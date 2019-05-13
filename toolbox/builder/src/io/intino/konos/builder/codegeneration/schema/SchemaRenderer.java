@@ -1,5 +1,8 @@
 package io.intino.konos.builder.codegeneration.schema;
 
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
@@ -16,19 +19,19 @@ import io.intino.konos.model.graph.real.RealData;
 import io.intino.konos.model.graph.text.TextData;
 import io.intino.konos.model.graph.type.TypeData;
 import io.intino.konos.model.graph.word.WordData;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.AbstractFrame;
-import org.siani.itrules.model.Frame;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.addAll;
+
 public class SchemaRenderer {
 	private final List<Schema> schemas;
+	private final Map<String, String> classes;
 	private File gen;
 	private String rootPackage;
-	private final Map<String, String> classes;
 
 	public SchemaRenderer(KonosGraph graph, File gen, String rootPackage, Map<String, String> classes) {
 		schemas = graph.core$().find(Schema.class).stream().filter(s -> !s.core$().owner().is(Schema.class)).collect(Collectors.toList());
@@ -37,8 +40,13 @@ public class SchemaRenderer {
 		this.classes = classes;
 	}
 
+
 	public void execute() {
 		schemas.forEach(this::processSchema);
+	}
+
+	public Frame createSchemaFrame(Schema schema, String packageName) {
+		return createSchemaFrame(schema, packageName, new HashSet<>());
 	}
 
 	private void processSchema(Schema schema) {
@@ -48,116 +56,129 @@ public class SchemaRenderer {
 		final String packageName = subPackage.isEmpty() ? rootPackage : rootPackage + "." + subPackage.replace(File.separator, ".");
 		final Frame frame = createSchemaFrame(schema, packageName);
 		classes.put(Schema.class.getSimpleName() + "#" + schema.name$(), subPackage.replace(File.separator, ".") + "." + schema.name$());
-		Commons.writeFrame(packageFolder, schema.name$(), template().format(new Frame("root").addSlot("root", rootPackage).addSlot("package", packageName).addSlot("schema", frame)));
-	}
-
-	public Frame createSchemaFrame(Schema schema, String packageName) {
-		return createSchemaFrame(schema, packageName, new HashSet<>());
+		Commons.writeFrame(packageFolder, schema.name$(), template().render(new FrameBuilder("root").add("root", rootPackage).add("package", packageName).add("schema", frame)));
 	}
 
 	private Frame createSchemaFrame(Schema schema, String packageName, Set<Schema> processed) {
-		Frame frame = new Frame("schema").addSlot("name", schema.name$()).addSlot("package", packageName);
-		if (schema.core$().owner().is(Schema.class)) frame.addSlot("inner", "static");
-		frame.addSlot("attribute", (AbstractFrame[]) processAttributes(schema.attributeList()));
-		frame.addSlot("attribute", (AbstractFrame[]) processSchemasAsAttribute(schema.schemaList()));
-		if (schema.isExtensionOf()) frame.addSlot("parent", schema.asExtensionOf().parent().name$());
-		if (schema.attributeMap() != null) frame.addSlot("attribute", render(schema.attributeMap()));
-		addReturningValueToAttributes(schema.name$(), frame.frames("attribute"));
-		final Frame[] innerSchemas = schema.schemaList().stream().filter(processed::add).map(s -> createSchemaFrame(s, packageName, processed)).toArray(Frame[]::new);
-		if (innerSchemas.length > 0) frame.addSlot("schema", innerSchemas);
-		return frame;
+		FrameBuilder builder = new FrameBuilder("schema").add("name", schema.name$()).add("package", packageName);
+		if (schema.core$().owner().is(Schema.class)) builder.add("inner", "static");
+		builder.add("attribute", collectAttributes(schema));
+		if (schema.isExtensionOf()) builder.add("parent", schema.asExtensionOf().parent().name$());
+		final Frame[] components = components(schema, packageName, processed);
+		if (components.length > 0) builder.add("schema", components);
+		return builder.toFrame();
 	}
 
-	private Frame[] processAttributes(List<Schema.Attribute> attributes) {
-		return attributes.stream().map(this::processAttribute).toArray(value -> new Frame[attributes.size()]);
+	@NotNull
+	private Frame[] components(Schema schema, String packageName, Set<Schema> processed) {
+		return schema.schemaList().stream().filter(processed::add).map(s -> createSchemaFrame(s, packageName, processed)).toArray(Frame[]::new);
 	}
 
-	private Frame[] processSchemasAsAttribute(List<Schema> schemas) {
-		return schemas.stream().map(schema -> processSchemaAsAttribute(schema, schema.name$() + (schema.multiple() ? "List" : ""), schema.multiple())).toArray(value -> new Frame[schemas.size()]);
+	@NotNull
+	private FrameBuilder[] collectAttributes(Schema schema) {
+		List<FrameBuilder> attributes = new ArrayList<>();
+		addAll(attributes, processAttributes(schema.attributeList()));
+		addAll(attributes, processSchemasAsAttribute(schema.schemaList()));
+		if (schema.attributeMap() != null) attributes.add(processAttributeMap(schema.attributeMap()));
+		attributes.forEach(f -> f.add("element", schema.name$()));
+		return attributes.toArray(new FrameBuilder[0]);
 	}
 
-	private Frame processAttribute(Schema.Attribute attribute) {
-		if (attribute.isReal()) return processAttribute(attribute.asReal());
-		else if (attribute.isInteger()) return processAttribute(attribute.asInteger());
-		else if (attribute.isBool()) return processAttribute(attribute.asBool());
-		else if (attribute.isText()) return processAttribute(attribute.asText());
-		else if (attribute.isDateTime()) return processAttribute(attribute.asDateTime());
-		else if (attribute.isDate()) return processAttribute(attribute.asDate());
-		else if (attribute.isFile()) return processAttribute(attribute.asFile());
-		else if (attribute.isLongInteger()) return processAttribute(attribute.asLongInteger());
-		else if (attribute.isWord()) return processAttribute(attribute.asWord());
+	private FrameBuilder[] processAttributes(List<Schema.Attribute> attributes) {
+		return attributes.stream().map(this::process).toArray(FrameBuilder[]::new);
+	}
+
+	private FrameBuilder[] processSchemasAsAttribute(List<Schema> schemas) {
+		return schemas.stream().map(schema -> processSchemaAsAttribute(schema, schema.name$() + (schema.multiple() ? "List" : ""), schema.multiple())).toArray(FrameBuilder[]::new);
+	}
+
+	private FrameBuilder process(Schema.Attribute attribute) {
+		if (attribute.isReal()) return process(attribute.asReal());
+		else if (attribute.isInteger()) return process(attribute.asInteger());
+		else if (attribute.isBool()) return process(attribute.asBool());
+		else if (attribute.isText()) return process(attribute.asText());
+		else if (attribute.isDateTime()) return process(attribute.asDateTime());
+		else if (attribute.isDate()) return process(attribute.asDate());
+		else if (attribute.isFile()) return process(attribute.asFile());
+		else if (attribute.isLongInteger()) return process(attribute.asLongInteger());
+		else if (attribute.isWord()) return process(attribute.asWord());
 		else if (attribute.isObject())
 			return processSchemaAsAttribute(attribute.asObject().schema(), attribute.name$(), attribute.isList());
 		return null;
 	}
 
-	private static Frame processAttribute(RealData attribute) {
-		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", "double")
-				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
-				.addSlot("type", !multiple(attribute) ? "double" : attribute.type())
-				.addSlot("defaultValue", attribute.defaultValue());
+	private FrameBuilder process(RealData attribute) {
+		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", "double")
+				.add("name", attribute.a$(Schema.Attribute.class).name$())
+				.add("type", !multiple(attribute) ? "double" : attribute.type())
+				.add("defaultValue", attribute.defaultValue());
 	}
 
-	private static Frame processAttribute(IntegerData attribute) {
-		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
-				.addSlot("type", !multiple(attribute) ? "int" : attribute.type())
-				.addSlot("defaultValue", attribute.defaultValue());
+	private FrameBuilder process(IntegerData attribute) {
+		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
+				.add("name", attribute.a$(Schema.Attribute.class).name$())
+				.add("type", !multiple(attribute) ? "int" : attribute.type())
+				.add("defaultValue", attribute.defaultValue());
 	}
 
-	private static Frame processAttribute(LongIntegerData attribute) {
-		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
-				.addSlot("type", attribute.type())
-				.addSlot("defaultValue", attribute.defaultValue() + "L");
+	private FrameBuilder process(LongIntegerData attribute) {
+		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
+				.add("name", attribute.a$(Schema.Attribute.class).name$())
+				.add("type", attribute.type())
+				.add("defaultValue", attribute.defaultValue() + "L");
 	}
 
-
-	private static Frame processAttribute(FileData attribute) {
-		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
-				.addSlot("type", attribute.type());
+	private FrameBuilder process(FileData attribute) {
+		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
+				.add("name", attribute.a$(Schema.Attribute.class).name$())
+				.add("type", attribute.type());
 	}
 
-	private Frame processAttribute(BoolData attribute) {
-		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
-				.addSlot("type", attribute.type())
-				.addSlot("defaultValue", attribute.defaultValue());
+	private FrameBuilder processAttributeMap(Schema.AttributeMap map) {
+		return new FrameBuilder("attributeMap").add("name", map.name$());
 	}
 
-	private Frame processAttribute(TextData attribute) {
-		return new Frame().addTypes(multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
-				.addSlot("type", attribute.type())
-				.addSlot("defaultValue", "\"" + attribute.defaultValue() + "\"");
+	private FrameBuilder process(BoolData attribute) {
+		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
+				.add("name", attribute.a$(Schema.Attribute.class).name$())
+				.add("type", attribute.type())
+				.add("defaultValue", attribute.defaultValue());
 	}
 
-	private Frame processAttribute(DateTimeData attribute) {
-		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
-				.addSlot("type", attribute.type());
+	private FrameBuilder process(TextData attribute) {
+		FrameBuilder builder = new FrameBuilder(multiple(attribute) ? "multiple" : "single", attribute.type())
+				.add("name", attribute.a$(Schema.Attribute.class).name$())
+				.add("type", attribute.type());
+		if (attribute.defaultValue() != null) builder.add("defaultValue", "\"" + attribute.defaultValue() + "\"");
+		return builder;
+
 	}
 
-	private Frame processAttribute(DateData attribute) {
-		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
-				.addSlot("type", attribute.type());
+	private FrameBuilder process(DateTimeData attribute) {
+		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
+				.add("name", attribute.a$(Schema.Attribute.class).name$())
+				.add("type", attribute.type());
 	}
 
-	private Frame processAttribute(WordData attribute) {
+	private FrameBuilder process(DateData attribute) {
+		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
+				.add("name", attribute.a$(Schema.Attribute.class).name$())
+				.add("type", attribute.type());
+	}
+
+	private FrameBuilder process(WordData attribute) {
 		final Schema.Attribute a = attribute.a$(Schema.Attribute.class);
-		return new Frame().addTypes("word", multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", a.name$())
-				.addSlot("words", attribute.values().toArray(new String[0]))
-				.addSlot("type", a.name$());
+		return new FrameBuilder("word", multiple(attribute) ? "multiple" : "single", attribute.type())
+				.add("name", a.name$())
+				.add("words", attribute.values().toArray(new String[0]))
+				.add("type", a.name$());
 	}
 
-	private Frame processSchemaAsAttribute(Schema schema, String name, boolean multiple) {
-		return new Frame().addTypes(multiple ? "multiple" : "single", "member", schema.name$())
-				.addSlot("name", name)
-				.addSlot("type", schema.name$())
-				.addSlot("package", packageOf(schema));
+	private FrameBuilder processSchemaAsAttribute(Schema schema, String name, boolean multiple) {
+		return new FrameBuilder(multiple ? "multiple" : "single", "member", schema.name$())
+				.add("name", name)
+				.add("type", schema.name$())
+				.add("package", packageOf(schema));
 	}
 
 	private String packageOf(Schema schema) {
@@ -166,28 +187,16 @@ public class SchemaRenderer {
 		return subPackage.isEmpty() ? rootPackage : rootPackage + "." + subPackage.replace(File.separator, ".");
 	}
 
-	private static Frame render(Schema.AttributeMap map) {
-		return new Frame().addTypes("attributeMap").addSlot("name", map.name$());
-	}
-
-	private static void addReturningValueToAttributes(String elementName, Iterator<AbstractFrame> attributes) {
-		while (attributes.hasNext()) {
-			final Frame next = (Frame) attributes.next();
-			next.addSlot("element", elementName);
-		}
-	}
-
-	private static boolean multiple(TypeData attribute) {
+	private boolean multiple(TypeData attribute) {
 		return attribute.i$(ListData.class);
 	}
 
+
 	private Template template() {
-		Template template = Formatters.customize(SchemaTemplate.create());
-		template.add("typeFormat", (value) -> {
+		return Formatters.customize(new SchemaTemplate()).add("typeFormat", (value) -> {
 			if (value.toString().contains(".")) return Formatters.firstLowerCase(value.toString());
 			else return value;
 		});
-		return template;
 	}
 
 }

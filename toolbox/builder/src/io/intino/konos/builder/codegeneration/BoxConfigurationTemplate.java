@@ -1,33 +1,20 @@
 package io.intino.konos.builder.codegeneration;
 
-import org.siani.itrules.LineSeparator;
-import org.siani.itrules.Template;
-
-import java.util.Locale;
-
-import static org.siani.itrules.LineSeparator.LF;
+import io.intino.itrules.RuleSet;
+import io.intino.itrules.Template;
 
 public class BoxConfigurationTemplate extends Template {
 
-	protected BoxConfigurationTemplate(Locale locale, LineSeparator separator) {
-		super(locale, separator);
-	}
-
-	public static Template create() {
-		return new BoxConfigurationTemplate(Locale.ENGLISH, LF).define();
-	}
-
-	public Template define() {
-		add(
-				rule().add((condition("type", "boxConfiguration"))).add(literal("package ")).add(mark("package")).add(literal(";\n\nimport java.util.Map;\nimport java.util.HashMap;\n\npublic class ")).add(mark("name", "SnakeCaseToCamelCase", "firstUpperCase")).add(literal("Configuration extends ")).add(expression().add(mark("parent")).add(literal("Configuration")).or(expression().add(literal("io.intino.alexandria.core.BoxConfiguration")))).add(literal(" {\n\n\tpublic ")).add(mark("name", "SnakeCaseToCamelCase", "firstUpperCase")).add(literal("Configuration(String[] args) {\n\t\tsuper(args);\n\t}\n\n\tpublic String get(String key) {\n\t\treturn args.get(key);\n\t}\n\n\tpublic static java.net.URL url(String url) {\n\t\ttry {\n\t\treturn new java.net.URL(url);\n\t\t} catch (java.net.MalformedURLException e) {\n\t\t\treturn null;\n\t\t}\n\t}\n}")),
-			rule().add((condition("type", "custom")), (condition("trigger", "replace"))).add(literal(".replace(\"{")).add(mark("name")).add(literal("}\", ")).add(mark("name", "validname", "firstLowerCase")).add(literal(")")),
-			rule().add((condition("type", "custom")), (condition("trigger", "signature"))).add(mark("type")).add(literal(" ")).add(mark("name", "validname", "firstLowerCase")),
-			rule().add((condition("type", "custom")), (condition("trigger", "name"))).add(mark("name", "validname", "firstLowerCase")),
-			rule().add((condition("type", "custom")), (condition("trigger", "field"))).add(literal("public ")).add(mark("type")).add(literal(" ")).add(mark("name", "validname", "firstLowerCase")).add(literal(" = \"\";")),
-			rule().add((condition("type", "custom")), (condition("trigger", "assign"))).add(literal("this.")).add(mark("conf", "validname", "firstLowerCase")).add(literal("Configuration.")).add(mark("name", "validname", "firstLowerCase")).add(literal(" = ")).add(mark("name", "validname", "firstLowerCase")).add(literal(";")),
-			rule().add((condition("type", "custom")), (condition("trigger", "parameter"))).add(literal("args.get(\"")).add(mark("conf", "firstLowerCase")).add(literal("_")).add(mark("name", "validname", "firstLowerCase")).add(literal("\")")),
-			rule().add((condition("trigger", "empty")))
+	public RuleSet ruleSet() {
+		return new RuleSet().add(
+			rule().condition((type("boxconfiguration"))).output(literal("package ")).output(mark("package")).output(literal(";\n\nimport java.util.Map;\nimport java.util.HashMap;\n\npublic class ")).output(mark("name", "SnakeCaseToCamelCase", "firstUpperCase")).output(literal("Configuration extends ")).output(expression().output(mark("parent")).output(literal("Configuration")).next(expression().output(literal("io.intino.alexandria.core.BoxConfiguration")))).output(literal(" {\n\n\tpublic ")).output(mark("name", "SnakeCaseToCamelCase", "firstUpperCase")).output(literal("Configuration(String[] args) {\n\t\tsuper(args);\n\t}\n\n\tpublic String get(String key) {\n\t\treturn args.get(key);\n\t}\n\n\tpublic static java.net.URL url(String url) {\n\t\ttry {\n\t\treturn new java.net.URL(url);\n\t\t} catch (java.net.MalformedURLException e) {\n\t\t\treturn null;\n\t\t}\n\t}\n}")),
+			rule().condition((type("custom")), (trigger("replace"))).output(literal(".replace(\"{")).output(mark("name")).output(literal("}\", ")).output(mark("name", "validname", "firstLowerCase")).output(literal(")")),
+			rule().condition((type("custom")), (trigger("signature"))).output(mark("type")).output(literal(" ")).output(mark("name", "validname", "firstLowerCase")),
+			rule().condition((type("custom")), (trigger("name"))).output(mark("name", "validname", "firstLowerCase")),
+			rule().condition((type("custom")), (trigger("field"))).output(literal("public ")).output(mark("type")).output(literal(" ")).output(mark("name", "validname", "firstLowerCase")).output(literal(" = \"\";")),
+			rule().condition((type("custom")), (trigger("assign"))).output(literal("this.")).output(mark("conf", "validname", "firstLowerCase")).output(literal("Configuration.")).output(mark("name", "validname", "firstLowerCase")).output(literal(" = ")).output(mark("name", "validname", "firstLowerCase")).output(literal(";")),
+			rule().condition((type("custom")), (trigger("parameter"))).output(literal("args.get(\"")).output(mark("conf", "firstLowerCase")).output(literal("_")).output(mark("name", "validname", "firstLowerCase")).output(literal("\")")),
+			rule().condition((trigger("empty")))
 		);
-		return this;
 	}
 }

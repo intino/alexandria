@@ -1,16 +1,17 @@
 package io.intino.konos.builder.codegeneration.accessor.ui;
 
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.ThemeTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
+import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Format;
 import io.intino.konos.model.graph.Theme;
 import io.intino.konos.model.graph.ui.UIService;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
-import static io.intino.konos.builder.helpers.Commons.write;
 import static io.intino.konos.model.graph.Theme.Type.Normal;
 
 public class ThemeRenderer extends UIRenderer {
@@ -23,39 +24,40 @@ public class ThemeRenderer extends UIRenderer {
 
 	@Override
 	public void execute() {
-		Frame frame = new Frame().addTypes("theme");
+		FrameBuilder builder = new FrameBuilder("theme");
 		Theme theme = service.graph().theme();
-		frame.addSlot("palette", palette(theme));
-		frame.addSlot("typography", typography(theme));
-		service.graph().formatList().forEach(r -> frame.addSlot("format", frameOf(r)));
-		write(new File(accessorGen() + File.separator + "Theme.js").toPath(), setup(ThemeTemplate.create()).format(frame));
+		if (isRendered(theme)) return;
+		builder.add("palette", palette(theme));
+		builder.add("typography", typography(theme));
+		service.graph().formatList().forEach(r -> builder.add("format", frameOf(r)));
+		Commons.write(new File(accessorGen() + File.separator + "Theme.js").toPath(), setup(new ThemeTemplate()).render(builder.toFrame()));
 	}
 
 	private Frame palette(Theme theme) {
-		Frame result = new Frame("palette");
-		if (theme.type() != Normal) result.addSlot("type", theme.type().name());
-		if (theme.primary() != null) result.addSlot("primary", theme.primary().color());
-		if (theme.secondary() != null) result.addSlot("secondary", theme.secondary().color());
-		if (theme.error() != null) result.addSlot("error", theme.error().color());
-		result.addSlot("contrastThreshold", theme.contrastThreshold());
-		result.addSlot("tonalOffset", theme.tonalOffset());
-		return result;
+		FrameBuilder result = new FrameBuilder("palette");
+		if (theme.type() != Normal) result.add("type", theme.type().name());
+		if (theme.primary() != null) result.add("primary", theme.primary().color());
+		if (theme.secondary() != null) result.add("secondary", theme.secondary().color());
+		if (theme.error() != null) result.add("error", theme.error().color());
+		result.add("contrastThreshold", theme.contrastThreshold());
+		result.add("tonalOffset", theme.tonalOffset());
+		return result.toFrame();
 	}
 
 	private Frame typography(Theme theme) {
 		Theme.Typography typography = theme.typography();
 		if (typography == null) typography = theme.create().typography();
-		Frame result = new Frame("typography");
-		result.addSlot("fontFamily", "\"" + String.join("\",\"", typography.fontFamily()) + "\"");
-		result.addSlot("fontSize", typography.fontSize());
-		return result;
+		FrameBuilder result = new FrameBuilder("typography");
+		result.add("fontFamily", "\"" + String.join("\",\"", typography.fontFamily()) + "\"");
+		result.add("fontSize", typography.fontSize());
+		return result.toFrame();
 	}
 
 	private Frame frameOf(Format format) {
-		Frame result = new Frame().addTypes("format");
-		result.addSlot("name", format.name$());
-		result.addSlot("content", format.content() != null ? format.content() : "");
-		return result;
+		FrameBuilder result = new FrameBuilder("format");
+		result.add("name", format.name$());
+		result.add("content", format.content() != null ? format.content() : "");
+		return result.toFrame();
 	}
 
 }

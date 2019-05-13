@@ -173,7 +173,7 @@ def type(service & ui) trigger(ui)
 end
 
 def trigger(use)
-	$value.initDisplays(sparkInstance, pushService);
+	$this.initDisplays(sparkInstance, pushService);
 end
 
 def type(service & jms) trigger(init)

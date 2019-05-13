@@ -1,31 +1,18 @@
 package io.intino.konos.builder.codegeneration.datalake.feeder;
 
-import org.siani.itrules.LineSeparator;
-import org.siani.itrules.Template;
-
-import java.util.Locale;
-
-import static org.siani.itrules.LineSeparator.LF;
+import io.intino.itrules.RuleSet;
+import io.intino.itrules.Template;
 
 public class FeederTemplate extends Template {
 
-	protected FeederTemplate(Locale locale, LineSeparator separator) {
-		super(locale, separator);
-	}
-
-	public static Template create() {
-		return new FeederTemplate(Locale.ENGLISH, LF).define();
-	}
-
-	public Template define() {
-		add(
-			rule().add((condition("type", "feeder"))).add(literal("package ")).add(mark("package", "validPackage")).add(literal(".datalake.feeders;\n\nimport ")).add(mark("package", "validPackage")).add(literal(".")).add(mark("box", "firstUpperCase")).add(literal("Box;\n\nimport io.intino.alexandria.inl.Message;\nimport java.util.Arrays;\n\npublic class ")).add(mark("name", "FirstUpperCase")).add(literal(" extends Abstract")).add(mark("name", "FirstUpperCase")).add(literal(" {\n\n\tpublic ")).add(mark("name", "FirstUpperCase")).add(literal("(")).add(mark("box", "FirstUpperCase")).add(literal("Box box) {\n\t\tsuper(box);\n\t}\n\n\t")).add(mark("sensor", "class")).add(literal("\n}")),
-			rule().add((condition("type", "sensor")), (condition("trigger", "class"))).add(literal("public static class ")).add(mark("name", "FirstUpperCase")).add(literal("Sensor extends Abstract")).add(mark("name", "FirstUpperCase")).add(literal("Sensor {\n\n\tpublic ")).add(mark("name", "FirstUpperCase")).add(literal("Sensor() {\n\t}\n\n\t")).add(mark("parent", "get")).add(literal("\n\n\t")).add(mark("parent", "methods")).add(literal("\n}")),
-			rule().add((condition("type", "poll")), (condition("trigger", "get"))).add(literal("public Message get(Object... args) {\n\tString option = null; //TODO\n\treturn get(option, args);\n}")),
-			rule().add((condition("trigger", "get"))).add(literal("public Message get(Object... args) {\n\treturn null;\n}")),
-			rule().add((condition("type", "poll")), (condition("trigger", "methods"))).add(mark("eventMethod").multiple("\n")),
-			rule().add((condition("trigger", "eventMethod"))).add(literal("protected Object ")).add(mark("value", "firstLowerCase")).add(literal("(java.util.List<Object> objects) {\n\t//return null;\n}"))
+	public RuleSet ruleSet() {
+		return new RuleSet().add(
+			rule().condition((type("feeder"))).output(literal("package ")).output(mark("package", "validPackage")).output(literal(".datalake.feeders;\n\nimport ")).output(mark("package", "validPackage")).output(literal(".")).output(mark("box", "firstUpperCase")).output(literal("Box;\n\nimport io.intino.alexandria.inl.Message;\nimport java.util.Arrays;\n\npublic class ")).output(mark("name", "FirstUpperCase")).output(literal(" extends Abstract")).output(mark("name", "FirstUpperCase")).output(literal(" {\n\n\tpublic ")).output(mark("name", "FirstUpperCase")).output(literal("(")).output(mark("box", "FirstUpperCase")).output(literal("Box box) {\n\t\tsuper(box);\n\t}\n\n\t")).output(mark("sensor", "class")).output(literal("\n}")),
+			rule().condition((type("sensor")), (trigger("class"))).output(literal("public static class ")).output(mark("name", "FirstUpperCase")).output(literal("Sensor extends Abstract")).output(mark("name", "FirstUpperCase")).output(literal("Sensor {\n\n\tpublic ")).output(mark("name", "FirstUpperCase")).output(literal("Sensor() {\n\t}\n\n\t")).output(mark("parent", "get")).output(literal("\n\n\t")).output(mark("parent", "methods")).output(literal("\n}")),
+			rule().condition((type("poll")), (trigger("get"))).output(literal("public Message get(Object... args) {\n\tString option = null; //TODO\n\treturn get(option, args);\n}")),
+			rule().condition((trigger("get"))).output(literal("public Message get(Object... args) {\n\treturn null;\n}")),
+			rule().condition((type("poll")), (trigger("methods"))).output(mark("eventMethod").multiple("\n")),
+			rule().condition((trigger("eventmethod"))).output(literal("protected Object ")).output(mark("value", "firstLowerCase")).output(literal("(java.util.List<Object> objects) {\n\t//return null;\n}"))
 		);
-		return this;
 	}
 }

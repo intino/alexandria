@@ -1,15 +1,18 @@
 package io.intino.konos.builder.codegeneration.accessor.jms;
 
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Parameter;
 import io.intino.konos.model.graph.jms.JMSService;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.AbstractFrame;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
@@ -32,17 +35,16 @@ public class JMSAccessorRenderer {
 	}
 
 	private void processService(JMSService jmsService) {
-		Frame frame = new Frame().addTypes("accessor");
-		frame.addSlot("name", jmsService.name$());
-		frame.addSlot("package", packageName);
+		FrameBuilder builder = new FrameBuilder("accessor");
+		builder.add("name", jmsService.name$());
+		builder.add("package", packageName);
 		if (!jmsService.graph().schemaList().isEmpty())
-			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
+			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName).toFrame());
 		final List<JMSService.Request> requests = jmsService.core$().findNode(JMSService.Request.class);
 		final Set<String> customParameters = extractCustomParameters(requests);
-		frame.addSlot("request", (AbstractFrame[]) requests.stream().
-				map(request -> processRequest(request, customParameters)).toArray(Frame[]::new));
-		for (String parameter : customParameters) frame.addSlot("custom", parameter);
-		Commons.writeFrame(destination, snakeCaseToCamelCase(jmsService.name$()) + "Accessor", getTemplate().format(frame));
+		builder.add("request", requests.stream().map(request -> processRequest(request, customParameters).toFrame()).toArray(Frame[]::new));
+		for (String parameter : customParameters) builder.add("custom", parameter);
+		Commons.writeFrame(destination, snakeCaseToCamelCase(jmsService.name$()) + "Accessor", getTemplate().render(builder.toFrame()));
 	}
 
 	private Set<String> extractCustomParameters(List<JMSService.Request> requests) {
@@ -51,21 +53,20 @@ public class JMSAccessorRenderer {
 		return set;
 	}
 
-	private Frame processRequest(JMSService.Request request, Set<String> customParameters) {
-		final Frame frame = new Frame().addTypes("request")
-				.addSlot("name", request.name$())
-				.addSlot("queue", request.path())
-				.addSlot("parameter", (AbstractFrame[]) parameters(request.parameterList()))
-				.addSlot("messageType", messageType(request.parameterList()));
+	private FrameBuilder processRequest(JMSService.Request request, Set<String> customParameters) {
+		final FrameBuilder builder = new FrameBuilder("request")
+				.add("name", request.name$())
+				.add("queue", request.path())
+				.add("parameter", parameters(request.parameterList()))
+				.add("messageType", messageType(request.parameterList()));
 		if (request.response() != null) {
-			frame.addTypes("reply");
-			final Frame reply = new Frame();
-			if (request.response().isList()) reply.addTypes("list");
-			frame.addSlot("reply", reply.addTypes("reply", request.response().asType().getClass().getSimpleName()).addSlot("value", request.response().asType().type()));
+			builder.add("reply");
+			final FrameBuilder reply = new FrameBuilder();
+			if (request.response().isList()) reply.add("list");
+			builder.add("reply", reply.add("reply", request.response().asType().getClass().getSimpleName()).add("value", request.response().asType().type()));
 		}
-		for (String parameter : customParameters) frame.addSlot("custom", parameter);
-
-		return frame;
+		customParameters.forEach(parameter -> builder.add("custom", parameter));
+		return builder;
 	}
 
 	private String messageType(List<Parameter> parameters) {
@@ -78,17 +79,16 @@ public class JMSAccessorRenderer {
 	}
 
 	private Frame parameter(Parameter parameter) {
-		return new Frame().addTypes("parameter", parameter.asType().getClass().getSimpleName())
-				.addSlot("name", parameter.name$())
-				.addSlot("type", parameter.asType().type());
+		return new FrameBuilder().add("parameter", parameter.asType().getClass().getSimpleName())
+				.add("name", parameter.name$())
+				.add("type", parameter.asType().type()).toFrame();
 	}
 
 
 	private Template getTemplate() {
-		Template template = JMSAccessorTemplate.create();
-		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
-		template.add("ReturnTypeFormatter", (value) -> value.equals("Void") ? "void" : value);
-		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
-		return template;
+		return new JMSAccessorTemplate()
+				.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()))
+				.add("ReturnTypeFormatter", (value) -> value.equals("Void") ? "void" : value)
+				.add("validname", value -> value.toString().replace("-", "").toLowerCase());
 	}
 }

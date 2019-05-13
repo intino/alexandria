@@ -1,10 +1,10 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.CatalogComponents;
 import io.intino.konos.model.graph.OperationComponents.Toolbar;
-import org.siani.itrules.model.Frame;
 
 public class ToolbarRenderer extends ComponentRenderer<Toolbar> {
 
@@ -13,21 +13,21 @@ public class ToolbarRenderer extends ComponentRenderer<Toolbar> {
 	}
 
 	@Override
-	public Frame buildFrame() {
-		Frame frame = super.buildFrame();
-		addBinding(frame);
-		return frame;
+	public FrameBuilder frameBuilder() {
+		FrameBuilder result = super.frameBuilder();
+		addBinding(result);
+		return result;
 	}
 
-	private void addBinding(Frame frame) {
+	private void addBinding(FrameBuilder builder) {
 		if (!element.isLinked()) return;
 
 		CatalogComponents.Collection collection = element.asLinked().to();
 		if (collection == null) return;
 
-		frame.addSlot("binding", new Frame("binding", Toolbar.class.getSimpleName())
-			 	.addSlot("name", nameOf(element))
-				.addSlot("collection", nameOf(collection)));
+		builder.add("binding", new FrameBuilder("binding", Toolbar.class.getSimpleName())
+			 	.add("name", nameOf(element))
+				.add("collection", nameOf(collection)));
 	}
 
 	@Override

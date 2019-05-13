@@ -1,11 +1,11 @@
 package io.intino.konos.builder.codegeneration.ui.resource;
 
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.services.ui.templates.ResourceTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.ui.UIService;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
@@ -24,18 +24,18 @@ public class ResourceRenderer extends UIRenderer {
 	public void execute() {
 		UIService uiService = resource.core$().ownerAs(UIService.class);
 
-		Frame frame = buildFrame().addTypes("resource").addSlot("name", resource.name$()).addSlot("parameter", parameters(resource));
-		if (uiService.googleApiKey() != null) frame.addSlot("googleApiKey", customize("googleApiKey", uiService.googleApiKey()));
-		if (resource.isConfidential()) frame.addSlot("confidential", "");
-		Commons.writeFrame(new File(gen(), format(Resources)), snakeCaseToCamelCase(resource.name$() + "Resource"), setup(ResourceTemplate.create()).format(frame));
+		FrameBuilder builder = frameBuilder().add("resource").add("name", resource.name$()).add("parameter", parameters(resource));
+		if (uiService.googleApiKey() != null) builder.add("googleApiKey", customize("googleApiKey", uiService.googleApiKey()));
+		if (resource.isConfidential()) builder.add("confidential", "");
+		Commons.writeFrame(new File(gen(), format(Resources)), snakeCaseToCamelCase(resource.name$() + "Resource"), setup(new ResourceTemplate()).render(builder.toFrame()));
 
 		new PageRenderer(settings, resource).execute();
 	}
 
-	private Frame[] parameters(UIService.Resource resource) {
+	private FrameBuilder[] parameters(UIService.Resource resource) {
 		List<String> parameters = Commons.extractUrlPathParameters(resource.path());
-		return parameters.stream().map(parameter -> new Frame().addTypes("parameter")
-				.addSlot("name", parameter)).toArray(Frame[]::new);
+		return parameters.stream().map(parameter -> new FrameBuilder().add("parameter")
+				.add("name", parameter)).toArray(FrameBuilder[]::new);
 	}
 
 }

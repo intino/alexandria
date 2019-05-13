@@ -1,5 +1,6 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
@@ -26,7 +27,6 @@ import io.intino.konos.model.graph.multiple.othercomponents.MultipleStamp;
 import io.intino.konos.model.graph.parallax.ParallaxBlock;
 import io.intino.konos.model.graph.radiobox.othercomponents.RadioBoxSelector;
 import io.intino.tara.magritte.Layer;
-import org.siani.itrules.model.Frame;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -46,19 +46,19 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	@Override
-	public Frame buildFrame() {
-		Frame frame = super.buildFrame().addTypes("component");
-		addOwner(frame);
-		frame.addSlot("properties", properties());
-		if (buildChildren) frame.addTypes("child");
-		frame.addSlot("methodName", element.i$(ConditionalBlock.class) ? "refresh" : "init");
-		addSpecificTypes(frame);
-		addComponents(element, frame);
-		addReferences(element, frame);
-		addFacets(element, frame);
-		addExtends(element, frame);
-		addImplements(element, frame);
-		return frame;
+	public FrameBuilder frameBuilder() {
+		FrameBuilder builder = super.frameBuilder().add("component");
+		addOwner(builder);
+		builder.add("properties", properties());
+		if (buildChildren) builder.add("child");
+		builder.add("methodName", element.i$(ConditionalBlock.class) ? "refresh" : "init");
+		addSpecificTypes(builder);
+		addComponents(element, builder);
+		addReferences(element, builder);
+		addFacets(element, builder);
+		addExtends(element, builder);
+		addImplements(element, builder);
+		return builder;
 	}
 
 	public void buildChildren(boolean value) {
@@ -73,72 +73,72 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		this.owner = owner;
 	}
 
-	protected Frame addOwner(Frame frame) {
-		if (owner != null) frame.addSlot("owner", (owner.isDecorated() ? "Abstract" : "") + firstUpperCase(owner.name$()));
-		return frame;
+	protected FrameBuilder addOwner(FrameBuilder builder) {
+		if (owner != null) builder.add("owner", (owner.isDecorated() ? "Abstract" : "") + firstUpperCase(owner.name$()));
+		return builder;
 	}
 
 	@Override
-	protected void addDecoratedFrames(Frame frame) {
-		addDecoratedFrames(frame, decorated);
+	protected void addDecoratedFrames(FrameBuilder builder) {
+		addDecoratedFrames(builder, decorated);
 	}
 
-	private void addComponents(Component component, Frame frame) {
+	private void addComponents(Component component, FrameBuilder builder) {
 		List<Component> components = components(component);
 		components.forEach(c -> {
-			Frame componentFrame = buildChildren ? childFrame(c) : componentFrame(c);
-			frame.addSlot( "component", componentFrame);
+			FrameBuilder componentBuilder = buildChildren ? childFrame(c) : componentFrame(c);
+			builder.add( "component", componentBuilder);
 		});
 	}
 
-	private void addReferences(Component component, Frame frame) {
+	private void addReferences(Component component, FrameBuilder builder) {
 		Set<Component> components = new LinkedHashSet<>(references(component));
-		frame.addSlot("componentReferences", componentReferencesFrame());
-		components.forEach(c -> frame.addSlot( "reference", referenceFrame(c)));
+		builder.add("componentReferences", componentReferencesFrame());
+		components.forEach(c -> builder.add( "reference", referenceFrame(c)));
 	}
 
-	private Frame referenceFrame(Component component) {
+	private FrameBuilder referenceFrame(Component component) {
 		ComponentRenderer renderer = factory.renderer(settings, component, templateProvider, target);
-		Frame frame = new Frame("reference", typeOf(component)).addSlot("name", component.name$());
-		frame.addSlot("box", boxName());
-		frame.addSlot("id", shortId(component));
-		frame.addSlot("properties", renderer.properties());
-		addOwner(frame);
-		addExtends(component, frame);
-		return frame;
+		FrameBuilder builder = new FrameBuilder("reference").add(typeOf(component)).add("name", component.name$());
+		builder.add("box", boxName());
+		builder.add("id", shortId(component));
+		builder.add("properties", renderer.properties());
+		addOwner(builder);
+		addExtends(component, builder);
+		return builder;
 	}
 
 	@Override
-	protected Frame componentFrame(Component component) {
-		return componentRenderer(component).buildFrame();
+	protected FrameBuilder componentFrame(Component component) {
+		return componentRenderer(component).frameBuilder();
 	}
 
 	protected String className(Class clazz) {
 		return clazz.getSimpleName().toLowerCase();
 	}
 
-	protected Frame childFrame(Component component) {
-		Frame result = componentRenderer(component).buildFrame();
+	protected FrameBuilder childFrame(Component component) {
+		FrameBuilder result = componentRenderer(component).frameBuilder();
 		String[] ancestors = ancestors(component);
-		result.addSlot("ancestors", ancestors);
-		result.addSlot("ancestorsNotMe", Arrays.copyOfRange(ancestors, 1, ancestors.length));
-		result.addSlot("value", componentRenderer(component).buildFrame().addSlot("addType", typeOf(component)));
+		result.add("ancestors", ancestors);
+		result.add("ancestorsNotMe", Arrays.copyOfRange(ancestors, 1, ancestors.length));
+		result.add("value", componentRenderer(component).frameBuilder().add("addType", typeOf(component)));
 		return result;
 	}
 
-	public Frame properties() {
-		Frame result = new Frame().addTypes("properties", typeOf(element));
-		if (element.color() != null && !element.color().isEmpty()) result.addSlot("color", element.color());
-		if (element.i$(AbstractLabeled.class)) result.addSlot("label", element.a$(AbstractLabeled.class).label());
+	public FrameBuilder properties() {
+		FrameBuilder result = new FrameBuilder().add("properties").add(typeOf(element));
+		if (element.color() != null && !element.color().isEmpty()) result.add("color", element.color());
+		if (element.i$(AbstractLabeled.class)) result.add("label", element.a$(AbstractLabeled.class).label());
 		if (element.i$(AbstractMultiple.class)) {
 			AbstractMultiple abstractMultiple = element.a$(AbstractMultiple.class);
-			result.addSlot("instances", nameOf(element));
-			result.addSlot("multipleArrangement", abstractMultiple.arrangement().name());
-			result.addSlot("multipleNoItemsMessage", abstractMultiple.noItemsMessage() != null ? abstractMultiple.noItemsMessage() : "");
+			result.add("instances", nameOf(element));
+			result.add("multipleArrangement", abstractMultiple.arrangement().name());
+			result.add("multipleNoItemsMessage", abstractMultiple.noItemsMessage() != null ? abstractMultiple.noItemsMessage() : "");
 		}
 		if (element.format() != null) {
 			String[] format = element.format().stream().map(Layer::name$).toArray(String[]::new);
-			result.addSlot("format", format);
+			result.add("format", format);
 		}
 		return result;
 	}
@@ -182,63 +182,62 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return component.components();
 	}
 
-	private void addExtends(Component element, Frame result) {
-		Frame frame = extendsFrame(element, result);
-		result.addSlot("extends", frame);
+	private void addExtends(Component element, FrameBuilder builder) {
+		builder.add("extends", extendsFrame(element, builder));
 	}
 
-	protected Frame extendsFrame(Component element, Frame result) {
-		Frame frame = new Frame("extends");
-		frame.addSlot("name", nameOf(element));
+	protected FrameBuilder extendsFrame(Component element, FrameBuilder builder) {
+		FrameBuilder result = new FrameBuilder("extends");
+		result.add("name", nameOf(element));
 
-		if (!addSpecificTypes(frame)) frame.addSlot("type", type());
-		addFacets(element, frame);
-		addDecoratedFrames(frame, decorated);
+		if (!addSpecificTypes(result)) result.add("type", type());
+		addFacets(element, result);
+		addDecoratedFrames(result, decorated);
 
-		return frame;
+		return result;
 	}
 
-	protected boolean addSpecificTypes(Frame frame) {
+	protected boolean addSpecificTypes(FrameBuilder builder) {
 
 		if (element.i$(AbstractMultiple.class)) {
-			frame.addTypes(AbstractMultiple.class.getSimpleName().replace("Abstract", ""));
+			builder.add(AbstractMultiple.class.getSimpleName().replace("Abstract", ""));
 			String message = element.a$(AbstractMultiple.class).noItemsMessage();
-			if (message != null) frame.addSlot("noItemsMessage", message);
-			Frame methodsFrame = addOwner(baseFrame()).addTypes("method", "multiple");
-			methodsFrame.addSlot("componentType", multipleComponentType(element));
+			if (message != null) builder.add("noItemsMessage", message);
+			FrameBuilder methodsFrame = addOwner(baseFrameBuilder()).add("method", "multiple");
+			methodsFrame.add("componentType", multipleComponentType(element));
 			String objectType = multipleObjectType(element);
 			if (objectType != null && !objectType.equals("java.lang.Void")) {
-				methodsFrame.addSlot("objectType", objectType);
-				methodsFrame.addSlot("objectTypeValue", "value");
+				methodsFrame.add("objectType", objectType);
+				methodsFrame.add("objectTypeValue", "value");
 			}
-			methodsFrame.addSlot("name", nameOf(element));
-			frame.addSlot("methods", methodsFrame);
-			frame.addTypes("multiple");
-			frame.addSlot("componentType", multipleComponentType(element));
-			if (objectType != null) frame.addSlot("objectType", objectType);
+			methodsFrame.add("name", nameOf(element));
+			builder.add("methods", methodsFrame);
+			builder.add("multiple");
+			builder.add("componentType", multipleComponentType(element));
+			if (objectType != null) builder.add("objectType", objectType);
 		}
 
 		if (element.i$(Template.class)) {
-			frame.addTypes(Template.class.getSimpleName());
+			builder.add(Template.class.getSimpleName());
 			String modelClass = element.a$(Template.class).modelClass();
-			frame.addSlot("componentType", nameOf(element));
-			frame.addSlot("objectType", modelClass != null ? modelClass : "java.lang.Void");
+			builder.add("componentType", nameOf(element));
+			builder.add("objectType", modelClass != null ? modelClass : "java.lang.Void");
 			return true;
 		}
 
 		if (element.i$(Stamp.class)) {
-			frame.addTypes(Stamp.class.getSimpleName());
-			if (!element.i$(AbstractMultiple.class)) frame.addTypes("single");
+			builder.add(Stamp.class.getSimpleName());
+			if (!element.i$(AbstractMultiple.class)) builder.add("single");
 			Template template = element.a$(Stamp.class).template();
-			frame.addSlot("template", template.name$());
-			frame.addSlot("type", template.name$());
+			builder.add("template", template.name$());
+			builder.add("type", template.name$());
 			return true;
 		}
 
 		if (element.i$(Mold.Item.class)) {
-			frame.addTypes(Mold.Item.class.getSimpleName());
+			builder.add(Mold.Item.class.getSimpleName());
 			CatalogComponents.Collection collection = element.a$(Mold.Item.class).core$().ownerAs(CatalogComponents.Collection.class);
-			frame.addSlot("itemClass", collection.itemClass() != null ? collection.itemClass() : "java.lang.Void");
+			builder.add("itemClass", collection.itemClass() != null ? collection.itemClass() : "java.lang.Void");
 			return true;
 		}
 
@@ -273,37 +272,37 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return null;
 	}
 
-	protected void addFacets(Component component, Frame result) {
-		if (component.i$(Editable.class)) result.addSlot("facet", new Frame("facet").addSlot("name", Editable.class.getSimpleName()));
-		if (component.i$(CodeText.class)) result.addSlot("facet", new Frame("facet").addSlot("name", CodeText.class.getSimpleName().replace("Text", "")));
-		if (component.i$(BadgeBlock.class)) result.addSlot("facet", new Frame("facet").addSlot("name", BadgeBlock.class.getSimpleName().replace("Block", "")));
-		if (component.i$(ConditionalBlock.class)) result.addSlot("facet", new Frame("facet").addSlot("name", ConditionalBlock.class.getSimpleName().replace("Block", "")));
-		if (component.i$(MenuSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", MenuSelector.class.getSimpleName().replace("Selector", "")));
-		if (component.i$(ComboBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", ComboBoxSelector.class.getSimpleName().replace("Selector", "")));
-		if (component.i$(ComboBoxGrouping.class)) result.addSlot("facet", new Frame("facet").addSlot("name", ComboBoxGrouping.class.getSimpleName().replace("Grouping", "")));
-		if (component.i$(RadioBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", RadioBoxSelector.class.getSimpleName().replace("Selector", "")));
-		if (component.i$(CheckBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", CheckBoxSelector.class.getSimpleName().replace("Selector", "")));
-		if (component.i$(AvatarImage.class)) result.addSlot("facet", new Frame("facet").addSlot("name", AvatarImage.class.getSimpleName().replace("Image", "")));
-		if (component.i$(ParallaxBlock.class)) result.addSlot("facet", new Frame("facet").addSlot("name", ParallaxBlock.class.getSimpleName().replace("Block", "")));
+	protected void addFacets(Component component, FrameBuilder builder) {
+		if (component.i$(Editable.class)) builder.add("facet", new FrameBuilder("facet").add("name", Editable.class.getSimpleName()));
+		if (component.i$(CodeText.class)) builder.add("facet", new FrameBuilder("facet").add("name", CodeText.class.getSimpleName().replace("Text", "")));
+		if (component.i$(BadgeBlock.class)) builder.add("facet", new FrameBuilder("facet").add("name", BadgeBlock.class.getSimpleName().replace("Block", "")));
+		if (component.i$(ConditionalBlock.class)) builder.add("facet", new FrameBuilder("facet").add("name", ConditionalBlock.class.getSimpleName().replace("Block", "")));
+		if (component.i$(MenuSelector.class)) builder.add("facet", new FrameBuilder("facet").add("name", MenuSelector.class.getSimpleName().replace("Selector", "")));
+		if (component.i$(ComboBoxSelector.class)) builder.add("facet", new FrameBuilder("facet").add("name", ComboBoxSelector.class.getSimpleName().replace("Selector", "")));
+		if (component.i$(ComboBoxGrouping.class)) builder.add("facet", new FrameBuilder("facet").add("name", ComboBoxGrouping.class.getSimpleName().replace("Grouping", "")));
+		if (component.i$(RadioBoxSelector.class)) builder.add("facet", new FrameBuilder("facet").add("name", RadioBoxSelector.class.getSimpleName().replace("Selector", "")));
+		if (component.i$(CheckBoxSelector.class)) builder.add("facet", new FrameBuilder("facet").add("name", CheckBoxSelector.class.getSimpleName().replace("Selector", "")));
+		if (component.i$(AvatarImage.class)) builder.add("facet", new FrameBuilder("facet").add("name", AvatarImage.class.getSimpleName().replace("Image", "")));
+		if (component.i$(ParallaxBlock.class)) builder.add("facet", new FrameBuilder("facet").add("name", ParallaxBlock.class.getSimpleName().replace("Block", "")));
 	}
 
-	protected Frame resourceMethodFrame(String method, String value) {
-		Frame frame = new Frame("resourceMethod").addSlot("name", method).addSlot("value", fixResourceValue(value));
-		addOwner(frame);
-		return frame;
+	protected FrameBuilder resourceMethodFrame(String method, String value) {
+		FrameBuilder result = new FrameBuilder("resourceMethod").add("name", method).add("value", fixResourceValue(value));
+		addOwner(result);
+		return result;
 	}
 
 	protected String fixResourceValue(String value) {
 		return value.startsWith("/") ? value : "/" + value;
 	}
 
-	private void addImplements(C element, Frame frame) {
+	private void addImplements(C element, FrameBuilder builder) {
 		if (!element.isOption()) return;
-		frame.addSlot("implements", new Frame("implements", "option").addSlot("option", ""));
+		builder.add("implements", new FrameBuilder("implements", "option").add("option", ""));
 	}
 
-	private Frame componentReferencesFrame() {
-		Frame result = new Frame("componentReferences");
+	private FrameBuilder componentReferencesFrame() {
+		FrameBuilder result = new FrameBuilder("componentReferences");
 		List<Component> componentList = null;
 
 		if (element.i$(Block.class)) componentList = element.a$(Block.class).componentList();
@@ -312,7 +311,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 		if (componentList == null) return result;
 
-		result.addTypes("forRoot");
+		result.add("forRoot");
 		componentList.forEach(c -> addComponent(c, result));
 
 		return result;

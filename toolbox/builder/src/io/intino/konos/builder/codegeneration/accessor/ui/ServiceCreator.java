@@ -14,14 +14,15 @@ import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.ArtifactTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
+import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.ui.UIService;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.NotNull;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,7 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.intino.konos.builder.helpers.Commons.write;
 import static io.intino.tara.plugin.project.configuration.ConfigurationManager.newExternalProvider;
 import static io.intino.tara.plugin.project.configuration.ConfigurationManager.register;
 
@@ -57,20 +57,20 @@ public class ServiceCreator extends UIRenderer {
 
 	private boolean createConfigurationFile() {
 		final Configuration configuration = TaraUtil.configurationOf(settings.module());
-		Frame frame = new Frame();
-		frame.addTypes("artifact", "legio");
-		frame.addSlot("groupID", configuration.groupId());
-		frame.addSlot("artifactID", configuration.artifactId());
-		frame.addSlot("version", configuration.version());
+		FrameBuilder builder = new FrameBuilder();
+		builder.add("artifact").add("legio");
+		builder.add("groupID", configuration.groupId());
+		builder.add("artifactID", configuration.artifactId());
+		builder.add("version", configuration.version());
 		final Map<String, List<String>> repositories = reduce(configuration.releaseRepositories());
 		for (String id : repositories.keySet()) {
-			final Frame repoFrame = new Frame().addTypes("repository", "release").addSlot("id", id);
-			for (String url : repositories.get(id)) repoFrame.addSlot("url", url);
-			frame.addSlot("repository", ((Frame) repoFrame));
+			final FrameBuilder repoFrame = new FrameBuilder("repository").add("release").add("id", id);
+			for (String url : repositories.get(id)) repoFrame.add("url", url);
+			builder.add("repository", repoFrame.toFrame());
 		}
 		File file = new File(accessorRoot(), LegioArtifact);
 		if (!file.exists()) {
-			write(file.toPath(), ArtifactTemplate.create().format(frame));
+			Commons.write(file.toPath(), new ArtifactTemplate().render(builder));
 			return true;
 		}
 		return false;

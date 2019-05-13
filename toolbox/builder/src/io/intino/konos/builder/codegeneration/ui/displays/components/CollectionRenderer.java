@@ -1,11 +1,11 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.AbstractNavigable;
 import io.intino.konos.model.graph.CatalogComponents;
 import io.intino.konos.model.graph.CatalogComponents.Collection;
-import org.siani.itrules.model.Frame;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 
@@ -16,83 +16,83 @@ public class CollectionRenderer extends SizedRenderer<Collection> {
 	}
 
 	@Override
-	public Frame buildFrame() {
-		Frame frame = super.buildFrame();
+	public FrameBuilder frameBuilder() {
+		FrameBuilder frame = super.frameBuilder();
 		addHeadings(frame);
 		return frame;
 	}
 
-	private void addHeadings(Frame frame) {
-		element.moldList().forEach(m -> addHeading(m, frame));
+	private void addHeadings(FrameBuilder builder) {
+		element.moldList().forEach(m -> addHeading(m, builder));
 	}
 
-	private void addHeading(Collection.Mold mold, Frame frame) {
+	private void addHeading(Collection.Mold mold, FrameBuilder builder) {
 		if (mold.heading() == null) return;
-		frame.addSlot("heading", childFrame(mold.heading()));
-		frame.addSlot("component", childFrame(mold.heading()));
+		builder.add("heading", childFrame(mold.heading()));
+		builder.add("component", childFrame(mold.heading()));
 	}
 
 	@Override
-	public Frame properties() {
-		Frame result = super.properties();
-		result.addTypes("collection");
-		if (element.i$(AbstractNavigable.class)) result.addSlot("navigable", element.a$(AbstractNavigable.class).position().name());
-		if (element.sourceClass() != null) result.addSlot("sourceClass", element.sourceClass());
-		result.addSlot("pageSize", element.pageSize());
-		result.addSlot("itemHeight", itemHeight());
-		result.addSlot("scrollingMark", element.scrollingMark());
-		if (element.isSelectable()) result.addSlot("selection", element.asSelectable().multiple() ? "multiple" : "single");
-		if (element.noItemsMessage() != null) result.addSlot("noItemsMessage", element.noItemsMessage());
+	public FrameBuilder properties() {
+		FrameBuilder result = super.properties();
+		result.add("collection");
+		if (element.i$(AbstractNavigable.class)) result.add("navigable", element.a$(AbstractNavigable.class).position().name());
+		if (element.sourceClass() != null) result.add("sourceClass", element.sourceClass());
+		result.add("pageSize", element.pageSize());
+		result.add("itemHeight", itemHeight());
+		result.add("scrollingMark", element.scrollingMark());
+		if (element.isSelectable()) result.add("selection", element.asSelectable().multiple() ? "multiple" : "single");
+		if (element.noItemsMessage() != null) result.add("noItemsMessage", element.noItemsMessage());
 		return result;
 	}
 
 	@Override
-	protected boolean addSpecificTypes(Frame frame) {
-		super.addSpecificTypes(frame);
+	protected boolean addSpecificTypes(FrameBuilder builder) {
+		super.addSpecificTypes(builder);
 
-		frame.addTypes(Collection.class.getSimpleName(), typeOf(element));
-		if (element.sourceClass() != null) frame.addSlot("sourceClass", element.sourceClass());
-		frame.addSlot("componentType", firstUpperCase(nameOf(element.mold(0).item())));
-		frame.addSlot("itemClass", element.itemClass() != null ? element.itemClass() : "java.lang.Void");
+		builder.add(Collection.class.getSimpleName(), typeOf(element));
+		if (element.sourceClass() != null) builder.add("sourceClass", element.sourceClass());
+		builder.add("componentType", firstUpperCase(nameOf(element.mold(0).item())));
+		builder.add("itemClass", element.itemClass() != null ? element.itemClass() : "java.lang.Void");
 
-		addMethodsFrame(frame);
+		addMethodsFrame(builder);
 
 		return false;
 	}
 
-	private void addMethodsFrame(Frame frame) {
-		Frame methodsFrame = addOwner(baseFrame()).addTypes("method", Collection.class.getSimpleName(), className(element.getClass()));
-		methodsFrame.addSlot("name", nameOf(element));
-		if (element.sourceClass() != null) methodsFrame.addSlot("sourceClass", element.sourceClass());
+	private void addMethodsFrame(FrameBuilder builder) {
+		FrameBuilder result = addOwner(baseFrameBuilder()).add("method").add(Collection.class.getSimpleName()).add(className(element.getClass()));
+		result.add("name", nameOf(element));
+		if (element.sourceClass() != null) result.add("sourceClass", element.sourceClass());
 		if (element.itemClass() != null) {
-			methodsFrame.addSlot("itemClass", element.itemClass());
-			methodsFrame.addSlot("itemVariable", "item");
+			result.add("itemClass", element.itemClass());
+			result.add("itemVariable", "item");
 		}
-		addSelectionMethod(methodsFrame);
-		element.moldList().forEach(m -> addItemFrame(m.item(), methodsFrame));
-		frame.addSlot("methods", methodsFrame);
+		addSelectionMethod(result);
+		element.moldList().forEach(m -> addItemFrame(m.item(), result));
+		builder.add("methods", result);
 	}
 
-	private void addItemFrame(Collection.Mold.Item item, Frame frame) {
-		Frame result = baseFrame().addTypes("item");
-		result.addSlot("methodAccessibility", element.i$(CatalogComponents.Table.class) ? "private" : "public");
-		result.addSlot("name", nameOf(item));
-		result.addSlot("methodName", element.i$(CatalogComponents.Table.class) ? nameOf(item) : "");
+	private void addItemFrame(Collection.Mold.Item item, FrameBuilder builder) {
+		FrameBuilder result = baseFrameBuilder().add("item");
+		result.add("methodAccessibility", element.i$(CatalogComponents.Table.class) ? "private" : "public");
+		result.add("name", nameOf(item));
+		result.add("methodName", element.i$(CatalogComponents.Table.class) ? nameOf(item) : "");
 		if (!element.i$(CatalogComponents.Table.class)) {
-			result.addSlot("addPromise", "addPromise");
-			result.addSlot("insertPromise", "insertPromise");
+			result.add("addPromise", "addPromise");
+			result.add("insertPromise", "insertPromise");
 		}
 		String itemClass = element.itemClass();
 		if (itemClass != null) {
-			result.addSlot("itemClass", itemClass);
-			result.addSlot("itemVariable", "item");
+			result.add("itemClass", itemClass);
+			result.add("itemVariable", "item");
 		}
-		frame.addSlot("item", result);
+		builder.add("item", result);
 	}
 
-	private void addSelectionMethod(Frame frame) {
+	private void addSelectionMethod(FrameBuilder builder) {
 		if (!element.isSelectable()) return;
-		frame.addSlot("selectionMethod", new Frame("selectionMethod"));
+		builder.add("selectionMethod", new FrameBuilder("selectionMethod"));
 	}
 
 	private int itemHeight() {

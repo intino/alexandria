@@ -1,29 +1,17 @@
 package io.intino.konos.builder.codegeneration.accessor.ui.templates;
 
-import org.siani.itrules.*;
-
-import java.util.Locale;
-
-import static org.siani.itrules.LineSeparator.*;
+import io.intino.itrules.RuleSet;
+import io.intino.itrules.Template;
 
 public class PageTemplate extends Template {
 
-	protected PageTemplate(Locale locale, LineSeparator separator) {
-		super(locale, separator);
-	}
-
-	public static Template create() {
-		return new PageTemplate(Locale.ENGLISH, LF).define();
-	}
-
-	public Template define() {
-		add(
-			rule().add((condition("type", "resource & js"))).add(literal("import React from \"react\";\nimport { MuiThemeProvider, withStyles } from '@material-ui/core/styles';\nimport { SnackbarProvider } from \"notistack\";\nimport CssBaseline from '@material-ui/core/CssBaseline';\nimport Theme from '../../gen/Theme';\nimport Page from \"alexandria-ui-elements/src/displays/Page\";\nimport ")).add(mark("pageDisplay", "firstUpperCase")).add(literal(" from \"")).add(mark("pageDisplayOrigin", "origin")).add(literal("/displays/")).add(mark("pageDisplayType", "firstLowerCase")).add(literal("s/")).add(mark("pageDisplay", "firstUpperCase")).add(literal("\";\n\nlet theme = Theme.create();\nconst styles = theme => ({});\n\nexport default class ")).add(mark("name", "firstUpperCase")).add(literal(" extends Page {\nrender() {\n    const { classes } = this.props;\n    return (\n\t\t<MuiThemeProvider theme={theme}>\n        \t<SnackbarProvider maxSnack={3}>\n        \t\t<CssBaseline />\n    \t\t\t<")).add(mark("pageDisplay", "firstUpperCase")).add(literal(" id=\"")).add(mark("pageDisplayId")).add(literal("\"></")).add(mark("pageDisplay", "firstUpperCase")).add(literal(">\n\t\t\t</SnackbarProvider>\n\t\t</MuiThemeProvider>\n    );\n}\n}")),
-			rule().add((condition("type", "resource & html"))).add(literal("<!DOCTYPE html>\n<html>\n\t<head>\n        <title>$title</title>\n\n\t\t<meta charset=\"utf-8\"/>\n        <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\"/>\n        <meta name=\"viewport\" content=\"width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes\"/>\n\n        <link rel=\"icon\" href-absolute=\"$favicon\">\n\n\t\t<script src=\"https://code.jquery.com/jquery-3.3.1.min.js\"></script>\n\t\t<script src=\"https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js\"></script>\n\t</head>\n\n\t<body>\n\t\t<div id=\"")).add(mark("name", "firstUpperCase")).add(literal("\"></div>\n\t\t<script>\n\t\t\tdocument.configuration = {};\n\t\t\tdocument.configuration.googleApiKey = \"$googleApiKey\";\n\t\t\tdocument.configuration.pushServices = \"$pushUrls\".split(\",\");\n\t\t\tdocument.configuration.clientId = \"$client\";\n\t\t\tdocument.configuration.language = \"$language\";\n\t\t\tdocument.configuration.url = \"$url\";\n\t\t\tdocument.configuration.baseUrl = \"$baseUrl\";\n\t\t\tdocument.configuration.basePath = \"$basePath\";\n\t\t</script>\n\t</body>\n</html>")),
-			rule().add((condition("attribute", "decorated")), (condition("trigger", "origin"))).add(literal("../../src")),
-			rule().add((condition("trigger", "origin"))).add(literal("..")),
-			rule().add((condition("type", "polymer & editor"))).add(literal("Polymer({\n\tis: 'page-body',\n\n\tattached : function() {\n\t\tthis._initEditor();\n\t},\n\n\t_initEditor : function() {\n\t\tvar widget = this;\n\t\tthis.$.root.whenPersonified().execute(function() {\n\t\t\tvar editor = widget.querySelector(\"alexandria-editor\");\n\n\t\t\teditor.onSaved = function() {\n\t\t\t\tif (document.onSaved) document.onSaved();\n\t\t\t};\n\n\t\t\tdocument.save = function() {\n\t\t\t\teditor.save();\n\t\t\t}\n\t\t});\n\t}\n});"))
+	public RuleSet ruleSet() {
+		return new RuleSet().add(
+			rule().condition((allTypes("resource","js"))).output(literal("import React from \"react\";\nimport { MuiThemeProvider, withStyles } from '@material-ui/core/styles';\nimport { SnackbarProvider } from \"notistack\";\nimport CssBaseline from '@material-ui/core/CssBaseline';\nimport Theme from '../../gen/Theme';\nimport Page from \"alexandria-ui-elements/src/displays/Page\";\nimport ")).output(mark("pageDisplay", "firstUpperCase")).output(literal(" from \"")).output(mark("pageDisplayOrigin", "origin")).output(literal("/displays/")).output(mark("pageDisplayType", "firstLowerCase")).output(literal("s/")).output(mark("pageDisplay", "firstUpperCase")).output(literal("\";\n\nlet theme = Theme.create();\nconst styles = theme => ({});\n\nexport default class ")).output(mark("name", "firstUpperCase")).output(literal(" extends Page {\nrender() {\n    const { classes } = this.props;\n    return (\n\t\t<MuiThemeProvider theme={theme}>\n        \t<SnackbarProvider maxSnack={3}>\n        \t\t<CssBaseline />\n    \t\t\t<")).output(mark("pageDisplay", "firstUpperCase")).output(literal(" id=\"")).output(mark("pageDisplayId")).output(literal("\"></")).output(mark("pageDisplay", "firstUpperCase")).output(literal(">\n\t\t\t</SnackbarProvider>\n\t\t</MuiThemeProvider>\n    );\n}\n}")),
+			rule().condition((allTypes("resource","html"))).output(literal("<!DOCTYPE html>\n<html>\n\t<head>\n        <title>$title</title>\n\n\t\t<meta charset=\"utf-8\"/>\n        <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\"/>\n        <meta name=\"viewport\" content=\"width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes\"/>\n\n        <link rel=\"icon\" href-absolute=\"$favicon\">\n\n\t\t<script src=\"https://code.jquery.com/jquery-3.3.1.min.js\"></script>\n\t\t<script src=\"https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js\"></script>\n\t</head>\n\n\t<body>\n\t\t<div id=\"")).output(mark("name", "firstUpperCase")).output(literal("\"></div>\n\t\t<script>\n\t\t\tdocument.configuration = {};\n\t\t\tdocument.configuration.googleApiKey = \"$googleApiKey\";\n\t\t\tdocument.configuration.pushServices = \"$pushUrls\".split(\",\");\n\t\t\tdocument.configuration.clientId = \"$client\";\n\t\t\tdocument.configuration.language = \"$language\";\n\t\t\tdocument.configuration.url = \"$url\";\n\t\t\tdocument.configuration.baseUrl = \"$baseUrl\";\n\t\t\tdocument.configuration.basePath = \"$basePath\";\n\t\t</script>\n\t</body>\n</html>")),
+			rule().condition((attribute("decorated")), (trigger("origin"))).output(literal("../../src")),
+			rule().condition((trigger("origin"))).output(literal("..")),
+			rule().condition((allTypes("polymer","editor"))).output(literal("Polymer({\n\tis: 'page-body',\n\n\tattached : function() {\n\t\tthis._initEditor();\n\t},\n\n\t_initEditor : function() {\n\t\tvar widget = this;\n\t\tthis.$.root.whenPersonified().execute(function() {\n\t\t\tvar editor = widget.querySelector(\"alexandria-editor\");\n\n\t\t\teditor.onSaved = function() {\n\t\t\t\tif (document.onSaved) document.onSaved();\n\t\t\t};\n\n\t\t\tdocument.save = function() {\n\t\t\t\teditor.save();\n\t\t\t}\n\t\t});\n\t}\n});"))
 		);
-		return this;
 	}
 }

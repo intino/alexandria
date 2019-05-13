@@ -1,10 +1,10 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.Template;
 import io.intino.konos.model.graph.rules.Spacing;
-import org.siani.itrules.model.Frame;
 
 public class TemplateRenderer extends ComponentRenderer<Template> {
 
@@ -13,20 +13,20 @@ public class TemplateRenderer extends ComponentRenderer<Template> {
 	}
 
 	@Override
-	public Frame properties() {
-		Frame result = super.properties();
+	public FrameBuilder properties() {
+		FrameBuilder result = super.properties();
 		addSpacing(result);
 		addLayout(result);
 		return result;
 	}
 
-	private void addSpacing(Frame result) {
-		if (element.spacing() != Spacing.None) result.addSlot("spacing", element.spacing().value());
+	private void addSpacing(FrameBuilder builder) {
+		if (element.spacing() != Spacing.None) builder.add("spacing", element.spacing().value());
 	}
 
-	private void addLayout(Frame result) {
+	private void addLayout(FrameBuilder builder) {
 		String[] layout = element.layout().stream().map(l -> l.name().toLowerCase()).toArray(String[]::new);
-		result.addSlot("layout", layout);
+		builder.add("layout", layout);
 	}
 
 	@Override

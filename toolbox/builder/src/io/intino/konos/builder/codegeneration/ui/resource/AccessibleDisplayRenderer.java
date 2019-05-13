@@ -1,12 +1,12 @@
 package io.intino.konos.builder.codegeneration.ui.resource;
 
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.action.AccessibleDisplayActionRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.templates.ResourceTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
-import io.intino.konos.builder.codegeneration.action.AccessibleDisplayActionRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
@@ -21,16 +21,20 @@ public class AccessibleDisplayRenderer extends UIRenderer {
 	}
 
 	public void execute() {
-		Frame frame = buildFrame().addSlot("name", display.name$()).addTypes("resource", display.getClass().getSimpleName());
+		if (isRendered(display)) return;
 
-		frame.addSlot("parameter", parameters(display));
-		Commons.writeFrame(new File(gen(), format(Resources)), snakeCaseToCamelCase(display.name$() + "ProxyResource"), setup(ResourceTemplate.create()).format(frame));
+		FrameBuilder builder = frameBuilder().add("name", display.name$());
+		builder.add("resource");
+		builder.add(display.getClass().getSimpleName());
+
+		builder.add("parameter", parameters(display));
+		Commons.writeFrame(new File(gen(), format(Resources)), snakeCaseToCamelCase(display.name$() + "ProxyResource"), setup(new ResourceTemplate()).render(builder.toFrame()));
 
 		new AccessibleDisplayActionRenderer(settings, display).execute();
 	}
 
-	private Frame[] parameters(AccessibleDisplay display) {
-		return display.parameters().stream().map(parameter -> new Frame().addTypes("parameter")
-				.addSlot("name", parameter)).toArray(Frame[]::new);
+	private FrameBuilder[] parameters(AccessibleDisplay display) {
+		return display.parameters().stream().map(parameter -> new FrameBuilder().add("parameter")
+				.add("name", parameter)).toArray(FrameBuilder[]::new);
 	}
 }

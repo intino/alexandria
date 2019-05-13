@@ -1,5 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays;
 
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.services.ui.templates.DisplayTemplate;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
@@ -10,7 +12,6 @@ import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
 import io.intino.konos.model.graph.dynamicloaded.DynamicLoadedComponent;
 import io.intino.konos.model.graph.selectable.catalogcomponents.SelectableCollection;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
@@ -24,156 +25,159 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	public void execute() {
+		if (isRendered(element)) return;
 		if (element == null) return;
 		String path = path(element);
 		final String newDisplay = snakeCaseToCamelCase(element.name$());
 		classes().put("Display#" + element.name$(), path + "." + newDisplay);
-		Frame frame = buildFrame();
-		createPassiveViewFiles(frame);
-		write(frame, src(), gen(), path(element));
-		if (element.isAccessible()) writeDisplaysFor(element.asAccessible(), frame);
+		FrameBuilder result = frameBuilder();
+		createPassiveViewFiles(result);
+		write(result, src(), gen(), path(element));
+		if (element.isAccessible()) writeDisplaysFor(element.asAccessible(), result);
 	}
 
 	@Override
-	public Frame buildFrame() {
-		Frame frame = super.buildFrame().addTypes("display").addTypes(typeOf(element));
-		addParametrized(frame);
-		addExtends(frame);
-		addImports(frame);
-		addImplements(frame);
-		addMethods(frame);
-		addRenderTagFrames(frame);
-		addDecoratedFrames(frame);
-		frame.addSlot("componentType", element.components().stream().map(this::typeOf).distinct().map(type -> new Frame().addSlot("componentType", type)).toArray(Frame[]::new));
-		if (element.parentDisplay() != null) addParent(element, frame);
+	public FrameBuilder frameBuilder() {
+		FrameBuilder result = super.frameBuilder();
+		result.add("display");
+		result.add(typeOf(element));
+		addParametrized(result);
+		addExtends(result);
+		addImports(result);
+		addImplements(result);
+		addMethods(result);
+		addRenderTagFrames(result);
+		addDecoratedFrames(result);
+		result.add("componentType", element.components().stream().map(this::typeOf).distinct().map(type -> new FrameBuilder().add("componentType", type)).toArray(Frame[]::new));
+		if (element.parentDisplay() != null) addParent(element, result);
 		if (!element.graph().schemaList().isEmpty())
-			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName()));
+			result.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()));
 		if (element.isAccessible())
-			frame.addSlot("parameter", element.asAccessible().parameters().stream().map(p -> new Frame("parameter", "accessible").addSlot("value", p)).toArray(Frame[]::new));
-		return frame;
+			result.add("parameter", element.asAccessible().parameters().stream().map(p -> new FrameBuilder("parameter", "accessible").add("value", p)).toArray(Frame[]::new));
+		return result;
 	}
 
-	private void addParametrized(Frame frame) {
-		Frame result = new Frame("parametrized");
-		result.addSlot("name", element.name$());
+	private void addParametrized(FrameBuilder frame) {
+		FrameBuilder result = new FrameBuilder("parametrized");
+		result.add("name", element.name$());
 		if (element.isExtensionOf()) {
-			result.addTypes("extensionOf");
-			result.addSlot("parent", element.asExtensionOf().parentView().name$());
+			result.add("extensionOf");
+			result.add("parent", element.asExtensionOf().parentView().name$());
 		}
 		addDecoratedFrames(result);
-		frame.addSlot("parametrized", result);
+		frame.add("parametrized", result.toFrame());
 	}
 
-	private void addExtends(Frame frame) {
-		Frame result = new Frame("displayExtends");
-		if (element.i$(Template.class)) result.addTypes(Template.class.getSimpleName());
-		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) result.addTypes(CatalogComponents.Collection.Mold.Item.class.getSimpleName());
-		if (element.i$(PrivateComponents.Row.class)) result.addTypes(PrivateComponents.Row.class.getSimpleName());
+	private void addExtends(FrameBuilder frame) {
+		FrameBuilder result = new FrameBuilder("displayExtends");
+		if (element.i$(Template.class)) result.add(Template.class.getSimpleName());
+		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) result.add(CatalogComponents.Collection.Mold.Item.class.getSimpleName());
+		if (element.i$(PrivateComponents.Row.class)) result.add(PrivateComponents.Row.class.getSimpleName());
 		if (element.isExtensionOf()) {
-			result.addTypes("extensionOf");
-			result.addSlot("parent", element.asExtensionOf().parentView().name$());
+			result.add("extensionOf");
+			result.add("parent", element.asExtensionOf().parentView().name$());
 		}
-		result.addSlot("type", typeOf(element));
+		result.add("type", typeOf(element));
 		addDecoratedFrames(result);
 		if (element.i$(Template.class)) {
 			String modelClass = element.a$(Template.class).modelClass();
-			result.addSlot("modelClass", modelClass != null ? modelClass : "java.lang.Void");
+			result.add("modelClass", modelClass != null ? modelClass : "java.lang.Void");
 		}
 		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) {
 			String itemClass = element.a$(CatalogComponents.Collection.Mold.Item.class).core$().ownerAs(CatalogComponents.Collection.class).itemClass();
-			result.addSlot("itemClass", itemClass != null ? itemClass : "java.lang.Void");
+			result.add("itemClass", itemClass != null ? itemClass : "java.lang.Void");
 		}
 		if (element.i$(PrivateComponents.Row.class)) {
 			String itemClass = element.a$(PrivateComponents.Row.class).items(0).core$().ownerAs(CatalogComponents.Collection.class).itemClass();
-			result.addSlot("itemClass", itemClass != null ? itemClass : "java.lang.Void");
+			result.add("itemClass", itemClass != null ? itemClass : "java.lang.Void");
 		}
-		result.addSlot("name", nameOf(element));
-		frame.addSlot("displayExtends", result);
+		result.add("name", nameOf(element));
+		frame.add("displayExtends", result);
 	}
 
-	private void addImports(Frame frame) {
-		if (element.graph().templateList().size() > 0) frame.addSlot("templatesImport", baseFrame().addTypes("templatesImport"));
-		if (element.graph().blockList().size() > 0) frame.addSlot("blocksImport", baseFrame().addTypes("blocksImport"));
-		if (element.graph().core$().find(CatalogComponents.Collection.Mold.Item.class) != null) frame.addSlot("itemsImport", baseFrame().addTypes("itemsImport"));
-		if (element.graph().core$().find(PrivateComponents.Row.class) != null) frame.addSlot("rowsImport", baseFrame().addTypes("rowsImport"));
+	private void addImports(FrameBuilder frame) {
+		if (element.graph().templateList().size() > 0) frame.add("templatesImport", baseFrameBuilder().add("templatesImport"));
+		if (element.graph().blockList().size() > 0) frame.add("blocksImport", baseFrameBuilder().add("blocksImport"));
+		if (element.graph().core$().find(CatalogComponents.Collection.Mold.Item.class) != null) frame.add("itemsImport", baseFrameBuilder().add("itemsImport"));
+		if (element.graph().core$().find(PrivateComponents.Row.class) != null) frame.add("rowsImport", baseFrameBuilder().add("rowsImport"));
 	}
 
-	protected void addImplements(Frame frame) {
-		if (element.i$(DynamicLoadedComponent.class)) frame.addSlot("implements", new Frame("implements", DynamicLoadedComponent.class.getSimpleName()));
-		if (element.i$(SelectableCollection.class)) frame.addSlot("implements", new Frame("implements", SelectableCollection.class.getSimpleName()));
+	protected void addImplements(FrameBuilder frame) {
+		if (element.i$(DynamicLoadedComponent.class)) frame.add("implements", new FrameBuilder("implements", DynamicLoadedComponent.class.getSimpleName()));
+		if (element.i$(SelectableCollection.class)) frame.add("implements", new FrameBuilder("implements", SelectableCollection.class.getSimpleName()));
 	}
 
-	protected void addMethods(Frame frame) {
+	protected void addMethods(FrameBuilder frame) {
 		if (element.i$(DynamicLoadedComponent.class)) {
-			frame.addSlot("baseMethod", "renderDynamicLoaded");
-			frame.addSlot("methods", new Frame("methods", DynamicLoadedComponent.class.getSimpleName()).addSlot("loadTime", element.a$(DynamicLoadedComponent.class).loadTime().name()));
+			frame.add("baseMethod", "renderDynamicLoaded");
+			frame.add("methods", new FrameBuilder("methods", DynamicLoadedComponent.class.getSimpleName()).add("loadTime", element.a$(DynamicLoadedComponent.class).loadTime().name()));
 		}
 		else if (element.i$(PrivateComponents.Row.class)) {
-			frame.addSlot("baseMethod", "renderRow");
+			frame.add("baseMethod", "renderRow");
 		}
 	}
 
-	protected void addRenderTagFrames(Frame frame) {
-		Frame renderTag = new Frame("renderTag");
+	protected void addRenderTagFrames(FrameBuilder frame) {
+		FrameBuilder renderTag = new FrameBuilder("renderTag");
 		if (element.i$(Block.class)) {
 			ComponentRenderer renderer = factory.renderer(settings, element.a$(Block.class), templateProvider, target);
-			renderTag.addTypes(Block.class.getSimpleName());
-			renderTag.addSlot("properties", renderer.properties());
+			renderTag.add(Block.class.getSimpleName());
+			renderTag.add("properties", renderer.properties());
 		}
 		else if (element.i$(Template.class)) {
 			ComponentRenderer renderer = factory.renderer(settings, element.a$(Template.class), templateProvider, target);
-			renderTag.addTypes(Template.class.getSimpleName());
-			renderTag.addSlot("properties", renderer.properties());
+			renderTag.add(Template.class.getSimpleName());
+			renderTag.add("properties", renderer.properties());
 		}
 		else if (element.i$(PrivateComponents.Row.class)) {
 			ComponentRenderer renderer = factory.renderer(settings, element.a$(PrivateComponents.Row.class), templateProvider, target);
-			renderTag.addTypes(PrivateComponents.Row.class.getSimpleName());
-			renderTag.addSlot("properties", renderer.properties());
+			renderTag.add(PrivateComponents.Row.class.getSimpleName());
+			renderTag.add("properties", renderer.properties());
 		}
 		else if (element.i$(CatalogComponents.Collection.Mold.Item.class)) {
-			renderTag.addTypes(CatalogComponents.Collection.Mold.Item.class.getSimpleName());
+			renderTag.add(CatalogComponents.Collection.Mold.Item.class.getSimpleName());
 		}
-		frame.addSlot("renderTag", renderTag);
+		frame.add("renderTag", renderTag);
 	}
 
-	protected void addDecoratedFrames(Frame frame) {
+	protected void addDecoratedFrames(FrameBuilder frame) {
 		addDecoratedFrames(frame, element.isDecorated());
 	}
 
-	protected void addDecoratedFrames(Frame frame, boolean decorated) {
+	protected void addDecoratedFrames(FrameBuilder frame, boolean decorated) {
 		boolean isAbstract = decorated && !element.i$(OtherComponents.Stamp.class);
-		if (isAbstract) frame.addSlot("abstract", "Abstract");
-		else frame.addSlot("notDecorated", element.name$());
-		Frame abstractBoxFrame = new Frame().addTypes("box");
-		if (isAbstract) abstractBoxFrame.addTypes("decorated");
-		abstractBoxFrame.addSlot("box", boxName());
-		frame.addSlot("abstractBox", abstractBoxFrame);
+		if (isAbstract) frame.add("abstract", "Abstract");
+		else frame.add("notDecorated", element.name$());
+		FrameBuilder abstractBoxFrame = new FrameBuilder().add("box");
+		if (isAbstract) abstractBoxFrame.add("decorated");
+		abstractBoxFrame.add("box", boxName());
+		frame.add("abstractBox", abstractBoxFrame);
 	}
 
-	protected Frame componentFrame(Component component) {
+	protected FrameBuilder componentFrame(Component component) {
 		ComponentRenderer renderer = factory.renderer(settings, component, templateProvider, target);
 		renderer.buildChildren(true);
 		renderer.decorated(element.isDecorated());
 		renderer.owner(element);
-		return renderer.buildFrame();
+		return renderer.frameBuilder();
 	}
 
-	protected void addComponent(Component component, Frame frame) {
-		frame.addSlot("component", componentFrame(component));
+	protected void addComponent(Component component, FrameBuilder builder) {
+		builder.add("component", componentFrame(component));
 	}
 
-	private void writeDisplaysFor(AccessibleDisplay display, Frame frame) {
-		frame.addTypes("accessible");
+	private void writeDisplaysFor(AccessibleDisplay display, FrameBuilder builder) {
+		Frame frame = builder.add("accessible").toFrame();
 		final String name = snakeCaseToCamelCase(display.name$());
-		writeFrame(new File(src(), path(display.a$(Display.class))), name + "Proxy", setup(DisplayTemplate.create()).format(frame.addTypes("accessible")));
+		writeFrame(new File(src(), path(display.a$(Display.class))), name + "Proxy", setup(new DisplayTemplate()).render(frame));
 		writeNotifier(display.a$(PassiveView.class), frame);
 		writeRequester(display.a$(PassiveView.class), frame);
 	}
 
-	private void addParent(Display display, Frame frame) {
+	private void addParent(Display display, FrameBuilder builder) {
 		String parent = parent();
-		final Frame parentFrame = new Frame().addSlot("value", display.parentDisplay()).addSlot("dsl", parent).addSlot("package", parent.substring(0, parent.lastIndexOf(".")));
-		frame.addSlot("parent", parentFrame);
+		final FrameBuilder parentFrame = new FrameBuilder().add("value", display.parentDisplay()).add("dsl", parent).add("package", parent.substring(0, parent.lastIndexOf(".")));
+		builder.add("parent", parentFrame.toFrame());
 	}
 
 }

@@ -1,5 +1,8 @@
 package io.intino.konos.builder.codegeneration.ui.passiveview;
 
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.ElementRenderer;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
@@ -10,11 +13,8 @@ import io.intino.konos.model.graph.PassiveView.Notification;
 import io.intino.konos.model.graph.PassiveView.Request;
 import io.intino.konos.model.graph.decorated.DecoratedDisplay;
 import io.intino.tara.magritte.Layer;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
@@ -27,24 +27,25 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	@Override
-	public Frame buildFrame() {
-		Frame frame = super.buildFrame();
-		Frame extensionFrame = extensionFrame();
+	public FrameBuilder frameBuilder() {
+		FrameBuilder result = super.frameBuilder();
+		FrameBuilder extensionFrame = extensionFrame();
 		String type = type();
-		frame.addSlot("id", shortId(element));
-		frame.addSlot("type", type);
-		addAccessorType(frame);
-		frame.addSlot("parentType", extensionFrame);
-		frame.addSlot("import", extensionFrame);
-		if (!type.equalsIgnoreCase("display")) frame.addSlot("packageType", type.toLowerCase());
-		frame.addSlot("packageTypeRelativeDirectory", typeOf(element).equalsIgnoreCase("display") ? "" : "../");
-		frame.addSlot("name", nameOf(element));
-		frame.addSlot("notification", framesOfNotifications(element.notificationList()));
-		frame.addSlot("request", framesOfRequests(element.requestList()));
-		return frame;
+		result.add("id", shortId(element));
+		result.add("type", type);
+		addAccessorType(result);
+		result.add("parentType", extensionFrame);
+		result.add("import", extensionFrame);
+		if (!type.equalsIgnoreCase("display")) result.add("packageType", type.toLowerCase());
+		result.add("packageTypeRelativeDirectory", typeOf(element).equalsIgnoreCase("display") ? "" : "../");
+		result.add("name", nameOf(element));
+		result.add("notification", framesOfNotifications(element.notificationList()));
+		result.add("request", framesOfRequests(element.requestList()));
+		return result;
 	}
 
-	protected void createPassiveViewFiles(Frame frame) {
+	protected void createPassiveViewFiles(FrameBuilder elementBuilder) {
+		Frame frame = elementBuilder.toFrame();
 		writeNotifier(frame);
 		writeRequester(frame);
 		writePushRequester(frame);
@@ -59,7 +60,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	protected void writeRequester(PassiveView element, Frame frame) {
-		writeFrame(new File(gen(), format(Requesters)), snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + "Requester"), displayRequesterTemplate().format(frame));
+		writeFrame(new File(gen(), format(Requesters)), snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + "Requester"), displayRequesterTemplate().render(frame));
 	}
 
 	private void writePushRequester(Frame frame) {
@@ -70,11 +71,11 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		Template template = displayPushRequesterTemplate();
 		boolean accessible = isAccessible(frame);
 		if (accessible || template == null) return;
-		writeFrame(new File(gen(), format(Requesters)), snakeCaseToCamelCase(element.name$() + "PushRequester"), template.format(frame));
+		writeFrame(new File(gen(), format(Requesters)), snakeCaseToCamelCase(element.name$() + "PushRequester"), template.render(frame));
 	}
 
 	private boolean isAccessible(Frame frame) {
-		return Arrays.asList(frame.types()).contains("accessible");
+		return frame.is("accessible");
 	}
 
 	private void writeNotifier(Frame frame) {
@@ -82,7 +83,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	protected void writeNotifier(PassiveView element, Frame frame) {
-		writeFrame(new File(gen(), format(Notifiers)), snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + "Notifier"), displayNotifierTemplate().format(frame));
+		writeFrame(new File(gen(), format(Notifiers)), snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + "Notifier"), displayNotifierTemplate().render(frame));
 	}
 
 	private Template displayNotifierTemplate() {
@@ -98,11 +99,11 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		return template != null ? setup(template) : null;
 	}
 
-	private Frame extensionFrame() {
-		Frame result = new Frame().addSlot(type(), "").addSlot("value", type()).addSlot("type", type());
+	private FrameBuilder extensionFrame() {
+		FrameBuilder result = new FrameBuilder().add(type(), "").add("value", type()).add("type", type());
 		if (element.isExtensionOf()) {
-			result.addSlot("extensionOf", "extensionOf");
-			result.addSlot("parent", element.asExtensionOf().parentView().name$());
+			result.add("extensionOf", "extensionOf");
+			result.add("parent", element.asExtensionOf().parentView().name$());
 		}
 		return result;
 	}
@@ -112,15 +113,15 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	private Frame frameOf(Notification notification) {
-		final Frame frame = new Frame().addTypes("notification");
-		frame.addSlot("name", notification.name$());
-		frame.addSlot("target", notification.to().name());
+		final FrameBuilder result = new FrameBuilder().add("notification");
+		result.add("name", notification.name$());
+		result.add("target", notification.to().name());
 		if (notification.isType()) {
-			final Frame parameterFrame = new Frame().addTypes("parameter", notification.asType().type(), notification.asType().getClass().getSimpleName().replace("Data", "")).addSlot("value", notification.asType().type());
-			if (notification.isList()) parameterFrame.addTypes("list");
-			frame.addSlot("parameter", parameterFrame);
+			final FrameBuilder parameterFrame = new FrameBuilder().add("parameter").add(notification.asType().type()).add(notification.asType().getClass().getSimpleName().replace("Data", "")).add("value", notification.asType().type());
+			if (notification.isList()) parameterFrame.add("list");
+			result.add("parameter", parameterFrame);
 		}
-		return frame;
+		return result.toFrame();
 	}
 
 	private Frame[] framesOfRequests(List<Request> requests) {
@@ -128,21 +129,21 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	public static Frame frameOf(Layer element, Request request, String packageName) {
-		final Frame frame = new Frame().addTypes("request");
-		frame.addSlot("display", element.name$());
-		if (request.responseType().equals(Asset)) frame.addTypes("asset");
-		if (request.isFile()) frame.addTypes("file");
-		frame.addSlot("name", request.name$());
+		final FrameBuilder result = new FrameBuilder().add("request");
+		result.add("display", element.name$());
+		if (request.responseType().equals(Asset)) result.add("asset");
+		if (request.isFile()) result.add("file");
+		result.add("name", request.name$());
 		if (request.isType()) {
-			final Frame parameterFrame = new Frame().addTypes("parameter", request.asType().type(), request.asType().getClass().getSimpleName().replace("Data", "")).addSlot("value", parameter(request, packageName));
-			if (request.isList()) parameterFrame.addTypes("list");
-			frame.addSlot("parameter", parameterFrame);
-			frame.addSlot("parameterSignature", "value");
+			final FrameBuilder parameterFrame = new FrameBuilder().add("parameter").add(request.asType().type()).add(request.asType().getClass().getSimpleName().replace("Data", "")).add("value", parameter(request, packageName));
+			if (request.isList()) parameterFrame.add("list");
+			result.add("parameter", parameterFrame);
+			result.add("parameterSignature", "value");
 		}
-		if (request.responseType() == Asset) frame.addSlot("method", new Frame().addSlot("download", "download"));
-		else if (request.isFile()) frame.addSlot("method", new Frame().addSlot("upload", "upload"));
-		else frame.addSlot("method", new Frame());
-		return frame;
+		if (request.responseType() == Asset) result.add("method", new FrameBuilder().add("download", "download"));
+		else if (request.isFile()) result.add("method", new FrameBuilder().add("upload", "upload"));
+		else result.add("method", new FrameBuilder());
+		return result.toFrame();
 	}
 
 	private static String parameter(Request request, String packageName) {
@@ -161,13 +162,13 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		return templateProvider.pushRequesterTemplate(element);
 	}
 
-	private void addAccessorType(Frame frame) {
-		Frame accessorType = new Frame().addSlot("value", type());
-		if (element.getClass().getSimpleName().equalsIgnoreCase("display")) accessorType.addSlot("baseDisplay", "");
-		if (element.getClass().getSimpleName().equalsIgnoreCase("component")) accessorType.addSlot("baseComponent", "");
-		if (element.i$(Component.class)) accessorType.addSlot("component", "");
-		if (element.i$(DecoratedDisplay.class)) accessorType.addSlot("abstract", "");
-		frame.addSlot("accessorType", accessorType);
+	private void addAccessorType(FrameBuilder builder) {
+		FrameBuilder accessorType = new FrameBuilder().add("value", type());
+		if (element.getClass().getSimpleName().equalsIgnoreCase("display")) accessorType.add("baseDisplay", "");
+		if (element.getClass().getSimpleName().equalsIgnoreCase("component")) accessorType.add("baseComponent", "");
+		if (element.i$(Component.class)) accessorType.add("component", "");
+		if (element.i$(DecoratedDisplay.class)) accessorType.add("abstract", "");
+		builder.add("accessorType", accessorType);
 	}
 
 }

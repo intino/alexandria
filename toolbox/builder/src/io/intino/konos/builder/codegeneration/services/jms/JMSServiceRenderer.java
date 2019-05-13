@@ -1,28 +1,29 @@
 package io.intino.konos.builder.codegeneration.services.jms;
 
-import io.intino.konos.builder.helpers.Commons;
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
+import io.intino.itrules.formatters.StringFormatters;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Parameter;
 import io.intino.konos.model.graph.jms.JMSService;
-import org.siani.itrules.Template;
-import org.siani.itrules.engine.formatters.StringFormatter;
-import org.siani.itrules.model.AbstractFrame;
-import org.siani.itrules.model.Frame;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class JMSServiceRenderer {
 
 	private final List<JMSService> services;
+	private final String boxName;
 	private File gen;
 	private String packageName;
-	private final String boxName;
 
-	public JMSServiceRenderer(KonosGraph graph, File gen, String packageName, String boxName, Map<String, String> classes) {
+	public JMSServiceRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
 		this.services = graph.jMSServiceList();
 		this.gen = gen;
 		this.packageName = packageName;
@@ -34,14 +35,18 @@ public class JMSServiceRenderer {
 	}
 
 	private void processService(JMSService service) {
-		Frame frame = new Frame().addTypes("jms").
-				addSlot("name", service.name$()).
-				addSlot("box", boxName).
-				addSlot("package", packageName).
-				addSlot("model", service.subscriptionModel().name()).
-				addSlot("request", (AbstractFrame[]) processRequests(service.requestList(), service.subscriptionModel().name())).
-				addSlot("notification", (AbstractFrame[]) processNotifications(service.notificationList(), service.subscriptionModel().name()));
-		Commons.writeFrame(gen, StringFormatter.get().get("firstuppercase").format(service.name$()).toString() + "Service", template().format(frame));
+		writeFrame(gen, nameOf(service), template().render(new FrameBuilder("jms").
+				add("name", service.name$()).
+				add("box", boxName).
+				add("package", packageName).
+				add("model", service.subscriptionModel().name()).
+				add("request", processRequests(service.requestList(), service.subscriptionModel().name())).
+				add("notification", processNotifications(service.notificationList(), service.subscriptionModel().name())).toFrame()));
+	}
+
+	@NotNull
+	private String nameOf(JMSService service) {
+		return StringFormatters.get(Locale.getDefault()).get("firstuppercase").format(service.name$()).toString() + "Service";
 	}
 
 	private Frame[] processRequests(List<JMSService.Request> requests, String subscriptionModel) {
@@ -49,10 +54,10 @@ public class JMSServiceRenderer {
 	}
 
 	private Frame processRequest(JMSService.Request request, String subscriptionModel) {
-		return new Frame().addTypes("request").
-				addSlot("name", request.name$()).
-				addSlot("model", subscriptionModel).
-				addSlot("queue", customize("queue", request.path()));
+		return new FrameBuilder("request").
+				add("name", request.name$()).
+				add("model", subscriptionModel).
+				add("queue", customize("queue", request.path())).toFrame();
 	}
 
 	private Frame[] processNotifications(List<JMSService.Notification> notifications, String subscriptionModel) {
@@ -60,21 +65,21 @@ public class JMSServiceRenderer {
 	}
 
 	private Frame processNotification(JMSService.Notification notification, String subscriptionModel) {
-		return new Frame().addTypes("notification").
-				addSlot("name", notification.name$()).
-				addSlot("package", packageName).
-				addSlot("queue", customize("queue", notification.path())).
-				addSlot("model", subscriptionModel).
-				addSlot("parameter", (AbstractFrame[]) parameters(notification.parameterList())).
-				addSlot("returnMessageType", messageType(notification.parameterList()));
+		return new FrameBuilder("notification").
+				add("name", notification.name$()).
+				add("package", packageName).
+				add("queue", customize("queue", notification.path())).
+				add("model", subscriptionModel).
+				add("parameter", parameters(notification.parameterList())).
+				add("returnMessageType", messageType(notification.parameterList())).toFrame();
 	}
 
 	private Template template() {
-		return customize(JMSServiceTemplate.create());
+		return customize(new JMSServiceTemplate());
 	}
 
 	private String messageType(List<Parameter> parameters) {
-		return parameters.stream().filter(Parameter::isFile).count() > 0 ? "Bytes" : "Text";
+		return parameters.stream().anyMatch(Parameter::isFile) ? "Bytes" : "Text";
 	}
 
 	private Frame[] parameters(List<Parameter> parameters) {
@@ -82,9 +87,9 @@ public class JMSServiceRenderer {
 	}
 
 	private Frame parameter(Parameter parameter) {
-		return new Frame().addTypes("parameter", parameter.asType().getClass().getSimpleName())
-				.addSlot("name", parameter.name$())
-				.addSlot("type", parameter.asType().type());
+		return new FrameBuilder("parameter", parameter.asType().getClass().getSimpleName())
+				.add("name", parameter.name$())
+				.add("type", parameter.asType().type()).toFrame();
 	}
 
 }

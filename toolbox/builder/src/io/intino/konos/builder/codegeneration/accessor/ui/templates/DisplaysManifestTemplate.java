@@ -1,32 +1,20 @@
 package io.intino.konos.builder.codegeneration.accessor.ui.templates;
 
-import org.siani.itrules.*;
-
-import java.util.Locale;
-
-import static org.siani.itrules.LineSeparator.*;
+import io.intino.itrules.RuleSet;
+import io.intino.itrules.Template;
 
 public class DisplaysManifestTemplate extends Template {
 
-	protected DisplaysManifestTemplate(Locale locale, LineSeparator separator) {
-		super(locale, separator);
-	}
-
-	public static Template create() {
-		return new DisplaysManifestTemplate(Locale.ENGLISH, LF).define();
-	}
-
-	public Template define() {
-		add(
-			rule().add((condition("type", "manifest"))).add(mark("display", "import").multiple("\n")).add(literal("\nexport { ")).add(mark("display", "export").multiple(",")).add(literal(" }")),
-			rule().add((condition("type", "item")), (condition("trigger", "import"))).add(literal("import ")).add(mark("name", "firstUppercase")).add(literal(" from \"../")).add(mark("directory")).add(literal("/displays/items/")).add(mark("name", "firstUppercase")).add(literal("\"")),
-			rule().add((condition("type", "row")), (condition("trigger", "import"))).add(literal("import ")).add(mark("name", "firstUppercase")).add(literal(" from \"../")).add(mark("directory")).add(literal("/displays/rows/")).add(mark("name", "firstUppercase")).add(literal("\"")),
-			rule().add((condition("type", "template")), (condition("trigger", "import"))).add(literal("import ")).add(mark("name", "firstUppercase")).add(literal(" from \"../")).add(mark("directory")).add(literal("/displays/templates/")).add(mark("name", "firstUppercase")).add(literal("\"")),
-			rule().add((condition("type", "block")), (condition("trigger", "import"))).add(literal("import ")).add(mark("name", "firstUppercase")).add(literal(" from \"../")).add(mark("directory")).add(literal("/displays/blocks/")).add(mark("name", "firstUppercase")).add(literal("\"")),
-			rule().add((condition("type", "component")), (condition("trigger", "import"))).add(literal("import ")).add(mark("name", "firstUppercase")).add(literal(" from \"../")).add(mark("directory")).add(literal("/displays/components/")).add(mark("name", "firstUppercase")).add(literal("\"")),
-			rule().add((condition("type", "display")), (condition("trigger", "import"))).add(literal("import ")).add(mark("name", "firstUppercase")).add(literal(" from \"../")).add(mark("directory")).add(literal("/displays/")).add(mark("name", "firstUppercase")).add(literal("\"")),
-			rule().add((condition("type", "display")), (condition("trigger", "export"))).add(mark("name", "firstUppercase"))
+	public RuleSet ruleSet() {
+		return new RuleSet().add(
+			rule().condition((type("manifest"))).output(mark("display", "import").multiple("\n")).output(literal("\nexport { ")).output(mark("display", "export").multiple(",")).output(literal(" }")),
+			rule().condition((type("item")), (trigger("import"))).output(literal("import ")).output(mark("name", "firstUppercase")).output(literal(" from \"../")).output(mark("directory")).output(literal("/displays/items/")).output(mark("name", "firstUppercase")).output(literal("\"")),
+			rule().condition((type("row")), (trigger("import"))).output(literal("import ")).output(mark("name", "firstUppercase")).output(literal(" from \"../")).output(mark("directory")).output(literal("/displays/rows/")).output(mark("name", "firstUppercase")).output(literal("\"")),
+			rule().condition((type("template")), (trigger("import"))).output(literal("import ")).output(mark("name", "firstUppercase")).output(literal(" from \"../")).output(mark("directory")).output(literal("/displays/templates/")).output(mark("name", "firstUppercase")).output(literal("\"")),
+			rule().condition((type("block")), (trigger("import"))).output(literal("import ")).output(mark("name", "firstUppercase")).output(literal(" from \"../")).output(mark("directory")).output(literal("/displays/blocks/")).output(mark("name", "firstUppercase")).output(literal("\"")),
+			rule().condition((type("component")), (trigger("import"))).output(literal("import ")).output(mark("name", "firstUppercase")).output(literal(" from \"../")).output(mark("directory")).output(literal("/displays/components/")).output(mark("name", "firstUppercase")).output(literal("\"")),
+			rule().condition((type("display")), (trigger("import"))).output(literal("import ")).output(mark("name", "firstUppercase")).output(literal(" from \"../")).output(mark("directory")).output(literal("/displays/")).output(mark("name", "firstUppercase")).output(literal("\"")),
+			rule().condition((type("display")), (trigger("export"))).output(mark("name", "firstUppercase"))
 		);
-		return this;
 	}
 }

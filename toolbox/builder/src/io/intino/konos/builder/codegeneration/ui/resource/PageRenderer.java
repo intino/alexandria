@@ -1,10 +1,10 @@
 package io.intino.konos.builder.codegeneration.ui.resource;
 
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.action.ActionRenderer;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.model.graph.ui.UIService;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
@@ -29,32 +29,32 @@ public class PageRenderer extends ActionRenderer {
 	}
 
 	public void execute() {
-		Frame frame = new Frame().addTypes("action", "ui");
-		frame.addSlot("name", resource.name$());
-		frame.addSlot("uiService", resource.core$().ownerAs(UIService.class).name$());
-		frame.addSlot("package", packageName);
-		frame.addSlot("box", boxName);
-		frame.addSlot("importTemplates", packageName);
-		frame.addSlot("component", componentFrame());
-		frame.addSlot("parameter", parameters());
-		service.useList().stream().map(use -> frame.addSlot("usedAppUrl", new Frame("usedAppUrl", isCustom(use.url()) ? "custom" : "standard").addSlot("value", isCustom(use.url()) ? customValue(use.url()) : use.url()))).collect(Collectors.toList());
-		if (service.favicon() != null) frame.addSlot("favicon", service.favicon());
-		else if (service.title() != null) frame.addSlot("title", service.title());
+		FrameBuilder builder = new FrameBuilder().add("action").add("ui");
+		builder.add("name", resource.name$());
+		builder.add("uiService", resource.core$().ownerAs(UIService.class).name$());
+		builder.add("package", packageName);
+		builder.add("box", boxName);
+		builder.add("importTemplates", packageName);
+		builder.add("component", componentFrame());
+		builder.add("parameter", parameters());
+		service.useList().stream().map(use -> builder.add("usedAppUrl", new FrameBuilder("usedAppUrl").add(isCustom(use.url()) ? "custom" : "standard").add("value", isCustom(use.url()) ? customValue(use.url()) : use.url()))).collect(Collectors.toList());
+		if (service.favicon() != null) builder.add("favicon", service.favicon());
+		else if (service.title() != null) builder.add("title", service.title());
 		settings.classes().put(resource.getClass().getSimpleName() + "#" + firstUpperCase(resource.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(resource.name$())) + suffix());
 		if (!alreadyRendered(destiny, resource.name$()))
-			writeFrame(destinyPackage(destiny), resource.name$() + suffix(), template().format(frame));
-		writeFrame(destinyPackage(settings.gen()), "Abstract" + firstUpperCase(resource.name$()) + suffix(), template().format(frame.addTypes("gen")));
+			writeFrame(destinyPackage(destiny), resource.name$() + suffix(), template().render(builder.toFrame()));
+		writeFrame(destinyPackage(settings.gen()), "Abstract" + firstUpperCase(resource.name$()) + suffix(), template().render(builder.add("gen").toFrame()));
 	}
 
-	private Frame componentFrame() {
-		return new Frame("component").addSlot("value", templateFor(resource).name$());
+	private FrameBuilder componentFrame() {
+		return new FrameBuilder("component").add("value", templateFor(resource).name$());
 	}
 
-	private Frame[] parameters() {
+	private FrameBuilder[] parameters() {
 		List<String> parameters = extractUrlPathParameters(resource.path());
-		return parameters.stream().map(parameter -> new Frame().addTypes("parameter")
-				.addSlot("type", "String")
-				.addSlot("name", parameter)).toArray(Frame[]::new);
+		return parameters.stream().map(parameter -> new FrameBuilder().add("parameter")
+				.add("type", "String")
+				.add("name", parameter)).toArray(FrameBuilder[]::new);
 	}
 
 	private boolean isCustom(String value) {

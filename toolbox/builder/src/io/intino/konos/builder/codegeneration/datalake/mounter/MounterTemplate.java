@@ -1,31 +1,18 @@
 package io.intino.konos.builder.codegeneration.datalake.mounter;
 
-import org.siani.itrules.LineSeparator;
-import org.siani.itrules.Template;
-
-import java.util.Locale;
-
-import static org.siani.itrules.LineSeparator.LF;
+import io.intino.itrules.RuleSet;
+import io.intino.itrules.Template;
 
 public class MounterTemplate extends Template {
 
-	protected MounterTemplate(Locale locale, LineSeparator separator) {
-		super(locale, separator);
-	}
-
-	public static Template create() {
-		return new MounterTemplate(Locale.ENGLISH, LF).define();
-	}
-
-	public Template define() {
-		add(
-			rule().add((condition("type", "mounter"))).add(literal("package ")).add(mark("package", "validPackage")).add(literal(".datalake.mounters;\n\nimport ")).add(mark("package", "validPackage")).add(literal(".")).add(mark("box", "firstUpperCase")).add(literal("Box;\n")).add(mark("schemaImport")).add(literal("\n\npublic class ")).add(mark("name", "snakeCaseToCamelCase", "FirstUpperCase")).add(literal("Mounter {\n\tpublic ")).add(mark("box", "validName", "firstUpperCase")).add(literal("Box box;\n\tpublic ")).add(mark("type", "typeClass")).add(literal(" ")).add(mark("type", "typeName")).add(literal(";\n\n\tpublic void execute() {\n\n\t}\n}")),
-			rule().add((condition("type", "schemaImport"))).add(literal("import ")).add(mark("package")).add(literal(".schemas.*;")),
-			rule().add((condition("attribute", "message")), (condition("trigger", "typeClass"))).add(literal("io.intino.alexandria.inl.Message")),
-			rule().add((condition("type", "schema")), (condition("trigger", "typeClass"))).add(mark("package")).add(literal(".schemas.")).add(mark("name", "FirstUpperCase")),
-			rule().add((condition("type", "schema")), (condition("trigger", "typeName"))).add(mark("name", "firstLowerCase")),
-			rule().add((condition("trigger", "typeName"))).add(literal("message"))
+	public RuleSet ruleSet() {
+		return new RuleSet().add(
+			rule().condition((type("mounter"))).output(literal("package ")).output(mark("package", "validPackage")).output(literal(".datalake.mounters;\n\nimport ")).output(mark("package", "validPackage")).output(literal(".")).output(mark("box", "firstUpperCase")).output(literal("Box;\n")).output(mark("schemaImport")).output(literal("\n\npublic class ")).output(mark("name", "snakeCaseToCamelCase", "FirstUpperCase")).output(literal("Mounter {\n\tpublic ")).output(mark("box", "validName", "firstUpperCase")).output(literal("Box box;\n\tpublic ")).output(mark("type", "typeClass")).output(literal(" ")).output(mark("type", "typeName")).output(literal(";\n\n\tpublic void execute() {\n\n\t}\n}")),
+			rule().condition((type("schemaimport"))).output(literal("import ")).output(mark("package")).output(literal(".schemas.*;")),
+			rule().condition((attribute("message")), (trigger("typeclass"))).output(literal("io.intino.alexandria.inl.Message")),
+			rule().condition((type("schema")), (trigger("typeclass"))).output(mark("package")).output(literal(".schemas.")).output(mark("name", "FirstUpperCase")),
+			rule().condition((type("schema")), (trigger("typename"))).output(mark("name", "firstLowerCase")),
+			rule().condition((trigger("typename"))).output(literal("message"))
 		);
-		return this;
 	}
 }
