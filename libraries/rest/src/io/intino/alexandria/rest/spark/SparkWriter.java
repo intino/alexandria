@@ -60,7 +60,7 @@ class SparkWriter {
 	}
 
 	private void writeResource(Resource resource, boolean embedded) {
-		writeResponse(resource.id(), resource.data(), embedded, response.raw());
+		writeResponse(resource.name(), resource.stream(), embedded, response.raw());
 	}
 
 	private void writeBytes(byte[] content, String filename, boolean embedded) {

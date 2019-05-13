@@ -1,13 +1,11 @@
 package io.intino.alexandria.restaccessor.filesproxy.core;
 
 import io.intino.alexandria.Resource;
-import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.restaccessor.core.RestAccessor;
 import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
 import io.intino.alexandria.restaccessor.filesproxy.FilesApi;
 import io.intino.alexandria.restaccessor.filesproxy.exceptions.FilesApiFailure;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -98,13 +96,8 @@ public class FilesAccessor implements FilesApi {
 			}
 
 			private Resource resourceOf(InputStream content, String contentType, Map<String, String> parameters) {
-				//				parameters.entrySet().forEach(entry -> resource.addParameter(entry.getKey(), entry.getValue()));
-				try {
-					return new Resource("resource." + contentType, content);
-				} catch (IOException e) {
-					Logger.error(e);
-					return null;
-				}
+//				parameters.entrySet().forEach(entry -> resource.addParameter(entry.getKey(), entry.getValue()));
+				return new Resource("resource", contentType, content);
 			}
 
 			private String pathOf(String path) {

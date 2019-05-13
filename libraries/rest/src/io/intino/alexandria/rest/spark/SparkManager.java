@@ -88,7 +88,7 @@ public class SparkManager<P extends PushService> {
 	public <T> T fromBody(String name, Class<T> type) {
 		try {
 			if (type.isAssignableFrom(Resource.class) || type.isAssignableFrom(InputStream.class))
-				return (T) new Resource(name).data(request.raw().getInputStream());
+				return (T) new Resource(name, request.raw().getInputStream());
 			return SparkReader.read(request.body(), type);
 		} catch (IOException e) {
 			return null;
@@ -98,7 +98,7 @@ public class SparkManager<P extends PushService> {
 	public <T> T fromForm(String name, Class<T> type) {
 		try {
 			Part part = request.raw().getPart(name);
-			return part != null ? (T) new Resource(part.getName()).data(part.getInputStream()).contentType(part.getContentType()) : null;
+			return part != null ? (T) new Resource(part.getName(), part.getInputStream()).metadata().contentType(part.getContentType()) : null;
 		} catch (ServletException | IOException e) {
 			return null;
 		}
