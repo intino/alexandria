@@ -14,3 +14,5 @@ gulpFile.js
 ide/builder/src-old
 alexandria/ui-elements-old
 alexandria/ui-elements/node_modules
+framework/ui-elements/node_modules/core-js-compat/node_modules
+framework/ui-elements/node_modules

@@ -3,10 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/alexandria/assa/assa.iml" filepath="$PROJECT_DIR$/alexandria/assa/assa.iml" group="library" />
-      <module fileurl="file://$PROJECT_DIR$/ide/builder/builder.iml" filepath="$PROJECT_DIR$/ide/builder/builder.iml" group="toolbox" />
+      <module fileurl="file://$PROJECT_DIR$/toolbox/builder/builder.iml" filepath="$PROJECT_DIR$/toolbox/builder/builder.iml" group="toolbox" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/columnar/columnar.iml" filepath="$PROJECT_DIR$/alexandria/columnar/columnar.iml" group="library" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/core/core.iml" filepath="$PROJECT_DIR$/alexandria/core/core.iml" group="framework" />
-      <module fileurl="file://$PROJECT_DIR$/ide/dsl/dsl.iml" filepath="$PROJECT_DIR$/ide/dsl/dsl.iml" group="toolbox" />
+      <module fileurl="file://$PROJECT_DIR$/toolbox/dsl/dsl.iml" filepath="$PROJECT_DIR$/toolbox/dsl/dsl.iml" group="toolbox" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/exceptions/exceptions.iml" filepath="$PROJECT_DIR$/alexandria/exceptions/exceptions.iml" group="library" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/filemap/filemap.iml" filepath="$PROJECT_DIR$/alexandria/filemap/filemap.iml" group="library" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/inl/inl.iml" filepath="$PROJECT_DIR$/alexandria/inl/inl.iml" group="library" />
@@ -20,10 +20,10 @@
       <module fileurl="file://$PROJECT_DIR$/alexandria/rest-accessor/rest-accessor.iml" filepath="$PROJECT_DIR$/alexandria/rest-accessor/rest-accessor.iml" group="library" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/scheduler/scheduler.iml" filepath="$PROJECT_DIR$/alexandria/scheduler/scheduler.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/slack/slack.iml" filepath="$PROJECT_DIR$/alexandria/slack/slack.iml" group="framework" />
-      <module fileurl="file://$PROJECT_DIR$/ide/test/test.iml" filepath="$PROJECT_DIR$/ide/test/test.iml" group="toolbox" />
+      <module fileurl="file://$PROJECT_DIR$/toolbox/test/test.iml" filepath="$PROJECT_DIR$/toolbox/test/test.iml" group="toolbox" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/triplestore/triplestore.iml" filepath="$PROJECT_DIR$/alexandria/triplestore/triplestore.iml" group="library" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/ui/ui.iml" filepath="$PROJECT_DIR$/alexandria/ui/ui.iml" group="framework" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/ui-elements/ui-elements.iml" filepath="$PROJECT_DIR$/alexandria/ui-elements/ui-elements.iml" group="framework" />
+      <module fileurl="file://$PROJECT_DIR$/framework/ui/ui.iml" filepath="$PROJECT_DIR$/framework/ui/ui.iml" group="framework" />
+      <module fileurl="file://$PROJECT_DIR$/framework/ui-elements/ui-elements.iml" filepath="$PROJECT_DIR$/framework/ui-elements/ui-elements.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/zet/zet.iml" filepath="$PROJECT_DIR$/alexandria/zet/zet.iml" group="library" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/zim/zim.iml" filepath="$PROJECT_DIR$/alexandria/zim/zim.iml" group="library" />
     </modules>
