@@ -30,6 +30,7 @@ public class DocsTemplate extends AbstractDocsTemplate<UiFrameworkBox> {
         body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.List));
         body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.Table));
         body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.Grouping));
+        body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.Sorting));
     }
 
     private void addOperationWidgets() {

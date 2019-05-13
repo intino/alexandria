@@ -39,6 +39,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block exportExamples as Conditional > Stamp(template=exportExamplesMold)
 			Block operationExamples as Conditional > Stamp(template=operationExamplesMold)
 			Block groupingExamples as Conditional > Stamp(template=groupingExamplesMold)
+			Block sortingExamples as Conditional > Stamp(template=sortingExamplesMold)
 
 		Block facets
 			Text(value="Facets", format=h5 underline)

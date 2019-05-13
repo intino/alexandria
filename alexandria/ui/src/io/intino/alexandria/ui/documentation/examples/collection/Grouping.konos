@@ -54,3 +54,26 @@ Template(layout=Vertical, spacing=DP8) groupingExamplesMold as Decorated
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) gender
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) age as Labeled("age")
 						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=49%, height=100%)
+			Text(format=h6, value="No facets with many options")
+			Block(spacing=DP8, format=filledNoAir)
+				Block(format=containerAirMedium, spacing=DP24) as Relative(width=100%)
+					Grouping(format=whiteBackground,collection=empty) country1 as Labeled("country")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Grouping(collection\=empty) country as Labeled("country")<br/>
+						=========
+
+		Block as Relative(width=49%, height=100%)
+			Text(format=h6, value="ComboBox facet with many options")
+			Block(spacing=DP8, format=filledNoAir)
+				Block(format=containerAirMedium, spacing=DP24) as Relative(width=100%)
+					Grouping(format=whiteBackground,collection=empty) country2 as Labeled("country") ComboBox
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Grouping(collection\=empty) country as Labeled("country") ComboBox<br/>
+						=========

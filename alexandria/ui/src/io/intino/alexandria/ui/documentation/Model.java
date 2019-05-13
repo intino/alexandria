@@ -13,7 +13,7 @@ public class Model {
 
 	public enum WidgetType {
 		Text, Number, Image, File, Date, Chart, Block, List, Table, Task, OpenPage, Export, Download, DownloadSelection,
-		Grouping;
+		Grouping, Sorting;
 
 		public static WidgetType from(String type) {
 			WidgetType[] values = values();
@@ -44,6 +44,7 @@ public class Model {
 		map.put(WidgetType.Download, new DownloadWidget());
 		map.put(WidgetType.DownloadSelection, new DownloadSelectionWidget());
 		map.put(WidgetType.Grouping, new GroupingWidget());
+		map.put(WidgetType.Sorting, new SortingWidget());
 	}
 
 	public static Widget widget(WidgetType type) {
