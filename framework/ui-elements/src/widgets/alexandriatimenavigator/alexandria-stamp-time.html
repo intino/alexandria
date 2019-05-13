@@ -1,0 +1,110 @@
+<link rel="import" href="../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../_common/alexandria-item-selector-combo.html">
+<link rel="import" href="../_common/alexandria-date-selector.html">
+<link rel="import" href="../_common/alexandria-scale-selector-slider.html">
+<link rel="import" href="../_common/alexandria-date-behavior.html">
+
+<script src="requester.js"></script>
+<script src="notifier-listener.js"></script>
+
+<dom-module id="alexandria-stamp-time">
+
+    <template>
+        <div class="layout horizontal center">
+            <div>[[_date]]</div>
+            <paper-icon-button icon="today" on-tap="_showDateSelector"></paper-icon-button>
+            <paper-icon-button icon="last-page" on-tap="_lastDate"></paper-icon-button>
+        </div>
+        <alexandria-date-selector id="dateSelector" date="[[_date]]" scale="[[_selectedScale]]" label="" on-change="_selectDate"></alexandria-date-selector>
+    </template>
+
+    <style>
+        :host div {
+            font-size: 12pt;
+            @apply(--alexandria-stamp-time);
+        }
+        :host paper-icon-button {
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            margin: 0 0 0 5px;
+        }
+        :host alexandria-date-selector {
+            position: absolute;
+            left: -5000px;
+        }
+    </style>
+
+    <script>
+
+        const AlexandriaStampTimeDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-stamp-time',
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                CottonBehaviors.PushBehavior,
+                CottonBehaviors.TranslatorBehavior,
+                AlexandriaTimeNavigatorBehaviors.Requester,
+                AlexandriaTimeNavigatorBehaviors.NotifierListener,
+                AlexandriaBehaviors.DateBehavior ],
+
+            properties : {
+                _scale : String,
+                _date : String,
+                _dateObject : Object
+            },
+
+            attached : function() {
+                this.translate(AlexandriaStampTimeDictionary);
+                this.translate(AlexandriaBehaviors.DateBehavior.Dictionary);
+                this.listenToDisplay();
+            },
+
+            _refreshScales : function(scaleList) {
+            },
+
+            _refreshState : function(state) {
+            },
+
+            _refreshOlapRange : function(range) {
+            },
+
+            _refreshScale : function(scale) {
+                this._scale = scale;
+                this._refresh();
+            },
+
+            _refreshDate : function(date) {
+                this._dateObject = new Date(date);
+                this._refresh();
+            },
+
+            _refresh : function() {
+                if (this._dateObject == null || this._scale == null) return;
+                this._date = this.fullDate(this._dateObject, this._scale, this.getLanguage());
+            },
+
+            _lastDate : function() {
+                this.lastDate();
+            },
+
+            _selectDate : function(event) {
+                this.selectDate(event.detail.date);
+            },
+
+            _showDateSelector : function() {
+                this.$.dateSelector.open();
+            }
+        });
+    </script>
+</dom-module>

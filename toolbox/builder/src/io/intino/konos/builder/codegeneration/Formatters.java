@@ -2,10 +2,11 @@ package io.intino.konos.builder.codegeneration;
 
 
 import cottons.utils.StringHelper;
+import io.intino.itrules.Formatter;
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.helpers.Commons;
-import org.siani.itrules.Formatter;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 public class Formatters {
 
@@ -64,11 +65,11 @@ public class Formatters {
 		};
 	}
 
-	public static Frame customize(String name,String value) {
-		Frame frame = new Frame().addTypes(name);
-		frame.addSlot("name", value);
-		for (String parameter : Commons.extractParameters(value)) frame.addSlot("custom", parameter);
-		return frame;
+	public static Frame customize(String name, String value) {
+		FrameBuilder builder = new FrameBuilder(name);
+		builder.add("name", value);
+		builder.add("custom", Commons.extractParameters(value).stream().toArray(String[]::new));
+		return builder.toFrame();
 	}
 
 

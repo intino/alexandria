@@ -1,0 +1,93 @@
+<link rel="import" href="../../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../../lib/paper-input/paper-input.html">
+
+<dom-module id="alexandria-stamp-editor">
+
+    <template>
+        <paper-input no-label-float value="{{value}}"
+                     on-keydown="_keyDown" on-keyup="_validate"
+                     on-blur="_close"
+                     error-message="[[_validation]]"></paper-input>
+    </template>
+
+    <style>
+        :host {
+            margin-top: -1px;
+        }
+        :host paper-input {
+            height: 100%;
+            --paper-input-container : {
+                padding: 0;
+                height: 100%;
+                font-size: 12pt;
+            };
+            --paper-input-container-input : {
+                border: 1px solid #ddd;
+                background: #efefef;
+                font-size: 11pt;
+                line-height: 19px;
+                height: 100%;
+            };
+            --paper-input-container-underline : {
+                display: none;
+            };
+            --paper-input-container-underline-focus : {
+                display: none;
+            };
+            --paper-input-container-underline-disabled : {
+                display: none;
+            };
+        }
+        :host paper-input ::content .input-content, :host paper-input ::content .label-and-input-container {
+            height: 100%;
+        }
+    </style>
+
+    <script>
+        Polymer({
+            is: 'alexandria-stamp-editor',
+
+            properties : {
+                label: String,
+                value: String,
+                _validation: String
+            },
+
+            focus : function() {
+                window.setTimeout(() => {
+                    let input = this.querySelector("paper-input").$.input;
+                input.focus();
+                input.setSelectionRange(0, input.value.length);
+            }, 50);
+            },
+
+            validationMessage : function(message) {
+                this._validation = message;
+                this.querySelector("paper-input").invalid = true;
+            },
+
+            _close : function(e) {
+                this.fire("close", this.value);
+            },
+
+            _keyDown : function(e) {
+                if (event.keyCode == 27) this.fire("close", this.value);
+                else if (event.keyCode == 13)
+                    this.fire("save", this.value);
+            },
+
+            _validate : function(e) {
+                if (this.validateTimeout != null) {
+                    window.clearTimeout(this.validateTimeout);
+                    this.validateTimeout = null;
+                }
+                window.setTimeout(() => {
+                    this.querySelector("paper-input").invalid = false;
+                this.fire("validate", this.value)
+            }, 100);
+            }
+
+        });
+    </script>
+
+</dom-module>

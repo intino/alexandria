@@ -1,0 +1,20 @@
+package io.intino.alexandria.ui.displays.requesters;
+
+import io.intino.alexandria.ui.displays.AlexandriaDisplay;
+import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
+import io.intino.alexandria.ui.spark.UISparkManager;
+import io.intino.alexandria.ui.services.push.UIClient;
+
+public abstract class AlexandriaProxyDisplayRequester extends AlexandriaDisplayRequester {
+
+	public AlexandriaProxyDisplayRequester(UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+		super(manager, notifierProvider);
+	}
+
+	public <D extends AlexandriaDisplay> D personifiedDisplay() {
+		String displayId = manager.fromQuery("personifiedDisplay", String.class);
+		UIClient client = manager.client(manager.fromQuery("client", String.class));
+		return client == null ? null : client.soul().get(displayId);
+	}
+
+}

@@ -106,7 +106,7 @@ def type(rest) trigger(dependency)
 	<dependency>
 		<groupId>io.intino.alexandria</groupId>
 		<artifactId>rest-accessor</artifactId>
-		<version>$[1.0.0, 2.0.0)</version>
+		<version>$[1.0.4, 2.0.0)</version>
 	</dependency>
 end
 

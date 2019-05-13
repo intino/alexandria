@@ -1,16 +1,16 @@
 package io.intino.konos.builder.codegeneration.exception;
 
-import io.intino.konos.builder.helpers.Commons;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.model.graph.KonosGraph;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
 
+import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class ExceptionRenderer {
-
 	private static final String EXCEPTIONS = "exceptions";
 	private final List<io.intino.konos.model.graph.Exception> exceptions;
 	private File gen;
@@ -27,11 +27,11 @@ public class ExceptionRenderer {
 	}
 
 	private void processException(io.intino.konos.model.graph.Exception exception) {
-		Frame frame = new Frame().addTypes("exception");
-		frame.addSlot("name", exception.name$());
-		frame.addSlot("code", exception.code());
-		frame.addSlot("package", packageName);
-		Commons.writeFrame(destinyPackage(gen), Commons.firstUpperCase(exception.name$()), template().format(frame));
+		writeFrame(destinyPackage(gen), firstUpperCase(exception.name$()), template().render(
+				new FrameBuilder("exception")
+						.add("name", exception.name$())
+						.add("code", exception.code())
+						.add("package", packageName).toFrame()));
 	}
 
 	private File destinyPackage(File destiny) {
@@ -39,8 +39,6 @@ public class ExceptionRenderer {
 	}
 
 	private Template template() {
-		return ExceptionTemplate.create();
+		return new ExceptionTemplate();
 	}
-
-
 }

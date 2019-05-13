@@ -1,6 +1,9 @@
 package io.intino.konos.builder.codegeneration.services.jms;
 
 import com.intellij.openapi.project.Project;
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.action.JMSRequestActionRenderer;
 import io.intino.konos.builder.helpers.Commons;
@@ -9,25 +12,23 @@ import io.intino.konos.model.graph.Parameter;
 import io.intino.konos.model.graph.Response;
 import io.intino.konos.model.graph.jms.JMSService;
 import io.intino.konos.model.graph.jms.JMSService.Request;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.AbstractFrame;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class JMSRequestRenderer {
 	private static final String REQUESTS = "requests";
 	private final Project project;
 	private final List<JMSService> services;
+	private final String boxName;
+	private final Map<String, String> classes;
 	private File gen;
 	private File src;
 	private String packageName;
-	private final String boxName;
-	private final Map<String, String> classes;
 
 	public JMSRequestRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName, Map<String, String> classes) {
 		this.project = project;
@@ -48,8 +49,7 @@ public class JMSRequestRenderer {
 	}
 
 	private void processRequest(Request resource) {
-		Frame frame = fillRequestFrame(resource);
-		Commons.writeFrame(new File(gen, REQUESTS), snakeCaseToCamelCase(resource.name$()) + "Request", template().format(frame));
+		writeFrame(new File(gen, REQUESTS), snakeCaseToCamelCase(resource.name$()) + "Request", template().render(fillRequestFrame(resource)));
 		createCorrespondingAction(resource);
 	}
 
@@ -59,19 +59,19 @@ public class JMSRequestRenderer {
 
 	private Frame fillRequestFrame(Request request) {
 		final String returnType = Commons.returnType(request.response());
-		Frame frame = new Frame().addTypes("request").
-				addSlot("name", request.name$()).
-				addSlot("box", boxName).
-				addSlot("package", packageName).
-				addSlot("call", new Frame().addTypes(returnType)).
-				addSlot("parameter", (AbstractFrame[]) parameters(request.parameterList()));
+		FrameBuilder builder = new FrameBuilder("request").
+				add("name", request.name$()).
+				add("box", boxName).
+				add("package", packageName).
+				add("call", new FrameBuilder(returnType).toFrame()).
+				add("parameter", parameters(request.parameterList()));
 		if (!returnType.equals("void"))
-			frame.addSlot("returnType", returnType).addSlot("returnMessageType", messageType(request.response()));
+			builder.add("returnType", returnType).add("returnMessageType", messageType(request.response()));
 		if (!request.exceptionList().isEmpty() || !request.exceptionRefs().isEmpty())
-			frame.addSlot("exception", "");
+			builder.add("exception", "");
 		if (!request.graph().schemaList().isEmpty())
-			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-		return frame;
+			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName).toFrame());
+		return builder.toFrame();
 	}
 
 	private String messageType(Response response) {
@@ -83,14 +83,12 @@ public class JMSRequestRenderer {
 	}
 
 	private Frame parameter(Parameter parameter) {
-		final Frame frame = new Frame();
-		if (parameter.isList()) frame.addTypes("List");
-		return frame.addTypes("parameter", parameter.asType().getClass().getSimpleName())
-				.addSlot("name", parameter.name$())
-				.addSlot("type", parameter.asType().type());
+		final FrameBuilder builder = new FrameBuilder("parameter", parameter.asType().getClass().getSimpleName());
+		if (parameter.isList()) builder.add("List");
+		return builder.add("name", parameter.name$()).add("type", parameter.asType().type()).toFrame();
 	}
 
 	private Template template() {
-		return Formatters.customize(JMSRequestTemplate.create());
+		return Formatters.customize(new JMSRequestTemplate());
 	}
 }

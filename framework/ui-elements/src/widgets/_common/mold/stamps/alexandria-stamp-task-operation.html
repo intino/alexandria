@@ -1,0 +1,101 @@
+<link rel="import" href="../../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="alexandria-stamp-behavior.html">
+<link rel="import" href="../../alexandria-operation-trigger.html">
+<link rel="import" href="../../alexandria-operation-confirm-dialog.html">
+
+<dom-module id="alexandria-stamp-task-operation">
+
+    <template>
+        <div class="container">
+            <alexandria-operation-trigger title="[[_title]]" icon="[[stamp.properties.alexandriaIcon]]"
+                                          styles="[[_style]]" mode="[[stamp.properties.mode]]"
+                                          color="[[stamp.properties.color]]"
+                                          on-execute="_confirmTask"></alexandria-operation-trigger>
+        </div>
+        <alexandria-operation-confirm-dialog id="dialog" message="[[stamp.properties.confirm]]" on-accept="_execute"></alexandria-operation-confirm-dialog>
+    </template>
+
+    <style>
+        :host .container {
+            margin: 0 !important;
+        }
+        :host a {
+            cursor: pointer;
+            color: var(--default-primary-color);
+        }
+        :host paper-dialog {
+            margin: 50px;
+            padding: 0;
+            background: white;
+            border-radius: 10px;
+        }
+        :host paper-dialog h2 {
+            background: #efefef;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 11pt;
+            padding: 4px 10px;
+        }
+        :host paper-dialog .message {
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding: 0 10px;
+        }
+        :host paper-dialog .buttons {
+            margin-bottom: 5px;
+        }
+        :host paper-dialog paper-button {
+            padding: 0 10px;
+            margin: 0 10px 0 0;
+            height: 25px;
+            width: 90px;
+        }
+    </style>
+
+    <script>
+        const AlexandriaStampTaskOperationDictionary = {
+            es: {
+                Execute : "ejecutar"
+            },
+            en: {
+                Execute : "execute"
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-stamp-task-operation',
+
+            behaviors: [ AlexandriaBehaviors.StampBehavior, CottonBehaviors.TranslatorBehavior ],
+
+            properties : {
+                _title: String
+            },
+
+            attached: function () {
+                this.translate(AlexandriaStampTaskOperationDictionary);
+            },
+
+            _render : function() {
+                var title = this.stamp.label;
+                this._title = title != null && title != "" ? title : this.Execute;
+                $(this).attr("style", $(this).attr("style") + ";" + this._style);
+            },
+
+            _confirmTask : function(e) {
+                if (!this.$.dialog.requireConfirm()) {
+                    this._execute(e);
+                    return;
+                }
+                this.$.dialog.open();
+                e.stopPropagation();
+            },
+
+            _execute : function(e) {
+                this.fire("execute-task-item", { stamp: this.stamp.name, item: this.stamp.item });
+            }
+
+        });
+    </script>
+
+</dom-module>

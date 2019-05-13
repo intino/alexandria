@@ -1,0 +1,81 @@
+<link rel="import" href="../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../_common/catalog/alexandria-catalog-grouping-list.html">
+<link rel="import" href="../_common/alexandria-element-behavior.html">
+<link rel="import" href="../_common/catalog/alexandria-catalog-behavior.html">
+<link rel="import" href="../_common/catalog/alexandria-temporal-catalog-behavior.html">
+
+<script src="requester.js"></script>
+<script src="notifier-listener.js"></script>
+
+<dom-module id="alexandria-temporal-time-catalog-drawer">
+
+    <template>
+        <h3 hidden$="[[!_showLabel]]">[[_catalog.label]]</h3>
+        <alexandria-catalog-grouping-list id="embeddedGroupings"
+                                          histograms-mode="[[_catalog.arrangementHistogramsMode]]"
+                                          grouping-list="[[_catalog.groupingList]]"
+                                          on-grouping-selection-change="_handleGroupingChange"></alexandria-catalog-grouping-list>
+    </template>
+
+    <style>
+        :host {
+            position: relative;
+        }
+        :host > h3 {
+            margin: 0 0 0 22px;
+        }
+        :host alexandria-catalog-grouping-list {
+            display: block;
+            margin: 0;
+            height: 100%;
+            border: 0;
+            overflow: auto;
+            --grouping-list : {
+                width: 100%;
+            };
+        }
+        @media screen and (max-width: 736px) {
+        }
+    </style>
+
+    <script>
+
+        const AlexandriaTemporalTimeCatalogDrawerDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-temporal-time-catalog-drawer',
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                CottonBehaviors.PushBehavior,
+                CottonBehaviors.TranslatorBehavior,
+                AlexandriaBehaviors.BreadcrumbsBehavior,
+                AlexandriaBehaviors.TemporalCatalogBehavior,
+                AlexandriaBehaviors.CatalogBehavior,
+                AlexandriaBehaviors.ElementBehavior,
+                AlexandriaTemporalTimeCatalogBehaviors.Requester,
+                AlexandriaTemporalTimeCatalogBehaviors.NotifierListener ],
+
+            attached : function() {
+                this.translate(AlexandriaTemporalTimeCatalogDrawerDictionary);
+                this.listenToDisplay();
+                this.listenOpenEvents();
+            },
+
+            _showTimeNavigator : function() {
+            },
+
+            _hideTimeNavigator : function() {
+            }
+
+        });
+    </script>
+</dom-module>

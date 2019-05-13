@@ -1,0 +1,123 @@
+<link rel="import" href="../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../lib/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../lib/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../../lib/paper-menu/paper-menu.html">
+<link rel="import" href="../../../lib/paper-item/paper-item.html">
+<link rel="import" href="../../../lib/iron-icon/iron-icon.html">
+<link rel="import" href="alexandria-operation-trigger.html">
+
+<dom-module id="alexandria-operation-download">
+
+    <template>
+        <div class="container">
+            <alexandria-operation-trigger id="operation" title="[[_title]]" icon="[[icon]]"
+                                          styles="[[styles]]" mode="[[mode]]"
+                                          on-execute="_openDownloadOptions"></alexandria-operation-trigger>
+        </div>
+        <paper-dialog id="dialog" no-overlap horizontal-align="left" vertical-align="top">
+            <template is="dom-if" if="[[!title.length]]">
+                <h2>[[Download]]</h2>
+            </template>
+            <paper-menu>
+                <template is="dom-repeat" items="[[options]]">
+                    <paper-item name$="[[item]]" on-tap="_download">[[item]]</paper-item>
+                </template>
+            </paper-menu>
+        </paper-dialog>
+    </template>
+
+    <style>
+        :host {
+            display: block;
+        }
+        :host .container {
+            margin: 0 !important;
+        }
+        :host a {
+            cursor: pointer;
+            color: var(--default-primary-color);
+        }
+        :host paper-dialog {
+            margin: 10px 0 0;
+            background: white;
+        }
+        :host paper-dialog h2 {
+            color: #777;
+            border-bottom: 1px solid #ccc;
+            margin: 3px 0;
+            padding: 0 8px 3px;
+            font-size: 15px;
+        }
+        :host paper-dialog paper-menu {
+            margin: 10px;
+            padding: 0;
+            background: white;
+        }
+        :host paper-dialog paper-item {
+            min-height: 28px;
+            font-size: 14px;
+            padding: 0 15px;
+            min-width: 130px;
+            cursor: pointer;
+        }
+        @media screen and (max-width: 540px) {
+            :host {
+                display: none;
+            }
+        }
+    </style>
+
+    <script>
+        const AlexandriaOperationDownloadDictionary = {
+            es: {
+                Download: "descargar..."
+            },
+            en: {
+                Download: "download..."
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-operation-download',
+
+            behaviors: [ CottonBehaviors.TranslatorBehavior ],
+
+            properties : {
+                title : { type: String, observer: '_refreshTitle' },
+                icon : String,
+                mode : String,
+                styles : String,
+                options : String,
+                _title : String
+            },
+
+            attached: function () {
+                this.translate(AlexandriaOperationDownloadDictionary);
+            },
+
+            _refreshTitle : function() {
+                var title = this.title;
+                this._title = title != null && title != "" ? title : this.Download;
+            },
+
+            _openDownloadOptions : function(e) {
+                var options = this.options;
+                if (options.length <= 1) {
+                    this.fire("tap-download", { option: "" });
+                    return;
+                }
+                this.$.dialog.positionTarget = this.$.operation;
+                this.$.dialog.open();
+            },
+
+            _download : function(e) {
+                this.$.dialog.close();
+                var option = e.target.getAttribute("name");
+                this.fire("tap-download", { option: option });
+                e.stopPropagation();
+            }
+        });
+    </script>
+
+</dom-module>

@@ -1,0 +1,16 @@
+dsl Legio
+
+Artifact("io.intino.alexandria", "1.0.1") jmx
+	Imports
+		Compile("io.intino.alexandria", "logger", "2.0.0")
+		Provided("com.sun", "tools", "1.8.0")
+		Test("junit", "junit", "4.12")
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Distribution(intino.release)
+
+Repository("intino-maven") intino
+	Release("https://artifactory.intino.io/artifactory/releases")
+	Release("https://artifactory.intino.io/artifactory/release-libraries") release
+
+Repository("maven2-repository.dev.java.net")
+	Release("http://download.java.net/maven/2/")

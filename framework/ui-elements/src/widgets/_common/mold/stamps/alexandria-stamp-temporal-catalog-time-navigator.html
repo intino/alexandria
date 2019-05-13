@@ -1,0 +1,30 @@
+<link rel="import" href="../../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../alexandriatimenavigator/alexandria-stamp-time-navigator.html">
+<link rel="import" href="alexandria-stamp-behavior.html">
+
+<dom-module id="alexandria-stamp-temporal-catalog-time-navigator">
+
+    <template>
+        <div id="layer" style$="[[_style]]"></div>
+    </template>
+
+    <style>
+    </style>
+
+    <script>
+        Polymer({
+            is: 'alexandria-stamp-temporal-catalog-time-navigator',
+
+            behaviors: [ AlexandriaBehaviors.StampBehavior ],
+
+            _render : function() {
+                this._removeZombieLayer();
+                var id = this.stamp.item + this.stamp.name;
+                var rendered = this.$.layer.innerHTML != "";
+                if (rendered) return;
+                this._addZombieLayer(this.$.layer, "AlexandriaTimeNavigator", "AlexandriaStampTimeNavigator", id);
+            }
+        });
+    </script>
+
+</dom-module>

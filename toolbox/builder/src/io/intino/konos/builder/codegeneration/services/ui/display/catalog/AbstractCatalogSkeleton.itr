@@ -1,0 +1,193 @@
+def type(catalog & gen)
+	package $package.displays;
+
+    import io.intino.alexandria.ui.displays.AlexandriaCatalog;
+    import io.intino.alexandria.ui.model.View;
+    import io.intino.alexandria.ui.model.Catalog;
+    import io.intino.alexandria.ui.model.TemporalCatalog;
+    import io.intino.alexandria.ui.model.Mold;
+    import io.intino.alexandria.ui.model.Toolbar;
+    import io.intino.alexandria.ui.model.catalog.arrangement.Arrangement;
+    import io.intino.alexandria.ui.model.catalog.arrangement.Grouping;
+    import io.intino.alexandria.ui.model.catalog.events.OnClickItem;
+    import io.intino.alexandria.ui.model.View;
+    import io.intino.alexandria.ui.model.TimeScale;
+    import io.intino.alexandria.ui.model.toolbar.*;
+
+    import $package+validPackage.$box+firstUpperCase~Box;
+    import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
+
+    import java.util.ArrayList;
+    import java.util.List;
+
+    public abstract class Abstract$name+FirstUpperCase extends io.intino.alexandria.ui.displays.Alexandria[Temporal$mode]Catalog<$name+FirstUpperCase~Notifier> {
+
+    	public Abstract$name+FirstUpperCase($box+firstUpperCase~Box box) {
+    		super(box);
+    		element(buildCatalog(box));
+    	}
+
+    	private static io.intino.alexandria.ui.model.$mode+temporal~Catalog buildCatalog($box+firstUpperCase~Box box) {
+    		io.intino.alexandria.ui.model.$mode+temporal~Catalog catalog = new io.intino.alexandria.ui.model.$mode+temporal~Catalog();
+			catalog.objectsLoader((scope, condition[, $mode+timerange], session) -> (java.util.List<Object>)(Object) $name+firstUpperCase.Source.$type+shortType+firstLowerCase~List(box, scope, condition[, $mode+timerange], session));
+			[$mode+setMode]
+            [$temporalFilter]
+			[$range]
+			[catalog.scales(new ArrayList<TimeScale>() {{ $scale+scaleAdd...[; ] }});]
+			[$hasMagazineView]
+			[catalog.events(new io.intino.alexandria.ui.model.catalog.Events().onClickItem(new OnClickItem().$event));]
+			[$hasGroupings]
+			[$hasCustomItemsArrivalMessage]
+			[$toolbar+add]
+			[catalog.name("$name")][.label("$label")];
+			catalog.objectLoader((id[, $mode+timerange], session) -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase(box, id[, $mode+timerange], session))
+				.objectIdLoader(object -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase~Id(box, ($type)object))
+				.objectNameLoader(object -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase~Name(box, ($type) object));
+    		buildViews(box).forEach(catalog::add);
+			buildArrangements(box).forEach(catalog::add);
+    		return catalog;
+    	}
+
+		[$toolbar]
+		private static java.util.List<View> buildViews($box+firstUpperCase~Box box) {
+			List<View> result = new ArrayList<>();
+			$view+add...[$NL]
+			return result;
+		}
+
+    	private static java.util.List<Arrangement> buildArrangements($box+firstUpperCase~Box box) {
+    		List<Arrangement> arrangements = new ArrayList<>();
+    		$arrangement+add...[$NL]
+    		return arrangements;
+    	}
+    }
+end
+
+
+def trigger(empty)
+
+end
+def trigger(toolbar+add)
+	catalog.toolbar(buildToolbar(box));
+end
+
+def trigger(temporal)
+	Temporal
+end
+
+
+
+def trigger(setMode)
+	catalog.type(TemporalCatalog.Type.$this+firstUpperCase);
+end
+
+def trigger(temporalFilter)
+	catalog.temporalFilter(new io.intino.alexandria.ui.model.catalog.TemporalFilter().enabledLoader($temporalFilterEnabled).visibilityLoader($temporalFilterVisible).layout("$temporalFilterLayout"));
+end
+
+def attribute(conditional) trigger(temporalFilterEnabled)
+	(c, scope, session) -> $catalog+FirstUpperCase.TemporalFilter.enable(box, c, scope, session)
+end
+
+def attribute(always) trigger(temporalFilterEnabled)
+	(c, scope, session) -> true
+end
+
+def attribute(never) trigger(temporalFilterEnabled)
+	(c, scope, session) -> false
+end
+
+def attribute(conditional) trigger(temporalFilterVisible)
+	(c, scope, session) -> $catalog+FirstUpperCase.TemporalFilter.visible(box, c, scope, session)
+end
+
+def attribute(always) trigger(temporalFilterVisible)
+	(c, scope, session) -> true
+end
+
+def attribute(never) trigger(temporalFilterVisible)
+	(c, scope, session) -> false
+end
+
+def trigger(range)
+	catalog.rangeLoader(session -> $catalog+FirstUpperCase.Temporal.range(box, session));
+	catalog.objectCreatedLoader(object -> $catalog+FirstUpperCase.Source.$type+shortType+firstLowerCase~Created(box, ($type) object));
+end
+
+def trigger(timeRange)
+	range
+end
+
+def trigger(scaleAdd)
+	add(TimeScale.$this+FirstUpperCase);
+end
+
+def trigger(hasMagazineView)
+	catalog.rootObjectLoader((objectList, range, session) -> $name+firstUpperCase.Source.root$type+shortType+firstUpperCase(box, (java.util.List<$type>)(Object)objectList[, $mode+timerange], session));
+	catalog.defaultObjectLoader((id, range, session) -> $name+firstUpperCase.Source.default$type+shortType+firstUpperCase(box, id[, $mode+timerange], session));
+end
+
+def trigger(hasGroupings)
+	catalog.arrangementFiltererLoader((session) -> $name+firstUpperCase.Arrangements.filterer(box, session));
+	catalog.arrangementHistogramsMode("$histogramsMode");
+	catalog.arrangementPosition("$position");
+end
+
+def trigger(hasCustomItemsArrivalMessage)
+	catalog.itemsArrivalMessageLoader((count, session) -> $name+firstUpperCase.Source.itemsArrivalMessage(box, count, session));
+end
+
+def trigger(toolbar)
+	private static io.intino.alexandria.ui.model.Toolbar buildToolbar($box+firstUpperCase~Box box) {
+		io.intino.alexandria.ui.model.Toolbar result = new Toolbar();
+		result.canSearch($canSearch);
+		$operation...[$NL]
+		return result;
+	}
+end
+
+def type(openDialog) trigger(event)
+	openDialog(new io.intino.alexandria.ui.model.catalog.events.OpenDialog()[.height($height)][.width($width)].dialogType("$dialog").dialogBuilder((item, session) -> {
+		io.intino.alexandria.ui.displays.AlexandriaDialog dialog = $package+validPackage.dialogs.Dialogs.dialogFor(box, "$dialog");
+		dialog.target(item);
+		return dialog;
+	}))
+end
+
+def type(openPanel) trigger(event)
+	openPanel(new io.intino.alexandria.ui.model.catalog.events.OpenPanel()
+		[.breadcrumbs($breadCrumbs)]
+		.panel((io.intino.alexandria.ui.model.Panel) Displays.displayFor(box, "$panel").element()))
+end
+
+def type(openCatalog) trigger(event)
+	openCatalog(new io.intino.alexandria.ui.model.catalog.events.OpenCatalog()
+		[.itemLoader($openCatalogLoader)]
+		[.filter($openCatalogFilter)]
+		.catalog((io.intino.alexandria.ui.model.Catalog) Displays.displayFor(box, "$catalog").element()))
+end
+
+def trigger(breadCrumbs)
+	(object, session) -> $catalog+FirstUpperCase.Events.onOpenPanelBreadcrumbs(box, ($type) object, session)
+end
+
+def trigger(openCatalogLoader)
+	(element, sender, session) -> $catalog+FirstUpperCase.Events.onOpenCatalog(box, element, ($type) sender, session)
+end
+
+def trigger(openCatalogFilter)
+	(element, sender, item, session) -> $catalog+FirstUpperCase.Events.onOpenCatalogFilter(box, element, ($type) sender, item, session)
+end
+
+def type(sorting) trigger(add)
+	arrangements.add(new io.intino.alexandria.ui.model.catalog.arrangement.Sorting().comparator((object1, object2, session) -> $catalog+FirstUpperCase.Arrangements.$name+FirstLowerCase~Comparator(box, ($type)object1, ($type)object2, session)).visible($visible).name("$name").label("$label"));
+end
+
+def type(grouping) trigger(add)
+	arrangements.add(new io.intino.alexandria.ui.model.catalog.arrangement.Grouping()[.histogram(io.intino.alexandria.ui.model.catalog.arrangement.Grouping.Histogram.$histogram)].groups((objects, session) -> $catalog+FirstUpperCase.Arrangements.$name+FirstLowerCase(box, (List<$type>)(Object)objects, session)).name("$name")[.label("$label")]);
+end
+
+def trigger(add)
+	result.add($value);
+end
+

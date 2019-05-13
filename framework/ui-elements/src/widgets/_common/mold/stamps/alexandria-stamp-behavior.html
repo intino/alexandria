@@ -1,0 +1,69 @@
+<script>
+    'use strict';
+
+    var AlexandriaBehaviors = AlexandriaBehaviors || {};
+
+    AlexandriaBehaviors.StampBehavior = {
+
+        properties : {
+            stamp : { type: Object, observer: '_init', value: function() { return null; } },
+            _style: { type: String, value: function() { return ""; } },
+            _zombie : Object,
+            _classes : String
+        },
+
+        _init : function() {
+            if (this.stamp == null) return;
+            if (this._classes == null) this._classes = $(this).attr("class");
+            this._updateClassName();
+            this._updateStyle();
+            this._render();
+        },
+
+        refreshValidation : function(message) {
+            if (this.$.editor == null) return;
+            this.$.editor.validationMessage(message);
+        },
+
+        _render : function() { }, // implemented by stamps
+
+        _updateClassName : function () {
+            var properties = this.stamp.properties;
+            $(this).attr("class", this._classes);
+            this.scopeSubtree(this, true);
+            if (this.stamp.layout.toLowerCase().indexOf("flexible") != -1) $(this).addClass("flex");
+            if (properties == null) return;
+            if (this.stamp.properties.className == null) return;
+            $(this).addClass(this.stamp.properties.className);
+        },
+
+        _updateStyle : function () {
+            var properties = this.stamp.properties;
+            if (properties == null) return;
+            var style = this.stamp.properties.defaultStyle != null ? this.stamp.properties.defaultStyle : "";
+            style += style !== "" ? ";" : "";
+            style += this.stamp.properties.style != null ? this.stamp.properties.style : "";
+            if (style == null) return;
+            this._style = style;
+        },
+
+        _removeZombieLayer : function() {
+            if (this._zombie == null) return;
+            this._zombie.remove();
+            this._zombie = null;
+        },
+
+        _addZombieLayer : function(layer, name, widget, object) {
+            var zombie = document.createElement("cotton-zombie");
+            zombie.setAttribute("display", name);
+            zombie.setAttribute("widget", widget);
+            if (object != null) zombie.setAttribute("object", object);
+            layer.appendChild(zombie);
+            this.fire("stamp-ready");
+            this._zombie = zombie;
+            return zombie;
+        }
+
+    };
+
+</script>

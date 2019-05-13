@@ -1,0 +1,154 @@
+<link rel="import" href="../../lib/polymer/polymer.html">
+<link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../lib/cotton-layout/cotton-layout.html">
+<link rel="import" href="../../lib/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../../lib/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../../lib/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="alexandria-tab-layout.html">
+<link rel="import" href="alexandria-menu-layout.html">
+<link rel="import" href="alexandriatablayout/alexandria-tab-layout-drawer.html">
+<link rel="import" href="alexandriamenulayout/alexandria-menu-layout-drawer.html">
+
+<script src="alexandriadesktop/requester.js"></script>
+<script src="alexandriadesktop/notifier-listener.js"></script>
+
+<dom-module id="alexandria-desktop">
+
+    <template>
+        <app-drawer-layout force-narrow>
+            <app-drawer slot="drawer" align="left">
+                <div id="drawer" slot="drawer" style="height:100%;"></div>
+            </app-drawer>
+            <div id="main" class="content main" slot="main">
+                <paper-icon-button hidden$="[[menuButtonHidden]]" class="toggle" icon="menu" drawer-toggle></paper-icon-button>
+            </div>
+        </app-drawer-layout>
+        <div id="loadingLayer" class="loading message layout horizontal center" hidden="[[!_catalogList.length]]"><!--<span>[[Loading]]</span>--></div>
+    </template>
+
+    <style>
+        :host {
+            display: block;
+            height: 100%;
+        }
+        :host app-drawer {
+            --app-drawer-width: 350px;
+        }
+        :host app-drawer-layout, :host app-drawer-layout .content.main {
+            height: 100%;
+        }
+        :host .loading {
+            position: absolute;
+            top: 0;
+            width: 100%;
+        }
+        :host .message {
+            height: 100%;
+        }
+        :host .message span {
+            margin: 0 auto;
+            background: var(--default-primary-color);
+            color: white;
+            padding: 3px 20px;
+            border-radius: 5px;
+            font-size: 14pt;
+        }
+        :host paper-drawer-panel ::content #drawer {
+            display: none;
+        }
+        :host paper-drawer-panel {
+            --paper-drawer-panel-drawer-container: {
+                z-index: 3;
+            };
+        }
+        :host #drawer h1 {
+            font-size: 12pt;
+        }
+        :host paper-icon-button.toggle {
+            position: absolute;
+            z-index: 2;
+            height: 50px;
+            width: 50px;
+            margin-left: 10px;
+            margin-top: 7px;
+        }
+        :host paper-icon-button.toggle {
+            display: none;
+        }
+        @media screen and (max-width: 736px), all and (min-width: 600px) and (orientation: portrait) {
+            :host paper-icon-button.toggle, :host paper-drawer-panel ::content #drawer {
+                display: block;
+            }
+        }
+    </style>
+
+    <script>
+        const AlexandriaDesktopDictionary = {
+            es: {
+                Loading: 'cargando vista...'
+            },
+            en: {
+                Loading: 'loading view...'
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-desktop',
+            _loadedTimer: null,
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                CottonBehaviors.PushBehavior,
+                CottonBehaviors.TranslatorBehavior,
+                AlexandriaDesktopBehaviors.Requester,
+                AlexandriaDesktopBehaviors.NotifierListener ],
+
+            properties : {
+                menuButtonHidden: { type: Boolean, value: function() { return false; } }
+            },
+
+            attached : function() {
+                this.translate(AlexandriaDesktopDictionary);
+                this.listenToDisplay();
+            },
+
+            _displayType : function(type) {
+                this._createZombie(this.$.drawer, type, type + "Drawer");
+                this._createZombie(this.$.main, type, type);
+            },
+
+            _createZombie : function(container, type, widget) {
+                var zombie = document.createElement("cotton-zombie");
+                zombie.setAttribute("display", type);
+                zombie.setAttribute("widget", widget);
+                container.appendChild(zombie);
+                zombie.whenPersonified().execute(widget => {
+                    widget.addEventListener("home", this._home.bind(this));
+                    widget.addEventListener("open-item", this._openItem.bind(this));
+                });
+                return zombie;
+            },
+
+            _home : function() {
+                this.home();
+            },
+
+            _openItem : function(e) {
+                this.openItem(e.detail);
+            },
+
+            _loading : function(withMessage) {
+                if (!withMessage) return;
+                this.$.loadingLayer.style.display = "flex";
+                if (this._loadedTimer != null) window.clearTimeout(this._loadedTimer);
+            },
+
+            _loaded : function() {
+                this._loadedTimer = window.setTimeout(() => this.$.loadingLayer.style.display = "none", 800);
+            }
+
+        });
+    </script>
+</dom-module>

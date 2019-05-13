@@ -1,0 +1,53 @@
+def type(dialog)
+	package $package.dialogs;
+
+	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
+	import io.intino.alexandria.ui.model.Dialog;
+	import io.intino.alexandria.ui.displays.DialogValidator;
+
+	import static io.intino.alexandria.ui.model.dialog.DialogResult;
+
+	public class $name+SnakeCaseToCamelCase+FirstUpperCase extends Abstract$name+SnakeCaseToCamelCase+FirstUpperCase {
+
+		public $name+SnakeCaseToCamelCase+FirstUpperCase($box+SnakeCaseToCamelCase+FirstUpperCase~Box box) {
+			super(box);
+		}
+
+		@Override
+		public void prepare() {
+		}
+
+		public static class Toolbar {
+			$execution...[$NL]
+		}
+
+		public static class Validators {
+			$validator...[$NL]
+		}
+
+		public static class Sources {
+			$source...[$NL]
+		}
+	}
+end
+
+def type(execution)
+	public static DialogResult $name($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, Dialog dialog, Dialog.Toolbar.Operation self, io.intino.alexandria.ui.services.push.UISession session) {
+		return DialogResult.none();
+	}
+
+end
+
+def type(validator)
+	public static DialogValidator.Result $name($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, Dialog.Tab.$field value) {
+		return null;
+	}
+
+end
+
+def type(source)
+	public static java.util.List<String> $name($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, Dialog.Tab.$field self) {
+		return java.util.Collections.emptyList();
+	}
+
+end

@@ -1,5 +1,7 @@
 package io.intino.konos.builder.codegeneration.datalake.feeder;
 
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Feeder;
 import io.intino.konos.model.graph.KonosGraph;
@@ -12,7 +14,6 @@ import io.intino.konos.model.graph.ness.NessClient;
 import io.intino.konos.model.graph.poll.PollSensor;
 import io.intino.konos.model.graph.usersensor.UserSensorSensor;
 import io.intino.tara.magritte.Layer;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,39 +52,41 @@ public class FeederRenderer {
 		return isAnonymous(feeder) ? feeder.eventTypes().stream().map(s -> firstUpperCase(s.name$())).collect(Collectors.joining()) + "Feeder" : feeder.name$();
 	}
 
+	private static boolean isAnonymous(Feeder feeder) {
+		return feeder.name$().matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
+	}
+
 	public void execute() {
 		for (Feeder feeder : feeders) {
-			final Frame frame = new Frame().addTypes("feeder").
-					addSlot("box", boxName).
-					addSlot("package", packageName).
-					addSlot("name", name(feeder));
+			final FrameBuilder builder = new FrameBuilder("feeder").
+					add("box", boxName).
+					add("package", packageName).
+					add("name", name(feeder));
 			for (Sensor sensor : feeder.sensorList())
-				frame.addSlot("sensor", frameOf(sensor, name(feeder)));
-			frame.addSlot("eventType", feeder.eventTypes().stream().filter(Objects::nonNull).map(s -> composedType(s, feeder.subdomain())).toArray(String[]::new));
-			frame.addSlot("domain", fullDomain(feeder.subdomain()));
+				builder.add("sensor", frameOf(sensor, name(feeder)));
+			builder.add("eventType", feeder.eventTypes().stream().filter(Objects::nonNull).map(s -> composedType(s, feeder.subdomain())).toArray(String[]::new));
+			builder.add("domain", fullDomain(feeder.subdomain()));
 			final String feederClassName = firstUpperCase(name(feeder));
 			classes.put(feeder.getClass().getSimpleName() + "#" + name(feeder), "datalake.feeders." + feederClassName);
-			writeFrame(new File(gen, "datalake/feeders"), "Abstract" + feederClassName, customize(AbstractFeederTemplate.create()).format(frame));
+			writeFrame(new File(gen, "datalake/feeders"), "Abstract" + feederClassName, customize(new AbstractFeederTemplate()).render(builder.toFrame()));
 			if (!alreadyRendered(new File(src, "datalake/feeders"), feederClassName))
-				writeFrame(new File(src, "datalake/feeders"), feederClassName, customize(FeederTemplate.create()).format(frame));
+				writeFrame(new File(src, "datalake/feeders"), feederClassName, customize(new FeederTemplate()).render(builder.toFrame()));
 		}
 	}
 
 	private Frame frameOf(Sensor sensor, String feeder) {
-		Frame frame = new Frame("sensor").
-				addSlot("name", sensor.name$()).
-				addSlot("feeder", feeder).
-				addSlot("type", sensor.core$().conceptList().get(0).id().replaceAll("#.*", "") + "Sensor").
-				addSlot("parent", parent(sensor));
+		FrameBuilder builder = new FrameBuilder("sensor").
+				add("name", sensor.name$()).
+				add("feeder", feeder).
+				add("type", sensor.core$().conceptList().get(0).id().replaceAll("#.*", "") + "Sensor").
+				add("parent", parent(sensor));
 
 		if (sensor.isUserSensor()) {
 			UserSensorSensor userSensor = sensor.asUserSensor();
-			if (userSensor.width() != 100) frame.addSlot("width", new Frame("width").addSlot("value", userSensor.width()));
-			if (userSensor.height() != 100) frame.addSlot("height", new Frame("height").addSlot("value", userSensor.height()));
+			if (userSensor.width() != 100) builder.add("width", new FrameBuilder("width").add("value", userSensor.width()));
+			if (userSensor.height() != 100) builder.add("height", new FrameBuilder("height").add("value", userSensor.height()));
 		}
-
-		return frame;
-	}
+		return builder.toFrame();
 
 	private static boolean isAnonymous(Feeder feeder) {
 		return feeder.name$().matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
@@ -94,39 +97,38 @@ public class FeederRenderer {
 		if (sensor.isFormEdition()) return formEdition(sensor.asFormEdition());
 		if (sensor.isDocumentEdition()) return documentEdition(sensor.asDocumentEdition());
 		if (sensor.isDocumentSignature()) return documentSignature(sensor.asDocumentSignature());
-		return new Frame();
+		return new FrameBuilder().toFrame();
 	}
 
 	private Frame poll(PollSensor sensor) {
-		return new Frame("poll").
-				addSlot("defaultOption", sensor.defaultOption() == null ? "" : sensor.defaultOption()).
-				addSlot("eventMethod", sensor.core$().ownerAs(Feeder.class).eventTypes().stream().map(Layer::name$).toArray(String[]::new)).
-				addSlot("option", frameOf(sensor.optionList()));
+		return new FrameBuilder("poll").
+				add("defaultOption", sensor.defaultOption() == null ? "" : sensor.defaultOption()).
+				add("eventMethod", sensor.core$().ownerAs(Feeder.class).eventTypes().stream().map(Layer::name$).toArray(String[]::new)).
+				add("option", frameOf(sensor.optionList())).toFrame();
 	}
 
 	private Frame[] frameOf(List<PollSensor.Option> options) {
 		List<Frame> frames = new ArrayList<>();
 		for (PollSensor.Option option : options) {
-			final Frame frame = new Frame("option").
-					addSlot("value", option.value()).
-					addSlot("event", option.event().name$());
-
-			if (!option.optionList().isEmpty()) frame.addSlot("option", frameOf(option.optionList()));
-			frames.add(frame);
+			final FrameBuilder builder = new FrameBuilder("option").
+					add("value", option.value()).
+					add("event", option.event().name$());
+			if (!option.optionList().isEmpty()) builder.add("option", frameOf(option.optionList()));
+			frames.add(builder.toFrame());
 		}
 		return frames.toArray(new Frame[0]);
 	}
 
 	private Frame formEdition(FormEditionSensor sensor) {
-		return new Frame("formEdition").addSlot("path", sensor.path());
+		return new FrameBuilder("formEdition").add("path", sensor.path()).toFrame();
 	}
 
 	private Frame documentEdition(DocumentEditionSensor sensor) {
-		return new Frame("documentEdition").addSlot("mode", sensor.mode().name());
+		return new FrameBuilder("documentEdition").add("mode", sensor.mode().name()).toFrame();
 	}
 
 	private Frame documentSignature(DocumentSignatureSensor sensor) {
-		return new Frame("documentSignature").addSlot("signType", sensor.signType().name()).addSlot("signFormat", sensor.signFormat().name());
+		return new FrameBuilder("documentSignature").add("signType", sensor.signType().name()).add("signFormat", sensor.signFormat().name()).toFrame();
 	}
 
 	private String composedType(Schema schema, String subdomain) {

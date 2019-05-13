@@ -1,0 +1,9 @@
+dsl Legio
+
+Artifact("io.intino.alexandria", "1.0.3") primitives
+	Imports
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Distribution(intino.releases)
+
+Repository("intino-maven") intino
+	Release("https://artifactory.intino.io/artifactory/release-libraries") releases

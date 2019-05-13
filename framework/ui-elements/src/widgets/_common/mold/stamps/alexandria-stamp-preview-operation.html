@@ -1,0 +1,137 @@
+<link rel="import" href="../../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../../../lib/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../../lib/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../../../../lib/paper-menu/paper-menu.html">
+<link rel="import" href="../../../../../lib/paper-item/paper-item.html">
+<link rel="import" href="../../../../../lib/iron-icon/iron-icon.html">
+<link rel="import" href="../../../../../lib/cotton-pdf-viewer/cotton-pdf-viewer.html">
+<link rel="import" href="../../../../../lib/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="alexandria-stamp-behavior.html">
+<link rel="import" href="../../alexandria-operation-trigger.html">
+
+<dom-module id="alexandria-stamp-preview-operation">
+
+    <template>
+        <div class="container">
+            <alexandria-operation-trigger title="[[_title]]" icon="[[stamp.properties.alexandriaIcon]]"
+                                          styles="[[_style]]" mode="[[stamp.properties.mode]]"
+                                          color="[[stamp.properties.color]]"
+                                          on-execute="_preview"></alexandria-operation-trigger>
+        </div>
+        <div id="dialogContainer" class="alexandria-stamp-preview-operation-0">
+            <paper-dialog id="dialog" no-overlap item-animation="scale-up-animation" exit-animation="fade-out-animation" on-iron-overlay-closed="_overlayClosed">
+                <paper-icon-button icon="close" on-tap="_close"></paper-icon-button>
+                <div style="height:calc(100% - 40px)">
+                    <cotton-pdf-viewer file="[[stamp.properties.document]]" width="100%" height="100%"></cotton-pdf-viewer>
+                </div>
+            </paper-dialog>
+        </div>
+    </template>
+
+    <style>
+        :host .container {
+            margin: 0 !important;
+        }
+        :host a {
+            cursor: pointer;
+            color: var(--default-primary-color);
+        }
+        :host paper-dialog {
+            margin: 50px;
+            padding: 0;
+            background: white;
+            border-radius: 10px;
+            z-index: 200 !important;
+            top: 25px !important;
+            left: 0 !important;
+            position: fixed !important;
+        }
+        :host paper-dialog paper-icon-button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 6px;
+            background: white;
+            border-radius: 50px;
+            margin: -15px -15px 0 0;
+            -webkit-box-shadow: -1px 1px 10px #888888;
+            -moz-box-shadow: -1px 1px 10px #888888;
+            box-shadow: -1px 1px 10px #888888;
+        }
+        :host paper-dialog pdf-browser-viewer {
+            height: 100%;
+        }
+    </style>
+
+    <script>
+        const AlexandriaMoldPreviewOperationDictionary = {
+            es: {
+                Preview : "ver documento",
+                Title : "vista previa"
+            },
+            en: {
+                Preview : "view document",
+                Title : "preview"
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-stamp-preview-operation',
+
+            behaviors: [ AlexandriaBehaviors.StampBehavior, CottonBehaviors.TranslatorBehavior, Polymer.IronResizableBehavior ],
+
+            listeners: { 'iron-resize': '_fitDialog' },
+
+            properties : {
+                _title : String,
+                width: Number,
+                _width : { type: Number, value: function() { return 100; } },
+                height: Number,
+                _height : { type: Number, value: function() { return 100; } }
+            },
+
+            attached: function () {
+                this.translate(AlexandriaMoldPreviewOperationDictionary);
+            },
+
+            _fitDialog : function() {
+                var style = "";
+
+                if (this._width != 100) {
+                    var width = $(window).width();
+                    style += ";width:" + this._width + "%;margin-left:" + ((width-(width*(this._width / 100)))/2) + "px;";
+                }
+                else style += ";width:calc(100% - 100px)";
+
+                if (this._height != 100) {
+                    var height = $(window).height();
+                    style += ";height:" + this._height + "%;margin-top:" + ((height - (height * (this._height / 100))) / 2) + "px;";
+                }
+                else style += ";height:calc(100% - 100px)";
+
+                this.$.dialog.style.cssText += style;
+            },
+
+            _render : function() {
+                var title = this.stamp.label;
+                this._title = title != null && title != "" ? title : this.Preview;
+            },
+
+            _preview : function(e) {
+                document.querySelector("body").appendChild(this.$.dialogContainer);
+                this.$.dialog.open();
+            },
+
+            _close : function() {
+                this.$.dialog.close();
+            },
+
+            _overlayClosed : function(e) {
+                this.appendChild(this.$.dialogContainer);
+            }
+
+        });
+    </script>
+
+</dom-module>

@@ -1,0 +1,49 @@
+<link rel="import" href="../../lib/polymer/polymer.html">
+<link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="_common/alexandria-view-behavior.html">
+<link rel="import" href="alexandria-item.html">
+
+<script src="alexandriaviewcontainermagazine/requester.js"></script>
+<script src="alexandriaviewcontainermagazine/notifier-listener.js"></script>
+
+<dom-module id="alexandria-view-container-magazine">
+
+    <template>
+        <cotton-zombie id="itemZombie" display="AlexandriaItem" widget="AlexandriaItem"></cotton-zombie>
+    </template>
+
+    <style>
+    </style>
+
+    <script>
+
+        const AlexandriaViewContainerMagazine = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-view-container-magazine',
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                CottonBehaviors.PushBehavior,
+                CottonBehaviors.TranslatorBehavior,
+                AlexandriaBehaviors.ViewBehavior,
+                AlexandriaViewContainerMagazineBehaviors.Requester,
+                AlexandriaViewContainerMagazineBehaviors.NotifierListener ],
+
+            attached : function() {
+                this.translate(AlexandriaViewContainerMagazine);
+                this.translate(AlexandriaBehaviors.ViewBehavior.Dictionary);
+                this.listenToDisplay();
+                this.addEventListener("navigate-item", (e) => this.fire("open-item", e.detail));
+                this.addEventListener("navigate-element", (e) => this.fire("open-element", e.detail));
+            }
+        });
+    </script>
+</dom-module>

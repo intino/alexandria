@@ -1,0 +1,102 @@
+<link rel="import" href="../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../lib/paper-toast/paper-toast.html">
+<link rel="import" href="../_common/catalog/alexandria-catalog-grouping-list.html">
+<link rel="import" href="../_common/alexandria-element-behavior.html">
+<link rel="import" href="../_common/catalog/alexandria-catalog-behavior.html">
+
+<script src="requester.js"></script>
+<script src="notifier-listener.js"></script>
+
+<dom-module id="alexandria-catalog-drawer">
+
+    <template>
+        <h3 hidden$="[[!_showLabel]]">[[_catalog.label]]</h3>
+        <div id="main">
+            <alexandria-catalog-grouping-list grouping-list="[[_catalog.groupingList]]"
+                                              histograms-mode="[[_catalog.arrangementHistogramsMode]]"
+                                              on-grouping-selection-change="_handleGroupingChange"
+                                              on-delete-grouping-group="_handleDeleteGroupingGroup"></alexandria-catalog-grouping-list>
+        </div>
+        <div id="panel" name="panel" class="layout vertical flex hidden"></div>
+    </template>
+
+    <style>
+        :host {
+            position: relative;
+        }
+        :host > h3 {
+            margin: 0 0 0 22px;
+        }
+        :host #panel {
+            display: block;
+            margin: 0px 6px;
+            width: calc(100% - 12px);
+            @apply(--alexandria-catalog-panels);
+        }
+        :host #main.hidden, :host #panel.hidden {
+            position: absolute;
+            left: -10000px;
+        }
+        :host alexandria-catalog-grouping-list {
+            display: block;
+            margin: 0;
+            height: 100%;
+            border: 0;
+            overflow: auto;
+            --grouping-list : {
+                width: 100%;
+            };
+        }
+        @media screen and (max-width: 736px) {
+        }
+    </style>
+
+    <script>
+
+        const AlexandriaCatalogDrawerDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-catalog-drawer',
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                CottonBehaviors.PushBehavior,
+                CottonBehaviors.TranslatorBehavior,
+                AlexandriaBehaviors.BreadcrumbsBehavior,
+                AlexandriaBehaviors.CatalogBehavior,
+                AlexandriaBehaviors.ElementBehavior,
+                AlexandriaCatalogBehaviors.Requester,
+                AlexandriaCatalogBehaviors.NotifierListener ],
+
+            attached : function() {
+                this.translate(AlexandriaCatalogDrawerDictionary);
+                this.listenToDisplay();
+                this.listenOpenEvents();
+            },
+
+            _handleDeleteGroupingGroup : function(event) {
+                this.deleteGroupingGroup(event.detail);
+            },
+
+            _createPanel : function(params) {
+                if (this.$.panel == null) return;
+                var zombie = document.createElement("cotton-zombie");
+                zombie.setAttribute("display", params.displayType);
+                zombie.setAttribute("widget", "AlexandriaPanelDrawer");
+                zombie.setAttribute("object", params.item);
+                this.$.panel.innerHTML = "";
+                this.$.panel.appendChild(zombie);
+            }
+
+        });
+
+    </script>
+</dom-module>

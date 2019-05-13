@@ -13,7 +13,7 @@ def type(feeder)
 
 	public abstract class Abstract$name+FirstUpperCase extends io.intino.alexandria.core.Feeder {
 		protected List<Sensor> sensors;
-		private final $box+FirstUpperCase~Box box;
+		protected final $box+FirstUpperCase~Box box;
 
 		public Abstract$name+FirstUpperCase($box+FirstUpperCase~Box box) {
 			this.box = box;
@@ -47,9 +47,9 @@ def type(sensor) trigger(class)
 		$parent+field
 
 		public Abstract$name+FirstUpperCase~Sensor() {
-			$parent+super[
-			$width][
-			$height]
+			$parent+super
+			[$width]
+			[$height]
 		}
 
 		$parent+methods

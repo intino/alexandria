@@ -1,0 +1,71 @@
+<link rel="import" href="../../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../../../../lib/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="alexandria-stamp-behavior.html">
+<link rel="import" href="../../../alexandria-catalog.html">
+<link rel="import" href="../../../alexandria-temporal-range-catalog.html">
+<link rel="import" href="../../../alexandria-temporal-time-catalog.html">
+
+<dom-module id="alexandria-stamp-embedded-catalog">
+
+    <template>
+        <div id="container" class="layout flex" style$="[[_style]]"></div>
+    </template>
+
+    <style>
+        :host {
+            display: block;
+            width: 100%;
+            min-height: 100px;
+            @apply(--layout-vertical);
+        }
+        :host #container {
+            height:100%;
+            min-height:100px;
+            overflow:auto;
+        }
+    </style>
+
+    <script>
+        Polymer({
+            is: 'alexandria-stamp-embedded-catalog',
+
+            behaviors: [ AlexandriaBehaviors.StampBehavior, Polymer.IronResizableBehavior ],
+
+            listeners: {
+                'iron-resize': '_resize'
+            },
+
+            _resize : function() {
+                this._addStyle(this._catalogElement());
+            },
+
+            _addStyle : function(catalog) {
+                if (this.stamp != null && this.stamp.layout == "Flexible") {
+                    catalog.style.height = "100%";
+                    this.querySelectorAll("alexandria-catalog-view-list").forEach((viewList) => viewList.style.overflow = "hidden");
+                    this.querySelectorAll("cotton-list").forEach((list) => list.style.height = "100%");
+                    return;
+                }
+                var height = $(this).parent().height() + "px";
+                catalog.style.height = height;
+                catalog.style.display = "block";
+            },
+
+            _render : function() {
+                var key = this.stamp.item + this.stamp.name;
+                var catalog = this.stamp.properties.catalog;
+                var rendered = this.$.container.innerHTML != "";
+
+                if (key == null || catalog == null || rendered) return;
+                this._addZombieLayer(this.$.container, catalog, catalog, key);
+            },
+
+            _catalogElement : function() {
+                var result = this.querySelector("#container > *");
+                return result != null ? result : { style: {} };
+            }
+        });
+    </script>
+
+</dom-module>

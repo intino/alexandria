@@ -1,0 +1,264 @@
+dsl Konos
+
+Schema Bounds
+	Attribute northEast as Object(NorthEast)
+	Attribute southWest as Object(SouthWest)
+
+Schema NorthEast
+	Attribute longitude as Real
+	Attribute latitude as Real
+
+Schema SouthWest
+	Attribute longitude as Real
+	Attribute latitude as Real
+
+Schema Catalog
+	Attribute name as Text
+	Attribute label as Text
+	Attribute embedded as Bool
+	Attribute hideGroupings as Bool
+	Attribute arrangementHistogramsMode as Text
+	Attribute arrangementPosition as Text
+	Attribute mode as Text
+	Attribute groupingList as List Object(Grouping)
+	Attribute sortingList as List Object(Sorting)
+
+Schema Grouping
+	Attribute name as Text
+	Attribute type as Text
+	Attribute label as Text
+	Attribute countItems as Integer
+	Attribute histogram as Text
+	Attribute groupList as List Object(Group)
+
+Schema Group
+	Attribute name as Text
+	Attribute label as Text
+	Attribute selected as Bool
+	Attribute count as Integer
+
+Schema DateNavigatorState
+	Attribute playing as Bool
+	Attribute canPlay as Bool
+	Attribute canPrevious as Bool
+	Attribute canNext as Bool
+
+Schema Dialog
+	Attribute label as Text
+	Attribute description as Text
+	Attribute definition as Text
+
+Schema DialogInput
+	Attribute path as Text
+	Attribute value as Text
+
+Schema DialogInputResource
+	Attribute path as Text
+	Attribute file as Object(DialogInputResourceFile)
+
+Schema DialogInputResourceFile
+	Attribute name as Text
+	Attribute data as Text
+
+Schema DisplayReference
+	Attribute label as Text
+	Attribute type as Text
+
+Schema DialogBoxSettings
+	Attribute acceptButton as Bool
+	Attribute position as Object(Position)
+	Attribute size as Object(Size)
+
+Schema Size
+	Attribute width as Integer
+	Attribute height as Integer
+
+Schema CatalogDialogReference
+	Attribute label as Text
+	Attribute type as Text
+	Attribute width as Integer
+	Attribute height as Integer
+
+Schema DownloadItemParameters
+	Attribute item as Text
+	Attribute stamp as Text
+	Attribute option as Text
+
+Schema ElementOperationParameters
+	Attribute operation as Text
+	Attribute option as Text
+	Attribute from as DateTime
+	Attribute to as DateTime
+	Attribute position as Object(Position)
+
+Schema ElementView
+	Attribute name as Text
+	Attribute label as Text
+	Attribute type as Text
+	Attribute embeddedElement as Bool
+	Attribute width as Integer
+	Attribute selectionEnabledByDefault as Bool
+	Attribute canSearch as Bool
+	Attribute emptyMessage as Text
+	Attribute mold as Text
+	Attribute toolbar as Object(Toolbar)
+	Attribute center as Object(Center)
+	Attribute zoom as Object(Zoom)
+
+Schema Toolbar
+	Attribute operationList as List Object(Operation)
+
+Schema Operation
+	Attribute name as Text
+	Attribute title as Text
+	Attribute mode as Text
+	Attribute type as Text
+	Attribute icon as Text
+	Attribute when as Text
+	Attribute confirmText as Text
+	Attribute propertyList as List Object(Property)
+
+Schema Center
+	Attribute latitude as Real
+	Attribute longitude as Real
+
+Schema Zoom
+	Attribute min as Integer
+	Attribute max as Integer
+	Attribute defaultValue as Integer
+
+Schema ExecuteItemTaskParameters
+	Attribute item as Text
+	Attribute stamp as Text
+
+Schema ExportItemParameters
+	Attribute stamp as Text
+	Attribute option as Text
+	Attribute from as DateTime
+	Attribute to as DateTime
+
+Schema GroupingGroup
+	Attribute grouping as Text
+	Attribute name as Text
+
+Schema GroupingSelection
+	Attribute name as Text
+	Attribute groups as List Text
+
+Schema ItemRefreshInfo
+	Attribute mold as Text
+	Attribute highlight as Bool
+	Attribute item as Object(Item)
+
+Schema ItemValidationRefreshInfo
+	Attribute item as Text
+	Attribute stamp as Text
+	Attribute message as Text
+
+Schema Item
+	Attribute name as Text
+	Attribute label as Text
+	Attribute group as DateTime
+	Attribute itemStampList as List Object(ItemStamp)
+	Attribute itemBlockList as List Object(ItemBlock)
+
+Schema ItemStamp
+	Attribute name as Text
+	Attribute values as List Text
+	Attribute className as Text
+	Attribute propertyList as List Object(Property)
+
+Schema ItemBlock
+	Attribute name as Text
+	Attribute hidden as Bool
+	Attribute className as Text
+
+Schema OpenItemParameters
+	Attribute item as Text
+	Attribute stamp as Text
+	Attribute position as Object(Position)
+
+Schema Position
+	Attribute left as Real
+	Attribute top as Real
+
+Schema PageLocation
+	Attribute value as Text
+	Attribute internal as Bool
+
+Schema PictureData
+	Attribute item as Text
+	Attribute stamp as Text
+	Attribute value as Text
+
+Schema PlatformInfo
+	Attribute title as Text
+	Attribute subtitle as Text
+	Attribute logo as Text
+	Attribute favicon as Text
+	Attribute authServiceUrl as Text
+
+Schema Property
+	Attribute name as Text
+	Attribute value as Text
+
+Schema Range
+	Attribute min as Real
+	Attribute max as Real
+	Attribute scale as Text
+
+Schema Reference
+	Attribute name as Text
+	Attribute label as Text
+	Attribute referencePropertyList as List Object(ReferenceProperty)
+
+Schema ReferenceProperty
+	Attribute name as Text
+	Attribute value as Text
+
+Schema RequestRange
+	Attribute from as DateTime
+	Attribute to as DateTime
+
+Schema ChangeItemParameters
+	Attribute stamp as Text
+	Attribute item as Text
+	Attribute value as Text
+
+Schema ValidateItemParameters
+	Attribute stamp as Text
+	Attribute item as Text
+	Attribute value as Text
+
+Schema Scale
+	Attribute name as Text
+	Attribute label as Text
+	Attribute symbol as Text
+
+Schema Sorting
+	Attribute name as Text
+	Attribute label as Text
+	Attribute mode as Text
+	Attribute visible as Bool
+
+Schema UserInfo
+	Attribute fullName as Text
+	Attribute photo as Text
+
+Schema Validation
+	Attribute input as Text
+	Attribute status as Bool
+	Attribute message as Text
+	Attribute modifiedInputs as Text
+
+Schema CreatePanelParameters
+	Attribute displayType as Text
+	Attribute item as Text
+
+Schema OpenElementParameters
+	Attribute item as Text
+	Attribute stamp as Object(Reference)
+
+Schema DisplayInfo
+	Attribute type as Text
+	Attribute elementType as Text

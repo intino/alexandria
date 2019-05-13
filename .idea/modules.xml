@@ -2,30 +2,31 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/alexandria/assa/assa.iml" filepath="$PROJECT_DIR$/alexandria/assa/assa.iml" group="library" />
       <module fileurl="file://$PROJECT_DIR$/toolbox/builder/builder.iml" filepath="$PROJECT_DIR$/toolbox/builder/builder.iml" group="toolbox" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/columnar/columnar.iml" filepath="$PROJECT_DIR$/alexandria/columnar/columnar.iml" group="library" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/core/core.iml" filepath="$PROJECT_DIR$/alexandria/core/core.iml" group="framework" />
+      <module fileurl="file://$PROJECT_DIR$/framework/core/core.iml" filepath="$PROJECT_DIR$/framework/core/core.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/toolbox/dsl/dsl.iml" filepath="$PROJECT_DIR$/toolbox/dsl/dsl.iml" group="toolbox" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/exceptions/exceptions.iml" filepath="$PROJECT_DIR$/alexandria/exceptions/exceptions.iml" group="library" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/filemap/filemap.iml" filepath="$PROJECT_DIR$/alexandria/filemap/filemap.iml" group="library" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/inl/inl.iml" filepath="$PROJECT_DIR$/alexandria/inl/inl.iml" group="library" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/jms/jms.iml" filepath="$PROJECT_DIR$/alexandria/jms/jms.iml" group="library" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/jmx/jmx.iml" filepath="$PROJECT_DIR$/alexandria/jmx/jmx.iml" group="library" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/json/json.iml" filepath="$PROJECT_DIR$/alexandria/json/json.iml" group="library" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/logger/logger.iml" filepath="$PROJECT_DIR$/alexandria/logger/logger.iml" group="library" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/ness-accessor/ness-accessor.iml" filepath="$PROJECT_DIR$/alexandria/ness-accessor/ness-accessor.iml" group="library" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/primitives/primitives.iml" filepath="$PROJECT_DIR$/alexandria/primitives/primitives.iml" group="library" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/rest/rest.iml" filepath="$PROJECT_DIR$/alexandria/rest/rest.iml" group="library" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/rest-accessor/rest-accessor.iml" filepath="$PROJECT_DIR$/alexandria/rest-accessor/rest-accessor.iml" group="library" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/scheduler/scheduler.iml" filepath="$PROJECT_DIR$/alexandria/scheduler/scheduler.iml" group="framework" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/slack/slack.iml" filepath="$PROJECT_DIR$/alexandria/slack/slack.iml" group="framework" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/exceptions/exceptions.iml" filepath="$PROJECT_DIR$/libraries/exceptions/exceptions.iml" group="libraries" />
+      <module fileurl="file://$PROJECT_DIR$/fileformats/inl/inl.iml" filepath="$PROJECT_DIR$/fileformats/inl/inl.iml" group="fileformats" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/jms/jms.iml" filepath="$PROJECT_DIR$/libraries/jms/jms.iml" group="libraries" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/jmx/jmx.iml" filepath="$PROJECT_DIR$/libraries/jmx/jmx.iml" group="libraries" />
+      <module fileurl="file://$PROJECT_DIR$/fileformats/json/json.iml" filepath="$PROJECT_DIR$/fileformats/json/json.iml" group="libraries" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/logger/logger.iml" filepath="$PROJECT_DIR$/libraries/logger/logger.iml" group="libraries" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/logger4j/logger4j.iml" filepath="$PROJECT_DIR$/libraries/logger4j/logger4j.iml" group="libraries" />
+      <module fileurl="file://$PROJECT_DIR$/fileformats/mapp/mapp.iml" filepath="$PROJECT_DIR$/fileformats/mapp/mapp.iml" group="fileformats" />
+      <module fileurl="file://$PROJECT_DIR$/fileformats/movv/movv.iml" filepath="$PROJECT_DIR$/fileformats/movv/movv.iml" group="fileformats" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/ness-accessor/ness-accessor.iml" filepath="$PROJECT_DIR$/libraries/ness-accessor/ness-accessor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/primitives/primitives.iml" filepath="$PROJECT_DIR$/libraries/primitives/primitives.iml" group="libraries" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/rest/rest.iml" filepath="$PROJECT_DIR$/libraries/rest/rest.iml" group="libraries" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/rest-accessor/rest-accessor.iml" filepath="$PROJECT_DIR$/libraries/rest-accessor/rest-accessor.iml" group="libraries" />
+      <module fileurl="file://$PROJECT_DIR$/framework/scheduler/scheduler.iml" filepath="$PROJECT_DIR$/framework/scheduler/scheduler.iml" group="framework" />
+      <module fileurl="file://$PROJECT_DIR$/framework/slack/slack.iml" filepath="$PROJECT_DIR$/framework/slack/slack.iml" group="framework" />
+      <module fileurl="file://$PROJECT_DIR$/fileformats/tabb/tabb.iml" filepath="$PROJECT_DIR$/fileformats/tabb/tabb.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/toolbox/test/test.iml" filepath="$PROJECT_DIR$/toolbox/test/test.iml" group="toolbox" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/triplestore/triplestore.iml" filepath="$PROJECT_DIR$/alexandria/triplestore/triplestore.iml" group="library" />
+      <module fileurl="file://$PROJECT_DIR$/fileformats/tris/tris.iml" filepath="$PROJECT_DIR$/fileformats/tris/tris.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/framework/ui/ui.iml" filepath="$PROJECT_DIR$/framework/ui/ui.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/framework/ui-elements/ui-elements.iml" filepath="$PROJECT_DIR$/framework/ui-elements/ui-elements.iml" group="framework" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/zet/zet.iml" filepath="$PROJECT_DIR$/alexandria/zet/zet.iml" group="library" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/zim/zim.iml" filepath="$PROJECT_DIR$/alexandria/zim/zim.iml" group="library" />
+      <module fileurl="file://$PROJECT_DIR$/fileformats/zet/zet.iml" filepath="$PROJECT_DIR$/fileformats/zet/zet.iml" group="fileformats" />
+      <module fileurl="file://$PROJECT_DIR$/fileformats/zim/zim.iml" filepath="$PROJECT_DIR$/fileformats/zim/zim.iml" group="fileformats" />
     </modules>
   </component>
 </project>

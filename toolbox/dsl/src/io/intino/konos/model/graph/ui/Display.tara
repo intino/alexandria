@@ -1,38 +1,23 @@
 dsl Proteo
 
+use Views
+use Dialog
+use Catalog
 use DataTypes
 use UI
-use Component
 
-Facet ExtensionOf on PassiveView
-	var PassiveView parentView
-
-Concept:Named PassiveView is abstract
+Concept:Named Display extends Component
+	var string label = empty
+	var Display[] displays = empty
+	var string parentDisplay = empty
 	Concept Request extends Data
 		var word:{Asset Void} responseType = Void
 		var Exception[] exceptionRefs = empty
 		has Exception
-
 	Concept Notification extends Data
 		var word:{All Client Display} to = Display
 		var Exception[] exceptionRefs = empty
 		has Exception
-
-Concept:Named Display extends PassiveView
-	var Component[] components = empty
-	var string parentDisplay = empty
-
-	has Block
-
-Facet Desktop on Template
-	has:{1..1} OtherComponents.Header
-	//has:{1..1} ChildComponents.Tabs
-
-Facet DrawerNavigable on Desktop
-	var word:{Left Right Top Bottom} direction = Left
-	var word:{Normal Modal} mode = Normal
-	var boolean hasMiniVariant = false
-	var boolean underHeader = false
 
 Facet Accessible on Display
 	var string[] parameters
@@ -42,4 +27,41 @@ Facet Addressable on Display.Request
 	var boolean encoded = false
 	var boolean listenForChanges = true
 
-Facet Decorated on Display
+Concept Toolbar is decorable component
+	var boolean canSearch = true
+
+	Concept Operation
+		var string title
+		var string polymerIcon = empty
+		var word:{Link Button Icon Chip} mode = Icon
+
+		sub OpenDialog > var Dialog dialog
+			var integer:{%} width = 100%
+			var integer:{%} height = 100%
+
+		sub Task > var string confirmText = empty
+		sub TaskSelection > var string confirmText = empty
+
+		sub Download > var string[] options = empty
+		sub DownloadSelection > var string[] options = empty
+
+		sub Export
+		sub ExportSelection
+
+		sub OpenCatalog
+			var Catalog catalog
+			var View[] views
+			var boolean filtered = false
+			var boolean openItem = false
+			var integer:{%} width = 100%
+			var integer:{%} height = 100%
+			var word:{Standalone RelativeToOperation} position = Standalone
+
+		sub OpenCatalogSelection
+			var Catalog catalog
+			var View[] views
+			var boolean filtered = false
+			var word:{None Single Multiple} selection = None
+			var word:{Standalone RelativeToOperation} position = Standalone
+			var integer:{%} width = 100%
+			var integer:{%} height = 100%
