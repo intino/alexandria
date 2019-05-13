@@ -22,7 +22,10 @@ class Grouping extends AbstractGrouping {
 		return (
 			<div className={classes.container} style={this.style()}>
 				{this.props.label != null ? <Typography className={classes.label} variant="subtitle1">{this.props.label}</Typography> : undefined}
-				<List>{this.state.groups.map((group, i) => this.renderGroup(group, i))}</List>
+				{this.renderToolbar()}
+				<List>{this.state.visibleGroups.map((group, i) => this.renderGroup(group, i))}</List>
+				{this.renderEmpty()}
+				{this.renderMoreGroups()}
 			</div>
 		);
 	};
@@ -30,7 +33,11 @@ class Grouping extends AbstractGrouping {
 	renderGroup = (group, index) => {
 		const { classes } = this.props;
 		return (
-			<ListItem key={index} className={classes.group} role={undefined} dense button onClick={this.handleToggle(group)}>{this.renderGroupContent(group)}</ListItem>
+			<ListItem key={index} className={classes.group} role={undefined} dense button onClick={this.handleToggle(group)}>
+				<Checkbox className={classes.checkbox} checked={this.state.selection.indexOf(group.label) !== -1} tabIndex={-1} disableRipple/>
+				<ListItemText>{group.label}</ListItemText>
+				<ListItemSecondaryAction className={classes.count}>{group.count}</ListItemSecondaryAction>
+			</ListItem>
 		);
 	};
 

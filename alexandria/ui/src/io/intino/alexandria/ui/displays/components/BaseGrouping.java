@@ -39,8 +39,8 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	}
 
 	@Override
-	public void init() {
-		super.init();
+	public void refresh() {
+		super.refresh();
 		if (groups.size() > 0) refreshGroups();
 	}
 

@@ -5,7 +5,6 @@ import Typography from "@material-ui/core/Typography";
 import AbstractBlock from "../../../gen/displays/components/AbstractBlock";
 import BlockNotifier from "../../../gen/displays/notifiers/BlockNotifier";
 import BlockRequester from "../../../gen/displays/requesters/BlockRequester";
-import Theme from "../../../gen/Theme"
 import 'alexandria-ui-elements/res/styles/layout.css';
 
 export default class Block extends AbstractBlock {

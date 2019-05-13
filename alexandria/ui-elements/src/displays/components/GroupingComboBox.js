@@ -1,23 +1,20 @@
 import React from "react";
 import { withStyles } from '@material-ui/core/styles';
-import {Select, InputLabel, Chip, Input, MenuItem} from "@material-ui/core";
+import { Typography } from "@material-ui/core";
+import Select, { components } from "react-select";
 import AbstractGroupingComboBox from "../../../gen/displays/components/AbstractGroupingComboBox";
 import GroupingComboBoxNotifier from "../../../gen/displays/notifiers/GroupingComboBoxNotifier";
 import GroupingComboBoxRequester from "../../../gen/displays/requesters/GroupingComboBoxRequester";
-import { BaseGroupingStyles } from "./BaseGrouping"
+import { BaseGroupingStyles } from "./BaseGrouping";
+import classNames from "classnames";
 
 const styles = theme => ({
 	...BaseGroupingStyles(theme),
 	container : {
 		minWidth: "200px"
 	},
-	chips: {
-		display: 'flex',
-		flexWrap: 'wrap',
-	},
-	chip: {
-		margin: theme.spacing(1)/4,
-		height: "22px"
+	group : {
+		padding: "0",
 	}
 });
 
@@ -33,43 +30,35 @@ class GroupingComboBox extends AbstractGroupingComboBox {
 		const { classes } = this.props;
 		return (
 			<div className={classes.container} style={this.style()}>
-				{this.props.label != null ? <InputLabel className={classes.label} htmlFor="select-multiple-chip">{this.props.label}</InputLabel> : undefined}
-				<Select displayEmpty style={{width:"100%",padding:"10px",minHeight:"60px"}} multiple value={this.state.selection}
-					onChange={this.handleChange} input={<Input id="select-multiple-chip" />}
-					renderValue={selection => this.renderSelection(selection)}>
-					<MenuItem disabled value="">{this.selectMessage()}</MenuItem>
-					{this.state.groups.map((group, index) => this.renderGroup(group, index))}
-				</Select>
+				<Select isMulti isSearchable closeMenuOnSelect={false} placeholder={this.selectMessage()} options={this.state.groups.map(group => { return { value: group.label, label: group.label, group: group } })}
+						className="basic-multi-select" classNamePrefix="select"
+						components={{ Option: this.renderGroup.bind(this)}}
+						onChange={this.handleChange}
+				/>
 			</div>
 		);
 	}
 
-	renderGroup = (group, index) => {
+	renderGroup = (options) => {
+		const { data, isDisabled, ...props } = options;
 		const { classes } = this.props;
-		return (
-			<MenuItem key={group.label} value={group.label} className={classes.group}>{this.renderGroupContent(group)}</MenuItem>
-		);
+		const group = data.group;
+		return !isDisabled ? (
+			<components.Option {...props}>
+				<div className={classNames(classes.group, "option layout horizontal")}>
+					<Typography className="flex" variant="body2">{group.label}</Typography>
+					<Typography className={classes.count} variant="body2">{group.count}</Typography>
+				</div>
+			</components.Option>
+		) : null;
 	};
 
-	handleChange = (e) => {
-		this.updateSelection(e.target.value);
-	};
-
-	renderSelection = (selection) => {
-		const { classes } = this.props;
-
-		if (selection.length === 0)
-			return this.selectMessage();
-
-		return (
-			<div className={classes.chips}>
-				{selection.map(value => (<Chip key={value} label={value} className={classes.chip} />))}
-			</div>
-		);
+	handleChange = (selection) => {
+		this.updateSelection(selection.map(s => s.value));
 	};
 
 	selectMessage = () => {
-		return (<em>{this.translate("Select " + (this.props.label != null ? this.props.label : " an option"))}</em>);
+		return this.translate("Select " + (this.props.label != null ? this.props.label : " an option"));
 	};
 
 }
