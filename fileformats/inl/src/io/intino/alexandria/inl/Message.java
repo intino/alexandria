@@ -64,17 +64,15 @@ public class Message {
 				return object;
 			}
 
-			private Object fill(Resource[] resources) {
-				stream(resources).forEach(this::fill);
-				return resources;
+
+			private Resource[] fill(Resource[] resources) {
+				return stream(resources).map(this::fill).toArray(Resource[]::new);
 			}
 
-			private Object fill(Resource resource) {
-				String key = new String(resource.data());
-				resource.data(attachments.getOrDefault(key, new byte[0]));
-				return resource;
+			private Resource fill(Resource resource) {
+				String key = new String(resource.bytes());
+				return new Resource(resource.name(), attachments.getOrDefault(key, new byte[0]));
 			}
-
 
 			@Override
 			public String toString() {
