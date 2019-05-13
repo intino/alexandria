@@ -1,10 +1,10 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.data;
 
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.SizedRenderer;
 import io.intino.konos.model.graph.DataComponents.File;
-import org.siani.itrules.model.Frame;
 
 public class FileRenderer extends SizedRenderer<File> {
 
@@ -13,9 +13,9 @@ public class FileRenderer extends SizedRenderer<File> {
 	}
 
 	@Override
-	public Frame properties() {
-		Frame result = super.properties();
-		if (element.value() != null && !element.value().isEmpty()) result.addSlot("value", resourceMethodFrame("value", element.value()));
+	public FrameBuilder properties() {
+		FrameBuilder result = super.properties();
+		if (element.value() != null && !element.value().isEmpty()) result.add("value", resourceMethodFrame("value", element.value()));
 		return result;
 	}
 

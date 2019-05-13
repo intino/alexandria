@@ -1,28 +1,16 @@
 package io.intino.konos.builder.codegeneration.accessor.ui.templates;
 
-import org.siani.itrules.*;
-
-import java.util.Locale;
-
-import static org.siani.itrules.LineSeparator.*;
+import io.intino.itrules.RuleSet;
+import io.intino.itrules.Template;
 
 public class DisplayTemplate extends Template {
 
-	protected DisplayTemplate(Locale locale, LineSeparator separator) {
-		super(locale, separator);
-	}
-
-	public static Template create() {
-		return new DisplayTemplate(Locale.ENGLISH, LF).define();
-	}
-
-	public Template define() {
-		add(
-			rule().add((condition("type", "display"))).add(literal("import React from \"react\";\nimport { withStyles } from '@material-ui/core/styles';\nimport Abstract")).add(mark("name", "firstUpperCase")).add(literal(" from \"../../")).add(mark("packageTypeRelativeDirectory")).add(literal("gen/displays")).add(expression().add(literal("/")).add(mark("packageType")).add(literal("s"))).add(literal("/Abstract")).add(mark("name", "firstUpperCase")).add(literal("\";\nimport ")).add(mark("name", "firstUpperCase")).add(literal("Notifier from \"../../")).add(mark("packageTypeRelativeDirectory")).add(literal("gen/displays/notifiers/")).add(mark("name", "firstUpperCase")).add(literal("Notifier\";\nimport ")).add(mark("name", "firstUpperCase")).add(literal("Requester from \"../../")).add(mark("packageTypeRelativeDirectory")).add(literal("gen/displays/requesters/")).add(mark("name", "firstUpperCase")).add(literal("Requester\";\n\nconst styles = theme => ({});\n\nclass ")).add(mark("name", "firstUpperCase")).add(literal(" extends Abstract")).add(mark("name", "firstUpperCase")).add(literal(" {\n\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tthis.notifier = new ")).add(mark("name", "firstUpperCase")).add(literal("Notifier(this);\n\t\tthis.requester = new ")).add(mark("name", "firstUpperCase")).add(literal("Requester(this);\n\t};\n\n\t")).add(mark("notification").multiple("\n\n")).add(literal("\n}\n\nexport default withStyles(styles, { withTheme: true })(")).add(mark("name", "firstUpperCase")).add(literal(");")),
-			rule().add((condition("type", "notification"))).add(mark("name")).add(literal(" = (")).add(expression().add(mark("parameter")).add(literal("value"))).add(literal(") => {\n};")),
-			rule().add((condition("trigger", "parameterValue"))).add(literal("value")),
-			rule().add((condition("trigger", "parameter")))
+	public RuleSet ruleSet() {
+		return new RuleSet().add(
+			rule().condition((type("display"))).output(literal("import React from \"react\";\nimport { withStyles } from '@material-ui/core/styles';\nimport Abstract")).output(mark("name", "firstUpperCase")).output(literal(" from \"../../")).output(mark("packageTypeRelativeDirectory")).output(literal("gen/displays")).output(expression().output(literal("/")).output(mark("packageType")).output(literal("s"))).output(literal("/Abstract")).output(mark("name", "firstUpperCase")).output(literal("\";\nimport ")).output(mark("name", "firstUpperCase")).output(literal("Notifier from \"../../")).output(mark("packageTypeRelativeDirectory")).output(literal("gen/displays/notifiers/")).output(mark("name", "firstUpperCase")).output(literal("Notifier\";\nimport ")).output(mark("name", "firstUpperCase")).output(literal("Requester from \"../../")).output(mark("packageTypeRelativeDirectory")).output(literal("gen/displays/requesters/")).output(mark("name", "firstUpperCase")).output(literal("Requester\";\n\nconst styles = theme => ({});\n\nclass ")).output(mark("name", "firstUpperCase")).output(literal(" extends Abstract")).output(mark("name", "firstUpperCase")).output(literal(" {\n\n\tconstructor(props) {\n\t\tsuper(props);\n\t\tthis.notifier = new ")).output(mark("name", "firstUpperCase")).output(literal("Notifier(this);\n\t\tthis.requester = new ")).output(mark("name", "firstUpperCase")).output(literal("Requester(this);\n\t};\n\n\t")).output(mark("notification").multiple("\n\n")).output(literal("\n}\n\nexport default withStyles(styles, { withTheme: true })(")).output(mark("name", "firstUpperCase")).output(literal(");")),
+			rule().condition((type("notification"))).output(mark("name")).output(literal(" = (")).output(expression().output(mark("parameter")).output(literal("value"))).output(literal(") => {\n};")),
+			rule().condition((trigger("parametervalue"))).output(literal("value")),
+			rule().condition((trigger("parameter")))
 		);
-		return this;
 	}
 }

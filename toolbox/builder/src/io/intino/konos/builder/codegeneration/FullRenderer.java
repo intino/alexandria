@@ -5,6 +5,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.search.GlobalSearchScope;
 import cottons.utils.Files;
+import io.intino.konos.builder.codegeneration.cache.Cache;
+import io.intino.konos.builder.codegeneration.cache.CacheLoader;
+import io.intino.konos.builder.codegeneration.cache.CacheWriter;
 import io.intino.konos.builder.codegeneration.datalake.DatalakeRenderer;
 import io.intino.konos.builder.codegeneration.datalake.NessJMXOperationsRenderer;
 import io.intino.konos.builder.codegeneration.datalake.feeder.FeederRenderer;
@@ -29,6 +32,7 @@ import io.intino.plugin.codeinsight.linemarkers.InterfaceToJavaImplementation;
 import io.intino.plugin.project.LegioConfiguration;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -57,6 +61,8 @@ public class FullRenderer {
 	private final String parent;
 	private final boolean hasModel;
 	private final Map<String, String> classes;
+
+	private static final String ElementCache = "element.cache";
 
 	public FullRenderer(@Nullable Module module, KonosGraph graph, File src, File gen, File res, String packageName) {
 		this.project = module == null ? null : module.getProject();
@@ -131,10 +137,23 @@ public class FullRenderer {
 	}
 
 	private void ui() {
-		Settings settings = settings();
+		Cache cache = loadCache();
 		prepareGraphForUi();
-		new io.intino.konos.builder.codegeneration.accessor.ui.ServiceListRenderer(settings, graph).execute();
-		new io.intino.konos.builder.codegeneration.services.ui.ServiceListRenderer(settings, graph).execute();
+		cache.addAll(uiServer().entrySet());
+		cache.addAll(uiClient().entrySet());
+		saveCache(cache);
+	}
+
+	private Cache uiServer() {
+		Cache cache = new Cache();
+		new io.intino.konos.builder.codegeneration.accessor.ui.ServiceListRenderer(settings(cache), graph).execute();
+		return cache;
+	}
+
+	private Cache uiClient() {
+		Cache cache = new Cache();
+		new io.intino.konos.builder.codegeneration.services.ui.ServiceListRenderer(settings(cache), graph).execute();
+		return cache;
 	}
 
 	private void box() {
@@ -195,10 +214,10 @@ public class FullRenderer {
 
 	}
 
-	private Settings settings() {
+	private Settings settings(Cache cache) {
 		return new Settings().project(project).module(module).parent(parent)
 							 .src(src).gen(gen).boxName(boxName).packageName(packageName)
-							 .classes(classes);
+							 .classes(classes).cache(cache);
 	}
 
 	protected void prepareGraphForUi() {
@@ -215,6 +234,19 @@ public class FullRenderer {
 		if (element.graph().privateComponentsList().size() <= 0) element.graph().create().privateComponents();
 		PrivateComponents.Row row = element.graph().privateComponents(0).rowList().stream().filter(c -> c.name$().equals(name)).findFirst().orElse(null);
 		if (row == null) element.graph().privateComponents(0).create(name).row(itemList);
+	}
+
+	private Cache loadCache() {
+		return new CacheLoader(cacheFile()).load();
+	}
+
+	private void saveCache(Cache cache) {
+		new CacheWriter(cacheFile()).save(cache);
+	}
+
+	@NotNull
+	private File cacheFile() {
+		return new File(res, ElementCache);
 	}
 
 }

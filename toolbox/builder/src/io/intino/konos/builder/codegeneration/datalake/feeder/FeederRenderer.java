@@ -83,13 +83,12 @@ public class FeederRenderer {
 
 		if (sensor.isUserSensor()) {
 			UserSensorSensor userSensor = sensor.asUserSensor();
-			if (userSensor.width() != 100) builder.add("width", new FrameBuilder("width").add("value", userSensor.width()));
-			if (userSensor.height() != 100) builder.add("height", new FrameBuilder("height").add("value", userSensor.height()));
+			if (userSensor.width() != 100)
+				builder.add("width", new FrameBuilder("width").add("value", userSensor.width()));
+			if (userSensor.height() != 100)
+				builder.add("height", new FrameBuilder("height").add("value", userSensor.height()));
 		}
 		return builder.toFrame();
-
-	private static boolean isAnonymous(Feeder feeder) {
-		return feeder.name$().matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
 	}
 
 	private Frame parent(Sensor sensor) {

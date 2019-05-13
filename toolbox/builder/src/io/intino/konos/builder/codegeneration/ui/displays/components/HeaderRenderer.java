@@ -1,9 +1,9 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.OtherComponents.Header;
-import org.siani.itrules.model.Frame;
 
 public class HeaderRenderer extends SizedRenderer<Header> {
 
@@ -12,9 +12,9 @@ public class HeaderRenderer extends SizedRenderer<Header> {
 	}
 
 	@Override
-	public Frame properties() {
-		Frame result = super.properties();
-		result.addSlot("position", element.position().name().toLowerCase());
+	public FrameBuilder properties() {
+		FrameBuilder result = super.properties();
+		result.add("position", element.position().name().toLowerCase());
 		return result;
 	}
 

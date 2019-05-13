@@ -1,10 +1,10 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
-import io.intino.konos.model.graph.OtherComponents.Chart;
 import io.intino.konos.model.graph.Dataframe;
-import org.siani.itrules.model.Frame;
+import io.intino.konos.model.graph.OtherComponents.Chart;
 
 public class ChartRenderer extends SizedRenderer<Chart> {
 
@@ -13,22 +13,22 @@ public class ChartRenderer extends SizedRenderer<Chart> {
 	}
 
 	@Override
-	public Frame properties() {
-		Frame result = super.properties();
-		result.addSlot("query", element.query());
+	public FrameBuilder properties() {
+		FrameBuilder result = super.properties();
+		result.add("query", element.query());
 		addInput(result);
 		addOutput(result);
 		return result;
 	}
 
-	private void addInput(Frame frame) {
+	private void addInput(FrameBuilder builder) {
 		Dataframe input = element.input();
 		String type = input.isCustom() ? "source" : "csv";
-		frame.addSlot("input", inputMethodFrame(input, type));
+		builder.add("input", inputMethodFrame(input, type));
 	}
 
-	private Frame inputMethodFrame(Dataframe input, String type) {
-		Frame frame = new Frame("inputMethod", type).addSlot("value", value(input));
+	private FrameBuilder inputMethodFrame(Dataframe input, String type) {
+		FrameBuilder frame = new FrameBuilder("inputMethod", type).add("value", value(input));
 		addOwner(frame);
 		return frame;
 	}
@@ -39,9 +39,9 @@ public class ChartRenderer extends SizedRenderer<Chart> {
 		return "";
 	}
 
-	private void addOutput(Frame frame) {
+	private void addOutput(FrameBuilder builder) {
 		Chart.Output output = element.output();
-		frame.addSlot("output", output.name());
+		builder.add("output", output.name());
 	}
 
 	@Override

@@ -1,9 +1,9 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.OtherComponents.Spinner;
-import org.siani.itrules.model.Frame;
 
 public class SpinnerRenderer extends ComponentRenderer<Spinner> {
 
@@ -12,9 +12,9 @@ public class SpinnerRenderer extends ComponentRenderer<Spinner> {
 	}
 
 	@Override
-	public Frame properties() {
-		Frame properties = super.properties();
-		properties.addSlot("mode", element.mode().name());
+	public FrameBuilder properties() {
+		FrameBuilder properties = super.properties();
+		properties.add("mode", element.mode().name());
 		return properties;
 	}
 

@@ -1,35 +1,23 @@
 package io.intino.konos.builder.actions;
 
-import org.siani.itrules.*;
-
-import java.util.Locale;
-
-import static org.siani.itrules.LineSeparator.*;
+import io.intino.itrules.RuleSet;
+import io.intino.itrules.Template;
 
 public class IntinoTestTemplate extends Template {
 
-	protected IntinoTestTemplate(Locale locale, LineSeparator separator) {
-		super(locale, separator);
-	}
-
-	public static Template create() {
-		return new IntinoTestTemplate(Locale.ENGLISH, LF).define();
-	}
-
-	public Template define() {
-		add(
-			rule().add((condition("type", "intinoTest"))).add(literal("package ")).add(mark("package")).add(literal(";\n\nimport org.junit.Test;\n\npublic class ")).add(mark("name")).add(literal(" {\n\n\t@Test\n\tpublic void main() throws Exception {\n\t\tMain.main(new String[]{\n\t\t\t\t")).add(mark("service", "fill").multiple(",\n")).add(literal("\n\t\t});\n\t}\n}")),
-			rule().add((condition("type", "service & rest")), (condition("trigger", "fill"))).add(literal("\"")).add(mark("name", "firstLowerCase")).add(literal(".port=\",\n\"")).add(mark("name", "firstLowerCase")).add(literal(".webDirectory=\"")).add(expression().add(mark("custom", "parameter").multiple(""))),
-			rule().add((condition("type", "service & jms")), (condition("trigger", "fill"))).add(literal("\"")).add(mark("name", "firstLowerCase")).add(literal(".url=\",\n\"")).add(mark("name", "firstLowerCase")).add(literal(".user=\",\n\"")).add(mark("name", "firstLowerCase")).add(literal(".password=\"")).add(expression().add(mark("custom", "parameter").multiple(""))),
-			rule().add((condition("type", "service & datalake")), (condition("trigger", "fill"))).add(literal("\"")).add(mark("name", "firstLowerCase")).add(literal(".workingDirectory=\",\n\"")).add(mark("name", "firstLowerCase")).add(literal(".nessieToken=\"")),
-			rule().add((condition("type", "service & channel")), (condition("trigger", "fill"))).add(expression().add(mark("custom", "parameter").multiple(""))),
-			rule().add((condition("type", "service & slack")), (condition("trigger", "fill"))).add(literal("\"")).add(mark("name", "firstLowerCase")).add(literal(".token=\"")),
-			rule().add((condition("type", "service & ui")), (condition("trigger", "fill"))).add(literal("\"")).add(mark("name", "firstLowerCase")).add(literal(".port=\",\n\"")).add(mark("name", "firstLowerCase")).add(literal(".webDirectory=\"")).add(expression().add(mark("custom", "parameter").multiple(""))),
-			rule().add((condition("type", "service & jmx")), (condition("trigger", "fill"))).add(literal("\"")).add(mark("name", "firstLowerCase")).add(literal(".port=\"")).add(expression().add(mark("custom", "parameter").multiple(""))),
-			rule().add((condition("type", "custom")), (condition("trigger", "parameter"))).add(literal(",")).add(literal("\n")).add(literal("\"")).add(mark("conf", "validname", "firstLowerCase")).add(literal(".")).add(mark("name", "validname", "firstLowerCase")).add(literal("=\"")),
-			rule().add((condition("trigger", "parameter"))),
-			rule().add((condition("trigger", "empty")))
+	public RuleSet ruleSet() {
+		return new RuleSet().add(
+			rule().condition((type("intinotest"))).output(literal("package ")).output(mark("package")).output(literal(";\n\nimport org.junit.Test;\n\npublic class ")).output(mark("name")).output(literal(" {\n\n\t@Test\n\tpublic void main() throws Exception {\n\t\tMain.main(new String[]{\n\t\t\t\t")).output(mark("service", "fill").multiple(",\n")).output(literal("\n\t\t});\n\t}\n}")),
+			rule().condition((allTypes("rest","service")), (trigger("fill"))).output(literal("\"")).output(mark("name", "firstLowerCase")).output(literal(".port=\",\n\"")).output(mark("name", "firstLowerCase")).output(literal(".webDirectory=\"")).output(expression().output(mark("custom", "parameter").multiple(""))),
+			rule().condition((allTypes("jms","service")), (trigger("fill"))).output(literal("\"")).output(mark("name", "firstLowerCase")).output(literal(".url=\",\n\"")).output(mark("name", "firstLowerCase")).output(literal(".user=\",\n\"")).output(mark("name", "firstLowerCase")).output(literal(".password=\"")).output(expression().output(mark("custom", "parameter").multiple(""))),
+			rule().condition((allTypes("datalake","service")), (trigger("fill"))).output(literal("\"")).output(mark("name", "firstLowerCase")).output(literal(".workingDirectory=\",\n\"")).output(mark("name", "firstLowerCase")).output(literal(".nessieToken=\"")),
+			rule().condition((allTypes("service","channel")), (trigger("fill"))).output(expression().output(mark("custom", "parameter").multiple(""))),
+			rule().condition((allTypes("service","slack")), (trigger("fill"))).output(literal("\"")).output(mark("name", "firstLowerCase")).output(literal(".token=\"")),
+			rule().condition((allTypes("ui","service")), (trigger("fill"))).output(literal("\"")).output(mark("name", "firstLowerCase")).output(literal(".port=\",\n\"")).output(mark("name", "firstLowerCase")).output(literal(".webDirectory=\"")).output(expression().output(mark("custom", "parameter").multiple(""))),
+			rule().condition((allTypes("jmx","service")), (trigger("fill"))).output(literal("\"")).output(mark("name", "firstLowerCase")).output(literal(".port=\"")).output(expression().output(mark("custom", "parameter").multiple(""))),
+			rule().condition((type("custom")), (trigger("parameter"))).output(literal(",")).output(literal("\n")).output(literal("\"")).output(mark("conf", "validname", "firstLowerCase")).output(literal(".")).output(mark("name", "validname", "firstLowerCase")).output(literal("=\"")),
+			rule().condition((trigger("parameter"))),
+			rule().condition((trigger("empty")))
 		);
-		return this;
 	}
 }

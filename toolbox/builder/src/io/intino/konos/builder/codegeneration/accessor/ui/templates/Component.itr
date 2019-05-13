@@ -6,11 +6,11 @@ def type(child) trigger(declaration)
 end
 
 def type(block & child) trigger(child)
-	$value
+	$this
 end
 
 def type(child) trigger(child)
-	$value
+	$this
 end
 
 def type(child) trigger(add)

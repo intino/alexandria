@@ -1,12 +1,12 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.data;
 
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.model.graph.DataComponents.Text;
 import io.intino.konos.model.graph.code.datacomponents.CodeText;
 import io.intino.konos.model.graph.highlighted.datacomponents.HighlightedText;
-import org.siani.itrules.model.Frame;
 
 import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 
@@ -17,14 +17,14 @@ public class TextRenderer extends ComponentRenderer<Text> {
 	}
 
 	@Override
-	public Frame buildFrame() {
-		Frame frame = super.buildFrame();
-		if (element.prefix() != null) frame.addSlot("prefix", element.prefix());
-		if (element.suffix() != null) frame.addSlot("suffix", element.suffix());
+	public FrameBuilder frameBuilder() {
+		FrameBuilder frame = super.frameBuilder();
+		if (element.prefix() != null) frame.add("prefix", element.prefix());
+		if (element.suffix() != null) frame.add("suffix", element.suffix());
 		if (element.isCode()) {
-			Frame codeFrame = new Frame(CodeText.class.getSimpleName());
-			if (element.asCode().value() != null) codeFrame.addSlot("value", escape(element.asCode().value()));
-			frame.addSlot("code", codeFrame);
+			FrameBuilder codeFrame = new FrameBuilder(CodeText.class.getSimpleName());
+			if (element.asCode().value() != null) codeFrame.add("value", escape(element.asCode().value()));
+			frame.add("code", codeFrame);
 		}
 		return frame;
 	}
@@ -34,26 +34,26 @@ public class TextRenderer extends ComponentRenderer<Text> {
 	}
 
 	@Override
-	public Frame properties() {
-		Frame result = super.properties();
+	public FrameBuilder properties() {
+		FrameBuilder result = super.properties();
 		addHighlight(result);
-		result.addSlot("mode", element.mode().name().toLowerCase());
+		result.add("mode", element.mode().name().toLowerCase());
 		if (element.isCode()) {
-			result.addTypes(CodeText.class.getSimpleName());
-			result.addSlot("language", element.asCode().language().name());
+			result.add(CodeText.class.getSimpleName());
+			result.add("language", element.asCode().language().name());
 		}
 		if (element.value() != null) {
 			String value = element.isCode() ? element.value().replaceAll("\\n", "").replaceAll("\"", "\\\\\"") : element.value();
-			result.addSlot("defaultValue", value);
+			result.add("defaultValue", value);
 		}
 		return result;
 	}
 
-	private void addHighlight(Frame result) {
+	private void addHighlight(FrameBuilder result) {
 		if (!element.isHighlighted()) return;
 		HighlightedText highlight = element.asHighlighted();
-		Frame highlightedFrame = new Frame("highlighted").addSlot("text", highlight.textColor()).addSlot("background", highlight.backgroundColor());
-		result.addSlot("highlighted", highlightedFrame);
+		FrameBuilder highlightedFrame = new FrameBuilder("highlighted").add("text", highlight.textColor()).add("background", highlight.backgroundColor());
+		result.add("highlighted", highlightedFrame);
 	}
 
 	@Override

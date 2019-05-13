@@ -1,11 +1,11 @@
 package io.intino.konos.builder.codegeneration.ui.displays;
 
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.Block;
 import io.intino.konos.model.graph.Template;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
@@ -21,21 +21,21 @@ public class TemplateRenderer extends BaseDisplayRenderer<Template> {
 	}
 
 	@Override
-	public Frame buildFrame() {
-		Frame frame = super.buildFrame();
+	public FrameBuilder frameBuilder() {
+		FrameBuilder frame = super.frameBuilder();
 		element.componentList().forEach(c -> addComponent(c, frame));
-		frame.addSlot("componentReferences", componentReferencesFrame());
+		frame.add("componentReferences", componentReferencesFrame());
 		return frame;
 	}
 
-	private Frame componentReferencesFrame() {
-		Frame result = new Frame("componentReferences");
-		if (element.i$(Block.class)) result.addTypes("forBlock");
+	private FrameBuilder componentReferencesFrame() {
+		FrameBuilder result = new FrameBuilder("componentReferences");
+		if (element.i$(Block.class)) result.add("forBlock");
 		addComponents(result);
 		return result;
 	}
 
-	private void addComponents(Frame frame) {
+	private void addComponents(FrameBuilder frame) {
 		element.componentList().forEach(c -> addComponent(c, frame));
 	}
 

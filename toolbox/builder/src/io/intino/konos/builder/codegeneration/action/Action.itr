@@ -94,7 +94,7 @@ def type(ui & action & gen)
 end
 
 def trigger(favicon)
-	this.getClass().getResource("$value");
+	this.getClass().getResource("$this");
 end
 
 def type(ui & action) !type(gen)
@@ -150,7 +150,7 @@ def type(component)
 	    return new io.intino.alexandria.ui.Soul(session) {
 			@Override
 			public void personify() {
-				$value+snakecaseToCamelCase+firstUpperCase component = new $value+snakecaseToCamelCase+firstUpperCase(box);
+				$this+snakecaseToCamelCase+firstUpperCase component = new $this+snakecaseToCamelCase+firstUpperCase(box);
 				$editor+component
 				register(component);
 				component.init();

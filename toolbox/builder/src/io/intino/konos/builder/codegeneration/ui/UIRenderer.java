@@ -1,28 +1,25 @@
 package io.intino.konos.builder.codegeneration.ui;
 
 import com.intellij.openapi.project.Project;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.PassiveView;
 import io.intino.konos.model.graph.temporal.TemporalCatalog;
 import io.intino.tara.magritte.Layer;
-import io.intino.tara.magritte.Node;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.javascriptFile;
-import static io.intino.konos.model.graph.Utils.isUUID;
-import static java.util.Collections.reverse;
 
 public abstract class UIRenderer {
 	protected Settings settings;
+	private final ElementHelper elementHelper;
 	protected final Target target;
 
 	public static final String UI = "ui";
@@ -39,17 +36,18 @@ public abstract class UIRenderer {
 
 	protected UIRenderer(Settings settings, Target target) {
 		this.settings = settings;
+		this.elementHelper = new ElementHelper();
 		this.target = target;
 	}
 
 	public abstract void execute();
 
-	public Frame buildFrame() {
-		return baseFrame();
+	public FrameBuilder frameBuilder() {
+		return baseFrameBuilder();
 	}
 
-	public Frame baseFrame() {
-		return new Frame().addSlot("box", boxName()).addSlot("package", settings.packageName());
+	public FrameBuilder baseFrameBuilder() {
+		return new FrameBuilder().add("box", boxName()).add("package", settings.packageName());
 	}
 
 	public Project project() {
@@ -139,12 +137,6 @@ public abstract class UIRenderer {
 		return Character.isDigit(name.charAt(0)) ? "_" + name : name;
 	}
 
-	protected String nameOf(Layer element) {
-		String result = element.name$();
-		if (!isUUID(result)) return result;
-		return generateName(element);
-	}
-
 	protected String typeOf(PassiveView element) {
 		if (element.i$(Display.class)) return typeOf(element.a$(Display.class));
 		return element.getClass().getSimpleName();
@@ -161,44 +153,20 @@ public abstract class UIRenderer {
 		return file;
 	}
 
-	protected String shortId(Layer element) {
-		return shortId(element, "");
+	protected String nameOf(Layer element) {
+		return elementHelper.nameOf(element);
 	}
 
-	protected String ownerId(Layer element) {
-		Node owner = element.core$().owner();
-		List<String> result = new ArrayList<>();
-		while (owner != null) {
-			result.add(shortId(owner.as(Layer.class)));
-			owner = owner.owner();
-		}
-		reverse(result);
-		return String.join(".", result);
+	protected String shortId(Layer element) {
+		return elementHelper.shortId(element);
 	}
 
 	protected String shortId(Layer element, String suffix) {
-		return settings.idGenerator().shortId(nameOf(element) + suffix);
+		return elementHelper.shortId(element, suffix);
 	}
 
-	private String generateName(Layer element) {
-		return generateName(element.core$(), "");
-	}
-
-	private String generateName(Node element, String name) {
-		Node owner = element.owner();
-		if (isRoot(owner)) return owner.name() + position(element, owner);
-		return generateName(owner, name) + position(element, owner);
-	}
-
-	private int position(Node element, Node owner) {
-		List<Node> children = owner.componentList();
-		for (int pos = 0; pos< children.size(); pos++)
-			if (children.get(pos).id().equals(element.id())) return pos;
-		return -1;
-	}
-
-	private boolean isRoot(Node node) {
-		return node.owner() == null || node.owner() == node.model();
+	protected boolean isRendered(Layer element) {
+		return settings.cache().containsKey(element.name$());
 	}
 
 }

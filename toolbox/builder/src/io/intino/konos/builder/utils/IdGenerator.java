@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class IdGenerator {
-	private Map<String, Integer> idsMap = new HashMap<>();
+	private static Map<String, Integer> idsMap = new HashMap<>();
 	private int seed = 0;
 
 	private static final Hashids generator = new Hashids("");

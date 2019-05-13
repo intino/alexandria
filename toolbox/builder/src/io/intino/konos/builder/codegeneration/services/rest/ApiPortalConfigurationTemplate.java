@@ -1,27 +1,14 @@
 package io.intino.konos.builder.codegeneration.services.rest;
 
-import org.siani.itrules.LineSeparator;
-import org.siani.itrules.Template;
-
-import java.util.Locale;
-
-import static org.siani.itrules.LineSeparator.LF;
+import io.intino.itrules.RuleSet;
+import io.intino.itrules.Template;
 
 public class ApiPortalConfigurationTemplate extends Template {
 
-	protected ApiPortalConfigurationTemplate(Locale locale, LineSeparator separator) {
-		super(locale, separator);
-	}
-
-	public static Template create() {
-		return new ApiPortalConfigurationTemplate(Locale.ENGLISH, LF).define();
-	}
-
-	public Template define() {
-		add(
-				rule().add((condition("type", "api"))).add(literal("{\n  \"urls\": [\n    ")).add(mark("url").multiple(",\n")).add(literal("\n  ],\n  \"title\": \"")).add(mark("title")).add(literal("\",\n  \"subtitle\": \"")).add(mark("subtitle")).add(literal("\",\n  \"background\": \"")).add(mark("background")).add(literal("\",\n  \"color\": \"")).add(mark("color")).add(literal("\",\n  \"selectorBorderColor\": \"\"\n}")),
-			rule().add((condition("trigger", "url"))).add(literal("{\n  \"url\": \"./data/")).add(mark("value")).add(literal(".json\",\n  \"name\": \"")).add(mark("value")).add(literal("\"\n}"))
+	public RuleSet ruleSet() {
+		return new RuleSet().add(
+			rule().condition((type("api"))).output(literal("{\n  \"urls\": [\n    ")).output(mark("url").multiple(",\n")).output(literal("\n  ],\n  \"title\": \"")).output(mark("title")).output(literal("\",\n  \"subtitle\": \"")).output(mark("subtitle")).output(literal("\",\n  \"background\": \"")).output(mark("background")).output(literal("\",\n  \"color\": \"")).output(mark("color")).output(literal("\",\n  \"selectorBorderColor\": \"\"\n}")),
+			rule().condition((trigger("url"))).output(literal("{\n  \"url\": \"./data/")).output(mark("value")).output(literal(".json\",\n  \"name\": \"")).output(mark("value")).output(literal("\"\n}"))
 		);
-		return this;
 	}
 }

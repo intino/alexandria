@@ -1,11 +1,11 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.collection;
 
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.model.graph.CatalogComponents;
 import io.intino.konos.model.graph.Component;
-import org.siani.itrules.model.Frame;
 
 import java.util.List;
 
@@ -16,12 +16,12 @@ public abstract class CollectionComponentRenderer<C extends Component> extends C
 	}
 
 	@Override
-	public Frame properties() {
-		Frame result = super.properties();
-		result.addSlot("width", width() != -1 ? width() : defaultWidth());
+	public FrameBuilder properties() {
+		FrameBuilder result = super.properties();
+		result.add("width", width() != -1 ? width() : defaultWidth());
 		int position = position();
-		if (position == 0) result.addSlot("marginLeft", "marginLeft");
-		result.addSlot("marginSize", position == 0 ? "20" : "10");
+		if (position == 0) result.add("marginLeft", "marginLeft");
+		result.add("marginSize", position == 0 ? "20" : "10");
 		return result;
 	}
 

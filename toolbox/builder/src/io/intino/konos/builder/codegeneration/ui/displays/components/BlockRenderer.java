@@ -1,5 +1,6 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.Block;
@@ -7,7 +8,6 @@ import io.intino.konos.model.graph.OtherComponents.Selector;
 import io.intino.konos.model.graph.badge.BadgeBlock;
 import io.intino.konos.model.graph.option.OptionComponent;
 import io.intino.konos.model.graph.rules.Spacing;
-import org.siani.itrules.model.Frame;
 
 public class BlockRenderer extends SizedRenderer<Block> {
 
@@ -16,67 +16,67 @@ public class BlockRenderer extends SizedRenderer<Block> {
 	}
 
 	@Override
-	public Frame buildFrame() {
-		Frame frame = super.buildFrame();
+	public FrameBuilder frameBuilder() {
+		FrameBuilder frame = super.frameBuilder();
 		addBinding(frame);
 		return frame;
 	}
 
 	@Override
-	public Frame properties() {
-		Frame result = super.properties();
+	public FrameBuilder properties() {
+		FrameBuilder result = super.properties();
 		addSpacing(result);
 		addLayout(result);
 		addPaper(result);
 		addBadge(result);
 		addParallax(result);
-		if (element.isCollapsible()) result.addSlot("collapsible", "true");
+		if (element.isCollapsible()) result.add("collapsible", "true");
 		return result;
 	}
 
-	private void addSpacing(Frame result) {
-		if (element.spacing() != Spacing.None) result.addSlot("spacing", element.spacing().value());
+	private void addSpacing(FrameBuilder builder) {
+		if (element.spacing() != Spacing.None) builder.add("spacing", element.spacing().value());
 	}
 
-	private void addLayout(Frame result) {
+	private void addLayout(FrameBuilder builder) {
 		String[] layout = element.layout().stream().map(l -> l.name().toLowerCase()).toArray(String[]::new);
-		result.addSlot("layout", layout);
+		builder.add("layout", layout);
 	}
 
-	private void addPaper(Frame result) {
+	private void addPaper(FrameBuilder builder) {
 		if (!element.isPaper()) return;
-		result.addSlot("paper", "paper");
+		builder.add("paper", "paper");
 	}
 
-	private void addBadge(Frame result) {
+	private void addBadge(FrameBuilder builder) {
 		if (!element.isBadge()) return;
 		BadgeBlock badgeBlock = element.asBadge();
-		Frame badgeFrame = new Frame("badge");
-		if (badgeBlock.value() != -1) badgeFrame.addSlot("value", badgeBlock.value());
-		if (badgeBlock.max() != -1) badgeFrame.addSlot("max", badgeBlock.max());
-		if (badgeBlock.showZero()) badgeFrame.addSlot("showZero", true);
-		badgeFrame.addSlot("mode", badgeBlock.mode().name());
-		result.addSlot("badge", badgeFrame);
+		FrameBuilder badgeFrame = new FrameBuilder("badge");
+		if (badgeBlock.value() != -1) badgeFrame.add("value", badgeBlock.value());
+		if (badgeBlock.max() != -1) badgeFrame.add("max", badgeBlock.max());
+		if (badgeBlock.showZero()) badgeFrame.add("showZero", true);
+		badgeFrame.add("mode", badgeBlock.mode().name());
+		builder.add("badge", badgeFrame);
 	}
 
-	private void addParallax(Frame result) {
+	private void addParallax(FrameBuilder builder) {
 		if (!element.isParallax()) return;
 		String background = element.asParallax().background();
 		if (background == null || background.isEmpty()) return;
-		result.addSlot("background", resourceMethodFrame("background", background));
+		builder.add("background", resourceMethodFrame("background", background));
 	}
 
-	private void addBinding(Frame result) {
+	private void addBinding(FrameBuilder builder) {
 		if (!element.isConditional()) return;
 
 		OptionComponent option = element.asConditional().selected();
 		if (option == null) return;
 
 		Selector selector = option.core$().ownerAs(Selector.class);
-		result.addSlot("binding", new Frame("binding")
-			  								.addSlot("name", nameOf(element))
-			  								.addSlot("selector", selector.name$())
-											.addSlot("option", shortId(option)));
+		builder.add("binding", new FrameBuilder("binding")
+			  								.add("name", nameOf(element))
+			  								.add("selector", selector.name$())
+											.add("option", shortId(option)));
 	}
 
 	@Override

@@ -1,10 +1,10 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.operation;
 
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.OperationRenderer;
 import io.intino.konos.model.graph.OperationComponents.OpenPage;
-import org.siani.itrules.model.Frame;
 
 public class OpenPageRenderer extends OperationRenderer<OpenPage> {
 
@@ -13,9 +13,9 @@ public class OpenPageRenderer extends OperationRenderer<OpenPage> {
 	}
 
 	@Override
-	public Frame properties() {
-		Frame properties = super.properties();
-		if (element.page() != null) properties.addSlot("path", element.page().path());
+	public FrameBuilder properties() {
+		FrameBuilder properties = super.properties();
+		if (element.page() != null) properties.add("path", element.page().path());
 		return properties;
 	}
 

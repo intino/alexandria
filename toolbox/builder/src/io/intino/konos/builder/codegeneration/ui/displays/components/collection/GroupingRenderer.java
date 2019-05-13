@@ -1,10 +1,10 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.collection;
 
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.model.graph.CatalogComponents.Grouping;
-import org.siani.itrules.model.Frame;
 
 public class GroupingRenderer extends ComponentRenderer<Grouping> {
 
@@ -13,17 +13,17 @@ public class GroupingRenderer extends ComponentRenderer<Grouping> {
 	}
 
 	@Override
-	public Frame buildFrame() {
-		Frame frame = super.buildFrame();
-		addBinding(frame);
-		return frame;
+	public FrameBuilder frameBuilder() {
+		FrameBuilder result = super.frameBuilder();
+		addBinding(result);
+		return result;
 	}
 
-	private void addBinding(Frame frame) {
+	private void addBinding(FrameBuilder builder) {
 		if (element.collection() == null) return;
-		Frame result = new Frame("binding", type()).addSlot("name", nameOf(element));
-		result.addSlot("collection", nameOf(element.collection()));
-		frame.addSlot("binding", result);
+		FrameBuilder result = new FrameBuilder("binding", type()).add("name", nameOf(element));
+		result.add("collection", nameOf(element.collection()));
+		builder.add("binding", result);
 	}
 
 	@Override

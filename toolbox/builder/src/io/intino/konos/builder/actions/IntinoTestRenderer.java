@@ -5,6 +5,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiPackage;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.builder.utils.GraphLoader;
@@ -15,8 +17,6 @@ import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.slackbot.SlackBotService;
 import io.intino.konos.model.graph.ui.UIService;
 import io.intino.tara.magritte.Layer;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -38,13 +38,13 @@ public class IntinoTestRenderer {
 
 	public String execute() {
 		if (graph == null) return null;
-		final Frame frame = new Frame();
-		frame.addTypes("intinoTest").addSlot("package", calculatePackage()).addSlot("name", newName);
-		addRESTServices(frame);
-		addJMSServices(frame);
-		addSlackServices(frame);
-		addUIServices(frame);
-		return template().format(frame);
+		final FrameBuilder builder = new FrameBuilder();
+		builder.add("intinoTest").add("package", calculatePackage()).add("name", newName);
+		addRESTServices(builder);
+		addJMSServices(builder);
+		addSlackServices(builder);
+		addUIServices(builder);
+		return template().render(builder);
 	}
 
 	private String calculatePackage() {
@@ -52,43 +52,43 @@ public class IntinoTestRenderer {
 		return aPackage == null ? "" : aPackage.getQualifiedName();
 	}
 
-	private void addRESTServices(Frame frame) {
+	private void addRESTServices(FrameBuilder builder) {
 		for (RESTService service : graph.rESTServiceList()) {
-			Frame restFrame = new Frame().addTypes("service", "rest").addSlot("name", service.name$());
-			addUserVariables(service.a$(Service.class), restFrame, findCustomParameters(service));
-			frame.addSlot("service", restFrame);
+			FrameBuilder restBuilder = new FrameBuilder("service").add("rest").add("name", service.name$());
+			addUserVariables(service.a$(Service.class), restBuilder, findCustomParameters(service));
+			builder.add("service", restBuilder.toFrame());
 		}
 	}
 
-	private void addJMSServices(Frame frame) {
+	private void addJMSServices(FrameBuilder builder) {
 		for (JMSService service : graph.jMSServiceList()) {
-			Frame jmsFrame = new Frame().addTypes("service", "jms").addSlot("name", service.name$());
-			addUserVariables(service.a$(Service.class), jmsFrame, findCustomParameters(service));
-			frame.addSlot("service", jmsFrame);
+			FrameBuilder jmsBuilder = new FrameBuilder("service").add("jms").add("name", service.name$());
+			addUserVariables(service.a$(Service.class), jmsBuilder, findCustomParameters(service));
+			builder.add("service", jmsBuilder.toFrame());
 		}
 	}
 
-	private void addUIServices(Frame frame) {
+	private void addUIServices(FrameBuilder builder) {
 		for (UIService service : graph.uIServiceList()) {
-			Frame serviceFrame = new Frame().addTypes("service", "ui").addSlot("name", service.name$());
-			frame.addSlot("service", serviceFrame);
+			FrameBuilder serviceBuilder = new FrameBuilder("service").add("ui").add("name", service.name$());
+			builder.add("service", serviceBuilder);
 			if (service.authentication() != null) {
-				serviceFrame.addTypes("auth");
-				serviceFrame.addSlot("auth", service.authentication().by());
+				serviceBuilder.add("auth");
+				serviceBuilder.add("auth", service.authentication().by());
 			}
-			addUserVariables(service, serviceFrame, findCustomParameters(service));
+			addUserVariables(service, serviceBuilder, findCustomParameters(service));
 		}
 	}
 
-	private void addSlackServices(Frame frame) {
+	private void addSlackServices(FrameBuilder builder) {
 		for (SlackBotService service : graph.slackBotServiceList()) {
-			frame.addSlot("service", new Frame().addTypes("service", "slack").addSlot("name", service.name$()));
+			builder.add("service", new FrameBuilder("service").add("slack").add("name", service.name$()));
 		}
 	}
 
-	private void addUserVariables(Layer layer, Frame frame, Collection<String> userVariables) {
+	private void addUserVariables(Layer layer, FrameBuilder builder, Collection<String> userVariables) {
 		for (String custom : userVariables)
-			frame.addSlot("custom", new Frame().addTypes("custom").addSlot("conf", layer.name$()).addSlot("name", custom).addSlot("type", "String"));
+			builder.add("custom", new FrameBuilder("custom").add("conf", layer.name$()).add("name", custom).add("type", "String"));
 	}
 
 	private Set<String> findCustomParameters(JMSService service) {
@@ -121,7 +121,7 @@ public class IntinoTestRenderer {
 	}
 
 	private Template template() {
-		return Formatters.customize(IntinoTestTemplate.create());
+		return Formatters.customize(new IntinoTestTemplate());
 	}
 
 }

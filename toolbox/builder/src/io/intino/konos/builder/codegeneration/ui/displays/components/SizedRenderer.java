@@ -1,11 +1,11 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.AbstractAbsolute;
 import io.intino.konos.model.graph.AbstractRelative;
 import io.intino.konos.model.graph.Component;
-import org.siani.itrules.model.Frame;
 
 public class SizedRenderer<C extends Component> extends ComponentRenderer<C> {
 
@@ -14,21 +14,21 @@ public class SizedRenderer<C extends Component> extends ComponentRenderer<C> {
 	}
 
 	@Override
-	public Frame properties() {
-		Frame result = super.properties();
+	public FrameBuilder properties() {
+		FrameBuilder result = super.properties();
 		addSize(result);
 		return result;
 	}
 
-	private void addSize(Frame result) {
+	private void addSize(FrameBuilder result) {
 		if (element.i$(AbstractRelative.class)) {
 			AbstractRelative abstractRelative = element.a$(AbstractRelative.class);
-			result.addSlot("width", abstractRelative.width() + "%");
-			result.addSlot("height", abstractRelative.height() + "%");
+			result.add("width", abstractRelative.width() + "%");
+			result.add("height", abstractRelative.height() + "%");
 		} else if (element.i$(AbstractAbsolute.class)) {
 			AbstractAbsolute abstractAbsolute = element.a$(AbstractAbsolute.class);
-			result.addSlot("width", abstractAbsolute.width() + "px");
-			result.addSlot("height", abstractAbsolute.height() + "px");
+			result.add("width", abstractAbsolute.width() + "px");
+			result.add("height", abstractAbsolute.height() + "px");
 		}
 	}
 
