@@ -314,7 +314,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		result.add("forRoot");
 		componentList.forEach(c -> addComponent(c, result));
 
-		return result;
+		return componentList.size() > 0 ? result : null;
 	}
 
 }

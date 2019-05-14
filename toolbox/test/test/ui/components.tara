@@ -23,6 +23,11 @@ Theme
 	Secondary(color = "") 
 	Error(color = "")
 
+Schema schema2
+
+Translator(language = Spanish)
+	Translation(text = "sample", value = "ejemplo")
+
 Format("color:'#B71C1C',textShadow:'2px 2px 2px #fff'") h1
 Format("color:'black',textShadow:'2px 2px 2px #fff'") h2
 Format("padding:'10px 20px'") air

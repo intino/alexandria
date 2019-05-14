@@ -23,10 +23,10 @@ public class ThemeRenderer extends UIRenderer {
 	}
 
 	@Override
-	public void execute() {
+	public void render() {
 		FrameBuilder builder = new FrameBuilder("theme");
 		Theme theme = service.graph().theme();
-		if (isRendered(theme)) return;
+		if (theme == null || isRendered(theme)) return;
 		builder.add("palette", palette(theme));
 		builder.add("typography", typography(theme));
 		service.graph().formatList().forEach(r -> builder.add("format", frameOf(r)));

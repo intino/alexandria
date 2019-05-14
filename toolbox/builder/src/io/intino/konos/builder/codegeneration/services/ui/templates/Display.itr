@@ -18,8 +18,8 @@ def type(display & accessible)
             super(session, appUrl, "/$name+SnakeCaseToCamelCase+lowercase~proxy");
         }
 
-		$request+accessible...[$NL$NL]
-		$parameter+method...[$NL$NL]
+		[$request+accessible...[$NL$NL]]
+		[$parameter+method...[$NL$NL]]
 
         @Override
         protected Map<String, String> parameters() {
@@ -66,10 +66,10 @@ def type(display)
 
         public $name+firstUpperCase($box+firstUpperCase~Box box) {
             super(box);
-        }[
+        }
 
-		]$request...[$NL$NL]
-		$parameter+setter...[$NL$NL]
+		[$request...[$NL$NL]]
+		[$parameter+setter...[$NL$NL]]
     }
 end
 

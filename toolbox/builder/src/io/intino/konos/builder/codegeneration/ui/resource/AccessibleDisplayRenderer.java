@@ -20,7 +20,8 @@ public class AccessibleDisplayRenderer extends UIRenderer {
 		this.display = display;
 	}
 
-	public void execute() {
+	@Override
+	public void render() {
 		if (isRendered(display)) return;
 
 		FrameBuilder builder = frameBuilder().add("name", display.name$());

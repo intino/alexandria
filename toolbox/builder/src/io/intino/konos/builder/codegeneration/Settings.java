@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import io.intino.konos.builder.codegeneration.cache.Cache;
+import io.intino.konos.builder.codegeneration.cache.ElementCache;
 
 import java.io.File;
 import java.util.HashMap;
@@ -13,9 +13,10 @@ public class Settings {
 	private Module module;
 	private Module webModule;
 	private String parent;
+	private File res;
 	private File src;
 	private File gen;
-	private Cache cache;
+	private ElementCache cache;
 	private String packageName;
 	private String boxName;
 	private Map<String, String> classes = new HashMap<>();
@@ -56,6 +57,15 @@ public class Settings {
 		return this;
 	}
 
+	public File res() {
+		return res;
+	}
+
+	public Settings res(File res) {
+		this.res = res;
+		return this;
+	}
+
 	public File src() {
 		return src;
 	}
@@ -65,11 +75,11 @@ public class Settings {
 		return this;
 	}
 
-	public Cache cache() {
+	public ElementCache cache() {
 		return cache;
 	}
 
-	public Settings cache(Cache cache) {
+	public Settings cache(ElementCache cache) {
 		this.cache = cache;
 		return this;
 	}

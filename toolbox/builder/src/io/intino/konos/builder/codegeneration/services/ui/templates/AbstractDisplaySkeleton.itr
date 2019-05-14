@@ -19,7 +19,7 @@ def type(display)
     	[$reference+declaration...[$NL]]
     	[$component+declarations...[$NL]]
 
-        public [$abstract]$name+firstUpperCase($abstractBox+type box) {
+        public $abstract$name+firstUpperCase($abstractBox+type box) {
             super(box);
             id("$id");
         }
@@ -28,12 +28,13 @@ def type(display)
 		public void init() {
 			super.init();
 			[$reference...[$NL]]
-			$componentReferences
+			[$componentReferences]
 			[$component+initializations...[$NL]]
 		}
-		[$methods]
-		[$component+class...[$NL]]
-		[$component+method...[$NL]]
+		$methods
+		[$component+class...[$NL$NL]]
+		[$component+method...[$NL$NL]]
+
 	}
 end
 
@@ -82,11 +83,11 @@ def type(rowsImport)
 end
 
 def type(componentReferences & forRoot)
-	$component+rootReferences...[$NL]
+	[$component+rootReferences...[$NL]]
 end
 
 def type(componentReferences)
-	$component+references...[$NL]
+	[$component+references...[$NL]]
 end
 
 def type(attribute)

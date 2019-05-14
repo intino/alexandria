@@ -22,13 +22,13 @@ public class CacheReader extends HashMap<String, Integer> {
 		this.cacheFile = cacheFile;
 	}
 
-	public Cache load() {
+	public ElementCache load() {
 		try {
-			if (!cacheFile.exists()) return new Cache();
+			if (!cacheFile.exists()) return new ElementCache();
 			Properties properties = new Properties();
 			properties.load(new FileInputStream(cacheFile));
 			Map<String, Long> marks = properties.entrySet().stream().collect(toMap(e -> String.valueOf(e.getKey()), e -> Long.valueOf(String.valueOf(e.getValue()))));
-			return new Cache(marks);
+			return new ElementCache(marks);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 			return null;

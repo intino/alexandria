@@ -32,7 +32,8 @@ public class ServiceRenderer extends UIRenderer {
 		this.service = service;
 	}
 
-	public void execute() {
+	@Override
+	public void render() {
 		try {
 			createSkeleton();
 			new AppRenderer(settings, service).execute();

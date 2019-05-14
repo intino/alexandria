@@ -53,6 +53,10 @@ public class Commons {
 		return preparedFile(packageFolder, name, "java");
 	}
 
+	public static String javaFilename(String name) {
+		return prepareName(name) + ".java";
+	}
+
 	public static File javascriptFile(File packageFolder, String name) {
 		return preparedFile(packageFolder, name, "js");
 	}

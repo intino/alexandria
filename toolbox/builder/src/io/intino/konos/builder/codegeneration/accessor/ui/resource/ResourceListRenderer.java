@@ -10,7 +10,8 @@ public class ResourceListRenderer extends io.intino.konos.builder.codegeneration
 		super(settings, service.graph(), Target.Accessor);
 	}
 
-	public void execute() {
+	@Override
+	public void render() {
 		resourceList.forEach(r -> new ResourceRenderer(settings, r).execute());
 		accessibleDisplays.forEach(d -> new AccessibleDisplayRenderer(settings, d, Target.Accessor).execute());
 	}

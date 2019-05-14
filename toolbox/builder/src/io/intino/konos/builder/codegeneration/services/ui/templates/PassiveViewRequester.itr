@@ -60,7 +60,8 @@ def type(display)
 			if (display == null) return;
 			String operation = operation();
 
-			$request...[$NL~else ]
+			[$request...[$NL~else ]]
+
 			super.execute();
 		}
 	}

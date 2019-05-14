@@ -1,10 +1,11 @@
 package io.intino.konos.builder.codegeneration.services.jmx;
 
-import com.intellij.openapi.project.Project;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.Renderer;
+import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.action.JMXActionRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
@@ -17,29 +18,17 @@ import io.intino.konos.model.graph.type.TypeData;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 
-public class JMXOperationsServiceRenderer {
-
-	private final Project project;
+public class JMXOperationsServiceRenderer extends Renderer {
 	private final List<JMXService> services;
-	private final File gen;
-	private final String boxName;
-	private final Map<String, String> classes;
-	private File src;
-	private String packageName;
 
-	public JMXOperationsServiceRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName, Map<String, String> classes) {
-		this.project = project;
+	public JMXOperationsServiceRenderer(Settings settings, KonosGraph graph) {
+		super(settings, Target.Service);
 		this.services = graph.jMXServiceList();
-		this.src = src;
-		this.gen = gen;
-		this.packageName = packageName;
-		this.boxName = boxName;
-		this.classes = classes;
 	}
 
-	public void execute() {
+	@Override
+	public void render() {
 		this.services.forEach((service) -> {
 			createInterface(service);
 			createImplementation(service);
@@ -50,10 +39,10 @@ public class JMXOperationsServiceRenderer {
 	private void createInterface(JMXService service) {
 		FrameBuilder builder = new FrameBuilder("jmx", "interface")
 				.add("name", service.name$())
-				.add("package", packageName)
-				.add("box", boxName);
+				.add("package", packageName())
+				.add("box", boxName());
 		if (!service.graph().schemaList().isEmpty())
-			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName));
+			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()));
 		for (Operation operation : service.operationList())
 			builder.add("operation", frameOf(operation));
 		Commons.writeFrame(destinationPackage(), service.name$() + "MBean", template().render(builder));
@@ -62,20 +51,20 @@ public class JMXOperationsServiceRenderer {
 	private void createImplementation(JMXService service) {
 		FrameBuilder builder = new FrameBuilder("jmx", "implementation")
 				.add("name", service.name$())
-				.add("box", boxName)
-				.add("package", packageName)
+				.add("box", boxName())
+				.add("package", packageName())
 				.add("operation", service.operationList().stream().map(this::frameOf).toArray(Frame[]::new));
 		Commons.writeFrame(destinationPackage(), service.name$(), template().render(builder));
 	}
 
 	private void createCorrespondingActions(List<Operation> operations) {
 		for (Operation operation : operations)
-			new JMXActionRenderer(project, operation, src, packageName, boxName, classes).execute();
+			new JMXActionRenderer(settings, operation).execute();
 	}
 
 	private Frame frameOf(Operation operation) {
 		final FrameBuilder builder = new FrameBuilder("operation").add("name", operation.name$()).add("action", operation.name$()).
-				add("package", packageName).add("returnType", returnType(operation));
+				add("package", packageName()).add("returnType", returnType(operation));
 		builder.add("description", operation.description());
 		setupParameters(operation.parameterList(), builder);
 		return builder.toFrame();
@@ -88,7 +77,7 @@ public class JMXOperationsServiceRenderer {
 	}
 
 	private String formatType(TypeData typeData) {
-		return (typeData.i$(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
+		return (typeData.i$(ObjectData.class) ? (packageName() + ".schemas.") : "") + typeData.type();
 	}
 
 	private void setupParameters(List<Parameter> parameters, FrameBuilder builder) {
@@ -104,6 +93,6 @@ public class JMXOperationsServiceRenderer {
 	}
 
 	private File destinationPackage() {
-		return new File(gen, "jmx");
+		return new File(gen(), "jmx");
 	}
 }

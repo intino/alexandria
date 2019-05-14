@@ -4,8 +4,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.search.GlobalSearchScope;
-import cottons.utils.Files;
-import io.intino.konos.builder.codegeneration.cache.Cache;
 import io.intino.konos.builder.codegeneration.cache.CacheReader;
 import io.intino.konos.builder.codegeneration.cache.CacheWriter;
 import io.intino.konos.builder.codegeneration.datalake.DatalakeRenderer;
@@ -15,7 +13,7 @@ import io.intino.konos.builder.codegeneration.datalake.mounter.MounterRenderer;
 import io.intino.konos.builder.codegeneration.datalake.process.ProcessRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
-import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
+import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.codegeneration.services.jms.JMSRequestRenderer;
 import io.intino.konos.builder.codegeneration.services.jms.JMSServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.jmx.JMXOperationsServiceRenderer;
@@ -79,87 +77,101 @@ public class FullRenderer {
 	}
 
 	public void execute() {
-		Files.removeDir(gen);
-		schemas();
-		exceptions();
-		rest();
-		tasks();
-		jmx();
-		jms();
-		bus();
-		slack();
-		ui();
-		box();
-		main();
+		io.intino.konos.builder.codegeneration.cache.ElementCache cache = loadCache();
+
+		schemas(cache);
+		exceptions(cache);
+		rest(cache);
+		tasks(cache);
+		jmx(cache);
+		jms(cache);
+		bus(cache);
+		slack(cache);
+		ui(cache);
+		box(cache);
+		main(cache);
+
 		InterfaceToJavaImplementation.nodeMap.clear();
 		InterfaceToJavaImplementation.nodeMap.putAll(classes);
-	}
 
-	private void schemas() {
-		new SchemaRenderer(graph, gen, packageName, classes).execute();
-	}
-
-	private void exceptions() {
-		new ExceptionRenderer(graph, gen, packageName).execute();
-	}
-
-	private void rest() {
-		new RESTResourceRenderer(project, graph, src, gen, packageName, boxName, classes).execute();
-		new RESTServiceRenderer(graph, gen, res, packageName, boxName,module, classes).execute();
-	}
-
-	private void jmx() {
-		new JMXOperationsServiceRenderer(project, graph, src, gen, packageName, boxName, classes).execute();
-		new JMXServerRenderer(graph, gen, packageName, boxName).execute();
-	}
-
-	private void jms() {
-		new JMSRequestRenderer(project, graph, src, gen, packageName, boxName, classes).execute();
-		new JMSServiceRenderer(graph, gen, packageName, boxName).execute();
-	}
-
-	private void tasks() {
-		new TaskRenderer(graph, src, gen, packageName, boxName, classes).execute();
-		new TaskerRenderer(graph, gen, packageName, boxName).execute();
-	}
-
-	private void bus() {
-		if (graph.nessClientList().isEmpty()) return;
-		new ProcessRenderer(graph, src, packageName, boxName, classes).execute();
-		new MounterRenderer(graph, src, packageName, boxName, classes).execute();
-		new FeederRenderer(graph, gen, src, packageName, boxName, classes).execute();
-		new DatalakeRenderer(graph, gen, packageName, boxName).execute();
-		new NessJMXOperationsRenderer(gen, src, packageName, boxName, (module != null && safe(() -> ((LegioConfiguration) configurationOf(module)).graph().artifact().asLevel().model()) != null)).execute();
-	}
-
-	private void slack() {
-		new SlackRenderer(project, graph, src, gen, packageName, boxName, classes).execute();
-	}
-
-	private void ui() {
-		Cache cache = loadCache();
-		prepareGraphForUi();
-		cache.addAll(uiServer().entrySet());
-		cache.addAll(uiClient().entrySet());
 		saveCache(cache);
 	}
 
-	private Cache uiServer() {
-		Cache cache = new Cache();
+	private void schemas(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {
+		new SchemaListRenderer(settings(cache), graph).execute();
+	}
+
+	private void exceptions(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {
+		new ExceptionRenderer(settings(cache), graph).execute();
+	}
+
+	private void rest(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {
+		new RESTResourceRenderer(settings(cache), graph).execute();
+		new RESTServiceRenderer(settings(cache), graph).execute();
+	}
+
+	private void jmx(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {
+		new JMXOperationsServiceRenderer(settings(cache), graph).execute();
+		new JMXServerRenderer(settings(cache), graph).execute();
+	}
+
+	private void jms(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {
+		new JMSRequestRenderer(settings(cache), graph).execute();
+		new JMSServiceRenderer(settings(cache), graph).execute();
+	}
+
+	private void tasks(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {
+		new TaskRenderer(settings(cache), graph).execute();
+		new TaskerRenderer(settings(cache), graph).execute();
+	}
+
+	private void bus(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {
+		if (graph.nessClientList().isEmpty()) return;
+		new ProcessRenderer(settings(cache), graph).execute();
+		new MounterRenderer(settings(cache), graph).execute();
+		new FeederRenderer(settings(cache), graph).execute();
+		new DatalakeRenderer(settings(cache), graph).execute();
+		new NessJMXOperationsRenderer(settings(cache), graph, (module != null && safe(() -> ((LegioConfiguration) configurationOf(module)).graph().artifact().asLevel().model()) != null)).execute();
+	}
+
+	private void slack(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {
+		new SlackRenderer(settings(cache), graph).execute();
+	}
+
+	private void ui(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {
+		prepareGraphForUi();
+		cache.addAll(uiServer().entrySet());
+		cache.addAll(uiClient().entrySet());
+	}
+
+	private io.intino.konos.builder.codegeneration.cache.ElementCache uiServer() {
+		io.intino.konos.builder.codegeneration.cache.ElementCache cache = loadCache();
 		new io.intino.konos.builder.codegeneration.accessor.ui.ServiceListRenderer(settings(cache), graph).execute();
 		return cache;
 	}
 
-	private Cache uiClient() {
-		Cache cache = new Cache();
+	private io.intino.konos.builder.codegeneration.cache.ElementCache uiClient() {
+		io.intino.konos.builder.codegeneration.cache.ElementCache cache = loadCache();
 		new io.intino.konos.builder.codegeneration.services.ui.ServiceListRenderer(settings(cache), graph).execute();
 		return cache;
 	}
 
-	private void box() {
-		new AbstractBoxRenderer(graph, gen, packageName, module, parent, hasModel).execute();
-		new BoxRenderer(graph, src, packageName, module, hasModel).execute();
-		new BoxConfigurationRenderer(gen, packageName, module, parent, hasModel).execute();
+	private void box(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {
+		new AbstractBoxRenderer(settings(cache), graph, hasModel).execute();
+		new BoxRenderer(settings(cache), graph, hasModel).execute();
+		new BoxConfigurationRenderer(settings(cache), graph, hasModel).execute();
+	}
+
+	private void main(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {
+		new MainRenderer(settings(cache), graph, hasModel).execute();
+		final File file = new File(res, "log4j.properties");
+		if (!file.exists()) {
+			try {
+				java.nio.file.Files.write(file.toPath(), getBytes());
+			} catch (IOException e) {
+				Logger.getRootLogger().error(e.getMessage(), e);
+			}
+		}
 	}
 
 	private String boxName() {
@@ -197,26 +209,14 @@ public class FullRenderer {
 		return !configuration.languages().isEmpty();
 	}
 
-	private void main() {
-		new MainRenderer(src, hasModel, packageName, module).execute();
-		final File file = new File(res, "log4j.properties");
-		if (!file.exists()) {
-			try {
-				java.nio.file.Files.write(file.toPath(), getBytes());
-			} catch (IOException e) {
-				Logger.getRootLogger().error(e.getMessage(), e);
-			}
-		}
-	}
-
 	private byte[] getBytes() throws IOException {
 		return IOUtils.toByteArray(this.getClass().getResourceAsStream("/log4j_model.properties"));
 
 	}
 
-	private Settings settings(Cache cache) {
+	private Settings settings(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {
 		return new Settings().project(project).module(module).parent(parent)
-							 .src(src).gen(gen).boxName(boxName).packageName(packageName)
+							 .res(res).src(src).gen(gen).boxName(boxName).packageName(packageName)
 							 .classes(classes).cache(cache);
 	}
 
@@ -236,11 +236,11 @@ public class FullRenderer {
 		if (row == null) element.graph().privateComponents(0).create(name).row(itemList);
 	}
 
-	private Cache loadCache() {
+	private io.intino.konos.builder.codegeneration.cache.ElementCache loadCache() {
 		return new CacheReader(cacheFile()).load();
 	}
 
-	private void saveCache(Cache cache) {
+	private void saveCache(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {
 		new CacheWriter(cacheFile()).save(cache);
 	}
 

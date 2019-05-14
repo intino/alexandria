@@ -18,7 +18,8 @@ public class ResourceListRenderer extends UIRenderer {
 		this.accessibleDisplays = graph.accessibleDisplayList();
 	}
 
-	public void execute() {
+	@Override
+	public void render() {
 		resourceList.forEach(r -> new ResourceRenderer(settings, r, target).execute());
 		accessibleDisplays.forEach(d -> new AccessibleDisplayRenderer(settings, d, target).execute());
 	}

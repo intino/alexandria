@@ -13,15 +13,18 @@ def type(display)
 	import io.intino.alexandria.ui.spark.UISparkManager;
 
 	public class $name+firstUpperCase~PushRequester extends io.intino.alexandria.ui.displays.requesters.[$type+class+FirstUpperCase]~PushRequester {
+
 		public void execute(UIClient client, UIMessage message) {
 			$name+firstUpperCase display = display(client, message);
 			if (display == null) return;
 			String operation = operation(message);
 			String data = data(message);
 
-			$request...[$NL~else ]
+			[$request...[$NL~else ]]
+
 			super.execute(client, message);
 		}
+
 	}
 end
 

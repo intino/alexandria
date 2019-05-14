@@ -1,6 +1,5 @@
 package io.intino.konos.builder.codegeneration.action;
 
-import com.intellij.openapi.project.Project;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
@@ -18,21 +17,22 @@ public class AccessibleDisplayActionRenderer extends ActionRenderer {
 	private final Settings configuration;
 
 	public AccessibleDisplayActionRenderer(Settings settings, AccessibleDisplay display) {
-		super(settings.project(), settings.src(), settings.packageName(), settings.boxName(),"accessibleDisplay");
+		super(settings,"accessibleDisplay");
 		this.configuration = settings;
 		this.display = display;
 	}
 
-	public void execute() {
+	@Override
+	public void render() {
 		FrameBuilder builder = new FrameBuilder("action", "ui", "accessibleDisplay");
 		builder.add("name", display.name$());
 		builder.add("display", display.name$());
-		builder.add("package", packageName);
-		builder.add("box", boxName);
+		builder.add("package", packageName());
+		builder.add("box", boxName());
 		builder.add("parameter", parameters());
 		configuration.classes().put(display.getClass().getSimpleName() + "#" + firstUpperCase(display.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(display.name$())) + suffix());
-		if (!alreadyRendered(destiny, display.name$() + "Proxy"))
-			writeFrame(destinyPackage(destiny), display.name$() + "ProxyAction", template().render(builder.toFrame()));
+		if (!alreadyRendered(src(), display.name$() + "Proxy"))
+			writeFrame(destinyPackage(src()), display.name$() + "ProxyAction", template().render(builder.toFrame()));
 	}
 
 	private Frame[] parameters() {

@@ -1,6 +1,8 @@
 package io.intino.konos.builder.helpers;
 
 import io.intino.konos.builder.utils.IdGenerator;
+import io.intino.konos.model.graph.Display;
+import io.intino.konos.model.graph.temporal.TemporalCatalog;
 import io.intino.tara.magritte.Layer;
 import io.intino.tara.magritte.Node;
 
@@ -25,6 +27,15 @@ public class ElementHelper {
 		String result = element.name$();
 		if (!isUUID(result)) return result;
 		return generateName(element);
+	}
+
+	public String typeOf(Layer element) {
+		if (element.i$(Display.class)) {
+			String type = element.getClass().getSimpleName();
+			boolean temporalCatalog = type.equalsIgnoreCase("temporalCatalog");
+			return temporalCatalog ? "temporal" + element.a$(TemporalCatalog.class).type().name() + "Catalog" : type;
+		}
+		return element.getClass().getSimpleName();
 	}
 
 	public String ownerId(Layer element) {

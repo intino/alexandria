@@ -20,7 +20,7 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 	}
 
 	@Override
-	public void execute() {
+	public void render() {
 		writeHtml(frameBuilder());
 		writeJavascript(frameBuilder());
 	}

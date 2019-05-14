@@ -16,7 +16,8 @@ public class ServiceListRenderer extends UIRenderer {
 		this.graph = graph;
 	}
 
-	public void execute() {
+	@Override
+	public void render() {
 		graph.uIServiceList().forEach(this::processUIService);
 		new ResourceListRenderer(settings, graph, Target.Service).execute();
 	}

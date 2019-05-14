@@ -26,6 +26,13 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 		this.templateProvider = templateProvider;
 	}
 
+	@Override
+	public void execute() {
+		if (isRendered(element)) return;
+		super.execute();
+		saveRendered(element);
+	}
+
 	protected final void write(FrameBuilder builder, File src, File gen, String child) {
 		writeSrc(src, child, builder);
 		writeGen(gen, child, builder);
