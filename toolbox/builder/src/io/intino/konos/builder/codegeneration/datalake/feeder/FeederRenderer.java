@@ -2,6 +2,8 @@ package io.intino.konos.builder.codegeneration.datalake.feeder;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.codegeneration.Renderer;
+import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Feeder;
 import io.intino.konos.model.graph.KonosGraph;
@@ -18,7 +20,6 @@ import io.intino.tara.magritte.Layer;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -26,51 +27,38 @@ import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
-public class FeederRenderer {
-
+public class FeederRenderer extends Renderer {
 	private final List<Feeder> feeders;
-	private final File src;
-	private final String packageName;
-	private final String boxName;
-	private final Map<String, String> classes;
 	private final NessClient nessClient;
-	private final File gen;
 	private final String domain;
 
-	public FeederRenderer(KonosGraph graph, File gen, File src, String packageName, String boxName, Map<String, String> classes) {
+	public FeederRenderer(Settings settings, KonosGraph graph) {
+		super(settings, Target.Service);
 		this.nessClient = graph.nessClient(0);
-		this.gen = gen;
 		this.domain = nessClient.domain();
 		this.feeders = nessClient.feederList();
-		this.src = src;
-		this.packageName = packageName;
-		this.boxName = boxName;
-		this.classes = classes;
 	}
 
 	public static String name(Feeder feeder) {
 		return isAnonymous(feeder) ? feeder.eventTypes().stream().map(s -> firstUpperCase(s.name$())).collect(Collectors.joining()) + "Feeder" : feeder.name$();
 	}
 
-	private static boolean isAnonymous(Feeder feeder) {
-		return feeder.name$().matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
-	}
-
-	public void execute() {
+	@Override
+	public void render() {
 		for (Feeder feeder : feeders) {
 			final FrameBuilder builder = new FrameBuilder("feeder").
-					add("box", boxName).
-					add("package", packageName).
+					add("box", boxName()).
+					add("package", packageName()).
 					add("name", name(feeder));
 			for (Sensor sensor : feeder.sensorList())
 				builder.add("sensor", frameOf(sensor, name(feeder)));
 			builder.add("eventType", feeder.eventTypes().stream().filter(Objects::nonNull).map(s -> composedType(s, feeder.subdomain())).toArray(String[]::new));
 			builder.add("domain", fullDomain(feeder.subdomain()));
 			final String feederClassName = firstUpperCase(name(feeder));
-			classes.put(feeder.getClass().getSimpleName() + "#" + name(feeder), "datalake.feeders." + feederClassName);
-			writeFrame(new File(gen, "datalake/feeders"), "Abstract" + feederClassName, customize(new AbstractFeederTemplate()).render(builder.toFrame()));
-			if (!alreadyRendered(new File(src, "datalake/feeders"), feederClassName))
-				writeFrame(new File(src, "datalake/feeders"), feederClassName, customize(new FeederTemplate()).render(builder.toFrame()));
+			classes().put(feeder.getClass().getSimpleName() + "#" + name(feeder), "datalake.feeders." + feederClassName);
+			writeFrame(new File(gen(), "datalake/feeders"), "Abstract" + feederClassName, customize(new AbstractFeederTemplate()).render(builder.toFrame()));
+			if (!alreadyRendered(new File(src(), "datalake/feeders"), feederClassName))
+				writeFrame(new File(src(), "datalake/feeders"), feederClassName, customize(new FeederTemplate()).render(builder.toFrame()));
 		}
 	}
 
@@ -141,4 +129,9 @@ public class FeederRenderer {
 	private boolean alreadyRendered(File destination, String action) {
 		return Commons.javaFile(destination, action).exists();
 	}
+
+	private static boolean isAnonymous(Feeder feeder) {
+		return feeder.name$().matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
+	}
+
 }

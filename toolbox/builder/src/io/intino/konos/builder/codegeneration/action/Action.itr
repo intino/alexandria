@@ -15,7 +15,6 @@ def type(action & notification) !type(ui)
 			//register listener
 		}
 
-
 		public void onClose(Client client) {
 			//unregister listener
 		}
@@ -150,8 +149,8 @@ def type(component)
 	    return new io.intino.alexandria.ui.Soul(session) {
 			@Override
 			public void personify() {
-				$this+snakecaseToCamelCase+firstUpperCase component = new $this+snakecaseToCamelCase+firstUpperCase(box);
-				$editor+component
+				$value+snakecaseToCamelCase+firstUpperCase component = new $value+snakecaseToCamelCase+firstUpperCase(box);
+				[$editor+component]
 				register(component);
 				component.init();
 			}

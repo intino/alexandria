@@ -20,7 +20,7 @@ public class AppRenderer extends UIRenderer {
 	}
 
 	@Override
-	public void execute() {
+	public void render() {
 		writeApp();
 		writePassiveView();
 	}

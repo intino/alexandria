@@ -13,7 +13,7 @@ public class ServiceListRenderer extends UIRenderer {
 	}
 
 	@Override
-	public void execute() {
+	public void render() {
 		graph.uIServiceList().forEach(s -> new ServiceCreator(settings, s).execute());
 	}
 

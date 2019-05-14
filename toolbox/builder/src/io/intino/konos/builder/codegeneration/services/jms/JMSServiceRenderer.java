@@ -4,41 +4,37 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.itrules.formatters.StringFormatters;
+import io.intino.konos.builder.codegeneration.Renderer;
+import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Parameter;
 import io.intino.konos.model.graph.jms.JMSService;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.util.List;
 import java.util.Locale;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
-public class JMSServiceRenderer {
-
+public class JMSServiceRenderer extends Renderer {
 	private final List<JMSService> services;
-	private final String boxName;
-	private File gen;
-	private String packageName;
 
-	public JMSServiceRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+	public JMSServiceRenderer(Settings settings, KonosGraph graph) {
+		super(settings, Target.Service);
 		this.services = graph.jMSServiceList();
-		this.gen = gen;
-		this.packageName = packageName;
-		this.boxName = boxName;
 	}
 
-	public void execute() {
+	@Override
+	public void render() {
 		services.forEach(this::processService);
 	}
 
 	private void processService(JMSService service) {
-		writeFrame(gen, nameOf(service), template().render(new FrameBuilder("jms").
+		writeFrame(gen(), nameOf(service), template().render(new FrameBuilder("jms").
 				add("name", service.name$()).
-				add("box", boxName).
-				add("package", packageName).
+				add("box", boxName()).
+				add("package", packageName()).
 				add("model", service.subscriptionModel().name()).
 				add("request", processRequests(service.requestList(), service.subscriptionModel().name())).
 				add("notification", processNotifications(service.notificationList(), service.subscriptionModel().name())).toFrame()));
@@ -67,7 +63,7 @@ public class JMSServiceRenderer {
 	private Frame processNotification(JMSService.Notification notification, String subscriptionModel) {
 		return new FrameBuilder("notification").
 				add("name", notification.name$()).
-				add("package", packageName).
+				add("package", packageName()).
 				add("queue", customize("queue", notification.path())).
 				add("model", subscriptionModel).
 				add("parameter", parameters(notification.parameterList())).

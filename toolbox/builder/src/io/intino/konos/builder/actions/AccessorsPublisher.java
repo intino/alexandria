@@ -14,6 +14,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.accessor.jms.JMSAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.jmx.JMXAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer;
@@ -50,18 +51,16 @@ class AccessorsPublisher {
 	private static final Logger LOG = Logger.getInstance("Publishing Accessor:");
 	private static final String KONOS = "konos";
 	private static final String ACCESSOR = "-accessor";
-	private final Module module;
+	private final Settings settings;
 	private final KonosGraph graph;
-	private final String generationPackage;
 	private StringBuilder log = new StringBuilder();
 	private File root;
 	private Configuration configuration;
 
-	AccessorsPublisher(Module module, KonosGraph graph, String generationPackage) {
-		this.module = module;
-		configuration = TaraUtil.configurationOf(module);
+	AccessorsPublisher(Settings settings, KonosGraph graph) {
+		this.settings = settings;
+		configuration = TaraUtil.configurationOf(settings.module());
 		this.graph = graph;
-		this.generationPackage = generationPackage;
 		try {
 			this.root = Files.createTempDirectory(KONOS).toFile();
 			FileSystemUtils.removeDir(this.root);
@@ -82,7 +81,7 @@ class AccessorsPublisher {
 			return;
 		}
 		if (services.size() > 1)
-			services = new SelectServicesDialog(WindowManager.getInstance().suggestParentWindow(module.getProject()), services).showAndGet();
+			services = new SelectServicesDialog(WindowManager.getInstance().suggestParentWindow(module().getProject()), services).showAndGet();
 		try {
 			createSources(services);
 			if (configuration.distributionReleaseRepository() == null) {
@@ -116,7 +115,7 @@ class AccessorsPublisher {
 	}
 
 	private InvocationResult invoke(File pom) throws MavenInvocationException, IOException {
-		final String ijMavenHome = MavenProjectsManager.getInstance(module.getProject()).getGeneralSettings().getMavenHome();
+		final String ijMavenHome = MavenProjectsManager.getInstance(module().getProject()).getGeneralSettings().getMavenHome();
 		InvocationRequest request = new DefaultInvocationRequest().setPomFile(pom).setGoals(Arrays.asList("clean", "install", "deploy"));
 		final File mavenHome = resolveMavenHomeDirectory(ijMavenHome);
 		if (mavenHome == null) return null;
@@ -133,6 +132,7 @@ class AccessorsPublisher {
 	}
 
 	private void publish(String line) {
+		Module module = module();
 		if (module.getProject().isDisposed()) return;
 		final MessageBus messageBus = module.getProject().getMessageBus();
 		final MavenListener mavenListener = messageBus.syncPublisher(IntinoTopics.BUILD_CONSOLE);
@@ -145,7 +145,7 @@ class AccessorsPublisher {
 	private void config(InvocationRequest request, File mavenHome) {
 		final File mvn = new File(mavenHome, "bin" + File.separator + "mvn");
 		mvn.setExecutable(true);
-		final Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
+		final Sdk sdk = ModuleRootManager.getInstance(module()).getSdk();
 		if (sdk != null && sdk.getHomePath() != null) request.setJavaHome(new File(sdk.getHomePath()));
 	}
 
@@ -157,26 +157,26 @@ class AccessorsPublisher {
 
 	private void rest(List<Service> services) {
 		services.stream().filter(Service::isREST).forEach(s -> {
-			File sourcesDestiny = new File(new File(root, s.name$() + File.separator + "src"), generationPackage.replace(".", File.separator));
+			File sourcesDestiny = new File(new File(root, s.name$() + File.separator + "src"), packageName().replace(".", File.separator));
 			sourcesDestiny.mkdirs();
-			new RESTAccessorRenderer(s.asREST(), sourcesDestiny, generationPackage).execute();
+			new RESTAccessorRenderer(settings, s.asREST(), sourcesDestiny).execute();
 		});
 	}
 
 	private void jms(List<Service> services) {
 		List<String> sources = new ArrayList<>();
 		services.stream().filter(Service::isJMS).forEach(s -> {
-			File sourcesDestiny = new File(new File(root, s.asJMS().name$() + File.separator + "src"), generationPackage.replace(".", File.separator));
+			File sourcesDestiny = new File(new File(root, s.asJMS().name$() + File.separator + "src"), packageName().replace(".", File.separator));
 			sourcesDestiny.mkdirs();
-			new JMSAccessorRenderer(s.asJMS(), sourcesDestiny, generationPackage).execute();
+			new JMSAccessorRenderer(settings, s.asJMS(), sourcesDestiny).execute();
 		});
 	}
 
 	private void jmx(List<Service> services) {
 		services.stream().filter(Service::isJMX).forEach(s -> {
-			File sourcesDestiny = new File(new File(root, s.name$() + File.separator + "src"), generationPackage.replace(".", File.separator));
+			File sourcesDestiny = new File(new File(root, s.name$() + File.separator + "src"), packageName().replace(".", File.separator));
 			sourcesDestiny.mkdirs();
-			new JMXAccessorRenderer(s.asJMX(), sourcesDestiny, generationPackage).execute();
+			new JMXAccessorRenderer(settings, s.asJMX(), sourcesDestiny).execute();
 		});
 	}
 
@@ -205,12 +205,12 @@ class AccessorsPublisher {
 			StringSelection selection = new StringSelection(newDependency(conf, app));
 			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 			clipboard.setContents(selection, selection);
-		}).setImportant(true).notify(module.getProject());
+		}).setImportant(true).notify(module().getProject());
 	}
 
 	private void notify(String message, NotificationType type) {
 		Notifications.Bus.notify(
-				new Notification("Konos", message, module.getName(), type), module.getProject());
+				new Notification("Konos", message, module().getName(), type), module().getProject());
 	}
 
 	@NotNull
@@ -229,6 +229,14 @@ class AccessorsPublisher {
 
 	private void notifyError(String message) {
 		final String result = log.toString();
-		Bus.notify(new Notification("Konos", "Accessor cannot be published. ", message + "\n" + result, ERROR), module.getProject());
+		Bus.notify(new Notification("Konos", "Accessor cannot be published. ", message + "\n" + result, ERROR), module().getProject());
+	}
+
+	private Module module() {
+		return settings.module();
+	}
+
+	private String packageName() {
+		return settings.packageName();
 	}
 }

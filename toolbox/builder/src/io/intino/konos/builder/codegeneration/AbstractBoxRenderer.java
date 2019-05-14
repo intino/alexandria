@@ -1,6 +1,5 @@
 package io.intino.konos.builder.codegeneration;
 
-import com.intellij.openapi.module.Module;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
@@ -18,44 +17,37 @@ import io.intino.plugin.project.LegioConfiguration;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 
-import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
 import static io.intino.tara.compiler.shared.Configuration.Level.Platform;
 
-public class AbstractBoxRenderer {
-	private final File gen;
-	private final String packageName;
-	private final Module module;
+public class AbstractBoxRenderer extends Renderer {
 	private final KonosGraph graph;
 	private final Configuration configuration;
-	private final String parent;
 	private final boolean hasModel;
 	private final Set<String> customParameters;
 
-	AbstractBoxRenderer(KonosGraph graph, File gen, String packageName, Module module, String parent, boolean hasModel) {
+	AbstractBoxRenderer(Settings settings, KonosGraph graph, boolean hasModel) {
+		super(settings, Target.Service);
 		this.graph = graph;
-		this.gen = gen;
-		this.packageName = packageName;
-		this.module = module;
-		this.configuration = module != null ? TaraUtil.configurationOf(module) : null;
-		this.parent = parent;
+		this.configuration = module() != null ? TaraUtil.configurationOf(module()) : null;
 		this.hasModel = hasModel;
 		customParameters = new HashSet<>();
 	}
 
-	public void execute() {
+	@Override
+	public void render() {
 		FrameBuilder builder = new FrameBuilder().add("box");
 		final String name = name();
 		builder.add("name", name);
-		builder.add("package", packageName);
+		builder.add("package", packageName());
 		if (hasModel) builder.add("tara", name);
 		parent(builder);
 		services(builder, name);
 		tasks(builder, name);
 		dataLake(builder, name);
-		Commons.writeFrame(gen, "AbstractBox", template().render(builder.toFrame()));
+		Commons.writeFrame(gen(), "AbstractBox", template().render(builder.toFrame()));
 		notifyNewParameters();
 	}
 
@@ -70,6 +62,7 @@ public class AbstractBoxRenderer {
 	private void dataLake(FrameBuilder rootBuilder, String name) {
 		if (!graph.nessClientList().isEmpty()) {
 			final NessClient client = graph.nessClientList().get(0);
+			final String packageName = packageName();
 			final FrameBuilder datalake = new FrameBuilder("dataLake").
 					add("mode", graph.nessClient(0).mode().name()).
 					add("name", graph.nessClient(0).name$()).
@@ -89,7 +82,7 @@ public class AbstractBoxRenderer {
 	}
 
 	private Frame frameOf(Feeder feeder) {
-		return new FrameBuilder("feeder").add("package", packageName).add("name", FeederRenderer.name(feeder)).add("box", name()).toFrame();
+		return new FrameBuilder("feeder").add("package", packageName()).add("name", FeederRenderer.name(feeder)).add("box", name()).toFrame();
 	}
 
 	private void services(FrameBuilder builder, String name) {
@@ -116,7 +109,7 @@ public class AbstractBoxRenderer {
 		if (!graph.rESTServiceList().isEmpty() || !graph.uIServiceList().isEmpty()) builder.add("spark", "stop");
 		if (!graph.uIServiceList().isEmpty()) {
 			final FrameBuilder uiFrame = new FrameBuilder();
-			if (parent != null) uiFrame.add("parent", parent);
+			if (parent() != null) uiFrame.add("parent", parent());
 			builder.add("hasUi", uiFrame);
 			builder.add("uiAuthentication", uiFrame);
 			builder.add("uiEdition", uiFrame);
@@ -127,7 +120,7 @@ public class AbstractBoxRenderer {
 	private Frame uiServiceFrame(UIService service, String name) {
 		final FrameBuilder builder = new FrameBuilder("service", "ui");
 		builder.add("name", service.name$());
-		builder.add("package", packageName);
+		builder.add("package", packageName());
 		builder.add("configuration", name);
 		builder.add("parameter", new FrameBuilder(isCustom(service.port()) ? "custom" : "standard").add("value", service.port()).toFrame());
 		if (service.authentication() != null)
@@ -146,15 +139,15 @@ public class AbstractBoxRenderer {
 	}
 
 	private void parent(FrameBuilder builder) {
-		if (parent != null && configuration != null && !Platform.equals(configuration.level()))
-			builder.add("parent", parent).add("hasParent", "");
+		if (parent() != null && configuration != null && !Platform.equals(configuration.level()))
+			builder.add("parent", parent()).add("hasParent", "");
 		else builder.add("hasntParent", "");
 	}
 
 	private String name() {
-		if (module != null) {
+		if (module() != null) {
 			final String dsl = configuration.outDSL();
-			if (dsl == null || dsl.isEmpty()) return module.getName();
+			if (dsl == null || dsl.isEmpty()) return module().getName();
 			else return dsl;
 		} else return "System";
 	}

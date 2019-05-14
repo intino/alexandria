@@ -22,7 +22,7 @@ public class CacheWriter extends HashMap<String, Integer> {
 		this.cacheFile = cacheFile;
 	}
 
-	public void save(Cache dictionary) {
+	public void save(ElementCache dictionary) {
 		try {
 			Map<String, String> map = dictionary.entrySet().stream().collect(toMap(e -> String.valueOf(e.getKey()), e -> String.valueOf(e.getValue())));
 			Properties properties = new Properties();

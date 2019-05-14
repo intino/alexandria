@@ -21,7 +21,8 @@ public class ResourceRenderer extends UIRenderer {
 		this.resource = resource;
 	}
 
-	public void execute() {
+	@Override
+	public void render() {
 		UIService uiService = resource.core$().ownerAs(UIService.class);
 
 		FrameBuilder builder = frameBuilder().add("resource").add("name", resource.name$()).add("parameter", parameters(resource));

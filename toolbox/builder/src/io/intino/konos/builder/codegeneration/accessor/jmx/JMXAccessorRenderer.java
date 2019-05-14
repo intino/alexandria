@@ -4,7 +4,9 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
+import io.intino.konos.builder.codegeneration.Renderer;
+import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.codegeneration.services.jmx.JMXServerTemplate;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Parameter;
@@ -13,24 +15,25 @@ import io.intino.konos.model.graph.object.ObjectData;
 import io.intino.konos.model.graph.type.TypeData;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
-public class JMXAccessorRenderer {
+public class JMXAccessorRenderer extends Renderer {
 	private final JMXService service;
 	private File destination;
 	private String packageName;
 
-	public JMXAccessorRenderer(JMXService restService, File destination, String packageName) {
+	public JMXAccessorRenderer(Settings settings, JMXService restService, File destination) {
+		super(settings, Target.Service);
 		this.service = restService;
 		this.destination = new File(destination, "konos");
-		this.packageName = packageName + ".konos";
+		this.packageName = settings.packageName() + ".konos";
 	}
 
-	public void execute() {
-		new SchemaRenderer(service.graph(), destination, packageName, new HashMap<>()).execute();
+	@Override
+	public void render() {
+		new SchemaListRenderer(settings, service.graph(), destination, packageName).execute();
 		createInterface(service);
 		createService(service);
 	}

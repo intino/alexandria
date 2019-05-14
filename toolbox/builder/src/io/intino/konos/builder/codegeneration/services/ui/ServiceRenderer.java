@@ -28,7 +28,8 @@ public class ServiceRenderer extends UIRenderer {
 		this.service = service;
 	}
 
-	public void execute() {
+	@Override
+	public void render() {
 		createUi();
 		new I18nRenderer(settings, service, target).execute();
 	}

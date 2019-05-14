@@ -2,25 +2,25 @@ def type(display)
 	import React from "react";
 	import * as Ui from "alexandria-ui-elements/gen/Displays";
 	import * as Displays from "../[$packageTypeRelativeDirectory]Displays";
-	$accessorType+import;[
-	import $notDecorated+firstUpperCase~Notifier from "../notifiers/$notDecorated+firstUpperCase~Notifier";][
-	import $notDecorated+firstUpperCase~Requester from "../requesters/$notDecorated+firstUpperCase~Requester";]
+	$accessorType+import;
+	[import $notDecorated+firstUpperCase~Notifier from "../notifiers/$notDecorated+firstUpperCase~Notifier";]
+	[import $notDecorated+firstUpperCase~Requester from "../requesters/$notDecorated+firstUpperCase~Requester";]
 
-	export default class [$abstract]$name+firstUpperCase extends $displayExtends {
+	export default class $abstract$name+firstUpperCase extends $displayExtends {
 
 		constructor(props) {
-			super(props);[
-			this.notifier = new $notDecorated+firstUpperCase~Notifier(this);][
-			this.requester = new $notDecorated+firstUpperCase~Requester(this);]
-			$properties+initialization
+			super(props);
+			[this.notifier = new $notDecorated+firstUpperCase~Notifier(this);]
+			[this.requester = new $notDecorated+firstUpperCase~Requester(this);]
+			[$properties+initialization]
 		};
 		
 		render() {
 			return [this.$baseMethod](
-				$renderTag[
-					$reference...[$NL]
-					$component...[$NL]
-				]$renderTag+end
+				[$renderTag]
+					[$reference...[$NL]]
+					[$component...[$NL]]
+				[$renderTag+end]
 			);
 		}
 	}

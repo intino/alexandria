@@ -1,40 +1,39 @@
 def type(display & accessible)
-import Notifier from "./Notifier";
+	import Notifier from "./Notifier";
 
-export default class $name+firstUpperCase~Notifier extends Notifier {
+	export default class $name+firstUpperCase~Notifier extends Notifier {
 
-    constructor(element) {
-        super(element);
-        this.setup();
-    };
+		constructor(element) {
+			super(element);
+			this.setup();
+		};
 
-    setup() {
-		if (this.element == null || this.pushLinked) return;
-    	super.setup();
-		this.when("refreshBaseUrl").toSelf().execute((parameters) => this.element.refreshBaseUrl(parameters.v));
-		this.when("refreshError").toSelf().execute((parameters) => this.element.refreshError(parameters.v));
-		this.pushLinked = true;
-    };
-}
+		setup() {
+			if (this.element == null || this.pushLinked) return;
+			super.setup();
+			this.when("refreshBaseUrl").toSelf().execute((parameters) => this.element.refreshBaseUrl(parameters.v));
+			this.when("refreshError").toSelf().execute((parameters) => this.element.refreshError(parameters.v));
+			this.pushLinked = true;
+		};
+	}
 end
 
 def type(display)
-$import
+	$import
 
-export default class $name+firstUpperCase~Notifier extends $parentType {
+	export default class $name+firstUpperCase~Notifier extends $parentType {
+		constructor(element) {
+			super(element);
+			this.setup();
+		};
 
-    constructor(element) {
-        super(element);
-        this.setup();
-    };
-
-    setup() {
-		if (this.element == null || this.pushLinked) return;
-		super.setup();
-		$notification...[$NL]
-		this.pushLinked = true;
-    };
-}
+		setup() {
+			if (this.element == null || this.pushLinked) return;
+			super.setup();
+			[$notification...[$NL]]
+			this.pushLinked = true;
+		};
+	}
 end
 
 def attribute(extensionOf) trigger(import)

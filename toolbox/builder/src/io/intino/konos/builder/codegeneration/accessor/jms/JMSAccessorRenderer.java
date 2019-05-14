@@ -3,43 +3,42 @@ package io.intino.konos.builder.codegeneration.accessor.jms;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
-import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
+import io.intino.konos.builder.codegeneration.Renderer;
+import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Parameter;
 import io.intino.konos.model.graph.jms.JMSService;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
-public class JMSAccessorRenderer {
-
+public class JMSAccessorRenderer extends Renderer {
 	private final JMSService service;
 	private File destination;
-	private String packageName;
 
-
-	public JMSAccessorRenderer(JMSService application, File destination, String packageName) {
+	public JMSAccessorRenderer(Settings settings, JMSService application, File destination) {
+		super(settings, Target.Service);
 		this.service = application;
 		this.destination = destination;
-		this.packageName = packageName;
 	}
 
-	public void execute() {
-		new SchemaRenderer(service.graph(), destination, packageName, new HashMap<>()).execute();
+	@Override
+	public void render() {
+		new SchemaListRenderer(settings, service.graph(), destination).execute();
 		processService(service);
 	}
 
 	private void processService(JMSService jmsService) {
 		FrameBuilder builder = new FrameBuilder("accessor");
 		builder.add("name", jmsService.name$());
-		builder.add("package", packageName);
+		builder.add("package", packageName());
 		if (!jmsService.graph().schemaList().isEmpty())
-			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName).toFrame());
+			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
 		final List<JMSService.Request> requests = jmsService.core$().findNode(JMSService.Request.class);
 		final Set<String> customParameters = extractCustomParameters(requests);
 		builder.add("request", requests.stream().map(request -> processRequest(request, customParameters).toFrame()).toArray(Frame[]::new));

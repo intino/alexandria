@@ -1,5 +1,5 @@
 def type(reference) trigger(declaration)
-	public [$ancestors+firstUpperCase...[.].]$name+firstUpperCase $name;
+	public [$ancestors+firstUpperCase...[.].] $name+firstUpperCase $name;
 end
 
 def type(reference & item)
@@ -11,8 +11,8 @@ def type(reference)
 end
 
 def type(component & child & collection) trigger(declarations)
-	public [$ancestors+firstUpperCase...[.].]$name+firstUpperCase $name;[
-	$heading+declarations...[$NL]]
+	public [$ancestors+firstUpperCase...[.].] $name+firstUpperCase $name;
+	[$heading+declarations...[$NL]]
 end
 
 def type(component & child & stamp & single) trigger(declarations)
@@ -20,8 +20,8 @@ def type(component & child & stamp & single) trigger(declarations)
 end
 
 def type(component & child) trigger(declarations)
-	public [$ancestors+firstUpperCase...[.].]$name+firstUpperCase $name;[
-	$component+declarations...[$NL]]
+	public [$ancestors+firstUpperCase...[.].] $name+firstUpperCase $name;
+	[$component+declarations...[$NL]]
 end
 
 def type(component & child & stamp & single) trigger(declaration)
@@ -29,7 +29,7 @@ def type(component & child & stamp & single) trigger(declaration)
 end
 
 def type(component & child) trigger(declaration)
-	public [$ancestors+firstUpperCase...[.].]$name+firstUpperCase $name;
+	public [$ancestors+firstUpperCase...[.].] $name+firstUpperCase $name;
 end
 
 def type(method & multiple)
@@ -37,8 +37,8 @@ def type(method & multiple)
 	public $componentType add([$objectType value]) {
 		$componentType child = new $componentType(box());
 		child.id(java.util.UUID.randomUUID().toString());
-		add(child, "$name");[
-		child.update($objectTypeValue);]
+		add(child, "$name");
+		[child.update($objectTypeValue);]
 		return child;
 	}
 end
@@ -47,16 +47,16 @@ def type(method & collection & table)
 	$selectionMethod
 
 	public $name+firstUpperCase~Row add([$itemClass item]) {
-		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row(($box+firstUpperCase~Box)box());[
-		row.id(java.util.UUID.randomUUID().toString());
+		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row(($box+firstUpperCase~Box)box());
+		[row.id(java.util.UUID.randomUUID().toString());
 		row.item($itemVariable);]
 		addPromise(row, "rows");
 		return row;
 	}
 
 	public $name+firstUpperCase~Row insert([$itemClass item, ]int index) {
-		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row(($box+firstUpperCase~Box)box());[
-		row.id(java.util.UUID.randomUUID().toString());
+		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row(($box+firstUpperCase~Box)box());
+		[row.id(java.util.UUID.randomUUID().toString());
 		row.item($itemVariable);]
 		insertPromise(row, index, "rows");
 		return row;
@@ -70,8 +70,9 @@ end
 
 def type(method & collection)
 	$selectionMethod
-	[$item+addMethod...[$NL]]
-	[$item+removeMethod...[$NL]]
+	[$item+addMethod...[$NL$NL]]
+
+	[$item+removeMethod...[$NL$NL]]
 end
 
 def type(component & child) trigger(method)
@@ -81,52 +82,48 @@ def type(component & child & stamp & single) trigger(class)
 end
 
 def type(component & child & collection) trigger(class)
-	public class $name+firstUpperCase extends $extends[ $implements] {
-		[$reference+declaration...[$NL]
-		][$heading+declaration...[$NL]]
+	public class $name+firstUpperCase extends $extends $implements {
+		[$reference+declaration...[$NL]]
+		[$heading+declaration...[$NL]]
 
 		public $name+firstUpperCase($abstractBox+type box) {
 			super(box);
-			$properties+common
-			$properties+specific
+			[$properties+common]
+			[$properties+specific]
 		}
 
 		@Override
 		public void $methodName() {
-			super.$methodName();[
-			$reference...[$NL]][
-			$heading+child...[$NL]]
+			super.$methodName();
+			[$reference...[$NL]]
+			[$heading+child...[$NL]]
 		}
-
 		$methods
-
-		[$component+class...[$NL]]
-		[$component+method...[$NL]]
+		[$component+class...[$NL$NL]]
+		[$component+method...[$NL$NL]]
 	}
 end
 
 def type(component & child) trigger(class)
-	public class $name+firstUpperCase extends $extends[ $implements] {
-		[$reference+declaration...[$NL]
-		][$component+declaration...[$NL]]
+	public class $name+firstUpperCase extends $extends $implements {
+		[$reference+declaration...[$NL]]
+		[$component+declaration...[$NL]]
 
 		public $name+firstUpperCase($abstractBox+type box) {
 			super(box);
-			$properties+common
-			$properties+specific
+			[$properties+common]
+			[$properties+specific]
 		}
 
 		@Override
 		public void $methodName() {
-			super.$methodName();[
-			$reference...[$NL]][
-			$component+child...[$NL]]
+			super.$methodName();
+			[$reference...[$NL]]
+			[$component+child...[$NL]]
 		}
-
 		$methods
-
-		[$component+class...[$NL]]
-		[$component+method...[$NL]]
+		[$component+class...[$NL$NL]]
+		[$component+method...[$NL$NL]]
 	}
 end
 
@@ -158,28 +155,28 @@ def type(component & child & multipleblock) trigger(rootChildReferences)
 end
 
 def type(component & child & collection) trigger(rootChildReferences)
-	$name = [$ancestorsNotMe...[.].]$name;[
-	$heading+rootChildReferences...[$NL]]
+	$name = [$ancestorsNotMe...[.].]$name;
+	[$heading+rootChildReferences...[$NL]]
 end
 
 def type(component & child) trigger(rootChildReferences)
-	$name = [$ancestorsNotMe...[.].]$name;[
-	$component+rootChildReferences...[$NL]]
+	$name = [$ancestorsNotMe...[.].]$name;
+	[$component+rootChildReferences...[$NL]]
 end
 
 def type(component & child & collection) trigger(childReferences)
-	$name = [$ancestors...[.].]$name;[
-	$heading+childReferences...[$NL]]
+	$name = [$ancestors...[.].]$name;
+	[$heading+childReferences...[$NL]]
 end
 
 def type(component & child) trigger(childReferences)
-	$name = [$ancestors...[.].]$name;[
-	$component+childReferences...[$NL]]
+	$name = [$ancestors...[.].]$name;
+	[$component+childReferences...[$NL]]
 end
 
 def type(component & child & collection) trigger(rootReferences)
-	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
-	$heading+rootChildReferences...[$NL]]
+	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+	[$heading+rootChildReferences...[$NL]]
 end
 
 def type(component & child & stamp & multiple) trigger(rootReferences)
@@ -191,28 +188,28 @@ def type(component & child & stamp & single) trigger(rootReferences)
 end
 
 def type(component & child) trigger(rootReferences)
-	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
-	$component+rootChildReferences...[$NL]]
+	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+	[$component+rootChildReferences...[$NL]]
 end
 
 def type(component & child & collection) trigger(references)
-	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
-	$heading+childReferences...[$NL]]
+	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+	[$heading+childReferences...[$NL]]
 end
 
 def type(component & child) trigger(references)
-	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
-	$component+childReferences...[$NL]]
+	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+	[$component+childReferences...[$NL]]
 end
 
 def type(component & child & collection) trigger(initializations)
-	$binding[
-	$heading+initializations...[$NL]]
+	[$binding]
+	[$heading+initializations...[$NL]]
 end
 
 def type(component & child) trigger(initializations)
-	$binding[
-	$component+initializations...[$NL]]
+	[$binding]
+	[$component+initializations...[$NL]]
 end
 
 def type(component & child & stamp & multiple)
@@ -260,16 +257,16 @@ def type(implements)
 end
 
 def type(properties & operation) trigger(common)
-	[title("$title");][
-	color("$color");][
-	disabled($disabled);]
-	mode(io.intino.alexandria.ui.displays.components.Operation.Mode.valueOf("$mode+firstUpperCase"));
-	$operationMode
+	[title("$title");]
+	[color("$color");]
+	[disabled($disabled);]
+	[mode(io.intino.alexandria.ui.displays.components.Operation.Mode.valueOf("$mode+firstUpperCase"));]
+	[$operationMode]
 end
 
 def type(properties) trigger(common)
-	[label("$label");][
-	color("$color");]
+	[label("$label");]
+	[color("$color");]
 end
 
 def type(properties & image & avatar) trigger(specific)
@@ -277,13 +274,13 @@ def type(properties & image & avatar) trigger(specific)
 end
 
 def type(properties & block) trigger(specific)
-	[$background+resourceMethod][
-	$badge]
+	[$background+resourceMethod]
+	[$badge]
 end
 
 def type(properties & image) trigger(specific)
-	[$value+resourceMethod][
-	$defaultValue+resourceMethod]
+	[$value+resourceMethod]
+	[$defaultValue+resourceMethod]
 end
 
 def type(properties & file) trigger(specific)
@@ -295,12 +292,12 @@ def type(properties & openpage) trigger(specific)
 end
 
 def type(properties & export) trigger(specific)
-	[from($from~L);][
-	to($to~L);][
-	min($min~L);][
-	max($max~L);][
-	range($rangeMin,$rangeMax);][
-	options(java.util.Arrays.asList("$option...[","]"));]
+	[from($from~L);]
+	[to($to~L);]
+	[min($min~L);]
+	[max($max~L);]
+	[range($rangeMin,$rangeMax);]
+	[options(java.util.Arrays.asList("$option...[","]"));]
 end
 
 def type(properties & download) trigger(specific)
@@ -312,21 +309,21 @@ def type(properties & downloadselection) trigger(specific)
 end
 
 def type(properties & chart) trigger(specific)
-	[query("$query");][
-	$input+inputMethod][
-	output("$output");]
+	[query("$query");]
+	[$input+inputMethod]
+	[output("$output");]
 end
 
 def type(properties & number) trigger(specific)
-	[value($value);][
-	min($min);][
-	max($max);]
+	[value($value);]
+	[min($min);]
+	[max($max);]
 end
 
 def type(properties & date) trigger(specific)
-	[value(java.time.Instant.ofEpochMilli($value~L));][
-	min(java.time.Instant.ofEpochMilli($min~L));][
-	max(java.time.Instant.ofEpochMilli($max~L));]
+	[value(java.time.Instant.ofEpochMilli($value~L));]
+	[min(java.time.Instant.ofEpochMilli($min~L));]
+	[max(java.time.Instant.ofEpochMilli($max~L));]
 end
 
 def type(properties & text) trigger(specific)
@@ -390,16 +387,17 @@ end
 def type(item) trigger(addMethod)
 	$methodAccessibility $name+firstUpperCase add$methodName+firstUpperCase([$itemClass item]) {
 		$name+firstUpperCase result = new $name+firstUpperCase(($box+firstUpperCase~Box)box());
-		result.id(java.util.UUID.randomUUID().toString());[
-		result.item($itemVariable);][
-		$addPromise~(result, "rows");]
+		result.id(java.util.UUID.randomUUID().toString());
+		[result.item($itemVariable);]
+		[$addPromise~(result, "rows");]
 		return result;
 	}
+
 	$methodAccessibility $name+firstUpperCase insert$methodName+firstUpperCase([$itemClass item, ]int index) {
 		$name+firstUpperCase result = new $name+firstUpperCase(($box+firstUpperCase~Box)box());
-		result.id(java.util.UUID.randomUUID().toString());[
-		result.item($itemVariable);][
-		$insertPromise~(result, index, "rows");]
+		result.id(java.util.UUID.randomUUID().toString());
+		[result.item($itemVariable);]
+		[$insertPromise~(result, index, "rows");]
 		return result;
 	}
 end

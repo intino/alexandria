@@ -21,7 +21,12 @@ public class I18nRenderer extends UIRenderer {
 	}
 
 	@Override
-	public void execute() {
+	public void clean() {
+		implementar
+	}
+
+	@Override
+	public void render() {
 		FrameBuilder builder = frameBuilder();
 		Commons.write(fileOf(folder(), "I18n").toPath(), setup(template()).render(builder.toFrame()));
 	}

@@ -22,27 +22,28 @@ public class PageRenderer extends ActionRenderer {
 	private final UIService service;
 
 	public PageRenderer(Settings settings, UIService.Resource resource) {
-		super(settings.project(), settings.src(), settings.packageName(), settings.boxName(), "ui");
+		super(settings, "ui");
 		this.settings = settings;
 		this.resource = resource;
 		this.service = resource.core$().ownerAs(UIService.class);
 	}
 
-	public void execute() {
+	@Override
+	public void render() {
 		FrameBuilder builder = new FrameBuilder().add("action").add("ui");
 		builder.add("name", resource.name$());
 		builder.add("uiService", resource.core$().ownerAs(UIService.class).name$());
-		builder.add("package", packageName);
-		builder.add("box", boxName);
-		builder.add("importTemplates", packageName);
+		builder.add("package", packageName());
+		builder.add("box", boxName());
+		builder.add("importTemplates", packageName());
 		builder.add("component", componentFrame());
 		builder.add("parameter", parameters());
 		service.useList().stream().map(use -> builder.add("usedAppUrl", new FrameBuilder("usedAppUrl").add(isCustom(use.url()) ? "custom" : "standard").add("value", isCustom(use.url()) ? customValue(use.url()) : use.url()))).collect(Collectors.toList());
 		if (service.favicon() != null) builder.add("favicon", service.favicon());
 		else if (service.title() != null) builder.add("title", service.title());
 		settings.classes().put(resource.getClass().getSimpleName() + "#" + firstUpperCase(resource.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(resource.name$())) + suffix());
-		if (!alreadyRendered(destiny, resource.name$()))
-			writeFrame(destinyPackage(destiny), resource.name$() + suffix(), template().render(builder.toFrame()));
+		if (!alreadyRendered(src(), resource.name$()))
+			writeFrame(destinyPackage(src()), resource.name$() + suffix(), template().render(builder.toFrame()));
 		writeFrame(destinyPackage(settings.gen()), "Abstract" + firstUpperCase(resource.name$()) + suffix(), template().render(builder.add("gen").toFrame()));
 	}
 

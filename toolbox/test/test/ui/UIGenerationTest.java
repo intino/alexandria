@@ -1,11 +1,10 @@
 package ui;
 
 import com.intellij.openapi.module.Module;
-import cottons.utils.Files;
 import io.intino.konos.builder.codegeneration.FullRenderer;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.accessor.ui.ServiceRenderer;
-import io.intino.konos.builder.codegeneration.cache.Cache;
+import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.ui.UIService;
 import io.intino.tara.magritte.Graph;
@@ -39,7 +38,7 @@ public class UIGenerationTest {
 		File gen = new File(DIR, UI);
 		KonosGraph graph = new Graph().loadStashes("ui").as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, UI).execute();
-		for (UIService service : graph.uIServiceList()) new ServiceRenderer(new Settings().src(gen).gen(gen).cache(new Cache()), service).execute();
+		for (UIService service : graph.uIServiceList()) new ServiceRenderer(new Settings().src(gen).gen(gen).cache(new ElementCache()), service).execute();
 	}
 
 	@Test
@@ -99,12 +98,12 @@ public class UIGenerationTest {
 		gen.mkdirs();
 		KonosGraph graph = new Graph().loadStashes(stash).as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, workingPackage.toLowerCase()).execute();
-		for (UIService service : graph.uIServiceList()) new ServiceRenderer(new Settings().packageName("").webModule(webModule()).src(gen).gen(gen).cache(new Cache()), service).execute();
+		for (UIService service : graph.uIServiceList()) new ServiceRenderer(new Settings().packageName("").webModule(webModule()).src(gen).gen(gen).cache(new ElementCache()), service).execute();
 	}
 
 	private void cleanTestDirectory() {
-		File directory = new File(DIR);
-		if (directory.exists()) Files.removeDir(directory);
+//		File directory = new File(DIR);
+//		if (directory.exists()) Files.removeDir(directory);
 	}
 
 	private Module webModule() {

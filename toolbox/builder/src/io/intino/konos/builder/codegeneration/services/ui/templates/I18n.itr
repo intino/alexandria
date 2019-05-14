@@ -13,9 +13,9 @@ def type(i18n)
 			return languageDictionary.containsKey(word) ? languageDictionary.get(word) : word;
 		}
 
-		static {
+		[static {
 			$translator...[,$NL]
-		}
+		}]
 	}
 end
 

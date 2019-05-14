@@ -20,11 +20,11 @@ def type(component & child & item)
 end
 
 def type(component & child)
-	<$extends context={this._context.bind(this)} owner={this._owner.bind(this)} id="$id"$properties+common$properties+specific[ $code]>[
-		$reference...[$NL]][
-		$methods][
-		$component+child...[$NL]][
-	]</$extends>
+	<$extends context={this._context.bind(this)} owner={this._owner.bind(this)} id="$id"$properties+common$properties+specific[ $code]>
+		[$reference...[$NL]]
+		[$methods]
+		[$component+child...[$NL]]
+	[</$extends>]
 end
 
 def type(extends & multiple)

@@ -1,11 +1,12 @@
 package io.intino.konos.builder.codegeneration.services.slack;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.Renderer;
+import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.slackbot.SlackBotService;
@@ -22,26 +23,16 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 import static io.intino.konos.model.graph.slackbot.SlackBotService.Request.ResponseType.Text;
 
-public class SlackRenderer {
-	private final Project project;
+public class SlackRenderer extends Renderer {
 	private final List<SlackBotService> services;
-	private final File src;
-	private final File gen;
-	private final String packageName;
-	private final String boxName;
-	private final Map<String, String> classes;
 
-	public SlackRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName, Map<String, String> classes) {
-		this.project = project;
+	public SlackRenderer(Settings settings, KonosGraph graph) {
+		super(settings, Target.Service);
 		this.services = graph.slackBotServiceList();
-		this.src = src;
-		this.gen = gen;
-		this.packageName = packageName;
-		this.boxName = boxName;
-		this.classes = classes;
 	}
 
-	public void execute() {
+	@Override
+	public void render() {
 		services.forEach(this::processService);
 	}
 
@@ -50,23 +41,23 @@ public class SlackRenderer {
 		final FrameBuilder builder = createFrameBuilder(service.name$(), service.requestList(), true);
 		for (String level : collectLevels(service).keySet())
 			builder.add("level", new FrameBuilder("level").add("name", level).toFrame());
-		writeFrame(gen, snakeCaseToCamelCase(service.name$()) + "SlackBot", template().render(builder));
-		if (alreadyRendered(new File(src, "slack"), srcName)) updateBot(service, srcName);
+		writeFrame(gen(), snakeCaseToCamelCase(service.name$()) + "SlackBot", template().render(builder));
+		if (alreadyRendered(new File(src(), "slack"), srcName)) updateBot(service, srcName);
 		else newBotActions(service);
 	}
 
 	private void updateBot(SlackBotService service, String name) {
-		new BotActionsUpdater(project, Commons.javaFile(new File(src, "slack"), name), service.requestList(), boxName).update();
+		new BotActionsUpdater(project(), Commons.javaFile(new File(src(), "slack"), name), service.requestList(), boxName()).update();
 		VirtualFileManager.getInstance().asyncRefresh(null);
 	}
 
 	private void newBotActions(SlackBotService service) {
-		final File directory = new File(src, "slack");
+		final File directory = new File(src(), "slack");
 		if (!alreadyRendered(directory, snakeCaseToCamelCase(service.name$()) + "Slack"))
 			writeFrame(directory, snakeCaseToCamelCase(service.name$()) + "Slack", template().render(createFrameBuilder(service.name$(), service.requestList(), false)));
 		Map<String, List<Request>> groups = collectLevels(service);
 		for (String requestContainer : groups.keySet()) {
-			classes.put("Service#" + service.name$(), "slack." + requestContainer + "Slack");
+			classes().put("Service#" + service.name$(), "slack." + requestContainer + "Slack");
 			if (!alreadyRendered(directory, requestContainer + "Slack"))
 				writeFrame(directory, requestContainer + "Slack", template().render(createFrameBuilder(requestContainer, groups.get(requestContainer), false)));
 		}
@@ -98,9 +89,9 @@ public class SlackRenderer {
 	@NotNull
 	private FrameBuilder createFrameBuilder(String name, List<Request> requests, boolean gen) {
 		FrameBuilder builder = new FrameBuilder("slack", (gen ? "gen" : "actions"));
-		builder.add("package", packageName).
+		builder.add("package", packageName()).
 				add("name", name).
-				add("box", boxName);
+				add("box", boxName());
 		if (gen) allRequests(requests, builder);
 		else createRequests(requests, builder);
 		return builder;
@@ -118,7 +109,7 @@ public class SlackRenderer {
 	}
 
 	private Frame createRequestFrame(Request request) {
-		final FrameBuilder builder = new FrameBuilder("request").add("type", request.core$().owner().is(Request.class) ? name(request.core$().ownerAs(Request.class)) : request.core$().owner().name()).add("box", boxName).add("name", request.name$()).add("description", request.description());
+		final FrameBuilder builder = new FrameBuilder("request").add("type", request.core$().owner().is(Request.class) ? name(request.core$().ownerAs(Request.class)) : request.core$().owner().name()).add("box", boxName()).add("name", request.name$()).add("description", request.description());
 		if (request.core$().owner().is(Request.class)) builder.add("context", name(request.core$().ownerAs(Request.class)));
 		builder.add("responseType", request.responseType().equals(Text) ? "String" : "SlackAttachment");
 		final List<Request.Parameter> parameters = request.parameterList();

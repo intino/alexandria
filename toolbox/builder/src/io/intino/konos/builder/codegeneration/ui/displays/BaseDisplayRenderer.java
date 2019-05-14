@@ -24,8 +24,13 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		super(settings, display, templateProvider, target);
 	}
 
-	public void execute() {
-		if (isRendered(element)) return;
+	@Override
+	public void clean() {
+		implementar
+	}
+
+	@Override
+	public void render() {
 		if (element == null) return;
 		String path = path(element);
 		final String newDisplay = snakeCaseToCamelCase(element.name$());
@@ -34,7 +39,6 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		createPassiveViewFiles(result);
 		write(result, src(), gen(), path(element));
 		if (element.isAccessible()) writeDisplaysFor(element.asAccessible(), result);
-		saveRendered(element);
 	}
 
 	@Override

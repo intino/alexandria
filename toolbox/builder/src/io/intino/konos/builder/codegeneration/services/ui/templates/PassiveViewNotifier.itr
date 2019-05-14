@@ -34,7 +34,8 @@ def type(display)
             super(display, carrier);
         }
 
-		$notification...[$NL$NL]
+		[$notification...[$NL$NL]]
+
     }
 end
 

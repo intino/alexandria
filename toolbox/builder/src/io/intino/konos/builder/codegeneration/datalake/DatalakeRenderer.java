@@ -4,49 +4,47 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.Renderer;
+import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.Procedure.Process.Input;
 import io.intino.konos.model.graph.ness.NessClient;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 
-public class DatalakeRenderer {
+public class DatalakeRenderer extends Renderer {
 	private final NessClient datalake;
-	private final File gen;
-	private final String packageName;
-	private final String boxName;
 	private final KonosGraph graph;
 	private final Set<EventSource> eventSources;
 	private final Set<FeederEventSource> eventFeederSources;
 
-	public DatalakeRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+	public DatalakeRenderer(Settings settings, KonosGraph graph) {
+		super(settings, Target.Service);
 		this.graph = graph;
-		this.gen = gen;
-		this.packageName = packageName;
-		this.boxName = boxName;
 		this.datalake = graph.nessClient(0);
 		this.eventSources = collectEventSources(graph);
 		this.eventFeederSources = collectNewFeederSources(graph.nessClientList().stream().map(NessClient::feederList).flatMap(Collection::stream).collect(Collectors.toList()));
 	}
 
-	public void execute() {
+	@Override
+	public void render() {
+		String packageName = packageName();
 		FrameBuilder builder = new FrameBuilder("tanks").
 				add("package", packageName).
 				add("name", datalake.name$()).
-				add("box", boxName).
+				add("box", boxName()).
 				add("tank", tanks());
 		builder.add("clientId", new FrameBuilder(isCustom(datalake.clientID()) ? "custom" : "standard").add("value", datalake.clientID()).toFrame());
 		if (eventSources.stream().anyMatch(h -> h.i$(Mounter.class))) builder.add("tankImport", packageName);
 		if (!datalake.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName).toFrame());
-		Commons.writeFrame(new File(gen, "datalake"), "Datalake", template().render(builder.toFrame()));
+		Commons.writeFrame(new File(gen(), "datalake"), "Datalake", template().render(builder.toFrame()));
 	}
 
 	private Frame[] tanks() {
@@ -60,7 +58,7 @@ public class DatalakeRenderer {
 		final String messageType = messageType(source);
 		final FrameBuilder builder = new FrameBuilder("tank", source.getClass().getSimpleName().toLowerCase()).
 				add("messageType", messageType).
-				add("box", boxName).
+				add("box", boxName()).
 				add("name", source.name()).
 				add("fullname", fullName(source));
 		if (source.i$(Input.class)) builder.add("handler", handlers(messageType));
@@ -71,10 +69,10 @@ public class DatalakeRenderer {
 	private Frame frameOf(FeederEventSource source) {
 		final FrameBuilder builder = new FrameBuilder("tank").
 				add("messageType", source.composedName()).
-				add("box", boxName).
+				add("box", boxName()).
 				add("name", source.name).
 				add("fullname", source.fullName());
-		builder.add("type", new FrameBuilder("schema").add("package", packageName).add("name", source.name).toFrame());
+		builder.add("type", new FrameBuilder("schema").add("package", packageName()).add("name", source.name).toFrame());
 		return builder.toFrame();
 	}
 
@@ -83,8 +81,8 @@ public class DatalakeRenderer {
 		List<Frame> frames = new ArrayList<>();
 		for (Input input : inputs) {
 			final FrameBuilder builder = new FrameBuilder("handler").
-					add("box", boxName).
-					add("processPackage", input.i$(Input.class) ? packageName + ".procedures." + input.core$().ownerAs(Procedure.class).name$() : "").
+					add("box", boxName()).
+					add("processPackage", input.i$(Input.class) ? packageName() + ".procedures." + input.core$().ownerAs(Procedure.class).name$() : "").
 					add("output", input.core$().ownerAs(Procedure.Process.class).outputList().stream().map(this::fullName).toArray(String[]::new)).
 					add("processName", input.i$(Input.class) ? input.core$().ownerAs(Procedure.Process.class).name$() : "");
 			type(input, builder);
@@ -94,7 +92,7 @@ public class DatalakeRenderer {
 	}
 
 	private void type(EventSource source, FrameBuilder builder) {
-		builder.add("type", source.schema() != null ? new FrameBuilder("schema").add("package", packageName).add("name", source.schema().name$()).toFrame() : "message");
+		builder.add("type", source.schema() != null ? new FrameBuilder("schema").add("package", packageName()).add("name", source.schema().name$()).toFrame() : "message");
 	}
 
 	private String fullName(EventSource source) {

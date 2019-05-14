@@ -4,8 +4,9 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.Renderer;
+import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Schema;
 import io.intino.konos.model.graph.Service;
 import io.intino.konos.model.graph.bool.BoolData;
@@ -22,41 +23,50 @@ import io.intino.konos.model.graph.word.WordData;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static java.util.Collections.addAll;
 
-public class SchemaRenderer {
-	private final List<Schema> schemas;
-	private final Map<String, String> classes;
-	private File gen;
-	private String rootPackage;
+public class SchemaRenderer extends Renderer {
+	private final Schema schema;
+	private final File destination;
+	private final String packageName;
 
-	public SchemaRenderer(KonosGraph graph, File gen, String rootPackage, Map<String, String> classes) {
-		schemas = graph.core$().find(Schema.class).stream().filter(s -> !s.core$().owner().is(Schema.class)).collect(Collectors.toList());
-		this.gen = gen;
-		this.rootPackage = rootPackage;
-		this.classes = classes;
+	public SchemaRenderer(Settings settings, Schema schema, File destination, String packageName) {
+		super(settings, Target.Service);
+		this.schema = schema;
+		this.destination = destination != null ? destination : gen();
+		this.packageName = packageName != null ? packageName : settings.packageName();
 	}
 
-
-	public void execute() {
-		schemas.forEach(this::processSchema);
+	public void render() {
+		String rootPackage = packageName;
+		String subPackage = subPackage(schema);
+		final File packageFolder = schemaFolder(schema);
+		final String packageName = subPackage.isEmpty() ? rootPackage : rootPackage + "." + subPackage.replace(File.separator, ".");
+		final Frame frame = createSchemaFrame(schema, packageName);
+		classes().put(Schema.class.getSimpleName() + "#" + schema.name$(), subPackage.replace(File.separator, ".") + "." + schema.name$());
+		Commons.writeFrame(packageFolder, schema.name$(), template().render(new FrameBuilder("root").add("root", rootPackage).add("package", packageName).add("schema", frame)));
+		saveRendered(schema);
 	}
 
 	public Frame createSchemaFrame(Schema schema, String packageName) {
 		return createSchemaFrame(schema, packageName, new HashSet<>());
 	}
 
-	private void processSchema(Schema schema) {
-		final Service service = schema.core$().ownerAs(Service.class);
-		String subPackage = "schemas" + (service != null ? File.separator + service.name$().toLowerCase() : "");
-		final File packageFolder = new File(gen, subPackage);
-		final String packageName = subPackage.isEmpty() ? rootPackage : rootPackage + "." + subPackage.replace(File.separator, ".");
-		final Frame frame = createSchemaFrame(schema, packageName);
-		classes.put(Schema.class.getSimpleName() + "#" + schema.name$(), subPackage.replace(File.separator, ".") + "." + schema.name$());
-		Commons.writeFrame(packageFolder, schema.name$(), template().render(new FrameBuilder("root").add("root", rootPackage).add("package", packageName).add("schema", frame)));
+	private String subPackage(Schema schema) {
+		return subPackage(schema.core$().ownerAs(Service.class));
+	}
+
+	private String subPackage(Service service) {
+		return "schemas" + (service != null ? File.separator + service.name$().toLowerCase() : "");
+	}
+
+	private File schemaFolder(Schema schema) {
+		return new File(destination, subPackage(schema));
 	}
 
 	private Frame createSchemaFrame(Schema schema, String packageName, Set<Schema> processed) {
@@ -183,6 +193,7 @@ public class SchemaRenderer {
 
 	private String packageOf(Schema schema) {
 		final Service service = schema.core$().ownerAs(Service.class);
+		String rootPackage = packageName;
 		String subPackage = "schemas" + (service != null ? File.separator + service.name$().toLowerCase() : "");
 		return subPackage.isEmpty() ? rootPackage : rootPackage + "." + subPackage.replace(File.separator, ".");
 	}

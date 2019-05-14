@@ -2,36 +2,44 @@ package io.intino.konos.builder.codegeneration.exception;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.codegeneration.Renderer;
+import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.model.graph.KonosGraph;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
-import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
-import static io.intino.konos.builder.helpers.Commons.writeFrame;
+import static io.intino.konos.builder.helpers.Commons.*;
+import static java.util.stream.Collectors.toList;
 
-public class ExceptionRenderer {
+public class ExceptionRenderer extends Renderer {
 	private static final String EXCEPTIONS = "exceptions";
 	private final List<io.intino.konos.model.graph.Exception> exceptions;
-	private File gen;
-	private String packageName;
 
-	public ExceptionRenderer(KonosGraph graph, File gen, String packageName) {
+	public ExceptionRenderer(Settings settings, KonosGraph graph) {
+		super(settings, Target.Service);
 		this.exceptions = graph.exceptionList();
-		this.gen = gen;
-		this.packageName = packageName;
 	}
 
-	public void execute() {
+	public void clean() {
+		File folder = destinyPackage(gen());
+		if (!folder.exists()) return;
+		List<String> filenames = exceptions.stream().map(e -> javaFile(folder, e.name$()).getAbsolutePath()).collect(toList());
+		Arrays.stream(Objects.requireNonNull(folder.listFiles((file, name) -> !filenames.contains(name)))).forEach(File::delete);
+	}
+
+	public void render() {
 		exceptions.forEach(this::processException);
 	}
 
 	private void processException(io.intino.konos.model.graph.Exception exception) {
-		writeFrame(destinyPackage(gen), firstUpperCase(exception.name$()), template().render(
+		writeFrame(destinyPackage(gen()), exception.name$(), template().render(
 				new FrameBuilder("exception")
 						.add("name", exception.name$())
 						.add("code", exception.code())
-						.add("package", packageName).toFrame()));
+						.add("package", packageName()).toFrame()));
 	}
 
 	private File destinyPackage(File destiny) {

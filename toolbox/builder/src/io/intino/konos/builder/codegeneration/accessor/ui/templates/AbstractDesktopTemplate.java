@@ -8,8 +8,8 @@ public class AbstractDesktopTemplate extends Template {
 	@Override
 	protected RuleSet ruleSet() {
 		RuleSet result = new RuleSet();
-		new AbstractDesktopSkeletonTemplate().ruleSet().forEach(result::add);
 		new ComponentTemplate().ruleSet().forEach(result::add);
+		new AbstractDesktopSkeletonTemplate().ruleSet().forEach(result::add);
 		return result;
 	}
 

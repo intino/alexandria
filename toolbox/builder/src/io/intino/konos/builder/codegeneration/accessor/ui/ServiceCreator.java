@@ -46,7 +46,8 @@ public class ServiceCreator extends UIRenderer {
 		this.service = service;
 	}
 
-	public void execute() {
+	@Override
+	public void render() {
 		if (settings.module() == null) return;
 		Module webModule = getOrCreateModule();
 		settings.webModule(webModule);

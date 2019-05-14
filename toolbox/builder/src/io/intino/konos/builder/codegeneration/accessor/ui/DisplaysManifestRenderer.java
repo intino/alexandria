@@ -6,7 +6,6 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.DisplaysManifestTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.ui.UIService;
 
@@ -23,7 +22,7 @@ public class DisplaysManifestRenderer extends UIRenderer {
 	}
 
 	@Override
-	public void execute() {
+	public void render() {
 		FrameBuilder result = new FrameBuilder("manifest");
 		displaysOf(service).stream().filter(this::isGeneric).distinct().forEach(d -> result.add("display", display(d)));
 		Commons.write(new File(accessorGen() + File.separator + "Displays.js").toPath(), setup(new DisplaysManifestTemplate()).render(result.toFrame()));
