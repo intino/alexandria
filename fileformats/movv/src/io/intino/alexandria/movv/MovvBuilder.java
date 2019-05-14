@@ -99,18 +99,18 @@ public class MovvBuilder {
             public MovvBuilder commit() {
                 stages.remove(id);
                 items.sort(comparing(o -> o.instant));
-                update();
+                store();
                 return MovvBuilder.this;
             }
 
-            private void update() {
+            private void store() {
                 Mov mov = movOf(id);
                 items = clean(items, isUpdatingFile() ? mov.last().data : null);
                 if (items.size() == 0 || mov.reject(items.get(0))) return;
-                update(mov);
+                store(mov);
             }
 
-            private void update(Mov mov) {
+            private void store(Mov mov) {
                 try {
                     int i = 0;
                     for (Item item : items) {

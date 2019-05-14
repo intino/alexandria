@@ -3,16 +3,20 @@ package io.intino.alexandria.movv;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import static java.lang.System.arraycopy;
 import static java.util.Arrays.binarySearch;
+import static java.util.Collections.emptyIterator;
 import static java.util.Comparator.comparing;
 
-interface Index extends Serializable {
+interface Index extends Serializable, Iterable<Long> {
 
     int dataSize();
+    int size();
 
+    boolean contains(long id);
     int indexOf(long id);
     int headOf(long id);
 
@@ -27,6 +31,7 @@ interface Index extends Serializable {
     static Index load(File file) throws IOException {
         return RandomIndex.load(file);
     }
+
 
     class RandomIndex implements Index {
         int dataSize;
@@ -108,8 +113,13 @@ interface Index extends Serializable {
             return heads;
         }
 
-        private int size() {
+        public int size() {
             return ids.length;
+        }
+
+        @Override
+        public boolean contains(long id) {
+            return indexOf(id) >= 0;
         }
 
         @Override
@@ -129,6 +139,21 @@ interface Index extends Serializable {
                     Arrays.equals(heads, randomIndex.heads);
         }
 
+        @Override
+        public Iterator<Long> iterator() {
+            return new Iterator<Long>() {
+                int i = 0;
+                @Override
+                public boolean hasNext() {
+                    return i < ids.length;
+                }
+
+                @Override
+                public Long next() {
+                    return ids[i++];
+                }
+            };
+        }
     }
 
     class BulkIndex implements Index {
@@ -168,6 +193,16 @@ interface Index extends Serializable {
             dataIndex().store(file);
         }
 
+        @Override
+        public int size() {
+            return -1;
+        }
+
+        @Override
+        public boolean contains(long id) {
+            return false;
+        }
+
         private Index dataIndex() {
             tuples.sort(comparing(t->t.id));
             return new RandomIndex(dataSize, ids(), heads());
@@ -185,6 +220,11 @@ interface Index extends Serializable {
 
         private int[] heads() {
             return tuples.stream().mapToInt(t->t.head).toArray();
+        }
+
+        @Override
+        public Iterator<Long> iterator() {
+            return emptyIterator();
         }
 
         private static class Tuple {
