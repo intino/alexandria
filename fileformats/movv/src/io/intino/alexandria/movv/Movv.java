@@ -21,6 +21,10 @@ public class Movv {
         return new Mov(index, access()).of(id);
     }
 
+    public boolean contains(long id) {
+        return index.indexOf(id) != -1;
+    }
+
     private Access access() {
         return Access.of(raf, index.dataSize());
     }
