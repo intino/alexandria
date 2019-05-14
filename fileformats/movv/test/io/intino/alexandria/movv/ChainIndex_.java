@@ -10,28 +10,29 @@ import java.util.Random;
 import static java.lang.Math.abs;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class Index_ {
+public class ChainIndex_ {
 
     @After
 	public void tearDown() {
         new File("index").delete();
+        new File("index.chain").delete();
     }
 
     @Test
     public void should_store_and_load_from_file() throws IOException {
-        Index index = new Index.BulkIndex(32);
-        index.put(4,0);
-        index.put(2,1);
-        index.put(5,2);
-        index.put(3,3);
-        index.put(8,4);
-        index.put(9,5);
-        index.put(0,6);
-        index.put(1,7);
-        index.put(7,8);
-        index.put(6,9);
-        index.store(new File("index"));
-        assertThat(index).isEqualTo(Index.load(new File("index")));
+        ChainIndex chainIndex = new ChainIndex.BulkChainIndex(new File("index"), 32);
+        chainIndex.put(4,0);
+        chainIndex.put(2,1);
+        chainIndex.put(5,2);
+        chainIndex.put(3,3);
+        chainIndex.put(8,4);
+        chainIndex.put(9,5);
+        chainIndex.put(0,6);
+        chainIndex.put(1,7);
+        chainIndex.put(7,8);
+        chainIndex.put(6,9);
+        chainIndex.close();
+        assertThat(chainIndex).isEqualTo(ChainIndex.load(new File("index")));
     }
 
     @Test
@@ -40,8 +41,8 @@ public class Index_ {
             assertThat(isSorted(index().ids)).isTrue();
     }
 
-    private Index.RandomIndex index() {
-        Index.RandomIndex index = new Index.RandomIndex(32, new long[0], new int[0]);
+    private ChainIndex.RandomChainIndex index() {
+        ChainIndex.RandomChainIndex index = new ChainIndex.RandomChainIndex(new File("index"), 32, new long[0], new int[0]);
         long id;
         for (int i = 0; i < 1000; i++) {
             do {
