@@ -7,6 +7,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.*;
 
 import static java.util.Arrays.stream;
+import static java.util.Collections.emptyList;
 
 
 public class MessageCast {
@@ -47,15 +48,13 @@ public class MessageCast {
         return object;
     }
 
-    private Object fillValue(Resource[] resources) {
-        stream(resources).forEach(this::fillValue);
-        return resources;
+	private Resource[] fillValue(Resource[] resources) {
+		return stream(resources).map(this::fillValue).toArray(Resource[]::new);
     }
 
-    private Object fillValue(Resource resource) {
-        String key = new String(resource.data());
-        resource.data(message.attachment(key));
-        return resource;
+	private Resource fillValue(Resource resource) {
+		String key = new String(resource.bytes());
+		return new Resource(resource.name(), message.attachment(key));
     }
 
 	@SuppressWarnings({"unchecked"})
@@ -159,7 +158,7 @@ public class MessageCast {
 			@Override
 			public Object parse(String text) {
 				Object[] array = (Object[]) fillValue(parser.parse(text));
-				return Arrays.asList(array);
+				return array != null ? Arrays.asList(array) : emptyList();
 			}
 		};
 	}

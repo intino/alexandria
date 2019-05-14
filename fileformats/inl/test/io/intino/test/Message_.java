@@ -24,12 +24,12 @@ public class Message_ {
 		assertThat(message.get("taps").as(Integer.class)).isEqualTo(100);
 		assertThat(message.toString()).isEqualTo(
 				"[Status]\n" +
-				"battery: 80.0\n" +
 				"cpuUsage: 11.95\n" +
 				"isPlugged: true\n" +
 				"isScreenOn: false\n" +
 				"temperature: 29.0\n" +
 				"created: 2017-03-22T12:56:18Z\n" +
+						"battery: 80.0\n" +
 				"taps: 100\n");
 	}
 
@@ -112,15 +112,15 @@ public class Message_ {
     		.append("file2", "xx.png", data(0))
     		.append("file2", "yy.png", data(100));
         assertThat(message.get("file1").as(Resource.class).name()).isEqualTo("photo.png");
-        assertThat(message.get("file1").as(Resource.class).data().length).isEqualTo(120);
-        assertThat(message.get("file1").as(Resource.class).data()).isEqualTo(data(120));
+		assertThat(message.get("file1").as(Resource.class).bytes().length).isEqualTo(120);
+		assertThat(message.get("file1").as(Resource.class).bytes()).isEqualTo(data(120));
         assertThat(message.get("file1").as(Resource[].class).length).isEqualTo(1);
         assertThat(message.get("file1").as(Resource[].class)[0].name()).isEqualTo("photo.png");
         assertThat(message.get("file2").as(Resource[].class).length).isEqualTo(3);
         assertThat(message.get("file2").as(Resource[].class)[0].name()).isEqualTo("cv.pdf");
-        assertThat(message.get("file2").as(Resource[].class)[0].data()).isEqualTo(data(80));
-        assertThat(message.get("file2").as(Resource[].class)[1].data()).isEqualTo(data(0));
-        assertThat(message.get("file2").as(Resource[].class)[2].data()).isEqualTo(data(100));
+		assertThat(message.get("file2").as(Resource[].class)[0].bytes()).isEqualTo(data(80));
+		assertThat(message.get("file2").as(Resource[].class)[1].bytes()).isEqualTo(data(0));
+		assertThat(message.get("file2").as(Resource[].class)[2].bytes()).isEqualTo(data(100));
         assertThat(message.attachments().size()).isEqualTo(4);
 		assertThat(withoutUUID(message.toString())).isEqualTo(
 		        "[Document]\n" +
@@ -141,8 +141,8 @@ public class Message_ {
             .remove("file")
             .set("file","0.png",data(128));
 		assertThat(message.get("file").as(Resource.class).type()).isEqualTo("png");
-		assertThat(message.get("file").as(Resource.class).data().length).isEqualTo(128);
-		assertThat(message.get("file").as(Resource.class).data()).isEqualTo(data(128));
+		assertThat(message.get("file").as(Resource.class).bytes().length).isEqualTo(128);
+		assertThat(message.get("file").as(Resource.class).bytes()).isEqualTo(data(128));
 		assertThat(message.attachments().size()).isEqualTo(1);
 		assertThat(withoutUUID(message.toString())).isEqualTo(
 		        "[Document]\n" +
