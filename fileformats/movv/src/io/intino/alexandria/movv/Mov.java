@@ -41,6 +41,10 @@ public class Mov implements Iterable<Mov.Item> {
         return Item.Null;
     }
 
+    public Item first() {
+        return head >= 0 ? itemAt(head) : null;
+    }
+
     public int length() {
         int length =0;
         int cursor = head;
