@@ -161,7 +161,7 @@ Schema OtraDocumentacion
 Schema Message
 	Attribute ts as DateTime
 
-Schema Solicitud as ExtensionOf(Message)
+Schema Solicitud as ExtensionOf(Message, parentView = empty)
 	Attribute id as Text
 	Attribute asunto as Text
 	Attribute expone as Text
@@ -172,16 +172,16 @@ Schema Solicitud as ExtensionOf(Message)
 	Attribute datosDelRepresentante as Object(DatosDelRepresentante)
 	Attribute solicitudDocumento as Object(SolicitudDocumento) List
 
-Schema SolicitudCompletada as ExtensionOf(Message)
+Schema SolicitudCompletada as ExtensionOf(Message, parentView = empty)
 	Attribute solicitud as Object(Solicitud)
 	Attribute autor as Text
 
-Schema SolicitudRevisada as ExtensionOf(Message)
+Schema SolicitudRevisada as ExtensionOf(Message, parentView = empty)
 	Attribute solicitud as Text
 	Attribute revision as Text
 	Attribute autor as Text
 
-Schema SolicitudArchivada as ExtensionOf(Message)
+Schema SolicitudArchivada as ExtensionOf(Message, parentView = empty)
 	Attribute solicitud as Text
 	Attribute autor as Text
 

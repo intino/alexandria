@@ -13,12 +13,12 @@ import java.util.Properties;
 import static java.util.stream.Collectors.toMap;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
-public class CacheLoader extends HashMap<String, Integer> {
+public class CacheReader extends HashMap<String, Integer> {
 	private final File cacheFile;
 
 	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 
-	public CacheLoader(File cacheFile) {
+	public CacheReader(File cacheFile) {
 		this.cacheFile = cacheFile;
 	}
 

@@ -6,7 +6,7 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.search.GlobalSearchScope;
 import cottons.utils.Files;
 import io.intino.konos.builder.codegeneration.cache.Cache;
-import io.intino.konos.builder.codegeneration.cache.CacheLoader;
+import io.intino.konos.builder.codegeneration.cache.CacheReader;
 import io.intino.konos.builder.codegeneration.cache.CacheWriter;
 import io.intino.konos.builder.codegeneration.datalake.DatalakeRenderer;
 import io.intino.konos.builder.codegeneration.datalake.NessJMXOperationsRenderer;
@@ -237,7 +237,7 @@ public class FullRenderer {
 	}
 
 	private Cache loadCache() {
-		return new CacheLoader(cacheFile()).load();
+		return new CacheReader(cacheFile()).load();
 	}
 
 	private void saveCache(Cache cache) {

@@ -236,7 +236,7 @@ Schema Crash
 	Attribute consulVersion as Text
 
 
-Schema DeviceBoot as ExtensionOf(DeviceInfo)
+Schema DeviceBoot as ExtensionOf(DeviceInfo, parentView = empty)
 	Attribute ts as DateTime
 	Attribute project as Text
 	Attribute deviceId as Text //TODO jose change for id

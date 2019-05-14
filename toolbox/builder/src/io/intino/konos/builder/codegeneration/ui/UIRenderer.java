@@ -169,4 +169,8 @@ public abstract class UIRenderer {
 		return settings.cache().containsKey(element.name$());
 	}
 
+	protected void saveRendered(Layer element) {
+		settings.cache().add(element);
+	}
+
 }
