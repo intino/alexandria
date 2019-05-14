@@ -5,14 +5,14 @@ import java.time.Instant;
 import java.util.Iterator;
 
 public class Mov implements Iterable<Mov.Item> {
-	private final Index index;
-	private final Access access;
+	private final ChainIndex chainIndex;
+	private final ChainReader chainReader;
 	private long id;
 	private int head;
 
-	Mov(Index index, Access access) {
-		this.access = access;
-		this.index = index;
+	Mov(ChainIndex chainIndex, ChainReader chainReader) {
+		this.chainReader = chainReader;
+		this.chainIndex = chainIndex;
 	}
 
 	public long id() {
@@ -21,7 +21,7 @@ public class Mov implements Iterable<Mov.Item> {
 
 	Mov of(long id) {
 		this.id = id;
-		this.head = index.headOf(id);
+		this.head = chainIndex.headOf(id);
 		return this;
 	}
 
@@ -92,7 +92,7 @@ public class Mov implements Iterable<Mov.Item> {
 	}
 
 	private void create(long id, int next) {
-		this.index.put(id, next);
+		this.chainIndex.put(id, next);
 		this.head = next;
 	}
 
@@ -108,8 +108,8 @@ public class Mov implements Iterable<Mov.Item> {
 
 	private int nextOf(int cursor) {
 		try {
-			access.seekNextOf(cursor);
-			return access.readNext();
+			chainReader.seekNextOf(cursor);
+			return chainReader.readNext();
 		} catch (IOException e) {
 			return -1;
 		}
@@ -117,7 +117,7 @@ public class Mov implements Iterable<Mov.Item> {
 
 	private int readNext() {
 		try {
-			return access.readNext();
+			return chainReader.readNext();
 		} catch (IOException e) {
 			return -1;
 		}
@@ -125,8 +125,8 @@ public class Mov implements Iterable<Mov.Item> {
 
 	private Item itemAt(int cursor) {
 		try {
-			access.seek(cursor);
-			return new Item(access.readInstant(), access.readData());
+			chainReader.seek(cursor);
+			return new Item(chainReader.readInstant(), chainReader.readData());
 		} catch (IOException e) {
 			return null;
 		}
@@ -134,8 +134,8 @@ public class Mov implements Iterable<Mov.Item> {
 
 	private void updateNext(int cursor, int next) {
 		try {
-			access.seekNextOf(cursor);
-			access.writeNext(next);
+			chainReader.seekNextOf(cursor);
+			chainReader.writeNext(next);
 		} catch (IOException ignored) {
 		}
 	}

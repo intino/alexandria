@@ -5,9 +5,7 @@ import java.io.RandomAccessFile;
 import java.time.Instant;
 import java.util.Arrays;
 
-interface Access {
-    Access Null = Null();
-
+interface ChainReader {
     void seek(int cursor) throws IOException;
 
     Instant readInstant() throws IOException;
@@ -17,8 +15,8 @@ interface Access {
     int readNext() throws IOException;
     void writeNext(int cursor) throws IOException;
 
-    static Access Null() {
-        return new Access() {
+    static ChainReader Null() {
+        return new ChainReader() {
 
             @Override
             public void seek(int cursor) {
@@ -52,8 +50,8 @@ interface Access {
         };
     }
 
-    static Access of(RandomAccessFile raf, int recordLength) {
-        return new Access() {
+    static ChainReader load(RandomAccessFile raf, int dataSize) {
+        return new ChainReader() {
             @Override
             public void seek(int cursor) throws IOException {
                 raf.seek(positionOf(cursor));
@@ -61,7 +59,7 @@ interface Access {
 
             @Override
             public void seekNextOf(int cursor) throws IOException {
-                raf.seek(positionOf(cursor) + Long.BYTES + recordLength);
+                raf.seek(positionOf(cursor) + Long.BYTES + dataSize);
             }
 
             @Override
@@ -84,7 +82,7 @@ interface Access {
             }
 
             private byte[] readBytes() throws IOException {
-                byte[] bytes = new byte[recordLength];
+                byte[] bytes = new byte[dataSize];
                 raf.read(bytes);
                 return Arrays.copyOf(bytes,lengthOf(bytes));
             }
@@ -103,7 +101,7 @@ interface Access {
             }
 
             private int recordSize() {
-                return Long.BYTES + recordLength + Integer.BYTES;
+                return Long.BYTES + dataSize + Integer.BYTES;
             }
 
         };

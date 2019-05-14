@@ -1,41 +1,40 @@
 package io.intino.alexandria.movv;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Iterator;
 
 public class Movv implements Iterable<Mov> {
-    private final Index index;
-    private final RandomAccessFile raf;
-    private Access access;
+    private final ChainIndex chainIndex;
+	private ChainReader chainReader;
 
     public Movv(File file) throws IOException {
-        this.index = Index.load(indexOf(file));
-        this.raf = new RandomAccessFile(file, "r");
-        this.access = access();
+	    this.chainIndex = ChainIndex.load(file);
+        this.chainReader = ChainReader.load(rafOf(file), chainIndex.dataSize());
     }
 
-    static File indexOf(File file) {
-        return new File(file.getAbsolutePath() + ".i");
+	private RandomAccessFile rafOf(File file) throws FileNotFoundException {
+		return new RandomAccessFile(chainFileOf(file), "r");
+	}
+
+	static File chainFileOf(File file) {
+        return new File(file.getAbsolutePath() + ".chain");
     }
 
     public Mov get(long id) {
-        return new Mov(index, access).of(id);
+        return new Mov(chainIndex, chainReader).of(id);
     }
 
     public boolean contains(long id) {
-        return index.contains(id);
-    }
-
-    private Access access() {
-        return Access.of(raf, index.dataSize());
+	    return chainIndex.contains(id);
     }
 
     @Override
     public Iterator<Mov> iterator() {
         return new Iterator<Mov>() {
-            Iterator<Long> iterator = index.iterator();
+            Iterator<Long> iterator = chainIndex.iterator();
             @Override
             public boolean hasNext() {
                 return iterator.hasNext();
