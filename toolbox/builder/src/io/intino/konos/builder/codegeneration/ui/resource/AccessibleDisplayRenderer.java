@@ -31,6 +31,8 @@ public class AccessibleDisplayRenderer extends UIRenderer {
 		Commons.writeFrame(new File(gen(), format(Resources)), snakeCaseToCamelCase(display.name$() + "ProxyResource"), setup(new ResourceTemplate()).render(builder.toFrame()));
 
 		new AccessibleDisplayActionRenderer(settings, display).execute();
+
+		saveRendered(display);
 	}
 
 	private FrameBuilder[] parameters(AccessibleDisplay display) {

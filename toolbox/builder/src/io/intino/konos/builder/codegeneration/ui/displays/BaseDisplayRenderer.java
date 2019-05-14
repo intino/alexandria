@@ -34,6 +34,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		createPassiveViewFiles(result);
 		write(result, src(), gen(), path(element));
 		if (element.isAccessible()) writeDisplaysFor(element.asAccessible(), result);
+		saveRendered(element);
 	}
 
 	@Override

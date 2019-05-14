@@ -15,26 +15,25 @@ def type(display)
 	$rowsImport
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
-    public[ $abstract+lowerCase] class [$abstract]$name+firstUpperCase$parametrized $displayExtends[ $implements] {
-    	[$reference+declaration...[$NL]
-    	][$component+declarations...[$NL]
+    public [$abstract+lowerCase] class $abstract$name+firstUpperCase$parametrized $displayExtends[ $implements] {
+    	[$reference+declaration...[$NL]]
+    	[$component+declarations...[$NL]]
 
-        ]public [$abstract]$name+firstUpperCase($abstractBox+type box) {
+        public [$abstract]$name+firstUpperCase($abstractBox+type box) {
             super(box);
             id("$id");
         }
 
         @Override
 		public void init() {
-			super.init();[
-			$reference...[$NL]]
-			$componentReferences[
-			$component+initializations...[$NL]]
-		}[
-		$methods
-		][
-		$component+class...[$NL]][
-		$component+method...[$NL]]
+			super.init();
+			[$reference...[$NL]]
+			$componentReferences
+			[$component+initializations...[$NL]]
+		}
+		[$methods]
+		[$component+class...[$NL]]
+		[$component+method...[$NL]]
 	}
 end
 

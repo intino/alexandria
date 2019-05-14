@@ -30,6 +30,7 @@ public class Cache extends HashMap<String, Long> {
 	}
 
 	private boolean checkCreateDate(Long createDate) {
+		if (createDate == null) return true;
 		int diffInDays = (int)( (Instant.now().toEpochMilli() - createDate) / (1000 * 60 * 60 * 24));
 		return diffInDays > 7;
 	}
