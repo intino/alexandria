@@ -3,7 +3,6 @@ package io.intino.alexandria.inl;
 import io.intino.alexandria.Resource;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.reflect.Modifier.isStatic;
@@ -48,7 +47,7 @@ public class MessageBuilder {
     }
 
     private void buildAttachment(Message message, Field field, Object object) {
-        message.set(field.getName(), resource(object).name(), resource(object).data());
+		message.set(field.getName(), resource(object).name(), resource(object).bytes());
     }
 
     private static Resource resource(Object object) {
