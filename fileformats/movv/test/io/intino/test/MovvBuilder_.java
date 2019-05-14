@@ -51,6 +51,8 @@ public class MovvBuilder_ {
 
         Movv movv = new Movv(new File("movvs/single.movv"));
         assertThat(movv.get(1000).length()).isEqualTo(1);
+        assertThat(movv.get(1000).first().instant.toString()).isEqualTo("2018-01-02T00:00:00Z");
+        assertThat(movv.get(1000).first().data).isEqualTo("1");
         assertThat(movv.get(1000).last().instant.toString()).isEqualTo("2018-01-02T00:00:00Z");
         assertThat(movv.get(1000).last().data).isEqualTo("1");
         assertThat(movv.get(1000).iterator().hasNext()).isTrue();
@@ -68,6 +70,7 @@ public class MovvBuilder_ {
         buildWithNonSortedStage();
 
         Movv movv = new Movv(new File("movvs/single.movv"));
+
         assertThat(movv.get(1000).length()).isEqualTo(2);
         assertThat(movv.get(1000).last().instant.toString()).isEqualTo("2018-02-20T00:00:00Z");
         assertThat(movv.get(1000).last().data).isEqualTo("2");
