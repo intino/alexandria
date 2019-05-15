@@ -187,6 +187,7 @@ public class MovvBuilder_ {
                 .stageOf(1000)
                     .add(instant(2018, 2, 24), "2")
                     .add(instant(2018, 1, 1), "1")
+                    .add(instant(2018, 1, 1), "3")
                     .add(instant(2018, 2, 20), "2")
                 .commit()
                 .close();
