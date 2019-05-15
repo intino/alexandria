@@ -101,6 +101,21 @@ public class MovvBuilder_ {
         assertThat(movv.get(1000).at(Instant.now()).data).isEqualTo("05");
     }
 
+
+    @Test
+    public void should_not_update_a_movv_if_new_record_instant_equals_to_last_instant() throws IOException {
+        buildWithNonSortedStage();
+        updateWithSameInstant();
+
+        Movv movv = new Movv(new File("movvs/single.movv"));
+        assertThat(movv.get(1000).length()).isEqualTo(2);
+        assertThat(movv.get(1000).at(instant(2010,1,1)).data).isNull();
+        assertThat(movv.get(1000).at(instant(2018,2,10)).data).isEqualTo("1");
+        assertThat(movv.get(1000).at(instant(2018,2,25)).data).isEqualTo("2");
+        assertThat(movv.get(1000).at(instant(2018,2,25)).data).isEqualTo("2");
+        assertThat(movv.get(1000).at(Instant.now()).data).isEqualTo("2");
+    }
+
     @Test
     public void should_update_a_movv_using_non_sorted_stage() throws IOException {
         buildWithNonSortedStage();
@@ -189,6 +204,12 @@ public class MovvBuilder_ {
         MovvBuilder.update(new File("movvs/single.movv"))
                 .add(1000, instant(2019,2,1), "4")
                 .add(1000, instant(2019,2,10), "05")
+                .close();
+    }
+
+    private void updateWithSameInstant() throws IOException {
+        MovvBuilder.update(new File("movvs/single.movv"))
+                .add(1000, instant(2018, 2, 20), "5")
                 .close();
     }
 

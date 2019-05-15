@@ -83,7 +83,7 @@ public class Mov implements Iterable<Mov.Item> {
 	boolean reject(Item item) {
 		Item last = last();
 		if (last == Item.Null) return false;
-		return last.isAfter(item.instant) || last.data.equals(item.data);
+		return item.instant.compareTo(last.instant) <= 0 || last.data.equals(item.data);
 	}
 
 	void append(long id, int next) {
