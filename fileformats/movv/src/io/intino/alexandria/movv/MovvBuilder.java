@@ -104,7 +104,7 @@ public class MovvBuilder {
 
 			private void store() {
 				Mov mov = movOf(id);
-				items = clean(items, isUpdatingFile() ? mov.last().data : null);
+				items = clean(items, isUpdatingFile() ? mov.last() : Item.Null);
 				if (items.size() == 0 || mov.reject(items.get(0))) return;
 				store(mov);
 			}
@@ -124,12 +124,12 @@ public class MovvBuilder {
 				return chainWriter.write(item, isTheLast);
 			}
 
-			private List<Item> clean(List<Item> items, String lastData) {
+			private List<Item> clean(List<Item> items, Item last) {
 				List<Item> result = new ArrayList<>();
 				for (Item item : items) {
-					if (item.data.equals(lastData)) continue;
+					if (item.data.equals(last.data) || item.instant.equals(last.instant)) continue;
 					result.add(item);
-					lastData = item.data;
+					last = item;
 				}
 				return result;
 			}
