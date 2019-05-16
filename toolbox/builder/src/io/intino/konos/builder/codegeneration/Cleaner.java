@@ -10,7 +10,7 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 
 public abstract class Cleaner {
-	private final ElementHelper elementHelper;
+	protected final ElementHelper elementHelper;
 	protected final Settings settings;
 
 	public Cleaner(Settings settings) {

@@ -3,13 +3,15 @@ package io.intino.konos.builder.codegeneration.action;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
-import io.intino.konos.builder.codegeneration.ui.UIRenderer;
+import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.helpers.CodeGenerationHelper;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
 
 import java.io.File;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.format;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class AccessibleDisplayActionRenderer extends ActionRenderer {
@@ -44,7 +46,7 @@ public class AccessibleDisplayActionRenderer extends ActionRenderer {
 
 	@Override
 	protected File destinyPackage(File destiny) {
-		return new File(destiny, UIRenderer.format(UIRenderer.Pages, UIRenderer.Target.Service));
+		return new File(destiny, format(CodeGenerationHelper.Pages, Target.Service));
 	}
 
 	@Override

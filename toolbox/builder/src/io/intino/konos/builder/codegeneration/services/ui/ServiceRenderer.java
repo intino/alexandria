@@ -4,6 +4,7 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.templates.ServiceTemplate;
 import io.intino.konos.builder.codegeneration.ui.I18nRenderer;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
@@ -11,13 +12,13 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.ui.UIService;
 
-import java.io.File;
 import java.util.List;
 import java.util.Set;
 
-import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.serviceFilename;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.serviceFolder;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
-import static io.intino.konos.model.graph.KonosGraph.displaysOf;
+import static io.intino.konos.model.graph.KonosGraph.rootDisplays;
 import static io.intino.konos.model.graph.PassiveView.Request.ResponseType.Asset;
 
 public class ServiceRenderer extends UIRenderer {
@@ -35,13 +36,13 @@ public class ServiceRenderer extends UIRenderer {
 	}
 
 	private void createUi() {
-		final List<Display> displays = displaysOf(service);
+		final List<Display> displays = rootDisplays(service);
 		FrameBuilder builder = frameBuilder().add("ui").add("name", service.name$()).add("resource", resourcesFrame(service.resourceList()));
 		if (service.userHome() != null) builder.add("userHome", service.userHome().name$());
 		if (!displays.isEmpty())
 			builder.add("display", displaysFrame(displays)).add("displaysImport", packageName());
 		if (service.authentication() != null) builder.add("auth", service.authentication().by());
-		writeFrame(new File(gen(), UI), snakeCaseToCamelCase(service.name$() + "Service"), template().render(builder.toFrame()));
+		writeFrame(serviceFolder(gen()), serviceFilename(service.name$()), template().render(builder.toFrame()));
 	}
 
 	private Frame[] resourcesFrame(List<UIService.Resource> resourceList) {

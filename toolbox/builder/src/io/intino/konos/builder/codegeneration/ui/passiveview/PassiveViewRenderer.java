@@ -4,6 +4,7 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.ElementRenderer;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.Component;
@@ -14,10 +15,11 @@ import io.intino.konos.model.graph.PassiveView.Request;
 import io.intino.konos.model.graph.decorated.DecoratedDisplay;
 import io.intino.tara.magritte.Layer;
 
-import java.io.File;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayNotifierFolder;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayRequesterFolder;
 import static io.intino.konos.model.graph.PassiveView.Request.ResponseType.Asset;
 
 public abstract class PassiveViewRenderer<C extends PassiveView> extends ElementRenderer<C> {
@@ -60,7 +62,8 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	protected void writeRequester(PassiveView element, Frame frame) {
-		writeFrame(new File(gen(), format(Requesters)), snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + "Requester"), displayRequesterTemplate().render(frame));
+		String name = snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + "Requester");
+		writeFrame(displayRequesterFolder(gen(), target), name, displayRequesterTemplate().render(frame));
 	}
 
 	private void writePushRequester(Frame frame) {
@@ -71,7 +74,8 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		Template template = displayPushRequesterTemplate();
 		boolean accessible = isAccessible(frame);
 		if (accessible || template == null) return;
-		writeFrame(new File(gen(), format(Requesters)), snakeCaseToCamelCase(element.name$() + "PushRequester"), template.render(frame));
+		String name = snakeCaseToCamelCase(element.name$() + "PushRequester");
+		writeFrame(displayRequesterFolder(gen(), target), name, template.render(frame));
 	}
 
 	private boolean isAccessible(Frame frame) {
@@ -83,7 +87,8 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	protected void writeNotifier(PassiveView element, Frame frame) {
-		writeFrame(new File(gen(), format(Notifiers)), snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + "Notifier"), displayNotifierTemplate().render(frame));
+		String notifierName = snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + "Notifier");
+		writeFrame(displayNotifierFolder(gen(), target), notifierName, displayNotifierTemplate().render(frame));
 	}
 
 	private Template displayNotifierTemplate() {

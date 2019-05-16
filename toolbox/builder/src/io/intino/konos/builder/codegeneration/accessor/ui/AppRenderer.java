@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.accessor.ui;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.AppTemplate;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.PassiveViewTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;

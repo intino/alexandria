@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.accessor.ui.resource;
 
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.resource.AccessibleDisplayRenderer;
 import io.intino.konos.model.graph.ui.UIService;
 

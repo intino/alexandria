@@ -2,15 +2,15 @@ package io.intino.konos.builder.codegeneration.ui.resource;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.AccessibleDisplayActionRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.templates.ResourceTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
 
-import java.io.File;
-
-import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.resourceFilename;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.resourceFolder;
 
 public class AccessibleDisplayRenderer extends UIRenderer {
 	private final AccessibleDisplay display;
@@ -29,7 +29,7 @@ public class AccessibleDisplayRenderer extends UIRenderer {
 		builder.add(display.getClass().getSimpleName());
 
 		builder.add("parameter", parameters(display));
-		Commons.writeFrame(new File(gen(), format(Resources)), snakeCaseToCamelCase(display.name$() + "ProxyResource"), setup(new ResourceTemplate()).render(builder.toFrame()));
+		Commons.writeFrame(resourceFolder(gen(), target), resourceFilename(display.name$(), "ProxyResource"), setup(new ResourceTemplate()).render(builder.toFrame()));
 
 		new AccessibleDisplayActionRenderer(settings, display).execute();
 
