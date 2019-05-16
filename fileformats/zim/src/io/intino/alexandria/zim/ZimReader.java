@@ -1,7 +1,8 @@
 package io.intino.alexandria.zim;
 
-import io.intino.alexandria.inl.MessageReader;
 import io.intino.alexandria.inl.Message;
+import io.intino.alexandria.inl.MessageReader;
+import io.intino.alexandria.logger.Logger;
 
 import java.io.*;
 import java.util.Iterator;
@@ -23,7 +24,7 @@ public class ZimReader implements ZimStream {
 	}
 
 	public ZimReader(InputStream is) {
-		this(iteratorOf(is));
+		this(iteratorOf(is instanceof GZIPInputStream ? is : zipStreamOf(is)));
 	}
 
 	public ZimReader(String text) {
@@ -92,9 +93,21 @@ public class ZimReader implements ZimStream {
 	}
 
 	private static InputStream zipStreamOf(File file) throws IOException {
-		return new GZIPInputStream(new BufferedInputStream(new FileInputStream(file)));
+		return new GZIPInputStream(fileInputStream(file));
 	}
 
+	private static InputStream zipStreamOf(InputStream stream) {
+		try {
+			return new GZIPInputStream(stream);
+		} catch (IOException e) {
+			Logger.error(e);
+			return stream;
+		}
+	}
+
+	private static BufferedInputStream fileInputStream(File file) throws FileNotFoundException {
+		return new BufferedInputStream(new FileInputStream(file));
+	}
 
 	@Override
 	public Message current() {
