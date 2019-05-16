@@ -90,8 +90,6 @@ public abstract class Renderer {
 	protected boolean isRendered(Layer element) {
 		if (element == null) return false;
 		String key = elementHelper.referenceOf(element).toString();
-		if (element.name$().contains("testTemplate") && element.core$().birthMark() != -1273592974)
-			System.out.println("Fallo!");
 		boolean containsKey = settings.cache().containsKey(key);
 		return containsKey && settings.cache().get(key).equals((long) element.core$().birthMark());
 	}

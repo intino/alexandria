@@ -1,19 +1,34 @@
 package io.intino.konos.builder.codegeneration;
 
-public class FullCleaner extends Cleaner {
-	public FullCleaner(Settings settings) {
-		super(settings);
-	}
-//	private final Settings settings;
-//	private final KonosGraph graph;
+import io.intino.konos.builder.codegeneration.services.ui.ServiceListCleaner;
+import io.intino.konos.model.graph.KonosGraph;
 
-//	public FullCleaner(Settings settings, KonosGraph graph) {
-//		this.settings = settings;
-//		this.graph = graph;
-//	}
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+
+public class FullCleaner extends Cleaner {
+	private final KonosGraph graph;
+	private static final List<String> ExcludedDirectories = Arrays.asList("displays", "element.cache");
+
+	public FullCleaner(Settings settings, KonosGraph graph) {
+		super(settings);
+		this.graph = graph;
+	}
 
 	@Override
 	public void execute() {
-//		new ServiceListCleaner(settings, graph).execute();
+		clean(gen());
+		new ServiceListCleaner(settings, graph).execute();
 	}
+
+	private void clean(File directory) {
+		if (!directory.exists()) return;
+		List<File> files = Arrays.asList(directory.listFiles(pathname -> !ExcludedDirectories.contains(pathname.getName())));
+		files.forEach(f -> {
+			if (f.isDirectory()) clean(f);
+			f.delete();
+		});
+	}
+
 }

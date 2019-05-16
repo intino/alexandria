@@ -16,7 +16,6 @@ Template(layout=Vertical, spacing=DP8) testTemplate
 			Item(height = 100px) item2
 
 Template template2
-	Text aaaaa
 	Grouping(collection=list3) group1
 	List list3
 		Mold > Item(height = 100px) item3

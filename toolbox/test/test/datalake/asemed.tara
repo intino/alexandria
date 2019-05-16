@@ -211,7 +211,7 @@ Schema ParamsDialogoCriterio
 Schema Grafica
 	Attribute nombre as Text
 
-Schema Timeline as ExtensionOf(Grafica, parentView = empty)
+Schema Timeline as ExtensionOf(Grafica)
 	Attribute(defaultValue="timeline") tipo as Text
 	Attribute periodos as List Text
 	Schema Serie
@@ -219,7 +219,7 @@ Schema Timeline as ExtensionOf(Grafica, parentView = empty)
 		Attribute color as Text
 		Attribute valores as List Real
 
-Schema Histograma as ExtensionOf(Grafica, parentView = empty)
+Schema Histograma as ExtensionOf(Grafica)
 	Attribute(defaultValue="histograma") tipo as Text
     Schema Valor
         Attribute nombre as Text

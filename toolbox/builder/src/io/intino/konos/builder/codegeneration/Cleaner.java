@@ -7,7 +7,7 @@ import io.intino.tara.magritte.Layer;
 import java.io.File;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.konos.builder.helpers.Commons.javaFile;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.fileOf;
 
 public abstract class Cleaner {
 	protected final ElementHelper elementHelper;
@@ -44,8 +44,8 @@ public abstract class Cleaner {
 		return elementHelper.nameOf(element);
 	}
 
-	protected void remove(File folder, String name) {
-		File file = javaFile(folder, snakeCaseToCamelCase(name));
+	protected void remove(File folder, String name, Target target) {
+		File file = fileOf(folder, snakeCaseToCamelCase(name), target);
 		if (file.exists()) file.delete();
 	}
 }

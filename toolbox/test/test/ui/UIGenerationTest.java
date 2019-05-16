@@ -4,6 +4,7 @@ import com.intellij.openapi.module.Module;
 import io.intino.konos.builder.codegeneration.FullRenderer;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.accessor.ui.ServiceRenderer;
+import io.intino.konos.builder.codegeneration.cache.CacheReader;
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.ui.UIService;
@@ -38,7 +39,7 @@ public class UIGenerationTest {
 		File gen = new File(DIR, UI);
 		KonosGraph graph = new Graph().loadStashes("ui").as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, UI).execute();
-		for (UIService service : graph.uIServiceList()) new ServiceRenderer(new Settings().src(gen).gen(gen).cache(new ElementCache()), service).execute();
+		for (UIService service : graph.uIServiceList()) new ServiceRenderer(new Settings().src(gen).gen(gen).cache(loadCache(gen)), service).execute();
 	}
 
 	@Test
@@ -94,10 +95,18 @@ public class UIGenerationTest {
 	}
 
 	private void execute(File gen, String stash, String workingPackage) {
+		Settings settings = new Settings().webModule(webModule()).src(gen).gen(gen).cache(loadCache(gen));
 		cleanTestDirectory();
 		gen.mkdirs();
 		KonosGraph graph = new Graph().loadStashes(stash).as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, workingPackage.toLowerCase()).execute();
+		for (UIService service : graph.uIServiceList()) {
+			new ServiceRenderer(settings, service).execute();
+		}
+	}
+
+	private ElementCache loadCache(File res) {
+		return new CacheReader(new File(res, "element.cache")).load();
 	}
 
 	private void cleanTestDirectory() {

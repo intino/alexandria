@@ -27,8 +27,8 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 
 	@Override
 	public void render() {
-		System.out.println(element.name$());
 		if (element == null) return;
+		System.out.println(String.format("Rendering %s - %s - %s", element.name$(), target.name(), element.core$().birthMark()));
 		String path = path(element);
 		final String newDisplay = snakeCaseToCamelCase(element.name$());
 		classes().put("Display#" + element.name$(), path + "." + newDisplay);
