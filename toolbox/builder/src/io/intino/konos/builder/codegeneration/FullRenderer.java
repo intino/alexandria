@@ -21,7 +21,6 @@ import io.intino.konos.builder.codegeneration.services.jmx.JMXServerRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTResourceRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
-import io.intino.konos.builder.codegeneration.services.ui.ServiceListCleaner;
 import io.intino.konos.builder.codegeneration.task.TaskRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskerRenderer;
 import io.intino.konos.model.graph.CatalogComponents;
@@ -85,7 +84,7 @@ public class FullRenderer {
 	}
 
 	private void clean(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {
-		new ServiceListCleaner(settings(cache), graph).execute();
+		new FullCleaner(settings(cache), graph).execute();
 	}
 
 	private void render(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {
@@ -148,20 +147,18 @@ public class FullRenderer {
 
 	private void ui(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {
 		prepareGraphForUi();
-		cache.addAll(uiServer(cache).entrySet());
-		cache.addAll(uiClient(cache).entrySet());
+		io.intino.konos.builder.codegeneration.cache.ElementCache serverCache = cache.clone();
+		uiServer(serverCache);
+		uiClient(cache.clone());
+		cache.addAll(serverCache.entrySet());
 	}
 
-	private io.intino.konos.builder.codegeneration.cache.ElementCache uiServer(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {
-		io.intino.konos.builder.codegeneration.cache.ElementCache newCache = cache.clone();
-		new io.intino.konos.builder.codegeneration.accessor.ui.ServiceListRenderer(settings(newCache), graph).execute();
-		return newCache;
+	private void uiServer(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {
+		new io.intino.konos.builder.codegeneration.services.ui.ServiceListRenderer(settings(cache), graph).execute();
 	}
 
-	private io.intino.konos.builder.codegeneration.cache.ElementCache uiClient(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {
-		io.intino.konos.builder.codegeneration.cache.ElementCache newCache = cache.clone();
-		new io.intino.konos.builder.codegeneration.services.ui.ServiceListRenderer(settings(newCache), graph).execute();
-		return newCache;
+	private void uiClient(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {
+		new io.intino.konos.builder.codegeneration.accessor.ui.ServiceListRenderer(settings(cache), graph).execute();
 	}
 
 	private void box(io.intino.konos.builder.codegeneration.cache.ElementCache cache) {

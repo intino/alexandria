@@ -25,16 +25,16 @@ public class DisplayCleaner extends Cleaner {
 	public void clean(Target target) {
 		String name = displayFilename(reference.name());
 		removePassiveViewFiles(target);
-		remove(displayFolder(gen(), reference.type(), target), name);
+		remove(displayFolder(gen(), reference.type(), target), name, target);
 	}
 
 	private void removePassiveViewFiles(Target target) {
 		String name = displayFilename(reference.name());
-		remove(displayNotifierFolder(gen(), target), name + "Notifier");
-		remove(displayNotifierFolder(gen(), target), name + "ProxyNotifier");
-		remove(displayRequesterFolder(gen(), target), name + "Requester");
-		remove(displayRequesterFolder(gen(), target), name + "ProxyRequester");
-		remove(displayRequesterFolder(gen(), target), name + "PushRequester");
+		remove(displayNotifierFolder(gen(), target), name + "Notifier", target);
+		remove(displayNotifierFolder(gen(), target), name + "ProxyNotifier", target);
+		remove(displayRequesterFolder(gen(), target), name + "Requester", target);
+		remove(displayRequesterFolder(gen(), target), name + "ProxyRequester", target);
+		remove(displayRequesterFolder(gen(), target), name + "PushRequester", target);
 	}
 
 }

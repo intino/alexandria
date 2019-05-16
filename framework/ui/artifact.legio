@@ -25,6 +25,12 @@ Artifact("io.intino.alexandria", "2.0.0") ui-framework
 		Compile(groupId = "io.intino.alexandria", artifactId = "ui-framework", version = "1.0.6")
 		Compile(groupId = "io.intino.alexandria", artifactId = "ui-framework", version = "1.0.6")
 		Compile(groupId = "io.intino.alexandria", artifactId = "ui-framework", version = "1.0.6")
+		Compile(groupId = "io.intino.alexandria", artifactId = "ui-framework", version = "1.0.6")
+		Compile(groupId = "io.intino.alexandria", artifactId = "ui-framework", version = "1.0.6")
+		Compile(groupId = "io.intino.alexandria", artifactId = "ui-framework", version = "1.0.6")
+		Compile(groupId = "io.intino.alexandria", artifactId = "ui-framework", version = "1.0.6")
+		Compile(groupId = "io.intino.alexandria", artifactId = "ui-framework", version = "1.0.6")
+		Compile(groupId = "io.intino.alexandria", artifactId = "ui-framework", version = "1.0.6")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.dist)
