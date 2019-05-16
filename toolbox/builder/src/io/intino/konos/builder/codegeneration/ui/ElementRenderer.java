@@ -4,6 +4,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.model.graph.decorated.DecoratedDisplay;
 import io.intino.tara.magritte.Layer;
@@ -14,6 +15,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 
 public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
@@ -33,35 +35,37 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 		saveRendered(element);
 	}
 
-	protected final void write(FrameBuilder builder, File src, File gen, String child) {
-		writeSrc(src, child, builder);
-		writeGen(gen, child, builder);
+	protected final void write(FrameBuilder builder) {
+		writeSrc(builder);
+		writeGen(builder);
 	}
 
-	private void writeSrc(File parent, String child, FrameBuilder builder) {
+	private void writeSrc(FrameBuilder builder) {
 		final String newDisplay = snakeCaseToCamelCase(element.name$());
 		Template template = srcTemplate();
+		String type = typeOf(element);
 		if (template == null) return;
-		File sourceFile = fileOf(new File(parent, child), newDisplay);
+		File sourceFile = displayFile(src(), newDisplay, type, target);
 		if (!sourceFile.exists())
-			writeFrame(new File(parent, child), newDisplay, template.render(builder.toFrame()));
+			writeFrame(displayFolder(src(), type, target), newDisplay, template.render(builder.toFrame()));
 		else {
 			Updater updater = updater(newDisplay, sourceFile);
 			if (updater != null) updater.update();
 		}
 	}
 
-	private void writeGen(File parent, String child, FrameBuilder builder) {
+	private void writeGen(FrameBuilder builder) {
 		Template template = genTemplate();
+		String type = typeOf(element);
 		if (template == null) return;
 		final String newDisplay = snakeCaseToCamelCase((element.i$(DecoratedDisplay.class) ? "Abstract" : "") + firstUpperCase(element.name$()));
-		writeFrame(new File(parent, child), newDisplay, template.render(builder.add("gen").toFrame()));
+		writeFrame(displayFolder(gen(), type, target), newDisplay, template.render(builder.add("gen").toFrame()));
 	}
 
 	public void writeFrame(File packageFolder, String name, String text) {
 		try {
 			packageFolder.mkdirs();
-			File file = fileOf(packageFolder, name);
+			File file = fileOf(packageFolder, name, target);
 			Files.write(file.toPath(), text.getBytes(Charset.forName("UTF-8")));
 		} catch (IOException e) {
 			Logger.getInstance("Konos: ").error(e.getMessage(), e);

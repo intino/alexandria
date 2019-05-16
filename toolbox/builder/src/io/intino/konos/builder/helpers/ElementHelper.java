@@ -1,5 +1,6 @@
 package io.intino.konos.builder.helpers;
 
+import io.intino.konos.builder.codegeneration.ElementReference;
 import io.intino.konos.builder.utils.IdGenerator;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.temporal.TemporalCatalog;
@@ -47,6 +48,10 @@ public class ElementHelper {
 		}
 		reverse(result);
 		return String.join(".", result);
+	}
+
+	public ElementReference referenceOf(Layer element) {
+		return ElementReference.of(nameOf(element), typeOf(element), ElementReference.Context.from(element));
 	}
 
 	private String generateName(Layer element) {

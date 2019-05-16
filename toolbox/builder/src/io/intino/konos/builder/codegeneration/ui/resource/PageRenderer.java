@@ -2,8 +2,9 @@ package io.intino.konos.builder.codegeneration.ui.resource;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.ActionRenderer;
-import io.intino.konos.builder.codegeneration.ui.UIRenderer;
+import io.intino.konos.builder.helpers.CodeGenerationHelper;
 import io.intino.konos.model.graph.ui.UIService;
 
 import java.io.File;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.format;
 import static io.intino.konos.builder.helpers.Commons.extractUrlPathParameters;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 import static io.intino.konos.model.graph.KonosGraph.templateFor;
@@ -68,7 +70,7 @@ public class PageRenderer extends ActionRenderer {
 
 	@Override
 	protected File destinyPackage(File destiny) {
-		return new File(destiny, UIRenderer.format(UIRenderer.Pages, UIRenderer.Target.Service));
+		return new File(destiny, format(CodeGenerationHelper.Pages, Target.Service));
 	}
 
 	@Override

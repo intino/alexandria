@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.ui.displays;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.templates.DisplayTemplate;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
@@ -13,9 +14,9 @@ import io.intino.konos.model.graph.accessible.AccessibleDisplay;
 import io.intino.konos.model.graph.dynamicloaded.DynamicLoadedComponent;
 import io.intino.konos.model.graph.selectable.catalogcomponents.SelectableCollection;
 
-import java.io.File;
-
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayFilename;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayFolder;
 
 public abstract class BaseDisplayRenderer<D extends Display> extends PassiveViewRenderer<D> {
 	private static final ComponentRendererFactory factory = new ComponentRendererFactory();
@@ -25,19 +26,15 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	@Override
-	public void clean() {
-		implementar
-	}
-
-	@Override
 	public void render() {
+		System.out.println(element.name$());
 		if (element == null) return;
 		String path = path(element);
 		final String newDisplay = snakeCaseToCamelCase(element.name$());
 		classes().put("Display#" + element.name$(), path + "." + newDisplay);
 		FrameBuilder result = frameBuilder();
 		createPassiveViewFiles(result);
-		write(result, src(), gen(), path(element));
+		write(result);
 		if (element.isAccessible()) writeDisplaysFor(element.asAccessible(), result);
 	}
 
@@ -173,8 +170,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 
 	private void writeDisplaysFor(AccessibleDisplay display, FrameBuilder builder) {
 		Frame frame = builder.add("accessible").toFrame();
-		final String name = snakeCaseToCamelCase(display.name$());
-		writeFrame(new File(src(), path(display.a$(Display.class))), name + "Proxy", setup(new DisplayTemplate()).render(frame));
+		writeFrame(displayFolder(src(), typeOf(display), target), displayFilename(display.name$(), "Proxy"), setup(new DisplayTemplate()).render(frame));
 		writeNotifier(display.a$(PassiveView.class), frame);
 		writeRequester(display.a$(PassiveView.class), frame);
 	}

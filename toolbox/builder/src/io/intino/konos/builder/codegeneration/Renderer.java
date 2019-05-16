@@ -10,9 +10,6 @@ import io.intino.tara.magritte.Layer;
 import java.io.File;
 import java.util.Map;
 
-import static io.intino.konos.builder.helpers.Commons.javaFile;
-import static io.intino.konos.builder.helpers.Commons.javascriptFile;
-
 public abstract class Renderer {
 	protected final Settings settings;
 	protected final ElementHelper elementHelper;
@@ -36,11 +33,6 @@ public abstract class Renderer {
 
 	public String boxName() {
 		return settings.boxName();
-	}
-
-	protected File fileOf(File file, String name) {
-		if (target == Target.Service) return javaFile(file, name);
-		return javascriptFile(file, name);
 	}
 
 	protected String packageName() {
@@ -97,7 +89,11 @@ public abstract class Renderer {
 
 	protected boolean isRendered(Layer element) {
 		if (element == null) return false;
-		return settings.cache().containsKey(element.name$());
+		String key = elementHelper.referenceOf(element).toString();
+		if (element.name$().contains("testTemplate") && element.core$().birthMark() != -1273592974)
+			System.out.println("Fallo!");
+		boolean containsKey = settings.cache().containsKey(key);
+		return containsKey && settings.cache().get(key).equals((long) element.core$().birthMark());
 	}
 
 	protected void saveRendered(Layer element) {

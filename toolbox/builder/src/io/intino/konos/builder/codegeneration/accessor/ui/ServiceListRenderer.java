@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.accessor.ui;
 
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.model.graph.KonosGraph;
 

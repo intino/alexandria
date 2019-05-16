@@ -4,13 +4,16 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.I18nTemplate;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Translator;
 import io.intino.konos.model.graph.ui.UIService;
 
-import java.io.File;
 import java.util.List;
+
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.fileOf;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.folder;
 
 public class I18nRenderer extends UIRenderer {
 	private final UIService service;
@@ -21,18 +24,9 @@ public class I18nRenderer extends UIRenderer {
 	}
 
 	@Override
-	public void clean() {
-		implementar
-	}
-
-	@Override
 	public void render() {
 		FrameBuilder builder = frameBuilder();
-		Commons.write(fileOf(folder(), "I18n").toPath(), setup(template()).render(builder.toFrame()));
-	}
-
-	private File folder() {
-		return new File(gen().getAbsolutePath() + (target == Target.Service ? File.separator + UI : ""));
+		Commons.write(fileOf(folder(gen(), "/", target), "I18n", target).toPath(), setup(template()).render(builder.toFrame()));
 	}
 
 	@Override

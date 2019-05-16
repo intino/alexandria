@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
@@ -25,9 +26,9 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		super(graph, wrapper);
 	}
 
-	public static List<Display> displaysOf(UIService service) {
+	public static List<Display> rootDisplays(UIService service) {
 		KonosGraph graph = service.graph();
-		List<Display> result = graph.displayList();
+		List<Display> result = graph.displayList().stream().filter(d -> d.core$().ownerAs(PassiveView.class) == null).collect(toList());
 		result.addAll(graph.core$().find(CatalogComponents.Collection.Mold.Item.class));
 		result.addAll(graph.core$().find(PrivateComponents.Row.class));
 		return result;

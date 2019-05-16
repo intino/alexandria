@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.accessor.ui;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.DisplaysManifestTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.helpers.Commons;
@@ -11,7 +12,7 @@ import io.intino.konos.model.graph.ui.UIService;
 
 import java.io.File;
 
-import static io.intino.konos.model.graph.KonosGraph.displaysOf;
+import static io.intino.konos.model.graph.KonosGraph.rootDisplays;
 
 public class DisplaysManifestRenderer extends UIRenderer {
 	private final UIService service;
@@ -24,7 +25,7 @@ public class DisplaysManifestRenderer extends UIRenderer {
 	@Override
 	public void render() {
 		FrameBuilder result = new FrameBuilder("manifest");
-		displaysOf(service).stream().filter(this::isGeneric).distinct().forEach(d -> result.add("display", display(d)));
+		rootDisplays(service).stream().filter(this::isGeneric).distinct().forEach(d -> result.add("display", display(d)));
 		Commons.write(new File(accessorGen() + File.separator + "Displays.js").toPath(), setup(new DisplaysManifestTemplate()).render(result.toFrame()));
 	}
 

@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.accessor.ui.resource;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.PageTemplate;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Display;

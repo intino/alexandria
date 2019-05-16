@@ -134,7 +134,7 @@ public class Commons {
 	}
 
 	private static String prepareName(String name) {
-		return Character.toUpperCase(name.charAt(0)) + name.substring(1);
+		return name.isEmpty() ? name : Character.toUpperCase(name.charAt(0)) + name.substring(1);
 	}
 
 }

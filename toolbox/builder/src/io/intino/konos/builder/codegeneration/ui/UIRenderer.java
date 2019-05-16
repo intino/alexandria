@@ -6,18 +6,12 @@ import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.helpers.DisplayHelper;
+import io.intino.konos.builder.helpers.CodeGenerationHelper;
 import io.intino.tara.magritte.Layer;
 
 import java.util.Map;
 
 public abstract class UIRenderer extends Renderer {
-
-	public static final String Resources = "%sresources";
-	public static final String Notifiers = "%sdisplays/notifiers";
-	public static final String Requesters = "%sdisplays/requesters";
-
-	public static final String Pages = "%spages";
 
 	protected UIRenderer(Settings settings, Target target) {
 		super(settings, target);
@@ -40,7 +34,7 @@ public abstract class UIRenderer extends Renderer {
 	}
 
 	protected String path(io.intino.konos.model.graph.Display display) {
-		return DisplayHelper.displayPath(typeOf(display), target);
+		return CodeGenerationHelper.displayPath(typeOf(display), target);
 	}
 
 	protected Template addFormats(Template template) {

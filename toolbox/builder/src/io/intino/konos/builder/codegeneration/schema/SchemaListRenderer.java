@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.schema;
 
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Schema;
 import io.intino.konos.model.graph.Service;

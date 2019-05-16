@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;
@@ -67,6 +68,10 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	public void decorated(boolean value) {
 		this.decorated = value;
+	}
+
+	public Display owner() {
+		return this.owner;
 	}
 
 	public void owner(Display owner) {

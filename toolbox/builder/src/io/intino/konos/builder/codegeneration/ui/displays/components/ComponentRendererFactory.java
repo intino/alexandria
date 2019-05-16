@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.collection.GroupingRenderer;
@@ -22,7 +23,7 @@ import io.intino.konos.model.graph.OtherComponents.Header;
 
 public class ComponentRendererFactory {
 
-	public <T extends UIRenderer> T renderer(Settings settings, Component component, TemplateProvider provider, UIRenderer.Target target) {
+	public <T extends UIRenderer> T renderer(Settings settings, Component component, TemplateProvider provider, Target target) {
 		if (component.i$(Text.class)) return (T) new TextRenderer(settings, component.a$(Text.class), provider, target);
 		if (component.i$(Date.class)) return (T) new DateRenderer(settings, component.a$(Date.class), provider, target);
 		if (component.i$(File.class)) return (T) new FileRenderer(settings, component.a$(File.class), provider, target);

@@ -6,15 +6,13 @@ import io.intino.tara.magritte.Layer;
 
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toMap;
 
-public class ElementCache extends HashMap<ElementReference, Long> {
+public class ElementCache extends HashMap<String, Long> {
 	private final ElementHelper elementHelper;
 
 	private static final String CreateDate = "Konos.CreateDate";
@@ -30,7 +28,7 @@ public class ElementCache extends HashMap<ElementReference, Long> {
 
 	private void init(Map<String, Long> values) {
 		if (!checkCreateDate(values.get(CreateDate))) return;
-		putAll(values.entrySet().stream().collect(toMap(e -> ElementReference.of(e.getKey()), Entry::getValue)));
+		putAll(values.entrySet().stream().collect(toMap(Entry::getKey, Entry::getValue)));
 	}
 
 	private boolean checkCreateDate(Long createDate) {
@@ -41,12 +39,19 @@ public class ElementCache extends HashMap<ElementReference, Long> {
 
 	public ElementCache add(Layer element) {
 		long mark = element.core$().birthMark();
-		put(new ElementReference().name(elementHelper.nameOf(element)).type(elementHelper.typeOf(element)), mark);
+		ElementReference reference = new ElementReference().name(elementHelper.nameOf(element)).type(elementHelper.typeOf(element)).context(ElementReference.Context.from(element));
+		put(reference.toString(), mark);
 		return this;
 	}
 
 	public void addAll(Set<Entry<String, Long>> entrySet) {
-		entrySet.forEach(e -> put(ElementReference.from(e.getKey()), e.getValue()));
+		entrySet.forEach(e -> put(e.getKey(), e.getValue()));
+	}
+
+	public ElementCache clone() {
+		ElementCache elementCache = new ElementCache();
+		elementCache.addAll(entrySet());
+		return elementCache;
 	}
 
 }

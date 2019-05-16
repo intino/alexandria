@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.accessor.ui;
 
 import com.intellij.util.io.ZipUtil;
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.accessor.ui.resource.ResourceListRenderer;
 import io.intino.konos.builder.codegeneration.ui.I18nRenderer;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;

@@ -25,7 +25,7 @@ public class UIService extends AbstractUIService {
 		return resourceList.stream().map(this::template).collect(Collectors.toList());
 	}
 
-	public Template template(UIService.Resource resource) {
+	public Template template(Resource resource) {
 		return resource.asPage().template();
 	}
 
