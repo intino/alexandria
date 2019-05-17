@@ -30,7 +30,7 @@ public class ArffFileGenerator implements FileGenerator {
 	public FileGenerator destination(File directory, String name) {
 		try {
 			writer = new BufferedWriter(new FileWriter(new File(directory, name + ".arff")));
-			writer.write(new ArffTemplate().render(new FrameBuilder("arff").add("attribute", attributes())));
+			writer.write(new ArffTemplate().render(new FrameBuilder("arff").add("attribute", attributes())) + "\n");
 		} catch (IOException e) {
 			Logger.error(e);
 		}
@@ -83,10 +83,12 @@ public class ArffFileGenerator implements FileGenerator {
 
 	private Frame columnType(ColumnStream stream) {
 		Type type = stream.type();
-		if (type.equals(Type.Integer) || type.equals(Type.Double) || type.equals(Type.Long)) return new FrameBuilder("Numeric").toFrame();
+		if (type.equals(Type.Integer) || type.equals(Type.Double) || type.equals(Type.Long))
+			return new FrameBuilder("Numeric").toFrame();
 		if (type.equals(Type.Datetime) || type.equals(Type.Instant))
 			return new FrameBuilder("Date").add("format", "yyyy-MM-dd'T'HH:mm:ss").toFrame();
-		if (type.equals(Type.Nominal)) return new FrameBuilder("Nominal").add("value", stream.mode().features).toFrame();
+		if (type.equals(Type.Nominal))
+			return new FrameBuilder("Nominal").add("value", stream.mode().features).toFrame();
 		return new FrameBuilder("String").toFrame();
 	}
 
