@@ -77,7 +77,7 @@ public class ArffFileGenerator implements FileGenerator {
 		headers.add(new FrameBuilder("attribute").add("name", "id").add("type", new FrameBuilder("Numeric").toFrame()).toFrame());
 		headers.add(new FrameBuilder("attribute").add("name", "timetag").add("type", new FrameBuilder("Date").add("format", "yyyyMM").toFrame()).toFrame());
 		for (ColumnStream stream : streams)
-			headers.add(new FrameBuilder("attribute").add("name", stream).add("type", columnType(stream)).toFrame());
+			headers.add(new FrameBuilder("attribute").add("name", stream.name()).add("type", columnType(stream)).toFrame());
 		return headers.toArray(new Frame[0]);
 	}
 
