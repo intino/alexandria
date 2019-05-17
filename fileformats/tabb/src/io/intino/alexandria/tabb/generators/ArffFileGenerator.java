@@ -49,7 +49,7 @@ public class ArffFileGenerator implements FileGenerator {
 	@Override
 	public void put(long key) {
 		String line = streams.stream()
-				.map(s -> s.key().equals(key) ? formatterOf(s.type()).format(s.value()) : NULL_VALUE)
+				.map(s -> s.key().equals(key) ? formatterOf().format(s.value()) : NULL_VALUE)
 				.collect(joining(","));
 		try {
 			writer.write(line + "\n");
@@ -58,7 +58,7 @@ public class ArffFileGenerator implements FileGenerator {
 		}
 	}
 
-	private Formatter formatterOf(Type type) {
+	private Formatter formatterOf() {
 		return new Formatter() {
 			@Override
 			public String pattern() {
@@ -67,7 +67,7 @@ public class ArffFileGenerator implements FileGenerator {
 
 			@Override
 			public String format(Object value) {
-				return value.toString();
+				return value == null ? NULL_VALUE : value.toString();
 			}
 		};
 	}
