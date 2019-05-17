@@ -12,8 +12,7 @@ public class ArffTemplate extends Template {
 				rule().condition((type("nominal")), (trigger("type"))).output(literal("{")).output(mark("value", "quoted").multiple(",")).output(literal("}")),
 				rule().condition((type("date")), (trigger("type"))).output(literal("DATE \"")).output(mark("format")).output(literal("\"")),
 				rule().condition((type("numeric")), (trigger("type"))).output(literal("NUMERIC")),
-				rule().condition((type("string")), (trigger("type"))).output(literal("string")),
-				rule().condition((trigger("quoted"))).output(literal("\"")).output(mark("value")).output(literal("\""))
+				rule().condition((type("string")), (trigger("type"))).output(literal("string"))
 		);
 	}
 }
