@@ -2,6 +2,7 @@ package io.intino.alexandria.movv;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class Mov implements Iterable<Mov.Item> {
@@ -83,7 +84,7 @@ public class Mov implements Iterable<Mov.Item> {
 	boolean reject(Item item) {
 		Item last = last();
 		if (last == Item.Null) return false;
-		return item.instant.compareTo(last.instant) <= 0 || last.data.equals(item.data);
+		return item.instant.compareTo(last.instant) <= 0 || Arrays.equals(last.data, item.data);
 	}
 
 	void append(long id, int next) {
@@ -143,9 +144,9 @@ public class Mov implements Iterable<Mov.Item> {
 	public static class Item {
 		static final Item Null = new Item(null, null);
 		public final Instant instant;
-		public final String data;
+		public final byte[] data;
 
-		Item(Instant instant, String data) {
+		Item(Instant instant, byte[] data) {
 			this.instant = instant;
 			this.data = data;
 		}
