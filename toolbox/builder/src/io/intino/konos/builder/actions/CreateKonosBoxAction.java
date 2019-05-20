@@ -20,6 +20,8 @@ import com.intellij.testFramework.PsiTestUtil;
 import io.intino.konos.builder.KonosIcons;
 import io.intino.konos.builder.Manifest;
 import io.intino.konos.builder.codegeneration.FullRenderer;
+import io.intino.konos.builder.codegeneration.cache.CacheReader;
+import io.intino.konos.builder.codegeneration.cache.CacheWriter;
 import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.legio.graph.Artifact.Imports.Dependency;
@@ -48,6 +50,8 @@ public class CreateKonosBoxAction extends KonosAction {
 	private static final Logger LOG = Logger.getInstance("CreateKonosBoxAction: ");
 	private static final String BOX = "box";
 	private static final String TEXT = "Create Konos Box";
+
+	private static final String ElementCache = ".cache";
 
 	public CreateKonosBoxAction() {
 		super(TEXT, "Creates Konos Box", KonosIcons.GENERATE_16);
@@ -187,7 +191,9 @@ public class CreateKonosBoxAction extends KonosAction {
 
 		private boolean render(String packageName, File gen, File src, File res, KonosGraph graph) {
 			try {
-				new FullRenderer(module, graph, src, gen, res, packageName).execute();
+				io.intino.konos.builder.codegeneration.cache.ElementCache cache = loadCache(res, graph);
+				new FullRenderer(module, graph, src, gen, res, packageName, cache).execute();
+				saveCache(cache, res);
 			} catch (Exception e) {
 				Logger.getInstance(this.getClass()).error(e.getMessage(), e);
 				notifyError(e.getMessage() == null ? e.toString() : e.getMessage());
@@ -237,6 +243,14 @@ public class CreateKonosBoxAction extends KonosAction {
 		final Application a = ApplicationManager.getApplication();
 		if (!a.isWriteAccessAllowed()) return a.runWriteAction((Computable<VirtualFile>) () -> create(module, name));
 		return create(module, name);
+	}
+
+	private io.intino.konos.builder.codegeneration.cache.ElementCache loadCache(File folder, KonosGraph graph) {
+		return new CacheReader(folder).load(graph);
+	}
+
+	private void saveCache(io.intino.konos.builder.codegeneration.cache.ElementCache cache, File folder) {
+		new CacheWriter(folder).save(cache);
 	}
 
 	@Nullable

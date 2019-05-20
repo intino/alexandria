@@ -16,7 +16,8 @@ public class DisplayRenderer<D extends Display> extends BaseDisplayRenderer<D> {
 
 	@Override
 	protected Updater updater(String displayName, File sourceFile) {
-		return new DisplayUpdater(settings, element, sourceFile);
+		return null;
+//		return new DisplayUpdater(settings, element, sourceFile);
 	}
 
 }

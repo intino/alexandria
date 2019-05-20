@@ -16,7 +16,7 @@ public class PassiveViewNotifierTemplate extends Template {
 			rule().condition((trigger("notification"))).output(literal("this.when(\"")).output(mark("name")).output(literal("\")")).output(expression().output(mark("target"))).output(literal(".execute((")).output(expression().output(mark("parameter", "call"))).output(literal(") => this.element.")).output(mark("name")).output(literal("(")).output(expression().output(mark("parameter", "value"))).output(literal("));")),
 			rule().condition((type("parameter")), (trigger("call"))).output(literal("parameters")),
 			rule().condition((type("parameter")), (trigger("value"))).output(literal("parameters.v")),
-			rule().condition((attribute("display")), (trigger("target"))).output(literal(".toSelf()")),
+			rule().condition((attribute("", "Display")), (trigger("target"))).output(literal(".toSelf()")),
 			rule().condition((trigger("target")))
 		);
 	}

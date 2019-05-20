@@ -43,26 +43,6 @@ def attribute(extensionOf) trigger(parentType)
 	$parent+firstUpperCase~Notifier
 end
 
-def attribute(catalog) trigger(parentType)
-	io.intino.alexandria.ui.displays.notifiers.CatalogNotifier
-end
-
-def attribute(temporalTimeCatalog) trigger(parentType)
-	io.intino.alexandria.ui.displays.notifiers.TemporalTimeCatalogNotifier
-end
-
-def attribute(temporalRangeCatalog) trigger(parentType)
-	io.intino.alexandria.ui.displays.notifiers.TemporalRangeCatalogNotifier
-end
-
-def attribute(MenuLayout) trigger(parentType)
-	io.intino.alexandria.ui.displays.notifiers.MenuLayoutNotifier
-end
-
-def attribute(TabLayout) trigger(parentType)
-	io.intino.alexandria.ui.displays.notifiers.TabLayoutNotifier
-end
-
 def trigger(parentType)
 	io.intino.alexandria.ui.displays.notifiers.$value+FirstUpperCase~Notifier
 end
@@ -88,13 +68,13 @@ def type(schemaImport)
 	import $package.schemas.*;
 end
 
-def attribute(All) trigger(target)
+def attribute(this:All) trigger(target)
 	ToAll
 end
 
-def attribute(Display) trigger(target)
+def attribute(this:Display) trigger(target)
 	ToDisplay
 end
 
-def attribute(Client) trigger(target)
+def attribute(this:Client) trigger(target)
 end

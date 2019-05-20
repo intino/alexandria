@@ -6,7 +6,6 @@ def type(display)
 	import io.intino.alexandria.ui.displays.components.*;
 	import $package.ui.*;
 	$schemaImport
-	$collectionItemsImport
 	import $package+validPackage.$box+firstUpperCase~Box;
 
 	$templatesImport
@@ -34,7 +33,6 @@ def type(display)
 		$methods
 		[$component+class...[$NL$NL]]
 		[$component+method...[$NL$NL]]
-
 	}
 end
 

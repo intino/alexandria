@@ -5,6 +5,7 @@ import io.intino.konos.builder.codegeneration.FullRenderer;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.accessor.ui.ServiceRenderer;
 import io.intino.konos.builder.codegeneration.cache.CacheReader;
+import io.intino.konos.builder.codegeneration.cache.CacheWriter;
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.ui.UIService;
@@ -33,20 +34,22 @@ public class UIGenerationTest {
 	private static final String componentsPackage = "io.intino.components.box";
 	private static final String DIR = "test-gen";
 
+	private static final boolean IgnoreCache = false;
+
 
 	@Test
 	public void testUiAndDisplays() throws Exception {
 		File gen = new File(DIR, UI);
 		KonosGraph graph = new Graph().loadStashes("ui").as(KonosGraph.class);
-		new FullRenderer(null, graph, gen, gen, gen, UI).execute();
-		for (UIService service : graph.uIServiceList()) new ServiceRenderer(new Settings().src(gen).gen(gen).cache(loadCache(gen)), service).execute();
+		new FullRenderer(null, graph, gen, gen, gen, UI, loadCache(gen, graph)).execute();
+		for (UIService service : graph.uIServiceList()) new ServiceRenderer(new Settings().src(gen).gen(gen).cache(loadCache(gen, graph)), service).execute();
 	}
 
 	@Test
 	public void testDialog() throws Exception {
 		File gen = new File(DIR, DIALOG);
 		KonosGraph graph = new Graph().loadStashes(DIALOG).as(KonosGraph.class);
-		new FullRenderer(null, graph, gen, gen, gen, DIALOG).execute();
+		new FullRenderer(null, graph, gen, gen, gen, DIALOG, loadCache(gen, graph)).execute();
 	}
 
 	@Test
@@ -61,52 +64,60 @@ public class UIGenerationTest {
 
 	@Test
 	public void testOctana() throws Exception {
-		execute(new File(DIR, octanaPackage.replace(".", File.separator)), octana, octanaPackage);
+		execute(new File(DIR, octanaPackage.replace(".", File.separator)), octanaPackage, octana);
 	}
 
 	@Test
 	public void testMarcet() throws Exception {
-		execute(new File(DIR, marcetPackage.replace(".", File.separator)), marcet, marcetPackage);
+		execute(new File(DIR, marcetPackage.replace(".", File.separator)), marcetPackage, marcet);
 	}
 
 	@Test
 	public void testCesar() throws Exception {
-		execute(new File(DIR, cesarPackage.replace(".", File.separator)), "testCesar", cesarPackage);
+		execute(new File(DIR, cesarPackage.replace(".", File.separator)), cesarPackage, "testCesar");
 	}
 
 	@Test
 	public void testEditor() throws Exception {
-		execute(new File(DIR, editorPackage.replace(".", File.separator)), "editor", editorPackage);
+		execute(new File(DIR, editorPackage.replace(".", File.separator)), editorPackage, "editor");
 	}
 
 	@Test
 	public void testPassiveView() throws Exception {
-		execute(new File(DIR, passiveViewPackage.replace(".", File.separator)), "passiveview", passiveViewPackage);
+		execute(new File(DIR, passiveViewPackage.replace(".", File.separator)), passiveViewPackage, "passiveview");
 	}
 
 	@Test
 	public void testComponents() throws Exception {
-		execute(new File(DIR, componentsPackage.replace(".", File.separator)), "components", componentsPackage);
+		String[] stashes = new String[] { "components2" };
+		execute(new File(DIR, componentsPackage.replace(".", File.separator)), componentsPackage, stashes);
+//		execute(new File(DIR, componentsPackage.replace(".", File.separator)), "components", componentsPackage);
 	}
 
 	@Test
 	public void testAsemed() throws Exception {
-		execute(new File(DIR, asemedPackage.replace(".", File.separator)), "asemed", asemedPackage);
+		execute(new File(DIR, asemedPackage.replace(".", File.separator)), asemedPackage, "asemed");
 	}
 
-	private void execute(File gen, String stash, String workingPackage) {
-		Settings settings = new Settings().webModule(webModule()).src(gen).gen(gen).cache(loadCache(gen));
+	private void execute(File gen, String workingPackage, String... stashes) {
+		KonosGraph graph = new Graph().loadStashes(stashes).as(KonosGraph.class);
+		ElementCache cache = loadCache(gen, graph);
+		Settings settings = new Settings().webModule(webModule()).src(gen).gen(gen).packageName(workingPackage.toLowerCase()).cache(cache);
 		cleanTestDirectory();
 		gen.mkdirs();
-		KonosGraph graph = new Graph().loadStashes(stash).as(KonosGraph.class);
-		new FullRenderer(null, graph, gen, gen, gen, workingPackage.toLowerCase()).execute();
-		for (UIService service : graph.uIServiceList()) {
-			new ServiceRenderer(settings, service).execute();
-		}
+		new FullRenderer(null, graph, gen, gen, gen, workingPackage.toLowerCase(), cache).execute();
+		for (UIService service : graph.uIServiceList()) new ServiceRenderer(settings, service).execute();
+		new CacheWriter(gen).save(cache);
 	}
 
-	private ElementCache loadCache(File res) {
-		return new CacheReader(new File(res, "element.cache")).load();
+	private ElementCache loadCache(File folder, KonosGraph graph) {
+		if (IgnoreCache) {
+			File checksumFile = new File(folder, ".checksum");
+			File cacheFile = new File(folder, ".cache");
+			checksumFile.delete();
+			cacheFile.delete();
+		}
+		return new CacheReader(folder).load(graph);
 	}
 
 	private void cleanTestDirectory() {

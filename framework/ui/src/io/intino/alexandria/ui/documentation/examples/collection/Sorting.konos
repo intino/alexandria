@@ -11,7 +11,7 @@ Template(layout=Vertical, spacing=DP8) sortingExamplesMold as Decorated
 				Block(format=containerAirMedium, spacing=DP24) as Absolute(width=200px)
 					Sorting(format=whiteBackground,collection=list1) gender1 as Labeled("gender")
 				List(itemClass="io.intino.alexandria.ui.documentation.Person") list1
-					Mold > Item(height=60px,width=30%) grouping1Mold
+					Mold > Item(height=60px,width=30%) sorting1Mold
 							Text firstName1
 							Block(layout=Horizontal, spacing=DP16)
 								Text(format=description) gender1
@@ -21,7 +21,7 @@ Template(layout=Vertical, spacing=DP8) sortingExamplesMold as Decorated
 						=========
 						Sorting(collection\=list1) gender as Labeled("gender")<br/>
 						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) groupingMold
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) sortingMold
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text firstName
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal, spacing\=DP16)
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) gender

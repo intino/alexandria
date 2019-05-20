@@ -17,6 +17,9 @@ import static java.util.stream.Collectors.toSet;
 
 public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 	private static Set<String> hierarchyDisplays = null;
+	private static List<CatalogComponents.Collection.Mold.Item> items = null;
+	private static List<PrivateComponents.Row> rows = null;
+	private static List<CatalogComponents.Table> tables = null;
 
 	public KonosGraph(Graph graph) {
 		super(graph);
@@ -26,12 +29,31 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		super(graph, wrapper);
 	}
 
-	public static List<Display> rootDisplays(UIService service) {
-		KonosGraph graph = service.graph();
-		List<Display> result = graph.displayList().stream().filter(d -> d.core$().ownerAs(PassiveView.class) == null).collect(toList());
-		result.addAll(graph.core$().find(CatalogComponents.Collection.Mold.Item.class));
-		result.addAll(graph.core$().find(PrivateComponents.Row.class));
-		return result;
+	public List<Display> rootDisplays() {
+		KonosGraph graph = this;
+		List<Display> rootDisplays = graph.displayList().stream().filter(d -> d.core$().ownerAs(PassiveView.class) == null).collect(toList());
+		rootDisplays.addAll(itemsDisplays());
+		rootDisplays.addAll(rowsDisplays());
+		return rootDisplays;
+	}
+
+	public List<CatalogComponents.Collection.Mold.Item> itemsDisplays() {
+		if (items == null) items = core$().find(CatalogComponents.Collection.Mold.Item.class);
+		return items;
+	}
+
+	public List<PrivateComponents.Row> rowsDisplays() {
+		if (rows == null) rows = core$().find(PrivateComponents.Row.class);
+		return rows;
+	}
+
+	public static List<CatalogComponents.Table> tablesDisplays(KonosGraph graph) {
+		if (tables == null) tables = graph.core$().find(CatalogComponents.Table.class);
+		return tables;
+	}
+
+	public void clearCache() {
+		rows = null;
 	}
 
 	public static Template templateFor(UIService.Resource resource) {
@@ -80,5 +102,4 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		if (hierarchyDisplays != null) return;
 		hierarchyDisplays = graph.core$().find(ExtensionOfPassiveView.class).stream().map(d -> d.core$().as(ExtensionOfPassiveView.class).parentView().name$()).collect(toSet());
 	}
-
 }

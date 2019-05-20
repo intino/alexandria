@@ -28,7 +28,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	@Override
 	public void render() {
 		if (element == null) return;
-		System.out.println(String.format("Rendering %s - %s - %s", element.name$(), target.name(), element.core$().birthMark()));
+		System.out.println(String.format("Rendering %s - %s", element.name$(), target.name()));
 		String path = path(element);
 		final String newDisplay = snakeCaseToCamelCase(element.name$());
 		classes().put("Display#" + element.name$(), path + "." + newDisplay);
@@ -98,10 +98,11 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	private void addImports(FrameBuilder frame) {
-		if (element.graph().templateList().size() > 0) frame.add("templatesImport", baseFrameBuilder().add("templatesImport"));
-		if (element.graph().blockList().size() > 0) frame.add("blocksImport", baseFrameBuilder().add("blocksImport"));
-		if (element.graph().core$().find(CatalogComponents.Collection.Mold.Item.class) != null) frame.add("itemsImport", baseFrameBuilder().add("itemsImport"));
-		if (element.graph().core$().find(PrivateComponents.Row.class) != null) frame.add("rowsImport", baseFrameBuilder().add("rowsImport"));
+		KonosGraph graph = element.graph();
+		if (graph.templateList().size() > 0) frame.add("templatesImport", baseFrameBuilder().add("templatesImport"));
+		if (graph.blockList().size() > 0) frame.add("blocksImport", baseFrameBuilder().add("blocksImport"));
+		if (graph.itemsDisplays().size() > 0) frame.add("itemsImport", baseFrameBuilder().add("itemsImport"));
+		if (graph.rowsDisplays().size() > 0) frame.add("rowsImport", baseFrameBuilder().add("rowsImport"));
 	}
 
 	protected void addImplements(FrameBuilder frame) {

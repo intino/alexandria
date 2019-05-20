@@ -6,11 +6,11 @@ def type(child) trigger(declaration)
 end
 
 def type(block & child) trigger(child)
-	$this
+	$value
 end
 
 def type(child) trigger(child)
-	$this
+	$value
 end
 
 def type(child) trigger(add)
@@ -36,7 +36,7 @@ def type(extends & stamp)
 end
 
 def type(extends)
-	Ui.$type+firstUpperCase$facet
+	Ui.$type+firstUpperCase$facet...[]
 end
 
 def type(facet)

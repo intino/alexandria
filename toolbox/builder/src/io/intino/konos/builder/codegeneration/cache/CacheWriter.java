@@ -14,22 +14,31 @@ import static java.util.stream.Collectors.toMap;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class CacheWriter extends HashMap<String, Integer> {
-	private final File cacheFile;
+	private final File folder;
 
 	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 
-	public CacheWriter(File cacheFile) {
-		this.cacheFile = cacheFile;
+	public CacheWriter(File folder) {
+		this.folder = folder;
 	}
 
-	public void save(ElementCache dictionary) {
+	public void save(ElementCache cache) {
+		saveCacheFile(cache);
+		saveAuditor(cache);
+	}
+
+	private void saveCacheFile(ElementCache cache) {
 		try {
-			Map<String, String> map = dictionary.entrySet().stream().collect(toMap(e -> String.valueOf(e.getKey()), e -> String.valueOf(e.getValue())));
+			Map<String, String> map = cache.stream().collect(toMap(String::valueOf, e -> ""));
 			Properties properties = new Properties();
 			properties.putAll(map);
-			properties.store(new FileOutputStream(cacheFile), "");
+			properties.store(new FileOutputStream(folder + "/.cache"), "");
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
+	}
+
+	private void saveAuditor(ElementCache cache) {
+		cache.auditor.commit();
 	}
 }

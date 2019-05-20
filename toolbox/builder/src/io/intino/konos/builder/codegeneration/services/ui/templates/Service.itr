@@ -78,7 +78,7 @@ def type(display) trigger(notifier)
 end
 
 def trigger(custom)
-	.replace("{$value}", configuration.get("$value"))
+	.replace("{$this}", configuration.get("$this"))
 end
 
 def type(display & proxy) trigger(proxy)
@@ -97,13 +97,13 @@ def type(display)
 end
 
 def trigger(asset)
-	spark.route("/$value+lowercase/:displayId").get(manager -> new $value+firstUppercase~Requester(manager, notifierProvider()).execute());
+	spark.route("/$this+lowercase/:displayId").get(manager -> new $this+firstUppercase~Requester(manager, notifierProvider()).execute());
 end
 
 def trigger(quoted)
-	"$value"
+	"$this"
 end
 
 def type(custom) trigger(custom)
-	.replace("{$value}", configuration.get("$value"))
+	.replace("{$this}", configuration.get("$this"))
 end

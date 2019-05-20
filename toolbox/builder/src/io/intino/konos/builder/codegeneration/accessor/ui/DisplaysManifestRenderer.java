@@ -8,14 +8,22 @@ import io.intino.konos.builder.codegeneration.accessor.ui.templates.DisplaysMani
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Display;
+import io.intino.konos.model.graph.PassiveView;
+import io.intino.konos.model.graph.decorated.DecoratedDisplay;
 import io.intino.konos.model.graph.ui.UIService;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import static io.intino.konos.model.graph.KonosGraph.rootDisplays;
+import static java.util.stream.Collectors.toSet;
 
 public class DisplaysManifestRenderer extends UIRenderer {
 	private final UIService service;
+	private final Set<String> renderedDisplays = new HashSet<>();
 
 	protected DisplaysManifestRenderer(Settings settings, UIService service) {
 		super(settings, Target.Accessor);
@@ -25,23 +33,48 @@ public class DisplaysManifestRenderer extends UIRenderer {
 	@Override
 	public void render() {
 		FrameBuilder result = new FrameBuilder("manifest");
-		rootDisplays(service).stream().filter(this::isGeneric).distinct().forEach(d -> result.add("display", display(d)));
+		Set<Display> displays = service.graph().rootDisplays().stream().filter(this::isGeneric).collect(toSet());
+		Set<PassiveView> baseDisplays = baseDisplays(displays);
+
+		baseDisplays.forEach(d -> renderDisplay(d, result));
+		displays.stream().filter(d -> !renderedDisplays.contains(d.core$().id())).forEach(d -> renderDisplay(d, result));
+
 		Commons.write(new File(accessorGen() + File.separator + "Displays.js").toPath(), setup(new DisplaysManifestTemplate()).render(result.toFrame()));
 	}
 
-	private boolean isGeneric(Display element) {
-		return element.getClass().getSimpleName().equalsIgnoreCase("display") ||
-			   element.getClass().getSimpleName().equalsIgnoreCase("component") ||
-			   element.getClass().getSimpleName().equalsIgnoreCase("template") ||
-			   element.getClass().getSimpleName().equalsIgnoreCase("block") ||
-			   element.getClass().getSimpleName().equalsIgnoreCase("item") ||
-			   element.getClass().getSimpleName().equalsIgnoreCase("row");
+	private Set<PassiveView> baseDisplays(Set<Display> displays) {
+		return displays.stream().filter(Display::isExtensionOf).map(this::baseDisplays).flatMap(Collection::stream).collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
-	private Frame display(Display display) {
+	private Set<PassiveView> baseDisplays(PassiveView view) {
+		Set<PassiveView> result = new LinkedHashSet<>();
+		if (view.isExtensionOf()) {
+			PassiveView passiveView = view.asExtensionOf().parentView();
+			result.addAll(baseDisplays(passiveView));
+		}
+		result.add(view);
+		return result;
+	}
+
+	private <D extends PassiveView> void renderDisplay(D display, FrameBuilder builder) {
+		builder.add("display", display(display));
+		renderedDisplays.add(display.core$().id());
+	}
+
+	private <D extends PassiveView> boolean isGeneric(D element) {
+		String className = element.getClass().getSimpleName();
+		return className.equalsIgnoreCase("display") ||
+			   className.equalsIgnoreCase("component") ||
+			   className.equalsIgnoreCase("template") ||
+			   className.equalsIgnoreCase("block") ||
+			   className.equalsIgnoreCase("item") ||
+			   className.equalsIgnoreCase("row");
+	}
+
+	private <D extends PassiveView> Frame display(D display) {
 		FrameBuilder result = new FrameBuilder("display", typeOf(display));
 		result.add("name", nameOf(display));
-		result.add("directory", display.isDecorated() ? "src" : "gen");
+		result.add("directory", display.i$(DecoratedDisplay.class) ? "src" : "gen");
 		return result.toFrame();
 	}
 

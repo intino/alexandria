@@ -72,10 +72,6 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 		}
 	}
 
-	protected boolean isRoot(Layer element) {
-		return element.core$().owner() == null || element.core$().owner() == element.core$().model();
-	}
-
 	protected abstract Updater updater(String displayName, File sourceFile);
 
 	private Template srcTemplate() {

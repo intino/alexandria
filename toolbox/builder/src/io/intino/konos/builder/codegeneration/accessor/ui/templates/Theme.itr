@@ -6,9 +6,15 @@ def type(theme)
 		var provider = {
 			create: () => {
 				theme = createMuiTheme({
-					palette : { $palette },
-					typography : { $typography },
-					formats: { $format...[,$NL] }
+					palette : {
+					    $palette
+					},
+					typography : {
+					    $typography
+					},
+					formats: {
+					    $format...[,$NL]
+					}
 				});
 				return theme;
 			},
