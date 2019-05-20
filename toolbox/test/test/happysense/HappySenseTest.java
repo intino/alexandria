@@ -1,6 +1,7 @@
 package happysense;
 
 import io.intino.konos.builder.codegeneration.FullRenderer;
+import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.magritte.Graph;
 import org.junit.Test;
@@ -17,7 +18,7 @@ HappySenseTest {
 	public void testCreation() {
 		KonosGraph graph = new Graph().loadStashes("Happysense").as(KonosGraph.class);
 		File gen = new File("test-gen", HAPPYSENSE);
-		new FullRenderer(null, graph, gen, gen, gen, HAPPYSENSE).execute();
+		new FullRenderer(null, graph, gen, gen, gen, HAPPYSENSE, new ElementCache()).execute();
 //		graph.rESTServiceList().forEach(a -> new RESTAccessorRenderer(a, new File("test-gen/happysense"), HAPPYSENSE).execute());
 	}
 }

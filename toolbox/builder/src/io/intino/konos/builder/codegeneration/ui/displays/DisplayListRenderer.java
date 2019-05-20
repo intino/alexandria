@@ -9,8 +9,6 @@ import io.intino.konos.model.graph.ui.UIService;
 
 import java.util.List;
 
-import static io.intino.konos.model.graph.KonosGraph.rootDisplays;
-
 @SuppressWarnings("Duplicates")
 public class DisplayListRenderer extends UIRenderer {
 	private final List<Display> displays;
@@ -18,7 +16,7 @@ public class DisplayListRenderer extends UIRenderer {
 
 	public DisplayListRenderer(Settings settings, UIService service, TemplateProvider templateProvider, Target target) {
 		super(settings, target);
-		this.displays = rootDisplays(service);
+		this.displays = service.graph().rootDisplays();
 		this.templateProvider = templateProvider;
 	}
 

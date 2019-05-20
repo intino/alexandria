@@ -132,11 +132,11 @@ def type(extends & multiple)
 end
 
 def type(extends & collection & table)
-	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type, io.intino.alexandria.ui.displays.components.Row, $itemClass>
+	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<$abstractBox+type, io.intino.alexandria.ui.displays.components.Row, $itemClass>
 end
 
 def type(extends & collection)
-	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type, $componentType, $itemClass>
+	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<$abstractBox+type, $componentType, $itemClass>
 end
 
 def type(extends & item)
@@ -148,7 +148,7 @@ def type(extends & stamp)
 end
 
 def type(extends)
-	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<io.intino.alexandria.ui.displays.notifiers.$type+firstUpperCase$facet~Notifier, $abstractBox+type>
+	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<io.intino.alexandria.ui.displays.notifiers.$type+firstUpperCase$facet...[]~Notifier, $abstractBox+type>
 end
 
 def type(component & child & multipleblock) trigger(rootChildReferences)

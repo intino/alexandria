@@ -34,7 +34,7 @@ export default class Component extends AlexandriaDisplay {
         if (this.props.format == null || this.props.format === "default") return defaultVariant;
         let theme = Theme.get();
         const variant = this.props.format.split(" ")[0];
-        return theme[variant] != null ? variant : defaultVariant;
+        return theme.formats[variant] != null ? variant : defaultVariant;
     };
 
     refreshLoading = (loading) => {

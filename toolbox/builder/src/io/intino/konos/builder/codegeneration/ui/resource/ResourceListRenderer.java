@@ -24,5 +24,4 @@ public class ResourceListRenderer extends UIRenderer {
 		resourceList.forEach(r -> new ResourceRenderer(settings, r, target).execute());
 		accessibleDisplays.forEach(d -> new AccessibleDisplayRenderer(settings, d, target).execute());
 	}
-
 }

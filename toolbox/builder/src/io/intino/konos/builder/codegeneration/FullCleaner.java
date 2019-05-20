@@ -9,7 +9,7 @@ import java.util.List;
 
 public class FullCleaner extends Cleaner {
 	private final KonosGraph graph;
-	private static final List<String> ExcludedDirectories = Arrays.asList("displays", "element.cache");
+	private static final List<String> ExcludedDirectories = Arrays.asList("displays", ".cache");
 
 	public FullCleaner(Settings settings, KonosGraph graph) {
 		super(settings);

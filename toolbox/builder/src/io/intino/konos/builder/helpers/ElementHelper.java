@@ -6,6 +6,7 @@ import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.temporal.TemporalCatalog;
 import io.intino.tara.magritte.Layer;
 import io.intino.tara.magritte.Node;
+import io.intino.tara.magritte.Predicate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,10 @@ public class ElementHelper {
 		String result = element.name$();
 		if (!isUUID(result)) return result;
 		return generateName(element);
+	}
+
+	public String nameOf(String id) {
+		return Predicate.nameOf(id);
 	}
 
 	public String typeOf(Layer element) {

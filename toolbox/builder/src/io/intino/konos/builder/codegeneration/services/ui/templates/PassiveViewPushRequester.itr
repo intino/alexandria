@@ -28,7 +28,7 @@ def type(display)
 	}
 end
 
-def attribute(Display) trigger(class)
+def attribute(this:Display) trigger(class)
 	Display
 end
 

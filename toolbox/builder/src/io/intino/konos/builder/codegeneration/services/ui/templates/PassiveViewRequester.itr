@@ -75,7 +75,7 @@ def trigger(parentType)
 	io.intino.alexandria.ui.displays.requesters.[$type+class+FirstUpperCase]~Requester
 end
 
-def attribute(Display) trigger(class)
+def attribute(this:Display) trigger(class)
 	Display
 end
 

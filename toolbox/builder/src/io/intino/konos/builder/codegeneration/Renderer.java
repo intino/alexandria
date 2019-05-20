@@ -89,9 +89,11 @@ public abstract class Renderer {
 
 	protected boolean isRendered(Layer element) {
 		if (element == null) return false;
-		String key = elementHelper.referenceOf(element).toString();
-		boolean containsKey = settings.cache().containsKey(key);
-		return containsKey && settings.cache().get(key).equals((long) element.core$().birthMark());
+		return !cache().isDirty(element);
+	}
+
+	protected boolean isRoot(Layer element) {
+		return element.core$().owner() == null || element.core$().owner() == element.core$().model();
 	}
 
 	protected void saveRendered(Layer element) {

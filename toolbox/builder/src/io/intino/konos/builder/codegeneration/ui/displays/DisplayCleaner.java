@@ -17,6 +17,7 @@ public class DisplayCleaner extends Cleaner {
 
 	@Override
 	public void execute() {
+		System.out.println(String.format("Removed %s", reference.name()));
 		clean(Target.Accessor);
 		clean(Target.Service);
 		cache().remove(reference.toString());

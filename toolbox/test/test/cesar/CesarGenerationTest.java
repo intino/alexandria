@@ -31,6 +31,6 @@ public class CesarGenerationTest {
 	public void testConsul() {
 		File gen = new File("test-gen", CONSUL);
 		KonosGraph graph = new Graph().loadStashes("Consul").as(KonosGraph.class);
-		new FullRenderer(null, graph, gen, gen, gen, CONSUL).execute();
+		new FullRenderer(null, graph, gen, gen, gen, CONSUL, new ElementCache()).execute();
 	}
 }

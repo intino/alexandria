@@ -1,13 +1,12 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.MimeTypes;
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.FileInfo;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
 import io.intino.alexandria.ui.displays.notifiers.FileEditableNotifier;
+import io.intino.alexandria.ui.utils.UrlUtil;
 
-import java.io.IOException;
 import java.net.URL;
 
 public class FileEditable<DN extends FileEditableNotifier, B extends Box> extends AbstractFileEditable<DN, B> {
@@ -51,10 +50,6 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	}
 
 	private String typeOf(URL value) {
-		try {
-			return MimeTypes.getFromStream(value.openStream());
-		} catch (IOException e) {
-			return MimeTypes.DEFAULT_CONTENT_TYPE;
-		}
+		return UrlUtil.mimeType(value);
 	}
 }

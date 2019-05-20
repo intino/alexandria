@@ -18,7 +18,6 @@ import java.util.Set;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.serviceFilename;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.serviceFolder;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
-import static io.intino.konos.model.graph.KonosGraph.rootDisplays;
 import static io.intino.konos.model.graph.PassiveView.Request.ResponseType.Asset;
 
 public class ServiceRenderer extends UIRenderer {
@@ -36,7 +35,7 @@ public class ServiceRenderer extends UIRenderer {
 	}
 
 	private void createUi() {
-		final List<Display> displays = rootDisplays(service);
+		final List<Display> displays = service.graph().rootDisplays();
 		FrameBuilder builder = frameBuilder().add("ui").add("name", service.name$()).add("resource", resourcesFrame(service.resourceList()));
 		if (service.userHome() != null) builder.add("userHome", service.userHome().name$());
 		if (!displays.isEmpty())

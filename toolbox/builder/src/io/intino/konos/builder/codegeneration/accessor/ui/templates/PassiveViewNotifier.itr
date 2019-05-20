@@ -64,7 +64,7 @@ def type(parameter) trigger(value)
 	parameters.v
 end
 
-def attribute(Display) trigger(target)
+def attribute(this:Display) trigger(target)
 	.toSelf()
 end
 

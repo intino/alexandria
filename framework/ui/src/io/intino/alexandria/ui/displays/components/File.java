@@ -1,10 +1,10 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.MimeTypes;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.FileInfo;
 import io.intino.alexandria.ui.displays.notifiers.FileNotifier;
 import io.intino.alexandria.ui.resources.Asset;
+import io.intino.alexandria.ui.utils.UrlUtil;
 
 import java.net.URL;
 
@@ -48,7 +48,7 @@ public class File<DN extends FileNotifier, B extends Box> extends AbstractFile<D
 	}
 
 	private String typeOf(URL value) {
-		return MimeTypes.getFromFilename(value.toString());
+		return UrlUtil.mimeType(value);
 	}
 
 }
