@@ -6,10 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static io.intino.alexandria.movv.Movv.chainFileOf;
@@ -59,7 +56,7 @@ public class MovvBuilder {
 		return new ArrayList<>(stages.values()).stream();
 	}
 
-	public MovvBuilder add(long id, Instant instant, String data) {
+	public MovvBuilder add(long id, Instant instant, byte[] data) {
 		try {
 			Mov mov = movOf(id);
 			if (isUpdatingFile() && mov.reject(new Item(instant, data))) return this;
@@ -89,7 +86,7 @@ public class MovvBuilder {
 			}
 
 			@Override
-			public Stage add(Instant instant, String data) {
+			public Stage add(Instant instant, byte[] data) {
 				items.add(new Item(instant, data));
 				return this;
 			}
@@ -127,7 +124,7 @@ public class MovvBuilder {
 			private List<Item> clean(List<Item> items, Item last) {
 				List<Item> result = new ArrayList<>();
 				for (Item item : items) {
-					if (item.data.equals(last.data) || item.instant.equals(last.instant)) continue;
+					if (item.instant.equals(last.instant) || Arrays.equals(item.data, last.data)) continue;
 					result.add(item);
 					last = item;
 				}
@@ -144,7 +141,7 @@ public class MovvBuilder {
 	public interface Stage {
 		long id();
 
-		Stage add(Instant instant, String data);
+		Stage add(Instant instant, byte[] data);
 
 		MovvBuilder commit();
 	}

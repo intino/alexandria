@@ -2,7 +2,7 @@ package io.intino.alexandria.movv;
 
 import java.io.*;
 
-import static java.lang.Integer.min;
+import static java.lang.Math.min;
 import static java.lang.System.arraycopy;
 
 interface ChainWriter {
@@ -26,7 +26,7 @@ interface ChainWriter {
         @Override
         public int write(Mov.Item item, boolean isTheLast) throws IOException {
             os.writeLong(item.instant.toEpochMilli());
-            os.write(RandomChainWriter.toByteArray(item.data, dataSize));
+            os.write(RandomChainWriter.adjust(item.data, dataSize));
             os.writeInt(isTheLast ? -1 : cursor + 1);
             return cursor++;
         }
@@ -60,7 +60,7 @@ interface ChainWriter {
         public int write(Mov.Item item, boolean isTheLast) throws IOException {
             raf.seek(raf.length());
             raf.writeLong(item.instant.toEpochMilli());
-            raf.write(toByteArray(item.data, dataSize));
+            raf.write(adjust(item.data, dataSize));
             raf.writeInt(isTheLast ? -1 : cursor + 1);
             return cursor++;
         }
@@ -70,9 +70,9 @@ interface ChainWriter {
             raf.close();
         }
 
-        static byte[] toByteArray(String data, int dataSize) {
+        static byte[] adjust(byte[] data, int dataSize) {
             byte[] bytes = new byte[dataSize];
-            arraycopy(data.getBytes(),0,bytes,0,min(dataSize, data.length()));
+            arraycopy(data,0,bytes,0, min(dataSize,data.length));
             return bytes;
         }
 

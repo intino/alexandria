@@ -9,7 +9,7 @@ interface ChainReader {
     void seek(int cursor) throws IOException;
 
     Instant readInstant() throws IOException;
-    String readData() throws IOException;
+    byte[] readData() throws IOException;
 
     void seekNextOf(int cursor) throws IOException;
     int readNext() throws IOException;
@@ -29,8 +29,8 @@ interface ChainReader {
             }
 
             @Override
-            public String readData() {
-                return null;
+            public byte[] readData() {
+                return new byte[0];
             }
 
             @Override
@@ -68,8 +68,8 @@ interface ChainReader {
             }
 
             @Override
-            public String readData() throws IOException {
-                return new String(readBytes());
+            public byte[] readData() throws IOException {
+                return readBytes();
             }
 
             @Override
