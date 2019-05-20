@@ -98,7 +98,7 @@ public class MovvBuilder_ {
         assertThat(movv.get(1000).at(instant(2018,2,25)).data).isEqualTo("2".getBytes());
         assertThat(movv.get(1000).at(instant(2019,1,1)).data).isEqualTo("4".getBytes());
         assertThat(movv.get(1000).at(instant(2019,2,15)).data).isEqualTo("05".getBytes());
-        assertThat(movv.get(1000).at(Instant.now()).data).isEqualTo("05");
+        assertThat(movv.get(1000).at(Instant.now()).data).isEqualTo("05".getBytes());
     }
 
 
