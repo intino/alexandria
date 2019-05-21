@@ -48,12 +48,8 @@ public class MovvBuilder {
 		return new Mov(chainIndex, chainReader).of(id);
 	}
 
-	public boolean containsStage(long id){
-		return stages.containsKey(id);
-	}
-
 	public Stage stageOf(long id) {
-		return createIfNotExist(id).get(id);
+		return stages.containsKey(id) ? stages.get(id) : createStage(id);
 	}
 
 	public Stream<Stage> stages() {
@@ -61,6 +57,7 @@ public class MovvBuilder {
 	}
 
 	public MovvBuilder add(long id, Instant instant, byte[] data) {
+		if (data == null) return this;
 		try {
 			Mov mov = movOf(id);
 			if (isUpdatingFile() && mov.reject(new Item(instant, data))) return this;
@@ -75,11 +72,6 @@ public class MovvBuilder {
 		chainWriter.close();
 	}
 
-	private Map<Long, Stage> createIfNotExist(long id) {
-		if (!stages.containsKey(id)) stages.put(id, createStage(id));
-		return stages;
-	}
-
 	private Stage createStage(long id) {
 		return new Stage() {
 			List<Item> items = new ArrayList<>();
@@ -91,7 +83,9 @@ public class MovvBuilder {
 
 			@Override
 			public Stage add(Instant instant, byte[] data) {
+				if (data == null) return this;
 				items.add(new Item(instant, data));
+				if (!stages.containsKey(id)) stages.put(id, this);
 				return this;
 			}
 
@@ -101,6 +95,11 @@ public class MovvBuilder {
 				items.sort(comparing(o -> o.instant));
 				store();
 				return MovvBuilder.this;
+			}
+
+			@Override
+			public int size() {
+				return items.size();
 			}
 
 			private void store() {
@@ -148,6 +147,8 @@ public class MovvBuilder {
 		Stage add(Instant instant, byte[] data);
 
 		MovvBuilder commit();
+
+		int size();
 	}
 
 }
