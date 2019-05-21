@@ -35,8 +35,10 @@ Component frame as Decorated
 
 Component selectorMenu as Decorated
 	Notification refreshSelected as Object(SelectorMenuSelection)
-
 	Request select as Integer
+
+Component selectorComboBox as Decorated
+	Request updateSelection as Text List
 
 Schema SelectorMenuSelection
 	Attribute option as Integer

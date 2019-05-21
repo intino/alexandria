@@ -4,7 +4,9 @@ import io.intino.alexandria.rest.pushservice.MessageCarrier;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.PropertyList;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.singletonMap;
@@ -18,16 +20,26 @@ public class DisplayNotifier {
         this.carrier = carrier;
     }
 
-    public void add(Display child, String container) {
-        String type = child.getClass().getSimpleName();
-        PropertyList propertyList = child.properties();
-        put("addInstance", addMetadata(registerParameters(type, propertyList, container, -1)));
+    public <D extends Display> void add(D child, String container) {
+        put("addInstance", addMetadata(registerParameters(child, container, -1)));
     }
 
-    public void insert(Display child, int index, String container) {
-        String type = child.getClass().getSimpleName();
-        PropertyList propertyList = child.properties();
-        put("insertInstance", addMetadata(registerParameters(type, propertyList, container, index)));
+    public <D extends Display> void add(List<D> children, String container) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("c", container);
+        params.put("value", registerParameters(children, -1, container));
+        put("addInstances", addMetadata(params));
+    }
+
+    public <D extends Display> void insert(D child, int index, String container) {
+        put("insertInstance", addMetadata(registerParameters(child, container, index)));
+    }
+
+    public <D extends Display> void insert(List<D> children, int index, String container) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("c", container);
+        params.put("value", registerParameters(children, index, container));
+        put("insertInstances", addMetadata(params));
     }
 
     public void remove(String id, String container) {
@@ -97,6 +109,17 @@ public class DisplayNotifier {
         parametersWithId.put("n", display.name());
         if (display.owner() != null) parametersWithId.put("o", display.owner().path());
         return parametersWithId;
+    }
+
+    private <D extends Display> List<Map<String, Object>> registerParameters(List<D> children, int index, String container) {
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (int i=0; i<children.size(); i++) result.add(registerParameters(children.get(i), container, i+index));
+        return result;
+    }
+
+    private <D extends Display> Map<String, Object> registerParameters(D display, String container, int index) {
+        String type = display.getClass().getSimpleName();
+        return registerParameters(type, display.properties(), container, index);
     }
 
     private Map<String, Object> registerParameters(String type, PropertyList propertyList, String container, int index) {

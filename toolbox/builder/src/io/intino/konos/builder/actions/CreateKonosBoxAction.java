@@ -20,6 +20,7 @@ import com.intellij.testFramework.PsiTestUtil;
 import io.intino.konos.builder.KonosIcons;
 import io.intino.konos.builder.Manifest;
 import io.intino.konos.builder.codegeneration.FullRenderer;
+import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.cache.CacheReader;
 import io.intino.konos.builder.codegeneration.cache.CacheWriter;
 import io.intino.konos.builder.utils.GraphLoader;
@@ -30,6 +31,7 @@ import io.intino.plugin.project.LegioConfiguration;
 import io.intino.plugin.project.LibraryConflictResolver.Version;
 import io.intino.plugin.project.LibraryConflictResolver.VersionRange;
 import io.intino.tara.compiler.shared.Configuration;
+import io.intino.tara.io.Stash;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.java.JavaResourceRootType;
@@ -172,12 +174,13 @@ public class CreateKonosBoxAction extends KonosAction {
 		}
 
 		private KonosGraph generate(String packageName, File gen, File src, File res) {
-			KonosGraph graph = new GraphLoader().loadGraph(module);
+			GraphLoader graphLoader = new GraphLoader();
+			KonosGraph graph = graphLoader.loadGraph(module);
 			if (graph == null) {
 				notifyError("Models have errors");
 				return null;
 			}
-			if (!render(packageName, gen, src, res, graph)) return null;
+			if (!render(packageName, gen, src, res, graph, graphLoader.konosStash())) return null;
 			refreshDirectories(gen, src, res);
 			notifySuccess();
 			return graph;
@@ -189,10 +192,10 @@ public class CreateKonosBoxAction extends KonosAction {
 			refreshDirectory(res);
 		}
 
-		private boolean render(String packageName, File gen, File src, File res, KonosGraph graph) {
+		private boolean render(String packageName, File gen, File src, File res, KonosGraph graph, Stash stash) {
 			try {
-				io.intino.konos.builder.codegeneration.cache.ElementCache cache = loadCache(res, graph);
-				new FullRenderer(module, graph, src, gen, res, packageName, cache).execute();
+				io.intino.konos.builder.codegeneration.cache.ElementCache cache = loadCache(res, graph, stash);
+				new FullRenderer(graph, new Settings(module, src, gen, res, packageName, cache)).execute();
 				saveCache(cache, res);
 			} catch (Exception e) {
 				Logger.getInstance(this.getClass()).error(e.getMessage(), e);
@@ -220,6 +223,7 @@ public class CreateKonosBoxAction extends KonosAction {
 			VfsUtil.markDirtyAndRefresh(true, true, true, vDir);
 			vDir.refresh(true, true);
 		}
+
 	}
 
 	private VirtualFile getGenRoot(Module module) {
@@ -245,8 +249,8 @@ public class CreateKonosBoxAction extends KonosAction {
 		return create(module, name);
 	}
 
-	private io.intino.konos.builder.codegeneration.cache.ElementCache loadCache(File folder, KonosGraph graph) {
-		return new CacheReader(folder).load(graph);
+	private io.intino.konos.builder.codegeneration.cache.ElementCache loadCache(File folder, KonosGraph graph, Stash stash) {
+		return new CacheReader(folder).load(graph, stash);
 	}
 
 	private void saveCache(io.intino.konos.builder.codegeneration.cache.ElementCache cache, File folder) {

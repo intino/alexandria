@@ -12,6 +12,8 @@ import io.intino.konos.model.graph.ui.UIService;
 
 import java.io.File;
 
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.createIfNotExists;
+
 public class AppRenderer extends UIRenderer {
 	private final UIService service;
 
@@ -29,13 +31,13 @@ public class AppRenderer extends UIRenderer {
 	private void writeApp() {
 		FrameBuilder builder = new FrameBuilder("app");
 		service.resourceList().forEach(r -> builder.add("page", new FrameBuilder("page").add("value", r.name$()).toFrame()));
-		Commons.write(new File(accessorGen() + File.separator + "App.js").toPath(), setup(new AppTemplate()).render(builder.toFrame()));
+		Commons.write(new File(gen() + File.separator + "App.js").toPath(), setup(new AppTemplate()).render(builder.toFrame()));
 	}
 
 	private void writePassiveView() {
 		Template template = new PassiveViewTemplate();
-		File notifiersFile = createIfNotExists(new File(accessorGen() + "/displays/notifiers"));
-		File requestersFile = createIfNotExists(new File(accessorGen() + "/displays/requesters"));
+		File notifiersFile = createIfNotExists(new File(gen() + "/displays/notifiers"));
+		File requestersFile = createIfNotExists(new File(gen() + "/displays/requesters"));
 		Commons.write(new File(notifiersFile + File.separator + "Notifier.js").toPath(), template.render(new FrameBuilder("notifier")));
 		Commons.write(new File(requestersFile + File.separator + "Requester.js").toPath(), template.render(new FrameBuilder("requester")));
 	}

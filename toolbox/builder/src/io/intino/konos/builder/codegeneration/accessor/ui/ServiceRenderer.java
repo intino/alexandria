@@ -49,7 +49,7 @@ public class ServiceRenderer extends UIRenderer {
 	}
 
 	private void createSkeleton() throws IOException {
-		final File destiny = accessorRes();
+		final File destiny = res();
 		final File file = new File(destiny, "ui.zip");
 		copyResourcesRecursively(this.getClass().getResource("/ui/ui.zip"), file);
 		ZipUtil.extract(file, destiny, null, false);

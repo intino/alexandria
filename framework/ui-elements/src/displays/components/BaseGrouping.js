@@ -36,7 +36,7 @@ export const BaseGroupingStyles = theme => ({
 	}
 });
 
-class BaseGrouping extends AbstractBaseGrouping {
+export default class BaseGrouping extends AbstractBaseGrouping {
 	static DefaultPageSize = 5;
 
 	state = {
@@ -122,5 +122,3 @@ class BaseGrouping extends AbstractBaseGrouping {
 		return this.filter(this.state.groups, this.state.condition).length;
 	};
 }
-
-export default BaseGrouping;

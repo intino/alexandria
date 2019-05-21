@@ -62,6 +62,10 @@ def type(properties & template) trigger(specific)
 	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"]
 end
 
+def type(properties & selector) trigger(specific)
+	[ multipleSelection={$multipleSelection}]
+end
+
 def type(properties & image) trigger(specific)
 	[ width="$width"][ height="$height"]
 end

@@ -31,7 +31,7 @@ public class ThemeRenderer extends UIRenderer {
 		builder.add("palette", palette(theme));
 		builder.add("typography", typography(theme));
 		service.graph().formatList().forEach(r -> builder.add("format", frameOf(r)));
-		Commons.write(new File(accessorGen() + File.separator + "Theme.js").toPath(), setup(new ThemeTemplate()).render(builder.toFrame()));
+		Commons.write(new File(gen() + File.separator + "Theme.js").toPath(), setup(new ThemeTemplate()).render(builder.toFrame()));
 		saveRendered(theme);
 	}
 

@@ -12,6 +12,7 @@ import io.intino.alexandria.ui.services.push.User;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
+import java.util.function.Consumer;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.reverse;
@@ -238,11 +239,11 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	}
 
 	public <D extends Display> D addPromise(D child, String container) {
-		if (container == null) container = DefaultInstanceContainer;
-		child.owner(this);
-		notifier.add(child, container);
-		addPromisedChild(child, container);
-		return child;
+		return registerPromise(child, container, containerName -> notifier.add(child, containerName));
+	}
+
+	public <D extends Display> List<D> addPromise(List<D> children, String container) {
+		return registerPromise(children, container, containerName -> notifier.add(children, containerName));
 	}
 
 	public <D extends Display> D insertPromise(D child, int index) {
@@ -250,11 +251,11 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	}
 
 	public <D extends Display> D insertPromise(D child, int index, String container) {
-		if (container == null) container = DefaultInstanceContainer;
-		child.owner(this);
-		notifier.insert(child, index, container);
-		addPromisedChild(child, container);
-		return child;
+		return registerPromise(child, container, containerName -> notifier.insert(child, index, containerName));
+	}
+
+	public <D extends Display> List<D> insertPromise(List<D> children, int index, String container) {
+		return registerPromise(children, container, containerName -> notifier.insert(children, index, containerName));
 	}
 
 	public <T extends Display> T parent() {
@@ -353,6 +354,22 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 
 	private String container(Display child) {
 		return child.container != null ? child.container : DefaultInstanceContainer;
+	}
+
+	private <D extends Display> D registerPromise(D child, String container, Consumer<String> consumer) {
+		String containerName = container != null ? container : DefaultInstanceContainer;
+		child.owner(this);
+		consumer.accept(containerName);
+		addPromisedChild(child, containerName);
+		return child;
+	}
+
+	private <D extends Display> List<D> registerPromise(List<D> children, String container, Consumer<String> consumer) {
+		String containerName = container != null ? container : DefaultInstanceContainer;
+		children.forEach(c -> c.owner(this));
+		consumer.accept(container);
+		children.forEach(c -> addPromisedChild(c, containerName));
+		return children;
 	}
 
 }

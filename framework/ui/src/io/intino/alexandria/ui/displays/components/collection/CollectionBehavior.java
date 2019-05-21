@@ -25,6 +25,26 @@ public class CollectionBehavior<ItemComponent, Item> {
 		recalculateCurrentPageAndReset();
 	}
 
+	public void condition(String condition) {
+		itemLoader.condition(condition);
+		recalculateCurrentPageAndReset();
+	}
+
+	public void sortings(List<String> sortings) {
+		itemLoader.sortings(sortings);
+		reset(itemLoader.page(page));
+	}
+
+	public void addSorting(String sorting) {
+		itemLoader.addSorting(sorting);
+		reset(itemLoader.page(page));
+	}
+
+	public void removeSorting(String sorting) {
+		itemLoader.removeSorting(sorting);
+		reset(itemLoader.page(page));
+	}
+
 	public void page(int pos) {
 		page = pos;
 		reset(itemLoader.page(pos));
@@ -46,7 +66,7 @@ public class CollectionBehavior<ItemComponent, Item> {
 
 	private void reset(List<Item> items) {
 		collection.clear();
-		collection.addAll(items);
+		collection.add(items);
 	}
 
 	private void recalculateCurrentPageAndReset() {

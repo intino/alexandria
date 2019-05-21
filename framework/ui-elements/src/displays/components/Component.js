@@ -5,6 +5,8 @@ import ComponentNotifier from "../notifiers/ComponentNotifier";
 import {Spinner} from "../../../gen/Displays";
 
 export default class Component extends AlexandriaDisplay {
+    static Variants = ["h1","h2","h3","h4","h5","h6","subtitle1","subtitle2","body1","body2","caption","button","overline","srOnly","inherit"];
+
     state = {
         loading: true
     };
@@ -32,9 +34,8 @@ export default class Component extends AlexandriaDisplay {
 
     variant = (defaultVariant) => {
         if (this.props.format == null || this.props.format === "default") return defaultVariant;
-        let theme = Theme.get();
         const variant = this.props.format.split(" ")[0];
-        return theme.formats[variant] != null ? variant : defaultVariant;
+        return Component.Variants.indexOf(variant) !== -1 ? variant : defaultVariant;
     };
 
     refreshLoading = (loading) => {

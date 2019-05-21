@@ -1,10 +1,10 @@
 package amidas;
 
 import io.intino.konos.builder.codegeneration.FullRenderer;
-import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.magritte.Graph;
 import org.junit.Test;
+import utils.TestUtil;
 
 import java.io.File;
 
@@ -17,7 +17,7 @@ public class AmidasGenerationTest {
 	public void testAmidas() {
 		File gen = new File("test-gen", AMIDAS);
 		KonosGraph graph = new Graph().loadStashes("Amidas").as(KonosGraph.class);
-		new FullRenderer(null, graph, gen, gen, gen, AMIDAS, new ElementCache()).execute();
+		new FullRenderer(graph, TestUtil.settings(gen, AMIDAS)).execute();
 //		graph.rESTServiceList().forEach(a ->
 //				new RESTAccessorRenderer(a, new File("test-gen/" + AMIDAS), AMIDAS).execute());
 	}
@@ -26,6 +26,7 @@ public class AmidasGenerationTest {
 	public void testProcesses() {
 		File gen = new File("test-gen", PROCESSES);
 		KonosGraph graph = new Graph().loadStashes("Processes").as(KonosGraph.class);
-		new FullRenderer(null, graph, gen, gen, gen, PROCESSES, new ElementCache()).execute();
+		new FullRenderer(graph, TestUtil.settings(gen, PROCESSES)).execute();
 	}
+
 }

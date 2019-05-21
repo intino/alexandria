@@ -8,6 +8,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.createIfNotExists;
+
 public class Settings {
 	private Project project;
 	private Module module;
@@ -20,6 +22,19 @@ public class Settings {
 	private String packageName;
 	private String boxName;
 	private Map<String, String> classes = new HashMap<>();
+
+	public Settings() {
+	}
+
+	public Settings(Module module, File src, File gen, File res, String packageName, ElementCache cache) {
+		module(module);
+		project(module == null ? null : module.getProject());
+		res(res);
+		src(src);
+		gen(gen);
+		packageName(packageName);
+		cache(cache);
+	}
 
 	public Project project() {
 		return project;
@@ -57,8 +72,12 @@ public class Settings {
 		return this;
 	}
 
-	public File res() {
-		return res;
+	public File root(Target target) {
+		return createIfNotExists(target == Target.Service ? new File(module().getModuleFilePath()).getParentFile() : new File(webModule().getModuleFilePath()).getParentFile());
+	}
+
+	public File res(Target target) {
+		return createIfNotExists(target == Target.Service ? res : accessorRes());
 	}
 
 	public Settings res(File res) {
@@ -66,12 +85,21 @@ public class Settings {
 		return this;
 	}
 
-	public File src() {
-		return src;
+	public File src(Target target) {
+		return createIfNotExists(target == Target.Service ? src : accessorSrc());
 	}
 
 	public Settings src(File src) {
 		this.src = src;
+		return this;
+	}
+
+	public File gen(Target target) {
+		return createIfNotExists(target == Target.Service ? gen : accessorGen());
+	}
+
+	public Settings gen(File gen) {
+		this.gen = gen;
 		return this;
 	}
 
@@ -81,15 +109,6 @@ public class Settings {
 
 	public Settings cache(ElementCache cache) {
 		this.cache = cache;
-		return this;
-	}
-
-	public File gen() {
-		return gen;
-	}
-
-	public Settings gen(File gen) {
-		this.gen = gen;
 		return this;
 	}
 
@@ -120,4 +139,31 @@ public class Settings {
 		return this;
 	}
 
+	private File accessorRes() {
+		return createIfNotExists(new File(root(Target.Accessor) + File.separator + "res"));
+	}
+
+	private File accessorSrc() {
+		return createIfNotExists(new File(root(Target.Accessor) + File.separator + "src"));
+	}
+
+	private File accessorGen() {
+		return createIfNotExists(new File(root(Target.Accessor) + File.separator + "gen"));
+	}
+
+	public Settings clone() {
+		Settings result = new Settings();
+		result.project = project;
+		result.module = module;
+		result.webModule = webModule;
+		result.parent = parent;
+		result.res = res;
+		result.src = src;
+		result.gen = gen;
+		result.cache = cache;
+		result.packageName = packageName;
+		result.boxName = boxName;
+		result.classes = classes;
+		return result;
+	}
 }

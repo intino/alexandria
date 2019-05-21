@@ -51,7 +51,7 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	}
 
 	private String key() {
-		return label() != null ? label() : name();
+		return label() != null && !label().isEmpty() ? label() : name();
 	}
 
 	private void loadGroups() {

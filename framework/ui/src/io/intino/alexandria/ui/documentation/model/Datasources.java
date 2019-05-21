@@ -26,8 +26,9 @@ public class Datasources {
 			}
 
 			@Override
-			public List<Item> items(int start, int count, String condition, List<Filter> filters) {
+			public List<Item> items(int start, int count, String condition, List<Filter> filters, List<String> sortings) {
 				List<Item> items = population();
+				if (sortings.size() > 0) items.sort(sortingComparator(sortings));
 				return page(items, start, count);
 			}
 
@@ -37,12 +38,16 @@ public class Datasources {
 				return Datasources.groups("itemalphabeticorder", population(), item -> ((Item)item).label().substring(0, 1));
 			}
 
+			public Comparator<Item> sortingComparator(List<String> sortings) {
+				return Comparator.comparing(Item::label);
+			}
+
 			private List<Item> population() {
-				if (itemPopulation != null) return itemPopulation;
+				if (itemPopulation != null) return new ArrayList<>(itemPopulation);
 				itemPopulation = new ArrayList<>();
 				for (int i = 0; i < ItemCount; i++)
 					itemPopulation.add(new Item().label("item " + (i + 1)));
-				return itemPopulation;
+				return new ArrayList<>(itemPopulation);
 			}
 		};
 	}
@@ -57,8 +62,9 @@ public class Datasources {
 			}
 
 			@Override
-			public List<Person> items(int start, int count, String condition, List<Filter> filters) {
+			public List<Person> items(int start, int count, String condition, List<Filter> filters, List<String> sortings) {
 				List<Person> persons = filterPopulation(filters);
+				if (sortings.size() > 0) persons.sort(sortingComparator(sortings));
 				return page(persons, start, count);
 			}
 
@@ -67,6 +73,11 @@ public class Datasources {
 				if (key.toLowerCase().contains("gender")) return Datasources.groups("persongender", population(), item -> ((Person)item).gender().name());
 				if (key.toLowerCase().contains("age group")) return Datasources.groups("personagegroup", population(), item -> ageGroupLabel(((Person)item).age()));
 				return emptyList();
+			}
+
+			public Comparator<Person> sortingComparator(List<String> sortings) {
+				if (sortings.contains("female first")) return Comparator.comparing(o -> o.gender().name());
+				return Comparator.comparing(Person::lastName);
 			}
 
 			private String ageGroupLabel(int age) {
@@ -93,11 +104,11 @@ public class Datasources {
 			}
 
 			private List<Person> population() {
-				if (personPopulation != null) return personPopulation;
+				if (personPopulation != null) return new ArrayList<>(personPopulation);
 				personPopulation = new ArrayList<>();
 				for (int i = 0; i < ItemCount; i++)
 					personPopulation.add(new Person().firstName("first name " + (i + 1)).lastName("last name" + (i + 1)).gender(Math.random() < 0.5 ? Person.Gender.Male : Person.Gender.Female).age(randomAge()));
-				return personPopulation;
+				return new ArrayList<>(personPopulation);
 			}
 
 			private int randomAge() {
