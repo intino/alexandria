@@ -148,7 +148,7 @@ public class Mov implements Iterable<Mov.Item> {
 
 		Item(Instant instant, byte[] data) {
 			this.instant = instant;
-			this.data = data;
+			this.data = data != null ? data : new byte[0];
 		}
 
 		boolean isAfter(Instant instant) {
