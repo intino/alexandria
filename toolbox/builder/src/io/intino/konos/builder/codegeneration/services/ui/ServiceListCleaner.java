@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.services.ui;
 
 import io.intino.konos.builder.codegeneration.Cleaner;
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayListCleaner;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.ui.UIService;
@@ -20,7 +21,7 @@ public class ServiceListCleaner extends Cleaner {
 	}
 
 	private void cleanService(UIService service) {
+		if (settings.webModule() != null) clean(gen(Target.Accessor));
 		new DisplayListCleaner(settings, service).execute();
 	}
-
 }

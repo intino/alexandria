@@ -16,10 +16,24 @@ export default class Display extends PassiveView {
         this._registerInstances(instance.c, instances);
     };
 
+    addInstances = (params) => {
+        let container = params.c;
+        let currentInstances = this.instances(container);
+        params.value.forEach(instance => currentInstances.push(instance));
+        this._registerInstances(container, currentInstances);
+    };
+
     insertInstance = (instance) => {
         let instances = this.instances(instance.c);
         instances[instance.idx] = instance;
         this._registerInstances(instance.c, instances);
+    };
+
+    insertInstances = (params) => {
+        let container = params.c;
+        let currentInstances = this.instances(container);
+        params.value.forEach(instance => currentInstances[instance.idx] = instance);
+        this._registerInstances(container, currentInstances);
     };
 
     removeInstance = (params) => {

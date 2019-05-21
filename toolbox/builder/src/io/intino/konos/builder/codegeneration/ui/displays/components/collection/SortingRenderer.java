@@ -5,11 +5,11 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
-import io.intino.konos.model.graph.CatalogComponents.Grouping;
+import io.intino.konos.model.graph.CatalogComponents.Sorting;
 
-public class GroupingRenderer extends ComponentRenderer<Grouping> {
+public class SortingRenderer extends ComponentRenderer<Sorting> {
 
-	public GroupingRenderer(Settings settings, Grouping component, TemplateProvider provider, Target target) {
+	public SortingRenderer(Settings settings, Sorting component, TemplateProvider provider, Target target) {
 		super(settings, component, provider, target);
 	}
 
@@ -29,6 +29,6 @@ public class GroupingRenderer extends ComponentRenderer<Grouping> {
 
 	@Override
 	protected String className(Class clazz) {
-		return super.className(clazz).replace("grouping", "");
+		return super.className(clazz).replace("sorting", "");
 	}
 }

@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.toSnakeCase;
 import static io.intino.tara.plugin.project.configuration.ConfigurationManager.newExternalProvider;
 import static io.intino.tara.plugin.project.configuration.ConfigurationManager.register;
 
@@ -70,7 +71,7 @@ public class ServiceCreator extends UIRenderer {
 			for (String url : repositories.get(id)) repoFrame.add("url", url);
 			builder.add("repository", repoFrame.toFrame());
 		}
-		File file = new File(accessorRoot(), LegioArtifact);
+		File file = new File(root(), LegioArtifact);
 		if (!file.exists()) {
 			Commons.write(file.toPath(), new ArtifactTemplate().render(builder));
 			return true;
@@ -113,12 +114,6 @@ public class ServiceCreator extends UIRenderer {
 		final File lib = new File(parent, "lib");
 		lib.mkdirs();
 		contentEntry.addExcludeFolder(VfsUtil.findFileByIoFile(lib, true));
-	}
-
-	private String toSnakeCase(String name) {
-		String regex = "([a-z])([A-Z]+)";
-		String replacement = "$1-$2";
-		return name.replaceAll(regex, replacement).toLowerCase();
 	}
 
 	@NotNull

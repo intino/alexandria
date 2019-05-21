@@ -5,6 +5,8 @@ import com.intellij.openapi.project.Project;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.builder.helpers.ElementHelper;
+import io.intino.konos.model.graph.CatalogComponents;
+import io.intino.konos.model.graph.PrivateComponents;
 import io.intino.tara.magritte.Layer;
 
 import java.io.File;
@@ -39,30 +41,6 @@ public abstract class Renderer {
 		return settings.packageName();
 	}
 
-	protected File res() {
-		return createIfNotExists((target == Target.Service) ? settings.res() : accessorSrc());
-	}
-
-	protected File accessorRes() {
-		return createIfNotExists(new File(accessorRoot() + File.separator + "res"));
-	}
-
-	protected File src() {
-		return createIfNotExists((target == Target.Service) ? settings.src() : accessorSrc());
-	}
-
-	protected File accessorSrc() {
-		return createIfNotExists(new File(accessorRoot() + File.separator + "src"));
-	}
-
-	protected File gen() {
-		return createIfNotExists((target == Target.Service) ? settings.gen() : accessorGen());
-	}
-
-	protected File accessorGen() {
-		return createIfNotExists(new File(accessorRoot() + File.separator + "gen"));
-	}
-
 	protected Module module() {
 		return settings.module();
 	}
@@ -71,8 +49,20 @@ public abstract class Renderer {
 		return settings.parent();
 	}
 
-	protected File accessorRoot() {
-		return createIfNotExists(new File(settings.webModule().getModuleFilePath()).getParentFile());
+	protected File root() {
+		return settings.root(target);
+	}
+
+	protected File res() {
+		return settings.res(target);
+	}
+
+	protected File src() {
+		return settings.src(target);
+	}
+
+	protected File gen() {
+		return settings.gen(target);
 	}
 
 	protected Map<String, String> classes() {
@@ -89,6 +79,8 @@ public abstract class Renderer {
 
 	protected boolean isRendered(Layer element) {
 		if (element == null) return false;
+		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) return false;
+		if (element.i$(PrivateComponents.Row.class)) return false;
 		return !cache().isDirty(element);
 	}
 
@@ -100,8 +92,4 @@ public abstract class Renderer {
 		settings.cache().add(element);
 	}
 
-	protected File createIfNotExists(File file) {
-		if (!file.exists()) file.mkdirs();
-		return file;
-	}
 }

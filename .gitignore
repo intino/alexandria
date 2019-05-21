@@ -16,3 +16,5 @@ alexandria/ui-elements-old
 alexandria/ui-elements/node_modules
 framework/ui-elements/node_modules/core-js-compat/node_modules
 framework/ui-elements/node_modules
+framework/ui/res/.cache
+framework/ui/res/.checksum

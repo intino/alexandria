@@ -79,10 +79,6 @@ public class CollectionRenderer extends SizedRenderer<Collection> {
 		result.add("methodAccessibility", element.i$(CatalogComponents.Table.class) ? "private" : "public");
 		result.add("name", nameOf(item));
 		result.add("methodName", element.i$(CatalogComponents.Table.class) ? nameOf(item) : "");
-		if (!element.i$(CatalogComponents.Table.class)) {
-			result.add("addPromise", "addPromise");
-			result.add("insertPromise", "insertPromise");
-		}
 		String itemClass = element.itemClass();
 		if (itemClass != null) {
 			result.add("itemClass", itemClass);

@@ -3,15 +3,15 @@ package io.intino.alexandria.ui.displays.components.collection;
 import io.intino.alexandria.ui.model.Datasource;
 import io.intino.alexandria.ui.model.datasource.Filter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ItemLoader<Item> {
-	private final Datasource source;
+	private final Datasource<Item> source;
 	private int pageSize;
 	private long itemCount;
 	private String condition;
 	private List<Filter> filters = new ArrayList<>();
+	private Set<String> sortings = new HashSet<>();
 
 	public ItemLoader(Datasource source, int pageSize) {
 		this.source = source;
@@ -26,7 +26,7 @@ public class ItemLoader<Item> {
 
 	public synchronized List<Item> page(int page) {
 		page = this.checkPageRange(page);
-		return source.items(start(page), count(), condition, filters);
+		return source.items(start(page), count(), condition, filters, new ArrayList<>(sortings));
 	}
 
 	public ItemLoader filter(String grouping, List<String> groups) {
@@ -44,6 +44,19 @@ public class ItemLoader<Item> {
 		this.condition = condition;
 		this.itemCount = source.itemCount(condition, filters);
 		return this;
+	}
+
+	public void sortings(List<String> sortings) {
+		this.sortings.clear();
+		this.sortings.addAll(sortings);
+	}
+
+	public void addSorting(String sorting) {
+		this.sortings.add(sorting);
+	}
+
+	public void removeSorting(String sorting) {
+		this.sortings.remove(sorting);
 	}
 
 	public long itemCount() {
@@ -64,7 +77,7 @@ public class ItemLoader<Item> {
 	}
 
 	public List<Item> moreItems(int start, int stop) {
-		return source.items(start, stop-start+1, condition, filters);
+		return source.items(start, stop - start + 1, condition, filters, new ArrayList<>(sortings));
 	}
 
 	private int checkPageRange(int page) {
@@ -89,5 +102,4 @@ public class ItemLoader<Item> {
 		Filter filter = filter(grouping);
 		if (filter != null) filters.remove(filter);
 	}
-
 }

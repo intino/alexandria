@@ -46,25 +46,11 @@ end
 def type(method & collection & table)
 	$selectionMethod
 
-	public $name+firstUpperCase~Row add([$itemClass item]) {
+	public $name+firstUpperCase~Row create([$itemClass item]) {
 		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row(($box+firstUpperCase~Box)box());
 		[row.id(java.util.UUID.randomUUID().toString());
 		row.item($itemVariable);]
-		addPromise(row, "rows");
 		return row;
-	}
-
-	public $name+firstUpperCase~Row insert([$itemClass item, ]int index) {
-		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row(($box+firstUpperCase~Box)box());
-		[row.id(java.util.UUID.randomUUID().toString());
-		row.item($itemVariable);]
-		insertPromise(row, index, "rows");
-		return row;
-	}
-
-	@Override
-	public void clear() {
-		clear("rows");
 	}
 end
 
@@ -236,6 +222,10 @@ def type(binding & grouping)
 	$name.bindTo($collection);
 end
 
+def type(binding & sorting)
+	$name.bindTo($collection);
+end
+
 def type(binding)
 	$name.bindTo($selector, "$option");
 end
@@ -267,6 +257,10 @@ end
 def type(properties) trigger(common)
 	[label("$label");]
 	[color("$color");]
+end
+
+def type(properties & selector) trigger(specific)
+	[multipleSelection($multipleSelection);]
 end
 
 def type(properties & image & avatar) trigger(specific)
@@ -385,26 +379,10 @@ def type(item) trigger(property)
 end
 
 def type(item) trigger(addMethod)
-	$methodAccessibility $name+firstUpperCase add$methodName+firstUpperCase([$itemClass item]) {
+	$methodAccessibility $name+firstUpperCase create$methodName+firstUpperCase([$itemClass item]) {
 		$name+firstUpperCase result = new $name+firstUpperCase(($box+firstUpperCase~Box)box());
 		result.id(java.util.UUID.randomUUID().toString());
 		[result.item($itemVariable);]
-		[$addPromise~(result, "rows");]
 		return result;
-	}
-
-	$methodAccessibility $name+firstUpperCase insert$methodName+firstUpperCase([$itemClass item, ]int index) {
-		$name+firstUpperCase result = new $name+firstUpperCase(($box+firstUpperCase~Box)box());
-		result.id(java.util.UUID.randomUUID().toString());
-		[result.item($itemVariable);]
-		[$insertPromise~(result, index, "rows");]
-		return result;
-	}
-end
-
-def type(item) trigger(removeMethod)
-	@Override
-	public void clear() {
-		clear("rows");
 	}
 end

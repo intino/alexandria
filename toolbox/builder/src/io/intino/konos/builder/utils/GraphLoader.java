@@ -42,6 +42,7 @@ public class GraphLoader {
 	private static final Logger LOG = Logger.getInstance("CreateKonosBoxAction: ");
 	private static final Key<Object> PROBLEMS_VIEW_SESSION_ID_KEY = Key.create("ProblemsViewSessionKey");
 	private static final Key<Object> PROBLEMS_VIEW_FILES_KEY = Key.create("ProblemsViewFiles");
+	private Stash konosStash;
 
 	public KonosGraph loadGraph(Module module) {
 		ClassFinder.clear();
@@ -49,11 +50,15 @@ public class GraphLoader {
 		if (!files.isEmpty()) {
 			final ByteArrayOutputStream out = new ByteArrayOutputStream();
 			final StashBuilder stashBuilder = new StashBuilder(files, new Konos(), module.getName(), new PrintStream(out));
-			final Stash stash = stashBuilder.build();
+			konosStash = stashBuilder.build();
 			processMessages(module.getProject(), out);
-			if (stash == null) return null;
-			else return loadGraph(stash);
+			if (konosStash == null) return null;
+			else return loadGraph(konosStash);
 		} else return loadGraph();
+	}
+
+	public Stash konosStash() {
+		return konosStash;
 	}
 
 	private KonosGraph loadGraph(Stash... stashes) {

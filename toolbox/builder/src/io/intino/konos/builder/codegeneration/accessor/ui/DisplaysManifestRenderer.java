@@ -39,7 +39,7 @@ public class DisplaysManifestRenderer extends UIRenderer {
 		baseDisplays.forEach(d -> renderDisplay(d, result));
 		displays.stream().filter(d -> !renderedDisplays.contains(d.core$().id())).forEach(d -> renderDisplay(d, result));
 
-		Commons.write(new File(accessorGen() + File.separator + "Displays.js").toPath(), setup(new DisplaysManifestTemplate()).render(result.toFrame()));
+		Commons.write(new File(gen() + File.separator + "Displays.js").toPath(), setup(new DisplaysManifestTemplate()).render(result.toFrame()));
 	}
 
 	private Set<PassiveView> baseDisplays(Set<Display> displays) {

@@ -12,6 +12,7 @@ import io.intino.konos.model.graph.ui.UIService;
 
 import java.io.File;
 
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.createIfNotExists;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 
 public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.resource.ResourceRenderer {
@@ -28,14 +29,14 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 
 	private void writeHtml(FrameBuilder builder) {
 		builder.add("html");
-		File file = new File(accessorRoot() + File.separator + resource.name$() + ".html");
+		File file = new File(root() + File.separator + resource.name$() + ".html");
 		if (file.exists()) return;
 		Commons.write(file.toPath(), setup(new PageTemplate()).render(builder.toFrame()));
 	}
 
 	private void writeJavascript(FrameBuilder builder) {
 		builder.add("js");
-		File destiny = createIfNotExists(new File(accessorGen() + File.separator + "pages" + File.separator));
+		File destiny = createIfNotExists(new File(gen() + File.separator + "pages" + File.separator));
 		File file = new File(destiny + File.separator + firstUpperCase(resource.name$()) + ".js");
 		Commons.write(file.toPath(), setup(new PageTemplate()).render(builder.toFrame()));
 	}

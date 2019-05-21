@@ -7,6 +7,7 @@ import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.collection.GroupingRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.collection.HeadingRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.collection.ItemRenderer;
+import io.intino.konos.builder.codegeneration.ui.displays.components.collection.SortingRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.data.*;
 import io.intino.konos.builder.codegeneration.ui.displays.components.operation.DownloadRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.operation.DownloadSelectionRenderer;
@@ -31,11 +32,13 @@ public class ComponentRendererFactory {
 		if (component.i$(DataComponents.Number.class)) return (T) new NumberRenderer(settings, component.a$(DataComponents.Number.class), provider, target);
 
 		if (component.i$(OtherComponents.Spinner.class)) return (T) new SpinnerRenderer(settings, component.a$(OtherComponents.Spinner.class), provider, target);
+		if (component.i$(OtherComponents.Selector.class)) return (T) new SelectorRenderer(settings, component.a$(OtherComponents.Selector.class), provider, target);
 		if (component.i$(Template.class)) return (T) new TemplateRenderer(settings, component.a$(Template.class), provider, target);
 		if (component.i$(Block.class)) return (T) new BlockRenderer(settings, component.a$(Block.class), provider, target);
 		if (component.i$(Header.class)) return (T) new HeaderRenderer(settings, component.a$(Header.class), provider, target);
 		if (component.i$(Chart.class)) return (T) new ChartRenderer(settings, component.a$(Chart.class), provider, target);
 		if (component.i$(CatalogComponents.Grouping.class)) return (T) new GroupingRenderer(settings, component.a$(CatalogComponents.Grouping.class), provider, target);
+		if (component.i$(CatalogComponents.Sorting.class)) return (T) new SortingRenderer(settings, component.a$(CatalogComponents.Sorting.class), provider, target);
 		if (component.i$(CatalogComponents.Collection.class)) return (T) new CollectionRenderer(settings, component.a$(CatalogComponents.Collection.class), provider, target);
 		if (component.i$(CatalogComponents.Collection.Mold.Heading.class)) return (T) new HeadingRenderer(settings, component.a$(CatalogComponents.Collection.Mold.Heading.class), provider, target);
 		if (component.i$(CatalogComponents.Collection.Mold.Item.class)) return (T) new ItemRenderer(settings, component.a$(CatalogComponents.Collection.Mold.Item.class), provider, target);

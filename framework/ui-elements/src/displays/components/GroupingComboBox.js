@@ -30,7 +30,8 @@ class GroupingComboBox extends AbstractGroupingComboBox {
 		const { classes } = this.props;
 		return (
 			<div className={classes.container} style={this.style()}>
-				<Select isMulti isSearchable closeMenuOnSelect={false} placeholder={this.selectMessage()} options={this.state.groups.map(group => { return { value: group.label, label: group.label, group: group } })}
+				<Select isMulti isSearchable closeMenuOnSelect={false} placeholder={this.selectMessage()}
+						options={this.state.groups.map(group => { return { value: group.label, label: group.label, group: group } })}
 						className="basic-multi-select" classNamePrefix="select"
 						components={{ Option: this.renderGroup.bind(this)}}
 						onChange={this.handleChange}

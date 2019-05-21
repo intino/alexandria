@@ -64,6 +64,8 @@
     <orderEntry type="library" name="Legio: net.rforge:Rserve:0.6-8.1" level="project" />
     <orderEntry type="library" name="Legio: net.rforge:REngine:0.6-8.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Legio: junit:junit:4.13-beta-3" level="project" />
+    <orderEntry type="module" module-name="jms" />
+    <orderEntry type="module" module-name="json" />
     <orderEntry type="library" name="Legio: io.intino.alexandria:ui-framework:1.0.6" level="project" />
     <orderEntry type="library" name="Legio: io.intino.alexandria:core-framework:1.0.1" level="project" />
     <orderEntry type="library" name="Legio: io.intino.alexandria:json:1.0.0" level="project" />

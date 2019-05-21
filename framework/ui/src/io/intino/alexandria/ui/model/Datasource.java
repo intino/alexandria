@@ -19,7 +19,7 @@ public abstract class Datasource<O> {
 		return itemCount(null, emptyList());
 	}
 	public abstract long itemCount(String condition, List<Filter> filters);
-	public abstract List<O> items(int start, int count, String condition, List<Filter> filters);
+	public abstract List<O> items(int start, int count, String condition, List<Filter> filters, List<String> sortings);
 	public abstract List<Group> groups(String key);
 
 	public Datasource<O> addAll(List<O> items) {

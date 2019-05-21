@@ -39,10 +39,11 @@ Component baseGrouping as Decorated
 
 Component grouping as Decorated ExtensionOf(baseGrouping)
 Component groupingComboBox as Decorated ExtensionOf(baseGrouping)
-
-Component sorting as Decorated
-Component searchBox as Decorated
-
 Schema Group
 	Attribute label as Text
 	Attribute count as Integer
+
+Component sorting as Decorated
+	Request toggle
+
+Component searchBox as Decorated

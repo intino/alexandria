@@ -46,7 +46,7 @@ public class PageRenderer extends ActionRenderer {
 		settings.classes().put(resource.getClass().getSimpleName() + "#" + firstUpperCase(resource.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(resource.name$())) + suffix());
 		if (!alreadyRendered(src(), resource.name$()))
 			writeFrame(destinyPackage(src()), resource.name$() + suffix(), template().render(builder.toFrame()));
-		writeFrame(destinyPackage(settings.gen()), "Abstract" + firstUpperCase(resource.name$()) + suffix(), template().render(builder.add("gen").toFrame()));
+		writeFrame(destinyPackage(gen()), "Abstract" + firstUpperCase(resource.name$()) + suffix(), template().render(builder.add("gen").toFrame()));
 	}
 
 	private FrameBuilder componentFrame() {

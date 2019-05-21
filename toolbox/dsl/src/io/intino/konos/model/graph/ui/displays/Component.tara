@@ -163,6 +163,7 @@ Concept OtherComponents
 		has Component
 
 	Concept Selector extends Component
+		var boolean multipleSelection = false
 		has Component
 
 	Concept Frame extends Component

@@ -90,8 +90,28 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         notifier.refreshItemCount(behavior.itemCount());
     }
 
+    public void filter(String condition) {
+        behavior.condition(condition);
+    }
+
+    public void sortings(List<String> sortings) {
+        behavior.sortings(sortings);
+    }
+
+    public void addSorting(String sorting) {
+        behavior.addSorting(sorting);
+    }
+
+    public void removeSorting(String sorting) {
+        behavior.removeSorting(sorting);
+    }
+
     public void changeSelection(String[] selection) {
         selectionListeners.forEach(l -> l.accept(new SelectionEvent(this, Arrays.asList(selection))));
+    }
+
+    public void clear() {
+        clear("rows");
     }
 
     protected void addSelectionListener(SelectionListener listener) {

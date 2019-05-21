@@ -7,10 +7,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
-import static java.util.stream.Collectors.toMap;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class CacheWriter extends HashMap<String, Integer> {
@@ -29,9 +27,8 @@ public class CacheWriter extends HashMap<String, Integer> {
 
 	private void saveCacheFile(ElementCache cache) {
 		try {
-			Map<String, String> map = cache.stream().collect(toMap(String::valueOf, e -> ""));
 			Properties properties = new Properties();
-			properties.putAll(map);
+			properties.putAll(cache);
 			properties.store(new FileOutputStream(folder + "/.cache"), "");
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
