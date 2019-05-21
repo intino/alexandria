@@ -3,7 +3,6 @@ package io.intino.alexandria.movv;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.time.Instant;
-import java.util.Arrays;
 
 interface ChainReader {
     void seek(int cursor) throws IOException;
@@ -69,7 +68,9 @@ interface ChainReader {
 
             @Override
             public byte[] readData() throws IOException {
-                return readBytes();
+                byte[] bytes = new byte[dataSize];
+                raf.read(bytes);
+                return bytes;
             }
 
             @Override
@@ -79,20 +80,6 @@ interface ChainReader {
 
             private long positionOf(int cursor) {
                 return cursor * recordSize();
-            }
-
-            private byte[] readBytes() throws IOException {
-                byte[] bytes = new byte[dataSize];
-                raf.read(bytes);
-                return Arrays.copyOf(bytes,lengthOf(bytes));
-            }
-
-            private int lengthOf(byte[] bytes) {
-                int length = 0;
-                while ((length < bytes.length) && (bytes[length] != 0)) {
-                    length++;
-                }
-                return length;
             }
 
             @Override
