@@ -48,6 +48,10 @@ public class MovvBuilder {
 		return new Mov(chainIndex, chainReader).of(id);
 	}
 
+	public boolean containsStage(long id){
+		return stages.containsKey(id);
+	}
+
 	public Stage stageOf(long id) {
 		return stages.containsKey(id) ? stages.get(id) : createStage(id);
 	}
