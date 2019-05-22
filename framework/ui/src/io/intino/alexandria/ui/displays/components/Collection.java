@@ -92,6 +92,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
 
     public void filter(String condition) {
         behavior.condition(condition);
+        notifier.refreshItemCount(behavior.itemCount());
     }
 
     public void sortings(List<String> sortings) {
@@ -104,6 +105,10 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
 
     public void removeSorting(String sorting) {
         behavior.removeSorting(sorting);
+    }
+
+    public long itemCount() {
+        return behavior.itemCount();
     }
 
     public void changeSelection(String[] selection) {

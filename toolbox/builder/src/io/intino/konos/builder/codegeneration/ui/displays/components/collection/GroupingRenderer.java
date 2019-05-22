@@ -4,10 +4,9 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
-import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.model.graph.CatalogComponents.Grouping;
 
-public class GroupingRenderer extends ComponentRenderer<Grouping> {
+public class GroupingRenderer extends BindingCollectionRenderer<Grouping> {
 
 	public GroupingRenderer(Settings settings, Grouping component, TemplateProvider provider, Target target) {
 		super(settings, component, provider, target);
@@ -16,15 +15,8 @@ public class GroupingRenderer extends ComponentRenderer<Grouping> {
 	@Override
 	public FrameBuilder frameBuilder() {
 		FrameBuilder result = super.frameBuilder();
-		addBinding(result);
+		addBinding(result, element.collection());
 		return result;
-	}
-
-	private void addBinding(FrameBuilder builder) {
-		if (element.collection() == null) return;
-		FrameBuilder result = new FrameBuilder("binding", type()).add("name", nameOf(element));
-		result.add("collection", nameOf(element.collection()));
-		builder.add("binding", result);
 	}
 
 	@Override

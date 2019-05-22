@@ -130,6 +130,10 @@ def type(properties & downloadselection) trigger(specific)
 	[ options={$["$option...[","]"$]}]
 end
 
+def type(properties & searchbox) trigger(specific)
+	[ placeholder="$placeholder"]
+end
+
 def type(properties) trigger(specific)
 end
 

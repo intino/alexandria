@@ -13,7 +13,10 @@ import com.intellij.util.indexing.ID;
 import io.intino.konos.builder.file.KonosFileType;
 import io.intino.tara.plugin.lang.psi.TaraModel;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class KonosUtils {
 
@@ -28,7 +31,7 @@ public class KonosUtils {
 	private static List<PsiFile> konosFiles(Module module) {
 		List<PsiFile> konosFiles = new ArrayList<>();
 		Collection<VirtualFile> files = FileBasedIndex.getInstance().getContainingFiles(ID.create("filetypes"), KonosFileType.instance(), GlobalSearchScope.moduleScope(module));
-		files.stream().filter(Objects::nonNull).forEach(file -> {
+		files.stream().filter(o -> o != null && !o.getCanonicalFile().getName().contains("Misc")).forEach(file -> {
 			TaraModel konosFile = (TaraModel) PsiManager.getInstance(module.getProject()).findFile(file);
 			if (konosFile != null) konosFiles.add(konosFile);
 		});

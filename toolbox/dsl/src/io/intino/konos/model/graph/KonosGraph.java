@@ -29,6 +29,18 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		super(graph, wrapper);
 	}
 
+	public KonosGraph init() {
+		resetCache();
+		createPrivateComponents();
+		return this;
+	}
+
+	private void resetCache() {
+		tables = null;
+		items = null;
+		rows = null;
+	}
+
 	public List<Display> rootDisplays() {
 		KonosGraph graph = this;
 		List<Display> rootDisplays = graph.displayList().stream().filter(d -> d.core$().ownerAs(PassiveView.class) == null).collect(toList());
@@ -50,10 +62,6 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 	public static List<CatalogComponents.Table> tablesDisplays(KonosGraph graph) {
 		if (tables == null) tables = graph.core$().find(CatalogComponents.Table.class);
 		return tables;
-	}
-
-	public void clearCache() {
-		rows = null;
 	}
 
 	public static Template templateFor(UIService.Resource resource) {
@@ -102,4 +110,21 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		if (hierarchyDisplays != null) return;
 		hierarchyDisplays = graph.core$().find(ExtensionOfPassiveView.class).stream().map(d -> d.core$().as(ExtensionOfPassiveView.class).parentView().name$()).collect(toSet());
 	}
+
+	private void createPrivateComponents() {
+		tablesDisplays(this).forEach(this::createUiTableRow);
+	}
+
+	private void createUiTableRow(CatalogComponents.Table element) {
+		List<CatalogComponents.Collection.Mold.Item> itemList = element.moldList().stream().map(CatalogComponents.Collection.Mold::item).collect(toList());
+		String name = firstUpperCase(element.name$()) + "Row";
+		PrivateComponents privateComponents = privateComponentsList().size() <= 0 ? create().privateComponents() : privateComponents(0);
+		PrivateComponents.Row row = privateComponents.rowList().stream().filter(c -> c.name$().equals(name)).findFirst().orElse(null);
+		if (row == null) privateComponents.create(name).row(itemList);
+	}
+
+	private static String firstUpperCase(String value) {
+		return value.substring(0, 1).toUpperCase() + value.substring(1);
+	}
+
 }

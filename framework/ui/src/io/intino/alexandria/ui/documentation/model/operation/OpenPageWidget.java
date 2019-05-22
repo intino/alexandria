@@ -1,7 +1,8 @@
-package io.intino.alexandria.ui.documentation.model;
+package io.intino.alexandria.ui.documentation.model.operation;
 
 import io.intino.alexandria.schemas.Property;
 import io.intino.alexandria.ui.documentation.Model;
+import io.intino.alexandria.ui.documentation.model.OperationWidget;
 
 public class OpenPageWidget extends OperationWidget {
 

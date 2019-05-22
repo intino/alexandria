@@ -101,8 +101,7 @@ Concept CatalogComponents
 
 	Concept:Named SearchBox extends Component
 		var Collection collection
-
-		var string placeholder
+		var string placeholder = empty
 
 Concept OperationComponents
 	Concept Toolbar extends Component

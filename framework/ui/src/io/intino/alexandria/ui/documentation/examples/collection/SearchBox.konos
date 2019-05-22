@@ -1,0 +1,29 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) searchBoxExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=49%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filledNoAir)
+				SearchBox(format=air,collection=list1) searchBox1 as Labeled("female population")
+					placeholder = "filter elements..."
+				List(itemClass="io.intino.alexandria.ui.documentation.Person") list1
+					Mold > Item(height=60px,width=30%) searchBox1Mold
+							Text firstName1
+							Block(layout=Horizontal, spacing=DP16)
+								Text(format=description) gender1
+								Text(format=description) age1 as Labeled("age")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						SearchBox(collection\=list,placeholder\="filter elements...") searchBox
+						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) sortingMold<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text firstName<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal, spacing\=DP16)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) gender<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) age as Labeled("age")
+						=========

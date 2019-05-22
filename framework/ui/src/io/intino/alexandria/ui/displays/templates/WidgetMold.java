@@ -4,7 +4,14 @@ import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.schemas.Widget;
 import io.intino.alexandria.ui.I18n;
 import io.intino.alexandria.ui.displays.EventsDisplay;
-import io.intino.alexandria.ui.documentation.model.*;
+import io.intino.alexandria.ui.documentation.model.OperationWidget;
+import io.intino.alexandria.ui.documentation.model.collection.*;
+import io.intino.alexandria.ui.documentation.model.data.*;
+import io.intino.alexandria.ui.documentation.model.operation.DownloadSelectionWidget;
+import io.intino.alexandria.ui.documentation.model.operation.DownloadWidget;
+import io.intino.alexandria.ui.documentation.model.operation.ExportWidget;
+import io.intino.alexandria.ui.documentation.model.other.BlockWidget;
+import io.intino.alexandria.ui.documentation.model.other.ChartWidget;
 
 public class WidgetMold extends AbstractWidgetMold<UiFrameworkBox> {
 
@@ -51,6 +58,7 @@ public class WidgetMold extends AbstractWidgetMold<UiFrameworkBox> {
         operationExamples.visible(widget instanceof OperationWidget && !(widget instanceof ExportWidget) && !(widget instanceof DownloadWidget) && !(widget instanceof DownloadSelectionWidget));
         groupingExamples.visible(widget instanceof GroupingWidget);
         sortingExamples.visible(widget instanceof SortingWidget);
+        searchBoxExamples.visible(widget instanceof SearchBoxWidget);
     }
 
     private void updateInfo() {

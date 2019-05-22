@@ -226,6 +226,10 @@ def type(binding & sorting)
 	$name.bindTo($collection);
 end
 
+def type(binding & searchbox)
+	$name.bindTo($collection);
+end
+
 def type(binding)
 	$name.bindTo($selector, "$option");
 end
