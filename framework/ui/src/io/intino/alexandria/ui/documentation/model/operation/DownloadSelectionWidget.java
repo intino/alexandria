@@ -1,4 +1,4 @@
-package io.intino.alexandria.ui.documentation.model;
+package io.intino.alexandria.ui.documentation.model.operation;
 
 import io.intino.alexandria.schemas.Property;
 

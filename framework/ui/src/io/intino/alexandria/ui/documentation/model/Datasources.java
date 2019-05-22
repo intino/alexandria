@@ -8,7 +8,10 @@ import io.intino.alexandria.ui.model.datasource.Group;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import static io.intino.alexandria.ui.documentation.Person.Gender.Female;
+import static io.intino.alexandria.ui.documentation.Person.Gender.Male;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
@@ -28,7 +31,7 @@ public class Datasources {
 			@Override
 			public List<Item> items(int start, int count, String condition, List<Filter> filters, List<String> sortings) {
 				List<Item> items = population();
-				if (sortings.size() > 0) items.sort(sortingComparator(sortings));
+				if (sortings.size() > 0) Collections.sort(items, sortingComparator(sortings));
 				return page(items, start, count);
 			}
 
@@ -58,12 +61,12 @@ public class Datasources {
 
 			@Override
 			public long itemCount(String condition, List<Filter> filters) {
-				return filterPopulation(filters).size();
+				return filterPopulation(condition, filters).size();
 			}
 
 			@Override
 			public List<Person> items(int start, int count, String condition, List<Filter> filters, List<String> sortings) {
-				List<Person> persons = filterPopulation(filters);
+				List<Person> persons = filterPopulation(condition, filters);
 				if (sortings.size() > 0) persons.sort(sortingComparator(sortings));
 				return page(persons, start, count);
 			}
@@ -76,8 +79,37 @@ public class Datasources {
 			}
 
 			public Comparator<Person> sortingComparator(List<String> sortings) {
-				if (sortings.contains("female first")) return Comparator.comparing(o -> o.gender().name());
-				return Comparator.comparing(Person::lastName);
+				if (sortings.size() <= 0) return Comparator.comparing(Person::lastName);
+				Comparator<Person> comparator = null;
+
+				for (String sorting : sortings) {
+					if (comparator == null) comparator = comparator(sorting);
+					else comparator.thenComparing(comparator(sorting));
+				}
+
+				return comparator;
+			}
+
+			private Comparator<Person> comparator(String sorting) {
+				if (sorting.contains("oldest")) return (o1, o2) -> Integer.compare(o2.age(), o1.age());
+				else if (sorting.contains("youthest")) return Comparator.comparingInt(Person::age);
+				else if (sorting.contains("female")) return genderComparator(Female);
+				else if (sorting.contains("male")) return genderComparator(Male);
+				else return Comparator.comparing(Person::lastName);
+			}
+
+			private Comparator<Person> genderComparator(Person.Gender flag) {
+				return (o1, o2) -> {
+					if (o1.gender() == Female && o2.gender() == Female && flag == Female) return 1;
+					if (o1.gender() == Female && o2.gender() == Female && flag == Male) return -1;
+					if (o1.gender() == Male && o2.gender() == Male && flag == Male) return 1;
+					if (o1.gender() == Male && o2.gender() == Male && flag == Female) return -1;
+					if (o1.gender() == Male && o2.gender() == Female && flag == Female) return 1;
+					if (o1.gender() == Female && o2.gender() == Male && flag == Female) return -1;
+					if (o1.gender() == Male && o2.gender() == Female && flag == Male) return -1;
+					if (o1.gender() == Female && o2.gender() == Male && flag == Male) return 1;
+					return 1;
+				};
 			}
 
 			private String ageGroupLabel(int age) {
@@ -87,11 +119,21 @@ public class Datasources {
 				return "Senior";
 			}
 
-			private List<Person> filterPopulation(List<Filter> filters) {
+			private List<Person> filterPopulation(String condition, List<Filter> filters) {
 				List<Person> result = population();
+				result = filterCondition(result, condition);
 				result = filter(result, getFilter("gender", filters), item -> ((Person)item).gender().name());
 				result = filter(result, getFilter("age group", filters), item -> ageGroupLabel(((Person)item).age()));
 				return result;
+			}
+
+			private List<Person> filterCondition(List<Person> population, String condition) {
+				if (condition == null || condition.isEmpty()) return population;
+				return population.stream().filter(person -> person.firstName().toLowerCase().contains(condition.toLowerCase()) ||
+															person.lastName().toLowerCase().contains(condition.toLowerCase()) ||
+															person.gender().name().toLowerCase().equalsIgnoreCase(condition) ||
+															String.valueOf(person.age()).contains(condition.toLowerCase())
+				).collect(Collectors.toList());
 			}
 
 			private List<Person> filter(List<Person> population, Filter filter, Function<Object, String> valueFunction) {
@@ -107,7 +149,7 @@ public class Datasources {
 				if (personPopulation != null) return new ArrayList<>(personPopulation);
 				personPopulation = new ArrayList<>();
 				for (int i = 0; i < ItemCount; i++)
-					personPopulation.add(new Person().firstName("first name " + (i + 1)).lastName("last name" + (i + 1)).gender(Math.random() < 0.5 ? Person.Gender.Male : Person.Gender.Female).age(randomAge()));
+					personPopulation.add(new Person().firstName("first name " + (i + 1)).lastName("last name" + (i + 1)).gender(Math.random() < 0.5 ? Male : Female).age(randomAge()));
 				return new ArrayList<>(personPopulation);
 			}
 
@@ -138,7 +180,7 @@ public class Datasources {
 	private static <T> List<T> page(List<T> items, int start, int count) {
 		List<T> result = new ArrayList<>();
 		int end = start+count;
-		if (items.size() < (start+count)) end = result.size();
+		if (items.size() < (start+count)) end = items.size();
 		for (int i = start; i < end; i++) result.add(items.get(i));
 		return result;
 	}

@@ -1,7 +1,8 @@
-package io.intino.alexandria.ui.documentation.model;
+package io.intino.alexandria.ui.documentation.model.collection;
 
 import io.intino.alexandria.schemas.Property;
 import io.intino.alexandria.ui.documentation.Model;
+import io.intino.alexandria.ui.documentation.model.BaseWidget;
 
 import static java.util.Collections.singletonList;
 

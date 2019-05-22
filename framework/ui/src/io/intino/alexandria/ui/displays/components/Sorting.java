@@ -26,13 +26,21 @@ public class Sorting<DN extends SortingNotifier, B extends Box> extends Abstract
 
     public void toggle() {
         selected = !selected;
-        if (collection == null) return;
-        if (selected) collection.addSorting(key());
-        else collection.removeSorting(key());
         notifySelected();
     }
 
     private void notifySelected() {
+        notifyCollection();
+        notifyListener();
+    }
+
+    private void notifyCollection() {
+        if (collection == null) return;
+        if (selected) collection.addSorting(key());
+        else collection.removeSorting(key());
+    }
+
+    private void notifyListener() {
         if (selectListener == null) return;
         selectListener.accept(new SelectEvent(this, key(), -1));
     }

@@ -4,10 +4,7 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
-import io.intino.konos.builder.codegeneration.ui.displays.components.collection.GroupingRenderer;
-import io.intino.konos.builder.codegeneration.ui.displays.components.collection.HeadingRenderer;
-import io.intino.konos.builder.codegeneration.ui.displays.components.collection.ItemRenderer;
-import io.intino.konos.builder.codegeneration.ui.displays.components.collection.SortingRenderer;
+import io.intino.konos.builder.codegeneration.ui.displays.components.collection.*;
 import io.intino.konos.builder.codegeneration.ui.displays.components.data.*;
 import io.intino.konos.builder.codegeneration.ui.displays.components.operation.DownloadRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.operation.DownloadSelectionRenderer;
@@ -42,6 +39,7 @@ public class ComponentRendererFactory {
 		if (component.i$(CatalogComponents.Collection.class)) return (T) new CollectionRenderer(settings, component.a$(CatalogComponents.Collection.class), provider, target);
 		if (component.i$(CatalogComponents.Collection.Mold.Heading.class)) return (T) new HeadingRenderer(settings, component.a$(CatalogComponents.Collection.Mold.Heading.class), provider, target);
 		if (component.i$(CatalogComponents.Collection.Mold.Item.class)) return (T) new ItemRenderer(settings, component.a$(CatalogComponents.Collection.Mold.Item.class), provider, target);
+		if (component.i$(CatalogComponents.SearchBox.class)) return (T) new SearchBoxRenderer(settings, component.a$(CatalogComponents.SearchBox.class), provider, target);
 
 		if (component.i$(Toolbar.class)) return (T) new ToolbarRenderer(settings, component.a$(Toolbar.class), provider, target);
 		if (component.i$(OpenPage.class)) return (T) new OpenPageRenderer(settings, component.a$(OpenPage.class), provider, target);

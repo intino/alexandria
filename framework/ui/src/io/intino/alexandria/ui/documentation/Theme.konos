@@ -14,10 +14,14 @@ Format("") h5
 Format("lineHeight:'17pt'") h6
 Format("") body1
 Format("") body2
+Format("") subtitle1
+Format("") subtitle2
 Format("color:'white'") white
 Format("background:'white',borderRadius:'3px',height:'100%'") whiteBackground
 Format("padding:'10px 20px'") air
 Format("marginBottom:'10px'") airBottom
+Format("marginRight:'10px'") airLeft
+Format("marginRight:'10px'") airRight
 Format("padding:'10px'") containerAirMedium
 Format("padding:'20px'") containerAirLarge
 Format("background:'#efefef',padding:'8px',minHeight:'200px'") filled

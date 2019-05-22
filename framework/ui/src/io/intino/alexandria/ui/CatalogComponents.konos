@@ -47,3 +47,5 @@ Component sorting as Decorated
 	Request toggle
 
 Component searchBox as Decorated
+	Notification refreshCount as LongInteger
+	Request search as Text

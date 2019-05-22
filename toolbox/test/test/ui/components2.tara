@@ -2,17 +2,22 @@ dsl Konos
 
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
 
-Component operation as Decorated
+Template(layout=Vertical, spacing=DP8) tableExamplesMold as Decorated
+	SearchBox(collection = list) searchBox1
+	SearchBox(collection = list, placeholder="hola mundo") searchBox2
+	List list > Mold > Item(height = 100px) item
 
-Template(layout=Vertical, spacing=DP8) sortingExamplesMold as Decorated
+Template(layout=Vertical, spacing=DP8) groupingExamplesMold as Decorated
 
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=49%, height=100%)
 			Text(format=h6, value="No facets")
-			Block(spacing=DP8, format=filledNoAir)
-				Sorting(format=air,collection=list1) gender1 as Labeled("female first")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal)
+				Block(format=containerAirMedium, spacing=DP24) as Absolute(width=200px)
+					Grouping(format=whiteBackground,collection=list1) gender1 as Labeled("gender")
+					Grouping(format=whiteBackground,collection=list1) ageGroup1 as Labeled("age group")
 				List(itemClass="io.intino.alexandria.ui.documentation.Person") list1
-					Mold > Item(height=60px,width=30%) sorting1Mold
+					Mold > Item(height=60px,width=30%) grouping1Mold
 							Text firstName1
 							Block(layout=Horizontal, spacing=DP16)
 								Text(format=description) gender1
@@ -20,9 +25,10 @@ Template(layout=Vertical, spacing=DP8) sortingExamplesMold as Decorated
 			Block > Text as Code(language=Html)
 					value
 						=========
-						Sorting(collection\=list1) gender as Labeled("gender")<br/>
+						Grouping(collection\=list1) gender as Labeled("gender")<br/>
+						Grouping(collection\=list1) ageGroup as Labeled("age group")<br/>
 						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) sortingMold
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) groupingMold
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text firstName
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal, spacing\=DP16)
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) gender
@@ -30,13 +36,13 @@ Template(layout=Vertical, spacing=DP8) sortingExamplesMold as Decorated
 						=========
 
 		Block as Relative(width=49%, height=100%)
-			Text(format=h6, value="Sorting inside Selector")
+			Text(format=h6, value="ComboBox facet")
 			Block(spacing=DP8, format=filledNoAir)
-				Selector as ComboBox
-					Sorting(collection = list2) male as Option
-					Sorting(collection = list2) female as Option
+				Block(format=containerAirMedium, spacing=DP24, layout=Horizontal)
+					Grouping(format=whiteBackground,collection=list2) gender2 as Labeled("gender") ComboBox
+					Grouping(format=whiteBackground,collection=list2) ageGroup2 as Labeled("age group") ComboBox
 				List(itemClass="io.intino.alexandria.ui.documentation.Person") list2
-					Mold > Item(height=60px,width=30%) sorting2Mold
+					Mold > Item(height=60px,width=30%) grouping2Mold
 							Text firstName2
 							Block(layout=Horizontal, spacing=DP16)
 								Text(format=description) gender2
@@ -44,15 +50,37 @@ Template(layout=Vertical, spacing=DP8) sortingExamplesMold as Decorated
 			Block > Text as Code(language=Html)
 					value
 						=========
-						Selector as ComboBox
-						&nbsp;&nbsp;&nbsp;&nbsp;Sorting(collection\=list) male as Option
-						&nbsp;&nbsp;&nbsp;&nbsp;Sorting(collection\=list) female as Option
-						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) sortingMold
+						Grouping(collection\=list2) gender as Labeled("gender") ComboBox<br/>
+						Grouping(collection\=list2) ageGroup as Labeled("age group") ComboBox<br/>
+						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list2<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) groupingMold
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text firstName
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal, spacing\=DP16)
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) gender
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) age as Labeled("age")
+						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=49%, height=100%)
+			Text(format=h6, value="No facets with many options")
+			Block(spacing=DP8, format=filledNoAir)
+				Block(format=containerAirMedium, spacing=DP24) as Relative(width=100%)
+					Grouping(format=whiteBackground,collection=empty) country1 as Labeled("country")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Grouping(collection\=empty) country as Labeled("country")<br/>
+						=========
+
+		Block as Relative(width=49%, height=100%)
+			Text(format=h6, value="ComboBox facet with many options")
+			Block(spacing=DP8, format=filledNoAir)
+				Block(format=containerAirMedium, spacing=DP24) as Relative(width=100%)
+					Grouping(format=whiteBackground,collection=empty) country2 as Labeled("country") ComboBox
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Grouping(collection\=empty) country as Labeled("country") ComboBox<br/>
 						=========
 
 Format("color:'#B71C1C',textShadow:'2px 2px 2px #fff'") h1
@@ -63,6 +91,7 @@ Format("") h5
 Format("lineHeight:'17pt'") h6
 Format("") body1
 Format("") body2
+Format("") body3
 Format("color:'white'") white
 Format("background:'white',borderRadius:'3px',height:'100%'") whiteBackground
 Format("padding:'10px 20px'") air

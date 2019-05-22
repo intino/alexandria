@@ -1,7 +1,11 @@
 package io.intino.alexandria.ui.documentation;
 
 import io.intino.alexandria.schemas.*;
-import io.intino.alexandria.ui.documentation.model.*;
+import io.intino.alexandria.ui.documentation.model.collection.*;
+import io.intino.alexandria.ui.documentation.model.data.*;
+import io.intino.alexandria.ui.documentation.model.operation.*;
+import io.intino.alexandria.ui.documentation.model.other.BlockWidget;
+import io.intino.alexandria.ui.documentation.model.other.ChartWidget;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,7 +17,7 @@ public class Model {
 
 	public enum WidgetType {
 		Text, Number, Image, File, Date, Chart, Block, List, Table, Task, OpenPage, Export, Download, DownloadSelection,
-		Grouping, Sorting;
+		Grouping, Sorting, SearchBox;
 
 		public static WidgetType from(String type) {
 			WidgetType[] values = values();
@@ -45,6 +49,7 @@ public class Model {
 		map.put(WidgetType.DownloadSelection, new DownloadSelectionWidget());
 		map.put(WidgetType.Grouping, new GroupingWidget());
 		map.put(WidgetType.Sorting, new SortingWidget());
+		map.put(WidgetType.SearchBox, new SearchBoxWidget());
 	}
 
 	public static Widget widget(WidgetType type) {

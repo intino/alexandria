@@ -48,6 +48,7 @@ public class ComponentTemplate extends Template {
 			rule().condition((allTypes("toolbar","binding"))).output(mark("name")).output(literal(".bindTo(")).output(mark("collection")).output(literal(");")),
 			rule().condition((allTypes("binding","grouping"))).output(mark("name")).output(literal(".bindTo(")).output(mark("collection")).output(literal(");")),
 			rule().condition((allTypes("sorting","binding"))).output(mark("name")).output(literal(".bindTo(")).output(mark("collection")).output(literal(");")),
+			rule().condition((allTypes("binding","searchbox"))).output(mark("name")).output(literal(".bindTo(")).output(mark("collection")).output(literal(");")),
 			rule().condition((type("binding"))).output(mark("name")).output(literal(".bindTo(")).output(mark("selector")).output(literal(", \"")).output(mark("option")).output(literal("\");")),
 			rule().condition((allTypes("implements","selectablecollection"))).output(literal("implements io.intino.alexandria.ui.displays.components.collection.Selectable")),
 			rule().condition((allTypes("implements","option"))).output(literal("implements io.intino.alexandria.ui.displays.components.selector.SelectorOption")),

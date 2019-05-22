@@ -66,7 +66,7 @@ public class GraphLoader {
 		Thread.currentThread().setContextClassLoader(GraphLoader.class.getClassLoader());
 		final Graph graph = new Graph().loadStashes("Konos").loadStashes(stashes);
 		if (graph == null) return null;
-		final KonosGraph konosGraph = graph.as(KonosGraph.class);
+		final KonosGraph konosGraph = graph.as(KonosGraph.class).init();
 		Thread.currentThread().setContextClassLoader(currentLoader);
 		return konosGraph;
 	}

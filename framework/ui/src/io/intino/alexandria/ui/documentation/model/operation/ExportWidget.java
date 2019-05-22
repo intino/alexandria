@@ -1,6 +1,7 @@
-package io.intino.alexandria.ui.documentation.model;
+package io.intino.alexandria.ui.documentation.model.operation;
 
 import io.intino.alexandria.schemas.Property;
+import io.intino.alexandria.ui.documentation.model.OperationWidget;
 
 import static io.intino.alexandria.ui.documentation.Model.property;
 

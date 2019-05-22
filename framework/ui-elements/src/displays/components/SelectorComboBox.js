@@ -7,7 +7,19 @@ import * as Ui from '../../../gen/Displays'
 import * as Elements from "app-elements/gen/Displays";
 import Select, { components } from "react-select";
 
-const styles = theme => ({});
+const styles = theme => ({
+	container : {
+		position: "relative"
+	},
+	readonly : {
+		position: "absolute",
+		top: "0",
+		left: "0",
+		width: "100%",
+		height: "100%",
+		zIndex: "1",
+	}
+});
 
 class SelectorComboBox extends AbstractSelectorComboBox {
 
@@ -26,8 +38,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 						placeholder={this.selectMessage()} options={items}
 						className="basic-multi-select" classNamePrefix="select"
 						components={{ Option: this.renderOption.bind(this)}}
-						onChange={this.handleChange.bind(this)}
-				/>
+						onChange={this.handleChange.bind(this)}/>
 			</div>
 		);
 	};
@@ -35,8 +46,9 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 	renderOption = (options) => {
 		const { data, isDisabled, ...props } = options;
 		const item = data.item;
+		const { classes } = this.props;
 		return !isDisabled ? (
-			<components.Option {...props}>{item}</components.Option>
+			<components.Option {...props} className={classes.container}>{item}<div className={classes.readonly}></div></components.Option>
 		) : null;
 	};
 

@@ -27,7 +27,7 @@ public class ThemeRenderer extends UIRenderer {
 	public void render() {
 		FrameBuilder builder = new FrameBuilder("theme");
 		Theme theme = service.graph().theme();
-		if (theme == null || isRendered(theme)) return;
+		if (theme == null) return;
 		builder.add("palette", palette(theme));
 		builder.add("typography", typography(theme));
 		service.graph().formatList().forEach(r -> builder.add("format", frameOf(r)));

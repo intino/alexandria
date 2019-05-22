@@ -123,8 +123,9 @@ const CollectionBehavior = (collection) => {
         const { classes } = self.collection.props;
         const width = self.width(index);
         var view = null;
+
         if (item != null) view = isScrolling ? self.scrollingView(width, classes) : self.itemView(item, classes, index);
-        else view = self.scrollingView(width, classes);
+        else view = isScrolling ? self.scrollingView(width, classes) : (<div style={style} key={index} className={classNames(classes.itemView, "layout horizontal center")}>&nbsp;</div>);
 
         var selectable = self.collection.props.selection != null;
         var multiple = self.collection.props.selection != null && self.collection.props.selection === "multiple";

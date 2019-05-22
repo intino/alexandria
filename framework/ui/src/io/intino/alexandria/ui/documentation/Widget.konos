@@ -1,5 +1,7 @@
 dsl Konos
 
+use SearchBox
+use Sorting
 use Grouping
 use DownloadSelection
 use Download
@@ -40,6 +42,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block operationExamples as Conditional > Stamp(template=operationExamplesMold)
 			Block groupingExamples as Conditional > Stamp(template=groupingExamplesMold)
 			Block sortingExamples as Conditional > Stamp(template=sortingExamplesMold)
+			Block searchBoxExamples as Conditional > Stamp(template=searchBoxExamplesMold)
 
 		Block facets
 			Text(value="Facets", format=h5 underline)

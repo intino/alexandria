@@ -124,7 +124,6 @@ public class FullRenderer {
 	}
 
 	private void ui() {
-		prepareGraphForUi();
 		ElementCache cache = settings.cache();
 		io.intino.konos.builder.codegeneration.cache.ElementCache serverCache = cache.clone();
 		uiServer(serverCache);
@@ -199,24 +198,6 @@ public class FullRenderer {
 	private byte[] getBytes() throws IOException {
 		return IOUtils.toByteArray(this.getClass().getResourceAsStream("/log4j_model.properties"));
 
-	}
-
-	protected void prepareGraphForUi() {
-		createUiTableRows();
-	}
-
-	protected void createUiTableRows() {
-		tablesDisplays(graph).forEach(this::createUiTableRow);
-		graph.clearCache();
-	}
-
-	protected void createUiTableRow(CatalogComponents.Table element) {
-		KonosGraph graph = element.graph();
-		List<CatalogComponents.Collection.Mold.Item> itemList = element.moldList().stream().map(CatalogComponents.Collection.Mold::item).collect(toList());
-		String name = firstUpperCase(element.name$()) + "Row";
-		if (graph.privateComponentsList().size() <= 0) graph.create().privateComponents();
-		PrivateComponents.Row row = graph.privateComponents(0).rowList().stream().filter(c -> c.name$().equals(name)).findFirst().orElse(null);
-		if (row == null) graph.privateComponents(0).create(name).row(itemList);
 	}
 
 }
