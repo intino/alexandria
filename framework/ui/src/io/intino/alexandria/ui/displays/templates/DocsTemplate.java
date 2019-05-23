@@ -29,6 +29,7 @@ public class DocsTemplate extends AbstractDocsTemplate<UiFrameworkBox> {
     private void addCatalogWidgets() {
         body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.List));
         body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.Table));
+        body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.Map));
         body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.Grouping));
         body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.Sorting));
         body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.SearchBox));

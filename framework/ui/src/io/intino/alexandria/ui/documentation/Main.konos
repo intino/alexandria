@@ -5,6 +5,8 @@ use WidgetType
 use Theme
 
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
+	googleApiKey = "AIzaSyA8FjeAX36umrYD8Jk2FbRFWqDEulInKIA"
+
 	Resource(path = "/") home as Page(homeTemplate)
 	Resource(path = "/docs") docs as Page(docsTemplate)
 	Resource(path = "/docs/data/:type") widgetType as Page(widgetTypeTemplate)

@@ -17,7 +17,7 @@ public class Model {
 
 	public enum WidgetType {
 		Text, Number, Image, File, Date, Chart, Block, List, Table, Task, OpenPage, Export, Download, DownloadSelection,
-		Grouping, Sorting, SearchBox;
+		Grouping, Sorting, SearchBox, Map;
 
 		public static WidgetType from(String type) {
 			WidgetType[] values = values();
@@ -41,6 +41,7 @@ public class Model {
 		map.put(WidgetType.Chart, new ChartWidget());
 		map.put(WidgetType.Block, new BlockWidget());
 		map.put(WidgetType.List, new ListWidget());
+		map.put(WidgetType.Map, new MapWidget());
 		map.put(WidgetType.Table, new TableWidget());
 		map.put(WidgetType.Task, new TaskWidget());
 		map.put(WidgetType.OpenPage, new OpenPageWidget());

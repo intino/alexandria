@@ -17,7 +17,7 @@ public abstract class Table<B extends Box, ItemComponent extends Row, Item> exte
     }
 
 	public Table source(Datasource source) {
-    	source(source, new CollectionBehavior<ItemComponent, Item>(this));
+    	source(source, new CollectionBehavior<Datasource<Item>, Item>(this));
 		return this;
 	}
 

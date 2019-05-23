@@ -19,7 +19,7 @@ export default class Multiple extends AbstractMultiple {
 		let multiple = this.props.multiple;
 		let layout = multiple.arrangement.toLowerCase();
 		let noItemsMessage = multiple.noItemsMessage;
-		let style = (layout === "horizontal") ? { marginRight: "5px", marginBottom: "2px" } : {};
+		let style = this._style(multiple);
 		if (noItemsMessage != null && noItemsMessage !== "" && multiple.instances.length <= 0) return (<Typography variant="body1">{noItemsMessage}</Typography>);
 		return (<div className={"layout wrap " + layout}>{this.renderInstances(multiple.instances, this._instanceProps(), style)}</div>);
 	};
@@ -28,6 +28,21 @@ export default class Multiple extends AbstractMultiple {
 		var result = {};
 		this.copyProps(this.props, result, "multiple,layout");
 		return result;
+	};
+
+	_style = (multiple) => {
+		let spacingStyle = this._spacingStyle(multiple);
+		if (spacingStyle === undefined) spacingStyle = (multiple.arrangement.toLowerCase() === "horizontal") ? { right: 5, bottom: 2 } : {};
+		return { marginRight: spacingStyle.right + "px", marginBottom: spacingStyle.bottom + "px" };
+	};
+
+	_spacingStyle = (multiple) => {
+		let spacingSize = multiple.spacing;
+		if (spacingSize === 0) return undefined;
+		const withBottom = multiple.arrangement.toLowerCase() === "vertical";
+		let spacingStyle = { right: spacingSize };
+		spacingStyle.bottom = withBottom ? spacingSize : 0;
+		return spacingStyle;
 	};
 
 }

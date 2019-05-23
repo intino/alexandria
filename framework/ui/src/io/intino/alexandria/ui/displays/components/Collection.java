@@ -1,11 +1,11 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.schemas.CollectionMoreItems;
 import io.intino.alexandria.schemas.CollectionSetup;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.CollectionBehavior;
 import io.intino.alexandria.ui.displays.components.collection.CollectionItemDisplay;
+import io.intino.alexandria.ui.displays.components.collection.ItemLoader;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.Listener;
 import io.intino.alexandria.ui.displays.events.SelectionEvent;
@@ -26,7 +26,6 @@ import static java.util.stream.Collectors.toList;
 public abstract class Collection<DN extends CollectionNotifier, B extends Box> extends AbstractCollection<B> {
     private CollectionBehavior behavior;
     private Datasource source;
-    private int pageSize;
     private java.util.List<SelectionListener> selectionListeners = new ArrayList<>();
     private AddItemListener addItemListener;
     private List<RefreshListener> refreshListeners = new ArrayList<>();
@@ -41,6 +40,10 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         this.behavior = behavior;
         setup();
         return this;
+    }
+
+    <CB extends CollectionBehavior> CB behavior() {
+        return (CB) behavior;
     }
 
     public void onAddItem(AddItemListener listener) {
@@ -69,20 +72,6 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
 
     public Datasource source() {
         return source;
-    }
-
-    public void loadMoreItems(CollectionMoreItems info) {
-        behavior.moreItems(info);
-    }
-
-    public void changePage(Integer page) {
-        behavior.page(page);
-        notifier.refresh();
-    }
-
-    public void changePageSize(Integer size) {
-        behavior.pageSize(size);
-        notifier.refresh();
     }
 
     public void filter(String grouping, List<String> groups) {
@@ -123,28 +112,27 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         this.selectionListeners.add(listener);
     }
 
-    protected Collection<DN, B> pageSize(int pageSize) {
-        this.pageSize = pageSize;
-        return this;
-    }
-
     protected abstract AddItemEvent itemEvent(Display c);
 
-    private void setup() {
-        if (source == null) return;
-        notifier.setup(new CollectionSetup().itemCount(source.itemCount()).pageSize(pageSize));
-        behavior.setup(source, pageSize);
-        notifyReady();
+    AddItemListener addItemListener() {
+        return addItemListener;
     }
 
-    private void notifyReady() {
-        readyListeners.forEach(l -> l.accept(new Event(this)));
-    }
-
-    private void notifyRefresh() {
+    void notifyRefresh() {
         if (refreshListeners.size() <= 0) return;
         List<Object> items = children().stream().map(d -> ((CollectionItemDisplay) d).item()).collect(toList());
         refreshListeners.forEach(l -> l.accept(new RefreshEvent(this, items)));
+    }
+
+    void notifyReady() {
+        readyListeners.forEach(l -> l.accept(new Event(this)));
+    }
+
+    void setup() {
+        if (source == null) return;
+        notifier.setup(new CollectionSetup().itemCount(source.itemCount()));
+        behavior.itemLoader(new ItemLoader<>(source));
+        notifyReady();
     }
 
 }

@@ -1,5 +1,6 @@
 dsl Konos
 
+use Map
 use SearchBox
 use Sorting
 use Grouping
@@ -36,6 +37,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block blockExamples as Conditional > Stamp(template=blockExamplesMold)
 			Block listExamples as Conditional > Stamp(template=listExamplesMold)
 			Block tableExamples as Conditional > Stamp(template=tableExamplesMold)
+			Block mapExamples as Conditional > Stamp(template=mapExamplesMold)
 			Block downloadExamples as Conditional > Stamp(template=downloadExamplesMold)
 			Block downloadSelectionExamples as Conditional > Stamp(template=downloadSelectionExamplesMold)
 			Block exportExamples as Conditional > Stamp(template=exportExamplesMold)

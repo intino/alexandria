@@ -62,6 +62,7 @@ Facet Conditional extends Behavior on Block
 Facet AbstractMultiple is abstract
 	var string noItemsMessage = empty
 	var word:{Vertical Horizontal} arrangement = Vertical
+	var word:Spacing spacing = None
 Facet Multiple extends AbstractMultiple on Block
 Facet Multiple extends AbstractMultiple on DataComponents.Text
 Facet Multiple extends AbstractMultiple on DataComponents.File
@@ -142,3 +143,7 @@ Facet Linked on OperationComponents.Toolbar
 
 Facet Selectable on CatalogComponents.Collection
 	var boolean multiple = false
+
+Facet Clustered on CatalogComponents.Map
+Facet Kml on CatalogComponents.Map
+Facet Heatmap on CatalogComponents.Map

@@ -51,15 +51,19 @@ def type(properties & multiple) trigger(common)
 end
 
 def type(properties & operation) trigger(common)
-	[ title="$title"][ target="$target"][ mode="$operationMode"][ icon="$icon"][ confirm="$confirm"][ disabled={$disabled}][ size="$size"]
+	[ title="$title"][ target="$target"][ mode="$operationMode"][ icon="$icon"][ confirm="$confirm"][ disabled={$disabled}][ size="$size"][ format="$format...[ ]"]
 end
 
 def type(properties) trigger(common)
-	[ label="$label"][ format="$format...[ ]"][ multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage"}}][ color="$color"]
+	[ label="$label"][ format="$format...[ ]"][ multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing}}][ color="$color"]
 end
 
 def type(properties & template) trigger(specific)
 	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"]
+end
+
+def type(properties & stamp) trigger(specific)
+	[ spacing="$spacing"]
 end
 
 def type(properties & selector) trigger(specific)
@@ -100,6 +104,10 @@ end
 
 def type(properties & text) trigger(specific)
 	[ mode="$mode"][ prefix="$prefix"][ suffix="$suffix"][ value="$defaultValue"][ highlighted={$highlighted}]
+end
+
+def type(properties & map) trigger(specific)
+	[ pageSize={$pageSize}][ itemHeight={$itemHeight}][ center={{lat:$centerLat,lng:$centerLng}}][ zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}]
 end
 
 def type(properties & collection) trigger(specific)
