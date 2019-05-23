@@ -1,13 +1,16 @@
 package io.intino.alexandria.movv;
 
 import java.io.*;
+import java.util.Arrays;
 
 import static java.lang.Math.min;
 import static java.lang.System.arraycopy;
 
 interface ChainWriter {
     int write(Mov.Item item, boolean isTheLast) throws IOException;
+	void writeNext(int cursor, int next) throws IOException;
     void close() throws IOException;
+
     class BulkChainWriter implements ChainWriter {
         private final DataOutputStream os;
         private int dataSize;
@@ -31,7 +34,12 @@ interface ChainWriter {
             return cursor++;
         }
 
-        @Override
+		@Override
+		public void writeNext(int cursor, int next) throws IOException {
+
+		}
+
+		@Override
         public void close() throws IOException {
             os.close();
         }
@@ -65,15 +73,29 @@ interface ChainWriter {
             return cursor++;
         }
 
-        @Override
+		@Override
+		public void writeNext(int cursor, int next) throws IOException {
+			seekNextOf(cursor);
+			raf.writeInt(next);
+		}
+
+		private void seekNextOf(int cursor) throws IOException {
+			raf.seek(positionOf(cursor) + Long.BYTES + dataSize);
+		}
+
+		private long positionOf(int cursor) {
+			return cursor * recordSize();
+		}
+
+
+		@Override
         public void close() throws IOException {
             raf.close();
         }
 
         static byte[] adjust(byte[] data, int dataSize) {
-            byte[] bytes = new byte[dataSize];
-            arraycopy(data,0,bytes,0, min(dataSize,data.length));
-            return bytes;
+        	if (data.length == dataSize) return data;
+			return Arrays.copyOf(data, dataSize);
         }
 
 

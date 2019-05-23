@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.time.Instant;
 
+import static java.lang.System.arraycopy;
+
 interface ChainReader {
     void seek(int cursor) throws IOException;
 
@@ -12,40 +14,78 @@ interface ChainReader {
 
     void seekNextOf(int cursor) throws IOException;
     int readNext() throws IOException;
-    void writeNext(int cursor) throws IOException;
 
-    static ChainReader Null() {
+    ChainReader Null = new ChainReader() {
+            @Override
+            public void seek(int cursor) { }
+
+            @Override
+            public Instant readInstant() { return null; }
+
+            @Override
+            public byte[] readData() { return new byte[0]; }
+
+            @Override
+            public void seekNextOf(int cursor) { }
+
+            @Override
+            public int readNext() { return 0; }
+
+        };
+
+    static ChainReader load(byte[] content, int dataSize) {
         return new ChainReader() {
-
+            int position = 0;
             @Override
             public void seek(int cursor) {
-
-            }
-
-            @Override
-            public Instant readInstant() {
-                return null;
-            }
-
-            @Override
-            public byte[] readData() {
-                return new byte[0];
+                position = positionOf(cursor);
             }
 
             @Override
             public void seekNextOf(int cursor) {
+                position = positionOf(cursor) + Long.BYTES + dataSize;
+            }
 
+            @Override
+            public Instant readInstant() {
+                return Instant.ofEpochMilli(readLong());
+            }
+
+            @Override
+            public byte[] readData() {
+                byte[] bytes = new byte[dataSize];
+                arraycopy(content,position,bytes,0,dataSize);
+                position+=dataSize;
+                return bytes;
             }
 
             @Override
             public int readNext() {
-                return 0;
+                return readInt();
             }
 
-            @Override
-            public void writeNext(int cursor) {
-
+            private int positionOf(int cursor) {
+                return cursor * recordSize();
             }
+
+            private int readInt() {
+                int value = 0;
+                for (int i = 0; i < 4; i++)
+                    value = (value << 8) + ((int) content[position++] & 0xFF);
+                return value;
+            }
+
+            private long readLong() {
+                long value = 0;
+                for (int i = 0; i < 8; i++)
+                    value = (value << 8) + ((long) content[position++] & 0xFFL);
+                return value;
+            }
+
+            private int recordSize() {
+                return Long.BYTES + dataSize + Integer.BYTES;
+            }
+
         };
     }
 
@@ -80,11 +120,6 @@ interface ChainReader {
 
             private long positionOf(int cursor) {
                 return cursor * recordSize();
-            }
-
-            @Override
-            public void writeNext(int cursor) throws IOException {
-                raf.writeInt(cursor);
             }
 
             private int recordSize() {

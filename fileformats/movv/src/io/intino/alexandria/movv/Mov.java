@@ -87,25 +87,6 @@ public class Mov implements Iterable<Mov.Item> {
 		return item.instant.compareTo(last.instant) <= 0 || Arrays.equals(last.data, item.data);
 	}
 
-	void append(long id, int next) {
-		if (this.head < 0) create(id, next);
-		else append(next);
-	}
-
-	private void create(long id, int next) {
-		this.chainIndex.put(id, next);
-		this.head = next;
-	}
-
-	private void append(int next) {
-		int cursor = head;
-		while (true) {
-			int last = nextOf(cursor);
-			if (last == -1) break;
-			cursor = last;
-		}
-		updateNext(cursor, next);
-	}
 
 	private int nextOf(int cursor) {
 		try {
@@ -133,16 +114,16 @@ public class Mov implements Iterable<Mov.Item> {
 		}
 	}
 
-	private void updateNext(int cursor, int next) {
-		try {
-			chainReader.seekNextOf(cursor);
-			chainReader.writeNext(next);
-		} catch (IOException ignored) {
-		}
+	int head() {
+		return head;
+	}
+
+	void head(int head) {
+		this.head = head;
 	}
 
 	public static class Item {
-		static final Item Null = new Item(null, null);
+		static final Item Null = new Item(null, new byte[0]);
 		public final Instant instant;
 		public final byte[] data;
 
