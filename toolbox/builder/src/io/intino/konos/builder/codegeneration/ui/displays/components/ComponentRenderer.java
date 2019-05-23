@@ -135,6 +135,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			AbstractMultiple abstractMultiple = element.a$(AbstractMultiple.class);
 			result.add("instances", nameOf(element));
 			result.add("multipleArrangement", abstractMultiple.arrangement().name());
+			result.add("multipleSpacing", abstractMultiple.spacing().value());
 			result.add("multipleNoItemsMessage", abstractMultiple.noItemsMessage() != null ? abstractMultiple.noItemsMessage() : "");
 		}
 		if (element.format() != null) {

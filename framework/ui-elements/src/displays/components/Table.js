@@ -7,13 +7,10 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import classNames from "classnames";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import Heading from "./Heading";
+import { CollectionStyles } from "./Collection";
 
 const styles = theme => ({
-	scrolling: {
-		background: "#ddd",
-		height: "50%",
-		borderRadius: "5px"
-	},
+	...CollectionStyles(theme),
 	headerView : {
 		borderBottom: "1px solid #ddd",
 		height: "100%"
@@ -28,19 +25,6 @@ const styles = theme => ({
 			display: 'block'
 		}
 	},
-	selectable : {
-		paddingLeft: "35px"
-	},
-	selector : {
-		display: "none",
-		position: "absolute",
-		left: "-5px"
-	},
-	selecting : {
-		"& $selector" : {
-			display: "block"
-		}
-	}
 });
 
 class Table extends AbstractTable {

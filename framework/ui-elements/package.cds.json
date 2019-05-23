@@ -49,6 +49,7 @@
     "react": "^16.7.0",
     "react-ace": "^6.4.0",
     "react-dom": "^16.7.0",
+    "react-google-maps": "^9.4.5",
     "react-materialize": "^2.6.0",
     "react-moment": "^0.8.4",
     "react-plotly.js": "^2.3.0",

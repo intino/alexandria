@@ -6,14 +6,18 @@ Component collection as Decorated
 	Notification setup as Object(CollectionSetup)
 	Notification refresh
 	Notification refreshItemCount as LongInteger
-	Request notifyItemsRendered as Object(CollectionItemsRenderedInfo)
-	Request loadMoreItems as Object(CollectionMoreItems)
-	Request changePage as Integer
-	Request changePageSize as Integer
 	Request changeSelection as Text List
 
-Component list as Decorated ExtensionOf(collection)
-Component table as Decorated ExtensionOf(collection)
+Component pageCollection as Decorated ExtensionOf(collection)
+	Notification setup as Object(PageCollectionSetup)
+	Request changePage as Integer
+	Request changePageSize as Integer
+	Request notifyItemsRendered as Object(CollectionItemsRenderedInfo)
+	Request loadMoreItems as Object(CollectionMoreItems)
+
+Component list as Decorated ExtensionOf(pageCollection)
+Component table as Decorated ExtensionOf(pageCollection)
+
 Component magazine as Decorated ExtensionOf(collection)
 Component map as Decorated ExtensionOf(collection)
 
@@ -23,6 +27,8 @@ Component row as Decorated
 
 Schema CollectionSetup
 	Attribute itemCount as LongInteger
+
+Schema PageCollectionSetup as ExtensionOf(CollectionSetup)
 	Attribute pageSize as Integer
 
 Schema CollectionItemsRenderedInfo

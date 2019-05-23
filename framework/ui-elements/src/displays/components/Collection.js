@@ -4,6 +4,27 @@ import CollectionNotifier from "../../../gen/displays/notifiers/CollectionNotifi
 import CollectionRequester from "../../../gen/displays/requesters/CollectionRequester";
 import CollectionBehavior from "./behaviors/CollectionBehavior";
 
+export const CollectionStyles = theme => ({
+	scrolling: {
+		background: "#ddd",
+		height: "50%",
+		borderRadius: "5px"
+	},
+	selectable : {
+		paddingLeft: "35px"
+	},
+	selector : {
+		display: "none",
+		position: "absolute",
+		left: "-5px"
+	},
+	selecting : {
+		"& $selector" : {
+			display: "block"
+		}
+	}
+});
+
 export default class Collection extends AbstractCollection {
 	state = {
 		selection: [],

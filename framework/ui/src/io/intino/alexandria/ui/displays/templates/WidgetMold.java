@@ -52,6 +52,7 @@ public class WidgetMold extends AbstractWidgetMold<UiFrameworkBox> {
         blockExamples.visible(widget instanceof BlockWidget);
         listExamples.visible(widget instanceof ListWidget);
         tableExamples.visible(widget instanceof TableWidget);
+        mapExamples.visible(widget instanceof MapWidget);
         exportExamples.visible(widget instanceof ExportWidget);
         downloadExamples.visible(widget instanceof DownloadWidget);
         downloadSelectionExamples.visible(widget instanceof DownloadSelectionWidget);

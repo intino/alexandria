@@ -22,7 +22,7 @@ public class ElementHelper {
 	}
 
 	public String shortId(Layer element, String suffix) {
-		return generator.shortId(nameOf(element) + suffix);
+		return generator.shortId(rootNameOf(element) + nameOf(element) + suffix);
 	}
 
 	public String nameOf(Layer element) {
@@ -67,6 +67,10 @@ public class ElementHelper {
 		Node owner = element.owner();
 		if (isRoot(owner)) return owner.name() + position(element, owner);
 		return generateName(owner, name) + position(element, owner);
+	}
+
+	private String rootNameOf(Layer element) {
+		return element.core$().rootNodeId();
 	}
 
 	private boolean isRoot(Node node) {

@@ -10,9 +10,9 @@ import io.intino.konos.model.graph.CatalogComponents.Collection;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 
-public class CollectionRenderer extends SizedRenderer<Collection> {
+public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 
-	public CollectionRenderer(Settings settings, Collection component, TemplateProvider provider, Target target) {
+	public CollectionRenderer(Settings settings, T component, TemplateProvider provider, Target target) {
 		super(settings, component, provider, target);
 	}
 

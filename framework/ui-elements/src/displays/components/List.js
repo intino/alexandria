@@ -5,13 +5,10 @@ import AbstractList from "../../../gen/displays/components/AbstractList";
 import ListNotifier from "../../../gen/displays/notifiers/ListNotifier";
 import ListRequester from "../../../gen/displays/requesters/ListRequester";
 import 'alexandria-ui-elements/res/styles/layout.css';
+import {CollectionStyles} from "./Collection";
 
 const styles = theme => ({
-	scrolling: {
-		background: "#ddd",
-		height: "50%",
-		borderRadius: "5px"
-	},
+	...CollectionStyles(theme),
 	itemView : {
 		height: "100%",
 		padding: "0 10px",
@@ -22,19 +19,6 @@ const styles = theme => ({
 			display: 'block'
 		}
 	},
-	selectable : {
-		paddingLeft: "35px"
-	},
-	selector : {
-		display: "none",
-		position: "absolute",
-		left: "-5px"
-	},
-	selecting : {
-		"& $selector" : {
-			display: "block"
-		}
-	}
 });
 
 class List extends AbstractList {

@@ -5,28 +5,16 @@ import io.intino.alexandria.ui.model.datasource.Filter;
 
 import java.util.*;
 
-public class ItemLoader<Item> {
-	private final Datasource<Item> source;
-	private int pageSize;
+public class ItemLoader<DS extends Datasource<Item>, Item> {
 	private long itemCount;
-	private String condition;
-	private List<Filter> filters = new ArrayList<>();
-	private Set<String> sortings = new HashSet<>();
+	final DS source;
+	String condition;
+	List<Filter> filters = new ArrayList<>();
+	HashSet<String> sortings = new HashSet<>();
 
-	public ItemLoader(Datasource source, int pageSize) {
+	public ItemLoader(DS source) {
 		this.source = source;
-		this.pageSize = pageSize;
 		this.itemCount = source.itemCount();
-	}
-
-	public ItemLoader<Item> pageSize(int size) {
-		this.pageSize = size;
-		return this;
-	}
-
-	public synchronized List<Item> page(int page) {
-		page = this.checkPageRange(page);
-		return source.items(start(page), count(), condition, filters, new ArrayList<>(sortings));
 	}
 
 	public ItemLoader filter(String grouping, List<String> groups) {
@@ -63,35 +51,8 @@ public class ItemLoader<Item> {
 		return itemCount;
 	}
 
-	public int pageCount() {
-		if (pageSize <= 0) return 0;
-		return pageOf(itemCount);
-	}
-
-	public int start(int page) {
-		return page * this.pageSize;
-	}
-
-	public int pageOf(long index) {
-		return (int) (Math.floor(index / pageSize) + (index % pageSize > 0 ? 1 : 0));
-	}
-
 	public List<Item> moreItems(int start, int stop) {
 		return source.items(start, stop - start + 1, condition, filters, new ArrayList<>(sortings));
-	}
-
-	private int checkPageRange(int page) {
-		if (page <= 0)
-			page = 0;
-
-		int countPages = pageCount();
-		if (page >= countPages && countPages > 0)
-			page = countPages - 1;
-		return page;
-	}
-
-	private int count() {
-		return this.pageSize;
 	}
 
 	private Filter filter(String grouping) {
