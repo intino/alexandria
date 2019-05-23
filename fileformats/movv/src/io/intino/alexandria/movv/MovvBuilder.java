@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static io.intino.alexandria.movv.Movv.chainFileOf;
+import static java.util.Arrays.copyOf;
 import static java.util.Comparator.comparing;
 
 public class MovvBuilder {
@@ -28,7 +29,7 @@ public class MovvBuilder {
 	public static MovvBuilder create(File file, int dataSize) throws IOException {
 		return new MovvBuilder(
 				ChainIndex.create(file, dataSize),
-				ChainReader.Null(),
+				ChainReader.Null,
 				ChainWriter.BulkChainWriter.create(chainFileOf(file), dataSize)
 		);
 	}
@@ -62,18 +63,67 @@ public class MovvBuilder {
 
 	public MovvBuilder add(long id, Instant instant, byte[] data) {
 		if (data == null) return this;
-		try {
-			Mov mov = movOf(id);
-			if (isUpdatingFile() && mov.reject(new Item(instant, data))) return this;
-			mov.append(id, chainWriter.write(new Item(instant, data), true));
-		} catch (IOException ignored) {
-		}
-		return this;
+		return add(id, new Item(instant, resize(data)));
 	}
 
 	public void close() throws IOException {
 		chainIndex.close();
 		chainWriter.close();
+	}
+
+	private MovvBuilder add(long id, Item item) {
+		try {
+			Mov mov = movOf(id);
+			if (isUpdatingFile() && mov.reject(item)) return this;
+			append(mov, id, chainWriter.write(item, true));
+		} catch (IOException ignored) {
+		}
+		return this;
+	}
+
+	void append(Mov mov, long id, int next) {
+		if (mov.head() < 0) create(mov, id, next);
+		else append(mov, next);
+	}
+
+	private void create(Mov mov, long id, int next) {
+		this.chainIndex.put(id, next);
+		mov.head(next);
+	}
+
+	private void append(Mov mov, int next) {
+		int cursor = mov.head();
+		while (true) {
+			int last = nextOf(cursor);
+			if (last == -1) break;
+			cursor = last;
+		}
+		updateNext(cursor, next);
+	}
+
+
+	private int nextOf(int cursor) {
+		try {
+			chainReader.seekNextOf(cursor);
+			return chainReader.readNext();
+		} catch (IOException e) {
+			return -1;
+		}
+	}
+
+	private void updateNext(int cursor, int next) {
+		try {
+			chainWriter.writeNext(cursor, next);
+		} catch (IOException ignored) {
+		}
+	}
+
+	private byte[] resize(byte[] data) {
+		return data.length == chainIndex.dataSize() ? data : copyOf(data, chainIndex.dataSize());
+	}
+
+	private boolean isUpdatingFile() {
+		return chainIndex instanceof ChainIndex.RandomChainIndex;
 	}
 
 	private Stage createStage(long id) {
@@ -88,9 +138,14 @@ public class MovvBuilder {
 			@Override
 			public Stage add(Instant instant, byte[] data) {
 				if (data == null) return this;
-				items.add(new Item(instant, data));
-				if (!stages.containsKey(id)) stages.put(id, this);
+				checkStageIsCreated();
+				items.add(new Item(instant, resize(data)));
 				return this;
+			}
+
+			private void checkStageIsCreated() {
+				if (stages.containsKey(id)) return;
+				stages.put(id, this);
 			}
 
 			@Override
@@ -118,7 +173,7 @@ public class MovvBuilder {
 					int i = 0;
 					for (Item item : items) {
 						int cursor = write(item, ++i == items.size());
-						if (i == 1) mov.append(id, cursor);
+						if (i == 1) append(mov, id, cursor);
 					}
 				} catch (IOException ignored) {
 				}
@@ -139,10 +194,6 @@ public class MovvBuilder {
 			}
 
 		};
-	}
-
-	private boolean isUpdatingFile() {
-		return chainIndex instanceof ChainIndex.RandomChainIndex;
 	}
 
 	public interface Stage {
