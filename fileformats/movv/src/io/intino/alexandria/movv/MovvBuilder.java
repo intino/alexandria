@@ -104,8 +104,7 @@ public class MovvBuilder {
 
 	private int nextOf(int cursor) {
 		try {
-			chainReader.seekNextOf(cursor);
-			return chainReader.readNext();
+			return chainReader.recordAt(cursor).next();
 		} catch (IOException e) {
 			return -1;
 		}

@@ -7,126 +7,117 @@ import java.time.Instant;
 import static java.lang.System.arraycopy;
 
 interface ChainReader {
-    void seek(int cursor) throws IOException;
+	ChainReader Null = cursor -> Record.Null;
 
-    Instant readInstant() throws IOException;
-    byte[] readData() throws IOException;
+	static ChainReader load(byte[] content, int dataSize) {
+		return new ChainReader() {
 
-    void seekNextOf(int cursor) throws IOException;
-    int readNext() throws IOException;
+			@Override
+			public Record recordAt(int cursor) {
+				int position = positionOf(cursor);
+				return new Record(readInstant(position), readData(position + Long.BYTES), readNext(position + Long.BYTES + dataSize));
+			}
 
-    ChainReader Null = new ChainReader() {
-            @Override
-            public void seek(int cursor) { }
+			Instant readInstant(int position) {
+				return Instant.ofEpochMilli(readLong(position));
+			}
 
-            @Override
-            public Instant readInstant() { return null; }
+			byte[] readData(int position) {
+				byte[] bytes = new byte[dataSize];
+				arraycopy(content, position, bytes, 0, dataSize);
+				return bytes;
+			}
 
-            @Override
-            public byte[] readData() { return new byte[0]; }
+			int readNext(int position) {
+				return readInt(position);
+			}
 
-            @Override
-            public void seekNextOf(int cursor) { }
+			private int positionOf(int cursor) {
+				return cursor * recordSize();
+			}
 
-            @Override
-            public int readNext() { return 0; }
+			private int readInt(int position) {
+				int value = 0;
+				for (int i = 0; i < 4; i++)
+					value = (value << 8) + ((int) content[position++] & 0xFF);
+				return value;
+			}
 
-        };
+			private long readLong(int position) {
+				long value = 0;
+				for (int i = 0; i < 8; i++)
+					value = (value << 8) + ((long) content[position++] & 0xFFL);
+				return value;
+			}
 
-    static ChainReader load(byte[] content, int dataSize) {
-        return new ChainReader() {
-            int position = 0;
-            @Override
-            public void seek(int cursor) {
-                position = positionOf(cursor);
-            }
+			private int recordSize() {
+				return Long.BYTES + dataSize + Integer.BYTES;
+			}
 
-            @Override
-            public void seekNextOf(int cursor) {
-                position = positionOf(cursor) + Long.BYTES + dataSize;
-            }
+		};
+	}
 
-            @Override
-            public Instant readInstant() {
-                return Instant.ofEpochMilli(readLong());
-            }
+	static ChainReader load(RandomAccessFile raf, int dataSize) {
+		return new ChainReader() {
+			@Override
+			synchronized public Record recordAt(int cursor) throws IOException {
+				raf.seek(positionOf(cursor));
+				return new Record(readInstant(), readData(), readNext());
+			}
 
-            @Override
-            public byte[] readData() {
-                byte[] bytes = new byte[dataSize];
-                arraycopy(content,position,bytes,0,dataSize);
-                position+=dataSize;
-                return bytes;
-            }
+			Instant readInstant() throws IOException {
+				return Instant.ofEpochMilli(raf.readLong());
+			}
 
-            @Override
-            public int readNext() {
-                return readInt();
-            }
+			byte[] readData() throws IOException {
+				byte[] bytes = new byte[dataSize];
+				raf.read(bytes);
+				return bytes;
+			}
 
-            private int positionOf(int cursor) {
-                return cursor * recordSize();
-            }
+			int readNext() throws IOException {
+				return raf.readInt();
+			}
 
-            private int readInt() {
-                int value = 0;
-                for (int i = 0; i < 4; i++)
-                    value = (value << 8) + ((int) content[position++] & 0xFF);
-                return value;
-            }
+			private long positionOf(int cursor) {
+				return cursor * recordSize();
+			}
 
-            private long readLong() {
-                long value = 0;
-                for (int i = 0; i < 8; i++)
-                    value = (value << 8) + ((long) content[position++] & 0xFFL);
-                return value;
-            }
+			private int recordSize() {
+				return Long.BYTES + dataSize + Integer.BYTES;
+			}
 
-            private int recordSize() {
-                return Long.BYTES + dataSize + Integer.BYTES;
-            }
+		};
+	}
 
-        };
-    }
+	Record recordAt(int cursor) throws IOException;
 
-    static ChainReader load(RandomAccessFile raf, int dataSize) {
-        return new ChainReader() {
-            @Override
-            public void seek(int cursor) throws IOException {
-                raf.seek(positionOf(cursor));
-            }
+	class Record {
+		static Record Null = new Record(null, new byte[0], 0);
+		private final Instant instant;
+		private final byte[] data;
+		private final int next;
 
-            @Override
-            public void seekNextOf(int cursor) throws IOException {
-                raf.seek(positionOf(cursor) + Long.BYTES + dataSize);
-            }
+		public Record(Instant instant, byte[] data, int next) {
+			this.instant = instant;
+			this.data = data;
+			this.next = next;
+		}
 
-            @Override
-            public Instant readInstant() throws IOException {
-                return Instant.ofEpochMilli(raf.readLong());
-            }
+		public Instant instant() {
+			return instant;
+		}
 
-            @Override
-            public byte[] readData() throws IOException {
-                byte[] bytes = new byte[dataSize];
-                raf.read(bytes);
-                return bytes;
-            }
+		public byte[] data() {
+			return data;
+		}
 
-            @Override
-            public int readNext() throws IOException {
-                return raf.readInt();
-            }
+		public int next() {
+			return next;
+		}
 
-            private long positionOf(int cursor) {
-                return cursor * recordSize();
-            }
-
-            private int recordSize() {
-                return Long.BYTES + dataSize + Integer.BYTES;
-            }
-
-        };
-    }
-
+		boolean isAfter(Instant instant) {
+			return this.instant.isAfter(instant);
+		}
+	}
 }
