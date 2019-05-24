@@ -27,27 +27,31 @@ public class Mov implements Iterable<Mov.Item> {
 	}
 
 	public Item at(Instant instant) {
-		Item result = Item.Null;
+		ChainReader.Record result = ChainReader.Record.Null;
 		int cursor = head;
 		while (cursor >= 0) {
-			Item item = itemAt(cursor);
-			if (item == null || item.isAfter(instant)) break;
-			cursor = readNext();
-			result = item;
+			ChainReader.Record record= recordAt(cursor);
+			if (record == ChainReader.Record.Null || record.isAfter(instant)) break;
+			cursor = record.next();
+			result = record;
 		}
-		return result;
+		return itemFrom(result);
+	}
+
+	private Item itemFrom(ChainReader.Record result) {
+		return new Item(result.instant(), result.data());
 	}
 
 	public Item first() {
-		return head >= 0 ? itemAt(head) : Item.Null;
+		return head >= 0 ? itemFrom(recordAt(head)) : Item.Null;
 	}
 
 	public Item last() {
 		int cursor = head;
 		while (cursor >= 0) {
-			int next = nextOf(cursor);
-			if (next < 0) return itemAt(cursor);
-			cursor = next;
+			ChainReader.Record record = recordAt(cursor);
+			if (record.next() < 0) return itemFrom(record);
+			cursor = record.next();
 		}
 		return Item.Null;
 	}
@@ -56,7 +60,7 @@ public class Mov implements Iterable<Mov.Item> {
 		int length = 0;
 		int cursor = head;
 		while (cursor >= 0) {
-			cursor = nextOf(cursor);
+			cursor = recordAt(cursor).next();
 			length++;
 		}
 		return length;
@@ -74,9 +78,9 @@ public class Mov implements Iterable<Mov.Item> {
 
 			@Override
 			public Item next() {
-				Item item = itemAt(next);
-				next = readNext();
-				return item;
+				ChainReader.Record record = recordAt(next);
+				next = record.next();
+				return itemFrom(record);
 			}
 		};
 	}
@@ -87,30 +91,11 @@ public class Mov implements Iterable<Mov.Item> {
 		return item.instant.compareTo(last.instant) <= 0 || Arrays.equals(last.data, item.data);
 	}
 
-
-	private int nextOf(int cursor) {
+	private ChainReader.Record recordAt(int cursor) {
 		try {
-			chainReader.seekNextOf(cursor);
-			return chainReader.readNext();
+			return chainReader.recordAt(cursor);
 		} catch (IOException e) {
-			return -1;
-		}
-	}
-
-	private int readNext() {
-		try {
-			return chainReader.readNext();
-		} catch (IOException e) {
-			return -1;
-		}
-	}
-
-	private Item itemAt(int cursor) {
-		try {
-			chainReader.seek(cursor);
-			return new Item(chainReader.readInstant(), chainReader.readData());
-		} catch (IOException e) {
-			return null;
+			return ChainReader.Record.Null;
 		}
 	}
 
