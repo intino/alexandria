@@ -6,7 +6,7 @@ import io.intino.alexandria.ui.displays.rows.Table1Row;
 import io.intino.alexandria.ui.displays.rows.Table2Row;
 import io.intino.alexandria.ui.documentation.Person;
 import io.intino.alexandria.ui.documentation.model.Datasources;
-import io.intino.alexandria.ui.model.Datasource;
+import io.intino.alexandria.ui.model.datasource.PageDatasource;
 
 public class TableExamplesMold extends AbstractTableExamplesMold<UiFrameworkBox> {
 
@@ -21,7 +21,7 @@ public class TableExamplesMold extends AbstractTableExamplesMold<UiFrameworkBox>
         init(table2, Datasources.personDatasource());
     }
 
-    private void init(io.intino.alexandria.ui.displays.components.Table table, Datasource datasource) {
+    private void init(io.intino.alexandria.ui.displays.components.Table table, PageDatasource datasource) {
         table.source(datasource);
         table.onAddItem(this::onAddItem);
     }

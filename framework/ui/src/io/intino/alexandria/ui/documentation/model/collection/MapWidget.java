@@ -18,7 +18,6 @@ public class MapWidget extends BaseWidget {
 		add(Model.property("sourceClass", Property.Type.Text, "Class responsible of loading items in list"));
 		add(Model.property("itemClass", Property.Type.Text, "Class for items stored in list"));
 		add(Model.property("noItemsMessage", Property.Type.Text, "Message if no items in list. By default, 'no items' message is shown."));
-		add(Model.property("pageSize", Property.Type.Integer, "Count of items per page by default."));
 		add(Model.property("Mold", Property.Type.Object, "Defines the template used to render each item in list"));
 	}
 

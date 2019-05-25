@@ -2,12 +2,12 @@ dsl Konos
 
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
 
-Template(layout=Vertical, spacing=DP8) groupingExamplesMold as Decorated
-	Map
-		Zoom(defaultZoom = 14, min = 1, max = 18)
-		Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
-		Mold > Item(height = 100px) name
-					
+Component collection as Decorated
+Component pageCollection as Decorated ExtensionOf(collection)
+Component map as Decorated ExtensionOf(collection)
+Component list as Decorated ExtensionOf(pageCollection)
+Component table as Decorated ExtensionOf(pageCollection)
+Component magazine as Decorated ExtensionOf(pageCollection)
 
 Format("color:'#B71C1C',textShadow:'2px 2px 2px #fff'") h1
 Format("color:'black',textShadow:'2px 2px 2px #fff'") h2

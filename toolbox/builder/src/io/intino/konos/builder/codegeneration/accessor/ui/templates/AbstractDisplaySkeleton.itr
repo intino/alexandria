@@ -26,8 +26,12 @@ def type(display)
 	}
 end
 
-def type(displayExtends & extensionOf)
-	Displays.~$parent+firstUpperCase
+def type(displayExtends & generic & isExtensionOf)
+	Displays.~$parent
+end
+
+def type(displayExtends & generic)
+	Ui~$parent
 end
 
 def type(displayExtends)

@@ -1,11 +1,11 @@
 package io.intino.alexandria.ui.displays.components;
 
+import io.intino.alexandria.Timetag;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.CollectionSetup;
 import io.intino.alexandria.ui.displays.Display;
-import io.intino.alexandria.ui.displays.components.collection.CollectionBehavior;
 import io.intino.alexandria.ui.displays.components.collection.CollectionItemDisplay;
-import io.intino.alexandria.ui.displays.components.collection.ItemLoader;
+import io.intino.alexandria.ui.displays.components.collection.behaviors.CollectionBehavior;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.Listener;
 import io.intino.alexandria.ui.displays.events.SelectionEvent;
@@ -23,7 +23,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-public abstract class Collection<DN extends CollectionNotifier, B extends Box> extends AbstractCollection<B> {
+public abstract class Collection<DN extends CollectionNotifier, B extends Box> extends AbstractCollection<DN, B> {
     private CollectionBehavior behavior;
     private Datasource source;
     private java.util.List<SelectionListener> selectionListeners = new ArrayList<>();
@@ -35,7 +35,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         super(box);
     }
 
-    public Collection<DN, B> source(Datasource source, CollectionBehavior behavior) {
+    Collection<DN, B> source(Datasource source, CollectionBehavior behavior) {
         this.source = source;
         this.behavior = behavior;
         setup();
@@ -64,14 +64,8 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         setup();
     }
 
-    public void notifyItemsRendered(io.intino.alexandria.schemas.CollectionItemsRenderedInfo info) {
-        promisedChildren(info.items()).forEach(this::register);
-        children(info.visible()).forEach(c -> addItemListener.accept(itemEvent(c)));
-        notifyRefresh();
-    }
-
-    public Datasource source() {
-        return source;
+    public <D extends Datasource> D source() {
+        return (D) source;
     }
 
     public void filter(String grouping, List<String> groups) {
@@ -81,6 +75,11 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
 
     public void filter(String condition) {
         behavior.condition(condition);
+        notifier.refreshItemCount(behavior.itemCount());
+    }
+
+    public void filter(Timetag timetag) {
+        behavior.timetag(timetag);
         notifier.refreshItemCount(behavior.itemCount());
     }
 
@@ -131,7 +130,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     void setup() {
         if (source == null) return;
         notifier.setup(new CollectionSetup().itemCount(source.itemCount()));
-        behavior.itemLoader(new ItemLoader<>(source));
+        behavior.setup(source);
         notifyReady();
     }
 

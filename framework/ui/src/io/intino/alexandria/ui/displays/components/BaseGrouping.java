@@ -12,8 +12,8 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extends AbstractBaseGrouping<B> {
-	private Collection collection;
+public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extends AbstractBaseGrouping<DN, B> {
+	private List<Collection> collections = new ArrayList<>();
 	private List<String> selection;
 	private SelectionListener selectionListener;
 	private List<Group> groups = new ArrayList<>();
@@ -32,9 +32,9 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
     	return this;
 	}
 
-	public BaseGrouping<DN, B> bindTo(Collection collection) {
-		this.collection = collection;
-		this.collection.onReady((event) -> loadGroups());
+	public BaseGrouping<DN, B> bindTo(Collection... collection) {
+		this.collections = Arrays.asList(collection);
+		if (collections.size() > 0) this.collections.get(0).onReady((event) -> loadGroups());
 		return this;
 	}
 
@@ -47,7 +47,7 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	public void select(String[] groups) {
 		this.selection = Arrays.asList(groups);
 		notifySelection();
-		if (collection != null) collection.filter(key(), selection);
+		collections.forEach(c -> c.filter(key(), selection));
 	}
 
 	private String key() {
@@ -55,7 +55,8 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	}
 
 	private void loadGroups() {
-		groups(collection.source().groups(key()));
+		if (collections.size() <= 0) return;
+		groups(collections.get(0).source().groups(key()));
 		refreshGroups();
 	}
 

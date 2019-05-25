@@ -131,7 +131,7 @@ const CollectionBehavior = (collection) => {
         var multiple = self.collection.props.selection != null && self.collection.props.selection === "multiple";
         var selecting = self.collection.state.selection.length > 0;
         return (<div style={style} key={index} className={classNames(classes.itemView, "layout horizontal center", selectable ? classes.selectable : undefined, selecting ? classes.selecting : undefined)}>
-                {multiple ? <Checkbox checked={self.isItemSelected(item)} className={classes.selector} onChange={self.handleSelectItem.bind(self, item.pl.id)}/> : undefined}
+                {multiple ? <Checkbox checked={self.isItemSelected(item)} className={classes.selector} onChange={self.handleSelectItem.bind(self, item != null ? item.pl.id : undefined)}/> : undefined}
                 {view}
             </div>
         );
@@ -169,6 +169,7 @@ const CollectionBehavior = (collection) => {
     };
 
     self.isItemSelected = (item) => {
+        if (item == null) return false;
         return self.collection.state.selection.indexOf(item.pl.id) !== -1;
     };
 

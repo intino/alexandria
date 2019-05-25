@@ -94,13 +94,13 @@ Concept CatalogComponents
 				var integer max
 
 	Concept:Named Grouping extends Component
-		var Collection collection
+		var Collection[] collections
 
 	Concept:Named Sorting extends Component
-		var Collection collection
+		var Collection[] collections
 
 	Concept:Named SearchBox extends Component
-		var Collection collection
+		var Collection[] collections
 		var string placeholder = empty
 
 Concept OperationComponents

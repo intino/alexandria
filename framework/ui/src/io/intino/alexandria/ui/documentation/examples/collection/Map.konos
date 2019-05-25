@@ -6,7 +6,7 @@ use Theme
 Template(layout=Vertical, spacing=DP8) mapExamplesMold as Decorated
 
 	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=99%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAirLarge)
 				Map(itemClass="io.intino.alexandria.ui.documentation.Item") map1
@@ -17,6 +17,27 @@ Template(layout=Vertical, spacing=DP8) mapExamplesMold as Decorated
 					value
 						=========
 						Map(itemClass\="io.intino.alexandria.ui.documentation.Item") map<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Zoom(defaultZoom\=14, min\=1, max\=18)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Center(latitude\=28.146773457066104, longitude\=-15.418557420532238)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item mapMold > Stamp(template\=itemMold) stamp<br/><br/>
+
+						Template(modelClass\="io.intino.alexandria.ui.documentation.Item") itemMold<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal Center, spacing\=DP8)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Image avatar as Avatar<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text label
+						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Clustered facet")
+			Block(spacing=DP8, format=filledNoAirLarge)
+				Map(itemClass="io.intino.alexandria.ui.documentation.Item") map2 as Clustered
+					Zoom(defaultZoom = 14, min = 1, max = 18)
+					Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
+					Mold > Item(height=60px) map2Mold > Stamp(template=itemMold) stamp
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Map(itemClass\="io.intino.alexandria.ui.documentation.Item") map as Clustered<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Zoom(defaultZoom\=14, min\=1, max\=18)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Center(latitude\=28.146773457066104, longitude\=-15.418557420532238)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item mapMold > Stamp(template\=itemMold) stamp<br/><br/>

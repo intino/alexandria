@@ -15,11 +15,16 @@ Component pageCollection as Decorated ExtensionOf(collection)
 	Request notifyItemsRendered as Object(CollectionItemsRenderedInfo)
 	Request loadMoreItems as Object(CollectionMoreItems)
 
+Component map as Decorated ExtensionOf(collection)
+	Notification placeMarks as Object(PlaceMark) List
+
+Schema PlaceMark
+	Attribute location as Text
+	Attribute pos as LongInteger
+
 Component list as Decorated ExtensionOf(pageCollection)
 Component table as Decorated ExtensionOf(pageCollection)
-
-Component magazine as Decorated ExtensionOf(collection)
-Component map as Decorated ExtensionOf(collection)
+Component magazine as Decorated ExtensionOf(pageCollection)
 
 Component item as Decorated
 Component heading as Decorated

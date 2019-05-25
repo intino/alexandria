@@ -9,8 +9,8 @@ Template(layout=Vertical, spacing=DP8) groupingExamplesMold as Decorated
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal)
 				Block(format=containerAirMedium, spacing=DP24) as Absolute(width=200px)
-					Grouping(format=whiteBackground,collection=list1) gender1 as Labeled("gender")
-					Grouping(format=whiteBackground,collection=list1) ageGroup1 as Labeled("age group")
+					Grouping(format=whiteBackground,collections=list1) gender1 as Labeled("gender")
+					Grouping(format=whiteBackground,collections=list1) ageGroup1 as Labeled("age group")
 				List(itemClass="io.intino.alexandria.ui.documentation.Person") list1
 					Mold > Item(height=60px,width=30%) grouping1Mold
 							Text firstName1
@@ -20,8 +20,8 @@ Template(layout=Vertical, spacing=DP8) groupingExamplesMold as Decorated
 			Block > Text as Code(language=Html)
 					value
 						=========
-						Grouping(collection\=list1) gender as Labeled("gender")<br/>
-						Grouping(collection\=list1) ageGroup as Labeled("age group")<br/>
+						Grouping(collections\=list1) gender as Labeled("gender")<br/>
+						Grouping(collections\=list1) ageGroup as Labeled("age group")<br/>
 						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) groupingMold
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text firstName
@@ -34,8 +34,8 @@ Template(layout=Vertical, spacing=DP8) groupingExamplesMold as Decorated
 			Text(format=h6, value="ComboBox facet")
 			Block(spacing=DP8, format=filledNoAir)
 				Block(format=containerAirMedium, spacing=DP24, layout=Horizontal)
-					Grouping(format=whiteBackground,collection=list2) gender2 as Labeled("gender") ComboBox
-					Grouping(format=whiteBackground,collection=list2) ageGroup2 as Labeled("age group") ComboBox
+					Grouping(format=whiteBackground,collections=list2) gender2 as Labeled("gender") ComboBox
+					Grouping(format=whiteBackground,collections=list2) ageGroup2 as Labeled("age group") ComboBox
 				List(itemClass="io.intino.alexandria.ui.documentation.Person") list2
 					Mold > Item(height=60px,width=30%) grouping2Mold
 							Text firstName2
@@ -45,8 +45,8 @@ Template(layout=Vertical, spacing=DP8) groupingExamplesMold as Decorated
 			Block > Text as Code(language=Html)
 					value
 						=========
-						Grouping(collection\=list2) gender as Labeled("gender") ComboBox<br/>
-						Grouping(collection\=list2) ageGroup as Labeled("age group") ComboBox<br/>
+						Grouping(collections\=list2) gender as Labeled("gender") ComboBox<br/>
+						Grouping(collections\=list2) ageGroup as Labeled("age group") ComboBox<br/>
 						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list2<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) groupingMold
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text firstName
@@ -60,20 +60,20 @@ Template(layout=Vertical, spacing=DP8) groupingExamplesMold as Decorated
 			Text(format=h6, value="No facets with many options")
 			Block(spacing=DP8, format=filledNoAir)
 				Block(format=containerAirMedium, spacing=DP24) as Relative(width=100%)
-					Grouping(format=whiteBackground,collection=empty) country1 as Labeled("country")
+					Grouping(format=whiteBackground,collections=empty) country1 as Labeled("country")
 			Block > Text as Code(language=Html)
 					value
 						=========
-						Grouping(collection\=empty) country as Labeled("country")<br/>
+						Grouping(collections\=empty) country as Labeled("country")<br/>
 						=========
 
 		Block as Relative(width=49%, height=100%)
 			Text(format=h6, value="ComboBox facet with many options")
 			Block(spacing=DP8, format=filledNoAir)
 				Block(format=containerAirMedium, spacing=DP24) as Relative(width=100%)
-					Grouping(format=whiteBackground,collection=empty) country2 as Labeled("country") ComboBox
+					Grouping(format=whiteBackground,collections=empty) country2 as Labeled("country") ComboBox
 			Block > Text as Code(language=Html)
 					value
 						=========
-						Grouping(collection\=empty) country as Labeled("country") ComboBox<br/>
+						Grouping(collections\=empty) country as Labeled("country") ComboBox<br/>
 						=========

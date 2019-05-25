@@ -5,9 +5,12 @@ import io.intino.alexandria.ui.displays.events.SearchEvent;
 import io.intino.alexandria.ui.displays.events.SearchListener;
 import io.intino.alexandria.ui.displays.notifiers.SearchBoxNotifier;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class SearchBox<DN extends SearchBoxNotifier, B extends Box> extends AbstractSearchBox<B> {
     private SearchListener searchListener;
-    private Collection collection;
+    private java.util.List<Collection> collections = new ArrayList<>();
     private String condition = null;
 
     public SearchBox(B box) {
@@ -19,8 +22,8 @@ public class SearchBox<DN extends SearchBoxNotifier, B extends Box> extends Abst
         return this;
     }
 
-    public SearchBox<DN, B> bindTo(Collection collection) {
-        this.collection = collection;
+    public SearchBox<DN, B> bindTo(Collection... collections) {
+        this.collections = Arrays.asList(collections);
         return this;
     }
 
@@ -35,9 +38,8 @@ public class SearchBox<DN extends SearchBoxNotifier, B extends Box> extends Abst
     }
 
     private void notifyCollection() {
-        if (collection == null) return;
-        collection.filter(condition);
-        notifier.refreshCount(collection.itemCount());
+        collections.forEach(c -> c.filter(condition));
+        if (collections.size() > 0) notifier.refreshCount(collections.get(0).itemCount());
     }
 
     private void notifyListener() {

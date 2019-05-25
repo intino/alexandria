@@ -6,7 +6,7 @@ import io.intino.alexandria.ui.displays.events.collection.AddItemEvent;
 import io.intino.alexandria.ui.displays.items.*;
 import io.intino.alexandria.ui.documentation.Person;
 import io.intino.alexandria.ui.documentation.model.Datasources;
-import io.intino.alexandria.ui.model.Datasource;
+import io.intino.alexandria.ui.model.datasource.PageDatasource;
 
 public class ListExamplesMold extends AbstractListExamplesMold<UiFrameworkBox> {
 
@@ -23,10 +23,10 @@ public class ListExamplesMold extends AbstractListExamplesMold<UiFrameworkBox> {
         init(list4, Datasources.personDatasource());
         init(list5, Datasources.personDatasource());
         add.onExecute((event) -> add.notifyUser("add item", UserMessage.Type.Info));
-        remove.onExecute((event) -> remove.notifyUser("remove " + event.selection().size() + " items "));
+        remove.onExecute((event) -> remove.notifyUser("remove " + event.selection().size() + " items"));
     }
 
-    private void init(io.intino.alexandria.ui.displays.components.List list, Datasource datasource) {
+    private void init(io.intino.alexandria.ui.displays.components.List list, PageDatasource datasource) {
         list.source(datasource);
         list.onAddItem(this::onAddItem);
     }

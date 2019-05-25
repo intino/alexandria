@@ -1,9 +1,13 @@
-package io.intino.alexandria.ui.displays.components.collection;
+package io.intino.alexandria.ui.displays.components.collection.loaders;
 
+import io.intino.alexandria.Timetag;
 import io.intino.alexandria.ui.model.Datasource;
 import io.intino.alexandria.ui.model.datasource.Filter;
+import io.intino.alexandria.ui.model.datasource.TemporalDatasource;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class ItemLoader<DS extends Datasource<Item>, Item> {
 	private long itemCount;
@@ -11,6 +15,7 @@ public class ItemLoader<DS extends Datasource<Item>, Item> {
 	String condition;
 	List<Filter> filters = new ArrayList<>();
 	HashSet<String> sortings = new HashSet<>();
+	Timetag timetag = null;
 
 	public ItemLoader(DS source) {
 		this.source = source;
@@ -24,13 +29,19 @@ public class ItemLoader<DS extends Datasource<Item>, Item> {
 			if (filter == null) filters.add(new Filter(grouping, groups));
 			else filter.groups(groups);
 		}
-		this.itemCount = source.itemCount(condition, filters);
+		this.itemCount = calculateItemCount(condition);
 		return this;
 	}
 
 	public ItemLoader condition(String condition) {
 		this.condition = condition;
-		this.itemCount = source.itemCount(condition, filters);
+		this.itemCount = calculateItemCount(condition);
+		return this;
+	}
+
+	public ItemLoader timetag(Timetag timetag) {
+		this.timetag = timetag;
+		this.itemCount = calculateItemCount(condition);
 		return this;
 	}
 
@@ -51,10 +62,6 @@ public class ItemLoader<DS extends Datasource<Item>, Item> {
 		return itemCount;
 	}
 
-	public List<Item> moreItems(int start, int stop) {
-		return source.items(start, stop - start + 1, condition, filters, new ArrayList<>(sortings));
-	}
-
 	private Filter filter(String grouping) {
 		return filters.stream().filter(f -> f.grouping().equalsIgnoreCase(grouping)).findFirst().orElse(null);
 	}
@@ -63,4 +70,10 @@ public class ItemLoader<DS extends Datasource<Item>, Item> {
 		Filter filter = filter(grouping);
 		if (filter != null) filters.remove(filter);
 	}
+
+	private long calculateItemCount(String condition) {
+		if (source instanceof TemporalDatasource) return ((TemporalDatasource) source).itemCount(timetag, condition, filters);
+		return source.itemCount(condition, filters);
+	}
+
 }

@@ -8,7 +8,7 @@ Template(layout=Vertical, spacing=DP8) searchBoxExamplesMold as Decorated
 		Block as Relative(width=49%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAir)
-				SearchBox(format=air,collection=list1) searchBox1 as Labeled("female population")
+				SearchBox(format=air,collections=list1) searchBox1 as Labeled("female population")
 					placeholder = "filter elements..."
 				List(itemClass="io.intino.alexandria.ui.documentation.Person") list1
 					Mold > Item(height=60px,width=30%) searchBox1Mold
@@ -19,7 +19,7 @@ Template(layout=Vertical, spacing=DP8) searchBoxExamplesMold as Decorated
 			Block > Text as Code(language=Html)
 					value
 						=========
-						SearchBox(collection\=list,placeholder\="filter elements...") searchBox
+						SearchBox(collections\=list,placeholder\="filter elements...") searchBox
 						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) sortingMold<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text firstName<br/>

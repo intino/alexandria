@@ -4,10 +4,10 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.CollectionMoreItems;
 import io.intino.alexandria.schemas.PageCollectionSetup;
 import io.intino.alexandria.ui.displays.Display;
-import io.intino.alexandria.ui.displays.components.collection.PageCollectionBehavior;
+import io.intino.alexandria.ui.displays.components.collection.behaviors.PageCollectionBehavior;
 import io.intino.alexandria.ui.displays.events.collection.AddItemEvent;
 import io.intino.alexandria.ui.displays.notifiers.PageCollectionNotifier;
-import io.intino.alexandria.ui.model.Datasource;
+import io.intino.alexandria.ui.model.datasource.PageDatasource;
 
 public abstract class PageCollection<DN extends PageCollectionNotifier, B extends Box> extends AbstractPageCollection<DN, B> {
     private int pageSize;
@@ -48,7 +48,7 @@ public abstract class PageCollection<DN extends PageCollectionNotifier, B extend
 
     @Override
     void setup() {
-        Datasource source = source();
+        PageDatasource source = source();
         if (source == null) return;
         notifier.setup(new PageCollectionSetup().pageSize(pageSize).itemCount(source.itemCount()));
         ((PageCollectionBehavior)behavior()).setup(source, pageSize);

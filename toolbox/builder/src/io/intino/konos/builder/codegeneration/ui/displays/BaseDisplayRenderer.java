@@ -62,10 +62,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	private void addParametrized(FrameBuilder frame) {
 		FrameBuilder result = new FrameBuilder("parametrized");
 		result.add("name", element.name$());
-		if (element.isExtensionOf()) {
-			result.add("extensionOf");
-			result.add("parent", element.asExtensionOf().parentView().name$());
-		}
+		addGeneric(element, result);
 		addDecoratedFrames(result);
 		frame.add("parametrized", result.toFrame());
 	}
@@ -75,10 +72,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (element.i$(Template.class)) result.add(Template.class.getSimpleName());
 		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) result.add(CatalogComponents.Collection.Mold.Item.class.getSimpleName());
 		if (element.i$(PrivateComponents.Row.class)) result.add(PrivateComponents.Row.class.getSimpleName());
-		if (element.isExtensionOf()) {
-			result.add("extensionOf");
-			result.add("parent", element.asExtensionOf().parentView().name$());
-		}
+		addGeneric(element, result);
 		result.add("type", typeOf(element));
 		addDecoratedFrames(result);
 		if (element.i$(Template.class)) {

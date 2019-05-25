@@ -38,6 +38,6 @@ public class MapRenderer extends CollectionRenderer<Map> {
 
 	@Override
 	protected String className(Class clazz) {
-		return super.className(clazz).replace("map", "");
+		return super.className(clazz);
 	}
 }
