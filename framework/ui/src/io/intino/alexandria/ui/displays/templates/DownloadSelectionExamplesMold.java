@@ -6,7 +6,7 @@ import io.intino.alexandria.ui.displays.events.collection.AddItemEvent;
 import io.intino.alexandria.ui.displays.items.*;
 import io.intino.alexandria.ui.documentation.Person;
 import io.intino.alexandria.ui.documentation.model.Datasources;
-import io.intino.alexandria.ui.model.Datasource;
+import io.intino.alexandria.ui.model.datasource.PageDatasource;
 import io.intino.alexandria.ui.spark.UIFile;
 
 import java.io.ByteArrayInputStream;
@@ -38,7 +38,7 @@ public class DownloadSelectionExamplesMold extends AbstractDownloadSelectionExam
         });
     }
 
-    private void init(io.intino.alexandria.ui.displays.components.List list, Datasource datasource) {
+    private void init(io.intino.alexandria.ui.displays.components.List list, PageDatasource datasource) {
         list.source(datasource);
         list.onAddItem(this::onAddItem);
     }

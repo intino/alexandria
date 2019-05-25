@@ -5,9 +5,12 @@ import io.intino.alexandria.ui.displays.events.SelectEvent;
 import io.intino.alexandria.ui.displays.events.SelectListener;
 import io.intino.alexandria.ui.displays.notifiers.SortingNotifier;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Sorting<DN extends SortingNotifier, B extends Box> extends AbstractSorting<B> {
     private SelectListener selectListener;
-    private Collection collection;
+    private java.util.List<Collection> collections = new ArrayList<>();
     private boolean selected = false;
 
     public Sorting(B box) {
@@ -19,8 +22,8 @@ public class Sorting<DN extends SortingNotifier, B extends Box> extends Abstract
         return this;
     }
 
-    public Sorting<DN, B> bindTo(Collection collection) {
-        this.collection = collection;
+    public Sorting<DN, B> bindTo(Collection... collections) {
+        this.collections = Arrays.asList(collections);
         return this;
     }
 
@@ -35,9 +38,10 @@ public class Sorting<DN extends SortingNotifier, B extends Box> extends Abstract
     }
 
     private void notifyCollection() {
-        if (collection == null) return;
-        if (selected) collection.addSorting(key());
-        else collection.removeSorting(key());
+        collections.forEach(c -> {
+            if (selected) c.addSorting(key());
+            else c.removeSorting(key());
+        });
     }
 
     private void notifyListener() {

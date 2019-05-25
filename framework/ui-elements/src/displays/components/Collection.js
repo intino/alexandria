@@ -11,7 +11,7 @@ export const CollectionStyles = theme => ({
 		borderRadius: "5px"
 	},
 	selectable : {
-		paddingLeft: "35px"
+		paddingLeft: "35px !important"
 	},
 	selector : {
 		display: "none",

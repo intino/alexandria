@@ -39,7 +39,7 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 		result.add("collection");
 		if (element.i$(AbstractNavigable.class)) result.add("navigable", element.a$(AbstractNavigable.class).position().name());
 		if (element.sourceClass() != null) result.add("sourceClass", element.sourceClass());
-		result.add("pageSize", element.pageSize());
+		if (element.i$(CatalogComponents.List.class) || element.i$(CatalogComponents.Table.class)) result.add("pageSize", element.pageSize());
 		result.add("itemHeight", itemHeight());
 		result.add("scrollingMark", element.scrollingMark());
 		if (element.isSelectable()) result.add("selection", element.asSelectable().multiple() ? "multiple" : "single");
@@ -81,8 +81,8 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 		result.add("methodName", element.i$(CatalogComponents.Table.class) ? nameOf(item) : "");
 		String itemClass = element.itemClass();
 		if (itemClass != null) {
-			result.add("itemClass", itemClass);
-			result.add("itemVariable", "item");
+			result.add("itemClass", new FrameBuilder("itemClass", element.i$(CatalogComponents.Map.class) ? "map" : "").add("value", itemClass));
+			result.add("itemVariable", new FrameBuilder("itemVariable", element.i$(CatalogComponents.Map.class) ? "map" : "").add("value", "item"));
 		}
 		builder.add("item", result);
 	}

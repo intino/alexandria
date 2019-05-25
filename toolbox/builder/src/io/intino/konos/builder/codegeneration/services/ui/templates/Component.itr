@@ -44,12 +44,12 @@ def type(method & multiple)
 end
 
 def type(method & collection & table)
-	$selectionMethod
+	[$selectionMethod]
 
 	public $name+firstUpperCase~Row create([$itemClass item]) {
 		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row(($box+firstUpperCase~Box)box());
-		[row.id(java.util.UUID.randomUUID().toString());
-		row.item($itemVariable);]
+		row.id(java.util.UUID.randomUUID().toString());
+		[row.item($itemVariable);]
 		return row;
 	}
 end
@@ -219,15 +219,15 @@ def type(binding & toolbar)
 end
 
 def type(binding & grouping)
-	$name.bindTo($collection);
+	$name.bindTo($collection...[,]);
 end
 
 def type(binding & sorting)
-	$name.bindTo($collection);
+	$name.bindTo($collection...[,]);
 end
 
 def type(binding & searchbox)
-	$name.bindTo($collection);
+	$name.bindTo($collection...[,]);
 end
 
 def type(binding)
@@ -330,7 +330,7 @@ end
 
 def type(properties & collection) trigger(specific)
 	[source(new io.intino.alexandria.ui.sources.$sourceClass+firstUpperCase());]
-	pageSize($pageSize);
+	[pageSize($pageSize);]
 end
 
 def type(properties) trigger(specific)
@@ -383,10 +383,26 @@ def type(item) trigger(property)
 end
 
 def type(item) trigger(addMethod)
-	$methodAccessibility $name+firstUpperCase create$methodName+firstUpperCase([$itemClass item]) {
+	$methodAccessibility $name+firstUpperCase create$methodName+firstUpperCase([$itemClass element]) {
 		$name+firstUpperCase result = new $name+firstUpperCase(($box+firstUpperCase~Box)box());
 		result.id(java.util.UUID.randomUUID().toString());
 		[result.item($itemVariable);]
 		return result;
 	}
+end
+
+def type(itemClass & map)
+    io.intino.alexandria.ui.model.datasource.PlaceMark<$value>
+end
+
+def type(itemClass)
+    $value
+end
+
+def type(itemVariable & map)
+    element.item()
+end
+
+def type(itemVariable)
+    element
 end

@@ -18,6 +18,7 @@ import io.intino.tara.magritte.Layer;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayNotifierFolder;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayRequesterFolder;
 import static io.intino.konos.model.graph.PassiveView.Request.ResponseType.Asset;
@@ -46,6 +47,24 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		return result;
 	}
 
+	public static Frame frameOf(Layer element, Request request, String packageName) {
+		final FrameBuilder result = new FrameBuilder().add("request");
+		result.add("display", element.name$());
+		if (request.responseType().equals(Asset)) result.add("asset");
+		if (request.isFile()) result.add("file");
+		result.add("name", request.name$());
+		if (request.isType()) {
+			final FrameBuilder parameterFrame = new FrameBuilder().add("parameter").add(request.asType().type()).add(request.asType().getClass().getSimpleName().replace("Data", "")).add("value", parameter(request, packageName));
+			if (request.isList()) parameterFrame.add("list");
+			result.add("parameter", parameterFrame);
+			result.add("parameterSignature", "value");
+		}
+		if (request.responseType() == Asset) result.add("method", new FrameBuilder().add("download", "download"));
+		else if (request.isFile()) result.add("method", new FrameBuilder().add("upload", "upload"));
+		else result.add("method", new FrameBuilder());
+		return result.toFrame();
+	}
+
 	protected void createPassiveViewFiles(FrameBuilder elementBuilder) {
 		Frame frame = elementBuilder.toFrame();
 		writeNotifier(frame);
@@ -57,17 +76,9 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		return typeOf(element.a$(Display.class));
 	}
 
-	private void writeRequester(Frame frame) {
-		writeRequester(element, frame);
-	}
-
 	protected void writeRequester(PassiveView element, Frame frame) {
 		String name = snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + "Requester");
 		writeFrame(displayRequesterFolder(gen(), target), name, displayRequesterTemplate().render(frame));
-	}
-
-	private void writePushRequester(Frame frame) {
-		writePushRequester(element, frame);
 	}
 
 	protected void writePushRequester(PassiveView element, Frame frame) {
@@ -78,17 +89,41 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		writeFrame(displayRequesterFolder(gen(), target), name, template.render(frame));
 	}
 
+	protected void writeNotifier(PassiveView element, Frame frame) {
+		String notifierName = snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + "Notifier");
+		writeFrame(displayNotifierFolder(gen(), target), notifierName, displayNotifierTemplate().render(frame));
+	}
+
+	protected void addGeneric(PassiveView element, FrameBuilder builder) {
+		if (!isGeneric(element)) return;
+		builder.add("generic");
+		if (element.isExtensionOf()) builder.add("isExtensionOf");
+		builder.add("parent", genericParent(element));
+	}
+
+	protected boolean isGeneric(PassiveView element) {
+		return element.isExtensionOf() || (element.i$(Component.class) && element.graph().isParentComponent(element.a$(Component.class)));
+	}
+
+	protected String genericParent(PassiveView element) {
+		if (element.isExtensionOf()) return firstUpperCase(element.asExtensionOf().parentView().name$());
+		return target == Target.Accessor ? "Component" : "io.intino.alexandria.ui.displays.Component";
+	}
+
+	private void writeRequester(Frame frame) {
+		writeRequester(element, frame);
+	}
+
+	private void writePushRequester(Frame frame) {
+		writePushRequester(element, frame);
+	}
+
 	private boolean isAccessible(Frame frame) {
 		return frame.is("accessible");
 	}
 
 	private void writeNotifier(Frame frame) {
 		writeNotifier(element, frame);
-	}
-
-	protected void writeNotifier(PassiveView element, Frame frame) {
-		String notifierName = snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + "Notifier");
-		writeFrame(displayNotifierFolder(gen(), target), notifierName, displayNotifierTemplate().render(frame));
 	}
 
 	private Template displayNotifierTemplate() {
@@ -131,24 +166,6 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	private Frame[] framesOfRequests(List<Request> requests) {
 		return requests.stream().map(r -> frameOf(element, r, packageName())).toArray(Frame[]::new);
-	}
-
-	public static Frame frameOf(Layer element, Request request, String packageName) {
-		final FrameBuilder result = new FrameBuilder().add("request");
-		result.add("display", element.name$());
-		if (request.responseType().equals(Asset)) result.add("asset");
-		if (request.isFile()) result.add("file");
-		result.add("name", request.name$());
-		if (request.isType()) {
-			final FrameBuilder parameterFrame = new FrameBuilder().add("parameter").add(request.asType().type()).add(request.asType().getClass().getSimpleName().replace("Data", "")).add("value", parameter(request, packageName));
-			if (request.isList()) parameterFrame.add("list");
-			result.add("parameter", parameterFrame);
-			result.add("parameterSignature", "value");
-		}
-		if (request.responseType() == Asset) result.add("method", new FrameBuilder().add("download", "download"));
-		else if (request.isFile()) result.add("method", new FrameBuilder().add("upload", "upload"));
-		else result.add("method", new FrameBuilder());
-		return result.toFrame();
 	}
 
 	private static String parameter(Request request, String packageName) {

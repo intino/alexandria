@@ -5,7 +5,10 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
+import io.intino.konos.model.graph.CatalogComponents;
 import io.intino.konos.model.graph.Component;
+
+import java.util.List;
 
 public class BindingCollectionRenderer<C extends Component> extends ComponentRenderer<C> {
 
@@ -13,10 +16,10 @@ public class BindingCollectionRenderer<C extends Component> extends ComponentRen
 		super(settings, component, provider, target);
 	}
 
-	void addBinding(FrameBuilder builder, io.intino.konos.model.graph.CatalogComponents.Collection collection) {
-		if (collection == null) return;
+	void addBinding(FrameBuilder builder, List<CatalogComponents.Collection> collections) {
+		if (collections.size() <= 0) return;
 		FrameBuilder result = new FrameBuilder("binding", type()).add("name", nameOf(element));
-		result.add("collection", nameOf(collection));
+		collections.forEach(c -> result.add("collection", nameOf(c)));
 		builder.add("binding", result);
 	}
 

@@ -4,9 +4,7 @@ import AbstractPageCollection from "../../../gen/displays/components/AbstractPag
 import PageCollectionNotifier from "../../../gen/displays/notifiers/PageCollectionNotifier";
 import PageCollectionRequester from "../../../gen/displays/requesters/PageCollectionRequester";
 
-const styles = theme => ({});
-
-class PageCollection extends AbstractPageCollection {
+export default class PageCollection extends AbstractPageCollection {
 
 	constructor(props) {
 		super(props);
@@ -14,8 +12,4 @@ class PageCollection extends AbstractPageCollection {
 		this.requester = new PageCollectionRequester(this);
 	};
 
-	setup = (value) => {
-	};
 }
-
-export default withStyles(styles, { withTheme: true })(PageCollection);

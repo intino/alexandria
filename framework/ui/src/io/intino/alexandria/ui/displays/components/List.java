@@ -3,10 +3,10 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.Collection;
-import io.intino.alexandria.ui.displays.components.collection.PageCollectionBehavior;
+import io.intino.alexandria.ui.displays.components.collection.behaviors.PageCollectionBehavior;
 import io.intino.alexandria.ui.displays.events.collection.AddItemEvent;
 import io.intino.alexandria.ui.displays.notifiers.ListNotifier;
-import io.intino.alexandria.ui.model.Datasource;
+import io.intino.alexandria.ui.model.datasource.PageDatasource;
 
 import java.util.stream.Collectors;
 
@@ -16,8 +16,8 @@ public abstract class List<B extends Box, ItemComponent extends io.intino.alexan
         super(box);
     }
 
-    public List<B, ItemComponent, Item> source(Datasource source) {
-        source(source, new PageCollectionBehavior<Datasource<Item>, Item>(this));
+    public List<B, ItemComponent, Item> source(PageDatasource source) {
+        source(source, new PageCollectionBehavior<PageDatasource<Item>, Item>(this));
         return this;
     }
 

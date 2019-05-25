@@ -36,7 +36,7 @@ def type(display)
 	}
 end
 
-def type(parametrized & extensionOf)
+def type(parametrized & generic)
 	<DN extends $name+firstUpperCase~Notifier, $abstractBox+extension>
 end
 
@@ -44,8 +44,8 @@ def type(parametrized)
 	$abstractBox+extensionTagged
 end
 
-def type(displayExtends & extensionOf)
-	extends $parent+firstUpperCase<DN, $abstractBox+type>
+def type(displayExtends & generic)
+	extends $parent<DN, $abstractBox+type>
 end
 
 def type(displayExtends & template)
