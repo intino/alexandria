@@ -33,7 +33,7 @@ public class Benchmarks_ {
         Instant instant = instant(2018,1,1);
 
         for (int id = 0; id < size; id++)
-            builder.add(id, instant, "init");
+            builder.add(id, instant, "init".getBytes());
         builder.close();
     }
 
@@ -44,7 +44,7 @@ public class Benchmarks_ {
         int id = 0;
         int timeOffset = 5000;
         for (int i = 0; i < updates; i++) {
-            builder.add(id, instant, String.valueOf(i));
+            builder.add(id, instant, String.valueOf(i).getBytes());
             instant = instant.plusMillis(timeOffset);
             id = (int) ((id + updates) % (size * 1.1));
         }

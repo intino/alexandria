@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 
@@ -41,48 +42,57 @@ public class MovvBuilder_ {
         buildEmptyMovv();
 
         Movv movv = new Movv(new File("movvs/empty.movv"));
-        assertThat(movv.get(1000).at(instant(2018,2,10)).data).isNull();
-        assertThat(movv.get(2000).at(instant(2018,2,10)).data).isNull();
+        assertThat(movv.get(1000).at(instant(2018,2,10)).data).isEqualTo(bytes());
+        assertThat(movv.get(2000).at(instant(2018,2,10)).data).isEqualTo(bytes());
     }
 
     @Test
     public void should_create_a_movv() throws IOException {
         build();
 
-        Movv movv = new Movv(new File("movvs/single.movv"));
-        assertThat(movv.get(1000).length()).isEqualTo(1);
-        assertThat(movv.get(1000).first().instant.toString()).isEqualTo("2018-01-02T00:00:00Z");
-        assertThat(movv.get(1000).first().data).isEqualTo("1");
-        assertThat(movv.get(1000).last().instant.toString()).isEqualTo("2018-01-02T00:00:00Z");
-        assertThat(movv.get(1000).last().data).isEqualTo("1");
-        assertThat(movv.get(1000).iterator().hasNext()).isTrue();
-        assertThat(movv.get(1000).iterator().next().data).isEqualTo("1");
-        assertThat(movv.get(1000).iterator().next().instant).isEqualTo(instant(2018,1,2));
-        assertThat(movv.get(1000).at(instant(2018,1,1)).data).isNull();
-        assertThat(movv.get(1000).at(instant(2018,1,2)).data).isEqualTo("1");
-        assertThat(movv.get(1000).at(instant(2019,1,1)).data).isEqualTo("1");
-        assertThat(movv.get(2000).at(instant(2019,1,1)).data).isNull();
+        for (Movv.Mode mode : Movv.Mode.values()) {
+            Movv movv = new Movv(new File("movvs/single.movv"), mode);
+            assertThat(movv.get(1000).length()).isEqualTo(1);
+            assertThat(movv.get(1000).first().instant.toString()).isEqualTo("2018-01-02T00:00:00Z");
+            assertThat(movv.get(1000).first().data).isEqualTo(bytes(49, 0));
+            assertThat(movv.get(1000).last().instant.toString()).isEqualTo("2018-01-02T00:00:00Z");
+            assertThat(movv.get(1000).last().data).isEqualTo(bytes(49, 0));
+            assertThat(movv.get(1000).iterator().hasNext()).isTrue();
+            assertThat(movv.get(1000).iterator().next().data).isEqualTo(bytes(49, 0));
+            assertThat(movv.get(1000).iterator().next().instant).isEqualTo(instant(2018,1,2));
+            assertThat(movv.get(1000).at(instant(2018,1,1)).data).isEqualTo(bytes());
+            assertThat(movv.get(1000).at(instant(2018,1,2)).data).isEqualTo(bytes(49,0));
+            assertThat(movv.get(1000).at(instant(2019,1,1)).data).isEqualTo(bytes(49,0));
+            assertThat(movv.get(2000).at(instant(2019,1,1)).data).isEqualTo(bytes());
+        }
 
+    }
+
+    private byte[] bytes(int... data) {
+        byte[] bytes = new byte[data.length];
+        for (int i = 0; i < data.length; i++)
+            bytes[i] = (byte) data[i];
+        return bytes;
     }
 
     @Test
     public void should_create_a_movv_using_non_sorted_stage() throws IOException {
         buildWithNonSortedStage();
 
-        Movv movv = new Movv(new File("movvs/single.movv"));
-
-        assertThat(movv.get(1000).length()).isEqualTo(2);
-        assertThat(movv.get(1000).last().instant.toString()).isEqualTo("2018-02-20T00:00:00Z");
-        assertThat(movv.get(1000).last().data).isEqualTo("2");
-        assertThat(movv.get(1000).iterator().hasNext()).isTrue();
-        assertThat(movv.get(1000).iterator().next().data).isEqualTo("1");
-        assertThat(movv.get(1000).iterator().next().instant).isEqualTo(instant(2018,1,1));
-        assertThat(movv.get(1000).at(instant(2010,1,1)).data).isNull();
-        assertThat(movv.get(1000).at(instant(2018,2,10)).data).isEqualTo("1");
-        assertThat(movv.get(1000).at(instant(2018,2,20)).data).isEqualTo("2");
-        assertThat(movv.get(1000).at(instant(2019,1,1)).data).isEqualTo("2");
-        assertThat(movv.get(2000).at(instant(2019,1,1)).data).isNull();
-
+        for (Movv.Mode mode : Movv.Mode.values()) {
+            Movv movv = new Movv(new File("movvs/single.movv"), mode);
+            assertThat(movv.get(1000).length()).isEqualTo(2);
+            assertThat(movv.get(1000).last().instant.toString()).isEqualTo("2018-02-20T00:00:00Z");
+            assertThat(movv.get(1000).last().data).isEqualTo(bytes(50, 0));
+            assertThat(movv.get(1000).iterator().hasNext()).isTrue();
+            assertThat(movv.get(1000).iterator().next().data).isEqualTo(bytes(49, 0));
+            assertThat(movv.get(1000).iterator().next().instant).isEqualTo(instant(2018, 1, 1));
+            assertThat(movv.get(1000).at(instant(2010, 1, 1)).data).isEqualTo(bytes());
+            assertThat(movv.get(1000).at(instant(2018, 2, 10)).data).isEqualTo(bytes(49, 0));
+            assertThat(movv.get(1000).at(instant(2018, 2, 20)).data).isEqualTo(bytes(50, 0));
+            assertThat(movv.get(1000).at(instant(2019, 1, 1)).data).isEqualTo(bytes(50, 0));
+            assertThat(movv.get(2000).at(instant(2019, 1, 1)).data).isEqualTo(bytes());
+        }
     }
 
     @Test
@@ -90,15 +100,17 @@ public class MovvBuilder_ {
         buildWithNonSortedStage();
         update();
 
-        Movv movv = new Movv(new File("movvs/single.movv"));
-        assertThat(movv.get(1000).length()).isEqualTo(4);
-        assertThat(movv.get(1000).at(instant(2010,1,1)).data).isNull();
-        assertThat(movv.get(1000).at(instant(2018,2,10)).data).isEqualTo("1");
-        assertThat(movv.get(1000).at(instant(2018,2,25)).data).isEqualTo("2");
-        assertThat(movv.get(1000).at(instant(2018,2,25)).data).isEqualTo("2");
-        assertThat(movv.get(1000).at(instant(2019,1,1)).data).isEqualTo("4");
-        assertThat(movv.get(1000).at(instant(2019,2,15)).data).isEqualTo("05");
-        assertThat(movv.get(1000).at(Instant.now()).data).isEqualTo("05");
+        for (Movv.Mode mode : Movv.Mode.values()) {
+            Movv movv = new Movv(new File("movvs/single.movv"));
+            assertThat(movv.get(1000).length()).isEqualTo(4);
+            assertThat(movv.get(1000).at(instant(2010, 1, 1)).data).isEqualTo(bytes());
+            assertThat(movv.get(1000).at(instant(2018, 2, 10)).data).isEqualTo(bytes(49, 0));
+            assertThat(movv.get(1000).at(instant(2018, 2, 25)).data).isEqualTo(bytes(50, 0));
+            assertThat(movv.get(1000).at(instant(2018, 2, 25)).data).isEqualTo(bytes(50, 0));
+            assertThat(movv.get(1000).at(instant(2019, 1, 1)).data).isEqualTo(bytes(52, 0));
+            assertThat(movv.get(1000).at(instant(2019, 2, 15)).data).isEqualTo(bytes(48, 53));
+            assertThat(movv.get(1000).at(Instant.now()).data).isEqualTo(bytes(48, 53));
+        }
     }
 
 
@@ -107,13 +119,15 @@ public class MovvBuilder_ {
         buildWithNonSortedStage();
         updateWithSameInstant();
 
-        Movv movv = new Movv(new File("movvs/single.movv"));
-        assertThat(movv.get(1000).length()).isEqualTo(2);
-        assertThat(movv.get(1000).at(instant(2010,1,1)).data).isNull();
-        assertThat(movv.get(1000).at(instant(2018,2,10)).data).isEqualTo("1");
-        assertThat(movv.get(1000).at(instant(2018,2,25)).data).isEqualTo("2");
-        assertThat(movv.get(1000).at(instant(2018,2,25)).data).isEqualTo("2");
-        assertThat(movv.get(1000).at(Instant.now()).data).isEqualTo("2");
+        for (Movv.Mode mode : Movv.Mode.values()) {
+            Movv movv = new Movv(new File("movvs/single.movv"));
+            assertThat(movv.get(1000).length()).isEqualTo(2);
+            assertThat(movv.get(1000).at(instant(2010, 1, 1)).data).isEqualTo(bytes());
+            assertThat(movv.get(1000).at(instant(2018, 2, 10)).data).isEqualTo(bytes(49, 0));
+            assertThat(movv.get(1000).at(instant(2018, 2, 25)).data).isEqualTo(bytes(50, 0));
+            assertThat(movv.get(1000).at(instant(2018, 2, 25)).data).isEqualTo(bytes(50, 0));
+            assertThat(movv.get(1000).at(Instant.now()).data).isEqualTo(bytes(50, 0));
+        }
     }
 
     @Test
@@ -121,17 +135,19 @@ public class MovvBuilder_ {
         buildWithNonSortedStage();
         updateWithNonSortedStages();
 
-        Movv movv = new Movv(new File("movvs/single.movv"));
-        assertThat(movv.get(1000).length()).isEqualTo(4);
-        assertThat(movv.get(1000).at(instant(2010,1,1)).data).isNull();
-        assertThat(movv.get(1000).at(instant(2018,2,10)).data).isEqualTo("1");
-        assertThat(movv.get(1000).at(instant(2018,2,25)).data).isEqualTo("2");
-        assertThat(movv.get(1000).at(instant(2018,2,25)).data).isEqualTo("2");
-        assertThat(movv.get(1000).at(instant(2019,1,1)).data).isEqualTo("4");
-        assertThat(movv.get(1000).at(instant(2019,2,15)).data).isEqualTo("5");
-        assertThat(movv.get(1000).at(Instant.now()).data).isEqualTo("5");
-        assertThat(movv.get(1000).last().instant.toString()).isEqualTo("2019-02-10T00:00:00Z");
-        assertThat(movv.get(1000).last().data).isEqualTo("5");
+        for (Movv.Mode mode : Movv.Mode.values()) {
+            Movv movv = new Movv(new File("movvs/single.movv"));
+            assertThat(movv.get(1000).length()).isEqualTo(4);
+            assertThat(movv.get(1000).at(instant(2010, 1, 1)).data).isEqualTo(bytes());
+            assertThat(movv.get(1000).at(instant(2018, 2, 10)).data).isEqualTo(bytes(49, 0));
+            assertThat(movv.get(1000).at(instant(2018, 2, 25)).data).isEqualTo(bytes(50, 0));
+            assertThat(movv.get(1000).at(instant(2018, 2, 25)).data).isEqualTo(bytes(50, 0));
+            assertThat(movv.get(1000).at(instant(2019, 1, 1)).data).isEqualTo(bytes(52, 0));
+            assertThat(movv.get(1000).at(instant(2019, 2, 15)).data).isEqualTo(bytes(53, 0));
+            assertThat(movv.get(1000).at(Instant.now()).data).isEqualTo(bytes(53, 0));
+            assertThat(movv.get(1000).last().instant.toString()).isEqualTo("2019-02-10T00:00:00Z");
+            assertThat(movv.get(1000).last().data).isEqualTo(bytes(53, 0));
+        }
     }
     private final int TimeOffset = 5000;
     private final int size = 1000;
@@ -142,8 +158,10 @@ public class MovvBuilder_ {
         buildMultipleWithStage();
         updateMultipleWithStage();
 
-        Movv movv = new Movv(new File("movvs/multiple.movv"));
-        checkMultiple(movv);
+        for (Movv.Mode mode : Movv.Mode.values()) {
+            Movv movv = new Movv(new File("movvs/multiple.movv"));
+            checkMultiple(movv);
+        }
     }
 
     @Test
@@ -151,8 +169,10 @@ public class MovvBuilder_ {
         buildMultiple();
         updateMultiple();
 
-        Movv movv = new Movv(new File("movvs/multiple.movv"));
-        checkMultiple(movv);
+        for (Movv.Mode mode : Movv.Mode.values()) {
+            Movv movv = new Movv(new File("movvs/multiple.movv"));
+            checkMultiple(movv);
+        }
     }
 
     private void checkMultiple(Movv movv) {
@@ -161,7 +181,7 @@ public class MovvBuilder_ {
             assertThat(movv.get(k).length()).isEqualTo(updates);
             iterator = movv.get(k).iterator();
             for (int i = 0; i < updates; i++)
-                assertThat(iterator.next().data).isEqualTo(String.valueOf(i*size+k));
+                assertThat(iterator.next().data).isEqualTo(resize(String.valueOf(i*size+k).getBytes(), 32));
             iterator = movv.get(k).iterator();
             iterator.next();
             Instant instant = instant(2018,2,1).plusMillis((k+size)*TimeOffset);
@@ -171,6 +191,10 @@ public class MovvBuilder_ {
         }
     }
 
+    private Object resize(byte[] bytes, int dataSize) {
+        return Arrays.copyOf(bytes, dataSize);
+    }
+
     private void buildEmptyMovv() throws IOException {
         MovvBuilder.create(new File("movvs/empty.movv"), 1)
                 .close();
@@ -178,58 +202,58 @@ public class MovvBuilder_ {
 
     private void build() throws IOException {
         MovvBuilder.create(new File("movvs/single.movv"), 2)
-                .add(1000, instant(2018, 1, 2), "1")
+                .add(1000, instant(2018, 1, 2), bytes(49,0))
                 .close();
     }
 
     private void buildWithNonSortedStage() throws IOException {
         MovvBuilder.create(new File("movvs/single.movv"), 2)
                 .stageOf(1000)
-                    .add(instant(2018, 2, 24), "2")
-                    .add(instant(2018, 1, 1), "1")
-                    .add(instant(2018, 1, 1), "3")
-                    .add(instant(2018, 2, 20), "2")
+                    .add(instant(2018, 2, 24), bytes(50,0))
+                    .add(instant(2018, 1, 1), bytes(49,0))
+                    .add(instant(2018, 1, 1), bytes(51,0))
+                    .add(instant(2018, 2, 20), bytes(50,0))
                 .commit()
                 .close();
     }
 
     private void update() throws IOException {
         MovvBuilder.update(new File("movvs/single.movv"))
-                .add(1000, instant(2018, 3, 20), "2")
-                .add(1000, instant(2018, 3, 24), "2")
-                .add(1000, instant(2018, 4, 13), "2")
-                .add(1000, instant(2018, 8, 18), "4")
-                .add(1000, instant(2019, 1, 6), "4")
+                .add(1000, instant(2018, 3, 20), bytes(50,0))
+                .add(1000, instant(2018, 3, 24), bytes(50,0))
+                .add(1000, instant(2018, 4, 13), bytes(50,0))
+                .add(1000, instant(2018, 8, 18), bytes(52,0))
+                .add(1000, instant(2019, 1, 6), bytes(52,0))
                 .close();
 
         MovvBuilder.update(new File("movvs/single.movv"))
-                .add(1000, instant(2019,2,1), "4")
-                .add(1000, instant(2019,2,10), "05")
+                .add(1000, instant(2019,2,1), bytes(52,0))
+                .add(1000, instant(2019,2,10), bytes(48,53))
                 .close();
     }
 
     private void updateWithSameInstant() throws IOException {
         MovvBuilder.update(new File("movvs/single.movv"))
-                .add(1000, instant(2018, 2, 20), "5")
+                .add(1000, instant(2018, 2, 20), bytes(53,0))
                 .close();
     }
 
     private void updateWithNonSortedStages() throws IOException {
         MovvBuilder builder = MovvBuilder.update(new File("movvs/single.movv"))
                 .stageOf(1000)
-                .add(instant(2018, 3, 20), "2")
-                .add(instant(2018, 3, 24), "2")
+                .add(instant(2018, 3, 20), bytes(50,0))
+                .add(instant(2018, 3, 24), bytes(50,0))
                 .commit();
         builder.stageOf(1000)
-                .add(instant(2018, 8, 18), "4")
-                .add(instant(2018, 4, 13), "2")
-                .add(instant(2019, 1, 6), "4");
+                .add(instant(2018, 8, 18), bytes(52,0))
+                .add(instant(2018, 4, 13), bytes(50,0))
+                .add(instant(2019, 1, 6), bytes(52,0));
         builder.stages().forEach(Stage::commit);
         builder.close();
 
         MovvBuilder.update(new File("movvs/single.movv"))
-                .add(1000, instant(2019,2,1), "4")
-                .add(1000, instant(2019,2,10), "5")
+                .add(1000, instant(2019,2,1), bytes(52,0))
+                .add(1000, instant(2019,2,10), bytes(53,0))
                 .close();
     }
 
@@ -237,7 +261,7 @@ public class MovvBuilder_ {
         MovvBuilder builder = MovvBuilder.create(new File("movvs/multiple.movv"), 32);
         Instant instant = instant(2018,1,1);
         for (int i = 0; i < size; i++) {
-            builder.add(i, instant, String.valueOf(i));
+            builder.add(i, instant, String.valueOf(i).getBytes());
             instant = instant.plusMillis(TimeOffset);
         }
         builder.close();
@@ -247,7 +271,7 @@ public class MovvBuilder_ {
         MovvBuilder builder = MovvBuilder.create(new File("movvs/multiple.movv"), 32);
         Instant instant = instant(2018,1,1);
         for (int i = 0; i < size; i++) {
-            builder.stageOf(i).add(instant, String.valueOf(i));
+            builder.stageOf(i).add(instant, String.valueOf(i).getBytes());
             instant = instant.plusMillis(TimeOffset);
         }
         builder.stages().forEach(Stage::commit);
@@ -258,7 +282,7 @@ public class MovvBuilder_ {
         MovvBuilder builder = MovvBuilder.update(new File("movvs/multiple.movv"));
         Instant instant = instant(2018,2,1);
         for (int i = 0; i < size * updates; i++) {
-            builder.add(i % size, instant, String.valueOf(i));
+            builder.add(i % size, instant, String.valueOf(i).getBytes());
             instant = instant.plusMillis(TimeOffset);
         }
         builder.close();
@@ -268,7 +292,7 @@ public class MovvBuilder_ {
         MovvBuilder builder = MovvBuilder.update(new File("movvs/multiple.movv"));
         Instant instant = instant(2018,2,1);
         for (int i = 0; i < size * updates; i++) {
-            builder.stageOf(i % size).add(instant, String.valueOf(i));
+            builder.stageOf(i % size).add(instant, String.valueOf(i).getBytes());
             instant = instant.plusMillis(TimeOffset);
         }
         builder.stages().forEach(Stage::commit);

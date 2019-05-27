@@ -1,13 +1,16 @@
 package io.intino.alexandria.movv;
 
 import java.io.*;
+import java.util.Arrays;
 
-import static java.lang.Integer.min;
+import static java.lang.Math.min;
 import static java.lang.System.arraycopy;
 
 interface ChainWriter {
     int write(Mov.Item item, boolean isTheLast) throws IOException;
+	void writeNext(int cursor, int next) throws IOException;
     void close() throws IOException;
+
     class BulkChainWriter implements ChainWriter {
         private final DataOutputStream os;
         private int dataSize;
@@ -26,12 +29,17 @@ interface ChainWriter {
         @Override
         public int write(Mov.Item item, boolean isTheLast) throws IOException {
             os.writeLong(item.instant.toEpochMilli());
-            os.write(RandomChainWriter.toByteArray(item.data, dataSize));
+            os.write(RandomChainWriter.adjust(item.data, dataSize));
             os.writeInt(isTheLast ? -1 : cursor + 1);
             return cursor++;
         }
 
-        @Override
+		@Override
+		public void writeNext(int cursor, int next) throws IOException {
+
+		}
+
+		@Override
         public void close() throws IOException {
             os.close();
         }
@@ -60,20 +68,34 @@ interface ChainWriter {
         public int write(Mov.Item item, boolean isTheLast) throws IOException {
             raf.seek(raf.length());
             raf.writeLong(item.instant.toEpochMilli());
-            raf.write(toByteArray(item.data, dataSize));
+            raf.write(adjust(item.data, dataSize));
             raf.writeInt(isTheLast ? -1 : cursor + 1);
             return cursor++;
         }
 
-        @Override
+		@Override
+		public void writeNext(int cursor, int next) throws IOException {
+			seekNextOf(cursor);
+			raf.writeInt(next);
+		}
+
+		private void seekNextOf(int cursor) throws IOException {
+			raf.seek(positionOf(cursor) + Long.BYTES + dataSize);
+		}
+
+		private long positionOf(int cursor) {
+			return cursor * recordSize();
+		}
+
+
+		@Override
         public void close() throws IOException {
             raf.close();
         }
 
-        static byte[] toByteArray(String data, int dataSize) {
-            byte[] bytes = new byte[dataSize];
-            arraycopy(data.getBytes(),0,bytes,0,min(dataSize, data.length()));
-            return bytes;
+        static byte[] adjust(byte[] data, int dataSize) {
+        	if (data.length == dataSize) return data;
+			return Arrays.copyOf(data, dataSize);
         }
 
 
