@@ -3,108 +3,121 @@ package io.intino.alexandria.movv;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.time.Instant;
-import java.util.Arrays;
+
+import static java.lang.System.arraycopy;
 
 interface ChainReader {
-    void seek(int cursor) throws IOException;
+	ChainReader Null = cursor -> Record.Null;
 
-    Instant readInstant() throws IOException;
-    String readData() throws IOException;
+	static ChainReader load(byte[] content, int dataSize) {
+		return new ChainReader() {
 
-    void seekNextOf(int cursor) throws IOException;
-    int readNext() throws IOException;
-    void writeNext(int cursor) throws IOException;
+			@Override
+			public Record recordAt(int cursor) {
+				int position = positionOf(cursor);
+				return new Record(readInstant(position), readData(position + Long.BYTES), readNext(position + Long.BYTES + dataSize));
+			}
 
-    static ChainReader Null() {
-        return new ChainReader() {
+			Instant readInstant(int position) {
+				return Instant.ofEpochMilli(readLong(position));
+			}
 
-            @Override
-            public void seek(int cursor) {
+			byte[] readData(int position) {
+				byte[] bytes = new byte[dataSize];
+				arraycopy(content, position, bytes, 0, dataSize);
+				return bytes;
+			}
 
-            }
+			int readNext(int position) {
+				return readInt(position);
+			}
 
-            @Override
-            public Instant readInstant() {
-                return null;
-            }
+			private int positionOf(int cursor) {
+				return cursor * recordSize();
+			}
 
-            @Override
-            public String readData() {
-                return null;
-            }
+			private int readInt(int position) {
+				int value = 0;
+				for (int i = 0; i < 4; i++)
+					value = (value << 8) + ((int) content[position++] & 0xFF);
+				return value;
+			}
 
-            @Override
-            public void seekNextOf(int cursor) {
+			private long readLong(int position) {
+				long value = 0;
+				for (int i = 0; i < 8; i++)
+					value = (value << 8) + ((long) content[position++] & 0xFFL);
+				return value;
+			}
 
-            }
+			private int recordSize() {
+				return Long.BYTES + dataSize + Integer.BYTES;
+			}
 
-            @Override
-            public int readNext() {
-                return 0;
-            }
+		};
+	}
 
-            @Override
-            public void writeNext(int cursor) {
+	static ChainReader load(RandomAccessFile raf, int dataSize) {
+		return new ChainReader() {
+			@Override
+			synchronized public Record recordAt(int cursor) throws IOException {
+				raf.seek(positionOf(cursor));
+				return new Record(readInstant(), readData(), readNext());
+			}
 
-            }
-        };
-    }
+			Instant readInstant() throws IOException {
+				return Instant.ofEpochMilli(raf.readLong());
+			}
 
-    static ChainReader load(RandomAccessFile raf, int dataSize) {
-        return new ChainReader() {
-            @Override
-            public void seek(int cursor) throws IOException {
-                raf.seek(positionOf(cursor));
-            }
+			byte[] readData() throws IOException {
+				byte[] bytes = new byte[dataSize];
+				raf.read(bytes);
+				return bytes;
+			}
 
-            @Override
-            public void seekNextOf(int cursor) throws IOException {
-                raf.seek(positionOf(cursor) + Long.BYTES + dataSize);
-            }
+			int readNext() throws IOException {
+				return raf.readInt();
+			}
 
-            @Override
-            public Instant readInstant() throws IOException {
-                return Instant.ofEpochMilli(raf.readLong());
-            }
+			private long positionOf(int cursor) {
+				return cursor * recordSize();
+			}
 
-            @Override
-            public String readData() throws IOException {
-                return new String(readBytes());
-            }
+			private int recordSize() {
+				return Long.BYTES + dataSize + Integer.BYTES;
+			}
 
-            @Override
-            public int readNext() throws IOException {
-                return raf.readInt();
-            }
+		};
+	}
 
-            private long positionOf(int cursor) {
-                return cursor * recordSize();
-            }
+	Record recordAt(int cursor) throws IOException;
 
-            private byte[] readBytes() throws IOException {
-                byte[] bytes = new byte[dataSize];
-                raf.read(bytes);
-                return Arrays.copyOf(bytes,lengthOf(bytes));
-            }
+	class Record {
+		static Record Null = new Record(null, new byte[0], 0);
+		private final Instant instant;
+		private final byte[] data;
+		private final int next;
 
-            private int lengthOf(byte[] bytes) {
-                int length = 0;
-                while ((length < bytes.length) && (bytes[length] != 0)) {
-                    length++;
-                }
-                return length;
-            }
+		public Record(Instant instant, byte[] data, int next) {
+			this.instant = instant;
+			this.data = data;
+			this.next = next;
+		}
 
-            @Override
-            public void writeNext(int cursor) throws IOException {
-                raf.writeInt(cursor);
-            }
+		public Instant instant() {
+			return instant;
+		}
 
-            private int recordSize() {
-                return Long.BYTES + dataSize + Integer.BYTES;
-            }
+		public byte[] data() {
+			return data;
+		}
 
-        };
-    }
+		public int next() {
+			return next;
+		}
 
+		boolean isAfter(Instant instant) {
+			return this.instant.isAfter(instant);
+		}
+	}
 }

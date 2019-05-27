@@ -4,19 +4,33 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.file.Files;
 import java.util.Iterator;
+
+import static io.intino.alexandria.movv.Movv.Mode.Disk;
+import static io.intino.alexandria.movv.Movv.Mode.Memory;
 
 public class Movv implements Iterable<Mov> {
     private final ChainIndex chainIndex;
-	private ChainReader chainReader;
+	private final ChainReader chainReader;
 
     public Movv(File file) throws IOException {
+    	this(file, Memory);
+    }
+
+    public Movv(File file, Mode mode) throws IOException {
 	    this.chainIndex = ChainIndex.load(file);
-        this.chainReader = ChainReader.load(rafOf(file), chainIndex.dataSize());
+        this.chainReader = mode == Disk ?
+				ChainReader.load(rafOf(file), chainIndex.dataSize()) :
+				ChainReader.load(contentOf(file), chainIndex.dataSize());
     }
 
 	private RandomAccessFile rafOf(File file) throws FileNotFoundException {
 		return new RandomAccessFile(chainFileOf(file), "r");
+	}
+
+	private byte[] contentOf(File file) throws IOException {
+		return Files.readAllBytes(chainFileOf(file).toPath());
 	}
 
 	static File chainFileOf(File file) {
@@ -46,4 +60,8 @@ public class Movv implements Iterable<Mov> {
             }
         };
     }
+
+	public enum Mode {
+    	Memory, Disk
+	}
 }
