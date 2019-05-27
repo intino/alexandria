@@ -49,7 +49,7 @@ public class ArffFileGenerator implements FileGenerator {
 	@Override
 	public void put(long key) {
 		String line = streams.stream()
-				.map(s -> s.key().equals(key) ? formatterOf().format(s.value()) : NULL_VALUE)
+				.map(s -> s.key().equals(key) ? formatterOf(s.type(), s.mode()).format(s.value()) : NULL_VALUE)
 				.collect(joining(","));
 		try {
 			writer.write(line + "\n");
@@ -58,7 +58,7 @@ public class ArffFileGenerator implements FileGenerator {
 		}
 	}
 
-	private Formatter formatterOf() {
+	private Formatter formatterOf(Type type, ColumnStream.Mode mode) {
 		return new Formatter() {
 			@Override
 			public String pattern() {
@@ -67,15 +67,18 @@ public class ArffFileGenerator implements FileGenerator {
 
 			@Override
 			public String format(Object value) {
-				return value == null ? NULL_VALUE : value.toString();
+				if (value == null) return NULL_VALUE;
+				else {
+					if (type.equals(Type.Nominal)) return "\'" + mode.features[(int) value] + "\'";
+					if (type.equals(Type.Boolean) || type.equals(Type.String)) return "\'" + value + "\'";
+					return value.toString();
+				}
 			}
 		};
 	}
 
 	private Frame[] attributes() {
 		List<Frame> headers = new ArrayList<>();
-		headers.add(new FrameBuilder("attribute").add("name", "id").add("type", new FrameBuilder("Numeric").toFrame()).toFrame());
-		headers.add(new FrameBuilder("attribute").add("name", "timetag").add("type", new FrameBuilder("Date").add("format", "yyyyMM").toFrame()).toFrame());
 		for (ColumnStream stream : streams)
 			headers.add(new FrameBuilder("attribute").add("name", stream.name()).add("type", columnType(stream)).toFrame());
 		return headers.toArray(new Frame[0]);
@@ -89,6 +92,7 @@ public class ArffFileGenerator implements FileGenerator {
 			return new FrameBuilder("Date").add("format", "yyyy-MM-dd'T'HH:mm:ss").toFrame();
 		if (type.equals(Type.Nominal))
 			return new FrameBuilder("Nominal").add("value", stream.mode().features).toFrame();
+		if (type.equals(Type.Boolean)) return new FrameBuilder("Nominal").add("value", new String[]{"true", "false"}).toFrame();
 		return new FrameBuilder("String").toFrame();
 	}
 
