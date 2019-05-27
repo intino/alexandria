@@ -2,12 +2,23 @@ dsl Konos
 
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
 
-Component collection as Decorated
-Component pageCollection as Decorated ExtensionOf(collection)
-Component map as Decorated ExtensionOf(collection)
-Component list as Decorated ExtensionOf(pageCollection)
-Component table as Decorated ExtensionOf(pageCollection)
-Component magazine as Decorated ExtensionOf(pageCollection)
+Template template1
+	Map map1
+		Zoom(defaultZoom = 1, min = 1, max = 1)
+		Mold > Item(height = 100px) map1Mold
+
+	Map map2 as Cluster
+		Zoom(defaultZoom = 1, min = 1, max = 1)
+		Mold > Item(height = 100px) map2Mold
+
+	Map map3 as Kml(layer="abcd.kml")
+		Zoom(defaultZoom = 1, min = 1, max = 1)
+		Mold > Item(height = 100px) map3Mold
+
+	Map map4 as Heatmap
+		Zoom(defaultZoom = 1, min = 1, max = 1)
+		Mold > Item(height = 100px) map4Mold
+
 
 Format("color:'#B71C1C',textShadow:'2px 2px 2px #fff'") h1
 Format("color:'black',textShadow:'2px 2px 2px #fff'") h2

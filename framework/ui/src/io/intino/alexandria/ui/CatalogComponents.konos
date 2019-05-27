@@ -16,11 +16,18 @@ Component pageCollection as Decorated ExtensionOf(collection)
 	Request loadMoreItems as Object(CollectionMoreItems)
 
 Component map as Decorated ExtensionOf(collection)
+	Notification setup as Object(MapCollectionSetup)
 	Notification placeMarks as Object(PlaceMark) List
 
 Schema PlaceMark
-	Attribute location as Text
+	Attribute location as Object(Location)
 	Attribute pos as LongInteger
+
+Schema Location
+	Attribute type as Word("Point" "Polyline" "Polygon")
+	Schema Point
+		Attribute lat as Real
+		Attribute lng as Real
 
 Component list as Decorated ExtensionOf(pageCollection)
 Component table as Decorated ExtensionOf(pageCollection)
@@ -32,6 +39,9 @@ Component row as Decorated
 
 Schema CollectionSetup
 	Attribute itemCount as LongInteger
+
+Schema MapCollectionSetup as ExtensionOf(CollectionSetup)
+	Attribute kmlLayer as Text
 
 Schema PageCollectionSetup as ExtensionOf(CollectionSetup)
 	Attribute pageSize as Integer

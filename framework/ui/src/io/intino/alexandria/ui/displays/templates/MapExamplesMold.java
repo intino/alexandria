@@ -12,8 +12,9 @@ public class MapExamplesMold extends AbstractMapExamplesMold<UiFrameworkBox> {
     @Override
     public void init() {
         super.init();
-        map1.source(Datasources.locatedPersonDatasource());
-        map2.source(Datasources.locatedPersonDatasource());
+        map1.source(Datasources.mapDatasource());
+        map2.source(Datasources.clusterDatasource());
+        map3.source(Datasources.heatDatasource());
     }
 
 }

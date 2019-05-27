@@ -1,12 +1,13 @@
 package io.intino.alexandria.ui.displays.components.collection.loaders;
 
+import io.intino.alexandria.ui.model.Datasource;
 import io.intino.alexandria.ui.model.datasource.PageDatasource;
-import io.intino.alexandria.ui.model.datasource.TemporalDatasource;
+import io.intino.alexandria.ui.model.datasource.temporal.TemporalPageDatasource;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PageItemLoader<DS extends PageDatasource<Item>, Item> extends ItemLoader<DS, Item> {
+public class PageItemLoader<DS extends Datasource<Item>, Item> extends ItemLoader<DS, Item> {
 	private int pageSize;
 
 	public PageItemLoader(DS source, int pageSize) {
@@ -51,8 +52,8 @@ public class PageItemLoader<DS extends PageDatasource<Item>, Item> extends ItemL
 
 	private List<Item> items(int start, int pageSize) {
 		ArrayList<String> sortings = new ArrayList<>(this.sortings);
-		if (source instanceof TemporalDatasource) return ((TemporalDatasource<Item>) source).items(timetag, start, pageSize, condition, filters, sortings);
-		return source.items(start, pageSize, condition, filters, sortings);
+		if (source instanceof TemporalPageDatasource) return ((TemporalPageDatasource<Item>) source).items(timetag, start, pageSize, condition, filters, sortings);
+		return ((PageDatasource)source).items(start, pageSize, condition, filters, sortings);
 	}
 
 }
