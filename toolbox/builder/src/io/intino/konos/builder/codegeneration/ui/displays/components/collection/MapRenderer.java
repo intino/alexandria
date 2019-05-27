@@ -16,9 +16,19 @@ public class MapRenderer extends CollectionRenderer<Map> {
 	@Override
 	public FrameBuilder properties() {
 		FrameBuilder result = super.properties();
+		addFacets(result);
 		addCenter(result);
 		addZoom(result);
 		return result;
+	}
+
+	private void addFacets(FrameBuilder builder) {
+		if (element.isCluster()) builder.add("type", "Cluster");
+		if (element.isKml()) {
+			builder.add("type", "Kml");
+			builder.add("layer", resourceMethodFrame("kmlLayer", element.asKml().layer()));
+		}
+		if (element.isHeatmap()) builder.add("type", "Heatmap");
 	}
 
 	private void addCenter(FrameBuilder builder) {

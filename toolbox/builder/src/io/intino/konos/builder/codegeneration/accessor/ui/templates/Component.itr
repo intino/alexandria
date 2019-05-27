@@ -107,7 +107,7 @@ def type(properties & text) trigger(specific)
 end
 
 def type(properties & map) trigger(specific)
-	[ pageSize={$pageSize}][ itemHeight={$itemHeight}][ center={{lat:$centerLat,lng:$centerLng}}][ zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}]
+	[ pageSize={$pageSize}][ type="$type"][ itemHeight={$itemHeight}][ center={{lat:$centerLat,lng:$centerLng}}][ zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}]
 end
 
 def type(properties & collection) trigger(specific)

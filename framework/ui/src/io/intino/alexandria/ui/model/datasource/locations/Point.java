@@ -1,5 +1,8 @@
 package io.intino.alexandria.ui.model.datasource.locations;
 
+import java.util.Collections;
+import java.util.List;
+
 public class Point extends Location {
 	private double latitude;
 	private double longitude;
@@ -31,5 +34,10 @@ public class Point extends Location {
 	@Override
 	public String toWkt() {
 		return String.format("POINT(%f %f)", latitude, longitude);
+	}
+
+	@Override
+	public List<Point> points() {
+		return Collections.singletonList(this);
 	}
 }

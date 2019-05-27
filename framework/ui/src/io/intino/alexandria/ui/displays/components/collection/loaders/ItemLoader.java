@@ -3,7 +3,7 @@ package io.intino.alexandria.ui.displays.components.collection.loaders;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.ui.model.Datasource;
 import io.intino.alexandria.ui.model.datasource.Filter;
-import io.intino.alexandria.ui.model.datasource.TemporalDatasource;
+import io.intino.alexandria.ui.model.datasource.temporal.TemporalDatasource;
 
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -144,6 +144,7 @@ Facet Linked on OperationComponents.Toolbar
 Facet Selectable on CatalogComponents.Collection
 	var boolean multiple = false
 
-Facet Clustered on CatalogComponents.Map
+Facet Cluster on CatalogComponents.Map
 Facet Kml on CatalogComponents.Map
+	var string layer
 Facet Heatmap on CatalogComponents.Map

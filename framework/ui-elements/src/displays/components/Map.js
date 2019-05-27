@@ -1,17 +1,37 @@
-import React from "react";
+import React, {Suspense} from "react";
 import { withStyles } from '@material-ui/core/styles';
 import AbstractMap from "../../../gen/displays/components/AbstractMap";
 import MapNotifier from "../../../gen/displays/notifiers/MapNotifier";
 import MapRequester from "../../../gen/displays/requesters/MapRequester";
 import {CollectionStyles} from "./Collection";
-import { GoogleMap, LoadScript, MarkerClusterer, Marker } from '@react-google-maps/api'
+import { GoogleMap, MarkerClusterer, HeatmapLayer, KmlLayer } from '@react-google-maps/api'
+import { Marker, Polygon, Polyline, InfoWindow } from '@react-google-maps/api'
 import 'alexandria-ui-elements/res/styles/layout.css';
+import GoogleApi from "./map/GoogleApi";
 
 const styles = theme => ({
 	...CollectionStyles(theme),
+	message : {
+		position: "absolute",
+		top: 0,
+		left: 0,
+		color: "white",
+		fontSize: "13pt",
+		margin: "25% 20%",
+		background: "#ca991e",
+		padding: "5px 10px",
+		borderRadius: "4px",
+		border: "1px solid",
+	}
 });
 
 class Map extends AbstractMap {
+
+	state = {
+		placeMarks: [],
+		placeMark: null,
+		kmlLayer: null,
+	};
 
 	constructor(props) {
 		super(props);
@@ -21,25 +41,76 @@ class Map extends AbstractMap {
 	};
 
 	render() {
-		const key = Application.configuration.googleApiKey;
 		const container = this.container.current;
 		const height = $(container).height();
+
 		return (
 			<div ref={this.container} className="layout flex">
-				<LoadScript googleMapsApiKey={key}>
+				<GoogleApi>
 					<GoogleMap className="map" zoom={this.props.zoom.defaultZoom} center={this._center()}>
 						<div style={{height: height, width: '100%'}}/>
-						{this.state.placeMarks.map((placemark, i) => (
-							<Marker
-								key={i}
-								position={this.location(placemark)}
-								// clusterer={clusterer}
-							/>
-						))}
+						{this.renderLayer()}
+						{this.renderInfoWindow()}
 					</GoogleMap>
-				</LoadScript>
+				</GoogleApi>
 			</div>
 		);
+	};
+
+	renderLayer = () => {
+		if (this.isCluster()) return this.renderCluster();
+		else if (this.isHeatMap()) return this.renderHeatmap();
+		else if (this.isKml()) return this.renderKml();
+		return this.renderPlaceMarks();
+	}
+
+	renderCluster = () => {
+		return (
+			<MarkerClusterer
+				options={{imagePath:"https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m"}}>
+				{
+					(clusterer) => {
+						return this.state.placeMarks.map((p, i) => this.renderPlaceMark(p, i, clusterer));
+					}
+				}
+			</MarkerClusterer>
+		);
+	};
+
+	renderHeatmap = () => {
+		const data = this.state.placeMarks.map(pm => new google.maps.LatLng(pm.location.pointList[0].lat, pm.location.pointList[0].lng));
+		return (<HeatmapLayer data={data}/>);
+	};
+
+	renderKml = () => {
+		const { classes } = this.props;
+		var isLocal = this.state.kmlLayer != null && this.state.kmlLayer.indexOf("localhost") !== -1;
+		return isLocal ? (<div className={classes.message}>{this.translate("Kml layers are not supported in local server")}</div>) : (<KmlLayer url={this.state.kmlLayer}/>);
+	};
+
+	renderPlaceMarks = () => {
+		return this.state.placeMarks.map((p, i) => this.renderPlaceMark(p, i));
+	};
+
+	renderPlaceMark = (placeMark, pos, clusterer) => {
+		const location = placeMark.location;
+		if (location.type === "Polyline") return (<Polyline key={pos} path={location.pointList} clusterer={clusterer} onClick={this.showInfo.bind(this, placeMark)}/>);
+		else if (location.type === "Polygon") return (<Polygon key={pos} path={location.pointList} clusterer={clusterer} onClick={this.showInfo.bind(this, placeMark)}/>);
+		return (<Marker key={pos} position={location.pointList[0]} clusterer={clusterer} onClick={this.showInfo.bind(this, placeMark)}/>);
+	};
+
+	renderInfoWindow = () => {
+		if (this.state.placeMark == null) return null;
+		const placeMark = this.state.placeMark;
+		return (
+			<InfoWindow position={placeMark.location.pointList[0]}>
+				<div>{placeMark.pos}</div>
+			</InfoWindow>
+		);
+	};
+
+	showInfo = (placeMark) => {
+		this.setState({ placeMark: placeMark })
 	};
 
 	_center = () => {
@@ -50,72 +121,21 @@ class Map extends AbstractMap {
 		this.setState({ placeMarks: placeMarks });
 	};
 
-	location = (placeMark) => {
-		var wkt = new Wkt.Wkt();
-		wkt.read(placeMark.location);
-		return this._fixWkt(wkt).toObject(this._markerConfiguration());
+	isCluster = () => {
+		return this.props.type != null && this.props.type.toLowerCase() === "cluster";
 	};
 
-	_fixWkt = (wkt) => {
-		for (var i=0; i<wkt.components.length; i++)
-			this._fixWktComponent(wkt.components[i]);
-		return wkt;
+	isHeatMap = () => {
+		return this.props.type != null && this.props.type.toLowerCase() === "heatmap";
 	};
 
-	_fixWktComponent = (component) => {
-		if (component instanceof Array) {
-			for(var i=0; i<component.length; i++) {
-				this._fixWktComponent(component[i]);
-			}
-		}
-		else {
-			var x = component.x;
-			component.x = component.y;
-			component.y = x;
-		}
+	isKml = () => {
+		return this.props.type != null && this.props.type.toLowerCase() === "kml";
 	};
 
-	_markerConfiguration = () => {
-		return {};
+	setup = (info) => {
+		this.setState({ itemCount : info.itemCount, kmlLayer: info.kmlLayer });
 	};
 }
-/*
-<MarkerClusterer
-	options={{imagePath:"https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m"}}>
-	{
-		(clusterer) => [
-			{lat: -31.563910, lng: 147.154312},
-			{lat: -33.718234, lng: 150.363181},
-			{lat: -33.727111, lng: 150.371124},
-			{lat: -33.848588, lng: 151.209834},
-			{lat: -33.851702, lng: 151.216968},
-			{lat: -34.671264, lng: 150.863657},
-			{lat: -35.304724, lng: 148.662905},
-			{lat: -36.817685, lng: 175.699196},
-			{lat: -36.828611, lng: 175.790222},
-			{lat: -37.750000, lng: 145.116667},
-			{lat: -37.759859, lng: 145.128708},
-			{lat: -37.765015, lng: 145.133858},
-			{lat: -37.770104, lng: 145.143299},
-			{lat: -37.773700, lng: 145.145187},
-			{lat: -37.774785, lng: 145.137978},
-			{lat: -37.819616, lng: 144.968119},
-			{lat: -38.330766, lng: 144.695692},
-			{lat: -39.927193, lng: 175.053218},
-			{lat: -41.330162, lng: 174.865694},
-			{lat: -42.734358, lng: 147.439506},
-			{lat: -42.734358, lng: 147.501315},
-			{lat: -42.735258, lng: 147.438000},
-			{lat: -43.999792, lng: 170.463352}
-		].map((location, i) => (
-			<Marker
-				key={i}
-				position={location}
-				clusterer={clusterer}
-			/>
-		))
-	}
-</MarkerClusterer>
-*/
 
 export default withStyles(styles, { withTheme: true })(Map);

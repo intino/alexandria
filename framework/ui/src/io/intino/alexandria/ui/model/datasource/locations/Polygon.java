@@ -17,9 +17,17 @@ public class Polygon extends Location {
 		return this;
 	}
 
+	public void add(Point point) {
+		this.paths.add(point);
+	}
+
 	@Override
 	public String toWkt() {
 		return String.format("POLYGON((%s))", String.join(",", paths.stream().map(Point::toWkt).collect(toList())));
 	}
 
+	@Override
+	public List<Point> points() {
+		return paths;
+	}
 }

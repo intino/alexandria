@@ -4,7 +4,7 @@ import io.intino.alexandria.ui.model.datasource.locations.Location;
 
 public class PlaceMark<O> {
 	private O item;
-	private Location location;
+	private Location position;
 
 	public O item() {
 		return item;
@@ -16,11 +16,12 @@ public class PlaceMark<O> {
 	}
 
 	public Location location() {
-		return location;
+		return position;
 	}
 
 	public PlaceMark location(Location location) {
-		this.location = location;
+		this.position = location;
 		return this;
 	}
+
 }

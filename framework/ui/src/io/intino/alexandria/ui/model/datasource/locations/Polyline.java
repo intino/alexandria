@@ -17,8 +17,17 @@ public class Polyline extends Location {
 		return this;
 	}
 
+	public void add(Point point) {
+		this.path.add(point);
+	}
+
 	@Override
 	public String toWkt() {
 		return String.format("LINESTRING(%s)", String.join(",", path.stream().map(Point::toWkt).collect(toList())));
+	}
+
+	@Override
+	public List<Point> points() {
+		return path;
 	}
 }
