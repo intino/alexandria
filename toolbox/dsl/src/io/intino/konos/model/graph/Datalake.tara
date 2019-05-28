@@ -2,22 +2,43 @@ dsl Proteo
 
 use DataTypes
 
-Concept Client
+Concept Datamart
 
-Facet Ness on Client
+Concept Datalake
+	var string path
+	Concept:Named Tank > var string fullName
+
+Facet Mirror on Datalake
 	var string url
 	var string user
 	var string password
 	var string domain
 	var string clientID
-	var word:{Normal Transacted} mode = Normal
-	var boolean requireConnection = false
-	has Mounter
-	has Feeder
 
-Concept:NamedIfNoSchema Mounter extends EventSource is component
+Concept Mounter
 
-Concept Feeder is component
+Concept Source is component
+
+Concept Target is component
+
+Facet MounterType on Mounter is required
+	sub Batch
+	sub Realtime
+
+Facet SourceType on Source is abstract required
+	Concept Select
+		var Datalake.Tank tanks
+	sub Event
+	sub Population
+		Concept Select extends Select
+			var string subjects
+
+Facet TargetType on Target is abstract required
+	var Datamart datamart
+	sub File > var word:{Arff Tabb Csv} format
+	sub Graph
+
+Concept Feeder
 	var Schema[] eventTypes
 	var string subdomain = ""
 	has:Named Sensor
