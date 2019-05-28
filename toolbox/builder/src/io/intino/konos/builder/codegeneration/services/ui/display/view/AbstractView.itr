@@ -91,5 +91,5 @@ def trigger(zoom)
 end
 
 def trigger(quoted)
-	"$value"
+	"$this"
 end
