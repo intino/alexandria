@@ -17,6 +17,10 @@ public abstract class BoxConfiguration {
 		}
 	}
 
+	public String get(String key) {
+		return args.get(key);
+	}
+
 	public java.io.File workspace() {
 		return this.workspace;
 	}
