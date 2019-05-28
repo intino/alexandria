@@ -28,8 +28,7 @@ public class DatalakeTemplate extends Template {
 				rule().condition((type("schema")), (trigger("load"))).output(literal("io.intino.alexandria.inl.Inl.fromMessage(m, ")).output(mark("package")).output(literal(".schemas.")).output(mark("name", "FirstUpperCase")).output(literal(".class)")),
 				rule().condition((trigger("load"))).output(literal("m")),
 				rule().condition((type("schema")), (trigger("typename"))).output(mark("name", "firstLowerCase")),
-				rule().condition((trigger("typename"))).output(literal("message")),
-				rule().condition((trigger("quoted"))).output(literal("\"")).output(mark("")).output(literal("\""))
+				rule().condition((trigger("typename"))).output(literal("message"))
 		);
 	}
 }

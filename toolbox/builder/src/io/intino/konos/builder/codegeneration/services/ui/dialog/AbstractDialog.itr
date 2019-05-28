@@ -107,10 +107,6 @@ def trigger(source)
 	.source(input -> $dialog+FirstUpperCase.Sources.$name(box, (Dialog.Tab.$type) input))
 end
 
-def trigger(quoted)
-	"$value"
-end
-
 def type(multiple)
 	.multiple($min, $max)
 end

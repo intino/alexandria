@@ -215,7 +215,3 @@ end
 def trigger(typeName)
 	message
 end
-
-def trigger(quoted)
-	"$this"
-end
