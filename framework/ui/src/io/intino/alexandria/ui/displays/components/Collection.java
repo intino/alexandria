@@ -20,6 +20,7 @@ import io.intino.alexandria.ui.model.Datasource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -113,8 +114,8 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
 
     protected abstract AddItemEvent itemEvent(Display c);
 
-    AddItemListener addItemListener() {
-        return addItemListener;
+    Optional<AddItemListener> addItemListener() {
+        return Optional.ofNullable(addItemListener);
     }
 
     void notifyRefresh() {

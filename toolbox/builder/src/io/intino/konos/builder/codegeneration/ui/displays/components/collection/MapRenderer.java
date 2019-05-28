@@ -16,6 +16,7 @@ public class MapRenderer extends CollectionRenderer<Map> {
 	@Override
 	public FrameBuilder properties() {
 		FrameBuilder result = super.properties();
+		if (element.icon() != null && !element.icon().isEmpty()) result.add("icon", resourceMethodFrame("icon", element.icon()));
 		addFacets(result);
 		addCenter(result);
 		addZoom(result);

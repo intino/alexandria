@@ -1,13 +1,13 @@
-import React, {Suspense} from "react";
+import React from "react";
 import { withStyles } from '@material-ui/core/styles';
 import AbstractMap from "../../../gen/displays/components/AbstractMap";
 import MapNotifier from "../../../gen/displays/notifiers/MapNotifier";
 import MapRequester from "../../../gen/displays/requesters/MapRequester";
 import {CollectionStyles} from "./Collection";
 import { GoogleMap, MarkerClusterer, HeatmapLayer, KmlLayer } from '@react-google-maps/api'
-import { Marker, Polygon, Polyline, InfoWindow } from '@react-google-maps/api'
 import 'alexandria-ui-elements/res/styles/layout.css';
 import GoogleApi from "./map/GoogleApi";
+import PlaceMark from "./map/PlaceMark";
 
 const styles = theme => ({
 	...CollectionStyles(theme),
@@ -31,6 +31,8 @@ class Map extends AbstractMap {
 		placeMarks: [],
 		placeMark: null,
 		kmlLayer: null,
+		closeAllInfoWindows: true,
+		markers: [],
 	};
 
 	constructor(props) {
@@ -47,14 +49,17 @@ class Map extends AbstractMap {
 		return (
 			<div ref={this.container} className="layout flex">
 				<GoogleApi>
-					<GoogleMap className="map" zoom={this.props.zoom.defaultZoom} center={this._center()}>
+					<GoogleMap className="map" zoom={this.props.zoom.defaultZoom} center={this._center()} onLoad={this.registerMap.bind(this)}>
 						<div style={{height: height, width: '100%'}}/>
 						{this.renderLayer()}
-						{this.renderInfoWindow()}
 					</GoogleMap>
 				</GoogleApi>
 			</div>
 		);
+	};
+
+	registerMap = (map) => {
+		map.addListener("click", this.hideAllMarkers.bind(this));
 	};
 
 	renderLayer = () => {
@@ -62,7 +67,7 @@ class Map extends AbstractMap {
 		else if (this.isHeatMap()) return this.renderHeatmap();
 		else if (this.isKml()) return this.renderKml();
 		return this.renderPlaceMarks();
-	}
+	};
 
 	renderCluster = () => {
 		return (
@@ -93,24 +98,28 @@ class Map extends AbstractMap {
 	};
 
 	renderPlaceMark = (placeMark, pos, clusterer) => {
-		const location = placeMark.location;
-		if (location.type === "Polyline") return (<Polyline key={pos} path={location.pointList} clusterer={clusterer} onClick={this.showInfo.bind(this, placeMark)}/>);
-		else if (location.type === "Polygon") return (<Polygon key={pos} path={location.pointList} clusterer={clusterer} onClick={this.showInfo.bind(this, placeMark)}/>);
-		return (<Marker key={pos} position={location.pointList[0]} clusterer={clusterer} onClick={this.showInfo.bind(this, placeMark)}/>);
-	};
-
-	renderInfoWindow = () => {
-		if (this.state.placeMark == null) return null;
-		const placeMark = this.state.placeMark;
+		const items = this.behavior.items();
 		return (
-			<InfoWindow position={placeMark.location.pointList[0]}>
-				<div>{placeMark.pos}</div>
-			</InfoWindow>
+			<PlaceMark ref={this.onPlaceMarkMounted}
+					   icon={this.state.icon}
+					   onShowInfo={this.handleShowInfo.bind(this)}
+					   content={items.length > 0 ? items[0] : undefined}
+					   key={pos} placeMark={placeMark} clusterer={clusterer}>
+
+			</PlaceMark>
 		);
 	};
 
-	showInfo = (placeMark) => {
-		this.setState({ placeMark: placeMark })
+	handleShowInfo = (element) => {
+		this.hideAllMarkers();
+		element.showLoading();
+		this.requester.showPlaceMark(element.props.placeMark.pos);
+	};
+
+	onPlaceMarkMounted = (element) => {
+		this.setState(prevState => ({
+			markers: [...prevState.markers, element]
+		}))
 	};
 
 	_center = () => {
@@ -134,7 +143,13 @@ class Map extends AbstractMap {
 	};
 
 	setup = (info) => {
-		this.setState({ itemCount : info.itemCount, kmlLayer: info.kmlLayer });
+		this.setState({ itemCount : info.itemCount, kmlLayer: info.kmlLayer, icon: info.icon });
+	};
+
+	hideAllMarkers = () => {
+		this.state.markers.forEach(m => {
+			if (m.isInfoVisible()) m.hideInfo();
+		});
 	};
 }
 

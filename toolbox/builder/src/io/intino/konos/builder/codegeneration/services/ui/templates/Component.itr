@@ -330,6 +330,7 @@ end
 
 def type(properties & collection & map) trigger(specific)
 	[type(io.intino.alexandria.ui.displays.components.Map.Type.valueOf("$type"));]
+	[$icon+resourceMethod]
 	[$layer+resourceMethod]
 end
 

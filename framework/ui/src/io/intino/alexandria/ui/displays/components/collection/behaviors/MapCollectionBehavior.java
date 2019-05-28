@@ -31,4 +31,10 @@ public class MapCollectionBehavior<Item> extends CollectionBehavior<MapDatasourc
 		return itemLoader().placeMarks();
 	}
 
+	public void showPlaceMark(long pos) {
+		Map collection = collection();
+		collection.clear();
+		collection.add(placeMarks().get((int)pos));
+	}
+
 }

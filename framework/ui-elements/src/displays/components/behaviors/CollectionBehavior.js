@@ -214,6 +214,9 @@ const CollectionBehavior = (collection) => {
         renderCollection: (height, width) => {
             return self.renderCollection(height, width);
         },
+        items : () => {
+            return self.items();
+        },
         refresh: () => {
             self.refresh();
         }
