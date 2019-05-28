@@ -3,44 +3,69 @@ dsl Proteo
 use DataTypes
 
 Concept Datamart
-
-Concept Datalake
 	var string path
-	Concept:Named Tank > var string fullName
 
-Facet Mirror on Datalake
-	var string url
-	var string user
-	var string password
-	var string domain
-	var string clientID
+Concept:{0..1} Datalake
+	Concept Domain
+	Concept:Named Tank
+		var string fullName
 
-Concept Mounter
+Facet TankType on Datalake.Tank
+	sub EventTank
+		var Schema schema
+	sub SetTank
+Facet Singleton on Datalake.Tank with SetTank
+
+Facet DatalakeLocation on Datalake is abstract
+	sub Remote
+		var string url
+		var string user
+		var string password
+		var string domain
+		var string clientID
+	sub Local
+		var string path
+
+Facet Mirror on Datalake with Remote
+	var string path
+	var integer:{Months} period
+
+
+
+
+Concept:Named Mounter
+	has:{1..1} Source
 
 Concept Source is component
 
-Concept Target is component
+Concept Collect is component
 
 Facet MounterType on Mounter is required
 	sub Batch
+		Concept:{0..1}:Named Filter
+		Concept:{0..1} Aggregation
+			Concept:{1..*} Column
+				var string name
+				var word:{Boolean String Integer Double Long} type
 	sub Realtime
 
 Facet SourceType on Source is abstract required
-	Concept Select
-		var Datalake.Tank tanks
 	sub Event
 	sub Population
-		Concept Select extends Select
-			var string subjects
+		Concept:{1..1} Column
+			var string name
+			var word:{Boolean String Integer Double} type
 
-Facet TargetType on Target is abstract required
+Facet Id on Population.Column
+	var word:{Boolean String Integer Double Long} type = Long
+
+Facet CollectType on Collect is abstract required
 	var Datamart datamart
 	sub File > var word:{Arff Tabb Csv} format
 	sub Graph
 
 Concept Feeder
-	var Schema[] eventTypes
-	var string subdomain = ""
+	var Datalake.Tank tanks
 	has:Named Sensor
 
 Concept:Named Sensor is component
@@ -67,8 +92,6 @@ Facet Poll extends UserSensor on Sensor
 		has Option
 
 Facet Device on Sensor
-
-//Facet Scrapper on Sensor
 
 Concept EventSource is abstract
 	var string name = 'io.intino.konos.model.graph.Utils.isUUID(self.name$()) && self.schema() != null ? self.schema().name$() : self.name$()' is private reactive
