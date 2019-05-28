@@ -27,6 +27,10 @@ public class Datasources {
 	private static Map<String, List<Group>> groupsMap = new HashMap<>();
 
 	public static PageDatasource<Item> itemDatasource() {
+		return itemDatasource(itemPopulation());
+	}
+
+	public static PageDatasource<Item> itemDatasource(List<Item> population) {
 		return new PageDatasource<Item>() {
 			@Override
 			public long itemCount(String condition, List<Filter> filters) {
@@ -35,7 +39,7 @@ public class Datasources {
 
 			@Override
 			public List<Item> items(int start, int count, String condition, List<Filter> filters, List<String> sortings) {
-				List<Item> items = population();
+				List<Item> items = population;
 				if (sortings.size() > 0) Collections.sort(items, sortingComparator(sortings));
 				return page(items, start, count);
 			}
@@ -43,37 +47,29 @@ public class Datasources {
 			@Override
 			public List<Group> groups(String name) {
 				if (!name.equalsIgnoreCase("alphabeticOrder")) return emptyList();
-				return Datasources.groups("itemalphabeticorder", population(), item -> ((Item)item).label().substring(0, 1));
+				return Datasources.groups("itemalphabeticorder", population, item -> ((Item)item).label().substring(0, 1));
 			}
 
 			public Comparator<Item> sortingComparator(List<String> sortings) {
 				return Comparator.comparing(Item::label);
 			}
-
-			private List<Item> population() {
-				if (itemPopulation != null) return new ArrayList<>(itemPopulation);
-				itemPopulation = new ArrayList<>();
-				for (int i = 0; i < ItemCount; i++)
-					itemPopulation.add(new Item().label("item " + (i + 1)));
-				return new ArrayList<>(itemPopulation);
-			}
 		};
 	}
 
-	public static MapDatasource<Person> mapDatasource() {
-		return locatedPersonDatasource(population().subList(0, 4), null);
+	public static MapDatasource<Item> mapDatasource() {
+		return locatedItemDatasource(itemPopulation().subList(0, 4), null);
 	}
 
-	public static MapDatasource<Person> clusterDatasource() {
-		return locatedPersonDatasource(population(), Cluster);
+	public static MapDatasource<Item> clusterDatasource() {
+		return locatedItemDatasource(itemPopulation(), Cluster);
 	}
 
-	public static MapDatasource<Person> heatDatasource() {
-		return locatedPersonDatasource(population(), Heatmap);
+	public static MapDatasource<Item> heatDatasource() {
+		return locatedItemDatasource(itemPopulation(), Heatmap);
 	}
 
 	public static PageDatasource<Person> personDatasource() {
-		return personDatasource(population());
+		return personDatasource(personPopulation());
 	}
 
 	public static PageDatasource<Person> personDatasource(List<Person> population) {
@@ -82,20 +78,20 @@ public class Datasources {
 
 			@Override
 			public long itemCount(String condition, List<Filter> filters) {
-				return filterPopulation(population, condition, filters).size();
+				return filterPersonPopulation(population, condition, filters).size();
 			}
 
 			@Override
 			public List<Person> items(int start, int count, String condition, List<Filter> filters, List<String> sortings) {
-				List<Person> persons = filterPopulation(population, condition, filters);
+				List<Person> persons = filterPersonPopulation(population, condition, filters);
 				if (sortings.size() > 0) persons.sort(sortingComparator(sortings));
 				return page(persons, start, count);
 			}
 
 			@Override
 			public List<Group> groups(String key) {
-				if (key.toLowerCase().contains("gender")) return Datasources.groups("persongender", population(), item -> ((Person)item).gender().name());
-				if (key.toLowerCase().contains("age group")) return Datasources.groups("personagegroup", population(), item -> ageGroupLabel(((Person)item).age()));
+				if (key.toLowerCase().contains("gender")) return Datasources.groups("persongender", personPopulation(), item -> ((Person)item).gender().name());
+				if (key.toLowerCase().contains("age group")) return Datasources.groups("personagegroup", personPopulation(), item -> ageGroupLabel(((Person)item).age()));
 				return emptyList();
 			}
 
@@ -161,7 +157,7 @@ public class Datasources {
 		return result;
 	}
 
-	private static List<Person> filterPopulation(List<Person> population, String condition, List<Filter> filters) {
+	private static List<Person> filterPersonPopulation(List<Person> population, String condition, List<Filter> filters) {
 		List<Person> result = population;
 		result = filterCondition(result, condition);
 		result = filter(result, getFilter("gender", filters), item -> ((Person)item).gender().name());
@@ -194,7 +190,15 @@ public class Datasources {
 		return "Senior";
 	}
 
-	private static List<Person> population() {
+	private static List<Item> itemPopulation() {
+		if (itemPopulation != null) return new ArrayList<>(itemPopulation);
+		itemPopulation = new ArrayList<>();
+		for (int i = 0; i < ItemCount; i++)
+			itemPopulation.add(new Item().label("item " + (i + 1)));
+		return new ArrayList<>(itemPopulation);
+	}
+
+	private static List<Person> personPopulation() {
 		if (personPopulation != null) return new ArrayList<>(personPopulation);
 		personPopulation = new ArrayList<>();
 		for (int i = 0; i < ItemCount; i++)
@@ -207,6 +211,41 @@ public class Datasources {
 		return r.nextInt(100);
 	}
 
+	private static MapDatasource<Item> locatedItemDatasource(List<Item> population, io.intino.alexandria.ui.displays.components.Map.Type type) {
+		Datasource datasource = itemDatasource(population);
+
+		return new MapDatasource<Item>() {
+			@Override
+			public List<PlaceMark<Item>> placeMarks(String condition, List<Filter> filters, BoundingBox boundingBox) {
+				List<PlaceMark<Item>> placeMarks = new ArrayList<>();
+				List<Item> items = population;
+				for (int i=0; i<items.size(); i++) placeMarks.add(placeMarkOf(items.get(i), i));
+				return placeMarks;
+			}
+
+			@Override
+			public long itemCount(String condition, List<Filter> filters) {
+				return datasource.itemCount(condition, filters);
+			}
+
+			@Override
+			public List<Group> groups(String key) {
+				return datasource.groups(key);
+			}
+
+			private PlaceMark<Item> placeMarkOf(Item item, int pos) {
+				return Datasources.placeMarkOf(item, pos, type);
+			}
+		};
+	}
+
+	private static <O> PlaceMark<O> placeMarkOf(Object item, int pos, io.intino.alexandria.ui.displays.components.Map.Type type) {
+		Location location = locations[pos] != null ? locations[pos] : point(31.76672014, -19.48827855);
+		Point point = location.points().get(0);
+		if (type != null) location = point(point.latitude(), point.longitude());
+		return new PlaceMark<>().item(item).location(location).label(String.valueOf(pos+1));
+	}
+
 	private static MapDatasource<Person> locatedPersonDatasource(List<Person> population, io.intino.alexandria.ui.displays.components.Map.Type type) {
 		Datasource datasource = personDatasource(population);
 
@@ -214,7 +253,7 @@ public class Datasources {
 			@Override
 			public List<PlaceMark<Person>> placeMarks(String condition, List<Filter> filters, BoundingBox boundingBox) {
 				List<PlaceMark<Person>> placeMarks = new ArrayList<>();
-				List<Person> persons = filterPopulation(population, condition, filters);
+				List<Person> persons = filterPersonPopulation(population, condition, filters);
 				for (int i=0; i<persons.size(); i++) placeMarks.add(placeMarkOf(persons.get(i), i));
 				return placeMarks;
 			}
@@ -230,10 +269,7 @@ public class Datasources {
 			}
 
 			private PlaceMark<Person> placeMarkOf(Person person, int pos) {
-				Location location = locations[pos] != null ? locations[pos] : point(31.76672014, -19.48827855);
-				Point point = location.points().get(0);
-				if (type != null) location = point(point.latitude(), point.longitude());
-				return new PlaceMark<Person>().item(person).location(location);
+				return Datasources.placeMarkOf(person, pos, type);
 			}
 		};
 	}

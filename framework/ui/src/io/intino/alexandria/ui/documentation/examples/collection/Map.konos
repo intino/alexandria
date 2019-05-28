@@ -10,6 +10,7 @@ Template(layout=Vertical, spacing=DP8) mapExamplesMold as Decorated
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAirLarge)
 				Map(itemClass="io.intino.alexandria.ui.documentation.Item") map1
+					icon = "icons/placemark.png"
 					Zoom(defaultZoom = 6, min = 1, max = 18)
 					Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
 					Mold > Item(height=60px) map1Mold > Stamp(template=itemMold) stamp
@@ -17,6 +18,7 @@ Template(layout=Vertical, spacing=DP8) mapExamplesMold as Decorated
 					value
 						=========
 						Map(itemClass\="io.intino.alexandria.ui.documentation.Item") map<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;icon\="icons/placemark.png"
 						&nbsp;&nbsp;&nbsp;&nbsp;Zoom(defaultZoom\=14, min\=1, max\=18)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Center(latitude\=28.146773457066104, longitude\=-15.418557420532238)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item mapMold > Stamp(template\=itemMold) stamp<br/><br/>

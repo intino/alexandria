@@ -19,8 +19,12 @@ Component map as Decorated ExtensionOf(collection)
 	Notification setup as Object(MapCollectionSetup)
 	Notification placeMarks as Object(PlaceMark) List
 
+	Request showPlaceMark as LongInteger
+
 Schema PlaceMark
 	Attribute location as Object(Location)
+	Attribute label as Text
+	Attribute icon as Text
 	Attribute pos as LongInteger
 
 Schema Location
@@ -42,6 +46,7 @@ Schema CollectionSetup
 
 Schema MapCollectionSetup as ExtensionOf(CollectionSetup)
 	Attribute kmlLayer as Text
+	Attribute icon as Text
 
 Schema PageCollectionSetup as ExtensionOf(CollectionSetup)
 	Attribute pageSize as Integer

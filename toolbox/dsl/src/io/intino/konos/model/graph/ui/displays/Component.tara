@@ -84,6 +84,8 @@ Concept CatalogComponents
 		sub List
 		sub Table
 		sub Map
+			var string icon = empty
+
 			Concept:{0..1} Center
 				var double latitude
 				var double longitude

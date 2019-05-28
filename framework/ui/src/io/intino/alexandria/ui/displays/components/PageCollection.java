@@ -18,7 +18,7 @@ public abstract class PageCollection<DN extends PageCollectionNotifier, B extend
 
     public void notifyItemsRendered(io.intino.alexandria.schemas.CollectionItemsRenderedInfo info) {
         promisedChildren(info.items()).forEach(this::register);
-        children(info.visible()).forEach(c -> addItemListener().accept(itemEvent(c)));
+        children(info.visible()).forEach(c -> addItemListener().ifPresent(l -> l.accept(itemEvent(c))));
         notifyRefresh();
     }
 

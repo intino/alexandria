@@ -21,7 +21,8 @@ import static java.util.stream.Collectors.toList;
 
 public abstract class Map<B extends Box, ItemComponent extends io.intino.alexandria.ui.displays.components.Item, Item> extends io.intino.alexandria.ui.displays.components.AbstractMap<MapNotifier, B> implements Collection<ItemComponent, PlaceMark<Item>> {
     private Map.Type type;
-    private URL kmlLayer;
+    private URL kmlLayer = null;
+    private URL icon = null;
 
     public Map(B box) {
         super(box);
@@ -45,6 +46,11 @@ public abstract class Map<B extends Box, ItemComponent extends io.intino.alexand
         return this;
     }
 
+    public Map icon(URL icon) {
+        this.icon = icon;
+        return this;
+    }
+
     @Override
     protected AddItemEvent itemEvent(Display display) {
         return new AddItemEvent(this, (ItemComponent)display, ((ItemComponent)display).item());
@@ -52,7 +58,12 @@ public abstract class Map<B extends Box, ItemComponent extends io.intino.alexand
 
     @Override
     public ItemComponent add(PlaceMark<Item> itemPlaceMark) {
-        return null;
+        ItemComponent component = create(itemPlaceMark);
+        addPromise(component, "rows");
+        promisedChildren().forEach(this::register);
+        children().forEach(c -> addItemListener().ifPresent(l -> l.accept(itemEvent(c))));
+        notifyRefresh();
+        return component;
     }
 
     @Override
@@ -77,6 +88,7 @@ public abstract class Map<B extends Box, ItemComponent extends io.intino.alexand
         MapCollectionSetup setup = new MapCollectionSetup();
         if (source != null) setup.itemCount(source.itemCount());
         if (type == Type.Kml) setup.kmlLayer(Asset.toResource(baseAssetUrl(), this.kmlLayer).toUrl().toString());
+        if (icon != null) setup.icon(Asset.toResource(baseAssetUrl(), this.icon).toUrl().toString());
         notifier.setup(setup);
         if (source != null) behavior().setup(source);
         notifyReady();
@@ -86,6 +98,11 @@ public abstract class Map<B extends Box, ItemComponent extends io.intino.alexand
         notifier.placeMarks(placeMarksOf(placeMarks));
     }
 
+    public void showPlaceMark(long pos) {
+        MapCollectionBehavior behavior = behavior();
+        behavior.showPlaceMark(pos);
+    }
+
     private List<io.intino.alexandria.schemas.PlaceMark> placeMarksOf(List<PlaceMark<Item>> placeMarks) {
         List<io.intino.alexandria.schemas.PlaceMark> result = new ArrayList<>();
         for (int i=0; i<placeMarks.size(); i++) result.add(placeMarkOf(placeMarks.get(i), i));
@@ -93,7 +110,9 @@ public abstract class Map<B extends Box, ItemComponent extends io.intino.alexand
     }
 
     private io.intino.alexandria.schemas.PlaceMark placeMarkOf(PlaceMark<Item> placeMark, long pos) {
-        return new io.intino.alexandria.schemas.PlaceMark().location(locationOf(placeMark)).pos(pos);
+        io.intino.alexandria.schemas.PlaceMark result = new io.intino.alexandria.schemas.PlaceMark().location(locationOf(placeMark)).pos(pos).label(placeMark.label());
+        if (placeMark.icon() != null) result.icon(Asset.toResource(baseAssetUrl(), placeMark.icon()).toUrl().toString());
+        return result;
     }
 
     private io.intino.alexandria.schemas.Location locationOf(PlaceMark<Item> placeMark) {
