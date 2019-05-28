@@ -25,8 +25,7 @@ public class AbstractViewTemplate extends Template {
 				rule().condition((type("hidden")), (trigger("call"))).output(literal(".hidden((object, session) -> ")).output(mark("owner", "FirstUpperCase")).output(literal(".Views.")).output(mark("view", "FirstUpperCase")).output(literal(".hidden(box, object, session))")),
 				rule().condition((type("filter")), (trigger("call"))).output(literal("(catalog, context, target, object, session) -> ")).output(mark("owner", "FirstUpperCase")).output(literal(".Views.")).output(mark("view", "firstUpperCase")).output(literal(".filter(box, catalog, context, target, (")).output(mark("itemClass")).output(literal(") object, session)")),
 				rule().condition((type("catalogscope"))).output(literal("(display, scope) -> ")).output(mark("owner", "FirstUpperCase")).output(literal(".Views.")).output(mark("name", "FirstUpperCase")).output(literal(".scope(box, display, scope)")),
-				rule().condition((trigger("zoom"))).output(literal("zoom(new io.intino.alexandria.ui.model.view.container.MapContainer.Zoom()")).output(expression().output(literal(".defaultZoom(")).output(mark("default")).output(literal(")"))).output(expression().output(literal(".max(")).output(mark("max")).output(literal(")"))).output(expression().output(literal(".min(")).output(mark("min")).output(literal(")"))).output(literal(")")),
-				rule().condition((trigger("quoted"))).output(literal("\"")).output(mark("")).output(literal("\""))
+				rule().condition((trigger("zoom"))).output(literal("zoom(new io.intino.alexandria.ui.model.view.container.MapContainer.Zoom()")).output(expression().output(literal(".defaultZoom(")).output(mark("default")).output(literal(")"))).output(expression().output(literal(".max(")).output(mark("max")).output(literal(")"))).output(expression().output(literal(".min(")).output(mark("min")).output(literal(")"))).output(literal(")"))
 		);
 	}
 }

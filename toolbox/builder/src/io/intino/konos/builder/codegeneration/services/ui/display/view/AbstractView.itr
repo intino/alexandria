@@ -89,7 +89,3 @@ end
 def trigger(zoom)
 	zoom(new io.intino.alexandria.ui.model.view.container.MapContainer.Zoom()[.defaultZoom($default)][.max($max)][.min($min)])
 end
-
-def trigger(quoted)
-	"$this"
-end

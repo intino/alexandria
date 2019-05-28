@@ -27,7 +27,6 @@ public class AbstractDialogTemplate extends Template {
 				rule().condition((allTypes("resource", "validation"))).output(literal("new Dialog.Tab.Resource.Validation()")).output(expression().output(literal(".maxSize(")).output(mark("maxSize")).output(literal(")"))).output(expression().output(literal(".allowedExtensions(")).output(mark("allowedExtensions")).output(literal(")"))),
 				rule().condition((type("validator"))).output(literal(".validator(input -> ")).output(mark("dialog", "FirstUpperCase")).output(literal(".Validators.")).output(mark("name")).output(literal("(box, (Dialog.Tab.")).output(mark("type")).output(literal(") input))")),
 				rule().condition((trigger("source"))).output(literal(".source(input -> ")).output(mark("dialog", "FirstUpperCase")).output(literal(".Sources.")).output(mark("name")).output(literal("(box, (Dialog.Tab.")).output(mark("type")).output(literal(") input))")),
-				rule().condition((trigger("quoted"))).output(literal("\"")).output(mark("value")).output(literal("\"")),
 				rule().condition((type("multiple"))).output(literal(".multiple(")).output(mark("min")).output(literal(", ")).output(mark("max")).output(literal(")"))
 		);
 	}
