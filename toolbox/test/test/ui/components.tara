@@ -364,7 +364,7 @@ Template(layout=Vertical, spacing=DP8) sortingExamplesMold as Decorated
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal)
 				Block(format=containerAirMedium, spacing=DP24) as Absolute(width=200px)
-					Sorting(format=whiteBackground,collection=list1) gender1 as Labeled("gender")
+					Sorting(format=whiteBackground,collections=list1) gender1 as Labeled("gender")
 				List(itemClass="io.intino.alexandria.ui.documentation.Person") list1
 					Mold > Item(height=60px,width=30%) sorting1Mold
 							Text firstName1
@@ -656,8 +656,8 @@ Template(layout=Vertical, spacing=DP8) groupingExamplesMold as Decorated
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal)
 				Block(format=containerAirMedium, spacing=DP24) as Absolute(width=200px)
-					Grouping(format=whiteBackground,collection=list1) gender1 as Labeled("gender")
-					Grouping(format=whiteBackground,collection=list1) ageGroup1 as Labeled("age group")
+					Grouping(format=whiteBackground,collections=list1) gender1 as Labeled("gender")
+					Grouping(format=whiteBackground,collections=list1) ageGroup1 as Labeled("age group")
 				List(itemClass="io.intino.alexandria.ui.documentation.Person") list1
 					Mold > Item(height=60px,width=30%) grouping1Mold
 							Text firstName1
@@ -681,8 +681,8 @@ Template(layout=Vertical, spacing=DP8) groupingExamplesMold as Decorated
 			Text(format=h6, value="ComboBox facet")
 			Block(spacing=DP8, format=filledNoAir)
 				Block(format=containerAirMedium, spacing=DP24, layout=Horizontal)
-					Grouping(format=whiteBackground,collection=list2) gender2 as Labeled("gender") ComboBox
-					Grouping(format=whiteBackground,collection=list2) ageGroup2 as Labeled("age group") ComboBox
+					Grouping(format=whiteBackground,collections=list2) gender2 as Labeled("gender") ComboBox
+					Grouping(format=whiteBackground,collections=list2) ageGroup2 as Labeled("age group") ComboBox
 				List(itemClass="io.intino.alexandria.ui.documentation.Person") list2
 					Mold > Item(height=60px,width=30%) grouping2Mold
 							Text firstName2
@@ -707,7 +707,7 @@ Template(layout=Vertical, spacing=DP8) groupingExamplesMold as Decorated
 			Text(format=h6, value="No facets with many options")
 			Block(spacing=DP8, format=filledNoAir)
 				Block(format=containerAirMedium, spacing=DP24) as Relative(width=100%)
-					Grouping(format=whiteBackground,collection=empty) country1 as Labeled("country")
+					Grouping(format=whiteBackground,collections=empty) country1 as Labeled("country")
 			Block > Text as Code(language=Html)
 					value
 						=========
@@ -718,7 +718,7 @@ Template(layout=Vertical, spacing=DP8) groupingExamplesMold as Decorated
 			Text(format=h6, value="ComboBox facet with many options")
 			Block(spacing=DP8, format=filledNoAir)
 				Block(format=containerAirMedium, spacing=DP24) as Relative(width=100%)
-					Grouping(format=whiteBackground,collection=empty) country2 as Labeled("country") ComboBox
+					Grouping(format=whiteBackground,collections=empty) country2 as Labeled("country") ComboBox
 			Block > Text as Code(language=Html)
 					value
 						=========

@@ -12,21 +12,22 @@ Template docsTemplate as Decorated
 				OpenPage(page=UiElements.home, title="home") as Link
 				Text(value="docs")
 
-	Block(layout=Horizontal CenterJustified Wrap, spacing=DP40, format=containerAirLarge) body
-		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) dataBlock as Paper Relative(width=40%) Labeled("data widgets")
-			Stamp(template=widgetSummaryMold,spacing=DP16) dataWidgets as Multiple(noItemsMessage="no widgets")
-		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) catalogBlock as Paper Relative(width=40%) Labeled("catalog widgets")
-			Stamp(template=widgetSummaryMold,spacing=DP16) catalogWidgets as Multiple(noItemsMessage="no widgets")
-		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) operationBlock as Paper Relative(width=40%) Labeled("operation widgets")
-			Stamp(template=widgetSummaryMold,spacing=DP16) operationWidgets as Multiple(noItemsMessage="no widgets")
-		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) otherBlock as Paper Relative(width=40%) Labeled("other widgets")
-			Stamp(template=widgetSummaryMold,spacing=DP16) otherWidgets as Multiple(noItemsMessage="no widgets")
+	Block(layout=Wrap, spacing=DP40, format=containerAirLarge) body
+		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) dataBlock as Labeled("data widgets")
+			Stamp(template=widgetSummaryMold,spacing=DP16,arrangement=Horizontal) dataWidgets as Multiple(noItemsMessage="no widgets")
+		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) catalogBlock as Labeled("catalog widgets")
+			Stamp(template=widgetSummaryMold,spacing=DP16,arrangement=Horizontal) catalogWidgets as Multiple(noItemsMessage="no widgets")
+		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) operationBlock as Labeled("operation widgets")
+			Stamp(template=widgetSummaryMold,spacing=DP16,arrangement=Horizontal) operationWidgets as Multiple(noItemsMessage="no widgets")
+		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) otherBlock as Labeled("other widgets")
+			Stamp(template=widgetSummaryMold,spacing=DP16,arrangement=Horizontal) otherWidgets as Multiple(noItemsMessage="no widgets")
 
 
-Template(modelClass="io.intino.alexandria.schemas.Widget") widgetSummaryMold as Decorated
-	OpenPage(title = "", page = UiElements.widgetType, format=h6, size=Large) title as Link
-	Text description
-	Text(format=body2) facets as Multiple(arrangement=Horizontal) Highlighted("white","#679164")
+Template(layout=Vertical Flexible, modelClass="io.intino.alexandria.schemas.Widget") widgetSummaryMold as Decorated Relative(height=100%)
+	Block(layout=Vertical Flexible) as Paper Absolute(width=400px)
+		OpenPage(title = "", page = UiElements.widgetType, format=h6, size=Large) title as Link
+		Block(layout=Flexible) > Text description
+		Text(format=body2) facets as Multiple(arrangement=Horizontal) Highlighted("white","#679164")
 
 
 //Template docsTemplate as Decorated

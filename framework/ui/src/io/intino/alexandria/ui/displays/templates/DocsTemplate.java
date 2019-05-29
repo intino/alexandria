@@ -46,6 +46,7 @@ public class DocsTemplate extends AbstractDocsTemplate<UiFrameworkBox> {
     private void addOtherWidgets() {
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Block));
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Chart));
+        body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Slider));
     }
 
     //    @Override

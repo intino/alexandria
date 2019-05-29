@@ -17,7 +17,8 @@ export default class PlaceMark extends I18nComponent {
         const placeMark = this.props.placeMark;
         const location = placeMark.location;
         const clusterer = this.props.clusterer;
-        const icon = {url:placeMark.icon != null ? placeMark.icon : (this.props.icon != null ? this.props.icon : undefined),labelOrigin: new google.maps.Point(9, 10)};
+        var icon = {url:placeMark.icon != null ? placeMark.icon : (this.props.icon != null ? this.props.icon : undefined),labelOrigin: new google.maps.Point(9, 10)};
+        if (icon.url === undefined) icon = undefined;
         if (location.type === "Polyline") return (<Marker icon={icon} label={{text:placeMark.label}} position={this.centerOf(placeMark)} onClick={this.showInfo.bind(this)}><Polyline path={location.pointList} clusterer={clusterer}></Polyline>{this.renderInfoWindow()}</Marker>);
         else if (location.type === "Polygon") return (<Marker icon={icon} label={{text:placeMark.label}} position={this.centerOf(placeMark)} onClick={this.showInfo.bind(this)}><Polygon path={location.pointList} clusterer={clusterer}></Polygon>{this.renderInfoWindow()}</Marker>);
         return (<Marker icon={icon} label={{text:placeMark.label}} position={location.pointList[0]} clusterer={clusterer} onClick={this.showInfo.bind(this)}>{this.renderInfoWindow()}</Marker>);

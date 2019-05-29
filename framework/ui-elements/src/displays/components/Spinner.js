@@ -1,5 +1,6 @@
 import React from "react";
 import { withStyles } from '@material-ui/core/styles';
+import { withSnackbar } from 'notistack';
 import AbstractSpinner from "../../../gen/displays/components/AbstractSpinner";
 import SpinnerNotifier from "../../../gen/displays/notifiers/SpinnerNotifier";
 import SpinnerRequester from "../../../gen/displays/requesters/SpinnerRequester";
@@ -41,4 +42,4 @@ class Spinner extends AbstractSpinner {
 
 }
 
-export default withStyles(styles, { withTheme: true })(Spinner);
+export default withStyles(styles, { withTheme: true })(withSnackbar(Spinner));

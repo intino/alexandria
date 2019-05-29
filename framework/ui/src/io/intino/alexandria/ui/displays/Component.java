@@ -18,4 +18,8 @@ public abstract class Component<DN extends ComponentNotifier, B extends Box> ext
 		this.color = color;
 		return this;
 	}
+
+	public void notifyUser(String message, UserMessage.Type messageType) {
+		notifier.userMessage(new UserMessage().message(message).type(messageType));
+	}
 }

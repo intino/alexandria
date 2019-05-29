@@ -41,12 +41,17 @@ export default class Block extends AbstractBlock {
 			return (
 				<Paper style={style} className={layout}>
 					{this.props.label !== "" ? <Typography style={{padding:"0 10px"}} variant={this.variant("h5")}>{this.props.label}</Typography> : undefined }
-					<div style={{padding:"0 10px"}}>{this._renderChildren()}</div>
+					<div style={{padding:"0 10px 10px"}}>{this._renderChildren()}</div>
 				</Paper>
 			);
 		}
 
-		return (<div style={style} className={layout}>{this._renderChildren()}</div>);
+		return (
+			<div style={style} className={layout}>
+				{this.props.label !== "" ? <Typography style={{padding:"0 0 5px"}} variant={this.variant("h5")}>{this.props.label}</Typography> : undefined }
+				{this._renderChildren()}
+			</div>
+		);
 	};
 
 	_renderChildren = () => {

@@ -33,11 +33,11 @@ public class SearchBox<DN extends SearchBoxNotifier, B extends Box> extends Abst
     }
 
     private void notifySelected() {
-        notifyCollection();
+        notifyCollections();
         notifyListener();
     }
 
-    private void notifyCollection() {
+    private void notifyCollections() {
         collections.forEach(c -> c.filter(condition));
         if (collections.size() > 0) notifier.refreshCount(collections.get(0).itemCount());
     }

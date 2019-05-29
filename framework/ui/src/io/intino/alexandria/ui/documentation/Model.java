@@ -1,11 +1,15 @@
 package io.intino.alexandria.ui.documentation;
 
-import io.intino.alexandria.schemas.*;
+import io.intino.alexandria.schemas.Method;
+import io.intino.alexandria.schemas.Parameter;
+import io.intino.alexandria.schemas.Property;
+import io.intino.alexandria.schemas.Widget;
 import io.intino.alexandria.ui.documentation.model.collection.*;
 import io.intino.alexandria.ui.documentation.model.data.*;
 import io.intino.alexandria.ui.documentation.model.operation.*;
 import io.intino.alexandria.ui.documentation.model.other.BlockWidget;
 import io.intino.alexandria.ui.documentation.model.other.ChartWidget;
+import io.intino.alexandria.ui.documentation.model.other.SliderWidget;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,7 +21,7 @@ public class Model {
 
 	public enum WidgetType {
 		Text, Number, Image, File, Date, Chart, Block, List, Table, Task, OpenPage, Export, Download, DownloadSelection,
-		Grouping, Sorting, SearchBox, Map;
+		Grouping, Sorting, SearchBox, Map, Slider;
 
 		public static WidgetType from(String type) {
 			WidgetType[] values = values();
@@ -42,6 +46,7 @@ public class Model {
 		map.put(WidgetType.Block, new BlockWidget());
 		map.put(WidgetType.List, new ListWidget());
 		map.put(WidgetType.Map, new MapWidget());
+		map.put(WidgetType.Slider, new SliderWidget());
 		map.put(WidgetType.Table, new TableWidget());
 		map.put(WidgetType.Task, new TaskWidget());
 		map.put(WidgetType.OpenPage, new OpenPageWidget());

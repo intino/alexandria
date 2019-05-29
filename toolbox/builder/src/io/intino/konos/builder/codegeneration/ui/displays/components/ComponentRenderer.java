@@ -172,7 +172,6 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		List<Component> components = new ArrayList<>();
 		if (component.i$(Block.class)) components.addAll(component.a$(Block.class).componentList());
 		if (component.i$(Template.class)) components.addAll(component.a$(Template.class).componentList());
-		if (component.i$(Catalog.class)) components.addAll(component.a$(Catalog.class).componentList());
 		if (component.i$(Snackbar.class)) components.addAll(component.a$(Snackbar.class).componentList());
 		if (component.i$(Step.class)) components.addAll(component.a$(Step.class).componentList());
 		if (component.i$(Header.class)) components.addAll(component.a$(Header.class).componentList());

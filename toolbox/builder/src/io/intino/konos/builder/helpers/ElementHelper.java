@@ -2,8 +2,6 @@ package io.intino.konos.builder.helpers;
 
 import io.intino.konos.builder.codegeneration.ElementReference;
 import io.intino.konos.builder.utils.IdGenerator;
-import io.intino.konos.model.graph.Display;
-import io.intino.konos.model.graph.temporal.TemporalCatalog;
 import io.intino.tara.magritte.Layer;
 import io.intino.tara.magritte.Node;
 import io.intino.tara.magritte.Predicate;
@@ -36,11 +34,6 @@ public class ElementHelper {
 	}
 
 	public String typeOf(Layer element) {
-		if (element.i$(Display.class)) {
-			String type = element.getClass().getSimpleName();
-			boolean temporalCatalog = type.equalsIgnoreCase("temporalCatalog");
-			return temporalCatalog ? "temporal" + element.a$(TemporalCatalog.class).type().name() + "Catalog" : type;
-		}
 		return element.getClass().getSimpleName();
 	}
 

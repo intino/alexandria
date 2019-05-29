@@ -48,3 +48,11 @@ Component multiple as Decorated
 
 Component spinner as Decorated
 	Notification refreshLoading as Bool
+
+Component slider as Decorated
+	Notification refreshOrdinals as Object(Ordinal) List
+	Request update as Integer
+
+Schema Ordinal
+	Attribute label as Text
+	Attribute step as Integer
