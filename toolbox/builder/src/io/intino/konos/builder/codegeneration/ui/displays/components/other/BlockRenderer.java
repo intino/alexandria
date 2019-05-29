@@ -1,9 +1,10 @@
-package io.intino.konos.builder.codegeneration.ui.displays.components;
+package io.intino.konos.builder.codegeneration.ui.displays.components.other;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.displays.components.SizedRenderer;
 import io.intino.konos.model.graph.Block;
 import io.intino.konos.model.graph.OtherComponents.Selector;
 import io.intino.konos.model.graph.badge.BadgeBlock;

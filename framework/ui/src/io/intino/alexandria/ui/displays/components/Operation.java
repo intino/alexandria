@@ -2,8 +2,8 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.OperationInfo;
-import io.intino.alexandria.schemas.UserMessage;
 import io.intino.alexandria.ui.displays.Component;
+import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.notifiers.OperationNotifier;
 import io.intino.alexandria.ui.resources.Asset;
 import io.intino.alexandria.ui.spark.UIFile;
@@ -58,10 +58,6 @@ public class Operation<DN extends OperationNotifier, B extends Box> extends Comp
 
     public void notifyUser(String message) {
         notifyUser(message, UserMessage.Type.Info);
-    }
-
-    public void notifyUser(String message, UserMessage.Type messageType) {
-        notifier.userMessage(new UserMessage().message(message).type(messageType));
     }
 
     @Override

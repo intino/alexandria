@@ -16,7 +16,7 @@ public class BindingCollectionRenderer<C extends Component> extends ComponentRen
 		super(settings, component, provider, target);
 	}
 
-	void addBinding(FrameBuilder builder, List<CatalogComponents.Collection> collections) {
+	protected void addBinding(FrameBuilder builder, List<CatalogComponents.Collection> collections) {
 		if (collections.size() <= 0) return;
 		FrameBuilder result = new FrameBuilder("binding", type()).add("name", nameOf(element));
 		collections.forEach(c -> result.add("collection", nameOf(c)));

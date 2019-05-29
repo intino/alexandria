@@ -23,24 +23,6 @@ Concept:Named Template extends Component
 
 	has Component
 
-Concept:Named Catalog extends Component
-
-	Concept:{0..1} Events
-		Concept:{1..1} OnClick
-			Concept:{1..1} CatalogEvent
-				sub Open
-					var Block block
-					var boolean hasBreadcrumbs = false
-				sub OpenDialog
-					var Dialog dialog
-				sub OpenCatalog
-					var Catalog catalog
-					var boolean filtered = false
-					var boolean openItem = false
-
-	has Component
-
-
 Concept DataComponents
 	Concept Text extends Component
 		var word:{Uppercase Lowercase Capitalize Normal} mode = Normal
@@ -175,6 +157,18 @@ Concept OtherComponents
 
 	Concept MaterialIcon extends Component
 		var string icon
+
+	Concept Slider extends Component
+		var word:{Vertical Horizontal} arrangement = Horizontal
+		var integer value = -1
+
+		Concept:{1..1} Range
+			var integer min
+			var integer max
+
+		Concept:{0..1} Animation
+			var integer interval
+			var boolean loop = false
 
 Concept PrivateComponents
 	Concept PrivateComponent extends Component

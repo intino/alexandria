@@ -33,11 +33,11 @@ public class Sorting<DN extends SortingNotifier, B extends Box> extends Abstract
     }
 
     private void notifySelected() {
-        notifyCollection();
+        notifyCollections();
         notifyListener();
     }
 
-    private void notifyCollection() {
+    private void notifyCollections() {
         collections.forEach(c -> {
             if (selected) c.addSorting(key());
             else c.removeSorting(key());

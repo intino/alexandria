@@ -10,6 +10,7 @@ import io.intino.konos.builder.codegeneration.ui.displays.components.operation.D
 import io.intino.konos.builder.codegeneration.ui.displays.components.operation.DownloadSelectionRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.operation.ExportRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.operation.OpenPageRenderer;
+import io.intino.konos.builder.codegeneration.ui.displays.components.other.*;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.DataComponents.Date;
 import io.intino.konos.model.graph.DataComponents.File;
@@ -30,6 +31,7 @@ public class ComponentRendererFactory {
 
 		if (component.i$(OtherComponents.Spinner.class)) return (T) new SpinnerRenderer(settings, component.a$(OtherComponents.Spinner.class), provider, target);
 		if (component.i$(OtherComponents.Selector.class)) return (T) new SelectorRenderer(settings, component.a$(OtherComponents.Selector.class), provider, target);
+		if (component.i$(OtherComponents.Slider.class)) return (T) new SliderRenderer(settings, component.a$(OtherComponents.Slider.class), provider, target);
 		if (component.i$(Block.class)) return (T) new BlockRenderer(settings, component.a$(Block.class), provider, target);
 		if (component.i$(Chart.class)) return (T) new ChartRenderer(settings, component.a$(Chart.class), provider, target);
 

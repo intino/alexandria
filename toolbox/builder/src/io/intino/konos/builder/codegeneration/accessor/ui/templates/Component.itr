@@ -54,8 +54,12 @@ def type(properties & operation) trigger(common)
 	[ title="$title"][ target="$target"][ mode="$operationMode"][ icon="$icon"][ confirm="$confirm"][ disabled={$disabled}][ size="$size"][ format="$format...[ ]"]
 end
 
+def type(properties & slider) trigger(common)
+	[ label="$label"][ format="$format...[ ]"][ color="$color"][ arrangement="$arrangement"][ animation={{interval:$interval,loop:$loop}}]
+end
+
 def type(properties) trigger(common)
-	[ label="$label"][ format="$format...[ ]"][ multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing}}][ color="$color"]
+	[ label="$label"][ format="$format...[ ]"][ color="$color"][ multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing}}]
 end
 
 def type(properties & template) trigger(specific)
@@ -140,6 +144,10 @@ end
 
 def type(properties & searchbox) trigger(specific)
 	[ placeholder="$placeholder"]
+end
+
+def type(properties & slider) trigger(specific)
+    [ range={{min:$min,max:$max}}][ value={$value}]
 end
 
 def type(properties) trigger(specific)

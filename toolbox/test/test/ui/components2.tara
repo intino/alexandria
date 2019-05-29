@@ -3,23 +3,14 @@ dsl Konos
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
 
 Template template1
-	Map map1
-		icon = "images/icon1.png"
-		Zoom(defaultZoom = 1, min = 1, max = 1)
-		Mold > Item(height = 100px) map1Mold
+	Slider
+		value=100
+		Range(min=1,max=20)
+		Animation(interval=1,loop=true)
 
-	Map map2 as Cluster
-		Zoom(defaultZoom = 1, min = 1, max = 1)
-		Mold > Item(height = 100px) map2Mold
-
-	Map map3 as Kml(layer="abcd.kml")
-		Zoom(defaultZoom = 1, min = 1, max = 1)
-		Mold > Item(height = 100px) map3Mold
-
-	Map map4 as Heatmap
-		Zoom(defaultZoom = 1, min = 1, max = 1)
-		Mold > Item(height = 100px) map4Mold
-
+	Slider as Temporal(scales=Year Month)
+		collections = empty
+		Range(min=1,max=20)
 
 Format("color:'#B71C1C',textShadow:'2px 2px 2px #fff'") h1
 Format("color:'black',textShadow:'2px 2px 2px #fff'") h2

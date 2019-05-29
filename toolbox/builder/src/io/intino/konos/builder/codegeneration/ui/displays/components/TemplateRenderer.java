@@ -7,7 +7,7 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.Template;
 import io.intino.konos.model.graph.rules.Spacing;
 
-public class TemplateRenderer extends ComponentRenderer<Template> {
+public class TemplateRenderer extends SizedRenderer<Template> {
 
 	public TemplateRenderer(Settings settings, Template component, TemplateProvider provider, Target target) {
 		super(settings, component, provider, target);

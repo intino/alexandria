@@ -230,6 +230,10 @@ def type(binding & searchbox)
 	$name.bindTo($collection...[,]);
 end
 
+def type(binding & slider)
+	$name.bindTo($collection...[,]);
+end
+
 def type(binding)
 	$name.bindTo($selector, "$option");
 end
@@ -339,6 +343,13 @@ def type(properties & collection) trigger(specific)
 	[pageSize($pageSize);]
 end
 
+def type(properties & slider) trigger(specific)
+    [value($value);]
+    [range($min,$max);]
+    [animation($interval,$loop);]
+    [$ordinal+ordinalMethod...[$NL]]
+end
+
 def type(properties) trigger(specific)
 end
 
@@ -352,6 +363,10 @@ end
 
 def trigger(resourceMethod)
 	$name($owner.class.getResource("$value"));
+end
+
+def trigger(ordinalMethod)
+	add(new io.intino.alexandria.ui.displays.components.slider.ordinals.$name+firstUpperCase~Ordinal());
 end
 
 def type(operationMode & iconbutton)

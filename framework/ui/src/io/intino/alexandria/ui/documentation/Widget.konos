@@ -1,5 +1,6 @@
 dsl Konos
 
+use Slider
 use Map
 use SearchBox
 use Sorting
@@ -45,6 +46,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block groupingExamples as Conditional > Stamp(template=groupingExamplesMold)
 			Block sortingExamples as Conditional > Stamp(template=sortingExamplesMold)
 			Block searchBoxExamples as Conditional > Stamp(template=searchBoxExamplesMold)
+			Block sliderExamples as Conditional > Stamp(template=sliderExamplesMold)
 
 		Block facets
 			Text(value="Facets", format=h5 underline)

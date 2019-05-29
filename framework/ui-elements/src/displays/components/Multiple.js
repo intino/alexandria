@@ -39,10 +39,7 @@ export default class Multiple extends AbstractMultiple {
 	_spacingStyle = (multiple) => {
 		let spacingSize = multiple.spacing;
 		if (spacingSize === 0) return undefined;
-		const withBottom = multiple.arrangement.toLowerCase() === "vertical";
-		let spacingStyle = { right: spacingSize };
-		spacingStyle.bottom = withBottom ? spacingSize : 0;
-		return spacingStyle;
+		return { right: spacingSize, bottom: spacingSize };
 	};
 
 }

@@ -31,8 +31,7 @@ class Map extends AbstractMap {
 		placeMarks: [],
 		placeMark: null,
 		kmlLayer: null,
-		closeAllInfoWindows: true,
-		markers: [],
+		closeAllInfoWindows: true
 	};
 
 	constructor(props) {
@@ -59,7 +58,7 @@ class Map extends AbstractMap {
 	};
 
 	registerMap = (map) => {
-		map.addListener("click", this.hideAllMarkers.bind(this));
+		map.addListener("click", this.hideActiveMarker.bind(this));
 	};
 
 	renderLayer = () => {
@@ -100,8 +99,7 @@ class Map extends AbstractMap {
 	renderPlaceMark = (placeMark, pos, clusterer) => {
 		const items = this.behavior.items();
 		return (
-			<PlaceMark ref={this.onPlaceMarkMounted}
-					   icon={this.state.icon}
+			<PlaceMark icon={this.state.icon}
 					   onShowInfo={this.handleShowInfo.bind(this)}
 					   content={items.length > 0 ? items[0] : undefined}
 					   key={pos} placeMark={placeMark} clusterer={clusterer}>
@@ -111,15 +109,10 @@ class Map extends AbstractMap {
 	};
 
 	handleShowInfo = (element) => {
-		this.hideAllMarkers();
+		this.hideActiveMarker();
 		element.showLoading();
 		this.requester.showPlaceMark(element.props.placeMark.pos);
-	};
-
-	onPlaceMarkMounted = (element) => {
-		this.setState(prevState => ({
-			markers: [...prevState.markers, element]
-		}))
+		this.current = element;
 	};
 
 	_center = () => {
@@ -146,10 +139,9 @@ class Map extends AbstractMap {
 		this.setState({ itemCount : info.itemCount, kmlLayer: info.kmlLayer, icon: info.icon });
 	};
 
-	hideAllMarkers = () => {
-		this.state.markers.forEach(m => {
-			if (m.isInfoVisible()) m.hideInfo();
-		});
+	hideActiveMarker = () => {
+		if (this.current == null) return;
+		this.current.hideInfo();
 	};
 }
 

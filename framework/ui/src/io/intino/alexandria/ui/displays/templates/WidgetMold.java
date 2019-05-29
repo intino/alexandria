@@ -12,6 +12,7 @@ import io.intino.alexandria.ui.documentation.model.operation.DownloadWidget;
 import io.intino.alexandria.ui.documentation.model.operation.ExportWidget;
 import io.intino.alexandria.ui.documentation.model.other.BlockWidget;
 import io.intino.alexandria.ui.documentation.model.other.ChartWidget;
+import io.intino.alexandria.ui.documentation.model.other.SliderWidget;
 
 public class WidgetMold extends AbstractWidgetMold<UiFrameworkBox> {
 
@@ -60,6 +61,7 @@ public class WidgetMold extends AbstractWidgetMold<UiFrameworkBox> {
         groupingExamples.visible(widget instanceof GroupingWidget);
         sortingExamples.visible(widget instanceof SortingWidget);
         searchBoxExamples.visible(widget instanceof SearchBoxWidget);
+        sliderExamples.visible(widget instanceof SliderWidget);
     }
 
     private void updateInfo() {

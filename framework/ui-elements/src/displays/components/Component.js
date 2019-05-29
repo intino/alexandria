@@ -22,6 +22,10 @@ export default class Component extends AlexandriaDisplay {
         return style;
     };
 
+    userMessage = (info) => {
+        this.showMessage(info.message, info.type);
+    };
+
     renderDynamicLoaded(components) {
         const theme = Theme.get();
         return (

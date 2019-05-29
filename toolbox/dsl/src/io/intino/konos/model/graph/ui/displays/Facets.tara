@@ -28,6 +28,7 @@ Facet AbstractAbsolute is abstract
 	var integer:{px} width = -1px
 	var integer:{px} height = -1px
 Facet Absolute extends AbstractAbsolute on Block
+Facet Absolute extends AbstractAbsolute on Template
 Facet Absolute extends AbstractAbsolute on DataComponents.Image
 Facet Absolute extends AbstractAbsolute on DataComponents.File
 Facet Absolute extends AbstractAbsolute on OtherComponents.Chart
@@ -37,6 +38,7 @@ Facet AbstractRelative is abstract
 	var double:{%} width = 100%
 	var double:{%} height = 100%
 Facet Relative extends AbstractRelative on Block
+Facet Relative extends AbstractRelative on Template
 Facet Relative extends AbstractRelative on DataComponents.Image
 Facet Relative extends AbstractRelative on DataComponents.File
 Facet Relative extends AbstractRelative on OtherComponents.Chart
@@ -76,16 +78,6 @@ Facet Multiple extends AbstractMultiple on OtherComponents.Stamp
 Facet Highlighted on DataComponents.Text
 	var string textColor
 	var string backgroundColor
-
-// CATALOG FACETS
-Facet Temporal on Catalog
-	var word:{Time Range} type
-	var word[]:{Year QuarterOfYear Month Week Day SixHours Hour FifteenMinutes Minute Second} scales
-
-	Concept:{0..1} TemporalFilter
-		var word:{Always Conditional Never} enabled
-		var word:{Always Conditional Never} visible
-		var word:{Vertical Horizontal} layout = Horizontal
 
 // DIALOG FACETS
 Facet Dialog on Block
@@ -148,3 +140,7 @@ Facet Cluster on CatalogComponents.Map
 Facet Kml on CatalogComponents.Map
 	var string layer
 Facet Heatmap on CatalogComponents.Map
+
+Facet Temporal on OtherComponents.Slider
+	var CatalogComponents.Collection[] collections
+	var word[]:{Year QuarterOfYear Month Week Day SixHours Hour FifteenMinutes Minute Second} scales
