@@ -8,32 +8,18 @@ import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.CatalogComponents.Collection.Mold;
-import io.intino.konos.model.graph.OtherComponents.Header;
-import io.intino.konos.model.graph.OtherComponents.Selector;
-import io.intino.konos.model.graph.OtherComponents.Snackbar;
 import io.intino.konos.model.graph.OtherComponents.Stamp;
-import io.intino.konos.model.graph.OtherComponents.Wizard.Step;
-import io.intino.konos.model.graph.avatar.datacomponents.AvatarImage;
-import io.intino.konos.model.graph.badge.BadgeBlock;
-import io.intino.konos.model.graph.checkbox.othercomponents.CheckBoxSelector;
-import io.intino.konos.model.graph.code.datacomponents.CodeText;
-import io.intino.konos.model.graph.combobox.catalogcomponents.ComboBoxGrouping;
-import io.intino.konos.model.graph.combobox.othercomponents.ComboBoxSelector;
 import io.intino.konos.model.graph.conditional.ConditionalBlock;
-import io.intino.konos.model.graph.menu.othercomponents.MenuSelector;
 import io.intino.konos.model.graph.multiple.MultipleBlock;
 import io.intino.konos.model.graph.multiple.datacomponents.*;
 import io.intino.konos.model.graph.multiple.othercomponents.MultipleIcon;
 import io.intino.konos.model.graph.multiple.othercomponents.MultipleStamp;
-import io.intino.konos.model.graph.parallax.ParallaxBlock;
-import io.intino.konos.model.graph.radiobox.othercomponents.RadioBoxSelector;
 import io.intino.tara.magritte.Layer;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
-import static io.intino.konos.model.graph.OperationComponents.Toolbar;
 
 public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private boolean buildChildren = false;
@@ -90,6 +76,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	private void addComponents(Component component, FrameBuilder builder) {
 		List<Component> components = components(component);
+		addComponentImports(components, builder);
 		components.forEach(c -> {
 			FrameBuilder componentBuilder = buildChildren ? childFrame(c) : componentFrame(c);
 			builder.add( "component", componentBuilder);
@@ -166,20 +153,6 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		renderer.decorated(decorated);
 		renderer.owner(owner);
 		return renderer;
-	}
-
-	private List<Component> components(Component component) {
-		List<Component> components = new ArrayList<>();
-		if (component.i$(Block.class)) components.addAll(component.a$(Block.class).componentList());
-		if (component.i$(Template.class)) components.addAll(component.a$(Template.class).componentList());
-		if (component.i$(Snackbar.class)) components.addAll(component.a$(Snackbar.class).componentList());
-		if (component.i$(Step.class)) components.addAll(component.a$(Step.class).componentList());
-		if (component.i$(Header.class)) components.addAll(component.a$(Header.class).componentList());
-		if (component.i$(Selector.class)) components.addAll(component.a$(Selector.class).componentList());
-		if (component.i$(Mold.Heading.class)) components.addAll(component.a$(Mold.Heading.class).componentList());
-		if (component.i$(Mold.Item.class)) components.addAll(component.a$(Mold.Item.class).componentList());
-		if (component.i$(Toolbar.class)) components.addAll(component.a$(Toolbar.class).componentList());
-		return components;
 	}
 
 	private List<Component> references(Component component) {
@@ -285,20 +258,6 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return null;
 	}
 
-	protected void addFacets(Component component, FrameBuilder builder) {
-		if (component.i$(Editable.class)) builder.add("facet", "Editable");
-		if (component.i$(CodeText.class)) builder.add("facet", "Code");
-		if (component.i$(BadgeBlock.class)) builder.add("facet", "Badge");
-		if (component.i$(ConditionalBlock.class)) builder.add("facet", "Conditional");
-		if (component.i$(MenuSelector.class)) builder.add("facet", "Menu");
-		if (component.i$(ComboBoxSelector.class)) builder.add("facet", "ComboBox");
-		if (component.i$(ComboBoxGrouping.class)) builder.add("facet", "ComboBox");
-		if (component.i$(RadioBoxSelector.class)) builder.add("facet", "RadioBox");
-		if (component.i$(CheckBoxSelector.class)) builder.add("facet", "CheckBox");
-		if (component.i$(AvatarImage.class)) builder.add("facet", "Avatar");
-		if (component.i$(ParallaxBlock.class)) builder.add("facet", "Parallax");
-	}
-
 	protected FrameBuilder resourceMethodFrame(String method, String value) {
 		FrameBuilder result = new FrameBuilder("resourceMethod").add("name", method).add("value", fixResourceValue(value));
 		addOwner(result);
@@ -325,6 +284,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (componentList == null) return result;
 
 		result.add("forRoot");
+		addComponentImports(componentList, result);
 		componentList.forEach(c -> addComponent(c, result));
 
 		return componentList.size() > 0 ? result : null;

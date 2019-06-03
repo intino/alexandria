@@ -4,7 +4,7 @@ import AbstractTextEditableCode from "../../../gen/displays/components/AbstractT
 import TextEditableCodeNotifier from "../../../gen/displays/notifiers/TextEditableCodeNotifier";
 import TextEditableCodeRequester from "../../../gen/displays/requesters/TextEditableCodeRequester";
 import CodeBehavior from "./behaviors/CodeBehavior";
-import { Spinner } from "../../../gen/Displays";
+import Spinner from "../../../src/displays/components/Spinner";
 import { Theme } from "../../../gen/Theme";
 
 const TextEditableCodeAce = React.lazy(() => {

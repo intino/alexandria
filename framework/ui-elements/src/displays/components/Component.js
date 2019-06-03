@@ -1,8 +1,8 @@
 import React from "react";
 import AlexandriaDisplay from "../Display";
-import Theme from "../../../gen/Theme";
+import Theme from "app-elements/gen/Theme";
 import ComponentNotifier from "../notifiers/ComponentNotifier";
-import {Spinner} from "../../../gen/Displays";
+import {RiseLoader} from "react-spinners";
 
 export default class Component extends AlexandriaDisplay {
     static Variants = ["h1","h2","h3","h4","h5","h6","subtitle1","subtitle2","body1","body2","caption","button","overline","srOnly","inherit"];
@@ -30,7 +30,7 @@ export default class Component extends AlexandriaDisplay {
         const theme = Theme.get();
         return (
             <React.Fragment>
-                {this.state.loading ? <div style={{position:'absolute',top:'50%',left:'43%'}}><Spinner mode="Rise" color={theme.palette.secondary.main} loading={this.state.loading}/></div> : undefined }
+                {this.state.loading ? <div style={{position:'absolute',top:'50%',left:'43%'}}><RiseLoader color={theme.palette.secondary.main} loading={this.state.loading}/></div> : undefined }
                 <div style={ { visibility: this.state.loading ? "hidden" : "" } }>{components}</div>
             </React.Fragment>
         );

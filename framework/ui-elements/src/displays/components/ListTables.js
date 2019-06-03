@@ -8,7 +8,7 @@ import TableCell from '@material-ui/core/TableCell';
 import AbstractList from "../../../gen/displays/components/AbstractList";
 import ListNotifier from "../../../gen/displays/notifiers/ListNotifier";
 import ListRequester from "../../../gen/displays/requesters/ListRequester";
-import * as Elements from "app-elements/gen/Displays";
+import DisplayFactory from "alexandria-ui-elements/src/display/DisplayFactory";
 
 const styles = theme => ({
 	list: { minHeight:'200px',height:'100%',width:'100%' },
@@ -70,7 +70,7 @@ class List extends AbstractList {
 
 	renderItem(definition, index) {
 		const { classes } = this.props;
-		const instance = React.createElement(Elements[definition.tp], definition.pl);
+		const instance = React.createElement(DisplayFactory.get(definition.tp), definition.pl);
 		return (
 			<TableRow key={index} className={classes.item}>
 				<TableCell className={classes.item} component="th" scope="row">{instance}</TableCell>

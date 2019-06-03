@@ -7,15 +7,26 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.ElementRenderer;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
-import io.intino.konos.model.graph.Component;
-import io.intino.konos.model.graph.Display;
-import io.intino.konos.model.graph.PassiveView;
+import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.PassiveView.Notification;
 import io.intino.konos.model.graph.PassiveView.Request;
+import io.intino.konos.model.graph.avatar.datacomponents.AvatarImage;
+import io.intino.konos.model.graph.badge.BadgeBlock;
+import io.intino.konos.model.graph.checkbox.othercomponents.CheckBoxSelector;
+import io.intino.konos.model.graph.code.datacomponents.CodeText;
+import io.intino.konos.model.graph.combobox.catalogcomponents.ComboBoxGrouping;
+import io.intino.konos.model.graph.combobox.othercomponents.ComboBoxSelector;
+import io.intino.konos.model.graph.conditional.ConditionalBlock;
 import io.intino.konos.model.graph.decorated.DecoratedDisplay;
+import io.intino.konos.model.graph.menu.othercomponents.MenuSelector;
+import io.intino.konos.model.graph.parallax.ParallaxBlock;
+import io.intino.konos.model.graph.radiobox.othercomponents.RadioBoxSelector;
 import io.intino.tara.magritte.Layer;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
@@ -40,7 +51,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		result.add("parentType", extensionFrame);
 		result.add("import", extensionFrame);
 		if (!type.equalsIgnoreCase("display")) result.add("packageType", type.toLowerCase());
-		result.add("packageTypeRelativeDirectory", typeOf(element).equalsIgnoreCase("display") ? "" : "../");
+		result.add("packageTypeRelativeDirectory", packageTypeRelativeDirectory(element));
 		result.add("name", nameOf(element));
 		result.add("notification", framesOfNotifications(element.notificationList()));
 		result.add("request", framesOfRequests(element.requestList()));
@@ -108,6 +119,72 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	protected String genericParent(PassiveView element) {
 		if (element.isExtensionOf()) return firstUpperCase(element.asExtensionOf().parentView().name$());
 		return target == Target.Accessor ? "Component" : "io.intino.alexandria.ui.displays.Component";
+	}
+
+	protected String packageTypeRelativeDirectory(PassiveView passiveView) {
+		return typeOf(passiveView).equalsIgnoreCase("display") ? "" : "../";
+	}
+
+	protected void addComponentImports(List<Component> componentList, FrameBuilder builder) {
+		HashSet<String> mounted = new HashSet<>();
+		addComponentImports(mounted, componentList, builder);
+		if (!mounted.contains("Block") && element.i$(io.intino.konos.model.graph.Template.class)) builder.add("alexandriaBlockImport", new FrameBuilder("alexandriaBlockImport"));
+	}
+
+	protected List<Component> components(Component component) {
+		List<Component> components = new ArrayList<>();
+		if (component.i$(Block.class)) components.addAll(component.a$(Block.class).componentList());
+		if (component.i$(io.intino.konos.model.graph.Template.class)) components.addAll(component.a$(io.intino.konos.model.graph.Template.class).componentList());
+		if (component.i$(OtherComponents.Snackbar.class)) components.addAll(component.a$(OtherComponents.Snackbar.class).componentList());
+		if (component.i$(OtherComponents.Wizard.Step.class)) components.addAll(component.a$(OtherComponents.Wizard.Step.class).componentList());
+		if (component.i$(OtherComponents.Header.class)) components.addAll(component.a$(OtherComponents.Header.class).componentList());
+		if (component.i$(OtherComponents.Selector.class)) components.addAll(component.a$(OtherComponents.Selector.class).componentList());
+		if (component.i$(CatalogComponents.Collection.Mold.Heading.class)) components.addAll(component.a$(CatalogComponents.Collection.Mold.Heading.class).componentList());
+		if (component.i$(CatalogComponents.Collection.Mold.Item.class)) components.addAll(component.a$(CatalogComponents.Collection.Mold.Item.class).componentList());
+		if (component.i$(OperationComponents.Toolbar.class)) components.addAll(component.a$(OperationComponents.Toolbar.class).componentList());
+		return components;
+	}
+
+	protected void addFacets(Component component, FrameBuilder builder) {
+		List<String> facets = facets(component);
+		facets.forEach(facet -> builder.add("facet", facet));
+	}
+
+	private List<String> facets(Component component) {
+		List<String> result = new ArrayList<>();
+		if (component.i$(Editable.class)) result.add("Editable");
+		if (component.i$(CodeText.class)) result.add("Code");
+		if (component.i$(BadgeBlock.class)) result.add("Badge");
+		if (component.i$(ConditionalBlock.class)) result.add("Conditional");
+		if (component.i$(MenuSelector.class)) result.add("Menu");
+		if (component.i$(ComboBoxSelector.class)) result.add("ComboBox");
+		if (component.i$(ComboBoxGrouping.class)) result.add("ComboBox");
+		if (component.i$(RadioBoxSelector.class)) result.add("RadioBox");
+		if (component.i$(CheckBoxSelector.class)) result.add("CheckBox");
+		if (component.i$(AvatarImage.class)) result.add("Avatar");
+		if (component.i$(ParallaxBlock.class)) result.add("Parallax");
+		return result;
+	}
+
+	private FrameBuilder componentImport(Component component, String type) {
+		FrameBuilder result = new FrameBuilder(type);
+		boolean multiple = component.i$(AbstractMultiple.class);
+		result.add("name", component.i$(OtherComponents.Stamp.class) ? component.a$(OtherComponents.Stamp.class).template().name$() : nameOf(component));
+		result.add("type", multiple ? "multiple" : typeOf(component));
+		result.add("directory", component.isDecorated() ? "src" : "gen");
+		result.add("componentDirectory", componentDirectory(component));
+		if (!multiple) addFacets(component, result);
+		return result;
+	}
+
+	private String componentDirectory(Component component) {
+		if (component.i$(AbstractMultiple.class)) return "components";
+		if (component.i$(OtherComponents.Stamp.class)) return componentDirectory(component.a$(OtherComponents.Stamp.class).template());
+		if (component.i$(io.intino.konos.model.graph.Template.class)) return "templates";
+		if (component.i$(CatalogComponents.Collection.Mold.Item.class)) return "items";
+		if (component.i$(PrivateComponents.Row.class)) return "rows";
+		if (component.i$(Component.class)) return "components";
+		return null;
 	}
 
 	private void writeRequester(Frame frame) {
@@ -191,6 +268,21 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (element.i$(Component.class)) accessorType.add("component", "");
 		if (element.i$(DecoratedDisplay.class)) accessorType.add("abstract", "");
 		builder.add("accessorType", accessorType);
+	}
+
+	private void addComponentImports(Set<String> mounted, List<Component> componentList, FrameBuilder builder) {
+		componentList.forEach(c -> {
+			String type = c.i$(AbstractMultiple.class) ? "multiple" : typeOf(c) + String.join("", facets(c));
+			if (c.i$(OtherComponents.Stamp.class) && !c.i$(AbstractMultiple.class)) {
+				if (!mounted.contains(c.name$())) builder.add("projectComponentImport", componentImport(c, "projectComponentImport"));
+				mounted.add(c.name$());
+			}
+			else {
+				if (!mounted.contains(type)) builder.add("alexandriaComponentImport", componentImport(c, "alexandriaComponentImport"));
+				mounted.add(type);
+			}
+			addComponentImports(mounted, components(c), builder);
+		});
 	}
 
 }

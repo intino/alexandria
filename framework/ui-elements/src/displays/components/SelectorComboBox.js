@@ -3,8 +3,6 @@ import { withStyles } from '@material-ui/core/styles';
 import AbstractSelectorComboBox from "../../../gen/displays/components/AbstractSelectorComboBox";
 import SelectorComboBoxNotifier from "../../../gen/displays/notifiers/SelectorComboBoxNotifier";
 import SelectorComboBoxRequester from "../../../gen/displays/requesters/SelectorComboBoxRequester";
-import * as Ui from '../../../gen/Displays'
-import * as Elements from "app-elements/gen/Displays";
 import Select, { components } from "react-select";
 
 const styles = theme => ({

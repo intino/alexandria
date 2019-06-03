@@ -3,7 +3,7 @@ import { Typography, withStyles} from "@material-ui/core";
 import AbstractChart from "../../../gen/displays/components/AbstractChart";
 import ChartNotifier from "../../../gen/displays/notifiers/ChartNotifier";
 import ChartRequester from "../../../gen/displays/requesters/ChartRequester";
-import { Spinner } from "../../../gen/Displays";
+import Spinner from "../../../src/displays/components/Spinner";
 import 'alexandria-ui-elements/res/styles/layout.css';
 
 export const ChartPlotly = React.lazy(() => {

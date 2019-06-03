@@ -6,9 +6,11 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.Block;
+import io.intino.konos.model.graph.Component;
 import io.intino.konos.model.graph.Template;
 
 import java.io.File;
+import java.util.List;
 
 public class TemplateRenderer extends BaseDisplayRenderer<Template> {
 
@@ -24,7 +26,9 @@ public class TemplateRenderer extends BaseDisplayRenderer<Template> {
 	@Override
 	public FrameBuilder frameBuilder() {
 		FrameBuilder frame = super.frameBuilder();
-		element.componentList().forEach(c -> addComponent(c, frame));
+		List<Component> components = element.componentList();
+		addComponentImports(components, frame);
+		components.forEach(c -> addComponent(c, frame));
 		frame.add("componentReferences", componentReferencesFrame());
 		return frame;
 	}

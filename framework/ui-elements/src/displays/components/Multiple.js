@@ -1,9 +1,7 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
 import AbstractMultiple from "../../../gen/displays/components/AbstractMultiple";
 import MultipleNotifier from "../../../gen/displays/notifiers/MultipleNotifier";
 import MultipleRequester from "../../../gen/displays/requesters/MultipleRequester";
-import * as Ui from "alexandria-ui-elements/gen/Displays";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import Typography from "./Text";
 

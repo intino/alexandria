@@ -6,10 +6,12 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.Block;
+import io.intino.konos.model.graph.Component;
 import io.intino.konos.model.graph.Template;
 import io.intino.konos.model.graph.desktop.DesktopTemplate;
 
 import java.io.File;
+import java.util.List;
 
 @SuppressWarnings("Duplicates")
 public class DesktopRenderer extends BaseDisplayRenderer<Template> {
@@ -44,7 +46,9 @@ public class DesktopRenderer extends BaseDisplayRenderer<Template> {
 
 	private void addComponents(FrameBuilder builder) {
 		DesktopTemplate template = element.asDesktop();
-		template.header().componentList().forEach(c -> addComponent(c, builder));
+		List<Component> components = template.header().componentList();
+		addComponentImports(components, builder);
+		components.forEach(c -> addComponent(c, builder));
 	}
 
 //	private void addTab(Tab tab, Frame frame) {

@@ -1,7 +1,7 @@
 import React from "react";
 import { Marker, Polygon, Polyline, InfoWindow } from '@react-google-maps/api'
 import I18nComponent from "../../I18nComponent";
-import * as Elements from "app-elements/gen/Displays";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export default class PlaceMark extends I18nComponent {
 
@@ -31,7 +31,7 @@ export default class PlaceMark extends I18nComponent {
         const content = this.props.content;
         return (
             <InfoWindow key={"_info" + pos} visible={true} position={this.centerOf(placeMark)} onCloseClick={this.hideInfo.bind(this)}>
-                <div>{content != null ? React.createElement(Elements[content.tp], content.pl) : "Loading"}</div>
+                <div>{content != null ? React.createElement(DisplayFactory.get(content.tp), content.pl) : "Loading"}</div>
             </InfoWindow>
         );
     };

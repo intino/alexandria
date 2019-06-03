@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 module.exports = {
     module: {
@@ -39,23 +40,16 @@ module.exports = {
         }
     },
     plugins: [
+        new CircularDependencyPlugin({
+            failOnError: true,
+            allowAsyncCycles: false,
+            cwd: process.cwd(),
+        }),
         new HtmlWebPackPlugin({
             hash: true,
             title: "Test UI",
             template: "./home.html",
             filename: "./home.html"
-        }),
-        new HtmlWebPackPlugin({
-            hash: true,
-            title: "Test UI",
-            template: "./docs.html",
-            filename: "./docs.html"
-        }),
-        new HtmlWebPackPlugin({
-            hash: true,
-            title: "Test UI",
-            template: "./widgetType.html",
-            filename: "./widgetType.html"
         }),
         new CopyWebpackPlugin([{
             from: 'res',
