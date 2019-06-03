@@ -1,7 +1,8 @@
 def type(display)
 	import React from "react";
-	import * as Ui from "alexandria-ui-elements/gen/Displays";
-	import * as Displays from "../[$packageTypeRelativeDirectory]Displays";
+	[$alexandriaBlockImport]
+	[$alexandriaComponentImport...[$NL]]
+	[$projectComponentImport...[$NL]]
 	$accessorType+import;
 	[import $notDecorated+firstUpperCase~Notifier from "../notifiers/$notDecorated+firstUpperCase~Notifier";]
 	[import $notDecorated+firstUpperCase~Requester from "../requesters/$notDecorated+firstUpperCase~Requester";]
@@ -26,8 +27,20 @@ def type(display)
 	}
 end
 
+def type(alexandriaBlockImport)
+	import { Block as UiBlock } from "alexandria-ui-elements/src/displays/components/Block";
+end
+
+def type(alexandriaComponentImport)
+	import { $type+firstUpperCase$facet...[] as Ui$type+firstUpperCase$facet...[] } from "alexandria-ui-elements/src/displays/[$componentDirectory/]$type+firstUpperCase$facet...[]";
+end
+
+def type(projectComponentImport)
+	import { $name+firstUpperCase as Displays$name+firstUpperCase } from "app-elements/src/displays/[$componentDirectory/]$name+firstUpperCase";
+end
+
 def type(displayExtends & generic & isExtensionOf)
-	Displays.~$parent
+	Displays~$parent
 end
 
 def type(displayExtends & generic)
@@ -39,11 +52,11 @@ def type(displayExtends)
 end
 
 def type(renderTag & template) trigger(end)
-	</Ui.Block>
+	</UiBlock>
 end
 
 def type(renderTag & block) trigger(end)
-	</Ui.Block>
+	</UiBlock>
 end
 
 def type(renderTag & item) trigger(end)
@@ -55,11 +68,11 @@ def type(renderTag) trigger(end)
 end
 
 def type(renderTag & template)
-	<Ui.Block[$properties+common$properties+specific]>
+	<UiBlock[$properties+common$properties+specific]>
 end
 
 def type(renderTag & block)
-	<Ui.Block[$properties+common$properties+specific]>
+	<UiBlock[$properties+common$properties+specific]>
 end
 
 def type(renderTag & item)

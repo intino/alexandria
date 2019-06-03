@@ -1,8 +1,0 @@
-dsl Konos
-
-use Theme
-
-Template(modelClass = "io.intino.alexandria.ui.documentation.Item") itemMold as Decorated
-	Block(layout=Horizontal Center, spacing=DP8)
-		Image avatar as Avatar("")
-		Text label

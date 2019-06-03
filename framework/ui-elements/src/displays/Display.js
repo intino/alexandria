@@ -1,7 +1,7 @@
 import React from "react";
 import PassiveView from "./PassiveView";
 import Typography from "@material-ui/core/Typography";
-import * as Elements from "app-elements/gen/Displays";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export default class Display extends PassiveView {
     state = {};
@@ -68,7 +68,7 @@ export default class Display extends PassiveView {
         return instances.map((instance, index) => {
             instance.pl.context = () => { return instance.pl.o };
             this.copyProps(props, instance.pl);
-            return (<div key={index} style={style}>{React.createElement(Elements[instance.tp], instance.pl)}</div>);
+            return (<div key={index} style={style}>{React.createElement(DisplayFactory.get(instance.tp), instance.pl)}</div>);
         });
     };
 

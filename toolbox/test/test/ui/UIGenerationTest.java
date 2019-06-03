@@ -30,7 +30,7 @@ public class UIGenerationTest {
 	private static final String passiveViewPackage = "io.intino.passiveview.box";
 	private static final String componentsPackage = "io.intino.components.box";
 
-	private static final boolean IgnoreCache = false;
+	private static final boolean IgnoreCache = true;
 
 
 	@Test

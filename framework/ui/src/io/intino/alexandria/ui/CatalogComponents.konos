@@ -1,7 +1,5 @@
 dsl Konos
 
-Component catalog as Decorated
-
 Component collection as Decorated
 	Notification setup as Object(CollectionSetup)
 	Notification refresh

@@ -27,12 +27,13 @@ public class ThemeRenderer extends UIRenderer {
 	public void render() {
 		FrameBuilder builder = new FrameBuilder("theme");
 		Theme theme = service.graph().theme();
-		if (theme == null) return;
-		builder.add("palette", palette(theme));
-		builder.add("typography", typography(theme));
+		if (theme != null) {
+			builder.add("palette", palette(theme));
+			builder.add("typography", typography(theme));
+		}
 		service.graph().formatList().forEach(r -> builder.add("format", frameOf(r)));
 		Commons.write(new File(gen() + File.separator + "Theme.js").toPath(), setup(new ThemeTemplate()).render(builder.toFrame()));
-		saveRendered(theme);
+		if (theme != null) saveRendered(theme);
 	}
 
 	private Frame palette(Theme theme) {

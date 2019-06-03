@@ -1,9 +1,15 @@
-import React from "react";
+import React, { Suspense } from "react";
 import AbstractOperation from "../../../gen/displays/components/AbstractOperation";
 import OperationNotifier from "../../../gen/displays/notifiers/OperationNotifier";
 import OperationRequester from "../../../gen/displays/requesters/OperationRequester";
-import * as Icons from "@material-ui/icons";
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, IconButton, Typography } from "@material-ui/core";
+import Spinner from "./Spinner";
+
+export const MuiIcon = React.lazy(() => {
+	return new Promise(resolve => {
+		setTimeout(() => resolve(import("./operation/Icon"), 300));
+	});
+});
 
 export default class Operation extends AbstractOperation {
 	state = {
@@ -36,14 +42,19 @@ export default class Operation extends AbstractOperation {
 	};
 
 	render = () => {
-		return this.renderOperation();
+		return (
+			<Suspense fallback={<div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><Spinner/></div>}>
+				{this.renderOperation()}
+			</Suspense>
+		);
 	};
 
 	renderOperation = () => {
-		return (<React.Fragment>
-					{this.renderConfirm()}
-					{this.renderTrigger()}
-				</React.Fragment>
+		return (
+			<React.Fragment>
+				{this.renderConfirm()}
+				{this.renderTrigger()}
+			</React.Fragment>
 		);
 	};
 
@@ -58,8 +69,8 @@ export default class Operation extends AbstractOperation {
 	renderLink = () => {
 		const {classes} = this.props;
 		return (<a onClick={this.handleClick.bind(this)} style={this.style()}>
-					<Typography variant={this.variant("body1")} className={classes.link}>{this._title()}</Typography>
-				</a>
+				<Typography variant={this.variant("body1")} className={classes.link}>{this._title()}</Typography>
+			</a>
 		);
 	};
 
@@ -68,8 +79,8 @@ export default class Operation extends AbstractOperation {
 		return (<Button size={this._size()} variant="contained" color="primary"
 						disabled={this._disabled()} onClick={this.handleClick.bind(this)}
 						className={classes.button}>
-					{this._title()}
-				</Button>
+				{this._title()}
+			</Button>
 		);
 	};
 
@@ -78,8 +89,8 @@ export default class Operation extends AbstractOperation {
 		return (<IconButton color="primary" aria-label={this._title()} disabled={this._disabled()}
 							onClick={this.handleClick.bind(this)}
 							className={classes.iconButton}>
-					<img src={this._icon()} style={{width:"24px",height:"24px"}}/>
-				</IconButton>
+				<img src={this._icon()} style={{width:"24px",height:"24px"}}/>
+			</IconButton>
 		);
 	};
 
@@ -87,8 +98,8 @@ export default class Operation extends AbstractOperation {
 		const {classes} = this.props;
 		return (<IconButton color="primary" aria-label={this._title()} disabled={this._disabled()}
 							onClick={this.handleClick.bind(this)} className={classes.materialIconButton}>
-					{React.createElement(Icons[this._icon()])}
-				</IconButton>
+				<MuiIcon icon={this._icon()}/>
+			</IconButton>
 		);
 	};
 

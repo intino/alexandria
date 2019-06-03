@@ -10,7 +10,7 @@ def type(i18n)
 		public static String translate(String word, String language) {
 			language = dictionaries.containsKey(language) ? language : "en";
 			Map<String, String> languageDictionary = dictionaries.get(language);
-			return languageDictionary.containsKey(word) ? languageDictionary.get(word) : word;
+			return languageDictionary != null && languageDictionary.containsKey(word) ? languageDictionary.get(word) : word;
 		}
 
 		[static {

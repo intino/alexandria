@@ -1,5 +1,5 @@
 def type(reference)
-	<Displays.$name+firstUppercase context={this._context.bind(this)} owner={this._owner.bind(this)} id="$id"$properties+common$properties+specific></Displays.$name+firstUppercase>
+	<Displays$name+firstUppercase context={this._context.bind(this)} owner={this._owner.bind(this)} id="$id"$properties+common$properties+specific></Displays$name+firstUppercase>
 end
 
 def type(child) trigger(declaration)
@@ -28,15 +28,15 @@ def type(component & child)
 end
 
 def type(extends & multiple)
-	Ui.Multiple
+	UiMultiple
 end
 
 def type(extends & stamp)
-	Displays.$type+firstUpperCase
+	Displays$type+firstUpperCase
 end
 
 def type(extends)
-	Ui.$type+firstUpperCase$facet...[]
+	Ui$type+firstUpperCase$facet...[]
 end
 
 def type(facet)

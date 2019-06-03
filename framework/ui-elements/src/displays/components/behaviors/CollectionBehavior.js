@@ -1,11 +1,11 @@
 import React from "react";
-import * as Elements from "app-elements/gen/Displays";
 import { Typography, Checkbox } from "@material-ui/core";
 import classNames from "classnames";
 import TablePagination from '@material-ui/core/TablePagination';
 import {FixedSizeList as ReactWindowList} from "react-window";
 import InfiniteLoader from 'react-window-infinite-loader';
 import 'alexandria-ui-elements/res/styles/layout.css';
+import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 
 const CollectionBehavior = (collection) => {
     const PaginationHeight = 56;
@@ -158,7 +158,7 @@ const CollectionBehavior = (collection) => {
     };
 
     self.itemView = (item, classes, index) => {
-        return React.createElement(Elements[item.tp], item.pl);
+        return React.createElement(DisplayFactory.get(item.tp), item.pl);
     };
 
     self.loadMoreItems = (items, startIndex, stopIndex) => {
