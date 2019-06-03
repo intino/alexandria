@@ -1,4 +1,4 @@
-package io.intino.alexandria.movv;
+package io.intino.alexandria.epoch;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
