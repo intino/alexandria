@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.2") movv
+Artifact("io.intino.alexandria", "1.0.0") epoch
 	Imports
 		Compile("com.esotericsoftware", "kryo", "5.0.0-RC4")
 		Test("junit", "junit", "LATEST")
