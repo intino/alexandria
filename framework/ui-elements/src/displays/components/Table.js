@@ -8,6 +8,7 @@ import classNames from "classnames";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import Heading from "./Heading";
 import { CollectionStyles } from "./Collection";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	...CollectionStyles(theme),
@@ -50,3 +51,4 @@ class Table extends AbstractTable {
 }
 
 export default withStyles(styles, { withTheme: true })(Table);
+DisplayFactory.register("Table", withStyles(styles, { withTheme: true })(Table));

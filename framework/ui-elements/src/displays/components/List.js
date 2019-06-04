@@ -6,6 +6,7 @@ import ListNotifier from "../../../gen/displays/notifiers/ListNotifier";
 import ListRequester from "../../../gen/displays/requesters/ListRequester";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import {CollectionStyles} from "./Collection";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	...CollectionStyles(theme),
@@ -36,3 +37,4 @@ class List extends AbstractList {
 }
 
 export default withStyles(styles, { withTheme: true })(List);
+DisplayFactory.register("List", withStyles(styles, { withTheme: true })(List));

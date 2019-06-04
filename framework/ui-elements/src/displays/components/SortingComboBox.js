@@ -4,6 +4,7 @@ import AbstractSortingComboBox from "../../../gen/displays/components/AbstractSo
 import SortingComboBoxNotifier from "../../../gen/displays/notifiers/SortingComboBoxNotifier";
 import SortingComboBoxRequester from "../../../gen/displays/requesters/SortingComboBoxRequester";
 import {BaseSortingStyles} from "./BaseSorting";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({...BaseSortingStyles(theme)});
 
@@ -18,3 +19,4 @@ class SortingComboBox extends AbstractSortingComboBox {
 }
 
 export default withStyles(styles, { withTheme: true })(SortingComboBox);
+DisplayFactory.register("SortingComboBox", withStyles(styles, { withTheme: true })(SortingComboBox));

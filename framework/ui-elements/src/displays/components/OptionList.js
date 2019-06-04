@@ -2,6 +2,7 @@ import React from "react";
 import AbstractOptionList from "../../../gen/displays/components/AbstractOptionList";
 import OptionListNotifier from "../../../gen/displays/notifiers/OptionListNotifier";
 import OptionListRequester from "../../../gen/displays/requesters/OptionListRequester";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export default class OptionList extends AbstractOptionList {
 
@@ -18,5 +19,6 @@ export default class OptionList extends AbstractOptionList {
 		);
 	};
 
-
 }
+
+DisplayFactory.register("OptionList", OptionList);

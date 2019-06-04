@@ -1,7 +1,5 @@
 def type(manifest)
-    import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 	$display+import...[$NL]
-	$display+register...[$NL]
     export { $display+export...[,] }
 end
 
@@ -27,10 +25,6 @@ end
 
 def type(display) trigger(import)
 	import $name+firstUppercase from "../$directory/displays/$name+firstUppercase"
-end
-
-def type(display) trigger(register)
-	DisplayFactory.register("$name+firstUppercase", $name+firstUppercase);
 end
 
 def type(display) trigger(export)

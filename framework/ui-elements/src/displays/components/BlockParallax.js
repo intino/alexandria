@@ -5,6 +5,7 @@ import BlockParallaxRequester from "../../../gen/displays/requesters/BlockParall
 import { Parallax } from "react-materialize"
 import {withStyles} from "@material-ui/core";
 import 'alexandria-ui-elements/res/styles/parallax.css';
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	container : {
@@ -50,3 +51,4 @@ class BlockParallax extends AbstractBlockParallax {
 }
 
 export default withStyles(styles, { withTheme: true })(BlockParallax);
+DisplayFactory.register("BlockParallax", withStyles(styles, { withTheme: true })(BlockParallax));

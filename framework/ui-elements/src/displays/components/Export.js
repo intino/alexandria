@@ -9,6 +9,7 @@ import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/picker
 import MomentUtils from "@date-io/moment";
 import DateUtil from "../../util/DateUtil";
 import { withSnackbar } from 'notistack';
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	...Operation.Styles,
@@ -208,3 +209,4 @@ class Export extends AbstractExport {
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(Export));
+DisplayFactory.register("Export", withStyles(styles, { withTheme: true })(withSnackbar(Export)));

@@ -4,6 +4,7 @@ import AbstractBlockConditional from "../../../gen/displays/components/AbstractB
 import BlockConditionalNotifier from "../../../gen/displays/notifiers/BlockConditionalNotifier";
 import BlockConditionalRequester from "../../../gen/displays/requesters/BlockConditionalRequester";
 import Block from "./Block";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export default class BlockConditional extends AbstractBlockConditional {
 
@@ -38,3 +39,5 @@ export default class BlockConditional extends AbstractBlockConditional {
 		this.setState({ visible });
 	};
 }
+
+DisplayFactory.register("BlockConditional", BlockConditional);

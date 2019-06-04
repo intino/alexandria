@@ -6,6 +6,9 @@ import TextEditableCodeRequester from "../../../gen/displays/requesters/TextEdit
 import CodeBehavior from "./behaviors/CodeBehavior";
 import Spinner from "../../../src/displays/components/Spinner";
 import { Theme } from "../../../gen/Theme";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import { withSnackbar } from 'notistack';
+import Delayer from '../../util/Delayer';
 
 const TextEditableCodeAce = React.lazy(() => {
 	return new Promise(resolve => {
@@ -33,10 +36,7 @@ class TextEditableCode extends AbstractTextEditableCode {
 	};
 
 	handleChange(value) {
-		if (this.timeout != null) window.clearTimeout(this.timeout);
-		this.timeout = window.setTimeout(() => {
-			this.requester.notifyChange(value.replace(/\+/g, "&plus;"));
-		}, 1000);
+		Delayer.execute(this, () => this.requester.notifyChange(value.replace(/\+/g, "&plus;")), 500);
 	};
 
 	render() {
@@ -56,4 +56,5 @@ class TextEditableCode extends AbstractTextEditableCode {
 	};
 }
 
-export default withStyles(styles, { withTheme: true })(TextEditableCode);
+export default withStyles(styles, { withTheme: true })(withSnackbar(TextEditableCode));
+DisplayFactory.register("TextEditableCode", withStyles(styles, { withTheme: true })(withSnackbar(TextEditableCode)));

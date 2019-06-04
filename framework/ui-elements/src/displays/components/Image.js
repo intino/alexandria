@@ -3,6 +3,7 @@ import AbstractImage from "../../../gen/displays/components/AbstractImage";
 import ImageNotifier from "../../../gen/displays/notifiers/ImageNotifier";
 import ImageRequester from "../../../gen/displays/requesters/ImageRequester";
 import {withStyles} from "@material-ui/core";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	value: {
@@ -35,8 +36,14 @@ class Image extends AbstractImage {
 	style() {
 		var result = super.style();
 		if (result == null) result = {};
-		if (this.props.width != null) result.width = this.props.width;
-		if (this.props.height != null) result.height = this.props.height;
+		if (this.props.width != null) {
+			result.width = this.props.width;
+			result.minWidth = this.props.width;
+		}
+		if (this.props.height != null) {
+			result.height = this.props.height;
+			result.minHeight = this.props.height;
+		}
 		return result;
 	};
 
@@ -46,3 +53,4 @@ class Image extends AbstractImage {
 }
 
 export default withStyles(styles, { withTheme: true })(Image);
+DisplayFactory.register("Image", withStyles(styles, { withTheme: true })(Image));

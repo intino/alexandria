@@ -6,6 +6,7 @@ import GroupingRequester from "../../../gen/displays/requesters/GroupingRequeste
 import {Checkbox, List, ListItem, ListItemSecondaryAction, ListItemText, Typography} from "@material-ui/core";
 import { BaseGroupingStyles } from "./BaseGrouping";
 import 'alexandria-ui-elements/res/styles/layout.css';
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({...BaseGroupingStyles(theme)});
 
@@ -48,3 +49,4 @@ class Grouping extends AbstractGrouping {
 }
 
 export default withStyles(styles, { withTheme: true })(Grouping);
+DisplayFactory.register("Grouping", withStyles(styles, { withTheme: true })(Grouping));

@@ -12,6 +12,7 @@ import AbstractSelectorMenu from "../../../gen/displays/components/AbstractSelec
 import SelectorMenuNotifier from "../../../gen/displays/notifiers/SelectorMenuNotifier";
 import SelectorMenuRequester from "../../../gen/displays/requesters/SelectorMenuRequester";
 import Block from './Block';
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	item: {
@@ -99,3 +100,4 @@ class SelectorMenu extends AbstractSelectorMenu {
 }
 
 export default withStyles(styles, { withTheme: true })(SelectorMenu);
+DisplayFactory.register("SelectorMenu", withStyles(styles, { withTheme: true })(SelectorMenu));

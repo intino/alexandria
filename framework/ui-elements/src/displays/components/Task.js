@@ -5,6 +5,7 @@ import TaskNotifier from "../../../gen/displays/notifiers/TaskNotifier";
 import TaskRequester from "../../../gen/displays/requesters/TaskRequester";
 import Operation from "./Operation"
 import { withSnackbar } from 'notistack';
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 class Task extends AbstractTask {
 	constructor(props) {
@@ -15,3 +16,4 @@ class Task extends AbstractTask {
 }
 
 export default withStyles(Operation.Styles, { withTheme: true })(withSnackbar(Task));
+DisplayFactory.register("Task", withStyles(Operation.Styles, { withTheme: true })(withSnackbar(Task)));

@@ -5,6 +5,7 @@ import AbstractBlockBadge from "../../../gen/displays/components/AbstractBlockBa
 import BlockBadgeNotifier from "../../../gen/displays/notifiers/BlockBadgeNotifier";
 import BlockBadgeRequester from "../../../gen/displays/requesters/BlockBadgeRequester";
 import Block from "./Block";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({});
 
@@ -42,3 +43,4 @@ class BlockBadge extends AbstractBlockBadge {
 }
 
 export default withStyles(styles, { withTheme: true })(BlockBadge);
+DisplayFactory.register("BlockBadge", withStyles(styles, { withTheme: true })(BlockBadge));

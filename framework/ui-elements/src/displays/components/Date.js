@@ -8,6 +8,7 @@ import DateNotifier from "../../../gen/displays/notifiers/DateNotifier";
 import DateRequester from "../../../gen/displays/requesters/DateRequester";
 import Block from "./Block";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	label: {
@@ -58,3 +59,4 @@ class Date extends AbstractDate {
 }
 
 export default withStyles(styles, { withTheme: true })(Date);
+DisplayFactory.register("Date", withStyles(styles, { withTheme: true })(Date));

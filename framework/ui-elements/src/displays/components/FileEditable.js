@@ -2,6 +2,7 @@ import React from "react";
 import AbstractFile from "../../../gen/displays/components/AbstractFile";
 import FileEditableNotifier from "../../../gen/displays/notifiers/FileEditableNotifier";
 import FileEditableRequester from "../../../gen/displays/requesters/FileEditableRequester";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export default class FileEditable extends AbstractFile {
 	state = {
@@ -30,3 +31,5 @@ export default class FileEditable extends AbstractFile {
 		this.setState({ "value": value });
 	};
 }
+
+DisplayFactory.register("FileEditable", FileEditable);

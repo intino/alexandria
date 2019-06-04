@@ -4,6 +4,7 @@ import AbstractHeading from "../../../gen/displays/components/AbstractHeading";
 import HeadingNotifier from "../../../gen/displays/notifiers/HeadingNotifier";
 import HeadingRequester from "../../../gen/displays/requesters/HeadingRequester";
 import 'alexandria-ui-elements/res/styles/layout.css';
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({});
 
@@ -23,3 +24,4 @@ class Heading extends AbstractHeading {
 }
 
 export default withStyles(styles, { withTheme: true })(Heading);
+DisplayFactory.register("Heading", withStyles(styles, { withTheme: true })(Heading));

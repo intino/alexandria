@@ -2,6 +2,7 @@ import React from "react";
 import AbstractItem from "../../../gen/displays/components/AbstractItem";
 import ItemNotifier from "../../../gen/displays/notifiers/ItemNotifier";
 import ItemRequester from "../../../gen/displays/requesters/ItemRequester";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export default class Item extends AbstractItem {
 
@@ -12,3 +13,5 @@ export default class Item extends AbstractItem {
 	};
 
 }
+
+DisplayFactory.register("Item", Item);

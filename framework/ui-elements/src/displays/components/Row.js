@@ -3,6 +3,7 @@ import AbstractRow from "../../../gen/displays/components/AbstractRow";
 import RowNotifier from "../../../gen/displays/notifiers/RowNotifier";
 import RowRequester from "../../../gen/displays/requesters/RowRequester";
 import 'alexandria-ui-elements/res/styles/layout.css';
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export default class Row extends AbstractRow {
 
@@ -19,3 +20,5 @@ export default class Row extends AbstractRow {
 	};
 
 }
+
+DisplayFactory.register("Row", Row);

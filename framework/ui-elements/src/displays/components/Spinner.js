@@ -5,6 +5,7 @@ import AbstractSpinner from "../../../gen/displays/components/AbstractSpinner";
 import SpinnerNotifier from "../../../gen/displays/notifiers/SpinnerNotifier";
 import SpinnerRequester from "../../../gen/displays/requesters/SpinnerRequester";
 import { BarLoader, CircleLoader, HashLoader, RingLoader, RiseLoader } from "react-spinners";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({});
 
@@ -43,3 +44,4 @@ class Spinner extends AbstractSpinner {
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(Spinner));
+DisplayFactory.register("Spinner", withStyles(styles, { withTheme: true })(withSnackbar(Spinner)));

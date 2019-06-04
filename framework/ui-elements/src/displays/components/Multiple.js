@@ -4,6 +4,7 @@ import MultipleNotifier from "../../../gen/displays/notifiers/MultipleNotifier";
 import MultipleRequester from "../../../gen/displays/requesters/MultipleRequester";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import Typography from "./Text";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export default class Multiple extends AbstractMultiple {
 
@@ -41,3 +42,5 @@ export default class Multiple extends AbstractMultiple {
 	};
 
 }
+
+DisplayFactory.register("Multiple", Multiple);

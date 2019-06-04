@@ -33,8 +33,12 @@ import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayNotifierFolder;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayRequesterFolder;
 import static io.intino.konos.model.graph.PassiveView.Request.ResponseType.Asset;
+import static java.util.stream.Collectors.toList;
 
 public abstract class PassiveViewRenderer<C extends PassiveView> extends ElementRenderer<C> {
+
+	public static final String ProjectComponentImport = "projectComponentImport";
+	public static final String AlexandriaComponentImport = "alexandriaComponentImport";
 
 	protected PassiveViewRenderer(Settings settings, C element, TemplateProvider templateProvider, Target target) {
 		super(settings, element, templateProvider, target);
@@ -47,7 +51,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		String type = type();
 		result.add("id", shortId(element));
 		result.add("type", type);
-		addAccessorType(result);
+		addParentImport(result);
 		result.add("parentType", extensionFrame);
 		result.add("import", extensionFrame);
 		if (!type.equalsIgnoreCase("display")) result.add("packageType", type.toLowerCase());
@@ -125,65 +129,95 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		return typeOf(passiveView).equalsIgnoreCase("display") ? "" : "../";
 	}
 
-	protected void addComponentImports(List<Component> componentList, FrameBuilder builder) {
-		HashSet<String> mounted = new HashSet<>();
-		addComponentImports(mounted, componentList, builder);
-		if (!mounted.contains("Block") && element.i$(io.intino.konos.model.graph.Template.class)) builder.add("alexandriaBlockImport", new FrameBuilder("alexandriaBlockImport"));
+	protected void addComponentsImports(FrameBuilder builder) {
+		if (element.i$(PrivateComponents.Row.class)) addComponentsImports(element.a$(PrivateComponents.Row.class).items().stream().map(i -> i.a$(Component.class)).collect(toList()), builder);
+		else addComponentsImports(components(element), builder);
 	}
 
-	protected List<Component> components(Component component) {
+	protected void addComponentsImports(List<Component> componentList, FrameBuilder builder) {
+		HashSet<String> imported = new HashSet<>();
+		addComponentsImports(imported, componentList, builder);
+		if (!imported.contains("Block") && element.i$(io.intino.konos.model.graph.Template.class)) builder.add("alexandriaBlockImport", new FrameBuilder("alexandriaImport").add("name", "Block"));
+	}
+
+	protected List<Component> components(PassiveView passiveView) {
 		List<Component> components = new ArrayList<>();
-		if (component.i$(Block.class)) components.addAll(component.a$(Block.class).componentList());
-		if (component.i$(io.intino.konos.model.graph.Template.class)) components.addAll(component.a$(io.intino.konos.model.graph.Template.class).componentList());
-		if (component.i$(OtherComponents.Snackbar.class)) components.addAll(component.a$(OtherComponents.Snackbar.class).componentList());
-		if (component.i$(OtherComponents.Wizard.Step.class)) components.addAll(component.a$(OtherComponents.Wizard.Step.class).componentList());
-		if (component.i$(OtherComponents.Header.class)) components.addAll(component.a$(OtherComponents.Header.class).componentList());
-		if (component.i$(OtherComponents.Selector.class)) components.addAll(component.a$(OtherComponents.Selector.class).componentList());
-		if (component.i$(CatalogComponents.Collection.Mold.Heading.class)) components.addAll(component.a$(CatalogComponents.Collection.Mold.Heading.class).componentList());
-		if (component.i$(CatalogComponents.Collection.Mold.Item.class)) components.addAll(component.a$(CatalogComponents.Collection.Mold.Item.class).componentList());
-		if (component.i$(OperationComponents.Toolbar.class)) components.addAll(component.a$(OperationComponents.Toolbar.class).componentList());
+		if (passiveView.i$(Block.class)) components.addAll(passiveView.a$(Block.class).componentList());
+		if (passiveView.i$(io.intino.konos.model.graph.Template.class)) components.addAll(passiveView.a$(io.intino.konos.model.graph.Template.class).componentList());
+		if (passiveView.i$(OtherComponents.Snackbar.class)) components.addAll(passiveView.a$(OtherComponents.Snackbar.class).componentList());
+		if (passiveView.i$(OtherComponents.Wizard.Step.class)) components.addAll(passiveView.a$(OtherComponents.Wizard.Step.class).componentList());
+		if (passiveView.i$(OtherComponents.Header.class)) components.addAll(passiveView.a$(OtherComponents.Header.class).componentList());
+		if (passiveView.i$(OtherComponents.Selector.class)) components.addAll(passiveView.a$(OtherComponents.Selector.class).componentList());
+		if (passiveView.i$(CatalogComponents.Table.class)) components.addAll(passiveView.a$(CatalogComponents.Table.class).moldList().stream().filter(m -> m.heading() != null).map(CatalogComponents.Collection.Mold::heading).collect(toList()));
+		if (passiveView.i$(CatalogComponents.Collection.Mold.Heading.class)) components.addAll(passiveView.a$(CatalogComponents.Collection.Mold.Heading.class).componentList());
+		if (passiveView.i$(CatalogComponents.Collection.Mold.Item.class)) components.addAll(passiveView.a$(CatalogComponents.Collection.Mold.Item.class).componentList());
+		if (passiveView.i$(OperationComponents.Toolbar.class)) components.addAll(passiveView.a$(OperationComponents.Toolbar.class).componentList());
 		return components;
 	}
 
-	protected void addFacets(Component component, FrameBuilder builder) {
-		List<String> facets = facets(component);
+	protected void addFacets(PassiveView passiveView, FrameBuilder builder) {
+		List<String> facets = facets(passiveView);
 		facets.forEach(facet -> builder.add("facet", facet));
 	}
 
-	private List<String> facets(Component component) {
+	private List<String> facets(PassiveView passiveView) {
 		List<String> result = new ArrayList<>();
-		if (component.i$(Editable.class)) result.add("Editable");
-		if (component.i$(CodeText.class)) result.add("Code");
-		if (component.i$(BadgeBlock.class)) result.add("Badge");
-		if (component.i$(ConditionalBlock.class)) result.add("Conditional");
-		if (component.i$(MenuSelector.class)) result.add("Menu");
-		if (component.i$(ComboBoxSelector.class)) result.add("ComboBox");
-		if (component.i$(ComboBoxGrouping.class)) result.add("ComboBox");
-		if (component.i$(RadioBoxSelector.class)) result.add("RadioBox");
-		if (component.i$(CheckBoxSelector.class)) result.add("CheckBox");
-		if (component.i$(AvatarImage.class)) result.add("Avatar");
-		if (component.i$(ParallaxBlock.class)) result.add("Parallax");
+		if (passiveView.i$(Editable.class)) result.add("Editable");
+		if (passiveView.i$(CodeText.class)) result.add("Code");
+		if (passiveView.i$(BadgeBlock.class)) result.add("Badge");
+		if (passiveView.i$(ConditionalBlock.class)) result.add("Conditional");
+		if (passiveView.i$(MenuSelector.class)) result.add("Menu");
+		if (passiveView.i$(ComboBoxSelector.class)) result.add("ComboBox");
+		if (passiveView.i$(ComboBoxGrouping.class)) result.add("ComboBox");
+		if (passiveView.i$(RadioBoxSelector.class)) result.add("RadioBox");
+		if (passiveView.i$(CheckBoxSelector.class)) result.add("CheckBox");
+		if (passiveView.i$(AvatarImage.class)) result.add("Avatar");
+		if (passiveView.i$(ParallaxBlock.class)) result.add("Parallax");
 		return result;
 	}
 
-	private FrameBuilder componentImport(Component component, String type) {
-		FrameBuilder result = new FrameBuilder(type);
-		boolean multiple = component.i$(AbstractMultiple.class);
-		result.add("name", component.i$(OtherComponents.Stamp.class) ? component.a$(OtherComponents.Stamp.class).template().name$() : nameOf(component));
-		result.add("type", multiple ? "multiple" : typeOf(component));
-		result.add("directory", component.isDecorated() ? "src" : "gen");
-		result.add("componentDirectory", componentDirectory(component));
-		if (!multiple) addFacets(component, result);
+	private FrameBuilder importOf(PassiveView passiveView, String container, boolean multiple) {
+		FrameBuilder result = new FrameBuilder(container);
+		result.add("name", importNameOf(passiveView));
+		result.add("type", importTypeOf(passiveView, multiple));
+		result.add("directory", directoryOf(passiveView));
+		result.add("componentDirectory", componentDirectoryOf(passiveView, multiple));
+		if (!multiple) addFacets(passiveView, result);
 		return result;
 	}
 
-	private String componentDirectory(Component component) {
-		if (component.i$(AbstractMultiple.class)) return "components";
-		if (component.i$(OtherComponents.Stamp.class)) return componentDirectory(component.a$(OtherComponents.Stamp.class).template());
-		if (component.i$(io.intino.konos.model.graph.Template.class)) return "templates";
-		if (component.i$(CatalogComponents.Collection.Mold.Item.class)) return "items";
-		if (component.i$(PrivateComponents.Row.class)) return "rows";
-		if (component.i$(Component.class)) return "components";
+	private String importNameOf(PassiveView passiveView) {
+		if (passiveView.i$(OtherComponents.Stamp.class)) return passiveView.a$(OtherComponents.Stamp.class).template().name$();
+		if (passiveView.i$(OtherComponents.Frame.class)) return passiveView.a$(OtherComponents.Frame.class).display().name$();
+		return nameOf(passiveView);
+	}
+
+	protected Object importTypeOf(PassiveView passiveView, boolean multiple) {
+		if (multiple) return "multiple";
+		if (passiveView.i$(CatalogComponents.Collection.Mold.Item.class) || passiveView.i$(PrivateComponents.Row.class)) return passiveView.name$();
+		return typeOf(passiveView);
+	}
+
+	protected PassiveView componentOf(PassiveView passiveView) {
+		PassiveView component = passiveView;
+		if (passiveView.i$(OtherComponents.Stamp.class)) component = passiveView.a$(OtherComponents.Stamp.class).template();
+		if (passiveView.i$(OtherComponents.Frame.class)) component = passiveView.a$(OtherComponents.Frame.class).display();
+		return component;
+	}
+
+	private String directoryOf(PassiveView passiveView) {
+		PassiveView component = componentOf(passiveView);
+		return component.i$(DecoratedDisplay.class) ? "src" : "gen";
+	}
+
+	private String componentDirectoryOf(PassiveView passiveView, boolean multiple) {
+		if (multiple && passiveView.i$(AbstractMultiple.class)) return "components";
+		if (passiveView.i$(OtherComponents.Stamp.class)) return componentDirectoryOf(passiveView.a$(OtherComponents.Stamp.class).template(), multiple);
+		if (passiveView.i$(OtherComponents.Frame.class)) return componentDirectoryOf(passiveView.a$(OtherComponents.Frame.class).display(), multiple);
+		if (passiveView.i$(io.intino.konos.model.graph.Template.class)) return "templates";
+		if (passiveView.i$(CatalogComponents.Collection.Mold.Item.class)) return "items";
+		if (passiveView.i$(PrivateComponents.Row.class)) return "rows";
+		if (passiveView.i$(Component.class)) return "components";
 		return null;
 	}
 
@@ -261,28 +295,66 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		return templateProvider.pushRequesterTemplate(element);
 	}
 
-	private void addAccessorType(FrameBuilder builder) {
-		FrameBuilder accessorType = new FrameBuilder().add("value", type());
-		if (element.getClass().getSimpleName().equalsIgnoreCase("display")) accessorType.add("baseDisplay", "");
-		if (element.getClass().getSimpleName().equalsIgnoreCase("component")) accessorType.add("baseComponent", "");
-		if (element.i$(Component.class)) accessorType.add("component", "");
-		if (element.i$(DecoratedDisplay.class)) accessorType.add("abstract", "");
-		builder.add("accessorType", accessorType);
+	private void addParentImport(FrameBuilder builder) {
+		FrameBuilder result = new FrameBuilder().add("value", type());
+		if (isGeneric(element) && element.isExtensionOf()) result.add("parent", genericParent(element));
+		else if (element.getClass().getSimpleName().equalsIgnoreCase("component")) result.add("baseComponent", "");
+		else if (element.getClass().getSimpleName().equalsIgnoreCase("display")) result.add("baseDisplay", "");
+		else if (element.i$(Component.class)) result.add("component", "");
+		else if (element.i$(DecoratedDisplay.class)) result.add("abstract", "");
+		builder.add("parent", result);
 	}
 
-	private void addComponentImports(Set<String> mounted, List<Component> componentList, FrameBuilder builder) {
+	private void addComponentsImports(Set<String> imported, List<Component> componentList, FrameBuilder builder) {
 		componentList.forEach(c -> {
-			String type = c.i$(AbstractMultiple.class) ? "multiple" : typeOf(c) + String.join("", facets(c));
-			if (c.i$(OtherComponents.Stamp.class) && !c.i$(AbstractMultiple.class)) {
-				if (!mounted.contains(c.name$())) builder.add("projectComponentImport", componentImport(c, "projectComponentImport"));
-				mounted.add(c.name$());
-			}
-			else {
-				if (!mounted.contains(type)) builder.add("alexandriaComponentImport", componentImport(c, "alexandriaComponentImport"));
-				mounted.add(type);
-			}
-			addComponentImports(mounted, components(c), builder);
+			boolean multiple = c.i$(AbstractMultiple.class);
+			String baseType = importTypeOf(c, multiple) + String.join("", facets(c));
+			String type = multiple ? "multiple" : baseType;
+			boolean isProjectComponent = isProjectComponent(c);
+			String key = keyOf(c, type);
+			String importType = isProjectComponent(c) ? ProjectComponentImport : AlexandriaComponentImport;
+			registerConcreteImports(c, builder);
+			registerMultipleImport(imported, multiple, type, c, builder);
+			if (!imported.contains(key)) builder.add(importType, importOf(c, importType, isProjectComponent ? false : multiple));
+			imported.add(key);
+			if (c.i$(CatalogComponents.Collection.class)) registerCollectionImports(imported, c, builder);
+			if (c.i$(PrivateComponents.Row.class)) registerRowImports(imported, c, builder);
+			if (!c.i$(CatalogComponents.Collection.Mold.Item.class)) addComponentsImports(imported, components(c), builder);
 		});
 	}
 
+	protected void registerConcreteImports(Component component, FrameBuilder builder) {
+		if (component.i$(OtherComponents.Stamp.class) && !builder.contains("alexandriaStampImport")) builder.add("alexandriaStampImport", new FrameBuilder("alexandriaImport").add("name", "Stamp"));
+		if (component.i$(OtherComponents.Frame.class) && !builder.contains("alexandriaFrameImport")) builder.add("alexandriaFrameImport", new FrameBuilder("alexandriaImport").add("name", "Frame"));
+	}
+
+	protected boolean isProjectComponent(Component component) {
+		if (component.i$(OtherComponents.Stamp.class)) return true;
+		if (component.i$(OtherComponents.Frame.class)) return true;
+		if (component.i$(PrivateComponents.Row.class)) return true;
+		if (component.i$(CatalogComponents.Collection.Mold.Item.class)) return true;
+		return false;
+	}
+
+	private String keyOf(Component component, String type) {
+		if (component == null) return type;
+		if (component.i$(OtherComponents.Stamp.class)) return component.a$(OtherComponents.Stamp.class).template().name$();
+		if (component.i$(OtherComponents.Frame.class)) return component.a$(OtherComponents.Frame.class).display().name$();
+		return type;
+	}
+
+	private void registerMultipleImport(Set<String> imported, boolean multiple, String type, Component component, FrameBuilder builder) {
+		if (!multiple || imported.contains(type)) return;
+		builder.add(AlexandriaComponentImport, importOf(component, AlexandriaComponentImport, true));
+		imported.add(type);
+	}
+
+	private void registerRowImports(Set<String> imported, Component component, FrameBuilder builder) {
+		addComponentsImports(imported, component.a$(PrivateComponents.Row.class).items().stream().map(i -> i.a$(Component.class)).collect(toList()), builder);
+	}
+
+	private void registerCollectionImports(Set<String> imported, Component component, FrameBuilder builder) {
+		if (component.i$(CatalogComponents.Table.class)) addComponentsImports(imported, component.graph().rowsDisplays().stream().map(r -> r.a$(Component.class)).collect(toList()), builder);
+		else addComponentsImports(imported, component.a$(CatalogComponents.Collection.class).moldList().stream().map(CatalogComponents.Collection.Mold::item).collect(toList()), builder);
+	}
 }

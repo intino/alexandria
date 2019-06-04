@@ -8,6 +8,7 @@ import { GoogleMap, MarkerClusterer, HeatmapLayer, KmlLayer } from '@react-googl
 import 'alexandria-ui-elements/res/styles/layout.css';
 import GoogleApi from "./map/GoogleApi";
 import PlaceMark from "./map/PlaceMark";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	...CollectionStyles(theme),
@@ -146,3 +147,4 @@ class Map extends AbstractMap {
 }
 
 export default withStyles(styles, { withTheme: true })(Map);
+DisplayFactory.register("Map", withStyles(styles, { withTheme: true })(Map));

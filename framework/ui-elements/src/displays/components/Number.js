@@ -6,6 +6,7 @@ import NumberNotifier from "../../../gen/displays/notifiers/NumberNotifier";
 import NumberRequester from "../../../gen/displays/requesters/NumberRequester";
 import TextBehavior from "./behaviors/TextBehavior";
 import Block from "./Block";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	prefix : {
@@ -58,3 +59,4 @@ class Number extends AbstractNumber {
 }
 
 export default withStyles(styles, { withTheme: true })(Number);
+DisplayFactory.register("Number", withStyles(styles, { withTheme: true })(Number));

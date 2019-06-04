@@ -4,6 +4,7 @@ import AbstractSorting from "../../../gen/displays/components/AbstractSorting";
 import SortingNotifier from "../../../gen/displays/notifiers/SortingNotifier";
 import SortingRequester from "../../../gen/displays/requesters/SortingRequester";
 import {Typography} from "@material-ui/core";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	link : {
@@ -36,3 +37,4 @@ class Sorting extends AbstractSorting {
 }
 
 export default withStyles(styles, { withTheme: true })(Sorting);
+DisplayFactory.register("Sorting", withStyles(styles, { withTheme: true })(Sorting));

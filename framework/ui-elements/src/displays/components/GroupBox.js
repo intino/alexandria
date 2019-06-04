@@ -5,6 +5,7 @@ import GroupBoxNotifier from "../../../gen/displays/notifiers/GroupBoxNotifier";
 import GroupBoxRequester from "../../../gen/displays/requesters/GroupBoxRequester";
 import { List, ListItem, ListItemText, ListItemSecondaryAction, Checkbox, Typography } from "@material-ui/core";
 import 'alexandria-ui-elements/res/styles/layout.css';
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	label : {
@@ -71,3 +72,4 @@ class GroupBox extends AbstractGroupBox {
 }
 
 export default withStyles(styles, { withTheme: true })(GroupBox);
+DisplayFactory.register("GroupBox", withStyles(styles, { withTheme: true })(GroupBox));

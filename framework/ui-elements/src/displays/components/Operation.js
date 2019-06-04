@@ -4,6 +4,7 @@ import OperationNotifier from "../../../gen/displays/notifiers/OperationNotifier
 import OperationRequester from "../../../gen/displays/requesters/OperationRequester";
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, IconButton, Typography } from "@material-ui/core";
 import Spinner from "./Spinner";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export const MuiIcon = React.lazy(() => {
 	return new Promise(resolve => {
@@ -68,8 +69,8 @@ export default class Operation extends AbstractOperation {
 
 	renderLink = () => {
 		const {classes} = this.props;
-		return (<a onClick={this.handleClick.bind(this)} style={this.style()}>
-				<Typography variant={this.variant("body1")} className={classes.link}>{this._title()}</Typography>
+		return (<a onClick={this.handleClick.bind(this)}>
+				<Typography style={this.style()} variant={this.variant("body1")} className={classes.link}>{this._title()}</Typography>
 			</a>
 		);
 	};
@@ -172,3 +173,5 @@ export default class Operation extends AbstractOperation {
 	}
 
 };
+
+DisplayFactory.register("Operation", Operation);

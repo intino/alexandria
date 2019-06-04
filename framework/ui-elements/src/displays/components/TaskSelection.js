@@ -5,6 +5,7 @@ import TaskSelectionNotifier from "../../../gen/displays/notifiers/TaskSelection
 import TaskSelectionRequester from "../../../gen/displays/requesters/TaskSelectionRequester";
 import Operation from "./Operation"
 import { withSnackbar } from 'notistack';
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 class TaskSelection extends AbstractTaskSelection {
 	constructor(props) {
@@ -15,3 +16,4 @@ class TaskSelection extends AbstractTaskSelection {
 }
 
 export default withStyles(Operation.Styles, { withTheme: true })(withSnackbar(TaskSelection));
+DisplayFactory.register("TaskSelection", withStyles(Operation.Styles, { withTheme: true })(withSnackbar(TaskSelection)));

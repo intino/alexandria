@@ -17,23 +17,6 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 	}
 
 	@Override
-	public FrameBuilder frameBuilder() {
-		FrameBuilder frame = super.frameBuilder();
-		addHeadings(frame);
-		return frame;
-	}
-
-	private void addHeadings(FrameBuilder builder) {
-		element.moldList().forEach(m -> addHeading(m, builder));
-	}
-
-	private void addHeading(Collection.Mold mold, FrameBuilder builder) {
-		if (mold.heading() == null) return;
-		builder.add("heading", childFrame(mold.heading()));
-		builder.add("component", childFrame(mold.heading()));
-	}
-
-	@Override
 	public FrameBuilder properties() {
 		FrameBuilder result = super.properties();
 		result.add("collection");

@@ -6,6 +6,7 @@ import DownloadSelectionRequester from "../../../gen/displays/requesters/Downloa
 import DownloadDialog from "./operation/DownloadDialog";
 import Operation from "./Operation";
 import { withSnackbar } from 'notistack';
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({...Operation.Styles(theme)});
 
@@ -61,3 +62,4 @@ class DownloadSelection extends AbstractDownloadSelection {
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(DownloadSelection));
+DisplayFactory.register("DownloadSelection", withStyles(styles, { withTheme: true })(withSnackbar(DownloadSelection)));
