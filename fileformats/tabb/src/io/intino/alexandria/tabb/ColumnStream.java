@@ -9,8 +9,6 @@ public interface ColumnStream {
 
 	Type type();
 
-	Mode mode();
-
 	boolean hasNext();
 
 	void next();
@@ -136,15 +134,6 @@ public interface ColumnStream {
 		public abstract byte[] toByteArray(Object object);
 
 		public abstract byte[] notAvailable();
-	}
-
-	class Mode {
-		public final String[] features;
-
-		public Mode(String... features) {
-			this.features = features;
-		}
-
 	}
 
 

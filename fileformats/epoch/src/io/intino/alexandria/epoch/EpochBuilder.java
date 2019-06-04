@@ -1,6 +1,6 @@
-package io.intino.alexandria.movv;
+package io.intino.alexandria.epoch;
 
-import io.intino.alexandria.movv.Mov.Item;
+import io.intino.alexandria.epoch.Timeline.Item;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,44 +9,45 @@ import java.time.Instant;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.movv.Movv.chainFileOf;
+import static io.intino.alexandria.epoch.Epoch.chainFileOf;
 import static java.util.Arrays.copyOf;
 import static java.util.Comparator.comparing;
 
-public class MovvBuilder {
+public class EpochBuilder {
 	private final ChainIndex chainIndex;
 	private final ChainReader chainReader;
 	private final ChainWriter chainWriter;
 	private final Map<Long, Stage> stages;
 
-	private MovvBuilder(ChainIndex chainIndex, ChainReader chainReader, ChainWriter chainWriter) {
+	private EpochBuilder(ChainIndex chainIndex, ChainReader chainReader, ChainWriter chainWriter) {
 		this.chainIndex = chainIndex;
 		this.chainReader = chainReader;
 		this.chainWriter = chainWriter;
 		this.stages = new HashMap<>();
 	}
 
-	public static MovvBuilder create(File file, int dataSize) throws IOException {
-		return new MovvBuilder(
+	public static EpochBuilder create(File file, int dataSize) throws IOException {
+		return new EpochBuilder(
 				ChainIndex.create(file, dataSize),
 				ChainReader.Null,
 				ChainWriter.BulkChainWriter.create(chainFileOf(file), dataSize)
 		);
 	}
 
-	public static MovvBuilder update(File file) throws IOException {
+	public static EpochBuilder update(File file) throws IOException {
 		return update(ChainIndex.load(file), new RandomAccessFile(chainFileOf(file), "rw"));
 	}
 
-	private static MovvBuilder update(ChainIndex index, RandomAccessFile raf) throws IOException {
-		return new MovvBuilder(
+	private static EpochBuilder update(ChainIndex index, RandomAccessFile raf) throws IOException {
+		return new EpochBuilder(
 				index,
 				ChainReader.load(raf, index.dataSize()),
 				ChainWriter.RandomChainWriter.create(raf, index.dataSize()));
 	}
 
-	public Mov movOf(long id) {
-		return new Mov(chainIndex, chainReader).of(id);
+	@SuppressWarnings("WeakerAccess")
+	public Timeline timelineOf(long id) {
+		return new Timeline(chainIndex, chainReader).of(id);
 	}
 
 	public boolean containsStage(long id){
@@ -61,7 +62,7 @@ public class MovvBuilder {
 		return new ArrayList<>(stages.values()).stream();
 	}
 
-	public MovvBuilder add(long id, Instant instant, byte[] data) {
+	public EpochBuilder add(long id, Instant instant, byte[] data) {
 		if (data == null) return this;
 		return add(id, new Item(instant, resize(data)));
 	}
@@ -71,28 +72,28 @@ public class MovvBuilder {
 		chainWriter.close();
 	}
 
-	private MovvBuilder add(long id, Item item) {
+	private EpochBuilder add(long id, Item item) {
 		try {
-			Mov mov = movOf(id);
-			if (isUpdatingFile() && mov.reject(item)) return this;
-			append(mov, id, chainWriter.write(item, true));
+			Timeline timeline = timelineOf(id);
+			if (isUpdatingFile() && timeline.reject(item)) return this;
+			append(timeline, id, chainWriter.write(item, true));
 		} catch (IOException ignored) {
 		}
 		return this;
 	}
 
-	void append(Mov mov, long id, int next) {
-		if (mov.head() < 0) create(mov, id, next);
-		else append(mov, next);
+	void append(Timeline timeline, long id, int next) {
+		if (timeline.head() < 0) create(timeline, id, next);
+		else append(timeline, next);
 	}
 
-	private void create(Mov mov, long id, int next) {
+	private void create(Timeline timeline, long id, int next) {
 		this.chainIndex.put(id, next);
-		mov.head(next);
+		timeline.head(next);
 	}
 
-	private void append(Mov mov, int next) {
-		int cursor = mov.head();
+	private void append(Timeline timeline, int next) {
+		int cursor = timeline.head();
 		while (true) {
 			int last = nextOf(cursor);
 			if (last == -1) break;
@@ -148,11 +149,11 @@ public class MovvBuilder {
 			}
 
 			@Override
-			public MovvBuilder commit() {
+			public EpochBuilder commit() {
 				stages.remove(id);
 				items.sort(comparing(o -> o.instant));
 				store();
-				return MovvBuilder.this;
+				return EpochBuilder.this;
 			}
 
 			@Override
@@ -161,18 +162,18 @@ public class MovvBuilder {
 			}
 
 			private void store() {
-				Mov mov = movOf(id);
-				items = clean(items, isUpdatingFile() ? mov.last() : Item.Null);
-				if (items.size() == 0 || mov.reject(items.get(0))) return;
-				store(mov);
+				Timeline timeline = timelineOf(id);
+				items = clean(items, isUpdatingFile() ? timeline.last() : Item.Null);
+				if (items.size() == 0 || timeline.reject(items.get(0))) return;
+				store(timeline);
 			}
 
-			private void store(Mov mov) {
+			private void store(Timeline timeline) {
 				try {
 					int i = 0;
 					for (Item item : items) {
 						int cursor = write(item, ++i == items.size());
-						if (i == 1) append(mov, id, cursor);
+						if (i == 1) append(timeline, id, cursor);
 					}
 				} catch (IOException ignored) {
 				}
@@ -200,7 +201,7 @@ public class MovvBuilder {
 
 		Stage add(Instant instant, byte[] data);
 
-		MovvBuilder commit();
+		EpochBuilder commit();
 
 		int size();
 	}
