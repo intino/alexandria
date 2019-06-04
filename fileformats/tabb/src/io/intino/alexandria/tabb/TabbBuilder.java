@@ -14,7 +14,6 @@ import static io.intino.alexandria.tabb.ColumnStream.ColumnExtension;
 import static io.intino.alexandria.tabb.ColumnStream.Type.Nominal;
 import static java.lang.String.join;
 import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static java.util.zip.Deflater.BEST_COMPRESSION;
 
@@ -121,7 +120,7 @@ public class TabbBuilder {
 		if (tabbGenerator.type() == Nominal) writer.write("\t" + serialize(tabbGenerator.mode()));
 	}
 
-	private String serialize(ColumnStream.Mode mode) {
+	private String serialize(Mode mode) {
 		return join("|", mode.features);
 	}
 

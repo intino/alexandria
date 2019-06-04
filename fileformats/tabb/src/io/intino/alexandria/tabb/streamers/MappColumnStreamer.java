@@ -6,64 +6,109 @@ import io.intino.alexandria.tabb.ColumnStream;
 import io.intino.alexandria.tabb.ColumnStream.Type;
 import io.intino.alexandria.tabb.ColumnStreamer;
 
-import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import static java.util.stream.Collectors.toMap;
-import static java.util.stream.IntStream.range;
+import java.util.function.Function;
 
 public class MappColumnStreamer implements ColumnStreamer {
 	private final MappReader reader;
-	private final Type type;
-	private final String name;
+	private List<Selector> selectors = new ArrayList<>();
+
+	private MappStream.Item current = nullItem();
 
 	public MappColumnStreamer(MappReader reader) {
-		this(reader, Type.Nominal);
-	}
-
-	public MappColumnStreamer(MappReader reader, String name) {
-		this(reader, name, Type.Nominal);
-	}
-
-	public MappColumnStreamer(MappReader reader, Type type) {
-		this(reader, reader.name(), type);
-	}
-
-	public MappColumnStreamer(MappReader reader, String name, Type type) {
 		this.reader = reader;
-		this.type = type;
-		this.name = name;
+	}
+
+	private static MappStream.Item nullItem() {
+		return new MappStream.Item() {
+			@Override
+			public long key() {
+				return -1;
+			}
+
+			@Override
+			public String value() {
+				return null;
+			}
+		};
+	}
+
+	public void add(Selector selector) {
+		selectors.add(selector);
 	}
 
 	@Override
 	public ColumnStream[] get() {
-		return new ColumnStream[]{create()};
+		return selectors.stream().map(s -> new ColumnStream() {
+			private MappStream.Item current = nullItem();
+
+			@Override
+			public String name() {
+				return s.name();
+			}
+
+			@Override
+			public Type type() {
+				return s.type();
+			}
+
+			@Override
+			public boolean hasNext() {
+				return getNext(current.key());
+			}
+
+			@Override
+			public void next() {
+				current = getCurrent(current.key() + 1);
+			}
+
+			@Override
+			public Long key() {
+				return current.key();
+			}
+
+			@Override
+			public Object value() {
+				return s.select(current);
+			}
+		}).toArray(ColumnStream[]::new);
 	}
 
-	private ColumnStream create() {
-		return new MappColumnStream(mapOf(reader.labels()));
+	private boolean getNext(long key) {
+		return key < this.current.key() || reader.hasNext();
 	}
 
-	private Map<String, Integer> mapOf(List<String> labels) {
-		return range(0, labels.size()).boxed()
-				.collect(toMap(labels::get, i -> i));
+	private MappStream.Item getCurrent(long key) {
+		if (key > this.current.key()) this.current = reader.next();
+		return this.current;
 	}
 
+	public interface Selector {
 
-	public class MappColumnStream implements ColumnStream {
-		private final Map<String, Integer> labels;
-		private MappStream.Item current;
-		private Parser parser;
+		String name();
 
-		MappColumnStream(Map<String, Integer> labels) {
-			this.labels = labels;
-			this.parser = parserOf(type);
+		Type type();
+
+		Object select(MappStream.Item item);
+
+	}
+
+	public static class SimpleSelector implements Selector {
+
+		private String name;
+		private Type type;
+		private Function<MappStream.Item, Object> function;
+
+		public SimpleSelector(String name, Type type, Function<MappStream.Item, Object> function) {
+			this.name = name;
+			this.type = type;
+			this.function = function;
 		}
 
 		@Override
 		public String name() {
-			return name == null ? reader.name() : name;
+			return name;
 		}
 
 		@Override
@@ -72,46 +117,19 @@ public class MappColumnStreamer implements ColumnStreamer {
 		}
 
 		@Override
-		public Mode mode() {
-			return new Mode(reader.labels().stream()
-					.map(l -> l.replace("\n", "|"))
-					.toArray(String[]::new));
+		public Object select(MappStream.Item item) {
+			return function.apply(item);
 		}
 
-		@Override
-		public boolean hasNext() {
-			return reader.hasNext();
-		}
-
-		@Override
-		public void next() {
-			current = reader.next();
-		}
-
-		@Override
-		public Long key() {
-			return current != null ? current.key() : null;
-		}
-
-		@Override
-		public Object value() {
-			return parser.parse(current.value());
-		}
-
-		private Parser parserOf(Type type) {
-			if (type == Type.Nominal) return labels::get;
-			if (type == Type.Double) return Double::parseDouble;
-			if (type == Type.Integer || type == Type.Datetime) return Integer::parseInt;
-			if (type == Type.Instant) return Instant::parse;
-			if (type == Type.Boolean) return Boolean::parseBoolean;
-			if (type == Type.Long) return Long::parseLong;
-			return value -> value;
-		}
-	}
-	private interface Parser {
-		Object parse(String value);
 	}
 
+	public static class BypassSelector extends SimpleSelector {
+
+		public BypassSelector(String name, Type type) {
+			super(name, type, MappStream.Item::value);
+		}
+
+	}
 }
 
 

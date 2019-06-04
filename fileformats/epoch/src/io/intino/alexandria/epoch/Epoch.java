@@ -1,4 +1,4 @@
-package io.intino.alexandria.movv;
+package io.intino.alexandria.epoch;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,18 +7,18 @@ import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.util.Iterator;
 
-import static io.intino.alexandria.movv.Movv.Mode.Disk;
-import static io.intino.alexandria.movv.Movv.Mode.Memory;
+import static io.intino.alexandria.epoch.Epoch.Mode.Disk;
+import static io.intino.alexandria.epoch.Epoch.Mode.Memory;
 
-public class Movv implements Iterable<Mov> {
+public class Epoch implements Iterable<Timeline> {
     private final ChainIndex chainIndex;
 	private final ChainReader chainReader;
 
-    public Movv(File file) throws IOException {
+	public Epoch(File file) throws IOException {
     	this(file, Memory);
     }
 
-    public Movv(File file, Mode mode) throws IOException {
+	public Epoch(File file, Mode mode) throws IOException {
 	    this.chainIndex = ChainIndex.load(file);
         this.chainReader = mode == Disk ?
 				ChainReader.load(rafOf(file), chainIndex.dataSize()) :
@@ -34,11 +34,11 @@ public class Movv implements Iterable<Mov> {
 	}
 
 	static File chainFileOf(File file) {
-        return new File(file.getAbsolutePath() + ".chain");
+		return new File(file.getAbsolutePath() + "ain");
     }
 
-    public Mov get(long id) {
-        return new Mov(chainIndex, chainReader).of(id);
+	public Timeline get(long id) {
+		return new Timeline(chainIndex, chainReader).of(id);
     }
 
     public boolean contains(long id) {
@@ -46,8 +46,8 @@ public class Movv implements Iterable<Mov> {
     }
 
     @Override
-    public Iterator<Mov> iterator() {
-        return new Iterator<Mov>() {
+    public Iterator<Timeline> iterator() {
+	    return new Iterator<Timeline>() {
             Iterator<Long> iterator = chainIndex.iterator();
             @Override
             public boolean hasNext() {
@@ -55,7 +55,7 @@ public class Movv implements Iterable<Mov> {
             }
 
             @Override
-            public Mov next() {
+            public Timeline next() {
                 return get(iterator.next());
             }
         };
