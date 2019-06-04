@@ -99,7 +99,7 @@ def type(properties & number) trigger(specific)
 end
 
 def type(properties & header) trigger(specific)
-	[ position="$position"]
+	[ position="$position"][ width="$width"][ height="$height"]
 end
 
 def type(properties & codeText) trigger(specific)

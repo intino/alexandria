@@ -6,6 +6,7 @@ import AbstractBlock from "../../../gen/displays/components/AbstractBlock";
 import BlockNotifier from "../../../gen/displays/notifiers/BlockNotifier";
 import BlockRequester from "../../../gen/displays/requesters/BlockRequester";
 import 'alexandria-ui-elements/res/styles/layout.css';
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export default class Block extends AbstractBlock {
 	state = {
@@ -111,3 +112,5 @@ export default class Block extends AbstractBlock {
 	};
 
 }
+
+DisplayFactory.register("Block", Block);

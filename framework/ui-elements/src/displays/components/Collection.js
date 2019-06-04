@@ -3,6 +3,7 @@ import AbstractCollection from "../../../gen/displays/components/AbstractCollect
 import CollectionNotifier from "../../../gen/displays/notifiers/CollectionNotifier";
 import CollectionRequester from "../../../gen/displays/requesters/CollectionRequester";
 import CollectionBehavior from "./behaviors/CollectionBehavior";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export const CollectionStyles = theme => ({
 	scrolling: {
@@ -52,3 +53,5 @@ export default class Collection extends AbstractCollection {
 		this.setState({ itemCount });
 	};
 }
+
+DisplayFactory.register("Collection", Collection);

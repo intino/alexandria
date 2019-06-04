@@ -1,11 +1,14 @@
 def type(display)
 	import React from "react";
 	[$alexandriaBlockImport]
+	[$alexandriaStampImport]
+	[$alexandriaFrameImport]
 	[$alexandriaComponentImport...[$NL]]
 	[$projectComponentImport...[$NL]]
-	$accessorType+import;
+	[$parent+import]
 	[import $notDecorated+firstUpperCase~Notifier from "../notifiers/$notDecorated+firstUpperCase~Notifier";]
 	[import $notDecorated+firstUpperCase~Requester from "../requesters/$notDecorated+firstUpperCase~Requester";]
+	[$displayRegistration+import]
 
 	export default class $abstract$name+firstUpperCase extends $displayExtends {
 
@@ -14,7 +17,7 @@ def type(display)
 			[this.notifier = new $notDecorated+firstUpperCase~Notifier(this);]
 			[this.requester = new $notDecorated+firstUpperCase~Requester(this);]
 			[$properties+initialization]
-		};
+    	};
 		
 		render() {
 			return [this.$baseMethod](
@@ -25,18 +28,28 @@ def type(display)
 			);
 		}
 	}
+
+	[$displayRegistration+declaration]
 end
 
-def type(alexandriaBlockImport)
-	import { Block as UiBlock } from "alexandria-ui-elements/src/displays/components/Block";
+def type(displayRegistration) trigger(import)
+    import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
+end
+
+def type(displayRegistration) trigger(declaration)
+    DisplayFactory.register("$name+firstUpperCase", $name+firstUpperCase);
+end
+
+def type(alexandriaImport)
+	import Ui$name+firstUpperCase from "alexandria-ui-elements/src/displays/components/$name+firstUpperCase";
 end
 
 def type(alexandriaComponentImport)
-	import { $type+firstUpperCase$facet...[] as Ui$type+firstUpperCase$facet...[] } from "alexandria-ui-elements/src/displays/[$componentDirectory/]$type+firstUpperCase$facet...[]";
+	import Ui$type+firstUpperCase$facet...[] from "alexandria-ui-elements/src/displays/[$componentDirectory/]$type+firstUpperCase$facet...[]";
 end
 
 def type(projectComponentImport)
-	import { $name+firstUpperCase as Displays$name+firstUpperCase } from "app-elements/src/displays/[$componentDirectory/]$name+firstUpperCase";
+	import Displays$name+firstUpperCase from "app-elements/[$directory]/displays/[$componentDirectory/]$name+firstUpperCase";
 end
 
 def type(displayExtends & generic & isExtensionOf)
@@ -90,18 +103,22 @@ end
 def type(renderTagAttributes)
 end
 
+def attribute(parent) trigger(import)
+	import Displays$parent+firstUpperCase from "../../../src/displays/components/$parent+firstUpperCase";
+end
+
 def attribute(baseDisplay) trigger(import)
-	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/Display"
+	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/Display";
 end
 
 def attribute(baseComponent) trigger(import)
-	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/components/Component"
+	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/components/Component";
 end
 
 def attribute(component) trigger(import)
-	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/components/$value+firstUpperCase"
+	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/components/$value+firstUpperCase";
 end
 
 def trigger(import)
-	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/$value+firstUpperCase"
+	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/$value+firstUpperCase";
 end

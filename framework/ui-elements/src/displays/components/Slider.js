@@ -7,6 +7,7 @@ import SliderNotifier from "../../../gen/displays/notifiers/SliderNotifier";
 import SliderRequester from "../../../gen/displays/requesters/SliderRequester";
 import Delayer from "../../util/Delayer";
 import 'alexandria-ui-elements/res/styles/layout.css';
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({});
 
@@ -57,3 +58,4 @@ class Slider extends AbstractSlider {
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(Slider));
+DisplayFactory.register("Slider", withStyles(styles, { withTheme: true })(withSnackbar(Slider)));

@@ -5,6 +5,7 @@ import ToolbarNotifier from "../../../gen/displays/notifiers/ToolbarNotifier";
 import ToolbarRequester from "../../../gen/displays/requesters/ToolbarRequester";
 import classNames from "classnames";
 import 'alexandria-ui-elements/res/styles/layout.css';
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	toolbar : {
@@ -36,3 +37,4 @@ class Toolbar extends AbstractToolbar {
 }
 
 export default withStyles(styles, { withTheme: true })(Toolbar);
+DisplayFactory.register("Toolbar", withStyles(styles, { withTheme: true })(Toolbar));

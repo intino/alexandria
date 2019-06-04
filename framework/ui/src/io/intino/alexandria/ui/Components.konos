@@ -53,6 +53,8 @@ Component slider as Decorated
 	Notification refreshOrdinals as Object(Ordinal) List
 	Request update as Integer
 
+Component stamp as Decorated
+
 Schema Ordinal
 	Attribute label as Text
 	Attribute step as Integer

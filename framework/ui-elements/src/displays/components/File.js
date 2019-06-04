@@ -5,6 +5,7 @@ import FileRequester from "../../../gen/displays/requesters/FileRequester";
 import {withStyles} from "@material-ui/core";
 import classNames from 'classnames';
 import 'alexandria-ui-elements/res/styles/layout.css';
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	value: {
@@ -66,3 +67,4 @@ class File extends AbstractFile {
 }
 
 export default withStyles(styles, { withTheme: true })(File);
+DisplayFactory.register("File", withStyles(styles, { withTheme: true })(File));

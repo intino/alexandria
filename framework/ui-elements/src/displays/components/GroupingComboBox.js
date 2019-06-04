@@ -7,6 +7,7 @@ import GroupingComboBoxNotifier from "../../../gen/displays/notifiers/GroupingCo
 import GroupingComboBoxRequester from "../../../gen/displays/requesters/GroupingComboBoxRequester";
 import { BaseGroupingStyles } from "./BaseGrouping";
 import classNames from "classnames";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	...BaseGroupingStyles(theme),
@@ -65,3 +66,4 @@ class GroupingComboBox extends AbstractGroupingComboBox {
 }
 
 export default withStyles(styles, { withTheme: true })(GroupingComboBox);
+DisplayFactory.register("GroupingComboBox", withStyles(styles, { withTheme: true })(GroupingComboBox));

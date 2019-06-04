@@ -5,6 +5,7 @@ import OpenPageNotifier from "../../../gen/displays/notifiers/OpenPageNotifier";
 import OpenPageRequester from "../../../gen/displays/requesters/OpenPageRequester";
 import Operation from "./Operation"
 import { withSnackbar } from 'notistack';
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 class OpenPage extends AbstractOpenPage {
 	constructor(props) {
@@ -26,3 +27,4 @@ class OpenPage extends AbstractOpenPage {
 }
 
 export default withStyles(Operation.Styles, { withTheme: true })(withSnackbar(OpenPage));
+DisplayFactory.register("OpenPage", withStyles(Operation.Styles, { withTheme: true })(withSnackbar(OpenPage)));

@@ -5,6 +5,7 @@ import DateEditableNotifier from "../../../gen/displays/notifiers/DateEditableNo
 import DateEditableRequester from "../../../gen/displays/requesters/DateEditableRequester";
 import MomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = props => ({
 	date : {
@@ -61,3 +62,4 @@ class DateEditable extends AbstractDateEditable {
 }
 
 export default withStyles(styles, { withTheme: true })(DateEditable);
+DisplayFactory.register("DateEditable", withStyles(styles, { withTheme: true })(DateEditable));

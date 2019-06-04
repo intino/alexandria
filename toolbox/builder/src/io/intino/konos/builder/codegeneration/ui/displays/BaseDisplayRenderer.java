@@ -11,6 +11,7 @@ import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRe
 import io.intino.konos.builder.codegeneration.ui.passiveview.PassiveViewRenderer;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
+import io.intino.konos.model.graph.decorated.DecoratedDisplay;
 import io.intino.konos.model.graph.dynamicloaded.DynamicLoadedComponent;
 import io.intino.konos.model.graph.selectable.catalogcomponents.SelectableCollection;
 
@@ -97,6 +98,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (graph.blockList().size() > 0) frame.add("blocksImport", baseFrameBuilder().add("blocksImport"));
 		if (graph.itemsDisplays().size() > 0) frame.add("itemsImport", baseFrameBuilder().add("itemsImport"));
 		if (graph.rowsDisplays().size() > 0) frame.add("rowsImport", baseFrameBuilder().add("rowsImport"));
+		if (!componentOf(element).i$(DecoratedDisplay.class)) frame.add("displayRegistration", baseFrameBuilder().add("displayRegistration").add("name", nameOf(element)));
 	}
 
 	protected void addImplements(FrameBuilder frame) {

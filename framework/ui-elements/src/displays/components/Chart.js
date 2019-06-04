@@ -5,6 +5,7 @@ import ChartNotifier from "../../../gen/displays/notifiers/ChartNotifier";
 import ChartRequester from "../../../gen/displays/requesters/ChartRequester";
 import Spinner from "../../../src/displays/components/Spinner";
 import 'alexandria-ui-elements/res/styles/layout.css';
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export const ChartPlotly = React.lazy(() => {
 	return new Promise(resolve => {
@@ -92,3 +93,4 @@ class Chart extends AbstractChart {
 }
 
 export default withStyles(styles, { withTheme: true })(Chart);
+DisplayFactory.register("Chart", withStyles(styles, { withTheme: true })(Chart));

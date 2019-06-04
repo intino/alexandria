@@ -1,6 +1,8 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.events.ChangeEvent;
+import io.intino.alexandria.ui.displays.events.ChangeListener;
 import io.intino.alexandria.ui.displays.notifiers.NumberEditableNotifier;
 
 public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> extends AbstractNumberEditable<DN, B> {
@@ -8,6 +10,7 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
 	private double min;
 	private double max;
 	private double step;
+	private ChangeListener changeListener = null;
 
     public NumberEditable(B box) {
         super(box);
@@ -54,7 +57,14 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
 		notifier.refresh(value);
 	}
 
+	public NumberEditable<DN, B> onChange(ChangeListener listener) {
+		this.changeListener = listener;
+		return this;
+	}
+
 	public void notifyChange(Double value) {
+		this.value = value;
+		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));
 	}
 
 }

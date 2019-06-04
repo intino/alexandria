@@ -6,6 +6,7 @@ import AbstractText from "../../../gen/displays/components/AbstractText";
 import TextNotifier from "../../../gen/displays/notifiers/TextNotifier";
 import TextRequester from "../../../gen/displays/requesters/TextRequester";
 import TextBehavior from "./behaviors/TextBehavior";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	label: {
@@ -76,3 +77,4 @@ class Text extends AbstractText {
 }
 
 export default withStyles(styles, { withTheme: true })(Text);
+DisplayFactory.register("Text", withStyles(styles, { withTheme: true })(Text));

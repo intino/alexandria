@@ -2,6 +2,7 @@ import React from "react";
 import AbstractTab from "../../../gen/displays/components/AbstractTab";
 import TabNotifier from "../../../gen/displays/notifiers/TabNotifier";
 import TabRequester from "../../../gen/displays/requesters/TabRequester";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export default class Tab extends AbstractTab {
 
@@ -18,5 +19,6 @@ export default class Tab extends AbstractTab {
 		);
 	};
 
-
 }
+
+DisplayFactory.register("Tab", Tab);

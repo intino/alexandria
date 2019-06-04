@@ -3,6 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AbstractFrame from "../../../gen/displays/components/AbstractFrame";
 import FrameNotifier from "../../../gen/displays/notifiers/FrameNotifier";
 import FrameRequester from "../../../gen/displays/requesters/FrameRequester";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({});
 
@@ -23,3 +24,5 @@ export default class Frame extends AbstractFrame {
 	};
 
 }
+
+DisplayFactory.register("Frame", Frame);

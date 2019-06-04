@@ -2,6 +2,7 @@ import React from "react";
 import AbstractPanel from "../../../gen/displays/components/AbstractPanel";
 import PanelNotifier from "../../../gen/displays/notifiers/PanelNotifier";
 import PanelRequester from "../../../gen/displays/requesters/PanelRequester";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export default class Panel extends AbstractPanel {
 
@@ -17,5 +18,6 @@ export default class Panel extends AbstractPanel {
 		);
 	};
 
-
 }
+
+DisplayFactory.register("Panel", Panel);

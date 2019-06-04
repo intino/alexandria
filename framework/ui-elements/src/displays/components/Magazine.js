@@ -3,6 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AbstractMagazine from "../../../gen/displays/components/AbstractMagazine";
 import MagazineNotifier from "../../../gen/displays/notifiers/MagazineNotifier";
 import MagazineRequester from "../../../gen/displays/requesters/MagazineRequester";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({});
 
@@ -18,3 +19,4 @@ class Magazine extends AbstractMagazine {
 }
 
 export default withStyles(styles, { withTheme: true })(Magazine);
+DisplayFactory.register("Magazine", withStyles(styles, { withTheme: true })(Magazine));

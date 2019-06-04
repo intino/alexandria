@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AbstractHeader from "../../../gen/displays/components/AbstractHeader";
 import HeaderNotifier from "../../../gen/displays/notifiers/HeaderNotifier";
 import HeaderRequester from "../../../gen/displays/requesters/HeaderRequester";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	color: {
@@ -35,8 +36,11 @@ class Header extends AbstractHeader {
 		var result = super.style();
 		if (result == null) result = {};
 		if (this.props.color != null) result.backgroundColor = this.props.color;
+		if (this._widthDefined()) result.width = this.props.width;
+		if (this._heightDefined()) result.height = this.props.height;
 		return result;
 	};
 }
 
 export default withStyles(styles, { withTheme: true })(Header);
+DisplayFactory.register("Header", withStyles(styles, { withTheme: true })(Header));

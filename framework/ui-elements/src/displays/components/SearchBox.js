@@ -9,6 +9,7 @@ import SearchBoxRequester from "../../../gen/displays/requesters/SearchBoxReques
 import classNames from "classnames";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import NumberUtil from "../../util/NumberUtil";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	grow: {
@@ -138,3 +139,4 @@ class SearchBox extends AbstractSearchBox {
 }
 
 export default withStyles(styles, { withTheme: true })(SearchBox);
+DisplayFactory.register("SearchBox", withStyles(styles, { withTheme: true })(SearchBox));

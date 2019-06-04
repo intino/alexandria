@@ -5,6 +5,9 @@ import NumberEditableNotifier from "../../../gen/displays/notifiers/NumberEditab
 import NumberEditableRequester from "../../../gen/displays/requesters/NumberEditableRequester";
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import { withSnackbar } from 'notistack';
+import Delayer from '../../util/Delayer';
 
 const styles = theme => ({
 	default : {
@@ -26,8 +29,8 @@ class NumberEditable extends AbstractNumberEditable {
 	handleChange(e) {
 		const value = e.target.value;
 		if (value === "") return;
-		this.requester.notifyChange(value);
 		this.setState({ value: value });
+		Delayer.execute(this, () => this.requester.notifyChange(value), 500);
 	};
 
 	render() {
@@ -56,4 +59,5 @@ class NumberEditable extends AbstractNumberEditable {
 
 }
 
-export default withStyles(styles, { withTheme: true })(NumberEditable);
+export default withStyles(styles, { withTheme: true })(withSnackbar(NumberEditable));
+DisplayFactory.register("NumberEditable", withStyles(styles, { withTheme: true })(withSnackbar(NumberEditable)));

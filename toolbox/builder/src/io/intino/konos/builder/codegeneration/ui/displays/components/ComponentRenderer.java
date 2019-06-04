@@ -75,9 +75,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private void addComponents(Component component, FrameBuilder builder) {
-		List<Component> components = components(component);
-		addComponentImports(components, builder);
-		components.forEach(c -> {
+		addComponentsImports(builder);
+		components(component).forEach(c -> {
 			FrameBuilder componentBuilder = buildChildren ? childFrame(c) : componentFrame(c);
 			builder.add( "component", componentBuilder);
 		});
@@ -284,7 +283,6 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (componentList == null) return result;
 
 		result.add("forRoot");
-		addComponentImports(componentList, result);
 		componentList.forEach(c -> addComponent(c, result));
 
 		return componentList.size() > 0 ? result : null;

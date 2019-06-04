@@ -208,12 +208,6 @@ Template(layout=Vertical, spacing=DP8) blockExamplesMold as Decorated
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value")
 						=========
 
-Theme theme1
-	type = Normal
-	Primary("#3f51b5")
-	Secondary("#ff9100")
-	Error("#f44336")
-
 Format("color:'#B71C1C',textShadow:'2px 2px 2px #fff'") h1
 Format("color:'black',textShadow:'2px 2px 2px #fff'") h2
 Format("") h3

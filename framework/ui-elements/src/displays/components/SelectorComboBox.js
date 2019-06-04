@@ -4,6 +4,7 @@ import AbstractSelectorComboBox from "../../../gen/displays/components/AbstractS
 import SelectorComboBoxNotifier from "../../../gen/displays/notifiers/SelectorComboBoxNotifier";
 import SelectorComboBoxRequester from "../../../gen/displays/requesters/SelectorComboBoxRequester";
 import Select, { components } from "react-select";
+import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	container : {
@@ -68,3 +69,4 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 }
 
 export default withStyles(styles, { withTheme: true })(SelectorComboBox);
+DisplayFactory.register("SelectorComboBox", withStyles(styles, { withTheme: true })(SelectorComboBox));
