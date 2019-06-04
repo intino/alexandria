@@ -38,19 +38,12 @@ public class SingletonStreamer implements ColumnStreamer {
 			}
 
 			@Override
-			public Mode mode() {
-				return null;
-			}
-
-			@Override
 			public boolean hasNext() {
 				return reference.hasNext();
 			}
 
 			@Override
 			public void next() {
-				while (zetStream.hasNext() && zetStream.current() < reference.key())
-					zetStream.next();
 			}
 
 			@Override
@@ -60,6 +53,8 @@ public class SingletonStreamer implements ColumnStreamer {
 
 			@Override
 			public Object value() {
+				while (zetStream.hasNext() && zetStream.current() < reference.key())
+					zetStream.next();
 				return reference.key() == zetStream.current();
 			}
 		};

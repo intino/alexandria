@@ -42,15 +42,15 @@ public class TabbReader {
 
 	public Value get(int index) {
 		ColumnStream stream = columns.get(index);
-		return new Value(stream.type(), stream.mode(), (byte[]) stream.value());
+		return new Value(stream.type(), new Mode(info.columns(stream.name())[0].modes), (byte[]) stream.value());
 	}
 
 	public static class Value {
 		private final Type type;
-		private final ColumnStream.Mode mode;
+		private final Mode mode;
 		private final byte[] value;
 
-		Value(Type type, ColumnStream.Mode mode, byte[] value) {
+		Value(Type type, Mode mode, byte[] value) {
 			this.type = type;
 			this.mode = mode;
 			this.value = value;
@@ -69,7 +69,7 @@ public class TabbReader {
 			return type;
 		}
 
-		public ColumnStream.Mode mode() {
+		public Mode mode() {
 			return mode;
 		}
 
@@ -146,17 +146,12 @@ public class TabbReader {
 
 		@Override
 		public String name() {
-			return file.getName().replace(ColumnExtension, "");
+			return column.name;
 		}
 
 		@Override
 		public Type type() {
 			return column.type;
-		}
-
-		@Override
-		public Mode mode() {
-			return new Mode(column.modes);
 		}
 
 		@Override
