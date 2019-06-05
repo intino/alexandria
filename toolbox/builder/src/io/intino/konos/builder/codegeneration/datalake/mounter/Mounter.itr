@@ -1,3 +1,16 @@
+def type(mounter & src)
+	package $package+validPackage.datalake.mounters;
+
+    import io.intino.alexandria.mapp.MappStream.Item;
+
+    import java.util.function.Function;
+
+    public class $name+snakeCaseToCamelCase+FirstUpperCase~MounterSource {
+
+    	$column+method...[$NL$NL]
+	}
+end
+
 def type(mounter & realtime)
 	package $package+validPackage.datalake.mounters;
 
@@ -20,10 +33,11 @@ def type(mounter & batch & population)
 	package $package+validPackage.datalake.mounters;
 
 	import io.intino.alexandria.Timetag;
-	import io.intino.alexandria.datalake.MappColumnStream;
 	import io.intino.alexandria.logger.Logger;
 	import io.intino.alexandria.tabb.ColumnStream;
 	import io.intino.alexandria.tabb.TabbBuilder;
+	import io.intino.alexandria.tabb.streamers.MappColumnStreamer;
+    import io.intino.alexandria.tabb.streamers.MappColumnStreamer.SimpleSelector;
 	import $package+validPackage.box.datalake.Datalake;
 	import $package+validPackage.box.datalake.$name+snakeCaseToCamelCase+FirstUpperCase~MounterFunctions;
 	import $package+validPackage.$box+firstUpperCase~Box;
@@ -37,7 +51,7 @@ def type(mounter & batch & population)
 				$splittedColumns
 				$column...[$NL]
 				try {
-					tabbBuilder.[$format].save(new File(box.datamart(), "$name+lowercase.tabb"));
+					tabbBuilder.[$format].save(new File(box.datamart(), "$name+lowercase~-" + timetag.value() + ".tabb"));));
 				} catch (IOException e) {
 					Logger.error(e);
 				}
@@ -53,11 +67,17 @@ def trigger(splittedColumns)
 end
 
 def type(splitted) trigger(column)
-	tabbBuilder.add(new MappColumnStream(box.datalake().setStore().tank(split + ".$fullName").on(timetag).index(), split + ".$name~-" + timetag.value(), ColumnStream.Type.$type+FirstUpperCase, timetag, $mounter+snakeCaseToCamelCase+FirstUpperCase~MounterFunctions.$name$facet()));
+	new MappColumnStreamer(box.datalake().setStore().tank(split + ".$fullName").on(timetag).index()).add(new SimpleSelector(split + ".$name", ColumnStream.Type.$type+FirstUpperCase, $mounter+snakeCaseToCamelCase+FirstUpperCase~MounterFunctions.$name$facet()));
 end
 
 def trigger(column)
-	tabbBuilder.add(new MappColumnStream(box.datalake().setStore().tank("$fullName").on(timetag).index(), "$name~-" + timetag.value(), ColumnStream.Type.$type+FirstUpperCase, timetag, $mounter+snakeCaseToCamelCase+FirstUpperCase~MounterFunctions.$name$facet()));
+	new MappColumnStreamer(box.datalake().setStore().tank(".$fullName").on(timetag).index()).add(new SimpleSelector(".$name", ColumnStream.Type.$type+FirstUpperCase, $mounter+snakeCaseToCamelCase+FirstUpperCase~MounterFunctions.$name$facet()));
+end
+
+def type(column) trigger(method)
+	public static Function<Item, $type+FirstUpperCase> revisionInspeccionId() {
+		return Item::key;
+	}
 end
 
 def trigger(format)
