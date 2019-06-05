@@ -12,6 +12,9 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.intino.tara:magritte:2.2.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.intino.tara:io:1.1.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.intino.tara:language:1.0.13" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.intino.tara:magritte:2.2.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.intino.tara:io:1.1.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.esotericsoftware:kryo:4.0.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.esotericsoftware:reflectasm:1.11.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.ow2.asm:asm:5.0.4" level="project" />

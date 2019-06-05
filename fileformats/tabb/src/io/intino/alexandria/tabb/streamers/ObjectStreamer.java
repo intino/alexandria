@@ -1,7 +1,6 @@
 package io.intino.alexandria.tabb.streamers;
 
 import io.intino.alexandria.tabb.ColumnStream;
-import io.intino.alexandria.tabb.ColumnStream.Mode;
 import io.intino.alexandria.tabb.ColumnStream.Type;
 import io.intino.alexandria.tabb.ColumnStreamer;
 
@@ -49,6 +48,8 @@ public class ObjectStreamer<T> implements ColumnStreamer {
 
 	private ColumnStream selectorStream(Selector<T> selector) {
 		return new ColumnStream() {
+			private long key;
+
 			@Override
 			public String name() {
 				return selector.name();
@@ -60,19 +61,13 @@ public class ObjectStreamer<T> implements ColumnStreamer {
 			}
 
 			@Override
-			public Mode mode() {
-				return selector.mode();
-			}
-
-			@Override
 			public boolean hasNext() {
-				return items.hasNext();
+				return getNext(key);
 			}
 
 			@Override
 			public void next() {
 				key++;
-				current = items.next();
 			}
 
 			@Override
@@ -82,17 +77,27 @@ public class ObjectStreamer<T> implements ColumnStreamer {
 
 			@Override
 			public Object value() {
-				return selector.select(current);
+				return selector.select(getCurrent(key));
 			}
 		};
+	}
+
+	private boolean getNext(long key) {
+		return key < this.key || items.hasNext();
+	}
+
+	private T getCurrent(long key) {
+		if (key > this.key) {
+			this.key = key;
+			this.current = items.next();
+		}
+		return this.current;
 	}
 
 	public interface Selector<T> {
 		String name();
 
 		Type type();
-
-		Mode mode();
 
 		Object select(T t);
 	}

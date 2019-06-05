@@ -1,6 +1,6 @@
 package io.intino.test;
 
-import io.intino.alexandria.movv.MovvBuilder;
+import io.intino.alexandria.epoch.EpochBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.time.ZoneOffset;
 public class Benchmarks_ {
     public static void main(String[] args) throws IOException {
         System.out.println("size;action;time");
-        new File("movvs").mkdirs();
+	    new File("epochs").mkdirs();
         for (int i = 1; i <= 10; i++) {
             Instant now = Instant.now();
             int size = i * 1000000;
@@ -29,7 +29,7 @@ public class Benchmarks_ {
     }
 
     private static void buildMany(int size) throws IOException {
-        MovvBuilder builder = MovvBuilder.create(new File("movvs/many-" + size +".movv"), 32);
+	    EpochBuilder builder = EpochBuilder.create(new File("epochs/many-" + size + ".epoch"), 32);
         Instant instant = instant(2018,1,1);
 
         for (int id = 0; id < size; id++)
@@ -38,7 +38,7 @@ public class Benchmarks_ {
     }
 
     private static void update(int size, int updates) throws IOException {
-        MovvBuilder builder = MovvBuilder.update(new File("movvs/many-" + size +".movv"));
+	    EpochBuilder builder = EpochBuilder.update(new File("epochs/many-" + size + ".epoch"));
         Instant instant = instant(2018,1,1);
 
         int id = 0;

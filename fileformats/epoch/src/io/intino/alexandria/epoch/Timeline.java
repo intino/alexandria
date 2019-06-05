@@ -1,17 +1,17 @@
-package io.intino.alexandria.movv;
+package io.intino.alexandria.epoch;
 
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class Mov implements Iterable<Mov.Item> {
+public class Timeline implements Iterable<Timeline.Item> {
 	private final ChainIndex chainIndex;
 	private final ChainReader chainReader;
 	private long id;
 	private int head;
 
-	Mov(ChainIndex chainIndex, ChainReader chainReader) {
+	Timeline(ChainIndex chainIndex, ChainReader chainReader) {
 		this.chainReader = chainReader;
 		this.chainIndex = chainIndex;
 	}
@@ -20,7 +20,7 @@ public class Mov implements Iterable<Mov.Item> {
 		return id;
 	}
 
-	Mov of(long id) {
+	Timeline of(long id) {
 		this.id = id;
 		this.head = chainIndex.headOf(id);
 		return this;

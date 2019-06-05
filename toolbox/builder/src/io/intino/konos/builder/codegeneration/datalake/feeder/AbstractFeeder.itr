@@ -108,9 +108,3 @@ end
 def trigger(option)
 	new Option("$value"[, Arrays.asList($option...[,])])
 end
-
-
-def trigger(quoted)
-	"$value"
-end
-

@@ -20,8 +20,7 @@ public class AbstractFeederTemplate extends Template {
 				rule().condition((type("poll")), (trigger("methods"))).output(literal("private void registerMessageBuilders() {\n\t")).output(mark("option", "build").multiple("\n")).output(literal("\n}\n\npublic Message get(String option, Object... args) {\n\treturn io.intino.alexandria.inl.Inl.toMessage(messageBuilders.get(option).apply(Arrays.asList(args)));\n}\n\n")).output(mark("eventMethod").multiple("\n\n")),
 				rule().condition((trigger("build"))).output(literal("messageBuilders.put(\"")).output(mark("value")).output(literal("\", this::")).output(mark("event", "firstLowerCase")).output(literal(");")),
 				rule().condition((trigger("eventmethod"))).output(literal("protected abstract Object ")).output(mark("value", "firstLowerCase")).output(literal("(List<Object> objects);")),
-				rule().condition((trigger("option"))).output(literal("new Option(\"")).output(mark("value")).output(literal("\"")).output(expression().output(literal(", Arrays.asList(")).output(mark("option").multiple(",")).output(literal(")"))).output(literal(")")),
-				rule().condition((trigger("quoted"))).output(literal("\"")).output(mark("value")).output(literal("\""))
+				rule().condition((trigger("option"))).output(literal("new Option(\"")).output(mark("value")).output(literal("\"")).output(expression().output(literal(", Arrays.asList(")).output(mark("option").multiple(",")).output(literal(")"))).output(literal(")"))
 		);
 	}
 }

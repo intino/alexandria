@@ -1,13 +1,10 @@
-package io.intino.alexandria.movv;
+package io.intino.alexandria.epoch;
 
 import java.io.*;
 import java.util.Arrays;
 
-import static java.lang.Math.min;
-import static java.lang.System.arraycopy;
-
 interface ChainWriter {
-    int write(Mov.Item item, boolean isTheLast) throws IOException;
+	int write(Timeline.Item item, boolean isTheLast) throws IOException;
 	void writeNext(int cursor, int next) throws IOException;
     void close() throws IOException;
 
@@ -27,7 +24,7 @@ interface ChainWriter {
         }
 
         @Override
-        public int write(Mov.Item item, boolean isTheLast) throws IOException {
+        public int write(Timeline.Item item, boolean isTheLast) throws IOException {
             os.writeLong(item.instant.toEpochMilli());
             os.write(RandomChainWriter.adjust(item.data, dataSize));
             os.writeInt(isTheLast ? -1 : cursor + 1);
@@ -65,7 +62,7 @@ interface ChainWriter {
 	    }
 
         @Override
-        public int write(Mov.Item item, boolean isTheLast) throws IOException {
+        public int write(Timeline.Item item, boolean isTheLast) throws IOException {
             raf.seek(raf.length());
             raf.writeLong(item.instant.toEpochMilli());
             raf.write(adjust(item.data, dataSize));
