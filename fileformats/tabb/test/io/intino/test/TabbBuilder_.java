@@ -5,7 +5,7 @@ import io.intino.alexandria.tabb.ColumnStream;
 import io.intino.alexandria.tabb.ColumnStream.Type;
 import io.intino.alexandria.tabb.TabbBuilder;
 import io.intino.alexandria.tabb.TabbReader;
-import io.intino.alexandria.tabb.streamers.MappColumnStreamerOld;
+import io.intino.alexandria.tabb.streamers.MappColumnStreamer;
 import org.junit.After;
 import org.junit.Test;
 
@@ -32,7 +32,9 @@ public class TabbBuilder_ {
 	@Test
 	public void should_build_a_column() throws IOException {
 		TabbBuilder builder = new TabbBuilder();
-		builder.add(new MappColumnStreamerOld(new MappReader(new File(mapps, "tests.mapp")), Nominal).get());
+		MappColumnStreamer streamer = new MappColumnStreamer(new MappReader(new File(mapps, "tests.mapp")));
+		streamer.add(new MappColumnStreamer.BypassSelector("tests", Nominal));
+		builder.add(streamer.get());
 		builder.save(new File(tabbDirectory, "result.tabb"));
 		TabbReader tabb = tabbReader();
 		assertThat(tabb.size()).isEqualTo(3);
@@ -53,7 +55,9 @@ public class TabbBuilder_ {
 	@Test
 	public void should_read_a_column_with_many_values() throws IOException {
 		TabbBuilder builder = new TabbBuilder();
-		builder.add(new MappColumnStreamerOld(new MappReader(new File(mapps, "many_values.mapp")), Nominal).get());
+		MappColumnStreamer streamer = new MappColumnStreamer(new MappReader(new File(mapps, "many_values.mapp")));
+		streamer.add(new MappColumnStreamer.BypassSelector("many_values", Nominal));
+		builder.add(streamer.get());
 		builder.save(new File(tabbDirectory, "result.tabb"));
 		TabbReader tabb = tabbReader();
 		assertThat(tabb.size()).isEqualTo(50000);
@@ -72,7 +76,8 @@ public class TabbBuilder_ {
 
 	@Test
 	public void should_read_a_column_with_multiple_values() throws IOException {
-		MappColumnStreamerOld streamer = new MappColumnStreamerOld(new MappReader(new File(mapps, "multivalued.mapp")), Nominal);
+		MappColumnStreamer streamer = new MappColumnStreamer(new MappReader(new File(mapps, "multivalued.mapp")));
+		streamer.add(new MappColumnStreamer.BypassSelector("multivalued", Nominal));
 		TabbBuilder builder = new TabbBuilder();
 		builder.add(streamer.get());
 		builder.save(new File(tabbDirectory, "result.tabb"));
@@ -116,10 +121,14 @@ public class TabbBuilder_ {
 	@Test
 	public void should_build_multiple_nominal_column() throws IOException {
 		TabbBuilder builder = new TabbBuilder();
-		builder.add(new MappColumnStreamerOld(new MappReader(new File(mapps, "tests.mapp")), Nominal).get());
-		builder.add(new MappColumnStreamerOld(new MappReader(new File(mapps, "letters.mapp")), Nominal).get());
+		MappColumnStreamer streamer = new MappColumnStreamer(new MappReader(new File(mapps, "tests.mapp")));
+		streamer.add(new MappColumnStreamer.BypassSelector("tests", Nominal));
+		builder.add(streamer.get());
+		streamer = new MappColumnStreamer(new MappReader(new File(mapps, "letters.mapp")));
+		streamer.add(new MappColumnStreamer.BypassSelector("letters", Nominal));
+		builder.add(streamer.get());
 		builder.save(new File(tabbDirectory, "result.tabb"));
-		assertThat(resultTabbFile().length()).isEqualTo(437);
+		assertThat(resultTabbFile().length()).isEqualTo(435);
 		TabbReader tabbReader = tabbReader();
 
 		tabbReader.next();
@@ -161,11 +170,6 @@ public class TabbBuilder_ {
 			@Override
 			public Type type() {
 				return Type.Integer;
-			}
-
-			@Override
-			public Mode mode() {
-				return new Mode();
 			}
 
 			@Override

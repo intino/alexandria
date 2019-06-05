@@ -33,9 +33,6 @@ end
 def trigger(hide)
 end
 
-def trigger(quoted)
-	"$this"
-end
 
 def trigger(rest)
 	protected io.intino.alexandria.ui.services.AuthService authService(java.net.URL authServiceUrl) {

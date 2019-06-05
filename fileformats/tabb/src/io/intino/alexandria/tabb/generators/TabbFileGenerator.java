@@ -2,11 +2,13 @@ package io.intino.alexandria.tabb.generators;
 
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.tabb.ColumnStream;
-import io.intino.alexandria.tabb.ColumnStream.Mode;
 import io.intino.alexandria.tabb.ColumnStream.Type;
 import io.intino.alexandria.tabb.FileGenerator;
+import io.intino.alexandria.tabb.Mode;
 
 import java.io.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static io.intino.alexandria.tabb.ColumnStream.ColumnExtension;
 
@@ -16,6 +18,7 @@ public class TabbFileGenerator implements FileGenerator {
 	private File file;
 	private OutputStream os;
 	private long size = 0;
+	private Map<String, Integer> modes = new LinkedHashMap<>();
 
 	public TabbFileGenerator(ColumnStream stream) {
 		this.stream = stream;
@@ -58,7 +61,7 @@ public class TabbFileGenerator implements FileGenerator {
 	}
 
 	public Mode mode() {
-		return stream.mode();
+		return new Mode(modes.keySet().toArray(new String[0]));
 	}
 
 	public long size() {
@@ -66,7 +69,14 @@ public class TabbFileGenerator implements FileGenerator {
 	}
 
 	private byte[] value() {
-		return stream.key() != null ? type().toByteArray(stream.value()) : notAvailable;
+		return stream.key() != null ? type().toByteArray(register(stream.value())) : notAvailable;
+	}
+
+	private Object register(Object value) {
+		if (type() != Type.Nominal) return value;
+		String nominal = value.toString().replace('\n', '|');
+		if (!modes.containsKey(nominal)) modes.put(nominal, modes.size());
+		return modes.get(nominal);
 	}
 
 	private void write(byte[] b) throws IOException {
