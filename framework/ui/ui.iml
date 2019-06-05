@@ -37,7 +37,6 @@
     <orderEntry type="library" name="Legio: com.google.code.gson:gson:2.8.0" level="project" />
     <orderEntry type="library" name="Legio: eu.medsea.mimeutil:mime-util:2.1.1" level="project" />
     <orderEntry type="module" module-name="core" />
-    <orderEntry type="module" module-name="primitives" />
     <orderEntry type="module" module-name="logger" />
     <orderEntry type="library" name="Legio: org.apache.httpcomponents:httpcore:4.4.4" level="project" />
     <orderEntry type="library" name="Legio: org.apache.httpcomponents:httpmime:4.5.1" level="project" />
@@ -54,5 +53,15 @@
     <orderEntry type="library" name="Legio: org.glassfish.grizzly:grizzly-http:2.3.15-gfa" level="project" />
     <orderEntry type="library" name="Legio: commons-io:commons-io:2.6" level="project" />
     <orderEntry type="library" scope="TEST" name="Legio: junit:junit:4.13-beta-3" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:ui-framework:1.0.6" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:core-framework:1.0.1" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:json:1.0.0" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:logger:2.0.0" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:inl:1.0.4" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:exceptions:1.0.0" level="project" />
+    <orderEntry type="library" name="Legio: com.sun.xml.security:xml-security-impl:1.0" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:rest:1.0.4" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:rest-accessor:1.0.5" level="project" />
+    <orderEntry type="library" name="primitives-1.0.2" level="project" />
   </component>
 </module>
