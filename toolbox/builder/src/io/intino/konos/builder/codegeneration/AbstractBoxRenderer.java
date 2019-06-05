@@ -10,7 +10,6 @@ import io.intino.konos.model.graph.Feeder;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.jms.JMSService;
 import io.intino.konos.model.graph.jmx.JMXService;
-import io.intino.konos.model.graph.ness.NessClient;
 import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.slackbot.SlackBotService;
 import io.intino.konos.model.graph.ui.UIService;
@@ -69,24 +68,12 @@ public class AbstractBoxRenderer {
 	}
 
 	private void dataLake(FrameBuilder root, String name) {
-		if (!graph.nessClientList().isEmpty()) {
-			final NessClient client = graph.nessClientList().get(0);
-			final FrameBuilder datalake = new FrameBuilder("dataLake").
-					add("mode", graph.nessClient(0).mode().name()).
-					add("name", graph.nessClient(0).name$()).
-					add("package", packageName).add("configuration", name);
-			datalake.add("parameter", new FrameBuilder(isCustom(client.url()) ? "custom" : "standard").add("value", client.url()).toFrame());
-			datalake.add("parameter", new FrameBuilder(isCustom(client.user()) ? "custom" : "standard").add("value", client.user()).toFrame());
-			datalake.add("parameter", new FrameBuilder(isCustom(client.password()) ? "custom" : "standard").add("value", client.password()).toFrame());
-			datalake.add("parameter", new FrameBuilder(isCustom(client.clientID()) ? "custom" : "standard").add("value", client.clientID()).toFrame());
-			datalake.add("feeder", client.feederList().stream().map(this::frameOf).toArray(Frame[]::new));
-			if (client.requireConnection()) datalake.add("requireConnection");
-			if (!graph.procedureList().isEmpty())
-				datalake.add("procedure", new FrameBuilder().add("package", packageName).add("configuration", name).toFrame()); //TODO
-			if (hasModel)
-				datalake.add("nessOperations", new FrameBuilder().add("package", packageName).add("configuration", name).toFrame());
-			root.add("dataLake", datalake);
-		}
+		if (graph.datalake() == null) return;
+		final FrameBuilder frame = new FrameBuilder().add("package", packageName).add("configuration", name);
+		frame.add("feeder", graph.feederList().stream().map(this::frameOf).toArray(Frame[]::new));
+		if (!graph.procedureList().isEmpty())
+			frame.add("procedure", new FrameBuilder().add("package", packageName).add("configuration", name).toFrame()); //TODO
+		root.add("datalake", frame);
 	}
 
 	private Frame frameOf(Feeder feeder) {

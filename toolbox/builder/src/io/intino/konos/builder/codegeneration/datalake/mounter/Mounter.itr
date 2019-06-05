@@ -1,17 +1,67 @@
-def type(mounter)
+def type(mounter & realtime)
 	package $package+validPackage.datalake.mounters;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
+	import io.intino.alexandria.inl.Message;
+	import io.intino.alexandria.inl.MessageCast;
+    import io.intino.ness.datalake.file.eventsourcing.EventHandler;
 	$schemaImport
 
 	public class $name+snakeCaseToCamelCase+FirstUpperCase~Mounter {
 		public $box+validName+firstUpperCase~Box box;
-		public $type+typeClass $type+typeName;
 
-		public void execute() {
-
+		public void handle(Message message) {
+			[$type+typeClass object = MessageCast.cast(message).as($type+typeClass.class);]
 		}
 	}
+end
+
+def type(mounter & batch & population)
+	package $package+validPackage.datalake.mounters;
+
+	import io.intino.alexandria.Timetag;
+	import io.intino.alexandria.datalake.MappColumnStream;
+	import io.intino.alexandria.logger.Logger;
+	import io.intino.alexandria.tabb.ColumnStream;
+	import io.intino.alexandria.tabb.TabbBuilder;
+	import $package+validPackage.box.datalake.Datalake;
+	import $package+validPackage.box.datalake.$name+snakeCaseToCamelCase+FirstUpperCase~MounterFunctions;
+	import $package+validPackage.$box+firstUpperCase~Box;
+
+	public class $name+snakeCaseToCamelCase+FirstUpperCase~Mounter {
+		public $box+validName+firstUpperCase~Box box;
+
+		public void pump(Timetag from, Timetag to, Predicate<Timetag> filter) {
+			from.iterateTo(to).forEach(timetag -> {
+				TabbBuilder tabbBuilder = new TabbBuilder();
+				$splittedColumns
+				$column...[$NL]
+				try {
+					tabbBuilder.[$format].save(new File(box.datamart(), "$name+lowercase.tabb"));
+				} catch (IOException e) {
+					Logger.error(e);
+				}
+			});
+		}
+	}
+end
+
+def trigger(splittedColumns)
+	for (String split : Datalake.splits) {
+		$column...[$NL]
+	}
+end
+
+def type(splitted) trigger(column)
+	tabbBuilder.add(new MappColumnStream(box.datalake().setStore().tank(split + ".$fullName").on(timetag).index(), split + ".$name~-" + timetag.value(), ColumnStream.Type.$type+FirstUpperCase, timetag, $mounter+snakeCaseToCamelCase+FirstUpperCase~MounterFunctions.$name$facet()));
+end
+
+def trigger(column)
+	tabbBuilder.add(new MappColumnStream(box.datalake().setStore().tank("$fullName").on(timetag).index(), "$name~-" + timetag.value(), ColumnStream.Type.$type+FirstUpperCase, timetag, $mounter+snakeCaseToCamelCase+FirstUpperCase~MounterFunctions.$name$facet()));
+end
+
+def trigger(format)
+	add(TabbBuilder.Format.$this+lowerCase)
 end
 
 def type(schemaImport)

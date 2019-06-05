@@ -70,7 +70,7 @@ def type(box)
 		[$service+getter...[$NL$NL]]
 		[$hasUi+authService]
 		[$hasUi+editorService]
-		[$dataLake+getter...[$NL$NL]]
+		[$datalake+getter...[$NL$NL]]
 		[$task+getter...[$NL$NL]]
 
 		private void initRESTServices() {
@@ -143,7 +143,7 @@ def type(service & rest) trigger(setup)
 end
 
 def type(datalake) trigger(setup)
-	this.nessAccessor = new io.intino.alexandria.nessaccessor.NessAccessor(datalakeFrom($parameter...[, ]));
+	this.datalake = new $package.box.datalake.Datalake(this);
 end
 
 def type(service & jmx) trigger(jmx)
@@ -195,36 +195,13 @@ def type(service & jms) trigger(init)
 	}
 end
 
-def type(dataLake & requireConnection) trigger(init)
-	this.nessAccessor.connection().connect("$mode");
-	$package+validPackage.datalake.Datalake.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
-	registerFeeders();
-	$nessOperations
-	if (nessAccessor.connection() instanceof io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection && ((io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection) nessAccessor.connection()).session() != null)
-		Logger.info("Ness connection: started!");
-end
-
 
 def type(dataLake) trigger(init)
-	java.lang.Thread thread = new java.lang.Thread(() -> {
-		this.nessAccessor.connection().connect("$mode");
-		$package+validPackage.datalake.Datalake.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
-		registerFeeders();
-		$nessOperations
-		if (nessAccessor.connection() instanceof io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection && ((io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection) nessAccessor.connection()).session() != null)
-			Logger.info("Ness connection: started!");
-	}, "ness accessor init");
-	try {
-		thread.start();
-		thread.join(10000);
-	} catch (InterruptedException e) {
-		Logger.error(e.getMessage());
-	}
+	this.datalake.connect("");
+	registerFeeders();
+	Logger.info("Ness connection: started!");
 end
 
-def trigger(nessOperations)
-	$package+validPackage.datalake.NessOperations.init(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
-end
 
 def type(custom) trigger(parameter)
 	configuration().get("$value+customParameter")
@@ -273,8 +250,8 @@ def type(task) trigger(field)
 	private io.intino.alexandria.scheduler.AlexandriaScheduler scheduler = new io.intino.alexandria.scheduler.AlexandriaScheduler();
 end
 
-def type(dataLake) trigger(field)
-	private io.intino.alexandria.nessaccessor.NessAccessor nessAccessor;
+def type(datalake) trigger(field)
+ 	private $package.box.datalake.Datalake datalake;
 end
 
 def type(service & jms) trigger(getter)
@@ -284,21 +261,21 @@ def type(service & jms) trigger(getter)
 end
 
 def type(dataLake) trigger(getter)
-	public io.intino.alexandria.nessaccessor.NessAccessor nessAccessor() {
-		return this.nessAccessor;
+	public $package.box.datalake.Datalake datalake() {
+		return this.datalake;
 	}
 
 	public io.intino.alexandria.core.Feeders feeders() {
 		return io.intino.alexandria.core.Feeders.get();
 	}
 
-	public void registerFeeders() {
+	private void registerFeeders() {
 		$feeder...[$NL]
 	}
 end
 
 def trigger(feeder)
-	io.intino.alexandria.core.Feeders.get().register(new $package+validPackage.datalake.feeders.$name+FirstUpperCase(($box+FirstUpperCase~Box)this));
+	io.intino.alexandria.core.Feeders.get().register(new $package+validPackage.datalake.feeders.$name+FirstUpperCase(($box+FirstUpperCase~Box) this));
 end
 
 def type(service & slack) trigger(getter)
@@ -319,7 +296,7 @@ def type(service) type(jms) trigger(quit)
 end
 
 def type(dataLake) trigger(quit)
-	if (nessAccessor != null) nessAccessor.connection().disconnect();
+	if (datalake != null) datalake.disconnect();
 end
 
 def type(service) trigger(quit)
