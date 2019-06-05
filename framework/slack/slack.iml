@@ -32,7 +32,11 @@
     <orderEntry type="library" name="Legio: com.google.guava:guava:18.0" level="project" />
     <orderEntry type="library" name="Legio: com.google.code.findbugs:jsr305:1.3.9" level="project" />
     <orderEntry type="module" module-name="core" />
-    <orderEntry type="library" name="Legio: eu.medsea.mimeutil:mime-util:2.1.1" level="project" />
-    <orderEntry type="library" name="Legio: commons-io:commons-io:2.6" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:json:1.0.0" level="project" />
+    <orderEntry type="library" name="Legio: com.sun.xml.security:xml-security-impl:1.0" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:inl:2.0.0" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:primitives:1.0.3" level="project" />
+    <orderEntry type="module" module-name="json" />
+    <orderEntry type="module" module-name="inl" />
   </component>
 </module>
