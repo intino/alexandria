@@ -6,15 +6,15 @@ Concept Datamart
 	var string path
 
 Concept:{0..1} Datalake
-	Concept Domain
+	Concept Split > var string[] splits
 	Concept:Named Tank
 		var string fullName
 
+
 Facet TankType on Datalake.Tank
-	sub EventTank
-		var Schema schema
-	sub SetTank
-Facet Singleton on Datalake.Tank with SetTank
+	sub Event > var Schema schema
+	sub Set > var Datalake.Split split = empty
+Facet Singleton on Datalake.Tank with Set
 
 Facet DatalakeLocation on Datalake is abstract
 	sub Remote
@@ -30,9 +30,6 @@ Facet Mirror on Datalake with Remote
 	var string path
 	var integer:{Months} period
 
-
-
-
 Concept:Named Mounter
 	has:{1..1} Source
 
@@ -46,18 +43,25 @@ Facet MounterType on Mounter is required
 		Concept:{0..1} Aggregation
 			Concept:{1..*} Column
 				var string name
-				var word:{Boolean String Integer Double Long} type
+				var Datalake.Tank tank
+				var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type
 	sub Realtime
 
 Facet SourceType on Source is abstract required
-	sub Event
+	sub Events
+		Concept Event > var Schema schema
 	sub Population
-		Concept:{1..1} Column
-			var string name
-			var word:{Boolean String Integer Double} type
+		Concept:{1..*} Column
+			var Set tank
+			var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type
 
 Facet Id on Population.Column
-	var word:{Boolean String Integer Double Long} type = Long
+	var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type = Long
+Facet Timetag on Population.Column
+	var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type = Timetag
+Facet Constant on Population.Column
+	var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type = String
+	var string value
 
 Facet CollectType on Collect is abstract required
 	var Datamart datamart
@@ -65,7 +69,7 @@ Facet CollectType on Collect is abstract required
 	sub Graph
 
 Concept Feeder
-	var Datalake.Tank tanks
+	var Datalake.Tank[] tanks
 	has:Named Sensor
 
 Concept:Named Sensor is component

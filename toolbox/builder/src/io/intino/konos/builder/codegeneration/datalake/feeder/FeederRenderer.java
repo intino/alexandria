@@ -3,14 +3,11 @@ package io.intino.konos.builder.codegeneration.datalake.feeder;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.Feeder;
-import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.Schema;
-import io.intino.konos.model.graph.Sensor;
+import io.intino.konos.model.graph.*;
+import io.intino.konos.model.graph.Datalake.Tank;
 import io.intino.konos.model.graph.documentedition.DocumentEditionSensor;
 import io.intino.konos.model.graph.documentsignature.DocumentSignatureSensor;
 import io.intino.konos.model.graph.formedition.FormEditionSensor;
-import io.intino.konos.model.graph.ness.NessClient;
 import io.intino.konos.model.graph.poll.PollSensor;
 import io.intino.konos.model.graph.usersensor.UserSensorSensor;
 import io.intino.tara.magritte.Layer;
@@ -33,15 +30,11 @@ public class FeederRenderer {
 	private final String packageName;
 	private final String boxName;
 	private final Map<String, String> classes;
-	private final NessClient nessClient;
 	private final File gen;
-	private final String domain;
 
 	public FeederRenderer(KonosGraph graph, File gen, File src, String packageName, String boxName, Map<String, String> classes) {
-		this.nessClient = graph.nessClient(0);
 		this.gen = gen;
-		this.domain = nessClient.domain();
-		this.feeders = nessClient.feederList();
+		this.feeders = graph.feederList();
 		this.src = src;
 		this.packageName = packageName;
 		this.boxName = boxName;
@@ -49,7 +42,7 @@ public class FeederRenderer {
 	}
 
 	public static String name(Feeder feeder) {
-		return isAnonymous(feeder) ? feeder.eventTypes().stream().map(s -> firstUpperCase(s.name$())).collect(Collectors.joining()) + "Feeder" : feeder.name$();
+		return isAnonymous(feeder) ? feeder.tanks().stream().map(s -> firstUpperCase(s.name$())).collect(Collectors.joining()) + "Feeder" : feeder.name$();
 	}
 
 	private static boolean isAnonymous(Feeder feeder) {
@@ -64,8 +57,7 @@ public class FeederRenderer {
 					add("name", name(feeder));
 			for (Sensor sensor : feeder.sensorList())
 				builder.add("sensor", frameOf(sensor, name(feeder)));
-			builder.add("eventType", feeder.eventTypes().stream().filter(Objects::nonNull).map(s -> composedType(s, feeder.subdomain())).toArray(String[]::new));
-			builder.add("domain", fullDomain(feeder.subdomain()));
+			builder.add("eventType", feeder.tanks().stream().filter(Objects::nonNull).map(Tank::fullName).toArray(String[]::new));
 			final String feederClassName = firstUpperCase(name(feeder));
 			classes.put(feeder.getClass().getSimpleName() + "#" + name(feeder), "datalake.feeders." + feederClassName);
 			writeFrame(new File(gen, "datalake/feeders"), "Abstract" + feederClassName, customize(new AbstractFeederTemplate()).render(builder.toFrame()));
@@ -100,7 +92,7 @@ public class FeederRenderer {
 	private Frame poll(PollSensor sensor) {
 		return new FrameBuilder("poll").
 				add("defaultOption", sensor.defaultOption() == null ? "" : sensor.defaultOption()).
-				add("eventMethod", sensor.core$().ownerAs(Feeder.class).eventTypes().stream().map(Layer::name$).toArray(String[]::new)).
+				add("eventMethod", sensor.core$().ownerAs(Feeder.class).tanks().stream().map(Layer::name$).toArray(String[]::new)).
 				add("option", frameOf(sensor.optionList())).toFrame();
 	}
 
@@ -128,13 +120,6 @@ public class FeederRenderer {
 		return new FrameBuilder("documentSignature").add("signType", sensor.signType().name()).add("signFormat", sensor.signFormat().name()).toFrame();
 	}
 
-	private String composedType(Schema schema, String subdomain) {
-		return fullDomain(subdomain) + schema.name$().toLowerCase();
-	}
-
-	private String fullDomain(String subdomain) {
-		return (domain.isEmpty() ? "" : domain + ".") + (subdomain.isEmpty() ? "" : subdomain + ".");
-	}
 
 	private boolean alreadyRendered(File destination, String action) {
 		return Commons.javaFile(destination, action).exists();

@@ -7,7 +7,6 @@ import com.intellij.psi.search.GlobalSearchScope;
 import cottons.utils.Files;
 import io.intino.konos.builder.codegeneration.accessor.ui.UIAccessorCreator;
 import io.intino.konos.builder.codegeneration.datalake.DatalakeRenderer;
-import io.intino.konos.builder.codegeneration.datalake.NessJMXOperationsRenderer;
 import io.intino.konos.builder.codegeneration.datalake.feeder.FeederRenderer;
 import io.intino.konos.builder.codegeneration.datalake.mounter.MounterRenderer;
 import io.intino.konos.builder.codegeneration.datalake.process.ProcessRenderer;
@@ -31,7 +30,6 @@ import io.intino.konos.builder.codegeneration.task.TaskRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskerRenderer;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.plugin.codeinsight.linemarkers.InterfaceToJavaImplementation;
-import io.intino.plugin.project.LegioConfiguration;
 import io.intino.tara.compiler.shared.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -44,7 +42,6 @@ import java.util.List;
 import java.util.Map;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.plugin.project.Safe.safe;
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.configurationOf;
 
 public class FullRenderer {
@@ -122,12 +119,11 @@ public class FullRenderer {
 	}
 
 	private void bus() {
-		if (graph.nessClientList().isEmpty()) return;
+		if (graph.datalake()== null) return;
 		new ProcessRenderer(graph, src, packageName, boxName, classes).execute();
-		new MounterRenderer(graph, src, packageName, boxName, classes).execute();
+		new MounterRenderer(graph,gen, src, packageName, boxName, classes).execute();
 		new FeederRenderer(graph, gen, src, packageName, boxName, classes).execute();
 		new DatalakeRenderer(graph, gen, packageName, boxName).execute();
-		new NessJMXOperationsRenderer(gen, src, packageName, boxName, (module != null && safe(() -> ((LegioConfiguration) configurationOf(module)).graph().artifact().asLevel().model()) != null)).execute();
 	}
 
 	private void slack() {
