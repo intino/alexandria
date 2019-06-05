@@ -13,17 +13,17 @@ def type(box)
 	import java.util.logging.Level;
 
 	[$hasREST~import io.intino.alexandria.rest.AlexandriaSpark;]
-    [$hasUi+hide~import io.intino.alexandria.ui.displays.Soul;]
+    [import io.intino.alexandria.ui.displays.Soul;$hasUi+hide]
 
 	public abstract class AbstractBox extends [$hasUi+uiBox?io.intino.alexandria.core.Box] {
 		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;
 		[$service+field...[$NL]]
 		[$dataLake+field...[$NL]]
 		[$task+field]
-        [$hasUi+hide~protected Map<String, Soul> uiSouls = new java.util.HashMap<>();]
-	    [$hasUi+hide~private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();]
-		[$hasUi+hide~private io.intino.alexandria.ui.services.AuthService authService;]
-		[$hasUi+hide~private io.intino.alexandria.ui.services.EditorService editorService;]
+        [protected Map<String, Soul> uiSouls = new java.util.HashMap<>();$hasUi+hide]
+	    [private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();$hasUi+hide]
+		[private io.intino.alexandria.ui.services.AuthService authService;$hasUi+hide]
+		[private io.intino.alexandria.ui.services.EditorService editorService;$hasUi+hide]
 
 		public AbstractBox(String$[] args) {
 			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
@@ -97,11 +97,11 @@ def type(box)
 		private void initDatalake() {
 			$dataLake+init...[$NL]
 		}
-		[$datalake+hide
+		[
 		private io.intino.ness.core.Datalake datalakeFrom(String nessUrl, String nessUser, String nessPassword, String clientId) {
 			if (nessUrl.startsWith("file://")) return new io.intino.alexandria.nessaccessor.local.LocalDatalake(new java.io.File(nessUrl.replace("file://", "")));
 			return new io.intino.alexandria.nessaccessor.tcp.TCPDatalake(nessUrl, nessUser, nessPassword, clientId);
-		}
+		}$datalake+hide
 		]
 		private void initTasks() {
 			[$task+init...[$NL]]
@@ -365,5 +365,6 @@ def trigger(parentInit)
 end
 
 def trigger(hide)
+
 end
 
