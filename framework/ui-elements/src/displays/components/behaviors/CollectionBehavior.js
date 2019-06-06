@@ -130,8 +130,9 @@ const CollectionBehavior = (collection) => {
         var selectable = self.collection.props.selection != null;
         var multiple = self.collection.props.selection != null && self.collection.props.selection === "multiple";
         var selecting = self.collection.state.selection.length > 0;
-        return (<div style={style} key={index} className={classNames(classes.itemView, "layout horizontal center", selectable ? classes.selectable : undefined, selecting ? classes.selecting : undefined)}>
-                {multiple ? <Checkbox checked={self.isItemSelected(item)} className={classes.selector} onChange={self.handleSelectItem.bind(self, item != null ? item.pl.id : undefined)}/> : undefined}
+        const id = item != null ? item.pl.id : undefined;
+        return (<div onClick={(selectable && !multiple) && self.handleSelect.bind(self, id)} style={style} key={index} className={classNames(classes.itemView, "layout horizontal center", selectable ? classes.selectable : undefined, selecting ? classes.selecting : undefined)}>
+                {multiple ? <Checkbox checked={self.isItemSelected(item)} className={classes.selector} onChange={self.handleSelect.bind(self, id)}/> : undefined}
                 {view}
             </div>
         );
@@ -173,7 +174,7 @@ const CollectionBehavior = (collection) => {
         return self.collection.state.selection.indexOf(item.pl.id) !== -1;
     };
 
-    self.handleSelectItem = (item, e) => {
+    self.updateSelection = (item) => {
         var selection = self.collection.state.selection;
         var index = selection.indexOf(item);
         if (index !== -1) selection.splice(index, 1);
@@ -181,7 +182,11 @@ const CollectionBehavior = (collection) => {
         self.collection.setState({selection : selection});
         self.refreshItemsRendered(self.items(), null, self.collection.itemsWindow);
         if (self.collection.selectTimeout != null) window.clearTimeout(self.collection.selectTimeout);
-        self.collection.selectTimeout = window.setTimeout(() => self.collection.requester.changeSelection(selection), 50);
+        self.collection.selectTimeout = window.setTimeout(() => self.collection.requester.selection(selection), 50);
+    };
+
+    self.handleSelect = (item, e) => {
+        self.updateSelection(item);
     };
 
     self.handlePage = (e, page) => {

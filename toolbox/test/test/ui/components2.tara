@@ -1,61 +1,13 @@
 dsl Konos
 
-// Cards
-Format("textAlign:'left',color:'#B71A1C',padding:'10px'") cardTitle
-Format("textAlign:'left',padding:'10px'") cardContent
-Service(title = "", favicon = "") BackUi as UI(port = "9000")
+Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(homeTemplate)
-	Resource(path = "/users") users as Page(usersTemplate)
-	Resource(path = "/ids") ids as Page(idsTemplate)
 
 Template homeTemplate
-	Header(color="#14609B", format=air) as Absolute(height=75px)
-		Block(layout=Horizontal Center, spacing=DP24)
-			Block
-				Image(value="images/logo.png") as Absolute(width=200px, 50px)
-				Text(value="back", format=headerSubtitle)
-			Block(layout=Horizontal Center, format=headerToolbar, spacing=DP24) links
-				Text(value="home", format=h6 secondary)
-				OpenPage(page=BackUi.users, title = "users", format=h6 white) as Link
-				OpenPage(page=BackUi.ids, title = "ids", format=h6 white) as Link
-
-Template usersTemplate as Relative(height=100%) as Decorated
-	Header(color="#14609B", format=air) as Absolute(height=75px)
-		Block(layout=Horizontal Center, spacing=DP24)
-			Block
-				Image(value="images/logo.png") as Absolute(width=200px, 50px)
-				Text(value="back", format=headerSubtitle)
-			Block(layout=Horizontal Center, format=headerToolbar, spacing=DP24) links
-				OpenPage(page=BackUi.home, title = "home", format=h6 white) as Link
-				Text(value="users", format=h6 secondary)
-				OpenPage(page=BackUi.ids, title = "ids", format=h6 white) as Link
-	Block(layout=Vertical Flexible) as Relative(height=100%,width=100%)
-		List(itemClass="com.adquiver.qia.back.model.User") users
-			Mold > Item(height = 100px) userItem > Stamp(template=userTemplate) stamp
-	Block
-		Stamp(template=footer)
-
-Template(modelClass="com.adquiver.qia.back.model.User") userTemplate as Decorated
-	Text(value="soy un usuario")
-
-Template idsTemplate
-	Header(color="#14609B", format=air) as Absolute(height=75px)
-		Block(layout=Horizontal Center, spacing=DP24)
-			Block
-				Image(value="images/logo.png") as Absolute(width=200px, 50px)
-				Text(value="back", format=headerSubtitle)
-			Block(layout=Horizontal Center, format=headerToolbar, spacing=DP24) links
-				OpenPage(page=BackUi.home, title = "home", format=h6 white) as Link
-				OpenPage(page=BackUi.users, title = "users", format=h6 white) as Link
-				Text(value="ids", format=h6 secondary)
-
-Template(format=footer) footer
-	Block(layout=Horizontal Flexible AroundJustified)
-		Image(value="images/logos1.png") as Relative(width=5%)
-		Block(layout=Vertical CenterCenter) > Text(format=separator,value="&nbsp;")
-		Image(value="images/logos2.png") as Relative(width=30%)
-		Block(layout=Vertical CenterCenter) > Text(format=separator,value="&nbsp;")
-		Image(value="images/logos3.png") as Relative(width=30%)
+	Block block1 as Animated(transition=Slide,transitionDirection=Left)
+	Block block2 as Animated(transition=Slide)
+	Block block3 as Animated(transition=Zoom)
+	Block usersBlock as Relative(height=100%) Conditional Animated
 
 Theme theme1
 	type = Normal

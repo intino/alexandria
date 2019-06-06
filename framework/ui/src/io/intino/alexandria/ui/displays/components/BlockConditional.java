@@ -7,13 +7,16 @@ import io.intino.alexandria.ui.displays.components.selector.Selection;
 import io.intino.alexandria.ui.displays.components.selector.Selector;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.HideListener;
+import io.intino.alexandria.ui.displays.events.Listener;
 import io.intino.alexandria.ui.displays.events.ShowListener;
 import io.intino.alexandria.ui.displays.notifiers.BlockConditionalNotifier;
 
 public class BlockConditional<DN extends BlockConditionalNotifier, B extends Box> extends AbstractBlockConditional<B> implements Selection {
     private boolean visible;
+    private boolean readyNotified = false;
     private ShowListener showListener = null;
     private HideListener hideListener = null;
+    private Listener readyListener = null;
 
     public BlockConditional(B box) {
         super(box);
@@ -48,6 +51,11 @@ public class BlockConditional<DN extends BlockConditionalNotifier, B extends Box
         this.updateVisibility(false);
     }
 
+    public BlockConditional<DN, B> onReady(Listener listener) {
+        this.readyListener = listener;
+        return this;
+    }
+
     public BlockConditional<DN, B> onShow(ShowListener listener) {
         this.showListener = listener;
         return this;
@@ -69,6 +77,7 @@ public class BlockConditional<DN extends BlockConditionalNotifier, B extends Box
         notifier.refreshVisibility(visible);
         if (visible) {
             refresh();
+            notifyReady();
             children().forEach(Display::refresh);
         }
         if (showListener != null && visible) showListener.accept(new Event(this));
@@ -82,4 +91,9 @@ public class BlockConditional<DN extends BlockConditionalNotifier, B extends Box
         updateVisibility(true);
     }
 
+    protected void notifyReady() {
+        if (readyNotified) return;
+        if (readyListener != null) readyListener.accept(new Event(this));
+        readyNotified = true;
+    }
 }

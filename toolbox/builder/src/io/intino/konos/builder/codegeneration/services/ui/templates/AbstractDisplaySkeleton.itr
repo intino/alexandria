@@ -28,7 +28,6 @@ def type(display)
 			super.init();
 			[$reference...[$NL]]
 			[$componentReferences]
-			[$component+initializations...[$NL]]
 		}
 		$methods
 		[$component+class...[$NL$NL]]

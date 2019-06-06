@@ -7,6 +7,7 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.SizedRenderer;
 import io.intino.konos.model.graph.Block;
 import io.intino.konos.model.graph.OtherComponents.Selector;
+import io.intino.konos.model.graph.animated.AnimatedBlock;
 import io.intino.konos.model.graph.badge.BadgeBlock;
 import io.intino.konos.model.graph.option.OptionComponent;
 import io.intino.konos.model.graph.rules.Spacing;
@@ -32,6 +33,7 @@ public class BlockRenderer extends SizedRenderer<Block> {
 		addPaper(result);
 		addBadge(result);
 		addParallax(result);
+		addTransition(result);
 		if (element.isCollapsible()) result.add("collapsible", "true");
 		return result;
 	}
@@ -66,6 +68,15 @@ public class BlockRenderer extends SizedRenderer<Block> {
 		String background = element.asParallax().background();
 		if (background == null || background.isEmpty()) return;
 		builder.add("background", resourceMethodFrame("background", background));
+	}
+
+	private void addTransition(FrameBuilder builder) {
+		if (!element.isAnimated()) return;
+		AnimatedBlock block = element.asAnimated();
+		AnimatedBlock.Transition transition = block.transition();
+		builder.add("mode", block.mode().name());
+		builder.add("transitionDirection", transition != null ? transition.direction().name() : "Right");
+		builder.add("transitionDuration", transition != null ? transition.duration() : 500);
 	}
 
 	private void addBinding(FrameBuilder builder) {

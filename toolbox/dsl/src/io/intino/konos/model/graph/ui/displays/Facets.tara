@@ -60,6 +60,12 @@ Facet Behavior is abstract
 Facet Collapsible extends Behavior on Block
 Facet Conditional extends Behavior on Block
 	var Option selected = empty
+Facet Animated extends Behavior on Block
+	var word:{ Slide Fade Grow Zoom } mode = Slide
+
+	Concept:{0..1} Transition
+		var word:{ Left Top Bottom Right } direction = Right
+		var integer:{ Milliseconds } duration = 500 Milliseconds
 
 Facet AbstractMultiple is abstract
 	var string noItemsMessage = empty

@@ -24,6 +24,9 @@ Component openPage as Decorated ExtensionOf(operation)
 	Notification redirect as Text
 	Request execute
 
+Component openBlock as Decorated ExtensionOf(operation)
+	Request execute
+
 Component selectionOperation as Decorated ExtensionOf(operation)
 Component taskSelection as Decorated ExtensionOf(selectionOperation)
 	Request execute
