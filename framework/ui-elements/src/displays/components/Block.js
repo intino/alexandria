@@ -1,10 +1,11 @@
 import React from "react";
-import Collapse from "@material-ui/core/Collapse";
+import Collapse from '@material-ui/core/Collapse';
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import AbstractBlock from "../../../gen/displays/components/AbstractBlock";
 import BlockNotifier from "../../../gen/displays/notifiers/BlockNotifier";
 import BlockRequester from "../../../gen/displays/requesters/BlockRequester";
+import BlockBehavior from "./behaviors/BlockBehavior";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
@@ -22,6 +23,13 @@ export default class Block extends AbstractBlock {
 	};
 
 	render() {
+        let animation = this.props.animation;
+        if (animation != null)
+            return BlockBehavior.renderAnimation(animation, !this.state.hidden, this.renderContent());
+		return this.renderContent();
+	};
+
+	renderContent = () => {
 		return (this.props.collapsible ? <Collapse>{this._renderLayout()}</Collapse> : this._renderLayout());
 	};
 
@@ -37,11 +45,12 @@ export default class Block extends AbstractBlock {
 		let paper = this.props.paper;
 		let layout = this._layout();
 		let style = this.style();
+		let label = this.props.label;
 
 		if (paper) {
 			return (
 				<Paper style={style} className={layout}>
-					{this.props.label !== "" ? <Typography style={{padding:"0 10px"}} variant={this.variant("h5")}>{this.props.label}</Typography> : undefined }
+					{label != null && label !== "" ? <Typography style={{padding:"0 10px"}} variant={this.variant("h5")}>{label}</Typography> : undefined }
 					<div style={{padding:"0 10px 10px"}}>{this._renderChildren()}</div>
 				</Paper>
 			);
@@ -49,7 +58,7 @@ export default class Block extends AbstractBlock {
 
 		return (
 			<div style={style} className={layout}>
-				{this.props.label !== "" ? <Typography style={{padding:"0 0 5px"}} variant={this.variant("h5")}>{this.props.label}</Typography> : undefined }
+				{label != null && label !== "" ? <Typography style={{padding:"0 0 5px"}} variant={this.variant("h5")}>{label}</Typography> : undefined }
 				{this._renderChildren()}
 			</div>
 		);

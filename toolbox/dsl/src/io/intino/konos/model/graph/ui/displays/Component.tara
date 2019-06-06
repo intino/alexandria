@@ -98,6 +98,7 @@ Concept OperationComponents
 
 		sub OpenDialog > var Block content
 		sub OpenPage > var Page page
+		sub OpenBlock > var Conditional block
 		sub Export
 			var string[] options = empty
 			var instant from = empty

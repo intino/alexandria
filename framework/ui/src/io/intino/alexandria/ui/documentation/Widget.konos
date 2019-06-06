@@ -1,0 +1,94 @@
+dsl Konos
+
+use Slider
+use Map
+use SearchBox
+use Sorting
+use Grouping
+use DownloadSelection
+use Download
+use Export
+use Operation
+use Table
+use List
+use Block
+use Chart
+use Date
+use Image
+use File
+use Number
+use Text
+use Theme
+use Schemas
+
+Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widgetMold as Decorated DynamicLoaded(loadTime=Slow)
+	Text(value="Widget", format=h3) title
+	Text(format=body1) highlightFacets as Multiple(arrangement=Horizontal) Highlighted("white","#679164")
+	Text(format=body1 airBottom) description
+
+	Block(layout=Vertical, spacing=DP24)
+		Block examples
+			Text(value="Examples", format=h5 underline) examplesTitle
+			Block textExamples as Conditional > Stamp(template=textExamplesMold)
+			Block numberExamples as Conditional > Stamp(template=numberExamplesMold)
+			Block fileExamples as Conditional > Stamp(template=fileExamplesMold)
+			Block imageExamples as Conditional > Stamp(template=imageExamplesMold)
+			Block dateExamples as Conditional > Stamp(template=dateExamplesMold)
+			Block chartExamples as Conditional > Stamp(template=chartExamplesMold)
+			Block blockExamples as Conditional > Stamp(template=blockExamplesMold)
+			Block listExamples as Conditional > Stamp(template=listExamplesMold)
+			Block tableExamples as Conditional > Stamp(template=tableExamplesMold)
+			Block mapExamples as Conditional > Stamp(template=mapExamplesMold)
+			Block downloadExamples as Conditional > Stamp(template=downloadExamplesMold)
+			Block downloadSelectionExamples as Conditional > Stamp(template=downloadSelectionExamplesMold)
+			Block exportExamples as Conditional > Stamp(template=exportExamplesMold)
+			Block operationExamples as Conditional > Stamp(template=operationExamplesMold)
+			Block groupingExamples as Conditional > Stamp(template=groupingExamplesMold)
+			Block sortingExamples as Conditional > Stamp(template=sortingExamplesMold)
+			Block searchBoxExamples as Conditional > Stamp(template=searchBoxExamplesMold)
+			Block sliderExamples as Conditional > Stamp(template=sliderExamplesMold)
+
+		Block facets
+			Text(value="Facets", format=h5 underline)
+			Text facetsNames
+		Block
+			Text(value="Properties", format=h5 underline)
+			Stamp(template=propertyMold) properties as Multiple(noItemsMessage="no properties")
+		Block
+			Text(value="Methods", format=h5 underline)
+			Stamp(template=methodMold) methods as Multiple(noItemsMessage="no methods")
+		Block
+			Text(value="Events", format=h5 underline)
+			Frame(display=eventsDisplay) events
+
+Template(modelClass="io.intino.alexandria.schemas.Property", format=airBottom) propertyMold as Decorated
+	Text(format=body2 facetsAbsolute, value="", mode=Uppercase) facets
+	Block(layout=Horizontal StartJustified)
+		Text(format=h6) name
+		Text(format=h6, value=":&nbsp;&nbsp;")
+		Text(format=h6 widgetType, mode = Lowercase) type
+	Text(format=body2, value="") description
+	Block(layout=Horizontal)
+		Text(format=body2 valuesLabelFormat) valuesLabel
+		Text(format=body2 widgetType, value=":&nbsp;&nbsp;") valuesSeparator
+		Text(format=body2) values
+
+Template(modelClass="io.intino.alexandria.schemas.Method", format=airBottom) methodMold as Decorated
+	Text(format=body2 facetsAbsolute, value="", mode=Uppercase) facets
+	Block(layout=Horizontal StartJustified)
+		Text(format=h6) name
+		Text(format=h6, value="(")
+		Stamp(template=methodParamMold) params as Multiple
+		Text(format=h6, value=")")
+		Text(format=h6, value=":&nbsp;&nbsp;")
+		Text(format=h6 widgetType, mode = Lowercase) returnType
+	Text(format=body2, value="") description
+
+Template(layout=Horizontal, modelClass="io.intino.alexandria.schemas.Parameter") methodParamMold as Decorated
+	Text(format=h6) name
+	Text(format=h6, value=":&nbsp;")
+	Text(format=h6) type
+	Text(format=h6) comma
+
+Display eventsDisplay as Decorated
+	Notification refresh as Object(Method) List

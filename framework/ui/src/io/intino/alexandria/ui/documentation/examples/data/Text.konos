@@ -1,0 +1,74 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) textExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filled)
+				Text(format=body1 widgetDemo) text1
+				Block > Text text1Code as Code(language=Html)
+						value
+							=========
+							Text(value\="lorem ipsum") text1
+							=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with label")
+			Block(spacing=DP8, format=filled)
+				Text(format=body1 widgetDemo) text2 as Labeled("título del campo")
+				Block > Text text2Code as Code(language=Html)
+						value
+							=========
+							Text text2 as Labeled("título del campo")<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;value\="lorem ipsum"
+							=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Editable facet")
+			Block(spacing=DP8, format=filled)
+				Text(format=body1 widgetDemo) text3 as Editable Labeled("campo editable")
+				Block > Text text3Code as Code(language=Html)
+						value
+							=========
+							Text(value\="lorem ipsum") text3 as Editable Labeled("campo editable")
+							=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Code facet")
+			Block(spacing=DP8, format=filled)
+				Text(format=body1 widgetDemo) textCode1 as Code(language=Html)
+					value
+						=========
+						Text(value\="lorem") text1
+						=========
+				Block > Text textCode1Code as Code(language=Html)
+						value
+							=========
+							Text textCode1 as Code(language\=Html)<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;value<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\=\=\=\=\=\=\=\=\=<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="lorem") text1<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\=\=\=\=\=\=\=\=\=<br/>
+							=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Code and Editable facet")
+			Block(spacing=DP8, format=filled)
+				Text(format=body1 widgetDemo) textCode2 as Code(language=Html) Editable
+					value
+						=========
+						<div>Here goes code</div>
+						=========
+				Block > Text textCode2Code as Code(language=Html)
+						value
+							=========
+							Text textCode1 as Code(language\=Html) Editable<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;value<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\=\=\=\=\=\=\=\=\=<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;Here goes code&lt;/div&gt;<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\=\=\=\=\=\=\=\=\=<br/>
+							=========

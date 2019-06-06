@@ -6,10 +6,7 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.collection.*;
 import io.intino.konos.builder.codegeneration.ui.displays.components.data.*;
-import io.intino.konos.builder.codegeneration.ui.displays.components.operation.DownloadRenderer;
-import io.intino.konos.builder.codegeneration.ui.displays.components.operation.DownloadSelectionRenderer;
-import io.intino.konos.builder.codegeneration.ui.displays.components.operation.ExportRenderer;
-import io.intino.konos.builder.codegeneration.ui.displays.components.operation.OpenPageRenderer;
+import io.intino.konos.builder.codegeneration.ui.displays.components.operation.*;
 import io.intino.konos.builder.codegeneration.ui.displays.components.other.*;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.DataComponents.Date;
@@ -48,6 +45,7 @@ public class ComponentRendererFactory {
 
 		if (component.i$(Toolbar.class)) return (T) new ToolbarRenderer(settings, component.a$(Toolbar.class), provider, target);
 		if (component.i$(OpenPage.class)) return (T) new OpenPageRenderer(settings, component.a$(OpenPage.class), provider, target);
+		if (component.i$(OpenBlock.class)) return (T) new OpenBlockRenderer(settings, component.a$(OpenBlock.class), provider, target);
 		if (component.i$(Download.class)) return (T) new DownloadRenderer(settings, component.a$(Download.class), provider, target);
 		if (component.i$(DownloadSelection.class)) return (T) new DownloadSelectionRenderer(settings, component.a$(DownloadSelection.class), provider, target);
 		if (component.i$(Export.class)) return (T) new ExportRenderer(settings, component.a$(Export.class), provider, target);

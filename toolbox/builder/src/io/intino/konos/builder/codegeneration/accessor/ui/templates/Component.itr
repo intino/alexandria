@@ -87,7 +87,7 @@ def type(properties & chart) trigger(specific)
 end
 
 def type(properties & block) trigger(specific)
-	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"][ collapsible="$collapsible"][ $paper][ $badge]
+	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"][ collapsible="$collapsible"][ $paper][ $badge][ animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}]
 end
 
 def type(properties & date) trigger(specific)

@@ -83,11 +83,16 @@ def type(component & child & collection) trigger(class)
 			super.$methodName();
 			[$reference...[$NL]]
 			[$heading+child...[$NL]]
+			[$component+initializations...[$NL]]
 		}
 		$methods
 		[$component+class...[$NL$NL]]
 		[$component+method...[$NL$NL]]
 	}
+end
+
+def attribute(notifyReady)
+    notifyReady();
 end
 
 def type(component & child) trigger(class)
@@ -106,6 +111,7 @@ def type(component & child) trigger(class)
 			super.$methodName();
 			[$reference...[$NL]]
 			[$component+child...[$NL]]
+			[$component+initializations...[$NL]]
 		}
 		$methods
 		[$component+class...[$NL$NL]]
@@ -215,27 +221,31 @@ def type(facet)
 end
 
 def type(binding & toolbar)
-	$name.bindTo($collection);
+	if ($name != null) $name.bindTo($collection);
 end
 
 def type(binding & grouping)
-	$name.bindTo($collection...[,]);
+	if ($name != null) $name.bindTo($collection...[,]);
 end
 
 def type(binding & sorting)
-	$name.bindTo($collection...[,]);
+	if ($name != null) $name.bindTo($collection...[,]);
 end
 
 def type(binding & searchbox)
-	$name.bindTo($collection...[,]);
+	if ($name != null) $name.bindTo($collection...[,]);
 end
 
 def type(binding & slider)
-	$name.bindTo($collection...[,]);
+	if ($name != null) $name.bindTo($collection...[,]);
+end
+
+def type(binding & openblock)
+	if ($name != null) $name.bindTo($block);
 end
 
 def type(binding)
-	$name.bindTo($selector, "$option");
+	if ($name != null) $name.bindTo($selector, "$option");
 end
 
 def type(implements & selectablecollection)

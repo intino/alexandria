@@ -13,7 +13,7 @@ import java.io.InputStream;
 
 public class Operation<DN extends OperationNotifier, B extends Box> extends Component<DN, B> {
     private String title;
-    private boolean disabled = true;
+    private boolean disabled = false;
     private String icon;
     private Mode mode;
 

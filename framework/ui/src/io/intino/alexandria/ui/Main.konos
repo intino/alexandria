@@ -1,8 +1,0 @@
-dsl Konos
-
-use CatalogComponents
-
-Service(title = "", favicon = "") UiElements as UI(port = "9000")
-	Resource(path = "/") home as Page(homeTemplate)
-
-Template homeTemplate

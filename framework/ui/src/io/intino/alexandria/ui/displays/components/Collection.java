@@ -17,10 +17,8 @@ import io.intino.alexandria.ui.displays.events.collection.RefreshListener;
 import io.intino.alexandria.ui.displays.notifiers.CollectionNotifier;
 import io.intino.alexandria.ui.model.Datasource;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -100,7 +98,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         return behavior.itemCount();
     }
 
-    public void changeSelection(String[] selection) {
+    public void selection(String[] selection) {
         selectionListeners.forEach(l -> l.accept(new SelectionEvent(this, Arrays.asList(selection))));
     }
 

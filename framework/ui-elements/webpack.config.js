@@ -51,6 +51,18 @@ module.exports = {
             template: "./home.html",
             filename: "./home.html"
         }),
+        new HtmlWebPackPlugin({
+            hash: true,
+            title: "Test UI",
+            template: "./docs.html",
+            filename: "./docs.html"
+        }),
+        new HtmlWebPackPlugin({
+            hash: true,
+            title: "Test UI",
+            template: "./widgetType.html",
+            filename: "./widgetType.html"
+        }),
         new CopyWebpackPlugin([{
             from: 'res',
             to: './res'

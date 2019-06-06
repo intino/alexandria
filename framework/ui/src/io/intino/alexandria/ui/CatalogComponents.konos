@@ -4,7 +4,7 @@ Component collection as Decorated
 	Notification setup as Object(CollectionSetup)
 	Notification refresh
 	Notification refreshItemCount as LongInteger
-	Request changeSelection as Text List
+	Request selection as Text List
 
 Component pageCollection as Decorated ExtensionOf(collection)
 	Notification setup as Object(PageCollectionSetup)
