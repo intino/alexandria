@@ -3,22 +3,21 @@ dsl Konos
 Datalake datalake as Local("{datalake}")
 	Split("DA" "DB") porDivisiones
 
-
 	Tank("asemed.Criterio") criterio as Event(Criterio)
 	Tank("asemed.CriterioBorrado") criterioBorrado as Event(CriterioBorrado)
 	Tank("asemed.CriterioModificado") criterioModificado as Event(CriterioModificado)
 	Tank("asemed.CriterioSentencia") criterioSentencia as Event(CriterioSentencia)
-	Tank("asemed.CriterioSentenciaModificada") criterioSentenciaModificada as Event(CriterioModificada)
-	Tank("asemed.CriterioSentenciaBorrada") criterioSentenciaBorrada as Event(CriterioBorrada)
+	Tank("asemed.CriterioSentenciaModificada") criterioSentenciaModificada as Event(CriterioSentenciaModificada)
+	Tank("asemed.CriterioSentenciaBorrada") criterioSentenciaBorrada as Event(CriterioSentenciaBorrada)
 	Tank("asemed.CriterioHabilitado") criterioHabilitado as Event(CriterioHabilitado)
 	Tank("asemed.CriterioDeshabilitado") criterioDeshabilitado as Event(CriterioDeshabilitado)
 	Tank("asemed.CriterioEvolucionado") criterioEvolucionado as Event(CriterioEvolucionado)
 
-	Tank("asemed.UsuarioConectado") usuarioConectado as Event
-	Tank("asemed.UsuarioDesconectado") usuarioDesconectado as Event
-	Tank("asemed.Despacho") despacho as Event
-	Tank("asemed.Inspeccion") inspeccion as Event
-	Tank("asemed.Ajuste") ajuste as Event
+	Tank("asemed.UsuarioConectado") usuarioConectado as Event(UsuarioConectado)
+	Tank("asemed.UsuarioDesconectado") usuarioDesconectado as Event(UsuarioDesconectado)
+	Tank("asemed.Despacho") despacho as Event(schema = Despacho)
+	Tank("asemed.Inspeccion") inspeccion as Event(schema = Inspeccion)
+	Tank("asemed.Ajuste") ajuste as Event(schema = Ajuste)
 
 	Tank("EsCFE") EsCFE as Set(porDivisiones) Singleton
 	Tank("EsEmpleado") EsEmpleado as Set(porDivisiones) Singleton
@@ -74,84 +73,82 @@ Datalake datalake as Local("{datalake}")
 	Tank("Revision.Inspeccionado") revisionInspeccionado as Set
 
 
-Datamart("{datamart}")
+Datamart("{datamart}") datamart
 
 Feeder(datalake.ajuste) ajusteFeeder
 Feeder(datalake.criterio datalake.criterioBorrado) criteriosFeeder
 
 Mounter inspeccionados as Batch
 	Source as Population
-		Column(tank = revisionInspeccion, type = Long) as Id
-		Column(tank = revisionInspeccion, type = Timetag)
-		Column(tank = EsCFE, type = Boolean)  as Constant("")
-		Column(tank = EsEmpleado, type = Boolean)
-		Column(tank = Giro, type = Nominal)
-		Column(tank = Estatus, type = String)
-		Column(tank = poblacionTipo, type = String)
-		Column(tank = contratoPotencia, type = String)
-		Column(tank = Firma, type = String)
-		Column(tank = Alta, type = String)
-		Column(tank = Baja, type = String)
-		Column(tank = contratoEstatus, type = String)
-		Column(tank = Periodicidad, type = String)
-		Column(tank = Modo, type = String)
-		Column(tank = EsColectiva, type = String)
-		Column(tank = EsEspecial, type = String)
-		Column(tank = EsPuntual, type = String)
-		Column(tank = tarifaTipo, type = String)
-		Column(tank = Conexiones, type = String)
-		Column(tank = conexionTipo, type = String)
-		Column(tank = Hilos, type = String)
-		Column(tank = PorteaEnergia, type = String)
-		Column(tank = GeneraEnergiaRenovable, type = String)
-		Column(tank = Potencia, type = String)
-		Column(tank = conexionConectado, type = String)
-		Column(tank = conexionDesconectado, type = String)
-		Column(tank = Reconectado, type = String)
-		Column(tank = medidorTipo, type = String)
-		Column(tank = medidorEstatus, type = String)
-		Column(tank = Caratulas, type = String)
-		Column(tank = Multiplicador, type = String)
-		Column(tank = Instalado, type = String)
-		Column(tank = Retirado, type = String)
-		Column(tank = Conectado, type = String)
-		Column(tank = Desconectado, type = String)
-		Column(tank = Sellado, type = String)
-		Column(tank = Cambiado, type = String)
-		Column(tank = Fecha, type = String)
-		Column(tank = Tipo, type = String)
-		Column(tank = Negativa, type = String)
-		Column(tank = Facturado, type = String)
-		Column(tank = NoFacturado, type = String)
-		Column(tank = MalFacturado, type = String)
-		Column(tank = Abatimiento, type = String)
-		Column(tank = FacturaAbatida, type = String)
-		Column(tank = consumoPromedioDiario, type = String)
-		Column(tank = Plano, type = String)
-		Column(tank = DiferenciaConMaxCPD, type = String)
-		Column(tank = demandaPromedioDiario, type = String)
-		Column(tank = FactorCarga, type = String)
-		Column(tank = FactorCargaPromedioDiario, type = String)
-		Column(tank = FactorPotencia, type = String)
-		Column(tank = Inspeccion, type = String)
-		Column(tank = revisionInspeccionado, type = String)
-
-	Collect as File(Arff)
+		Column(datalake.revisionInspeccion, type = Long) as Id
+		Column(datalake.revisionInspeccion, type = Timetag)
+		Column(datalake.EsCFE, type = Boolean)  as Constant(value = "sss")
+		Column(datalake.EsEmpleado, type = Boolean)
+		Column(datalake.Giro, type = Nominal)
+		Column(datalake.Estatus, type = String)
+		Column(datalake.poblacionTipo, type = String)
+		Column(datalake.contratoPotencia, type = String)
+		Column(datalake.Firma, type = String)
+		Column(datalake.Alta, type = String)
+		Column(datalake.Baja, type = String)
+		Column(datalake.contratoEstatus, type = String)
+		Column(datalake.Periodicidad, type = String)
+		Column(datalake.Modo, type = String)
+		Column(datalake.EsColectiva, type = String)
+		Column(datalake.EsEspecial, type = String)
+		Column(datalake.EsPuntual, type = String)
+		Column(datalake.tarifaTipo, type = String)
+		Column(datalake.Conexiones, type = String)
+		Column(datalake.conexionTipo, type = String)
+		Column(datalake.Hilos, type = String)
+		Column(datalake.PorteaEnergia, type = String)
+		Column(datalake.GeneraEnergiaRenovable, type = String)
+		Column(datalake.Potencia, type = String)
+		Column(datalake.conexionConectado, type = String)
+		Column(datalake.conexionDesconectado, type = String)
+		Column(datalake.Reconectado, type = String)
+		Column(datalake.medidorTipo, type = String)
+		Column(datalake.medidorEstatus, type = String)
+		Column(datalake.Caratulas, type = String)
+		Column(datalake.Multiplicador, type = String)
+		Column(datalake.Instalado, type = String)
+		Column(datalake.Retirado, type = String)
+		Column(datalake.Conectado, type = String)
+		Column(datalake.Desconectado, type = String)
+		Column(datalake.Sellado, type = String)
+		Column(datalake.Cambiado, type = String)
+		Column(datalake.Fecha, type = String)
+		Column(datalake.Tipo, type = String)
+		Column(datalake.Negativa, type = String)
+		Column(datalake.Facturado, type = String)
+		Column(datalake.NoFacturado, type = String)
+		Column(datalake.MalFacturado, type = String)
+		Column(datalake.Abatimiento, type = String)
+		Column(datalake.FacturaAbatida, type = String)
+		Column(datalake.consumoPromedioDiario, type = String)
+		Column(datalake.Plano, type = String)
+		Column(datalake.DiferenciaConMaxCPD, type = String)
+		Column(datalake.demandaPromedioDiario, type = String)
+		Column(datalake.FactorCarga, type = String)
+		Column(datalake.FactorCargaPromedioDiario, type = String)
+		Column(datalake.FactorPotencia, type = String)
+		Column(datalake.revisionInspeccion, type = String)
+		Column(datalake.revisionInspeccionado, type = String)
+	Collect as File(format = Arff, datamart = datamart)
 
 Mounter ajuste as Realtime
-	Source as Event
+	Source as Events
 		Select(datalake.ajuste)
-	Collect as Graph
+	Collect as Graph(datamart)
 
 
 Mounter criterios as Realtime
-	Source as Event
-		Select(datalake.criterio datalake.criterioBorrado)
-	Collect as Graph
+	Source as Events
+		Select(datalake.criterio)
+		Select(datalake.criterioBorrado)
+	Collect as Graph(datamart = datamart)
 
 Task MountAjuste as BootTrigger
-
-
 
 Schema Evento
 	Attribute ts as DateTime
@@ -212,11 +209,9 @@ Schema Despacho as ExtensionOf(Evento)
 
 Schema Inspeccion as ExtensionOf(Evento)
 	Attribute revision as Text
-	Attribute parte as Object(ParteInspeccion)
 
 Schema Ajuste as ExtensionOf(Evento)
 	Attribute revision as Text
-	Attribute parte as Object(ParteCierre)
 
 Schema UsuarioConectado as ExtensionOf(Evento)
 Schema UsuarioDesconectado as ExtensionOf(Evento)

@@ -1,6 +1,6 @@
 dsl Konos
 
-Procedure(ness=client) gestionarSolicitud
+Procedure(datalake) gestionarSolicitud
 	Process completarSolicitud
 		Input(Solicitud)
 		Output(SolicitudCompletada)
@@ -130,27 +130,35 @@ Procedure(ness=client) gestionarSolicitud
 		Output(DocumentoRevisado)
 
 
-Client client as Ness(url = "", user = "", password = "", domain = "", clientID = "")
-	Feeder(SolicitudCompletada) solicitudCompletada
-		Sensor defecto as FormEdition(path="/editor/solicitud/completar")
+Datalake datalake as Remote(url = "", user = "", password = "", clientID = "")
+	Tank("solicitudCompletada") solicitudCompletada
+	Tank("solicitudRevisada") solicitudRevisada
+	Tank("RequerimientoSolicitado")requerimientoSolicitado
+	Tank("EscritoSolicitado")escritoSolicitado
+	Tank("InformePropuestaSolicitado")propuestaSolicitado
+	Tank("SolicitudArchivada")solicitudArchivada
+	Tank("RequerimientoCreado")requerimientoCreado
 
-	Feeder(SolicitudRevisada) solicitudRevisada
-		Sensor defecto as FormEdition(path="/editor/solicitud/revisar")
+Feeder(datalake.solicitudCompletada) completada
+	Sensor defecto as FormEdition(path="/editor/solicitud/completar")
 
-	Feeder(RequerimientoSolicitado EscritoSolicitado InformePropuestaSolicitado SolicitudArchivada) decidirSolicitud
-		Sensor decidirSolicitud as Poll
+Feeder(datalake.solicitudRevisada) solicitudRevisada
+	Sensor defecto as FormEdition(path="/editor/solicitud/revisar")
 
-			Option("Requerir", RequerimientoSolicitado)
-			Option("Realizar escrito", EscritoSolicitado)
-			Option("Resolver con informe propuesta", InformePropuestaSolicitado)
-			Option("Resolver sin informe propuesta", InformePropuestaSolicitado)
-			Option("Archivar", SolicitudArchivada)
+Feeder(datalake.requerimientoSolicitado datalake.escritoSolicitado datalake.propuestaSolicitado datalake.solicitudArchivada) decidirSolicitud
+	Sensor decidirSolicitud as Poll
 
-	Feeder(RequerimientoCreado) tipoRequerimiento
-		Sensor decidirRequerimiento as Poll
+		Option("Requerir", RequerimientoSolicitado)
+		Option("Realizar escrito", EscritoSolicitado)
+		Option("Resolver con informe propuesta", InformePropuestaSolicitado)
+		Option("Resolver sin informe propuesta", InformePropuestaSolicitado)
+		Option("Archivar", SolicitudArchivada)
 
-			Option("Requerimiento tipo 1", RequerimientoCreado)
-			Option("Requerimiento tipo 2", RequerimientoCreado)
+Feeder(datalake.requerimientoCreado) tipoRequerimiento
+	Sensor decidirRequerimiento as Poll
+
+		Option("Requerimiento tipo 1", RequerimientoCreado)
+		Option("Requerimiento tipo 2", RequerimientoCreado)
 
 
 

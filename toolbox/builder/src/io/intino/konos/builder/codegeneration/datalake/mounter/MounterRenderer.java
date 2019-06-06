@@ -42,9 +42,9 @@ public class MounterRenderer {
 					add("name", mounter.name$());
 			if (mounter.isBatch()) {
 				batchMounter(builder, mounter);
-				final File destination = new File(gen, "datalake/mounters");
 				classes.put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datalake.mounters." + (mounter.name$() + "Mounter"));
-				writeFrame(destination, mounter.name$() + "Mounter", customize(new MounterTemplate()).render(builder.toFrame()));
+				writeFrame(new File(gen, "datalake/mounters"), mounter.name$() + "Mounter", customize(new MounterTemplate()).render(builder.toFrame()));
+				writeFrame(new File(src, "datalake/mounters"), mounter.name$() + "MounterFunctions", customize(new MounterTemplate()).render(builder.add("src").toFrame()));
 			} else {
 				realtimeMounter(builder, mounter);
 				final File destination = new File(src, "datalake/mounters");
@@ -57,14 +57,13 @@ public class MounterRenderer {
 	}
 
 	private void batchMounter(FrameBuilder builder, Mounter mounter) {
-		builder.add("batch").add(mounter.source().core$().facetList().get(0));
+		builder.add("batch").add(mounter.source().core$().facetList().get(0).replace("#Source", ""));
 		if (mounter.source().isPopulation()) {
 			PopulationSource population = mounter.source().asPopulation();
 			List<PopulationSource.Column> splittedColumns = population.columnList().stream().filter(c -> c.tank().split() != null).collect(toList());
-			if (!splittedColumns.isEmpty()) {
-				builder.add("splittedColumns", splitted(splittedColumns));
-			}
+			if (!splittedColumns.isEmpty()) builder.add("splittedColumns", splitted(splittedColumns));
 			builder.add("column", population.columnList().stream().map(column -> builderOf(column).toFrame()).toArray(Frame[]::new));
+			if (mounter.collect().isFile()) builder.add("format", mounter.collect().asFile().format().name());
 		}
 	}
 
@@ -79,7 +78,6 @@ public class MounterRenderer {
 				.add("type", column.type().name())
 				.add("mounter", column.core$().root().as(Mounter.class).name$());
 		if (column.isId()) builder.add("facet", "id");
-		else if (column.isTimetag()) builder.add("facet", "timetag");
 		return builder;
 	}
 
@@ -87,8 +85,8 @@ public class MounterRenderer {
 		builder.add("realtime");
 		if (!mounter.source().isEvents()) return;
 		EventsSource eventsSource = mounter.source().asEvents();
-		if (eventsSource.eventList().size() == 1) {
-			Schema schema = eventsSource.eventList().get(0).schema();
+		if (eventsSource.selectList().size() == 1) {
+			Schema schema = eventsSource.select(0).tank().asEvent().schema();
 			if (schema != null) {
 				builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName));
 				builder.add("type", new FrameBuilder("schema").add("package", packageName).add("name", schema.name$()));

@@ -1,36 +1,26 @@
 dsl Konos
 
-Client(clientID = "amidas", domain = "amidas.v4") as Ness(url = "{nessUrl}", user = "{nessUser}", password = "{nessPassword}")
-	Mounter(schema=IdentityRegister)
-	Mounter(schema=IdentityDelete)
-	Mounter(schema=IdentityApprove)
-	Mounter(schema=IdentityReject)
-	Mounter(schema=IdentitySave)
-	Mounter(schema=IdentityEnableManager)
-	Mounter(schema=IdentityDisableManager)
+Datalake datalake as Remote(clientID = "amidas", url = "{nessUrl}", user = "{nessUser}", password = "{nessPassword}")
+	Tank(fullName = "authorizationRegister")authorizationRegister
+	Tank(fullName = "identityRegister")identityRegister
+	Tank("dayAheadReport") dayAheadReport
+	Tank("intradayReport") intradayReport
+	Tank("actualGeneration") actualGeneration
 
+Mounter identityRegister
+	Source as Events
+		Select(tank = datalake.identityRegister)
+	Collect
 
-	Mounter(schema=CapabilityAssign)
-	Mounter(schema=CapabilityRelease)
+Mounter() authorizationRegister
+	Source as Events
+		Select(tank = datalake.identityRegister)
+	Collect
 
-	Mounter(schema=WorkerGroupAssign)
-	Mounter(schema=WorkerGroupRelease)
+Feeder(datalake.dayAheadReport)
 
-	Mounter(schema=AuthorizationRegister)
-	Mounter(schema=AuthorizationSave)
-	Mounter(schema=AuthorizationDelete)
-	Feeder(dayAheadReport)
-	Feeder(intradayReport)
-	Feeder(eexMasterDataUnit)
-	Feeder(actualGeneration)
-
-	Mounter(schema = empty) dialog
-	Mounter(schema = empty) survey
-	Mounter(schema = empty) revocation
-	Mounter(schema = AddGoal) addgoal
-	Mounter(schema = RemoveGoal) removeGoal
-
-
+Feeder(tanks = datalake.intradayReport)
+Feeder(tanks = datalake.actualGeneration)
 
 Schema AddGoal
 	Attribute ts as DateTime

@@ -10,15 +10,13 @@ import java.io.File;
 
 @Ignore
 public class AsemedGenerationTest {
-
-	private static final String ASEMED = "asemed";
+	private static final String ASEMED = "asemed2";
 
 	@Test
 	@Ignore
-	public void testEbarGeneration() {
+	public void testAsemedGeneration() {
 		File gen = new File("test-gen", ASEMED);
-		KonosGraph graph = new Graph().loadStashes("Ebar").as(KonosGraph.class);
+		KonosGraph graph = new Graph().loadStashes("Asemed2").as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, ASEMED).execute();
 	}
-
 }
