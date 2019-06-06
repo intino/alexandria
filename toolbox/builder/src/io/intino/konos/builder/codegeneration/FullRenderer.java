@@ -52,12 +52,12 @@ public class FullRenderer {
 	private final KonosGraph graph;
 	private final File gen;
 	private final File src;
-	private File res;
 	private final String packageName;
 	private final String boxName;
 	private final String parent;
 	private final boolean hasModel;
 	private final Map<String, String> classes;
+	private File res;
 
 	public FullRenderer(@Nullable Module module, KonosGraph graph, File src, File gen, File res, String packageName) {
 		this.project = module == null ? null : module.getProject();
@@ -100,7 +100,7 @@ public class FullRenderer {
 
 	private void rest() {
 		new RESTResourceRenderer(project, graph, src, gen, packageName, boxName, classes).execute();
-		new RESTServiceRenderer(graph, gen, res, packageName, boxName,module, classes).execute();
+		new RESTServiceRenderer(graph, gen, res, packageName, boxName, module, classes).execute();
 	}
 
 	private void jmx() {
@@ -119,9 +119,9 @@ public class FullRenderer {
 	}
 
 	private void bus() {
-		if (graph.datalake()== null) return;
+		if (graph.datalake() == null) return;
 		new ProcessRenderer(graph, src, packageName, boxName, classes).execute();
-		new MounterRenderer(graph,gen, src, packageName, boxName, classes).execute();
+		new MounterRenderer(graph, gen, src, packageName, boxName, classes).execute();
 		new FeederRenderer(graph, gen, src, packageName, boxName, classes).execute();
 		new DatalakeRenderer(graph, gen, packageName, boxName).execute();
 	}

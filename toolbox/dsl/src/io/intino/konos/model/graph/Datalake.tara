@@ -10,7 +10,6 @@ Concept:{0..1} Datalake
 	Concept:Named Tank
 		var string fullName
 
-
 Facet TankType on Datalake.Tank
 	sub Event > var Schema schema
 	sub Set > var Datalake.Split split = empty
@@ -21,7 +20,6 @@ Facet DatalakeLocation on Datalake is abstract
 		var string url
 		var string user
 		var string password
-		var string domain
 		var string clientID
 	sub Local
 		var string path
@@ -32,12 +30,13 @@ Facet Mirror on Datalake with Remote
 
 Concept:Named Mounter
 	has:{1..1} Source
+	has:{1..1} Collect
 
 Concept Source is component
 
 Concept Collect is component
 
-Facet MounterType on Mounter is required
+Facet MounterType on Mounter
 	sub Batch
 		Concept:{0..1}:Named Filter
 		Concept:{0..1} Aggregation
@@ -47,9 +46,9 @@ Facet MounterType on Mounter is required
 				var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type
 	sub Realtime
 
-Facet SourceType on Source is abstract required
+Facet SourceType on Source is abstract
 	sub Events
-		Concept Event > var Schema schema
+		Concept:{1..*} Select > var Datalake.Tank tank
 	sub Population
 		Concept:{1..*} Column
 			var Set tank
@@ -57,13 +56,11 @@ Facet SourceType on Source is abstract required
 
 Facet Id on Population.Column
 	var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type = Long
-Facet Timetag on Population.Column
-	var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type = Timetag
 Facet Constant on Population.Column
 	var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type = String
 	var string value
 
-Facet CollectType on Collect is abstract required
+Facet CollectType on Collect is abstract
 	var Datamart datamart
 	sub File > var word:{Arff Tabb Csv} format
 	sub Graph

@@ -45,7 +45,7 @@ def type(tanks)
 
 		}
 
-		$tank+getter
+		$tank+getter...[$NL]
 
 	}
 end
@@ -67,8 +67,15 @@ def type(tank & event) trigger(subscribe)
 	subscriber.subscribe(datalake.eventStore().tank("$fullName")).using(new $name+firstUpperCase~Mounter(box));
 end
 
-def type(tank) trigger(getter)
-	public static TankAccessor $name+firstLowerCase() {
+def type(tank & event) trigger(getter)
+	public static io.intino.ness.datalake.Datalake.EventStore.Tank $name+firstLowerCase() {
 		return this.datalake.eventStore().tank("$fullName");
+	}
+end
+
+
+def type(tank & set) trigger(getter)
+	public static io.intino.ness.datalake.Datalake.SetStore.Tank $name+firstLowerCase() {
+		return this.datalake.setStore().tank("$fullName");
 	}
 end

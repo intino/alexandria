@@ -5,7 +5,7 @@ def type(mounter & src)
 
     import java.util.function.Function;
 
-    public class $name+snakeCaseToCamelCase+FirstUpperCase~MounterSource {
+    public class $name+snakeCaseToCamelCase+FirstUpperCase~MounterFunctions {
 
     	$column+method...[$NL$NL]
 	}
@@ -17,14 +17,19 @@ def type(mounter & realtime)
 	import $package+validPackage.$box+firstUpperCase~Box;
 	import io.intino.alexandria.inl.Message;
 	import io.intino.alexandria.inl.MessageCast;
-    import io.intino.ness.datalake.file.eventsourcing.EventHandler;
+	import io.intino.alexandria.logger.Logger;
+
 	$schemaImport
 
 	public class $name+snakeCaseToCamelCase+FirstUpperCase~Mounter {
 		public $box+validName+firstUpperCase~Box box;
 
 		public void handle(Message message) {
-			[$type+typeClass object = MessageCast.cast(message).as($type+typeClass.class);]
+			[try {
+				$type+typeClass object = MessageCast.cast(message).as($type+typeClass.class);
+			} catch (IllegalAccessException e) {
+				Logger.error(e);
+			}]
 		}
 	}
 end
@@ -42,6 +47,9 @@ def type(mounter & batch & population)
 	import $package+validPackage.box.datalake.$name+snakeCaseToCamelCase+FirstUpperCase~MounterFunctions;
 	import $package+validPackage.$box+firstUpperCase~Box;
 
+	import java.util.function.Predicate;
+	import java.io.IOException;
+
 	public class $name+snakeCaseToCamelCase+FirstUpperCase~Mounter {
 		public $box+validName+firstUpperCase~Box box;
 
@@ -51,7 +59,7 @@ def type(mounter & batch & population)
 				$splittedColumns
 				$column...[$NL]
 				try {
-					tabbBuilder.[$format].save(new File(box.datamart(), "$name+lowercase~-" + timetag.value() + ".tabb"));));
+					tabbBuilder[$format].save(new java.io.File(box.datamart(), "$name+lowercase~-" + timetag.value() + ".tabb"));));
 				} catch (IOException e) {
 					Logger.error(e);
 				}
@@ -74,14 +82,45 @@ def trigger(column)
 	new MappColumnStreamer(box.datalake().setStore().tank(".$fullName").on(timetag).index()).add(new SimpleSelector(".$name", ColumnStream.Type.$type+FirstUpperCase, $mounter+snakeCaseToCamelCase+FirstUpperCase~MounterFunctions.$name$facet()));
 end
 
-def type(column) trigger(method)
-	public static Function<Item, $type+FirstUpperCase> revisionInspeccionId() {
+def type(column) attribute(type:Long) trigger(method)
+	public static Function<Item, $type+FirstUpperCase> $name$facet() {
 		return Item::key;
 	}
 end
 
+def type(column) attribute(type:Double) trigger(method)
+	public static Function<Item, $type+FirstUpperCase> $name$facet() {
+		return i -> $type+FirstUpperCase.valueOf(i.value());
+	}
+end
+
+def type(column) attribute(type:Integer) trigger(method)
+	public static Function<Item, $type+FirstUpperCase> $name$facet() {
+		return i -> Double.valueOf(i.value());
+	}
+end
+
+
+def type(column) attribute(type:Timetag) trigger(method)
+	public static Function<Item, io.intino.alexandria.Timetag> $name$facet() {
+		return i -> io.intino.alexandria.Timetag.of(i.value());
+	}
+end
+
+def type(column) attribute(type:Nominal) trigger(method)
+	public static Function<Item, String> $name$facet() {
+		return Item::value;
+	}
+end
+
+def type(column) trigger(method)
+	public static Function<Item, $type+FirstUpperCase> $name$facet() {
+		return Item::value;
+	}
+end
+
 def trigger(format)
-	add(TabbBuilder.Format.$this+lowerCase)
+	.add(TabbBuilder.Format.$this+lowercase)
 end
 
 def type(schemaImport)
