@@ -15,7 +15,7 @@ public abstract class Cleaner {
 	protected final ElementHelper elementHelper;
 	protected final Settings settings;
 
-	protected static final List<String> ExcludedDirectories = Arrays.asList("displays", ".cache");
+	protected static final List<String> ExcludedDirectories = Arrays.asList("displays", "graph", ".cache");
 
 	public Cleaner(Settings settings) {
 		this.settings = settings;

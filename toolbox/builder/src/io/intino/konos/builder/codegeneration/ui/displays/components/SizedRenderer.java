@@ -10,6 +10,8 @@ import io.intino.konos.model.graph.Component;
 
 public class SizedRenderer<C extends Component> extends ComponentRenderer<C> {
 
+	private static final String OffsetSize = "calc(%.0f%% - %dpx)";
+
 	public SizedRenderer(Settings settings, C component, TemplateProvider provider, Target target) {
 		super(settings, component, provider, target);
 	}
@@ -24,8 +26,8 @@ public class SizedRenderer<C extends Component> extends ComponentRenderer<C> {
 	private void addSize(FrameBuilder result) {
 		if (element.i$(AbstractRelative.class)) {
 			AbstractRelative abstractRelative = element.a$(AbstractRelative.class);
-			result.add("width", abstractRelative.width() + "%");
-			result.add("height", abstractRelative.height() + "%");
+			result.add("width", relativeSizeOf(abstractRelative.width(), abstractRelative.offsetWidth()));
+			result.add("height", relativeSizeOf(abstractRelative.height(), abstractRelative.offsetHeight()));
 		} else if (element.i$(AbstractAbsolute.class)) {
 			AbstractAbsolute abstractAbsolute = element.a$(AbstractAbsolute.class);
 			result.add("width", abstractAbsolute.width() + "px");
@@ -33,4 +35,7 @@ public class SizedRenderer<C extends Component> extends ComponentRenderer<C> {
 		}
 	}
 
+	private String relativeSizeOf(double size, int offset) {
+		return offset != -1 ? String.format(OffsetSize, size, offset) : size + "%";
+	}
 }

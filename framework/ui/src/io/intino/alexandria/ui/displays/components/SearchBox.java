@@ -7,6 +7,9 @@ import io.intino.alexandria.ui.displays.notifiers.SearchBoxNotifier;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
+
+import static java.util.stream.Collectors.toList;
 
 public class SearchBox<DN extends SearchBoxNotifier, B extends Box> extends AbstractSearchBox<B> {
     private SearchListener searchListener;
@@ -23,7 +26,7 @@ public class SearchBox<DN extends SearchBoxNotifier, B extends Box> extends Abst
     }
 
     public SearchBox<DN, B> bindTo(Collection... collections) {
-        this.collections = Arrays.asList(collections);
+        this.collections = Arrays.stream(collections).filter(Objects::nonNull).collect(toList());
         return this;
     }
 

@@ -38,7 +38,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		addOwner(builder);
 		addProperties(builder);
 		if (buildChildren) builder.add("child");
-		builder.add("methodName", element.i$(ConditionalBlock.class) ? "refresh" : "init");
+		builder.add("methodName", element.i$(ConditionalBlock.class) ? "initConditional" : "init");
 		addSpecificTypes(builder);
 		addComponents(element, builder);
 		addReferences(element, builder);

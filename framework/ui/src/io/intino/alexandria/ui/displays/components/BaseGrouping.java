@@ -9,6 +9,7 @@ import io.intino.alexandria.ui.model.datasource.Group;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
 
@@ -33,7 +34,7 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	}
 
 	public BaseGrouping<DN, B> bindTo(Collection... collection) {
-		this.collections = Arrays.asList(collection);
+		this.collections = Arrays.stream(collection).filter(Objects::nonNull).collect(toList());
 		if (collections.size() > 0) this.collections.get(0).onReady((event) -> loadGroups());
 		return this;
 	}

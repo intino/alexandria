@@ -41,6 +41,9 @@ def type(method & multiple)
 		[child.update($objectTypeValue);]
 		return child;
 	}
+	public void clear() {
+	    super.clear("$name");
+	}
 end
 
 def type(method & collection & table)
@@ -83,7 +86,6 @@ def type(component & child & collection) trigger(class)
 			super.$methodName();
 			[$reference...[$NL]]
 			[$heading+child...[$NL]]
-			[$component+initializations...[$NL]]
 		}
 		$methods
 		[$component+class...[$NL$NL]]
@@ -108,10 +110,9 @@ def type(component & child) trigger(class)
 
 		@Override
 		public void $methodName() {
-			super.$methodName();
+			super.init();
 			[$reference...[$NL]]
 			[$component+child...[$NL]]
-			[$component+initializations...[$NL]]
 		}
 		$methods
 		[$component+class...[$NL$NL]]

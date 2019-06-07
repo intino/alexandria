@@ -1,9 +1,9 @@
 import React from "react";
+import Typography from '@material-ui/core/Typography';
 import AbstractMultiple from "../../../gen/displays/components/AbstractMultiple";
 import MultipleNotifier from "../../../gen/displays/notifiers/MultipleNotifier";
 import MultipleRequester from "../../../gen/displays/requesters/MultipleRequester";
 import 'alexandria-ui-elements/res/styles/layout.css';
-import Typography from "./Text";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export default class Multiple extends AbstractMultiple {
@@ -19,7 +19,7 @@ export default class Multiple extends AbstractMultiple {
 		let layout = multiple.arrangement.toLowerCase();
 		let noItemsMessage = multiple.noItemsMessage;
 		let style = this._style(multiple);
-		if (noItemsMessage != null && noItemsMessage !== "" && multiple.instances.length <= 0) return (<Typography variant="body1">{noItemsMessage}</Typography>);
+		if (noItemsMessage != null && noItemsMessage !== "" && this.instances(multiple.instances).length <= 0) return (<Typography style={{margin:'5px 0'}} variant="body1">{noItemsMessage}</Typography>);
 		return (<div className={"layout wrap " + layout}>{this.renderInstances(multiple.instances, this._instanceProps(), style)}</div>);
 	};
 

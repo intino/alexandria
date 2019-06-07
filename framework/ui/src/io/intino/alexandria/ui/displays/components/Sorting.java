@@ -7,6 +7,9 @@ import io.intino.alexandria.ui.displays.notifiers.SortingNotifier;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
+
+import static java.util.stream.Collectors.toList;
 
 public class Sorting<DN extends SortingNotifier, B extends Box> extends AbstractSorting<B> {
     private SelectListener selectListener;
@@ -23,7 +26,7 @@ public class Sorting<DN extends SortingNotifier, B extends Box> extends Abstract
     }
 
     public Sorting<DN, B> bindTo(Collection... collections) {
-        this.collections = Arrays.asList(collections);
+        this.collections = Arrays.stream(collections).filter(Objects::nonNull).collect(toList());
         return this;
     }
 
