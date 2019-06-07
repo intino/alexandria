@@ -89,7 +89,7 @@ def type(renderTag & block)
 end
 
 def type(renderTag & item)
-	<div style={this.props.style}>
+	<div style={{width:"100%",...this.props.style}}>
 end
 
 def type(renderTag)

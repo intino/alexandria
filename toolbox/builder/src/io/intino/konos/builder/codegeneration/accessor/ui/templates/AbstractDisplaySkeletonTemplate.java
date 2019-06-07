@@ -22,7 +22,7 @@ public class AbstractDisplaySkeletonTemplate extends Template {
 			rule().condition((type("rendertag")), (trigger("end"))).output(literal("</React.Fragment>")),
 			rule().condition((allTypes("template","rendertag"))).output(literal("<UiBlock")).output(expression().output(mark("properties", "common")).output(mark("properties", "specific"))).output(literal(">")),
 			rule().condition((allTypes("rendertag","block"))).output(literal("<UiBlock")).output(expression().output(mark("properties", "common")).output(mark("properties", "specific"))).output(literal(">")),
-			rule().condition((allTypes("item","rendertag"))).output(literal("<div style={this.props.style}>")),
+			rule().condition((allTypes("item","rendertag"))).output(literal("<div style={{width:\"100%\",...this.props.style}}>")),
 			rule().condition((type("rendertag"))).output(literal("<React.Fragment>")),
 			rule().condition((allTypes("rendertagattributes","block"))).output(mark("properties", "common")).output(mark("properties", "specific")),
 			rule().condition((type("rendertagattributes"))),

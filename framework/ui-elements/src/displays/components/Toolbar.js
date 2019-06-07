@@ -9,7 +9,7 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	toolbar : {
-		padding: "10px"
+		padding: "10px 0"
 	},
 	operation : {
 		marginRight: "10px"

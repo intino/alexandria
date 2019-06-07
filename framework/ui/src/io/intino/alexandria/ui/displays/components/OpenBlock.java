@@ -24,7 +24,7 @@ public class OpenBlock<DN extends OpenBlockNotifier, B extends Box> extends Abst
 	}
 
 	public void execute() {
-		this.block.show();
+		if (this.block != null) this.block.show();
 		if (openListener != null) openListener.accept(new Event(this));
 	}
 }

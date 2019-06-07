@@ -5,17 +5,17 @@ import io.intino.alexandria.ui.displays.Display;
 import java.util.List;
 
 public class SelectionEvent extends Event {
-	private final List<String> selection;
+	private final List selection;
 
-	public SelectionEvent(Display sender, List<String> selection) {
+	public SelectionEvent(Display sender, List selection) {
 		super(sender);
 		this.selection = selection;
 	}
 
-	public String first() { return selection.size() > 0 ? selection.get(0) : null; }
+	public <T> T first() { return selection.size() > 0 ? (T) selection.get(0) : null; }
 
-	public List<String> selection() {
-		return selection;
+	public <T> List<T> selection() {
+		return (List<T>) selection;
 	}
 
 }

@@ -37,6 +37,8 @@ Facet Absolute extends AbstractAbsolute on OtherComponents.Header
 Facet AbstractRelative is abstract
 	var double:{%} width = 100%
 	var double:{%} height = 100%
+	var integer:{px} offsetWidth = -1px
+	var integer:{px} offsetHeight = -1px
 Facet Relative extends AbstractRelative on Block
 Facet Relative extends AbstractRelative on Template
 Facet Relative extends AbstractRelative on DataComponents.Image
@@ -65,7 +67,7 @@ Facet Animated extends Behavior on Block
 
 	Concept:{0..1} Transition
 		var word:{ Left Top Bottom Right } direction = Right
-		var integer:{ Milliseconds } duration = 500 Milliseconds
+		var integer:{ Millis } duration = 500 Millis
 
 Facet AbstractMultiple is abstract
 	var string noItemsMessage = empty

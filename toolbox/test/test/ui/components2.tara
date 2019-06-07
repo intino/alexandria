@@ -4,10 +4,12 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(homeTemplate)
 
 Template homeTemplate
-	Block block1 as Animated(transition=Slide,transitionDirection=Left)
-	Block block2 as Animated(transition=Slide)
-	Block block3 as Animated(transition=Zoom)
-	Block usersBlock as Relative(height=100%) Conditional Animated
+	Block block4 as Relative(height=100%,offsetHeight=100px) Conditional Animated
+	Block block5 as Relative(width=80%,offsetWidth=100px) Conditional Animated
+	Block block6 as Relative(offsetHeight=80px) Conditional Animated
+	Stamp(template = template1) stampList as Multiple
+
+Template template1
 
 Theme theme1
 	type = Normal

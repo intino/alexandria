@@ -9,6 +9,10 @@ import Block from "./Block";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
+	label: {
+		color: theme.palette.grey.primary,
+		marginRight: "5px"
+	},
 	prefix : {
 		color: theme.palette.grey.primary,
 		fontSize: "10pt",

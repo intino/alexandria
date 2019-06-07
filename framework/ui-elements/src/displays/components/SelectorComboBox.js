@@ -1,5 +1,6 @@
 import React from "react";
 import { withStyles } from '@material-ui/core/styles';
+import Typography from "@material-ui/core/Typography";
 import AbstractSelectorComboBox from "../../../gen/displays/components/AbstractSelectorComboBox";
 import SelectorComboBoxNotifier from "../../../gen/displays/notifiers/SelectorComboBoxNotifier";
 import SelectorComboBoxRequester from "../../../gen/displays/requesters/SelectorComboBoxRequester";
@@ -31,9 +32,12 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 	render() {
 		const { classes } = this.props;
 		const items = React.Children.map(this.props.children, (option, i) => { return { value: this._label(option), label: this._label(option), item: option }});
+		const multiple = this.props.multipleSelection;
+		const label = this.props.label;
 		return (
 			<div className={classes.container} style={this.style()}>
-				<Select isMulti={this.props.multipleSelection} isSearchable closeMenuOnSelect={false}
+				{label != null && label !== "" ? <Typography variant={this.variant("subtitle1")}>{label}</Typography> : undefined }
+				<Select isMulti={multiple} isSearchable closeMenuOnSelect={multiple ? false : true}
 						placeholder={this.selectMessage()} options={items}
 						className="basic-multi-select" classNamePrefix="select"
 						components={{ Option: this.renderOption.bind(this)}}
@@ -47,7 +51,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		const item = data.item;
 		const { classes } = this.props;
 		return !isDisabled ? (
-			<components.Option {...props} className={classes.container}>{item}<div className={classes.readonly}></div></components.Option>
+			<components.Option {...props} className={classes.container}>{item}</components.Option>
 		) : null;
 	};
 
@@ -63,7 +67,8 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 	};
 
 	_label = (option) => {
-		return option.props.label != null && option.props.label !== "" ? option.props.label : this.translate("no label");
+		const label = option.props.label != null && option.props.label !== "" ? option.props.label : option.props.value;
+		return label != null ? label : this.translate("no label");
 	}
 
 }

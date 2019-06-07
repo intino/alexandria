@@ -99,7 +99,16 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     }
 
     public void selection(String[] selection) {
-        selectionListeners.forEach(l -> l.accept(new SelectionEvent(this, Arrays.asList(selection))));
+        selectionListeners.forEach(l -> l.accept(new SelectionEvent(this, itemsOf(selection))));
+    }
+
+    private List<Object> itemsOf(String[] selectionArray) {
+        List<String> selection = Arrays.asList(selectionArray);
+        return children().stream().filter(d -> selection.contains(d.id())).map(this::itemOf).collect(toList());
+    }
+
+    protected Object itemOf(Display display) {
+        return (display instanceof CollectionItemDisplay) ? ((CollectionItemDisplay)display).item() : null;
     }
 
     public void clear() {

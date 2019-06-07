@@ -39,8 +39,8 @@ const CollectionBehavior = (collection) => {
         return (<InfiniteLoader isItemLoaded={isItemLoaded} itemCount={self.collection.state.itemCount}
                                 loadMoreItems={self.loadMoreItems.bind(self, items)}
                                 threshold={threshold}>
-                        {({ onItemsRendered, ref }) => (self.renderList(items, height, width, onItemsRendered, ref))}
-                </InfiniteLoader>
+                {({ onItemsRendered, ref }) => (self.renderList(items, height, width, onItemsRendered, ref))}
+            </InfiniteLoader>
         );
     };
 
@@ -98,7 +98,7 @@ const CollectionBehavior = (collection) => {
                 visible: self.itemsIds(instances, itemsWindow.visibleStartIndex, itemsWindow.visibleStopIndex)
             });
             self.collection.rendering = false;
-        }, 50);
+        }, 200);
     };
 
     self.width = (index) => {
@@ -128,7 +128,7 @@ const CollectionBehavior = (collection) => {
         else view = isScrolling ? self.scrollingView(width, classes) : (<div style={style} key={index} className={classNames(classes.itemView, "layout horizontal center")}>&nbsp;</div>);
 
         var selectable = self.collection.props.selection != null;
-        var multiple = self.collection.props.selection != null && self.collection.props.selection === "multiple";
+        var multiple = self.isMultipleSelection();
         var selecting = self.collection.state.selection.length > 0;
         const id = item != null ? item.pl.id : undefined;
         return (<div onClick={(selectable && !multiple) && self.handleSelect.bind(self, id)} style={style} key={index} className={classNames(classes.itemView, "layout horizontal center", selectable ? classes.selectable : undefined, selecting ? classes.selecting : undefined)}>
@@ -136,6 +136,10 @@ const CollectionBehavior = (collection) => {
                 {view}
             </div>
         );
+    };
+
+    self.isMultipleSelection = () => {
+        return self.collection.props.selection != null && self.collection.props.selection === "multiple";
     };
 
     self.refreshItemsRendered = (items, callback, { overscanStartIndex, overscanStopIndex, visibleStartIndex, visibleStopIndex }) => {
@@ -147,11 +151,11 @@ const CollectionBehavior = (collection) => {
 
     self.scrolling = (instances, { scrollDirection, scrollOffset, scrollUpdateWasRequested }) => {
         if (self.collection.scrollingTimeout != null) window.clearTimeout(self.collection.scrollingTimeout);
-        if (self.collection.rendering) return;
+        // if (self.collection.rendering) return;
         self.collection.scrollingTimeout = window.setTimeout(() => {
             if (self.collection.itemsWindow == null) return;
             self.refreshItemsRendered(instances, null, self.collection.itemsWindow);
-        }, 300);
+        }, 50);
     };
 
     self.scrollingView = (width, classes) => {
@@ -175,18 +179,25 @@ const CollectionBehavior = (collection) => {
     };
 
     self.updateSelection = (item) => {
-        var selection = self.collection.state.selection;
+        const multiple = self.isMultipleSelection();
+        var selection = multiple ? self.collection.state.selection : [];
         var index = selection.indexOf(item);
         if (index !== -1) selection.splice(index, 1);
         else selection.push(item);
-        self.collection.setState({selection : selection});
-        self.refreshItemsRendered(self.items(), null, self.collection.itemsWindow);
-        if (self.collection.selectTimeout != null) window.clearTimeout(self.collection.selectTimeout);
-        self.collection.selectTimeout = window.setTimeout(() => self.collection.requester.selection(selection), 50);
+        return selection;
     };
 
     self.handleSelect = (item, e) => {
-        self.updateSelection(item);
+        const multiple = self.isMultipleSelection();
+        const selection = self.updateSelection(item);
+
+        if (multiple) {
+            self.collection.setState({selection: selection});
+            self.refreshItemsRendered(self.items(), null, self.collection.itemsWindow);
+        }
+
+        if (self.collection.selectTimeout != null) window.clearTimeout(self.collection.selectTimeout);
+        self.collection.selectTimeout = window.setTimeout(() => self.collection.requester.selection(selection), 50);
     };
 
     self.handlePage = (e, page) => {
