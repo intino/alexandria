@@ -47,6 +47,7 @@ public class DocsTemplate extends AbstractDocsTemplate<AlexandriaUiBox> {
     private void addOtherWidgets() {
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Block));
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Chart));
+        body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Dashboard));
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Slider));
     }
 

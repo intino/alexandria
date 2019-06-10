@@ -12,6 +12,7 @@ import io.intino.alexandria.ui.documentation.model.operation.DownloadWidget;
 import io.intino.alexandria.ui.documentation.model.operation.ExportWidget;
 import io.intino.alexandria.ui.documentation.model.other.BlockWidget;
 import io.intino.alexandria.ui.documentation.model.other.ChartWidget;
+import io.intino.alexandria.ui.documentation.model.other.DashboardWidget;
 import io.intino.alexandria.ui.documentation.model.other.SliderWidget;
 
 public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
@@ -50,6 +51,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         imageExamples.visible(widget instanceof ImageWidget);
         dateExamples.visible(widget instanceof DateWidget);
         chartExamples.visible(widget instanceof ChartWidget);
+        dashboardExamples.visible(widget instanceof DashboardWidget);
         blockExamples.visible(widget instanceof BlockWidget);
         listExamples.visible(widget instanceof ListWidget);
         tableExamples.visible(widget instanceof TableWidget);

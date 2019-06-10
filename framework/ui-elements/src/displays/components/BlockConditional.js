@@ -48,7 +48,7 @@ export default class BlockConditional extends AbstractBlockConditional {
 		if (result == null) result = {};
 		result.display = this.state.visible ? "block" : "none";
 		if (this._widthDefined()) result.width = this.props.width;
-		if (this._heightDefined()) result.height = this.props.height;
+		// if (this._heightDefined()) result.height = this.props.height;
 		return result;
 	};
 

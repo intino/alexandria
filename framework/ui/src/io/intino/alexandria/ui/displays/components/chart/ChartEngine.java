@@ -49,7 +49,6 @@ public class ChartEngine {
 	}
 
 	private void sendInput(RConnection connection, Dataframe input) {
-
 	}
 
 	public void put(RConnection connection, InputStream content, String name) {

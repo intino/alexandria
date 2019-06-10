@@ -1,0 +1,21 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) dashboardExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=50%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filled)
+				Dashboard dashboard1
+					script = "data/dashboard/app.R"
+					Parameter("param1", "abcd")
+
+				Block > Text dashboard1Code as Code(language=Html)
+						value
+							=========
+							Dashboard dashboard1
+								script \= "data/dashboard/app.R"
+								Parameter("param1", "abcd")
+							=========

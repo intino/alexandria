@@ -4,10 +4,11 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(homeTemplate)
 
 Template homeTemplate
-	Block block4 as Relative(height=100%,offsetHeight=100px) Conditional Animated
-	Block block5 as Relative(width=80%,offsetWidth=100px) Conditional Animated
-	Block block6 as Relative(offsetHeight=80px) Conditional Animated
-	Stamp(template = template1) stampList as Multiple
+	Dashboard dashboard1 as Relative(width=100%,height=100%)
+		homeDirectory = "/users/mcaballero"
+		startPort = 10000
+		script = "/a/b.R"
+		Parameter(name="a",value="value of a")
 
 Template template1
 
@@ -17,6 +18,7 @@ Theme theme1
 	Secondary("#ff9100")
 	Error("#f44336")
 
+Format("") formatoIncorrecto
 Format("color:'#B71C1C',textShadow:'2px 2px 2px #fff'") h1
 Format("color:'black',textShadow:'2px 2px 2px #fff'") h2
 Format("") h3

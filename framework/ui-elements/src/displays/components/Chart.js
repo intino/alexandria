@@ -38,20 +38,20 @@ class Chart extends AbstractChart {
 	render() {
 		const { classes } = this.props;
 		const error = this.state.error;
-		const value = this.state.value != undefined && this.state.value !== "" ? this.state.value : undefined;
+		const value = this.state.value !== undefined && this.state.value !== "" ? this.state.value : undefined;
 
-		if (value != undefined && this.container.current != null)
+		if (value !== undefined && this.container.current != null)
 			this.height = this.container.current.offsetHeight;
 
-		if (error != undefined)
+		if (error !== undefined)
 			return (<Typography style={this.style()} className={classes.error}>{error}</Typography>);
 
 		return (
 			<Suspense fallback={<div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><Spinner/></div>}>
 				<div style={this.style()} ref={this.container}>
 					{this.state.loading ? <div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><Spinner/></div> : undefined}
-					{this.state.mode === "Image" && !this.state.loading && value != undefined ? <img style={ { width: this._width() } } src={"data:image/png;base64, " + value}></img> : undefined }
-					{this.state.mode === "Html" && !this.state.loading && value != undefined ? <ChartPlotly data={value} width={this._width()}/> : undefined}
+					{this.state.mode === "Image" && !this.state.loading && value !== undefined ? <img style={ { width: this._width() } } src={"data:image/png;base64, " + value}></img> : undefined }
+					{this.state.mode === "Html" && !this.state.loading && value !== undefined ? <ChartPlotly data={value} width={this._width()}/> : undefined}
 				</div>
 			</Suspense>
 		);

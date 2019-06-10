@@ -9,6 +9,7 @@ import io.intino.alexandria.ui.documentation.model.data.*;
 import io.intino.alexandria.ui.documentation.model.operation.*;
 import io.intino.alexandria.ui.documentation.model.other.BlockWidget;
 import io.intino.alexandria.ui.documentation.model.other.ChartWidget;
+import io.intino.alexandria.ui.documentation.model.other.DashboardWidget;
 import io.intino.alexandria.ui.documentation.model.other.SliderWidget;
 
 import java.util.Arrays;
@@ -22,7 +23,7 @@ public class Model {
 	public enum WidgetType {
 		Text, Number, Image, File, Date, Chart, Block, List, Table, Task, OpenPage, OpenBlock, Export,
 		Download, DownloadSelection,
-		Grouping, Sorting, SearchBox, Map, Slider;
+		Grouping, Sorting, SearchBox, Map, Slider, Dashboard;
 
 		public static WidgetType from(String type) {
 			WidgetType[] values = values();
@@ -44,6 +45,7 @@ public class Model {
 		map.put(WidgetType.File, new FileWidget());
 		map.put(WidgetType.Date, new DateWidget());
 		map.put(WidgetType.Chart, new ChartWidget());
+		map.put(WidgetType.Dashboard, new DashboardWidget());
 		map.put(WidgetType.Block, new BlockWidget());
 		map.put(WidgetType.List, new ListWidget());
 		map.put(WidgetType.Map, new MapWidget());

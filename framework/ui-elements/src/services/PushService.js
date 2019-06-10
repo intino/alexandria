@@ -43,12 +43,7 @@ const PushService = (function () {
         }
 
         this.ws.notifyClose = function() {
-            var cottonNetwork = document.querySelector("cotton-push-network");
-            if (cottonNetwork == null) {
-                cottonNetwork = document.createElement("cotton-push-network");
-                document.body.appendChild(cottonNetwork);
-            }
-            cottonNetwork.open();
+            if (service.onCloseListener) service.onCloseListener();
             callbacks = {};
         };
     };
@@ -68,6 +63,10 @@ const PushService = (function () {
 
     service.send = function(message) {
         this.ws.send(JSON.stringify(message));
+    };
+
+    service.onClose = function(listener) {
+        this.onCloseListener = listener;
     };
 
     function callback(name) {

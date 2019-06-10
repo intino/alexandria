@@ -327,6 +327,13 @@ def type(properties & chart) trigger(specific)
 	[output("$output");]
 end
 
+def type(properties & dashboard) trigger(specific)
+    [$script+resourceMethod]
+	[homeDirectory("$homeDirectory");]
+	[startPort($startPort);]
+	[$parameter...[$NL]]
+end
+
 def type(properties & number) trigger(specific)
 	[value($value);]
 	[min($min);]
@@ -366,6 +373,10 @@ end
 
 def type(inputMethod & csv) trigger(inputMethod)
 	input(new io.intino.alexandria.ui.displays.components.chart.datasources.CSVDataSource($owner.class.getResource("$value")));
+end
+
+def type(parameter & dashboard)
+	add(new io.intino.alexandria.ui.displays.components.dashboard.Parameter("$name", "$value");
 end
 
 def type(inputMethod & source) trigger(inputMethod)
