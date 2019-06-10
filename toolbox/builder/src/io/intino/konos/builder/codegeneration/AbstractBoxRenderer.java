@@ -46,16 +46,16 @@ public class AbstractBoxRenderer {
 	}
 
 	public void execute() {
-		FrameBuilder builder = new FrameBuilder("box");
+		FrameBuilder root = new FrameBuilder("box");
 		final String name = name();
-		builder.add("name", name);
-		builder.add("package", packageName);
-		if (hasModel) builder.add("tara", name);
-		parent(builder);
-		services(builder, name);
-		tasks(builder, name);
-		dataLake(builder, name);
-		Commons.writeFrame(gen, "AbstractBox", template().render(builder.toFrame()));
+		root.add("name", name);
+		root.add("package", packageName);
+		if (hasModel) root.add("tara", name);
+		parent(root);
+		services(root, name);
+		tasks(root, name);
+		dataLake(root, name);
+		Commons.writeFrame(gen, "AbstractBox", template().render(root.toFrame()));
 		notifyNewParameters();
 	}
 
@@ -69,11 +69,11 @@ public class AbstractBoxRenderer {
 
 	private void dataLake(FrameBuilder root, String name) {
 		if (graph.datalake() == null) return;
-		final FrameBuilder frame = new FrameBuilder().add("package", packageName).add("configuration", name);
+		final FrameBuilder frame = new FrameBuilder("datalake").add("package", packageName).add("configuration", name);
 		frame.add("feeder", graph.feederList().stream().map(this::frameOf).toArray(Frame[]::new));
 		if (!graph.procedureList().isEmpty())
 			frame.add("procedure", new FrameBuilder().add("package", packageName).add("configuration", name).toFrame()); //TODO
-		root.add("datalake", frame);
+		root.add("datalake", frame.toFrame());
 	}
 
 	private Frame frameOf(Feeder feeder) {

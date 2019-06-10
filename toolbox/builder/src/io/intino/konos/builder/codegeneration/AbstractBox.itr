@@ -18,7 +18,7 @@ def type(box)
 	public abstract class AbstractBox extends [$hasUi+uiBox?io.intino.alexandria.core.Box] {
 		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;
 		[$service+field...[$NL]]
-		[$dataLake+field...[$NL]]
+		$datalake+field
 		[$task+field]
         [protected Map<String, Soul> uiSouls = new java.util.HashMap<>();$hasUi+hide]
 	    [private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();$hasUi+hide]
@@ -61,16 +61,16 @@ def type(box)
 
 		public void close() {
 			if(owner != null) owner.close();
-			$spark...[$NL]
-			$service+quit...[$NL]
-			$dataLake+quit...[$NL]
+			[$spark...[$NL]]
+			[$service+quit...[$NL]]
+			[$datalake+quit]
 		}
 
 		[$hasUi+registerSoul]
 		[$service+getter...[$NL$NL]]
 		[$hasUi+authService]
 		[$hasUi+editorService]
-		[$datalake+getter...[$NL$NL]]
+		[$datalake+getter]
 		[$task+getter...[$NL$NL]]
 
 		private void initRESTServices() {
@@ -95,14 +95,14 @@ def type(box)
 		}
 
 		private void initDatalake() {
-			$dataLake+init...[$NL]
-		}
-		[
-		private io.intino.ness.core.Datalake datalakeFrom(String nessUrl, String nessUser, String nessPassword, String clientId) {
+			$datalake+init...
+		}aaaaa
+
+		[private io.intino.ness.core.Datalake datalakeFrom(String nessUrl, String nessUser, String nessPassword, String clientId) {
 			if (nessUrl.startsWith("file://")) return new io.intino.alexandria.nessaccessor.local.LocalDatalake(new java.io.File(nessUrl.replace("file://", "")));
 			return new io.intino.alexandria.nessaccessor.tcp.TCPDatalake(nessUrl, nessUser, nessPassword, clientId);
-		}$datalake+hide
-		]
+		}$datalake+hide]
+
 		private void initTasks() {
 			[$task+init...[$NL]]
 		}
@@ -143,7 +143,7 @@ def type(service & rest) trigger(setup)
 end
 
 def type(datalake) trigger(setup)
-	this.datalake = new $package.box.datalake.Datalake(this);
+	this.datalake = new $package.datalake.Datalake(this);
 end
 
 def type(service & jmx) trigger(jmx)
@@ -196,7 +196,7 @@ def type(service & jms) trigger(init)
 end
 
 
-def type(dataLake) trigger(init)
+def type(datalake) trigger(init)
 	this.datalake.connect("");
 	registerFeeders();
 	Logger.info("Ness connection: started!");
@@ -251,7 +251,7 @@ def type(task) trigger(field)
 end
 
 def type(datalake) trigger(field)
- 	private $package.box.datalake.Datalake datalake;
+ 	private $package.datalake.Datalake datalake;
 end
 
 def type(service & jms) trigger(getter)
@@ -260,8 +260,8 @@ def type(service & jms) trigger(getter)
 	}
 end
 
-def type(dataLake) trigger(getter)
-	public $package.box.datalake.Datalake datalake() {
+def type(datalake) trigger(getter)
+	public $package.datalake.Datalake datalake() {
 		return this.datalake;
 	}
 
@@ -295,7 +295,7 @@ def type(service) type(jms) trigger(quit)
 	if ($name+SnakeCaseToCamelCase+firstlowerCase != null) $name+SnakeCaseToCamelCase+firstlowerCase.closeSession();
 end
 
-def type(dataLake) trigger(quit)
+def type(datalake) trigger(quit)
 	if (datalake != null) datalake.disconnect();
 end
 
