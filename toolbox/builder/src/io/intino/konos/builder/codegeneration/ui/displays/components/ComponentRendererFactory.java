@@ -30,7 +30,8 @@ public class ComponentRendererFactory {
 		if (component.i$(OtherComponents.Selector.class)) return (T) new SelectorRenderer(settings, component.a$(OtherComponents.Selector.class), provider, target);
 		if (component.i$(OtherComponents.Slider.class)) return (T) new SliderRenderer(settings, component.a$(OtherComponents.Slider.class), provider, target);
 		if (component.i$(Block.class)) return (T) new BlockRenderer(settings, component.a$(Block.class), provider, target);
-		if (component.i$(Chart.class)) return (T) new ChartRenderer(settings, component.a$(Chart.class), provider, target);
+		if (component.i$(OtherComponents.Chart.class)) return (T) new ChartRenderer(settings, component.a$(Chart.class), provider, target);
+		if (component.i$(OtherComponents.Dashboard.class)) return (T) new DashboardRenderer(settings, component.a$(OtherComponents.Dashboard.class), provider, target);
 
 		if (component.i$(Template.class)) return (T) new TemplateRenderer(settings, component.a$(Template.class), provider, target);
 		if (component.i$(Header.class)) return (T) new HeaderRenderer(settings, component.a$(Header.class), provider, target);

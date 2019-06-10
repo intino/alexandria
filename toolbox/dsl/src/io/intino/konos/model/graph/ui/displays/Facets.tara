@@ -32,6 +32,7 @@ Facet Absolute extends AbstractAbsolute on Template
 Facet Absolute extends AbstractAbsolute on DataComponents.Image
 Facet Absolute extends AbstractAbsolute on DataComponents.File
 Facet Absolute extends AbstractAbsolute on OtherComponents.Chart
+Facet Absolute extends AbstractAbsolute on OtherComponents.Dashboard
 Facet Absolute extends AbstractAbsolute on OtherComponents.Header
 
 Facet AbstractRelative is abstract
@@ -44,6 +45,7 @@ Facet Relative extends AbstractRelative on Template
 Facet Relative extends AbstractRelative on DataComponents.Image
 Facet Relative extends AbstractRelative on DataComponents.File
 Facet Relative extends AbstractRelative on OtherComponents.Chart
+Facet Relative extends AbstractRelative on OtherComponents.Dashboard
 Facet Relative extends AbstractRelative on OtherComponents.Header
 
 Facet Paper on Block
@@ -68,6 +70,8 @@ Facet Animated extends Behavior on Block
 	Concept:{0..1} Transition
 		var word:{ Left Top Bottom Right } direction = Right
 		var integer:{ Millis } duration = 500 Millis
+Facet CollapseTriggerer extends Behavior on Component
+	var Collapsible for
 
 Facet AbstractMultiple is abstract
 	var string noItemsMessage = empty

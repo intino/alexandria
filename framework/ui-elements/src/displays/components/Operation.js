@@ -3,7 +3,6 @@ import AbstractOperation from "../../../gen/displays/components/AbstractOperatio
 import OperationNotifier from "../../../gen/displays/notifiers/OperationNotifier";
 import OperationRequester from "../../../gen/displays/requesters/OperationRequester";
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, IconButton, Typography } from "@material-ui/core";
-import Spinner from "./Spinner";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export const MuiIcon = React.lazy(() => {
@@ -44,7 +43,7 @@ export default class Operation extends AbstractOperation {
 
 	render = () => {
 		return (
-			<Suspense fallback={<div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><Spinner/></div>}>
+			<Suspense fallback={<div></div>}>
 				{this.renderOperation()}
 			</Suspense>
 		);
@@ -98,7 +97,8 @@ export default class Operation extends AbstractOperation {
 	renderMaterialIconButton = () => {
 		const {classes} = this.props;
 		return (<IconButton color="primary" aria-label={this._title()} disabled={this._disabled()}
-							onClick={this.handleClick.bind(this)} className={classes.materialIconButton}>
+							onClick={this.handleClick.bind(this)} className={classes.materialIconButton}
+							style={this.style()} >
 				<MuiIcon icon={this._icon()}/>
 			</IconButton>
 		);

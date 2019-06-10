@@ -130,6 +130,15 @@ Concept OtherComponents
 		var word:{Image Html} output = Html
 		var string query
 
+	Concept Dashboard extends Component
+		var string script
+		var integer startPort = 4000
+		var string homeDirectory = "$HOME"
+
+		Concept Parameter
+			var string name
+			var string value
+
 	Concept Snackbar extends Component
 		var word:{TopCenter TopRight BottomRight BottomCenter BottomLeft TopLeft} position = BottomCenter
 		has Component
