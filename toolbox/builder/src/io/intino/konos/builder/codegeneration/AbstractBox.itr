@@ -265,13 +265,13 @@ def type(datalake) trigger(getter)
 		return this.datalake;
 	}
 
-	public io.intino.alexandria.core.Feeders feeders() {
+	[public io.intino.alexandria.core.Feeders feeders() {
 		return io.intino.alexandria.core.Feeders.get();
 	}
 
 	private void registerFeeders() {
 		$feeder...[$NL]
-	}
+	}]
 end
 
 def trigger(feeder)

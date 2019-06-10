@@ -24,10 +24,6 @@ Facet DatalakeLocation on Datalake is abstract
 	sub Local
 		var string path
 
-Facet Mirror on Datalake with Remote
-	var string path
-	var integer:{Months} period
-
 Concept:Named Mounter
 	has:{1..1} Source
 	has:{1..1} Collect
