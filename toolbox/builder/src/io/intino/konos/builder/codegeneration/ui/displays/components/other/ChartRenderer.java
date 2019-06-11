@@ -17,7 +17,7 @@ public class ChartRenderer extends SizedRenderer<Chart> {
 	@Override
 	public FrameBuilder properties() {
 		FrameBuilder result = super.properties();
-		result.add("query", element.query());
+		result.add("query", clean(element.query()));
 		addInput(result);
 		addOutput(result);
 		return result;
@@ -44,6 +44,12 @@ public class ChartRenderer extends SizedRenderer<Chart> {
 	private void addOutput(FrameBuilder builder) {
 		Chart.Output output = element.output();
 		builder.add("output", output.name());
+	}
+
+	private String clean(String script) {
+		return script.replaceAll("\\n", "\\\\n")
+				.replaceAll("\\t", "\\\\t")
+				.replaceAll("\"", "\\\\\"");
 	}
 
 	@Override

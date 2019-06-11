@@ -376,7 +376,7 @@ def type(inputMethod & csv) trigger(inputMethod)
 end
 
 def type(parameter & dashboard)
-	add(new io.intino.alexandria.ui.displays.components.dashboard.Parameter("$name", "$value");
+	add("$name", "$value");
 end
 
 def type(inputMethod & source) trigger(inputMethod)

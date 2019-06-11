@@ -44,6 +44,7 @@ Component selectorMenu as Decorated
 	Request select as Integer
 
 Component selectorComboBox as Decorated
+	Notification refreshSelection as Text List
 	Request updateSelection as Text List
 
 Schema SelectorMenuSelection

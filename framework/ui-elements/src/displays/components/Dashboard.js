@@ -41,7 +41,7 @@ class Dashboard extends AbstractDashboard {
 			return (<Typography style={this.style()} className={classes.error}>{error}</Typography>);
 
 		return (
-			<div style={this.style()} ref={this.container}>
+			<div className={classes.container} style={this.style()} ref={this.container}>
 				{this.state.loading ? <div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><Spinner/></div> : undefined}
 				{(!this.state.loading && location != null) && <iframe className={classes.container} src={this.state.location}></iframe>}
 				{(!this.state.loading && location == null) && <div>{this.translate("No dashboard script defined")}</div>}

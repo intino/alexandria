@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SelectorComboBox<DN extends SelectorComboBoxNotifier, B extends Box> extends AbstractSelectorComboBox<B> {
-	private java.util.List<Object> selection = new ArrayList<>();
+	private java.util.List<String> selection = new ArrayList<>();
 	private boolean multipleSelection = false;
 	private List<SelectionListener> onSelectionListeners = new ArrayList<>();
 
@@ -26,6 +26,11 @@ public class SelectorComboBox<DN extends SelectorComboBoxNotifier, B extends Box
 	public SelectorComboBox<DN, B> onSelect(SelectionListener selectionListener) {
 		this.onSelectionListeners.add(selectionListener);
 		return this;
+	}
+
+	public void select(String... options) {
+		this.selection = Arrays.asList(options);
+		notifier.refreshSelection(selection);
 	}
 
 	public void updateSelection(String[] selection) {

@@ -31,12 +31,6 @@ public class DashboardRenderer extends SizedRenderer<Dashboard> {
 		return frame;
 	}
 
-	private String clean(String script) {
-		return script.replaceAll("\\n", "\\\\n")
-					 .replaceAll("\\t", "\\\\t")
-					 .replaceAll("\"", "\\\\\"");
-	}
-
 	@Override
 	protected String className(Class clazz) {
 		return super.className(clazz).replace("dashboard", "");

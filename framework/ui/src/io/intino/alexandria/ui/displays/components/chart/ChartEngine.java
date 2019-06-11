@@ -41,6 +41,7 @@ public class ChartEngine {
 			return output;
 
 		} catch (REngineException | IOException | REXPMismatchException e) {
+			Logger.error(e);
 			throw new RuntimeException(e.getMessage());
 		}
 		finally {

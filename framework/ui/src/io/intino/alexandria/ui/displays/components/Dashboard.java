@@ -8,9 +8,10 @@ import org.apache.commons.codec.digest.DigestUtils;
 import spark.utils.IOUtils;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,9 +22,10 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
 
     private static int freePort = 4000;
     private static int startPort = 4000;
-    private static java.util.Map<String, ProcessInstance> processMap = new HashMap<>();
+    private static java.util.Map<String, ProcessInstance> instanceMap = new HashMap<>();
     private static final String PortTag = "port";
     private static final int MaxPort = 100000000;
+    private static final String ShinyApp = "\nshinyApp(ui = ui, server = server, options=list(port=%d))";
 
     public Dashboard(B box) {
         super(box);
@@ -50,11 +52,23 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
     }
 
     @Override
+    public void init() {
+        super.init();
+        refresh();
+    }
+
+    @Override
     public void refresh() {
         try {
             notifier.showLoading();
             String location = (script != null && homeDirectory != null) ? execute() : null;
-            notifier.refresh(new DashboardInfo().location(location));
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    notifier.refresh(new DashboardInfo().location(location));
+                }
+            }, 1000);
         }
         catch (RuntimeException ex) {
             notifier.refreshError(ex.getMessage());
@@ -62,31 +76,45 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
     }
 
     private String execute() {
+        String script = buildScript();
+
+        if (running(script))
+            return dashboardUrl(Objects.requireNonNull(instanceOf(script)).port);
+
+        return dashboardUrl(run(script));
+    }
+
+    private boolean running(String script) {
+        return instanceOf(script) != null;
+    }
+
+    private int run(String script) {
         int port = freePort();
+
         if (port == -1) {
-            notifier.refreshError("no ports available");
-            return null;
+            notifier.refreshError("url not defined or no ports available");
+            return port;
         }
-        execute(buildScript(), port);
-        return session().browser().baseUrl() + ":" + port;
+
+        register(script, port, run(script, port));
+
+        return port;
     }
 
-    private void execute(String script, int port) {
-        String hash = new String(DigestUtils.md5(script));
-        if (processMap.containsKey(hash)) return;
-        Process process = run(hash, script, port);
-        processMap.put(hash, new ProcessInstance().port(port).process(process));
-    }
-
-    private Process run(String hash, String script, int port) {
+    private Process run(String script, int port) {
         try {
+            String hash = hashOf(script);
             java.io.File file = new java.io.File(homeDirectory + "/" + hash + ".R");
-            Files.write(file.toPath(), replaceTag(script, PortTag, String.valueOf(port)).getBytes());
+            Files.write(file.toPath(), replaceTag(addShinyApp(script, port), PortTag, String.valueOf(port)).getBytes());
             return new ProcessBuilder("Rscript", file.getAbsolutePath()).start();
         } catch (IOException e) {
             Logger.error(e);
             return null;
         }
+    }
+
+    private String addShinyApp(String script, int port) {
+        return script + String.format(ShinyApp, port);
     }
 
     private String buildScript() {
@@ -104,6 +132,39 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
         return content.replaceAll(":" + tag + ":", value);
     }
 
+    private ProcessInstance instanceOf(String script) {
+        String hash = hashOf(script);
+        return instanceMap.getOrDefault(hash, null);
+    }
+
+    private void register(String script, int port, Process process) {
+        String hash = hashOf(script);
+        instanceMap.put(hash, new ProcessInstance().port(port).process(process));
+    }
+
+    private int freePort() {
+        List<Integer> busyPorts = instanceMap.values().stream().map(v -> v.port).collect(Collectors.toList());
+
+        freePort = startPort;
+        while (busyPorts.contains(freePort) && freePort < MaxPort) freePort++;
+
+        return freePort <= MaxPort ? freePort : -1;
+    }
+
+    private String dashboardUrl(int port) {
+        try {
+            URL result = new URL(session().browser().baseUrl());
+            return result.getProtocol() + "://" + result.getHost() + ":" + port;
+        } catch (MalformedURLException e) {
+            Logger.error(e);
+            return null;
+        }
+    }
+
+    private String hashOf(String script) {
+        return new String(DigestUtils.md5(script));
+    }
+
     private static class ProcessInstance {
         int port;
         Process process;
@@ -117,15 +178,6 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
             this.process = process;
             return this;
         }
-    }
-
-    private int freePort() {
-        List<Integer> busyPorts = processMap.values().stream().map(v -> v.port).collect(Collectors.toList());
-
-        freePort = startPort;
-        while (busyPorts.contains(freePort) && freePort < MaxPort) freePort++;
-
-        return freePort <= MaxPort ? freePort : -1;
     }
 
 }

@@ -5,6 +5,7 @@ def type(display)
 	import $name+firstUpperCase~Notifier from "../../$packageTypeRelativeDirectory~gen/displays/notifiers/$name+firstUpperCase~Notifier";
 	import $name+firstUpperCase~Requester from "../../$packageTypeRelativeDirectory~gen/displays/requesters/$name+firstUpperCase~Requester";
     import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
+    import { withSnackbar } from 'notistack';
 
 	const styles = theme => ({});
 
@@ -19,8 +20,8 @@ def type(display)
 		$notification...[$NL$NL]
 	}
 
-	export default withStyles(styles, { withTheme: true })($name+firstUpperCase);
-    DisplayFactory.register("$name+firstUpperCase", withStyles(styles, { withTheme: true })($name+firstUpperCase));
+	export default withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase));
+    DisplayFactory.register("$name+firstUpperCase", withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase)));
 end
 
 def type(notification)

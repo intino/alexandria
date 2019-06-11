@@ -22,6 +22,9 @@ const styles = theme => ({
 });
 
 class SelectorComboBox extends AbstractSelectorComboBox {
+	state = {
+		selection: []
+	};
 
 	constructor(props) {
 		super(props);
@@ -34,6 +37,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		const items = React.Children.map(this.props.children, (option, i) => { return { value: this._label(option), label: this._label(option), item: option }});
 		const multiple = this.props.multipleSelection;
 		const label = this.props.label;
+		const value = this.selection(items);
 		return (
 			<div className={classes.container} style={this.style()}>
 				{label != null && label !== "" ? <Typography variant={this.variant("subtitle1")}>{label}</Typography> : undefined }
@@ -41,6 +45,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 						placeholder={this.selectMessage()} options={items}
 						className="basic-multi-select" classNamePrefix="select"
 						components={{ Option: this.renderOption.bind(this)}}
+						value={value}
 						onChange={this.handleChange.bind(this)}/>
 			</div>
 		);
@@ -69,8 +74,24 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 	_label = (option) => {
 		const label = option.props.label != null && option.props.label !== "" ? option.props.label : option.props.value;
 		return label != null ? label : this.translate("no label");
-	}
+	};
 
+	refreshSelection = (selection) => {
+		this.setState({ selection: selection });
+	};
+
+	selection = (options) => {
+		const multiple = this.props.multipleSelection;
+		const selectedOptions = this.state.selection.map(s => this.option(options, s));
+		return multiple ? selectedOptions : (selectedOptions.length > 0 ? selectedOptions[0] : undefined);
+	};
+
+	option = (options, key) => {
+		for (var i=0; i<options.length; i++) {
+			if (options[i].value === key || options[i].label === key) return options[i];
+		}
+		return null;
+	};
 }
 
 export default withStyles(styles, { withTheme: true })(SelectorComboBox);
