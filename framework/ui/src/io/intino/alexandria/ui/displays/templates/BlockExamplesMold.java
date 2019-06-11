@@ -9,8 +9,8 @@ public class BlockExamplesMold extends AbstractBlockExamplesMold<AlexandriaUiBox
     }
 
     @Override
-    public void refresh() {
-        super.refresh();
+    public void init() {
+        super.init();
         block2Code.onChange(event -> block2.spacing(event.<String>value().replace("DP", "")));
         block3Code.onChange(event -> block3.layout(event.value()));
     }

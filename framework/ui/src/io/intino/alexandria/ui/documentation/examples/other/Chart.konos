@@ -10,7 +10,11 @@ Template(layout=Vertical, spacing=DP8) chartExamplesMold as Decorated
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="No facets with Html output")
 			Block(spacing=DP8, format=filled)
-				Chart(input=iris, query = "") chart1
+				Chart(input=iris) chart1
+					query
+						===========
+						output \= qplot(Petal.Width, Sepal.Length, data \= iris, color \= Species)
+						===========
 				Text chart1Editor as Editable Code(language=R)
 					value
 						======
@@ -26,8 +30,13 @@ Template(layout=Vertical, spacing=DP8) chartExamplesMold as Decorated
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="No facets with Image output")
 			Block(spacing=DP8, format=filled)
-				Chart(input=iris, query="") chart2
-// TODO Octavio				Chart(input=iris, query="", output=Image) chart2
+				Chart(input=iris) chart2
+					query
+						======
+						set.seed(100);
+						d \= diamonds[sample(nrow(diamonds), 1000), ];
+						output \= ggplot(data \= d, aes(x \= carat, y \= price)) + geom_point(aes(text \= paste("Clarity:", clarity)), size \= 4) + geom_smooth(aes(colour \= cut, fill \= cut)) + facet_wrap(~ cut);
+						======
 				Text chart2Editor as Editable Code(language=R)
 					value
 						======

@@ -12,8 +12,8 @@ public class ChartExamplesMold extends AbstractChartExamplesMold<AlexandriaUiBox
     }
 
     @Override
-    public void refresh() {
-        super.refresh();
+    public void init() {
+        super.init();
         linkCharts();
     }
 

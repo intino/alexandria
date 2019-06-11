@@ -39,5 +39,3 @@ ui = pageWithSidebar(
     plotOutput('plot1')
   )
 )
-
-shinyApp(ui = ui, server = server, options=list(port=:port:))
