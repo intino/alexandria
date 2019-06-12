@@ -49,15 +49,24 @@ public abstract class Bot {
 		return usersContext;
 	}
 
-	private String parameters(List<String> parameters) {
-		return parameters.isEmpty() ? "" : " `" + String.join("` `", parameters) + "`";
-	}
-
 	public void execute() throws IOException {
 		session = createWebSocketSlackSession(token);
 		session.addMessagePostedListener(this::talk);
 		session.connect();
 		initContexts();
+	}
+
+
+	public void disconnect() {
+		try {
+			this.session.disconnect();
+		} catch (Exception e) {
+			Logger.error(e);
+		}
+	}
+
+	private String parameters(List<String> parameters) {
+		return parameters.isEmpty() ? "" : " `" + String.join("` `", parameters) + "`";
 	}
 
 	private void initContexts() {
