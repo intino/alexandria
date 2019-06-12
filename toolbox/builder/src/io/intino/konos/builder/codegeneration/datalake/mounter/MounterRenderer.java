@@ -6,8 +6,7 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Mounter;
 import io.intino.konos.model.graph.Schema;
-import io.intino.konos.model.graph.events.EventsSource;
-import io.intino.konos.model.graph.population.PopulationSource;
+import io.intino.konos.model.graph.population.PopulationMounter;
 
 import java.io.File;
 import java.util.List;
@@ -40,11 +39,13 @@ public class MounterRenderer {
 					add("box", boxName).
 					add("package", packageName).
 					add("name", mounter.name$());
-			if (mounter.isBatch()) {
-				batchMounter(builder, mounter);
+			if (mounter.isPopulation()) {
+				populationMounter(builder, mounter.asPopulation());
 				classes.put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datalake.mounters." + (mounter.name$() + "Mounter"));
 				writeFrame(new File(gen, "datalake/mounters"), mounter.name$() + "Mounter", customize(new MounterTemplate()).render(builder.toFrame()));
 				writeFrame(new File(src, "datalake/mounters"), mounter.name$() + "MounterFunctions", customize(new MounterTemplate()).render(builder.add("src").toFrame()));
+			} else if (!mounter.isRealtime()) {
+				writeFrame(new File(src, "datalake/mounters"), mounter.name$() + "Mounter", customize(new MounterTemplate()).render(builder.add("batch").toFrame()));
 			} else {
 				realtimeMounter(builder, mounter);
 				final File destination = new File(src, "datalake/mounters");
@@ -56,22 +57,18 @@ public class MounterRenderer {
 		}
 	}
 
-	private void batchMounter(FrameBuilder builder, Mounter mounter) {
-		builder.add("batch").add(mounter.source().core$().facetList().get(0).replace("#Source", ""));
-		if (mounter.source().isPopulation()) {
-			PopulationSource population = mounter.source().asPopulation();
-			List<PopulationSource.Column> splittedColumns = population.columnList().stream().filter(c -> c.tank().split() != null).collect(toList());
-			if (!splittedColumns.isEmpty()) builder.add("splittedColumns", splitted(splittedColumns));
-			builder.add("column", population.columnList().stream().map(column -> builderOf(column).toFrame()).toArray(Frame[]::new));
-			if (mounter.collect().isFile()) builder.add("format", mounter.collect().asFile().format().name());
-		}
+	private void populationMounter(FrameBuilder builder, PopulationMounter mounter) {
+		List<PopulationMounter.Column> splittedColumns = mounter.columnList().stream().filter(c -> c.tank().split() != null).collect(toList());
+		if (!splittedColumns.isEmpty()) builder.add("population").add("splittedColumns", splitted(splittedColumns));
+		builder.add("column", mounter.columnList().stream().map(column -> builderOf(column).toFrame()).toArray(Frame[]::new));
+		builder.add("format", mounter.collect().format().name());
 	}
 
-	private Frame splitted(List<PopulationSource.Column> splittedColumns) {
+	private Frame splitted(List<PopulationMounter.Column> splittedColumns) {
 		return new FrameBuilder("splittedColumns").add("column", splittedColumns.stream().map(column -> builderOf(column).add("splitted").toFrame()).toArray(Frame[]::new)).toFrame();
 	}
 
-	private FrameBuilder builderOf(PopulationSource.Column column) {
+	private FrameBuilder builderOf(PopulationMounter.Column column) {
 		FrameBuilder builder = new FrameBuilder("column")
 				.add("fullName", column.tank().fullName())
 				.add("name", column.tank().name$())
@@ -83,10 +80,8 @@ public class MounterRenderer {
 
 	private void realtimeMounter(FrameBuilder builder, Mounter mounter) {
 		builder.add("realtime");
-		if (!mounter.source().isEvents()) return;
-		EventsSource eventsSource = mounter.source().asEvents();
-		if (eventsSource.selectList().size() == 1) {
-			Schema schema = eventsSource.select(0).tank().asEvent().schema();
+		if (mounter.asRealtime().selectList().size() == 1) {
+			Schema schema = mounter.asRealtime().select(0).tank().asEvent().schema();
 			if (schema != null) {
 				builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName));
 				builder.add("type", new FrameBuilder("schema").add("package", packageName).add("name", schema.name$()));

@@ -7,15 +7,10 @@ Datalake datalake as Remote(clientID = "amidas", url = "{nessUrl}", user = "{nes
 	Tank("intradayReport") intradayReport
 	Tank("actualGeneration") actualGeneration
 
-Mounter identityRegister
-	Source as Events
-		Select(tank = datalake.identityRegister)
-	Collect
+Mounter identityRegister as Realtime
+	Select(tank = datalake.identityRegister)
 
-Mounter() authorizationRegister
-	Source as Events
-		Select(tank = datalake.identityRegister)
-	Collect
+Mounter authorizationRegister
 
 Feeder(datalake.dayAheadReport)
 

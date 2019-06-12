@@ -11,6 +11,19 @@ def type(mounter & src)
 	}
 end
 
+def type(mounter & batch)
+	package $package+validPackage.datalake.mounters;
+
+
+
+    public class $name+snakeCaseToCamelCase+FirstUpperCase~Mounter {
+
+    	public void execute() {
+
+    	}
+	}
+end
+
 def type(mounter & realtime)
 	package $package+validPackage.datalake.mounters;
 
@@ -34,7 +47,7 @@ def type(mounter & realtime)
 	}
 end
 
-def type(mounter & batch & population)
+def type(mounter & population)
 	package $package+validPackage.datalake.mounters;
 
 	import io.intino.alexandria.Timetag;
