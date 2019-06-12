@@ -1,5 +1,7 @@
 dsl Konos
 
+use Dialog
+use Dashboard
 use Slider
 use Map
 use SearchBox
@@ -48,6 +50,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block searchBoxExamples as Conditional > Stamp(template=searchBoxExamplesMold)
 			Block sliderExamples as Conditional > Stamp(template=sliderExamplesMold)
 			Block dashboardExamples as Conditional > Stamp(template=dashboardExamplesMold)
+			Block dialogExamples as Conditional > Stamp(template=dialogExamplesMold)
 
 		Block facets
 			Text(value="Facets", format=h5 underline)

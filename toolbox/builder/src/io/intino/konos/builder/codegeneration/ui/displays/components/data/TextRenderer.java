@@ -7,6 +7,7 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.model.graph.DataComponents.Text;
 import io.intino.konos.model.graph.code.datacomponents.CodeText;
+import io.intino.konos.model.graph.editable.datacomponents.EditableText;
 import io.intino.konos.model.graph.highlighted.datacomponents.HighlightedText;
 
 import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
@@ -46,6 +47,10 @@ public class TextRenderer extends ComponentRenderer<Text> {
 		if (element.value() != null) {
 			String value = element.isCode() ? element.value().replaceAll("\\n", "").replaceAll("\"", "\\\\\"") : element.value();
 			result.add("defaultValue", value);
+		}
+		if (element.isEditable()) {
+			EditableText editableText = element.asEditable();
+			if (editableText.placeHolder() != null) result.add("placeholder", editableText.placeHolder());
 		}
 		return result;
 	}

@@ -34,6 +34,7 @@ Facet Absolute extends AbstractAbsolute on DataComponents.File
 Facet Absolute extends AbstractAbsolute on OtherComponents.Chart
 Facet Absolute extends AbstractAbsolute on OtherComponents.Dashboard
 Facet Absolute extends AbstractAbsolute on OtherComponents.Header
+Facet Absolute extends AbstractAbsolute on OtherComponents.Dialog
 
 Facet AbstractRelative is abstract
 	var double:{%} width = 100%
@@ -47,6 +48,7 @@ Facet Relative extends AbstractRelative on DataComponents.File
 Facet Relative extends AbstractRelative on OtherComponents.Chart
 Facet Relative extends AbstractRelative on OtherComponents.Dashboard
 Facet Relative extends AbstractRelative on OtherComponents.Header
+Facet Relative extends AbstractRelative on OtherComponents.Dialog
 
 Facet Paper on Block
 Facet Badge on Block
@@ -64,12 +66,18 @@ Facet Behavior is abstract
 Facet Collapsible extends Behavior on Block
 Facet Conditional extends Behavior on Block
 	var Option selected = empty
-Facet Animated extends Behavior on Block
+Facet AbstractAnimated is abstract
 	var word:{ Slide Fade Grow Zoom } mode = Slide
 
-	Concept:{0..1} Transition
+//	Concept:{0..1} Transition // TODO pendiente Octavio
+	Concept Transition
 		var word:{ Left Top Bottom Right } direction = Right
 		var integer:{ Millis } duration = 500 Millis
+Facet Animated extends AbstractAnimated on Block
+Facet Animated extends AbstractAnimated on OtherComponents.Dialog
+Facet Animated extends AbstractAnimated on OtherComponents.AlertDialog
+Facet Animated extends AbstractAnimated on OtherComponents.DecisionDialog
+
 Facet CollapseTriggerer extends Behavior on Component
 	var Collapsible for
 
@@ -92,18 +100,9 @@ Facet Highlighted on DataComponents.Text
 	var string backgroundColor
 
 // DIALOG FACETS
-Facet Dialog on Block
-	var string title
-
-Facet AlertDialog extends Dialog
-Facet DecisionDialog extends Dialog
-	Concept Option
-		var string label
-		var string value
-
-Facet Fullscreen on Dialog
-Facet Mobile on Dialog
-Facet Draggable on Dialog
+Facet Fullscreen on OtherComponents.Dialog
+Facet Mobile on OtherComponents.Dialog
+Facet Draggable on OtherComponents.Dialog
 
 // SELECTOR FACETS
 Facet Tabs on OtherComponents.Selector

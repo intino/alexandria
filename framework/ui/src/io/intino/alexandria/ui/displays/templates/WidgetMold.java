@@ -10,10 +10,7 @@ import io.intino.alexandria.ui.documentation.model.data.*;
 import io.intino.alexandria.ui.documentation.model.operation.DownloadSelectionWidget;
 import io.intino.alexandria.ui.documentation.model.operation.DownloadWidget;
 import io.intino.alexandria.ui.documentation.model.operation.ExportWidget;
-import io.intino.alexandria.ui.documentation.model.other.BlockWidget;
-import io.intino.alexandria.ui.documentation.model.other.ChartWidget;
-import io.intino.alexandria.ui.documentation.model.other.DashboardWidget;
-import io.intino.alexandria.ui.documentation.model.other.SliderWidget;
+import io.intino.alexandria.ui.documentation.model.other.*;
 
 public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
 
@@ -64,6 +61,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         sortingExamples.visible(widget instanceof SortingWidget);
         searchBoxExamples.visible(widget instanceof SearchBoxWidget);
         sliderExamples.visible(widget instanceof SliderWidget);
+        dialogExamples.visible(widget instanceof DialogWidget);
     }
 
     private void updateInfo() {

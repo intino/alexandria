@@ -1,12 +1,13 @@
 package io.intino.alexandria.ui.displays.components.selector;
 
-import io.intino.alexandria.ui.displays.events.SelectListener;
+import io.intino.alexandria.ui.displays.events.SelectionListener;
 
 import java.util.List;
 
 public interface Selector {
-	String selectedOption();
+	List<String> selection();
 	List<SelectorOption> options();
+	void reset();
 	void add(SelectorOption option);
-	Selector onSelect(SelectListener selectListener);
+	Selector onSelect(SelectionListener selectionListener);
 }

@@ -152,6 +152,9 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (passiveView.i$(CatalogComponents.Collection.Mold.Heading.class)) components.addAll(passiveView.a$(CatalogComponents.Collection.Mold.Heading.class).componentList());
 		if (passiveView.i$(CatalogComponents.Collection.Mold.Item.class)) components.addAll(passiveView.a$(CatalogComponents.Collection.Mold.Item.class).componentList());
 		if (passiveView.i$(OperationComponents.Toolbar.class)) components.addAll(passiveView.a$(OperationComponents.Toolbar.class).componentList());
+		if (passiveView.i$(OtherComponents.Dialog.class)) components.addAll(passiveView.a$(OtherComponents.Dialog.class).componentList());
+		if (passiveView.i$(OtherComponents.DecisionDialog.class)) components.add(passiveView.a$(OtherComponents.DecisionDialog.class).selector());
+		if (passiveView.i$(OtherComponents.CollectionDialog.class)) components.add(passiveView.a$(OtherComponents.CollectionDialog.class).collection());
 		return components;
 	}
 

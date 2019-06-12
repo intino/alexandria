@@ -245,6 +245,22 @@ def type(binding & openblock)
 	if ($name != null) $name.bindTo($block);
 end
 
+def type(binding & opendialog)
+	if ($name != null) $name.bindTo($dialog);
+end
+
+def type(binding & closedialog)
+	if ($name != null) $name.bindTo($dialog);
+end
+
+def type(binding & decisiondialog)
+	if ($name != null) $name.bindTo($selector);
+end
+
+def type(binding & collectiondialog)
+	if ($name != null) $name.bindTo($collection);
+end
+
 def type(binding)
 	if ($name != null) $name.bindTo($selector, "$option");
 end
@@ -274,6 +290,7 @@ def type(properties & operation) trigger(common)
 end
 
 def type(properties) trigger(common)
+	[name("$name");]
 	[label("$label");]
 	[color("$color");]
 end
@@ -366,6 +383,10 @@ def type(properties & slider) trigger(specific)
     [range($min,$max);]
     [animation($interval,$loop);]
     [$ordinal+ordinalMethod...[$NL]]
+end
+
+def type(properties & collectiondialog) trigger(specific)
+    [allowSearch($allowSearch);]
 end
 
 def type(properties) trigger(specific)

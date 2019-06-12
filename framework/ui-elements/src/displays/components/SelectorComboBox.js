@@ -34,7 +34,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 
 	render() {
 		const { classes } = this.props;
-		const items = React.Children.map(this.props.children, (option, i) => { return { value: this._label(option), label: this._label(option), item: option }});
+		const items = React.Children.map(this.props.children, (option, i) => { return { value: this._name(option), label: this._label(option), item: option }});
 		const multiple = this.props.multipleSelection;
 		const label = this.props.label;
 		const value = this.selection(items);
@@ -69,6 +69,10 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 
 	selectMessage = () => {
 		return this.translate("Select an option");
+	};
+
+	_name = (option) => {
+		return option.props.name;
 	};
 
 	_label = (option) => {

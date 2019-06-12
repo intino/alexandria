@@ -4,8 +4,6 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.International;
 import io.intino.alexandria.ui.Soul;
 import io.intino.alexandria.ui.SoulProvider;
-import io.intino.alexandria.ui.displays.events.Event;
-import io.intino.alexandria.ui.displays.events.Listener;
 import io.intino.alexandria.ui.displays.notifiers.DisplayNotifier;
 import io.intino.alexandria.ui.resources.Asset;
 import io.intino.alexandria.ui.services.push.UISession;
@@ -36,6 +34,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	private List<String> route = new ArrayList<>();
 	private PropertyList propertyList = new PropertyList();
 	private String label = "";
+	private String name = "";
 
 	private static final String DefaultInstanceContainer = "__elements";
 
@@ -309,7 +308,12 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	}
 
 	public String name() {
-		return nameOf(this.getClass());
+		return name != null ? name : nameOf(this.getClass());
+	}
+
+	public Display name(String name) {
+		this.name = name;
+		return this;
 	}
 
 	public static String nameOf(Class<? extends Display> clazz) {

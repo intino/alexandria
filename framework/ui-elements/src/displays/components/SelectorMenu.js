@@ -33,7 +33,7 @@ const styles = theme => ({
 
 class SelectorMenu extends AbstractSelectorMenu {
 	state = {
-		selected : 0,
+		selected : -1,
 		open : []
 	};
 
