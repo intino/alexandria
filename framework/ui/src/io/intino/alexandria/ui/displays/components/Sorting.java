@@ -49,7 +49,7 @@ public class Sorting<DN extends SortingNotifier, B extends Box> extends Abstract
 
     private void notifyListener() {
         if (selectListener == null) return;
-        selectListener.accept(new SelectEvent(this, key(), -1));
+        selectListener.accept(new SelectEvent(this, key()));
     }
 
     private String key() {

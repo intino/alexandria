@@ -1,0 +1,80 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) dialogExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				OpenDialog(title="custom dialog", dialog=dialog1) as Button
+				Dialog(format=containerAirLarge, title = "custom dialog") dialog1
+					Text field1 as Editable(placeHolder="field 1")
+					Text field2 as Editable(placeHolder="field 2")
+					Block(layout=Horizontal EndJustified, spacing=DP8, format=airTop)
+						CloseDialog(title="Close", dialog=dialog1) as Button
+						Task(title="Accept") as Button
+			Block > Text as Code(language=Html)
+					value
+						=========
+						OpenDialog(title\="custom dialog", dialog\=dialog) as Button
+						Dialog(format\=containerAirLarge, title \= "custom dialog") dialog
+						&nbsp;&nbsp;&nbsp;&nbsp;Text field1 as Editable
+						&nbsp;&nbsp;&nbsp;&nbsp;Text field2 as Editable
+						&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal EndJustified)
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CloseDialog(title\="Close", dialog\=dialog) as Button
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Task(title\="Accept") as Button
+						=========
+
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="No facets. Decision dialog")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				OpenDialog(title="decision dialog", dialog=dialog2) as Button
+				DecisionDialog(format=containerAirLarge, title = "decision dialog") dialog2
+					Selector selector1 as Menu(layout = Vertical)
+						Text(value="Option 1") option1 as Option
+						Text(value="Option 2") option2 as Option
+			Block > Text as Code(language=Html)
+					value
+						=========
+						OpenDialog(title\="decision dialog", dialog\=dialog) as Button
+						DecisionDialog(format\=containerAirLarge, title \= "decision dialog") dialog
+						&nbsp;&nbsp;&nbsp;&nbsp;Selector selector1 as ComboBox
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text option1 as Option Labeled("Option 1")
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text option2 as Option Labeled("Option 2")
+						=========
+
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="No facets. Alert dialog")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				OpenDialog(title="alert dialog", dialog=dialog3) as Button
+				AlertDialog(format=containerAirLarge, title = "alert dialog") dialog3
+					message = "Intino is cool!"
+					acceptLabel = "OK!"
+			Block > Text as Code(language=Html)
+					value
+						=========
+						OpenDialog(title\="alert dialog", dialog\=dialog) as Button
+						AlertDialog(format\=containerAirLarge, title \= "alert dialog") dialog
+						&nbsp;&nbsp;&nbsp;&nbsp;message \= "Intino is cool!"
+						&nbsp;&nbsp;&nbsp;&nbsp;acceptLabel \= "OK!"
+						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="No facets. Collection dialog")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				OpenDialog(title="collection dialog", dialog=dialog4) as Button
+				CollectionDialog(format=containerAirLarge, title = "collection dialog") dialog4
+					allowSearch = true
+					List list1 as Selectable > Mold > Item(height = 100px) dialog4ListMold
+			Block > Text as Code(language=Html)
+					value
+						=========
+						OpenDialog(title\="collection dialog", dialog\=dialog) as Button
+						CollectionDialog(format\=containerAirLarge, title \= "collection dialog") dialog
+						&nbsp;&nbsp;&nbsp;&nbsp;allowSearch \= true
+						&nbsp;&nbsp;&nbsp;&nbsp;List list1 as Selectable > Mold > Item(height \= 100px) itemMold
+						=========
+

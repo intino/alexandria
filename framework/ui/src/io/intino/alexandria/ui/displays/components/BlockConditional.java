@@ -68,7 +68,7 @@ public abstract class BlockConditional<DN extends BlockConditionalNotifier, B ex
     @Override
     public void bindTo(Selector selector, String option) {
         updateVisibility(selector, option);
-        selector.onSelect(e -> updateVisibility(e.option().equals(option)));
+        selector.onSelect(e -> updateVisibility(e.selection().contains(option)));
     }
 
     public abstract void initConditional();
@@ -83,8 +83,8 @@ public abstract class BlockConditional<DN extends BlockConditionalNotifier, B ex
 
     private void updateVisibility(Selector selector, String option) {
         if (selector == null) return;
-        String selectedOption = selector.selectedOption();
-        if (selectedOption == null || !selectedOption.equals(option)) return;
+        java.util.List<String> selection = selector.selection();
+        if (selection.size() <= 0 || !selection.contains(option)) return;
         updateVisibility(true);
     }
 

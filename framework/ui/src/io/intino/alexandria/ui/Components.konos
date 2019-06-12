@@ -39,11 +39,13 @@ Component optionList as Decorated
 Component frame as Decorated
 	Notification refreshDisplay as Text
 
-Component selectorMenu as Decorated
+Component baseSelector as Decorated
+
+Component selectorMenu as Decorated ExtensionOf(baseSelector)
 	Notification refreshSelected as Object(SelectorMenuSelection)
 	Request select as Integer
 
-Component selectorComboBox as Decorated
+Component selectorComboBox as Decorated ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
 	Request updateSelection as Text List
 
@@ -59,9 +61,17 @@ Component spinner as Decorated
 Component slider as Decorated
 	Notification refreshOrdinals as Object(Ordinal) List
 	Request update as Integer
-
-Component stamp as Decorated
-
 Schema Ordinal
 	Attribute label as Text
 	Attribute step as Integer
+
+Component stamp as Decorated
+
+Component baseDialog as Decorated
+	Notification open
+	Notification close
+
+Component dialog as Decorated ExtensionOf(baseDialog)
+Component alertDialog as Decorated ExtensionOf(baseDialog)
+Component decisionDialog as Decorated ExtensionOf(baseDialog)
+Component collectionDialog as Decorated ExtensionOf(baseDialog)

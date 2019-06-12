@@ -96,9 +96,10 @@ Concept OperationComponents
 		var word:{Blank Self Parent Top} target = Self
 		var word:{Small Medium Large} size = Medium
 
-		sub OpenDialog > var Block content
 		sub OpenPage > var Page page
 		sub OpenBlock > var Conditional block
+		sub OpenDialog > var OtherComponents.AbstractDialog dialog
+		sub CloseDialog > var OtherComponents.AbstractDialog dialog
 		sub Export
 			var string[] options = empty
 			var instant from = empty
@@ -179,6 +180,24 @@ Concept OtherComponents
 		Concept:{0..1} Animation
 			var integer interval
 			var boolean loop = false
+
+	Concept AbstractDialog extends Component is abstract
+		var string title
+
+		sub Dialog
+			has Component
+
+		sub AlertDialog
+			var string message
+			var string acceptLabel = "Accept"
+			var string cancelLabel = "Cancel"
+
+		sub DecisionDialog
+			has:{1..1} Selector
+
+		sub CollectionDialog
+			var boolean allowSearch = true
+			has:{0..1} CatalogComponents.Collection
 
 Concept PrivateComponents
 	Concept PrivateComponent extends Component

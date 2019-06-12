@@ -32,6 +32,7 @@ public class ComponentRendererFactory {
 		if (component.i$(Block.class)) return (T) new BlockRenderer(settings, component.a$(Block.class), provider, target);
 		if (component.i$(OtherComponents.Chart.class)) return (T) new ChartRenderer(settings, component.a$(Chart.class), provider, target);
 		if (component.i$(OtherComponents.Dashboard.class)) return (T) new DashboardRenderer(settings, component.a$(OtherComponents.Dashboard.class), provider, target);
+		if (component.i$(OtherComponents.AbstractDialog.class)) return (T) new DialogRenderer(settings, component.a$(OtherComponents.AbstractDialog.class), provider, target);
 
 		if (component.i$(Template.class)) return (T) new TemplateRenderer(settings, component.a$(Template.class), provider, target);
 		if (component.i$(Header.class)) return (T) new HeaderRenderer(settings, component.a$(Header.class), provider, target);
@@ -50,6 +51,8 @@ public class ComponentRendererFactory {
 		if (component.i$(Download.class)) return (T) new DownloadRenderer(settings, component.a$(Download.class), provider, target);
 		if (component.i$(DownloadSelection.class)) return (T) new DownloadSelectionRenderer(settings, component.a$(DownloadSelection.class), provider, target);
 		if (component.i$(Export.class)) return (T) new ExportRenderer(settings, component.a$(Export.class), provider, target);
+		if (component.i$(OpenDialog.class)) return (T) new OpenDialogRenderer(settings, component.a$(OpenDialog.class), provider, target);
+		if (component.i$(CloseDialog.class)) return (T) new CloseDialogRenderer(settings, component.a$(CloseDialog.class), provider, target);
 		if (component.i$(Operation.class)) return (T) new OperationRenderer(settings, component.a$(Operation.class), provider, target);
 
 		return (T) new ComponentRenderer(settings, component, provider, target);

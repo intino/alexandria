@@ -59,7 +59,7 @@ def type(properties & slider) trigger(common)
 end
 
 def type(properties) trigger(common)
-	[ label="$label"][ format="$format...[ ]"][ color="$color"][ multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing}}]
+	[ name="$name"][ label="$label"][ format="$format...[ ]"][ color="$color"][ multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing}}]
 end
 
 def type(properties & template) trigger(specific)
@@ -90,6 +90,14 @@ def type(properties & dashboard) trigger(specific)
 	[ width="$width"][ height="$height"]
 end
 
+def type(properties & alertdialog) trigger(specific)
+	[ title="$title"][ message="$message"][ labels={{accept:"$accept",cancel:"$cancel"}}][ width="$width"][ height="$height"][ animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}]
+end
+
+def type(properties & abstractdialog) trigger(specific)
+	[ title="$title"][ width="$width"][ height="$height"][ animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}]
+end
+
 def type(properties & block) trigger(specific)
 	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"][ collapsible="$collapsible"][ $paper][ $badge][ animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}]
 end
@@ -111,7 +119,7 @@ def type(properties & codeText) trigger(specific)
 end
 
 def type(properties & text) trigger(specific)
-	[ mode="$mode"][ prefix="$prefix"][ suffix="$suffix"][ value="$defaultValue"][ highlighted={$highlighted}]
+	[ mode="$mode"][ prefix="$prefix"][ suffix="$suffix"][ value="$defaultValue"][ placeholder="$placeholder"][ highlighted={$highlighted}]
 end
 
 def type(properties & map) trigger(specific)

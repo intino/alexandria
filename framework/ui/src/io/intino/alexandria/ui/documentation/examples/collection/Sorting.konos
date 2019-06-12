@@ -51,10 +51,10 @@ Template(layout=Vertical, spacing=DP8) sortingExamplesMold as Decorated
 						=========
 						Selector as ComboBox<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;multipleSelection\=true<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Sorting(collections\=list) youthest as Option Labeled("youthest population")
-						&nbsp;&nbsp;&nbsp;&nbsp;Sorting(collections\=list) oldest as Option Labeled("oldest population")
-						&nbsp;&nbsp;&nbsp;&nbsp;Sorting(collections\=list) female as Option Labeled("female population")
-						&nbsp;&nbsp;&nbsp;&nbsp;Sorting(collections\=list) male as Option Labeled("male population")
+						&nbsp;&nbsp;&nbsp;&nbsp;Sorting(collections\=list) as Option("youthest") Labeled("youthest population")
+						&nbsp;&nbsp;&nbsp;&nbsp;Sorting(collections\=list) as Option("oldest") Labeled("oldest population")
+						&nbsp;&nbsp;&nbsp;&nbsp;Sorting(collections\=list) as Option("female") Labeled("female population")
+						&nbsp;&nbsp;&nbsp;&nbsp;Sorting(collections\=list) as Option("male") Labeled("male population")
 						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) sortingMold<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text firstName<br/>

@@ -39,11 +39,13 @@ class TextEditable extends AbstractTextEditable {
 	render() {
 		const { classes } = this.props;
 		const label = this.props.label !== "" ? this.props.label : undefined;
+		const placeholder = this.props.placeholder !== "" ? this.props.placeholder : undefined;
 
 		return (
 			<TextField format={this.variant("body1")} style={this.style()} className={classes.default} label={label} type="text"
 					   value={this.state.value} onChange={this.handleChange.bind(this)}
 					   onKeyPress={this.handleKeypress.bind(this)}
+					   placeholder={placeholder}
 					   InputProps={{
 						   startAdornment: this.props.prefix !== undefined ? <InputAdornment position="start">{this.props.prefix}</InputAdornment> : undefined,
 						   endAdornment: this.props.suffix !== undefined ? <InputAdornment position="end">{this.props.suffix}</InputAdornment> : undefined

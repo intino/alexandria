@@ -27,6 +27,12 @@ Component openPage as Decorated ExtensionOf(operation)
 Component openBlock as Decorated ExtensionOf(operation)
 	Request execute
 
+Component openDialog as Decorated ExtensionOf(operation)
+	Request execute
+
+Component closeDialog as Decorated ExtensionOf(operation)
+	Request execute
+
 Component selectionOperation as Decorated ExtensionOf(operation)
 Component taskSelection as Decorated ExtensionOf(selectionOperation)
 	Request execute

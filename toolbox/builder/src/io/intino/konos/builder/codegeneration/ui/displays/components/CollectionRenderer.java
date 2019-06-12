@@ -48,10 +48,8 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 		FrameBuilder result = addOwner(baseFrameBuilder()).add("method").add(Collection.class.getSimpleName()).add(className(element.getClass()));
 		result.add("name", nameOf(element));
 		if (element.sourceClass() != null) result.add("sourceClass", element.sourceClass());
-		if (element.itemClass() != null) {
-			result.add("itemClass", element.itemClass());
-			result.add("itemVariable", "item");
-		}
+		result.add("itemClass", element.itemClass() != null ? element.itemClass() : "java.lang.Void");
+		result.add("itemVariable", "item");
 		addSelectionMethod(result);
 		element.moldList().forEach(m -> addItemFrame(m.item(), result));
 		builder.add("methods", result);
@@ -63,10 +61,8 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 		result.add("name", nameOf(item));
 		result.add("methodName", element.i$(CatalogComponents.Table.class) ? nameOf(item) : "");
 		String itemClass = element.itemClass();
-		if (itemClass != null) {
-			result.add("itemClass", new FrameBuilder("itemClass", element.i$(CatalogComponents.Map.class) ? "map" : "").add("value", itemClass));
-			result.add("itemVariable", new FrameBuilder("itemVariable", element.i$(CatalogComponents.Map.class) ? "map" : "").add("value", "item"));
-		}
+		result.add("itemClass", new FrameBuilder("itemClass", element.i$(CatalogComponents.Map.class) ? "map" : "").add("value", itemClass != null ? itemClass : "java.lang.Void"));
+		result.add("itemVariable", new FrameBuilder("itemVariable", element.i$(CatalogComponents.Map.class) ? "map" : "").add("value", "item"));
 		builder.add("item", result);
 	}
 

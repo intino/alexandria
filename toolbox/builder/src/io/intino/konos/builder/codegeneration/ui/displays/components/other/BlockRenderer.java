@@ -73,7 +73,7 @@ public class BlockRenderer extends SizedRenderer<Block> {
 	private void addTransition(FrameBuilder builder) {
 		if (!element.isAnimated()) return;
 		AnimatedBlock block = element.asAnimated();
-		AnimatedBlock.Transition transition = block.transition();
+		AnimatedBlock.Transition transition = block.transitionList().size() > 0 ? block.transition(0) : null;
 		builder.add("mode", block.mode().name());
 		builder.add("transitionDirection", transition != null ? transition.direction().name() : "Right");
 		builder.add("transitionDuration", transition != null ? transition.duration() : 500);
@@ -87,9 +87,9 @@ public class BlockRenderer extends SizedRenderer<Block> {
 
 		Selector selector = option.core$().ownerAs(Selector.class);
 		builder.add("binding", new FrameBuilder("binding")
-			  								.add("name", nameOf(element))
-			  								.add("selector", selector.name$())
-											.add("option", shortId(option)));
+				.add("name", nameOf(element))
+				.add("selector", selector.name$())
+				.add("option", option.name$()));
 	}
 
 	@Override
