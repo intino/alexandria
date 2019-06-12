@@ -161,11 +161,7 @@ public class AbstractBoxRenderer {
 	}
 
 	private String name() {
-		if (module != null) {
-			final String dsl = configuration.outLanguage();
-			if (dsl == null || dsl.isEmpty()) return module.getName();
-			else return dsl;
-		} else return "System";
+		return module != null ? configuration.artifactId() : Configuration.Level.Solution.name();
 	}
 
 

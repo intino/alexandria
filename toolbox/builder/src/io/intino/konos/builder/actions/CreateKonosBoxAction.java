@@ -116,7 +116,7 @@ public class CreateKonosBoxAction extends KonosAction {
 		if (!hasModel(module) && konosGraph.jMXServiceList().isEmpty()) remove(dependencies, "jmx");
 		if (konosGraph.jMSServiceList().isEmpty()) remove(dependencies, "jms");
 		if (konosGraph.taskList().isEmpty()) remove(dependencies, "scheduler");
-		if (konosGraph.datalake() == null) remove(dependencies, "ness-accessor");
+		if (konosGraph.datalake() == null) remove(dependencies, "ingestion");
 		if (konosGraph.uIServiceList().isEmpty()) remove(dependencies, "ui");
 		if (konosGraph.rESTServiceList().isEmpty() || !konosGraph.uIServiceList().isEmpty()) remove(dependencies, "rest");
 		if (konosGraph.slackBotServiceList().isEmpty()) remove(dependencies, "slack");
