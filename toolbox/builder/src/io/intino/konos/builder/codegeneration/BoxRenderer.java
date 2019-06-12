@@ -84,9 +84,6 @@ public class BoxRenderer {
 	}
 
 	private String name() {
-		if (module != null) {
-			final String dsl = configuration.outLanguage();
-			return dsl == null || dsl.isEmpty() ? module.getName() : dsl;
-		} else return Configuration.Level.Solution.name();
+		return module != null ? configuration.artifactId() : Configuration.Level.Solution.name();
 	}
 }

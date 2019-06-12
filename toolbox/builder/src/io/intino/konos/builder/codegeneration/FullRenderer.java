@@ -147,13 +147,7 @@ public class FullRenderer {
 	}
 
 	private String boxName() {
-		if (module != null) {
-			final Configuration configuration = configurationOf(module);
-			if (configuration == null) return "";
-			final String dsl = configuration.outLanguage();
-			if (dsl == null || dsl.isEmpty()) return module.getName();
-			else return dsl;
-		} else return "System";
+		return module != null ? configurationOf(module).artifactId() : Configuration.Level.Solution.name();
 	}
 
 	private String parent() {
