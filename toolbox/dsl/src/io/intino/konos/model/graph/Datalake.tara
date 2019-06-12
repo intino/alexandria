@@ -25,41 +25,34 @@ Facet DatalakeLocation on Datalake is abstract
 		var string path
 
 Concept:Named Mounter
-	has:{1..1} Source
-	has:{1..1} Collect
-
-Concept Source is component
-
-Concept Collect is component
 
 Facet MounterType on Mounter
-	sub Batch
+	sub Population
+		Concept:{1..*} Column
+			var Set tank
+			var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type
 		Concept:{0..1}:Named Filter
 		Concept:{0..1} Aggregation
 			Concept:{1..*} Column
 				var string name
 				var Datalake.Tank tank
 				var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type
+		Concept:{1..1} Collect
+        	var Datamart datamart
+        	var word:{Arff Tabb Csv} format
 	sub Realtime
+		Concept:{1..*} Select
+			var Datalake.Tank tank
+			var Datalake.Split split = empty
 
-Facet SourceType on Source is abstract
-	sub Events
-		Concept:{1..*} Select > var Datalake.Tank tank
-	sub Population
-		Concept:{1..*} Column
-			var Set tank
-			var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type
-
+//sin faceta, es un mounter generico con datalake.
 Facet Id on Population.Column
 	var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type = Long
 Facet Constant on Population.Column
 	var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type = String
 	var string value
 
-Facet CollectType on Collect is abstract
-	var Datamart datamart
-	sub File > var word:{Arff Tabb Csv} format
-	sub Graph
+
 
 Concept Feeder
 	var Datalake.Tank[] tanks
