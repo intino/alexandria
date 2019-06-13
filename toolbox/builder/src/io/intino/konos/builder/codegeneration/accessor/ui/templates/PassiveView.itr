@@ -65,6 +65,9 @@ def type(notifier)
 		};
 
 		detached = () => {
+            var context = this.element.props.context != null ? this.element.props.context() : "";
+            var key = this.element.props.id + context;
+            Notifier.subscriptions$[key$] = null;
 			this.pushRegistrations.forEach((registrations) => registrations.deregister());
 			this.pushRegistrations.splice(0, this.pushRegistrations.length);
 		};

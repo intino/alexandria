@@ -49,6 +49,10 @@ Component selectorComboBox as Decorated ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
 	Request updateSelection as Text List
 
+Component selectorListBox as Decorated ExtensionOf(baseSelector)
+	Notification refreshSelection as Text List
+	Request updateSelection as Text List
+
 Schema SelectorMenuSelection
 	Attribute option as Integer
 	Attribute ancestors as Text List

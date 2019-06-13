@@ -33,7 +33,7 @@ public class DisplaysManifestRenderer extends UIRenderer {
 	@Override
 	public void render() {
 		FrameBuilder result = new FrameBuilder("manifest");
-		Set<Display> displays = service.graph().rootDisplays().stream().filter(this::isGeneric).collect(toSet());
+		Set<Display> displays = service.graph().rootDisplays().stream().filter(this::isBaseType).collect(toSet());
 		Set<PassiveView> baseDisplays = baseDisplays(displays);
 
 		baseDisplays.forEach(d -> renderDisplay(d, result));
@@ -59,16 +59,6 @@ public class DisplaysManifestRenderer extends UIRenderer {
 	private <D extends PassiveView> void renderDisplay(D display, FrameBuilder builder) {
 		builder.add("display", display(display));
 		renderedDisplays.add(display.core$().id());
-	}
-
-	private <D extends PassiveView> boolean isGeneric(D element) {
-		String className = element.getClass().getSimpleName();
-		return className.equalsIgnoreCase("display") ||
-			   className.equalsIgnoreCase("component") ||
-			   className.equalsIgnoreCase("template") ||
-			   className.equalsIgnoreCase("block") ||
-			   className.equalsIgnoreCase("item") ||
-			   className.equalsIgnoreCase("row");
 	}
 
 	private <D extends PassiveView> Frame display(D display) {

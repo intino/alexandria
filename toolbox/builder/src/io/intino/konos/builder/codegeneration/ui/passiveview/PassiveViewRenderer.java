@@ -18,6 +18,7 @@ import io.intino.konos.model.graph.combobox.catalogcomponents.ComboBoxGrouping;
 import io.intino.konos.model.graph.combobox.othercomponents.ComboBoxSelector;
 import io.intino.konos.model.graph.conditional.ConditionalBlock;
 import io.intino.konos.model.graph.decorated.DecoratedDisplay;
+import io.intino.konos.model.graph.listbox.othercomponents.ListBoxSelector;
 import io.intino.konos.model.graph.menu.othercomponents.MenuSelector;
 import io.intino.konos.model.graph.parallax.ParallaxBlock;
 import io.intino.konos.model.graph.radiobox.othercomponents.RadioBoxSelector;
@@ -172,6 +173,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (passiveView.i$(MenuSelector.class)) result.add("Menu");
 		if (passiveView.i$(ComboBoxSelector.class)) result.add("ComboBox");
 		if (passiveView.i$(ComboBoxGrouping.class)) result.add("ComboBox");
+		if (passiveView.i$(ListBoxSelector.class)) result.add("ListBox");
 		if (passiveView.i$(RadioBoxSelector.class)) result.add("RadioBox");
 		if (passiveView.i$(CheckBoxSelector.class)) result.add("CheckBox");
 		if (passiveView.i$(AvatarImage.class)) result.add("Avatar");
@@ -254,11 +256,15 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	private FrameBuilder extensionFrame() {
-		FrameBuilder result = new FrameBuilder().add(type(), "").add("value", type()).add("type", type());
+		String type = type();
+		FrameBuilder result = new FrameBuilder().add(type, "").add("value", type).add("type", type);
 		if (element.isExtensionOf()) {
 			result.add("extensionOf", "extensionOf");
 			result.add("parent", element.asExtensionOf().parentView().name$());
 		}
+		if (type.equalsIgnoreCase("Component")) result.add("component", "component");
+		else if (isBaseType(element) && !type.equalsIgnoreCase("Display"))
+			result.add("baseType", "baseType");
 		return result;
 	}
 

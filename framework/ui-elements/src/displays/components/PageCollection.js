@@ -9,8 +9,6 @@ export default class PageCollection extends AbstractPageCollection {
 
 	constructor(props) {
 		super(props);
-		this.notifier = new PageCollectionNotifier(this);
-		this.requester = new PageCollectionRequester(this);
 	};
 
 }

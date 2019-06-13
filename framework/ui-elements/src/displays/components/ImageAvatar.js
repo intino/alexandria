@@ -4,6 +4,7 @@ import AbstractImageAvatar from "../../../gen/displays/components/AbstractImageA
 import ImageAvatarNotifier from "../../../gen/displays/notifiers/ImageAvatarNotifier";
 import ImageAvatarRequester from "../../../gen/displays/requesters/ImageAvatarRequester";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import Delayer from '../../util/Delayer';
 
 const styles = theme => ({
 	value: {
@@ -24,13 +25,14 @@ class ImageAvatar extends AbstractImageAvatar {
 		this.requester = new ImageAvatarRequester(this);
 	};
 
+	componentDidMount() {
+		this.requester.load();
+	};
+
 	render() {
 		const { classes } = this.props;
-
 		return (
-			<React.Fragment>
-				<img className={classes.value} style={this.style()} title={this.props.label} src={this.state.value}/>
-			</React.Fragment>
+			<img className={classes.value} style={this.style()} title={this.props.label} src={this.state.value}/>
 		);
 	};
 
@@ -42,9 +44,6 @@ class ImageAvatar extends AbstractImageAvatar {
 		return result;
 	};
 
-	refresh = (value) => {
-		this.setState({ value });
-	};
 }
 
 export default withStyles(styles, { withTheme: true })(ImageAvatar);

@@ -54,7 +54,7 @@ class TextEditable extends AbstractTextEditable {
 	};
 
 	refresh = (value) => {
-		this.setState({ "value": value });
+		this.setState({ "value": value != null ? value : "" });
 	};
 }
 

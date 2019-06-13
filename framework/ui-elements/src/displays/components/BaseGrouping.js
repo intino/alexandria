@@ -1,7 +1,5 @@
 import React from "react";
 import AbstractBaseGrouping from "../../../gen/displays/components/AbstractBaseGrouping";
-import BaseGroupingNotifier from "../../../gen/displays/notifiers/BaseGroupingNotifier";
-import BaseGroupingRequester from "../../../gen/displays/requesters/BaseGroupingRequester";
 import {Typography, Input } from "@material-ui/core";
 import classNames from "classnames";
 import 'alexandria-ui-elements/res/styles/layout.css';
@@ -49,8 +47,6 @@ export default class BaseGrouping extends AbstractBaseGrouping {
 
 	constructor(props) {
 		super(props);
-		this.notifier = new BaseGroupingNotifier(this);
-		this.requester = new BaseGroupingRequester(this);
 	};
 
 	renderToolbar = () => {
