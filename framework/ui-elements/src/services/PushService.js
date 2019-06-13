@@ -5,6 +5,9 @@ const PushService = (function () {
     var ws = null;
 
     service.retries = 0;
+    service.ready = false;
+    service.pendingMessages = [];
+
     service.openConnection = function (url) {
         this.ws = new WebSocket(url);
         socketUrl = url;
@@ -12,6 +15,8 @@ const PushService = (function () {
         this.ws.onopen = function(e) {
             console.log("WebSocket connection opened.");
             service.retries = 0;
+            service.ready = true;
+            sendPendingMessages(service);
         };
 
         this.ws.onmessage = function (event) {
@@ -24,6 +29,7 @@ const PushService = (function () {
 
         this.ws.onclose = function(e) {
             if (service.retries >= 3) {
+                service.ready = false;
                 this.notifyClose();
                 return;
             }
@@ -62,7 +68,8 @@ const PushService = (function () {
     };
 
     service.send = function(message) {
-        this.ws.send(JSON.stringify(message));
+        if (this.ready) this.ws.send(JSON.stringify(message));
+        else service.pendingMessages.push(message);
     };
 
     service.onClose = function(listener) {
@@ -71,6 +78,11 @@ const PushService = (function () {
 
     function callback(name) {
         return name in callbacks ? callbacks[name] : [];
+    }
+
+    function sendPendingMessages(service) {
+        for (var i=0; i<service.pendingMessages; i++)
+            service.send(service.pendingMessages[i]);
     }
 
     return service;

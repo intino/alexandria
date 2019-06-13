@@ -30,6 +30,7 @@ public class DialogRenderer extends SizedRenderer<AbstractDialog> {
 		FrameBuilder result = super.properties();
 		result.add("abstractdialog");
 		result.add("title", element.title());
+		if (element.isFullscreen()) result.add("fullscreen", true);
 		addTransition(result);
 		addAlertDialogProperties(result);
 		addCollectionDialogProperties(result);
@@ -49,8 +50,7 @@ public class DialogRenderer extends SizedRenderer<AbstractDialog> {
 		if (!element.i$(OtherComponents.AlertDialog.class)) return;
 		OtherComponents.AlertDialog dialog = element.a$(OtherComponents.AlertDialog.class);
 		builder.add("message", dialog.message());
-		builder.add("accept", dialog.acceptLabel());
-		builder.add("cancel", dialog.cancelLabel());
+		builder.add("close", dialog.closeLabel());
 	}
 
 	private void addCollectionDialogProperties(FrameBuilder builder) {

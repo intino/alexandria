@@ -13,7 +13,6 @@ export default class Component extends AlexandriaDisplay {
 
     constructor(props) {
         super(props);
-        this.notifier = new ComponentNotifier(this);
     };
 
     style() {

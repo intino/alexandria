@@ -59,6 +59,10 @@ const styles = theme => ({
 	root: {
 		width: "100%",
 	},
+	count: {
+		position: "absolute",
+		right: "0",
+	}
 });
 
 class SearchBox extends AbstractSearchBox {
@@ -79,7 +83,7 @@ class SearchBox extends AbstractSearchBox {
 		return (
 			<div className={classNames(classes.root, "layout horizontal")} style={this.style()}>
 				<div className={classes.grow}/>
-				<div>
+				<div style={{position:'relative'}}>
 					<Paper className={classes.search} elevation={1}>
 						<div className={classes.searchIcon}>
 							<SearchIcon/>
@@ -94,7 +98,7 @@ class SearchBox extends AbstractSearchBox {
 							}}
 						/>
 					</Paper>
-					<div className="layout horizontal end-justified"><div title={this.countHint()}>{this.countMessage()}</div></div>
+					<div className={classNames(classes.count, "layout horizontal end-justified")}><div title={this.countHint()}>{this.countMessage()}</div></div>
 				</div>
 			</div>
 		);

@@ -7,6 +7,7 @@ import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.CodeGenerationHelper;
+import io.intino.konos.model.graph.PassiveView;
 import io.intino.tara.magritte.Layer;
 
 import java.util.Map;
@@ -58,4 +59,13 @@ public abstract class UIRenderer extends Renderer {
 		return elementHelper.shortId(element, suffix);
 	}
 
+	protected <D extends PassiveView> boolean isBaseType(D element) {
+		String type = typeOf(element);
+		return type.equalsIgnoreCase("display") ||
+			   type.equalsIgnoreCase("component") ||
+			   type.equalsIgnoreCase("template") ||
+			   type.equalsIgnoreCase("block") ||
+			   type.equalsIgnoreCase("item") ||
+			   type.equalsIgnoreCase("row");
+	}
 }

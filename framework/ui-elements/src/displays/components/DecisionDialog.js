@@ -6,8 +6,9 @@ import DecisionDialogNotifier from "../../../gen/displays/notifiers/DecisionDial
 import DecisionDialogRequester from "../../../gen/displays/requesters/DecisionDialogRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
+import BaseDialog from "./BaseDialog";
 
-const styles = theme => ({});
+const styles = theme => ({...BaseDialog.Styles(theme)});
 
 class DecisionDialog extends AbstractDecisionDialog {
 
@@ -19,9 +20,9 @@ class DecisionDialog extends AbstractDecisionDialog {
 
 	render() {
 		return (
-			<MuiDialog style={this.style()} open={this.state.opened} onClose={this.handleClose.bind(this)}>
+			<MuiDialog fullScreen={this.props.fullscreen} open={this.state.opened} onClose={this.handleClose.bind(this)} TransitionComponent={this.props.fullscreen ? BaseDialog.Transition : undefined}>
 				{this.renderTitle()}
-				<DialogContent>{this.props.children}</DialogContent>
+				{this.renderContent(this.props.children)}
 			</MuiDialog>
 		);
 	};

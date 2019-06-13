@@ -34,7 +34,7 @@ Facet Absolute extends AbstractAbsolute on DataComponents.File
 Facet Absolute extends AbstractAbsolute on OtherComponents.Chart
 Facet Absolute extends AbstractAbsolute on OtherComponents.Dashboard
 Facet Absolute extends AbstractAbsolute on OtherComponents.Header
-Facet Absolute extends AbstractAbsolute on OtherComponents.Dialog
+Facet Absolute extends AbstractAbsolute on OtherComponents.AbstractDialog
 
 Facet AbstractRelative is abstract
 	var double:{%} width = 100%
@@ -48,7 +48,7 @@ Facet Relative extends AbstractRelative on DataComponents.File
 Facet Relative extends AbstractRelative on OtherComponents.Chart
 Facet Relative extends AbstractRelative on OtherComponents.Dashboard
 Facet Relative extends AbstractRelative on OtherComponents.Header
-Facet Relative extends AbstractRelative on OtherComponents.Dialog
+Facet Relative extends AbstractRelative on OtherComponents.AbstractDialog
 
 Facet Paper on Block
 Facet Badge on Block
@@ -77,6 +77,7 @@ Facet Animated extends AbstractAnimated on Block
 Facet Animated extends AbstractAnimated on OtherComponents.Dialog
 Facet Animated extends AbstractAnimated on OtherComponents.AlertDialog
 Facet Animated extends AbstractAnimated on OtherComponents.DecisionDialog
+Facet Animated extends AbstractAnimated on OtherComponents.CollectionDialog
 
 Facet CollapseTriggerer extends Behavior on Component
 	var Collapsible for
@@ -100,9 +101,7 @@ Facet Highlighted on DataComponents.Text
 	var string backgroundColor
 
 // DIALOG FACETS
-Facet Fullscreen on OtherComponents.Dialog
-Facet Mobile on OtherComponents.Dialog
-Facet Draggable on OtherComponents.Dialog
+Facet Fullscreen on OtherComponents.AbstractDialog
 
 // SELECTOR FACETS
 Facet Tabs on OtherComponents.Selector
@@ -119,6 +118,8 @@ Facet CheckBox on OtherComponents.Selector
 
 Facet ComboBox on OtherComponents.Selector
 Facet ComboBox on CatalogComponents.Grouping
+
+Facet ListBox on OtherComponents.Selector
 
 // TEXT FACETS
 Facet Code on DataComponents.Text

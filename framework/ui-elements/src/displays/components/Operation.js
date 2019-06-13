@@ -37,8 +37,8 @@ export default class Operation extends AbstractOperation {
 
 	constructor(props) {
 		super(props);
-		this.notifier = new OperationNotifier(this);
-		this.requester = new OperationRequester(this);
+		// this.notifier = new OperationNotifier(this);
+		// this.requester = new OperationRequester(this);
 	};
 
 	render = () => {
@@ -76,7 +76,7 @@ export default class Operation extends AbstractOperation {
 
 	renderButton = () => {
 		const {classes} = this.props;
-		return (<Button style={this.style()} size={this._size()} variant="contained" color="primary"
+		return (<Button style={this.style()} size={this._size()} color="primary"
 						disabled={this._disabled()} onClick={this.handleClick.bind(this)}
 						className={classes.button}>
 				{this._title()}

@@ -67,6 +67,7 @@ export default class Display extends PassiveView {
         }
         return instances.map((instance, index) => {
             instance.pl.context = () => { return instance.pl.o };
+            instance.pl.owner = () => { return instance.i };
             this.copyProps(props, instance.pl);
             return (<div key={index} style={style}>{React.createElement(DisplayFactory.get(instance.tp), instance.pl)}</div>);
         });

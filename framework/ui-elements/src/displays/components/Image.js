@@ -47,9 +47,6 @@ class Image extends AbstractImage {
 		return result;
 	};
 
-	refresh = (value) => {
-		this.setState({ value });
-	};
 }
 
 export default withStyles(styles, { withTheme: true })(Image);

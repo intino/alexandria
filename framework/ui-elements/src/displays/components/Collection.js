@@ -36,8 +36,6 @@ export default class Collection extends AbstractCollection {
 
 	constructor(props) {
 		super(props);
-		this.notifier = new CollectionNotifier(this);
-		this.requester = new CollectionRequester(this);
 		this.behavior = new CollectionBehavior(this);
 	};
 

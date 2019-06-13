@@ -40,6 +40,14 @@ def attribute(extensionOf) trigger(import)
 	import $parent+firstUpperCase~Notifier from "./$parent+firstUpperCase~Notifier"
 end
 
+def attribute(component) trigger(import)
+	import Notifier from "alexandria-ui-elements/src/displays/notifiers/ComponentNotifier";
+end
+
+def attribute(baseType) trigger(import)
+	import Notifier from "alexandria-ui-elements/gen/displays/notifiers/$type+firstUpperCase~Notifier";
+end
+
 def trigger(import)
 	import Notifier from "./Notifier";
 end

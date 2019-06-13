@@ -91,11 +91,11 @@ def type(properties & dashboard) trigger(specific)
 end
 
 def type(properties & alertdialog) trigger(specific)
-	[ title="$title"][ message="$message"][ labels={{accept:"$accept",cancel:"$cancel"}}][ width="$width"][ height="$height"][ animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}]
+	[ title="$title"][ fullscreen={$fullscreen}][ message="$message"][ closeLabel="$close"][ width="$width"][ height="$height"][ animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}]
 end
 
 def type(properties & abstractdialog) trigger(specific)
-	[ title="$title"][ width="$width"][ height="$height"][ animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}]
+	[ title="$title"][ fullscreen={$fullscreen}][ width="$width"][ height="$height"][ animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}]
 end
 
 def type(properties & block) trigger(specific)
