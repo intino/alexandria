@@ -1,5 +1,6 @@
 dsl Konos
 
+use Divider
 use Dialog
 use Dashboard
 use Slider
@@ -51,6 +52,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block sliderExamples as Conditional > Stamp(template=sliderExamplesMold)
 			Block dashboardExamples as Conditional > Stamp(template=dashboardExamplesMold)
 			Block dialogExamples as Conditional > Stamp(template=dialogExamplesMold)
+			Block dividerExamples as Conditional > Stamp(template=dividerExamplesMold)
 
 		Block facets
 			Text(value="Facets", format=h5 underline)

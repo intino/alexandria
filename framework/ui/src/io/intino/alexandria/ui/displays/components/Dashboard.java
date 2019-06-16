@@ -1,53 +1,55 @@
 package io.intino.alexandria.ui.displays.components;
 
+import io.intino.alexandria.Base64;
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.driver.Program;
+import io.intino.alexandria.drivers.shiny.Driver;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.schemas.DashboardInfo;
+import io.intino.alexandria.ui.AlexandriaUiBox;
+import io.intino.alexandria.ui.displays.components.dashboard.Proxy;
 import io.intino.alexandria.ui.displays.notifiers.DashboardNotifier;
 import org.apache.commons.codec.digest.DigestUtils;
-import spark.utils.IOUtils;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.util.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class Dashboard<DN extends DashboardNotifier, B extends Box> extends AbstractDashboard<B> {
-    private String homeDirectory;
-    private URL script;
-    private java.util.Map<String, String> parameterMap = new HashMap<>();
+import static io.intino.alexandria.ui.utils.IOUtils.readAllLines;
 
-    private static int freePort = 4000;
-    private static int startPort = 4000;
-    private static java.util.Map<String, ProcessInstance> instanceMap = new HashMap<>();
-    private static final String PortTag = "port";
-    private static final int MaxPort = 100000000;
-    private static final String ShinyApp = "\nshinyApp(ui = ui, server = server, options=list(port=%d))";
+public class Dashboard<DN extends DashboardNotifier, B extends Box> extends AbstractDashboard<B> {
+    private Driver driver;
+    private URL serverScript;
+    private URL uiScript;
+    private java.util.Map<String, String> parameterMap = new HashMap<>();
+    private List<URL> resourceList = new ArrayList<>();
 
     public Dashboard(B box) {
         super(box);
+        this.driver = new Driver();
     }
 
-    public Dashboard script(URL script) {
-        this.script = script;
+    public Dashboard serverScript(URL script) {
+        this.serverScript = script;
         return this;
     }
 
-    public Dashboard startPort(int port) {
-        startPort = port;
-        return this;
-    }
-
-    public Dashboard homeDirectory(String directory) {
-        homeDirectory = directory.equalsIgnoreCase("$HOME") ? System.getProperty("user.home") : directory;
+    public Dashboard uiScript(URL script) {
+        this.uiScript = script;
         return this;
     }
 
     public Dashboard add(String parameter, String value) {
         parameterMap.put(parameter, value);
+        return this;
+    }
+
+    public Dashboard add(URL resource) {
+        resourceList.add(resource);
         return this;
     }
 
@@ -61,12 +63,11 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
     public void refresh() {
         try {
             notifier.showLoading();
-            String location = (script != null && homeDirectory != null) ? execute() : null;
+            String location = execute();
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
-                public void run() {
-                    notifier.refresh(new DashboardInfo().location(location));
+                public void run() { notifier.refresh(new DashboardInfo().location(location));
                 }
             }, 1000);
         }
@@ -76,53 +77,26 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
     }
 
     private String execute() {
-        String script = buildScript();
+        String program = programName();
+        Proxy proxy = new Proxy((AlexandriaUiBox)box(), session().browser().baseUrl(), program);
 
-        if (running(script))
-            return dashboardUrl(Objects.requireNonNull(instanceOf(script)).port);
+        proxy.listen();
+        if (!driver.isPublished(program))
+            driver.publish(program());
 
-        return dashboardUrl(run(script));
+        return proxy.dashboardUrl().toString();
     }
 
-    private boolean running(String script) {
-        return instanceOf(script) != null;
+    private Program program() {
+        String name = programName();
+        List<Path> resources = resourceList.stream().map(this::pathOf).collect(Collectors.toList());
+        return new Program().name(name).algorithms(Arrays.asList(pathOf(serverScript), pathOf(uiScript))).resources(resources);
     }
 
-    private int run(String script) {
-        int port = freePort();
-
-        if (port == -1) {
-            notifier.refreshError("url not defined or no ports available");
-            return port;
-        }
-
-        register(script, port, run(script, port));
-
-        return port;
-    }
-
-    private Process run(String script, int port) {
+    private Path pathOf(URL serverScript) {
         try {
-            String hash = hashOf(script);
-            java.io.File file = new java.io.File(homeDirectory + "/" + hash + ".R");
-            Files.write(file.toPath(), replaceTag(addShinyApp(script, port), PortTag, String.valueOf(port)).getBytes());
-            return new ProcessBuilder("Rscript", file.getAbsolutePath()).start();
-        } catch (IOException e) {
-            Logger.error(e);
-            return null;
-        }
-    }
-
-    private String addShinyApp(String script, int port) {
-        return script + String.format(ShinyApp, port);
-    }
-
-    private String buildScript() {
-        try {
-            String content = IOUtils.toString(script.openStream());
-            parameterMap.forEach((key, value) -> replaceTag(content, key, value));
-            return content;
-        } catch (IOException e) {
+            return Paths.get(serverScript.toURI());
+        } catch (URISyntaxException e) {
             Logger.error(e);
             return null;
         }
@@ -132,52 +106,20 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
         return content.replaceAll(":" + tag + ":", value);
     }
 
-    private ProcessInstance instanceOf(String script) {
-        String hash = hashOf(script);
-        return instanceMap.getOrDefault(hash, null);
+    private String programName() {
+        String serverScriptContent = readAllLines(serverScript);
+        String uiScriptContent = readAllLines(uiScript);
+        String content = replaceParameters(serverScriptContent + uiScriptContent);
+        return hashOf(content);
     }
 
-    private void register(String script, int port, Process process) {
-        String hash = hashOf(script);
-        instanceMap.put(hash, new ProcessInstance().port(port).process(process));
-    }
-
-    private int freePort() {
-        List<Integer> busyPorts = instanceMap.values().stream().map(v -> v.port).collect(Collectors.toList());
-
-        freePort = startPort;
-        while (busyPorts.contains(freePort) && freePort < MaxPort) freePort++;
-
-        return freePort <= MaxPort ? freePort : -1;
-    }
-
-    private String dashboardUrl(int port) {
-        try {
-            URL result = new URL(session().browser().baseUrl());
-            return result.getProtocol() + "://" + result.getHost() + ":" + port;
-        } catch (MalformedURLException e) {
-            Logger.error(e);
-            return null;
-        }
+    private String replaceParameters(String script) {
+        parameterMap.forEach((key, value) -> replaceTag(script, key, value));
+        return script;
     }
 
     private String hashOf(String script) {
-        return new String(DigestUtils.md5(script));
-    }
-
-    private static class ProcessInstance {
-        int port;
-        Process process;
-
-        public ProcessInstance port(int port) {
-            this.port = port;
-            return this;
-        }
-
-        public ProcessInstance process(Process process) {
-            this.process = process;
-            return this;
-        }
+        return Base64.encode(DigestUtils.md5(script));
     }
 
 }

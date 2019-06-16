@@ -24,6 +24,7 @@ def type(ui)
 
 		public static void init(UISpark spark, $box+SnakeCaseToCamelCase+FirstUpperCase~Box box, PushService pushService) {
 			$box+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration = ($box+SnakeCaseToCamelCase+FirstUpperCase~Configuration) box.configuration();
+			box.routeManager(routeManager(spark));
 			spark.route("/push").push(pushService);
 			spark.route("/authenticate-callback").get(manager -> new AuthenticateCallbackResource(manager, notifierProvider()).execute());
 			spark.route("/asset/:name").get(manager -> new AssetResource(name -> new AssetResourceLoader(box).load(name), manager, notifierProvider()).execute());

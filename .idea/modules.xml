@@ -16,9 +16,11 @@
       <module fileurl="file://$PROJECT_DIR$/fileformats/movv/movv.iml" filepath="$PROJECT_DIR$/fileformats/movv/movv.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/libraries/ness-accessor/ness-accessor.iml" filepath="$PROJECT_DIR$/libraries/ness-accessor/ness-accessor.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/primitives/primitives.iml" filepath="$PROJECT_DIR$/libraries/primitives/primitives.iml" group="libraries" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/proxy/proxy.iml" filepath="$PROJECT_DIR$/libraries/proxy/proxy.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/rest/rest.iml" filepath="$PROJECT_DIR$/libraries/rest/rest.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/rest-accessor/rest-accessor.iml" filepath="$PROJECT_DIR$/libraries/rest-accessor/rest-accessor.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/framework/scheduler/scheduler.iml" filepath="$PROJECT_DIR$/framework/scheduler/scheduler.iml" group="framework" />
+      <module fileurl="file://$PROJECT_DIR$/drivers/shiny/shiny.iml" filepath="$PROJECT_DIR$/drivers/shiny/shiny.iml" group="drivers" />
       <module fileurl="file://$PROJECT_DIR$/framework/slack/slack.iml" filepath="$PROJECT_DIR$/framework/slack/slack.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/tabb/tabb.iml" filepath="$PROJECT_DIR$/fileformats/tabb/tabb.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/toolbox/test/test.iml" filepath="$PROJECT_DIR$/toolbox/test/test.iml" group="toolbox" />

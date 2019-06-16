@@ -79,3 +79,5 @@ Component dialog as Decorated ExtensionOf(baseDialog)
 Component alertDialog as Decorated ExtensionOf(baseDialog)
 Component decisionDialog as Decorated ExtensionOf(baseDialog)
 Component collectionDialog as Decorated ExtensionOf(baseDialog)
+
+Component divider as Decorated

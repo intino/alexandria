@@ -20,7 +20,7 @@ public class Model {
 	public enum WidgetType {
 		Text, Number, Image, File, Date, Chart, Block, List, Table, Task, OpenPage, OpenBlock, Export,
 		Download, DownloadSelection,
-		Grouping, Sorting, SearchBox, Map, Slider, Dashboard, Dialog;
+		Grouping, Sorting, SearchBox, Map, Slider, Dashboard, Dialog, Divider;
 
 		public static WidgetType from(String type) {
 			WidgetType[] values = values();
@@ -58,6 +58,7 @@ public class Model {
 		map.put(WidgetType.Sorting, new SortingWidget());
 		map.put(WidgetType.SearchBox, new SearchBoxWidget());
 		map.put(WidgetType.Dialog, new DialogWidget());
+		map.put(WidgetType.Divider, new DividerWidget());
 	}
 
 	public static Widget widget(WidgetType type) {

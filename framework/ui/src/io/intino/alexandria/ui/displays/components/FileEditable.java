@@ -24,7 +24,7 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 
 	public FileEditable value(URL value) {
 		this.value = value;
-		this.mimeType = typeOf(value);
+		this.mimeType = UrlUtil.mimeType(value);
 		return this;
 	}
 
@@ -49,7 +49,4 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 		return null;
 	}
 
-	private String typeOf(URL value) {
-		return UrlUtil.mimeType(value);
-	}
 }

@@ -38,7 +38,8 @@ export default class BaseDialog extends AbstractBaseDialog {
 
 	renderTitle = () => {
 		const { classes } = this.props;
-		if (this.props.fullscreen) return (<AppBar className={classes.header}><Typography variant="h5">{this.props.title}</Typography></AppBar>);
+		const style = this.props.color != null ? { backgroundColor: this.props.color } : undefined;
+		if (this.props.fullscreen) return (<AppBar style={style} className={classes.header}><Typography variant="h5">{this.props.title}</Typography></AppBar>);
 		return (<DialogTitle>{this.props.title}</DialogTitle>);
 	};
 

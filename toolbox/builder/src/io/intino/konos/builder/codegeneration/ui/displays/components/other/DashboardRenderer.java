@@ -16,9 +16,9 @@ public class DashboardRenderer extends SizedRenderer<Dashboard> {
 	@Override
 	public FrameBuilder properties() {
 		FrameBuilder result = super.properties();
-		if (element.script() != null && !element.script().isEmpty()) result.add("script", resourceMethodFrame("script", element.script()));
-		result.add("homeDirectory", element.homeDirectory());
-		result.add("startPort", element.startPort());
+		if (element.serverScript() != null && !element.serverScript().isEmpty()) result.add("serverScript", resourceMethodFrame("serverScript", element.serverScript()));
+		if (element.uiScript() != null && !element.uiScript().isEmpty()) result.add("uiScript", resourceMethodFrame("uiScript", element.uiScript()));
+		element.resources().forEach(r -> result.add("resource", resourceMethodFrame("add", r)));
 		element.parameterList().forEach(p -> result.add("parameter", parameterFrame(p)));
 		return result;
 	}

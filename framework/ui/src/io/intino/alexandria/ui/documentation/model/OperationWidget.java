@@ -11,7 +11,7 @@ public class OperationWidget extends BaseWidget {
 
 	public OperationWidget(String description) {
 		super(description);
-		facets(asList("Link", "Button", "IconButton", "MaterialIconButton", "Confirmable"));
+		facets(asList("Link", "Button", "IconButton", "MaterialIconButton", "Confirmable", "Highlighted"));
 	}
 
 	protected void addProperties() {
