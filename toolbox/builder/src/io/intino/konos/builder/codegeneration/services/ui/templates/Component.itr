@@ -345,9 +345,9 @@ def type(properties & chart) trigger(specific)
 end
 
 def type(properties & dashboard) trigger(specific)
-    [$script+resourceMethod]
-	[homeDirectory("$homeDirectory");]
-	[startPort($startPort);]
+    [$serverScript+resourceMethod]
+    [$uiScript+resourceMethod]
+	[$resource+resourceMethod...[$NL]]
 	[$parameter...[$NL]]
 end
 

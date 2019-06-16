@@ -47,6 +47,7 @@ Template(layout=Vertical, spacing=DP8) operationExamplesMold as Decorated
 						Task(title\="operation") as MaterialIconButton("Add")<br/><br/>
 						for icons gallery, refer to <a href\="https://material.io/tools/icons" target\="_blank">material.io</a>
 						=========
+
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="Confirmable facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
@@ -55,4 +56,14 @@ Template(layout=Vertical, spacing=DP8) operationExamplesMold as Decorated
 					value
 						=========
 						Task(title\="operation") as Button Confirmable("Are you sure you want to execute operation?")
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Highlighted facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Task(title="operation") operation6 as Button Highlighted
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Task(title\="operation") as Button Highlighted
 						=========

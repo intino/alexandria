@@ -99,6 +99,7 @@ Facet Multiple extends AbstractMultiple on OtherComponents.Stamp
 Facet Highlighted on DataComponents.Text
 	var string textColor
 	var string backgroundColor
+Facet Highlighted on OperationComponents.Operation
 
 // DIALOG FACETS
 Facet Fullscreen on OtherComponents.AbstractDialog

@@ -8,20 +8,27 @@ import io.intino.alexandria.ui.displays.notifiers.BaseDialogNotifier;
 import java.util.ArrayList;
 
 public class BaseDialog<DN extends BaseDialogNotifier, B extends Box> extends AbstractBaseDialog<DN, B> {
-    private java.util.List<Listener> beforeListeners = new ArrayList<>();
+    private java.util.List<Listener> beforeOpenListeners = new ArrayList<>();
+    private java.util.List<Listener> openListeners = new ArrayList<>();
 
     public BaseDialog(B box) {
         super(box);
     }
 
     public BaseDialog onBeforeOpen(Listener listener) {
-        beforeListeners.add(listener);
+        beforeOpenListeners.add(listener);
+        return this;
+    }
+
+    public BaseDialog onOpen(Listener listener) {
+        openListeners.add(listener);
         return this;
     }
 
     public void open() {
         notifyBeforeOpen();
         notifier.open();
+        notifyOpen();
     }
 
     public void close() {
@@ -29,6 +36,10 @@ public class BaseDialog<DN extends BaseDialogNotifier, B extends Box> extends Ab
     }
 
     private void notifyBeforeOpen() {
-        beforeListeners.forEach(l -> l.accept(new Event(this)));
+        beforeOpenListeners.forEach(l -> l.accept(new Event(this)));
+    }
+
+    private void notifyOpen() {
+        openListeners.forEach(l -> l.accept(new Event(this)));
     }
 }

@@ -35,6 +35,8 @@ Component baseImage as Decorated
 Component image as Decorated ExtensionOf(baseImage)
 Component imageAvatar as Decorated ExtensionOf(baseImage)
 	Request load
+Component imageEditable as Decorated ExtensionOf(baseImage)
+	Request notifyChange as File
 
 Schema KeyPressEventData
 	Attribute keyCode as Text

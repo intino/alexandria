@@ -51,7 +51,7 @@ def type(properties & multiple) trigger(common)
 end
 
 def type(properties & operation) trigger(common)
-	[ title="$title"][ target="$target"][ mode="$operationMode"][ icon="$icon"][ confirm="$confirm"][ disabled={$disabled}][ size="$size"][ format="$format...[ ]"]
+	[ title="$title"][ target="$target"][ mode="$operationMode"][ icon="$icon"][ confirm="$confirm"][ disabled={$disabled}][ size="$size"][ format="$format...[ ]"][ highlighted={$highlighted}]
 end
 
 def type(properties & slider) trigger(common)

@@ -76,7 +76,7 @@ export default class Operation extends AbstractOperation {
 
 	renderButton = () => {
 		const {classes} = this.props;
-		return (<Button style={this.style()} size={this._size()} color="primary"
+		return (<Button style={this.style()} size={this._size()} color="primary" variant={this.props.highlighted ? "contained" : undefined}
 						disabled={this._disabled()} onClick={this.handleClick.bind(this)}
 						className={classes.button}>
 				{this._title()}
