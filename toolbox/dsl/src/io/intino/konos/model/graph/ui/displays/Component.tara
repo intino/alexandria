@@ -169,17 +169,26 @@ Concept OtherComponents
 	Concept MaterialIcon extends Component
 		var string icon
 
-	Concept Slider extends Component
+	Concept AbstractSlider extends Component
 		var word:{Vertical Horizontal} arrangement = Horizontal
 		var integer value = -1
 
-		Concept:{1..1} Range
-			var integer min
-			var integer max
-
 		Concept:{0..1} Animation
-			var integer interval
+			var integer:{Millis} interval
 			var boolean loop = false
+
+		sub Slider
+			Concept:{1..1} Range
+				var integer min
+				var integer max
+
+		sub TemporalSlider
+			var CatalogComponents.Collection[] collections
+			var word[]:{Year QuarterOfYear Month Week Day SixHours Hour FifteenMinutes Minute Second} scales
+
+			Concept:{1..1} Range
+				var instant min
+				var instant max
 
 	Concept AbstractDialog extends Component is abstract
 		var string title

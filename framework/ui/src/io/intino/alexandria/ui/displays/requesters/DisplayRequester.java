@@ -20,7 +20,7 @@ public abstract class DisplayRequester extends Resource {
 		if (displayId == null) return null;
 		String[] data = manager.fromPath("displayId", String.class).split(":");
 		UIClient client = manager.currentClient();
-		return client == null ? null : client.soul().displayWithId(data[0], data[1]);
+		return client == null ? null : client.soul().displayWithId(data[0], data[1], data[2]);
 	}
 
 	public String operation() {

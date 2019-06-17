@@ -63,8 +63,10 @@ public abstract class Soul implements DisplayRepository {
         return displays.values().stream().filter(c -> clazz.isAssignableFrom(c.getClass())).map(clazz::cast).collect(toList());
     }
 
-    public <T extends Display> T displayWithId(String owner, String id) {
-        String key = (owner != null && !owner.isEmpty() ? owner : "") + id;
+    public <T extends Display> T displayWithId(String owner, String context, String id) {
+        String ownerId = owner != null && !owner.isEmpty() ? owner : "";
+        String key = (context != null && !context.isEmpty() ? context : ownerId) + id;
+        if (!displays.containsKey(key)) key = ownerId + id;
         return displays.containsKey(key) ? (T) displays.get(key) : null;
     }
 
@@ -85,7 +87,9 @@ public abstract class Soul implements DisplayRepository {
     @Override
     public <T extends Display> void register(T display) {
         String ownerId = display.owner() != null ? display.owner().id() : "";
+        String context = display.owner() != null ? display.owner().path() : "";
         this.displays.put(ownerId + display.id(), display);
+        this.displays.put(context + display.id(), display);
         registerListeners.forEach(listener -> listener.accept(display));
     }
 

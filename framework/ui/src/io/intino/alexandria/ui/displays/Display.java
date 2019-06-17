@@ -7,7 +7,6 @@ import io.intino.alexandria.ui.SoulProvider;
 import io.intino.alexandria.ui.displays.notifiers.DisplayNotifier;
 import io.intino.alexandria.ui.resources.Asset;
 import io.intino.alexandria.ui.services.push.UISession;
-import io.intino.alexandria.ui.services.push.User;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -328,11 +327,6 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		} catch (MalformedURLException e) {
 			return null;
 		}
-	}
-
-	public String language() {
-		User user = session().user();
-		return user != null ? user.language() : session().discoverLanguage();
 	}
 
 	private Optional<List<Display>> children(String container) {

@@ -39,7 +39,7 @@ export default class Display extends PassiveView {
     removeInstance = (params) => {
         let id = params.id;
         let container = params.c;
-        const instances = this.state[container];
+        const instances = this.instances(container);
         for (var i = 0; i < instances.length; i++)
             if (instances[i].pl.id === id) break;
         if (i >= instances.length) return;

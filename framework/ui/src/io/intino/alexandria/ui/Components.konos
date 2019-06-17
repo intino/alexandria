@@ -62,12 +62,33 @@ Component multiple as Decorated
 Component spinner as Decorated
 	Notification refreshLoading as Bool
 
-Component slider as Decorated
+Component baseSlider as Decorated
 	Notification refreshOrdinals as Object(Ordinal) List
-	Request update as Integer
+	Notification refreshValue as LongInteger
+	Notification refreshSelectedOrdinal as Text
+	Notification refreshToolbar as Object(ToolbarState)
+
+	Request update as LongInteger
+	Request selectOrdinal as Text
+	Request previous
+	Request next
+	Request play
+	Request pause
+
+Component slider as Decorated ExtensionOf(baseSlider)
+Component temporalSlider as Decorated ExtensionOf(baseSlider)
+	Notification refreshRange as Object(Range)
 Schema Ordinal
+	Attribute name as Text
 	Attribute label as Text
 	Attribute step as Integer
+Schema Range
+	Attribute min as LongInteger
+	Attribute max as LongInteger
+Schema ToolbarState
+	Attribute canPrevious as Bool
+	Attribute canNext as Bool
+	Attribute playing as Bool
 
 Component stamp as Decorated
 

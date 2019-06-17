@@ -7,7 +7,7 @@ import io.intino.alexandria.drivers.shiny.Driver;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.schemas.DashboardInfo;
 import io.intino.alexandria.ui.AlexandriaUiBox;
-import io.intino.alexandria.ui.displays.components.dashboard.Proxy;
+import io.intino.alexandria.ui.displays.components.dashboard.DashboardManager;
 import io.intino.alexandria.ui.displays.notifiers.DashboardNotifier;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -78,13 +78,15 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
 
     private String execute() {
         String program = programName();
-        Proxy proxy = new Proxy((AlexandriaUiBox)box(), session().browser().baseUrl(), program);
+        DashboardManager dashboardManager = new DashboardManager((AlexandriaUiBox)box(), session(), program);
 
-        proxy.listen();
         if (!driver.isPublished(program))
             driver.publish(program());
 
-        return proxy.dashboardUrl().toString();
+        dashboardManager.register(program);
+        dashboardManager.listen();
+
+        return dashboardManager.dashboardUrl().toString();
     }
 
     private Program program() {
@@ -109,7 +111,8 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
     private String programName() {
         String serverScriptContent = readAllLines(serverScript);
         String uiScriptContent = readAllLines(uiScript);
-        String content = replaceParameters(serverScriptContent + uiScriptContent);
+        String username = username();
+        String content = replaceParameters(serverScriptContent + uiScriptContent) + (username != null ? username : "");
         return hashOf(content);
     }
 

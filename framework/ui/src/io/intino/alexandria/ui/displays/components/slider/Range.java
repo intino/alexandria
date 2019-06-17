@@ -1,23 +1,23 @@
 package io.intino.alexandria.ui.displays.components.slider;
 
 public class Range {
-	public int min;
-	public int max;
+	public long min;
+	public long max;
 
-	public int min() {
+	public long min() {
 		return min;
 	}
 
-	public Range min(int min) {
+	public Range min(long min) {
 		this.min = min;
 		return this;
 	}
 
-	public int max() {
+	public long max() {
 		return max;
 	}
 
-	public Range max(int max) {
+	public Range max(long max) {
 		this.max = max;
 		return this;
 	}

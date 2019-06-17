@@ -10,6 +10,7 @@ public class UIMessage implements Serializable {
 	@SerializedName("d") private String display;
 	@SerializedName("v") private String value;
 	@SerializedName("o") private String owner;
+	@SerializedName("c") private String context;
 
 	public String operation() {
 		return operation;
@@ -53,6 +54,15 @@ public class UIMessage implements Serializable {
 
 	public UIMessage owner(String owner) {
 		this.owner = owner;
+		return this;
+	}
+
+	public String context() {
+		return context;
+	}
+
+	public UIMessage context(String context) {
+		this.context = context;
 		return this;
 	}
 
