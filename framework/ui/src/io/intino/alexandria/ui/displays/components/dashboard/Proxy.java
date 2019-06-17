@@ -1,6 +1,6 @@
 package io.intino.alexandria.ui.displays.components.dashboard;
 
-import io.intino.alexandria.Driver;
+import io.intino.alexandria.drivers.Driver;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.proxy.Network;
 import io.intino.alexandria.ui.AlexandriaUiBox;
@@ -75,6 +75,7 @@ public class Proxy {
 
 	private void proxyGet(UISparkManager manager) {
 		try {
+			checkSecurity();
 			proxy().get(manager.request(), manager.response());
 		} catch (Network.NetworkException e) {
 			Logger.error(e);
@@ -83,6 +84,7 @@ public class Proxy {
 
 	private void proxyPost(UISparkManager manager) {
 		try {
+			checkSecurity();
 			proxy().post(manager.request(), manager.response());
 		} catch (Network.NetworkException e) {
 			Logger.error(e);

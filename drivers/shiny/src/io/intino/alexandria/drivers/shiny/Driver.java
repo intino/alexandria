@@ -1,6 +1,6 @@
 package io.intino.alexandria.drivers.shiny;
 
-import io.intino.alexandria.driver.Program;
+import io.intino.alexandria.drivers.Program;
 import io.intino.alexandria.drivers.shiny.functions.CleanQueryParam;
 import io.intino.alexandria.proxy.ProxyAdapter;
 
@@ -8,7 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
-public class Driver implements io.intino.alexandria.Driver<URL, io.intino.alexandria.proxy.Proxy> {
+public class Driver implements io.intino.alexandria.drivers.Driver<URL, io.intino.alexandria.proxy.Proxy> {
 
 	public static final String Program = "Program";
 	public static final String LocalUrlParameter = "LocalUrlParameter";

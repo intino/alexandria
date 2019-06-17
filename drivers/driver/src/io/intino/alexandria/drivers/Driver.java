@@ -1,6 +1,4 @@
-package io.intino.alexandria;
-
-import io.intino.alexandria.driver.Program;
+package io.intino.alexandria.drivers;
 
 import java.net.URL;
 import java.util.Map;
