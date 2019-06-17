@@ -153,7 +153,3 @@ Facet Cluster on CatalogComponents.Map
 Facet Kml on CatalogComponents.Map
 	var string layer
 Facet Heatmap on CatalogComponents.Map
-
-Facet Temporal on OtherComponents.Slider
-	var CatalogComponents.Collection[] collections
-	var word[]:{Year QuarterOfYear Month Week Day SixHours Hour FifteenMinutes Minute Second} scales

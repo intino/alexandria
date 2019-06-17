@@ -41,16 +41,6 @@ public class Proxy {
 		writeResponse(response, content);
 	}
 
-	private void addHeaders(Response response) {
-		Header[] headers = network.getLastHeaders();
-		if (headers == null) return;
-		for (Header header : headers) {
-			if (!"Content-Length".equals(header.getName())) {
-				response.header(header.getName(), header.getValue());
-			}
-		}
-	}
-
 	public void post(Request request, Response response) throws Network.NetworkException {
 		String query = request.queryString();
 		if (query == null) query = ""; else query = "?" + query;
@@ -68,6 +58,16 @@ public class Proxy {
 
 		addHeaders(response);
 		writeResponse(response, content);
+	}
+
+	private void addHeaders(Response response) {
+		Header[] headers = network.getLastHeaders();
+		if (headers == null) return;
+		for (Header header : headers) {
+			if ("content-type".equals(header.getName())) {
+				response.header(header.getName(), header.getValue());
+			}
+		}
 	}
 
 	private String pathOf(Request request) {

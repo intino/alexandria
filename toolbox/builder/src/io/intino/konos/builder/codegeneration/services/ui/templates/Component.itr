@@ -237,7 +237,7 @@ def type(binding & searchbox)
 	if ($name != null) $name.bindTo($collection...[,]);
 end
 
-def type(binding & slider)
+def type(binding & temporalslider)
 	if ($name != null) $name.bindTo($collection...[,]);
 end
 
@@ -381,6 +381,13 @@ end
 def type(properties & slider) trigger(specific)
     [value($value);]
     [range($min,$max);]
+    [animation($interval,$loop);]
+    [$ordinal+ordinalMethod...[$NL]]
+end
+
+def type(properties & temporalslider) trigger(specific)
+    [value($value);]
+    [range(java.time.Instant.ofEpochMilli($min~L),java.time.Instant.ofEpochMilli($max~L));]
     [animation($interval,$loop);]
     [$ordinal+ordinalMethod...[$NL]]
 end

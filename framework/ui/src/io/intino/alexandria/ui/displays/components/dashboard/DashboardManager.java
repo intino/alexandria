@@ -5,7 +5,9 @@ import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.proxy.Network;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.DisplayRouteManager;
+import io.intino.alexandria.ui.services.push.UISession;
 import io.intino.alexandria.ui.spark.UISparkManager;
+import spark.Request;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -15,21 +17,24 @@ import java.util.Map;
 import static io.intino.alexandria.drivers.shiny.Driver.LocalUrlParameter;
 import static io.intino.alexandria.drivers.shiny.Driver.Program;
 
-public class Proxy {
+public class DashboardManager {
 	private final AlexandriaUiBox box;
-	private final String baseUrl;
+	private final UISession session;
 	private final String dashboard;
 	private final Driver<URL, io.intino.alexandria.proxy.Proxy> driver;
 
 	private static boolean routeManagerReady = false;
-	private static final Map<String, io.intino.alexandria.proxy.Proxy> proxyMap = new HashMap<>();
 	private static final String DashboardsPathPattern = "/dashboards/:name/*";
 	private static final String DashboardPathPattern = "/dashboards/:name";
+	private static final String DashboardPathName = "name";
 	private static final String DashboardPath = "/dashboards/%s";
 
-	public Proxy(AlexandriaUiBox box, String baseUrl, String dashboard) {
+	private static final Map<String, io.intino.alexandria.proxy.Proxy> proxyMap = new HashMap<>();
+	private static final Map<String, String> sessionMap = new HashMap<>();
+
+	public DashboardManager(AlexandriaUiBox box, UISession session, String dashboard) {
 		this.box = box;
-		this.baseUrl = baseUrl;
+		this.session = session;
 		this.dashboard = dashboard;
 		this.driver = new io.intino.alexandria.drivers.shiny.Driver();
 	}
@@ -44,9 +49,14 @@ public class Proxy {
 		routeManagerReady = true;
 	}
 
+	public void register(String dashboard) {
+		proxyMap.put(dashboard, driver.run(parameters()));
+		sessionMap.put(session.id(), dashboard);
+	}
+
 	public URL dashboardUrl() {
 		try {
-			return new URL(baseUrl + dashboardPath());
+			return new URL(session.browser().baseUrl() + dashboardPath());
 		} catch (MalformedURLException e) {
 			return null;
 		}
@@ -57,8 +67,6 @@ public class Proxy {
 	}
 
 	private io.intino.alexandria.proxy.Proxy proxy() {
-		if (!proxyMap.containsKey(dashboard))
-			proxyMap.put(dashboard, driver.run(parameters()));
 		return proxyMap.get(dashboard);
 	}
 
@@ -75,7 +83,7 @@ public class Proxy {
 
 	private void proxyGet(UISparkManager manager) {
 		try {
-			checkSecurity();
+			if (!validRequest(manager.request())) return;
 			proxy().get(manager.request(), manager.response());
 		} catch (Network.NetworkException e) {
 			Logger.error(e);
@@ -84,11 +92,20 @@ public class Proxy {
 
 	private void proxyPost(UISparkManager manager) {
 		try {
-			checkSecurity();
+			if (!validRequest(manager.request())) return;
 			proxy().post(manager.request(), manager.response());
 		} catch (Network.NetworkException e) {
 			Logger.error(e);
 		}
+	}
+
+	private boolean validRequest(Request request) {
+		String sessionId = request.session().id();
+
+		if (sessionMap.containsKey(sessionId))
+			return true;
+
+		return false;
 	}
 
 }

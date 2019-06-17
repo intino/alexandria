@@ -4,21 +4,13 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(homeTemplate)
 
 Template homeTemplate
-	Dashboard dashboard1
-		serverScript = "/server.R"
-		uiScript = "/ui.R"
-		resources = "/res1.R" "/res2.R"
-		Parameter("a", "valuea")
-		Parameter("b", "valueb")
+	Slider
+		Range(min=1, max=100)
 
-	Dashboard dashboard2
-		serverScript = "/server.R"
-		uiScript = "/ui.R"
-		resources = "/res1.R" "/res2.R"
-
-	Dashboard dashboard3
-		serverScript = "/server.R"
-		uiScript = "/ui.R"
+	TemporalSlider(collections = empty)
+		Range(min="2011-12-03T00:00:00Z", max="2011-12-03T00:00:00Z")
+		scales = Year Month Day
+		Animation(interval=1000 Millis, loop=true)
 
 Template template1
 

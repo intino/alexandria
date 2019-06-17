@@ -54,7 +54,7 @@ def type(properties & operation) trigger(common)
 	[ title="$title"][ target="$target"][ mode="$operationMode"][ icon="$icon"][ confirm="$confirm"][ disabled={$disabled}][ size="$size"][ format="$format...[ ]"][ highlighted={$highlighted}]
 end
 
-def type(properties & slider) trigger(common)
+def type(properties & abstractslider) trigger(common)
 	[ label="$label"][ format="$format...[ ]"][ color="$color"][ arrangement="$arrangement"][ animation={{interval:$interval,loop:$loop}}]
 end
 

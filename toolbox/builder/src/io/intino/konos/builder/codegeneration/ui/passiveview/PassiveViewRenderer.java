@@ -8,6 +8,7 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.ElementRenderer;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.*;
+import io.intino.konos.model.graph.OtherComponents.TemporalSlider;
 import io.intino.konos.model.graph.PassiveView.Notification;
 import io.intino.konos.model.graph.PassiveView.Request;
 import io.intino.konos.model.graph.avatar.datacomponents.AvatarImage;

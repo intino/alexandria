@@ -3,8 +3,6 @@ package io.intino.alexandria.ui.displays.templates;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.components.slider.Ordinal;
-import io.intino.alexandria.ui.displays.events.ChangeEvent;
-import io.intino.alexandria.ui.displays.events.ChangeListener;
 
 public class SliderExamplesMold extends AbstractSliderExamplesMold<AlexandriaUiBox> {
 
@@ -16,6 +14,11 @@ public class SliderExamplesMold extends AbstractSliderExamplesMold<AlexandriaUiB
     public void init() {
         super.init();
         slider1.add(new Ordinal() {
+            @Override
+            public String name() {
+                return "ordinal";
+            }
+
             @Override
             public String label() {
                 return "Ordinal";
@@ -31,11 +34,7 @@ public class SliderExamplesMold extends AbstractSliderExamplesMold<AlexandriaUiB
                 return null;
             }
         });
-        slider1.onChange(new ChangeListener() {
-            @Override
-            public void accept(ChangeEvent event) {
-                slider1.notifyUser(String.format("Se ha seleccionado el valor %d", (int)event.value()), UserMessage.Type.Info);
-            }
-        });
+        slider1.onChange(event -> slider1.notifyUser(String.format("Se ha seleccionado el valor %d", (Long)event.value()), UserMessage.Type.Info));
+        slider1.refresh();
     }
 }
