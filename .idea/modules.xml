@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/toolbox/builder/builder.iml" filepath="$PROJECT_DIR$/toolbox/builder/builder.iml" group="toolbox" />
       <module fileurl="file://$PROJECT_DIR$/framework/core/core.iml" filepath="$PROJECT_DIR$/framework/core/core.iml" group="framework" />
+      <module fileurl="file://$PROJECT_DIR$/drivers/driver/driver.iml" filepath="$PROJECT_DIR$/drivers/driver/driver.iml" group="drivers" />
       <module fileurl="file://$PROJECT_DIR$/toolbox/dsl/dsl.iml" filepath="$PROJECT_DIR$/toolbox/dsl/dsl.iml" group="toolbox" />
       <module fileurl="file://$PROJECT_DIR$/libraries/exceptions/exceptions.iml" filepath="$PROJECT_DIR$/libraries/exceptions/exceptions.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/inl/inl.iml" filepath="$PROJECT_DIR$/fileformats/inl/inl.iml" group="fileformats" />

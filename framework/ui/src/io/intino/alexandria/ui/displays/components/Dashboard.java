@@ -2,7 +2,7 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.Base64;
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.driver.Program;
+import io.intino.alexandria.drivers.Program;
 import io.intino.alexandria.drivers.shiny.Driver;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.schemas.DashboardInfo;
@@ -90,7 +90,7 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
     private Program program() {
         String name = programName();
         List<Path> resources = resourceList.stream().map(this::pathOf).collect(Collectors.toList());
-        return new Program().name(name).algorithms(Arrays.asList(pathOf(serverScript), pathOf(uiScript))).resources(resources);
+        return new Program().name(name).scripts(Arrays.asList(pathOf(serverScript), pathOf(uiScript))).data(resources);
     }
 
     private Path pathOf(URL serverScript) {
