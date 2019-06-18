@@ -56,8 +56,8 @@ def type(mounter & population)
 	import io.intino.alexandria.tabb.TabbBuilder;
 	import io.intino.alexandria.tabb.streamers.MappColumnStreamer;
     import io.intino.alexandria.tabb.streamers.MappColumnStreamer.SimpleSelector;
-	import $package+validPackage.box.datalake.Datalake;
-	import $package+validPackage.box.datalake.$name+snakeCaseToCamelCase+FirstUpperCase~MounterFunctions;
+	import $package+validPackage.datalake.Datalake;
+	import $package+validPackage.datalake.mounter.$name+snakeCaseToCamelCase+FirstUpperCase~MounterFunctions;
 	import $package+validPackage.$box+firstUpperCase~Box;
 
 	import java.util.function.Predicate;
@@ -72,7 +72,7 @@ def type(mounter & population)
 				$splittedColumns
 				$column...[$NL]
 				try {
-					tabbBuilder[$format].save(new java.io.File(box.datamart(), "$name+lowercase~-" + timetag.value() + ".tabb"));));
+					tabbBuilder[$format].save(new java.io.File(box.datamart(), "$name+lowercase~-" + timetag.value() + ".tabb"));
 				} catch (IOException e) {
 					Logger.error(e);
 				}
@@ -117,6 +117,12 @@ end
 def type(column) attribute(type:Timetag) trigger(method)
 	public static Function<Item, io.intino.alexandria.Timetag> $name$facet() {
 		return i -> io.intino.alexandria.Timetag.of(i.value());
+	}
+end
+
+def type(column) attribute(type:Boolean) trigger(method)
+	public static Function<Item, Boolean> $name$facet() {
+		return i -> Boolean.parseBoolean(i.value());
 	}
 end
 

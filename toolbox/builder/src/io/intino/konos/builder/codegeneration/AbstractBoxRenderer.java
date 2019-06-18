@@ -6,6 +6,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.datalake.feeder.FeederRenderer;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.graph.Datamart;
 import io.intino.konos.model.graph.Feeder;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.jms.JMSService;
@@ -48,15 +49,19 @@ public class AbstractBoxRenderer {
 	public void execute() {
 		FrameBuilder root = new FrameBuilder("box");
 		final String name = name();
-		root.add("name", name);
-		root.add("package", packageName);
+		root.add("name", name).add("package", packageName);
 		if (hasModel) root.add("tara", name);
 		parent(root);
 		services(root, name);
 		tasks(root, name);
 		dataLake(root, name);
+		graph.datamartList().forEach(d -> datamart(root, d));
 		Commons.writeFrame(gen, "AbstractBox", template().render(root.toFrame()));
 		notifyNewParameters();
+	}
+
+	private void datamart(FrameBuilder root, Datamart datamart) {
+		root.add("datamart", new FrameBuilder("datamart").add("name", datamart.name$()).add("value", datamart.path()));
 	}
 
 	private void notifyNewParameters() {

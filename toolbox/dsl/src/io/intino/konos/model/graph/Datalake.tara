@@ -2,7 +2,7 @@ dsl Proteo
 
 use DataTypes
 
-Concept Datamart
+Concept:Named Datamart
 	var string path
 
 Concept:{0..1} Datalake

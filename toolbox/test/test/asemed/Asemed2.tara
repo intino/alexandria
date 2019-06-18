@@ -131,7 +131,6 @@ Mounter inspeccionados as Population
 	Column(datalake.FactorCarga, type = String)
 	Column(datalake.FactorCargaPromedioDiario, type = String)
 	Column(datalake.FactorPotencia, type = String)
-	Column(datalake.revisionInspeccion, type = String)
 	Column(datalake.revisionInspeccionado, type = String)
 	Collect(format = Arff, datamart = datamart)
 
