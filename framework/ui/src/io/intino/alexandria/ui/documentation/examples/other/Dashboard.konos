@@ -9,7 +9,7 @@ Template(layout=Vertical, spacing=DP8) dashboardExamplesMold as Decorated
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAirExtraLarge)
 				Block as Absolute(height=600px)
-					Dashboard dashboard1
+					Dashboard alexandriaDashboard
 						serverScript = "data/dashboard/server.R"
 						uiScript = "data/dashboard/ui.R"
 						Parameter("param1", "abcd")

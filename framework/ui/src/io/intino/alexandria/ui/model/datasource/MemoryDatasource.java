@@ -5,8 +5,6 @@ import io.intino.alexandria.ui.model.Datasource;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Collections.emptyList;
-
 public abstract class MemoryDatasource<O> extends Datasource<O> {
 	private List<O> items = new ArrayList<>();
 
@@ -18,9 +16,6 @@ public abstract class MemoryDatasource<O> extends Datasource<O> {
 		this.items.addAll(items);
 	}
 
-	public long itemCount() {
-		return itemCount(null, emptyList());
-	}
 	public abstract long itemCount(String condition, List<Filter> filters);
 	public abstract List<O> items(int start, int count, String condition, List<Filter> filters, List<String> sortings);
 

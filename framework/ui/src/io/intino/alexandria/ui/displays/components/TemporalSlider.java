@@ -4,8 +4,8 @@ import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.components.slider.Ordinal;
-import io.intino.alexandria.ui.displays.components.slider.Range;
 import io.intino.alexandria.ui.displays.components.slider.ordinals.*;
+import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.notifiers.TemporalSliderNotifier;
 import io.intino.alexandria.ui.model.TimeScale;
 
@@ -45,16 +45,28 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
     }
 
     @Override
-    public void refresh() {
-        super.refresh();
-        Range range = range();
-        notifier.refreshRange(new io.intino.alexandria.schemas.Range().min(range().min()).max(range.max()));
-    }
-
-    @Override
     void notifyChange() {
         notifyCollections();
         super.notifyChange();
+    }
+
+    @Override
+    String formattedValue() {
+        Ordinal ordinal = ordinal();
+        long value = millisOf(value());
+        return ordinal != null ? ordinal.formatter().format(value) : String.valueOf(value);
+    }
+
+    private long millisOf(long value) {
+        return timeScale().addTo(min, value).toEpochMilli();
+    }
+
+    private Instant toInstant(long millis) {
+        return Instant.ofEpochMilli(millis);
+    }
+
+    private TimeScale timeScale() {
+        return TimeScale.valueOf(ordinal().name());
     }
 
     private void notifyCollections() {
@@ -62,7 +74,7 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
     }
 
     private Timetag timetag() {
-        LocalDateTime localDate = Instant.ofEpochMilli(value()).atZone(UTC).toLocalDateTime();
+        LocalDateTime localDate = toInstant(millisOf(value())).atZone(UTC).toLocalDateTime();
         return Timetag.of(localDate, scale());
     }
 
@@ -80,8 +92,15 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
     void updateRange() {
         Ordinal ordinal = ordinal();
         if (ordinal == null) return;
-        long count = TimeScale.valueOf(ordinal().name()).instantsBetween(min, max);
+        long count = timeScale().instantsBetween(min, max) - 1;
         range(0, count);
+        if (notifier != null) notifier.refreshRange(rangeSchema());
+    }
+
+    @Override
+    void notifyListener() {
+        if (changeListener() == null) return;
+        changeListener().accept(new ChangeEvent(this, toInstant(millisOf(value()))));
     }
 
 }

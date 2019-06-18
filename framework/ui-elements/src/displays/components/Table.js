@@ -14,7 +14,6 @@ const styles = theme => ({
 	...CollectionStyles(theme),
 	headerView : {
 		borderBottom: "1px solid #ddd",
-		height: "100%"
 	},
 	itemView : {
 		borderBottom: "1px solid #ddd",

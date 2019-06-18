@@ -2,6 +2,9 @@ package io.intino.alexandria.ui.displays.components.slider.ordinals;
 
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.ui.displays.components.slider.Ordinal;
+import io.intino.alexandria.ui.model.TimeScale;
+
+import java.time.Instant;
 
 public class YearOrdinal implements Ordinal {
 	@Override
@@ -20,7 +23,7 @@ public class YearOrdinal implements Ordinal {
 	}
 
 	@Override
-	public String formatter() {
-		return null;
+	public Formatter formatter() {
+		return value -> TimeScale.Year.toString(Instant.ofEpochMilli(value));
 	}
 }

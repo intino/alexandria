@@ -1,12 +1,14 @@
 package io.intino.alexandria.ui.displays.components.slider.ordinals;
 
-import io.intino.alexandria.Scale;
 import io.intino.alexandria.ui.displays.components.slider.Ordinal;
+import io.intino.alexandria.ui.model.TimeScale;
+
+import java.time.Instant;
 
 public class MinuteOrdinal implements Ordinal {
 	@Override
 	public String name() {
-		return Scale.Minute.name();
+		return TimeScale.Minute.name();
 	}
 
 	@Override
@@ -20,7 +22,7 @@ public class MinuteOrdinal implements Ordinal {
 	}
 
 	@Override
-	public String formatter() {
-		return null;
+	public Formatter formatter() {
+		return value -> TimeScale.Minute.toString(Instant.ofEpochMilli(value));
 	}
 }

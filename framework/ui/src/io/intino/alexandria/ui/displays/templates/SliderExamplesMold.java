@@ -13,7 +13,20 @@ public class SliderExamplesMold extends AbstractSliderExamplesMold<AlexandriaUiB
     @Override
     public void init() {
         super.init();
-        slider1.add(new Ordinal() {
+
+        slider1.add(ordinal());
+        slider1.onChange(event -> slider1.notifyUser(String.format("Se ha seleccionado el valor %d", (Long)event.value()), UserMessage.Type.Info));
+        slider1.refresh();
+
+        slider2.add(ordinal());
+        slider2.onChange(event -> slider2.notifyUser(String.format("Se ha seleccionado el valor %d", (Long)event.value()), UserMessage.Type.Info));
+        slider2.refresh();
+
+        slider3.onChange(event -> slider3.notifyUser(String.format("Se ha seleccionado el valor %s", event.value().toString()), UserMessage.Type.Info));
+    }
+
+    private Ordinal ordinal() {
+        return new Ordinal() {
             @Override
             public String name() {
                 return "ordinal";
@@ -30,11 +43,9 @@ public class SliderExamplesMold extends AbstractSliderExamplesMold<AlexandriaUiB
             }
 
             @Override
-            public String formatter() {
-                return null;
+            public Formatter formatter() {
+                return value -> value + "%";
             }
-        });
-        slider1.onChange(event -> slider1.notifyUser(String.format("Se ha seleccionado el valor %d", (Long)event.value()), UserMessage.Type.Info));
-        slider1.refresh();
+        };
     }
 }

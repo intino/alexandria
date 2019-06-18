@@ -224,8 +224,8 @@ public class Datasources {
 			}
 
 			@Override
-			public long itemCount(String condition, List<Filter> filters) {
-				return datasource.itemCount(condition, filters);
+			public long placeMarkCount(String condition, List<Filter> filters) {
+				return ((PageDatasource) datasource).itemCount(condition, filters);
 			}
 
 			@Override
@@ -259,8 +259,8 @@ public class Datasources {
 			}
 
 			@Override
-			public long itemCount(String condition, List<Filter> filters) {
-				return datasource.itemCount(condition, filters);
+			public long placeMarkCount(String condition, List<Filter> filters) {
+				return ((PageDatasource) datasource).itemCount(condition, filters);
 			}
 
 			@Override

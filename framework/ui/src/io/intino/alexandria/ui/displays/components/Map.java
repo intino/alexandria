@@ -5,6 +5,7 @@ import io.intino.alexandria.schemas.MapCollectionSetup;
 import io.intino.alexandria.ui.Asset;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.Collection;
+import io.intino.alexandria.ui.displays.components.collection.behaviors.CollectionBehavior;
 import io.intino.alexandria.ui.displays.components.collection.behaviors.MapCollectionBehavior;
 import io.intino.alexandria.ui.displays.events.collection.AddItemEvent;
 import io.intino.alexandria.ui.displays.notifiers.MapNotifier;
@@ -86,11 +87,14 @@ public abstract class Map<B extends Box, ItemComponent extends io.intino.alexand
         MapDatasource source = source();
         if (source == null && type != Type.Kml) return;
         MapCollectionSetup setup = new MapCollectionSetup();
-        if (source != null) setup.itemCount(source.itemCount());
+        if (source != null) {
+            CollectionBehavior behavior = behavior();
+            behavior.setup(source);
+            setup.itemCount(behavior.itemCount());
+        }
         if (type == Type.Kml) setup.kmlLayer(Asset.toResource(baseAssetUrl(), this.kmlLayer).toUrl().toString());
         if (icon != null) setup.icon(Asset.toResource(baseAssetUrl(), this.icon).toUrl().toString());
         notifier.setup(setup);
-        if (source != null) behavior().setup(source);
         notifyReady();
     }
 

@@ -3,7 +3,11 @@ package io.intino.alexandria.ui.displays.components.collection.loaders;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.ui.model.Datasource;
 import io.intino.alexandria.ui.model.datasource.Filter;
+import io.intino.alexandria.ui.model.datasource.MapDatasource;
+import io.intino.alexandria.ui.model.datasource.MemoryDatasource;
+import io.intino.alexandria.ui.model.datasource.PageDatasource;
 import io.intino.alexandria.ui.model.datasource.temporal.TemporalDatasource;
+import io.intino.alexandria.ui.model.datasource.temporal.TemporalPageDatasource;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,7 +23,7 @@ public class ItemLoader<DS extends Datasource<Item>, Item> {
 
 	public ItemLoader(DS source) {
 		this.source = source;
-		this.itemCount = source.itemCount();
+		this.itemCount = calculateItemCount(null);
 	}
 
 	public ItemLoader filter(String grouping, List<String> groups) {
@@ -73,7 +77,11 @@ public class ItemLoader<DS extends Datasource<Item>, Item> {
 
 	private long calculateItemCount(String condition) {
 		if (source instanceof TemporalDatasource) return ((TemporalDatasource) source).itemCount(timetag, condition, filters);
-		return source.itemCount(condition, filters);
+		else if (source instanceof TemporalPageDatasource) return ((TemporalPageDatasource) source).itemCount(timetag, condition, filters);
+		else if (source instanceof MemoryDatasource) return ((MemoryDatasource) source).itemCount(condition, filters);
+		else if (source instanceof MapDatasource) return ((MapDatasource) source).placeMarkCount(condition, filters);
+		else if (source instanceof PageDatasource) return ((PageDatasource) source).itemCount(condition, filters);
+		return 0;
 	}
 
 }

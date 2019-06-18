@@ -64,9 +64,10 @@ Component spinner as Decorated
 
 Component baseSlider as Decorated
 	Notification refreshOrdinals as Object(Ordinal) List
-	Notification refreshValue as LongInteger
+	Notification refreshSelected as Object(Selected)
 	Notification refreshSelectedOrdinal as Text
 	Notification refreshToolbar as Object(ToolbarState)
+	Notification refreshRange as Object(Range)
 
 	Request update as LongInteger
 	Request selectOrdinal as Text
@@ -77,7 +78,6 @@ Component baseSlider as Decorated
 
 Component slider as Decorated ExtensionOf(baseSlider)
 Component temporalSlider as Decorated ExtensionOf(baseSlider)
-	Notification refreshRange as Object(Range)
 Schema Ordinal
 	Attribute name as Text
 	Attribute label as Text
@@ -89,6 +89,9 @@ Schema ToolbarState
 	Attribute canPrevious as Bool
 	Attribute canNext as Bool
 	Attribute playing as Bool
+Schema Selected
+	Attribute value as LongInteger
+	Attribute formattedValue as Text
 
 Component stamp as Decorated
 

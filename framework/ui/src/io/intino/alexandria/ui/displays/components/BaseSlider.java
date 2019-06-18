@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.schemas.Selected;
 import io.intino.alexandria.schemas.ToolbarState;
 import io.intino.alexandria.ui.displays.components.slider.Animation;
 import io.intino.alexandria.ui.displays.components.slider.Ordinal;
@@ -61,6 +62,7 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 	public void selectOrdinal(String name) {
 		ordinal(ordinalList.stream().filter(o -> o.name().equals(name)).findFirst().orElse(null));
 		notifier.refreshSelectedOrdinal(name);
+		update(value);
 	}
 
 	public BaseSlider ordinal(Ordinal ordinal) {
@@ -121,21 +123,32 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		if (notifier == null) return;
 		notifier.refreshToolbar(toolbarState());
 		notifier.refreshOrdinals(ordinals());
+		notifier.refreshSelected(selectedValue());
+		notifier.refreshRange(rangeSchema());
 		if (ordinal() != null) notifier.refreshSelectedOrdinal(ordinal().name());
 	}
 
+	ChangeListener changeListener() {
+		return changeListener;
+	}
+
 	void notifyChange() {
-		notifier.refreshValue(value);
+		notifier.refreshSelected(selectedValue());
 		notifier.refreshToolbar(toolbarState());
 		notifyListener();
 	}
 
-	abstract void updateRange();
+	io.intino.alexandria.schemas.Range rangeSchema() {
+		return new io.intino.alexandria.schemas.Range().min(range().min()).max(range.max());
+	}
 
-	private void notifyListener() {
+	void notifyListener() {
 		if (changeListener == null) return;
 		changeListener.accept(new ChangeEvent(this, value));
 	}
+
+	abstract String formattedValue();
+	abstract void updateRange();
 
 	private List<io.intino.alexandria.schemas.Ordinal> ordinals() {
 		return ordinalList.stream().map(this::ordinalOf).collect(toList());
@@ -146,7 +159,7 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 	}
 
 	private void playerStep() {
-		if (!canNext()) {
+		if (!canNext() && !canLoop()) {
 			this.playerStepTimer = null;
 			return;
 		}
@@ -162,6 +175,10 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		}, this.animation.interval);
 	}
 
+	private boolean canLoop() {
+		return animation != null && animation.loop;
+	}
+
 	private Boolean canPrevious() {
 		return value > range.min;
 	}
@@ -171,8 +188,8 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 	}
 
 	private void nextValue() {
-		if (value > range.max) {
-			if (this.animation.loop) value(range.min()-1);
+		if (value >= range.max) {
+			if (canLoop()) value(range.min()-1);
 			else return;
 		}
 		update(value+1);
@@ -187,6 +204,11 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		if (value > range.max) return false;
 		if (value < range.min) return false;
 		return true;
+	}
+
+	private Selected selectedValue() {
+		String formattedValue = formattedValue();
+		return new Selected().value(value).formattedValue(formattedValue);
 	}
 
 }

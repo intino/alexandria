@@ -26,7 +26,6 @@ public class DashboardManager {
 	private static boolean routeManagerReady = false;
 	private static final String DashboardsPathPattern = "/dashboards/:name/*";
 	private static final String DashboardPathPattern = "/dashboards/:name";
-	private static final String DashboardPathName = "name";
 	private static final String DashboardPath = "/dashboards/%s";
 
 	private static final Map<String, io.intino.alexandria.proxy.Proxy> proxyMap = new HashMap<>();
@@ -49,8 +48,8 @@ public class DashboardManager {
 		routeManagerReady = true;
 	}
 
-	public void register(String dashboard) {
-		proxyMap.put(dashboard, driver.run(parameters()));
+	public void register(String dashboard, String username) {
+		proxyMap.put(dashboard + (username != null ? username : ""), driver.run(parameters()));
 		sessionMap.put(session.id(), dashboard);
 	}
 
@@ -101,11 +100,7 @@ public class DashboardManager {
 
 	private boolean validRequest(Request request) {
 		String sessionId = request.session().id();
-
-		if (sessionMap.containsKey(sessionId))
-			return true;
-
-		return false;
+		return sessionMap.containsKey(sessionId);
 	}
 
 }

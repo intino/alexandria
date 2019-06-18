@@ -137,8 +137,8 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
 
     void setup() {
         if (source == null) return;
-        notifier.setup(new CollectionSetup().itemCount(source.itemCount()));
         behavior.setup(source);
+        notifier.setup(new CollectionSetup().itemCount(behavior.itemCount()));
         notifyReady();
     }
 
