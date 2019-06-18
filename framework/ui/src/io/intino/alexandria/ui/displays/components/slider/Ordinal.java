@@ -4,9 +4,9 @@ public interface Ordinal {
 	String name();
 	String label();
 	int step();
-	String formatter();
+	Formatter formatter();
 
 	interface Formatter {
-		String format(int value);
+		String format(long value);
 	}
 }

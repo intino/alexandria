@@ -5,8 +5,9 @@ import TemporalSliderNotifier from "../../../gen/displays/notifiers/TemporalSlid
 import TemporalSliderRequester from "../../../gen/displays/requesters/TemporalSliderRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
+import BaseSlider from "./BaseSlider";
 
-const styles = theme => ({});
+const styles = theme => ({...BaseSlider.Styles(theme)});
 
 class TemporalSlider extends AbstractTemporalSlider {
 
@@ -20,9 +21,6 @@ class TemporalSlider extends AbstractTemporalSlider {
 		return this.renderComponent();
 	};
 
-	refreshRange = (range) => {
-		this.setState({range});
-	};
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(TemporalSlider));

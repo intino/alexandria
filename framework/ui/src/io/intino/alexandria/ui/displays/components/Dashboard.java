@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static io.intino.alexandria.ui.utils.IOUtils.readAllLines;
-
 public class Dashboard<DN extends DashboardNotifier, B extends Box> extends AbstractDashboard<B> {
     private Driver driver;
     private URL serverScript;
@@ -83,7 +81,7 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
         if (!driver.isPublished(program))
             driver.publish(program());
 
-        dashboardManager.register(program);
+        dashboardManager.register(program, username());
         dashboardManager.listen();
 
         return dashboardManager.dashboardUrl().toString();
@@ -109,11 +107,7 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
     }
 
     private String programName() {
-        String serverScriptContent = readAllLines(serverScript);
-        String uiScriptContent = readAllLines(uiScript);
-        String username = username();
-        String content = replaceParameters(serverScriptContent + uiScriptContent) + (username != null ? username : "");
-        return hashOf(content);
+        return this.name();
     }
 
     private String replaceParameters(String script) {

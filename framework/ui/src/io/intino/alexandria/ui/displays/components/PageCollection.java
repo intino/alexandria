@@ -50,8 +50,9 @@ public abstract class PageCollection<DN extends PageCollectionNotifier, B extend
     void setup() {
         PageDatasource source = source();
         if (source == null) return;
-        notifier.setup(new PageCollectionSetup().pageSize(pageSize).itemCount(source.itemCount()));
-        ((PageCollectionBehavior)behavior()).setup(source, pageSize);
+        PageCollectionBehavior behavior = behavior();
+        behavior.setup(source, pageSize);
+        notifier.setup(new PageCollectionSetup().pageSize(pageSize).itemCount(behavior.itemCount()));
         notifyReady();
     }
 
