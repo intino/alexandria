@@ -71,7 +71,9 @@ def type(box)
 		[$hasUi+authService]
 		[$hasUi+editorService]
 		[$datalake+getter]
+		[$datamart+getter]
 		[$task+getter...[$NL$NL]]
+
 
 		private void initRESTServices() {
 			$service+rest...[$NL]
@@ -94,9 +96,9 @@ def type(box)
 			$service+ui...[$NL]
 		}
 
-		private void initDatalake() {
-			$datalake+init...
-		}aaaaa
+		[private void initDatalake() {
+			$datalake+init
+		}]
 
 		[private io.intino.ness.core.Datalake datalakeFrom(String nessUrl, String nessUser, String nessPassword, String clientId) {
 			if (nessUrl.startsWith("file://")) return new io.intino.alexandria.nessaccessor.local.LocalDatalake(new java.io.File(nessUrl.replace("file://", "")));
@@ -272,6 +274,12 @@ def type(datalake) trigger(getter)
 	private void registerFeeders() {
 		$feeder...[$NL]
 	}]
+end
+
+def type(datamart) trigger(getter)
+	public java.io.File $name~Datamart() {
+		return new java.io.File(this.configuration().get("$value+customParameter"));
+	}
 end
 
 def trigger(feeder)
