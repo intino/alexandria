@@ -26,7 +26,7 @@ public class ResourceRenderer extends UIRenderer {
 	public void render() {
 		UIService uiService = resource.core$().ownerAs(UIService.class);
 
-		FrameBuilder builder = frameBuilder().add("resource").add("name", resource.name$()).add("parameter", parameters(resource));
+		FrameBuilder builder = buildFrame().add("resource").add("name", resource.name$()).add("parameter", parameters(resource));
 		if (uiService.googleApiKey() != null) builder.add("googleApiKey", customize("googleApiKey", uiService.googleApiKey()));
 		if (resource.isConfidential()) builder.add("confidential", "");
 		Commons.writeFrame(resourceFolder(gen(), target), resourceFilename(resource.name$()), setup(new ResourceTemplate()).render(builder.toFrame()));

@@ -11,6 +11,7 @@ Template(layout=Vertical, spacing=DP8) chartExamplesMold as Decorated
 			Text(format=h6, value="No facets with Html output")
 			Block(spacing=DP8, format=filled)
 				Chart(input=iris) chart1
+					serverUrl = "http://localhost:6311"
 					query
 						===========
 						output \= qplot(Petal.Width, Sepal.Length, data \= iris, color \= Species)

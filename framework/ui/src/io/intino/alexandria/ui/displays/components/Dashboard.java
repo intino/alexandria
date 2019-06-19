@@ -107,7 +107,7 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
     }
 
     private String programName() {
-        return this.name();
+        return this.name().toLowerCase();
     }
 
     private String replaceParameters(String script) {

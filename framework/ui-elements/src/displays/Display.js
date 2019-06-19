@@ -50,6 +50,12 @@ export default class Display extends PassiveView {
         this._registerInstances(params.c, []);
     };
 
+    redirect = (params) => {
+        let url = params.url;
+        if (url == null || url === "") url = Application.configuration.baseUrl;
+        window.location.href = url;
+    };
+
     instances = () => {
         return this.instances("__elements");
     };

@@ -13,10 +13,8 @@ public class GroupingRenderer extends BindingCollectionRenderer<Grouping> {
 	}
 
 	@Override
-	public FrameBuilder frameBuilder() {
-		FrameBuilder result = super.frameBuilder();
-		addBinding(result, element.collections());
-		return result;
+	public void fill(FrameBuilder builder) {
+		addBinding(builder, element.collections());
 	}
 
 	@Override

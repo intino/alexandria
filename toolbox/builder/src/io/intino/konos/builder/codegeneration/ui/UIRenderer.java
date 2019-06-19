@@ -18,8 +18,8 @@ public abstract class UIRenderer extends Renderer {
 		super(settings, target);
 	}
 
-	public FrameBuilder frameBuilder() {
-		return baseFrameBuilder();
+	public FrameBuilder buildFrame() {
+		return buildBaseFrame();
 	}
 
 	protected String parent() {

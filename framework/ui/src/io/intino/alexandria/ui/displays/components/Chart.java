@@ -7,12 +7,16 @@ import io.intino.alexandria.ui.displays.components.chart.Dataframe;
 import io.intino.alexandria.ui.displays.components.chart.DataframeLoader;
 import io.intino.alexandria.ui.displays.components.chart.Output;
 import io.intino.alexandria.ui.displays.notifiers.ChartNotifier;
+import io.intino.alexandria.ui.utils.UrlUtil;
+
+import java.net.URL;
 
 public class Chart<DN extends ChartNotifier, B extends Box> extends AbstractChart<B> {
     private Dataframe input;
     private String query;
     private ChartEngine engine = new ChartEngine();
     private Output output = Output.Html;
+    private URL serverUrl = null;
 
     public Chart(B box) {
         super(box);
@@ -37,6 +41,11 @@ public class Chart<DN extends ChartNotifier, B extends Box> extends AbstractChar
         return this;
     }
 
+    public Chart<DN, B> serverUrl(String url) {
+        this.serverUrl = UrlUtil.toURL(url);
+        return this;
+    }
+
     public Chart<DN, B> update(Dataframe input) {
         this.input = input;
         this.refresh();
@@ -58,7 +67,7 @@ public class Chart<DN extends ChartNotifier, B extends Box> extends AbstractChar
     }
 
     private String execute() {
-        return engine.execute(input, query, output);
+        return engine.execute(serverUrl, input, query, output);
     }
 
 }

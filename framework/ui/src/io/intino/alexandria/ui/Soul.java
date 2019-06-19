@@ -8,10 +8,7 @@ import io.intino.alexandria.ui.services.push.User;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 import static java.util.stream.Collectors.toList;
@@ -64,8 +61,10 @@ public abstract class Soul implements DisplayRepository {
     }
 
     public <T extends Display> T displayWithId(String owner, String context, String id) {
+        Display display = findDisplay(context, id);
+        if (display != null) return (T) display;
         String ownerId = owner != null && !owner.isEmpty() ? owner : "";
-        String key = (context != null && !context.isEmpty() ? context : ownerId) + id;
+        String key = ownerId + id;
         if (!displays.containsKey(key)) key = ownerId + id;
         return displays.containsKey(key) ? (T) displays.get(key) : null;
     }
@@ -103,4 +102,12 @@ public abstract class Soul implements DisplayRepository {
         this.displays.remove(id);
     }
 
+    private Display findDisplay(String context, String id) {
+        String[] contextArray = context.split("\\.");
+        for (int i=0; i<contextArray.length; i++) {
+            String key = String.join(".", Arrays.copyOfRange(contextArray, i, contextArray.length)) + id;
+            if (displays.containsKey(key)) return displays.get(key);
+        }
+        return null;
+    }
 }

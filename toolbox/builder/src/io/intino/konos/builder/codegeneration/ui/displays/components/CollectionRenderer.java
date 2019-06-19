@@ -45,7 +45,7 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 	}
 
 	private void addMethodsFrame(FrameBuilder builder) {
-		FrameBuilder result = addOwner(baseFrameBuilder()).add("method").add(Collection.class.getSimpleName()).add(className(element.getClass()));
+		FrameBuilder result = addOwner(buildBaseFrame()).add("method").add(Collection.class.getSimpleName()).add(className(element.getClass()));
 		result.add("name", nameOf(element));
 		if (element.sourceClass() != null) result.add("sourceClass", element.sourceClass());
 		result.add("itemClass", element.itemClass() != null ? element.itemClass() : "java.lang.Void");
@@ -56,7 +56,7 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 	}
 
 	private void addItemFrame(Collection.Mold.Item item, FrameBuilder builder) {
-		FrameBuilder result = baseFrameBuilder().add("item");
+		FrameBuilder result = buildBaseFrame().add("item");
 		result.add("methodAccessibility", element.i$(CatalogComponents.Table.class) ? "private" : "public");
 		result.add("name", nameOf(item));
 		result.add("methodName", element.i$(CatalogComponents.Table.class) ? nameOf(item) : "");

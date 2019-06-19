@@ -18,11 +18,6 @@ public class OperationRenderer<O extends Operation> extends ComponentRenderer<O>
 	}
 
 	@Override
-	public FrameBuilder frameBuilder() {
-		return super.frameBuilder();
-	}
-
-	@Override
 	public FrameBuilder properties() {
 		FrameBuilder properties = super.properties();
 		properties.add(Operation.class.getSimpleName().toLowerCase());

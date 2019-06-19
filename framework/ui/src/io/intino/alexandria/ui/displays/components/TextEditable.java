@@ -2,16 +2,16 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.KeyPressEventData;
-import io.intino.alexandria.ui.displays.events.ChangeEvent;
-import io.intino.alexandria.ui.displays.events.ChangeListener;
-import io.intino.alexandria.ui.displays.events.KeyPressEvent;
-import io.intino.alexandria.ui.displays.events.KeyPressListener;
+import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.notifiers.TextEditableNotifier;
 
 public class TextEditable<DN extends TextEditableNotifier, B extends Box> extends AbstractTextEditable<DN, B> {
     private String value;
     private ChangeListener changeListener = null;
     private KeyPressListener keyPressListener = null;
+    private KeyPressListener keyEnterListener = null;
+
+    private static final String EnterKeyCode = "Enter";
 
     public TextEditable(B box) {
         super(box);
@@ -41,6 +41,11 @@ public class TextEditable<DN extends TextEditableNotifier, B extends Box> extend
         return this;
     }
 
+    public TextEditable<DN, B> onKeyEnterPress(KeyPressListener listener) {
+        this.keyEnterListener = listener;
+        return this;
+    }
+
     public void notifyChange(String value) {
         this.value = value;
         if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));
@@ -48,6 +53,8 @@ public class TextEditable<DN extends TextEditableNotifier, B extends Box> extend
 
     public void notifyKeyPress(KeyPressEventData data) {
         this.value = data.value();
-        if (keyPressListener != null) keyPressListener.accept(new KeyPressEvent(this, data.value(), data.keyCode()));
+        KeyPressEvent event = new KeyPressEvent(this, data.value(), data.keyCode());
+        if (keyPressListener != null) keyPressListener.accept(event);
+        if (keyEnterListener != null && data.keyCode().equals(EnterKeyCode)) keyEnterListener.accept(event);
     }
 }

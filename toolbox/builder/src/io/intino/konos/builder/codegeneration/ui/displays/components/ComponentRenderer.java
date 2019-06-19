@@ -26,6 +26,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private boolean decorated;
 	private Display owner;
 	private static final ComponentRendererFactory factory = new ComponentRendererFactory();
+	private static final Map<String, FrameBuilder> componentFrameMap = new HashMap<>();
 
 	public ComponentRenderer(Settings settings, C component, TemplateProvider provider, Target target) {
 		super(settings, component, provider, target);
@@ -33,8 +34,10 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	@Override
-	public FrameBuilder frameBuilder() {
-		FrameBuilder builder = super.frameBuilder().add("component");
+	public final FrameBuilder buildFrame() {
+		String frameId = frameId();
+		if (componentFrameMap.containsKey(frameId)) return componentFrameMap.get(frameId);
+		FrameBuilder builder = super.buildFrame().add("component");
 		addOwner(builder);
 		addProperties(builder);
 		if (buildChildren) builder.add("child");
@@ -45,7 +48,13 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		addFacets(element, builder);
 		addExtends(element, builder);
 		addImplements(element, builder);
+		fill(builder);
+		componentFrameMap.put(frameId, builder);
 		return builder;
+	}
+
+	public static void clearCache() {
+		componentFrameMap.clear();
 	}
 
 	public void buildChildren(boolean value) {
@@ -72,6 +81,9 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	@Override
 	protected void addDecoratedFrames(FrameBuilder builder) {
 		addDecoratedFrames(builder, decorated);
+	}
+
+	protected void fill(FrameBuilder builder) {
 	}
 
 	private void addComponents(Component component, FrameBuilder builder) {
@@ -101,15 +113,15 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	@Override
 	protected FrameBuilder componentFrame(Component component) {
-		return componentRenderer(component).frameBuilder();
+		return componentRenderer(component).buildFrame();
 	}
 
 	protected FrameBuilder childFrame(Component component) {
-		FrameBuilder result = componentRenderer(component).frameBuilder();
+		FrameBuilder result = componentRenderer(component).buildFrame();
 		String[] ancestors = ancestors(component);
 		result.add("ancestors", ancestors);
 		result.add("ancestorsNotMe", Arrays.copyOfRange(ancestors, 1, ancestors.length));
-		result.add("value", componentRenderer(component).frameBuilder().add("addType", typeOf(component)));
+		result.add("value", componentRenderer(component).buildFrame().add("addType", typeOf(component)));
 		return result;
 	}
 
@@ -183,7 +195,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			builder.add("multiple");
 			String message = element.a$(AbstractMultiple.class).noItemsMessage();
 			if (message != null) builder.add("noItemsMessage", message);
-			FrameBuilder methodsFrame = addOwner(baseFrameBuilder()).add("method").add("multiple");
+			FrameBuilder methodsFrame = addOwner(buildBaseFrame()).add("method").add("multiple");
 			methodsFrame.add("componentType", multipleComponentType(element));
 			String objectType = multipleObjectType(element);
 			if (objectType != null && !objectType.equals("java.lang.Void")) {
@@ -287,6 +299,10 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		componentList.forEach(c -> addComponent(c, result));
 
 		return componentList.size() > 0 ? result : null;
+	}
+
+	private String frameId() {
+		return nameOf(element) + (owner != null ? owner.name$() : "") + target.name() + buildChildren + decorated;
 	}
 
 }

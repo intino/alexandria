@@ -26,8 +26,8 @@ public class DesktopRenderer extends BaseDisplayRenderer<Template> {
 	}
 
 	@Override
-	public FrameBuilder frameBuilder() {
-		FrameBuilder result = super.frameBuilder();
+	public FrameBuilder buildFrame() {
+		FrameBuilder result = super.buildFrame();
 		DesktopTemplate template = element.asDesktop();
 		result.add("headerId", shortId(element, "headerId"));
 		result.add("tabBarId", shortId(element, "tabBarId"));

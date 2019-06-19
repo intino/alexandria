@@ -18,6 +18,7 @@ public class ChartRenderer extends SizedRenderer<Chart> {
 	public FrameBuilder properties() {
 		FrameBuilder result = super.properties();
 		result.add("query", clean(element.query()));
+		if (element.serverUrl() != null) result.add("serverUrl", element.serverUrl());
 		addInput(result);
 		addOutput(result);
 		return result;

@@ -24,8 +24,8 @@ public class TemplateRenderer extends BaseDisplayRenderer<Template> {
 	}
 
 	@Override
-	public FrameBuilder frameBuilder() {
-		FrameBuilder frame = super.frameBuilder();
+	public FrameBuilder buildFrame() {
+		FrameBuilder frame = super.buildFrame();
 		List<Component> components = element.componentList();
 		addComponentsImports(components, frame);
 		components.forEach(c -> addComponent(c, frame));

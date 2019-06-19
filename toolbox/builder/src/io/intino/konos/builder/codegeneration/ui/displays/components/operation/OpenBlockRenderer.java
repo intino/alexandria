@@ -14,10 +14,8 @@ public class OpenBlockRenderer extends OperationRenderer<OpenBlock> {
 	}
 
 	@Override
-	public FrameBuilder frameBuilder() {
-		FrameBuilder result = super.frameBuilder();
-		addBinding(result);
-		return result;
+	public void fill(FrameBuilder builder) {
+		addBinding(builder);
 	}
 
 	protected void addBinding(FrameBuilder builder) {

@@ -18,7 +18,7 @@ Template(layout=Vertical, spacing=DP8) dashboardExamplesMold as Decorated
 						value
 							=========
 							Dashboard dashboard<br/>
-							&nbsp;&nbsp;&nbsp;&nbsp;serverScript \= "data/dashboard/server.R"
-							&nbsp;&nbsp;&nbsp;&nbsp;uiScript \= "data/dashboard/ui.R"
+							&nbsp;&nbsp;&nbsp;&nbsp;serverScript \= "data/dashboard/server.R"<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;uiScript \= "data/dashboard/ui.R"<br/>
 							&nbsp;&nbsp;&nbsp;&nbsp;Parameter("param1", "abcd")
 							=========

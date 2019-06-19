@@ -340,6 +340,7 @@ end
 
 def type(properties & chart) trigger(specific)
 	[query("$query");]
+	[serverUrl("$serverUrl");]
 	[$input+inputMethod]
 	[output("$output");]
 end

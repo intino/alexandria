@@ -33,15 +33,15 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		String path = path(element);
 		final String newDisplay = snakeCaseToCamelCase(element.name$());
 		classes().put("Display#" + element.name$(), path + "." + newDisplay);
-		FrameBuilder result = frameBuilder();
+		FrameBuilder result = buildFrame();
 		createPassiveViewFiles(result);
 		write(result);
 		if (element.isAccessible()) writeDisplaysFor(element.asAccessible(), result);
 	}
 
 	@Override
-	public FrameBuilder frameBuilder() {
-		FrameBuilder result = super.frameBuilder();
+	public FrameBuilder buildFrame() {
+		FrameBuilder result = super.buildFrame();
 		result.add("display");
 		result.add(typeOf(element));
 		addParametrized(result);
@@ -94,11 +94,11 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 
 	private void addImports(FrameBuilder frame) {
 		KonosGraph graph = element.graph();
-		if (graph.templateList().size() > 0) frame.add("templatesImport", baseFrameBuilder().add("templatesImport"));
-		if (graph.blockList().size() > 0) frame.add("blocksImport", baseFrameBuilder().add("blocksImport"));
-		if (graph.itemsDisplays().size() > 0) frame.add("itemsImport", baseFrameBuilder().add("itemsImport"));
-		if (graph.rowsDisplays().size() > 0) frame.add("rowsImport", baseFrameBuilder().add("rowsImport"));
-		if (!componentOf(element).i$(DecoratedDisplay.class)) frame.add("displayRegistration", baseFrameBuilder().add("displayRegistration").add("name", nameOf(element)));
+		if (graph.templateList().size() > 0) frame.add("templatesImport", buildBaseFrame().add("templatesImport"));
+		if (graph.blockList().size() > 0) frame.add("blocksImport", buildBaseFrame().add("blocksImport"));
+		if (graph.itemsDisplays().size() > 0) frame.add("itemsImport", buildBaseFrame().add("itemsImport"));
+		if (graph.rowsDisplays().size() > 0) frame.add("rowsImport", buildBaseFrame().add("rowsImport"));
+		if (!componentOf(element).i$(DecoratedDisplay.class)) frame.add("displayRegistration", buildBaseFrame().add("displayRegistration").add("name", nameOf(element)));
 	}
 
 	protected void addImplements(FrameBuilder frame) {
@@ -158,7 +158,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		renderer.buildChildren(true);
 		renderer.decorated(element.isDecorated());
 		renderer.owner(element);
-		return renderer.frameBuilder();
+		return renderer.buildFrame();
 	}
 
 	protected void addComponent(Component component, FrameBuilder builder) {
