@@ -8,7 +8,6 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.ElementRenderer;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.*;
-import io.intino.konos.model.graph.OtherComponents.TemporalSlider;
 import io.intino.konos.model.graph.PassiveView.Notification;
 import io.intino.konos.model.graph.PassiveView.Request;
 import io.intino.konos.model.graph.avatar.datacomponents.AvatarImage;
@@ -47,8 +46,8 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	@Override
-	public FrameBuilder frameBuilder() {
-		FrameBuilder result = super.frameBuilder();
+	public FrameBuilder buildFrame() {
+		FrameBuilder result = super.buildFrame();
 		FrameBuilder extensionFrame = extensionFrame();
 		String type = type();
 		result.add("id", shortId(element));
@@ -308,8 +307,8 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	private void addParentImport(FrameBuilder builder) {
 		FrameBuilder result = new FrameBuilder().add("value", type());
 		if (isGeneric(element) && element.isExtensionOf()) result.add("parent", genericParent(element));
-		else if (element.getClass().getSimpleName().equalsIgnoreCase("component")) result.add("baseComponent", "");
-		else if (element.getClass().getSimpleName().equalsIgnoreCase("display")) result.add("baseDisplay", "");
+		else if (typeOf(element).equalsIgnoreCase("component")) result.add("baseComponent", "");
+		else if (typeOf(element).equalsIgnoreCase("display")) result.add("baseDisplay", "");
 		else if (element.i$(Component.class)) result.add("component", "");
 		else if (element.i$(DecoratedDisplay.class)) result.add("abstract", "");
 		builder.add("parent", result);

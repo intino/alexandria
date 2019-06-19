@@ -18,11 +18,9 @@ public class DialogRenderer extends SizedRenderer<AbstractDialog> {
 	}
 
 	@Override
-	public FrameBuilder frameBuilder() {
-		FrameBuilder frame = super.frameBuilder();
-		frame.add("abstractdialog");
-		addBinding(frame);
-		return frame;
+	public void fill(FrameBuilder builder) {
+		builder.add("abstractdialog");
+		addBinding(builder);
 	}
 
 	@Override

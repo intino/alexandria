@@ -16,11 +16,9 @@ public class SliderRenderer extends BindingCollectionRenderer<AbstractSlider> {
 	}
 
 	@Override
-	public FrameBuilder frameBuilder() {
-		FrameBuilder result = super.frameBuilder();
-		result.add("abstractslider");
-		if (element.i$(TemporalSlider.class)) addBinding(result, element.a$(TemporalSlider.class).collections());
-		return result;
+	public void fill(FrameBuilder builder) {
+		builder.add("abstractslider");
+		if (element.i$(TemporalSlider.class)) addBinding(builder, element.a$(TemporalSlider.class).collections());
 	}
 
 	@Override

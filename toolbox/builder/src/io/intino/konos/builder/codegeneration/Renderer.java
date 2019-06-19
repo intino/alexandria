@@ -73,7 +73,7 @@ public abstract class Renderer {
 		return settings.cache();
 	}
 
-	public FrameBuilder baseFrameBuilder() {
+	public FrameBuilder buildBaseFrame() {
 		return new FrameBuilder().add("box", boxName()).add("package", settings.packageName());
 	}
 

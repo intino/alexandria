@@ -4,9 +4,11 @@ import org.apache.http.Header;
 import spark.Request;
 import spark.Response;
 
+import javax.servlet.ServletOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 public class Proxy {
 	private URL localUrl;
@@ -31,14 +33,40 @@ public class Proxy {
 		String uri = pathOf(request);
 		String url = remoteUrl + uri + query;
 
-		String content = network.sendGetString(url);
-
-		if (! request.uri().contains("iframe.html"))
-			content = content.replaceAll(" src=\"", " src=\""+localUrl+"/");
-		content = content.replaceAll(" href=\"", " href=\""+localUrl+"/");
-
+		byte[] content = network.sendGetString(url);
 		addHeaders(response);
-		writeResponse(response, content);
+
+		if (isText()) {
+			String textContent = new String(content, StandardCharsets.UTF_8);
+
+			if (isHtml()) {
+				if (!request.uri().contains("iframe.html"))
+					textContent = textContent.replaceAll(" src=\"", " src=\"" + localUrl + "/");
+				textContent = textContent.replaceAll(" href=\"", " href=\"" + localUrl + "/");
+			}
+
+			if (isCss()) {
+				String subUri = uri.length() > 1 ? uri.substring(1) : uri;
+				textContent = textContent.replaceAll("url\\(\\.\\./", "url(" + localUrl + uri.substring(0, subUri.indexOf("/") + 1) + "/");
+			}
+
+			writeResponse(response, textContent);
+		}
+		else writeResponse(response, content);
+	}
+
+	private boolean isText() {
+		return isHtml() || isCss();
+	}
+
+	private boolean isHtml() {
+		String contentType = contentType();
+		return contentType != null && contentType.contains("text/html");
+	}
+
+	private boolean isCss() {
+		String contentType = contentType();
+		return contentType != null && contentType.contains("text/css");
 	}
 
 	public void post(Request request, Response response) throws Network.NetworkException {
@@ -54,7 +82,7 @@ public class Proxy {
 		}
 		if (params.length() > 0) params = new StringBuilder(params.substring(1));
 
-		String content = network.sendPostString(url, params.toString());
+		byte[] content = network.sendPostString(url, params.toString());
 
 		addHeaders(response);
 		writeResponse(response, content);
@@ -64,10 +92,21 @@ public class Proxy {
 		Header[] headers = network.getLastHeaders();
 		if (headers == null) return;
 		for (Header header : headers) {
-			if ("content-type".equals(header.getName())) {
-				response.header(header.getName(), header.getValue());
+			if ("content-length".equalsIgnoreCase(header.getName()) ||
+			    "Set-Cookie".equalsIgnoreCase(header.getName())) continue;
+			response.header(header.getName(), header.getValue());
+		}
+	}
+
+	private String contentType() {
+		Header[] headers = network.getLastHeaders();
+		if (headers == null) return null;
+		for (Header header : headers) {
+			if ("content-type".equalsIgnoreCase(header.getName())) {
+				return header.getValue();
 			}
 		}
+		return null;
 	}
 
 	private String pathOf(Request request) {
@@ -87,8 +126,20 @@ public class Proxy {
 	private void writeResponse(Response response, String content) throws Network.NetworkException {
 		try {
 			PrintWriter writer = response.raw().getWriter();
+			response.raw().setContentLength(content.length());
 			writer.print(content);
 			writer.close();
+		} catch (IOException e) {
+			throw new Network.NetworkException(e);
+		}
+	}
+
+	private void writeResponse(Response response, byte[] content) throws Network.NetworkException {
+		try {
+			ServletOutputStream stream = response.raw().getOutputStream();
+			response.raw().setContentLength(content.length);
+			stream.write(content);
+			stream.close();
 		} catch (IOException e) {
 			throw new Network.NetworkException(e);
 		}

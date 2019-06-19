@@ -14,10 +14,8 @@ public class ToolbarRenderer extends ComponentRenderer<Toolbar> {
 	}
 
 	@Override
-	public FrameBuilder frameBuilder() {
-		FrameBuilder result = super.frameBuilder();
-		addBinding(result);
-		return result;
+	public void fill(FrameBuilder builder) {
+		addBinding(builder);
 	}
 
 	private void addBinding(FrameBuilder builder) {

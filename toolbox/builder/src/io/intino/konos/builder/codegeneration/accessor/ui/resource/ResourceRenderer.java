@@ -23,8 +23,8 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 
 	@Override
 	public void render() {
-		writeHtml(frameBuilder());
-		writeJavascript(frameBuilder());
+		writeHtml(buildFrame());
+		writeJavascript(buildFrame());
 	}
 
 	private void writeHtml(FrameBuilder builder) {
@@ -42,8 +42,8 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 	}
 
 	@Override
-	public FrameBuilder frameBuilder() {
-		FrameBuilder result = super.frameBuilder().add("resource");
+	public FrameBuilder buildFrame() {
+		FrameBuilder result = super.buildFrame().add("resource");
 		result.add("name", resource.name$());
 		Template template = KonosGraph.templateFor(resource);
 		result.add("pageDisplay", template.name$());

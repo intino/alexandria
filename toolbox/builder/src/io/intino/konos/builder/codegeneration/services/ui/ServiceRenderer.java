@@ -36,7 +36,7 @@ public class ServiceRenderer extends UIRenderer {
 
 	private void createUi() {
 		final List<Display> displays = service.graph().rootDisplays();
-		FrameBuilder builder = frameBuilder().add("ui").add("name", service.name$()).add("resource", resourcesFrame(service.resourceList()));
+		FrameBuilder builder = buildFrame().add("ui").add("name", service.name$()).add("resource", resourcesFrame(service.resourceList()));
 		if (service.userHome() != null) builder.add("userHome", service.userHome().name$());
 		if (!displays.isEmpty())
 			builder.add("display", displaysFrame(displays)).add("displaysImport", packageName());

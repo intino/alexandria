@@ -7,13 +7,16 @@ import io.intino.tara.magritte.Node;
 import io.intino.tara.magritte.Predicate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static io.intino.konos.model.graph.Utils.isUUID;
 import static java.util.Collections.reverse;
 
 public class ElementHelper {
 	private static final IdGenerator generator = new IdGenerator();
+	private static Map<Layer, String> typeMap = new HashMap<>();
 
 	public String shortId(Layer element) {
 		return shortId(element, "");
@@ -34,7 +37,8 @@ public class ElementHelper {
 	}
 
 	public String typeOf(Layer element) {
-		return element.getClass().getSimpleName();
+		if (!typeMap.containsKey(element)) typeMap.put(element, element.getClass().getSimpleName());
+		return typeMap.get(element);
 	}
 
 	public String ownerId(Layer element) {

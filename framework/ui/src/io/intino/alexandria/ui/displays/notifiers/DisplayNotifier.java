@@ -49,6 +49,16 @@ public class DisplayNotifier {
         put("removeInstance", addMetadata(params));
     }
 
+	public void redirect() {
+    	redirect(null);
+	}
+
+    public void redirect(String url) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("url", url);
+        put("redirect", addMetadata(params));
+    }
+
     public void clearContainer(String container) {
         Map<String, Object> params = new HashMap<>();
         params.put("c", container);

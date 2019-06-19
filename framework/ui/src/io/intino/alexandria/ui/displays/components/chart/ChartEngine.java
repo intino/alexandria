@@ -9,18 +9,23 @@ import org.rosuda.REngine.Rserve.RFileInputStream;
 import org.rosuda.REngine.Rserve.RFileOutputStream;
 
 import java.io.*;
+import java.net.URL;
 
 import static io.intino.alexandria.ui.utils.IOUtils.toByteArray;
 
 public class ChartEngine {
 
-	public String execute(Dataframe input, String query, Output mode) {
+	public static final int DefaultRServePort = 6311;
+
+	public String execute(URL serverUrl, Dataframe input, String query, Output mode) {
 		RConnection connection = null;
+		String host = serverUrl != null ? serverUrl.getHost() : "";
+		int port = serverUrl != null ? serverUrl.getPort() : DefaultRServePort;
 
 		if (query == null || query.isEmpty()) return null;
 
 		try {
-			connection = new RConnection("");
+			connection = new RConnection(host, port);
 
 			connection.voidEval("library(ggplot2)");
 			connection.voidEval(query);

@@ -30,11 +30,11 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.net.URLDecoder.decode;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class Network {
   private List<String> cookies;
@@ -63,18 +63,18 @@ public class Network {
     acceptLanguage = "en-US,en;q=0.5";
   }
 
-  public String sendPostString(String url, String postParams) throws NetworkException {
+  public byte[] sendPostString(String url, String postParams) throws NetworkException {
     try {
-      return new String(sendPost(url, postParams, null), StandardCharsets.UTF_8);
+      return sendPost(url, postParams, null);
     } catch (Exception e) {
       throw new NetworkException(e);
     }
   }
 
   @SuppressWarnings("unused")
-  public String sendPostString(String url, String postParams, ArrayList<NameValuePair> files) throws NetworkException {
+  public byte[] sendPostString(String url, String postParams, ArrayList<NameValuePair> files) throws NetworkException {
     try {
-      return new String(sendPost(url, postParams, files), StandardCharsets.UTF_8);
+      return sendPost(url, postParams, files);
     } catch (Exception e) {
       throw new NetworkException(e);
     }
@@ -135,8 +135,8 @@ public class Network {
     }
   }
 
-  public String sendGetString(String url) throws NetworkException {
-    return new String(sendGet(url), StandardCharsets.UTF_8);
+  public byte[] sendGetString(String url) throws NetworkException {
+    return sendGet(url);
   }
 
   private byte[] sendGet(String url) throws NetworkException {
@@ -297,7 +297,7 @@ public class Network {
   @SuppressWarnings("unused")
   public String getRemoteIP() {
     try {
-      return sendGetString("http://wtfismyip.com/text");
+      return new String(sendGetString("http://wtfismyip.com/text"), UTF_8);
     } catch (Exception e) {
       Logger.debug(e.getMessage());
       return "";

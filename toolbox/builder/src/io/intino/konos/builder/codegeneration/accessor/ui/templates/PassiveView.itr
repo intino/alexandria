@@ -20,6 +20,7 @@ def type(notifier)
 			this.when("insertInstances").toSelf().execute((parameters) => this.element.insertInstances(parameters));
 			this.when("removeInstance").toSelf().execute((parameters) => this.element.removeInstance(parameters));
 			this.when("clearContainer").toSelf().execute((parameters) => this.element.clearContainer(parameters));
+			this.when("redirect").toSelf().execute((parameters) => this.element.redirect(parameters));
 		};
 
 		when = (message) => {

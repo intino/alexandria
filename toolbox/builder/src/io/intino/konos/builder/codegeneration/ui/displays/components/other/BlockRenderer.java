@@ -19,10 +19,8 @@ public class BlockRenderer extends SizedRenderer<Block> {
 	}
 
 	@Override
-	public FrameBuilder frameBuilder() {
-		FrameBuilder frame = super.frameBuilder();
-		addBinding(frame);
-		return frame;
+	public void fill(FrameBuilder builder) {
+		addBinding(builder);
 	}
 
 	@Override

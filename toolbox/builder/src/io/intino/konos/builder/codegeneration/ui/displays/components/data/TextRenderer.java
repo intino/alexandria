@@ -19,16 +19,14 @@ public class TextRenderer extends ComponentRenderer<Text> {
 	}
 
 	@Override
-	public FrameBuilder frameBuilder() {
-		FrameBuilder frame = super.frameBuilder();
-		if (element.prefix() != null) frame.add("prefix", element.prefix());
-		if (element.suffix() != null) frame.add("suffix", element.suffix());
+	public void fill(FrameBuilder builder) {
+		if (element.prefix() != null) builder.add("prefix", element.prefix());
+		if (element.suffix() != null) builder.add("suffix", element.suffix());
 		if (element.isCode()) {
 			FrameBuilder codeFrame = new FrameBuilder(CodeText.class.getSimpleName());
 			if (element.asCode().value() != null) codeFrame.add("value", escape(element.asCode().value()));
-			frame.add("code", codeFrame);
+			builder.add("code", codeFrame);
 		}
-		return frame;
 	}
 
 	private String escape(String value) {

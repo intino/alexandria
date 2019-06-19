@@ -21,9 +21,8 @@ import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskerRenderer;
-import io.intino.konos.model.graph.CatalogComponents;
+import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.PrivateComponents;
 import io.intino.plugin.codeinsight.linemarkers.InterfaceToJavaImplementation;
 import io.intino.plugin.project.LegioConfiguration;
 import org.apache.commons.io.IOUtils;
@@ -35,11 +34,8 @@ import java.io.IOException;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
-import static io.intino.konos.model.graph.KonosGraph.tablesDisplays;
 import static io.intino.plugin.project.Safe.safe;
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.configurationOf;
-import static java.util.stream.Collectors.toList;
 
 public class FullRenderer {
 	@Nullable
@@ -125,6 +121,7 @@ public class FullRenderer {
 
 	private void ui() {
 		ElementCache cache = settings.cache();
+		ComponentRenderer.clearCache();
 		io.intino.konos.builder.codegeneration.cache.ElementCache serverCache = cache.clone();
 		uiServer(serverCache);
 		uiClient(cache.clone());

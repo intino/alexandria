@@ -128,6 +128,7 @@ Concept OtherComponents
 
 	Concept Chart extends Component
 		var Dataframe input
+		var string serverUrl = empty
 		var word:{Image Html} output = Html
 		var string query
 
