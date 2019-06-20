@@ -9,7 +9,7 @@ public class TextEditable<DN extends TextEditableNotifier, B extends Box> extend
     private String value;
     private ChangeListener changeListener = null;
     private KeyPressListener keyPressListener = null;
-    private KeyPressListener keyEnterListener = null;
+    private KeyPressListener enterPressListener = null;
 
     private static final String EnterKeyCode = "Enter";
 
@@ -41,8 +41,8 @@ public class TextEditable<DN extends TextEditableNotifier, B extends Box> extend
         return this;
     }
 
-    public TextEditable<DN, B> onKeyEnterPress(KeyPressListener listener) {
-        this.keyEnterListener = listener;
+    public TextEditable<DN, B> onEnterPress(KeyPressListener listener) {
+        this.enterPressListener = listener;
         return this;
     }
 
@@ -55,6 +55,6 @@ public class TextEditable<DN extends TextEditableNotifier, B extends Box> extend
         this.value = data.value();
         KeyPressEvent event = new KeyPressEvent(this, data.value(), data.keyCode());
         if (keyPressListener != null) keyPressListener.accept(event);
-        if (keyEnterListener != null && data.keyCode().equals(EnterKeyCode)) keyEnterListener.accept(event);
+        if (enterPressListener != null && data.keyCode().equals(EnterKeyCode)) enterPressListener.accept(event);
     }
 }

@@ -40,6 +40,7 @@ Component frame as Decorated
 	Notification refreshDisplay as Text
 
 Component baseSelector as Decorated
+	Request optionsRendered
 
 Component selectorMenu as Decorated ExtensionOf(baseSelector)
 	Notification refreshSelected as Object(SelectorMenuSelection)
@@ -105,3 +106,11 @@ Component decisionDialog as Decorated ExtensionOf(baseDialog)
 Component collectionDialog as Decorated ExtensionOf(baseDialog)
 
 Component divider as Decorated
+Component user as Decorated
+	Notification refresh as Object(UserInfo)
+
+	Request logout
+
+Schema UserInfo
+	Attribute fullName as Text
+	Attribute photo as Text

@@ -66,6 +66,7 @@ public class UISession extends SparkSession<UIClient> {
     public void logout() {
         super.logout();
         token(null);
+        user(null);
     }
 
     public void token(Token token) {

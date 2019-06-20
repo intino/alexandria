@@ -4,68 +4,7 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(homeTemplate)
 
 Template homeTemplate
-	Header(color="black", format=air) as Absolute(height=75px)
-		Block(layout=Horizontal Center, spacing=DP24)
-			Block
-				Image(value="images/logo.png") as Absolute(width=200px, 50px)
-				Text(value="back", format=headerSubtitle)
-			Block(layout=Horizontal Center, format=headerToolbar, spacing=DP24) links
-				Text(value="thesaurus", format=h6 secondary)
-
-	Block(layout=Vertical Flexible) as Relative(height=100%,width=100%)
-		Block(layout=Vertical Flexible) blocks as Relative(height=100%)
-			Block(layout = Horizontal Wrap Flexible) tables
-				Block(layout = Vertical Flexible) sector
-					Text(format=h5, value="Sectors")
-					Block ts as Relative(height=100%)
-						Table(itemClass="com.adquiver.qia.back.graph.Sector") sectorTable
-							Mold
-								Heading sectorCodeHeading > Text(value="code")
-								Item(height=50px) sectorCodeView > Text code
-							Mold
-								Heading sectorLabelHeading > Text(value="label")
-								Item(height=50px) sectorLabelView > Text label as Editable(placeHolder="no label")
-							Mold
-								Heading sectorCountHeading > Text(value="count")
-								Item(height=50px) sectorCountView > Number count
-				Block(layout = Vertical Flexible) client
-					Text(format=h5, value="Clients / Subclients")
-					Block tc as Relative(height=100%)
-						Table(itemClass="com.adquiver.qia.back.graph.Client") clientTable
-							Mold
-								Heading clientCodeHeading > Text(value="code")
-								Item(height=50px) clientCodeView > Text code
-							Mold
-								Heading clientLabelHeading > Text(value="label")
-								Item(height=50px) clientLabelView > Text label as Editable(placeHolder="no label")
-							Mold
-								Heading clientAdvertiser > Text(value="advertiser")
-								Item(height=50px) clientAdvertiserView > Text advertiser
-							Mold
-								Heading clientCountHeading > Text(value="count")
-								Item(height=50px) clientCountView > Number count
-				Block(layout = Vertical Flexible) market
-					Text(format=h5, value="Markets")
-					Block tm as Relative(height=100%)
-						Table(itemClass="com.adquiver.qia.back.graph.Market") marketTable
-							Mold
-								Heading marketCodeHeading > Text(value="code")
-								Item(height=50px) marketCodeView > Text code
-							Mold
-								Heading marketLabelHeading > Text(value="label")
-								Item(height=50px) marketLabelView > Text label as Editable(placeHolder="no label")
-							Mold
-								Heading marketShapeFile > Text(value="shape file")
-								Item(height=50px) marketShapeFileView > Text shapeFile as Editable(placeHolder="no shape")
-							Mold
-								Heading marketCountHeading > Text(value="count")
-								Item(height=50px) marketCountView > Number count
-
-		Block(format=air)
-			TemporalSlider(scales = Day)
-				collections = blocks.tables.sector.ts.sectorTable blocks.tables.client.tc.clientTable blocks.tables.market.tm.marketTable
-				Range(min="2019-01-01T00:00:00Z",max="2019-12-01T00:00:00Z")
-				Animation(interval=5000 Millis)
+	Text aa as Editable(placeHolder="aaaaaaa") Password
 
 Template template1
 

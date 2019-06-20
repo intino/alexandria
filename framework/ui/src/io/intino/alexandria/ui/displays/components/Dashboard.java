@@ -51,6 +51,12 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
         return this;
     }
 
+    public Dashboard update(java.util.Map<String, String> parameters) {
+        this.parameterMap = parameterMap;
+        refresh();
+        return this;
+    }
+
     @Override
     public void init() {
         super.init();
@@ -90,7 +96,7 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
     private Program program() {
         String name = programName();
         List<Path> resources = resourceList.stream().map(this::pathOf).collect(Collectors.toList());
-        return new Program().name(name).scripts(Arrays.asList(pathOf(serverScript), pathOf(uiScript))).data(resources);
+        return new Program().name(name).scripts(Arrays.asList(pathOf(serverScript), pathOf(uiScript))).resources(resources).parameters(parameterMap);
     }
 
     private Path pathOf(URL serverScript) {
@@ -102,21 +108,17 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
         }
     }
 
-    private String replaceTag(String content, String tag, String value) {
-        return content.replaceAll(":" + tag + ":", value);
-    }
-
     private String programName() {
-        return this.name().toLowerCase();
+        String serializedParams = serializeParameters();
+        return this.name().toLowerCase() + (!serializedParams.isEmpty() ? "_" + hashOf(serializedParams) : "");
     }
 
-    private String replaceParameters(String script) {
-        parameterMap.forEach((key, value) -> replaceTag(script, key, value));
-        return script;
+    private String serializeParameters() {
+        return parameterMap.entrySet().stream().map(e -> e.getKey() + "=" + e.getValue()).collect(Collectors.joining("&"));
     }
 
-    private String hashOf(String script) {
-        return Base64.encode(DigestUtils.md5(script));
+    private String hashOf(String content) {
+        return Base64.encode(DigestUtils.md5(content));
     }
 
 }

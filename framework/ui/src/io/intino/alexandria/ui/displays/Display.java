@@ -29,7 +29,6 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	private UISession session;
 	private Display parent = null;
 	private Display owner = null;
-	private Boolean dirty = null;
 	private List<String> route = new ArrayList<>();
 	private PropertyList propertyList = new PropertyList();
 	private String label = "";
@@ -151,20 +150,10 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		allChildren().forEach(c -> c.propagateLanguageChanged(language));
 	}
 
+	public void update() {
+	}
+
 	public void refresh() {
-	}
-
-	public void forceRefresh() {
-		dirty(true);
-		refresh();
-	}
-
-	public boolean dirty() {
-		return dirty == null || dirty;
-	}
-
-	public void dirty(boolean value) {
-		dirty = value;
 	}
 
 	public String id() {

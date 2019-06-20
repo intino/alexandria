@@ -30,6 +30,7 @@ public class Driver implements io.intino.alexandria.drivers.Driver<URL, io.intin
 	@Override
 	public URL publish(Program program) {
 		try {
+			// replaceParameters(program)
 			return new URL(String.format("http://10.13.13.37:3838/%s", program));
 		} catch (MalformedURLException e) {
 			return null;
@@ -51,5 +52,13 @@ public class Driver implements io.intino.alexandria.drivers.Driver<URL, io.intin
 			CleanQueryParam cleanQueryParam = new CleanQueryParam();
 			return cleanQueryParam.execute(localUrl, param, value);
 		};
+	}
+
+	private void replaceParameters(Program program) {
+//		program.parameters().forEach((key, value) -> replaceTag(script, key, value));
+	}
+
+	private String replaceTag(String content, String tag, String value) {
+		return content.replaceAll(":" + tag + ":", value);
 	}
 }
