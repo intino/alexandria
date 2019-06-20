@@ -9,6 +9,8 @@ import io.intino.alexandria.ui.services.push.UISession;
 import io.intino.alexandria.ui.spark.UISparkManager;
 import spark.Request;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -49,8 +51,9 @@ public class DashboardManager {
 	}
 
 	public void register(String dashboard, String username) {
-		proxyMap.put(dashboard + (username != null ? username : ""), driver.run(parameters()));
-		sessionMap.put(session.id(), dashboard);
+		String userKey = username != null ? username : "";
+		proxyMap.put(dashboard + userKey, driver.run(parameters()));
+		sessionMap.put(session.id(), dashboard + userKey);
 	}
 
 	public URL dashboardUrl() {
@@ -65,8 +68,9 @@ public class DashboardManager {
 		return routeManagerReady;
 	}
 
-	private io.intino.alexandria.proxy.Proxy proxy() {
-		return proxyMap.get(dashboard);
+	private io.intino.alexandria.proxy.Proxy proxy(String sessionId) {
+		if (!sessionMap.containsKey(sessionId)) return null;
+		return proxyMap.get(sessionMap.get(sessionId));
 	}
 
 	private Map<String, Object> parameters() {
@@ -83,16 +87,23 @@ public class DashboardManager {
 	private void proxyGet(UISparkManager manager) {
 		try {
 			if (!validRequest(manager.request())) return;
-			proxy().get(manager.request(), manager.response());
-		} catch (Network.NetworkException e) {
-			Logger.error(e);
+			proxy(manager.request().session().id()).get(manager.request(), manager.response());
+		} catch (Throwable ex) {
+			Logger.error(ex);
+			try {
+				PrintWriter writer = manager.response().raw().getWriter();
+				writer.print("Could not load dashboard. Contact administrator.");
+				writer.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	private void proxyPost(UISparkManager manager) {
 		try {
 			if (!validRequest(manager.request())) return;
-			proxy().post(manager.request(), manager.response());
+			proxy(manager.request().session().id()).post(manager.request(), manager.response());
 		} catch (Network.NetworkException e) {
 			Logger.error(e);
 		}

@@ -2,6 +2,8 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.Component;
+import io.intino.alexandria.ui.displays.Display;
+import io.intino.alexandria.ui.displays.PropertyList;
 import io.intino.alexandria.ui.displays.components.selector.SelectorOption;
 import io.intino.alexandria.ui.displays.events.SelectionEvent;
 import io.intino.alexandria.ui.displays.events.SelectionListener;
@@ -35,10 +37,21 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         return findOptions();
     }
 
+    public BaseSelector<DN, B> add(String option) {
+        Display display = new Text<>(box()).name(option);
+        display.properties().put("value", option);
+        display.properties().put("color", "black");
+        addComponent((Component) display);
+        return this;
+    }
+
     @Override
     public void add(SelectorOption option) {
-        ((Component)option).properties().addClassName("option");
-        super.add((Component)option);
+        addComponent((Component) option);
+    }
+
+    public void optionsRendered() {
+        children().forEach(Display::update);
     }
 
     protected void notifySelection() {
@@ -59,4 +72,12 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         children.forEach(c -> result.addAll(findOptions(c)));
         return result;
     }
+
+    private void addComponent(Component option) {
+        PropertyList properties = option.properties();
+        properties.addClassName("option");
+        properties.put("name", option.name());
+        super.add(option);
+    }
+
 }

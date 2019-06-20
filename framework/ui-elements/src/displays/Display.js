@@ -56,11 +56,8 @@ export default class Display extends PassiveView {
         window.location.href = url;
     };
 
-    instances = () => {
-        return this.instances("__elements");
-    };
-
     instances = (container) => {
+        if (container == null) container = "__elements";
         return this.state[container] != null ? this.state[container] : [];
     };
 

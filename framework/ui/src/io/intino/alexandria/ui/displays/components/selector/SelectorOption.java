@@ -9,6 +9,7 @@ import java.util.List;
 public interface SelectorOption {
 	String name();
 	String id();
+	void update();
 	<T extends Display> T parent(Class<T> type);
 
 	default List<Block> ancestors() {

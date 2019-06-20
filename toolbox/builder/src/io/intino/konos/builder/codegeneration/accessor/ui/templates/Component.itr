@@ -119,7 +119,7 @@ def type(properties & codeText) trigger(specific)
 end
 
 def type(properties & text) trigger(specific)
-	[ mode="$mode"][ prefix="$prefix"][ suffix="$suffix"][ value="$defaultValue"][ placeholder="$placeholder"][ highlighted={$highlighted}]
+	[ mode="$mode"][ prefix="$prefix"][ suffix="$suffix"][ value="$defaultValue"][ placeholder="$placeholder"][ highlighted={$highlighted}][ type="$type"]
 end
 
 def type(properties & map) trigger(specific)

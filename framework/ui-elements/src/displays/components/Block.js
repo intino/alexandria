@@ -23,9 +23,9 @@ export default class Block extends AbstractBlock {
 	};
 
 	render() {
-        let animation = this.props.animation;
-        if (animation != null)
-            return BlockBehavior.renderAnimation(animation, !this.state.hidden, this.renderContent());
+		let animation = this.props.animation;
+		if (animation != null)
+			return BlockBehavior.renderAnimation(animation, !this.state.hidden, this.renderContent());
 		return this.renderContent();
 	};
 
@@ -43,9 +43,9 @@ export default class Block extends AbstractBlock {
 
 	_renderLayout = () => {
 		let paper = this.props.paper;
-		let layout = this._layout();
 		let style = this.style();
 		let label = this.props.label;
+		const layout = BlockBehavior.className(this);
 
 		if (paper) {
 			return (
@@ -75,20 +75,6 @@ export default class Block extends AbstractBlock {
 			}
 			return child;
 		});
-	};
-
-	_layout = () => {
-		let layout = this.state.layout != null ? this.state.layout : this.props.layout;
-		layout = layout.toLowerCase();
-		layout = layout.replace("flexible", "flex");
-		layout = layout.replace("centercenter", "center-center");
-		layout = layout.replace("preverse", "p-reverse");
-		layout = layout.replace("lreverse", "l-reverse");
-		layout = layout.replace("rjustified", "r-justified");
-		layout = layout.replace("tjustified", "t-justified");
-		layout = layout.replace("djustified", "d-justified");
-		layout = layout.replace("nowrap", "no-wrap");
-		return "layout " + layout;
 	};
 
 	style() {

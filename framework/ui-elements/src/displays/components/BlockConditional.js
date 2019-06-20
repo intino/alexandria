@@ -21,17 +21,18 @@ export default class BlockConditional extends AbstractBlockConditional {
 	};
 
 	render() {
-        let animation = this.props.animation;
-        if (animation != null)
-            return BlockBehavior.renderAnimation(animation, this.state.visible, this.renderBlock());
+		let animation = this.props.animation;
+		if (animation != null)
+			return BlockBehavior.renderAnimation(animation, this.state.visible, this.renderBlock());
 		return this.renderBlock();
 	};
 
 	renderBlock = () => {
 		let styles = this.style();
 		if (this.props.style != null) this.applyStyles(this.props.style, styles);
+		const layout = BlockBehavior.className(this);
 		return (
-			<div style={styles}>
+			<div style={styles} className={layout}>
 				<Block style={this.style()}
 					   layout={this.props.layout}
 					   width={this.props.width}
@@ -46,7 +47,7 @@ export default class BlockConditional extends AbstractBlockConditional {
 	style() {
 		var result = super.style();
 		if (result == null) result = {};
-		result.display = this.state.visible ? "block" : "none";
+		result.display = this.state.visible ? "" : "none";
 		if (this._widthDefined()) result.width = this.props.width;
 		// if (this._heightDefined()) result.height = this.props.height;
 		return result;

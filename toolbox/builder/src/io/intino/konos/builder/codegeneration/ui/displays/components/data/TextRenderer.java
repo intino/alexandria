@@ -38,6 +38,7 @@ public class TextRenderer extends ComponentRenderer<Text> {
 		FrameBuilder result = super.properties();
 		addHighlight(result);
 		result.add("mode", element.mode().name().toLowerCase());
+		if (element.isPassword()) result.add("type", "password");
 		if (element.isCode()) {
 			result.add(CodeText.class.getSimpleName());
 			result.add("language", element.asCode().language().name());

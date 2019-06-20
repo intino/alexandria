@@ -26,11 +26,15 @@ module.exports = {
             }
         ]
     },
-    entry : './gen/App.js',
+    entry : {
+        'home' : './gen/home.js',
+        'docs' : './gen/docs.js',
+        'widgetType' : './gen/widgetType.js',
+    },
     output: {
         path: "/Users/mcaballero/Proyectos/alexandria/out/production/ui-elements/www/ui-elements",
         publicPath: '/ui-elements/',
-        filename: 'App.js'/*,
+        filename: '[name].js'/*,
         chunkFilename: '[name].bundle.js'*/
     },
     resolve: {
@@ -48,18 +52,21 @@ module.exports = {
         new HtmlWebPackPlugin({
             hash: true,
             title: "Test UI",
+            chunks: ['home'],
             template: "./home.html",
             filename: "./home.html"
         }),
         new HtmlWebPackPlugin({
             hash: true,
             title: "Test UI",
+            chunks: ['docs'],
             template: "./docs.html",
             filename: "./docs.html"
         }),
         new HtmlWebPackPlugin({
             hash: true,
             title: "Test UI",
+            chunks: ['widgetType'],
             template: "./widgetType.html",
             filename: "./widgetType.html"
         }),

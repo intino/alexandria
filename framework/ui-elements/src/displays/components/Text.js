@@ -14,7 +14,7 @@ const styles = theme => ({
 		marginRight: "5px"
 	},
 	value: {
-		color: "inherit"
+		color: 'inherit',
 	},
 	prefix : {
 		color: theme.palette.grey.primary,
@@ -62,6 +62,7 @@ class Text extends AbstractText {
 
 	style() {
 		var result = super.style();
+		if (this.props.color != null) result.color = this.props.color;
 		if (!this.props.highlighted) return result;
 		result.color = this.props.highlighted.text;
 		result.background = this.props.highlighted.background;

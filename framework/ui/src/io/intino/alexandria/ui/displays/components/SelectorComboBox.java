@@ -33,4 +33,5 @@ public class SelectorComboBox<DN extends SelectorComboBoxNotifier, B extends Box
 		this.selection = Arrays.asList(selection);
 		notifySelection();
 	}
+
 }

@@ -17,7 +17,7 @@ public class OpenPage<DN extends OpenPageNotifier, B extends Box> extends Abstra
 
 	public void execute() {
 		if (path == null) return;
-		notifier.redirect(path);
+		notifier.open(path);
     }
 
 }

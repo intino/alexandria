@@ -19,6 +19,12 @@ public class Text<DN extends TextNotifier, B extends Box> extends AbstractText<D
         return this;
     }
 
+    @Override
+    public void update() {
+        super.update();
+        update(value);
+    }
+
     public void update(String value) {
         this.value = value;
         notifier.refresh(value);
