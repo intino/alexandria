@@ -82,7 +82,6 @@ public class Network {
 
   private byte[] sendPost(String url, String postParams, ArrayList<NameValuePair> files) throws NetworkException {
     lastHeaders = null;
-
     SSLContextBuilder builder = new SSLContextBuilder();
     try {
       builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
@@ -116,19 +115,19 @@ public class Network {
       }
 
       HttpResponse httpResp = executeSend(client, post);
+      lastHeaders = httpResp.getAllHeaders();
 
-      Logger.debug("\nSending 'POST' request to URL : " + url);
-      Logger.debug("Post parameters : " + decode(postParams, "UTF-8"));
+      Logger.debug("Sending 'POST' request to URL : " + url);
       Logger.debug("Response Code : " + responseCode);
-      Logger.debug("Cookies : " + getCookiesAsString());
-      Logger.debug("Location : " + location);
-      Logger.debug("referer : " + referer);
+      if (httpResp.getHeaders("Content-Type").length > 0)
+        Logger.debug(httpResp.getHeaders("Content-Type")[0].getName() + ": " + httpResp.getHeaders("Content-Type")[0].getValue());
+      else
+        Logger.debug("Content-Type: none");
 
       Boolean redirect = isRedirect(responseCode, url);
       if (redirect)
         return this.sendGet(location);
       else {
-        lastHeaders = httpResp.getAllHeaders();
         return IOUtils.toByteArray(httpResp.getEntity().getContent());
       }
     } catch (Exception e) {
@@ -161,12 +160,14 @@ public class Network {
       addHeaders(get);
 
       HttpResponse httpResp = executeSend(client, get);
+      lastHeaders = httpResp.getAllHeaders();
 
-      Logger.debug("\nSending 'GET' request to URL : " + url);
+      Logger.debug("Sending 'GET' request to URL : " + url);
       Logger.debug("Response Code : " + responseCode);
-      Logger.debug("Cookies : " + getCookiesAsString());
-      Logger.debug("Location : " + location);
-      Logger.debug("referer : " + referer);
+      if (httpResp.getHeaders("Content-Type").length > 0)
+        Logger.debug(httpResp.getHeaders("Content-Type")[0].getName() + ": " + httpResp.getHeaders("Content-Type")[0].getValue());
+      else
+        Logger.debug("Content-Type: none");
 
       if (responseCode > 400) {
         String message = String.format("Can't download file %s, Response code: %d, Message: %s", url, responseCode, IOUtils.toString(httpResp.getEntity().getContent()));
@@ -178,7 +179,6 @@ public class Network {
       if (redirect)
         return this.sendGet(location);
       else {
-        lastHeaders = httpResp.getAllHeaders();
         return IOUtils.toByteArray(httpResp.getEntity().getContent());
       }
 
