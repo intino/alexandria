@@ -39,7 +39,7 @@ def type(app)
 end
 
 def type(page) trigger(import)
-    import $value+firstUpperCase from "../gen/pages/$value+firstUpperCase";
+    import $value+firstUpperCase from "../pages/$value+firstUpperCase";
 end
 
 def type(page) trigger(render)
