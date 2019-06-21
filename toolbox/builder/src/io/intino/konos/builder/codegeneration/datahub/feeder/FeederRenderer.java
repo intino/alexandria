@@ -1,10 +1,12 @@
-package io.intino.konos.builder.codegeneration.datalake.feeder;
+package io.intino.konos.builder.codegeneration.datahub.feeder;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.*;
-import io.intino.konos.model.graph.Datalake.Tank;
+import io.intino.konos.model.graph.DataHub.Tank;
+import io.intino.konos.model.graph.Feeder;
+import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.Sensor;
 import io.intino.konos.model.graph.documentedition.DocumentEditionSensor;
 import io.intino.konos.model.graph.documentsignature.DocumentSignatureSensor;
 import io.intino.konos.model.graph.formedition.FormEditionSensor;
@@ -24,7 +26,6 @@ import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class FeederRenderer {
-
 	private final List<Feeder> feeders;
 	private final File src;
 	private final String packageName;
