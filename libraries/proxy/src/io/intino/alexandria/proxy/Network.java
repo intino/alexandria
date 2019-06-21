@@ -81,6 +81,7 @@ public class Network {
   }
 
   private byte[] sendPost(String url, String postParams, ArrayList<NameValuePair> files) throws NetworkException {
+    lastHeaders = null;
 
     SSLContextBuilder builder = new SSLContextBuilder();
     try {
