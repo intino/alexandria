@@ -2,6 +2,7 @@ dsl Konos
 
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(homeTemplate)
+	Resource(path = "/demo") demo as Page(homeTemplate)
 
 Template homeTemplate
 	Text aa as Editable(placeHolder="aaaaaaa") Password

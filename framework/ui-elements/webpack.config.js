@@ -27,15 +27,14 @@ module.exports = {
         ]
     },
     entry : {
-        'home' : './gen/home.js',
-        'docs' : './gen/docs.js',
-        'widgetType' : './gen/widgetType.js',
+        'home' : './gen/apps/Home.js',
+        'docs' : './gen/apps/Docs.js',
+        'widgetType' : './gen/apps/WidgetType.js'
     },
     output: {
-        path: "/Users/mcaballero/Proyectos/alexandria/out/production/ui-elements/www/ui-elements",
+        path: "/Users/mcaballero/Proyectos/alexandria/out/production/ui-elements/www/ui-elements",// /Users/mcaballero/Proyectos/adquiver-qia/out/production/front-ui/www/front-ui
         publicPath: '/ui-elements/',
-        filename: '[name].js'/*,
-        chunkFilename: '[name].bundle.js'*/
+        filename: "[name].js"
     },
     resolve: {
         alias: {
@@ -49,6 +48,10 @@ module.exports = {
             allowAsyncCycles: false,
             cwd: process.cwd(),
         }),
+        new CopyWebpackPlugin([{
+            from: 'res',
+            to: './res'
+        }]),
         new HtmlWebPackPlugin({
             hash: true,
             title: "Test UI",
@@ -69,10 +72,6 @@ module.exports = {
             chunks: ['widgetType'],
             template: "./widgetType.html",
             filename: "./widgetType.html"
-        }),
-        new CopyWebpackPlugin([{
-            from: 'res',
-            to: './res'
-        }])
+        })
     ]
 };
