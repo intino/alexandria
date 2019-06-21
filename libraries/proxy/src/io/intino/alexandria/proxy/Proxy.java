@@ -1,5 +1,6 @@
 package io.intino.alexandria.proxy;
 
+import io.intino.alexandria.logger.Logger;
 import org.apache.http.Header;
 import spark.Request;
 import spark.Response;
@@ -12,8 +13,8 @@ import java.nio.charset.StandardCharsets;
 public class Proxy {
 	private URL localUrl;
 	private URL remoteUrl;
-	private Network network = new Network();
 	private ProxyAdapter adapter = null;
+	String url;
 
 	public Proxy(URL localUrl, URL remoteUrl) {
 		this.localUrl = localUrl;
@@ -26,25 +27,27 @@ public class Proxy {
 	}
 
 	public void get(Request request, Response response) throws Network.NetworkException {
+		Network network = new Network();
+
 		String query = request.queryString();
 		if (query == null) query = ""; else query = "?" + query;
 
 		String uri = pathOf(request);
-		String url = remoteUrl + uri + query;
+		url = remoteUrl + uri + query;
 
 		byte[] content = network.sendGetString(url);
-		fixHeaders(response);
+		fixHeaders(network, response);
 
-		if (isText()) {
+		if (isText(network)) {
 			String textContent = new String(content, StandardCharsets.UTF_8);
 
-			if (isHtml()) {
+			if (isHtml(network)) {
 				if (!request.uri().contains("iframe.html"))
 					textContent = textContent.replaceAll(" src=\"", " src=\"" + localUrl + "/");
 				textContent = textContent.replaceAll(" href=\"", " href=\"" + localUrl + "/");
 			}
 
-			if (isCss()) {
+			if (isCss(network)) {
 				String subUri = uri.length() > 1 ? uri.substring(1) : uri;
 				textContent = textContent.replaceAll("url\\(\\.\\./", "url(" + localUrl + uri.substring(0, subUri.indexOf("/") + 1) + "/");
 			}
@@ -54,25 +57,27 @@ public class Proxy {
 		writeResponse(response, content);
 	}
 
-	private boolean isText() {
-		return isHtml() || isCss();
+	private boolean isText(Network network) {
+		return isHtml(network) || isCss(network);
 	}
 
-	private boolean isHtml() {
-		String contentType = contentType();
+	private boolean isHtml(Network network) {
+		String contentType = contentType(network);
 		return contentType != null && contentType.contains("text/html");
 	}
 
-	private boolean isCss() {
-		String contentType = contentType();
+	private boolean isCss(Network network) {
+		String contentType = contentType(network);
 		return contentType != null && contentType.contains("text/css");
 	}
 
 	public void post(Request request, Response response) throws Network.NetworkException {
+		Network network = new Network();
+
 		String query = request.queryString();
 		if (query == null) query = ""; else query = "?" + query;
 
-		String url = remoteUrl + pathOf(request) + query;
+		url = remoteUrl + pathOf(request) + query;
 
 		StringBuilder params = new StringBuilder();
 		for (String key : request.queryParams()) {
@@ -83,23 +88,23 @@ public class Proxy {
 
 		byte[] content = network.sendPostString(url, params.toString());
 
-		fixHeaders(response);
+		fixHeaders(network, response);
 		writeResponse(response, content);
 	}
 
-	private void fixHeaders(Response response) {
+	private void fixHeaders(Network network, Response response) {
 		response.removeCookie("JSESSIONID");
 		Header[] headers = network.getLastHeaders();
 		if (headers == null) return;
 		for (Header header : headers) {
 			if ("content-length".equalsIgnoreCase(header.getName()) ||
 			    "Set-Cookie".equalsIgnoreCase(header.getName())) continue;
-			
+
 			response.header(header.getName(), header.getValue());
 		}
 	}
 
-	private String contentType() {
+	private String contentType(Network network) {
 		Header[] headers = network.getLastHeaders();
 		if (headers == null) return null;
 		for (Header header : headers) {
@@ -130,6 +135,9 @@ public class Proxy {
 			response.raw().setContentLength(content.length);
 			stream.write(content);
 			stream.close();
+
+//			Logger.debug(url + " - Out header - " + response.raw().getHeader("Content-Type"));
+
 		} catch (IOException e) {
 			throw new Network.NetworkException(e);
 		}
