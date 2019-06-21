@@ -6,7 +6,6 @@ import spark.Response;
 
 import javax.servlet.ServletOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -34,7 +33,7 @@ public class Proxy {
 		String url = remoteUrl + uri + query;
 
 		byte[] content = network.sendGetString(url);
-		addHeaders(response);
+		fixHeaders(response);
 
 		if (isText()) {
 			String textContent = new String(content, StandardCharsets.UTF_8);
@@ -50,9 +49,9 @@ public class Proxy {
 				textContent = textContent.replaceAll("url\\(\\.\\./", "url(" + localUrl + uri.substring(0, subUri.indexOf("/") + 1) + "/");
 			}
 
-			writeResponse(response, textContent);
+			content = textContent.getBytes();
 		}
-		else writeResponse(response, content);
+		writeResponse(response, content);
 	}
 
 	private boolean isText() {
@@ -84,16 +83,18 @@ public class Proxy {
 
 		byte[] content = network.sendPostString(url, params.toString());
 
-		addHeaders(response);
+		fixHeaders(response);
 		writeResponse(response, content);
 	}
 
-	private void addHeaders(Response response) {
+	private void fixHeaders(Response response) {
+		response.removeCookie("JSESSIONID");
 		Header[] headers = network.getLastHeaders();
 		if (headers == null) return;
 		for (Header header : headers) {
 			if ("content-length".equalsIgnoreCase(header.getName()) ||
 			    "Set-Cookie".equalsIgnoreCase(header.getName())) continue;
+			
 			response.header(header.getName(), header.getValue());
 		}
 	}
@@ -121,17 +122,6 @@ public class Proxy {
 	private String adaptParameter(String key, String value) {
 		if (adapter == null) return value;
 		return adapter.adaptParameter(localUrl, remoteUrl, key, value);
-	}
-
-	private void writeResponse(Response response, String content) throws Network.NetworkException {
-		try {
-			PrintWriter writer = response.raw().getWriter();
-			response.raw().setContentLength(content.length());
-			writer.print(content);
-			writer.close();
-		} catch (IOException e) {
-			throw new Network.NetworkException(e);
-		}
 	}
 
 	private void writeResponse(Response response, byte[] content) throws Network.NetworkException {
