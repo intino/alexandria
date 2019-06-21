@@ -10,13 +10,22 @@ import java.io.File;
 
 @Ignore
 public class AsemedGenerationTest {
-	private static final String ASEMED = "asemed2";
+	private static final String ASEMED = "Asemed";
+	private static final String ASEMED_MIRROR = "AsemedMirror";
 
 	@Test
 	@Ignore
 	public void testAsemedGeneration() {
-		File gen = new File("test-gen", ASEMED);
-		KonosGraph graph = new Graph().loadStashes("Asemed2").as(KonosGraph.class);
-		new FullRenderer(null, graph, gen, gen, gen, ASEMED).execute();
+		File gen = new File("test-gen", ASEMED.toLowerCase());
+		KonosGraph graph = new Graph().loadStashes(ASEMED).as(KonosGraph.class);
+		new FullRenderer(null, graph, gen, gen, gen, ASEMED.toLowerCase()).execute();
+	}
+
+	@Test
+	@Ignore
+	public void testAsemedMirrorGeneration() {
+		File gen = new File("test-gen", ASEMED_MIRROR.toLowerCase());
+		KonosGraph graph = new Graph().loadStashes(ASEMED_MIRROR).as(KonosGraph.class);
+		new FullRenderer(null, graph, gen, gen, gen, ASEMED_MIRROR.toLowerCase()).execute();
 	}
 }

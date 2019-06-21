@@ -1,0 +1,28 @@
+dsl Legio
+
+Artifact("io.intino.alexandria", "1.0.0") data-hub
+	Box("Konos", "5.2.0")
+	Imports
+		Compile("io.intino.alexandria", "scheduler-framework", "1.0.1")
+		Compile("io.intino.alexandria", "logger4j", "1.0.0")
+		Compile("io.intino.ness", "ingestion", "1.0.0")
+		Compile("io.intino.ness", "sealing", "1.0.0")
+
+		Compile("org.apache.activemq", "activemq-broker", "5.15.2")
+		Compile("org.apache.activemq", "activemq-mqtt", "5.15.2")
+		Compile("org.apache.activemq", "activemq-kahadb-store", "5.15.2")
+		Compile("org.apache.activemq", "activemq-jaas", "5.15.2")
+		Compile("org.apache.activemq", "activemq-runtime-config", "5.15.2")
+		Compile(groupId = "io.intino.alexandria", artifactId = "rest", version = "1.0.4")
+		Test("junit", "junit", "LATEST")
+		Test("org.assertj", "assertj-core", "3.11.1")
+	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Distribution(intino.libraries, empty)
+
+
+Repository("intino-maven") intino
+	Release("https://artifactory.intino.io/artifactory/releases")
+	Release("https://artifactory.intino.io/artifactory/release-libraries") libraries
+
+RunConfiguration dev
+	Argument(name = "scale", value = "Day")

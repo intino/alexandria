@@ -6,10 +6,9 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.search.GlobalSearchScope;
 import cottons.utils.Files;
 import io.intino.konos.builder.codegeneration.accessor.ui.UIAccessorCreator;
-import io.intino.konos.builder.codegeneration.datalake.DatalakeRenderer;
-import io.intino.konos.builder.codegeneration.datalake.feeder.FeederRenderer;
-import io.intino.konos.builder.codegeneration.datalake.mounter.MounterRenderer;
-import io.intino.konos.builder.codegeneration.datalake.process.ProcessRenderer;
+import io.intino.konos.builder.codegeneration.datahub.feeder.FeederRenderer;
+import io.intino.konos.builder.codegeneration.datahub.mounter.MounterRenderer;
+import io.intino.konos.builder.codegeneration.datahub.process.ProcessRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
@@ -119,11 +118,10 @@ public class FullRenderer {
 	}
 
 	private void bus() {
-		if (graph.datalake() == null) return;
+		if (graph.dataHub() == null) return;
 		new ProcessRenderer(graph, src, packageName, boxName, classes).execute();
 		new MounterRenderer(graph, gen, src, packageName, boxName, classes).execute();
 		new FeederRenderer(graph, gen, src, packageName, boxName, classes).execute();
-		new DatalakeRenderer(graph, gen, packageName, boxName).execute();
 	}
 
 	private void slack() {

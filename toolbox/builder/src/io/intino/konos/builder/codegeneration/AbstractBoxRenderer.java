@@ -4,13 +4,13 @@ import com.intellij.openapi.module.Module;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
-import io.intino.konos.builder.codegeneration.datalake.feeder.FeederRenderer;
+import io.intino.konos.builder.codegeneration.datahub.feeder.FeederRenderer;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.Datamart;
-import io.intino.konos.model.graph.Feeder;
-import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.jms.JMSService;
 import io.intino.konos.model.graph.jmx.JMXService;
+import io.intino.konos.model.graph.local.LocalDataHub;
+import io.intino.konos.model.graph.mirrored.MirroredDataHub;
 import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.slackbot.SlackBotService;
 import io.intino.konos.model.graph.ui.UIService;
@@ -54,7 +54,7 @@ public class AbstractBoxRenderer {
 		parent(root);
 		services(root, name);
 		tasks(root, name);
-		dataLake(root, name);
+		dataHub(root, name);
 		graph.datamartList().forEach(d -> datamart(root, d));
 		Commons.writeFrame(gen, "AbstractBox", template().render(root.toFrame()));
 		notifyNewParameters();
@@ -72,13 +72,74 @@ public class AbstractBoxRenderer {
 		if (!graph.taskList().isEmpty()) builder.add("task", new FrameBuilder("task").add("configuration", name).toFrame());
 	}
 
-	private void dataLake(FrameBuilder root, String name) {
-		if (graph.datalake() == null) return;
-		final FrameBuilder frame = new FrameBuilder("datalake").add("package", packageName).add("configuration", name);
-		frame.add("feeder", graph.feederList().stream().map(this::frameOf).toArray(Frame[]::new));
+	private void dataHub(FrameBuilder builder, String name) {
+		DataHub dataHub = graph.dataHub();
+		if (dataHub == null) return;
+		final FrameBuilder dataHubFrame = new FrameBuilder("datahub", type(dataHub)).add("workspace", parameter(dataHub.workingDirectory()));
+		if (!dataHub.tankList().isEmpty()) {
+			FrameBuilder tanks = new FrameBuilder("tanks");
+			for (DataHub.Split split : dataHub.splitList())
+				tanks.add("split", frameOf(split));
+			for (DataHub.Tank tank : dataHub.tankList())
+				tanks.add("tank", frameOf(tank));
+			dataHubFrame.add("tanks", tanks.toFrame());
+		}
+		if (dataHub.isLocal()) {
+			LocalDataHub local = dataHub.asLocal();
+			if (local.broker() != null) addBroker(dataHubFrame, local.broker());
+			FrameBuilder frame = new FrameBuilder("local").add("path", parameter(local.path())).add("scale", local.scale());
+			if (local.seal() != null) frame.add("sealing", local.seal().when());
+			dataHubFrame.add("datasource", frame);
+		} else if (dataHub.isMirrored()) {
+			MirroredDataHub mirrored = dataHub.asMirrored();
+			if (mirrored.broker() != null) addBroker(dataHubFrame, mirrored.broker());
+			if (mirrored.busConnection() != null) busConnection(mirrored.busConnection());
+			FrameBuilder mirror = new FrameBuilder("mirror").add("originUrl", parameter(mirrored.originUrl())).add("destinationPath", parameter(mirrored.destinationPath()));
+			if (mirrored.busConnection() != null) mirror.add("realtime", busConnection(mirrored.busConnection()));
+			dataHubFrame.add("datasource", mirror);
+		} else if (dataHub.isRemote()) {
+			BusConnection remote = dataHub.asRemote().busConnection();
+			dataHubFrame.add("datasource", new FrameBuilder("remote").add("realtime", busConnection(remote)));
+		}
+		dataHubFrame.add("feeder", graph.feederList().stream().map(this::frameOf).toArray(Frame[]::new));
 		if (!graph.procedureList().isEmpty())
-			frame.add("procedure", new FrameBuilder().add("package", packageName).add("configuration", name).toFrame()); //TODO
-		root.add("datalake", frame.toFrame());
+			dataHubFrame.add("procedure", new FrameBuilder().add("package", packageName).add("configuration", name).toFrame()); //TODO
+		builder.add("dataHub", dataHubFrame.toFrame());
+	}
+
+	private Frame frameOf(DataHub.Split split) {
+		return new FrameBuilder("split").add("name", split.name$()).add("value", split.splits().toArray(new String[0])).toFrame();
+	}
+
+	private Frame frameOf(DataHub.Tank tank) {
+		String[] objects = tank.core$().conceptList().stream().map(s -> s.id().split("#")[0]).toArray(String[]::new);
+		FrameBuilder builder = new FrameBuilder(objects).add("tank").add("name", tank.fullName()).add("type", objects[0]);
+		if (tank.isSet() && tank.asSet().split() != null) builder.add("splitName", tank.asSet().split().name$());
+		return builder.toFrame();
+	}
+
+	@NotNull
+	private FrameBuilder busConnection(BusConnection connection) {
+		return new FrameBuilder("realtime").add("brokerUrl", parameter(connection.busUrl())).add("user", parameter(connection.user())).add("password", parameter(connection.password())).add("clientId", parameter(connection.clientId()));
+	}
+
+	private void addBroker(FrameBuilder dataHubFrame, Broker broker) {
+		FrameBuilder brokerFrame = new FrameBuilder().
+				add("port", parameter(broker.port() + "", "int")).
+				add("mqtt_port", parameter(broker.mqtt_port() + "", "int")).
+				add("connectorId", parameter(broker.connectorId()));
+		broker.pipeList().forEach(pipe -> brokerFrame.add("pipe", new FrameBuilder().add("origin", pipe.origin()).add("destination", pipe.destination())));
+		broker.userList().forEach(user -> brokerFrame.add("user", new FrameBuilder().add("name", parameter(user.name())).add("password", parameter(user.password()))));
+		dataHubFrame.add("broker", brokerFrame);
+	}
+
+	private String type(DataHub dataHub) {
+		return dataHub.core$().conceptList().stream().map(s -> s.id().split("#")[0]).toArray(String[]::new)[0];
+	}
+
+	@NotNull
+	private FrameBuilder parameter(String parameter, String... types) {
+		return new FrameBuilder(types).add("parameter").add(isCustom(parameter) ? "custom" : "standard").add("value", parameter);
 	}
 
 	private Frame frameOf(Feeder feeder) {
@@ -101,15 +162,15 @@ public class AbstractBoxRenderer {
 					new FrameBuilder("service", "rest")
 							.add("name", service.name$())
 							.add("configuration", name)
-							.add("parameter", new FrameBuilder(isCustom(service.port()) ? "custom" : "standard").add("value", service.port())).toFrame());
+							.add("parameter", parameter(service.port())).toFrame());
 	}
 
 	private void jms(FrameBuilder frame, String name) {
 		for (JMSService service : graph.jMSServiceList())
 			frame.add("service", new FrameBuilder("service", "jms").add("name", service.name$()).add("configuration", name)
-					.add("parameter", new FrameBuilder(isCustom(service.user()) ? "custom" : "standard").add("value", service.user()).toFrame())
-					.add("parameter", new FrameBuilder(isCustom(service.password()) ? "custom" : "standard").add("value", service.password()).toFrame())
-					.add("parameter", new FrameBuilder(isCustom(service.url()) ? "custom" : "standard").add("value", service.url()).toFrame()).toFrame());
+					.add("parameter", parameter(service.user()).toFrame())
+					.add("parameter", parameter(service.password()).toFrame())
+					.add("parameter", parameter(service.url()).toFrame()).toFrame());
 	}
 
 	private void jmx(FrameBuilder frame, String name) {
@@ -138,9 +199,9 @@ public class AbstractBoxRenderer {
 
 	private Frame ui(UIService service, String name) {
 		final FrameBuilder builder = new FrameBuilder("service", "ui").add("name", service.name$()).add("configuration", name)
-				.add("parameter", new FrameBuilder(isCustom(service.port()) ? "custom" : "standard").add("value", service.port()).toFrame());
+				.add("parameter", parameter(service.port()).toFrame());
 		if (service.authentication() != null)
-			builder.add("authentication", new FrameBuilder(isCustom(service.authentication().by()) ? "custom" : "standard").add("value", service.authentication().by()).toFrame());
+			builder.add("authentication", parameter(service.authentication().by()).toFrame());
 		if (service.edition() != null)
 			builder.add("edition", new FrameBuilder(isCustom(service.edition().by()) ? "custom" : "standard").add("value", service.edition().by()).toFrame());
 		service.useList().forEach(use -> builder.add("use", use.className() + "Service"));
