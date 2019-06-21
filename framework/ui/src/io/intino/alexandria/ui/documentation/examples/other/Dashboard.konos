@@ -12,7 +12,6 @@ Template(layout=Vertical, spacing=DP8) dashboardExamplesMold as Decorated
 					Dashboard alexandriaDashboard
 						serverScript = "data/dashboard/server.R"
 						uiScript = "data/dashboard/ui.R"
-						Parameter("param1", "abcd")
 
 				Block > Text dashboard1Code as Code(language=Html)
 						value
