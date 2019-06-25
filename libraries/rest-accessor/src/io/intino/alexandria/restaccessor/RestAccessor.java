@@ -58,6 +58,8 @@ public interface RestAccessor {
 
 		Response post(String path) throws RestfulFailure;
 
+		Response post(String path, String body) throws RestfulFailure;
+
 		Response post(String path, Map<String, String> parameters) throws RestfulFailure;
 
 		Response post(String path, Resource resource) throws RestfulFailure;
@@ -80,6 +82,8 @@ public interface RestAccessor {
 	}
 
 	interface Response {
+		int code();
+
 		String content();
 
 		InputStream contentAsStream();
