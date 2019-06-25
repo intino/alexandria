@@ -30,5 +30,10 @@
     <orderEntry type="library" name="Legio: org.glassfish.grizzly:grizzly-http:2.3.15-gfa" level="project" />
     <orderEntry type="module" module-name="json" />
     <orderEntry type="library" name="Legio: com.google.code.gson:gson:2.8.0" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:exceptions:1.0.0" level="project" />
+    <orderEntry type="library" name="Legio: com.sun.xml.security:xml-security-impl:1.0" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:primitives:1.0.3" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:json:1.0.0" level="project" />
+    <orderEntry type="module" module-name="inl" />
   </component>
 </module>

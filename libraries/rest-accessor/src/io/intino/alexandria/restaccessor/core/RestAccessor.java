@@ -13,6 +13,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.InputStreamBody;
@@ -71,6 +72,12 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 	public Response post(URL url, String path) throws RestfulFailure {
 		return post(url, path, emptyMap());
 	}
+
+	@Override
+	public Response post(URL url, String path, String body) throws RestfulFailure {
+		return doPost(url, path, entityOf(body));
+	}
+
 
 	@Override
 	public Response post(URL url, String path, Map<String, String> parameters) throws RestfulFailure {
@@ -441,8 +448,20 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 	private HttpEntity entityOf(Map<String, String> parameters) throws RestfulFailure {
 		try {
 			return new UrlEncodedFormEntity(parametersToNameValuePairs(parameters), "UTF-8");
-		} catch (UnsupportedEncodingException exception) {
-			throw new RestfulFailure(exception.getMessage());
+		} catch (UnsupportedEncodingException e) {
+			throw new RestfulFailure(e.getMessage());
+		}
+	}
+
+	private HttpEntity entityOf(String body) throws RestfulFailure {
+		try {
+			StringEntity entity = new StringEntity(body);
+			entity.setContentEncoding("UTF-8");
+			return entity;
+		} catch (UnsupportedEncodingException e) {
+			Logger.error(e);
+			throw new RestfulFailure(e.getMessage());
+
 		}
 	}
 

@@ -21,6 +21,8 @@ public interface RestAccessor {
 
 	Response post(URL url, String path, Map<String, String> parameters) throws RestfulFailure;
 
+	Response post(URL url, String path, String body) throws RestfulFailure;
+
 	Response post(URL url, String path, Resource resource) throws RestfulFailure;
 
 	Response post(URL url, String path, List<Resource> resourceList) throws RestfulFailure;
