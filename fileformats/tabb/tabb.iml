@@ -25,8 +25,6 @@
     <orderEntry type="library" scope="TEST" name="Legio: org.assertj:assertj-core:3.11.1" level="project" />
     <orderEntry type="library" name="Legio: io.intino.itrules:engine:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Legio: junit:junit:4.13-beta-3" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.alexandria:zet:1.0.5" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.alexandria:logger:2.0.0" level="project" />
     <orderEntry type="module" module-name="inl" />
   </component>
 </module>

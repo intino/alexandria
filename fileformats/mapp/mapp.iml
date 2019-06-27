@@ -15,5 +15,6 @@
     <orderEntry type="module" module-name="zet" />
     <orderEntry type="module" module-name="tris" />
     <orderEntry type="module" module-name="inl" />
+    <orderEntry type="library" scope="TEST" name="Legio: junit:junit:4.13-beta-3" level="project" />
   </component>
 </module>

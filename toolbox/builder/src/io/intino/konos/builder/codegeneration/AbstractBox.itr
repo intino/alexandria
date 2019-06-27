@@ -153,12 +153,16 @@ def type(datahub) trigger(setup)
 		[$tanks]));
 end
 
+def type(service) trigger(datasource)
+	new io.intino.alexandria.datahub.model.Configuration.Service($path+parameter, [$scale?io.intino.alexandria.Scale.Day], [$sealing?null], [$realtime?null])
+end
+
 def type(local) trigger(datasource)
-	new io.intino.alexandria.datahub.model.Configuration.Local($path+parameter, [$scale?io.intino.alexandria.Scale.Day], [$sealing?null], [$realtime?null])
+	new io.intino.alexandria.datahub.model.Configuration.Local($path+parameter)
 end
 
 def type(mirror) trigger(datasource)
-	new io.intino.alexandria.datahub.model.Configuration.Mirror($originUrl+parameter, $destinationPath+parameter, [$realtime?null])
+	new io.intino.alexandria.datahub.model.Configuration.Mirror($originUrl+parameter, $originPath+parameter, $destinationPath+parameter, "$startingTimetag", $user+parameter, $password+parameter,[$realtime?null])
 end
 
 def trigger(broker)

@@ -49,6 +49,7 @@ public class SealingTask {
 		}
 	}
 
+
 	private Set<Trigger> newSet(Trigger... triggers) {
 		LinkedHashSet<Trigger> set = new LinkedHashSet<>();
 		java.util.Collections.addAll(set, triggers);

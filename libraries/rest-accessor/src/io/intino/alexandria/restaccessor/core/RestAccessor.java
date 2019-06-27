@@ -457,7 +457,6 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 
 	private Response executeMethod(HttpRequestBase method, Map<String, String> headers) throws RestfulFailure {
 		HttpResponse response;
-
 		try {
 			headers.forEach(method::setHeader);
 			response = client().execute(method);

@@ -19,7 +19,7 @@ public final class BrokerManager {
 	private static final String NESS = "ness";
 
 	private final String nessID;
-	private final BusService service;
+	private final BrokerService service;
 	private final Map<String, Producer> producers = new HashMap<>();
 	private final Map<String, List<TopicConsumer>> consumers = new HashMap<>();
 	private Connection connection;
@@ -27,7 +27,7 @@ public final class BrokerManager {
 	private AdvisoryManager advisoryManager;
 
 
-	public BrokerManager(String nessID, BusService service) {
+	public BrokerManager(String nessID, BrokerService service) {
 		this.nessID = nessID;
 		this.service = service;
 	}

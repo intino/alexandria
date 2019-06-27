@@ -1,16 +1,14 @@
 dsl Legio
 
-Artifact("io.intino.ness", "1.0.0") ingestion
+Artifact("io.intino.alexandria", "1.0.0") ingestion
 	Imports
-		Compile("io.intino.ness", "core", "2.0.0")
+		Compile("io.intino.alexandria", "session", "1.0.0")
 		Compile("io.intino.alexandria", "zim", "1.0.6")
 		Compile("io.intino.alexandria", "zet", "1.0.5")
 		Compile("io.intino.alexandria", "tris", "1.0.0")
-
-		Test(groupId = "junit", artifactId = "junit", version = "LATEST")
-
-	Package(mode = ModulesAndLibrariesLinkedByManifest)
+		Test("junit", "junit", "LATEST")
+	Package(ModulesAndLibrariesLinkedByManifest)
 	Distribution(intino.release)
 
-Repository(identifier = "intino-maven") intino
-	Release(url = "https://artifactory.intino.io/artifactory/release-libraries") release
+Repository("intino-maven") intino
+	Release("https://artifactory.intino.io/artifactory/release-libraries") release
