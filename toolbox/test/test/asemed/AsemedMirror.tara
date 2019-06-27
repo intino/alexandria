@@ -3,7 +3,10 @@ dsl Konos
 DataHub datahub as Mirrored
 	workingDirectory = "{datahub_path}"
 	originUrl = "{datalake_origin}"
+	originDatalakePath = "{datalake_origin_path}"
+	user = "asemed"
 	destinationPath = "{datalake_path}"
+	startingTimetag = "20190101"
 	BusConnection("{bus}", "{user}", "{password}", "xxxx")
 	Broker(connectorId = "{broker_connector}")
 		User(name = "a", password = "b")

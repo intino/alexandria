@@ -72,6 +72,18 @@ public class Configuration {
 				this.split = split;
 			}
 
+			public String name() {
+				return name;
+			}
+
+			public Type type() {
+				return type;
+			}
+
+			public String split() {
+				return split;
+			}
+
 			public enum Type {
 				Event, Set, Singleton;
 			}
@@ -85,16 +97,36 @@ public class Configuration {
 				this.name = name;
 				this.values = values;
 			}
+
+			public String name() {
+				return name;
+			}
+
+			public List<String> values() {
+				return values;
+			}
 		}
 	}
 
 	public static class Local extends DataSource {
 		private String path;
+
+		public Local(String path) {
+			this.path = path;
+		}
+
+		public String path() {
+			return path;
+		}
+	}
+
+	public static class Service extends DataSource {
+		private String path;
 		private Scale scale;
 		private String sealingPattern;
 		private Realtime realtime;
 
-		public Local(String path, Scale scale, String sealingPattern, Realtime realtime) {
+		public Service(String path, Scale scale, String sealingPattern, Realtime realtime) {
 			this.path = path;
 			this.scale = scale;
 			this.sealingPattern = sealingPattern;
@@ -119,13 +151,21 @@ public class Configuration {
 	}
 
 	public static class Mirror extends DataSource {
+		private final String startingTimetag;
 		private String originUrl;
-		private String destinationPath;
+		private String datalakeOriginPath;
+		private String user;
+		private String password;
+		private String datalakeDestinationPath;
 		private Realtime realtime;
 
-		public Mirror(String originUrl, String destinationPath, Realtime realtime) {
+		public Mirror(String originUrl, String datalakeOriginPath, String datalakeDestinationPath, String startingTimetag, String user, String password, Realtime realtime) {
 			this.originUrl = originUrl;
-			this.destinationPath = destinationPath;
+			this.datalakeOriginPath = datalakeOriginPath;
+			this.startingTimetag = startingTimetag;
+			this.user = user;
+			this.password = password;
+			this.datalakeDestinationPath = datalakeDestinationPath;
 			this.realtime = realtime;
 		}
 
@@ -133,8 +173,24 @@ public class Configuration {
 			return originUrl;
 		}
 
-		public String destinationPath() {
-			return destinationPath;
+		public String user() {
+			return user;
+		}
+
+		public String password() {
+			return password;
+		}
+
+		public String datalakeOriginPath() {
+			return datalakeOriginPath;
+		}
+
+		public String datalakeDestinationPath() {
+			return datalakeDestinationPath;
+		}
+
+		public String startingTimetag() {
+			return startingTimetag;
 		}
 
 		public Realtime realtime() {

@@ -2,14 +2,16 @@ package io.intino.alexandria.datahub;
 
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.datahub.bus.BrokerManager;
-import io.intino.alexandria.datahub.bus.BusService;
+import io.intino.alexandria.datahub.bus.BrokerService;
 import io.intino.alexandria.datahub.bus.PipeManager;
+import io.intino.alexandria.datahub.datalake.DatalakeCloner;
 import io.intino.alexandria.datahub.datalake.SealingTask;
 import io.intino.alexandria.datahub.datalake.TankManager;
 import io.intino.alexandria.datahub.model.Broker;
 import io.intino.alexandria.datahub.model.Configuration;
 import io.intino.alexandria.datahub.model.Configuration.Local;
 import io.intino.alexandria.datahub.model.Configuration.Mirror;
+import io.intino.alexandria.datahub.model.Configuration.Service;
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.file.FileDatalake;
 import io.intino.alexandria.logger.Logger;
@@ -28,7 +30,7 @@ public class DataHub {
 	private final Configuration configuration;
 	private Datalake datalake;
 	private BrokerManager brokerManager;
-	private BusService brokerService;
+	private BrokerService brokerService;
 	private AdminService adminService;
 	private SessionManager sessionManager;
 	private PipeManager pipeManager;
@@ -43,13 +45,16 @@ public class DataHub {
 	}
 
 	public void start() {
+		if (isService()) configureDatalake(((Service) configuration.dataSource()).path());
 		if (isLocal()) configureDatalake(((Local) configuration.dataSource()).path());
 		else configureMirror((Mirror) configuration.dataSource());
+
 		if (configuration.broker() != null) configureBroker();
 	}
 
 	public void stop() {
 		Logger.info("Shutting down datalake...");
+		sealingTask = null;
 		if (brokerManager != null) brokerManager.stop();
 	}
 
@@ -70,21 +75,21 @@ public class DataHub {
 		return sessionManager;
 	}
 
-	public BusService brokerService() {
+	public BrokerService brokerService() {
 		return brokerService;
-	}
-
-	public File temporalSessionDirectory() {
-		return brokerSessionsDirectory;
 	}
 
 	BrokerManager brokerManager() {
 		return brokerManager;
 	}
 
+	public File temporalSessionDirectory() {
+		return brokerSessionsDirectory;
+	}
+
 	private void configureMirror(Mirror mirror) {
-		clone(mirror.originUrl(), mirror.destinationPath());
-		configureDatalake(mirror.destinationPath());
+		configureDatalake(mirror.datalakeOriginPath());
+		cloneDatalake();
 	}
 
 	private void configureDatalake(String path) {
@@ -93,25 +98,25 @@ public class DataHub {
 	}
 
 	private void configureBroker() {
-		brokerService = new BusService(brokerPort(), mqttPort(), true, new File(brokerDirectory()), users(), Collections.emptyList());
+		brokerService = new BrokerService(brokerPort(), mqttPort(), true, new File(brokerDirectory()), users(), Collections.emptyList());
 		brokerManager = new BrokerManager(configuration.broker().connectorId(), brokerService);
 		brokerManager.start();
 		pipeManager = new PipeManager(brokerManager);
 		startServices();
 	}
 
-	private void clone(String originUrl, String destinationPath) {
-
+	private void cloneDatalake() {
+		new DatalakeCloner((Mirror) configuration.dataSource(), configuration.tanks());
 	}
 
 	private void startServices() {
-		if (isLocal() && configuration.broker() != null) {
-			startTanks(((Local) configuration.dataSource()).scale());
+		if (isService() && configuration.broker() != null) {
+			startTanks(((Service) configuration.dataSource()).scale());
 			startPipes();
 			startAdminService();
 		}
-		if (isLocal() && ((Local) configuration.dataSource()).sealingPattern() != null)
-			startSealingTask(((Local) configuration.dataSource()).sealingPattern());
+		if (isService() && ((Service) configuration.dataSource()).sealingPattern() != null)
+			startSealingTask(((Service) configuration.dataSource()).sealingPattern());
 	}
 
 	private void startSealingTask(String pattern) {
@@ -145,6 +150,10 @@ public class DataHub {
 
 	private int mqttPort() {
 		return configuration.broker().mqtt_port();
+	}
+
+	private boolean isService() {
+		return configuration.dataSource() instanceof Service;
 	}
 
 	private boolean isLocal() {

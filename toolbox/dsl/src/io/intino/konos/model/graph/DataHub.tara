@@ -13,16 +13,23 @@ Facet DataHubLocation on DataHub is abstract
 	sub Remote > has:{1..1} BusConnection
 	sub Mirrored
 		var string originUrl
+		var string originDatalakePath
+		var string user
+		var string password = empty
 		var string destinationPath
+		var string startingTimetag
+
 		has:{0..1} BusConnection
 		has:{0..1} Broker
-	sub Local
+	sub Service
 		var string path
 		var word:{Year Month Day Hour Minute} scale
 		has:{0..1} Broker
 		Concept:{0..1} Seal
 			var string when
 			var string description
+	sub Local
+		var string path
 
 Facet TankType on DataHub.Tank
 	sub Event > var Schema schema

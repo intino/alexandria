@@ -33,6 +33,6 @@
     "io.intino.alexandria:rest": "1.0.4",
     "io.intino.alexandria:jms": "1.0.1",
     "io.intino.alexandria:jmx": "1.0.1",
-    "io.intino.alexandria.data-hub": "1.0.0"
+    "io.intino.alexandria:data-hub": "1.0.0"
   }
 }

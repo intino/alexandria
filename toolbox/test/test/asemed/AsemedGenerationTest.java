@@ -11,6 +11,7 @@ import java.io.File;
 @Ignore
 public class AsemedGenerationTest {
 	private static final String ASEMED = "Asemed";
+	private static final String ASEMED_LOCAL = "AsemedLocal";
 	private static final String ASEMED_MIRROR = "AsemedMirror";
 
 	@Test
@@ -27,5 +28,14 @@ public class AsemedGenerationTest {
 		File gen = new File("test-gen", ASEMED_MIRROR.toLowerCase());
 		KonosGraph graph = new Graph().loadStashes(ASEMED_MIRROR).as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, ASEMED_MIRROR.toLowerCase()).execute();
+	}
+
+
+	@Test
+	@Ignore
+	public void testAsemedLocalGeneration() {
+		File gen = new File("test-gen", ASEMED_LOCAL.toLowerCase());
+		KonosGraph graph = new Graph().loadStashes(ASEMED_LOCAL).as(KonosGraph.class);
+		new FullRenderer(null, graph, gen, gen, gen, ASEMED_LOCAL.toLowerCase()).execute();
 	}
 }

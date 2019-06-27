@@ -4,7 +4,6 @@ import io.intino.alexandria.datahub.model.Broker;
 import io.intino.alexandria.logger.Logger;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerPlugin;
-import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.broker.TransportConnector;
 import org.apache.activemq.broker.region.policy.ConstantPendingMessageLimitStrategy;
 import org.apache.activemq.broker.region.policy.PolicyEntry;
@@ -36,7 +35,7 @@ import java.util.stream.Collectors;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
-public class BusService {
+public class BrokerService {
 	private static final String NESS = "ness";
 
 	private final int brokerPort;
@@ -49,11 +48,11 @@ public class BusService {
 
 	private JavaRuntimeConfigurationPlugin configurationPlugin;
 	private SimpleAuthenticationPlugin authenticator;
-	private BrokerService service;
+	private org.apache.activemq.broker.BrokerService service;
 	private Map<String, VirtualDestinationInterceptor> pipes = new HashMap<>();
 	private JavaRuntimeConfigurationBroker confBroker;
 
-	public BusService(int brokerPort, int mqttPort, boolean persistent, File brokerStore, Map<String, String> users, List<Broker.JmsConnector> connectors) {
+	public BrokerService(int brokerPort, int mqttPort, boolean persistent, File brokerStore, Map<String, String> users, List<Broker.JmsConnector> connectors) {
 		this.brokerPort = brokerPort;
 		this.mqttPort = mqttPort;
 		this.persistent = persistent;
@@ -120,7 +119,7 @@ public class BusService {
 	public void start() {
 		try {
 			Logger.info("starting broker...");
-			this.service = new BrokerService();
+			this.service = new org.apache.activemq.broker.BrokerService();
 			this.authenticator = new SimpleAuthenticationPlugin(initUsers(users));
 			this.configurationPlugin = new JavaRuntimeConfigurationPlugin();
 			configure(persistent, connectors);

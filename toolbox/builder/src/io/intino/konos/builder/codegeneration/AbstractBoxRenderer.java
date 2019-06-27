@@ -9,9 +9,9 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.jms.JMSService;
 import io.intino.konos.model.graph.jmx.JMXService;
-import io.intino.konos.model.graph.local.LocalDataHub;
 import io.intino.konos.model.graph.mirrored.MirroredDataHub;
 import io.intino.konos.model.graph.rest.RESTService;
+import io.intino.konos.model.graph.service.ServiceDataHub;
 import io.intino.konos.model.graph.slackbot.SlackBotService;
 import io.intino.konos.model.graph.ui.UIService;
 import io.intino.plugin.project.LegioConfiguration;
@@ -84,22 +84,30 @@ public class AbstractBoxRenderer {
 				tanks.add("tank", frameOf(tank));
 			dataHubFrame.add("tanks", tanks.toFrame());
 		}
-		if (dataHub.isLocal()) {
-			LocalDataHub local = dataHub.asLocal();
-			if (local.broker() != null) addBroker(dataHubFrame, local.broker());
-			FrameBuilder frame = new FrameBuilder("local").add("path", parameter(local.path())).add("scale", local.scale());
-			if (local.seal() != null) frame.add("sealing", local.seal().when());
+		if (dataHub.isService()) {
+			ServiceDataHub service = dataHub.asService();
+			if (service.broker() != null) addBroker(dataHubFrame, service.broker());
+			FrameBuilder frame = new FrameBuilder("service").add("path", parameter(service.path())).add("scale", service.scale());
+			if (service.seal() != null) frame.add("sealing", service.seal().when());
 			dataHubFrame.add("datasource", frame);
 		} else if (dataHub.isMirrored()) {
 			MirroredDataHub mirrored = dataHub.asMirrored();
 			if (mirrored.broker() != null) addBroker(dataHubFrame, mirrored.broker());
 			if (mirrored.busConnection() != null) busConnection(mirrored.busConnection());
-			FrameBuilder mirror = new FrameBuilder("mirror").add("originUrl", parameter(mirrored.originUrl())).add("destinationPath", parameter(mirrored.destinationPath()));
+			FrameBuilder mirror = new FrameBuilder("mirror").
+					add("originUrl", parameter(mirrored.originUrl())).
+					add("originPath", parameter(mirrored.originDatalakePath())).
+					add("startingTimetag", mirrored.startingTimetag()).
+					add("user", parameter(mirrored.user())).
+					add("password", mirrored.password() == null ? "" : parameter(mirrored.password())).
+					add("destinationPath", parameter(mirrored.destinationPath()));
 			if (mirrored.busConnection() != null) mirror.add("realtime", busConnection(mirrored.busConnection()));
 			dataHubFrame.add("datasource", mirror);
 		} else if (dataHub.isRemote()) {
 			BusConnection remote = dataHub.asRemote().busConnection();
 			dataHubFrame.add("datasource", new FrameBuilder("remote").add("realtime", busConnection(remote)));
+		} else if (dataHub.isLocal()) {
+			dataHubFrame.add("datasource", new FrameBuilder("local").add("path", parameter(dataHub.asLocal().path())));
 		}
 		dataHubFrame.add("feeder", graph.feederList().stream().map(this::frameOf).toArray(Frame[]::new));
 		if (!graph.procedureList().isEmpty())
