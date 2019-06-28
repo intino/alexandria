@@ -3,7 +3,7 @@ package io.intino.test;
 import io.intino.alexandria.tabb.ColumnStream;
 import io.intino.alexandria.tabb.ColumnStream.Type;
 import io.intino.alexandria.tabb.TabbBuilder;
-import io.intino.alexandria.tabb.streamers.ObjectStreamer;
+import io.intino.alexandria.tabb.streamers. ObjectStreamer;
 import org.junit.Before;
 import org.junit.Test;
 

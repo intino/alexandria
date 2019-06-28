@@ -49,15 +49,24 @@ public abstract class Bot {
 		return usersContext;
 	}
 
-	private String parameters(List<String> parameters) {
-		return parameters.isEmpty() ? "" : " `" + String.join("` `", parameters) + "`";
-	}
-
 	public void execute() throws IOException {
 		session = createWebSocketSlackSession(token);
 		session.addMessagePostedListener(this::talk);
 		session.connect();
 		initContexts();
+	}
+
+
+	public void disconnect() {
+		try {
+			this.session.disconnect();
+		} catch (Exception e) {
+			Logger.error(e);
+		}
+	}
+
+	private String parameters(List<String> parameters) {
+		return parameters.isEmpty() ? "" : " `" + String.join("` `", parameters) + "`";
 	}
 
 	private void initContexts() {
@@ -81,7 +90,7 @@ public abstract class Bot {
 	}
 
 	public Object talk(String userName, String message, MessageProperties properties) {
-		String[] content = Arrays.stream(message.split(" ")).filter(s -> !s.trim().isEmpty()).toArray(String[]::new);
+		String[] content = Arrays.stream(message.split(" ")).filter(s -> !s.trim().isEmpty()).map(this::decode).toArray(String[]::new);
 		CommandInfo commandInfo = commandsInfo.get((contexts().get(userName).command.isEmpty() || isBundledCommand(content[0].toLowerCase()) ? "" : contexts().get(userName).command + "$") + content[0].toLowerCase());
 		final String context = commandInfo != null ? commandInfo.context : "";
 		final String commandKey = (context.isEmpty() ? "" : context + "$") + content[0].toLowerCase();
@@ -91,6 +100,12 @@ public abstract class Bot {
 		else if (commands.containsKey(commandKey) && Objects.equals(context, "")) command = commands.get(commandKey);
 		return command.execute(properties, content.length > 1 ? Arrays.copyOfRange(content, 1, content.length) : new String[0]);
 
+	}
+
+	private String decode(String message) {
+		if (message.startsWith("<") && message.endsWith(">") && message.contains("|"))
+			return message.substring(message.indexOf("|" + 1), message.length() - 1);
+		return message;
 	}
 
 	private String messageContent(SlackMessagePosted message) {

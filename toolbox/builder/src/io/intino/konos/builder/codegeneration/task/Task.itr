@@ -1,4 +1,4 @@
-def type(scheduled)
+def type(task)
 	package $package+ValidPackage.scheduling;
 
 	import org.quartz.JobExecutionContext;
@@ -10,11 +10,26 @@ def type(scheduled)
 
 		public void execute(JobExecutionContext context) throws JobExecutionException {
 			$box+FirstUpperCase~Box box = ($box+FirstUpperCase~Box) context.getMergedJobDataMap().get("box");
-			$package+ValidPackage.actions.$name+firstUpperCase~Action action = new $package+ValidPackage.actions.$name+firstUpperCase~Action();
-			action.box = box;
-			action.execute();
+			$target...[$NL]
 		}
 	}
+end
+
+
+def type(mounter) trigger(target)
+	$package+ValidPackage.datahub.mounters.$name+firstUpperCase~Mounter $name~Mounter = new $package+ValidPackage.datahub.mounters.$name+firstUpperCase~Mounter();
+	$name~Mounter.box = box;
+	$name~Mounter.execute();
+end
+
+def type(feeder) trigger(target)
+	new $package+ValidPackage.datahub.feeders.$name+firstUpperCase~Feeder(box).execute();
+end
+
+def trigger(target)
+	$package+ValidPackage.actions.$name+firstUpperCase~Action action = new $package+ValidPackage.actions.$name+firstUpperCase~Action();
+	action.box = box;
+	action.execute();
 end
 
 def type(parameter) trigger(assign)

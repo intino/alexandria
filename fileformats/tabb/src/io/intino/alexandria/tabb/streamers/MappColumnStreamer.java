@@ -98,9 +98,9 @@ public class MappColumnStreamer implements ColumnStreamer {
 
 		private String name;
 		private Type type;
-		private Function<MappStream.Item, Object> function;
+		private Function<MappStream.Item, ?> function;
 
-		public SimpleSelector(String name, Type type, Function<MappStream.Item, Object> function) {
+		public SimpleSelector(String name, Type type, Function<MappStream.Item, ?> function) {
 			this.name = name;
 			this.type = type;
 			this.function = function;

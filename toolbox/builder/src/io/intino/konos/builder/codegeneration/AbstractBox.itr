@@ -4,19 +4,22 @@ def type(box)
 	import java.util.LinkedHashMap;
 	import java.util.Map;
 	import java.util.UUID;
-	[import java.util.HashMap;
-    import java.util.Map;$hasUi]
+	[$hasUi
+	import java.util.HashMap;
+    import java.util.Map;]
+
 	import io.intino.alexandria.logger.Logger;
 	import java.util.logging.ConsoleHandler;
 	import java.util.logging.Level;
 
-	[$hasREST~import io.intino.alexandria.rest.AlexandriaSpark;]
+	[$datahub+import]
+	[import io.intino.alexandria.rest.AlexandriaSpark;$hasREST]
     [import io.intino.alexandria.ui.displays.Soul;$hasUi+hide]
 
 	public abstract class AbstractBox extends [$hasUi+uiBox?io.intino.alexandria.core.Box] {
 		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;
 		[$service+field...[$NL]]
-		[$dataLake+field...[$NL]]
+		[$dataHub+field]
 		[$task+field]
         [protected Map<String, Soul> uiSouls = new java.util.HashMap<>();$hasUi+hide]
 	    [private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();$hasUi+hide]
@@ -32,7 +35,7 @@ def type(box)
 			this.configuration = configuration;
 			initJavaLogger();
 			[$service+setup...[$NL]]
-			[$datalake+setup]
+			[$dataHub+setup]
 		}
 
 		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration() {
@@ -51,25 +54,33 @@ def type(box)
 			initRESTServices();
 			initJMXServices();
 			initJMSServices();
-			initDatalake();
+			initDataHub();
 			initTasks();
 			initSlackBots();
 			return this;
 		}
 
 		public void close() {
-			if(owner != null) owner.close();
-			$spark...[$NL]
-			$service+quit...[$NL]
-			$dataLake+quit...[$NL]
+			if (owner != null) owner.close();
+			[$spark...[$NL]]
+			[$service+quit...[$NL]]
+			[$dataHub+quit]
 		}
 
 		[$hasUi+registerSoul]
+
 		[$service+getter...[$NL$NL]]
+
 		[$hasUi+authService]
+
 		[$hasUi+editorService]
-		[$dataLake+getter...[$NL$NL]]
+
+		[$dataHub+getter]
+
+		[$datamart+getter]
+
 		[$task+getter...[$NL$NL]]
+
 
 		private void initRESTServices() {
 			$service+rest...[$NL]
@@ -92,15 +103,10 @@ def type(box)
 			$service+ui...[$NL]
 		}
 
-		private void initDatalake() {
-			$dataLake+init...[$NL]
+		private void initDataHub() {
+			[$dataHub+init]
 		}
-		[
-		private io.intino.ness.core.Datalake datalakeFrom(String nessUrl, String nessUser, String nessPassword, String clientId) {
-			if (nessUrl.startsWith("file://")) return new io.intino.alexandria.nessaccessor.local.LocalDatalake(new java.io.File(nessUrl.replace("file://", "")));
-			return new io.intino.alexandria.nessaccessor.tcp.TCPDatalake(nessUrl, nessUser, nessPassword, clientId);
-		}$datalake+hide
-		]
+
 		private void initTasks() {
 			[$task+init...[$NL]]
 		}
@@ -114,9 +120,9 @@ def type(box)
 			Logger.addHandler(handler);
 		}
 
-		private static java.net.URL url(String url) {
+		private java.net.URL url(String url) {
 			try {
-			return new java.net.URL(url);
+				return new java.net.URL(url);
 			} catch (java.net.MalformedURLException e) {
 				return null;
 			}
@@ -140,8 +146,57 @@ def type(service & rest) trigger(setup)
 	io.intino.alexandria.rest.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
 end
 
-def type(datalake) trigger(setup)
-	this.nessAccessor = new io.intino.alexandria.nessaccessor.NessAccessor(datalakeFrom($parameter...[, ]));
+def type(datahub) trigger(setup)
+	this.dataHub = new DataHub(new Configuration($workspace+parameter,
+		[$broker?null],
+		[$datasource],
+		[$tanks]));
+end
+
+def type(service) trigger(datasource)
+	new io.intino.alexandria.datahub.model.Configuration.Service($path+parameter, [$scale?io.intino.alexandria.Scale.Day], [$sealing?null], [$realtime?null])
+end
+
+def type(local) trigger(datasource)
+	new io.intino.alexandria.datahub.model.Configuration.Local($path+parameter)
+end
+
+def type(mirror) trigger(datasource)
+	new io.intino.alexandria.datahub.model.Configuration.Mirror($originUrl+parameter, $originPath+parameter, $destinationPath+parameter, "$startingTimetag", $user+parameter, $password+parameter,[$realtime?null])
+end
+
+def trigger(broker)
+	new io.intino.alexandria.datahub.model.Broker($port+parameter, $mqtt_port+parameter, $connectorId+parameter,
+		java.util.Arrays.asList($user...[, ]),
+		java.util.Arrays.asList($pipe...[, ]))
+end
+
+def trigger(tanks)
+	new io.intino.alexandria.datahub.model.Configuration.Tanks(java.util.Arrays.asList($split...[, ]),
+		java.util.Arrays.asList($tank...[,$NL ]))
+end
+def trigger(split)
+	new io.intino.alexandria.datahub.model.Configuration.Tanks.Split("$name", java.util.Arrays.asList($value+quoted...[, ]))
+end
+
+def trigger(tank)
+	new io.intino.alexandria.datahub.model.Configuration.Tanks.Tank("$name", Configuration.Tanks.Tank.Type.$type+firstUpperCase, ["$splitName"?null])
+end
+
+def trigger(user)
+	new io.intino.alexandria.datahub.model.Broker.User($name+parameter, $password+parameter)
+end
+
+def trigger(realtime)
+	new io.intino.alexandria.datahub.model.Configuration.Realtime($brokerUrl+parameter, $user+parameter, $password+parameter, $clientId+parameter)
+end
+
+def trigger(pipe)
+	new io.intino.alexandria.datahub.model.Broker.Pipe("$origin", "$destination")
+end
+
+def trigger(scale)
+	io.intino.alexandria.Scale.$this+FirstUpperCase
 end
 
 def type(service & jmx) trigger(jmx)
@@ -193,66 +248,15 @@ def type(service & jms) trigger(init)
 	}
 end
 
-def type(dataLake & requireConnection) trigger(init)
-	this.nessAccessor.connection().connect("$mode");
-	$package+validPackage.datalake.Datalake.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
-	registerFeeders();
-	$nessOperations
-	if (nessAccessor.connection() instanceof io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection && ((io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection) nessAccessor.connection()).session() != null)
-		Logger.info("Ness connection: started!");
+def type(dataHub) trigger(import)
+	import io.intino.alexandria.datahub.DataHub;
+	import io.intino.alexandria.datahub.model.Configuration;
 end
 
-
-def type(dataLake) trigger(init)
-	java.lang.Thread thread = new java.lang.Thread(() -> {
-		this.nessAccessor.connection().connect("$mode");
-		$package+validPackage.datalake.Datalake.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
-		registerFeeders();
-		$nessOperations
-		if (nessAccessor.connection() instanceof io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection && ((io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection) nessAccessor.connection()).session() != null)
-			Logger.info("Ness connection: started!");
-	}, "ness accessor init");
-	try {
-		thread.start();
-		thread.join(10000);
-	} catch (InterruptedException e) {
-		Logger.error(e.getMessage());
-	}
-end
-
-def trigger(nessOperations)
-	$package+validPackage.datalake.NessOperations.init(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
-end
-
-def type(custom) trigger(parameter)
-	configuration().get("$value+customParameter")
-end
-
-def type(custom) trigger(authentication)
-	url(configuration().get("$value+customParameter"))
-end
-
-def type(custom) trigger(edition)
-	url(configuration().get("$value+customParameter"))
-end
-
-def trigger(parameter)
-	"$value"
-end
-
-def trigger(authentication)
-	url("$value")
-end
-
-def trigger(edition)
-	url("$value")
-end
-
-def attribute(Transacted) trigger(mode)
-	Transacted
-end
-
-def trigger(mode)
+def type(dataHub) trigger(init)
+	this.dataHub.start();
+	[registerFeeders();$feeder+hide]
+	Logger.info("Ness connection: started!");
 end
 
 def type(service & jmx) trigger(field)
@@ -271,8 +275,8 @@ def type(task) trigger(field)
 	private io.intino.alexandria.scheduler.AlexandriaScheduler scheduler = new io.intino.alexandria.scheduler.AlexandriaScheduler();
 end
 
-def type(dataLake) trigger(field)
-	private io.intino.alexandria.nessaccessor.NessAccessor nessAccessor;
+def type(dataHub) trigger(field)
+	private io.intino.alexandria.datahub.DataHub dataHub;
 end
 
 def type(service & jms) trigger(getter)
@@ -281,22 +285,28 @@ def type(service & jms) trigger(getter)
 	}
 end
 
-def type(dataLake) trigger(getter)
-	public io.intino.alexandria.nessaccessor.NessAccessor nessAccessor() {
-		return this.nessAccessor;
+def type(dataHub) trigger(getter)
+	public io.intino.alexandria.datahub.DataHub dataHub() {
+		return this.dataHub;
 	}
 
-	public io.intino.alexandria.core.Feeders feeders() {
+	[public io.intino.alexandria.core.Feeders feeders() {
 		return io.intino.alexandria.core.Feeders.get();
 	}
 
-	public void registerFeeders() {
+	private void registerFeeders() {
 		$feeder...[$NL]
+	}]
+end
+
+def type(datamart) trigger(getter)
+	public java.io.File $name+firstLowerCase~Datamart() {
+		return new java.io.File(this.configuration().get("$path+parameter"));
 	}
 end
 
 def trigger(feeder)
-	io.intino.alexandria.core.Feeders.get().register(new $package+validPackage.datalake.feeders.$name+FirstUpperCase(($box+FirstUpperCase~Box)this));
+	io.intino.alexandria.core.Feeders.get().register(new $package+validPackage.datalake.feeders.$name+FirstUpperCase(($box+FirstUpperCase~Box) this));
 end
 
 def type(service & slack) trigger(getter)
@@ -316,8 +326,8 @@ def type(service) type(jms) trigger(quit)
 	if ($name+SnakeCaseToCamelCase+firstlowerCase != null) $name+SnakeCaseToCamelCase+firstlowerCase.closeSession();
 end
 
-def type(dataLake) trigger(quit)
-	if (nessAccessor != null) nessAccessor.connection().disconnect();
+def type(dataHub) trigger(quit)
+	if (dataHub != null) dataHub.stop();
 end
 
 def type(service) trigger(quit)
@@ -379,7 +389,33 @@ def trigger(registerSoul)
 		}
 end
 
-def trigger(import)
+
+def type(custom) trigger(parameter)
+	configuration().get("$value+customParameter")
+end
+
+def type(custom) trigger(authentication)
+	url(configuration().get("$value+customParameter"))
+end
+
+def type(custom) trigger(edition)
+	url(configuration().get("$value+customParameter"))
+end
+
+def type(int) trigger(parameter)
+	$value
+end
+
+def trigger(parameter)
+	"$value"
+end
+
+def trigger(authentication)
+	url("$value")
+end
+
+def trigger(edition)
+	url("$value")
 end
 
 def trigger(parentInit)

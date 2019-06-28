@@ -103,13 +103,12 @@ public class ObjectStreamer<T> implements ColumnStreamer {
 	}
 
 	public interface Reducer<T, R> {
-		boolean mustBreak(T current);
-
-		void clear();
+		boolean canAdd(T current);
 
 		void add(T item);
-
 		Iterator<R> items();
+
+		void clear();
 	}
 
 	static class Splitter<T, R> implements Iterable<R> {
@@ -145,7 +144,7 @@ public class ObjectStreamer<T> implements ColumnStreamer {
 					while (next != null) {
 						reducer.add(next);
 						next = iterator.hasNext() ? iterator.next() : null;
-						if (reducer.mustBreak(next)) break;
+						if (reducer.canAdd(next)) break;
 					}
 					split = reducer.items();
 				}

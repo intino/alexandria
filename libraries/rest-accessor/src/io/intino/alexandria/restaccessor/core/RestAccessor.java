@@ -13,6 +13,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.InputStreamBody;
@@ -70,6 +71,11 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 	@Override
 	public Response post(URL url, String path) throws RestfulFailure {
 		return post(url, path, emptyMap());
+	}
+
+	@Override
+	public Response post(URL url, String path, String body) throws RestfulFailure {
+		return doPost(url, path, entityOf(body));
 	}
 
 	@Override
@@ -160,6 +166,11 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 			}
 
 			@Override
+			public Response post(String path, String body) throws RestfulFailure {
+				return doPost(url, path, entityOf(body));
+			}
+
+			@Override
 			public Response post(String path, Map<String, String> parameters) throws RestfulFailure {
 				return doPost(url, path, entityOf(parameters));
 			}
@@ -222,6 +233,18 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 					throw new RestfulFailure(exception.getMessage());
 				}
 			}
+
+			private HttpEntity entityOf(String body) throws RestfulFailure {
+				try {
+					StringEntity entity = new StringEntity(body);
+					entity.setContentEncoding("UTF-8");
+					return entity;
+				} catch (UnsupportedEncodingException e) {
+					Logger.error(e);
+					throw new RestfulFailure(e.getMessage());
+
+				}
+			}
 		};
 	}
 
@@ -251,6 +274,11 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 			@Override
 			public Response post(String path) throws RestfulFailure {
 				return post(path, emptyMap());
+			}
+
+			@Override
+			public Response post(String path, String body) throws RestfulFailure {
+				return doPost(url, path, entityOf(body), headers());
 			}
 
 			@Override
@@ -315,6 +343,19 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 				}
 			}
 
+			private HttpEntity entityOf(String body) throws RestfulFailure {
+				try {
+					StringEntity entity = new StringEntity(body);
+					entity.setContentEncoding("UTF-8");
+					entity.setContentType("application/json");
+					return entity;
+				} catch (UnsupportedEncodingException e) {
+					Logger.error(e);
+					throw new RestfulFailure(e.getMessage());
+
+				}
+			}
+
 			private Map<String, String> headers() {
 				return new HashMap<String, String>() {{
 					put(HttpHeaders.AUTHORIZATION, token);
@@ -344,7 +385,7 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 	private Response doGet(URL url, String path, List<NameValuePair> parameters, Map<String, String> headers) throws RestfulFailure {
 		try {
 			URIBuilder uriBuilder = new URIBuilder(pathUrl(url, path)).setParameters(parameters);
-			return executeMethod(url, new HttpGet(uriBuilder.build().toURL().toString()), headers);
+			return executeMethod(new HttpGet(uriBuilder.build().toURL().toString()), headers);
 		} catch (URISyntaxException | MalformedURLException exception) {
 			throw new RestfulFailure(exception.getMessage());
 		}
@@ -388,7 +429,7 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 	private Response doPost(URL url, String path, HttpEntity entity, Map<String, String> headers) throws RestfulFailure {
 		HttpPost post = new HttpPost(pathUrl(url, path));
 		post.setEntity(entity);
-		return executeMethod(url, post, headers);
+		return executeMethod(post, headers);
 	}
 
 	private Response doPut(URL url, String path, HttpEntity entity) throws RestfulFailure {
@@ -398,7 +439,7 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 	private Response doPut(URL url, String path, HttpEntity entity, Map<String, String> headers) throws RestfulFailure {
 		HttpPut put = new HttpPut(pathUrl(url, path));
 		put.setEntity(entity);
-		return executeMethod(url, put, headers);
+		return executeMethod(put, headers);
 	}
 
 	private Response doDelete(URL url, String path, List<NameValuePair> parameters) throws RestfulFailure {
@@ -408,15 +449,14 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 	private Response doDelete(URL url, String path, List<NameValuePair> parameters, Map<String, String> headers) throws RestfulFailure {
 		try {
 			URIBuilder uriBuilder = new URIBuilder(pathUrl(url, path)).setParameters(parameters);
-			return executeMethod(url, new HttpDelete(uriBuilder.build().toURL().toString()), headers);
+			return executeMethod(new HttpDelete(uriBuilder.build().toURL().toString()), headers);
 		} catch (URISyntaxException | MalformedURLException exception) {
 			throw new RestfulFailure(exception.getMessage());
 		}
 	}
 
-	private Response executeMethod(URL url, HttpRequestBase method, Map<String, String> headers) throws RestfulFailure {
+	private Response executeMethod(HttpRequestBase method, Map<String, String> headers) throws RestfulFailure {
 		HttpResponse response;
-
 		try {
 			headers.forEach(method::setHeader);
 			response = client().execute(method);
@@ -441,8 +481,21 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 	private HttpEntity entityOf(Map<String, String> parameters) throws RestfulFailure {
 		try {
 			return new UrlEncodedFormEntity(parametersToNameValuePairs(parameters), "UTF-8");
-		} catch (UnsupportedEncodingException exception) {
-			throw new RestfulFailure(exception.getMessage());
+		} catch (UnsupportedEncodingException e) {
+			throw new RestfulFailure(e.getMessage());
+		}
+	}
+
+
+	private HttpEntity entityOf(String body) throws RestfulFailure {
+		try {
+			StringEntity entity = new StringEntity(body);
+			entity.setContentEncoding("UTF-8");
+			return entity;
+		} catch (UnsupportedEncodingException e) {
+			Logger.error(e);
+			throw new RestfulFailure(e.getMessage());
+
 		}
 	}
 
@@ -540,6 +593,11 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 
 	private Response responseOf(HttpResponse response) {
 		return new Response() {
+
+			@Override
+			public int code() {
+				return response.getStatusLine().getStatusCode();
+			}
 
 			@Override
 			public String content() {

@@ -3,7 +3,7 @@ dsl Legio
 Artifact(groupId = "io.intino.alexandria", version = "2.0.0") tabb
 	Imports
 		Compile("com.opencsv", "opencsv", "4.1")
-		Compile("io.intino.itrules", "engine", "LATEST")
+		Compile("io.intino.itrules", "engine", "1.0.0")
 		Compile("io.intino.alexandria", "zet", "1.0.5")
 		Compile("io.intino.alexandria", "mapp", "1.0.0")
 		Compile("io.intino.alexandria", "logger", "2.0.0")
