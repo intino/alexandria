@@ -6,11 +6,9 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.search.GlobalSearchScope;
 import cottons.utils.Files;
 import io.intino.konos.builder.codegeneration.accessor.ui.UIAccessorCreator;
-import io.intino.konos.builder.codegeneration.datalake.DatalakeRenderer;
-import io.intino.konos.builder.codegeneration.datalake.NessJMXOperationsRenderer;
-import io.intino.konos.builder.codegeneration.datalake.feeder.FeederRenderer;
-import io.intino.konos.builder.codegeneration.datalake.mounter.MounterRenderer;
-import io.intino.konos.builder.codegeneration.datalake.process.ProcessRenderer;
+import io.intino.konos.builder.codegeneration.datahub.feeder.FeederRenderer;
+import io.intino.konos.builder.codegeneration.datahub.mounter.MounterRenderer;
+import io.intino.konos.builder.codegeneration.datahub.process.ProcessRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
@@ -27,11 +25,10 @@ import io.intino.konos.builder.codegeneration.services.ui.dialog.DialogsRenderer
 import io.intino.konos.builder.codegeneration.services.ui.display.DisplayRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.display.DisplaysRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.resource.ResourceRenderer;
+import io.intino.konos.builder.codegeneration.task.SchedulerRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskRenderer;
-import io.intino.konos.builder.codegeneration.task.TaskerRenderer;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.plugin.codeinsight.linemarkers.InterfaceToJavaImplementation;
-import io.intino.plugin.project.LegioConfiguration;
 import io.intino.tara.compiler.shared.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -44,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.plugin.project.Safe.safe;
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.configurationOf;
 
 public class FullRenderer {
@@ -55,12 +51,12 @@ public class FullRenderer {
 	private final KonosGraph graph;
 	private final File gen;
 	private final File src;
-	private File res;
 	private final String packageName;
 	private final String boxName;
 	private final String parent;
 	private final boolean hasModel;
 	private final Map<String, String> classes;
+	private File res;
 
 	public FullRenderer(@Nullable Module module, KonosGraph graph, File src, File gen, File res, String packageName) {
 		this.project = module == null ? null : module.getProject();
@@ -103,7 +99,7 @@ public class FullRenderer {
 
 	private void rest() {
 		new RESTResourceRenderer(project, graph, src, gen, packageName, boxName, classes).execute();
-		new RESTServiceRenderer(graph, gen, res, packageName, boxName,module, classes).execute();
+		new RESTServiceRenderer(graph, gen, res, packageName, boxName, module, classes).execute();
 	}
 
 	private void jmx() {
@@ -118,16 +114,14 @@ public class FullRenderer {
 
 	private void tasks() {
 		new TaskRenderer(graph, src, gen, packageName, boxName, classes).execute();
-		new TaskerRenderer(graph, gen, packageName, boxName).execute();
+		new SchedulerRenderer(graph, gen, packageName, boxName).execute();
 	}
 
 	private void bus() {
-		if (graph.nessClientList().isEmpty()) return;
+		if (graph.dataHub() == null) return;
 		new ProcessRenderer(graph, src, packageName, boxName, classes).execute();
-		new MounterRenderer(graph, src, packageName, boxName, classes).execute();
+		new MounterRenderer(graph, gen, src, packageName, boxName, classes).execute();
 		new FeederRenderer(graph, gen, src, packageName, boxName, classes).execute();
-		new DatalakeRenderer(graph, gen, packageName, boxName).execute();
-		new NessJMXOperationsRenderer(gen, src, packageName, boxName, (module != null && safe(() -> ((LegioConfiguration) configurationOf(module)).graph().artifact().asLevel().model()) != null)).execute();
 	}
 
 	private void slack() {
@@ -151,13 +145,7 @@ public class FullRenderer {
 	}
 
 	private String boxName() {
-		if (module != null) {
-			final Configuration configuration = configurationOf(module);
-			if (configuration == null) return "";
-			final String dsl = configuration.outDSL();
-			if (dsl == null || dsl.isEmpty()) return module.getName();
-			else return dsl;
-		} else return "System";
+		return module != null ? configurationOf(module).artifactId() : Configuration.Level.Solution.name();
 	}
 
 	private String parent() {

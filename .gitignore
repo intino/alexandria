@@ -15,3 +15,10 @@ alexandria/ui-elements-old
 alexandria/ui-elements-new
 alexandria/ui-elements/node_modules
 framework/ui-elements/node_modules
+.tara/misc
+kotlinc.xml
+toolbox/test/test-res
+libraries/ness/datalake/temp
+libraries/ness/ingestion/temp
+ConfigurationTest.stash
+framework/ui-elements/lib

@@ -1,0 +1,323 @@
+dsl Konos
+
+DataHub dataHub as Remote
+	BusConnection(busUrl = "{nessUrl}", user = "{nessUser}", password = "{nessPassword}", clientId = "amidas")
+	Tank(fullName = "authorizationRegister")authorizationRegister
+	Tank(fullName = "identityRegister")identityRegister
+	Tank("dayAheadReport") dayAheadReport
+	Tank("intradayReport") intradayReport
+	Tank("actualGeneration") actualGeneration
+
+	Mounter identityRegister as Realtime
+		Select(tank = identityRegister)
+
+	Mounter authorizationRegister
+
+	Feeder(dataHub.dayAheadReport)
+
+	Feeder(tanks = dataHub.intradayReport)
+	Feeder(tanks = dataHub.actualGeneration)
+
+Schema AddGoal
+	Attribute ts as DateTime
+	Attribute area as Text
+	Attribute goal as Real
+
+Schema RemoveGoal
+	Attribute ts as DateTime
+	Attribute area as Text
+
+
+Schema dayAheadReport
+	Attribute ts as DateTime
+	Attribute priceZone as Text
+	Attribute volume as Text
+	Attribute price as Text
+	Attribute type as Text
+
+Schema intradayReport
+	Attribute ts as DateTime
+	Attribute priceZone as Text
+	Attribute weightedPrice as Text
+	Attribute id3 as Text
+	Attribute type as Text
+
+Schema eexMasterDataUnit
+	Attribute ts as DateTime
+	Attribute unitID as Text
+	Attribute capacity as Text
+	Attribute unitName as Text
+	Attribute plantID as Text
+	Attribute plantName as Text
+	Attribute connectingArea as Text
+	Attribute source as Text
+	Attribute startDate as Text
+	Attribute endDate as Text
+	Attribute latitude as Text
+	Attribute longitude as Text
+	Attribute country as Text
+	Attribute reportReason as Text
+	Attribute companyName as Text
+	Attribute companyID as Text
+	Attribute commercialisation as Text
+
+Schema actualGeneration
+	Attribute ts as DateTime
+	Attribute unitID as Text
+	Attribute actualGeneration as Text
+	Attribute country as Text
+Schema IdentityRegister
+	Attribute ts as DateTime
+	Attribute name as Text
+	Attribute fullName as Text
+	Attribute email as Text
+	Attribute language as Text
+	Attribute photo as Text
+
+Schema IdentityDelete
+	Attribute ts as DateTime
+	Attribute identity as Text
+	Attribute author as Text
+
+Schema IdentityApprove
+	Attribute ts as DateTime
+	Attribute identity as Text
+	Attribute signature as Text
+	Attribute author as Text
+
+Schema IdentityReject
+	Attribute ts as DateTime
+	Attribute identity as Text
+	Attribute signature as Text
+	Attribute author as Text
+
+Schema IdentitySave
+	Attribute ts as DateTime
+	Attribute identity as Text
+	Attribute fullName as Text
+	Attribute email as Text
+	Attribute language as Text
+	Attribute photo as Text
+
+Schema IdentityEnableManager
+	Attribute ts as DateTime
+	Attribute identity as Text
+	Attribute author as Text
+
+Schema IdentityDisableManager
+	Attribute ts as DateTime
+	Attribute identity as Text
+	Attribute author as Text
+
+Schema BusinessUnitApprove
+	Attribute ts as DateTime
+	Attribute businessUnit as Text
+	Attribute signature as Text
+	Attribute author as Text
+
+Schema BusinessUnitReject
+	Attribute ts as DateTime
+	Attribute businessUnit as Text
+	Attribute signature as Text
+	Attribute author as Text
+
+Schema WorkerRegister
+	Attribute ts as DateTime
+	Attribute identity as Text
+	Attribute businessUnit as Text
+
+Schema AgentDelete
+	Attribute ts as DateTime
+	Attribute agent as Text
+	Attribute author as Text
+
+Schema AgentEnable
+	Attribute ts as DateTime
+	Attribute agent as Text
+	Attribute author as Text
+
+Schema AgentDisable
+	Attribute ts as DateTime
+	Attribute agent as Text
+	Attribute author as Text
+
+Schema CredentialRegister
+	Attribute ts as DateTime
+	Attribute identity as Text
+	Attribute authentication as Text
+	Attribute username as Text
+
+Schema CredentialDelete
+	Attribute ts as DateTime
+	Attribute credential as Text
+
+Schema CredentialApprove
+	Attribute ts as DateTime
+	Attribute credential as Text
+	Attribute validationCode as Text
+	Attribute author as Text
+	Attribute sendNotification as Bool
+
+Schema CredentialReject
+	Attribute ts as DateTime
+	Attribute credential as Text
+	Attribute validationCode as Text
+	Attribute author as Text
+	Attribute sendNotification as Bool
+
+Schema CredentialRemember
+	Attribute ts as DateTime
+	Attribute authentication as Text
+
+Schema CredentialRememberApprove
+	Attribute ts as DateTime
+	Attribute credential as Text
+	Attribute validationCode as Text
+	Attribute author as Text
+	Attribute sendNotification as Bool
+
+Schema CredentialRememberReject
+	Attribute ts as DateTime
+	Attribute credential as Text
+	Attribute validationCode as Text
+	Attribute author as Text
+	Attribute sendNotification as Bool
+
+Schema CredentialSave
+	Attribute ts as DateTime
+	Attribute credential as Text
+
+Schema CredentialSavePassword
+	Attribute ts as DateTime
+	Attribute credential as Text
+	Attribute password as Text
+
+Schema CredentialLogin
+	Attribute ts as DateTime
+	Attribute authentication as Text
+
+Schema CredentialLoginUsingToken
+	Attribute ts as DateTime
+	Attribute token as Text
+
+Schema CredentialLogout
+	Attribute ts as DateTime
+	Attribute credential as Text
+
+Schema TaskEditionRegister
+	Attribute ts as DateTime
+	Attribute document as Text
+	Attribute editorPath as Text
+	Attribute properties as Object(TaskProperties)
+
+Schema TaskDocumentSignatureRegister
+	Attribute ts as DateTime
+	Attribute document as Text
+	Attribute signatureId as Text
+	Attribute properties as Object(TaskProperties)
+
+Schema TaskDocumentEditionRegister
+	Attribute ts as DateTime
+	Attribute document as Text
+	Attribute properties as Object(TaskProperties)
+
+Schema TaskDecisionRegister
+	Attribute ts as DateTime
+	Attribute document as Text
+	Attribute properties as Object(TaskProperties)
+
+Schema TaskCoordinatorRegister
+	Attribute ts as DateTime
+	Attribute task as Text
+	Attribute agent as Text
+	Attribute workerGroups as Text List
+	Attribute capabilities as Text List
+	Attribute authorizations as Text List
+
+Schema TaskProperties
+	Attribute ts as DateTime
+	Attribute label as Text
+	Attribute description as Text
+	Attribute type as Text
+	Attribute originator as Text
+	Attribute thread as Text
+	Attribute priority as Text
+	Attribute wkt as Text
+	Attribute tags as List Text
+
+Schema TaskComplete
+	Attribute ts as DateTime
+	Attribute task as Text
+
+Schema TaskAllocate
+	Attribute ts as DateTime
+	Attribute task as Text
+	Attribute agent as Text
+	Attribute responsible as Text
+
+Schema TaskRelease
+	Attribute ts as DateTime
+	Attribute task as Text
+	Attribute responsible as Text
+
+Schema TaskCancel
+	Attribute ts as DateTime
+	Attribute task as Text
+	Attribute responsible as Text
+
+Schema TaskPriority
+	Attribute ts as DateTime
+	Attribute task as Text
+	Attribute priority as Text
+	Attribute responsible as Text
+
+Schema TaskSign
+	Attribute ts as DateTime
+	Attribute task as Text
+	Attribute signature as Text
+
+Schema CapabilityAssign
+	Attribute ts as DateTime
+	Attribute capability as Text
+	Attribute businessUnit as Text
+	Attribute author as Text
+
+Schema CapabilityRelease
+	Attribute ts as DateTime
+	Attribute capability as Text
+	Attribute businessUnit as Text
+	Attribute author as Text
+
+Schema WorkerGroupAssign
+	Attribute ts as DateTime
+	Attribute key as Text
+	Attribute worker as Text
+	Attribute author as Text
+
+Schema WorkerGroupRelease
+	Attribute ts as DateTime
+	Attribute key as Text
+	Attribute worker as Text
+	Attribute author as Text
+
+Schema AuthorizationRegister
+	Attribute ts as DateTime
+	Attribute type as Text
+	Attribute worker as Text
+	Attribute from as DateTime
+	Attribute to as DateTime
+	Attribute author as Text
+
+Schema AuthorizationSave
+	Attribute ts as DateTime
+	Attribute name as Text
+	Attribute from as DateTime
+	Attribute to as DateTime
+	Attribute author as Text
+
+Schema AuthorizationDelete
+	Attribute ts as DateTime
+	Attribute name as Text
+	Attribute author as Text
+Schema opinion
+	Attribute asas as Text

@@ -45,12 +45,7 @@ public class BoxConfigurationRenderer {
 	}
 
 	private String name() {
-		if (module != null) {
-			final Configuration configuration = TaraUtil.configurationOf(module);
-			final String dsl = configuration.outDSL();
-			if (dsl == null || dsl.isEmpty()) return module.getName();
-			else return dsl;
-		} else return "System";
+		return module != null ? configuration.artifactId() : Configuration.Level.Solution.name();
 	}
 
 	private Template template() {

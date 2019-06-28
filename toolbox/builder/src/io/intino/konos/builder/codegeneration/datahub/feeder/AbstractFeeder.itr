@@ -1,0 +1,108 @@
+def type(feeder)
+	package $package+validPackage.datahub.feeders;
+
+	import $package+validPackage.$box+FirstUpperCase~Box;
+	import io.intino.alexandria.core.Feeder;
+	import io.intino.alexandria.core.Sensor;
+	import io.intino.alexandria.inl.Message;
+
+	import java.util.Arrays;
+	import java.util.List;
+
+	public abstract class Abstract$name+FirstUpperCase extends io.intino.alexandria.core.Feeder {
+		protected List<Sensor> sensors;
+		protected final $box+FirstUpperCase~Box box;
+
+		public Abstract$name+FirstUpperCase($box+FirstUpperCase~Box box) {
+			this.box = box;
+			this.sensors = Arrays.asList($sensor+new...[, ]);
+		}
+
+		public List<String> eventTypes() {
+			return Arrays.asList($eventType+quoted...[, ]);
+		}
+
+
+		public void feed(Message event) {
+			//box.nessAccesor().push(); TODO
+
+		}
+
+		public List<Sensor> sensors() {
+			return sensors;
+		}
+
+		$sensor+class...[$NL]
+	}
+end
+
+def type(sensor) trigger(new)
+	new $feeder+FirstUpperCase.$name+FirstUpperCase~Sensor()
+end
+
+def type(sensor) trigger(class)
+	static abstract class Abstract$name+FirstUpperCase~Sensor[ extends io.intino.alexandria.core.sensors.$type] {
+		$parent+field
+
+		public Abstract$name+FirstUpperCase~Sensor() {
+			$parent+super
+			[$width]
+			[$height]
+		}
+
+		$parent+methods
+	}
+end
+
+def type(width)
+	width($value);
+end
+
+def type(height)
+	height($value);
+end
+
+def type(documentEdition) trigger(super)
+	super("$mode");
+end
+
+def type(documentSignature) trigger(super)
+	super("$signType", "$signFormat");
+end
+
+def type(formEdition) trigger(super)
+	super("$path");
+end
+
+def type(poll) trigger(field)
+	private java.util.Map<String, java.util.function.Function<List<Object>, Object>> messageBuilders = new java.util.HashMap<>();
+end
+
+def type(poll) trigger(super)
+	super("$defaultOption", Arrays.asList($option...[, ]));
+	registerMessageBuilders();
+end
+
+def type(poll) trigger(methods)
+	private void registerMessageBuilders() {
+		$option+build...[$NL]
+	}
+
+	public Message get(String option, Object... args) {
+		return io.intino.alexandria.inl.Inl.toMessage(messageBuilders.get(option).apply(Arrays.asList(args)));
+	}
+
+	$eventMethod...[$NL$NL]
+end
+
+def trigger(build)
+	messageBuilders.put("$value", this::$event+firstLowerCase);
+end
+
+def trigger(eventMethod)
+	protected abstract Object $value+firstLowerCase(List<Object> objects);
+end
+
+def trigger(option)
+	new Option("$value"[, Arrays.asList($option...[,])])
+end
