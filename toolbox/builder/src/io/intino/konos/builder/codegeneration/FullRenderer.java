@@ -25,8 +25,8 @@ import io.intino.konos.builder.codegeneration.services.ui.dialog.DialogsRenderer
 import io.intino.konos.builder.codegeneration.services.ui.display.DisplayRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.display.DisplaysRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.resource.ResourceRenderer;
+import io.intino.konos.builder.codegeneration.task.SchedulerRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskRenderer;
-import io.intino.konos.builder.codegeneration.task.TaskerRenderer;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.plugin.codeinsight.linemarkers.InterfaceToJavaImplementation;
 import io.intino.tara.compiler.shared.Configuration;
@@ -114,7 +114,7 @@ public class FullRenderer {
 
 	private void tasks() {
 		new TaskRenderer(graph, src, gen, packageName, boxName, classes).execute();
-		new TaskerRenderer(graph, gen, packageName, boxName).execute();
+		new SchedulerRenderer(graph, gen, packageName, boxName).execute();
 	}
 
 	private void bus() {

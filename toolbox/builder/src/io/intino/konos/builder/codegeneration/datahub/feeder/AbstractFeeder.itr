@@ -1,5 +1,5 @@
 def type(feeder)
-	package $package+validPackage.datalake.feeders;
+	package $package+validPackage.datahub.feeders;
 
 	import $package+validPackage.$box+FirstUpperCase~Box;
 	import io.intino.alexandria.core.Feeder;
@@ -8,7 +8,6 @@ def type(feeder)
 
 	import java.util.Arrays;
 	import java.util.List;
-	import java.util.Collections;
 
 	public abstract class Abstract$name+FirstUpperCase extends io.intino.alexandria.core.Feeder {
 		protected List<Sensor> sensors;

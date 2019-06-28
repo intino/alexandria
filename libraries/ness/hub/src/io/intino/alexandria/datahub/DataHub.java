@@ -5,7 +5,6 @@ import io.intino.alexandria.datahub.bus.BrokerManager;
 import io.intino.alexandria.datahub.bus.BrokerService;
 import io.intino.alexandria.datahub.bus.PipeManager;
 import io.intino.alexandria.datahub.datalake.DatalakeCloner;
-import io.intino.alexandria.datahub.datalake.SealingTask;
 import io.intino.alexandria.datahub.datalake.TankManager;
 import io.intino.alexandria.datahub.model.Broker;
 import io.intino.alexandria.datahub.model.Configuration;
@@ -23,10 +22,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.io.File.separator;
-
 public class DataHub {
-	private final File brokerSessionsDirectory;
+	private final File brokerStage;
 	private final Configuration configuration;
 	private Datalake datalake;
 	private BrokerManager brokerManager;
@@ -39,16 +36,16 @@ public class DataHub {
 	public DataHub(Configuration configuration) {
 		this.configuration = configuration;
 		this.adminService = new AdminService(this);
-		this.brokerSessionsDirectory = new File(workspace(), "stage_inl");
-		this.brokerSessionsDirectory.mkdirs();
-		new File(workspace(), "stage").mkdirs();
+		this.brokerStage = new File(workspaceDirectory(), "broker_stage");
+		workspaceDirectory().mkdirs();
+		this.brokerStage.mkdirs();
+		stageFolder().mkdirs();
 	}
 
 	public void start() {
 		if (isService()) configureDatalake(((Service) configuration.dataSource()).path());
 		if (isLocal()) configureDatalake(((Local) configuration.dataSource()).path());
 		else configureMirror((Mirror) configuration.dataSource());
-
 		if (configuration.broker() != null) configureBroker();
 	}
 
@@ -56,15 +53,6 @@ public class DataHub {
 		Logger.info("Shutting down datalake...");
 		sealingTask = null;
 		if (brokerManager != null) brokerManager.stop();
-	}
-
-	public void restartBroker() {
-		brokerManager.restart(true);
-		startServices();
-	}
-
-	public String workspace() {
-		return configuration.workingDirectory();
 	}
 
 	public Datalake datalake() {
@@ -83,8 +71,8 @@ public class DataHub {
 		return brokerManager;
 	}
 
-	public File temporalSessionDirectory() {
-		return brokerSessionsDirectory;
+	File brokerStageDirectory() {
+		return brokerStage;
 	}
 
 	private void configureMirror(Mirror mirror) {
@@ -94,11 +82,15 @@ public class DataHub {
 
 	private void configureDatalake(String path) {
 		this.datalake = new FileDatalake(new File(path));
-		this.sessionManager = new FileSessionManager((FileDatalake) datalake, new File(workspace(), "stage"));
+		this.sessionManager = new FileSessionManager((FileDatalake) datalake, stageFolder());
+	}
+
+	private File stageFolder() {
+		return new File(workspaceDirectory(), "stage");
 	}
 
 	private void configureBroker() {
-		brokerService = new BrokerService(brokerPort(), mqttPort(), true, new File(brokerDirectory()), users(), Collections.emptyList());
+		brokerService = new BrokerService(brokerPort(), mqttPort(), true, brokerDirectory(), users(), Collections.emptyList());
 		brokerManager = new BrokerManager(configuration.broker().connectorId(), brokerService);
 		brokerManager.start();
 		pipeManager = new PipeManager(brokerManager);
@@ -137,11 +129,15 @@ public class DataHub {
 	}
 
 	private void startTanks(Scale scale) {
-		datalake.eventStore().tanks().forEach(t -> new TankManager(brokerManager, temporalSessionDirectory(), t, scale).register());
+		datalake.eventStore().tanks().forEach(t -> new TankManager(brokerManager, brokerStageDirectory(), t, scale).register());
 	}
 
-	private String brokerDirectory() {
-		return workspace() + separator + "broker";
+	private File workspaceDirectory() {
+		return new File(configuration.workingDirectory());
+	}
+
+	private File brokerDirectory() {
+		return new File(workspaceDirectory(), "broker");
 	}
 
 	private int brokerPort() {

@@ -1,9 +1,12 @@
 dsl Proteo
 
-
-use DataTypes
+use DataHub
 
 Concept Task
+	Concept LinkWithFeeder
+		var Feeder:NoFacets feeder
+	Concept LinkWithMounter
+		var Mounter:NoFacets mounter
 
 Facet Scheduled on Task is abstract
 

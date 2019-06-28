@@ -140,26 +140,26 @@ DataHub dataHub as Remote
 	Tank("SolicitudArchivada")solicitudArchivada
 	Tank("RequerimientoCreado")requerimientoCreado
 
-Feeder(dataHub.solicitudCompletada) completada
-	Sensor defecto as FormEdition(path="/editor/solicitud/completar")
+	Feeder(dataHub.solicitudCompletada) completada
+		Sensor defecto as FormEdition(path="/editor/solicitud/completar")
 
-Feeder(dataHub.solicitudRevisada) solicitudRevisada
-	Sensor defecto as FormEdition(path="/editor/solicitud/revisar")
+	Feeder(dataHub.solicitudRevisada) solicitudRevisada
+		Sensor defecto as FormEdition(path="/editor/solicitud/revisar")
 
-Feeder(dataHub.requerimientoSolicitado dataHub.escritoSolicitado dataHub.propuestaSolicitado dataHub.solicitudArchivada) decidirSolicitud
-	Sensor decidirSolicitud as Poll
+	Feeder(dataHub.requerimientoSolicitado dataHub.escritoSolicitado dataHub.propuestaSolicitado dataHub.solicitudArchivada) decidirSolicitud
+		Sensor decidirSolicitud as Poll
 
-		Option("Requerir", RequerimientoSolicitado)
-		Option("Realizar escrito", EscritoSolicitado)
-		Option("Resolver con informe propuesta", InformePropuestaSolicitado)
-		Option("Resolver sin informe propuesta", InformePropuestaSolicitado)
-		Option("Archivar", SolicitudArchivada)
+			Option("Requerir", RequerimientoSolicitado)
+			Option("Realizar escrito", EscritoSolicitado)
+			Option("Resolver con informe propuesta", InformePropuestaSolicitado)
+			Option("Resolver sin informe propuesta", InformePropuestaSolicitado)
+			Option("Archivar", SolicitudArchivada)
 
-Feeder(dataHub.requerimientoCreado) tipoRequerimiento
-	Sensor decidirRequerimiento as Poll
+	Feeder(dataHub.requerimientoCreado) tipoRequerimiento
+		Sensor decidirRequerimiento as Poll
 
-		Option("Requerimiento tipo 1", RequerimientoCreado)
-		Option("Requerimiento tipo 2", RequerimientoCreado)
+			Option("Requerimiento tipo 1", RequerimientoCreado)
+			Option("Requerimiento tipo 2", RequerimientoCreado)
 
 
 

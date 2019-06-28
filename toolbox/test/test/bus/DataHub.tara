@@ -13,10 +13,10 @@ DataHub dataHub as Remote
 
 	Mounter authorizationRegister
 
-Feeder(dataHub.dayAheadReport)
+	Feeder(dataHub.dayAheadReport)
 
-Feeder(tanks = dataHub.intradayReport)
-Feeder(tanks = dataHub.actualGeneration)
+	Feeder(tanks = dataHub.intradayReport)
+	Feeder(tanks = dataHub.actualGeneration)
 
 Schema AddGoal
 	Attribute ts as DateTime

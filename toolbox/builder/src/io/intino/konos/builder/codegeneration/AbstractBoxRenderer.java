@@ -109,7 +109,7 @@ public class AbstractBoxRenderer {
 		} else if (dataHub.isLocal()) {
 			dataHubFrame.add("datasource", new FrameBuilder("local").add("path", parameter(dataHub.asLocal().path())));
 		}
-		dataHubFrame.add("feeder", graph.feederList().stream().map(this::frameOf).toArray(Frame[]::new));
+		dataHubFrame.add("feeder", graph.dataHub().feederList().stream().map(this::frameOf).toArray(Frame[]::new));
 		if (!graph.procedureList().isEmpty())
 			dataHubFrame.add("procedure", new FrameBuilder().add("package", packageName).add("configuration", name).toFrame()); //TODO
 		builder.add("dataHub", dataHubFrame.toFrame());

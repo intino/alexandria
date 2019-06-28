@@ -5,11 +5,13 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.action.ActionTemplate;
+import io.intino.konos.builder.codegeneration.datahub.feeder.FeederRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Task;
 import io.intino.konos.model.graph.directorysentinel.DirectorySentinelTask;
 import io.intino.konos.model.graph.scheduled.ScheduledTask;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.net.URL;
@@ -42,8 +44,24 @@ public class TaskRenderer {
 		this.tasks.stream().filter(Task::isDirectorySentinel).forEach(this::processDirectorySentinel);
 	}
 
+	private void processTrigger(ScheduledTask task) {
+		FrameBuilder builder = baseFrame("task").add("name", task.name$());
+		List<Frame> targets = targets(task);
+		boolean hasTargets = !targets.isEmpty();
+		if (!hasTargets) targets.add(baseFrame(task.name$()).toFrame());
+		builder.add("target", targets.toArray(new Frame[0]));
+		writeFrame(destinyPackage(), task.name$() + "Task", template().render(builder.toFrame()));
+		if (!hasTargets) createCorrespondingAction(task);
+	}
+
+	private List<Frame> targets(ScheduledTask task) {
+		List<Frame> frames = task.linkWithMounterList().stream().map(link -> baseFrame("target", "mounter").add("name", link.mounter().name$()).toFrame()).collect(Collectors.toList());
+		task.linkWithFeederList().stream().map(link -> baseFrame("target", "feeder").add("name", FeederRenderer.name(link.feeder())).toFrame()).forEach(frames::add);
+		return frames;
+	}
+
 	private void processDirectorySentinel(Task task) {
-		FrameBuilder frame = new FrameBuilder("action")
+		FrameBuilder frame = new FrameBuilder("task")
 				.add("name", task.name$())
 				.add("box", boxName)
 				.add("package", packageName)
@@ -57,14 +75,6 @@ public class TaskRenderer {
 		list.add(new FrameBuilder("parameter").add("type", URL.class.getCanonicalName()).add("name", "directory").toFrame());
 		list.add(new FrameBuilder("parameter").add("type", "io.intino.konos.scheduling.directory.KonosDirectorySentinel.Event").add("name", "event").toFrame());
 		return list.toArray(new Frame[0]);
-	}
-
-	private void processTrigger(ScheduledTask task) {
-		writeFrame(destinyPackage(), task.name$() + "Task", template().render(new FrameBuilder("scheduled")
-				.add("name", task.name$())
-				.add("box", boxName)
-				.add("package", packageName).toFrame()));
-		createCorrespondingAction(task);
 	}
 
 	private void createCorrespondingAction(ScheduledTask task) {
@@ -94,5 +104,12 @@ public class TaskRenderer {
 
 	private File destinyPackage() {
 		return new File(genDestination, "scheduling");
+	}
+
+	@NotNull
+	private FrameBuilder baseFrame(String... types) {
+		return new FrameBuilder(types)
+				.add("box", boxName)
+				.add("package", packageName);
 	}
 }
