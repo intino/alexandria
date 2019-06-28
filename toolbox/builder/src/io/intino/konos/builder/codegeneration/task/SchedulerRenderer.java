@@ -17,13 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TaskerRenderer {
+public class SchedulerRenderer {
 	private final List<Task> tasks;
 	private final File gen;
 	private final String packageName;
 	private final String boxName;
 
-	public TaskerRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+	public SchedulerRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
 		this.tasks = graph.taskList();
 		this.gen = gen;
 		this.packageName = packageName;

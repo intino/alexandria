@@ -7,6 +7,8 @@ Concept:{0..1} DataHub
 	Concept Split > var string[] splits
 	Concept:Named Tank > var string fullName
 	has Mounter
+	has Feeder
+
 Concept:Named Mounter is component
 
 Facet DataHubLocation on DataHub is abstract
@@ -83,7 +85,7 @@ Facet Constant on Population.Column
 	var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type = String
 	var string value
 
-Concept Feeder
+Concept Feeder is component
 	var DataHub.Tank[] tanks
 	has:Named Sensor
 

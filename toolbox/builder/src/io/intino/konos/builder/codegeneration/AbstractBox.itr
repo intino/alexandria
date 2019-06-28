@@ -255,7 +255,7 @@ end
 
 def type(dataHub) trigger(init)
 	this.dataHub.start();
-	registerFeeders();
+	[registerFeeders();$feeder+hide]
 	Logger.info("Ness connection: started!");
 end
 

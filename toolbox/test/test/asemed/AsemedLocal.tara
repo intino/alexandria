@@ -1,6 +1,6 @@
 dsl Konos
 
-DataHub datahub as Local
+DataHub(workingDirectory = "{workspace}") datahub as Local
 	path = "{datahub_path}"
 
 	Split("DA" "DB") porDivisiones
@@ -132,17 +132,19 @@ DataHub datahub as Local
 	Mounter ajustes as Realtime
 		Select(ajuste)
 
-	Mounter criterios as Realtime
-		Select(criterio)
-		Select(criterioBorrado)
+	Mounter criterios
+
+	Feeder(datahub.ajuste) ajusteFeeder
+	Feeder(datahub.criterio datahub.criterioBorrado) criteriosFeeder
+
 
 Datamart("{datamart}") datamart
 
-Feeder(datahub.ajuste) ajusteFeeder
-Feeder(datahub.criterio datahub.criterioBorrado) criteriosFeeder
-
-
 Task MountAjuste as BootTrigger
+	LinkWithMounter(datahub.criterios)
+
+Task AjusteFeeder as BootTrigger
+	LinkWithFeeder(datahub.ajusteFeeder)
 
 Schema Evento
 	Attribute ts as DateTime

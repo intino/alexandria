@@ -14,9 +14,8 @@ end
 def type(mounter & batch)
 	package $package+validPackage.datahub.mounters;
 
-
-
     public class $name+snakeCaseToCamelCase+FirstUpperCase~Mounter {
+		public $box+validName+firstUpperCase~Box box;
 
     	public void execute() {
 

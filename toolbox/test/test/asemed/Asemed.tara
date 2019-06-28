@@ -136,11 +136,11 @@ DataHub datahub as Service
 	Mounter criterios as Realtime
 		Select(criterio)
 		Select(criterioBorrado)
+	Feeder(datahub.ajuste) ajusteFeeder
+	Feeder(datahub.criterio datahub.criterioBorrado) criteriosFeeder
 
 Datamart("{datamart}") datamart
 
-Feeder(datahub.ajuste) ajusteFeeder
-Feeder(datahub.criterio datahub.criterioBorrado) criteriosFeeder
 
 
 Task MountAjuste as BootTrigger

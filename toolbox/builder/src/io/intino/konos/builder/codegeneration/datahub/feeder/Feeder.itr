@@ -1,5 +1,23 @@
-def type(feeder)
-	package $package+validPackage.datalake.feeders;
+def type(feeder & simple)
+	package $package+validPackage.datahub.feeders;
+
+	import $package+validPackage.$box+firstUpperCase~Box;
+
+	public class $name+FirstUpperCase {
+		private $box+FirstUpperCase~Box box;
+
+		public $name+FirstUpperCase($box+FirstUpperCase~Box box) {
+			this.box = box;
+		}
+
+		public void exectute() {
+
+		}
+	}
+end
+
+def type(feeder & complex)
+	package $package+validPackage.datahub.feeders;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
 

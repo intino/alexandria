@@ -35,7 +35,7 @@ public class FeederRenderer {
 
 	public FeederRenderer(KonosGraph graph, File gen, File src, String packageName, String boxName, Map<String, String> classes) {
 		this.gen = gen;
-		this.feeders = graph.feederList();
+		this.feeders = graph.dataHub().feederList();
 		this.src = src;
 		this.packageName = packageName;
 		this.boxName = boxName;
@@ -52,7 +52,7 @@ public class FeederRenderer {
 
 	public void execute() {
 		for (Feeder feeder : feeders) {
-			final FrameBuilder builder = new FrameBuilder("feeder").
+			final FrameBuilder builder = new FrameBuilder("feeder", feeder.sensorList().isEmpty() ? "simple" : "complex").
 					add("box", boxName).
 					add("package", packageName).
 					add("name", name(feeder));
@@ -60,10 +60,10 @@ public class FeederRenderer {
 				builder.add("sensor", frameOf(sensor, name(feeder)));
 			builder.add("eventType", feeder.tanks().stream().filter(Objects::nonNull).map(Tank::fullName).toArray(String[]::new));
 			final String feederClassName = firstUpperCase(name(feeder));
-			classes.put(feeder.getClass().getSimpleName() + "#" + name(feeder), "datalake.feeders." + feederClassName);
-			writeFrame(new File(gen, "datalake/feeders"), "Abstract" + feederClassName, customize(new AbstractFeederTemplate()).render(builder.toFrame()));
-			if (!alreadyRendered(new File(src, "datalake/feeders"), feederClassName))
-				writeFrame(new File(src, "datalake/feeders"), feederClassName, customize(new FeederTemplate()).render(builder.toFrame()));
+			classes.put(feeder.getClass().getSimpleName() + "#" + name(feeder), "datahub.feeders." + feederClassName);
+			writeFrame(new File(gen, "datahub/feeders"), "Abstract" + feederClassName, customize(new AbstractFeederTemplate()).render(builder.toFrame()));
+			if (!alreadyRendered(new File(src, "datahub/feeders"), feederClassName))
+				writeFrame(new File(src, "datahub/feeders"), feederClassName, customize(new FeederTemplate()).render(builder.toFrame()));
 		}
 	}
 

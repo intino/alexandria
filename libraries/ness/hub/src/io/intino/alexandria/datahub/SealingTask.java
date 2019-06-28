@@ -1,7 +1,6 @@
-package io.intino.alexandria.datahub.datalake;
+package io.intino.alexandria.datahub;
 
 import io.intino.alexandria.Timetag;
-import io.intino.alexandria.datahub.DataHub;
 import io.intino.alexandria.ingestion.EventSession;
 import io.intino.alexandria.ingestion.SessionHandler;
 import io.intino.alexandria.inl.Message;
@@ -25,19 +24,19 @@ import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.TriggerBuilder.newTrigger;
 
-public class SealingTask {
+class SealingTask {
 
 	private final DataHub hub;
 	private final AlexandriaScheduler tasker;
 	private final String pattern;
 
-	public SealingTask(DataHub hub, String pattern) {
+	SealingTask(DataHub hub, String pattern) {
 		this.hub = hub;
 		this.tasker = new io.intino.alexandria.scheduler.AlexandriaScheduler();
 		this.pattern = pattern;
 	}
 
-	public void start() {
+	void start() {
 		JobDetail job;
 		try {
 			job = newJob(SealTask.class).withIdentity("seal").build();
@@ -70,7 +69,7 @@ public class SealingTask {
 
 		private void pushTemporalSessions(DataHub hub) {
 			try {
-				for (File file : Objects.requireNonNull(hub.temporalSessionDirectory().listFiles(f -> f.getName().endsWith(".inl")))) {
+				for (File file : Objects.requireNonNull(hub.brokerStageDirectory().listFiles(f -> f.getName().endsWith(".inl")))) {
 					String name = file.getName().replace(".inl", "");
 					String[] split = name.split("#");
 					SessionHandler handler = new SessionHandler();
@@ -78,7 +77,7 @@ public class SealingTask {
 					for (Message message : new MessageReader(new BufferedInputStream(new FileInputStream(file))))
 						eventSession.put(split[0], new Timetag(split[1]), message);
 					eventSession.close();
-					handler.pushTo(hub.temporalSessionDirectory());
+					handler.pushTo(hub.brokerStageDirectory());
 					file.delete();
 				}
 			} catch (FileNotFoundException e) {
