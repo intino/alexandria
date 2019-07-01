@@ -62,7 +62,7 @@ class SealingTask {
 			Logger.info("Starting seal of tanks");
 			new Thread(() -> {
 				pushTemporalSessions(hub);
-				hub.sessionManager().seal();
+				hub.sessionSealer().seal();
 				Logger.info("Sealing of tanks finished successfully");
 			}).start();
 		}
