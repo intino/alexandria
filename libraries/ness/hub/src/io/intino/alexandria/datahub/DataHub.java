@@ -14,8 +14,8 @@ import io.intino.alexandria.datahub.model.Configuration.Service;
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.file.FileDatalake;
 import io.intino.alexandria.logger.Logger;
-import io.intino.alexandria.sealing.FileSessionManager;
-import io.intino.alexandria.sealing.SessionManager;
+import io.intino.alexandria.sealing.FileSessionSealer;
+import io.intino.alexandria.sealing.SessionSealer;
 
 import java.io.File;
 import java.util.Collections;
@@ -29,7 +29,7 @@ public class DataHub {
 	private BrokerManager brokerManager;
 	private BrokerService brokerService;
 	private AdminService adminService;
-	private SessionManager sessionManager;
+	private SessionSealer sessionSealer;
 	private PipeManager pipeManager;
 	private SealingTask sealingTask;
 
@@ -59,12 +59,16 @@ public class DataHub {
 		return datalake;
 	}
 
-	public SessionManager sessionManager() {
-		return sessionManager;
+	public SessionSealer sessionSealer() {
+		return sessionSealer;
 	}
 
 	public BrokerService brokerService() {
 		return brokerService;
+	}
+
+	public File stageFolder() {
+		return new File(workspaceDirectory(), "stage");
 	}
 
 	BrokerManager brokerManager() {
@@ -82,11 +86,7 @@ public class DataHub {
 
 	private void configureDatalake(String path) {
 		this.datalake = new FileDatalake(new File(path));
-		this.sessionManager = new FileSessionManager((FileDatalake) datalake, stageFolder());
-	}
-
-	private File stageFolder() {
-		return new File(workspaceDirectory(), "stage");
+		this.sessionSealer = new FileSessionSealer((FileDatalake) datalake, stageFolder());
 	}
 
 	private void configureBroker() {
