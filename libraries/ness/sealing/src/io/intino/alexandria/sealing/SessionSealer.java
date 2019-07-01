@@ -1,6 +1,6 @@
 package io.intino.alexandria.sealing;
 
-public interface SessionManager {
+public interface SessionSealer {
 
 	void seal();
 }

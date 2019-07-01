@@ -40,7 +40,7 @@ public class SessionManagerTests {
 		Timetag timetag = createSets(handler);
 
 		handler.pushTo(STAGE_FOLDER);
-		FileSessionManager fileSessionManager = new FileSessionManager(new FileDatalake(DATALAKE), STAGE_FOLDER);
+		FileSessionSealer fileSessionManager = new FileSessionSealer(new FileDatalake(DATALAKE), STAGE_FOLDER);
 		fileSessionManager.seal();
 
 		checkEvents(messageList);

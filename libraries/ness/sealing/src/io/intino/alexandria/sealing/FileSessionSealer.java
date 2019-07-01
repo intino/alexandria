@@ -4,12 +4,12 @@ import io.intino.alexandria.datalake.file.FileDatalake;
 
 import java.io.File;
 
-public class FileSessionManager implements SessionManager {
+public class FileSessionSealer implements SessionSealer {
 	private final File stageFolder;
 	private final FileStage stage;
 	private final FileDatalake datalake;
 
-	public FileSessionManager(FileDatalake datalake, File stageFolder) {
+	public FileSessionSealer(FileDatalake datalake, File stageFolder) {
 		this.datalake = datalake;
 		this.stageFolder = stageFolder;
 		this.stage = new FileStage(stageFolder);

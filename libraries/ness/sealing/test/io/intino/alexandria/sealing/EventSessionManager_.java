@@ -37,7 +37,7 @@ public class EventSessionManager_ {
 		}
 		session.close();
 		handler.pushTo(stageFolder);
-		new FileSessionManager(new FileDatalake(datalake), stageFolder).seal();
+		new FileSessionSealer(new FileDatalake(datalake), stageFolder).seal();
 		ZimReader reader = new ZimReader(new File("temp/datalake/events/tank1/2019022816.zim"));
 		for (int i = 0; i < 30; i++) {
 			Message next = reader.next();

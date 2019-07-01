@@ -33,7 +33,7 @@ public class SetSessionManager_ {
 		session.close();
 
 		handler.pushTo(STAGE_FOLDER);
-		new FileSessionManager(new FileDatalake(DATALAKE), STAGE_FOLDER).seal();
+		new FileSessionSealer(new FileDatalake(DATALAKE), STAGE_FOLDER).seal();
 		ZetReader reader = new ZetReader(new File("temp/datalake/sets/tank1/" + timetag.value() + "/0.zet"));
 		for (int i = 1; i < 31; i++)
 			assertEquals(reader.next(), i);
