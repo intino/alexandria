@@ -14,6 +14,8 @@ end
 def type(mounter & batch)
 	package $package+validPackage.datahub.mounters;
 
+	import $package+validPackage.$box+firstUpperCase~Box;
+
     public class $name+snakeCaseToCamelCase+FirstUpperCase~Mounter {
 		public $box+validName+firstUpperCase~Box box;
 

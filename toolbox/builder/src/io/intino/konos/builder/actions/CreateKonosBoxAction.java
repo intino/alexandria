@@ -160,6 +160,10 @@ public class CreateKonosBoxAction extends KonosAction {
 			}
 			final Configuration configuration = configurationOf(module);
 			String generationPackage = configuration == null ? BOX : configuration.workingPackage() + (configuration.boxPackage().isEmpty() ? "" : "." + configuration.boxPackage());
+			if (generationPackage == null) {
+				notifyError("gen package is null.");
+				return null;
+			}
 			File gen = new File(genDirectory.getPath(), generationPackage.replace(".", File.separator));
 			gen.mkdirs();
 			File src = new File(srcDirectory.getPath(), generationPackage.replace(".", File.separator));
