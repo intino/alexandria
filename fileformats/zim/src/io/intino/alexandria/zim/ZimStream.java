@@ -5,6 +5,7 @@ import io.intino.alexandria.inl.Message;
 
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.stream;
@@ -18,6 +19,12 @@ public interface ZimStream {
 	Message next();
 
 	boolean hasNext();
+
+	default void forEachRemaining(Consumer<Message> action) {
+		Objects.requireNonNull(action);
+		while (hasNext())
+			action.accept(next());
+	}
 
 	@SuppressWarnings("unused")
 	class Merge implements ZimStream {
