@@ -1,6 +1,6 @@
 dsl Konos
 
-DataHub dataHub as Remote
+DataHub(workingDirectory = "") dataHub as Remote
 	BusConnection(busUrl = "{nessUrl}", user = "{nessUser}", password = "{nessPassword}", clientId = "amidas")
 	Tank(fullName = "authorizationRegister")authorizationRegister
 	Tank(fullName = "identityRegister")identityRegister

@@ -1,6 +1,6 @@
 dsl Konos
 
-DataHub datahub as Service
+DataHub datahub as StandAlone
 	workingDirectory = "{datahub_path}"
 	path = "{datalake_path}"
 	scale = Hour

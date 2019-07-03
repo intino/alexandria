@@ -1,0 +1,40 @@
+dsl Proteo
+
+use Dialog
+use DataTypes
+use DataHub
+//
+//Concept:Named Procedure
+//	var DataHub dataHub
+//	Concept:Named Process is component
+//		Concept:{1..1}:NamedIfNoSchema Input extends EventSource
+//		Concept Output extends EventSource
+
+Concept Process
+	Concept:Named State
+		has State
+		Concept Task
+			var string description = empty
+		Concept Go
+			var State[] states
+		Concept Trace
+			var word:{OnExit OnEntry} mode = OnExit
+			var string message
+
+Facet StateMode on Process.State
+	sub Initial
+	sub Terminal
+
+Facet TaskMode on Process.State.Task
+	sub Automatic
+	sub Manual
+		var Dialog dialog
+		var word:{Requester Offered} allocation
+	sub Get
+		var WebService webService
+	sub Post
+		var WebService webService
+
+Concept WebService
+	var string url
+	var string token
