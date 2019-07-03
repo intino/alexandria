@@ -11,8 +11,8 @@ import io.intino.konos.model.graph.jms.JMSService;
 import io.intino.konos.model.graph.jmx.JMXService;
 import io.intino.konos.model.graph.mirrored.MirroredDataHub;
 import io.intino.konos.model.graph.rest.RESTService;
-import io.intino.konos.model.graph.service.ServiceDataHub;
 import io.intino.konos.model.graph.slackbot.SlackBotService;
+import io.intino.konos.model.graph.standalone.StandAloneDataHub;
 import io.intino.konos.model.graph.ui.UIService;
 import io.intino.plugin.project.LegioConfiguration;
 import io.intino.tara.compiler.shared.Configuration;
@@ -84,8 +84,8 @@ public class AbstractBoxRenderer {
 				tanks.add("tank", frameOf(tank));
 			dataHubFrame.add("tanks", tanks.toFrame());
 		}
-		if (dataHub.isService()) {
-			ServiceDataHub service = dataHub.asService();
+		if (dataHub.isStandAlone()) {
+			StandAloneDataHub service = dataHub.asStandAlone();
 			if (service.broker() != null) addBroker(dataHubFrame, service.broker());
 			FrameBuilder frame = new FrameBuilder("service").add("path", parameter(service.path())).add("scale", service.scale());
 			if (service.seal() != null) frame.add("sealing", service.seal().when());
@@ -111,8 +111,8 @@ public class AbstractBoxRenderer {
 		}
 		Frame[] feederFrames = graph.dataHub().feederList().stream().filter(f -> !f.sensorList().isEmpty()).map(this::frameOf).toArray(Frame[]::new);
 		if (feederFrames.length != 0) dataHubFrame.add("feeder", feederFrames);
-		if (!graph.procedureList().isEmpty())
-			dataHubFrame.add("procedure", new FrameBuilder().add("package", packageName).add("configuration", name).toFrame()); //TODO
+//		if (!graph.procedureList().isEmpty())
+//			dataHubFrame.add("procedure", new FrameBuilder().add("package", packageName).add("configuration", name).toFrame()); //TODO
 		builder.add("dataHub", dataHubFrame.toFrame());
 	}
 

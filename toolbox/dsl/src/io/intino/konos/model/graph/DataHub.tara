@@ -23,7 +23,7 @@ Facet DataHubLocation on DataHub is abstract
 
 		has:{0..1} BusConnection
 		has:{0..1} Broker
-	sub Service
+	sub StandAlone
 		var string path
 		var word:{Year Month Day Hour Minute} scale
 		has:{0..1} Broker
