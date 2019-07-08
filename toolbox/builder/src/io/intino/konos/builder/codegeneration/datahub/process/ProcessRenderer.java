@@ -25,22 +25,6 @@ public class ProcessRenderer {
 
 	public void execute() {
 		for (Process process : processes) {
-//			final String procedure = process.core$().ownerAs(Procedure.class).name$();
-//			final String name = composedName(process);
-//			final FrameBuilder builder = new FrameBuilder("process").
-//					add("box", boxName).
-//					add("procedure", procedure).
-//					add("package", packageName).
-//					add("name", name);
-//			if (process.input().schema() != null) {
-//				builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName).toFrame());
-//				builder.add("type", new FrameBuilder("schema").add("package", packageName).add("name", process.input().schema().name$()).toFrame());
-//			} else builder.add("type", "message");
-//			final File destination = new File(src, "procedures" + File.separator + procedure.toLowerCase());
-//			final String handlerName = firstUpperCase(name) + "Process";
-//			classes.put(process.getClass().getSimpleName() + "#" + process.name$(), "procedures." + procedure.toLowerCase() + "." + handlerName);
-//			if (!alreadyRendered(destination, handlerName))
-//				writeFrame(destination, handlerName, customize(new ProcessTemplate()).render(builder.toFrame()));
 		}
 	}
 

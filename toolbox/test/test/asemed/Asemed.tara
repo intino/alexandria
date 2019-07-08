@@ -144,6 +144,7 @@ Datamart("{datamart}") datamart
 
 
 Task MountAjuste as BootTrigger
+Task Mount1Ajuste as CronTrigger(pattern = "sssasas")
 
 Schema Evento
 	Attribute ts as DateTime

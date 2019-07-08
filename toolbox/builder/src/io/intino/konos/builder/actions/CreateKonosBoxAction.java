@@ -11,8 +11,15 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.progress.PerformInBackgroundOption;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -29,20 +36,22 @@ import io.intino.plugin.project.LibraryConflictResolver.Version;
 import io.intino.plugin.project.LibraryConflictResolver.VersionRange;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.java.JavaResourceRootType;
 import org.jetbrains.jps.model.java.JavaSourceRootType;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.intellij.notification.NotificationType.ERROR;
 import static com.intellij.notification.NotificationType.INFORMATION;
 import static io.intino.plugin.project.LibraryConflictResolver.VersionRange.isRange;
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.*;
+import static java.util.stream.Collectors.toList;
 
 public class CreateKonosBoxAction extends KonosAction {
 	private static final Logger LOG = Logger.getInstance("CreateKonosBoxAction: ");
@@ -73,31 +82,44 @@ public class CreateKonosBoxAction extends KonosAction {
 		if (noProject(e, project) || module == null) return;
 		project.save();
 		FileDocumentManager.getInstance().saveAllDocuments();
-		final KonosGraph konosGraph = new KonosGenerator(module).generate(getSrcRoot(module), getGenRoot(module), getResRoot(module));
-		if (konosGraph != null) updateDependencies(module, requiredDependencies(module, konosGraph));
+		this.withTask(new Task.Backgroundable(project, module.getName() + "Generating box...", false, PerformInBackgroundOption.ALWAYS_BACKGROUND) {
+			@Override
+			public void run(@NotNull ProgressIndicator progressIndicator) {
+				final KonosGraph konosGraph = new KonosGenerator(module).generate(getSrcRoot(module), getGenRoot(module), getResRoot(module));
+				if (konosGraph != null) updateDependencies(module, requiredDependencies(konosGraph));
+			}
+		});
 	}
 
 	private void updateDependencies(Module module, Map<String, String> requiredLibraries) {
 		final LegioConfiguration conf = (LegioConfiguration) TaraUtil.configurationOf(module);
-		final List<Dependency> dependencies = conf.graph().artifact().imports().dependencyList();
-		conf.addCompileDependencies(requiredLibraries.keySet().stream().
-				filter(dep -> findDependency(dependencies, dep) == null || (conf.groupId() + ":" + conf.artifactId()).equals(dep)).
+		if (conf.groupId().equals("io.intino.alexandria")) return;
+		final List<Dependency> toAdd = conf.graph().artifact().imports().dependencyList();
+		List<OrderEntry> libraries = Arrays.stream(ModuleRootManager.getInstance(module).getModifiableModel().getOrderEntries()).filter(o -> o instanceof LibraryOrderEntry).collect(toList());
+		List<String> collect = requiredLibraries.keySet().stream().
+				filter(dep -> !isInModule(libraries, dep + ":" + requiredLibraries.get(dep)) && findDependency(toAdd, dep) == null || (conf.groupId() + ":" + conf.artifactId()).equals(dep)).
 				map(dep -> dep + ":" + requiredLibraries.get(dep)).
-				collect(Collectors.toList()));
+				collect(toList());
+		conf.addCompileDependencies(collect);
 		conf.updateCompileDependencies(requiredLibraries.keySet().stream().
 				filter(dep -> {
-					final Dependency dependency = findDependency(dependencies, dep);
+					final Dependency dependency = findDependency(toAdd, dep);
 					return dependency != null && isOlder(dependency, requiredLibraries.get(dep));
 				}).
 				map(dep -> dep + ":" + requiredLibraries.get(dep)).
-				collect(Collectors.toList()));
+				collect(toList()));
 		conf.reload();
+	}
+
+	private boolean isInModule(List<OrderEntry> libraries, String dep) {
+		return libraries.stream().anyMatch(library -> ((LibraryOrderEntry) library).getLibraryName().endsWith(dep));
 	}
 
 	private boolean isOlder(Dependency dependency, String version) {
 		try {
 			final String dependencyVersion = dependency.effectiveVersion().isEmpty() ? dependency.version() : dependency.effectiveVersion();
-			if (isRange(dependencyVersion)) return !VersionRange.isInRange(version, VersionRange.rangeValuesOf(dependencyVersion));
+			if (isRange(dependencyVersion))
+				return !VersionRange.isInRange(version, VersionRange.rangeValuesOf(dependencyVersion));
 			if (dependencyVersion.isEmpty()) return false;
 			if (version.isEmpty()) return true;
 			return new Version(dependencyVersion).compareTo(new Version(version)) < 0;
@@ -111,14 +133,15 @@ public class CreateKonosBoxAction extends KonosAction {
 		return dependencies.stream().filter(dependency -> artifact.equals(dependency.groupId() + ":" + dependency.artifactId())).findFirst().orElse(null);
 	}
 
-	private Map<String, String> requiredDependencies(Module module, KonosGraph konosGraph) {
+	private Map<String, String> requiredDependencies(KonosGraph konosGraph) {
 		Map<String, String> dependencies = Manifest.load().dependencies;
-		if (!hasModel(module) && konosGraph.jMXServiceList().isEmpty()) remove(dependencies, "jmx");
+		if (konosGraph.jMXServiceList().isEmpty()) remove(dependencies, "jmx");
 		if (konosGraph.jMSServiceList().isEmpty()) remove(dependencies, "jms");
 		if (konosGraph.taskList().isEmpty()) remove(dependencies, "scheduler");
-		if (konosGraph.dataHub() == null) remove(dependencies, "datahub");
+		if (konosGraph.dataHub() == null) remove(dependencies, "data-hub");
 		if (konosGraph.uIServiceList().isEmpty()) remove(dependencies, "ui");
-		if (konosGraph.rESTServiceList().isEmpty() || !konosGraph.uIServiceList().isEmpty()) remove(dependencies, "rest");
+		if (konosGraph.rESTServiceList().isEmpty() || !konosGraph.uIServiceList().isEmpty())
+			remove(dependencies, "rest");
 		if (konosGraph.slackBotServiceList().isEmpty()) remove(dependencies, "slack");
 		return dependencies;
 	}
@@ -129,20 +152,49 @@ public class CreateKonosBoxAction extends KonosAction {
 		if (toRemove != null) dependencies.remove(toRemove);
 	}
 
-	private boolean hasModel(Module module) {
-		return module != null && configurationOf(module) != null && hasModel(configurationOf(module));
-	}
-
-	private boolean hasModel(Configuration configuration) {
-		return !configuration.languages().isEmpty();
-	}
-
 	private boolean noProject(AnActionEvent e, Project project) {
 		if (project == null) {
 			LOG.error("actionPerformed: no project for " + e);
 			return true;
 		}
 		return false;
+	}
+
+	private VirtualFile getGenRoot(Module module) {
+		for (VirtualFile file : getSourceRoots(module))
+			if (file.isDirectory() && "gen".equals(file.getName())) return file;
+		final VirtualFile genDirectory = createDirectory(module, "gen");
+		if (genDirectory == null) return null;
+		PsiTestUtil.addSourceRoot(module, genDirectory, JavaSourceRootType.SOURCE);
+		return genDirectory;
+	}
+
+	private VirtualFile getResRoot(Module module) {
+		for (VirtualFile file : getSourceRoots(module))
+			if (file.isDirectory() && "res".equals(file.getName())) return file;
+		final VirtualFile resDirectory = createDirectory(module, "res");
+		PsiTestUtil.addSourceRoot(module, resDirectory, JavaResourceRootType.RESOURCE);
+		return resDirectory;
+	}
+
+	private VirtualFile createDirectory(Module module, String name) {
+		final Application a = ApplicationManager.getApplication();
+		if (!a.isWriteAccessAllowed()) return a.runWriteAction((Computable<VirtualFile>) () -> create(module, name));
+		return create(module, name);
+	}
+
+	@Nullable
+	private VirtualFile create(Module module, String name) {
+		try {
+			final VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
+			return VfsUtil.createDirectoryIfMissing(contentRoots[0], name);
+		} catch (IOException e) {
+			return null;
+		}
+	}
+
+	private void withTask(Task.Backgroundable runnable) {
+		ProgressManager.getInstance().runProcessWithProgressAsynchronously(runnable, new BackgroundableProcessIndicator(runnable));
 	}
 
 	private class KonosGenerator {
@@ -160,10 +212,6 @@ public class CreateKonosBoxAction extends KonosAction {
 			}
 			final Configuration configuration = configurationOf(module);
 			String generationPackage = configuration == null ? BOX : configuration.workingPackage() + (configuration.boxPackage().isEmpty() ? "" : "." + configuration.boxPackage());
-			if (generationPackage == null) {
-				notifyError("gen package is null.");
-				return null;
-			}
 			File gen = new File(genDirectory.getPath(), generationPackage.replace(".", File.separator));
 			gen.mkdirs();
 			File src = new File(srcDirectory.getPath(), generationPackage.replace(".", File.separator));
@@ -219,38 +267,4 @@ public class CreateKonosBoxAction extends KonosAction {
 			vDir.refresh(true, true);
 		}
 	}
-
-	private VirtualFile getGenRoot(Module module) {
-		for (VirtualFile file : getSourceRoots(module))
-			if (file.isDirectory() && "gen".equals(file.getName())) return file;
-		final VirtualFile genDirectory = createDirectory(module, "gen");
-		if (genDirectory == null) return null;
-		PsiTestUtil.addSourceRoot(module, genDirectory, JavaSourceRootType.SOURCE);
-		return genDirectory;
-	}
-
-	private VirtualFile getResRoot(Module module) {
-		for (VirtualFile file : getSourceRoots(module))
-			if (file.isDirectory() && "res".equals(file.getName())) return file;
-		final VirtualFile resDirectory = createDirectory(module, "res");
-		PsiTestUtil.addSourceRoot(module, resDirectory, JavaResourceRootType.RESOURCE);
-		return resDirectory;
-	}
-
-	private VirtualFile createDirectory(Module module, String name) {
-		final Application a = ApplicationManager.getApplication();
-		if (!a.isWriteAccessAllowed()) return a.runWriteAction((Computable<VirtualFile>) () -> create(module, name));
-		return create(module, name);
-	}
-
-	@Nullable
-	private VirtualFile create(Module module, String name) {
-		try {
-			final VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
-			return VfsUtil.createDirectoryIfMissing(contentRoots[0], name);
-		} catch (IOException e) {
-			return null;
-		}
-	}
-
 }

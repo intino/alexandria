@@ -10,6 +10,7 @@ Artifact("io.intino.alexandria", "1.0.7") ui-framework
 		Compile("io.intino.alexandria", "rest", "1.0.3")
 		Compile("io.intino.alexandria", "rest-accessor", "1.0.4")
 		Test("junit", "junit", "LATEST")
+
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.dist)
 
