@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/framework/bpm/bpm.iml" filepath="$PROJECT_DIR$/framework/bpm/bpm.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/toolbox/builder/builder.iml" filepath="$PROJECT_DIR$/toolbox/builder/builder.iml" group="toolbox" />
       <module fileurl="file://$PROJECT_DIR$/framework/core/core.iml" filepath="$PROJECT_DIR$/framework/core/core.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/libraries/ness/datalake/datalake.iml" filepath="$PROJECT_DIR$/libraries/ness/datalake/datalake.iml" group="ness" />
