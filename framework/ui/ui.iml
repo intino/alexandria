@@ -69,5 +69,15 @@
     <orderEntry type="library" name="Legio: org.apache.httpcomponents:fluent-hc:4.5.7" level="project" />
     <orderEntry type="library" name="Legio: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="module" module-name="driver" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:ui-framework:1.0.6" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:core-framework:1.0.1" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:json:1.0.0" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:logger:2.0.0" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:inl:1.0.4" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:primitives:1.0.3" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:exceptions:1.0.0" level="project" />
+    <orderEntry type="library" name="Legio: com.sun.xml.security:xml-security-impl:1.0" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:rest:1.0.4" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:rest-accessor:1.0.6" level="project" />
   </component>
 </module>
