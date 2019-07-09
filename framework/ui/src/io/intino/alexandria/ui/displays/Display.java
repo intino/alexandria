@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
 
+import static io.intino.alexandria.ui.utils.UUIDUtil.isUUID;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.reverse;
 import static java.util.stream.Collectors.toList;
@@ -73,6 +74,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		result.add(id());
 		while (owner != null) {
 			result.add(owner.id());
+			if (isUUID(owner.id())) break;
 			owner = owner.parent();
 		}
 		reverse(result);

@@ -6,10 +6,6 @@ import {withStyles} from "@material-ui/core";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
-	value: {
-		minHeight: "100px",
-		minWidth: "100px"
-	}
 });
 
 class Image extends AbstractImage {
@@ -24,11 +20,9 @@ class Image extends AbstractImage {
 	};
 
 	render() {
-		const { classes } = this.props;
-
 		return (
 			<React.Fragment>
-				<img className={classes.value} style={this.style()} title={this.props.label} src={this.state.value}/>
+				<img style={this.style()} title={this.props.label} src={this.state.value}/>
 			</React.Fragment>
 		);
 	};
