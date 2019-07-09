@@ -12,29 +12,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13-beta-3" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: org.hamcrest:hamcrest-core:1.3" level="project" />
-    <orderEntry type="module" module-name="scheduler" />
-    <orderEntry type="module" module-name="core" />
-    <orderEntry type="module" module-name="logger4j" />
-    <orderEntry type="module" module-name="rest" />
-    <orderEntry type="module" module-name="exceptions" />
-    <orderEntry type="module" module-name="primitives" />
-    <orderEntry type="module" module-name="json" />
-    <orderEntry type="module" module-name="logger" />
-    <orderEntry type="module" module-name="ingestion" />
-    <orderEntry type="module" module-name="datalake" />
-    <orderEntry type="module" module-name="session" />
-    <orderEntry type="module" module-name="zim" />
-    <orderEntry type="module" module-name="inl" />
-    <orderEntry type="module" module-name="zet" />
-    <orderEntry type="module" module-name="tris" />
-    <orderEntry type="module" module-name="sealing" />
-    <orderEntry type="module" module-name="jms" />
-    <orderEntry type="module" module-name="mapp" />
-    <orderEntry type="library" name="Intino: com.jcraft:jsch:0.1.55" level="project" />
-    <orderEntry type="library" name="Intino: com.jcraft:jzlib:1.0.7" level="project" />
     <orderEntry type="library" name="Intino: org.apache.activemq:activemq-broker:5.15.2" level="project" />
     <orderEntry type="library" name="Intino: org.apache.activemq:activemq-client:5.15.2" level="project" />
-    <orderEntry type="library" name="Intino: org.slf4j:slf4j-api:1.7.25" level="project" />
     <orderEntry type="library" name="Intino: org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1" level="project" />
     <orderEntry type="library" name="Intino: org.fusesource.hawtbuf:hawtbuf:1.11" level="project" />
     <orderEntry type="library" name="Intino: org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:1.0.1" level="project" />
@@ -78,5 +57,57 @@
     <orderEntry type="library" name="Intino: org.apache.commons:commons-pool2:2.4.2" level="project" />
     <orderEntry type="library" name="Intino: org.jvnet.jaxb2_commons:jaxb2-basics-runtime:0.6.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: org.assertj:assertj-core:3.11.1" level="project" />
+    <orderEntry type="library" name="Intino: org.slf4j:slf4j-api:1.7.7" level="project" />
+    <orderEntry type="library" name="Intino: com.hierynomus:sshj:0.27.0" level="project" />
+    <orderEntry type="library" name="Intino: org.bouncycastle:bcprov-jdk15on:1.60" level="project" />
+    <orderEntry type="library" name="Intino: org.bouncycastle:bcpkix-jdk15on:1.60" level="project" />
+    <orderEntry type="library" name="Intino: com.jcraft:jzlib:1.1.3" level="project" />
+    <orderEntry type="library" name="Intino: net.i2p.crypto:eddsa:0.2.0" level="project" />
+    <orderEntry type="module" module-name="scheduler" />
+    <orderEntry type="library" name="Intino: org.quartz-scheduler:quartz:2.3.0" level="project" />
+    <orderEntry type="library" name="Intino: com.mchange:c3p0:0.9.5.2" level="project" />
+    <orderEntry type="library" name="Intino: com.mchange:mchange-commons-java:0.2.11" level="project" />
+    <orderEntry type="library" name="Intino: com.zaxxer:HikariCP-java6:2.3.13" level="project" />
+    <orderEntry type="library" name="Intino: org.quartz-scheduler:quartz-jobs:2.2.1" level="project" />
+    <orderEntry type="module" module-name="logger4j" />
+    <orderEntry type="library" name="Intino: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
+    <orderEntry type="library" name="Intino: log4j:log4j:1.2.17" level="project" />
+    <orderEntry type="module" module-name="rest" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:exceptions:1.0.0" level="project" />
+    <orderEntry type="library" name="Intino: com.sun.xml.security:xml-security-impl:1.0" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.3" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.0.0" level="project" />
+    <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.8.0" level="project" />
+    <orderEntry type="library" name="Intino: org.bouncycastle:bcmail-jdk15:1.45" level="project" />
+    <orderEntry type="library" name="Intino: org.bouncycastle:bcprov-jdk15:1.45" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
+    <orderEntry type="library" name="Intino: com.sparkjava:spark-core:2.7.2" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-server:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: javax.servlet:javax.servlet-api:3.1.0" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-http:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-util:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-io:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-webapp:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-xml:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-servlet:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-security:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-server:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-common:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-client:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-client:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-servlet:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-api:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: commons-codec:commons-codec:1.10" level="project" />
+    <orderEntry type="library" name="Intino: eu.medsea.mimeutil:mime-util:2.1.1" level="project" />
+    <orderEntry type="module" module-name="ingestion" />
+    <orderEntry type="module" module-name="session" />
+    <orderEntry type="module" module-name="zim" />
+    <orderEntry type="module" module-name="inl" />
+    <orderEntry type="module" module-name="zet" />
+    <orderEntry type="module" module-name="tris" />
+    <orderEntry type="module" module-name="sealing" />
+    <orderEntry type="module" module-name="datalake" />
+    <orderEntry type="module" module-name="jms" />
+    <orderEntry type="module" module-name="mapp" />
   </component>
 </module>
