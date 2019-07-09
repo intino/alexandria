@@ -1,8 +1,6 @@
 package io.intino.alexandria.bpm;
 
 
-import io.intino.alexandria.inl.Message;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +12,7 @@ import static java.util.stream.Collectors.toList;
 public abstract class Process {
 
 	private final String id;
-	protected List<Message> messages = new ArrayList<>();
+	protected List<ProcessStatus> processStatusList = new ArrayList<>();
 	private List<Link> links = new ArrayList<>();
 	private Map<String, State> states = new HashMap<>();
 
@@ -30,16 +28,20 @@ public abstract class Process {
 		links.add(link);
 	}
 
-	public void registerMessage(Message message) {
-		messages.add(message);
+	public void register(ProcessStatus status) {
+		processStatusList.add(status);
 	}
 
 	public State state(String state) {
 		return states.get(state);
 	}
 
-	public synchronized List<Link> linksOf(String state) {
-		return links.stream().filter(l -> l.from().equals(state) && predecessorsHaveFinished(l.to())).collect(toList());
+	public List<Link> linksOf(String state) {
+		return links.stream().filter(l -> l.from().equals(state) && !stateCovered(l.to()) && predecessorsHaveFinished(l.to())).collect(toList());
+	}
+
+	private boolean stateCovered(String state) {
+		return processStatusList.stream().anyMatch(s -> s.hasStateInfo() && s.stateInfo().name().equals(state));
 	}
 
 	private boolean predecessorsHaveFinished(String state) {
@@ -48,10 +50,10 @@ public abstract class Process {
 	}
 
 	private boolean stateFinished(String stateName) {
-		return messages.stream()
-				.filter(m -> !m.components("ProcessStatus.State").isEmpty())
-				.map(m -> m.components("ProcessStatus.State").get(0))
-				.anyMatch(m -> m.get("name").data().equals(stateName) && m.get("status").data().equals("Exit"));
+		return processStatusList.stream()
+				.filter(ProcessStatus::hasStateInfo)
+				.map(ProcessStatus::stateInfo)
+				.anyMatch(s -> s.name().equals(stateName) && s.status().equals("Exit"));
 	}
 
 	public State initialState() {
@@ -64,7 +66,7 @@ public abstract class Process {
 
 	public abstract String name();
 
-	public List<Message> messages() {
-		return messages;
+	public List<ProcessStatus> messages() {
+		return processStatusList;
 	}
 }

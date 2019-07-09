@@ -2,10 +2,7 @@ package io.intino.alexandria.bpm;
 
 import io.intino.alexandria.inl.Message;
 
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static io.intino.alexandria.bpm.Link.Type.Default;
 import static io.intino.alexandria.bpm.Link.Type.Exclusive;
@@ -19,6 +16,7 @@ public class Workflow {
 	private MessageHub messageHub;
 	private ProcessFactory processFactory;
 	private Map<String, Process> processes = new HashMap<>();
+	private Set<String> advancingProcesses = new HashSet<>();
 
 	public Workflow(MessageHub messageHub, ProcessFactory processFactory) {
 		this.messageHub = messageHub;
@@ -27,31 +25,50 @@ public class Workflow {
 	}
 
 	private void process(Message message) {
-		if (startProcess(message)) initProcess(message);
-		else processes.get(processId(message)).registerMessage(message);
-		if (stateExited(message)) {
-			if (stateIsTerminal(message)) terminateProcess(message);
-			else advanceProcess(message);
+		ProcessStatus status = new ProcessStatus(message);
+		waitSemaphore(status);
+		advancingProcesses.add(status.processId());
+		if (startProcess(status)) initProcess(status);
+		else if(terminatedProcess(status)) terminateProcess(status);
+		else processes.get(status.processId()).register(status);
+		if (stateExited(status)) {
+			if (stateIsTerminal(status)) sendTerminationMessage(status);
+			else advanceProcess(status);
 		}
+		advancingProcesses.remove(status.processId());
 	}
 
-	private void initProcess(Message message) {
-		Process process = processFactory.createProcess(processId(message), processName(message));
-		processes.put(processId(message), process);
-		process.registerMessage(message);
+	private void initProcess(ProcessStatus status) {
+		Process process = processFactory.createProcess(status.processId(), status.processName());
+		processes.put(status.processId(), process);
+		process.register(status);
 		invoke(process, process.initialState());
 	}
 
-	private void terminateProcess(Message message) {
-		messageHub.sendMessage(Channel, terminateProcessMessage(processes.get(processId(message))));
-		processes.remove(processId(message));
+	private void terminateProcess(ProcessStatus status) {
+		processes.get(status.processId()).register(status);
+		//processes.remove(status.processId()); // TODO all states finished???
 	}
 
-	private void advanceProcess(Message message) {
-		Process process = processes.get(processId(message));
-		List<Link> links = process.linksOf(stateOf(message));
+	private void sendTerminationMessage(ProcessStatus status) {
+		messageHub.sendMessage(Channel, terminateProcessMessage(processes.get(status.processId())));
+	}
+
+	private void advanceProcess(ProcessStatus status) {
+		Process process = processes.get(status.processId());
+		List<Link> links = process.linksOf(stateOf(status));
 		if (links.isEmpty()) return;
 		processLinks(process, links, typeOf(links));
+	}
+
+	private void waitSemaphore(ProcessStatus status) {
+		while(advancingProcesses.contains(status.processId())) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void processLinks(Process process, List<Link> links, Link.Type type) {
@@ -70,25 +87,21 @@ public class Workflow {
 		return process.state(link.to()).task().accept();
 	}
 
-	private boolean stateIsTerminal(Message message) {
-		return processes.get(processId(message)).state(stateOf(message)).type() == Terminal;
+	private boolean stateIsTerminal(ProcessStatus status) {
+		return processes.get(status.processId()).state(stateOf(status)).type() == Terminal;
 	}
 
-	private String processId(Message message) {
-		return message.get("id").data();
+	private boolean stateExited(ProcessStatus status) {
+		return status.hasStateInfo() &&
+				(status.stateInfo().status().equals("Exit") || status.stateInfo().status().equals("Rejected"));
 	}
 
-	private String processName(Message message) {
-		return message.get("name").data();
+	private boolean startProcess(ProcessStatus status) {
+		return status.processStatus().equals("Enter");
 	}
 
-	private boolean stateExited(Message message) {
-		List<Message> components = message.components("ProcessStatus.State");
-		return !components.isEmpty() && components.get(0).get("status").data().equals("Exit");
-	}
-
-	private boolean startProcess(Message message) {
-		return message.get("status").data().equals("Enter");
+	private boolean terminatedProcess(ProcessStatus status) {
+		return status.processStatus().equals("Exit");
 	}
 
 	private Link defaultLink(List<Link> links) {
@@ -96,8 +109,8 @@ public class Workflow {
 	}
 
 	private void invoke(Process process, State state) {
-		messageHub.sendMessage(Channel, enterMessage(process, state));
 		new Thread(() -> {
+			messageHub.sendMessage(Channel, enterMessage(process, state));
 			String result = state.task().execute();
 			if (state.task().type() == Automatic) messageHub.sendMessage(Channel, exitMessage(process, state, result));
 		}).start();
@@ -113,38 +126,27 @@ public class Workflow {
 	}
 
 	private Message enterMessage(Process process, State state) {
-		return stateMessage(process, state, "Enter");
+		return stateMessage(process, state, "Enter").message();
 	}
 
 	private Message exitMessage(Process process, State state, String result) {
-		Message message = stateMessage(process, state, "Exit");
-		message.components(Channel + ".State").get(0)
-				.add(new Message(Channel + ".State.Task").set("result", result));
-		return message;
+		ProcessStatus status = stateMessage(process, state, "Exit");
+		status.addTaskInfo(result);
+		return status.message();
 	}
 
 	private Message rejectMessage(Process process, State state) {
-		return stateMessage(process, state, "Rejected");
+		return stateMessage(process, state, "Rejected").message();
 	}
 
-	private Message stateMessage(Process process, State state, String stateStatus) {
-		Message message = processMessage(process, "Running");
-		message.add(stateMessage(state, stateStatus));
-		return message;
+	private ProcessStatus stateMessage(Process process, State state, String stateStatus) {
+		ProcessStatus status = processMessage(process, "Running");
+		status.addStateInfo(state.name(), stateStatus);
+		return status;
 	}
 
-	private Message processMessage(Process process, String processStatus) {
-		return new Message(Channel)
-				.set("ts", Instant.now().toString())
-				.set("id", process.id())
-				.set("name", process.name())
-				.set("status", processStatus);
-	}
-
-	private Message stateMessage(State state, String stateStatus) {
-		return new Message(Channel + ".State")
-				.set("name", state.name())
-				.set("status", stateStatus);
+	private ProcessStatus processMessage(Process process, String processStatus) {
+		return new ProcessStatus(process.id(), process.name(), processStatus);
 	}
 
 	private Link.Type typeOf(List<Link> links) {
@@ -152,11 +154,11 @@ public class Workflow {
 	}
 
 	private Message terminateProcessMessage(Process process) {
-		return processMessage(process, "Exit");
+		return new ProcessStatus(process.id(), process.name(), "Exit").message();
 	}
 
-	private String stateOf(Message message) {
-		return message.components(Channel + ".State").get(0).get("name").data();
+	private String stateOf(ProcessStatus status) {
+		return status.stateInfo().name();
 	}
 
 	public Process process(String processId) {

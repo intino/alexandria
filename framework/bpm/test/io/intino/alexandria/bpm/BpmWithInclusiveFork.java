@@ -21,15 +21,18 @@ public class BpmWithInclusiveFork {
 		Workflow workflow = new Workflow(messageHub, new ProcessFactory());
 		messageHub.sendMessage("ProcessStatus", createProcessMessage());
 		Process process = workflow.process("1");
-		while(!hasEnded(process)) Thread.sleep(100);
-		List<Message> messages = process.messages();
-		assertThat(messages.get(0).toString(), is(createProcessMessage().toString()));
+		while(!hasEnded(process)){
+			if(process==null) process = workflow.process("1");
+			Thread.sleep(100);
+		}
+		List<ProcessStatus> messages = process.messages();
+		assertThat(messages.get(0).message().toString(), is(createProcessMessage().toString()));
 	}
 
 	private boolean hasEnded(Process process) {
-		if(process == null || process.messages.isEmpty()) return false;
-		Message message = process.messages().get(process.messages.size() - 1);
-		return message.get("status").data().equals("Exit");
+		if(process == null || process.processStatusList.isEmpty()) return false;
+		ProcessStatus message = process.messages().get(process.processStatusList.size() - 1);
+		return message.processStatus().equals("Exit");
 	}
 
 	private Message createProcessMessage() {
@@ -46,7 +49,7 @@ public class BpmWithInclusiveFork {
 
 			@Override
 			public void sendMessage(String channel, Message message) {
-				listeners.forEach(l -> l.process(message));
+				new Thread(() -> listeners.forEach(l -> l.process(message))).start();
 			}
 
 			@Override
@@ -74,7 +77,7 @@ public class BpmWithInclusiveFork {
 			return new Task(Automatic) {
 				@Override
 				public String execute() {
-					return "Hello:Goodbye";
+					return Math.random() < 0.5 ? "Hello:Goodbye" : "Goodbye:Hello";
 				}
 
 			};
@@ -85,19 +88,17 @@ public class BpmWithInclusiveFork {
 
 				@Override
 				String execute() {
-					String[] result = resultOfState("CreateString").get("result").data().split(":");
+					String[] result = resultOfState("CreateString").split(":");
 					return result[0].equals("Hello") ? "0-Hi" : "1-Hi";
 				}
 			};
 		}
 
-		private Message resultOfState(String stateName) {
-			return messages.stream().filter(m -> {
-				List<Message> components = m.components("ProcessStatus.State");
-				if(components.isEmpty()) return false;
-				Message message = components.get(0);
-				return message.get("name").data().equals(stateName) && message.get("status").data().equals("Exit");
-			}).findFirst().get().components("ProcessStatus.State").get(0).components("ProcessStatus.State.Task").get(0);
+		private String resultOfState(String stateName) {
+			return new ArrayList<>(processStatusList).stream().filter(m -> {
+				if(!m.hasStateInfo()) return false;
+				return m.stateInfo().name().equals(stateName) && m.stateInfo().status().equals("Exit");
+			}).findFirst().get().taskInfo().result();
 		}
 
 		private Task processGoodbye() {
@@ -105,7 +106,7 @@ public class BpmWithInclusiveFork {
 
 				@Override
 				String execute() {
-					String[] result = resultOfState("CreateString").get("result").data().split(":");
+					String[] result = resultOfState("CreateString").split(":");
 					return result[0].equals("Goodbye") ? "0-Bye" : "1-Bye";
 				}
 			};
@@ -117,8 +118,9 @@ public class BpmWithInclusiveFork {
 
 				@Override
 				String execute() {
-					String[] hello = resultOfState("ProcessHello").get("result").data().split("-");
-					String[] goodbye = resultOfState("ProcessGoodbye").get("result").data().split("-");
+					System.out.println("hey");
+					String[] hello = resultOfState("ProcessHello").split("-");
+					String[] goodbye = resultOfState("ProcessGoodbye").split("-");
 					return hello[0].equals("0") ? hello[1] + ":" + goodbye[1] : goodbye[1] + ":" + hello[1];
 				}
 			};

@@ -21,15 +21,18 @@ public class BpmWithExclusiveFork {
 		Workflow workflow = new Workflow(messageHub, new ProcessFactory());
 		messageHub.sendMessage("ProcessStatus", createProcessMessage());
 		Process process = workflow.process("1");
-		while(!hasEnded(process)) Thread.sleep(100);
-		List<Message> messages = process.messages();
-		assertThat(messages.get(0).toString(), is(createProcessMessage().toString()));
+		while(!hasEnded(process)){
+			if(process==null) process = workflow.process("1");
+			Thread.sleep(100);
+		}
+		List<ProcessStatus> messages = process.messages();
+		assertThat(messages.get(0).message().toString(), is(createProcessMessage().toString()));
 	}
 
 	private boolean hasEnded(Process process) {
-		if(process == null || process.messages.isEmpty()) return false;
-		Message message = process.messages().get(process.messages.size() - 1);
-		return message.get("status").data().equals("Exit");
+		if(process == null || process.processStatusList.isEmpty()) return false;
+		ProcessStatus message = process.messages().get(process.processStatusList.size() - 1);
+		return message.processStatus().equals("Exit");
 	}
 
 	private Message createProcessMessage() {
@@ -46,7 +49,7 @@ public class BpmWithExclusiveFork {
 
 			@Override
 			public void sendMessage(String channel, Message message) {
-				listeners.forEach(l -> l.process(message));
+				new Thread(() -> listeners.forEach(l -> l.process(message))).start();
 			}
 
 			@Override
@@ -83,12 +86,17 @@ public class BpmWithExclusiveFork {
 			return new Task(Automatic) {
 				@Override
 				String execute() {
-					Message last = messages.get(messages.size() - 2);
-					return last.components("ProcessStatus.State").get(0)
-							.components("ProcessStatus.State.Task").get(0)
-							.get("result").data().contains("Hello") + "";
+					ProcessStatus last = exitStateStatus("CreateString");
+					return last.taskInfo().result().contains("Hello") + "";
 				}
 			};
+		}
+
+		private ProcessStatus exitStateStatus(String stateName) {
+			return new ArrayList<>(processStatusList)
+					.stream()
+					.filter(s -> s.hasStateInfo() && s.stateInfo().name().equals(stateName) && s.stateInfo().status().equals("Exit"))
+					.findFirst().orElse(null); //TODO more exit status
 		}
 
 		private Task processHello() {
@@ -96,10 +104,8 @@ public class BpmWithExclusiveFork {
 
 				@Override
 				public boolean accept() {
-					Message last = messages.get(messages.size() - 1);
-					return last.components("ProcessStatus.State").get(0)
-							.components("ProcessStatus.State.Task").get(0)
-							.get("result").data().equals("true");
+					ProcessStatus last = exitStateStatus("CheckContainsHello");
+					return last.taskInfo().result().equals("true");
 				}
 
 				@Override
