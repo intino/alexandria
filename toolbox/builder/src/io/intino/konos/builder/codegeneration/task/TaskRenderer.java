@@ -48,7 +48,7 @@ public class TaskRenderer {
 		FrameBuilder builder = baseFrame("task").add("name", task.name$());
 		List<Frame> targets = targets(task);
 		boolean hasTargets = !targets.isEmpty();
-		if (!hasTargets) targets.add(baseFrame(task.name$()).toFrame());
+		if (!hasTargets) targets.add(baseFrame(task.name$()).add("name", task.name$()).toFrame());
 		builder.add("target", targets.toArray(new Frame[0]));
 		writeFrame(destinyPackage(), task.name$() + "Task", template().render(builder.toFrame()));
 		if (!hasTargets) createCorrespondingAction(task);
