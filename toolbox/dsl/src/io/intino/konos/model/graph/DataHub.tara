@@ -5,7 +5,7 @@ use DataTypes
 Concept:{0..1} DataHub
 	var string workingDirectory
 	Concept Split > var string[] splits
-	Concept:Named Tank > var string fullName
+	Concept:Named:RequiresFacet Tank > var string fullName
 	has Mounter
 	has Feeder
 
@@ -14,13 +14,12 @@ Concept:Named Mounter is component
 Facet DataHubLocation on DataHub is abstract
 	sub Remote > has:{1..1} BusConnection
 	sub Mirrored
-		var string originUrl
+		var string originSshUrl
 		var string originDatalakePath
 		var string user
 		var string password = empty
 		var string destinationPath
 		var string startingTimetag
-
 		has:{0..1} BusConnection
 		has:{0..1} Broker
 	sub StandAlone
@@ -77,6 +76,9 @@ Facet MounterType on Mounter
 		Concept:{1..*} Select
 			var DataHub.Tank tank
 			var DataHub.Split split = empty
+		sub TimeLine
+			Concept Select extends Select
+				var word:{Sum Average Count Custom} aggregator
 
 //sin faceta, es un mounter generico con datalake.
 Facet Id on Population.Column

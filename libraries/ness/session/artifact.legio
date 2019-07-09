@@ -1,7 +1,6 @@
 dsl Legio
 
 Artifact("io.intino.alexandria", "1.0.0") session
-	Imports
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.release)
 
