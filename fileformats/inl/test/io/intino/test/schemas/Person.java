@@ -1,11 +1,14 @@
 package io.intino.test.schemas;
 
+import com.sun.tools.javah.Gen;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Person {
 	public String name;
+	public Gender gender;
 	public double money;
 	public Instant birthDate;
 	public Country country;
@@ -14,8 +17,9 @@ public class Person {
 	public Person() {
 	}
 
-	public Person(String name, double money, Instant birthDate, Country country) {
+	public Person(String name, Gender gender, double money, Instant birthDate, Country country) {
 		this.name = name;
+		this.gender = gender;
 		this.money = money;
 		this.birthDate = birthDate;
 		this.country = country;
@@ -24,5 +28,11 @@ public class Person {
 	public void add(Phone phone) {
 		if (phones == null) phones = new ArrayList<>();
 		phones.add(phone);
+
 	}
+
+	public enum Gender {
+		Male, Female
+	}
+
 }

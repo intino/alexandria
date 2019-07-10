@@ -26,6 +26,7 @@ public class MessageCast_ {
         String str =
                 "[Teacher]\n" +
                 "name: Jose\n" +
+                "gender: Male\n" +
                 "money: 50.0\n" +
                 "birthDate: 2016-10-04T20:10:12Z\n" +
                 "university: ULPGC\n" +
@@ -39,6 +40,7 @@ public class MessageCast_ {
         assertThat(messages.hasNext()).isFalse();
 		Teacher teacher = cast(message).as(Teacher.class);
         assertThat(teacher.name).isEqualTo("Jose");
+        assertThat(teacher.gender.toString()).isEqualTo("Male");
         assertThat(teacher.money).isEqualTo(50.0);
         assertThat(teacher.birthDate).isEqualTo(instant(2016, 10, 4, 20, 10, 12));
         assertThat(teacher.university).isEqualTo("ULPGC");
@@ -51,6 +53,7 @@ public class MessageCast_ {
         String str =
                 "[Teacher]\n" +
                 "name: Jose\n" +
+                "gender: Male\n" +
                 "money: 50.0\n" +
                 "birthDate: 2016-10-04T20:10:11Z\n" +
                 "\n" +
@@ -59,6 +62,7 @@ public class MessageCast_ {
 
 		Teacher teacher = cast(new MessageReader(str).next()).as(Teacher.class);
         assertThat(teacher.name).isEqualTo("Jose");
+        assertThat(teacher.gender.toString()).isEqualTo("Male");
         assertThat(teacher.money).isEqualTo(50.0);
         assertThat(teacher.birthDate).isEqualTo(instant(2016, 10, 4, 20, 10, 11));
         assertThat(teacher.university).isNull();
@@ -200,6 +204,7 @@ public class MessageCast_ {
         String str =
             "[Teacher]\n" +
             "name: Jose\n" +
+            "gender: Male\n" +
             "money: 50.0\n" +
             "birthDate: 2016-10-04T20:10:11Z\n" +
             "university: ULPGC\n" +
@@ -220,6 +225,7 @@ public class MessageCast_ {
             "name: Mexico\n";
 		Teacher teacher = cast(new MessageReader(str).next()).as(Teacher.class);
         assertThat(teacher.name).isEqualTo("Jose");
+        assertThat(teacher.gender.toString()).isEqualTo("Male");
         assertThat(teacher.money).isEqualTo(50.0);
         assertThat(teacher.birthDate).isEqualTo(instant(2016, 10, 4, 20, 10, 11));
         assertThat(teacher.country.name).isEqualTo("Spain");

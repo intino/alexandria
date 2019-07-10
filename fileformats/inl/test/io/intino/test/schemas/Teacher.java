@@ -8,8 +8,9 @@ public class Teacher extends Person {
 	public Teacher() {
 	}
 
-	public Teacher(String name, double money, Instant birthDate, Country country, String university) {
-		super(name, money, birthDate, country);
+	public Teacher(String name, Gender gender, double money, Instant birthDate, Country country, String university) {
+		super(name, gender, money, birthDate, country);
 		this.university = university;
 	}
+
 }
