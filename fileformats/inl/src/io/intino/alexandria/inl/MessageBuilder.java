@@ -69,7 +69,7 @@ public class MessageBuilder {
 
 	private static boolean isPrimitive(Field field) {
 		Class<?> aClass = field.getType();
-		return isPrimitive(aClass) || isArrayOfPrimitives(aClass) || isListOfPrimitives(field);
+		return isPrimitive(aClass) || isEnum(aClass) || isArrayOfPrimitives(aClass) || isListOfPrimitives(field);
 	}
 
 	private static boolean isAttachment(Field field) {
@@ -103,6 +103,10 @@ public class MessageBuilder {
 
 	private static boolean isListOfPrimitives(Field field) {
 		return field.getType().isAssignableFrom(List.class) && isPrimitive(field.getGenericType().toString());
+	}
+
+	private static boolean isEnum(Class<?> aClass) {
+		return aClass.isEnum();
 	}
 
 	private static boolean isPrimitive(Class<?> aClass) {
