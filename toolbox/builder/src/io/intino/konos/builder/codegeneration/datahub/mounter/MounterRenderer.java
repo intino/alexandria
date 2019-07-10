@@ -34,25 +34,27 @@ public class MounterRenderer {
 	}
 
 	public void execute() {
+		File sourceMounters = new File(src, "datahub/mounters");
 		for (Mounter mounter : mounters) {
+			final String mounterName = mounter.name$() + "Mounter";
 			final FrameBuilder builder = new FrameBuilder("mounter").
 					add("box", boxName).
 					add("package", packageName).
 					add("name", mounter.name$());
 			if (mounter.isPopulation()) {
 				populationMounter(builder, mounter.asPopulation());
-				classes.put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datahub.mounters." + (mounter.name$() + "Mounter"));
+				classes.put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datahub.mounters." + mounterName);
 				writeFrame(new File(gen, "datahub/mounters"), mounter.name$() + "Mounter", customize(new MounterTemplate()).render(builder.toFrame()));
-				writeFrame(new File(src, "datahub/mounters"), mounter.name$() + "MounterFunctions", customize(new MounterTemplate()).render(builder.add("src").toFrame()));
-			} else if (!mounter.isRealtime()) {
-				writeFrame(new File(src, "datahub/mounters"), mounter.name$() + "Mounter", customize(new MounterTemplate()).render(builder.add("batch").toFrame()));
+				if (!alreadyRendered(sourceMounters, mounter.name$() + "MounterFunctions"))
+					writeFrame(sourceMounters, mounter.name$() + "MounterFunctions", customize(new MounterTemplate()).render(builder.add("src").toFrame()));
+			} else if (!mounter.isRealtime() && !alreadyRendered(sourceMounters, mounterName)) {
+				writeFrame(new File(src, "datahub/mounters"), mounterName, customize(new MounterTemplate()).render(builder.add("batch").toFrame()));
+				classes.put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datahub.mounters." + mounterName);
 			} else {
 				realtimeMounter(builder, mounter);
-				final File destination = new File(src, "datahub/mounters");
-				final String mounterName = mounter.name$() + "Mounter";
 				classes.put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datahub.mounters." + mounterName);
-				if (!alreadyRendered(destination, mounterName))
-					writeFrame(destination, mounterName, customize(new MounterTemplate()).render(builder.toFrame()));
+				if (!alreadyRendered(sourceMounters, mounterName))
+					writeFrame(sourceMounters, mounterName, customize(new MounterTemplate()).render(builder.toFrame()));
 			}
 		}
 	}

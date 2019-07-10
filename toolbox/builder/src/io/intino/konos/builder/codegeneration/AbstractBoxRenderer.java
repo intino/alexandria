@@ -95,7 +95,7 @@ public class AbstractBoxRenderer {
 			if (mirrored.broker() != null) addBroker(dataHubFrame, mirrored.broker());
 			if (mirrored.busConnection() != null) busConnection(mirrored.busConnection());
 			FrameBuilder mirror = new FrameBuilder("mirror").
-					add("originUrl", parameter(mirrored.originUrl())).
+					add("originUrl", parameter(mirrored.originSshUrl())).
 					add("originPath", parameter(mirrored.originDatalakePath())).
 					add("startingTimetag", mirrored.startingTimetag()).
 					add("user", parameter(mirrored.user())).
