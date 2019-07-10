@@ -32,7 +32,7 @@ module.exports = {
         'widgetType' : './gen/apps/WidgetType.js'
     },
     output: {
-        path: "/Users/mcaballero/Proyectos/alexandria/out/production/ui-elements/www/ui-elements",// /Users/mcaballero/Proyectos/adquiver-qia/out/production/front-ui/www/front-ui
+        path: "/Users/mcaballero/Proyectos/alexandria/out/production/ui-elements/www/ui-elements",
         publicPath: '/ui-elements/',
         filename: "[name].js"
     },
