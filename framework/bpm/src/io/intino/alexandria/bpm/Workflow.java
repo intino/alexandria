@@ -29,12 +29,13 @@ public class Workflow {
 		waitSemaphore(status);
 		advancingProcesses.add(status.processId());
 		if (startProcess(status)) initProcess(status);
-		else if(terminatedProcess(status)) terminateProcess(status);
+		else if (terminatedProcess(status)) terminateProcess(status);
 		else processes.get(status.processId()).register(status);
 		if (stateExited(status)) {
 			if (stateIsTerminal(status)) sendTerminationMessage(status);
 			else advanceProcess(status);
-		}
+		} else if (stateRejectedOrSkipped(status))
+			propagateRejectionOnBranch(processes.get(status.processId()), stateOf(status));
 		advancingProcesses.remove(status.processId());
 	}
 
@@ -46,7 +47,11 @@ public class Workflow {
 	}
 
 	private void terminateProcess(ProcessStatus status) {
-		processes.get(status.processId()).register(status);
+		Process process = processes.get(status.processId());
+		process.register(status);
+		if(!process.hasCallback()) return;
+		Process callbackProcess = processes.get(process.callbackProcess());
+		messageHub.sendMessage(Channel, exitMessage(callbackProcess, callbackProcess.state(process.callbackState()), "Process " + process.id() + " exited"));
 		//processes.remove(status.processId()); // TODO all states finished???
 	}
 
@@ -62,7 +67,7 @@ public class Workflow {
 	}
 
 	private void waitSemaphore(ProcessStatus status) {
-		while(advancingProcesses.contains(status.processId())) {
+		while (advancingProcesses.contains(status.processId())) {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
@@ -74,7 +79,7 @@ public class Workflow {
 	private void processLinks(Process process, List<Link> links, Link.Type type) {
 		boolean invoked = false;
 		for (Link link : links) {
-			if ((type == Exclusive && invoked) || !stateAccept(process, link)) processRejection(process, link);
+			if ((type == Exclusive && invoked) || !stateAccept(process, link)) sendRejectionMessage(process, link);
 			else {
 				invoked = true;
 				invoke(process, process.state(link.to()));
@@ -88,12 +93,16 @@ public class Workflow {
 	}
 
 	private boolean stateIsTerminal(ProcessStatus status) {
-		return processes.get(status.processId()).state(stateOf(status)).type() == Terminal;
+		return processes.get(status.processId()).state(stateOf(status)).isTerminal();
 	}
 
 	private boolean stateExited(ProcessStatus status) {
+		return status.hasStateInfo() && status.stateInfo().status().equals("Exit");
+	}
+
+	private boolean stateRejectedOrSkipped(ProcessStatus status) {
 		return status.hasStateInfo() &&
-				(status.stateInfo().status().equals("Exit") || status.stateInfo().status().equals("Rejected"));
+				(status.stateInfo().status().equals("Rejected") || status.stateInfo().status().equals("Skipped"));
 	}
 
 	private boolean startProcess(ProcessStatus status) {
@@ -116,13 +125,21 @@ public class Workflow {
 		}).start();
 	}
 
-	private void processRejection(Process process, Link link) {
+	private void sendRejectionMessage(Process process, Link link) {
 		messageHub.sendMessage(Channel, rejectMessage(process, process.state(link.to())));
-		propagateRejectionOnBranch(process, process.state(link.to())); // TODO
 	}
 
-	private void propagateRejectionOnBranch(Process process, State state) {
-		//TODO
+	private void propagateRejectionOnBranch(Process process, String state) {
+		List<Link> links = process.linksOf(state);
+		for (Link link : links) {
+			if (!process.predecessorsHaveFinished(link.to())) continue;
+			if (anyPredecessorHasExited(process, link)) invoke(process, process.state(link.to()));
+			else messageHub.sendMessage(Channel, skipMessage(process, process.state(link.to())));
+		}
+	}
+
+	private boolean anyPredecessorHasExited(Process process, Link link) {
+		return process.predecessorsFinishedStatus(link.to()).stream().anyMatch(s -> s.stateInfo().status().equals("Exit"));
 	}
 
 	private Message enterMessage(Process process, State state) {
@@ -137,6 +154,10 @@ public class Workflow {
 
 	private Message rejectMessage(Process process, State state) {
 		return stateMessage(process, state, "Rejected").message();
+	}
+
+	private Message skipMessage(Process process, State state) {
+		return stateMessage(process, state, "Skipped").message();
 	}
 
 	private ProcessStatus stateMessage(Process process, State state, String stateStatus) {

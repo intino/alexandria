@@ -40,28 +40,58 @@ public abstract class Process {
 		return links.stream().filter(l -> l.from().equals(state) && !stateCovered(l.to()) && predecessorsHaveFinished(l.to())).collect(toList());
 	}
 
+	public boolean hasCallback() {
+		return processStatusList.get(0).hasCallback();
+	}
+
+	public String callbackProcess() {
+		return processStatusList.get(0).callbackProcess();
+	}
+
+	public String callbackState() {
+		return processStatusList.get(0).callbackState();
+	}
+
 	private boolean stateCovered(String state) {
 		return processStatusList.stream().anyMatch(s -> s.hasStateInfo() && s.stateInfo().name().equals(state));
 	}
 
-	private boolean predecessorsHaveFinished(String state) {
+	boolean predecessorsHaveFinished(String state) {
 		return links.stream().filter(l -> l.to().equals(state))
 				.allMatch(l -> stateFinished(l.from()));
+	}
+
+	protected List<ProcessStatus> predecessorsFinishedStatus(String state) {
+		return links.stream().filter(l -> l.to().equals(state))
+				.filter(l -> stateFinished(l.from()))
+				.map(l -> exitStateStatus(l.from()))
+				.collect(toList());
+	}
+
+	protected ProcessStatus exitStateStatus(String stateName) {
+		return new ArrayList<>(processStatusList)
+				.stream()
+				.filter(s -> s.hasStateInfo() && s.stateInfo().name().equals(stateName) && s.stateInfo().isTerminated())
+				.findFirst().orElse(null);
 	}
 
 	private boolean stateFinished(String stateName) {
 		return processStatusList.stream()
 				.filter(ProcessStatus::hasStateInfo)
 				.map(ProcessStatus::stateInfo)
-				.anyMatch(s -> s.name().equals(stateName) && s.status().equals("Exit"));
+				.anyMatch(s -> s.name().equals(stateName) && s.isTerminated());
 	}
 
 	public State initialState() {
-		return states.values().stream().filter(s -> s.type() == Initial).findFirst().get();
+		return states.values().stream().filter(State::isInitial).findFirst().get();
 	}
 
 	public String id() {
 		return id;
+	}
+
+	protected String owner() {
+		return processStatusList.get(0).owner();
 	}
 
 	public abstract String name();
