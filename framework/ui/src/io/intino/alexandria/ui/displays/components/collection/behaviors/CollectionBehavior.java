@@ -29,6 +29,11 @@ public abstract class CollectionBehavior<DS extends Datasource<Item>, Item, IL e
 		return this;
 	}
 
+	public void reload() {
+		this.itemLoader.reload();
+		reset();
+	}
+
 	public void filter(String grouping, List<String> groups) {
 		itemLoader.filter(grouping, groups);
 		reset();

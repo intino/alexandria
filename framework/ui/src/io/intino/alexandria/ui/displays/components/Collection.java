@@ -63,6 +63,11 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         setup();
     }
 
+    public void reload() {
+        behavior.reload();
+        notifier.refreshItemCount(behavior.itemCount());
+    }
+
     public <D extends Datasource> D source() {
         return (D) source;
     }

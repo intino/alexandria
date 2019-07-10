@@ -1,5 +1,6 @@
 import React from "react";
 import { withStyles } from '@material-ui/core/styles';
+import { withSnackbar } from 'notistack';
 import AbstractTable from "../../../gen/displays/components/AbstractTable";
 import TableNotifier from "../../../gen/displays/notifiers/TableNotifier";
 import TableRequester from "../../../gen/displays/requesters/TableRequester";
@@ -49,5 +50,5 @@ class Table extends AbstractTable {
 
 }
 
-export default withStyles(styles, { withTheme: true })(Table);
-DisplayFactory.register("Table", withStyles(styles, { withTheme: true })(Table));
+export default withStyles(styles, { withTheme: true })(withSnackbar(Table));
+DisplayFactory.register("Table", withStyles(styles, { withTheme: true })(withSnackbar(Table)));

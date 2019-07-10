@@ -19,7 +19,6 @@ public abstract class Soul implements DisplayRepository {
     private Consumer<String> redirectListener = null;
     protected final UISession session;
     protected User user;
-
     public Soul(UISession session) {
         this.session = session;
     }
