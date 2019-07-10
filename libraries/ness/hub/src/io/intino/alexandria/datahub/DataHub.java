@@ -16,6 +16,7 @@ import io.intino.alexandria.datalake.file.FileDatalake;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.sealing.FileSessionSealer;
 import io.intino.alexandria.sealing.SessionSealer;
+import org.apache.log4j.Level;
 
 import java.io.File;
 import java.util.Collections;
@@ -23,6 +24,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DataHub {
+	static {
+		io.intino.alexandria.logger4j.Logger.init(Level.WARN);
+	}
+
 	private final File brokerStage;
 	private final Configuration configuration;
 	private Datalake datalake;
