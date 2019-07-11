@@ -1,7 +1,5 @@
 package io.intino.test.schemas;
 
-import com.sun.tools.javah.Gen;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
