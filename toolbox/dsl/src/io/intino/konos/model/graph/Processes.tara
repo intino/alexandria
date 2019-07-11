@@ -1,3 +1,4 @@
 dsl Proteo
 
 Concept:Named Process
+	var resource bpmn

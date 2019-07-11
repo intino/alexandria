@@ -2,11 +2,11 @@ dsl Konos
 
 DataHub(workingDirectory = "") dataHub as Remote
 	BusConnection(busUrl = "{nessUrl}", user = "{nessUser}", password = "{nessPassword}", clientId = "amidas")
-	Tank(fullName = "authorizationRegister")authorizationRegister
-	Tank(fullName = "identityRegister")identityRegister
-	Tank("dayAheadReport") dayAheadReport
-	Tank("intradayReport") intradayReport
-	Tank("actualGeneration") actualGeneration
+	Tank(fullName = "authorizationRegister")authorizationRegister as Event(schema = empty)
+	Tank(fullName = "identityRegister")identityRegister as Event(schema = empty)
+	Tank("dayAheadReport") dayAheadReport as Event(schema = empty)
+	Tank("intradayReport") intradayReport as Event(schema = empty)
+	Tank("actualGeneration") actualGeneration as Event(schema = empty)
 
 	Mounter identityRegister as Realtime
 		Select(tank = identityRegister)
