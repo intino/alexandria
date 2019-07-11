@@ -128,7 +128,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	public FrameBuilder properties() {
 		FrameBuilder result = new FrameBuilder().add("properties").add(typeOf(element));
 		if (element.color() != null && !element.color().isEmpty()) result.add("color", element.color());
-		if (element.hiddenIfMobile() != null) result.add("hiddenIfMobile", true);
+		if (element.hidden() != null && element.hidden() != Component.Hidden.Never) result.add("hidden", element.hidden().name());
 		if (element.isOption()) result.add("name", element.asOption().name$());
 		if (element.i$(AbstractLabeled.class)) result.add("label", element.a$(AbstractLabeled.class).label());
 		if (element.i$(AbstractMultiple.class)) {

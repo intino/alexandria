@@ -9,7 +9,7 @@ use UI
 Concept:Named Component extends Display
 	var string color = empty
 	var Format[] format = empty
-	var boolean hiddenIfMobile = false
+	var word:{Never Always IfMobile IfNotMobile} hidden = Never
 
 Concept Block extends Component
 	var word[]:Layout layout = Vertical
