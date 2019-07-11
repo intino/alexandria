@@ -20,7 +20,7 @@ export default class Frame extends AbstractFrame {
 	};
 
 	render() {
-		return (<React.Fragment>{this.renderInstances()}</React.Fragment>);
+		return (<div style={this.style()}>{this.renderInstances()}</div>);
 	};
 
 }

@@ -1,11 +1,12 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
 import AbstractBlockConditional from "../../../gen/displays/components/AbstractBlockConditional";
 import BlockConditionalNotifier from "../../../gen/displays/notifiers/BlockConditionalNotifier";
 import BlockConditionalRequester from "../../../gen/displays/requesters/BlockConditionalRequester";
 import Block from "./Block";
 import BlockBehavior from "./behaviors/BlockBehavior";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import 'alexandria-ui-elements/res/styles/layout.css';
+import 'alexandria-ui-elements/res/styles/mobile.css';
 
 export default class BlockConditional extends AbstractBlockConditional {
 
@@ -30,9 +31,9 @@ export default class BlockConditional extends AbstractBlockConditional {
 	renderBlock = () => {
 		let styles = this.style();
 		if (this.props.style != null) this.applyStyles(this.props.style, styles);
-		const layout = BlockBehavior.className(this);
+		const classNames = BlockBehavior.classNames(this);
 		return (
-			<div style={styles} className={layout}>
+			<div style={styles} className={classNames}>
 				<Block style={this.style()}
 					   layout={this.props.layout}
 					   width={this.props.width}

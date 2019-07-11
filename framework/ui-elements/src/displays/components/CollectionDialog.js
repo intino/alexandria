@@ -41,7 +41,7 @@ class CollectionDialog extends AbstractCollectionDialog {
 		return (
 			<React.Fragment>
 				<div className={classes.search}>{this.renderInstances()}</div>
-				{this.props.children}
+				<div className="layout vertical flex" style={{height:'calc(100% - 40px)'}}>{this.props.children}</div>
 			</React.Fragment>
 		);
 	};

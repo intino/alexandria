@@ -32,6 +32,7 @@ public class BlockRenderer extends SizedRenderer<Block> {
 		addBadge(result);
 		addParallax(result);
 		addTransition(result);
+		if (element.hidden() != null && element.hidden() != Block.Hidden.Never) result.add("hidden", element.hidden().name());
 		if (element.isCollapsible()) result.add("collapsible", "true");
 		return result;
 	}
