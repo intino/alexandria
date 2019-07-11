@@ -9,6 +9,7 @@ use UI
 Concept:Named Component extends Display
 	var string color = empty
 	var Format[] format = empty
+	var word:{Never Always IfMobile IfNotMobile} hidden = Never
 
 Concept Block extends Component
 	var word[]:Layout layout = Vertical
@@ -39,7 +40,7 @@ Concept DataComponents
 		var string defaultValue = empty
 
 	Concept Number extends Component
-		var double value = -1
+		var double value = empty
 		var string prefix = empty
 		var string suffix = empty
 

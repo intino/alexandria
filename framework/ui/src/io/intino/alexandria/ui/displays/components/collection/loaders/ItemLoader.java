@@ -26,6 +26,11 @@ public class ItemLoader<DS extends Datasource<Item>, Item> {
 		this.itemCount = calculateItemCount(null);
 	}
 
+	public ItemLoader reload() {
+		this.itemCount = calculateItemCount(condition);
+		return this;
+	}
+
 	public ItemLoader filter(String grouping, List<String> groups) {
 		if (groups.size() <= 0) remove(grouping);
 		else {

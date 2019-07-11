@@ -6,6 +6,7 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 
 Template homeTemplate
 	Text aa as Editable(placeHolder="aaaaaaa") Password
+		hidden = IfMobile
 
 Template template1
 
