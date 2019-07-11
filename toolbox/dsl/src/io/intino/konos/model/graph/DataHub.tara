@@ -6,10 +6,12 @@ Concept:{0..1} DataHub
 	var string workingDirectory
 	Concept Split > var string[] splits
 	Concept:Named:RequiresFacet Tank > var string fullName
+	has Adapter
 	has Mounter
 	has Feeder
 
 Concept:Named Mounter is component
+Concept:Named Adapter is component
 
 Facet DataHubLocation on DataHub is abstract
 	sub Remote > has:{1..1} BusConnection

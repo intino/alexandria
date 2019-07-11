@@ -7,7 +7,8 @@ Artifact("io.intino.alexandria", "1.0.0") data-hub
 		Compile("io.intino.alexandria", "rest", "1.0.4")
 		Compile("io.intino.alexandria", "ingestion", "1.0.0")
 		Compile("io.intino.alexandria", "sealing", "1.0.0")
-		Compile("com.jcraft", "jsch", "0.1.55")
+		Compile("com.hierynomus", "sshj", "0.27.0")
+
 		Compile("org.apache.activemq", "activemq-broker", "5.15.2")
 		Compile("org.apache.activemq", "activemq-mqtt", "5.15.2")
 		Compile("org.apache.activemq", "activemq-kahadb-store", "5.15.2")

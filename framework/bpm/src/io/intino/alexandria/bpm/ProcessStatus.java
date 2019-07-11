@@ -16,6 +16,9 @@ public class ProcessStatus {
 	private static final String Status = "status";
 	private static final String Ts = "ts";
 	private static final String Id = "Id";
+	private static final String CallbackProcess = "callbackProcess";
+	private static final String CallbackState = "callbackState";
+	public static final String Owner = "owner";
 	private final Message message;
 
 	public ProcessStatus() {
@@ -30,20 +33,47 @@ public class ProcessStatus {
 				.set(Status, processStatus));
 	}
 
+	public ProcessStatus(String id, String name, String processStatus, String owner, String callbackProcess, String callbackState) {
+		this(new Message(ProcessStatusType)
+				.set(Ts, Instant.now().toString())
+				.set(Id, id)
+				.set(Name, name)
+				.set(Status, processStatus)
+				.set(Owner, owner)
+				.set(CallbackProcess, callbackProcess)
+				.set(CallbackState, callbackState));
+	}
+
 	public ProcessStatus(Message message) {
 		this.message = message;
 	}
 
-	public String processId(){
+	public String processId() {
 		return message.get(Id).data();
 	}
 
-	public String processName(){
+	public String owner() {
+		return message.contains(Owner) ? message.get(Owner).data() : null;
+	}
+
+	public String processName() {
 		return message.get(Name).data();
 	}
 
-	public String processStatus(){
+	public String processStatus() {
 		return message.get(Status).data();
+	}
+
+	public boolean hasCallback(){
+		return message.contains(CallbackProcess);
+	}
+
+	public String callbackProcess(){
+		return message.get(CallbackProcess).data();
+	}
+
+	public String callbackState(){
+		return message.get(CallbackState).data();
 	}
 
 	public boolean hasStateInfo() {
@@ -94,6 +124,10 @@ public class ProcessStatus {
 
 		public String status() {
 			return status;
+		}
+
+		public boolean isTerminated() {
+			return status.equals("Exit") || status.equals("Rejected") || status.equals("Skipped");
 		}
 	}
 

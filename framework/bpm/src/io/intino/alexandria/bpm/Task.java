@@ -17,5 +17,5 @@ public abstract class Task {
 		return type;
 	}
 
-	enum Type {Automatic, Manual}
+	enum Type {Automatic, Manual, CallActivity}
 }

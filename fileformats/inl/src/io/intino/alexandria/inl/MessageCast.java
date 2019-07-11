@@ -68,11 +68,14 @@ public class MessageCast {
 
 	private void setField(Field field, Object owner, Object value) throws IllegalAccessException {
 		field.setAccessible(true);
-		if (field.getType().isAssignableFrom(List.class))
+		if (isEnum(field))
+			field.set(owner, Enum.valueOf(field.getType().asSubclass(Enum.class), (String) value));
+		else if (isList(field))
 			field.set(owner, value instanceof List ? append((List) field.get(owner), (List) value) : append((List) field.get(owner), value));
-		else if (field.getType().isArray())
+		else if (isArray(field))
 			field.set(owner, append((Object[]) field.get(owner), (Object[]) value));
-		else field.set(owner, value);
+		else
+			field.set(owner, value);
 	}
 
 	private static Object append(Object[] current, Object[] value) {
@@ -135,14 +138,28 @@ public class MessageCast {
 	}
 
 	private Parser parserOf(Field field) {
-		return isList(field) ? listParserOf(field.getGenericType().toString()) : Parser.of(field.getType());
+		return isList(field) ?
+				parserOf(field.getGenericType().toString()) :
+				parserOf(isEnum(field) ? String.class : field.getType());
+	}
+
+	private boolean isEnum(Field field) {
+		return field.getType().isEnum();
+	}
+
+	private boolean isArray(Field field) {
+		return field.getType().isArray();
 	}
 
 	private boolean isList(Field field) {
 		return field.getType().isAssignableFrom(List.class);
 	}
 
-	private Parser listParserOf(final String name) {
+	private Parser parserOf(Class<?> type) {
+		return Parser.of(type);
+	}
+
+	private Parser parserOf(final String name) {
 		return new Parser() {
 			Parser parser = Parser.of(arrayClass());
 

@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,8 +24,8 @@ public class SessionHandler {
 	}
 
 	public SessionHandler(File root) {
-		root.mkdirs();
-		this.root = root;
+		this.root = new File(root, UUID.randomUUID().toString());
+		this.root.mkdirs();
 		this.sessions.addAll(loadFileSessions());
 	}
 
@@ -47,8 +48,9 @@ public class SessionHandler {
 	}
 
 	public void pushTo(File stageFolder) {
-		stageFolder.mkdirs();
-		sessions().forEach(s -> push(s, stageFolder));
+		File destination = new File(stageFolder, root.getName());
+		destination.mkdirs();
+		sessions().forEach(s -> push(s, destination));
 	}
 
 	public void clear() {
