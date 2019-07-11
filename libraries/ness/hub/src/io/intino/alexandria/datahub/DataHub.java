@@ -49,7 +49,7 @@ public class DataHub {
 
 	public void start() {
 		if (isService()) configureDatalake(((Service) configuration.dataSource()).path());
-		if (isLocal()) configureDatalake(((Local) configuration.dataSource()).path());
+		else if (isLocal()) configureDatalake(((Local) configuration.dataSource()).path());
 		else configureMirror((Mirror) configuration.dataSource());
 		if (configuration.broker() != null) configureBroker();
 	}
