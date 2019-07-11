@@ -6,8 +6,9 @@ import AbstractBlock from "../../../gen/displays/components/AbstractBlock";
 import BlockNotifier from "../../../gen/displays/notifiers/BlockNotifier";
 import BlockRequester from "../../../gen/displays/requesters/BlockRequester";
 import BlockBehavior from "./behaviors/BlockBehavior";
-import 'alexandria-ui-elements/res/styles/layout.css';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import 'alexandria-ui-elements/res/styles/layout.css';
+import 'alexandria-ui-elements/res/styles/mobile.css';
 
 export default class Block extends AbstractBlock {
 	state = {
@@ -45,11 +46,11 @@ export default class Block extends AbstractBlock {
 		let paper = this.props.paper;
 		let style = this.style();
 		let label = this.props.label;
-		const layout = BlockBehavior.className(this);
+		const classNames = BlockBehavior.classNames(this);
 
 		if (paper) {
 			return (
-				<Paper style={style} className={layout}>
+				<Paper style={style} className={classNames}>
 					{label != null && label !== "" ? <Typography style={{padding:"0 10px"}} variant={this.variant("h5")}>{label}</Typography> : undefined }
 					<div style={{padding:"0 10px 10px"}}>{this._renderChildren()}</div>
 				</Paper>
@@ -57,7 +58,7 @@ export default class Block extends AbstractBlock {
 		}
 
 		return (
-			<div style={style} className={layout}>
+			<div style={style} className={classNames}>
 				{label != null && label !== "" ? <Typography style={{padding:"0 0 5px"}} variant={this.variant("h5")}>{label}</Typography> : undefined }
 				{this._renderChildren()}
 			</div>
