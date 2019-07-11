@@ -23,6 +23,8 @@ public class MounterRenderer {
 	private final String packageName;
 	private final String boxName;
 	private final Map<String, String> classes;
+	private final File sourceMounters;
+	private File genMounters;
 
 	public MounterRenderer(KonosGraph graph, File gen, File src, String packageName, String boxName, Map<String, String> classes) {
 		this.mounters = graph.dataHub().mounterList();
@@ -31,30 +33,42 @@ public class MounterRenderer {
 		this.packageName = packageName;
 		this.boxName = boxName;
 		this.classes = classes;
+		this.sourceMounters = new File(src, "datahub/mounters");
+		this.genMounters = new File(gen, "datahub/mounters");
+
 	}
 
 	public void execute() {
+
 		for (Mounter mounter : mounters) {
+			final String mounterName = mounter.name$() + "Mounter";
 			final FrameBuilder builder = new FrameBuilder("mounter").
 					add("box", boxName).
 					add("package", packageName).
 					add("name", mounter.name$());
-			if (mounter.isPopulation()) {
-				populationMounter(builder, mounter.asPopulation());
-				classes.put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datahub.mounters." + (mounter.name$() + "Mounter"));
-				writeFrame(new File(gen, "datahub/mounters"), mounter.name$() + "Mounter", customize(new MounterTemplate()).render(builder.toFrame()));
-				writeFrame(new File(src, "datahub/mounters"), mounter.name$() + "MounterFunctions", customize(new MounterTemplate()).render(builder.add("src").toFrame()));
-			} else if (!mounter.isRealtime()) {
-				writeFrame(new File(src, "datahub/mounters"), mounter.name$() + "Mounter", customize(new MounterTemplate()).render(builder.add("batch").toFrame()));
-			} else {
-				realtimeMounter(builder, mounter);
-				final File destination = new File(src, "datahub/mounters");
-				final String mounterName = mounter.name$() + "Mounter";
-				classes.put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datahub.mounters." + mounterName);
-				if (!alreadyRendered(destination, mounterName))
-					writeFrame(destination, mounterName, customize(new MounterTemplate()).render(builder.toFrame()));
-			}
+			if (mounter.isPopulation()) populationMounter(mounter, mounterName, builder);
+			else if (mounter.isRealtime() && !alreadyRendered(sourceMounters, mounterName)) realtimeMounter(mounter, mounterName, builder);
+			else if (!mounter.isRealtime() && !alreadyRendered(sourceMounters, mounterName)) batchMounter(mounter, mounterName, builder);
 		}
+	}
+
+	private void realtimeMounter(Mounter mounter, String mounterName, FrameBuilder builder) {
+		realtimeMounter(builder, mounter);
+		classes.put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datahub.mounters." + mounterName);
+		writeFrame(sourceMounters, mounterName, customize(new MounterTemplate()).render(builder.toFrame()));
+	}
+
+	private void batchMounter(Mounter mounter, String mounterName, FrameBuilder builder) {
+		writeFrame(new File(src, "datahub/mounters"), mounterName, customize(new MounterTemplate()).render(builder.add("batch").toFrame()));
+		classes.put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datahub.mounters." + mounterName);
+	}
+
+	private void populationMounter(Mounter mounter, String mounterName, FrameBuilder builder) {
+		populationMounter(builder, mounter.asPopulation());
+		classes.put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datahub.mounters." + mounterName);
+		writeFrame(genMounters, mounter.name$() + "Mounter", customize(new MounterTemplate()).render(builder.toFrame()));
+		if (!alreadyRendered(sourceMounters, mounter.name$() + "MounterFunctions"))
+			writeFrame(sourceMounters, mounter.name$() + "MounterFunctions", customize(new MounterTemplate()).render(builder.add("src").toFrame()));
 	}
 
 	private void populationMounter(FrameBuilder builder, PopulationMounter mounter) {

@@ -2,7 +2,7 @@ dsl Konos
 
 DataHub datahub as Mirrored
 	workingDirectory = "{datahub_path}"
-	originUrl = "{datalake_origin}"
+	originSshUrl = "{datalake_origin}"
 	originDatalakePath = "{datalake_origin_path}"
 	user = "asemed"
 	destinationPath = "{datalake_path}"

@@ -17,7 +17,7 @@ public class BpmWithInclusiveFork {
 
 	@Test
 	public void name() throws InterruptedException {
-		MessageHub messageHub = messageHub();
+		MessageHub messageHub = new MessageHub_();
 		Workflow workflow = new Workflow(messageHub, new ProcessFactory());
 		messageHub.sendMessage("ProcessStatus", createProcessMessage());
 		Process process = workflow.process("1");
@@ -41,22 +41,6 @@ public class BpmWithInclusiveFork {
 				.set("id", "1")
 				.set("name", "StringContentReviewer")
 				.set("status", "Enter");
-	}
-
-	private MessageHub messageHub() {
-		return new MessageHub() {
-			private List<OnMessageReceived> listeners = new ArrayList<>();
-
-			@Override
-			public void sendMessage(String channel, Message message) {
-				new Thread(() -> listeners.forEach(l -> l.process(message))).start();
-			}
-
-			@Override
-			public void registerListener(String channel, OnMessageReceived onMessageReceived) {
-				listeners.add(onMessageReceived);
-			}
-		};
 	}
 
 	static class JoinTwoBranches extends Process {

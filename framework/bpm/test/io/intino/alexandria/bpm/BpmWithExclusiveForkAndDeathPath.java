@@ -6,48 +6,30 @@ import org.junit.Test;
 import java.util.List;
 
 import static io.intino.alexandria.bpm.Link.Type.Exclusive;
+import static io.intino.alexandria.bpm.Link.Type.Inclusive;
 import static io.intino.alexandria.bpm.State.Type.Initial;
 import static io.intino.alexandria.bpm.State.Type.Terminal;
 import static io.intino.alexandria.bpm.Task.Type.Automatic;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class BpmWithExclusiveFork {
+public class BpmWithExclusiveForkAndDeathPath {
 
 	@Test
 	public void name() throws InterruptedException {
-		MessageHub messageHub = new MessageHub_();
-		Workflow workflow = new Workflow(messageHub, (id, name) -> new StringContentReviewerProcess(id));
+		MessageHub_ messageHub = new MessageHub_();
+		Workflow workflow = new Workflow(messageHub, new ProcessFactory());
 		messageHub.sendMessage("ProcessStatus", createProcessMessage());
-		Process process = waitForProcess(workflow);
-		List<ProcessStatus> messages = process.messages();
-		assertThat(messages.get(0).processStatus(), is("Enter"));
-		assertThat(messages.get(1).stateInfo().name(), is("CreateString"));
-		assertThat(messages.get(1).stateInfo().status(), is("Enter"));
-		assertThat(messages.get(2).stateInfo().name(), is("CreateString"));
-		assertThat(messages.get(2).stateInfo().status(), is("Exit"));
-		assertThat(messages.get(3).stateInfo().name(), is("CheckContainsHello"));
-		assertThat(messages.get(3).stateInfo().status(), is("Enter"));
-		assertThat(messages.get(4).stateInfo().name(), is("CheckContainsHello"));
-		assertThat(messages.get(4).stateInfo().status(), is("Exit"));
-		if(process.exitStateStatus("CreateString").taskInfo().result().equals("Hello")){
-			assertThat(process.exitStateStatus("ProcessHello").taskInfo().result(), is("Processing hello"));
-			assertThat(process.exitStateStatus("ProcessGoodbye").stateInfo().status(), is("Rejected"));
-		}
-		else{
-			assertThat(process.exitStateStatus("ProcessGoodbye").taskInfo().result(), is("Processing goodbye"));
-			assertThat(process.exitStateStatus("ProcessHello").stateInfo().status(), is("Rejected"));
-		}
-	}
-
-	public Process waitForProcess(Workflow workflow) throws InterruptedException {
 		Process process = workflow.process("1");
 		while (!hasEnded(process)) {
 			if (process == null) process = workflow.process("1");
 			Thread.sleep(100);
 		}
-		Thread.sleep(100);
-		return process;
+		List<ProcessStatus> messages = process.messages();
+		messages.stream().forEach(m -> {
+			System.out.println(m.message().toString().replace("\n", "\t"));
+		});
+		assertThat(messages.get(0).message().toString(), is(createProcessMessage().toString()));
 	}
 
 	private boolean hasEnded(Process... processes) {
@@ -59,20 +41,31 @@ public class BpmWithExclusiveFork {
 	}
 
 	private Message createProcessMessage() {
-		return new ProcessStatus("1", "StringContentReviewer", "Enter").message();
+		return new Message("ProcessStatus")
+				.set("ts", "2019-01-01T00:00:00Z")
+				.set("id", "1")
+				.set("name", "StringContentReviewer")
+				.set("status", "Enter");
 	}
 
 	static class StringContentReviewerProcess extends Process {
 
-		StringContentReviewerProcess(String id) {
+		protected StringContentReviewerProcess(String id) {
 			super(id);
 			addState(new State("CreateString", createString(), Initial));
 			addState(new State("CheckContainsHello", checkContainsHelloTask()));
-			addState(new State("ProcessHello", processHello(), Terminal));
-			addState(new State("ProcessGoodbye", processGoodbye(), Terminal));
+			addState(new State("ProcessHello", processHello()));
+			addState(new State("ProcessHello2", processHello2()));
+			addState(new State("ProcessGoodbye", processGoodbye()));
+			addState(new State("ProcessGoodbye2", processGoodbye2()));
+			addState(new State("Terminate", terminate(), Terminal));
 			addLink(new Link("CreateString", "CheckContainsHello", Exclusive));
 			addLink(new Link("CheckContainsHello", "ProcessHello", Exclusive));
 			addLink(new Link("CheckContainsHello", "ProcessGoodbye", Exclusive));
+			addLink(new Link("ProcessHello", "ProcessHello2", Inclusive));
+			addLink(new Link("ProcessGoodbye", "ProcessGoodbye2", Inclusive));
+			addLink(new Link("ProcessHello2", "Terminate", Inclusive));
+			addLink(new Link("ProcessGoodbye2", "Terminate", Inclusive));
 		}
 
 		private Task createString() {
@@ -111,6 +104,16 @@ public class BpmWithExclusiveFork {
 			};
 		}
 
+		private Task processHello2() {
+			return new Task(Automatic) {
+
+				@Override
+				String execute() {
+					return "Processing hello2";
+				}
+			};
+		}
+
 		private Task processGoodbye() {
 			return new Task(Automatic) {
 
@@ -121,9 +124,38 @@ public class BpmWithExclusiveFork {
 			};
 		}
 
+		private Task terminate() {
+			return new Task(Automatic) {
+
+				@Override
+				String execute() {
+					return exitStateStatus("ProcessHello2").stateInfo().status().equals("Exit") ? "hello2" :
+							exitStateStatus("ProcessGoodbye2").stateInfo().status().equals("Exit") ? "bye2" : "none";
+				}
+			};
+		}
+
+		private Task processGoodbye2() {
+			return new Task(Automatic) {
+
+				@Override
+				String execute() {
+					return "Processing goodbye2";
+				}
+			};
+		}
+
 		@Override
 		public String name() {
 			return "StringContentReviewer";
+		}
+	}
+
+	public static class ProcessFactory implements io.intino.alexandria.bpm.ProcessFactory {
+
+		@Override
+		public Process createProcess(String id, String name) {
+			return new StringContentReviewerProcess(id);
 		}
 	}
 

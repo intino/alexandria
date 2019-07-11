@@ -25,8 +25,8 @@ public class EventSessionManager {
 				.parallel().forEach(e -> new Sealer(eventStoreFolder, tempFolder).seal(e.getKey(), e.getValue()));
 	}
 
-	private static Stream<File> eventSessions(File eventStageFolder) {
-		return FS.filesIn(eventStageFolder, f -> f.getName().endsWith(Session.EventSessionExtension) && f.length() > 0f);
+	private static Stream<File> eventSessions(File stage) {
+		return FS.allFilesIn(stage, f -> f.getName().endsWith(Session.EventSessionExtension) && f.length() > 0f);
 	}
 
 	private static ZimReader reader(File zimFile) {

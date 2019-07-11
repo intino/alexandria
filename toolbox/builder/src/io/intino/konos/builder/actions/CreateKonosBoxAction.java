@@ -86,7 +86,8 @@ public class CreateKonosBoxAction extends KonosAction {
 			@Override
 			public void run(@NotNull ProgressIndicator progressIndicator) {
 				final KonosGraph konosGraph = new KonosGenerator(module).generate(getSrcRoot(module), getGenRoot(module), getResRoot(module));
-				if (konosGraph != null) updateDependencies(module, requiredDependencies(konosGraph));
+				if (konosGraph != null)
+					ApplicationManager.getApplication().invokeLater(() -> updateDependencies(module, requiredDependencies(konosGraph)));
 			}
 		});
 	}

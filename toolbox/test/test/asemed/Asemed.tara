@@ -132,6 +132,7 @@ DataHub datahub as StandAlone
 
 	Mounter ajustes as Realtime
 		Select(ajuste)
+	Mounter ajustes2
 
 	Mounter criterios as Realtime
 		Select(criterio)
