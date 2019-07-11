@@ -39,7 +39,6 @@ public class AdapterRenderer {
 			if (!alreadyRendered(directory, adapterName))
 				writeFrame(directory, adapterName, customize(new AdapterTemplate()).render(builder.toFrame()));
 		}
-
 	}
 
 	private boolean alreadyRendered(File destination, String action) {

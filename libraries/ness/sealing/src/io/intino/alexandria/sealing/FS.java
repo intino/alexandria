@@ -23,18 +23,18 @@ public class FS {
 	}
 
 	public static Stream<File> foldersIn(File folder) {
-		return Arrays.stream(new FS(folder).foldersIn(File::isDirectory, Sort.Normal));
+		return Arrays.stream(new FS(folder).filesIn(File::isDirectory, Sort.Normal));
 	}
 
 	public static Stream<File> foldersIn(File folder, Sort sort) {
-		return Arrays.stream(new FS(folder).foldersIn(File::isDirectory, sort));
+		return Arrays.stream(new FS(folder).filesIn(File::isDirectory, sort));
 	}
 
 	public static Stream<File> filesIn(File folder, FileFilter filter) {
-		return Arrays.stream(new FS(folder).foldersIn(filter, Sort.Normal));
+		return Arrays.stream(new FS(folder).filesIn(filter, Sort.Normal));
 	}
 
-	private File[] foldersIn(FileFilter filter, Sort sort) {
+	private File[] filesIn(FileFilter filter, Sort sort) {
 		File[] files = root.listFiles(filter);
 		files = files == null ? new File[0] : files;
 		Arrays.sort(files, sort.comparator);
