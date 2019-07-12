@@ -87,33 +87,36 @@ public class AbstractBoxRenderer {
 		if (dataHub.isStandAlone()) {
 			StandAloneDataHub service = dataHub.asStandAlone();
 			if (service.broker() != null) addBroker(dataHubFrame, service.broker());
-			FrameBuilder frame = new FrameBuilder("service").add("path", parameter(service.path())).add("scale", service.scale());
+			FrameBuilder frame = new FrameBuilder("service").add("path", parameter(service.datalakePath())).add("scale", service.scale());
 			if (service.seal() != null) frame.add("sealing", service.seal().when());
 			dataHubFrame.add("datasource", frame);
-		} else if (dataHub.isMirrored()) {
-			MirroredDataHub mirrored = dataHub.asMirrored();
-			if (mirrored.broker() != null) addBroker(dataHubFrame, mirrored.broker());
-			if (mirrored.busConnection() != null) busConnection(mirrored.busConnection());
-			FrameBuilder mirror = new FrameBuilder("mirror").
-					add("originUrl", parameter(mirrored.originSshUrl())).
-					add("originPath", parameter(mirrored.originDatalakePath())).
-					add("startingTimetag", mirrored.startingTimetag()).
-					add("user", parameter(mirrored.user())).
-					add("password", mirrored.password() == null ? "" : parameter(mirrored.password())).
-					add("destinationPath", parameter(mirrored.destinationPath()));
-			if (mirrored.busConnection() != null) mirror.add("realtime", busConnection(mirrored.busConnection()));
-			dataHubFrame.add("datasource", mirror);
-		} else if (dataHub.isRemote()) {
-			BusConnection remote = dataHub.asRemote().busConnection();
-			dataHubFrame.add("datasource", new FrameBuilder("remote").add("realtime", busConnection(remote)));
-		} else if (dataHub.isLocal()) {
-			dataHubFrame.add("datasource", new FrameBuilder("local").add("path", parameter(dataHub.asLocal().path())));
-		}
+		} else if (dataHub.isMirrored()) mirroredDataSource(dataHub, dataHubFrame);
+		else if (dataHub.isRemote()) remoteDataSource(dataHub, dataHubFrame);
+		else if (dataHub.isLocal())
+			dataHubFrame.add("datasource", new FrameBuilder("local").add("path", parameter(dataHub.asLocal().datalakePath())));
 		Frame[] feederFrames = graph.dataHub().feederList().stream().filter(f -> !f.sensorList().isEmpty()).map(this::frameOf).toArray(Frame[]::new);
 		if (feederFrames.length != 0) dataHubFrame.add("feeder", feederFrames);
-//		if (!graph.procedureList().isEmpty())
-//			dataHubFrame.add("procedure", new FrameBuilder().add("package", packageName).add("configuration", name).toFrame()); //TODO
 		builder.add("dataHub", dataHubFrame.toFrame());
+	}
+
+	private void remoteDataSource(DataHub dataHub, FrameBuilder dataHubFrame) {
+		BusConnection remote = dataHub.asRemote().busConnection();
+		dataHubFrame.add("datasource", new FrameBuilder("remote").add("realtime", busConnection(remote)));
+	}
+
+	private void mirroredDataSource(DataHub dataHub, FrameBuilder dataHubFrame) {
+		MirroredDataHub mirrored = dataHub.asMirrored();
+		if (mirrored.broker() != null) addBroker(dataHubFrame, mirrored.broker());
+		if (mirrored.busConnection() != null) busConnection(mirrored.busConnection());
+		FrameBuilder mirror = new FrameBuilder("mirror").
+				add("originUrl", parameter(mirrored.originSshUrl())).
+				add("originPath", parameter(mirrored.originDatalakePath())).
+				add("startingTimetag", mirrored.startingTimetag()).
+				add("user", parameter(mirrored.user())).
+				add("password", mirrored.password() == null ? "" : parameter(mirrored.password())).
+				add("destinationPath", parameter(mirrored.destinationPath()));
+		if (mirrored.busConnection() != null) mirror.add("realtime", busConnection(mirrored.busConnection()));
+		dataHubFrame.add("datasource", mirror);
 	}
 
 	private Frame frameOf(DataHub.Split split) {

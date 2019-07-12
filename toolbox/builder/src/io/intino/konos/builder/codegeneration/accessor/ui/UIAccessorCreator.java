@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.accessor.ui;
 
 import com.intellij.ide.highlighter.ModuleFileType;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -51,14 +52,13 @@ public class UIAccessorCreator {
 	}
 
 	private Module getOrCreateModule(UIService service) {
-		return ApplicationManager.getApplication().runWriteAction((Computable<Module>) () -> {
+		Module m = findModule(service.name$());
+		Application application = ApplicationManager.getApplication();
+		application.invokeAndWait(() -> application.runWriteAction(() -> {
+			if (m != null) {
+				addModuleDependency(m);
+			}
 			final ModuleManager manager = ModuleManager.getInstance(project);
-			Module[] modules = manager.getModules();
-			for (Module m : modules)
-				if (m.getName().equals(toSnakeCase(service.name$()))) {
-					addModuleDependency(m);
-					return m;
-				}
 			Module webModule = manager.newModule(modulePath(service), WebModuleType.WEB_MODULE);
 			final ModifiableRootModel model = ModuleRootManager.getInstance(webModule).getModifiableModel();
 			final File parent = new File(webModule.getModuleFilePath()).getParentFile();
@@ -68,11 +68,23 @@ public class UIAccessorCreator {
 			addExcludeFiles(parent, contentEntry);
 			model.commit();
 			addModuleDependency(webModule);
-			return webModule;
+		}));
+		return findModule(service.name$());
+	}
+
+	private Module findModule(String name) {
+		return ApplicationManager.getApplication().runReadAction((Computable<Module>) () -> {
+			final ModuleManager manager = ModuleManager.getInstance(project);
+			Module[] modules = manager.getModules();
+			for (Module m : modules)
+				if (m.getName().equals(toSnakeCase(name))) {
+					return m;
+				}
+			return null;
 		});
 	}
 
-	private void addExcludeFiles(File parent, ContentEntry contentEntry)  {
+	private void addExcludeFiles(File parent, ContentEntry contentEntry) {
 		final File lib = new File(parent, "lib");
 		lib.mkdirs();
 		contentEntry.addExcludeFolder(Objects.requireNonNull(VfsUtil.findFileByIoFile(lib, true)));

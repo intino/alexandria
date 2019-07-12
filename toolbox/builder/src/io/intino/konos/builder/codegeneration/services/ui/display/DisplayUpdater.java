@@ -1,7 +1,9 @@
 package io.intino.konos.builder.codegeneration.services.ui.display;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.psi.*;
 import io.intino.konos.builder.codegeneration.Formatters;
@@ -19,20 +21,23 @@ public class DisplayUpdater {
 	private Project project;
 	private Display display;
 	private String packageName;
+	private Application application = ApplicationManager.getApplication();
+
 
 	DisplayUpdater(Project project, Display display, File file, String packageName) {
 		this.project = project;
 		this.factory = JavaPsiFacade.getElementFactory(project);
 		this.display = display;
 		this.packageName = packageName;
-		this.file = PsiManager.getInstance(project).findFile(Objects.requireNonNull(VfsUtil.findFileByIoFile(file, true)));
+		this.file = application.runReadAction((Computable<PsiFile>) () -> PsiManager.getInstance(project).findFile(Objects.requireNonNull(VfsUtil.findFileByIoFile(file, true))));
 	}
 
 	public void update() {
-		if (!(file instanceof PsiJavaFile) || ((PsiJavaFile) file).getClasses()[0] == null) return;
-		PsiJavaFile javaFile = (PsiJavaFile) file;
-		final PsiClass psiClass = javaFile.getClasses()[0];
-		if (!ApplicationManager.getApplication().isWriteAccessAllowed())
+		PsiClass psiClass = application.runReadAction((Computable<PsiClass>) () -> {
+			if (!(file instanceof PsiJavaFile) || ((PsiJavaFile) file).getClasses()[0] == null) return null;
+			return ((PsiJavaFile) file).getClasses()[0];
+		});
+		if (!application.isWriteAccessAllowed())
 			runWriteCommandAction(project, () -> update(psiClass));
 		else update(psiClass);
 	}
