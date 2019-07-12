@@ -8,7 +8,7 @@ import java.net.URL;
 
 public class Image<DN extends ImageNotifier, B extends Box> extends AbstractImage<DN, B> {
 	private URL value;
-	private URL defaultPicture = null;
+	private URL defaultValue = null;
 
     public Image(B box) {
         super(box);
@@ -23,8 +23,8 @@ public class Image<DN extends ImageNotifier, B extends Box> extends AbstractImag
     	return this;
 	}
 
-	public Image defaultValue(URL defaultPicture) {
-    	this.defaultPicture = defaultPicture;
+	public Image defaultValue(URL defaultValue) {
+    	this.defaultValue = defaultValue;
     	return this;
 	}
 
@@ -36,8 +36,8 @@ public class Image<DN extends ImageNotifier, B extends Box> extends AbstractImag
     @Override
 	String serializedValue() {
 		String result = null;
-		if (defaultPicture != null) result = Asset.toResource(baseAssetUrl(), defaultPicture).toUrl().toString();
-		else if (value != null) result = Asset.toResource(baseAssetUrl(), value).toUrl().toString();
+		if (value != null) result = Asset.toResource(baseAssetUrl(), value).toUrl().toString();
+		else if (defaultValue != null) result = Asset.toResource(baseAssetUrl(), defaultValue).toUrl().toString();
 		return result;
 	}
 }

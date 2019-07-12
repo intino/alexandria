@@ -12,7 +12,7 @@ Template(layout=Vertical, spacing=DP8) imageExamplesMold as Decorated
 				Block > Text image1Code as Code(language=Html)
 						value
 							=========
-							Image(default\="images/image.jpg", format\=widgetDemo) image1 as Absolute(width\=300px, height\=150px)
+							Image(defaultValue\="images/image.jpg", format\=widgetDemo) image1 as Absolute(width\=300px, height\=150px)
 							=========
 
 		Block as Relative(width=32%, height=100%)
@@ -23,4 +23,14 @@ Template(layout=Vertical, spacing=DP8) imageExamplesMold as Decorated
 						value
 							=========
 							Image image2 as Avatar("Intino avatar", format\=widgetDemo, color\="#3F52B5") Absolute(width\=75px, height\=75px)
+							=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Editable facet")
+			Block(spacing=DP8, format=filled)
+				Image(defaultValue="images/image.jpg") image3 as Editable(format=widgetDemo) Absolute(width=200px, height=200px)
+				Block > Text image3Code as Code(language=Html)
+						value
+							=========
+							Image(defaultValue\="images/image.jpg") image3 as Editable(format\=widgetDemo) Absolute(width\=200px, height\=200px)
 							=========
