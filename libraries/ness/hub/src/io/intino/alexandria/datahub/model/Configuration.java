@@ -120,6 +120,20 @@ public class Configuration {
 		}
 	}
 
+	public static class Remote extends DataSource {
+		private final Realtime realtime;
+		private String path;
+
+		public Remote(Realtime realtime) {
+			this.realtime = realtime;
+		}
+
+		public Realtime realtime() {
+			return realtime;
+		}
+	}
+
+
 	public static class Service extends DataSource {
 		private String path;
 		private Scale scale;

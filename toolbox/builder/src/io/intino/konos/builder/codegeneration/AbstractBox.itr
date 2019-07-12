@@ -4,9 +4,9 @@ def type(box)
 	import java.util.LinkedHashMap;
 	import java.util.Map;
 	import java.util.UUID;
-	[$hasUi
+	[
 	import java.util.HashMap;
-    import java.util.Map;]
+    import java.util.Map;$hasUi+hideUi]
 
 	import io.intino.alexandria.logger.Logger;
 	import java.util.logging.ConsoleHandler;
@@ -14,17 +14,17 @@ def type(box)
 
 	[$datahub+import]
 	[import io.intino.alexandria.rest.AlexandriaSpark;$hasREST]
-    [import io.intino.alexandria.ui.displays.Soul;$hasUi+hide]
+    [import io.intino.alexandria.ui.displays.Soul;$hasUi+hideUi]
 
 	public abstract class AbstractBox extends [$hasUi+uiBox?io.intino.alexandria.core.Box] {
 		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;
 		[$service+field...[$NL]]
 		[$dataHub+field]
 		[$task+field]
-        [protected Map<String, Soul> uiSouls = new java.util.HashMap<>();$hasUi+hide]
-	    [private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();$hasUi+hide]
-		[private io.intino.alexandria.ui.services.AuthService authService;$hasUi+hide]
-		[private io.intino.alexandria.ui.services.EditorService editorService;$hasUi+hide]
+        [protected Map<String, Soul> uiSouls = new java.util.HashMap<>();$hasUi+hideUi]
+	    [private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();$hasUi+hideUi]
+		[private io.intino.alexandria.ui.services.AuthService authService;$hasUi+hideUi]
+		[private io.intino.alexandria.ui.services.EditorService editorService;$hasUi+hideUi]
 
 		public AbstractBox(String$[] args) {
 			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
@@ -153,6 +153,11 @@ def type(datahub) trigger(setup)
 		[$tanks]));
 end
 
+
+def type(remote) trigger(datasource)
+	new io.intino.alexandria.datahub.model.Configuration.Remote([$realtime?null])
+end
+
 def type(service) trigger(datasource)
 	new io.intino.alexandria.datahub.model.Configuration.Service($path+parameter, [$scale?io.intino.alexandria.Scale.Day], [$sealing?null], [$realtime?null])
 end
@@ -226,7 +231,7 @@ def type(service & ui) trigger(ui)
 end
 
 def trigger(use)
-	$value.initDisplays(sparkInstance);
+	$this.initDisplays(sparkInstance);
 end
 
 def type(service & jms) trigger(init)
@@ -423,5 +428,9 @@ end
 
 def trigger(hide)
 
+end
+
+def trigger(hideUi)
+	;
 end
 

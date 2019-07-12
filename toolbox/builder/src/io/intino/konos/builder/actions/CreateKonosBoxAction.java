@@ -82,7 +82,7 @@ public class CreateKonosBoxAction extends KonosAction {
 		if (noProject(e, project) || module == null) return;
 		project.save();
 		FileDocumentManager.getInstance().saveAllDocuments();
-		this.withTask(new Task.Backgroundable(project, module.getName() + "Generating box...", false, PerformInBackgroundOption.ALWAYS_BACKGROUND) {
+		this.withTask(new Task.Backgroundable(project, module.getName() + ": Generating box...", false, PerformInBackgroundOption.ALWAYS_BACKGROUND) {
 			@Override
 			public void run(@NotNull ProgressIndicator progressIndicator) {
 				final KonosGraph konosGraph = new KonosGenerator(module).generate(getSrcRoot(module), getGenRoot(module), getResRoot(module));
