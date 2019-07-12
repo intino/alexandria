@@ -23,7 +23,7 @@ class FileStage implements Stage {
 
 	public void clear() {
 		FS.allFilesIn(stageFolder, File::isFile).forEach(f -> f.renameTo(new File(f.getAbsolutePath() + ".treated")));
-		FS.foldersIn(stageFolder).forEach(f -> f.renameTo(new File(f.getParentFile().getAbsolutePath() + File.separator + "treated." + f.getName())));
+		FS.foldersIn(stageFolder).filter(f -> !f.getName().equals("temp")).forEach(f -> f.renameTo(new File(f.getParentFile().getAbsolutePath() + File.separator + "treated." + f.getName())));
 	}
 
 	private void push(Session session, File stageFolder) {

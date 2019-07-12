@@ -41,8 +41,8 @@ public class EventSessionManager_ {
 		ZimReader reader = new ZimReader(new File("temp/datalake/events/tank1/2019022816.zim"));
 		for (int i = 0; i < 30; i++) {
 			Message next = reader.next();
-			assertEquals(next.get("ts"), messageList.get(i).get("ts"));
-			assertEquals(next.get("entries"), messageList.get(i).get("entries"));
+			assertEquals(next.get("ts").data(), messageList.get(i).get("ts").data());
+			assertEquals(next.get("entries").data(), messageList.get(i).get("entries").data());
 		}
 	}
 
