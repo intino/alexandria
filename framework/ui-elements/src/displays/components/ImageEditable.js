@@ -56,7 +56,7 @@ class ImageEditable extends AbstractImageEditable {
 		const inputId = this.props.id + "-image-input";
 		return (
 			<div style={this.style()}>
-				<img className={classes.image} title={this.props.label} src={this.state.value} />
+				{this.state.value && <img className={classes.image} title={this.props.label} src={this.state.value} />}
 				<label htmlFor={inputId} className={classes.overlay}>
 					<AddAPhoto className={classes.icon} />
 				</label>
