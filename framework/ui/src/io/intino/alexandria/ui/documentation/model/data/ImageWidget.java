@@ -14,7 +14,7 @@ public class ImageWidget extends BaseWidget {
 
 	public ImageWidget() {
 		super("This widget allows preview images or create avatars from text.");
-		facets(asList("Avatar", "Absolute", "Relative"));
+		facets(asList("Avatar", "Absolute", "Relative", "Editable"));
 	}
 
 	protected void addProperties() {
