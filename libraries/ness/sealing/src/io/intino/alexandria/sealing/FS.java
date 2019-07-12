@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -34,14 +33,6 @@ public class FS {
 		return Arrays.stream(new FS(folder).filesIn(filter, Sort.Normal));
 	}
 
-	private File[] filesIn(FileFilter filter, Sort sort) {
-		File[] files = root.listFiles(filter);
-		files = files == null ? new File[0] : files;
-		Arrays.sort(files, sort.comparator);
-		return files;
-	}
-
-
 	public static void copyInto(File destination, InputStream inputStream) {
 		try {
 			Files.copy(inputStream, destination.toPath());
@@ -57,13 +48,18 @@ public class FS {
 
 	private static List<File> allFilesIn(Path path, FileFilter filter) {
 		List<File> files = new ArrayList<>();
-		try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
-			for (Path entry : stream)
-				if (Files.isDirectory(entry) && filter.accept(entry.toFile())) files.addAll(allFilesIn(entry, filter));
-				else if (filter.accept(entry.toFile())) files.add(entry.toFile());
+		try (Stream<Path> paths = Files.walk(path)) {
+			paths.filter(p -> Files.isRegularFile(p) && filter.accept(p.toFile())).forEach(p -> files.add(p.toFile()));
 		} catch (IOException e) {
 			Logger.error(e);
 		}
+		return files;
+	}
+
+	private File[] filesIn(FileFilter filter, Sort sort) {
+		File[] files = root.listFiles(filter);
+		files = files == null ? new File[0] : files;
+		Arrays.sort(files, sort.comparator);
 		return files;
 	}
 
