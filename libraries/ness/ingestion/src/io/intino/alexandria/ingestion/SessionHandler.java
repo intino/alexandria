@@ -5,11 +5,8 @@ import io.intino.alexandria.logger.Logger;
 
 import java.io.*;
 import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,7 +21,7 @@ public class SessionHandler {
 	}
 
 	public SessionHandler(File root) {
-		this.root = new File(root, UUID.randomUUID().toString());
+		this.root = root;
 		this.root.mkdirs();
 		this.sessions.addAll(loadFileSessions());
 	}
@@ -84,15 +81,7 @@ public class SessionHandler {
 	}
 
 	private Stream<File> sessionFiles() {
-		try {
-			if (this.root == null) return Stream.empty();
-			return Files.walk(root.toPath())
-					.filter(path -> Files.isRegularFile(path) && path.toFile().getName().endsWith(Session.SessionExtension))
-					.map(Path::toFile);
-		} catch (IOException e) {
-			Logger.error(e);
-			return Stream.empty();
-		}
+		return this.root == null ? Stream.empty() : FS.allFilesIn(root, path -> path.getName().endsWith(Session.SessionExtension));
 	}
 
 	private String name(File f) {

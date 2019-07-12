@@ -1,6 +1,7 @@
 package io.intino.alexandria.sealing;
 
 import io.intino.alexandria.Session;
+import io.intino.alexandria.datalake.file.FS;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.*;

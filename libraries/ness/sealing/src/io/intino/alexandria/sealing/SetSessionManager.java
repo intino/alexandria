@@ -2,6 +2,7 @@ package io.intino.alexandria.sealing;
 
 import io.intino.alexandria.Fingerprint;
 import io.intino.alexandria.Session;
+import io.intino.alexandria.datalake.file.FS;
 import io.intino.alexandria.datalake.file.FileSetStore;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.triplestore.FileTripleStore;
