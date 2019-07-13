@@ -155,11 +155,11 @@ end
 
 
 def type(remote) trigger(datasource)
-	new io.intino.alexandria.datahub.model.Configuration.Remote([$realtime?null])
+	new io.intino.alexandria.datahub.model.Configuration.Remote($messageHub)
 end
 
-def type(service) trigger(datasource)
-	new io.intino.alexandria.datahub.model.Configuration.Service($path+parameter, [$scale?io.intino.alexandria.Scale.Day], [$sealing?null], [$realtime?null])
+def type(standalone) trigger(datasource)
+	new io.intino.alexandria.datahub.model.Configuration.StandAlone($path+parameter, [$scale?io.intino.alexandria.Scale.Day], [$sealing?null])
 end
 
 def type(local) trigger(datasource)
@@ -167,7 +167,7 @@ def type(local) trigger(datasource)
 end
 
 def type(mirror) trigger(datasource)
-	new io.intino.alexandria.datahub.model.Configuration.Mirror($originUrl+parameter, $originPath+parameter, $destinationPath+parameter, "$startingTimetag", $user+parameter, $password+parameter,[$realtime?null])
+	new io.intino.alexandria.datahub.model.Configuration.Mirror($originUrl+parameter, $originPath+parameter, $destinationPath+parameter, "$startingTimetag", $user+parameter, $password+parameter,[$messageHub?null])
 end
 
 def trigger(broker)
@@ -192,8 +192,8 @@ def trigger(user)
 	new io.intino.alexandria.datahub.model.Broker.User($name+parameter, $password+parameter)
 end
 
-def trigger(realtime)
-	new io.intino.alexandria.datahub.model.Configuration.Realtime($brokerUrl+parameter, $user+parameter, $password+parameter, $clientId+parameter)
+def trigger(messageHub)
+	new $package.datahub.MessageHub(this);
 end
 
 def trigger(pipe)

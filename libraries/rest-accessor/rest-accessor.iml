@@ -13,7 +13,7 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.0.0" level="project" />
     <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.8.0" level="project" />
     <orderEntry type="module" module-name="logger" />
-    <orderEntry type="module" module-name="inl" />
+    <orderEntry type="module" module-name="message" />
     <orderEntry type="library" name="Intino: org.bouncycastle:bcmail-jdk15:1.45" level="project" />
     <orderEntry type="library" name="Intino: org.bouncycastle:bcprov-jdk15:1.45" level="project" />
     <orderEntry type="library" name="Intino: org.apache.httpcomponents:httpcore:4.4.4" level="project" />

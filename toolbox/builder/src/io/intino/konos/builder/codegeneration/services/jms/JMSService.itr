@@ -4,8 +4,7 @@ def type(jms)
 
 	import $package.requests.*;
 	import io.intino.alexandria.core.Box;
-	import io.intino.alexandria.jms.$model~Consumer;
-	import io.intino.alexandria.jms.$model~Producer;
+	import io.intino.alexandria.jms.*;
 
 	import javax.jms.BytesMessage;
 	import javax.jms.JMSException;
@@ -17,9 +16,11 @@ def type(jms)
 	import java.io.InputStream;
 
 
-	public class $name+firstUpperCase~Service extends io.intino.alexandria.jms.Bus {
+	public class $name+firstUpperCase~Service {
 
 		private $box+firstUpperCase~Configuration configuration;
+		private javax.jms.Connection connection;
+		private javax.jms.Session session;
 
 		public $name+firstUpperCase~Service(Connection connection, $box+firstUpperCase~Box box) {
 			this.configuration = box.configuration();
@@ -30,6 +31,32 @@ def type(jms)
 		}
 
 		$notification...[$NL$NL]
+
+		public javax.jms.Session session() {
+			return session;
+		}
+
+		public javax.jms.Connection connection() {
+			return connection;
+		}
+
+
+		public TopicProducer newTopicProducer(String path) {
+			try {
+				return new TopicProducer(session(), path);
+			} catch (JMSException e) {
+				Logger.getGlobal().severe(e.getMessage());
+				return null;
+			}
+		}
+
+		public void closeSession() {
+			try {
+				session.close();
+			} catch (JMSException e) {
+				Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
 		
 		private Session createSession(Connection connection) {
 			try {

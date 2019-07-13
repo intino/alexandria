@@ -48,13 +48,13 @@ public class AbstractBoxRenderer {
 
 	public void execute() {
 		FrameBuilder root = new FrameBuilder("box");
-		final String name = name();
-		root.add("name", name).add("package", packageName);
-		if (hasModel) root.add("tara", name);
+		final String boxName = name();
+		root.add("name", boxName).add("package", packageName);
+		if (hasModel) root.add("tara", boxName);
 		parent(root);
-		services(root, name);
-		tasks(root, name);
-		dataHub(root, name);
+		services(root, boxName);
+		tasks(root, boxName);
+		dataHub(root, boxName);
 		graph.datamartList().forEach(d -> datamart(root, d));
 		Commons.writeFrame(gen, "AbstractBox", template().render(root.toFrame()));
 		notifyNewParameters();
@@ -68,11 +68,11 @@ public class AbstractBoxRenderer {
 		new ParameterPublisher((LegioConfiguration) configuration).publish(customParameters);
 	}
 
-	private void tasks(FrameBuilder builder, String name) {
-		if (!graph.taskList().isEmpty()) builder.add("task", new FrameBuilder("task").add("configuration", name).toFrame());
+	private void tasks(FrameBuilder builder, String boxName) {
+		if (!graph.taskList().isEmpty()) builder.add("task", new FrameBuilder("task").add("configuration", boxName).toFrame());
 	}
 
-	private void dataHub(FrameBuilder builder, String name) {
+	private void dataHub(FrameBuilder builder, String boxName) {
 		DataHub dataHub = graph.dataHub();
 		if (dataHub == null) return;
 		final FrameBuilder dataHubFrame = new FrameBuilder("datahub", type(dataHub)).add("workspace", parameter(dataHub.workingDirectory()));
@@ -87,7 +87,7 @@ public class AbstractBoxRenderer {
 		if (dataHub.isStandAlone()) {
 			StandAloneDataHub service = dataHub.asStandAlone();
 			if (service.broker() != null) addBroker(dataHubFrame, service.broker());
-			FrameBuilder frame = new FrameBuilder("service").add("path", parameter(service.datalakePath())).add("scale", service.scale());
+			FrameBuilder frame = new FrameBuilder("standalone").add("path", parameter(service.datalakePath())).add("scale", service.scale());
 			if (service.seal() != null) frame.add("sealing", service.seal().when());
 			dataHubFrame.add("datasource", frame);
 		} else if (dataHub.isMirrored()) mirroredDataSource(dataHub, dataHubFrame);
@@ -100,14 +100,14 @@ public class AbstractBoxRenderer {
 	}
 
 	private void remoteDataSource(DataHub dataHub, FrameBuilder dataHubFrame) {
-		BusConnection remote = dataHub.asRemote().busConnection();
-		dataHubFrame.add("datasource", new FrameBuilder("remote").add("realtime", busConnection(remote)));
+		FrameBuilder remote = new FrameBuilder("remote");
+		if (dataHub.asRemote().messageHub() != null) remote.add("messageHub", messageHub());
+		dataHubFrame.add("datasource", remote);
 	}
 
 	private void mirroredDataSource(DataHub dataHub, FrameBuilder dataHubFrame) {
 		MirroredDataHub mirrored = dataHub.asMirrored();
 		if (mirrored.broker() != null) addBroker(dataHubFrame, mirrored.broker());
-		if (mirrored.busConnection() != null) busConnection(mirrored.busConnection());
 		FrameBuilder mirror = new FrameBuilder("mirror").
 				add("originUrl", parameter(mirrored.originSshUrl())).
 				add("originPath", parameter(mirrored.originDatalakePath())).
@@ -115,7 +115,7 @@ public class AbstractBoxRenderer {
 				add("user", parameter(mirrored.user())).
 				add("password", mirrored.password() == null ? "" : parameter(mirrored.password())).
 				add("destinationPath", parameter(mirrored.destinationPath()));
-		if (mirrored.busConnection() != null) mirror.add("realtime", busConnection(mirrored.busConnection()));
+		if (mirrored.messageHub() != null) mirror.add("messageHub", messageHub());
 		dataHubFrame.add("datasource", mirror);
 	}
 
@@ -131,8 +131,8 @@ public class AbstractBoxRenderer {
 	}
 
 	@NotNull
-	private FrameBuilder busConnection(BusConnection connection) {
-		return new FrameBuilder("realtime").add("brokerUrl", parameter(connection.busUrl())).add("user", parameter(connection.user())).add("password", parameter(connection.password())).add("clientId", parameter(connection.clientId()));
+	private FrameBuilder messageHub() {
+		return new FrameBuilder("messageHub").add("package", packageName);
 	}
 
 	private void addBroker(FrameBuilder dataHubFrame, Broker broker) {

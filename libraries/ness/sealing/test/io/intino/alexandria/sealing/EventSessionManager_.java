@@ -5,7 +5,7 @@ import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.file.FileDatalake;
 import io.intino.alexandria.ingestion.EventSession;
 import io.intino.alexandria.ingestion.SessionHandler;
-import io.intino.alexandria.inl.Message;
+import io.intino.alexandria.message.Message;
 import io.intino.alexandria.zim.ZimReader;
 import org.junit.After;
 import org.junit.Test;

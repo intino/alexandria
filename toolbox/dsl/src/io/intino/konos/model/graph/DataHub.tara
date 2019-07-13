@@ -14,7 +14,7 @@ Concept:Named Mounter is component
 Concept:Named Adapter is component
 
 Facet DataHubLocation on DataHub is abstract
-	sub Remote > has:{1..1} BusConnection
+	sub Remote > has:{1..1} MessageHub
 	sub Mirrored
 		var string originSshUrl
 		var string originDatalakePath
@@ -22,7 +22,7 @@ Facet DataHubLocation on DataHub is abstract
 		var string password = empty
 		var string destinationPath
 		var string startingTimetag
-		has:{0..1} BusConnection
+		has:{0..1} MessageHub
 		has:{0..1} Broker
 	sub StandAlone
 		var string datalakePath
@@ -39,11 +39,13 @@ Facet TankType on DataHub.Tank
 	sub Set > var DataHub.Split split = empty
 Facet Singleton on DataHub.Tank with Set
 
-Concept BusConnection is component
+Concept:RequiresFacet MessageHub is component
 	var string busUrl
 	var string user
 	var string password
 	var string clientId
+
+Facet JmsHub on MessageHub
 
 Concept Broker is component
 	var word:{Embed Remote} location = Embed
