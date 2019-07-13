@@ -17,7 +17,7 @@
     <orderEntry type="module" module-name="exceptions" />
     <orderEntry type="module" module-name="json" />
     <orderEntry type="module" module-name="logger" />
-    <orderEntry type="module" module-name="inl" />
+    <orderEntry type="module" module-name="message" />
     <orderEntry type="module" module-name="zim" />
     <orderEntry type="module" module-name="zet" />
     <orderEntry type="module" module-name="mapp" />

@@ -1,7 +1,7 @@
 package io.intino.alexandria.zim;
 
-import io.intino.alexandria.inl.Message;
-import io.intino.alexandria.inl.MessageWriter;
+import io.intino.alexandria.message.Message;
+import io.intino.alexandria.message.MessageWriter;
 
 import java.io.*;
 

@@ -29,7 +29,7 @@ public class QueueConsumer {
 		try {
 			Destination destination = session.createQueue(queue);
 			MessageConsumer consumer = session.createConsumer(destination);
-			consumer.setMessageListener(listener::consume);
+			consumer.setMessageListener(listener::accept);
 		} catch (Exception e) {
 			getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
 		}
@@ -40,7 +40,7 @@ public class QueueConsumer {
 			Destination destination = session.createQueue(queue);
 			MessageConsumer consumer = session.createConsumer(destination);
 			Message message = consumer.receive(timeout);
-			if (message != null) messageConsumer.consume(message);
+			if (message != null) messageConsumer.accept(message);
 		} catch (JMSException e) {
 			getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
 		}

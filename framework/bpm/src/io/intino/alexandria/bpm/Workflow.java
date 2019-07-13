@@ -1,12 +1,11 @@
 package io.intino.alexandria.bpm;
 
-import io.intino.alexandria.inl.Message;
+import io.intino.alexandria.message.Message;
 
 import java.util.*;
 
 import static io.intino.alexandria.bpm.Link.Type.Default;
 import static io.intino.alexandria.bpm.Link.Type.Exclusive;
-import static io.intino.alexandria.bpm.State.Type.Terminal;
 import static io.intino.alexandria.bpm.Task.Type.Automatic;
 
 

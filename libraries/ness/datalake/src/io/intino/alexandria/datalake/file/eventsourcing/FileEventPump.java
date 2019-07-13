@@ -1,7 +1,7 @@
 package io.intino.alexandria.datalake.file.eventsourcing;
 
 import io.intino.alexandria.datalake.Datalake;
-import io.intino.alexandria.inl.Message;
+import io.intino.alexandria.message.Message;
 import io.intino.alexandria.zim.ZimStream;
 
 import java.util.Arrays;

@@ -35,6 +35,6 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.0.0" level="project" />
     <orderEntry type="library" name="Intino: com.sun.xml.security:xml-security-impl:1.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
-    <orderEntry type="module" module-name="inl" />
+    <orderEntry type="module" module-name="message" />
   </component>
 </module>

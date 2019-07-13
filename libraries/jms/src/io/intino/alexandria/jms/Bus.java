@@ -4,6 +4,7 @@ import javax.jms.JMSException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Deprecated
 public abstract class Bus {
 
 	protected javax.jms.Connection connection;

@@ -1,0 +1,42 @@
+def type(messagehub)
+	package $package+validPackage.datahub;
+
+	import $package+validPackage.$box+firstUpperCase~Box;
+
+    public class MessageHub [extends $type+class] {
+		$tank...[$NL]
+
+		public MessageHub($box+validName+firstUpperCase~Box box) {
+			$type+super
+		}
+	}
+end
+
+def type(jms) trigger(class)
+	io.intino.alexandria.messagehub.JmsMessageHub
+end
+
+def type(rabbit) trigger(class)
+	io.intino.alexandria.messagehub.RabbitMessageHub
+end
+
+def type(jms) trigger(super)
+	super($url, $user, $password);
+end
+
+def type(rabbit) trigger(super)
+	io.intino.alexandria.messagehub.RabbitMessageHub
+end
+
+def trigger(tank)
+	public static final String $name = "$qn";
+end
+
+def type(custom) trigger(parameter)
+	box.configuration().get("$value+customParameter")
+end
+
+def trigger(parameter)
+	"$value"
+end
+
