@@ -2,7 +2,7 @@ dsl Konos
 
 DataHub datahub as StandAlone
 	workingDirectory = "{datahub_path}"
-	path = "{datalake_path}"
+	datalakePath = "{datalake_path}"
 	scale = Hour
 	Split("DA" "DB") porDivisiones
 

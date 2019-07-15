@@ -1,7 +1,7 @@
 dsl Konos
 
 DataHub(workingDirectory = "") dataHub as Remote
-	BusConnection(busUrl = "{nessUrl}", user = "{nessUser}", password = "{nessPassword}", clientId = "amidas")
+	MessageHub (busUrl = "{nessUrl}", user = "{nessUser}", password = "{nessPassword}", clientId = "amidas") as JmsHub
 	Tank(fullName = "authorizationRegister")authorizationRegister as Event(schema = empty)
 	Tank(fullName = "identityRegister")identityRegister as Event(schema = empty)
 	Tank("dayAheadReport") dayAheadReport as Event(schema = empty)

@@ -55,7 +55,7 @@
         <dependency>
             <groupId>io.intino.konos</groupId>
             <artifactId>builder</artifactId>
-            <version>5.2.0</version>
+            <version>5.3.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -159,6 +159,18 @@
             <groupId>io.intino.alexandria</groupId>
             <artifactId>rest-accessor</artifactId>
             <version>1.0.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.alexandria</groupId>
+            <artifactId>data-hub</artifactId>
+            <version>LATEST</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.alexandria</groupId>
+            <artifactId>data-hub-jms</artifactId>
+            <version>1.0.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

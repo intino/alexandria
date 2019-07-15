@@ -39,7 +39,7 @@ Facet TankType on DataHub.Tank
 	sub Set > var DataHub.Split split = empty
 Facet Singleton on DataHub.Tank with Set
 
-Concept:RequiresFacet MessageHub is component
+Concept MessageHub is component
 	var string busUrl
 	var string user
 	var string password

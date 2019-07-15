@@ -7,7 +7,7 @@ DataHub datahub as Mirrored
 	user = "asemed"
 	destinationPath = "{datalake_path}"
 	startingTimetag = "20190101"
-	BusConnection("{bus}", "{user}", "{password}", "xxxx")
+	MessageHub(busUrl = "{bus_url}", user = "{user}", password = "pass", clientId = "clientId") as JmsHub
 	Broker(connectorId = "{broker_connector}")
 		User(name = "a", password = "b")
 		User(name = "c", password = "d")

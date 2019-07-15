@@ -1,8 +1,7 @@
 dsl Konos
 
 DataHub(workingDirectory = "{workspace}") datahub as Local
-	path = "{datahub_path}"
-
+	datalakePath = "{datahub_path}"
 	Split("DA" "DB") porDivisiones
 
 	Tank("asemed.Criterio") criterio as Event(Criterio)
