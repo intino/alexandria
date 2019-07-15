@@ -119,6 +119,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	protected FrameBuilder childFrame(Component component) {
 		FrameBuilder result = componentRenderer(component).buildFrame();
 		String[] ancestors = ancestors(component);
+		Component parent = component.core$().ownerAs(Component.class);
+		if (parent != null) result.add("parent", nameOf(parent));
 		result.add("ancestors", ancestors);
 		result.add("ancestorsNotMe", Arrays.copyOfRange(ancestors, 1, ancestors.length));
 		result.add("value", componentRenderer(component).buildFrame().add("addType", typeOf(component)));

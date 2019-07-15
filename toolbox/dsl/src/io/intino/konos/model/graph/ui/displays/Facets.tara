@@ -22,6 +22,8 @@ Facet Circular on OtherComponents.Progress
 Facet Linear on OtherComponents.Progress
 
 Facet Drawer on Block
+Facet Splitter on Block
+	var string splitMobileLabel = "Back"
 
 // Layout facets
 Facet AbstractAbsolute is abstract

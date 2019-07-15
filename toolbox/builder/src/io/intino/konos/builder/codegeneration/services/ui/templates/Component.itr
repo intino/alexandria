@@ -97,6 +97,30 @@ def attribute(notifyReady)
     notifyReady();
 end
 
+def type(component & child & block & conditional) trigger(class)
+	public class $name+firstUpperCase extends $extends $implements {
+		[$reference+declaration...[$NL]]
+		[$component+declaration...[$NL]]
+
+		public $name+firstUpperCase($abstractBox+type box) {
+			super(box);
+			[$properties+common]
+			[$properties+specific]
+		}
+
+		@Override
+		public void $methodName() {
+			super.init();
+			[$reference...[$NL]]
+			[$component+child...[$NL]]
+			[$component+conditionalReferences...[$NL]]
+		}
+		$methods
+		[$component+class...[$NL$NL]]
+		[$component+method...[$NL$NL]]
+	}
+end
+
 def type(component & child) trigger(class)
 	public class $name+firstUpperCase extends $extends $implements {
 		[$reference+declaration...[$NL]]
@@ -148,22 +172,22 @@ def type(component & child & multipleblock) trigger(rootChildReferences)
 end
 
 def type(component & child & collection) trigger(rootChildReferences)
-	$name = [$ancestorsNotMe...[.].]$name;
+	[if ($parent != null)] $name = [$ancestorsNotMe...[.].]$name;
 	[$heading+rootChildReferences...[$NL]]
 end
 
 def type(component & child) trigger(rootChildReferences)
-	$name = [$ancestorsNotMe...[.].]$name;
+	[if ($parent != null)] $name = [$ancestorsNotMe...[.].]$name;
 	[$component+rootChildReferences...[$NL]]
 end
 
 def type(component & child & collection) trigger(childReferences)
-	$name = [$ancestors...[.].]$name;
+	[if ($parent != null)] $name = [$ancestors...[.].]$name;
 	[$heading+childReferences...[$NL]]
 end
 
 def type(component & child) trigger(childReferences)
-	$name = [$ancestors...[.].]$name;
+	[if ($parent != null)] $name = [$ancestors...[.].]$name;
 	[$component+childReferences...[$NL]]
 end
 
@@ -193,6 +217,15 @@ end
 def type(component & child) trigger(references)
 	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 	[$component+childReferences...[$NL]]
+end
+
+def type(component & child & block) trigger(conditionalReferences)
+	[$component+conditionalReferences...[$NL]]
+end
+
+def type(component & child) trigger(conditionalReferences)
+	$name = [$ancestorsNotMe...[.].]$name;
+	[$binding]
 end
 
 def type(component & child & collection) trigger(initializations)

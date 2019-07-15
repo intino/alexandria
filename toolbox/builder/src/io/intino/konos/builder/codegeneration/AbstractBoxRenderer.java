@@ -144,15 +144,6 @@ public class AbstractBoxRenderer extends Renderer {
 		else builder.add("hasntParent", "");
 	}
 
-	private String name() {
-		if (module() != null) {
-			final String dsl = configuration.outDSL();
-			if (dsl == null || dsl.isEmpty()) return module().getName();
-			else return dsl;
-		} else return "System";
-	}
-
-
 	private Template template() {
 		return Formatters.customize(new AbstractBoxTemplate());
 	}

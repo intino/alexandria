@@ -11,7 +11,6 @@ import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.dsl.Proteo;
 import io.intino.tara.dsl.Verso;
-import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,20 +20,19 @@ import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 
 public class BoxRenderer extends Renderer {
 	private final KonosGraph graph;
-	private final Configuration configuration;
 	private boolean isTara;
 
 	BoxRenderer(Settings settings, KonosGraph graph, boolean isTara) {
 		super(settings, Target.Service);
 		this.graph = graph;
-		this.configuration = module() != null ? TaraUtil.configurationOf(module()) : null;
 		this.isTara = isTara;
 	}
 
 	@Override
 	public void render() {
+		if (configuration() == null) return;
 		final String name = name();
-		if (configuration == null || Commons.javaFile(src(), snakeCaseToCamelCase(name) + "Box").exists()) {
+		if (Commons.javaFile(src(), snakeCaseToCamelCase(name) + "Box").exists()) {
 			return;
 		}
 		FrameBuilder builder = new FrameBuilder("Box").add("package", packageName()).add("name", name);
@@ -55,13 +53,15 @@ public class BoxRenderer extends Renderer {
 
 	private Frame fillTara() {
 		FrameBuilder builder = new FrameBuilder();
+		Configuration configuration = configuration();
 		builder.add("name", name());
-		if (configuration.outDSL() != null) builder.add("outDSL", configuration.outDSL());
+		if (configuration.artifactId() != null) builder.add("outDSL", configuration.artifactId());
 		builder.add("wrapper", dsls());
 		return builder.toFrame();
 	}
 
 	private String[] dsls() {
+		Configuration configuration = configuration();
 		List<String> dsls = new ArrayList<>();
 		for (Configuration.LanguageLibrary lang : configuration.languages())
 			if (!Verso.class.getSimpleName().equals(lang.name()) && !Proteo.class.getSimpleName().equals(lang.name())) {
@@ -69,7 +69,7 @@ public class BoxRenderer extends Renderer {
 				dsls.add((genPackage == null ? "" : genPackage.toLowerCase() + ".") + firstUpperCase(lang.name()));
 			}
 		if (configuration.level() != Configuration.Level.Solution)
-			dsls.add(configuration.workingPackage().toLowerCase() + "." + firstUpperCase(configuration.outDSL()));
+			dsls.add(configuration.workingPackage().toLowerCase() + "." + firstUpperCase(configuration.artifactId()));
 		return dsls.toArray(new String[0]);
 	}
 
@@ -77,10 +77,4 @@ public class BoxRenderer extends Renderer {
 		return Formatters.customize(new BoxTemplate());
 	}
 
-	private String name() {
-		if (module() != null) {
-			final String dsl = configuration.outDSL();
-			return dsl == null || dsl.isEmpty() ? module().getName() : dsl;
-		} else return Configuration.Level.Solution.name();
-	}
 }

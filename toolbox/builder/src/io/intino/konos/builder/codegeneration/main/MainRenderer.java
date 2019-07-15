@@ -1,6 +1,5 @@
 package io.intino.konos.builder.codegeneration.main;
 
-import com.intellij.openapi.module.Module;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
@@ -34,15 +33,6 @@ public class MainRenderer extends Renderer {
 
 	private Template template() {
 		return Formatters.customize(new MainTemplate());
-	}
-
-	private String name() {
-		Module module = module();
-		if (module != null) {
-			final String dsl = configuration.outDSL();
-			if (dsl == null || dsl.isEmpty()) return module.getName();
-			else return dsl;
-		} else return "System";
 	}
 
 }

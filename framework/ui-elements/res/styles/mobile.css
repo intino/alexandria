@@ -1,10 +1,14 @@
-@media all and (min-width: 736px) and (orientation: portrait) {
+.hidden {
+    display: none !important;
+}
+
+@media screen and (min-width: 800px), all and (min-width: 800px) and (orientation: portrait) {
     .hidden-ifnotmobile {
-        display: none;
+        display: none !important;
     }
 }
 
-@media screen and (max-width: 736px), all and (min-width: 600px) and (orientation: portrait) {
+@media screen and (max-width: 736px), all and (min-width: 736px) and (orientation: portrait) {
     .hidden-ifmobile {
         display: none !important;
     }

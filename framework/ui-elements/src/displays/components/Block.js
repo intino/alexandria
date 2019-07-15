@@ -52,7 +52,7 @@ export default class Block extends AbstractBlock {
 			return (
 				<Paper style={style} className={classNames}>
 					{label != null && label !== "" ? <Typography style={{padding:"0 10px"}} variant={this.variant("h5")}>{label}</Typography> : undefined }
-					<div style={{padding:"0 10px 10px"}}>{this._renderChildren()}</div>
+					<div style={{padding:"0 10px 10px",height:"100%"}} className={classNames}>{this._renderChildren()}</div>
 				</Paper>
 			);
 		}

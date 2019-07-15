@@ -4,25 +4,24 @@ def type(box)
 	import java.util.LinkedHashMap;
 	import java.util.Map;
 	import java.util.UUID;
-	[$hasUi
-	import java.util.HashMap;
-    import java.util.Map;
-	]
+
+	[import java.util.HashMap;
+    import java.util.Map$hasUi+hideUi]
 	import io.intino.alexandria.logger.Logger;
 	import java.util.logging.ConsoleHandler;
 	import java.util.logging.Level;
 	[$hasREST~import io.intino.alexandria.rest.AlexandriaSpark;]
-    [$hasUi+hide~import io.intino.alexandria.ui.Soul;]
+    [import io.intino.alexandria.ui.Soul$hasUi+hideUi]
 
 	public abstract class AbstractBox extends [$hasUi+uiBox?io.intino.alexandria.core.Box] {
 		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;
 		[$service+field...[$NL]]
 		[$dataLake+field...[$NL]]
 		[$task+field]
-        [$hasUi+hide~protected Map<String, Soul> uiSouls = new java.util.HashMap<>();]
-	    [$hasUi+hide~private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();]
-		[$hasUi+hide~private io.intino.alexandria.ui.services.AuthService authService;]
-		[$hasUi+hide~private io.intino.alexandria.ui.services.EditorService editorService;]
+        [protected Map<String, Soul> uiSouls = new java.util.HashMap<>()$hasUi+hideUi]
+	    [private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>()$hasUi+hideUi]
+		[private io.intino.alexandria.ui.services.AuthService authService$hasUi+hideUi]
+		[private io.intino.alexandria.ui.services.EditorService editorService$hasUi+hideUi]
 
 		public AbstractBox(String$[] args) {
 			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
@@ -96,11 +95,11 @@ def type(box)
 		private void initDatalake() {
 			$dataLake+init...[$NL]
 		}
-		[$datalake+hide
+		[
 		private io.intino.ness.core.Datalake datalakeFrom(String nessUrl, String nessUser, String nessPassword, String clientId) {
 			if (nessUrl.startsWith("file://")) return new io.intino.alexandria.nessaccessor.local.LocalDatalake(new java.io.File(nessUrl.replace("file://", "")));
 			return new io.intino.alexandria.nessaccessor.tcp.TCPDatalake(nessUrl, nessUser, nessPassword, clientId);
-		}
+		}$datalake+hideDatalake
 		]
 		private void initTasks() {
 			[$task+init...[$NL]]
@@ -390,3 +389,10 @@ end
 def trigger(hide)
 end
 
+def trigger(hideUi)
+    ;
+end
+
+def trigger(hideDatalake)
+    ;
+end

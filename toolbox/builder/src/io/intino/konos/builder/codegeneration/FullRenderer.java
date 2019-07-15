@@ -159,7 +159,7 @@ public class FullRenderer {
 		if (module != null) {
 			final io.intino.tara.compiler.shared.Configuration configuration = configurationOf(module);
 			if (configuration == null) return "";
-			final String dsl = configuration.outDSL();
+			final String dsl = configuration.artifactId();
 			if (dsl == null || dsl.isEmpty()) return module.getName();
 			else return dsl;
 		} else return "System";
