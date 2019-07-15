@@ -101,7 +101,7 @@ public class AbstractBoxRenderer {
 
 	private void remoteDataSource(DataHub dataHub, FrameBuilder dataHubFrame) {
 		FrameBuilder remote = new FrameBuilder("remote");
-		if (dataHub.asRemote().messageHub() != null) remote.add("messageHub", messageHub());
+		if (dataHub.asRemote().messageHub() != null) remote.add("messageHub", messageHubFrame(dataHub.asRemote().messageHub()));
 		dataHubFrame.add("datasource", remote);
 	}
 
@@ -115,7 +115,7 @@ public class AbstractBoxRenderer {
 				add("user", parameter(mirrored.user())).
 				add("password", mirrored.password() == null ? "" : parameter(mirrored.password())).
 				add("destinationPath", parameter(mirrored.destinationPath()));
-		if (mirrored.messageHub() != null) mirror.add("messageHub", messageHub());
+		if (mirrored.messageHub() != null) mirror.add("messageHub", messageHubFrame(dataHub.asMirrored().messageHub()));
 		dataHubFrame.add("datasource", mirror);
 	}
 
@@ -131,8 +131,11 @@ public class AbstractBoxRenderer {
 	}
 
 	@NotNull
-	private FrameBuilder messageHub() {
-		return new FrameBuilder("messageHub").add("package", packageName);
+	private FrameBuilder messageHubFrame(MessageHub hub) {
+		FrameBuilder frame = new FrameBuilder("messageHub");
+		if (hub.isJmsHub())
+			frame.add("jms").add("parameter", parameter(hub.busUrl())).add("parameter", parameter(hub.user())).add("parameter", parameter(hub.password())).add("parameter", parameter(hub.clientId()));
+		return frame.add("package", packageName);
 	}
 
 	private void addBroker(FrameBuilder dataHubFrame, Broker broker) {

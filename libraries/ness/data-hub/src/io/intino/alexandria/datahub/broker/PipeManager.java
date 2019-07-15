@@ -5,7 +5,8 @@ import io.intino.alexandria.jms.MessageFactory;
 import io.intino.alexandria.jms.TopicProducer;
 import io.intino.alexandria.logger.Logger;
 
-import static io.intino.alexandria.jms.Consumer.textFrom;
+import static io.intino.alexandria.jms.MessageReader.textFrom;
+
 
 public class PipeManager {
 

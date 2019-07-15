@@ -8,6 +8,7 @@ import cottons.utils.Files;
 import io.intino.konos.builder.codegeneration.accessor.ui.UIAccessorCreator;
 import io.intino.konos.builder.codegeneration.datahub.adapter.AdapterRenderer;
 import io.intino.konos.builder.codegeneration.datahub.feeder.FeederRenderer;
+import io.intino.konos.builder.codegeneration.datahub.messagehub.MessageHubRenderer;
 import io.intino.konos.builder.codegeneration.datahub.mounter.MounterRenderer;
 import io.intino.konos.builder.codegeneration.datahub.process.ProcessRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
@@ -121,6 +122,7 @@ public class FullRenderer {
 	private void bus() {
 		if (graph.dataHub() == null) return;
 		new ProcessRenderer(graph, src, packageName, boxName, classes).execute();
+		new MessageHubRenderer(graph, gen, src, packageName, boxName, classes).execute();
 		new MounterRenderer(graph, gen, src, packageName, boxName, classes).execute();
 		new AdapterRenderer(graph, src, packageName, boxName, classes).execute();
 		new FeederRenderer(graph, gen, src, packageName, boxName, classes).execute();

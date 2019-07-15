@@ -1,6 +1,7 @@
 package io.intino.alexandria.datahub.model;
 
 import io.intino.alexandria.Scale;
+import io.intino.alexandria.message.MessageHub;
 
 import java.util.List;
 
@@ -9,7 +10,6 @@ public class Configuration {
 	private final Tanks tanks;
 	private String workingDirectory;
 	private Broker broker;
-
 
 	public Configuration(String workingDirectory, Broker broker, DataSource dataSource, Tanks tanks) {
 		this.workingDirectory = workingDirectory;
@@ -85,7 +85,7 @@ public class Configuration {
 			}
 
 			public enum Type {
-				Event, Set, Singleton;
+				Event, Set, Singleton
 			}
 		}
 
@@ -128,7 +128,7 @@ public class Configuration {
 			this.messageHub = messageHub;
 		}
 
-		public MessageHub realtime() {
+		public MessageHub messageHub() {
 			return messageHub;
 		}
 	}
@@ -202,40 +202,11 @@ public class Configuration {
 			return startingTimetag;
 		}
 
-		public MessageHub realtime() {
+		public MessageHub messageHub() {
 			return messageHub;
 		}
 	}
 
-	public static class MessageHub {
-		private String brokerUrl;
-		private String user;
-		private String password;
-		private String clientId;
-
-		public MessageHub(String brokerUrl, String user, String password, String clientId) {
-			this.brokerUrl = brokerUrl;
-			this.user = user;
-			this.password = password;
-			this.clientId = clientId;
-		}
-
-		public String brokerUrl() {
-			return brokerUrl;
-		}
-
-		public String user() {
-			return user;
-		}
-
-		public String password() {
-			return password;
-		}
-
-		public String clientId() {
-			return clientId;
-		}
-	}
 
 	public static abstract class DataSource {
 	}

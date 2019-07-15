@@ -26,5 +26,6 @@
     <orderEntry type="library" name="Intino: commons-net:commons-net:3.6" level="project" />
     <orderEntry type="library" name="Intino: javax.jmdns:jmdns:3.4.1" level="project" />
     <orderEntry type="module" module-name="logger" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
   </component>
 </module>

@@ -2,6 +2,7 @@ package io.intino.alexandria.datahub;
 
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.jms.Consumer;
+import io.intino.alexandria.jms.MessageReader;
 import io.intino.alexandria.logger.Logger;
 import org.apache.activemq.command.ActiveMQDestination;
 
@@ -20,7 +21,7 @@ public class AdminService implements Consumer {
 
 	@Override
 	public void accept(Message message) {
-		String text = Consumer.textFrom(message);
+		String text = MessageReader.textFrom(message);
 		if (text.startsWith("tanks"))
 			replyTo(message, box.datalake().eventStore().tanks().map(Datalake.EventStore.Tank::name).collect(joining(";")));
 	}

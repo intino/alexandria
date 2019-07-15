@@ -14,6 +14,7 @@ import io.intino.alexandria.datahub.model.Configuration.StandAlone;
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.file.FileDatalake;
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.message.MessageHub;
 import io.intino.alexandria.sealing.FileSessionSealer;
 import io.intino.alexandria.sealing.SessionSealer;
 import org.apache.log4j.Level;
@@ -37,20 +38,24 @@ public class DataHub {
 	private SessionSealer sessionSealer;
 	private PipeManager pipeManager;
 	private SealingTask sealingTask;
+	private MessageHub messageHub;
 
 	public DataHub(Configuration configuration) {
 		this.configuration = configuration;
 		this.adminService = new AdminService(this);
 		this.brokerStage = new File(workspaceDirectory(), "broker_stage");
-		workspaceDirectory().mkdirs();
 		this.brokerStage.mkdirs();
+		workspaceDirectory().mkdirs();
 		stageFolder().mkdirs();
 	}
 
 	public void start() {
 		if (isService()) configureDatalake(((StandAlone) configuration.dataSource()).path());
 		else if (isLocal()) configureDatalake(((Local) configuration.dataSource()).path());
-		else configureMirror((Mirror) configuration.dataSource());
+		else if (isMirror()) {
+			configureMirror((Mirror) configuration.dataSource());
+			this.messageHub = ((Mirror) configuration.dataSource()).messageHub();
+		} else this.messageHub = ((Configuration.Remote) configuration.dataSource()).messageHub();
 		if (configuration.broker() != null) configureBroker();
 	}
 
@@ -66,6 +71,10 @@ public class DataHub {
 
 	public SessionSealer sessionSealer() {
 		return sessionSealer;
+	}
+
+	public MessageHub messageHub() {
+		return messageHub;
 	}
 
 	public BrokerService brokerService() {
@@ -108,8 +117,8 @@ public class DataHub {
 
 	private void startServices() {
 		if (isService() && configuration.broker() != null) {
-			startTanks(((Configuration.StandAlone) configuration.dataSource()).scale());
-			startPipes();
+			initTanks(((Configuration.StandAlone) configuration.dataSource()).scale());
+			initPipes();
 			startAdminService();
 		}
 		if (isService() && ((StandAlone) configuration.dataSource()).sealingPattern() != null)
@@ -121,7 +130,11 @@ public class DataHub {
 		sealingTask.start();
 	}
 
-	private void startPipes() {
+	private void initTanks(Scale scale) {
+		datalake.eventStore().tanks().forEach(t -> new TankManager(brokerManager, brokerStageDirectory(), t, scale).register());
+	}
+
+	private void initPipes() {
 		for (Broker.Pipe pipe : configuration.broker().pipes()) pipeManager.start(pipe);
 	}
 
@@ -131,10 +144,6 @@ public class DataHub {
 
 	private Map<String, String> users() {
 		return configuration.broker().users().stream().collect(Collectors.toMap(user -> user.name() == null ? user.name() : user.name(), Broker.User::password));
-	}
-
-	private void startTanks(Scale scale) {
-		datalake.eventStore().tanks().forEach(t -> new TankManager(brokerManager, brokerStageDirectory(), t, scale).register());
 	}
 
 	private File workspaceDirectory() {
@@ -158,6 +167,14 @@ public class DataHub {
 	}
 
 	private boolean isLocal() {
+		return configuration.dataSource() instanceof Local;
+	}
+
+	private boolean isMirror() {
+		return configuration.dataSource() instanceof Local;
+	}
+
+	private boolean isRemote() {
 		return configuration.dataSource() instanceof Local;
 	}
 }
