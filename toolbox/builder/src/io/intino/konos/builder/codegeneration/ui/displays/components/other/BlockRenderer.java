@@ -11,6 +11,7 @@ import io.intino.konos.model.graph.animated.AnimatedBlock;
 import io.intino.konos.model.graph.badge.BadgeBlock;
 import io.intino.konos.model.graph.option.OptionComponent;
 import io.intino.konos.model.graph.rules.Spacing;
+import io.intino.konos.model.graph.splitter.SplitterBlock;
 
 public class BlockRenderer extends SizedRenderer<Block> {
 
@@ -20,6 +21,7 @@ public class BlockRenderer extends SizedRenderer<Block> {
 
 	@Override
 	public void fill(FrameBuilder builder) {
+		if (element.isConditional()) builder.add("conditional");
 		addBinding(builder);
 	}
 
@@ -32,6 +34,7 @@ public class BlockRenderer extends SizedRenderer<Block> {
 		addBadge(result);
 		addParallax(result);
 		addTransition(result);
+		addSplitter(result);
 		if (element.hidden() != null && element.hidden() != Block.Hidden.Never) result.add("hidden", element.hidden().name());
 		if (element.isCollapsible()) result.add("collapsible", "true");
 		return result;
@@ -76,6 +79,12 @@ public class BlockRenderer extends SizedRenderer<Block> {
 		builder.add("mode", block.mode().name());
 		builder.add("transitionDirection", transition != null ? transition.direction().name() : "Right");
 		builder.add("transitionDuration", transition != null ? transition.duration() : 500);
+	}
+
+	private void addSplitter(FrameBuilder builder) {
+		if (!element.isSplitter()) return;
+		SplitterBlock block = element.asSplitter();
+		builder.add("splitMobileLabel", block.splitMobileLabel());
 	}
 
 	private void addBinding(FrameBuilder builder) {

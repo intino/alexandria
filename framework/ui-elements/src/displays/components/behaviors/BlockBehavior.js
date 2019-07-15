@@ -4,7 +4,8 @@ import { Slide, Fade, Grow, Zoom } from '@material-ui/core';
 const BlockBehavior = (function () {
 
     function layoutClasses(block) {
-        let layout = block.state.layout != null ? block.state.layout : block.props.layout;
+        let layout = block.state != null && block.state.layout != null ? block.state.layout : block.props.layout;
+        if (layout == null) return "";
         layout = layout.toLowerCase();
         layout = layout.replace("flexible", "flex");
         layout = layout.replace("centercenter", "center-center");

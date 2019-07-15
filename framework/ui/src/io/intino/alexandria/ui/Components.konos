@@ -9,6 +9,10 @@ Component block as Decorated
 Component blockConditional as Decorated
 	Notification refreshVisibility as Bool
 
+Component blockSplitter as Decorated
+	Notification show as Integer
+	Request back
+
 Component blockParallax as Decorated
 	Notification refresh as Text
 

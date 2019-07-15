@@ -7,7 +7,9 @@ import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.CatalogComponents;
 import io.intino.konos.model.graph.PrivateComponents;
+import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.magritte.Layer;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 
 import java.io.File;
 import java.util.Map;
@@ -35,6 +37,14 @@ public abstract class Renderer {
 
 	public String boxName() {
 		return settings.boxName();
+	}
+
+	protected String name() {
+		return module() != null ? configuration().artifactId() : Configuration.Level.Solution.name();
+	}
+
+	protected Configuration configuration() {
+		return module() != null ? TaraUtil.configurationOf(module()) : null;
 	}
 
 	protected String packageName() {

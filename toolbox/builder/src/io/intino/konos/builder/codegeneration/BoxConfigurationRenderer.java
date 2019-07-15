@@ -1,6 +1,5 @@
 package io.intino.konos.builder.codegeneration;
 
-import com.intellij.openapi.module.Module;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.helpers.Commons;
@@ -34,16 +33,6 @@ public class BoxConfigurationRenderer extends Renderer {
 		if (parent() != null && configuration != null && !Platform.equals(configuration.level())) builder.add("parent", parent());
 		if (isTara) builder.add("tara", "");
 		return boxName;
-	}
-
-	private String name() {
-		Module module = module();
-		if (module != null) {
-			final Configuration configuration = TaraUtil.configurationOf(module);
-			final String dsl = configuration.outDSL();
-			if (dsl == null || dsl.isEmpty()) return module.getName();
-			else return dsl;
-		} else return "System";
 	}
 
 	private Template template() {

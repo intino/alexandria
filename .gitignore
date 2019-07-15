@@ -21,3 +21,5 @@ framework/ui-elements/webpack.config.js
 framework/ui/res/.cache
 framework/ui/res/.checksum
 .tara
+.intino/audit
+.intino

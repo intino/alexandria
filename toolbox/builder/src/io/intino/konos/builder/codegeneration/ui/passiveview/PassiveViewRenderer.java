@@ -22,6 +22,7 @@ import io.intino.konos.model.graph.listbox.othercomponents.ListBoxSelector;
 import io.intino.konos.model.graph.menu.othercomponents.MenuSelector;
 import io.intino.konos.model.graph.parallax.ParallaxBlock;
 import io.intino.konos.model.graph.radiobox.othercomponents.RadioBoxSelector;
+import io.intino.konos.model.graph.splitter.SplitterBlock;
 import io.intino.tara.magritte.Layer;
 
 import java.util.ArrayList;
@@ -170,6 +171,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (passiveView.i$(CodeText.class)) result.add("Code");
 		if (passiveView.i$(BadgeBlock.class)) result.add("Badge");
 		if (passiveView.i$(ConditionalBlock.class)) result.add("Conditional");
+		if (passiveView.i$(SplitterBlock.class)) result.add("Splitter");
 		if (passiveView.i$(MenuSelector.class)) result.add("Menu");
 		if (passiveView.i$(ComboBoxSelector.class)) result.add("ComboBox");
 		if (passiveView.i$(ComboBoxGrouping.class)) result.add("ComboBox");
