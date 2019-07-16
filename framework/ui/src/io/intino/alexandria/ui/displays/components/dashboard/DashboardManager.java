@@ -89,13 +89,11 @@ public class DashboardManager {
 			if (!validRequest(manager.request())) return;
 			proxy(manager.request().session().id()).get(manager.request(), manager.response());
 		} catch (Throwable ex) {
-			Logger.error(ex);
 			try {
 				PrintWriter writer = manager.response().raw().getWriter();
 				writer.print("Could not load dashboard. Contact administrator.");
 				writer.close();
 			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}
 	}

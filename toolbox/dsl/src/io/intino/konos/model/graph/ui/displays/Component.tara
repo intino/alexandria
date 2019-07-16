@@ -38,6 +38,7 @@ Concept DataComponents
 	Concept Image extends Component
 		var string value = empty
 		var string defaultValue = empty
+		var integer:{%} mobileReduceFactor = 0%
 
 	Concept Number extends Component
 		var double value = empty

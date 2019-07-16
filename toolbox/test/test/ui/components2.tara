@@ -5,37 +5,9 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/demo") demo as Page(homeTemplate)
 
 Template homeTemplate
-	Block(layout=Vertical Flexible CenterCenter) none as Conditional Relative(height=100%)
-		Text(value="select user from list", format=h6)
-
-	Block(layout=Horizontal Flexible) info as Conditional
-		Block(layout=Horizontal CenterJustified, hidden=IfMobile, format=airRight) as Relative(width=20%)
-			Image(defaultValue="images/no-photo.png") photo as Absolute(height=150px,width=150px)
-		Block(layout=Vertical Flexible)
-			Block(layout=Horizontal, spacing=DP16)
-				Text(value="Loading...", format=h4) fullName
-				OpenDialog(title = "edit", dialog=editUserDialog) edit as Button
-				Task(title = "remove") remove as Button Confirmable(confirmText = "¿Are you sure you want to remove user?")
-
-			Block
-				Text(value="Dashboards", format=h5)
-				Block as Absolute(width=150px)
-					Task(title = "add dashboard") addDashboard as Button Highlighted
-
-	Dialog(title = "edit user") editUserDialog as Fullscreen(color="#005b9f")
-		Block(spacing=DP24)
-			Block(layout=Horizontal, spacing=DP24)
-				Block > Image dialogPhoto as Editable Labeled("Photo") Absolute(height=150px,width=150px)
-				Block(layout=Vertical Flexible, format=airLeft)
-					Text(placeHolder="User full name") dialogFullName as Editable Labeled("Full name")
-					Text(placeHolder="User token") dialogToken as Editable Password Labeled("Token")
-					Selector dialogEnableSelector as ComboBox Labeled("State")
-						Text(value="enabled") enabled as Option
-						Text(value="disabled") disabled as Option
-		Divider
-		Block(layout=Horizontal, spacing=DP16)
-			CloseDialog(title="close", dialog = editUserDialog) as Button
-			Task(title="save") saveUserTask as Button Highlighted
+	Image image1
+		mobileReduceFactor = 10%
+	Image image2
 
 Component baseImage as Decorated
 	Notification refresh as Text

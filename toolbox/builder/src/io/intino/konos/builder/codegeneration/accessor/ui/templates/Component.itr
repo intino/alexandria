@@ -75,7 +75,7 @@ def type(properties & selector) trigger(specific)
 end
 
 def type(properties & image) trigger(specific)
-	[ width="$width"][ height="$height"]
+	[ width="$width"][ height="$height"][ mobileReduceFactor={$mobileReduceFactor}]
 end
 
 def type(properties & file) trigger(specific)

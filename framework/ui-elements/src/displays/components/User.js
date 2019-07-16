@@ -1,6 +1,8 @@
 import React from "react";
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, Link } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton'
+import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew'
 import AbstractUser from "../../../gen/displays/components/AbstractUser";
 import UserNotifier from "../../../gen/displays/notifiers/UserNotifier";
 import UserRequester from "../../../gen/displays/requesters/UserRequester";
@@ -39,9 +41,12 @@ class User extends AbstractUser {
 		return (
 			<div className="layout horizontal">
 				<img className={classes.photo} src={info.photo} title={info.fullName}/>
-				<div className="layout vertical center-justified">
+				<div className="layout vertical center-justified" className="hidden-ifmobile">
 					<Typography variant={variant}>{info.fullName}</Typography>
 					<Link className={classes.link} component="button" variant={variant} onClick={this.handleLogout.bind(this)}>{this.translate("Logout")}</Link>
+				</div>
+				<div className="layout vertical center-justified" className="hidden-ifnotmobile">
+					<IconButton onClick={this.handleLogout.bind(this)} className={classes.link}><PowerSettingsNew/></IconButton>
 				</div>
 			</div>
 		);

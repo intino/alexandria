@@ -2,10 +2,7 @@ package io.intino.alexandria.rest.spark;
 
 import io.intino.alexandria.logger.Logger;
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.eclipse.jetty.websocket.api.annotations.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +34,11 @@ public class PushServiceHandler {
 		pushService.onOpen(client(session));
 	}
 
+	@OnWebSocketError
+	public void onError(Throwable error) {
+		Logger.error(error);
+	}
+
 	@OnWebSocketClose
 	public void onClose(Session session, int statusCode, String reason) {
 		cancelClose(session);
@@ -44,7 +46,7 @@ public class PushServiceHandler {
 			doClose(client(session));
 			return;
 		}
-		Logger.debug(String.format("WebSocket connection lost. Status code: %d.", statusCode));
+		Logger.debug(String.format("WebSocket connection lost. Status code: %d. %s", statusCode, reason));
 		doCloseDelayed(session);
 	}
 
