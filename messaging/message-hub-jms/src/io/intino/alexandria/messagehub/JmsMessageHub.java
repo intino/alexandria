@@ -72,7 +72,15 @@ public class JmsMessageHub implements MessageHub {
 	}
 
 	@Override
-	public void detachListener(String channel) {
+	public void attachListener(String channel, String subscriberId, Consumer<Message> onMessageReceived) {
+		List<TopicConsumer> topicConsumers = this.consumers.putIfAbsent(channel, new ArrayList<>());
+		TopicConsumer topicConsumer = new TopicConsumer(session, channel);
+		topicConsumer.listen(message -> onMessageReceived.accept(MessageDeserializer.deserialize(message)), subscriberId);
+		topicConsumers.add(topicConsumer);
+	}
+
+	@Override
+	public void detachListeners(String channel) {
 		for (TopicConsumer topicConsumer : this.consumers.getOrDefault(channel, Collections.emptyList())) topicConsumer.stop();
 	}
 

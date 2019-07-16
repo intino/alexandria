@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.0") data-hub-jms
+Artifact("io.intino.alexandria", "1.0.0") message-hub-jms
 	Imports
 		Compile("io.intino.alexandria","message", "1.0.0")
 		Compile("io.intino.alexandria", "jms", "1.0.2")

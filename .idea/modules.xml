@@ -18,7 +18,7 @@
       <module fileurl="file://$PROJECT_DIR$/libraries/logger/logger.iml" filepath="$PROJECT_DIR$/libraries/logger/logger.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/logger4j/logger4j.iml" filepath="$PROJECT_DIR$/libraries/logger4j/logger4j.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/mapp/mapp.iml" filepath="$PROJECT_DIR$/fileformats/mapp/mapp.iml" group="fileformats" />
-      <module fileurl="file://$PROJECT_DIR$/fileformats/message/message.iml" filepath="$PROJECT_DIR$/fileformats/message/message.iml" group="messaging" />
+      <module fileurl="file://$PROJECT_DIR$/messaging/message/message.iml" filepath="$PROJECT_DIR$/messaging/message/message.iml" group="messaging" />
       <module fileurl="file://$PROJECT_DIR$/messaging/message-hub-jms/message-hub-jms.iml" filepath="$PROJECT_DIR$/messaging/message-hub-jms/message-hub-jms.iml" group="messaging" />
       <module fileurl="file://$PROJECT_DIR$/libraries/ness-accessor/ness-accessor.iml" filepath="$PROJECT_DIR$/libraries/ness-accessor/ness-accessor.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/primitives/primitives.iml" filepath="$PROJECT_DIR$/libraries/primitives/primitives.iml" group="libraries" />
