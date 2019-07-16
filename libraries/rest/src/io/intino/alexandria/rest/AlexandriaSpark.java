@@ -1,6 +1,7 @@
 package io.intino.alexandria.rest;
 
 import io.intino.alexandria.exceptions.AlexandriaException;
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.rest.security.AlexandriaSecurityManager;
 import io.intino.alexandria.rest.security.NullSecurityManager;
 import io.intino.alexandria.rest.spark.PushService;
@@ -9,6 +10,7 @@ import io.intino.alexandria.rest.spark.SparkRouter;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.thread.ThreadPool;
 import spark.Service;
+import spark.Spark;
 import spark.embeddedserver.EmbeddedServers;
 import spark.embeddedserver.jetty.EmbeddedJettyServer;
 import spark.embeddedserver.jetty.JettyHandler;
@@ -27,6 +29,10 @@ public class AlexandriaSpark<R extends SparkRouter> {
 	protected static final String WebDirectory = "/www";
 	protected Service service;
 	protected int port;
+
+	static {
+		Spark.initExceptionHandler(Logger::error);
+	}
 
 	public AlexandriaSpark(int port) {
 		this(port, WebDirectory);
@@ -121,4 +127,5 @@ public class AlexandriaSpark<R extends SparkRouter> {
 		matcherFilter.init(null);
 		return new JettyHandler(matcherFilter);
 	}
+
 }

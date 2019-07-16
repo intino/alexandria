@@ -20,6 +20,7 @@ public class ImageRenderer extends SizedRenderer<Image> {
 		addAvatarProperties(result);
 		if (element.value() != null && !element.value().isEmpty()) result.add("value", resourceMethodFrame("value", element.value()));
 		if (element.defaultValue() != null && !element.defaultValue().isEmpty()) result.add("defaultValue", resourceMethodFrame("defaultValue", element.defaultValue()));
+		if (element.mobileReduceFactor() != 0) result.add("mobileReduceFactor", element.mobileReduceFactor());
 		return result;
 	}
 
