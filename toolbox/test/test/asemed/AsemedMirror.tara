@@ -139,10 +139,10 @@ DataHub datahub as Mirrored
 		Column(revisionInspeccionado, type = String)
 		Collect(format = Arff, datamart = datamart)
 
-	Mounter ajustes as Realtime
+	Mounter ajustes as Realtime("subs1")
 		Select(ajuste)
 
-	Mounter criterios as Realtime
+	Mounter criterios as Realtime("subs2")
 		Select(criterio)
 		Select(criterioBorrado)
 

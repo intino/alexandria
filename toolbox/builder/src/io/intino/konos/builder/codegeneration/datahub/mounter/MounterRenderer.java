@@ -39,9 +39,8 @@ public class MounterRenderer {
 	}
 
 	public void execute() {
-
 		for (Mounter mounter : mounters) {
-			final String mounterName = mounter.name$() + "Mounter";
+			final String mounterName = mounter.name$();
 			final FrameBuilder builder = new FrameBuilder("mounter").
 					add("box", boxName).
 					add("package", packageName).
@@ -66,7 +65,7 @@ public class MounterRenderer {
 	private void populationMounter(Mounter mounter, String mounterName, FrameBuilder builder) {
 		populationMounter(builder, mounter.asPopulation());
 		classes.put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datahub.mounters." + mounterName);
-		writeFrame(genMounters, mounter.name$() + "Mounter", customize(new MounterTemplate()).render(builder.toFrame()));
+		writeFrame(genMounters, mounter.name$(), customize(new MounterTemplate()).render(builder.toFrame()));
 		if (!alreadyRendered(sourceMounters, mounter.name$() + "MounterFunctions"))
 			writeFrame(sourceMounters, mounter.name$() + "MounterFunctions", customize(new MounterTemplate()).render(builder.add("src").toFrame()));
 	}
