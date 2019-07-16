@@ -10,25 +10,29 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.ui.UIService;
+import io.intino.plugin.project.LegioConfiguration;
+import io.intino.tara.compiler.shared.Configuration;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
+import static io.intino.konos.builder.codegeneration.Formatters.camelCaseToSnakeCase;
+import static io.intino.konos.builder.helpers.Commons.write;
+import static io.intino.plugin.dependencyresolution.DependencyCatalog.DependencyScope.WEB;
 import static io.intino.tara.plugin.project.configuration.ConfigurationManager.newExternalProvider;
 import static io.intino.tara.plugin.project.configuration.ConfigurationManager.register;
 import static java.util.Arrays.stream;
 
 public class UIAccessorCreator {
-
+	private static final String ARTIFACT_LEGIO = "artifact.legio";
 	private final Project project;
 	private final Module javaModule;
 	private final List<UIService> serviceList;
@@ -44,11 +48,7 @@ public class UIAccessorCreator {
 	public void execute() {
 		if (javaModule == null) return;
 		for (UIService service : serviceList) {
-			Module webModule = getOrCreateModule(service);
-			final UIAccessorRenderer renderer = new UIAccessorRenderer(javaModule, webModule, service, parent);
-			renderer.execute();
-			final boolean created = renderer.createConfigurationFile();
-			if (created) register(webModule, newExternalProvider(webModule));
+			new UIAccessorRenderer(javaModule, getOrCreateModule(service), service, parent).execute();
 		}
 	}
 
@@ -57,21 +57,55 @@ public class UIAccessorCreator {
 		Application application = ApplicationManager.getApplication();
 		application.invokeAndWait(() -> application.runWriteAction(() -> {
 			if (m != null) {
-				addModuleDependency(m);
+				addWebDependency(TaraUtil.configurationOf(m));
 				return;
 			}
 			final ModuleManager manager = ModuleManager.getInstance(project);
 			Module webModule = manager.newModule(modulePath(service), WebModuleType.WEB_MODULE);
 			final ModifiableRootModel model = ModuleRootManager.getInstance(webModule).getModifiableModel();
-			final File parent = new File(webModule.getModuleFilePath()).getParentFile();
-			parent.mkdirs();
-			final VirtualFile vFile = VfsUtil.findFileByIoFile(parent, true);
-			final ContentEntry contentEntry = vFile != null ? model.addContentEntry(vFile) : model.addContentEntry(parent.getAbsolutePath());
-			addExcludeFiles(parent, contentEntry);
+			final File moduleRoot = new File(webModule.getModuleFilePath()).getParentFile();
+			moduleRoot.mkdirs();
+			final VirtualFile vFile = VfsUtil.findFileByIoFile(moduleRoot, true);
+			final ContentEntry contentEntry = vFile != null ? model.addContentEntry(vFile) : model.addContentEntry(moduleRoot.getAbsolutePath());
+			addExcludeFiles(moduleRoot, contentEntry);
 			model.commit();
-			addModuleDependency(webModule);
+			boolean created = createConfigurationFile(moduleRoot, service.name$());
+			if (created) addWebDependency(register(webModule, newExternalProvider(webModule)));
 		}));
 		return findModule(service.name$());
+	}
+
+	private boolean createConfigurationFile(File moduleRoot, String name) {
+		final Configuration configuration = TaraUtil.configurationOf(javaModule);
+		FrameBuilder builder = new FrameBuilder("artifact", "legio");
+		builder.add("groupId", configuration.groupId());
+		builder.add("artifactId", camelCaseToSnakeCase().format(name).toString());
+		builder.add("version", configuration.version());
+		final Map<String, List<String>> repositories = reduce(configuration.releaseRepositories());
+		for (String id : repositories.keySet()) {
+			final FrameBuilder repoFrameBuilder = new FrameBuilder("repository", "release").add("id", id);
+			for (String url : repositories.get(id)) repoFrameBuilder.add("url", url);
+			builder.add("repository", repoFrameBuilder);
+		}
+		File file = new File(moduleRoot, ARTIFACT_LEGIO);
+		if (!file.exists()) {
+			write(file.toPath(), new ArtifactTemplate().render(builder));
+			return true;
+		}
+		return false;
+	}
+
+	private Map<String, List<String>> reduce(Map<String, String> map) {
+		Map<String, List<String>> reduced = new HashMap<>();
+		map.forEach((key, value) -> {
+			reduced.putIfAbsent(value, new ArrayList<>());
+			reduced.get(value).add(key);
+		});
+		return reduced;
+	}
+
+	private void addWebDependency(Configuration webConf) {
+		((LegioConfiguration) TaraUtil.configurationOf(javaModule)).addDependency(WEB, webConf.groupId() + ":" + webConf.artifactId() + ":" + webConf.version());
 	}
 
 	private Module findModule(String name) {
@@ -96,15 +130,4 @@ public class UIAccessorCreator {
 	private String modulePath(UIService service) {
 		return project.getBasePath() + File.separator + toSnakeCase(service.name$()) + File.separator + toSnakeCase(service.name$()) + ModuleFileType.DOT_DEFAULT_EXTENSION;
 	}
-
-	private void addModuleDependency(Module webModule) {
-		LibraryTable table = javaModule != null ? LibraryTablesRegistrar.getInstance().getLibraryTable(javaModule.getProject()) : null;
-		if (table == null) return;
-		final ModuleRootManager manager = ModuleRootManager.getInstance(javaModule);
-		final ModifiableRootModel modifiableModel = manager.getModifiableModel();
-		if (manager.isDependsOn(webModule)) return;
-		modifiableModel.addModuleOrderEntry(webModule);
-		modifiableModel.commit();
-	}
-
 }

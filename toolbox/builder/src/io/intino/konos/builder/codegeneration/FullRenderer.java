@@ -1,8 +1,11 @@
 package io.intino.konos.builder.codegeneration;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
 import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.search.GlobalSearchScope;
 import cottons.utils.Files;
 import io.intino.konos.builder.codegeneration.accessor.ui.UIAccessorCreator;
@@ -160,8 +163,8 @@ public class FullRenderer {
 			final List<? extends Configuration.LanguageLibrary> languages = configuration.languages();
 			if (languages.isEmpty() || languages.get(0).generationPackage() == null) return null;
 			final String workingPackage = languages.get(0).generationPackage().replace(".graph", "");
-			if (facade.findClass(workingPackage + ".box." + Formatters.firstUpperCase(languages.get(0).name()) + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
-				return workingPackage.toLowerCase() + ".box." + Formatters.firstUpperCase(languages.get(0).name());
+			PsiClass aClass = ApplicationManager.getApplication().runReadAction((Computable<PsiClass>) () -> facade.findClass(workingPackage + ".box." + Formatters.firstUpperCase(languages.get(0).name()) + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)));
+			if (aClass != null) return workingPackage.toLowerCase() + ".box." + Formatters.firstUpperCase(languages.get(0).name());
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}

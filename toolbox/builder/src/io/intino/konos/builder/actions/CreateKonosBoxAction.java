@@ -31,6 +31,7 @@ import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.legio.graph.Artifact.Imports.Dependency;
 import io.intino.plugin.IntinoException;
+import io.intino.plugin.dependencyresolution.DependencyCatalog;
 import io.intino.plugin.project.LegioConfiguration;
 import io.intino.plugin.project.LibraryConflictResolver.Version;
 import io.intino.plugin.project.LibraryConflictResolver.VersionRange;
@@ -101,7 +102,7 @@ public class CreateKonosBoxAction extends KonosAction {
 				filter(dep -> !isInModule(libraries, dep + ":" + requiredLibraries.get(dep)) && findDependency(toAdd, dep) == null || (conf.groupId() + ":" + conf.artifactId()).equals(dep)).
 				map(dep -> dep + ":" + requiredLibraries.get(dep)).
 				collect(toList());
-		conf.addCompileDependencies(collect);
+		collect.forEach(d -> conf.addDependency(DependencyCatalog.DependencyScope.COMPILE, d));
 		conf.updateCompileDependencies(requiredLibraries.keySet().stream().
 				filter(dep -> {
 					final Dependency dependency = findDependency(toAdd, dep);
