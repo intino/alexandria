@@ -2,7 +2,7 @@ def type(process)
 	package $package+validPackage.procedures.$procedure+lowercase;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
-    import io.intino.alexandria.inl.Message;
+    import io.intino.alexandria.message.Message;
 
     public class $name+FirstUpperCase~Process {
 
@@ -20,7 +20,7 @@ def type(schemaImport)
 end
 
 def attribute(message) trigger(typeClass)
-	io.intino.alexandria.inl.Message
+	io.intino.alexandria.message.Message
 end
 
 def type(schema) trigger(typeClass)
