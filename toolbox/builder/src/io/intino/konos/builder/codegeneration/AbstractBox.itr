@@ -276,7 +276,7 @@ def type(realtime) trigger(mounter)
 end
 
 def trigger(subscription)
-	this.dataHub.messageHub().attachListener("$tankName", "$subscriberId", (m) -> new $package.datahub.mounters.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).execute(m));
+	this.dataHub.messageHub().attachListener("$tankName", "$subscriberId", m -> new $package.datahub.mounters.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).handle(m));
 end
 
 def type(service & jmx) trigger(field)
