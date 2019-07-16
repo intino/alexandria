@@ -22,7 +22,7 @@ public class TopicConsumer {
 	public void listen(Consumer consumer) {
 		try {
 			if (session == null) return;
-			this.consumer = session.createConsumer(session.createTopic(topic));
+			this.consumer = session.createConsumer(session.createTopic(topic), null, true);
 			this.consumer.setMessageListener(consumer::accept);
 		} catch (Exception e) {
 			Logger.error(e.getMessage(), e);
@@ -32,7 +32,7 @@ public class TopicConsumer {
 	public void listen(Consumer consumer, String subscriberId) {
 		try {
 			if (session == null) return;
-			this.consumer = session.createDurableSubscriber(session.createTopic(topic), subscriberId);
+			this.consumer = session.createDurableSubscriber(session.createTopic(topic), subscriberId, null, true);
 			this.consumer.setMessageListener(consumer::accept);
 			this.subscriberID = subscriberId;
 		} catch (Exception e) {

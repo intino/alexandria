@@ -16,7 +16,7 @@ def type(mounter & batch)
 
 	import $package+validPackage.$box+firstUpperCase~Box;
 
-    public class $name+snakeCaseToCamelCase+FirstUpperCase~Mounter {
+    public class $name+snakeCaseToCamelCase+FirstUpperCase {
 		public $box+validName+firstUpperCase~Box box;
 
     	public void execute() {
@@ -35,8 +35,12 @@ def type(mounter & realtime)
 
 	$schemaImport
 
-	public class $name+snakeCaseToCamelCase+FirstUpperCase~Mounter {
-		public $box+validName+firstUpperCase~Box box;
+	public class $name+snakeCaseToCamelCase+FirstUpperCase {
+		private $box+validName+firstUpperCase~Box box;
+
+		public $name+snakeCaseToCamelCase+FirstUpperCase($box+validName+firstUpperCase~Box box) {
+			this.box = box;
+		}
 
 		public void handle(Message message) {
 			[try {
@@ -63,7 +67,7 @@ def type(mounter & population)
 	import java.util.function.Predicate;
 	import java.io.IOException;
 
-	public class $name+snakeCaseToCamelCase+FirstUpperCase~Mounter {
+	public class $name+snakeCaseToCamelCase+FirstUpperCase {
 		public $box+validName+firstUpperCase~Box box;
 
 		public void pump(Timetag from, Timetag to, Predicate<Timetag> filter) {

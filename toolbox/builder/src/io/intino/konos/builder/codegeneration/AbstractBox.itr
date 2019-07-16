@@ -6,7 +6,7 @@ def type(box)
 	import java.util.UUID;
 	[
 	import java.util.HashMap;
-    import java.util.Map;$hasUi+hideUi]
+    import java.util.Map$hasUi+hideUi]
 
 	import io.intino.alexandria.logger.Logger;
 	import java.util.logging.ConsoleHandler;
@@ -14,17 +14,17 @@ def type(box)
 
 	[$datahub+import]
 	[import io.intino.alexandria.rest.AlexandriaSpark;$hasREST]
-    [import io.intino.alexandria.ui.displays.Soul;$hasUi+hideUi]
+    [import io.intino.alexandria.ui.displays.Soul$hasUi+hideUi]
 
 	public abstract class AbstractBox extends [$hasUi+uiBox?io.intino.alexandria.core.Box] {
 		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;
 		[$service+field...[$NL]]
 		[$dataHub+field]
 		[$task+field]
-        [protected Map<String, Soul> uiSouls = new java.util.HashMap<>();$hasUi+hideUi]
-	    [private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();$hasUi+hideUi]
-		[private io.intino.alexandria.ui.services.AuthService authService;$hasUi+hideUi]
-		[private io.intino.alexandria.ui.services.EditorService editorService;$hasUi+hideUi]
+        [protected Map<String, Soul> uiSouls = new java.util.HashMap<>()$hasUi+hideUi]
+	    [private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>()$hasUi+hideUi]
+		[private io.intino.alexandria.ui.services.AuthService authService$hasUi+hideUi]
+		[private io.intino.alexandria.ui.services.EditorService editorService$hasUi+hideUi]
 
 		public AbstractBox(String$[] args) {
 			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
@@ -264,8 +264,19 @@ end
 
 def type(dataHub) trigger(init)
 	this.dataHub.start();
+	if(this.dataHub.messageHub() != null) {
+		$mounter...[$NL]
+	}
 	[registerFeeders();$feeder+hide]
 	Logger.info("Ness connection: started!");
+end
+
+def type(realtime) trigger(mounter)
+	$subscription...[$NL]
+end
+
+def trigger(subscription)
+	this.dataHub.messageHub().attachListener("$tankName", "$subscriberId", (m) -> new $package.datahub.mounters.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).execute(m));
 end
 
 def type(service & jmx) trigger(field)

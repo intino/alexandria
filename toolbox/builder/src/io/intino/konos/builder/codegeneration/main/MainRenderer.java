@@ -41,5 +41,4 @@ public class MainRenderer {
 	private String name() {
 		return module != null ? configuration.artifactId() : Configuration.Level.Solution.name();
 	}
-
 }

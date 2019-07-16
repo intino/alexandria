@@ -25,6 +25,7 @@ import java.util.Objects;
 
 import static io.intino.tara.plugin.project.configuration.ConfigurationManager.newExternalProvider;
 import static io.intino.tara.plugin.project.configuration.ConfigurationManager.register;
+import static java.util.Arrays.stream;
 
 public class UIAccessorCreator {
 
@@ -57,6 +58,7 @@ public class UIAccessorCreator {
 		application.invokeAndWait(() -> application.runWriteAction(() -> {
 			if (m != null) {
 				addModuleDependency(m);
+				return;
 			}
 			final ModuleManager manager = ModuleManager.getInstance(project);
 			Module webModule = manager.newModule(modulePath(service), WebModuleType.WEB_MODULE);
@@ -73,15 +75,9 @@ public class UIAccessorCreator {
 	}
 
 	private Module findModule(String name) {
-		return ApplicationManager.getApplication().runReadAction((Computable<Module>) () -> {
-			final ModuleManager manager = ModuleManager.getInstance(project);
-			Module[] modules = manager.getModules();
-			for (Module m : modules)
-				if (m.getName().equals(toSnakeCase(name))) {
-					return m;
-				}
-			return null;
-		});
+		return ApplicationManager.getApplication().
+				runReadAction((Computable<Module>) () ->
+						stream(ModuleManager.getInstance(project).getModules()).filter(m -> m.getName().equals(toSnakeCase(name))).findFirst().orElse(null));
 	}
 
 	private void addExcludeFiles(File parent, ContentEntry contentEntry) {

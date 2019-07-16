@@ -22,3 +22,5 @@ libraries/ness/datalake/temp
 libraries/ness/ingestion/temp
 ConfigurationTest.stash
 framework/ui-elements/lib
+.intino/artifacts
+.intino

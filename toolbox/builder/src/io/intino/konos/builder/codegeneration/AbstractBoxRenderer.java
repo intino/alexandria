@@ -10,6 +10,7 @@ import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.jms.JMSService;
 import io.intino.konos.model.graph.jmx.JMXService;
 import io.intino.konos.model.graph.mirrored.MirroredDataHub;
+import io.intino.konos.model.graph.realtime.RealtimeMounter;
 import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.slackbot.SlackBotService;
 import io.intino.konos.model.graph.standalone.StandAloneDataHub;
@@ -96,7 +97,19 @@ public class AbstractBoxRenderer {
 			dataHubFrame.add("datasource", new FrameBuilder("local").add("path", parameter(dataHub.asLocal().datalakePath())));
 		Frame[] feederFrames = graph.dataHub().feederList().stream().filter(f -> !f.sensorList().isEmpty()).map(this::frameOf).toArray(Frame[]::new);
 		if (feederFrames.length != 0) dataHubFrame.add("feeder", feederFrames);
+		Frame[] mounterFrames = graph.dataHub().mounterList().stream().filter(Mounter::isRealtime).map(m -> frameOf(m, boxName)).toArray(Frame[]::new);
+		if (mounterFrames.length != 0) dataHubFrame.add("mounter", mounterFrames);
+
 		builder.add("dataHub", dataHubFrame.toFrame());
+	}
+
+	private Frame frameOf(Mounter m, String boxName) {
+		RealtimeMounter mounter = m.asRealtime();
+		FrameBuilder[] subscriptions = mounter.selectList().stream().map(s -> s.tank().fullName()).map(t ->
+				new FrameBuilder("subscription").add("tankName", t).add("box", boxName).
+						add("package", packageName).add("name", mounter.name$()).add("subscriberId", mounter.subscriberId())).toArray(FrameBuilder[]::new);
+		FrameBuilder mounterFrame = new FrameBuilder("mounter", "realtime");
+		return mounterFrame.add("name", mounter.name$()).add("subscription", subscriptions).toFrame();
 	}
 
 	private void remoteDataSource(DataHub dataHub, FrameBuilder dataHubFrame) {

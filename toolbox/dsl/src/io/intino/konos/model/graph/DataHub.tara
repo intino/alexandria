@@ -77,6 +77,7 @@ Facet MounterType on Mounter
         	var Datamart datamart
         	var word:{Arff Tabb Csv} format
 	sub Realtime
+		var string subscriberId
 		Concept:{1..*} Select
 			var DataHub.Tank tank
 			var DataHub.Split split = empty
