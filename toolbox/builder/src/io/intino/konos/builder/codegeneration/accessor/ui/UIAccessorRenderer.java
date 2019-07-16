@@ -11,9 +11,7 @@ import io.intino.konos.builder.codegeneration.accessor.ui.widget.*;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.addressable.display.AddressableRequest;
 import io.intino.konos.model.graph.ui.UIService;
-import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.magritte.Layer;
-import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
@@ -27,7 +25,8 @@ import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
@@ -44,7 +43,7 @@ import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class UIAccessorRenderer {
 	private static final String SRC_DIRECTORY = "src";
-	private static final String ARTIFACT_LEGIO = "artifact.legio";
+
 	private final File genDirectory;
 	private final UIService service;
 	private Module appModule;
@@ -62,35 +61,6 @@ public class UIAccessorRenderer {
 		this.service = service;
 	}
 
-	boolean createConfigurationFile() {
-		final Configuration configuration = TaraUtil.configurationOf(appModule);
-		FrameBuilder builder = new FrameBuilder();
-		builder.add("artifact", "legio");
-		builder.add("groupID", configuration.groupId());
-		builder.add("artifactID", configuration.artifactId());
-		builder.add("version", configuration.version());
-		final Map<String, List<String>> repositories = reduce(configuration.releaseRepositories());
-		for (String id : repositories.keySet()) {
-			final FrameBuilder repoFrameBuilder = new FrameBuilder("repository", "release").add("id", id);
-			for (String url : repositories.get(id)) repoFrameBuilder.add("url", url);
-			builder.add("repository", repoFrameBuilder);
-		}
-		File file = new File(genDirectory, ARTIFACT_LEGIO);
-		if (!file.exists()) {
-			write(file.toPath(), new ArtifactTemplate().render(builder));
-			return true;
-		}
-		return false;
-	}
-
-	private Map<String, List<String>> reduce(Map<String, String> map) {
-		Map<String, List<String>> reduced = new HashMap<>();
-		for (Map.Entry<String, String> entry : map.entrySet()) {
-			if (!reduced.containsKey(entry.getValue())) reduced.put(entry.getValue(), new ArrayList<>());
-			reduced.get(entry.getValue()).add(entry.getKey());
-		}
-		return reduced;
-	}
 
 	public void execute() {
 		try {

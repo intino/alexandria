@@ -1,13 +1,13 @@
 def type(artifact & legio)
 	dsl Legio
 
-	Artifact(groupId = "$groupID", version = "1.0.0") $artifactID~UI
+	Artifact(groupId = "$groupId+lowercase", version = "1.0.0") $artifactId+lowercase
 		WebImports
 			WebArtifact("io.intino.alexandria", "ui-elements", "LATEST") alexandria-ui-elements
-
 			Resolution("jquery", "3.1.0")
-	$repository
-end
+
+	$repository...[$NL$NL]
+endº
 
 def type(repository)
 	Repository("$id")
