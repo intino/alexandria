@@ -29,8 +29,8 @@ def type(mounter & realtime)
 	package $package+validPackage.datahub.mounters;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
-	import io.intino.alexandria.inl.Message;
-	import io.intino.alexandria.inl.MessageCast;
+	import io.intino.alexandria.message.Message;
+	import io.intino.alexandria.message.MessageCast;
 	import io.intino.alexandria.logger.Logger;
 
 	$schemaImport
@@ -151,7 +151,7 @@ def type(schemaImport)
 end
 
 def attribute(message) trigger(typeClass)
-	io.intino.alexandria.inl.Message
+	io.intino.alexandria.message.Message
 end
 
 def type(schema) trigger(typeClass)
