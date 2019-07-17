@@ -1,0 +1,70 @@
+def type(feeder & simple)
+	package $package+validPackage.datahub.feeders;
+
+	import $package+validPackage.$box+firstUpperCase~Box;
+
+	public class $name+FirstUpperCase {
+		private $box+FirstUpperCase~Box box;
+
+		public $name+FirstUpperCase($box+FirstUpperCase~Box box) {
+			this.box = box;
+		}
+
+		public void exectute() {
+
+		}
+	}
+end
+
+def type(feeder & complex)
+	package $package+validPackage.datahub.feeders;
+
+	import $package+validPackage.$box+firstUpperCase~Box;
+
+	import io.intino.alexandria.message.Message;
+	import java.util.Arrays;
+
+	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
+
+		public $name+FirstUpperCase($box+FirstUpperCase~Box box) {
+			super(box);
+		}
+
+		$sensor+class
+	}
+end
+
+def type(sensor) trigger(class)
+	public static class $name+FirstUpperCase~Sensor extends Abstract$name+FirstUpperCase~Sensor {
+
+		public $name+FirstUpperCase~Sensor() {
+		}
+
+		$parent+get
+
+		$parent+methods
+	}
+end
+
+def type(poll) trigger(get)
+	public Message get(Object... args) {
+		String option = null; //TODO
+		return get(option, args);
+	}
+end
+
+def trigger(get)
+	public Message get(Object... args) {
+		return null;
+	}
+end
+
+def type(poll) trigger(methods)
+	$eventMethod...[$NL]
+end
+
+def trigger(eventMethod)
+	protected Object $value+firstLowerCase(java.util.List<Object> objects) {
+		//return null;
+	}
+end

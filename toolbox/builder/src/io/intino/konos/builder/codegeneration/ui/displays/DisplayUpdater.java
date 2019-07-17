@@ -1,6 +1,10 @@
 package io.intino.konos.builder.codegeneration.ui.displays;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.psi.*;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Settings;
@@ -16,18 +20,27 @@ import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAct
 
 public class DisplayUpdater<D extends Display> extends PassiveViewUpdater<D> {
 	private final PsiElementFactory factory;
+	private final PsiFile file;
+	private Project project;
+	private Display display;
+	private String packageName;
+	private Application application = ApplicationManager.getApplication();
 
-	public DisplayUpdater(Settings settings, D display, File file) {
-		super(settings, display, file);
-		this.factory = JavaPsiFacade.getElementFactory(settings.project());
+	DisplayUpdater(Settings settings, D display, File file) {
+		this.project = settings.project();
+		this.factory = JavaPsiFacade.getElementFactory(project);
+		this.display = display;
+		this.packageName = settings.packageName();
+		this.file = application.runReadAction((Computable<PsiFile>) () -> PsiManager.getInstance(project).findFile(Objects.requireNonNull(VfsUtil.findFileByIoFile(file, true))));
 	}
 
 	public void update() {
-		if (!(file instanceof PsiJavaFile) || ((PsiJavaFile) file).getClasses()[0] == null) return;
-		PsiJavaFile javaFile = (PsiJavaFile) file;
-		final PsiClass psiClass = javaFile.getClasses()[0];
-		if (!ApplicationManager.getApplication().isWriteAccessAllowed())
-			runWriteCommandAction(settings.project(), () -> update(psiClass));
+		PsiClass psiClass = application.runReadAction((Computable<PsiClass>) () -> {
+			if (!(file instanceof PsiJavaFile) || ((PsiJavaFile) file).getClasses()[0] == null) return null;
+			return ((PsiJavaFile) file).getClasses()[0];
+		});
+		if (!application.isWriteAccessAllowed())
+			runWriteCommandAction(project, () -> update(psiClass));
 		else update(psiClass);
 	}
 

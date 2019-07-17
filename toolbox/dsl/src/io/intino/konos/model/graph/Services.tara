@@ -1,5 +1,6 @@
 dsl Proteo
 
+use Processes
 use DataTypes
 
 Concept:Named Service
@@ -72,6 +73,12 @@ Facet REST on Service
         	var word:{body path form header query} in //TODO si body: requerido que este definido como "fomat"
         	//TODO si no, debe ser cualquier otro y en caso de ser tipo file el consumes debe ser "multipart/form-data" y el
         	//TODO in debe ser form.
+
+Facet Launcher on REST.Resource.Operation
+	var Process process
+
+Facet Launcher on JMS.Request
+	var Process process
 
 Facet JMX on Service
 	var string path = ""

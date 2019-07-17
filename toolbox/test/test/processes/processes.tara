@@ -1,0 +1,19 @@
+dsl Konos
+
+Service api as REST(host = "localhost", port = "8080")
+	Resource("/ficheros") ficheros
+		Post recibirFicheros
+			Parameter(in = query) name as Text
+			Response(code = "200")
+
+Service bus as JMS(url = "", user = "", password = "", clientId = "", subscriptionModel = Topic)
+	Request("recibir.respuesta") recibirRespuesta as Launcher(ProcesarRespuesta)
+
+Process ProcesamientoFichero
+
+Process ProcesarRespuesta
+
+Dialog(url = "/process", label = "Procesa anomalía", description = "") ProcesarAnomalia
+
+
+
