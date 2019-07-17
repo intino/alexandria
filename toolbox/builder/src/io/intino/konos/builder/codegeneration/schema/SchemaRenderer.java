@@ -34,7 +34,7 @@ public class SchemaRenderer extends Renderer {
 	private final String packageName;
 
 	public SchemaRenderer(Settings settings, Schema schema, File destination, String packageName) {
-		super(settings, Target.Service);
+		super(settings, Target.Owner);
 		this.schema = schema;
 		this.destination = destination != null ? destination : gen();
 		this.packageName = packageName != null ? packageName : settings.packageName();

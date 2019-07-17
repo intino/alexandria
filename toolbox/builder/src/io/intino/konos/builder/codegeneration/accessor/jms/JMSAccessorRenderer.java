@@ -23,7 +23,7 @@ public class JMSAccessorRenderer extends Renderer {
 	private File destination;
 
 	public JMSAccessorRenderer(Settings settings, JMSService application, File destination) {
-		super(settings, Target.Service);
+		super(settings, Target.Owner);
 		this.service = application;
 		this.destination = destination;
 	}

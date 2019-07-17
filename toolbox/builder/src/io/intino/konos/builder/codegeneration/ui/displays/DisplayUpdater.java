@@ -15,6 +15,7 @@ import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.PassiveView.Request;
 
 import java.io.File;
+import java.util.Objects;
 
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
 
@@ -26,7 +27,8 @@ public class DisplayUpdater<D extends Display> extends PassiveViewUpdater<D> {
 	private String packageName;
 	private Application application = ApplicationManager.getApplication();
 
-	DisplayUpdater(Settings settings, D display, File file) {
+	protected DisplayUpdater(Settings settings, D display, File file) {
+		super(settings, display, file);
 		this.project = settings.project();
 		this.factory = JavaPsiFacade.getElementFactory(project);
 		this.display = display;

@@ -40,7 +40,7 @@ public class RESTServiceRenderer extends Renderer {
 	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 
 	public RESTServiceRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Service);
+		super(settings, Target.Owner);
 		this.services = graph.rESTServiceList();
 		this.graph = graph;
 	}

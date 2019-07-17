@@ -23,7 +23,7 @@ public class SchedulerRenderer extends Renderer {
 	private final List<Task> tasks;
 
 	public SchedulerRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Service);
+		super(settings, Target.Owner);
 		this.tasks = graph.taskList();
 	}
 

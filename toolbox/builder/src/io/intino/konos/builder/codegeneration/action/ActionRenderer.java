@@ -24,7 +24,7 @@ public abstract class ActionRenderer extends Renderer {
 	private final String type;
 
 	public ActionRenderer(Settings settings, String type) {
-		super(settings, Target.Service);
+		super(settings, Target.Owner);
 		this.type = type;
 	}
 

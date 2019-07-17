@@ -1,34 +1,34 @@
 package io.intino.konos.builder.codegeneration.main;
 
-import com.intellij.openapi.module.Module;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 
 import java.io.File;
 
 public class MainRenderer {
+	private final Settings settings;
 	private final File destination;
 	private final boolean hasModel;
-	private final String packageName;
-	private final Module module;
 	private final Configuration configuration;
 
-	public MainRenderer(File destination, boolean hasModel, String packageName, Module module) {
-		this.destination = destination;
+	public MainRenderer(Settings settings, KonosGraph graph, boolean hasModel) {
+		this.settings = settings;
+		this.destination = settings.src(Target.Owner);
 		this.hasModel = hasModel;
-		this.packageName = packageName;
-		this.module = module;
-		this.configuration = module != null ? TaraUtil.configurationOf(module) : null;
+		this.configuration = settings.module() != null ? TaraUtil.configurationOf(settings.module()) : null;
 	}
 
 	public void execute() {
 		if (configuration == null) return;
-		final String name = name();
-		FrameBuilder builder = new FrameBuilder("main").add("package", packageName).add("name", name);
+		final String name = settings.boxName();
+		FrameBuilder builder = new FrameBuilder("main").add("package", settings.packageName()).add("name", name);
 		if (hasModel) builder.add("model", new FrameBuilder("model").add("name", name).toFrame());
 		if (!Commons.javaFile(destination, "Main").exists())
 			Commons.writeFrame(destination, "Main", template().render(builder.toFrame()));
@@ -38,7 +38,4 @@ public class MainRenderer {
 		return Formatters.customize(new MainTemplate());
 	}
 
-	private String name() {
-		return module != null ? configuration.artifactId() : Configuration.Level.Solution.name();
-	}
 }

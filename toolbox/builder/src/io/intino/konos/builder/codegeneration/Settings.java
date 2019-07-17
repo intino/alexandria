@@ -3,12 +3,14 @@ package io.intino.konos.builder.codegeneration;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
+import io.intino.tara.compiler.shared.Configuration;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.createIfNotExists;
+import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.configurationOf;
 
 public class Settings {
 	private Project project;
@@ -20,7 +22,7 @@ public class Settings {
 	private File gen;
 	private ElementCache cache;
 	private String packageName;
-	private String boxName;
+	private String boxName = null;
 	private Map<String, String> classes = new HashMap<>();
 
 	public Settings() {
@@ -73,11 +75,11 @@ public class Settings {
 	}
 
 	public File root(Target target) {
-		return createIfNotExists(target == Target.Service ? new File(module().getModuleFilePath()).getParentFile() : new File(webModule().getModuleFilePath()).getParentFile());
+		return createIfNotExists(target == Target.Owner ? new File(module().getModuleFilePath()).getParentFile() : new File(webModule().getModuleFilePath()).getParentFile());
 	}
 
 	public File res(Target target) {
-		return createIfNotExists(target == Target.Service ? res : accessorRes());
+		return createIfNotExists(target == Target.Owner ? res : accessorRes());
 	}
 
 	public Settings res(File res) {
@@ -86,7 +88,7 @@ public class Settings {
 	}
 
 	public File src(Target target) {
-		return createIfNotExists(target == Target.Service ? src : accessorSrc());
+		return createIfNotExists(target == Target.Owner ? src : accessorSrc());
 	}
 
 	public Settings src(File src) {
@@ -95,7 +97,7 @@ public class Settings {
 	}
 
 	public File gen(Target target) {
-		return createIfNotExists(target == Target.Service ? gen : accessorGen());
+		return createIfNotExists(target == Target.Owner ? gen : accessorGen());
 	}
 
 	public Settings gen(File gen) {
@@ -122,12 +124,8 @@ public class Settings {
 	}
 
 	public String boxName() {
+		if (boxName == null) boxName = module() != null ? configurationOf(module()).artifactId() : Configuration.Level.Solution.name();
 		return boxName;
-	}
-
-	public Settings boxName(String boxName) {
-		this.boxName = boxName;
-		return this;
 	}
 
 	public Map<String, String> classes() {

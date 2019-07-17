@@ -24,7 +24,7 @@ public class ServiceRenderer extends UIRenderer {
 	private final UIService service;
 
 	public ServiceRenderer(Settings settings, UIService service) {
-		super(settings, Target.Service);
+		super(settings, Target.Owner);
 		this.service = service;
 	}
 

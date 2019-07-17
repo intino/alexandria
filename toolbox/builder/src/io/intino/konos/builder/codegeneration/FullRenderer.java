@@ -2,14 +2,11 @@ package io.intino.konos.builder.codegeneration;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.search.GlobalSearchScope;
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
-import cottons.utils.Files;
-import io.intino.konos.builder.codegeneration.accessor.ui.UIAccessorCreator;
 import io.intino.konos.builder.codegeneration.datahub.adapter.AdapterRenderer;
 import io.intino.konos.builder.codegeneration.datahub.feeder.FeederRenderer;
 import io.intino.konos.builder.codegeneration.datahub.messagehub.MessageHubRenderer;
@@ -25,19 +22,11 @@ import io.intino.konos.builder.codegeneration.services.jmx.JMXServerRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTResourceRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
-import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
-import io.intino.plugin.project.LegioConfiguration;
-import io.intino.konos.builder.codegeneration.services.ui.UIServiceRenderer;
-import io.intino.konos.builder.codegeneration.services.ui.dialog.DialogRenderer;
-import io.intino.konos.builder.codegeneration.services.ui.dialog.DialogsRenderer;
-import io.intino.konos.builder.codegeneration.services.ui.display.DisplayRenderer;
-import io.intino.konos.builder.codegeneration.services.ui.display.DisplaysRenderer;
-import io.intino.konos.builder.codegeneration.services.ui.resource.ResourceRenderer;
 import io.intino.konos.builder.codegeneration.task.SchedulerRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskRenderer;
+import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.plugin.codeinsight.linemarkers.InterfaceToJavaImplementation;
-import io.intino.tara.compiler.shared.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -58,7 +47,6 @@ public class FullRenderer {
 	public FullRenderer(KonosGraph graph, Settings settings) {
 		this.graph = graph;
 		this.settings = settings;
-		this.settings.boxName(snakeCaseToCamelCase(boxName()));
 		this.settings.parent(parent());
 		this.hasModel = hasModel();
 	}
@@ -155,7 +143,7 @@ public class FullRenderer {
 
 	private void main() {
 		new MainRenderer(settings, graph, hasModel).execute();
-		final File file = new File(settings.res(Target.Service), "log4j.properties");
+		final File file = new File(settings.res(Target.Owner), "log4j.properties");
 		if (!file.exists()) {
 			try {
 				java.nio.file.Files.write(file.toPath(), getBytes());
@@ -163,10 +151,6 @@ public class FullRenderer {
 				Logger.getRootLogger().error(e.getMessage(), e);
 			}
 		}
-	}
-
-	private String boxName() {
-		return module != null ? configurationOf(module).artifactId() : Configuration.Level.Solution.name();
 	}
 
 	private String parent() {

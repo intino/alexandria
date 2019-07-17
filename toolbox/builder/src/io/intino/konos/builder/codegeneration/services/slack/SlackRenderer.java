@@ -28,7 +28,7 @@ public class SlackRenderer extends Renderer {
 	private final List<SlackBotService> services;
 
 	public SlackRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Service);
+		super(settings, Target.Owner);
 		this.services = graph.slackBotServiceList();
 	}
 

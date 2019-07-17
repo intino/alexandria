@@ -26,7 +26,7 @@ public class JMSRequestRenderer extends Renderer {
 	private final List<JMSService> services;
 
 	public JMSRequestRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Service);
+		super(settings, Target.Owner);
 		this.services = graph.jMSServiceList();
 	}
 

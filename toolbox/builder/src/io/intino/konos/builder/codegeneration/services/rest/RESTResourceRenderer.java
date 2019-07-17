@@ -33,7 +33,7 @@ public class RESTResourceRenderer extends Renderer {
 	private final List<RESTService> services;
 
 	public RESTResourceRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Service);
+		super(settings, Target.Owner);
 		this.services = graph.rESTServiceList();
 	}
 

@@ -13,14 +13,14 @@ public class ServiceListRenderer extends UIRenderer {
 	private final KonosGraph graph;
 
 	public ServiceListRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Service);
+		super(settings, Target.Owner);
 		this.graph = graph;
 	}
 
 	@Override
 	public void render() {
 		graph.uIServiceList().forEach(this::processUIService);
-		new ResourceListRenderer(settings, graph, Target.Service).execute();
+		new ResourceListRenderer(settings, graph, Target.Owner).execute();
 	}
 
 	private void processUIService(UIService service) {
