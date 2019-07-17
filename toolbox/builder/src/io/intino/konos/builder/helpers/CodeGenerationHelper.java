@@ -74,11 +74,11 @@ public class CodeGenerationHelper {
 	}
 
 	public static String uiSubPath(Target target) {
-		return target == Target.Service ? UI + "/" : "";
+		return target == Target.Owner ? UI + "/" : "";
 	}
 
 	public static File fileOf(File file, String name, Target target) {
-		if (target == Target.Service) return javaFile(file, name);
+		if (target == Target.Owner) return javaFile(file, name);
 		return javascriptFile(file, name);
 	}
 

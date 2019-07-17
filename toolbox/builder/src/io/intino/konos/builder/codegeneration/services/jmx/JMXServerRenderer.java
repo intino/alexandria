@@ -19,7 +19,7 @@ public class JMXServerRenderer extends Renderer {
 	private final List<JMXService> jmxServices;
 
 	public JMXServerRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Service);
+		super(settings, Target.Owner);
 		jmxServices = graph.jMXServiceList();
 	}
 

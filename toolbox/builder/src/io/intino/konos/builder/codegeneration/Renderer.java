@@ -39,10 +39,6 @@ public abstract class Renderer {
 		return settings.boxName();
 	}
 
-	protected String name() {
-		return module() != null ? configuration().artifactId() : Configuration.Level.Solution.name();
-	}
-
 	protected Configuration configuration() {
 		return module() != null ? TaraUtil.configurationOf(module()) : null;
 	}

@@ -19,7 +19,7 @@ public class DisplayCleaner extends Cleaner {
 	public void execute() {
 		System.out.println(String.format("Removed %s", reference.name()));
 		clean(Target.Accessor);
-		clean(Target.Service);
+		clean(Target.Owner);
 		cache().remove(reference.toString());
 	}
 

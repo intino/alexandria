@@ -29,7 +29,7 @@ public class TaskRenderer extends Renderer {
 	private final List<Task> tasks;
 
 	public TaskRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Service);
+		super(settings, Target.Owner);
 		this.scheduledTasks = graph.scheduledTaskList();
 		this.tasks = graph.taskList().stream().filter(t -> !t.isScheduled()).collect(Collectors.toList());
 	}
@@ -105,7 +105,7 @@ public class TaskRenderer extends Renderer {
 	@NotNull
 	private FrameBuilder baseFrame(String... types) {
 		return new FrameBuilder(types)
-				.add("box", boxName)
-				.add("package", packageName);
+				.add("box", settings.boxName())
+				.add("package", settings.packageName());
 	}
 }

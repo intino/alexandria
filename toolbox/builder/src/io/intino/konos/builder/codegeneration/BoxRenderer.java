@@ -11,7 +11,6 @@ import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.dsl.Meta;
 import io.intino.tara.dsl.Proteo;
-import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ public class BoxRenderer extends Renderer {
 	private boolean isTara;
 
 	BoxRenderer(Settings settings, KonosGraph graph, boolean isTara) {
-		super(settings, Target.Service);
+		super(settings, Target.Owner);
 		this.graph = graph;
 		this.isTara = isTara;
 	}
@@ -32,7 +31,7 @@ public class BoxRenderer extends Renderer {
 	@Override
 	public void render() {
 		if (configuration() == null) return;
-		final String name = name();
+		final String name = settings.boxName();
 		if (Commons.javaFile(src(), snakeCaseToCamelCase(name) + "Box").exists()) {
 			return;
 		}
@@ -55,7 +54,7 @@ public class BoxRenderer extends Renderer {
 	private Frame fillTara() {
 		FrameBuilder builder = new FrameBuilder();
 		Configuration configuration = configuration();
-		builder.add("name", name());
+		builder.add("name", settings.boxName());
 		if (configuration.outLanguage() != null) builder.add("outDSL", configuration.outLanguage());
 		builder.add("wrapper", dsls());
 		return builder.toFrame();

@@ -37,7 +37,7 @@ public class RESTAccessorRenderer extends Renderer {
 	private File destination;
 
 	public RESTAccessorRenderer(Settings settings, RESTService restService, File destination) {
-		super(settings, Target.Service);
+		super(settings, Target.Owner);
 		this.service = restService;
 		this.destination = destination;
 	}

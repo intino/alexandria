@@ -26,7 +26,7 @@ public class JMXAccessorRenderer extends Renderer {
 	private String packageName;
 
 	public JMXAccessorRenderer(Settings settings, JMXService restService, File destination) {
-		super(settings, Target.Service);
+		super(settings, Target.Owner);
 		this.service = restService;
 		this.destination = new File(destination, "konos");
 		this.packageName = settings.packageName() + ".konos";

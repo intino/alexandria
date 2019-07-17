@@ -168,23 +168,6 @@ public class CreateKonosBoxAction extends KonosAction {
 		return false;
 	}
 
-	private VirtualFile getGenRoot(Module module) {
-		for (VirtualFile file : getSourceRoots(module))
-			if (file.isDirectory() && "gen".equals(file.getName())) return file;
-		final VirtualFile genDirectory = createDirectory(module, "gen");
-		if (genDirectory == null) return null;
-		PsiTestUtil.addSourceRoot(module, genDirectory, JavaSourceRootType.SOURCE);
-		return genDirectory;
-	}
-
-	private VirtualFile getResRoot(Module module) {
-		for (VirtualFile file : getSourceRoots(module))
-			if (file.isDirectory() && "res".equals(file.getName())) return file;
-		final VirtualFile resDirectory = createDirectory(module, "res");
-		PsiTestUtil.addSourceRoot(module, resDirectory, JavaResourceRootType.RESOURCE);
-		return resDirectory;
-	}
-
 	private VirtualFile createDirectory(Module module, String name) {
 		final Application a = ApplicationManager.getApplication();
 		if (!a.isWriteAccessAllowed()) return a.runWriteAction((Computable<VirtualFile>) () -> create(module, name));
@@ -297,28 +280,12 @@ public class CreateKonosBoxAction extends KonosAction {
 		return resDirectory;
 	}
 
-	private VirtualFile createDirectory(Module module, String name) {
-		final Application a = ApplicationManager.getApplication();
-		if (!a.isWriteAccessAllowed()) return a.runWriteAction((Computable<VirtualFile>) () -> create(module, name));
-		return create(module, name);
-	}
-
 	private io.intino.konos.builder.codegeneration.cache.ElementCache loadCache(File folder, KonosGraph graph, Stash stash) {
 		return new CacheReader(folder).load(graph, stash);
 	}
 
 	private void saveCache(io.intino.konos.builder.codegeneration.cache.ElementCache cache, File folder) {
 		new CacheWriter(folder).save(cache);
-	}
-
-	@Nullable
-	private VirtualFile create(Module module, String name) {
-		try {
-			final VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
-			return VfsUtil.createDirectoryIfMissing(contentRoots[0], name);
-		} catch (IOException e) {
-			return null;
-		}
 	}
 
 }

@@ -13,7 +13,7 @@ public class FullCleaner extends Cleaner {
 
 	@Override
 	public void execute() {
-		clean(gen(Target.Service));
+		clean(gen(Target.Owner));
 		new ServiceListCleaner(settings, graph).execute();
 	}
 

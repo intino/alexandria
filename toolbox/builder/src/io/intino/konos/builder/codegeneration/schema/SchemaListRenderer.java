@@ -30,7 +30,7 @@ public class SchemaListRenderer extends Renderer {
 	}
 
 	public SchemaListRenderer(Settings settings, KonosGraph graph, File destination, String packageName) {
-		super(settings, Target.Service);
+		super(settings, Target.Owner);
 		this.schemas = graph.core$().find(Schema.class).stream().filter(s -> !s.core$().owner().is(Schema.class)).collect(toList());
 		this.services = graph.serviceList();
 		this.destination = destination != null ? destination : gen();

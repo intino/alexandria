@@ -46,7 +46,7 @@ public class AccessibleDisplayActionRenderer extends ActionRenderer {
 
 	@Override
 	protected File destinyPackage(File destiny) {
-		return new File(destiny, format(CodeGenerationHelper.Pages, Target.Service));
+		return new File(destiny, format(CodeGenerationHelper.Pages, Target.Owner));
 	}
 
 	@Override

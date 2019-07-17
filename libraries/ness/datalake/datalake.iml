@@ -15,13 +15,10 @@
     <orderEntry type="library" scope="TEST" name="Intino: org.assertj:assertj-core:3.11.1" level="project" />
     <orderEntry type="module" module-name="logger" />
     <orderEntry type="module" module-name="message" />
-    <orderEntry type="module" module-name="zet" />
     <orderEntry type="module" module-name="mapp" />
     <orderEntry type="module" module-name="tris" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
-    <orderEntry type="module" module-name="zim" />
     <orderEntry type="module" module-name="primitives" />
-    <orderEntry type="module" module-name="jms" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:exceptions:1.0.0" level="project" />
     <orderEntry type="library" name="Intino: com.sun.xml.security:xml-security-impl:1.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.0.0" level="project" />
@@ -31,7 +28,10 @@
     <orderEntry type="library" name="Intino: org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1" level="project" />
     <orderEntry type="library" name="Intino: org.fusesource.hawtbuf:hawtbuf:1.11" level="project" />
     <orderEntry type="library" name="Intino: org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:1.0.1" level="project" />
-    <orderEntry type="library" name="Intino: commons-net:commons-net:3.6" level="project" />
-    <orderEntry type="library" name="Intino: javax.jmdns:jmdns:3.4.1" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:zim:1.0.7" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:message:1.0.0" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.3" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:jms:1.0.2" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:zet:1.0.5" level="project" />
   </component>
 </module>

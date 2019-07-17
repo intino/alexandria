@@ -21,7 +21,7 @@ public class ExceptionRenderer extends Renderer {
 	private final List<io.intino.konos.model.graph.Exception> exceptions;
 
 	public ExceptionRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Service);
+		super(settings, Target.Owner);
 		this.exceptions = graph.exceptionList();
 	}
 

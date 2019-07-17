@@ -15,7 +15,7 @@ public class BoxConfigurationRenderer extends Renderer {
 	private boolean isTara;
 
 	public BoxConfigurationRenderer(Settings settings, KonosGraph graph, boolean isTara) {
-		super(settings, Target.Service);
+		super(settings, Target.Owner);
 		this.configuration = module() != null ? TaraUtil.configurationOf(module()) : null;
 		this.isTara = isTara;
 	}
@@ -28,7 +28,7 @@ public class BoxConfigurationRenderer extends Renderer {
 	}
 
 	private String fillFrame(FrameBuilder builder) {
-		final String boxName = name();
+		final String boxName = settings.boxName();
 		builder.add("name", boxName).add("package", packageName());
 		if (parent() != null && configuration != null && !Platform.equals(configuration.level())) builder.add("parent", parent());
 		if (isTara) builder.add("tara", "");
