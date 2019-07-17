@@ -1,6 +1,7 @@
 package io.intino.alexandria.bpm;
 
 import io.intino.alexandria.message.Message;
+import io.intino.alexandria.message.MessageHub;
 
 import java.util.*;
 
@@ -19,7 +20,7 @@ public class Workflow {
 
 	public Workflow(MessageHub messageHub, ProcessFactory processFactory) {
 		this.messageHub = messageHub;
-		this.messageHub.registerListener(Channel, Workflow.this::process);
+		this.messageHub.attachListener(Channel, Workflow.this::process);
 		this.processFactory = processFactory;
 	}
 

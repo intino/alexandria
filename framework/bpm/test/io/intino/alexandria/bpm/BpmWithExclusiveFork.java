@@ -1,6 +1,7 @@
 package io.intino.alexandria.bpm;
 
 import io.intino.alexandria.message.Message;
+import io.intino.alexandria.message.MessageHub;
 import org.junit.Test;
 
 import java.util.List;
