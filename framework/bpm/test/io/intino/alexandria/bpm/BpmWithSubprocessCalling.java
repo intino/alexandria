@@ -1,6 +1,7 @@
 package io.intino.alexandria.bpm;
 
 import io.intino.alexandria.message.Message;
+import io.intino.alexandria.message.MessageHub;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -33,8 +34,14 @@ public class BpmWithSubprocessCalling {
 			if(process2==null) process2 = workflow.process("2");
 			Thread.sleep(100);
 		}
-		List<ProcessStatus> messages = process1.messages(); //TODO
-		assertThat(messages.get(0).message().toString(), is(createProcessMessage().toString()));
+		List<ProcessStatus> messages = process1.messages();
+		assertThat(messages.get(1).stateInfo().name(), is("CreateString"));
+		assertThat(messages.get(1).stateInfo().status(), is("Enter"));
+		assertThat(messages.get(2).stateInfo().name(), is("CreateString"));
+		assertThat(messages.get(2).stateInfo().status(), is("Exit"));
+		if(process1.exitStateStatus("CreateString").taskInfo().result().equals("Hello"))
+			assertThat(process1.exitStateStatus("HandleSubprocessEnding").taskInfo().result(), is("true"));
+		else assertThat(process1.exitStateStatus("HandleSubprocessEnding").taskInfo().result(), is("false"));
 	}
 
 	private boolean hasEnded(Process... processes) {
@@ -70,7 +77,7 @@ public class BpmWithSubprocessCalling {
 				@Override
 				public String execute() {
 					memory.put(id(), Math.random() < 0.5 ? "Hello" : "Goodbye");
-					return "create string executed";
+					return memory.get(id());
 				}
 
 			};

@@ -26,10 +26,25 @@ public class BpmWithExclusiveForkAndDeathPath {
 			Thread.sleep(100);
 		}
 		List<ProcessStatus> messages = process.messages();
-		messages.stream().forEach(m -> {
-			System.out.println(m.message().toString().replace("\n", "\t"));
-		});
-		assertThat(messages.get(0).message().toString(), is(createProcessMessage().toString()));
+
+		assertThat(messages.get(0).processStatus(), is("Enter"));
+		assertThat(messages.get(1).stateInfo().name(), is("CreateString"));
+		assertThat(messages.get(1).stateInfo().status(), is("Enter"));
+		assertThat(messages.get(2).stateInfo().name(), is("CreateString"));
+		assertThat(messages.get(2).stateInfo().status(), is("Exit"));
+		assertThat(messages.get(3).stateInfo().name(), is("CheckContainsHello"));
+		assertThat(messages.get(3).stateInfo().status(), is("Enter"));
+		assertThat(messages.get(4).stateInfo().name(), is("CheckContainsHello"));
+		assertThat(messages.get(4).stateInfo().status(), is("Exit"));
+		if (process.exitStateStatus("CreateString").taskInfo().result().equals("Hello")) {
+			assertThat(process.exitStateStatus("ProcessHello2").taskInfo().result(), is("Processing hello2"));
+			assertThat(process.exitStateStatus("ProcessGoodbye2").stateInfo().status(), is("Skipped"));
+			assertThat(process.exitStateStatus("Terminate").taskInfo().result(), is("hello2"));
+		} else {
+			assertThat(process.exitStateStatus("ProcessGoodbye2").taskInfo().result(), is("Processing goodbye2"));
+			assertThat(process.exitStateStatus("ProcessHello2").stateInfo().status(), is("Skipped"));
+			assertThat(process.exitStateStatus("Terminate").taskInfo().result(), is("bye2"));
+		}
 	}
 
 	private boolean hasEnded(Process... processes) {
