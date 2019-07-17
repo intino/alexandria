@@ -27,6 +27,9 @@ const PushService = (function () {
             });
         };
 
+        this.ws.onerror = function(e) {
+        };
+
         this.ws.onclose = function(e) {
             if (service.retries >= 3) {
                 service.ready = false;
