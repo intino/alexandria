@@ -1,6 +1,7 @@
 package io.intino.alexandria.bpm;
 
 import io.intino.alexandria.message.Message;
+import io.intino.alexandria.message.MessageHub;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -26,7 +27,13 @@ public class BpmWithInclusiveFork {
 			Thread.sleep(100);
 		}
 		List<ProcessStatus> messages = process.messages();
-		assertThat(messages.get(0).message().toString(), is(createProcessMessage().toString()));
+		assertThat(messages.get(1).stateInfo().name(), is("CreateString"));
+		assertThat(messages.get(1).stateInfo().status(), is("Enter"));
+		assertThat(messages.get(2).stateInfo().name(), is("CreateString"));
+		assertThat(messages.get(2).stateInfo().status(), is("Exit"));
+		if(process.exitStateStatus("CreateString").taskInfo().result().equals("Hello:Goodbye"))
+			assertThat(process.exitStateStatus("JoinResult").taskInfo().result(), is("Hi:Bye"));
+		else assertThat(process.exitStateStatus("JoinResult").taskInfo().result(), is("Bye:Hi"));
 	}
 
 	private boolean hasEnded(Process process) {
@@ -102,7 +109,6 @@ public class BpmWithInclusiveFork {
 
 				@Override
 				String execute() {
-					System.out.println("hey");
 					String[] hello = resultOfState("ProcessHello").split("-");
 					String[] goodbye = resultOfState("ProcessGoodbye").split("-");
 					return hello[0].equals("0") ? hello[1] + ":" + goodbye[1] : goodbye[1] + ":" + hello[1];
