@@ -1,12 +1,10 @@
 package io.intino.alexandria.tabb.streamers;
 
 import io.intino.alexandria.tabb.ColumnStream;
-import io.intino.alexandria.tabb.ColumnStream.Mode;
 import io.intino.alexandria.tabb.ColumnStream.Type;
 import io.intino.alexandria.tabb.ColumnStreamer;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -50,6 +48,8 @@ public class ObjectStreamer<T> implements ColumnStreamer {
 
 	private ColumnStream selectorStream(Selector<T> selector) {
 		return new ColumnStream() {
+			private long key;
+
 			@Override
 			public String name() {
 				return selector.name();
@@ -61,19 +61,13 @@ public class ObjectStreamer<T> implements ColumnStreamer {
 			}
 
 			@Override
-			public Mode mode() {
-				return selector.mode();
-			}
-
-			@Override
 			public boolean hasNext() {
-				return items.hasNext();
+				return getNext(key);
 			}
 
 			@Override
 			public void next() {
 				key++;
-				current = items.next();
 			}
 
 			@Override
@@ -83,9 +77,21 @@ public class ObjectStreamer<T> implements ColumnStreamer {
 
 			@Override
 			public Object value() {
-				return selector.select(current);
+				return selector.select(getCurrent(key));
 			}
 		};
+	}
+
+	private boolean getNext(long key) {
+		return key < this.key || items.hasNext();
+	}
+
+	private T getCurrent(long key) {
+		if (key > this.key) {
+			this.key = key;
+			this.current = items.next();
+		}
+		return this.current;
 	}
 
 	public interface Selector<T> {
@@ -93,19 +99,16 @@ public class ObjectStreamer<T> implements ColumnStreamer {
 
 		Type type();
 
-		Mode mode();
-
 		Object select(T t);
 	}
 
 	public interface Reducer<T, R> {
-		boolean mustBreak(T current);
-
-		void clear();
+		boolean canAdd(T current);
 
 		void add(T item);
-
 		Iterator<R> items();
+
+		void clear();
 	}
 
 	static class Splitter<T, R> implements Iterable<R> {
@@ -141,7 +144,7 @@ public class ObjectStreamer<T> implements ColumnStreamer {
 					while (next != null) {
 						reducer.add(next);
 						next = iterator.hasNext() ? iterator.next() : null;
-						if (reducer.mustBreak(next)) break;
+						if (reducer.canAdd(next)) break;
 					}
 					split = reducer.items();
 				}

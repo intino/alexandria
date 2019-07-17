@@ -1,14 +1,20 @@
 package io.intino.konos.builder.codegeneration;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
 import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.search.GlobalSearchScope;
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
-import io.intino.konos.builder.codegeneration.datalake.DatalakeRenderer;
-import io.intino.konos.builder.codegeneration.datalake.NessJMXOperationsRenderer;
-import io.intino.konos.builder.codegeneration.datalake.feeder.FeederRenderer;
-import io.intino.konos.builder.codegeneration.datalake.mounter.MounterRenderer;
-import io.intino.konos.builder.codegeneration.datalake.process.ProcessRenderer;
+import cottons.utils.Files;
+import io.intino.konos.builder.codegeneration.accessor.ui.UIAccessorCreator;
+import io.intino.konos.builder.codegeneration.datahub.adapter.AdapterRenderer;
+import io.intino.konos.builder.codegeneration.datahub.feeder.FeederRenderer;
+import io.intino.konos.builder.codegeneration.datahub.messagehub.MessageHubRenderer;
+import io.intino.konos.builder.codegeneration.datahub.mounter.MounterRenderer;
+import io.intino.konos.builder.codegeneration.datahub.process.ProcessRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
@@ -19,12 +25,19 @@ import io.intino.konos.builder.codegeneration.services.jmx.JMXServerRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTResourceRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
-import io.intino.konos.builder.codegeneration.task.TaskRenderer;
-import io.intino.konos.builder.codegeneration.task.TaskerRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
+import io.intino.plugin.project.LegioConfiguration;
+import io.intino.konos.builder.codegeneration.services.ui.UIServiceRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.dialog.DialogRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.dialog.DialogsRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.display.DisplayRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.display.DisplaysRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.resource.ResourceRenderer;
+import io.intino.konos.builder.codegeneration.task.SchedulerRenderer;
+import io.intino.konos.builder.codegeneration.task.TaskRenderer;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.plugin.codeinsight.linemarkers.InterfaceToJavaImplementation;
-import io.intino.plugin.project.LegioConfiguration;
+import io.intino.tara.compiler.shared.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +47,6 @@ import java.io.IOException;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.plugin.project.Safe.safe;
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.configurationOf;
 
 public class FullRenderer {
@@ -102,17 +114,16 @@ public class FullRenderer {
 
 	private void tasks() {
 		new TaskRenderer(settings, graph).execute();
-		new TaskerRenderer(settings, graph).execute();
+		new SchedulerRenderer(settings, graph).execute();
 	}
 
 	private void bus() {
-		if (graph.nessClientList().isEmpty()) return;
-		Module module = settings.module();
+		if (graph.dataHub() == null) return;
 		new ProcessRenderer(settings, graph).execute();
+		new MessageHubRenderer(settings, graph).execute();
 		new MounterRenderer(settings, graph).execute();
+		new AdapterRenderer(settings, graph).execute();
 		new FeederRenderer(settings, graph).execute();
-		new DatalakeRenderer(settings, graph).execute();
-		new NessJMXOperationsRenderer(settings, graph, (module != null && safe(() -> ((LegioConfiguration) configurationOf(settings.module())).graph().artifact().asLevel().model()) != null)).execute();
 	}
 
 	private void slack() {
@@ -155,14 +166,7 @@ public class FullRenderer {
 	}
 
 	private String boxName() {
-		Module module = settings.module();
-		if (module != null) {
-			final io.intino.tara.compiler.shared.Configuration configuration = configurationOf(module);
-			if (configuration == null) return "";
-			final String dsl = configuration.artifactId();
-			if (dsl == null || dsl.isEmpty()) return module.getName();
-			else return dsl;
-		} else return "System";
+		return module != null ? configurationOf(module).artifactId() : Configuration.Level.Solution.name();
 	}
 
 	private String parent() {
@@ -174,8 +178,8 @@ public class FullRenderer {
 			final List<? extends io.intino.tara.compiler.shared.Configuration.LanguageLibrary> languages = configuration.languages();
 			if (languages.isEmpty() || languages.get(0).generationPackage() == null) return null;
 			final String workingPackage = languages.get(0).generationPackage().replace(".graph", "");
-			if (facade.findClass(workingPackage + ".box." + Formatters.firstUpperCase(languages.get(0).name()) + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
-				return workingPackage.toLowerCase() + ".box." + Formatters.firstUpperCase(languages.get(0).name());
+			PsiClass aClass = ApplicationManager.getApplication().runReadAction((Computable<PsiClass>) () -> facade.findClass(workingPackage + ".box." + Formatters.firstUpperCase(languages.get(0).name()) + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)));
+			if (aClass != null) return workingPackage.toLowerCase() + ".box." + Formatters.firstUpperCase(languages.get(0).name());
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}

@@ -109,7 +109,7 @@ def type(dialog)
 end
 
 def trigger(asset)
-	spark.route("/$value+lowercase/:displayId").get(manager -> new $value+firstUppercase~Requester(manager, notifierProvider()).execute());
+	spark.route("/$this+lowercase/:displayId").get(manager -> new $this+firstUppercase~Requester(manager, notifierProvider()).execute());
 end
 
 def trigger(quoted)

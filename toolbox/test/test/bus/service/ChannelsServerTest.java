@@ -11,7 +11,7 @@ public class ChannelsServerTest {
 		Connection connection = new ActiveMQConnectionFactory("happysense.sumus", "happysense.sumus", "tcp://bus.siani.es:61616").createConnection();
 		connection.start();
 		final Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-//		MonetJMSService.init(session, null);
+//		MonetJMSService.start(session, null);
 		session.close();
 		connection.close();
 	}

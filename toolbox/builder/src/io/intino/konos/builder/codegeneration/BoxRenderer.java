@@ -9,8 +9,9 @@ import io.intino.itrules.Template;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.compiler.shared.Configuration;
+import io.intino.tara.dsl.Meta;
 import io.intino.tara.dsl.Proteo;
-import io.intino.tara.dsl.Verso;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +56,7 @@ public class BoxRenderer extends Renderer {
 		FrameBuilder builder = new FrameBuilder();
 		Configuration configuration = configuration();
 		builder.add("name", name());
-		if (configuration.artifactId() != null) builder.add("outDSL", configuration.artifactId());
+		if (configuration.outLanguage() != null) builder.add("outDSL", configuration.outLanguage());
 		builder.add("wrapper", dsls());
 		return builder.toFrame();
 	}
@@ -64,12 +65,12 @@ public class BoxRenderer extends Renderer {
 		Configuration configuration = configuration();
 		List<String> dsls = new ArrayList<>();
 		for (Configuration.LanguageLibrary lang : configuration.languages())
-			if (!Verso.class.getSimpleName().equals(lang.name()) && !Proteo.class.getSimpleName().equals(lang.name())) {
+			if (!Meta.class.getSimpleName().equals(lang.name()) && !Proteo.class.getSimpleName().equals(lang.name())) {
 				final String genPackage = lang.generationPackage();
 				dsls.add((genPackage == null ? "" : genPackage.toLowerCase() + ".") + firstUpperCase(lang.name()));
 			}
 		if (configuration.level() != Configuration.Level.Solution)
-			dsls.add(configuration.workingPackage().toLowerCase() + "." + firstUpperCase(configuration.artifactId()));
+			dsls.add(configuration.workingPackage().toLowerCase() + "." + firstUpperCase(configuration.outLanguage()));
 		return dsls.toArray(new String[0]);
 	}
 

@@ -10,10 +10,10 @@ def type(server)
 	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Service {
 
 		public static AlexandriaSpark setup(AlexandriaSpark server, $box+FirstUpperCase~Box box) {
-			$secure
-			$hasNotifications
-			$notification...[$NL]
-			$resource...[$NL]
+			[$secure]
+			[$hasNotifications]
+			[$notification...[$NL]]
+			[$resource...[$NL]]
 
 			return server;
 		}

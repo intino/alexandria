@@ -27,7 +27,6 @@ def type(String) trigger(type)
 	string
 end
 
-
 def trigger(quoted)
-	"$value"
+	"$this"
 end

@@ -1,0 +1,14 @@
+dsl Legio
+
+Artifact("io.intino.alexandria", "1.0.0") sealing
+	Imports
+		Compile("io.intino.alexandria", "datalake", "1.0.0")
+		Compile("io.intino.alexandria", "session", "1.0.0")
+		Compile("io.intino.alexandria", "mapp", "1.0.0")
+		Test("io.intino.alexandria", "ingestion", "1.0.0")
+		Test("junit", "junit", "LATEST")
+	Package(ModulesAndLibrariesLinkedByManifest)
+	Distribution(intino.release)
+
+Repository("intino-maven") intino
+	Release("https://artifactory.intino.io/artifactory/release-libraries") release

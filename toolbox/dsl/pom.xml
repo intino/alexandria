@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.intino.konos</groupId>
     <artifactId>model</artifactId>
-    <name>DSL</name>
+    <name>Dsl</name>
     <version>1.0.0</version>
 
     <properties>
@@ -69,7 +69,7 @@
             <groupId>io.intino.tara</groupId>
             <artifactId>magritte</artifactId>
             <scope>provided</scope>
-            <version>2.3.0</version>
+            <version>2.2.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

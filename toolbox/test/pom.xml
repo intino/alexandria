@@ -20,7 +20,28 @@
         <outputDirectory>../../out/production/builder-test</outputDirectory>
         <testOutputDirectory>../../out/test/builder-test</testOutputDirectory>
         <directory>../../out/build/builder-test</directory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <delete dir="${project.basedir}/test-gen" includeemptydirs="true"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
+
 
     <repositories>
         <repository>
@@ -81,6 +102,12 @@
         </dependency>
         <dependency>
             <groupId>io.intino.alexandria</groupId>
+            <artifactId>inl</artifactId>
+            <version>LATEST</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.alexandria</groupId>
             <artifactId>jmx</artifactId>
             <version>LATEST</version>
             <scope>test</scope>
@@ -88,7 +115,19 @@
         <dependency>
             <groupId>io.intino.alexandria</groupId>
             <artifactId>core-framework</artifactId>
-            <version>1.0.1</version>
+            <version>LATEST</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.ness</groupId>
+            <artifactId>ingestion-lib</artifactId>
+            <version>LATEST</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.alexandria</groupId>
+            <artifactId>tabb</artifactId>
+            <version>LATEST</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -100,12 +139,6 @@
         <dependency>
             <groupId>io.intino.alexandria</groupId>
             <artifactId>jms</artifactId>
-            <version>LATEST</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.intino.alexandria</groupId>
-            <artifactId>ness-accessor</artifactId>
             <version>LATEST</version>
             <scope>test</scope>
         </dependency>
@@ -134,9 +167,16 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.picocontainer</groupId>
-            <artifactId>picocontainer</artifactId>
-            <version>2.15</version>
+            <groupId>io.intino.alexandria</groupId>
+            <artifactId>data-hub</artifactId>
+            <version>LATEST</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.alexandria</groupId>
+            <artifactId>data-hub-jms</artifactId>
+            <version>1.0.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

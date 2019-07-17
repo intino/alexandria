@@ -113,6 +113,7 @@ public class RESTServiceRenderer extends Renderer {
 	}
 
 	private VirtualFile getResRoot(Module module) {
+		if (module == null) return null;
 		for (VirtualFile file : getSourceRoots(module))
 			if (file.isDirectory() && "res".equals(file.getName())) return file;
 		return null;
