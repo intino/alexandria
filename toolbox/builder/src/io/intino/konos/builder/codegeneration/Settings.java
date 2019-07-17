@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.createIfNotExists;
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.configurationOf;
 
@@ -124,7 +125,7 @@ public class Settings {
 	}
 
 	public String boxName() {
-		if (boxName == null) boxName = module() != null ? configurationOf(module()).artifactId() : Configuration.Level.Solution.name();
+		if (boxName == null) boxName = snakeCaseToCamelCase(module() != null ? configurationOf(module()).artifactId() : Configuration.Level.Solution.name());
 		return boxName;
 	}
 
