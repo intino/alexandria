@@ -14,7 +14,7 @@ def type(box)
 
 	[$datahub+import]
 	[import io.intino.alexandria.rest.AlexandriaSpark;$hasREST]
-    [import io.intino.alexandria.ui.displays.Soul$hasUi+hideUi]
+    [import io.intino.alexandria.ui.Soul$hasUi+hideUi]
 
 	public abstract class AbstractBox extends [$hasUi+uiBox?io.intino.alexandria.core.Box] {
 		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;
