@@ -13,6 +13,7 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.io.ZipUtil;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
@@ -22,10 +23,21 @@ import io.intino.konos.model.graph.ui.UIService;
 import io.intino.plugin.project.LegioConfiguration;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.LoggerFactory;
+import sun.net.www.protocol.file.FileURLConnection;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import static io.intino.konos.builder.codegeneration.Formatters.camelCaseToSnakeCase;
 import static io.intino.konos.builder.helpers.Commons.write;
@@ -33,6 +45,7 @@ import static io.intino.plugin.dependencyresolution.DependencyCatalog.Dependency
 import static io.intino.tara.plugin.project.configuration.ConfigurationManager.newExternalProvider;
 import static io.intino.tara.plugin.project.configuration.ConfigurationManager.register;
 import static java.util.Arrays.stream;
+import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class ServiceCreator extends UIRenderer {
 
@@ -49,9 +62,15 @@ public class ServiceCreator extends UIRenderer {
 
 	@Override
 	public void render() {
-		if (settings.module() == null) return;
-		settings.webModule(getOrCreateModule());
-		new ServiceRenderer(settings, service).execute();
+		try {
+			if (settings.module() == null) return;
+			boolean exists = findModule(service.name$()) != null;
+			settings.webModule(getOrCreateModule());
+			if (!exists) createSkeleton();
+			new ServiceRenderer(settings, service).execute();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private Module getOrCreateModule() {
@@ -95,6 +114,43 @@ public class ServiceCreator extends UIRenderer {
 			return true;
 		}
 		return false;
+	}
+
+	private void createSkeleton() throws IOException {
+		final File destiny = root();
+		final File file = new File(destiny, "ui.zip");
+		copyResourcesRecursively(this.getClass().getResource("/ui/ui.zip"), file);
+		ZipUtil.extract(file, destiny, null, false);
+		file.delete();
+		new File(destiny, "images").mkdirs();
+	}
+
+	private void copyResourcesRecursively(URL originUrl, File destination) {
+		try {
+			URLConnection urlConnection = originUrl.openConnection();
+			if (urlConnection instanceof JarURLConnection)
+				copyJarResourcesRecursively(destination, (JarURLConnection) urlConnection);
+			else if (urlConnection instanceof FileURLConnection) {
+				FileUtils.copyFile(new File(originUrl.getPath()), destination);
+			} else throw new Exception("URLConnection[" + urlConnection.getClass().getSimpleName() +
+					"] is not a recognized/implemented connection type.");
+		} catch (Exception e) {
+			LoggerFactory.getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
+		}
+	}
+
+	private void copyJarResourcesRecursively(File destination, JarURLConnection jarConnection) throws IOException {
+		JarFile jarFile = jarConnection.getJarFile();
+		for (Enumeration list = jarFile.entries(); list.hasMoreElements(); ) {
+			JarEntry entry = (JarEntry) list.nextElement();
+			if (entry.getName().startsWith(jarConnection.getEntryName())) {
+				String fileName = StringUtils.removeStart(entry.getName(), jarConnection.getEntryName());
+				if (!entry.isDirectory()) try (InputStream entryInputStream = jarFile.getInputStream(entry)) {
+					FileUtils.copyInputStreamToFile(entryInputStream, new File(destination, fileName));
+				}
+				else new File(destination, fileName).exists();
+			}
+		}
 	}
 
 	private Map<String, List<String>> reduce(Map<String, String> map) {

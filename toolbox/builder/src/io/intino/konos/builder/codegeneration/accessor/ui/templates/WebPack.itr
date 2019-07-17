@@ -77,7 +77,7 @@ def type(page) trigger(plugin)
         hash: true,
         title: "Test UI",
         chunks: $['$value'],
-        template: "./$value.html",
+        template: "./src/$value.html",
         filename: "./$value.html"
     })
 end

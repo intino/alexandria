@@ -29,7 +29,7 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 
 	private void writeHtml(FrameBuilder builder) {
 		builder.add("html");
-		File file = new File(root() + File.separator + resource.name$() + ".html");
+		File file = new File(src() + File.separator + resource.name$() + ".html");
 		if (file.exists()) return;
 		Commons.write(file.toPath(), setup(new PageTemplate()).render(builder.toFrame()));
 	}

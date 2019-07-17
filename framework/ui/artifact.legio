@@ -12,6 +12,8 @@ Artifact("io.intino.alexandria", "2.0.0") ui-framework
 		Compile("io.intino.alexandria", "rest-accessor", "1.0.5")
 		Compile("io.intino.alexandria", "driver-shiny", "1.0.0")
 		Compile("io.intino.alexandria", "proxy", "1.0.0")
+		Compile("io.intino.alexandria", "logger", "2.0.0")
+		Compile("io.intino.alexandria", "logger4j", "1.0.0")
 		Compile("com.opencsv", "opencsv", "4.1")
 		Compile("org.hashids", "hashids", "1.0.3")
 		Compile("net.rforge", "Rserve", "0.6-8.1")
