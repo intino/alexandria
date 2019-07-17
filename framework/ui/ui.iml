@@ -71,5 +71,6 @@
     <orderEntry type="library" name="Intino: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.0.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
+    <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>
