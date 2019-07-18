@@ -23,7 +23,7 @@ public class SwaggerApiGeneratorTest {
 	}
 
 	@Test
-	public void testApiJSON() throws Exception {
+	public void testApiJSON() {
 		KonosGraph graph = new Graph().loadStashes("Petstore").as(KonosGraph.class);
 		OpenApiDescriptor descriptor = new OpenApiDescriptor(graph.rESTServiceList().get(0));
 		final String jsonDescriptor = descriptor.createJSONDescriptor();
@@ -32,7 +32,7 @@ public class SwaggerApiGeneratorTest {
 	}
 
 	@Test
-	public void testApiCreation() throws Exception {
+	public void testApiCreation() {
 		KonosGraph graph = new Graph().loadStashes("Petstore").as(KonosGraph.class);
 		SwaggerProfileGenerator generator = new SwaggerProfileGenerator(graph.rESTServiceList(), SWAGGER);
 		generator.execute();
