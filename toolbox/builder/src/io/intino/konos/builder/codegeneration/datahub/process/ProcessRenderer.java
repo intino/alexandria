@@ -1,29 +1,25 @@
 package io.intino.konos.builder.codegeneration.datahub.process;
 
+import io.intino.konos.builder.codegeneration.Renderer;
+import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Process;
 
-import java.io.File;
 import java.util.List;
-import java.util.Map;
 
-public class ProcessRenderer {
-
-	private final File src;
-	private final String packageName;
-	private final String boxName;
-	private final Map<String, String> classes;
+public class ProcessRenderer extends Renderer {
+	private final Settings settings;
 	private final List<Process> processes;
 
-	public ProcessRenderer(KonosGraph graph, File src, String packageName, String boxName, Map<String, String> classes) {
+	public ProcessRenderer(Settings settings, KonosGraph graph) {
+		super(settings, Target.Owner);
+		this.settings = settings;
 		this.processes = graph.processList();
-		this.src = src;
-		this.packageName = packageName;
-		this.boxName = boxName;
-		this.classes = classes;
 	}
 
-	public void execute() {
+	@Override
+	protected void render() {
 		for (Process process : processes) {
 		}
 	}

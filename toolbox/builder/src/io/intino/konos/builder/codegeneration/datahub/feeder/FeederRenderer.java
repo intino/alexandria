@@ -2,6 +2,8 @@ package io.intino.konos.builder.codegeneration.datahub.feeder;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.DataHub.Tank;
 import io.intino.konos.model.graph.Feeder;
@@ -17,7 +19,6 @@ import io.intino.tara.magritte.Layer;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -26,20 +27,12 @@ import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class FeederRenderer {
+	private final Settings settings;
 	private final List<Feeder> feeders;
-	private final File src;
-	private final String packageName;
-	private final String boxName;
-	private final Map<String, String> classes;
-	private final File gen;
 
-	public FeederRenderer(KonosGraph graph, File gen, File src, String packageName, String boxName, Map<String, String> classes) {
-		this.gen = gen;
+	public FeederRenderer(Settings settings, KonosGraph graph) {
+		this.settings = settings;
 		this.feeders = graph.dataHub().feederList();
-		this.src = src;
-		this.packageName = packageName;
-		this.boxName = boxName;
-		this.classes = classes;
 	}
 
 	public static String name(Feeder feeder) {
@@ -53,17 +46,17 @@ public class FeederRenderer {
 	public void execute() {
 		for (Feeder feeder : feeders) {
 			final FrameBuilder builder = new FrameBuilder("feeder", feeder.sensorList().isEmpty() ? "simple" : "complex").
-					add("box", boxName).
-					add("package", packageName).
+					add("box", settings.boxName()).
+					add("package", settings.packageName()).
 					add("name", name(feeder));
 			for (Sensor sensor : feeder.sensorList())
 				builder.add("sensor", frameOf(sensor, name(feeder)));
 			builder.add("eventType", feeder.tanks().stream().filter(Objects::nonNull).map(Tank::fullName).toArray(String[]::new));
 			final String feederClassName = firstUpperCase(name(feeder));
-			classes.put(feeder.getClass().getSimpleName() + "#" + name(feeder), "datahub.feeders." + feederClassName);
-			writeFrame(new File(gen, "datahub/feeders"), "Abstract" + feederClassName, customize(new AbstractFeederTemplate()).render(builder.toFrame()));
-			if (!alreadyRendered(new File(src, "datahub/feeders"), feederClassName))
-				writeFrame(new File(src, "datahub/feeders"), feederClassName, customize(new FeederTemplate()).render(builder.toFrame()));
+			settings.classes().put(feeder.getClass().getSimpleName() + "#" + name(feeder), "datahub.feeders." + feederClassName);
+			writeFrame(new File(settings.gen(Target.Owner), "datahub/feeders"), "Abstract" + feederClassName, customize(new AbstractFeederTemplate()).render(builder.toFrame()));
+			if (!alreadyRendered(new File(settings.src(Target.Owner), "datahub/feeders"), feederClassName))
+				writeFrame(new File(settings.src(Target.Owner), "datahub/feeders"), feederClassName, customize(new FeederTemplate()).render(builder.toFrame()));
 		}
 	}
 

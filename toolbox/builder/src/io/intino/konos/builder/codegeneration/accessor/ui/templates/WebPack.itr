@@ -1,0 +1,83 @@
+def type(webpack)
+    const path = require("path");
+    const HtmlWebPackPlugin = require("html-webpack-plugin");
+    const CopyWebpackPlugin = require('copy-webpack-plugin');
+    const CircularDependencyPlugin = require('circular-dependency-plugin');
+
+    module.exports = {
+        module: {
+            rules: $[
+                {
+                    test: /\\.js$$/,
+                    $exclude
+                    options: {
+                        rootMode: "upward",
+                        presets: $['@babel/preset-env'],
+                        cacheDirectory: true
+                    },
+                    loader: "babel-loader"
+                },
+                {
+                    test: /\\.html$$/,
+                    loader: "html-loader"
+                },
+                {
+                    test: /\\.css$$/,
+                    loader: 'style-loader!css-loader'
+                }
+            ]
+        },
+        entry : {
+            $page+gen...[,$NL]
+        },
+        output: {
+            path: "$outDirectory/$webModuleName/www/$webModuleName",
+            publicPath: '/$webModuleName/',
+            filename: "$[name].js"
+        },
+        resolve: {
+            alias: {
+                [$alias]
+                "app-elements": path.resolve(__dirname, '.')
+            }
+        },
+        plugins: $[
+            new CircularDependencyPlugin({
+                failOnError: true,
+                allowAsyncCycles: false,
+                cwd: process.cwd(),
+            }),
+            new CopyWebpackPlugin($[{
+                from: 'res',
+                to: './res'
+            }]),
+            $page+plugin...[,$NL]
+        ]
+    };
+end
+
+def type(exclude & alexandriaProject)
+    exclude: /(node_modules)/,
+end
+
+def type(exclude)
+    exclude: /node_modules\\/(?!$[alexandria\\-ui\\-elements])/,
+end
+
+def type(alias & alexandriaProject)
+    "alexandria-ui-elements": path.resolve(__dirname, '.'),
+end
+
+def type(page) trigger(gen)
+    '$value' : './gen/apps/$value+firstUppercase~.js'
+end
+
+def type(page) trigger(plugin)
+    new HtmlWebPackPlugin({
+        hash: true,
+        title: "Test UI",
+        chunks: $['$value'],
+        template: "./src/$value.html",
+        filename: "./$value.html"
+    })
+end

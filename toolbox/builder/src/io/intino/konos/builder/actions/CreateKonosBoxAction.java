@@ -27,6 +27,9 @@ import com.intellij.testFramework.PsiTestUtil;
 import io.intino.konos.builder.KonosIcons;
 import io.intino.konos.builder.Manifest;
 import io.intino.konos.builder.codegeneration.FullRenderer;
+import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.cache.CacheReader;
+import io.intino.konos.builder.codegeneration.cache.CacheWriter;
 import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.legio.graph.Artifact.Imports.Dependency;
@@ -36,6 +39,7 @@ import io.intino.plugin.project.LegioConfiguration;
 import io.intino.plugin.project.LibraryConflictResolver.Version;
 import io.intino.plugin.project.LibraryConflictResolver.VersionRange;
 import io.intino.tara.compiler.shared.Configuration;
+import io.intino.tara.io.Stash;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,6 +62,8 @@ public class CreateKonosBoxAction extends KonosAction {
 	private static final Logger LOG = Logger.getInstance("CreateKonosBoxAction: ");
 	private static final String BOX = "box";
 	private static final String TEXT = "Create Konos Box";
+
+	private static final String ElementCache = ".cache";
 
 	public CreateKonosBoxAction() {
 		super(TEXT, "Creates Konos Box", KonosIcons.GENERATE_16);
@@ -162,23 +168,6 @@ public class CreateKonosBoxAction extends KonosAction {
 		return false;
 	}
 
-	private VirtualFile getGenRoot(Module module) {
-		for (VirtualFile file : getSourceRoots(module))
-			if (file.isDirectory() && "gen".equals(file.getName())) return file;
-		final VirtualFile genDirectory = createDirectory(module, "gen");
-		if (genDirectory == null) return null;
-		PsiTestUtil.addSourceRoot(module, genDirectory, JavaSourceRootType.SOURCE);
-		return genDirectory;
-	}
-
-	private VirtualFile getResRoot(Module module) {
-		for (VirtualFile file : getSourceRoots(module))
-			if (file.isDirectory() && "res".equals(file.getName())) return file;
-		final VirtualFile resDirectory = createDirectory(module, "res");
-		PsiTestUtil.addSourceRoot(module, resDirectory, JavaResourceRootType.RESOURCE);
-		return resDirectory;
-	}
-
 	private VirtualFile createDirectory(Module module, String name) {
 		final Application a = ApplicationManager.getApplication();
 		if (!a.isWriteAccessAllowed()) return a.runWriteAction((Computable<VirtualFile>) () -> create(module, name));
@@ -222,12 +211,13 @@ public class CreateKonosBoxAction extends KonosAction {
 		}
 
 		private KonosGraph generate(String packageName, File gen, File src, File res) {
-			KonosGraph graph = new GraphLoader().loadGraph(module);
+			GraphLoader graphLoader = new GraphLoader();
+			KonosGraph graph = graphLoader.loadGraph(module);
 			if (graph == null) {
 				notifyError("Models have errors");
 				return null;
 			}
-			if (!render(packageName, gen, src, res, graph)) return null;
+			if (!render(packageName, gen, src, res, graph, graphLoader.konosStash())) return null;
 			refreshDirectories(gen, src, res);
 			notifySuccess();
 			return graph;
@@ -239,9 +229,11 @@ public class CreateKonosBoxAction extends KonosAction {
 			refreshDirectory(res);
 		}
 
-		private boolean render(String packageName, File gen, File src, File res, KonosGraph graph) {
+		private boolean render(String packageName, File gen, File src, File res, KonosGraph graph, Stash stash) {
 			try {
-				new FullRenderer(module, graph, src, gen, res, packageName).execute();
+				io.intino.konos.builder.codegeneration.cache.ElementCache cache = loadCache(res, graph, stash);
+				new FullRenderer(graph, new Settings(module, src, gen, res, packageName, cache)).execute();
+				saveCache(cache, res);
 			} catch (Exception e) {
 				Logger.getInstance(this.getClass()).error(e.getMessage(), e);
 				notifyError(e.getMessage() == null ? e.toString() : e.getMessage());
@@ -268,5 +260,32 @@ public class CreateKonosBoxAction extends KonosAction {
 			VfsUtil.markDirtyAndRefresh(true, true, true, vDir);
 			vDir.refresh(true, true);
 		}
+
 	}
+
+	private VirtualFile getGenRoot(Module module) {
+		for (VirtualFile file : getSourceRoots(module))
+			if (file.isDirectory() && "gen".equals(file.getName())) return file;
+		final VirtualFile genDirectory = createDirectory(module, "gen");
+		if (genDirectory == null) return null;
+		PsiTestUtil.addSourceRoot(module, genDirectory, JavaSourceRootType.SOURCE);
+		return genDirectory;
+	}
+
+	private VirtualFile getResRoot(Module module) {
+		for (VirtualFile file : getSourceRoots(module))
+			if (file.isDirectory() && "res".equals(file.getName())) return file;
+		final VirtualFile resDirectory = createDirectory(module, "res");
+		PsiTestUtil.addSourceRoot(module, resDirectory, JavaResourceRootType.RESOURCE);
+		return resDirectory;
+	}
+
+	private io.intino.konos.builder.codegeneration.cache.ElementCache loadCache(File folder, KonosGraph graph, Stash stash) {
+		return new CacheReader(folder).load(graph, stash);
+	}
+
+	private void saveCache(io.intino.konos.builder.codegeneration.cache.ElementCache cache, File folder) {
+		new CacheWriter(folder).save(cache);
+	}
+
 }

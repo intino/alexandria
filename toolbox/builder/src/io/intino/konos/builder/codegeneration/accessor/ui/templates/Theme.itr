@@ -1,0 +1,52 @@
+def type(theme)
+	import { createMuiTheme } from '@material-ui/core/styles';
+
+	const Theme = (function () {
+		var theme = null;
+		var provider = {
+			create: () => {
+				theme = createMuiTheme({
+					palette : {
+					    $palette
+					},
+					typography : {
+					    $typography
+					},
+					formats: {
+					    $format...[,$NL]
+					}
+				});
+				return theme;
+			},
+			get: () => {
+				return theme;
+			},
+		};
+		return provider;
+	})();
+
+	export default Theme;
+end
+
+def type(palette)
+	[type : "$type+lowerCase",
+	][primary : { main: "$primary" },
+	][secondary : { main: "$secondary" },
+	][error : { main: "$error" },
+	]contrastThreshold : "$contrastThreshold",
+	tonalOffset : "$tonalOffset",
+	grey : {
+		primary: "#888",
+		secondary: '#ddd'
+	}
+end
+
+def type(typography)
+	fontFamily : '$fontFamily',
+	fontSize : $fontSize,
+	useNextVariants: true
+end
+
+def type(format)
+	$name: { $content }
+end

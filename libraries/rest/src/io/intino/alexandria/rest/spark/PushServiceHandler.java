@@ -2,10 +2,7 @@ package io.intino.alexandria.rest.spark;
 
 import io.intino.alexandria.logger.Logger;
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.eclipse.jetty.websocket.api.annotations.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +16,7 @@ public class PushServiceHandler {
 	private Map<String, Timer> closeTimersMap = new HashMap<>();
 	private static final int CloseTimeout = 1000*60*60*24;
 	private static final int CloseGoingAway = 1001;
+	private static final int CloseReadEOF = 1006;
 
 	public static void inject(io.intino.alexandria.rest.pushservice.PushService pushService) {
 		PushServiceHandler.pushService = (PushService) pushService;
@@ -37,14 +35,19 @@ public class PushServiceHandler {
 		pushService.onOpen(client(session));
 	}
 
+	@OnWebSocketError
+	public void onError(Throwable error) {
+		Logger.error(error);
+	}
+
 	@OnWebSocketClose
 	public void onClose(Session session, int statusCode, String reason) {
 		cancelClose(session);
-		if (statusCode == CloseGoingAway) {
+		if (statusCode == CloseGoingAway || statusCode == CloseReadEOF) {
 			doClose(client(session));
 			return;
 		}
-		Logger.debug(String.format("WebSocket connection lost. Status code: %d.", statusCode));
+		Logger.debug(String.format("WebSocket connection lost. Status code: %d. %s", statusCode, reason));
 		doCloseDelayed(session);
 	}
 

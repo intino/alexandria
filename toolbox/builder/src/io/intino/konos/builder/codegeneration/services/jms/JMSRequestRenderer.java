@@ -1,10 +1,12 @@
 package io.intino.konos.builder.codegeneration.services.jms;
 
-import com.intellij.openapi.project.Project;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.Renderer;
+import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.JMSRequestActionRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
@@ -15,32 +17,21 @@ import io.intino.konos.model.graph.jms.JMSService.Request;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
-public class JMSRequestRenderer {
+public class JMSRequestRenderer extends Renderer {
 	private static final String REQUESTS = "requests";
-	private final Project project;
 	private final List<JMSService> services;
-	private final String boxName;
-	private final Map<String, String> classes;
-	private File gen;
-	private File src;
-	private String packageName;
 
-	public JMSRequestRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName, Map<String, String> classes) {
-		this.project = project;
+	public JMSRequestRenderer(Settings settings, KonosGraph graph) {
+		super(settings, Target.Owner);
 		this.services = graph.jMSServiceList();
-		this.gen = gen;
-		this.src = src;
-		this.packageName = packageName;
-		this.boxName = boxName;
-		this.classes = classes;
 	}
 
-	public void execute() {
+	@Override
+	public void render() {
 		services.forEach(this::processService);
 	}
 
@@ -49,20 +40,20 @@ public class JMSRequestRenderer {
 	}
 
 	private void processRequest(Request resource) {
-		writeFrame(new File(gen, REQUESTS), snakeCaseToCamelCase(resource.name$()) + "Request", template().render(fillRequestFrame(resource)));
+		writeFrame(new File(gen(), REQUESTS), snakeCaseToCamelCase(resource.name$()) + "Request", template().render(fillRequestFrame(resource)));
 		createCorrespondingAction(resource);
 	}
 
 	private void createCorrespondingAction(Request request) {
-		new JMSRequestActionRenderer(project, request, src, packageName, boxName, classes).execute();
+		new JMSRequestActionRenderer(settings, request).execute();
 	}
 
 	private Frame fillRequestFrame(Request request) {
 		final String returnType = Commons.returnType(request.response());
 		FrameBuilder builder = new FrameBuilder("request").
 				add("name", request.name$()).
-				add("box", boxName).
-				add("package", packageName).
+				add("box", boxName()).
+				add("package", packageName()).
 				add("call", new FrameBuilder(returnType).toFrame()).
 				add("parameter", parameters(request.parameterList()));
 		if (!returnType.equals("void"))
@@ -70,7 +61,7 @@ public class JMSRequestRenderer {
 		if (!request.exceptionList().isEmpty() || !request.exceptionRefs().isEmpty())
 			builder.add("exception", "");
 		if (!request.graph().schemaList().isEmpty())
-			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName).toFrame());
+			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
 		return builder.toFrame();
 	}
 

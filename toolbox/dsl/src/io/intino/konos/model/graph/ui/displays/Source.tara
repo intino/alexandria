@@ -1,0 +1,14 @@
+dsl Proteo
+
+Concept:Named Source
+
+	sub Dataframe
+		Concept Column
+			var string name
+			var word:{String Integer Double Boolean} type
+
+Facet CSV on Dataframe
+	var string datasourceFilename
+
+Facet Custom on Dataframe
+	var string datasourceClass

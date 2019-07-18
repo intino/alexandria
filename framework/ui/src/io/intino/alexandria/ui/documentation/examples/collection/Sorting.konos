@@ -1,0 +1,64 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) sortingExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=49%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filledNoAir)
+				Block(format=air,layout=Horizontal)
+					Text(format=subtitle2 description airRight,value="mostrar primero")
+					Sorting(collections=list1) gender1 as Labeled("female population")
+				List(itemClass="io.intino.alexandria.ui.documentation.Person") list1
+					Mold > Item(height=60px,width=30%) sorting1Mold
+							Text firstName1
+							Block(layout=Horizontal, spacing=DP16)
+								Text(format=description) gender1
+								Text(format=description) age1 as Labeled("age")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Block(layout\=Horizontal)
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="mostrar primero")
+						&nbsp;&nbsp;&nbsp;&nbsp;Sorting(collections\=list) gender1 as Labeled("female population")
+						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) sortingMold<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text firstName<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal, spacing\=DP16)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) gender<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) age as Labeled("age")
+						=========
+
+		Block as Relative(width=49%, height=100%)
+			Text(format=h6, value="Sortings inside Selector")
+			Block(spacing=DP8, format=filledNoAir)
+				Selector(format=air) selector as ComboBox
+					multipleSelection = true
+					Sorting(collections=list2) youthest as Option Labeled("youthest population")
+					Sorting(collections=list2) oldest as Option Labeled("oldest population")
+					Sorting(collections=list2) female as Option Labeled("female population")
+					Sorting(collections=list2) male as Option Labeled("male population")
+				List(itemClass="io.intino.alexandria.ui.documentation.Person") list2
+					Mold > Item(height=60px,width=30%) sorting2Mold
+							Text firstName2
+							Block(layout=Horizontal, spacing=DP16)
+								Text(format=description) gender2
+								Text(format=description) age2 as Labeled("age")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Selector as ComboBox<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;multipleSelection\=true<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Sorting(collections\=list) as Option("youthest") Labeled("youthest population")
+						&nbsp;&nbsp;&nbsp;&nbsp;Sorting(collections\=list) as Option("oldest") Labeled("oldest population")
+						&nbsp;&nbsp;&nbsp;&nbsp;Sorting(collections\=list) as Option("female") Labeled("female population")
+						&nbsp;&nbsp;&nbsp;&nbsp;Sorting(collections\=list) as Option("male") Labeled("male population")
+						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) sortingMold<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text firstName<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal, spacing\=DP16)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) gender<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) age as Labeled("age")
+						=========

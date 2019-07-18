@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.psi.*;
+import io.intino.konos.builder.codegeneration.Settings;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -13,20 +14,16 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public abstract class Updater {
+	protected final Settings settings;
 	protected final PsiFile file;
-	protected final Project project;
 	protected final PsiElementFactory factory;
-	protected final String packageName;
-	protected final String box;
 	private Application application = ApplicationManager.getApplication();
 
-	public Updater(File file, Project project, String packageName, String box) {
+	public Updater(Settings settings, File file) {
+		Project project = settings.project();
 		this.file = project == null ? null : application.runReadAction((Computable<PsiFile>) () -> PsiManager.getInstance(project).findFile(Objects.requireNonNull(VfsUtil.findFileByIoFile(file, true))));
-		this.project = project;
-		this.packageName = packageName;
-		this.box = box;
+		this.settings = settings;
 		this.factory = project == null ? null : JavaPsiFacade.getElementFactory(project);
-
 	}
 
 	public abstract void update();

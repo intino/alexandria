@@ -1,0 +1,119 @@
+def type(display & accessible)
+	package $package+validPackage.ui.displays.requesters;
+
+    import $package+validPackage.ui.displays.[$packageType~s.]$name+FirstUppercase;
+    import $package+validPackage.ui.displays.[$packageType~s.]$name+FirstUpperCase~Proxy;
+    import io.intino.alexandria.exceptions.AlexandriaException;
+    import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
+    import io.intino.alexandria.ui.spark.UISparkManager;
+
+    public class $name+FirstUpperCase~ProxyRequester extends io.intino.alexandria.ui.displays.requesters.DisplayProxyRequester {
+
+    	public $name+FirstUpperCase~ProxyRequester(UISparkManager manager, DisplayNotifierProvider notifierProvider) {
+    		super(manager, notifierProvider);
+    	}
+
+    	@Override
+    	public void execute() throws AlexandriaException {
+    		String operation = operation();
+    		if (operation.equals("registerPersonifiedDisplay")) {
+    			$name+FirstUpperCase~Proxy display = display();
+    			if (display != null) display.registerPersonifiedDisplay(manager.fromQuery("v", String.class));
+    		}
+    		else {
+				$name+FirstUppercase display = personifiedDisplay();
+				if (display == null) return;
+				if (operation.equals("refreshPersonifiedDisplay")) {
+					$parameter...[$NL]
+					display.refresh();
+					return;
+				}
+				[else $request...[$NL~else ]]
+				super.execute();
+    		}
+    	}
+    }
+end
+
+def type(display)
+	package $package+validPackage.ui.displays.requesters;
+
+	import $package+validPackage.ui.displays.[$packageType~s.]$name+FirstUpperCase;
+	import io.intino.alexandria.exceptions.*;
+	import $package+validPackage.*;
+	$schemaImport
+
+	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
+	import io.intino.alexandria.exceptions.AlexandriaException;
+	import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
+	import io.intino.alexandria.ui.spark.UISparkManager;
+
+	public class $name+firstUpperCase~Requester extends $parentType {
+
+		public $name+firstUpperCase~Requester(UISparkManager manager, DisplayNotifierProvider notifierProvider) {
+			super(manager, notifierProvider);
+		}
+
+		@Override
+		public void execute() throws AlexandriaException {
+			$name+firstUpperCase display = display();
+			if (display == null) return;
+			String operation = operation();
+
+			[$request...[$NL~else ]]
+
+			super.execute();
+		}
+	}
+end
+
+def attribute(extensionOf) trigger(parentType)
+	$parent+firstUpperCase~Requester
+end
+
+def trigger(parentType)
+	io.intino.alexandria.ui.displays.requesters.[$type+class+FirstUpperCase]~Requester
+end
+
+def attribute(this:Display) trigger(class)
+	Display
+end
+
+def type(request & asset) trigger(request)
+	if (operation.equals("$name")) {
+		io.intino.alexandria.ui.spark.UIFile file = display.$name($parameter);
+		manager.write(file.content(), file.label(), file.embedded());
+		return;
+	}
+end
+
+def type(request) trigger(request)
+	if (operation.equals("$name")) {
+		display.$name($parameter);
+		return;
+	}
+end
+
+def type(parameter & accessible) trigger(parameter)
+    display.$value+firstLowercase(manager.fromQuery("$value", String.class));
+end
+
+def type(list) trigger(parameter)
+    manager.fromQuery("v", $value~$[].class)
+end
+
+def type(parameter & file) trigger(parameter)
+    manager.fromForm("v", $value.class)
+end
+
+def type(parameter) trigger(parameter)
+    manager.fromQuery("v", $value.class)
+end
+
+def	trigger(parameter)
+
+end
+
+def type(schemaImport)
+	import $package.schemas.*;
+end

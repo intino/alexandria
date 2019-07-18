@@ -1,6 +1,5 @@
 package io.intino.konos.builder.codegeneration;
 
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -12,47 +11,40 @@ import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.dsl.Meta;
 import io.intino.tara.dsl.Proteo;
-import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 
-public class BoxRenderer {
+public class BoxRenderer extends Renderer {
 	private final KonosGraph graph;
-	private final File destination;
-	private final String packageName;
-	private final Module module;
-	private final Configuration configuration;
 	private boolean isTara;
 
-	BoxRenderer(KonosGraph graph, File destination, String packageName, Module module, boolean isTara) {
+	BoxRenderer(Settings settings, KonosGraph graph, boolean isTara) {
+		super(settings, Target.Owner);
 		this.graph = graph;
-		this.destination = destination;
-		this.packageName = packageName;
-		this.module = module;
-		this.configuration = module != null ? TaraUtil.configurationOf(module) : null;
 		this.isTara = isTara;
 	}
 
-	public void execute() {
-		final String name = name();
-		if (configuration == null || Commons.javaFile(destination, snakeCaseToCamelCase(name) + "Box").exists()) {
+	@Override
+	public void render() {
+		if (configuration() == null) return;
+		final String name = settings.boxName();
+		if (Commons.javaFile(src(), snakeCaseToCamelCase(name) + "Box").exists()) {
 			return;
 		}
-		FrameBuilder builder = new FrameBuilder("Box").add("package", packageName).add("name", name);
+		FrameBuilder builder = new FrameBuilder("Box").add("package", packageName()).add("name", name);
 		if (isTara) builder.add("tara", fillTara());
-		DumbService.getInstance(module.getProject()).setAlternativeResolveEnabled(true);
-		final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
-		if (facade.findClass("io.intino.konos.server.ui.services.AuthService", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
+		DumbService.getInstance(module().getProject()).setAlternativeResolveEnabled(true);
+		final JavaPsiFacade facade = JavaPsiFacade.getInstance(module().getProject());
+		if (facade.findClass("io.intino.konos.server.ui.services.AuthService", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module())) != null)
 			builder.add("rest", name);
 
 		if (hasAuthenticatedApis()) builder.add("authenticationValidator", new FrameBuilder().add("type", "Basic"));
-		DumbService.getInstance(module.getProject()).setAlternativeResolveEnabled(false);
-		Commons.writeFrame(destination, snakeCaseToCamelCase(name) + "Box", template().render(builder.toFrame()));
+		DumbService.getInstance(module().getProject()).setAlternativeResolveEnabled(false);
+		Commons.writeFrame(src(), snakeCaseToCamelCase(name) + "Box", template().render(builder.toFrame()));
 	}
 
 	private boolean hasAuthenticatedApis() {
@@ -61,13 +53,15 @@ public class BoxRenderer {
 
 	private Frame fillTara() {
 		FrameBuilder builder = new FrameBuilder();
-		builder.add("name", name());
+		Configuration configuration = configuration();
+		builder.add("name", settings.boxName());
 		if (configuration.outLanguage() != null) builder.add("outDSL", configuration.outLanguage());
 		builder.add("wrapper", dsls());
 		return builder.toFrame();
 	}
 
 	private String[] dsls() {
+		Configuration configuration = configuration();
 		List<String> dsls = new ArrayList<>();
 		for (Configuration.LanguageLibrary lang : configuration.languages())
 			if (!Meta.class.getSimpleName().equals(lang.name()) && !Proteo.class.getSimpleName().equals(lang.name())) {
@@ -83,7 +77,4 @@ public class BoxRenderer {
 		return Formatters.customize(new BoxTemplate());
 	}
 
-	private String name() {
-		return module != null ? configuration.artifactId() : Configuration.Level.Solution.name();
-	}
 }

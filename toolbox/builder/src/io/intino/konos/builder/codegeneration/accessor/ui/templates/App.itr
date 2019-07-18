@@ -1,0 +1,48 @@
+def type(app)
+	import React from "react";
+	import ReactDOM from "react-dom";
+    $page+import...[$NL]
+	import PushService from "alexandria-ui-elements/src/services/PushService";
+	import FileService from "alexandria-ui-elements/src/services/FileService";
+	import TranslatorService from "alexandria-ui-elements/src/services/TranslatorService";
+
+	var launchApplication = function () {
+		var configuration = loadConfiguration();
+
+		window.Application = (function(configuration) {
+			var self = {};
+
+			self.configuration = configuration;
+			self.services = {
+				pushService: PushService,
+				fileService: FileService.create(configuration),
+				translatorService: TranslatorService.create(configuration)
+			};
+
+			return self;
+		})(configuration);
+
+		renderApplication();
+        for (var i=0; i<configuration.pushServices.length; i++)
+            PushService.openConnection(configuration.pushServices$[i$]);
+
+		function loadConfiguration() {
+			return document.configuration;
+		}
+
+		function renderApplication() {
+			$page+render...[$NL$NL]
+		}
+	};
+
+	launchApplication();
+end
+
+def type(page) trigger(import)
+    import $value+firstUpperCase from "../pages/$value+firstUpperCase";
+end
+
+def type(page) trigger(render)
+    const $value+firstLowerCase = document.getElementById("$value+firstUpperCase");
+    if ($value+firstLowerCase) ReactDOM.render(<$value+firstUpperCase />, $value+firstLowerCase);
+end

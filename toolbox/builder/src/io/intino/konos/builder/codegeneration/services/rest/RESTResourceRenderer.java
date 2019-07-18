@@ -1,11 +1,13 @@
 package io.intino.konos.builder.codegeneration.services.rest;
 
-import com.intellij.openapi.project.Project;
 import cottons.utils.MimeTypes;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.Renderer;
+import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.RESTNotificationActionRenderer;
 import io.intino.konos.builder.codegeneration.action.RESTResourceActionRenderer;
 import io.intino.konos.builder.helpers.Commons;
@@ -21,33 +23,21 @@ import io.intino.konos.model.graph.rest.RESTService.Resource.Parameter;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
-public class RESTResourceRenderer {
+public class RESTResourceRenderer extends Renderer {
 	private static final String RESOURCES_PACKAGE = "rest/resources";
 	private static final String NOTIFICATIONS_PACKAGE = "rest/notifications";
-	private final Project project;
 	private final List<RESTService> services;
-	private final String boxName;
-	private final Map<String, String> classes;
-	private File gen;
-	private File src;
-	private String packageName;
 
-	public RESTResourceRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName, Map<String, String> classes) {
-		this.project = project;
+	public RESTResourceRenderer(Settings settings, KonosGraph graph) {
+		super(settings, Target.Owner);
 		this.services = graph.rESTServiceList();
-		this.gen = gen;
-		this.src = src;
-		this.packageName = packageName;
-		this.boxName = boxName;
-		this.classes = classes;
 	}
 
-	public void execute() {
+	public void render() {
 		services.forEach(this::processService);
 	}
 
@@ -60,7 +50,7 @@ public class RESTResourceRenderer {
 		for (Operation operation : resource.operationList()) {
 			Frame frame = frameOf(resource, operation);
 			final String className = snakeCaseToCamelCase(operation.getClass().getSimpleName() + "_" + resource.name$()) + "Resource";
-			Commons.writeFrame(new File(gen, RESOURCES_PACKAGE), className, template().render(frame));
+			Commons.writeFrame(new File(gen(), RESOURCES_PACKAGE), className, template().render(frame));
 			createCorrespondingAction(operation);
 		}
 	}
@@ -74,16 +64,16 @@ public class RESTResourceRenderer {
 		builder.add("returnType", notificationResponse());
 		authenticated(service, builder);
 		if (service.authenticatedWithToken() != null) builder.add("throws", "Unauthorized");
-		Commons.writeFrame(new File(gen, NOTIFICATIONS_PACKAGE), className, template().render(builder.toFrame()));
+		Commons.writeFrame(new File(gen(), NOTIFICATIONS_PACKAGE), className, template().render(builder.toFrame()));
 		createCorrespondingAction(notification);
 	}
 
 	private void createCorrespondingAction(Operation operation) {
-		new RESTResourceActionRenderer(project, operation, src, packageName, boxName, classes).execute();
+		new RESTResourceActionRenderer(settings, operation).execute();
 	}
 
 	private void createCorrespondingAction(Notification notification) {
-		new RESTNotificationActionRenderer(project, notification, src, packageName, boxName, classes).execute();
+		new RESTNotificationActionRenderer(settings, notification).execute();
 	}
 
 	private Frame frameOf(Resource resource, Operation operation) {
@@ -94,7 +84,7 @@ public class RESTResourceRenderer {
 		builder.add("parameter", parameters(operation.parameterList()));
 		if (hasResponse(operation)) builder.add("returnType", frameOf(operation.response()));
 		if (!resource.graph().schemaList().isEmpty())
-			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName).toFrame());
+			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
 		authenticated(resource.core$().ownerAs(RESTService.class), builder);
 		return builder.toFrame();
 	}
@@ -106,9 +96,9 @@ public class RESTResourceRenderer {
 	}
 
 	private void addCommons(String name, FrameBuilder builder) {
-		builder.add("package", packageName);
+		builder.add("package", packageName());
 		builder.add("name", name);
-		builder.add("box", boxName);
+		builder.add("box", boxName());
 	}
 
 	private boolean hasResponse(Operation operation) {
@@ -116,7 +106,7 @@ public class RESTResourceRenderer {
 	}
 
 	private Frame frameOf(Response response) {
-		FrameBuilder builder = new FrameBuilder(response.getClass().getSimpleName()).add("value", Commons.returnType(response, packageName));
+		FrameBuilder builder = new FrameBuilder(response.getClass().getSimpleName()).add("value", Commons.returnType(response, packageName()));
 		if (response.isText() && response.dataFormat() != Response.DataFormat.html)
 			builder.add("format", MimeTypes.get(response.dataFormat().toString()));
 		return builder.toFrame();
@@ -170,7 +160,7 @@ public class RESTResourceRenderer {
 	}
 
 	private Frame parameterType(io.intino.konos.model.graph.Parameter parameter) {
-		String innerPackage = parameter.isObject() && parameter.asObject().isComponent() ? String.join(".", packageName, "schemas.") : "";
+		String innerPackage = parameter.isObject() && parameter.asObject().isComponent() ? String.join(".", packageName(), "schemas.") : "";
 		final FrameBuilder builder = new FrameBuilder().add("value", innerPackage + parameter.asType().type());
 		if (parameter.i$(ListData.class)) builder.add("list");
 		return builder.toFrame();

@@ -4,6 +4,9 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.Renderer;
+import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Task;
@@ -12,30 +15,25 @@ import io.intino.konos.model.graph.crontrigger.CronTriggerTask;
 import io.intino.konos.model.graph.directorysentinel.DirectorySentinelTask;
 import io.intino.konos.model.graph.scheduled.ScheduledTask;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SchedulerRenderer {
+public class SchedulerRenderer extends Renderer {
 	private final List<Task> tasks;
-	private final File gen;
-	private final String packageName;
-	private final String boxName;
 
-	public SchedulerRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+	public SchedulerRenderer(Settings settings, KonosGraph graph) {
+		super(settings, Target.Owner);
 		this.tasks = graph.taskList();
-		this.gen = gen;
-		this.packageName = packageName;
-		this.boxName = boxName;
 	}
 
-	public void execute() {
+	@Override
+	public void render() {
 		if (tasks.isEmpty()) return;
-		Commons.writeFrame(gen, "Tasks", template().render(
+		Commons.writeFrame(gen(), "Tasks", template().render(
 				new FrameBuilder("scheduler")
-						.add("package", packageName)
-						.add("box", boxName)
+						.add("package", packageName())
+						.add("box", boxName())
 						.add("task", processTasks(tasks)).toFrame()));
 	}
 
@@ -73,7 +71,7 @@ public class SchedulerRenderer {
 				.add("event", task.events().stream().map(Enum::name).toArray(String[]::new))
 				.add("file", task.directory() == null ? "" : task.directory())
 				.add("name", task.name$())
-				.add("package", packageName);
+				.add("package", packageName());
 		return builder.toFrame();
 	}
 

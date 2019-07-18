@@ -1,0 +1,39 @@
+def type(desktop)
+	import React from "react";
+	import { Header as UiHeader, Tabs as UiTabs } from "alexandria-ui-elements/gen/Displays";
+	[$alexandriaComponentImport...[$NL]]
+	[$projectComponentImport...[$NL]]
+	import AlexandriaDesktop from "alexandria-ui-elements/src/displays/Desktop";[
+	import $notDecorated+firstUpperCase~Notifier from "../notifiers/$notDecorated+firstUpperCase~Notifier";][
+	import $notDecorated+firstUpperCase~Requester from "../requesters/$notDecorated+firstUpperCase~Requester";]
+
+	export default class [$abstract]$name+firstUpperCase extends AlexandriaDesktop {
+
+		constructor(props) {
+			super(props);[
+			this.notifier = new $notDecorated+firstUpperCase~Notifier(this);][
+			this.requester = new $notDecorated+firstUpperCase~Requester(this);]
+		};
+
+		render() {
+			return (
+				<React.Fragment>
+					<UiHeader id="$headerId">
+						$component...[$NL]
+					</UiHeader>
+					<UiTabs id="$tabBarId">
+						$tabs...[$NL]
+					</UiTabs>
+				</React.Fragment>
+			);
+		}
+	}
+end
+
+def type(alexandriaComponentImport)
+	import { $type+firstUpperCase as Ui$type+firstUpperCase } from "alexandria-ui-elements/gen/Displays";
+end
+
+def type(projectComponentImport)
+	import { $type+firstUpperCase as Displays$type+firstUpperCase } from "../[$packageTypeRelativeDirectory]Displays";
+end

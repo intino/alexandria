@@ -25,8 +25,8 @@ public class SessionAuthService implements AuthService {
 	}
 
 	@Override
-	public AuthService.Authentication authenticate() throws SpaceAuthCallbackUrlIsNull {
-		return new AuthService.Authentication() {
+	public Authentication authenticate() throws SpaceAuthCallbackUrlIsNull {
+		return new Authentication() {
 
 			@Override
 			public Token requestToken() throws CouldNotObtainRequestToken {
@@ -77,7 +77,7 @@ public class SessionAuthService implements AuthService {
 	}
 
 	@Override
-	public void addPushListener(Token token, AuthService.FederationNotificationListener federationNotificationListener) throws CouldNotObtainInfo {
+	public void addPushListener(Token token, FederationNotificationListener federationNotificationListener) throws CouldNotObtainInfo {
 	}
 
 }

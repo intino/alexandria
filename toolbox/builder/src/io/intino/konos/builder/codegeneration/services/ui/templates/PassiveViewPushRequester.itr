@@ -1,0 +1,65 @@
+def type(display)
+	package $package+validPackage.ui.displays.requesters;
+
+	import $package+validPackage.ui.displays.[$packageType~s.]$name+FirstUpperCase;
+	import io.intino.alexandria.exceptions.*;
+	import $package+validPackage.*;
+	$schemaImport
+
+	import io.intino.alexandria.exceptions.AlexandriaException;
+	import io.intino.alexandria.rest.spark.SparkReader;
+	import io.intino.alexandria.ui.services.push.UIClient;
+	import io.intino.alexandria.ui.services.push.UIMessage;
+	import io.intino.alexandria.ui.spark.UISparkManager;
+
+	public class $name+firstUpperCase~PushRequester extends io.intino.alexandria.ui.displays.requesters.[$type+class+FirstUpperCase]~PushRequester {
+
+		public void execute(UIClient client, UIMessage message) {
+			$name+firstUpperCase display = display(client, message);
+			if (display == null) return;
+			String operation = operation(message);
+			String data = data(message);
+
+			[$request...[$NL~else ]]
+
+			super.execute(client, message);
+		}
+
+	}
+end
+
+def attribute(this:Display) trigger(class)
+	Display
+end
+
+def type(request & file) trigger(request)
+end
+
+def type(request & asset) trigger(request)
+end
+
+def type(request) trigger(request)
+	if (operation.equals("$name")) {
+		display.$name($parameter);
+		return;
+	}
+end
+
+def type(list) trigger(parameter)
+	SparkReader.read(data, $value~$[].class)
+end
+
+def type(parameter & file) trigger(parameter)
+end
+
+def type(parameter) trigger(parameter)
+	SparkReader.read(data, $value.class)
+end
+
+def	trigger(parameter)
+
+end
+
+def type(schemaImport)
+	import $package.schemas.*;
+end

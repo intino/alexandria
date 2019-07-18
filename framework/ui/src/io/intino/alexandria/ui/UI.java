@@ -1,28 +1,48 @@
 package io.intino.alexandria.ui;
 
 import io.intino.alexandria.rest.pushservice.MessageCarrier;
-import io.intino.alexandria.ui.displays.AlexandriaDisplay;
-import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifier;
-import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
+import io.intino.alexandria.ui.displays.Display;
+import io.intino.alexandria.ui.displays.DisplayRouteManager;
+import io.intino.alexandria.ui.displays.notifiers.DisplayNotifier;
+import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
+import io.intino.alexandria.ui.spark.UISparkManager;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+
+import static java.util.stream.Collectors.toList;
 
 public abstract class UI {
-    private static Map<Class<? extends AlexandriaDisplay>, Class<? extends AlexandriaDisplayNotifier>> notifiers = new HashMap<>();
+    private static Map<Class<? extends Display>, Class<? extends DisplayNotifier>> notifiers = new HashMap<>();
 
-    protected static <DN extends AlexandriaDisplayNotifier> DisplayNotifierRegistration register(Class<DN> notifierClass) {
+    protected static <DN extends DisplayNotifier> DisplayNotifierRegistration register(Class<DN> notifierClass) {
         return new DisplayNotifierRegistration() {
             @Override
-            public <D extends AlexandriaDisplay> void forDisplay(Class<D> displayClass) {
+            public <D extends Display> void forDisplay(Class<D> displayClass) {
                 notifiers.put(displayClass, notifierClass);
             }
         };
     }
 
-    protected static AlexandriaDisplayNotifierProvider notifierProvider() {
+    protected static DisplayRouteManager routeManager(UISpark spark) {
+        return new DisplayRouteManager() {
+            @Override
+            public void get(String path, Consumer<UISparkManager> consumer) {
+                spark.route(path).get(consumer::accept);
+            }
+
+            @Override
+            public void post(String path, Consumer<UISparkManager> consumer) {
+                spark.route(path).post(consumer::accept);
+            }
+        };
+    }
+
+    protected static DisplayNotifierProvider notifierProvider() {
         return (display, carrier) -> {
             try {
                 return notifierFor(display).newInstance(display, carrier);
@@ -33,21 +53,24 @@ public abstract class UI {
         };
     }
 
-    private static Constructor<? extends AlexandriaDisplayNotifier> notifierFor(AlexandriaDisplay display) throws NoSuchMethodException {
-        Class<? extends AlexandriaDisplayNotifier> clazz = notifiers.get(display.getClass());;
+    private static Constructor<? extends DisplayNotifier> notifierFor(Display display) throws NoSuchMethodException {
+        Class<? extends DisplayNotifier> clazz = notifiers.get(display.getClass());
 
         if (clazz == null)
-			clazz = notifiers.getOrDefault(displayByInheritance(display.getClass()), AlexandriaDisplayNotifier.class);
+			clazz = notifiers.getOrDefault(displayByInheritance(display.getClass()), DisplayNotifier.class);
 
-        return clazz.getConstructor(AlexandriaDisplay.class, MessageCarrier.class);
+        return clazz.getConstructor(Display.class, MessageCarrier.class);
     }
 
-    private static Class<? extends AlexandriaDisplay> displayByInheritance(Class<? extends AlexandriaDisplay> clazz) {
-        return notifiers.keySet().stream().filter(dc -> dc.isAssignableFrom(clazz)).findFirst().orElse(null);
+    private static Class<? extends Display> displayByInheritance(Class<? extends Display> clazz) {
+        Class<?> superclass = clazz.getSuperclass();
+        if (Display.class.isAssignableFrom(superclass) && notifiers.containsKey(superclass)) return (Class<? extends Display>) superclass;
+        List<Class<? extends Display>> result = notifiers.keySet().stream().filter(dc -> dc.isAssignableFrom(clazz)).collect(toList());
+        return result.size() > 0 ? result.get(result.size()-1) : null;
     }
 
     protected interface DisplayNotifierRegistration {
-        <D extends AlexandriaDisplay> void forDisplay(Class<D> displayClass);
+        <D extends Display> void forDisplay(Class<D> displayClass);
     }
 
 }

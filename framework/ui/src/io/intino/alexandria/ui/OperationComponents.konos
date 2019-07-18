@@ -1,0 +1,51 @@
+dsl Konos
+
+Component toolbar as Decorated
+
+Component operation as Decorated
+	Notification refresh as Object(OperationInfo)
+	Notification refreshDisabled as Bool
+	Notification refreshIcon as Text
+
+Component task as Decorated ExtensionOf(operation)
+	Request execute
+
+Component export as Decorated ExtensionOf(operation)
+	Request changeParams as Object(ExportParams)
+
+	Request(Asset) execute
+
+Component download as Decorated ExtensionOf(operation)
+	Request changeParams as Text
+
+	Request(Asset) execute
+
+Component openPage as Decorated ExtensionOf(operation)
+	Notification open as Text
+	Request execute
+
+Component openBlock as Decorated ExtensionOf(operation)
+	Request execute
+
+Component openDialog as Decorated ExtensionOf(operation)
+	Request execute
+
+Component closeDialog as Decorated ExtensionOf(operation)
+	Request execute
+
+Component selectionOperation as Decorated ExtensionOf(operation)
+Component taskSelection as Decorated ExtensionOf(selectionOperation)
+	Request execute
+
+Component downloadSelection as Decorated ExtensionOf(selectionOperation)
+	Request changeParams as Text
+	Request(Asset) execute
+
+Schema OperationInfo
+	Attribute title as Text
+	Attribute disabled as Bool
+
+Schema ExportParams
+	Attribute from as DateTime
+	Attribute to as DateTime
+	Attribute option as Text

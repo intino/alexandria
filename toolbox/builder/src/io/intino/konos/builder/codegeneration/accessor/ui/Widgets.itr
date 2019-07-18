@@ -1,7 +1,0 @@
-def type(widgets)
-	$widget...[$NL]
-end
-
-def trigger(widget)
-	<link rel="import" href="$this+camelCaseToSnakeCase~.html">
-end

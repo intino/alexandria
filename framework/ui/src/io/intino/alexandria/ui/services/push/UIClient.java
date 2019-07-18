@@ -1,7 +1,7 @@
 package io.intino.alexandria.ui.services.push;
 
-import io.intino.alexandria.ui.displays.Soul;
 import io.intino.alexandria.rest.spark.SparkClient;
+import io.intino.alexandria.ui.Soul;
 
 public class UIClient<S extends Soul> extends SparkClient {
     private S soul;

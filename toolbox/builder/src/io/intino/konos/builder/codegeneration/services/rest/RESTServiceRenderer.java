@@ -5,6 +5,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.codegeneration.Renderer;
+import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.swagger.SwaggerProfileGenerator;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
@@ -21,7 +24,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.zip.ZipInputStream;
 
 import static com.intellij.platform.templates.github.ZipUtil.unzip;
@@ -31,37 +33,25 @@ import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.getSourceRoots;
 import static java.util.stream.Collectors.toList;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
-public class RESTServiceRenderer {
+public class RESTServiceRenderer extends Renderer {
+	private final List<RESTService> services;
+	@NotNull private final KonosGraph graph;
+
 	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 
-	private final List<RESTService> services;
-	@NotNull
-	private final KonosGraph graph;
-	private final File gen;
-	private final File res;
-	private final String boxName;
-	private final Module module;
-	private final Map<String, String> classes;
-	private String packageName;
-
-	public RESTServiceRenderer(KonosGraph graph, File gen, File res, String packageName, String boxName, Module module, Map<String, String> classes) {
+	public RESTServiceRenderer(Settings settings, KonosGraph graph) {
+		super(settings, Target.Owner);
 		this.services = graph.rESTServiceList();
 		this.graph = graph;
-		this.gen = gen;
-		this.res = res;
-		this.packageName = packageName;
-		this.boxName = boxName;
-		this.module = module;
-		this.classes = classes;
 	}
 
-	public void execute() {
-		services.forEach((service) -> processService(service.a$(RESTService.class), gen));
+	public void render() {
+		services.forEach((service) -> processService(service.a$(RESTService.class), gen()));
 		if (services.stream().anyMatch(RESTService::generateDocs)) generateApiPortal();
 	}
 
 	private void generateApiPortal() {
-		final File api = new File(res, "www" + File.separator + "api");
+		final File api = new File(res(), "www" + File.separator + "api");
 		copyAssets(api);
 		File data = new File(api, "data");
 		data.mkdirs();
@@ -116,7 +106,7 @@ public class RESTServiceRenderer {
 	}
 
 	private File findResource(String logo) {
-		VirtualFile resRoot = getResRoot(module);
+		VirtualFile resRoot = getResRoot(module());
 		if (resRoot == null) return null;
 		File file = new File(resRoot.getPath(), logo);
 		return file.exists() ? file : null;
@@ -133,8 +123,8 @@ public class RESTServiceRenderer {
 		if (service.resourceList().isEmpty()) return;
 		FrameBuilder builder = new FrameBuilder("server").
 				add("name", service.name$()).
-				add("box", boxName).
-				add("package", packageName).
+				add("box", boxName()).
+				add("package", packageName()).
 				add("resource", framesOf(service.resourceList()));
 		if (!service.notificationList().isEmpty()) {
 			builder.add("notification", notificationsFrame(service.notificationList()));
@@ -144,7 +134,7 @@ public class RESTServiceRenderer {
 		if (secure != null && secure.store() != null)
 			builder.add("secure", new FrameBuilder("secure").add("file", secure.store()).add("password", secure.storePassword()).toFrame());
 		final String className = snakeCaseToCamelCase(service.name$()) + "Service";
-		classes.put(service.getClass().getSimpleName() + "#" + service.name$(), className);
+		classes().put(service.getClass().getSimpleName() + "#" + service.name$(), className);
 		Commons.writeFrame(gen, className, template().render(builder.toFrame()));
 	}
 
@@ -153,7 +143,7 @@ public class RESTServiceRenderer {
 		for (RESTService.Notification notification : list)
 			frames.add(new FrameBuilder("notification").
 					add("path", notification.path()).
-					add("package", packageName).
+					add("package", packageName()).
 					add("name", notification.name$()).toFrame());
 		return frames.toArray(new Frame[0]);
 	}
