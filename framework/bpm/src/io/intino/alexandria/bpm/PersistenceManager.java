@@ -3,11 +3,17 @@ package io.intino.alexandria.bpm;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
 public interface PersistenceManager {
 
 	void delete(String path);
+
+	List<String> list(String path);
 
 	InputStream read(String path);
 
@@ -23,6 +29,11 @@ public interface PersistenceManager {
 		@Override
 		public void delete(String path) {
 			new File(directory, path).delete();
+		}
+
+		@Override
+		public List<String> list(String path) {
+			return asList(new File(directory, path).list());
 		}
 
 		@Override
@@ -55,6 +66,11 @@ public interface PersistenceManager {
 		@Override
 		public void delete(String path) {
 			content.remove(path);
+		}
+
+		@Override
+		public List<String> list(String path) {
+			return content.keySet().stream().filter(k -> !k.equals(path) && k.startsWith(path)).collect(toList());
 		}
 
 		@Override

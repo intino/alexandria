@@ -1,62 +1,153 @@
 package io.intino.alexandria.bpm;
 
+import io.intino.alexandria.bpm.PersistenceManager.InMemoryPersistenceManager;
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageHub;
+import io.intino.alexandria.message.MessageReader;
+import io.intino.alexandria.message.MessageWriter;
 
+import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.StreamSupport;
 
 import static io.intino.alexandria.bpm.Link.Type.Default;
 import static io.intino.alexandria.bpm.Link.Type.Exclusive;
 import static io.intino.alexandria.bpm.Task.Type.Automatic;
+import static java.lang.Thread.sleep;
+import static java.util.stream.Collectors.toList;
 
 
 public class Workflow {
 
 	private static final String Channel = "ProcessStatus";
-	private MessageHub messageHub;
-	private ProcessFactory processFactory;
-	private Map<String, Process> processes = new HashMap<>();
+	private final MessageHub messageHub;
+	private final PersistenceManager persistence;
+	private ProcessFactory factory;
+	private Map<String, Process> processes = new ConcurrentHashMap<>();
 	private Set<String> advancingProcesses = new HashSet<>();
 
-	public Workflow(MessageHub messageHub, ProcessFactory processFactory) {
+	public Workflow(MessageHub messageHub, ProcessFactory factory) {
+		this(messageHub, factory, new InMemoryPersistenceManager());
+	}
+
+	public Workflow(MessageHub messageHub, ProcessFactory factory, PersistenceManager persistence) {
 		this.messageHub = messageHub;
+		this.persistence = persistence;
+		this.factory = factory;
+		loadActiveProcesses();
 		this.messageHub.attachListener(Channel, Workflow.this::process);
-		this.processFactory = processFactory;
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			while (!advancingProcesses.isEmpty()) {
+				try {
+					sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}));
+	}
+
+	private void loadActiveProcesses() {
+		persistence.list("active/").forEach(path -> {
+			List<ProcessStatus> statuses = messagesOf(path);
+			ProcessStatus status = statuses.get(0);
+			processes.put(status.processId(), factory.createProcess(status.processId(), status.processName()));
+			process(status.processId()).resume(statuses);
+		});
 	}
 
 	private void process(Message message) {
 		ProcessStatus status = new ProcessStatus(message);
 		waitSemaphore(status);
-		advancingProcesses.add(status.processId());
+		getSemaphore(status);
+		doProcess(status);
+		releaseSemaphore(status);
+	}
+
+	private void doProcess(ProcessStatus status) {
 		if (startProcess(status)) initProcess(status);
-		else if (terminatedProcess(status)) terminateProcess(status);
-		else processes.get(status.processId()).register(status);
+		Process process = processes.get(status.processId());
+		if (process == null) addMessageToFinishedProcess(status);
+		else doProcess(process, status);
+	}
+
+	private void doProcess(Process process, ProcessStatus status) {
 		if (stateExited(status)) {
+			if (!taskIsAutomatic(status)) process.register(status);
 			if (stateIsTerminal(status)) sendTerminationMessage(status);
 			else advanceProcess(status);
-		} else if (stateRejectedOrSkipped(status))
-			propagateRejectionOnBranch(processes.get(status.processId()), stateOf(status));
+		} else if (stateRejectedOrSkipped(status)) propagateRejectionOnBranch(process, stateOf(status));
+		persistProcess(process);
+	}
+
+	private void addMessageToFinishedProcess(ProcessStatus status) {
+		List<ProcessStatus> statuses = messagesOf(finishedPathOf(status.processId()));
+		if (statuses.isEmpty()) {
+			Logger.error("Received status from non-existing process: " + status.processId());
+			return;
+		}
+		statuses.add(status);
+		write(finishedPathOf(status.processId()), statuses);
+	}
+
+	private List<ProcessStatus> messagesOf(String path) {
+		return StreamSupport.stream(new MessageReader(persistence.read(path)).spliterator(), false)
+				.map(ProcessStatus::new)
+				.collect(toList());
+	}
+
+	private void getSemaphore(ProcessStatus status) {
+		advancingProcesses.add(status.processId());
+	}
+
+	private void releaseSemaphore(ProcessStatus status) {
 		advancingProcesses.remove(status.processId());
 	}
 
+	private void persistProcess(Process process) {
+		if (process.isFinished()) {
+			terminateProcess(process);
+			persistence.delete(activePathOf(process.id()));
+			write(finishedPathOf(process.id()), process.messages());
+		} else write(activePathOf(process.id()), process.messages());
+	}
+
+	private void write(String path, List<ProcessStatus> messages) {
+		try {
+			MessageWriter writer = new MessageWriter(persistence.write(path));
+			for (ProcessStatus message : new ArrayList<>(messages)) writer.write(message.message());
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private String activePathOf(String id) {
+		return "active/" + id + ".process";
+	}
+
+	private String finishedPathOf(String id) {
+		return "finished/" + id + ".process";
+	}
+
 	private void initProcess(ProcessStatus status) {
-		Process process = processFactory.createProcess(status.processId(), status.processName());
+		Process process = factory.createProcess(status.processId(), status.processName());
 		processes.put(status.processId(), process);
 		process.register(status);
 		invoke(process, process.initialState());
 	}
 
-	private void terminateProcess(ProcessStatus status) {
-		Process process = processes.get(status.processId());
-		process.register(status);
-		if(!process.hasCallback()) return;
+	private void terminateProcess(Process process) {
+		processes.remove(process.id());
+		if (!process.hasCallback()) return;
 		Process callbackProcess = processes.get(process.callbackProcess());
-		messageHub.sendMessage(Channel, exitMessage(callbackProcess, callbackProcess.state(process.callbackState()), "Process " + process.id() + " exited"));
-		//processes.remove(status.processId()); // TODO all states finished???
+		sendMessage(exitMessage(callbackProcess, callbackProcess.state(process.callbackState()), "Process " + process.id() + " has " + process.finishStatus()));
 	}
 
 	private void sendTerminationMessage(ProcessStatus status) {
-		messageHub.sendMessage(Channel, terminateProcessMessage(processes.get(status.processId())));
+		sendMessage(terminateProcessMessage(processes.get(status.processId())));
 	}
 
 	private void advanceProcess(ProcessStatus status) {
@@ -69,7 +160,7 @@ public class Workflow {
 	private void waitSemaphore(ProcessStatus status) {
 		while (advancingProcesses.contains(status.processId())) {
 			try {
-				Thread.sleep(100);
+				sleep(100);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -96,6 +187,10 @@ public class Workflow {
 		return processes.get(status.processId()).state(stateOf(status)).isTerminal();
 	}
 
+	private boolean taskIsAutomatic(ProcessStatus status) {
+		return processes.get(status.processId()).state(stateOf(status)).task().type() == Automatic;
+	}
+
 	private boolean stateExited(ProcessStatus status) {
 		return status.hasStateInfo() && status.stateInfo().status().equals("Exit");
 	}
@@ -110,7 +205,7 @@ public class Workflow {
 	}
 
 	private boolean terminatedProcess(ProcessStatus status) {
-		return status.processStatus().equals("Exit");
+		return status.processStatus().equals("Exit") || status.processStatus().equals("Aborted");
 	}
 
 	private Link defaultLink(List<Link> links) {
@@ -119,14 +214,19 @@ public class Workflow {
 
 	private void invoke(Process process, State state) {
 		new Thread(() -> {
-			messageHub.sendMessage(Channel, enterMessage(process, state));
+			sendMessage(enterMessage(process, state));
 			String result = state.task().execute();
-			if (state.task().type() == Automatic) messageHub.sendMessage(Channel, exitMessage(process, state, result));
+			if (state.task().type() == Automatic) sendMessage(exitMessage(process, state, result));
 		}).start();
 	}
 
+	private void sendMessage(ProcessStatus status) {
+		processes.get(status.processId()).register(status);
+		messageHub.sendMessage(Channel, status.message());
+	}
+
 	private void sendRejectionMessage(Process process, Link link) {
-		messageHub.sendMessage(Channel, rejectMessage(process, process.state(link.to())));
+		sendMessage(rejectMessage(process, process.state(link.to())));
 	}
 
 	private void propagateRejectionOnBranch(Process process, String state) {
@@ -134,7 +234,7 @@ public class Workflow {
 		for (Link link : links) {
 			if (!process.predecessorsHaveFinished(link.to())) continue;
 			if (anyPredecessorHasExited(process, link)) invoke(process, process.state(link.to()));
-			else messageHub.sendMessage(Channel, skipMessage(process, process.state(link.to())));
+			else sendMessage(skipMessage(process, process.state(link.to())));
 		}
 	}
 
@@ -142,22 +242,22 @@ public class Workflow {
 		return process.predecessorsFinishedStatus(link.to()).stream().anyMatch(s -> s.stateInfo().status().equals("Exit"));
 	}
 
-	private Message enterMessage(Process process, State state) {
-		return stateMessage(process, state, "Enter").message();
+	private ProcessStatus enterMessage(Process process, State state) {
+		return stateMessage(process, state, "Enter");
 	}
 
-	private Message exitMessage(Process process, State state, String result) {
+	private ProcessStatus exitMessage(Process process, State state, String result) {
 		ProcessStatus status = stateMessage(process, state, "Exit");
 		status.addTaskInfo(result);
-		return status.message();
+		return status;
 	}
 
-	private Message rejectMessage(Process process, State state) {
-		return stateMessage(process, state, "Rejected").message();
+	private ProcessStatus rejectMessage(Process process, State state) {
+		return stateMessage(process, state, "Rejected");
 	}
 
-	private Message skipMessage(Process process, State state) {
-		return stateMessage(process, state, "Skipped").message();
+	private ProcessStatus skipMessage(Process process, State state) {
+		return stateMessage(process, state, "Skipped");
 	}
 
 	private ProcessStatus stateMessage(Process process, State state, String stateStatus) {
@@ -174,8 +274,8 @@ public class Workflow {
 		return links.stream().filter(l -> l.type() != Default).findFirst().get().type();
 	}
 
-	private Message terminateProcessMessage(Process process) {
-		return new ProcessStatus(process.id(), process.name(), "Exit").message();
+	private ProcessStatus terminateProcessMessage(Process process) {
+		return new ProcessStatus(process.id(), process.name(), "Exit");
 	}
 
 	private String stateOf(ProcessStatus status) {

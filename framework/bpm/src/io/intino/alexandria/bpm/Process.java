@@ -6,13 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.intino.alexandria.bpm.State.Type.Initial;
 import static java.util.stream.Collectors.toList;
 
 public abstract class Process {
 
 	private final String id;
-	protected List<ProcessStatus> processStatusList = new ArrayList<>();
+	protected final List<ProcessStatus> processStatusList = new ArrayList<>();
 	private List<Link> links = new ArrayList<>();
 	private Map<String, State> states = new HashMap<>();
 
@@ -29,6 +28,7 @@ public abstract class Process {
 	}
 
 	public void register(ProcessStatus status) {
+//		int index = binarySearch(processStatusList, status) + 1;
 		processStatusList.add(status);
 	}
 
@@ -69,8 +69,7 @@ public abstract class Process {
 	}
 
 	protected ProcessStatus exitStateStatus(String stateName) {
-		return new ArrayList<>(processStatusList)
-				.stream()
+		return new ArrayList<>(processStatusList).stream()
 				.filter(s -> s.hasStateInfo() && s.stateInfo().name().equals(stateName) && s.stateInfo().isTerminated())
 				.findFirst().orElse(null);
 	}
@@ -98,5 +97,21 @@ public abstract class Process {
 
 	public List<ProcessStatus> messages() {
 		return processStatusList;
+	}
+
+	public boolean isFinished() {
+		String status = processStatusList.get(processStatusList.size() - 1).processStatus();
+		return status.equals("Exit") || status.equals("Aborted");
+	}
+
+	void resume(List<ProcessStatus> statuses) {
+		this.processStatusList.clear();
+		this.processStatusList.addAll(statuses);
+	}
+
+	protected void onAbort(){}
+
+	public String finishStatus() {
+		return processStatusList.get(processStatusList.size() - 1).processStatus();
 	}
 }

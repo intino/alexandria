@@ -14,32 +14,23 @@ import static io.intino.alexandria.bpm.Task.Type.Automatic;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class BpmWithInclusiveFork {
+public class BpmWithInclusiveFork extends BpmTest {
 
 	@Test
 	public void name() throws InterruptedException {
 		MessageHub messageHub = new MessageHub_();
-		Workflow workflow = new Workflow(messageHub, new ProcessFactory());
+		PersistenceManager.InMemoryPersistenceManager persistence = new PersistenceManager.InMemoryPersistenceManager();
+		new Workflow(messageHub, (id, name) -> new JoinTwoBranches(id), persistence);
 		messageHub.sendMessage("ProcessStatus", createProcessMessage());
-		Process process = workflow.process("1");
-		while(!hasEnded(process)){
-			if(process==null) process = workflow.process("1");
-			Thread.sleep(100);
-		}
-		List<ProcessStatus> messages = process.messages();
+		waitForProcess(persistence);
+		List<ProcessStatus> messages = messagesOf(persistence.read("finished/1.process"));
 		assertThat(messages.get(1).stateInfo().name(), is("CreateString"));
 		assertThat(messages.get(1).stateInfo().status(), is("Enter"));
 		assertThat(messages.get(2).stateInfo().name(), is("CreateString"));
 		assertThat(messages.get(2).stateInfo().status(), is("Exit"));
-		if(process.exitStateStatus("CreateString").taskInfo().result().equals("Hello:Goodbye"))
-			assertThat(process.exitStateStatus("JoinResult").taskInfo().result(), is("Hi:Bye"));
-		else assertThat(process.exitStateStatus("JoinResult").taskInfo().result(), is("Bye:Hi"));
-	}
-
-	private boolean hasEnded(Process process) {
-		if(process == null || process.processStatusList.isEmpty()) return false;
-		ProcessStatus message = process.messages().get(process.processStatusList.size() - 1);
-		return message.processStatus().equals("Exit");
+		if (exitStateStatus(messages, "CreateString").taskInfo().result().equals("Hello:Goodbye"))
+			assertThat(exitStateStatus(messages, "JoinResult").taskInfo().result(), is("Hi:Bye"));
+		else assertThat(exitStateStatus(messages, "JoinResult").taskInfo().result(), is("Bye:Hi"));
 	}
 
 	private Message createProcessMessage() {
@@ -87,7 +78,7 @@ public class BpmWithInclusiveFork {
 
 		private String resultOfState(String stateName) {
 			return new ArrayList<>(processStatusList).stream().filter(m -> {
-				if(!m.hasStateInfo()) return false;
+				if (!m.hasStateInfo()) return false;
 				return m.stateInfo().name().equals(stateName) && m.stateInfo().status().equals("Exit");
 			}).findFirst().get().taskInfo().result();
 		}
@@ -122,11 +113,4 @@ public class BpmWithInclusiveFork {
 		}
 	}
 
-	public static class ProcessFactory implements io.intino.alexandria.bpm.ProcessFactory {
-
-		@Override
-		public Process createProcess(String id, String name) {
-			return new JoinTwoBranches(id);
-		}
-	}
 }
