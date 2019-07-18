@@ -30,6 +30,14 @@ public abstract class Page {
 		this.uiServiceName = uiServiceName;
 	}
 
+	public boolean hasPermissions() {
+		return true;
+	}
+
+	public String redirectUrl() {
+		return session.browser().baseUrl();
+	}
+
 	protected abstract String title();
 	protected abstract URL favicon();
 

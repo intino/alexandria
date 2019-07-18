@@ -52,7 +52,7 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
     }
 
     public Dashboard update(java.util.Map<String, String> parameters) {
-        this.parameterMap = parameterMap;
+        this.parameterMap = parameters;
         refresh();
         return this;
     }
@@ -118,7 +118,11 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
     }
 
     private String hashOf(String content) {
-        return Base64.encode(DigestUtils.md5(content));
+        return Base64.encode(DigestUtils.md5(content))
+                .replaceAll("/", "A")
+                .replaceAll("\\.", "B")
+                .replaceAll("\\+", "C")
+                .replaceAll("=", "D");
     }
 
 }
