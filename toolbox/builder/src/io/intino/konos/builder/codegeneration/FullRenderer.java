@@ -27,12 +27,8 @@ import io.intino.konos.builder.codegeneration.task.TaskRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.plugin.codeinsight.linemarkers.InterfaceToJavaImplementation;
-import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.configurationOf;
@@ -142,14 +138,6 @@ public class FullRenderer {
 
 	private void main() {
 		new MainRenderer(settings, graph, hasModel).execute();
-		final File file = new File(settings.res(Target.Owner), "log4j.properties");
-		if (!file.exists()) {
-			try {
-				java.nio.file.Files.write(file.toPath(), getBytes());
-			} catch (IOException e) {
-				Logger.getRootLogger().error(e.getMessage(), e);
-			}
-		}
 	}
 
 	private String parent() {
@@ -177,11 +165,6 @@ public class FullRenderer {
 
 	private boolean hasModel(io.intino.tara.compiler.shared.Configuration configuration) {
 		return !configuration.languages().isEmpty();
-	}
-
-	private byte[] getBytes() throws IOException {
-		return IOUtils.toByteArray(this.getClass().getResourceAsStream("/log4j_model.properties"));
-
 	}
 
 }
