@@ -1,0 +1,186 @@
+def type(reference)
+	<Displays$name+firstUppercase context={this._context.bind(this)} owner={this._owner.bind(this)} id="$id"$properties+common$properties+specific></Displays$name+firstUppercase>
+end
+
+def type(child) trigger(declaration)
+end
+
+def type(block & child) trigger(child)
+	$value
+end
+
+def type(child) trigger(child)
+	$value
+end
+
+def type(child) trigger(add)
+end
+
+def type(component & child & item)
+end
+
+def type(component & child)
+	<$extends context={this._context.bind(this)} owner={this._owner.bind(this)} id="$id"$properties+common$properties+specific[ $code]>
+		[$reference...[$NL]]
+		[$methods]
+		[$component+child...[$NL]]
+	[</$extends>]
+end
+
+def type(extends & multiple)
+	UiMultiple
+end
+
+def type(extends & stamp)
+	Displays$type+firstUpperCase
+end
+
+def type(extends)
+	Ui$type+firstUpperCase$facet...[]
+end
+
+def type(facet)
+	$name+firstUpperCase
+end
+
+def type(method)
+end
+
+def type(properties & multiple) trigger(common)
+	[ label="$label"][ format="$format...[ ]"]
+end
+
+def type(properties & operation) trigger(common)
+	[ title="$title"][ target="$target"][ mode="$operationMode"][ icon="$icon"][ confirm="$confirm"][ disabled={$disabled}][ size="$size"][ format="$format...[ ]"][ highlighted={$highlighted}]
+end
+
+def type(properties & abstractslider) trigger(common)
+	[ label="$label"][ format="$format...[ ]"][ color="$color"][ arrangement="$arrangement"][ animation={{interval:$interval,loop:$loop}}]
+end
+
+def type(properties) trigger(common)
+	[ name="$name"][ label="$label"][ format="$format...[ ]"][ color="$color"][ multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing}}]
+end
+
+def type(properties & template) trigger(specific)
+	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"]
+end
+
+def type(properties & stamp) trigger(specific)
+	[ spacing="$spacing"]
+end
+
+def type(properties & selector) trigger(specific)
+	[ multipleSelection={$multipleSelection}]
+end
+
+def type(properties & image) trigger(specific)
+	[ width="$width"][ height="$height"][ mobileReduceFactor={$mobileReduceFactor}]
+end
+
+def type(properties & file) trigger(specific)
+	[ width="$width"][ height="$height"]
+end
+
+def type(properties & chart) trigger(specific)
+	[ width="$width"][ height="$height"]
+end
+
+def type(properties & dashboard) trigger(specific)
+	[ width="$width"][ height="$height"]
+end
+
+def type(properties & alertdialog) trigger(specific)
+	[ title="$title"][ fullscreen={$fullscreen}][ message="$message"][ closeLabel="$close"][ width="$width"][ height="$height"][ animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}]
+end
+
+def type(properties & abstractdialog) trigger(specific)
+	[ title="$title"][ fullscreen={$fullscreen}][ width="$width"][ height="$height"][ animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}]
+end
+
+def type(properties & block) trigger(specific)
+	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"][ collapsible="$collapsible"][ $paper][ $badge][ animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}][ hidden="$hidden"][ splitMobileLabel="$splitMobileLabel"]
+end
+
+def type(properties & date) trigger(specific)
+	[ pattern="$pattern"][ mode="$mode"][ value={new Date($value)}][ timePicker={$timePicker}][ mask="$mask"]
+end
+
+def type(properties & number) trigger(specific)
+	[ value={$value}][ prefix="$prefix"][ suffix="$suffix"][ min={$min}][ max={$max}][ step={$step}]
+end
+
+def type(properties & header) trigger(specific)
+	[ position="$position"][ width="$width"][ height="$height"]
+end
+
+def type(properties & codeText) trigger(specific)
+	[ mode="$mode"][ language="$language"][ highlighted=$highlighted]
+end
+
+def type(properties & text) trigger(specific)
+	[ mode="$mode"][ prefix="$prefix"][ suffix="$suffix"][ value="$defaultValue"][ placeholder="$placeholder"][ highlighted={$highlighted}][ type="$type"]
+end
+
+def type(properties & map) trigger(specific)
+	[ pageSize={$pageSize}][ type="$type"][ itemHeight={$itemHeight}][ center={{lat:$centerLat,lng:$centerLng}}][ zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}]
+end
+
+def type(properties & collection) trigger(specific)
+	[ noItemsMessage="$noItemsMessage"][ pageSize={$pageSize}][ itemHeight={$itemHeight}][ scrollingMark={$scrollingMark}][ navigable="$navigable"][ selection="$selection"]
+end
+
+def type(properties & heading) trigger(specific)
+	 style={{width:"calc($width~% - $marginSize~px)",marginRight:"10px"[,$marginLeft:"10px"]}}
+end
+
+def type(properties & item) trigger(specific)
+	 style={{width:"calc($width~% - $marginSize~px)",marginRight:"10px"[,$marginLeft:"10px"]}}
+end
+
+def type(properties & spinner) trigger(specific)
+	[ mode="$mode"]
+end
+
+def type(properties & export) trigger(specific)
+	[ from={$from}][ to={$to}][ min={$min}][ max={$max}][ range={{min:$rangeMin,max:$rangeMax}}][ options={$["$option...[","]"$]}]
+end
+
+def type(properties & download) trigger(specific)
+	[ options={$["$option...[","]"$]}]
+end
+
+def type(properties & downloadselection) trigger(specific)
+	[ options={$["$option...[","]"$]}]
+end
+
+def type(properties & searchbox) trigger(specific)
+	[ placeholder="$placeholder"]
+end
+
+def type(properties & slider) trigger(specific)
+    [ range={{min:$min,max:$max}}][ value={$value}]
+end
+
+def type(properties) trigger(specific)
+end
+
+def type(badge)
+	mode="$mode"[ value={$value}][ max={$max}][ showZero={$showZero}]
+end
+
+def type(codetext)
+	value="$value"
+end
+
+def type(highlighted)
+	{text:"$text",background:"$background"}
+end
+
+def type(operationMode)
+	$mode
+end
+
+def type(histogram)
+	{alwaysVisible:$alwaysVisible,type:"$type"}
+end

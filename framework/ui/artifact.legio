@@ -1,14 +1,22 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.7") ui-framework
-	Box("Konos", "5.3.0") > targetPackage = ""
-	Code("io.intino.alexandria.ui")
+Artifact("io.intino.alexandria", "2.0.0") ui-framework
+	Box("Konos", "6.0.0") > targetPackage = ""
+	Code("io.intino.alexandria")
 	Imports
-		Compile("io.intino.alexandria", "primitives", "1.0.2")
-		Compile("io.intino.alexandria", "core-framework", "[1.0.0, 2.0.0)")
-		Compile("io.intino.alexandria", "exceptions", "[1.0.0, 2.0.0)")
-		Compile("io.intino.alexandria", "rest", "1.0.3")
-		Compile("io.intino.alexandria", "rest-accessor", "1.0.4")
+		Web(groupId = "io.intino.alexandria", artifactId = "ui-framework-elements", version = "2.0.0")
+		Compile("io.intino.alexandria", "core-framework", "1.0.1")
+		Compile("io.intino.alexandria", "primitives", "1.0.3")
+		Compile("io.intino.alexandria", "exceptions", "1.0.0")
+		Compile("io.intino.alexandria", "rest", "2.0.0")
+		Compile("io.intino.alexandria", "rest-accessor", "1.0.5")
+		Compile("io.intino.alexandria", "driver-shiny", "1.0.0")
+		Compile("io.intino.alexandria", "proxy", "1.0.0")
+		Compile("io.intino.alexandria", "logger", "2.0.0")
+		Compile("io.intino.alexandria", "logger4j", "1.0.0")
+		Compile("com.opencsv", "opencsv", "4.1")
+		Compile("org.hashids", "hashids", "1.0.3")
+		Compile("net.rforge", "Rserve", "0.6-8.1")
 		Test("junit", "junit", "LATEST")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
@@ -17,3 +25,6 @@ Artifact("io.intino.alexandria", "1.0.7") ui-framework
 Repository("intino-maven") intino
 	Release("https://artifactory.intino.io/artifactory/releases")
 	Release("https://artifactory.intino.io/artifactory/release-frameworks") dist
+
+Repository("bedatadriven") bedatadrivenPublic
+	Release("https://nexus.bedatadriven.com/content/groups/public/")

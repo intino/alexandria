@@ -7,27 +7,27 @@ import java.nio.charset.Charset;
 import java.util.Collection;
 
 @SuppressWarnings("unchecked")
-class SparkReader {
+public class SparkReader {
 
-	static <T> T read(String object, Type type) {
+	public static <T> T read(String object, Type type) {
 		Class<T> rawType =(Class<T>) ((ParameterizedType) type).getRawType();
 		if(Collection.class.isAssignableFrom(rawType)) return readList(object, type);
 		return read(object, (Class<T>) rawType);
 	}
 
-	private static <T> T readList(String object, Type type) {
-		return RequestAdapter.adaptFromJSON(object, type);
-	}
-
-	static <T> T read(String object, Class<T> type) {
+	public static <T> T read(String object, Class<T> type) {
 		if (type.isAssignableFrom(Error.class) || Collection.class.isAssignableFrom(type))
 			return RequestAdapter.adaptFromJSON(object, type);
 		else if (type.isAssignableFrom(byte[].class)) return (T) readBytes(object);
 		return RequestAdapter.adapt(object, type);
 	}
 
-	static <T> T read(Object object, Class<T> type) {
+	public static <T> T read(Object object, Class<T> type) {
 		return type.isAssignableFrom(InputStream.class) ? (T) object : null;
+	}
+
+	private static <T> T readList(String object, Type type) {
+		return RequestAdapter.adaptFromJSON(object, type);
 	}
 
 	private static byte[] readBytes(String object) {

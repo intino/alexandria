@@ -2,6 +2,8 @@ package io.intino.konos.builder.codegeneration.datahub.mounter;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Mounter;
@@ -10,31 +12,22 @@ import io.intino.konos.model.graph.population.PopulationMounter;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 import static java.util.stream.Collectors.toList;
 
 public class MounterRenderer {
+	private final Settings settings;
 	private final List<Mounter> mounters;
-	private final File gen;
-	private final File src;
-	private final String packageName;
-	private final String boxName;
-	private final Map<String, String> classes;
 	private final File sourceMounters;
 	private File genMounters;
 
-	public MounterRenderer(KonosGraph graph, File gen, File src, String packageName, String boxName, Map<String, String> classes) {
+	public MounterRenderer(Settings settings, KonosGraph graph) {
+		this.settings = settings;
 		this.mounters = graph.dataHub().mounterList();
-		this.gen = gen;
-		this.src = src;
-		this.packageName = packageName;
-		this.boxName = boxName;
-		this.classes = classes;
-		this.sourceMounters = new File(src, "datahub/mounters");
-		this.genMounters = new File(gen, "datahub/mounters");
+		this.sourceMounters = new File(settings.src(Target.Owner), "datahub/mounters");
+		this.genMounters = new File(settings.gen(Target.Owner), "datahub/mounters");
 
 	}
 
@@ -42,8 +35,8 @@ public class MounterRenderer {
 		for (Mounter mounter : mounters) {
 			final String mounterName = mounter.name$();
 			final FrameBuilder builder = new FrameBuilder("mounter").
-					add("box", boxName).
-					add("package", packageName).
+					add("box", settings.boxName()).
+					add("package", settings.packageName()).
 					add("name", mounter.name$());
 			if (mounter.isPopulation()) populationMounter(mounter, mounterName, builder);
 			else if (mounter.isRealtime() && !alreadyRendered(sourceMounters, mounterName)) realtimeMounter(mounter, mounterName, builder);
@@ -53,18 +46,18 @@ public class MounterRenderer {
 
 	private void realtimeMounter(Mounter mounter, String mounterName, FrameBuilder builder) {
 		realtimeMounter(builder, mounter);
-		classes.put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datahub.mounters." + mounterName);
+		settings.classes().put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datahub.mounters." + mounterName);
 		writeFrame(sourceMounters, mounterName, customize(new MounterTemplate()).render(builder.toFrame()));
 	}
 
 	private void batchMounter(Mounter mounter, String mounterName, FrameBuilder builder) {
-		writeFrame(new File(src, "datahub/mounters"), mounterName, customize(new MounterTemplate()).render(builder.add("batch").toFrame()));
-		classes.put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datahub.mounters." + mounterName);
+		writeFrame(new File(settings.src(Target.Owner), "datahub/mounters"), mounterName, customize(new MounterTemplate()).render(builder.add("batch").toFrame()));
+		settings.classes().put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datahub.mounters." + mounterName);
 	}
 
 	private void populationMounter(Mounter mounter, String mounterName, FrameBuilder builder) {
 		populationMounter(builder, mounter.asPopulation());
-		classes.put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datahub.mounters." + mounterName);
+		settings.classes().put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datahub.mounters." + mounterName);
 		writeFrame(genMounters, mounter.name$(), customize(new MounterTemplate()).render(builder.toFrame()));
 		if (!alreadyRendered(sourceMounters, mounter.name$() + "MounterFunctions"))
 			writeFrame(sourceMounters, mounter.name$() + "MounterFunctions", customize(new MounterTemplate()).render(builder.add("src").toFrame()));
@@ -97,6 +90,7 @@ public class MounterRenderer {
 		if (mounter.asRealtime().selectList().size() == 1) {
 			Schema schema = mounter.asRealtime().select(0).tank().asEvent().schema();
 			if (schema != null) {
+				String packageName = settings.packageName();
 				builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName));
 				builder.add("type", new FrameBuilder("schema").add("package", packageName).add("name", schema.name$()));
 			} else builder.add("type", "message");

@@ -1,6 +1,5 @@
 package io.intino.konos.builder.codegeneration;
 
-import com.intellij.openapi.module.Module;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
@@ -20,44 +19,37 @@ import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
 import static io.intino.tara.compiler.shared.Configuration.Level.Platform;
 
-public class AbstractBoxRenderer {
-	private final File gen;
-	private final String packageName;
-	private final Module module;
+public class AbstractBoxRenderer extends Renderer {
 	private final KonosGraph graph;
 	private final Configuration configuration;
-	private final String parent;
 	private final boolean hasModel;
 	private final Set<String> customParameters;
 
-	AbstractBoxRenderer(KonosGraph graph, File gen, String packageName, Module module, String parent, boolean hasModel) {
+	AbstractBoxRenderer(Settings settings, KonosGraph graph, boolean hasModel) {
+		super(settings, Target.Owner);
 		this.graph = graph;
-		this.gen = gen;
-		this.packageName = packageName;
-		this.module = module;
-		this.configuration = module != null ? TaraUtil.configurationOf(module) : null;
-		this.parent = parent;
+		this.configuration = module() != null ? TaraUtil.configurationOf(module()) : null;
 		this.hasModel = hasModel;
-		this.customParameters = new HashSet<>();
+		customParameters = new HashSet<>();
 	}
 
-	public void execute() {
+	@Override
+	public void render() {
 		FrameBuilder root = new FrameBuilder("box");
-		final String boxName = name();
-		root.add("name", boxName).add("package", packageName);
+		final String boxName = settings.boxName();
+		root.add("name", boxName).add("package", settings.packageName());
 		if (hasModel) root.add("tara", boxName);
 		parent(root);
 		services(root, boxName);
 		tasks(root, boxName);
 		dataHub(root, boxName);
 		graph.datamartList().forEach(d -> datamart(root, d));
-		Commons.writeFrame(gen, "AbstractBox", template().render(root.toFrame()));
+		Commons.writeFrame(settings.gen(Target.Owner), "AbstractBox", template().render(root.toFrame()));
 		notifyNewParameters();
 	}
 
@@ -107,7 +99,7 @@ public class AbstractBoxRenderer {
 		RealtimeMounter mounter = m.asRealtime();
 		FrameBuilder[] subscriptions = mounter.selectList().stream().map(s -> s.tank().fullName()).map(t ->
 				new FrameBuilder("subscription").add("tankName", t).add("box", boxName).
-						add("package", packageName).add("name", mounter.name$()).add("subscriberId", mounter.subscriberId())).toArray(FrameBuilder[]::new);
+						add("package", settings.packageName()).add("name", mounter.name$()).add("subscriberId", mounter.subscriberId())).toArray(FrameBuilder[]::new);
 		FrameBuilder mounterFrame = new FrameBuilder("mounter", "realtime");
 		return mounterFrame.add("name", mounter.name$()).add("subscription", subscriptions).toFrame();
 	}
@@ -148,7 +140,7 @@ public class AbstractBoxRenderer {
 		FrameBuilder frame = new FrameBuilder("messageHub");
 		if (hub.isJmsHub())
 			frame.add("jms").add("parameter", parameter(hub.busUrl())).add("parameter", parameter(hub.user())).add("parameter", parameter(hub.password())).add("parameter", parameter(hub.clientId()));
-		return frame.add("package", packageName);
+		return frame.add("package", settings.packageName());
 	}
 
 	private void addBroker(FrameBuilder dataHubFrame, Broker broker) {
@@ -170,8 +162,13 @@ public class AbstractBoxRenderer {
 		return new FrameBuilder(types).add("parameter").add(isCustom(parameter) ? "custom" : "standard").add("value", parameter);
 	}
 
+	@NotNull
+	private Frame parameter(SlackBotService service) {
+		return new FrameBuilder(isCustom(service.token()) ? "custom" : "standard").add("value", service.token()).toFrame();
+	}
+
 	private Frame frameOf(Feeder feeder) {
-		return new FrameBuilder("feeder").add("package", packageName).add("name", FeederRenderer.name(feeder)).add("box", name()).toFrame();
+		return new FrameBuilder("feeder").add("package", packageName()).add("name", FeederRenderer.name(feeder)).add("box", settings.boxName()).toFrame();
 	}
 
 	private void services(FrameBuilder builder, String name) {
@@ -217,7 +214,7 @@ public class AbstractBoxRenderer {
 	private void ui(FrameBuilder builder, String name) {
 		if (!graph.uIServiceList().isEmpty()) {
 			final FrameBuilder uiFrame = new FrameBuilder();
-			if (parent != null) uiFrame.add("parent", parent);
+			if (settings.parent() != null) uiFrame.add("parent", settings.parent());
 			builder.add("hasUi", uiFrame);
 			builder.add("uiAuthentication", uiFrame);
 			builder.add("uiEdition", uiFrame);
@@ -227,7 +224,7 @@ public class AbstractBoxRenderer {
 
 	private Frame ui(UIService service, String name) {
 		final FrameBuilder builder = new FrameBuilder("service", "ui").add("name", service.name$()).add("configuration", name)
-				.add("parameter", parameter(service.port()).toFrame());
+				.add("parameter", parameter(service.port()).toFrame()).add("package", packageName());
 		if (service.authentication() != null)
 			builder.add("authentication", parameter(service.authentication().by()).toFrame());
 		if (service.edition() != null)
@@ -237,11 +234,6 @@ public class AbstractBoxRenderer {
 
 	}
 
-	@NotNull
-	private Frame parameter(SlackBotService service) {
-		return new FrameBuilder(isCustom(service.token()) ? "custom" : "standard").add("value", service.token()).toFrame();
-	}
-
 	private boolean isCustom(String value) {
 		final boolean custom = value != null && value.startsWith("{");
 		if (custom) customParameters.add(value.substring(1, value.length() - 1));
@@ -249,15 +241,10 @@ public class AbstractBoxRenderer {
 	}
 
 	private void parent(FrameBuilder builder) {
-		if (parent != null && configuration != null && !Platform.equals(configuration.level()))
-			builder.add("parent", parent).add("hasParent", "");
+		if (parent() != null && configuration != null && !Platform.equals(configuration.level()))
+			builder.add("parent", parent()).add("hasParent", "");
 		else builder.add("hasntParent", "");
 	}
-
-	private String name() {
-		return module != null ? configuration.artifactId() : Configuration.Level.Solution.name();
-	}
-
 
 	private Template template() {
 		return Formatters.customize(new AbstractBoxTemplate());

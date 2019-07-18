@@ -10,13 +10,6 @@ import io.intino.konos.builder.helpers.Commons;
 
 public class Formatters {
 
-	public static Formatter validMoldName() {
-		return (value) -> {
-			final String name = value.toString().replace("-", "");
-			return Character.isDigit(name.charAt(0)) ? "m" + name : name;
-		};
-	}
-
 	public static Formatter validName() {
 		return (value) -> StringHelper.snakeCaseToCamelCase(value.toString().replace(".", "-"));
 	}

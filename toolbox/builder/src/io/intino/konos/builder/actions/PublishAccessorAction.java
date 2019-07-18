@@ -12,6 +12,8 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.KonosIcons;
+import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.compiler.shared.Configuration;
@@ -55,9 +57,14 @@ public class PublishAccessorAction extends KonosAction implements DumbAware {
 				final Configuration configuration = TaraUtil.configurationOf(module);
 				String generationPackage = configuration != null ? configuration.workingPackage() + ".box" : "konos";
 				ProgressManager.getInstance().getProgressIndicator().setIndeterminate(true);
-				new AccessorsPublisher(module, graph, generationPackage).publish();
+				Settings settings = settings(module, generationPackage);
+				new AccessorsPublisher(settings, graph).publish();
 			}
 		});
+	}
+
+	private Settings settings(Module module, String packageName) {
+		return new Settings().module(module).packageName(packageName).cache(new ElementCache());
 	}
 
 	private boolean projectIsNull(AnActionEvent e, Project project) {

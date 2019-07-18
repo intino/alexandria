@@ -1,0 +1,54 @@
+dsl Konos
+
+Service(title = "", favicon = "") UiElements as UI(port = "9000")
+	Resource(path = "/") home as Page(homeTemplate)
+	Resource(path = "/demo") demo as Page(homeTemplate)
+
+Template homeTemplate
+	Image image1
+		mobileReduceFactor = 10%
+	Image image2
+
+Component baseImage as Decorated
+	Notification refresh as Text
+
+Theme theme1
+	type = Normal
+	Primary("#3f51b5")
+	Secondary("#ff9100")
+	Error("#f44336")
+
+Format("") formatoIncorrecto
+Format("color:'#B71C1C',textShadow:'2px 2px 2px #fff'") h1
+Format("color:'black',textShadow:'2px 2px 2px #fff'") h2
+Format("") h3
+Format("") h4
+Format("") h5
+Format("lineHeight:'17pt'") h6
+Format("") body1
+Format("") body2
+Format("") subtitle1
+Format("") subtitle2
+Format("color:'white'") white
+Format("color:'orange'") secondary
+Format("borderRight:'1px solid black'") separator
+Format("background:'#efefef',padding:'10px 30px'") footer
+Format("color:'white',position:'absolute',top:0,left:0,marginLeft:'187px',marginTop:'9px'") headerSubtitle
+Format("background:'white',borderRadius:'3px',height:'100%'") whiteBackground
+Format("padding:'10px 20px'") air
+Format("marginBottom:'10px'") airBottom
+Format("marginRight:'10px'") airLeft
+Format("marginRight:'10px'") airRight
+Format("padding:'10px'") containerAirMedium
+Format("padding:'20px'") containerAirLarge
+Format("background:'#efefef',padding:'8px',minHeight:'200px'") filled
+Format("background:'#efefef',minHeight:'200px'") filledNoAir
+Format("background:'#efefef',minHeight:'400px'") filledNoAirLarge
+Format("marginTop:'10px'") headerToolbar
+Format("textAlign:'center'") textCentered
+Format("color:'#888',fontSize:'10px',marginTop:'-10px',position:'absolute'") facetsAbsolute
+Format("whiteSpace:'nowrap'") valuesLabelFormat
+Format("border:'1px solid',width:'100%'") bordered
+Format("minHeight:'300px'") paperFormat
+Format("borderBottom:'1px dotted #ddd',width:'100%',marginBottom:'10px'") underline
+Format("fontSize:'10pt',color:'grey'") description

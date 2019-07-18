@@ -1,6 +1,6 @@
 package io.intino.alexandria.ui.spark.resources;
 
-import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
+import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
 import io.intino.alexandria.ui.services.EditorService.Permission;
 import io.intino.alexandria.ui.spark.UISparkManager;
 
@@ -11,14 +11,14 @@ import static io.intino.alexandria.ui.services.EditorService.PermissionParameter
 
 public abstract class EditorResource extends Resource {
 
-	public EditorResource(UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+	public EditorResource(UISparkManager manager, DisplayNotifierProvider notifierProvider) {
 		super(manager, notifierProvider);
 	}
 
 	protected io.intino.alexandria.Resource loadDocument() {
 		String documentId = documentId();
 		if (documentId == null) return null;
-		return new io.intino.alexandria.Resource(documentId()).data(content());
+		return new io.intino.alexandria.Resource(documentId(), content());
 	}
 
 	protected Permission loadPermission() {
@@ -33,13 +33,13 @@ public abstract class EditorResource extends Resource {
 		if (document == null)
 			return manager.editorService() != null ? manager.editorService().loadDocument(documentId()) : null;
 
-		return document.data();
+		return document.stream();
 	}
 
 	protected void saveDocument(InputStream document, boolean completed) {
 		if (manager.editorService() == null) return;
 		String documentId = manager.fromQuery(DocumentParameter, String.class);
-		io.intino.alexandria.Resource documentResource = new io.intino.alexandria.Resource(documentId).data(document);
+		io.intino.alexandria.Resource documentResource = new io.intino.alexandria.Resource(documentId, document);
 		manager.editorService().saveDocument(documentId, documentResource, completed);
 	}
 

@@ -1,0 +1,75 @@
+def type(display & accessible)
+	import Requester from "./Requester";
+
+	export default class $name+firstUpperCase~Requester extends Requester {
+		constructor(element) {
+			super(element);
+		};
+		registerPersonifiedDisplay = function(value) {
+			this.pushService.send({ op: "registerPersonifiedTemplate", s: "$name+lowercase", d: this.element.props.id, v: JSON.stringify(value)});
+		}
+	}
+end
+
+def type(display)
+	$import
+
+	export default class $name+firstUpperCase~Requester extends $parentType {
+		constructor(element) {
+			super(element);
+		};
+		[$request...[$NL]]
+	}
+end
+
+def attribute(extensionOf) trigger(import)
+	import $parent+firstUpperCase~Requester from "./$parent+firstUpperCase~Requester"
+end
+
+def trigger(import)
+	import Requester from "./Requester";
+end
+
+def attribute(extensionOf) trigger(parentType)
+	$parent+firstUpperCase~Requester
+end
+
+def trigger(parentType)
+	Requester
+end
+
+def type(parameter) trigger(request)
+	$name = function(value) {
+		$method({ op: "$name", s: "$display+lowercase", d: this.element.props.id, o: this.element.props.owner(), c: this.element.props.context(), v: $parameter});
+	}
+end
+
+def trigger(request)
+    $name = ([$parameterSignature]) => {
+        $method({ op: "$name", s: "$display+lowercase", d: this.element.props.id, o: this.element.props.owner(), c: this.element.props.context()[, v: $parameter]});
+    };
+end
+
+def type(object) trigger(parameter)
+	JSON.stringify(value)
+end
+
+def type(list) trigger(parameter)
+	JSON.stringify(value)
+end
+
+def trigger(parameter)
+	value
+end
+
+def attribute(upload) trigger(method)
+	this.fileService.upload
+end
+
+def attribute(download) trigger(method)
+	this.fileService.download
+end
+
+def trigger(method)
+	this.pushService.send
+end

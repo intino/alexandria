@@ -1,0 +1,17 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) fileExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=50%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filled)
+				Block as Absolute(height=600px)
+					File(value="data/example.pdf", format=widgetDemo) file1 as Relative(width=100%, height=100%)
+				Block > Text file1Code as Code(language=Html)
+						value
+							=========
+							File(value\="data/example.pdf") file1 as Absolute(width\=200px, height\=150px)
+							=========

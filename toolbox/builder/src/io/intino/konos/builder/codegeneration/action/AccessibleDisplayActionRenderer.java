@@ -1,38 +1,40 @@
 package io.intino.konos.builder.codegeneration.action;
 
-import com.intellij.openapi.project.Project;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.helpers.CodeGenerationHelper;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.format;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class AccessibleDisplayActionRenderer extends ActionRenderer {
-
 	private final AccessibleDisplay display;
-	private final Map<String, String> classes;
+	private final Settings configuration;
 
-	public AccessibleDisplayActionRenderer(Project project, AccessibleDisplay display, File src, String packageName, String boxName, Map<String, String> classes) {
-		super(project, src, packageName, boxName, "accessibleDisplay");
+	public AccessibleDisplayActionRenderer(Settings settings, AccessibleDisplay display) {
+		super(settings,"accessibleDisplay");
+		this.configuration = settings;
 		this.display = display;
-		this.classes = classes;
 	}
 
-	public void execute() {
+	@Override
+	public void render() {
 		FrameBuilder builder = new FrameBuilder("action", "ui", "accessibleDisplay");
 		builder.add("name", display.name$());
 		builder.add("display", display.name$());
-		builder.add("package", packageName);
-		builder.add("box", boxName);
+		builder.add("package", packageName());
+		builder.add("box", boxName());
 		builder.add("parameter", parameters());
-		classes.put(display.getClass().getSimpleName() + "#" + firstUpperCase(display.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(display.name$())) + "Action");
-		if (!alreadyRendered(destiny, display.name$() + "Proxy"))
-			writeFrame(destinyPackage(destiny), display.name$() + "ProxyAction", template().render(builder.toFrame()));
+		configuration.classes().put(display.getClass().getSimpleName() + "#" + firstUpperCase(display.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(display.name$())) + suffix());
+		if (!alreadyRendered(src(), display.name$() + "Proxy"))
+			writeFrame(destinyPackage(src()), display.name$() + "ProxyAction", template().render(builder.toFrame()));
 	}
 
 	private Frame[] parameters() {
@@ -42,4 +44,13 @@ public class AccessibleDisplayActionRenderer extends ActionRenderer {
 				.add("name", parameter).toFrame()).toArray(Frame[]::new);
 	}
 
+	@Override
+	protected File destinyPackage(File destiny) {
+		return new File(destiny, format(CodeGenerationHelper.Pages, Target.Owner));
+	}
+
+	@Override
+	protected String suffix() {
+		return "Page";
+	}
 }

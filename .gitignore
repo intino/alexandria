@@ -11,10 +11,15 @@ dependency-reduced-pom.xml
 alexandria/activity-elements-activity/gulpFile.js
 alexandria/activity-elements-activity/package.json
 gulpFile.js
-alexandria/ui-elements-old
-alexandria/ui-elements-new
+ide/builder/src-old
 alexandria/ui-elements/node_modules
 framework/ui-elements/node_modules
+framework/ui-elements/package.json
+framework/ui-elements/webpack.config.js
+framework/ui/res/.cache
+framework/ui/res/.checksum
+.tara
+.intino/audit
 .tara/misc
 kotlinc.xml
 toolbox/test/test-res

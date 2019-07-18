@@ -9,6 +9,7 @@
     </content>
     <orderEntry type="jdk" jdkName="IDEA Konos" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: org.hashids:hashids:1.0.3" level="project" />
     <orderEntry type="module" module-name="dsl" />
     <orderEntry type="library" name="Maven: tara.dsl:konos:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: io.swagger:swagger-codegen:2.1.5" level="project" />
@@ -93,5 +94,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.slf4j:slf4j-log4j12:1.7.7" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.slf4j:slf4j-api:1.7.7" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: log4j:log4j:1.2.17" level="project" />
+    <orderEntry type="library" name="Maven: org.hashids:hashids:1.0.3" level="project" />
   </component>
 </module>

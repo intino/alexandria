@@ -1,0 +1,110 @@
+def type(display)
+	package $package.ui.displays[.$packageType~s];
+
+	import io.intino.alexandria.core.Box;
+	import io.intino.alexandria.exceptions.*;
+	import io.intino.alexandria.ui.displays.components.*;
+	import $package.ui.*;
+	$schemaImport
+	import $package+validPackage.$box+firstUpperCase~Box;
+
+	$templatesImport
+	$blocksImport
+	$itemsImport
+	$rowsImport
+	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
+
+    public [$abstract+lowerCase] class $abstract$name+firstUpperCase$parametrized $displayExtends[ $implements] {
+    	[$reference+declaration...[$NL]]
+    	[$component+declarations...[$NL]]
+
+        public $abstract$name+firstUpperCase($abstractBox+type box) {
+            super(box);
+            id("$id");
+        }
+
+        @Override
+		public void init() {
+			super.init();
+			[$reference...[$NL]]
+			[$componentReferences]
+			[$component+initializations...[$NL]]
+		}
+		$methods
+		[$component+class...[$NL$NL]]
+		[$component+method...[$NL$NL]]
+	}
+end
+
+def type(parametrized & generic)
+	<DN extends $name+firstUpperCase~Notifier, $abstractBox+extension>
+end
+
+def type(parametrized)
+	$abstractBox+extensionTagged
+end
+
+def type(displayExtends & generic)
+	extends $parent<DN, $abstractBox+type>
+end
+
+def type(displayExtends & template)
+	extends io.intino.alexandria.ui.displays.components.Template<$name+firstUpperCase~Notifier, $modelClass, $abstractBox+type>
+end
+
+def type(displayExtends & item)
+	extends io.intino.alexandria.ui.displays.components.Item<$name+firstUpperCase~Notifier, $itemClass, $abstractBox+type>
+end
+
+def type(displayExtends & row)
+	extends io.intino.alexandria.ui.displays.components.Row<$name+firstUpperCase~Notifier, $itemClass, $abstractBox+type>
+end
+
+def type(displayExtends)
+	extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type>
+end
+
+def type(templatesImport)
+	import $package+validPackage.ui.displays.templates.*;
+end
+
+def type(blocksImport)
+	import $package+validPackage.ui.displays.blocks.*;
+end
+
+def type(itemsImport)
+	import $package+validPackage.ui.displays.items.*;
+end
+
+def type(rowsImport)
+	import $package+validPackage.ui.displays.rows.*;
+end
+
+def type(componentReferences & forRoot)
+	[$component+rootReferences...[$NL]]
+end
+
+def type(componentReferences)
+	[$component+references...[$NL]]
+end
+
+def type(attribute)
+	public $clazz $name+firstLowerCase;
+end
+
+def type(methods & dynamicloadedcomponent)
+	@Override
+	public io.intino.alexandria.ui.displays.components.DynamicLoaded.LoadTime loadTime() {
+		return io.intino.alexandria.ui.displays.components.DynamicLoaded.LoadTime.valueOf("$loadTime");
+	}
+
+	@Override
+	public void showLoading() {
+		notifier.refreshLoading(true);
+	}
+
+	@Override
+	public void hideLoading() {
+		notifier.refreshLoading(false);
+	}
+end

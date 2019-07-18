@@ -1,0 +1,75 @@
+dsl Konos
+
+Component collection as Decorated
+	Notification setup as Object(CollectionSetup)
+	Notification refresh
+	Notification refreshItemCount as LongInteger
+	Request selection as Text List
+
+Component pageCollection as Decorated ExtensionOf(collection)
+	Notification setup as Object(PageCollectionSetup)
+	Request changePage as Integer
+	Request changePageSize as Integer
+	Request notifyItemsRendered as Object(CollectionItemsRenderedInfo)
+	Request loadMoreItems as Object(CollectionMoreItems)
+
+Component map as Decorated ExtensionOf(collection)
+	Notification setup as Object(MapCollectionSetup)
+	Notification placeMarks as Object(PlaceMark) List
+
+	Request showPlaceMark as LongInteger
+
+Schema PlaceMark
+	Attribute location as Object(Location)
+	Attribute label as Text
+	Attribute icon as Text
+	Attribute pos as LongInteger
+
+Schema Location
+	Attribute type as Word("Point" "Polyline" "Polygon")
+	Schema Point
+		Attribute lat as Real
+		Attribute lng as Real
+
+Component list as Decorated ExtensionOf(pageCollection)
+Component table as Decorated ExtensionOf(pageCollection)
+Component magazine as Decorated ExtensionOf(pageCollection)
+
+Component item as Decorated
+Component heading as Decorated
+Component row as Decorated
+
+Schema CollectionSetup
+	Attribute itemCount as LongInteger
+
+Schema MapCollectionSetup as ExtensionOf(CollectionSetup)
+	Attribute kmlLayer as Text
+	Attribute icon as Text
+
+Schema PageCollectionSetup as ExtensionOf(CollectionSetup)
+	Attribute pageSize as Integer
+
+Schema CollectionItemsRenderedInfo
+	Attribute items as Text List
+	Attribute visible as Text List
+
+Schema CollectionMoreItems
+	Attribute start as Integer
+	Attribute stop as Integer
+
+Component baseGrouping as Decorated
+	Notification refreshGroups as Object(Group) List
+	Request select as Text List
+
+Component grouping as Decorated ExtensionOf(baseGrouping)
+Component groupingComboBox as Decorated ExtensionOf(baseGrouping)
+Schema Group
+	Attribute label as Text
+	Attribute count as Integer
+
+Component sorting as Decorated
+	Request toggle
+
+Component searchBox as Decorated
+	Notification refreshCount as LongInteger
+	Request search as Text
