@@ -13,20 +13,16 @@ import static io.intino.alexandria.bpm.Task.Type.Automatic;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class BpmWithExclusiveForkAndDeathPath {
+public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 
 	@Test
 	public void name() throws InterruptedException {
 		MessageHub_ messageHub = new MessageHub_();
-		Workflow workflow = new Workflow(messageHub, new ProcessFactory());
+		PersistenceManager.InMemoryPersistenceManager persistence = new PersistenceManager.InMemoryPersistenceManager();
+		new Workflow(messageHub, (id, name) -> new StringContentReviewerProcess(id), persistence);
 		messageHub.sendMessage("ProcessStatus", createProcessMessage());
-		Process process = workflow.process("1");
-		while (!hasEnded(process)) {
-			if (process == null) process = workflow.process("1");
-			Thread.sleep(100);
-		}
-		List<ProcessStatus> messages = process.messages();
-
+		waitForProcess(persistence);
+		List<ProcessStatus> messages = messagesOf(persistence.read("finished/1.process"));
 		assertThat(messages.get(0).processStatus(), is("Enter"));
 		assertThat(messages.get(1).stateInfo().name(), is("CreateString"));
 		assertThat(messages.get(1).stateInfo().status(), is("Enter"));
@@ -36,24 +32,17 @@ public class BpmWithExclusiveForkAndDeathPath {
 		assertThat(messages.get(3).stateInfo().status(), is("Enter"));
 		assertThat(messages.get(4).stateInfo().name(), is("CheckContainsHello"));
 		assertThat(messages.get(4).stateInfo().status(), is("Exit"));
-		if (process.exitStateStatus("CreateString").taskInfo().result().equals("Hello")) {
-			assertThat(process.exitStateStatus("ProcessHello2").taskInfo().result(), is("Processing hello2"));
-			assertThat(process.exitStateStatus("ProcessGoodbye2").stateInfo().status(), is("Skipped"));
-			assertThat(process.exitStateStatus("Terminate").taskInfo().result(), is("hello2"));
+		if (exitStateStatus(messages, "CreateString").taskInfo().result().equals("Hello")) {
+			assertThat(exitStateStatus(messages, "ProcessHello2").taskInfo().result(), is("Processing hello2"));
+			assertThat(exitStateStatus(messages, "ProcessGoodbye2").stateInfo().status(), is("Skipped"));
+			assertThat(exitStateStatus(messages, "Terminate").taskInfo().result(), is("hello2"));
 		} else {
-			assertThat(process.exitStateStatus("ProcessGoodbye2").taskInfo().result(), is("Processing goodbye2"));
-			assertThat(process.exitStateStatus("ProcessHello2").stateInfo().status(), is("Skipped"));
-			assertThat(process.exitStateStatus("Terminate").taskInfo().result(), is("bye2"));
+			assertThat(exitStateStatus(messages, "ProcessGoodbye2").taskInfo().result(), is("Processing goodbye2"));
+			assertThat(exitStateStatus(messages, "ProcessHello2").stateInfo().status(), is("Skipped"));
+			assertThat(exitStateStatus(messages, "Terminate").taskInfo().result(), is("bye2"));
 		}
 	}
 
-	private boolean hasEnded(Process... processes) {
-		for (Process process : processes) {
-			if (process == null || process.processStatusList.isEmpty()) return false;
-			if (process.messages().stream().noneMatch(m -> m.processStatus().equals("Exit"))) return false;
-		}
-		return true;
-	}
 
 	private Message createProcessMessage() {
 		return new Message("ProcessStatus")
@@ -65,7 +54,7 @@ public class BpmWithExclusiveForkAndDeathPath {
 
 	static class StringContentReviewerProcess extends Process {
 
-		protected StringContentReviewerProcess(String id) {
+		StringContentReviewerProcess(String id) {
 			super(id);
 			addState(new State("CreateString", createString(), Initial));
 			addState(new State("CheckContainsHello", checkContainsHelloTask()));
@@ -163,14 +152,6 @@ public class BpmWithExclusiveForkAndDeathPath {
 		@Override
 		public String name() {
 			return "StringContentReviewer";
-		}
-	}
-
-	public static class ProcessFactory implements io.intino.alexandria.bpm.ProcessFactory {
-
-		@Override
-		public Process createProcess(String id, String name) {
-			return new StringContentReviewerProcess(id);
 		}
 	}
 
