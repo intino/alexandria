@@ -21,7 +21,6 @@
       <module fileurl="file://$PROJECT_DIR$/fileformats/mapp/mapp.iml" filepath="$PROJECT_DIR$/fileformats/mapp/mapp.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/messaging/message/message.iml" filepath="$PROJECT_DIR$/messaging/message/message.iml" group="messaging" />
       <module fileurl="file://$PROJECT_DIR$/messaging/message-hub-jms/message-hub-jms.iml" filepath="$PROJECT_DIR$/messaging/message-hub-jms/message-hub-jms.iml" group="messaging" />
-      <module fileurl="file://$PROJECT_DIR$/libraries/ness-accessor/ness-accessor.iml" filepath="$PROJECT_DIR$/libraries/ness-accessor/ness-accessor.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/primitives/primitives.iml" filepath="$PROJECT_DIR$/libraries/primitives/primitives.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/proxy/proxy.iml" filepath="$PROJECT_DIR$/libraries/proxy/proxy.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/rest/rest.iml" filepath="$PROJECT_DIR$/libraries/rest/rest.iml" group="libraries" />
