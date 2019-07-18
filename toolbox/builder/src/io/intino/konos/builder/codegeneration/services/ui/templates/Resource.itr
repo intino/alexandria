@@ -57,6 +57,10 @@ def type(resource & accessibleDisplay)
 			page.googleApiKey = "";
 			page.device = parameterValue("device");
 			$parameter...[$NL]
+            if (!page.hasPermissions()) {
+                manager.redirect(page.redirectUrl());
+                return;
+            }
 
 			Soul soul = soul();
 			if (soul != null) {
@@ -137,6 +141,11 @@ def type(resource)
 			page.token = parameterValue("token");[
 			$editor+parameters]
 			$parameter...[$NL]
+            if (!page.hasPermissions()) {
+                manager.redirect(page.redirectUrl());
+                return;
+            }
+
 			manager.pushService().onOpen(client -> {
 				if (!client.id().equals(page.clientId))
 					return false;

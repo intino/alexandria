@@ -102,6 +102,7 @@ Facet Highlighted on DataComponents.Text
 	var string textColor
 	var string backgroundColor
 Facet Highlighted on OperationComponents.Operation
+	var word:{Outline Fill} style = Fill
 
 // DIALOG FACETS
 Facet Fullscreen on OtherComponents.AbstractDialog

@@ -61,9 +61,11 @@ Template(layout=Vertical, spacing=DP8) operationExamplesMold as Decorated
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="Highlighted facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				Task(title="operation") operation6 as Button Highlighted
+				Task(title="operation 1") operation6 as Button Highlighted(style=Outline)
+				Task(title="operation 2") operation7 as Button Highlighted(style=Fill)
 			Block > Text as Code(language=Html)
 					value
 						=========
-						Task(title\="operation") as Button Highlighted
+						Task(title\="operation 1") as Button Highlighted(style\=Outline)<br/>
+						Task(title\="operation 2") as Button Highlighted(style\=Fill)<br/>
 						=========
