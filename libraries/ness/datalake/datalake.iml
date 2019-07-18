@@ -33,5 +33,10 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.3" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:jms:1.0.2" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:zet:1.0.5" level="project" />
+    <orderEntry type="module" module-name="zim" />
+    <orderEntry type="module" module-name="jms" />
+    <orderEntry type="library" name="Intino: commons-net:commons-net:3.6" level="project" />
+    <orderEntry type="library" name="Intino: javax.jmdns:jmdns:3.4.1" level="project" />
+    <orderEntry type="module" module-name="zet" />
   </component>
 </module>
