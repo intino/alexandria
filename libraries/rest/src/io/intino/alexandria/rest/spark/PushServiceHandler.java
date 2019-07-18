@@ -16,6 +16,7 @@ public class PushServiceHandler {
 	private Map<String, Timer> closeTimersMap = new HashMap<>();
 	private static final int CloseTimeout = 1000*60*60*24;
 	private static final int CloseGoingAway = 1001;
+	private static final int CloseReadEOF = 1006;
 
 	public static void inject(io.intino.alexandria.rest.pushservice.PushService pushService) {
 		PushServiceHandler.pushService = (PushService) pushService;
@@ -42,7 +43,7 @@ public class PushServiceHandler {
 	@OnWebSocketClose
 	public void onClose(Session session, int statusCode, String reason) {
 		cancelClose(session);
-		if (statusCode == CloseGoingAway) {
+		if (statusCode == CloseGoingAway || statusCode == CloseReadEOF) {
 			doClose(client(session));
 			return;
 		}
