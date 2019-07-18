@@ -18,24 +18,26 @@ import static javax.jms.Session.AUTO_ACKNOWLEDGE;
 import static javax.jms.Session.SESSION_TRANSACTED;
 
 public class JmsMessageHub implements MessageHub {
-	private javax.jms.Connection connection;
-	private Session session;
 	private final Map<String, Producer> producers;
 	private final Map<String, List<TopicConsumer>> consumers;
+	private javax.jms.Connection connection;
+	private Session session;
 
 	public JmsMessageHub(String brokerUrl, String user, String password) {
 		this(brokerUrl, user, password, false);
 	}
 
 	public JmsMessageHub(String brokerUrl, String user, String password, boolean transactedSession) {
-		try {
-			connection = BusConnector.createConnection(brokerUrl, user, password);
-			if (connection != null)
-				session = connection.createSession(transactedSession, transactedSession ? AUTO_ACKNOWLEDGE : SESSION_TRANSACTED);
-			else Logger.error("Connection is null");
-		} catch (JMSException e) {
-			Logger.error(e);
-		}
+		if (brokerUrl != null && !brokerUrl.isEmpty()) {
+			try {
+				connection = BusConnector.createConnection(brokerUrl, user, password);
+				if (connection != null)
+					session = connection.createSession(transactedSession, transactedSession ? AUTO_ACKNOWLEDGE : SESSION_TRANSACTED);
+				else Logger.error("Connection is null");
+			} catch (JMSException e) {
+				Logger.error(e);
+			}
+		} else Logger.warn("Broker url is null");
 		producers = new HashMap<>();
 		consumers = new HashMap<>();
 	}
@@ -54,6 +56,7 @@ public class JmsMessageHub implements MessageHub {
 
 	@Override
 	public void sendMessage(String channel, Message message) {
+		if (session == null) return;
 		try {
 			Producer producer = producers.putIfAbsent(channel, new TopicProducer(session, channel));
 			if (producer == null) return;
@@ -65,6 +68,7 @@ public class JmsMessageHub implements MessageHub {
 
 	@Override
 	public void attachListener(String channel, Consumer<Message> onMessageReceived) {
+		if (session == null) return;
 		List<TopicConsumer> topicConsumers = this.consumers.putIfAbsent(channel, new ArrayList<>());
 		TopicConsumer topicConsumer = new TopicConsumer(session, channel);
 		topicConsumer.listen(message -> onMessageReceived.accept(MessageDeserializer.deserialize(message)));
@@ -73,6 +77,7 @@ public class JmsMessageHub implements MessageHub {
 
 	@Override
 	public void attachListener(String channel, String subscriberId, Consumer<Message> onMessageReceived) {
+		if (session == null) return;
 		List<TopicConsumer> topicConsumers = this.consumers.putIfAbsent(channel, new ArrayList<>());
 		TopicConsumer topicConsumer = new TopicConsumer(session, channel);
 		topicConsumer.listen(message -> onMessageReceived.accept(MessageDeserializer.deserialize(message)), subscriberId);
@@ -81,7 +86,8 @@ public class JmsMessageHub implements MessageHub {
 
 	@Override
 	public void detachListeners(String channel) {
-		for (TopicConsumer topicConsumer : this.consumers.getOrDefault(channel, Collections.emptyList())) topicConsumer.stop();
+		for (TopicConsumer topicConsumer : this.consumers.getOrDefault(channel, Collections.emptyList()))
+			topicConsumer.stop();
 	}
 
 	private static class MessageSerializer {
