@@ -43,6 +43,7 @@ def type(resource & accessibleDisplay)
 
 			$name+firstUpperCase~ProxyPage page = new $name+firstUpperCase~ProxyPage();
 			page.session = session();
+			page.session.browser().onRedirect(location -> manager.redirect(location));
 			page.session.browser().requestUrl(manager.requestUrl());
 			page.session.whenLogin(new Function<String, String>() {
 				@Override
@@ -120,6 +121,7 @@ def type(resource)
 			String clientId = UUID.randomUUID().toString();
 			$name+firstUpperCase~Page page = new $name+firstUpperCase~Page();
 			page.session = manager.currentSession();
+			page.session.browser().onRedirect(location -> manager.redirect(location));
 			page.session.browser().requestUrl(manager.requestUrl());
 			page.session.whenLogin(new Function<String, String>() {
 				@Override
