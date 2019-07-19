@@ -22,7 +22,7 @@ def type(action & notification) !type(ui)
 end
 
 def type(action) !type(ui)
-	package $package+validPackage.ui.pages;
+	package $package+validPackage.actions;
 
 	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
 	import io.intino.alexandria.exceptions.*;
@@ -30,7 +30,7 @@ def type(action) !type(ui)
 	import java.util.*;
 	$schemaImport
 
-	public class $name+snakecaseToCamelCase+firstUpperCase~Page {
+	public class $name+snakecaseToCamelCase+firstUpperCase~Action {
 
 		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
 		public io.intino.alexandria.core.Context context = new io.intino.alexandria.core.Context();

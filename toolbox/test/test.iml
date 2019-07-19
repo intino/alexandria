@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module io.intino.tara.isTaraModule="true" type="JAVA_MODULE" version="4">
+<module io.intino.tara.isTaraModule="true" org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="Spring" name="Spring">
+      <configuration />
+    </facet>
+  </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/../../out/production/builder-test" />
     <output-test url="file://$MODULE_DIR$/../../out/test/builder-test" />
@@ -16,7 +21,6 @@
     <orderEntry type="module" module-name="core" scope="TEST" />
     <orderEntry type="module" module-name="data-hub" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:rest:1.0.4" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.activemq:activemq-broker:5.15.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.activemq:activemq-openwire-legacy:5.15.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.6.7" level="project" />
@@ -33,6 +37,9 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework:spring-context:4.3.9.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework:spring-aop:4.3.9.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework:spring-expression:4.3.9.RELEASE" level="project" />
+    <orderEntry type="module" module-name="builder" scope="TEST" />
+    <orderEntry type="module" module-name="dsl" scope="TEST" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:message:1.0.0" level="project" />
     <orderEntry type="module" module-name="builder" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: tara.dsl:konos:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.swagger:swagger-codegen:2.1.5" level="project" />
@@ -117,18 +124,18 @@
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:driver:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:proxy:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.httpcomponents:fluent-hc:4.5.7" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:logger:2.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:logger4j:1.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: log4j:log4j:1.2.17" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.opencsv:opencsv:4.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.commons:commons-text:1.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: commons-beanutils:commons-beanutils:1.9.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: commons-collections:commons-collections:3.2.2" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.slf4j:slf4j-log4j12:1.7.7" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.slf4j:slf4j-api:1.7.7" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: log4j:log4j:1.2.17" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: net.rforge:rserve:0.6-8.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: net.rforge:REngine:0.6-8.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:inl:2.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:jmx:1.0.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:logger:2.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:core-framework:2.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:json:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.ness:ingestion-lib:2.0.0" level="project" />
@@ -143,6 +150,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: com.mchange:c3p0:0.9.5.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.mchange:mchange-commons-java:0.2.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.zaxxer:HikariCP-java6:2.3.13" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.slf4j:slf4j-api:1.7.7" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.quartz-scheduler:quartz-jobs:2.2.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:jms:1.0.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.activemq:activemq-client:5.15.2" level="project" />
@@ -192,7 +200,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.httpcomponents:httpmime:4.5.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-all:1.9.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:data-hub:1.0.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:logger4j:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:ingestion:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:session:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:tris:1.0.0" level="project" />
@@ -229,6 +236,5 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework:spring-expression:4.3.18.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jvnet.jaxb2_commons:jaxb2-basics-runtime:0.6.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:data-hub-jms:1.0.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:message:1.0.0" level="project" />
   </component>
 </module>

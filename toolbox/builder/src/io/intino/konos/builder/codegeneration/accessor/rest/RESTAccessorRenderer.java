@@ -131,7 +131,7 @@ public class RESTAccessorRenderer extends Renderer {
 	private Frame invokeSentence(Operation operation, boolean authenticated, boolean cert) {
 		Response response = operation.response();
 		FrameBuilder result;
-		if (response.asType() == null) result = voidInvokeSentence();
+		if (response == null || response.asType() == null) result = voidInvokeSentence();
 		else if (response.isObject()) result = objectInvokeSentence(response);
 		else if (response.isFile()) result = fileInvokeSentence(response.asFile());
 		else if (response.isDate()) result = dateInvokeSentence(response.asDate());
