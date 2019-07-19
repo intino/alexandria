@@ -48,6 +48,8 @@ public class AbstractBoxRenderer extends Renderer {
 		services(root, boxName);
 		tasks(root, boxName);
 		dataHub(root, boxName);
+		if (hasAuthenticatedApis()) root.add("authenticationValidator", new FrameBuilder().add("type", "Basic"));
+
 		graph.datamartList().forEach(d -> datamart(root, d));
 		Commons.writeFrame(settings.gen(Target.Owner), "AbstractBox", template().render(root.toFrame()));
 		notifyNewParameters();
@@ -188,6 +190,10 @@ public class AbstractBoxRenderer extends Renderer {
 							.add("name", service.name$())
 							.add("configuration", name)
 							.add("parameter", parameter(service.port())).toFrame());
+	}
+
+	private boolean hasAuthenticatedApis() {
+		return graph.rESTServiceList().stream().anyMatch(restService -> restService.authenticatedWithToken() != null);
 	}
 
 	private void jms(FrameBuilder frame, String name) {
