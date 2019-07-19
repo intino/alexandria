@@ -111,6 +111,8 @@ def type(box)
 			[$task+init...[$NL]]
 		}
 
+		[$authenticationValidator]
+
 		private void initJavaLogger() {
 			final java.util.logging.Logger Logger = java.util.logging.Logger.getGlobal();
 			final ConsoleHandler handler = new ConsoleHandler();
@@ -408,6 +410,11 @@ def trigger(registerSoul)
 		private void notifySoulsClosed() {
 			soulsClosedListeners.forEach(l -> l.accept());
 		}
+end
+
+
+def trigger(authenticationValidator)
+	public abstract io.intino.alexandria.rest.security.$type+FirstUpperCase~AuthenticationValidator authenticationValidator();
 end
 
 
