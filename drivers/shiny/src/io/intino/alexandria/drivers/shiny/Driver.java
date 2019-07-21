@@ -5,6 +5,7 @@ import io.intino.alexandria.drivers.shiny.functions.CleanQueryParam;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.proxy.ProxyAdapter;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,17 +19,10 @@ import java.util.Map;
 
 public class Driver implements io.intino.alexandria.drivers.Driver<URL, io.intino.alexandria.proxy.Proxy> {
 	private static final String ShinyUrl = "http://10.13.13.37:3838";
-//	private static final String ShinyScriptsFolder = "/src/shiny-server";
-	private static final String ShinyScriptsFolder = "/tmp/shiny-server";
+	private static final String ShinyScriptsFolder = "/srv/shiny-server";
 
 	public static final String Program = "Program";
 	public static final String LocalUrlParameter = "LocalUrlParameter";
-
-	@Override
-	public boolean isPublished(String program) {
-		if (!shinyScriptsFolder().exists()) return true;
-		return shinyProgramDirectory(program).exists();
-	}
 
 	@Override
 	public URL info(String program) {
@@ -40,16 +34,28 @@ public class Driver implements io.intino.alexandria.drivers.Driver<URL, io.intin
 	}
 
 	@Override
+	public boolean isPublished(String program) {
+		if (!shinyScriptsFolder().exists()) return true;
+		return new File(shinyProgramDirectory(program) + "/ui.R").exists() && new File(shinyProgramDirectory(program) + "/server.R").exists();
+	}
+
+	@Override
 	public URL publish(Program program) {
 		try {
 			if (!shinyScriptsFolder().exists()) return new URL(String.format(ShinyUrl + "/%s", program.name()));
-			shinyProgramDirectory(program.name()).mkdirs();
-			publishScripts(program);
-			publishResources(program);
+			update(program);
 			return new URL(String.format(ShinyUrl + "/%s", program));
 		} catch (MalformedURLException e) {
 			return null;
 		}
+	}
+
+	@Override
+	public void update(Program program) {
+		if (!shinyScriptsFolder().exists()) return;
+		shinyProgramDirectory(program.name()).mkdirs();
+		publishScripts(program);
+		publishResources(program);
 	}
 
 	@Override
@@ -79,8 +85,8 @@ public class Driver implements io.intino.alexandria.drivers.Driver<URL, io.intin
 	private void publishScripts(Program program) {
 		program.scripts().forEach(script -> {
 			try {
-				Path target = Paths.get(shinyProgramDirectory(program.name()) + File.separator + script.getFileName());
-				String scriptContent = new String(Files.readAllBytes(script), StandardCharsets.UTF_8);
+				Path target = Paths.get(shinyProgramDirectory(program.name()) + File.separator + script.name());
+				String scriptContent = new String(IOUtils.toByteArray(script.content()), StandardCharsets.UTF_8);
 				replaceParameters(program, scriptContent);
 				Files.write(target, scriptContent.getBytes());
 			} catch (IOException e) {
@@ -92,7 +98,7 @@ public class Driver implements io.intino.alexandria.drivers.Driver<URL, io.intin
 	private void publishResources(Program program) {
 		program.resources().forEach(resource -> {
 			try {
-				Files.copy(resource, Paths.get(shinyProgramDirectory(program.name()) + File.separator + resource.getFileName()));
+				Files.copy(resource.content(), Paths.get(shinyProgramDirectory(program.name()) + File.separator + resource.name()));
 			} catch (IOException e) {
 				Logger.error(e);
 			}

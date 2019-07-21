@@ -1,14 +1,21 @@
 package io.intino.alexandria.drivers;
 
-import java.nio.file.Path;
+import io.intino.alexandria.Base64;
+import io.intino.alexandria.drivers.program.Resource;
+import io.intino.alexandria.drivers.program.Script;
+import org.apache.commons.codec.digest.DigestUtils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Program {
 	private String name;
-	private List<Path> scripts;
-	private List<Path> resources;
-	private Map<String, String> parameters;
+	private List<Script> scripts = new ArrayList<>();
+	private List<Resource> resources = new ArrayList<>();
+	private Map<String, String> parameters = new HashMap<>();
 
 	public String name() {
 		return name;
@@ -19,20 +26,20 @@ public class Program {
 		return this;
 	}
 
-	public List<Path> scripts() {
+	public List<Script> scripts() {
 		return scripts;
 	}
 
-	public Program scripts(List<Path> scripts) {
+	public Program scripts(List<Script> scripts) {
 		this.scripts = scripts;
 		return this;
 	}
 
-	public List<Path> resources() {
+	public List<Resource> resources() {
 		return resources;
 	}
 
-	public Program resources(List<Path> resources) {
+	public Program resources(List<Resource> resources) {
 		this.resources = resources;
 		return this;
 	}
@@ -45,4 +52,22 @@ public class Program {
 		this.parameters = parameters;
 		return this;
 	}
+
+	public static String name(String program, Map<String, String> params) {
+		String serializedParams = serializeParameters(params);
+		return program.toLowerCase() + (!serializedParams.isEmpty() ? "_" + hashOf(serializedParams) : "");
+	}
+
+	private static String serializeParameters(Map<String, String> params) {
+		return params.entrySet().stream().map(e -> e.getKey() + "=" + e.getValue()).collect(Collectors.joining("&"));
+	}
+
+	private static String hashOf(String content) {
+		return Base64.encode(DigestUtils.md5(content))
+				.replaceAll("/", "A")
+				.replaceAll("\\.", "B")
+				.replaceAll("\\+", "C")
+				.replaceAll("=", "D");
+	}
+
 }

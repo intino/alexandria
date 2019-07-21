@@ -1,8 +1,13 @@
 dsl Legio
 
 Artifact(groupId = "io.intino.alexandria", version = "1.0.0") driver
+
 	Imports
+		Compile("io.intino.alexandria", "json", "[1.0.0, 2.0.0)")
+		Compile("commons-codec", "commons-codec", "1.10")
+
 		Test("junit", "junit", "LATEST")
+
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.release)
 

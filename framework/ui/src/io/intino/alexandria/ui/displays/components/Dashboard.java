@@ -1,16 +1,18 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.Base64;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.drivers.Program;
+import io.intino.alexandria.drivers.program.Resource;
+import io.intino.alexandria.drivers.program.Script;
 import io.intino.alexandria.drivers.shiny.Driver;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.schemas.DashboardInfo;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.components.dashboard.DashboardManager;
 import io.intino.alexandria.ui.displays.notifiers.DashboardNotifier;
-import org.apache.commons.codec.digest.DigestUtils;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -95,11 +97,34 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
 
     private Program program() {
         String name = programName();
-        List<Path> resources = resourceList.stream().map(this::pathOf).collect(Collectors.toList());
-        return new Program().name(name).scripts(Arrays.asList(pathOf(serverScript), pathOf(uiScript))).resources(resources).parameters(parameterMap);
+		List<Script> scripts = Arrays.asList(scriptOf(serverScript), scriptOf(uiScript));
+		List<Resource> resources = resourceList.stream().map(this::resourceOf).collect(Collectors.toList());
+		return new Program().name(name).scripts(scripts).resources(resources).parameters(parameterMap);
     }
 
-    private Path pathOf(URL serverScript) {
+	private Script scriptOf(URL script) {
+    	try {
+			Path path = pathOf(script);
+			if (path == null) return null;
+			return new Script().name(path.getFileName().toString()).content(new FileInputStream(path.toFile()));
+		} catch (FileNotFoundException e) {
+			Logger.error(e);
+			return null;
+		}
+	}
+
+	private Resource resourceOf(URL resource) {
+		try {
+			Path path = pathOf(resource);
+			if (path == null) return null;
+			return new Resource().name(path.getFileName().toString()).content(new FileInputStream(path.toFile()));
+		} catch (FileNotFoundException e) {
+			Logger.error(e);
+			return null;
+		}
+	}
+
+	private Path pathOf(URL serverScript) {
         try {
             return Paths.get(serverScript.toURI());
         } catch (URISyntaxException e) {
@@ -109,20 +134,7 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
     }
 
     private String programName() {
-        String serializedParams = serializeParameters();
-        return this.name().toLowerCase() + (!serializedParams.isEmpty() ? "_" + hashOf(serializedParams) : "");
-    }
-
-    private String serializeParameters() {
-        return parameterMap.entrySet().stream().map(e -> e.getKey() + "=" + e.getValue()).collect(Collectors.joining("&"));
-    }
-
-    private String hashOf(String content) {
-        return Base64.encode(DigestUtils.md5(content))
-                .replaceAll("/", "A")
-                .replaceAll("\\.", "B")
-                .replaceAll("\\+", "C")
-                .replaceAll("=", "D");
+        return Program.name(name(), parameterMap);
     }
 
 }
