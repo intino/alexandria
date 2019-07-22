@@ -1,20 +1,26 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.drivers.Driver;
 import io.intino.alexandria.drivers.Program;
 import io.intino.alexandria.drivers.program.Resource;
 import io.intino.alexandria.drivers.program.Script;
-import io.intino.alexandria.drivers.shiny.Driver;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.schemas.DashboardInfo;
+import io.intino.alexandria.schemas.DashboardSettingsInfo;
 import io.intino.alexandria.ui.AlexandriaUiBox;
+import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.components.dashboard.DashboardManager;
 import io.intino.alexandria.ui.displays.notifiers.DashboardNotifier;
+import io.intino.alexandria.ui.utils.DelayerUtil;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -27,10 +33,10 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
     private URL uiScript;
     private java.util.Map<String, String> parameterMap = new HashMap<>();
     private List<URL> resourceList = new ArrayList<>();
+    private boolean adminMode = false;
 
     public Dashboard(B box) {
         super(box);
-        this.driver = new Driver();
     }
 
     public Dashboard serverScript(URL script) {
@@ -42,6 +48,17 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
         this.uiScript = script;
         return this;
     }
+
+	public Dashboard driver(Driver driver) {
+		this.driver = driver;
+		refresh();
+		return this;
+	}
+
+	public Dashboard adminMode(boolean value) {
+		this.adminMode = value;
+		return this;
+	}
 
     public Dashboard add(String parameter, String value) {
         parameterMap.put(parameter, value);
@@ -73,7 +90,7 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
-                public void run() { notifier.refresh(new DashboardInfo().location(location));
+                public void run() { notifier.refresh(new DashboardInfo().location(location).driverDefined(driver != null).adminMode(adminMode));
                 }
             }, 1000);
         }
@@ -82,9 +99,25 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
         }
     }
 
-    private String execute() {
+    public void settings() {
+    	notifier.showSettings(new DashboardSettingsInfo().serverScript(contentOf(serverScript)).uiScript(contentOf(uiScript)));
+	}
+
+	public void saveServerScript(String content) {
+    	saveScript(serverScript, content);
+    	DelayerUtil.execute(this, aVoid -> notifyUser("Server script saved", UserMessage.Type.Info), 1000);
+	}
+
+	public void saveUiScript(String content) {
+		saveScript(uiScript, content);
+		DelayerUtil.execute(this, aVoid -> notifyUser("UI script saved", UserMessage.Type.Info), 1000);
+	}
+
+	private String execute() {
         String program = programName();
-        DashboardManager dashboardManager = new DashboardManager((AlexandriaUiBox)box(), session(), program);
+        DashboardManager dashboardManager = new DashboardManager((AlexandriaUiBox)box(), session(), program, driver);
+
+        if (driver == null) return null;
 
         if (!driver.isPublished(program))
             driver.publish(program());
@@ -101,6 +134,14 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
 		List<Resource> resources = resourceList.stream().map(this::resourceOf).collect(Collectors.toList());
 		return new Program().name(name).scripts(scripts).resources(resources).parameters(parameterMap);
     }
+
+    private String contentOf(URL file) {
+		try {
+			return new String(Files.readAllBytes(Paths.get(file.toURI())), StandardCharsets.UTF_8);
+		} catch (IOException | URISyntaxException e) {
+			return "";
+		}
+	}
 
 	private Script scriptOf(URL script) {
     	try {
@@ -136,5 +177,13 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
     private String programName() {
         return Program.name(name(), parameterMap);
     }
+
+	private void saveScript(URL script, String content) {
+		try {
+			Files.write(Paths.get(script.toURI()), content.getBytes());
+		} catch (URISyntaxException | IOException e) {
+			Logger.error(e);
+		}
+	}
 
 }

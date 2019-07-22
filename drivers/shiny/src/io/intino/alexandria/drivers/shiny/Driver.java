@@ -18,16 +18,20 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 public class Driver implements io.intino.alexandria.drivers.Driver<URL, io.intino.alexandria.proxy.Proxy> {
-	private static final String ShinyUrl = "http://10.13.13.37:3838";
+	private final String shinyUrl;
 	private static final String ShinyScriptsFolder = "/srv/shiny-server";
 
 	public static final String Program = "Program";
 	public static final String LocalUrlParameter = "LocalUrlParameter";
 
+	public Driver(String shinyUrl) {
+		this.shinyUrl = shinyUrl;
+	}
+
 	@Override
 	public URL info(String program) {
 		try {
-			return new URL(String.format(ShinyUrl + "/%s", program));
+			return new URL(String.format(shinyUrl + "/%s", program));
 		} catch (MalformedURLException e) {
 			return null;
 		}
@@ -42,9 +46,10 @@ public class Driver implements io.intino.alexandria.drivers.Driver<URL, io.intin
 	@Override
 	public URL publish(Program program) {
 		try {
-			if (!shinyScriptsFolder().exists()) return new URL(String.format(ShinyUrl + "/%s", program.name()));
+			String programUrl = shinyUrl + "/" + program.name();
+			if (!shinyScriptsFolder().exists()) return new URL(programUrl);
 			update(program);
-			return new URL(String.format(ShinyUrl + "/%s", program));
+			return new URL(programUrl);
 		} catch (MalformedURLException e) {
 			return null;
 		}

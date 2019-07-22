@@ -60,9 +60,7 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 	}
 
 	public void selectOrdinal(String name) {
-		ordinal(ordinalList.stream().filter(o -> o.name().equals(name)).findFirst().orElse(null));
-		notifier.refreshSelectedOrdinal(name);
-		update(value);
+		selectOrdinal(name, value);
 	}
 
 	public BaseSlider ordinal(Ordinal ordinal) {
@@ -77,7 +75,8 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 
 	public BaseSlider range(long min, long max) {
 		this.range = new Range().min(min).max(max);
-		this.value = min;
+		if (value < min) value = min;
+		if (value > max) value = max;
 		return this;
 	}
 
@@ -147,8 +146,14 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		changeListener.accept(new ChangeEvent(this, value));
 	}
 
-	abstract String formattedValue();
+	public abstract String formattedValue();
 	abstract void updateRange();
+
+	void selectOrdinal(String name, long value) {
+		ordinal(ordinalList.stream().filter(o -> o.name().equals(name)).findFirst().orElse(null));
+		notifier.refreshSelectedOrdinal(name);
+		update(value);
+	}
 
 	private List<io.intino.alexandria.schemas.Ordinal> ordinals() {
 		return ordinalList.stream().map(this::ordinalOf).collect(toList());

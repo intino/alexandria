@@ -30,10 +30,22 @@ Schema ChartInfo
 
 Component dashboard as Decorated
 	Notification showLoading
+	Notification showSettings as Object(DashboardSettingsInfo)
 	Notification refresh as Object(DashboardInfo)
 	Notification refreshError as Text
+
+	Request settings
+	Request saveServerScript as Text
+	Request saveUiScript as Text
+
 Schema DashboardInfo
 	Attribute location as Text
+	Attribute adminMode as Bool
+	Attribute driverDefined as Bool
+
+Schema DashboardSettingsInfo
+	Attribute serverScript as Text
+	Attribute uiScript as Text
 
 Component header as Decorated
 Component tabs as Decorated
