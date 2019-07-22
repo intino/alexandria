@@ -32,6 +32,18 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
         return this;
     }
 
+    public Instant min() {
+        return min;
+    }
+
+    public Instant max() {
+        return max;
+    }
+
+    public void update(Instant instant) {
+        update(toLong(instant));
+    }
+
     @Override
     public TemporalSlider ordinal(Ordinal ordinal) {
         super.ordinal(ordinal);
@@ -51,10 +63,21 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
     }
 
     @Override
-    String formattedValue() {
+    public String formattedValue() {
         Ordinal ordinal = ordinal();
         long value = millisOf(value());
         return ordinal != null ? ordinal.formatter().format(value) : String.valueOf(value);
+    }
+
+    @Override
+    public void selectOrdinal(String name) {
+        Instant current = toInstant(millisOf(value()));
+        super.selectOrdinal(name, toLong(timeScale(name), current));
+    }
+
+    public Timetag timetag() {
+        LocalDateTime localDate = toInstant(millisOf(value())).atZone(UTC).toLocalDateTime();
+        return Timetag.of(localDate, scale());
     }
 
     private long millisOf(long value) {
@@ -66,16 +89,15 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
     }
 
     private TimeScale timeScale() {
-        return TimeScale.valueOf(ordinal().name());
+        return timeScale(ordinal().name());
+    }
+
+    private TimeScale timeScale(String ordinal) {
+        return TimeScale.valueOf(ordinal);
     }
 
     private void notifyCollections() {
         collections.forEach(c -> c.filter(timetag()));
-    }
-
-    private Timetag timetag() {
-        LocalDateTime localDate = toInstant(millisOf(value())).atZone(UTC).toLocalDateTime();
-        return Timetag.of(localDate, scale());
     }
 
     private Scale scale() {
@@ -92,7 +114,7 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
     void updateRange() {
         Ordinal ordinal = ordinal();
         if (ordinal == null) return;
-        long count = timeScale().instantsBetween(min, max) - 1;
+        long count = toLong(max);
         range(0, count);
         if (notifier != null) notifier.refreshRange(rangeSchema());
     }
@@ -101,6 +123,14 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
     void notifyListener() {
         if (changeListener() == null) return;
         changeListener().accept(new ChangeEvent(this, toInstant(millisOf(value()))));
+    }
+
+    private long toLong(Instant instant) {
+        return toLong(timeScale(), instant);
+    }
+
+    private long toLong(TimeScale timeScale, Instant instant) {
+        return timeScale.instantsBetween(min, instant) - 1;
     }
 
 }

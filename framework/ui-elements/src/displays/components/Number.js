@@ -7,6 +7,7 @@ import NumberRequester from "../../../gen/displays/requesters/NumberRequester";
 import TextBehavior from "./behaviors/TextBehavior";
 import Block from "./Block";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import NumberUtil from "alexandria-ui-elements/src/util/NumberUtil";
 
 const styles = theme => ({
 	label: {
@@ -51,7 +52,7 @@ class Number extends AbstractNumber {
 			<Block layout="horizontal">
 				{ labelBlock }
 				{this.props.prefix !== undefined ? <Typography variant={variant} className={classes.prefix}>{this.props.prefix}:</Typography> : undefined }
-				<Typography variant={variant} className={classes.value} style={this.style()}>{value}</Typography>
+				<Typography variant={variant} className={classes.value} style={this.style()}>{NumberUtil.format(value, this.translate("0,0"))}</Typography>
 				{ this.props.suffix !== undefined ? <Typography variant={variant} className={classes.suffix}>{this.props.suffix}</Typography> : undefined }
 			</Block>
 		);

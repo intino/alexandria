@@ -3,6 +3,7 @@ package io.intino.alexandria.ui.displays.components.dashboard;
 import io.intino.alexandria.drivers.Driver;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.proxy.Network;
+import io.intino.alexandria.proxy.Proxy;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.DisplayRouteManager;
 import io.intino.alexandria.ui.services.push.UISession;
@@ -33,11 +34,11 @@ public class DashboardManager {
 	private static final Map<String, io.intino.alexandria.proxy.Proxy> proxyMap = new HashMap<>();
 	private static final Map<String, String> sessionMap = new HashMap<>();
 
-	public DashboardManager(AlexandriaUiBox box, UISession session, String dashboard) {
+	public DashboardManager(AlexandriaUiBox box, UISession session, String dashboard, Driver driver) {
 		this.box = box;
 		this.session = session;
 		this.dashboard = dashboard;
-		this.driver = new io.intino.alexandria.drivers.shiny.Driver();
+		this.driver = driver;
 	}
 
 	public void listen() {
@@ -52,7 +53,7 @@ public class DashboardManager {
 
 	public void register(String dashboard, String username) {
 		String userKey = username != null ? username : "";
-		proxyMap.put(dashboard + userKey, driver.run(parameters()));
+		proxyMap.put(dashboard + userKey, driver != null ? driver.run(parameters()) : null);
 		sessionMap.put(session.id(), dashboard + userKey);
 	}
 
@@ -68,8 +69,9 @@ public class DashboardManager {
 		return routeManagerReady;
 	}
 
-	private io.intino.alexandria.proxy.Proxy proxy(String sessionId) {
+	private Proxy proxy(String sessionId) {
 		if (!sessionMap.containsKey(sessionId)) return null;
+		if (!proxyMap.containsKey(sessionMap.get(sessionId))) return null;
 		return proxyMap.get(sessionMap.get(sessionId));
 	}
 
@@ -87,7 +89,9 @@ public class DashboardManager {
 	private void proxyGet(UISparkManager manager) {
 		try {
 			if (!validRequest(manager.request())) return;
-			proxy(manager.request().session().id()).get(manager.request(), manager.response());
+			Proxy proxy = proxy(manager.request().session().id());
+			if (proxy == null) return;
+			proxy.get(manager.request(), manager.response());
 		} catch (Throwable ex) {
 			try {
 				PrintWriter writer = manager.response().raw().getWriter();
@@ -101,7 +105,9 @@ public class DashboardManager {
 	private void proxyPost(UISparkManager manager) {
 		try {
 			if (!validRequest(manager.request())) return;
-			proxy(manager.request().session().id()).post(manager.request(), manager.response());
+			Proxy proxy = proxy(manager.request().session().id());
+			if (proxy == null) return;
+			proxy.post(manager.request(), manager.response());
 		} catch (Network.NetworkException e) {
 			Logger.error(e);
 		}

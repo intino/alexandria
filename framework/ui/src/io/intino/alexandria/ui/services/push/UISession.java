@@ -50,7 +50,7 @@ public class UISession extends SparkSession<UIClient> {
 
     public String discoverLanguage() {
         User user = user();
-        if (user != null) return user.language();
+        if (user != null && user.language() != null && !user.language().isEmpty()) return user.language();
 
         String language = browser.language();
         if (language != null) return language;

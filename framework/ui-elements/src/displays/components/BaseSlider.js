@@ -1,5 +1,5 @@
 import React from "react";
-import Slider from '@material-ui/lab/Slider';
+import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core';
 import { Tooltip, MenuItem, Select, IconButton } from '@material-ui/core';
 import { PlayCircleFilled, PauseCircleFilled, NavigateBefore, NavigateNext } from '@material-ui/icons';
@@ -125,11 +125,11 @@ export default class BaseSlider extends AbstractBaseSlider {
 		const { classes } = this.props;
 		return (
 			<div className={classNames("layout horizontal", classes.doubleSpacing)}>
-				<div className="layout horizontal center flex">
+				<div className={classNames("layout horizontal center", classes.doubleSpacing)}>
 					{this.renderAnimationControls()}
 					{this.renderValue()}
 				</div>
-				<div className="layout horizontal end-justified">
+				<div className="layout horizontal">
 					{this.renderOrdinals()}
 				</div>
 			</div>

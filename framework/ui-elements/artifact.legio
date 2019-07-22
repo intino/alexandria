@@ -4,11 +4,10 @@ Artifact(groupId = "io.intino.alexandria", version = "2.0.0") ui-framework-eleme
 
 	WebImports
 		WebComponent("@date-io/moment", "^1.3.7")
-		WebComponent("@material-ui/core", "^4.1.1")
-		WebComponent("@material-ui/icons", "^3.0.2")
-		WebComponent("@material-ui/lab", "^4.0.0-alpha.16")
-		WebComponent("@material-ui/pickers", "^3.1.2")
-		WebComponent("@material-ui/styles", "^3.0.0-alpha.10")
+		WebComponent("@material-ui/core", "^4.1.2")
+		WebComponent("@material-ui/icons", "^4.2.1")
+		WebComponent("@material-ui/pickers", "^3.2.0")
+		WebComponent("@material-ui/styles", "^4.2.1")
 		WebComponent("@react-google-maps/api", "^1.3.0")
 		WebComponent("classnames", "^2.2.6")
 		WebComponent("jquery", "^3.4.1")
