@@ -44,7 +44,7 @@ public class MessageHubRenderer {
 	private MessageHub messageHub() {
 		if (graph.dataHub() == null) return null;
 		if (graph.dataHub().isMirrored()) return graph.dataHub().asMirrored().messageHub();
-		if (graph.dataHub().isRemote()) return graph.dataHub().asRemote().messageHub();
+		if (graph.dataHub().isLocal()) return graph.dataHub().asLocal().messageHub();
 		return null;
 	}
 }
