@@ -24,7 +24,7 @@ class GoogleApi extends I18nComponent {
         if (GoogleApi.Loading) return null;
         GoogleApi.Loading = true;
         const key = Application.configuration.googleApiKey;
-        return (<LoadScript libraries={["visualization"]} googleMapsApiKey={key}/>);
+        return (<LoadScript libraries={["visualization","drawing"]} googleMapsApiKey={key}/>);
     };
 
     checkIfScriptLoaded = () => {

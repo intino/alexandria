@@ -1,16 +1,16 @@
-package io.intino.konos.builder.codegeneration.ui.displays.components.collection;
+package io.intino.konos.builder.codegeneration.ui.displays.components.data;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
-import io.intino.konos.builder.codegeneration.ui.displays.components.CollectionRenderer;
+import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.GeoRendererHelper;
-import io.intino.konos.model.graph.CatalogComponents.Map;
+import io.intino.konos.model.graph.DataComponents.Location;
 
-public class MapRenderer extends CollectionRenderer<Map> {
+public class LocationRenderer extends ComponentRenderer<Location> {
 
-	public MapRenderer(Settings settings, Map component, TemplateProvider provider, Target target) {
+	public LocationRenderer(Settings settings, Location component, TemplateProvider provider, Target target) {
 		super(settings, component, provider, target);
 	}
 
@@ -18,19 +18,10 @@ public class MapRenderer extends CollectionRenderer<Map> {
 	public FrameBuilder properties() {
 		FrameBuilder result = super.properties();
 		if (element.icon() != null && !element.icon().isEmpty()) result.add("icon", resourceMethodFrame("icon", element.icon()));
-		addFacets(result);
+		if (element.value() != null && !element.value().isEmpty()) result.add("value", element.value());
 		GeoRendererHelper.addCenter(element.center(), result);
 		GeoRendererHelper.addZoom(element.zoom(), result);
 		return result;
-	}
-
-	private void addFacets(FrameBuilder builder) {
-		if (element.isCluster()) builder.add("type", "Cluster");
-		if (element.isKml()) {
-			builder.add("type", "Kml");
-			builder.add("layer", resourceMethodFrame("kmlLayer", element.asKml().layer()));
-		}
-		if (element.isHeatmap()) builder.add("type", "Heatmap");
 	}
 
 	@Override

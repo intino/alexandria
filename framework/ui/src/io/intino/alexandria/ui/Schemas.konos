@@ -1,0 +1,94 @@
+dsl Konos
+
+Schema PlaceMark
+	Attribute location as Object(Geometry)
+	Attribute label as Text
+	Attribute icon as Text
+	Attribute pos as LongInteger
+
+Schema Geometry
+	Attribute type as Word("Point" "Polyline" "Polygon")
+	Schema Point
+		Attribute lat as Real
+		Attribute lng as Real
+
+Schema CollectionSetup
+	Attribute itemCount as LongInteger
+
+Schema MapCollectionSetup as ExtensionOf(CollectionSetup)
+	Attribute kmlLayer as Text
+	Attribute icon as Text
+
+Schema PageCollectionSetup as ExtensionOf(CollectionSetup)
+	Attribute pageSize as Integer
+
+Schema CollectionItemsRenderedInfo
+	Attribute items as Text List
+	Attribute visible as Text List
+
+Schema CollectionMoreItems
+	Attribute start as Integer
+	Attribute stop as Integer
+
+Schema Group
+	Attribute label as Text
+	Attribute count as Integer
+
+Schema ChartInfo
+	Attribute mode as Text
+	Attribute config as Text
+
+Schema DashboardInfo
+	Attribute location as Text
+	Attribute adminMode as Bool
+	Attribute driverDefined as Bool
+
+Schema DashboardSettingsInfo
+	Attribute serverScript as Text
+	Attribute uiScript as Text
+
+Schema SelectorMenuSelection
+	Attribute option as Integer
+	Attribute ancestors as Text List
+
+Schema Ordinal
+	Attribute name as Text
+	Attribute label as Text
+	Attribute step as Integer
+Schema Range
+	Attribute min as LongInteger
+	Attribute max as LongInteger
+Schema ToolbarState
+	Attribute canPrevious as Bool
+	Attribute canNext as Bool
+	Attribute playing as Bool
+Schema Selected
+	Attribute value as LongInteger
+	Attribute formattedValue as Text
+
+Schema UserInfo
+	Attribute fullName as Text
+	Attribute photo as Text
+
+Schema KeyPressEventData
+	Attribute keyCode as Text
+	Attribute value as Text
+
+Schema FileInfo
+	Attribute value as Text
+	Attribute mimeType as Text
+
+Schema LocationSetup
+	Attribute icon as Text
+
+Schema OperationInfo
+	Attribute title as Text
+	Attribute disabled as Bool
+
+Schema ExportParams
+	Attribute from as DateTime
+	Attribute to as DateTime
+	Attribute option as Text
+
+
+

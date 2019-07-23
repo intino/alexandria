@@ -1,6 +1,6 @@
 package io.intino.alexandria.ui.model.datasource;
 
-import io.intino.alexandria.ui.model.datasource.locations.Point;
+import io.intino.alexandria.ui.model.locations.Point;
 
 public class BoundingBox {
 	private Point northEast;

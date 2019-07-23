@@ -1,9 +1,11 @@
-package io.intino.alexandria.ui.model.datasource.locations;
+package io.intino.alexandria.ui.model.locations;
+
+import io.intino.alexandria.ui.model.Geometry;
 
 import java.util.Collections;
 import java.util.List;
 
-public class Point extends Location {
+public class Point extends Geometry {
 	private double latitude;
 	private double longitude;
 
@@ -40,4 +42,5 @@ public class Point extends Location {
 	public List<Point> points() {
 		return Collections.singletonList(this);
 	}
+
 }

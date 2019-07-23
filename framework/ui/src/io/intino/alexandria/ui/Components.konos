@@ -1,5 +1,7 @@
 dsl Konos
 
+use Schemas
+
 Component template as Decorated
 
 Component block as Decorated
@@ -24,9 +26,6 @@ Component chart as Decorated
 	Notification showLoading
 	Notification refresh as Object(ChartInfo)
 	Notification refreshError as Text
-Schema ChartInfo
-	Attribute mode as Text
-	Attribute config as Text
 
 Component dashboard as Decorated
 	Notification showLoading
@@ -37,15 +36,6 @@ Component dashboard as Decorated
 	Request settings
 	Request saveServerScript as Text
 	Request saveUiScript as Text
-
-Schema DashboardInfo
-	Attribute location as Text
-	Attribute adminMode as Bool
-	Attribute driverDefined as Bool
-
-Schema DashboardSettingsInfo
-	Attribute serverScript as Text
-	Attribute uiScript as Text
 
 Component header as Decorated
 Component tabs as Decorated
@@ -70,10 +60,6 @@ Component selectorListBox as Decorated ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
 	Request updateSelection as Text List
 
-Schema SelectorMenuSelection
-	Attribute option as Integer
-	Attribute ancestors as Text List
-
 Component multiple as Decorated
 
 Component spinner as Decorated
@@ -95,20 +81,6 @@ Component baseSlider as Decorated
 
 Component slider as Decorated ExtensionOf(baseSlider)
 Component temporalSlider as Decorated ExtensionOf(baseSlider)
-Schema Ordinal
-	Attribute name as Text
-	Attribute label as Text
-	Attribute step as Integer
-Schema Range
-	Attribute min as LongInteger
-	Attribute max as LongInteger
-Schema ToolbarState
-	Attribute canPrevious as Bool
-	Attribute canNext as Bool
-	Attribute playing as Bool
-Schema Selected
-	Attribute value as LongInteger
-	Attribute formattedValue as Text
 
 Component stamp as Decorated
 
@@ -126,7 +98,3 @@ Component user as Decorated
 	Notification refresh as Object(UserInfo)
 
 	Request logout
-
-Schema UserInfo
-	Attribute fullName as Text
-	Attribute photo as Text

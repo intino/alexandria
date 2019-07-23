@@ -128,8 +128,8 @@ DataHub(workingDirectory = "{workspace}") datahub as Local
 		Column(revisionInspeccionado, type = String)
 		Collect(format = Arff, datamart = datamart)
 
-	Mounter ajustes as Realtime
-		Select(ajuste)
+//	Mounter ajustes as Realtime
+//		Select(ajuste)
 
 	Mounter criterios
 
@@ -139,11 +139,11 @@ DataHub(workingDirectory = "{workspace}") datahub as Local
 
 Datamart("{datamart}") datamart
 
-Task MountAjuste as BootTrigger
-	LinkWithMounter(datahub.criterios)
-
-Task AjusteFeeder as BootTrigger
-	LinkWithFeeder(datahub.ajusteFeeder)
+//Task MountAjuste as BootTrigger
+//	LinkWithMounter(datahub.criterios)
+//
+//Task AjusteFeeder as BootTrigger
+//	LinkWithFeeder(datahub.ajusteFeeder)
 
 Schema Evento
 	Attribute ts as DateTime

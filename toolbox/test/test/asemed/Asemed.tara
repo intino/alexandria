@@ -130,13 +130,13 @@ DataHub datahub as StandAlone
 		Column(revisionInspeccionado, type = String)
 		Collect(format = Arff, datamart = datamart)
 
-	Mounter ajustes as Realtime
-		Select(ajuste)
+//	Mounter ajustes as Realtime
+//		Select(ajuste)
 	Mounter ajustes2
 
-	Mounter criterios as Realtime
-		Select(criterio)
-		Select(criterioBorrado)
+//	Mounter criterios as Realtime
+//		Select(criterio)
+//		Select(criterioBorrado)
 	Feeder(datahub.ajuste) ajusteFeeder
 	Feeder(datahub.criterio datahub.criterioBorrado) criteriosFeeder
 
@@ -144,8 +144,8 @@ Datamart("{datamart}") datamart
 
 
 
-Task MountAjuste as BootTrigger
-Task Mount1Ajuste as CronTrigger(pattern = "sssasas")
+//Task MountAjuste as BootTrigger
+//Task Mount1Ajuste as CronTrigger(pattern = "sssasas")
 
 Schema Evento
 	Attribute ts as DateTime

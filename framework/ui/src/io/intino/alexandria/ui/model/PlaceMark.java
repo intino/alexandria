@@ -1,6 +1,4 @@
-package io.intino.alexandria.ui.model.datasource;
-
-import io.intino.alexandria.ui.model.datasource.locations.Location;
+package io.intino.alexandria.ui.model;
 
 import java.net.URL;
 
@@ -8,7 +6,7 @@ public class PlaceMark<O> {
 	private O item;
 	private String label;
 	private URL icon = null;
-	private Location position;
+	private Geometry position;
 
 	public O item() {
 		return item;
@@ -37,13 +35,20 @@ public class PlaceMark<O> {
 		return this;
 	}
 
-	public Location location() {
+	public Geometry location() {
 		return position;
 	}
 
-	public PlaceMark location(Location location) {
+	public PlaceMark location(Geometry location) {
 		this.position = location;
 		return this;
+	}
+
+	public static PlaceMark build(String label, String location) {
+		PlaceMark result = new PlaceMark();
+		result.label(label);
+		result.location(Geometry.fromWkt(location));
+		return result;
 	}
 
 }

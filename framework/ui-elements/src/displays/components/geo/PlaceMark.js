@@ -25,7 +25,7 @@ export default class PlaceMark extends I18nComponent {
     };
 
     renderInfoWindow = () => {
-        if (this.state.isOpen == null || !this.state.isOpen) return null;
+        if (this.props.content == null || this.state.isOpen == null || !this.state.isOpen) return null;
         const placeMark = this.props.placeMark;
         const pos = placeMark.pos;
         const content = this.props.content;

@@ -90,5 +90,14 @@
     <orderEntry type="module" module-name="logger4j" />
     <orderEntry type="library" name="Intino: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
     <orderEntry type="library" name="Intino: log4j:log4j:1.2.17" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:scheduler-framework:1.0.1" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:core-framework:2.0.0" level="project" />
+    <orderEntry type="module" module-name="ingestion" />
+    <orderEntry type="module" module-name="session" />
+    <orderEntry type="module" module-name="primitives" />
+    <orderEntry type="module" module-name="zet" />
+    <orderEntry type="module" module-name="tris" />
+    <orderEntry type="module" module-name="zim" />
+    <orderEntry type="module" module-name="message" />
   </component>
 </module>

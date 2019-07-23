@@ -150,7 +150,7 @@ DataHub datahub as Mirrored
 	Feeder(datahub.criterio datahub.criterioBorrado) criteriosFeeder
 Datamart("{datamart}") datamart
 
-Task MountAjuste as BootTrigger
+//Task MountAjuste as BootTrigger
 
 Schema Evento
 	Attribute ts as DateTime

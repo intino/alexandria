@@ -1,5 +1,7 @@
 dsl Konos
 
+use Schemas
+
 Component collection as Decorated
 	Notification setup as Object(CollectionSetup)
 	Notification refresh
@@ -19,18 +21,6 @@ Component map as Decorated ExtensionOf(collection)
 
 	Request showPlaceMark as LongInteger
 
-Schema PlaceMark
-	Attribute location as Object(Location)
-	Attribute label as Text
-	Attribute icon as Text
-	Attribute pos as LongInteger
-
-Schema Location
-	Attribute type as Word("Point" "Polyline" "Polygon")
-	Schema Point
-		Attribute lat as Real
-		Attribute lng as Real
-
 Component list as Decorated ExtensionOf(pageCollection)
 Component table as Decorated ExtensionOf(pageCollection)
 Component magazine as Decorated ExtensionOf(pageCollection)
@@ -39,33 +29,12 @@ Component item as Decorated
 Component heading as Decorated
 Component row as Decorated
 
-Schema CollectionSetup
-	Attribute itemCount as LongInteger
-
-Schema MapCollectionSetup as ExtensionOf(CollectionSetup)
-	Attribute kmlLayer as Text
-	Attribute icon as Text
-
-Schema PageCollectionSetup as ExtensionOf(CollectionSetup)
-	Attribute pageSize as Integer
-
-Schema CollectionItemsRenderedInfo
-	Attribute items as Text List
-	Attribute visible as Text List
-
-Schema CollectionMoreItems
-	Attribute start as Integer
-	Attribute stop as Integer
-
 Component baseGrouping as Decorated
 	Notification refreshGroups as Object(Group) List
 	Request select as Text List
 
 Component grouping as Decorated ExtensionOf(baseGrouping)
 Component groupingComboBox as Decorated ExtensionOf(baseGrouping)
-Schema Group
-	Attribute label as Text
-	Attribute count as Integer
 
 Component sorting as Decorated
 	Request toggle
