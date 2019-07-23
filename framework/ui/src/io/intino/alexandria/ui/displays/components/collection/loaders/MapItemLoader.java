@@ -2,7 +2,7 @@ package io.intino.alexandria.ui.displays.components.collection.loaders;
 
 import io.intino.alexandria.ui.model.datasource.BoundingBox;
 import io.intino.alexandria.ui.model.datasource.MapDatasource;
-import io.intino.alexandria.ui.model.datasource.PlaceMark;
+import io.intino.alexandria.ui.model.PlaceMark;
 import io.intino.alexandria.ui.model.datasource.temporal.TemporalMapDatasource;
 
 import java.util.List;

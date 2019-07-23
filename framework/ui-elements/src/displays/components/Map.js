@@ -6,9 +6,10 @@ import MapRequester from "../../../gen/displays/requesters/MapRequester";
 import {CollectionStyles} from "./Collection";
 import { GoogleMap, MarkerClusterer, HeatmapLayer, KmlLayer } from '@react-google-maps/api'
 import 'alexandria-ui-elements/res/styles/layout.css';
-import GoogleApi from "./map/GoogleApi";
-import PlaceMark from "./map/PlaceMark";
+import GoogleApi from "./geo/GoogleApi";
+import PlaceMark from "./geo/PlaceMark";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import GeoBehavior from "./behaviors/GeoBehavior";
 
 const styles = theme => ({
 	...CollectionStyles(theme),
@@ -45,11 +46,10 @@ class Map extends AbstractMap {
 	render() {
 		const container = this.container.current;
 		const height = $(container).height();
-
 		return (
 			<div ref={this.container} className="layout flex">
 				<GoogleApi>
-					<GoogleMap className="map" zoom={this.props.zoom.defaultZoom} center={this._center()} onLoad={this.registerMap.bind(this)}>
+					<GoogleMap className="map" zoom={this.props.zoom.defaultZoom} center={GeoBehavior.center(this)} onLoad={this.registerMap.bind(this)}>
 						<div style={{height: height, width: '100%'}}/>
 						{this.renderLayer()}
 					</GoogleMap>
@@ -114,10 +114,6 @@ class Map extends AbstractMap {
 		element.showLoading();
 		this.requester.showPlaceMark(element.props.placeMark.pos);
 		this.current = element;
-	};
-
-	_center = () => {
-		return this.props.center != null ? this.props.center : undefined;
 	};
 
 	placeMarks = (placeMarks) => {

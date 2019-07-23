@@ -135,6 +135,10 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
 		return new Program().name(name).scripts(scripts).resources(resources).parameters(parameterMap);
     }
 
+	private Program programOf(URL script) {
+		return new Program().name(programName()).scripts(Collections.singletonList(scriptOf(script)));
+	}
+
     private String contentOf(URL file) {
 		try {
 			return new String(Files.readAllBytes(Paths.get(file.toURI())), StandardCharsets.UTF_8);
@@ -181,6 +185,7 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
 	private void saveScript(URL script, String content) {
 		try {
 			Files.write(Paths.get(script.toURI()), content.getBytes());
+			if (driver != null) driver.update(programOf(script));
 		} catch (URISyntaxException | IOException e) {
 			Logger.error(e);
 		}

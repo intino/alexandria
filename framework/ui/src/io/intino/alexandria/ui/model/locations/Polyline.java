@@ -1,11 +1,13 @@
-package io.intino.alexandria.ui.model.datasource.locations;
+package io.intino.alexandria.ui.model.locations;
+
+import io.intino.alexandria.ui.model.Geometry;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-public class Polyline extends Location {
+public class Polyline extends Geometry {
 	private List<Point> path = new ArrayList<>();
 
 	public List<Point> path() {

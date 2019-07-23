@@ -25,6 +25,7 @@ public class ComponentRendererFactory {
 		if (component.i$(File.class)) return (T) new FileRenderer(settings, component.a$(File.class), provider, target);
 		if (component.i$(Image.class)) return (T) new ImageRenderer(settings, component.a$(Image.class), provider, target);
 		if (component.i$(DataComponents.Number.class)) return (T) new NumberRenderer(settings, component.a$(DataComponents.Number.class), provider, target);
+		if (component.i$(DataComponents.Location.class)) return (T) new LocationRenderer(settings, component.a$(DataComponents.Location.class), provider, target);
 
 		if (component.i$(OtherComponents.Spinner.class)) return (T) new SpinnerRenderer(settings, component.a$(OtherComponents.Spinner.class), provider, target);
 		if (component.i$(OtherComponents.Selector.class)) return (T) new SelectorRenderer(settings, component.a$(OtherComponents.Selector.class), provider, target);

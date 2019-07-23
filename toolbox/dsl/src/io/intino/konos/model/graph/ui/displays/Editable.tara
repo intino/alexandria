@@ -43,6 +43,8 @@ Facet Editable on DataComponents.Number
 	var double max = -1
 	var double step = -1
 
+Facet Editable on DataComponents.Location
+
 Facet Editable on DataComponents.File
 	var boolean showPreview = false
 

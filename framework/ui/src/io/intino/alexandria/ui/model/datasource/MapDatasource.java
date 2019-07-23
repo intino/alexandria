@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.model.datasource;
 
 import io.intino.alexandria.ui.model.Datasource;
+import io.intino.alexandria.ui.model.PlaceMark;
 
 import java.util.List;
 

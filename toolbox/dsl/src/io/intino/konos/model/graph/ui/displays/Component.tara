@@ -50,6 +50,19 @@ Concept DataComponents
 		var word:{FromNow ToNow None} mode = None
 		var instant value = empty
 
+	Concept Location extends Component
+		var string icon = empty
+		var string value = empty
+
+		Concept:{0..1} Center
+			var double latitude
+			var double longitude
+
+		Concept:{1..1} Zoom
+			var integer defaultZoom
+			var integer min
+			var integer max
+
 Concept CatalogComponents
 	Concept Collection extends Component
 		var string sourceClass = empty

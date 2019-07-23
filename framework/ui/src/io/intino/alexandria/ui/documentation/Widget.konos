@@ -55,6 +55,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block dialogExamples as Conditional > Stamp(template=dialogExamplesMold)
 			Block dividerExamples as Conditional > Stamp(template=dividerExamplesMold)
 			Block userExamples as Conditional > Stamp(template=userExamplesMold)
+			Block locationExamples as Conditional > Stamp(template=locationExamplesMold)
 
 		Block facets
 			Text(value="Facets", format=h5 underline)

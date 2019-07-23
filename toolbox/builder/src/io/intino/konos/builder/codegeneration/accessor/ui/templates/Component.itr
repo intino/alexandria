@@ -122,6 +122,10 @@ def type(properties & text) trigger(specific)
 	[ mode="$mode"][ prefix="$prefix"][ suffix="$suffix"][ value="$defaultValue"][ placeholder="$placeholder"][ highlighted={$highlighted}][ type="$type"]
 end
 
+def type(properties & location) trigger(specific)
+	[ center={{lat:$centerLat,lng:$centerLng}}][ zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}]
+end
+
 def type(properties & map) trigger(specific)
 	[ pageSize={$pageSize}][ type="$type"][ itemHeight={$itemHeight}][ center={{lat:$centerLat,lng:$centerLng}}][ zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}]
 end

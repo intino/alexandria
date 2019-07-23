@@ -1,5 +1,7 @@
 dsl Konos
 
+use Schemas
+
 Component toolbar as Decorated
 
 Component operation as Decorated
@@ -40,12 +42,3 @@ Component taskSelection as Decorated ExtensionOf(selectionOperation)
 Component downloadSelection as Decorated ExtensionOf(selectionOperation)
 	Request changeParams as Text
 	Request(Asset) execute
-
-Schema OperationInfo
-	Attribute title as Text
-	Attribute disabled as Bool
-
-Schema ExportParams
-	Attribute from as DateTime
-	Attribute to as DateTime
-	Attribute option as Text

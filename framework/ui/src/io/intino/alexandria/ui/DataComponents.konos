@@ -1,5 +1,7 @@
 dsl Konos
 
+use Schemas
+
 Component baseNumber as Decorated
 	Notification refresh as Real
 
@@ -38,10 +40,10 @@ Component imageAvatar as Decorated ExtensionOf(baseImage)
 Component imageEditable as Decorated ExtensionOf(baseImage)
 	Request notifyChange as File
 
-Schema KeyPressEventData
-	Attribute keyCode as Text
-	Attribute value as Text
+Component baseLocation as Decorated
+	Notification setup as Object(LocationSetup)
+	Notification refresh as Object(Geometry)
 
-Schema FileInfo
-	Attribute value as Text
-	Attribute mimeType as Text
+Component location as Decorated ExtensionOf(baseLocation)
+Component locationEditable as Decorated ExtensionOf(baseLocation)
+	Request notifyChange as Text

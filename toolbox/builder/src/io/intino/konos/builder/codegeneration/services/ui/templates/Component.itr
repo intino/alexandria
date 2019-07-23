@@ -401,6 +401,11 @@ def type(properties & text) trigger(specific)
 	[value("$defaultValue");]
 end
 
+def type(properties & location) trigger(specific)
+	[$icon+resourceMethod]
+	[value("$value");]
+end
+
 def type(properties & collection & map) trigger(specific)
 	[type(io.intino.alexandria.ui.displays.components.Map.Type.valueOf("$type"));]
 	[$icon+resourceMethod]
@@ -497,7 +502,7 @@ def type(item) trigger(addMethod)
 end
 
 def type(itemClass & map)
-    io.intino.alexandria.ui.model.datasource.PlaceMark<$value>
+    io.intino.alexandria.ui.model.PlaceMark<$value>
 end
 
 def type(itemClass)
