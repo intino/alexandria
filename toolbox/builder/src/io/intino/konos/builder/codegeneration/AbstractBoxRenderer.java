@@ -64,7 +64,8 @@ public class AbstractBoxRenderer extends Renderer {
 	}
 
 	private void tasks(FrameBuilder builder, String boxName) {
-		if (!graph.taskList().isEmpty()) builder.add("task", new FrameBuilder("task").add("configuration", boxName).toFrame());
+		if (!graph.taskList().isEmpty())
+			builder.add("task", new FrameBuilder("task").add("configuration", boxName).toFrame());
 	}
 
 	private void dataHub(FrameBuilder builder, String boxName) {
@@ -86,15 +87,21 @@ public class AbstractBoxRenderer extends Renderer {
 			if (service.seal() != null) frame.add("sealing", service.seal().when());
 			dataHubFrame.add("datasource", frame);
 		} else if (dataHub.isMirrored()) mirroredDataSource(dataHub, dataHubFrame);
-		else if (dataHub.isRemote()) remoteDataSource(dataHub, dataHubFrame);
-		else if (dataHub.isLocal())
-			dataHubFrame.add("datasource", new FrameBuilder("local").add("path", parameter(dataHub.asLocal().datalakePath())));
+		else if (dataHub.isLocal()) {
+			localDataSource(dataHub, dataHubFrame);
+		}
 		Frame[] feederFrames = graph.dataHub().feederList().stream().filter(f -> !f.sensorList().isEmpty()).map(this::frameOf).toArray(Frame[]::new);
 		if (feederFrames.length != 0) dataHubFrame.add("feeder", feederFrames);
 		Frame[] mounterFrames = graph.dataHub().mounterList().stream().filter(Mounter::isRealtime).map(m -> frameOf(m, boxName)).toArray(Frame[]::new);
 		if (mounterFrames.length != 0) dataHubFrame.add("mounter", mounterFrames);
-
 		builder.add("dataHub", dataHubFrame.toFrame());
+	}
+
+	private void localDataSource(DataHub dataHub, FrameBuilder dataHubFrame) {
+		FrameBuilder local = new FrameBuilder("local");
+		if (dataHub.asLocal().messageHub() != null)
+			local.add("messageHub", messageHubFrame(dataHub.asLocal().messageHub()));
+		dataHubFrame.add("datasource", local.add("path", parameter(dataHub.asLocal().datalakePath())));
 	}
 
 	private Frame frameOf(Mounter m, String boxName) {
@@ -104,12 +111,6 @@ public class AbstractBoxRenderer extends Renderer {
 						add("package", settings.packageName()).add("name", mounter.name$()).add("subscriberId", mounter.subscriberId())).toArray(FrameBuilder[]::new);
 		FrameBuilder mounterFrame = new FrameBuilder("mounter", "realtime");
 		return mounterFrame.add("name", mounter.name$()).add("subscription", subscriptions).toFrame();
-	}
-
-	private void remoteDataSource(DataHub dataHub, FrameBuilder dataHubFrame) {
-		FrameBuilder remote = new FrameBuilder("remote");
-		if (dataHub.asRemote().messageHub() != null) remote.add("messageHub", messageHubFrame(dataHub.asRemote().messageHub()));
-		dataHubFrame.add("datasource", remote);
 	}
 
 	private void mirroredDataSource(DataHub dataHub, FrameBuilder dataHubFrame) {

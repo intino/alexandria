@@ -165,7 +165,7 @@ def type(standalone) trigger(datasource)
 end
 
 def type(local) trigger(datasource)
-	new io.intino.alexandria.datahub.model.Configuration.Local($path+parameter)
+	new io.intino.alexandria.datahub.model.Configuration.Local($path+parameter, [$messageHub?null])
 end
 
 def type(mirror) trigger(datasource)

@@ -14,7 +14,6 @@ Concept:Named Mounter is component
 Concept:Named Adapter is component
 
 Facet DataHubLocation on DataHub is abstract
-	sub Remote > has:{1..1} MessageHub
 	sub Mirrored
 		var string originSshUrl
 		var string originDatalakePath
@@ -33,6 +32,7 @@ Facet DataHubLocation on DataHub is abstract
 			var string description
 	sub Local
 		var string datalakePath
+		has:{0..1} MessageHub
 
 Facet TankType on DataHub.Tank
 	sub Event > var Schema schema

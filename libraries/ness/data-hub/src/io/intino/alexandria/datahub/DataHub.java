@@ -179,8 +179,4 @@ public class DataHub {
 	private boolean isMirror() {
 		return configuration.dataSource() instanceof Local;
 	}
-
-	private boolean isRemote() {
-		return configuration.dataSource() instanceof Local;
-	}
 }
