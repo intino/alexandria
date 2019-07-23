@@ -37,5 +37,10 @@
     <orderEntry type="library" name="Intino: commons-net:commons-net:3.6" level="project" />
     <orderEntry type="library" name="Intino: javax.jmdns:jmdns:3.4.1" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:ingestion:1.0.0" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:zim:1.0.7" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:message:1.0.0" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.3" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:zet:1.0.5" level="project" />
   </component>
 </module>
