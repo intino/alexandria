@@ -23,8 +23,6 @@ const styles = theme => ({
 		margin: "10px 0"
 	},
     settings : {
-	    position: "absolute",
-	    zIndex: 1,
 		background: "white",
 		border: "1px solid #ddd",
 		width: "100%",
@@ -58,7 +56,7 @@ class Dashboard extends AbstractDashboard {
 		const error = this.state.error;
 		const location = this.state.location;
 		const driverDefined = this.state.driverDefined;
-		const frameStyle = this.state.adminMode ? { paddingTop: "48px" } : undefined;
+		const frameStyle = this.state.adminMode ? { height: "calc(100% - 48px)" } : undefined;
 
 		if (error !== undefined)
 			return (<Typography style={this.style()} className={classes.error}>{error}</Typography>);
@@ -67,18 +65,18 @@ class Dashboard extends AbstractDashboard {
 			<div className={classes.container} style={this.style()} ref={this.container}>
 				{this.state.adminMode && <div className={classNames("layout horizontal end-justified", classes.settings)}><IconButton onClick={this.handleShowSettings.bind(this)}><Settings/></IconButton></div>}
 				{this.state.loading ? <div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><Spinner/></div> : undefined}
-				{(!this.state.loading && location != null) && <iframe className={classes.container} style={frameStyle} src={this.state.location}></iframe>}
+				{(!this.state.loading && location != null) && <iframe className={classes.container} style={frameStyle} src={this.state.location}/>}
 				{(!this.state.loading && !driverDefined) && <div>{this.translate("No driver defined to load dashboard")}</div>}
 				{(!this.state.loading && location == null) && <div>{this.translate("No dashboard script defined")}</div>}
-				<Dialog ref={this.dialog} open={this.state.settingsOpened} fullWidth={true} maxWidth="500">
+				<Dialog ref={this.dialog} open={this.state.settingsOpened} fullWidth={true} maxWidth="lg" onClose={this.handleClose.bind(this)}>
 					<DialogTitle>{this.translate("Edit dashboard")}</DialogTitle>
 					<DialogContent>
 						<TextField multiline variant="outlined" rows="10" fullWidth className={classes.spaced}
 							   	   label={this.translate("Server script")} value={this.state.serverScript}
-								   onChange={this.handleServerScriptChange.bind(this)}></TextField>
+								   onChange={this.handleServerScriptChange.bind(this)}/>
 						<TextField multiline variant="outlined" rows="10" fullWidth
 							   	   label={this.translate("UI script")} value={this.state.uiScript}
-								   onChange={this.handleUiScriptChange.bind(this)}></TextField>
+								   onChange={this.handleUiScriptChange.bind(this)}/>
 					</DialogContent>
 					<DialogActions>
 						<Button onClick={this.handleClose.bind(this)} color="primary">{this.translate("Close")}</Button>
@@ -100,7 +98,7 @@ class Dashboard extends AbstractDashboard {
 	handleUiScriptChange = (e) => {
 		this.setState({ "uiScript" : e.target.value});
 		this.requester.saveUiScript(e.target.value);
-	}
+	};
 
 	showLoading = () => {
 		this.setState({ "loading" : true, "error" : undefined });
