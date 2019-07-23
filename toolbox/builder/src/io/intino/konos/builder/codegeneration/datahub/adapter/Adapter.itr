@@ -1,4 +1,4 @@
-def type(mounter & src)
+def type(adapter)
 	package $package+validPackage.datahub.feeders;
 
 	import $package+validPackage.$box+firstUpperCase~Box;

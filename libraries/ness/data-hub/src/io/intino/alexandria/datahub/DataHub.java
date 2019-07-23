@@ -51,8 +51,10 @@ public class DataHub {
 
 	public void start() {
 		if (isService()) configureDatalake(((StandAlone) configuration.dataSource()).path());
-		else if (isLocal()) configureDatalake(((Local) configuration.dataSource()).path());
-		else if (isMirror()) {
+		else if (isLocal()) {
+			this.messageHub = ((Local) configuration.dataSource()).messageHub();
+			configureDatalake(((Local) configuration.dataSource()).path());
+		} else if (isMirror()) {
 			configureMirror((Mirror) configuration.dataSource());
 			this.messageHub = ((Mirror) configuration.dataSource()).messageHub();
 		} else this.messageHub = ((Configuration.Remote) configuration.dataSource()).messageHub();
@@ -63,6 +65,10 @@ public class DataHub {
 		Logger.info("Shutting down datalake...");
 		sealingTask = null;
 		if (brokerManager != null) brokerManager.stop();
+	}
+
+	public Configuration configuration() {
+		return configuration;
 	}
 
 	public Datalake datalake() {

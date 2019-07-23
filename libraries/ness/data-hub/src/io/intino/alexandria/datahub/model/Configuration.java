@@ -109,20 +109,35 @@ public class Configuration {
 	}
 
 	public static class Local extends DataSource {
+		private MessageHub messageHub;
 		private String path;
 
 		public Local(String path) {
 			this.path = path;
+			messageHub = null;
+		}
+
+		public Local(String path, MessageHub messageHub) {
+			this.path = path;
+			this.messageHub = messageHub;
 		}
 
 		public String path() {
 			return path;
 		}
+
+		public MessageHub messageHub() {
+			return messageHub;
+		}
+
+		public Local messageHub(MessageHub messageHub) {
+			this.messageHub = messageHub;
+			return this;
+		}
 	}
 
 	public static class Remote extends DataSource {
 		private final MessageHub messageHub;
-		private String path;
 
 		public Remote(MessageHub messageHub) {
 			this.messageHub = messageHub;
