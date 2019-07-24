@@ -314,13 +314,13 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 
 			@Override
 			public Response put(String path, List<Resource> resourceList) throws RestfulFailure {
-				return doPost(url, path, multipartEntityOf(emptyMap(), resourceList), headers());
+				return doPut(url, path, multipartEntityOf(emptyMap(), resourceList), headers());
 			}
 
 			@Override
 			public Response put(String path, Map<String, String> parameters, List<Resource> resourceList) throws RestfulFailure {
-				if (resourceList.size() <= 0) return doPost(url, path, entityOf(parameters), headers());
-				return doPost(url, path, multipartEntityOf(parameters, resourceList), headers());
+				if (resourceList.size() <= 0) return doPut(url, path, entityOf(parameters), headers());
+				return doPut(url, path, multipartEntityOf(parameters, resourceList), headers());
 			}
 
 			@Override
