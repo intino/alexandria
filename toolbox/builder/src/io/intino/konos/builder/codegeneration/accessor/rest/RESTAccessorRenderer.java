@@ -42,10 +42,6 @@ public class RESTAccessorRenderer extends Renderer {
 		this.destination = destination;
 	}
 
-	public static String firstLowerCase(String value) {
-		return value.substring(0, 1).toLowerCase() + value.substring(1);
-	}
-
 	@Override
 	public void render() {
 		new SchemaListRenderer(settings, service.graph(), destination).execute();
@@ -119,6 +115,7 @@ public class RESTAccessorRenderer extends Renderer {
 	}
 
 	private String parameterType(Parameter parameter) {
+		if (parameter.isFile()) return "java.io.InputStream";
 		String value = (parameter.isObject() && parameter.asObject().isComponent() ? String.join(".", packageName(), "schemas.") : "") + parameter.asType().type();
 		return parameter.i$(ListData.class) ? "List<" + value + ">" : value;
 	}
@@ -150,7 +147,7 @@ public class RESTAccessorRenderer extends Renderer {
 		if (Commons.queryParameters(operation) > 0 || Commons.bodyParameters(operation) > 0)
 			builder.add("parameters", "parameters");
 		if (Commons.fileParameters(operation) > 0)
-			builder.add("resource", operation.parameterList().stream().filter(p -> p.i$(FileData.class)).map(Layer::name$).toArray(String[]::new));
+			builder.add("inputStream", operation.parameterList().stream().filter(p -> p.i$(FileData.class)).map(Layer::name$).toArray(String[]::new));
 		return builder.toFrame();
 	}
 
@@ -223,6 +220,10 @@ public class RESTAccessorRenderer extends Renderer {
 
 	private Template template() {
 		return Formatters.customize(new RESTAccessorTemplate());
+	}
+
+	public static String firstLowerCase(String value) {
+		return value.substring(0, 1).toLowerCase() + value.substring(1);
 	}
 
 }
