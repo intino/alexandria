@@ -19,6 +19,11 @@ public class CollectionDialog<DN extends CollectionDialogNotifier, B extends Box
         super(box);
     }
 
+	public CollectionDialog allowSearch(boolean value) {
+		this.allowSearch = value;
+		return this;
+	}
+
 	@Override
 	public void init() {
 		super.init();
@@ -31,11 +36,6 @@ public class CollectionDialog<DN extends CollectionDialogNotifier, B extends Box
 		searchBox().ifPresent(sb -> sb.search(""));
 		if (collection != null) collection.init();
 	}
-
-	public CollectionDialog allowSearch(boolean value) {
-        this.allowSearch = value;
-        return this;
-    }
 
     public CollectionDialog onSelect(SelectionListener listener) {
     	this.selectionListener = listener;

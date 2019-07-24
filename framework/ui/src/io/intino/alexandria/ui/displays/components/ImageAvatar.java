@@ -11,13 +11,13 @@ public class ImageAvatar<DN extends ImageAvatarNotifier, B extends Box> extends 
 		super(box);
 	}
 
+	public void load() {
+		refresh();
+	}
+
 	public ImageAvatar<DN, B> text(String text) {
 		this.text = text;
 		return this;
-	}
-
-	public void load() {
-		refresh();
 	}
 
 	public void update(String text) {

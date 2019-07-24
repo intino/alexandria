@@ -14,5 +14,6 @@ public class DashboardExamplesMold extends AbstractDashboardExamplesMold<UiFrame
         super.init();
         alexandriaDashboard.adminMode(true);
         alexandriaDashboard.driver(new Driver("http://10.13.13.37:3838"));
+        alexandriaDashboard.refresh();
     }
 }

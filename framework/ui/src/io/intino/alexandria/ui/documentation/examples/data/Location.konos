@@ -5,7 +5,7 @@ use Theme
 Template(layout=Vertical, spacing=DP8) locationExamplesMold as Decorated
 
 	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAirLarge)
 				Location location1
@@ -19,7 +19,7 @@ Template(layout=Vertical, spacing=DP8) locationExamplesMold as Decorated
 							&nbsp;&nbsp;&nbsp;&nbsp;Center(latitude\=28.146773457066104, longitude\=-15.418557420532238)
 							=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with location")
 			Block(spacing=DP8, format=filledNoAirLarge)
 				Location(value="POINT(28.146773457066104 -15.146773457066104)") location2
@@ -34,7 +34,8 @@ Template(layout=Vertical, spacing=DP8) locationExamplesMold as Decorated
 							&nbsp;&nbsp;&nbsp;&nbsp;Center(latitude\=28.146773457066104, longitude\=-15.418557420532238)
 							=========
 
-		Block as Relative(width=32%, height=100%)
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Editable facet")
 			Block(spacing=DP8, format=filledNoAirLarge)
 				Location location3 as Editable
@@ -44,6 +45,22 @@ Template(layout=Vertical, spacing=DP8) locationExamplesMold as Decorated
 						value
 							=========
 							Location location as Editable<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;Zoom(defaultZoom\=6, min\=1, max\=18)<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;Center(latitude\=28.146773457066104, longitude\=-15.418557420532238)
+							=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Editable facet with modes")
+			Block(spacing=DP8, format=filledNoAirLarge)
+				Location location4 as Editable
+					modes = Rectangle
+					Zoom(defaultZoom = 6, min = 1, max = 18)
+					Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
+				Block > Text location4Code as Code(language=Html)
+						value
+							=========
+							Location location as Editable<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;modes\=Rectangle<br/>
 							&nbsp;&nbsp;&nbsp;&nbsp;Zoom(defaultZoom\=6, min\=1, max\=18)<br/>
 							&nbsp;&nbsp;&nbsp;&nbsp;Center(latitude\=28.146773457066104, longitude\=-15.418557420532238)
 							=========

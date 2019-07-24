@@ -5,31 +5,31 @@ import io.intino.alexandria.ui.model.Geometry;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
 public class Polygon extends Geometry {
-	private List<Point> paths = new ArrayList<>();
+	private List<List<Point>> paths = new ArrayList<>();
 
-	public List<Point> paths() {
+	public List<List<Point>> paths() {
 		return paths;
 	}
 
-	public Polygon paths(List<Point> paths) {
+	public Polygon paths(List<List<Point>> paths) {
 		this.paths = paths;
 		return this;
 	}
 
-	public void add(Point point) {
-		this.paths.add(point);
+	public Polygon add(List<Point> points) {
+		this.paths.add(points);
+		return this;
 	}
 
 	@Override
 	public String toWkt() {
-		return String.format("POLYGON((%s))", String.join(",", paths.stream().map(Point::toWkt).collect(toList())));
+		StringBuilder result = new StringBuilder();
+		for (int i=0; i<paths.size(); i++) result.append(pathToWkt(paths.get(i)));
+		return String.format("POLYGON(%s)", String.join(",", result.toString()));
 	}
 
-	@Override
-	public List<Point> points() {
-		return paths;
+	private String pathToWkt(List<Point> path) {
+		return path.stream().map(Point::toWkt).collect(java.util.stream.Collectors.joining(","));
 	}
 }

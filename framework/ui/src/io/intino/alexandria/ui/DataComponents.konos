@@ -46,4 +46,4 @@ Component baseLocation as Decorated
 
 Component location as Decorated ExtensionOf(baseLocation)
 Component locationEditable as Decorated ExtensionOf(baseLocation)
-	Request notifyChange as Text
+	Request notifyChange as Object(Geometry)

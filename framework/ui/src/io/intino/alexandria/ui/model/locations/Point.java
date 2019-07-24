@@ -38,9 +38,4 @@ public class Point extends Geometry {
 		return String.format("POINT(%f %f)", latitude, longitude);
 	}
 
-	@Override
-	public List<Point> points() {
-		return Collections.singletonList(this);
-	}
-
 }

@@ -23,7 +23,11 @@ public class BaseLocation<DN extends BaseLocationNotifier, B extends Box> extend
     }
 
     public <D extends BaseLocation> D value(String value) {
-        this.value = Geometry.fromWkt(value);
+        return value(Geometry.fromWkt(value));
+    }
+
+    public <D extends BaseLocation> D value(Geometry value) {
+        this.value = value;
         return (D) this;
     }
 

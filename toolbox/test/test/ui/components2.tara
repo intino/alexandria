@@ -5,15 +5,16 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/demo") demo as Page(homeTemplate)
 
 Template homeTemplate
-	Place place1
+	Location place1
 		icon = "icons/placemark.png"
-		location = "point(222.222,222.222)"
+		value = "point(222.222 222.222)"
 		Zoom(defaultZoom = 6, min = 1, max = 18)
 		Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
 
-	Place place2 as Editable
+	Location place2 as Editable
 		icon = "icons/placemark.png"
-		value = "POINT(point1,point2)"
+		value = "POINT(point1 point2)"
+		modes = Point Polygon
 		Zoom(defaultZoom = 6, min = 1, max = 18)
 		Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
 

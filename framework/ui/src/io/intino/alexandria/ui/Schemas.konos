@@ -8,9 +8,16 @@ Schema PlaceMark
 
 Schema Geometry
 	Attribute type as Word("Point" "Polyline" "Polygon")
-	Schema Point
-		Attribute lat as Real
-		Attribute lng as Real
+	Attribute point as Object(Point)
+	Attribute path as Object(Path)
+	Attribute paths as Object(Path) List
+
+Schema Point
+	Attribute lat as Real
+	Attribute lng as Real
+
+Schema Path
+	Attribute pointList as Object(Point) List
 
 Schema CollectionSetup
 	Attribute itemCount as LongInteger
