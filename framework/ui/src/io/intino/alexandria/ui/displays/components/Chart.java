@@ -36,6 +36,12 @@ public class Chart<DN extends ChartNotifier, B extends Box> extends AbstractChar
         return this;
     }
 
+    public Chart<DN, B> updateQuery(String query) {
+        query(query);
+        refresh();
+        return this;
+    }
+
     public Chart<DN, B> output(String output) {
         this.output = Output.valueOf(output);
         return this;

@@ -14,11 +14,6 @@ public class Block<DN extends BlockNotifier, B extends Box> extends AbstractBloc
         return label;
     }
 
-    public Block<DN, B> label(String label) {
-        this.label = label;
-        return this;
-    }
-
     public void spacing(String spacing) {
         notifier.refreshSpacing(spacing);
     }

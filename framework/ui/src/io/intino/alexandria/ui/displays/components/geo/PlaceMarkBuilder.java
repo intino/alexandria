@@ -1,13 +1,17 @@
 package io.intino.alexandria.ui.displays.components.geo;
 
 import io.intino.alexandria.schemas.Geometry;
+import io.intino.alexandria.schemas.Path;
 import io.intino.alexandria.schemas.PlaceMark;
 import io.intino.alexandria.ui.Asset;
 import io.intino.alexandria.ui.model.locations.Point;
+import io.intino.alexandria.ui.model.locations.Polygon;
+import io.intino.alexandria.ui.model.locations.Polyline;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -26,7 +30,41 @@ public class PlaceMarkBuilder {
 	}
 
 	public static Geometry buildGeometry(io.intino.alexandria.ui.model.Geometry location) {
-		return new Geometry().type(typeOf(location)).pointList(pointsOf(location));
+		Geometry result = new Geometry().type(typeOf(location));
+		fillPoint(location, result);
+		fillPolygon(location, result);
+		fillPolyline(location, result);
+		return result;
+	}
+
+	private static void fillPoint(io.intino.alexandria.ui.model.Geometry location, Geometry result) {
+		if (!location.isPoint()) return;
+		Point point = (Point)location;
+		result.point(pointOf(point));
+	}
+
+	private static void fillPolyline(io.intino.alexandria.ui.model.Geometry location, Geometry result) {
+		if (!location.isPolyline()) return;
+		Polyline polyline = (Polyline)location;
+		result.path(pathOf(polyline.path()));
+	}
+
+	private static void fillPolygon(io.intino.alexandria.ui.model.Geometry location, Geometry result) {
+		if (!location.isPolygon()) return;
+		Polygon polygon = (Polygon)location;
+		result.paths(pathsOf(polygon.paths()));
+	}
+
+	private static List<io.intino.alexandria.schemas.Path> pathsOf(List<List<Point>> paths) {
+		return paths.stream().map(PlaceMarkBuilder::pathOf).collect(toList());
+	}
+
+	private static io.intino.alexandria.schemas.Path pathOf(List<Point> path) {
+		return new Path().pointList(path.stream().map(PlaceMarkBuilder::pointOf).collect(Collectors.toList()));
+	}
+
+	private static io.intino.alexandria.schemas.Point pointOf(Point point) {
+		return new io.intino.alexandria.schemas.Point().lat(point.latitude()).lng(point.longitude());
 	}
 
 	private static <Item> PlaceMark build(io.intino.alexandria.ui.model.PlaceMark<Item> placeMark, long pos, URL baseAssetUrl) {
@@ -45,11 +83,4 @@ public class PlaceMarkBuilder {
 		return Geometry.Type.Point;
 	}
 
-	private static List<Geometry.Point> pointsOf(io.intino.alexandria.ui.model.Geometry location) {
-		return location.points().stream().map(PlaceMarkBuilder::pointOf).collect(toList());
-	}
-
-	private static Geometry.Point pointOf(Point p) {
-		return new Geometry.Point().lat(p.latitude()).lng(p.longitude());
-	}
 }

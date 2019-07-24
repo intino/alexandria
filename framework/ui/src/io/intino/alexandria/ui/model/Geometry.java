@@ -9,12 +9,10 @@ import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class Geometry {
 	public abstract String toWkt();
-
-	public abstract List<Point> points();
 
 	public boolean isPoint() {
 		return this instanceof Point;
@@ -36,7 +34,7 @@ public abstract class Geometry {
 				return new Point(coordinates[0].x, coordinates[0].y);
 			else if (geometry instanceof org.locationtech.jts.geom.Polygon) {
 				Polygon polygon = new Polygon();
-				Arrays.stream(coordinates).forEach(c -> polygon.add(new Point(c.x, c.y)));
+				polygon.add(Arrays.stream(coordinates).map(c -> new Point(c.x, c.y)).collect(Collectors.toList()));
 				return polygon;
 			}
 			else if (geometry instanceof org.locationtech.jts.geom.LineString) {

@@ -1,6 +1,6 @@
 dsl Konos
 
-DataHub(workingDirectory = "") dataHub as Remote
+DataHub(workingDirectory = "") dataHub as Local(datalakePath = "")
 	MessageHub (busUrl = "{nessUrl}", user = "{nessUser}", password = "{nessPassword}", clientId = "amidas") as JmsHub
 	Tank(fullName = "authorizationRegister")authorizationRegister as Event(schema = empty)
 	Tank(fullName = "identityRegister")identityRegister as Event(schema = empty)
@@ -8,8 +8,8 @@ DataHub(workingDirectory = "") dataHub as Remote
 	Tank("intradayReport") intradayReport as Event(schema = empty)
 	Tank("actualGeneration") actualGeneration as Event(schema = empty)
 
-	Mounter identityRegister as Realtime
-		Select(tank = identityRegister)
+//	Mounter identityRegister as Realtime
+//		Select(tank = identityRegister)
 
 	Mounter authorizationRegister
 

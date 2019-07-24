@@ -13,7 +13,7 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
 	private URL value;
 	private URL defaultValue;
 	private String mimeType;
-	protected ChangeListener changeListener = null;
+	public ChangeListener changeListener = null;
 
     public ImageEditable(B box) {
         super(box);

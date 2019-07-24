@@ -25,11 +25,7 @@ public class ChartExamplesMold extends AbstractChartExamplesMold<AlexandriaUiBox
     }
 
     private void linkChart(Chart chart, TextEditableCode textCode) {
-        chart.query(textCode.value());
-        chart.refresh();
-        textCode.onChange(event -> {
-            chart.query(event.value());
-            chart.refresh();
-        });
+        chart.updateQuery(textCode.value());
+        textCode.onChange(event -> chart.updateQuery(event.value()));
     }
 }

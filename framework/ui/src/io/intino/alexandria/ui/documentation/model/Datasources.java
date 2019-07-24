@@ -242,8 +242,6 @@ public class Datasources {
 
 	private static <O> PlaceMark<O> placeMarkOf(Object item, int pos, io.intino.alexandria.ui.displays.components.Map.Type type) {
 		Geometry location = locations[pos] != null ? locations[pos] : point(31.76672014, -19.48827855);
-		Point point = location.points().get(0);
-		if (type != null) location = point(point.latitude(), point.longitude());
 		return new PlaceMark<>().item(item).location(location).label(String.valueOf(pos+1));
 	}
 
@@ -284,10 +282,9 @@ public class Datasources {
 	private static Polygon polygon(double latitude, double longitude) {
 		Polygon result = new Polygon();
 		int randomValue = nextRandomInt(1);
-		result.add(point(latitude, longitude));
-		result.add(point(latitude - randomValue, longitude + randomValue));
-		result.add(point(latitude + randomValue, longitude + randomValue + randomValue));
-		result.add(point(latitude, longitude));
+		List<Point> path = Arrays.asList(point(latitude, longitude), point(latitude - randomValue, longitude + randomValue),
+										 point(latitude + randomValue, longitude + randomValue + randomValue), point(latitude, longitude));
+		result.add(path);
 		return result;
 	}
 

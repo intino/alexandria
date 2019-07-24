@@ -10,6 +10,7 @@ import GoogleApi from "./geo/GoogleApi";
 import PlaceMark from "./geo/PlaceMark";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import GeoBehavior from "./behaviors/GeoBehavior";
+import GeometryUtil from "../../util/GeometryUtil";
 
 const styles = theme => ({
 	...CollectionStyles(theme),
@@ -83,7 +84,7 @@ class Map extends AbstractMap {
 	};
 
 	renderHeatmap = () => {
-		const data = this.state.placeMarks.map(pm => new google.maps.LatLng(pm.location.pointList[0].lat, pm.location.pointList[0].lng));
+		const data = this.state.placeMarks.map(pm => GeometryUtil.firstPoint(pm.location));
 		return (<HeatmapLayer data={data}/>);
 	};
 

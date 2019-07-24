@@ -19,8 +19,9 @@ public class Polyline extends Geometry {
 		return this;
 	}
 
-	public void add(Point point) {
+	public Polyline add(Point point) {
 		this.path.add(point);
+		return this;
 	}
 
 	@Override
@@ -28,8 +29,4 @@ public class Polyline extends Geometry {
 		return String.format("LINESTRING(%s)", String.join(",", path.stream().map(Point::toWkt).collect(toList())));
 	}
 
-	@Override
-	public List<Point> points() {
-		return path;
-	}
 }

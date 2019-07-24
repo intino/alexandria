@@ -44,6 +44,7 @@ Facet Editable on DataComponents.Number
 	var double step = -1
 
 Facet Editable on DataComponents.Location
+	var word[]:{Point Polygon Polyline Rectangle} modes = empty
 
 Facet Editable on DataComponents.File
 	var boolean showPreview = false

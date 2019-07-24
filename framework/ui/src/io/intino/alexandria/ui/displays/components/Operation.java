@@ -27,18 +27,9 @@ public class Operation<DN extends OperationNotifier, B extends Box> extends Comp
         return title;
     }
 
-    public Operation<DN, B> title(String title) {
-        this.title = title;
-        return this;
-    }
-
-    public Operation<DN, B> mode(Mode mode) {
-        this.mode = mode;
-        return this;
-    }
-
-    public Operation<DN, B> icon(String icon) {
+    public Operation<DN, B> updateIcon(String icon) {
         this.icon = icon;
+        refreshIcon();
         return this;
     }
 
@@ -66,6 +57,21 @@ public class Operation<DN extends OperationNotifier, B extends Box> extends Comp
         if (isResourceIcon()) refreshIcon();
     }
 
+    public Operation<DN, B> title(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public Operation<DN, B> mode(Mode mode) {
+        this.mode = mode;
+        return this;
+    }
+
+    public Operation<DN, B> icon(String icon) {
+        this.icon = icon;
+        return this;
+    }
+
     UIFile defaultFile() {
         return new UIFile() {
             @Override
@@ -81,7 +87,8 @@ public class Operation<DN extends OperationNotifier, B extends Box> extends Comp
     }
 
     private void refreshIcon() {
-        notifier.refreshIcon(Asset.toResource(baseAssetUrl(), Operation.class.getResource(icon)).toUrl().toString());
+        String icon = isResourceIcon() ? Asset.toResource(baseAssetUrl(), Operation.class.getResource(this.icon)).toUrl().toString() : this.icon;
+        notifier.refreshIcon(icon);
     }
 
     private boolean isResourceIcon() {

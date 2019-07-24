@@ -29,8 +29,14 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	}
 
 	public BaseGrouping groups(List<Group> groups) {
-    	this.groups = groups;
-    	return this;
+		this.groups = groups;
+		return this;
+	}
+
+	public BaseGrouping updateGroups(List<Group> groups) {
+		groups(groups);
+		refresh();
+		return this;
 	}
 
 	public BaseGrouping<DN, B> bindTo(Collection... collection) {

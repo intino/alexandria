@@ -25,10 +25,8 @@ public class GroupingExamplesMold extends AbstractGroupingExamplesMold<Alexandri
         list1.onAddItem(this::onAddItem);
         list2.source(Datasources.personDatasource());
         list2.onAddItem(this::onAddItem);
-        country1.groups(countries());
-        country1.refresh();
-        country2.groups(countries());
-        country2.refresh();
+        country1.updateGroups(countries());
+        country2.updateGroups(countries());
     }
 
     private void onAddItem(AddItemEvent event) {

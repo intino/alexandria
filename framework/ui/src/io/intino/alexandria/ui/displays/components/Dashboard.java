@@ -39,19 +39,19 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
         super(box);
     }
 
-    public Dashboard serverScript(URL script) {
-        this.serverScript = script;
+    public Dashboard update(java.util.Map<String, String> parameters) {
+        this.parameterMap = parameters;
+        refresh();
         return this;
     }
 
-    public Dashboard uiScript(URL script) {
-        this.uiScript = script;
-        return this;
-    }
+	public Dashboard serverScript(URL script) {
+		this.serverScript = script;
+		return this;
+	}
 
-	public Dashboard driver(Driver driver) {
-		this.driver = driver;
-		refresh();
+	public Dashboard uiScript(URL script) {
+		this.uiScript = script;
 		return this;
 	}
 
@@ -60,23 +60,22 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
 		return this;
 	}
 
-    public Dashboard add(String parameter, String value) {
-        parameterMap.put(parameter, value);
-        return this;
-    }
+	public Dashboard driver(Driver driver) {
+		this.driver = driver;
+		return this;
+	}
 
-    public Dashboard add(URL resource) {
-        resourceList.add(resource);
-        return this;
-    }
+	public Dashboard add(String parameter, String value) {
+		parameterMap.put(parameter, value);
+		return this;
+	}
 
-    public Dashboard update(java.util.Map<String, String> parameters) {
-        this.parameterMap = parameters;
-        refresh();
-        return this;
-    }
+	public Dashboard add(URL resource) {
+		resourceList.add(resource);
+		return this;
+	}
 
-    @Override
+	@Override
     public void init() {
         super.init();
         refresh();
