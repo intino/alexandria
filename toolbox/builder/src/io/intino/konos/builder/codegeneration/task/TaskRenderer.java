@@ -8,7 +8,6 @@ import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.ActionTemplate;
-import io.intino.konos.builder.codegeneration.datahub.feeder.FeederRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Task;
@@ -52,7 +51,7 @@ public class TaskRenderer extends Renderer {
 
 	private List<Frame> targets(ScheduledTask task) {
 		List<Frame> frames = task.linkWithMounterList().stream().map(link -> baseFrame("target", "mounter").add("name", link.mounter().name$()).toFrame()).collect(Collectors.toList());
-		task.linkWithFeederList().stream().map(link -> baseFrame("target", "feeder").add("name", FeederRenderer.name(link.feeder())).toFrame()).forEach(frames::add);
+		task.linkWithFeederList().stream().map(link -> baseFrame("target", "feeder").add("name", link.feeder().name$()).toFrame()).forEach(frames::add);
 		return frames;
 	}
 

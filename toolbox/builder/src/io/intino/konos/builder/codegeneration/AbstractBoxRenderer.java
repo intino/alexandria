@@ -3,16 +3,15 @@ package io.intino.konos.builder.codegeneration;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
-import io.intino.konos.builder.codegeneration.datahub.feeder.FeederRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.jms.JMSService;
+import io.intino.konos.model.graph.jmsbus.JmsBusMessageHub;
 import io.intino.konos.model.graph.jmx.JMXService;
-import io.intino.konos.model.graph.mirrored.MirroredDataHub;
 import io.intino.konos.model.graph.realtime.RealtimeMounter;
 import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.slackbot.SlackBotService;
-import io.intino.konos.model.graph.standalone.StandAloneDataHub;
+import io.intino.konos.model.graph.sshmirrored.SshMirroredDatalake;
 import io.intino.konos.model.graph.ui.UIService;
 import io.intino.plugin.project.LegioConfiguration;
 import io.intino.tara.compiler.shared.Configuration;
@@ -20,6 +19,7 @@ import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import static io.intino.tara.compiler.shared.Configuration.Level.Platform;
@@ -42,12 +42,13 @@ public class AbstractBoxRenderer extends Renderer {
 	public void render() {
 		FrameBuilder root = new FrameBuilder("box");
 		final String boxName = settings.boxName();
-		root.add("name", boxName).add("package", settings.packageName());
+		root.add("name", boxName).add("package", packageName());
 		if (hasModel) root.add("tara", boxName);
 		parent(root);
 		services(root, boxName);
 		tasks(root, boxName);
-		dataHub(root, boxName);
+		datalake(root);
+		messageHub(root, boxName);
 		if (hasAuthenticatedApis()) root.add("authenticationValidator", new FrameBuilder().add("type", "Basic"));
 
 		graph.datamartList().forEach(d -> datamart(root, d));
@@ -68,96 +69,49 @@ public class AbstractBoxRenderer extends Renderer {
 			builder.add("task", new FrameBuilder("task").add("configuration", boxName).toFrame());
 	}
 
-	private void dataHub(FrameBuilder builder, String boxName) {
-		DataHub dataHub = graph.dataHub();
-		if (dataHub == null) return;
-		final FrameBuilder dataHubFrame = new FrameBuilder("datahub", type(dataHub)).add("workspace", parameter(dataHub.workingDirectory()));
-		if (!dataHub.tankList().isEmpty()) {
-			FrameBuilder tanks = new FrameBuilder("tanks");
-			for (DataHub.Split split : dataHub.splitList())
-				tanks.add("split", frameOf(split));
-			for (DataHub.Tank tank : dataHub.tankList())
-				tanks.add("tank", frameOf(tank));
-			dataHubFrame.add("tanks", tanks.toFrame());
-		}
-		if (dataHub.isStandAlone()) {
-			StandAloneDataHub service = dataHub.asStandAlone();
-			if (service.broker() != null) addBroker(dataHubFrame, service.broker());
-			FrameBuilder frame = new FrameBuilder("standalone").add("path", parameter(service.datalakePath())).add("scale", service.scale());
-			if (service.seal() != null) frame.add("sealing", service.seal().when());
-			dataHubFrame.add("datasource", frame);
-		} else if (dataHub.isMirrored()) mirroredDataSource(dataHub, dataHubFrame);
-		else if (dataHub.isLocal()) {
-			localDataSource(dataHub, dataHubFrame);
-		}
-		Frame[] feederFrames = graph.dataHub().feederList().stream().filter(f -> !f.sensorList().isEmpty()).map(this::frameOf).toArray(Frame[]::new);
-		if (feederFrames.length != 0) dataHubFrame.add("feeder", feederFrames);
-		Frame[] mounterFrames = graph.dataHub().mounterList().stream().filter(Mounter::isRealtime).map(m -> frameOf(m, boxName)).toArray(Frame[]::new);
-		if (mounterFrames.length != 0) dataHubFrame.add("mounter", mounterFrames);
-		builder.add("dataHub", dataHubFrame.toFrame());
+	private void datalake(FrameBuilder root) {
+		Datalake datalake = graph.datalake();
+		if (datalake == null) return;
+		FrameBuilder builder = new FrameBuilder("datalake", datalake.isLocal() ? "Local" : "Mirror");
+		builder.add("package", packageName());
+		builder.add("path", parameter(datalake.path()));
+		if (datalake.isSshMirrored()) {
+			SshMirroredDatalake mirror = datalake.asSshMirrored();
+			builder.add("parameter", parameter(mirror.url())).
+					add("parameter", parameter(mirror.user())).
+					add("parameter", parameter(mirror.password())).
+					add("parameter", parameter(mirror.originDatalakePath())).
+					add("parameter", parameter(mirror.startingTimetag()));
+		} else if (datalake.isNfsMirrored())
+			builder.add("parameter", parameter(datalake.asNfsMirrored().originDatalakePath())).
+					add("parameter", parameter(datalake.asNfsMirrored().startingTimetag()));
+		root.add("datalake", builder);
 	}
 
-	private void localDataSource(DataHub dataHub, FrameBuilder dataHubFrame) {
-		FrameBuilder local = new FrameBuilder("local");
-		if (dataHub.asLocal().messageHub() != null)
-			local.add("messageHub", messageHubFrame(dataHub.asLocal().messageHub()));
-		dataHubFrame.add("datasource", local.add("path", parameter(dataHub.asLocal().datalakePath())));
+	private void messageHub(FrameBuilder root, String boxName) {
+		MessageHub hub = graph.messageHub();
+		if (hub == null) return;
+		FrameBuilder builder = new FrameBuilder("messageHub");
+		if (hub.isJmsBus()) {
+			JmsBusMessageHub jmsHub = hub.asJmsBus();
+			builder.add("jms").add("parameter", parameter(jmsHub.url())).add("parameter", parameter(jmsHub.user())).add("parameter", parameter(jmsHub.password())).add("parameter", parameter(jmsHub.clientId()));
+		}
+		builder.add("package", packageName());
+		Frame[] feederFrames = graph.feederList().stream().filter(f -> !f.sensorList().isEmpty()).map(this::frameOf).toArray(Frame[]::new);
+		if (feederFrames.length != 0) builder.add("feeder", feederFrames);
+		Frame[] mounterFrames = graph.mounterList().stream().filter(Mounter::isRealtime).map(m -> frameOf(m, boxName)).toArray(Frame[]::new);
+		if (mounterFrames.length != 0) builder.add("mounter", mounterFrames);
+		root.add("messageHub", builder.toFrame());
 	}
+
 
 	private Frame frameOf(Mounter m, String boxName) {
 		RealtimeMounter mounter = m.asRealtime();
-		FrameBuilder[] subscriptions = mounter.selectList().stream().map(s -> s.tank().fullName()).map(t ->
+		FrameBuilder[] subscriptions = mounter.sourceList().stream().filter(s -> Objects.nonNull(s.channel())).map(RealtimeMounter.Source::channel).map(t ->
 				new FrameBuilder("subscription").add("tankName", t).add("box", boxName).
-						add("package", settings.packageName()).add("name", mounter.name$()).add("subscriberId", mounter.subscriberId())).toArray(FrameBuilder[]::new);
+						add("package", packageName()).add("name", mounter.name$()).add("subscriberId", mounter.subscriberId())).toArray(FrameBuilder[]::new);
 		FrameBuilder mounterFrame = new FrameBuilder("mounter", "realtime");
 		return mounterFrame.add("name", mounter.name$()).add("subscription", subscriptions).toFrame();
-	}
-
-	private void mirroredDataSource(DataHub dataHub, FrameBuilder dataHubFrame) {
-		MirroredDataHub mirrored = dataHub.asMirrored();
-		if (mirrored.broker() != null) addBroker(dataHubFrame, mirrored.broker());
-		FrameBuilder mirror = new FrameBuilder("mirror").
-				add("originUrl", parameter(mirrored.originSshUrl())).
-				add("originPath", parameter(mirrored.originDatalakePath())).
-				add("startingTimetag", mirrored.startingTimetag()).
-				add("user", parameter(mirrored.user())).
-				add("password", mirrored.password() == null ? "" : parameter(mirrored.password())).
-				add("destinationPath", parameter(mirrored.destinationPath()));
-		if (mirrored.messageHub() != null) mirror.add("messageHub", messageHubFrame(dataHub.asMirrored().messageHub()));
-		dataHubFrame.add("datasource", mirror);
-	}
-
-	private Frame frameOf(DataHub.Split split) {
-		return new FrameBuilder("split").add("name", split.name$()).add("value", split.splits().toArray(new String[0])).toFrame();
-	}
-
-	private Frame frameOf(DataHub.Tank tank) {
-		String[] objects = tank.core$().conceptList().stream().map(s -> s.id().split("#")[0]).toArray(String[]::new);
-		FrameBuilder builder = new FrameBuilder(objects).add("tank").add("name", tank.fullName()).add("type", objects[0]);
-		if (tank.isSet() && tank.asSet().split() != null) builder.add("splitName", tank.asSet().split().name$());
-		return builder.toFrame();
-	}
-
-	@NotNull
-	private FrameBuilder messageHubFrame(MessageHub hub) {
-		FrameBuilder frame = new FrameBuilder("messageHub");
-		if (hub.isJmsHub())
-			frame.add("jms").add("parameter", parameter(hub.busUrl())).add("parameter", parameter(hub.user())).add("parameter", parameter(hub.password())).add("parameter", parameter(hub.clientId()));
-		return frame.add("package", settings.packageName());
-	}
-
-	private void addBroker(FrameBuilder dataHubFrame, Broker broker) {
-		FrameBuilder brokerFrame = new FrameBuilder().
-				add("port", parameter(broker.port() + "", "int")).
-				add("mqtt_port", parameter(broker.mqtt_port() + "", "int")).
-				add("connectorId", parameter(broker.connectorId()));
-		broker.pipeList().forEach(pipe -> brokerFrame.add("pipe", new FrameBuilder().add("origin", pipe.origin()).add("destination", pipe.destination())));
-		broker.userList().forEach(user -> brokerFrame.add("user", new FrameBuilder().add("name", parameter(user.name())).add("password", parameter(user.password()))));
-		dataHubFrame.add("broker", brokerFrame);
-	}
-
-	private String type(DataHub dataHub) {
-		return dataHub.core$().conceptList().stream().map(s -> s.id().split("#")[0]).toArray(String[]::new)[0];
 	}
 
 	@NotNull
@@ -171,7 +125,7 @@ public class AbstractBoxRenderer extends Renderer {
 	}
 
 	private Frame frameOf(Feeder feeder) {
-		return new FrameBuilder("feeder").add("package", packageName()).add("name", FeederRenderer.name(feeder)).add("box", settings.boxName()).toFrame();
+		return new FrameBuilder("feeder").add("package", packageName()).add("name", feeder.name$()).add("box", settings.boxName()).toFrame();
 	}
 
 	private void services(FrameBuilder builder, String name) {
@@ -238,7 +192,6 @@ public class AbstractBoxRenderer extends Renderer {
 			builder.add("edition", new FrameBuilder(isCustom(service.edition().by()) ? "custom" : "standard").add("value", service.edition().by()).toFrame());
 		service.useList().forEach(use -> builder.add("use", use.className() + "Service"));
 		return builder.toFrame();
-
 	}
 
 	private boolean isCustom(String value) {

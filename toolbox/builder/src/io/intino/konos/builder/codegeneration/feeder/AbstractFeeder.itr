@@ -1,5 +1,5 @@
 def type(feeder)
-	package $package+validPackage.datahub.feeders;
+	package $package+validPackage.feeders;
 
 	import $package+validPackage.$box+FirstUpperCase~Box;
 	import io.intino.alexandria.core.Feeder;

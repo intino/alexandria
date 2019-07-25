@@ -141,16 +141,19 @@ public class CreateKonosBoxAction extends KonosAction {
 		return dependencies.stream().filter(dependency -> artifact.equals(dependency.groupId() + ":" + dependency.artifactId())).findFirst().orElse(null);
 	}
 
-	private Map<String, String> requiredDependencies(KonosGraph konosGraph) {
+	private Map<String, String> requiredDependencies(KonosGraph graph) {
 		Map<String, String> dependencies = Manifest.load().dependencies;
-		if (konosGraph.jMXServiceList().isEmpty()) remove(dependencies, "jmx");
-		if (konosGraph.jMSServiceList().isEmpty()) remove(dependencies, "jms");
-		if (konosGraph.taskList().isEmpty()) remove(dependencies, "scheduler");
-		if (konosGraph.dataHub() == null) remove(dependencies, "data-hub");
-		if (konosGraph.uIServiceList().isEmpty()) remove(dependencies, "ui");
-		if (konosGraph.rESTServiceList().isEmpty() || !konosGraph.uIServiceList().isEmpty())
+		if (graph.jMXServiceList().isEmpty()) remove(dependencies, "jmx");
+		if (graph.jMSServiceList().isEmpty()) remove(dependencies, "jms");
+		if (graph.taskList().isEmpty()) remove(dependencies, "scheduler");
+		if (graph.datalake() == null) remove(dependencies, "datalake");
+		else if (!graph.datalake().isSshMirrored()) remove(dependencies, "sshj");
+		if (graph.messageHub() == null) remove(dependencies, "message-hub");
+		if (!graph.messageHub().isJmsBus()) remove(dependencies, "message-hub-jms");
+		if (graph.uIServiceList().isEmpty()) remove(dependencies, "ui");
+		if (graph.rESTServiceList().isEmpty() || !graph.uIServiceList().isEmpty())
 			remove(dependencies, "rest");
-		if (konosGraph.slackBotServiceList().isEmpty()) remove(dependencies, "slack");
+		if (graph.slackBotServiceList().isEmpty()) remove(dependencies, "slack");
 		return dependencies;
 	}
 
@@ -186,6 +189,31 @@ public class CreateKonosBoxAction extends KonosAction {
 
 	private void withTask(Task.Backgroundable runnable) {
 		ProgressManager.getInstance().runProcessWithProgressAsynchronously(runnable, new BackgroundableProcessIndicator(runnable));
+	}
+
+	private VirtualFile getGenRoot(Module module) {
+		for (VirtualFile file : getSourceRoots(module))
+			if (file.isDirectory() && "gen".equals(file.getName())) return file;
+		final VirtualFile genDirectory = createDirectory(module, "gen");
+		if (genDirectory == null) return null;
+		PsiTestUtil.addSourceRoot(module, genDirectory, JavaSourceRootType.SOURCE);
+		return genDirectory;
+	}
+
+	private VirtualFile getResRoot(Module module) {
+		for (VirtualFile file : getSourceRoots(module))
+			if (file.isDirectory() && "res".equals(file.getName())) return file;
+		final VirtualFile resDirectory = createDirectory(module, "res");
+		PsiTestUtil.addSourceRoot(module, resDirectory, JavaResourceRootType.RESOURCE);
+		return resDirectory;
+	}
+
+	private io.intino.konos.builder.codegeneration.cache.ElementCache loadCache(File folder, KonosGraph graph, Stash stash) {
+		return new CacheReader(folder).load(graph, stash);
+	}
+
+	private void saveCache(io.intino.konos.builder.codegeneration.cache.ElementCache cache, File folder) {
+		new CacheWriter(folder).save(cache);
 	}
 
 	private class KonosGenerator {
@@ -261,31 +289,6 @@ public class CreateKonosBoxAction extends KonosAction {
 			vDir.refresh(true, true);
 		}
 
-	}
-
-	private VirtualFile getGenRoot(Module module) {
-		for (VirtualFile file : getSourceRoots(module))
-			if (file.isDirectory() && "gen".equals(file.getName())) return file;
-		final VirtualFile genDirectory = createDirectory(module, "gen");
-		if (genDirectory == null) return null;
-		PsiTestUtil.addSourceRoot(module, genDirectory, JavaSourceRootType.SOURCE);
-		return genDirectory;
-	}
-
-	private VirtualFile getResRoot(Module module) {
-		for (VirtualFile file : getSourceRoots(module))
-			if (file.isDirectory() && "res".equals(file.getName())) return file;
-		final VirtualFile resDirectory = createDirectory(module, "res");
-		PsiTestUtil.addSourceRoot(module, resDirectory, JavaResourceRootType.RESOURCE);
-		return resDirectory;
-	}
-
-	private io.intino.konos.builder.codegeneration.cache.ElementCache loadCache(File folder, KonosGraph graph, Stash stash) {
-		return new CacheReader(folder).load(graph, stash);
-	}
-
-	private void saveCache(io.intino.konos.builder.codegeneration.cache.ElementCache cache, File folder) {
-		new CacheWriter(folder).save(cache);
 	}
 
 }
