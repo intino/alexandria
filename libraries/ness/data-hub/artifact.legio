@@ -11,8 +11,6 @@ Artifact("io.intino.alexandria", "1.0.0") data-hub
 		Compile("org.apache.activemq", "activemq-kahadb-store", "5.15.8")
 		Compile("org.apache.activemq", "activemq-jaas", "5.15.8")
 		Compile("org.apache.activemq", "activemq-runtime-config", "5.15.8")
-		Compile("com.hierynomus", "sshj", "0.27.0")
-			Exclude("org.slf4j", "slf4j-api")
 		Test("junit", "junit", "LATEST")
 		Test("org.assertj", "assertj-core", "3.11.1")
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)

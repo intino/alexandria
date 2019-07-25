@@ -1,12 +1,13 @@
-package io.intino.konos.builder.codegeneration.datahub.messagehub;
+package io.intino.konos.builder.codegeneration.messagehub;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.DataHub;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.MessageHub;
+import io.intino.konos.model.graph.realtime.RealtimeMounter;
+import io.intino.konos.model.graph.realtime.RealtimeMounter.Source;
 
 import java.io.File;
 
@@ -22,29 +23,26 @@ public class MessageHubRenderer {
 	public MessageHubRenderer(Settings settings, KonosGraph graph) {
 		this.graph = graph;
 		this.settings = settings;
-		this.sourceDirectory = new File(settings.src(Target.Owner), "datahub");
-		this.genDirectory = new File(settings.gen(Target.Owner), "datahub");
+		this.sourceDirectory = settings.src(Target.Owner);
+		this.genDirectory = settings.gen(Target.Owner);
 	}
 
 	public void execute() {
-		MessageHub messageHub = messageHub();
+		MessageHub messageHub = graph.messageHub();
 		if (messageHub == null) return;
 		final FrameBuilder builder = new FrameBuilder("messageHub").
 				add("box", settings.boxName()).
 				add("package", settings.packageName());
-		if (messageHub.isJmsHub()) builder.add("jms");
-		for (DataHub.Tank tank : graph.dataHub().tankList((r) -> true))
-			builder.add("tank", new FrameBuilder().add("name", tank.fullName().replace(".", "_")).add("qn", tank.fullName()));
-		settings.classes().put("MessageHub", "datahub.MessageHub");
-		File destination = messageHub.isJmsHub() ? genDirectory : sourceDirectory;
+		if (messageHub.isJmsBus()) builder.add("jms");
+		graph.realtimeMounterList().forEach(mounter -> builder.add("mounter", frameOf(mounter)));
+		settings.classes().put("MessageHub", "MessageHub");
+		File destination = messageHub.isJmsBus() ? genDirectory : sourceDirectory;
 		if (!Commons.javaFile(destination, "MessageHub").exists())
 			writeFrame(destination, "MessageHub", customize(new MessageHubTemplate()).render(builder.toFrame()));
 	}
 
-	private MessageHub messageHub() {
-		if (graph.dataHub() == null) return null;
-		if (graph.dataHub().isMirrored()) return graph.dataHub().asMirrored().messageHub();
-		if (graph.dataHub().isLocal()) return graph.dataHub().asLocal().messageHub();
-		return null;
+	private FrameBuilder frameOf(RealtimeMounter mounter) {
+		return new FrameBuilder("mounter").add("package", settings.packageName()).add("name", mounter.name$()).add("source", mounter.sourceList().stream().map(Source::channel).toArray(String[]::new));
 	}
+
 }
