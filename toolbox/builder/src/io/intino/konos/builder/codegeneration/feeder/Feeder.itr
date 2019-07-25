@@ -1,5 +1,5 @@
 def type(feeder & simple)
-	package $package+validPackage.datahub.feeders;
+	package $package+validPackage.feeders;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
 
@@ -17,7 +17,7 @@ def type(feeder & simple)
 end
 
 def type(feeder & complex)
-	package $package+validPackage.datahub.feeders;
+	package $package+validPackage.feeders;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
 

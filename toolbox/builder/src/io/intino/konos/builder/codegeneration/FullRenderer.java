@@ -7,13 +7,13 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.search.GlobalSearchScope;
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
-import io.intino.konos.builder.codegeneration.datahub.adapter.AdapterRenderer;
-import io.intino.konos.builder.codegeneration.datahub.feeder.FeederRenderer;
-import io.intino.konos.builder.codegeneration.datahub.messagehub.MessageHubRenderer;
-import io.intino.konos.builder.codegeneration.datahub.mounter.MounterRenderer;
-import io.intino.konos.builder.codegeneration.datahub.process.ProcessRenderer;
+import io.intino.konos.builder.codegeneration.datalake.DatalakeRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
+import io.intino.konos.builder.codegeneration.feeder.FeederRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
+import io.intino.konos.builder.codegeneration.messagehub.MessageHubRenderer;
+import io.intino.konos.builder.codegeneration.mounter.MounterRenderer;
+import io.intino.konos.builder.codegeneration.process.ProcessRenderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.codegeneration.services.jms.JMSRequestRenderer;
 import io.intino.konos.builder.codegeneration.services.jms.JMSServiceRenderer;
@@ -62,12 +62,15 @@ public class FullRenderer {
 		tasks();
 		jmx();
 		jms();
-		bus();
+		datalake();
+		messageHub();
+		mounters();
+		feeders();
+		processes();
 		slack();
 		ui();
 		box();
 		main();
-
 		InterfaceToJavaImplementation.nodeMap.clear();
 		InterfaceToJavaImplementation.nodeMap.putAll(settings.classes());
 	}
@@ -100,12 +103,23 @@ public class FullRenderer {
 		new SchedulerRenderer(settings, graph).execute();
 	}
 
-	private void bus() {
-		if (graph.dataHub() == null) return;
-		new ProcessRenderer(settings, graph).execute();
+	private void datalake() {
+		new DatalakeRenderer(settings, graph).execute();
+	}
+
+	private void messageHub() {
 		new MessageHubRenderer(settings, graph).execute();
+	}
+
+	private void mounters() {
 		new MounterRenderer(settings, graph).execute();
-		new AdapterRenderer(settings, graph).execute();
+	}
+
+	private void processes() {
+		new ProcessRenderer(settings, graph).execute();
+	}
+
+	private void feeders() {
 		new FeederRenderer(settings, graph).execute();
 	}
 
@@ -150,7 +164,8 @@ public class FullRenderer {
 			if (languages.isEmpty() || languages.get(0).generationPackage() == null) return null;
 			final String workingPackage = languages.get(0).generationPackage().replace(".graph", "");
 			PsiClass aClass = ApplicationManager.getApplication().runReadAction((Computable<PsiClass>) () -> facade.findClass(workingPackage + ".box." + Formatters.firstUpperCase(languages.get(0).name()) + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)));
-			if (aClass != null) return workingPackage.toLowerCase() + ".box." + Formatters.firstUpperCase(languages.get(0).name());
+			if (aClass != null)
+				return workingPackage.toLowerCase() + ".box." + Formatters.firstUpperCase(languages.get(0).name());
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}

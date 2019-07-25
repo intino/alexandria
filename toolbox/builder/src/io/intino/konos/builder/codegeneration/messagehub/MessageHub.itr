@@ -1,9 +1,7 @@
 def type(messagehub & jms)
-	package $package+validPackage.datahub;
+	package $package+validPackage;
 
     public class MessageHub extends io.intino.alexandria.messagehub.JmsMessageHub {
-		$tank...[$NL]
-
 		private String clientId;
 
 		public MessageHub(String url, String user, String password, String clientId) {
@@ -14,7 +12,7 @@ def type(messagehub & jms)
 end
 
 def type(messagehub)
-	package $package+validPackage.datahub;
+	package $package+validPackage;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
 
@@ -27,8 +25,6 @@ def type(messagehub)
 	}
 end
 
-def trigger(tank)
-	public static final String $name+snakecaseToCamelCase+firstLowerCase = "$qn";
-end
+
 
 
