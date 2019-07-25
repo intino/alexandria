@@ -77,8 +77,8 @@ class LocationEditable extends AbstractLocationEditable {
 	};
 
 	handleRectangleChange = (rectangle) => {
-        this.requester.notifyChange(GeometryUtil.rectangleToPolygon(rectangle));
-        this.notifyChange(rectangle, "rectangle");
+		this.requester.notifyChange(GeometryUtil.rectangleToPolygon(rectangle));
+		this.notifyChange(rectangle, "rectangle");
 	};
 
 	handlePolygonChange = (polygon) => {
@@ -96,6 +96,11 @@ class LocationEditable extends AbstractLocationEditable {
 		this.requester.notifyChange(null);
 		this.setState({drawingControl : true});
 	};
+
+	refresh = (location) => {
+		this.setState({ location: location, drawingControl : location == null });
+	};
+
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(LocationEditable));

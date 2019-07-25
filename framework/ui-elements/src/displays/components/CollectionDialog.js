@@ -31,7 +31,7 @@ class CollectionDialog extends AbstractCollectionDialog {
 		return (
 			<Dialog fullScreen={this.props.fullscreen} open={this.state.opened} onClose={this.handleClose.bind(this)} TransitionComponent={this.props.fullscreen ? BaseDialog.Transition : undefined}>
 				{this.renderTitle()}
-				{this.renderContent(this.content())}
+				{this.renderContent(() => this.content())}
 			</Dialog>
 		);
 	};

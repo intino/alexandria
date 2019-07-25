@@ -30,7 +30,7 @@ class Dialog extends AbstractDialog {
 					   onClose={this.handleClose.bind(this)}
 					   TransitionComponent={this.props.fullscreen ? BaseDialog.Transition : undefined}>
 				{this.renderTitle()}
-				{this.renderContent(this.props.children)}
+				{this.renderContent(() => this.props.children)}
 			</MuiDialog>
 		);
 	};

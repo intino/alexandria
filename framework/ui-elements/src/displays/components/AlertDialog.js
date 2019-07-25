@@ -22,7 +22,7 @@ class AlertDialog extends AbstractAlertDialog {
 		return (
 			<Dialog fullScreen={this.props.fullscreen} open={this.state.opened} onClose={this.handleClose.bind(this)} TransitionComponent={this.props.fullscreen ? BaseDialog.Transition : undefined}>
 				{this.renderTitle()}
-				{this.renderContent(<DialogContentText>{this.props.message}</DialogContentText>)}
+				{this.renderContent(() => <DialogContentText>{this.props.message}</DialogContentText>)}
 				<DialogActions>
 					<Button onClick={this.handleClose.bind(this)} color="primary">{this.closeLabel()}</Button>
 				</DialogActions>

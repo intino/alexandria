@@ -17,7 +17,7 @@ Artifact("io.intino.alexandria", "2.0.0") ui-framework
 		Compile("com.opencsv", "opencsv", "4.1")
 		Compile("org.hashids", "hashids", "1.0.3")
 		Compile("net.rforge", "Rserve", "0.6-8.1")
-		Compile("org.locationtech.spatial4j", "spatial4j", "0.7")
+		Compile("org.locationtech.jts", "jts-core", "1.16.1")
 		Test("junit", "junit", "LATEST")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)

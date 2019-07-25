@@ -2,12 +2,16 @@ import React from "react";
 import AbstractBaseLocation from "../../../gen/displays/components/AbstractBaseLocation";
 import BaseLocationNotifier from "../../../gen/displays/notifiers/BaseLocationNotifier";
 import BaseLocationRequester from "../../../gen/displays/requesters/BaseLocationRequester";
-import GoogleApi from "./geo/GoogleApi";
-import { GoogleMap, LoadScript } from '@react-google-maps/api'
+import { GoogleMap } from '@react-google-maps/api'
 import PlaceMark from "./geo/PlaceMark";
 import GeoBehavior from "./behaviors/GeoBehavior";
+import 'alexandria-ui-elements/res/styles/layout.css';
 
-const styles = theme => ({});
+const styles = theme => ({
+	map : {
+		minHeight: "100%"
+	}
+});
 
 export default class BaseLocation extends AbstractBaseLocation {
 
@@ -21,32 +25,37 @@ export default class BaseLocation extends AbstractBaseLocation {
 		this.notifier = new BaseLocationNotifier(this);
 		this.requester = new BaseLocationRequester(this);
 		this.container = React.createRef();
+		this.googleMapLayer = React.createRef();
 	};
 
 	renderLayer = (content) => {
-		const container = this.container.current;
-		const height = $(container).height();
+		const { classes } = this.props;
+
+		window.setTimeout(() => this.resize(), 100);
+
 		return (
-			<div ref={this.container} className="layout flex">
-				<GoogleApi>
-					<GoogleMap className="map" zoom={this.props.zoom.defaultZoom}
-							   center={GeoBehavior.center(this)}>
-						<div style={{height: height, width: '100%'}}/>
-						{this.renderPlaceMark()}
-						{content != null && content()}
-					</GoogleMap>
-				</GoogleApi>
+			<div ref={this.container} className="layout flex" style={{height:"100%"}}>
+				<GoogleMap className={classes.map} zoom={this.props.zoom.defaultZoom}
+						   center={GeoBehavior.center(this)}>
+					<div ref={this.googleMapLayer} style={{width:'100%'}}/>
+					{this.renderPlaceMark()}
+					{content != null && content()}
+				</GoogleMap>
 			</div>
 		);
+	};
+
+	resize = function() {
+		const container = this.container.current;
+		this.googleMapLayer.current.style.height = $(container).height() + "px";
 	};
 
 	renderPlaceMark = () => {
 		const icon = this.state.icon;
 		const location = this.state.location;
-		const label = this.translate(this.props.label != null ? this.props.label : undefined);
 		if (location == null) return;
 		return (
-			<PlaceMark placeMark={{label:label,icon:icon,location:location}} clusterer={false}/>
+			<PlaceMark placeMark={{icon:icon,location:location}}/>
 		);
 	};
 
