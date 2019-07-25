@@ -21,8 +21,20 @@ export default class PlaceMark extends I18nComponent {
         const clusterer = this.props.clusterer;
         var icon = {url:placeMark.icon != null ? placeMark.icon : (this.props.icon != null ? this.props.icon : undefined),labelOrigin: new google.maps.Point(9, 10)};
         if (icon.url === undefined) icon = undefined;
-        if (location.type === "Polyline") return (<Marker icon={icon} label={{text:placeMark.label}} position={GeometryUtil.centerOf(placeMark.location)} onClick={this.showInfo.bind(this)}><Polyline path={googleMapStructure} clusterer={clusterer}/>{this.renderInfoWindow()}</Marker>);
-        else if (location.type === "Polygon") return (<Marker icon={icon} label={{text:placeMark.label}} position={GeometryUtil.centerOf(placeMark.location)} onClick={this.showInfo.bind(this)}><Polygon paths={googleMapStructure} clusterer={clusterer}/>{this.renderInfoWindow()}</Marker>);
+        if (location.type === "Polyline") return (
+            <React.Fragment>
+                {clusterer == null && <Polyline path={googleMapStructure}/> }
+                <Marker clusterer={clusterer} icon={icon} label={{text:placeMark.label}} position={GeometryUtil.centerOf(placeMark.location)} onClick={this.showInfo.bind(this)}>{this.renderInfoWindow()}</Marker>
+            </React.Fragment>
+        );
+        else if (location.type === "Polygon") return (
+            <React.Fragment>
+                {clusterer == null && <Polygon paths={googleMapStructure}/> }
+                <Marker clusterer={clusterer} icon={icon} label={{text:placeMark.label}} position={GeometryUtil.centerOf(placeMark.location)} onClick={this.showInfo.bind(this)}>
+                    {this.renderInfoWindow()}
+                </Marker>
+            </React.Fragment>
+        );
         return (<Marker icon={icon} label={{text:placeMark.label}} position={googleMapStructure} clusterer={clusterer} onClick={this.showInfo.bind(this)}>{this.renderInfoWindow()}</Marker>);
     };
 

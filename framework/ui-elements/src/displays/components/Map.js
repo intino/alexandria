@@ -6,7 +6,6 @@ import MapRequester from "../../../gen/displays/requesters/MapRequester";
 import {CollectionStyles} from "./Collection";
 import { GoogleMap, MarkerClusterer, HeatmapLayer, KmlLayer } from '@react-google-maps/api'
 import 'alexandria-ui-elements/res/styles/layout.css';
-import GoogleApi from "./geo/GoogleApi";
 import PlaceMark from "./geo/PlaceMark";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import GeoBehavior from "./behaviors/GeoBehavior";
@@ -49,12 +48,10 @@ class Map extends AbstractMap {
 		const height = $(container).height();
 		return (
 			<div ref={this.container} className="layout flex">
-				<GoogleApi>
-					<GoogleMap className="map" zoom={this.props.zoom.defaultZoom} center={GeoBehavior.center(this)} onLoad={this.registerMap.bind(this)}>
-						<div style={{height: height, width: '100%'}}/>
-						{this.renderLayer()}
-					</GoogleMap>
-				</GoogleApi>
+				<GoogleMap className="map" zoom={this.props.zoom.defaultZoom} center={GeoBehavior.center(this)} onLoad={this.registerMap.bind(this)}>
+					<div style={{height: height, width: '100%'}}/>
+					{this.renderLayer()}
+				</GoogleMap>
 			</div>
 		);
 	};
@@ -105,7 +102,6 @@ class Map extends AbstractMap {
 					   onShowInfo={this.handleShowInfo.bind(this)}
 					   content={items.length > 0 ? items[0] : undefined}
 					   key={pos} placeMark={placeMark} clusterer={clusterer}>
-
 			</PlaceMark>
 		);
 	};

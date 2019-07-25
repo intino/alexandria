@@ -45,7 +45,7 @@ export default class BaseDialog extends AbstractBaseDialog {
 
 	renderContent = (content) => {
 		const { classes } = this.props;
-		return (<DialogContent className={this.props.fullscreen && classes.fullscreen} style={this.style()}>{content}</DialogContent>);
+		return (<DialogContent className={this.props.fullscreen && classes.fullscreen} style={this.style()}>{content != null && content()}</DialogContent>);
 	}
 
 	open = () => {
