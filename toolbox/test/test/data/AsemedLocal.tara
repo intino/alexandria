@@ -1,0 +1,101 @@
+dsl Konos
+
+MessageHub as JmsBus(url = "", user = "", password = "", clientId = "")
+
+Datalake(path = "{path}") datalake as Local
+
+Datamart("{datamart}") datamart
+
+Mounter(datamart) inspeccionados as Population(format = Arff)
+	Split("DA" "DB") porDivisiones
+
+	Source("revisionInspeccion", type = Long) as Id
+	Source("revisionInspeccion", type = Timetag)
+	Source("EsCFE", type = Boolean)  as Constant(value = "sss")
+
+
+Mounter(datamart) criterios as Batch
+	Source("asemed.Criterio")
+
+Mounter(datamart) allCriterios as Realtime(subscriberId = "")
+	Source("asemed.Criterio", Criterio)
+	Source("asemed.CriterioBorrado", CriterioBorrado)
+	Source("asemed.CriterioModificado", CriterioModificado)
+	Source("asemed.CriterioSentencia", CriterioSentencia)
+
+
+Feeder("asemed.Ajuste") ajusteFeeder
+Feeder("asemed.Criterio" "asemed.CriterioBorrado") criteriosFeeder
+
+
+//Task MountAjuste as BootTrigger
+//	LinkWithMounter(datahub.criterios)
+//
+//Task AjusteFeeder as BootTrigger
+//	LinkWithFeeder(datahub.ajusteFeeder)
+
+Schema Evento
+	Attribute ts as DateTime
+	Attribute autor as Text
+
+Schema Criterio as ExtensionOf(Evento)
+	Attribute nombre as Text
+	Attribute descripcion as Text
+	Attribute tipo as Text
+	Attribute filtroInteligente as Text
+	Attribute divisiones as Text List
+
+Schema CriterioBorrado as ExtensionOf(Evento)
+	Attribute criterio as Text
+
+Schema CriterioModificado as ExtensionOf(Evento)
+	Attribute criterio as Text
+	Attribute descripcion as Text
+	Attribute tipo as Text
+	Attribute filtroInteligente as Text
+	Attribute divisiones as Text List
+
+Schema CriterioEvolucionado as ExtensionOf(Evento)
+	Attribute criterio as Text
+
+Schema CriterioConsultaModificada as ExtensionOf(Evento)
+	Attribute criterio as Text
+	Attribute consulta as Text
+	Attribute esValida as Bool
+
+Schema CriterioSentencia as ExtensionOf(Evento)
+	Attribute criterio as Text
+	Attribute consulta as Text
+	Attribute descripcion as Text
+	Attribute tipo as Text
+	Attribute esValida as Bool
+
+Schema CriterioSentenciaModificada as ExtensionOf(Evento)
+	Attribute criterio as Text
+	Attribute sentencia as Text
+	Attribute descripcion as Text
+	Attribute consulta as Text
+	Attribute esValida as Bool
+
+Schema CriterioSentenciaBorrada as ExtensionOf(Evento)
+	Attribute criterio as Text
+	Attribute sentencia as Text
+
+Schema CriterioHabilitado as ExtensionOf(Evento)
+	Attribute criterio as Text
+
+Schema CriterioDeshabilitado as ExtensionOf(Evento)
+	Attribute criterio as Text
+
+Schema Despacho as ExtensionOf(Evento)
+	Attribute nombre as Text
+	Attribute rpu as LongInteger
+
+Schema Inspeccion as ExtensionOf(Evento)
+	Attribute revision as Text
+
+Schema Ajuste as ExtensionOf(Evento)
+	Attribute revision as Text
+
+Schema UsuarioConectado as ExtensionOf(Evento)
+Schema UsuarioDesconectado as ExtensionOf(Evento)

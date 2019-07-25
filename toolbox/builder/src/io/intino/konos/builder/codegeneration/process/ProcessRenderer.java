@@ -1,4 +1,4 @@
-package io.intino.konos.builder.codegeneration.datahub.process;
+package io.intino.konos.builder.codegeneration.process;
 
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Settings;
