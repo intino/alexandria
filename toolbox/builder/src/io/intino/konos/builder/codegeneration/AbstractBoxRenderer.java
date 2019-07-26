@@ -35,7 +35,7 @@ public class AbstractBoxRenderer extends Renderer {
 		this.graph = graph;
 		this.configuration = module() != null ? TaraUtil.configurationOf(module()) : null;
 		this.hasModel = hasModel;
-		customParameters = new HashSet<>();
+		this.customParameters = new HashSet<>();
 	}
 
 	@Override
@@ -54,6 +54,10 @@ public class AbstractBoxRenderer extends Renderer {
 		graph.datamartList().forEach(d -> datamart(root, d));
 		Commons.writeFrame(settings.gen(Target.Owner), "AbstractBox", template().render(root.toFrame()));
 		notifyNewParameters();
+	}
+
+	public Set<String> customParameters() {
+		return customParameters;
 	}
 
 	private void datamart(FrameBuilder root, Datamart datamart) {
