@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/framework/bpm/bpm.iml" filepath="$PROJECT_DIR$/framework/bpm/bpm.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/toolbox/builder/builder.iml" filepath="$PROJECT_DIR$/toolbox/builder/builder.iml" group="toolbox" />
       <module fileurl="file://$PROJECT_DIR$/framework/core/core.iml" filepath="$PROJECT_DIR$/framework/core/core.iml" group="framework" />
-      <module fileurl="file://$PROJECT_DIR$/libraries/ness/data-hub/data-hub.iml" filepath="$PROJECT_DIR$/libraries/ness/data-hub/data-hub.iml" group="ness" />
       <module fileurl="file://$PROJECT_DIR$/libraries/ness/datalake/datalake.iml" filepath="$PROJECT_DIR$/libraries/ness/datalake/datalake.iml" group="ness" />
       <module fileurl="file://$PROJECT_DIR$/drivers/driver/driver.iml" filepath="$PROJECT_DIR$/drivers/driver/driver.iml" group="drivers" />
       <module fileurl="file://$PROJECT_DIR$/toolbox/dsl/dsl.iml" filepath="$PROJECT_DIR$/toolbox/dsl/dsl.iml" group="toolbox" />

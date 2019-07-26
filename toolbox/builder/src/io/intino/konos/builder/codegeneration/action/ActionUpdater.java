@@ -6,6 +6,7 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Exception;
@@ -42,7 +43,10 @@ class ActionUpdater {
 		this.parameters = parameters;
 		this.exceptions = exceptions;
 		this.response = response;
-		this.file = application.runReadAction((Computable<PsiFile>) () -> PsiManager.getInstance(project).findFile(Objects.requireNonNull(VfsUtil.findFileByIoFile(destination, true))));
+		this.file = application.runReadAction((Computable<PsiFile>) () -> {
+			VirtualFile fileByIoFile = VfsUtil.findFileByIoFile(destination, true);
+			return PsiManager.getInstance(project).findFile(Objects.requireNonNull(fileByIoFile));
+		});
 	}
 
 	void update() {
