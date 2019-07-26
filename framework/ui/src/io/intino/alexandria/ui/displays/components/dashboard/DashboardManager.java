@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.components.dashboard;
 
 import io.intino.alexandria.drivers.Driver;
+import io.intino.alexandria.drivers.Program;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.proxy.Network;
 import io.intino.alexandria.proxy.Proxy;
@@ -18,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.intino.alexandria.drivers.shiny.Driver.LocalUrlParameter;
-import static io.intino.alexandria.drivers.shiny.Driver.Program;
 
 public class DashboardManager {
 	private final AlexandriaUiBox box;
@@ -53,7 +53,7 @@ public class DashboardManager {
 
 	public void register(String dashboard, String username) {
 		String userKey = username != null ? username : "";
-		proxyMap.put(dashboard + userKey, driver != null ? driver.run(parameters()) : null);
+		proxyMap.put(dashboard + userKey, driver != null ? driver.run(program()) : null);
 		sessionMap.put(session.id(), dashboard + userKey);
 	}
 
@@ -75,11 +75,10 @@ public class DashboardManager {
 		return proxyMap.get(sessionMap.get(sessionId));
 	}
 
-	private Map<String, Object> parameters() {
-		return new HashMap<String, Object>() {{
-			put(Program, dashboard);
-			put(LocalUrlParameter, dashboardUrl());
-		}};
+	private io.intino.alexandria.drivers.Program program() {
+		Program result = new Program().name(dashboard);
+		result.parameters().put(LocalUrlParameter, dashboardUrl());
+		return result;
 	}
 
 	private String dashboardPath() {
