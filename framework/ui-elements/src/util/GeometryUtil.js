@@ -66,7 +66,7 @@ const GeometryUtil = (function () {
             var SW = bounds.getSouthWest();
             var NW = new google.maps.LatLng(NE.lat(), SW.lng());
             var SE = new google.maps.LatLng(SW.lat(), NE.lng());
-            return {type: 'Polygon', paths: [{ pointList : _toPoints([NE, SW, NW, SE]) }]};
+            return {type: 'Polygon', paths: [{ pointList : _toPoints([NE, NW, SW, SE]) }]};
         },
         toPolygon: (googleMapsPolygon) => {
             const paths = _toPaths(googleMapsPolygon.getPaths());

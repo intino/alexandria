@@ -92,9 +92,9 @@ class LocationEditable extends AbstractLocationEditable {
 	};
 
 	handleRemove = () => {
-		this.selectedShape.setMap(null);
+		if (this.selectedShape != null) this.selectedShape.setMap(null);
 		this.requester.notifyChange(null);
-		this.setState({drawingControl : true});
+		this.setState({ location: null, drawingControl : true});
 	};
 
 	refresh = (location) => {
