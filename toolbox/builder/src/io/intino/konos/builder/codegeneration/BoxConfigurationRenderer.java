@@ -3,21 +3,24 @@ package io.intino.konos.builder.codegeneration;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
+
+import java.util.Set;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.tara.compiler.shared.Configuration.Level.Platform;
 
 public class BoxConfigurationRenderer extends Renderer {
 	private final Configuration configuration;
+	private final Set<String> customParameters;
 	private boolean isTara;
 
-	public BoxConfigurationRenderer(Settings settings, KonosGraph graph, boolean isTara) {
+	public BoxConfigurationRenderer(Settings settings, boolean isTara, Set<String> customParameters) {
 		super(settings, Target.Owner);
-		this.configuration = module() != null ? TaraUtil.configurationOf(module()) : null;
 		this.isTara = isTara;
+		this.customParameters = customParameters;
+		this.configuration = module() != null ? TaraUtil.configurationOf(module()) : null;
 	}
 
 	@Override
@@ -30,9 +33,16 @@ public class BoxConfigurationRenderer extends Renderer {
 	private String fillFrame(FrameBuilder builder) {
 		final String boxName = settings.boxName();
 		builder.add("name", boxName).add("package", packageName());
-		if (parent() != null && configuration != null && !Platform.equals(configuration.level())) builder.add("parent", parent());
+		if (parent() != null && configuration != null && !Platform.equals(configuration.level()))
+			builder.add("parent", parent());
 		if (isTara) builder.add("tara", "");
+		for (String parameter : customParameters)
+			builder.add("parameter", new FrameBuilder().add("name", nameOf(parameter)).add("value", parameter));
 		return boxName;
+	}
+
+	private String nameOf(String parameter) {
+		return parameter.replace("-", " ").replace("_", " ");
 	}
 
 	private Template template() {
