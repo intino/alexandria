@@ -31,7 +31,8 @@ Template(layout=Vertical, spacing=DP8) chartExamplesMold as Decorated
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="No facets with Image output")
 			Block(spacing=DP8, format=filled)
-				Chart(input=iris) chart2
+				Chart(input=iris, output = Image) chart2
+					serverUrl = "http://localhost:6311"
 					query
 						======
 						set.seed(100);
