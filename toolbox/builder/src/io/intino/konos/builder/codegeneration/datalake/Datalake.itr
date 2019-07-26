@@ -1,0 +1,219 @@
+def type(datalake & nfs)
+	package $package+validPackage;
+	import io.intino.alexandria.logger.Logger;
+
+	import java.io.File;
+	import java.io.IOException;
+	import java.util.Collection;
+	import java.util.Collections;
+	import java.util.Comparator;
+	import java.util.List;
+	import java.util.stream.Collectors;
+
+	public class Datalake extends io.intino.alexandria.datalake.file.FileDatalake {
+
+		private DatalakeCloner cloner;
+
+		Datalake(File root, String originDatalakePath, String startingTimetag) {
+			super(root);
+			this.cloner = new DatalakeCloner(root, originDatalakePath, startingTimetag, eventTanks(), setTanks());
+		}
+
+		void init() {
+			cloner.execute();
+		}
+
+		public List<String> eventTanks() {
+			return java.util.Arrays.asList($eventTank+quoted...[, ]);
+		}
+
+		public List<String> setTanks() {
+			return java.util.Arrays.asList($setTank+quoted...[, ]);
+		}
+
+		private class DatalakeCloner {
+			private final File destination;
+			private final String originDatalakePath;
+			private final String startingTimetag;
+			private final List<String> eventTanks;
+			private final List<String> setTanks;
+
+			public DatalakeCloner(File destination, String originDatalakePath, String startingTimetag, List<String> eventTanks, List<String> setTanks) {
+				this.destination = destination;
+				this.originDatalakePath = originDatalakePath;
+				this.startingTimetag = startingTimetag;
+				this.eventTanks = eventTanks;
+				this.setTanks = setTanks;
+			}
+
+			public void execute() {
+				Logger.info("Mirroring datalake from " + this.originDatalakePath + " to " + destination);
+				try {
+					cloneEventTanks();
+					cloneSetTanks();
+					Logger.info("Mirroring finished");
+				} catch (IOException e) {
+					Logger.error(e);
+				}
+			}
+
+			private void cloneEventTanks() throws IOException {
+				for (String tank : this.eventTanks) {
+					File destinationTank = new File(destination + File.separator + "events" + File.separator + tank);
+					destinationTank.mkdirs();
+					File file = new File(this.originDatalakePath + "/events/" + tank);
+					if (!file.exists()) continue;
+					List<File> zims = java.util.Arrays.asList(file.listFiles(f-> f.getName().endsWith(".zim")));
+					zims.sort(Comparator.comparing(File::getName));
+					copyZims(zims, destinationTank);
+				}
+			}
+
+			private void cloneSetTanks() throws IOException {
+				for (String tank : this.setTanks) {
+					File destinationTank = new File(destination + File.separator + "sets" + File.separator + tank + File.separator);
+					destinationTank.mkdirs();
+					File file = new File(this.originDatalakePath + "/sets/" + tank);
+					if (!file.exists()) continue;
+					List<File> tubs = java.util.Arrays.asList(file.listFiles(f-> f.isDirectory()));
+					tubs.sort(Comparator.comparing(File::getName));
+					copyZets(tubs, destinationTank);
+				}
+			}
+
+			private void copyZims(List<File> zims, File destinationTank) throws IOException {
+				String startingTimetag = this.startingTimetag + ".zim";
+				for (File zim : zims)
+					if (zim.getName().replace(".zim", "").compareTo(startingTimetag) >= 0 && !new File(destinationTank, zim.getName()).exists())
+						java.nio.file.Files.copy(zim.toPath(), new File(destinationTank, zim.getName()).toPath());
+			}
+
+			private void copyZets(List<File> tubs, File destinationTank) throws IOException {
+				for (File tub : tubs)
+					if (tub.getName().compareTo(this.startingTimetag) >= 0 && !new File(destinationTank, tub.getName()).exists())
+						copyDirectory(tub, new File(destinationTank, tub.getName()));
+			}
+
+			private void copyDirectory(File from, File to) throws IOException {
+				to.mkdirs();
+				for (File zet : java.util.Objects.requireNonNull(from.listFiles())) {
+					java.nio.file.Files.copy(zet.toPath(), new File(to, zet.getName()).toPath());
+				}
+			}
+		}
+	}
+
+end
+def type(datalake & ssh)
+	package $package+validPackage;
+
+	import io.intino.alexandria.logger.Logger;
+    import net.schmizz.sshj.SSHClient;
+    import net.schmizz.sshj.sftp.RemoteResourceInfo;
+    import net.schmizz.sshj.sftp.SFTPClient;
+    import net.schmizz.sshj.sftp.SFTPFileTransfer;
+
+    import java.io.File;
+    import java.io.IOException;
+    import java.util.Collection;
+    import java.util.Collections;
+    import java.util.Comparator;
+    import java.util.List;
+    import java.util.stream.Collectors;
+
+    public class Datalake extends io.intino.alexandria.datalake.file.FileDatalake {
+
+		private DatalakeCloner cloner;
+
+		Datalake(File root, String url, String originDatalakePath, String user, String password, String startingTimetag) {
+			super(root);
+			this.cloner = new DatalakeCloner(url, originDatalakePath, user, password, startingTimetag, root, eventTanks(), setTanks());
+		}
+
+		void init() {
+			cloner.execute();
+		}
+
+		private List<String> eventTanks() {
+			return java.util.Arrays.asList($eventTank+quoted...[, ]);
+		}
+
+		private List<String> setTanks() {
+			return java.util.Arrays.asList($setTank+quoted...[, ]);
+		}
+
+		private class DatalakeCloner {
+			private final String url;
+			private final String user;
+			private final String password;
+			private final String originDatalakePath;
+			private final String startingTimetag;
+			private final String destination;
+			private final List<String> eventTanks;
+			private final List<String> setTanks;
+
+			public DatalakeCloner(String url, String originDatalakePath, String user, String password, String startingTimetag, File destination, List<String> eventTanks, List<String> setTanks) {
+				this.url = url;
+				this.originDatalakePath = originDatalakePath;
+				this.user = user;
+				this.password = password;
+				this.startingTimetag = startingTimetag;
+				this.destination = destination.getPath();
+				this.eventTanks = eventTanks;
+				this.setTanks = setTanks;
+			}
+
+			public void execute() {
+				Logger.info("Mirroring datalake from " + this.url + " to " + destination);
+				SSHClient ssh = new SSHClient();
+				String$[] urlAndPort = this.url.split(":");
+				try {
+					ssh.loadKnownHosts();
+					ssh.connect(urlAndPort$[0], Integer.parseInt(urlAndPort$[1]));
+					ssh.authPublickey(user, System.getProperty("user.home") + File.separator + ".ssh" + File.separator + "id_rsa");
+					SFTPClient sftpClient = ssh.newSFTPClient();
+					cloneEventTanks(sftpClient);
+					cloneSetTanks(sftpClient);
+					Logger.info("Mirroring finished");
+				} catch (IOException e) {
+					Logger.error(e);
+				}
+			}
+
+			private void cloneEventTanks(SFTPClient client) throws IOException {
+				SFTPFileTransfer fileTransfer = client.getFileTransfer();
+				for (String tank : this.eventTanks) {
+					File destinationTank = new File(destination + File.separator + "events" + File.separator + tank);
+					destinationTank.mkdirs();
+					List<RemoteResourceInfo> zims = client.ls(this.originDatalakePath + "/events/" + tank);
+					zims.sort(Comparator.comparing(RemoteResourceInfo::getName));
+					downloadZims(fileTransfer, zims, destinationTank);
+				}
+			}
+
+			private void cloneSetTanks(SFTPClient client) throws IOException {
+				SFTPFileTransfer fileTransfer = client.getFileTransfer();
+				for (String tank : this.setTanks) {
+					File destinationTank = new File(destination + File.separator + "sets" + File.separator + tank + File.separator);
+					destinationTank.mkdirs();
+					List<RemoteResourceInfo> tubs = client.ls(this.originDatalakePath + "/sets/" + tank);
+					tubs.sort(Comparator.comparing(RemoteResourceInfo::getName));
+					downloadZets(fileTransfer, destinationTank, tubs);
+				}
+			}
+
+			private void downloadZims(SFTPFileTransfer fileTransfer, List<RemoteResourceInfo> zims, File destinationTank) throws IOException {
+				String startingTimetag = this.startingTimetag + ".zim";
+				for (RemoteResourceInfo zim : zims)
+					if (zim.getName().replace(".zim", "").compareTo(startingTimetag) >= 0 && !new File(destinationTank, zim.getName()).exists())
+						fileTransfer.download(zim.getPath(), new File(destinationTank, zim.getName()).getPath());
+			}
+
+			private void downloadZets(SFTPFileTransfer fileTransfer, File destinationTank, List<RemoteResourceInfo> tubs) throws IOException {
+				for (RemoteResourceInfo tub : tubs)
+					if (tub.getName().compareTo(this.startingTimetag) >= 0 && !new File(destinationTank, tub.getName()).exists())
+						fileTransfer.download(tub.getPath(), new File(destinationTank, tub.getName()).getPath());
+			}
+		}
+	}
+end
