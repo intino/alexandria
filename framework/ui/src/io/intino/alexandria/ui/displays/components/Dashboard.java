@@ -31,7 +31,7 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
     private Driver driver;
     private URL serverScript;
     private URL uiScript;
-    private java.util.Map<String, String> parameterMap = new HashMap<>();
+    private java.util.Map<String, Object> parameterMap = new HashMap<>();
     private List<URL> resourceList = new ArrayList<>();
     private boolean adminMode = false;
 
@@ -39,7 +39,7 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
         super(box);
     }
 
-    public Dashboard update(java.util.Map<String, String> parameters) {
+    public Dashboard update(java.util.Map<String, Object> parameters) {
         this.parameterMap = parameters;
         refresh();
         return this;

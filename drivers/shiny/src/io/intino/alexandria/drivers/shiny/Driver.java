@@ -15,13 +15,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Map;
 
 public class Driver implements io.intino.alexandria.drivers.Driver<URL, io.intino.alexandria.proxy.Proxy> {
 	private final String shinyUrl;
 	private static final String ShinyScriptsFolder = "/srv/shiny-server";
 
-	public static final String Program = "Program";
 	public static final String LocalUrlParameter = "LocalUrlParameter";
 
 	public Driver(String shinyUrl) {
@@ -74,10 +72,10 @@ public class Driver implements io.intino.alexandria.drivers.Driver<URL, io.intin
 		}
 	}
 
-	public io.intino.alexandria.proxy.Proxy run(Map<String, Object> parameters) {
-		String program = (String) parameters.get(Program);
-		URL localUrl = (URL) parameters.get(LocalUrlParameter);
-		return new io.intino.alexandria.proxy.Proxy(localUrl, info(program)).adapter(proxyAdapter());
+	@Override
+	public io.intino.alexandria.proxy.Proxy run(Program program) {
+		URL localUrl = (URL) program.parameters().get(LocalUrlParameter);
+		return new io.intino.alexandria.proxy.Proxy(localUrl, info(program.name())).adapter(proxyAdapter());
 	}
 
 	private ProxyAdapter proxyAdapter() {
@@ -111,7 +109,7 @@ public class Driver implements io.intino.alexandria.drivers.Driver<URL, io.intin
 	}
 
 	private void replaceParameters(Program program, String script) {
-		program.parameters().forEach((key, value) -> replaceTag(script, key, value));
+		program.parameters().forEach((key, value) -> replaceTag(script, key, String.valueOf(value)));
 	}
 
 	private String replaceTag(String content, String tag, String value) {
