@@ -145,9 +145,11 @@ public class FullRenderer {
 	}
 
 	private void box() {
-		new AbstractBoxRenderer(settings, graph, hasModel).execute();
+		AbstractBoxRenderer renderer = new AbstractBoxRenderer(settings, graph, hasModel);
+		renderer.execute();
+
 		new BoxRenderer(settings, graph, hasModel).execute();
-		new BoxConfigurationRenderer(settings, graph, hasModel).execute();
+		new BoxConfigurationRenderer(settings, hasModel, renderer.customParameters()).execute();
 	}
 
 	private void main() {
