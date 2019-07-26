@@ -35,6 +35,7 @@ import io.intino.konos.model.graph.KonosGraph;
 import io.intino.legio.graph.Artifact.Imports.Dependency;
 import io.intino.plugin.IntinoException;
 import io.intino.plugin.dependencyresolution.DependencyCatalog;
+import io.intino.plugin.project.IntinoDirectory;
 import io.intino.plugin.project.LegioConfiguration;
 import io.intino.plugin.project.LibraryConflictResolver.Version;
 import io.intino.plugin.project.LibraryConflictResolver.VersionRange;
@@ -258,9 +259,11 @@ public class CreateKonosBoxAction extends KonosAction {
 
 		private boolean render(String packageName, File gen, File src, File res, KonosGraph graph, Stash stash) {
 			try {
-				io.intino.konos.builder.codegeneration.cache.ElementCache cache = loadCache(res, graph, stash);
+				File folder = new File(IntinoDirectory.of(module.getProject()) + "/box/" + module.getName());
+				folder.mkdirs();
+				io.intino.konos.builder.codegeneration.cache.ElementCache cache = loadCache(folder, graph, stash);
 				new FullRenderer(graph, new Settings(module, src, gen, res, packageName, cache)).execute();
-				saveCache(cache, res);
+				saveCache(cache, folder);
 			} catch (Exception e) {
 				Logger.getInstance(this.getClass()).error(e.getMessage(), e);
 				notifyError(e.getMessage() == null ? e.toString() : e.getMessage());
