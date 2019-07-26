@@ -27,7 +27,7 @@ def type(boxConfiguration)
 end
 
 def trigger(parameter)
-	public String $name+camelCase() {
+	public String $name+camelCase+firstLowerCase() {
 		return get("$value");
 	}
 end
