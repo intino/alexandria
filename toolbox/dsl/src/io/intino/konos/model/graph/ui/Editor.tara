@@ -1,7 +1,0 @@
-dsl Proteo
-
-use Display
-use UI
-
-Concept Editor extends Display
-	var Component display

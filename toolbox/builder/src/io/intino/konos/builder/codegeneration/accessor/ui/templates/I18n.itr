@@ -1,0 +1,28 @@
+def type(i18n)
+	const I18n = (function () {
+
+		var translators = {
+			$translator...[,$NL]
+		};
+
+		var loader = {
+			load: (lang) => {
+				return translators$[lang$];
+			}
+		};
+
+		return loader;
+	})();
+
+	export default I18n;
+end
+
+def type(translator)
+	"$language" : {
+		$translation...[,$NL]
+	}
+end
+
+def type(translation)
+	"$text" : "$value"
+end

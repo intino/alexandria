@@ -1,0 +1,37 @@
+def type(display)
+	import React from "react";
+	import { withStyles } from '@material-ui/core/styles';
+	import Abstract$name+firstUpperCase from "../../$packageTypeRelativeDirectory~gen/displays[/$packageType~s]/Abstract$name+firstUpperCase";
+	import $name+firstUpperCase~Notifier from "../../$packageTypeRelativeDirectory~gen/displays/notifiers/$name+firstUpperCase~Notifier";
+	import $name+firstUpperCase~Requester from "../../$packageTypeRelativeDirectory~gen/displays/requesters/$name+firstUpperCase~Requester";
+    import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
+    import { withSnackbar } from 'notistack';
+
+	const styles = theme => ({});
+
+	class $name+firstUpperCase extends Abstract$name+firstUpperCase {
+
+		constructor(props) {
+			super(props);
+			this.notifier = new $name+firstUpperCase~Notifier(this);
+			this.requester = new $name+firstUpperCase~Requester(this);
+		};
+
+		$notification...[$NL$NL]
+	}
+
+	export default withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase));
+    DisplayFactory.register("$name+firstUpperCase", withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase)));
+end
+
+def type(notification)
+	$name = ([$parameter~value]) => {
+	};
+end
+
+def trigger(parameterValue)
+	value
+end
+
+def trigger(parameter)
+end

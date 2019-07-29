@@ -1,7 +1,7 @@
 package io.intino.alexandria.core;
 
 
-import io.intino.alexandria.inl.Message;
+import io.intino.alexandria.message.Message;
 
 import java.util.List;
 

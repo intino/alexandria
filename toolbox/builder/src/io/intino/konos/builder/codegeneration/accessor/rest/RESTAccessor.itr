@@ -107,7 +107,7 @@ def type(parameter) trigger(invoke)
 end
 
 def type(parameter & query & list) trigger(declaration)
-	if ($name+SnakeCaseToCamelCase+firstLowerCase != null && !$name+SnakeCaseToCamelCase+firstLowerCase.isEmpty()) put("$name", String.valueOf(gsonWriter.toJson($name+SnakeCaseToCamelCase+firstLowerCase)));
+	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", String.valueOf(gsonWriter.toJson($name+SnakeCaseToCamelCase+firstLowerCase)));
 end
 
 def type(parameter & query & required) type(dateData)  trigger(declaration)
@@ -230,21 +230,25 @@ def type(exceptionResponse) trigger(declaration)
 end
 
 def type(auth & cert & doInvoke)
-	accessor.secure(this.url, $certificate~this.certificate, this.password).$type+firstLowerCase($relativePath[, $parameters][, Arrays.asList($resource...[,])])
+	accessor.secure(this.url, $certificate~this.certificate, this.password).$type+firstLowerCase($relativePath[, $parameters][, Arrays.asList($inputStream...[,])])
 end
 
 def type(auth & doInvoke)
-	accessor.secure(this.url, this.token).$type+firstLowerCase($relativePath[, $parameters][, Arrays.asList($resource...[,])])
+	accessor.secure(this.url, this.token).$type+firstLowerCase($relativePath[, $parameters][, Arrays.asList($inputStream...[,])])
 end
 
 def type(doInvoke)
-	accessor.$type+firstLowerCase(this.url, $relativePath[, $parameters][, Arrays.asList($resource...[,])])
+	accessor.$type+firstLowerCase(this.url, $relativePath[, $parameters][, Arrays.asList($inputStream...[,])])
 end
 
 def type(doInvoke)
-	accessor.$type+firstLowerCase(this.url, $relativePath[, $parameters][, Arrays.asList($resource...[,])])
+	accessor.$type+firstLowerCase(this.url, $relativePath[, $parameters][, Arrays.asList($inputStream...[,])])
 end
 
 def type(schemaImport) trigger(schemaImport)
 	import $package.schemas.*;
+end
+
+def trigger(inputStream)
+    new io.intino.alexandria.Resource("$this", $this)
 end

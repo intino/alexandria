@@ -1,0 +1,60 @@
+def type(app)
+	import React from "react";
+	import ReactDOM from "react-dom";
+    $page+import...[$NL]
+	import PushService from "alexandria-ui-elements/src/services/PushService";
+	import FileService from "alexandria-ui-elements/src/services/FileService";
+	import TranslatorService from "alexandria-ui-elements/src/services/TranslatorService";
+    import GoogleApiLoader from "alexandria-ui-elements/src/displays/components/geo/GoogleApiLoader";
+
+	var launchApplication = function () {
+		var configuration = loadConfiguration();
+
+		window.Application = (function(configuration) {
+			var self = {};
+
+			self.configuration = configuration;
+			self.services = {
+				pushService: PushService,
+				fileService: FileService.create(configuration),
+				translatorService: TranslatorService.create(configuration)
+			};
+
+			return self;
+		})(configuration);
+
+		renderApplication();
+
+		function loadConfiguration() {
+			return document.configuration;
+		}
+
+		function renderApplication() {
+			$page+render...[$NL$NL]
+		}
+
+        function openPushServices() {
+            window.setTimeout(() => {
+                const configuration = Application.configuration;
+                const pushServices = configuration.pushServices;
+                for (var i=0; i<pushServices.length; i++)
+                    PushService.openConnection(pushServices$[i$]);
+            }, 100);
+        }
+
+	};
+
+	launchApplication();
+end
+
+def type(page) trigger(import)
+    import $value+firstUpperCase from "../pages/$value+firstUpperCase";
+end
+
+def type(page) trigger(render)
+    const requireGoogleApi = Application.configuration.googleApiKey != null && Application.configuration.googleApiKey !== "";
+    const content = requireGoogleApi ? <GoogleApiLoader onLoad={openPushServices()}><$value+firstUpperCase/></GoogleApiLoader> : <$value+firstUpperCase/>;
+    const $value+firstLowerCase = document.getElementById("$value+firstUpperCase");
+    if ($value+firstLowerCase) ReactDOM.render(content, $value+firstLowerCase);
+    if (!requireGoogleApi) openPushServices();
+end

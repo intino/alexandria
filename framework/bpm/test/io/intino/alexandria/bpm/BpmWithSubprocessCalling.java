@@ -1,6 +1,7 @@
 package io.intino.alexandria.bpm;
 
-import io.intino.alexandria.inl.Message;
+import io.intino.alexandria.message.Message;
+import io.intino.alexandria.message.MessageHub;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -15,35 +16,27 @@ import static io.intino.alexandria.bpm.Task.Type.CallActivity;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class BpmWithSubprocessCalling {
+public class BpmWithSubprocessCalling extends BpmTest {
 
-	public static final String ProcessStatus = "ProcessStatus";
+	private static final String ProcessStatus = "ProcessStatus";
 	private static Map<String, String> memory = new HashMap<>();
 	private static MessageHub messageHub;
 
 	@Test
 	public void name() throws InterruptedException {
 		messageHub = new MessageHub_();
-		Workflow workflow = new Workflow(messageHub, new ProcessFactory());
-		messageHub.sendMessage(ProcessStatus, createProcessMessage());
-		Process process1 = workflow.process("1");
-		Process process2 = workflow.process("2");
-		while(!hasEnded(process1, process2)){
-			if(process1==null) process1 = workflow.process("1");
-			if(process2==null) process2 = workflow.process("2");
-			Thread.sleep(100);
-		}
-		List<ProcessStatus> messages = process1.messages(); //TODO
-		assertThat(messages.get(0).message().toString(), is(createProcessMessage().toString()));
-	}
-
-	private boolean hasEnded(Process... processes) {
-		for (Process process : processes) {
-			if(process == null || process.processStatusList.isEmpty()) return false;
-			ProcessStatus message = process.messages().get(process.processStatusList.size() - 1);
-			if (!message.processStatus().equals("Exit")) return false;
-		}
-		return true;
+		PersistenceManager.InMemoryPersistenceManager persistence = new PersistenceManager.InMemoryPersistenceManager();
+		new Workflow(messageHub, new ProcessFactory(), persistence);
+		messageHub.sendMessage("ProcessStatus", createProcessMessage());
+		waitForProcess(persistence);
+		List<ProcessStatus> messages = messagesOf(persistence.read("finished/1.process"));
+		assertThat(messages.get(1).stateInfo().name(), is("CreateString"));
+		assertThat(messages.get(1).stateInfo().status(), is("Enter"));
+		assertThat(messages.get(2).stateInfo().name(), is("CreateString"));
+		assertThat(messages.get(2).stateInfo().status(), is("Exit"));
+		if (exitStateStatus(messages, "CreateString").taskInfo().result().equals("Hello"))
+			assertThat(exitStateStatus(messages, "HandleSubprocessEnding").taskInfo().result(), is("true"));
+		else assertThat(exitStateStatus(messages, "HandleSubprocessEnding").taskInfo().result(), is("false"));
 	}
 
 	private Message createProcessMessage() {
@@ -56,7 +49,7 @@ public class BpmWithSubprocessCalling {
 
 	static class StringContentReviewerProcess extends Process {
 
-		protected StringContentReviewerProcess(String id) {
+		StringContentReviewerProcess(String id) {
 			super(id);
 			addState(new State("CreateString", createString(), Initial));
 			addState(new State("CallSubprocess", callSubprocess()));
@@ -70,7 +63,7 @@ public class BpmWithSubprocessCalling {
 				@Override
 				public String execute() {
 					memory.put(id(), Math.random() < 0.5 ? "Hello" : "Goodbye");
-					return "create string executed";
+					return memory.get(id());
 				}
 
 			};
@@ -80,14 +73,7 @@ public class BpmWithSubprocessCalling {
 			return new Task(CallActivity) {
 				@Override
 				String execute() {
-					messageHub.sendMessage(ProcessStatus, new Message(ProcessStatus)
-							.set("ts", "2019-01-01T00:00:00Z")
-							.set("id", "2")
-							.set("name", "StringChecker")
-							.set("owner", "1")
-							.set("callbackProcess", "1")
-							.set("callbackState", "CallSubprocess")
-							.set("status", "Enter"));
+					messageHub.sendMessage(ProcessStatus, new ProcessStatus("2", "StringChecker", "Enter", "1", "1", "CallSubprocess").message());
 					return "subprocess called StringChecker";
 				}
 			};
@@ -110,7 +96,7 @@ public class BpmWithSubprocessCalling {
 
 	static class StringCheckerProcess extends Process {
 
-		protected StringCheckerProcess(String id) {
+		StringCheckerProcess(String id) {
 			super(id);
 			addState(new State("CheckString", checkString(), Initial, Terminal));
 		}

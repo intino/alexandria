@@ -1,264 +1,101 @@
 dsl Konos
 
-Schema Bounds
-	Attribute northEast as Object(NorthEast)
-	Attribute southWest as Object(SouthWest)
-
-Schema NorthEast
-	Attribute longitude as Real
-	Attribute latitude as Real
-
-Schema SouthWest
-	Attribute longitude as Real
-	Attribute latitude as Real
-
-Schema Catalog
-	Attribute name as Text
+Schema PlaceMark
+	Attribute location as Object(Geometry)
 	Attribute label as Text
-	Attribute embedded as Bool
-	Attribute hideGroupings as Bool
-	Attribute arrangementHistogramsMode as Text
-	Attribute arrangementPosition as Text
-	Attribute mode as Text
-	Attribute groupingList as List Object(Grouping)
-	Attribute sortingList as List Object(Sorting)
+	Attribute icon as Text
+	Attribute pos as LongInteger
 
-Schema Grouping
-	Attribute name as Text
-	Attribute type as Text
-	Attribute label as Text
-	Attribute countItems as Integer
-	Attribute histogram as Text
-	Attribute groupList as List Object(Group)
+Schema Geometry
+	Attribute type as Word("Point" "Polyline" "Polygon")
+	Attribute point as Object(Point)
+	Attribute path as Object(Path)
+	Attribute paths as Object(Path) List
+
+Schema Point
+	Attribute lat as Real
+	Attribute lng as Real
+
+Schema Path
+	Attribute pointList as Object(Point) List
+
+Schema CollectionSetup
+	Attribute itemCount as LongInteger
+
+Schema MapCollectionSetup as ExtensionOf(CollectionSetup)
+	Attribute kmlLayer as Text
+	Attribute icon as Text
+
+Schema PageCollectionSetup as ExtensionOf(CollectionSetup)
+	Attribute pageSize as Integer
+
+Schema CollectionItemsRenderedInfo
+	Attribute items as Text List
+	Attribute visible as Text List
+
+Schema CollectionMoreItems
+	Attribute start as Integer
+	Attribute stop as Integer
 
 Schema Group
-	Attribute name as Text
 	Attribute label as Text
-	Attribute selected as Bool
 	Attribute count as Integer
 
-Schema DateNavigatorState
-	Attribute playing as Bool
-	Attribute canPlay as Bool
+Schema ChartInfo
+	Attribute mode as Text
+	Attribute config as Text
+
+Schema DashboardInfo
+	Attribute location as Text
+	Attribute adminMode as Bool
+	Attribute driverDefined as Bool
+
+Schema DashboardSettingsInfo
+	Attribute serverScript as Text
+	Attribute uiScript as Text
+
+Schema SelectorMenuSelection
+	Attribute option as Integer
+	Attribute ancestors as Text List
+
+Schema Ordinal
+	Attribute name as Text
+	Attribute label as Text
+	Attribute step as Integer
+Schema Range
+	Attribute min as LongInteger
+	Attribute max as LongInteger
+Schema ToolbarState
 	Attribute canPrevious as Bool
 	Attribute canNext as Bool
-
-Schema Dialog
-	Attribute label as Text
-	Attribute description as Text
-	Attribute definition as Text
-
-Schema DialogInput
-	Attribute path as Text
-	Attribute value as Text
-
-Schema DialogInputResource
-	Attribute path as Text
-	Attribute file as Object(DialogInputResourceFile)
-
-Schema DialogInputResourceFile
-	Attribute name as Text
-	Attribute data as Text
-
-Schema DisplayReference
-	Attribute label as Text
-	Attribute type as Text
-
-Schema DialogBoxSettings
-	Attribute acceptButton as Bool
-	Attribute position as Object(Position)
-	Attribute size as Object(Size)
-
-Schema Size
-	Attribute width as Integer
-	Attribute height as Integer
-
-Schema CatalogDialogReference
-	Attribute label as Text
-	Attribute type as Text
-	Attribute width as Integer
-	Attribute height as Integer
-
-Schema DownloadItemParameters
-	Attribute item as Text
-	Attribute stamp as Text
-	Attribute option as Text
-
-Schema ElementOperationParameters
-	Attribute operation as Text
-	Attribute option as Text
-	Attribute from as DateTime
-	Attribute to as DateTime
-	Attribute position as Object(Position)
-
-Schema ElementView
-	Attribute name as Text
-	Attribute label as Text
-	Attribute type as Text
-	Attribute embeddedElement as Bool
-	Attribute width as Integer
-	Attribute selectionEnabledByDefault as Bool
-	Attribute canSearch as Bool
-	Attribute emptyMessage as Text
-	Attribute mold as Text
-	Attribute toolbar as Object(Toolbar)
-	Attribute center as Object(Center)
-	Attribute zoom as Object(Zoom)
-
-Schema Toolbar
-	Attribute operationList as List Object(Operation)
-
-Schema Operation
-	Attribute name as Text
-	Attribute title as Text
-	Attribute mode as Text
-	Attribute type as Text
-	Attribute icon as Text
-	Attribute when as Text
-	Attribute confirmText as Text
-	Attribute propertyList as List Object(Property)
-
-Schema Center
-	Attribute latitude as Real
-	Attribute longitude as Real
-
-Schema Zoom
-	Attribute min as Integer
-	Attribute max as Integer
-	Attribute defaultValue as Integer
-
-Schema ExecuteItemTaskParameters
-	Attribute item as Text
-	Attribute stamp as Text
-
-Schema ExportItemParameters
-	Attribute stamp as Text
-	Attribute option as Text
-	Attribute from as DateTime
-	Attribute to as DateTime
-
-Schema GroupingGroup
-	Attribute grouping as Text
-	Attribute name as Text
-
-Schema GroupingSelection
-	Attribute name as Text
-	Attribute groups as List Text
-
-Schema ItemRefreshInfo
-	Attribute mold as Text
-	Attribute highlight as Bool
-	Attribute item as Object(Item)
-
-Schema ItemValidationRefreshInfo
-	Attribute item as Text
-	Attribute stamp as Text
-	Attribute message as Text
-
-Schema Item
-	Attribute name as Text
-	Attribute label as Text
-	Attribute group as DateTime
-	Attribute itemStampList as List Object(ItemStamp)
-	Attribute itemBlockList as List Object(ItemBlock)
-
-Schema ItemStamp
-	Attribute name as Text
-	Attribute values as List Text
-	Attribute className as Text
-	Attribute propertyList as List Object(Property)
-
-Schema ItemBlock
-	Attribute name as Text
-	Attribute hidden as Bool
-	Attribute className as Text
-
-Schema OpenItemParameters
-	Attribute item as Text
-	Attribute stamp as Text
-	Attribute position as Object(Position)
-
-Schema Position
-	Attribute left as Real
-	Attribute top as Real
-
-Schema PageLocation
-	Attribute value as Text
-	Attribute internal as Bool
-
-Schema PictureData
-	Attribute item as Text
-	Attribute stamp as Text
-	Attribute value as Text
-
-Schema PlatformInfo
-	Attribute title as Text
-	Attribute subtitle as Text
-	Attribute logo as Text
-	Attribute favicon as Text
-	Attribute authServiceUrl as Text
-
-Schema Property
-	Attribute name as Text
-	Attribute value as Text
-
-Schema Range
-	Attribute min as Real
-	Attribute max as Real
-	Attribute scale as Text
-
-Schema Reference
-	Attribute name as Text
-	Attribute label as Text
-	Attribute referencePropertyList as List Object(ReferenceProperty)
-
-Schema ReferenceProperty
-	Attribute name as Text
-	Attribute value as Text
-
-Schema RequestRange
-	Attribute from as DateTime
-	Attribute to as DateTime
-
-Schema ChangeItemParameters
-	Attribute stamp as Text
-	Attribute item as Text
-	Attribute value as Text
-
-Schema ValidateItemParameters
-	Attribute stamp as Text
-	Attribute item as Text
-	Attribute value as Text
-
-Schema Scale
-	Attribute name as Text
-	Attribute label as Text
-	Attribute symbol as Text
-
-Schema Sorting
-	Attribute name as Text
-	Attribute label as Text
-	Attribute mode as Text
-	Attribute visible as Bool
+	Attribute playing as Bool
+Schema Selected
+	Attribute value as LongInteger
+	Attribute formattedValue as Text
 
 Schema UserInfo
 	Attribute fullName as Text
 	Attribute photo as Text
 
-Schema Validation
-	Attribute input as Text
-	Attribute status as Bool
-	Attribute message as Text
-	Attribute modifiedInputs as Text
+Schema KeyPressEventData
+	Attribute keyCode as Text
+	Attribute value as Text
 
-Schema CreatePanelParameters
-	Attribute displayType as Text
-	Attribute item as Text
+Schema FileInfo
+	Attribute value as Text
+	Attribute mimeType as Text
 
-Schema OpenElementParameters
-	Attribute item as Text
-	Attribute stamp as Object(Reference)
+Schema LocationSetup
+	Attribute icon as Text
 
-Schema DisplayInfo
-	Attribute type as Text
-	Attribute elementType as Text
+Schema OperationInfo
+	Attribute title as Text
+	Attribute disabled as Bool
+
+Schema ExportParams
+	Attribute from as DateTime
+	Attribute to as DateTime
+	Attribute option as Text
+
+
+

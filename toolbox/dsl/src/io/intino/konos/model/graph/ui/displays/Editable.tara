@@ -1,0 +1,67 @@
+dsl Proteo
+
+use Facets
+use Component
+use Display
+use UI
+
+Facet Editable is abstract
+	var string isRequired = ""
+	var string isReadonly = ""
+	var string placeHolder = ""
+	var string defaultValue = ""
+	var string validator = ""
+
+Facet Range on Editable with Multiple
+	var integer min = -1
+	var integer max = -1
+
+Facet Editable on DataComponents.Text
+	var word:{Normal Email Url} edition = Normal
+
+	Concept:{0..1} Validation
+		var string[] allowedValues = empty
+		var string[] disallowedValues = empty
+		var boolean disallowEmptySpaces = false
+		Concept:{0..1} Length
+			var integer min
+			var integer max
+
+Facet Memo on DataComponents.Text with Editable
+	var word:{Raw Rich} mode = Raw
+	var integer height = 5
+
+Facet Password on DataComponents.Text with Editable
+	Concept:{0..1} Validation
+		var word[]:{Letter Number Symbol} isRequired = Letter Number Symbol
+		Concept:{1..1} Length
+			var integer min
+			var integer max
+
+Facet Editable on DataComponents.Number
+	var double min = -1
+	var double max = -1
+	var double step = -1
+
+Facet Editable on DataComponents.Location
+	var word[]:{Point Polygon Polyline Rectangle} modes = empty
+
+Facet Editable on DataComponents.File
+	var boolean showPreview = false
+
+	Concept:{0..1} Validation
+		var double:{kbytes} maxSize
+		var string[] allowedExtensions = empty
+
+Facet Editable on DataComponents.Image
+	var boolean showPreview = false
+
+	Concept:{0..1} Validation
+		var double:{kbytes} maxSize
+		var string[] allowedExtensions = empty
+
+Facet Editable on DataComponents.Date
+	var instant min = empty
+	var instant max = empty
+	var boolean timePicker = false
+	var string mask = empty

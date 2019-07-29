@@ -1,11 +1,12 @@
 package io.intino.alexandria.bpm;
 
-import io.intino.alexandria.inl.Message;
+import io.intino.alexandria.message.Message;
 
 import java.time.Instant;
 
-public class ProcessStatus {
+public class ProcessStatus implements Comparable<ProcessStatus> {
 
+	private static final String Owner = "owner";
 	private static final String ProcessStatusType = "ProcessStatus";
 	private static final String Task = "Task";
 	private static final String State = "State";
@@ -18,12 +19,7 @@ public class ProcessStatus {
 	private static final String Id = "Id";
 	private static final String CallbackProcess = "callbackProcess";
 	private static final String CallbackState = "callbackState";
-	public static final String Owner = "owner";
 	private final Message message;
-
-	public ProcessStatus() {
-		this(new Message(ProcessStatusType).set(Ts, Instant.now().toString()));
-	}
 
 	public ProcessStatus(String id, String name, String processStatus) {
 		this(new Message(ProcessStatusType)
@@ -48,6 +44,10 @@ public class ProcessStatus {
 		this.message = message;
 	}
 
+	public Instant ts() {
+		return Instant.parse(message.get("ts").data());
+	}
+
 	public String processId() {
 		return message.get(Id).data();
 	}
@@ -64,15 +64,15 @@ public class ProcessStatus {
 		return message.get(Status).data();
 	}
 
-	public boolean hasCallback(){
+	public boolean hasCallback() {
 		return message.contains(CallbackProcess);
 	}
 
-	public String callbackProcess(){
+	public String callbackProcess() {
 		return message.get(CallbackProcess).data();
 	}
 
-	public String callbackState(){
+	public String callbackState() {
 		return message.get(CallbackState).data();
 	}
 
@@ -106,6 +106,11 @@ public class ProcessStatus {
 
 	public Message message() {
 		return this.message;
+	}
+
+	@Override
+	public int compareTo(ProcessStatus o) {
+		return !ts().equals(o.ts()) ? ts().compareTo(o.ts()) : -1;
 	}
 
 	public static class StateInfo {

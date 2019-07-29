@@ -3,6 +3,7 @@ package io.intino.alexandria.ui.services.push;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class Browser {
@@ -16,6 +17,7 @@ public class Browser {
     private String metadataIpAddress;
     private int timezoneOffset = 0;
     private Map<String, String> preferences = new HashMap<>();
+    private Consumer<String> redirectManager = null;
 
     private static final String PushPath = "/push?id=%s&currentSession=%s&language=%s";
 
@@ -111,6 +113,14 @@ public class Browser {
 
     public String preference(String name) {
         return preferences.get(name);
+    }
+
+    public void onRedirect(Consumer<String> redirectManager) {
+        this.redirectManager = redirectManager;
+    }
+
+    public void redirect(String location) {
+        if (redirectManager != null) redirectManager.accept(location);
     }
 
     public Browser add(String preference, String value) {

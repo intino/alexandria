@@ -16,6 +16,7 @@
  */
 package io.intino.alexandria.ui.utils;
 
+import io.intino.alexandria.logger.Logger;
 import org.apache.commons.codec.Charsets;
 
 import java.io.*;
@@ -736,6 +737,15 @@ public class IOUtils {
      */
     public static String toString(byte[] input, String encoding) throws IOException {
         return new String(input, Charsets.toCharset(encoding));
+    }
+
+    public static String readAllLines(URL file) {
+        try {
+            return spark.utils.IOUtils.toString(file.openStream());
+        } catch (IOException e) {
+            Logger.error(e);
+            return null;
+        }
     }
 
     // readLines

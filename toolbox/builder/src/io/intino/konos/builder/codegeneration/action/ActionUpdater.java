@@ -1,9 +1,12 @@
 package io.intino.konos.builder.codegeneration.action;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Exception;
@@ -32,19 +35,25 @@ class ActionUpdater {
 	private final List<Exception> exceptions;
 	private final Response response;
 	private final PsiFile file;
+	private Application application = ApplicationManager.getApplication();
 
-	ActionUpdater(Project project, File destiny, String packageName, List<? extends Parameter> parameters, List<Exception> exceptions, Response response) {
+	ActionUpdater(Project project, File destination, String packageName, List<? extends Parameter> parameters, List<Exception> exceptions, Response response) {
 		this.project = project;
 		this.packageName = packageName;
 		this.parameters = parameters;
 		this.exceptions = exceptions;
 		this.response = response;
-		file = PsiManager.getInstance(project).findFile(Objects.requireNonNull(VfsUtil.findFileByIoFile(destiny, true)));
+		this.file = application.runReadAction((Computable<PsiFile>) () -> {
+			VirtualFile fileByIoFile = VfsUtil.findFileByIoFile(destination, true);
+			return PsiManager.getInstance(project).findFile(Objects.requireNonNull(fileByIoFile));
+		});
 	}
 
 	void update() {
-		if (!(file instanceof PsiJavaFile) || ((PsiJavaFile) file).getClasses()[0] == null) return;
-		final PsiClass psiClass = ((PsiJavaFile) file).getClasses()[0];
+		PsiClass psiClass = application.runReadAction((Computable<PsiClass>) () -> {
+			if (!(file instanceof PsiJavaFile) || ((PsiJavaFile) file).getClasses()[0] == null) return null;
+			return ((PsiJavaFile) file).getClasses()[0];
+		});
 		if (!ApplicationManager.getApplication().isWriteAccessAllowed())
 			runWriteCommandAction(project, () -> update(psiClass));
 		else update(psiClass);

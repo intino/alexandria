@@ -1,0 +1,81 @@
+def type(display & accessible)
+	package $package+validPackage.ui.displays.notifiers;
+
+	import io.intino.alexandria.exceptions.*;
+	import $package+validPackage.*;
+	$schemaImport
+
+    public class $name+FirstUpperCase~ProxyNotifier extends io.intino.alexandria.ui.displays.notifiers.ProxyDisplayNotifier  {
+
+        public $name+FirstUpperCase~ProxyNotifier(io.intino.alexandria.ui.displays.Display display, io.intino.alexandria.rest.pushservice.MessageCarrier carrier) {
+            super(display, carrier);
+        }
+
+		public void refreshBaseUrl(String value) {
+			putToDisplay("refreshBaseUrl", "v", value);
+		}
+
+		public void refreshError(String value) {
+			putToDisplay("refreshError", "v", value);
+		}
+    }
+end
+
+def type(display)
+	package $package+validPackage.ui.displays.notifiers;
+
+	import io.intino.alexandria.exceptions.*;
+	import $package+validPackage.*;
+	$schemaImport
+
+    public class $name+FirstUpperCase~Notifier extends $parentType {
+
+        public $name+FirstUpperCase~Notifier(io.intino.alexandria.ui.displays.Display display, io.intino.alexandria.rest.pushservice.MessageCarrier carrier) {
+            super(display, carrier);
+        }
+
+		[$notification...[$NL$NL]]
+
+    }
+end
+
+def attribute(extensionOf) trigger(parentType)
+	$parent+firstUpperCase~Notifier
+end
+
+def trigger(parentType)
+	io.intino.alexandria.ui.displays.notifiers.$value+FirstUpperCase~Notifier
+end
+
+def type(notification) trigger(notification)
+	public void $name+firstLowercase([$parameter value]) {
+		put[$target]("$name+firstLowercase"[, "v", $parameter+call]);
+	}
+end
+
+def type(parameter) trigger(call)
+    value
+end
+
+def type(list) trigger(parameter)
+    java.util.List<$value>
+end
+
+def trigger(parameter)
+    $value
+end
+
+def type(schemaImport)
+	import $package.schemas.*;
+end
+
+def attribute(this:All) trigger(target)
+	ToAll
+end
+
+def attribute(this:Display) trigger(target)
+	ToDisplay
+end
+
+def attribute(this:Client) trigger(target)
+end

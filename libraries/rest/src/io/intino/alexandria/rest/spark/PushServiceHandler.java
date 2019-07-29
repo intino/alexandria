@@ -2,11 +2,9 @@ package io.intino.alexandria.rest.spark;
 
 import io.intino.alexandria.logger.Logger;
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.eclipse.jetty.websocket.api.annotations.*;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -19,6 +17,7 @@ public class PushServiceHandler {
 	private Map<String, Timer> closeTimersMap = new HashMap<>();
 	private static final int CloseTimeout = 1000*60*60*24;
 	private static final int CloseGoingAway = 1001;
+	private static final int CloseReadEOF = 1006;
 
 	public static void inject(io.intino.alexandria.rest.pushservice.PushService pushService) {
 		PushServiceHandler.pushService = (PushService) pushService;
@@ -26,30 +25,35 @@ public class PushServiceHandler {
 
 	@OnWebSocketConnect
 	public void onConnect(Session session) throws Exception {
-		String sessionId = id(session);
-		if (closeTimersMap.containsKey(sessionId)) {
-			cancelClose(session);
-			if (clientsMap.containsKey(sessionId)) refreshSession(session);
-			else session.close();
-			return;
-		}
 		registerClient(session);
 		pushService.onOpen(client(session));
+	}
+
+	@OnWebSocketError
+	public void onError(Throwable error) {
+		Logger.error(error);
 	}
 
 	@OnWebSocketClose
 	public void onClose(Session session, int statusCode, String reason) {
 		cancelClose(session);
-		if (statusCode == CloseGoingAway) {
-			doClose(client(session));
+		if (statusCode == CloseGoingAway || statusCode == CloseReadEOF) {
+			doClose(SparkClient.sessionId(session), client(session));
 			return;
 		}
-		Logger.debug(String.format("WebSocket connection lost. Status code: %d.", statusCode));
+		Logger.debug(String.format("WebSocket connection lost. Status code: %d. %s", statusCode, reason));
 		doCloseDelayed(session);
 	}
 
 	@OnWebSocketMessage
 	public void onMessage(Session session, String message) {
+		if (client(session) == null) {
+			try {
+				session.disconnect();
+			} catch (IOException e) {
+				Logger.error(e);
+			}
+		}
 		pushService.onMessage(client(session), message);
 	}
 
@@ -66,7 +70,7 @@ public class PushServiceHandler {
 	}
 
 	private String id(Session session) {
-		return SparkClient.clientId(session);
+		return SparkClient.sessionId(session);
 	}
 
 	private void cancelClose(Session session) {
@@ -82,15 +86,14 @@ public class PushServiceHandler {
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				doClose(client);
+				doClose(SparkClient.sessionId(session), client);
 			}
 		}, CloseTimeout);
 		closeTimersMap.put(id(session), timer);
 	}
 
-	private void doClose(SparkClient client) {
-		String sessionId = client.sessionId();
-		pushService.onClose(client);
+	private void doClose(String sessionId, SparkClient client) {
+		if (client == null) pushService.onClose(client);
 		clientsMap.remove(sessionId);
 		if (!closeTimersMap.containsKey(sessionId)) return;
 		closeTimersMap.get(sessionId).cancel();
@@ -98,7 +101,7 @@ public class PushServiceHandler {
 	}
 
 	private void refreshSession(Session session) {
-		SparkClient client = client(session);
+		SparkClient client = registerClient(session);
 		client.session(session);
 		pushService.linkToThread(client);
 	}

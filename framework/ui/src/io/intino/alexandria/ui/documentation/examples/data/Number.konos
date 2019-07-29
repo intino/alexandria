@@ -1,0 +1,34 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) numberExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filled)
+				Number(format=body1 widgetDemo, value = 0) number1
+				Block > Text number1Code as Code(language=Html)
+						value
+							=========
+							Number(value\=10, label\="Campo numérico") number1
+							=========
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with prefix and suffix")
+			Block(spacing=DP8, format=filled)
+				Number(format=body1 widgetDemo, value = 0, prefix = "Amount", suffix = "$") number2
+				Block > Text number2Code as Code(language=Html)
+						value
+							=========
+							Number(format\=body1 widgetDemo, value\=0, prefix\="Amount", suffix\="$") number1
+							=========
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Editable facet")
+			Block(spacing=DP8, format=filled)
+				Number(format=body1 widgetDemo, value = 0, min=0, max=100, step=10, prefix="Price:", suffix="$") number3 as Editable
+				Block > Text number3Code as Code(language=Html)
+						value
+							=========
+							Number(format\=body1 widgetDemo, value\=0, min\=0, max\=100, step\=10, prefix\="Price:", suffix\="$") number2 as Editable
+							=========

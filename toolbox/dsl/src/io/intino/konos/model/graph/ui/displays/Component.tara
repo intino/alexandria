@@ -1,0 +1,231 @@
+dsl Proteo
+
+use Source
+use Facets
+use Display
+use DataTypes
+use UI
+
+Concept:Named Component extends Display
+	var string color = empty
+	var Format[] format = empty
+
+Concept Block extends Component
+	var word[]:Layout layout = Vertical
+	var word:Spacing spacing = None
+	var word:{Never Always IfMobile IfNotMobile} hidden = Never
+
+	has Component
+
+Concept:Named Template extends Component
+	var string modelClass = empty
+	var word[]:Layout layout = Vertical
+	var word:Spacing spacing = None
+
+	has Component
+
+Concept DataComponents
+	Concept Text extends Component
+		var word:{Uppercase Lowercase Capitalize Normal} mode = Normal
+		!! The initial text to display in the box, if any
+		var string value = empty
+		var string prefix = empty
+		var string suffix = empty
+
+	Concept File extends Component
+		var string value = empty
+
+	Concept Image extends Component
+		var string value = empty
+		var string defaultValue = empty
+		var integer:{%} mobileReduceFactor = 0%
+
+	Concept Number extends Component
+		var double value = empty
+		var string prefix = empty
+		var string suffix = empty
+
+	Concept Date extends Component
+		var string pattern = "DD/MM/YYYY"
+		var word:{FromNow ToNow None} mode = None
+		var instant value = empty
+
+	Concept Location extends Component
+		var string icon = empty
+		var string value = empty
+
+		Concept:{0..1} Center
+			var double latitude
+			var double longitude
+
+		Concept:{1..1} Zoom
+			var integer defaultZoom
+			var integer min
+			var integer max
+
+Concept CatalogComponents
+	Concept Collection extends Component
+		var string sourceClass = empty
+		var string itemClass = empty
+		var string noItemsMessage = empty
+		var integer pageSize = 20
+		var boolean scrollingMark = true
+
+		Concept:{1..*} Mold
+			Concept:{0..1} Heading extends Component > has Component
+			Concept:{1..1} Item extends Component > has Component
+				var integer:{px} height
+				var integer:{%} width = -1%
+
+		sub Magazine
+		sub List
+		sub Table
+		sub Map
+			var string icon = empty
+
+			Concept:{0..1} Center
+				var double latitude
+				var double longitude
+
+			Concept:{1..1} Zoom
+				var integer defaultZoom
+				var integer min
+				var integer max
+
+	Concept:Named Grouping extends Component
+		var Collection[] collections
+
+	Concept:Named Sorting extends Component
+		var Collection[] collections
+
+	Concept:Named SearchBox extends Component
+		var Collection[] collections
+		var string placeholder = empty
+
+Concept OperationComponents
+	Concept Toolbar extends Component
+		has Component
+
+	Concept Operation extends Component is abstract
+		var string title
+		var word:{Blank Self Parent Top} target = Self
+		var word:{Small Medium Large} size = Medium
+
+		sub OpenPage > var Page page
+		sub OpenBlock > var Conditional block
+		sub OpenDialog > var OtherComponents.AbstractDialog dialog
+		sub CloseDialog > var OtherComponents.AbstractDialog dialog
+		sub Export
+			var string[] options = empty
+			var instant from = empty
+			var instant to = empty
+			var instant min = empty
+			var instant max = empty
+			var integer:{Days} rangeMin = -1 Days
+			var integer:{Days} rangeMax = -1 Days
+		sub Download
+			var string[] options = empty
+		sub Task
+
+	Concept SelectionOperation extends Operation is abstract
+		sub DownloadSelection
+			var string[] options = empty
+		sub TaskSelection
+
+Concept OtherComponents
+	Concept Chip extends Component
+	Concept Card extends Component
+	Concept Tooltip extends Component
+	Concept User extends Component
+	Concept KPI extends Component
+	Concept Spinner extends Component
+		var word:{Bar Circle Hash Ring Rise} mode = Rise
+
+	Concept Chart extends Component
+		var Dataframe input
+		var string serverUrl = empty
+		var word:{Image Html} output = Html
+		var string query
+
+	Concept Dashboard extends Component
+		var string serverScript
+		var string uiScript
+		var string[] resources = empty
+
+		Concept Parameter
+			var string name
+			var string value
+
+	Concept Snackbar extends Component
+		var word:{TopCenter TopRight BottomRight BottomCenter BottomLeft TopLeft} position = BottomCenter
+		has Component
+	Concept Progress extends Component
+		Concept Color > var string text; var string background
+	Concept Wizard extends Component
+		Concept Step > has Component
+
+	Concept Stamp extends Component
+		var Template template
+
+	Concept Header extends Component
+		var word:{Fixed Absolute Sticky Static Relative} position = Relative
+
+		has Component
+
+	Concept Selector extends Component
+		var boolean multipleSelection = false
+		has Component
+
+	Concept Frame extends Component
+		var Display display
+
+	Concept Icon extends Component
+		var string icon
+
+	Concept MaterialIcon extends Component
+		var string icon
+
+	Concept AbstractSlider extends Component
+		var word:{Vertical Horizontal} arrangement = Horizontal
+		var integer value = -1
+
+		Concept:{0..1} Animation
+			var integer:{Millis} interval
+			var boolean loop = false
+
+		sub Slider
+			Concept:{1..1} Range
+				var integer min
+				var integer max
+
+		sub TemporalSlider
+			var CatalogComponents.Collection[] collections
+			var word[]:{Year QuarterOfYear Month Week Day SixHours Hour FifteenMinutes Minute Second} scales
+
+			Concept:{1..1} Range
+				var instant min
+				var instant max
+
+	Concept AbstractDialog extends Component is abstract
+		var string title
+
+		sub Dialog
+			has Component
+
+		sub AlertDialog
+			var string message
+			var string closeLabel = "Close"
+
+		sub DecisionDialog
+			has:{1..1} Selector
+
+		sub CollectionDialog
+			var boolean allowSearch = true
+			has:{0..1} CatalogComponents.Collection
+
+	Concept Divider extends Component
+
+Concept PrivateComponents
+	Concept PrivateComponent extends Component
+	Concept Row extends PrivateComponent
+		var CatalogComponents.Collection.Mold.Item[] items

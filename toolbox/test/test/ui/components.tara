@@ -1,0 +1,1129 @@
+dsl Konos
+
+Service(title = "", favicon = "") UiElements as UI(port = "9000")
+	Resource(path = "/") home as Page(homeTemplate)
+	Resource(path = "/docs") docs as Page(docsTemplate)
+	Resource(path = "/docs/data/:type") widgetType as Page(widgetTypeTemplate)
+//	Resource(path = "/docs/data/number") number as Page(numberTemplate)
+//	Resource(path = "/docs/data/image") image as Page(imageTemplate)
+//	Resource(path = "/docs/data/file") file as Page(fileTemplate)
+//	Resource(path = "/docs/data/date") date as Page(dateTemplate)
+//	Resource(path = "/docs/other/block") block as Page(blockTemplate)
+//	Resource(path = "/docs/other/chart") chart as Page(chartTemplate)
+
+Template homeTemplate
+	Header(color="white", format=air) as Absolute(height=100px)
+		Block(layout=Horizontal Center, spacing=DP24)
+			Image(value="images/intino.png") as Absolute(80px, 80px)
+			Text(value="intino", format=h3)
+			Block(layout=Horizontal Center, format=headerToolbar, spacing=DP24) links
+				Text(value="home")
+				OpenPage(page=UiElements.docs, title = "docs") as Link
+
+	Block(format=containerAirLarge) as Parallax("images/background1.jpg") Absolute(height=500px)
+		Block(layout=Vertical Center) as Relative(width=70%)
+			Text(value="software production lines made easy", format=h1 textCentered)
+			Text(value="symplifying software mass customization", format=h2)
+			Block(layout=Horizontal)
+//				Link("demo") as Button
+//				Link("get started") as Button
+
+	Block(format=containerAirLarge)
+		Block(layout=Vertical Center, spacing=DP40) as Relative(width=70%)
+			Block > Text(value="Why intino?", format=h1 air)
+			Block(layout=Horizontal CenterCenter, spacing=DP40) as Absolute(height=300px)
+				Block as Paper Relative(width=28%)
+					Text(value="flexibility", format=h5 cardTitle)
+					Text(value="Extending benefits beyond software development into modifiability. With intino, software evolution is tailor-made, that is evolving systems built specifically for the needs of particular customer", format=h5 cardContent)
+				Block as Paper Relative(width=28%)
+					Text(value="reuse", format=h5 cardTitle)
+					Text(value="Developing core components that can be reused. This is the strategy that creates an opportunity for benefits in reducing the effort and costs costs required to create, deploy and software", format=h5 cardContent)
+				Block as Paper Relative(width=28%)
+					Text(value="quality", format=h5 cardTitle)
+					Text(value="Lowering the complexity of product line development. Application developers can focus on user requirements, getting advantage on the platform architecture that provides a stable quality", format=h5 cardContent)
+
+	Block(format=containerAirLarge) as Parallax("images/background2.jpg") Absolute(height=500px)
+		Block(layout=Vertical Center, spacing=DP40) as Relative(width=70%)
+			Block > Text(value="What does it look like?", format=h2 air white)
+			Block(layout=Horizontal)
+//				Link("demo") as Button
+//				Link("get started") as Button
+
+	Block(format=containerAirLarge) as Parallax("images/background3.jpg") Absolute(height=500px)
+		Block
+			Text(value="software production lines made easy", format=h1)
+			Text(value="symplifying software mass customization", format=h2)
+			Block(layout=Horizontal)
+//				Link("demo") as Button
+//				Link("get started") as Button
+
+Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widgetMold as Decorated DynamicLoaded(loadTime=Slow)
+	Text(value="Widget", format=h3) title
+	Text(format=body1) highlightFacets as Multiple(arrangement=Horizontal) Highlighted("white","#679164")
+	Text(format=body1 airBottom) description
+
+	Block(layout=Vertical, spacing=DP24)
+		Block examples
+			Text(value="Examples", format=h5 underline) examplesTitle
+			Block textExamples as Conditional > Stamp(template=textExamplesMold)
+			Block numberExamples as Conditional > Stamp(template=numberExamplesMold)
+			Block fileExamples as Conditional > Stamp(template=fileExamplesMold)
+			Block imageExamples as Conditional > Stamp(template=imageExamplesMold)
+			Block dateExamples as Conditional > Stamp(template=dateExamplesMold)
+			Block chartExamples as Conditional > Stamp(template=chartExamplesMold)
+			Block blockExamples as Conditional > Stamp(template=blockExamplesMold)
+			Block listExamples as Conditional > Stamp(template=listExamplesMold)
+			Block tableExamples as Conditional > Stamp(template=tableExamplesMold)
+			Block downloadExamples as Conditional > Stamp(template=downloadExamplesMold)
+			Block downloadSelectionExamples as Conditional > Stamp(template=downloadSelectionExamplesMold)
+			Block exportExamples as Conditional > Stamp(template=exportExamplesMold)
+			Block operationExamples as Conditional > Stamp(template=operationExamplesMold)
+			Block groupingExamples as Conditional > Stamp(template=groupingExamplesMold)
+			Block sortingExamples as Conditional > Stamp(template=sortingExamplesMold)
+
+		Block facets
+			Text(value="Facets", format=h5 underline)
+			Text facetsNames
+		Block
+			Text(value="Properties", format=h5 underline)
+			Stamp(template=propertyMold) properties as Multiple(noItemsMessage="no properties")
+		Block
+			Text(value="Methods", format=h5 underline)
+			Stamp(template=methodMold) methods as Multiple(noItemsMessage="no methods")
+		Block
+			Text(value="Events", format=h5 underline)
+			Frame(display=eventsDisplay) events
+
+Template(modelClass="io.intino.alexandria.schemas.Property", format=airBottom) propertyMold as Decorated
+	Text(format=body2 facetsAbsolute, value="", mode=Uppercase) facets
+	Block(layout=Horizontal StartJustified)
+		Text(format=h6) name
+		Text(format=h6, value=":&nbsp;&nbsp;")
+		Text(format=h6 widgetType, mode = Lowercase) type
+	Text(format=body2, value="") description
+	Block(layout=Horizontal)
+		Text(format=body2 valuesLabelFormat) valuesLabel
+		Text(format=body2 widgetType, value=":&nbsp;&nbsp;") valuesSeparator
+		Text(format=body2) values
+
+Template(modelClass="io.intino.alexandria.schemas.Method", format=airBottom) methodMold as Decorated
+	Text(format=body2 facetsAbsolute, value="", mode=Uppercase) facets
+	Block(layout=Horizontal StartJustified)
+		Text(format=h6) name
+		Text(format=h6, value="(")
+		Stamp(template=methodParamMold) params as Multiple
+		Text(format=h6, value=")")
+		Text(format=h6, value=":&nbsp;&nbsp;")
+		Text(format=h6 widgetType, mode = Lowercase) returnType
+	Text(format=body2, value="") description
+
+Template(layout=Horizontal, modelClass="io.intino.alexandria.schemas.Parameter") methodParamMold as Decorated
+	Text(format=h6) name
+	Text(format=h6, value=":&nbsp;")
+	Text(format=h6) type
+	Text(format=h6) comma
+
+Display eventsDisplay as Decorated
+	Notification refresh as Object(Method) List
+
+
+Template widgetTypeTemplate as Decorated
+	Header(color="white", format=air) as Absolute(height=100px)
+		Block(layout=Horizontal Center, spacing=DP24)
+			Image(value="images/intino.png") as Absolute(80px, 80px)
+			Text(value="intino", format=h3)
+			Block(layout=Horizontal Center, format=headerToolbar, spacing=DP24) links
+				OpenPage(page=UiElements.home, title="home") as Link
+				OpenPage(page=UiElements.docs, title="docs") as Link
+
+	Block(format=containerAirLarge)
+		Stamp(template=widgetMold) widget
+
+Template(layout=Vertical, spacing=DP8) blockExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filled)
+				Block
+					Text(value="value 1", format=body1 bordered)
+					Text(value="value 2", format=body1 bordered)
+					Text(value="value 3", format=body1 bordered)
+			Block > Text block1Code as Code(language=Html)
+					value
+						=========
+						Block<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value 1")
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value 2")
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value 3")
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with spacing")
+			Block(spacing=DP8, format=filled)
+				Block(layout=Vertical, spacing=DP8) block2
+					Text(value="value 1", format=body1 bordered)
+					Text(value="value 2", format=body1 bordered)
+					Text(value="value 3", format=body1 bordered)
+			Block > Text block2Code as Code(language=Html) Editable
+					value
+						=========
+						DP8
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with layout")
+			Block(spacing=DP8, format=filled)
+				Block(layout=Horizontal CenterCenter, spacing=DP8) block3 as Absolute(height=175px)
+					Text(value="value 1", format=body1 bordered)
+					Text(value="value 2", format=body1 bordered)
+					Text(value="value 3", format=body1 bordered)
+			Block > Text block3Code as Code(language=Html) Editable
+					value
+						=========
+						Horizontal CenterCenter
+						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Badge facet")
+			Block(spacing=DP8, format=filled)
+				Block(layout=Horizontal) as Badge(value=10)
+					Text(value="value", format=body1)
+			Block > Text block4Code as Code(language=Html)
+					value
+						=========
+						Block as Badge(value\=10)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value")
+						=========
+		Block as Relative(width=64%, height=100%)
+			Text(format=h6, value="Parallax facet")
+			Block(spacing=DP8, format=filled)
+				Block as Parallax(background="images/background1.jpg") Absolute(height=175px)
+					Text(value="value", format=body1)
+			Block > Text block5Code as Code(language=Html)
+					value
+						=========
+						Block as Parallax(value\="images/background1.jpg") Absolute(height\=175px)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value")
+						=========
+
+Format("color:'#B71C1C',textShadow:'2px 2px 2px #fff'") h1
+Format("color:'black',textShadow:'2px 2px 2px #fff'") h2
+Format("") h3
+Format("") h4
+Format("") h5
+Format("lineHeight:'17pt'") h6
+Format("") body1
+Format("") body2
+Format("color:'white'") white
+Format("background:'white',borderRadius:'3px',height:'100%'") whiteBackground
+Format("padding:'10px 20px'") air
+Format("marginBottom:'10px'") airBottom
+Format("padding:'10px'") containerAirMedium
+Format("padding:'20px'") containerAirLarge
+Format("background:'#efefef',padding:'8px',minHeight:'200px'") filled
+Format("background:'#efefef',minHeight:'200px'") filledNoAir
+Format("marginTop:'10px'") headerToolbar
+Format("textAlign:'center'") textCentered
+Format("color:'#888',fontSize:'10px',marginTop:'-10px',position:'absolute'") facetsAbsolute
+Format("whiteSpace:'nowrap'") valuesLabelFormat
+Format("border:'1px solid',width:'100%'") bordered
+Format("minHeight:'300px'") paperFormat
+Format("borderBottom:'1px dotted #ddd',width:'100%',marginBottom:'10px'") underline
+Format("fontSize:'10pt',color:'grey'") description
+
+// Cards
+Format("textAlign:'left',color:'#B71A1C',padding:'10px'") cardTitle
+Format("textAlign:'left',padding:'10px'") cardContent
+
+// Widgets
+Format("color:'#888'") widgetType
+Format("margin:'0 0 5px 0'") widgetDemo
+
+Template(layout=Vertical, spacing=DP8) textExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filled)
+				Text(format=body1 widgetDemo) text1
+				Block > Text text1Code as Code(language=Html)
+						value
+							=========
+							Text(value\="lorem ipsum") text1
+							=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with label")
+			Block(spacing=DP8, format=filled)
+				Text(format=body1 widgetDemo) text2 as Labeled("título del campo")
+				Block > Text text2Code as Code(language=Html)
+						value
+							=========
+							Text text2 as Labeled("título del campo")<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;value\="lorem ipsum"
+							=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Editable facet")
+			Block(spacing=DP8, format=filled)
+				Text(format=body1 widgetDemo) text3 as Editable Labeled("campo editable")
+				Block > Text text3Code as Code(language=Html)
+						value
+							=========
+							Text(value\="lorem ipsum") text3 as Editable Labeled("campo editable")
+							=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Code facet")
+			Block(spacing=DP8, format=filled)
+				Text(format=body1 widgetDemo) textCode1 as Code(language=Html)
+					value
+						=========
+						Text(value\="lorem") text1
+						=========
+				Block > Text textCode1Code as Code(language=Html)
+						value
+							=========
+							Text textCode1 as Code(language\=Html)<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;value<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\=\=\=\=\=\=\=\=\=<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="lorem") text1<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\=\=\=\=\=\=\=\=\=<br/>
+							=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Code and Editable facet")
+			Block(spacing=DP8, format=filled)
+				Text(format=body1 widgetDemo) textCode2 as Code(language=Html) Editable
+					value
+						=========
+						<div>Here goes code</div>
+						=========
+				Block > Text textCode2Code as Code(language=Html)
+						value
+							=========
+							Text textCode1 as Code(language\=Html) Editable<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;value<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\=\=\=\=\=\=\=\=\=<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;Here goes code&lt;/div&gt;<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\=\=\=\=\=\=\=\=\=<br/>
+							=========
+
+Template(layout=Vertical, spacing=DP8) tableExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filledNoAir)
+				Table(itemClass="io.intino.alexandria.ui.documentation.Person") table1
+					Mold > Item(height=60px,width=30%) table11Mold > Text firstName as Editable
+					Mold > Item(height=60px,width=70%) table12Mold > Text lastName as Editable
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Table(itemClass\="io.intino.alexandria.ui.documentation.Person") table<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) table1Mold > Text firstName as Editable<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=70%) table2Mold > Text lastName as Editable
+						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="No facets with heading")
+			Block(spacing=DP8, format=filledNoAir)
+				Table(itemClass="io.intino.alexandria.ui.documentation.Person") table2
+					Mold
+						Heading firstNameHeading > Text(value="first name")
+						Item(height=60px,width=30%) table21Mold > Text firstName
+					Mold
+						Heading lastNameHeading > Text(value="last name")
+						Item(height=60px,width=70%) table22Mold > Text lastName
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Table(itemClass\="io.intino.alexandria.ui.documentation.Person") table<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Heading firstNameHeading > Text(value\="first name")<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item(height\=60px,width\=30%) table21Mold > Text firstName<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Heading lastNameHeading > Text(value\="last name")<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item(height\=60px,width\=70%) table22Mold > Text lastName
+						=========
+
+Template(layout=Vertical, spacing=DP8) sortingExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=49%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal)
+				Block(format=containerAirMedium, spacing=DP24) as Absolute(width=200px)
+					Sorting(format=whiteBackground,collections=list1) gender1 as Labeled("gender")
+				List(itemClass="io.intino.alexandria.ui.documentation.Person") list1
+					Mold > Item(height=60px,width=30%) sorting1Mold
+							Text firstName1
+							Block(layout=Horizontal, spacing=DP16)
+								Text(format=description) gender1
+								Text(format=description) age1 as Labeled("age")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Sorting(collection\=list1) gender as Labeled("gender")<br/>
+						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) groupingMold
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text firstName
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal, spacing\=DP16)
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) gender
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) age as Labeled("age")
+						=========
+
+Schema Widget
+	Attribute description as Text
+	Attribute facets as Text List
+	Attribute propertyList as Object(Property) List
+	Attribute methodList as Object(Method) List
+	Attribute eventList as Object(Method) List
+
+Schema Property
+	Attribute name as Text
+	Attribute facets as Text List
+	Attribute type as Word("Integer" "Word" "Text" "TextList" "Resource" "Reference" "ReferenceArray" "Bool" "Instant" "Object")
+	Attribute values as Text List
+	Attribute description as Text
+
+Schema Method
+	Attribute name as Text
+	Attribute facets as Text List
+	Attribute params as Object(Parameter) List
+	Attribute description as Text
+	Attribute returnType as Text
+
+Schema Parameter
+	Attribute name as Text
+	Attribute type as Text
+
+Component toolbar as Decorated
+
+Component operation as Decorated
+	Notification refresh as Object(OperationInfo)
+	Notification refreshDisabled as Bool
+	Notification refreshIcon as Text
+	Notification userMessage as Object(UserMessage)
+
+Component task as Decorated ExtensionOf(operation)
+	Request execute
+
+Component export as Decorated ExtensionOf(operation)
+	Request changeParams as Object(ExportParams)
+
+	Request(Asset) execute
+
+Component download as Decorated ExtensionOf(operation)
+	Request changeParams as Text
+
+	Request(Asset) execute
+
+Component openPage as Decorated ExtensionOf(operation)
+	Notification redirect as Text
+	Request execute
+
+Component selectionOperation as Decorated ExtensionOf(operation)
+Component taskSelection as Decorated ExtensionOf(selectionOperation)
+	Request execute
+
+Component downloadSelection as Decorated ExtensionOf(selectionOperation)
+	Request changeParams as Text
+	Request(Asset) execute
+
+Schema OperationInfo
+	Attribute title as Text
+	Attribute disabled as Bool
+
+Schema ExportParams
+	Attribute from as DateTime
+	Attribute to as DateTime
+	Attribute option as Text
+
+Schema UserMessage
+	Attribute message as Text
+	Attribute type as Word("Success" "Error" "Warning" "Info")
+
+Template(layout=Vertical, spacing=DP8) operationExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Task(title="operation") operation1
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Task(title\="operation")
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Button facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Task(title="operation") operation2 as Button
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Task(title\="operation") as Button
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="IconButton facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Task(title="operation") operation3 as IconButton("/icons/operation.png")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Task(title\="operation") as IconButton("/icons/operation.png")
+						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="MaterialIconButton facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Task(title="operation") operation4 as MaterialIconButton("Add")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Task(title\="operation") as MaterialIconButton("Add")<br/><br/>
+						for icons gallery, refer to <a href\="https://material.io/tools/icons" target\="_blank">material.io</a>
+						=========
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Confirmable facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Task(title="operation") operation5 as Button Confirmable("Are you sure you want to execute operation?")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Task(title\="operation") as Button Confirmable("Are you sure you want to execute operation?")
+						=========
+Template(layout=Vertical, spacing=DP8) numberExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filled)
+				Number(format=body1 widgetDemo, value = 0) number1
+				Block > Text number1Code as Code(language=Html)
+						value
+							=========
+							Number(value\=10, label\="Campo numérico") number1
+							=========
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with prefix and suffix")
+			Block(spacing=DP8, format=filled)
+				Number(format=body1 widgetDemo, value = 0, prefix = "Amount", suffix = "$") number2
+				Block > Text number2Code as Code(language=Html)
+						value
+							=========
+							Number(format\=body1 widgetDemo, value\=0, prefix\="Amount", suffix\="$") number1
+							=========
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Editable facet")
+			Block(spacing=DP8, format=filled)
+				Number(format=body1 widgetDemo, value = 0, min=0, max=100, step=10, prefix="Price:", suffix="$") number3 as Editable
+				Block > Text number3Code as Code(language=Html)
+						value
+							=========
+							Number(format\=body1 widgetDemo, value\=0, min\=0, max\=100, step\=10, prefix\="Price:", suffix\="$") number2 as Editable
+							=========
+
+Template(layout=Vertical, spacing=DP8) listExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filledNoAir)
+				List(itemClass="io.intino.alexandria.ui.documentation.Item") list1
+					Mold > Item(height=60px) list1Mold > Stamp(template=itemMold) stamp
+			Block > Text as Code(language=Html)
+					value
+						=========
+						List(itemClass\="io.intino.alexandria.ui.documentation.Item") list<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item listMold > Stamp(template\=itemMold) stamp<br/><br/>
+
+						Template(modelClass\="io.intino.alexandria.ui.documentation.Item") itemMold<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal Center, spacing\=DP8)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Image avatar as Avatar<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text label
+						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="No facets and no mark on scrolling")
+			Block(spacing=DP8, format=filledNoAir)
+				List(itemClass="io.intino.alexandria.ui.documentation.Item", scrollingMark=false) list2
+					Mold > Item(height=60px) list2Mold > Stamp(template=itemMold) stamp
+			Block > Text as Code(language=Html)
+					value
+						=========
+						List(itemClass\="io.intino.alexandria.ui.documentation.Item", loadingMark\=false) list<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item listMold > Stamp(template\=itemMold) stamp<br/><br/>
+
+						Template(modelClass\="io.intino.alexandria.ui.documentation.Item") itemMold<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal Center, spacing\=DP8)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Image avatar as Avatar<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text label
+						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Navigable facet with position Top")
+			Block(spacing=DP8, format=filledNoAir)
+				List(itemClass="io.intino.alexandria.ui.documentation.Person") list3 as Navigable(position=Top)
+					Mold > Item(height=60px,width=30%) list3Mold > Text firstName as Editable
+			Block > Text as Code(language=Html)
+					value
+						=========
+						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list as Navigable(position\=Top)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) listMold > Text firstName as Editable
+						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Navigable facet with position Bottom")
+			Block(spacing=DP8, format=filledNoAir)
+				List(itemClass="io.intino.alexandria.ui.documentation.Person") list4 as Navigable(position=Bottom)
+					Mold > Item(height=60px,width=30%) list4Mold > Text firstName as Editable
+			Block > Text as Code(language=Html)
+					value
+						=========
+						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list as Navigable(position\=Bottom)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) listMold > Text firstName as Editable
+						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Selectable facet with Toolbar")
+			Block(spacing=DP8, format=filledNoAir)
+				Toolbar toolbar5 as Linked(to=list5)
+					Task(title="add") add as MaterialIconButton(icon="Add")
+					TaskSelection(title="remove") remove as MaterialIconButton(icon="Delete") Confirmable("Are you sure you want to delete the element?")
+				List(itemClass="io.intino.alexandria.ui.documentation.Person") list5 as Selectable(multiple=true)
+					Mold > Item(height=60px,width=30%) list5Mold > Text firstName
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Toolbar toolbar5 as Linked(to\=list5)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Task(title\="añadir") add as MaterialIconButton(icon\="Add")<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;TaskSelection(title\="eliminar") as MaterialIconButton(icon\="Delete")<br/>
+						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list5 as Selectable(multiple\=true)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) list5Mold > Text firstName<br/>
+						=========
+
+Template(layout=Vertical, spacing=DP8) imageExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filled)
+				Image(defaultValue="images/image.jpg", format=widgetDemo) image1 as Absolute(width=200px, height=150px)
+				Block > Text image1Code as Code(language=Html)
+						value
+							=========
+							Image(default\="images/image.jpg", format\=widgetDemo) image1 as Absolute(width\=300px, height\=150px)
+							=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Avatar facet")
+			Block(spacing=DP8, format=filled)
+				Image image2 as Avatar("Intino avatar", format=widgetDemo, color="#3F52B5") Absolute(width=75px, height=75px)
+				Block > Text image2Code as Code(language=Html)
+						value
+							=========
+							Image image2 as Avatar("Intino avatar", format\=widgetDemo, color\="#3F52B5") Absolute(width\=75px, height\=75px)
+							=========
+
+Translator(Spanish)
+	Translation("no facets", "no tiene facetas")
+	Translation("no properties", "no tiene propiedades")
+	Translation("no methods", "no tiene métodos")
+	Translation("no events", "no tiene eventos")
+
+Template(layout=Vertical, spacing=DP8) groupingExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=49%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal)
+				Block(format=containerAirMedium, spacing=DP24) as Absolute(width=200px)
+					Grouping(format=whiteBackground,collections=list1) gender1 as Labeled("gender")
+					Grouping(format=whiteBackground,collections=list1) ageGroup1 as Labeled("age group")
+				List(itemClass="io.intino.alexandria.ui.documentation.Person") list1
+					Mold > Item(height=60px,width=30%) grouping1Mold
+							Text firstName1
+							Block(layout=Horizontal, spacing=DP16)
+								Text(format=description) gender1
+								Text(format=description) age1 as Labeled("age")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Grouping(collection\=list1) gender as Labeled("gender")<br/>
+						Grouping(collection\=list1) ageGroup as Labeled("age group")<br/>
+						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) groupingMold
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text firstName
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal, spacing\=DP16)
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) gender
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) age as Labeled("age")
+						=========
+
+		Block as Relative(width=49%, height=100%)
+			Text(format=h6, value="ComboBox facet")
+			Block(spacing=DP8, format=filledNoAir)
+				Block(format=containerAirMedium, spacing=DP24, layout=Horizontal)
+					Grouping(format=whiteBackground,collections=list2) gender2 as Labeled("gender") ComboBox
+					Grouping(format=whiteBackground,collections=list2) ageGroup2 as Labeled("age group") ComboBox
+				List(itemClass="io.intino.alexandria.ui.documentation.Person") list2
+					Mold > Item(height=60px,width=30%) grouping2Mold
+							Text firstName2
+							Block(layout=Horizontal, spacing=DP16)
+								Text(format=description) gender2
+								Text(format=description) age2 as Labeled("age")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Grouping(collection\=list2) gender as Labeled("gender") ComboBox<br/>
+						Grouping(collection\=list2) ageGroup as Labeled("age group") ComboBox<br/>
+						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list2<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) groupingMold
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text firstName
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal, spacing\=DP16)
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) gender
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) age as Labeled("age")
+						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=49%, height=100%)
+			Text(format=h6, value="No facets with many options")
+			Block(spacing=DP8, format=filledNoAir)
+				Block(format=containerAirMedium, spacing=DP24) as Relative(width=100%)
+					Grouping(format=whiteBackground,collections=empty) country1 as Labeled("country")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Grouping(collection\=empty) country as Labeled("country")<br/>
+						=========
+
+		Block as Relative(width=49%, height=100%)
+			Text(format=h6, value="ComboBox facet with many options")
+			Block(spacing=DP8, format=filledNoAir)
+				Block(format=containerAirMedium, spacing=DP24) as Relative(width=100%)
+					Grouping(format=whiteBackground,collections=empty) country2 as Labeled("country") ComboBox
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Grouping(collection\=empty) country as Labeled("country") ComboBox<br/>
+						=========
+
+Template(layout=Vertical, spacing=DP8) fileExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=50%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filled)
+				Block as Absolute(height=600px)
+					File(value="data/example.pdf", format=widgetDemo) file1 as Relative(width=100%, height=100%)
+				Block > Text file1Code as Code(language=Html)
+						value
+							=========
+							File(value\="data/example.pdf") file1 as Absolute(width\=200px, height\=150px)
+							=========
+
+Template(layout=Vertical, spacing=DP8) exportExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with from")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Export(title="export...", from="2011-12-03T00:00:00Z") export1 as Button
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Export(title\="export...", from\="2011-12-03T00:00:00Z") as Button
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with from and to")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Export(title="export...", from="2011-12-03T00:00:00Z", to="2011-12-08T00:00:00Z") export2 as Button
+					min="2011-12-01T00:00:00Z"
+					max="2011-12-31T00:00:00Z"
+					rangeMax = 7 Days
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Export(title\="export...", from\="2011-12-03T00:00:00Z", to\="2011-12-03T00:00:00Z") as Button
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with options")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Export(title="export...", options="a" "b") export3 as Button
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Export(title\="export...", options\="a" "b") as Button
+						=========
+
+Template(layout=Vertical, spacing=DP8) downloadSelectionExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filledNoAir)
+				Toolbar toolbar as Linked(to=list6)
+					DownloadSelection(title="download") download as Button Confirmable("Are you sure you want to download selection?")
+						options = "only title" "full info"
+				List(itemClass="io.intino.alexandria.ui.documentation.Person") list6 as Selectable(multiple=true)
+					Mold > Item(height=60px,width=30%) downloadSelectionMold > Text firstName
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Toolbar toolbar as Linked(to\=list)
+							DownloadSelection(title\="download") download as MaterialIconButton(icon\="GetApp") Confirmable("Are you sure you want to download selection?")
+						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list as Selectable(multiple\=true)
+							Mold > Item(height\=60px,width\=30%) mold > Text firstName
+						=========
+
+Template(layout=Vertical, spacing=DP8) downloadExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Download(title="download...") download1 as Button
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Download(title\="download...") as Button
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with options")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Download(title="download...", options="a" "b" "c") download2 as Button
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Download(title\="download...", options\="a" "b" "c") as Button
+						=========
+
+Template docsTemplate as Decorated
+	Header(color="white", format=air) as Absolute(height=100px)
+		Block(layout=Horizontal Center, spacing=DP24)
+			Image(value="images/intino.png") as Absolute(80px, 80px)
+			Text(value="intino", format=h3)
+			Block(layout=Horizontal Center, format=headerToolbar, spacing=DP24) links
+				OpenPage(page=UiElements.home, title="home") as Link
+				Text(value="docs")
+
+	Block(layout=Horizontal CenterJustified Wrap, spacing=DP40, format=containerAirLarge) body
+		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) dataBlock as Paper Relative(width=40%) Labeled("data widgets")
+			Stamp(template=widgetSummaryMold) dataWidgets as Multiple(noItemsMessage="no widgets")
+		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) catalogBlock as Paper Relative(width=40%) Labeled("catalog widgets")
+			Stamp(template=widgetSummaryMold) catalogWidgets as Multiple(noItemsMessage="no widgets")
+		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) operationBlock as Paper Relative(width=40%) Labeled("operation widgets")
+			Stamp(template=widgetSummaryMold) operationWidgets as Multiple(noItemsMessage="no widgets")
+		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) otherBlock as Paper Relative(width=40%) Labeled("other widgets")
+			Stamp(template=widgetSummaryMold) otherWidgets as Multiple(noItemsMessage="no widgets")
+
+
+Template(modelClass="io.intino.alexandria.schemas.Widget") widgetSummaryMold as Decorated
+	OpenPage(title = "", page = UiElements.widgetType, format=h6) title as Link
+	Text(format=body2) facets as Multiple(arrangement=Horizontal) Highlighted("white","#679164")
+	Text description
+
+
+//Template docsTemplate as Decorated
+//	Header(color="white", format=air) as Absolute(height=100px)
+//		Block(layout=Horizontal Center, spacing=DP24)
+//			Image(value="images/intino.png") as Absolute(80px, 80px)
+//			Text(value="intino", format=h3)
+//			Block(layout=Horizontal Center, format=headerToolbar, spacing=DP24) links
+//				OpenPage(page=UiElements.home, title="home") as Link
+//				Text(value="docs")
+//
+//	Block(layout=Horizontal Flexible) body
+//
+//		Block header as Relative(width=25%)
+//			Selector menu as Menu(layout=Vertical)
+//				Block basicSection as Collapsible Labeled("data widgets")
+//					Text(value="Text") text as Option
+//					Text(value="Number") number as Option
+//					Text(value="Image") image as Option
+//					Text(value="File") file as Option
+//					Text(value="Date") date as Option
+//				Block catalogSection as Collapsible Labeled("catalog widgets")
+//					Text(value="Collection") collection as Option
+//					Text(value="Catalog") catalog as Option
+//					Text(value="Grouping") sorting as Option
+//					Text(value="Sorting") grouping as Option
+//				Block operationSection as Collapsible Labeled("operation widgets")
+//					Text(value="OpenCatalogOperation") openCatalogOperation as Option
+//					Text(value="OpenDialogOperation") openDialogOperation as Option
+//					Text(value="OpenExternalDialogOperation") openExternalDialogOperation as Option
+//					Text(value="ExportOperation") exportOperation as Option
+//					Text(value="ExportSelectionOperation") exportSelectionOperation as Option
+//					Text(value="DownloadOperation") downloadOperation as Option
+//					Text(value="DownloadSelectionOperation") downloadSelectionOperation as Option
+//					Text(value="TaskOperation") taskOperation as Option
+//					Text(value="TaskSelectionOperation") taskSelectionOperation as Option
+//					Text(value="PreviewOperation") previewOperation as Option
+//					Text(value="SearchOperation") searchOperation as Option
+//				Block otherSection as Labeled(label="other widgets")
+//					Text(value="Block") block as Option
+//					Text(value="Chart") chart as Option
+//					Text(value="Chip") chip as Option
+//					Text(value="Card") card as Option
+//					Text(value="Snackbar") snackbar as Option
+//					Text(value="Progress") progress as Option
+//					Text(value="Wizard") wizard as Option
+//
+//		Block(layout=Vertical Flexible, format=air) panels
+//			Block textPanel as Conditional(docsTemplate.body.header.menu.basicSection.text) > Block textBlock as Stamp(widgetMold)
+//			Block numberPanel as Conditional(docsTemplate.body.header.menu.basicSection.number) > Block numberBlock as Stamp(widgetMold)
+//			Block imagePanel as Conditional(docsTemplate.body.header.menu.basicSection.image) > Block imageBlock as Stamp(widgetMold)
+//			Block filePanel as Conditional(docsTemplate.body.header.menu.basicSection.file) > Block fileBlock as Stamp(widgetMold)
+//			Block datePanel as Conditional(docsTemplate.body.header.menu.basicSection.date) > Block dateBlock as Stamp(widgetMold)
+//
+//			Block collectionPanel as Conditional(docsTemplate.body.header.menu.catalogSection.collection) > Block collectionBlock as Stamp(widgetMold)
+//			Block catalogPanel as Conditional(docsTemplate.body.header.menu.catalogSection.catalog) > Block catalogBlock as Stamp(widgetMold)
+//
+//			Block blockPanel as Conditional(docsTemplate.body.header.menu.otherSection.block) > Block blockBlock as Stamp(widgetMold)
+//			Block chartPanel as Conditional(docsTemplate.body.header.menu.otherSection.chart) > Block chartBlock as Stamp(widgetMold)
+
+Display desktop as Decorated
+Display page as Decorated
+Display pageDisplay as Decorated
+
+Template(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filled)
+				Date(pattern="MM/DD/YYYY", format=body1 widgetDemo) date1
+				Block > Text date1Code as Code(language=Html)
+						value
+							=========
+							Date(pattern\="MM/DD/YYYY") date1<br/><br/>
+							<i>pattern</i> is defined using <a href\="https://momentjs.com/docs/#/displaying/format/" target\="_blank">momentjs format</a>
+							=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with Mode")
+			Block(spacing=DP8, format=filled)
+				Date(mode=FromNow, format=body1 widgetDemo) date2
+				Block > Text date2Code as Code(language=Html)
+						value
+							=========
+							Date(mode\=FromNow) date2
+							=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Editable facet")
+			Block(spacing=DP8, format=filled)
+				Date(format=body1 widgetDemo) date3 as Editable
+				Block > Text date3Code as Code(language=Html)
+						value
+							=========
+							Date date3 as Editable
+							=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Editable facet with timePicker")
+			Block(spacing=DP8, format=filled)
+				Date(format=body1 widgetDemo) date4 as Editable(timePicker=true)
+					pattern = "DD/MM/YYYY HH:mm"
+				Block > Text date4Code as Code(language=Html)
+						value
+							=========
+							Date date4 as Editable(timePicker\=true)
+							=========
+
+Component baseNumber as Decorated
+	Notification refresh as Real
+
+Component number as Decorated ExtensionOf(baseNumber)
+Component numberEditable as Decorated ExtensionOf(baseNumber)
+	Request notifyChange as Real
+
+Component baseDate as Decorated
+	Notification refresh as DateTime
+Component date as Decorated ExtensionOf(baseDate)
+Component dateEditable as Decorated ExtensionOf(baseDate)
+	Request notifyChange as DateTime
+
+Component baseText as Decorated
+	Notification refresh as Text
+Component text as Decorated ExtensionOf(baseText)
+Component textCode as Decorated ExtensionOf(baseText)
+Component textEditable as Decorated ExtensionOf(baseText)
+	Request notifyChange as Text
+	Request notifyKeyPress as Object(KeyPressEventData)
+Component textEditableCode as Decorated ExtensionOf(baseText)
+	Request notifyChange as Text
+
+Component baseFile as Decorated
+	Notification refresh as Object(FileInfo)
+Component file as Decorated ExtensionOf(baseFile)
+Component fileEditable as Decorated ExtensionOf(baseFile)
+	Request notifyChange as File
+
+Component baseImage as Decorated
+	Notification refresh as Text
+
+Component image as Decorated ExtensionOf(baseImage)
+Component imageAvatar as Decorated ExtensionOf(baseImage)
+
+Schema KeyPressEventData
+	Attribute keyCode as Text
+	Attribute value as Text
+
+Schema FileInfo
+	Attribute value as Text
+	Attribute mimeType as Text
+
+Component template as Decorated
+
+Component block as Decorated
+	Notification refreshSpacing as Text
+	Notification refreshLayout as Text
+
+Component blockConditional as Decorated
+	Notification refreshVisibility as Bool
+
+Component blockParallax as Decorated
+	Notification refresh as Text
+
+Component blockBadge as Decorated
+	Notification refresh as Integer
+
+Component option as Decorated
+Component chart as Decorated
+	Notification showLoading
+	Notification refresh as Object(ChartInfo)
+	Notification refreshError as Text
+
+Schema ChartInfo
+	Attribute mode as Text
+	Attribute config as Text
+
+Component header as Decorated
+Component tabs as Decorated
+Component tab as Decorated
+Component icon as Decorated
+Component optionList as Decorated
+Component frame as Decorated
+	Notification refreshDisplay as Text
+
+Component selectorMenu as Decorated
+	Notification refreshSelected as Object(SelectorMenuSelection)
+
+	Request select as Integer
+
+Schema SelectorMenuSelection
+	Attribute option as Integer
+	Attribute ancestors as Text List
+
+Component multiple as Decorated
+
+Component spinner as Decorated
+	Notification refreshLoading as Bool
+
+Template(modelClass = "io.intino.alexandria.ui.documentation.Item") itemMold as Decorated
+	Block(layout=Horizontal Center, spacing=DP8)
+		Image avatar as Avatar("")
+		Text label
+
+Dataframe iris as CSV("data/iris.csv")
+
+Template(layout=Vertical, spacing=DP8) chartExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with Html output")
+			Block(spacing=DP8, format=filled)
+				Chart(input=iris, query = "") chart1
+				Text chart1Editor as Editable Code(language=R)
+					value
+						======
+						output \= qplot(Petal.Width, Sepal.Length, data \= iris, color \= Species)
+						======
+				Block > Text chart1Code as Code(language=Html)
+						value
+							=========
+							DataFrame iris as CSV("data/iris.csv")
+							Chart(input\=iris, query\="") chart
+							=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with Image output")
+			Block(spacing=DP8, format=filled)
+				Chart(input=iris, query="") chart2
+// TODO Octavio				Chart(input=iris, query="", output=Image) chart2
+				Text chart2Editor as Editable Code(language=R)
+					value
+						======
+						set.seed(100);\\n
+						d \= diamonds[sample(nrow(diamonds), 1000), ];\\n
+						output \= ggplot(data \= d, aes(x \= carat, y \= price)) + geom_point(aes(text \= paste("Clarity:", clarity)), size \= 4) + geom_smooth(aes(colour \= cut, fill \= cut)) + facet_wrap(~ cut);
+						======
+				Block > Text chart2Code as Code(language=Html)
+						value
+							=========
+							DataFrame iris as CSV("data/iris.csv")
+							Chart(input\=iris, query\="", output\=Image) chart
+							========
+
+Component catalog as Decorated
+
+Component collection as Decorated
+	Notification setup as Object(CollectionSetup)
+	Notification refresh
+	Notification refreshItemCount as LongInteger
+	Request notifyItemsRendered as Object(CollectionItemsRenderedInfo)
+	Request loadMoreItems as Object(CollectionMoreItems)
+	Request changePage as Integer
+	Request changePageSize as Integer
+	Request changeSelection as Text List
+
+Component list as Decorated ExtensionOf(collection)
+Component table as Decorated ExtensionOf(collection)
+Component magazine as Decorated ExtensionOf(collection)
+Component map as Decorated ExtensionOf(collection)
+
+Component item as Decorated
+Component heading as Decorated
+Component row as Decorated
+
+Schema CollectionSetup
+	Attribute itemCount as LongInteger
+	Attribute pageSize as Integer
+
+Schema CollectionItemsRenderedInfo
+	Attribute items as Text List
+	Attribute visible as Text List
+
+Schema CollectionMoreItems
+	Attribute start as Integer
+	Attribute stop as Integer
+
+Component baseGrouping as Decorated
+	Notification refreshGroups as Object(Group) List
+	Request select as Text List
+
+Component grouping as Decorated ExtensionOf(baseGrouping)
+Component groupingComboBox as Decorated ExtensionOf(baseGrouping)
+
+Component sorting as Decorated
+Component searchBox as Decorated
+
+Schema Group
+	Attribute label as Text
+	Attribute count as Integer

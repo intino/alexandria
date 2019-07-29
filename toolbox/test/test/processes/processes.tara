@@ -9,31 +9,11 @@ Service api as REST(host = "localhost", port = "8080")
 Service bus as JMS(url = "", user = "", password = "", clientId = "", subscriptionModel = Topic)
 	Request("recibir.respuesta") recibirRespuesta as Launcher(ProcesarRespuesta)
 
-Process ProcesamientoFichero
-	State ValidarFichero as Initial
-		Task as Automatic
-		Go(NotificarFallo LeerContenido)
-	State NotificarFallo as Terminal
-		Task as Automatic
-	State LeerContenido
-		Task as Automatic
-		Go(ProcesarContenidoFichero)
-	State ProcesarContenidoFichero as Terminal
-		Task as Automatic > description = "Escribir en BD y Enviar pago al BUS"
+Process(bpmn = "") ProcesamientoFichero
 
-Process ProcesarRespuesta
-	State ValidarRespuesta as Initial
-		Go(RespuestaCorrecta RespuestaIncorrecta)
-	State RespuestaCorrecta as Terminal
-	State RespuestaIncorrecta
-		Task as Manual(ProcesarAnomalia, allocation = Offered)
-		Go(Terminar UltimaLinea)
-	State Terminar as Terminal // No hace nada. Solo se notifica cuando es la última línea
-	State UltimaLinea as Terminal
-		Task as Automatic > description = "Notificar anomalias"
+Process(bpmn = "") ProcesarRespuesta
 
-
-Dialog(url = "/process", label = "Procesa anomalía", description = "") ProcesarAnomalia
+//Dialog(url = "/process", label = "Procesa anomalía", description = "") ProcesarAnomalia
 
 
 

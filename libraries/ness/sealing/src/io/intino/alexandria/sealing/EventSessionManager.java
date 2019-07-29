@@ -2,6 +2,7 @@ package io.intino.alexandria.sealing;
 
 import io.intino.alexandria.Fingerprint;
 import io.intino.alexandria.Session;
+import io.intino.alexandria.datalake.file.FS;
 import io.intino.alexandria.datalake.file.FileEventStore;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.zim.ZimBuilder;
@@ -25,8 +26,8 @@ public class EventSessionManager {
 				.parallel().forEach(e -> new Sealer(eventStoreFolder, tempFolder).seal(e.getKey(), e.getValue()));
 	}
 
-	private static Stream<File> eventSessions(File eventStageFolder) {
-		return FS.filesIn(eventStageFolder, f -> f.getName().endsWith(Session.EventSessionExtension) && f.length() > 0f);
+	private static Stream<File> eventSessions(File stage) {
+		return FS.allFilesIn(stage, f -> f.getName().endsWith(Session.EventSessionExtension) && f.length() > 0f);
 	}
 
 	private static ZimReader reader(File zimFile) {

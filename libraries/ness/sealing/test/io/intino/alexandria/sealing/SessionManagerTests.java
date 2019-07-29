@@ -6,7 +6,7 @@ import io.intino.alexandria.datalake.file.FileDatalake;
 import io.intino.alexandria.ingestion.EventSession;
 import io.intino.alexandria.ingestion.SessionHandler;
 import io.intino.alexandria.ingestion.SetSession;
-import io.intino.alexandria.inl.Message;
+import io.intino.alexandria.message.Message;
 import io.intino.alexandria.mapp.Mapp;
 import io.intino.alexandria.mapp.MappReader;
 import io.intino.alexandria.mapp.MappStream;

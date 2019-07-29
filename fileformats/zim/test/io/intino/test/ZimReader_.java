@@ -1,6 +1,6 @@
 package io.intino.test;
 
-import io.intino.alexandria.inl.Message;
+import io.intino.alexandria.message.Message;
 import io.intino.alexandria.zim.ZimReader;
 import io.intino.alexandria.zim.ZimStream;
 import org.junit.Before;

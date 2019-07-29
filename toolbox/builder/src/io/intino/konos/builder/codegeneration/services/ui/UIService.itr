@@ -23,6 +23,7 @@ def type(ui)
 
 		public static void init(UIAlexandriaSpark spark, $box+SnakeCaseToCamelCase+FirstUpperCase~Box box) {
 			$box+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration = ($box+SnakeCaseToCamelCase+FirstUpperCase~Configuration) box.configuration();
+			box.routeManager(routeManager(spark));
 			spark.route("/push").push(new PushService());
 			spark.route("/authenticate-callback").get(manager -> new AuthenticateCallbackResource(manager, notifierProvider()).execute());
 			spark.route("/asset/:name").get(manager -> new AssetResource(name -> new AssetResourceLoader(box).load(name), manager, notifierProvider()).execute());
@@ -108,7 +109,7 @@ def type(dialog)
 end
 
 def trigger(asset)
-	spark.route("/$value+lowercase/:displayId").get(manager -> new $value+firstUppercase~Requester(manager, notifierProvider()).execute());
+	spark.route("/$this+lowercase/:displayId").get(manager -> new $this+firstUppercase~Requester(manager, notifierProvider()).execute());
 end
 
 def trigger(quoted)

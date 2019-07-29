@@ -11,7 +11,6 @@ import javax.swing.*;
 
 abstract class Action extends AnAction {
 
-
 	public Action(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
 		super(text, description, icon);
 	}

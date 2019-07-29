@@ -1,0 +1,97 @@
+package io.intino.alexandria.ui.displays.components;
+
+import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.Component;
+import io.intino.alexandria.ui.displays.components.selector.Selection;
+import io.intino.alexandria.ui.displays.components.selector.Selector;
+import io.intino.alexandria.ui.displays.events.Event;
+import io.intino.alexandria.ui.displays.events.HideListener;
+import io.intino.alexandria.ui.displays.events.Listener;
+import io.intino.alexandria.ui.displays.events.ShowListener;
+import io.intino.alexandria.ui.displays.notifiers.BlockConditionalNotifier;
+
+public abstract class BlockConditional<DN extends BlockConditionalNotifier, B extends Box> extends AbstractBlockConditional<B> implements Selection {
+    private boolean visible;
+    private boolean initialized = false;
+    private ShowListener showListener = null;
+    private HideListener hideListener = null;
+    private Listener initListener = null;
+
+    public BlockConditional(B box) {
+        super(box);
+    }
+
+    @Override
+    public void add(Component container) {
+        super.add(container);
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public boolean isHidden() {
+        return !visible;
+    }
+
+    public void visible(boolean value) {
+        updateVisibility(value);
+    }
+
+    public void hidden(boolean value) {
+        updateVisibility(!value);
+    }
+
+    public void show() {
+        this.updateVisibility(true);
+    }
+
+    public void hide() {
+        this.updateVisibility(false);
+    }
+
+    public BlockConditional<DN, B> onInit(Listener listener) {
+        this.initListener = listener;
+        return this;
+    }
+
+    public BlockConditional<DN, B> onShow(ShowListener listener) {
+        this.showListener = listener;
+        return this;
+    }
+
+    public BlockConditional<DN, B> onHide(HideListener listener) {
+        this.hideListener = listener;
+        return this;
+    }
+
+    @Override
+    public void bindTo(Selector selector, String option) {
+        updateVisibility(selector, option);
+        selector.onSelect(e -> updateVisibility(e.selection().contains(option)));
+    }
+
+    public abstract void initConditional();
+
+    private void updateVisibility(boolean value) {
+        this.visible = value;
+        notifier.refreshVisibility(visible);
+        if (visible) initComponent();
+        if (showListener != null && visible) showListener.accept(new Event(this));
+        if (hideListener != null && !visible) hideListener.accept(new Event(this));
+    }
+
+    private void updateVisibility(Selector selector, String option) {
+        if (selector == null) return;
+        java.util.List<String> selection = selector.selection();
+        if (selection.size() <= 0 || !selection.contains(option)) return;
+        updateVisibility(true);
+    }
+
+    protected void initComponent() {
+        if (initialized) return;
+        initConditional();
+        if (initListener != null) initListener.accept(new Event(this));
+        initialized = true;
+    }
+}

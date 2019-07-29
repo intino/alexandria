@@ -1,0 +1,201 @@
+def type(resource & accessibleDisplay)
+	package $package+validPackage.ui.resources;
+
+	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
+	import $package+validPackage.ui.pages.$name+firstUpperCase~ProxyPage;
+	import io.intino.alexandria.exceptions.AlexandriaException;
+	import io.intino.alexandria.exceptions.Unauthorized;
+	import io.intino.alexandria.ui.Soul;
+	import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
+	import io.intino.alexandria.ui.services.auth.exceptions.CouldNotObtainInfo;
+	import io.intino.alexandria.ui.services.push.UIClient;
+	import io.intino.alexandria.ui.services.push.UISession;
+
+	import java.util.function.Function;
+
+	public class $name+firstUpperCase~ProxyResource extends io.intino.alexandria.ui.spark.resources.ProxyResource {
+		private final $box+SnakeCaseToCamelCase+FirstUpperCase~Box box;
+
+		public $name+firstUpperCase~ProxyResource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, DisplayNotifierProvider notifierProvider) {
+			super(manager, notifierProvider);
+			this.box = box;
+		}
+
+		@Override
+		public void execute() throws AlexandriaException {
+			fillBrowser(manager, session());
+			fillDeviceParameter();
+			try {
+				if (!isLogged(accessToken()))
+					throw new Unauthorized("user is not logged");
+
+				authenticate(session(), accessToken());
+				render();
+			} catch (CouldNotObtainInfo couldNotObtainInfo) {
+				throw new Unauthorized("user is not logged");
+			} catch (Throwable error) {
+				throw new Unauthorized("could not render component");
+			}
+		}
+
+		private void render() {
+			UIClient client = client();
+
+			$name+firstUpperCase~ProxyPage page = new $name+firstUpperCase~ProxyPage();
+			page.session = session();
+			page.session.browser().onRedirect(location -> manager.redirect(location));
+			page.session.browser().requestUrl(manager.requestUrl());
+			page.session.whenLogin(new Function<String, String>() {
+				@Override
+				public String apply(String baseUrl) {
+					return $name+firstUpperCase~ProxyResource.this.authenticate(baseUrl);
+				}
+			});
+			page.session.whenLogout(b -> logout());
+			page.box = box;
+			page.clientId = client.id();
+			page.googleApiKey = "";
+			page.device = parameterValue("device");
+			$parameter...[$NL]
+            if (!page.hasPermissions()) {
+                manager.redirect(page.redirectUrl());
+                return;
+            }
+
+			Soul soul = soul();
+			if (soul != null) {
+				page.soul = soul;
+				page.execute();
+				return;
+			}
+
+			soul = new Soul(page.session) {
+				@Override
+				public void personify() {
+					Soul soul = this;
+					addRegisterDisplayListener(display -> {
+						display.inject(notifier(page.session, client, display));
+						display.inject(page.session);
+						display.inject(soul);
+						display.inject(() -> soul);
+					});
+				}
+			};
+			client.soul(soul);
+			page.soul = soul;
+			page.execute();
+			box.registerSoul(client.id(), soul);
+
+			manager.write("OK");
+		}
+	}
+end
+
+def type(resource)
+	package $package+validPackage.ui.resources;
+
+	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
+	import $package+validPackage.ui.pages.$name+firstUpperCase~Page;
+	import io.intino.alexandria.exceptions.AlexandriaException;
+	import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
+
+	import java.util.Base64;
+	import java.util.UUID;
+	import java.util.function.Consumer;
+	import java.util.function.Function;
+
+	public class $name+firstUpperCase~Resource extends io.intino.alexandria.ui.spark.resources.[$editor]Resource {
+		private final $box+SnakeCaseToCamelCase+FirstUpperCase~Box box;
+
+		public $name+firstUpperCase~Resource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, DisplayNotifierProvider notifierProvider) {
+			super(manager, notifierProvider);
+			this.box = box;
+		}
+
+		@Override
+		public void execute() throws AlexandriaException {
+			super.execute();
+			fillDeviceParameter();
+			[$confidential
+			if (isLogged()) render();
+			else authenticate();?render();]
+		}
+
+		private void render() {
+			String clientId = UUID.randomUUID().toString();
+			$name+firstUpperCase~Page page = new $name+firstUpperCase~Page();
+			page.session = manager.currentSession();
+			page.session.browser().onRedirect(location -> manager.redirect(location));
+			page.session.browser().requestUrl(manager.requestUrl());
+			page.session.whenLogin(new Function<String, String>() {
+				@Override
+				public String apply(String baseUrl) {
+					return $name+firstUpperCase~Resource.this.authenticate(baseUrl);
+				}
+			});
+			page.session.whenLogout(b -> logout());
+			page.box = box;
+			page.clientId = clientId;
+			[page.googleApiKey = $googleApiKey+format;]
+			page.device = parameterValue("device");
+			page.token = parameterValue("token");[
+			$editor+parameters]
+			$parameter...[$NL]
+            if (!page.hasPermissions()) {
+                manager.redirect(page.redirectUrl());
+                return;
+            }
+
+			manager.pushService().onOpen(client -> {
+				if (!client.id().equals(page.clientId))
+					return false;
+
+				if (client.soul() != null)
+					return false;
+
+				io.intino.alexandria.ui.Soul soul = page.prepareSoul(client);
+				soul.onRedirect((location) -> manager.redirect(location));
+				soul.addRegisterDisplayListener(display -> {
+					display.inject(notifier(page.session, client, display));
+					display.inject(page.session);
+					display.inject(soul);
+					display.inject(() -> soul);
+				});
+				client.soul(soul);
+
+				box.registerSoul(clientId, soul);
+
+				return true;
+			});
+
+			manager.pushService().onClose(clientId).execute(new Consumer<io.intino.alexandria.ui.services.push.UIClient>() {
+				@Override
+				public void accept(io.intino.alexandria.ui.services.push.UIClient client) {
+					box.soul(client.id()).ifPresent(s -> s.destroy());
+					box.unRegisterSoul(client.id());
+					manager.unRegister(client);
+				}
+			});
+
+			manager.write(page.execute());
+		}
+
+	}
+end
+
+def trigger(parameters)
+	page.document = loadDocument();
+	page.permission = loadPermission();
+end
+
+def type(parameter)
+	page.$name+SnakeCaseToCamelCase+firstLowerCase = parameterValue("$name");
+end
+
+def type(googleApiKey) trigger(format)
+	"$name"[$custom...[]]
+end
+
+def trigger(custom)
+	.replace("{$value}", box.configuration().get("$value"))
+end
