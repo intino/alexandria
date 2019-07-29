@@ -51,7 +51,7 @@ public class ChartEngine {
 	}
 
 	private Result run(URL serverUrl, String script) {
-		Driver driver = new Driver(serverUrl.toString());
+		Driver driver = new Driver(serverUrl.getHost(), serverUrl.getPort());
 		Program program = new Program().add("script", script);
 		return driver.run(program);
 	}

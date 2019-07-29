@@ -9,13 +9,23 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Driver implements io.intino.alexandria.drivers.Driver<URL, Result> {
-	private final URL serverUrl;
+	private final String host;
+	private final int port;
 
 	public static final String Script = "script";
 	private static final int DefaultRServePort = 6311;
 
-	public Driver(String serverUrl) {
-		this.serverUrl = urlOf(serverUrl);
+	public Driver() {
+		this("", DefaultRServePort);
+	}
+
+	public Driver(String host) {
+		this(host, DefaultRServePort);
+	}
+
+	public Driver(String host, int port) {
+		this.host = host;
+		this.port = port;
 	}
 
 	@Override
@@ -49,8 +59,8 @@ public class Driver implements io.intino.alexandria.drivers.Driver<URL, Result> 
 			return null;
 		}
 
-		String host = serverUrl != null ? serverUrl.getHost() : "";
-		int port = serverUrl != null ? serverUrl.getPort() : DefaultRServePort;
+		String host = this.host != null ? this.host : "";
+		int port = this.port != -1 ? this.port : DefaultRServePort;
 
 		try {
 			RConnection connection = new RConnection(host, port);
