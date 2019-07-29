@@ -27,7 +27,7 @@ public class SparkClient implements Client {
 		return this;
 	}
 
-	public static String clientId(Session session) {
+	public static String sessionId(Session session) {
 		Map<String, String> queryString = parseQueryString(session.getUpgradeRequest().getRequestURI().getQuery());
 		return queryString.get("currentSession");
 	}
@@ -39,7 +39,7 @@ public class SparkClient implements Client {
 
 	@Override
 	public String sessionId() {
-		return clientId(session);
+		return sessionId(session);
 	}
 
 	@Override

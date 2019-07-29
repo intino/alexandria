@@ -1,5 +1,6 @@
 package io.intino.alexandria.ui.services.push;
 
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.rest.spark.RequestAdapter;
 import io.intino.alexandria.ui.displays.requesters.DisplayPushRequester;
 import org.eclipse.jetty.websocket.api.Session;
@@ -24,7 +25,13 @@ public class PushService extends io.intino.alexandria.rest.spark.PushService<UIS
 	public void onMessage(UIClient client, String content) {
 		UIMessage message = RequestAdapter.adaptFromJSON(content, UIMessage.class);
 		String requester = message.sender();
-		requesterMap.get(requester).execute(client, message);
+
+		try {
+			requesterMap.get(requester).execute(client, message);
+		}
+		catch (Throwable e) {
+			Logger.error(e);
+		}
 	}
 
 	public PushService register(String type, DisplayPushRequester requester) {
