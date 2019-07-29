@@ -26,6 +26,8 @@ Facet DatalakeType on Datalake is abstract
 		var string password = empty
 	sub Local
 
+Concept:Named Adapter
+
 Concept:Named:RequiresFacet Mounter
 	var Datamart datamart
 Facet MounterType on Mounter

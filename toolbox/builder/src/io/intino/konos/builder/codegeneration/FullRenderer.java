@@ -6,6 +6,7 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.search.GlobalSearchScope;
+import io.intino.konos.builder.codegeneration.adapter.AdapterRenderer;
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.builder.codegeneration.datalake.DatalakeRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
@@ -65,6 +66,7 @@ public class FullRenderer {
 		datalake();
 		messageHub();
 		mounters();
+		adapters();
 		feeders();
 		processes();
 		slack();
@@ -113,6 +115,10 @@ public class FullRenderer {
 
 	private void mounters() {
 		new MounterRenderer(settings, graph).execute();
+	}
+
+	private void adapters() {
+		new AdapterRenderer(settings, graph).execute();
 	}
 
 	private void processes() {

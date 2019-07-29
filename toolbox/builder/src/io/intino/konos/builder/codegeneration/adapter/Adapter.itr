@@ -1,0 +1,17 @@
+def type(adapter)
+	package $package+validPackage.adapters;
+
+	import $package+validPackage.$box+firstUpperCase~Box;
+
+	public class $name+FirstUpperCase {
+		private $box+FirstUpperCase~Box box;
+
+		public $name+FirstUpperCase($box+FirstUpperCase~Box box) {
+			this.box = box;
+		}
+
+		public void exectute() {
+
+		}
+	}
+end
