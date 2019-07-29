@@ -1,6 +1,7 @@
 package io.intino.alexandria.drivers.r;
 
 import io.intino.alexandria.logger.Logger;
+import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.REngineException;
 import org.rosuda.REngine.Rserve.RFileOutputStream;
@@ -13,6 +14,7 @@ import static io.intino.alexandria.drivers.r.StreamHelper.copy;
 
 public class RScript {
 	private final org.rosuda.REngine.Rserve.RConnection connection;
+	private REXP rexp = null;
 
 	public RScript(org.rosuda.REngine.Rserve.RConnection connection) {
 		this.connection = connection;
@@ -21,7 +23,7 @@ public class RScript {
 	public void add(String... lines) {
 		Stream.of(lines).forEach(line -> {
 			try {
-				connection.parseAndEval(line);
+				rexp = connection.parseAndEval(line);
 			} catch (REngineException | REXPMismatchException e) {
 				Logger.error("Could not add script line", e);
 			}
@@ -38,7 +40,7 @@ public class RScript {
 	}
 
 	public Result run() {
-		return new Result(connection);
+		return new Result(connection, rexp);
 	}
 
 }
