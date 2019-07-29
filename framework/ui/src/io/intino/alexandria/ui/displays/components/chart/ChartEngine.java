@@ -28,7 +28,7 @@ public class ChartEngine {
 			if (mode == Output.Image) {
 				lines.append("ggsave('data.png', output);\n");
 				result = run(serverUrl, lines.toString());
-				output = Base64.encode(toByteArray(result.getFile("data.png")));
+				output = Base64.encode(toByteArray(result.get("data.png")));
 			}
 			else if (mode == Output.Html) {
 				lines.append("library(plotly);\n");
@@ -36,7 +36,7 @@ public class ChartEngine {
 				lines.append("output <- plotly_json(output, FALSE);\n");
 				lines.append("write(output, 'data.json');\n");
 				result = run(serverUrl, lines.toString());
-				output = new String(toByteArray(result.getFile("data.json")));
+				output = new String(toByteArray(result.get("data.json")));
 			}
 
 			return output;
