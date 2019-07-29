@@ -1,4 +1,5 @@
 import com.google.gson.GsonBuilder;
+import utils.TestUtil;
 import io.intino.konos.builder.Manifest;
 import io.intino.konos.builder.codegeneration.FullRenderer;
 import io.intino.konos.model.graph.KonosGraph;
@@ -15,7 +16,7 @@ public class CommandsTest {
 	public void testModel() throws Exception {
 		File gen = new File("test-gen", COMMANDS);
 		KonosGraph graph = new Graph().loadStashes("Command").as(KonosGraph.class);
-		new FullRenderer(null, graph, gen, gen, gen, COMMANDS).execute();
+		new FullRenderer(graph, TestUtil.settings(gen, COMMANDS)).execute();
 	}
 
 	@Test

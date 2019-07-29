@@ -1,0 +1,99 @@
+def type(resource & js)
+import React from "react";
+import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
+import { SnackbarProvider } from "notistack";
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Theme from '../../gen/Theme';
+import Page from "alexandria-ui-elements/src/displays/Page";
+import ConnectionChecker from "alexandria-ui-elements/src/displays/ConnectionChecker";
+import $pageDisplay+firstUpperCase from "$pageDisplayOrigin+origin/displays/$pageDisplayType+firstLowerCase~s/$pageDisplay+firstUpperCase";
+
+let theme = Theme.create();
+const styles = theme => ({});
+
+export default class $name+firstUpperCase extends Page {
+    render() {
+        const { classes } = this.props;
+        return (
+			<MuiThemeProvider theme={theme}>
+	        	<SnackbarProvider maxSnack={3}>
+            		<CssBaseline />
+        			<$pageDisplay+firstUpperCase id="$pageDisplayId"></$pageDisplay+firstUpperCase>
+        			<ConnectionChecker></ConnectionChecker>
+				</SnackbarProvider>
+			</MuiThemeProvider>
+        );
+    }
+}
+end
+
+def type(resource & html)
+	<!DOCTYPE html>
+	<html>
+		<head>
+            <title>$$title</title>
+
+			<meta charset="utf-8"/>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+            <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes"/>
+
+	        <link rel="icon" href-absolute="$$favicon">
+
+			<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+
+            <style>
+                html, body, .page {
+                    height: 100%;
+                }
+            </style>
+		</head>
+
+		<body>
+			<div class="page" id="$name+firstUpperCase"></div>
+			<script>
+				document.configuration = {};
+				document.configuration.googleApiKey = "$$googleApiKey";
+				document.configuration.pushServices = "$$pushUrls".split(",");
+				document.configuration.clientId = "$$client";
+				document.configuration.language = "$$language";
+				document.configuration.url = "$$url";
+				document.configuration.baseUrl = "$$baseUrl";
+				document.configuration.basePath = "$$basePath";
+			</script>
+		</body>
+	</html>
+end
+
+def attribute(decorated) trigger(origin)
+	../../src
+end
+
+def trigger(origin)
+	..
+end
+
+def type(polymer & editor)
+	Polymer({
+		is: 'page-body',
+
+		attached : function() {
+			this._initEditor();
+		},
+
+		_initEditor : function() {
+			var widget = this;
+			this.$$.root.whenPersonified().execute(function() {
+				var editor = widget.querySelector("alexandria-editor");
+
+				editor.onSaved = function() {
+					if (document.onSaved) document.onSaved();
+				};
+
+				document.save = function() {
+					editor.save();
+				}
+			});
+		}
+	});
+end

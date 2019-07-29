@@ -1,9 +1,5 @@
 package io.intino.alexandria.epoch;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,11 +58,15 @@ interface ChainIndex extends Serializable, Iterable<Long> {
 		}
 
 		static ChainIndex deserialize(File file) throws IOException {
-			Input input = new Input(new FileInputStream(file));
-			RandomChainIndex index = getKryo().readObject(input, RandomChainIndex.class);
-			input.close();
-			index.file = file;
-			return index;
+			DataInputStream stream = new DataInputStream(new FileInputStream(file));
+			int dataSize = stream.readInt();
+			int arraySize = stream.readInt();
+			long[] ids = new long[arraySize];
+			int[] heads = new int[arraySize];
+			for (int i = 0; i < arraySize; i++) ids[i] = stream.readLong();
+			for (int i = 0; i < arraySize; i++) heads[i] = stream.readInt();
+			stream.close();
+			return new RandomChainIndex(file, dataSize, ids, heads);
 		}
 
 		@Override
@@ -125,17 +125,12 @@ interface ChainIndex extends Serializable, Iterable<Long> {
 
 		@Override
 		public void close() throws IOException {
-			Output output = new Output(new FileOutputStream(file));
-			getKryo().writeObject(output, this);
-			output.close();
-		}
-
-		private static Kryo getKryo() {
-			Kryo kryo = new Kryo();
-			kryo.register(RandomChainIndex.class);
-			kryo.register(int[].class);
-			kryo.register(long[].class);
-			return kryo;
+			DataOutputStream stream = new DataOutputStream(new FileOutputStream(file));
+			stream.writeInt(dataSize);
+			stream.writeInt(ids.length);
+			for (long id : ids) stream.writeLong(id);
+			for (int head : heads) stream.writeInt(head);
+			stream.close();
 		}
 
 		@Override

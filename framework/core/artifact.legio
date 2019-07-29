@@ -4,7 +4,7 @@ Artifact("io.intino.alexandria", "2.0.0") core-framework
 	Imports
 		Compile("io.intino.alexandria", "json", "[1.0.0, 2.0.0)")
 		Compile("io.intino.alexandria", "logger", "2.0.0")
-		Provided("io.intino.alexandria", "inl", "[2.0.0, 3.0.0)")
+		Provided("io.intino.alexandria", "message", "[1.0.0, 2.0.0)")
 		Test("junit", "junit", "4.12")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.release)

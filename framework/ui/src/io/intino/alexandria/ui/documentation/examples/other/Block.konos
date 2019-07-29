@@ -1,0 +1,91 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) blockExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filled)
+				Block
+					Text(value="value 1", format=body1 bordered)
+					Text(value="value 2", format=body1 bordered)
+					Text(value="value 3", format=body1 bordered)
+			Block > Text block1Code as Code(language=Html)
+					value
+						=========
+						Block<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value 1")
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value 2")
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value 3")
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with spacing")
+			Block(spacing=DP8, format=filled)
+				Block(layout=Vertical, spacing=DP8) block2
+					Text(value="value 1", format=body1 bordered)
+					Text(value="value 2", format=body1 bordered)
+					Text(value="value 3", format=body1 bordered)
+			Block > Text block2Code as Code(language=Html) Editable
+					value
+						=========
+						DP8
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with layout")
+			Block(spacing=DP8, format=filled)
+				Block(layout=Horizontal CenterCenter, spacing=DP8) block3 as Absolute(height=175px)
+					Text(value="value 1", format=body1 bordered)
+					Text(value="value 2", format=body1 bordered)
+					Text(value="value 3", format=body1 bordered)
+			Block > Text block3Code as Code(language=Html) Editable
+					value
+						=========
+						Horizontal CenterCenter
+						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Badge facet")
+			Block(spacing=DP8, format=filled)
+				Block(layout=Horizontal) as Badge(value=10)
+					Text(value="value", format=body1)
+			Block > Text block4Code as Code(language=Html)
+					value
+						=========
+						Block as Badge(value\=10)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value")
+						=========
+		Block as Relative(width=64%, height=100%)
+			Text(format=h6, value="Parallax facet")
+			Block(spacing=DP8, format=filled)
+				Block as Parallax(background="images/background1.jpg") Absolute(height=175px)
+					Text(value="value", format=body1)
+			Block > Text block5Code as Code(language=Html)
+					value
+						=========
+						Block as Parallax(value\="images/background1.jpg") Absolute(height\=175px)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value")
+						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Splitter facet")
+			Block(spacing=DP8, format=filled)
+				Block(layout=Horizontal) splitterBlock as Splitter
+					Block splitBlock1
+						Text(value="block 1")
+						Task(title="open 2") openBlock2
+					Block splitBlock2
+						Text(value="block 2")
+
+			Block > Text block6Code as Code(language=Html)
+					value
+						=========
+						Block(layout\=Horizontal) as Splitter<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Block > Text(value\="block 1")<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Block > Text(value\="block 2")
+						=========

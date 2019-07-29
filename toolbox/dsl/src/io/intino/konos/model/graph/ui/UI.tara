@@ -1,8 +1,7 @@
 dsl Proteo
 
-use Dialog
+use Component
 use Display
-use Editor
 use Services
 use DataTypes
 
@@ -24,14 +23,38 @@ Facet UI on Service is decorable
 	Concept:Named Resource
 		var string path
 
-Facet Root on UI.Resource
+Concept Translator
+	var word:Language language
+	Concept Translation
+		var string text
+		var string value
+
+Concept:{0..1} Theme
+	var word:{Normal Dark} type = Normal
+	var integer contrastThreshold = 3
+	var double tonalOffset = 0.2
+
+	Concept Property is abstract > var string color
+	Concept:{1..1} Primary extends Property
+	Concept:{1..1} Secondary extends Property
+	Concept:{1..1} Error extends Property
+
+	Concept:{0..1} Typography
+		var integer:{px} fontSize = 13px
+		var string[] fontFamily = "-apple-system" "BlinkMacSystemFont" "Segoe UI" "Roboto" "Helvetica Neue" "Arial" "sans-serif" "Apple Color Emoji" "Segoe UI Emoji" "Segoe UI Symbol"
+
+Concept Format
+	var string content
+
+Facet Main on UI.Resource
 Facet Confidential on UI.Resource
 
-Facet DisplayPage on UI.Resource
-	var Display display
-Facet DialogPage on UI.Resource
-	var Dialog dialog
-Facet EditorPage on UI.Resource
-	var Editor editor
+Facet Page on UI.Resource
+	var Template template
 
-Concept Component is abstract
+// deprecated
+//Facet DialogPage extends Page
+//	var Block block
+
+Facet Responsible on DrawerNavigable
+Facet Persistent on DrawerNavigable

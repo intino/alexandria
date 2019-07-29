@@ -1,0 +1,87 @@
+def type(desktop)
+	package $package.ui.displays.desktops;
+
+	import io.intino.alexandria.core.Box;
+	import io.intino.alexandria.exceptions.*;
+	import io.intino.alexandria.ui.displays.components.*;
+	import $package.ui.*;
+	$schemaImport
+	import $package+validPackage.$box+firstUpperCase~Box;[
+	import $package+validPackage.ui.displays.desktops.$abstract$name+firstUpperCase;]
+
+	$templatesImport
+	$blocksImport
+	$itemsImport
+	$rowsImport
+	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
+
+    public class [$abstract]$name+firstUpperCase$parametrized extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type> {
+    	public $name+firstUpperCase~Header header;
+    	public $name+firstUpperCase~Tabs tabs;
+
+        public [$abstract]$name+firstUpperCase($abstractBox+type box) {
+            super(box);
+            id("$id");
+        }
+
+        @Override
+		public void init() {
+			super.init();
+			header = register(new $name+firstUpperCase~Header<>(box()).id("$headerId"));
+			tabs = register(new $name+firstUpperCase~Tabs<>(box()).id("$tabBarId"));
+		}
+
+		public class $name+firstUpperCase~Header[<$abstractBox+extension>] extends io.intino.alexandria.ui.displays.components.Header<$abstractBox+type> {
+			[$attribute...[$NL]]
+			[$component+declarations...[$NL]]
+
+			public $name+firstUpperCase~Header($abstractBox+type box) {
+				super(box);
+			}
+
+			@Override
+			public void init() {
+				super.init();
+				$componentReferences
+				[$component+initializations...[$NL]]
+			}
+			[$component+class...[$NL]]
+			[$component+method...[$NL]]
+		}
+
+		public class $name+firstUpperCase~Tabs[<$abstractBox+extension>] extends io.intino.alexandria.ui.displays.components.Tabs<$abstractBox+type> {
+			public $name+firstUpperCase~Tabs($abstractBox+type box) {
+        		super(box);
+        		$tabs...[$NL]
+        	}
+		}
+    }
+end
+
+def type(templatesImports)
+	import $package+validPackage.ui.displays.templates.*;
+end
+
+def type(blocksImport)
+	import $package+validPackage.ui.displays.blocks.*;
+end
+
+def type(itemsImport)
+	import $package+validPackage.ui.displays.items.*;
+end
+
+def type(rowsImport)
+	import $package+validPackage.ui.displays.rows.*;
+end
+
+def type(componentReferences & forRoot)
+	$component+rootReferences...[$NL]
+end
+
+def type(componentReferences)
+	$component+references...[$NL]
+end
+
+def type(attribute)
+	public $clazz $name+firstLowerCase;
+end

@@ -3,8 +3,8 @@ package io.intino.alexandria.ingestion;
 import io.intino.alexandria.Fingerprint;
 import io.intino.alexandria.Session;
 import io.intino.alexandria.Timetag;
-import io.intino.alexandria.inl.Message;
-import io.intino.alexandria.inl.MessageWriter;
+import io.intino.alexandria.message.Message;
+import io.intino.alexandria.message.MessageWriter;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.IOException;

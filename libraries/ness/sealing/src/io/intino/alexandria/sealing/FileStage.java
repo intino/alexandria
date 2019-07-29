@@ -1,6 +1,7 @@
 package io.intino.alexandria.sealing;
 
 import io.intino.alexandria.Session;
+import io.intino.alexandria.datalake.file.FS;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.*;
@@ -22,7 +23,12 @@ class FileStage implements Stage {
 	}
 
 	public void clear() {
-		FS.filesIn(stageFolder, File::isFile).forEach(f -> f.renameTo(new File(f.getAbsolutePath() + ".treated")));
+		FS.allFilesIn(stageFolder, file -> file.isFile() && isNotTreated(file)).forEach(f -> f.renameTo(new File(f.getAbsolutePath() + ".treated")));
+		FS.foldersIn(stageFolder).filter(f -> !f.getName().equals("temp") && !f.getName().startsWith("treated.")).forEach(f -> f.renameTo(new File(f.getParentFile().getAbsolutePath() + File.separator + "treated." + f.getName())));
+	}
+
+	private boolean isNotTreated(File file) {
+		return !file.getName().endsWith(".treated");
 	}
 
 	private void push(Session session, File stageFolder) {

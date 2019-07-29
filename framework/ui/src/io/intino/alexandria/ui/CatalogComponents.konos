@@ -1,0 +1,44 @@
+dsl Konos
+
+use Schemas
+
+Component collection as Decorated
+	Notification setup as Object(CollectionSetup)
+	Notification refresh
+	Notification refreshItemCount as LongInteger
+	Request selection as Text List
+
+Component pageCollection as Decorated ExtensionOf(collection)
+	Notification setup as Object(PageCollectionSetup)
+	Request changePage as Integer
+	Request changePageSize as Integer
+	Request notifyItemsRendered as Object(CollectionItemsRenderedInfo)
+	Request loadMoreItems as Object(CollectionMoreItems)
+
+Component map as Decorated ExtensionOf(collection)
+	Notification setup as Object(MapCollectionSetup)
+	Notification placeMarks as Object(PlaceMark) List
+
+	Request showPlaceMark as LongInteger
+
+Component list as Decorated ExtensionOf(pageCollection)
+Component table as Decorated ExtensionOf(pageCollection)
+Component magazine as Decorated ExtensionOf(pageCollection)
+
+Component item as Decorated
+Component heading as Decorated
+Component row as Decorated
+
+Component baseGrouping as Decorated
+	Notification refreshGroups as Object(Group) List
+	Request select as Text List
+
+Component grouping as Decorated ExtensionOf(baseGrouping)
+Component groupingComboBox as Decorated ExtensionOf(baseGrouping)
+
+Component sorting as Decorated
+	Request toggle
+
+Component searchBox as Decorated
+	Notification refreshCount as LongInteger
+	Request search as Text

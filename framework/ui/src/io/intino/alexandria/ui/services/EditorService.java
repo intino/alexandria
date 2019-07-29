@@ -16,7 +16,7 @@ public interface EditorService {
     }
 
     default void saveDocument(String id, InputStream document, boolean completed) {
-        Resource documentResource = new Resource(DocumentParameter).data(document);
+        Resource documentResource = new Resource(DocumentParameter, document);
         saveDocument(id, documentResource, completed);
     }
 }

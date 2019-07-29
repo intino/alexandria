@@ -1,0 +1,49 @@
+dsl Konos
+
+use Schemas
+
+Component baseNumber as Decorated
+	Notification refresh as Real
+
+Component number as Decorated ExtensionOf(baseNumber)
+Component numberEditable as Decorated ExtensionOf(baseNumber)
+	Request notifyChange as Real
+
+Component baseDate as Decorated
+	Notification refresh as DateTime
+Component date as Decorated ExtensionOf(baseDate)
+Component dateEditable as Decorated ExtensionOf(baseDate)
+	Request notifyChange as DateTime
+
+Component baseText as Decorated
+	Notification refresh as Text
+Component text as Decorated ExtensionOf(baseText)
+Component textCode as Decorated ExtensionOf(baseText)
+Component textEditable as Decorated ExtensionOf(baseText)
+	Request notifyChange as Text
+	Request notifyKeyPress as Object(KeyPressEventData)
+Component textEditableCode as Decorated ExtensionOf(baseText)
+	Request notifyChange as Text
+
+Component baseFile as Decorated
+	Notification refresh as Object(FileInfo)
+Component file as Decorated ExtensionOf(baseFile)
+Component fileEditable as Decorated ExtensionOf(baseFile)
+	Request notifyChange as File
+
+Component baseImage as Decorated
+	Notification refresh as Text
+
+Component image as Decorated ExtensionOf(baseImage)
+Component imageAvatar as Decorated ExtensionOf(baseImage)
+	Request load
+Component imageEditable as Decorated ExtensionOf(baseImage)
+	Request notifyChange as File
+
+Component baseLocation as Decorated
+	Notification setup as Object(LocationSetup)
+	Notification refresh as Object(Geometry)
+
+Component location as Decorated ExtensionOf(baseLocation)
+Component locationEditable as Decorated ExtensionOf(baseLocation)
+	Request notifyChange as Object(Geometry)

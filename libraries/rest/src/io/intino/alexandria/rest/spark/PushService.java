@@ -146,8 +146,8 @@ public abstract class PushService<S extends Session<C>, C extends Client> implem
 	private String serializeMessage(Message message) {
 		JsonObject result = new JsonObject();
 		Map<String, Object> parameters = message.parameters();
-		result.addProperty("name", message.name());
-		result.add("parameters", serializeMessageParameters(parameters));
+		result.addProperty("n", message.name());
+		result.add("p", serializeMessageParameters(parameters));
 		return result.toString();
 	}
 

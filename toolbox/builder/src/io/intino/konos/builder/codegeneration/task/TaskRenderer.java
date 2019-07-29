@@ -4,8 +4,10 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.Renderer;
+import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.ActionTemplate;
-import io.intino.konos.builder.codegeneration.datahub.feeder.FeederRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Task;
@@ -17,29 +19,22 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
-public class TaskRenderer {
+public class TaskRenderer extends Renderer {
 	private final List<ScheduledTask> scheduledTasks;
 	private final List<Task> tasks;
-	private final String boxName;
-	private File srcDestination;
-	private File genDestination;
-	private String packageName;
 
-	public TaskRenderer(KonosGraph graph, File src, File gen, String packageName, String boxName, Map<String, String> classes) {
+	public TaskRenderer(Settings settings, KonosGraph graph) {
+		super(settings, Target.Owner);
 		this.scheduledTasks = graph.scheduledTaskList();
 		this.tasks = graph.taskList().stream().filter(t -> !t.isScheduled()).collect(Collectors.toList());
-		this.srcDestination = src;
-		this.genDestination = gen;
-		this.packageName = packageName;
-		this.boxName = boxName;
 	}
 
-	public void execute() {
+	@Override
+	public void render() {
 		this.scheduledTasks.forEach(this::processTrigger);
 		this.tasks.stream().filter(Task::isDirectorySentinel).forEach(this::processDirectorySentinel);
 	}
@@ -56,18 +51,18 @@ public class TaskRenderer {
 
 	private List<Frame> targets(ScheduledTask task) {
 		List<Frame> frames = task.linkWithMounterList().stream().map(link -> baseFrame("target", "mounter").add("name", link.mounter().name$()).toFrame()).collect(Collectors.toList());
-		task.linkWithFeederList().stream().map(link -> baseFrame("target", "feeder").add("name", FeederRenderer.name(link.feeder())).toFrame()).forEach(frames::add);
+		task.linkWithFeederList().stream().map(link -> baseFrame("target", "feeder").add("name", link.feeder().name$()).toFrame()).forEach(frames::add);
 		return frames;
 	}
 
 	private void processDirectorySentinel(Task task) {
 		FrameBuilder frame = new FrameBuilder("task")
 				.add("name", task.name$())
-				.add("box", boxName)
-				.add("package", packageName)
+				.add("box", boxName())
+				.add("package", packageName())
 				.add("parameter", parameters(task.asDirectorySentinel()));
-		if (!alreadyRendered(srcDestination, task))
-			writeFrame(actionsPackage(srcDestination), task.name$() + "Action", actionTemplate().render(frame));
+		if (!alreadyRendered(src(), task))
+			writeFrame(actionsPackage(src()), task.name$() + "Action", actionTemplate().render(frame));
 	}
 
 	private Frame[] parameters(DirectorySentinelTask task) {
@@ -78,12 +73,12 @@ public class TaskRenderer {
 	}
 
 	private void createCorrespondingAction(ScheduledTask task) {
-		if (!alreadyRendered(srcDestination, task.a$(Task.class)))
-			writeFrame(actionsPackage(srcDestination), task.name$() + "Action", actionTemplate().
+		if (!alreadyRendered(src(), task.a$(Task.class)))
+			writeFrame(actionsPackage(src()), task.name$() + "Action", actionTemplate().
 					render(new FrameBuilder("action")
 							.add("name", task.name$())
-							.add("box", boxName)
-							.add("package", packageName).toFrame()));
+							.add("box", boxName())
+							.add("package", packageName()).toFrame()));
 	}
 
 	private Template actionTemplate() {
@@ -103,13 +98,13 @@ public class TaskRenderer {
 	}
 
 	private File destinyPackage() {
-		return new File(genDestination, "scheduling");
+		return new File(gen(), "scheduling");
 	}
 
 	@NotNull
 	private FrameBuilder baseFrame(String... types) {
 		return new FrameBuilder(types)
-				.add("box", boxName)
-				.add("package", packageName);
+				.add("box", settings.boxName())
+				.add("package", settings.packageName());
 	}
 }

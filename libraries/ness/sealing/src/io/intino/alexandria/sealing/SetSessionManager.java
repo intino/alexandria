@@ -2,6 +2,7 @@ package io.intino.alexandria.sealing;
 
 import io.intino.alexandria.Fingerprint;
 import io.intino.alexandria.Session;
+import io.intino.alexandria.datalake.file.FS;
 import io.intino.alexandria.datalake.file.FileSetStore;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.triplestore.FileTripleStore;
@@ -22,7 +23,7 @@ import static io.intino.alexandria.Session.SessionExtension;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.util.stream.Collectors.toList;
 
-public class SetSessionManager {
+class SetSessionManager {
 	private static final DecimalFormat FORMATTER = new DecimalFormat("#.##");
 	private final List<File> files;
 	private final File setStoreFolder;
@@ -36,16 +37,12 @@ public class SetSessionManager {
 		this.tempFolder = tempFolder;
 	}
 
-	public static void push(Session session, File stageFolder) {
-		FS.copyInto(fileFor(session, stageFolder), session.inputStream());
-	}
-
-	public static void seal(File stageFolder, File setStoreFolder, File tempFolder) {
+	static void seal(File stageFolder, File setStoreFolder, File tempFolder) {
 		new SetSessionManager(sessionsOf(stageFolder), setStoreFolder, tempFolder).seal();
 	}
 
 	private static List<File> sessionsOf(File stageFolder) {
-		return FS.filesIn(stageFolder, f -> f.getName().endsWith(SessionExtension)).collect(Collectors.toList());
+		return FS.allFilesIn(stageFolder, f -> f.getName().endsWith(SessionExtension)).collect(Collectors.toList());
 	}
 
 	private static File fileFor(Session session, File stageFolder) {
