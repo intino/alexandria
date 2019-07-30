@@ -2,7 +2,7 @@ package io.intino.alexandria.ui.displays.components.chart;
 
 import io.intino.alexandria.Base64;
 import io.intino.alexandria.drivers.Program;
-import io.intino.alexandria.drivers.r.Driver;
+import io.intino.alexandria.drivers.r.RemoteDriver;
 import io.intino.alexandria.drivers.r.Result;
 import io.intino.alexandria.logger.Logger;
 
@@ -51,7 +51,7 @@ public class ChartEngine {
 	}
 
 	private Result run(URL serverUrl, String script) {
-		Driver driver = new Driver(serverUrl.getHost(), serverUrl.getPort());
+		RemoteDriver driver = new RemoteDriver(serverUrl.getHost(), serverUrl.getPort());
 		Program program = new Program().add("script", script);
 		return driver.run(program);
 	}

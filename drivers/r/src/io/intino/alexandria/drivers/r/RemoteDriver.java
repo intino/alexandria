@@ -8,22 +8,22 @@ import org.rosuda.REngine.Rserve.RserveException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Driver implements io.intino.alexandria.drivers.Driver<URL, Result> {
+public class RemoteDriver implements io.intino.alexandria.drivers.Driver<URL, Result> {
 	private final String host;
 	private final int port;
 
 	public static final String Script = "script";
 	private static final int DefaultRServePort = 6311;
 
-	public Driver() {
+	public RemoteDriver() {
 		this("", DefaultRServePort);
 	}
 
-	public Driver(String host) {
+	public RemoteDriver(String host) {
 		this(host, DefaultRServePort);
 	}
 
-	public Driver(String host, int port) {
+	public RemoteDriver(String host, int port) {
 		this.host = host;
 		this.port = port;
 	}
@@ -67,15 +67,6 @@ public class Driver implements io.intino.alexandria.drivers.Driver<URL, Result> 
 			return RScriptBuilder.build(connection, program).run();
 		} catch (RserveException e) {
 			Logger.error("R driver: Could not connect with R server");
-			return null;
-		}
-	}
-
-	private URL urlOf(String serverUrl) {
-		try {
-			return new URL(serverUrl);
-		} catch (MalformedURLException e) {
-			Logger.error("R driver: invalid server url " + serverUrl);
 			return null;
 		}
 	}

@@ -1,5 +1,6 @@
 package io.intino.alexandria.drivers.r;
 
+import io.intino.alexandria.drivers.r.result.RemoteResult;
 import io.intino.alexandria.logger.Logger;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
@@ -40,7 +41,7 @@ public class RScript {
 	}
 
 	public Result run() {
-		return new Result(connection, rexp);
+		return new RemoteResult(connection, rexp);
 	}
 
 }
