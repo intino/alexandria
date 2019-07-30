@@ -1,13 +1,14 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.alexandria", version = "1.0.0") bpm
+Artifact("io.intino.alexandria", "1.0.0") bpm
 	Imports
 		Compile("io.intino.alexandria", "message", "1.0.0")
 		Compile("io.intino.alexandria", "logger", "2.0.0")
-		Test(groupId = "junit", artifactId = "junit", version = "LATEST")
+		Test("junit", "junit", "LATEST")
 
 	Package(mode = ModulesAndLibrariesLinkedByManifest)
+	Distribution(intino.release)
 
-Repository(identifier = "intino-maven")
-	Language(url = "https://artifactory.intino.io/artifactory/releases")
-	Release(url = "https://artifactory.intino.io/artifactory/releases")
+
+Repository("intino-maven") intino
+	Release("https://artifactory.intino.io/artifactory/release-libraries") release

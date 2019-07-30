@@ -21,12 +21,16 @@ import io.intino.tara.compiler.shared.TaraBuildConstants;
 import io.intino.tara.io.Stash;
 import io.intino.tara.magritte.Graph;
 import io.intino.tara.magritte.loaders.ClassFinder;
+import io.intino.tara.magritte.stores.ResourcesStore;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import tara.dsl.Konos;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,18 +57,27 @@ public class GraphLoader {
 			konosStash = stashBuilder.build();
 			processMessages(module.getProject(), out);
 			if (konosStash == null) return null;
-			else return loadGraph(konosStash);
-		} else return loadGraph();
+			else return loadGraph(module, konosStash);
+		} else return loadGraph(module);
 	}
 
 	public Stash konosStash() {
 		return konosStash;
 	}
 
-	private KonosGraph loadGraph(Stash... stashes) {
+	private KonosGraph loadGraph(Module module, Stash... stashes) {
 		final ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
 		Thread.currentThread().setContextClassLoader(GraphLoader.class.getClassLoader());
-		final Graph graph = new Graph().loadStashes("Konos").loadStashes(stashes);
+		final Graph graph = new Graph(new ResourcesStore() {
+			@Override
+			public URL resourceFrom(String path) {
+				try {
+					return new URL("file://" + (TaraUtil.getResourcesRoot(module, false).getPath() + File.separator + path));
+				} catch (MalformedURLException e) {
+					return null;
+				}
+			}
+		}).loadStashes("Konos").loadStashes(stashes);
 		if (graph == null) return null;
 		final KonosGraph konosGraph = graph.as(KonosGraph.class).init();
 		Thread.currentThread().setContextClassLoader(currentLoader);

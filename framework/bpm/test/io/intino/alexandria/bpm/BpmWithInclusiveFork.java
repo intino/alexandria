@@ -69,7 +69,7 @@ public class BpmWithInclusiveFork extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				String execute() {
+				public String execute() {
 					String[] result = resultOfState("CreateString").split(":");
 					return result[0].equals("Hello") ? "0-Hi" : "1-Hi";
 				}
@@ -87,7 +87,7 @@ public class BpmWithInclusiveFork extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				String execute() {
+				public String execute() {
 					String[] result = resultOfState("CreateString").split(":");
 					return result[0].equals("Goodbye") ? "0-Bye" : "1-Bye";
 				}
@@ -99,7 +99,7 @@ public class BpmWithInclusiveFork extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				String execute() {
+				public String execute() {
 					String[] hello = resultOfState("ProcessHello").split("-");
 					String[] goodbye = resultOfState("ProcessGoodbye").split("-");
 					return hello[0].equals("0") ? hello[1] + ":" + goodbye[1] : goodbye[1] + ":" + hello[1];

@@ -72,7 +72,7 @@ public class BpmWithExclusiveFork extends BpmTest {
 		private Task checkContainsHelloTask() {
 			return new Task(Automatic) {
 				@Override
-				String execute() {
+				public String execute() {
 					ProcessStatus last = exitStateStatus("CreateString");
 					return last.taskInfo().result().contains("Hello") + "";
 				}
@@ -89,7 +89,7 @@ public class BpmWithExclusiveFork extends BpmTest {
 				}
 
 				@Override
-				String execute() {
+				public String execute() {
 					return "Processing hello";
 				}
 			};
@@ -99,7 +99,7 @@ public class BpmWithExclusiveFork extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				String execute() {
+				public String execute() {
 					return "Processing goodbye";
 				}
 			};

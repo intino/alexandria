@@ -27,7 +27,7 @@ public class BpmWithSubprocessCalling extends BpmTest {
 		messageHub = new MessageHub_();
 		PersistenceManager.InMemoryPersistenceManager persistence = new PersistenceManager.InMemoryPersistenceManager();
 		new Workflow(messageHub, new ProcessFactory(), persistence);
-		messageHub.sendMessage("ProcessStatus", createProcessMessage());
+		messageHub.sendMessage(ProcessStatus, createProcessMessage());
 		waitForProcess(persistence);
 		List<ProcessStatus> messages = messagesOf(persistence.read("finished/1.process"));
 		assertThat(messages.get(1).stateInfo().name(), is("CreateString"));
@@ -72,7 +72,7 @@ public class BpmWithSubprocessCalling extends BpmTest {
 		private Task callSubprocess() {
 			return new Task(CallActivity) {
 				@Override
-				String execute() {
+				public String execute() {
 					messageHub.sendMessage(ProcessStatus, new ProcessStatus("2", "StringChecker", "Enter", "1", "1", "CallSubprocess").message());
 					return "subprocess called StringChecker";
 				}
@@ -82,7 +82,7 @@ public class BpmWithSubprocessCalling extends BpmTest {
 		private Task handleSubprocessEnding() {
 			return new Task(Automatic) {
 				@Override
-				String execute() {
+				public String execute() {
 					return memory.get("2");
 				}
 			};
