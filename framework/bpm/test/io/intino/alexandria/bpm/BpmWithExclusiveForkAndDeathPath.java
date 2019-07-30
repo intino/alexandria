@@ -85,7 +85,7 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 		private Task checkContainsHelloTask() {
 			return new Task(Automatic) {
 				@Override
-				String execute() {
+				public String execute() {
 					ProcessStatus last = exitStateStatus("CreateString");
 					return last.taskInfo().result().contains("Hello") + "";
 				}
@@ -102,7 +102,7 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 				}
 
 				@Override
-				String execute() {
+				public String execute() {
 					return "Processing hello";
 				}
 			};
@@ -112,7 +112,7 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				String execute() {
+				public String execute() {
 					return "Processing hello2";
 				}
 			};
@@ -122,7 +122,7 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				String execute() {
+				public String execute() {
 					return "Processing goodbye";
 				}
 			};
@@ -132,7 +132,7 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				String execute() {
+				public String execute() {
 					return exitStateStatus("ProcessHello2").stateInfo().status().equals("Exit") ? "hello2" :
 							exitStateStatus("ProcessGoodbye2").stateInfo().status().equals("Exit") ? "bye2" : "none";
 				}
@@ -143,7 +143,7 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				String execute() {
+				public String execute() {
 					return "Processing goodbye2";
 				}
 			};

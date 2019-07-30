@@ -1,36 +1,100 @@
+def type(process & src)
+	package $package+validPackage.bpm;
+
+	import io.intino.alexandria.bpm.Task;
+	import io.intino.alexandria.bpm.Task.Type.*;
+	import io.intino.alexandria.message.MessageHub;
+
+	public class $name+firstUpperCase extends Abstract$name+firstUpperCase {
+
+		$name+firstUpperCase(MessageHub messageHub, String id) {
+			super(messageHub, id);
+		}
+
+		$state+task...[$NL$NL]
+	}
+end
+
 def type(process)
-	package $package+validPackage.procedures.$procedure+lowercase;
+	package $package+validPackage.bpm;
 
-	import $package+validPackage.$box+firstUpperCase~Box;
+	import io.intino.alexandria.bpm.PersistenceManager.InMemoryPersistenceManager;
+	import static io.intino.alexandria.bpm.State.Type.*;
+	import static io.intino.alexandria.bpm.Link.Type.*;
     import io.intino.alexandria.message.Message;
+    import io.intino.alexandria.message.MessageHub;
 
-    public class $name+FirstUpperCase~Process {
+    import java.util.List;
 
-		public java.util.List<String> outputs;
-		public $box+validName+firstUpperCase~Box box;
-		public $type+typeClass $type+typeName;
+    import static io.intino.alexandria.bpm.Link.Type.*;
 
-    	public void execute() {
-    	}
-    }
+    public abstract class Abstract$name+firstUpperCase extends io.intino.alexandria.bpm.Process {
+
+    	private MessageHub messageHub;
+
+		Abstract$name+firstUpperCase(MessageHub messageHub, String id) {
+			super(id);
+			this.messageHub = messageHub;
+			$state...[$NL]
+			$link...[$NL]
+		}
+
+		@Override
+		public String name() {
+			return "$name+firstUpperCase";
+		}
+
+		$state+method...[$NL$NL]
+	}
 end
 
-def type(schemaImport)
-	import $package.schemas.*;
+def type(callActivity) trigger(method)
+	private io.intino.alexandria.bpm.Task $name+firstLowerCase() {
+		return new io.intino.alexandria.bpm.Task($taskType) {
+			@Override
+			public String execute() {
+				messageHub.sendMessage("ProcessStatus", new io.intino.alexandria.bpm.ProcessStatus(java.util.UUID.randomUUID().toString(), "$task", "Enter", id(), id(), "$name").message());
+				return "Subprocess called $task";
+			}
+		};
+	}
 end
 
-def attribute(message) trigger(typeClass)
-	io.intino.alexandria.message.Message
+def !type(callActivity) trigger(method)
+	protected abstract io.intino.alexandria.bpm.Task $name+firstLowerCase();
 end
 
-def type(schema) trigger(typeClass)
-	$package.schemas.$name+FirstUpperCase
+def trigger(state)
+	addState(new io.intino.alexandria.bpm.State("$name", $name+firstLowerCase()[, $type+logercase+FirstUpperCase]));
 end
 
-def type(schema) trigger(typeName)
-	$name+firstLowerCase
+def trigger(link)
+	addLink(new io.intino.alexandria.bpm.Link("$from", "$to", $type));
 end
 
-def trigger(typeName)
-	message
+def !type(callActivity) trigger(task)
+	protected Task $name+firstLowerCase() {
+		return new Task($taskType) {
+			@Override
+			public String execute() {
+				return null;
+			}
+		};
+	}
+end
+
+def attribute(this:CallActivity) trigger(taskType)
+	io.intino.alexandria.bpm.Task.Type.CallActivity
+end
+
+def attribute(this:User) trigger(taskType)
+	io.intino.alexandria.bpm.Task.Type.Manual
+end
+
+def attribute(this:Manual) trigger(taskType)
+	io.intino.alexandria.bpm.Task.Type.Manual
+end
+
+def trigger(taskType)
+	io.intino.alexandria.bpm.Task.Type.Automatic
 end

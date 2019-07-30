@@ -88,6 +88,9 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.objenesis:objenesis:2.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.intino.tara:language:1.1.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.intino.itrules:engine:1.0.0" level="project" />
+    <orderEntry type="library" name="Maven: io.intino:bpmn-parser:1.0.0" level="project" />
+    <orderEntry type="library" name="Maven: javax.xml.bind:jaxb-api:2.2.11" level="project" />
+    <orderEntry type="library" name="Maven: io.intino.alexandria:logger:2.0.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.maven.shared:maven-invoker:2.0.11" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.plexus:plexus-utils:1.5.6" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.slf4j:slf4j-log4j12:1.7.25" level="project" />

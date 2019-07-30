@@ -1,49 +1,35 @@
 package io.intino.alexandria.bpm;
 
-import io.intino.alexandria.inl.Message;
+import io.intino.alexandria.message.Message;
+import io.intino.alexandria.message.MessageHub;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.intino.alexandria.bpm.Link.Type.Exclusive;
 import static io.intino.alexandria.bpm.Link.Type.Inclusive;
 import static io.intino.alexandria.bpm.State.Type.Initial;
 import static io.intino.alexandria.bpm.State.Type.Terminal;
 import static io.intino.alexandria.bpm.Task.Type.Automatic;
-import static io.intino.alexandria.bpm.Task.Type.CallActivity;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class BpmWithSubprocessCallingNoWait {
+public class BpmWithSubprocessCallingNoWait extends BpmTest {
 
 	public static final String ProcessStatus = "ProcessStatus";
 	private static Map<String, String> memory = new HashMap<>();
-	private static MessageHub messageHub;
+	private static MessageHub messageHub = new MessageHub_();
 
 	@Test
 	public void name() throws InterruptedException {
-		messageHub = new MessageHub_();
-		Workflow workflow = new Workflow(messageHub, new ProcessFactory());
+		PersistenceManager.InMemoryPersistenceManager persistence = new PersistenceManager.InMemoryPersistenceManager();
+		new Workflow(messageHub, new ProcessFactory(), persistence);
 		messageHub.sendMessage(ProcessStatus, createProcessMessage());
-		Process process1 = workflow.process("1");
-		Process process2 = workflow.process("2");
-		while(!hasEnded(process1, process2)){
-			if(process1==null) process1 = workflow.process("1");
-			if(process2==null) process2 = workflow.process("2");
-			Thread.sleep(100);
-		}
-		List<ProcessStatus> messages = process1.messages(); //TODO
-		assertThat(messages.get(0).message().toString(), is(createProcessMessage().toString()));
-	}
-
-	private boolean hasEnded(Process... processes) {
-		for (Process process : processes) {
-			if (process == null || process.processStatusList.isEmpty()) return false;
-			if (process.messages().stream().noneMatch(m -> m.processStatus().equals("Exit"))) return false;
-		}
-		return true;
+		waitForProcess(persistence);
+		List<ProcessStatus> messages1 = messagesOf(persistence.read("finished/1.process"));
+		List<ProcessStatus> messages2 = messagesOf(persistence.read("finished/2.process"));
+		assertThat(messages1.get(0).message().toString(), is(createProcessMessage().toString()));
 	}
 
 	private Message createProcessMessage() {
@@ -77,7 +63,7 @@ public class BpmWithSubprocessCallingNoWait {
 		private Task callSubprocess() {
 			return new Task(Automatic) {
 				@Override
-				String execute() {
+				public String execute() {
 					messageHub.sendMessage(ProcessStatus, new Message(ProcessStatus)
 							.set("ts", "2019-01-01T00:00:00Z")
 							.set("id", "2")

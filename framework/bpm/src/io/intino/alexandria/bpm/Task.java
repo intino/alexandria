@@ -3,7 +3,7 @@ package io.intino.alexandria.bpm;
 public abstract class Task {
 	private final Type type;
 
-	Task(Type type) {
+	public Task(Type type) {
 		this.type = type;
 	}
 
@@ -11,11 +11,11 @@ public abstract class Task {
 		return true;
 	}
 
-	abstract String execute();
+	public abstract String execute();
 
 	Type type(){
 		return type;
 	}
 
-	enum Type {Automatic, Manual, CallActivity}
+	public enum Type {Automatic, Manual, CallActivity}
 }
