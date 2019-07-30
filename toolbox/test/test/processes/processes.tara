@@ -9,11 +9,4 @@ Service api as REST(host = "localhost", port = "8080")
 Service bus as JMS(url = "", user = "", password = "", clientId = "", subscriptionModel = Topic)
 	Request("recibir.respuesta") recibirRespuesta as Launcher(ProcesarRespuesta)
 
-Process(bpmn = "") ProcesamientoFichero
-
-Process(bpmn = "") ProcesarRespuesta
-
-//Dialog(url = "/process", label = "Procesa anomalía", description = "") ProcesarAnomalia
-
-
-
+Process(bpmn = "example.bpmn") ProcesarRespuesta
