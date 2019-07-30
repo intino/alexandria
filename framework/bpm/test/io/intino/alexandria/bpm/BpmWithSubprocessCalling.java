@@ -72,7 +72,7 @@ public class BpmWithSubprocessCalling extends BpmTest {
 		private Task callSubprocess() {
 			return new Task(CallActivity) {
 				@Override
-				String execute() {
+				public String execute() {
 					messageHub.sendMessage(ProcessStatus, new ProcessStatus("2", "StringChecker", "Enter", "1", "1", "CallSubprocess").message());
 					return "subprocess called StringChecker";
 				}
@@ -82,7 +82,7 @@ public class BpmWithSubprocessCalling extends BpmTest {
 		private Task handleSubprocessEnding() {
 			return new Task(Automatic) {
 				@Override
-				String execute() {
+				public String execute() {
 					return memory.get("2");
 				}
 			};

@@ -63,7 +63,7 @@ public class BpmWithSubprocessCallingNoWait extends BpmTest {
 		private Task callSubprocess() {
 			return new Task(Automatic) {
 				@Override
-				String execute() {
+				public String execute() {
 					messageHub.sendMessage(ProcessStatus, new Message(ProcessStatus)
 							.set("ts", "2019-01-01T00:00:00Z")
 							.set("id", "2")

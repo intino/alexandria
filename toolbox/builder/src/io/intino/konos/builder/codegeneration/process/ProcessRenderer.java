@@ -82,7 +82,10 @@ public class ProcessRenderer extends Renderer {
 	private FrameBuilder frameOf(State state, State.Type type) {
 		FrameBuilder builder = new FrameBuilder("state").add("name", state.name());
 		if (!State.Type.Intermediate.equals(type)) builder.add("type", type.name());
-		if (state.task() != null) builder.add("taskType", state.task().type().name());
+		if (state.task() != null) {
+			builder.add("taskType", state.task().type().name());
+			builder.add(state.task().type().name());
+		}
 		return builder;
 	}
 

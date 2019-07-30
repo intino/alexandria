@@ -3,11 +3,12 @@ def type(process & src)
 
 	import io.intino.alexandria.bpm.Task;
 	import io.intino.alexandria.bpm.Task.Type.*;
+	import io.intino.alexandria.message.MessageHub;
 
 	public class $name+firstUpperCase extends Abstract$name+firstUpperCase {
 
-		$name+firstUpperCase(String id) {
-			super(id);
+		$name+firstUpperCase(MessageHub messageHub, String id) {
+			super(messageHub, id);
 		}
 
 		$state+task...[$NL$NL]
@@ -21,6 +22,7 @@ def type(process)
 	import static io.intino.alexandria.bpm.State.Type.*;
 	import static io.intino.alexandria.bpm.Link.Type.*;
     import io.intino.alexandria.message.Message;
+    import io.intino.alexandria.message.MessageHub;
 
     import java.util.List;
 
@@ -28,8 +30,11 @@ def type(process)
 
     public abstract class Abstract$name+firstUpperCase extends io.intino.alexandria.bpm.Process {
 
-		Abstract$name+firstUpperCase(String id) {
+    	private MessageHub messageHub;
+
+		Abstract$name+firstUpperCase(MessageHub messageHub, String id) {
 			super(id);
+			this.messageHub = messageHub;
 			$state...[$NL]
 			$link...[$NL]
 		}
@@ -43,7 +48,19 @@ def type(process)
 	}
 end
 
-def trigger(method)
+def type(callActivity) trigger(method)
+	private io.intino.alexandria.bpm.Task $name+firstLowerCase() {
+		return new io.intino.alexandria.bpm.Task($taskType) {
+			@Override
+			public String execute() {
+				messageHub.sendMessage("ProcessStatus", new io.intino.alexandria.bpm.ProcessStatus(java.util.UUID.randomUUID().toString(), "$task", "Enter", id(), id(), "$name").message());
+				return "Subprocess called $task";
+			}
+		};
+	}
+end
+
+def !type(callActivity) trigger(method)
 	protected abstract io.intino.alexandria.bpm.Task $name+firstLowerCase();
 end
 
@@ -55,7 +72,7 @@ def trigger(link)
 	addLink(new io.intino.alexandria.bpm.Link("$from", "$to", $type));
 end
 
-def trigger(task)
+def !type(callActivity) trigger(task)
 	protected Task $name+firstLowerCase() {
 		return new Task($taskType) {
 			@Override
