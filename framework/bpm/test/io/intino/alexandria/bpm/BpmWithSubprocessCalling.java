@@ -27,7 +27,7 @@ public class BpmWithSubprocessCalling extends BpmTest {
 		messageHub = new MessageHub_();
 		PersistenceManager.InMemoryPersistenceManager persistence = new PersistenceManager.InMemoryPersistenceManager();
 		new Workflow(messageHub, new ProcessFactory(), persistence);
-		messageHub.sendMessage("ProcessStatus", createProcessMessage());
+		messageHub.sendMessage(ProcessStatus, createProcessMessage());
 		waitForProcess(persistence);
 		List<ProcessStatus> messages = messagesOf(persistence.read("finished/1.process"));
 		assertThat(messages.get(1).stateInfo().name(), is("CreateString"));
