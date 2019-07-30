@@ -76,7 +76,7 @@ public class Workflow {
 	private void doProcess(Process process, ProcessStatus status) {
 		if (stateExited(status)) {
 			if (!taskIsAutomatic(status)) process.register(status);
-			if (stateIsTerminal(status)) sendTerminationMessage(status);
+			if (stateIsTerminal(status)) registerTerminationMessage(status);
 			else advanceProcess(status);
 		} else if (stateRejectedOrSkipped(status)) propagateRejectionOnBranch(process, stateOf(status));
 		persistProcess(process);
@@ -146,8 +146,8 @@ public class Workflow {
 		sendMessage(exitMessage(callbackProcess, callbackProcess.state(process.callbackState()), "Process " + process.id() + " has " + process.finishStatus()));
 	}
 
-	private void sendTerminationMessage(ProcessStatus status) {
-		sendMessage(terminateProcessMessage(processes.get(status.processId())));
+	private void registerTerminationMessage(ProcessStatus status) {
+		processes.get(status.processId()).register(terminateProcessMessage(processes.get(status.processId())));
 	}
 
 	private void advanceProcess(ProcessStatus status) {
