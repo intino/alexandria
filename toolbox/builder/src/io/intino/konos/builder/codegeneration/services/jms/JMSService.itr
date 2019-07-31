@@ -1,10 +1,10 @@
-
 def type(jms)
 	package $package;
 
 	import $package.requests.*;
 	import io.intino.alexandria.core.Box;
 	import io.intino.alexandria.jms.*;
+	import io.intino.alexandria.Logger;
 
 	import javax.jms.BytesMessage;
 	import javax.jms.JMSException;
@@ -45,7 +45,7 @@ def type(jms)
 			try {
 				return new TopicProducer(session(), path);
 			} catch (JMSException e) {
-				Logger.getGlobal().severe(e.getMessage());
+				Logger.error(e.getMessage());
 				return null;
 			}
 		}
@@ -54,7 +54,7 @@ def type(jms)
 			try {
 				session.close();
 			} catch (JMSException e) {
-				Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
+				Logger.error(e);
 			}
 		}
 		
@@ -62,7 +62,7 @@ def type(jms)
 			try {
 				return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 			} catch (JMSException e) {
-				io.intino.alexandria.logger.Logger.error(e.getMessage(), e);
+				Logger.error(e);
 				return null;
 			}
 		}
@@ -78,7 +78,7 @@ def type(jms)
 				buffer.flush();
 				return buffer.toByteArray();
 			} catch (IOException e) {
-				io.intino.alexandria.logger.Logger.error(e.getMessage(), e);
+				Logger.error(e);
 			}
 			return new byte$[0];
 		}
