@@ -1,4 +1,4 @@
-package io.intino.konos.builder.codegeneration.process;
+package io.intino.konos.builder.codegeneration.bpm;
 
 import io.intino.alexandria.logger.Logger;
 import io.intino.bpmparser.BpmnParser;
@@ -11,6 +11,7 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Process;
+import io.intino.tara.magritte.Layer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,18 +25,32 @@ import static io.intino.bpmparser.State.Type.Terminal;
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
-public class ProcessRenderer extends Renderer {
+public class BpmRenderer extends Renderer {
 	private final Settings settings;
 	private final List<Process> processes;
+	private final File src;
+	private final File gen;
 
-	public ProcessRenderer(Settings settings, KonosGraph graph) {
+	public BpmRenderer(Settings settings, KonosGraph graph) {
 		super(settings, Target.Owner);
 		this.settings = settings;
 		this.processes = graph.processList();
+		this.src = new File(settings.src(Target.Owner), "bpm");
+		this.gen = new File(settings.gen(Target.Owner), "bpm");
 	}
 
 	@Override
 	protected void render() {
+		renderProcesses();
+		renderBpm();
+	}
+
+	private void renderBpm() {
+		FrameBuilder builder = new FrameBuilder("workflow").add("package", settings.packageName()).add("process", processes.stream().map(Layer::name$).toArray(String[]::new));
+		writeFrame(gen, "Workflow", customize(new WorkflowTemplate()).render(builder.toFrame()));
+	}
+
+	private void renderProcesses() {
 		for (Process process : processes) {
 			final FrameBuilder builder = new FrameBuilder("process").
 					add("box", settings.boxName()).
@@ -45,11 +60,8 @@ public class ProcessRenderer extends Renderer {
 			if (!file.exists()) continue;
 			try {
 				BpmnParser bpmnParser = new BpmnParser(new FileInputStream(file));
-				State initial = bpmnParser.getNodeWalker().getInitial().links().get(0).state();
-				initial.type(Initial);
+				State initial = bpmnParser.getNodeWalker().getInitial().links().get(0).state().type(Initial);
 				walk(builder, initial);
-				final File src = new File(settings.src(Target.Owner), "bpm");
-				final File gen = new File(settings.gen(Target.Owner), "bpm");
 				settings.classes().put(process.getClass().getSimpleName() + "#" + process.name$(), "bpm." + process.name$());
 				writeFrame(gen, "Abstract" + process.name$(), customize(new ProcessTemplate()).render(builder.toFrame()));
 				if (!alreadyRendered(src, process.name$()))
@@ -92,7 +104,7 @@ public class ProcessRenderer extends Renderer {
 
 	private State.Type typeOf(State state) {
 		if (state.type().equals(Initial)) return Initial;
-		if (state.links().get(0).state().type().equals(Terminal)) return Terminal;
+		if (state.links().isEmpty() || state.links().get(0).state().type().equals(Terminal)) return Terminal;
 		return State.Type.Intermediate;
 	}
 

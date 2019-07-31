@@ -7,6 +7,7 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.search.GlobalSearchScope;
 import io.intino.konos.builder.codegeneration.adapter.AdapterRenderer;
+import io.intino.konos.builder.codegeneration.bpm.BpmRenderer;
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.builder.codegeneration.datalake.DatalakeRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
@@ -14,7 +15,6 @@ import io.intino.konos.builder.codegeneration.feeder.FeederRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
 import io.intino.konos.builder.codegeneration.messagehub.MessageHubRenderer;
 import io.intino.konos.builder.codegeneration.mounter.MounterRenderer;
-import io.intino.konos.builder.codegeneration.process.ProcessRenderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.codegeneration.services.jms.JMSRequestRenderer;
 import io.intino.konos.builder.codegeneration.services.jms.JMSServiceRenderer;
@@ -122,7 +122,7 @@ public class FullRenderer {
 	}
 
 	private void processes() {
-		new ProcessRenderer(settings, graph).execute();
+		new BpmRenderer(settings, graph).execute();
 	}
 
 	private void feeders() {

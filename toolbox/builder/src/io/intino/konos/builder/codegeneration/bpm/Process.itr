@@ -18,10 +18,7 @@ end
 def type(process)
 	package $package+validPackage.bpm;
 
-	import io.intino.alexandria.bpm.PersistenceManager.InMemoryPersistenceManager;
 	import static io.intino.alexandria.bpm.State.Type.*;
-	import static io.intino.alexandria.bpm.Link.Type.*;
-    import io.intino.alexandria.message.Message;
     import io.intino.alexandria.message.MessageHub;
 
     import java.util.List;
@@ -69,7 +66,7 @@ def trigger(state)
 end
 
 def trigger(link)
-	addLink(new io.intino.alexandria.bpm.Link("$from", "$to", $type));
+	addLink(new io.intino.alexandria.bpm.Link("$from", "$to", $type+linkType));
 end
 
 def !type(callActivity) trigger(task)
@@ -85,6 +82,18 @@ end
 
 def attribute(this:CallActivity) trigger(taskType)
 	io.intino.alexandria.bpm.Task.Type.CallActivity
+end
+
+def attribute(this:DefaultLine) trigger(linkType)
+	io.intino.alexandria.bpm.Link.Type.Default
+end
+
+def attribute(this:Exclusive) trigger(linkType)
+	io.intino.alexandria.bpm.Link.Type.Exclusive
+end
+
+def trigger(linkType)
+	io.intino.alexandria.bpm.Link.Type.Inclusive
 end
 
 def attribute(this:User) trigger(taskType)
