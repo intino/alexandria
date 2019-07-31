@@ -52,4 +52,5 @@ public class OperationRenderer<O extends Operation> extends ComponentRenderer<O>
 	protected String className(Class clazz) {
 		return super.className(clazz).replace("operation", "");
 	}
+
 }

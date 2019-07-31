@@ -18,5 +18,6 @@ public class OperationExamplesMold extends AbstractOperationExamplesMold<Alexand
         operation5.onExecute((event) -> operation5.notifyUser("User clicked operation"));
         operation6.onExecute((event) -> operation6.notifyUser("User clicked operation"));
         operation7.onExecute((event) -> operation7.notifyUser("User clicked operation"));
+        operation8.onToggle((event) -> operation7.notifyUser("Edition state to " + event.state().name()));
     }
 }

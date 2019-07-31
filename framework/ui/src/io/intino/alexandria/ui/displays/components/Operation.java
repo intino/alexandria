@@ -42,6 +42,24 @@ public class Operation<DN extends OperationNotifier, B extends Box> extends Comp
         return this;
     }
 
+    public Operation readonly(boolean value) {
+        if (value) disable();
+        else enable();
+        return this;
+    }
+
+    public Operation enable() {
+        disabled(false);
+        notifier.refreshDisabled(disabled);
+        return this;
+    }
+
+    public Operation disable() {
+        disabled(true);
+        notifier.refreshDisabled(disabled);
+        return this;
+    }
+
     public void refresh() {
         OperationInfo info = new OperationInfo().title(title()).disabled(disabled());
         notifier.refresh(info);

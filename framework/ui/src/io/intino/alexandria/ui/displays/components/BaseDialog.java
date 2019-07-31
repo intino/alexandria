@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class BaseDialog<DN extends BaseDialogNotifier, B extends Box> extends AbstractBaseDialog<DN, B> {
     private java.util.List<Listener> beforeOpenListeners = new ArrayList<>();
     private java.util.List<Listener> openListeners = new ArrayList<>();
+    private java.util.List<Listener> closeListeners = new ArrayList<>();
 
     public BaseDialog(B box) {
         super(box);
@@ -25,6 +26,11 @@ public class BaseDialog<DN extends BaseDialogNotifier, B extends Box> extends Ab
         return this;
     }
 
+    public BaseDialog onClose(Listener listener) {
+        closeListeners.add(listener);
+        return this;
+    }
+
     public void open() {
         notifyBeforeOpen();
         notifier.open();
@@ -33,6 +39,7 @@ public class BaseDialog<DN extends BaseDialogNotifier, B extends Box> extends Ab
 
     public void close() {
         notifier.close();
+        notifyClose();
     }
 
     private void notifyBeforeOpen() {
@@ -41,5 +48,9 @@ public class BaseDialog<DN extends BaseDialogNotifier, B extends Box> extends Ab
 
     private void notifyOpen() {
         openListeners.forEach(l -> l.accept(new Event(this)));
+    }
+
+    private void notifyClose() {
+        closeListeners.forEach(l -> l.accept(new Event(this)));
     }
 }

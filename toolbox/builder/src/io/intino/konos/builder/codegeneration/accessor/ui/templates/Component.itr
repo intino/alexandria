@@ -146,6 +146,10 @@ def type(properties & spinner) trigger(specific)
 	[ mode="$mode"]
 end
 
+def type(properties & switches) trigger(specific)
+    [ state="$state"]
+end
+
 def type(properties & export) trigger(specific)
 	[ from={$from}][ to={$to}][ min={$min}][ max={$max}][ range={{min:$rangeMin,max:$rangeMax}}][ options={$["$option...[","]"$]}]
 end

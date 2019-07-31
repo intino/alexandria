@@ -8,6 +8,7 @@ import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -23,6 +24,7 @@ import io.intino.tara.magritte.Graph;
 import io.intino.tara.magritte.loaders.ClassFinder;
 import io.intino.tara.magritte.stores.ResourcesStore;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
+import org.jetbrains.jps.model.java.JavaResourceRootType;
 import tara.dsl.Konos;
 
 import java.io.ByteArrayOutputStream;
@@ -190,4 +192,5 @@ public class GraphLoader {
 		}
 
 	}
+
 }

@@ -12,6 +12,10 @@ Component operation as Decorated
 Component task as Decorated ExtensionOf(operation)
 	Request execute
 
+Component taskSwitches as Decorated ExtensionOf(operation)
+	Notification refreshState as Text
+	Request toggle
+
 Component export as Decorated ExtensionOf(operation)
 	Request changeParams as Object(ExportParams)
 

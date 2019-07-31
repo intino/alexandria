@@ -23,6 +23,7 @@ import io.intino.konos.model.graph.menu.othercomponents.MenuSelector;
 import io.intino.konos.model.graph.parallax.ParallaxBlock;
 import io.intino.konos.model.graph.radiobox.othercomponents.RadioBoxSelector;
 import io.intino.konos.model.graph.splitter.SplitterBlock;
+import io.intino.konos.model.graph.switches.operationcomponents.SwitchesTask;
 import io.intino.tara.magritte.Layer;
 
 import java.util.ArrayList;
@@ -167,6 +168,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	private List<String> facets(PassiveView passiveView) {
 		List<String> result = new ArrayList<>();
+		if (passiveView.i$(SwitchesTask.class)) result.add("Switches");
 		if (passiveView.i$(Editable.class)) result.add("Editable");
 		if (passiveView.i$(CodeText.class)) result.add("Code");
 		if (passiveView.i$(BadgeBlock.class)) result.add("Badge");
