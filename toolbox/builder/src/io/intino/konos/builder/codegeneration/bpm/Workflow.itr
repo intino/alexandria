@@ -1,0 +1,38 @@
+def type(workflow)
+	package $package+validPackage.bpm;
+
+	import io.intino.alexandria.bpm.PersistenceManager;
+	import io.intino.alexandria.bpm.ProcessFactory;
+	import io.intino.alexandria.bpm.ProcessStatus;
+	import io.intino.alexandria.message.MessageHub;
+
+	import java.io.File;
+
+	public class Workflow extends io.intino.alexandria.bpm.Workflow {
+		public Workflow(MessageHub messageHub, File workspace) {
+			super(messageHub, factory(messageHub), new PersistenceManager.FilePersistenceManager(new File(workspace, "bpm")));
+		}
+
+		private static ProcessFactory factory(MessageHub messageHub) {
+			return (id, name) -> {
+				switch (name) {
+					$process...[$NL]
+				}
+				return null;
+			};
+		}
+
+
+		$process+method...[$NL]
+	}
+end
+
+def trigger(method)
+	public void launch$this+firstUpperCase() {
+		messageHub.sendMessage("ProcessStatus", new ProcessStatus(java.util.UUID.randomUUID().toString(), "$this", "Enter").message());
+	}
+end
+
+def trigger(process)
+	case "$this": return new $this+firstUpperCase(messageHub, id);
+end

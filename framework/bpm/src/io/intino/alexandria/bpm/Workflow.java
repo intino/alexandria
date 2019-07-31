@@ -20,9 +20,8 @@ import static java.util.stream.Collectors.toList;
 
 
 public class Workflow {
-
 	private static final String Channel = "ProcessStatus";
-	private final MessageHub messageHub;
+	protected final MessageHub messageHub;
 	private final PersistenceManager persistence;
 	private ProcessFactory factory;
 	private Map<String, Process> processes = new ConcurrentHashMap<>();
