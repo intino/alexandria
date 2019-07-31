@@ -22,6 +22,7 @@ def type(box)
 		[$messageHub+field]
 		[$datalake+field]
 		[$task+field]
+		[$workflow+field]
         [protected Map<String, Soul> uiSouls = new java.util.HashMap<>()$hasUi+hideUi]
 	    [private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>()$hasUi+hideUi]
 		[private io.intino.alexandria.ui.services.AuthService authService$hasUi+hideUi]
@@ -60,14 +61,15 @@ def type(box)
 			initMessageHub();
 			initTasks();
 			initSlackBots();
+			initWorkflow();
 			return this;
 		}
 
 		public void close() {
 			if (owner != null) owner.close();
 			[$spark...[$NL]]
-			[$service+quit...[$NL]]
-			[$messageHub+quit]
+			[$service+close...[$NL]]
+			[$messageHub+close]
 		}
 
 		[$hasUi+registerSoul]
@@ -86,6 +88,7 @@ def type(box)
 
 		[$task+getter...[$NL$NL]]
 
+		[$workflow+getter]
 
 		private void initRESTServices() {
 			$service+rest...[$NL]
@@ -120,6 +123,10 @@ def type(box)
 			[$task+init...[$NL]]
 		}
 
+		private void initWorkflow() {
+			[$workflow+init]
+		}
+
 		[$authenticationValidator]
 
 		private void initJavaLogger() {
@@ -139,6 +146,13 @@ def type(box)
 			}
 		}
 	}
+end
+
+def type(datalake) trigger(import)
+	import io.intino.alexandria.datalake.Datalake;
+end
+def type(messageHub) trigger(import)
+	import io.intino.alexandria.message.MessageHub;
 end
 
 def trigger(uiBox)
@@ -223,11 +237,12 @@ def type(service & jms) trigger(init)
 	}
 end
 
-def type(datalake) trigger(import)
-	import io.intino.alexandria.datalake.Datalake;
+def type(task) trigger(init)
+	Tasks.init(this.scheduler, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
-def type(messageHub) trigger(import)
-	import io.intino.alexandria.message.MessageHub;
+
+def type(workflow) trigger(init)
+	this.workflow = new $package.bpm.Workflow(this.messageHub, this.configuration().workspace());
 end
 
 def type(datalake & mirror) trigger(init)
@@ -275,9 +290,12 @@ def type(datalake) trigger(field)
 	private io.intino.alexandria.datalake.Datalake datalake;
 end
 
-
 def type(messageHub) trigger(field)
 	private $package.MessageHub messageHub;
+end
+
+def type(workflow) trigger(field)
+	private $package.bpm.Workflow workflow;
 end
 
 def type(service & jms) trigger(getter)
@@ -291,6 +309,7 @@ def type(datalake) trigger(getter)
 		return this.datalake;
 	}
 end
+
 def type(messageHub) trigger(getter)
 	public io.intino.alexandria.message.MessageHub messageHub() {
 		return this.messageHub;
@@ -303,6 +322,12 @@ def type(messageHub) trigger(getter)
 	private void registerFeeders() {
 		$feeder...[$NL]
 	}]
+end
+
+def type(datalake) trigger(getter)
+	public $package.bpm.Workflow workflow() {
+		return this.workflow;
+	}
 end
 
 def type(datamart) trigger(getter)
@@ -328,23 +353,20 @@ def trigger(spark)
 	io.intino.alexandria.rest.AlexandriaSparkBuilder.instance().stop();
 end
 
-def type(service) type(jms) trigger(quit)
+def type(service) type(jms) trigger(close)
 	if ($name+SnakeCaseToCamelCase+firstlowerCase != null) $name+SnakeCaseToCamelCase+firstlowerCase.closeSession();
 end
 
-def type(messageHub) trigger(quit)
+def type(messageHub) trigger(close)
 	if (messageHub != null) messageHub.stop();
 end
 
-def type(service) trigger(quit)
+def type(service) trigger(close)
 end
 
 def type(service)
 end
 
-def type(task) trigger(init)
-	Tasks.init(this.scheduler, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
-end
 
 def type(task) trigger(getter)
 	public io.intino.alexandria.scheduler.AlexandriaScheduler scheduler() {
