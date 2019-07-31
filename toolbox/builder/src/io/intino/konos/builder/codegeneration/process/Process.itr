@@ -53,8 +53,8 @@ def type(callActivity) trigger(method)
 		return new io.intino.alexandria.bpm.Task($taskType) {
 			@Override
 			public String execute() {
-				messageHub.sendMessage("ProcessStatus", new io.intino.alexandria.bpm.ProcessStatus(java.util.UUID.randomUUID().toString(), "$task", "Enter", id(), id(), "$name").message());
-				return "Subprocess called $task";
+				messageHub.sendMessage("ProcessStatus", new io.intino.alexandria.bpm.ProcessStatus(java.util.UUID.randomUUID().toString(), "$taskName", "Enter", id(), id(), "$name").message());
+				return "Subprocess called $taskName";
 			}
 		};
 	}
