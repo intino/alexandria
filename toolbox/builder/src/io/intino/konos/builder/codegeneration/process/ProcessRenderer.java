@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import static io.intino.bpmparser.State.Type.Initial;
+import static io.intino.bpmparser.State.Type.Terminal;
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
@@ -44,7 +45,8 @@ public class ProcessRenderer extends Renderer {
 			if (!file.exists()) continue;
 			try {
 				BpmnParser bpmnParser = new BpmnParser(new FileInputStream(file));
-				State initial = bpmnParser.getNodeWalker().getInitial();
+				State initial = bpmnParser.getNodeWalker().getInitial().links().get(0).state();
+				initial.type(Initial);
 				walk(builder, initial);
 				final File src = new File(settings.src(Target.Owner), "bpm");
 				final File gen = new File(settings.gen(Target.Owner), "bpm");
@@ -61,9 +63,6 @@ public class ProcessRenderer extends Renderer {
 	private void walk(FrameBuilder builder, State initial) {
 		Map<String, FrameBuilder> states = new LinkedHashMap<>();
 		Map<String, FrameBuilder> links = new LinkedHashMap<>();
-		if (initial.links().isEmpty()) return;
-		initial = initial.links().get(0).state();
-		initial.type(Initial);
 		framesFrom(initial, states, links);
 		builder.add("state", states.values().toArray(new FrameBuilder[0]));
 		builder.add("link", links.values().toArray(new FrameBuilder[0]));
@@ -72,10 +71,10 @@ public class ProcessRenderer extends Renderer {
 	private void framesFrom(State state, Map<String, FrameBuilder> states, Map<String, FrameBuilder> links) {
 		states.put(state.name(), frameOf(state, typeOf(state)));
 		for (Link link : state.links()) {
-			if (!states.containsKey(link.state().name()) && !link.state().type().equals(State.Type.Terminal))
+			if (!states.containsKey(link.state().name()) && !link.state().type().equals(Terminal))
 				framesFrom(link.state(), states, links);
-			if (!links.containsKey(state.name() + "#" + link.state().name()) && !link.state().type().equals(State.Type.Terminal))
-				links.put(link.state().name(), frameOf(link, link.state()));
+			if (!links.containsKey(state.name() + "#" + link.state().name()))
+				links.put(state.name() + "#" + link.state().name(), frameOf(state, link));
 		}
 	}
 
@@ -84,23 +83,24 @@ public class ProcessRenderer extends Renderer {
 		if (!State.Type.Intermediate.equals(type)) builder.add("type", type.name());
 		if (state.task() != null) {
 			builder.add("taskType", state.task().type().name());
+			builder.add("taskName", state.task().id());
 			builder.add(state.task().type().name());
 		}
+		if (type.equals(Terminal)) state.type(Terminal).links().clear();
 		return builder;
 	}
 
 	private State.Type typeOf(State state) {
 		if (state.type().equals(Initial)) return Initial;
-		if (state.links().get(0).state().type().equals(State.Type.Terminal)) return State.Type.Terminal;
+		if (state.links().get(0).state().type().equals(Terminal)) return Terminal;
 		return State.Type.Intermediate;
 	}
 
-	private FrameBuilder frameOf(Link link, State state) {
+	private FrameBuilder frameOf(State state, Link link) {
 		return new FrameBuilder("link").add("from", state.name()).add("to", link.state().name()).add("type", link.type().name());
 	}
 
 	private boolean alreadyRendered(File destination, String action) {
 		return Commons.javaFile(destination, action).exists();
 	}
-
 }
