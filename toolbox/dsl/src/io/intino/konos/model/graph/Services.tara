@@ -1,6 +1,6 @@
 dsl Proteo
 
-use Processes
+use bpm
 use DataTypes
 
 Concept:Named Service

@@ -49,6 +49,7 @@ public class AbstractBoxRenderer extends Renderer {
 		tasks(root, boxName);
 		datalake(root);
 		messageHub(root, boxName);
+		workflow(root);
 		if (hasAuthenticatedApis()) root.add("authenticationValidator", new FrameBuilder().add("type", "Basic"));
 
 		graph.datamartList().forEach(d -> datamart(root, d));
@@ -108,6 +109,11 @@ public class AbstractBoxRenderer extends Renderer {
 		root.add("messageHub", builder.toFrame());
 	}
 
+	private void workflow(FrameBuilder root) {
+		if (graph.processList().isEmpty()) return;
+		root.add("workflow", buildBaseFrame().add("workflow"));
+		customParameters.add("workspace");
+	}
 
 	private Frame frameOf(Mounter m, String boxName) {
 		RealtimeMounter mounter = m.asRealtime();
