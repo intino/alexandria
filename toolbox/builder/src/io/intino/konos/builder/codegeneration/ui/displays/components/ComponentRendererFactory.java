@@ -54,6 +54,7 @@ public class ComponentRendererFactory {
 		if (component.i$(Export.class)) return (T) new ExportRenderer(settings, component.a$(Export.class), provider, target);
 		if (component.i$(OpenDialog.class)) return (T) new OpenDialogRenderer(settings, component.a$(OpenDialog.class), provider, target);
 		if (component.i$(CloseDialog.class)) return (T) new CloseDialogRenderer(settings, component.a$(CloseDialog.class), provider, target);
+		if (component.i$(OperationComponents.Task.class)) return (T) new TaskRenderer(settings, component.a$(OperationComponents.Task.class), provider, target);
 		if (component.i$(Operation.class)) return (T) new OperationRenderer(settings, component.a$(Operation.class), provider, target);
 
 		return (T) new ComponentRenderer(settings, component, provider, target);

@@ -9,7 +9,8 @@ Facet IconButton extends Button on OperationComponents.Operation
 	var string icon
 Facet MaterialIconButton extends Button on OperationComponents.Operation
 	var string icon
-Facet Switches on OperationComponents.Operation
+Facet Switches on OperationComponents.Task
+	var word:{On Off} state = Off
 
 Facet Confirmable on OperationComponents.Operation
 	var string confirmText

@@ -88,6 +88,9 @@ Component baseDialog as Decorated
 	Notification open
 	Notification close
 
+	Request open
+	Request close
+
 Component dialog as Decorated ExtensionOf(baseDialog)
 Component alertDialog as Decorated ExtensionOf(baseDialog)
 Component decisionDialog as Decorated ExtensionOf(baseDialog)

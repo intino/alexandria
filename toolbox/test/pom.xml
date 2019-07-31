@@ -267,12 +267,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>io.intino.alexandria</groupId>
-            <artifactId>data-hub-jms</artifactId>
-            <version>1.0.0</version>
-            <scope>test</scope>
-        </dependency>
+
     </dependencies>
 
 </project>

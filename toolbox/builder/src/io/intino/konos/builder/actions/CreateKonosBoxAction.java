@@ -24,6 +24,7 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.PsiTestUtil;
+import cottons.utils.Files;
 import io.intino.konos.builder.KonosIcons;
 import io.intino.konos.builder.Manifest;
 import io.intino.konos.builder.codegeneration.FullRenderer;
@@ -63,8 +64,7 @@ public class CreateKonosBoxAction extends KonosAction {
 	private static final Logger LOG = Logger.getInstance("CreateKonosBoxAction: ");
 	private static final String BOX = "box";
 	private static final String TEXT = "Create Konos Box";
-
-	private static final String ElementCache = ".cache";
+	private static boolean firstTime = true;
 
 	public CreateKonosBoxAction() {
 		super(TEXT, "Creates Konos Box", KonosIcons.GENERATE_16);
@@ -211,6 +211,14 @@ public class CreateKonosBoxAction extends KonosAction {
 		return resDirectory;
 	}
 
+	private File prepareIntinoFolder(Module module) {
+		File folder = new File(IntinoDirectory.of(module.getProject()) + "/box/" + module.getName());
+		if (folder.exists() && firstTime) Files.removeDir(folder);
+		if (!folder.exists()) folder.mkdirs();
+		firstTime = false;
+		return folder;
+	}
+
 	private io.intino.konos.builder.codegeneration.cache.ElementCache loadCache(File folder, KonosGraph graph, Stash stash) {
 		return new CacheReader(folder).load(graph, stash);
 	}
@@ -262,8 +270,7 @@ public class CreateKonosBoxAction extends KonosAction {
 
 		private boolean render(String packageName, File gen, File src, File res, KonosGraph graph, Stash stash) {
 			try {
-				File folder = new File(IntinoDirectory.of(module.getProject()) + "/box/" + module.getName());
-				folder.mkdirs();
+				File folder = prepareIntinoFolder(module);
 				io.intino.konos.builder.codegeneration.cache.ElementCache cache = loadCache(folder, graph, stash);
 				new FullRenderer(graph, new Settings(module, src, gen, res, packageName, cache)).execute();
 				saveCache(cache, folder);

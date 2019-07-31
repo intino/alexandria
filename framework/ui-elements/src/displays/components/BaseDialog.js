@@ -33,7 +33,7 @@ export default class BaseDialog extends AbstractBaseDialog {
 	};
 
 	handleClose = () => {
-		this.close();
+		this.requester.close();
 	};
 
 	renderTitle = () => {

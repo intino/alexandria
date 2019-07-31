@@ -69,3 +69,15 @@ Template(layout=Vertical, spacing=DP8) operationExamplesMold as Decorated
 						Task(title\="operation 1") as Button Highlighted(style\=Outline)<br/>
 						Task(title\="operation 2") as Button Highlighted(style\=Fill)<br/>
 						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Switches facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Task(title="edition") operation8 as Switches(state=On)
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Task(title\="edition") as Switches(state\=Off)
+						=========
