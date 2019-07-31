@@ -10,4 +10,7 @@ Service api as REST(host = "localhost", port = "8080")
 //	Request("recibir.respuesta") recibirRespuesta as Launcher(ProcesarRespuesta)
 
 //Process(bpmn = "example.bpmn") ProcesarRespuesta
-Process(bpmn = "example2.bpmn") BpmWithSubprocessCalling
+//Process(bpmn = "example2.bpmn") BpmWithSubprocessCalling
+Process(bpmn = "example3.bpmn") BpmWithInclusiveFork
+Process(bpmn = "example4.bpmn") BpmWithExclusiveForkAndDeathPath
+Process(bpmn = "example5.bpmn") BpmWithExclusiveForkAndDeathPathAndDefault
