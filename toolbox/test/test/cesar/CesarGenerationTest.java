@@ -1,14 +1,13 @@
 package cesar;
 
-import io.intino.konos.builder.codegeneration.FullRenderer;
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.accessor.jms.JMSAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer;
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.magritte.Graph;
 import org.junit.Ignore;
 import org.junit.Test;
-import utils.TestUtil;
 
 import java.io.File;
 
@@ -32,6 +31,9 @@ public class CesarGenerationTest {
 	public void testConsul() {
 		File gen = new File("test-gen", CONSUL);
 		KonosGraph graph = new Graph().loadStashes("Consul").as(KonosGraph.class);
-		new FullRenderer(graph, TestUtil.settings(gen, CONSUL)).execute();
+//		new FullRenderer(graph, TestUtil.settings(gen, CONSUL)).execute();
+		Settings settings = new Settings().packageName(CONSUL).gen(gen).src(gen).cache(new ElementCache());
+		graph.jMSServiceList().forEach(a ->
+				new JMSAccessorRenderer(settings, a, new File("test-gen/" + CONSUL)).execute());
 	}
 }
