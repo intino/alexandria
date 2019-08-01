@@ -9,12 +9,12 @@ def type(accessor)
     import javax.jms.*;
 	$schemaImport
 
-	public class $name+firstUpperCase+camelCase~Accessor {
+	public class $name+snakeCaseToCamelCase+firstUpperCase~Accessor {
 
 		private final Session session;
 		$custom+field...[$NL]
 
-		public $name+firstUpperCase+camelCase~Accessor(Session session[, $custom+signature...[, ]]) {
+		public $name+snakeCaseToCamelCase+firstUpperCase~Accessor(Session session[, $custom+signature...[, ]]) {
 			this.session = session;
 			$custom+assign...[$NL]
 		}
@@ -116,15 +116,15 @@ def type(request)
 end
 
 def type(parameter & list) trigger(signature)
-	java.util.List<$type> $name+camelCase+firstLowerCase
+	java.util.List<$type> $name+snakeCaseToCamelCase+firstLowerCase
 end
 
 def type(parameter) trigger(signature)
-	$type $name+camelCase+firstLowerCase
+	$type $name+snakeCaseToCamelCase+firstLowerCase
 end
 
 def type(parameter) trigger(name)
-	$name+camelCase+firstLowerCase
+	$name+snakeCaseToCamelCase+firstLowerCase
 end
 
 def type(parameter & objectData) trigger(assign)
