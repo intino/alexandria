@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LocationEditable<DN extends LocationEditableNotifier, B extends Box> extends AbstractLocationEditable<DN, B> {
+	private boolean readonly;
 	private ChangeListener changeListener = null;
 
     public LocationEditable(B box) {
@@ -21,6 +22,21 @@ public class LocationEditable<DN extends LocationEditableNotifier, B extends Box
 
 	public LocationEditable<DN, B> onChange(ChangeListener listener) {
 		this.changeListener = listener;
+		return this;
+	}
+
+	public boolean readonly() {
+		return readonly;
+	}
+
+	public LocationEditable<DN, B> readonly(boolean value) {
+		this.readonly = readonly;
+		return this;
+	}
+
+	public LocationEditable<DN, B> updateReadonly(boolean value) {
+		readonly(value);
+		notifier.refreshReadonly(value);
 		return this;
 	}
 

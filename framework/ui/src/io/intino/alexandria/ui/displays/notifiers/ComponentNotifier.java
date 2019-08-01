@@ -18,4 +18,8 @@ public class ComponentNotifier extends DisplayNotifier {
 		putToDisplay("userMessage", "v", value);
 	}
 
+	public void refreshVisibility(boolean value) {
+		putToDisplay("refreshVisibility", "v", value);
+	}
+
 }

@@ -17,7 +17,8 @@ const styles = theme => ({
 
 class TextEditable extends AbstractTextEditable {
 	state = {
-		value : ""
+		value : "",
+		readonly : this.props.readonly
 	};
 
 	constructor(props) {
@@ -44,7 +45,7 @@ class TextEditable extends AbstractTextEditable {
 
 		return (
 			<TextField format={this.variant("body1")} style={this.style()} className={classes.default} label={label} type="text"
-					   value={this.state.value} onChange={this.handleChange.bind(this)}
+					   value={this.state.value} onChange={this.handleChange.bind(this)} disabled={this.state.readonly}
 					   onKeyPress={this.handleKeypress.bind(this)} type={type}
 					   placeholder={placeholder}
 					   InputProps={{
@@ -56,6 +57,10 @@ class TextEditable extends AbstractTextEditable {
 
 	refresh = (value) => {
 		this.setState({ "value": value != null ? value : "" });
+	};
+
+	refreshReadonly = (readonly) => {
+		this.setState({ readonly });
 	};
 }
 

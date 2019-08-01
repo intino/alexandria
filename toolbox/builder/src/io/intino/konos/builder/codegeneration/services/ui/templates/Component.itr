@@ -330,6 +330,7 @@ end
 
 def type(properties & selector) trigger(specific)
 	[multipleSelection($multipleSelection);]
+	[readonly($readonly);]
 end
 
 def type(properties & image & avatar) trigger(specific)
@@ -393,6 +394,7 @@ def type(properties & number) trigger(specific)
 	[value($value);]
 	[min($min);]
 	[max($max);]
+	[readonly($readonly);]
 end
 
 def type(properties & date) trigger(specific)
@@ -403,6 +405,7 @@ end
 
 def type(properties & text) trigger(specific)
 	[value("$defaultValue");]
+	[readonly($readonly);]
 end
 
 def type(properties & location) trigger(specific)

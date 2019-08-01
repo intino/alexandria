@@ -13,6 +13,7 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
 	private URL value;
 	private URL defaultValue;
 	private String mimeType;
+	private boolean readonly;
 	public ChangeListener changeListener = null;
 
     public ImageEditable(B box) {
@@ -34,9 +35,24 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
 		return this;
 	}
 
+	public boolean readonly() {
+		return readonly;
+	}
+
+	public ImageEditable<DN, B> readonly(boolean value) {
+		this.readonly = readonly;
+		return this;
+	}
+
 	public void update(URL value) {
 		value(value);
 		refresh();
+	}
+
+	public ImageEditable<DN, B> updateReadonly(boolean value) {
+		readonly(value);
+		notifier.refreshReadonly(value);
+		return this;
 	}
 
 	public ImageEditable<DN, B> onChange(ChangeListener listener) {
