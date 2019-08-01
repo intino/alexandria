@@ -339,10 +339,6 @@ def trigger(spark)
 	io.intino.alexandria.rest.AlexandriaSparkBuilder.instance().stop();
 end
 
-def type(service) type(jms) trigger(close)
-	if ($name+SnakeCaseToCamelCase+firstlowerCase != null) $name+SnakeCaseToCamelCase+firstlowerCase.closeSession();
-end
-
 def type(messageHub) trigger(close)
 	if (messageHub != null) messageHub.stop();
 end

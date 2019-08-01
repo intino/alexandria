@@ -46,7 +46,6 @@ public class AbstractBoxTemplate extends Template {
 			rule().condition((allTypes("service","slack")), (trigger("getter"))).output(literal("public ")).output(mark("name", "SnakeCaseToCamelCase", "firstUpperCase")).output(literal("SlackBot ")).output(mark("name", "SnakeCaseToCamelCase", "firstlowerCase")).output(literal("() {\n\treturn (")).output(mark("name", "SnakeCaseToCamelCase", "firstUpperCase")).output(literal("SlackBot) ")).output(mark("name", "SnakeCaseToCamelCase", "firstlowerCase")).output(literal(";\n}")),
 			rule().condition((type("service")), (trigger("getter"))),
 			rule().condition((trigger("spark"))).output(literal("io.intino.alexandria.rest.AlexandriaSparkBuilder.instance().stop();")),
-				rule().condition((type("service")), (type("jms")), (trigger("close"))).output(literal("if (")).output(mark("name", "SnakeCaseToCamelCase", "firstlowerCase")).output(literal(" != null) ")).output(mark("name", "SnakeCaseToCamelCase", "firstlowerCase")).output(literal(".closeSession();")),
 				rule().condition((type("messageHub")), (trigger("close"))).output(literal("if (messageHub != null) messageHub.stop();")),
 				rule().condition((type("service")), (trigger("close"))),
 			rule().condition((type("service"))),

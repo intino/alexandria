@@ -41,8 +41,10 @@ public class BoxConfigurationRenderer extends Renderer {
 		if (parent() != null && configuration != null && !Platform.equals(configuration.level()))
 			builder.add("parent", parent());
 		if (isTara) builder.add("tara", "");
-		for (String parameter : params)
+		for (String parameter : params) {
+			if (parameter.equalsIgnoreCase("workspace")) continue;
 			builder.add("parameter", new FrameBuilder().add("name", nameOf(parameter)).add("value", parameter));
+		}
 		return boxName;
 	}
 
