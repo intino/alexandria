@@ -28,14 +28,15 @@ public class AbstractBoxRenderer extends Renderer {
 	private final KonosGraph graph;
 	private final Configuration configuration;
 	private final boolean hasModel;
-	private final Set<String> customParameters;
+	private final Set<String> konosParameters;
 
 	AbstractBoxRenderer(Settings settings, KonosGraph graph, boolean hasModel) {
 		super(settings, Target.Owner);
 		this.graph = graph;
 		this.configuration = module() != null ? TaraUtil.configurationOf(module()) : null;
 		this.hasModel = hasModel;
-		this.customParameters = new HashSet<>();
+		this.konosParameters = new HashSet<>();
+		this.konosParameters.add("workspace");
 	}
 
 	@Override
@@ -51,14 +52,13 @@ public class AbstractBoxRenderer extends Renderer {
 		messageHub(root, boxName);
 		workflow(root);
 		if (hasAuthenticatedApis()) root.add("authenticationValidator", new FrameBuilder().add("type", "Basic"));
-
 		graph.datamartList().forEach(d -> datamart(root, d));
 		Commons.writeFrame(settings.gen(Target.Owner), "AbstractBox", template().render(root.toFrame()));
 		notifyNewParameters();
 	}
 
-	public Set<String> customParameters() {
-		return customParameters;
+	Set<String> customParameters() {
+		return konosParameters;
 	}
 
 	private void datamart(FrameBuilder root, Datamart datamart) {
@@ -66,7 +66,7 @@ public class AbstractBoxRenderer extends Renderer {
 	}
 
 	private void notifyNewParameters() {
-		new ParameterPublisher((LegioConfiguration) configuration).publish(customParameters);
+		new ParameterPublisher((LegioConfiguration) configuration).publish(konosParameters);
 	}
 
 	private void tasks(FrameBuilder builder, String boxName) {
@@ -112,7 +112,7 @@ public class AbstractBoxRenderer extends Renderer {
 	private void workflow(FrameBuilder root) {
 		if (graph.processList().isEmpty()) return;
 		root.add("workflow", buildBaseFrame().add("workflow"));
-		customParameters.add("workspace");
+		konosParameters.add("workspace");
 	}
 
 	private Frame frameOf(Mounter m, String boxName) {
@@ -203,7 +203,7 @@ public class AbstractBoxRenderer extends Renderer {
 
 	private boolean isCustom(String value) {
 		final boolean custom = value != null && value.startsWith("{");
-		if (custom) customParameters.add(value.substring(1, value.length() - 1));
+		if (custom) konosParameters.add(value.substring(1, value.length() - 1));
 		return custom;
 	}
 
