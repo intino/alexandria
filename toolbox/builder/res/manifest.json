@@ -32,7 +32,6 @@
     "io.intino.alexandria:ui-framework": "2.0.0",
     "io.intino.alexandria:rest": "2.0.0",
     "io.intino.alexandria:bpm": "1.0.0",
-    "io.intino.alexandria:jms": "1.0.1",
     "io.intino.alexandria:jmx": "1.0.1",
     "io.intino.alexandria:datalake": "1.0.0",
     "io.intino.alexandria:message-hub": "1.0.0",
