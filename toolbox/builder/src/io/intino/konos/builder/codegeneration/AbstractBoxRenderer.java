@@ -163,10 +163,7 @@ public class AbstractBoxRenderer extends Renderer {
 
 	private void jms(FrameBuilder frame, String name) {
 		for (JMSService service : graph.jMSServiceList())
-			frame.add("service", new FrameBuilder("service", "jms").add("name", service.name$()).add("configuration", name)
-					.add("parameter", parameter(service.user()).toFrame())
-					.add("parameter", parameter(service.password()).toFrame())
-					.add("parameter", parameter(service.url()).toFrame()).toFrame());
+			frame.add("service", new FrameBuilder("service", "jms").add("name", service.name$()).add("configuration", name));
 	}
 
 	private void jmx(FrameBuilder frame, String name) {
