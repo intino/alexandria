@@ -63,7 +63,7 @@ public class JMSAccessorRenderer extends Renderer {
 			builder.add("reply");
 			final FrameBuilder reply = new FrameBuilder();
 			if (request.response().isList()) reply.add("list");
-			builder.add("reply", reply.add("reply", request.response().asType().getClass().getSimpleName()).add("value", request.response().asType().type()));
+			builder.add("reply", reply.add("reply").add(request.response().asType().getClass().getSimpleName()).add("value", request.response().asType().type()));
 		}
 		customParameters.forEach(parameter -> builder.add("custom", parameter));
 		return builder;
@@ -79,7 +79,7 @@ public class JMSAccessorRenderer extends Renderer {
 	}
 
 	private Frame parameter(Parameter parameter) {
-		return new FrameBuilder().add("parameter", parameter.asType().getClass().getSimpleName())
+		return new FrameBuilder("parameter", parameter.asType().getClass().getSimpleName())
 				.add("name", parameter.name$())
 				.add("type", parameter.asType().type()).toFrame();
 	}

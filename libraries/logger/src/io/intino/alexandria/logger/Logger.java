@@ -4,15 +4,12 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.LogRecord;
 
 public class Logger {
-	private static PrintStream out = System.out;
-	private static PrintStream err = System.err;
+	private static List<LogHandler> out = Arrays.asList(new PrintStreamLogHandler(System.out));
+	private static List<LogHandler> err = Arrays.asList(new PrintStreamLogHandler(System.err));
 	private static List<String> excludedPackages = new ArrayList<>();
 	private static Set<Level> excludedLevels = new HashSet<>();
 	private static String pattern = "[%level]\nts: %date\nsource: %C\nmessage: %m\n";
@@ -23,36 +20,36 @@ public class Logger {
 
 	public static void trace(String message) {
 		if (isExcluded() || excludedLevels.contains(Level.TRACE)) return;
-		out.print(format(Level.TRACE, message));
+		out.forEach(o -> o.publish(format(Level.TRACE, message)));
 	}
 
 	public static void debug(String message) {
-		if (isDebugging()) out.print(format(Level.DEBUG, message));
+		if (isDebugging()) out.forEach(o -> o.publish(format(Level.DEBUG, message)));
 	}
 
 	public static void info(String message) {
 		if (isExcluded() || excludedLevels.contains(Level.INFO)) return;
-		out.print(format(Level.INFO, message));
+		out.forEach(o -> o.publish(format(Level.INFO, message)));
 	}
 
 	public static void warn(String message) {
 		if (isExcluded() || excludedLevels.contains(Level.WARN)) return;
-		out.print(format(Level.WARN, message));
+		out.forEach(o -> o.publish(format(Level.WARN, message)));
 	}
 
 	public static void error(String message) {
 		if (isExcluded() || excludedLevels.contains(Level.ERROR)) return;
-		err.print(format(Level.ERROR, message));
+		err.forEach(o -> o.publish(format(Level.ERROR, message)));
 	}
 
 	public static void error(Throwable e) {
 		if (isExcluded() || excludedLevels.contains(Level.ERROR)) return;
-		err.print(format(e));
+		err.forEach(o -> o.publish(format(e)));
 	}
 
 	public static void error(String message, Throwable e) {
 		if (isExcluded() || excludedLevels.contains(Level.ERROR)) return;
-		err.print(format(message, e));
+		err.forEach(o -> o.publish(format(message, e)));
 	}
 
 	public static void excludePackage(String aPackage) {
@@ -69,6 +66,14 @@ public class Logger {
 
 	public static void includeLevel(Level level) {
 		excludedLevels.remove(level);
+	}
+
+	public static void addErrorhandler(LogHandler stream) {
+		err.add(stream);
+	}
+
+	public static void addOuthandler(LogHandler stream) {
+		out.add(stream);
 	}
 
 	static String format(LogRecord record) {
@@ -124,5 +129,23 @@ public class Logger {
 
 	public enum Level {
 		ERROR, WARN, INFO, DEBUG, TRACE
+	}
+
+	public interface LogHandler {
+		void publish(String message);
+	}
+
+	private static class PrintStreamLogHandler implements LogHandler {
+
+		private final PrintStream stream;
+
+		PrintStreamLogHandler(PrintStream stream) {
+			this.stream = stream;
+		}
+
+		@Override
+		public void publish(String message) {
+			stream.print(message);
+		}
 	}
 }

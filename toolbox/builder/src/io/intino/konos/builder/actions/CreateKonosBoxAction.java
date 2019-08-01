@@ -151,7 +151,7 @@ public class CreateKonosBoxAction extends KonosAction {
 			remove(dependencies, "datalake");
 			remove(dependencies, "sshj");
 		} else if (!graph.datalake().isSshMirrored()) remove(dependencies, "sshj");
-		if (graph.messageHub() == null) remove(dependencies, "message-hub");
+		if (graph.messageHub() == null) remove(dependencies, "message");
 		if (!graph.messageHub().isJmsBus()) remove(dependencies, "message-hub-jms");
 		if (graph.uIServiceList().isEmpty()) remove(dependencies, "ui");
 		if (graph.rESTServiceList().isEmpty()) remove(dependencies, "rest");

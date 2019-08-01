@@ -6,6 +6,7 @@ import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageHub;
 import io.intino.alexandria.message.MessageWriter;
 
+import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.Session;
 import java.io.ByteArrayOutputStream;
@@ -40,6 +41,14 @@ public class JmsMessageHub implements MessageHub {
 		} else Logger.warn("Broker url is null");
 		producers = new HashMap<>();
 		consumers = new HashMap<>();
+	}
+
+	public Connection connection() {
+		return connection;
+	}
+
+	public Session session() {
+		return session;
 	}
 
 	public void stop() {
