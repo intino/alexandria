@@ -9,12 +9,12 @@ def type(accessor)
     import javax.jms.*;
 	$schemaImport
 
-	public class $name+firstUpperCase+SnakeCaseToCamelCase~Accessor {
+	public class $name+snakeCaseToCamelCase+firstUpperCase~Accessor {
 
 		private final Session session;
 		$custom+field...[$NL]
 
-		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(Session session[, $custom+signature...[, ]]) {
+		public $name+snakeCaseToCamelCase+firstUpperCase~Accessor(Session session[, $custom+signature...[, ]]) {
 			this.session = session;
 			$custom+assign...[$NL]
 		}
@@ -55,7 +55,6 @@ def type(request & reply) trigger(interface)
 		default void onMessage(Message message) {
 			try {
 				$reply
-
 			} catch (JMSException e) {
 				io.intino.alexandria.logger.Logger.error(e.getMessage(), e);
 			}
@@ -87,19 +86,19 @@ def type(request & reply)
 end
 
 def !type(parameter) trigger(field)
-	private String $value+validname;
+	private String $this+validname;
 end
 
 def !type(parameter) trigger(signature)
-	String $value+validname
+	String $this+validname
 end
 
 def !type(parameter) trigger(assign)
-	this.$value+validname = $value+validname;
+	this.$this+validname = $this+validname;
 end
 
 def !type(parameter) trigger(custom)
-	.replace("{$value}", this.$value+validname)
+	.replace("{$this}", this.$this+validname)
 end
 
 def type(request)
@@ -117,15 +116,15 @@ def type(request)
 end
 
 def type(parameter & list) trigger(signature)
-	java.util.List<$type> $name+SnakeCaseToCamelCase+firstLowerCase
+	java.util.List<$type> $name+snakeCaseToCamelCase+firstLowerCase
 end
 
 def type(parameter) trigger(signature)
-	$type $name+SnakeCaseToCamelCase+firstLowerCase
+	$type $name+snakeCaseToCamelCase+firstLowerCase
 end
 
 def type(parameter) trigger(name)
-	$name+SnakeCaseToCamelCase+firstLowerCase
+	$name+snakeCaseToCamelCase+firstLowerCase
 end
 
 def type(parameter & objectData) trigger(assign)
@@ -160,7 +159,7 @@ def type(reply) trigger(return)
 	$value
 end
 
-def attribute(Integer) trigger(format)
+def attribute(this:Integer) trigger(format)
 	Int
 end
 

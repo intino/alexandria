@@ -1,13 +1,170 @@
 dsl Konos
 
+MessageHub messageHub as JmsBus("{cesar-bus}", "{bus-user}", "{bus-password}", "{bus-client-id}")
+
+Service ConsulJms as JMS(messageHub)
+	Request("service.consul.{serverId}.status") status
+		Response as Object(ServerStatus)
+	Request("service.consul.{serverId}.reboot") reboot
+		Response as Bool
+	Request("service.consul.{serverId}.deploy") deploy
+		Parameter process as Object(ProcessSchema)
+		Response as Object(schema = DeployResult)
+	Request("service.consul.{serverId}.retract") retract
+		Parameter project as Text
+		Parameter processId as Text
+		Response as Bool
+	Request("service.consul.{serverId}.upgrade") upgrade
+		Response as Bool
+	Request("service.consul.{serverId}.startProcess") startProcess
+		Parameter project as Text
+		Parameter processId as Text
+		Response as Bool
+	Request("service.consul.{serverId}.stopProcess") stopProcess
+		Parameter project as Text
+		Parameter processId as Text
+		Response as Bool
+	Request("service.consul.{serverId}.debugProcess") debugProcess
+		Parameter project as Text
+		Parameter processId as Text
+		Parameter port as Integer
+		Response as Bool
+	Request("service.consul.{serverId}.restartProcess") restartProcess
+		Parameter project as Text
+		Parameter processId as Text
+		Response as Bool
+	Request("service.consul.{serverId}.resetProcess") resetProcess
+		Parameter project as Text
+		Parameter processId as Text
+		Response as Bool
+	Request("service.consul.{serverId}.parameter") parameter
+		Parameter project as Text
+		Parameter processId as Text
+		Parameter name as Text
+		Parameter value as Text
+		Response as Bool
+	Request("service.consul.{serverId}.processStatus") processStatus
+		Parameter project as Text
+		Parameter processId as Text
+		Response as Object(ProcessStatus)
+	Request("service.consul.{serverId}.processLog") processLog
+		Parameter project as Text
+		Parameter processId as Text
+		Response as Object(ProcessLog)
+	Request("service.consul.{serverId}.operate") processOperation
+		Parameter project as Text
+		Parameter processId as Text
+		Parameter operation as Object(Operation)
+		Response as Object(OperationResult)
+	Request("service.consul.{serverId}.operations") processOperations
+		Parameter project as Text
+		Parameter processId as Text
+		Response as List Object(Operation)
+
+
+Feeder("consul.prorcess.status")  processStatusFeeder
+Feeder("consul.prorcess.log")  processLogFeeder
+Feeder("consul.server.upgrade") serverUpgradeFeeder
+Feeder("consul.server.log") serverLogFeeder
+Feeder("consul.server.info") serverInfoFeeder
+Feeder("consul.server.status") serverStatusFeeder
+Feeder("consul.server.boot") serverBootFeeder
+
+Task launchProcessesOnStart as BootTrigger
+Task notifyBoot as BootTrigger
+
+Task checkServerInfoChanges as CronTrigger("0 0/1 * 1/1 * ? *", "Every minute", timeZone = "Atlantic/Canary")
+Task scheduleServerStatus as CronTrigger("0 0/15 * 1/1 * ? *", "Every 15 minutes", timeZone = "Atlantic/Canary")
+Task scheduleProcessStatus as CronTrigger("0 0/15 * 1/1 * ? *", "Every 15 minutes", timeZone = "Atlantic/Canary")
+
+Schema ServerStatus
+	Attribute ts as DateTime
+	Attribute id as Text
+	Attribute memory as Real
+	Attribute hdd as Real
+	Attribute cpu as Real
+	Attribute kernelTemperature as Real
+	Attribute temperature as Real
+	Attribute inboundConnections as Integer
+	Attribute outboundConnections as Integer
+
+Schema ServerInfo as ExtensionOf(ServerBoot)
+
+Schema ServerBoot
+	Attribute ts as DateTime
+	Attribute project as Text
+	Attribute version as Text
+	Attribute id as Text
+	Attribute deployUser as Text
+	Attribute ip as Text
+	Attribute architecture as Text
+	Attribute os as Text
+	Attribute jvm as Text
+	Attribute cores as Integer
+	Attribute diskSize as LongInteger  //MB
+	Attribute memorySize as Real //MB
+	Attribute processes as Integer
+	Attribute processInfo as Object(ProcessSchema) List
+
+Schema ProcessStatus
+	Attribute ts as DateTime
+	Attribute project as Text
+	Attribute id as Text
+	Attribute serverId as Text
+	Attribute running as Bool
+	Attribute exitValue as Integer
+	Attribute memory as Real
+	Attribute cpu as Real
+	Attribute threads as Integer
+	Attribute workspaceSize as Real
+	Attribute workspaceTotalSize as Real
+
+Schema ProcessLog
+	Attribute ts as DateTime
+	Attribute project as Text
+	Attribute serverId as Text
+	Attribute id as Text
+	Attribute value as Text
 
 Schema ServerLog
-	Attribute individuals as Object(KeyValuePair)
+	Attribute ts as DateTime
+	Attribute level as Text
+	Attribute message as Text
+	Attribute sourceClass as Text
+	Attribute sourceMethod as Text
+	Attribute stackTrace as Text
 
-Schema KeyValuePair
-	Schema(multiple = false) InnerSchema
-	Schema(multiple = true) InnerSchemaMultiple
-	Attribute multipleReference as List Object(Reference)
-	Attribute singleReference  as Object(Reference)
+Schema ProcessSchema
+	Attribute project as Text
+	Attribute name as Text
+	Attribute classpathPrefix as Text
+	Attribute jmxPort as Integer
+	Attribute artifact as Text
+	Attribute requiredMemory as Integer
+		defaultValue = 512
+	Schema Parameter
+		Attribute name as Text
+		Attribute value as Text
+	Schema JVMParameter
+		Attribute value as Text
+	Attribute artifactories as Object(Artifactory) List
 
-Schema Reference
+Schema Artifactory
+	Attribute id as Text
+	Attribute url as Text
+	Attribute user as Text
+	Attribute password as Text
+
+Schema OperationResult
+	Attribute success as Bool
+	Attribute remarks as Text
+
+Schema Operation
+	Attribute name as Text
+    Attribute parameters as Text List
+	Attribute returnType as Text
+	Attribute description as Text
+
+Schema DeployResult
+	Attribute success as Bool(defaultValue = true)
+	Attribute remarks as Text

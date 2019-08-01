@@ -10,19 +10,7 @@ def type(boxConfiguration)
 			super(args);
 		}
 
-		public String get(String key) {
-			return args.get(key);
-		}
-
 		$parameter...[$NL$NL]
-
-		public static java.net.URL url(String url) {
-			try {
-			return new java.net.URL(url);
-			} catch (java.net.MalformedURLException e) {
-				return null;
-			}
-		}
 	}
 end
 

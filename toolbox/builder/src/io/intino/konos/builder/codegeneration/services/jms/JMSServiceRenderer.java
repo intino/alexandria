@@ -72,7 +72,7 @@ public class JMSServiceRenderer extends Renderer {
 	}
 
 	private Template template() {
-		return customize(new JMSServiceTemplate());
+		return customize(new JmsServiceTemplate());
 	}
 
 	private String messageType(List<Parameter> parameters) {

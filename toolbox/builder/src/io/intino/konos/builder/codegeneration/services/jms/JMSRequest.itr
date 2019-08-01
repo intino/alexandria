@@ -60,7 +60,7 @@ def attribute(Bytes) trigger(return)
 end
 
 def trigger(return)
-	message.set$value(new Gson().toJson(response));
+	message.set$this(new Gson().toJson(response));
 end
 
 def !type(void) trigger(call)
@@ -95,7 +95,7 @@ def type(parameter) trigger(assign)
 	action.$name+SnakeCaseToCamelCase+firstLowerCase = message.get$type+format~Property("$name");
 end
 
-def attribute(Integer) trigger(format)
+def attribute(this:Integer) trigger(format)
 	Int
 end
 
