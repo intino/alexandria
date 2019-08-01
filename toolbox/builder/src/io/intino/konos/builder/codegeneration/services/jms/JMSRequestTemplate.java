@@ -17,7 +17,7 @@ public class JmsRequestTemplate extends Template {
 				rule().condition((allTypes("parameter", "objectData")), (trigger("assign"))).output(literal("action.")).output(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).output(literal(" = new Gson().fromJson(((TextMessage) message).getText(), ")).output(mark("type")).output(literal(".class);")),
 				rule().condition((allTypes("parameter", "List")), (trigger("assign"))).output(literal("action.")).output(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).output(literal(" = new Gson().fromJson(message.getStringProperty(\"")).output(mark("name")).output(literal("\"),  new com.google.gson.reflect.TypeToken<java.util.ArrayList<")).output(mark("type")).output(literal(">>(){}.getType());")),
 				rule().condition((type("parameter")), (trigger("assign"))).output(literal("action.")).output(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).output(literal(" = message.get")).output(mark("type", "format")).output(literal("Property(\"")).output(mark("name")).output(literal("\");")),
-				rule().condition((attribute("integer")), (trigger("format"))).output(literal("Int")),
+				rule().condition((attribute("", "Integer")), (trigger("format"))).output(literal("Int")),
 				rule().condition((type("schemaImport"))).output(literal("import ")).output(mark("package")).output(literal(".schemas.*;"))
 		);
 	}
