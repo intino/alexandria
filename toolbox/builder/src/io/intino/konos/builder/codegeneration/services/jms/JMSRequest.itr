@@ -60,7 +60,7 @@ def attribute(Bytes) trigger(return)
 end
 
 def trigger(return)
-	message.set$value(new Gson().toJson(response));
+	message.set$this(new Gson().toJson(response));
 end
 
 def !type(void) trigger(call)

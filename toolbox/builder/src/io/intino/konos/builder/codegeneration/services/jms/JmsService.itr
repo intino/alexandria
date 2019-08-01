@@ -23,7 +23,6 @@ def type(jms)
 		public $name+firstUpperCase~Service(MessageHub messageHub, $box+firstUpperCase~Box box) {
 			this.configuration = box.configuration();
 			this.messageHub = messageHub;
-			if (session == null) return;
 			$request...[$NL]
 		}
 
@@ -48,7 +47,7 @@ def type(jms)
 end
 
 def type(request)
-	messageHub.attachListener($queue+format), m -> new $name+firstUpperCase~Request(box));
+	messageHub.attachListener($queue+format, m -> new $name+firstUpperCase~Request(box));
 end
 
 def type(notification)
