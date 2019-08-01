@@ -56,9 +56,9 @@ def type(box)
 			initUI();
 			initRESTServices();
 			initJMXServices();
-			initJMSServices();
 			initDatalake();
 			initMessageHub();
+			initJMSServices();
 			initTasks();
 			initSlackBots();
 			initWorkflow();
@@ -219,22 +219,8 @@ def trigger(use)
 end
 
 def type(service & jms) trigger(init)
-	try {
-		connection = new org.apache.activemq.ActiveMQConnectionFactory($parameter...[, ]).createConnection();
-		java.lang.Thread thread = new java.lang.Thread(() -> {
-			try {
-				connection.start();
-				this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(connection, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
-				Logger.info("JMS service $name: started!");
-			} catch (javax.jms.JMSException e) {
-				Logger.error(e.getMessage());
-			}
-		}, "jms init");
-		thread.start();
-		thread.join(10000);
-	} catch (javax.jms.JMSException | InterruptedException e) {
-		Logger.error(e.getMessage());
-	}
+	this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(this.messageHub, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	Logger.info("JMS service $name: started!");
 end
 
 def type(task) trigger(init)
@@ -366,7 +352,6 @@ end
 
 def type(service)
 end
-
 
 def type(task) trigger(getter)
 	public io.intino.alexandria.scheduler.AlexandriaScheduler scheduler() {

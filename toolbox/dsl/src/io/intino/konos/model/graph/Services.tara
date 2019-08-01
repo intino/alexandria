@@ -1,5 +1,6 @@
 dsl Proteo
 
+use Datalake
 use bpm
 use DataTypes
 
@@ -90,11 +91,8 @@ Facet JMX on Service
     Concept:Named Notification
 
 Facet JMS on Service
-	var string url
-	var string user
-	var string password
-	var string clientId
-	var word:{Queue Topic} subscriptionModel
+	var JmsBus jmsBus
+	var word:{Queue Topic} subscriptionModel = Topic
 	Concept:Named Request
 		var string path
 		has:Named Parameter

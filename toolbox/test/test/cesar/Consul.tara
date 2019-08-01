@@ -11,3 +11,23 @@ Schema KeyValuePair
 	Attribute singleReference  as Object(Reference)
 
 Schema Reference
+
+
+MessageHub messageHub as JmsBus("{cesar-bus}", "{bus-user}", "{bus-password}", "{bus-client-id}")
+
+Service ConsulJms as JMS(messageHub, subscriptionModel = Topic)
+	Request("service.consul.{serverId}.status") status
+		Response as Object(ServerStatus)
+	Request("service.consul.{serverId}.reboot") reboot
+		Response as Bool
+
+Schema ServerStatus
+	Attribute ts as DateTime
+	Attribute id as Text
+	Attribute memory as Real
+	Attribute hdd as Real
+	Attribute cpu as Real
+	Attribute kernelTemperature as Real
+	Attribute temperature as Real
+	Attribute inboundConnections as Integer
+	Attribute outboundConnections as Integer

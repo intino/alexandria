@@ -9,6 +9,8 @@ Service api as REST(host = "localhost", port = "8080")
 //Service bus as JMS(url = "", user = "", password = "", clientId = "", subscriptionModel = Topic)
 //	Request("recibir.respuesta") recibirRespuesta as Launcher(ProcesarRespuesta)
 
+
+MessageHub messageHub
 //Process(bpmn = "example.bpmn") ProcesarRespuesta
 //Process(bpmn = "example2.bpmn") BpmWithSubprocessCalling
 //Process(bpmn = "example3.bpmn") BpmWithInclusiveFork

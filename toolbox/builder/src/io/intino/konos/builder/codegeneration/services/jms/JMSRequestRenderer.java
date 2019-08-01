@@ -80,6 +80,6 @@ public class JMSRequestRenderer extends Renderer {
 	}
 
 	private Template template() {
-		return Formatters.customize(new JMSRequestTemplate());
+		return Formatters.customize(new JmsRequestTemplate());
 	}
 }
