@@ -31,17 +31,20 @@ const styles = theme => ({
 });
 
 class Text extends AbstractText {
-	state = {
-		value : this.props.value
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new TextNotifier(this);
 		this.requester = new TextRequester(this);
+		this.state = {
+			...this.state,
+			value : this.props.value,
+		}
 	};
 
 	render() {
+		if (!this.state.visible) return (<React.Fragment/>);
+
 		const { classes } = this.props;
 	    const value = TextBehavior.mode(this.state.value, this.props);
 	    const variant = this.variant("body1");

@@ -34,7 +34,8 @@ const styles = theme => ({
 
 class ImageEditable extends AbstractImageEditable {
 	state = {
-		value: this.props.value
+		value: this.props.value,
+		readonly: this.props.readonly
 	};
 
 	constructor(props) {
@@ -60,7 +61,9 @@ class ImageEditable extends AbstractImageEditable {
 				<label htmlFor={inputId} className={classes.overlay}>
 					<AddAPhoto className={classes.icon} />
 				</label>
-				<input accept="image/*" id={inputId} type="file" className={classes.input} onChange={this.handleChange.bind(this)}/>
+				<input accept="image/*" id={inputId} type="file"
+					   className={classes.input} onChange={this.handleChange.bind(this)}
+					   disabled={this.state.readonly} />
 			</div>
 		);
 	};
@@ -78,6 +81,10 @@ class ImageEditable extends AbstractImageEditable {
 		}
 		result.position = "relative";
 		return result;
+	};
+
+	refreshReadonly = (readonly) => {
+		this.setState({ readonly });
 	};
 }
 

@@ -59,7 +59,7 @@ def type(properties & abstractslider) trigger(common)
 end
 
 def type(properties) trigger(common)
-	[ name="$name"][ label="$label"][ format="$format...[ ]"][ color="$color"][ multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing}}]
+	[ name="$name"][ label="$label"][ format="$format...[ ]"][ color="$color"][ visible={$visible}][ multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing}}]
 end
 
 def type(properties & template) trigger(specific)
@@ -71,7 +71,7 @@ def type(properties & stamp) trigger(specific)
 end
 
 def type(properties & selector) trigger(specific)
-	[ multipleSelection={$multipleSelection}]
+	[ multipleSelection={$multipleSelection}][ readonly={$readonly}]
 end
 
 def type(properties & image) trigger(specific)
@@ -107,7 +107,7 @@ def type(properties & date) trigger(specific)
 end
 
 def type(properties & number) trigger(specific)
-	[ value={$value}][ prefix="$prefix"][ suffix="$suffix"][ min={$min}][ max={$max}][ step={$step}]
+	[ value={$value}][ prefix="$prefix"][ suffix="$suffix"][ min={$min}][ max={$max}][ step={$step}][ readonly={$readonly}]
 end
 
 def type(properties & header) trigger(specific)
@@ -119,7 +119,7 @@ def type(properties & codeText) trigger(specific)
 end
 
 def type(properties & text) trigger(specific)
-	[ mode="$mode"][ prefix="$prefix"][ suffix="$suffix"][ value="$defaultValue"][ placeholder="$placeholder"][ highlighted={$highlighted}][ type="$type"]
+	[ mode="$mode"][ prefix="$prefix"][ suffix="$suffix"][ value="$defaultValue"][ placeholder="$placeholder"][ readonly={$readonly}][ highlighted={$highlighted}][ type="$type"]
 end
 
 def type(properties & location) trigger(specific)

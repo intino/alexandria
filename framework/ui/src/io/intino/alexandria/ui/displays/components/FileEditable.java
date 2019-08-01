@@ -12,6 +12,7 @@ import java.net.URL;
 public class FileEditable<DN extends FileEditableNotifier, B extends Box> extends AbstractFileEditable<DN, B> {
 	private URL value;
 	private String mimeType;
+	private boolean readonly;
 	protected ChangeListener changeListener = null;
 
 	public FileEditable(B box) {
@@ -28,9 +29,24 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 		return this;
 	}
 
+	public boolean readonly() {
+		return readonly;
+	}
+
+	public FileEditable<DN, B> readonly(boolean value) {
+		this.readonly = readonly;
+		return this;
+	}
+
 	public void update(URL value) {
 		value(value);
 		refresh();
+	}
+
+	public FileEditable<DN, B> updateReadonly(boolean value) {
+		readonly(value);
+		notifier.refreshReadonly(value);
+		return this;
 	}
 
 	public void refresh() {

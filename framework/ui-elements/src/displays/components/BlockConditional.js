@@ -10,15 +10,15 @@ import 'alexandria-ui-elements/res/styles/mobile.css';
 
 export default class BlockConditional extends AbstractBlockConditional {
 
-	state = {
-		visible : false,
-		loading : false
-	};
-
 	constructor(props) {
 		super(props);
 		this.notifier = new BlockConditionalNotifier(this);
 		this.requester = new BlockConditionalRequester(this);
+		this.state = {
+			...this.state,
+			visible: false,
+			loading: false,
+		}
 	};
 
 	render() {
@@ -54,9 +54,6 @@ export default class BlockConditional extends AbstractBlockConditional {
 		return result;
 	};
 
-	refreshVisibility = (visible) => {
-		this.setState({ visible });
-	};
 }
 
 DisplayFactory.register("BlockConditional", BlockConditional);

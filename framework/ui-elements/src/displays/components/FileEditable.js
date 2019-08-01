@@ -6,7 +6,8 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export default class FileEditable extends AbstractFile {
 	state = {
-		value : ""
+		value : "",
+		readonly : this.props.readonly
 	};
 
 	constructor(props) {
@@ -22,13 +23,17 @@ export default class FileEditable extends AbstractFile {
 
 	render() {
 		return (
-			<input type="file" value={this.state.value}
+			<input type="file" value={this.state.value} disabled={this.state.readonly ? "disabled" : undefined}
 				   onChange={this.handleChange.bind(this)}></input>
 		);
 	};
 
 	refresh = (value) => {
 		this.setState({ "value": value });
+	};
+
+	refreshReadonly = (readonly) => {
+		this.setState({ readonly });
 	};
 }
 

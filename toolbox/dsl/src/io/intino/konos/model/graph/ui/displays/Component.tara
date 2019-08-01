@@ -9,6 +9,7 @@ use UI
 Concept:Named Component extends Display
 	var string color = empty
 	var Format[] format = empty
+	var boolean visible = true
 
 Concept Block extends Component
 	var word[]:Layout layout = Vertical

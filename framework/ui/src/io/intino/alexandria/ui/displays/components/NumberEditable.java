@@ -10,6 +10,7 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
 	private double min;
 	private double max;
 	private double step;
+	private boolean readonly;
 	private ChangeListener changeListener = null;
 
     public NumberEditable(B box) {
@@ -52,9 +53,24 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
 		return this;
 	}
 
+	public boolean readonly() {
+		return readonly;
+	}
+
+	public NumberEditable<DN, B> readonly(boolean value) {
+		this.readonly = readonly;
+		return this;
+	}
+
 	public void update(double value) {
 		value(value);
 		notifier.refresh(value);
+	}
+
+	public NumberEditable<DN, B> updateReadonly(boolean value) {
+		readonly(value);
+		notifier.refreshReadonly(value);
+		return this;
 	}
 
 	public NumberEditable<DN, B> onChange(ChangeListener listener) {

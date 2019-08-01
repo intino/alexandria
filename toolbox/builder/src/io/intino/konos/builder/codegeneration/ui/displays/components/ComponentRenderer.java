@@ -132,6 +132,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (element.color() != null && !element.color().isEmpty()) result.add("color", element.color());
 		if (element.isOption()) result.add("name", element.asOption().name$());
 		if (element.i$(AbstractLabeled.class)) result.add("label", element.a$(AbstractLabeled.class).label());
+		if (!element.visible()) result.add("visible", element.visible());
 		if (element.i$(AbstractMultiple.class)) {
 			AbstractMultiple abstractMultiple = element.a$(AbstractMultiple.class);
 			result.add("instances", nameOf(element));

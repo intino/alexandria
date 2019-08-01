@@ -12,12 +12,6 @@ export const MuiIcon = React.lazy(() => {
 });
 
 export default class Operation extends AbstractOperation {
-	state = {
-		icon : this.props.icon,
-		title: this.props.title,
-		disabled: this.props.disabled,
-		openConfirm : false
-	};
 
 	static Styles = theme => ({
 		link : {
@@ -37,11 +31,17 @@ export default class Operation extends AbstractOperation {
 
 	constructor(props) {
 		super(props);
-		// this.notifier = new OperationNotifier(this);
-		// this.requester = new OperationRequester(this);
+		this.state = {
+			...this.state,
+			icon : this.props.icon,
+			title: this.props.title,
+			disabled: this.props.disabled,
+			openConfirm : false
+		}
 	};
 
 	render = () => {
+		if (!this.state.visible) return (<React.Fragment/>);
 		return (
 			<Suspense fallback={<div></div>}>
 				{this.renderOperation()}
