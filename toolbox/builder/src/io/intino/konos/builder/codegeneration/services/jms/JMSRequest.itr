@@ -95,7 +95,7 @@ def type(parameter) trigger(assign)
 	action.$name+SnakeCaseToCamelCase+firstLowerCase = message.get$type+format~Property("$name");
 end
 
-def attribute(Integer) trigger(format)
+def attribute(this:Integer) trigger(format)
 	Int
 end
 
