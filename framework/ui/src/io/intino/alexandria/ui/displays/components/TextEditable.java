@@ -7,6 +7,7 @@ import io.intino.alexandria.ui.displays.notifiers.TextEditableNotifier;
 
 public class TextEditable<DN extends TextEditableNotifier, B extends Box> extends AbstractTextEditable<DN, B> {
     private String value;
+    private boolean readonly;
     private ChangeListener changeListener = null;
     private KeyPressListener keyPressListener = null;
     private KeyPressListener enterPressListener = null;
@@ -26,9 +27,24 @@ public class TextEditable<DN extends TextEditableNotifier, B extends Box> extend
         return this;
     }
 
+    public boolean readonly() {
+        return readonly;
+    }
+
+    public TextEditable<DN, B> readonly(boolean value) {
+        this.readonly = readonly;
+        return this;
+    }
+
     public void update(String value) {
         this.value = value;
         notifier.refresh(value);
+    }
+
+    public TextEditable<DN, B> updateReadonly(boolean value) {
+        readonly(value);
+        notifier.refreshReadonly(value);
+        return this;
     }
 
     public TextEditable<DN, B> onChange(ChangeListener listener) {

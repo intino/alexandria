@@ -17,7 +17,8 @@ const styles = theme => ({
 
 class NumberEditable extends AbstractNumberEditable {
 	state = {
-		value : ""
+		value : "",
+		readonly: this.props.readonly
 	};
 
 	constructor(props) {
@@ -35,12 +36,11 @@ class NumberEditable extends AbstractNumberEditable {
 
 	render() {
 		const { classes } = this.props;
-		const value = this.state.value !== "" ? this.state.value : (this.props.min !== -1 ? this.props.min : null);
 		const label = this.props.label !== "" ? this.props.label : undefined;
 
 		return (
 			<TextField format={this.variant("body1")} style={this.style()} className={classes.default} label={label} type="number"
-					   value={value} onChange={this.handleChange.bind(this)}
+					   value={this.state.value} onChange={this.handleChange.bind(this)} disabled={this.state.readonly}
 					   inputProps={{
 						   min: this.props.min !== -1 ? this.props.min : undefined,
 						   max: this.props.max !== -1 ? this.props.max : undefined,
@@ -57,6 +57,9 @@ class NumberEditable extends AbstractNumberEditable {
 		this.setState({ "value": value });
 	};
 
+	refreshReadonly = (readonly) => {
+		this.setState({ readonly });
+	};
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(NumberEditable));

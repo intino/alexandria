@@ -11,6 +11,7 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 	private Instant min;
 	private Instant max;
 	private Instant value;
+	private boolean readonly;
 	private ChangeListener changeListener = null;
 
     public DateEditable(B box) {
@@ -44,9 +45,24 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 		return this;
 	}
 
+	public boolean readonly() {
+		return readonly;
+	}
+
+	public DateEditable<DN, B> readonly(boolean value) {
+		this.readonly = readonly;
+		return this;
+	}
+
 	public void update(Instant value) {
 		value(value);
 		notifier.refresh(value);
+	}
+
+	public DateEditable<DN, B> updateReadonly(boolean value) {
+		readonly(value);
+		notifier.refreshReadonly(value);
+		return this;
 	}
 
 	public DateEditable<DN, B> onChange(ChangeListener listener) {

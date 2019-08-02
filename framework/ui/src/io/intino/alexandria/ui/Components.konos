@@ -9,7 +9,6 @@ Component block as Decorated
 	Notification refreshLayout as Text
 
 Component blockConditional as Decorated
-	Notification refreshVisibility as Bool
 
 Component blockSplitter as Decorated
 	Notification show as Integer
@@ -54,6 +53,7 @@ Component selectorMenu as Decorated ExtensionOf(baseSelector)
 
 Component selectorComboBox as Decorated ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
+	Notification refreshReadonly as Bool
 	Request updateSelection as Text List
 
 Component selectorListBox as Decorated ExtensionOf(baseSelector)

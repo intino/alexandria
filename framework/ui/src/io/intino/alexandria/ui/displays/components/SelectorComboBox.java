@@ -9,6 +9,7 @@ import java.util.List;
 
 public class SelectorComboBox<DN extends SelectorComboBoxNotifier, B extends Box> extends AbstractSelectorComboBox<DN, B> {
 	private java.util.List<String> selection = new ArrayList<>();
+	private boolean readonly;
 
 	public SelectorComboBox(B box) {
         super(box);
@@ -17,6 +18,21 @@ public class SelectorComboBox<DN extends SelectorComboBoxNotifier, B extends Box
 	@Override
 	public List<String> selection() {
 		return selection;
+	}
+
+	public boolean readonly() {
+		return readonly;
+	}
+
+	public SelectorComboBox<DN, B> readonly(boolean value) {
+		this.readonly = readonly;
+		return this;
+	}
+
+	public SelectorComboBox<DN, B> updateReadonly(boolean value) {
+		readonly(value);
+		notifier.refreshReadonly(value);
+		return this;
 	}
 
 	@Override

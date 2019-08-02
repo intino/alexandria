@@ -23,7 +23,8 @@ const styles = theme => ({
 
 class SelectorComboBox extends AbstractSelectorComboBox {
 	state = {
-		selection: []
+		selection: [],
+		readonly: this.props.readonly
 	};
 
 	constructor(props) {
@@ -33,15 +34,17 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 	};
 
 	render() {
-		const { classes } = this.props;
+		const { classes, theme } = this.props;
 		const items = this.items();
 		const multiple = this.props.multipleSelection;
 		const label = this.props.label;
 		const value = this.selection(items);
+		const color = this.state.readonly ? theme.palette.grey.primary : "inherit";
 		return (
 			<div className={classes.container} style={this.style()}>
-				{label != null && label !== "" ? <Typography variant={this.variant("subtitle1")}>{label}</Typography> : undefined }
-				<Select isMulti={multiple} isSearchable closeMenuOnSelect={multiple ? false : true}
+				{label != null && label !== "" ? <Typography variant={this.variant("subtitle1")} style={{color:color}}>{label}</Typography> : undefined }
+				<Select isMulti={multiple} isDisabled={this.state.readonly} isSearchable
+						closeMenuOnSelect={!multiple}
 						placeholder={this.selectMessage()} options={items}
 						className="basic-multi-select" classNamePrefix="select"
 						components={{ Option: this.renderOption.bind(this)}}
@@ -94,6 +97,10 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 
 	refreshSelection = (selection) => {
 		this.setState({ selection: selection });
+	};
+
+	refreshReadonly = (readonly) => {
+		this.setState({ readonly });
 	};
 
 	selection = (options) => {

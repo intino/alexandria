@@ -22,7 +22,8 @@ const styles = theme => ({
 class LocationEditable extends AbstractLocationEditable {
 	state = {
 		drawingControl: true,
-		drawingMode: null
+		drawingMode: null,
+		readonly: this.props.readonly,
 	};
 
 	constructor(props) {
@@ -36,6 +37,8 @@ class LocationEditable extends AbstractLocationEditable {
 	};
 
 	renderEditor = () => {
+		if (this.state.readonly) return;
+
 		const { classes } = this.props;
 		const drawingModes = this._drawingModes();
 		const drawingOptions = { drawingControl:this.state.drawingControl, drawingControlOptions:{drawingModes:drawingModes} };
@@ -99,6 +102,10 @@ class LocationEditable extends AbstractLocationEditable {
 
 	refresh = (location) => {
 		this.setState({ location: location, drawingControl : location == null });
+	};
+
+	refreshReadonly = (readonly) => {
+		this.setState({ readonly });
 	};
 
 }
