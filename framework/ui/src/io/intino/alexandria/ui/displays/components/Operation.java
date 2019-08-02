@@ -42,7 +42,7 @@ public class Operation<DN extends OperationNotifier, B extends Box> extends Comp
         return this;
     }
 
-    public Operation readonly(boolean value) {
+    public Operation updateReadonly(boolean value) {
         if (value) disable();
         else enable();
         return this;

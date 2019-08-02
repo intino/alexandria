@@ -6,8 +6,6 @@ use Display
 use UI
 
 Facet Editable is abstract
-	var string isRequired = ""
-	var string isReadonly = ""
 	var string placeHolder = ""
 	var string defaultValue = ""
 	var string validator = ""
@@ -65,3 +63,19 @@ Facet Editable on DataComponents.Date
 	var instant max = empty
 	var boolean timePicker = false
 	var string mask = empty
+
+Facet Readonly on DataComponents.Text with Editable
+Facet Readonly on DataComponents.Number with Editable
+Facet Readonly on DataComponents.Location with Editable
+Facet Readonly on DataComponents.File with Editable
+Facet Readonly on DataComponents.Image with Editable
+Facet Readonly on DataComponents.Date with Editable
+Facet Readonly on OtherComponents.Selector with RadioBox, CheckBox, ComboBox
+
+Facet Required on DataComponents.Text with Editable
+Facet Required on DataComponents.Number with Editable
+Facet Required on DataComponents.Location with Editable
+Facet Required on DataComponents.File with Editable
+Facet Required on DataComponents.Image with Editable
+Facet Required on DataComponents.Date with Editable
+Facet Required on OtherComponents.Selector with RadioBox, CheckBox, ComboBox

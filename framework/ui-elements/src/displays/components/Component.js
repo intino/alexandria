@@ -8,7 +8,8 @@ export default class Component extends AlexandriaDisplay {
     static Variants = ["h1","h2","h3","h4","h5","h6","subtitle1","subtitle2","body1","body2","caption","button","overline","srOnly","inherit"];
 
     state = {
-        loading: true
+        loading: true,
+        visible: this.props.visible != null ? this.props.visible : true
     };
 
     constructor(props) {
@@ -43,6 +44,10 @@ export default class Component extends AlexandriaDisplay {
 
     refreshLoading = (loading) => {
         this.setState({ loading: loading });
+    };
+
+    refreshVisibility = (value) => {
+        this.setState({ visible: value });
     };
 
     _addFormats() {

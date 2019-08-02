@@ -5,16 +5,11 @@ import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.components.selector.Selection;
 import io.intino.alexandria.ui.displays.components.selector.Selector;
 import io.intino.alexandria.ui.displays.events.Event;
-import io.intino.alexandria.ui.displays.events.HideListener;
 import io.intino.alexandria.ui.displays.events.Listener;
-import io.intino.alexandria.ui.displays.events.ShowListener;
 import io.intino.alexandria.ui.displays.notifiers.BlockConditionalNotifier;
 
 public abstract class BlockConditional<DN extends BlockConditionalNotifier, B extends Box> extends AbstractBlockConditional<B> implements Selection {
-    private boolean visible;
     private boolean initialized = false;
-    private ShowListener showListener = null;
-    private HideListener hideListener = null;
     private Listener initListener = null;
 
     public BlockConditional(B box) {
@@ -26,42 +21,8 @@ public abstract class BlockConditional<DN extends BlockConditionalNotifier, B ex
         super.add(container);
     }
 
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public boolean isHidden() {
-        return !visible;
-    }
-
-    public void visible(boolean value) {
-        updateVisibility(value);
-    }
-
-    public void hidden(boolean value) {
-        updateVisibility(!value);
-    }
-
-    public void show() {
-        this.updateVisibility(true);
-    }
-
-    public void hide() {
-        this.updateVisibility(false);
-    }
-
     public BlockConditional<DN, B> onInit(Listener listener) {
         this.initListener = listener;
-        return this;
-    }
-
-    public BlockConditional<DN, B> onShow(ShowListener listener) {
-        this.showListener = listener;
-        return this;
-    }
-
-    public BlockConditional<DN, B> onHide(HideListener listener) {
-        this.hideListener = listener;
         return this;
     }
 
@@ -73,12 +34,12 @@ public abstract class BlockConditional<DN extends BlockConditionalNotifier, B ex
 
     public abstract void initConditional();
 
-    private void updateVisibility(boolean value) {
-        this.visible = value;
-        notifier.refreshVisibility(visible);
-        if (visible) initComponent();
-        if (showListener != null && visible) showListener.accept(new Event(this));
-        if (hideListener != null && !visible) hideListener.accept(new Event(this));
+    @Override
+    protected void updateVisibility(boolean value) {
+        updateVisible(value);
+        notifier.refreshVisibility(value);
+        if (isVisible()) initComponent();
+        notifyVisibility();
     }
 
     private void updateVisibility(Selector selector, String option) {

@@ -20,6 +20,7 @@ public class NumberRenderer extends ComponentRenderer<Number> {
 		result.add("value", element.value());
 		if (element.prefix() != null) result.add("prefix", element.prefix());
 		if (element.suffix() != null) result.add("suffix", element.suffix());
+		if (element.isReadonly()) result.add("readonly", element.isReadonly());
 		addEditableProperties(result);
 		return result;
 	}

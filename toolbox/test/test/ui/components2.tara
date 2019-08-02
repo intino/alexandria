@@ -5,7 +5,9 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/demo") demo as Page(homeTemplate)
 
 Template homeTemplate
-	Task(title="title1") as Switches
+	Text f1 as Editable Readonly
+		visible = false
+	Number f2 as Editable Readonly
 
 Component baseImage as Decorated
 	Notification refresh as Text
