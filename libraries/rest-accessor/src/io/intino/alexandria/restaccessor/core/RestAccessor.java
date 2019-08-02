@@ -3,6 +3,7 @@ package io.intino.alexandria.restaccessor.core;
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -19,7 +20,6 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.HttpClientBuilder;
-import sun.misc.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,10 +42,6 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 
 	public RestAccessor(int timeOutMillis) {
 		this.timeOutMillis = timeOutMillis;
-	}
-
-	private static String toString(InputStream content) throws IOException {
-		return new String(IOUtils.readFully(content, -1, false));
 	}
 
 	@Override
@@ -486,7 +482,6 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 		}
 	}
 
-
 	private HttpEntity entityOf(String body) throws RestfulFailure {
 		try {
 			StringEntity entity = new StringEntity(body);
@@ -547,6 +542,10 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 		parameterList.forEach((key, value) -> addParameter(builder, key, value));
 	}
 
+	private void addParameter(MultipartEntityBuilder builder, String key, String value) {
+		builder.addPart(key, new StringBody(value, ContentType.APPLICATION_JSON));
+	}
+
 //	private void addSecureParameters(URL certificate, String password, MultipartEntityBuilder entityBuilder, Resource resource) throws RestfulFailure {
 //		if (certificate == null)
 //			return;
@@ -567,10 +566,6 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 //			resource.parameters().forEach(this::put);
 //		}};
 //	}
-
-	private void addParameter(MultipartEntityBuilder builder, String key, String value) {
-		builder.addPart(key, new StringBody(value, ContentType.APPLICATION_JSON));
-	}
 
 	private Map<String, String> secureParameters(Map<String, String> parameters, URL certificate, String password) throws RestfulFailure {
 		if (certificate == null)
@@ -626,5 +621,9 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 				}
 			}
 		};
+	}
+
+	private static String toString(InputStream content) throws IOException {
+		return IOUtils.toString(content, "UTF-8");
 	}
 }
