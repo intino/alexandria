@@ -47,3 +47,14 @@ Template(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
 							=========
 							Date date4 as Editable(timePicker\=true)
 							=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Editable facet allowing empty")
+			Block(spacing=DP8, format=filled)
+				Date(format=body1 widgetDemo) date5 as Editable(allowEmpty=true)
+					pattern = "DD/MM/YYYY HH:mm"
+				Block > Text date5Code as Code(language=Html)
+						value
+							=========
+							Date date as Editable(allowEmpty\=true)
+							=========

@@ -22,6 +22,14 @@ Artifact("io.intino.alexandria", "2.0.0") ui-framework
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.dist)
+	Parameter(name = "workspace")
+	Parameter(name = "workspace")
+	Parameter(name = "workspace")
+	Parameter(name = "workspace")
+	Parameter(name = "workspace")
+	Parameter(name = "workspace")
+	Parameter(name = "workspace")
+	Parameter(name = "workspace")
 
 Repository("intino-maven") intino
 	Release("https://artifactory.intino.io/artifactory/releases")

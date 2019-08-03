@@ -40,7 +40,7 @@ class NumberEditable extends AbstractNumberEditable {
 
 		return (
 			<TextField format={this.variant("body1")} style={this.style()} className={classes.default} label={label} type="number"
-					   value={this.state.value} onChange={this.handleChange.bind(this)} disabled={this.state.readonly}
+					   value={this.state.value} onChange={this.handleChange.bind(this)} disabled={this.state.readonly} autoFocus={this.props.focused}
 					   inputProps={{
 						   min: this.props.min !== -1 ? this.props.min : undefined,
 						   max: this.props.max !== -1 ? this.props.max : undefined,

@@ -27,6 +27,7 @@ public class SliderRenderer extends BindingCollectionRenderer<AbstractSlider> {
 		result.add("abstractslider");
 		if (element.arrangement() != null) result.add("arrangement", element.arrangement().name());
 		if (element.value() != -1) result.add("value", element.value());
+		if (element.isReadonly()) result.add("readonly", element.isReadonly());
 		addRange(result);
 		addAnimation(result);
 		addOrdinals(result);

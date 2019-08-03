@@ -32,6 +32,7 @@ public class DateRenderer extends ComponentRenderer<Date> {
 		if (editableDate.max() != null) builder.add("max", editableDate.max().toEpochMilli());
 		if (editableDate.timePicker()) builder.add("timePicker", editableDate.timePicker());
 		if (editableDate.mask() != null) builder.add("mask", editableDate.mask());
+		if (editableDate.allowEmpty()) builder.add("allowEmpty", editableDate.allowEmpty());
 	}
 
 	@Override

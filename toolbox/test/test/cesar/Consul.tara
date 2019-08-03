@@ -70,12 +70,12 @@ Feeder("consul.server.info") serverInfoFeeder
 Feeder("consul.server.status") serverStatusFeeder
 Feeder("consul.server.boot") serverBootFeeder
 
-Task launchProcessesOnStart as BootTrigger
-Task notifyBoot as BootTrigger
+//Task launchProcessesOnStart as BootTrigger
+//Task notifyBoot as BootTrigger
 
-Task checkServerInfoChanges as CronTrigger("0 0/1 * 1/1 * ? *", "Every minute", timeZone = "Atlantic/Canary")
-Task scheduleServerStatus as CronTrigger("0 0/15 * 1/1 * ? *", "Every 15 minutes", timeZone = "Atlantic/Canary")
-Task scheduleProcessStatus as CronTrigger("0 0/15 * 1/1 * ? *", "Every 15 minutes", timeZone = "Atlantic/Canary")
+//Task checkServerInfoChanges as CronTrigger("0 0/1 * 1/1 * ? *", "Every minute", timeZone = "Atlantic/Canary")
+//Task scheduleServerStatus as CronTrigger("0 0/15 * 1/1 * ? *", "Every 15 minutes", timeZone = "Atlantic/Canary")
+//Task scheduleProcessStatus as CronTrigger("0 0/15 * 1/1 * ? *", "Every 15 minutes", timeZone = "Atlantic/Canary")
 
 Schema ServerStatus
 	Attribute ts as DateTime

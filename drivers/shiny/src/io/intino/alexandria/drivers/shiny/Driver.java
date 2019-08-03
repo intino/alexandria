@@ -101,6 +101,8 @@ public class Driver implements io.intino.alexandria.drivers.Driver<URL, io.intin
 	private void publishResources(Program program) {
 		program.resources().forEach(resource -> {
 			try {
+				File file = new File(shinyProgramDirectory(program.name()) + File.separator + resource.name());
+				if (file.exists()) file.delete();
 				Files.copy(resource.content(), Paths.get(shinyProgramDirectory(program.name()) + File.separator + resource.name()));
 			} catch (IOException e) {
 				Logger.error(e);

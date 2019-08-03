@@ -63,6 +63,7 @@ Facet Editable on DataComponents.Date
 	var instant max = empty
 	var boolean timePicker = false
 	var string mask = empty
+	var boolean allowEmpty = false
 
 Facet Readonly on DataComponents.Text with Editable
 Facet Readonly on DataComponents.Number with Editable
@@ -71,6 +72,7 @@ Facet Readonly on DataComponents.File with Editable
 Facet Readonly on DataComponents.Image with Editable
 Facet Readonly on DataComponents.Date with Editable
 Facet Readonly on OtherComponents.Selector with RadioBox, CheckBox, ComboBox
+Facet Readonly on OtherComponents.AbstractSlider
 
 Facet Required on DataComponents.Text with Editable
 Facet Required on DataComponents.Number with Editable
@@ -79,3 +81,12 @@ Facet Required on DataComponents.File with Editable
 Facet Required on DataComponents.Image with Editable
 Facet Required on DataComponents.Date with Editable
 Facet Required on OtherComponents.Selector with RadioBox, CheckBox, ComboBox
+
+Facet Focused on DataComponents.Text with Editable
+Facet Focused on DataComponents.Number with Editable
+Facet Focused on DataComponents.Location with Editable
+Facet Focused on DataComponents.File with Editable
+Facet Focused on DataComponents.Image with Editable
+Facet Focused on DataComponents.Date with Editable
+Facet Focused on OtherComponents.Selector with RadioBox, CheckBox, ComboBox
+

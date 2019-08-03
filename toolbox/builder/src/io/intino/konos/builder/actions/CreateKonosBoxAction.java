@@ -51,6 +51,7 @@ import org.jetbrains.jps.model.java.JavaSourceRootType;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -64,7 +65,7 @@ public class CreateKonosBoxAction extends KonosAction {
 	private static final Logger LOG = Logger.getInstance("CreateKonosBoxAction: ");
 	private static final String BOX = "box";
 	private static final String TEXT = "Create Konos Box";
-	private static boolean firstTime = true;
+	private static Map<String, Boolean> firstTimeMap = new HashMap<>();
 
 	public CreateKonosBoxAction() {
 		super(TEXT, "Creates Konos Box", KonosIcons.GENERATE_16);
@@ -212,10 +213,11 @@ public class CreateKonosBoxAction extends KonosAction {
 	}
 
 	private File prepareIntinoFolder(Module module) {
-		File folder = new File(IntinoDirectory.of(module.getProject()) + "/box/" + module.getName());
-		if (folder.exists() && firstTime) Files.removeDir(folder);
+		String intinoFolder = IntinoDirectory.of(module.getProject()) + "/box/" + module.getName();
+		File folder = new File(intinoFolder);
+		if (folder.exists() && !firstTimeMap.containsKey(intinoFolder)) Files.removeDir(folder);
 		if (!folder.exists()) folder.mkdirs();
-		firstTime = false;
+		firstTimeMap.put(intinoFolder, true);
 		return folder;
 	}
 

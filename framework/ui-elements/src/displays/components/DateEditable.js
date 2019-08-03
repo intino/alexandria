@@ -1,11 +1,13 @@
 import React from "react";
 import { withStyles } from '@material-ui/core/styles';
+import { FormControlLabel, Checkbox } from '@material-ui/core';
 import AbstractDateEditable from "../../../gen/displays/components/AbstractDateEditable";
 import DateEditableNotifier from "../../../gen/displays/notifiers/DateEditableNotifier";
 import DateEditableRequester from "../../../gen/displays/requesters/DateEditableRequester";
 import MomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import 'alexandria-ui-elements/res/styles/layout.css';
 
 const styles = props => ({
 	date : {
@@ -19,7 +21,8 @@ const styles = props => ({
 class DateEditable extends AbstractDateEditable {
 	state = {
 		value : this.props.value,
-		readonly : this.props.readonly
+		readonly : this.props.readonly,
+		empty : false,
 	};
 
 	constructor(props) {
@@ -30,8 +33,7 @@ class DateEditable extends AbstractDateEditable {
 
 	handleChange(moment) {
 		if (!moment.isValid()) return;
-		this.requester.notifyChange(moment.toDate().getTime());
-		this.setState({ value: moment.toDate() });
+		this._notifyChange(moment.toDate());
 	};
 
 	render() {
@@ -39,9 +41,10 @@ class DateEditable extends AbstractDateEditable {
 		const dateLabel = this.translate(this.props.label != null ? this.props.label : "Date");
 		const timeLabel = this.translate(this.props.label != null ? this.props.label : "Time");
 		const pattern = this.props.pattern !== "" ? this.props.pattern : undefined;
-		return (<div style={this.style()}>
+		return (
+			<div style={this.style()}>
 				{ !timePicker ? <MuiPickersUtilsProvider utils={MomentUtils}><KeyboardDatePicker variant="inline" placeholder={pattern} autoOk
-																								 disabled={this.state.readonly}
+																								 disabled={this.state.readonly || this.state.empty}
 																								 format={pattern} className={classes.date} mask={this.props.mask}
 																								 value={this.state.value} onChange={this.handleChange.bind(this)}
 																								 minDate={min} maxDate={max} label={dateLabel}
@@ -54,17 +57,29 @@ class DateEditable extends AbstractDateEditable {
 																									minDate={min} maxDate={max} label={timeLabel}
 																									minDateMessage={this.translate("Date should not be before minimal date")}
 																									maxDateMessage={this.translate("Date should not be after maximal date")}/></MuiPickersUtilsProvider> : undefined }
+				{this.props.allowEmpty && <FormControlLabel control={<Checkbox disabled={this.state.readonly} checked={this.state.empty} onChange={this.handleAllowEmpty.bind(this)} />} label={this.translate("sin definir")} />}
 			</div>
 		);
 	};
 
 	refresh = (value) => {
-		this.setState({ value: new Date(value) });
+		const date = value != null ? new Date(value) : null;
+		this.setState({ value: date, empty: date == null });
 	};
 
 	refreshReadonly = (readonly) => {
 		this.setState({ readonly });
 	};
+
+	handleAllowEmpty = (e) => {
+		const checked = e.target.checked;
+		this._notifyChange(checked ? null : new Date());
+	};
+
+	_notifyChange = (date) => {
+		this.requester.notifyChange(date != null ? date.getTime() : null);
+		this.setState({ value: date != null ? date : null, empty: date == null || date === ""});
+	}
 }
 
 export default withStyles(styles, { withTheme: true })(DateEditable);

@@ -5,9 +5,10 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/demo") demo as Page(homeTemplate)
 
 Template homeTemplate
-	Text f1 as Editable Readonly
-		visible = false
-	Number f2 as Editable Readonly
+	Date date as Editable(allowEmpty=true)
+	TemporalSlider as Readonly
+		Range(min = empty, max = empty)
+
 
 Component baseImage as Decorated
 	Notification refresh as Text

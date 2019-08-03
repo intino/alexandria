@@ -78,6 +78,7 @@ export default class BaseSlider extends AbstractBaseSlider {
 		toolbar: null,
 		ordinals: [],
 		ordinal: null,
+		readonly: this.props.readonly,
 	};
 
 	static Styles = theme => ({
@@ -113,12 +114,12 @@ export default class BaseSlider extends AbstractBaseSlider {
 		const range = this.state.range;
 		const ordinal = this.state.ordinals[0];
 
-		return (<StyledSlider valueLabelDisplay="auto" min={range.min} max={range.max}
-						value={this.getValue()} step={ordinal.step}
-						onChange={this.handleChange.bind(this)}
-						valueLabelFormat={this.handleFormattedValue.bind(this)}
-						ValueLabelComponent={ValueLabelComponent}
-						/>);
+		return (<StyledSlider disabled={this.state.readonly} valueLabelDisplay="auto" min={range.min} max={range.max}
+							  value={this.getValue()} step={ordinal.step}
+							  onChange={this.handleChange.bind(this)}
+							  valueLabelFormat={this.handleFormattedValue.bind(this)}
+							  ValueLabelComponent={ValueLabelComponent}
+		/>);
 	};
 
 	renderToolbar = () => {
@@ -143,16 +144,17 @@ export default class BaseSlider extends AbstractBaseSlider {
 		const { classes } = this.props;
 		return (
 			<div className="layout horizontal">
-				{ <IconButton color="primary" aria-label={this.translate("Before")} onClick={this.handlePrevious.bind(this)} disabled={!canPrevious} size="small"><NavigateBefore/></IconButton>}
-				{ (this.props.animation && !this.state.toolbar.playing) && <IconButton color="primary" aria-label={this.translate("Play")} onClick={this.handlePlay.bind(this)} size="small"><PlayCircleFilled/></IconButton>}
-				{ (this.props.animation && this.state.toolbar.playing) && <IconButton color="primary" aria-label={this.translate("Pause")} onClick={this.handlePause.bind(this)} size="small"><PauseCircleFilled/></IconButton>}
-				{ <IconButton className={classes.spacing} color="primary" aria-label={this.translate("Next")} onClick={this.handleNext.bind(this)} disabled={!canNext} size="small"><NavigateNext/></IconButton>}
+				{ <IconButton disabled={this.state.readonly || !canPrevious} color="primary" aria-label={this.translate("Before")} onClick={this.handlePrevious.bind(this)} size="small"><NavigateBefore/></IconButton>}
+				{ (this.props.animation && !this.state.toolbar.playing) && <IconButton disabled={this.state.readonly} color="primary" aria-label={this.translate("Play")} onClick={this.handlePlay.bind(this)} size="small"><PlayCircleFilled/></IconButton>}
+				{ (this.props.animation && this.state.toolbar.playing) && <IconButton disabled={this.state.readonly} color="primary" aria-label={this.translate("Pause")} onClick={this.handlePause.bind(this)} size="small"><PauseCircleFilled/></IconButton>}
+				{ <IconButton disabled={this.state.readonly || !canNext} className={classes.spacing} color="primary" aria-label={this.translate("Next")} onClick={this.handleNext.bind(this)} size="small"><NavigateNext/></IconButton>}
 			</div>
 		);
 	};
 
 	renderValue = () => {
-		return (<div>{this.getFormattedValue()}</div>);
+		const { theme } = this.props;
+		return (<div style={{color: this.state.readonly ? theme.palette.grey.primary : "black"}}>{this.getFormattedValue()}</div>);
 	};
 
 	getValue = () => {
@@ -166,7 +168,8 @@ export default class BaseSlider extends AbstractBaseSlider {
 	renderOrdinals = () => {
 		if (this.state.ordinals.length <= 1 || this.state.ordinal == null) return null;
 		return (
-			<Select value={this.state.ordinal} style={{width:"100%"}} onChange={this.handleOrdinalChange.bind(this)}>
+			<Select value={this.state.ordinal} style={{width:"100%"}} isDisabled={this.state.readonly}
+					onChange={this.handleOrdinalChange.bind(this)}>
 				{this.state.ordinals.map((ordinal, i) => <MenuItem key={i} value={ordinal.name}>{ordinal.label}</MenuItem>)}
 			</Select>
 		);
@@ -200,6 +203,10 @@ export default class BaseSlider extends AbstractBaseSlider {
 
 	refreshRange = (range) => {
 		this.setState({range});
+	};
+
+	refreshReadonly = (readonly) => {
+		this.setState({readonly});
 	};
 
 	handleFormattedValue = (value, index) => {
