@@ -60,7 +60,7 @@ const styles = theme => ({
 		width: "100%",
 	},
 	count: {
-		position: "absolute",
+		height: "9px",
 		right: "0",
 	}
 });
@@ -88,15 +88,17 @@ class SearchBox extends AbstractSearchBox {
 						<div className={classes.searchIcon}>
 							<SearchIcon/>
 						</div>
-						<InputBase
-							placeholder={placeholder}
-							onChange={this.handleSearch.bind(this)}
-							ref={this.input}
-							classes={{
-								root: classes.inputRoot,
-								input: classes.inputInput,
-							}}
-						/>
+						<form autoComplete="off">
+							<InputBase
+								placeholder={placeholder}
+								onChange={this.handleSearch.bind(this)}
+								ref={this.input}
+								classes={{
+									root: classes.inputRoot,
+									input: classes.inputInput,
+								}}
+							/>
+						</form>
 					</Paper>
 					<div className={classNames(classes.count, "layout horizontal end-justified")}><div title={this.countHint()}>{this.countMessage()}</div></div>
 				</div>

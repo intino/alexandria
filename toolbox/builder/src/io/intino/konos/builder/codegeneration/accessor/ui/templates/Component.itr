@@ -55,7 +55,7 @@ def type(properties & operation) trigger(common)
 end
 
 def type(properties & abstractslider) trigger(common)
-	[ label="$label"][ format="$format...[ ]"][ color="$color"][ arrangement="$arrangement"][ animation={{interval:$interval,loop:$loop}}]
+	[ label="$label"][ format="$format...[ ]"][ color="$color"][ arrangement="$arrangement"][ animation={{interval:$interval,loop:$loop}}][ readonly={$readonly}]
 end
 
 def type(properties) trigger(common)
@@ -71,7 +71,7 @@ def type(properties & stamp) trigger(specific)
 end
 
 def type(properties & selector) trigger(specific)
-	[ multipleSelection={$multipleSelection}][ readonly={$readonly}]
+	[ multipleSelection={$multipleSelection}][ readonly={$readonly}][ focused={$focused}]
 end
 
 def type(properties & image) trigger(specific)
@@ -103,11 +103,11 @@ def type(properties & block) trigger(specific)
 end
 
 def type(properties & date) trigger(specific)
-	[ pattern="$pattern"][ mode="$mode"][ value={new Date($value)}][ timePicker={$timePicker}][ mask="$mask"]
+	[ pattern="$pattern"][ mode="$mode"][ value={new Date($value)}][ timePicker={$timePicker}][ mask="$mask"][ allowEmpty={$allowEmpty}]
 end
 
 def type(properties & number) trigger(specific)
-	[ value={$value}][ prefix="$prefix"][ suffix="$suffix"][ min={$min}][ max={$max}][ step={$step}][ readonly={$readonly}]
+	[ value={$value}][ prefix="$prefix"][ suffix="$suffix"][ min={$min}][ max={$max}][ step={$step}][ readonly={$readonly}][ focused={$focused}]
 end
 
 def type(properties & header) trigger(specific)
@@ -119,7 +119,7 @@ def type(properties & codeText) trigger(specific)
 end
 
 def type(properties & text) trigger(specific)
-	[ mode="$mode"][ prefix="$prefix"][ suffix="$suffix"][ value="$defaultValue"][ placeholder="$placeholder"][ readonly={$readonly}][ highlighted={$highlighted}][ type="$type"]
+	[ mode="$mode"][ prefix="$prefix"][ suffix="$suffix"][ value="$defaultValue"][ placeholder="$placeholder"][ readonly={$readonly}][ focused={$focused}][ highlighted={$highlighted}][ type="$type"]
 end
 
 def type(properties & location) trigger(specific)

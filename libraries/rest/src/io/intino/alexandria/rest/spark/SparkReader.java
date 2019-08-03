@@ -10,12 +10,14 @@ import java.util.Collection;
 public class SparkReader {
 
 	public static <T> T read(String object, Type type) {
+		if (object == null) return null;
 		Class<T> rawType =(Class<T>) ((ParameterizedType) type).getRawType();
 		if(Collection.class.isAssignableFrom(rawType)) return readList(object, type);
 		return read(object, (Class<T>) rawType);
 	}
 
 	public static <T> T read(String object, Class<T> type) {
+		if (object == null) return null;
 		if (type.isAssignableFrom(Error.class) || Collection.class.isAssignableFrom(type))
 			return RequestAdapter.adaptFromJSON(object, type);
 		else if (type.isAssignableFrom(byte[].class)) return (T) readBytes(object);
@@ -23,6 +25,7 @@ public class SparkReader {
 	}
 
 	public static <T> T read(Object object, Class<T> type) {
+		if (object == null) return null;
 		return type.isAssignableFrom(InputStream.class) ? (T) object : null;
 	}
 

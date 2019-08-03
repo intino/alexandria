@@ -71,6 +71,7 @@ Component baseSlider as Decorated
 	Notification refreshSelectedOrdinal as Text
 	Notification refreshToolbar as Object(ToolbarState)
 	Notification refreshRange as Object(Range)
+	Notification refreshReadonly as Bool
 
 	Request update as LongInteger
 	Request selectOrdinal as Text
@@ -87,6 +88,7 @@ Component stamp as Decorated
 Component baseDialog as Decorated
 	Notification open
 	Notification close
+	Notification refreshTitle as Text
 
 	Request open
 	Request close

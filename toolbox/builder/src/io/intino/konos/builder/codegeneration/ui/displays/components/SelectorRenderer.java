@@ -5,7 +5,6 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.OtherComponents.Selector;
-import io.intino.konos.model.graph.editable.datacomponents.EditableNumber;
 
 public class SelectorRenderer extends ComponentRenderer<Selector> {
 
@@ -18,6 +17,7 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 		FrameBuilder result = super.properties();
 		result.add("multipleSelection", element.multipleSelection() ? "true" : "false");
 		if (element.isReadonly()) result.add("readonly", element.isReadonly());
+		if (element.isFocused()) result.add("readonly", element.isFocused());
 		return result;
 	}
 

@@ -21,6 +21,7 @@ public class NumberRenderer extends ComponentRenderer<Number> {
 		if (element.prefix() != null) result.add("prefix", element.prefix());
 		if (element.suffix() != null) result.add("suffix", element.suffix());
 		if (element.isReadonly()) result.add("readonly", element.isReadonly());
+		if (element.isFocused()) result.add("focused", element.isFocused());
 		addEditableProperties(result);
 		return result;
 	}

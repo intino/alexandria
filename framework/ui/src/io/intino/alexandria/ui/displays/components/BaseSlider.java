@@ -25,6 +25,7 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 	private ChangeListener changeListener = null;
 	private Range range = null;
 	private Timer playerStepTimer = null;
+	private boolean readonly;
 
 	public BaseSlider(B box) {
         super(box);
@@ -80,10 +81,25 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		return this;
 	}
 
+	public boolean readonly() {
+		return readonly;
+	}
+
+	public BaseSlider<DN, B> readonly(boolean value) {
+		this.readonly = readonly;
+		return this;
+	}
+
 	public void update(long value) {
 		if (!checkRange(value)) return;
 		this.value = value;
 		notifyChange();
+	}
+
+	public BaseSlider<DN, B> updateReadonly(boolean value) {
+		readonly(value);
+		notifier.refreshReadonly(value);
+		return this;
 	}
 
 	public void previous() {
