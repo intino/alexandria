@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.6") rest-accessor
+Artifact("io.intino.alexandria", "1.0.7") rest-accessor
 	Imports
 		Compile("io.intino.alexandria", "exceptions", "[1.0.0, 2.0.0)")
 		Compile("io.intino.alexandria", "primitives", "[1.0.3, 2.0.0)")
@@ -12,6 +12,7 @@ Artifact("io.intino.alexandria", "1.0.6") rest-accessor
 		Compile("org.apache.httpcomponents", "httpmime", "4.5.1")
 		Compile("org.apache.httpcomponents", "httpclient", "4.5.1")
 		Compile("org.apache.commons", "commons-lang3", "3.4")
+		Compile("commons-io", "commons-io", "2.6")
 		Compile("org.glassfish.tyrus", "tyrus-client", "1.8.3")
 		Compile("org.glassfish.tyrus", "tyrus-container-grizzly-client", "1.8.3")
 		Test("junit", "junit", "4.12")
