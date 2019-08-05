@@ -17,13 +17,14 @@ Facet JmsBus on MessageHub
 	var string clientId
 
 Facet DatalakeType on Datalake is abstract
-	var string startingTimetag
-	var string originDatalakePath
-	sub NfsMirrored
-	sub SshMirrored
-		var string url
-		var string user
-		var string password = empty
+	sub Mirrored
+		var string startingTimetag
+		var string originDatalakePath
+		sub NfsMirrored
+		sub SshMirrored
+			var string url
+			var string user
+			var string password = empty
 	sub Local
 
 Concept:Named Adapter
