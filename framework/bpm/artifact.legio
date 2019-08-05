@@ -3,7 +3,7 @@ dsl Legio
 Artifact("io.intino.alexandria", "1.0.0") bpm
 	Imports
 		Compile("io.intino.alexandria", "message", "1.0.0")
-		Compile("io.intino.alexandria", "logger", "2.0.0")
+		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Test("junit", "junit", "LATEST")
 
 	Package(mode = ModulesAndLibrariesLinkedByManifest)

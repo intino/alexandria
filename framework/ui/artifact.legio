@@ -4,8 +4,8 @@ Artifact("io.intino.alexandria", "2.0.0") ui-framework
 	Box("Konos", "6.0.0") > targetPackage = ""
 	Code("io.intino.alexandria")
 	Imports
-		Web(groupId = "io.intino.alexandria", artifactId = "ui-framework-elements", version = "2.0.0")
-		Compile("io.intino.alexandria", "core-framework", "1.0.1")
+		Web("io.intino.alexandria", "ui-framework-elements", "2.0.0")
+		Compile("io.intino.alexandria", "core-framework", "2.0.1")
 		Compile("io.intino.alexandria", "primitives", "1.0.3")
 		Compile("io.intino.alexandria", "exceptions", "1.0.0")
 		Compile("io.intino.alexandria", "rest", "2.0.0")
@@ -13,7 +13,7 @@ Artifact("io.intino.alexandria", "2.0.0") ui-framework
 		Compile("io.intino.alexandria", "driver-shiny", "1.0.0")
 		Compile("io.intino.alexandria", "driver-r", "1.0.0")
 		Compile("io.intino.alexandria", "proxy", "1.0.0")
-		Compile("io.intino.alexandria", "logger", "2.0.0")
+		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Compile("io.intino.alexandria", "logger4j", "1.0.0")
 		Compile("com.opencsv", "opencsv", "4.1")
 		Compile("org.hashids", "hashids", "1.0.3")

@@ -1,11 +1,11 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.4") slack-framework
+Artifact("io.intino.alexandria", "1.0.5") slack-framework
 	Imports
-		Compile("io.intino.alexandria", "core-framework", "2.0.0")
 		Compile("com.ullink.slack", "simpleslackapi", "1.2.0") > Exclude("ch.qos.logback","logback-classic")
 		Compile("org.apache.commons", "commons-lang3", "3.4")
 		Compile("org.glassfish.tyrus", "tyrus-client", "1.8.3")
+		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Compile("org.glassfish.tyrus", "tyrus-container-grizzly-client", "1.8.3")
 		Compile("com.googlecode.json-simple", "json-simple", "1.1.1")
 		Compile("com.google.guava", "guava", "18.0")
