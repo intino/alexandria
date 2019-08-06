@@ -1,5 +1,6 @@
 package io.intino.alexandria.ui.displays.components;
 
+import io.intino.alexandria.Base64;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.drivers.Driver;
 import io.intino.alexandria.drivers.Program;
@@ -11,15 +12,17 @@ import io.intino.alexandria.schemas.DashboardSettingsInfo;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.components.dashboard.DashboardManager;
+import io.intino.alexandria.ui.displays.events.Event;
+import io.intino.alexandria.ui.displays.events.Listener;
 import io.intino.alexandria.ui.displays.notifiers.DashboardNotifier;
 import io.intino.alexandria.ui.utils.DelayerUtil;
+import io.intino.alexandria.ui.utils.IOUtils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,6 +37,8 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
     private java.util.Map<String, Object> parameterMap = new HashMap<>();
     private List<URL> resourceList = new ArrayList<>();
     private boolean adminMode = false;
+    private DashboardNameProvider dashboardNameProvider = null;
+    private Listener closeSettingsListener = null;
 
     public Dashboard(B box) {
         super(box);
@@ -44,6 +49,16 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
         refresh();
         return this;
     }
+
+    public Dashboard dashboardNameProvider(DashboardNameProvider provider) {
+		this.dashboardNameProvider = provider;
+		return this;
+	}
+
+	public Dashboard onCloseSettings(Listener listener) {
+		this.closeSettingsListener = listener;
+		return this;
+	}
 
 	public Dashboard serverScript(URL script) {
 		this.serverScript = script;
@@ -98,17 +113,22 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
         }
     }
 
-    public void settings() {
+    public void showSettings() {
     	notifier.showSettings(new DashboardSettingsInfo().serverScript(contentOf(serverScript)).uiScript(contentOf(uiScript)));
 	}
 
+	public void hideSettings() {
+		notifier.hideSettings();
+		if (this.closeSettingsListener != null) this.closeSettingsListener.accept(new Event(this));
+	}
+
 	public void saveServerScript(String content) {
-    	saveScript(serverScript, content);
+    	saveScript(serverScript, new String(Base64.decode(content)));
     	DelayerUtil.execute(this, aVoid -> notifyUser("Server script saved", UserMessage.Type.Info), 1000);
 	}
 
 	public void saveUiScript(String content) {
-		saveScript(uiScript, content);
+		saveScript(uiScript, new String(Base64.decode(content)));
 		DelayerUtil.execute(this, aVoid -> notifyUser("UI script saved", UserMessage.Type.Info), 1000);
 	}
 
@@ -131,17 +151,17 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
         String name = programName();
 		List<Script> scripts = Arrays.asList(scriptOf(serverScript), scriptOf(uiScript));
 		List<Resource> resources = resourceList.stream().map(this::resourceOf).collect(Collectors.toList());
-		return new Program().name(name).scripts(scripts).resources(resources).parameters(parameterMap);
+		return new Program().name(name).parameters(parameterMap).scripts(scripts).resources(resources).parameters(parameterMap);
     }
 
 	private Program programOf(URL script) {
-		return new Program().name(programName()).scripts(Collections.singletonList(scriptOf(script)));
+		return new Program().name(programName()).parameters(parameterMap).scripts(Collections.singletonList(scriptOf(script)));
 	}
 
     private String contentOf(URL file) {
 		try {
-			return new String(Files.readAllBytes(Paths.get(file.toURI())), StandardCharsets.UTF_8);
-		} catch (IOException | URISyntaxException e) {
+			return new String(IOUtils.toByteArray(file.openStream()));
+		} catch (IOException e) {
 			return "";
 		}
 	}
@@ -161,8 +181,8 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
 		try {
 			Path path = pathOf(resource);
 			if (path == null) return null;
-			return new Resource().name(path.getFileName().toString()).content(new FileInputStream(path.toFile()));
-		} catch (FileNotFoundException e) {
+			return new Resource().name(path.getFileName().toString()).content(resource.openStream());
+		} catch (IOException e) {
 			Logger.error(e);
 			return null;
 		}
@@ -178,16 +198,19 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
     }
 
     private String programName() {
-        return Program.name(name(), parameterMap);
+    	return dashboardNameProvider != null ? dashboardNameProvider.name() : name().toLowerCase();
     }
 
 	private void saveScript(URL script, String content) {
 		try {
-			Files.write(Paths.get(script.toURI()), content.getBytes());
 			if (driver != null) driver.update(programOf(script));
+			Files.write(Paths.get(script.toURI()), content.getBytes());
 		} catch (URISyntaxException | IOException e) {
 			Logger.error(e);
 		}
 	}
 
+	public interface DashboardNameProvider {
+    	String name();
+	}
 }

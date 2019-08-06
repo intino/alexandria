@@ -29,10 +29,12 @@ Component chart as Decorated
 Component dashboard as Decorated
 	Notification showLoading
 	Notification showSettings as Object(DashboardSettingsInfo)
+	Notification hideSettings
 	Notification refresh as Object(DashboardInfo)
 	Notification refreshError as Text
 
-	Request settings
+	Request showSettings
+	Request hideSettings
 	Request saveServerScript as Text
 	Request saveUiScript as Text
 
@@ -59,6 +61,10 @@ Component selectorComboBox as Decorated ExtensionOf(baseSelector)
 Component selectorListBox as Decorated ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
 	Request updateSelection as Text List
+
+Component selectorTabs as Decorated ExtensionOf(baseSelector)
+	Notification refreshSelected as Integer
+	Request select as Integer
 
 Component multiple as Decorated
 

@@ -1,0 +1,71 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) selectorExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="Tabs facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Selector selector1 as Tabs
+					Text(value="option 1") tabOption1 as Option
+					Text(value="option 2") tabOption2 as Option
+					Text(value="option 3") tabOption3 as Option
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Selector as Tabs<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") tabOption1 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") tabOption2 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") tabOption3 as Option
+						=========
+
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="Menu facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Selector selector2 as Menu(layout=Vertical)
+					Text(value="option 1") menuOption1 as Option
+					Text(value="option 2") menuOption2 as Option
+					Text(value="option 3") menuOption3 as Option
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Selector as Menu(layout\=Vertical)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") menuOption1 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") menuOption2 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") menuOption3 as Option
+						=========
+
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="ComboBox facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Selector selector3 as ComboBox
+					Text(value="option 1") comboBoxOption1 as Option
+					Text(value="option 2") comboBoxOption2 as Option
+					Text(value="option 3") comboBoxOption3 as Option
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Selector as ComboBox<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") comboBoxOption1 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") comboBoxOption2 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") comboBoxOption3 as Option
+						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="ListBox facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Selector selector4 as ListBox
+					Text(value="option 1") listBoxOption1 as Option
+					Text(value="option 2") listBoxOption2 as Option
+					Text(value="option 3") listBoxOption3 as Option
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Selector as ListBox<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") listBoxOption1 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") listBoxOption2 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") listBoxOption3 as Option
+						=========

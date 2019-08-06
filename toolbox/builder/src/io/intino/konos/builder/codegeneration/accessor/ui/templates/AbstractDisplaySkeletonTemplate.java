@@ -26,7 +26,7 @@ public class AbstractDisplaySkeletonTemplate extends Template {
 			rule().condition((type("renderTag"))).output(literal("<React.Fragment>")),
 			rule().condition((allTypes("renderTagAttributes","block"))).output(mark("properties", "common")).output(mark("properties", "specific")),
 			rule().condition((type("renderTagAttributes"))),
-			rule().condition((attribute("parent")), (trigger("import"))).output(literal("import Displays")).output(mark("parent", "firstUpperCase")).output(literal(" from \"../../../src/displays/components/")).output(mark("parent", "firstUpperCase")).output(literal("\";")),
+			rule().condition((attribute("parent")), (trigger("import"))).output(literal("import Displays")).output(mark("parent", "firstUpperCase")).output(literal(" from \"../../../src/displays/")).output(mark("parentDirectory")).output(literal("/")).output(mark("parent", "firstUpperCase")).output(literal("\";")),
 			rule().condition((attribute("basedisplay")), (trigger("import"))).output(literal("import Ui")).output(mark("value", "firstUpperCase")).output(literal(" from \"alexandria-ui-elements/src/displays/Display\";")),
 			rule().condition((attribute("basecomponent")), (trigger("import"))).output(literal("import Ui")).output(mark("value", "firstUpperCase")).output(literal(" from \"alexandria-ui-elements/src/displays/components/Component\";")),
 			rule().condition((attribute("component")), (trigger("import"))).output(literal("import Ui")).output(mark("value", "firstUpperCase")).output(literal(" from \"alexandria-ui-elements/src/displays/components/")).output(mark("value", "firstUpperCase")).output(literal("\";")),

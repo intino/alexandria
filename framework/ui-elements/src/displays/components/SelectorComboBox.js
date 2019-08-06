@@ -9,7 +9,8 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	container : {
-		position: "relative"
+		position: "relative",
+		minWidth: "170px",
 	},
 	readonly : {
 		position: "absolute",

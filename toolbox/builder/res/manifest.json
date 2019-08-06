@@ -27,7 +27,7 @@
     }
   ],
   "dependencies": {
-    "io.intino.alexandria:core": "2.0.1",
+    "io.intino.alexandria:core-framework": "2.0.1",
     "io.intino.alexandria:scheduler-framework": "1.0.0",
     "io.intino.alexandria:slack-framework": "1.0.1",
     "io.intino.alexandria:ui-framework": "2.0.0",

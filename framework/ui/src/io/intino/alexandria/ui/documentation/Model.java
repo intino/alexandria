@@ -21,7 +21,8 @@ public class Model {
 		Text, Number, Image, File, Date, Location,
 		Chart, Block, List, Table, Task, OpenPage, OpenBlock, Export,
 		Download, DownloadSelection,
-		Grouping, Sorting, SearchBox, Map, Slider, Dashboard, Dialog, Divider, User;
+		Grouping, Sorting, SearchBox, Map, Slider, Selector,
+		Dashboard, Dialog, Divider, User;
 
 		public static WidgetType from(String type) {
 			WidgetType[] values = values();
@@ -49,6 +50,7 @@ public class Model {
 		map.put(WidgetType.List, new ListWidget());
 		map.put(WidgetType.Map, new MapWidget());
 		map.put(WidgetType.Slider, new SliderWidget());
+		map.put(WidgetType.Selector, new SelectorWidget());
 		map.put(WidgetType.Table, new TableWidget());
 		map.put(WidgetType.Task, new TaskWidget());
 		map.put(WidgetType.OpenPage, new OpenPageWidget());
