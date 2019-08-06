@@ -58,6 +58,27 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         selectionListeners.forEach(l -> l.accept(new SelectionEvent(this, selection())));
     }
 
+    String nameOf(int option) {
+        if (option == -1) return null;
+        SelectorOption child = findOption(option);
+        return child != null ? child.name() : null;
+    }
+
+    SelectorOption findOption(int option) {
+        List<SelectorOption> options = options();
+        return options.get(option);
+    }
+
+    int position(String option) {
+        List<SelectorOption> options = options();
+        for (int i = 0; i< options.size(); i++) {
+            SelectorOption selectorOption = options.get(i);
+            if (selectorOption.name().equalsIgnoreCase(option) || selectorOption.id().equals(option))
+                return i;
+        }
+        return -1;
+    }
+
     private java.util.List<SelectorOption> findOptions() {
         java.util.List<SelectorOption> result = new ArrayList<>();
         java.util.List<Component> children = children(Component.class);

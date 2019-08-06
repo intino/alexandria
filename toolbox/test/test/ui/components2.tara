@@ -5,10 +5,9 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/demo") demo as Page(homeTemplate)
 
 Template homeTemplate
-	Date date as Editable(allowEmpty=true)
-	TemporalSlider as Readonly
-		Range(min = empty, max = empty)
-
+Template page as Decorated
+Template nodePage as Decorated ExtensionOf(page)
+Template desktopPage as Decorated ExtensionOf(nodePage)
 
 Component baseImage as Decorated
 	Notification refresh as Text
@@ -33,7 +32,6 @@ Format("") subtitle2
 Format("color:'white'") white
 Format("color:'orange'") secondary
 Format("borderRight:'1px solid black'") separator
-Format("background:'#efefef',padding:'10px 30px'") footer
 Format("color:'white',position:'absolute',top:0,left:0,marginLeft:'187px',marginTop:'9px'") headerSubtitle
 Format("background:'white',borderRadius:'3px',height:'100%'") whiteBackground
 Format("padding:'10px 20px'") air

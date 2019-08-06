@@ -24,6 +24,7 @@ import io.intino.konos.model.graph.parallax.ParallaxBlock;
 import io.intino.konos.model.graph.radiobox.othercomponents.RadioBoxSelector;
 import io.intino.konos.model.graph.splitter.SplitterBlock;
 import io.intino.konos.model.graph.switches.operationcomponents.SwitchesTask;
+import io.intino.konos.model.graph.tabs.othercomponents.TabsSelector;
 import io.intino.tara.magritte.Layer;
 
 import java.util.ArrayList;
@@ -174,6 +175,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (passiveView.i$(BadgeBlock.class)) result.add("Badge");
 		if (passiveView.i$(ConditionalBlock.class)) result.add("Conditional");
 		if (passiveView.i$(SplitterBlock.class)) result.add("Splitter");
+		if (passiveView.i$(TabsSelector.class)) result.add("Tabs");
 		if (passiveView.i$(MenuSelector.class)) result.add("Menu");
 		if (passiveView.i$(ComboBoxSelector.class)) result.add("ComboBox");
 		if (passiveView.i$(ComboBoxGrouping.class)) result.add("ComboBox");
@@ -310,7 +312,10 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	private void addParentImport(FrameBuilder builder) {
 		FrameBuilder result = new FrameBuilder().add("value", type());
-		if (isGeneric(element) && element.isExtensionOf()) result.add("parent", genericParent(element));
+		if (isGeneric(element) && element.isExtensionOf()) {
+			result.add("parent", genericParent(element));
+			result.add("parentDirectory", componentDirectoryOf(element.asExtensionOf().parentView(), false));
+		}
 		else if (typeOf(element).equalsIgnoreCase("component")) result.add("baseComponent", "");
 		else if (typeOf(element).equalsIgnoreCase("display")) result.add("baseDisplay", "");
 		else if (element.i$(Component.class)) result.add("component", "");

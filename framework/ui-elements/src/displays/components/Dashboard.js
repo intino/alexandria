@@ -9,6 +9,7 @@ import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { Typography } from "@material-ui/core";
 import Spinner from "./Spinner";
 import classNames from "classnames";
+import StringUtil from "../../util/StringUtil";
 import { withSnackbar } from 'notistack';
 
 const styles = theme => ({
@@ -16,17 +17,17 @@ const styles = theme => ({
 		width: "100%",
 		height: "100%",
 		border: "0",
-        position: "relative",
+		position: "relative",
 	},
 	error: {
 		color: theme.palette.error.main,
 		margin: "10px 0"
 	},
-    settings : {
+	settings : {
 		background: "white",
 		border: "1px solid #ddd",
 		width: "100%",
-    },
+	},
 	spaced : {
 		marginBottom: "30px",
 	},
@@ -37,7 +38,7 @@ class Dashboard extends AbstractDashboard {
 		loading : false,
 		error : undefined,
 		location: undefined,
-        driverDefined: undefined,
+		driverDefined: undefined,
 		adminMode: false,
 		settingsOpened: false,
 		serverScript: null,
@@ -72,10 +73,10 @@ class Dashboard extends AbstractDashboard {
 					<DialogTitle>{this.translate("Edit dashboard")}</DialogTitle>
 					<DialogContent>
 						<TextField multiline variant="outlined" rows="10" fullWidth className={classes.spaced}
-							   	   label={this.translate("Server script")} value={this.state.serverScript}
+								   label={this.translate("Server script")} value={this.state.serverScript}
 								   onChange={this.handleServerScriptChange.bind(this)}/>
 						<TextField multiline variant="outlined" rows="10" fullWidth
-							   	   label={this.translate("UI script")} value={this.state.uiScript}
+								   label={this.translate("UI script")} value={this.state.uiScript}
 								   onChange={this.handleUiScriptChange.bind(this)}/>
 					</DialogContent>
 					<DialogActions>
@@ -87,17 +88,17 @@ class Dashboard extends AbstractDashboard {
 	};
 
 	handleShowSettings = () => {
-		this.requester.settings();
+		this.requester.showSettings();
 	};
 
 	handleServerScriptChange = (e) => {
 		this.setState({ "serverScript" : e.target.value});
-		this.requester.saveServerScript(e.target.value);
+		this.requester.saveServerScript(StringUtil.toBase64(e.target.value));
 	};
 
 	handleUiScriptChange = (e) => {
 		this.setState({ "uiScript" : e.target.value});
-		this.requester.saveUiScript(e.target.value);
+		this.requester.saveUiScript(StringUtil.toBase64(e.target.value));
 	};
 
 	showLoading = () => {
@@ -106,8 +107,8 @@ class Dashboard extends AbstractDashboard {
 
 	refresh = (info) => {
 		this.setState({ "location": info.location, "driverDefined": info.driverDefined,
-                        "serverScript": info.serverScript, "uiScript": info.uiScript,
-                        "adminMode": info.adminMode, "loading": false, "error": undefined });
+			"serverScript": info.serverScript, "uiScript": info.uiScript,
+			"adminMode": info.adminMode, "loading": false, "error": undefined });
 	};
 
 	refreshError = (error) => {
@@ -118,8 +119,12 @@ class Dashboard extends AbstractDashboard {
 		this.setState({ "settingsOpened": true, "serverScript": info.serverScript, "uiScript": info.uiScript });
 	};
 
-	handleClose = () => {
+	hideSettings = () => {
 		this.setState({ "settingsOpened": false });
+	};
+
+	handleClose = () => {
+		this.requester.hideSettings();
 	};
 }
 

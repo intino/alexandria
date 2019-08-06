@@ -4,7 +4,8 @@ import AbstractBaseDialog from "../../../gen/displays/components/AbstractBaseDia
 
 export default class BaseDialog extends AbstractBaseDialog {
 	state = {
-		opened: false
+		title: this.props.title,
+		opened: false,
 	};
 
 	static Styles = theme => ({
@@ -39,14 +40,14 @@ export default class BaseDialog extends AbstractBaseDialog {
 	renderTitle = () => {
 		const { classes } = this.props;
 		const style = this.props.color != null ? { backgroundColor: this.props.color } : undefined;
-		if (this.props.fullscreen) return (<AppBar style={style} className={classes.header}><Typography variant="h5">{this.props.title}</Typography></AppBar>);
-		return (<DialogTitle>{this.props.title}</DialogTitle>);
+		if (this.props.fullscreen) return (<AppBar style={style} className={classes.header}><Typography variant="h5">{this.state.title}</Typography></AppBar>);
+		return (<DialogTitle>{this.state.title}</DialogTitle>);
 	};
 
 	renderContent = (content) => {
 		const { classes } = this.props;
 		return (<DialogContent className={this.props.fullscreen && classes.fullscreen} style={this.style()}>{content != null && content()}</DialogContent>);
-	}
+	};
 
 	open = () => {
 		this.setState({ opened: true });
@@ -54,6 +55,10 @@ export default class BaseDialog extends AbstractBaseDialog {
 
 	close = () => {
 		this.setState({ opened: false });
+	};
+
+	refreshTitle = (title) => {
+		this.setState({title});
 	};
 
 }

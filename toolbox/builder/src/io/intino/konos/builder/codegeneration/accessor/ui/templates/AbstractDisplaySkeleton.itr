@@ -104,7 +104,7 @@ def type(renderTagAttributes)
 end
 
 def attribute(parent) trigger(import)
-	import Displays$parent+firstUpperCase from "../../../src/displays/components/$parent+firstUpperCase";
+	import Displays$parent+firstUpperCase from "../../../src/displays/$parentDirectory/$parent+firstUpperCase";
 end
 
 def attribute(baseDisplay) trigger(import)

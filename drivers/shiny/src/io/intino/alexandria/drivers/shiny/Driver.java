@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 
 public class Driver implements io.intino.alexandria.drivers.Driver<URL, io.intino.alexandria.proxy.Proxy> {
 	private final String shinyUrl;
@@ -90,7 +91,7 @@ public class Driver implements io.intino.alexandria.drivers.Driver<URL, io.intin
 			try {
 				Path target = Paths.get(shinyProgramDirectory(program.name()) + File.separator + script.name());
 				String scriptContent = new String(IOUtils.toByteArray(script.content()), StandardCharsets.UTF_8);
-				replaceParameters(program, scriptContent);
+				scriptContent = replaceParameters(program, scriptContent);
 				Files.write(target, scriptContent.getBytes());
 			} catch (IOException e) {
 				Logger.error(e);
@@ -110,12 +111,18 @@ public class Driver implements io.intino.alexandria.drivers.Driver<URL, io.intin
 		});
 	}
 
-	private void replaceParameters(Program program, String script) {
-		program.parameters().forEach((key, value) -> replaceTag(script, key, String.valueOf(value)));
+	private String replaceParameters(Program program, String script) {
+		for (Map.Entry<String, Object> entry : program.parameters().entrySet()) {
+			Object value = entry.getValue();
+			script = replaceTag(script, entry.getKey(), value != null ? String.valueOf(value) : "");
+		}
+		script = script.replaceAll("###", "");
+		return script;
 	}
 
 	private String replaceTag(String content, String tag, String value) {
-		return content.replaceAll(":" + tag + ":", value);
+		content = content.replaceAll(":" + tag + ":", value);
+		return content;
 	}
 
 	private File shinyProgramDirectory(String program) {

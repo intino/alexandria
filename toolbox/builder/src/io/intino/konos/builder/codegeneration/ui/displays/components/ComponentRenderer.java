@@ -41,7 +41,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		addOwner(builder);
 		addProperties(builder);
 		if (buildChildren) builder.add("child");
-		builder.add("methodName", element.i$(ConditionalBlock.class) ? "initConditional" : "init");
+		builder.add("methodName", element.i$(ConditionalBlock.class) && !element.i$(MultipleBlock.class) ? "initConditional" : "init");
 		addSpecificTypes(builder);
 		addComponents(element, builder);
 		addReferences(element, builder);
@@ -201,9 +201,9 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			FrameBuilder methodsFrame = addOwner(buildBaseFrame()).add("method").add("multiple");
 			methodsFrame.add("componentType", multipleComponentType(element));
 			String objectType = multipleObjectType(element);
-			if (objectType != null && !objectType.equals("java.lang.Void")) {
+			if (objectType != null) {
 				methodsFrame.add("objectType", objectType);
-				methodsFrame.add("objectTypeValue", "value");
+				if (!objectType.equals("java.lang.Void")) methodsFrame.add("objectTypeValue", "value");
 			}
 			methodsFrame.add("name", nameOf(element));
 			builder.add("methods", methodsFrame);
@@ -226,6 +226,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			Template template = element.a$(Stamp.class).template();
 			builder.add("template", template.name$());
 			builder.add("type", template.name$());
+			builder.add("generic", KonosGraph.isParentComponent(template) ? "<>" : "");
 			return true;
 		}
 

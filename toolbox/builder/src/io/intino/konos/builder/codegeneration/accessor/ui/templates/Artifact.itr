@@ -3,8 +3,7 @@ def type(artifact & legio)
 
 	Artifact(groupId = "$groupId+lowercase", version = "1.0.0") $artifactId+lowercase
 		WebImports
-			WebArtifact("io.intino.alexandria", "ui-elements", "LATEST") alexandria-ui-elements
-			Resolution("jquery", "3.1.0")
+		    WebArtifact("io.intino.alexandria", "ui-framework-elements", "LATEST") alexandria-ui-elements
 
 	$repository...[$NL$NL]
 end
@@ -15,5 +14,5 @@ def type(repository)
 end
 
 def trigger(url)
-	Release("$value")
+	Release("$this")
 end
