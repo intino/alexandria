@@ -8,7 +8,6 @@ import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -24,7 +23,6 @@ import io.intino.tara.magritte.Graph;
 import io.intino.tara.magritte.loaders.ClassFinder;
 import io.intino.tara.magritte.stores.ResourcesStore;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
-import org.jetbrains.jps.model.java.JavaResourceRootType;
 import tara.dsl.Konos;
 
 import java.io.ByteArrayOutputStream;
@@ -48,7 +46,7 @@ public class GraphLoader {
 	private static final Logger LOG = Logger.getInstance("CreateKonosBoxAction: ");
 	private static final Key<Object> PROBLEMS_VIEW_SESSION_ID_KEY = Key.create("ProblemsViewSessionKey");
 	private static final Key<Object> PROBLEMS_VIEW_FILES_KEY = Key.create("ProblemsViewFiles");
-	private Stash konosStash;
+	private Stash m1Stash;
 
 	public KonosGraph loadGraph(Module module) {
 		ClassFinder.clear();
@@ -56,15 +54,15 @@ public class GraphLoader {
 		if (!files.isEmpty()) {
 			final ByteArrayOutputStream out = new ByteArrayOutputStream();
 			final StashBuilder stashBuilder = new StashBuilder(files, new Konos(), module.getName(), new PrintStream(out));
-			konosStash = stashBuilder.build();
+			m1Stash = stashBuilder.build();
 			processMessages(module.getProject(), out);
-			if (konosStash == null) return null;
-			else return loadGraph(module, konosStash);
-		} else return loadGraph(module);
+			if (m1Stash == null) return null;
+			else return loadGraph(module, m1Stash);
+		} else return loadGraph(module, new Stash[0]);
 	}
 
 	public Stash konosStash() {
-		return konosStash;
+		return m1Stash;
 	}
 
 	private KonosGraph loadGraph(Module module, Stash... stashes) {
