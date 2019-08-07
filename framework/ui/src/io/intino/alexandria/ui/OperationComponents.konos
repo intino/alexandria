@@ -39,6 +39,12 @@ Component openDialog as Decorated ExtensionOf(operation)
 Component closeDialog as Decorated ExtensionOf(operation)
 	Request execute
 
+Component openDrawer as Decorated ExtensionOf(operation)
+	Request execute
+
+Component closeDrawer as Decorated ExtensionOf(operation)
+	Request execute
+
 Component selectionOperation as Decorated ExtensionOf(operation)
 Component taskSelection as Decorated ExtensionOf(selectionOperation)
 	Request execute

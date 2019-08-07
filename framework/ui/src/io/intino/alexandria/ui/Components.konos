@@ -20,6 +20,10 @@ Component blockParallax as Decorated
 Component blockBadge as Decorated
 	Notification refresh as Integer
 
+Component blockDrawer as Decorated
+	Notification refresh as Bool
+	Request toggle
+
 Component option as Decorated
 Component chart as Decorated
 	Notification showLoading

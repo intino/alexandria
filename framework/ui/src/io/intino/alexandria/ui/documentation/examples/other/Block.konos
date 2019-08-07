@@ -16,8 +16,8 @@ Template(layout=Vertical, spacing=DP8) blockExamplesMold as Decorated
 					value
 						=========
 						Block<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value 1")
-						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value 2")
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value 1")<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value 2")<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value 3")
 						=========
 
@@ -48,22 +48,11 @@ Template(layout=Vertical, spacing=DP8) blockExamplesMold as Decorated
 						=========
 
 	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=32%, height=100%)
-			Text(format=h6, value="Badge facet")
-			Block(spacing=DP8, format=filled)
-				Block(layout=Horizontal) as Badge(value=10)
-					Text(value="value", format=body1)
-			Block > Text block4Code as Code(language=Html)
-					value
-						=========
-						Block as Badge(value\=10)<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value")
-						=========
-		Block as Relative(width=64%, height=100%)
+		Block as Relative(width=99%, height=100%)
 			Text(format=h6, value="Parallax facet")
 			Block(spacing=DP8, format=filled)
 				Block as Parallax(background="images/background1.jpg") Absolute(height=175px)
-					Text(value="value", format=body1)
+					Block(layout=Horizontal CenterCenter) as Relative(height=100%) > Text(value="pencils", format=body1 white higgerFont)
 			Block > Text block5Code as Code(language=Html)
 					value
 						=========
@@ -72,6 +61,104 @@ Template(layout=Vertical, spacing=DP8) blockExamplesMold as Decorated
 						=========
 
 	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Drawer facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Vertical CenterCenter)
+				OpenDrawer(title = "open drawer", drawer = drawerBlock1) as MaterialIconButton(icon="Menu")
+				Block drawerBlock1 as Drawer Absolute(width=300px)
+					Selector as ListBox
+						Text(value="option 1") as Option
+						Text(value="option 2") as Option
+
+			Block > Text block7Code as Code(language=Html)
+					value
+						=========
+						OpenDrawer(title\="open drawer", drawer\=drawerBlock1) as MaterialIconButton(icon\="Menu")<br/>
+						Block drawerBlock1 as Drawer Absolute(width\=300px)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Selector as ListBox<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") as Option
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Drawer facet with position")
+			Block(spacing=DP8, format=filledNoAir, layout=Vertical CenterCenter)
+				OpenDrawer(title = "open drawer", drawer = drawerBlock2) as MaterialIconButton(icon="Menu")
+				Block drawerBlock2 as Drawer(position=Right) Absolute(width=300px)
+					Selector as ListBox
+						Text(value="option 1") as Option
+						Text(value="option 2") as Option
+
+			Block > Text as Code(language=Html)
+					value
+						=========
+						OpenDrawer(title\="open drawer", drawer\=drawerBlock2) as MaterialIconButton(icon\="Menu")<br/>
+						Block drawerBlock2 as Drawer(position\=Right) Absolute(width\=300px)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Selector as ListBox<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") as Option
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Drawer facet with Persistent variant")
+			Block(spacing=DP8, format=filledNoAir, layout=Vertical CenterCenter)
+				OpenDrawer(title = "open drawer", drawer = drawerBlock3) as MaterialIconButton(icon="Menu")
+				Block drawerBlock3 as Drawer(variant=Persistent) Absolute(width=300px)
+					Block(layout=Horizontal EndJustified) > CloseDrawer(drawer=drawerBlock3, title = "close") as MaterialIconButton("ChevronLeft")
+					Divider
+					Selector as ListBox
+						Text(value="option 1") as Option
+						Text(value="option 2") as Option
+
+			Block > Text as Code(language=Html)
+					value
+						=========
+						OpenDrawer(title\="open drawer", drawer\=drawerBlock3) as MaterialIconButton(icon\="Menu")<br/>
+						Block drawerBlock3 as Drawer(variant\=Persistent) Absolute(width\=300px)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal EndJustified) > CloseDrawer(drawer\=drawerBlock3, title\="close") as MaterialIconButton("ChevronLeft")<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Divider<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Selector as ListBox<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") as Option
+						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Drawer facet with PersistentAndMini variant")
+			Block(spacing=DP8, format=filledNoAir, layout=Vertical CenterCenter)
+				OpenDrawer(title = "open drawer", drawer = drawerBlock6) as MaterialIconButton(icon="Menu")
+				Block drawerBlock6 as Drawer(variant=PersistentAndMini) Absolute(width=300px)
+					Selector as ListBox
+						Text(value="option 1") as Option
+						Text(value="option 2") as Option
+
+			Block > Text as Code(language=Html)
+					value
+						=========
+						OpenDrawer(title\="open drawer", drawer\=drawerBlock1) as MaterialIconButton(icon\="Menu")<br/>
+						Block drawerBlock1 as Drawer(variant\=PersistentAndMini) Absolute(width\=300px)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Selector as ListBox<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") as Option
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Drawer facet with Permanent variant")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal)
+				Block(spacing=DP8) drawerBlock5 as Drawer(variant=Permanent) Absolute(width=150px)
+					Selector as ListBox
+						Text(value="option 1") as Option
+						Text(value="option 2") as Option
+
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Block drawerBlock as Drawer(variant\=Permanent) Absolute(width\=150px)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Selector as ListBox<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") as Option
+						=========
+
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="Splitter facet")
 			Block(spacing=DP8, format=filled)
@@ -88,4 +175,17 @@ Template(layout=Vertical, spacing=DP8) blockExamplesMold as Decorated
 						Block(layout\=Horizontal) as Splitter<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Block > Text(value\="block 1")<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Block > Text(value\="block 2")
+						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Badge facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Block(layout=Horizontal) as Badge(value=10)
+					Text(value="value", format=body1)
+			Block > Text block4Code as Code(language=Html)
+					value
+						=========
+						Block as Badge(value\=10)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value")
 						=========

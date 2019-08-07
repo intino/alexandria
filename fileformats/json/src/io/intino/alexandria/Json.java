@@ -1,7 +1,6 @@
 package io.intino.alexandria;
 
 import com.google.gson.*;
-import sun.misc.IOUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -38,7 +37,7 @@ public class Json {
 
 	private static byte[] toByteArray(InputStream inputStream) {
 		try {
-			return IOUtils.readFully(inputStream, -1 , false);
+			return inputStream.readAllBytes();
 		} catch (IOException e) {
 			return new byte[0];
 		}

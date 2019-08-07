@@ -48,6 +48,8 @@ public class ComponentRendererFactory {
 
 		if (component.i$(Toolbar.class)) return (T) new ToolbarRenderer(settings, component.a$(Toolbar.class), provider, target);
 		if (component.i$(OpenPage.class)) return (T) new OpenPageRenderer(settings, component.a$(OpenPage.class), provider, target);
+		if (component.i$(OpenDrawer.class)) return (T) new OpenDrawerRenderer(settings, component.a$(OpenDrawer.class), provider, target);
+		if (component.i$(CloseDrawer.class)) return (T) new CloseDrawerRenderer(settings, component.a$(CloseDrawer.class), provider, target);
 		if (component.i$(OpenBlock.class)) return (T) new OpenBlockRenderer(settings, component.a$(OpenBlock.class), provider, target);
 		if (component.i$(Download.class)) return (T) new DownloadRenderer(settings, component.a$(Download.class), provider, target);
 		if (component.i$(DownloadSelection.class)) return (T) new DownloadSelectionRenderer(settings, component.a$(DownloadSelection.class), provider, target);

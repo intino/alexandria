@@ -15,8 +15,8 @@ Artifact("io.intino.alexandria", "2.0.0") ui-framework
 		Compile("com.opencsv", "opencsv", "4.1")
 		Compile("org.hashids", "hashids", "1.0.3")
 		Compile("org.locationtech.jts", "jts-core", "1.16.1")
-		Provided("io.intino.alexandria", "driver-shiny", "1.0.0")
-		Provided("io.intino.alexandria", "driver-r", "1.0.0")
+		Compile("io.intino.alexandria", "driver-shiny", "1.0.0")
+		Compile("io.intino.alexandria", "driver-r", "1.0.0")
 		Test("junit", "junit", "LATEST")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)

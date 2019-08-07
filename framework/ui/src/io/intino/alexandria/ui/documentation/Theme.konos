@@ -17,6 +17,7 @@ Format("") body2
 Format("") subtitle1
 Format("") subtitle2
 Format("color:'white'") white
+Format("fontSize:'50pt'") higgerFont
 Format("background:'white',borderRadius:'3px',height:'100%'") whiteBackground
 Format("padding:'10px 20px'") air
 Format("marginTop:'10px'") airTop

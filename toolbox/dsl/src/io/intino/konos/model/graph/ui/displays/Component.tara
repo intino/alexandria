@@ -112,6 +112,8 @@ Concept OperationComponents
 		var word:{Blank Self Parent Top} target = Self
 		var word:{Small Medium Large} size = Medium
 
+		sub OpenDrawer > var Drawer drawer
+		sub CloseDrawer > var Drawer drawer
 		sub OpenPage > var Page page
 		sub OpenBlock > var Conditional block
 		sub OpenDialog > var OtherComponents.AbstractDialog dialog
