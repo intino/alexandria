@@ -195,7 +195,6 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	protected boolean addSpecificTypes(FrameBuilder builder) {
 
 		if (element.i$(AbstractMultiple.class)) {
-			builder.add("multiple");
 			String message = element.a$(AbstractMultiple.class).noItemsMessage();
 			if (message != null) builder.add("noItemsMessage", message);
 			FrameBuilder methodsFrame = addOwner(buildBaseFrame()).add("method").add("multiple");

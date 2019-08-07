@@ -44,10 +44,11 @@ class SelectorMenu extends AbstractSelectorMenu {
 	};
 
 	render() {
+		const children = this.children();
 		this._index = -1;
 		return (
 			<List component="nav">
-				{React.Children.map(this.props.children, (child, i) => { return this.renderItem(child); })}
+				{React.Children.map(children, (child, i) => { return this.renderItem(child); })}
 			</List>
 		);
 	};

@@ -224,7 +224,7 @@ def type(component & child & block) trigger(conditionalReferences)
 end
 
 def type(component & child) trigger(conditionalReferences)
-	$name = [$ancestorsNotMe...[.].]$name;
+	if ($name == null) $name = [$ancestorsNotMe...[.].]$name;
 	[$binding]
 end
 

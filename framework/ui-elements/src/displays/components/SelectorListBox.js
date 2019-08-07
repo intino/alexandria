@@ -21,9 +21,10 @@ class SelectorListBox extends AbstractSelectorListBox {
 	};
 
 	render() {
+		const children = this.children();
 		return (
 			<List>
-				{React.Children.map(this.props.children, (child, i) => { return this.renderChild(child, i); })}
+				{React.Children.map(children, (child, i) => { return this.renderChild(child, i); })}
 			</List>
 		);
 	};

@@ -126,7 +126,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	protected String genericParent(PassiveView element) {
 		if (element.isExtensionOf()) return firstUpperCase(element.asExtensionOf().parentView().name$());
-		return target == Target.Accessor ? "Component" : "io.intino.alexandria.ui.displays.Component";
+		return target == Target.Accessor ? firstUpperCase(typeOf(element)) : "io.intino.alexandria.ui.displays.Component";
 	}
 
 	protected String packageTypeRelativeDirectory(PassiveView passiveView) {
