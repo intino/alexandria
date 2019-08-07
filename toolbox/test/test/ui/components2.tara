@@ -1,16 +1,21 @@
 dsl Konos
 
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
-	Resource(path = "/") home as Page(homeTemplate)
-	Resource(path = "/demo") demo as Page(homeTemplate)
+//	Resource(path = "/") home as Page(homeTemplate)
+//	Resource(path = "/demo") demo as Page(homeTemplate)
 
-Template homeTemplate
 Template page as Decorated
-Template nodePage as Decorated ExtensionOf(page)
-Template desktopPage as Decorated ExtensionOf(nodePage)
+	Header > Stamp(template=header)
 
-Component baseImage as Decorated
-	Notification refresh as Text
+	Block(layout=Vertical Flexible)
+		//Breadcrumbs
+		Block viewList as Conditional Multiple > Stamp(template=view)
+
+	Block > Stamp(template=footer)
+
+Template header > Text(value="Coordinación")
+Template footer
+Template view
 
 Theme theme1
 	type = Normal

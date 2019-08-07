@@ -56,15 +56,8 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 	};
 
 	items = () => {
-		var items = this.props.children;
-
-		if (items == null) {
-			const instances = this.instances();
-			items = [];
-			instances.forEach(instance => items.push(React.createElement(DisplayFactory.get(instance.tp), instance.pl)));
-		}
-
-		return React.Children.map(items, (option, i) => { return { value: this._name(option), label: this._label(option), item: option }});
+		var children = this.children();
+		return React.Children.map(children, (option, i) => { return { value: this._name(option), label: this._label(option), item: option }});
 	};
 
 	renderOption = (options) => {
