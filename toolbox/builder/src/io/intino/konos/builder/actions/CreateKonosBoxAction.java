@@ -158,6 +158,10 @@ public class CreateKonosBoxAction extends KonosAction {
 		if (graph.rESTServiceList().isEmpty()) remove(dependencies, "rest");
 		if (graph.processList().isEmpty()) remove(dependencies, "bpm");
 		if (graph.slackBotServiceList().isEmpty()) remove(dependencies, "slack");
+		if (graph.absoluteChartList().isEmpty() && graph.relativeChartList().isEmpty())
+			remove(dependencies, "driver-r");
+		if (graph.absoluteDashboardList().isEmpty() && graph.relativeDashboardList().isEmpty())
+			remove(dependencies, "driver-shiny");
 		return dependencies;
 	}
 
