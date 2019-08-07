@@ -1,8 +1,8 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.ui.displays.components.switches.State;
 import io.intino.alexandria.ui.displays.events.operation.ToggleEvent;
+import io.intino.alexandria.ui.displays.events.operation.ToggleEvent.State;
 import io.intino.alexandria.ui.displays.events.operation.ToggleListener;
 import io.intino.alexandria.ui.displays.notifiers.TaskSwitchesNotifier;
 

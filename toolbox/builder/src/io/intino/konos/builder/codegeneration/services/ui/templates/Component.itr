@@ -286,6 +286,14 @@ def type(binding & closedialog)
 	if ($name != null) $name.bindTo($dialog);
 end
 
+def type(binding & opendrawer)
+	if ($name != null) $name.bindTo($drawer);
+end
+
+def type(binding & closedrawer)
+	if ($name != null) $name.bindTo($drawer);
+end
+
 def type(binding & decisiondialog)
 	if ($name != null) $name.bindTo($selector);
 end
@@ -340,6 +348,7 @@ end
 def type(properties & block) trigger(specific)
 	[$background+resourceMethod]
 	[$badge]
+	[$drawer]
 end
 
 def type(properties & image) trigger(specific)
@@ -356,7 +365,7 @@ def type(properties & openpage) trigger(specific)
 end
 
 def type(properties & switches) trigger(specific)
-    [state(io.intino.alexandria.ui.displays.components.switches.State.valueOf("$state"));]
+    [state(io.intino.alexandria.ui.displays.events.operation.ToggleEvent.State.valueOf("$state"));]
 end
 
 def type(properties & export) trigger(specific)
@@ -477,6 +486,9 @@ end
 
 def type(badge)
 	[value($value);]
+end
+
+def type(drawer)
 end
 
 def type(selectionMethod)

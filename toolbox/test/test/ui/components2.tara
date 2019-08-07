@@ -1,21 +1,14 @@
 dsl Konos
 
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
-//	Resource(path = "/") home as Page(homeTemplate)
-//	Resource(path = "/demo") demo as Page(homeTemplate)
+	Resource(path = "/") home as Page(homeTemplate)
+	Resource(path = "/demo") demo as Page(homeTemplate)
 
-Template page as Decorated
-	Header > Stamp(template=header)
-
-	Block(layout=Vertical Flexible)
-		//Breadcrumbs
-		Block viewList as Conditional Multiple > Stamp(template=view)
-
-	Block > Stamp(template=footer)
-
-Template header > Text(value="Coordinación")
-Template footer
-Template view
+Template homeTemplate as Decorated
+	Block
+		OpenDrawer(drawer=d1, title = "") as Button
+		CloseDrawer(drawer=d1, title = "") as Button
+	Block d1 as Drawer
 
 Theme theme1
 	type = Normal

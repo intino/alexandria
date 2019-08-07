@@ -16,7 +16,6 @@ class CloseDialog extends AbstractCloseDialog {
 		this.requester = new CloseDialogRequester(this);
 	};
 
-
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(CloseDialog));

@@ -18,6 +18,7 @@ import io.intino.konos.model.graph.combobox.catalogcomponents.ComboBoxGrouping;
 import io.intino.konos.model.graph.combobox.othercomponents.ComboBoxSelector;
 import io.intino.konos.model.graph.conditional.ConditionalBlock;
 import io.intino.konos.model.graph.decorated.DecoratedDisplay;
+import io.intino.konos.model.graph.drawer.DrawerBlock;
 import io.intino.konos.model.graph.listbox.othercomponents.ListBoxSelector;
 import io.intino.konos.model.graph.menu.othercomponents.MenuSelector;
 import io.intino.konos.model.graph.parallax.ParallaxBlock;
@@ -172,6 +173,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (passiveView.i$(SwitchesTask.class)) result.add("Switches");
 		if (passiveView.i$(Editable.class)) result.add("Editable");
 		if (passiveView.i$(CodeText.class)) result.add("Code");
+		if (passiveView.i$(DrawerBlock.class)) result.add("Drawer");
 		if (passiveView.i$(BadgeBlock.class)) result.add("Badge");
 		if (passiveView.i$(ConditionalBlock.class)) result.add("Conditional");
 		if (passiveView.i$(SplitterBlock.class)) result.add("Splitter");

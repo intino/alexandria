@@ -2,7 +2,6 @@ package io.intino.alexandria.ui.documentation.model.operation;
 
 import io.intino.alexandria.schemas.Property;
 
-import static com.sun.tools.internal.xjc.reader.Ring.add;
 import static io.intino.alexandria.ui.documentation.Model.property;
 
 public class DownloadSelectionWidget extends SelectionOperationWidget {

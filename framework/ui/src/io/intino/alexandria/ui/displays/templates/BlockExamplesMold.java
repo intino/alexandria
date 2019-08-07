@@ -14,6 +14,7 @@ public class BlockExamplesMold extends AbstractBlockExamplesMold<AlexandriaUiBox
         block2Code.onChange(event -> block2.spacing(event.<String>value().replace("DP", "")));
         block3Code.onChange(event -> block3.layout(event.value()));
         openBlock2.onExecute(event -> splitterBlock.show(splitBlock2));
+//        drawerBlock1.onToggle()
     }
 
 }

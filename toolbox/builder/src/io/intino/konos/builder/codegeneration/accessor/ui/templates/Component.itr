@@ -99,7 +99,7 @@ def type(properties & abstractdialog) trigger(specific)
 end
 
 def type(properties & block) trigger(specific)
-	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"][ collapsible="$collapsible"][ $paper][ $badge][ animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}][ hidden="$hidden"][ splitMobileLabel="$splitMobileLabel"]
+	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"][ collapsible="$collapsible"][ $paper][ $badge][ $drawer][ animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}][ hidden="$hidden"][ splitMobileLabel="$splitMobileLabel"]
 end
 
 def type(properties & date) trigger(specific)
@@ -175,6 +175,10 @@ end
 
 def type(badge)
 	mode="$mode"[ value={$value}][ max={$max}][ showZero={$showZero}]
+end
+
+def type(drawer)
+	position="$position" variant="$variant"
 end
 
 def type(codetext)

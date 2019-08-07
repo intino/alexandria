@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.0") json
+Artifact("io.intino.alexandria", "1.0.1") json
 	Imports
 		Compile("com.google.code.gson", "gson", "2.8.0")
 		Test("junit", "junit", "LATEST")

@@ -12,7 +12,7 @@ public class BlockWidget extends BaseWidget {
 
 	public BlockWidget() {
 		super("With this widget you can organize your page in order to define the page layout.");
-		facets(asList("Paper", "Badge", "Conditional", "Absolute", "Relative", "Parallax", "Stamp", "Animated"));
+		facets(asList("Paper", "Badge", "Conditional", "Absolute", "Relative", "Parallax", "Stamp", "Animated", "Drawer"));
 	}
 
 	protected void addProperties() {

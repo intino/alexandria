@@ -9,6 +9,7 @@ import io.intino.konos.model.graph.Block;
 import io.intino.konos.model.graph.OtherComponents.Selector;
 import io.intino.konos.model.graph.animated.AnimatedBlock;
 import io.intino.konos.model.graph.badge.BadgeBlock;
+import io.intino.konos.model.graph.drawer.DrawerBlock;
 import io.intino.konos.model.graph.option.OptionComponent;
 import io.intino.konos.model.graph.rules.Spacing;
 import io.intino.konos.model.graph.splitter.SplitterBlock;
@@ -33,6 +34,7 @@ public class BlockRenderer extends SizedRenderer<Block> {
 		addPaper(result);
 		addBadge(result);
 		addParallax(result);
+		addDrawer(result);
 		addTransition(result);
 		addSplitter(result);
 		if (element.hidden() != null && element.hidden() != Block.Hidden.Never) result.add("hidden", element.hidden().name());
@@ -70,6 +72,15 @@ public class BlockRenderer extends SizedRenderer<Block> {
 		String background = element.asParallax().background();
 		if (background == null || background.isEmpty()) return;
 		builder.add("background", resourceMethodFrame("background", background));
+	}
+
+	private void addDrawer(FrameBuilder builder) {
+		if (!element.isDrawer()) return;
+		DrawerBlock drawerBlock = element.asDrawer();
+		FrameBuilder drawerFrame = new FrameBuilder("drawer");
+		drawerFrame.add("position", drawerBlock.position().name());
+		drawerFrame.add("variant", drawerBlock.variant().name());
+		builder.add("drawer", drawerFrame);
 	}
 
 	private void addTransition(FrameBuilder builder) {

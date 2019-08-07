@@ -24,6 +24,9 @@ Facet Circular on OtherComponents.Progress
 Facet Linear on OtherComponents.Progress
 
 Facet Drawer on Block
+	var word:{Left Top Bottom Right} position = Left
+	var word:{Permanent Persistent PersistentAndMini Temporary} variant = Temporary
+
 Facet Splitter on Block
 	var string splitMobileLabel = "Back"
 
