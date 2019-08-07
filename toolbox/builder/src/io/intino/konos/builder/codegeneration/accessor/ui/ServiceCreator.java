@@ -27,7 +27,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.LoggerFactory;
-import sun.net.www.protocol.file.FileURLConnection;
 
 import java.io.File;
 import java.io.IOException;
@@ -130,10 +129,7 @@ public class ServiceCreator extends UIRenderer {
 			URLConnection urlConnection = originUrl.openConnection();
 			if (urlConnection instanceof JarURLConnection)
 				copyJarResourcesRecursively(destination, (JarURLConnection) urlConnection);
-			else if (urlConnection instanceof FileURLConnection) {
-				FileUtils.copyFile(new File(originUrl.getPath()), destination);
-			} else throw new Exception("URLConnection[" + urlConnection.getClass().getSimpleName() +
-					"] is not a recognized/implemented connection type.");
+			else FileUtils.copyFile(new File(originUrl.getPath()), destination);
 		} catch (Exception e) {
 			LoggerFactory.getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
 		}
