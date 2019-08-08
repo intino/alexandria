@@ -228,7 +228,7 @@ def type(task) trigger(init)
 end
 
 def type(workflow) trigger(init)
-	this.workflow = new $package.bpm.Workflow(this.messageHub, this.configuration().workspace());
+	this.workflow = new $package.bpm.Workflow(this, this.configuration().workspace());
 end
 
 def type(datalake & mirror) trigger(init)
@@ -310,7 +310,7 @@ def type(messageHub) trigger(getter)
 	}]
 end
 
-def type(datalake) trigger(getter)
+def type(workflow) trigger(getter)
 	public $package.bpm.Workflow workflow() {
 		return this.workflow;
 	}

@@ -11,7 +11,7 @@ public class KonosIcons {
 	private static final boolean RETINA = UIUtil.isRetina();
 
 	private static Icon scale(Icon icon) {
-		return IconUtil.scale(icon, 0.5);
+		return IconUtil.scale(icon, null, 0.5f);
 	}
 
 	public static final Icon ICON_16 = RETINA ? scale(IconLoader.getIcon("/icons/files/box-32.png")) : IconLoader.getIcon("/icons/files/box-16.png");
