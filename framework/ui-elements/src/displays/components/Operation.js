@@ -1,13 +1,11 @@
 import React, { Suspense } from "react";
 import AbstractOperation from "../../../gen/displays/components/AbstractOperation";
-import OperationNotifier from "../../../gen/displays/notifiers/OperationNotifier";
-import OperationRequester from "../../../gen/displays/requesters/OperationRequester";
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, IconButton, Typography } from "@material-ui/core";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
-export const MuiIcon = React.lazy(() => {
+const OperationMui = React.lazy(() => {
 	return new Promise(resolve => {
-		setTimeout(() => resolve(import("./operation/Icon"), 300));
+		setTimeout(() => resolve(import("./icon/MuiIcon"), 300));
 	});
 });
 
@@ -43,7 +41,7 @@ export default class Operation extends AbstractOperation {
 	render = () => {
 		if (!this.state.visible) return (<React.Fragment/>);
 		return (
-			<Suspense fallback={<div></div>}>
+			<Suspense fallback={<div style={{width: "24px", ...this.style()}}/>}>
 				{this.renderOperation()}
 			</Suspense>
 		);
@@ -105,8 +103,8 @@ export default class Operation extends AbstractOperation {
 		const {classes} = this.props;
 		return (<IconButton color="primary" aria-label={this._title()} disabled={this._disabled()}
 							onClick={this.handleClick.bind(this)} className={classes.materialIconButton}
-							style={this.style()} >
-				<MuiIcon icon={this._icon()}/>
+							style={this.style()}>
+				<OperationMui icon={this._icon()}/>
 			</IconButton>
 		);
 	};

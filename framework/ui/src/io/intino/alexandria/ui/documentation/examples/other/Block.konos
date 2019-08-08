@@ -125,16 +125,22 @@ Template(layout=Vertical, spacing=DP8) blockExamplesMold as Decorated
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="Drawer facet with PersistentAndMini variant")
-			Block(spacing=DP8, format=filledNoAir, layout=Vertical CenterCenter)
-				OpenDrawer(title = "open drawer", drawer = drawerBlock6) as MaterialIconButton(icon="Menu")
-				Block drawerBlock6 as Drawer(variant=PersistentAndMini) Absolute(width=300px)
+			Block(format=filledNoAir, layout=Horizontal)
+				Block drawerBlock6 as Drawer(variant=PersistentAndMini) Absolute(width=150px)
+					Block(layout=Horizontal EndJustified) as Absolute(height=45px) > CloseDrawer(drawer=drawerBlock6, title = "close") as MaterialIconButton("ChevronLeft")
+					Divider
 					Selector as ListBox
-						Text(value="option 1") as Option
-						Text(value="option 2") as Option
+						Block(layout=Horizontal, spacing=DP16) > MaterialIcon(icon="Build"); Text(value="option 1") as Option
+						Block(layout=Horizontal, spacing=DP16) > MaterialIcon(icon="Face"); Text(value="option 2") as Option
+				Block(layout=Vertical Flexible, format=autoHeight)
+					Block(layout=Horizontal StartJustified, color="white") > OpenDrawer(title = "open drawer", drawer = drawerBlock6) as MaterialIconButton(icon="Menu")
+					Text(format=containerAirMedium, value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris tellus lacus, tristique vitae lectus id, tristique cursus est. Mauris dui dolor, lacinia non accumsan sed, lacinia et eros. Ut eget ornare nunc. Vestibulum at porta tellus, in fringilla tellus. Nam ultricies porta nisi, ut sagittis est lacinia ac. Nunc aliquet, lacus a malesuada pretium, arcu lectus egestas purus, vel euismod nisl ante eget augue. Proin tristique, arcu vitae vehicula cursus, odio nulla congue erat, at porttitor magna dui id quam. In hac habitasse platea dictumst. Etiam id lorem cursus, ultricies felis ut, pretium ante. Aliquam sit amet tellus tellus. Maecenas eget faucibus enim. Pellentesque rutrum augue id pulvinar pharetra. Proin purus ex, tincidunt et posuere vel, dignissim a neque. Aenean quis imperdiet lectus. Pellentesque bibendum ante tincidunt feugiat pharetra. Fusce sollicitudin, magna in mollis vulputate, nunc nunc accumsan lectus, a blandit erat felis a lectus.")
 
 			Block > Text as Code(language=Html)
 					value
 						=========
+						Block(layout\=Horizontal EndJustified) > CloseDrawer(drawer\=drawerBlock1, title\="close") as MaterialIconButton("ChevronLeft")
+						Divider
 						OpenDrawer(title\="open drawer", drawer\=drawerBlock1) as MaterialIconButton(icon\="Menu")<br/>
 						Block drawerBlock1 as Drawer(variant\=PersistentAndMini) Absolute(width\=300px)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Selector as ListBox<br/>

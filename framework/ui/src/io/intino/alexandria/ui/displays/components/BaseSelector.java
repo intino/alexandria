@@ -66,7 +66,7 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
 
     SelectorOption findOption(int option) {
         List<SelectorOption> options = options();
-        return options.get(option);
+        return options.size() > 0 ? options.get(option) : null;
     }
 
     int position(String option) {

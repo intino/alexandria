@@ -70,6 +70,10 @@ def type(properties & stamp) trigger(specific)
 	[ spacing="$spacing"]
 end
 
+def type(properties & materialicon) trigger(specific)
+	[ icon="$icon"]
+end
+
 def type(properties & selector) trigger(specific)
 	[ multipleSelection={$multipleSelection}][ readonly={$readonly}][ focused={$focused}]
 end
@@ -111,7 +115,7 @@ def type(properties & number) trigger(specific)
 end
 
 def type(properties & header) trigger(specific)
-	[ position="$position"][ width="$width"][ height="$height"]
+	[ position="$position"][ width="$width"][ height="$height"][ elevation={$elevation}]
 end
 
 def type(properties & codeText) trigger(specific)

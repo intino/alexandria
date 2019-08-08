@@ -345,6 +345,14 @@ def type(properties & image & avatar) trigger(specific)
 	[text("$text");]
 end
 
+def type(properties & materialicon) trigger(specific)
+	[icon("$icon");]
+end
+
+def type(properties & icon) trigger(specific)
+	[$icon+resourceMethod]
+end
+
 def type(properties & block) trigger(specific)
 	[$background+resourceMethod]
 	[$badge]
