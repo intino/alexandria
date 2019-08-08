@@ -1,11 +1,14 @@
 import React from "react";
+import { withStyles } from '@material-ui/core/styles';
+import { withSnackbar } from 'notistack';
 import AbstractIcon from "../../../gen/displays/components/AbstractIcon";
 import IconNotifier from "../../../gen/displays/notifiers/IconNotifier";
 import IconRequester from "../../../gen/displays/requesters/IconRequester";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
-export default class Icon extends AbstractIcon {
+const styles = theme => ({});
 
+class Icon extends AbstractIcon {
 	constructor(props) {
 		super(props);
 		this.notifier = new IconNotifier(this);
@@ -13,12 +16,9 @@ export default class Icon extends AbstractIcon {
 	};
 
 	render() {
-		return (
-			<React.Fragment>
-			</React.Fragment>
-		);
-	};
-
+		return this.renderLayer(<img src={this._icon()} style={{width:"24px",height:"24px"}}/>);
+	}
 }
 
-DisplayFactory.register("Icon", Icon);
+export default withStyles(styles, { withTheme: true })(withSnackbar(Icon));
+DisplayFactory.register("Icon", withStyles(styles, { withTheme: true })(withSnackbar(Icon)));

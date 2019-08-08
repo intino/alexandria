@@ -172,6 +172,7 @@ Concept OtherComponents
 
 	Concept Header extends Component
 		var word:{Fixed Absolute Sticky Static Relative} position = Relative
+		var integer elevation = 4
 
 		has Component
 
@@ -182,11 +183,11 @@ Concept OtherComponents
 	Concept Frame extends Component
 		var Display display
 
-	Concept Icon extends Component
+	Concept BaseIcon extends Component
 		var string icon
 
-	Concept MaterialIcon extends Component
-		var string icon
+		sub Icon
+		sub MaterialIcon
 
 	Concept AbstractSlider extends Component
 		var word:{Vertical Horizontal} arrangement = Horizontal

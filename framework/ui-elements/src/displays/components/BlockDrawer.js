@@ -8,8 +8,6 @@ import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
 import classNames from "classnames";
 
-const BlockDrawerDefaultWidth = "300px";
-
 const styles = theme => ({
 	drawer: {
 		flexShrink: 0,
@@ -27,9 +25,9 @@ const styles = theme => ({
 			duration: theme.transitions.duration.leavingScreen,
 		}),
 		overflowX: 'hidden',
-		width: theme.spacing(7) + 1,
+		width: theme.spacing(5),
 		[theme.breakpoints.up('sm')]: {
-			width: theme.spacing(9) + 1,
+			width: theme.spacing(7),
 		},
 	},
 });
@@ -53,6 +51,7 @@ class BlockDrawer extends AbstractBlockDrawer {
 					anchor={this._anchor()}
 					variant={this._variant()}
 					className={drawerClass && classNames(classes.drawer, drawerClass)}
+					classes={{paper: drawerClass}}
 					PaperProps={{style: this.style()}}
 					onClose={this.toggleDrawer.bind(this)}>{this.props.children}</Drawer>
 		);
@@ -65,7 +64,7 @@ class BlockDrawer extends AbstractBlockDrawer {
 	_variant = () => {
 		const variant = this.props.variant;
 		if (variant == null) return "temporary";
-		if (variant === "PersistentAndMini") return "persistent";
+		if (variant === "PersistentAndMini") return "permanent";
 		return variant.toLowerCase();
 	};
 
@@ -80,13 +79,18 @@ class BlockDrawer extends AbstractBlockDrawer {
 	style() {
 		let result = super.style();
 		if (result == null) result = {};
-		if (this._widthDefined()) result.width = this.props.width;
+		if (this._checkWidthDefined()) result.width = this.props.width;
 		if (this._heightDefined()) result.height = this.props.height;
-		if (this.props.variant === "Permanent") {
+		if (this.props.variant === "PersistentAndMini" || this.props.variant === "Permanent") {
 			result.position = "relative";
 			result.zIndex = 0;
 		}
 		return result;
+	};
+
+	_checkWidthDefined = () => {
+		let defined = this._widthDefined();
+		return defined && this.props.variant !== "PersistentAndMini" ? defined : this.state.opened;
 	};
 }
 

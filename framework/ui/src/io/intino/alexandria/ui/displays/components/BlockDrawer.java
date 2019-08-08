@@ -5,18 +5,24 @@ import io.intino.alexandria.ui.displays.events.operation.ToggleEvent;
 import io.intino.alexandria.ui.displays.events.operation.ToggleListener;
 import io.intino.alexandria.ui.displays.notifiers.BlockDrawerNotifier;
 
+import java.util.ArrayList;
+
 public class BlockDrawer<DN extends BlockDrawerNotifier, B extends Box> extends AbstractBlockDrawer<B> {
     private boolean opened = false;
-    private ToggleListener toggleListener;
+    private java.util.List<ToggleListener> toggleListeners = new ArrayList<>();
 
     public BlockDrawer(B box) {
         super(box);
     }
 
     public BlockDrawer onToggle(ToggleListener listener) {
-        this.toggleListener = listener;
+        this.toggleListeners.add(listener);
         return this;
     }
+
+	public boolean isOpened() {
+    	return opened;
+	}
 
 	public BlockDrawer open() {
 		update(true);
@@ -40,6 +46,7 @@ public class BlockDrawer<DN extends BlockDrawerNotifier, B extends Box> extends 
 
     private void notifyToggle() {
         notifier.refresh(opened);
-        if (toggleListener != null) toggleListener.accept(new ToggleEvent(this, opened));
+        toggleListeners.forEach(l -> l.accept(new ToggleEvent(this, opened)));
+		updateVisibility(opened);
     }
 }

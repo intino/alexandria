@@ -45,7 +45,12 @@ Component dashboard as Decorated
 Component header as Decorated
 Component tabs as Decorated
 Component tab as Decorated
-Component icon as Decorated
+
+Component baseIcon as Decorated
+	Notification refreshIcon as Text
+Component icon as Decorated ExtensionOf(baseIcon)
+Component materialIcon as Decorated ExtensionOf(baseIcon)
+
 Component optionList as Decorated
 Component frame as Decorated
 	Notification refreshDisplay as Text

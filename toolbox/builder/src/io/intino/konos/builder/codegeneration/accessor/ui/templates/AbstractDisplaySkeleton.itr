@@ -20,6 +20,7 @@ def type(display)
     	};
 		
 		render() {
+		    if (!this.state.visible) return (<React.Fragment/>);
 			return [this.$baseMethod](
 				[$renderTag]
 					[$reference...[$NL]]

@@ -26,6 +26,7 @@ class Header extends AbstractHeader {
 		return (
 			<AppBar style={this.style()}
 					position={position.toLowerCase()}
+					elevation={this.props.elevation}
 					className={classes.color}>
 				<React.Fragment>{this.props.children}</React.Fragment>
 			</AppBar>

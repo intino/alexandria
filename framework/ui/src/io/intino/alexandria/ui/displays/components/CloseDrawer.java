@@ -20,6 +20,9 @@ public class CloseDrawer<DN extends CloseDrawerNotifier, B extends Box> extends 
 
 	public CloseDrawer bindTo(BlockDrawer drawer) {
 		this.drawer = drawer;
+		updateVisibility(drawer.isOpened());
+		drawer.onShow(e -> show());
+		drawer.onHide(e -> hide());
 		return this;
 	}
 

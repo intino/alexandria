@@ -17,6 +17,7 @@ public class HeaderRenderer extends SizedRenderer<Header> {
 	public FrameBuilder properties() {
 		FrameBuilder result = super.properties();
 		result.add("position", element.position().name().toLowerCase());
+		result.add("elevation", element.elevation());
 		return result;
 	}
 

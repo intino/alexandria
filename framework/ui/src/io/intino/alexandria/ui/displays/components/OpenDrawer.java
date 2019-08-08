@@ -20,6 +20,8 @@ public class OpenDrawer<DN extends OpenDrawerNotifier, B extends Box> extends Ab
 
 	public OpenDrawer bindTo(BlockDrawer drawer) {
 		this.drawer = drawer;
+		drawer.onShow(d -> hide());
+		drawer.onHide(d -> show());
 		return this;
 	}
 

@@ -6,11 +6,14 @@ import io.intino.alexandria.ui.displays.events.HideListener;
 import io.intino.alexandria.ui.displays.events.ShowListener;
 import io.intino.alexandria.ui.displays.notifiers.ComponentNotifier;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Component<DN extends ComponentNotifier, B extends Box> extends AlexandriaDisplay<DN, B> {
 	private String color;
 	private boolean visible = false;
-	private ShowListener showListener = null;
-	private HideListener hideListener = null;
+	private List<ShowListener> showListeners = new ArrayList<>();
+	private List<HideListener> hideListeners = new ArrayList<>();
 
 	protected Component(B box) {
 		super(box);
@@ -26,12 +29,12 @@ public abstract class Component<DN extends ComponentNotifier, B extends Box> ext
 	}
 
 	public Component<DN, B> onShow(ShowListener listener) {
-		this.showListener = listener;
+		this.showListeners.add(listener);
 		return this;
 	}
 
 	public Component<DN, B> onHide(HideListener listener) {
-		this.hideListener = listener;
+		this.hideListeners.add(listener);
 		return this;
 	}
 
@@ -73,8 +76,8 @@ public abstract class Component<DN extends ComponentNotifier, B extends Box> ext
 	}
 
 	protected void notifyVisibility() {
-		if (showListener != null && visible) showListener.accept(new Event(this));
-		if (hideListener != null && !visible) hideListener.accept(new Event(this));
+		if (visible) showListeners.forEach(l -> l.accept(new Event(this)));
+		if (!visible) hideListeners.forEach(l -> l.accept(new Event(this)));
 	}
 
 }

@@ -5,10 +5,8 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/demo") demo as Page(homeTemplate)
 
 Template homeTemplate as Decorated
-	Block
-		OpenDrawer(drawer=d1, title = "") as Button
-		CloseDrawer(drawer=d1, title = "") as Button
-	Block d1 as Drawer
+	Icon(icon="dddd")
+	MaterialIcon(icon="dddd")
 
 Theme theme1
 	type = Normal
