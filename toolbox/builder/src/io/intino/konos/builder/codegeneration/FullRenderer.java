@@ -28,6 +28,8 @@ import io.intino.konos.builder.codegeneration.task.TaskRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.plugin.codeinsight.linemarkers.InterfaceToJavaImplementation;
+import io.intino.plugin.dependencyresolution.LanguageResolver;
+import io.intino.tara.compiler.shared.Configuration;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -169,11 +171,13 @@ public class FullRenderer {
 			final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
 			final io.intino.tara.compiler.shared.Configuration configuration = configurationOf(module);
 			final List<? extends io.intino.tara.compiler.shared.Configuration.LanguageLibrary> languages = configuration.languages();
-			if (languages.isEmpty() || languages.get(0).generationPackage() == null) return null;
-			final String workingPackage = languages.get(0).generationPackage().replace(".graph", "");
-			PsiClass aClass = ApplicationManager.getApplication().runReadAction((Computable<PsiClass>) () -> facade.findClass(workingPackage + ".box." + Formatters.firstUpperCase(languages.get(0).name()) + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)));
+			Configuration.LanguageLibrary language = languages.get(0);
+			if (languages.isEmpty() || language.generationPackage() == null) return null;
+			final String workingPackage = language.generationPackage().replace(".graph", "");
+			String artifact = LanguageResolver.languageId(language.name(), language.effectiveVersion()).split(":")[1];
+			PsiClass aClass = ApplicationManager.getApplication().runReadAction((Computable<PsiClass>) () -> facade.findClass(workingPackage + ".box." + Formatters.firstUpperCase(Formatters.snakeCaseToCamelCase().format(artifact).toString()) + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)));
 			if (aClass != null)
-				return workingPackage.toLowerCase() + ".box." + Formatters.firstUpperCase(languages.get(0).name());
+				return workingPackage.toLowerCase() + ".box." + Formatters.firstUpperCase(language.name());
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
