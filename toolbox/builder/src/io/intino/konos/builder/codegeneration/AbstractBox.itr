@@ -310,7 +310,7 @@ def type(messageHub) trigger(getter)
 	}]
 end
 
-def type(datalake) trigger(getter)
+def type(workflow) trigger(getter)
 	public $package.bpm.Workflow workflow() {
 		return this.workflow;
 	}
