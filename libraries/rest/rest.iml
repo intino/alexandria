@@ -38,6 +38,5 @@
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-api:9.4.8.v20171121" level="project" />
     <orderEntry type="library" name="Intino: commons-codec:commons-codec:1.10" level="project" />
     <orderEntry type="library" name="Intino: eu.medsea.mimeutil:mime-util:2.1.1" level="project" />
-    <orderEntry type="module" module-name="logger" />
   </component>
 </module>

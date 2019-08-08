@@ -6,9 +6,11 @@ def type(process & src)
 	import io.intino.alexandria.message.MessageHub;
 
 	public class $name+firstUpperCase extends Abstract$name+firstUpperCase {
+		$box+FirstUpperCase~Box box;
 
-		$name+firstUpperCase(MessageHub messageHub, String id) {
-			super(messageHub, id);
+		$name+firstUpperCase($box+FirstUpperCase~Box box, String id) {
+			super(box.messageHub, id);
+			this.box = box;
 		}
 
 		$state+task...[$NL$NL]
@@ -27,7 +29,7 @@ def type(process)
 
     public abstract class Abstract$name+firstUpperCase extends io.intino.alexandria.bpm.Process {
 
-    	private MessageHub messageHub;
+    	protected MessageHub messageHub;
 
 		Abstract$name+firstUpperCase(MessageHub messageHub, String id) {
 			super(id);
