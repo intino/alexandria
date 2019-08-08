@@ -23,6 +23,7 @@ import java.util.Map;
 import static io.intino.bpmparser.State.Type.Initial;
 import static io.intino.bpmparser.State.Type.Terminal;
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
+import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class BpmRenderer extends Renderer {
@@ -47,7 +48,7 @@ public class BpmRenderer extends Renderer {
 
 	private void renderBpm() {
 		if (processes.isEmpty()) return;
-		FrameBuilder builder = new FrameBuilder("workflow").add("package", settings.packageName()).add("process", processes.stream().map(Layer::name$).toArray(String[]::new));
+		FrameBuilder builder = new FrameBuilder("workflow").add("package", settings.packageName()).add(settings.boxName()).add("process", processes.stream().map(Layer::name$).toArray(String[]::new));
 		writeFrame(gen, "Workflow", customize(new WorkflowTemplate()).render(builder.toFrame()));
 	}
 
@@ -64,7 +65,7 @@ public class BpmRenderer extends Renderer {
 				State initial = bpmnParser.getNodeWalker().getInitial().links().get(0).state().type(Initial);
 				walk(builder, initial);
 				settings.classes().put(process.getClass().getSimpleName() + "#" + process.name$(), "bpm." + process.name$());
-				writeFrame(gen, "Abstract" + process.name$(), customize(new ProcessTemplate()).render(builder.toFrame()));
+				writeFrame(gen, "Abstract" + firstUpperCase(process.name$()), customize(new ProcessTemplate()).render(builder.toFrame()));
 				if (!alreadyRendered(src, process.name$()))
 					writeFrame(src, process.name$(), customize(new ProcessTemplate()).render(builder.add("src").toFrame()));
 			} catch (FileNotFoundException e) {

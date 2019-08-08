@@ -5,15 +5,15 @@ def type(workflow)
 	import io.intino.alexandria.bpm.ProcessFactory;
 	import io.intino.alexandria.bpm.ProcessStatus;
 	import io.intino.alexandria.message.MessageHub;
-
+	import $package+validPackage.$box+FirstUpperCase~Box;
 	import java.io.File;
 
 	public class Workflow extends io.intino.alexandria.bpm.Workflow {
-		public Workflow(MessageHub messageHub, File workspace) {
-			super(messageHub, factory(messageHub), new PersistenceManager.FilePersistenceManager(new File(workspace, "bpm")));
+		public Workflow($box+FirstUpperCase~Box box, File workspace) {
+			super(messageHub, factory(box), new PersistenceManager.FilePersistenceManager(new File(workspace, "bpm")));
 		}
 
-		private static ProcessFactory factory(MessageHub messageHub) {
+		private static ProcessFactory factory($box+FirstUpperCase~Box box) {
 			return (id, name) -> {
 				switch (name) {
 					$process...[$NL]
@@ -22,17 +22,16 @@ def type(workflow)
 			};
 		}
 
-
 		$process+method...[$NL]
 	}
 end
 
 def trigger(method)
 	public void launch$this+firstUpperCase() {
-		messageHub.sendMessage("ProcessStatus", new ProcessStatus(java.util.UUID.randomUUID().toString(), "$this", "Enter").message());
+		messageHub.sendMessage("$unit.ProcessStatus", new ProcessStatus(java.util.UUID.randomUUID().toString(), "$this", "Enter").message());
 	}
 end
 
 def trigger(process)
-	case "$this": return new $this+firstUpperCase(messageHub, id);
+	case "$this": return new $this+firstUpperCase(box, id);
 end
