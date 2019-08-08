@@ -48,7 +48,7 @@ public class BpmRenderer extends Renderer {
 
 	private void renderBpm() {
 		if (processes.isEmpty()) return;
-		FrameBuilder builder = new FrameBuilder("workflow").add("package", settings.packageName()).add("process", processes.stream().map(Layer::name$).toArray(String[]::new));
+		FrameBuilder builder = new FrameBuilder("workflow").add("package", settings.packageName()).add(settings.boxName()).add("process", processes.stream().map(Layer::name$).toArray(String[]::new));
 		writeFrame(gen, "Workflow", customize(new WorkflowTemplate()).render(builder.toFrame()));
 	}
 
