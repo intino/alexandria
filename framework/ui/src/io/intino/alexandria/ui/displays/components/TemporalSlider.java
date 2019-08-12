@@ -25,13 +25,6 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
         super(box);
     }
 
-    public TemporalSlider range(Instant min, Instant max) {
-        this.min = min;
-        this.max = max;
-        updateRange();
-        return this;
-    }
-
     public Instant min() {
         return min;
     }
@@ -40,8 +33,8 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
         return max;
     }
 
-    public void update(Instant instant) {
-        update(toLong(instant));
+    public void value(Instant instant) {
+        value(toLong(instant));
     }
 
     @Override
@@ -80,6 +73,13 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
         return Timetag.of(localDate, scale());
     }
 
+    protected TemporalSlider _range(Instant min, Instant max) {
+        this.min = min;
+        this.max = max;
+        updateRange();
+        return this;
+    }
+
     private long millisOf(long value) {
         return timeScale().addTo(min, value).toEpochMilli();
     }
@@ -115,7 +115,7 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
         Ordinal ordinal = ordinal();
         if (ordinal == null) return;
         long count = toLong(max);
-        range(0, count);
+        _range(0, count);
         if (notifier != null) notifier.refreshRange(rangeSchema());
     }
 

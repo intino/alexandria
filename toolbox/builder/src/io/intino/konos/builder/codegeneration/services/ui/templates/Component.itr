@@ -38,7 +38,7 @@ def type(method & multiple)
 		$componentType child = new $componentType(box());
 		child.id(java.util.UUID.randomUUID().toString());
 		add(child, "$name");
-		[child.update($objectTypeValue);]
+		[child.value($objectTypeValue);]
 		return child;
 	}
 	public void clear() {
@@ -323,30 +323,30 @@ def type(implements)
 end
 
 def type(properties & operation) trigger(common)
-	[title("$title");]
-	[color("$color");]
-	[disabled($disabled);]
-	[mode(io.intino.alexandria.ui.displays.components.Operation.Mode.valueOf("$mode+firstUpperCase"));]
+	[_title("$title");]
+	[_color("$color");]
+	[_disabled($disabled);]
+	[_mode(io.intino.alexandria.ui.displays.components.Operation.Mode.valueOf("$mode+firstUpperCase"));]
 	[$operationMode]
 end
 
 def type(properties) trigger(common)
-	[name("$name");]
 	[label("$label");]
-	[color("$color");]
+	[name("$name");]
+	[_color("$color");]
 end
 
 def type(properties & selector) trigger(specific)
-	[multipleSelection($multipleSelection);]
-	[readonly($readonly);]
+	[_multipleSelection($multipleSelection);]
+	[_readonly($readonly);]
 end
 
 def type(properties & image & avatar) trigger(specific)
-	[text("$text");]
+	[_text("$text");]
 end
 
 def type(properties & materialicon) trigger(specific)
-	[icon("$icon");]
+	[_icon("$icon");]
 end
 
 def type(properties & icon) trigger(specific)
@@ -369,35 +369,35 @@ def type(properties & file) trigger(specific)
 end
 
 def type(properties & openpage) trigger(specific)
-	[path("$path");]
+	[_path("$path");]
 end
 
 def type(properties & switches) trigger(specific)
-    [state(io.intino.alexandria.ui.displays.events.operation.ToggleEvent.State.valueOf("$state"));]
+    [_state(io.intino.alexandria.ui.displays.events.operation.ToggleEvent.State.valueOf("$state"));]
 end
 
 def type(properties & export) trigger(specific)
-	[from($from~L);]
-	[to($to~L);]
-	[min($min~L);]
-	[max($max~L);]
-	[range($rangeMin,$rangeMax);]
-	[options(java.util.Arrays.asList("$option...[","]"));]
+	[_from($from~L);]
+	[_to($to~L);]
+	[_min($min~L);]
+	[_max($max~L);]
+	[_range($rangeMin,$rangeMax);]
+	[_options(java.util.Arrays.asList("$option...[","]"));]
 end
 
 def type(properties & download) trigger(specific)
-	[options(java.util.Arrays.asList("$option...[","]"));]
+	[_options(java.util.Arrays.asList("$option...[","]"));]
 end
 
 def type(properties & downloadselection) trigger(specific)
-	[options(java.util.Arrays.asList("$option...[","]"));]
+	[_options(java.util.Arrays.asList("$option...[","]"));]
 end
 
 def type(properties & chart) trigger(specific)
-	[query("$query");]
-	[serverUrl("$serverUrl");]
+	[_query("$query");]
+	[_serverUrl("$serverUrl");]
 	[$input+inputMethod]
-	[output("$output");]
+	[_output("$output");]
 end
 
 def type(properties & dashboard) trigger(specific)
@@ -408,92 +408,92 @@ def type(properties & dashboard) trigger(specific)
 end
 
 def type(properties & number) trigger(specific)
-	[value($value);]
-	[min($min);]
-	[max($max);]
-	[readonly($readonly);]
+	[_value($value);]
+	[_min($min);]
+	[_max($max);]
+	[_readonly($readonly);]
 end
 
 def type(properties & date) trigger(specific)
-	[value(java.time.Instant.ofEpochMilli($value~L));]
-	[min(java.time.Instant.ofEpochMilli($min~L));]
-	[max(java.time.Instant.ofEpochMilli($max~L));]
+	[_value(java.time.Instant.ofEpochMilli($value~L));]
+	[_min(java.time.Instant.ofEpochMilli($min~L));]
+	[_max(java.time.Instant.ofEpochMilli($max~L));]
 end
 
 def type(properties & text) trigger(specific)
-	[value("$defaultValue");]
-	[readonly($readonly);]
+	[_value("$defaultValue");]
+	[_readonly($readonly);]
 end
 
 def type(properties & location) trigger(specific)
 	[$icon+resourceMethod]
-	[value("$value");]
+	[_value("$value");]
 end
 
 def type(properties & collection & map) trigger(specific)
-	[type(io.intino.alexandria.ui.displays.components.Map.Type.valueOf("$type"));]
+	[_type(io.intino.alexandria.ui.displays.components.Map.Type.valueOf("$type"));]
 	[$icon+resourceMethod]
 	[$layer+resourceMethod]
 end
 
 def type(properties & collection) trigger(specific)
-	[source(new io.intino.alexandria.ui.sources.$sourceClass+firstUpperCase());]
-	[pageSize($pageSize);]
+	[_source(new io.intino.alexandria.ui.sources.$sourceClass+firstUpperCase());]
+	[_pageSize($pageSize);]
 end
 
 def type(properties & slider) trigger(specific)
-    [value($value);]
-    [range($min,$max);]
-    [animation($interval,$loop);]
-    [readonly($readonly);]
+    [_value($value);]
+    [_range($min,$max);]
+    [_animation($interval,$loop);]
+    [_readonly($readonly);]
     [$ordinal+ordinalMethod...[$NL]]
 end
 
 def type(properties & temporalslider) trigger(specific)
-    [value($value);]
-    [range(java.time.Instant.ofEpochMilli($min~L),java.time.Instant.ofEpochMilli($max~L));]
-    [animation($interval,$loop);]
-    [readonly($readonly);]
+    [_value($value);]
+    [_range(java.time.Instant.ofEpochMilli($min~L),java.time.Instant.ofEpochMilli($max~L));]
+    [_animation($interval,$loop);]
+    [_readonly($readonly);]
     [$ordinal+ordinalMethod...[$NL]]
 end
 
 def type(properties & collectiondialog) trigger(specific)
-    [allowSearch($allowSearch);]
+    [_allowSearch($allowSearch);]
 end
 
 def type(properties) trigger(specific)
 end
 
 def type(inputMethod & csv) trigger(inputMethod)
-	input(new io.intino.alexandria.ui.displays.components.chart.datasources.CSVDataSource($owner.class.getResource("$value")));
+	_input(new io.intino.alexandria.ui.displays.components.chart.datasources.CSVDataSource($owner.class.getResource("$value")));
 end
 
 def type(parameter & dashboard)
-	add("$name", "$value");
+	_add("$name", "$value");
 end
 
 def type(inputMethod & source) trigger(inputMethod)
-	input(new $value());
+	_input(new $value());
 end
 
 def trigger(resourceMethod)
-	$name($owner.class.getResource("$value"));
+	_$name($owner.class.getResource("$value"));
 end
 
 def trigger(ordinalMethod)
-	add(new io.intino.alexandria.ui.displays.components.slider.ordinals.$name+firstUpperCase~Ordinal());
+	_add(new io.intino.alexandria.ui.displays.components.slider.ordinals.$name+firstUpperCase~Ordinal());
 end
 
 def type(operationMode & iconbutton)
-	icon("$icon");
+	_icon("$icon");
 end
 
 def type(operationMode & materialiconbutton)
-	icon("$icon");
+	_icon("$icon");
 end
 
 def type(badge)
-	[value($value);]
+	[_value($value);]
 end
 
 def type(drawer)

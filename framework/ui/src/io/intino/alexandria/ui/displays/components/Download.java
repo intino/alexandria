@@ -21,16 +21,6 @@ public class Download<DN extends DownloadNotifier, B extends Box> extends Abstra
         return options;
     }
 
-    public Download<DN, B> options(List<String> options) {
-        this.options = options;
-        return this;
-    }
-
-    public Download<DN, B> select(String option) {
-        this.option = option;
-        return this;
-    }
-
     public void changeParams(String option) {
         this.option = option;
     }
@@ -42,6 +32,16 @@ public class Download<DN extends DownloadNotifier, B extends Box> extends Abstra
     public UIFile execute() {
         if (this.downloadListener == null) return defaultFile();
         return this.downloadListener.accept(new DownloadEvent(this, option));
+    }
+
+    protected Download<DN, B> _options(List<String> options) {
+        this.options = options;
+        return this;
+    }
+
+    protected Download<DN, B> _select(String option) {
+        this.option = option;
+        return this;
     }
 
 }

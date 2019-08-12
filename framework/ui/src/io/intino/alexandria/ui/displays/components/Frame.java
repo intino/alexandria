@@ -17,7 +17,7 @@ public class Frame<DN extends FrameNotifier, B extends Box> extends AbstractFram
         return (D) this.display;
     }
 
-    public void set(Display display) {
+    public void display(Display display) {
         this.display = display;
         this.display.id(UUID.randomUUID().toString());
     }

@@ -33,27 +33,6 @@ public abstract class Map<B extends Box, ItemComponent extends io.intino.alexand
         return this;
     }
 
-    public Map type(Map.Type type) {
-        this.type = type;
-        return this;
-    }
-
-    public Map kmlLayer(URL layer) {
-        this.type = Type.Kml;
-        this.kmlLayer = layer;
-        return this;
-    }
-
-    public Map icon(URL icon) {
-        this.icon = icon;
-        return this;
-    }
-
-    @Override
-    protected AddItemEvent itemEvent(Display display) {
-        return new AddItemEvent(this, (ItemComponent)display, ((ItemComponent)display).item());
-    }
-
     @Override
     public ItemComponent add(PlaceMark<Item> itemPlaceMark) {
         ItemComponent component = create(itemPlaceMark);
@@ -77,6 +56,27 @@ public abstract class Map<B extends Box, ItemComponent extends io.intino.alexand
     @Override
     public List<ItemComponent> insert(List<PlaceMark<Item>> placeMarks, int from) {
         return null;
+    }
+
+    protected Map _type(Map.Type type) {
+        this.type = type;
+        return this;
+    }
+
+    protected Map _kmlLayer(URL layer) {
+        this.type = Type.Kml;
+        this.kmlLayer = layer;
+        return this;
+    }
+
+    protected Map _icon(URL icon) {
+        this.icon = icon;
+        return this;
+    }
+
+    @Override
+    protected AddItemEvent itemEvent(Display display) {
+        return new AddItemEvent(this, (ItemComponent)display, ((ItemComponent)display).item());
     }
 
     @Override

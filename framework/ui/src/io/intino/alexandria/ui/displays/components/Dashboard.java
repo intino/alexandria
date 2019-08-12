@@ -44,11 +44,16 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
         super(box);
     }
 
-    public Dashboard update(java.util.Map<String, Object> parameters) {
+    public Dashboard parameters(java.util.Map<String, Object> parameters) {
         this.parameterMap = parameters;
         refresh();
         return this;
     }
+
+    public Dashboard<DN, B> adminMode(boolean value) {
+    	_adminMode(value);
+    	return this;
+	}
 
     public Dashboard dashboardNameProvider(DashboardNameProvider provider) {
 		this.dashboardNameProvider = provider;
@@ -60,32 +65,32 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
 		return this;
 	}
 
-	public Dashboard serverScript(URL script) {
-		this.serverScript = script;
-		return this;
-	}
-
-	public Dashboard uiScript(URL script) {
-		this.uiScript = script;
-		return this;
-	}
-
-	public Dashboard adminMode(boolean value) {
-		this.adminMode = value;
-		return this;
-	}
-
 	public Dashboard driver(Driver driver) {
 		this.driver = driver;
 		return this;
 	}
 
-	public Dashboard add(String parameter, String value) {
+	protected Dashboard _adminMode(boolean value) {
+		this.adminMode = value;
+		return this;
+	}
+
+	protected Dashboard _serverScript(URL script) {
+		this.serverScript = script;
+		return this;
+	}
+
+	protected Dashboard _uiScript(URL script) {
+		this.uiScript = script;
+		return this;
+	}
+
+	protected Dashboard _add(String parameter, String value) {
 		parameterMap.put(parameter, value);
 		return this;
 	}
 
-	public Dashboard add(URL resource) {
+	protected Dashboard _add(URL resource) {
 		resourceList.add(resource);
 		return this;
 	}

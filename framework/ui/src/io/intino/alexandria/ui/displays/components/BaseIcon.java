@@ -10,13 +10,13 @@ public class BaseIcon<DN extends BaseIconNotifier, B extends Box> extends Abstra
         super(box);
     }
 
-    protected BaseIcon<DN, B> icon(String icon) {
+    protected BaseIcon<DN, B> _icon(String icon) {
         this.icon = icon;
         return this;
     }
 
-    protected BaseIcon<DN, B> update(String icon) {
-        icon(icon);
+    protected BaseIcon<DN, B> icon(String icon) {
+        _icon(icon);
         refreshIcon();
         return this;
     }

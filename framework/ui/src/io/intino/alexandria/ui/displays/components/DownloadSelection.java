@@ -24,16 +24,6 @@ public class DownloadSelection<DN extends DownloadSelectionNotifier, B extends B
         return options;
     }
 
-    public DownloadSelection<DN, B> options(List<String> options) {
-        this.options = options;
-        return this;
-    }
-
-    public DownloadSelection<DN, B> select(String option) {
-        this.option = option;
-        return this;
-    }
-
     public void changeParams(String option) {
         this.option = option;
     }
@@ -41,6 +31,16 @@ public class DownloadSelection<DN extends DownloadSelectionNotifier, B extends B
     public io.intino.alexandria.ui.spark.UIFile execute() {
         if (this.executeListener == null) return defaultFile();
         return this.executeListener.accept(new DownloadSelectionEvent(this, selection(), option));
+    }
+
+    protected DownloadSelection<DN, B> _options(List<String> options) {
+        this.options = options;
+        return this;
+    }
+
+    protected DownloadSelection<DN, B> _select(String option) {
+        this.option = option;
+        return this;
     }
 
 }

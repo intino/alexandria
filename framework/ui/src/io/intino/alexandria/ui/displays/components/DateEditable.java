@@ -22,46 +22,26 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 		return value;
 	}
 
-	public DateEditable<DN, B> value(Instant value) {
-		this.value = value;
-		return this;
-	}
-
 	public Instant min() {
 		return this.min;
-	}
-
-	public DateEditable<DN, B> min(Instant min) {
-		this.min = min;
-		return this;
 	}
 
 	public Instant max() {
 		return this.max;
 	}
 
-	public DateEditable<DN, B> max(Instant max) {
-		this.max = max;
-		return this;
-	}
-
 	public boolean readonly() {
 		return readonly;
 	}
 
-	public DateEditable<DN, B> readonly(boolean value) {
-		this.readonly = readonly;
-		return this;
-	}
-
-	public void update(Instant value) {
-		value(value);
+	public void value(Instant value) {
+		_value(value);
 		notifier.refresh(value);
 	}
 
-	public DateEditable<DN, B> updateReadonly(boolean value) {
-		readonly(value);
-		notifier.refreshReadonly(value);
+	public DateEditable<DN, B> readonly(boolean readonly) {
+		_readonly(readonly);
+		notifier.refreshReadonly(readonly);
 		return this;
 	}
 
@@ -74,5 +54,25 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
     	value(value);
     	if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));
     }
+
+	protected DateEditable<DN, B> _value(Instant value) {
+		this.value = value;
+		return this;
+	}
+
+	protected DateEditable<DN, B> _min(Instant min) {
+		this.min = min;
+		return this;
+	}
+
+	protected DateEditable<DN, B> _max(Instant max) {
+		this.max = max;
+		return this;
+	}
+
+	protected DateEditable<DN, B> _readonly(boolean readonly) {
+		this.readonly = readonly;
+		return this;
+	}
 
 }

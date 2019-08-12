@@ -15,4 +15,5 @@ public class Spinner<B extends Box> extends AbstractSpinner<B> {
     public void hideLoading() {
         notifier.refreshLoading(false);
     }
+
 }

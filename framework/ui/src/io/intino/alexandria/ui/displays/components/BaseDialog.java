@@ -22,11 +22,6 @@ public class BaseDialog<DN extends BaseDialogNotifier, B extends Box> extends Ab
         return this;
     }
 
-    public BaseDialog<DN, B> title(String title) {
-        this.title = title;
-        return this;
-    }
-
     public BaseDialog onOpen(Listener listener) {
         openListeners.add(listener);
         return this;
@@ -48,9 +43,14 @@ public class BaseDialog<DN extends BaseDialogNotifier, B extends Box> extends Ab
         notifyClose();
     }
 
-    public BaseDialog<DN, B> updateTitle(String title) {
-        title(title);
+    public BaseDialog<DN, B> title(String title) {
+        _title(title);
         notifier.refreshTitle(title);
+        return this;
+    }
+
+    protected BaseDialog<DN, B> _title(String title) {
+        this.title = title;
         return this;
     }
 

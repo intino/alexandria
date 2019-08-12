@@ -25,24 +25,24 @@ public class GroupingExamplesMold extends AbstractGroupingExamplesMold<Alexandri
         list1.onAddItem(this::onAddItem);
         list2.source(Datasources.personDatasource());
         list2.onAddItem(this::onAddItem);
-        country1.updateGroups(countries());
-        country2.updateGroups(countries());
+        country1.groups(countries());
+        country2.groups(countries());
     }
 
     private void onAddItem(AddItemEvent event) {
         if (event.component() instanceof Grouping1Mold) {
             Grouping1Mold component = event.component();
             Person person = event.item();
-            component.firstName1.update(person.firstName());
-            component.gender1.update(person.gender().name());
-            component.age1.update(String.valueOf(person.age()));
+            component.firstName1.value(person.firstName());
+            component.gender1.value(person.gender().name());
+            component.age1.value(String.valueOf(person.age()));
         }
         else if (event.component() instanceof Grouping2Mold) {
             Grouping2Mold component = event.component();
             Person person = event.item();
-            component.firstName2.update(person.firstName());
-            component.gender2.update(person.gender().name());
-            component.age2.update(String.valueOf(person.age()));
+            component.firstName2.value(person.firstName());
+            component.gender2.value(person.gender().name());
+            component.age2.value(String.valueOf(person.age()));
         }
     }
 

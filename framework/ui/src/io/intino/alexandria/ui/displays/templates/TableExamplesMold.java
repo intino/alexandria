@@ -31,15 +31,15 @@ public class TableExamplesMold extends AbstractTableExamplesMold<AlexandriaUiBox
 
         if (event.component() instanceof Table1Row) {
             Table1Row component = event.component();
-            component.table11Mold.firstName.update(person.firstName());
+            component.table11Mold.firstName.value(person.firstName());
             component.table11Mold.firstName.onChange(e -> logInfo(person, e.value()));
-            component.table12Mold.lastName.update(person.lastName());
+            component.table12Mold.lastName.value(person.lastName());
             component.table12Mold.lastName.onChange(e -> logInfo(person, e.value()));
         }
         else if (event.component() instanceof Table2Row) {
             Table2Row component = event.component();
-            component.table21Mold.firstName.update(person.firstName());
-            component.table22Mold.lastName.update(person.lastName());
+            component.table21Mold.firstName.value(person.firstName());
+            component.table22Mold.lastName.value(person.lastName());
         }
     }
 

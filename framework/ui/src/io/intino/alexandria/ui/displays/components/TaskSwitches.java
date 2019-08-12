@@ -24,12 +24,7 @@ public class TaskSwitches<DN extends TaskSwitchesNotifier, B extends Box> extend
     }
 
     public TaskSwitches state(State state) {
-        this.state = state;
-        return this;
-    }
-
-    public TaskSwitches update(State state) {
-        state(state);
+        _state(state);
         notifyToggle();
         return this;
     }
@@ -37,6 +32,11 @@ public class TaskSwitches<DN extends TaskSwitchesNotifier, B extends Box> extend
     public void toggle() {
         state = state == State.On ? State.Off : State.On;
         notifyToggle();
+    }
+
+    protected TaskSwitches _state(State state) {
+        this.state = state;
+        return this;
     }
 
     private void notifyToggle() {

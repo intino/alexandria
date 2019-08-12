@@ -17,8 +17,8 @@ public class Icon<DN extends IconNotifier, B extends Box> extends AbstractIcon<D
         return this;
     }
 
-    public Icon<DN, B> update(URL icon) {
-        update(serialize(icon));
+    protected Icon<DN, B> _icon(URL icon) {
+        _icon(serialize(icon));
         return this;
     }
 

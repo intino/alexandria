@@ -13,7 +13,7 @@ public class WidgetTypeTemplate extends AbstractWidgetTypeTemplate<AlexandriaUiB
     @Override
     public void init() {
         super.init();
-        widget.update(Model.widget(type));
+        widget.item(Model.widget(type));
     }
 
     public void type(String type) {

@@ -26,8 +26,8 @@ public class ItemMold extends AbstractItemMold<AlexandriaUiBox> {
     @Override
     public void refresh() {
         String label = item().label();
-        avatar.update(label);
-        this.label.update(label);
+        avatar.text(label);
+        this.label.value(label);
     }
 
 }

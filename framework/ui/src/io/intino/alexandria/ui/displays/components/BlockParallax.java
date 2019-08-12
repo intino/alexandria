@@ -19,20 +19,21 @@ public class BlockParallax<DN extends BlockParallaxNotifier, B extends Box> exte
         refresh();
     }
 
+    @Override
+    public void refresh() {
+        String background = background();
+        if (background == null) return;
+        notifier.refresh(background);
+    }
+
     public String background() {
         if (background == null) return null;
         return Asset.toResource(baseAssetUrl(), background).toUrl().toString();
     }
 
-    public BlockParallax background(URL background) {
+    protected BlockParallax _background(URL background) {
         this.background = background;
         return this;
-    }
-
-    public void refresh() {
-        String background = background();
-        if (background == null) return;
-        notifier.refresh(background);
     }
 
 }

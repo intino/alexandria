@@ -32,11 +32,11 @@ public class ListExamplesMold extends AbstractListExamplesMold<AlexandriaUiBox> 
     }
 
     private void onAddItem(AddItemEvent event) {
-        if (event.component() instanceof List1Mold) ((List1Mold)event.component()).stamp.update(event.item());
-        else if (event.component() instanceof List2Mold) ((List2Mold)event.component()).stamp.update(event.item());
-        else if (event.component() instanceof List3Mold) ((List3Mold) event.component()).firstName.update(((Person) event.item()).firstName());
-        else if (event.component() instanceof List4Mold) ((List4Mold) event.component()).firstName.update(((Person) event.item()).firstName());
-        else if (event.component() instanceof List5Mold) ((List5Mold) event.component()).firstName.update(((Person) event.item()).firstName());
+        if (event.component() instanceof List1Mold) ((List1Mold)event.component()).stamp.item(event.item());
+        else if (event.component() instanceof List2Mold) ((List2Mold)event.component()).stamp.item(event.item());
+        else if (event.component() instanceof List3Mold) ((List3Mold) event.component()).firstName.value(((Person) event.item()).firstName());
+        else if (event.component() instanceof List4Mold) ((List4Mold) event.component()).firstName.value(((Person) event.item()).firstName());
+        else if (event.component() instanceof List5Mold) ((List5Mold) event.component()).firstName.value(((Person) event.item()).firstName());
     }
 
 }

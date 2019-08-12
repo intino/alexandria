@@ -9,12 +9,12 @@ public class MaterialIcon<DN extends MaterialIconNotifier, B extends Box> extend
         super(box);
     }
 
-    public MaterialIcon<DN, B> icon(String materialIcon) {
-        return (MaterialIcon<DN, B>) super.icon(materialIcon);
+    protected MaterialIcon<DN, B> _icon(String materialIcon) {
+        return (MaterialIcon<DN, B>) super._icon(materialIcon);
     }
 
-    public MaterialIcon<DN, B> update(String icon) {
-        return (MaterialIcon<DN, B>) super.update(icon);
+    public MaterialIcon<DN, B> icon(String icon) {
+        return (MaterialIcon<DN, B>) super.icon(icon);
     }
 
 }

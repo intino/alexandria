@@ -17,40 +17,41 @@ public class Number<DN extends NumberNotifier, B extends Box> extends AbstractNu
         return value;
     }
 
-    public Number value(double value) {
-        this.value = value;
-        return this;
-    }
-
     public double min() {
         return min;
-    }
-
-    public Number min(double min) {
-        this.min = min;
-        return this;
     }
 
     public double max() {
         return max;
     }
 
-    public Number max(double max) {
-        this.max = max;
-        return this;
-    }
-
     public double step() {
         return step;
     }
 
-    public Number step(double step) {
+    public void value(double value) {
+        _value(value);
+        notifier.refresh(value);
+    }
+
+    protected Number _value(double value) {
+        this.value = value;
+        return this;
+    }
+
+    protected Number _min(double min) {
+        this.min = min;
+        return this;
+    }
+
+    protected Number _max(double max) {
+        this.max = max;
+        return this;
+    }
+
+    protected Number _step(double step) {
         this.step = step;
         return this;
     }
 
-    public void update(double value) {
-        value(value);
-        notifier.refresh(value);
-    }
 }

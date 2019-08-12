@@ -21,7 +21,7 @@ public class ImageExamplesMold extends AbstractImageExamplesMold<AlexandriaUiBox
             try {
                 Resource value = event.value();
                 File file = toFile("/tmp/updated-test-image.png", value);
-                image3.update(file.toURI().toURL());
+                image3.value(file.toURI().toURL());
             } catch (IOException e) {
                 e.printStackTrace();
             }

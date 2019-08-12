@@ -41,4 +41,12 @@ public abstract class BaseWidget extends Widget {
 	protected void addEvent(Method method) {
 		eventList().add(method);
 	}
+
+	protected String[] multipleArrangements() {
+		return new String[] { "Vertical", "Horizontal" };
+	}
+
+	protected String[] multipleSpacings() {
+		return new String[] { "DP8", "DP16", "DP24", "DP32", "DP40" };
+	}
 }

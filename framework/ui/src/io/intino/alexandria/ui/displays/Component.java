@@ -23,11 +23,6 @@ public abstract class Component<DN extends ComponentNotifier, B extends Box> ext
 		return color;
 	}
 
-	public Component color(String color) {
-		this.color = color;
-		return this;
-	}
-
 	public Component<DN, B> onShow(ShowListener listener) {
 		this.showListeners.add(listener);
 		return this;
@@ -62,6 +57,11 @@ public abstract class Component<DN extends ComponentNotifier, B extends Box> ext
 
 	public Component<DN, B> hide() {
 		updateVisibility(false);
+		return this;
+	}
+
+	protected Component _color(String color) {
+		this.color = color;
 		return this;
 	}
 

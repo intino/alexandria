@@ -26,14 +26,8 @@ public class File<DN extends FileNotifier, B extends Box> extends AbstractFile<D
 		return value;
 	}
 
-	public File value(URL value) {
-		this.value = value;
-		this.mimeType = typeOf(value);
-		return this;
-	}
-
-	public void update(URL value) {
-		value(value);
+	public void value(URL value) {
+		_value(value);
 		refresh();
 	}
 
@@ -41,6 +35,12 @@ public class File<DN extends FileNotifier, B extends Box> extends AbstractFile<D
 		String value = serializedValue();
 		if (value == null) return;
 		notifier.refresh(new FileInfo().value(value).mimeType(mimeType));
+	}
+
+	protected File _value(URL value) {
+		this.value = value;
+		this.mimeType = typeOf(value);
+		return this;
 	}
 
 	private String serializedValue() {

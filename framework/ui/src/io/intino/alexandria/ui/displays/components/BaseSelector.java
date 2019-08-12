@@ -28,11 +28,6 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         return this;
     }
 
-    public BaseSelector<DN, B> multipleSelection(boolean value) {
-        this.multipleSelection = value;
-        return this;
-    }
-
     @Override
     public java.util.List<SelectorOption> options() {
         return findOptions();
@@ -53,6 +48,11 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
 
     public void optionsRendered() {
         children().forEach(Display::update);
+    }
+
+    protected BaseSelector<DN, B> _multipleSelection(boolean value) {
+        this.multipleSelection = value;
+        return this;
     }
 
     protected void notifySelection() {

@@ -14,9 +14,9 @@ public class MethodParamMold extends AbstractMethodParamMold<AlexandriaUiBox> {
     public void refresh() {
         super.refresh();
         Parameter parameter = item();
-        name.update(parameter.name());
-        type.update(parameter.type());
-        if (addComma) comma.update(", ");
+        name.value(parameter.name());
+        type.value(parameter.type());
+        if (addComma) comma.value(", ");
     }
 
 }

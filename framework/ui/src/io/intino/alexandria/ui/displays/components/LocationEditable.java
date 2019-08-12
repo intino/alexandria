@@ -29,14 +29,9 @@ public class LocationEditable<DN extends LocationEditableNotifier, B extends Box
 		return readonly;
 	}
 
-	public LocationEditable<DN, B> readonly(boolean value) {
-		this.readonly = readonly;
-		return this;
-	}
-
-	public LocationEditable<DN, B> updateReadonly(boolean value) {
-		readonly(value);
-		notifier.refreshReadonly(value);
+	public LocationEditable<DN, B> readonly(boolean readonly) {
+		_readonly(readonly);
+		notifier.refreshReadonly(readonly);
 		return this;
 	}
 
@@ -46,6 +41,11 @@ public class LocationEditable<DN extends LocationEditableNotifier, B extends Box
     	else if (geometry.type() == Geometry.Type.Polyline) value(polylineOf(geometry));
     	else if (geometry.type() == Geometry.Type.Point) value(pointOf(geometry));
 		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value()));
+	}
+
+	protected LocationEditable<DN, B> _readonly(boolean readonly) {
+		this.readonly = readonly;
+		return this;
 	}
 
 	private Point pointOf(Geometry geometry) {

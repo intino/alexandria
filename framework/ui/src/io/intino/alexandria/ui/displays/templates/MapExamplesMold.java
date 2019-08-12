@@ -28,9 +28,9 @@ public class MapExamplesMold extends AbstractMapExamplesMold<AlexandriaUiBox> {
     }
 
     private void onAddItem(AddItemEvent event) {
-        if (event.component() instanceof Map1Mold) ((Map1Mold)event.component()).stamp.update(event.item());
-        else if (event.component() instanceof Map2Mold) ((Map2Mold)event.component()).stamp.update(event.item());
-        else if (event.component() instanceof Map3Mold) ((Map3Mold)event.component()).stamp.update(event.item());
+        if (event.component() instanceof Map1Mold) ((Map1Mold)event.component()).stamp.item(event.item());
+        else if (event.component() instanceof Map2Mold) ((Map2Mold)event.component()).stamp.item(event.item());
+        else if (event.component() instanceof Map3Mold) ((Map3Mold)event.component()).stamp.item(event.item());
     }
 
 }

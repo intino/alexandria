@@ -24,34 +24,18 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
 		return value;
 	}
 
-	public ImageEditable value(URL value) {
-		this.value = value;
-		this.mimeType = UrlUtil.mimeType(value);
-		return this;
-	}
-
-	public ImageEditable<DN, B> defaultValue(URL defaultValue) {
-		this.defaultValue = defaultValue;
-		return this;
-	}
-
 	public boolean readonly() {
 		return readonly;
 	}
 
-	public ImageEditable<DN, B> readonly(boolean value) {
-		this.readonly = readonly;
-		return this;
-	}
-
-	public void update(URL value) {
-		value(value);
+	public void value(URL value) {
+		_value(value);
 		refresh();
 	}
 
-	public ImageEditable<DN, B> updateReadonly(boolean value) {
-		readonly(value);
-		notifier.refreshReadonly(value);
+	public ImageEditable<DN, B> readonly(boolean readonly) {
+		_readonly(readonly);
+		notifier.refreshReadonly(readonly);
 		return this;
 	}
 
@@ -62,6 +46,22 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
 
 	public void notifyChange(io.intino.alexandria.Resource value) {
 		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));
+	}
+
+	protected ImageEditable _value(URL value) {
+		this.value = value;
+		this.mimeType = UrlUtil.mimeType(value);
+		return this;
+	}
+
+	protected ImageEditable<DN, B> _defaultValue(URL defaultValue) {
+		this.defaultValue = defaultValue;
+		return this;
+	}
+
+	protected ImageEditable<DN, B> _readonly(boolean readonly) {
+		this.readonly = readonly;
+		return this;
 	}
 
 	@Override
