@@ -36,7 +36,7 @@ public interface PersistenceManager {
 		@Override
 		public List<String> list(String path) {
 			File file = new File(directory, path);
-			return file.exists() ? asList(file.list()) : Collections.emptyList();
+			return file.exists() ? asList(file.list((f, n) -> n.endsWith(".process"))) : Collections.emptyList();
 		}
 
 		@Override
