@@ -228,7 +228,7 @@ def type(task) trigger(init)
 end
 
 def type(workflow) trigger(init)
-	this.workflow = new $package.bpm.Workflow(this, this.configuration().workspace());
+	this.workflow = new $package.bpm.Workflow((($box+SnakeCaseToCamelCase+FirstUpperCase~Box))this, this.configuration().workspace());
 end
 
 def type(datalake & mirror) trigger(init)
