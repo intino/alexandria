@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.0") bpm
+Artifact("io.intino.alexandria", "1.0.0") bpm-framework
 	Imports
 		Compile("io.intino.alexandria", "message", "1.0.0")
 		Compile("io.intino.alexandria", "logger", "2.1.0")
@@ -9,6 +9,6 @@ Artifact("io.intino.alexandria", "1.0.0") bpm
 	Package(mode = ModulesAndLibrariesLinkedByManifest)
 	Distribution(intino.release)
 
-
 Repository("intino-maven") intino
-	Release("https://artifactory.intino.io/artifactory/release-libraries") release
+	Release("https://artifactory.intino.io/artifactory/releases")
+	Release("https://artifactory.intino.io/artifactory/release-frameworks") release

@@ -8,6 +8,7 @@ import io.intino.alexandria.ui.displays.components.selector.SelectorOption;
 import io.intino.alexandria.ui.displays.events.SelectionEvent;
 import io.intino.alexandria.ui.displays.events.SelectionListener;
 import io.intino.alexandria.ui.displays.notifiers.BaseSelectorNotifier;
+import io.intino.alexandria.ui.displays.notifiers.TextNotifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
     }
 
     public BaseSelector<DN, B> add(String option) {
-        Display display = new Text<>(box()).name(option);
+		Display display = new Text(box()).name(option);
         display.properties().put("value", option);
         display.properties().put("color", "black");
         addComponent((Component) display);
@@ -101,4 +102,9 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         super.add(option);
     }
 
+	private static class Text extends io.intino.alexandria.ui.displays.components.Text<TextNotifier, Box> implements SelectorOption {
+		public Text(Box box) {
+			super(box);
+		}
+	}
 }

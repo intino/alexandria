@@ -20,7 +20,7 @@ def type(display)
     	};
 		
 		render() {
-		    if (!this.state.visible) return (<React.Fragment/>);
+		    const display = !this.state.visible ? {display:'none'} : undefined;
 			return [this.$baseMethod](
 				[$renderTag]
 					[$reference...[$NL]]
@@ -82,19 +82,19 @@ def type(renderTag) trigger(end)
 end
 
 def type(renderTag & template)
-	<UiBlock[$properties+common$properties+specific]>
+	<UiBlock[$properties+common$properties+specific] style={{...this.props.style,...display}}>
 end
 
 def type(renderTag & block)
-	<UiBlock[$properties+common$properties+specific]>
+	<UiBlock[$properties+common$properties+specific] style={{...this.props.style,...display}}>
 end
 
 def type(renderTag & item)
-	<div style={{width:"100%",...this.props.style}}>
+	<div style={{width:"100%",...this.props.style,...display}}>
 end
 
 def type(renderTag)
-	<React.Fragment>
+	<React.Fragment style={{...this.props.style,...display}}>
 end
 
 def type(renderTagAttributes & block)
