@@ -164,7 +164,7 @@ Concept OtherComponents
 		has Component
 	Concept Progress extends Component
 		Concept Color > var string text; var string background
-	Concept Wizard extends Component
+	Concept Stepper extends Component
 		Concept Step > has Component
 
 	Concept Stamp extends Component

@@ -1,6 +1,6 @@
 dsl Proteo
 
-use DataHub
+use Datalake
 
 Concept Task
 	Concept LinkWithFeeder

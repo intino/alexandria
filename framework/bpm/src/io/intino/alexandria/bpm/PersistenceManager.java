@@ -2,6 +2,7 @@ package io.intino.alexandria.bpm;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ public interface PersistenceManager {
 		private final File directory;
 
 		public FilePersistenceManager(File directory) {
+			directory.mkdirs();
 			this.directory = directory;
 		}
 
@@ -33,7 +35,8 @@ public interface PersistenceManager {
 
 		@Override
 		public List<String> list(String path) {
-			return asList(new File(directory, path).list());
+			File file = new File(directory, path);
+			return file.exists() ? asList(file.list()) : Collections.emptyList();
 		}
 
 		@Override
