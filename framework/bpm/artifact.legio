@@ -6,7 +6,7 @@ Artifact("io.intino.alexandria", "1.0.0") bpm-framework
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Test("junit", "junit", "LATEST")
 
-	Package(mode = ModulesAndLibrariesLinkedByManifest)
+	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.release)
 
 Repository("intino-maven") intino
