@@ -27,9 +27,21 @@ public class Operation<DN extends OperationNotifier, B extends Box> extends Comp
         return title;
     }
 
-    public Operation<DN, B> updateIcon(String icon) {
-        this.icon = icon;
+    public Operation<DN, B> title(String title) {
+        _title(title);
+        refresh();
+        return this;
+    }
+
+    public Operation<DN, B> icon(String icon) {
+        _icon(icon);
         refreshIcon();
+        return this;
+    }
+
+    public Operation readonly(boolean readonly) {
+        if (readonly) disable();
+        else enable();
         return this;
     }
 
@@ -37,25 +49,14 @@ public class Operation<DN extends OperationNotifier, B extends Box> extends Comp
         return disabled;
     }
 
-    public Operation<DN, B> disabled(boolean value) {
-        this.disabled = value;
-        return this;
-    }
-
-    public Operation updateReadonly(boolean value) {
-        if (value) disable();
-        else enable();
-        return this;
-    }
-
     public Operation enable() {
-        disabled(false);
+        _disabled(false);
         notifier.refreshDisabled(disabled);
         return this;
     }
 
     public Operation disable() {
-        disabled(true);
+        _disabled(true);
         notifier.refreshDisabled(disabled);
         return this;
     }
@@ -75,18 +76,23 @@ public class Operation<DN extends OperationNotifier, B extends Box> extends Comp
         if (isResourceIcon()) refreshIcon();
     }
 
-    public Operation<DN, B> title(String title) {
+    protected Operation<DN, B> _title(String title) {
         this.title = title;
         return this;
     }
 
-    public Operation<DN, B> mode(Mode mode) {
+    protected Operation<DN, B> _mode(Mode mode) {
         this.mode = mode;
         return this;
     }
 
-    public Operation<DN, B> icon(String icon) {
+    protected Operation<DN, B> _icon(String icon) {
         this.icon = icon;
+        return this;
+    }
+
+    protected Operation<DN, B> _disabled(boolean value) {
+        this.disabled = value;
         return this;
     }
 

@@ -23,8 +23,8 @@ public class DialogExamplesMold extends AbstractDialogExamplesMold<UiFrameworkBo
 
     private void initDialog1() {
         dialog1.onBeforeOpen((event) -> {
-            field1.update("");
-            field2.update("");
+            field1.value("");
+            field2.value("");
         });
         acceptButton.onExecute((event -> {
             String value1 = field1.value() != null && !field1.value().isEmpty() ? field1.value() : "(no value)";
@@ -52,6 +52,6 @@ public class DialogExamplesMold extends AbstractDialogExamplesMold<UiFrameworkBo
     }
 
     private void onAddItem(AddItemEvent event) {
-        if (event.component() instanceof Dialog4ListMold) ((Dialog4ListMold) event.component()).firstName.update(((Person) event.item()).firstName());
+        if (event.component() instanceof Dialog4ListMold) ((Dialog4ListMold) event.component()).firstName.value(((Person) event.item()).firstName());
     }
 }

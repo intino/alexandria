@@ -13,14 +13,14 @@ public class PropertyMold extends AbstractPropertyMold<AlexandriaUiBox> {
     public void refresh() {
         super.refresh();
         Property property = item();
-        name.update(property.name());
-        type.update(property.type().name().replace("Array", "[]"));
-        if (property.facets() != null) facets.update(String.join(", ", property.facets()));
-        description.update(property.description());
+        name.value(property.name());
+        type.value(property.type().name().replace("Array", "[]"));
+        if (property.facets() != null) facets.value(String.join(", ", property.facets()));
+        description.value(property.description());
         //valuesLabel.update(property.type() == Property.Type.Word ? translate("allowed values") : translate("default value"));
-        valuesLabel.update(valuesLabel());
-        valuesSeparator.update(hasValues() ? ":" : null);
-        values.update(String.join(", ", property.values()));
+        valuesLabel.value(valuesLabel());
+        valuesSeparator.value(hasValues() ? ":" : null);
+        values.value(String.join(", ", property.values()));
     }
 
     private String valuesLabel() {

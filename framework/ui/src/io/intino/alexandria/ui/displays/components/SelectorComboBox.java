@@ -24,14 +24,9 @@ public class SelectorComboBox<DN extends SelectorComboBoxNotifier, B extends Box
 		return readonly;
 	}
 
-	public SelectorComboBox<DN, B> readonly(boolean value) {
-		this.readonly = readonly;
-		return this;
-	}
-
-	public SelectorComboBox<DN, B> updateReadonly(boolean value) {
-		readonly(value);
-		notifier.refreshReadonly(value);
+	public SelectorComboBox<DN, B> readonly(boolean readonly) {
+		_readonly(readonly);
+		notifier.refreshReadonly(readonly);
 		return this;
 	}
 
@@ -48,6 +43,11 @@ public class SelectorComboBox<DN extends SelectorComboBoxNotifier, B extends Box
 	public void updateSelection(String[] selection) {
 		this.selection = Arrays.asList(selection);
 		notifySelection();
+	}
+
+	protected SelectorComboBox<DN, B> _readonly(boolean readonly) {
+		this.readonly = readonly;
+		return this;
 	}
 
 }

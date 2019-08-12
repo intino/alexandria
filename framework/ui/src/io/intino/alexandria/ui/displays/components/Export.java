@@ -26,64 +26,12 @@ public class Export<DN extends ExportNotifier, B extends Box> extends AbstractEx
         return params.from();
     }
 
-    public Export<DN, B> from(long from) {
-        return from(Instant.ofEpochMilli(from));
-    }
-
-    public Export<DN, B> from(Instant from) {
-        params.from(from);
-        return this;
-    }
-
     public Instant to() {
         return params.to();
     }
 
-    public Export<DN, B> to(long to) {
-        return to(Instant.ofEpochMilli(to));
-    }
-
-    public Export<DN, B> to(Instant to) {
-        params.to(to);
-        return this;
-    }
-
-    public Export<DN, B> min(long min) {
-        return min(Instant.ofEpochMilli(min));
-    }
-
-    public Export<DN, B> min(Instant min) {
-        this.min = min;
-        return this;
-    }
-
-    public Export<DN, B> max(long max) {
-        return max(Instant.ofEpochMilli(max));
-    }
-
-    public Export<DN, B> max(Instant max) {
-        this.max = max;
-        return this;
-    }
-
-    public Export<DN, B> range(int min, int max) {
-        this.range = new Range(min, max);
-        return this;
-    }
-
     public List<String> options() {
         return options;
-    }
-
-    public Export<DN, B> options(List<String> options) {
-        this.options = options;
-        return this;
-    }
-
-    public Export<DN, B> select(String option) {
-        if (!this.options.contains(option)) return this;
-        params.option(option);
-        return this;
     }
 
     public void onExecute(ExportListener listener) {
@@ -102,7 +50,59 @@ public class Export<DN extends ExportNotifier, B extends Box> extends AbstractEx
         return this.exportListener.accept(new ExportEvent(this, from, to, option));
     }
 
-	class Range {
+    protected Export<DN, B> _from(long from) {
+        return _from(Instant.ofEpochMilli(from));
+    }
+
+    protected Export<DN, B> _from(Instant from) {
+        params.from(from);
+        return this;
+    }
+
+    protected Export<DN, B> _to(long to) {
+        return _to(Instant.ofEpochMilli(to));
+    }
+
+    protected Export<DN, B> _to(Instant to) {
+        params.to(to);
+        return this;
+    }
+
+    protected Export<DN, B> _min(long min) {
+        return _min(Instant.ofEpochMilli(min));
+    }
+
+    protected Export<DN, B> _min(Instant min) {
+        this.min = min;
+        return this;
+    }
+
+    protected Export<DN, B> _max(long max) {
+        return _max(Instant.ofEpochMilli(max));
+    }
+
+    protected Export<DN, B> _max(Instant max) {
+        this.max = max;
+        return this;
+    }
+
+    protected Export<DN, B> _range(int min, int max) {
+        this.range = new Range(min, max);
+        return this;
+    }
+
+    protected Export<DN, B> _options(List<String> options) {
+        this.options = options;
+        return this;
+    }
+
+    protected Export<DN, B> _select(String option) {
+        if (!this.options.contains(option)) return this;
+        params.option(option);
+        return this;
+    }
+
+    class Range {
         final int min;
         final int max;
 

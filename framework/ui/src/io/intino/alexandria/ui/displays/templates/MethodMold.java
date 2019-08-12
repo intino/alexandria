@@ -16,11 +16,11 @@ public class MethodMold extends AbstractMethodMold<AlexandriaUiBox> {
     public void refresh() {
         super.refresh();
         Method method = item();
-        name.update(method.name());
+        name.value(method.name());
         addParameters();
-        if (method.facets() != null) facets.update(String.join(", ", method.facets()));
-        description.update(method.description());
-        returnType.update(method.returnType());
+        if (method.facets() != null) facets.value(String.join(", ", method.facets()));
+        description.value(method.description());
+        returnType.value(method.returnType());
     }
 
     private void addParameters() {

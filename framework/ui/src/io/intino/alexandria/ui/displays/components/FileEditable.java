@@ -23,29 +23,18 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 		return value;
 	}
 
-	public FileEditable value(URL value) {
-		this.value = value;
-		this.mimeType = UrlUtil.mimeType(value);
-		return this;
-	}
-
 	public boolean readonly() {
 		return readonly;
 	}
 
-	public FileEditable<DN, B> readonly(boolean value) {
-		this.readonly = readonly;
-		return this;
-	}
-
-	public void update(URL value) {
-		value(value);
+	public void value(URL value) {
+		_value(value);
 		refresh();
 	}
 
-	public FileEditable<DN, B> updateReadonly(boolean value) {
-		readonly(value);
-		notifier.refreshReadonly(value);
+	public FileEditable<DN, B> readonly(boolean readonly) {
+		_readonly(readonly);
+		notifier.refreshReadonly(readonly);
 		return this;
 	}
 
@@ -58,6 +47,17 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	public void notifyChange(Resource value) {
 //		value(value);
 //		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));
+	}
+
+	protected FileEditable _value(URL value) {
+		this.value = value;
+		this.mimeType = UrlUtil.mimeType(value);
+		return this;
+	}
+
+	protected FileEditable<DN, B> _readonly(boolean readonly) {
+		this.readonly = readonly;
+		return this;
 	}
 
 	private String serializedValue() {

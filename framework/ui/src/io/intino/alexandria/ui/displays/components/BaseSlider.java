@@ -40,28 +40,17 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
     	return value;
 	}
 
-	public BaseSlider value(long value) {
-		this.value = value;
-		return this;
-	}
-
-	public BaseSlider add(Ordinal ordinal) {
-		this.ordinalList.add(ordinal);
-		if (this.ordinal == null && ordinalList.size() > 0) ordinal(ordinalList.get(0));
-		return this;
-	}
-
-	public BaseSlider animation(int interval, boolean loop) {
-		this.animation = new Animation().interval(interval).loop(loop);
-		return this;
-	}
-
 	public Ordinal ordinal() {
 		return ordinal;
 	}
 
 	public void selectOrdinal(String name) {
 		selectOrdinal(name, value);
+	}
+
+	public BaseSlider add(Ordinal ordinal) {
+		_add(ordinal);
+		return this;
 	}
 
 	public BaseSlider ordinal(Ordinal ordinal) {
@@ -74,41 +63,33 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		return range;
 	}
 
-	public BaseSlider range(long min, long max) {
-		this.range = new Range().min(min).max(max);
-		if (value < min) value = min;
-		if (value > max) value = max;
-		return this;
-	}
-
 	public boolean readonly() {
 		return readonly;
 	}
 
-	public BaseSlider<DN, B> readonly(boolean value) {
-		this.readonly = readonly;
-		return this;
-	}
-
-	public void update(long value) {
+	public void value(long value) {
 		if (!checkRange(value)) return;
-		this.value = value;
+		_value(value);
 		notifyChange();
 	}
 
-	public BaseSlider<DN, B> updateReadonly(boolean value) {
-		readonly(value);
+	public void update(long value) {
+		value(value);
+	}
+
+	public BaseSlider<DN, B> readonly(boolean value) {
+		_readonly(value);
 		notifier.refreshReadonly(value);
 		return this;
 	}
 
 	public void previous() {
-		update(value-1);
+		value(value-1);
 		notifyChange();
 	}
 
 	public void next() {
-		update(value+1);
+		value(value+1);
 		notifyChange();
 	}
 
@@ -165,10 +146,38 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 	public abstract String formattedValue();
 	abstract void updateRange();
 
+	protected BaseSlider _value(long value) {
+		this.value = value;
+		return this;
+	}
+
+	protected BaseSlider _range(long min, long max) {
+		this.range = new Range().min(min).max(max);
+		if (value < min) value = min;
+		if (value > max) value = max;
+		return this;
+	}
+
+	public BaseSlider _add(Ordinal ordinal) {
+		this.ordinalList.add(ordinal);
+		if (this.ordinal == null && ordinalList.size() > 0) ordinal(ordinalList.get(0));
+		return this;
+	}
+
+	protected BaseSlider _animation(int interval, boolean loop) {
+		this.animation = new Animation().interval(interval).loop(loop);
+		return this;
+	}
+
+	protected BaseSlider _readonly(boolean readonly) {
+		this.readonly = readonly;
+		return this;
+	}
+
 	void selectOrdinal(String name, long value) {
 		ordinal(ordinalList.stream().filter(o -> o.name().equals(name)).findFirst().orElse(null));
 		notifier.refreshSelectedOrdinal(name);
-		update(value);
+		value(value);
 	}
 
 	private List<io.intino.alexandria.schemas.Ordinal> ordinals() {
@@ -213,7 +222,7 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 			if (canLoop()) value(range.min()-1);
 			else return;
 		}
-		update(value+1);
+		value(value+1);
 		notifyChange();
 	}
 

@@ -12,9 +12,9 @@ public class TextExamplesMold extends AbstractTextExamplesMold<AlexandriaUiBox> 
     @Override
     public void init() {
         super.init();
-        text1.update("lorem ipsum");
-        text2.update("lorem ipsum");
-        text3.update("lorem ipsum");
+        text1.value("lorem ipsum");
+        text2.value("lorem ipsum");
+        text3.value("lorem ipsum");
         text3.onChange((event) -> text3.notifyUser(String.format("Valor: %s", (String)event.value()), UserMessage.Type.Info));
         textCode2.onChange((event) -> textCode2.notifyUser(String.format("Valor: %s", (String)event.value()), UserMessage.Type.Info));
     }

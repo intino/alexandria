@@ -11,17 +11,21 @@ public class Template<DN extends TemplateNotifier, Item, B extends Box> extends 
         super(box);
     }
 
-    public void update(Item item) {
-        this.item(item);
-        refresh();
+    public void value(Item item) {
+        item(item);
     }
 
-    public Template<DN, Item, B> item(Item item) {
-        this.item = item;
-        return this;
+    public void item(Item item) {
+        _item(item);
+        refresh();
     }
 
     public Item item() {
         return item;
+    }
+
+    protected Template<DN, Item, B> _item(Item item) {
+        this.item = item;
+        return this;
     }
 }

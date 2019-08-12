@@ -15,14 +15,14 @@ public class ImageAvatar<DN extends ImageAvatarNotifier, B extends Box> extends 
 		refresh();
 	}
 
-	public ImageAvatar<DN, B> text(String text) {
-		this.text = text;
-		return this;
+	public void text(String text) {
+		_text(text);
+		refresh();
 	}
 
-	public void update(String text) {
+	protected ImageAvatar<DN, B> _text(String text) {
 		this.text = text;
-		refresh();
+		return this;
 	}
 
 	@Override

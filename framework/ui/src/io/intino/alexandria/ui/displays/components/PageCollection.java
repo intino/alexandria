@@ -39,7 +39,7 @@ public abstract class PageCollection<DN extends PageCollectionNotifier, B extend
         notifier.refresh();
     }
 
-    public PageCollection<DN, B> pageSize(int pageSize) {
+    protected PageCollection<DN, B> _pageSize(int pageSize) {
         this.pageSize = pageSize;
         return this;
     }

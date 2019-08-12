@@ -10,14 +10,19 @@ public class OpenPage<DN extends OpenPageNotifier, B extends Box> extends Abstra
         super(box);
     }
 
-	public OpenPage path(String path) {
-    	this.path = path;
-    	return this;
-	}
-
 	public void execute() {
 		if (path == null) return;
 		notifier.open(path);
     }
+
+    public OpenPage path(String path) {
+    	_path(path);
+    	return this;
+	}
+
+	protected OpenPage _path(String path) {
+		this.path = path;
+		return this;
+	}
 
 }

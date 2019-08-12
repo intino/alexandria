@@ -15,7 +15,7 @@ public class TextWidget extends BaseWidget {
 
 	public TextWidget() {
 		super("Use this widget to present text content in your user interface");
-		facets(asList("Multiple", "Code", "Editable"));
+		facets(asList("Multiple", "Code", "Editable", "Highlighted"));
 	}
 
 	protected void addProperties() {
@@ -25,6 +25,11 @@ public class TextWidget extends BaseWidget {
 		add(property("language", Property.Type.Word, "Language of code defined in widget.", languages()).facets(singletonList("Code")));
 		add(property("prefix", Property.Type.Text, "Text to add before the value."));
 		add(property("suffix", Property.Type.Text, "Text to add after the value."));
+		add(property("textColor", Property.Type.Text, "Color for text.").facets(singletonList("Highlight")));
+		add(property("backgroundColor", Property.Type.Text, "Color for background.").facets(singletonList("Highlight")));
+		add(property("noItemsMessage", Property.Type.Text, "Text rendered when no elements are added to component.").facets(singletonList("Multiple")));
+		add(property("arrangement", Property.Type.Word, "Text rendered when no elements are added to component.", multipleArrangements()).facets(singletonList("Multiple")));
+		add(property("spacing", Property.Type.Word, "Spacing between text components applied.", multipleSpacings()).facets(singletonList("Multiple")));
 	}
 
 	protected void addMethods() {
@@ -39,8 +44,8 @@ public class TextWidget extends BaseWidget {
 		addEvent(method("onKeyPress", singletonList(Model.methodParameter("listener", "io.intino.alexandria.ui.displays.events.KeyPressListener")), "This event is fired when widget value changes", "void").facets(singletonList("Editable")));
 	}
 
-	private String languages() {
-		return "Html, Java, Javascript, R";
+	private String[] languages() {
+		return new String[] { "Html", "Java", "Javascript", "R" };
 	}
 
 }

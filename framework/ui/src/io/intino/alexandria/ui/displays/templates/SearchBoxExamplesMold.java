@@ -23,9 +23,9 @@ public class SearchBoxExamplesMold extends AbstractSearchBoxExamplesMold<Alexand
         if (event.component() instanceof SearchBox1Mold) {
             SearchBox1Mold component = event.component();
             Person person = event.item();
-            component.firstName1.update(person.firstName());
-            component.gender1.update(person.gender().name());
-            component.age1.update(String.valueOf(person.age()));
+            component.firstName1.value(person.firstName());
+            component.gender1.value(person.gender().name());
+            component.age1.value(String.valueOf(person.age()));
         }
     }
 

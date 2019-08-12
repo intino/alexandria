@@ -18,22 +18,22 @@ public class Image<DN extends ImageNotifier, B extends Box> extends AbstractImag
     	return value;
 	}
 
-	public Image value(URL value) {
-    	this.value = value;
-    	return this;
-	}
-
-	public Image defaultValue(URL defaultValue) {
-    	this.defaultValue = defaultValue;
-    	return this;
-	}
-
-	public void update(URL value) {
-    	this.value = value;
+	public void value(URL value) {
+    	_value(value);
     	refresh();
     }
 
-    @Override
+	protected Image _value(URL value) {
+		this.value = value;
+		return this;
+	}
+
+	protected Image _defaultValue(URL defaultValue) {
+		this.defaultValue = defaultValue;
+		return this;
+	}
+
+	@Override
 	String serializedValue() {
 		String result = null;
 		if (value != null) result = Asset.toResource(baseAssetUrl(), value).toUrl().toString();

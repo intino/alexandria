@@ -14,13 +14,13 @@ public class BlockBadge<DN extends BlockBadgeNotifier, B extends Box> extends Ab
         return this.value;
     }
 
-    public BlockBadge<DN, B> value(int value) {
-        this.value = value;
-        return this;
+    public void value(int value) {
+        _value(value);
+        notifier.refresh(value);
     }
 
-    public void update(int value) {
-        value(value);
-        notifier.refresh(value);
+    protected BlockBadge<DN, B> _value(int value) {
+        this.value = value;
+        return this;
     }
 }

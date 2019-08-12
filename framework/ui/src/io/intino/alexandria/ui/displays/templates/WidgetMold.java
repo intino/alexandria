@@ -23,7 +23,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
     @Override
     public void init() {
         super.init();
-        events.set(new EventsDisplay(box()));
+        events.display(new EventsDisplay(box()));
     }
 
     @Override
@@ -32,8 +32,8 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         showLoading();
         if (item() == null) return;
         Widget widget = item();
-        title.update(I18n.translate(widget.getClass().getSimpleName().replace("Widget", ""), language()));
-        description.update(I18n.translate(widget.description(), language()));
+        title.value(I18n.translate(widget.getClass().getSimpleName().replace("Widget", ""), language()));
+        description.value(I18n.translate(widget.description(), language()));
         highlightFacets.addAll(widget.facets());
         updateExamplesVisibility();
         updateInfo();
@@ -71,7 +71,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
     private void updateInfo() {
         if (infoAdded) return;
         Widget widget = item();
-        facetsNames.update(widget.facets().size() > 0 ? String.join(", ", widget.facets()) : I18n.translate("no facets", language()));
+        facetsNames.value(widget.facets().size() > 0 ? String.join(", ", widget.facets()) : I18n.translate("no facets", language()));
         refreshProperties();
         refreshMethods();
         refreshEventsDisplay();

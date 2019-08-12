@@ -26,35 +26,15 @@ public class Chart<DN extends ChartNotifier, B extends Box> extends AbstractChar
         return input;
     }
 
-    public Chart<DN, B> input(DataframeLoader loader) {
-        this.input = loader.load();
+    public Chart<DN, B> input(Dataframe input) {
+        this.input = input;
+        this.refresh();
         return this;
     }
 
     public Chart<DN, B> query(String query) {
-        this.query = query;
-        return this;
-    }
-
-    public Chart<DN, B> updateQuery(String query) {
-        query(query);
+        _query(query);
         refresh();
-        return this;
-    }
-
-    public Chart<DN, B> output(String output) {
-        this.output = Output.valueOf(output);
-        return this;
-    }
-
-    public Chart<DN, B> serverUrl(String url) {
-        this.serverUrl = UrlUtil.toURL(url);
-        return this;
-    }
-
-    public Chart<DN, B> update(Dataframe input) {
-        this.input = input;
-        this.refresh();
         return this;
     }
 
@@ -70,6 +50,26 @@ public class Chart<DN extends ChartNotifier, B extends Box> extends AbstractChar
         catch (RuntimeException ex) {
             notifier.refreshError(ex.getMessage());
         }
+    }
+
+    protected Chart<DN, B> _input(DataframeLoader loader) {
+        this.input = loader.load();
+        return this;
+    }
+
+    protected Chart<DN, B> _query(String query) {
+        this.query = query;
+        return this;
+    }
+
+    protected Chart<DN, B> _output(String output) {
+        this.output = Output.valueOf(output);
+        return this;
+    }
+
+    protected Chart<DN, B> _serverUrl(String url) {
+        this.serverUrl = UrlUtil.toURL(url);
+        return this;
     }
 
     private String execute() {

@@ -18,32 +18,32 @@ public class Date<DN extends DateNotifier, B extends Box> extends AbstractDate<D
         return value;
     }
 
-    public Date<DN, B> value(Instant value) {
-        this.value = value;
-        return this;
-    }
-
     public Instant min() {
         return this.min;
-    }
-
-    public Date<DN, B> min(Instant min) {
-        this.min = min;
-        return this;
     }
 
     public Instant max() {
         return this.max;
     }
 
-    public Date<DN, B> max(Instant max) {
-        this.max = max;
+    public void value(Instant value) {
+        _value(value);
+        notifier.refresh(value);
+    }
+
+    protected Date<DN, B> _value(Instant value) {
+        this.value = value;
         return this;
     }
 
-    public void update(Instant value) {
-        value(value);
-        notifier.refresh(value);
+    protected Date<DN, B> _min(Instant min) {
+        this.min = min;
+        return this;
+    }
+
+    protected Date<DN, B> _max(Instant max) {
+        this.max = max;
+        return this;
     }
 
 }

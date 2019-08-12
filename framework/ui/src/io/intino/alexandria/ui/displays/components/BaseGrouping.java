@@ -29,14 +29,15 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	}
 
 	public BaseGrouping groups(List<Group> groups) {
-		this.groups = groups;
+		_groups(groups);
+		refresh();
 		return this;
 	}
 
-	public BaseGrouping updateGroups(List<Group> groups) {
-		groups(groups);
-		refresh();
-		return this;
+	public void select(String[] groups) {
+		this.selection = Arrays.asList(groups);
+		notifySelection();
+		collections.forEach(c -> c.filter(key(), selection));
 	}
 
 	public BaseGrouping<DN, B> bindTo(Collection... collection) {
@@ -51,10 +52,9 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 		if (groups.size() > 0) refreshGroups();
 	}
 
-	public void select(String[] groups) {
-		this.selection = Arrays.asList(groups);
-		notifySelection();
-		collections.forEach(c -> c.filter(key(), selection));
+	protected BaseGrouping _groups(List<Group> groups) {
+		this.groups = groups;
+		return this;
 	}
 
 	private String key() {
@@ -63,7 +63,7 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 
 	private void loadGroups() {
 		if (collections.size() <= 0) return;
-		groups(collections.get(0).source().groups(key()));
+		_groups(collections.get(0).source().groups(key()));
 		refreshGroups();
 	}
 

@@ -27,16 +27,16 @@ public class SortingExamplesMold extends AbstractSortingExamplesMold<AlexandriaU
         if (event.component() instanceof Sorting1Mold) {
             Sorting1Mold component = event.component();
             Person person = event.item();
-            component.firstName1.update(person.firstName());
-            component.gender1.update(person.gender().name());
-            component.age1.update(String.valueOf(person.age()));
+            component.firstName1.value(person.firstName());
+            component.gender1.value(person.gender().name());
+            component.age1.value(String.valueOf(person.age()));
         }
 		else if (event.component() instanceof Sorting2Mold) {
 			Sorting2Mold component = event.component();
 			Person person = event.item();
-			component.firstName2.update(person.firstName());
-			component.gender2.update(person.gender().name());
-			component.age2.update(String.valueOf(person.age()));
+			component.firstName2.value(person.firstName());
+			component.gender2.value(person.gender().name());
+			component.age2.value(String.valueOf(person.age()));
 		}
     }
 

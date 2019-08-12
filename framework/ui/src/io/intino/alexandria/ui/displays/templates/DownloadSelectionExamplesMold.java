@@ -44,7 +44,7 @@ public class DownloadSelectionExamplesMold extends AbstractDownloadSelectionExam
     }
 
     private void onAddItem(AddItemEvent event) {
-        if (event.component() instanceof DownloadSelectionMold) ((DownloadSelectionMold) event.component()).firstName.update(((Person) event.item()).firstName());
+        if (event.component() instanceof DownloadSelectionMold) ((DownloadSelectionMold) event.component()).firstName.value(((Person) event.item()).firstName());
     }
 
 }
