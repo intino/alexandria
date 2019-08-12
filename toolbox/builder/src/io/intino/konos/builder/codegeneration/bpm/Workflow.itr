@@ -10,7 +10,7 @@ def type(workflow)
 
 	public class Workflow extends io.intino.alexandria.bpm.Workflow {
 		public Workflow($box+FirstUpperCase~Box box, File workspace) {
-			super(messageHub, factory(box), new PersistenceManager.FilePersistenceManager(new File(workspace, "bpm")));
+			super(box.messageHub(), factory(box), new PersistenceManager.FilePersistenceManager(new File(workspace, "bpm")));
 		}
 
 		private static ProcessFactory factory($box+FirstUpperCase~Box box) {
