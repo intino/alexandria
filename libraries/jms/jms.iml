@@ -7,7 +7,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="exceptions" />
-    <orderEntry type="module" module-name="json" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:exceptions:1.0.0" level="project" />
     <orderEntry type="library" name="Intino: com.sun.xml.security:xml-security-impl:1.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.0.0" level="project" />
@@ -22,6 +21,8 @@
     <orderEntry type="library" name="Intino: org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:1.0.1" level="project" />
     <orderEntry type="library" name="Intino: commons-net:commons-net:3.6" level="project" />
     <orderEntry type="library" name="Intino: javax.jmdns:jmdns:3.4.1" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
+    <orderEntry type="module" module-name="logger4j" />
+    <orderEntry type="library" name="Intino: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
+    <orderEntry type="library" name="Intino: log4j:log4j:1.2.17" level="project" />
   </component>
 </module>

@@ -24,23 +24,26 @@ public class JmsMessageHub implements MessageHub {
 	private javax.jms.Connection connection;
 	private Session session;
 
-	public JmsMessageHub(String brokerUrl, String user, String password) {
-		this(brokerUrl, user, password, false);
+	public JmsMessageHub(String brokerUrl, String user, String password, String clientId) {
+		this(brokerUrl, user, password, clientId, false);
 	}
 
-	public JmsMessageHub(String brokerUrl, String user, String password, boolean transactedSession) {
+	public JmsMessageHub(String brokerUrl, String user, String password, String clientId, boolean transactedSession) {
+		producers = new HashMap<>();
+		consumers = new HashMap<>();
 		if (brokerUrl != null && !brokerUrl.isEmpty()) {
 			try {
 				connection = BusConnector.createConnection(brokerUrl, user, password);
-				if (connection != null)
-					session = connection.createSession(transactedSession, transactedSession ? AUTO_ACKNOWLEDGE : SESSION_TRANSACTED);
-				else Logger.error("Connection is null");
+				if (connection != null) {
+					if (clientId != null && !clientId.isEmpty()) connection.setClientID(clientId);
+					connection.start();
+					session = connection.createSession(transactedSession, transactedSession ? SESSION_TRANSACTED : AUTO_ACKNOWLEDGE);
+				} else Logger.error("Connection is null");
 			} catch (JMSException e) {
 				Logger.error(e);
 			}
 		} else Logger.warn("Broker url is null");
-		producers = new HashMap<>();
-		consumers = new HashMap<>();
+
 	}
 
 	public Connection connection() {
@@ -57,7 +60,7 @@ public class JmsMessageHub implements MessageHub {
 		producers.values().forEach(Producer::close);
 		try {
 			session.close();
-			connection.stop();
+			connection.close();
 		} catch (JMSException e) {
 			Logger.error(e);
 		}
@@ -67,7 +70,8 @@ public class JmsMessageHub implements MessageHub {
 	public void sendMessage(String channel, Message message) {
 		if (session == null) return;
 		try {
-			Producer producer = producers.putIfAbsent(channel, new TopicProducer(session, channel));
+			producers.putIfAbsent(channel, new TopicProducer(session, channel));
+			Producer producer = producers.get(channel);
 			if (producer == null) return;
 			producer.produce(MessageSerializer.serialize(message));
 		} catch (JMSException | IOException e) {
@@ -78,19 +82,19 @@ public class JmsMessageHub implements MessageHub {
 	@Override
 	public void attachListener(String channel, Consumer<Message> onMessageReceived) {
 		if (session == null) return;
-		List<TopicConsumer> topicConsumers = this.consumers.putIfAbsent(channel, new ArrayList<>());
+		this.consumers.putIfAbsent(channel, new ArrayList<>());
 		TopicConsumer topicConsumer = new TopicConsumer(session, channel);
 		topicConsumer.listen(message -> onMessageReceived.accept(MessageDeserializer.deserialize(message)));
-		topicConsumers.add(topicConsumer);
+		this.consumers.get(channel).add(topicConsumer);
 	}
 
 	@Override
 	public void attachListener(String channel, String subscriberId, Consumer<Message> onMessageReceived) {
 		if (session == null) return;
-		List<TopicConsumer> topicConsumers = this.consumers.putIfAbsent(channel, new ArrayList<>());
+		this.consumers.putIfAbsent(channel, new ArrayList<>());
 		TopicConsumer topicConsumer = new TopicConsumer(session, channel);
 		topicConsumer.listen(message -> onMessageReceived.accept(MessageDeserializer.deserialize(message)), subscriberId);
-		topicConsumers.add(topicConsumer);
+		this.consumers.get(channel).add(topicConsumer);
 	}
 
 	@Override
