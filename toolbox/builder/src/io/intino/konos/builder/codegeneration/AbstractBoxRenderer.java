@@ -96,7 +96,7 @@ public class AbstractBoxRenderer extends Renderer {
 	private void messageHub(FrameBuilder root, String boxName) {
 		MessageHub hub = graph.messageHub();
 		if (hub == null) return;
-		FrameBuilder builder = new FrameBuilder("messageHub");
+		FrameBuilder builder = new FrameBuilder("messagehub");
 		if (hub.isJmsBus()) {
 			JmsBusMessageHub jmsHub = hub.asJmsBus();
 			builder.add("jms").add("parameter", parameter(jmsHub.url())).add("parameter", parameter(jmsHub.user())).add("parameter", parameter(jmsHub.password())).add("parameter", parameter(jmsHub.clientId()));
@@ -106,7 +106,7 @@ public class AbstractBoxRenderer extends Renderer {
 		if (feederFrames.length != 0) builder.add("feeder", feederFrames);
 		Frame[] mounterFrames = graph.mounterList().stream().filter(Mounter::isRealtime).map(m -> frameOf(m, boxName)).toArray(Frame[]::new);
 		if (mounterFrames.length != 0) builder.add("mounter", mounterFrames);
-		root.add("messageHub", builder.toFrame());
+		root.add("messagehub", builder.toFrame());
 	}
 
 	private void workflow(FrameBuilder root) {

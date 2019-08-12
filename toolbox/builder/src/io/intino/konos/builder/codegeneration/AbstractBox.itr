@@ -12,14 +12,14 @@ def type(box)
 	import java.util.logging.ConsoleHandler;
 	import java.util.logging.Level;
 
-	[$messageHub+import]
+	[$messagehub+import]
 	[import io.intino.alexandria.rest.AlexandriaSpark;$hasREST]
     [import io.intino.alexandria.ui.Soul$hasUi+hideUi]
 
 	public abstract class AbstractBox extends [$hasUi+uiBox?io.intino.alexandria.core.Box] {
 		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;
 		[$service+field...[$NL]]
-		[$messageHub+field]
+		[$messagehub+field]
 		[$datalake+field]
 		[$task+field]
 		[$workflow+field]
@@ -38,7 +38,7 @@ def type(box)
 			initJavaLogger();
 			[$service+setup...[$NL]]
 			[$datalake+setup]
-			[$messageHub+setup]
+			[$messagehub+setup]
 		}
 
 		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration() {
@@ -69,7 +69,7 @@ def type(box)
 			if (owner != null) owner.close();
 			[$spark...[$NL]]
 			[$service+close...[$NL]]
-			[$messageHub+close]
+			[$messagehub+close]
 		}
 
 		[$hasUi+registerSoul]
@@ -80,7 +80,7 @@ def type(box)
 
 		[$hasUi+editorService]
 
-		[$messageHub+getter]
+		[$messagehub+getter]
 
 		[$datalake+getter]
 
@@ -116,7 +116,7 @@ def type(box)
 		}
 
 		private void initMessageHub() {
-			[$messageHub+init]
+			[$messagehub+init]
 		}
 
 		private void initTasks() {
@@ -179,12 +179,12 @@ def type(datalake) trigger(setup)
 	this.datalake = new io.intino.alexandria.datalake.file.FileDatalake(new java.io.File($path+parameter));
 end
 
-def type(jms) trigger(messageHub)
-	new $package.MessageHub($parameter...[, ])
+def type(jms & messageHub) trigger(setup)
+	this.messageHub = new $package.MessageHub($parameter...[, ]);
 end
 
-def trigger(messageHub)
-	new $package.MessageHub(this)
+def type(messageHub) trigger(setup)
+	this.messageHub = new $package.MessageHub(this);
 end
 
 def type(service & jmx) trigger(jmx)
