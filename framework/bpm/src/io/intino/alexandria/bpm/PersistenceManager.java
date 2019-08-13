@@ -72,7 +72,7 @@ public interface PersistenceManager {
 		}
 
 		@Override
-		public List<String> list(String path) {
+		public List<String> list(String path) { // TODO list only files
 			return content.keySet().stream().filter(k -> !k.equals(path) && k.startsWith(path)).collect(toList());
 		}
 

@@ -50,7 +50,7 @@ public class Workflow {
 
 	private void loadActiveProcesses() {
 		persistence.list("active/").forEach(path -> {
-			List<ProcessStatus> statuses = messagesOf(path);
+			List<ProcessStatus> statuses = messagesOf("active/" + path);
 			ProcessStatus status = statuses.get(0);
 			processes.put(status.processId(), factory.createProcess(status.processId(), status.processName()));
 			process(status.processId()).resume(statuses);
