@@ -16,7 +16,7 @@ public class ProcessStatus implements Comparable<ProcessStatus> {
 	private static final String Name = "name";
 	private static final String Status = "status";
 	private static final String Ts = "ts";
-	private static final String Id = "Id";
+	private static final String Id = "id";
 	private static final String CallbackProcess = "callbackProcess";
 	private static final String CallbackState = "callbackState";
 	private final Message message;

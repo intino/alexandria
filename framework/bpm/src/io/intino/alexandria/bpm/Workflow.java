@@ -20,7 +20,7 @@ import static java.util.stream.Collectors.toList;
 
 
 public class Workflow {
-	private static final String Channel = "ProcessStatus";
+	public static final String Channel = "ProcessStatus";
 	protected final MessageHub messageHub;
 	private final PersistenceManager persistence;
 	private ProcessFactory factory;
@@ -142,6 +142,7 @@ public class Workflow {
 		processes.remove(process.id());
 		if (!process.hasCallback()) return;
 		Process callbackProcess = processes.get(process.callbackProcess());
+		if (callbackProcess == null) return;
 		sendMessage(exitMessage(callbackProcess, callbackProcess.state(process.callbackState()), "Process " + process.id() + " has " + process.finishStatus()));
 	}
 

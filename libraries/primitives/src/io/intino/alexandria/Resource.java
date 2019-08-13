@@ -118,15 +118,12 @@ public class Resource {
                 return null;
             }
         }
-
-
     }
 
 	private static class ResourceInputStream extends ByteArrayInputStream {
 		ResourceInputStream(byte[] buf) {
 			super(buf);
 		}
-
 		byte[] bytes() {
 			return buf;
 		}
