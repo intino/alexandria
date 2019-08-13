@@ -52,9 +52,9 @@ public class BpmWithSubprocessCallingNoWait extends BpmTest {
 		private Task createString() {
 			return new Task(Automatic) {
 				@Override
-				public String execute() {
+				public Result execute() {
 					memory.put(id(), Math.random() < 0.5 ? "Hello" : "Goodbye");
-					return "create string executed";
+					return new Result("create string executed");
 				}
 
 			};
@@ -63,14 +63,14 @@ public class BpmWithSubprocessCallingNoWait extends BpmTest {
 		private Task callSubprocess() {
 			return new Task(Automatic) {
 				@Override
-				public String execute() {
+				public Result execute() {
 					messageHub.sendMessage(ProcessStatus, new Message(ProcessStatus)
 							.set("ts", "2019-01-01T00:00:00Z")
 							.set("id", "2")
 							.set("name", "StringChecker")
 							.set("owner", "1")
 							.set("status", "Enter"));
-					return "subprocess called StringChecker";
+					return new Result("subprocess called StringChecker");
 				}
 			};
 		}
@@ -91,8 +91,8 @@ public class BpmWithSubprocessCallingNoWait extends BpmTest {
 		private Task checkString() {
 			return new Task(Automatic) {
 				@Override
-				public String execute() {
-					return memory.get(owner()).equals("Hello") + "";
+				public Result execute() {
+					return new Result(memory.get(owner()).equals("Hello") + "");
 				}
 
 			};

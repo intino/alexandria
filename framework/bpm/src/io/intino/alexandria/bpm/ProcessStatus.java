@@ -21,20 +21,20 @@ public class ProcessStatus implements Comparable<ProcessStatus> {
 	private static final String CallbackState = "callbackState";
 	private final Message message;
 
-	public ProcessStatus(String id, String name, String processStatus) {
+	public ProcessStatus(String id, String name, Process.Status processStatus) {
 		this(new Message(ProcessStatusType)
 				.set(Ts, Instant.now().toString())
 				.set(Id, id)
 				.set(Name, name)
-				.set(Status, processStatus));
+				.set(Status, processStatus.name()));
 	}
 
-	public ProcessStatus(String id, String name, String processStatus, String owner, String callbackProcess, String callbackState) {
+	public ProcessStatus(String id, String name, Process.Status processStatus, String owner, String callbackProcess, String callbackState) {
 		this(new Message(ProcessStatusType)
 				.set(Ts, Instant.now().toString())
 				.set(Id, id)
 				.set(Name, name)
-				.set(Status, processStatus)
+				.set(Status, processStatus.name())
 				.set(Owner, owner)
 				.set(CallbackProcess, callbackProcess)
 				.set(CallbackState, callbackState));
@@ -80,8 +80,8 @@ public class ProcessStatus implements Comparable<ProcessStatus> {
 		return !message.components(State).isEmpty();
 	}
 
-	public void addStateInfo(String name, String status) {
-		message.add(new Message(State).set(Name, name).set(Status, status));
+	public void addStateInfo(String name, State.Status status) {
+		message.add(new Message(State).set(Name, name).set(Status, status.name()));
 	}
 
 	public StateInfo stateInfo() {
@@ -96,12 +96,12 @@ public class ProcessStatus implements Comparable<ProcessStatus> {
 		return hasTaskInfo() ? new TaskInfo(message.components(Task).get(0)) : null;
 	}
 
-	public void addTaskInfo(String result) {
-		message.add(new Message(Task).set(Result, result));
+	public void addTaskInfo(io.intino.alexandria.bpm.Task.Result result) {
+		message.add(new Message(Task).set(Result, result.result()));
 	}
 
-	public void addTaskInfo(String user, String duration, String result) {
-		message.add(new Message(Task).set(User, user).set(Duration, duration).set(Result, result));
+	public void addTaskInfo(String user, String duration, io.intino.alexandria.bpm.Task.Result result) {
+		message.add(new Message(Task).set(User, user).set(Duration, duration).set(Result, result.result()));
 	}
 
 	public Message message() {

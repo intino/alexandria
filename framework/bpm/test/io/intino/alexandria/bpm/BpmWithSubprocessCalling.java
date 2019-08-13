@@ -61,9 +61,9 @@ public class BpmWithSubprocessCalling extends BpmTest {
 		private Task createString() {
 			return new Task(Automatic) {
 				@Override
-				public String execute() {
+				public Result execute() {
 					memory.put(id(), Math.random() < 0.5 ? "Hello" : "Goodbye");
-					return memory.get(id());
+					return new Result(memory.get(id()));
 				}
 
 			};
@@ -72,9 +72,9 @@ public class BpmWithSubprocessCalling extends BpmTest {
 		private Task callSubprocess() {
 			return new Task(CallActivity) {
 				@Override
-				public String execute() {
-					messageHub.sendMessage(ProcessStatus, new ProcessStatus("2", "StringChecker", "Enter", "1", "1", "CallSubprocess").message());
-					return "subprocess called StringChecker";
+				public Result execute() {
+					messageHub.sendMessage(ProcessStatus, new ProcessStatus("2", "StringChecker", Status.Enter, "1", "1", "CallSubprocess").message());
+					return new Result("subprocess called StringChecker");
 				}
 			};
 		}
@@ -82,8 +82,8 @@ public class BpmWithSubprocessCalling extends BpmTest {
 		private Task handleSubprocessEnding() {
 			return new Task(Automatic) {
 				@Override
-				public String execute() {
-					return memory.get("2");
+				public Result execute() {
+					return new Result(memory.get("2"));
 				}
 			};
 		}
@@ -104,8 +104,8 @@ public class BpmWithSubprocessCalling extends BpmTest {
 		private Task checkString() {
 			return new Task(Automatic) {
 				@Override
-				public String execute() {
-					return memory.put(id(), memory.get(owner()).equals("Hello") + "");
+				public Result execute() {
+					return new Result(memory.put(id(), memory.get(owner()).equals("Hello") + ""));
 				}
 
 			};

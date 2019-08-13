@@ -10,11 +10,10 @@ import static java.util.stream.Collectors.toList;
 
 public abstract class Process {
 
-	private final String id;
 	protected final List<ProcessStatus> processStatusList = new ArrayList<>();
+	private final String id;
 	private List<Link> links = new ArrayList<>();
 	private Map<String, State> states = new HashMap<>();
-
 	protected Process(String id) {
 		this.id = id;
 	}
@@ -109,9 +108,12 @@ public abstract class Process {
 		this.processStatusList.addAll(statuses);
 	}
 
-	protected void onAbort(){}
+	protected void onAbort() {
+	}
 
 	public String finishStatus() {
 		return processStatusList.get(processStatusList.size() - 1).processStatus();
 	}
+
+	public enum Status {Enter, Running, Exit}
 }

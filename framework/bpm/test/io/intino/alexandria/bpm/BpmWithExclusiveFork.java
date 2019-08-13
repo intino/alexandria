@@ -43,7 +43,7 @@ public class BpmWithExclusiveFork extends BpmTest {
 	}
 
 	private Message createProcessMessage() {
-		return new ProcessStatus("1", "StringContentReviewer", "Enter").message();
+		return new ProcessStatus("1", "StringContentReviewer", Process.Status.Enter).message();
 	}
 
 	static class StringContentReviewerProcess extends Process {
@@ -62,8 +62,8 @@ public class BpmWithExclusiveFork extends BpmTest {
 		private Task createString() {
 			return new Task(Automatic) {
 				@Override
-				public String execute() {
-					return Math.random() < 0.5 ? "Hello" : "Goodbye";
+				public Result execute() {
+					return new Result(Math.random() < 0.5 ? "Hello" : "Goodbye");
 				}
 
 			};
@@ -72,9 +72,9 @@ public class BpmWithExclusiveFork extends BpmTest {
 		private Task checkContainsHelloTask() {
 			return new Task(Automatic) {
 				@Override
-				public String execute() {
+				public Result execute() {
 					ProcessStatus last = exitStateStatus("CreateString");
-					return last.taskInfo().result().contains("Hello") + "";
+					return new Result(last.taskInfo().result().contains("Hello") + "");
 				}
 			};
 		}
@@ -89,8 +89,8 @@ public class BpmWithExclusiveFork extends BpmTest {
 				}
 
 				@Override
-				public String execute() {
-					return "Processing hello";
+				public Result execute() {
+					return new Result("Processing hello");
 				}
 			};
 		}
@@ -99,8 +99,8 @@ public class BpmWithExclusiveFork extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				public String execute() {
-					return "Processing goodbye";
+				public Result execute() {
+					return new Result("Processing goodbye");
 				}
 			};
 		}
