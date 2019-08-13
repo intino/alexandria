@@ -5,8 +5,8 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/demo") demo as Page(homeTemplate)
 
 Template homeTemplate as Decorated
-	Icon(icon="dddd")
-	MaterialIcon(icon="dddd")
+Display dialog1 as Accessible(parameters = "user")
+Display dialog2 as Decorated Accessible(parameters = "user")
 
 Theme theme1
 	type = Normal

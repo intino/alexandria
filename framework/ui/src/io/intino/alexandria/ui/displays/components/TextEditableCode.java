@@ -24,7 +24,7 @@ public class TextEditableCode<DN extends TextEditableCodeNotifier, B extends Box
 
 	@Override
 	protected TextEditableCode<DN, B> _value(String value) {
-		super.value(value.replaceAll("&#13;", "\n").replaceAll("\\\\n", "\n"));
+		super._value(value.replaceAll("&#13;", "\n").replaceAll("\\\\n", "\n"));
 		return this;
 	}
 }

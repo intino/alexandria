@@ -10,6 +10,7 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.PassiveView.Notification;
 import io.intino.konos.model.graph.PassiveView.Request;
+import io.intino.konos.model.graph.accessible.AccessibleDisplay;
 import io.intino.konos.model.graph.avatar.datacomponents.AvatarImage;
 import io.intino.konos.model.graph.badge.BadgeBlock;
 import io.intino.konos.model.graph.checkbox.othercomponents.CheckBoxSelector;
@@ -51,7 +52,12 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	@Override
 	public FrameBuilder buildFrame() {
+		return buildFrame(false);
+	}
+
+	public FrameBuilder buildFrame(boolean accessible) {
 		FrameBuilder result = super.buildFrame();
+		if (accessible) result.add("accessible");
 		FrameBuilder extensionFrame = extensionFrame();
 		String type = type();
 		result.add("id", shortId(element));
@@ -272,6 +278,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			result.add("parent", element.asExtensionOf().parentView().name$());
 		}
 		if (type.equalsIgnoreCase("Component")) result.add("component", "component");
+		else if (element.i$(AccessibleDisplay.class)) result.add("accessible", "accessible");
 		else if (isBaseType(element) && !type.equalsIgnoreCase("Display"))
 			result.add("baseType", "baseType");
 		return result;
@@ -320,6 +327,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			result.add("parentDirectory", componentDirectoryOf(element.asExtensionOf().parentView(), false));
 		}
 		else if (typeOf(element).equalsIgnoreCase("component")) result.add("baseComponent", "");
+		else if (builder.is("accessible")) result.add("accessible", "");
 		else if (typeOf(element).equalsIgnoreCase("display")) result.add("baseDisplay", "");
 		else if (element.i$(Component.class)) result.add("component", "");
 		else if (element.i$(DecoratedDisplay.class)) result.add("abstract", "");

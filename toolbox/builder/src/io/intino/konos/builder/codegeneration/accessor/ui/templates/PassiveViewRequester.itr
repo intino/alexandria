@@ -1,16 +1,3 @@
-def type(display & accessible)
-	import Requester from "./Requester";
-
-	export default class $name+firstUpperCase~Requester extends Requester {
-		constructor(element) {
-			super(element);
-		};
-		registerPersonifiedDisplay = function(value) {
-			this.pushService.send({ op: "registerPersonifiedTemplate", s: "$name+lowercase", d: this.element.props.id, v: JSON.stringify(value)});
-		}
-	}
-end
-
 def type(display)
 	$import
 
@@ -24,6 +11,10 @@ end
 
 def attribute(extensionOf) trigger(import)
 	import $parent+firstUpperCase~Requester from "./$parent+firstUpperCase~Requester"
+end
+
+def attribute(accessible) trigger(import)
+	import Requester from "alexandria-ui-elements/gen/displays/requesters/ProxyDisplayRequester";
 end
 
 def trigger(import)
