@@ -49,6 +49,11 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
         return this;
     }
 
+    public TemporalSlider range(Instant min, Instant max) {
+        _range(min, max);
+        return this;
+    }
+
     @Override
     void notifyChange() {
         notifyCollections();

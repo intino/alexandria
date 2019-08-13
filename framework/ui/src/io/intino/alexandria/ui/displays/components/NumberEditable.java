@@ -37,7 +37,7 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
 		return readonly;
 	}
 
-	public void update(double value) {
+	public void value(double value) {
 		_value(value);
 		notifier.refresh(value);
 	}

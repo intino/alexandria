@@ -50,6 +50,16 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
         return this;
     }
 
+	public Dashboard<DN, B> serverScript(URL script) {
+		_serverScript(script);
+		return this;
+	}
+
+	public Dashboard<DN, B> uiScript(URL script) {
+		_uiScript(script);
+		return this;
+	}
+
     public Dashboard<DN, B> adminMode(boolean value) {
     	_adminMode(value);
     	return this;
