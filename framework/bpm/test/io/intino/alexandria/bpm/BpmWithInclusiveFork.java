@@ -58,8 +58,8 @@ public class BpmWithInclusiveFork extends BpmTest {
 		private Task createString() {
 			return new Task(Automatic) {
 				@Override
-				public String execute() {
-					return Math.random() < 0.5 ? "Hello:Goodbye" : "Goodbye:Hello";
+				public Result execute() {
+					return new Result(Math.random() < 0.5 ? "Hello:Goodbye" : "Goodbye:Hello");
 				}
 
 			};
@@ -69,9 +69,9 @@ public class BpmWithInclusiveFork extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				public String execute() {
+				public Result execute() {
 					String[] result = resultOfState("CreateString").split(":");
-					return result[0].equals("Hello") ? "0-Hi" : "1-Hi";
+					return new Result(result[0].equals("Hello") ? "0-Hi" : "1-Hi");
 				}
 			};
 		}
@@ -87,9 +87,9 @@ public class BpmWithInclusiveFork extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				public String execute() {
+				public Result execute() {
 					String[] result = resultOfState("CreateString").split(":");
-					return result[0].equals("Goodbye") ? "0-Bye" : "1-Bye";
+					return new Result(result[0].equals("Goodbye") ? "0-Bye" : "1-Bye");
 				}
 			};
 		}
@@ -99,10 +99,10 @@ public class BpmWithInclusiveFork extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				public String execute() {
+				public Result execute() {
 					String[] hello = resultOfState("ProcessHello").split("-");
 					String[] goodbye = resultOfState("ProcessGoodbye").split("-");
-					return hello[0].equals("0") ? hello[1] + ":" + goodbye[1] : goodbye[1] + ":" + hello[1];
+					return new Result(hello[0].equals("0") ? hello[1] + ":" + goodbye[1] : goodbye[1] + ":" + hello[1]);
 				}
 			};
 		}

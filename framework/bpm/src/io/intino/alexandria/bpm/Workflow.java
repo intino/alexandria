@@ -14,6 +14,7 @@ import java.util.stream.StreamSupport;
 
 import static io.intino.alexandria.bpm.Link.Type.Default;
 import static io.intino.alexandria.bpm.Link.Type.Exclusive;
+import static io.intino.alexandria.bpm.Process.Status.Running;
 import static io.intino.alexandria.bpm.Task.Type.Automatic;
 import static java.lang.Thread.sleep;
 import static java.util.stream.Collectors.toList;
@@ -215,8 +216,8 @@ public class Workflow {
 	private void invoke(Process process, State state) {
 		new Thread(() -> {
 			sendMessage(enterMessage(process, state));
-			String result = state.task().execute();
-			if (state.task().type() == Automatic) sendMessage(exitMessage(process, state, result));
+			Task.Result result = state.task().execute();
+			if (state.task().type() == Automatic) sendMessage(exitMessage(process, state, result.result()));
 		}).start();
 	}
 
@@ -248,7 +249,7 @@ public class Workflow {
 
 	private ProcessStatus exitMessage(Process process, State state, String result) {
 		ProcessStatus status = stateMessage(process, state, "Exit");
-		status.addTaskInfo(result);
+		status.addTaskInfo(new Task.Result(result));
 		return status;
 	}
 
@@ -261,12 +262,12 @@ public class Workflow {
 	}
 
 	private ProcessStatus stateMessage(Process process, State state, String stateStatus) {
-		ProcessStatus status = processMessage(process, "Running");
-		status.addStateInfo(state.name(), stateStatus);
+		ProcessStatus status = processMessage(process, Running);
+		status.addStateInfo(state.name(), State.Status.valueOf(stateStatus));
 		return status;
 	}
 
-	private ProcessStatus processMessage(Process process, String processStatus) {
+	private ProcessStatus processMessage(Process process, Process.Status processStatus) {
 		return new ProcessStatus(process.id(), process.name(), processStatus);
 	}
 
@@ -275,7 +276,7 @@ public class Workflow {
 	}
 
 	private ProcessStatus terminateProcessMessage(Process process) {
-		return new ProcessStatus(process.id(), process.name(), "Exit");
+		return new ProcessStatus(process.id(), process.name(), Process.Status.valueOf("Exit"));
 	}
 
 	private String stateOf(ProcessStatus status) {
