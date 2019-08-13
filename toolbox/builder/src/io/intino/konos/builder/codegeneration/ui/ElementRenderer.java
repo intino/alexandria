@@ -41,7 +41,7 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 	}
 
 	private void writeSrc(FrameBuilder builder) {
-		final String newDisplay = snakeCaseToCamelCase(element.name$());
+		final String newDisplay = displayFilename(element.name$(), builder.is("accessible") ? "Proxy" : "");
 		Template template = srcTemplate();
 		String type = typeOf(element);
 		if (template == null) return;
@@ -58,7 +58,8 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 		Template template = genTemplate();
 		String type = typeOf(element);
 		if (template == null) return;
-		final String newDisplay = snakeCaseToCamelCase((element.i$(DecoratedDisplay.class) ? "Abstract" : "") + firstUpperCase(element.name$()));
+		final String suffix = builder.is("accessible") ? "Proxy" : "";
+		final String newDisplay = displayFilename(snakeCaseToCamelCase((element.i$(DecoratedDisplay.class) ? "Abstract" : "") + firstUpperCase(element.name$())), suffix);
 		writeFrame(displayFolder(gen(), type, target), newDisplay, template.render(builder.add("gen").toFrame()));
 	}
 

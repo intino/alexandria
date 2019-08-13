@@ -27,17 +27,6 @@ def type(display & accessible)
             $parameter+map...[$NL]
             return result;
         }
-
-        @Override
-        protected void refreshBaseUrl(String url) {
-            notifier.refreshBaseUrl(url);
-        }
-
-        @Override
-        protected void refreshError(String error) {
-            notifier.refreshError(error);
-        }
-
     }
 end
 

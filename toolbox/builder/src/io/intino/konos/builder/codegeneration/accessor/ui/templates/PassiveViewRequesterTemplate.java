@@ -7,9 +7,9 @@ public class PassiveViewRequesterTemplate extends Template {
 
 	public RuleSet ruleSet() {
 		return new RuleSet().add(
-			rule().condition((allTypes("accessible","display"))).output(literal("import Requester from \"./Requester\";\n\nexport default class ")).output(mark("name", "firstUpperCase")).output(literal("Requester extends Requester {\n\tconstructor(element) {\n\t\tsuper(element);\n\t};\n\tregisterPersonifiedDisplay = function(value) {\n\t\tthis.pushService.send({ op: \"registerPersonifiedTemplate\", s: \"")).output(mark("name", "lowercase")).output(literal("\", d: this.element.props.id, v: JSON.stringify(value)});\n\t}\n}")),
 			rule().condition((type("display"))).output(mark("import")).output(literal("\n\nexport default class ")).output(mark("name", "firstUpperCase")).output(literal("Requester extends ")).output(mark("parentType")).output(literal(" {\n\tconstructor(element) {\n\t\tsuper(element);\n\t};\n\t")).output(expression().output(mark("request").multiple("\n"))).output(literal("\n}")),
 			rule().condition((attribute("extensionof")), (trigger("import"))).output(literal("import ")).output(mark("parent", "firstUpperCase")).output(literal("Requester from \"./")).output(mark("parent", "firstUpperCase")).output(literal("Requester\"")),
+			rule().condition((attribute("accessible")), (trigger("import"))).output(literal("import Requester from \"alexandria-ui-elements/gen/displays/requesters/ProxyDisplayRequester\";")),
 			rule().condition((trigger("import"))).output(literal("import Requester from \"./Requester\";")),
 			rule().condition((attribute("extensionof")), (trigger("parenttype"))).output(mark("parent", "firstUpperCase")).output(literal("Requester")),
 			rule().condition((trigger("parenttype"))).output(literal("Requester")),

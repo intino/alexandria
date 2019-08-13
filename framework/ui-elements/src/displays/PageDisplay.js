@@ -11,12 +11,4 @@ export default class PageDisplay extends AbstractPageDisplay {
 		this.requester = new PageDisplayRequester(this);
 	};
 
-	render() {
-		return (
-			<React.Fragment>
-			</React.Fragment>
-		);
-	};
-
-
 }

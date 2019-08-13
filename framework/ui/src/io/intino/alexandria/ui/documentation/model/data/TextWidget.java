@@ -4,11 +4,10 @@ import io.intino.alexandria.schemas.Property;
 import io.intino.alexandria.ui.documentation.Model;
 import io.intino.alexandria.ui.documentation.model.BaseWidget;
 
-import java.util.Collections;
-
 import static io.intino.alexandria.ui.documentation.Model.method;
 import static io.intino.alexandria.ui.documentation.Model.property;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 public class TextWidget extends BaseWidget {
@@ -34,14 +33,17 @@ public class TextWidget extends BaseWidget {
 
 	protected void addMethods() {
 		super.addMethods();
-		addMethod(method("value", Collections.emptyList(), "Returns value stored in widget", "String"));
-		addMethod(method("update", singletonList(Model.methodParameter("value", "String")), "Allows updating text value", "String"));
+		addMethod(method("value", emptyList(), "Returns value stored in widget", "String"));
+		addMethod(method("value", singletonList(Model.methodParameter("value", "String")), "Allows updating text value", "TextEditable").facets(singletonList("Editable")));
+		addMethod(method("readonly", emptyList(), "Returns true if component is readonly", "Bool").facets(singletonList("Editable")));
+		addMethod(method("readonly", singletonList(Model.methodParameter("value", "Bool")), "Allows updating readonly state. If true component is disabled for edition", "TextEditable").facets(singletonList("Editable")));
 	}
 
 	protected void addEvents() {
 		super.addEvents();
-		addEvent(method("onChange", singletonList(Model.methodParameter("listener", "io.intino.alexandria.ui.displays.events.ChangeListener")), "This event is fired when widget value changes", "void").facets(singletonList("Editable")));
-		addEvent(method("onKeyPress", singletonList(Model.methodParameter("listener", "io.intino.alexandria.ui.displays.events.KeyPressListener")), "This event is fired when widget value changes", "void").facets(singletonList("Editable")));
+		addEvent(method("onChange", singletonList(Model.methodParameter("listener", "io.intino.alexandria.ui.displays.events.ChangeListener")), "This event is fired when widget value changes", "TextEditable").facets(singletonList("Editable")));
+		addEvent(method("onKeyPress", singletonList(Model.methodParameter("listener", "io.intino.alexandria.ui.displays.events.KeyPressListener")), "This event is fired when widget user press any key", "TextEditable").facets(singletonList("Editable")));
+		addEvent(method("onEnterPress", singletonList(Model.methodParameter("listener", "io.intino.alexandria.ui.displays.events.KeyPressListener")), "This event is fired when user press 'Enter' key", "TextEditable").facets(singletonList("Editable")));
 	}
 
 	private String[] languages() {

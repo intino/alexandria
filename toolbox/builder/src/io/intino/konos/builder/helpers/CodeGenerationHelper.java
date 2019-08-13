@@ -38,7 +38,7 @@ public class CodeGenerationHelper {
 	}
 
 	public static String displayPath(String type, Target target) {
-		return type.equalsIgnoreCase("display") ? format(Displays, target) : String.format(DisplaysType, uiSubPath(target), type).toLowerCase();
+		return type.equalsIgnoreCase("display") || type.equalsIgnoreCase("AccessibleDisplay") ? format(Displays, target) : String.format(DisplaysType, uiSubPath(target), type).toLowerCase();
 	}
 
 	public static File displayRequesterFolder(File folder, Target target) {

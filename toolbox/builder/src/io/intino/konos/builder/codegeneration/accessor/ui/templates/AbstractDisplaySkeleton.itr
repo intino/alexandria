@@ -6,8 +6,8 @@ def type(display)
 	[$alexandriaComponentImport...[$NL]]
 	[$projectComponentImport...[$NL]]
 	[$parent+import]
-	[import $notDecorated+firstUpperCase~Notifier from "../notifiers/$notDecorated+firstUpperCase~Notifier";]
-	[import $notDecorated+firstUpperCase~Requester from "../requesters/$notDecorated+firstUpperCase~Requester";]
+	[import $notDecorated+firstUpperCase~Notifier from "$notifierDirectory/notifiers/$notDecorated+firstUpperCase~Notifier";]
+	[import $notDecorated+firstUpperCase~Requester from "$requesterDirectory/requesters/$notDecorated+firstUpperCase~Requester";]
 	[$displayRegistration+import]
 
 	export default class $abstract$name+firstUpperCase extends $displayExtends {
@@ -106,6 +106,10 @@ end
 
 def attribute(parent) trigger(import)
 	import Displays$parent+firstUpperCase from "../../../src/displays/$parentDirectory/$parent+firstUpperCase";
+end
+
+def attribute(accessible) trigger(import)
+	import UiDisplay from "alexandria-ui-elements/src/displays/ProxyDisplay";
 end
 
 def attribute(baseDisplay) trigger(import)
