@@ -75,8 +75,8 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 		private Task createString() {
 			return new Task(Automatic) {
 				@Override
-				public String execute() {
-					return Math.random() < 0.5 ? "Hello" : "Goodbye";
+				public Result execute() {
+					return new Result(Math.random() < 0.5 ? "Hello" : "Goodbye");
 				}
 
 			};
@@ -85,9 +85,9 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 		private Task checkContainsHelloTask() {
 			return new Task(Automatic) {
 				@Override
-				public String execute() {
+				public Result execute() {
 					ProcessStatus last = exitStateStatus("CreateString");
-					return last.taskInfo().result().contains("Hello") + "";
+					return new Result(last.taskInfo().result().contains("Hello") + "");
 				}
 			};
 		}
@@ -102,8 +102,8 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 				}
 
 				@Override
-				public String execute() {
-					return "Processing hello";
+				public Result execute() {
+					return new Result("Processing hello");
 				}
 			};
 		}
@@ -112,8 +112,8 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				public String execute() {
-					return "Processing hello2";
+				public Result execute() {
+					return new Result("Processing hello2");
 				}
 			};
 		}
@@ -122,8 +122,8 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				public String execute() {
-					return "Processing goodbye";
+				public Result execute() {
+					return new Result("Processing goodbye");
 				}
 			};
 		}
@@ -132,9 +132,9 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				public String execute() {
-					return exitStateStatus("ProcessHello2").stateInfo().status().equals("Exit") ? "hello2" :
-							exitStateStatus("ProcessGoodbye2").stateInfo().status().equals("Exit") ? "bye2" : "none";
+				public Result execute() {
+					return new Result(exitStateStatus("ProcessHello2").stateInfo().status().equals("Exit") ? "hello2" :
+							exitStateStatus("ProcessGoodbye2").stateInfo().status().equals("Exit") ? "bye2" : "none");
 				}
 			};
 		}
@@ -143,8 +143,8 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				public String execute() {
-					return "Processing goodbye2";
+				public Result execute() {
+					return new Result("Processing goodbye2");
 				}
 			};
 		}
