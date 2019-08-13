@@ -39,4 +39,5 @@ public class State {
 	}
 
 	public enum Type {Initial, Normal, Terminal}
+	public enum Status {Enter, Exit, Rejected, Skipped}
 }

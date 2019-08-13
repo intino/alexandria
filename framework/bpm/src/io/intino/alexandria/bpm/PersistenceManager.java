@@ -73,7 +73,10 @@ public interface PersistenceManager {
 
 		@Override
 		public List<String> list(String path) {
-			return content.keySet().stream().filter(k -> !k.equals(path) && k.startsWith(path)).collect(toList());
+			return content.keySet().stream()
+					.filter(k -> !k.equals(path) && k.startsWith(path))
+					.map(p -> p.substring(path.length()))
+					.collect(toList());
 		}
 
 		@Override
