@@ -1,5 +1,6 @@
 dsl Proteo
 
+use Services
 use Datalake
 
 Concept Task
@@ -31,15 +32,3 @@ Facet ShutdownTrigger extends Scheduled on Task
 Facet DirectorySentinel on Task
 	var string directory
 	var word[]:{OnCreate OnDelete OnModify} events
-
-Facet ProcessSentinel on Task
-	var string processName
-	var word[]:{OnStart OnTerminate} events
-	var function:ProcessChecker check
-
-Facet JMSQueueSentinel on Task
-	var string queue
-
-Facet JMSTopicSentinel on Task
-	var string topic
-

@@ -240,7 +240,7 @@
         </dependency>
         <dependency>
             <groupId>io.intino.alexandria</groupId>
-            <artifactId>bpm</artifactId>
+            <artifactId>bpm-framework</artifactId>
             <version>LATEST</version>
         </dependency>
         <dependency>

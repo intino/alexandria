@@ -12,6 +12,7 @@ import io.intino.konos.model.graph.realtime.RealtimeMounter;
 import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.slackbot.SlackBotService;
 import io.intino.konos.model.graph.sshmirrored.SshMirroredDatalake;
+import io.intino.konos.model.graph.taskinbox.TaskInboxService;
 import io.intino.konos.model.graph.ui.UIService;
 import io.intino.plugin.project.LegioConfiguration;
 import io.intino.tara.compiler.shared.Configuration;
@@ -143,6 +144,7 @@ public class AbstractBoxRenderer extends Renderer {
 		rest(builder, name);
 		jms(builder, name);
 		jmx(builder, name);
+		taskInbox(builder, name);
 		slackServices(builder, name);
 		if (!graph.rESTServiceList().isEmpty() || !graph.uIServiceList().isEmpty()) builder.add("spark", "stop");
 		ui(builder, name);
@@ -164,6 +166,11 @@ public class AbstractBoxRenderer extends Renderer {
 	private void jms(FrameBuilder frame, String name) {
 		for (JMSService service : graph.jMSServiceList())
 			frame.add("service", new FrameBuilder("service", "jms").add("name", service.name$()).add("configuration", name));
+	}
+
+	private void taskInbox(FrameBuilder frame, String name) {
+		for (TaskInboxService service : graph.taskInboxServiceList())
+			frame.add("service", new FrameBuilder("service", "taskInbox").add("name", service.name$()).add("configuration", name).add("package", packageName()));
 	}
 
 	private void jmx(FrameBuilder frame, String name) {

@@ -59,6 +59,7 @@ def type(box)
 			initDatalake();
 			initMessageHub();
 			initJMSServices();
+			initTaskInboxService();
 			initTasks();
 			initSlackBots();
 			initWorkflow();
@@ -119,6 +120,10 @@ def type(box)
 			[$messagehub+init]
 		}
 
+		private void initTaskInboxService() {
+			$service+taskInbox...[$NL]
+		}
+
 		private void initTasks() {
 			[$task+init...[$NL]]
 		}
@@ -151,6 +156,7 @@ end
 def type(datalake) trigger(import)
 	import io.intino.alexandria.datalake.Datalake;
 end
+
 def type(messageHub) trigger(import)
 	import io.intino.alexandria.message.MessageHub;
 end
@@ -223,6 +229,11 @@ def type(service & jms) trigger(init)
 	Logger.info("JMS service $name: started!");
 end
 
+def type(service & taskInbox) trigger(taskInbox)
+	this.$name+SnakeCaseToCamelCase+firstLowerCase = new $package.taskinbox.$name+SnakeCaseToCamelCase+firstUpperCase~Service(this.messageHub, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	Logger.info("Task Inbox service $name: started!");
+end
+
 def type(task) trigger(init)
 	Tasks.init(this.scheduler, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
@@ -264,6 +275,10 @@ def type(service & jms) trigger(field)
 	private $name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase;
 end
 
+def type(service & taskInbox) trigger(field)
+	private $package.taskinbox.$name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase;
+end
+
 def type(task) trigger(field)
 	private io.intino.alexandria.scheduler.AlexandriaScheduler scheduler = new io.intino.alexandria.scheduler.AlexandriaScheduler();
 end
@@ -286,6 +301,12 @@ end
 
 def type(service & jms) trigger(getter)
 	public $name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase() {
+		return $name+SnakeCaseToCamelCase+firstlowerCase;
+	}
+end
+
+def type(service & taskInbox) trigger(getter)
+	public $package.taskinbox.$name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase() {
 		return $name+SnakeCaseToCamelCase+firstlowerCase;
 	}
 end
