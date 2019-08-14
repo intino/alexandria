@@ -23,6 +23,7 @@ import io.intino.konos.builder.codegeneration.services.jmx.JMXServerRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTResourceRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
+import io.intino.konos.builder.codegeneration.services.taskinbox.TaskInboxRenderer;
 import io.intino.konos.builder.codegeneration.task.SchedulerRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
@@ -70,6 +71,7 @@ public class FullRenderer {
 		mounters();
 		adapters();
 		feeders();
+		tasnkinbox();
 		processes();
 		slack();
 		ui();
@@ -121,6 +123,11 @@ public class FullRenderer {
 
 	private void adapters() {
 		new AdapterRenderer(settings, graph).execute();
+	}
+
+
+	private void tasnkinbox() {
+		new TaskInboxRenderer(settings, graph).execute();
 	}
 
 	private void processes() {

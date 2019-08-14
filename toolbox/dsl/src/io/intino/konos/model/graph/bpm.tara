@@ -1,4 +1,6 @@
 dsl Proteo
 
+use DataTypes
+
 Concept:Named:MessageHubNeeded Process
 	var resource bpmn

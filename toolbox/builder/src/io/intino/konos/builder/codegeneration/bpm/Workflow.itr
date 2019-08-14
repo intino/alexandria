@@ -9,9 +9,12 @@ def type(workflow)
 	import java.io.File;
 
 	public class Workflow extends io.intino.alexandria.bpm.Workflow {
+
 		public Workflow($box+FirstUpperCase~Box box, File workspace) {
 			super(box.messageHub(), factory(box), new PersistenceManager.FilePersistenceManager(new File(workspace, "bpm")));
 		}
+
+		$process+publicMethod...[$NL]
 
 		private static ProcessFactory factory($box+FirstUpperCase~Box box) {
 			return (id, name) -> {
@@ -21,17 +24,15 @@ def type(workflow)
 				return null;
 			};
 		}
-
-		$process+method...[$NL]
 	}
 end
 
-def trigger(method)
-	public void launch$this+firstUpperCase() {
-		messageHub.sendMessage("$unit.ProcessStatus", new ProcessStatus(java.util.UUID.randomUUID().toString(), "$this", "Enter").message());
+def trigger(publicMethod)
+	public void launch$name+firstUpperCase() {
+		messageHub.sendMessage("ProcessStatus", new ProcessStatus(java.util.UUID.randomUUID().toString(), "$name", io.intino.alexandria.bpm.Process.Status.Enter).message());
 	}
 end
 
 def trigger(process)
-	case "$this": return new $this+firstUpperCase(box, id);
+	case "$name": return new $name+firstUpperCase(box, id);
 end

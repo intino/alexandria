@@ -1,0 +1,80 @@
+def type(service)
+	package $package.taskinbox;
+
+	import io.intino.alexandria.message.MessageHub;
+	import io.intino.alexandria.logger.Logger;
+	import io.intino.alexandria.bpm.ProcessStatus;
+	import java.io.IOException;
+	import $package.$box+firstUpperCase~Box;
+
+	public class $name+firstUpperCase~Service {
+
+		private $box+firstUpperCase~Box box;
+		private final MessageHub messageHub;
+
+		public $name+firstUpperCase~Service(MessageHub messageHub, $box+firstUpperCase~Box box) {
+			this.box = box;
+			this.messageHub = messageHub;
+			registerInbox();
+		}
+
+		private void registerInbox() {
+		messageHub.attachListener("Task", "$box+lowercase-task", message -> {
+        		String name = message.get("name").data();
+        		$inbox+listener...[$NL]
+        	});
+        	messageHub.attachListener("ProcessStatus", message -> {
+        		ProcessStatus status = new ProcessStatus(message);
+        		if (!status.hasCallback()) return;
+        		String callback = message.get("callback").data();
+        		Object data = dispatcher(status.processName()).onResponse();
+        		io.intino.alexandria.message.Message result = new io.intino.alexandria.message.Message(callback.substring(callback.lastIndexOf(".") + 1))
+        			.set("callbackProcess", status.callbackProcess())
+        			.set("callbackState", status.callbackState())
+        			.set("data", io.intino.alexandria.Json.toString(data));
+        		((MessageHub) messageHub).sendMessage(callback, result); //ROOT MESSAGE
+        	});
+		}
+
+		$inbox+method...[$NL]
+
+		private InboxDispatcher dispatcher(String name) {
+			$inbox+select
+			return null;
+		}
+
+		public interface InboxDispatcher<Request, Response> {
+			void onRequest(Request request);
+			Response onResponse();
+		}
+	}
+end
+
+def type(inbox & process) trigger(method)
+	private void launch$process+firstUpperCase(String owner, String callback, String callbackProcess, String callbackState) {
+		messageHub.sendMessage("ProcessStatus", new ProcessStatus(java.util.UUID.randomUUID().toString(), "$process", io.intino.alexandria.bpm.Process.Status.Enter, owner, callbackProcess, callbackState).message().set("callback", callback));
+	}
+end
+
+def trigger(select)
+	if (name.equalsIgnoreCase("$name")) return new $name+FirstUpperCase(box);
+end
+
+def type(inbox & process) trigger(listener)
+	if (name.equalsIgnoreCase("$process")) {
+		String callbackData = message.get("callback").data();
+		io.intino.alexandria.bpm.Callback callback = io.intino.alexandria.bpm.Callback.from(callbackData);
+		InboxDispatcher dispatcher = dispatcher(name);
+		if (dispatcher == null) return;
+		dispatcher(name).onRequest(io.intino.alexandria.Json.fromString(message.get("data").data(), $input+resolve.class));
+		launch$process+firstUpperCase(message.get("owner").data(), callback.value(), callback.requesterId(), callback.requesterState());
+	}
+end
+
+def type(list) trigger(resolve)
+	java.util.List<$value>
+end
+
+def trigger(resolve)
+	$value
+end
