@@ -19,7 +19,7 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 	public void name() throws InterruptedException {
 		MessageHub_ messageHub = new MessageHub_();
 		PersistenceManager.InMemoryPersistenceManager persistence = new PersistenceManager.InMemoryPersistenceManager();
-		new Workflow(messageHub, (id, name) -> new StringContentReviewerProcess(id), persistence);
+		new Workflow(messageHub, (id, name) -> new StringContentReviewerProcess(id), persistence, null);
 		messageHub.sendMessage("ProcessStatus", createProcessMessage());
 		waitForProcess(persistence);
 		List<ProcessStatus> messages = messagesOf(persistence.read("finished/1.process"));
