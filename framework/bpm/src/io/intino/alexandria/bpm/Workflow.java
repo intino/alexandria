@@ -21,23 +21,24 @@ import static java.util.stream.Collectors.toList;
 
 
 public class Workflow {
-	public static final String Channel = "ProcessStatus";
+	private final String channel;
 	protected final MessageHub messageHub;
 	private final PersistenceManager persistence;
 	private ProcessFactory factory;
 	private Map<String, Process> processes = new ConcurrentHashMap<>();
 	private Set<String> advancingProcesses = new HashSet<>();
 
-	public Workflow(MessageHub messageHub, ProcessFactory factory) {
-		this(messageHub, factory, new InMemoryPersistenceManager());
+	public Workflow(MessageHub messageHub, ProcessFactory factory, String domain) {
+		this(messageHub, factory, new InMemoryPersistenceManager(), domain);
 	}
 
-	public Workflow(MessageHub messageHub, ProcessFactory factory, PersistenceManager persistence) {
+	public Workflow(MessageHub messageHub, ProcessFactory factory, PersistenceManager persistence, String domain) {
 		this.messageHub = messageHub;
 		this.persistence = persistence;
 		this.factory = factory;
 		loadActiveProcesses();
-		this.messageHub.attachListener(Channel, Workflow.this::process);
+		this.channel = domain == null || domain.isEmpty() ? "ProcessStatus" : domain + "." + "ProcessStatus";
+		this.messageHub.attachListener(channel, Workflow.this::process);
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			while (!advancingProcesses.isEmpty()) {
 				try {
@@ -223,7 +224,7 @@ public class Workflow {
 
 	private void sendMessage(ProcessStatus status) {
 		processes.get(status.processId()).register(status);
-		messageHub.sendMessage(Channel, status.message());
+		messageHub.sendMessage(channel, status.message());
 	}
 
 	private void sendRejectionMessage(Process process, Link link) {
