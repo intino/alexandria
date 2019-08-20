@@ -51,6 +51,12 @@ public class Workflow {
 		}));
 	}
 
+	public void exitState(String processId, String processName, String stateName, Task.Result result){
+		messageHub.sendMessage(channel, new ProcessStatus(processId, processName, Running)
+				.addStateInfo(stateName, State.Status.Exit)
+				.addTaskInfo(result).message());
+	}
+
 	private void loadActiveProcesses() {
 		persistence.list("active/").forEach(path -> {
 			List<ProcessStatus> statuses = messagesOf("active/" + path);

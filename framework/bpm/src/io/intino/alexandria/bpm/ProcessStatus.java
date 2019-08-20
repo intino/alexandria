@@ -81,8 +81,9 @@ public class ProcessStatus implements Comparable<ProcessStatus> {
 		return !message.components(State).isEmpty();
 	}
 
-	public void addStateInfo(String name, State.Status status) {
+	public ProcessStatus addStateInfo(String name, State.Status status) {
 		message.add(new Message(State).set(Name, name).set(Status, status.name()));
+		return this;
 	}
 
 	public StateInfo stateInfo() {
@@ -97,8 +98,9 @@ public class ProcessStatus implements Comparable<ProcessStatus> {
 		return hasTaskInfo() ? new TaskInfo(message.components(Task).get(0)) : null;
 	}
 
-	public void addTaskInfo(io.intino.alexandria.bpm.Task.Result result) {
+	public ProcessStatus addTaskInfo(io.intino.alexandria.bpm.Task.Result result) {
 		message.add(new Message(Task).set(Result, result.result()));
+		return this;
 	}
 
 	public void addTaskInfo(String user, String duration, io.intino.alexandria.bpm.Task.Result result) {
