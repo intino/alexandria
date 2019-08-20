@@ -7,7 +7,7 @@ Artifact("io.intino.alexandria", "1.0.0") ingestion
 		Compile("io.intino.alexandria", "zet", "1.0.5")
 		Compile("io.intino.alexandria", "tris", "1.0.0")
 		Test("junit", "junit", "LATEST")
-	Package(ModulesAndLibrariesLinkedByManifest)
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.release)
 
 Repository("intino-maven") intino

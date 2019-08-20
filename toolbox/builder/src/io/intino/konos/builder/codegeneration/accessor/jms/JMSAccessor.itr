@@ -12,16 +12,37 @@ def type(accessor)
 	public class $name+snakeCaseToCamelCase+firstUpperCase~Accessor {
 
 		private final Session session;
+		private static final String businessUnit = "$businessUnit";
 		$custom+field...[$NL]
 
 		public $name+snakeCaseToCamelCase+firstUpperCase~Accessor(Session session[, $custom+signature...[, ]]) {
 			this.session = session;
 			$custom+assign...[$NL]
+			$request+putTypes...[$NL$NL]
 		}
 
 		$request...[$NL$NL]
 
 		$request+interface...[$NL$NL]
+
+		[@Override
+		public void trigger(String name, String callback, Object data) {
+			Message taskMessage = new Message("Task").set("name", name).set("callback", callback).set("data", io.intino.alexandria.Json.toString(data));
+			messageHub.sendMessage(this.businessUnit + ".Task", taskMessage);
+		}
+
+		@Override
+		public void subscribeToTasks(Consumer<Message> consumer) {
+			messageHub.attachListener("TaskFinished", consumer)$hasProcess
+		}
+		]
+		public <T> Class<T> outputOf(String task) {
+			return (Class<T>) outputs.getOrDefault(task, null);
+		}
+
+		public Class inputOf(String task) {
+			return (Class<T>) inputs.getOrDefault(task, null);
+		}
 
 		private static String createRandomString() {
 			java.util.Random random = new java.util.Random(System.currentTimeMillis());
@@ -47,7 +68,7 @@ def type(accessor)
 	}
 end
 
-def type(request & reply) trigger(interface)
+def type(request & reply) !type(process) trigger(interface)
 	public interface $name+firstUpperCase~Response extends MessageListener {
 
 		void callback($reply+return value);
@@ -65,7 +86,12 @@ end
 def type(request) trigger(interface)
 end
 
-def type(request & reply)
+def type(request & process) trigger(putTypes)
+	inputs.put("$name", [$parameter+type.class? null]);
+	outputs.put("$name", [$reply+Return~.class? null]);
+end
+
+def type(request & reply) !type(process)
 	public MessageConsumer $name([$parameter+signature...[, ], ]$name+firstUpperCase~Response callback) throws JMSException {
 		Destination temporaryQueue = session.createTemporaryQueue();
 		MessageConsumer consumer = session.createConsumer(temporaryQueue);
@@ -83,6 +109,9 @@ def type(request & reply)
 	private void fill$name+firstUpperCase($messageType~Message message[, $parameter+signature...[, ]]) throws JMSException {
 		$parameter+assign...[$NL]
 	}
+end
+
+def type(request & process)
 end
 
 def !type(parameter) trigger(field)
@@ -117,6 +146,10 @@ end
 
 def type(parameter & list) trigger(signature)
 	java.util.List<$type> $name+snakeCaseToCamelCase+firstLowerCase
+end
+
+def type(parameter) trigger(type)
+	$type+FirstUpperCase
 end
 
 def type(parameter) trigger(signature)

@@ -17,7 +17,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.commons:commons-io:1.3.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:driver-r:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: io.intino.alexandria:logger:2.1.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:logger4j:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.locationtech.jts:jts-core:1.16.1" level="project" />
     <orderEntry type="module" module-name="builder" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: tara.dsl:konos:1.0.0" level="project" />
@@ -119,7 +118,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:jmx:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: io.intino.alexandria:logger:2.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:core-framework:2.0.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:json:1.0.1" level="project" />
+    <orderEntry type="library" name="Maven: io.intino.alexandria:json:1.0.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.ness:ingestion-lib:2.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.ness:datalake:2.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:zim:1.0.6" level="project" />

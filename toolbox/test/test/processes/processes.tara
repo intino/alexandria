@@ -1,16 +1,47 @@
 dsl Konos
 
-Service taskManager as TaskInbox
-	Inbox helloWorldInbox as ProcessTrigger(helloWorld)
-		Input input as Object(Budget)
-    	Output as LongInteger
+MessageHub messageHub as JmsBus("{bus}", "{bus-user}", "{bus-password}", "{bus-client-id}")
 
+Service ProcessInbox as JMS(messageHub)
+	Request("service.consul.{serverId}.status") status
+		Response as Object(ServerStatus)
+	Request("service.consul.{serverId}.reboot") reboot
+		Response as Bool
+	Request("service.consul.{serverId}.deploy") task as ProcessTrigger(helloWorld)
+		Parameter process as Object(ProcessSchema)
+		Response as Object(schema = DeployResult)
 
+BusinessUnit("unit1") unit
 Process(bpmn = "service.bpmn") service
-
 Process(bpmn = "helloworld.bpmn") helloWorld
 
 Schema Budget
 	Attribute total as Real
 
-MessageHub messageHub as JmsBus(url = "tcp://localhost:63000", user = "user1", password = "1234", clientId = "")
+Schema ProcessSchema
+	Attribute project as Text
+	Attribute name as Text
+	Attribute classpathPrefix as Text
+	Attribute jmxPort as Integer
+	Attribute artifact as Text
+	Attribute requiredMemory as Integer
+		defaultValue = 512
+	Schema Parameter
+		Attribute name as Text
+		Attribute value as Text
+	Schema JVMParameter
+		Attribute value as Text
+
+Schema ServerStatus
+	Attribute ts as DateTime
+	Attribute id as Text
+	Attribute memory as Real
+	Attribute hdd as Real
+	Attribute cpu as Real
+	Attribute kernelTemperature as Real
+	Attribute temperature as Real
+	Attribute inboundConnections as Integer
+	Attribute outboundConnections as Integer
+Schema DeployResult
+	Attribute success as Bool(defaultValue = true)
+	Attribute remarks as Text

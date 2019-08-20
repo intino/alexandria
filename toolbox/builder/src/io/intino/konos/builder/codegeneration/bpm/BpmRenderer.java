@@ -4,6 +4,7 @@ import io.intino.alexandria.logger.Logger;
 import io.intino.bpmparser.BpmnParser;
 import io.intino.bpmparser.Link;
 import io.intino.bpmparser.State;
+import io.intino.bpmparser.Task;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Renderer;
@@ -32,10 +33,13 @@ public class BpmRenderer extends Renderer {
 	private final List<Process> processes;
 	private final File src;
 	private final File gen;
+	private final String businessUnit;
+	private List<String> stateServices = new ArrayList<>();
 
 	public BpmRenderer(Settings settings, KonosGraph graph) {
 		super(settings, Target.Owner);
 		this.settings = settings;
+		this.businessUnit = graph.businessUnit().name();
 		this.processes = graph.processList();
 		this.src = new File(settings.src(Target.Owner), "bpm");
 		this.gen = new File(settings.gen(Target.Owner), "bpm");
@@ -49,7 +53,7 @@ public class BpmRenderer extends Renderer {
 
 	private void renderBpm() {
 		if (processes.isEmpty()) return;
-		FrameBuilder builder = new FrameBuilder("workflow").add("box", settings.boxName()).add("package", settings.packageName()).add(settings.boxName()).add("process", processes.stream().map(p -> frameOf(p)).toArray(Frame[]::new));
+		FrameBuilder builder = new FrameBuilder("workflow").add("box", settings.boxName()).add("package", settings.packageName()).add("businessUnit", businessUnit).add(settings.boxName()).add("process", processes.stream().map(p -> frameOf(p)).toArray(Frame[]::new));
 		writeFrame(gen, "Workflow", customize(new WorkflowTemplate()).render(builder.toFrame()));
 	}
 
@@ -59,9 +63,11 @@ public class BpmRenderer extends Renderer {
 
 	private void renderProcesses() {
 		for (Process process : processes) {
+			stateServices.clear();
 			final FrameBuilder builder = new FrameBuilder("process").
 					add("box", settings.boxName()).
 					add("package", settings.packageName()).
+					add("businessUnit", businessUnit).
 					add("name", process.name$());
 			File file = new File(process.bpmn().getFile());
 			if (!file.exists()) continue;
@@ -69,6 +75,8 @@ public class BpmRenderer extends Renderer {
 				BpmnParser bpmnParser = new BpmnParser(new FileInputStream(file));
 				State initial = bpmnParser.getNodeWalker().getInitial().links().get(0).state().type(Initial);
 				walk(builder, process, initial);
+				for (String stateService : stateServices)
+					builder.add("accessor", new FrameBuilder("accessor").add("name", stateService));
 				settings.classes().put(process.getClass().getSimpleName() + "#" + process.name$(), "bpm." + process.name$());
 				writeFrame(gen, "Abstract" + firstUpperCase(process.name$()), customize(new ProcessTemplate()).render(builder.toFrame()));
 				if (!alreadyRendered(src, process.name$()))
@@ -83,8 +91,8 @@ public class BpmRenderer extends Renderer {
 		Map<String, FrameBuilder> states = new LinkedHashMap<>();
 		Map<String, FrameBuilder> links = new LinkedHashMap<>();
 		framesFrom(initial, process, states, links);
-		builder.add("state", states.values().toArray(new FrameBuilder[0]));
-		builder.add("link", links.values().toArray(new FrameBuilder[0]));
+		builder.add("state", states.values().toArray(new FrameBuilder[0]))
+				.add("link", links.values().toArray(new FrameBuilder[0]));
 	}
 
 	private void framesFrom(State state, Process process, Map<String, FrameBuilder> states, Map<String, FrameBuilder> links) {
@@ -101,11 +109,14 @@ public class BpmRenderer extends Renderer {
 		FrameBuilder builder = new FrameBuilder("state").add("name", state.name());
 		if (!types.contains(State.Type.Intermediate))
 			builder.add("type", types.stream().map(Enum::name).toArray(String[]::new));
-		if (state.task() != null)
-			builder.add("taskType", state.task().type().name())
+		if (state.task() != null) {
+			if (state.task().type().equals(Task.Type.Service)) stateServices.add(state.name());
+			builder.add(state.task().type().name())
+					.add("taskType", state.task().type().name())
 					.add("taskName", state.task().id())
-					.add("domain", "TODO")
-					.add("process", process.name$()).add(state.task().type().name());
+					.add("businessUnit", businessUnit)
+					.add("process", process.name$());
+		}
 		if (types.contains(Terminal)) state.type(Terminal).links().clear();
 		return builder;
 	}

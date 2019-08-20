@@ -7,7 +7,7 @@ Artifact("io.intino.alexandria", "1.0.0") sealing
 		Compile("io.intino.alexandria", "mapp", "1.0.0")
 		Test("io.intino.alexandria", "ingestion", "1.0.0")
 		Test("junit", "junit", "LATEST")
-	Package(ModulesAndLibrariesLinkedByManifest)
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.release)
 
 Repository("intino-maven") intino

@@ -37,7 +37,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -59,7 +58,7 @@ class AccessorsPublisher {
 
 	AccessorsPublisher(Settings settings, KonosGraph graph) {
 		this.settings = settings;
-		configuration = TaraUtil.configurationOf(settings.module());
+		this.configuration = TaraUtil.configurationOf(settings.module());
 		this.graph = graph;
 		try {
 			this.root = Files.createTempDirectory(KONOS).toFile();
@@ -69,42 +68,60 @@ class AccessorsPublisher {
 		}
 	}
 
-	void publish() {
-		if (configuration == null) return;
-		if (graph == null) {
-			notify("Box has errors. Check problems view for more information", INFORMATION);
-			return;
-		}
+	void install() {
 		List<Service> services = collectServices();
-		if (services.isEmpty()) {
-			notify("No services found in module", INFORMATION);
-			return;
-		}
-		if (services.size() > 1)
-			services = new SelectServicesDialog(WindowManager.getInstance().suggestParentWindow(module().getProject()), services).showAndGet();
+		if (!createSources(services)) return;
 		try {
-			createSources(services);
-			if (configuration.distributionReleaseRepository() == null) {
-				notify("There isn't distribution repository defined", ERROR);
-				return;
-			}
-			mvn(services, configuration);
+			mvn(services, configuration, "");
 		} catch (IOException | MavenInvocationException e) {
 			notifyError(e.getMessage());
 			LOG.error(e.getMessage());
 		}
 	}
 
+	void publish() {
+		List<Service> services = collectServices();
+		if (!createSources(services)) return;
+		try {
+			mvn(services, configuration, "deploy");
+		} catch (IOException | MavenInvocationException e) {
+			notifyError(e.getMessage());
+			LOG.error(e.getMessage());
+		}
+	}
+
+	private boolean createSources(List<Service> services) {
+		if (configuration == null) return false;
+		if (graph == null) {
+			notify("Box has errors. Check problems view for more information", INFORMATION);
+			return false;
+		}
+		if (services.isEmpty()) {
+			notify("No services found in module", INFORMATION);
+			return false;
+		}
+		if (services.size() > 1)
+			services = new SelectServicesDialog(WindowManager.getInstance().suggestParentWindow(module().getProject()), services).showAndGet();
+		rest(services);
+		jms(services);
+		jmx(services);
+		if (configuration.distributionReleaseRepository() == null) {
+			notify("There isn't distribution repository defined", ERROR);
+			return false;
+		}
+		return true;
+	}
+
 	private List<Service> collectServices() {
 		return graph.serviceList().stream().filter(s -> !s.isUI() && !s.isSlackBot()).collect(Collectors.toList());
 	}
 
-	private void mvn(List<Service> services, Configuration conf) throws MavenInvocationException, IOException {
+	private void mvn(List<Service> services, Configuration conf, String goal) throws MavenInvocationException, IOException {
 		final File[] files = root.listFiles(File::isDirectory);
 		for (File file : files != null ? files : new File[0]) {
 			final Service service = services.stream().filter(s -> s.name$().equals(file.getName())).findFirst().orElse(null);
 			final File pom = createPom(file, service, conf.groupId(), file.getName() + ACCESSOR, conf.version());
-			final InvocationResult result = invoke(pom);
+			final InvocationResult result = invoke(pom, goal);
 			if (result != null && result.getExitCode() != 0) {
 				if (result.getExecutionException() != null)
 					throw new IOException("Failed to publish accessor.", result.getExecutionException());
@@ -114,9 +131,11 @@ class AccessorsPublisher {
 		}
 	}
 
-	private InvocationResult invoke(File pom) throws MavenInvocationException, IOException {
+	private InvocationResult invoke(File pom, String goal) throws MavenInvocationException, IOException {
 		final String ijMavenHome = MavenProjectsManager.getInstance(module().getProject()).getGeneralSettings().getMavenHome();
-		InvocationRequest request = new DefaultInvocationRequest().setPomFile(pom).setGoals(Arrays.asList("clean", "install", "deploy"));
+		List<String> goals = Arrays.asList("clean", "install");
+		if (!goal.isEmpty()) goals.add(goal);
+		InvocationRequest request = new DefaultInvocationRequest().setPomFile(pom).setGoals(goals);
 		final File mavenHome = resolveMavenHomeDirectory(ijMavenHome);
 		if (mavenHome == null) return null;
 		LOG.info("Maven HOME: " + mavenHome.getAbsolutePath());
@@ -126,7 +145,7 @@ class AccessorsPublisher {
 		return invoker.execute(request);
 	}
 
-	private void log(Invoker invoker) throws IOException {
+	private void log(Invoker invoker) {
 		invoker.setErrorHandler(LOG::error);
 		invoker.setOutputHandler(this::publish);
 	}
@@ -149,11 +168,6 @@ class AccessorsPublisher {
 		if (sdk != null && sdk.getHomePath() != null) request.setJavaHome(new File(sdk.getHomePath()));
 	}
 
-	private void createSources(List<Service> services) {
-		rest(services);
-		jms(services);
-		jmx(services);
-	}
 
 	private void rest(List<Service> services) {
 		services.stream().filter(Service::isREST).forEach(s -> {
@@ -164,11 +178,10 @@ class AccessorsPublisher {
 	}
 
 	private void jms(List<Service> services) {
-		List<String> sources = new ArrayList<>();
 		services.stream().filter(Service::isJMS).forEach(s -> {
 			File sourcesDestiny = new File(new File(root, s.asJMS().name$() + File.separator + "src"), packageName().replace(".", File.separator));
 			sourcesDestiny.mkdirs();
-			new JMSAccessorRenderer(settings, s.asJMS(), sourcesDestiny).execute();
+			new JMSAccessorRenderer(settings, s.asJMS(), graph.businessUnit(), sourcesDestiny).execute();
 		});
 	}
 

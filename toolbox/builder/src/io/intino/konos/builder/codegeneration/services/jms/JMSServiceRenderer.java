@@ -7,6 +7,7 @@ import io.intino.itrules.formatters.StringFormatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.model.graph.BusinessUnit;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Parameter;
 import io.intino.konos.model.graph.jms.JMSService;
@@ -20,10 +21,12 @@ import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class JMSServiceRenderer extends Renderer {
 	private final List<JMSService> services;
+	private final BusinessUnit businessUnit;
 
 	public JMSServiceRenderer(Settings settings, KonosGraph graph) {
 		super(settings, Target.Owner);
 		this.services = graph.jMSServiceList();
+		this.businessUnit = graph.businessUnit();
 	}
 
 	@Override
@@ -32,13 +35,19 @@ public class JMSServiceRenderer extends Renderer {
 	}
 
 	private void processService(JMSService service) {
-		writeFrame(gen(), nameOf(service), template().render(new FrameBuilder("jms").
+		FrameBuilder builder = new FrameBuilder("jms").
 				add("name", service.name$()).
 				add("box", boxName()).
 				add("package", packageName()).
+				add("businessUnit", businessUnit != null ? businessUnit.name() : "").
 				add("model", service.subscriptionModel().name()).
 				add("request", processRequests(service.requestList(), service.subscriptionModel().name())).
-				add("notification", processNotifications(service.notificationList(), service.subscriptionModel().name())).toFrame()));
+				add("notification", processNotifications(service.notificationList(), service.subscriptionModel().name()));
+		if (service.requestList().stream().anyMatch(JMSService.Request::isProcessTrigger))
+			builder.add("hasProcess", ";");
+		if (!service.graph().schemaList().isEmpty())
+			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
+		writeFrame(gen(), nameOf(service), template().render(builder.toFrame()));
 	}
 
 	@NotNull
@@ -51,10 +60,14 @@ public class JMSServiceRenderer extends Renderer {
 	}
 
 	private Frame processRequest(JMSService.Request request, String subscriptionModel) {
-		return new FrameBuilder("request").
+		FrameBuilder builder = new FrameBuilder("request").
 				add("name", request.name$()).
 				add("model", subscriptionModel).
-				add("queue", customize("queue", request.path())).toFrame();
+				add("parameter", parameters(request.parameterList())).
+				add("queue", customize("queue", request.path()));
+		if (request.isProcessTrigger())
+			builder.add("process").add("process", request.asProcessTrigger().process().name$()).add("package", packageName());
+		return builder.toFrame();
 	}
 
 	private Frame[] processNotifications(List<JMSService.Notification> notifications, String subscriptionModel) {

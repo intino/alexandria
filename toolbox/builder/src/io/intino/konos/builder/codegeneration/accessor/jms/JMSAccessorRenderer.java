@@ -8,6 +8,7 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.graph.BusinessUnit;
 import io.intino.konos.model.graph.Parameter;
 import io.intino.konos.model.graph.jms.JMSService;
 
@@ -20,11 +21,13 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
 public class JMSAccessorRenderer extends Renderer {
 	private final JMSService service;
+	private final BusinessUnit businessUnit;
 	private File destination;
 
-	public JMSAccessorRenderer(Settings settings, JMSService application, File destination) {
+	public JMSAccessorRenderer(Settings settings, JMSService application, BusinessUnit businessUnit, File destination) {
 		super(settings, Target.Owner);
 		this.service = application;
+		this.businessUnit = businessUnit;
 		this.destination = destination;
 	}
 
@@ -38,9 +41,11 @@ public class JMSAccessorRenderer extends Renderer {
 		FrameBuilder builder = new FrameBuilder("accessor");
 		builder.add("name", jmsService.name$());
 		builder.add("package", packageName());
+		builder.add("businessUnit", businessUnit.name());
 		if (!jmsService.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
 		final List<JMSService.Request> requests = jmsService.core$().findNode(JMSService.Request.class);
+		if (requests.stream().anyMatch(JMSService.Request::isProcessTrigger)) builder.add("hasProcess", ";");
 		final Set<String> customParameters = extractCustomParameters(requests);
 		builder.add("request", requests.stream().map(request -> processRequest(request, customParameters).toFrame()).toArray(Frame[]::new));
 		for (String parameter : customParameters) builder.add("custom", parameter);

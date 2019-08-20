@@ -1,0 +1,8 @@
+dsl Proteo
+
+use DataTypes
+
+Concept:{0..1} BusinessUnit
+	var string name
+Concept:Named:BusinessUnitNeeded:MessageHubNeeded Process
+	var resource bpmn

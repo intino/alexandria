@@ -18,10 +18,19 @@
     },
     {
       "id": "PublishAccessors",
-      "aClass": "io.intino.konos.builder.actions.PublishAccessorAction",
+      "aClass": "io.intino.konos.builder.actions.PublishAccessorsAction",
       "text": "Distribute Konos Accessors",
       "description": "Distribute Konos Accessors in Artifactory",
       "shortcut": "control alt A",
+      "groupId": "intino",
+      "anchor": "first"
+    },
+    {
+      "id": "InstallAccessors",
+      "aClass": "io.intino.konos.builder.actions.InstallAccessorsAction",
+      "text": "Install Konos Accessors",
+      "description": "Install Konos Accessors in local repository",
+      "shortcut": "control alt shift A",
       "groupId": "intino",
       "anchor": "first"
     }
