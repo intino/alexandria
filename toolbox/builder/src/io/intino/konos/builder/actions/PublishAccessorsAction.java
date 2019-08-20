@@ -21,12 +21,13 @@ import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.Objects;
 
-public class PublishAccessorAction extends KonosAction implements DumbAware {
+public class PublishAccessorsAction extends KonosAction implements DumbAware {
 	private static final Logger LOG = Logger.getInstance("Publish Accessor: publish");
 	private static final String TEXT = "Publish Konos Accessor";
 
-	public PublishAccessorAction() {
+	public PublishAccessorsAction() {
 		super(TEXT, "Publish Konos Accessor in Artifactory", KonosIcons.GENERATE_16);
 		this.setShortcutSet(CustomShortcutSet.fromString("control alt A"));
 	}
@@ -46,7 +47,7 @@ public class PublishAccessorAction extends KonosAction implements DumbAware {
 	public void actionPerformed(AnActionEvent e) {
 		Project project = e.getData(PlatformDataKeys.PROJECT);
 		if (projectIsNull(e, project)) return;
-		publish(LangDataKeys.MODULE.getData(e.getDataContext()));
+		publish(Objects.requireNonNull(LangDataKeys.MODULE.getData(e.getDataContext())));
 	}
 
 	private void publish(Module module) {

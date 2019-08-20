@@ -13,20 +13,50 @@ def type(jms)
 	import java.io.ByteArrayOutputStream;
 	import java.io.IOException;
 	import java.io.InputStream;
-
+	$schemaImport
 
 	public class $name+firstUpperCase~Service {
-
-		private $box+firstUpperCase~Configuration configuration;
+		private final $box+firstUpperCase~Box box;
+		private final $box+firstUpperCase~Configuration configuration;
 		private final MessageHub messageHub;
 
 		public $name+firstUpperCase~Service(MessageHub messageHub, $box+firstUpperCase~Box box) {
+			this.box = box;
 			this.configuration = box.configuration();
 			this.messageHub = messageHub;
+			[registerProcessListener()$hasProcess]
 			$request...[$NL]
 		}
 
 		$notification...[$NL$NL]
+
+		private void registerProcessListener() {
+			messageHub.attachListener("Task", "$box+lowercase-task", message -> {
+				String name = message.get("name").data();
+				$request+processlistener...[$NL]
+			});
+			messageHub.attachListener(["$businessUnit." +] io.intino.alexandria.bpm.Workflow.EventType, message -> {
+				io.intino.alexandria.bpm.ProcessStatus status = new io.intino.alexandria.bpm.ProcessStatus(message);
+				if (!status.hasCallback()) return;
+				String callback = message.get("callback").data();
+				Object data = dispatcher(status.processName()).onResponse();
+				io.intino.alexandria.message.Message result = new io.intino.alexandria.message.Message(callback.substring(callback.lastIndexOf(".") + 1))
+					.set("callbackProcess", status.callbackProcess())
+					.set("callbackState", status.callbackState())
+					.set("data", io.intino.alexandria.Json.toString(data));
+				messageHub.sendMessage(callback, result);
+			});
+		}
+
+		private InboxDispatcher dispatcher(String name) {
+			$request+processSelect...[$NL]
+			return null;
+		}
+
+		public interface InboxDispatcher<Request, Response> {
+			void onRequest(Request request);
+			Response onResponse();
+		}
 
 		private static byte$[] toByteArray(InputStream stream) {
 			try {
@@ -46,7 +76,28 @@ def type(jms)
 	}
 end
 
-def type(request)
+def type(process) trigger(processListener)
+	if (name.equalsIgnoreCase("$process")) {
+		String callbackData = message.get("callback").data();
+		io.intino.alexandria.bpm.Callback callback = io.intino.alexandria.bpm.Callback.from(callbackData);
+		InboxDispatcher dispatcher = dispatcher(name);
+		if (dispatcher == null) return;
+		dispatcher(name).onRequest(io.intino.alexandria.Json.fromString(message.get("data").data(), $parameter+type.class));
+		messageHub.sendMessage("$businessUnit." + io.intino.alexandria.bpm.Workflow.EventType, new io.intino.alexandria.bpm.ProcessStatus(java.util.UUID.randomUUID().toString(), "$process", io.intino.alexandria.bpm.Process.Status.Enter, message.get("owner").data(), callback.requesterId(), callback.requesterState()).message().set("callback", callback.value()));
+	}
+end
+
+def !type(process) trigger(processListener)
+end
+
+def type(process) trigger(processSelect)
+	if (name.equalsIgnoreCase("$name")) return new $package.actions.$name+FirstUpperCase~Action(box);
+end
+
+def !type(process) trigger(processSelect)
+end
+
+def !type(process) type(request)
 	messageHub.attachListener($queue+format, m -> new $name+firstUpperCase~Request(box));
 end
 
@@ -68,6 +119,10 @@ end
 
 def trigger(custom)
 	.replace("{$value}", configuration.get("$value"))
+end
+
+def type(parameter) trigger(type)
+	$type+formatted
 end
 
 def type(parameter) trigger(name)
@@ -92,4 +147,8 @@ end
 
 def attribute(Integer) trigger(formatted)
 	Int
+end
+
+def type(schemaImport)
+	import $package.schemas.*;
 end

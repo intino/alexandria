@@ -39,9 +39,10 @@ public class JMSRequestRenderer extends Renderer {
 		service.core$().findNode(Request.class).forEach(this::processRequest);
 	}
 
-	private void processRequest(Request resource) {
-		writeFrame(new File(gen(), REQUESTS), snakeCaseToCamelCase(resource.name$()) + "Request", template().render(fillRequestFrame(resource)));
-		createCorrespondingAction(resource);
+	private void processRequest(Request request) {
+		if (!request.isProcessTrigger())
+			writeFrame(new File(gen(), REQUESTS), snakeCaseToCamelCase(request.name$()) + "Request", template().render(fillRequestFrame(request)));
+		createCorrespondingAction(request);
 	}
 
 	private void createCorrespondingAction(Request request) {

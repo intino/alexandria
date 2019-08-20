@@ -11,7 +11,7 @@ def type(workflow)
 	public class Workflow extends io.intino.alexandria.bpm.Workflow {
 
 		public Workflow($box+FirstUpperCase~Box box, File workspace) {
-			super(box.messageHub(), factory(box), new PersistenceManager.FilePersistenceManager(new File(workspace, "bpm")));
+			super(box.messageHub(), factory(box), new PersistenceManager.FilePersistenceManager(new File(workspace, "bpm")), "$businessUnit");
 		}
 
 		$process+publicMethod...[$NL]

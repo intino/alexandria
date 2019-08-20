@@ -34,6 +34,6 @@ public class CesarGenerationTest {
 //		new FullRenderer(graph, TestUtil.settings(gen, CONSUL)).execute();
 		Settings settings = new Settings().packageName(CONSUL).gen(gen).src(gen).cache(new ElementCache());
 		graph.jMSServiceList().forEach(a ->
-				new JMSAccessorRenderer(settings, a, new File("test-gen/" + CONSUL)).execute());
+				new JMSAccessorRenderer(settings, a, graph.businessUnit(), new File("test-gen/" + CONSUL)).execute());
 	}
 }

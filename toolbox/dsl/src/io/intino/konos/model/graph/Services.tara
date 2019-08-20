@@ -1,7 +1,7 @@
 dsl Proteo
 
 use Datalake
-use bpm
+use Bpm
 use DataTypes
 
 Concept:Named Service
@@ -84,15 +84,6 @@ Facet JMX on Service
 		has:{0..1} Response
     Concept:Named Notification
 
-Facet TaskInbox on Service
-	has Inbox
-Concept:Named Inbox is component
-
-Facet ProcessTrigger on Inbox
-	var Process process
-	Concept:{0..1} Input extends Parameter
-	Concept:{0..1} Output extends Response
-
 Facet JMS on Service
 	var JmsBus jmsBus
 	var word:{Queue Topic} subscriptionModel = Topic
@@ -111,6 +102,9 @@ Facet JMS on Service
 			var string password
 		sub CertificateSecured
 			var string certificate
+
+Facet ProcessTrigger on JMS.Request
+	var Process process
 
 Facet SlackBot on Service
 	var string token

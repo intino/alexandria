@@ -59,7 +59,6 @@ def type(box)
 			initDatalake();
 			initMessageHub();
 			initJMSServices();
-			initTaskInboxService();
 			initTasks();
 			initSlackBots();
 			initWorkflow();
@@ -118,10 +117,6 @@ def type(box)
 
 		private void initMessageHub() {
 			[$messagehub+init]
-		}
-
-		private void initTaskInboxService() {
-			$service+taskInbox...[$NL]
 		}
 
 		private void initTasks() {
@@ -229,11 +224,6 @@ def type(service & jms) trigger(init)
 	Logger.info("JMS service $name: started!");
 end
 
-def type(service & taskInbox) trigger(taskInbox)
-	this.$name+SnakeCaseToCamelCase+firstLowerCase = new $package.taskinbox.$name+SnakeCaseToCamelCase+firstUpperCase~Service(this.messageHub, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
-	Logger.info("Task Inbox service $name: started!");
-end
-
 def type(task) trigger(init)
 	Tasks.init(this.scheduler, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
@@ -275,10 +265,6 @@ def type(service & jms) trigger(field)
 	private $name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase;
 end
 
-def type(service & taskInbox) trigger(field)
-	private $package.taskinbox.$name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase;
-end
-
 def type(task) trigger(field)
 	private io.intino.alexandria.scheduler.AlexandriaScheduler scheduler = new io.intino.alexandria.scheduler.AlexandriaScheduler();
 end
@@ -305,11 +291,6 @@ def type(service & jms) trigger(getter)
 	}
 end
 
-def type(service & taskInbox) trigger(getter)
-	public $package.taskinbox.$name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase() {
-		return $name+SnakeCaseToCamelCase+firstlowerCase;
-	}
-end
 
 def type(datalake) trigger(getter)
 	public io.intino.alexandria.datalake.Datalake datalake() {
