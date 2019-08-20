@@ -21,6 +21,7 @@ import static java.util.stream.Collectors.toList;
 
 
 public class Workflow {
+	public static final String EventType = "ProcessStatus";
 	private final String channel;
 	protected final MessageHub messageHub;
 	private final PersistenceManager persistence;
@@ -37,7 +38,7 @@ public class Workflow {
 		this.persistence = persistence;
 		this.factory = factory;
 		loadActiveProcesses();
-		this.channel = domain == null || domain.isEmpty() ? "ProcessStatus" : domain + "." + "ProcessStatus";
+		this.channel = domain == null || domain.isEmpty() ? EventType : domain + "." + EventType;
 		this.messageHub.attachListener(channel, Workflow.this::process);
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			while (!advancingProcesses.isEmpty()) {
