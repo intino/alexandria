@@ -10,4 +10,12 @@ public interface MessageHub {
 	void attachListener(String channel, String subscriberId, Consumer<Message> onMessageReceived);
 
 	void detachListeners(String channel);
+
+	void attachRequestListener(String channel, RequestConsumer onMessageReceived);
+
+	void requestResponse(String channel, String message, Consumer<String> onResponse);
+
+	interface RequestConsumer {
+		String accept(String request);
+	}
 }

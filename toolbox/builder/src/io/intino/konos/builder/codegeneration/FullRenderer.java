@@ -16,15 +16,15 @@ import io.intino.konos.builder.codegeneration.main.MainRenderer;
 import io.intino.konos.builder.codegeneration.messagehub.MessageHubRenderer;
 import io.intino.konos.builder.codegeneration.mounter.MounterRenderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
-import io.intino.konos.builder.codegeneration.services.jms.JMSRequestRenderer;
-import io.intino.konos.builder.codegeneration.services.jms.JMSServiceRenderer;
+import io.intino.konos.builder.codegeneration.services.messaging.MessagingRequestRenderer;
+import io.intino.konos.builder.codegeneration.services.messaging.MessagingServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.jmx.JMXOperationsServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.jmx.JMXServerRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTResourceRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
-import io.intino.konos.builder.codegeneration.task.SchedulerRenderer;
-import io.intino.konos.builder.codegeneration.task.TaskRenderer;
+import io.intino.konos.builder.codegeneration.sentinel.SentinelsRenderer;
+import io.intino.konos.builder.codegeneration.sentinel.ListenerRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.plugin.codeinsight.linemarkers.InterfaceToJavaImplementation;
@@ -98,13 +98,13 @@ public class FullRenderer {
 	}
 
 	private void jms() {
-		new JMSRequestRenderer(settings, graph).execute();
-		new JMSServiceRenderer(settings, graph).execute();
+		new MessagingRequestRenderer(settings, graph).execute();
+		new MessagingServiceRenderer(settings, graph).execute();
 	}
 
 	private void tasks() {
-		new TaskRenderer(settings, graph).execute();
-		new SchedulerRenderer(settings, graph).execute();
+		new ListenerRenderer(settings, graph).execute();
+		new SentinelsRenderer(settings, graph).execute();
 	}
 
 	private void datalake() {

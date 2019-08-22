@@ -3,7 +3,7 @@ package io.intino.konos.model.graph.rules;
 import io.intino.tara.lang.model.Node;
 import io.intino.tara.lang.model.rules.NodeRule;
 
-public class BusinessUnitNeeded implements NodeRule {
+public class WorkflowNeeded implements NodeRule {
 
 
 	public boolean accept(Node node) {

@@ -1,19 +1,22 @@
 def type(action & jms & process) !type(ui)
 	package $package+validPackage.actions;
+
+	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
 	$schemaImport
 
-	public class $name+firstUpperCase~Action implements processes.$service+firstUpperCase~Service.InboxDispatcher<$parameter+onlyType, $returnType> {
-		$box+firstUpperCase~Box box;
+	public class $name+firstUpperCase~Action implements $package.$service+firstUpperCase~Service.InboxDispatcher<[$returnType?Void]> {
+		private $box+firstUpperCase~Box box;
+
 		public $name+firstUpperCase~Action($box+firstUpperCase~Box box) {
 			this.box = box;
 		}
 
-		public void onRequest($parameter+onlyType input) {
+		public void onRequest([$parameter+onlyType input]) {
 			//TODO save input
 		}
 
-		public $returnType onResponse() {
-			return null; //TODO
+		public [$returnType?Void] onResponse() {
+			return null;
 		}
 	}
 end
@@ -146,6 +149,10 @@ end
 
 def type(parameter) trigger(methodCall)
 	display.$name+snakecaseToCamelCase+FirstLowerCase($name+snakecaseToCamelCase+FirstLowerCase);
+end
+
+def type(fileData) trigger(onlyType)
+	io.intino.alexandria.Resource
 end
 
 def type(list) trigger(onlyType)

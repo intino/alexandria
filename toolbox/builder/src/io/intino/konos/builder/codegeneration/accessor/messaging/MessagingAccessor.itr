@@ -3,20 +3,23 @@ def type(accessor)
 
 	import io.intino.alexandria.exceptions.*;
 	import io.intino.alexandria.jms.QueueProducer;
+	import io.intino.alexandria.jms.TopicProducer;
 	import com.google.gson.Gson;
 
 	import java.util.List;
     import javax.jms.*;
 	$schemaImport
 
-	public class $name+snakeCaseToCamelCase+firstUpperCase~Accessor {
+	public class $name+snakeCaseToCamelCase+firstUpperCase~Accessor implements io.intino.alexandria.bpm.WorkflowAccessor {
 
-		private final Session session;
+		private final io.intino.alexandria.messagehub.JmsMessageHub messageHub;
 		private static final String businessUnit = "$businessUnit";
+		[private java.util.Map<String, Class> inputs = new java.util.HashMap<>()$hasProcess]
+		[private java.util.Map<String, Class> outputs = new java.util.HashMap<>()$hasProcess]
 		$custom+field...[$NL]
 
-		public $name+snakeCaseToCamelCase+firstUpperCase~Accessor(Session session[, $custom+signature...[, ]]) {
-			this.session = session;
+		public $name+snakeCaseToCamelCase+firstUpperCase~Accessor(io.intino.alexandria.messagehub.JmsMessageHub messageHub[, $custom+signature...[, ]]) {
+			this.messageHub = messageHub;
 			$custom+assign...[$NL]
 			$request+putTypes...[$NL$NL]
 		}
@@ -27,13 +30,26 @@ def type(accessor)
 
 		[@Override
 		public void trigger(String name, String callback, Object data) {
-			Message taskMessage = new Message("Task").set("name", name).set("callback", callback).set("data", io.intino.alexandria.Json.toString(data));
-			messageHub.sendMessage(this.businessUnit + ".Task", taskMessage);
+			try {
+			io.intino.alexandria.message.Message taskMessage = new io.intino.alexandria.message.Message("Task").set("name", name).set("callback", callback).set("data", io.intino.alexandria.Json.toString(data));
+				final TextMessage message = session.createTextMessage();
+				message.setJMSCorrelationID(createRandomString());
+				message.setText(message.toString());
+				TopicProducer producer = new TopicProducer(session, "$businessUnit.Task");
+				producer.produce(message);
+				producer.close();
+			} catch (JMSException e) {
+				io.intino.alexandria.logger.Logger.error(e);
+			}
 		}
 
 		@Override
-		public void subscribeToTasks(Consumer<Message> consumer) {
-			messageHub.attachListener("TaskFinished", consumer)$hasProcess
+		public void subscribe(java.util.functionConsumer<io.intino.alexandria.message.Message> consumer) {
+		if (session == null) return;
+			this.consumers.putIfAbsent(channel, new ArrayList<>());
+			TopicConsumer topicConsumer = new TopicConsumer(session, channel);
+			topicConsumer.listen(message -> consumer.accept(MessageDeserializer.deserialize(message)));
+			messageHub.attachListener("TaskFinished", consumer);
 		}
 		]
 		public <T> Class<T> outputOf(String task) {
@@ -91,27 +107,7 @@ def type(request & process) trigger(putTypes)
 	outputs.put("$name", [$reply+Return~.class? null]);
 end
 
-def type(request & reply) !type(process)
-	public MessageConsumer $name([$parameter+signature...[, ], ]$name+firstUpperCase~Response callback) throws JMSException {
-		Destination temporaryQueue = session.createTemporaryQueue();
-		MessageConsumer consumer = session.createConsumer(temporaryQueue);
-		consumer.setMessageListener(callback);
-		final $messageType~Message message = session.create$messageType~Message();
-		message.setJMSReplyTo(temporaryQueue);
-		message.setJMSCorrelationID(createRandomString());
-		fill$name+firstUpperCase(message[, $parameter+name...[, ]]);
-		QueueProducer producer = new QueueProducer(session, "$queue"[$custom...[]]);
-		producer.produce(message);
-		producer.close();
-		return consumer;
-	}
-
-	private void fill$name+firstUpperCase($messageType~Message message[, $parameter+signature...[, ]]) throws JMSException {
-		$parameter+assign...[$NL]
-	}
-end
-
-def type(request & process)
+def trigger(putTypes)
 end
 
 def !type(parameter) trigger(field)
@@ -128,6 +124,30 @@ end
 
 def !type(parameter) trigger(custom)
 	.replace("{$this}", this.$this+validname)
+end
+
+def type(request & process)
+end
+
+def type(request & reply) !type(process) trigger(request)
+	public MessageConsumer $name([$parameter+signature...[, ], ]$name+firstUpperCase~Response callback) throws JMSException {
+		messageHub.requestResponse();
+		Destination temporaryQueue = session.createTemporaryQueue();
+		MessageConsumer consumer = session.createConsumer(temporaryQueue);
+		consumer.setMessageListener(callback);
+		final $messageType~Message message = session.create$messageType~Message();
+		message.setJMSReplyTo(temporaryQueue);
+		message.setJMSCorrelationID(createRandomString());
+		fill$name+firstUpperCase(message[, $parameter+name...[, ]]);
+		QueueProducer producer = new QueueProducer(session, "$queue"[$custom...[]]);
+		producer.produce(message);
+		producer.close();
+		return consumer;
+	}
+
+	private void fill$name+firstUpperCase($messageType~Message message[, $parameter+signature...[, ]]) throws JMSException {
+		$parameter+assign...[$NL]
+	}
 end
 
 def type(request)

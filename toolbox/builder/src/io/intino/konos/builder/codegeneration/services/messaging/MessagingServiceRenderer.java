@@ -1,4 +1,4 @@
-package io.intino.konos.builder.codegeneration.services.jms;
+package io.intino.konos.builder.codegeneration.services.messaging;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
@@ -7,10 +7,10 @@ import io.intino.itrules.formatters.StringFormatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.model.graph.BusinessUnit;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Parameter;
-import io.intino.konos.model.graph.jms.JMSService;
+import io.intino.konos.model.graph.Workflow;
+import io.intino.konos.model.graph.messaging.MessagingService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -19,14 +19,14 @@ import java.util.Locale;
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
-public class JMSServiceRenderer extends Renderer {
-	private final List<JMSService> services;
-	private final BusinessUnit businessUnit;
+public class MessagingServiceRenderer extends Renderer {
+	private final List<MessagingService> services;
+	private final Workflow workflow;
 
-	public JMSServiceRenderer(Settings settings, KonosGraph graph) {
+	public MessagingServiceRenderer(Settings settings, KonosGraph graph) {
 		super(settings, Target.Owner);
-		this.services = graph.jMSServiceList();
-		this.businessUnit = graph.businessUnit();
+		this.services = graph.messagingServiceList();
+		this.workflow = graph.workflow();
 	}
 
 	@Override
@@ -34,16 +34,16 @@ public class JMSServiceRenderer extends Renderer {
 		services.forEach(this::processService);
 	}
 
-	private void processService(JMSService service) {
+	private void processService(MessagingService service) {
 		FrameBuilder builder = new FrameBuilder("jms").
 				add("name", service.name$()).
 				add("box", boxName()).
 				add("package", packageName()).
-				add("businessUnit", businessUnit != null ? businessUnit.name() : "").
+				add("businessUnit", workflow != null ? workflow.businessUnit() : "").
 				add("model", service.subscriptionModel().name()).
-				add("request", processRequests(service.requestList(), service.subscriptionModel().name())).
+				add("request", processRequests(service.requestList(), service.domain(), service.subscriptionModel().name())).
 				add("notification", processNotifications(service.notificationList(), service.subscriptionModel().name()));
-		if (service.requestList().stream().anyMatch(JMSService.Request::isProcessTrigger))
+		if (service.requestList().stream().anyMatch(MessagingService.Request::isProcessTrigger))
 			builder.add("hasProcess", ";");
 		if (!service.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
@@ -51,30 +51,31 @@ public class JMSServiceRenderer extends Renderer {
 	}
 
 	@NotNull
-	private String nameOf(JMSService service) {
+	private String nameOf(MessagingService service) {
 		return StringFormatters.get(Locale.getDefault()).get("firstuppercase").format(service.name$()).toString() + "Service";
 	}
 
-	private Frame[] processRequests(List<JMSService.Request> requests, String subscriptionModel) {
-		return requests.stream().map((request) -> processRequest(request, subscriptionModel)).toArray(Frame[]::new);
+	private Frame[] processRequests(List<MessagingService.Request> requests, String domain, String subscriptionModel) {
+		return requests.stream().map((request) -> processRequest(request, domain, subscriptionModel)).toArray(Frame[]::new);
 	}
 
-	private Frame processRequest(JMSService.Request request, String subscriptionModel) {
+	private Frame processRequest(MessagingService.Request request, String domain, String subscriptionModel) {
 		FrameBuilder builder = new FrameBuilder("request").
 				add("name", request.name$()).
+				add("package", packageName()).
 				add("model", subscriptionModel).
 				add("parameter", parameters(request.parameterList())).
-				add("queue", customize("queue", request.path()));
+				add("queue", customize("queue", "service." + domain + "." + request.path()));
 		if (request.isProcessTrigger())
-			builder.add("process").add("process", request.asProcessTrigger().process().name$()).add("package", packageName());
+			builder.add("process").add("process", request.asProcessTrigger().process().name$());
 		return builder.toFrame();
 	}
 
-	private Frame[] processNotifications(List<JMSService.Notification> notifications, String subscriptionModel) {
+	private Frame[] processNotifications(List<MessagingService.Notification> notifications, String subscriptionModel) {
 		return notifications.stream().map((notification) -> processNotification(notification, subscriptionModel)).toArray(Frame[]::new);
 	}
 
-	private Frame processNotification(JMSService.Notification notification, String subscriptionModel) {
+	private Frame processNotification(MessagingService.Notification notification, String subscriptionModel) {
 		return new FrameBuilder("notification").
 				add("name", notification.name$()).
 				add("package", packageName()).
@@ -85,7 +86,7 @@ public class JMSServiceRenderer extends Renderer {
 	}
 
 	private Template template() {
-		return customize(new JmsServiceTemplate());
+		return customize(new MessagingServiceTemplate());
 	}
 
 	private String messageType(List<Parameter> parameters) {

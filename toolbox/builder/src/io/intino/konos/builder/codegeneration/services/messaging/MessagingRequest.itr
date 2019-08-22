@@ -1,0 +1,80 @@
+def type(request)
+	package $package.requests;
+
+	import io.intino.alexandria.exceptions.*;
+	import $package.*;
+	import com.google.gson.Gson;
+	import io.intino.alexandria.core.Box;
+	import io.intino.alexandria.message.MessageHub.RequestConsumer;
+
+	import javax.jms.*;
+	import java.util.List;
+	import java.util.logging.Level;
+	import java.util.logging.Logger;
+	$schemaImport
+
+	public class $name+firstUpperCase~Request implements RequestConsumer {
+
+		private $box+firstUpperCase~Box box;
+
+		public $name+firstUpperCase~Request($box+firstUpperCase~Box box) {
+			this.box = box;
+		}
+
+		public String accept(String request) {
+			try {
+				$call
+			} [$exception+catch]
+			catch (Throwable e) {
+				io.intino.alexandria.logger.Logger.error(e.getMessage(), e);
+			}
+		}
+
+		private $package.actions.$name+firstUpperCase~Action actionFor([$parameter+signature]) {
+			final $package.actions.$name+firstUpperCase~Action action = new $package.actions.$name+firstUpperCase~Action();
+			action.box = this.box;
+			[$parameter+assign]
+			return action;
+		}
+	}
+end
+
+def !type(void) trigger(call)
+	return io.intino.alexandria.Json.toString(actionFor([io.intino.alexandria.Json.fromString(request, $parameter+type.class)]).execute());
+end
+
+def trigger(call)
+	actionFor([io.intino.alexandria.Json.fromString(request, $parameter+type.class)]).execute();
+	return null;
+end
+
+def trigger(catch)
+	catch (AlexandriaException e) {
+		response(session, replyTo(request), exceptionMessage(session, idOf(request), e));
+	}
+end
+
+def type(parameter) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = $name+SnakeCaseToCamelCase+firstLowerCase;
+end
+
+def type(parameter) trigger(signature)
+	$type+FirstUpperCase $name+SnakeCaseToCamelCase+firstLowerCase
+end
+
+
+def type(parameter) type(fileData) trigger(type)
+	io.intino.alexandria.Resource
+end
+
+def type(parameter) type(list) trigger(type)
+	java.util.List<$type>
+end
+
+def type(parameter) trigger(type)
+	$type
+end
+
+def type(schemaImport)
+	import $package.schemas.*;
+end

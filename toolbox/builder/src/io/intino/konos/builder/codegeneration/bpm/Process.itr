@@ -78,7 +78,7 @@ def type(service) trigger(method)
 
 	private void accept$name+FirstUpperCase(io.intino.alexandria.message.Message m) {
 		if (m.get("callbackProcess").data().equals(id()) && m.get("callbackState").data().equals("$name+FirstUpperCase")) {
-			io.intino.alexandria.bpm.Task.Result result = on$name+firstUpperCase~Finished(io.intino.alexandria.Json.fromString(m.get("data").data(), $name+firstLowerCase~Accessor().outputOf("$process")));
+			io.intino.alexandria.bpm.Task.Result result = on$name+firstUpperCase~Finished(m.contains("data")? io.intino.alexandria.Json.fromString(m.get("data").data(), $name+firstLowerCase~Accessor().outputOf("$process")): null);
 			box.workflow().exitState(id(), name(), m.get("callbackState").data(), result);
 		}
 	}

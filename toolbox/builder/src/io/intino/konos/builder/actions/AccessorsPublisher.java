@@ -15,8 +15,8 @@ import com.intellij.util.messages.MessageBusConnection;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
-import io.intino.konos.builder.codegeneration.accessor.jms.JMSAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.jmx.JMXAccessorRenderer;
+import io.intino.konos.builder.codegeneration.accessor.messaging.MessagingAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
@@ -178,10 +178,10 @@ class AccessorsPublisher {
 	}
 
 	private void jms(List<Service> services) {
-		services.stream().filter(Service::isJMS).forEach(s -> {
-			File sourcesDestiny = new File(new File(root, s.asJMS().name$() + File.separator + "src"), packageName().replace(".", File.separator));
+		services.stream().filter(Service::isMessaging).forEach(s -> {
+			File sourcesDestiny = new File(new File(root, s.asMessaging().name$() + File.separator + "src"), packageName().replace(".", File.separator));
 			sourcesDestiny.mkdirs();
-			new JMSAccessorRenderer(settings, s.asJMS(), graph.businessUnit(), sourcesDestiny).execute();
+			new MessagingAccessorRenderer(settings, s.asMessaging(), graph.workflow(), sourcesDestiny).execute();
 		});
 	}
 
