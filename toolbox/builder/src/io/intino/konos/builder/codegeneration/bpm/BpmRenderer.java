@@ -12,7 +12,7 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.Process;
+import io.intino.konos.model.graph.Workflow.Process;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,8 +39,8 @@ public class BpmRenderer extends Renderer {
 	public BpmRenderer(Settings settings, KonosGraph graph) {
 		super(settings, Target.Owner);
 		this.settings = settings;
-		this.businessUnit = graph.businessUnit().name();
-		this.processes = graph.processList();
+		this.businessUnit = graph.workflow().businessUnit();
+		this.processes = graph.workflow().processList();
 		this.src = new File(settings.src(Target.Owner), "bpm");
 		this.gen = new File(settings.gen(Target.Owner), "bpm");
 	}

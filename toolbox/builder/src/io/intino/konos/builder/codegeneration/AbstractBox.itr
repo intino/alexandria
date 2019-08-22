@@ -21,7 +21,7 @@ def type(box)
 		[$service+field...[$NL]]
 		[$messagehub+field]
 		[$datalake+field]
-		[$task+field]
+		[$sentinel+field]
 		[$workflow+field]
         [protected Map<String, Soul> uiSouls = new java.util.HashMap<>()$hasUi+hideUi]
 	    [private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>()$hasUi+hideUi]
@@ -58,8 +58,8 @@ def type(box)
 			initJMXServices();
 			initDatalake();
 			initMessageHub();
-			initJMSServices();
-			initTasks();
+			initMessagingServices();
+			initSentinels();
 			initSlackBots();
 			initWorkflow();
 			return this;
@@ -86,7 +86,7 @@ def type(box)
 
 		[$datamart+getter]
 
-		[$task+getter...[$NL$NL]]
+		[$sentinel+getter...[$NL$NL]]
 
 		[$workflow+getter]
 
@@ -94,9 +94,8 @@ def type(box)
 			$service+rest...[$NL]
 		}
 
-		private void initJMSServices() {
-			[$jms~javax.jms.Connection connection;]
-			$service+jms...[$NL]
+		private void initMessagingServices() {
+			$service+messaging...[$NL]
 		}
 
 		private void initJMXServices() {
@@ -119,8 +118,8 @@ def type(box)
 			[$messagehub+init]
 		}
 
-		private void initTasks() {
-			[$task+init...[$NL]]
+		private void initSentinels() {
+			[$sentinel+init...[$NL]]
 		}
 
 		private void initWorkflow() {
@@ -219,13 +218,13 @@ def trigger(use)
 	$this.initDisplays(sparkInstance, pushService);
 end
 
-def type(service & jms) trigger(init)
+def type(service & messaging) trigger(messaging)
 	this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(this.messageHub, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
-	Logger.info("JMS service $name: started!");
+	Logger.info("Messaging service $name: started!");
 end
 
-def type(task) trigger(init)
-	Tasks.init(this.scheduler, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+def type(sentinel) trigger(init)
+	Sentinels.init(this.scheduler, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
 
 def type(workflow) trigger(init)
@@ -261,11 +260,11 @@ def type(service & slack) trigger(field)
 	private io.intino.alexandria.slack.Bot $name+SnakeCaseToCamelCase+firstlowerCase;
 end
 
-def type(service & jms) trigger(field)
+def type(service & messaging) trigger(field)
 	private $name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase;
 end
 
-def type(task) trigger(field)
+def type(sentinel) trigger(field)
 	private io.intino.alexandria.scheduler.AlexandriaScheduler scheduler = new io.intino.alexandria.scheduler.AlexandriaScheduler();
 end
 
@@ -285,7 +284,7 @@ def type(workflow) trigger(field)
 	private $package.bpm.Workflow workflow;
 end
 
-def type(service & jms) trigger(getter)
+def type(service & messaging) trigger(getter)
 	public $name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase() {
 		return $name+SnakeCaseToCamelCase+firstlowerCase;
 	}
@@ -351,7 +350,7 @@ end
 def type(service)
 end
 
-def type(task) trigger(getter)
+def type(sentinel) trigger(getter)
 	public io.intino.alexandria.scheduler.AlexandriaScheduler scheduler() {
 		return this.scheduler;
 	}

@@ -1,7 +1,7 @@
 dsl Proteo
 
-use Datalake
 use Bpm
+use Datalake
 use DataTypes
 
 Concept:Named Service
@@ -84,8 +84,9 @@ Facet JMX on Service
 		has:{0..1} Response
     Concept:Named Notification
 
-Facet JMS on Service
-	var JmsBus jmsBus
+Facet Messaging on Service
+	var MessageHub messageHub
+	var string domain
 	var word:{Queue Topic} subscriptionModel = Topic
 	Concept:Named Request
 		var string path
@@ -103,8 +104,9 @@ Facet JMS on Service
 		sub CertificateSecured
 			var string certificate
 
-Facet ProcessTrigger on JMS.Request
-	var Process process
+Facet ProcessTrigger on Messaging.Request
+	var Workflow.Process process
+	var string path = 'self.graph().workflow().businessUnit() + ".Task"'
 
 Facet SlackBot on Service
 	var string token

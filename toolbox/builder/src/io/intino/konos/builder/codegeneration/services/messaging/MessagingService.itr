@@ -1,15 +1,9 @@
 def type(jms)
 	package $package;
 
-	import $package.requests.*;
 	import io.intino.alexandria.message.MessageHub;
 	import io.intino.alexandria.logger.Logger;
 
-	import javax.jms.BytesMessage;
-	import javax.jms.JMSException;
-	import javax.jms.Session;
-	import javax.jms.Connection;
-	import javax.jms.TextMessage;
 	import java.io.ByteArrayOutputStream;
 	import java.io.IOException;
 	import java.io.InputStream;
@@ -27,8 +21,6 @@ def type(jms)
 			[registerProcessListener()$hasProcess]
 			$request...[$NL]
 		}
-
-		$notification...[$NL$NL]
 
 		private void registerProcessListener() {
 			messageHub.attachListener("Task", "$box+lowercase-task", message -> {
@@ -48,30 +40,15 @@ def type(jms)
 			});
 		}
 
+		[$notification...[$NL$NL]]
+
 		private InboxDispatcher dispatcher(String name) {
 			$request+processSelect...[$NL]
 			return null;
 		}
 
-		public interface InboxDispatcher<Request, Response> {
-			void onRequest(Request request);
+		public interface InboxDispatcher<Response> {
 			Response onResponse();
-		}
-
-		private static byte$[] toByteArray(InputStream stream) {
-			try {
-				ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-				int nRead;
-				byte$[] data = new byte$[16384];
-				while ((nRead = stream.read(data, 0, data.length)) != -1) {
-					buffer.write(data, 0, nRead);
-				}
-				buffer.flush();
-				return buffer.toByteArray();
-			} catch (IOException e) {
-				Logger.error(e);
-			}
-			return new byte$[0];
 		}
 	}
 end
@@ -80,9 +57,7 @@ def type(process) trigger(processListener)
 	if (name.equalsIgnoreCase("$process")) {
 		String callbackData = message.get("callback").data();
 		io.intino.alexandria.bpm.Callback callback = io.intino.alexandria.bpm.Callback.from(callbackData);
-		InboxDispatcher dispatcher = dispatcher(name);
-		if (dispatcher == null) return;
-		dispatcher(name).onRequest(io.intino.alexandria.Json.fromString(message.get("data").data(), $parameter+type.class));
+		new $package.actions.$name+FirstUpperCase~Action(box).onRequest([io.intino.alexandria.Json.fromString(message.get("data").data(), $parameter+type.class)]);
 		messageHub.sendMessage("$businessUnit." + io.intino.alexandria.bpm.Workflow.EventType, new io.intino.alexandria.bpm.ProcessStatus(java.util.UUID.randomUUID().toString(), "$process", io.intino.alexandria.bpm.Process.Status.Enter, message.get("owner").data(), callback.requesterId(), callback.requesterState()).message().set("callback", callback.value()));
 	}
 end
@@ -98,11 +73,11 @@ def !type(process) trigger(processSelect)
 end
 
 def !type(process) type(request)
-	messageHub.attachListener($queue+format, m -> new $name+firstUpperCase~Request(box));
+	messageHub.attachRequestListener($queue+format, m -> new $package.requests.$name+firstUpperCase~Request(box).execute());
 end
 
 def type(notification)
-	public void notify$name+firstUpperCase([$parameter+signature...[, ]]) throws JMSException {
+	public void notify$name+firstUpperCase([$parameter+signature...[, ]]) throws JMSException {//TODO
 		final $returnMessageType~Message message = session.create$returnMessageType~Message();
 		fill$name+firstUpperCase~Message(message[, $parameter+name...[, ]]);
 		new $model~Producer(session, $queue+format).produce(message);

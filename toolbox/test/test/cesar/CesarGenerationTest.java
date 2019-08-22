@@ -1,7 +1,7 @@
 package cesar;
 
 import io.intino.konos.builder.codegeneration.Settings;
-import io.intino.konos.builder.codegeneration.accessor.jms.JMSAccessorRenderer;
+import io.intino.konos.builder.codegeneration.accessor.messaging.MessagingAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer;
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.model.graph.KonosGraph;
@@ -33,7 +33,7 @@ public class CesarGenerationTest {
 		KonosGraph graph = new Graph().loadStashes("Consul").as(KonosGraph.class);
 //		new FullRenderer(graph, TestUtil.settings(gen, CONSUL)).execute();
 		Settings settings = new Settings().packageName(CONSUL).gen(gen).src(gen).cache(new ElementCache());
-		graph.jMSServiceList().forEach(a ->
-				new JMSAccessorRenderer(settings, a, graph.businessUnit(), new File("test-gen/" + CONSUL)).execute());
+		graph.messagingServiceList().forEach(a ->
+				new MessagingAccessorRenderer(settings, a, graph.workflow(), new File("test-gen/" + CONSUL)).execute());
 	}
 }

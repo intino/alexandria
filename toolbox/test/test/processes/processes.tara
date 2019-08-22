@@ -2,18 +2,26 @@ dsl Konos
 
 MessageHub messageHub as JmsBus("{bus}", "{bus-user}", "{bus-password}", "{bus-client-id}")
 
-Service ProcessInbox as JMS(messageHub)
-	Request("service.consul.{serverId}.status") status
+Service ProcessInbox as Messaging(messageHub)
+	domain = "unit1"
+	Request("status") status
 		Response as Object(ServerStatus)
-	Request("service.consul.{serverId}.reboot") reboot
+	Request("reboot") reboot
+		Parameter process as Object(Budget)
 		Response as Bool
-	Request("service.consul.{serverId}.deploy") task as ProcessTrigger(helloWorld)
+	Request("deploy") deploy
+		Parameter process as Object(Budget)
+		Response
+	Request("task") task as ProcessTrigger(wf.helloWorld)
 		Parameter process as Object(ProcessSchema)
 		Response as Object(schema = DeployResult)
 
-BusinessUnit("unit1") unit
-Process(bpmn = "service.bpmn") service
-Process(bpmn = "helloworld.bpmn") helloWorld
+Workflow("unit1") wf
+	Process(bpmn = "service.bpmn") service
+	Process(bpmn = "helloworld.bpmn") helloWorld
+
+Sentinel toReservoir as ClockListener("0 0 0 1/1 * ? *", "daily starting at 00:00")
+Sentinel toReservoir2 as DirectoryListener("./temp", OnModify)
 
 Schema Budget
 	Attribute total as Real
