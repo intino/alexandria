@@ -6,7 +6,7 @@ Artifact("io.intino.alexandria", "2.0.0") ui-framework
 	Imports
 		Web("io.intino.alexandria", "ui-framework-elements", "2.0.0")
 		Compile("io.intino.alexandria", "core-framework", "2.0.1")
-		Compile("io.intino.alexandria", "rest", "2.0.0")
+		Compile("io.intino.alexandria", "rest", "2.1.0")
 		Compile("io.intino.alexandria", "rest-accessor", "1.0.7")
 		Compile("io.intino.alexandria", "logger4j", "1.0.0")
 		Compile("com.opencsv", "opencsv", "4.1")

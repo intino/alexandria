@@ -1,47 +1,3 @@
-def type(display & accessible)
-	package $package+validPackage.ui.displays[.$packageType~s];
-
-	$templatesImport
-	$blocksImport
-	$itemsImport
-    import $package+validPackage.ui.displays.notifiers.$name+SnakeCaseToCamelCase+FirstUpperCase~ProxyNotifier;
-    import io.intino.alexandria.ui.displays.ProxyDisplay;
-    import io.intino.alexandria.ui.services.push.UISession;
-
-    import java.util.HashMap;
-    import java.util.Map;
-
-    public class $name+SnakeCaseToCamelCase+FirstUpperCase~Proxy extends ProxyDisplay<$name+SnakeCaseToCamelCase+FirstUpperCase~ProxyNotifier> {
-        $parameter+field...[$NL]
-
-        public $name+SnakeCaseToCamelCase+FirstUpperCase~Proxy(UISession session, String appUrl) {
-            super(session, appUrl, "/$name+SnakeCaseToCamelCase+lowercase~proxy");
-        }
-
-		[$request+accessible...[$NL$NL]]
-		[$parameter+method...[$NL$NL]]
-
-        @Override
-        protected Map<String, String> parameters() {
-            Map<String, String> result = new HashMap<>();
-            $parameter+map...[$NL]
-            return result;
-        }
-    }
-end
-
-def type(templatesImport)
-	import $package+validPackage.ui.displays.templates.*;
-end
-
-def type(blocksImport)
-	import $package+validPackage.ui.displays.blocks.*;
-end
-
-def type(itemsImport)
-	import $package+validPackage.ui.displays.items.*;
-end
-
 def type(display)
 	package $package.ui.displays[.$packageType~s];
 
@@ -62,20 +18,22 @@ def type(display)
     }
 end
 
+def type(templatesImport)
+	import $package+validPackage.ui.displays.templates.*;
+end
+
+def type(blocksImport)
+	import $package+validPackage.ui.displays.blocks.*;
+end
+
+def type(itemsImport)
+	import $package+validPackage.ui.displays.items.*;
+end
+
 def type(request & asset)
 	public io.intino.alexandria.ui.spark.UIFile $name([$parameter value]) {
         return null;
 	}
-end
-
-def type(request) trigger(accessible)
-	public void $name([$parameter value]) {
-		request("$name"[, $parameter+parameterValue]);
-	}
-end
-
-def trigger(parameterValue)
-	value
 end
 
 def type(request)
@@ -88,21 +46,6 @@ def trigger(setter)
 	public void $value+firstLowerCase(String value) {
 
 	}
-end
-
-def trigger(field)
-	private String $value+firstLowerCase;
-end
-
-
-def trigger(map)
-	result.put("$value", $value+firstLowerCase);
-end
-
-def trigger(method)
-    public void $value+firstLowerCase(String value) {
-        this.$value+firstLowerCase = value;
-    }
 end
 
 def type(dateTime | date) type(list) trigger(parameter)

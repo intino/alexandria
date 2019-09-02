@@ -46,6 +46,16 @@ def type(method & multiple)
 	}
 end
 
+def type(method & portal)
+	@Override
+	protected io.intino.alexandria.ui.displays.ProxyDisplay buildProxy() {
+        String key = "$inUrl".replace("{", "").replace("}", "");
+        java.util.Map<String, String> args = box().configuration().args();
+        String url = args.getOrDefault(key, "$inUrl");
+	    return register(new $inPackage~.displays[.$type+lowercase~s].$to+firstUpperCase~Proxy(session(), url));
+	}
+end
+
 def type(method & collection & table)
 	[$selectionMethod]
 
@@ -336,6 +346,11 @@ def type(properties) trigger(common)
 	[_color("$color");]
 end
 
+def type(properties & portal) trigger(specific)
+	[_to("$to","$inName");]
+	[$parameter...[$NL]]
+end
+
 def type(properties & selector) trigger(specific)
 	[_multipleSelection($multipleSelection);]
 	[_readonly($readonly);]
@@ -468,12 +483,12 @@ def type(inputMethod & csv) trigger(inputMethod)
 	_input(new io.intino.alexandria.ui.displays.components.chart.datasources.CSVDataSource($owner.class.getResource("$value")));
 end
 
-def type(parameter & dashboard)
-	_add("$name", "$value");
-end
-
 def type(inputMethod & source) trigger(inputMethod)
 	_input(new $value());
+end
+
+def type(parameterMethod)
+	_add("$name", "$value");
 end
 
 def trigger(resourceMethod)

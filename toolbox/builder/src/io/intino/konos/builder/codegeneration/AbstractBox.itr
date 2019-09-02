@@ -26,7 +26,6 @@ def type(box)
         [protected Map<String, Soul> uiSouls = new java.util.HashMap<>()$hasUi+hideUi]
 	    [private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>()$hasUi+hideUi]
 		[private io.intino.alexandria.ui.services.AuthService authService$hasUi+hideUi]
-		[private io.intino.alexandria.ui.services.EditorService editorService$hasUi+hideUi]
 
 		public AbstractBox(String$[] args) {
 			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
@@ -77,8 +76,6 @@ def type(box)
 		[$service+getter...[$NL$NL]]
 
 		[$hasUi+authService]
-
-		[$hasUi+editorService]
 
 		[$messagehub+getter]
 
@@ -161,10 +158,9 @@ end
 
 def type(service & ui) trigger(setup)
 	this.authService = [this.authService($authentication)?null];
-	this.editorService = [this.editorService($edition)?null];
 	[if($parameter != null && !$parameter.isEmpty())][io.intino.alexandria.rest.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/")];
 	io.intino.alexandria.rest.AlexandriaSparkBuilder.setUI(true);
-	io.intino.alexandria.rest.AlexandriaSparkBuilder.addParameters(this.authService, this.editorService);
+	io.intino.alexandria.rest.AlexandriaSparkBuilder.addParameters(this.authService);
 end
 
 def type(service & rest) trigger(setup)
@@ -357,14 +353,6 @@ end
 
 def trigger(authservice)
 	protected abstract io.intino.alexandria.ui.services.AuthService authService(java.net.URL authServiceUrl);
-end
-
-def trigger(editorService)
-	protected abstract io.intino.alexandria.ui.services.EditorService editorService(java.net.URL editorServiceUrl);
-
-	public io.intino.alexandria.ui.services.EditorService editorService() {
-		return this.editorService;
-	}
 end
 
 def trigger(registerSoul)

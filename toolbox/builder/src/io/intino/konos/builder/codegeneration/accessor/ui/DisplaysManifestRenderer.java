@@ -7,9 +7,9 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.DisplaysManifestTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.PassiveView;
-import io.intino.konos.model.graph.decorated.DecoratedDisplay;
 import io.intino.konos.model.graph.ui.UIService;
 
 import java.io.File;
@@ -64,7 +64,7 @@ public class DisplaysManifestRenderer extends UIRenderer {
 	private <D extends PassiveView> Frame display(D display) {
 		FrameBuilder result = new FrameBuilder("display", typeOf(display));
 		result.add("name", nameOf(display));
-		result.add("directory", display.i$(DecoratedDisplay.class) ? "src" : "gen");
+		result.add("directory", ElementHelper.isRoot(display) ? "src" : "gen");
 		return result.toFrame();
 	}
 

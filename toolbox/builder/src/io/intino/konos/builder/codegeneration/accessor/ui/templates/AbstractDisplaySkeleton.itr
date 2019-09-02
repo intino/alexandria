@@ -1,3 +1,29 @@
+def type(display & accessible)
+	import React from "react";
+	[$alexandriaBlockImport]
+	[$alexandriaStampImport]
+	[$alexandriaFrameImport]
+	[$alexandriaComponentImport...[$NL]]
+	[$projectComponentImport...[$NL]]
+	[$parent+import]
+	[import $notDecorated+firstUpperCase~Notifier from "$notifierDirectory/notifiers/$notDecorated+firstUpperCase~Notifier";]
+	[import $notDecorated+firstUpperCase~Requester from "$requesterDirectory/requesters/$notDecorated+firstUpperCase~Requester";]
+	[$displayRegistration+import]
+
+	export default class $abstract$name+firstUpperCase extends $displayExtends {
+
+		constructor(props) {
+			super(props);
+			[this.notifier = new $notDecorated+firstUpperCase~Notifier(this);]
+			[this.requester = new $notDecorated+firstUpperCase~Requester(this);]
+			[$properties+initialization]
+    	};
+
+	}
+
+	[$displayRegistration+declaration]
+end
+
 def type(display)
 	import React from "react";
 	[$alexandriaBlockImport]
@@ -109,7 +135,7 @@ def attribute(parent) trigger(import)
 end
 
 def attribute(accessible) trigger(import)
-	import UiDisplay from "alexandria-ui-elements/src/displays/ProxyDisplay";
+	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/ProxyDisplay";
 end
 
 def attribute(baseDisplay) trigger(import)

@@ -46,7 +46,7 @@ def type(ui & accessibleDisplay)
 	package $package+validPackage.ui.pages;
 
 	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
-	import $package+validPackage.displays.$display+snakecaseToCamelCase+firstUpperCase;
+	import $package+validPackage.ui.displays[.$packageType~s].$display+snakecaseToCamelCase+firstUpperCase;
 	import io.intino.alexandria.ui.Soul;
 
 	public class $name+snakecaseToCamelCase+firstUpperCase~ProxyPage extends io.intino.alexandria.ui.spark.pages.ProxyPage {

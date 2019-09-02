@@ -1,7 +1,6 @@
 package io.intino.alexandria;
 
 import io.intino.alexandria.ui.services.AuthService;
-import io.intino.alexandria.ui.services.EditorService;
 
 import java.net.URL;
 
@@ -34,8 +33,4 @@ public class UiFrameworkBox extends AbstractBox {
 		return null;
 	}
 
-	@Override
-	protected EditorService editorService(URL editorServiceUrl) {
-		return null;
-	}
 }

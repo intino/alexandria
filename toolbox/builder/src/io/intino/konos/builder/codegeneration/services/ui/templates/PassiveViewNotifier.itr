@@ -6,18 +6,9 @@ def type(display & accessible)
 	$schemaImport
 
     public class $name+FirstUpperCase~ProxyNotifier extends io.intino.alexandria.ui.displays.notifiers.ProxyDisplayNotifier  {
-
         public $name+FirstUpperCase~ProxyNotifier(io.intino.alexandria.ui.displays.Display display, io.intino.alexandria.rest.pushservice.MessageCarrier carrier) {
             super(display, carrier);
         }
-
-		public void refreshBaseUrl(String value) {
-			putToDisplay("refreshBaseUrl", "v", value);
-		}
-
-		public void refreshError(String value) {
-			putToDisplay("refreshError", "v", value);
-		}
     }
 end
 

@@ -8,9 +8,9 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRendererFactory;
 import io.intino.konos.builder.codegeneration.ui.passiveview.PassiveViewRenderer;
+import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
-import io.intino.konos.model.graph.decorated.DecoratedDisplay;
 import io.intino.konos.model.graph.dynamicloaded.DynamicLoadedComponent;
 import io.intino.konos.model.graph.selectable.catalogcomponents.SelectableCollection;
 
@@ -99,7 +99,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (graph.blockList().size() > 0) frame.add("blocksImport", buildBaseFrame().add("blocksImport"));
 		if (graph.itemsDisplays().size() > 0) frame.add("itemsImport", buildBaseFrame().add("itemsImport"));
 		if (graph.rowsDisplays().size() > 0) frame.add("rowsImport", buildBaseFrame().add("rowsImport"));
-		if (!componentOf(element).i$(DecoratedDisplay.class)) frame.add("displayRegistration", buildBaseFrame().add("displayRegistration").add("name", nameOf(element)));
+		if (!ElementHelper.isRoot(componentOf(element))) frame.add("displayRegistration", buildBaseFrame().add("displayRegistration").add("name", nameOf(element)));
 		frame.add("requesterDirectory", typeOf(element).equalsIgnoreCase("Display") || typeOf(element).equalsIgnoreCase("Display") ? "." : "..");
 		frame.add("notifierDirectory", typeOf(element).equalsIgnoreCase("Display") ? "." : "..");
 	}
@@ -143,7 +143,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	protected void addDecoratedFrames(FrameBuilder frame) {
-		addDecoratedFrames(frame, element.isDecorated());
+		addDecoratedFrames(frame, ElementHelper.isRoot(element));
 	}
 
 	protected void addDecoratedFrames(FrameBuilder frame, boolean decorated) {
@@ -159,7 +159,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	protected FrameBuilder componentFrame(Component component) {
 		ComponentRenderer renderer = factory.renderer(settings, component, templateProvider, target);
 		renderer.buildChildren(true);
-		renderer.decorated(element.isDecorated());
+		renderer.decorated(ElementHelper.isRoot(element));
 		renderer.owner(element);
 		return renderer.buildFrame();
 	}
@@ -170,8 +170,8 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 
 	private void writeDisplaysFor(AccessibleDisplay display, FrameBuilder builder) {
 		write(builder);
-		writeNotifier(display.a$(PassiveView.class), builder.toFrame());
-		writeRequester(display.a$(PassiveView.class), builder.toFrame());
+		writeNotifier(display.a$(PassiveView.class), builder);
+		writeRequester(display.a$(PassiveView.class), builder);
 	}
 
 	private void addParent(Display display, FrameBuilder builder) {

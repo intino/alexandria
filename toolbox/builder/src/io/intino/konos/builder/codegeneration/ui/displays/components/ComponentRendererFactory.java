@@ -35,6 +35,7 @@ public class ComponentRendererFactory {
 		if (component.i$(OtherComponents.Dashboard.class)) return (T) new DashboardRenderer(settings, component.a$(OtherComponents.Dashboard.class), provider, target);
 		if (component.i$(OtherComponents.AbstractDialog.class)) return (T) new DialogRenderer(settings, component.a$(OtherComponents.AbstractDialog.class), provider, target);
 		if (component.i$(OtherComponents.BaseIcon.class)) return (T) new IconRenderer(settings, component.a$(OtherComponents.BaseIcon.class), provider, target);
+		if (component.i$(OtherComponents.Portal.class)) return (T) new PortalRenderer(settings, component.a$(OtherComponents.Portal.class), provider, target);
 
 		if (component.i$(Template.class)) return (T) new TemplateRenderer(settings, component.a$(Template.class), provider, target);
 		if (component.i$(Header.class)) return (T) new HeaderRenderer(settings, component.a$(Header.class), provider, target);
