@@ -9,7 +9,6 @@ import io.intino.konos.model.graph.ui.UIService;
 
 import java.io.File;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.format;
@@ -40,7 +39,7 @@ public class PageRenderer extends ActionRenderer {
 		builder.add("importTemplates", packageName());
 		builder.add("component", componentFrame());
 		builder.add("parameter", parameters());
-		service.useList().stream().map(use -> builder.add("usedAppUrl", new FrameBuilder("usedAppUrl").add(isCustom(use.url()) ? "custom" : "standard").add("value", isCustom(use.url()) ? customValue(use.url()) : use.url()))).collect(Collectors.toList());
+		service.useList().forEach(use -> builder.add("usedAppUrl", new FrameBuilder("usedAppUrl").add(isCustom(use.url()) ? "custom" : "standard").add("value", isCustom(use.url()) ? customValue(use.url()) : use.url())).toFrame());
 		if (service.favicon() != null) builder.add("favicon", service.favicon());
 		else if (service.title() != null) builder.add("title", service.title());
 		settings.classes().put(resource.getClass().getSimpleName() + "#" + firstUpperCase(resource.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(resource.name$())) + suffix());
