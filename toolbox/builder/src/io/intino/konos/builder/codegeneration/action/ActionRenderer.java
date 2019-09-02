@@ -15,17 +15,18 @@ import io.intino.konos.model.graph.object.ObjectData;
 import io.intino.konos.model.graph.type.TypeData;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
 
 public abstract class ActionRenderer extends Renderer {
-	private final String type;
+	private final String[] types;
 
-	public ActionRenderer(Settings settings, String type) {
+	public ActionRenderer(Settings settings, String... types) {
 		super(settings, Target.Owner);
-		this.type = type;
+		this.types = types;
 	}
 
 	protected boolean alreadyRendered(File destiny, String action) {
@@ -36,10 +37,10 @@ public abstract class ActionRenderer extends Renderer {
 		return new File(destiny, "actions");
 	}
 
-	protected void execute(String name, Response response, List<? extends Parameter> parameters, List<Exception> exceptions, List<Schema> schemas) {
+	protected void execute(String name, String serviceName, Response response, List<? extends Parameter> parameters, List<Exception> exceptions, List<Schema> schemas) {
 		File destiny = destiny();
 		if (!alreadyRendered(destiny, name)) {
-			createNewClass(name, response, parameters, exceptions, schemas);
+			createNewClass(name, serviceName, response, parameters, exceptions, schemas);
 		} else {
 			File newDestiny = Commons.javaFile(destinyPackage(destiny), firstUpperCase(snakeCaseToCamelCase(name)) + suffix());
 			new ActionUpdater(project(), newDestiny, packageName(), parameters, exceptions, response).update();
@@ -50,20 +51,21 @@ public abstract class ActionRenderer extends Renderer {
 		return "Action";
 	}
 
-	private void createNewClass(String name, Response response, List<? extends Parameter> parameters, List<Exception> exceptions, List<Schema> schemas) {
+	private void createNewClass(String name, String serviceName, Response response, List<? extends Parameter> parameters, List<Exception> exceptions, List<Schema> schemas) {
 		String packageName = packageName();
-		FrameBuilder builder = new FrameBuilder("action", this.type)
+		FrameBuilder builder = new FrameBuilder("action")
 				.add("name", name)
+				.add("service", serviceName)
 				.add("package", packageName)
 				.add("box", boxName())
 				.add("returnType", Commons.returnType(response, packageName));
+		Arrays.stream(types).forEach(builder::add);
 		setupParameters(parameters, builder);
 
 		if (!exceptions.isEmpty())
 			builder.add("throws", exceptions.stream().map(e -> e.code().name()).toArray(String[]::new));
 		if (!schemas.isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName).toFrame());
-		
 		Commons.writeFrame(destinyPackage(destiny()), firstUpperCase(snakeCaseToCamelCase(name)) + suffix(), template().render(builder.toFrame()));
 	}
 

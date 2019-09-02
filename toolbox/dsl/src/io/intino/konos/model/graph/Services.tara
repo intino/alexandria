@@ -1,7 +1,7 @@
 dsl Proteo
 
+use Bpm
 use Datalake
-use bpm
 use DataTypes
 
 Concept:Named Service
@@ -75,12 +75,6 @@ Facet REST on Service
         	//TODO si no, debe ser cualquier otro y en caso de ser tipo file el consumes debe ser "multipart/form-data" y el
         	//TODO in debe ser form.
 
-Facet Launcher on REST.Resource.Operation
-	var Process process
-
-Facet Launcher on JMS.Request
-	var Process process
-
 Facet JMX on Service
 	var string path = ""
 	Concept:Named:{1..*} Operation
@@ -90,8 +84,9 @@ Facet JMX on Service
 		has:{0..1} Response
     Concept:Named Notification
 
-Facet JMS on Service
-	var JmsBus jmsBus
+Facet Messaging on Service
+	var MessageHub messageHub
+	var string domain
 	var word:{Queue Topic} subscriptionModel = Topic
 	Concept:Named Request
 		var string path
@@ -108,6 +103,10 @@ Facet JMS on Service
 			var string password
 		sub CertificateSecured
 			var string certificate
+
+Facet ProcessTrigger on Messaging.Request
+	var Workflow.Process process
+	var string path = 'self.graph().workflow().businessUnit() + ".Task"'
 
 Facet SlackBot on Service
 	var string token

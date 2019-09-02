@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.action;
 
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.model.graph.Service;
 import io.intino.konos.model.graph.rest.RESTService.Resource;
 
 import java.util.stream.Collectors;
@@ -18,7 +19,7 @@ public class RESTResourceActionRenderer extends ActionRenderer {
 	public void render() {
 		final String name = firstUpperCase(operation.getClass().getSimpleName()) + firstUpperCase(operation.core$().owner().name());
 		classes().put(operation.getClass().getSimpleName() + "#" + firstUpperCase(operation.core$().owner().name()), "actions" + "." + name + "Action");
-		execute(name, operation.response(), operation.parameterList(),
+		execute(name, operation.core$().ownerAs(Service.class).name$(), operation.response(), operation.parameterList(),
 				Stream.concat(operation.exceptionList().stream(), operation.exceptionRefs().stream()).collect(Collectors.toList()), operation.graph().schemaList());
 	}
 }

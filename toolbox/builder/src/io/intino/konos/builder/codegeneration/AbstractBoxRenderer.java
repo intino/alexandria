@@ -5,9 +5,9 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.*;
-import io.intino.konos.model.graph.jms.JMSService;
 import io.intino.konos.model.graph.jmsbus.JmsBusMessageHub;
 import io.intino.konos.model.graph.jmx.JMXService;
+import io.intino.konos.model.graph.messaging.MessagingService;
 import io.intino.konos.model.graph.realtime.RealtimeMounter;
 import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.slackbot.SlackBotService;
@@ -47,7 +47,7 @@ public class AbstractBoxRenderer extends Renderer {
 		if (hasModel) root.add("tara", boxName);
 		parent(root);
 		services(root, boxName);
-		tasks(root, boxName);
+		sentinels(root, boxName);
 		datalake(root);
 		messageHub(root, boxName);
 		workflow(root);
@@ -69,9 +69,9 @@ public class AbstractBoxRenderer extends Renderer {
 		new ParameterPublisher((LegioConfiguration) configuration).publish(konosParameters);
 	}
 
-	private void tasks(FrameBuilder builder, String boxName) {
-		if (!graph.taskList().isEmpty())
-			builder.add("task", new FrameBuilder("task").add("configuration", boxName).toFrame());
+	private void sentinels(FrameBuilder builder, String boxName) {
+		if (!graph.sentinelList().isEmpty())
+			builder.add("sentinel", new FrameBuilder("sentinel").add("configuration", boxName).toFrame());
 	}
 
 	private void datalake(FrameBuilder root) {
@@ -110,7 +110,7 @@ public class AbstractBoxRenderer extends Renderer {
 	}
 
 	private void workflow(FrameBuilder root) {
-		if (graph.processList().isEmpty()) return;
+		if (graph.workflow() == null || graph.workflow().processList().isEmpty()) return;
 		root.add("workflow", buildBaseFrame().add("workflow"));
 		konosParameters.add("workspace");
 	}
@@ -139,7 +139,7 @@ public class AbstractBoxRenderer extends Renderer {
 	}
 
 	private void services(FrameBuilder builder, String name) {
-		if (!graph.jMSServiceList().isEmpty()) builder.add("jms", "");
+		if (!graph.messagingServiceList().isEmpty()) builder.add("jms", "");
 		rest(builder, name);
 		jms(builder, name);
 		jmx(builder, name);
@@ -162,7 +162,7 @@ public class AbstractBoxRenderer extends Renderer {
 	}
 
 	private void jms(FrameBuilder frame, String name) {
-		for (JMSService service : graph.jMSServiceList())
+		for (MessagingService service : graph.messagingServiceList())
 			frame.add("service", new FrameBuilder("service", "jms").add("name", service.name$()).add("configuration", name));
 	}
 

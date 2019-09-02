@@ -15,7 +15,7 @@ public class BusConnector {
 		try {
 			return new ActiveMQConnectionFactory(user, password, brokerURL).createConnection();
 		} catch (JMSException e) {
-			Logger.error(e.getMessage(), e);
+			Logger.error(e);
 			return null;
 		}
 	}

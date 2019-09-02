@@ -12,7 +12,7 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Service;
-import io.intino.konos.model.graph.jms.JMSService;
+import io.intino.konos.model.graph.messaging.MessagingService;
 import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.slackbot.SlackBotService;
 import io.intino.konos.model.graph.ui.UIService;
@@ -41,7 +41,7 @@ public class IntinoTestRenderer {
 		final FrameBuilder builder = new FrameBuilder();
 		builder.add("intinoTest").add("package", calculatePackage()).add("name", newName);
 		addRESTServices(builder);
-		addJMSServices(builder);
+		addMessagingServices(builder);
 		addSlackServices(builder);
 		addUIServices(builder);
 		return template().render(builder);
@@ -60,8 +60,8 @@ public class IntinoTestRenderer {
 		}
 	}
 
-	private void addJMSServices(FrameBuilder builder) {
-		for (JMSService service : graph.jMSServiceList()) {
+	private void addMessagingServices(FrameBuilder builder) {
+		for (MessagingService service : graph.messagingServiceList()) {
 			FrameBuilder jmsBuilder = new FrameBuilder("service").add("jms").add("name", service.name$());
 			addUserVariables(service.a$(Service.class), jmsBuilder, findCustomParameters(service));
 			builder.add("service", jmsBuilder.toFrame());
@@ -91,9 +91,9 @@ public class IntinoTestRenderer {
 			builder.add("custom", new FrameBuilder("custom").add("conf", layer.name$()).add("name", custom).add("type", "String"));
 	}
 
-	private Set<String> findCustomParameters(JMSService service) {
+	private Set<String> findCustomParameters(MessagingService service) {
 		Set<String> set = new LinkedHashSet<>();
-		for (JMSService.Request request : service.requestList())
+		for (MessagingService.Request request : service.requestList())
 			set.addAll(Commons.extractParameters(request.path()));
 		return set;
 	}

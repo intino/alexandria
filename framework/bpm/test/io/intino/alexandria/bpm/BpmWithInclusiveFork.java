@@ -20,7 +20,7 @@ public class BpmWithInclusiveFork extends BpmTest {
 	public void name() throws InterruptedException {
 		MessageHub messageHub = new MessageHub_();
 		PersistenceManager.InMemoryPersistenceManager persistence = new PersistenceManager.InMemoryPersistenceManager();
-		new Workflow(messageHub, (id, name) -> new JoinTwoBranches(id), persistence);
+		new Workflow(messageHub, (id, name) -> new JoinTwoBranches(id), persistence, null);
 		messageHub.sendMessage("ProcessStatus", createProcessMessage());
 		waitForProcess(persistence);
 		List<ProcessStatus> messages = messagesOf(persistence.read("finished/1.process"));

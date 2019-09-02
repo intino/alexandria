@@ -15,8 +15,6 @@
     <orderEntry type="module" module-name="datalake" />
     <orderEntry type="module" module-name="jms" />
     <orderEntry type="module" module-name="exceptions" />
-    <orderEntry type="module" module-name="json" />
-    <orderEntry type="module" module-name="logger" />
     <orderEntry type="module" module-name="message" />
     <orderEntry type="module" module-name="zim" />
     <orderEntry type="module" module-name="zet" />

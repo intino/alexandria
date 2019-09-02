@@ -20,7 +20,7 @@ public class BpmWithExclusiveFork extends BpmTest {
 	public void name() throws InterruptedException {
 		MessageHub messageHub = new MessageHub_();
 		InMemoryPersistenceManager manager = new InMemoryPersistenceManager();
-		new Workflow(messageHub, (id, name) -> new StringContentReviewerProcess(id), manager);
+		new Workflow(messageHub, (id, name) -> new StringContentReviewerProcess(id), manager, null);
 		messageHub.sendMessage("ProcessStatus", createProcessMessage());
 		waitForProcess(manager);
 		List<ProcessStatus> messages = messagesOf(manager.read("finished/1.process"));

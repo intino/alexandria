@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.action;
 
 import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.model.graph.Service;
 import io.intino.konos.model.graph.jmx.JMXService.Operation;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
@@ -16,6 +17,6 @@ public class JMXActionRenderer extends ActionRenderer {
 	@Override
 	public void render() {
 		classes().put(operation.getClass().getSimpleName() + "#" + firstUpperCase(operation.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(operation.name$())) + "Action");
-		execute(operation.name$(), operation.response(), operation.parameterList(), operation.exceptionList(), operation.graph().schemaList());
+		execute(operation.name$(), operation.core$().ownerAs(Service.class).name$(), operation.response(), operation.parameterList(), operation.exceptionList(), operation.graph().schemaList());
 	}
 }

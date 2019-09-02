@@ -1,0 +1,69 @@
+def type(sentinels)
+	package $package+ValidPackage;
+
+	import $package+ValidPackage.$box+FirstUpperCase~Box;
+	import io.intino.alexandria.scheduler.AlexandriaScheduler;
+	import $package+ValidPackage.scheduling.*;
+	import org.quartz.*;
+	import java.util.LinkedHashSet;
+	import java.util.Map;
+	import java.util.Set;
+	import java.time.ZoneId;
+	import java.util.TimeZone;
+	import io.intino.alexandria.logger.Logger;
+
+	import static org.quartz.JobBuilder.newJob;
+	import static org.quartz.CronScheduleBuilder.*;
+	import static org.quartz.TriggerBuilder.newTrigger;
+
+	public class $name+firstUpperCase+SnakeCaseToCamelCase~Sentinels {
+
+		private $name+firstUpperCase+SnakeCaseToCamelCase~Sentinels() {
+
+		}
+
+		public static void init(AlexandriaScheduler scheduler, $box+FirstUpperCase~Box box) {
+			JobDetail job;
+			try {
+				$sentinel+init...[$NL]
+				scheduler.startSchedules();
+			} catch (Exception e) {
+				Logger.error(e.getMessage());
+			}
+		}
+
+		private static Set<Trigger> newSet(Trigger... triggers) {
+			LinkedHashSet<Trigger> set = new LinkedHashSet<>();
+			java.util.Collections.addAll(set, triggers);
+			return set;
+		}
+	}
+end
+
+def type(sentinel) type(DirectoryListenerSentinel) trigger(init)
+	scheduler.watchDirectory("$name", new java.io.File("$file"), (file, event) -> {
+			$package+ValidPackage.actions.$name+SnakeCaseToCamelCase~Action action = new $package+ValidPackage.actions.$name+SnakeCaseToCamelCase~Action();
+			action.box = box;
+			action.directory = file;
+			action.event = event;
+			action.execute();
+		}, $event+fullPath...[, ]);
+end
+
+def trigger(fullPath)
+	io.intino.alexandria.scheduler.directory.DirectorySentinel.Event.$this
+end
+def type(sentinel) trigger(init)
+	job = newJob($name+SnakeCaseToCamelCase~Listener.class).withIdentity("$name").build();
+	job.getJobDataMap().put("box", box);
+	scheduler.scheduleJob(job, newSet($job...[, ]), true);
+
+end
+
+def type(cronTrigger) trigger(job)
+	newTrigger().withIdentity("$name").withSchedule(cronSchedule("$pattern")[.inTimeZone(TimeZone.getTimeZone(ZoneId.of("$timeZone")))]).build()
+end
+
+def type(onBootTrigger) trigger(job)
+	newTrigger().startNow().build()
+end

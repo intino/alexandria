@@ -240,13 +240,13 @@
         </dependency>
         <dependency>
             <groupId>io.intino.alexandria</groupId>
-            <artifactId>bpm</artifactId>
+            <artifactId>bpm-framework</artifactId>
             <version>LATEST</version>
         </dependency>
         <dependency>
             <groupId>io.intino.alexandria</groupId>
             <artifactId>rest-accessor</artifactId>
-            <version>1.0.6</version>
+            <version>1.0.7</version>
             <scope>test</scope>
         </dependency>
         <dependency>

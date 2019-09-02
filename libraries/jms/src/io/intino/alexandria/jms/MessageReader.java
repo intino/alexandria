@@ -17,7 +17,7 @@ public class MessageReader {
 				return new String(data);
 			} else return ((TextMessage) message).getText();
 		} catch (JMSException e) {
-			Logger.error(e.getMessage(), e);
+			Logger.error(e);
 			return "";
 		}
 	}

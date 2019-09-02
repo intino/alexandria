@@ -4,18 +4,20 @@ import io.intino.alexandria.logger.Logger;
 import io.intino.bpmparser.BpmnParser;
 import io.intino.bpmparser.Link;
 import io.intino.bpmparser.State;
+import io.intino.bpmparser.Task;
+import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.Process;
-import io.intino.tara.magritte.Layer;
+import io.intino.konos.model.graph.Workflow.Process;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,11 +33,14 @@ public class BpmRenderer extends Renderer {
 	private final List<Process> processes;
 	private final File src;
 	private final File gen;
+	private final String businessUnit;
+	private List<String> stateServices = new ArrayList<>();
 
 	public BpmRenderer(Settings settings, KonosGraph graph) {
 		super(settings, Target.Owner);
 		this.settings = settings;
-		this.processes = graph.processList();
+		this.businessUnit = graph.workflow().businessUnit();
+		this.processes = graph.workflow().processList();
 		this.src = new File(settings.src(Target.Owner), "bpm");
 		this.gen = new File(settings.gen(Target.Owner), "bpm");
 	}
@@ -48,22 +53,30 @@ public class BpmRenderer extends Renderer {
 
 	private void renderBpm() {
 		if (processes.isEmpty()) return;
-		FrameBuilder builder = new FrameBuilder("workflow").add("box", settings.boxName()).add("package", settings.packageName()).add(settings.boxName()).add("process", processes.stream().map(Layer::name$).toArray(String[]::new));
+		FrameBuilder builder = new FrameBuilder("workflow").add("box", settings.boxName()).add("package", settings.packageName()).add("businessUnit", businessUnit).add(settings.boxName()).add("process", processes.stream().map(p -> frameOf(p)).toArray(Frame[]::new));
 		writeFrame(gen, "Workflow", customize(new WorkflowTemplate()).render(builder.toFrame()));
+	}
+
+	private Frame frameOf(Process p) {
+		return new FrameBuilder("process").add("name", p.name$()).toFrame();
 	}
 
 	private void renderProcesses() {
 		for (Process process : processes) {
+			stateServices.clear();
 			final FrameBuilder builder = new FrameBuilder("process").
 					add("box", settings.boxName()).
 					add("package", settings.packageName()).
+					add("businessUnit", businessUnit).
 					add("name", process.name$());
 			File file = new File(process.bpmn().getFile());
 			if (!file.exists()) continue;
 			try {
 				BpmnParser bpmnParser = new BpmnParser(new FileInputStream(file));
 				State initial = bpmnParser.getNodeWalker().getInitial().links().get(0).state().type(Initial);
-				walk(builder, initial);
+				walk(builder, process, initial);
+				for (String stateService : stateServices)
+					builder.add("accessor", new FrameBuilder("accessor").add("name", stateService));
 				settings.classes().put(process.getClass().getSimpleName() + "#" + process.name$(), "bpm." + process.name$());
 				writeFrame(gen, "Abstract" + firstUpperCase(process.name$()), customize(new ProcessTemplate()).render(builder.toFrame()));
 				if (!alreadyRendered(src, process.name$()))
@@ -74,40 +87,46 @@ public class BpmRenderer extends Renderer {
 		}
 	}
 
-	private void walk(FrameBuilder builder, State initial) {
+	private void walk(FrameBuilder builder, Process process, State initial) {
 		Map<String, FrameBuilder> states = new LinkedHashMap<>();
 		Map<String, FrameBuilder> links = new LinkedHashMap<>();
-		framesFrom(initial, states, links);
-		builder.add("state", states.values().toArray(new FrameBuilder[0]));
-		builder.add("link", links.values().toArray(new FrameBuilder[0]));
+		framesFrom(initial, process, states, links);
+		builder.add("state", states.values().toArray(new FrameBuilder[0]))
+				.add("link", links.values().toArray(new FrameBuilder[0]));
 	}
 
-	private void framesFrom(State state, Map<String, FrameBuilder> states, Map<String, FrameBuilder> links) {
-		states.put(state.name(), frameOf(state, typeOf(state)));
+	private void framesFrom(State state, Process process, Map<String, FrameBuilder> states, Map<String, FrameBuilder> links) {
+		states.put(state.name(), frameOf(state, process, typeOf(state)));
 		for (Link link : state.links()) {
 			if (!states.containsKey(link.state().name()) && !link.state().type().equals(Terminal))
-				framesFrom(link.state(), states, links);
+				framesFrom(link.state(), process, states, links);
 			if (!links.containsKey(state.name() + "#" + link.state().name()))
 				links.put(state.name() + "#" + link.state().name(), frameOf(state, link));
 		}
 	}
 
-	private FrameBuilder frameOf(State state, State.Type type) {
+	private FrameBuilder frameOf(State state, Process process, List<State.Type> types) {
 		FrameBuilder builder = new FrameBuilder("state").add("name", state.name());
-		if (!State.Type.Intermediate.equals(type)) builder.add("type", type.name());
+		if (!types.contains(State.Type.Intermediate))
+			builder.add("type", types.stream().map(Enum::name).toArray(String[]::new));
 		if (state.task() != null) {
-			builder.add("taskType", state.task().type().name());
-			builder.add("taskName", state.task().id());
-			builder.add(state.task().type().name());
+			if (state.task().type().equals(Task.Type.Service)) stateServices.add(state.name());
+			builder.add(state.task().type().name())
+					.add("taskType", state.task().type().name())
+					.add("taskName", state.task().id())
+					.add("businessUnit", businessUnit)
+					.add("process", process.name$());
 		}
-		if (type.equals(Terminal)) state.type(Terminal).links().clear();
+		if (types.contains(Terminal)) state.type(Terminal).links().clear();
 		return builder;
 	}
 
-	private State.Type typeOf(State state) {
-		if (state.type().equals(Initial)) return Initial;
-		if (state.links().isEmpty() || state.links().get(0).state().type().equals(Terminal)) return Terminal;
-		return State.Type.Intermediate;
+	private List<State.Type> typeOf(State state) {
+		List<State.Type> types = new ArrayList<>();
+		if (state.type().equals(Initial)) types.add(Initial);
+		if (state.links().isEmpty() || state.links().get(0).state().type().equals(Terminal)) types.add(Terminal);
+		else if (!types.contains(Initial)) types.add(State.Type.Intermediate);
+		return types;
 	}
 
 	private FrameBuilder frameOf(State state, Link link) {
