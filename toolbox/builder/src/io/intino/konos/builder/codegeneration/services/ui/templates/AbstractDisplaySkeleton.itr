@@ -1,3 +1,27 @@
+def type(display & accessible)
+	package $package.ui.displays[.$packageType~s];
+
+	$templatesImport
+	$blocksImport
+	$itemsImport
+    import $package+validPackage.ui.displays.notifiers.$name+SnakeCaseToCamelCase+FirstUpperCase~ProxyNotifier;
+    import io.intino.alexandria.ui.displays.ProxyDisplay;
+    import io.intino.alexandria.ui.services.push.UISession;
+
+    import java.util.HashMap;
+    import java.util.Map;
+
+    public class $name+SnakeCaseToCamelCase+FirstUpperCase~Proxy extends ProxyDisplay<$name+SnakeCaseToCamelCase+FirstUpperCase~ProxyNotifier> {
+
+        public $name+firstUpperCase~Proxy(UISession session, String appUrl) {
+            super("$name+firstUpperCase", session, appUrl, "/$name+SnakeCaseToCamelCase+lowercase~proxy");
+        }
+
+		[$request+accessible...[$NL$NL]]
+		[$parameter+method...[$NL$NL]]
+    }
+end
+
 def type(display)
 	package $package.ui.displays[.$packageType~s];
 
@@ -107,4 +131,20 @@ def type(methods & dynamicloadedcomponent)
 	public void hideLoading() {
 		notifier.refreshLoading(false);
 	}
+end
+
+def type(request) trigger(accessible)
+	public void $name([$parameter value]) {
+		request("$name"[, $parameter+parameterValue]);
+	}
+end
+
+def trigger(parameterValue)
+	value
+end
+
+def trigger(method)
+    public void $value+firstLowerCase(String value) {
+        add("$value", value);
+    }
 end

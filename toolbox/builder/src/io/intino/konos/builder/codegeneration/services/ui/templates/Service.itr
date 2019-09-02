@@ -70,7 +70,7 @@ def type(path)
 end
 
 def type(display & proxy) trigger(notifier)
-	register($name+firstUpperCase~ProxyNotifier.class).forDisplay($package+validPackage.ui.displays.$name+firstUpperCase~Proxy.class);
+	register($name+firstUpperCase~ProxyNotifier.class).forDisplay($package+validPackage.ui.displays.[$type~s.]$name+firstUpperCase~Proxy.class);
 end
 
 def type(display) trigger(notifier)

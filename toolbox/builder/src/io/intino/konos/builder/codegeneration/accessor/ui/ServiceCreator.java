@@ -7,14 +7,12 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.WebModuleType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.io.ZipUtil;
 import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.ArtifactTemplate;
@@ -81,13 +79,10 @@ public class ServiceCreator extends UIRenderer {
 				return;
 			}
 			final ModuleManager manager = ModuleManager.getInstance(project);
-			Module webModule = manager.newModule(modulePath(service), WebModuleType.WEB_MODULE);
+			Module webModule = manager.newModule(moduleImlFilename(service), WebModuleType.WEB_MODULE);
 			final ModifiableRootModel model = ModuleRootManager.getInstance(webModule).getModifiableModel();
 			final File moduleRoot = new File(webModule.getModuleFilePath()).getParentFile();
 			moduleRoot.mkdirs();
-			final VirtualFile vFile = VfsUtil.findFileByIoFile(moduleRoot, true);
-			final ContentEntry contentEntry = vFile != null ? model.addContentEntry(vFile) : model.addContentEntry(moduleRoot.getAbsolutePath());
-			addExcludeFiles(moduleRoot, contentEntry);
 			model.commit();
 			boolean created = createConfigurationFile(moduleRoot, service.name$());
 			if (created) addWebDependency(register(webModule, newExternalProvider(webModule)));
@@ -168,20 +163,12 @@ public class ServiceCreator extends UIRenderer {
 						stream(ModuleManager.getInstance(project).getModules()).filter(m -> m.getName().equals(toSnakeCase(name))).findFirst().orElse(null));
 	}
 
-	private void addExcludeFiles(File parent, ContentEntry contentEntry) {
-		final File lib = new File(parent, "lib");
-		lib.mkdirs();
-		contentEntry.addExcludeFolder(Objects.requireNonNull(VfsUtil.findFileByIoFile(lib, true)));
-	}
-
 	private String toSnakeCase(String name) {
-		String regex = "([a-z])([A-Z]+)";
-		String replacement = "$1-$2";
-		return name.replaceAll(regex, replacement).toLowerCase();
+		return (String) Formatters.camelCaseToSnakeCase().format(name);
 	}
 
 	@NotNull
-	private String modulePath(UIService service) {
+	private String moduleImlFilename(UIService service) {
 		return project.getBasePath() + File.separator + toSnakeCase(service.name$()) + File.separator + toSnakeCase(service.name$()) + ModuleFileType.DOT_DEFAULT_EXTENSION;
 	}
 

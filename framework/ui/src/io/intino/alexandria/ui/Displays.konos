@@ -8,7 +8,7 @@ Display proxyDisplay as Decorated
 	Notification refresh as Object(ProxyDisplayInfo)
 	Notification refreshError as Text
 
-	Request registerPersonifiedTemplate as Text
+	Request ready
 
 Schema ProxyDisplayInfo
 	Attribute baseUrl as Text

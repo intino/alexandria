@@ -228,6 +228,14 @@ Concept OtherComponents
 			has:{0..1} CatalogComponents.Collection
 
 	Concept Divider extends Component
+	Concept Portal extends Component
+		var string to
+		var word:{Display Template} type = Template
+		var UI.Use in
+
+		Concept Parameter
+			var string name
+			var string value
 
 Concept PrivateComponents
 	Concept PrivateComponent extends Component

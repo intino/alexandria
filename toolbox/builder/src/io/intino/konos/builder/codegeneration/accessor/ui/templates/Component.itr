@@ -74,6 +74,10 @@ def type(properties & materialicon) trigger(specific)
 	[ icon="$icon"]
 end
 
+def type(properties & portal) trigger(specific)
+    [ to="$to"]
+end
+
 def type(properties & selector) trigger(specific)
 	[ multipleSelection={$multipleSelection}][ readonly={$readonly}][ focused={$focused}]
 end

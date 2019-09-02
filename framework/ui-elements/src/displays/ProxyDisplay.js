@@ -24,12 +24,21 @@ export default class ProxyDisplay extends AbstractProxyDisplay {
 			return;
 		}
 
+		if (this.state.baseUrl == null) {
+			this._renderLoading();
+			return;
+		}
+
 		return (
 			<div id="component" base-url={this.state.baseUrl}>
 				{React.createElement(DisplayFactory.get(this.state.displayType))}
 			</div>
 		);
 	}
+
+	_renderLoading = () => {
+		this.requester.ready();
+	};
 
 	_renderError = () => {
 		return (

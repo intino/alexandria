@@ -1,12 +1,14 @@
 dsl Konos
 
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
+	Use(className = "org.example.unit1.box.ui.Unit1Elements", url = "http://unit1") unit1
 	Resource(path = "/") home as Page(homeTemplate)
 	Resource(path = "/demo") demo as Page(homeTemplate)
 
-Template homeTemplate as Decorated
-Display dialog1 as Accessible(parameters = "user")
-Display dialog2 as Decorated Accessible(parameters = "user")
+Template homeTemplate
+	Portal(to="Display1",in=UiElements.unit1)
+
+Template root as Accessible(parameters = "a" "b")
 
 Theme theme1
 	type = Normal

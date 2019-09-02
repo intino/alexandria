@@ -86,10 +86,4 @@ public class CodeGenerationHelper {
 		if (!file.exists()) file.mkdirs();
 		return file;
 	}
-
-	public static String toSnakeCase(String name) {
-		String regex = "([a-z])([A-Z]+)";
-		String replacement = "$1-$2";
-		return name.replaceAll(regex, replacement).toLowerCase();
-	}
 }

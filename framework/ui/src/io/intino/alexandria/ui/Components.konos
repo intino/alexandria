@@ -118,3 +118,5 @@ Component user as Decorated
 	Notification refresh as Object(UserInfo)
 
 	Request logout
+
+Component portal as Decorated

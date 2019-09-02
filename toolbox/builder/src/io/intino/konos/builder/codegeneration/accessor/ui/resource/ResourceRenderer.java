@@ -5,6 +5,7 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.PageTemplate;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Template;
@@ -55,7 +56,7 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 
 	private void addPageDisplayOrigin(FrameBuilder builder, Display display) {
 		FrameBuilder originFrame = new FrameBuilder();
-		if (display.isDecorated()) originFrame.add("decorated", "");
+		if (ElementHelper.isRoot(display)) originFrame.add("decorated", "");
 		builder.add("pageDisplayOrigin", originFrame);
 	}
 
