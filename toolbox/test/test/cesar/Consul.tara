@@ -2,61 +2,62 @@ dsl Konos
 
 MessageHub messageHub as JmsBus("{cesar-bus}", "{bus-user}", "{bus-password}", "{bus-client-id}")
 
-Service ConsulJms as JMS(messageHub)
-	Request("service.consul.{serverId}.status") status
+Service ConsulJms as Messaging(messageHub)
+	domain="{serverId"
+	Request("status") status
 		Response as Object(ServerStatus)
-	Request("service.consul.{serverId}.reboot") reboot
+	Request("reboot") reboot
 		Response as Bool
-	Request("service.consul.{serverId}.deploy") deploy
+	Request("deploy") deploy
 		Parameter process as Object(ProcessSchema)
 		Response as Object(schema = DeployResult)
-	Request("service.consul.{serverId}.retract") retract
+	Request("retract") retract
 		Parameter project as Text
 		Parameter processId as Text
 		Response as Bool
-	Request("service.consul.{serverId}.upgrade") upgrade
+	Request("upgrade") upgrade
 		Response as Bool
-	Request("service.consul.{serverId}.startProcess") startProcess
+	Request("startProcess") startProcess
 		Parameter project as Text
 		Parameter processId as Text
 		Response as Bool
-	Request("service.consul.{serverId}.stopProcess") stopProcess
+	Request("stopProcess") stopProcess
 		Parameter project as Text
 		Parameter processId as Text
 		Response as Bool
-	Request("service.consul.{serverId}.debugProcess") debugProcess
+	Request("debugProcess") debugProcess
 		Parameter project as Text
 		Parameter processId as Text
 		Parameter port as Integer
 		Response as Bool
-	Request("service.consul.{serverId}.restartProcess") restartProcess
+	Request("restartProcess") restartProcess
 		Parameter project as Text
 		Parameter processId as Text
 		Response as Bool
-	Request("service.consul.{serverId}.resetProcess") resetProcess
+	Request("resetProcess") resetProcess
 		Parameter project as Text
 		Parameter processId as Text
 		Response as Bool
-	Request("service.consul.{serverId}.parameter") parameter
+	Request("parameter") parameter
 		Parameter project as Text
 		Parameter processId as Text
 		Parameter name as Text
 		Parameter value as Text
 		Response as Bool
-	Request("service.consul.{serverId}.processStatus") processStatus
+	Request("processStatus") processStatus
 		Parameter project as Text
 		Parameter processId as Text
 		Response as Object(ProcessStatus)
-	Request("service.consul.{serverId}.processLog") processLog
+	Request("processLog") processLog
 		Parameter project as Text
 		Parameter processId as Text
 		Response as Object(ProcessLog)
-	Request("service.consul.{serverId}.operate") processOperation
+	Request("operate") processOperation
 		Parameter project as Text
 		Parameter processId as Text
 		Parameter operation as Object(Operation)
 		Response as Object(OperationResult)
-	Request("service.consul.{serverId}.operations") processOperations
+	Request("operations") processOperations
 		Parameter project as Text
 		Parameter processId as Text
 		Response as List Object(Operation)

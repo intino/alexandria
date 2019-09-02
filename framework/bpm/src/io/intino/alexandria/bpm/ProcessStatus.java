@@ -4,10 +4,11 @@ import io.intino.alexandria.message.Message;
 
 import java.time.Instant;
 
+import static io.intino.alexandria.bpm.Workflow.EventType;
+
 public class ProcessStatus implements Comparable<ProcessStatus> {
 
 	private static final String Owner = "owner";
-	private static final String ProcessStatusType = "ProcessStatus";
 	private static final String Task = "Task";
 	private static final String State = "State";
 	private static final String Result = "result";
@@ -22,7 +23,7 @@ public class ProcessStatus implements Comparable<ProcessStatus> {
 	private final Message message;
 
 	public ProcessStatus(String id, String name, Process.Status processStatus) {
-		this(new Message(ProcessStatusType)
+		this(new Message(EventType)
 				.set(Ts, Instant.now().toString())
 				.set(Id, id)
 				.set(Name, name)
@@ -30,7 +31,7 @@ public class ProcessStatus implements Comparable<ProcessStatus> {
 	}
 
 	public ProcessStatus(String id, String name, Process.Status processStatus, String owner, String callbackProcess, String callbackState) {
-		this(new Message(ProcessStatusType)
+		this(new Message(EventType)
 				.set(Ts, Instant.now().toString())
 				.set(Id, id)
 				.set(Name, name)
@@ -80,8 +81,9 @@ public class ProcessStatus implements Comparable<ProcessStatus> {
 		return !message.components(State).isEmpty();
 	}
 
-	public void addStateInfo(String name, State.Status status) {
+	public ProcessStatus addStateInfo(String name, State.Status status) {
 		message.add(new Message(State).set(Name, name).set(Status, status.name()));
+		return this;
 	}
 
 	public StateInfo stateInfo() {
@@ -96,8 +98,9 @@ public class ProcessStatus implements Comparable<ProcessStatus> {
 		return hasTaskInfo() ? new TaskInfo(message.components(Task).get(0)) : null;
 	}
 
-	public void addTaskInfo(io.intino.alexandria.bpm.Task.Result result) {
+	public ProcessStatus addTaskInfo(io.intino.alexandria.bpm.Task.Result result) {
 		message.add(new Message(Task).set(Result, result.result()));
+		return this;
 	}
 
 	public void addTaskInfo(String user, String duration, io.intino.alexandria.bpm.Task.Result result) {

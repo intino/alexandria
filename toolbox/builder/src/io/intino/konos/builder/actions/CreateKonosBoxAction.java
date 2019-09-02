@@ -146,8 +146,8 @@ public class CreateKonosBoxAction extends KonosAction {
 	private Map<String, String> requiredDependencies(KonosGraph graph) {
 		Map<String, String> dependencies = Manifest.load().dependencies;
 		if (graph.jMXServiceList().isEmpty()) remove(dependencies, "jmx");
-		if (graph.jMSServiceList().isEmpty()) remove(dependencies, "jms");
-		if (graph.taskList().isEmpty()) remove(dependencies, "scheduler");
+		if (graph.messagingServiceList().isEmpty()) remove(dependencies, "jms");
+		if (graph.sentinelList().isEmpty()) remove(dependencies, "scheduler");
 		if (graph.datalake() == null) {
 			remove(dependencies, "datalake");
 			remove(dependencies, "sshj");
@@ -156,7 +156,7 @@ public class CreateKonosBoxAction extends KonosAction {
 		if (graph.messageHub() != null && !graph.messageHub().isJmsBus()) remove(dependencies, "message-hub-jms");
 		if (graph.uIServiceList().isEmpty()) remove(dependencies, "ui");
 		if (graph.rESTServiceList().isEmpty()) remove(dependencies, "rest");
-		if (graph.processList().isEmpty()) remove(dependencies, "bpm");
+		if (graph.workflow() != null) remove(dependencies, "bpm");
 		if (graph.slackBotServiceList().isEmpty()) remove(dependencies, "slack");
 		if (graph.absoluteChartList().isEmpty() && graph.relativeChartList().isEmpty())
 			remove(dependencies, "driver-r");

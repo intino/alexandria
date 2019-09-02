@@ -1,7 +1,7 @@
 package io.intino.konos.model.graph;
 
 import io.intino.konos.model.graph.extensionof.ExtensionOfPassiveView;
-import io.intino.konos.model.graph.jms.JMSService;
+import io.intino.konos.model.graph.messaging.MessagingService;
 import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.ui.UIService;
 import io.intino.tara.magritte.Graph;
@@ -74,9 +74,9 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		return hierarchyDisplays.contains(component.name$());
 	}
 
-	public Set<String> findCustomParameters(JMSService service) {
+	public Set<String> findCustomParameters(MessagingService service) {
 		Set<String> set = new LinkedHashSet<>();
-		for (JMSService.Request request : service.requestList())
+		for (MessagingService.Request request : service.requestList())
 			set.addAll(extractParameters(request.path()));
 		return set;
 	}

@@ -209,8 +209,9 @@ public class SessionHandler {
 		@Override
 		public OutputStream outputStream() {
 			try {
+				if (!file.exists()) file.createNewFile();
 				return new BufferedOutputStream(new FileOutputStream(file));
-			} catch (FileNotFoundException e) {
+			} catch (IOException e) {
 				Logger.error(e);
 				return null;
 			}
