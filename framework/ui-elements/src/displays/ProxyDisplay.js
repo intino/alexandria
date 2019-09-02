@@ -2,6 +2,7 @@ import React from "react";
 import AbstractProxyDisplay from "../../gen/displays/AbstractProxyDisplay";
 import ProxyDisplayNotifier from "../../gen/displays/notifiers/ProxyDisplayNotifier";
 import ProxyDisplayRequester from "../../gen/displays/requesters/ProxyDisplayRequester";
+import Spinner from "alexandria-ui-elements/src/displays/components/Spinner";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import 'alexandria-ui-elements/res/styles/layout.css';
 
@@ -32,12 +33,17 @@ export default class ProxyDisplay extends AbstractProxyDisplay {
 		return (
 			<div id="component" base-url={this.state.baseUrl}>
 				{React.createElement(DisplayFactory.get(this.state.displayType))}
+				{this.requester.ready()}
 			</div>
 		);
 	}
 
 	_renderLoading = () => {
-		this.requester.ready();
+		return (
+			<div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }>
+				<Spinner/>
+			</div>
+		);
 	};
 
 	_renderError = () => {
