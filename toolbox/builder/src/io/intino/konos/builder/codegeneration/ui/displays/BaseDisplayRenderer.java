@@ -13,6 +13,7 @@ import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
 import io.intino.konos.model.graph.dynamicloaded.DynamicLoadedComponent;
 import io.intino.konos.model.graph.selectable.catalogcomponents.SelectableCollection;
+import org.jetbrains.annotations.NotNull;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
@@ -47,7 +48,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (accessible) result.add("accessible");
 		addParametrized(result);
 		addExtends(result);
-		addImports(result);
+		addImports(result, accessible);
 		addImplements(result);
 		addMethods(result);
 		addRenderTagFrames(result);
@@ -93,15 +94,22 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		frame.add("displayExtends", result);
 	}
 
-	private void addImports(FrameBuilder frame) {
+	private void addImports(FrameBuilder frame, boolean accessible) {
 		KonosGraph graph = element.graph();
 		if (graph.templateList().size() > 0) frame.add("templatesImport", buildBaseFrame().add("templatesImport"));
 		if (graph.blockList().size() > 0) frame.add("blocksImport", buildBaseFrame().add("blocksImport"));
 		if (graph.itemsDisplays().size() > 0) frame.add("itemsImport", buildBaseFrame().add("itemsImport"));
 		if (graph.rowsDisplays().size() > 0) frame.add("rowsImport", buildBaseFrame().add("rowsImport"));
-		if (!ElementHelper.isRoot(componentOf(element))) frame.add("displayRegistration", buildBaseFrame().add("displayRegistration").add("name", nameOf(element)));
+		if (!ElementHelper.isRoot(componentOf(element)) || (element.isAccessible() && accessible)) frame.add("displayRegistration", displayRegistrationFrame(accessible));
 		frame.add("requesterDirectory", typeOf(element).equalsIgnoreCase("Display") || typeOf(element).equalsIgnoreCase("Display") ? "." : "..");
 		frame.add("notifierDirectory", typeOf(element).equalsIgnoreCase("Display") ? "." : "..");
+	}
+
+	@NotNull
+	private FrameBuilder displayRegistrationFrame(boolean accessible) {
+		FrameBuilder result = buildBaseFrame().add("displayRegistration");
+		if (element.isAccessible() && accessible) result.add("accessible");
+		return result.add("name", nameOf(element));
 	}
 
 	protected void addImplements(FrameBuilder frame) {

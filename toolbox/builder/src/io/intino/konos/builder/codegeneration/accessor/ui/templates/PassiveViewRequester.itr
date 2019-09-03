@@ -1,7 +1,7 @@
 def type(display)
 	$import
 
-	export default class $name+firstUpperCase~Requester extends $parentType {
+	export default class $name+firstUpperCase$proxy~Requester extends $parentType {
 		constructor(element) {
 			super(element);
 		};
@@ -21,6 +21,13 @@ def trigger(import)
 	import Requester from "./Requester";
 end
 
+def attribute(accessible) trigger(proxy)
+	Proxy
+end
+
+def trigger(proxy)
+end
+
 def attribute(extensionOf) trigger(parentType)
 	$parent+firstUpperCase~Requester
 end
@@ -31,13 +38,13 @@ end
 
 def type(parameter) trigger(request)
 	$name = function(value) {
-		$method({ op: "$name", s: "$display+lowercase", d: this.element.props.id, o: this.element.props.owner(), c: this.element.props.context(), v: $parameter});
+		$method({ op: "$name", s: "$display+lowercase", d: this.element.props.id, o: this.element.props.owner(), c: this.element.props.context(), v: $parameter}, this.element.socket());
 	}
 end
 
 def trigger(request)
     $name = ([$parameterSignature]) => {
-        $method({ op: "$name", s: "$display+lowercase", d: this.element.props.id, o: this.element.props.owner(), c: this.element.props.context()[, v: $parameter]});
+        $method({ op: "$name", s: "$display+lowercase", d: this.element.props.id, o: this.element.props.owner(), c: this.element.props.context()[, v: $parameter]}, this.element.socket());
     };
 end
 

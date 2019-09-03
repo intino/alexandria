@@ -1,25 +1,24 @@
 const PushService = (function () {
-    var socketUrl = {};
     var callbacks = {};
     var service = {};
-    var ws = null;
 
-    service.retries = 0;
-    service.ready = false;
     service.pendingMessages = [];
+    service.connections = [];
+    service.notified = false;
 
     service.openConnection = function (url) {
-        this.ws = new WebSocket(url);
-        socketUrl = url;
+        var socket = new WebSocket(url);
+        socket.retries = 0;
+        socket.ready = false;
 
-        this.ws.onopen = function(e) {
+        socket.onopen = function(e) {
             console.log("WebSocket connection opened.");
-            service.retries = 0;
-            service.ready = true;
+            socket.retries = 0;
+            socket.ready = true;
             sendPendingMessages(service);
         };
 
-        this.ws.onmessage = function (event) {
+        socket.onmessage = function (event) {
             var data = JSON.parse(event.data);
             var callbacks = callback(data.n).slice(0);
             callbacks.forEach(function (callback) {
@@ -27,12 +26,12 @@ const PushService = (function () {
             });
         };
 
-        this.ws.onerror = function(e) {
+        socket.onerror = function(e) {
         };
 
-        this.ws.onclose = function(e) {
-            if (service.retries >= 3) {
-                service.ready = false;
+        socket.onclose = function(e) {
+            if (socket.retries >= 3) {
+                socket.ready = false;
                 this.notifyClose();
                 return;
             }
@@ -40,21 +39,25 @@ const PushService = (function () {
             this.reconnect(e);
         };
 
-        this.ws.reconnect = function(e) {
+        socket.reconnect = function(e) {
             try {
-                service.retries++;
-                console.log("WebSocket connection lost. Status code: " + e.code + ". Retry: " + service.retries + ".");
-                service.openConnection(socketUrl);
+                socket.retries++;
+                console.log("WebSocket connection lost. Status code: " + e.code + ". Retry: " + socket.retries + ".");
+                service.openConnection(url);
             }
             catch(e) {
-                window.setTimeout(service.openConnection(socketUrl), 1000*2);
+                window.setTimeout(service.openConnection(url), 1000*2);
             }
         }
 
-        this.ws.notifyClose = function() {
+        socket.notifyClose = function() {
+            if (service.notified) return;
             if (service.onCloseListener) service.onCloseListener();
             callbacks = {};
         };
+
+        if (this.connections.length <= 0) this.connections["Default"] = socket;
+        this.connections[url] = socket;
     };
 
     service.listen = function (name, callback) {
@@ -70,9 +73,11 @@ const PushService = (function () {
         }
     };
 
-    service.send = function(message) {
-        if (this.ready) this.ws.send(JSON.stringify(message));
-        else service.pendingMessages.push(message);
+    service.send = function(message, socketUrl) {
+        if (socketUrl == null) socketUrl = "Default";
+        const socket = this.connections[socketUrl];
+        if (socket != null && socket.ready) socket.send(JSON.stringify(message));
+        else service.pendingMessages.push({ message: message, socket: socketUrl });
     };
 
     service.onClose = function(listener) {
@@ -84,8 +89,10 @@ const PushService = (function () {
     }
 
     function sendPendingMessages(service) {
-        for (var i=0; i<service.pendingMessages; i++)
-            service.send(service.pendingMessages[i]);
+        for (let i=0; i<service.pendingMessages; i++) {
+            const pendingMessage = service.pendingMessages[i];
+            service.send(pendingMessage.message, pendingMessage.socket);
+        }
     }
 
     return service;

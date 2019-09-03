@@ -16,7 +16,9 @@ class Portal extends AbstractPortal {
 		this.requester = new PortalRequester(this);
 	};
 
-
+	render() {
+		return (<div>{this.renderInstances()}</div>);
+	};
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(Portal));

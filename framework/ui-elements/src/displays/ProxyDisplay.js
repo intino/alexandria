@@ -8,7 +8,6 @@ import 'alexandria-ui-elements/res/styles/layout.css';
 
 export default class ProxyDisplay extends AbstractProxyDisplay {
 	state = {
-		baseUrl: null,
 		displayType: null,
 		error: null,
 	};
@@ -20,18 +19,14 @@ export default class ProxyDisplay extends AbstractProxyDisplay {
 	};
 
 	render() {
-		if (this.state.error != null) {
-			this._renderError();
-			return;
-		}
+		if (this.state.error != null)
+			return this._renderError();
 
-		if (this.state.baseUrl == null) {
-			this._renderLoading();
-			return;
-		}
+		if (this.state.pushId == null)
+			return this._renderLoading();
 
 		return (
-			<div id="component" base-url={this.state.baseUrl}>
+			<div id="component">
 				{React.createElement(DisplayFactory.get(this.state.displayType))}
 				{this.requester.ready()}
 			</div>
@@ -55,7 +50,7 @@ export default class ProxyDisplay extends AbstractProxyDisplay {
 	};
 
 	refresh = (info) => {
-		this.setState({baseUrl: info.baseUrl, displayType: info.displayType});
+		this.setState({socket: info.app, displayType: info.displayType});
 	};
 
 	refreshError = (error) => {

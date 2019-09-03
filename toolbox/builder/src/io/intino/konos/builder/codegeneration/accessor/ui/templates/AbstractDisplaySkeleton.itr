@@ -10,7 +10,7 @@ def type(display & accessible)
 	[import $notDecorated+firstUpperCase~Requester from "$requesterDirectory/requesters/$notDecorated+firstUpperCase~Requester";]
 	[$displayRegistration+import]
 
-	export default class $abstract$name+firstUpperCase extends $displayExtends {
+	export default class $name+SnakeCaseToCamelCase+FirstUpperCase~Proxy extends $displayExtends {
 
 		constructor(props) {
 			super(props);
@@ -61,6 +61,10 @@ end
 
 def type(displayRegistration) trigger(import)
     import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
+end
+
+def type(displayRegistration & accessible) trigger(declaration)
+    DisplayFactory.register("$name+SnakeCaseToCamelCase+FirstUpperCase~Proxy", $name+SnakeCaseToCamelCase+FirstUpperCase~Proxy);
 end
 
 def type(displayRegistration) trigger(declaration)

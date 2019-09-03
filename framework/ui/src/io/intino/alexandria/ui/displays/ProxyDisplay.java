@@ -23,6 +23,7 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
     private final String sessionId;
     private final String clientId;
     private final String token;
+    private final String app;
     private final String appUrl;
     private final String path;
     private boolean ready = false;
@@ -30,13 +31,14 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
     private Set<PendingRequest> pendingRequestList = new LinkedHashSet<>();
     private Map<String, String> parameters = new HashMap<>();
 
-    public ProxyDisplay(String type, UISession session, String appUrl, String path) {
+    public ProxyDisplay(String type, UISession session, String app, String url, String path) {
         super(null);
         this.type = type;
         this.sessionId = session.id();
         this.clientId = session.client().id();
         this.token = session.token() != null ? session.token().id() : null;
-        this.appUrl = appUrl;
+        this.app = app;
+        this.appUrl = url;
         this.path = path;
     }
 
@@ -68,7 +70,7 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
     protected void init() {
         super.init();
         try {
-            notifier.refresh(new ProxyDisplayInfo().baseUrl(appUrl).displayType(type));
+            notifier.refresh(new ProxyDisplayInfo().app(app).displayType(type));
             post("/personify", parameters());
         } catch (RestfulFailure | MalformedURLException error) {
             notifier.refreshError(errorMessage(appUrl));
