@@ -100,7 +100,7 @@ def type(ui & action & gen)
 		public Abstract$name+snakecaseToCamelCase+firstUpperCase~Page() { super("$uiService+camelCaseToSnakeCase+lowerCase"); }
 
 		public String execute() [throws $throws+FirstUpperCase...[, ]] {
-			return super.template("$name"[, Arrays.asList($usedAppUrl...[,]]));
+			return super.template("$name"[, Arrays.asList($usedAppUrl...[,])]);
 		}
 
 		@Override

@@ -58,13 +58,14 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	public FrameBuilder buildFrame(boolean accessible) {
 		FrameBuilder result = super.buildFrame();
 		if (accessible) result.add("accessible");
-		FrameBuilder extensionFrame = extensionFrame();
+		FrameBuilder extensionFrame = extensionFrame(accessible);
 		String type = type();
 		result.add("id", shortId(element));
 		result.add("type", type);
 		addParentImport(result);
 		result.add("parentType", extensionFrame);
 		result.add("import", extensionFrame);
+		result.add("proxy", extensionFrame);
 		if (!type.equalsIgnoreCase("display")) result.add("packageType", type.toLowerCase());
 		result.add("packageTypeRelativeDirectory", packageTypeRelativeDirectory(element));
 		result.add("name", nameOf(element));
@@ -272,7 +273,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		return template != null ? setup(template) : null;
 	}
 
-	private FrameBuilder extensionFrame() {
+	private FrameBuilder extensionFrame(boolean accessible) {
 		String type = type();
 		FrameBuilder result = new FrameBuilder().add(type, "").add("value", type).add("type", type);
 		if (element.isExtensionOf()) {
@@ -280,7 +281,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			result.add("parent", element.asExtensionOf().parentView().name$());
 		}
 		if (type.equalsIgnoreCase("Component")) result.add("component", "component");
-		else if (element.i$(AccessibleDisplay.class)) result.add("accessible", "accessible");
+		else if (accessible && element.i$(AccessibleDisplay.class)) result.add("accessible", "accessible");
 		else if (isBaseType(element) && !type.equalsIgnoreCase("Display"))
 			result.add("baseType", "baseType");
 		return result;

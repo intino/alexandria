@@ -32,8 +32,9 @@ public class PageRenderer extends ActionRenderer {
 	@Override
 	public void render() {
 		FrameBuilder builder = new FrameBuilder().add("action").add("ui");
+		UIService uiService = resource.core$().ownerAs(UIService.class);
 		builder.add("name", resource.name$());
-		builder.add("uiService", resource.core$().ownerAs(UIService.class).name$());
+		builder.add("uiService", uiService.name$());
 		builder.add("package", packageName());
 		builder.add("box", boxName());
 		builder.add("importTemplates", packageName());

@@ -7,6 +7,7 @@ import Theme from '../../gen/Theme';
 import Page from "alexandria-ui-elements/src/displays/Page";
 import ConnectionChecker from "alexandria-ui-elements/src/displays/ConnectionChecker";
 import $pageDisplay+firstUpperCase from "$pageDisplayOrigin+origin/displays/$pageDisplayType+firstLowerCase~s/$pageDisplay+firstUpperCase";
+$accessibleImport...[$NL]
 
 let theme = Theme.create();
 const styles = theme => ({});
@@ -73,27 +74,6 @@ def trigger(origin)
 	..
 end
 
-def type(polymer & editor)
-	Polymer({
-		is: 'page-body',
-
-		attached : function() {
-			this._initEditor();
-		},
-
-		_initEditor : function() {
-			var widget = this;
-			this.$$.root.whenPersonified().execute(function() {
-				var editor = widget.querySelector("alexandria-editor");
-
-				editor.onSaved = function() {
-					if (document.onSaved) document.onSaved();
-				};
-
-				document.save = function() {
-					editor.save();
-				}
-			});
-		}
-	});
+def type(accessibleImport)
+    import Displays from '$elements/gen/AccessibleDisplays';
 end

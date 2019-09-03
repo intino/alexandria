@@ -30,4 +30,14 @@ class MessageHub_ implements MessageHub {
 
 	}
 
+	@Override
+	public void attachRequestListener(String channel, RequestConsumer onMessageReceived) {
+
+	}
+
+	@Override
+	public void requestResponse(String channel, String message, Consumer<String> onResponse) {
+
+	}
+
 }
