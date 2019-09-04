@@ -9,6 +9,7 @@ def type(display & accessible)
 	[import $notDecorated+firstUpperCase~Notifier from "$notifierDirectory/notifiers/$notDecorated+firstUpperCase~Notifier";]
 	[import $notDecorated+firstUpperCase~Requester from "$requesterDirectory/requesters/$notDecorated+firstUpperCase~Requester";]
 	[$displayRegistration+import]
+	import $name+SnakeCaseToCamelCase+FirstUpperCase from '../../../src/displays/[$componentDirectory/]$name+SnakeCaseToCamelCase+FirstUpperCase';
 
 	export default class $name+SnakeCaseToCamelCase+FirstUpperCase~Proxy extends $displayExtends {
 

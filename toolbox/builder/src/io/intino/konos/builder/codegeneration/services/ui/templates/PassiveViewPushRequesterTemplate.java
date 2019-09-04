@@ -13,10 +13,10 @@ public class PassiveViewPushRequesterTemplate extends Template {
 			rule().condition((allTypes("request","asset")), (trigger("request"))),
 			rule().condition((type("request")), (trigger("request"))).output(literal("if (operation.equals(\"")).output(mark("name")).output(literal("\")) {\n\tdisplay.")).output(mark("name")).output(literal("(")).output(mark("parameter")).output(literal(");\n\treturn;\n}")),
 			rule().condition((type("list")), (trigger("parameter"))).output(literal("SparkReader.read(data, ")).output(mark("value")).output(literal("[].class)")),
-			rule().condition((allTypes("file","parameter")), (trigger("parameter"))),
+			rule().condition((allTypes("parameter","file")), (trigger("parameter"))),
 			rule().condition((type("parameter")), (trigger("parameter"))).output(literal("SparkReader.read(data, ")).output(mark("value")).output(literal(".class)")),
 			rule().condition((trigger("parameter"))),
-			rule().condition((type("schemaimport"))).output(literal("import ")).output(mark("package")).output(literal(".schemas.*;"))
+			rule().condition((type("schemaImport"))).output(literal("import ")).output(mark("package")).output(literal(".schemas.*;"))
 		);
 	}
 }

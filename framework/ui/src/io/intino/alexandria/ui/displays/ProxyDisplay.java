@@ -10,6 +10,7 @@ import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
 import io.intino.alexandria.schemas.ProxyDisplayInfo;
 import io.intino.alexandria.ui.displays.notifiers.ProxyDisplayNotifier;
 import io.intino.alexandria.ui.services.push.UISession;
+import io.intino.alexandria.ui.spark.pages.Unit;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -23,22 +24,20 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
     private final String sessionId;
     private final String clientId;
     private final String token;
-    private final String app;
-    private final String appUrl;
+    private final Unit unit;
     private final String path;
     private boolean ready = false;
     private static final JsonParser Parser = new JsonParser();
     private Set<PendingRequest> pendingRequestList = new LinkedHashSet<>();
     private Map<String, String> parameters = new HashMap<>();
 
-    public ProxyDisplay(String type, UISession session, String app, String url, String path) {
+    public ProxyDisplay(String type, UISession session, Unit unit, String path) {
         super(null);
         this.type = type;
         this.sessionId = session.id();
         this.clientId = session.client().id();
         this.token = session.token() != null ? session.token().id() : null;
-        this.app = app;
-        this.appUrl = url;
+        this.unit = unit;
         this.path = path;
     }
 
@@ -48,7 +47,7 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
             if (!ready) return;
             post("?operation=refreshPersonifiedDisplay", parameters());
         } catch (RestfulFailure | MalformedURLException error) {
-            notifier.refreshError(errorMessage(appUrl));
+            notifier.refreshError(errorMessage(unit.url()));
         }
     }
 
@@ -70,10 +69,10 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
     protected void init() {
         super.init();
         try {
-            notifier.refresh(new ProxyDisplayInfo().app(app).displayType(type));
+            notifier.refresh(new ProxyDisplayInfo().unit(unit.name()).display(new ProxyDisplayInfo.Display().id(id() + "_").type(type)));
             post("/personify", parameters());
         } catch (RestfulFailure | MalformedURLException error) {
-            notifier.refreshError(errorMessage(appUrl));
+            notifier.refreshError(errorMessage(unit.url()));
         }
     }
 
@@ -93,7 +92,7 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
             if (object != null) map.put("value", serializeParameter(object).toString());
             post("?operation=" + operation, map);
         } catch (RestfulFailure | MalformedURLException error) {
-            notifier.refreshError(errorMessage(appUrl));
+            notifier.refreshError(errorMessage(unit.url()));
         }
     }
 
@@ -109,8 +108,8 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
     }
 
     private void post(String subPath, Map<String, String> parameters) throws MalformedURLException, RestfulFailure {
-        URL appUrl = new URL(this.appUrl);
-        new RestAccessor().post(appUrl, path + "/" + id() + subPath, withInternalParameters(parameters));
+        URL unitUrl = new URL(this.unit.url());
+        new RestAccessor().post(unitUrl, path + "/" + id() + subPath, withInternalParameters(parameters));
     }
 
     private JsonElement serializeParameter(Object value) {
@@ -139,7 +138,7 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
         result.put("client", clientId);
         result.put("session", sessionId);
         result.put("token", token);
-        result.put("personifiedDisplay", id());
+        result.put("personifiedDisplay", id() + "_");
         return result;
     }
 

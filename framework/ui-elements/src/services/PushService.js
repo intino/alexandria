@@ -4,16 +4,18 @@ const PushService = (function () {
 
     service.pendingMessages = [];
     service.connections = [];
-    service.notified = false;
+    service.retries = [];
 
-    service.openConnection = function (url) {
+    service.openConnection = function (name, url) {
         var socket = new WebSocket(url);
-        socket.retries = 0;
+        socket.name = name;
         socket.ready = false;
+
+        if (service.retries[socket.name] == null) service.retries[socket.name] = 0;
 
         socket.onopen = function(e) {
             console.log("WebSocket connection opened.");
-            socket.retries = 0;
+            service.retries[socket.name] = 0;
             socket.ready = true;
             sendPendingMessages(service);
         };
@@ -30,9 +32,9 @@ const PushService = (function () {
         };
 
         socket.onclose = function(e) {
-            if (socket.retries >= 3) {
+            if (service.retries[socket.name] >= 3) {
                 socket.ready = false;
-                this.notifyClose();
+                this.notifyClose(socket);
                 return;
             }
 
@@ -41,23 +43,22 @@ const PushService = (function () {
 
         socket.reconnect = function(e) {
             try {
-                socket.retries++;
-                console.log("WebSocket connection lost. Status code: " + e.code + ". Retry: " + socket.retries + ".");
-                service.openConnection(url);
+                service.retries[socket.name]++;
+                console.log("WebSocket connection lost. Status code: " + e.code + ". Retry: " + service.retries[socket.name] + ".");
+                service.openConnection(socket.name, url);
             }
             catch(e) {
-                window.setTimeout(service.openConnection(url), 1000*2);
+                window.setTimeout(service.openConnection(socket.name, url), 1000*2);
             }
         }
 
-        socket.notifyClose = function() {
-            if (service.notified) return;
-            if (service.onCloseListener) service.onCloseListener();
+        socket.notifyClose = function(socket) {
+            if (service.onCloseListener) service.onCloseListener(socket.name);
             callbacks = {};
         };
 
         if (this.connections.length <= 0) this.connections["Default"] = socket;
-        this.connections[url] = socket;
+        this.connections[name] = socket;
     };
 
     service.listen = function (name, callback) {
@@ -73,11 +74,16 @@ const PushService = (function () {
         }
     };
 
-    service.send = function(message, socketUrl) {
-        if (socketUrl == null) socketUrl = "Default";
-        const socket = this.connections[socketUrl];
+    service.send = function(message, app) {
+        if (app == null) app = "Default";
+        const socket = this.connections[app];
         if (socket != null && socket.ready) socket.send(JSON.stringify(message));
-        else service.pendingMessages.push({ message: message, socket: socketUrl });
+        else service.pendingMessages.push({ message: message, app: app });
+    };
+
+    service.existsConnection = function(app) {
+        const socket = this.connections[app];
+        return socket != null && socket.ready;
     };
 
     service.onClose = function(listener) {
@@ -91,7 +97,7 @@ const PushService = (function () {
     function sendPendingMessages(service) {
         for (let i=0; i<service.pendingMessages; i++) {
             const pendingMessage = service.pendingMessages[i];
-            service.send(pendingMessage.message, pendingMessage.socket);
+            service.send(pendingMessage.message, pendingMessage.app);
         }
     }
 

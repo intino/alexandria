@@ -20,7 +20,8 @@ public class DisplaysManifestTemplate extends Template {
 			rule().condition((type("component")), (trigger("import"))).output(literal("import ")).output(mark("name", "firstUppercase")).output(literal(" from \"../")).output(mark("directory")).output(literal("/displays/components/")).output(mark("name", "firstUppercase")).output(literal("\"")),
 			rule().condition((allTypes("display","accessible")), (trigger("import"))).output(literal("import ")).output(mark("name", "firstUppercase")).output(literal("Proxy from \"./displays/")).output(mark("name", "firstUppercase")).output(literal("Proxy\"")),
 			rule().condition((type("display")), (trigger("import"))).output(literal("import ")).output(mark("name", "firstUppercase")).output(literal(" from \"../")).output(mark("directory")).output(literal("/displays/")).output(mark("name", "firstUppercase")).output(literal("\"")),
-			rule().condition((type("display")), (trigger("export"))).output(mark("name", "firstUppercase")).output(mark("accessible"))
+			rule().condition((type("display")), (trigger("export"))).output(mark("name", "firstUppercase")).output(mark("accessible")),
+			rule().condition((type("accessible"))).output(literal("Proxy"))
 		);
 	}
 }

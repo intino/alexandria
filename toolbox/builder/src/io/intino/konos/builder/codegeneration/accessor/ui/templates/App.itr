@@ -36,9 +36,11 @@ def type(app)
         function openPushServices() {
             window.setTimeout(() => {
                 const configuration = Application.configuration;
-                const pushServices = configuration.pushServices;
-                for (var i=0; i<pushServices.length; i++)
-                    PushService.openConnection(pushServices$[i$]);
+                const pushConnections = configuration.pushConnections;
+                for (let i=0; i<pushConnections.length; i++) {
+                    const connection = pushConnections$[i$].split("_##_");
+                    PushService.openConnection(connection$[0$], connection$[1$]);
+                }
             }, 100);
         }
 

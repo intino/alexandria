@@ -1,7 +1,7 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "2.0.0") ui-framework
-	Box("Konos", "6.0.0") > targetPackage = ""
+Artifact("io.intino.alexandria", "2.1.0") ui-framework
+	Box("Konos", "6.1.0") > targetPackage = ""
 	Code("io.intino.alexandria")
 	Imports
 		Web("io.intino.alexandria", "ui-framework-elements", "2.0.0")
@@ -15,6 +15,7 @@ Artifact("io.intino.alexandria", "2.0.0") ui-framework
 		Compile("io.intino.alexandria", "driver-shiny", "1.0.0")
 		Compile("io.intino.alexandria", "driver-r", "1.0.0")
 		Test("junit", "junit", "LATEST")
+		Web(groupId = "io.intino.alexandria", artifactId = "ui-framework-elements", version = "2.1.0")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.dist)

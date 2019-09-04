@@ -82,5 +82,9 @@ def type(requester)
 			this.pushService = Application.services.pushService;
 			this.fileService = Application.services.fileService;
 		};
+
+        available = (unit) => {
+            return this.pushService.existsConnection(unit);
+        };
     }
 end

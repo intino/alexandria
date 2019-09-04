@@ -54,3 +54,7 @@ end
 def type(display) trigger(export)
 	$name+firstUppercase~$accessible
 end
+
+def type(accessible)
+    Proxy
+end
