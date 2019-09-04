@@ -35,7 +35,6 @@
     <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-http:2.3.15-gfa" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.0.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
-    <orderEntry type="module" module-name="ui-elements" />
     <orderEntry type="library" name="Intino: org.apache.commons:commons-lang3:3.4" level="project" />
     <orderEntry type="library" name="Intino: org.locationtech.jts:jts-core:1.16.1" level="project" />
     <orderEntry type="module" module-name="primitives" />
@@ -77,5 +76,6 @@
     <orderEntry type="library" name="Intino: com.jcraft:jzlib:1.0.7" level="project" />
     <orderEntry type="module" module-name="rest-accessor" />
     <orderEntry type="module" module-name="proxy" />
+    <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>

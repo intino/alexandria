@@ -1,10 +1,12 @@
 package io.intino.konos.builder.codegeneration.ui.resource;
 
+import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.ActionRenderer;
 import io.intino.konos.builder.helpers.CodeGenerationHelper;
+import io.intino.konos.model.graph.ui.AbstractUIService;
 import io.intino.konos.model.graph.ui.UIService;
 
 import java.io.File;
@@ -40,13 +42,21 @@ public class PageRenderer extends ActionRenderer {
 		builder.add("importTemplates", packageName());
 		builder.add("component", componentFrame());
 		builder.add("parameter", parameters());
-		service.useList().forEach(use -> builder.add("usedAppUrl", new FrameBuilder("usedAppUrl").add(isCustom(use.url()) ? "custom" : "standard").add("value", isCustom(use.url()) ? customValue(use.url()) : use.url())).toFrame());
+		service.useList().forEach(use -> builder.add("usedUnit", usedUnitFrame(use)));
 		if (service.favicon() != null) builder.add("favicon", service.favicon());
 		else if (service.title() != null) builder.add("title", service.title());
 		settings.classes().put(resource.getClass().getSimpleName() + "#" + firstUpperCase(resource.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(resource.name$())) + suffix());
 		if (!alreadyRendered(src(), resource.name$()))
 			writeFrame(destinyPackage(src()), resource.name$() + suffix(), template().render(builder.toFrame()));
 		writeFrame(destinyPackage(gen()), "Abstract" + firstUpperCase(resource.name$()) + suffix(), template().render(builder.add("gen").toFrame()));
+	}
+
+	private Frame usedUnitFrame(AbstractUIService.Use use) {
+		FrameBuilder result = new FrameBuilder("usedUnit");
+		result.add(isCustom(use.url()) ? "custom" : "standard");
+		result.add("name", use.name$());
+		result.add("url", isCustom(use.url()) ? customValue(use.url()) : use.url());
+		return result.toFrame();
 	}
 
 	private FrameBuilder componentFrame() {

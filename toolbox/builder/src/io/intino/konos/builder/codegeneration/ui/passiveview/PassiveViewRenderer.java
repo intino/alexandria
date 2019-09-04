@@ -68,6 +68,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		result.add("proxy", extensionFrame);
 		if (!type.equalsIgnoreCase("display")) result.add("packageType", type.toLowerCase());
 		result.add("packageTypeRelativeDirectory", packageTypeRelativeDirectory(element));
+		result.add("componentDirectory", componentDirectoryOf(element, false));
 		result.add("name", nameOf(element));
 		result.add("notification", framesOfNotifications(element.notificationList()));
 		result.add("request", framesOfRequests(element.requestList()));

@@ -11,5 +11,8 @@ Display proxyDisplay as Decorated
 	Request ready
 
 Schema ProxyDisplayInfo
-	Attribute app as Text
-	Attribute displayType as Text
+	Attribute unit as Text
+
+	Schema(multiple=false) display
+		Attribute id as Text
+		Attribute type as Text

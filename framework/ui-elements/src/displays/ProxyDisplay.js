@@ -4,7 +4,9 @@ import ProxyDisplayNotifier from "../../gen/displays/notifiers/ProxyDisplayNotif
 import ProxyDisplayRequester from "../../gen/displays/requesters/ProxyDisplayRequester";
 import Spinner from "alexandria-ui-elements/src/displays/components/Spinner";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
+import Typography from '@material-ui/core/Typography';
 import 'alexandria-ui-elements/res/styles/layout.css';
+import { OwnerUnitContext } from 'alexandria-ui-elements/src/displays/PassiveView'
 
 export default class ProxyDisplay extends AbstractProxyDisplay {
 	state = {
@@ -19,17 +21,21 @@ export default class ProxyDisplay extends AbstractProxyDisplay {
 	};
 
 	render() {
-		if (this.state.error != null)
+		const available = this.requester.available(this.state.ownerUnit);
+
+		if (this.state.error != null || (this.state.ownerUnit != null && !available))
 			return this._renderError();
 
-		if (this.state.pushId == null)
+		if (this.state.ownerUnit == null)
 			return this._renderLoading();
 
 		return (
-			<div id="component">
-				{React.createElement(DisplayFactory.get(this.state.displayType))}
-				{this.requester.ready()}
-			</div>
+			<OwnerUnitContext.Provider value={this.state.ownerUnit}>
+				<div id="component">
+					{React.createElement(DisplayFactory.get(this.state.display.type), { id: this.state.display.id })}
+					{this.requester.ready()}
+				</div>
+			</OwnerUnitContext.Provider>
 		);
 	}
 
@@ -42,15 +48,17 @@ export default class ProxyDisplay extends AbstractProxyDisplay {
 	};
 
 	_renderError = () => {
+		const available = this.requester.available(this.state.ownerUnit);
+		const message = this.state.error != null ? this.state.error : "no connection with " + this.state.ownerUnit + "!";
 		return (
-			<div className="layout horizontal center center-justified" style="height:100%;">
-				<div id="error" className="error">{this.state.error}</div>
+			<div className="layout horizontal" style={ {margin: "10px 0", height: "100%"} }>
+				<Typography style={{color:"red"}}>{this.translate(message)}</Typography>
 			</div>
 		);
 	};
 
 	refresh = (info) => {
-		this.setState({socket: info.app, displayType: info.displayType});
+		this.setState({ownerUnit: info.unit, display: info.display});
 	};
 
 	refreshError = (error) => {

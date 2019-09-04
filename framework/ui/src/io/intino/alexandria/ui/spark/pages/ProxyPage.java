@@ -4,6 +4,7 @@ import java.net.URL;
 
 
 public abstract class ProxyPage extends Page {
+	public String personifiedDisplay;
 
 	public ProxyPage() {
 		super(null);

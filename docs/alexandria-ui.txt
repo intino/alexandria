@@ -1,0 +1,5 @@
+- Modelado
+- Vista pasiva
+- Layout
+- Componentes
+- Componentes entre unidades

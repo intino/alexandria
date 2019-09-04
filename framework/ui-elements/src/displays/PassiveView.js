@@ -1,9 +1,10 @@
+import React from "react";
 import I18nComponent from "./I18nComponent";
 
+export const OwnerUnitContext = React.createContext('');
+
 export default class PassiveView extends I18nComponent {
-    state = {
-        socket: null
-    };
+    static contextType = OwnerUnitContext;
 
     constructor(props) {
         super(props);
@@ -15,8 +16,8 @@ export default class PassiveView extends I18nComponent {
         return this.constructor.name;
     };
 
-    socket = () => {
-        return this.state.socket;
+    ownerUnit = () => {
+        return this.context !== "" ? this.context : null;
     };
 
 }

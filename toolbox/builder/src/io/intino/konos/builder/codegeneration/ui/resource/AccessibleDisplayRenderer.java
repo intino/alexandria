@@ -9,6 +9,9 @@ import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.resourceFilename;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.resourceFolder;
 
@@ -37,7 +40,8 @@ public class AccessibleDisplayRenderer extends UIRenderer {
 	}
 
 	private FrameBuilder[] parameters(AccessibleDisplay display) {
-		return display.parameters().stream().map(parameter -> new FrameBuilder().add("parameter")
-				.add("name", parameter)).toArray(FrameBuilder[]::new);
+		List<FrameBuilder> result = display.parameters().stream().map(parameter -> new FrameBuilder("parameter").add("name", parameter)).collect(Collectors.toList());
+		result.add(new FrameBuilder("parameter").add("name", "personifiedDisplay"));
+		return result.toArray(new FrameBuilder[0]);
 	}
 }
