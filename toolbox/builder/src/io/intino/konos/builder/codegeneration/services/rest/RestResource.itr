@@ -59,6 +59,7 @@ def type(notification)
 			context.put("domain", manager.domain());
 			context.put("baseUrl", manager.baseUrl());
 			context.put("requestUrl", manager.baseUrl() + manager.request().pathInfo());
+			context.put("authorization", manager.getHeader("authorization"));
 			context.put("realIp", manager.realIp());
 			[$authenticationValidator+put]
 			return context;
@@ -114,6 +115,7 @@ def type(resource)
 			context.put("domain", manager.domain());
 			context.put("baseUrl", manager.baseUrl());
 			context.put("requestUrl", manager.baseUrl() + manager.request().pathInfo());
+			context.put("authorization", manager.getHeader("authorization"));
 			context.put("realIp", manager.realIp());
 			$authenticationValidator+put
 			return context;
