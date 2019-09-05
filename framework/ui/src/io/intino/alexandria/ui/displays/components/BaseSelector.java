@@ -41,12 +41,17 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         return this;
     }
 
-    @Override
-    public void add(SelectorOption option) {
-        addComponent((Component) option);
-    }
+	@Override
+	public void add(SelectorOption option) {
+		addComponent((Component) option);
+	}
 
-    public void optionsRendered() {
+	@Override
+	public <D extends Display> D add(D child) {
+		return addComponent((Component) child);
+	}
+
+	public void optionsRendered() {
         children().forEach(Display::update);
     }
 
@@ -95,11 +100,11 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         return result;
     }
 
-    private void addComponent(Component option) {
+    private <D extends Display> D addComponent(Component option) {
         PropertyList properties = option.properties();
         properties.addClassName("option");
         properties.put("name", option.name());
-        super.add(option);
+        return (D) super.add(option);
     }
 
 	private static class Text extends io.intino.alexandria.ui.displays.components.Text<TextNotifier, Box> implements SelectorOption {

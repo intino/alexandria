@@ -139,6 +139,10 @@ public class SparkManager<P extends PushService> {
 		return forwardedPath == null || forwardedPath.equals("") || forwardedPath.equals("/") ? "" : forwardedPath;
 	}
 
+	public String getHeader(String name) {
+		return request.raw().getHeader(name);
+	}
+
 	public String realIp() {
 		HttpServletRequest raw = request.raw();
 		String ip = raw.getHeader("X-Real-IP");
