@@ -42,6 +42,7 @@ public class PageRenderer extends ActionRenderer {
 		builder.add("importTemplates", packageName());
 		builder.add("component", componentFrame());
 		builder.add("parameter", parameters());
+		builder.add("contextProperty", contextPropertyFrame());
 		service.useList().forEach(use -> builder.add("usedUnit", usedUnitFrame(use)));
 		if (service.favicon() != null) builder.add("favicon", service.favicon());
 		else if (service.title() != null) builder.add("title", service.title());
@@ -49,6 +50,11 @@ public class PageRenderer extends ActionRenderer {
 		if (!alreadyRendered(src(), resource.name$()))
 			writeFrame(destinyPackage(src()), resource.name$() + suffix(), template().render(builder.toFrame()));
 		writeFrame(destinyPackage(gen()), "Abstract" + firstUpperCase(resource.name$()) + suffix(), template().render(builder.add("gen").toFrame()));
+	}
+
+	@Override
+	protected ContextType contextType() {
+		return ContextType.Spark;
 	}
 
 	private Frame usedUnitFrame(AbstractUIService.Use use) {

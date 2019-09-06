@@ -4,6 +4,7 @@ import { Tabs, Tab } from '@material-ui/core';
 import AbstractSelectorTabs from "../../../gen/displays/components/AbstractSelectorTabs";
 import SelectorTabsNotifier from "../../../gen/displays/notifiers/SelectorTabsNotifier";
 import SelectorTabsRequester from "../../../gen/displays/requesters/SelectorTabsRequester";
+import Divider from './Divider';
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
 
@@ -32,9 +33,8 @@ class SelectorTabs extends AbstractSelectorTabs {
     }
 
     renderTab = (tab) => {
-        return (
-            <Tab label={tab}/>
-        );
+        if (child.props.className.indexOf("divider") !== -1) return (<Divider/>);
+        return (<Tab label={tab}/>);
     };
 
     refreshSelected = (tab) => {

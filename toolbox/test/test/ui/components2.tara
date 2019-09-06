@@ -1,5 +1,10 @@
 dsl Konos
 
+Service RestService as REST(port = "9000", host = "")
+	Resource(path = "") ddd
+		Get
+			Parameter(in=query) a as Text
+
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Use(className = "org.example.unit1.box.ui.Unit1Elements", url = "http://unit1") unit1
 	Resource(path = "/") home as Page(homeTemplate)

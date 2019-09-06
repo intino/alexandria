@@ -35,9 +35,15 @@ public class AccessibleDisplayActionRenderer extends ActionRenderer {
 		builder.add("package", packageName());
 		builder.add("box", boxName());
 		builder.add("parameter", parameters());
+		builder.add("contextProperty", contextPropertyFrame());
 		configuration.classes().put(display.getClass().getSimpleName() + "#" + firstUpperCase(display.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(display.name$())) + suffix());
 		if (!alreadyRendered(src(), display.name$() + "Proxy"))
 			writeFrame(destinyPackage(src()), display.name$() + "ProxyPage", template().render(builder.toFrame()));
+	}
+
+	@Override
+	protected ContextType contextType() {
+		return ContextType.Spark;
 	}
 
 	private Frame[] parameters() {

@@ -43,7 +43,7 @@ Facet REST on Service
 		Concept Document
 			var string description = ""
 			var string url
-	Concept:CheckPath Resource
+	Concept:Named:CheckPath Resource
 		var string path
 		Concept:Named Parameter extends Parameter is component
         	var string description = ""

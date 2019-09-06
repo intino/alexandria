@@ -54,13 +54,8 @@ def type(notification)
 			return new SparkNotifier(new MessageCarrier(manager.pushService(), session, client));
 		}
 
-		private io.intino.alexandria.core.Context context() {
-			io.intino.alexandria.core.Context context = new io.intino.alexandria.core.Context();
-			context.put("domain", manager.domain());
-			context.put("baseUrl", manager.baseUrl());
-			context.put("requestUrl", manager.baseUrl() + manager.request().pathInfo());
-			context.put("authorization", manager.getHeader("authorization"));
-			context.put("realIp", manager.realIp());
+		private io.intino.alexandria.rest.spark.SparkContext context() {
+			io.intino.alexandria.rest.spark.SparkContext context = new io.intino.alexandria.rest.spark.SparkContext();
 			[$authenticationValidator+put]
 			return context;
 		}
@@ -110,13 +105,8 @@ def type(resource)
 
 		[$returnType+method]
 
-		private io.intino.alexandria.core.Context context() {
-			io.intino.alexandria.core.Context context = new io.intino.alexandria.core.Context();
-			context.put("domain", manager.domain());
-			context.put("baseUrl", manager.baseUrl());
-			context.put("requestUrl", manager.baseUrl() + manager.request().pathInfo());
-			context.put("authorization", manager.getHeader("authorization"));
-			context.put("realIp", manager.realIp());
+		private io.intino.alexandria.rest.spark.SparkContext context() {
+			io.intino.alexandria.rest.spark.SparkContext context = new io.intino.alexandria.rest.spark.SparkContext();
 			$authenticationValidator+put
 			return context;
 		}

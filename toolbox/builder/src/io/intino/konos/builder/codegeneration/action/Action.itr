@@ -31,7 +31,7 @@ def type(action & notification) !type(ui)
 
 	public class $name+snakecaseToCamelCase+firstUpperCase~Action {
 		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
-		public io.intino.alexandria.core.Context context = new io.intino.alexandria.core.Context();
+		$contextProperty
 		[$parameter+type...[$NL]]
 
 		public void onOpen(Client client, SparkNotifier notifier) {
@@ -54,9 +54,8 @@ def type(action) !type(ui)
 	$schemaImport
 
 	public class $name+snakecaseToCamelCase+firstUpperCase~Action {
-
 		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
-		public io.intino.alexandria.core.Context context = new io.intino.alexandria.core.Context();
+		$contextProperty
 		[$parameter+type...[$NL]]
 
 		public [$returnType?void] execute() [throws $throws+FirstUpperCase...[, ]] {
@@ -206,4 +205,12 @@ end
 
 def type(usedUnit & custom)
 	new io.intino.alexandria.ui.spark.pages.Unit("$name",box.configuration().get("$url"))
+end
+
+def type(contextProperty & spark)
+    public io.intino.alexandria.rest.spark.SparkContext context = new io.intino.alexandria.rest.spark.SparkContext();
+end
+
+def type(contextProperty)
+    public io.intino.alexandria.Context context = new io.intino.alexandria.Context();
 end

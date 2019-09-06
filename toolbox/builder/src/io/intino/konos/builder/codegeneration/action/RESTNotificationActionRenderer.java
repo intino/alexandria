@@ -21,4 +21,8 @@ public class RESTNotificationActionRenderer extends ActionRenderer {
 		execute(name, notification.core$().ownerAs(Service.class).name$(), null, notification.parameterList(), Collections.emptyList(), notification.graph().schemaList());
 	}
 
+	@Override
+	protected ContextType contextType() {
+		return ContextType.Spark;
+	}
 }
