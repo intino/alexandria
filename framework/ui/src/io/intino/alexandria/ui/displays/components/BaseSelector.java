@@ -37,19 +37,27 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
 		Display display = new Text(box()).name(option);
         display.properties().put("value", option);
         display.properties().put("color", "black");
-        addComponent((Component) display);
+        addOption((Component) display);
         return this;
     }
 
 	@Override
 	public void add(SelectorOption option) {
-		addComponent((Component) option);
+		addOption((Component) option);
 	}
 
-	@Override
-	public <D extends Display> D add(D child) {
-		return addComponent((Component) child);
-	}
+    @Override
+    public <D extends Display> D add(D child) {
+        return addOption((Component) child);
+    }
+
+    @Override
+    public void addDivider() {
+        Divider divider = new Divider(box());
+        PropertyList properties = divider.properties();
+        properties.addClassName("divider");
+        super.add(divider);
+    }
 
 	public void optionsRendered() {
         children().forEach(Display::update);
@@ -100,7 +108,7 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         return result;
     }
 
-    private <D extends Display> D addComponent(Component option) {
+    private <D extends Display> D addOption(Component option) {
         PropertyList properties = option.properties();
         properties.addClassName("option");
         properties.put("name", option.name());

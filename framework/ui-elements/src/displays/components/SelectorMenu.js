@@ -12,6 +12,7 @@ import AbstractSelectorMenu from "../../../gen/displays/components/AbstractSelec
 import SelectorMenuNotifier from "../../../gen/displays/notifiers/SelectorMenuNotifier";
 import SelectorMenuRequester from "../../../gen/displays/requesters/SelectorMenuRequester";
 import Block from './Block';
+import Divider from './Divider';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
@@ -54,6 +55,8 @@ class SelectorMenu extends AbstractSelectorMenu {
 	};
 
 	renderItem = (item) => {
+		if (child.props.className.indexOf("divider") !== -1) return (<Divider/>);
+
 		if (item.type == Block)
 			return this.renderBlock(item);
 

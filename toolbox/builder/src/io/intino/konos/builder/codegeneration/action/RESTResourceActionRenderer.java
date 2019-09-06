@@ -22,4 +22,9 @@ public class RESTResourceActionRenderer extends ActionRenderer {
 		execute(name, operation.core$().ownerAs(Service.class).name$(), operation.response(), operation.parameterList(),
 				Stream.concat(operation.exceptionList().stream(), operation.exceptionRefs().stream()).collect(Collectors.toList()), operation.graph().schemaList());
 	}
+
+	@Override
+	protected ContextType contextType() {
+		return ContextType.Spark;
+	}
 }
