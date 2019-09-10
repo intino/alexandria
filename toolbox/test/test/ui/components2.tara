@@ -11,7 +11,7 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/demo") demo as Page(homeTemplate)
 
 Template homeTemplate
-	Portal(to="Display1",in=UiElements.unit1)
+	Task(visible=false, title = "aaa")
 
 Template root as Accessible(parameters = "a" "b")
 

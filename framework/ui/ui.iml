@@ -39,7 +39,6 @@
     <orderEntry type="library" name="Intino: org.locationtech.jts:jts-core:1.16.1" level="project" />
     <orderEntry type="module" module-name="primitives" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:exceptions:1.0.0" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.3" level="project" />
     <orderEntry type="module" module-name="shiny" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:proxy:1.0.0" level="project" />
     <orderEntry type="library" name="Intino: org.apache.httpcomponents:fluent-hc:4.5.7" level="project" />

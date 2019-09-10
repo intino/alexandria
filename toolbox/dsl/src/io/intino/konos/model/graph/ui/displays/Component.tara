@@ -139,7 +139,11 @@ Concept OtherComponents
 	Concept Chip extends Component
 	Concept Card extends Component
 	Concept Tooltip extends Component
+
 	Concept User extends Component
+		var word:{OnlyPhoto PhotoWithFullname} mode = PhotoWithFullname
+		has Component
+
 	Concept KPI extends Component
 	Concept Spinner extends Component
 		var word:{Bar Circle Hash Ring Rise} mode = Rise

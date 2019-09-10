@@ -47,15 +47,15 @@ def type(method)
 end
 
 def type(properties & multiple) trigger(common)
-	[ label="$label"][ format="$format...[ ]"]
+	[ label="$label"][ format="$format...[ ]"][ visible={$visible}]
 end
 
 def type(properties & operation) trigger(common)
-	[ title="$title"][ target="$target"][ mode="$operationMode"][ icon="$icon"][ confirm="$confirm"][ disabled={$disabled}][ size="$size"][ format="$format...[ ]"][ highlighted="$highlighted"]
+	[ title="$title"][ target="$target"][ mode="$operationMode"][ icon="$icon"][ confirm="$confirm"][ disabled={$disabled}][ size="$size"][ format="$format...[ ]"][ highlighted="$highlighted"][ visible={$visible}]
 end
 
 def type(properties & abstractslider) trigger(common)
-	[ label="$label"][ format="$format...[ ]"][ color="$color"][ arrangement="$arrangement"][ animation={{interval:$interval,loop:$loop}}][ readonly={$readonly}]
+	[ label="$label"][ format="$format...[ ]"][ color="$color"][ arrangement="$arrangement"][ animation={{interval:$interval,loop:$loop}}][ readonly={$readonly}][ visible={$visible}]
 end
 
 def type(properties) trigger(common)
@@ -112,6 +112,10 @@ end
 
 def type(properties & date) trigger(specific)
 	[ pattern="$pattern"][ mode="$mode"][ value={new Date($value)}][ timePicker={$timePicker}][ mask="$mask"][ allowEmpty={$allowEmpty}]
+end
+
+def type(properties & user) trigger(specific)
+	[ mode="$mode"]
 end
 
 def type(properties & number) trigger(specific)

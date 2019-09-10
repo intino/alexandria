@@ -4,7 +4,6 @@ Artifact("io.intino.alexandria", "2.1.0") ui-framework
 	Box("Konos", "6.1.0") > targetPackage = ""
 	Code("io.intino.alexandria")
 	Imports
-		Web("io.intino.alexandria", "ui-framework-elements", "2.0.0")
 		Compile("io.intino.alexandria", "core-framework", "2.0.1")
 		Compile("io.intino.alexandria", "rest", "2.1.0")
 		Compile("io.intino.alexandria", "rest-accessor", "1.0.7")
@@ -14,8 +13,10 @@ Artifact("io.intino.alexandria", "2.1.0") ui-framework
 		Compile("org.locationtech.jts", "jts-core", "1.16.1")
 		Compile("io.intino.alexandria", "driver-shiny", "1.0.0")
 		Compile("io.intino.alexandria", "driver-r", "1.0.0")
+
+		Web("io.intino.alexandria", "ui-framework-elements", "2.1.0")
+
 		Test("junit", "junit", "LATEST")
-		Web(groupId = "io.intino.alexandria", artifactId = "ui-framework-elements", version = "2.1.0")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.dist)

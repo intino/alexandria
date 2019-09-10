@@ -7,6 +7,7 @@ public class SparkContext extends Context {
 
 	public SparkContext(SparkManager manager) {
 		this.manager = manager;
+		initialize();
 	}
 
 	public String domain() {
@@ -31,5 +32,12 @@ public class SparkContext extends Context {
 
 	public String header(String name) {
 		return (String) manager.fromHeader(name, String.class);
+	}
+
+	private void initialize() {
+		put("domain", domain());
+		put("baseUrl", baseUrl());
+		put("requestUrl", requestUrl());
+		put("realIp", realIp());
 	}
 }
