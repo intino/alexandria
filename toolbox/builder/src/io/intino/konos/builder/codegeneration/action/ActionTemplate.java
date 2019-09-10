@@ -29,7 +29,7 @@ public class ActionTemplate extends Template {
 			rule().condition((type("editor")), (trigger("component"))).output(literal("component.document(document);\ncomponent.permission(permission);\ncomponent.display(new ")).output(mark("display", "snakecaseToCamelCase", "firstUpperCase")).output(literal("(box));")),
 			rule().condition((allTypes("usedUnit","standard"))).output(literal("new io.intino.alexandria.ui.spark.pages.Unit(\"")).output(mark("name")).output(literal("\",\"")).output(mark("url")).output(literal("\")")),
 			rule().condition((allTypes("usedUnit","custom"))).output(literal("new io.intino.alexandria.ui.spark.pages.Unit(\"")).output(mark("name")).output(literal("\",box.configuration().get(\"")).output(mark("url")).output(literal("\"))")),
-			rule().condition((allTypes("contextProperty","spark"))).output(literal("public io.intino.alexandria.rest.spark.SparkContext context = new io.intino.alexandria.rest.spark.SparkContext();")),
+			rule().condition((allTypes("contextProperty","spark"))).output(literal("public io.intino.alexandria.rest.spark.SparkContext context;")),
 			rule().condition((type("contextProperty"))).output(literal("public io.intino.alexandria.Context context = new io.intino.alexandria.Context();"))
 		);
 	}

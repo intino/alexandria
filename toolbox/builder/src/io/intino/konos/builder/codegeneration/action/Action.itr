@@ -208,7 +208,7 @@ def type(usedUnit & custom)
 end
 
 def type(contextProperty & spark)
-    public io.intino.alexandria.rest.spark.SparkContext context = new io.intino.alexandria.rest.spark.SparkContext();
+    public io.intino.alexandria.rest.spark.SparkContext context;
 end
 
 def type(contextProperty)

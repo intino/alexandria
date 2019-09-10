@@ -55,7 +55,7 @@ def type(notification)
 		}
 
 		private io.intino.alexandria.rest.spark.SparkContext context() {
-			io.intino.alexandria.rest.spark.SparkContext context = new io.intino.alexandria.rest.spark.SparkContext();
+			io.intino.alexandria.rest.spark.SparkContext context = new io.intino.alexandria.rest.spark.SparkContext(manager);
 			[$authenticationValidator+put]
 			return context;
 		}
@@ -106,7 +106,7 @@ def type(resource)
 		[$returnType+method]
 
 		private io.intino.alexandria.rest.spark.SparkContext context() {
-			io.intino.alexandria.rest.spark.SparkContext context = new io.intino.alexandria.rest.spark.SparkContext();
+			io.intino.alexandria.rest.spark.SparkContext context = new io.intino.alexandria.rest.spark.SparkContext(manager);
 			$authenticationValidator+put
 			return context;
 		}

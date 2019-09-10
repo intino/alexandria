@@ -11,16 +11,17 @@ import 'alexandria-ui-elements/res/styles/layout.css';
 import 'alexandria-ui-elements/res/styles/mobile.css';
 
 export default class Block extends AbstractBlock {
-	state = {
-		hidden: false,
-		layout: this.props.layout,
-		spacing: this.props.spacing
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new BlockNotifier(this);
 		this.requester = new BlockRequester(this);
+		this.state = {
+			hidden: false,
+			layout: this.props.layout,
+			spacing: this.props.spacing,
+			...this.state
+		}
 	};
 
 	render() {
@@ -47,6 +48,8 @@ export default class Block extends AbstractBlock {
 		let style = this.style();
 		let label = this.props.label;
 		const classNames = BlockBehavior.classNames(this);
+
+		if (!this.state.visible) style = {display:"none", ...style};
 
 		if (paper) {
 			return (
