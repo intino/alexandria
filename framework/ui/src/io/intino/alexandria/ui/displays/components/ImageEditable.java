@@ -1,11 +1,11 @@
 package io.intino.alexandria.ui.displays.components;
 
+import io.intino.alexandria.MimeTypes;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
 import io.intino.alexandria.ui.displays.notifiers.ImageEditableNotifier;
 import io.intino.alexandria.ui.resources.Asset;
-import io.intino.alexandria.ui.utils.UrlUtil;
 
 import java.net.URL;
 
@@ -50,7 +50,7 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
 
 	protected ImageEditable _value(URL value) {
 		this.value = value;
-		this.mimeType = UrlUtil.mimeType(value);
+		this.mimeType = MimeTypes.contentTypeOf(value);
 		return this;
 	}
 

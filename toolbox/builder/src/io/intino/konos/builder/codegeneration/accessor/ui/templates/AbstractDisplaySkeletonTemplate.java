@@ -25,7 +25,7 @@ public class AbstractDisplaySkeletonTemplate extends Template {
 			rule().condition((allTypes("renderTag","template"))).output(literal("<UiBlock")).output(expression().output(mark("properties", "common")).output(mark("properties", "specific"))).output(literal(" style={{...this.props.style,...display}}>")),
 			rule().condition((allTypes("renderTag","block"))).output(literal("<UiBlock")).output(expression().output(mark("properties", "common")).output(mark("properties", "specific"))).output(literal(" style={{...this.props.style,...display}}>")),
 			rule().condition((allTypes("renderTag","item"))).output(literal("<div style={{width:\"100%\",...this.props.style,...display}}>")),
-			rule().condition((type("renderTag"))).output(literal("<React.Fragment style={{...this.props.style,...display}}>")),
+			rule().condition((type("renderTag"))).output(literal("<React.Fragment>")),
 			rule().condition((allTypes("renderTagAttributes","block"))).output(mark("properties", "common")).output(mark("properties", "specific")),
 			rule().condition((type("renderTagAttributes"))),
 			rule().condition((attribute("parent")), (trigger("import"))).output(literal("import Displays")).output(mark("parent", "firstUpperCase")).output(literal(" from \"../../../src/displays/")).output(mark("parentDirectory")).output(literal("/")).output(mark("parent", "firstUpperCase")).output(literal("\";")),
