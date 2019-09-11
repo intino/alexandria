@@ -1,5 +1,8 @@
 package io.intino.alexandria;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -7,7 +10,21 @@ public class MimeTypes {
 	private static Map<String, String> contentTypes = new LinkedHashMap<>();
 	private static Map<String, String> extensions = new LinkedHashMap<>();
 
+	public static String contentTypeOf(URL url) {
+		try {
+			return contentTypeOf(url.toURI());
+		} catch (URISyntaxException e) {
+			return "";
+		}
+	}
+
+	public static String contentTypeOf(URI uri) {
+		String uriString = uri.toString();
+		return contentTypeOf(uriString.substring(uriString.lastIndexOf(".")));
+	}
+
 	public static String contentTypeOf(String extension) {
+		if (!extension.startsWith(".")) extension = "." + extension;
 		return contentTypes.getOrDefault(extension, "");
 	}
 

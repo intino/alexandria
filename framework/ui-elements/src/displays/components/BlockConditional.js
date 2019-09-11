@@ -34,7 +34,8 @@ export default class BlockConditional extends AbstractBlockConditional {
 		const classNames = BlockBehavior.classNames(this);
 		return (
 			<div style={styles} className={classNames}>
-				<Block style={this.style()}
+				<Block label={this.props.label}
+					   style={this.style()}
 					   layout={this.props.layout}
 					   width={this.props.width}
 					   height={this.props.height}

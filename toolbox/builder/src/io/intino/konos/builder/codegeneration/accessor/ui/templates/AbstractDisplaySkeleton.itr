@@ -125,7 +125,7 @@ def type(renderTag & item)
 end
 
 def type(renderTag)
-	<React.Fragment style={{...this.props.style,...display}}>
+	<React.Fragment>
 end
 
 def type(renderTagAttributes & block)

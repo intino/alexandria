@@ -33,7 +33,8 @@ class SelectorTabs extends AbstractSelectorTabs {
     }
 
     renderTab = (tab) => {
-        if (child.props.className.indexOf("divider") !== -1) return (<Divider/>);
+	    const className = tab.props.className;
+        if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
         return (<Tab label={tab}/>);
     };
 

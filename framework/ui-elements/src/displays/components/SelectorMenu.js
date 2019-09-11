@@ -55,7 +55,9 @@ class SelectorMenu extends AbstractSelectorMenu {
 	};
 
 	renderItem = (item) => {
-		if (child.props.className.indexOf("divider") !== -1) return (<Divider/>);
+		const className = item.props.className;
+
+		if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
 
 		if (item.type == Block)
 			return this.renderBlock(item);
