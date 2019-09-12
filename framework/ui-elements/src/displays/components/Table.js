@@ -15,6 +15,7 @@ const styles = theme => ({
 	...CollectionStyles(theme),
 	headerView : {
 		borderBottom: "1px solid #ddd",
+		width: "100%"
 	},
 	itemView : {
 		borderBottom: "1px solid #ddd",
@@ -43,7 +44,7 @@ class Table extends AbstractTable {
 		return (
 			<React.Fragment>
 				<div className={classNames(classes.headerView, "layout horizontal")}>{this.props.children}</div>
-				<AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height-offset, width))}</AutoSizer>
+				<div className="layout flex" style={{width:"100%",height:"100%"}}><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width))}</AutoSizer></div>
 			</React.Fragment>
 		);
 	}
