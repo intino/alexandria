@@ -51,7 +51,7 @@ public class TextRenderer extends ComponentRenderer<Text> {
 		}
 		if (element.isEditable()) {
 			EditableText editableText = element.asEditable();
-			if (editableText.placeHolder() != null) result.add("placeholder", editableText.placeHolder());
+			if (editableText.placeholder() != null) result.add("placeholder", editableText.placeholder());
 		}
 		return result;
 	}

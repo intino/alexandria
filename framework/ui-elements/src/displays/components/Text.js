@@ -7,6 +7,7 @@ import TextNotifier from "../../../gen/displays/notifiers/TextNotifier";
 import TextRequester from "../../../gen/displays/requesters/TextRequester";
 import TextBehavior from "./behaviors/TextBehavior";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import ComponentBehavior from "./behaviors/ComponentBehavior";
 
 const styles = theme => ({
 	label: {
@@ -48,14 +49,12 @@ class Text extends AbstractText {
 		const { classes } = this.props;
 	    const value = TextBehavior.mode(this.state.value, this.props);
 	    const variant = this.variant("body1");
-	    const label = TextBehavior.label(this.props);
-	    const labelBlock = (label !== undefined) ? <Typography variant={variant} className={classes.label}>{label}</Typography> : undefined;
 
 	    if (value == null || value === "") return (<React.Fragment/>);
 
 	    return (
 			<Block layout="horizontal">
-				{ labelBlock }
+				{ ComponentBehavior.labelBlock(this.props) }
 				{this.props.prefix !== undefined ? <Typography variant={variant} className={classes.prefix}>{this.props.prefix}:</Typography> : undefined }
 				<Typography variant={variant} className={classes.value} style={this.style()}>{value}</Typography>
 				{ this.props.suffix !== undefined ? <Typography variant={variant} className={classes.suffix}>{this.props.suffix}</Typography> : undefined }

@@ -28,6 +28,10 @@ public class MimeTypes {
 		return contentTypes.getOrDefault(extension, "");
 	}
 
+	public static String extensionOf(URL url) {
+		return extensionOf(contentTypeOf(url));
+	}
+
 	public static String extensionOf(String contentType) {
 		return extensions.getOrDefault(contentType, "");
 	}

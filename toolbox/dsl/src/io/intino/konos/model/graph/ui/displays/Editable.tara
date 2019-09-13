@@ -6,7 +6,7 @@ use Display
 use UI
 
 Facet Editable is abstract
-	var string placeHolder = ""
+	var string placeholder = ""
 	var string defaultValue = ""
 	var string validator = ""
 

@@ -6,6 +6,7 @@ import AbstractBlock from "../../../gen/displays/components/AbstractBlock";
 import BlockNotifier from "../../../gen/displays/notifiers/BlockNotifier";
 import BlockRequester from "../../../gen/displays/requesters/BlockRequester";
 import BlockBehavior from "./behaviors/BlockBehavior";
+import ComponentBehavior from "./behaviors/ComponentBehavior";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import 'alexandria-ui-elements/res/styles/mobile.css';
@@ -46,7 +47,6 @@ export default class Block extends AbstractBlock {
 	_renderLayout = () => {
 		let paper = this.props.paper;
 		let style = this.style();
-		let label = this.props.label;
 		const classNames = BlockBehavior.classNames(this);
 
 		if (!this.state.visible) style = {display:"none", ...style};
@@ -54,7 +54,7 @@ export default class Block extends AbstractBlock {
 		if (paper) {
 			return (
 				<Paper style={style} className={classNames}>
-					{label != null && label !== "" ? <Typography style={{padding:"0 10px"}} variant={this.variant("h5")}>{label}</Typography> : undefined }
+					{ ComponentBehavior.labelBlock(this.props, "h5", {padding:"0 0 5px"}) }
 					<div style={{padding:"0 10px 10px",height:"100%"}} className={classNames}>{this._renderChildren()}</div>
 				</Paper>
 			);
@@ -62,7 +62,7 @@ export default class Block extends AbstractBlock {
 
 		return (
 			<div style={style} className={classNames}>
-				{label != null && label !== "" ? <Typography style={{padding:"0 0 5px"}} variant={this.variant("h5")}>{label}</Typography> : undefined }
+				{ ComponentBehavior.labelBlock(this.props, "h5", {padding:"0 0 5px"}) }
 				{this._renderChildren()}
 			</div>
 		);

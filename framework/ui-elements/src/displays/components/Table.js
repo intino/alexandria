@@ -10,9 +10,15 @@ import 'alexandria-ui-elements/res/styles/layout.css';
 import Heading from "./Heading";
 import { CollectionStyles } from "./Collection";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import ComponentBehavior from "./behaviors/ComponentBehavior";
+import Block from "./Block";
 
 const styles = theme => ({
 	...CollectionStyles(theme),
+	label: {
+		color: theme.palette.grey.primary,
+		marginRight: "5px"
+	},
 	headerView : {
 		borderBottom: "1px solid #ddd",
 		width: "100%"
@@ -39,12 +45,13 @@ class Table extends AbstractTable {
 
 	render() {
 		const { classes } = this.props;
-		const offset = React.Children.count(this.props.children) > 0 ? Heading.Height : 0;
+		// const offset = React.Children.count(this.props.children) > 0 ? Heading.Height : 0;
 
 		return (
 			<React.Fragment>
+				{ ComponentBehavior.labelBlock(this.props) }
 				<div className={classNames(classes.headerView, "layout horizontal")}>{this.props.children}</div>
-				<div className="layout flex" style={{width:"100%",height:"100%"}}><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width))}</AutoSizer></div>
+				<div className="layout flex" style={{width:"100%",height:"100%",minHeight:"100%"}}><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width))}</AutoSizer></div>
 			</React.Fragment>
 		);
 	}

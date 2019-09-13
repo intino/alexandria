@@ -18,7 +18,15 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 		result.add("multipleSelection", element.multipleSelection() ? "true" : "false");
 		if (element.isReadonly()) result.add("readonly", element.isReadonly());
 		if (element.isFocused()) result.add("readonly", element.isFocused());
+		addComboBoxProperties(result);
 		return result;
+	}
+
+	private void addComboBoxProperties(FrameBuilder builder) {
+		if (!element.isComboBox()) return;
+		String placeholder = element.asComboBox().placeholder();
+		if (placeholder == null || placeholder.isEmpty()) return;
+		builder.add("placeholder", placeholder);
 	}
 
 	@Override
