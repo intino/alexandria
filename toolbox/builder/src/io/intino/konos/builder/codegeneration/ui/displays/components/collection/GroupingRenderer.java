@@ -18,6 +18,20 @@ public class GroupingRenderer extends BindingCollectionRenderer<Grouping> {
 	}
 
 	@Override
+	public FrameBuilder properties() {
+		FrameBuilder properties = super.properties();
+		addComboBoxProperties(properties);
+		return properties;
+	}
+
+	private void addComboBoxProperties(FrameBuilder builder) {
+		if (!element.isComboBox()) return;
+		String placeholder = element.asComboBox().placeholder();
+		if (placeholder == null || placeholder.isEmpty()) return;
+		builder.add("placeholder", placeholder);
+	}
+
+	@Override
 	protected String className(Class clazz) {
 		return super.className(clazz).replace("grouping", "");
 	}

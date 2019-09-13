@@ -11,7 +11,8 @@ const styles = theme => ({
 	container : {
 		position: "relative",
 		minWidth: "170px",
-	},
+        width: "100%",
+    },
 	readonly : {
 		position: "absolute",
 		top: "0",
@@ -77,7 +78,8 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 	};
 
 	selectMessage = () => {
-		return this.translate("Select an option");
+		const placeholder = this.props.placeholder;
+		return this.translate(placeholder != null && placeholder !== "" ? placeholder : "Select an option");
 	};
 
 	_name = (option) => {

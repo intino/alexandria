@@ -8,6 +8,7 @@ import TextBehavior from "./behaviors/TextBehavior";
 import Block from "./Block";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import NumberUtil from "alexandria-ui-elements/src/util/NumberUtil";
+import ComponentBehavior from "./behaviors/ComponentBehavior";
 
 const styles = theme => ({
 	label: {
@@ -43,14 +44,12 @@ class Number extends AbstractNumber {
 		const { classes } = this.props;
 		const value = this.state.value;
 		const variant = this.variant("body1");
-		const label = TextBehavior.label(this.props);
-		const labelBlock = (label !== undefined) ? <Typography variant={variant} className={classes.label}>{label}</Typography> : undefined;
 
 		if (value == null || value === "") return (<React.Fragment/>);
 
 		return (
 			<Block layout="horizontal">
-				{ labelBlock }
+				{ ComponentBehavior.labelBlock(this.props) }
 				{this.props.prefix !== undefined ? <Typography variant={variant} className={classes.prefix}>{this.props.prefix}:</Typography> : undefined }
 				<Typography variant={variant} className={classes.value} style={this.style()}>{NumberUtil.format(value, this.translate("0,0"))}</Typography>
 				{ this.props.suffix !== undefined ? <Typography variant={variant} className={classes.suffix}>{this.props.suffix}</Typography> : undefined }

@@ -126,7 +126,9 @@ Facet CheckBox on OtherComponents.Selector
 	var string[] selected = empty
 
 Facet ComboBox on OtherComponents.Selector
+	var string placeholder = ""
 Facet ComboBox on CatalogComponents.Grouping
+	var string placeholder = ""
 
 Facet ListBox on OtherComponents.Selector
 

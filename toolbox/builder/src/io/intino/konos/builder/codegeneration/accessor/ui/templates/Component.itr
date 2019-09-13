@@ -79,7 +79,7 @@ def type(properties & portal) trigger(specific)
 end
 
 def type(properties & selector) trigger(specific)
-	[ multipleSelection={$multipleSelection}][ readonly={$readonly}][ focused={$focused}]
+	[ multipleSelection={$multipleSelection}][ readonly={$readonly}][ focused={$focused}][ placeholder="$placeholder"]
 end
 
 def type(properties & image) trigger(specific)
@@ -180,6 +180,10 @@ end
 
 def type(properties & slider) trigger(specific)
     [ range={{min:$min,max:$max}}][ value={$value}]
+end
+
+def type(properties & grouping) trigger(specific)
+    [ placeholder="$placeholder"]
 end
 
 def type(properties) trigger(specific)

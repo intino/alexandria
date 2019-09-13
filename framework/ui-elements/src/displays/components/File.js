@@ -39,9 +39,6 @@ class File extends AbstractFile {
 	render() {
 		const { classes } = this.props;
 		const file = this.state.value != null ? this.state.value + (this.state.value.indexOf("?") != -1 ? "&" : "?") + "embedded=true" : undefined;
-		const variant = this.variant("body1");
-		const label = ComponentBehavior.label(this.props);
-		const labelBlock = (label !== undefined) ? <Typography variant={variant} className={classes.label}>{label}</Typography> : undefined;
 
 		if (file === undefined) return (<React.Fragment/>);
 
@@ -51,7 +48,7 @@ class File extends AbstractFile {
 
 		return (
 			<Block layout="horizontal">
-				{ labelBlock }
+				{ ComponentBehavior.labelBlock(this.props) }
 				{!this._isPdf() && <div style={this.style()} className={classNames(classes.message, "layout horizontal center-center")}><div>{notAvailable}</div></div> }
 				{this._isPdf() &&
 					<object className={classes.value} style={this.style()} data={file} type="application/pdf">

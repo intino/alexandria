@@ -2,10 +2,6 @@ import ComponentBehavior from "./ComponentBehavior";
 
 const TextBehavior = (function () {
     return {
-        label : (props) => {
-            return ComponentBehavior.label(props);
-        },
-
         mode: (value, props) => {
             if (value == null) return value;
             if (props.mode === "capitalize") return this.capitalize(value);
