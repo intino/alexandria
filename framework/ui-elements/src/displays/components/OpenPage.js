@@ -20,7 +20,7 @@ class OpenPage extends AbstractOpenPage {
 
 	open = (path) => {
 		let url = this.buildApplicationUrl(path);
-		if (this.props.format === "blank") window.open(url, "_blank");
+		if (this.props.target === "blank") window.open(url, "_blank");
 		else window.location.href = url;
 	};
 

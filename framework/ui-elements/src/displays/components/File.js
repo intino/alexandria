@@ -47,7 +47,7 @@ class File extends AbstractFile {
 		const notSupportedLinkMessage = this.translate("click here to download the PDF file.");
 
 		return (
-			<Block layout="horizontal">
+			<Block layout="horizontal flex">
 				{ ComponentBehavior.labelBlock(this.props) }
 				{!this._isPdf() && <div style={this.style()} className={classNames(classes.message, "layout horizontal center-center")}><div>{notAvailable}</div></div> }
 				{this._isPdf() &&

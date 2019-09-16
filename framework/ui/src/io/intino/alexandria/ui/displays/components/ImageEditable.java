@@ -50,7 +50,7 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
 
 	protected ImageEditable _value(URL value) {
 		this.value = value;
-		this.mimeType = MimeTypes.contentTypeOf(value);
+		this.mimeType = value != null ? MimeTypes.contentTypeOf(value) : null;
 		return this;
 	}
 

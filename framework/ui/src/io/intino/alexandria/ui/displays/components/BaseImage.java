@@ -16,9 +16,7 @@ public class BaseImage<DN extends BaseImageNotifier, B extends Box> extends Abst
     }
 
     public void refresh() {
-        String value = serializedValue();
-        if (value == null) return;
-        notifier.refresh(value);
+        notifier.refresh(serializedValue());
     }
 
     String serializedValue() {

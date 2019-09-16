@@ -17,6 +17,9 @@ const TranslatorService = {
         };
 
         return {
+            language: () => {
+                return language;
+            },
             translate: (word, params) => {
                 return translator.translate(word, params);
             }

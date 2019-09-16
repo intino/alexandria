@@ -115,6 +115,7 @@ Concept OperationComponents
 		sub OpenDrawer > var Drawer drawer
 		sub CloseDrawer > var Drawer drawer
 		sub OpenPage > var Page page
+		sub OpenSite > var string site
 		sub OpenBlock > var Conditional block
 		sub OpenDialog > var OtherComponents.AbstractDialog dialog
 		sub CloseDialog > var OtherComponents.AbstractDialog dialog

@@ -39,9 +39,7 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	}
 
 	public void refresh() {
-		String value = serializedValue();
-		if (value == null) return;
-		notifier.refresh(new FileInfo().value(value).mimeType(mimeType));
+		notifier.refresh(new FileInfo().value(serializedValue()).mimeType(mimeType));
 	}
 
 	public void notifyChange(Resource value) {
@@ -51,7 +49,7 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 
 	protected FileEditable _value(URL value) {
 		this.value = value;
-		this.mimeType = MimeTypes.contentTypeOf(value);
+		this.mimeType = value != null ? MimeTypes.contentTypeOf(value) : null;
 		return this;
 	}
 
