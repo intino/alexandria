@@ -387,6 +387,10 @@ def type(properties & openpage) trigger(specific)
 	[_path("$path");]
 end
 
+def type(properties & opensite) trigger(specific)
+	[_site("$site");]
+end
+
 def type(properties & switches) trigger(specific)
     [_state(io.intino.alexandria.ui.displays.events.operation.ToggleEvent.State.valueOf("$state"));]
 end

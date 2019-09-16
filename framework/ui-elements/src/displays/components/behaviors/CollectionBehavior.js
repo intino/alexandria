@@ -57,12 +57,16 @@ const CollectionBehavior = (collection) => {
     self.renderPagination = () => {
         const itemCount = self.collection.state.itemCount;
         const pageSize = self.collection.state.pageSize;
+        const defaultPageSize = self.collection.defaultPageSize != null ? self.collection.defaultPageSize : self.collection.state.pageSize;
         const page = self.collection.state.page;
+        const pageSizes = [defaultPageSize, defaultPageSize*2, defaultPageSize*3];
+
+        self.collection.defaultPageSize = defaultPageSize;
 
         return (
             <div style={{height:PaginationHeight + "px"}}>
                 <TablePagination style={{position:"absolute",right:"0"}}
-                                 rowsPerPageOptions={[20, 40, 60]}
+                                 rowsPerPageOptions={pageSizes}
                                  component="div"
                                  count={itemCount}
                                  rowsPerPage={pageSize}
@@ -70,7 +74,9 @@ const CollectionBehavior = (collection) => {
                                  backIconButtonProps={{'aria-label': 'Previous Page'}}
                                  nextIconButtonProps={{'aria-label': 'Next Page'}}
                                  onChangePage={self.handlePage.bind(self)}
-                                 onChangeRowsPerPage={self.handlePageSize.bind(self)}/>
+                                 onChangeRowsPerPage={self.handlePageSize.bind(self)}
+                                 labelDisplayedRows={self.displayedRowsLabel.bind(self)}
+                                 labelRowsPerPage={self.rowsPerPageLabel()}/>
             </div>
         );
     };
@@ -212,6 +218,20 @@ const CollectionBehavior = (collection) => {
         const size = e.target.value;
         self.collection.setState({ pageSize: size });
         self.collection.requester.changePageSize(size);
+    };
+
+    self.displayedRowsLabel = ({from, to, count}) => {
+        const language = self.collection.language();
+        let message = "${from}-${to} of ${count}";
+        if (language === "es") message = "${from}-${to} de ${count}";
+        return self.collection.translate(message).replace("${from}", from).replace("${to}", to).replace("${count}", count);
+    };
+
+    self.rowsPerPageLabel = () => {
+        const language = self.collection.language();
+        let message = "Rows per page:";
+        if (language === "es") message = "Elementos por página:";
+        return self.collection.translate(message);
     };
 
     self.items = () => {

@@ -11,7 +11,8 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/demo") demo as Page(homeTemplate)
 
 Template homeTemplate
-	Selector as ComboBox(placeholder="hola mundo!")
+	OpenSite(site="http://www.google.es", title = "", target=Blank)
+
 
 Template root as Accessible(parameters = "a" "b")
 

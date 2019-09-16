@@ -51,6 +51,7 @@ public class ComponentRendererFactory {
 
 		if (component.i$(Toolbar.class)) return (T) new ToolbarRenderer(settings, component.a$(Toolbar.class), provider, target);
 		if (component.i$(OpenPage.class)) return (T) new OpenPageRenderer(settings, component.a$(OpenPage.class), provider, target);
+		if (component.i$(OpenSite.class)) return (T) new OpenSiteRenderer(settings, component.a$(OpenSite.class), provider, target);
 		if (component.i$(OpenDrawer.class)) return (T) new OpenDrawerRenderer(settings, component.a$(OpenDrawer.class), provider, target);
 		if (component.i$(CloseDrawer.class)) return (T) new CloseDrawerRenderer(settings, component.a$(CloseDrawer.class), provider, target);
 		if (component.i$(OpenBlock.class)) return (T) new OpenBlockRenderer(settings, component.a$(OpenBlock.class), provider, target);
