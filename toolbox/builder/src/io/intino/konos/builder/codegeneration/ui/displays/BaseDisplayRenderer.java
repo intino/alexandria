@@ -11,6 +11,7 @@ import io.intino.konos.builder.codegeneration.ui.passiveview.PassiveViewRenderer
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
+import io.intino.konos.model.graph.addressable.operationcomponents.AddressableTask;
 import io.intino.konos.model.graph.dynamicloaded.DynamicLoadedComponent;
 import io.intino.konos.model.graph.selectable.catalogcomponents.SelectableCollection;
 import org.jetbrains.annotations.NotNull;
@@ -115,6 +116,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	protected void addImplements(FrameBuilder frame) {
 		if (element.i$(DynamicLoadedComponent.class)) frame.add("implements", new FrameBuilder("implements", DynamicLoadedComponent.class.getSimpleName()));
 		if (element.i$(SelectableCollection.class)) frame.add("implements", new FrameBuilder("implements", SelectableCollection.class.getSimpleName()));
+		if (element.i$(AddressableTask.class)) frame.add("implements", new FrameBuilder("implements", AddressableTask.class.getSimpleName()).add("name", nameOf(element)));
 	}
 
 	protected void addMethods(FrameBuilder frame) {

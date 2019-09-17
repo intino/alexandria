@@ -3,6 +3,7 @@ package io.intino.alexandria.ui;
 import io.intino.alexandria.rest.pushservice.MessageCarrier;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.DisplayRouteManager;
+import io.intino.alexandria.ui.displays.DisplayRouteDispatcher;
 import io.intino.alexandria.ui.displays.notifiers.DisplayNotifier;
 import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
 import io.intino.alexandria.ui.spark.UISparkManager;
@@ -28,7 +29,7 @@ public abstract class UI {
         };
     }
 
-    protected static DisplayRouteManager routeManager(UISpark spark) {
+    protected static DisplayRouteManager routeManager(UISpark spark, DisplayRouteDispatcher routeDispatcher) {
         return new DisplayRouteManager() {
             @Override
             public void get(String path, Consumer<UISparkManager> consumer) {
@@ -38,6 +39,11 @@ public abstract class UI {
             @Override
             public void post(String path, Consumer<UISparkManager> consumer) {
                 spark.route(path).post(consumer::accept);
+            }
+
+            @Override
+            public DisplayRouteDispatcher routeDispatcher() {
+                return routeDispatcher;
             }
         };
     }
