@@ -21,6 +21,7 @@ def type(notifier)
 			this.when("removeInstance").toSelf().execute((parameters) => this.element.removeInstance(parameters));
 			this.when("clearContainer").toSelf().execute((parameters) => this.element.clearContainer(parameters));
 			this.when("redirect").toSelf().execute((parameters) => this.element.redirect(parameters));
+			this.when("addressed").toSelf().execute((parameters) => this.element.addressed(parameters));
 		};
 
 		when = (message) => {
@@ -76,6 +77,8 @@ def type(notifier)
 end
 
 def type(requester)
+	import history from "alexandria-ui-elements/src/util/History";
+
 	export default class Requester {
 		constructor(element) {
 			this.element = element;
@@ -86,5 +89,12 @@ def type(requester)
         available = (unit) => {
             return this.pushService.existsConnection(unit);
         };
+
+        addToHistory = () => {
+            const address = this.element.historyAddress();
+            if (address == null) return false;
+            history.push(address, {});
+            return true;
+	    };
     }
 end

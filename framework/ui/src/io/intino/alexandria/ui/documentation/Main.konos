@@ -10,12 +10,6 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(homeTemplate)
 	Resource(path = "/docs") docs as Page(docsTemplate)
 	Resource(path = "/docs/data/:type") widgetType as Page(widgetTypeTemplate)
-//	Resource(path = "/docs/data/number") number as Page(numberTemplate)
-//	Resource(path = "/docs/data/image") image as Page(imageTemplate)
-//	Resource(path = "/docs/data/file") file as Page(fileTemplate)
-//	Resource(path = "/docs/data/date") date as Page(dateTemplate)
-//	Resource(path = "/docs/other/block") block as Page(blockTemplate)
-//	Resource(path = "/docs/other/chart") chart as Page(chartTemplate)
 
 Template homeTemplate
 	Header(color="white", format=air) as Absolute(height=100px)

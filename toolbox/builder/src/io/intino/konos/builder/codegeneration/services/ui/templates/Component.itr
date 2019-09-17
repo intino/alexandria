@@ -56,6 +56,14 @@ def type(method & portal)
 	}
 end
 
+def type(method & task & addressable)
+    @Override
+    public $name+firstUpperCase address(java.util.function.Function<String, String> addressFromPathResolver) {
+        address(addressFromPathResolver.apply(path()));
+        return this;
+    }
+end
+
 def type(method & collection & table)
 	[$selectionMethod]
 
@@ -328,6 +336,10 @@ def type(implements & dynamicloadedcomponent)
 	implements io.intino.alexandria.ui.displays.components.DynamicLoaded
 end
 
+def type(implements & addressabletask)
+	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
+end
+
 def type(implements)
 	implements --undefined--
 end
@@ -389,6 +401,10 @@ end
 
 def type(properties & opensite) trigger(specific)
 	[_site("$site");]
+end
+
+def type(properties & task) trigger(specific)
+	[_path("$path");]
 end
 
 def type(properties & switches) trigger(specific)

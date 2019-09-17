@@ -3,6 +3,8 @@ dsl Konos
 Display desktop as Decorated
 Display page as Decorated
 Display pageDisplay as Decorated
+Display displayRouter as Decorated
+	Request dispatch as Text
 
 Display proxyDisplay as Decorated
 	Notification refresh as Object(ProxyDisplayInfo)

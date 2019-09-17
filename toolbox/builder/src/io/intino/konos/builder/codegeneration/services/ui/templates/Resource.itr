@@ -85,6 +85,7 @@ def type(resource & accessibleDisplay)
 			page.soul = soul;
 			page.execute();
 			box.registerSoul(client.id(), soul);
+			soul.register(new io.intino.alexandria.ui.displays.DisplayRouter(box).id("__router__"));
 
 			manager.write("OK");
 		}
@@ -164,6 +165,7 @@ def type(resource)
 				client.soul(soul);
 
 				box.registerSoul(clientId, soul);
+				soul.register(new io.intino.alexandria.ui.displays.DisplayRouter(box).id("__router__"));
 
 				return true;
 			});

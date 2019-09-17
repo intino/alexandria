@@ -7,11 +7,18 @@ Service RestService as REST(port = "9000", host = "")
 
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Use(className = "org.example.unit1.box.ui.Unit1Elements", url = "http://unit1") unit1
-	Resource(path = "/") home as Page(homeTemplate)
-	Resource(path = "/demo") demo as Page(homeTemplate)
+	Resource(path = "/") home as Page(homeTemplate) Main
+	Resource(path = "/cobranzas") cobranzas as Page(homeTemplate)
+	Resource(path = "/cobranza/:name") cobranza as Page(homeTemplate)
+	Resource(path = "/cuentas") cuentas as Page(homeTemplate)
+	Resource(path = "/cuenta/:id") cuenta as Page(homeTemplate)
+	Resource(path = "/cuenta/:id/:view") cuentaView as Page(homeTemplate)
+	Resource(path = "/cuenta/a/b/c/:id/:view") cuentaView as Page(homeTemplate)
+	Resource(path = "/ingresos") ingresos as Page(homeTemplate)
+	Resource(path = "/ingreso/:name") ingreso as Page(homeTemplate)
 
 Template homeTemplate
-	OpenSite(site="http://www.google.es", title = "", target=Blank)
+	Task as Link Addressable(UiElements.home)
 
 
 Template root as Accessible(parameters = "a" "b")

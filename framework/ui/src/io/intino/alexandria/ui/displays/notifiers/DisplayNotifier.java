@@ -65,6 +65,12 @@ public class DisplayNotifier {
         put("clearContainer", addMetadata(params));
     }
 
+    public void addressed(String address) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("address", address);
+        put("addressed", addMetadata(params));
+    }
+
     protected void put(String message) {
         put(message, addMetadata(new HashMap<>()));
     }

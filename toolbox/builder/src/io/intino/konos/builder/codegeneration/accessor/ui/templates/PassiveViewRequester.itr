@@ -38,12 +38,14 @@ end
 
 def type(parameter) trigger(request)
 	$name = function(value) {
+        if (this.addToHistory()) return;
 		$method({ op: "$name", s: "$display+lowercase", d: this.element.props.id, o: this.element.props.owner(), c: this.element.props.context(), v: $parameter}, this.element.ownerUnit());
 	}
 end
 
 def trigger(request)
     $name = ([$parameterSignature]) => {
+        if (this.addToHistory()) return;
         $method({ op: "$name", s: "$display+lowercase", d: this.element.props.id, o: this.element.props.owner(), c: this.element.props.context()[, v: $parameter]}, this.element.ownerUnit());
     };
 end

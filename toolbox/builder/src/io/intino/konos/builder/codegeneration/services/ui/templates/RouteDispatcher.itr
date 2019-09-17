@@ -1,0 +1,70 @@
+def type(dispatcher & gen)
+    package $package.ui.displays;
+
+    import io.intino.alexandria.ui.Soul;
+
+    public abstract class AbstractRouteDispatcher implements io.intino.alexandria.ui.displays.DisplayRouteDispatcher {
+
+        @Override
+        public void dispatch(Soul soul, String address) {
+            String subPath = subPath(address);
+            java.util.List<String> params = paramsOf(address);
+            [$resource+call...[$NL]]
+        }
+
+        [$resource+declaration...[$NL]]
+
+        private String subPath(String address) {
+            java.util.stream.Stream<String> split = java.util.stream.Stream.of(address.split("/"));
+            return split.filter(s -> !s.startsWith(":")).collect(java.util.stream.Collectors.joining("/"));
+        }
+
+        private java.util.List<String> paramsOf(String address) {
+            java.util.stream.Stream<String> split = java.util.stream.Stream.of(address.split("/"));
+            return split.filter(s -> s.startsWith(":")).map(s -> s.substring(1)).collect(java.util.stream.Collectors.toList());
+        }
+    }
+end
+
+def type(dispatcher)
+    package $package.ui.displays;
+
+    import io.intino.alexandria.ui.Soul;
+
+    public class RouteDispatcher extends AbstractRouteDispatcher {
+        [$resource+implementation...[$NL]]
+    }
+end
+
+def type(resource & main) trigger(call)
+    if (subPath.length() <= 0) dispatch$name+firstUpperCase(soul);
+end
+
+def type(resource) trigger(call)
+    else if (params.size() == $paramsCount && subPath.equals("$subPath")) dispatch$name+firstUpperCase(soul[, $param+call...[, ]]);
+end
+
+def type(resource & main) trigger(declaration)
+end
+
+def type(resource) trigger(declaration)
+    public abstract void dispatch$name+firstUpperCase(Soul soul[, $param...[, ]]);
+end
+
+def type(resource & main) trigger(implementation)
+end
+
+def type(resource) trigger(implementation)
+    @Override
+    public void dispatch$name+firstUpperCase(Soul soul[, $param...[, ]]) {
+        // TODO
+    }
+end
+
+def type(param) trigger(call)
+    params.get($index)
+end
+
+def type(param)
+    String $name
+end

@@ -19,5 +19,4 @@ export default class PassiveView extends I18nComponent {
     ownerUnit = () => {
         return this.context !== "" ? this.context : null;
     };
-
 }
