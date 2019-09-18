@@ -56,7 +56,7 @@ def type(method & portal)
 	}
 end
 
-def type(method & task & addressable)
+def type(method & addressable)
     @Override
     public $name+firstUpperCase address(java.util.function.Function<String, String> addressFromPathResolver) {
         address(addressFromPathResolver.apply(path()));
@@ -340,6 +340,10 @@ def type(implements & addressabletask)
 	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
 end
 
+def type(implements & addressableselector)
+	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
+end
+
 def type(implements)
 	implements --undefined--
 end
@@ -366,6 +370,7 @@ end
 def type(properties & selector) trigger(specific)
 	[_multipleSelection($multipleSelection);]
 	[_readonly($readonly);]
+	[_path("$path");]
 end
 
 def type(properties & image & avatar) trigger(specific)

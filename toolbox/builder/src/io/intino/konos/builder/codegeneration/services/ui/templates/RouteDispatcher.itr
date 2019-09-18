@@ -3,26 +3,51 @@ def type(dispatcher & gen)
 
     import io.intino.alexandria.ui.Soul;
 
+    import java.util.ArrayList;
+    import java.util.Collections;
+    import java.util.HashMap;
+    import java.util.List;
+    import java.util.regex.Matcher;
+    import java.util.regex.Pattern;
+
     public abstract class AbstractRouteDispatcher implements io.intino.alexandria.ui.displays.DisplayRouteDispatcher {
+        private static java.util.Map<String, String> patterns = new HashMap<>();
+
+        public AbstractRouteDispatcher() {
+            registerPatterns();
+        }
 
         @Override
         public void dispatch(Soul soul, String address) {
-            String subPath = subPath(address);
-            java.util.List<String> params = paramsOf(address);
+            List<String> params = paramsOf(address);
             [$resource+call...[$NL]]
         }
 
         [$resource+declaration...[$NL]]
 
-        private String subPath(String address) {
-            java.util.stream.Stream<String> split = java.util.stream.Stream.of(address.split("/"));
-            return split.filter(s -> !s.startsWith(":")).collect(java.util.stream.Collectors.joining("/"));
+        private void registerPatterns() {
+            if (patterns.size() > 0) return;
+            [$resource+patternRegister...[$NL]]
         }
 
-        private java.util.List<String> paramsOf(String address) {
-            java.util.stream.Stream<String> split = java.util.stream.Stream.of(address.split("/"));
-            return split.filter(s -> s.startsWith(":")).map(s -> s.substring(1)).collect(java.util.stream.Collectors.toList());
+        private String patternOf(String address) {
+            [$resource+pattern...[$NL]]
+            return null;
         }
+
+        private List<String> paramsOf(String address) {
+            return paramsOf(address, patternOf(address));
+        }
+
+        private List<String> paramsOf(String address, String pattern) {
+            Pattern p = Pattern.compile(pattern);
+            Matcher m = p.matcher(address);
+            if (!m.find()) return Collections.emptyList();
+            List<String> result = new ArrayList<>();
+            for (int i=1; i<=m.groupCount(); i++) result.add(m.group(i));
+            return result;
+        }
+
     }
 end
 
@@ -37,11 +62,11 @@ def type(dispatcher)
 end
 
 def type(resource & main) trigger(call)
-    if (subPath.length() <= 0) dispatch$name+firstUpperCase(soul);
+    if (address.length() <= 1) dispatch$name+firstUpperCase(soul);
 end
 
 def type(resource) trigger(call)
-    else if (params.size() == $paramsCount && subPath.equals("$subPath")) dispatch$name+firstUpperCase(soul[, $param+call...[, ]]);
+    else if (address.matches(patterns.get("$name"))) dispatch$name+firstUpperCase(soul[, $param+call...[, ]]);
 end
 
 def type(resource & main) trigger(declaration)
@@ -59,6 +84,21 @@ def type(resource) trigger(implementation)
     public void dispatch$name+firstUpperCase(Soul soul[, $param...[, ]]) {
         // TODO
     }
+end
+
+def type(resource & main) trigger(patternRegister)
+end
+
+def type(resource) trigger(patternRegister)
+    patterns.put("$name", "$pattern");
+end
+
+def type(resource & main) trigger(pattern)
+    if (address.matches(patterns.get("$name"))) return patterns.get("$name");
+end
+
+def type(resource) trigger(pattern)
+    else if (address.matches(patterns.get("$name"))) return patterns.get("$name");
 end
 
 def type(param) trigger(call)
