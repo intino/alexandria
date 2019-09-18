@@ -43,5 +43,6 @@ Facet AbstractAddressable is abstract
 	var boolean listenForChanges = true
 Facet Addressable extends AbstractAddressable on Display.Request
 Facet Addressable extends AbstractAddressable on OperationComponents.Task
+Facet Addressable extends AbstractAddressable on OtherComponents.Selector
 
 Facet Decorated on Display

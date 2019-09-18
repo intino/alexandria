@@ -20,11 +20,6 @@ public class TaskRenderer extends OperationRenderer<Task> {
 		addMethod(builder);
 	}
 
-	private void addMethod(FrameBuilder builder) {
-		if (!element.isAddressable()) return;
-		builder.add("methods", addressedMethod());
-	}
-
 	@Override
 	public FrameBuilder properties() {
 		FrameBuilder result = super.properties();
@@ -34,6 +29,11 @@ public class TaskRenderer extends OperationRenderer<Task> {
 		}
 		addAddressableProperties(result);
 		return result;
+	}
+
+	private void addMethod(FrameBuilder builder) {
+		if (!element.isAddressable()) return;
+		builder.add("methods", addressedMethod());
 	}
 
 	private FrameBuilder addressedMethod() {

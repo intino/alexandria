@@ -15,6 +15,9 @@ const styles = theme => ({
 		color: theme.palette.grey.primary,
 		marginRight: "5px"
 	},
+	value : {
+		margin: "0 !important"
+	},
 	prefix : {
 		color: theme.palette.grey.primary,
 		fontSize: "10pt",
@@ -24,7 +27,6 @@ const styles = theme => ({
 	suffix : {
 		color: theme.palette.grey.primary,
 		fontSize: "10pt",
-		marginTop: "2px",
 		marginLeft: "3px"
 	}
 });
@@ -48,7 +50,7 @@ class Number extends AbstractNumber {
 		if (value == null || value === "") return (<React.Fragment/>);
 
 		return (
-			<Block layout="horizontal">
+			<Block layout="horizontal center" style={this.style()}>
 				{ ComponentBehavior.labelBlock(this.props) }
 				{this.props.prefix !== undefined ? <Typography variant={variant} className={classes.prefix}>{this.props.prefix}:</Typography> : undefined }
 				<Typography variant={variant} className={classes.value} style={this.style()}>{NumberUtil.format(value, this.translate("0,0"))}</Typography>

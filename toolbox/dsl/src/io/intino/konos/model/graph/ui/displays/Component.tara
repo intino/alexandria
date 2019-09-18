@@ -45,6 +45,7 @@ Concept DataComponents
 		var double value = empty
 		var string prefix = empty
 		var string suffix = empty
+		var integer countDecimals = 0
 
 	Concept Date extends Component
 		var string pattern = "DD/MM/YYYY"

@@ -6,6 +6,7 @@ def type(app)
 	import FileService from "alexandria-ui-elements/src/services/FileService";
 	import TranslatorService from "alexandria-ui-elements/src/services/TranslatorService";
     import GoogleApiLoader from "alexandria-ui-elements/src/displays/components/geo/GoogleApiLoader";
+    import DisplayRouter from "alexandria-ui-elements/src/displays/DisplayRouter";
 
 	var launchApplication = function () {
 		var configuration = loadConfiguration();
@@ -57,6 +58,6 @@ def type(page) trigger(render)
     const requireGoogleApi = Application.configuration.googleApiKey != null && Application.configuration.googleApiKey !== "";
     const content = requireGoogleApi ? <GoogleApiLoader onLoad={openPushServices()}><$value+firstUpperCase/></GoogleApiLoader> : <$value+firstUpperCase/>;
     const $value+firstLowerCase = document.getElementById("$value+firstUpperCase");
-    if ($value+firstLowerCase) ReactDOM.render(content, $value+firstLowerCase);
+    if ($value+firstLowerCase) ReactDOM.render(<DisplayRouter id="__router__" owner={()=>""} context={()=>""}>{content}</DisplayRouter>, $value+firstLowerCase);
     if (!requireGoogleApi) openPushServices();
 end
