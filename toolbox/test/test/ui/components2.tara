@@ -20,7 +20,6 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 Template homeTemplate
 	Number(countDecimals=2)
 
-
 Template root as Accessible(parameters = "a" "b")
 
 Theme theme1

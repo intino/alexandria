@@ -51,7 +51,7 @@ class User extends AbstractUser {
         const { classes } = this.props;
         const variant = this.variant("body1");
         const photoWithFullname = this.props.mode == null || this.props.mode === "PhotoWithFullname";
-        const hasChildren = this.props.children.length > 0;
+        const hasChildren = this.props.children != null && this.props.children.length > 0;
 
         return (
             <div className="layout horizontal">
