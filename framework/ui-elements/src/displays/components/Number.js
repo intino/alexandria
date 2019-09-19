@@ -46,6 +46,7 @@ class Number extends AbstractNumber {
 		const { classes } = this.props;
 		const value = this.state.value;
 		const variant = this.variant("body1");
+		const format = this._format();
 
 		if (value == null || value === "") return (<React.Fragment/>);
 
@@ -53,7 +54,7 @@ class Number extends AbstractNumber {
 			<Block layout="horizontal center" style={this.style()}>
 				{ ComponentBehavior.labelBlock(this.props) }
 				{this.props.prefix !== undefined ? <Typography variant={variant} className={classes.prefix}>{this.props.prefix}:</Typography> : undefined }
-				<Typography variant={variant} className={classes.value} style={this.style()}>{NumberUtil.format(value, this.translate("0,0"))}</Typography>
+				<Typography variant={variant} className={classes.value} style={this.style()}>{NumberUtil.format(value, this.translate(format))}</Typography>
 				{ this.props.suffix !== undefined ? <Typography variant={variant} className={classes.suffix}>{this.props.suffix}</Typography> : undefined }
 			</Block>
 		);
@@ -61,6 +62,14 @@ class Number extends AbstractNumber {
 
 	refresh = (value) => {
 		this.setState({ value });
+	};
+
+	_format = () => {
+		const decimals = this.props.decimals != null ? this.props.decimals : 0;
+		let result = "0,0";
+		if (decimals > 0) result += ".";
+		for (let i=0; i<decimals; i++) result += "0";
+		return result;
 	};
 }
 

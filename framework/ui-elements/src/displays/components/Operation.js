@@ -124,6 +124,7 @@ export default class Operation extends AbstractOperation {
 	};
 
 	handleClick(e) {
+		e.stopPropagation();
 		this.execute();
 	};
 
