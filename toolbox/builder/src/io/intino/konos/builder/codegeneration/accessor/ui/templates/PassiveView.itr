@@ -12,8 +12,8 @@ def type(notifier)
 		setup() {
 			var context = this.element.props.context != null ? this.element.props.context() : "";
 			var key = this.element.props.id + context;
-			if (Notifier.subscriptions$[key$]) return;
-			Notifier.subscriptions$[key$] = true;
+			//if (Notifier.subscriptions$[key$]) return;
+			//Notifier.subscriptions$[key$] = true;
 			this.when("addInstance").toSelf().execute((parameters) => this.element.addInstance(parameters));
 			this.when("addInstances").toSelf().execute((parameters) => this.element.addInstances(parameters));
 			this.when("insertInstance").toSelf().execute((parameters) => this.element.insertInstance(parameters));
@@ -69,7 +69,7 @@ def type(notifier)
 		detached = () => {
             var context = this.element.props.context != null ? this.element.props.context() : "";
             var key = this.element.props.id + context;
-            Notifier.subscriptions$[key$] = null;
+            //Notifier.subscriptions$[key$] = null;
 			this.pushRegistrations.forEach((registrations) => registrations.deregister());
 			this.pushRegistrations.splice(0, this.pushRegistrations.length);
 		};
