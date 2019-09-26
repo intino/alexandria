@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { withStyles } from '@material-ui/core/styles';
 import AbstractDownloadSelection from "../../../gen/displays/components/AbstractDownloadSelection";
 import DownloadSelectionNotifier from "../../../gen/displays/notifiers/DownloadSelectionNotifier";
@@ -26,7 +26,11 @@ class DownloadSelection extends AbstractDownloadSelection {
 
 	render = () => {
 		const operation = this.renderOperation();
-		return (<React.Fragment>{this.renderDownloadDialog()}{operation}</React.Fragment>);
+		return (
+			<Suspense fallback={<div style={{width: "24px", ...this.style()}}/>}>
+				{this.renderDownloadDialog()}{operation}
+			</Suspense>
+		);
 	};
 
 	renderDownloadDialog = () => {

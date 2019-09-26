@@ -108,8 +108,10 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
     }
 
     SelectorOption findOption(int option) {
+        if (option < 0) return null;
         List<SelectorOption> options = options();
-        return options.size() > 0 ? options.get(option) : null;
+        int size = options.size();
+        return size > 0 && option < size ? options.get(option) : null;
     }
 
     int position(String option) {
