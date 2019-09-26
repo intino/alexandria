@@ -20,12 +20,7 @@ public class Frame<DN extends FrameNotifier, B extends Box> extends AbstractFram
     public void display(Display display) {
         this.display = display;
         this.display.id(UUID.randomUUID().toString());
-    }
-
-    @Override
-    public void refresh() {
-        super.refresh();
-        if (display != null) add(display);
+        add(this.display);
     }
 
 }

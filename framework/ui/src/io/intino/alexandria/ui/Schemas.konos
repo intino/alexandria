@@ -97,5 +97,7 @@ Schema ExportParams
 	Attribute to as DateTime
 	Attribute option as Text
 
-
+Schema Highlight
+	Attribute textColor as Text
+	Attribute backgroundColor as Text
 

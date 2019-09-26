@@ -56,6 +56,20 @@ def type(method & portal)
 	}
 end
 
+def type(method & highlightedtext)
+	public $name+firstUpperCase textColor(String color) {
+	    this._textColor(color);
+	    this._refreshHighlight();
+	    return this;
+	}
+
+	public $name+firstUpperCase backgroundColor(String color) {
+	    this._backgroundColor(color);
+	    this._refreshHighlight();
+	    return this;
+	}
+end
+
 def type(method & addressable)
     @Override
     public $name+firstUpperCase address(java.util.function.Function<String, String> addressFromPathResolver) {

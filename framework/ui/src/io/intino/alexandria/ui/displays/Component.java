@@ -45,9 +45,9 @@ public abstract class Component<DN extends ComponentNotifier, B extends Box> ext
 		return !visible;
 	}
 
-	public Component<DN, B> visible(boolean value) {
+	public <T extends Component> T visible(boolean value) {
 		updateVisibility(value);
-		return this;
+		return (T) this;
 	}
 
 	public Component<DN, B> show() {

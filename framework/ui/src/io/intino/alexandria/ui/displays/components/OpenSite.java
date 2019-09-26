@@ -15,6 +15,15 @@ public class OpenSite<DN extends OpenSiteNotifier, B extends Box> extends Abstra
 		notifier.open(site);
 	}
 
+	public String site() {
+		return site;
+	}
+
+	public OpenSite site(String site) {
+    	_site(site);
+    	return this;
+	}
+
 	public OpenSite path(String site) {
 		_site(site);
 		return this;

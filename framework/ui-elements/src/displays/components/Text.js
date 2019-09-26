@@ -47,12 +47,12 @@ class Text extends AbstractText {
 		if (!this.state.visible) return (<React.Fragment/>);
 
 		const { classes } = this.props;
-	    const value = TextBehavior.mode(this.state.value, this.props);
-	    const variant = this.variant("body1");
+		const value = TextBehavior.mode(this.state.value, this.props);
+		const variant = this.variant("body1");
 
-	    if (value == null || value === "") return (<React.Fragment/>);
+		if (value == null || value === "") return (<React.Fragment/>);
 
-	    return (
+		return (
 			<Block layout="horizontal">
 				{ ComponentBehavior.labelBlock(this.props) }
 				{this.props.prefix !== undefined ? <Typography variant={variant} className={classes.prefix}>{this.props.prefix}:</Typography> : undefined }
@@ -65,9 +65,9 @@ class Text extends AbstractText {
 	style() {
 		var result = super.style();
 		if (this.props.color != null) result.color = this.props.color;
-		if (!this.props.highlighted) return result;
-		result.color = this.props.highlighted.text;
-		result.background = this.props.highlighted.background;
+		if (!this.state.highlighted) return result;
+		result.color = this.state.highlighted.text;
+		result.background = this.state.highlighted.background;
 		result.padding = "0 10px";
 		result.borderRadius = "3px";
 		return result;

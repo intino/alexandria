@@ -16,7 +16,7 @@ public class Browser {
     private String metadataLanguage;
     private String metadataIpAddress;
     private int timezoneOffset = 0;
-    private Map<String, String> preferences = new HashMap<>();
+    private Map<String, Object> preferences = new HashMap<>();
     private Consumer<String> redirectManager = null;
 
     private static final String PushPath = "/push?id=%s&currentSession=%s&language=%s";
@@ -107,12 +107,12 @@ public class Browser {
         this.timezoneOffset = timezoneOffset;
     }
 
-    public List<String> preferences() {
+    public List<Object> preferences() {
         return preferences.values().stream().collect(Collectors.toList());
     }
 
-    public String preference(String name) {
-        return preferences.get(name);
+    public <T> T preference(String name) {
+        return (T) preferences.get(name);
     }
 
     public void onRedirect(Consumer<String> redirectManager) {
@@ -123,7 +123,7 @@ public class Browser {
         if (redirectManager != null) redirectManager.accept(location);
     }
 
-    public Browser add(String preference, String value) {
+    public Browser add(String preference, Object value) {
         preferences.put(preference, value);
         return this;
     }
