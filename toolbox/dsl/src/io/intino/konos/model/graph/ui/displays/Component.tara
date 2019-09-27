@@ -46,6 +46,7 @@ Concept DataComponents
 		var string prefix = empty
 		var string suffix = empty
 		var integer countDecimals = 0
+		var word:{Number Currency Bytes Percentage Exponential} style = Number
 
 	Concept Date extends Component
 		var string pattern = "DD/MM/YYYY"

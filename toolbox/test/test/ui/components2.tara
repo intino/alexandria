@@ -18,8 +18,7 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/ingreso/:name") ingreso as Page(homeTemplate)
 
 Template homeTemplate
-	Text mensajes1 as Highlighted(textColor="white", backgroundColor="#036639")
-	Text mensajes2 as Highlighted(textColor="white", backgroundColor="#036639") Multiple(arrangement=Horizontal)
+	Number(mode=Short,style=Currency) number1
 
 Template root as Accessible(parameters = "a" "b")
 
