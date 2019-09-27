@@ -32,3 +32,34 @@ Template(layout=Vertical, spacing=DP8) numberExamplesMold as Decorated
 							=========
 							Number(format\=body1 widgetDemo, value\=0, min\=0, max\=100, step\=10, prefix\="Price:", suffix\="$") number2 as Editable
 							=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets, Currency style")
+			Block(spacing=DP8, format=filled)
+				Number(format=body1 widgetDemo, value=100000000, style=Currency, countDecimals=2)
+				Block > Text as Code(language=Html)
+						value
+							=========
+							Number(value\=100000000, style\=Currency, countDecimals\=2)
+							=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets, Bytes style")
+			Block(spacing=DP8, format=filled)
+				Number(format=body1 widgetDemo, value=23232323, style=Bytes, countDecimals=2)
+				Block > Text as Code(language=Html)
+						value
+							=========
+							Number(value\=23232323, style\=Bytes, countDecimals\=2)
+							=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets, Exponential style")
+			Block(spacing=DP8, format=filled)
+				Number(format=body1 widgetDemo, value=12398734.202, style=Exponential, countDecimals=2)
+				Block > Text as Code(language=Html)
+						value
+							=========
+							Number(value\=12398734.202, style\=Exponential, countDecimals\=2)
+							=========

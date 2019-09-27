@@ -65,11 +65,25 @@ class Number extends AbstractNumber {
 	};
 
 	_format = () => {
+		const style = this.props.style;
+		if (style == null) return this._defaultFormat();
+		const format = this._addDecimals("0");
+		if (style === "Currency") return "(" + format + "a)";
+		else if (style === "Bytes") return "(" + format + "b)";
+		else if (style === "Percentage" && this.props.suffix == null) return "(" + format + "%)";
+		else if (style === "Exponential" && this.props.suffix == null) return "(" + format + "e+0)";
+		return this._defaultFormat();
+	};
+
+	_defaultFormat = () => {
+		return this._addDecimals("0,0");
+	};
+
+	_addDecimals = (format) => {
 		const decimals = this.props.decimals != null ? this.props.decimals : 0;
-		let result = "0,0";
-		if (decimals > 0) result += ".";
-		for (let i=0; i<decimals; i++) result += "0";
-		return result;
+		if (decimals > 0) format += ".";
+		for (let i=0; i<decimals; i++) format += "0";
+		return format;
 	};
 }
 

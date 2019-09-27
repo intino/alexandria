@@ -23,6 +23,7 @@ public class NumberRenderer extends ComponentRenderer<Number> {
 		if (element.isReadonly()) result.add("readonly", element.isReadonly());
 		if (element.isFocused()) result.add("focused", element.isFocused());
 		result.add("decimals", element.countDecimals());
+		result.add("style", element.style().name());
 		addEditableProperties(result);
 		return result;
 	}
