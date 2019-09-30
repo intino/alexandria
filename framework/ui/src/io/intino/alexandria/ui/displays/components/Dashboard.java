@@ -56,6 +56,11 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
 		return this;
 	}
 
+	public Dashboard<DN, B> addResource(URL resource) {
+    	this.resourceList.add(resource);
+    	return this;
+	}
+
     public Dashboard<DN, B> adminMode(boolean value) {
     	_adminMode(value);
     	return this;
@@ -154,7 +159,7 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
         if (driver == null) return null;
 
         if (!driver.isPublished(program))
-            driver.publish(program());
+			driver.publish(program());
 
         dashboardManager.register(program, username());
         dashboardManager.listen();

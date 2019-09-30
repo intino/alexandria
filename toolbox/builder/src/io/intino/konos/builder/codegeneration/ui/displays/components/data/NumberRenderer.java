@@ -24,6 +24,7 @@ public class NumberRenderer extends ComponentRenderer<Number> {
 		if (element.isFocused()) result.add("focused", element.isFocused());
 		result.add("decimals", element.countDecimals());
 		result.add("style", element.style().name());
+		result.add("expanded", element.expanded());
 		addEditableProperties(result);
 		return result;
 	}
