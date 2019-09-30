@@ -1,6 +1,7 @@
 import React from "react";
 import { withStyles } from '@material-ui/core/styles';
 import Typography from "@material-ui/core/Typography";
+import Popover from "@material-ui/core/Popover";
 import AbstractNumber from "../../../gen/displays/components/AbstractNumber";
 import NumberNotifier from "../../../gen/displays/notifiers/NumberNotifier";
 import NumberRequester from "../../../gen/displays/requesters/NumberRequester";
@@ -9,6 +10,7 @@ import Block from "./Block";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import NumberUtil from "alexandria-ui-elements/src/util/NumberUtil";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
+import classnames from "classnames";
 
 const styles = theme => ({
 	label: {
@@ -28,33 +30,41 @@ const styles = theme => ({
 		color: theme.palette.grey.primary,
 		fontSize: "10pt",
 		marginLeft: "3px"
+	},
+	withExpanded : {
+		cursor: "pointer",
+		color: theme.palette.primary.main,
 	}
 });
 
 class Number extends AbstractNumber {
-	state = {
-		value: this.props.value
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new NumberNotifier(this);
 		this.requester = new NumberRequester(this);
+		this.state = {
+			...this.state,
+			value : this.props.value,
+			expanded : this.props.expanded,
+		}
 	};
 
 	render() {
 		const { classes } = this.props;
 		const value = this.state.value;
 		const variant = this.variant("body1");
-		const format = this._format();
+		const expanded = this.state.expanded;
+		const format = expanded ? this._defaultFormat() : this._format();
+		const expandedClass = this.props.style != null ? classes.withExpanded : undefined;
 
-		if (value == null || value === "") return (<React.Fragment/>);
+		if (value == null || value === "" || !this.state.visible) return (<React.Fragment/>);
 
 		return (
 			<Block layout="horizontal center" style={this.style()}>
 				{ ComponentBehavior.labelBlock(this.props) }
 				{this.props.prefix !== undefined ? <Typography variant={variant} className={classes.prefix}>{this.props.prefix}:</Typography> : undefined }
-				<Typography variant={variant} className={classes.value} style={this.style()}>{NumberUtil.format(value, this.translate(format))}</Typography>
+				<Typography className={classnames(expandedClass, classes.value)} onClick={this.handleToggleExpanded.bind(this)} variant={variant} style={this.style()}>{NumberUtil.format(value, this.translate(format))}</Typography>
 				{ this.props.suffix !== undefined ? <Typography variant={variant} className={classes.suffix}>{this.props.suffix}</Typography> : undefined }
 			</Block>
 		);
@@ -85,6 +95,11 @@ class Number extends AbstractNumber {
 		for (let i=0; i<decimals; i++) format += "0";
 		return format;
 	};
+
+	handleToggleExpanded = () => {
+		this.setState({ expanded: !this.state.expanded });
+	};
+
 }
 
 export default withStyles(styles, { withTheme: true })(Number);

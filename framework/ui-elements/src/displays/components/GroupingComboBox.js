@@ -1,6 +1,6 @@
 import React from "react";
 import { withStyles } from '@material-ui/core/styles';
-import { Typography } from "@material-ui/core";
+import {ListItemSecondaryAction, Typography} from "@material-ui/core";
 import Select, { components } from "react-select";
 import AbstractGroupingComboBox from "../../../gen/displays/components/AbstractGroupingComboBox";
 import GroupingComboBoxNotifier from "../../../gen/displays/notifiers/GroupingComboBoxNotifier";
@@ -8,6 +8,7 @@ import GroupingComboBoxRequester from "../../../gen/displays/requesters/Grouping
 import { BaseGroupingStyles } from "./BaseGrouping";
 import classNames from "classnames";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import NumberUtil from 'alexandria-ui-elements/src/util/NumberUtil';
 
 const styles = theme => ({
 	...BaseGroupingStyles(theme),
@@ -49,7 +50,7 @@ class GroupingComboBox extends AbstractGroupingComboBox {
 			<components.Option {...props}>
 				<div className={classNames(classes.group, "option layout horizontal")}>
 					<Typography className="flex" variant="body2">{group.label}</Typography>
-					<Typography className={classes.count} variant="body2">{group.count}</Typography>
+					{group.count > 0 && <Typography className={classes.count} variant="body2">{NumberUtil.format(group.count, "0,0")}</Typography>}
 				</div>
 			</components.Option>
 		) : null;

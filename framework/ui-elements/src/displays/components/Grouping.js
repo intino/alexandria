@@ -7,6 +7,7 @@ import {Checkbox, List, ListItem, ListItemSecondaryAction, ListItemText, Typogra
 import { BaseGroupingStyles } from "./BaseGrouping";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import NumberUtil from 'alexandria-ui-elements/src/util/NumberUtil';
 
 const styles = theme => ({...BaseGroupingStyles(theme)});
 
@@ -37,7 +38,7 @@ class Grouping extends AbstractGrouping {
 			<ListItem key={index} className={classes.group} role={undefined} dense button onClick={this.handleToggle(group)}>
 				<Checkbox className={classes.checkbox} checked={this.state.selection.indexOf(group.label) !== -1} tabIndex={-1} disableRipple/>
 				<ListItemText>{group.label}</ListItemText>
-				<ListItemSecondaryAction className={classes.count}>{group.count}</ListItemSecondaryAction>
+				{group.count > 0 && <ListItemSecondaryAction className={classes.count}>{NumberUtil.format(group.count, "0,0")}</ListItemSecondaryAction>}
 			</ListItem>
 		);
 	};
