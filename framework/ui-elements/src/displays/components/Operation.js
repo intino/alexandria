@@ -52,6 +52,7 @@ export default class Operation extends AbstractOperation {
 	};
 
 	renderOperation = () => {
+		if (!this.state.visible) return (<React.Fragment/>);
 		return (
 			<React.Fragment>
 				{this.renderConfirm()}

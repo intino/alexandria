@@ -28,7 +28,7 @@ export default class FileEditable extends AbstractFile {
 		const label = this.props.label !== "" ? this.props.label : undefined;
 		const theme = Theme.get();
 		return (
-			<Block layout="horizontal center">
+			<Block layout="horizontal center" style={this.style()}>
 				{ ComponentBehavior.labelBlock(this.props, "body1", { color: theme.palette.grey.primary, marginRight: '5px' }) }
 				<input type="file" value={this.state.value} disabled={this.state.readonly ? "disabled" : undefined}
 					   onChange={this.handleChange.bind(this)}></input>
