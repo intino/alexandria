@@ -163,3 +163,6 @@ Facet Cluster on CatalogComponents.Map
 Facet Kml on CatalogComponents.Map
 	var string layer
 Facet Heatmap on CatalogComponents.Map
+
+Facet MaterialIcon on OtherComponents.Stepper.Step
+	var string icon

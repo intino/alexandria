@@ -1,0 +1,139 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) stepperExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(format=filledNoAirExtraLarge)
+				Stepper stepper1
+					Step step1 as Labeled > label = "Step1"
+						Text(value="hola1")
+					Step step2 as Labeled > label = "Step2"
+						Image(defaultValue="images/image.jpg") as Absolute(width=200px, height=150px)
+					Step step3 as Labeled > label = "Step3"
+						Date(pattern="DD/MM/YYYY")
+
+				Block > Text as Code(language=Html)
+						value
+							=========
+							Stepper<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;Step step1 as Labeled<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label \= "Step1"<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="hola1")<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;Step step2 as Labeled<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label \= "Step2"<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Image(defaultValue \=" images/image.jpg") as Absolute(width \= 200px, height \= 150px)<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;Step step3 as Labeled<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label \= "Step3"<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date(pattern \= "DD/MM/YYYY")<br/>
+							=========
+
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="No facet. Position top, Orientation horizontal")
+			Block(format=filledNoAirExtraLarge)
+				Stepper stepper2
+					position = Top
+					Step step4 as Labeled
+						label = "Step1"
+						Text(value="Hello")
+					Step step5 as Labeled
+						label = "Step2"
+						Text(value="World")
+
+				Block > Text as Code(language=Html)
+						value
+							=========
+							Stepper<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;position \= Top<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;Step step4 as Labeled<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label \= "Step1"<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="Hello")<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;Step step5 as Labeled<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label \= "Step2"<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="World")<br/>
+							=========
+
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="No facet. Position left, Orientation vertical")
+			Block(format=filledNoAirExtraLarge)
+				Stepper stepper3
+					position = Left
+					orientation = Vertical
+					Step step6 as Labeled
+						label = "Step1"
+						Text(value="Hello")
+					Step step7 as Labeled
+						label = "Step2"
+						Text(value="World")
+
+				Block > Text as Code(language=Html)
+						value
+							=========
+							Stepper<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;position \= Left<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;orientation \= Vertical<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;Step step6 as Labeled<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label \= "Step1"<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="Hello")<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;Step step7 as Labeled<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label \= "Step2"<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="World")<br/>
+							=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="No facet. Position right, Orientation vertical")
+			Block(format=filledNoAirExtraLarge)
+				Stepper stepper4
+					position = Right
+					orientation = Vertical
+					Step step8 as Labeled
+						label = "Step1"
+						Text(value="Hello")
+					Step step9 as Labeled
+						label = "Step2"
+						Text(value="World")
+
+				Block > Text as Code(language=Html)
+						value
+							=========
+							Stepper<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;position \= Right<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;orientation \= Vertical<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;Step step8 as Labeled<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label \= "Step1"<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="Hello")<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;Step step9 as Labeled<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label \= "Step2"<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="World")<br/>
+							=========
+
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="MaterialIcon facet")
+			Block(format=filledNoAirExtraLarge)
+				Stepper stepper5
+					Step step10 as Labeled MaterialIcon
+						label = "Step1"
+						icon = "AddCircle"
+						Text(value="Hello")
+					Step step11 as Labeled MaterialIcon
+						label = "Step2"
+						icon = "Menu"
+						Text(value="World")
+
+				Block > Text as Code(language=Html)
+						value
+							=========
+							Stepper<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;Step step10 as Labeled MaterialIcon<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label \= "Step1"<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;icon \= "AddCircle"<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="Hello")<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;Step step11 as Labeled MaterialIcon<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label \= "Step2"<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;icon \= "Menu"<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="World")<br/>
+							=========

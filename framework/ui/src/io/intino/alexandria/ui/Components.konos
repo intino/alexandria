@@ -120,3 +120,12 @@ Component user as Decorated
 	Request logout
 
 Component portal as Decorated
+
+Component stepper as Decorated
+    Notification refresh as Object(StepperInfo)
+    Request next
+    Request back
+
+Component step as Decorated
+    Notification refresh as Object(StepInfo)
+    Request contentRendered

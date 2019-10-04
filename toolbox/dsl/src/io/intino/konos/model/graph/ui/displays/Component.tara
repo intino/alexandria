@@ -72,6 +72,7 @@ Concept CatalogComponents
 		var string sourceClass = empty
 		var string itemClass = empty
 		var string noItemsMessage = empty
+		var string noItemsFoundMessage = empty
 		var integer pageSize = 20
 		var boolean scrollingMark = true
 
@@ -170,10 +171,15 @@ Concept OtherComponents
 	Concept Snackbar extends Component
 		var word:{TopCenter TopRight BottomRight BottomCenter BottomLeft TopLeft} position = BottomCenter
 		has Component
+
 	Concept Progress extends Component
 		Concept Color > var string text; var string background
+
 	Concept Stepper extends Component
-		Concept Step > has Component
+		var word:{Horizontal Vertical} orientation = Horizontal
+		var word:{Top Bottom Left Right} position = Bottom
+		Concept Step extends Component
+			has Component
 
 	Concept Stamp extends Component
 		var Template template
