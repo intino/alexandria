@@ -101,3 +101,11 @@ Schema Highlight
 	Attribute textColor as Text
 	Attribute backgroundColor as Text
 
+Schema StepperInfo
+    Attribute active as Integer
+
+Schema StepInfo
+    Attribute icon as Text
+    Attribute isActive as Bool
+    Attribute isDisabled as Bool
+    Attribute isCompleted as Bool

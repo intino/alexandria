@@ -6,7 +6,7 @@ public enum Layout implements Rule<Enum> {
 	Horizontal, HorizontalReverse, Vertical, VerticalReverse,
 	Center, CenterJustified, CenterCenter,
 	Flexible, Justified,
-	StartJustified, EndJustified, AroundJustified,
+	Start, End, StartJustified, EndJustified, AroundJustified,
 	Wrap, NoWrap, WrapReverse;
 
 	@Override

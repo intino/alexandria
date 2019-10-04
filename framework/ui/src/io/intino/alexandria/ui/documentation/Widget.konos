@@ -1,5 +1,6 @@
 dsl Konos
 
+use Stepper
 use Selector
 use Location
 use User
@@ -59,6 +60,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block userExamples as Conditional > Stamp(template=userExamplesMold)
 			Block locationExamples as Conditional > Stamp(template=locationExamplesMold)
 			Block selectorExamples as Conditional > Stamp(template=selectorExamplesMold)
+			Block stepperExamples as Conditional > Stamp(template=stepperExamplesMold)
 
 		Block facets
 			Text(value="Facets", format=h5 underline)

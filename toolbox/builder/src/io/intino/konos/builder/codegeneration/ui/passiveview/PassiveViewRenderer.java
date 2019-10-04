@@ -160,8 +160,8 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (passiveView.i$(Block.class)) components.addAll(passiveView.a$(Block.class).componentList());
 		if (passiveView.i$(io.intino.konos.model.graph.Template.class)) components.addAll(passiveView.a$(io.intino.konos.model.graph.Template.class).componentList());
 		if (passiveView.i$(OtherComponents.Snackbar.class)) components.addAll(passiveView.a$(OtherComponents.Snackbar.class).componentList());
-		if (passiveView.i$(OtherComponents.Stepper.Step.class))
-			components.addAll(passiveView.a$(OtherComponents.Stepper.Step.class).componentList());
+		if (passiveView.i$(OtherComponents.Stepper.class)) components.addAll(passiveView.a$(OtherComponents.Stepper.class).stepList());
+		if (passiveView.i$(OtherComponents.Stepper.Step.class)) components.addAll(passiveView.a$(OtherComponents.Stepper.Step.class).componentList());
 		if (passiveView.i$(OtherComponents.Header.class)) components.addAll(passiveView.a$(OtherComponents.Header.class).componentList());
 		if (passiveView.i$(OtherComponents.Selector.class)) components.addAll(passiveView.a$(OtherComponents.Selector.class).componentList());
 		if (passiveView.i$(OtherComponents.User.class)) components.addAll(passiveView.a$(OtherComponents.User.class).componentList());

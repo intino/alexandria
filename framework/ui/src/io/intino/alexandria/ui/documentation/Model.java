@@ -22,7 +22,7 @@ public class Model {
 		Chart, Block, List, Table, Task, OpenPage, OpenBlock, Export,
 		Download, DownloadSelection,
 		Grouping, Sorting, SearchBox, Map, Slider, Selector,
-		Dashboard, Dialog, Divider, User;
+		Dashboard, Dialog, Divider, User, Stepper;
 
 		public static WidgetType from(String type) {
 			WidgetType[] values = values();
@@ -64,6 +64,7 @@ public class Model {
 		map.put(WidgetType.Dialog, new DialogWidget());
 		map.put(WidgetType.Divider, new DividerWidget());
 		map.put(WidgetType.User, new UserWidget());
+		map.put(WidgetType.Stepper, new StepperWidget());
 	}
 
 	public static Widget widget(WidgetType type) {

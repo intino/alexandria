@@ -143,15 +143,15 @@ def type(properties & map) trigger(specific)
 end
 
 def type(properties & collection) trigger(specific)
-	[ noItemsMessage="$noItemsMessage"][ pageSize={$pageSize}][ itemHeight={$itemHeight}][ scrollingMark={$scrollingMark}][ navigable="$navigable"][ selection="$selection"]
+	[ noItemsMessage="$noItemsMessage"][ noItemsFoundMessage="$noItemsFoundMessage"][ pageSize={$pageSize}][ itemHeight={$itemHeight}][ scrollingMark={$scrollingMark}][ navigable="$navigable"][ selection="$selection"]
 end
 
 def type(properties & heading) trigger(specific)
-	 style={{width:"calc($width~% - $marginSize~px)",marginRight:"10px"[,$marginLeft:"10px"]}}
+	 style={{width:"calc($width~% - $paddingSize~px)",paddingRight:"10px"[,$paddingLeft:"10px"]}}
 end
 
 def type(properties & item) trigger(specific)
-	 style={{width:"calc($width~% - $marginSize~px)",marginRight:"10px"[,$marginLeft:"10px"]}}
+	 style={{width:"calc($width~% - $paddingSize~px)",paddingRight:"10px"[,$paddingLeft:"10px"]}}
 end
 
 def type(properties & spinner) trigger(specific)
@@ -184,6 +184,10 @@ end
 
 def type(properties & grouping) trigger(specific)
     [ placeholder="$placeholder"]
+end
+
+def type(properties & stepper) trigger(specific)
+   [ orientation={"$orientation+lowercase"}][ position={"$position+lowercase"}]
 end
 
 def type(properties) trigger(specific)

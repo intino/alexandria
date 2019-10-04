@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Documentation App" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="io.intino.alexandria.Main" />
+    <module name="ui" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

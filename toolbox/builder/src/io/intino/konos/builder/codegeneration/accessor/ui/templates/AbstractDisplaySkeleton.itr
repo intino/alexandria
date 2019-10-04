@@ -45,7 +45,7 @@ def type(display)
 			[this.requester = new $notDecorated+firstUpperCase~Requester(this);]
 			[$properties+initialization]
     	};
-		
+
 		render() {
 		    const display = !this.state.visible ? {display:'none'} : undefined;
 			return [this.$baseMethod](
@@ -121,7 +121,7 @@ def type(renderTag & block)
 end
 
 def type(renderTag & item)
-	<div style={{width:"100%",...this.props.style,...display}}>
+	<div style={{width:"100%",height:"100%",...this.props.style,...this.style(),...display}} class="layout vertical center-justified">
 end
 
 def type(renderTag)
