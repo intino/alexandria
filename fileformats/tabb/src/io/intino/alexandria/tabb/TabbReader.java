@@ -62,7 +62,7 @@ public class TabbReader {
 
 		private static long get64(byte[] data) {
 			return (data[0] & 0xFFL) << 56 | (data[1] & 0xFFL) << 48 | (data[2] & 0xFFL) << 40 | (data[3] & 0xFFL) << 32 |
-					(data[4] & 0xFF) << 24 | (data[5] & 0xFF) << 16 | (data[6] & 0xFF) << 8 | (data[7] & 0xFF);
+					(data[4] & 0xFFL) << 24 | (data[5] & 0xFFL) << 16 | (data[6] & 0xFFL) << 8 | (data[7] & 0xFFL);
 		}
 
 		public Type type() {
@@ -98,7 +98,7 @@ public class TabbReader {
 		}
 
 		public Instant asInstant() {
-			return null;
+			return Instant.ofEpochSecond(asInteger());
 		}
 
 		public String asString() {
