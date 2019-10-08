@@ -18,7 +18,12 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/ingreso/:name") ingreso as Page(homeTemplate)
 
 Template homeTemplate
-	Task(title = "aaa") as Switches(state=On)
+	Slider > Range(min = 0, max = 0)
+
+Dialog dialog1
+	Text hola
+	Block
+		Text adios
 
 Template root as Accessible(parameters = "a" "b")
 

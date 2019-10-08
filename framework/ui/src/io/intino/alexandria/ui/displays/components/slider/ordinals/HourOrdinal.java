@@ -22,7 +22,7 @@ public class HourOrdinal implements Ordinal {
 	}
 
 	@Override
-	public Formatter formatter() {
-		return value -> TimeScale.Hour.toString(Instant.ofEpochMilli(value)) + ":00";
+	public Formatter formatter(String language) {
+		return value -> TimeScale.Hour.toString(Instant.ofEpochMilli(value), language);
 	}
 }

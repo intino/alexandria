@@ -40,6 +40,7 @@ Schema CollectionMoreItems
 Schema Group
 	Attribute label as Text
 	Attribute count as Integer
+	Attribute color as Text
 
 Schema ChartInfo
 	Attribute mode as Text

@@ -14,7 +14,7 @@ public class Slider<DN extends SliderNotifier, B extends Box> extends AbstractSl
     public String formattedValue() {
         Ordinal ordinal = ordinal();
         long value = value();
-        return ordinal != null ? ordinal.formatter().format(value) : String.valueOf(value);
+        return ordinal != null ? ordinal.formatter(language()).format(value) : String.valueOf(value);
     }
 
     @Override

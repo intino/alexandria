@@ -45,5 +45,7 @@
     <orderEntry type="library" name="Intino: com.jcraft:jzlib:1.0.7" level="project" />
     <orderEntry type="library" name="Intino: commons-codec:commons-codec:1.11" level="project" />
     <orderEntry type="module" module-name="r" />
+    <orderEntry type="library" name="Intino: net.rforge:Rserve:0.6-8.1" level="project" />
+    <orderEntry type="library" name="Intino: net.rforge:REngine:0.6-8.1" level="project" />
   </component>
 </module>

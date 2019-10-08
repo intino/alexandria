@@ -3,6 +3,11 @@ import PassiveView from "./PassiveView";
 import Typography from "@material-ui/core/Typography";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
+export const enrichDisplayProperties = (instance) => {
+    instance.pl.context = () => { return instance.pl.o };
+    instance.pl.owner = () => { return instance.i };
+};
+
 export default class Display extends PassiveView {
     address = null;
     state = {};
@@ -78,8 +83,7 @@ export default class Display extends PassiveView {
             return;
         }
         return instances.map((instance, index) => {
-            instance.pl.context = () => { return instance.pl.o };
-            instance.pl.owner = () => { return instance.i };
+            enrichDisplayProperties(instance);
             this.copyProps(props, instance.pl);
             return (<div key={index} style={style}>{React.createElement(DisplayFactory.get(instance.tp), instance.pl)}</div>);
         });

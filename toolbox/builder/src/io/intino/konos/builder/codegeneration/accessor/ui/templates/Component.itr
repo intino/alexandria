@@ -55,7 +55,7 @@ def type(properties & operation) trigger(common)
 end
 
 def type(properties & abstractslider) trigger(common)
-	[ label="$label"][ format="$format...[ ]"][ color="$color"][ arrangement="$arrangement"][ animation={{interval:$interval,loop:$loop}}][ readonly={$readonly}][ visible={$visible}]
+	[ label="$label"][ format="$format...[ ]"][ color="$color"][ arrangement="$arrangement"][ animation={{interval:$interval,loop:$loop}}][ readonly={$readonly}][ visible={$visible}][ style="$style"]
 end
 
 def type(properties) trigger(common)

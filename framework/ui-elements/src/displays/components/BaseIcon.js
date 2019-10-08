@@ -5,17 +5,18 @@ import BaseIconRequester from "../../../gen/displays/requesters/BaseIconRequeste
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 
 export default class BaseIcon extends AbstractBaseIcon {
-	state = {
-		icon: this.props.icon
-	};
-
 	constructor(props) {
 		super(props);
 		this.notifier = new BaseIconNotifier(this);
 		this.requester = new BaseIconRequester(this);
+		this.state = {
+			...this.state,
+			icon: this.props.icon
+		}
 	};
 
 	renderLayer = (iconLayer) => {
+		if (!this.state.visible) return (<React.Fragment/>);
 		if (this._icon() == null) return (<div></div>);
 		return iconLayer;
 	};
@@ -26,6 +27,10 @@ export default class BaseIcon extends AbstractBaseIcon {
 
 	_icon = () => {
 		return this.state.icon != null ? this.state.icon : this.props.icon;
+	};
+
+	_color = () => {
+		return this.state.color != null ? this.state.color : this.props.color;
 	};
 
 	_title = () => {
