@@ -111,6 +111,8 @@ export default class BaseSlider extends AbstractBaseSlider {
 	};
 
 	renderSlider = () => {
+		if (this.toolbarOnly()) return (<React.Fragment/>);
+
 		const range = this.state.range;
 		const ordinal = this.state.ordinals[0];
 
@@ -123,16 +125,15 @@ export default class BaseSlider extends AbstractBaseSlider {
 	};
 
 	renderToolbar = () => {
+		if (this.sliderOnly()) return (<React.Fragment/>);
 		const { classes } = this.props;
 		return (
 			<div className={classNames("layout horizontal", classes.doubleSpacing)}>
 				<div className={classNames("layout horizontal center", classes.doubleSpacing)}>
 					{this.renderAnimationControls()}
-					{this.renderValue()}
+					{!this.toolbarOnly() && this.renderValue()}
 				</div>
-				<div className="layout horizontal">
-					{this.renderOrdinals()}
-				</div>
+				{!this.toolbarOnly() && <div className="layout horizontal">{this.renderOrdinals()}</div>}
 			</div>
 		);
 	};
@@ -218,4 +219,11 @@ export default class BaseSlider extends AbstractBaseSlider {
 	handlePause = () => { this.requester.pause(); };
 	handleNext = () => { this.requester.next(); };
 
+	toolbarOnly = () => {
+		return this.props.style != null && this.props.style.toLowerCase() === "toolbaronly";
+	};
+
+	sliderOnly = () => {
+		return this.props.style != null && this.props.style.toLowerCase() === "slideronly";
+	};
 }

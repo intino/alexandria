@@ -72,7 +72,7 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	}
 
 	private io.intino.alexandria.schemas.Group groupOf(Group group) {
-		return new io.intino.alexandria.schemas.Group().label(group.label()).count(group.count());
+		return new io.intino.alexandria.schemas.Group().label(group.label()).count(group.count()).color(group.color());
 	}
 
 	private void notifySelection() {

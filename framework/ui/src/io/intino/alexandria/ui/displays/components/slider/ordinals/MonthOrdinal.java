@@ -23,7 +23,8 @@ public class MonthOrdinal implements Ordinal {
 	}
 
 	@Override
-	public Formatter formatter() {
-		return value -> TimeScale.Month.toString(Instant.ofEpochMilli(value));
+	public Formatter formatter(String language) {
+		return value -> TimeScale.Month.toString(Instant.ofEpochMilli(value), language);
 	}
+
 }

@@ -4,7 +4,7 @@ public interface Ordinal {
 	String name();
 	String label();
 	int step();
-	Formatter formatter();
+	Formatter formatter(String language);
 
 	interface Formatter {
 		String format(long value);

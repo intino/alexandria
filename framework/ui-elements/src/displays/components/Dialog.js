@@ -25,12 +25,16 @@ class Dialog extends AbstractDialog {
 	};
 
 	render() {
+		return this.renderDialog(this.props.children);
+	};
+
+	renderDialog(children) {
 		return (
 			<MuiDialog fullScreen={this.props.fullscreen} open={this.state.opened}
 					   onClose={this.handleClose.bind(this)}
 					   TransitionComponent={this.props.fullscreen ? BaseDialog.Transition : undefined}>
 				{this.renderTitle()}
-				{this.renderContent(() => this.props.children)}
+				{this.renderContent(() => children)}
 			</MuiDialog>
 		);
 	};

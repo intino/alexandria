@@ -24,7 +24,7 @@ public class AbstractDisplaySkeletonTemplate extends Template {
 			rule().condition((type("renderTag")), (trigger("end"))).output(literal("</React.Fragment>")),
 			rule().condition((allTypes("renderTag","template"))).output(literal("<UiBlock")).output(expression().output(mark("properties", "common")).output(mark("properties", "specific"))).output(literal(" style={{...this.props.style,...display}}>")),
 			rule().condition((allTypes("renderTag","block"))).output(literal("<UiBlock")).output(expression().output(mark("properties", "common")).output(mark("properties", "specific"))).output(literal(" style={{...this.props.style,...display}}>")),
-			rule().condition((allTypes("renderTag","item"))).output(literal("<div style={{width:\"100%\",height:\"100%\",...this.props.style,...this.style(),...display}} class=\"layout vertical center-justified\">")),
+			rule().condition((allTypes("renderTag","item"))).output(literal("<div style={{width:\"100%\",height:\"100%\",...this.props.style,...this.style(),...display}} className=\"layout vertical center-justified\">")),
 			rule().condition((type("renderTag"))).output(literal("<React.Fragment>")),
 			rule().condition((allTypes("renderTagAttributes","block"))).output(mark("properties", "common")).output(mark("properties", "specific")),
 			rule().condition((type("renderTagAttributes"))),

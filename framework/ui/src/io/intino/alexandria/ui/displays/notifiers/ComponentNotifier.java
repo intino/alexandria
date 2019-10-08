@@ -22,4 +22,8 @@ public class ComponentNotifier extends DisplayNotifier {
 		putToDisplay("refreshVisibility", "v", value);
 	}
 
+	public void refreshColor(String color) {
+		putToDisplay("refreshColor", "v", color);
+	}
+
 }

@@ -10,6 +10,7 @@ import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRe
 import io.intino.konos.builder.codegeneration.ui.passiveview.PassiveViewRenderer;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.*;
+import io.intino.konos.model.graph.OtherComponents.Dialog;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
 import io.intino.konos.model.graph.addressable.operationcomponents.AddressableTask;
 import io.intino.konos.model.graph.addressable.othercomponents.AddressableSelector;
@@ -74,6 +75,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 
 	private void addExtends(FrameBuilder frame) {
 		FrameBuilder result = new FrameBuilder("displayExtends");
+		if (element.i$(Dialog.class)) result.add(Dialog.class.getSimpleName());
 		if (element.i$(Template.class)) result.add(Template.class.getSimpleName());
 		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) result.add(CatalogComponents.Collection.Mold.Item.class.getSimpleName());
 		if (element.i$(PrivateComponents.Row.class)) result.add(PrivateComponents.Row.class.getSimpleName());
@@ -125,6 +127,9 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (element.i$(DynamicLoadedComponent.class)) {
 			frame.add("baseMethod", "renderDynamicLoaded");
 			frame.add("methods", new FrameBuilder("methods", DynamicLoadedComponent.class.getSimpleName()).add("loadTime", element.a$(DynamicLoadedComponent.class).loadTime().name()));
+		}
+		else if (element.i$(Dialog.class)) {
+			frame.add("baseMethod", "renderDialog");
 		}
 		else if (element.i$(PrivateComponents.Row.class)) {
 			frame.add("baseMethod", "renderRow");
