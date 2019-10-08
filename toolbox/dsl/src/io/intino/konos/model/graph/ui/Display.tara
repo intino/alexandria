@@ -37,9 +37,12 @@ Facet DrawerNavigable on Desktop
 Facet Accessible on Display
 	var string[] parameters
 
-Facet Addressable on Display.Request
+Facet AbstractAddressable is abstract
 	var UI.Resource addressableResource
 	var boolean encoded = false
 	var boolean listenForChanges = true
+Facet Addressable extends AbstractAddressable on Display.Request
+Facet Addressable extends AbstractAddressable on OperationComponents.Task
+Facet Addressable extends AbstractAddressable on OtherComponents.Selector
 
 Facet Decorated on Display

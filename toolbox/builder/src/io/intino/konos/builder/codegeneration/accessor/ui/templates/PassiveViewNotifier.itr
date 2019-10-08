@@ -1,7 +1,7 @@
 def type(display)
 	$import
 
-	export default class $name+firstUpperCase~Notifier extends $parentType {
+	export default class $name+firstUpperCase~$proxy~Notifier extends $parentType {
 		constructor(element) {
 			super(element);
 			this.setup();
@@ -34,6 +34,13 @@ end
 
 def trigger(import)
 	import Notifier from "./Notifier";
+end
+
+def attribute(accessible) trigger(proxy)
+	Proxy
+end
+
+def trigger(proxy)
 end
 
 def attribute(extensionOf) trigger(parentType)

@@ -46,6 +46,38 @@ def type(method & multiple)
 	}
 end
 
+def type(method & portal)
+	@Override
+	protected io.intino.alexandria.ui.displays.ProxyDisplay buildProxy() {
+        String key = "$inUrl".replace("{", "").replace("}", "");
+        java.util.Map<String, String> args = box().configuration().args();
+        String url = args.getOrDefault(key, "$inUrl");
+	    return add(new $inPackage~.displays[.$type+lowercase~s].$to+firstUpperCase~Proxy(session(), new io.intino.alexandria.ui.spark.pages.Unit("$inName", url)));
+	}
+end
+
+def type(method & highlightedtext)
+	public $name+firstUpperCase textColor(String color) {
+	    this._textColor(color);
+	    this._refreshHighlight();
+	    return this;
+	}
+
+	public $name+firstUpperCase backgroundColor(String color) {
+	    this._backgroundColor(color);
+	    this._refreshHighlight();
+	    return this;
+	}
+end
+
+def type(method & addressable)
+    @Override
+    public $name+firstUpperCase address(java.util.function.Function<String, String> addressFromPathResolver) {
+        address(addressFromPathResolver.apply(path()));
+        return this;
+    }
+end
+
 def type(method & collection & table)
 	[$selectionMethod]
 
@@ -318,6 +350,14 @@ def type(implements & dynamicloadedcomponent)
 	implements io.intino.alexandria.ui.displays.components.DynamicLoaded
 end
 
+def type(implements & addressabletask)
+	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
+end
+
+def type(implements & addressableselector)
+	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
+end
+
 def type(implements)
 	implements --undefined--
 end
@@ -336,9 +376,15 @@ def type(properties) trigger(common)
 	[_color("$color");]
 end
 
+def type(properties & portal) trigger(specific)
+	[_to("$to","$inName");]
+	[$parameter...[$NL]]
+end
+
 def type(properties & selector) trigger(specific)
 	[_multipleSelection($multipleSelection);]
 	[_readonly($readonly);]
+	[_path("$path");]
 end
 
 def type(properties & image & avatar) trigger(specific)
@@ -372,8 +418,17 @@ def type(properties & openpage) trigger(specific)
 	[_path("$path");]
 end
 
+def type(properties & opensite) trigger(specific)
+	[_site("$site");]
+end
+
 def type(properties & switches) trigger(specific)
+    [_path("$path");]
     [_state(io.intino.alexandria.ui.displays.events.operation.ToggleEvent.State.valueOf("$state"));]
+end
+
+def type(properties & task) trigger(specific)
+	[_path("$path");]
 end
 
 def type(properties & export) trigger(specific)
@@ -468,12 +523,12 @@ def type(inputMethod & csv) trigger(inputMethod)
 	_input(new io.intino.alexandria.ui.displays.components.chart.datasources.CSVDataSource($owner.class.getResource("$value")));
 end
 
-def type(parameter & dashboard)
-	_add("$name", "$value");
-end
-
 def type(inputMethod & source) trigger(inputMethod)
 	_input(new $value());
+end
+
+def type(parameterMethod)
+	_add("$name", "$value");
 end
 
 def trigger(resourceMethod)

@@ -45,6 +45,9 @@ Concept DataComponents
 		var double value = empty
 		var string prefix = empty
 		var string suffix = empty
+		var integer countDecimals = 0
+		var boolean expanded = true
+		var word:{Number Currency Bytes Percentage Exponential} style = Number
 
 	Concept Date extends Component
 		var string pattern = "DD/MM/YYYY"
@@ -69,6 +72,7 @@ Concept CatalogComponents
 		var string sourceClass = empty
 		var string itemClass = empty
 		var string noItemsMessage = empty
+		var string noItemsFoundMessage = empty
 		var integer pageSize = 20
 		var boolean scrollingMark = true
 
@@ -115,6 +119,7 @@ Concept OperationComponents
 		sub OpenDrawer > var Drawer drawer
 		sub CloseDrawer > var Drawer drawer
 		sub OpenPage > var Page page
+		sub OpenSite > var string site
 		sub OpenBlock > var Conditional block
 		sub OpenDialog > var OtherComponents.AbstractDialog dialog
 		sub CloseDialog > var OtherComponents.AbstractDialog dialog
@@ -139,7 +144,11 @@ Concept OtherComponents
 	Concept Chip extends Component
 	Concept Card extends Component
 	Concept Tooltip extends Component
+
 	Concept User extends Component
+		var word:{OnlyPhoto PhotoWithFullname} mode = PhotoWithFullname
+		has Component
+
 	Concept KPI extends Component
 	Concept Spinner extends Component
 		var word:{Bar Circle Hash Ring Rise} mode = Rise
@@ -162,10 +171,15 @@ Concept OtherComponents
 	Concept Snackbar extends Component
 		var word:{TopCenter TopRight BottomRight BottomCenter BottomLeft TopLeft} position = BottomCenter
 		has Component
+
 	Concept Progress extends Component
 		Concept Color > var string text; var string background
+
 	Concept Stepper extends Component
-		Concept Step > has Component
+		var word:{Horizontal Vertical} orientation = Horizontal
+		var word:{Top Bottom Left Right} position = Bottom
+		Concept Step extends Component
+			has Component
 
 	Concept Stamp extends Component
 		var Template template
@@ -228,6 +242,14 @@ Concept OtherComponents
 			has:{0..1} CatalogComponents.Collection
 
 	Concept Divider extends Component
+	Concept Portal extends Component
+		var string to
+		var word:{Display Template} type = Template
+		var UI.Use in
+
+		Concept Parameter
+			var string name
+			var string value
 
 Concept PrivateComponents
 	Concept PrivateComponent extends Component

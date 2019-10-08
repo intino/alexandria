@@ -2,14 +2,21 @@ import React from "react";
 import AbstractFile from "../../../gen/displays/components/AbstractFile";
 import FileNotifier from "../../../gen/displays/notifiers/FileNotifier";
 import FileRequester from "../../../gen/displays/requesters/FileRequester";
-import {withStyles} from "@material-ui/core";
 import classNames from 'classnames';
+import { withStyles } from '@material-ui/core/styles';
 import 'alexandria-ui-elements/res/styles/layout.css';
+import Block from "./Block";
+import ComponentBehavior from "./behaviors/ComponentBehavior";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
+	label: {
+		color: theme.palette.grey.primary,
+		marginRight: "5px"
+	},
 	value: {
-		minHeight: "100px",
+		minHeight: "300px",
 		minWidth: "100px"
 	},
 	message : {
@@ -30,22 +37,27 @@ class File extends AbstractFile {
 	};
 
 	render() {
+		const { classes } = this.props;
 		const file = this.state.value != null ? this.state.value + (this.state.value.indexOf("?") != -1 ? "&" : "?") + "embedded=true" : undefined;
 
 		if (file === undefined) return (<React.Fragment/>);
 
-		const { classes } = this.props;
 		const notAvailable = this.translate("Preview not available");
-		if (!this._isPdf()) return (<div style={this.style()} className={classNames(classes.message, "layout horizontal center-center")}><div>{notAvailable}</div></div>);
-
 		const notSupportedMessage = this.translate("It appears your application is not configured to display PDF files. No worries, just");
 		const notSupportedLinkMessage = this.translate("click here to download the PDF file.");
+
 		return (
-			<object className={classes.value} style={this.style()} data={file} type="application/pdf">
-				<div className="layout horizontal center-center">
-					<p>{notSupportedMessage}</p>&nbsp;<a href={file} target="_blank">{notSupportedLinkMessage}</a>
-				</div>
-			</object>
+			<Block layout="horizontal flex">
+				{ ComponentBehavior.labelBlock(this.props) }
+				{!this._isPdf() && <div style={this.style()} className={classNames(classes.message, "layout horizontal center-center")}><div>{notAvailable}</div></div> }
+				{this._isPdf() &&
+					<object className={classes.value} style={this.style()} data={file} type="application/pdf">
+						<div className="layout horizontal center-center">
+							<p>{notSupportedMessage}</p>&nbsp;<a href={file} target="_blank">{notSupportedLinkMessage}</a>
+						</div>
+					</object>
+				}
+			</Block>
 		);
 	};
 

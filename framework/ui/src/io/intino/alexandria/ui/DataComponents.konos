@@ -4,6 +4,7 @@ use Schemas
 
 Component baseNumber as Decorated
 	Notification refresh as Real
+	Notification refreshExpanded as Bool
 
 Component number as Decorated ExtensionOf(baseNumber)
 Component numberEditable as Decorated ExtensionOf(baseNumber)
@@ -19,6 +20,7 @@ Component dateEditable as Decorated ExtensionOf(baseDate)
 
 Component baseText as Decorated
 	Notification refresh as Text
+	Notification refreshHighlight as Object(Highlight)
 Component text as Decorated ExtensionOf(baseText)
 Component textCode as Decorated ExtensionOf(baseText)
 Component textEditable as Decorated ExtensionOf(baseText)

@@ -31,7 +31,7 @@ def type(action & notification) !type(ui)
 
 	public class $name+snakecaseToCamelCase+firstUpperCase~Action {
 		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
-		public io.intino.alexandria.core.Context context = new io.intino.alexandria.core.Context();
+		$contextProperty
 		[$parameter+type...[$NL]]
 
 		public void onOpen(Client client, SparkNotifier notifier) {
@@ -54,9 +54,8 @@ def type(action) !type(ui)
 	$schemaImport
 
 	public class $name+snakecaseToCamelCase+firstUpperCase~Action {
-
 		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
-		public io.intino.alexandria.core.Context context = new io.intino.alexandria.core.Context();
+		$contextProperty
 		[$parameter+type...[$NL]]
 
 		public [$returnType?void] execute() [throws $throws+FirstUpperCase...[, ]] {
@@ -69,7 +68,7 @@ def type(ui & accessibleDisplay)
 	package $package+validPackage.ui.pages;
 
 	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
-	import $package+validPackage.displays.$display+snakecaseToCamelCase+firstUpperCase;
+	import $package+validPackage.ui.displays[.$packageType~s].$display+snakecaseToCamelCase+firstUpperCase;
 	import io.intino.alexandria.ui.Soul;
 
 	public class $name+snakecaseToCamelCase+firstUpperCase~ProxyPage extends io.intino.alexandria.ui.spark.pages.ProxyPage {
@@ -79,6 +78,7 @@ def type(ui & accessibleDisplay)
 
 		public void execute() {
 			$display+snakecaseToCamelCase+firstUpperCase display = new $display+snakecaseToCamelCase+firstUpperCase(box);
+    		display.id(personifiedDisplay);
 			$parameter+methodCall...[$NL]
 			soul.register(display);
 			display.init();
@@ -100,7 +100,7 @@ def type(ui & action & gen)
 		public Abstract$name+snakecaseToCamelCase+firstUpperCase~Page() { super("$uiService+camelCaseToSnakeCase+lowerCase"); }
 
 		public String execute() [throws $throws+FirstUpperCase...[, ]] {
-			return super.template("$name"[, Arrays.asList($usedAppUrl...[,])]);
+			return super.template("$name"[, Arrays.asList($usedUnit...[,])]);
 		}
 
 		@Override
@@ -199,10 +199,18 @@ def type(editor) trigger(component)
 	component.display(new $display+snakecaseToCamelCase+firstUpperCase(box));
 end
 
-def type(usedAppUrl & standard)
-	"$this"
+def type(usedUnit & standard)
+	new io.intino.alexandria.ui.spark.pages.Unit("$name","$url")
 end
 
-def type(usedAppUrl & custom)
-	box.configuration().get("$this")
+def type(usedUnit & custom)
+	new io.intino.alexandria.ui.spark.pages.Unit("$name",box.configuration().get("$url"))
+end
+
+def type(contextProperty & spark)
+    public io.intino.alexandria.rest.spark.SparkContext context;
+end
+
+def type(contextProperty)
+    public io.intino.alexandria.Context context = new io.intino.alexandria.Context();
 end

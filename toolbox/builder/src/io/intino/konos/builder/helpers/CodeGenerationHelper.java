@@ -21,6 +21,10 @@ public class CodeGenerationHelper {
 		return new File(root.getAbsolutePath() + format(path, target));
 	}
 
+	public static File displaysFolder(File folder, Target target) {
+		return new File(folder, displaysPath(target));
+	}
+
 	public static File displayFolder(File folder, String type, Target target) {
 		return new File(folder, displayPath(type, target));
 	}
@@ -35,6 +39,10 @@ public class CodeGenerationHelper {
 
 	public static String displayFilename(String name, String suffix) {
 		return snakeCaseToCamelCase(name + suffix);
+	}
+
+	private static String displaysPath(Target target) {
+		return format(Displays, target);
 	}
 
 	public static String displayPath(String type, Target target) {
@@ -85,11 +93,5 @@ public class CodeGenerationHelper {
 	public static File createIfNotExists(File file) {
 		if (!file.exists()) file.mkdirs();
 		return file;
-	}
-
-	public static String toSnakeCase(String name) {
-		String regex = "([a-z])([A-Z]+)";
-		String replacement = "$1-$2";
-		return name.replaceAll(regex, replacement).toLowerCase();
 	}
 }

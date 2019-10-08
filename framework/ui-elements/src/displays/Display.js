@@ -4,6 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export default class Display extends PassiveView {
+    address = null;
     state = {};
 
     constructor(props) {
@@ -54,6 +55,14 @@ export default class Display extends PassiveView {
         let url = params.url;
         if (url == null || url === "") url = Application.configuration.baseUrl;
         window.location.href = url;
+    };
+
+    addressed = (params) => {
+        this.address = params.address;
+    };
+
+    historyAddress = () => {
+        return this.address;
     };
 
     instances = (container) => {

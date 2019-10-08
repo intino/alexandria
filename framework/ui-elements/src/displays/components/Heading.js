@@ -18,7 +18,7 @@ class Heading extends AbstractHeading {
 	};
 
 	render() {
-		return (<div className="layout vertical center-justified" style={{height:Heading.Height,...this.props.style}}>{this.props.children}</div>);
+		return (<div className="layout vertical center-justified" style={{height:Heading.Height,...this.props.style,...this.style()}}>{this.props.children}</div>);
 	}
 
 }

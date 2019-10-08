@@ -6,12 +6,12 @@ import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
-import io.intino.konos.model.graph.decorated.DecoratedDisplay;
+import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.tara.magritte.Layer;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
@@ -42,7 +42,7 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 
 	private void writeSrc(FrameBuilder builder) {
 		final String newDisplay = displayFilename(element.name$(), builder.is("accessible") ? "Proxy" : "");
-		Template template = srcTemplate();
+		Template template = srcTemplate(builder);
 		String type = typeOf(element);
 		if (template == null) return;
 		File sourceFile = displayFile(src(), newDisplay, type, target);
@@ -55,11 +55,12 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 	}
 
 	private void writeGen(FrameBuilder builder) {
-		Template template = genTemplate();
+		Template template = genTemplate(builder);
 		String type = typeOf(element);
 		if (template == null) return;
 		final String suffix = builder.is("accessible") ? "Proxy" : "";
-		final String newDisplay = displayFilename(snakeCaseToCamelCase((element.i$(DecoratedDisplay.class) ? "Abstract" : "") + firstUpperCase(element.name$())), suffix);
+		final String abstractValue = builder.is("accessible") ? "" : (ElementHelper.isRoot(element) ? "Abstract" : "");
+		final String newDisplay = displayFilename(snakeCaseToCamelCase(abstractValue + firstUpperCase(element.name$())), suffix);
 		writeFrame(displayFolder(gen(), type, target), newDisplay, template.render(builder.add("gen").toFrame()));
 	}
 
@@ -67,7 +68,7 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 		try {
 			packageFolder.mkdirs();
 			File file = fileOf(packageFolder, name, target);
-			Files.write(file.toPath(), text.getBytes(Charset.forName("UTF-8")));
+			Files.write(file.toPath(), text.getBytes(StandardCharsets.UTF_8));
 		} catch (IOException e) {
 			Logger.getInstance("Konos: ").error(e.getMessage(), e);
 		}
@@ -75,12 +76,12 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 
 	protected abstract Updater updater(String displayName, File sourceFile);
 
-	private Template srcTemplate() {
-		return templateProvider.srcTemplate(element);
+	private Template srcTemplate(FrameBuilder builder) {
+		return templateProvider.srcTemplate(element, builder);
 	}
 
-	private Template genTemplate() {
-		return templateProvider.genTemplate(element);
+	private Template genTemplate(FrameBuilder builder) {
+		return templateProvider.genTemplate(element, builder);
 	}
 
 }

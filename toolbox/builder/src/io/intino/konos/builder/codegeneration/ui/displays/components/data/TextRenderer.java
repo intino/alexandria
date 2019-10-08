@@ -27,6 +27,7 @@ public class TextRenderer extends ComponentRenderer<Text> {
 			if (element.asCode().value() != null) codeFrame.add("value", escape(element.asCode().value()));
 			builder.add("code", codeFrame);
 		}
+		addHighlightMethods(builder);
 	}
 
 	private String escape(String value) {
@@ -51,7 +52,7 @@ public class TextRenderer extends ComponentRenderer<Text> {
 		}
 		if (element.isEditable()) {
 			EditableText editableText = element.asEditable();
-			if (editableText.placeHolder() != null) result.add("placeholder", editableText.placeHolder());
+			if (editableText.placeholder() != null) result.add("placeholder", editableText.placeholder());
 		}
 		return result;
 	}
@@ -61,6 +62,14 @@ public class TextRenderer extends ComponentRenderer<Text> {
 		HighlightedText highlight = element.asHighlighted();
 		FrameBuilder highlightedFrame = new FrameBuilder("highlighted").add("text", highlight.textColor()).add("background", highlight.backgroundColor());
 		result.add("highlighted", highlightedFrame);
+	}
+
+	private void addHighlightMethods(FrameBuilder builder) {
+		if (!element.isHighlighted()) return;
+		if (element.isMultiple()) return;
+		FrameBuilder result = addOwner(buildBaseFrame()).add("method").add(HighlightedText.class.getSimpleName());
+		result.add("name", nameOf(element));
+		builder.add("methods", result);
 	}
 
 	@Override

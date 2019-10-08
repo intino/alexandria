@@ -3,13 +3,18 @@ dsl Konos
 Display desktop as Decorated
 Display page as Decorated
 Display pageDisplay as Decorated
+Display displayRouter as Decorated
+	Request dispatch as Text
 
 Display proxyDisplay as Decorated
 	Notification refresh as Object(ProxyDisplayInfo)
 	Notification refreshError as Text
 
-	Request registerPersonifiedTemplate as Text
+	Request ready
 
 Schema ProxyDisplayInfo
-	Attribute baseUrl as Text
-	Attribute displayType as Text
+	Attribute unit as Text
+
+	Schema(multiple=false) display
+		Attribute id as Text
+		Attribute type as Text

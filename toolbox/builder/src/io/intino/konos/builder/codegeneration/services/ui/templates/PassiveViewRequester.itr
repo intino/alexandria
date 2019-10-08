@@ -16,21 +16,15 @@ def type(display & accessible)
     	@Override
     	public void execute() throws AlexandriaException {
     		String operation = operation();
-    		if (operation.equals("registerPersonifiedDisplay")) {
-    			$name+FirstUpperCase~Proxy display = display();
-    			if (display != null) display.registerPersonifiedDisplay(manager.fromQuery("v", String.class));
-    		}
-    		else {
-				$name+FirstUppercase display = personifiedDisplay();
-				if (display == null) return;
-				if (operation.equals("refreshPersonifiedDisplay")) {
-					$parameter...[$NL]
-					display.refresh();
-					return;
-				}
-				[else $request...[$NL~else ]]
-				super.execute();
-    		}
+            $name+FirstUppercase display = personifiedDisplay();
+            if (display == null) return;
+            if (operation.equals("refreshPersonifiedDisplay")) {
+                $parameter...[$NL]
+                display.refresh();
+                return;
+            }
+            [else $request...[$NL~else ]]
+            super.execute();
     	}
     }
 end

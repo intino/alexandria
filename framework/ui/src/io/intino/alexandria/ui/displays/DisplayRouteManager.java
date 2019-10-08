@@ -7,4 +7,5 @@ import java.util.function.Consumer;
 public interface DisplayRouteManager {
 	void get(String path, Consumer<UISparkManager> consumer);
 	void post(String path, Consumer<UISparkManager> consumer);
+	DisplayRouteDispatcher routeDispatcher();
 }

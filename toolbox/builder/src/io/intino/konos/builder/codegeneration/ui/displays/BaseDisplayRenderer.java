@@ -8,11 +8,14 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRendererFactory;
 import io.intino.konos.builder.codegeneration.ui.passiveview.PassiveViewRenderer;
+import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
-import io.intino.konos.model.graph.decorated.DecoratedDisplay;
+import io.intino.konos.model.graph.addressable.operationcomponents.AddressableTask;
+import io.intino.konos.model.graph.addressable.othercomponents.AddressableSelector;
 import io.intino.konos.model.graph.dynamicloaded.DynamicLoadedComponent;
 import io.intino.konos.model.graph.selectable.catalogcomponents.SelectableCollection;
+import org.jetbrains.annotations.NotNull;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
@@ -47,7 +50,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (accessible) result.add("accessible");
 		addParametrized(result);
 		addExtends(result);
-		addImports(result);
+		addImports(result, accessible);
 		addImplements(result);
 		addMethods(result);
 		addRenderTagFrames(result);
@@ -93,20 +96,29 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		frame.add("displayExtends", result);
 	}
 
-	private void addImports(FrameBuilder frame) {
+	private void addImports(FrameBuilder frame, boolean accessible) {
 		KonosGraph graph = element.graph();
 		if (graph.templateList().size() > 0) frame.add("templatesImport", buildBaseFrame().add("templatesImport"));
 		if (graph.blockList().size() > 0) frame.add("blocksImport", buildBaseFrame().add("blocksImport"));
 		if (graph.itemsDisplays().size() > 0) frame.add("itemsImport", buildBaseFrame().add("itemsImport"));
 		if (graph.rowsDisplays().size() > 0) frame.add("rowsImport", buildBaseFrame().add("rowsImport"));
-		if (!componentOf(element).i$(DecoratedDisplay.class)) frame.add("displayRegistration", buildBaseFrame().add("displayRegistration").add("name", nameOf(element)));
+		if (!ElementHelper.isRoot(componentOf(element)) || (element.isAccessible() && accessible)) frame.add("displayRegistration", displayRegistrationFrame(accessible));
 		frame.add("requesterDirectory", typeOf(element).equalsIgnoreCase("Display") || typeOf(element).equalsIgnoreCase("Display") ? "." : "..");
 		frame.add("notifierDirectory", typeOf(element).equalsIgnoreCase("Display") ? "." : "..");
+	}
+
+	@NotNull
+	private FrameBuilder displayRegistrationFrame(boolean accessible) {
+		FrameBuilder result = buildBaseFrame().add("displayRegistration");
+		if (element.isAccessible() && accessible) result.add("accessible");
+		return result.add("name", nameOf(element));
 	}
 
 	protected void addImplements(FrameBuilder frame) {
 		if (element.i$(DynamicLoadedComponent.class)) frame.add("implements", new FrameBuilder("implements", DynamicLoadedComponent.class.getSimpleName()));
 		if (element.i$(SelectableCollection.class)) frame.add("implements", new FrameBuilder("implements", SelectableCollection.class.getSimpleName()));
+		if (element.i$(AddressableTask.class)) frame.add("implements", new FrameBuilder("implements", AddressableTask.class.getSimpleName()).add("name", nameOf(element)));
+		if (element.i$(AddressableSelector.class)) frame.add("implements", new FrameBuilder("implements", AddressableSelector.class.getSimpleName()).add("name", nameOf(element)));
 	}
 
 	protected void addMethods(FrameBuilder frame) {
@@ -143,7 +155,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	protected void addDecoratedFrames(FrameBuilder frame) {
-		addDecoratedFrames(frame, element.isDecorated());
+		addDecoratedFrames(frame, ElementHelper.isRoot(element));
 	}
 
 	protected void addDecoratedFrames(FrameBuilder frame, boolean decorated) {
@@ -159,7 +171,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	protected FrameBuilder componentFrame(Component component) {
 		ComponentRenderer renderer = factory.renderer(settings, component, templateProvider, target);
 		renderer.buildChildren(true);
-		renderer.decorated(element.isDecorated());
+		renderer.decorated(ElementHelper.isRoot(element));
 		renderer.owner(element);
 		return renderer.buildFrame();
 	}
@@ -170,8 +182,8 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 
 	private void writeDisplaysFor(AccessibleDisplay display, FrameBuilder builder) {
 		write(builder);
-		writeNotifier(display.a$(PassiveView.class), builder.toFrame());
-		writeRequester(display.a$(PassiveView.class), builder.toFrame());
+		writeNotifier(display.a$(PassiveView.class), builder);
+		writeRequester(display.a$(PassiveView.class), builder);
 	}
 
 	private void addParent(Display display, FrameBuilder builder) {

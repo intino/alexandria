@@ -8,6 +8,7 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.templates.ServiceTemplate;
 import io.intino.konos.builder.codegeneration.ui.I18nRenderer;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
+import io.intino.konos.builder.codegeneration.ui.displays.RouteDispatcherRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.ui.UIService;
@@ -32,6 +33,7 @@ public class ServiceRenderer extends UIRenderer {
 	public void render() {
 		createUi();
 		new I18nRenderer(settings, service, target).execute();
+		new RouteDispatcherRenderer(settings, service, target).execute();
 	}
 
 	private void createUi() {
@@ -67,14 +69,14 @@ public class ServiceRenderer extends UIRenderer {
 
 	private Frame frameOf(Display display) {
 		final FrameBuilder result = newDisplayFrame(display, new FrameBuilder("display"));
-		String type = typeOf(display);
-		if (!type.equalsIgnoreCase("display")) result.add("type", typeOf(display).toLowerCase());
 		if (display.isAccessible())
 			result.add("accessible").add("display", newDisplayFrame(display, new FrameBuilder("display").add("proxy")));
 		return result.toFrame();
 	}
 
 	private FrameBuilder newDisplayFrame(Display display, FrameBuilder builder) {
+		String type = typeOf(display);
+		if (!type.equalsIgnoreCase("display")) builder.add("type", typeOf(display).toLowerCase());
 		builder.add("name", nameOf(display)).add("package", packageName());
 		if (display.requestList().stream().anyMatch(r -> r.responseType().equals(Asset)))
 			builder.add("asset", display.name$());

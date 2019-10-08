@@ -37,8 +37,7 @@ public class Resource {
 
 	private String extensionOf(String contentType) {
 		if (contentType == null) return "";
-		throw new RuntimeException("TODO. No te olvides de implementarlo");
-		//return ".pdf";
+		return MimeTypes.extensionOf(contentType);
 	}
 
 	public String name() {

@@ -301,9 +301,9 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		return name != null && !name.isEmpty() ? name : nameOf(this.getClass());
 	}
 
-	public Display name(String name) {
+	public <D extends Display> D name(String name) {
 		this.name = name;
-		return this;
+		return (D) this;
 	}
 
 	public static String nameOf(Class<? extends Display> clazz) {

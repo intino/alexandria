@@ -17,10 +17,7 @@ import io.intino.konos.model.graph.Workflow.Process;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static io.intino.bpmparser.State.Type.Initial;
 import static io.intino.bpmparser.State.Type.Terminal;
@@ -39,8 +36,8 @@ public class BpmRenderer extends Renderer {
 	public BpmRenderer(Settings settings, KonosGraph graph) {
 		super(settings, Target.Owner);
 		this.settings = settings;
-		this.businessUnit = graph.workflow().businessUnit();
-		this.processes = graph.workflow().processList();
+		this.businessUnit = graph.workflow() != null ? graph.workflow().businessUnit() : null;
+		this.processes = graph.workflow() != null ? graph.workflow().processList() : Collections.emptyList();
 		this.src = new File(settings.src(Target.Owner), "bpm");
 		this.gen = new File(settings.gen(Target.Owner), "bpm");
 	}

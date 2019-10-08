@@ -21,8 +21,8 @@ public abstract class CollectionComponentRenderer<C extends Component> extends C
 		FrameBuilder result = super.properties();
 		result.add("width", width() != -1 ? width() : defaultWidth());
 		int position = position();
-		if (position == 0) result.add("marginLeft", "marginLeft");
-		result.add("marginSize", position == 0 ? "20" : "10");
+		if (position == 0) result.add("paddingLeft", "paddingLeft");
+		result.add("paddingSize", position == 0 ? "20" : "10");
 		return result;
 	}
 

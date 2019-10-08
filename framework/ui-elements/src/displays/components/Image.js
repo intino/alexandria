@@ -32,7 +32,7 @@ class Image extends AbstractImage {
 	};
 
 	render() {
-		let style = this.style();
+		if (this.state.value == null) return (<React.Fragment/>);
 		return (
 			<React.Fragment>
 				<img style={this.style()} title={this.props.label} src={this.state.value}/>

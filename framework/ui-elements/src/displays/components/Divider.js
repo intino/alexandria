@@ -23,7 +23,7 @@ class Divider extends AbstractDivider {
 	};
 
 	render() {
-		return (<MuiDivider className={this.props.classes.divider} component="li"/>);
+		return (<MuiDivider style={this.style()} className={this.props.classes.divider} component="li"/>);
 	};
 }
 

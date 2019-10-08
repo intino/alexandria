@@ -6,6 +6,7 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;
+import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.CatalogComponents.Collection.Mold;
 import io.intino.konos.model.graph.OtherComponents.Stamp;
@@ -30,7 +31,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	public ComponentRenderer(Settings settings, C component, TemplateProvider provider, Target target) {
 		super(settings, component, provider, target);
-		this.decorated = component.isDecorated();
+		this.decorated = ElementHelper.isRoot(component);
 	}
 
 	@Override
@@ -74,7 +75,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	protected FrameBuilder addOwner(FrameBuilder builder) {
-		if (owner != null) builder.add("owner", (owner.isDecorated() ? "Abstract" : "") + firstUpperCase(owner.name$()));
+		if (owner != null) builder.add("owner", (ElementHelper.isRoot(owner) ? "Abstract" : "") + firstUpperCase(owner.name$()));
 		return builder;
 	}
 
@@ -277,6 +278,14 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		FrameBuilder result = new FrameBuilder("resourceMethod").add("name", method).add("value", fixResourceValue(value));
 		addOwner(result);
 		return result;
+	}
+
+	protected FrameBuilder parameterMethodFrame(String name, String value) {
+		FrameBuilder frame = new FrameBuilder("parameter");
+		frame.add("name", name);
+		frame.add("value", value);
+		addOwner(frame);
+		return frame;
 	}
 
 	protected String fixResourceValue(String value) {

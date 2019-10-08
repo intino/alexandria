@@ -56,6 +56,10 @@ public class ElementHelper {
 		return ElementReference.of(nameOf(element), typeOf(element), ElementReference.Context.from(element));
 	}
 
+	public static boolean isRoot(Layer element) {
+		return isRoot(element.core$());
+	}
+
 	private String generateName(Layer element) {
 		return generateName(element.core$(), "");
 	}
@@ -70,7 +74,7 @@ public class ElementHelper {
 		return element.core$().rootNodeId();
 	}
 
-	private boolean isRoot(Node node) {
+	private static boolean isRoot(Node node) {
 		return node.owner() == null || node.owner() == node.model();
 	}
 

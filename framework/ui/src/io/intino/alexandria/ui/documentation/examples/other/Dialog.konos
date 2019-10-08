@@ -10,8 +10,8 @@ Template(layout=Vertical, spacing=DP8) dialogExamplesMold as Decorated
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				OpenDialog(title="custom dialog", dialog=dialog1) as Button
 				Dialog(format=containerAirLarge, title = "custom dialog") dialog1
-					Text field1 as Editable(placeHolder="field 1")
-					Text field2 as Editable(placeHolder="field 2")
+					Text field1 as Editable(placeholder="field 1")
+					Text field2 as Editable(placeholder="field 2")
 					Block(layout=Horizontal EndJustified, spacing=DP8, format=airTop)
 						CloseDialog(title="Close", dialog=dialog1) as Button
 						Task(title="Accept") acceptButton as Button

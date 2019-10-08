@@ -4,6 +4,7 @@ import AbstractOpenDialog from "../../../gen/displays/components/AbstractOpenDia
 import OpenDialogNotifier from "../../../gen/displays/notifiers/OpenDialogNotifier";
 import OpenDialogRequester from "../../../gen/displays/requesters/OpenDialogRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
+import Operation from "./Operation";
 
 const styles = theme => ({});
 
@@ -17,5 +18,5 @@ class OpenDialog extends AbstractOpenDialog {
 
 }
 
-export default withStyles(styles, { withTheme: true })(OpenDialog);
-DisplayFactory.register("OpenDialog", withStyles(styles, { withTheme: true })(OpenDialog));
+export default withStyles(Operation.Styles, { withTheme: true })(OpenDialog);
+DisplayFactory.register("OpenDialog", withStyles(Operation.Styles, { withTheme: true })(OpenDialog));

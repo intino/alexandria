@@ -85,6 +85,8 @@ def type(resource & accessibleDisplay)
 			page.soul = soul;
 			page.execute();
 			box.registerSoul(client.id(), soul);
+			soul.register(new io.intino.alexandria.ui.displays.DisplayRouter(box).id("__router__"));
+			(($package+validPackage.ui.displays.RouteDispatcher)box.routeManager().routeDispatcher()).dispatch$name+firstUpperCase(soul[, $parameter+dispatch...[, ]]);
 
 			manager.write("OK");
 		}
@@ -164,6 +166,8 @@ def type(resource)
 				client.soul(soul);
 
 				box.registerSoul(clientId, soul);
+				soul.register(new io.intino.alexandria.ui.displays.DisplayRouter(box).id("__router__"));
+				(($package+validPackage.ui.displays.RouteDispatcher)box.routeManager().routeDispatcher()).dispatch$name+firstUpperCase(soul[, $parameter+dispatch...[, ]]);
 
 				return true;
 			});
@@ -186,6 +190,10 @@ end
 def trigger(parameters)
 	page.document = loadDocument();
 	page.permission = loadPermission();
+end
+
+def type(parameter) trigger(dispatch)
+	page.$name+SnakeCaseToCamelCase+firstLowerCase
 end
 
 def type(parameter)

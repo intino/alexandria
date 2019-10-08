@@ -1,11 +1,11 @@
 package io.intino.alexandria.ui.displays.components;
 
+import io.intino.alexandria.MimeTypes;
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.FileInfo;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
 import io.intino.alexandria.ui.displays.notifiers.FileEditableNotifier;
-import io.intino.alexandria.ui.utils.UrlUtil;
 
 import java.net.URL;
 
@@ -39,9 +39,7 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	}
 
 	public void refresh() {
-		String value = serializedValue();
-		if (value == null) return;
-		notifier.refresh(new FileInfo().value(value).mimeType(mimeType));
+		notifier.refresh(new FileInfo().value(serializedValue()).mimeType(mimeType));
 	}
 
 	public void notifyChange(Resource value) {
@@ -51,7 +49,7 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 
 	protected FileEditable _value(URL value) {
 		this.value = value;
-		this.mimeType = UrlUtil.mimeType(value);
+		this.mimeType = value != null ? MimeTypes.contentTypeOf(value) : null;
 		return this;
 	}
 

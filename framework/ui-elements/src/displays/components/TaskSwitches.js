@@ -19,11 +19,11 @@ class TaskSwitches extends AbstractTaskSwitches {
 	};
 
 	renderTrigger = () => {
-		const {classes} = this.props;
+		if (!this.state.visible) return (<React.Fragment/>);
 		return (
-			<FormControlLabel
-				control={<Switch checked={this.state.checked} onChange={this.handleChange.bind(this)}/>}
-				label={this._title()}
+			<FormControlLabel style={this.style()}
+							  control={<Switch checked={this.state.checked} onChange={this.handleChange.bind(this)}/>}
+							  label={this._title()}
 			/>
 		);
 	};

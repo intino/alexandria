@@ -1,3 +1,30 @@
+def type(display & accessible)
+	import React from "react";
+	[$alexandriaBlockImport]
+	[$alexandriaStampImport]
+	[$alexandriaFrameImport]
+	[$alexandriaComponentImport...[$NL]]
+	[$projectComponentImport...[$NL]]
+	[$parent+import]
+	[import $notDecorated+firstUpperCase~Notifier from "$notifierDirectory/notifiers/$notDecorated+firstUpperCase~Notifier";]
+	[import $notDecorated+firstUpperCase~Requester from "$requesterDirectory/requesters/$notDecorated+firstUpperCase~Requester";]
+	[$displayRegistration+import]
+	import $name+SnakeCaseToCamelCase+FirstUpperCase from '../../../src/displays/[$componentDirectory/]$name+SnakeCaseToCamelCase+FirstUpperCase';
+
+	export default class $name+SnakeCaseToCamelCase+FirstUpperCase~Proxy extends $displayExtends {
+
+		constructor(props) {
+			super(props);
+			[this.notifier = new $notDecorated+firstUpperCase~Notifier(this);]
+			[this.requester = new $notDecorated+firstUpperCase~Requester(this);]
+			[$properties+initialization]
+    	};
+
+	}
+
+	[$displayRegistration+declaration]
+end
+
 def type(display)
 	import React from "react";
 	[$alexandriaBlockImport]
@@ -18,7 +45,7 @@ def type(display)
 			[this.requester = new $notDecorated+firstUpperCase~Requester(this);]
 			[$properties+initialization]
     	};
-		
+
 		render() {
 		    const display = !this.state.visible ? {display:'none'} : undefined;
 			return [this.$baseMethod](
@@ -35,6 +62,10 @@ end
 
 def type(displayRegistration) trigger(import)
     import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
+end
+
+def type(displayRegistration & accessible) trigger(declaration)
+    DisplayFactory.register("$name+SnakeCaseToCamelCase+FirstUpperCase~Proxy", $name+SnakeCaseToCamelCase+FirstUpperCase~Proxy);
 end
 
 def type(displayRegistration) trigger(declaration)
@@ -90,11 +121,11 @@ def type(renderTag & block)
 end
 
 def type(renderTag & item)
-	<div style={{width:"100%",...this.props.style,...display}}>
+	<div style={{width:"100%",height:"100%",...this.props.style,...this.style(),...display}} class="layout vertical center-justified">
 end
 
 def type(renderTag)
-	<React.Fragment style={{...this.props.style,...display}}>
+	<React.Fragment>
 end
 
 def type(renderTagAttributes & block)
@@ -109,7 +140,7 @@ def attribute(parent) trigger(import)
 end
 
 def attribute(accessible) trigger(import)
-	import UiDisplay from "alexandria-ui-elements/src/displays/ProxyDisplay";
+	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/ProxyDisplay";
 end
 
 def attribute(baseDisplay) trigger(import)

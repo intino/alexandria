@@ -12,8 +12,8 @@ def type(notifier)
 		setup() {
 			var context = this.element.props.context != null ? this.element.props.context() : "";
 			var key = this.element.props.id + context;
-			if (Notifier.subscriptions$[key$]) return;
-			Notifier.subscriptions$[key$] = true;
+			//if (Notifier.subscriptions$[key$]) return;
+			//Notifier.subscriptions$[key$] = true;
 			this.when("addInstance").toSelf().execute((parameters) => this.element.addInstance(parameters));
 			this.when("addInstances").toSelf().execute((parameters) => this.element.addInstances(parameters));
 			this.when("insertInstance").toSelf().execute((parameters) => this.element.insertInstance(parameters));
@@ -21,6 +21,7 @@ def type(notifier)
 			this.when("removeInstance").toSelf().execute((parameters) => this.element.removeInstance(parameters));
 			this.when("clearContainer").toSelf().execute((parameters) => this.element.clearContainer(parameters));
 			this.when("redirect").toSelf().execute((parameters) => this.element.redirect(parameters));
+			this.when("addressed").toSelf().execute((parameters) => this.element.addressed(parameters));
 		};
 
 		when = (message) => {
@@ -68,7 +69,7 @@ def type(notifier)
 		detached = () => {
             var context = this.element.props.context != null ? this.element.props.context() : "";
             var key = this.element.props.id + context;
-            Notifier.subscriptions$[key$] = null;
+            //Notifier.subscriptions$[key$] = null;
 			this.pushRegistrations.forEach((registrations) => registrations.deregister());
 			this.pushRegistrations.splice(0, this.pushRegistrations.length);
 		};
@@ -76,11 +77,25 @@ def type(notifier)
 end
 
 def type(requester)
+	import history from "alexandria-ui-elements/src/util/History";
+
 	export default class Requester {
 		constructor(element) {
 			this.element = element;
 			this.pushService = Application.services.pushService;
 			this.fileService = Application.services.fileService;
 		};
+
+        available = (unit) => {
+            return this.pushService.existsConnection(unit);
+        };
+
+        addToHistory = (param) => {
+            const address = this.element.historyAddress();
+            const id = (param instanceof Array) ? (param.length > 0 ? param$[0$] : "") : param;
+            if (address == null) return false;
+            history.push(address.replace(/:$[^\\/$]*/, id), {});
+            return true;
+	    };
     }
 end
