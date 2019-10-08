@@ -46,10 +46,7 @@ public interface ColumnStream {
 			@Override
 			public byte[] toByteArray(Object object) {
 				if (object == null) return notAvailable();
-				byte[] result = new byte[8];
-				long value = (long) object;
-				for (int i = 0, shift = 56; i < 8; i++, shift -= 8) result[i] = (byte) (value >> shift);
-				return result;
+				return allocate(8).putLong((java.lang.Long) object).array();
 			}
 
 			@Override
