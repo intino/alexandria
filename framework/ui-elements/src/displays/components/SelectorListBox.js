@@ -4,6 +4,7 @@ import { List, ListItem } from '@material-ui/core';
 import AbstractSelectorListBox from "../../../gen/displays/components/AbstractSelectorListBox";
 import SelectorListBoxNotifier from "../../../gen/displays/notifiers/SelectorListBoxNotifier";
 import SelectorListBoxRequester from "../../../gen/displays/requesters/SelectorListBoxRequester";
+import Divider from './Divider';
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
 
@@ -22,6 +23,7 @@ class SelectorListBox extends AbstractSelectorListBox {
 
 	render() {
 		const children = this.children();
+		if (children.length <= 0) return (<div></div>);
 		return (
 			<List>
 				{React.Children.map(children, (child, i) => { return this.renderChild(child, i); })}
@@ -30,9 +32,9 @@ class SelectorListBox extends AbstractSelectorListBox {
 	};
 
 	renderChild = (child, key) => {
-		return (
-			<ListItem key={key} button onClick={this.handleSelect.bind(this, child.props.name)}>{child}</ListItem>
-		);
+		const className = child.props.className;
+		if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
+		return (<ListItem key={key} button onClick={this.handleSelect.bind(this, child.props.name)}>{child}</ListItem>);
 	};
 
 	handleSelect = (name) => {

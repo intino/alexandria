@@ -55,7 +55,7 @@ public class BaseLocation<DN extends BaseLocationNotifier, B extends Box> extend
     }
 
     protected <D extends BaseLocation> D _value(String value) {
-        return value(Geometry.fromWkt(value));
+        return _value(Geometry.fromWkt(value));
     }
 
     private void setup() {

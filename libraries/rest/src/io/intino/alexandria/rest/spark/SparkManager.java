@@ -139,6 +139,22 @@ public class SparkManager<P extends PushService> {
 		return forwardedPath == null || forwardedPath.equals("") || forwardedPath.equals("/") ? "" : forwardedPath;
 	}
 
+	public String getHeader(String name) {
+		return request.raw().getHeader(name);
+	}
+
+	public String realIp() {
+		HttpServletRequest raw = request.raw();
+		String ip = raw.getHeader("X-Real-IP");
+		if (ip == null || ip.isEmpty()) ip = raw.getHeader("X-Forwarded-For");
+		if (ip != null && !ip.isEmpty()) {
+			int indexComma = ip.indexOf(',');
+			if (indexComma == -1) return ip;
+			else return ip.substring(0, indexComma);
+		}
+		return raw.getRemoteAddr();
+	}
+
 	private void setUpMultipartConfiguration() {
 		MultipartConfigElement multipartConfigElement = new MultipartConfigElement(System.getProperty("java.io.tmpdir"));
 		request.raw().setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);

@@ -16,7 +16,7 @@ export default class BaseIcon extends AbstractBaseIcon {
 	};
 
 	renderLayer = (iconLayer) => {
-		if (this._icon() == null) return (<div>!</div>);
+		if (this._icon() == null) return (<div></div>);
 		return iconLayer;
 	};
 

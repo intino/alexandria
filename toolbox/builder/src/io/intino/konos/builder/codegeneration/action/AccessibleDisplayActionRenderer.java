@@ -5,6 +5,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.CodeGenerationHelper;
+import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
 
 import java.io.File;
@@ -27,14 +28,22 @@ public class AccessibleDisplayActionRenderer extends ActionRenderer {
 	@Override
 	public void render() {
 		FrameBuilder builder = new FrameBuilder("action", "ui", "accessibleDisplay");
+		String type = elementHelper.typeOf(display.a$(Display.class));
 		builder.add("name", display.name$());
 		builder.add("display", display.name$());
+		if (!type.equalsIgnoreCase("display")) builder.add("packageType", type.toLowerCase());
 		builder.add("package", packageName());
 		builder.add("box", boxName());
 		builder.add("parameter", parameters());
+		builder.add("contextProperty", contextPropertyFrame());
 		configuration.classes().put(display.getClass().getSimpleName() + "#" + firstUpperCase(display.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(display.name$())) + suffix());
 		if (!alreadyRendered(src(), display.name$() + "Proxy"))
 			writeFrame(destinyPackage(src()), display.name$() + "ProxyPage", template().render(builder.toFrame()));
+	}
+
+	@Override
+	protected ContextType contextType() {
+		return ContextType.Spark;
 	}
 
 	private Frame[] parameters() {

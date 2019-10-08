@@ -1,17 +1,21 @@
 package io.intino.konos.builder.codegeneration.accessor.ui.resource;
 
+import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.PageTemplate;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Template;
+import io.intino.konos.model.graph.ui.AbstractUIService;
 import io.intino.konos.model.graph.ui.UIService;
 
 import java.io.File;
 
+import static cottons.utils.StringHelper.camelCaseToSnakeCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.createIfNotExists;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 
@@ -44,19 +48,29 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 	@Override
 	public FrameBuilder buildFrame() {
 		FrameBuilder result = super.buildFrame().add("resource");
+		UIService uiService = resource.core$().ownerAs(UIService.class);
 		result.add("name", resource.name$());
 		Template template = KonosGraph.templateFor(resource);
 		result.add("pageDisplay", template.name$());
 		result.add("pageDisplayId", shortId(template));
 		result.add("pageDisplayType", typeOf(template));
+		uiService.useList().forEach(use -> result.add("accessibleImport", accessibleImportFrame(use)));
 		addPageDisplayOrigin(result, template);
 		return result;
 	}
 
 	private void addPageDisplayOrigin(FrameBuilder builder, Display display) {
 		FrameBuilder originFrame = new FrameBuilder();
-		if (display.isDecorated()) originFrame.add("decorated", "");
+		if (ElementHelper.isRoot(display)) originFrame.add("decorated", "");
 		builder.add("pageDisplayOrigin", originFrame);
+	}
+
+	private Frame accessibleImportFrame(AbstractUIService.Use use) {
+		FrameBuilder result = new FrameBuilder("accessibleImport");
+		result.add("name", use.name$());
+		result.add("url", use.url());
+		result.add("elements", camelCaseToSnakeCase(use.className().substring(use.className().lastIndexOf(".")+1)));
+		return result.toFrame();
 	}
 
 }

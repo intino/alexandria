@@ -35,6 +35,10 @@ public class ComponentRendererFactory {
 		if (component.i$(OtherComponents.Dashboard.class)) return (T) new DashboardRenderer(settings, component.a$(OtherComponents.Dashboard.class), provider, target);
 		if (component.i$(OtherComponents.AbstractDialog.class)) return (T) new DialogRenderer(settings, component.a$(OtherComponents.AbstractDialog.class), provider, target);
 		if (component.i$(OtherComponents.BaseIcon.class)) return (T) new IconRenderer(settings, component.a$(OtherComponents.BaseIcon.class), provider, target);
+		if (component.i$(OtherComponents.Portal.class)) return (T) new PortalRenderer(settings, component.a$(OtherComponents.Portal.class), provider, target);
+		if (component.i$(OtherComponents.User.class)) return (T) new UserRenderer(settings, component.a$(OtherComponents.User.class), provider, target);
+		if (component.i$(OtherComponents.Stepper.class)) return (T) new StepperRenderer(settings, component.a$(OtherComponents.Stepper.class), provider, target);
+		if (component.i$(OtherComponents.Stepper.Step.class)) return (T) new StepRenderer(settings, component.a$(OtherComponents.Stepper.Step.class), provider, target);
 
 		if (component.i$(Template.class)) return (T) new TemplateRenderer(settings, component.a$(Template.class), provider, target);
 		if (component.i$(Header.class)) return (T) new HeaderRenderer(settings, component.a$(Header.class), provider, target);
@@ -49,6 +53,7 @@ public class ComponentRendererFactory {
 
 		if (component.i$(Toolbar.class)) return (T) new ToolbarRenderer(settings, component.a$(Toolbar.class), provider, target);
 		if (component.i$(OpenPage.class)) return (T) new OpenPageRenderer(settings, component.a$(OpenPage.class), provider, target);
+		if (component.i$(OpenSite.class)) return (T) new OpenSiteRenderer(settings, component.a$(OpenSite.class), provider, target);
 		if (component.i$(OpenDrawer.class)) return (T) new OpenDrawerRenderer(settings, component.a$(OpenDrawer.class), provider, target);
 		if (component.i$(CloseDrawer.class)) return (T) new CloseDrawerRenderer(settings, component.a$(CloseDrawer.class), provider, target);
 		if (component.i$(OpenBlock.class)) return (T) new OpenBlockRenderer(settings, component.a$(OpenBlock.class), provider, target);

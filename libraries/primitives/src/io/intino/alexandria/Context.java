@@ -1,4 +1,4 @@
-package io.intino.alexandria.core;
+package io.intino.alexandria;
 
 import java.util.HashMap;
 import java.util.Map;

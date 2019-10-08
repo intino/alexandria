@@ -7,6 +7,7 @@ import Theme from '../../gen/Theme';
 import Page from "alexandria-ui-elements/src/displays/Page";
 import ConnectionChecker from "alexandria-ui-elements/src/displays/ConnectionChecker";
 import $pageDisplay+firstUpperCase from "$pageDisplayOrigin+origin/displays/$pageDisplayType+firstLowerCase~s/$pageDisplay+firstUpperCase";
+$accessibleImport...[$NL]
 
 let theme = Theme.create();
 const styles = theme => ({});
@@ -43,8 +44,14 @@ def type(resource & html)
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
 
             <style>
-                html, body, .page {
+                html, body {
+                    min-height: 100vh;
                     height: 100%;
+                }
+                .page {
+                    display: table;
+                    height: 100%;
+                    width: 100%;
                 }
             </style>
 		</head>
@@ -54,7 +61,7 @@ def type(resource & html)
 			<script>
 				document.configuration = {};
 				document.configuration.googleApiKey = "$$googleApiKey";
-				document.configuration.pushServices = "$$pushUrls".split(",");
+				document.configuration.pushConnections = "$$pushConnections".split(",");
 				document.configuration.clientId = "$$client";
 				document.configuration.language = "$$language";
 				document.configuration.url = "$$url";
@@ -73,27 +80,6 @@ def trigger(origin)
 	..
 end
 
-def type(polymer & editor)
-	Polymer({
-		is: 'page-body',
-
-		attached : function() {
-			this._initEditor();
-		},
-
-		_initEditor : function() {
-			var widget = this;
-			this.$$.root.whenPersonified().execute(function() {
-				var editor = widget.querySelector("alexandria-editor");
-
-				editor.onSaved = function() {
-					if (document.onSaved) document.onSaved();
-				};
-
-				document.save = function() {
-					editor.save();
-				}
-			});
-		}
-	});
+def type(accessibleImport)
+    import Displays from '$elements/gen/AccessibleDisplays';
 end

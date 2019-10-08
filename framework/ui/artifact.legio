@@ -1,12 +1,11 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "2.0.0") ui-framework
-	Box("Konos", "6.0.0") > targetPackage = ""
+Artifact("io.intino.alexandria", "2.1.0") ui-framework
+	Box("Konos", "6.1.0") > targetPackage = ""
 	Code("io.intino.alexandria")
 	Imports
-		Web("io.intino.alexandria", "ui-framework-elements", "2.0.0")
 		Compile("io.intino.alexandria", "core-framework", "2.0.1")
-		Compile("io.intino.alexandria", "rest", "2.0.0")
+		Compile("io.intino.alexandria", "rest", "2.1.0")
 		Compile("io.intino.alexandria", "rest-accessor", "1.0.7")
 		Compile("io.intino.alexandria", "logger4j", "1.0.0")
 		Compile("com.opencsv", "opencsv", "4.1")
@@ -14,6 +13,9 @@ Artifact("io.intino.alexandria", "2.0.0") ui-framework
 		Compile("org.locationtech.jts", "jts-core", "1.16.1")
 		Compile("io.intino.alexandria", "driver-shiny", "1.0.0")
 		Compile("io.intino.alexandria", "driver-r", "1.0.0")
+
+		Web("io.intino.alexandria", "ui-framework-elements", "2.1.0")
+
 		Test("junit", "junit", "LATEST")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)

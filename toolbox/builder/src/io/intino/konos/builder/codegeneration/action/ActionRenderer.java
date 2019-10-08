@@ -24,9 +24,15 @@ import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamel
 public abstract class ActionRenderer extends Renderer {
 	private final String[] types;
 
+	public enum ContextType { Default, Spark }
+
 	public ActionRenderer(Settings settings, String... types) {
 		super(settings, Target.Owner);
 		this.types = types;
+	}
+
+	protected ContextType contextType() {
+		return ContextType.Default;
 	}
 
 	protected boolean alreadyRendered(File destiny, String action) {
@@ -60,6 +66,8 @@ public abstract class ActionRenderer extends Renderer {
 				.add("box", boxName())
 				.add("returnType", Commons.returnType(response, packageName));
 		Arrays.stream(types).forEach(builder::add);
+
+		builder.add("contextProperty", contextPropertyFrame());
 		setupParameters(parameters, builder);
 
 		if (!exceptions.isEmpty())
@@ -67,6 +75,12 @@ public abstract class ActionRenderer extends Renderer {
 		if (!schemas.isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName).toFrame());
 		Commons.writeFrame(destinyPackage(destiny()), firstUpperCase(snakeCaseToCamelCase(name)) + suffix(), template().render(builder.toFrame()));
+	}
+
+	protected FrameBuilder contextPropertyFrame() {
+		FrameBuilder result = new FrameBuilder("contextProperty");
+		if (contextType() == ContextType.Spark) result.add("spark");
+		return result;
 	}
 
 	private void setupParameters(List<? extends Parameter> parameters, FrameBuilder builder) {

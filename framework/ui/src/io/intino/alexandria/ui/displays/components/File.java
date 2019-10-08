@@ -1,10 +1,10 @@
 package io.intino.alexandria.ui.displays.components;
 
+import io.intino.alexandria.MimeTypes;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.FileInfo;
 import io.intino.alexandria.ui.displays.notifiers.FileNotifier;
 import io.intino.alexandria.ui.resources.Asset;
-import io.intino.alexandria.ui.utils.UrlUtil;
 
 import java.net.URL;
 
@@ -32,9 +32,7 @@ public class File<DN extends FileNotifier, B extends Box> extends AbstractFile<D
 	}
 
 	public void refresh() {
-		String value = serializedValue();
-		if (value == null) return;
-		notifier.refresh(new FileInfo().value(value).mimeType(mimeType));
+		notifier.refresh(new FileInfo().value(serializedValue()).mimeType(mimeType));
 	}
 
 	protected File _value(URL value) {
@@ -48,7 +46,7 @@ public class File<DN extends FileNotifier, B extends Box> extends AbstractFile<D
 	}
 
 	private String typeOf(URL value) {
-		return UrlUtil.mimeType(value);
+		return value != null ? MimeTypes.contentTypeOf(value) : null;
 	}
 
 }

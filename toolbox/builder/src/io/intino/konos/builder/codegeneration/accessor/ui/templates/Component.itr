@@ -47,15 +47,15 @@ def type(method)
 end
 
 def type(properties & multiple) trigger(common)
-	[ label="$label"][ format="$format...[ ]"]
+	[ label="$label"][ format="$format...[ ]"][ visible={$visible}]
 end
 
 def type(properties & operation) trigger(common)
-	[ title="$title"][ target="$target"][ mode="$operationMode"][ icon="$icon"][ confirm="$confirm"][ disabled={$disabled}][ size="$size"][ format="$format...[ ]"][ highlighted="$highlighted"]
+	[ title="$title"][ target="$target"][ mode="$operationMode"][ icon="$icon"][ confirm="$confirm"][ disabled={$disabled}][ size="$size"][ format="$format...[ ]"][ highlighted="$highlighted"][ visible={$visible}]
 end
 
 def type(properties & abstractslider) trigger(common)
-	[ label="$label"][ format="$format...[ ]"][ color="$color"][ arrangement="$arrangement"][ animation={{interval:$interval,loop:$loop}}][ readonly={$readonly}]
+	[ label="$label"][ format="$format...[ ]"][ color="$color"][ arrangement="$arrangement"][ animation={{interval:$interval,loop:$loop}}][ readonly={$readonly}][ visible={$visible}]
 end
 
 def type(properties) trigger(common)
@@ -74,8 +74,12 @@ def type(properties & materialicon) trigger(specific)
 	[ icon="$icon"]
 end
 
+def type(properties & portal) trigger(specific)
+    [ to="$to"]
+end
+
 def type(properties & selector) trigger(specific)
-	[ multipleSelection={$multipleSelection}][ readonly={$readonly}][ focused={$focused}]
+	[ multipleSelection={$multipleSelection}][ readonly={$readonly}][ focused={$focused}][ placeholder="$placeholder"]
 end
 
 def type(properties & image) trigger(specific)
@@ -110,8 +114,12 @@ def type(properties & date) trigger(specific)
 	[ pattern="$pattern"][ mode="$mode"][ value={new Date($value)}][ timePicker={$timePicker}][ mask="$mask"][ allowEmpty={$allowEmpty}]
 end
 
+def type(properties & user) trigger(specific)
+	[ mode="$mode"]
+end
+
 def type(properties & number) trigger(specific)
-	[ value={$value}][ prefix="$prefix"][ suffix="$suffix"][ min={$min}][ max={$max}][ step={$step}][ readonly={$readonly}][ focused={$focused}]
+	[ value={$value}][ prefix="$prefix"][ suffix="$suffix"][ min={$min}][ max={$max}][ step={$step}][ readonly={$readonly}][ focused={$focused}][ decimals={$decimals}][ style="$style"][ expanded={$expanded}]
 end
 
 def type(properties & header) trigger(specific)
@@ -135,15 +143,15 @@ def type(properties & map) trigger(specific)
 end
 
 def type(properties & collection) trigger(specific)
-	[ noItemsMessage="$noItemsMessage"][ pageSize={$pageSize}][ itemHeight={$itemHeight}][ scrollingMark={$scrollingMark}][ navigable="$navigable"][ selection="$selection"]
+	[ noItemsMessage="$noItemsMessage"][ noItemsFoundMessage="$noItemsFoundMessage"][ pageSize={$pageSize}][ itemHeight={$itemHeight}][ scrollingMark={$scrollingMark}][ navigable="$navigable"][ selection="$selection"]
 end
 
 def type(properties & heading) trigger(specific)
-	 style={{width:"calc($width~% - $marginSize~px)",marginRight:"10px"[,$marginLeft:"10px"]}}
+	 style={{width:"calc($width~% - $paddingSize~px)",paddingRight:"10px"[,$paddingLeft:"10px"]}}
 end
 
 def type(properties & item) trigger(specific)
-	 style={{width:"calc($width~% - $marginSize~px)",marginRight:"10px"[,$marginLeft:"10px"]}}
+	 style={{width:"calc($width~% - $paddingSize~px)",paddingRight:"10px"[,$paddingLeft:"10px"]}}
 end
 
 def type(properties & spinner) trigger(specific)
@@ -172,6 +180,14 @@ end
 
 def type(properties & slider) trigger(specific)
     [ range={{min:$min,max:$max}}][ value={$value}]
+end
+
+def type(properties & grouping) trigger(specific)
+    [ placeholder="$placeholder"]
+end
+
+def type(properties & stepper) trigger(specific)
+   [ orientation={"$orientation+lowercase"}][ position={"$position+lowercase"}]
 end
 
 def type(properties) trigger(specific)

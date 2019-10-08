@@ -7,6 +7,7 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.ElementRenderer;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.PassiveView.Notification;
 import io.intino.konos.model.graph.PassiveView.Request;
@@ -18,7 +19,6 @@ import io.intino.konos.model.graph.code.datacomponents.CodeText;
 import io.intino.konos.model.graph.combobox.catalogcomponents.ComboBoxGrouping;
 import io.intino.konos.model.graph.combobox.othercomponents.ComboBoxSelector;
 import io.intino.konos.model.graph.conditional.ConditionalBlock;
-import io.intino.konos.model.graph.decorated.DecoratedDisplay;
 import io.intino.konos.model.graph.drawer.DrawerBlock;
 import io.intino.konos.model.graph.listbox.othercomponents.ListBoxSelector;
 import io.intino.konos.model.graph.menu.othercomponents.MenuSelector;
@@ -58,15 +58,17 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	public FrameBuilder buildFrame(boolean accessible) {
 		FrameBuilder result = super.buildFrame();
 		if (accessible) result.add("accessible");
-		FrameBuilder extensionFrame = extensionFrame();
+		FrameBuilder extensionFrame = extensionFrame(accessible);
 		String type = type();
 		result.add("id", shortId(element));
 		result.add("type", type);
 		addParentImport(result);
 		result.add("parentType", extensionFrame);
 		result.add("import", extensionFrame);
+		result.add("proxy", extensionFrame);
 		if (!type.equalsIgnoreCase("display")) result.add("packageType", type.toLowerCase());
 		result.add("packageTypeRelativeDirectory", packageTypeRelativeDirectory(element));
+		result.add("componentDirectory", componentDirectoryOf(element, false));
 		result.add("name", nameOf(element));
 		result.add("notification", framesOfNotifications(element.notificationList()));
 		result.add("request", framesOfRequests(element.requestList()));
@@ -92,32 +94,34 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	protected void createPassiveViewFiles(FrameBuilder elementBuilder) {
-		Frame frame = elementBuilder.toFrame();
-		writeNotifier(frame);
-		writeRequester(frame);
-		writePushRequester(frame);
+		writeNotifier(elementBuilder);
+		writeRequester(elementBuilder);
+		writePushRequester(elementBuilder);
 	}
 
 	protected String type() {
 		return typeOf(element.a$(Display.class));
 	}
 
-	protected void writeRequester(PassiveView element, Frame frame) {
+	protected void writeRequester(PassiveView element, FrameBuilder builder) {
+		Frame frame = builder.toFrame();
 		String name = snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + "Requester");
-		writeFrame(displayRequesterFolder(gen(), target), name, displayRequesterTemplate().render(frame));
+		writeFrame(displayRequesterFolder(gen(), target), name, displayRequesterTemplate(builder).render(frame));
 	}
 
-	protected void writePushRequester(PassiveView element, Frame frame) {
-		Template template = displayPushRequesterTemplate();
+	protected void writePushRequester(PassiveView element, FrameBuilder builder) {
+		Frame frame = builder.toFrame();
+		Template template = displayPushRequesterTemplate(builder);
 		boolean accessible = isAccessible(frame);
 		if (accessible || template == null) return;
 		String name = snakeCaseToCamelCase(element.name$() + "PushRequester");
 		writeFrame(displayRequesterFolder(gen(), target), name, template.render(frame));
 	}
 
-	protected void writeNotifier(PassiveView element, Frame frame) {
+	protected void writeNotifier(PassiveView element, FrameBuilder builder) {
+		Frame frame = builder.toFrame();
 		String notifierName = snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + "Notifier");
-		writeFrame(displayNotifierFolder(gen(), target), notifierName, displayNotifierTemplate().render(frame));
+		writeFrame(displayNotifierFolder(gen(), target), notifierName, displayNotifierTemplate(builder).render(frame));
 	}
 
 	protected void addGeneric(PassiveView element, FrameBuilder builder) {
@@ -156,10 +160,11 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (passiveView.i$(Block.class)) components.addAll(passiveView.a$(Block.class).componentList());
 		if (passiveView.i$(io.intino.konos.model.graph.Template.class)) components.addAll(passiveView.a$(io.intino.konos.model.graph.Template.class).componentList());
 		if (passiveView.i$(OtherComponents.Snackbar.class)) components.addAll(passiveView.a$(OtherComponents.Snackbar.class).componentList());
-		if (passiveView.i$(OtherComponents.Stepper.Step.class))
-			components.addAll(passiveView.a$(OtherComponents.Stepper.Step.class).componentList());
+		if (passiveView.i$(OtherComponents.Stepper.class)) components.addAll(passiveView.a$(OtherComponents.Stepper.class).stepList());
+		if (passiveView.i$(OtherComponents.Stepper.Step.class)) components.addAll(passiveView.a$(OtherComponents.Stepper.Step.class).componentList());
 		if (passiveView.i$(OtherComponents.Header.class)) components.addAll(passiveView.a$(OtherComponents.Header.class).componentList());
 		if (passiveView.i$(OtherComponents.Selector.class)) components.addAll(passiveView.a$(OtherComponents.Selector.class).componentList());
+		if (passiveView.i$(OtherComponents.User.class)) components.addAll(passiveView.a$(OtherComponents.User.class).componentList());
 		if (passiveView.i$(CatalogComponents.Table.class)) components.addAll(passiveView.a$(CatalogComponents.Table.class).moldList().stream().filter(m -> m.heading() != null).map(CatalogComponents.Collection.Mold::heading).collect(toList()));
 		if (passiveView.i$(CatalogComponents.Collection.Mold.Heading.class)) components.addAll(passiveView.a$(CatalogComponents.Collection.Mold.Heading.class).componentList());
 		if (passiveView.i$(CatalogComponents.Collection.Mold.Item.class)) components.addAll(passiveView.a$(CatalogComponents.Collection.Mold.Item.class).componentList());
@@ -227,7 +232,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	private String directoryOf(PassiveView passiveView) {
 		PassiveView component = componentOf(passiveView);
-		return component.i$(DecoratedDisplay.class) ? "src" : "gen";
+		return ElementHelper.isRoot(component) ? "src" : "gen";
 	}
 
 	private String componentDirectoryOf(PassiveView passiveView, boolean multiple) {
@@ -241,36 +246,36 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		return null;
 	}
 
-	private void writeRequester(Frame frame) {
-		writeRequester(element, frame);
+	private void writeRequester(FrameBuilder builder) {
+		writeRequester(element, builder);
 	}
 
-	private void writePushRequester(Frame frame) {
-		writePushRequester(element, frame);
+	private void writePushRequester(FrameBuilder builder) {
+		writePushRequester(element, builder);
 	}
 
 	private boolean isAccessible(Frame frame) {
 		return frame.is("accessible");
 	}
 
-	private void writeNotifier(Frame frame) {
-		writeNotifier(element, frame);
+	private void writeNotifier(FrameBuilder builder) {
+		writeNotifier(element, builder);
 	}
 
-	private Template displayNotifierTemplate() {
-		return setup(notifierTemplate());
+	private Template displayNotifierTemplate(FrameBuilder builder) {
+		return setup(notifierTemplate(builder));
 	}
 
-	private Template displayRequesterTemplate() {
-		return setup(requesterTemplate());
+	private Template displayRequesterTemplate(FrameBuilder builder) {
+		return setup(requesterTemplate(builder));
 	}
 
-	private Template displayPushRequesterTemplate() {
-		Template template = pushRequesterTemplate();
+	private Template displayPushRequesterTemplate(FrameBuilder builder) {
+		Template template = pushRequesterTemplate(builder);
 		return template != null ? setup(template) : null;
 	}
 
-	private FrameBuilder extensionFrame() {
+	private FrameBuilder extensionFrame(boolean accessible) {
 		String type = type();
 		FrameBuilder result = new FrameBuilder().add(type, "").add("value", type).add("type", type);
 		if (element.isExtensionOf()) {
@@ -278,7 +283,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			result.add("parent", element.asExtensionOf().parentView().name$());
 		}
 		if (type.equalsIgnoreCase("Component")) result.add("component", "component");
-		else if (element.i$(AccessibleDisplay.class)) result.add("accessible", "accessible");
+		else if (accessible && element.i$(AccessibleDisplay.class)) result.add("accessible", "accessible");
 		else if (isBaseType(element) && !type.equalsIgnoreCase("Display"))
 			result.add("baseType", "baseType");
 		return result;
@@ -308,16 +313,16 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		return request.isObject() ? packageName.toLowerCase() + ".schemas." + request.asType().type() : request.asType().type();
 	}
 
-	private Template notifierTemplate() {
-		return templateProvider.notifierTemplate(element);
+	private Template notifierTemplate(FrameBuilder builder) {
+		return templateProvider.notifierTemplate(element, builder);
 	}
 
-	private Template requesterTemplate() {
-		return templateProvider.requesterTemplate(element);
+	private Template requesterTemplate(FrameBuilder builder) {
+		return templateProvider.requesterTemplate(element, builder);
 	}
 
-	private Template pushRequesterTemplate() {
-		return templateProvider.pushRequesterTemplate(element);
+	private Template pushRequesterTemplate(FrameBuilder builder) {
+		return templateProvider.pushRequesterTemplate(element, builder);
 	}
 
 	private void addParentImport(FrameBuilder builder) {
@@ -330,7 +335,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		else if (builder.is("accessible")) result.add("accessible", "");
 		else if (typeOf(element).equalsIgnoreCase("display")) result.add("baseDisplay", "");
 		else if (element.i$(Component.class)) result.add("component", "");
-		else if (element.i$(DecoratedDisplay.class)) result.add("abstract", "");
+		else if (ElementHelper.isRoot(element)) result.add("abstract", "");
 		builder.add("parent", result);
 	}
 

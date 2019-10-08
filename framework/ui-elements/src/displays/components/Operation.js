@@ -24,7 +24,11 @@ export default class Operation extends AbstractOperation {
 		},
 		materialIconButton : {
 			cursor: "pointer"
-		}
+		},
+		disabled : {
+			color: theme.palette.grey.primary,
+			cursor: "default"
+		},
 	});
 
 	constructor(props) {
@@ -48,6 +52,7 @@ export default class Operation extends AbstractOperation {
 	};
 
 	renderOperation = () => {
+		if (!this.state.visible) return (<React.Fragment/>);
 		return (
 			<React.Fragment>
 				{this.renderConfirm()}
@@ -66,8 +71,9 @@ export default class Operation extends AbstractOperation {
 
 	renderLink = () => {
 		const {classes} = this.props;
-		return (<a onClick={this.handleClick.bind(this)}>
-				<Typography style={this.style()} variant={this.variant("body1")} className={classes.link}>{this._title()}</Typography>
+		const className = this._disabled() ? classes.disabled : classes.link;
+		return (<a onClick={this.handleClick.bind(this)} disabled={this._disabled()}>
+				<Typography style={this.style()} variant={this.variant("body1")} className={className}>{this._title()}</Typography>
 			</a>
 		);
 	};
@@ -124,6 +130,8 @@ export default class Operation extends AbstractOperation {
 	};
 
 	handleClick(e) {
+		if (this._disabled()) return;
+		e.stopPropagation();
 		this.execute();
 	};
 

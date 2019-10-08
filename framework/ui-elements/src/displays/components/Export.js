@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { withStyles } from '@material-ui/core/styles';
 import AbstractExport from "../../../gen/displays/components/AbstractExport";
 import ExportNotifier from "../../../gen/displays/notifiers/ExportNotifier";
@@ -45,7 +45,11 @@ class Export extends AbstractExport {
 
 	render = () => {
 		const operation = this.renderOperation();
-		return (<React.Fragment>{this.renderRangeDialog()}{operation}</React.Fragment>);
+		return (
+			<Suspense fallback={<div style={{width: "24px", ...this.style()}}/>}>
+				{this.renderRangeDialog()}{operation}
+			</Suspense>
+		);
 	};
 
 	renderRangeDialog = () => {

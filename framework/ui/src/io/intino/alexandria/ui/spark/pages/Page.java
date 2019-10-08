@@ -24,6 +24,7 @@ public abstract class Page {
 	public String device;
 	public String token;
 
+	private static final String AppSeparator = "_##_";
 	private static final String TemplateName = "/www/%s/%s.html";
 
 	public Page(String uiServiceName) {
@@ -45,18 +46,18 @@ public abstract class Page {
 		return template(name, Collections.emptyList());
 	}
 
-	protected String template(String name, List<String> usedAppsUrls) {
+	protected String template(String name, List<Unit> usedUnits) {
 		try {
 			byte[] templateBytes = StreamUtil.readBytes(Page.class.getResourceAsStream(format(TemplateName, uiServiceName, name)));
 			String result = new String(templateBytes);
-			result = addTemplateVariables(result, usedAppsUrls);
+			result = addTemplateVariables(result, usedUnits);
 			return result;
 		} catch (IOException e) {
 			return "";
 		}
 	}
 
-	protected String addTemplateVariables(String template, List<String> usedAppsUrls) {
+	protected String addTemplateVariables(String template, List<Unit> usedUnits) {
 		String sessionId = session.id();
 		String language = session.discoverLanguage();
 		Browser browser = session.browser();
@@ -68,18 +69,18 @@ public abstract class Page {
 		template = template.replace("$baseUrl", browser.baseUrl());
 		template = template.replace("$basePath", browser.basePath());
 		template = template.replace("$url", browser.baseUrl() + "/" + uiServiceName);
-		template = template.replace("$pushUrls", String.join(",", pushUrls(usedAppsUrls, sessionId, language, browser)));
+		template = template.replace("$pushConnections", String.join(",", pushConnections(usedUnits, sessionId, language, browser)));
 		template = template.replace("$googleApiKey", googleApiKey != null ? googleApiKey : "");
 		template = template.replace("$favicon", favicon() != null ? Asset.toResource(baseAssetUrl(), favicon()).toUrl().toString() : "");
 
 		return template;
 	}
 
-	private List<String> pushUrls(List<String> usedAppsUrls, String sessionId, String language, Browser browser) {
-		List<String> pushList = usedAppsUrls.stream().filter(appUrl -> appUrl != null && !appUrl.isEmpty())
-											.map(appUrl-> browser.pushUrl(sessionId, clientId, language, appUrl))
+	private List<String> pushConnections(List<Unit> usedUnits, String sessionId, String language, Browser browser) {
+		List<String> pushList = usedUnits.stream().filter(unit -> unit != null && !unit.url().isEmpty())
+											.map(unit -> unit.name() + AppSeparator + browser.pushUrl(sessionId, clientId, language, unit.url()))
 											.collect(Collectors.toList());
-		pushList.add(browser.pushUrl(sessionId, clientId, language));
+		pushList.add("Default" + AppSeparator + browser.pushUrl(sessionId, clientId, language));
 		return pushList;
 	}
 

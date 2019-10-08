@@ -4,6 +4,7 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.PropertyList;
+import io.intino.alexandria.ui.displays.components.addressable.Addressable;
 import io.intino.alexandria.ui.displays.components.selector.SelectorOption;
 import io.intino.alexandria.ui.displays.events.SelectionEvent;
 import io.intino.alexandria.ui.displays.events.SelectionListener;
@@ -13,8 +14,10 @@ import io.intino.alexandria.ui.displays.notifiers.TextNotifier;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Box> extends AbstractBaseSelector<DN, B> implements io.intino.alexandria.ui.displays.components.selector.Selector {
+public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Box> extends AbstractBaseSelector<DN, B> implements io.intino.alexandria.ui.displays.components.selector.Selector, Addressable {
     private boolean multipleSelection = false;
+    private String path;
+    private String address;
 
     public BaseSelector(B box) {
         super(box);
@@ -29,6 +32,12 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
     }
 
     @Override
+    public void init() {
+        super.init();
+        if (validAddress()) notifier.addressed(address);
+    }
+
+    @Override
     public java.util.List<SelectorOption> options() {
         return findOptions();
     }
@@ -37,17 +46,34 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
 		Display display = new Text(box()).name(option);
         display.properties().put("value", option);
         display.properties().put("color", "black");
-        addComponent((Component) display);
+        addOption((Component) display);
         return this;
     }
 
+	@Override
+	public void add(SelectorOption option) {
+		addOption((Component) option);
+	}
+
     @Override
-    public void add(SelectorOption option) {
-        addComponent((Component) option);
+    public <D extends Display> D add(D child) {
+        return addOption((Component) child);
     }
 
-    public void optionsRendered() {
+    @Override
+    public void addDivider() {
+        Divider divider = new Divider(box());
+        PropertyList properties = divider.properties();
+        properties.addClassName("divider");
+        super.add(divider);
+    }
+
+	public void optionsRendered() {
         children().forEach(Display::update);
+    }
+
+    public String path() {
+        return this.path;
     }
 
     protected BaseSelector<DN, B> _multipleSelection(boolean value) {
@@ -59,6 +85,22 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         selectionListeners.forEach(l -> l.accept(new SelectionEvent(this, selection())));
     }
 
+    protected BaseSelector<DN, B> _path(String path) {
+        this.path = path;
+        this._address(path);
+        return this;
+    }
+
+    protected BaseSelector<DN, B> _address(String address) {
+        this.address = address;
+        return this;
+    }
+
+    protected void address(String value) {
+        this._address(value);
+        notifier.addressed(address);
+    }
+
     String nameOf(int option) {
         if (option == -1) return null;
         SelectorOption child = findOption(option);
@@ -66,8 +108,10 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
     }
 
     SelectorOption findOption(int option) {
+        if (option < 0) return null;
         List<SelectorOption> options = options();
-        return options.size() > 0 ? options.get(option) : null;
+        int size = options.size();
+        return size > 0 && option < size ? options.get(option) : null;
     }
 
     int position(String option) {
@@ -95,11 +139,11 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         return result;
     }
 
-    private void addComponent(Component option) {
+    private <D extends Display> D addOption(Component option) {
         PropertyList properties = option.properties();
         properties.addClassName("option");
         properties.put("name", option.name());
-        super.add(option);
+        return (D) super.add(option);
     }
 
 	private static class Text extends io.intino.alexandria.ui.displays.components.Text<TextNotifier, Box> implements SelectorOption {
@@ -107,4 +151,8 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
 			super(box);
 		}
 	}
+
+    private boolean validAddress() {
+        return address != null && address.chars().filter(c -> c == ':').count() <= 1;
+    }
 }

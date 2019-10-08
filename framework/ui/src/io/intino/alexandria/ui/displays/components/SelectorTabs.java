@@ -1,13 +1,14 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.components.selector.SelectorOption;
 import io.intino.alexandria.ui.displays.notifiers.SelectorTabsNotifier;
 
 import java.util.Collections;
 import java.util.List;
 
 public class SelectorTabs<DN extends SelectorTabsNotifier, B extends Box> extends AbstractSelectorTabs<DN, B> {
-	private int selected = 0;
+	private int selected = -1;
 
     public SelectorTabs(B box) {
         super(box);
@@ -26,9 +27,20 @@ public class SelectorTabs<DN extends SelectorTabsNotifier, B extends Box> extend
 		notifySelection();
 	}
 
+	public void show(String option) {
+		SelectorOption component = findOption(position(option));
+		component.visible(true);
+	}
+
+	public void hide(String option) {
+		SelectorOption component = findOption(position(option));
+		component.visible(false);
+	}
+
 	@Override
 	public List<String> selection() {
-		return Collections.singletonList(nameOf(selected));
+		if (selected == -1) return Collections.emptyList();
+    	return Collections.singletonList(nameOf(selected));
 	}
 
 	@Override

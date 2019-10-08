@@ -29,7 +29,6 @@ class NumberEditable extends AbstractNumberEditable {
 
 	handleChange(e) {
 		const value = e.target.value;
-		if (value === "") return;
 		this.setState({ value: value });
 		Delayer.execute(this, () => this.requester.notifyChange(value), 500);
 	};

@@ -3,6 +3,9 @@ import AbstractFile from "../../../gen/displays/components/AbstractFile";
 import FileEditableNotifier from "../../../gen/displays/notifiers/FileEditableNotifier";
 import FileEditableRequester from "../../../gen/displays/requesters/FileEditableRequester";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import Block from "./Block";
+import ComponentBehavior from "./behaviors/ComponentBehavior";
+import Theme from "app-elements/gen/Theme";
 
 export default class FileEditable extends AbstractFile {
 	state = {
@@ -22,9 +25,14 @@ export default class FileEditable extends AbstractFile {
 	}
 
 	render() {
+		const label = this.props.label !== "" ? this.props.label : undefined;
+		const theme = Theme.get();
 		return (
-			<input type="file" value={this.state.value} disabled={this.state.readonly ? "disabled" : undefined}
-				   onChange={this.handleChange.bind(this)}></input>
+			<Block layout="horizontal center" style={this.style()}>
+				{ ComponentBehavior.labelBlock(this.props, "body1", { color: theme.palette.grey.primary, marginRight: '5px' }) }
+				<input type="file" value={this.state.value} disabled={this.state.readonly ? "disabled" : undefined}
+					   onChange={this.handleChange.bind(this)}></input>
+			</Block>
 		);
 	};
 

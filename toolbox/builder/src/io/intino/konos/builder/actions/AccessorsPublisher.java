@@ -37,7 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -131,9 +131,11 @@ class AccessorsPublisher {
 		}
 	}
 
-	private InvocationResult invoke(File pom, String goal) throws MavenInvocationException, IOException {
+	private InvocationResult invoke(File pom, String goal) throws MavenInvocationException {
+		List<String> goals = new ArrayList<>();
 		final String ijMavenHome = MavenProjectsManager.getInstance(module().getProject()).getGeneralSettings().getMavenHome();
-		List<String> goals = Arrays.asList("clean", "install");
+		goals.add("clean");
+		goals.add("install");
 		if (!goal.isEmpty()) goals.add(goal);
 		InvocationRequest request = new DefaultInvocationRequest().setPomFile(pom).setGoals(goals);
 		final File mavenHome = resolveMavenHomeDirectory(ijMavenHome);

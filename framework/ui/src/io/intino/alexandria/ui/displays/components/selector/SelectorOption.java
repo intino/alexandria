@@ -1,5 +1,6 @@
 package io.intino.alexandria.ui.displays.components.selector;
 
+import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.Block;
 
@@ -10,6 +11,7 @@ public interface SelectorOption {
 	String name();
 	String id();
 	void update();
+	<T extends Component> T visible(boolean value);
 	<T extends Display> T parent(Class<T> type);
 
 	default List<Block> ancestors() {

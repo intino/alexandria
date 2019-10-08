@@ -33,20 +33,20 @@ class Date extends AbstractDate {
 
 	render() {
 		const { classes } = this.props;
-		const label = ComponentBehavior.label(this.props);
 		const pattern = this.props.pattern !== "" ? this.props.pattern : undefined;
-		const labelBlock = (label !== undefined) ? <Typography variant="body1" className={classes.label}>{label}</Typography> : undefined;
-		const dateToFormat = this.state.value != null ? new Date(this.state.value) : null;
 		const hasMode = this.props.mode != null;
 
 		return (
 			<Block layout="horizontal">
-				{ labelBlock }
-				<Typography variant={this.variant("body1")} className={classes.value}>
+				{ ComponentBehavior.labelBlock(this.props) }
+				<Typography variant={this.variant("body1")} className={classes.value} style={this.style()}>
+					{this.state.value &&
 					<Moment format={!hasMode ? pattern : undefined}
 							fromNow={this.props.mode === "fromnow"}
 							toNow={this.props.mode === "tonow"}
-							ago date={dateToFormat}/>
+							ago date={this.state.value}/>
+					}
+					{!this.state.value && <React.Fragment>-</React.Fragment>}
 				</Typography>
 			</Block>
 		);

@@ -30,6 +30,10 @@ Component openPage as Decorated ExtensionOf(operation)
 	Notification open as Text
 	Request execute
 
+Component openSite as Decorated ExtensionOf(operation)
+	Notification open as Text
+	Request execute
+
 Component openBlock as Decorated ExtensionOf(operation)
 	Request execute
 

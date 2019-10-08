@@ -76,7 +76,8 @@ public class Settings {
 	}
 
 	public File root(Target target) {
-		return createIfNotExists(target == Target.Owner ? new File(module().getModuleFilePath()).getParentFile() : new File(webModule().getModuleFilePath()).getParentFile());
+		String rootDir = target == Target.Owner ? module().getModuleFilePath() : webModule().getModuleFilePath();
+		return createIfNotExists(new File(rootDir).getParentFile());
 	}
 
 	public File res(Target target) {

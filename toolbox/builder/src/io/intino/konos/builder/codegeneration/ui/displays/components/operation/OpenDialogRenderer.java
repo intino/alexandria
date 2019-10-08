@@ -19,6 +19,7 @@ public class OpenDialogRenderer extends OperationRenderer<OpenDialog> {
 	}
 
 	protected void addBinding(FrameBuilder builder) {
+		if (element.dialog() == null) return;
 		FrameBuilder result = new FrameBuilder("binding", "opendialog").add("name", nameOf(element));
 		result.add("dialog", nameOf(element.dialog()));
 		builder.add("binding", result);

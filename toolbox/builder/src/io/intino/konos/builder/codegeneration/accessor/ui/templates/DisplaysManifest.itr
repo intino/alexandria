@@ -3,24 +3,48 @@ def type(manifest)
     export { $display+export...[,] }
 end
 
+def type(item & accessible) trigger(import)
+	import $name+firstUppercase~Proxy from "./displays/items/$name+firstUppercase~Proxy"
+end
+
 def type(item) trigger(import)
 	import $name+firstUppercase from "../$directory/displays/items/$name+firstUppercase"
+end
+
+def type(row & accessible) trigger(import)
+	import $name+firstUppercase~Proxy from "./displays/rows/$name+firstUppercase~Proxy"
 end
 
 def type(row) trigger(import)
 	import $name+firstUppercase from "../$directory/displays/rows/$name+firstUppercase"
 end
 
+def type(template & accessible) trigger(import)
+	import $name+firstUppercase~Proxy from "./displays/templates/$name+firstUppercase~Proxy"
+end
+
 def type(template) trigger(import)
 	import $name+firstUppercase from "../$directory/displays/templates/$name+firstUppercase"
+end
+
+def type(block & accessible) trigger(import)
+	import $name+firstUppercase~Proxy from "./displays/blocks/$name+firstUppercase~Proxy"
 end
 
 def type(block) trigger(import)
 	import $name+firstUppercase from "../$directory/displays/blocks/$name+firstUppercase"
 end
 
+def type(component & accessible) trigger(import)
+	import $name+firstUppercase~Proxy from "./displays/components/$name+firstUppercase~Proxy"
+end
+
 def type(component) trigger(import)
 	import $name+firstUppercase from "../$directory/displays/components/$name+firstUppercase"
+end
+
+def type(display & accessible) trigger(import)
+	import $name+firstUppercase~Proxy from "./displays/$name+firstUppercase~Proxy"
 end
 
 def type(display) trigger(import)
@@ -28,5 +52,9 @@ def type(display) trigger(import)
 end
 
 def type(display) trigger(export)
-	$name+firstUppercase
+	$name+firstUppercase~$accessible
+end
+
+def type(accessible)
+    Proxy
 end

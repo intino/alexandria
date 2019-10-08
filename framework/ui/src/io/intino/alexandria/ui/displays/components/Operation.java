@@ -116,7 +116,7 @@ public class Operation<DN extends OperationNotifier, B extends Box> extends Comp
     }
 
     private boolean isResourceIcon() {
-        return mode == Mode.IconButton && icon != null;
+        return mode == Mode.IconButton && icon != null && Operation.class.getResource(this.icon) != null;
     }
 
 }

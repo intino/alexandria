@@ -36,6 +36,8 @@ public class Setup extends io.intino.alexandria.drivers.Setup {
 
       exec("sed -i \"/disable_protocols/d\" \"/etc/shiny-server/shiny-server.conf\"");
       exec("echo \"disable_protocols websocket xdr-streaming xhr-streaming iframe-eventsource iframe-htmlfile xdr-polling xhr-polling iframe-xhr-polling;\" >> \"/etc/shiny-server/shiny-server.conf\"");
+      exec("echo \"preserve_logs true;\" >> \"/etc/shiny-server/shiny-server.conf\"");
+
       exec("/bin/systemctl restart shiny-server");
 
       exec("apt -y install libcurl4-openssl-dev libssl-dev libxml2-dev libudunits2-dev libgdal-dev");

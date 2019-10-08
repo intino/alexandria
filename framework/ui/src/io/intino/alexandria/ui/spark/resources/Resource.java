@@ -92,6 +92,7 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 	}
 
 	protected synchronized void authenticate(UISession session, Token accessToken) throws CouldNotObtainInfo {
+		if (!isFederated()) return;
 		UserInfo info = authService().me(accessToken);
 		session.user(userOf(info));
 		session.token(accessToken);

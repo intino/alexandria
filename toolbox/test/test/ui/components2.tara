@@ -1,12 +1,26 @@
 dsl Konos
 
-Service(title = "", favicon = "") UiElements as UI(port = "9000")
-	Resource(path = "/") home as Page(homeTemplate)
-	Resource(path = "/demo") demo as Page(homeTemplate)
+Service RestService as REST(port = "9000", host = "")
+	Resource(path = "") ddd
+		Get
+			Parameter(in=query) a as Text
 
-Template homeTemplate as Decorated
-Display dialog1 as Accessible(parameters = "user")
-Display dialog2 as Decorated Accessible(parameters = "user")
+Service(title = "", favicon = "") UiElements as UI(port = "9000")
+	Use(className = "org.example.unit1.box.ui.Unit1Elements", url = "http://unit1") unit1
+	Resource(path = "/") home as Page(homeTemplate) Main
+	Resource(path = "/cobranzas") cobranzas as Page(homeTemplate)
+	Resource(path = "/cobranza/:name") cobranza as Page(homeTemplate)
+	Resource(path = "/cuentas") cuentas as Page(homeTemplate)
+	Resource(path = "/cuenta/:id") cuenta as Page(homeTemplate)
+	Resource(path = "/cuenta/:id/:view") cuentaView as Page(homeTemplate)
+	Resource(path = "/cuenta/a/b/c/:id/:view") cuentaView as Page(homeTemplate)
+	Resource(path = "/ingresos") ingresos as Page(homeTemplate)
+	Resource(path = "/ingreso/:name") ingreso as Page(homeTemplate)
+
+Template homeTemplate
+	Task(title = "aaa") as Switches(state=On)
+
+Template root as Accessible(parameters = "a" "b")
 
 Theme theme1
 	type = Normal
