@@ -2,6 +2,7 @@ package io.intino.alexandria.slack;
 
 import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
+import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import io.intino.alexandria.logger.Logger;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -10,9 +11,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.*;
+import java.net.Proxy;
 import java.util.*;
 
-import static com.ullink.slack.simpleslackapi.impl.SlackSessionFactory.createWebSocketSlackSession;
+import static com.ullink.slack.simpleslackapi.impl.SlackSessionFactory.getSlackSessionBuilder;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 
@@ -50,7 +52,12 @@ public abstract class Bot {
 	}
 
 	public void execute() throws IOException {
-		session = createWebSocketSlackSession(token);
+		SlackSessionFactory.SlackSessionFactoryBuilder builder = getSlackSessionBuilder(token);
+		if(System.getProperty("http.proxyHost") != null)
+			builder.withProxy(Proxy.Type.HTTP, System.getProperty("http.proxyHost"), Integer.parseInt(System.getProperty("http.proxyPort")));
+		if(System.getProperty("https.proxyHost") != null)
+			builder.withProxy(Proxy.Type.HTTP, System.getProperty("https.proxyHost"), Integer.parseInt(System.getProperty("https.proxyPort")));
+		session = builder.build();
 		session.addMessagePostedListener(this::talk);
 		session.connect();
 		initContexts();
