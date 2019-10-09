@@ -9,4 +9,9 @@ public class Grouping<DN extends GroupingNotifier, B extends Box> extends Abstra
         super(box);
     }
 
+    public Grouping<DN, B> pageSize(int pageSize) {
+        notifier.refreshPageSize(pageSize);
+        return this;
+    }
+
 }

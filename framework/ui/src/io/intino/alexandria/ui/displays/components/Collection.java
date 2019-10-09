@@ -29,6 +29,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     private AddItemListener addItemListener;
     private List<RefreshListener> refreshListeners = new ArrayList<>();
     private List<Listener> readyListeners = new ArrayList<>();
+    private boolean ready = false;
 
     public Collection(B box) {
         super(box);
@@ -66,6 +67,10 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     public void reload() {
         behavior.reload();
         notifier.refreshItemCount(behavior.itemCount());
+    }
+
+    public boolean ready() {
+        return ready;
     }
 
     public <D extends Datasource> D source() {
@@ -138,6 +143,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
 
     void notifyReady() {
         readyListeners.forEach(l -> l.accept(new Event(this)));
+        ready = true;
     }
 
     void setup() {

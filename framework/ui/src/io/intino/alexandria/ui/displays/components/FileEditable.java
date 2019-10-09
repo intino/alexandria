@@ -4,6 +4,8 @@ import io.intino.alexandria.MimeTypes;
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.FileInfo;
+import io.intino.alexandria.ui.Asset;
+import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
 import io.intino.alexandria.ui.displays.notifiers.FileEditableNotifier;
 
@@ -38,13 +40,17 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 		return this;
 	}
 
+	public FileEditable<DN, B> onChange(ChangeListener listener) {
+		this.changeListener = listener;
+		return this;
+	}
+
 	public void refresh() {
 		notifier.refresh(new FileInfo().value(serializedValue()).mimeType(mimeType));
 	}
 
 	public void notifyChange(Resource value) {
-//		value(value);
-//		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));
+		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));
 	}
 
 	protected FileEditable _value(URL value) {
@@ -59,8 +65,7 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	}
 
 	private String serializedValue() {
-//		return value != null ? Asset.toResource(baseAssetUrl(), value).toUrl().toString() : null;
-		return null;
+		return value != null ? Asset.toResource(baseAssetUrl(), value).toUrl().toString() : null;
 	}
 
 }

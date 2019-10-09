@@ -27,7 +27,7 @@ public class OperationRenderer<O extends Operation> extends ComponentRenderer<O>
 		properties.add("operationMode", modeFrame());
 		properties.add("size", element.size().name());
 		if (element.isHighlighted()) properties.add("highlighted", element.asHighlighted().style().name());
-		if (element.i$(OperationComponents.SelectionOperation.class)) properties.add("disabled", "true");
+		if (element.isReadonly() || element.i$(OperationComponents.SelectionOperation.class)) properties.add("readonly", "true");
 		if (element.isConfirmable()) properties.add("confirm", element.asConfirmable().confirmText());
 		if (element.isMaterialIconButton()) properties.add("icon", element.asMaterialIconButton().icon());
 		return properties;

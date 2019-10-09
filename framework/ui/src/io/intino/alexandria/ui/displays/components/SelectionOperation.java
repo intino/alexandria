@@ -30,7 +30,7 @@ public class SelectionOperation<DN extends SelectionOperationNotifier, B extends
     @Override
     public void refresh() {
         super.refresh();
-        notifier.refreshDisabled(selection.size() <= 0);
+        notifier.refreshReadonly(selection.size() <= 0);
     }
 
 }
