@@ -20,6 +20,7 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
     private Instant min;
     private Instant max;
     private java.util.List<Collection> collections = new ArrayList<>();
+    private Ordinal.Formatter customFormatter = null;
 
     public TemporalSlider(B box) {
         super(box);
@@ -44,6 +45,11 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
         return this;
     }
 
+    public TemporalSlider formatter(Ordinal.Formatter formatter) {
+        this.customFormatter = formatter;
+        return this;
+    }
+
     public TemporalSlider bindTo(Collection... collections) {
         this.collections = Arrays.asList(collections);
         return this;
@@ -64,7 +70,7 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
     public String formattedValue() {
         Ordinal ordinal = ordinal();
         long value = millisOf(value());
-        return ordinal != null ? ordinal.formatter(language()).format(value) : String.valueOf(value);
+        return ordinal != null ? (customFormatter != null ? customFormatter.format(value) : ordinal.formatter(language()).format(value)) : String.valueOf(value);
     }
 
     @Override

@@ -5,7 +5,7 @@ public class UserMessage implements java.io.Serializable {
 	private Type type;
 
 	public enum Type {
-		Success, Error, Warning, Info
+		Success, Error, Warning, Info, Loading
 	}
 
 	public String message() {

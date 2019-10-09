@@ -34,6 +34,8 @@ Component baseGrouping as Decorated
 	Request select as Text List
 
 Component grouping as Decorated ExtensionOf(baseGrouping)
+	Notification refreshPageSize as Integer
+
 Component groupingComboBox as Decorated ExtensionOf(baseGrouping)
 
 Component sorting as Decorated

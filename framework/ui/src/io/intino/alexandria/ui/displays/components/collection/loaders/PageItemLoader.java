@@ -5,6 +5,7 @@ import io.intino.alexandria.ui.model.datasource.PageDatasource;
 import io.intino.alexandria.ui.model.datasource.temporal.TemporalPageDatasource;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PageItemLoader<DS extends Datasource<Item>, Item> extends ItemLoader<DS, Item> {
@@ -51,6 +52,7 @@ public class PageItemLoader<DS extends Datasource<Item>, Item> extends ItemLoade
 	}
 
 	private List<Item> items(int start, int pageSize) {
+		if (timetag == null) return Collections.emptyList();
 		ArrayList<String> sortings = new ArrayList<>(this.sortings);
 		if (source instanceof TemporalPageDatasource) return ((TemporalPageDatasource<Item>) source).items(timetag, start, pageSize, condition, filters, sortings);
 		return ((PageDatasource)source).items(start, pageSize, condition, filters, sortings);
