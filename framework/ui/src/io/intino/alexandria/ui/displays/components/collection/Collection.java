@@ -12,4 +12,5 @@ public interface Collection<ItemComponent, Item> {
 	ItemComponent create(Item item);
 	void onAddItem(AddItemListener listener);
 	void clear();
+	void loading(boolean value);
 }

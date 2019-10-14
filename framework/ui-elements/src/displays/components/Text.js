@@ -68,7 +68,7 @@ class Text extends AbstractText {
 		if (!this.state.highlighted) return result;
 		result.color = this.state.highlighted.text;
 		result.background = this.state.highlighted.background;
-		result.padding = "0 10px";
+		if (result.padding == null) result.padding = "0 10px";
 		result.borderRadius = "3px";
 		return result;
 	};

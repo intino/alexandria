@@ -22,20 +22,22 @@ public class PageCollectionBehavior<DS extends PageDatasource<Item>, Item> exten
 
 	public CollectionBehavior setup(DS source, int pageSize) {
 		if (source == null) return this;
-		itemLoader = new PageItemLoader<>(source, pageSize);
-		page(0);
+		computeUpdate(e -> {
+			itemLoader = new PageItemLoader<>(source, pageSize);
+			page(0);
+		}, false);
 		return this;
     }
 
 	public void page(int pos) {
-		page = pos;
-		reset();
+		computeUpdate(e -> page = pos);
 	}
 
 	public void pageSize(int size) {
-		PageItemLoader<DS, Item> itemLoader = itemLoader();
-		itemLoader.pageSize(size);
-		reset();
+		computeUpdate(e -> {
+			PageItemLoader<DS, Item> itemLoader = itemLoader();
+			itemLoader.pageSize(size);
+		});
 	}
 
 	public synchronized void moreItems(CollectionMoreItems info) {

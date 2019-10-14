@@ -88,12 +88,10 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 
 	public void previous() {
 		value(value-1);
-		notifyChange();
 	}
 
 	public void next() {
 		value(value+1);
-		notifyChange();
 	}
 
 	public void play() {
@@ -235,7 +233,6 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 			else return;
 		}
 		value(value+1);
-		notifyChange();
 	}
 
 	private ToolbarState toolbarState() {
