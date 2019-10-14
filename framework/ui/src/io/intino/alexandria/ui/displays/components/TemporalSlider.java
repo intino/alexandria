@@ -62,8 +62,8 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
 
     @Override
     void notifyChange() {
-        notifyCollections();
         super.notifyChange();
+        notifyCollections();
     }
 
     @Override

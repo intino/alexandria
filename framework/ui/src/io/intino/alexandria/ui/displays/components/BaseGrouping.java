@@ -80,6 +80,7 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	}
 
 	private void notifySelection() {
+		notifier.refreshSelection(selection);
 		if (selectionListener == null) return;
 		selectionListener.accept(new SelectionEvent(this, selection));
 	}

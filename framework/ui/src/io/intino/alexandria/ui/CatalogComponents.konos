@@ -31,6 +31,7 @@ Component row as Decorated
 
 Component baseGrouping as Decorated
 	Notification refreshGroups as Object(Group) List
+	Notification refreshSelection as Text List
 	Request select as Text List
 
 Component grouping as Decorated ExtensionOf(baseGrouping)

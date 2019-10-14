@@ -103,6 +103,9 @@ export default class BaseGrouping extends AbstractBaseGrouping {
 
     updateSelection = selection => {
         this.requester.select(selection);
+    };
+
+    refreshSelection = (selection) => {
         this.setState({ selection: selection });
     };
 

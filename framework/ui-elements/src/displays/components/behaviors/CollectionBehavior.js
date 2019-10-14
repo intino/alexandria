@@ -7,6 +7,8 @@ import InfiniteLoader from 'react-window-infinite-loader';
 import 'alexandria-ui-elements/res/styles/layout.css';
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { enrichDisplayProperties } from 'alexandria-ui-elements/src/displays/Display';
+import {RiseLoader} from "react-spinners";
+import Theme from "app-elements/gen/Theme";
 
 const CollectionBehaviorCheckbox = (props) => {
     let [checked, setChecked] = React.useState(props.checked ? true : false);
@@ -28,6 +30,7 @@ const CollectionBehavior = (collection) => {
         const items = self.items();
         const navigable = collection.props.navigable;
 
+        if (collection.state.loading) return self.renderLoading(height, width);
         if (items.length <= 0) return self.renderEmpty(height, width);
 
         self.collection.itemsRenderedCalled = false;
@@ -89,6 +92,11 @@ const CollectionBehavior = (collection) => {
                                  labelRowsPerPage={self.rowsPerPageLabel()}/>
             </div>
         );
+    };
+
+    self.renderLoading = () => {
+        const theme = Theme.get();
+        return (<div style={{position:'absolute',top:'50%',left:'43%'}}><RiseLoader color={theme.palette.secondary.main} loading={true}/></div>);
     };
 
     self.renderEmpty = (height, width) => {
