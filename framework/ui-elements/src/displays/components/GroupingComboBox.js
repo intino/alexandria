@@ -45,7 +45,8 @@ class GroupingComboBox extends AbstractGroupingComboBox {
     };
 
     _groupOf = (option) => {
-        return this.state.groups.filter(g => g.label === option)[0];
+        let group = this.state.groups.filter(g => g.label === option)[0];
+        return group != null ? { value: group.label, label: group.label, group: group } : null;
     };
 
     renderGroup = (options) => {
