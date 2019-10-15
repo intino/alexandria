@@ -156,7 +156,7 @@ public class CreateKonosBoxAction extends KonosAction {
 		if (graph.messageHub() != null && !graph.messageHub().isJmsBus()) remove(dependencies, "message-hub-jms");
 		if (graph.uIServiceList().isEmpty()) remove(dependencies, "ui");
 		if (graph.rESTServiceList().isEmpty()) remove(dependencies, "rest");
-		if (graph.workflow() != null) remove(dependencies, "bpm");
+		if (graph.workflow() == null) remove(dependencies, "bpm");
 		if (graph.slackBotServiceList().isEmpty()) remove(dependencies, "slack");
 		if (graph.absoluteChartList().isEmpty() && graph.relativeChartList().isEmpty())
 			remove(dependencies, "driver-r");
