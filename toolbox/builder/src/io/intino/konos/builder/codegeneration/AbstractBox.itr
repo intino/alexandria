@@ -81,7 +81,7 @@ def type(box)
 
 		[$datalake+getter]
 
-		[$datamart+getter]
+		[$datamart+getter...[$NL]]
 
 		[$sentinel+getter...[$NL$NL]]
 
