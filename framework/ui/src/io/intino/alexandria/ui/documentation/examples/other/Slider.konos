@@ -45,3 +45,28 @@ Template(layout=Vertical, spacing=DP8) sliderExamplesMold as Decorated
 						&nbsp;&nbsp;&nbsp;&nbsp;Range(min\=1,max\=100)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;scales\=Day Month Year
 						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="No facets with ToolbarOnly style")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Slider(format=containerAirLarge, style=ToolbarOnly) slider4
+					Range(min=1,max=100)
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Slider(style\=ToolbarOnly)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Range(min\=1,max\=100)
+						=========
+
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="No facets with SliderOnly style")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Slider(format=containerAirLarge, style=SliderOnly) slider5
+					Range(min=1,max=100)
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Slider(style\=SliderOnly)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Range(min\=1,max\=100)
+						=========

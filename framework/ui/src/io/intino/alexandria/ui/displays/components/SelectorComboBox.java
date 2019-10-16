@@ -36,12 +36,12 @@ public class SelectorComboBox<DN extends SelectorComboBoxNotifier, B extends Box
 	}
 
 	public void select(String... options) {
-		this.selection = Arrays.asList(options);
-		notifier.refreshSelection(selection);
+		updateSelection(options);
 	}
 
 	public void updateSelection(String[] selection) {
 		this.selection = Arrays.asList(selection);
+		notifier.refreshSelection(this.selection);
 		notifySelection();
 	}
 

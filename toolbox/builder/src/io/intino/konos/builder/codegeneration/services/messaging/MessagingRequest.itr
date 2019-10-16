@@ -30,7 +30,7 @@ def type(request)
 			}
 		}
 
-		private $package.actions.$name+firstUpperCase~Action actionFor([$parameter+signature]) {
+		private $package.actions.$name+firstUpperCase~Action actionFor([$parameter+signature...[, ]]) {
 			final $package.actions.$name+firstUpperCase~Action action = new $package.actions.$name+firstUpperCase~Action();
 			action.box = this.box;
 			[$parameter+assign]

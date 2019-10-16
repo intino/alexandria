@@ -23,6 +23,12 @@ public abstract class Component<DN extends ComponentNotifier, B extends Box> ext
 		return color;
 	}
 
+	public Component<DN, B> color(String color) {
+		this._color(color);
+		notifier.refreshColor(color);
+		return this;
+	}
+
 	public Component<DN, B> onShow(ShowListener listener) {
 		this.showListeners.add(listener);
 		return this;

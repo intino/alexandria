@@ -29,6 +29,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     private AddItemListener addItemListener;
     private List<RefreshListener> refreshListeners = new ArrayList<>();
     private List<Listener> readyListeners = new ArrayList<>();
+    private boolean ready = false;
 
     public Collection(B box) {
         super(box);
@@ -64,8 +65,13 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     }
 
     public void reload() {
+        if (behavior == null) return;
         behavior.reload();
         notifier.refreshItemCount(behavior.itemCount());
+    }
+
+    public boolean ready() {
+        return ready;
     }
 
     public <D extends Datasource> D source() {
@@ -73,16 +79,19 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     }
 
     public void filter(String grouping, List<String> groups) {
+        if (behavior == null) return;
         behavior.filter(grouping, groups);
         notifier.refreshItemCount(behavior.itemCount());
     }
 
     public void filter(String condition) {
+        if (behavior == null) return;
         behavior.condition(condition);
         notifier.refreshItemCount(behavior.itemCount());
     }
 
     public void filter(Timetag timetag) {
+        if (behavior == null) return;
         behavior.timetag(timetag);
         notifier.refreshItemCount(behavior.itemCount());
     }
@@ -120,6 +129,10 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         clear("rows");
     }
 
+	public void loading(boolean value) {
+		notifier.refreshLoading(value);
+	}
+
     protected void addSelectionListener(SelectionListener listener) {
         this.selectionListeners.add(listener);
     }
@@ -138,6 +151,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
 
     void notifyReady() {
         readyListeners.forEach(l -> l.accept(new Event(this)));
+        ready = true;
     }
 
     void setup() {

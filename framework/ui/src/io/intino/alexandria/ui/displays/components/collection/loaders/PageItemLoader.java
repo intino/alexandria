@@ -52,7 +52,7 @@ public class PageItemLoader<DS extends Datasource<Item>, Item> extends ItemLoade
 
 	private List<Item> items(int start, int pageSize) {
 		ArrayList<String> sortings = new ArrayList<>(this.sortings);
-		if (source instanceof TemporalPageDatasource) return ((TemporalPageDatasource<Item>) source).items(timetag, start, pageSize, condition, filters, sortings);
+		if (source instanceof TemporalPageDatasource && timetag != null) return ((TemporalPageDatasource<Item>) source).items(timetag, start, pageSize, condition, filters, sortings);
 		return ((PageDatasource)source).items(start, pageSize, condition, filters, sortings);
 	}
 

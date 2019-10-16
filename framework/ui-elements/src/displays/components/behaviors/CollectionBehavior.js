@@ -6,6 +6,18 @@ import {FixedSizeList as ReactWindowList} from "react-window";
 import InfiniteLoader from 'react-window-infinite-loader';
 import 'alexandria-ui-elements/res/styles/layout.css';
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
+import { enrichDisplayProperties } from 'alexandria-ui-elements/src/displays/Display';
+import {RiseLoader} from "react-spinners";
+import Theme from "app-elements/gen/Theme";
+
+const CollectionBehaviorCheckbox = (props) => {
+    let [checked, setChecked] = React.useState(props.checked ? true : false);
+    const handleCheck = (e) => {
+        setChecked(e.target.checked);
+        if (props.onCheck) props.onCheck(e);
+    }
+    return (<Checkbox checked={checked} className={props.classes.selector} onChange={handleCheck} />);
+}
 
 const CollectionBehavior = (collection) => {
     const PaginationHeight = 56;
@@ -18,6 +30,7 @@ const CollectionBehavior = (collection) => {
         const items = self.items();
         const navigable = collection.props.navigable;
 
+        if (collection.state.loading) return self.renderLoading(height, width);
         if (items.length <= 0) return self.renderEmpty(height, width);
 
         self.collection.itemsRenderedCalled = false;
@@ -81,6 +94,11 @@ const CollectionBehavior = (collection) => {
         );
     };
 
+    self.renderLoading = () => {
+        const theme = Theme.get();
+        return (<div style={{position:'absolute',top:'50%',left:'43%'}}><RiseLoader color={theme.palette.secondary.main} loading={true}/></div>);
+    };
+
     self.renderEmpty = (height, width) => {
         const noItemsMessage = self.collection.props.noItemsMessage != null ? self.collection.props.noItemsMessage : "No elements";
         return (<Typography style={{height, width, padding:"10px 0"}} className="layout horizontal">{self.collection.translate(noItemsMessage)}</Typography>);
@@ -138,8 +156,9 @@ const CollectionBehavior = (collection) => {
         var selecting = self.collection.state.selection.length > 0;
         const id = item != null ? item.pl.id : undefined;
         return (
-            <div onClick={self.handleSelect.bind(self, id)} style={style} key={index} className={classNames(classes.itemView, "layout horizontal center", selectable ? classes.selectable : undefined, selecting ? classes.selecting : undefined)}>
-                {multiple ? <Checkbox checked={self.isItemSelected(item)} className={classes.selector}/> : undefined}
+            <div style={style} key={index} className={classNames(classes.itemView, "layout horizontal center", selectable ? classes.selectable : undefined, selecting ? classes.selecting : undefined)}>
+                {/*{multiple ? <Checkbox checked={self.isItemSelected(item)} className={classes.selector} onChange={self.handleSelect.bind(self, id)} /> : undefined}*/}
+                {multiple ? <CollectionBehaviorCheckbox checked={self.isItemSelected(item)} classes={classes} onCheck={self.handleSelect.bind(self, id)} /> : undefined}
                 {view}
             </div>
         );
@@ -170,6 +189,9 @@ const CollectionBehavior = (collection) => {
     };
 
     self.itemView = (item, classes, index) => {
+        enrichDisplayProperties(item);
+        item.pl.context = () => { return item.pl.o };
+        item.pl.owner = () => { return item.i };
         return React.createElement(DisplayFactory.get(item.tp), item.pl);
     };
 
@@ -203,10 +225,12 @@ const CollectionBehavior = (collection) => {
 
         if (!selectable) return;
 
+        const prevSelectionCount = self.collection.selectionCount != null ? self.collection.selectionCount : 0;
         const selection = self.updateSelection(item);
         if (multiple) {
-            self.collection.setState({selection: selection});
+            if (prevSelectionCount == 0 || (prevSelectionCount > 0 && selection.length <= 0)) self.collection.setState({selection: selection});
             self.refreshItemsRendered(self.items(), null, self.collection.itemsWindow);
+            self.collection.selectionCount = selection.length;
         }
 
         if (self.collection.selectTimeout != null) window.clearTimeout(self.collection.selectTimeout);

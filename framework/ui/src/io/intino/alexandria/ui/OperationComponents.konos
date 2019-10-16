@@ -6,7 +6,7 @@ Component toolbar as Decorated
 
 Component operation as Decorated
 	Notification refresh as Object(OperationInfo)
-	Notification refreshDisabled as Bool
+	Notification refreshReadonly as Bool
 	Notification refreshIcon as Text
 
 Component task as Decorated ExtensionOf(operation)

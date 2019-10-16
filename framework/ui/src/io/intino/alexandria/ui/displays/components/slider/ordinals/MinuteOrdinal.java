@@ -22,7 +22,7 @@ public class MinuteOrdinal implements Ordinal {
 	}
 
 	@Override
-	public Formatter formatter() {
-		return value -> TimeScale.Minute.toString(Instant.ofEpochMilli(value));
+	public Formatter formatter(String language) {
+		return value -> TimeScale.Minute.toString(Instant.ofEpochMilli(value), language);
 	}
 }

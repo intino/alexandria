@@ -13,39 +13,48 @@ const styles = theme => ({...BaseGroupingStyles(theme)});
 
 class Grouping extends AbstractGrouping {
 
-	constructor(props) {
-		super(props);
-		this.notifier = new GroupingNotifier(this);
-		this.requester = new GroupingRequester(this);
-	};
+    constructor(props) {
+        super(props);
+        this.notifier = new GroupingNotifier(this);
+        this.requester = new GroupingRequester(this);
+    };
 
-	render() {
-		const { classes } = this.props;
-		return (
-			<div className={classes.container} style={this.style()}>
-				{this.props.label != null ? <Typography className={classes.label} variant="subtitle1">{this.props.label}</Typography> : undefined}
-				{this.renderToolbar()}
-				<List>{this.state.visibleGroups.map((group, i) => this.renderGroup(group, i))}</List>
-				{this.renderEmpty()}
-				{this.renderMoreGroups()}
-			</div>
-		);
-	};
+    render() {
+        const { classes } = this.props;
+        return (
+            <div className={classes.container} style={this.style()}>
+                {this.props.label != null ? <Typography className={classes.label} variant="subtitle1">{this.props.label}</Typography> : undefined}
+                {this.renderToolbar()}
+                <List>{this.state.visibleGroups.map((group, i) => this.renderGroup(group, i))}</List>
+                {this.renderEmpty()}
+                {this.renderMoreGroups()}
+            </div>
+        );
+    };
 
-	renderGroup = (group, index) => {
-		const { classes } = this.props;
-		return (
-			<ListItem key={index} className={classes.group} role={undefined} dense button onClick={this.handleToggle(group)}>
-				<Checkbox className={classes.checkbox} checked={this.state.selection.indexOf(group.label) !== -1} tabIndex={-1} disableRipple/>
-				<ListItemText>{group.label}</ListItemText>
-				{group.count > 0 && <ListItemSecondaryAction className={classes.count}>{NumberUtil.format(group.count, "0,0")}</ListItemSecondaryAction>}
-			</ListItem>
-		);
-	};
+    renderGroup = (group, index) => {
+        const { classes } = this.props;
+        return (
+            <ListItem key={index} className={classes.group} role={undefined} dense button onClick={this.handleToggle(group)}>
+                <Checkbox className={classes.checkbox} checked={this.state.selection.indexOf(group.label) !== -1} tabIndex={-1} disableRipple/>
+                <ListItemText>
+                    <div className="layout horizontal center">
+                        <div className="layout flex">{group.label}</div>
+                        {group.color != null && <Typography className={classes.colorBox} variant="body2" style={{backgroundColor:group.color,marginLeft:'10px'}}></Typography>}
+                    </div>
+                </ListItemText>
+                {group.count > 0 && <ListItemSecondaryAction className={classes.count}>{NumberUtil.format(group.count, "0,0")}</ListItemSecondaryAction>}
+            </ListItem>
+        );
+    };
 
-	handleToggle = group => () => {
-		this.toggle(group);
-	};
+    handleToggle = group => () => {
+        this.toggle(group);
+    };
+
+    refreshPageSize = (size) => {
+        this.setState({pageSize: size});
+    };
 
 }
 

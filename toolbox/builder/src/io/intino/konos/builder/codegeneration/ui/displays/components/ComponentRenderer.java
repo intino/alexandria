@@ -9,6 +9,7 @@ import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.CatalogComponents.Collection.Mold;
+import io.intino.konos.model.graph.OtherComponents.Dialog;
 import io.intino.konos.model.graph.OtherComponents.Stamp;
 import io.intino.konos.model.graph.conditional.ConditionalBlock;
 import io.intino.konos.model.graph.multiple.MultipleBlock;
@@ -303,6 +304,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 		if (element.i$(Block.class)) componentList = element.a$(Block.class).componentList();
 		else if (element.i$(Template.class)) componentList = element.a$(Template.class).componentList();
+		else if (element.i$(Dialog.class)) componentList = element.a$(Dialog.class).componentList();
 		else if (element.i$(Mold.Item.class)) componentList = element.a$(Mold.Item.class).componentList();
 
 		if (componentList == null) return result;

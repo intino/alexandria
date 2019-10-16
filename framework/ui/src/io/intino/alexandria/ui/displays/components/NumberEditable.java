@@ -6,10 +6,10 @@ import io.intino.alexandria.ui.displays.events.ChangeListener;
 import io.intino.alexandria.ui.displays.notifiers.NumberEditableNotifier;
 
 public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> extends AbstractNumberEditable<DN, B> {
-	private double value;
-	private double min;
-	private double max;
-	private double step;
+	private Double value;
+	private Double min;
+	private Double max;
+	private Double step;
 	private boolean readonly;
 	private ChangeListener changeListener = null;
 
@@ -17,19 +17,19 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
         super(box);
     }
 
-	public double value() {
+	public Double value() {
 		return value;
 	}
 
-	public double min() {
+	public Double min() {
 		return min;
 	}
 
-	public double max() {
+	public Double max() {
 		return max;
 	}
 
-	public double step() {
+	public Double step() {
 		return step;
 	}
 
@@ -37,9 +37,14 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
 		return readonly;
 	}
 
-	public void value(double value) {
+	public NumberEditable value(double value) {
+    	return value(Double.valueOf(value));
+	}
+
+	public NumberEditable value(Double value) {
 		_value(value);
 		notifier.refresh(value);
+		return this;
 	}
 
 	public NumberEditable<DN, B> readonly(boolean readonly) {
@@ -59,21 +64,37 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
 	}
 
 	protected NumberEditable _value(double value) {
+		return _value(Double.valueOf(value));
+	}
+
+	protected NumberEditable _value(Double value) {
 		this.value = value;
 		return this;
 	}
 
-	protected NumberEditable _min(double min) {
+	protected NumberEditable _min(double value) {
+		return _min(Double.valueOf(value));
+	}
+
+	protected NumberEditable _min(Double min) {
 		this.min = min;
 		return this;
 	}
 
-	protected NumberEditable _max(double max) {
+	protected NumberEditable _max(double value) {
+		return _max(Double.valueOf(value));
+	}
+
+	protected NumberEditable _max(Double max) {
 		this.max = max;
 		return this;
 	}
 
-	protected NumberEditable _step(double step) {
+	protected NumberEditable _step(double value) {
+		return _step(Double.valueOf(value));
+	}
+
+	protected NumberEditable _step(Double step) {
 		this.step = step;
 		return this;
 	}

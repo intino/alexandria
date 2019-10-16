@@ -23,7 +23,7 @@ public class YearOrdinal implements Ordinal {
 	}
 
 	@Override
-	public Formatter formatter() {
+	public Formatter formatter(String language) {
 		return value -> TimeScale.Year.toString(Instant.ofEpochMilli(value));
 	}
 }

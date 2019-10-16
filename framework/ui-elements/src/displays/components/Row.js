@@ -1,7 +1,5 @@
 import React from "react";
 import AbstractRow from "../../../gen/displays/components/AbstractRow";
-import RowNotifier from "../../../gen/displays/notifiers/RowNotifier";
-import RowRequester from "../../../gen/displays/requesters/RowRequester";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
@@ -9,13 +7,13 @@ export default class Row extends AbstractRow {
 
 	constructor(props) {
 		super(props);
-		this.notifier = new RowNotifier(this);
-		this.requester = new RowRequester(this);
 	};
 
 	renderRow(row) {
+		let style = { height:"100%"};
+		if (this.state.color != null) style.backgroundColor = this.state.color;
 		return (
-			<div className="layout horizontal center flex" style={{height:"100%"}}>{row}</div>
+			<div className="layout horizontal center flex" style={style}>{row}</div>
 		);
 	};
 

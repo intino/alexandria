@@ -6,6 +6,7 @@ import io.intino.alexandria.ui.displays.components.collection.loaders.ItemLoader
 import io.intino.alexandria.ui.model.Datasource;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class CollectionBehavior<DS extends Datasource<Item>, Item, IL extends ItemLoader<DS, Item>> {
 	private final Collection collection;
@@ -30,42 +31,46 @@ public abstract class CollectionBehavior<DS extends Datasource<Item>, Item, IL e
 	}
 
 	public void reload() {
-		this.itemLoader.reload();
-		reset();
+		computeUpdate(e -> this.itemLoader.reload());
 	}
 
 	public void filter(String grouping, List<String> groups) {
-		itemLoader.filter(grouping, groups);
-		reset();
+		computeUpdate(e -> itemLoader.filter(grouping, groups));
 	}
 
 	public void condition(String condition) {
-		itemLoader.condition(condition);
-		reset();
+		computeUpdate(e -> itemLoader.condition(condition));
 	}
 
 	public void timetag(Timetag timetag) {
-		itemLoader.timetag(timetag);
-		reset();
+		computeUpdate(e -> itemLoader.timetag(timetag));
 	}
 
 	public void sortings(List<String> sortings) {
-		itemLoader.sortings(sortings);
-		reset();
+		computeUpdate(e -> itemLoader.sortings(sortings));
 	}
 
 	public void addSorting(String sorting) {
-		itemLoader.addSorting(sorting);
-		reset();
+		computeUpdate(e -> itemLoader.addSorting(sorting));
 	}
 
 	public void removeSorting(String sorting) {
-		itemLoader.removeSorting(sorting);
-		reset();
+		computeUpdate(e -> itemLoader.removeSorting(sorting));
 	}
 
 	public long itemCount() {
 		return itemLoader.itemCount();
+	}
+
+	void computeUpdate(Consumer<Void> consumer) {
+		computeUpdate(consumer, true);
+	}
+
+	void computeUpdate(Consumer<Void> consumer, boolean reset) {
+		collection.loading(true);
+		consumer.accept(null);
+		if (reset) reset();
+		collection.loading(false);
 	}
 
 	void reset() {

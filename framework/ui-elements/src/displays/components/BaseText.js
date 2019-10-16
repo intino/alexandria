@@ -20,12 +20,12 @@ export default class BaseText extends AbstractBaseText {
 
     _textColor = (highlighted) => {
         if (highlighted != null && highlighted.textColor != null) return highlighted.textColor;
-        return this.props.highlighted != null ? this.props.highlighted.textColor : null;
+        return this.props.highlighted != null ? this.props.highlighted.text : null;
     };
 
     _backgroundColor = (highlighted) => {
         if (highlighted != null && highlighted.backgroundColor != null) return highlighted.backgroundColor;
-        return this.props.highlighted != null ? this.props.highlighted.backgroundColor : null;
+        return this.props.highlighted != null ? this.props.highlighted.background : null;
     };
 
 }

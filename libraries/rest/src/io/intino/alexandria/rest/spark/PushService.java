@@ -160,6 +160,7 @@ public abstract class PushService<S extends Session<C>, C extends Client> implem
 	private JsonElement serializeMessageParameter(Object value) {
 		final String result = ResponseAdapter.adapt(value);
 		try {
+			if (value instanceof String) return new JsonPrimitive(result);
 			return Parser.parse(result);
 		} catch (Exception exception) {
 			return new JsonPrimitive(result);

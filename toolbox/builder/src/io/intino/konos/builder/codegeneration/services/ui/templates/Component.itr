@@ -365,7 +365,7 @@ end
 def type(properties & operation) trigger(common)
 	[_title("$title");]
 	[_color("$color");]
-	[_disabled($disabled);]
+	[_readonly($readonly);]
 	[_mode(io.intino.alexandria.ui.displays.components.Operation.Mode.valueOf("$mode+firstUpperCase"));]
 	[$operationMode]
 end

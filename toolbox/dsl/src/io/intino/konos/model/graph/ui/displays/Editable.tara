@@ -73,6 +73,7 @@ Facet Readonly on DataComponents.Image with Editable
 Facet Readonly on DataComponents.Date with Editable
 Facet Readonly on OtherComponents.Selector with RadioBox, CheckBox, ComboBox
 Facet Readonly on OtherComponents.AbstractSlider
+Facet Readonly on OperationComponents.Operation
 
 Facet Required on DataComponents.Text with Editable
 Facet Required on DataComponents.Number with Editable
