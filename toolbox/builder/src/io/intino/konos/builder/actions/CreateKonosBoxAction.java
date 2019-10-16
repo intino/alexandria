@@ -146,7 +146,7 @@ public class CreateKonosBoxAction extends KonosAction {
     private Map<String, String> requiredDependencies(KonosGraph graph) {
         Map<String, String> dependencies = Manifest.load().dependencies;
         if (graph.jMXServiceList().isEmpty()) remove(dependencies, "jmx");
-        if (graph.messagingServiceList().isEmpty()) remove(dependencies, "jms");
+        if (graph.messagingServiceList().isEmpty()) remove(dependencies, ":jms");
         if (graph.sentinelList().isEmpty()) remove(dependencies, "scheduler");
         if (graph.datalake() == null) {
             remove(dependencies, "datalake");
