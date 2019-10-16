@@ -62,7 +62,7 @@ public class AbstractBoxRenderer extends Renderer {
 	}
 
 	private void datamart(FrameBuilder root, Datamart datamart) {
-		root.add("datamart", new FrameBuilder("datamart").add("name", datamart.name$()).add("path", datamart.path()));
+		root.add("datamart", new FrameBuilder("datamart").add("name", datamart.name$()).add("path", parameter(datamart.path())));
 	}
 
 	private void notifyNewParameters() {
