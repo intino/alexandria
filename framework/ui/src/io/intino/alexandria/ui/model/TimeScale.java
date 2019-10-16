@@ -50,13 +50,12 @@ public enum TimeScale {
 		}
 
 		@Override
-		public String toString(Instant instant) {
+		public String toString(Instant instant, String language) {
 			return String.valueOf(yearOf(instant));
 		}
 	},
 
 	QuarterOfYear(MONTHS) {
-		private final DateTimeFormatter Formatter = DateTimeFormatter.ofPattern("MM/yyyy");
 
 		@Override
 		public String label(String language) {
@@ -105,12 +104,13 @@ public enum TimeScale {
 		}
 
 		@Override
-		public String toString(Instant instant) {
-			return "Q" + quarterNumber(instant) + " (" + range(instant) + ")";
+		public String toString(Instant instant, String language) {
+			return "Q" + quarterNumber(instant) + " (" + range(instant, language) + ")";
 		}
 
-		private String range(Instant instant) {
-			return Formatter.format(dateTimeOf(instant)) + " - " + Formatter.format(dateTimeOf(nextTime(instant)));
+		private String range(Instant instant, String language) {
+			DateTimeFormatter formatter = formatter(language);
+			return formatter.format(dateTimeOf(instant)) + " - " + formatter.format(dateTimeOf(nextTime(instant)));
 		}
 
 		private int quarterNumber(Instant instant) {
@@ -120,10 +120,13 @@ public enum TimeScale {
 		private int firstMonthOfQuarter(Instant instant) {
 			return ((monthNumberOf(instant) - 1) / 3) * 3 + 1;
 		}
+
+		private DateTimeFormatter formatter(String language) {
+			return DateTimeFormatter.ofPattern(language.equals("es") ? "MM/yyyy" : "yyyy/MM");
+		}
 	},
 
 	Month(MONTHS) {
-		private final DateTimeFormatter Formatter = DateTimeFormatter.ofPattern("MM/yyyy");
 
 		@Override
 		public String label(String language) {
@@ -162,13 +165,16 @@ public enum TimeScale {
 		}
 
 		@Override
-		public String toString(Instant instant) {
-			return Formatter.format(dateTimeOf(instant));
+		public String toString(Instant instant, String language) {
+			return formatter(language).format(dateTimeOf(instant));
+		}
+
+		private DateTimeFormatter formatter(String language) {
+			return DateTimeFormatter.ofPattern(language.equals("es") ? "MM/yyyy" : "yyyy/MM");
 		}
 	},
 
 	Week(WEEKS) {
-		private final DateTimeFormatter Formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 		@Override
 		public String label(String language) {
@@ -209,20 +215,23 @@ public enum TimeScale {
 		}
 
 		@Override
-		public String toString(Instant instant) {
+		public String toString(Instant instant, String language) {
 			LocalDateTime dateTime = dateTimeOf(instant);
-			return "Week " + format(dateTime.get(ALIGNED_WEEK_OF_YEAR), 2) + " (" + range(instant) + ")";
+			return "Week " + format(dateTime.get(ALIGNED_WEEK_OF_YEAR), 2) + " (" + range(instant, language) + ")";
 		}
 
-		private String range(Instant instant) {
+		private String range(Instant instant, String language) {
 			LocalDateTime dateTime = dateTimeOf(instant);
-			return Formatter.format(dateTime) + " - " + Formatter.format(dateTimeOf(nextTime(instant)));
+			DateTimeFormatter formatter = formatter(language);
+			return formatter.format(dateTime) + " - " + formatter.format(dateTimeOf(nextTime(instant)));
+		}
+
+		private DateTimeFormatter formatter(String language) {
+			return DateTimeFormatter.ofPattern(language.equals("es") ? "dd/MM/yyyy" : "yyyy/MM/dd");
 		}
 	},
 
 	Day(DAYS) {
-		private final DateTimeFormatter Formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
 		@Override
 		public String label(String language) {
 			return labels.get(Day).get(language);
@@ -264,14 +273,16 @@ public enum TimeScale {
 		}
 
 		@Override
-		public String toString(Instant instant) {
-			return Formatter.format(dateTimeOf(instant));
+		public String toString(Instant instant, String language) {
+			return formatter(language).format(dateTimeOf(instant));
 		}
 
+		private DateTimeFormatter formatter(String language) {
+			return DateTimeFormatter.ofPattern(language.equals("es") ? "dd/MM/yyyy" : "yyyy/MM/dd");
+		}
 	},
 
 	SixHours(HOURS) {
-		private final DateTimeFormatter Formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 		@Override
 		public String label(String language) {
@@ -320,13 +331,16 @@ public enum TimeScale {
 		}
 
 		@Override
-		public String toString(Instant instant) {
-			return Formatter.format(dateTimeOf(addTo(instant, -1))) + " (" + format(hourOf(addTo(instant, -1)), 2) + " - " + format(hourOf(instant), 2) + ")";
+		public String toString(Instant instant, String language) {
+			return formatter(language).format(dateTimeOf(addTo(instant, -1))) + " (" + format(hourOf(addTo(instant, -1)), 2) + " - " + format(hourOf(instant), 2) + ")";
+		}
+
+		private DateTimeFormatter formatter(String language) {
+			return DateTimeFormatter.ofPattern(language.equals("es") ? "dd/MM/yyyy" : "yyyy/MM/dd");
 		}
 	},
 
 	Hour(HOURS) {
-		private final DateTimeFormatter Formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH");
 		private final DateTimeFormatter CategoryFormatter = DateTimeFormatter.ofPattern("HH");
 
 		@Override
@@ -360,13 +374,16 @@ public enum TimeScale {
 		}
 
 		@Override
-		public String toString(Instant instant) {
-			return Formatter.format(dateTimeOf(instant));
+		public String toString(Instant instant, String language) {
+			return formatter(language).format(dateTimeOf(instant));
+		}
+
+		private DateTimeFormatter formatter(String language) {
+			return DateTimeFormatter.ofPattern(language.equals("es") ? "dd/MM/yyyy HH" : "yyyy/MM/dd HH");
 		}
 	},
 
 	FifteenMinutes(MINUTES) {
-		private final DateTimeFormatter Formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH");
 
 		@Override
 		public String label(String language) {
@@ -411,17 +428,20 @@ public enum TimeScale {
 		}
 
 		@Override
-		public String toString(Instant instant) {
-			return Formatter.format(dateTimeOf(addTo(instant, -1))) + " (" + format(minuteOf(addTo(instant, -1)), 2) + " - " + format(minuteOf(instant), 2) + ")";
+		public String toString(Instant instant, String language) {
+			return formatter(language).format(dateTimeOf(addTo(instant, -1))) + " (" + format(minuteOf(addTo(instant, -1)), 2) + " - " + format(minuteOf(instant), 2) + ")";
 		}
 
 		private int quarter(int minutes) {
 			return (minutes / 15) * 15;
 		}
+
+		private DateTimeFormatter formatter(String language) {
+			return DateTimeFormatter.ofPattern(language.equals("es") ? "dd/MM/yyyy HH" : "yyyy/MM/dd HH");
+		}
 	},
 
 	Minute(MINUTES) {
-		private final DateTimeFormatter Formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 		private final DateTimeFormatter CategoryFormatter = DateTimeFormatter.ofPattern("mm");
 
 		@Override
@@ -455,13 +475,16 @@ public enum TimeScale {
 		}
 
 		@Override
-		public String toString(Instant instant) {
-			return Formatter.format(dateTimeOf(instant));
+		public String toString(Instant instant, String language) {
+			return formatter(language).format(dateTimeOf(instant));
+		}
+
+		private DateTimeFormatter formatter(String language) {
+			return DateTimeFormatter.ofPattern(language.equals("es") ? "dd/MM/yyyy HH:mm" : "yyyy/MM/dd HH:mm");
 		}
 	},
 
 	Second(SECONDS) {
-		private final DateTimeFormatter Formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 		private final DateTimeFormatter CategoryFormatter = DateTimeFormatter.ofPattern("ss");
 
 		@Override
@@ -495,8 +518,12 @@ public enum TimeScale {
 		}
 
 		@Override
-		public String toString(Instant instant) {
-			return Formatter.format(dateTimeOf(instant));
+		public String toString(Instant instant, String language) {
+			return formatter(language).format(dateTimeOf(instant));
+		}
+
+		private DateTimeFormatter formatter(String language) {
+			return DateTimeFormatter.ofPattern(language.equals("es") ? "dd/MM/yyyy HH:mm:ss" : "yyyy/MM/dd HH:mm:ss");
 		}
 	};
 
@@ -566,7 +593,11 @@ public enum TimeScale {
 
 	public abstract Instant normalise(Instant instant);
 
-	public abstract String toString(Instant instant);
+	public String toString(Instant instant) {
+		return toString(instant, "en");
+	}
+
+	public abstract String toString(Instant instant, String language);
 
 	public Instant nextTime(Instant time) {
 		return addTo(time, 1);

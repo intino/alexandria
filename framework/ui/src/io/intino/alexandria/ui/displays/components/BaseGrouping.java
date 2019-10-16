@@ -40,9 +40,13 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 		collections.forEach(c -> c.filter(key(), selection));
 	}
 
-	public BaseGrouping<DN, B> bindTo(Collection... collection) {
-		this.collections = Arrays.stream(collection).filter(Objects::nonNull).collect(toList());
-		if (collections.size() > 0) this.collections.get(0).onReady((event) -> loadGroups());
+	public BaseGrouping<DN, B> bindTo(Collection... collections) {
+		this.collections = Arrays.stream(collections).filter(Objects::nonNull).collect(toList());
+		if (this.collections.size() > 0) {
+			Collection collection = this.collections.get(0);
+			if (collection.ready()) loadGroups();
+			else collection.onReady((event) -> loadGroups());
+		}
 		return this;
 	}
 
@@ -72,10 +76,11 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	}
 
 	private io.intino.alexandria.schemas.Group groupOf(Group group) {
-		return new io.intino.alexandria.schemas.Group().label(group.label()).count(group.count());
+		return new io.intino.alexandria.schemas.Group().label(group.label()).count(group.count()).color(group.color());
 	}
 
 	private void notifySelection() {
+		notifier.refreshSelection(selection);
 		if (selectionListener == null) return;
 		selectionListener.accept(new SelectionEvent(this, selection));
 	}

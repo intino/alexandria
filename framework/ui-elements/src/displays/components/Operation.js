@@ -25,7 +25,7 @@ export default class Operation extends AbstractOperation {
 		materialIconButton : {
 			cursor: "pointer"
 		},
-		disabled : {
+		readonly : {
 			color: theme.palette.grey.primary,
 			cursor: "default"
 		},
@@ -37,7 +37,7 @@ export default class Operation extends AbstractOperation {
 			...this.state,
 			icon : this.props.icon,
 			title: this.props.title,
-			disabled: this.props.disabled,
+			readonly: this.props.readonly,
 			openConfirm : false
 		}
 	};
@@ -71,8 +71,8 @@ export default class Operation extends AbstractOperation {
 
 	renderLink = () => {
 		const {classes} = this.props;
-		const className = this._disabled() ? classes.disabled : classes.link;
-		return (<a onClick={this.handleClick.bind(this)} disabled={this._disabled()}>
+		const className = this._readonly() ? classes.readonly : classes.link;
+		return (<a onClick={this.handleClick.bind(this)} disabled={this._readonly()}>
 				<Typography style={this.style()} variant={this.variant("body1")} className={className}>{this._title()}</Typography>
 			</a>
 		);
@@ -81,7 +81,7 @@ export default class Operation extends AbstractOperation {
 	renderButton = () => {
 		const {classes} = this.props;
 		return (<Button style={this.style()} size={this._size()} color="primary" variant={this._highlightVariant()}
-						disabled={this._disabled()} onClick={this.handleClick.bind(this)}
+						disabled={this._readonly()} onClick={this.handleClick.bind(this)}
 						className={classes.button}>
 				{this._title()}
 			</Button>
@@ -97,9 +97,9 @@ export default class Operation extends AbstractOperation {
 
 	renderIconButton = () => {
 		const {classes} = this.props;
-		return (<IconButton color="primary" aria-label={this._title()} disabled={this._disabled()}
+		return (<IconButton color="primary" aria-label={this._title()} disabled={this._readonly()}
 							onClick={this.handleClick.bind(this)}
-							className={classes.iconButton}>
+							className={classes.iconButton} size={this._size()}>
 				<img src={this._icon()} style={{width:"24px",height:"24px"}}/>
 			</IconButton>
 		);
@@ -107,9 +107,9 @@ export default class Operation extends AbstractOperation {
 
 	renderMaterialIconButton = () => {
 		const {classes} = this.props;
-		return (<IconButton color="primary" aria-label={this._title()} disabled={this._disabled()}
+		return (<IconButton color="primary" aria-label={this._title()} disabled={this._readonly()}
 							onClick={this.handleClick.bind(this)} className={classes.materialIconButton}
-							style={this.style()}>
+							style={this.style()} size={this._size()}>
 				<OperationMui icon={this._icon()}/>
 			</IconButton>
 		);
@@ -130,7 +130,7 @@ export default class Operation extends AbstractOperation {
 	};
 
 	handleClick(e) {
-		if (this._disabled()) return;
+		if (this._readonly()) return;
 		e.stopPropagation();
 		this.execute();
 	};
@@ -152,12 +152,12 @@ export default class Operation extends AbstractOperation {
 		this.setState({ openConfirm : false });
 	};
 
-	refresh = ({ title, disabled }) => {
-		this.setState({ title, disabled });
+	refresh = ({ title, readonly }) => {
+		this.setState({ title, readonly });
 	};
 
-	refreshDisabled = (value) => {
-		this.setState({ disabled: value });
+	refreshReadonly = (value) => {
+		this.setState({ readonly: value });
 	};
 
 	refreshIcon = (value) => {
@@ -181,8 +181,8 @@ export default class Operation extends AbstractOperation {
 		return size != null ? size.toLowerCase() : "small";
 	};
 
-	_disabled = () => {
-		return this.state.disabled != null ? this.state.disabled : false;
+	_readonly = () => {
+		return this.state.readonly != null ? this.state.readonly : false;
 	}
 
 };

@@ -3,6 +3,11 @@ import PassiveView from "./PassiveView";
 import Typography from "@material-ui/core/Typography";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
+export const enrichDisplayProperties = (instance) => {
+    instance.pl.context = () => { return instance.pl.o };
+    instance.pl.owner = () => { return instance.i };
+};
+
 export default class Display extends PassiveView {
     address = null;
     state = {};
@@ -78,8 +83,7 @@ export default class Display extends PassiveView {
             return;
         }
         return instances.map((instance, index) => {
-            instance.pl.context = () => { return instance.pl.o };
-            instance.pl.owner = () => { return instance.i };
+            enrichDisplayProperties(instance);
             this.copyProps(props, instance.pl);
             return (<div key={index} style={style}>{React.createElement(DisplayFactory.get(instance.tp), instance.pl)}</div>);
         });
@@ -106,9 +110,15 @@ export default class Display extends PassiveView {
     };
 
     showMessage = (message, type) => {
-        const options = { variant: type.toLowerCase(), autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'center' }};
+        const loading = type.toLowerCase() === "loading";
+        const messageType = loading ? "info" : type.toLowerCase();
+        const options = { variant: messageType, autoHideDuration: !loading ? 2000 : undefined, anchorOrigin: { vertical: 'top', horizontal: 'center' }};
+        if (this.snack != null) this.props.closeSnackbar(this.snack);
         if (this.messageTimeout != null) window.clearTimeout(this.messageTimeout);
-        this.messageTimeout = window.setTimeout(() => this.props.enqueueSnackbar(message, options), 100);
+        this.messageTimeout = window.setTimeout(() => {
+            const snack = this.props.enqueueSnackbar(message, options);
+            if (loading) this.snack = snack;
+        }, 100);
     };
 
     componentWillUnmount() {

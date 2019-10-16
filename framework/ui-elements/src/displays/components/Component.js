@@ -9,7 +9,8 @@ export default class Component extends AlexandriaDisplay {
 
     state = {
         loading: true,
-        visible: this.props.visible != null ? this.props.visible : true
+        visible: this.props.visible != null ? this.props.visible : true,
+        color: this.props.color != null ? this.props.color : null
     };
 
     constructor(props) {
@@ -46,6 +47,10 @@ export default class Component extends AlexandriaDisplay {
 
     refreshVisibility = (value) => {
         this.setState({ visible: value });
+    };
+
+    refreshColor = (color) => {
+        this.setState({ color: color });
     };
 
     _addFormats() {

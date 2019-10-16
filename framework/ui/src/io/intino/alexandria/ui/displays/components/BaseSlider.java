@@ -10,10 +10,8 @@ import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
 import io.intino.alexandria.ui.displays.notifiers.BaseSliderNotifier;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -26,6 +24,7 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 	private Range range = null;
 	private Timer playerStepTimer = null;
 	private boolean readonly;
+	private java.util.List<BaseSlider<DN, B>> observers = new ArrayList<>();
 
 	public BaseSlider(B box) {
         super(box);
@@ -73,6 +72,10 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		notifyChange();
 	}
 
+	public void addObserver(BaseSlider slider) {
+		this.observers.add(slider);
+	}
+
 	public void update(long value) {
 		value(value);
 	}
@@ -85,12 +88,10 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 
 	public void previous() {
 		value(value-1);
-		notifyChange();
 	}
 
 	public void next() {
 		value(value+1);
-		notifyChange();
 	}
 
 	public void play() {
@@ -132,6 +133,7 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		notifier.refreshSelected(selectedValue());
 		notifier.refreshToolbar(toolbarState());
 		notifyListener();
+		notifyObservers();
 	}
 
 	io.intino.alexandria.schemas.Range rangeSchema() {
@@ -141,6 +143,14 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 	void notifyListener() {
 		if (changeListener == null) return;
 		changeListener.accept(new ChangeEvent(this, value));
+	}
+
+	private void notifyObservers() {
+		observers.forEach(o -> {
+			o._value(value());
+			o.notifier.refreshSelected(selectedValue());
+			o.notifier.refreshToolbar(toolbarState());
+		});
 	}
 
 	public abstract String formattedValue();
@@ -223,7 +233,6 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 			else return;
 		}
 		value(value+1);
-		notifyChange();
 	}
 
 	private ToolbarState toolbarState() {

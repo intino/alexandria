@@ -31,6 +31,7 @@ public class SliderRenderer extends BindingCollectionRenderer<AbstractSlider> {
 		addRange(result);
 		addAnimation(result);
 		addOrdinals(result);
+		addStyle(result);
 		return result;
 	}
 
@@ -42,8 +43,8 @@ public class SliderRenderer extends BindingCollectionRenderer<AbstractSlider> {
 		}
 		else if (element.i$(TemporalSlider.class)) {
 			TemporalSlider.Range range = element.a$(TemporalSlider.class).range();
-			builder.add("min", range.min().toEpochMilli());
-			builder.add("max", range.max().toEpochMilli());
+			builder.add("min", range.min() != null ? range.min().toEpochMilli() : 0);
+			builder.add("max", range.max() != null ? range.max().toEpochMilli() : 0);
 		}
 	}
 
@@ -61,6 +62,12 @@ public class SliderRenderer extends BindingCollectionRenderer<AbstractSlider> {
 			FrameBuilder ordinal = new FrameBuilder("ordinalMethod").add("name", scale);
 			builder.add("ordinal", ordinal);
 		});
+	}
+
+	private void addStyle(FrameBuilder builder) {
+		AbstractSlider.Style style = element.style();
+		if (style == AbstractSlider.Style.Full) return;
+		builder.add("style", style.name());
 	}
 
 	@Override

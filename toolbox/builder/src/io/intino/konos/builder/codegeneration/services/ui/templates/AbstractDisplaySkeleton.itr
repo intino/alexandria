@@ -84,6 +84,10 @@ def type(displayExtends & row)
 	extends io.intino.alexandria.ui.displays.components.Row<$name+firstUpperCase~Notifier, $itemClass, $abstractBox+type>
 end
 
+def type(displayExtends & dialog)
+	extends io.intino.alexandria.ui.displays.components.Dialog<$name+firstUpperCase~Notifier, $abstractBox+type>
+end
+
 def type(displayExtends)
 	extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type>
 end

@@ -23,6 +23,14 @@ public class SliderExamplesMold extends AbstractSliderExamplesMold<AlexandriaUiB
         slider2.refresh();
 
         slider3.onChange(event -> slider3.notifyUser(String.format("Se ha seleccionado el valor %s", event.value().toString()), UserMessage.Type.Info));
+
+        slider4.add(ordinal());
+        slider4.onChange(event -> slider4.notifyUser(String.format("Se ha seleccionado el valor %d", (Long)event.value()), UserMessage.Type.Info));
+        slider4.refresh();
+
+        slider5.add(ordinal());
+        slider5.onChange(event -> slider5.notifyUser(String.format("Se ha seleccionado el valor %d", (Long)event.value()), UserMessage.Type.Info));
+        slider5.refresh();
     }
 
     private Ordinal ordinal() {
@@ -43,7 +51,7 @@ public class SliderExamplesMold extends AbstractSliderExamplesMold<AlexandriaUiB
             }
 
             @Override
-            public Formatter formatter() {
+            public Formatter formatter(String language) {
                 return value -> value + "%";
             }
         };

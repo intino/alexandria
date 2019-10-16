@@ -13,7 +13,7 @@ import java.io.InputStream;
 
 public class Operation<DN extends OperationNotifier, B extends Box> extends Component<DN, B> {
     private String title;
-    private boolean disabled = false;
+    private boolean readonly = false;
     private String icon;
     private Mode mode;
 
@@ -46,18 +46,18 @@ public class Operation<DN extends OperationNotifier, B extends Box> extends Comp
     }
 
     public boolean disabled() {
-        return disabled;
+        return readonly;
     }
 
     public Operation enable() {
-        _disabled(false);
-        notifier.refreshDisabled(disabled);
+        _readonly(false);
+        notifier.refreshReadonly(readonly);
         return this;
     }
 
     public Operation disable() {
-        _disabled(true);
-        notifier.refreshDisabled(disabled);
+        _readonly(true);
+        notifier.refreshReadonly(readonly);
         return this;
     }
 
@@ -91,8 +91,8 @@ public class Operation<DN extends OperationNotifier, B extends Box> extends Comp
         return this;
     }
 
-    protected Operation<DN, B> _disabled(boolean value) {
-        this.disabled = value;
+    protected Operation<DN, B> _readonly(boolean value) {
+        this.readonly = value;
         return this;
     }
 

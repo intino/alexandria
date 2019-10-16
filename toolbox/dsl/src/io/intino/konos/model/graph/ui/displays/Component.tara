@@ -205,6 +205,7 @@ Concept OtherComponents
 
 	Concept AbstractSlider extends Component
 		var word:{Vertical Horizontal} arrangement = Horizontal
+		var word:{Full ToolbarOnly SliderOnly} style = Full
 		var integer value = -1
 
 		Concept:{0..1} Animation

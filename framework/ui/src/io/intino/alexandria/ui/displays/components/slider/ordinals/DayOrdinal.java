@@ -22,7 +22,7 @@ public class DayOrdinal implements Ordinal {
 	}
 
 	@Override
-	public Formatter formatter() {
-		return value -> TimeScale.Day.toString(Instant.ofEpochMilli(value));
+	public Formatter formatter(String language) {
+		return value -> TimeScale.Day.toString(Instant.ofEpochMilli(value), language);
 	}
 }

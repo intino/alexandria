@@ -51,11 +51,11 @@ def type(properties & multiple) trigger(common)
 end
 
 def type(properties & operation) trigger(common)
-	[ title="$title"][ target="$target"][ mode="$operationMode"][ icon="$icon"][ confirm="$confirm"][ disabled={$disabled}][ size="$size"][ format="$format...[ ]"][ highlighted="$highlighted"][ visible={$visible}]
+	[ title="$title"][ target="$target"][ mode="$operationMode"][ icon="$icon"][ confirm="$confirm"][ readonly={$readonly}][ size="$size"][ format="$format...[ ]"][ highlighted="$highlighted"][ visible={$visible}]
 end
 
 def type(properties & abstractslider) trigger(common)
-	[ label="$label"][ format="$format...[ ]"][ color="$color"][ arrangement="$arrangement"][ animation={{interval:$interval,loop:$loop}}][ readonly={$readonly}][ visible={$visible}]
+	[ label="$label"][ format="$format...[ ]"][ color="$color"][ arrangement="$arrangement"][ animation={{interval:$interval,loop:$loop}}][ readonly={$readonly}][ visible={$visible}][ style="$style"]
 end
 
 def type(properties) trigger(common)
