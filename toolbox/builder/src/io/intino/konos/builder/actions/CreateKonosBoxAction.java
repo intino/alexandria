@@ -192,8 +192,9 @@ public class CreateKonosBoxAction extends KonosAction {
             return VfsUtil.createDirectoryIfMissing(contentRoots[0], name);
         } catch (IOException e) {
             Logger.getInstance(this.getClass()).error(e);
-            new File(contentRoots[0].getPath(), name).mkdirs();
-            return null;
+            File file = new File(contentRoots[0].getPath(), name);
+            file.mkdirs();
+            return VfsUtil.findFileByIoFile(file, true);
         }
     }
 
