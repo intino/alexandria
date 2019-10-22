@@ -105,6 +105,7 @@ class User extends AbstractUser {
 
     handleOpenDialog = (e) => {
         this.setState({trigger: e.currentTarget});
+        this.requester.refreshChildren();
     };
 
     handleCloseDialog = () => {

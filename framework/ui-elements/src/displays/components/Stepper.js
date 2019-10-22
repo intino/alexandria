@@ -39,14 +39,17 @@ function clsx(position, classes){
 }
 
 class Stepper extends AbstractStepper {
-	state = {
-		active: undefined
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new StepperNotifier(this);
 		this.requester = new StepperRequester(this);
+		this.state = {
+			...this.state,
+			active: undefined,
+			allowNext: true,
+			allowBack: true,
+		};
 	};
 
 	_isTop(){
@@ -67,7 +70,7 @@ class Stepper extends AbstractStepper {
 		const classNames = clsx(position, classes);
 		const isTop =  this._isTop();
 		return (
-			<div className={classNames}>
+			<div className={classNames} style={{height:"100%"}}>
 				{isTop && this._renderStepper()}
 				{this._renderActive()}
 				{!isTop && this._renderStepper()}
@@ -80,7 +83,7 @@ class Stepper extends AbstractStepper {
 		const children  = React.Children.toArray(this.props.children);
 		const isInRange = this._inRange(active, children.length);
 		return (
-			<div className={this.props.classes.content}>
+			<div className={this.props.classes.content} style={{height:"100%"}}>
 				{ isInRange && React.cloneElement(children[active], { showContent: true })}
 			</div>
 		);
@@ -102,15 +105,16 @@ class Stepper extends AbstractStepper {
 	};
 
 	_renderToolbar() {
+	    if (this.props.style === "NoToolbar") return;
 		const count = React.Children.count(this.props.children);
 		return (<div>
-			<MuiButton onClick={() => this.requester.back()} disabled={this.state.active <= 0}>Back</MuiButton>
-			<MuiButton onClick={() => this.requester.next()} disabled={this.state.active >= count}>Next</MuiButton>
+			<MuiButton onClick={() => this.requester.back()} disabled={this.state.active <= 0 || !this.state.allowBack}>Back</MuiButton>
+			<MuiButton onClick={() => this.requester.next()} disabled={this.state.active >= count || !this.state.allowNext}>Next</MuiButton>
 		</div>);
 	};
 
-	refresh({active}) {
-		this.setState({active});
+	refresh({active, allowNext, allowBack}) {
+		this.setState({active,allowNext,allowBack});
 	}
 }
 

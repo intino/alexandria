@@ -14,48 +14,58 @@ import ComponentBehavior from "./behaviors/ComponentBehavior";
 import Block from "./Block";
 
 const styles = theme => ({
-	...CollectionStyles(theme),
-	label: {
-		color: theme.palette.grey.primary,
-		marginRight: "5px"
-	},
-	headerView : {
-		borderBottom: "1px solid #ddd",
-		width: "100%"
-	},
-	itemView : {
-		borderBottom: "1px solid #ddd",
-		height: "100%",
-		'&:hover' : {
-			background: '#ddd'
-		},
-		'&:hover $selector' : {
-			display: 'block'
-		}
-	},
+    ...CollectionStyles(theme),
+    label: {
+        color: theme.palette.grey.primary,
+        marginRight: "5px"
+    },
+    headerView : {
+        borderBottom: "1px solid #ddd",
+    },
+    withoutScroller : {
+        width: "100%"
+    },
+    withScroller : {
+        width: "calc(100% - 15px)"
+    },
+    itemView : {
+        borderBottom: "1px solid #ddd",
+        height: "100%",
+        '&:hover' : {
+            background: '#ddd'
+        },
+        '&:hover $selector' : {
+            display: 'block'
+        }
+    },
 });
 
 class Table extends AbstractTable {
 
-	constructor(props) {
-		super(props);
-		this.notifier = new TableNotifier(this);
-		this.requester = new TableRequester(this);
-	};
+    constructor(props) {
+        super(props);
+        this.notifier = new TableNotifier(this);
+        this.requester = new TableRequester(this);
+        this.container = React.createRef();
+        this.header = React.createRef();
+    };
 
-	render() {
-		const { classes } = this.props;
-		const selectable = this.props.selection != null;
-		// const offset = React.Children.count(this.props.children) > 0 ? Heading.Height : 0;
+    render() {
+        const { classes } = this.props;
+        const selectable = this.props.selection != null;
+        const headerHeight = this.header.current != null ? this.header.current.offsetHeight : 0;
+        const minHeight = this.props.itemHeight * this.state.itemCount;
+        const height = this.container.current != null ? this.container.current.offsetHeight : 0;
+        const headerClass = height <= minHeight ? classes.withScroller : classes.withoutScroller;
 
-		return (
-			<React.Fragment>
-				{ ComponentBehavior.labelBlock(this.props) }
-				<div className={classNames(classes.headerView, "layout horizontal", selectable ? classes.selectable : {})}>{this.props.children}</div>
-				<div className="layout flex" style={{width:"100%",height:"100%"}}><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width))}</AutoSizer></div>
-			</React.Fragment>
-		);
-	}
+        return (
+            <div ref={this.container} style={{height:"100%",width:"100%"}}>
+                { ComponentBehavior.labelBlock(this.props) }
+                <div ref={this.header} className={classNames(classes.headerView, headerClass, "layout horizontal", selectable ? classes.selectable : {})}>{this.props.children}</div>
+                <div className="layout flex" style={{width:"100%",height:"calc(100% - " + headerHeight + "px)"}}><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width))}</AutoSizer></div>
+            </div>
+        );
+    }
 
 }
 

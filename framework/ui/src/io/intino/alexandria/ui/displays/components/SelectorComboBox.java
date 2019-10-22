@@ -1,6 +1,8 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.Display;
+import io.intino.alexandria.ui.displays.components.selector.SelectorOption;
 import io.intino.alexandria.ui.displays.notifiers.SelectorComboBoxNotifier;
 
 import java.util.ArrayList;
@@ -33,6 +35,12 @@ public class SelectorComboBox<DN extends SelectorComboBoxNotifier, B extends Box
 	@Override
 	public void reset() {
 		select();
+	}
+
+	@Override
+	public void refresh() {
+		super.refresh();
+		children().stream().filter(c -> c instanceof SelectorOption).forEach(Display::refresh);
 	}
 
 	public void select(String... options) {

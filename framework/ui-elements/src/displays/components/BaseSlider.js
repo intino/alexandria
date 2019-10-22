@@ -72,14 +72,6 @@ function ValueLabelComponent(props) {
 };
 
 export default class BaseSlider extends AbstractBaseSlider {
-	state = {
-		selected: { value: this.props.value, formattedValue: this.props.value },
-		range: this.props.range,
-		toolbar: null,
-		ordinals: [],
-		ordinal: null,
-		readonly: this.props.readonly,
-	};
 
 	static Styles = theme => ({
 		spacing: {
@@ -92,9 +84,20 @@ export default class BaseSlider extends AbstractBaseSlider {
 
 	constructor(props) {
 		super(props);
+		this.state = {
+			...this.state,
+			selected: { value: this.props.value, formattedValue: this.props.value },
+			range: this.props.range,
+			toolbar: null,
+			ordinals: [],
+			ordinal: null,
+			readonly: this.props.readonly,
+		};
 	};
 
 	renderComponent() {
+		if (!this.state.visible) return (<React.Fragment/>);
+
 		if (this.state.ordinals.length <= 0)
 			return (<div style={this.style()}>{this.translate("No ordinals defined!")}</div>);
 

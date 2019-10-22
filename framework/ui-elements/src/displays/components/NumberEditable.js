@@ -18,7 +18,9 @@ const styles = theme => ({
 class NumberEditable extends AbstractNumberEditable {
 	state = {
 		value : "",
-		readonly: this.props.readonly
+		readonly: this.props.readonly,
+		prefix: this.props.prefix,
+		suffix: this.props.suffix,
 	};
 
 	constructor(props) {
@@ -46,8 +48,8 @@ class NumberEditable extends AbstractNumberEditable {
 						   step: this.props.step !== -1 ? this.props.step : undefined
 					   }}
 					   InputProps={{
-						   startAdornment: this.props.prefix !== undefined ? <InputAdornment position="start">{this.props.prefix}</InputAdornment> : undefined,
-						   endAdornment: this.props.suffix !== undefined ? <InputAdornment position="end">{this.props.suffix}</InputAdornment> : undefined
+						   startAdornment: this.state.prefix !== undefined ? <InputAdornment position="start">{this.state.prefix}</InputAdornment> : undefined,
+						   endAdornment: this.state.suffix !== undefined ? <InputAdornment position="end">{this.state.suffix}</InputAdornment> : undefined
 					   }}/>
 		);
 	};

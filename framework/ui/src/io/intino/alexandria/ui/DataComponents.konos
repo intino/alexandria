@@ -5,6 +5,8 @@ use Schemas
 Component baseNumber as Decorated
 	Notification refresh as Real
 	Notification refreshExpanded as Bool
+	Notification refreshPrefix as Text
+	Notification refreshSuffix as Text
 
 Component number as Decorated ExtensionOf(baseNumber)
 Component numberEditable as Decorated ExtensionOf(baseNumber)

@@ -1,7 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.schemas.*;
+import io.intino.alexandria.schemas.StepperInfo;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.Listener;
@@ -49,8 +49,14 @@ public class Stepper<DN extends StepperNotifier, B extends Box> extends Abstract
             step._isActive(index == active);
             step._isCompleted(index < active);
             step.refresh();
+            if (index == active) step.show();
             index++;
         }
+    }
+
+    public void reset() {
+        this.active = 0;
+        updateActive();
     }
 
     public void next() {
@@ -91,6 +97,6 @@ public class Stepper<DN extends StepperNotifier, B extends Box> extends Abstract
     }
 
     private void updateActive() {
-        notifier.refresh(new StepperInfo().active(active));
+        notifier.refresh(new StepperInfo().active(active).allowNext(allowNext()).allowBack(allowBack()));
     }
 }

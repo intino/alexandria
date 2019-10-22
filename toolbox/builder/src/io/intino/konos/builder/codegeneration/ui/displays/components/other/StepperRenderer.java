@@ -18,6 +18,7 @@ public class StepperRenderer extends ComponentRenderer<Stepper> {
 		FrameBuilder properties = super.properties();
 		properties.add("orientation", element.orientation().name());
 		properties.add("position", element.position().name());
+		properties.add("style", element.style().name());
 		return properties;
 	}
 }

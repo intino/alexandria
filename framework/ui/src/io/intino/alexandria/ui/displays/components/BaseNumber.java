@@ -19,4 +19,14 @@ public class BaseNumber<DN extends BaseNumberNotifier, B extends Box> extends Ab
     public boolean expanded() {
         return expanded;
     }
+
+    public BaseNumber prefix(String prefix) {
+        notifier.refreshSuffix(prefix);
+        return this;
+    }
+
+    public BaseNumber suffix(String suffix) {
+        notifier.refreshSuffix(suffix);
+        return this;
+    }
 }
