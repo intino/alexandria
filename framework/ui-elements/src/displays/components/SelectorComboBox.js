@@ -11,8 +11,8 @@ const styles = theme => ({
 	container : {
 		position: "relative",
 		minWidth: "170px",
-        width: "calc(100% - 32px)",
-    },
+		width: "calc(100% - 32px)",
+	},
 	readonly : {
 		position: "absolute",
 		top: "0",
@@ -51,7 +51,8 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 						className="basic-multi-select" classNamePrefix="select"
 						components={{ Option: this.renderOption.bind(this)}}
 						value={value}
-						onChange={this.handleChange.bind(this)}/>
+						onChange={this.handleChange.bind(this)}
+						onMenuOpen={this.handleOpen.bind(this)}/>
 			</div>
 		);
 	};
@@ -75,6 +76,10 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		const selection = multi ? selectedOptions.map(s => s.value) : [ selectedOptions.value ];
 		this.requester.updateSelection(selection);
 		this.setState({ selection: selection });
+	};
+
+	handleOpen = () => {
+		this.requester.refresh();
 	};
 
 	selectMessage = () => {

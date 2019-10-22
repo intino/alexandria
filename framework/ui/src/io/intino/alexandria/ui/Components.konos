@@ -66,6 +66,7 @@ Component selectorComboBox as Decorated ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
 	Notification refreshReadonly as Bool
 	Request updateSelection as Text List
+	Request refresh
 
 Component selectorListBox as Decorated ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
@@ -118,6 +119,7 @@ Component user as Decorated
 	Notification refresh as Object(UserInfo)
 
 	Request logout
+	Request refreshChildren
 
 Component portal as Decorated
 

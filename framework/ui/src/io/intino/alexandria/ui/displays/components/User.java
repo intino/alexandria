@@ -4,12 +4,16 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.UserInfo;
 import io.intino.alexandria.ui.Asset;
 import io.intino.alexandria.ui.I18n;
+import io.intino.alexandria.ui.displays.Display;
+import io.intino.alexandria.ui.displays.events.Event;
+import io.intino.alexandria.ui.displays.events.Listener;
 import io.intino.alexandria.ui.displays.notifiers.UserNotifier;
 import io.intino.alexandria.ui.utils.AvatarUtil;
 
 import java.net.URL;
 
 public class User<DN extends UserNotifier, B extends Box> extends AbstractUser<B> {
+    private Listener refreshListener;
 
     public User(B box) {
         super(box);
@@ -21,11 +25,21 @@ public class User<DN extends UserNotifier, B extends Box> extends AbstractUser<B
         refresh();
     }
 
+    public User onRefresh(Listener listener) {
+        refreshListener = listener;
+        return this;
+    }
+
     @Override
     public void refresh() {
         super.refresh();
         io.intino.alexandria.ui.services.push.User user = session().user();
         notifier.refresh(info(user));
+    }
+
+    public void refreshChildren() {
+        notifyRefresh();
+        children().forEach(Display::refresh);
     }
 
     public void logout() {
@@ -43,5 +57,9 @@ public class User<DN extends UserNotifier, B extends Box> extends AbstractUser<B
 
     private String photoLink(URL photo) {
         return Asset.toResource(baseAssetUrl(), photo).toUrl().toString();
+    }
+
+    private void notifyRefresh() {
+        if (refreshListener != null) refreshListener.accept(new Event(this));
     }
 }

@@ -12,5 +12,13 @@ export default class BaseNumber extends AbstractBaseNumber {
 
 	refreshExpanded = (value) => {
 		this.setState({expanded : value});
-	}
+	};
+
+	refreshPrefix = (value) => {
+		this.setState({prefix : value});
+	};
+
+	refreshSuffix = (value) => {
+		this.setState({suffix : value});
+	};
 }

@@ -178,6 +178,7 @@ Concept OtherComponents
 	Concept Stepper extends Component
 		var word:{Horizontal Vertical} orientation = Horizontal
 		var word:{Top Bottom Left Right} position = Bottom
+		var word:{Full NoToolbar} style = Full
 		Concept Step extends Component
 			has Component
 

@@ -147,11 +147,11 @@ def type(properties & collection) trigger(specific)
 end
 
 def type(properties & heading) trigger(specific)
-	 style={{width:"calc($width~% - $paddingSize~px)",paddingRight:"10px"[,$paddingLeft:"10px"]}}
+	 style={{width:"$width~%",paddingRight:"10px"[,$paddingLeft:"10px"]}}
 end
 
 def type(properties & item) trigger(specific)
-	 style={{width:"calc($width~% - $paddingSize~px)",paddingRight:"10px"[,$paddingLeft:"10px"]}}
+	 style={{width:"$width~%",paddingRight:"10px"[,$paddingLeft:"10px"]}}
 end
 
 def type(properties & spinner) trigger(specific)
@@ -187,7 +187,7 @@ def type(properties & grouping) trigger(specific)
 end
 
 def type(properties & stepper) trigger(specific)
-   [ orientation={"$orientation+lowercase"}][ position={"$position+lowercase"}]
+   [ orientation="$orientation+lowercase"][ position="$position+lowercase"][ style="$style"]
 end
 
 def type(properties) trigger(specific)

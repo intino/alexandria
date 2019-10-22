@@ -47,6 +47,8 @@ class Number extends AbstractNumber {
 			...this.state,
 			value : this.props.value,
 			expanded : this.props.expanded,
+			prefix : this.props.prefix,
+			suffix : this.props.suffix,
 		}
 	};
 
@@ -63,9 +65,9 @@ class Number extends AbstractNumber {
 		return (
 			<Block layout="horizontal center" style={this.style()}>
 				{ ComponentBehavior.labelBlock(this.props) }
-				{this.props.prefix !== undefined ? <Typography variant={variant} className={classes.prefix}>{this.props.prefix}:</Typography> : undefined }
+				{this.state.prefix !== undefined ? <Typography variant={variant} className={classes.prefix}>{this.state.prefix}</Typography> : undefined }
 				<Typography className={classnames(expandedClass, classes.value)} onClick={this.handleToggleExpanded.bind(this)} variant={variant} style={this.style()}>{NumberUtil.format(value, this.translate(format))}</Typography>
-				{ this.props.suffix !== undefined ? <Typography variant={variant} className={classes.suffix}>{this.props.suffix}</Typography> : undefined }
+				{ this.state.suffix !== undefined ? <Typography variant={variant} className={classes.suffix}>{this.state.suffix}</Typography> : undefined }
 			</Block>
 		);
 	};
@@ -80,8 +82,8 @@ class Number extends AbstractNumber {
 		const format = this._addDecimals("0");
 		if (style === "Currency") return "(" + format + "a)";
 		else if (style === "Bytes") return "(" + format + "b)";
-		else if (style === "Percentage" && this.props.suffix == null) return "(" + format + "%)";
-		else if (style === "Exponential" && this.props.suffix == null) return "(" + format + "e+0)";
+		else if (style === "Percentage" && this.state.suffix == null) return "(" + format + "%)";
+		else if (style === "Exponential" && this.state.suffix == null) return "(" + format + "e+0)";
 		return this._defaultFormat();
 	};
 

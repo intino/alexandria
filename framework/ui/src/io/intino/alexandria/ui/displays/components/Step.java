@@ -43,12 +43,12 @@ public class Step<DN extends StepNotifier, B extends Box> extends AbstractStep<B
         return this;
     }
 
-    public Step onNext(StepChecker checker){
+    public Step canNext(StepChecker checker){
         this.nextChecker = checker;
         return this;
     }
 
-    public Step onBack(StepChecker checker){
+    public Step canBack(StepChecker checker){
         this.backChecker = checker;
         return this;
     }

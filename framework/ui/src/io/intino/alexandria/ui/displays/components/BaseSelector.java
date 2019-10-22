@@ -13,6 +13,7 @@ import io.intino.alexandria.ui.displays.notifiers.TextNotifier;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Box> extends AbstractBaseSelector<DN, B> implements io.intino.alexandria.ui.displays.components.selector.Selector, Addressable {
     private boolean multipleSelection = false;
@@ -44,6 +45,7 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
 
     public BaseSelector<DN, B> add(String option) {
 		Display display = new Text(box()).name(option);
+		display.id(UUID.randomUUID().toString());
         display.properties().put("value", option);
         display.properties().put("color", "black");
         addOption((Component) display);
@@ -142,7 +144,9 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
     private <D extends Display> D addOption(Component option) {
         PropertyList properties = option.properties();
         properties.addClassName("option");
+        properties.put("id", option.id());
         properties.put("name", option.name());
+        properties.put("label"  , option.label());
         return (D) super.add(option);
     }
 
