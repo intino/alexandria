@@ -81,7 +81,7 @@ def type(box)
 
 		[$datalake+getter]
 
-		[$datamart+getter...[$NL]]
+		[$datamart+getter...[$NL$NL]]
 
 		[$sentinel+getter...[$NL$NL]]
 
@@ -316,7 +316,7 @@ end
 
 def type(datamart) trigger(getter)
 	public java.io.File $name+firstLowerCase~Datamart() {
-		return new java.io.File(this.configuration().get("$path+parameter"));
+		return new java.io.File($path+parameter);
 	}
 end
 

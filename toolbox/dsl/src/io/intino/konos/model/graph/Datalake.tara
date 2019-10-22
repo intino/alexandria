@@ -29,7 +29,7 @@ Facet DatalakeType on Datalake is abstract
 
 Concept:Named Adapter
 
-Concept:Named:RequiresFacet Mounter
+Concept:Named:RequiresFacet:MessageHubNeeded Mounter
 	var Datamart datamart
 Facet MounterType on Mounter
 	sub Population

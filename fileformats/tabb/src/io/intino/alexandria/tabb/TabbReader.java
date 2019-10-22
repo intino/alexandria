@@ -19,13 +19,17 @@ import static java.util.stream.Collectors.toList;
 
 public class TabbReader {
 	private final TabbManifest info;
-	private final List<ColumnStream> columns;
+	private final List<TabbColumnStream> columns;
 
 	public TabbReader(File file, String... columns) throws IOException {
 		this.info = TabbManifest.of(file);
 		this.columns = Arrays.stream(info.columns(columns))
 				.map(c -> new TabbColumnStream(file, c))
 				.collect(toList());
+	}
+
+	public void close() {
+		columns.forEach(TabbColumnStream::close);
 	}
 
 	public long size() {
@@ -181,6 +185,14 @@ public class TabbReader {
 		@Override
 		public byte[] value() {
 			return value;
+		}
+
+		public void close() {
+			try {
+				inputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
