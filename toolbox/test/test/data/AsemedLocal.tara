@@ -5,6 +5,7 @@ MessageHub as JmsBus(url = "", user = "", password = "", clientId = "")
 Datalake(path = "{path}") datalake as Local
 
 Datamart("{datamart}") datamart
+Datamart("{datamart}") datamart2
 
 Mounter(datamart) inspeccionados as Population(format = Arff)
 	Split("DA" "DB") porDivisiones
