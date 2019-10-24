@@ -11,6 +11,8 @@ public interface MessageHub {
 
 	void detachListeners(String channel);
 
+	void detachListeners(Consumer<Message> consumer);
+
 	void attachRequestListener(String channel, RequestConsumer onMessageReceived);
 
 	void requestResponse(String channel, String message, Consumer<String> onResponse);

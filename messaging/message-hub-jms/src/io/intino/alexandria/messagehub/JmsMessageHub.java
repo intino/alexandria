@@ -11,8 +11,11 @@ import javax.jms.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static io.intino.alexandria.jms.MessageReader.textFrom;
 import static javax.jms.Session.AUTO_ACKNOWLEDGE;
@@ -21,7 +24,8 @@ import static javax.jms.Session.SESSION_TRANSACTED;
 public class JmsMessageHub implements MessageHub {
 	private final Map<String, JmsProducer> producers;
 	private final Map<String, JmsConsumer> consumers;
-	private javax.jms.Connection connection;
+	private final Map<Consumer<javax.jms.Message>, Integer> jmsConsumers;
+	private Connection connection;
 	private Session session;
 
 	public JmsMessageHub(String brokerUrl, String user, String password, String clientId) {
@@ -43,7 +47,7 @@ public class JmsMessageHub implements MessageHub {
 				Logger.error(e);
 			}
 		} else Logger.warn("Broker url is null");
-
+		jmsConsumers = new HashMap<>();
 	}
 
 	public Connection connection() {
@@ -115,7 +119,9 @@ public class JmsMessageHub implements MessageHub {
 		this.consumers.putIfAbsent(channel, topicConsumer(channel));
 		JmsConsumer consumer = this.consumers.get(channel);
 		if (consumer == null) return;
-		consumer.listen(message -> onMessageReceived.accept(MessageDeserializer.deserialize(message)));
+		Consumer<javax.jms.Message> messageConsumer = m -> onMessageReceived.accept(MessageDeserializer.deserialize(m));
+		jmsConsumers.put(messageConsumer, messageConsumer.hashCode());
+		consumer.listen(messageConsumer);
 	}
 
 	@Override
@@ -124,7 +130,9 @@ public class JmsMessageHub implements MessageHub {
 		this.consumers.putIfAbsent(channel, topicConsumer(channel));
 		TopicConsumer consumer = (TopicConsumer) this.consumers.get(channel);
 		if (consumer == null) return;
-		consumer.listen(message -> onMessageReceived.accept(MessageDeserializer.deserialize(message)), subscriberId);
+		Consumer<javax.jms.Message> messageConsumer = m -> onMessageReceived.accept(MessageDeserializer.deserialize(m));
+		jmsConsumers.put(messageConsumer, messageConsumer.hashCode());
+		consumer.listen(messageConsumer, subscriberId);
 	}
 
 	@Override
@@ -132,6 +140,16 @@ public class JmsMessageHub implements MessageHub {
 		if (this.consumers.containsKey(channel)) {
 			this.consumers.get(channel).close();
 			this.consumers.remove(channel);
+		}
+	}
+
+	@Override
+	public void detachListeners(Consumer<Message> consumer) {
+		Integer code = jmsConsumers.get(consumer);
+		if (code == null) return;
+		for (JmsConsumer jc : consumers.values()) {
+			List<Consumer<javax.jms.Message>> toRemove = jc.listeners().stream().filter(l -> l.hashCode() == code).collect(Collectors.toList());
+			toRemove.forEach(jc::removeListener);
 		}
 	}
 
@@ -180,7 +198,7 @@ public class JmsMessageHub implements MessageHub {
 
 
 	private static String createRandomString() {
-		java.util.Random random = new java.util.Random(System.currentTimeMillis());
+		Random random = new Random(System.currentTimeMillis());
 		long randomLong = random.nextLong();
 		return Long.toHexString(randomLong);
 	}

@@ -1,11 +1,11 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.1.0") jms
+Artifact("io.intino.alexandria", "1.2.0") jms
 	Imports
 		Compile("io.intino.alexandria", "logger4j", "1.0.0")
 		Compile("io.intino.alexandria", "logger", "2.1.0")
-		Compile("io.intino.alexandria", "exceptions", "[1.0.0, 2.0.0)")
-		Compile("io.intino.alexandria", "json", "[1.0.0, 2.0.0)")
+		Compile("io.intino.alexandria", "exceptions", "1.0.0")
+		Compile("io.intino.alexandria", "json", "1.0.1")
 		Compile("org.apache.activemq", "activemq-client", "5.15.8")
 		Test("junit", "junit", "4.12")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)

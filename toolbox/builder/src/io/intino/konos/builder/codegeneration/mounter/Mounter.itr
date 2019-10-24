@@ -75,6 +75,8 @@ def type(mounter & batch)
 	package $package+validPackage.mounters;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
+	import io.intino.alexandria.message.Message;
+	import io.intino.alexandria.zim.ZimStream;
 
     public class $name+FirstUpperCase {
 
@@ -88,8 +90,15 @@ def type(mounter & batch)
 		}
 
     	public void execute() {
+            ZimStream.Merge stream = new ZimStream.Merge($tank+content...[, ]);
+            while(stream.hasNext()) {
+                process(stream.next());
+            }
+        }
 
-    	}
+    	private void process(Message message) {
+
+        }
 	}
 end
 
@@ -97,8 +106,12 @@ def type(tank) trigger(field)
 	io.intino.alexandria.datalake.Datalake.EventStore.Tank $name+camelCase+firstLowerCase;
 end
 
+def type(tank) trigger(content)
+	$name+camelCase+firstLowerCase.content()
+end
+
 def type(tank) trigger(constructor)
-	this.$name+camelCase+firstLowerCase = box.datalake().tank(t -> t.name().equals("$qn")).get();
+	this.$name+camelCase+firstLowerCase = box.datalake().eventStore().tank(t -> t.name().equals("$qn")).get();
 end
 
 def trigger(column)

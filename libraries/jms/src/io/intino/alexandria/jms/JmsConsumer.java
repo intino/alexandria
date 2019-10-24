@@ -4,6 +4,7 @@ import io.intino.alexandria.logger.Logger;
 
 import javax.jms.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -29,6 +30,14 @@ public abstract class JmsConsumer {
 		} catch (Exception e) {
 			Logger.error(e);
 		}
+	}
+
+    public List<Consumer<Message>>  listeners() {
+        return Collections.unmodifiableList(listeners);
+    }
+
+    public void removeListener(Consumer<Message> listener) {
+		listeners.remove(listener);
 	}
 
 	public void close() {

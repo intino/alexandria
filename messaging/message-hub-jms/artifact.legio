@@ -3,7 +3,7 @@ dsl Legio
 Artifact("io.intino.alexandria", "1.0.0") message-hub-jms
 	Imports
 		Compile("io.intino.alexandria","message", "1.0.0")
-		Compile("io.intino.alexandria", "jms", "1.1.0")
+		Compile("io.intino.alexandria", "jms", "1.2.0")
 		Test("junit", "junit", "LATEST")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.releases)
