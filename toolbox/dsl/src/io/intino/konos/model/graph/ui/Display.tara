@@ -4,8 +4,8 @@ use DataTypes
 use UI
 use Component
 
-Facet ExtensionOf on PassiveView
-	var PassiveView parentView
+
+
 
 Concept:Named PassiveView is abstract
 	Concept Request extends Data
@@ -18,21 +18,24 @@ Concept:Named PassiveView is abstract
 		var Exception[] exceptionRefs = empty
 		has Exception
 
+	Aspect ExtensionOf
+		var PassiveView parentView
+
 Concept:Named Display extends PassiveView
 	var Component[] components = empty
 	var string parentDisplay = empty
 
 	has Block
 
-Facet Desktop on Template
-	has:{1..1} OtherComponents.Header
-	//has:{1..1} ChildComponents.Tabs
 
-Facet DrawerNavigable on Desktop
+Facet DrawerNavigable
 	var word:{Left Right Top Bottom} direction = Left
 	var word:{Normal Modal} mode = Normal
 	var boolean hasMiniVariant = false
 	var boolean underHeader = false
+
+	Aspect Responsible
+	Aspect Persistent
 
 Facet Accessible on Display
 	var string[] parameters
