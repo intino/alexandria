@@ -180,7 +180,7 @@ def type(jms & messageHub) trigger(setup)
 end
 
 def type(messageHub) trigger(setup)
-	this.messageHub = new $package.MessageHub(this);
+	this.messageHub = new $package.MessageHub(($box+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
 
 def type(service & jmx) trigger(jmx)
@@ -287,14 +287,13 @@ def type(service & messaging) trigger(getter)
 	}
 end
 
-
 def type(datalake) trigger(getter)
 	public io.intino.alexandria.datalake.Datalake datalake() {
 		return this.datalake;
 	}
 end
 
-def type(messageHub) trigger(getter)
+def type(messagehub) trigger(getter)
 	public io.intino.alexandria.message.MessageHub messageHub() {
 		return this.messageHub;
 	}

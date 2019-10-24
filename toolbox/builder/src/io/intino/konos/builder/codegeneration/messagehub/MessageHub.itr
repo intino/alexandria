@@ -11,14 +11,53 @@ end
 def type(messagehub)
 	package $package+validPackage;
 
-	import $package+validPackage.$box+firstUpperCase~Box;
+	import io.intino.alexandria.message.Message;
 
-    public class MessageHub {
-		$tank...[$NL]
+	import java.util.ArrayList;
+	import java.util.HashMap;
+	import java.util.List;
+	import java.util.Map;
+	import java.util.function.Consumer;
 
-		public MessageHub($box+validName+firstUpperCase~Box box) {
+	import static java.util.Collections.emptyList;
 
-		}
+    public class MessageHub implements io.intino.alexandria.message.MessageHub {
+		private Map<String, List<Consumer<Message>>> consumers = new HashMap<>();
+
+        @Override
+        public void sendMessage(String channel, Message message) {
+            new Thread(() -> consumers.getOrDefault(channel, emptyList()).forEach(l -> l.accept(message))).start();
+        }
+
+        @Override
+        public void attachListener(String channel, Consumer<Message> onMessageReceived) {
+            if(!consumers.containsKey(channel)) consumers.put(channel, new ArrayList<>());
+            consumers.get(channel).add(onMessageReceived);
+        }
+
+        @Override
+        public void attachListener(String channel, String subscriberId, Consumer<Message> onMessageReceived) {
+            attachListener(channel, onMessageReceived);
+        }
+
+        @Override
+        public void detachListeners(String channel) {
+            consumers.remove(channel);
+        }
+
+        @Override
+        public void detachListeners(Consumer<Message> consumer) {
+            consumers.values().forEach(l -> l.remove(consumer));
+        }
+
+
+        @Override
+        public void attachRequestListener(String channel, RequestConsumer onMessageReceived) {
+        }
+
+        @Override
+        public void requestResponse(String channel, String message, Consumer<String> onResponse) {
+        }
 	}
 end
 

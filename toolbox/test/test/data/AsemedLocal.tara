@@ -28,6 +28,9 @@ Mounter(datamart) allCriterios as Realtime(subscriberId = "")
 Feeder("asemed.Ajuste") ajusteFeeder
 Feeder("asemed.Criterio" "asemed.CriterioBorrado") criteriosFeeder
 
+Workflow(businessUnit = "b1") w1
+	Process(bpmn = "helloworld.bpmn") aaa
+	Process(bpmn = "service.bpmn") bbb
 
 //Task MountAjuste as BootTrigger
 //	LinkWithMounter(datahub.criterios)
