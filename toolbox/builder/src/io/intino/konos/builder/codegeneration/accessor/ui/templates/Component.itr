@@ -131,7 +131,7 @@ def type(properties & codeText) trigger(specific)
 end
 
 def type(properties & text) trigger(specific)
-	[ mode="$mode"][ prefix="$prefix"][ suffix="$suffix"][ value="$defaultValue"][ placeholder="$placeholder"][ readonly={$readonly}][ focused={$focused}][ highlighted={$highlighted}][ type="$type"]
+	[ mode="$mode"][ editionMode="$editionMode"][ rows={$rows}][ prefix="$prefix"][ suffix="$suffix"][ value="$defaultValue"][ placeholder="$placeholder"][ readonly={$readonly}][ focused={$focused}][ highlighted={$highlighted}][ type="$type"]
 end
 
 def type(properties & location) trigger(specific)

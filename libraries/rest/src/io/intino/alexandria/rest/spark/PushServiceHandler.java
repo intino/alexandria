@@ -25,7 +25,12 @@ public class PushServiceHandler {
 
 	@OnWebSocketConnect
 	public void onConnect(Session session) throws Exception {
-		registerClient(session);
+		if (client(session) != null) {
+			cancelClose(session);
+			client(session).session(session);
+		}
+		else registerClient(session);
+
 		pushService.onOpen(client(session));
 	}
 
@@ -36,13 +41,14 @@ public class PushServiceHandler {
 
 	@OnWebSocketClose
 	public void onClose(Session session, int statusCode, String reason) {
+		String sessionId = SparkClient.sessionId(session);
 		cancelClose(session);
-		if (statusCode == CloseGoingAway || statusCode == CloseReadEOF) {
-			doClose(SparkClient.sessionId(session), client(session));
+		if (statusCode == CloseGoingAway) {
+			Logger.debug(String.format("WebSocket connection lost. Status code: %d. %s", statusCode, reason));
+			doClose(sessionId, client(session));
 			return;
 		}
-		Logger.debug(String.format("WebSocket connection lost. Status code: %d. %s", statusCode, reason));
-		doCloseDelayed(session);
+		doCloseDelayed(session, sessionId);
 	}
 
 	@OnWebSocketMessage
@@ -80,16 +86,16 @@ public class PushServiceHandler {
 		closeTimersMap.remove(sessionId);
 	}
 
-	private void doCloseDelayed(Session session) {
+	private void doCloseDelayed(Session session, String sessionId) {
 		SparkClient client = client(session);
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				doClose(SparkClient.sessionId(session), client);
+				doClose(sessionId, client);
 			}
 		}, CloseTimeout);
-		closeTimersMap.put(id(session), timer);
+		closeTimersMap.put(sessionId, timer);
 	}
 
 	private void doClose(String sessionId, SparkClient client) {
