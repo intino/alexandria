@@ -7,8 +7,8 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.I18nTemplate;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.graph.Service;
 import io.intino.konos.model.graph.Translator;
-import io.intino.konos.model.graph.ui.UIService;
 
 import java.util.List;
 
@@ -16,9 +16,9 @@ import static io.intino.konos.builder.helpers.CodeGenerationHelper.fileOf;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.folder;
 
 public class I18nRenderer extends UIRenderer {
-	private final UIService service;
+	private final Service.UI service;
 
-	public I18nRenderer(Settings settings, UIService service, Target target) {
+	public I18nRenderer(Settings settings, Service.UI service, Target target) {
 		super(settings, target);
 		this.service = service;
 	}

@@ -6,8 +6,7 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.MessageHub;
-import io.intino.konos.model.graph.realtime.RealtimeMounter;
-import io.intino.konos.model.graph.realtime.RealtimeMounter.Source;
+import io.intino.konos.model.graph.Mounter;
 
 import java.io.File;
 
@@ -34,15 +33,15 @@ public class MessageHubRenderer {
 				add("box", settings.boxName()).
 				add("package", settings.packageName());
 		if (messageHub.isJmsBus()) builder.add("jms");
-		graph.realtimeMounterList().forEach(mounter -> builder.add("mounter", frameOf(mounter)));
+		graph.mounterList(Mounter::isRealtime).map(Mounter::asRealtime).forEach(mounter -> builder.add("mounter", frameOf(mounter)));
 		settings.classes().put("MessageHub", "MessageHub");
 		File destination = messageHub.isJmsBus() ? genDirectory : sourceDirectory;
 		if (!Commons.javaFile(destination, "MessageHub").exists())
 			writeFrame(destination, "MessageHub", customize(new MessageHubTemplate()).render(builder.toFrame()));
 	}
 
-	private FrameBuilder frameOf(RealtimeMounter mounter) {
-		return new FrameBuilder("mounter").add("package", settings.packageName()).add("name", mounter.name$()).add("source", mounter.sourceList().stream().map(Source::channel).toArray(String[]::new));
+	private FrameBuilder frameOf(Mounter.Realtime mounter) {
+		return new FrameBuilder("mounter").add("package", settings.packageName()).add("name", mounter.name$()).add("source", mounter.sourceList().stream().map(Mounter.Realtime.Source::channel).toArray(String[]::new));
 	}
 
 }

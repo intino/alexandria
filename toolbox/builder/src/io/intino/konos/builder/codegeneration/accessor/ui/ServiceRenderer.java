@@ -6,12 +6,12 @@ import io.intino.konos.builder.codegeneration.accessor.ui.resource.ResourceListR
 import io.intino.konos.builder.codegeneration.ui.I18nRenderer;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayListRenderer;
-import io.intino.konos.model.graph.ui.UIService;
+import io.intino.konos.model.graph.Service;
 
 public class ServiceRenderer extends UIRenderer {
-	private final UIService service;
+	private final Service.UI service;
 
-	public ServiceRenderer(Settings settings, UIService service) {
+	public ServiceRenderer(Settings settings, Service.UI service) {
 		super(settings, Target.Accessor);
 		this.service = service;
 	}

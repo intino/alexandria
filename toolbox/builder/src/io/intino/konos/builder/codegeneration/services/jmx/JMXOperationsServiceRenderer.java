@@ -9,23 +9,22 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.JMXActionRenderer;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.graph.Data;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Parameter;
-import io.intino.konos.model.graph.jmx.JMXService;
-import io.intino.konos.model.graph.jmx.JMXService.Operation;
-import io.intino.konos.model.graph.list.ListData;
-import io.intino.konos.model.graph.object.ObjectData;
-import io.intino.konos.model.graph.type.TypeData;
+import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.graph.Service.JMX.Operation;
 
 import java.io.File;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class JMXOperationsServiceRenderer extends Renderer {
-	private final List<JMXService> services;
+	private final List<Service.JMX> services;
 
 	public JMXOperationsServiceRenderer(Settings settings, KonosGraph graph) {
 		super(settings, Target.Owner);
-		this.services = graph.jMXServiceList();
+		this.services = graph.serviceList(Service::isJMX).map(Service::asJMX).collect(Collectors.toList());
 	}
 
 	@Override
@@ -37,7 +36,7 @@ public class JMXOperationsServiceRenderer extends Renderer {
 		});
 	}
 
-	private void createInterface(JMXService service) {
+	private void createInterface(Service.JMX service) {
 		FrameBuilder builder = new FrameBuilder("jmx", "interface")
 				.add("name", service.name$())
 				.add("package", packageName())
@@ -49,7 +48,7 @@ public class JMXOperationsServiceRenderer extends Renderer {
 		Commons.writeFrame(destinationPackage(), service.name$() + "MBean", template().render(builder));
 	}
 
-	private void createImplementation(JMXService service) {
+	private void createImplementation(Service.JMX service) {
 		FrameBuilder builder = new FrameBuilder("jmx", "implementation")
 				.add("name", service.name$())
 				.add("box", boxName())
@@ -73,18 +72,18 @@ public class JMXOperationsServiceRenderer extends Renderer {
 
 	private Frame returnType(Operation operation) {
 		final FrameBuilder builder = new FrameBuilder("returnType").add("value", operation.response() == null ? "void" : formatType(operation.response().asType()));
-		if (operation.response() != null && operation.response().i$(ListData.class)) builder.add("list");
+		if (operation.response() != null && operation.response().i$(Data.List.class)) builder.add("list");
 		return builder.toFrame();
 	}
 
-	private String formatType(TypeData typeData) {
-		return (typeData.i$(ObjectData.class) ? (packageName() + ".schemas.") : "") + typeData.type();
+	private String formatType(Data.Type typeData) {
+		return (typeData.i$(Data.Object.class) ? (packageName() + ".schemas.") : "") + typeData.type();
 	}
 
 	private void setupParameters(List<Parameter> parameters, FrameBuilder builder) {
 		for (Parameter parameter : parameters) {
 			final FrameBuilder parameterBuilder = new FrameBuilder("parameter").add("name", parameter.name$()).add("type", formatType(parameter.asType()));
-			if (parameter.i$(ListData.class)) parameterBuilder.add("list");
+			if (parameter.i$(Data.List.class)) parameterBuilder.add("list");
 			builder.add("parameter", parameterBuilder.toFrame());
 		}
 	}

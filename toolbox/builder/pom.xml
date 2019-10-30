@@ -5,7 +5,7 @@
     <groupId>io.intino.konos</groupId>
     <artifactId>builder</artifactId>
     <name>Builder</name>
-    <version>6.1.2</version>
+    <version>7.0.0</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -105,7 +105,7 @@
             <groupId>io.intino.tara</groupId>
             <artifactId>magritte</artifactId>
             <scope>provided</scope>
-            <version>2.3.1</version>
+            <version>3.0.0</version>
         </dependency>
         <dependency>
             <groupId>io.intino.itrules</groupId>

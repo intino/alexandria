@@ -64,7 +64,7 @@ Concept:Named Service
 				sub Head
 				sub Options
 				sub Patch
-				has:RequiresFacet Parameter
+				has:RequiresAspect Parameter
 				has:{0..1} Response
 				var Exception[] exceptionRefs = empty
 				has Exception
@@ -122,7 +122,9 @@ Concept:Named Service
 			var word:{Text Attachment} responseType = Text
 			has Request
 
-	Aspect UI is decorable
+	Aspect UI
+		var function:HomesProvider homeList = 'self.resourceList().stream().filter(Service.UI.Resource::isMain).collect(toList());';
+		var function:TemplatesProvider templates = 'return self.resourceList().stream().map(r-> r.asPage().template()).collect(Collectors.toList());';
     	Concept Use
     		var string className
     		var string url

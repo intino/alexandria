@@ -7,7 +7,7 @@ import io.intino.konos.builder.codegeneration.cache.CacheReader;
 import io.intino.konos.builder.codegeneration.cache.CacheWriter;
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.ui.UIService;
+import io.intino.konos.model.graph.Service;
 import io.intino.tara.magritte.Graph;
 import org.junit.Test;
 import utils.TestUtil;
@@ -16,7 +16,7 @@ import java.io.File;
 
 public class UIGenerationTest {
 
-	private static final String UI = "ui";
+	private static final String UI = "components";
 	private static final String DIALOG = "dialog";
 	private static final String konos = "testkonos";
 	private static final String ebar = "testebar";
@@ -36,9 +36,9 @@ public class UIGenerationTest {
 	@Test
 	public void testUiAndDisplays() throws Exception {
 		File gen = new File(TestUtil.DIR, UI);
-		KonosGraph graph = new Graph().loadStashes("ui").as(KonosGraph.class);
+		KonosGraph graph = new Graph().loadStashes(UI).as(KonosGraph.class);
 		new FullRenderer(graph, TestUtil.settings(gen, UI, loadCache(gen, graph))).execute();
-		for (UIService service : graph.uIServiceList()) new ServiceRenderer(new Settings().src(gen).gen(gen).cache(loadCache(gen, graph)), service).execute();
+		for (Service.UI service : graph.uiServiceList()) new ServiceRenderer(new Settings().src(gen).gen(gen).cache(loadCache(gen, graph)), service).execute();
 	}
 
 	@Test
@@ -102,7 +102,7 @@ public class UIGenerationTest {
 		cleanTestDirectory();
 		gen.mkdirs();
 		new FullRenderer(graph, TestUtil.settings(gen, workingPackage.toLowerCase(), cache)).execute();
-		for (UIService service : graph.uIServiceList()) new ServiceRenderer(settings, service).execute();
+		for (Service.UI service : graph.uiServiceList()) new ServiceRenderer(settings, service).execute();
 		new CacheWriter(gen).save(cache);
 	}
 

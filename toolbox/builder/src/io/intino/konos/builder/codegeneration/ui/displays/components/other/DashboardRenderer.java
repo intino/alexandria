@@ -5,7 +5,7 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.SizedRenderer;
-import io.intino.konos.model.graph.OtherComponents.Dashboard;
+import io.intino.konos.model.graph.BIComponents.Dashboard;
 
 public class DashboardRenderer extends SizedRenderer<Dashboard> {
 

@@ -48,7 +48,7 @@ public class BoxRenderer extends Renderer {
 	}
 
 	private boolean hasAuthenticatedApis() {
-		return graph.rESTServiceList().stream().anyMatch(restService -> restService.authenticatedWithToken() != null);
+		return graph.serviceList(service -> service.isREST() && service.asREST().authenticatedWithToken() != null).findAny().isPresent();
 	}
 
 	private Frame fillTara() {

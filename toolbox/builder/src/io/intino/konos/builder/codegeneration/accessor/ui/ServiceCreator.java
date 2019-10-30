@@ -17,7 +17,7 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.ArtifactTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
-import io.intino.konos.model.graph.ui.UIService;
+import io.intino.konos.model.graph.Service;
 import io.intino.plugin.project.LegioConfiguration;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
@@ -47,11 +47,11 @@ import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 public class ServiceCreator extends UIRenderer {
 
 	private final Project project;
-	private final UIService service;
+	private final Service.UI service;
 
 	private static final String LegioArtifact = "artifact.legio";
 
-	public ServiceCreator(Settings settings, UIService service) {
+	public ServiceCreator(Settings settings, Service.UI service) {
 		super(settings, Target.Accessor);
 		this.project = settings.module() == null ? null : settings.module().getProject();
 		this.service = service;
@@ -168,7 +168,7 @@ public class ServiceCreator extends UIRenderer {
 	}
 
 	@NotNull
-	private String moduleImlFilename(UIService service) {
+	private String moduleImlFilename(Service.UI service) {
 		return project.getBasePath() + File.separator + toSnakeCase(service.name$()) + File.separator + toSnakeCase(service.name$()) + ModuleFileType.DOT_DEFAULT_EXTENSION;
 	}
 

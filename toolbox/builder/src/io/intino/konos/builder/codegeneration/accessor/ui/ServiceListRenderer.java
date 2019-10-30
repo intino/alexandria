@@ -4,6 +4,10 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ServiceListRenderer extends UIRenderer {
 	private final KonosGraph graph;
@@ -15,7 +19,8 @@ public class ServiceListRenderer extends UIRenderer {
 
 	@Override
 	public void render() {
-		graph.uIServiceList().forEach(s -> new ServiceCreator(settings, s).execute());
+		List<Service.UI> services = graph.serviceList(Service::isUI).map(Service::asUI).collect(Collectors.toList());
+		services.forEach(s -> new ServiceCreator(settings, s).execute());
 	}
 
 }

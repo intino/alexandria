@@ -5,15 +5,9 @@ import com.google.gson.GsonBuilder;
 import io.intino.konos.builder.codegeneration.swagger.SwaggerSpec.Path.Operation;
 import io.intino.konos.builder.codegeneration.swagger.SwaggerSpec.SecurityDefinition;
 import io.intino.konos.model.graph.Exception;
-import io.intino.konos.model.graph.Response;
-import io.intino.konos.model.graph.Schema;
-import io.intino.konos.model.graph.file.FileData;
-import io.intino.konos.model.graph.longinteger.LongIntegerData;
-import io.intino.konos.model.graph.object.ObjectData;
-import io.intino.konos.model.graph.rest.RESTService;
-import io.intino.konos.model.graph.rest.RESTService.Resource;
-import io.intino.konos.model.graph.rest.RESTService.Resource.Parameter.In;
-import io.intino.konos.model.graph.type.TypeData;
+import io.intino.konos.model.graph.*;
+import io.intino.konos.model.graph.Service.REST.Resource;
+import io.intino.konos.model.graph.Service.REST.Resource.Parameter.In;
 import io.intino.tara.magritte.Layer;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,10 +16,10 @@ import java.util.stream.Collectors;
 
 public class OpenApiDescriptor {
 
-	private final RESTService service;
+	private final Service.REST service;
 	private final List<Schema> schemas;
 
-	public OpenApiDescriptor(RESTService service) {
+	public OpenApiDescriptor(Service.REST service) {
 		this.service = service;
 		this.schemas = new ArrayList<>();
 	}
@@ -60,7 +54,7 @@ public class OpenApiDescriptor {
 		return "/" + service.info().version();
 	}
 
-	private SwaggerSpec.Info createInfo(RESTService.Info info) {
+	private SwaggerSpec.Info createInfo(Service.REST.Info info) {
 		return info == null ? null : new SwaggerSpec.Info(info.version(), info.title(), info.description(), info.termsOfService(), info.contact() == null ? null :
 				new SwaggerSpec.Info.Contact(info.contact().name$(), info.contact().email(), info.contact().url()), info.license() == null ? null :
 				new SwaggerSpec.Info.License(info.license().name$(), info.license().url()));
@@ -148,24 +142,24 @@ public class OpenApiDescriptor {
 		return list.isEmpty() ? null : list;
 	}
 
-	private String parameterType(In in, TypeData typeData) {
+	private String parameterType(In in, Data.Type typeData) {
 		String type = typeData.type();
-		if (typeData.i$(LongIntegerData.class) || type.equals("java.time.Instant") || type.equalsIgnoreCase("double")) return "number";
-		if (typeData.i$(FileData.class) || type.endsWith("Resource")) return "file";
+		if (typeData.i$(Data.LongInteger.class) || type.equals("java.time.Instant") || type.equalsIgnoreCase("double")) return "number";
+		if (typeData.i$(Data.File.class) || type.endsWith("Resource")) return "file";
 		if (type.equalsIgnoreCase("java.lang.enum")) return "string";
-		if (typeData.i$(ObjectData.class)) {
+		if (typeData.i$(Data.Object.class)) {
 			if (in == In.body) return null;
 			return "string";
 		}
 		return type.toLowerCase();
 	}
 
-	private String transform(TypeData typeData) {
+	private String transform(Data.Type typeData) {
 		String type = typeData.type();
-		if (typeData.i$(LongIntegerData.class) || type.equals("java.time.Instant") || type.equalsIgnoreCase("double")) return "number";
-		if (typeData.i$(FileData.class) || type.endsWith("Resource")) return "file";
+		if (typeData.i$(Data.LongInteger.class) || type.equals("java.time.Instant") || type.equalsIgnoreCase("double")) return "number";
+		if (typeData.i$(Data.File.class) || type.endsWith("Resource")) return "file";
 		if (type.equalsIgnoreCase("java.lang.enum")) return "string";
-		if (typeData.i$(ObjectData.class)) return "object";
+		if (typeData.i$(Data.Object.class)) return "object";
 		return type.toLowerCase();
 	}
 

@@ -1,17 +1,15 @@
 dsl Proteo
 
 use DataTypes
-use UI
 use Component
-
-
-
+use Services
 
 Concept:Named PassiveView is abstract
 	Concept Request extends Data
 		var word:{Asset Void} responseType = Void
 		var Exception[] exceptionRefs = empty
 		has Exception
+		Aspect Addressable
 
 	Concept Notification extends Data
 		var word:{All Client Display} to = Display
@@ -24,28 +22,16 @@ Concept:Named PassiveView is abstract
 Concept:Named Display extends PassiveView
 	var Component[] components = empty
 	var string parentDisplay = empty
-
+	var string[] parameters = empty
 	has Block
 
+	Aspect Accessible
+	Aspect Decorated
 
-Facet DrawerNavigable
-	var word:{Left Right Top Bottom} direction = Left
-	var word:{Normal Modal} mode = Normal
-	var boolean hasMiniVariant = false
-	var boolean underHeader = false
-
-	Aspect Responsible
-	Aspect Persistent
-
-Facet Accessible on Display
-	var string[] parameters
-
-Facet AbstractAddressable is abstract
-	var UI.Resource addressableResource
+Facet Addressable
+	var Service.UI.Resource addressableResource
 	var boolean encoded = false
 	var boolean listenForChanges = true
-Facet Addressable extends AbstractAddressable on Display.Request
-Facet Addressable extends AbstractAddressable on OperationComponents.Task
-Facet Addressable extends AbstractAddressable on OtherComponents.Selector
 
-Facet Decorated on Display
+
+

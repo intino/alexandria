@@ -1,14 +1,14 @@
 package io.intino.konos.builder.helpers;
 
 import com.intellij.openapi.diagnostic.Logger;
+import io.intino.konos.model.graph.Data;
 import io.intino.konos.model.graph.Redirect;
 import io.intino.konos.model.graph.Response;
-import io.intino.konos.model.graph.file.FileData;
-import io.intino.konos.model.graph.rest.RESTService;
-import io.intino.konos.model.graph.rest.RESTService.Notification;
-import io.intino.konos.model.graph.rest.RESTService.Resource;
-import io.intino.konos.model.graph.rest.RESTService.Resource.Operation;
-import io.intino.konos.model.graph.rest.RESTService.Resource.Parameter.In;
+import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.graph.Service.REST.Notification;
+import io.intino.konos.model.graph.Service.REST.Resource;
+import io.intino.konos.model.graph.Service.REST.Resource.Operation;
+import io.intino.konos.model.graph.Service.REST.Resource.Parameter.In;
 
 import java.io.File;
 import java.io.IOException;
@@ -83,7 +83,7 @@ public class Commons {
 	}
 
 	public static String path(Resource resource) {
-		RESTService service = resource.core$().ownerAs(RESTService.class);
+		Service.REST service = resource.core$().ownerAs(Service.REST.class);
 		String basePath = basePath(service.basePath());
 		if (service.info() != null && service.info().version() != null) basePath = basePath + service.info().version() + "/";
 		String resourcePath = resource.path();
@@ -122,7 +122,7 @@ public class Commons {
 	}
 
 	public static int fileParameters(Operation operation) {
-		return (int) operation.parameterList().stream().filter(p -> p.i$(FileData.class)).count();
+		return (int) operation.parameterList().stream().filter(p -> p.i$(Data.File.class)).count();
 	}
 
 	public static String firstUpperCase(String value) {

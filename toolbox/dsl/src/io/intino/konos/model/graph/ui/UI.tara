@@ -23,8 +23,6 @@ Concept:{0..1} Theme
 Concept Format
 	var string content
 
-
-
 // deprecated
 //Facet DialogPage extends Page
 //	var Block block

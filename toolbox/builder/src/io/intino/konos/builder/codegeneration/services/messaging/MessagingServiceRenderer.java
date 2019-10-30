@@ -9,23 +9,24 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Parameter;
+import io.intino.konos.model.graph.Service;
 import io.intino.konos.model.graph.Workflow;
-import io.intino.konos.model.graph.messaging.MessagingService;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class MessagingServiceRenderer extends Renderer {
-	private final List<MessagingService> services;
+	private final List<Service.Messaging> services;
 	private final Workflow workflow;
 
 	public MessagingServiceRenderer(Settings settings, KonosGraph graph) {
 		super(settings, Target.Owner);
-		this.services = graph.messagingServiceList();
+		this.services = graph.serviceList(Service::isMessaging).map(Service::asMessaging).collect(Collectors.toList());
 		this.workflow = graph.workflow();
 	}
 
@@ -34,7 +35,7 @@ public class MessagingServiceRenderer extends Renderer {
 		services.forEach(this::processService);
 	}
 
-	private void processService(MessagingService service) {
+	private void processService(Service.Messaging service) {
 		FrameBuilder builder = new FrameBuilder("jms").
 				add("name", service.name$()).
 				add("box", boxName()).
@@ -43,7 +44,7 @@ public class MessagingServiceRenderer extends Renderer {
 				add("model", service.subscriptionModel().name()).
 				add("request", processRequests(service.requestList(), service.domain(), service.subscriptionModel().name())).
 				add("notification", processNotifications(service.notificationList(), service.subscriptionModel().name()));
-		if (service.requestList().stream().anyMatch(MessagingService.Request::isProcessTrigger))
+		if (service.requestList().stream().anyMatch(Service.Messaging.Request::isProcessTrigger))
 			builder.add("hasProcess", ";");
 		if (!service.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
@@ -51,15 +52,15 @@ public class MessagingServiceRenderer extends Renderer {
 	}
 
 	@NotNull
-	private String nameOf(MessagingService service) {
+	private String nameOf(Service.Messaging service) {
 		return StringFormatters.get(Locale.getDefault()).get("firstuppercase").format(service.name$()).toString() + "Service";
 	}
 
-	private Frame[] processRequests(List<MessagingService.Request> requests, String domain, String subscriptionModel) {
+	private Frame[] processRequests(List<Service.Messaging.Request> requests, String domain, String subscriptionModel) {
 		return requests.stream().map((request) -> processRequest(request, domain, subscriptionModel)).toArray(Frame[]::new);
 	}
 
-	private Frame processRequest(MessagingService.Request request, String domain, String subscriptionModel) {
+	private Frame processRequest(Service.Messaging.Request request, String domain, String subscriptionModel) {
 		FrameBuilder builder = new FrameBuilder("request").
 				add("name", request.name$()).
 				add("package", packageName()).
@@ -71,11 +72,11 @@ public class MessagingServiceRenderer extends Renderer {
 		return builder.toFrame();
 	}
 
-	private Frame[] processNotifications(List<MessagingService.Notification> notifications, String subscriptionModel) {
+	private Frame[] processNotifications(List<Service.Messaging.Notification> notifications, String subscriptionModel) {
 		return notifications.stream().map((notification) -> processNotification(notification, subscriptionModel)).toArray(Frame[]::new);
 	}
 
-	private Frame processNotification(MessagingService.Notification notification, String subscriptionModel) {
+	private Frame processNotification(Service.Messaging.Notification notification, String subscriptionModel) {
 		return new FrameBuilder("notification").
 				add("name", notification.name$()).
 				add("package", packageName()).

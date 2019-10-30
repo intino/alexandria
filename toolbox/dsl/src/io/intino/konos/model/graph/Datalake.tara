@@ -3,94 +3,91 @@ dsl Proteo
 use DataTypes
 
 Concept:{0..1} MessageHub
+	Aspect JmsBus
+		var string url
+		var string user
+		var string password
+		var string clientId
+
 
 Concept:{0..1} Datalake
 	var string path
-
+	Aspect DatalakeType
+		sub Mirrored
+			var string startingTimetag
+			var string originDatalakePath
+			sub NfsMirrored
+			sub SshMirrored
+				var string url
+				var string user
+				var string password = empty
+		sub Local
 Concept:Named Datamart
 	var string path
 
-Facet JmsBus on MessageHub
-	var string url
-	var string user
-	var string password
-	var string clientId
-
-Facet DatalakeType on Datalake is abstract
-	sub Mirrored
-		var string startingTimetag
-		var string originDatalakePath
-		sub NfsMirrored
-		sub SshMirrored
-			var string url
-			var string user
-			var string password = empty
-	sub Local
-
 Concept:Named Adapter
 
-Concept:Named:RequiresFacet:MessageHubNeeded Mounter
+Concept:Named:RequiresAspect:MessageHubNeeded Mounter
 	var Datamart datamart
-Facet MounterType on Mounter
-	sub Population
-		var word:{Arff Tabb Csv} format
-		Concept Split > var string[] splits
-		Concept:{1..*} Source
-			var string tank
-			var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type
-		Concept:{0..1}:Named Filter
-		Concept:{0..1} Aggregation
-			Concept:{1..*} Column
-				var string name
+	Aspect MounterType
+		sub Population
+			var word:{Arff Tabb Csv} format
+			Concept Split > var string[] splits
+			Concept:{1..*} Source
 				var string tank
 				var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type
-	sub Batch
-		Concept:{1..*} Source
-			var string tank
-	sub Realtime
-		var string subscriberId
-		Concept:{1..*} Source
-			var string channel
-			var Schema schema
+				Aspect Id
+					var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type = Long
+				Aspect Constant
+					var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type = String
+					var string value
+			Concept:{0..1}:Named Filter
+			Concept:{0..1} Aggregation
+				Concept:{1..*} Column
+					var string name
+					var string tank
+					var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type
+		sub Batch
+			Concept:{1..*} Source
+				var string tank
+		sub Realtime
+			var string subscriberId
+			Concept:{1..*} Source
+				var string channel
+				var Schema schema
 //	sub TimeLine
 //		Concept Select extends Realtime.Select
 //			var word:{Sum Average Count Custom} aggregator
 
 //sin faceta, es un mounter generico con datalake.
-Facet Id on Population.Source
-	var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type = Long
-Facet Constant on Population.Source
-	var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type = String
-	var string value
+
+
 
 Concept:Named Feeder
 	var string[] tanks
 	has:Named Sensor
 
 Concept:Named Sensor is component
+	Aspect UserSensor
+		var integer:{%} width = 100%
+		var integer:{%} height = 100%
+	Aspect FormEdition extends UserSensor
+		var string path
+	Aspect DocumentEdition extends UserSensor
+		var word:{Offline Online} mode = Online
 
-Facet UserSensor on Sensor
-	var integer:{%} width = 100%
-	var integer:{%} height = 100%
+	Aspect DocumentSignature extends UserSensor
+		var word:{Sign CoSign CounterSign} signType
+		var word:{Pkcs7 XadesAttached XadesDetached CadesAttached CadesDetached} signFormat
 
-Facet FormEdition extends UserSensor on Sensor
-	var string path
+	Aspect Poll extends UserSensor
+		var string defaultOption = empty
+		Concept Option
+			var string value
+			var Schema event
+			has Option
 
-Facet DocumentEdition extends UserSensor on Sensor
-	var word:{Offline Online} mode = Online
-
-Facet DocumentSignature extends UserSensor on Sensor
-	var word:{Sign CoSign CounterSign} signType
-	var word:{Pkcs7 XadesAttached XadesDetached CadesAttached CadesDetached} signFormat
-
-Facet Poll extends UserSensor on Sensor
-	var string defaultOption = empty
-	Concept Option
-		var string value
-		var Schema event
-		has Option
-
-Facet Device on Sensor
+	Aspect Device
 
 Concept EventSource is abstract
 	var string name = 'io.intino.konos.model.graph.Utils.isUUID(self.name$()) && self.schema() != null ? self.schema().name$() : self.name$()' is private reactive

@@ -6,7 +6,6 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.CodeGenerationHelper;
 import io.intino.konos.model.graph.Display;
-import io.intino.konos.model.graph.accessible.AccessibleDisplay;
 
 import java.io.File;
 import java.util.List;
@@ -16,10 +15,10 @@ import static io.intino.konos.builder.helpers.CodeGenerationHelper.format;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class AccessibleDisplayActionRenderer extends ActionRenderer {
-	private final AccessibleDisplay display;
+	private final Display.Accessible display;
 	private final Settings configuration;
 
-	public AccessibleDisplayActionRenderer(Settings settings, AccessibleDisplay display) {
+	public AccessibleDisplayActionRenderer(Settings settings, Display.Accessible display) {
 		super(settings,"accessibleDisplay");
 		this.configuration = settings;
 		this.display = display;

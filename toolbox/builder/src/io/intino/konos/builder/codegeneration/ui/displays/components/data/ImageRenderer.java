@@ -6,7 +6,6 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.SizedRenderer;
 import io.intino.konos.model.graph.DataComponents.Image;
-import io.intino.konos.model.graph.avatar.datacomponents.AvatarImage;
 
 public class ImageRenderer extends SizedRenderer<Image> {
 
@@ -26,7 +25,7 @@ public class ImageRenderer extends SizedRenderer<Image> {
 
 	private void addAvatarProperties(FrameBuilder frame) {
 		if (!element.isAvatar()) return;
-		AvatarImage avatar = element.asAvatar();
+		Image.Avatar avatar = element.asAvatar();
 		frame.add("avatar");
 		frame.add("text", avatar.text());
 	}

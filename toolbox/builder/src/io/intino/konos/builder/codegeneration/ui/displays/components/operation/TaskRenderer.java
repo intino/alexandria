@@ -6,7 +6,6 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.OperationRenderer;
 import io.intino.konos.model.graph.OperationComponents.Task;
-import io.intino.konos.model.graph.addressable.operationcomponents.AddressableTask;
 
 public class TaskRenderer extends OperationRenderer<Task> {
 
@@ -44,7 +43,7 @@ public class TaskRenderer extends OperationRenderer<Task> {
 
 	private void addAddressableProperties(FrameBuilder builder) {
 		if (!element.isAddressable()) return;
-		AddressableTask addressable = element.asAddressable();
+		Task.Addressable addressable = element.asAddressable();
 		String path = addressable.addressableResource().path();
 		builder.add("path", path);
 	}

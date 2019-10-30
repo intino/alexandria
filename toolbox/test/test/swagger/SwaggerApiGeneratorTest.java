@@ -25,7 +25,7 @@ public class SwaggerApiGeneratorTest {
 	@Test
 	public void testApiJSON() {
 		KonosGraph graph = new Graph().loadStashes("Petstore").as(KonosGraph.class);
-		OpenApiDescriptor descriptor = new OpenApiDescriptor(graph.rESTServiceList().get(0));
+		OpenApiDescriptor descriptor = new OpenApiDescriptor(graph.restServiceList().get(0));
 		final String jsonDescriptor = descriptor.createJSONDescriptor();
 		Commons.write(new File(SWAGGER, "petstore.json").toPath(), jsonDescriptor);
 //		assertEquals(jsonDescriptor, new String(Files.readAllBytes(new File("test-res", "swagger" + File.separator + "petstore_expected.json").toPath())));
@@ -34,7 +34,7 @@ public class SwaggerApiGeneratorTest {
 	@Test
 	public void testApiCreation() {
 		KonosGraph graph = new Graph().loadStashes("Petstore").as(KonosGraph.class);
-		SwaggerProfileGenerator generator = new SwaggerProfileGenerator(graph.rESTServiceList(), SWAGGER);
+		SwaggerProfileGenerator generator = new SwaggerProfileGenerator(graph.restServiceList(), SWAGGER);
 		generator.execute();
 	}
 }

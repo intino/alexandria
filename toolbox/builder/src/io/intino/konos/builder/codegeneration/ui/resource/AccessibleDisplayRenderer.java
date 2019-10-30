@@ -7,7 +7,7 @@ import io.intino.konos.builder.codegeneration.action.AccessibleDisplayActionRend
 import io.intino.konos.builder.codegeneration.services.ui.templates.ResourceTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.accessible.AccessibleDisplay;
+import io.intino.konos.model.graph.Display;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,9 +16,9 @@ import static io.intino.konos.builder.helpers.CodeGenerationHelper.resourceFilen
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.resourceFolder;
 
 public class AccessibleDisplayRenderer extends UIRenderer {
-	private final AccessibleDisplay display;
+	private final Display.Accessible display;
 
-	public AccessibleDisplayRenderer(Settings settings, AccessibleDisplay display, Target target) {
+	public AccessibleDisplayRenderer(Settings settings, Display.Accessible display, Target target) {
 		super(settings, target);
 		this.display = display;
 	}
@@ -39,7 +39,7 @@ public class AccessibleDisplayRenderer extends UIRenderer {
 		saveRendered(display);
 	}
 
-	private FrameBuilder[] parameters(AccessibleDisplay display) {
+	private FrameBuilder[] parameters(Display.Accessible display) {
 		List<FrameBuilder> result = display.parameters().stream().map(parameter -> new FrameBuilder("parameter").add("name", parameter)).collect(Collectors.toList());
 		result.add(new FrameBuilder("parameter").add("name", "personifiedDisplay"));
 		return result.toArray(new FrameBuilder[0]);

@@ -11,7 +11,7 @@ import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.RouteDispatcherRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Display;
-import io.intino.konos.model.graph.ui.UIService;
+import io.intino.konos.model.graph.Service;
 
 import java.util.List;
 import java.util.Set;
@@ -22,9 +22,9 @@ import static io.intino.konos.builder.helpers.Commons.writeFrame;
 import static io.intino.konos.model.graph.PassiveView.Request.ResponseType.Asset;
 
 public class ServiceRenderer extends UIRenderer {
-	private final UIService service;
+	private final Service.UI service;
 
-	public ServiceRenderer(Settings settings, UIService service) {
+	public ServiceRenderer(Settings settings, Service.UI service) {
 		super(settings, Target.Owner);
 		this.service = service;
 	}
@@ -39,14 +39,14 @@ public class ServiceRenderer extends UIRenderer {
 	private void createUi() {
 		final List<Display> displays = service.graph().rootDisplays();
 		FrameBuilder builder = buildFrame().add("ui").add("name", service.name$()).add("resource", resourcesFrame(service.resourceList()));
-		if (service.userHome() != null) builder.add("userHome", service.userHome().name$());
+		if (userHome(service) != null) builder.add("userHome", userHome(service).name$());
 		if (!displays.isEmpty())
 			builder.add("display", displaysFrame(displays)).add("displaysImport", packageName());
 		if (service.authentication() != null) builder.add("auth", service.authentication().by());
 		writeFrame(serviceFolder(gen()), serviceFilename(service.name$()), template().render(builder.toFrame()));
 	}
 
-	private Frame[] resourcesFrame(List<UIService.Resource> resourceList) {
+	private Frame[] resourcesFrame(List<Service.UI.Resource> resourceList) {
 		return resourceList.stream().map(this::frameOf).toArray(Frame[]::new);
 	}
 
@@ -54,14 +54,18 @@ public class ServiceRenderer extends UIRenderer {
 		return displays.stream().map(this::frameOf).toArray(Frame[]::new);
 	}
 
-	private Frame frameOf(UIService.Resource resource) {
+	public Service.UI.Resource userHome(Service.UI service) {
+		return service.homeList().stream().filter(Service.UI.Resource::isConfidential).findFirst().orElse(null);
+	}
+
+	private Frame frameOf(Service.UI.Resource resource) {
 		final FrameBuilder result = new FrameBuilder("resource").add("abstractResource");
 		result.add("name", resource.name$());
-		final UIService service = resource.core$().ownerAs(UIService.class);
+		final Service.UI service = resource.core$().ownerAs(Service.UI.class);
 		String path = resource.path();
 		Set<String> custom = Commons.extractParameters(path);
 		FrameBuilder pathBuilder = new FrameBuilder("path").add("value", path).add("name", resource.name$());
-		if (service.userHome() != null) pathBuilder.add("userHome", service.userHome().name$());
+		if (userHome(service) != null) pathBuilder.add("userHome", userHome(service).name$());
 		if (!custom.isEmpty()) pathBuilder.add("custom", custom.toArray(new String[0]));
 		result.add("path", pathBuilder);
 		return result.toFrame();

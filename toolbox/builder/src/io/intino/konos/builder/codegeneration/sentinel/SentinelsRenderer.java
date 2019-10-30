@@ -10,10 +10,6 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Sentinel;
-import io.intino.konos.model.graph.bootlistener.BootListenerSentinel;
-import io.intino.konos.model.graph.clocklistener.ClockListenerSentinel;
-import io.intino.konos.model.graph.directorylistener.DirectoryListenerSentinel;
-import io.intino.konos.model.graph.systemlistener.SystemListenerSentinel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,16 +35,16 @@ public class SentinelsRenderer extends Renderer {
 
 	private Frame[] processSentinels() {
 		List<Frame> list = new ArrayList<>();
-		list.addAll(sentinels.stream().filter(t -> t.i$(SystemListenerSentinel.class)).map(t -> t.a$(SystemListenerSentinel.class)).map(this::processSentinel).collect(Collectors.toList()));
-		list.addAll(sentinels.stream().filter(t -> t.i$(DirectoryListenerSentinel.class)).map(t -> t.a$(DirectoryListenerSentinel.class)).map(this::processDirectoryListenerSentinel).collect(Collectors.toList()));
+		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.SystemListener.class)).map(t -> t.a$(Sentinel.SystemListener.class)).map(this::processSentinel).collect(Collectors.toList()));
+		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.DirectoryListener.class)).map(t -> t.a$(Sentinel.DirectoryListener.class)).map(this::processDirectoryListenerSentinel).collect(Collectors.toList()));
 		return list.toArray(new Frame[0]);
 	}
 
-	private Frame processSentinel(SystemListenerSentinel task) {
+	private Frame processSentinel(Sentinel.SystemListener task) {
 		final FrameBuilder builder = new FrameBuilder().add("sentinel").add(task.getClass().getSimpleName()).add("name", task.name$());
 		List<Frame> jobFrames = new ArrayList<>();
-		if (task.i$(ClockListenerSentinel.class)) {
-			ClockListenerSentinel cron = task.a$(ClockListenerSentinel.class);
+		if (task.i$(Sentinel.ClockListener.class)) {
+			Sentinel.ClockListener cron = task.a$(Sentinel.ClockListener.class);
 			FrameBuilder jobFrameBuilder = new FrameBuilder().add("job").add("Cron" + task.getClass().getSimpleName())
 					.add("name", task.core$().id());
 			jobFrameBuilder.add("cronTrigger")
@@ -57,7 +53,7 @@ public class SentinelsRenderer extends Renderer {
 			if (cron.timeZone() != null) jobFrameBuilder.add("timeZone", cron.timeZone());
 			jobFrames.add(jobFrameBuilder.toFrame());
 		}
-		if (task.i$(BootListenerSentinel.class)) {
+		if (task.i$(Sentinel.BootListener.class)) {
 			final FrameBuilder jobFrameBuilder = new FrameBuilder("onBootTrigger", "job", "Boot" + task.getClass().getSimpleName())
 					.add("name", task.core$().id());
 			jobFrames.add(jobFrameBuilder.toFrame());
@@ -66,7 +62,7 @@ public class SentinelsRenderer extends Renderer {
 		return builder.toFrame();
 	}
 
-	private Frame processDirectoryListenerSentinel(DirectoryListenerSentinel sentinel) {
+	private Frame processDirectoryListenerSentinel(Sentinel.DirectoryListener sentinel) {
 		final FrameBuilder builder = new FrameBuilder().add("sentinel").add(sentinel.getClass().getSimpleName())
 				.add("event", sentinel.events().stream().map(Enum::name).toArray(String[]::new))
 				.add("file", sentinel.directories() == null ? "" : sentinel.directories().get(0))

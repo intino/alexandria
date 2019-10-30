@@ -11,8 +11,8 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.swagger.SwaggerProfileGenerator;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.rest.RESTService;
-import io.intino.konos.model.graph.rest.RESTService.Resource;
+import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.graph.Service.REST.Resource;
 import io.intino.tara.magritte.Layer;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -34,20 +34,21 @@ import static java.util.stream.Collectors.toList;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class RESTServiceRenderer extends Renderer {
-	private final List<RESTService> services;
-	@NotNull private final KonosGraph graph;
+	private final List<Service.REST> services;
+	@NotNull
+	private final KonosGraph graph;
 
 	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 
 	public RESTServiceRenderer(Settings settings, KonosGraph graph) {
 		super(settings, Target.Owner);
-		this.services = graph.rESTServiceList();
+		this.services = graph.serviceList(Service::isREST).map(Service::asREST).collect(toList());
 		this.graph = graph;
 	}
 
 	public void render() {
-		services.forEach((service) -> processService(service.a$(RESTService.class), gen()));
-		if (services.stream().anyMatch(RESTService::generateDocs)) generateApiPortal();
+		services.forEach((service) -> processService(service.a$(Service.REST.class), gen()));
+		if (services.stream().anyMatch(Service.REST::generateDocs)) generateApiPortal();
 	}
 
 	private void generateApiPortal() {
@@ -69,8 +70,8 @@ public class RESTServiceRenderer extends Renderer {
 
 	private void createConfigFile(File api) {
 		Template template = customize(new ApiPortalConfigurationTemplate());
-		FrameBuilder frame = new FrameBuilder("api").add("url", services.stream().filter(RESTService::generateDocs).map(Layer::name$).toArray(String[]::new));
-		RESTService service = services.get(0);
+		FrameBuilder frame = new FrameBuilder("api").add("url", services.stream().filter(Service.REST::generateDocs).map(Layer::name$).toArray(String[]::new));
+		Service.REST service = services.get(0);
 		if (service.color() != null) frame.add("color", service.color());
 		if (service.backgroundColor() != null) frame.add("background", service.backgroundColor());
 		if (service.title() != null) frame.add("title", service.title());
@@ -119,7 +120,7 @@ public class RESTServiceRenderer extends Renderer {
 		return null;
 	}
 
-	private void processService(RESTService service, File gen) {
+	private void processService(Service.REST service, File gen) {
 		if (service.resourceList().isEmpty()) return;
 		FrameBuilder builder = new FrameBuilder("server").
 				add("name", service.name$()).
@@ -128,9 +129,10 @@ public class RESTServiceRenderer extends Renderer {
 				add("resource", framesOf(service.resourceList()));
 		if (!service.notificationList().isEmpty()) {
 			builder.add("notification", notificationsFrame(service.notificationList()));
-			if (graph.uIServiceList().isEmpty()) builder.add("hasNotifications", notificationsFrame(service.notificationList()));
+			if (graph.serviceList(Service::isUI).findAny().isPresent())
+				builder.add("hasNotifications", notificationsFrame(service.notificationList()));
 		}
-		final RESTService.AuthenticatedWithCertificate secure = service.authenticatedWithCertificate();
+		final Service.REST.AuthenticatedWithCertificate secure = service.authenticatedWithCertificate();
 		if (secure != null && secure.store() != null)
 			builder.add("secure", new FrameBuilder("secure").add("file", secure.store()).add("password", secure.storePassword()).toFrame());
 		final String className = snakeCaseToCamelCase(service.name$()) + "Service";
@@ -138,9 +140,9 @@ public class RESTServiceRenderer extends Renderer {
 		Commons.writeFrame(gen, className, template().render(builder.toFrame()));
 	}
 
-	private Frame[] notificationsFrame(List<RESTService.Notification> list) {
+	private Frame[] notificationsFrame(List<Service.REST.Notification> list) {
 		List<Frame> frames = new ArrayList<>();
-		for (RESTService.Notification notification : list)
+		for (Service.REST.Notification notification : list)
 			frames.add(new FrameBuilder("notification").
 					add("path", notification.path()).
 					add("package", packageName()).

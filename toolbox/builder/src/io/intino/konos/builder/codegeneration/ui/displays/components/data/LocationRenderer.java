@@ -7,7 +7,6 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.GeoRendererHelper;
 import io.intino.konos.model.graph.DataComponents.Location;
-import io.intino.konos.model.graph.editable.datacomponents.EditableLocation;
 
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class LocationRenderer extends ComponentRenderer<Location> {
 
 	private void addModes(FrameBuilder result) {
 		if (!element.isEditable()) return;
-		List<EditableLocation.Modes> modes = element.asEditable().modes();
+		List<Location.Editable.Modes> modes = element.asEditable().modes();
 		modes.forEach(m -> result.add("mode", m.name()));
 	}
 

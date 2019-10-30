@@ -1,10 +1,9 @@
 package io.intino.konos.model.graph;
 
-import io.intino.konos.model.graph.object.ObjectData;
 import io.intino.tara.magritte.Node;
 
 public class DataTypes {
-	public static String schemaName(ObjectData self) {
+	public static String schemaName(Parameter.Object self) {
 		final Schema schema = self.schema();
 		String name = "";
 		if (isInService(schema))
@@ -12,7 +11,7 @@ public class DataTypes {
 		return name + fullName(self);
 	}
 
-	public static String fullName(ObjectData self) {
+	public static String fullName(Parameter.Object self) {
 		final Schema schema = self.schema();
 		StringBuilder fullName = new StringBuilder();
 		Node node = schema.core$();
@@ -32,7 +31,7 @@ public class DataTypes {
 		return value.substring(0, 1).toUpperCase() + value.substring(1);
 	}
 
-	public static boolean isComponent(ObjectData self) {
+	public static boolean isComponent(Parameter.Object self) {
 		return isInService(self.schema());
 	}
 }
