@@ -14,8 +14,9 @@ import io.intino.konos.model.graph.DataComponents.File;
 import io.intino.konos.model.graph.DataComponents.Image;
 import io.intino.konos.model.graph.DataComponents.Text;
 import io.intino.konos.model.graph.OperationComponents.*;
-import io.intino.konos.model.graph.OtherComponents.Chart;
 import io.intino.konos.model.graph.OtherComponents.Header;
+
+import static io.intino.konos.model.graph.BIComponents.*;
 
 public class ComponentRendererFactory {
 
@@ -27,18 +28,18 @@ public class ComponentRendererFactory {
 		if (component.i$(DataComponents.Number.class)) return (T) new NumberRenderer(settings, component.a$(DataComponents.Number.class), provider, target);
 		if (component.i$(DataComponents.Location.class)) return (T) new LocationRenderer(settings, component.a$(DataComponents.Location.class), provider, target);
 
-		if (component.i$(OtherComponents.Spinner.class)) return (T) new SpinnerRenderer(settings, component.a$(OtherComponents.Spinner.class), provider, target);
+		if (component.i$(Spinner.class)) return (T) new SpinnerRenderer(settings, component.a$(BIComponents.Spinner.class), provider, target);
 		if (component.i$(OtherComponents.Selector.class)) return (T) new SelectorRenderer(settings, component.a$(OtherComponents.Selector.class), provider, target);
-		if (component.i$(OtherComponents.AbstractSlider.class)) return (T) new SliderRenderer(settings, component.a$(OtherComponents.AbstractSlider.class), provider, target);
+		if (component.i$(AbstractSlider.class)) return (T) new SliderRenderer(settings, component.a$(BIComponents.Slider.class), provider, target);
 		if (component.i$(Block.class)) return (T) new BlockRenderer(settings, component.a$(Block.class), provider, target);
-		if (component.i$(OtherComponents.Chart.class)) return (T) new ChartRenderer(settings, component.a$(Chart.class), provider, target);
-		if (component.i$(OtherComponents.Dashboard.class)) return (T) new DashboardRenderer(settings, component.a$(OtherComponents.Dashboard.class), provider, target);
+		if (component.i$(Chart.class)) return (T) new ChartRenderer(settings, component.a$(Chart.class), provider, target);
+		if (component.i$(Dashboard.class)) return (T) new DashboardRenderer(settings, component.a$(BIComponents.Dashboard.class), provider, target);
 		if (component.i$(OtherComponents.AbstractDialog.class)) return (T) new DialogRenderer(settings, component.a$(OtherComponents.AbstractDialog.class), provider, target);
 		if (component.i$(OtherComponents.BaseIcon.class)) return (T) new IconRenderer(settings, component.a$(OtherComponents.BaseIcon.class), provider, target);
 		if (component.i$(OtherComponents.Portal.class)) return (T) new PortalRenderer(settings, component.a$(OtherComponents.Portal.class), provider, target);
 		if (component.i$(OtherComponents.User.class)) return (T) new UserRenderer(settings, component.a$(OtherComponents.User.class), provider, target);
-		if (component.i$(OtherComponents.Stepper.class)) return (T) new StepperRenderer(settings, component.a$(OtherComponents.Stepper.class), provider, target);
-		if (component.i$(OtherComponents.Stepper.Step.class)) return (T) new StepRenderer(settings, component.a$(OtherComponents.Stepper.Step.class), provider, target);
+		if (component.i$(Stepper.class)) return (T) new StepperRenderer(settings, component.a$(Stepper.class), provider, target);
+		if (component.i$(Stepper.Step.class)) return (T) new StepRenderer(settings, component.a$(Stepper.Step.class), provider, target);
 
 		if (component.i$(Template.class)) return (T) new TemplateRenderer(settings, component.a$(Template.class), provider, target);
 		if (component.i$(Header.class)) return (T) new HeaderRenderer(settings, component.a$(Header.class), provider, target);

@@ -10,7 +10,7 @@ import io.intino.konos.builder.codegeneration.accessor.ui.templates.WebPackTempl
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.builder.utils.ProjectUtil;
-import io.intino.konos.model.graph.ui.UIService;
+import io.intino.konos.model.graph.Service;
 
 import java.io.File;
 
@@ -18,9 +18,9 @@ import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.createIfNotExists;
 
 public class AppRenderer extends UIRenderer {
-	private final UIService service;
+	private final Service.UI service;
 
-	protected AppRenderer(Settings settings, UIService service) {
+	protected AppRenderer(Settings settings, Service.UI service) {
 		super(settings, Target.Accessor);
 		this.service = service;
 	}

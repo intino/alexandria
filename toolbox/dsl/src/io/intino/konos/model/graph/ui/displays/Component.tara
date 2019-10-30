@@ -1,22 +1,48 @@
 dsl Proteo
 
+use Services
 use Source
-use Facets
 use Display
-use DataTypes
 use UI
 
 Concept:Named Component extends Display
 	var string color = empty
 	var Format[] format = empty
 	var boolean visible = true
+	Aspect Option
+	Aspect CollapseTriggerer
+    	var Block.Collapsible for
+	Aspect Labeled
+	Aspect DynamicLoaded
+    	var word:{VerySlow Slow Fast VeryFast} loadTime = VeryFast
 
 Concept Block extends Component
 	var word[]:Layout layout = Vertical
 	var word:Spacing spacing = None
 	var word:{Never Always IfMobile IfNotMobile} hidden = Never
-
 	has Component
+
+	Aspect Drawer
+    	var word:{Left Top Bottom Right} position = Left
+    	var word:{Permanent Persistent PersistentAndMini Temporary} variant = Temporary
+    Aspect Splitter
+    	var string splitMobileLabel = "Back"
+	Aspect Absolute
+	Aspect Relative
+	Aspect Paper
+    Aspect Badge
+    	var integer value = -1
+    	var integer max = -1
+    	var boolean showZero = false
+    	var word:{Normal Dot} mode = Normal
+    Aspect Parallax
+    	var string background
+    Aspect Collapsible
+    Aspect Conditional
+    	var Component.Option selected = empty
+    Aspect Animated
+    Aspect Multiple
+
 
 Concept:Named Template extends Component
 	var string modelClass = empty
@@ -27,6 +53,17 @@ Concept:Named Template extends Component
     	has:{1..1} OtherComponents.Header
 		//has:{1..1} ChildComponents.Tabs
 
+	Aspect DrawerNavigable with Desktop
+		var word:{Left Right Top Bottom} direction = Left
+		var word:{Normal Modal} mode = Normal
+		var boolean hasMiniVariant = false
+		var boolean underHeader = false
+
+	Aspect Responsible with DrawerNavigable
+	Aspect Persistent with DrawerNavigable
+	Aspect Absolute
+	Aspect Relative
+
 Concept DataComponents
 	Concept Text extends Component
 		var word:{Uppercase Lowercase Capitalize Normal} mode = Normal
@@ -34,14 +71,66 @@ Concept DataComponents
 		var string value = empty
 		var string prefix = empty
 		var string suffix = empty
+		Aspect Multiple
+		Aspect Highlighted
+        	var string textColor
+        	var string backgroundColor
+        Aspect Code
+            var word:CodeLanguage language
+        Aspect Editable
+        	var word:{Normal Email Url} edition = Normal
+
+        	Concept:{0..1} Validation
+        		var string[] allowedValues = empty
+        		var string[] disallowedValues = empty
+        		var boolean disallowEmptySpaces = false
+        		Concept:{0..1} Length
+        			var integer min
+        			var integer max
+        Aspect Memo with Editable
+        	var word:{Raw Rich} mode = Raw
+        	var integer height = 5
+		Aspect Password with Editable
+        	Concept:{0..1} Validation
+        		var word[]:{Letter Number Symbol} isRequired = Letter Number Symbol
+        		Concept:{1..1} Length
+        			var integer min
+        			var integer max
+        Aspect Readonly with Editable
+        Aspect Required with Editable
+        Aspect Focused with Editable
 
 	Concept File extends Component
 		var string value = empty
+		Aspect Absolute
+		Aspect Relative
+		Aspect Multiple
+		Aspect Editable
+        	var boolean showPreview = false
+        	Concept:{0..1} Validation
+        		var double:{kbytes} maxSize
+        		var string[] allowedExtensions = empty
+        Aspect Readonly with Editable
+        Aspect Required with Editable
+        Aspect Focused with Editable
 
 	Concept Image extends Component
 		var string value = empty
 		var string defaultValue = empty
 		var integer:{%} mobileReduceFactor = 0%
+		Aspect Avatar
+			var string text
+		Aspect Absolute
+		Aspect Relative
+		Aspect Multiple
+		Aspect Editable
+        	var boolean showPreview = false
+        	Concept:{0..1} Validation
+        		var double:{kbytes} maxSize
+        		var string[] allowedExtensions = empty
+        Aspect Readonly with Editable
+        Aspect Required with Editable
+        Aspect Focused with Editable
 
 	Concept Number extends Component
 		var double value = empty
@@ -50,12 +139,29 @@ Concept DataComponents
 		var integer countDecimals = 0
 		var boolean expanded = true
 		var word:{Number Currency Bytes Percentage Exponential} style = Number
+		Aspect Multiple
+		Aspect Editable
+        	var double min = -1
+        	var double max = -1
+        	var double step = -1
+        Aspect Readonly with Editable
+        Aspect Required with Editable
+        Aspect Focused with Editable
 
 	Concept Date extends Component
 		var string pattern = "DD/MM/YYYY"
 		var word:{FromNow ToNow None} mode = None
 		var instant value = empty
-
+		Aspect Multiple
+		Aspect Editable
+        	var instant min = empty
+        	var instant max = empty
+        	var boolean timePicker = false
+        	var string mask = empty
+        	var boolean allowEmpty = false
+		Aspect Readonly with Editable
+		Aspect Required with Editable
+		Aspect Focused with Editable
 	Concept Location extends Component
 		var string icon = empty
 		var string value = empty
@@ -68,6 +174,11 @@ Concept DataComponents
 			var integer defaultZoom
 			var integer min
 			var integer max
+		Aspect Editable //TODO is ok extending facet??
+        	var word[]:{Point Polygon Polyline Rectangle} modes = empty
+		Aspect Readonly with Editable
+		Aspect Required with Editable
+		Aspect Focused with Editable
 
 Concept CatalogComponents
 	Concept Collection extends Component
@@ -79,14 +190,18 @@ Concept CatalogComponents
 		var boolean scrollingMark = true
 
 		Concept:{1..*} Mold
-			Concept:{0..1} Heading extends Component > has Component
+			Concept:{0..1} Heading extends Component
+				has Component
 			Concept:{1..1} Item extends Component > has Component
 				var integer:{px} height
 				var integer:{%} width = -1%
-
+		Aspect Selectable
+        	var boolean multiple = false
 		sub Magazine
 		sub List
+			Aspect Navigable
 		sub Table
+			Aspect Navigable
 		sub Map
 			var string icon = empty
 
@@ -98,10 +213,15 @@ Concept CatalogComponents
 				var integer defaultZoom
 				var integer min
 				var integer max
+			Aspect Cluster
+            Aspect Kml
+            	var string layer
+            Aspect Heatmap
 
 	Concept:Named Grouping extends Component
 		var Collection[] collections
-
+		Aspect ComboBox
+        	var string placeholder = ""
 	Concept:Named Sorting extends Component
 		var Collection[] collections
 
@@ -112,17 +232,20 @@ Concept CatalogComponents
 Concept OperationComponents
 	Concept Toolbar extends Component
 		has Component
+		Aspect Linked
+        	var CatalogComponents.Collection to
+        	has OperationComponents.SelectionOperation
 
 	Concept Operation extends Component is abstract
 		var string title
 		var word:{Blank Self Parent Top} target = Self
 		var word:{Small Medium Large} size = Medium
 
-		sub OpenDrawer > var Drawer drawer
-		sub CloseDrawer > var Drawer drawer
-		sub OpenPage > var Page page
+		sub OpenDrawer > var Block.Drawer drawer
+		sub CloseDrawer > var Block.Drawer drawer
+		sub OpenPage > var Service.UI.Resource.Page page
 		sub OpenSite > var string site
-		sub OpenBlock > var Conditional block
+		sub OpenBlock > var Block.Conditional block
 		sub OpenDialog > var OtherComponents.AbstractDialog dialog
 		sub CloseDialog > var OtherComponents.AbstractDialog dialog
 		sub Export
@@ -136,21 +259,26 @@ Concept OperationComponents
 		sub Download
 			var string[] options = empty
 		sub Task
-
+			Aspect Switches
+            	var word:{On Off} state = Off
+            Aspect Addressable
+		Aspect Link
+		Aspect Button
+			sub IconButton
+				var string icon
+			sub MaterialIconButton
+            	var string icon
+		Aspect Confirmable
+			var string confirmText
+		Aspect Highlighted
+        	var word:{Outline Fill} style = Fill
+		Aspect Readonly
 	Concept SelectionOperation extends Operation is abstract
 		sub DownloadSelection
 			var string[] options = empty
 		sub TaskSelection
 
-Concept OtherComponents
-	Concept Chip extends Component
-	Concept Card extends Component
-	Concept Tooltip extends Component
-
-	Concept User extends Component
-		var word:{OnlyPhoto PhotoWithFullname} mode = PhotoWithFullname
-		has Component
-
+Concept:{0..1} BIComponents
 	Concept KPI extends Component
 	Concept Spinner extends Component
 		var word:{Bar Circle Hash Ring Rise} mode = Rise
@@ -160,57 +288,30 @@ Concept OtherComponents
 		var string serverUrl = empty
 		var word:{Image Html} output = Html
 		var string query
+		Aspect Absolute
+		Aspect Relative
 
 	Concept Dashboard extends Component
 		var string serverScript
 		var string uiScript
 		var string[] resources = empty
-
+		Aspect Absolute
+		Aspect Relative
 		Concept Parameter
 			var string name
 			var string value
-
-	Concept Snackbar extends Component
-		var word:{TopCenter TopRight BottomRight BottomCenter BottomLeft TopLeft} position = BottomCenter
-		has Component
-
-	Concept Progress extends Component
-		Concept Color > var string text; var string background
-
 	Concept Stepper extends Component
 		var word:{Horizontal Vertical} orientation = Horizontal
 		var word:{Top Bottom Left Right} position = Bottom
 		var word:{Full NoToolbar} style = Full
 		Concept Step extends Component
 			has Component
-
-	Concept Stamp extends Component
-		var Template template
-
-	Concept Header extends Component
-		var word:{Fixed Absolute Sticky Static Relative} position = Relative
-		var integer elevation = 4
-
-		has Component
-
-	Concept Selector extends Component
-		var boolean multipleSelection = false
-		has Component
-
-	Concept Frame extends Component
-		var Display display
-
-	Concept BaseIcon extends Component
-		var string icon
-
-		sub Icon
-		sub MaterialIcon
-
+			Aspect MaterialIcon
+				var string icon
 	Concept AbstractSlider extends Component
 		var word:{Vertical Horizontal} arrangement = Horizontal
 		var word:{Full ToolbarOnly SliderOnly} style = Full
 		var integer value = -1
-
 		Concept:{0..1} Animation
 			var integer:{Millis} interval
 			var boolean loop = false
@@ -227,35 +328,134 @@ Concept OtherComponents
 			Concept:{1..1} Range
 				var instant min
 				var instant max
+		Aspect Readonly
+
+
+Concept OtherComponents
+	Concept Chip extends Component
+	Concept Card extends Component
+	Concept Tooltip extends Component
+
+	Concept User extends Component
+		var word:{OnlyPhoto PhotoWithFullname} mode = PhotoWithFullname
+		has Component
+
+	Concept Snackbar extends Component
+		var word:{TopCenter TopRight BottomRight BottomCenter BottomLeft TopLeft} position = BottomCenter
+		has Component
+
+	Concept Progress extends Component
+		Concept Color > var string text; var string background
+		Aspect Circular
+        Aspect Linear
+
+	Concept Stamp extends Component
+		var Template template
+		Aspect Multiple
+
+	Concept Header extends Component
+		var word:{Fixed Absolute Sticky Static Relative} position = Relative
+		var integer elevation = 4
+		has Component
+		Aspect Absolute
+		Aspect Relative
+
+	Concept Selector extends Component
+		var boolean multipleSelection = false
+		has Component
+		Aspect Addressable
+		Aspect Tabs
+        Aspect Menu
+        Aspect ListBox
+        Aspect RadioBox
+        	!! The value that should initially be selected, defaults to the first value.
+        	var string selected = empty
+        Aspect CheckBox
+        	!! The value(s) that should initially be selected. Defaults to the first value, or no values if Multiple facet is present
+        	var string[] selected = empty
+        Aspect ComboBox
+        	var string placeholder = ""
+        Aspect Readonly
+        Aspect Required with RadioBox, CheckBox, ComboBox
+        Aspect Focused with RadioBox, CheckBox, ComboBox
+
+	Concept Frame extends Component
+		var Display display
+
+	Concept BaseIcon extends Component
+		var string icon
+		Aspect Multiple
+		sub Icon
+		sub MaterialIcon
+
 
 	Concept AbstractDialog extends Component is abstract
 		var string title
-
+		Aspect Absolute
+		Aspect Relative
+		Aspect Animated
+		Aspect FullScreen
 		sub Dialog
 			has Component
 
 		sub AlertDialog
 			var string message
 			var string closeLabel = "Close"
-
 		sub DecisionDialog
 			has:{1..1} Selector
-
 		sub CollectionDialog
 			var boolean allowSearch = true
 			has:{0..1} CatalogComponents.Collection
-
 	Concept Divider extends Component
+
 	Concept Portal extends Component
 		var string to
 		var word:{Display Template} type = Template
-		var UI.Use in
-
+		var Service.UI.Use in
 		Concept Parameter
 			var string name
 			var string value
 
 Concept PrivateComponents
 	Concept PrivateComponent extends Component
+
 	Concept Row extends PrivateComponent
 		var CatalogComponents.Collection.Mold.Item[] items
+
+Facet Editable
+	var string placeholder = ""
+	var string defaultValue = ""
+	var string validator = ""
+
+Facet Range with Editable, Multiple //TODO está correcto?
+	var integer min = -1
+	var integer max = -1
+
+
+Facet Absolute
+	var integer:{px} width = -1px
+	var integer:{px} height = -1px
+
+Facet Relative
+	var double:{%} width = 100%
+	var double:{%} height = 100%
+	var integer:{px} offsetWidth = -1px
+	var integer:{px} offsetHeight = -1px
+
+Facet Animated
+	var word:{Slide Fade Grow Zoom} mode = Slide
+	Concept:{0..1} Transition
+		var word:{ Left Top Bottom Right } direction = Right
+		var integer:{ Millis } duration = 500 Millis
+
+Facet Multiple
+	var string noItemsMessage = empty
+	var word:{Vertical Horizontal} arrangement = Vertical
+	var word:Spacing spacing = None
+
+Facet Labeled
+	var string label
+	var word:{Top Bottom Left Right} position = Left
+
+Facet Navigable
+	var word:{Top Bottom} position = Bottom

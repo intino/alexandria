@@ -6,25 +6,25 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.templates.ResourceTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.ui.UIService;
+import io.intino.konos.model.graph.Service;
 
 import java.util.List;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
-import static io.intino.konos.builder.helpers.CodeGenerationHelper.resourceFolder;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.resourceFilename;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.resourceFolder;
 
 public class ResourceRenderer extends UIRenderer {
-	protected final UIService.Resource resource;
+	protected final Service.UI.Resource resource;
 
-	public ResourceRenderer(Settings settings, UIService.Resource resource, Target target) {
+	public ResourceRenderer(Settings settings, Service.UI.Resource resource, Target target) {
 		super(settings, target);
 		this.resource = resource;
 	}
 
 	@Override
 	public void render() {
-		UIService uiService = resource.core$().ownerAs(UIService.class);
+		Service.UI uiService = resource.core$().ownerAs(Service.UI.class);
 
 		FrameBuilder builder = buildFrame().add("resource").add("name", resource.name$()).add("parameter", parameters(resource));
 		if (uiService.googleApiKey() != null) builder.add("googleApiKey", customize("googleApiKey", uiService.googleApiKey()));
@@ -34,7 +34,7 @@ public class ResourceRenderer extends UIRenderer {
 		new PageRenderer(settings, resource).execute();
 	}
 
-	private FrameBuilder[] parameters(UIService.Resource resource) {
+	private FrameBuilder[] parameters(Service.UI.Resource resource) {
 		List<String> parameters = Commons.extractUrlPathParameters(resource.path());
 		return parameters.stream().map(parameter -> new FrameBuilder().add("parameter")
 				.add("name", parameter)).toArray(FrameBuilder[]::new);

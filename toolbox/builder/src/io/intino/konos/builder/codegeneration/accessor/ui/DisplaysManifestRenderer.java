@@ -10,8 +10,7 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.PassiveView;
-import io.intino.konos.model.graph.accessible.AccessibleDisplay;
-import io.intino.konos.model.graph.ui.UIService;
+import io.intino.konos.model.graph.Service;
 
 import java.io.File;
 import java.util.Collection;
@@ -23,10 +22,10 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toSet;
 
 public class DisplaysManifestRenderer extends UIRenderer {
-	private final UIService service;
+	private final Service.UI service;
 	private final Set<String> renderedDisplays = new HashSet<>();
 
-	protected DisplaysManifestRenderer(Settings settings, UIService service) {
+	protected DisplaysManifestRenderer(Settings settings, Service.UI service) {
 		super(settings, Target.Accessor);
 		this.service = service;
 	}
@@ -52,7 +51,7 @@ public class DisplaysManifestRenderer extends UIRenderer {
 	private void renderAccessibleDisplays(Set<Display> displays, Set<PassiveView> baseDisplays) {
 		FrameBuilder result = new FrameBuilder("manifest");
 
-		baseDisplays.stream().filter(d -> d.i$(AccessibleDisplay.class)).forEach(d -> renderDisplay(d, result, true));
+		baseDisplays.stream().filter(d -> d.i$(Display.Accessible.class)).forEach(d -> renderDisplay(d, result, true));
 		displays.stream().filter(d -> !renderedDisplays.contains(d.core$().id()) && d.isAccessible()).forEach(d -> renderDisplay(d, result, true));
 
 		Commons.write(new File(gen() + File.separator + "AccessibleDisplays.js").toPath(), setup(new DisplaysManifestTemplate()).render(result.toFrame()));

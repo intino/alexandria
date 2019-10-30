@@ -6,8 +6,7 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.templates.RouteDispatcherTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.ui.AbstractUIService;
-import io.intino.konos.model.graph.ui.UIService;
+import io.intino.konos.model.graph.Service;
 
 import java.io.File;
 import java.util.List;
@@ -18,9 +17,9 @@ import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
 import static java.util.stream.Collectors.toList;
 
 public class RouteDispatcherRenderer extends UIRenderer {
-	private final UIService service;
+	private final Service.UI service;
 
-	public RouteDispatcherRenderer(Settings settings, UIService service, Target target) {
+	public RouteDispatcherRenderer(Settings settings, Service.UI service, Target target) {
 		super(settings, target);
 		this.service = service;
 	}
@@ -45,7 +44,7 @@ public class RouteDispatcherRenderer extends UIRenderer {
 		return builder;
 	}
 
-	private FrameBuilder resourceFrame(AbstractUIService.Resource resource) {
+	private FrameBuilder resourceFrame(Service.UI.Resource resource) {
 		FrameBuilder result = new FrameBuilder("resource");
 		result.add("name", resource.name$());
 		result.add("pattern", patternOf(resource));
@@ -53,17 +52,17 @@ public class RouteDispatcherRenderer extends UIRenderer {
 		return result;
 	}
 
-	private void addResourceParams(AbstractUIService.Resource resource, FrameBuilder result) {
+	private void addResourceParams(Service.UI.Resource resource, FrameBuilder result) {
 		List<String> params = paramsOf(resource);
 		for (int i=0; i<params.size(); i++) result.add("param", new FrameBuilder().add("param").add("name", params.get(i)).add("index", i));
 	}
 
-	private List<String> paramsOf(AbstractUIService.Resource resource) {
+	private List<String> paramsOf(Service.UI.Resource resource) {
 		Stream<String> split = Stream.of(resource.path().split("/"));
 		return split.filter(s -> s.startsWith(":")).map(s -> s.substring(1)).collect(toList());
 	}
 
-	private String patternOf(AbstractUIService.Resource resource) {
+	private String patternOf(Service.UI.Resource resource) {
 		if (resource.path().isEmpty()) return "\\\\/";
 		Stream<String> split = Stream.of(resource.path().split("/"));
 		return split.map(s -> s.startsWith(":") ? "([^\\\\/]*)" : s).collect(Collectors.joining("\\\\/"));

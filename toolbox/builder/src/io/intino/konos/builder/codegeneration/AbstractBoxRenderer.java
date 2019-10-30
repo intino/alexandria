@@ -5,14 +5,6 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.*;
-import io.intino.konos.model.graph.jmsbus.JmsBusMessageHub;
-import io.intino.konos.model.graph.jmx.JMXService;
-import io.intino.konos.model.graph.messaging.MessagingService;
-import io.intino.konos.model.graph.realtime.RealtimeMounter;
-import io.intino.konos.model.graph.rest.RESTService;
-import io.intino.konos.model.graph.slackbot.SlackBotService;
-import io.intino.konos.model.graph.sshmirrored.SshMirroredDatalake;
-import io.intino.konos.model.graph.ui.UIService;
 import io.intino.plugin.project.LegioConfiguration;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
@@ -81,7 +73,7 @@ public class AbstractBoxRenderer extends Renderer {
         builder.add("package", packageName());
         builder.add("path", parameter(datalake.path()));
         if (datalake.isSshMirrored()) {
-            SshMirroredDatalake mirror = datalake.asSshMirrored();
+            Datalake.SshMirrored mirror = datalake.asSshMirrored();
             builder.add("parameter", parameter(mirror.url())).
                     add("parameter", parameter(mirror.user())).
                     add("parameter", parameter(mirror.password())).
@@ -98,7 +90,7 @@ public class AbstractBoxRenderer extends Renderer {
         if (hub == null) return;
         FrameBuilder builder = new FrameBuilder("messagehub");
         if (hub.isJmsBus()) {
-            JmsBusMessageHub jmsHub = hub.asJmsBus();
+            MessageHub.JmsBus jmsHub = hub.asJmsBus();
             builder.add("jms").add("parameter", parameter(jmsHub.url())).add("parameter", parameter(jmsHub.user())).add("parameter", parameter(jmsHub.password())).add("parameter", parameter(jmsHub.clientId()));
         }
         builder.add("package", packageName());
@@ -117,8 +109,8 @@ public class AbstractBoxRenderer extends Renderer {
     }
 
     private Frame frameOf(Mounter m, String boxName) {
-        RealtimeMounter mounter = m.asRealtime();
-        FrameBuilder[] subscriptions = mounter.sourceList().stream().filter(s -> Objects.nonNull(s.channel())).map(RealtimeMounter.Source::channel).map(t ->
+        Mounter.Realtime mounter = m.asRealtime();
+        FrameBuilder[] subscriptions = mounter.sourceList().stream().filter(s -> Objects.nonNull(s.channel())).map(Mounter.Realtime.Source::channel).map(t ->
                 new FrameBuilder("subscription").add("tankName", t).add("box", boxName).
                         add("package", packageName()).add("name", mounter.name$()).add("subscriberId", mounter.subscriberId())).toArray(FrameBuilder[]::new);
         FrameBuilder mounterFrame = new FrameBuilder("mounter", "realtime");
@@ -131,7 +123,7 @@ public class AbstractBoxRenderer extends Renderer {
     }
 
     @NotNull
-    private Frame parameter(SlackBotService service) {
+    private Frame parameter(Service.SlackBot service) {
         return new FrameBuilder(isCustom(service.token()) ? "custom" : "standard").add("value", service.token()).toFrame();
     }
 
@@ -145,12 +137,12 @@ public class AbstractBoxRenderer extends Renderer {
         jms(builder, name);
         jmx(builder, name);
         slackServices(builder, name);
-        if (!graph.rESTServiceList().isEmpty() || !graph.uIServiceList().isEmpty()) builder.add("spark", "stop");
+        if (!graph.restServiceList().isEmpty() || !graph.uiServiceList().isEmpty()) builder.add("spark", "stop");
         ui(builder, name);
     }
 
     private void rest(FrameBuilder frame, String name) {
-        for (RESTService service : graph.rESTServiceList())
+        for (Service.REST service : graph.restServiceList())
             frame.add("service",
                     new FrameBuilder("service", "rest")
                             .add("name", service.name$())
@@ -159,21 +151,21 @@ public class AbstractBoxRenderer extends Renderer {
     }
 
     private boolean hasAuthenticatedApis() {
-        return graph.rESTServiceList().stream().anyMatch(restService -> restService.authenticatedWithToken() != null);
+        return graph.restServiceList().stream().anyMatch(restService -> restService.authenticatedWithToken() != null);
     }
 
     private void jms(FrameBuilder frame, String name) {
-        for (MessagingService service : graph.messagingServiceList())
+        for (Service.Messaging service : graph.messagingServiceList())
             frame.add("service", new FrameBuilder("service", "jms").add("name", service.name$()).add("configuration", name));
     }
 
     private void jmx(FrameBuilder frame, String name) {
-        for (JMXService service : graph.jMXServiceList())
+        for (Service.JMX service : graph.jmxServiceList())
             frame.add("service", new FrameBuilder("service", "jmx").add("name", service.name$()).add("configuration", name).toFrame());
     }
 
     private void slackServices(FrameBuilder frame, String name) {
-        for (SlackBotService service : graph.slackBotServiceList()) {
+        for (Service.SlackBot service : graph.slackBotServiceList()) {
             frame.add("service", new FrameBuilder("service", "slack")
                     .add("name", service.name$()).add("configuration", name)
                     .add("parameter", parameter(service)).toFrame());
@@ -181,17 +173,17 @@ public class AbstractBoxRenderer extends Renderer {
     }
 
     private void ui(FrameBuilder builder, String name) {
-        if (!graph.uIServiceList().isEmpty()) {
+        if (!graph.uiServiceList().isEmpty()) {
             final FrameBuilder uiFrame = new FrameBuilder();
             if (settings.parent() != null) uiFrame.add("parent", settings.parent());
             builder.add("hasUi", uiFrame);
             builder.add("uiAuthentication", uiFrame);
             builder.add("uiEdition", uiFrame);
-            builder.add("service", graph.uIServiceList().stream().map(s -> ui(s, name)).toArray(Frame[]::new));
+            builder.add("service", graph.uiServiceList().stream().map(s -> ui(s, name)).toArray(Frame[]::new));
         }
     }
 
-    private Frame ui(UIService service, String name) {
+    private Frame ui(Service.UI service, String name) {
         final FrameBuilder builder = new FrameBuilder("service", "ui").add("name", service.name$()).add("configuration", name)
                 .add("parameter", parameter(service.port()).toFrame()).add("package", packageName());
         if (service.authentication() != null)

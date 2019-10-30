@@ -3,9 +3,9 @@ package io.intino.konos.model.graph.rules;
 import io.intino.tara.lang.model.Node;
 import io.intino.tara.lang.model.rules.NodeRule;
 
-public class RequiresFacet implements NodeRule {
+public class RequiresAspect implements NodeRule {
 	public boolean accept(Node node) {
-		return !node.facets().isEmpty();
+		return !node.appliedAspects().isEmpty();
 	}
 
 

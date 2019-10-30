@@ -6,10 +6,6 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.OperationComponents;
 import io.intino.konos.model.graph.OperationComponents.Operation;
-import io.intino.konos.model.graph.button.operationcomponents.ButtonOperation;
-import io.intino.konos.model.graph.iconbutton.operationcomponents.IconButtonOperation;
-import io.intino.konos.model.graph.link.operationcomponents.LinkOperation;
-import io.intino.konos.model.graph.materialiconbutton.operationcomponents.MaterialIconButtonOperation;
 
 public class OperationRenderer<O extends Operation> extends ComponentRenderer<O> {
 
@@ -42,10 +38,10 @@ public class OperationRenderer<O extends Operation> extends ComponentRenderer<O>
 	}
 
 	private String mode() {
-		if (element.isIconButton()) return IconButtonOperation.class.getSimpleName().replace("Operation", "");
-		else if (element.isMaterialIconButton()) return MaterialIconButtonOperation.class.getSimpleName().replace("Operation", "");
-		else if (element.isButton()) return ButtonOperation.class.getSimpleName().replace("Operation", "");
-		return LinkOperation.class.getSimpleName().replace("Operation", "");
+		if (element.isIconButton()) return Operation.IconButton.class.getSimpleName().replace("Operation", "");
+		else if (element.isMaterialIconButton()) return Operation.MaterialIconButton.class.getSimpleName().replace("Operation", "");
+		else if (element.isButton()) return Operation.Button.class.getSimpleName().replace("Operation", "");
+		return Operation.Link.class.getSimpleName().replace("Operation", "");
 	}
 
 	@Override

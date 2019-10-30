@@ -8,7 +8,6 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.Block;
 import io.intino.konos.model.graph.Component;
 import io.intino.konos.model.graph.Template;
-import io.intino.konos.model.graph.desktop.DesktopTemplate;
 
 import java.io.File;
 import java.util.List;
@@ -28,7 +27,7 @@ public class DesktopRenderer extends BaseDisplayRenderer<Template> {
 	@Override
 	public FrameBuilder buildFrame() {
 		FrameBuilder result = super.buildFrame();
-		DesktopTemplate template = element.asDesktop();
+		Template.Desktop template = element.asDesktop();
 		result.add("headerId", shortId(element, "headerId"));
 		result.add("tabBarId", shortId(element, "tabBarId"));
 		addComponents(result);
@@ -45,7 +44,7 @@ public class DesktopRenderer extends BaseDisplayRenderer<Template> {
 	}
 
 	private void addComponents(FrameBuilder builder) {
-		DesktopTemplate template = element.asDesktop();
+		Template.Desktop template = element.asDesktop();
 		List<Component> components = template.header().componentList();
 		addComponentsImports(components, builder);
 		components.forEach(c -> addComponent(c, builder));

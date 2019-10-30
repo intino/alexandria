@@ -7,7 +7,7 @@ import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayListRenderer;
 import io.intino.konos.builder.codegeneration.ui.resource.ResourceListRenderer;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.ui.UIService;
+import io.intino.konos.model.graph.Service;
 
 public class ServiceListRenderer extends UIRenderer {
 	private final KonosGraph graph;
@@ -19,11 +19,11 @@ public class ServiceListRenderer extends UIRenderer {
 
 	@Override
 	public void render() {
-		graph.uIServiceList().forEach(this::processUIService);
+		graph.serviceList(Service::isUI).map(Service::asUI).forEach(this::processUIService);
 		new ResourceListRenderer(settings, graph, Target.Owner).execute();
 	}
 
-	private void processUIService(UIService service) {
+	private void processUIService(Service.UI service) {
 		new ServiceRenderer(settings, service).execute();
 		new DisplayListRenderer(settings, service, templateProvider(), target).execute();
 	}

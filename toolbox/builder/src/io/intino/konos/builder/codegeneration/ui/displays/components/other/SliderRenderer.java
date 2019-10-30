@@ -5,13 +5,13 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.collection.BindingCollectionRenderer;
-import io.intino.konos.model.graph.OtherComponents.AbstractSlider;
-import io.intino.konos.model.graph.OtherComponents.Slider;
-import io.intino.konos.model.graph.OtherComponents.TemporalSlider;
 
-public class SliderRenderer extends BindingCollectionRenderer<AbstractSlider> {
+import static io.intino.konos.model.graph.BIComponents.Slider;
+import static io.intino.konos.model.graph.BIComponents.TemporalSlider;
 
-	public SliderRenderer(Settings settings, AbstractSlider component, TemplateProvider provider, Target target) {
+public class SliderRenderer extends BindingCollectionRenderer<Slider> {
+
+	public SliderRenderer(Settings settings, Slider component, TemplateProvider provider, Target target) {
 		super(settings, component, provider, target);
 	}
 
@@ -65,8 +65,8 @@ public class SliderRenderer extends BindingCollectionRenderer<AbstractSlider> {
 	}
 
 	private void addStyle(FrameBuilder builder) {
-		AbstractSlider.Style style = element.style();
-		if (style == AbstractSlider.Style.Full) return;
+		Slider.Style style = element.style();
+		if (style == Slider.Style.Full) return;
 		builder.add("style", style.name());
 	}
 

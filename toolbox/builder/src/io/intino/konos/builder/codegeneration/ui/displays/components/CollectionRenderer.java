@@ -4,9 +4,9 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
-import io.intino.konos.model.graph.AbstractNavigable;
 import io.intino.konos.model.graph.CatalogComponents;
 import io.intino.konos.model.graph.CatalogComponents.Collection;
+import io.intino.konos.model.graph.Navigable;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 
@@ -20,7 +20,7 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 	public FrameBuilder properties() {
 		FrameBuilder result = super.properties();
 		result.add("collection");
-		if (element.i$(AbstractNavigable.class)) result.add("navigable", element.a$(AbstractNavigable.class).position().name());
+		if (element.i$(Navigable.class)) result.add("navigable", element.a$(Navigable.class).position().name());
 		if (element.sourceClass() != null) result.add("sourceClass", element.sourceClass());
 		if (element.i$(CatalogComponents.List.class) || element.i$(CatalogComponents.Table.class)) result.add("pageSize", element.pageSize());
 		result.add("itemHeight", itemHeight());

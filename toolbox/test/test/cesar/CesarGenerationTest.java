@@ -23,7 +23,7 @@ public class CesarGenerationTest {
 		KonosGraph graph = new Graph().loadStashes("Cesar").as(KonosGraph.class);
 //		new FullRenderer(null, graph, gen, gen, gen, CESAR).execute();
 		Settings settings = new Settings().packageName(CESAR).src(new File("test-gen/accessor/" + CESAR)).cache(new ElementCache());
-		graph.rESTServiceList().forEach(a ->
+		graph.restServiceList().forEach(a ->
 				new RESTAccessorRenderer(settings, a, new File("test-gen/accessor/" + CESAR)).execute());
 	}
 

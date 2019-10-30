@@ -17,7 +17,7 @@ public class ViewRule implements NodeRule {
 
 	public boolean accept(Node node) {
 		final List<Node> components = node.components();
-		if (components.isEmpty() || components.size() > 1) {
+		if (components.size() != 1) {
 			error(SIZE);
 			return false;
 		}

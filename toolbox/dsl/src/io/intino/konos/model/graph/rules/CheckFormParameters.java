@@ -25,6 +25,6 @@ public class CheckFormParameters implements NodeRule {
 	}
 
 	private boolean isParameter(Node component) {
-		return component.simpleType().equals("REST:Service.Resource.Parameter");
+		return component.type().equals("Service.REST.Resource.Parameter");
 	}
 }

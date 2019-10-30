@@ -9,9 +9,8 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.Service;
 import io.intino.konos.model.graph.Template;
-import io.intino.konos.model.graph.ui.AbstractUIService;
-import io.intino.konos.model.graph.ui.UIService;
 
 import java.io.File;
 
@@ -21,7 +20,7 @@ import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 
 public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.resource.ResourceRenderer {
 
-	public ResourceRenderer(Settings settings, UIService.Resource resource) {
+	public ResourceRenderer(Settings settings, Service.UI.Resource resource) {
 		super(settings, resource, Target.Accessor);
 	}
 
@@ -48,7 +47,7 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 	@Override
 	public FrameBuilder buildFrame() {
 		FrameBuilder result = super.buildFrame().add("resource");
-		UIService uiService = resource.core$().ownerAs(UIService.class);
+		Service.UI uiService = resource.core$().ownerAs(Service.UI.class);
 		result.add("name", resource.name$());
 		Template template = KonosGraph.templateFor(resource);
 		result.add("pageDisplay", template.name$());
@@ -65,7 +64,7 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 		builder.add("pageDisplayOrigin", originFrame);
 	}
 
-	private Frame accessibleImportFrame(AbstractUIService.Use use) {
+	private Frame accessibleImportFrame(Service.UI.Use use) {
 		FrameBuilder result = new FrameBuilder("accessibleImport");
 		result.add("name", use.name$());
 		result.add("url", use.url());

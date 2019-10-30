@@ -6,8 +6,7 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.ActionRenderer;
 import io.intino.konos.builder.helpers.CodeGenerationHelper;
-import io.intino.konos.model.graph.ui.AbstractUIService;
-import io.intino.konos.model.graph.ui.UIService;
+import io.intino.konos.model.graph.Service;
 
 import java.io.File;
 import java.util.List;
@@ -21,20 +20,20 @@ import static io.intino.konos.model.graph.KonosGraph.templateFor;
 public class PageRenderer extends ActionRenderer {
 
 	private final Settings settings;
-	private final UIService.Resource resource;
-	private final UIService service;
+	private final Service.UI.Resource resource;
+	private final Service.UI service;
 
-	public PageRenderer(Settings settings, UIService.Resource resource) {
+	public PageRenderer(Settings settings, Service.UI.Resource resource) {
 		super(settings, "ui");
 		this.settings = settings;
 		this.resource = resource;
-		this.service = resource.core$().ownerAs(UIService.class);
+		this.service = resource.core$().ownerAs(Service.UI.class);
 	}
 
 	@Override
 	public void render() {
 		FrameBuilder builder = new FrameBuilder().add("action").add("ui");
-		UIService uiService = resource.core$().ownerAs(UIService.class);
+		Service.UI uiService = resource.core$().ownerAs(Service.UI.class);
 		builder.add("name", resource.name$());
 		builder.add("uiService", uiService.name$());
 		builder.add("package", packageName());
@@ -57,7 +56,7 @@ public class PageRenderer extends ActionRenderer {
 		return ContextType.Spark;
 	}
 
-	private Frame usedUnitFrame(AbstractUIService.Use use) {
+	private Frame usedUnitFrame(Service.UI.Use use) {
 		FrameBuilder result = new FrameBuilder("usedUnit");
 		result.add(isCustom(use.url()) ? "custom" : "standard");
 		result.add("name", use.name$());

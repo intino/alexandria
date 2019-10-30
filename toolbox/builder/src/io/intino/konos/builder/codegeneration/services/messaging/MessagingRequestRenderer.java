@@ -12,23 +12,24 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Parameter;
 import io.intino.konos.model.graph.Response;
-import io.intino.konos.model.graph.messaging.MessagingService;
-import io.intino.konos.model.graph.messaging.MessagingService.Request;
+import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.graph.Service.Messaging.Request;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class MessagingRequestRenderer extends Renderer {
 	private static final String REQUESTS = "requests";
-	private final List<MessagingService> services;
+	private final List<Service.Messaging> services;
 
 	public MessagingRequestRenderer(Settings settings, KonosGraph graph) {
 		super(settings, Target.Owner);
-		this.services = graph.messagingServiceList();
+		this.services = graph.serviceList(Service::isMessaging).map(Service::asMessaging).collect(Collectors.toList());
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class MessagingRequestRenderer extends Renderer {
 		services.forEach(this::processService);
 	}
 
-	private void processService(MessagingService service) {
+	private void processService(Service.Messaging service) {
 		service.core$().findNode(Request.class).forEach(this::processRequest);
 	}
 
