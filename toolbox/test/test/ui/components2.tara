@@ -7,7 +7,7 @@ Service RestService as REST(port = "9000", host = "")
 
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Use(className = "org.example.unit1.box.ui.Unit1Elements", url = "http://unit1") unit1
-	Resource(path = "/") home as Page(homeTemplate) Main
+	Resource(path = "/") home as Page(homeTemplate) Main Confidential
 	Resource(path = "/cobranzas") cobranzas as Page(homeTemplate)
 	Resource(path = "/cobranza/:name") cobranza as Page(homeTemplate)
 	Resource(path = "/cuentas") cuentas as Page(homeTemplate)
@@ -18,8 +18,7 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/ingreso/:name") ingreso as Page(homeTemplate)
 
 Template homeTemplate
-	Task(title="titt") ddd as Readonly
-	Stamp(template=root)
+	Text aaa as Editable(placeholder="Números de aaa") Memo
 
 Template root as Accessible(parameters = "a" "b")
 

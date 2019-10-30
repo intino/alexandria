@@ -51,7 +51,7 @@ def type(resource) trigger(path)
 end
 
 def trigger(userHome)
-	spark.route("/alexandria/user").get(manager -> new $value+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
+	spark.route("/alexandria/user").get(manager -> new $this+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
 end
 
 def type(display & accessible) trigger(path)

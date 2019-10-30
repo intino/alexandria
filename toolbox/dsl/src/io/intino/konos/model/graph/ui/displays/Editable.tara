@@ -26,7 +26,7 @@ Facet Editable on DataComponents.Text
 			var integer max
 
 Facet Memo on DataComponents.Text with Editable
-	var word:{Raw Rich} mode = Raw
+	var word:{Raw Rich} editionMode = Raw
 	var integer height = 5
 
 Facet Password on DataComponents.Text with Editable

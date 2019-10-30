@@ -152,8 +152,10 @@ def type(resource)
 				if (!client.id().equals(page.clientId))
 					return false;
 
-				if (client.soul() != null)
+				if (client.soul() != null) {
+    				(($package+validPackage.ui.displays.RouteDispatcher)box.routeManager().routeDispatcher()).dispatch$name+firstUpperCase(client.soul()[, $parameter+dispatch...[, ]]);
 					return false;
+				}
 
 				io.intino.alexandria.ui.Soul soul = page.prepareSoul(client);
 				soul.onRedirect((location) -> manager.redirect(location));

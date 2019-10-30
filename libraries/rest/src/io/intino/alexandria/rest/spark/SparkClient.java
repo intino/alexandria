@@ -22,6 +22,10 @@ public class SparkClient implements Client {
 		this.runQueueManager();
 	}
 
+	public Session session() {
+		return session;
+	}
+
 	public SparkClient session(Session session) {
 		this.session = session;
 		return this;
