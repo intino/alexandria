@@ -7,28 +7,29 @@ import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.jmx.JMXService;
-import io.intino.konos.model.graph.jmx.JMXService.Operation;
+import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.graph.Service.JMX.Operation;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class JMXServerRenderer extends Renderer {
-	private final List<JMXService> jmxServices;
+	private final List<Service.JMX> services;
 
 	public JMXServerRenderer(Settings settings, KonosGraph graph) {
 		super(settings, Target.Owner);
-		jmxServices = graph.jMXServiceList();
+		this.services = graph.serviceList(Service::isJMX).map(Service::asJMX).collect(Collectors.toList());
 	}
 
 	@Override
 	public void render() {
-		jmxServices.forEach(this::processService);
+		services.forEach(this::processService);
 	}
 
-	private void processService(JMXService service) {
+	private void processService(Service.JMX service) {
 		final List<Operation> operations = service.operationList();
 		if (operations.isEmpty()) return;
 		writeFrame(gen(), "JMX" + snakeCaseToCamelCase(service.name$()), template().render(new FrameBuilder("jmxserver")

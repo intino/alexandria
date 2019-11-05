@@ -8,11 +8,7 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Exception;
-import io.intino.konos.model.graph.Parameter;
-import io.intino.konos.model.graph.Response;
-import io.intino.konos.model.graph.Schema;
-import io.intino.konos.model.graph.object.ObjectData;
-import io.intino.konos.model.graph.type.TypeData;
+import io.intino.konos.model.graph.*;
 
 import java.io.File;
 import java.util.Arrays;
@@ -91,8 +87,8 @@ public abstract class ActionRenderer extends Renderer {
 		}
 	}
 
-	private String formatType(TypeData typeData) {
-		return (typeData.i$(ObjectData.class) ? (packageName() + ".schemas.") : "") + typeData.type();
+	private String formatType(Data.Type typeData) {
+		return (typeData.i$(Data.Object.class) ? (packageName() + ".schemas.") : "") + typeData.type();
 	}
 
 	protected String firstUpperCase(String value) {

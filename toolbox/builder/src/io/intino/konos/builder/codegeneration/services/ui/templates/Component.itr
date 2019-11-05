@@ -338,7 +338,7 @@ def type(binding)
 	if ($name != null) $name.bindTo($selector, "$option");
 end
 
-def type(implements & selectablecollection)
+def type(implements & selectable)
 	implements io.intino.alexandria.ui.displays.components.collection.Selectable
 end
 
@@ -346,15 +346,15 @@ def type(implements & option)
 	implements io.intino.alexandria.ui.displays.components.selector.SelectorOption
 end
 
-def type(implements & dynamicloadedcomponent)
+def type(implements & dynamicloaded)
 	implements io.intino.alexandria.ui.displays.components.DynamicLoaded
 end
 
-def type(implements & addressabletask)
+def type(implements & addressable & task)
 	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
 end
 
-def type(implements & addressableselector)
+def type(implements & addressable & selector)
 	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
 end
 

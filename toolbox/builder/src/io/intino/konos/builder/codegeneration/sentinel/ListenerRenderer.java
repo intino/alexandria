@@ -11,12 +11,9 @@ import io.intino.konos.builder.codegeneration.action.ActionTemplate;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Sentinel;
-import io.intino.konos.model.graph.directorylistener.DirectoryListenerSentinel;
-import io.intino.konos.model.graph.systemlistener.SystemListenerSentinel;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,12 +21,12 @@ import java.util.stream.Collectors;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class ListenerRenderer extends Renderer {
-	private final List<SystemListenerSentinel> systemSentinels;
+	private final List<Sentinel.SystemListener> systemSentinels;
 	private final List<Sentinel> sentinels;
 
 	public ListenerRenderer(Settings settings, KonosGraph graph) {
 		super(settings, Target.Owner);
-		this.systemSentinels = graph.systemListenerSentinelList();
+		this.systemSentinels = graph.sentinelList(Sentinel::isSystemListener).map(Sentinel::asSystemListener).collect(Collectors.toList());
 		this.sentinels = graph.sentinelList().stream().filter(t -> !t.isSystemListener()).collect(Collectors.toList());
 	}
 
@@ -39,7 +36,7 @@ public class ListenerRenderer extends Renderer {
 		this.sentinels.stream().filter(Sentinel::isDirectoryListener).map(Sentinel::asDirectoryListener).forEach(this::processDirectorySentinel);
 	}
 
-	private void processSystemSentinel(SystemListenerSentinel sentinel) {
+	private void processSystemSentinel(Sentinel.SystemListener sentinel) {
 		FrameBuilder builder = baseFrame("listener").add("name", sentinel.name$());
 		List<Frame> targets = new ArrayList<>();
 		targets.add(baseFrame(sentinel.name$()).add("name", sentinel.name$()).toFrame());
@@ -48,7 +45,7 @@ public class ListenerRenderer extends Renderer {
 		createCorrespondingAction(sentinel.a$(Sentinel.class));
 	}
 
-	private void processDirectorySentinel(DirectoryListenerSentinel sentinel) {
+	private void processDirectorySentinel(Sentinel.DirectoryListener sentinel) {
 		FrameBuilder frame = new FrameBuilder("action", "listener")
 				.add("name", sentinel.name$())
 				.add("box", boxName())
@@ -58,7 +55,7 @@ public class ListenerRenderer extends Renderer {
 			writeFrame(actionsPackage(src()), sentinel.name$() + "Action", actionTemplate().render(frame));
 	}
 
-	private Frame[] parameters(DirectoryListenerSentinel sentinel) {
+	private Frame[] parameters(Sentinel.DirectoryListener sentinel) {
 		List<Frame> list = new ArrayList<>();
 		list.add(new FrameBuilder("parameter").add("type", File.class.getCanonicalName()).add("name", "directory").toFrame());
 		list.add(new FrameBuilder("parameter").add("type", "io.intino.alexandria.scheduler.directory.DirectorySentinel.Event").add("name", "event").toFrame());

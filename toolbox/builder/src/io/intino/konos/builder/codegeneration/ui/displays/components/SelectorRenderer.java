@@ -5,7 +5,6 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.OtherComponents.Selector;
-import io.intino.konos.model.graph.addressable.othercomponents.AddressableSelector;
 
 public class SelectorRenderer extends ComponentRenderer<Selector> {
 
@@ -50,7 +49,7 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 
 	private void addAddressableProperties(FrameBuilder builder) {
 		if (!element.isAddressable()) return;
-		AddressableSelector addressable = element.asAddressable();
+		Selector.Addressable addressable = element.asAddressable();
 		String path = addressable.addressableResource().path();
 		builder.add("path", path);
 	}

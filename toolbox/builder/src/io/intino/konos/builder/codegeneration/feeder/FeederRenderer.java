@@ -8,11 +8,6 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Feeder;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Sensor;
-import io.intino.konos.model.graph.documentedition.DocumentEditionSensor;
-import io.intino.konos.model.graph.documentsignature.DocumentSignatureSensor;
-import io.intino.konos.model.graph.formedition.FormEditionSensor;
-import io.intino.konos.model.graph.poll.PollSensor;
-import io.intino.konos.model.graph.usersensor.UserSensorSensor;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -56,7 +51,7 @@ public class FeederRenderer {
 				add("parent", parent(sensor));
 
 		if (sensor.isUserSensor()) {
-			UserSensorSensor userSensor = sensor.asUserSensor();
+			Sensor.UserSensor userSensor = sensor.asUserSensor();
 			if (userSensor.width() != 100)
 				builder.add("width", new FrameBuilder("width").add("value", userSensor.width()));
 			if (userSensor.height() != 100)
@@ -73,16 +68,16 @@ public class FeederRenderer {
 		return new FrameBuilder().toFrame();
 	}
 
-	private Frame poll(PollSensor sensor) {
+	private Frame poll(Sensor.Poll sensor) {
 		return new FrameBuilder("poll").
 				add("defaultOption", sensor.defaultOption() == null ? "" : sensor.defaultOption()).
 				add("eventMethod", sensor.core$().ownerAs(Feeder.class).tanks().toArray(new String[0])).
 				add("option", frameOf(sensor.optionList())).toFrame();
 	}
 
-	private Frame[] frameOf(List<PollSensor.Option> options) {
+	private Frame[] frameOf(List<Sensor.Poll.Option> options) {
 		List<Frame> frames = new ArrayList<>();
-		for (PollSensor.Option option : options) {
+		for (Sensor.Poll.Option option : options) {
 			final FrameBuilder builder = new FrameBuilder("option").
 					add("value", option.value()).
 					add("event", option.event().name$());
@@ -92,15 +87,15 @@ public class FeederRenderer {
 		return frames.toArray(new Frame[0]);
 	}
 
-	private Frame formEdition(FormEditionSensor sensor) {
+	private Frame formEdition(Sensor.FormEdition sensor) {
 		return new FrameBuilder("formEdition").add("path", sensor.path()).toFrame();
 	}
 
-	private Frame documentEdition(DocumentEditionSensor sensor) {
+	private Frame documentEdition(Sensor.DocumentEdition sensor) {
 		return new FrameBuilder("documentEdition").add("mode", sensor.mode().name()).toFrame();
 	}
 
-	private Frame documentSignature(DocumentSignatureSensor sensor) {
+	private Frame documentSignature(Sensor.DocumentSignature sensor) {
 		return new FrameBuilder("documentSignature").add("signType", sensor.signType().name()).add("signFormat", sensor.signFormat().name()).toFrame();
 	}
 

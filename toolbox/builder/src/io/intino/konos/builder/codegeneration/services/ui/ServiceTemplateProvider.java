@@ -7,7 +7,6 @@ import io.intino.konos.builder.codegeneration.services.ui.templates.*;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.PassiveView;
-import io.intino.konos.model.graph.desktop.DesktopTemplate;
 import io.intino.tara.magritte.Layer;
 
 public class ServiceTemplateProvider implements TemplateProvider {
@@ -19,7 +18,7 @@ public class ServiceTemplateProvider implements TemplateProvider {
 	}
 
 	public Template genTemplate(Layer layer, FrameBuilder builder) {
-		if (layer.i$(DesktopTemplate.class)) return setup(new AbstractDesktopTemplate());
+		if (layer.i$(io.intino.konos.model.graph.Template.Desktop.class)) return setup(new AbstractDesktopTemplate());
 		return setup(new AbstractDisplayTemplate());
 	}
 

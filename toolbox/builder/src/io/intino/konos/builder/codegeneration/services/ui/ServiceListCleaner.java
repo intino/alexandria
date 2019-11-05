@@ -5,7 +5,7 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayListCleaner;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.ui.UIService;
+import io.intino.konos.model.graph.Service;
 
 public class ServiceListCleaner extends Cleaner {
 	private final KonosGraph graph;
@@ -17,10 +17,10 @@ public class ServiceListCleaner extends Cleaner {
 
 	@Override
 	public void execute() {
-		graph.uIServiceList().forEach(this::cleanService);
+		graph.serviceList().stream().filter(Service::isUI).map(Service::asUI).forEach(this::cleanService);
 	}
 
-	private void cleanService(UIService service) {
+	private void cleanService(Service.UI service) {
 		if (settings.webModule() != null) clean(gen(Target.Accessor));
 		new DisplayListCleaner(settings, service).execute();
 	}

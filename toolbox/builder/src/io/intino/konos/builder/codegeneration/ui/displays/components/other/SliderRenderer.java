@@ -5,9 +5,11 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.collection.BindingCollectionRenderer;
-import io.intino.konos.model.graph.OtherComponents.AbstractSlider;
-import io.intino.konos.model.graph.OtherComponents.Slider;
-import io.intino.konos.model.graph.OtherComponents.TemporalSlider;
+import io.intino.konos.model.graph.BIComponents;
+import io.intino.konos.model.graph.BIComponents.AbstractSlider;
+
+import static io.intino.konos.model.graph.BIComponents.Slider;
+import static io.intino.konos.model.graph.BIComponents.TemporalSlider;
 
 public class SliderRenderer extends BindingCollectionRenderer<AbstractSlider> {
 
@@ -65,8 +67,8 @@ public class SliderRenderer extends BindingCollectionRenderer<AbstractSlider> {
 	}
 
 	private void addStyle(FrameBuilder builder) {
-		AbstractSlider.Style style = element.style();
-		if (style == AbstractSlider.Style.Full) return;
+		Slider.Style style = element.style();
+		if (style == Slider.Style.Full) return;
 		builder.add("style", style.name());
 	}
 

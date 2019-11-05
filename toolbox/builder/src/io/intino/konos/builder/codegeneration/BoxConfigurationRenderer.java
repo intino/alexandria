@@ -11,7 +11,6 @@ import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import java.util.Set;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.tara.compiler.shared.Configuration.Level.Platform;
 
 public class BoxConfigurationRenderer extends Renderer {
 	private final Configuration configuration;
@@ -38,7 +37,7 @@ public class BoxConfigurationRenderer extends Renderer {
 	private String fillFrame(FrameBuilder builder) {
 		final String boxName = settings.boxName();
 		builder.add("name", boxName).add("package", packageName());
-		if (parent() != null && configuration != null && !Platform.equals(configuration.level()))
+		if (parent() != null && configuration != null && configuration.model() != null && !configuration.model().level().isPlatform())
 			builder.add("parent", parent());
 		if (isTara) builder.add("tara", "");
 		for (String parameter : params) {

@@ -8,17 +8,17 @@ import io.intino.konos.builder.codegeneration.accessor.ui.templates.ThemeTemplat
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Format;
+import io.intino.konos.model.graph.Service;
 import io.intino.konos.model.graph.Theme;
-import io.intino.konos.model.graph.ui.UIService;
 
 import java.io.File;
 
 import static io.intino.konos.model.graph.Theme.Type.Normal;
 
 public class ThemeRenderer extends UIRenderer {
-	private final UIService service;
+	private final Service.UI service;
 
-	protected ThemeRenderer(Settings settings, UIService service) {
+	protected ThemeRenderer(Settings settings, Service.UI service) {
 		super(settings, Target.Accessor);
 		this.service = service;
 	}

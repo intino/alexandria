@@ -4,8 +4,8 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
-import io.intino.konos.model.graph.AbstractAbsolute;
-import io.intino.konos.model.graph.AbstractRelative;
+import io.intino.konos.model.graph.Absolute;
+import io.intino.konos.model.graph.Relative;
 import io.intino.konos.model.graph.Component;
 
 public class SizedRenderer<C extends Component> extends ComponentRenderer<C> {
@@ -24,12 +24,12 @@ public class SizedRenderer<C extends Component> extends ComponentRenderer<C> {
 	}
 
 	private void addSize(FrameBuilder result) {
-		if (element.i$(AbstractRelative.class)) {
-			AbstractRelative abstractRelative = element.a$(AbstractRelative.class);
+		if (element.i$(Relative.class)) {
+			Relative abstractRelative = element.a$(Relative.class);
 			result.add("width", relativeSizeOf(abstractRelative.width(), abstractRelative.offsetWidth()));
 			result.add("height", relativeSizeOf(abstractRelative.height(), abstractRelative.offsetHeight()));
-		} else if (element.i$(AbstractAbsolute.class)) {
-			AbstractAbsolute abstractAbsolute = element.a$(AbstractAbsolute.class);
+		} else if (element.i$(Absolute.class)) {
+			Absolute abstractAbsolute = element.a$(Absolute.class);
 			result.add("width", abstractAbsolute.width() + "px");
 			result.add("height", abstractAbsolute.height() + "px");
 		}

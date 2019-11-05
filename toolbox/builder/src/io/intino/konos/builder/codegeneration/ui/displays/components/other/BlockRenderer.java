@@ -6,13 +6,9 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.SizedRenderer;
 import io.intino.konos.model.graph.Block;
+import io.intino.konos.model.graph.Component;
 import io.intino.konos.model.graph.OtherComponents.Selector;
-import io.intino.konos.model.graph.animated.AnimatedBlock;
-import io.intino.konos.model.graph.badge.BadgeBlock;
-import io.intino.konos.model.graph.drawer.DrawerBlock;
-import io.intino.konos.model.graph.option.OptionComponent;
 import io.intino.konos.model.graph.rules.Spacing;
-import io.intino.konos.model.graph.splitter.SplitterBlock;
 
 public class BlockRenderer extends SizedRenderer<Block> {
 
@@ -37,7 +33,8 @@ public class BlockRenderer extends SizedRenderer<Block> {
 		addDrawer(result);
 		addTransition(result);
 		addSplitter(result);
-		if (element.hidden() != null && element.hidden() != Block.Hidden.Never) result.add("hidden", element.hidden().name());
+		if (element.hidden() != null && element.hidden() != Block.Hidden.Never)
+			result.add("hidden", element.hidden().name());
 		if (element.isCollapsible()) result.add("collapsible", "true");
 		return result;
 	}
@@ -58,7 +55,7 @@ public class BlockRenderer extends SizedRenderer<Block> {
 
 	private void addBadge(FrameBuilder builder) {
 		if (!element.isBadge()) return;
-		BadgeBlock badgeBlock = element.asBadge();
+		Block.Badge badgeBlock = element.asBadge();
 		FrameBuilder badgeFrame = new FrameBuilder("badge");
 		if (badgeBlock.value() != -1) badgeFrame.add("value", badgeBlock.value());
 		if (badgeBlock.max() != -1) badgeFrame.add("max", badgeBlock.max());
@@ -76,7 +73,7 @@ public class BlockRenderer extends SizedRenderer<Block> {
 
 	private void addDrawer(FrameBuilder builder) {
 		if (!element.isDrawer()) return;
-		DrawerBlock drawerBlock = element.asDrawer();
+		Block.Drawer drawerBlock = element.asDrawer();
 		FrameBuilder drawerFrame = new FrameBuilder("drawer");
 		drawerFrame.add("position", drawerBlock.position().name());
 		drawerFrame.add("variant", drawerBlock.variant().name());
@@ -85,8 +82,8 @@ public class BlockRenderer extends SizedRenderer<Block> {
 
 	private void addTransition(FrameBuilder builder) {
 		if (!element.isAnimated()) return;
-		AnimatedBlock block = element.asAnimated();
-		AnimatedBlock.Transition transition = block.transitionList().size() > 0 ? block.transition(0) : null;
+		Block.Animated block = element.asAnimated();
+		Block.Animated.Transition transition = block.transition();
 		builder.add("mode", block.mode().name());
 		builder.add("transitionDirection", transition != null ? transition.direction().name() : "Right");
 		builder.add("transitionDuration", transition != null ? transition.duration() : 500);
@@ -94,14 +91,14 @@ public class BlockRenderer extends SizedRenderer<Block> {
 
 	private void addSplitter(FrameBuilder builder) {
 		if (!element.isSplitter()) return;
-		SplitterBlock block = element.asSplitter();
+		Block.Splitter block = element.asSplitter();
 		builder.add("splitMobileLabel", block.splitMobileLabel());
 	}
 
 	private void addBinding(FrameBuilder builder) {
 		if (!element.isConditional()) return;
 
-		OptionComponent option = element.asConditional().selected();
+		Component.Option option = element.asConditional().selected();
 		if (option == null) return;
 
 		Selector selector = option.core$().ownerAs(Selector.class);

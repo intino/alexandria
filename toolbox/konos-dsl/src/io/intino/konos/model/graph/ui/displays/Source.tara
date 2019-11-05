@@ -1,0 +1,12 @@
+dsl Proteo
+
+Concept:Named Source
+
+	sub Dataframe
+		Concept Column
+			var string name
+			var word:{String Integer Double Boolean} type
+		Aspect CSV
+			var string datasourceFilename
+		Aspect Custom
+			var string datasourceClass

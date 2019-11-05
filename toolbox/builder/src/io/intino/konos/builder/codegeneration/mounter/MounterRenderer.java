@@ -7,8 +7,6 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Mounter;
 import io.intino.konos.model.graph.Schema;
-import io.intino.konos.model.graph.batch.BatchMounter;
-import io.intino.konos.model.graph.population.PopulationMounter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -58,7 +56,7 @@ public class MounterRenderer {
 		writeFrame(sourceMounters, mounterName, customize(new MounterTemplate()).render(builder.toFrame()));
 	}
 
-	private void batchMounter(BatchMounter mounter, String mounterName, FrameBuilder builder) {
+	private void batchMounter(Mounter.Batch mounter, String mounterName, FrameBuilder builder) {
 		builder.add("batch");
 		mounter.sourceList().forEach(source -> builder.add("tank", new FrameBuilder("tank").add("qn", source.tank()).add("name", name(source.tank()))));
 		writeFrame(new File(settings.src(Target.Owner), "mounters"), mounterName, customize(new MounterTemplate()).render(builder));
@@ -96,7 +94,7 @@ public class MounterRenderer {
 		return tank.replace(".", " ");
 	}
 
-	private void populationMounter(FrameBuilder builder, PopulationMounter mounter) {
+	private void populationMounter(FrameBuilder builder, Mounter.Population mounter) {
 		List<FrameBuilder> frames = new ArrayList<>();
 		mounter.sourceList().stream().map(this::buildersOf).forEach(frames::addAll);
 		builder.add("population").
@@ -105,9 +103,9 @@ public class MounterRenderer {
 				add("format", mounter.format().name());
 	}
 
-	private List<FrameBuilder> buildersOf(PopulationMounter.Source source) {
+	private List<FrameBuilder> buildersOf(Mounter.Population.Source source) {
 		List<FrameBuilder> builders = new ArrayList<>();
-		for (String tank : tanksOf(source.core$().ownerAs(PopulationMounter.class), source.tank())) {
+		for (String tank : tanksOf(source.core$().ownerAs(Mounter.Population.class), source.tank())) {
 			FrameBuilder builder = new FrameBuilder("column")
 					.add("fullName", tank)
 					.add("name", source.tank())
@@ -119,9 +117,9 @@ public class MounterRenderer {
 		return builders;
 	}
 
-	private List<String> tanksOf(PopulationMounter mounter, String tank) {
+	private List<String> tanksOf(Mounter.Population mounter, String tank) {
 		List<String> tanks = new ArrayList<>();
-		if (!mounter.splitList().isEmpty()) for (PopulationMounter.Split split : mounter.splitList())
+		if (!mounter.splitList().isEmpty()) for (Mounter.Population.Split split : mounter.splitList())
 			split.splits().stream().map(s -> s + "." + tank).forEach(tanks::add);
 		else return Collections.singletonList(tank);
 		return tanks;

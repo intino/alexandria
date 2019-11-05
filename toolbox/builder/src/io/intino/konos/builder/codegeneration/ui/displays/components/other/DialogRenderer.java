@@ -8,8 +8,8 @@ import io.intino.konos.builder.codegeneration.ui.displays.components.SizedRender
 import io.intino.konos.model.graph.CatalogComponents;
 import io.intino.konos.model.graph.OtherComponents;
 import io.intino.konos.model.graph.OtherComponents.AbstractDialog;
+import io.intino.konos.model.graph.OtherComponents.Dialog;
 import io.intino.konos.model.graph.OtherComponents.Selector;
-import io.intino.konos.model.graph.animated.othercomponents.AnimatedDialog;
 
 public class DialogRenderer extends SizedRenderer<AbstractDialog> {
 
@@ -28,7 +28,7 @@ public class DialogRenderer extends SizedRenderer<AbstractDialog> {
 		FrameBuilder result = super.properties();
 		result.add("abstractdialog");
 		result.add("title", element.title());
-		if (element.isFullscreen()) result.add("fullscreen", true);
+		if (element.isFullScreen()) result.add("fullscreen", true);
 		addTransition(result);
 		addAlertDialogProperties(result);
 		addCollectionDialogProperties(result);
@@ -36,9 +36,9 @@ public class DialogRenderer extends SizedRenderer<AbstractDialog> {
 	}
 
 	private void addTransition(FrameBuilder builder) {
-		if (!element.i$(AnimatedDialog.class)) return;
-		AnimatedDialog block = element.a$(AnimatedDialog.class);
-		AnimatedDialog.Transition transition = block.transitionList().size() > 0 ? block.transition(0) : null;
+		if (!element.i$(Dialog.Animated.class)) return;
+		Dialog.Animated block = element.a$(Dialog.Animated.class);
+		Dialog.Animated.Transition transition = block.transition();
 		builder.add("mode", block.mode().name());
 		builder.add("transitionDirection", transition != null ? transition.direction().name() : "Right");
 		builder.add("transitionDuration", transition != null ? transition.duration() : 500);

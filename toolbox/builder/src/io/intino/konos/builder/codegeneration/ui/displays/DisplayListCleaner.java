@@ -3,14 +3,13 @@ package io.intino.konos.builder.codegeneration.ui.displays;
 import io.intino.konos.builder.codegeneration.Cleaner;
 import io.intino.konos.builder.codegeneration.ElementReference;
 import io.intino.konos.builder.codegeneration.Settings;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.model.graph.ui.UIService;
+import io.intino.konos.model.graph.Service;
 
 import java.util.List;
 
 public class DisplayListCleaner extends Cleaner {
 
-	public DisplayListCleaner(Settings settings, UIService service) {
+	public DisplayListCleaner(Settings settings, Service.UI service) {
 		super(settings);
 	}
 

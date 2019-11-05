@@ -1,0 +1,58 @@
+dsl Proteo
+
+
+
+use Component
+
+Concept CatalogComponents
+	Concept Collection extends Component
+		var string sourceClass = empty
+		var string itemClass = empty
+		var string noItemsMessage = empty
+		var string noItemsFoundMessage = empty
+		var integer pageSize = 20
+		var boolean scrollingMark = true
+
+		Concept:{1..*} Mold
+			Concept:{0..1} Heading extends Component
+				has Component
+			Concept:{1..1} Item extends Component > has Component
+				var integer:{px} height
+				var integer:{%} width = -1%
+		Aspect Selectable
+        	var boolean multiple = false
+		sub Magazine
+		sub List
+			Aspect Navigable
+		sub Table
+			Aspect Navigable
+		sub Map
+			var string icon = empty
+
+			Concept:{0..1} Center
+				var double latitude
+				var double longitude
+
+			Concept:{1..1} Zoom
+				var integer defaultZoom
+				var integer min
+				var integer max
+			Aspect Cluster
+            Aspect Kml
+            	var string layer
+            Aspect Heatmap
+
+	Concept:Named Grouping extends Component
+		var Collection[] collections
+		Aspect ComboBox
+        	var string placeholder = ""
+	Concept:Named Sorting extends Component
+		var Collection[] collections
+
+	Concept:Named SearchBox extends Component
+		var Collection[] collections
+		var string placeholder = empty
+
+
+
+

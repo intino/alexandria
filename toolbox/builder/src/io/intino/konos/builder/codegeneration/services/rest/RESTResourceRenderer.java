@@ -11,37 +11,33 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.RESTNotificationActionRenderer;
 import io.intino.konos.builder.codegeneration.action.RESTResourceActionRenderer;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.Redirect;
-import io.intino.konos.model.graph.Response;
-import io.intino.konos.model.graph.list.ListData;
-import io.intino.konos.model.graph.rest.RESTService;
-import io.intino.konos.model.graph.rest.RESTService.Notification;
-import io.intino.konos.model.graph.rest.RESTService.Resource;
-import io.intino.konos.model.graph.rest.RESTService.Resource.Operation;
-import io.intino.konos.model.graph.rest.RESTService.Resource.Parameter;
+import io.intino.konos.model.graph.*;
+import io.intino.konos.model.graph.Service.REST.Notification;
+import io.intino.konos.model.graph.Service.REST.Resource;
+import io.intino.konos.model.graph.Service.REST.Resource.Parameter;
 
 import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.model.graph.Service.REST.Resource.Operation;
 
 public class RESTResourceRenderer extends Renderer {
 	private static final String RESOURCES_PACKAGE = "rest/resources";
 	private static final String NOTIFICATIONS_PACKAGE = "rest/notifications";
-	private final List<RESTService> services;
+	private final List<Service.REST> services;
 
 	public RESTResourceRenderer(Settings settings, KonosGraph graph) {
 		super(settings, Target.Owner);
-		this.services = graph.rESTServiceList();
+		this.services = graph.serviceList(Service::isREST).map(Service::asREST).collect(Collectors.toList());
 	}
 
 	public void render() {
 		services.forEach(this::processService);
 	}
 
-	private void processService(RESTService service) {
+	private void processService(Service.REST service) {
 		service.core$().findNode(Resource.class).forEach(this::processResource);
 		service.core$().findNode(Notification.class).forEach(this::processNotification);
 	}
@@ -57,7 +53,7 @@ public class RESTResourceRenderer extends Renderer {
 
 	private void processNotification(Notification notification) {
 		final String className = snakeCaseToCamelCase(notification.name$()) + "Notification";
-		RESTService service = notification.core$().ownerAs(RESTService.class);
+		Service.REST service = notification.core$().ownerAs(Service.REST.class);
 		FrameBuilder builder = new FrameBuilder("notification").add("path", notification.path());
 		addCommons(notification.name$(), builder);
 		builder.add("parameter", notificationParameters(notification.parameterList()));
@@ -85,12 +81,12 @@ public class RESTResourceRenderer extends Renderer {
 		if (hasResponse(operation)) builder.add("returnType", frameOf(operation.response()));
 		if (!resource.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
-		authenticated(resource.core$().ownerAs(RESTService.class), builder);
+		authenticated(resource.core$().ownerAs(Service.REST.class), builder);
 		return builder.toFrame();
 	}
 
-	private void authenticated(RESTService service, FrameBuilder builder) {
-		final RESTService.AuthenticatedWithToken authenticated = service.authenticatedWithToken();
+	private void authenticated(Service.REST service, FrameBuilder builder) {
+		final Service.REST.AuthenticatedWithToken authenticated = service.authenticatedWithToken();
 		if (authenticated != null)
 			builder.add("authenticationValidator", new FrameBuilder("authenticationValidator").add("type", "Basic").toFrame());
 	}
@@ -117,7 +113,7 @@ public class RESTResourceRenderer extends Renderer {
 	}
 
 	private String[] throwCodes(Operation resource) {
-		final RESTService.AuthenticatedWithToken authenticated = resource.core$().ownerAs(RESTService.class).authenticatedWithToken();
+		final Service.REST.AuthenticatedWithToken authenticated = resource.core$().ownerAs(Service.REST.class).authenticatedWithToken();
 		List<String> throwCodes = resource.exceptionList().stream().map(r -> r.code().toString()).collect(Collectors.toList());
 		if (authenticated != null) throwCodes.add("Unauthorized");
 		return throwCodes.isEmpty() ? new String[]{"Unknown"} : throwCodes.toArray(new String[0]);
@@ -162,7 +158,7 @@ public class RESTResourceRenderer extends Renderer {
 	private Frame parameterType(io.intino.konos.model.graph.Parameter parameter) {
 		String innerPackage = parameter.isObject() && parameter.asObject().isComponent() ? String.join(".", packageName(), "schemas.") : "";
 		final FrameBuilder builder = new FrameBuilder().add("value", innerPackage + parameter.asType().type());
-		if (parameter.i$(ListData.class)) builder.add("list");
+		if (parameter.i$(Data.List.class)) builder.add("list");
 		return builder.toFrame();
 	}
 
