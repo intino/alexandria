@@ -156,7 +156,7 @@ const CollectionBehavior = (collection) => {
         var selecting = self.collection.state.selection.length > 0;
         const id = item != null ? item.pl.id : undefined;
         return (
-            <div style={style} key={index} className={classNames(classes.itemView, "layout horizontal center", selectable ? classes.selectable : undefined, selecting ? classes.selecting : undefined)}>
+            <div style={style} key={index} onClick={selectable && !multiple ? self.handleSelect.bind(self, id) : undefined} className={classNames(classes.itemView, "layout horizontal center", selectable ? classes.selectable : undefined, selecting ? classes.selecting : undefined)}>
                 {/*{multiple ? <Checkbox checked={self.isItemSelected(item)} className={classes.selector} onChange={self.handleSelect.bind(self, id)} /> : undefined}*/}
                 {multiple ? <CollectionBehaviorCheckbox checked={self.isItemSelected(item)} classes={classes} onCheck={self.handleSelect.bind(self, id)} /> : undefined}
                 {view}
@@ -190,8 +190,6 @@ const CollectionBehavior = (collection) => {
 
     self.itemView = (item, classes, index) => {
         enrichDisplayProperties(item);
-        item.pl.context = () => { return item.pl.o };
-        item.pl.owner = () => { return item.i };
         return React.createElement(DisplayFactory.get(item.tp), item.pl);
     };
 

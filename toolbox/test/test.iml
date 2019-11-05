@@ -16,7 +16,6 @@
     <orderEntry type="module" module-name="rest-accessor" scope="TEST" />
     <orderEntry type="module" module-name="core" scope="TEST" />
     <orderEntry type="module" module-name="message-hub-jms" scope="TEST" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.apache.commons:commons-io:1.3.2" level="project" />
     <orderEntry type="module" module-name="datalake" scope="TEST" />
     <orderEntry type="module" module-name="builder" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: tara.dsl:konos:1.0.0" level="project" />
@@ -105,8 +104,10 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.locationtech.jts:jts-core:1.16.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:driver-shiny:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:driver:1.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.jcraft:jsch:0.1.55" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:proxy:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.httpcomponents:fluent-hc:4.5.7" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.apache.commons:commons-io:1.3.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:driver-r:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: net.rforge:rserve:0.6-8.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: net.rforge:REngine:0.6-8.1" level="project" />

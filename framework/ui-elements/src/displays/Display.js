@@ -5,7 +5,7 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export const enrichDisplayProperties = (instance) => {
     instance.pl.context = () => { return instance.pl.o };
-    instance.pl.owner = () => { return instance.i };
+    instance.pl.owner = () => { return instance.i != null ? instance.i : instance.pl.id };
 };
 
 export default class Display extends PassiveView {
