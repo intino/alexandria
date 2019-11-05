@@ -21,17 +21,20 @@ const styles = theme => ({
 });
 
 class Date extends AbstractDate {
-	state = {
-		value : this.props.value
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new DateNotifier(this);
 		this.requester = new DateRequester(this);
+		this.state = {
+			...this.state,
+			value : this.props.value,
+		}
 	};
 
 	render() {
+		if (!this.state.visible) return (<React.Fragment/>);
+
 		const { classes } = this.props;
 		const pattern = this.props.pattern !== "" ? this.props.pattern : undefined;
 		const hasMode = this.props.mode != null;

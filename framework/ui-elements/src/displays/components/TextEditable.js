@@ -16,15 +16,16 @@ const styles = theme => ({
 });
 
 class TextEditable extends AbstractTextEditable {
-	state = {
-		value : "",
-		readonly : this.props.readonly
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new TextEditableNotifier(this);
 		this.requester = new TextEditableRequester(this);
+		this.state = {
+			...this.state,
+			value : "",
+			readonly : this.props.readonly
+		};
 	};
 
 	handleChange(e) {
@@ -38,6 +39,8 @@ class TextEditable extends AbstractTextEditable {
 	};
 
 	render() {
+		if (!this.state.visible) return (<React.Fragment/>);
+
 		const { classes } = this.props;
 		const label = this.props.label !== "" ? this.props.label : undefined;
 		const placeholder = this.props.placeholder !== "" ? this.props.placeholder : undefined;
