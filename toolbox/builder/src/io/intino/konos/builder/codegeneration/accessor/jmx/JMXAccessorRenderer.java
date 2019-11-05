@@ -10,10 +10,9 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.codegeneration.services.jmx.JMXServerTemplate;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.graph.Data;
 import io.intino.konos.model.graph.Parameter;
-import io.intino.konos.model.graph.jmx.JMXService;
-import io.intino.konos.model.graph.object.ObjectData;
-import io.intino.konos.model.graph.type.TypeData;
+import io.intino.konos.model.graph.Service;
 
 import java.io.File;
 import java.util.List;
@@ -21,11 +20,11 @@ import java.util.List;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
 public class JMXAccessorRenderer extends Renderer {
-	private final JMXService service;
+	private final Service.JMX service;
 	private File destination;
 	private String packageName;
 
-	public JMXAccessorRenderer(Settings settings, JMXService restService, File destination) {
+	public JMXAccessorRenderer(Settings settings, Service.JMX restService, File destination) {
 		super(settings, Target.Owner);
 		this.service = restService;
 		this.destination = new File(destination, "konos");
@@ -39,7 +38,7 @@ public class JMXAccessorRenderer extends Renderer {
 		createService(service);
 	}
 
-	private void createInterface(JMXService service) {
+	private void createInterface(Service.JMX service) {
 		FrameBuilder frame = new FrameBuilder("jmx", "interface");
 		fillFrame(service, frame);
 		Commons.writeFrame(destinationPackage(), service.name$() + "MBean", interfaceTemplate().render(frame));
@@ -49,30 +48,30 @@ public class JMXAccessorRenderer extends Renderer {
 		return new File(destination, "jmx");
 	}
 
-	private void createService(JMXService service) {
+	private void createService(Service.JMX service) {
 		FrameBuilder builder = new FrameBuilder("accessor");
 		fillFrame(service, builder);
 		Commons.writeFrame(destination, snakeCaseToCamelCase(service.name$()) + "JMXAccessor", template().render(builder.toFrame()));
 	}
 
-	private void fillFrame(JMXService service, FrameBuilder builder) {
+	private void fillFrame(Service.JMX service, FrameBuilder builder) {
 		builder.add("name", service.name$());
 		builder.add("package", packageName);
 		if (!service.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName));
-		for (JMXService.Operation operation : service.operationList())
+		for (Service.JMX.Operation operation : service.operationList())
 			builder.add("operation", frameOf(operation));
 	}
 
-	private Frame frameOf(JMXService.Operation operation) {
+	private Frame frameOf(Service.JMX.Operation operation) {
 		final FrameBuilder builder = new FrameBuilder("operation").add("name", operation.name$()).add("action", operation.name$()).
 				add("package", packageName).add("returnType", operation.response() == null ? "void" : formatType(operation.response().asType()));
 		setupParameters(operation.parameterList(), builder);
 		return builder.toFrame();
 	}
 
-	private String formatType(TypeData typeData) {
-		return (typeData.i$(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
+	private String formatType(Data.Type typeData) {
+		return (typeData.i$(Data.Object.class) ? (packageName + ".schemas.") : "") + typeData.type();
 	}
 
 	private void setupParameters(List<Parameter> parameters, FrameBuilder builder) {

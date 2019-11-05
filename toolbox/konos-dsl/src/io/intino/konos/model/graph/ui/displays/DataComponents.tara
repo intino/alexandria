@@ -1,0 +1,124 @@
+dsl Proteo
+
+
+
+use Component
+
+Concept DataComponents
+	Concept Text extends Component
+		var word:{Uppercase Lowercase Capitalize Normal} mode = Normal
+		!! The initial text to display in the box, if any
+		var string value = empty
+		var string prefix = empty
+		var string suffix = empty
+		Aspect Multiple
+		Aspect Highlighted
+        	var string textColor
+        	var string backgroundColor
+        Aspect Code
+            var word:CodeLanguage language
+        Aspect Editable
+        	var word:{Normal Email Url} edition = Normal
+
+        	Concept:{0..1} Validation
+        		var string[] allowedValues = empty
+        		var string[] disallowedValues = empty
+        		var boolean disallowEmptySpaces = false
+        		Concept:{0..1} Length
+        			var integer min
+        			var integer max
+        Aspect Memo with Editable
+        	var word:{Raw Rich} mode = Raw
+        	var integer height = 5
+		Aspect Password with Editable
+        	Concept:{0..1} Validation
+        		var word[]:{Letter Number Symbol} isRequired = Letter Number Symbol
+        		Concept:{1..1} Length
+        			var integer min
+        			var integer max
+        Aspect Readonly with Editable
+        Aspect Required with Editable
+        Aspect Focused with Editable
+
+	Concept File extends Component
+		var string value = empty
+		Aspect Absolute
+		Aspect Relative
+		Aspect Multiple
+		Aspect Editable
+        	var boolean showPreview = false
+        	Concept:{0..1} Validation
+        		var double:{kbytes} maxSize
+        		var string[] allowedExtensions = empty
+        Aspect Readonly with Editable
+        Aspect Required with Editable
+        Aspect Focused with Editable
+
+	Concept Image extends Component
+		var string value = empty
+		var string defaultValue = empty
+		var integer:{%} mobileReduceFactor = 0%
+		Aspect Avatar
+			var string text
+		Aspect Absolute
+		Aspect Relative
+		Aspect Multiple
+		Aspect Editable
+        	var boolean showPreview = false
+        	Concept:{0..1} Validation
+        		var double:{kbytes} maxSize
+        		var string[] allowedExtensions = empty
+        Aspect Readonly with Editable
+        Aspect Required with Editable
+        Aspect Focused with Editable
+
+	Concept Number extends Component
+		var double value = empty
+		var string prefix = empty
+		var string suffix = empty
+		var integer countDecimals = 0
+		var boolean expanded = true
+		var word:{Number Currency Bytes Percentage Exponential} style = Number
+		Aspect Multiple
+		Aspect Editable
+        	var double min = -1
+        	var double max = -1
+        	var double step = -1
+        Aspect Readonly with Editable
+        Aspect Required with Editable
+        Aspect Focused with Editable
+
+	Concept Date extends Component
+		var string pattern = "DD/MM/YYYY"
+		var word:{FromNow ToNow None} mode = None
+		var instant value = empty
+		Aspect Multiple
+		Aspect Editable
+        	var instant min = empty
+        	var instant max = empty
+        	var boolean timePicker = false
+        	var string mask = empty
+        	var boolean allowEmpty = false
+		Aspect Readonly with Editable
+		Aspect Required with Editable
+		Aspect Focused with Editable
+	Concept Location extends Component
+		var string icon = empty
+		var string value = empty
+
+		Concept:{0..1} Center
+			var double latitude
+			var double longitude
+
+		Concept:{1..1} Zoom
+			var integer defaultZoom
+			var integer min
+			var integer max
+		Aspect Editable //TODO is ok extending facet??
+        	var word[]:{Point Polygon Polyline Rectangle} modes = empty
+		Aspect Readonly with Editable
+		Aspect Required with Editable
+		Aspect Focused with Editable
+
+
+

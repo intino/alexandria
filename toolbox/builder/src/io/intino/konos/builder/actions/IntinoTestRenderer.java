@@ -1,7 +1,6 @@
 package io.intino.konos.builder.actions;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiPackage;
@@ -12,17 +11,11 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Service;
-import io.intino.konos.model.graph.messaging.MessagingService;
-import io.intino.konos.model.graph.rest.RESTService;
-import io.intino.konos.model.graph.slackbot.SlackBotService;
-import io.intino.konos.model.graph.ui.UIService;
 import io.intino.tara.magritte.Layer;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
-import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.getSourceRoots;
 
 public class IntinoTestRenderer {
 	private KonosGraph graph;
@@ -53,23 +46,23 @@ public class IntinoTestRenderer {
 	}
 
 	private void addRESTServices(FrameBuilder builder) {
-		for (RESTService service : graph.rESTServiceList()) {
+		graph.serviceList(Service::isREST).map(Service::asREST).forEach(service -> {
 			FrameBuilder restBuilder = new FrameBuilder("service").add("rest").add("name", service.name$());
 			addUserVariables(service.a$(Service.class), restBuilder, findCustomParameters(service));
 			builder.add("service", restBuilder.toFrame());
-		}
+		});
 	}
 
 	private void addMessagingServices(FrameBuilder builder) {
-		for (MessagingService service : graph.messagingServiceList()) {
+		graph.serviceList(Service::isMessaging).map(Service::asMessaging).forEach(service -> {
 			FrameBuilder jmsBuilder = new FrameBuilder("service").add("jms").add("name", service.name$());
 			addUserVariables(service.a$(Service.class), jmsBuilder, findCustomParameters(service));
 			builder.add("service", jmsBuilder.toFrame());
-		}
+		});
 	}
 
 	private void addUIServices(FrameBuilder builder) {
-		for (UIService service : graph.uIServiceList()) {
+		graph.serviceList(Service::isUI).map(Service::asUI).forEach(service -> {
 			FrameBuilder serviceBuilder = new FrameBuilder("service").add("ui").add("name", service.name$());
 			builder.add("service", serviceBuilder);
 			if (service.authentication() != null) {
@@ -77,13 +70,12 @@ public class IntinoTestRenderer {
 				serviceBuilder.add("auth", service.authentication().by());
 			}
 			addUserVariables(service, serviceBuilder, findCustomParameters(service));
-		}
+		});
 	}
 
 	private void addSlackServices(FrameBuilder builder) {
-		for (SlackBotService service : graph.slackBotServiceList()) {
-			builder.add("service", new FrameBuilder("service").add("slack").add("name", service.name$()));
-		}
+		graph.serviceList(Service::isSlackBot).map(Service::asSlackBot).forEach(s ->
+				builder.add("service", new FrameBuilder("service").add("slack").add("name", s.name$())));
 	}
 
 	private void addUserVariables(Layer layer, FrameBuilder builder, Collection<String> userVariables) {
@@ -91,37 +83,30 @@ public class IntinoTestRenderer {
 			builder.add("custom", new FrameBuilder("custom").add("conf", layer.name$()).add("name", custom).add("type", "String"));
 	}
 
-	private Set<String> findCustomParameters(MessagingService service) {
+	private Set<String> findCustomParameters(Service.Messaging service) {
 		Set<String> set = new LinkedHashSet<>();
-		for (MessagingService.Request request : service.requestList())
+		for (Service.Messaging.Request request : service.requestList())
 			set.addAll(Commons.extractParameters(request.path()));
 		return set;
 	}
 
-	private Set<String> findCustomParameters(RESTService service) {
+	private Set<String> findCustomParameters(Service.REST service) {
 		Set<String> set = new LinkedHashSet<>();
-		for (RESTService.Resource resource : service.resourceList())
+		for (Service.REST.Resource resource : service.resourceList())
 			set.addAll(Commons.extractParameters(resource.path()));
 		return set;
 	}
 
-	private Set<String> findCustomParameters(UIService service) {
+	private Set<String> findCustomParameters(Service.UI service) {
 		Set<String> set = new LinkedHashSet<>();
 		if (service.authentication() != null)
 			set.addAll(Commons.extractParameters(service.authentication().by()));
-		for (UIService.Resource resource : service.resourceList())
+		for (Service.UI.Resource resource : service.resourceList())
 			set.addAll(Commons.extractParameters(resource.path()));
 		return set;
-	}
-
-	private VirtualFile getTestRoot(Module module) {
-		for (VirtualFile file : getSourceRoots(module))
-			if (file.isDirectory() && "test".equals(file.getName())) return file;
-		return null;
 	}
 
 	private Template template() {
 		return Formatters.customize(new IntinoTestTemplate());
 	}
-
 }

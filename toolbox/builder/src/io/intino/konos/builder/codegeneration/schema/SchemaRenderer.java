@@ -3,21 +3,14 @@ package io.intino.konos.builder.codegeneration.schema;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
-import io.intino.konos.builder.codegeneration.*;
+import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.Renderer;
+import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.graph.Data;
 import io.intino.konos.model.graph.Schema;
 import io.intino.konos.model.graph.Service;
-import io.intino.konos.model.graph.bool.BoolData;
-import io.intino.konos.model.graph.date.DateData;
-import io.intino.konos.model.graph.datetime.DateTimeData;
-import io.intino.konos.model.graph.file.FileData;
-import io.intino.konos.model.graph.integer.IntegerData;
-import io.intino.konos.model.graph.list.ListData;
-import io.intino.konos.model.graph.longinteger.LongIntegerData;
-import io.intino.konos.model.graph.real.RealData;
-import io.intino.konos.model.graph.text.TextData;
-import io.intino.konos.model.graph.type.TypeData;
-import io.intino.konos.model.graph.word.WordData;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -115,28 +108,28 @@ public class SchemaRenderer extends Renderer {
 		return null;
 	}
 
-	private FrameBuilder process(RealData attribute) {
+	private FrameBuilder process(Data.Real attribute) {
 		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", "double")
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
 				.add("type", !multiple(attribute) ? "double" : attribute.type())
 				.add("defaultValue", attribute.defaultValue());
 	}
 
-	private FrameBuilder process(IntegerData attribute) {
+	private FrameBuilder process(Data.Integer attribute) {
 		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
 				.add("type", !multiple(attribute) ? "int" : attribute.type())
 				.add("defaultValue", attribute.defaultValue());
 	}
 
-	private FrameBuilder process(LongIntegerData attribute) {
+	private FrameBuilder process(Data.LongInteger attribute) {
 		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
 				.add("type", attribute.type())
 				.add("defaultValue", attribute.defaultValue() + "L");
 	}
 
-	private FrameBuilder process(FileData attribute) {
+	private FrameBuilder process(Data.File attribute) {
 		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
 				.add("type", attribute.type());
@@ -146,14 +139,14 @@ public class SchemaRenderer extends Renderer {
 		return new FrameBuilder("attributeMap").add("name", map.name$());
 	}
 
-	private FrameBuilder process(BoolData attribute) {
+	private FrameBuilder process(Data.Bool attribute) {
 		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
 				.add("type", attribute.type())
 				.add("defaultValue", attribute.defaultValue());
 	}
 
-	private FrameBuilder process(TextData attribute) {
+	private FrameBuilder process(Data.Text attribute) {
 		FrameBuilder builder = new FrameBuilder(multiple(attribute) ? "multiple" : "single", attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
 				.add("type", attribute.type());
@@ -162,19 +155,19 @@ public class SchemaRenderer extends Renderer {
 
 	}
 
-	private FrameBuilder process(DateTimeData attribute) {
+	private FrameBuilder process(Data.DateTime attribute) {
 		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
 				.add("type", attribute.type());
 	}
 
-	private FrameBuilder process(DateData attribute) {
+	private FrameBuilder process(Data.Date attribute) {
 		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
 				.add("type", attribute.type());
 	}
 
-	private FrameBuilder process(WordData attribute) {
+	private FrameBuilder process(Data.Word attribute) {
 		final Schema.Attribute a = attribute.a$(Schema.Attribute.class);
 		return new FrameBuilder("word", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.add("name", a.name$())
@@ -196,8 +189,8 @@ public class SchemaRenderer extends Renderer {
 		return subPackage.isEmpty() ? rootPackage : rootPackage + "." + subPackage.replace(File.separator, ".");
 	}
 
-	private boolean multiple(TypeData attribute) {
-		return attribute.i$(ListData.class);
+	private boolean multiple(Data.Type attribute) {
+		return attribute.asData().isList();
 	}
 
 

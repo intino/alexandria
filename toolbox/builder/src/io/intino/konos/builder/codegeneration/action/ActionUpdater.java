@@ -9,11 +9,10 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.graph.Data;
 import io.intino.konos.model.graph.Exception;
 import io.intino.konos.model.graph.Parameter;
 import io.intino.konos.model.graph.Response;
-import io.intino.konos.model.graph.object.ObjectData;
-import io.intino.konos.model.graph.type.TypeData;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -134,9 +133,9 @@ class ActionUpdater {
 		return field;
 	}
 
-	private String formatType(TypeData typeData, boolean list) {
+	private String formatType(Data.Type typeData, boolean list) {
 		if (typeData == null || typeData.type() == null) return "void";
-		final String type = (typeData.i$(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
+		final String type = (typeData.i$(Data.Object.class) ? (packageName + ".schemas.") : "") + typeData.type();
 		return list ? "List<" + type + ">" : type;
 	}
 }

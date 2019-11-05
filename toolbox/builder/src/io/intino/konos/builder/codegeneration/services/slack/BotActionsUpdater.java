@@ -8,8 +8,8 @@ import com.intellij.psi.*;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.model.graph.slackbot.SlackBotService;
-import io.intino.konos.model.graph.slackbot.SlackBotService.Request;
+import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.graph.Service.SlackBot.Request;
 
 import java.io.File;
 import java.util.List;
@@ -51,7 +51,7 @@ class BotActionsUpdater {
 	}
 
 	private void addMethod(PsiClass psiClass, Request request) {
-		final String methodText = Formatters.customize(new SlackTemplate()).render(createRequestFrame(request.core$().ownerAs(SlackBotService.class), request));
+		final String methodText = Formatters.customize(new SlackTemplate()).render(createRequestFrame(request.core$().ownerAs(Service.SlackBot.class), request));
 		psiClass.addAfter(factory.createMethodFromText(methodText, psiClass), anchor(psiClass));
 	}
 
@@ -64,9 +64,9 @@ class BotActionsUpdater {
 		return psiClass.getMethods()[psiClass.getMethods().length - 1];
 	}
 
-	private Frame createRequestFrame(SlackBotService service, SlackBotService.Request request) {
+	private Frame createRequestFrame(Service.SlackBot service, Service.SlackBot.Request request) {
 		final FrameBuilder builder = new FrameBuilder("request", "newMethod").add("bot", service.name$()).add("box", boxName).add("name", request.name$()).add("description", request.description());
-		final List<SlackBotService.Request.Parameter> parameters = request.parameterList();
+		final List<Service.SlackBot.Request.Parameter> parameters = request.parameterList();
 		for (int i = 0; i < parameters.size(); i++) {
 			final FrameBuilder parameterBuilder = new FrameBuilder("parameter", parameters.get(i).type().name()).
 					add("type", parameters.get(i).type().name()).add("name", parameters.get(i).name$()).add("pos", i);

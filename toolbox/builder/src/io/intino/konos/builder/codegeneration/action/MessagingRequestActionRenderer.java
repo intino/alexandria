@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.action;
 
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.model.graph.Service;
-import io.intino.konos.model.graph.messaging.MessagingService.Request;
+import io.intino.konos.model.graph.Service.Messaging.Request;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

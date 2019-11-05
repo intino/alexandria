@@ -6,7 +6,6 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.model.graph.DataComponents.Number;
-import io.intino.konos.model.graph.editable.datacomponents.EditableNumber;
 
 public class NumberRenderer extends ComponentRenderer<Number> {
 
@@ -31,7 +30,7 @@ public class NumberRenderer extends ComponentRenderer<Number> {
 
 	private void addEditableProperties(FrameBuilder builder) {
 		if (!element.isEditable()) return;
-		EditableNumber editableNumber = element.asEditable();
+		Number.Editable editableNumber = element.asEditable();
 		builder.add("min", editableNumber.min());
 		builder.add("max", editableNumber.max());
 		builder.add("step", editableNumber.step());

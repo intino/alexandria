@@ -126,7 +126,7 @@ def type(properties & header) trigger(specific)
 	[ position="$position"][ width="$width"][ height="$height"][ elevation={$elevation}]
 end
 
-def type(properties & codeText) trigger(specific)
+def type(properties & code) trigger(specific)
 	[ mode="$mode"][ language="$language"][ highlighted=$highlighted]
 end
 
@@ -201,7 +201,7 @@ def type(drawer)
 	position="$position" variant="$variant"
 end
 
-def type(codetext)
+def type(code)
 	value="$value"
 end
 

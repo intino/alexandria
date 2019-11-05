@@ -1,0 +1,596 @@
+dsl Konos
+
+Sentinel everyMonth as ClockListener(pattern = "0 0 12 1 1/1 ? *")
+Datalake(path = "{datalake_path}") as Local
+
+MessageHub as JmsBus(url = "{messagehub_url}", user = "{messagehub_user}", password = "{messagehub_password}", clientId = "{messagehub_clientId}")
+
+Datamart(path = "{datamart_path}") datamart
+
+Mounter(datamart) contratoFirmadoMounter as Realtime(subscriberId = "cobranza")
+	Source(channel = "ContratoFirmado", schema = empty)
+Mounter(datamart) cuentaAbiertaMounter as Realtime(subscriberId = "cobranza")
+	Source(channel = "ContratoAbierta", schema = empty)
+Mounter(datamart) amortizacionCreadaMounter as Realtime(subscriberId = "amortizacionCreada")
+	Source("amortizacionCreada", schema = empty)
+Mounter(datamart) liquidacionCreadaMounter as Realtime(subscriberId = "liquidacionCreada")
+	Source("liquidacionCreada", schema = empty)
+Mounter(datamart) facturacionEmitidaMounter as Realtime(subscriberId = "facturacionEmitida")
+	Source("FacturacionEmitida", schema = empty)
+Mounter(datamart) ingresoRecibidoMounter as Realtime(subscriberId = "ingresoRecibido")
+	Source("IngresoRecibido", schema = empty)
+	Source("IngresoConciliado", schema = empty)
+Mounter(datamart) asientoCreadoMounter as Realtime(subscriberId = "asientoCreado")
+	Source("AsientoCreado", schema = empty)
+
+Service CobranzaElements as UI(port = "{port}", title = "Gestión Comercial. Cobranza", favicon = "")
+	Authentication(by="{federation_url}")
+	Resource(path = "/") home as Page(homeTemplate) Main Confidential
+	Resource(path = "/vista/:vista") homeView as Page(homeTemplate) Confidential
+	Resource(path = "/cobranzas/:periodo") cobranzas as Page(homeTemplate) Confidential
+	Resource(path = "/cobranza/:periodo/:nombre") cobranza as Page(homeTemplate) Confidential
+	Resource(path = "/cuentas") cuentas as Page(homeTemplate) Confidential
+	Resource(path = "/cuenta/:clave") cuenta as Page(homeTemplate) Confidential
+	Resource(path = "/cuenta/:clave/:vista") cuentaView as Page(homeTemplate) Confidential
+	Resource(path = "/ingresos/:dia") ingresos as Page(homeTemplate) Confidential
+	Resource(path = "/tareas") tareas as Page(homeTemplate) Confidential
+
+Template(layout=Vertical Flexible) homeTemplate as Decorated Relative(height=100%,width=100%)
+	Block(layout=Vertical Flexible)
+		Header(color="white", format=airHeader separator, elevation=0) as Absolute(height=65px)
+			Stamp(template=header) header
+		Block(layout=Horizontal) as Relative(width=100%)
+			Block drawer as Drawer(variant=PersistentAndMini) Absolute(width=200px)
+				Block(layout=Horizontal EndJustified Center) as Absolute(height=60px)
+					OpenDrawer(drawer = drawer, title="open menu") as MaterialIconButton(icon="ChevronRight",format=airMenuRight)
+					CloseDrawer(drawer = drawer, title = "minimize") as MaterialIconButton(icon="ChevronLeft",format=airMenuRight)
+				Divider
+				Selector linksSelector as ListBox Addressable(CobranzaElements.homeView)
+					Block(layout=Horizontal, spacing=DP16) cuentas as Option > MaterialIcon(icon = "Portrait"); Text(value="Cuentas")
+					Block(layout=Horizontal, spacing=DP16) cobranzas as Option > MaterialIcon(icon = "MenuBook"); Text(value="Cobranzas")
+					Block(layout=Horizontal, spacing=DP16) ingresos as Option > MaterialIcon(icon = "AttachMoney"); Text(value="Ingresos")
+					Block(layout=Horizontal, spacing=DP16) tareas as Option > MaterialIcon(icon = "HowToReg"); Text(value="Tareas")
+
+			Block(layout=Vertical Flexible)
+				Block(layout=Vertical Flexible CenterCenter) loading > Spinner(format=secondary)
+				Block(layout=Vertical Flexible) cuentasPage as Conditional > Stamp(template=cuentas) cuentasStamp
+				Block(layout=Vertical Flexible) cobranzasPage as Conditional > Stamp(template=cobranzas) cobranzasStamp
+				Block(layout=Vertical Flexible) ingresosPage as Conditional > Stamp(template=ingresos) ingresosStamp
+				Block(layout=Vertical Flexible) tareasPage as Conditional > Stamp(template=tareas) tareasStamp
+
+				Block > Stamp(template=footer) footer
+
+Template(layout=Vertical Flexible, format=airTop) cobranzaView
+	Block(layout=Horizontal Wrap)
+		Block(layout=Vertical Flexible)
+			Block(layout=Horizontal Center)
+				Task(title="",format=h3 middleAirRight) titulo as Link Addressable(addressableResource=CobranzaElements.cuenta)
+				Text(format=h5) subTitulo
+
+	Block(layout=Horizontal Flexible, format=airTop) main
+		Block(format=dialog airRight)
+			Text tipo
+			Text(mode=Uppercase) status as Highlighted(textColor = "white", backgroundColor = "transparent")
+			Block(layout=Horizontal, spacing=DP8, format=airTop airBottom) as Absolute(width=200px)
+				Task(title="Rectificar") rectificar as Button Highlighted(style=Outline)
+			Block(format=airBottom)
+				Block(format=airBottom)
+					Text(value="Consumo")
+					Number(format=h4,prefix="$",countDecimals=2,expanded=true,style=Currency) adeudos
+				Block(format=airBottom)
+					Text(value="Importe realizado")
+					Number(format=h4,prefix="$",countDecimals=2,expanded=true,style=Currency) cobros
+				Block(format=airBottom)
+					Text(value="Pendiente")
+					Number(format=h4,prefix="$",countDecimals=2,expanded=true,style=Currency) pendiente
+
+			Block(format=airTop) facturacionBlock
+				Text(value="Facturación", format=h5)
+				Block(format=airBottom) numeroRpusBlock
+					Text(value="Número RPUs")
+					Number(format=h4) numeroRpus
+
+		Block(layout=Vertical Flexible, format=airLeft) gestionesPanel
+			Stamp(template=cobranzaGestionCobroView, spacing=DP24) cobranzaGestiones as Multiple(noItemsMessage="No se han realizado gestiones en la cobranza")
+
+Template(layout=Vertical, spacing=DP16, format=dialog) cobranzaGestionCobroView
+	Block(layout=Vertical)
+		Text(format=h4) titulo
+		Block(layout=Horizontal, format=middleAirTop)
+			Text(format=body2 h5 rubber, value="Pendiente", mode=Uppercase) pendiente as Highlighted(textColor="white", backgroundColor="#b60200")
+			Text(format=body2 h5 rubber, mode=Uppercase) fechaAnulada as Highlighted(textColor="white", backgroundColor="#777")
+			Text(format=body2 h5 rubber, mode=Uppercase) fechaCobrada as Highlighted(textColor="white", backgroundColor="black")
+		Block(layout=Vertical)
+			Date fechaVencimiento as Labeled("Fecha vencimiento")
+			Number(suffix="%") tasaInteres as Labeled("Tasa de interés")
+
+	Block(layout=Horizontal Flexible, spacing=DP16)
+		Block adeudosBlock as Relative(width=50%)
+			Block(layout=Horizontal Center, spacing=DP16, format=middleAirBottom underline)
+				Text(value="adeudo", format=h5)
+				Number(format=h6, countDecimals=2,prefix="$",expanded=true,style=Currency) totalAdeudos
+			Stamp(template=cobranzaTransaccionView) adeudos as Multiple(noItemsMessage="No hay adeudos")
+		Block cobrosBlock as Relative(width=50%)
+			Block(layout=Horizontal Center, spacing=DP16, format=middleAirBottom underline)
+				Text(value="cobrado", format=h5)
+				Number(format=h6, countDecimals=2,prefix="$",expanded=true,style=Currency) totalCobros
+			Stamp(template=cobranzaTransaccionView) cobros as Multiple(noItemsMessage="No hay cobros")
+
+Template(layout=Horizontal Flexible, spacing=DP16, format=airTop) cobranzaTransaccionView
+	Block as Absolute(width=50px) > Text(format=middleAirLeft middleAirTop tasaIva) tasaIva as Highlighted(textColor="white", backgroundColor="#FF9300")
+	Block(layout=Vertical Flexible)
+		Stamp(template=cobranzaImporteView) importes as Multiple(noItemsMessage="No hay importes")
+		Download(title="descargar") descargar as Link
+
+Template(layout=Horizontal Flexible Center, spacing=DP16) cobranzaImporteView
+	Text concepto
+	Number(countDecimals=2,prefix="$",expanded=true,style=Currency) cantidad
+
+
+Template(layout=Vertical Flexible, format=air) cuentas
+	Text(value="Cuentas", format=h3 airBottom, visible=false) title
+	Stamp(template=cuentasDialog, visible=false) cuentasDialog
+	Stamp(template=cuentasCatalog, visible=false) cuentasCatalog
+	Stamp(template=cuentaView, visible=false) cuentaView
+
+Template(format=dialog) cuentasDialog
+	Block(layout=Horizontal Wrap Center)
+		Block(format=airRight) as Absolute(width=300px) > Text cuenta as Editable(placeholder="Clave/RFC/Nombre corto") Labeled("Clave/Nombre corto")
+		Block(layout=Horizontal Flexible EndJustified) > Task(title="cuentas activas") cuentasActivas as Switches(state=On)
+
+Template cuentasCatalog as Relative(height=100%)
+	Table(itemClass="com.cfemex.ssb.cobranza.graph.Cuenta", scrollingMark=false) cuentasTable
+		noItemsMessage = "No hay cuentas"
+		noItemsFoundMessage = "No se han encontrado cuentas con el criterio definido"
+		Mold
+			Heading cuentasClaveHeading > Text(value="Clave")
+			Item(height=50px,width=10%) cuentasClaveView > Task(title="Cargando...") clave as Link Addressable(addressableResource=CobranzaElements.cuenta)
+		Mold
+			Heading cuentasNombreCortoHeading > Text(value="Nombre corto")
+			Item(height=50px,width=25%) cuentasNombreCortoView > Text nombreCorto
+		Mold
+			Heading cuentasAnticiposHeading > Block(layout=Horizontal EndJustified) > Text(value="Anticipos")
+			Item(height=50px,width=20%) cuentasAnticiposView > Block(layout=Horizontal EndJustified) > Number(format=h4 anticiposColor,prefix="$",countDecimals=2,expanded=true,style=Currency) anticipos
+		Mold
+			Heading cuentasCuentaContableHeading > Block(layout=Horizontal EndJustified) > Text(value="Disponible")
+			Item(height=50px,width=20%) cuentasCuentaContableView > Block(layout=Horizontal EndJustified) > Number(format=h4 cuentaColor,prefix="$",countDecimals=2,expanded=true,style=Currency) cuentaContable
+		Mold
+			Heading cuentasGestionesCobroHeading > Block(layout=Horizontal EndJustified) > Text(value="Cobros pendientes")
+			Item(height=50px,width=20%) cuentasGestionesCobroView > Block(layout=Vertical End)
+					Number(format=h4 gestionesColor,prefix="$",countDecimals=2,expanded=true,style=Currency) importe
+					Task(title="", format=body2) cantidad as Link Addressable(addressableResource=CobranzaElements.cuentaView)
+		Mold
+			Heading cuentasContratoHeading > Block(layout=Horizontal CenterCenter) > Text(value="Contrato")
+			Item(height=50px,width=10%) cuentasContratoView > Block(layout=Horizontal CenterCenter) > OpenSite(title="Ver contrato", site = "{contratacionSite}/contrato/:nombre", target=Blank) verContrato as MaterialIconButton(icon="Link")
+
+Template(layout=Vertical Flexible, format=airTop) cuentaView
+	Block(layout=Horizontal Wrap, format=headerWithIndicators)
+		Block(layout=Vertical Flexible)
+			Text(format=h3) titulo
+			Block(layout=Horizontal, spacing=DP8, format=airTop)
+				Text(format=body2, mode=Uppercase, value="Cerrada") cuentaCerrada as Highlighted(textColor = "white", backgroundColor = "black")
+		Block(layout=Vertical CenterCenter, format=block indicator anticipos, visible=false) saldoAnticiposBlock
+			Number(format=h3 white, countDecimals=2, suffix="$") saldoAnticipos
+			Text(value="Anticipos",format=body2 white)
+		Block(layout=Vertical CenterCenter, format=block indicator cuenta, visible=false) saldoCuentaBlock
+			Number(format=h3 white, countDecimals=2, suffix="$") saldoCuenta
+			Text(value="Cuenta contable", format=body2 white)
+		Block(layout=Vertical CenterCenter, format=block indicator gestiones, visible=false) saldoGestionesBlock
+			Number(format=h3 white, countDecimals=2, suffix="$") saldoGestiones
+			Text(value="Gestiones",format=body2 white)
+
+	Block selectorBlock as Absolute(width=570px)
+		Selector viewSelector as Tabs Addressable(CobranzaElements.cuentaView)
+			Text(value="Operativa") operativa as Option
+			Text(value="Cobranzas") cobranzas as Option
+			Text(value="Histórico") historico as Option
+
+	Block(layout=Vertical Flexible, format=airTop)
+		Block(layout=Vertical Flexible) operativaPanel as Conditional(selected=cuentaView.selectorBlock.viewSelector.operativa)
+			Block(layout=Horizontal Wrap)
+				Block(layout=Vertical Center, format=containerAirMedium) anticiposColumn as Relative(width=33%, offsetWidth=10px)
+					Text(format=h4 middleAirBottom, value="Anticipos")
+					Block(format=block indicatorFull anticipos) > Stamp(template=cuentaIndicatorView) anticiposIndicator
+					Block(format=toolbar fullWidth) > OpenDialog(title="Crear", dialog=crearAnticipoDialog) openCrearAnticipo as Link
+					Block(format=fullWidth) > Stamp(template=cuentaTransaccionView) transaccionesAnticipo as Multiple("No hay anticipos")
+				Block(layout=Vertical Center, format=containerAirMedium) cuentaColumn as Relative(width=33%, offsetWidth=10px)
+					Text(format=h4 middleAirBottom, value="Cuenta contable")
+					Block(format=block indicatorFull cuenta) > Stamp(template=cuentaIndicatorView) cuentaIndicator
+					Block(layout=Horizontal Wrap, format=toolbar fullWidth)
+						Block(layout=Horizontal Flexible) > OpenDialog(title="Añadir ingreso", dialog=addIngresoDialog) addIngreso as Link
+						Block(layout=Horizontal EndJustified) > Task(title="Anular útimo ingreso") anularIngreso as Link
+					Block(format=fullWidth) > Stamp(template=cuentaTransaccionView) transaccionesCuenta as Multiple("No hay asientos")
+				Block(layout=Vertical Center, format=containerAirMedium) gestionesColumn as Relative(width=33%, offsetWidth=10px)
+					Text(format=h4 middleAirBottom, value="Gestiones de cobro")
+					Block(format=block indicatorFull gestiones) > Stamp(template=cuentaIndicatorView) gestionesIndicador
+					Block(format=toolbar fullWidth)
+					Block(format=fullWidth) > Stamp(template=cuentaTransaccionView) transaccionesGestion as Multiple("No hay cobros pendientes")
+
+		Block(layout=Vertical Flexible) cobranzasPanel as Conditional(selected=selectorBlock.viewSelector.cobranzas)
+			Table(itemClass="com.cfemex.ssb.cobranza.graph.Cobranza", scrollingMark=false) cuentaCobranzasTable
+				noItemsMessage = "No hay cobranzas"
+				noItemsFoundMessage = "No se han encontrado cobranzas con el criterio definido"
+				Mold
+					Heading cuentaCobranzaPeriodoHeading > Text(value="Periodo")
+					Item(height=50px, width=14%) cuentaCobranzaPeriodoView
+						Block(layout=Horizontal StartJustified, spacing=DP8)
+							Block(layout=Flexible) > Task(title="Cargando...") periodo as Link Addressable(CobranzaElements.cobranza)
+							Text(value=" ", format=pill, mode=Uppercase) status as Highlighted(textColor = "white", backgroundColor = "transparent")
+				Mold
+					Heading cuentaCobranzaTipoHeading > Text(value="Tipo")
+					Item(height=50px, width=23%) cuentaCobranzaTipoView > Text tipo
+				Mold
+					Heading cuentaCobranzaAdeudosHeading > Block(layout=Horizontal EndJustified) > Text(value="Consumo")
+					Item(height=50px, width=21%) cuentaCobranzaAdeudosView > Block(layout=Vertical End)
+							Number(format=h4,prefix="$",countDecimals=2,expanded=true,style=Currency) importe
+							Task(title="", format=body2) cantidad as Link Addressable(addressableResource=CobranzaElements.cobranza)
+				Mold
+					Heading cuentaCobranzaCobrosHeading > Block(layout=Horizontal EndJustified) > Text(value="Importe realizado")
+					Item(height=50px, width=21%) cuentaCobranzaCobrosView > Block(layout=Horizontal EndJustified) > Number(format=h4,prefix="$",countDecimals=2,expanded=true,style=Currency) importe
+				Mold
+					Heading cuentaCobranzaPendienteHeading > Block(layout=Horizontal EndJustified) > Text(value="Pendiente")
+					Item(height=50px, width=21%) cuentaCobranzaPendienteView > Block(layout=Horizontal EndJustified) > Number(format=h4,prefix="$",countDecimals=2,expanded=true,style=Currency) importe
+
+		Block(layout=Vertical Flexible) historicoPanel as Conditional(selected=selectorBlock.viewSelector.historico)
+			Block(spacing=DP16)
+				Block(format=dialog, layout=Horizontal Center, spacing=DP16)
+					Block as Absolute(width=350px) > Selector periodoSelector as ComboBox(placeholder="Seleccione un periodo")
+				Block(layout=Horizontal Flexible)
+					Block(layout=Vertical, format=containerAirMedium, spacing=DP16) as Relative(width=33%, offsetWidth=10px)
+						Text(value="Anticipos", format=h5)
+						Stamp(template=cuentaTransaccionView) historicoAnticipos as Multiple(noItemsMessage="No hay historial de anticipos")
+					Block(layout=Vertical, format=containerAirMedium, spacing=DP16) as Relative(width=33%, offsetWidth=10px)
+						Text(value="Cuenta contable", format=h5)
+						Stamp(template=cuentaTransaccionView) historicoAsientos as Multiple(noItemsMessage="No hay historial de asientos")
+					Block(layout=Vertical, format=containerAirMedium, spacing=DP16) as Relative(width=33%, offsetWidth=10px)
+						Text(value="Gestiones de cobro", format=h5)
+						Stamp(template=cuentaTransaccionView) historicoGestiones as Multiple(noItemsMessage="No hay historial de gestiones de cobro")
+
+	Dialog(title = "Crear anticipo") crearAnticipoDialog
+		Number(format=h2,suffix="$",countDecimals=2,expanded=true,style=Currency,min=0) importeAnticipo as Editable(placeholder="Indique el importe a reintegrar") Labeled("Importe")
+		Block(layout=Horizontal EndJustified, format=airTop) > Task(title="Crear") crearAnticipo as Button Highlighted
+
+	CollectionDialog(title = "Añadir ingreso") addIngresoDialog as FullScreen
+		List(itemClass="com.cfemex.ssb.cobranza.graph.Ingreso") ingresosList as Selectable
+			noItemsMessage = "No se ha encontrado ningún ingreso"
+			Mold
+				Item(height=200px) ingresosListView
+					Text(format=body2, mode=Uppercase) tipo
+					Number(format=h2,suffix="$",countDecimals=2,expanded=true,style=Currency) importe
+					Block(format=airTop)
+						Date fecha as Labeled("Fecha")
+						Number numeroDocumento as Labeled("Número de documento")
+						Text referencia as Labeled("Referencia")
+						Text observaciones as Labeled("Observaciones")
+					Block(layout=Horizontal Center, spacing=DP8, format=airTop)
+						Download(title="Comprobante") comprobante as Button Highlighted(style=Outline)
+
+
+Template(layout=Vertical CenterCenter) cuentaIndicatorView
+	Number(format=h3 white, countDecimals=2, suffix="$") saldo
+	Task(title="", format=white) automatico as Switches(state=Off)
+
+Template(layout=Horizontal Center Wrap, format=transaccion) cuentaTransaccionView as Absolute(height=48px)
+	Block as Relative(width=24%, height=65%)
+		Text titulo
+		Text(format=body2 grey tag) subTitulo
+	Block as Relative(width=25%, height=65%)
+		Number(suffix="$", countDecimals=2, style=Currency, expanded=false) inicial
+		Text(format=body2 grey tag) tituloInicial
+	Block as Relative(width=25%, height=65%)
+		Number(suffix="$", countDecimals=2, style=Currency, expanded=false) resto
+		Text(format=body2 grey tag) tituloResto
+	Block as Relative(width=16%, height=50%) > Task(title="") operacion as Link
+	Block as Relative(width=10%) > Download(title="Descargar") descargar as MaterialIconButton("AttachFile")
+
+Schema Transaccion
+	Attribute titulo as Text
+
+
+Template(layout=Horizontal Center) header as Decorated
+	Block(layout=Horizontal Center Flexible, spacing=DP8)
+		Image(value="images/logo.jpeg") as Absolute(width=200px, 50px)
+		Text(value="Cobranza de Cuentas Maestras", format=h2)
+	Block(layout=Horizontal Center EndJustified, format=h6 secondary, spacing=DP16)
+//		Task(title="Mostrar los importes absolutos") importesAbsolutos as Switches
+		User(color="grey", mode=OnlyPhoto)
+			Block(layout=Horizontal, spacing=DP8, format=moduleAir) as Option > MaterialIcon(icon="Highlight"); OpenSite(title="Facturación", site="{facturacionSite}", target=Blank) facturacion as Link
+			Block(layout=Horizontal, spacing=DP8, format=moduleAir) as Option > MaterialIcon(icon="AttachMoney"); Text(value="Cobranza")
+			Block(layout=Horizontal, spacing=DP8, format=moduleAir) as Option > MaterialIcon(icon="FolderShared"); OpenSite(title="Contratación", site="{contratacionSite}", target=Blank) contratacion as Link
+			Block(layout=Horizontal, spacing=DP8, format=moduleAir) as Option > MaterialIcon(icon="Gavel"); OpenSite(title="Timbrado", site="{timbradoSite}", target=Blank) timbrado as Link
+
+Template timetagSelector
+	Selector(format=selectorWidth, placeholder="Seleccione periodos", multipleSelection=true) selector as ComboBox
+
+Template(format=footerFormat) footer
+	Block(layout=Horizontal Flexible EndJustified)
+		OpenSite(site="http://intino.io", title = "made by intino", target=Blank, format=body2) as Link
+
+Translator(language=Spanish)
+	Translation(text = "Confirm", value = "Confirmar")
+	Translation(text = "Cancel", value = "Cancelar")
+	Translation(text = "OK", value = "Aceptar")
+
+Template(layout=Vertical Flexible) cobranzas
+	Block(layout=Vertical Flexible, format=air)
+		Text(value="Cobranzas", format=h3 airBottom, visible=false) title
+		Block(layout=Vertical Flexible)
+			Stamp(template=cobranzasDialog, visible=false) cobranzasDialog
+			Stamp(template=cobranzasCatalog, visible=false) cobranzasCatalog
+			Stamp(template=cobranzaView, visible=false) cobranzaView
+	Block(format=periodoFormat)
+    	TemporalSlider(scales=Month,collections=empty) periodo > Range(min = "2010-01-01T00:00:00Z", max = "2019-12-01T00:00:00Z")
+
+Template(format=dialog) cobranzasDialog
+	Block(layout=Horizontal Wrap Center, spacing=DP16)
+		Block as Absolute(width=250px) > Text cuenta as Editable(placeholder="Clave/Nombre de cuenta") Labeled("Clave/Nombre de cuenta")
+		Grouping(collections=empty) statusGrouping as ComboBox(placeholder="Todos los status")
+		Grouping(collections=empty) tipoGrouping as ComboBox(placeholder="Todos los tipos")
+
+Template cobranzasCatalog as Relative(height=100%)
+	Table(itemClass="com.cfemex.ssb.cobranza.graph.Cobranza", scrollingMark=false) cobranzasTable
+		noItemsMessage = "No hay cobranzas"
+		noItemsFoundMessage = "No se han encontrado cobranzas con el criterio definido"
+		Mold
+			Heading cobranzaClaveHeading > Text(value="Clave")
+			Item(height=50px,width=14%) cobranzaClaveView
+				Block(layout=Horizontal StartJustified, spacing=DP8)
+					Block(layout=Flexible) > Task(title="Cargando...") clave as Link Addressable(addressableResource=CobranzaElements.cobranza)
+					Text(value=" ", format=pill, mode=Uppercase) status as Highlighted(textColor = "white", backgroundColor = "transparent")
+		Mold
+			Heading cobranzaNombreCortoHeading > Text(value="Nombre corto")
+			Item(height=50px,width=20%) cobranzaNombreCortoView > Text nombreCorto
+		Mold
+			Heading cobranzaTipoHeading > Text(value="Tipo")
+			Item(height=50px, width=15%) cobranzaTipoView > Text tipo
+		Mold
+			Heading cobranzaAdeudosHeading > Block(layout=Horizontal EndJustified) > Text(value="Consumo")
+			Item(height=50px, width=17%) cobranzaAdeudosView > Block(layout=Vertical End)
+					Number(format=h4,prefix="$",countDecimals=2,expanded=true,style=Currency) importe
+					Task(title="", format=body2) cantidad as Link Addressable(addressableResource=CobranzaElements.cobranza)
+		Mold
+			Heading cobranzaCobrosHeading > Block(layout=Horizontal EndJustified) > Text(value="Importe realizado")
+			Item(height=50px, width=17%) cobranzaCobrosView > Block(layout=Horizontal EndJustified) > Number(format=h4,prefix="$",countDecimals=2,expanded=true,style=Currency) importe
+		Mold
+			Heading cobranzaPendienteHeading > Block(layout=Horizontal EndJustified) > Text(value="Pendiente")
+			Item(height=50px, width=17%) cobranzaPendienteView > Block(layout=Horizontal EndJustified) > Number(format=h4,prefix="$",countDecimals=2,expanded=true,style=Currency) importe
+
+
+Template(layout=Vertical Flexible, spacing=DP16) facturacionesCatalog
+	Block(layout=Horizontal Center, format=dialog, spacing=DP16)
+		Toolbar as Linked(to=facturacionesList)
+			Grouping(collections = facturacionesList) divisionGrouping as ComboBox(placeholder="Todas las divisiones")
+			TaskSelection(title="Recepcionar") recepcionarSelection as Button Highlighted(style=Outline)
+
+	List(itemClass="com.cfemex.ssb.cobranza.graph.Facturacion") facturacionesList as Selectable(multiple=true)
+		noItemsMessage = "No se han recibido nuevas facturaciones"
+		Mold
+			Item(height=80px) facturacionesView
+				Block(layout=Horizontal Wrap Flexible Center)
+					Block(layout=Vertical CenterCenter, spacing=DP16) as Absolute(width=170px)
+						Number(format=h2,suffix="$",countDecimals=2,expanded=true,style=Currency) importeTotal
+					Block(layout=Vertical Flexible, format=airTop)
+						Block(layout=Horizontal, spacing=DP16)
+							Text division
+							Date fecha
+						Block(layout=Horizontal, spacing=DP8)
+							Text rpu as Labeled("RPU")
+							Number(suffix="$",countDecimals=2,expanded=true,style=Currency) energia as Labeled("Energía")
+							Number(suffix="$",countDecimals=2,expanded=true,style=Currency) importe as Labeled("Importe")
+							Number(suffix="$",countDecimals=2,expanded=true,style=Currency) dap as Labeled("DAP")
+							Number(suffix="%") iva as Labeled("IVA")
+					Block(layout=Horizontal Center, spacing=DP8, format=airTop)
+						Task(title="Recepcionar") recepcionar as Button Highlighted(style=Outline)
+						Task(title="Rechazar") rechazar as Button Highlighted(style=Outline)
+
+
+Format("color:'#05673c',textShadow:'2px 2px 2px #fff',fontSize:'25pt'") h1
+Format("color:'#05673c',textShadow:'2px 2px 2px #fff',fontSize:'20pt'") h2
+Format("fontSize:'15pt'") h3
+Format("fontSize:'14pt',fontWeight:'400'") h4
+Format("fontSize:'12pt'") h5
+Format("lineHeight:'17pt',fontSize:'12pt'") h6
+Format("") body1
+Format("") body2
+Format("") subtitle1
+Format("") subtitle2
+Format("padding:'10px',border:'1px solid #efefef',borderRadius:'5px',background:'white'") dialog
+Format("color:'#ff9100'") link
+Format("") secondary
+Format("background:'white',padding:'10px',borderRadius:'10px'") highlightedBlock
+Format("color:'#ff9100',borderBottom:'1px solid white'") secondaryHighlighted
+Format("borderRight:'1px solid black'") separator
+Format("minHeight:'100%'") main
+Format("background:'#efefef',padding:'1px 7px',borderTop:'1px solid #aaa'") footerFormat
+Format("background:'#efefef',padding:'10px 30px',borderTop:'1px solid #aaa'") periodoFormat
+Format("color:'white',position:'absolute',top:0,left:0,marginLeft:'180px',marginTop:'6px',textTransform:'uppercase',fontSize:'9pt'") headerSubtitle
+Format("background:'white',borderRadius:'3px',height:'100%',border:'1px solid #efefef'") whiteBackground
+Format("padding:'10px 20px'") air
+Format("padding:'4px 20px'") airHeader
+Format("marginTop:'10px',paddingBottom:'10px',borderBottom:'1px solid #ddd'") userHeader
+Format("marginTop:'10px'") airTop
+Format("marginTop:'20px'") doubleAirTop
+Format("marginBottom:'10px'") airBottom
+Format("marginTop:'5px'") middleAirTop
+Format("marginBottom:'5px'") middleAirBottom
+Format("marginLeft:'10px'") airLeft
+Format("marginLeft:'3px'") airTagsLeft
+Format("marginRight:'10px'") airRight
+Format("marginLeft:'5px'") middleAirLeft
+Format("marginRight:'5px'") middleAirRight
+Format("marginRight:'4px'") airMenuRight
+Format("padding:'10px'") containerAirMedium
+Format("padding:'20px'") containerAirLarge
+Format("padding:'10px 20px'") moduleAir
+Format("background:'#efefef',padding:'8px',minHeight:'300px'") filled
+Format("background:'#efefef',minHeight:'200px'") filledNoAir
+Format("background:'#efefef',minHeight:'400px'") filledNoAirLarge
+Format("marginTop:'10px'") headerToolbar
+Format("textAlign:'center'") textCentered
+Format("position:'absolute'") absolute
+Format("whiteSpace:'nowrap'") valuesLabelFormat
+Format("border:'1px solid',width:'100%'") bordered
+Format("minHeight:'300px'") paperFormat
+Format("borderBottom:'1px dotted #ddd',width:'100%',marginBottom:'10px'") underline
+Format("borderBottom:'1px solid #ddd',width:'100%'") separator
+Format("fontSize:'10pt',color:'grey'") description
+Format("minHeight:'60px'") headerWithIndicators
+Format("minHeight:'100%'") minHeight
+Format("minWidth:'400px'") minWidth
+Format("minWidth:'100px'") minPhotoWidth
+Format("height:'100%'") usersStampFormat
+Format("position:'relative'") relative
+Format("position:'absolute',right:'44px',top:'-12px',background:'white',border:'1px solid #efefef'") contentCopyDashboardIcon
+Format("position:'absolute',right:'-12px',top:'-12px',background:'white',border:'1px solid #efefef'") removeDashboardIcon
+Format("overflow:'auto',padding:'10px',minWidth:'300px',minHeight:'400px'") thesaurus
+Format("background:'#efefef'") greyBackground
+Format("color:'#777'") grey
+Format("color:'white'") white
+Format("position:'absolute',bottom:'-10px',textAlign:'center',width:'100%',color:'red'") loginError
+Format("position:'absolute',bottom:'0',top:'0',width:'100%',height:'100%',zIndex:'0'") backgroundLogin
+Format("filter:'brightness(0) invert(1)',position:'absolute',margin:'30px'") logoLogin
+Format("zIndex:'1'") visible
+Format("width:'150px'") openUsersButton
+Format("fontSize:'20pt',textAlign:'center',marginTop:'40px'") userNotGranted
+Format("minWidth:'250px'") selectorWidth
+Format("padding:'10px',position:'relative',border:'1px solid #efefef',borderRadius:'5px',background:'white'") block
+Format("width:'200px',marginLeft:'10px'") indicator
+Format("width:'100%',marginLeft:'0',height:'80px'") indicatorFull
+Format("width:'20px',height:'20px',marginRight:'10px'") estadoFormat
+Format("background:'#B60200'") gestiones
+Format("color:'#B60200'") gestionesColor
+Format("background:'#8A1C88'") cuenta
+Format("color:'#8A1C88'") cuentaColor
+Format("background:'#458400'") anticipos
+Format("color:'#458400'") anticiposColor
+Format("width:'100%'") fullWidth
+Format("border:'1px solid #eee',paddingLeft:'10px',marginBottom:'4px'") transaccion
+Format("fontSize:'8pt',marginTop:'-5px'") tag
+Format("height:'17px',marginRight:'8px',padding:'2px 4px',fontSize:'7pt',marginTop:'2px',textAlign:'center'") pill
+Format("width:'48px',textAlign:'center'") tasaIva
+Format("margin:'5px 0px 20px'") toolbar
+Format("transform:'rotate(45deg)',opacity:'0.8',right:'0',position:'absolute',marginRight:'17px',width:'131px',textAlign:'center',marginTop:'-9px',borderRadius:'44px 44px 1px 1px'") rubber
+
+// Cards
+Format("textAlign:'left',color:'#B71A1C',padding:'10px'") cardTitle
+Format("textAlign:'left',padding:'10px'") cardContent
+
+
+Template(layout=Vertical Flexible) tareas
+	Block(layout=Vertical Flexible, format=air)
+		Text(value="Tareas", format=h3 airBottom) title
+		Block as Absolute(width=175px) > Task(title="Resolver todas") as Button Highlighted(style=Outline)
+		Block(layout=Vertical Flexible, format=airTop)
+			Stamp(template=tareasCatalog) tareasCatalog
+	Block(format=periodoFormat)
+		TemporalSlider(scales=Month,collections=empty) periodo > Range(min = "2010-01-01T00:00:00Z", max = "2019-12-01T00:00:00Z")
+
+Template tareasCatalog as Relative(height=100%)
+
+	Block(layout=Horizontal Flexible Center, format=dialog)
+		Block(format=airRight) as Absolute(width=300px) > Text buscador as Editable(placeholder="Introduzca una palabra clave para buscar") Labeled("Buscar tarea...")
+
+	Table(itemClass="com.cfemex.ssb.cobranza.graph.Tarea", scrollingMark=false) tareasTable as Selectable(multiple=false)
+		noItemsMessage = "No hay tareas"
+		noItemsFoundMessage = "No se han encontrado tareas con el criterio definido"
+		Mold
+			Heading tareasTituloHeading > Text(value="Título")
+			Item(height=50px,width=15%) tareasTituloView > Text(value="Cargando...") titulo
+		Mold
+			Heading tareasEstadoHeading > Text(value="Estado")
+			Item(height=50px,width=15%) tareasEstadoView > Text estado
+		Mold
+			Heading tareasObservacionesHeading > Text(value="Observaciones")
+			Item(height=50px,width=15%) tareasObservacionesView > Text observaciones
+		Mold
+			Heading tareasOperacionesHeading > Text(value="Operaciones")
+			Item(height=50px,width=15%) tareasOperacionesView
+				Block(layout=Horizontal)
+					OpenDialog(title="Resolver", dialog=resolverTareaDialogBox) openResolverTarea
+					Dialog(title = "Cargar ingresos...") resolverTareaDialogBox as FullScreen
+						Stamp(template=resolverTareaDialog) dialog
+
+Template resolverTareaDialog as Relative(height=100%)
+	Text(value="Dialogo de resolver tarea")
+
+
+Template(layout=Vertical Flexible) ingresos
+	Block(layout=Vertical Flexible, format=air)
+		Text(value="Ingresos", format=h3 airBottom) title
+		Block as Absolute(width=175px) > OpenDialog(title="Cargar ingresos...", dialog=ingresosDialogBox) as Button Highlighted(style=Outline)
+		Block(layout=Vertical Flexible, format=airTop)
+			Stamp(template=ingresosCatalog) ingresosCatalog
+	Block(format=periodoFormat)
+		TemporalSlider(scales=Day,collections=empty) periodo > Range(min = "2010-01-01T00:00:00Z", max = "2019-12-01T00:00:00Z")
+
+	Dialog(title = "Cargar ingresos...") ingresosDialogBox as FullScreen
+		Stamp(template=ingresosDialog) dialog
+
+Template ingresosDialog as Relative(height=100%)
+
+	Stepper(position=Top, style=NoToolbar) stepper
+		Step cargarIngresos as Labeled("Seleccionar archivo")
+			Block(layout=Vertical CenterCenter Flexible) as Relative(height=100%)
+				Block(layout=Vertical, spacing=DP16) as Absolute(width=400px)
+					Text(value="Archivo de ingresos")
+					File archivo as Editable
+					Divider
+					Block(layout=Horizontal EndJustified) > Task(title="Procesar") procesar as Button Highlighted
+		Step validarIngresos as Labeled("Validar ingresos")
+			Block(layout=Horizontal Flexible) as Relative(height=100%, offsetHeight=60px)
+				Block(format=airRight) as Relative(width=100%)
+					Text(value="Ingresos encontrados")
+					Stamp(template=ingresosCatalog) ingresosRecibidos
+				Block(visible=false) as Relative(width=40%,offsetWidth=10px)
+					Text(value="Ingresos descartados")
+					Stamp(template=ingresoDescartado) ingresosDescartados as Multiple
+			Block(layout=Vertical EndJustified)
+				Divider
+				Block(layout=Horizontal EndJustified, format=air)
+					Task(title="Atrás", format=airRight) cancelar as Button Highlighted(style=Outline)
+					Task(title="Validar") validar as Button Highlighted Confirmable("¿Está seguro que quiere validar los ingresos?")
+
+Template ingresosCatalog as Relative(height=100%)
+
+	Block(layout=Horizontal Flexible Center, format=dialog)
+		Block(format=airRight) as Absolute(width=300px) > Text buscador as Editable(placeholder="Introduzca una palabra clave para buscar") Labeled("Buscar ingreso...")
+		Grouping(collections=ingresosTable) divisionGrouping as ComboBox(placeholder="Todas las divisiones")
+
+	Table(itemClass="com.cfemex.ssb.cobranza.graph.Ingreso", scrollingMark=false) ingresosTable as Selectable(multiple=false)
+		noItemsMessage = "No hay ingresos"
+		noItemsFoundMessage = "No se han encontrado ingresos con el criterio definido"
+		Mold
+			Heading ingresosNumeroDocumentoHeading > Text(value="Nº documento")
+			Item(height=50px,width=15%) ingresosNumeroDocumentoView > Text(value="Cargando...") numeroDocumento
+		Mold
+			Heading ingresosReferenciaHeading > Text(value="Referencia")
+			Item(height=50px,width=15%) ingresosReferenciaView > Text referencia
+		Mold
+			Heading ingresosFechaHeading > Text(value="Fecha")
+			Item(height=50px,width=10%) ingresosFechaView > Date fecha
+		Mold
+			Heading ingresosDivisionHeading > Text(value="División")
+			Item(height=50px,width=8%) ingresosDivisionView > Text division
+		Mold
+			Heading ingresosClaseHeading > Text(value="Clase")
+			Item(height=50px,width=5%) ingresosClaseView > Text clase
+		Mold
+			Heading ingresosImporteHeading > Block(layout=Horizontal EndJustified) > Text(value="Importe")
+			Item(height=50px,width=15%) ingresosImporteView > Block(layout=Horizontal EndJustified)
+					Number(format=h4,prefix="$",countDecimals=2,expanded=true,style=Currency) importe
+		Mold
+			Heading ingresosOrigenHeading > Text(value="Origen")
+			Item(height=50px,width=10%) ingresosOrigenView > Text origen
+		Mold
+			Heading ingresosObservacionesHeading > Text(value="Observaciones")
+			Item(height=50px,width=14%) ingresosObservacionesView > Text observaciones
+		Mold
+			Heading ingresosOperacionesHeading > Text(value="Operaciones")
+			Item(height=50px,width=8%) ingresosOperacionesView
+				Block(layout=Horizontal) operaciones
+					Task(title="Quitar ingreso") quitar as MaterialIconButton("Clear", size=Small) Confirmable("¿Está seguro que quiere quitar el ingreso?")
+
+Template ingresoDescartado
+	Text numeroDocumento
+	Text referencia
+	Date fecha

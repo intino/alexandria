@@ -1,0 +1,93 @@
+dsl Proteo
+
+use Services
+use CatalogComponents
+use Display
+use Component
+
+Concept OtherComponents
+	Concept Chip extends Component
+	Concept Card extends Component
+	Concept Tooltip extends Component
+
+	Concept User extends Component
+		var word:{OnlyPhoto PhotoWithFullname} mode = PhotoWithFullname
+		has Component
+
+	Concept Snackbar extends Component
+		var word:{TopCenter TopRight BottomRight BottomCenter BottomLeft TopLeft} position = BottomCenter
+		has Component
+
+	Concept Progress extends Component
+		Concept Color > var string text; var string background
+		Aspect Circular
+        Aspect Linear
+
+	Concept Stamp extends Component
+		var Template template
+		Aspect Multiple
+
+	Concept Header extends Component
+		var word:{Fixed Absolute Sticky Static Relative} position = Relative
+		var integer elevation = 4
+		has Component
+		Aspect Absolute
+		Aspect Relative
+
+	Concept Selector extends Component
+		var boolean multipleSelection = false
+		has Component
+		Aspect Addressable
+		Aspect Tabs
+        Aspect Menu
+			var word:{Horizontal Vertical} layout
+        Aspect ListBox
+        Aspect RadioBox
+        	!! The value that should initially be selected, defaults to the first value.
+        	var string selected = empty
+        Aspect CheckBox
+        	!! The value(s) that should initially be selected. Defaults to the first value, or no values if Multiple facet is present
+        	var string[] selected = empty
+        Aspect ComboBox
+        	var string placeholder = ""
+        Aspect Readonly
+        Aspect Required with RadioBox, CheckBox, ComboBox
+        Aspect Focused with RadioBox, CheckBox, ComboBox
+
+	Concept Frame extends Component
+		var Display display
+
+	Concept BaseIcon extends Component
+		var string icon
+		Aspect Multiple
+		sub Icon
+		sub MaterialIcon
+
+
+	Concept AbstractDialog extends Component is abstract
+		var string title
+		Aspect Absolute
+		Aspect Relative
+		Aspect Animated
+		Aspect FullScreen
+		sub Dialog
+			has Component
+
+		sub AlertDialog
+			var string message
+			var string closeLabel = "Close"
+		sub DecisionDialog
+			has:{1..1} Selector
+		sub CollectionDialog
+			var boolean allowSearch = true
+			has:{0..1} CatalogComponents.Collection
+	Concept Divider extends Component
+
+	Concept Portal extends Component
+		var string to
+		var word:{Display Template} type = Template
+		var Service.UI.Use in
+		Concept Parameter
+			var string name
+			var string value
+

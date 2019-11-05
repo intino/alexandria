@@ -5,7 +5,8 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
-import io.intino.konos.model.graph.OtherComponents.Spinner;
+
+import static io.intino.konos.model.graph.BIComponents.Spinner;
 
 public class SpinnerRenderer extends ComponentRenderer<Spinner> {
 

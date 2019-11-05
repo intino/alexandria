@@ -3,20 +3,21 @@ package io.intino.konos.builder.codegeneration.ui.resource;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
+import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.accessible.AccessibleDisplay;
-import io.intino.konos.model.graph.ui.UIService;
+import io.intino.konos.model.graph.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ResourceListRenderer extends UIRenderer {
-	protected final List<UIService.Resource> resourceList;
-	protected final List<AccessibleDisplay> accessibleDisplays;
+	protected final List<Service.UI.Resource> resourceList;
+	protected final List<Display.Accessible> accessibleDisplays;
 
 	public ResourceListRenderer(Settings settings, KonosGraph graph, Target target) {
 		super(settings, target);
-		this.resourceList = graph.core$().find(UIService.Resource.class);
-		this.accessibleDisplays = graph.accessibleDisplayList();
+		this.resourceList = graph.core$().find(Service.UI.Resource.class);
+		this.accessibleDisplays = graph.displayList(Display::isAccessible).map(Display::asAccessible).collect(Collectors.toList());
 	}
 
 	@Override

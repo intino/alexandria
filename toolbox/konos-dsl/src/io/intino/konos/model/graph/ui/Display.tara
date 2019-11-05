@@ -1,0 +1,37 @@
+dsl Proteo
+
+use DataTypes
+use Component
+use Services
+
+Concept:Named PassiveView is abstract
+	Concept Request extends Data
+		var word:{Asset Void} responseType = Void
+		var Exception[] exceptionRefs = empty
+		has Exception
+		Aspect Addressable
+
+	Concept Notification extends Data
+		var word:{All Client Display} to = Display
+		var Exception[] exceptionRefs = empty
+		has Exception
+
+	Aspect ExtensionOf
+		var PassiveView parentView
+
+Concept:Named Display extends PassiveView
+	var Component[] components = empty
+	var string parentDisplay = empty
+	var string[] parameters = empty
+	has Block
+
+	Aspect Accessible
+	Aspect Decorated
+
+Facet Addressable
+	var Service.UI.Resource addressableResource
+	var boolean encoded = false
+	var boolean listenForChanges = true
+
+
+

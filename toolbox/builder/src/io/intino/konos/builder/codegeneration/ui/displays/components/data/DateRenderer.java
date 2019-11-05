@@ -5,7 +5,6 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
-import io.intino.konos.model.graph.editable.datacomponents.EditableDate;
 
 import static io.intino.konos.model.graph.DataComponents.Date;
 
@@ -27,7 +26,7 @@ public class DateRenderer extends ComponentRenderer<Date> {
 
 	private void addEditableProperties(FrameBuilder builder) {
 		if (!element.isEditable()) return;
-		EditableDate editableDate = element.asEditable();
+		Date.Editable editableDate = element.asEditable();
 		if (editableDate.min() != null) builder.add("min", editableDate.min().toEpochMilli());
 		if (editableDate.max() != null) builder.add("max", editableDate.max().toEpochMilli());
 		if (editableDate.timePicker()) builder.add("timePicker", editableDate.timePicker());

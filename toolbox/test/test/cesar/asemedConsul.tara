@@ -13,6 +13,7 @@ Service screening as REST(host = "https://api.asemed.cfe.mx", port = "443")
 
 	Resource("/divisiones") divisiones
 		Get
+
 			description = "Proporciona un listado con todas las divisiones"
 			tags = "Compañía"
 			Response as List Text
@@ -23,7 +24,7 @@ Service screening as REST(host = "https://api.asemed.cfe.mx", port = "443")
 			Parameter(in = path) division as Text
 			Parameter(in = query) pagina as Integer
 				description = "Número de página"
-			Response as List Text
+			Response aaa as List Text
 				description = "El número máximo de rutas que se incluyen en la respuesta es 200. Para acceder a las siguientes rutas es necesario indicar un número de pagina"
 	Resource("/divisiones/:division/:ruta/inspectores") inspectores
 		Get

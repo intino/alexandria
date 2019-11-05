@@ -11,14 +11,13 @@ import io.intino.konos.builder.codegeneration.ui.passiveview.PassiveViewRenderer
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.OtherComponents.Dialog;
-import io.intino.konos.model.graph.accessible.AccessibleDisplay;
-import io.intino.konos.model.graph.addressable.operationcomponents.AddressableTask;
-import io.intino.konos.model.graph.addressable.othercomponents.AddressableSelector;
-import io.intino.konos.model.graph.dynamicloaded.DynamicLoadedComponent;
-import io.intino.konos.model.graph.selectable.catalogcomponents.SelectableCollection;
 import org.jetbrains.annotations.NotNull;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.model.graph.CatalogComponents.*;
+import static io.intino.konos.model.graph.Component.*;
+import static io.intino.konos.model.graph.OperationComponents.*;
+import static io.intino.konos.model.graph.OtherComponents.*;
 
 public abstract class BaseDisplayRenderer<D extends Display> extends PassiveViewRenderer<D> {
 	private static final ComponentRendererFactory factory = new ComponentRendererFactory();
@@ -77,7 +76,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		FrameBuilder result = new FrameBuilder("displayExtends");
 		if (element.i$(Dialog.class)) result.add(Dialog.class.getSimpleName());
 		if (element.i$(Template.class)) result.add(Template.class.getSimpleName());
-		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) result.add(CatalogComponents.Collection.Mold.Item.class.getSimpleName());
+		if (element.i$(Collection.Mold.Item.class)) result.add(Collection.Mold.Item.class.getSimpleName());
 		if (element.i$(PrivateComponents.Row.class)) result.add(PrivateComponents.Row.class.getSimpleName());
 		addGeneric(element, result);
 		result.add("type", typeOf(element));
@@ -86,12 +85,12 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 			String modelClass = element.a$(Template.class).modelClass();
 			result.add("modelClass", modelClass != null ? modelClass : "java.lang.Void");
 		}
-		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) {
-			String itemClass = element.a$(CatalogComponents.Collection.Mold.Item.class).core$().ownerAs(CatalogComponents.Collection.class).itemClass();
+		if (element.i$(Collection.Mold.Item.class)) {
+			String itemClass = element.a$(Collection.Mold.Item.class).core$().ownerAs(Collection.class).itemClass();
 			result.add("itemClass", itemClass != null ? itemClass : "java.lang.Void");
 		}
 		if (element.i$(PrivateComponents.Row.class)) {
-			String itemClass = element.a$(PrivateComponents.Row.class).items(0).core$().ownerAs(CatalogComponents.Collection.class).itemClass();
+			String itemClass = element.a$(PrivateComponents.Row.class).items(0).core$().ownerAs(Collection.class).itemClass();
 			result.add("itemClass", itemClass != null ? itemClass : "java.lang.Void");
 		}
 		result.add("name", nameOf(element));
@@ -104,7 +103,8 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (graph.blockList().size() > 0) frame.add("blocksImport", buildBaseFrame().add("blocksImport"));
 		if (graph.itemsDisplays().size() > 0) frame.add("itemsImport", buildBaseFrame().add("itemsImport"));
 		if (graph.rowsDisplays().size() > 0) frame.add("rowsImport", buildBaseFrame().add("rowsImport"));
-		if (!ElementHelper.isRoot(componentOf(element)) || (element.isAccessible() && accessible)) frame.add("displayRegistration", displayRegistrationFrame(accessible));
+		if (!ElementHelper.isRoot(componentOf(element)) || (element.isAccessible() && accessible))
+			frame.add("displayRegistration", displayRegistrationFrame(accessible));
 		frame.add("requesterDirectory", typeOf(element).equalsIgnoreCase("Display") || typeOf(element).equalsIgnoreCase("Display") ? "." : "..");
 		frame.add("notifierDirectory", typeOf(element).equalsIgnoreCase("Display") ? "." : "..");
 	}
@@ -117,21 +117,23 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	protected void addImplements(FrameBuilder frame) {
-		if (element.i$(DynamicLoadedComponent.class)) frame.add("implements", new FrameBuilder("implements", DynamicLoadedComponent.class.getSimpleName()));
-		if (element.i$(SelectableCollection.class)) frame.add("implements", new FrameBuilder("implements", SelectableCollection.class.getSimpleName()));
-		if (element.i$(AddressableTask.class)) frame.add("implements", new FrameBuilder("implements", AddressableTask.class.getSimpleName()).add("name", nameOf(element)));
-		if (element.i$(AddressableSelector.class)) frame.add("implements", new FrameBuilder("implements", AddressableSelector.class.getSimpleName()).add("name", nameOf(element)));
+		if (element.i$(DynamicLoaded.class))
+			frame.add("implements", new FrameBuilder("implements", DynamicLoaded.class.getSimpleName()));
+		if (element.i$(Collection.Selectable.class))
+			frame.add("implements", new FrameBuilder("implements", Collection.Selectable.class.getSimpleName()));
+		if (element.i$(Task.Addressable.class))
+			frame.add("implements", new FrameBuilder("implements", Task.class.getSimpleName(), Task.Addressable.class.getSimpleName()).add("name", nameOf(element)));
+		if (element.i$(Selector.Addressable.class))
+			frame.add("implements", new FrameBuilder("implements", Selector.class.getSimpleName(), Selector.Addressable.class.getSimpleName()).add("name", nameOf(element)));
 	}
 
 	protected void addMethods(FrameBuilder frame) {
-		if (element.i$(DynamicLoadedComponent.class)) {
+		if (element.i$(Component.DynamicLoaded.class)) {
 			frame.add("baseMethod", "renderDynamicLoaded");
-			frame.add("methods", new FrameBuilder("methods", DynamicLoadedComponent.class.getSimpleName()).add("loadTime", element.a$(DynamicLoadedComponent.class).loadTime().name()));
-		}
-		else if (element.i$(Dialog.class)) {
+			frame.add("methods", new FrameBuilder("methods", Component.DynamicLoaded.class.getSimpleName()).add("loadTime", element.a$(Component.DynamicLoaded.class).loadTime().name()));
+		} else if (element.i$(Dialog.class)) {
 			frame.add("baseMethod", "renderDialog");
-		}
-		else if (element.i$(PrivateComponents.Row.class)) {
+		} else if (element.i$(PrivateComponents.Row.class)) {
 			frame.add("baseMethod", "renderRow");
 		}
 	}
@@ -142,19 +144,16 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 			ComponentRenderer renderer = factory.renderer(settings, element.a$(Block.class), templateProvider, target);
 			renderTag.add(Block.class.getSimpleName());
 			renderTag.add("properties", renderer.properties());
-		}
-		else if (element.i$(Template.class)) {
+		} else if (element.i$(Template.class)) {
 			ComponentRenderer renderer = factory.renderer(settings, element.a$(Template.class), templateProvider, target);
 			renderTag.add(Template.class.getSimpleName());
 			renderTag.add("properties", renderer.properties());
-		}
-		else if (element.i$(PrivateComponents.Row.class)) {
+		} else if (element.i$(PrivateComponents.Row.class)) {
 			ComponentRenderer renderer = factory.renderer(settings, element.a$(PrivateComponents.Row.class), templateProvider, target);
 			renderTag.add(PrivateComponents.Row.class.getSimpleName());
 			renderTag.add("properties", renderer.properties());
-		}
-		else if (element.i$(CatalogComponents.Collection.Mold.Item.class)) {
-			renderTag.add(CatalogComponents.Collection.Mold.Item.class.getSimpleName());
+		} else if (element.i$(Collection.Mold.Item.class)) {
+			renderTag.add(Collection.Mold.Item.class.getSimpleName());
 		}
 		frame.add("renderTag", renderTag);
 	}
@@ -164,7 +163,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	protected void addDecoratedFrames(FrameBuilder frame, boolean decorated) {
-		boolean isAbstract = decorated && !element.i$(OtherComponents.Stamp.class);
+		boolean isAbstract = decorated && !element.i$(Stamp.class);
 		if (isAbstract) frame.add("abstract", "Abstract");
 		else frame.add("notDecorated", element.name$());
 		FrameBuilder abstractBoxFrame = new FrameBuilder().add("box");
@@ -185,7 +184,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		builder.add("component", componentFrame(component));
 	}
 
-	private void writeDisplaysFor(AccessibleDisplay display, FrameBuilder builder) {
+	private void writeDisplaysFor(Display.Accessible display, FrameBuilder builder) {
 		write(builder);
 		writeNotifier(display.a$(PassiveView.class), builder);
 		writeRequester(display.a$(PassiveView.class), builder);

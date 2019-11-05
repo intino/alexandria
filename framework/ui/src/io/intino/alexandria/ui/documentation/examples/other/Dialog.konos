@@ -87,7 +87,7 @@ Template(layout=Vertical, spacing=DP8) dialogExamplesMold as Decorated
 			Text(format=h6, value="Fullscreen facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				OpenDialog(title="fullscreen dialog", dialog=dialog5) as Button
-				AlertDialog(format=containerAirLarge, title = "full screen dialog") dialog5 as Absolute(width=350px) Fullscreen
+				AlertDialog(format=containerAirLarge, title = "full screen dialog") dialog5 as Absolute(width=350px) FullScreen
 					message = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce lobortis lacinia leo, sed fringilla libero. Pellentesque at venenatis orci. Sed enim sem, blandit vel massa ut, semper blandit sapien. Suspendisse potenti. Etiam euismod nibh a scelerisque placerat. Duis maximus eget ipsum pretium auctor. Mauris malesuada metus vel dolor laoreet, eget mollis mauris condimentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam id nisl nibh. Mauris mattis nulla non lacinia tincidunt. Ut id orci sit amet nisl viverra rutrum in eu neque.
                                Donec ac ex in nisl feugiat sagittis. Curabitur vehicula sed felis nec blandit. Mauris eu urna at dui feugiat laoreet. Aliquam iaculis feugiat scelerisque. Maecenas suscipit est mauris, non aliquet metus molestie in. Suspendisse finibus malesuada ante et dapibus. Mauris et dapibus massa, eu posuere nunc. Ut a lacus lectus. Morbi non vulputate eros. Morbi egestas vehicula risus, egestas sollicitudin velit elementum in. Nulla ut euismod tortor. Vestibulum tempor justo fringilla mollis hendrerit."
 					closeLabel = "OK!"

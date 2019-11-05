@@ -6,9 +6,6 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.model.graph.DataComponents.Text;
-import io.intino.konos.model.graph.code.datacomponents.CodeText;
-import io.intino.konos.model.graph.editable.datacomponents.EditableText;
-import io.intino.konos.model.graph.highlighted.datacomponents.HighlightedText;
 
 import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 
@@ -23,7 +20,7 @@ public class TextRenderer extends ComponentRenderer<Text> {
 		if (element.prefix() != null) builder.add("prefix", element.prefix());
 		if (element.suffix() != null) builder.add("suffix", element.suffix());
 		if (element.isCode()) {
-			FrameBuilder codeFrame = new FrameBuilder(CodeText.class.getSimpleName());
+			FrameBuilder codeFrame = new FrameBuilder(Text.Code.class.getSimpleName());
 			if (element.asCode().value() != null) codeFrame.add("value", escape(element.asCode().value()));
 			builder.add("code", codeFrame);
 		}
@@ -43,7 +40,7 @@ public class TextRenderer extends ComponentRenderer<Text> {
 		if (element.isReadonly()) result.add("readonly", element.isReadonly());
 		if (element.isFocused()) result.add("focused", element.isFocused());
 		if (element.isCode()) {
-			result.add(CodeText.class.getSimpleName());
+			result.add(Text.Code.class.getSimpleName());
 			result.add("language", element.asCode().language().name());
 		}
 		if (element.value() != null) {
@@ -51,11 +48,7 @@ public class TextRenderer extends ComponentRenderer<Text> {
 			result.add("defaultValue", value);
 		}
 		if (element.isEditable()) {
-			EditableText editableText = element.asEditable();
-			if (element.isMemo()) {
-				result.add("editionMode", element.asMemo().editionMode().name());
-				result.add("rows", element.asMemo().height());
-			}
+			Text.Editable editableText = element.asEditable();
 			if (editableText.placeholder() != null) result.add("placeholder", editableText.placeholder());
 		}
 		return result;
@@ -63,7 +56,7 @@ public class TextRenderer extends ComponentRenderer<Text> {
 
 	private void addHighlight(FrameBuilder result) {
 		if (!element.isHighlighted()) return;
-		HighlightedText highlight = element.asHighlighted();
+		Text.Highlighted highlight = element.asHighlighted();
 		FrameBuilder highlightedFrame = new FrameBuilder("highlighted").add("text", highlight.textColor()).add("background", highlight.backgroundColor());
 		result.add("highlighted", highlightedFrame);
 	}
@@ -71,7 +64,7 @@ public class TextRenderer extends ComponentRenderer<Text> {
 	private void addHighlightMethods(FrameBuilder builder) {
 		if (!element.isHighlighted()) return;
 		if (element.isMultiple()) return;
-		FrameBuilder result = addOwner(buildBaseFrame()).add("method").add(HighlightedText.class.getSimpleName());
+		FrameBuilder result = addOwner(buildBaseFrame()).add("method").add(Text.Highlighted.class.getSimpleName());
 		result.add("name", nameOf(element));
 		builder.add("methods", result);
 	}

@@ -170,9 +170,9 @@ public class FullRenderer {
 			if (module == null) return null;
 			final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
 			final io.intino.tara.compiler.shared.Configuration configuration = configurationOf(module);
-			final List<? extends io.intino.tara.compiler.shared.Configuration.LanguageLibrary> languages = configuration.languages();
-			Configuration.LanguageLibrary language = languages.get(0);
-			if (languages.isEmpty() || language.generationPackage() == null) return null;
+			if (configuration.model() == null) return null;
+			Configuration.Model.ModelLanguage language = configuration.model().language();
+			if (language == null || language.generationPackage() == null) return null;
 			final String workingPackage = language.generationPackage().replace(".graph", "");
 			String artifact = LanguageResolver.languageId(language.name(), language.effectiveVersion()).split(":")[1];
 			PsiClass aClass = ApplicationManager.getApplication().runReadAction((Computable<PsiClass>) () -> facade.findClass(workingPackage + ".box." + Formatters.firstUpperCase(Formatters.snakeCaseToCamelCase().format(artifact).toString()) + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)));
@@ -191,7 +191,7 @@ public class FullRenderer {
 	}
 
 	private boolean hasModel(io.intino.tara.compiler.shared.Configuration configuration) {
-		return !configuration.languages().isEmpty();
+		return configuration.model() != null && configuration.model().language() != null;
 	}
 
 }

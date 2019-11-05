@@ -10,12 +10,11 @@ import io.intino.konos.model.graph.CatalogComponents;
 import io.intino.konos.model.graph.Component;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.Template;
-import io.intino.konos.model.graph.desktop.DesktopTemplate;
 
 public class DisplayRendererFactory {
 
 	public <T extends UIRenderer> T renderer(Settings settings, Display display, TemplateProvider provider, Target target) {
-		if (display.i$(DesktopTemplate.class)) return (T) new DesktopRenderer(settings, display.a$(Template.class), provider, target);
+		if (display.i$(Template.Desktop.class)) return (T) new DesktopRenderer(settings, display.a$(Template.class), provider, target);
 		if (display.i$(Template.class)) {
 			ComponentRenderer renderer = new io.intino.konos.builder.codegeneration.ui.displays.components.TemplateRenderer(settings, display.a$(Template.class), provider, target);
 			renderer.owner(display);

@@ -9,13 +9,12 @@ import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.CatalogComponents.Collection.Mold;
+import io.intino.konos.model.graph.DataComponents.File;
+import io.intino.konos.model.graph.DataComponents.Image;
+import io.intino.konos.model.graph.DataComponents.Text;
 import io.intino.konos.model.graph.OtherComponents.Dialog;
+import io.intino.konos.model.graph.OtherComponents.Icon;
 import io.intino.konos.model.graph.OtherComponents.Stamp;
-import io.intino.konos.model.graph.conditional.ConditionalBlock;
-import io.intino.konos.model.graph.multiple.MultipleBlock;
-import io.intino.konos.model.graph.multiple.datacomponents.*;
-import io.intino.konos.model.graph.multiple.othercomponents.MultipleIcon;
-import io.intino.konos.model.graph.multiple.othercomponents.MultipleStamp;
 import io.intino.tara.magritte.Layer;
 
 import java.util.*;
@@ -43,7 +42,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		addOwner(builder);
 		addProperties(builder);
 		if (buildChildren) builder.add("child");
-		builder.add("methodName", element.i$(ConditionalBlock.class) && !element.i$(MultipleBlock.class) ? "initConditional" : "init");
+		builder.add("methodName", element.i$(Block.Conditional.class) && !element.i$(Block.Multiple.class) ? "initConditional" : "init");
 		addSpecificTypes(builder);
 		addComponents(element, builder);
 		addReferences(element, builder);
@@ -133,10 +132,10 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		FrameBuilder result = new FrameBuilder().add("properties").add(typeOf(element));
 		if (element.color() != null && !element.color().isEmpty()) result.add("color", element.color());
 		if (element.isOption()) result.add("name", element.asOption().name$());
-		if (element.i$(AbstractLabeled.class)) result.add("label", element.a$(AbstractLabeled.class).label());
+		if (element.i$(Labeled.class)) result.add("label", element.a$(Labeled.class).label());
 		if (!element.visible()) result.add("visible", element.visible());
-		if (element.i$(AbstractMultiple.class)) {
-			AbstractMultiple abstractMultiple = element.a$(AbstractMultiple.class);
+		if (element.i$(Multiple.class)) {
+			Multiple abstractMultiple = element.a$(Multiple.class);
 			result.add("instances", nameOf(element));
 			result.add("multipleArrangement", abstractMultiple.arrangement().name());
 			result.add("multipleSpacing", abstractMultiple.spacing().value());
@@ -196,8 +195,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	protected boolean addSpecificTypes(FrameBuilder builder) {
 
-		if (element.i$(AbstractMultiple.class)) {
-			String message = element.a$(AbstractMultiple.class).noItemsMessage();
+		if (element.i$(Multiple.class)) {
+			String message = element.a$(Multiple.class).noItemsMessage();
 			if (message != null) builder.add("noItemsMessage", message);
 			FrameBuilder methodsFrame = addOwner(buildBaseFrame()).add("method").add("multiple");
 			methodsFrame.add("componentType", multipleComponentType(element));
@@ -223,7 +222,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 		if (element.i$(Stamp.class)) {
 			builder.add("stamp");
-			if (!element.i$(AbstractMultiple.class)) builder.add("single");
+			if (!element.i$(Multiple.class)) builder.add("single");
 			Template template = element.a$(Stamp.class).template();
 			builder.add("template", template.name$());
 			builder.add("type", template.name$());
@@ -249,29 +248,29 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	private String multipleComponentType(C element) {
 		String prefix = "io.intino.alexandria.ui.displays.components.";
-		if (element.i$(MultipleText.class)) return prefix + "Text";
-		if (element.i$(MultipleFile.class)) return prefix + "File";
-		if (element.i$(MultipleImage.class)) return prefix + "Image";
-		if (element.i$(MultipleIcon.class)) return prefix + "Icon";
-		if (element.i$(MultipleNumber.class)) return prefix + "Number";
-		if (element.i$(MultipleDate.class)) return prefix + "Date";
-		if (element.i$(MultipleStamp.class)) return firstUpperCase(element.a$(MultipleStamp.class).template().name$());
-		if (element.i$(MultipleBlock.class)) return firstUpperCase(nameOf(element));
+		if (element.i$(Text.Multiple.class)) return prefix + "Text";
+		if (element.i$(File.Multiple.class)) return prefix + "File";
+		if (element.i$(Image.Multiple.class)) return prefix + "Image";
+		if (element.i$(Icon.Multiple.class)) return prefix + "Icon";
+		if (element.i$(DataComponents.Number.Multiple.class)) return prefix + "Number";
+		if (element.i$(DataComponents.Date.Multiple.class)) return prefix + "Date";
+		if (element.i$(Stamp.Multiple.class)) return firstUpperCase(element.a$(Stamp.Multiple.class).template().name$());
+		if (element.i$(Block.Multiple.class)) return firstUpperCase(nameOf(element));
 		return null;
 	}
 
 	private String multipleObjectType(C element) {
-		if (element.i$(MultipleText.class)) return "java.lang.String";
-		if (element.i$(MultipleFile.class)) return "java.net.URL";
-		if (element.i$(MultipleImage.class)) return "java.net.URL";
-		if (element.i$(MultipleIcon.class)) return "java.net.URL";
-		if (element.i$(MultipleNumber.class)) return "java.lang.Double";
-		if (element.i$(MultipleDate.class)) return "java.time.Instant";
-		if (element.i$(MultipleStamp.class)) {
-			String modelClass = element.a$(MultipleStamp.class).template().modelClass();
+		if (element.i$(Text.Multiple.class)) return "java.lang.String";
+		if (element.i$(File.Multiple.class)) return "java.net.URL";
+		if (element.i$(Image.Multiple.class)) return "java.net.URL";
+		if (element.i$(Icon.Multiple.class)) return "java.net.URL";
+		if (element.i$(DataComponents.Number.Multiple.class)) return "java.lang.Double";
+		if (element.i$(DataComponents.Date.Multiple.class)) return "java.time.Instant";
+		if (element.i$(Stamp.Multiple.class)) {
+			String modelClass = element.a$(Stamp.Multiple.class).template().modelClass();
 			return modelClass != null ? modelClass : "java.lang.Void";
 		}
-		if (element.i$(MultipleBlock.class)) return "java.lang.Void";
+		if (element.i$(Block.Multiple.class)) return "java.lang.Void";
 		return null;
 	}
 
