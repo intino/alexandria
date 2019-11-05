@@ -49,6 +49,10 @@ public class TextRenderer extends ComponentRenderer<Text> {
 		}
 		if (element.isEditable()) {
 			Text.Editable editableText = element.asEditable();
+			if (element.isMemo()) {
+				result.add("editionMode", element.asMemo().editionMode().name());
+				result.add("rows", element.asMemo().height());
+			}
 			if (editableText.placeholder() != null) result.add("placeholder", editableText.placeholder());
 		}
 		return result;

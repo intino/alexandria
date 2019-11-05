@@ -28,7 +28,7 @@ Concept DataComponents
         			var integer min
         			var integer max
         Aspect Memo with Editable
-        	var word:{Raw Rich} mode = Raw
+        	var word:{Raw Rich} editionMode = Raw
         	var integer height = 5
 		Aspect Password with Editable
         	Concept:{0..1} Validation
