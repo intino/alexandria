@@ -18,9 +18,7 @@ framework/ui-elements/package.json
 framework/ui-elements/webpack.config.js
 framework/ui/res/.cache
 framework/ui/res/.checksum
-.tara
 .intino/audit
-.tara/misc
 kotlinc.xml
 toolbox/test/test-res
 libraries/ness/datalake/temp
@@ -28,4 +26,3 @@ libraries/ness/ingestion/temp
 ConfigurationTest.stash
 framework/ui-elements/lib
 .intino/artifacts
-.intino
