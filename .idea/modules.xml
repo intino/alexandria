@@ -7,14 +7,15 @@
       <module fileurl="file://$PROJECT_DIR$/framework/core/core.iml" filepath="$PROJECT_DIR$/framework/core/core.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/libraries/ness/datalake/datalake.iml" filepath="$PROJECT_DIR$/libraries/ness/datalake/datalake.iml" group="ness" />
       <module fileurl="file://$PROJECT_DIR$/drivers/driver/driver.iml" filepath="$PROJECT_DIR$/drivers/driver/driver.iml" group="drivers" />
-      <module fileurl="file://$PROJECT_DIR$/toolbox/dsl/dsl.iml" filepath="$PROJECT_DIR$/toolbox/dsl/dsl.iml" group="toolbox" />
       <module fileurl="file://$PROJECT_DIR$/libraries/ness/dump/dump.iml" filepath="$PROJECT_DIR$/libraries/ness/dump/dump.iml" group="ness" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/epoch/epoch.iml" filepath="$PROJECT_DIR$/fileformats/epoch/epoch.iml" group="fileformats" />
+      <module fileurl="file://$PROJECT_DIR$/toolbox/ether-dsl/ether-dsl.iml" filepath="$PROJECT_DIR$/toolbox/ether-dsl/ether-dsl.iml" group="toolbox" />
       <module fileurl="file://$PROJECT_DIR$/libraries/exceptions/exceptions.iml" filepath="$PROJECT_DIR$/libraries/exceptions/exceptions.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/ness/ingestion/ingestion.iml" filepath="$PROJECT_DIR$/libraries/ness/ingestion/ingestion.iml" group="ness" />
       <module fileurl="file://$PROJECT_DIR$/libraries/jms/jms.iml" filepath="$PROJECT_DIR$/libraries/jms/jms.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/jmx/jmx.iml" filepath="$PROJECT_DIR$/libraries/jmx/jmx.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/json/json.iml" filepath="$PROJECT_DIR$/fileformats/json/json.iml" group="libraries" />
+      <module fileurl="file://$PROJECT_DIR$/toolbox/konos-dsl/konos-dsl.iml" filepath="$PROJECT_DIR$/toolbox/konos-dsl/konos-dsl.iml" group="toolbox" />
       <module fileurl="file://$PROJECT_DIR$/libraries/logger/logger.iml" filepath="$PROJECT_DIR$/libraries/logger/logger.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/logger4j/logger4j.iml" filepath="$PROJECT_DIR$/libraries/logger4j/logger4j.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/mapp/mapp.iml" filepath="$PROJECT_DIR$/fileformats/mapp/mapp.iml" group="fileformats" />

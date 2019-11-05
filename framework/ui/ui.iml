@@ -65,8 +65,15 @@
     <orderEntry type="library" name="Intino: commons-io:commons-io:2.6" level="project" />
     <orderEntry type="module" module-name="rest-accessor" />
     <orderEntry type="module" module-name="proxy" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.0.1" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:rest:2.1.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.4" level="project" />
+    <orderEntry type="module" module-name="core" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.0.0" level="project" />
+    <orderEntry type="library" name="Intino: org.apache.httpcomponents:fluent-hc:4.5.7" level="project" />
+    <orderEntry type="library" name="Intino: com.jcraft:jsch:0.1.55" level="project" />
+    <orderEntry type="library" name="Intino: com.jcraft:jzlib:1.0.7" level="project" />
+    <orderEntry type="library" name="Intino: net.rforge:Rserve:0.6-8.1" level="project" />
+    <orderEntry type="library" name="Intino: net.rforge:REngine:0.6-8.1" level="project" />
+    <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>

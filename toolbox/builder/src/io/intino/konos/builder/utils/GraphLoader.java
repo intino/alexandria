@@ -3,11 +3,13 @@ package io.intino.konos.builder.utils;
 import com.intellij.compiler.CompilerMessageImpl;
 import com.intellij.compiler.ProblemsView;
 import com.intellij.compiler.impl.ProjectCompileScope;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.compiler.CompilerMessage;
 import com.intellij.openapi.compiler.CompilerMessageCategory;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -157,7 +159,8 @@ public class GraphLoader {
 				LOG.error("File is null: " + url);
 				return;
 			}
-			CompilerMessage compilerMessage = new CompilerMessageImpl(project, kind, message, file, lineInt, columnInt, PsiManager.getInstance(project).findFile(file));
+			PsiFile messageFile = ApplicationManager.getApplication().runReadAction((Computable<PsiFile>) () -> PsiManager.getInstance(project).findFile(file));
+			CompilerMessage compilerMessage = new CompilerMessageImpl(project, kind, message, file, lineInt, columnInt, messageFile);
 			if (LOG.isDebugEnabled()) LOG.debug("Message: " + compilerMessage);
 			compilerMessages.add(compilerMessage);
 		}

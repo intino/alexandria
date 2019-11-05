@@ -120,7 +120,7 @@ def type(attribute)
 	public $clazz $name+firstLowerCase;
 end
 
-def type(methods & dynamicloadedcomponent)
+def type(methods & dynamicloaded)
 	@Override
 	public io.intino.alexandria.ui.displays.components.DynamicLoaded.LoadTime loadTime() {
 		return io.intino.alexandria.ui.displays.components.DynamicLoaded.LoadTime.valueOf("$loadTime");
