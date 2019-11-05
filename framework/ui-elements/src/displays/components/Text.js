@@ -39,7 +39,6 @@ class Text extends AbstractText {
 		this.requester = new TextRequester(this);
 		this.state = {
 			...this.state,
-			value : this.props.value,
 		}
 	};
 
@@ -71,10 +70,6 @@ class Text extends AbstractText {
 		if (result.padding == null) result.padding = "0 10px";
 		if (result.borderRadius == null) result.borderRadius = "3px";
 		return result;
-	};
-
-	refresh = (value) => {
-		this.setState({ "value": value });
 	};
 
 }

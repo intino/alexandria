@@ -23,7 +23,6 @@ class TextEditable extends AbstractTextEditable {
 		this.requester = new TextEditableRequester(this);
 		this.state = {
 			...this.state,
-			value : "",
 			readonly : this.props.readonly
 		};
 	};
@@ -66,10 +65,6 @@ class TextEditable extends AbstractTextEditable {
 	_rowsCount = () => {
 		const rows = this.props.rows;
 		return rows != null ? rows : undefined;
-	};
-
-	refresh = (value) => {
-		this.setState({ "value": value != null ? value : "" });
 	};
 
 	refreshReadonly = (readonly) => {

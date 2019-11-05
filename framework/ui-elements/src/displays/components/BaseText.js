@@ -7,11 +7,13 @@ export default class BaseText extends AbstractBaseText {
         super(props);
         this.state = {
             ...this.state,
+			value : this.props.value,
             highlighted : this.props.highlighted,
         }
     };
 
     refresh = (value) => {
+		this.setState({ "value": value != null ? value : "" });
     };
 
     refreshHighlight = (highlighted) => {
