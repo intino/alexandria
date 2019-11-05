@@ -55,7 +55,8 @@ public class BoxRenderer extends Renderer {
 		FrameBuilder builder = new FrameBuilder();
 		Configuration configuration = configuration();
 		builder.add("name", settings.boxName());
-		if (configuration.outLanguage() != null) builder.add("outDSL", configuration.outLanguage());
+		if (configuration.model() != null && configuration.model().outLanguage() != null)
+			builder.add("outDSL", configuration.model().outLanguage());
 		builder.add("wrapper", dsls());
 		return builder.toFrame();
 	}
@@ -63,13 +64,14 @@ public class BoxRenderer extends Renderer {
 	private String[] dsls() {
 		Configuration configuration = configuration();
 		List<String> dsls = new ArrayList<>();
-		for (Configuration.LanguageLibrary lang : configuration.languages())
-			if (!Meta.class.getSimpleName().equals(lang.name()) && !Proteo.class.getSimpleName().equals(lang.name())) {
-				final String genPackage = lang.generationPackage();
-				dsls.add((genPackage == null ? "" : genPackage.toLowerCase() + ".") + firstUpperCase(lang.name()));
-			}
-		if (configuration.level() != Configuration.Level.Solution)
-			dsls.add(configuration.workingPackage().toLowerCase() + "." + firstUpperCase(configuration.outLanguage()));
+		if (configuration.model() == null) return new String[0];
+		Configuration.Model.ModelLanguage language = configuration.model().language();
+		if (!Meta.class.getSimpleName().equals(language.name()) && !Proteo.class.getSimpleName().equals(language.name())) {
+			final String genPackage = language.generationPackage();
+			dsls.add((genPackage == null ? "" : genPackage.toLowerCase() + ".") + firstUpperCase(language.name()));
+		}
+		if (!configuration.model().level().isSolution())
+			dsls.add(configuration.workingPackage().toLowerCase() + "." + firstUpperCase(configuration.model().outLanguage()));
 		return dsls.toArray(new String[0]);
 	}
 

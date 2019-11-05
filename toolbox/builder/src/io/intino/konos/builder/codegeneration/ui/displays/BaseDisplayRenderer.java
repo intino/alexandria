@@ -103,7 +103,8 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (graph.blockList().size() > 0) frame.add("blocksImport", buildBaseFrame().add("blocksImport"));
 		if (graph.itemsDisplays().size() > 0) frame.add("itemsImport", buildBaseFrame().add("itemsImport"));
 		if (graph.rowsDisplays().size() > 0) frame.add("rowsImport", buildBaseFrame().add("rowsImport"));
-		if (!ElementHelper.isRoot(componentOf(element)) || (element.isAccessible() && accessible)) frame.add("displayRegistration", displayRegistrationFrame(accessible));
+		if (!ElementHelper.isRoot(componentOf(element)) || (element.isAccessible() && accessible))
+			frame.add("displayRegistration", displayRegistrationFrame(accessible));
 		frame.add("requesterDirectory", typeOf(element).equalsIgnoreCase("Display") || typeOf(element).equalsIgnoreCase("Display") ? "." : "..");
 		frame.add("notifierDirectory", typeOf(element).equalsIgnoreCase("Display") ? "." : "..");
 	}
@@ -116,21 +117,23 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	protected void addImplements(FrameBuilder frame) {
-		if (element.i$(DynamicLoaded.class)) frame.add("implements", new FrameBuilder("implements", DynamicLoaded.class.getSimpleName()));
-		if (element.i$(Collection.Selectable.class)) frame.add("implements", new FrameBuilder("implements",Collection. Selectable.class.getSimpleName()));
-		if (element.i$(Task.Addressable.class)) frame.add("implements", new FrameBuilder("implements", Task. Addressable.class.getSimpleName()).add("name", nameOf(element)));
-		if (element.i$(Selector.Addressable.class)) frame.add("implements", new FrameBuilder("implements",Selector. Addressable.class.getSimpleName()).add("name", nameOf(element)));
+		if (element.i$(DynamicLoaded.class))
+			frame.add("implements", new FrameBuilder("implements", DynamicLoaded.class.getSimpleName()));
+		if (element.i$(Collection.Selectable.class))
+			frame.add("implements", new FrameBuilder("implements", Collection.Selectable.class.getSimpleName()));
+		if (element.i$(Task.Addressable.class))
+			frame.add("implements", new FrameBuilder("implements", Task.class.getSimpleName(), Task.Addressable.class.getSimpleName()).add("name", nameOf(element)));
+		if (element.i$(Selector.Addressable.class))
+			frame.add("implements", new FrameBuilder("implements", Selector.class.getSimpleName(), Selector.Addressable.class.getSimpleName()).add("name", nameOf(element)));
 	}
 
 	protected void addMethods(FrameBuilder frame) {
 		if (element.i$(Component.DynamicLoaded.class)) {
 			frame.add("baseMethod", "renderDynamicLoaded");
 			frame.add("methods", new FrameBuilder("methods", Component.DynamicLoaded.class.getSimpleName()).add("loadTime", element.a$(Component.DynamicLoaded.class).loadTime().name()));
-		}
-		else if (element.i$(Dialog.class)) {
+		} else if (element.i$(Dialog.class)) {
 			frame.add("baseMethod", "renderDialog");
-		}
-		else if (element.i$(PrivateComponents.Row.class)) {
+		} else if (element.i$(PrivateComponents.Row.class)) {
 			frame.add("baseMethod", "renderRow");
 		}
 	}
@@ -141,18 +144,15 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 			ComponentRenderer renderer = factory.renderer(settings, element.a$(Block.class), templateProvider, target);
 			renderTag.add(Block.class.getSimpleName());
 			renderTag.add("properties", renderer.properties());
-		}
-		else if (element.i$(Template.class)) {
+		} else if (element.i$(Template.class)) {
 			ComponentRenderer renderer = factory.renderer(settings, element.a$(Template.class), templateProvider, target);
 			renderTag.add(Template.class.getSimpleName());
 			renderTag.add("properties", renderer.properties());
-		}
-		else if (element.i$(PrivateComponents.Row.class)) {
+		} else if (element.i$(PrivateComponents.Row.class)) {
 			ComponentRenderer renderer = factory.renderer(settings, element.a$(PrivateComponents.Row.class), templateProvider, target);
 			renderTag.add(PrivateComponents.Row.class.getSimpleName());
 			renderTag.add("properties", renderer.properties());
-		}
-		else if (element.i$(Collection.Mold.Item.class)) {
+		} else if (element.i$(Collection.Mold.Item.class)) {
 			renderTag.add(Collection.Mold.Item.class.getSimpleName());
 		}
 		frame.add("renderTag", renderTag);

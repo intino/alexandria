@@ -34,6 +34,14 @@ public class UIGenerationTest {
 
 
 	@Test
+	public void testCobranzaUi() throws Exception {
+		File gen = new File(TestUtil.DIR, "cobranza");
+		KonosGraph graph = new Graph().loadStashes("Cobranza").as(KonosGraph.class);
+		new FullRenderer(graph, TestUtil.settings(gen, "cobranza", loadCache(gen, graph))).execute();
+		//for (Service.UI service : graph.uiServiceList()) new ServiceRenderer(new Settings().src(gen).gen(gen).cache(loadCache(gen, graph)), service).execute();
+	}
+
+	@Test
 	public void testUiAndDisplays() throws Exception {
 		File gen = new File(TestUtil.DIR, UI);
 		KonosGraph graph = new Graph().loadStashes(UI).as(KonosGraph.class);

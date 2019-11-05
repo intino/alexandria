@@ -91,7 +91,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.itrules:engine:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.maven.shared:maven-invoker:2.0.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.codehaus.plexus:plexus-utils:1.5.6" level="project" />
-    <orderEntry type="module" module-name="dsl" scope="TEST" />
+    <orderEntry type="module" module-name="konos-dsl" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.12" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: picocontainer:picocontainer:1.2" level="project" />

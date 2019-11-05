@@ -30,7 +30,7 @@ public class ComponentRendererFactory {
 
 		if (component.i$(Spinner.class)) return (T) new SpinnerRenderer(settings, component.a$(BIComponents.Spinner.class), provider, target);
 		if (component.i$(OtherComponents.Selector.class)) return (T) new SelectorRenderer(settings, component.a$(OtherComponents.Selector.class), provider, target);
-		if (component.i$(AbstractSlider.class)) return (T) new SliderRenderer(settings, component.a$(BIComponents.Slider.class), provider, target);
+		if (component.i$(AbstractSlider.class)) return (T) new SliderRenderer(settings, component.a$(AbstractSlider.class), provider, target);
 		if (component.i$(Block.class)) return (T) new BlockRenderer(settings, component.a$(Block.class), provider, target);
 		if (component.i$(Chart.class)) return (T) new ChartRenderer(settings, component.a$(Chart.class), provider, target);
 		if (component.i$(Dashboard.class)) return (T) new DashboardRenderer(settings, component.a$(BIComponents.Dashboard.class), provider, target);

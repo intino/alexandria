@@ -38,10 +38,10 @@ public class OperationRenderer<O extends Operation> extends ComponentRenderer<O>
 	}
 
 	private String mode() {
-		if (element.isIconButton()) return Operation.IconButton.class.getSimpleName().replace("Operation", "");
-		else if (element.isMaterialIconButton()) return Operation.MaterialIconButton.class.getSimpleName().replace("Operation", "");
-		else if (element.isButton()) return Operation.Button.class.getSimpleName().replace("Operation", "");
-		return Operation.Link.class.getSimpleName().replace("Operation", "");
+		if (element.isIconButton()) return Operation.IconButton.class.getSimpleName();
+		else if (element.isMaterialIconButton()) return Operation.MaterialIconButton.class.getSimpleName();
+		else if (element.isButton()) return Operation.Button.class.getSimpleName();
+		return Operation.Link.class.getSimpleName();
 	}
 
 	@Override

@@ -126,7 +126,7 @@ public class Settings {
 	}
 
 	public String boxName() {
-		if (boxName == null) boxName = snakeCaseToCamelCase(module() != null ? configurationOf(module()).artifactId() : Configuration.Level.Solution.name());
+		if (boxName == null) boxName = snakeCaseToCamelCase(module() != null ? configurationOf(module()).artifactId() : Configuration.Model.Level.Solution.name());
 		return boxName;
 	}
 

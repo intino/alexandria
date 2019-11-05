@@ -123,7 +123,7 @@ Concept:Named Service
 			has Request
 
 	Aspect UI
-		var function:HomesProvider homeList = 'self.resourceList().stream().filter(Service.UI.Resource::isMain).collect(toList());';
+		var function:HomesProvider homeList = 'return self.resourceList().stream().filter(Service.UI.Resource::isMain).collect(toList());';
 		var function:TemplatesProvider templates = 'return self.resourceList().stream().map(r-> r.asPage().template()).collect(Collectors.toList());';
     	Concept Use
     		var string className

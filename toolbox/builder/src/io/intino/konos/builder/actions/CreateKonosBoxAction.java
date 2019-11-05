@@ -158,9 +158,9 @@ public class CreateKonosBoxAction extends KonosAction {
 		if (graph.restServiceList().isEmpty()) remove(dependencies, "rest");
 		if (graph.workflow() == null) remove(dependencies, "bpm");
 		if (graph.slackBotServiceList().isEmpty()) remove(dependencies, "slack");
-		if (graph.bIComponents().chartList(c -> c.isAbsolute() || c.isRelative()).isEmpty())
+		if (graph.bIComponents() == null || graph.bIComponents().chartList(c -> c.isAbsolute() || c.isRelative()).isEmpty())
 			remove(dependencies, "driver-r");
-		if (graph.bIComponents().dashboardList(d -> d.isAbsolute() || d.isRelative()).isEmpty())
+		if (graph.bIComponents() == null || graph.bIComponents().dashboardList(d -> d.isAbsolute() || d.isRelative()).isEmpty())
 			remove(dependencies, "driver-shiny");
 		return dependencies;
 	}
@@ -250,7 +250,7 @@ public class CreateKonosBoxAction extends KonosAction {
 				return null;
 			}
 			final Configuration configuration = configurationOf(module);
-			String generationPackage = configuration == null ? BOX : configuration.workingPackage() + (configuration.boxPackage().isEmpty() ? "" : "." + configuration.boxPackage());
+			String generationPackage = configuration == null || configuration.box() == null ? BOX : configuration.workingPackage() + (configuration.box().targetPackage().isEmpty() ? "" : "." + configuration.box().targetPackage());
 			File gen = new File(genDirectory.getPath(), generationPackage.replace(".", File.separator));
 			gen.mkdirs();
 			File src = new File(srcDirectory.getPath(), generationPackage.replace(".", File.separator));

@@ -32,5 +32,4 @@ public class Manifest {
 		public String anchor;
 		public String relativeToAction;
 	}
-
 }

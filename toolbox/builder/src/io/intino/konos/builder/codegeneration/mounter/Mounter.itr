@@ -169,7 +169,7 @@ def type(schemaImport)
 	import $package.schemas.*;
 end
 
-def attribute(message) trigger(typeClass)
+def attribute(this:message) trigger(typeClass)
 	io.intino.alexandria.message.Message
 end
 

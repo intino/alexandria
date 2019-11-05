@@ -92,7 +92,7 @@ public class CreateKonosTestFileAction extends JavaCreateTemplateInPackageAction
 		String version = file.getParentFile().getName();
 		final Configuration configuration = TaraUtil.configurationOf(module);
 		if (configuration == null) enabled = false;
-		final String interfaceVersion = configuration == null ? null : configuration.boxVersion();
+		final String interfaceVersion = configuration == null || configuration.box() == null ? null : configuration.box().version();
 		e.getPresentation().setVisible(enabled && version.equals(interfaceVersion));
 		e.getPresentation().setEnabled(enabled && version.equals(interfaceVersion));
 	}

@@ -42,8 +42,8 @@ Template(layout=Vertical Flexible) homeTemplate as Decorated Relative(height=100
 		Block(layout=Horizontal) as Relative(width=100%)
 			Block drawer as Drawer(variant=PersistentAndMini) Absolute(width=200px)
 				Block(layout=Horizontal EndJustified Center) as Absolute(height=60px)
-					OpenDrawer(drawer=drawer, title="open menu") as MaterialIconButton(icon="ChevronRight",format=airMenuRight)
-					CloseDrawer(drawer=drawer, title = "minimize") as MaterialIconButton(icon="ChevronLeft",format=airMenuRight)
+					OpenDrawer(drawer = drawer, title="open menu") as MaterialIconButton(icon="ChevronRight",format=airMenuRight)
+					CloseDrawer(drawer = drawer, title = "minimize") as MaterialIconButton(icon="ChevronLeft",format=airMenuRight)
 				Divider
 				Selector linksSelector as ListBox Addressable(CobranzaElements.homeView)
 					Block(layout=Horizontal, spacing=DP16) cuentas as Option > MaterialIcon(icon = "Portrait"); Text(value="Cuentas")
@@ -186,7 +186,7 @@ Template(layout=Vertical Flexible, format=airTop) cuentaView
 			Text(value="Histórico") historico as Option
 
 	Block(layout=Vertical Flexible, format=airTop)
-		Block(layout=Vertical Flexible) operativaPanel as Conditional(selected=selectorBlock.viewSelector.operativa)
+		Block(layout=Vertical Flexible) operativaPanel as Conditional(selected=cuentaView.selectorBlock.viewSelector.operativa)
 			Block(layout=Horizontal Wrap)
 				Block(layout=Vertical Center, format=containerAirMedium) anticiposColumn as Relative(width=33%, offsetWidth=10px)
 					Text(format=h4 middleAirBottom, value="Anticipos")
@@ -250,7 +250,7 @@ Template(layout=Vertical Flexible, format=airTop) cuentaView
 		Number(format=h2,suffix="$",countDecimals=2,expanded=true,style=Currency,min=0) importeAnticipo as Editable(placeholder="Indique el importe a reintegrar") Labeled("Importe")
 		Block(layout=Horizontal EndJustified, format=airTop) > Task(title="Crear") crearAnticipo as Button Highlighted
 
-	CollectionDialog(title = "Añadir ingreso") addIngresoDialog as Fullscreen
+	CollectionDialog(title = "Añadir ingreso") addIngresoDialog as FullScreen
 		List(itemClass="com.cfemex.ssb.cobranza.graph.Ingreso") ingresosList as Selectable
 			noItemsMessage = "No se ha encontrado ningún ingreso"
 			Mold
@@ -354,3 +354,243 @@ Template cobranzasCatalog as Relative(height=100%)
 		Mold
 			Heading cobranzaPendienteHeading > Block(layout=Horizontal EndJustified) > Text(value="Pendiente")
 			Item(height=50px, width=17%) cobranzaPendienteView > Block(layout=Horizontal EndJustified) > Number(format=h4,prefix="$",countDecimals=2,expanded=true,style=Currency) importe
+
+
+Template(layout=Vertical Flexible, spacing=DP16) facturacionesCatalog
+	Block(layout=Horizontal Center, format=dialog, spacing=DP16)
+		Toolbar as Linked(to=facturacionesList)
+			Grouping(collections = facturacionesList) divisionGrouping as ComboBox(placeholder="Todas las divisiones")
+			TaskSelection(title="Recepcionar") recepcionarSelection as Button Highlighted(style=Outline)
+
+	List(itemClass="com.cfemex.ssb.cobranza.graph.Facturacion") facturacionesList as Selectable(multiple=true)
+		noItemsMessage = "No se han recibido nuevas facturaciones"
+		Mold
+			Item(height=80px) facturacionesView
+				Block(layout=Horizontal Wrap Flexible Center)
+					Block(layout=Vertical CenterCenter, spacing=DP16) as Absolute(width=170px)
+						Number(format=h2,suffix="$",countDecimals=2,expanded=true,style=Currency) importeTotal
+					Block(layout=Vertical Flexible, format=airTop)
+						Block(layout=Horizontal, spacing=DP16)
+							Text division
+							Date fecha
+						Block(layout=Horizontal, spacing=DP8)
+							Text rpu as Labeled("RPU")
+							Number(suffix="$",countDecimals=2,expanded=true,style=Currency) energia as Labeled("Energía")
+							Number(suffix="$",countDecimals=2,expanded=true,style=Currency) importe as Labeled("Importe")
+							Number(suffix="$",countDecimals=2,expanded=true,style=Currency) dap as Labeled("DAP")
+							Number(suffix="%") iva as Labeled("IVA")
+					Block(layout=Horizontal Center, spacing=DP8, format=airTop)
+						Task(title="Recepcionar") recepcionar as Button Highlighted(style=Outline)
+						Task(title="Rechazar") rechazar as Button Highlighted(style=Outline)
+
+
+Format("color:'#05673c',textShadow:'2px 2px 2px #fff',fontSize:'25pt'") h1
+Format("color:'#05673c',textShadow:'2px 2px 2px #fff',fontSize:'20pt'") h2
+Format("fontSize:'15pt'") h3
+Format("fontSize:'14pt',fontWeight:'400'") h4
+Format("fontSize:'12pt'") h5
+Format("lineHeight:'17pt',fontSize:'12pt'") h6
+Format("") body1
+Format("") body2
+Format("") subtitle1
+Format("") subtitle2
+Format("padding:'10px',border:'1px solid #efefef',borderRadius:'5px',background:'white'") dialog
+Format("color:'#ff9100'") link
+Format("") secondary
+Format("background:'white',padding:'10px',borderRadius:'10px'") highlightedBlock
+Format("color:'#ff9100',borderBottom:'1px solid white'") secondaryHighlighted
+Format("borderRight:'1px solid black'") separator
+Format("minHeight:'100%'") main
+Format("background:'#efefef',padding:'1px 7px',borderTop:'1px solid #aaa'") footerFormat
+Format("background:'#efefef',padding:'10px 30px',borderTop:'1px solid #aaa'") periodoFormat
+Format("color:'white',position:'absolute',top:0,left:0,marginLeft:'180px',marginTop:'6px',textTransform:'uppercase',fontSize:'9pt'") headerSubtitle
+Format("background:'white',borderRadius:'3px',height:'100%',border:'1px solid #efefef'") whiteBackground
+Format("padding:'10px 20px'") air
+Format("padding:'4px 20px'") airHeader
+Format("marginTop:'10px',paddingBottom:'10px',borderBottom:'1px solid #ddd'") userHeader
+Format("marginTop:'10px'") airTop
+Format("marginTop:'20px'") doubleAirTop
+Format("marginBottom:'10px'") airBottom
+Format("marginTop:'5px'") middleAirTop
+Format("marginBottom:'5px'") middleAirBottom
+Format("marginLeft:'10px'") airLeft
+Format("marginLeft:'3px'") airTagsLeft
+Format("marginRight:'10px'") airRight
+Format("marginLeft:'5px'") middleAirLeft
+Format("marginRight:'5px'") middleAirRight
+Format("marginRight:'4px'") airMenuRight
+Format("padding:'10px'") containerAirMedium
+Format("padding:'20px'") containerAirLarge
+Format("padding:'10px 20px'") moduleAir
+Format("background:'#efefef',padding:'8px',minHeight:'300px'") filled
+Format("background:'#efefef',minHeight:'200px'") filledNoAir
+Format("background:'#efefef',minHeight:'400px'") filledNoAirLarge
+Format("marginTop:'10px'") headerToolbar
+Format("textAlign:'center'") textCentered
+Format("position:'absolute'") absolute
+Format("whiteSpace:'nowrap'") valuesLabelFormat
+Format("border:'1px solid',width:'100%'") bordered
+Format("minHeight:'300px'") paperFormat
+Format("borderBottom:'1px dotted #ddd',width:'100%',marginBottom:'10px'") underline
+Format("borderBottom:'1px solid #ddd',width:'100%'") separator
+Format("fontSize:'10pt',color:'grey'") description
+Format("minHeight:'60px'") headerWithIndicators
+Format("minHeight:'100%'") minHeight
+Format("minWidth:'400px'") minWidth
+Format("minWidth:'100px'") minPhotoWidth
+Format("height:'100%'") usersStampFormat
+Format("position:'relative'") relative
+Format("position:'absolute',right:'44px',top:'-12px',background:'white',border:'1px solid #efefef'") contentCopyDashboardIcon
+Format("position:'absolute',right:'-12px',top:'-12px',background:'white',border:'1px solid #efefef'") removeDashboardIcon
+Format("overflow:'auto',padding:'10px',minWidth:'300px',minHeight:'400px'") thesaurus
+Format("background:'#efefef'") greyBackground
+Format("color:'#777'") grey
+Format("color:'white'") white
+Format("position:'absolute',bottom:'-10px',textAlign:'center',width:'100%',color:'red'") loginError
+Format("position:'absolute',bottom:'0',top:'0',width:'100%',height:'100%',zIndex:'0'") backgroundLogin
+Format("filter:'brightness(0) invert(1)',position:'absolute',margin:'30px'") logoLogin
+Format("zIndex:'1'") visible
+Format("width:'150px'") openUsersButton
+Format("fontSize:'20pt',textAlign:'center',marginTop:'40px'") userNotGranted
+Format("minWidth:'250px'") selectorWidth
+Format("padding:'10px',position:'relative',border:'1px solid #efefef',borderRadius:'5px',background:'white'") block
+Format("width:'200px',marginLeft:'10px'") indicator
+Format("width:'100%',marginLeft:'0',height:'80px'") indicatorFull
+Format("width:'20px',height:'20px',marginRight:'10px'") estadoFormat
+Format("background:'#B60200'") gestiones
+Format("color:'#B60200'") gestionesColor
+Format("background:'#8A1C88'") cuenta
+Format("color:'#8A1C88'") cuentaColor
+Format("background:'#458400'") anticipos
+Format("color:'#458400'") anticiposColor
+Format("width:'100%'") fullWidth
+Format("border:'1px solid #eee',paddingLeft:'10px',marginBottom:'4px'") transaccion
+Format("fontSize:'8pt',marginTop:'-5px'") tag
+Format("height:'17px',marginRight:'8px',padding:'2px 4px',fontSize:'7pt',marginTop:'2px',textAlign:'center'") pill
+Format("width:'48px',textAlign:'center'") tasaIva
+Format("margin:'5px 0px 20px'") toolbar
+Format("transform:'rotate(45deg)',opacity:'0.8',right:'0',position:'absolute',marginRight:'17px',width:'131px',textAlign:'center',marginTop:'-9px',borderRadius:'44px 44px 1px 1px'") rubber
+
+// Cards
+Format("textAlign:'left',color:'#B71A1C',padding:'10px'") cardTitle
+Format("textAlign:'left',padding:'10px'") cardContent
+
+
+Template(layout=Vertical Flexible) tareas
+	Block(layout=Vertical Flexible, format=air)
+		Text(value="Tareas", format=h3 airBottom) title
+		Block as Absolute(width=175px) > Task(title="Resolver todas") as Button Highlighted(style=Outline)
+		Block(layout=Vertical Flexible, format=airTop)
+			Stamp(template=tareasCatalog) tareasCatalog
+	Block(format=periodoFormat)
+		TemporalSlider(scales=Month,collections=empty) periodo > Range(min = "2010-01-01T00:00:00Z", max = "2019-12-01T00:00:00Z")
+
+Template tareasCatalog as Relative(height=100%)
+
+	Block(layout=Horizontal Flexible Center, format=dialog)
+		Block(format=airRight) as Absolute(width=300px) > Text buscador as Editable(placeholder="Introduzca una palabra clave para buscar") Labeled("Buscar tarea...")
+
+	Table(itemClass="com.cfemex.ssb.cobranza.graph.Tarea", scrollingMark=false) tareasTable as Selectable(multiple=false)
+		noItemsMessage = "No hay tareas"
+		noItemsFoundMessage = "No se han encontrado tareas con el criterio definido"
+		Mold
+			Heading tareasTituloHeading > Text(value="Título")
+			Item(height=50px,width=15%) tareasTituloView > Text(value="Cargando...") titulo
+		Mold
+			Heading tareasEstadoHeading > Text(value="Estado")
+			Item(height=50px,width=15%) tareasEstadoView > Text estado
+		Mold
+			Heading tareasObservacionesHeading > Text(value="Observaciones")
+			Item(height=50px,width=15%) tareasObservacionesView > Text observaciones
+		Mold
+			Heading tareasOperacionesHeading > Text(value="Operaciones")
+			Item(height=50px,width=15%) tareasOperacionesView
+				Block(layout=Horizontal)
+					OpenDialog(title="Resolver", dialog=resolverTareaDialogBox) openResolverTarea
+					Dialog(title = "Cargar ingresos...") resolverTareaDialogBox as FullScreen
+						Stamp(template=resolverTareaDialog) dialog
+
+Template resolverTareaDialog as Relative(height=100%)
+	Text(value="Dialogo de resolver tarea")
+
+
+Template(layout=Vertical Flexible) ingresos
+	Block(layout=Vertical Flexible, format=air)
+		Text(value="Ingresos", format=h3 airBottom) title
+		Block as Absolute(width=175px) > OpenDialog(title="Cargar ingresos...", dialog=ingresosDialogBox) as Button Highlighted(style=Outline)
+		Block(layout=Vertical Flexible, format=airTop)
+			Stamp(template=ingresosCatalog) ingresosCatalog
+	Block(format=periodoFormat)
+		TemporalSlider(scales=Day,collections=empty) periodo > Range(min = "2010-01-01T00:00:00Z", max = "2019-12-01T00:00:00Z")
+
+	Dialog(title = "Cargar ingresos...") ingresosDialogBox as FullScreen
+		Stamp(template=ingresosDialog) dialog
+
+Template ingresosDialog as Relative(height=100%)
+
+	Stepper(position=Top, style=NoToolbar) stepper
+		Step cargarIngresos as Labeled("Seleccionar archivo")
+			Block(layout=Vertical CenterCenter Flexible) as Relative(height=100%)
+				Block(layout=Vertical, spacing=DP16) as Absolute(width=400px)
+					Text(value="Archivo de ingresos")
+					File archivo as Editable
+					Divider
+					Block(layout=Horizontal EndJustified) > Task(title="Procesar") procesar as Button Highlighted
+		Step validarIngresos as Labeled("Validar ingresos")
+			Block(layout=Horizontal Flexible) as Relative(height=100%, offsetHeight=60px)
+				Block(format=airRight) as Relative(width=100%)
+					Text(value="Ingresos encontrados")
+					Stamp(template=ingresosCatalog) ingresosRecibidos
+				Block(visible=false) as Relative(width=40%,offsetWidth=10px)
+					Text(value="Ingresos descartados")
+					Stamp(template=ingresoDescartado) ingresosDescartados as Multiple
+			Block(layout=Vertical EndJustified)
+				Divider
+				Block(layout=Horizontal EndJustified, format=air)
+					Task(title="Atrás", format=airRight) cancelar as Button Highlighted(style=Outline)
+					Task(title="Validar") validar as Button Highlighted Confirmable("¿Está seguro que quiere validar los ingresos?")
+
+Template ingresosCatalog as Relative(height=100%)
+
+	Block(layout=Horizontal Flexible Center, format=dialog)
+		Block(format=airRight) as Absolute(width=300px) > Text buscador as Editable(placeholder="Introduzca una palabra clave para buscar") Labeled("Buscar ingreso...")
+		Grouping(collections=ingresosTable) divisionGrouping as ComboBox(placeholder="Todas las divisiones")
+
+	Table(itemClass="com.cfemex.ssb.cobranza.graph.Ingreso", scrollingMark=false) ingresosTable as Selectable(multiple=false)
+		noItemsMessage = "No hay ingresos"
+		noItemsFoundMessage = "No se han encontrado ingresos con el criterio definido"
+		Mold
+			Heading ingresosNumeroDocumentoHeading > Text(value="Nº documento")
+			Item(height=50px,width=15%) ingresosNumeroDocumentoView > Text(value="Cargando...") numeroDocumento
+		Mold
+			Heading ingresosReferenciaHeading > Text(value="Referencia")
+			Item(height=50px,width=15%) ingresosReferenciaView > Text referencia
+		Mold
+			Heading ingresosFechaHeading > Text(value="Fecha")
+			Item(height=50px,width=10%) ingresosFechaView > Date fecha
+		Mold
+			Heading ingresosDivisionHeading > Text(value="División")
+			Item(height=50px,width=8%) ingresosDivisionView > Text division
+		Mold
+			Heading ingresosClaseHeading > Text(value="Clase")
+			Item(height=50px,width=5%) ingresosClaseView > Text clase
+		Mold
+			Heading ingresosImporteHeading > Block(layout=Horizontal EndJustified) > Text(value="Importe")
+			Item(height=50px,width=15%) ingresosImporteView > Block(layout=Horizontal EndJustified)
+					Number(format=h4,prefix="$",countDecimals=2,expanded=true,style=Currency) importe
+		Mold
+			Heading ingresosOrigenHeading > Text(value="Origen")
+			Item(height=50px,width=10%) ingresosOrigenView > Text origen
+		Mold
+			Heading ingresosObservacionesHeading > Text(value="Observaciones")
+			Item(height=50px,width=14%) ingresosObservacionesView > Text observaciones
+		Mold
+			Heading ingresosOperacionesHeading > Text(value="Operaciones")
+			Item(height=50px,width=8%) ingresosOperacionesView
+				Block(layout=Horizontal) operaciones
+					Task(title="Quitar ingreso") quitar as MaterialIconButton("Clear", size=Small) Confirmable("¿Está seguro que quiere quitar el ingreso?")
+
+Template ingresoDescartado
+	Text numeroDocumento
+	Text referencia
+	Date fecha

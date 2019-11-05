@@ -24,7 +24,7 @@ public class MounterTemplate extends Template {
 			rule().condition((type("column")), (trigger("method"))).output(literal("public static Function<Item, ")).output(mark("type", "FirstUpperCase")).output(literal("> ")).output(mark("name", "validName", "firstLowerCase")).output(mark("facet")).output(literal("() {\n\treturn Item::value;\n}")),
 			rule().condition((trigger("format"))).output(literal(".add(TabbBuilder.Format.")).output(mark("", "lowercase")).output(literal(")")),
 			rule().condition((type("schemaImport"))).output(literal("import ")).output(mark("package")).output(literal(".schemas.*;")),
-			rule().condition((attribute("message")), (trigger("typeclass"))).output(literal("io.intino.alexandria.message.Message")),
+			rule().condition((attribute("", "message")), (trigger("typeclass"))).output(literal("io.intino.alexandria.message.Message")),
 			rule().condition((type("schema")), (trigger("typeclass"))).output(mark("package")).output(literal(".schemas.")).output(mark("name", "FirstUpperCase")),
 			rule().condition((type("schema")), (trigger("typename"))).output(mark("name", "firstLowerCase")),
 			rule().condition((trigger("typename"))).output(literal("message"))
