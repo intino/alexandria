@@ -8,9 +8,12 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.CodeGenerationHelper;
 import io.intino.konos.model.graph.PassiveView;
+import io.intino.konos.model.graph.Service;
 import io.intino.tara.magritte.Layer;
 
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class UIRenderer extends Renderer {
 
@@ -68,4 +71,11 @@ public abstract class UIRenderer extends Renderer {
 			   type.equalsIgnoreCase("item") ||
 			   type.equalsIgnoreCase("row");
 	}
+
+	protected String patternOf(Service.UI.Resource resource) {
+		if (resource.path().isEmpty()) return "\\\\/";
+		Stream<String> split = Stream.of(resource.path().split("/"));
+		return split.map(s -> s.startsWith(":") ? "([^\\\\/]*)" : s).collect(Collectors.joining("\\\\/"));
+	}
+
 }

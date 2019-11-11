@@ -1,4 +1,6 @@
 def type(app)
+    __webpack_public_path__ = loadAppUrl();
+
 	import React from "react";
 	import ReactDOM from "react-dom";
     $page+import...[$NL]
@@ -46,6 +48,13 @@ def type(app)
         }
 
 	};
+
+	function loadAppUrl() {
+        let url = window.location.pathname !== "/" ? window.location.pathname : "";
+        [url = url.replace(new RegExp("$pattern", 'g'), "");]
+        if (url.lastIndexOf("/") > 0) url = url.substr(0, window.location.pathname.lastIndexOf('/'));
+        return url + "/$webModuleName/";
+	}
 
 	launchApplication();
 end

@@ -62,9 +62,4 @@ public class RouteDispatcherRenderer extends UIRenderer {
 		return split.filter(s -> s.startsWith(":")).map(s -> s.substring(1)).collect(toList());
 	}
 
-	private String patternOf(Service.UI.Resource resource) {
-		if (resource.path().isEmpty()) return "\\\\/";
-		Stream<String> split = Stream.of(resource.path().split("/"));
-		return split.map(s -> s.startsWith(":") ? "([^\\\\/]*)" : s).collect(Collectors.joining("\\\\/"));
-	}
 }

@@ -56,7 +56,7 @@ def type(method & portal)
 	}
 end
 
-def type(method & highlightedtext)
+def type(method & highlighted)
 	public $name+firstUpperCase textColor(String color) {
 	    this._textColor(color);
 	    this._refreshHighlight();

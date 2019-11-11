@@ -37,6 +37,8 @@ public class AppRenderer extends UIRenderer {
 		service.resourceList().forEach(r -> {
 			FrameBuilder builder = new FrameBuilder("app");
 			builder.add("page", new FrameBuilder("page").add("value", r.name$()).toFrame());
+			builder.add("webModuleName", settings.webModule() != null ? settings.webModule().getName() : "");
+			if (!patternOf(r).isEmpty()) builder.add("pattern", patternOf(r));
 			Commons.write(new File(gen() + File.separator + "apps" + File.separator + firstUpperCase(r.name$()) + ".js").toPath(), setup(new AppTemplate()).render(builder.toFrame()));
 		});
 	}

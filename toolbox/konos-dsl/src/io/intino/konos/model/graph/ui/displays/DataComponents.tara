@@ -29,7 +29,7 @@ Concept DataComponents
         			var integer max
         Aspect Memo with Editable
         	var word:{Raw Rich} editionMode = Raw
-        	var integer height = 5
+        	var integer:{Columns} height = 5 Columns
 		Aspect Password with Editable
         	Concept:{0..1} Validation
         		var word[]:{Letter Number Symbol} isRequired = Letter Number Symbol

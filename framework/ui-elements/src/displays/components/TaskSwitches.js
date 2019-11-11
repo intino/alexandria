@@ -22,7 +22,7 @@ class TaskSwitches extends AbstractTaskSwitches {
 		if (!this.state.visible) return (<React.Fragment/>);
 		return (
 			<FormControlLabel style={this.style()}
-							  control={<Switch checked={this.state.checked} onChange={this.handleChange.bind(this)}/>}
+							  control={<Switch size={this._size()} checked={this.state.checked} onChange={this.handleChange.bind(this)}/>}
 							  label={this._title()}
 			/>
 		);

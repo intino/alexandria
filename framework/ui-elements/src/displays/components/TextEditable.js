@@ -23,6 +23,7 @@ class TextEditable extends AbstractTextEditable {
 		this.requester = new TextEditableRequester(this);
 		this.state = {
 			...this.state,
+			value: '',
 			readonly : this.props.readonly
 		};
 	};

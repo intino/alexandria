@@ -62,16 +62,16 @@ public abstract class Page {
 		String language = session.discoverLanguage();
 		Browser browser = session.browser();
 
-		template = template.replace("$title", title() != null ? title() : "");
-		template = template.replace("$language", language != null ? language : "");
-		template = template.replace("$currentSession", sessionId);
-		template = template.replace("$client", clientId);
-		template = template.replace("$baseUrl", browser.baseUrl());
-		template = template.replace("$basePath", browser.basePath());
-		template = template.replace("$url", browser.baseUrl() + "/" + uiServiceName);
-		template = template.replace("$pushConnections", String.join(",", pushConnections(usedUnits, sessionId, language, browser)));
-		template = template.replace("$googleApiKey", googleApiKey != null ? googleApiKey : "");
-		template = template.replace("$favicon", favicon() != null ? Asset.toResource(baseAssetUrl(), favicon()).toUrl().toString() : "");
+		template = template.replaceAll("\\$title", title() != null ? title() : "");
+		template = template.replaceAll("\\$language", language != null ? language : "");
+		template = template.replaceAll("\\$currentSession", sessionId);
+		template = template.replaceAll("\\$client", clientId);
+		template = template.replaceAll("\\$baseUrl", browser.baseUrl());
+		template = template.replaceAll("\\$basePath", browser.basePath());
+		template = template.replaceAll("\\$url", browser.baseUrl() + "/" + uiServiceName);
+		template = template.replaceAll("\\$pushConnections", String.join(",", pushConnections(usedUnits, sessionId, language, browser)));
+		template = template.replaceAll("\\$googleApiKey", googleApiKey != null ? googleApiKey : "");
+		template = template.replaceAll("\\$favicon", favicon() != null ? Asset.toResource(baseAssetUrl(), favicon()).toUrl().toString() : "");
 
 		return template;
 	}

@@ -106,8 +106,10 @@ Concept OperationComponents
 			var string icon
 		Aspect MaterialIconButton extends Button
 			var string icon
-		Aspect Confirmable
-			var string confirmText
+		Aspect Affirmed
+			var string affirmText
+		Aspect Signed
+			var string signText
 		Aspect Highlighted
         	var word:{Outline Fill} style = Fill
 		Aspect Readonly
