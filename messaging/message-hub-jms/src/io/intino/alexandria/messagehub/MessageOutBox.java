@@ -52,8 +52,7 @@ class MessageOutBox {
 		return Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(".json"))).length == 0;
 	}
 
-
-	private class SavedMessage {
+	private static class SavedMessage {
 		String channel;
 		String message;
 

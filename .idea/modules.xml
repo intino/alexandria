@@ -9,7 +9,6 @@
       <module fileurl="file://$PROJECT_DIR$/drivers/driver/driver.iml" filepath="$PROJECT_DIR$/drivers/driver/driver.iml" group="drivers" />
       <module fileurl="file://$PROJECT_DIR$/libraries/ness/dump/dump.iml" filepath="$PROJECT_DIR$/libraries/ness/dump/dump.iml" group="ness" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/epoch/epoch.iml" filepath="$PROJECT_DIR$/fileformats/epoch/epoch.iml" group="fileformats" />
-      <module fileurl="file://$PROJECT_DIR$/toolbox/ether-dsl/ether-dsl.iml" filepath="$PROJECT_DIR$/toolbox/ether-dsl/ether-dsl.iml" group="toolbox" />
       <module fileurl="file://$PROJECT_DIR$/libraries/exceptions/exceptions.iml" filepath="$PROJECT_DIR$/libraries/exceptions/exceptions.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/ness/ingestion/ingestion.iml" filepath="$PROJECT_DIR$/libraries/ness/ingestion/ingestion.iml" group="ness" />
       <module fileurl="file://$PROJECT_DIR$/libraries/jms/jms.iml" filepath="$PROJECT_DIR$/libraries/jms/jms.iml" group="libraries" />
