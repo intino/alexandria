@@ -32,7 +32,7 @@ def type(webpack)
         },
         output: {
             path: "$outDirectory/$webModuleName/www/$webModuleName",
-            publicPath: '/$webModuleName/',
+            publicPath: '$$basePath/$webModuleName/',
             filename: "$[name].js"
         },
         resolve: {

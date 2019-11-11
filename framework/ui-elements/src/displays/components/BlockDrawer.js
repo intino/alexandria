@@ -7,6 +7,7 @@ import BlockDrawerRequester from "../../../gen/displays/requesters/BlockDrawerRe
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
 import classNames from "classnames";
+import Delayer from '../../util/Delayer';
 
 const styles = theme => ({
 	drawer: {
@@ -34,7 +35,8 @@ const styles = theme => ({
 
 class BlockDrawer extends AbstractBlockDrawer {
 	state = {
-		opened: false
+		opened: false,
+		temporaryOpened: false
 	};
 
 	constructor(props) {
@@ -45,20 +47,32 @@ class BlockDrawer extends AbstractBlockDrawer {
 
 	render() {
 		const {classes} = this.props;
-		const drawerClass = this.props.variant === "PersistentAndMini" ? (this.state.opened ? classes.drawerOpen : classes.drawerClose) : undefined;
+		const opened = this._isOpened();
+		const drawerClass = this.props.variant === "PersistentAndMini" ? (opened ? classes.drawerOpen : classes.drawerClose) : undefined;
 		return (
-			<Drawer style={this.style()} open={this.state.opened}
+			<Drawer style={this.style()} open={opened}
 					anchor={this._anchor()}
 					variant={this._variant()}
 					className={drawerClass && classNames(classes.drawer, drawerClass)}
 					classes={{paper: drawerClass}}
 					PaperProps={{style: this.style()}}
-					onClose={this.toggleDrawer.bind(this)}>{this.props.children}</Drawer>
+					onClose={this.toggleDrawer.bind(this)}
+					onMouseOver={this.handleMouseOver.bind(this)}
+					onMouseOut={this.handleMouseOut.bind(this)}
+					>{this.props.children}</Drawer>
 		);
 	};
 
 	_anchor = () => {
 		return this.props.position != null ? this.props.position.toLowerCase() : "left";
+	};
+
+	handleMouseOver = () => {
+	    Delayer.execute(this, () => this.setState({temporaryOpened: true}), 1200);
+	};
+
+	handleMouseOut = () => {
+	    Delayer.execute(this, () => this.setState({temporaryOpened: false}), 300);
 	};
 
 	_variant = () => {
@@ -73,7 +87,7 @@ class BlockDrawer extends AbstractBlockDrawer {
 	};
 
 	refresh = (opened) => {
-		this.setState({opened})
+		this.setState({opened});
 	};
 
 	style() {
@@ -90,7 +104,11 @@ class BlockDrawer extends AbstractBlockDrawer {
 
 	_checkWidthDefined = () => {
 		let defined = this._widthDefined();
-		return defined && this.props.variant !== "PersistentAndMini" ? defined : this.state.opened;
+		return defined && this.props.variant !== "PersistentAndMini" ? defined : this._isOpened();
+	};
+
+	_isOpened = () => {
+	    return this.state.temporaryOpened ? this.state.temporaryOpened : this.state.opened;
 	};
 }
 

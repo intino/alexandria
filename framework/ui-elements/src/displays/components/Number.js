@@ -23,7 +23,7 @@ const styles = theme => ({
 	prefix : {
 		color: theme.palette.grey.primary,
 		fontSize: "10pt",
-		marginTop: "2px",
+//		marginTop: "2px",
 		marginRight: "3px"
 	},
 	suffix : {

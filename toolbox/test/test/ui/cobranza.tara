@@ -548,7 +548,7 @@ Template ingresosDialog as Relative(height=100%)
 				Divider
 				Block(layout=Horizontal EndJustified, format=air)
 					Task(title="Atrás", format=airRight) cancelar as Button Highlighted(style=Outline)
-					Task(title="Validar") validar as Button Highlighted Confirmable("¿Está seguro que quiere validar los ingresos?")
+					Task(title="Validar") validar as Button Highlighted Affirmed("¿Está seguro que quiere validar los ingresos?")
 
 Template ingresosCatalog as Relative(height=100%)
 
@@ -588,7 +588,7 @@ Template ingresosCatalog as Relative(height=100%)
 			Heading ingresosOperacionesHeading > Text(value="Operaciones")
 			Item(height=50px,width=8%) ingresosOperacionesView
 				Block(layout=Horizontal) operaciones
-					Task(title="Quitar ingreso") quitar as MaterialIconButton("Clear", size=Small) Confirmable("¿Está seguro que quiere quitar el ingreso?")
+					Task(title="Quitar ingreso") quitar as MaterialIconButton("Clear", size=Small) Affirmed("¿Está seguro que quiere quitar el ingreso?")
 
 Template ingresoDescartado
 	Text numeroDocumento

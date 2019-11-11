@@ -74,5 +74,6 @@
     <orderEntry type="library" name="Intino: net.rforge:Rserve:0.6-8.1" level="project" />
     <orderEntry type="library" name="Intino: net.rforge:REngine:0.6-8.1" level="project" />
     <orderEntry type="module" module-name="rest" />
+    <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>

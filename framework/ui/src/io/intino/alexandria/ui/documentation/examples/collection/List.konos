@@ -71,7 +71,7 @@ Template(layout=Vertical, spacing=DP8) listExamplesMold as Decorated
 			Block(spacing=DP8, format=filledNoAir)
 				Toolbar toolbar5 as Linked(to=list5)
 					Task(title="add") add as MaterialIconButton(icon="Add")
-					TaskSelection(title="remove") remove as MaterialIconButton(icon="Delete") Confirmable("Are you sure you want to delete the element?")
+					TaskSelection(title="remove") remove as MaterialIconButton(icon="Delete") Affirmed("Are you sure you want to delete the element?")
 				List(itemClass="io.intino.alexandria.ui.documentation.Person") list5 as Selectable(multiple=true)
 					Mold > Item(height=60px,width=30%) list5Mold > Text firstName
 			Block > Text as Code(language=Html)

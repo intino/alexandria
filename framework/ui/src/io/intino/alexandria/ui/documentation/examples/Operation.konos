@@ -49,13 +49,13 @@ Template(layout=Vertical, spacing=DP8) operationExamplesMold as Decorated
 						=========
 
 		Block as Relative(width=32%, height=100%)
-			Text(format=h6, value="Confirmable facet")
+			Text(format=h6, value="Affirmed facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				Task(title="operation") operation5 as Button Confirmable("Are you sure you want to execute operation?")
+				Task(title="operation") operation5 as Button Affirmed("Are you sure you want to execute operation?")
 			Block > Text as Code(language=Html)
 					value
 						=========
-						Task(title\="operation") as Button Confirmable("Are you sure you want to execute operation?")
+						Task(title\="operation") as Button Affirmed("Are you sure you want to execute operation?")
 						=========
 
 		Block as Relative(width=32%, height=100%)

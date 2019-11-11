@@ -9,7 +9,7 @@ Template(layout=Vertical, spacing=DP8) downloadSelectionExamplesMold as Decorate
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAir)
 				Toolbar toolbar as Linked(to=list6)
-					DownloadSelection(title="download") download as Button Confirmable("Are you sure you want to download selection?")
+					DownloadSelection(title="download") download as Button Affirmed("Are you sure you want to download selection?")
 						options = "only title" "full info"
 				List(itemClass="io.intino.alexandria.ui.documentation.Person") list6 as Selectable(multiple=true)
 					Mold > Item(height=60px,width=30%) downloadSelectionMold > Text firstName
@@ -17,7 +17,7 @@ Template(layout=Vertical, spacing=DP8) downloadSelectionExamplesMold as Decorate
 					value
 						=========
 						Toolbar toolbar as Linked(to\=list)
-							DownloadSelection(title\="download") download as MaterialIconButton(icon\="GetApp") Confirmable("Are you sure you want to download selection?")
+							DownloadSelection(title\="download") download as MaterialIconButton(icon\="GetApp") Affirmed("Are you sure you want to download selection?")
 						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list as Selectable(multiple\=true)
 							Mold > Item(height\=60px,width\=30%) mold > Text firstName
 						=========
