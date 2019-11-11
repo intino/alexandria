@@ -106,19 +106,22 @@ public class MessageCast {
 
 	private static <T> void findField(Class<T> aClass, String attr, String attrId) {
 		for (Field field : Fields.of(aClass))
-			if (attr.equalsIgnoreCase(field.getName()) || attr.equalsIgnoreCase(className(field))) {
+			if (attr.equalsIgnoreCase(field.getName()) || attr.equalsIgnoreCase(simpleClassName(field))) {
 				fields.put(attrId, field);
 				break;
 			}
 	}
 
-	private static String className(Field field) {
+	private static String simpleClassName(Field field) {
 		final Class aClass = classOf(field);
-		return className(aClass);
+		String name = className(aClass);
+		name = name.contains("$") ? name.substring(name.lastIndexOf("$") + 1) : name;
+		name = name.contains(".") ? name.substring(name.lastIndexOf(".") + 1) : name;
+		return name;
 	}
 
 	private static String className(Class aClass) {
-		if (!classNames.containsKey(aClass)) classNames.put(aClass, aClass.getSimpleName());
+		if (!classNames.containsKey(aClass)) classNames.put(aClass, aClass.getCanonicalName());
 		return classNames.get(aClass);
 	}
 
