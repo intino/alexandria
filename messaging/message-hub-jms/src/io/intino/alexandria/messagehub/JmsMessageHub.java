@@ -67,19 +67,6 @@ public class JmsMessageHub implements MessageHub {
 		if (!doSendMessage(channel, message)) messageOutBox.push(channel, message);
 	}
 
-	private boolean doSendMessage(String channel, Message message) {
-		if (session == null || !connected.get()) return false;
-		try {
-			producers.putIfAbsent(channel, new TopicProducer(session, channel));
-			JmsProducer producer = producers.get(channel);
-			if (producer == null) return false;
-			return producer.produce(serialize(message));
-		} catch (JMSException | IOException e) {
-			Logger.error(e);
-			return false;
-		}
-	}
-
 	public void requestResponse(String channel, String message, Consumer<String> onResponse) {
 		if (session == null) {
 			Logger.error("Session is null");
@@ -183,6 +170,19 @@ public class JmsMessageHub implements MessageHub {
 			connection.close();
 		} catch (JMSException e) {
 			Logger.error(e);
+		}
+	}
+
+	private boolean doSendMessage(String channel, Message message) {
+		if (session == null || !connected.get()) return false;
+		try {
+			producers.putIfAbsent(channel, new TopicProducer(session, channel));
+			JmsProducer producer = producers.get(channel);
+			if (producer == null) return false;
+			return producer.produce(serialize(message));
+		} catch (JMSException | IOException e) {
+			Logger.error(e);
+			return false;
 		}
 	}
 
