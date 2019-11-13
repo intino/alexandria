@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 import AbstractOperation from "../../../gen/displays/components/AbstractOperation";
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, IconButton, Typography } from "@material-ui/core";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import TextField from '@material-ui/core/TextField';
 
 const OperationMui = React.lazy(() => {
 	return new Promise(resolve => {
@@ -38,7 +39,9 @@ export default class Operation extends AbstractOperation {
 			icon : this.props.icon,
 			title: this.props.title,
 			readonly: this.props.readonly,
-			openConfirm : false
+			openAffirm : false,
+			openSign : false,
+			sign : ""
 		}
 	};
 
@@ -55,7 +58,8 @@ export default class Operation extends AbstractOperation {
 		if (!this.state.visible) return (<React.Fragment/>);
 		return (
 			<React.Fragment>
-				{this.renderConfirm()}
+				{this.renderAffirm()}
+				{this.renderSign()}
 				{this.renderTrigger()}
 			</React.Fragment>
 		);
@@ -115,15 +119,33 @@ export default class Operation extends AbstractOperation {
 		);
 	};
 
-	renderConfirm = () => {
-		if (!this.requireConfirm()) return;
-		const openConfirm = this.state.openConfirm != null ? this.state.openConfirm : false;
-		return (<Dialog onClose={this.handleConfirmClose} open={openConfirm}>
-				<DialogTitle onClose={this.handleConfirmClose}>{this.translate("Confirm")}</DialogTitle>
-				<DialogContent><DialogContentText>{this.props.confirm}</DialogContentText></DialogContent>
+	renderAffirm = () => {
+		if (!this.requireAffirm()) return;
+		const openAffirm = this.state.openAffirm != null ? this.state.openAffirm : false;
+		return (<Dialog onClose={this.handleAffirmClose} open={openAffirm}>
+				<DialogTitle onClose={this.handleAffirmClose}>{this.translate("Affirm")}</DialogTitle>
+				<DialogContent><DialogContentText>{this.props.affirmed}</DialogContentText></DialogContent>
 				<DialogActions>
-					<Button onClick={this.handleConfirmClose} color="primary">{this.translate("Cancel")}</Button>
-					<Button variant="contained" onClick={this.handleConfirmAccept} color="primary">{this.translate("OK")}</Button>
+					<Button onClick={this.handleAffirmClose} color="primary">{this.translate("Cancel")}</Button>
+					<Button variant="contained" onClick={this.handleAffirmAccept} color="primary">{this.translate("OK")}</Button>
+				</DialogActions>
+			</Dialog>
+		);
+	};
+
+	renderSign = () => {
+		if (!this.requireSign()) return;
+		const openSign = this.state.openSign != null ? this.state.openSign : false;
+		return (<Dialog onClose={this.handleSignClose} open={openSign}>
+				<DialogTitle onClose={this.handleSignClose}>{this.translate("Sign")}</DialogTitle>
+				<DialogContent>
+				    <DialogContentText>{this.props.signed}</DialogContentText>
+				    <TextField autoFocus={true} style={{width:'100%'}} type="password" value={this.state.sign}
+				               onChange={this.handleSignChange.bind(this)} onKeyPress={this.handleSignKeypress.bind(this)}/>
+                </DialogContent>
+				<DialogActions>
+					<Button onClick={this.handleSignClose} color="primary">{this.translate("Cancel")}</Button>
+					<Button variant="contained" onClick={this.handleSignAccept} color="primary">{this.translate("OK")}</Button>
 				</DialogActions>
 			</Dialog>
 		);
@@ -136,20 +158,46 @@ export default class Operation extends AbstractOperation {
 	};
 
 	execute = () => {
-		if (this.requireConfirm()) {
-			this.setState({ openConfirm : true });
+		if (this.requireAffirm()) {
+			this.setState({ openAffirm : true });
+			return;
+		}
+		if (this.requireSign()) {
+			this.setState({ openSign : true });
 			return;
 		}
 		this.requester.execute();
 	};
 
-	handleConfirmAccept = () => {
-		this.setState({ openConfirm : false });
+	handleAffirmAccept = () => {
+		this.setState({ openAffirm : false });
 		this.requester.execute();
 	};
 
-	handleConfirmClose = () => {
-		this.setState({ openConfirm : false });
+	handleAffirmClose = () => {
+		this.setState({ openAffirm : false });
+	};
+
+    handleSignChange = (e) => {
+        this.setState({ sign: e.target.value });
+    };
+
+	handleSignKeypress = (e) => {
+	    if (e.key === "Enter") this.handleSignAccept();
+	};
+
+	handleSignAccept = () => {
+		this.setState({ openSign : false });
+		this.requester.checkSign(this.state.sign);
+	};
+
+	checkSignResult = (value) => {
+	    if (value) this.requester.execute();
+	    else this.showError(this.translate("Value not valid!"));
+	}
+
+	handleSignClose = () => {
+		this.setState({ openSign : false });
 	};
 
 	refresh = ({ title, readonly }) => {
@@ -164,8 +212,12 @@ export default class Operation extends AbstractOperation {
 		this.setState({ icon: value });
 	};
 
-	requireConfirm = () => {
-		return this.props.confirm != null && this.props.confirm !== "";
+	requireAffirm = () => {
+		return this.props.affirmed != null && this.props.affirmed !== "";
+	};
+
+	requireSign = () => {
+		return this.props.signed != null && this.props.signed !== "";
 	};
 
 	_title = () => {

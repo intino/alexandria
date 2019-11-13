@@ -1,5 +1,5 @@
 def type(i18n)
-	package $package.ui;
+	package $package;
 
 	import java.util.HashMap;
 	import java.util.Map;

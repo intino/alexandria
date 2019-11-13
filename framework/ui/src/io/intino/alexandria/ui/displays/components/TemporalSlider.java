@@ -127,7 +127,10 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
         if (ordinal == null) return;
         long count = toLong(max);
         _range(0, count);
-        if (notifier != null) notifier.refreshRange(rangeSchema());
+        if (notifier != null) {
+            notifier.refreshRange(rangeSchema());
+            notifier.refreshToolbar(toolbarState());
+        }
     }
 
     @Override

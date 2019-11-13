@@ -2,6 +2,7 @@ package io.intino.alexandria.rest.spark;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
+import io.intino.alexandria.logger.Logger;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
@@ -23,27 +24,30 @@ public class RequestAdapter {
 	}
 
 	public static <T> T adaptFromJSON(String object, Class<T> type) {
-		try {
-			final GsonBuilder builder = new GsonBuilder();
-			builder.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, type1, jsonDeserializationContext) -> Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong())).
-					registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, type1, jsonDeserializationContext) -> new Date(json.getAsJsonPrimitive().getAsLong()));
-			return object == null || object.isEmpty() ? null : builder.create().fromJson(URLDecoder.decode(object, "UTF-8"), type);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return null;
-		}
+		final GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, type1, jsonDeserializationContext) -> Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong())).
+				registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, type1, jsonDeserializationContext) -> new Date(json.getAsJsonPrimitive().getAsLong()));
+		return object == null || object.isEmpty() ? null : builder.create().fromJson(decode(object), type);
 	}
 
 
 	public static <T> T adaptFromJSON(String object, Type type) {
+		final GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, type1, jsonDeserializationContext) -> Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong())).
+				registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, type1, jsonDeserializationContext) -> new Date(json.getAsJsonPrimitive().getAsLong()));
+		return object == null || object.isEmpty() ? null : builder.create().fromJson(decode(object), type);
+	}
+
+	private static String decode(String object) {
 		try {
-			final GsonBuilder builder = new GsonBuilder();
-			builder.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, type1, jsonDeserializationContext) -> Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong())).
-					registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, type1, jsonDeserializationContext) -> new Date(json.getAsJsonPrimitive().getAsLong()));
-			return object == null || object.isEmpty() ? null : builder.create().fromJson(URLDecoder.decode(object, "UTF-8"), type);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			return URLDecoder.decode(object, "UTF-8");
+		}
+		catch (UnsupportedEncodingException ex) {
+			Logger.error(ex);
 			return null;
+		}
+		catch (IllegalArgumentException ex) {
+			return object;
 		}
 	}
 

@@ -70,6 +70,13 @@ def type(method & highlighted)
 	}
 end
 
+def type(method & signed)
+    public $name+firstUpperCase signChecker(java.util.function.Function<String, Boolean> checker) {
+        this._signChecker(checker);
+        return this;
+    }
+end
+
 def type(method & addressable)
     @Override
     public $name+firstUpperCase address(java.util.function.Function<String, String> addressFromPathResolver) {

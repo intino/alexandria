@@ -1,9 +1,9 @@
 package io.intino.alexandria.ui.displays.components;
 
+import io.intino.alexandria.I18n;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.UserInfo;
 import io.intino.alexandria.ui.Asset;
-import io.intino.alexandria.ui.I18n;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.Listener;

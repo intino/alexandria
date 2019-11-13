@@ -307,7 +307,8 @@ Template(format=footerFormat) footer
 		OpenSite(site="http://intino.io", title = "made by intino", target=Blank, format=body2) as Link
 
 Translator(language=Spanish)
-	Translation(text = "Confirm", value = "Confirmar")
+	Translation(text = "Affirm", value = "Confirmar")
+	Translation(text = "Sign", value = "Firmar")
 	Translation(text = "Cancel", value = "Cancelar")
 	Translation(text = "OK", value = "Aceptar")
 

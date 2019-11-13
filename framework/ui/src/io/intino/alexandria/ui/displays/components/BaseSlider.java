@@ -190,6 +190,10 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		value(value);
 	}
 
+	ToolbarState toolbarState() {
+		return new ToolbarState().canPrevious(canPrevious()).canNext(canNext()).playing(this.playerStepTimer != null);
+	}
+
 	private List<io.intino.alexandria.schemas.Ordinal> ordinals() {
 		return ordinalList.stream().map(this::ordinalOf).collect(toList());
 	}
@@ -233,10 +237,6 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 			else return;
 		}
 		value(value+1);
-	}
-
-	private ToolbarState toolbarState() {
-		return new ToolbarState().canPrevious(canPrevious()).canNext(canNext()).playing(this.playerStepTimer != null);
 	}
 
 	private boolean checkRange(long value) {
