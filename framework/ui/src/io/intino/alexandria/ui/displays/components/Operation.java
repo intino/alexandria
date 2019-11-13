@@ -10,12 +10,14 @@ import io.intino.alexandria.ui.spark.UIFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.function.Function;
 
 public class Operation<DN extends OperationNotifier, B extends Box> extends Component<DN, B> {
     private String title;
     private boolean readonly = false;
     private String icon;
     private Mode mode;
+    private Function<String, Boolean> signChecker;
 
     public enum Mode { Link, Button, IconButton, MaterialIconButton }
 
@@ -94,6 +96,16 @@ public class Operation<DN extends OperationNotifier, B extends Box> extends Comp
     protected Operation<DN, B> _readonly(boolean value) {
         this.readonly = value;
         return this;
+    }
+
+    protected Operation<DN, B> _signChecker(Function<String, Boolean> checker) {
+        this.signChecker = checker;
+        return this;
+    }
+
+    public void checkSign(String sign) {
+        if (signChecker == null) notifier.checkSignResult(true);
+        notifier.checkSignResult(signChecker.apply(sign));
     }
 
     UIFile defaultFile() {

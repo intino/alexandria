@@ -14,6 +14,12 @@ public class OperationRenderer<O extends Operation> extends ComponentRenderer<O>
 	}
 
 	@Override
+	protected void fill(FrameBuilder builder) {
+		super.fill(builder);
+		addSignedMethods(builder);
+	}
+
+	@Override
 	public FrameBuilder properties() {
 		FrameBuilder properties = super.properties();
 		properties.add(Operation.class.getSimpleName().toLowerCase());
@@ -43,6 +49,13 @@ public class OperationRenderer<O extends Operation> extends ComponentRenderer<O>
 		else if (element.isMaterialIconButton()) return Operation.MaterialIconButton.class.getSimpleName();
 		else if (element.isButton()) return Operation.Button.class.getSimpleName();
 		return Operation.Link.class.getSimpleName();
+	}
+
+	private void addSignedMethods(FrameBuilder builder) {
+		if (!element.isSigned()) return;
+		FrameBuilder result = addOwner(buildBaseFrame()).add("method").add(Operation.Signed.class.getSimpleName());
+		result.add("name", nameOf(element));
+		builder.add("methods", result);
 	}
 
 	@Override

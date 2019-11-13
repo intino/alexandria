@@ -87,7 +87,7 @@ class BlockDrawer extends AbstractBlockDrawer {
 	};
 
 	refresh = (opened) => {
-		this.setState({opened});
+		this.setState({ opened: opened, temporaryOpened: null });
 	};
 
 	style() {

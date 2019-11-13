@@ -1,8 +1,8 @@
 package io.intino.alexandria.ui.displays.templates;
 
+import io.intino.alexandria.I18n;
 import io.intino.alexandria.schemas.Widget;
 import io.intino.alexandria.ui.AlexandriaUiBox;
-import io.intino.alexandria.ui.I18n;
 
 public class WidgetSummaryMold extends AbstractWidgetSummaryMold<AlexandriaUiBox> {
 
