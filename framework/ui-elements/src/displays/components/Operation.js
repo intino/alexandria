@@ -187,13 +187,15 @@ export default class Operation extends AbstractOperation {
 	};
 
 	handleSignAccept = () => {
-		this.setState({ openSign : false });
 		this.requester.checkSign(this.state.sign);
 	};
 
 	checkSignResult = (value) => {
-	    if (value) this.requester.execute();
-	    else this.showError(this.translate("Value not valid!"));
+	    if (value) {
+    		this.setState({ openSign : false });
+	        this.requester.execute();
+	    }
+	    else this.showError(this.translate("User not granted to execute operation!"));
 	}
 
 	handleSignClose = () => {
