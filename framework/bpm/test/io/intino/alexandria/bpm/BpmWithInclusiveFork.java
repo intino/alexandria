@@ -1,7 +1,6 @@
 package io.intino.alexandria.bpm;
 
 import io.intino.alexandria.message.Message;
-import io.intino.alexandria.message.MessageHub;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -18,10 +17,14 @@ public class BpmWithInclusiveFork extends BpmTest {
 
 	@Test
 	public void name() throws InterruptedException {
-		MessageHub messageHub = new MessageHub_();
 		PersistenceManager.InMemoryPersistenceManager persistence = new PersistenceManager.InMemoryPersistenceManager();
-		new Workflow(messageHub, (id, name) -> new JoinTwoBranches(id), persistence, null);
-		messageHub.sendMessage("ProcessStatus", createProcessMessage());
+		new Workflow((id, name) -> new JoinTwoBranches(id), persistence, null) {
+
+			@Override
+			public void send(ProcessStatus processStatus) {
+				new Thread(() -> receive(processStatus)).start();
+			}
+		}.send(createProcessMessage());
 		waitForProcess(persistence);
 		List<ProcessStatus> messages = messagesOf(persistence.read("finished/1.process"));
 		assertThat(messages.get(1).stateInfo().name(), is("CreateString"));
@@ -33,12 +36,12 @@ public class BpmWithInclusiveFork extends BpmTest {
 		else assertThat(exitStateStatus(messages, "JoinResult").taskInfo().result(), is("Bye:Hi"));
 	}
 
-	private Message createProcessMessage() {
-		return new Message("ProcessStatus")
+	private ProcessStatus createProcessMessage() {
+		return new ProcessStatus(new Message("ProcessStatus")
 				.set("ts", "2019-01-01T00:00:00Z")
 				.set("id", "1")
 				.set("name", "StringContentReviewer")
-				.set("status", "Enter");
+				.set("status", "Enter"));
 	}
 
 	static class JoinTwoBranches extends Process {
