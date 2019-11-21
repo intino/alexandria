@@ -81,3 +81,23 @@ Template(layout=Vertical, spacing=DP8) operationExamplesMold as Decorated
 						=========
 						Task(title\="edition") as Switches(state\=Off)
 						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Signed facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Task(title="edition") operation9 as Signed(signText="Fill your password before continue")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Task(title\="edition") as Signed(signText\="Fill your password before continue")
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Signed facet with reason property")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Task(title="edition") operation10 as Signed(signText="Fill your password before continue", reasonText="Fill reason")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Task(title\="edition") as Signed(signText\="Fill your password before continue", reasonText\="Fill reason")
+						=========

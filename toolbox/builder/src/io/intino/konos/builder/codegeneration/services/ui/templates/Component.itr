@@ -71,7 +71,7 @@ def type(method & highlighted)
 end
 
 def type(method & signed)
-    public $name+firstUpperCase signChecker(java.util.function.Function<String, Boolean> checker) {
+    public $name+firstUpperCase signChecker(io.intino.alexandria.ui.displays.components.operation.SignChecker checker) {
         this._signChecker(checker);
         return this;
     }

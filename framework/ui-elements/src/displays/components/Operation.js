@@ -41,7 +41,10 @@ export default class Operation extends AbstractOperation {
 			readonly: this.props.readonly,
 			openAffirm : false,
 			openSign : false,
-			sign : ""
+			signInfo : {
+			    sign: "",
+			    reason: ""
+			}
 		}
 	};
 
@@ -139,9 +142,16 @@ export default class Operation extends AbstractOperation {
 		return (<Dialog onClose={this.handleSignClose} open={openSign}>
 				<DialogTitle onClose={this.handleSignClose}>{this.translate("Sign")}</DialogTitle>
 				<DialogContent>
-				    <DialogContentText>{this.props.signed}</DialogContentText>
-				    <TextField autoFocus={true} style={{width:'100%'}} type="password" value={this.state.sign}
-				               onChange={this.handleSignChange.bind(this)} onKeyPress={this.handleSignKeypress.bind(this)}/>
+				    <DialogContentText style={{marginBottom:'5px'}}>{this.props.signed.text}</DialogContentText>
+				    <TextField autoFocus={true} style={{width:'100%'}} type="password" value={this.state.signInfo.sign}
+				               onChange={this.handleSignTextChange.bind(this)} onKeyPress={this.handleSignKeypress.bind(this)}/>
+				    {this.requireSignReason() &&
+				        <div style={{marginTop:"25px"}}>
+                            <DialogContentText style={{marginBottom:'5px'}}>{this.props.signed.reason}</DialogContentText>
+                            <TextField autoFocus={true} style={{width:'100%'}} multiline={true} rows={5} value={this.state.signInfo.reason}
+                                       onChange={this.handleSignReasonChange.bind(this)} onKeyPress={this.handleSignKeypress.bind(this)}/>
+                       </div>
+                    }
                 </DialogContent>
 				<DialogActions>
 					<Button onClick={this.handleSignClose} color="primary">{this.translate("Cancel")}</Button>
@@ -178,8 +188,16 @@ export default class Operation extends AbstractOperation {
 		this.setState({ openAffirm : false });
 	};
 
-    handleSignChange = (e) => {
-        this.setState({ sign: e.target.value });
+    handleSignTextChange = (e) => {
+        const signInfo = this.state.signInfo;
+        signInfo.sign = e.target.value;
+        this.setState({signInfo});
+    };
+
+    handleSignReasonChange = (e) => {
+        const signInfo = this.state.signInfo;
+        signInfo.reason = e.target.value;
+        this.setState({signInfo});
     };
 
 	handleSignKeypress = (e) => {
@@ -187,7 +205,11 @@ export default class Operation extends AbstractOperation {
 	};
 
 	handleSignAccept = () => {
-		this.requester.checkSign(this.state.sign);
+	    if (this.requireSignReason() && this.state.signInfo.reason === "") {
+	        this.showError(this.translate("Reason must be filled"));
+	        return;
+	    }
+		this.requester.checkSign(this.state.signInfo);
 	};
 
 	checkSignResult = (value) => {
@@ -195,7 +217,7 @@ export default class Operation extends AbstractOperation {
     		this.setState({ openSign : false });
 	        this.requester.execute();
 	    }
-	    else this.showError(this.translate("User not granted to execute operation!"));
+	    else this.showError(this.translate("User not granted to execute operation"));
 	}
 
 	handleSignClose = () => {
@@ -219,7 +241,13 @@ export default class Operation extends AbstractOperation {
 	};
 
 	requireSign = () => {
-		return this.props.signed != null && this.props.signed !== "";
+		return this.props.signed != null;
+	};
+
+	requireSignReason = () => {
+		if (!this.requireSign()) return false;
+		const reason = this.props.signed.reason;
+		return reason != null && reason !== "";
 	};
 
 	_title = () => {
