@@ -110,6 +110,7 @@ Concept OperationComponents
 			var string affirmText
 		Aspect Signed
 			var string signText
+			var string reasonText = empty
 		Aspect Highlighted
         	var word:{Outline Fill} style = Fill
 		Aspect Readonly

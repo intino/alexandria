@@ -31,7 +31,11 @@ public class OperationRenderer<O extends Operation> extends ComponentRenderer<O>
 		if (element.isHighlighted()) properties.add("highlighted", element.asHighlighted().style().name());
 		if (element.isReadonly() || element.i$(OperationComponents.SelectionOperation.class)) properties.add("readonly", "true");
 		if (element.isAffirmed()) properties.add("affirmed", element.asAffirmed().affirmText());
-		if (element.isSigned()) properties.add("signed", element.asSigned().signText());
+		if (element.isSigned()) {
+			Operation.Signed signed = element.asSigned();
+			properties.add("signText", signed.signText());
+			if (signed.reasonText() != null) properties.add("reasonText", signed.reasonText());
+		}
 		if (element.isMaterialIconButton()) properties.add("icon", element.asMaterialIconButton().icon());
 		return properties;
 	}
