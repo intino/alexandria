@@ -1,4 +1,4 @@
-package io.intino.konos.builder.codegeneration.adapter;
+package io.intino.konos.builder.codegeneration.datahub.adapter;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;

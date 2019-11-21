@@ -63,7 +63,7 @@ public class JmsMessageHub implements MessageHub {
 
 	@Override
 	public void sendMessage(String channel, Message message) {
-		if(connected.get() && !messageOutBox.isEmpty()) scheduler.execute(recoverMessages());
+		if (connected.get() && !messageOutBox.isEmpty()) scheduler.execute(recoverMessages());
 		if (!doSendMessage(channel, message)) messageOutBox.push(channel, message);
 	}
 

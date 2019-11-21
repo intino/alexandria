@@ -1,6 +1,6 @@
 dsl Konos
 
-MessageHub messageHub as JmsBus("{bus}", "{bus-user}", "{bus-password}", "{bus-client-id}")
+DataHubTerminal messageHub as JmsBus("{bus}", "{bus-user}", "{bus-password}", "{bus-client-id}")
 
 Service ProcessInbox as Messaging(messageHub)
 	domain = "unit1"
