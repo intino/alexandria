@@ -1,7 +1,7 @@
 dsl Konos
 
 
-MessageHub(url = "{bus_url}", user = "{user}", password = "pass", clientId = "clientId") as JmsBus
+DataHubTerminal(url = "{bus_url}", user = "{user}", password = "pass", clientId = "clientId") as JmsBus
 
 Datamart("{datamart}") datamart
 

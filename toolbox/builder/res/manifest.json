@@ -46,7 +46,7 @@
     "io.intino.alexandria:datalake": "1.0.0",
     "io.intino.alexandria:message": "1.0.0",
     "io.intino.alexandria:jms": "1.1.0",
-    "io.intino.alexandria:message-hub-jms": "1.0.0",
+    "io.intino.alexandria:terminal-jms": "1.0.0",
     "com.hierynomus:sshj": "0.27.0",
     "io.intino.alexandria:driver-r": "1.0.0",
     "io.intino.alexandria:driver-shiny": "1.0.0"

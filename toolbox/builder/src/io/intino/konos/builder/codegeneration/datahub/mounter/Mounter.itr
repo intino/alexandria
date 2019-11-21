@@ -43,34 +43,6 @@ def type(mounter & population)
 	}
 end
 
-
-def type(mounter & realtime)
-	package $package+validPackage.mounters;
-
-	import $package+validPackage.$box+firstUpperCase~Box;
-	import io.intino.alexandria.message.Message;
-	import io.intino.alexandria.message.MessageCast;
-	import io.intino.alexandria.logger.Logger;
-
-	$schemaImport
-
-	public class $name+FirstUpperCase {
-		private $box+validName+firstUpperCase~Box box;
-
-		public $name+FirstUpperCase($box+validName+firstUpperCase~Box box) {
-			this.box = box;
-		}
-
-		public void handle(Message message) {
-			[try {
-				$type+typeClass object = MessageCast.cast(message).as($type+typeClass.class);
-			} catch (IllegalAccessException e) {
-				Logger.error(e);
-			}]
-		}
-	}
-end
-
 def type(mounter & batch)
 	package $package+validPackage.mounters;
 
@@ -99,6 +71,28 @@ def type(mounter & batch)
     	private void process(Message message) {
 
         }
+	}
+end
+
+
+def type(mounter)
+	package $package+validPackage.mounters;
+
+	import $package+validPackage.$box+firstUpperCase~Box;
+	import io.intino.alexandria.message.Message;
+	import io.intino.alexandria.message.MessageCast;
+	import io.intino.alexandria.logger.Logger;
+
+	public class $name+FirstUpperCase {
+		private $box+validName+firstUpperCase~Box box;
+
+		public $name+FirstUpperCase($box+validName+firstUpperCase~Box box) {
+			this.box = box;
+		}
+
+		public void handle(Message message) {
+
+		}
 	}
 end
 

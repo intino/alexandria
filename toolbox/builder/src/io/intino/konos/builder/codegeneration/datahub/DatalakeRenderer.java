@@ -1,4 +1,4 @@
-package io.intino.konos.builder.codegeneration.datalake;
+package io.intino.konos.builder.codegeneration.datahub;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
@@ -32,7 +32,6 @@ public class DatalakeRenderer {
 		if (datalake == null || !(datalake.isNfsMirrored() || datalake.isSshMirrored())) return;
 		final FrameBuilder builder = new FrameBuilder("datalake", datalake.isNfsMirrored() ? "nfs" : "ssh").add("package", settings.packageName());
 		List<String> eventTanks = new ArrayList<>();
-		graph.mounterList().stream().filter(Mounter::isRealtime).map(Mounter::asRealtime).forEach(mounter -> eventTanks.addAll(tanksOf(mounter)));
 		graph.mounterList().stream().filter(Mounter::isBatch).map(Mounter::asBatch).forEach(mounter -> eventTanks.addAll(tanksOf(mounter)));
 		List<String> setTanks = new ArrayList<>();
 		builder.add("eventTank", eventTanks.toArray(new String[0]));
@@ -41,15 +40,11 @@ public class DatalakeRenderer {
 		settings.classes().put("Datalake", "Datalake");
 		File destination = genDirectory;
 		if (!Commons.javaFile(destination, "Datalake").exists())
-			writeFrame(destination, "Datalake", customize(new DatalakeTemplate()).render(builder.toFrame()));
+			writeFrame(destination, "Datalake", customize(new io.intino.konos.builder.codegeneration.datalake.DatalakeTemplate()).render(builder.toFrame()));
 	}
 
 	private List<String> tanksOf(Mounter.Batch mounter) {
 		return mounter.sourceList().stream().map(Mounter.Batch.Source::tank).collect(Collectors.toList());
-	}
-
-	private List<String> tanksOf(Mounter.Realtime mounter) {
-		return mounter.sourceList().stream().map(Mounter.Realtime.Source::channel).collect(Collectors.toList());
 	}
 
 	private List<String> tanksOf(Mounter.Population mounter) {

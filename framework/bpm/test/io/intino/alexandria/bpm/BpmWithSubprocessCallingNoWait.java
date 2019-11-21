@@ -1,7 +1,6 @@
 package io.intino.alexandria.bpm;
 
 import io.intino.alexandria.message.Message;
-import io.intino.alexandria.message.MessageHub;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -19,25 +18,31 @@ public class BpmWithSubprocessCallingNoWait extends BpmTest {
 
 	public static final String ProcessStatus = "ProcessStatus";
 	private static Map<String, String> memory = new HashMap<>();
-	private static MessageHub messageHub = new MessageHub_();
+	private static Workflow workflow;
 
 	@Test
 	public void name() throws InterruptedException {
 		PersistenceManager.InMemoryPersistenceManager persistence = new PersistenceManager.InMemoryPersistenceManager();
-		new Workflow(messageHub, new ProcessFactory(), persistence, null);
-		messageHub.sendMessage(ProcessStatus, createProcessMessage());
+		workflow = new Workflow(new ProcessFactory(), persistence, null) {
+
+			@Override
+			public void send(ProcessStatus processStatus) {
+				new Thread(() -> receive(processStatus)).start();
+			}
+		};
+		workflow.send(createProcessMessage());
 		waitForProcess(persistence);
 		List<ProcessStatus> messages1 = messagesOf(persistence.read("finished/1.process"));
 		List<ProcessStatus> messages2 = messagesOf(persistence.read("finished/2.process"));
-		assertThat(messages1.get(0).message().toString(), is(createProcessMessage().toString()));
+		assertThat(messages1.get(0).message().toString(), is(createProcessMessage().message().toString()));
 	}
 
-	private Message createProcessMessage() {
-		return new Message(ProcessStatus)
+	private ProcessStatus createProcessMessage() {
+		return new ProcessStatus(new Message(ProcessStatus)
 				.set("ts", "2019-01-01T00:00:00Z")
 				.set("id", "1")
 				.set("name", "StringContentReviewer")
-				.set("status", "Enter");
+				.set("status", "Enter"));
 	}
 
 	static class StringContentReviewerProcess extends Process {
@@ -64,12 +69,12 @@ public class BpmWithSubprocessCallingNoWait extends BpmTest {
 			return new Task(Automatic) {
 				@Override
 				public Result execute() {
-					messageHub.sendMessage(ProcessStatus, new Message(ProcessStatus)
+					workflow.send(new ProcessStatus(new Message(ProcessStatus)
 							.set("ts", "2019-01-01T00:00:00Z")
 							.set("id", "2")
 							.set("name", "StringChecker")
 							.set("owner", "1")
-							.set("status", "Enter"));
+							.set("status", "Enter")));
 					return new Result("subprocess called StringChecker");
 				}
 			};

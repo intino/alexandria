@@ -9,6 +9,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 public class Dotx {
+	private static final String CRLF = "</w:t></w:r><w:r><w:rPr><w:noProof/><w:sz w:val=\"16\"/><w:szCs w:val=\"16\"/></w:rPr><w:br/></w:r><w:r><w:rPr><w:noProof/><w:sz w:val=\"16\"/><w:szCs w:val=\"16\"/></w:rPr><w:t>";
 	private File template;
 	private final Content content;
 
@@ -54,7 +55,7 @@ public class Dotx {
 		}
 
 		private String valueOf(String key) {
-			return tagOf(data.get(key));
+			return tagOf(data.get(key)).replace("\n", CRLF);
 		}
 
 		private String tagOf(String name) {

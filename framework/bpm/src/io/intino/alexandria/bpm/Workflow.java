@@ -2,8 +2,6 @@ package io.intino.alexandria.bpm;
 
 import io.intino.alexandria.bpm.PersistenceManager.InMemoryPersistenceManager;
 import io.intino.alexandria.logger.Logger;
-import io.intino.alexandria.message.Message;
-import io.intino.alexandria.message.MessageHub;
 import io.intino.alexandria.message.MessageReader;
 import io.intino.alexandria.message.MessageWriter;
 
@@ -20,26 +18,23 @@ import static java.lang.Thread.sleep;
 import static java.util.stream.Collectors.toList;
 
 
-public class Workflow {
+public abstract class Workflow {
 	public static final String EventType = "ProcessStatus";
 	private final String channel;
-	protected final MessageHub messageHub;
 	private final PersistenceManager persistence;
 	private ProcessFactory factory;
 	private Map<String, Process> processes = new ConcurrentHashMap<>();
 	private Set<String> advancingProcesses = new HashSet<>();
 
-	public Workflow(MessageHub messageHub, ProcessFactory factory, String domain) {
-		this(messageHub, factory, new InMemoryPersistenceManager(), domain);
+	public Workflow(ProcessFactory factory, String domain) {
+		this(factory, new InMemoryPersistenceManager(), domain);
 	}
 
-	public Workflow(MessageHub messageHub, ProcessFactory factory, PersistenceManager persistence, String domain) {
-		this.messageHub = messageHub;
+	public Workflow(ProcessFactory factory, PersistenceManager persistence, String domain) {
 		this.persistence = persistence;
 		this.factory = factory;
 		loadActiveProcesses();
 		this.channel = domain == null || domain.isEmpty() ? EventType : domain + "." + EventType;
-		this.messageHub.attachListener(channel, Workflow.this::process);
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			while (!advancingProcesses.isEmpty()) {
 				try {
@@ -52,9 +47,9 @@ public class Workflow {
 	}
 
 	public void exitState(String processId, String processName, String stateName, Task.Result result){
-		messageHub.sendMessage(channel, new ProcessStatus(processId, processName, Running)
+		send(new ProcessStatus(processId, processName, Running)
 				.addStateInfo(stateName, State.Status.Exit)
-				.addTaskInfo(result).message());
+				.addTaskInfo(result));
 	}
 
 	private void loadActiveProcesses() {
@@ -66,8 +61,7 @@ public class Workflow {
 		});
 	}
 
-	private void process(Message message) {
-		ProcessStatus status = new ProcessStatus(message);
+	private void process(ProcessStatus status) {
 		waitSemaphore(status);
 		getSemaphore(status);
 		doProcess(status);
@@ -231,8 +225,14 @@ public class Workflow {
 
 	private void sendMessage(ProcessStatus status) {
 		processes.get(status.processId()).register(status);
-		messageHub.sendMessage(channel, status.message());
+		send(status);
 	}
+
+	public void receive(ProcessStatus processStatus){
+		process(processStatus);
+	}
+
+	public abstract void send(ProcessStatus processStatus);
 
 	private void sendRejectionMessage(Process process, Link link) {
 		sendMessage(rejectMessage(process, process.state(link.to())));

@@ -17,10 +17,14 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 
 	@Test
 	public void name() throws InterruptedException {
-		MessageHub_ messageHub = new MessageHub_();
 		PersistenceManager.InMemoryPersistenceManager persistence = new PersistenceManager.InMemoryPersistenceManager();
-		new Workflow(messageHub, (id, name) -> new StringContentReviewerProcess(id), persistence, null);
-		messageHub.sendMessage("ProcessStatus", createProcessMessage());
+		new Workflow((id, name) -> new StringContentReviewerProcess(id), persistence, null) {
+
+			@Override
+			public void send(ProcessStatus processStatus) {
+				new Thread(() -> receive(processStatus)).start();
+			}
+		}.send(createProcessMessage());
 		waitForProcess(persistence);
 		List<ProcessStatus> messages = messagesOf(persistence.read("finished/1.process"));
 		assertThat(messages.get(0).processStatus(), is("Enter"));
@@ -44,12 +48,12 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 	}
 
 
-	private Message createProcessMessage() {
-		return new Message("ProcessStatus")
+	private ProcessStatus createProcessMessage() {
+		return new ProcessStatus(new Message("ProcessStatus")
 				.set("ts", "2019-01-01T00:00:00Z")
 				.set("id", "1")
 				.set("name", "StringContentReviewer")
-				.set("status", "Enter");
+				.set("status", "Enter"));
 	}
 
 	static class StringContentReviewerProcess extends Process {
