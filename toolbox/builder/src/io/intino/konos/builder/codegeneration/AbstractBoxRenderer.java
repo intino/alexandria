@@ -95,7 +95,7 @@ public class AbstractBoxRenderer extends Renderer {
 				add("qn", manifest.qn).
 				add("package", packageName()).
 				add("box", boxName());
-		manifest.parameters.forEach(p -> builder.add("parameter", parameter(p, "custom", p.contains("directory") ? "file" : "standard")));
+		manifest.parameters.forEach(p -> builder.add("parameter", parameter(p, "conf", p.contains("directory") ? "file" : "standard")));
 		Frame[] subscriber = graph.subscriberList().stream().map(s -> terminalFrameOf(s, manifest, boxName).toFrame()).toArray(Frame[]::new);
 		if (subscriber.length != 0) builder.add("subscriber", subscriber);
 		root.add("terminal", builder.toFrame());
