@@ -1,8 +1,6 @@
 package io.intino.alexandria.bpm;
 
 import io.intino.alexandria.bpm.PersistenceManager.InMemoryPersistenceManager;
-import io.intino.alexandria.message.Message;
-import io.intino.alexandria.message.MessageHub;
 import org.junit.Test;
 
 import java.util.List;
@@ -18,10 +16,14 @@ public class BpmWithExclusiveFork extends BpmTest {
 
 	@Test
 	public void name() throws InterruptedException {
-		MessageHub messageHub = new MessageHub_();
 		InMemoryPersistenceManager manager = new InMemoryPersistenceManager();
-		new Workflow(messageHub, (id, name) -> new StringContentReviewerProcess(id), manager, null);
-		messageHub.sendMessage("ProcessStatus", createProcessMessage());
+		new Workflow((id, name) -> new StringContentReviewerProcess(id), manager, null) {
+
+			@Override
+			public void send(ProcessStatus processStatus) {
+				new Thread(() -> receive(processStatus)).start();
+			}
+		}.send(createProcessMessage());
 		waitForProcess(manager);
 		List<ProcessStatus> messages = messagesOf(manager.read("finished/1.process"));
 		assertThat(messages.get(0).processStatus(), is("Enter"));
@@ -42,8 +44,8 @@ public class BpmWithExclusiveFork extends BpmTest {
 		}
 	}
 
-	private Message createProcessMessage() {
-		return new ProcessStatus("1", "StringContentReviewer", Process.Status.Enter).message();
+	private ProcessStatus createProcessMessage() {
+		return new ProcessStatus("1", "StringContentReviewer", Process.Status.Enter);
 	}
 
 	static class StringContentReviewerProcess extends Process {

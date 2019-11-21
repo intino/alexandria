@@ -13,6 +13,7 @@ def type(box)
 	import java.util.logging.Level;
 
 	[$messagehub+import]
+	[$terminal+import]
 	[import io.intino.alexandria.rest.AlexandriaSpark;$hasREST]
     [import io.intino.alexandria.ui.Soul$hasUi+hideUi]
 
@@ -20,6 +21,7 @@ def type(box)
 		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;
 		[$service+field...[$NL]]
 		[$messagehub+field]
+		[$terminal+field]
 		[$datalake+field]
 		[$sentinel+field]
 		[$workflow+field]
@@ -38,6 +40,7 @@ def type(box)
 			[$service+setup...[$NL]]
 			[$datalake+setup]
 			[$messagehub+setup]
+			[$terminal+setup]
 		}
 
 		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration() {
@@ -57,6 +60,7 @@ def type(box)
 			initJMXServices();
 			initDatalake();
 			initMessageHub();
+			initTerminal();
 			initMessagingServices();
 			initSentinels();
 			initSlackBots();
@@ -69,6 +73,7 @@ def type(box)
 			[$spark...[$NL]]
 			[$service+close...[$NL]]
 			[$messagehub+close]
+			[$terminal+close]
 		}
 
 		[$hasUi+registerSoul]
@@ -78,6 +83,8 @@ def type(box)
 		[$hasUi+authService]
 
 		[$messagehub+getter]
+
+		[$terminal+getter]
 
 		[$datalake+getter]
 
@@ -113,6 +120,11 @@ def type(box)
 
 		private void initMessageHub() {
 			[$messagehub+init]
+		}
+
+
+		private void initTerminal() {
+			[$terminal+init]
 		}
 
 		private void initSentinels() {
@@ -175,6 +187,11 @@ def type(datalake) trigger(setup)
 	this.datalake = new io.intino.alexandria.datalake.file.FileDatalake(new java.io.File($path+parameter));
 end
 
+
+def type(terminal) trigger(setup)
+	this.terminal = new $qn(new io.intino.alexandria.messagehub.JmsMessageHub($parameter...[, ]));
+end
+
 def type(jms & messageHub) trigger(setup)
 	this.messageHub = new $package.MessageHub($parameter...[, ]);
 end
@@ -232,21 +249,37 @@ def type(datalake & mirror) trigger(init)
 	this.datalake.init();
 end
 
+def type(terminal) trigger(init)
+	[if(this.terminal != null) {
+		$subscriber...[$NL]
+	}
+	]
+	Logger.info("Terminal connected to Data Hub!");
+end
+
 def type(messageHub) trigger(init)
 	[if(this.messageHub != null) {
-		$mounter...[$NL]
+		$subscriber...[$NL]
 	}
 	]
 	[registerFeeders();$feeder+hide]
 	Logger.info("Message Hub connected!");
 end
 
-def type(realtime) trigger(mounter)
-	$subscription...[$NL]
+def type(terminal) trigger(subscriber)
+	this.terminal.subscribe(new $terminal.$typeName~Consumer() {
+			public void accept($type e) {
+				new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e);
+			}
+		}[, "$subscriberId"][, $context]);
 end
 
-def trigger(subscription)
-	this.messageHub.attachListener("$tankName", "$subscriberId", m -> new $package.mounters.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).handle(m));
+def trigger(context)
+	$type.Context.$value
+end
+
+def type(messageHub) trigger(subscriber)
+	this.messageHub.attachListener("$source", "$subscriberId", m -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).handle(m));
 end
 
 def type(service & jmx) trigger(field)
@@ -277,6 +310,10 @@ def type(messageHub) trigger(field)
 	private $package.MessageHub messageHub;
 end
 
+def type(terminal) trigger(field)
+	private $qn terminal;
+end
+
 def type(workflow) trigger(field)
 	private $package.bpm.Workflow workflow;
 end
@@ -290,6 +327,12 @@ end
 def type(datalake) trigger(getter)
 	public io.intino.alexandria.datalake.Datalake datalake() {
 		return this.datalake;
+	}
+end
+
+def type(terminal) trigger(getter)
+	public $qn terminal() {
+		return this.terminal;
 	}
 end
 
@@ -334,6 +377,10 @@ end
 
 def trigger(spark)
 	io.intino.alexandria.rest.AlexandriaSparkBuilder.instance().stop();
+end
+
+def type(terminal) trigger(close)
+	if (terminal != null) terminal.stop();
 end
 
 def type(messageHub) trigger(close)
@@ -392,6 +439,11 @@ def trigger(authenticationValidator)
 end
 
 
+def type(custom & file) trigger(parameter)
+	new java.io.File(configuration().get("$value+customParameter"))
+end
+
+
 def type(custom) trigger(parameter)
 	configuration().get("$value+customParameter")
 end
@@ -402,6 +454,10 @@ end
 
 def type(custom) trigger(edition)
 	url(configuration().get("$value+customParameter"))
+end
+
+def type(file) trigger(parameter)
+	$value
 end
 
 def type(int) trigger(parameter)

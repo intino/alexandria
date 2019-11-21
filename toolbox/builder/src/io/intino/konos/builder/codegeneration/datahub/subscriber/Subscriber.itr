@@ -1,0 +1,17 @@
+def type(subscriber)
+	package $package+validPackage.subscribers;
+
+	import $package+validPackage.$box+firstUpperCase~Box;
+
+	public class $name+FirstUpperCase implements java.util.function.Consumer<$type> {
+		private $box+validName+firstUpperCase~Box box;
+
+		public $name+FirstUpperCase($box+validName+firstUpperCase~Box box) {
+			this.box = box;
+		}
+
+		public void accept($type event) {
+
+		}
+	}
+end

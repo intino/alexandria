@@ -1,6 +1,6 @@
 dsl Konos
 
-MessageHub as JmsBus(url = "", user = "", password = "", clientId = "")
+DataHubTerminal as JmsBus(url = "", user = "", password = "", clientId = "")
 
 Datalake(path = "{path}") datalake as Local
 

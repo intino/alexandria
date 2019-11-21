@@ -1,7 +1,6 @@
 package io.intino.alexandria.bpm;
 
 import io.intino.alexandria.message.Message;
-import io.intino.alexandria.message.MessageHub;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -20,14 +19,19 @@ public class BpmWithSubprocessCalling extends BpmTest {
 
 	private static final String ProcessStatus = "ProcessStatus";
 	private static Map<String, String> memory = new HashMap<>();
-	private static MessageHub messageHub;
+	private static Workflow workflow;
 
 	@Test
 	public void name() throws InterruptedException {
-		messageHub = new MessageHub_();
 		PersistenceManager.InMemoryPersistenceManager persistence = new PersistenceManager.InMemoryPersistenceManager();
-		new Workflow(messageHub, new ProcessFactory(), persistence, null);
-		messageHub.sendMessage(ProcessStatus, createProcessMessage());
+		workflow = new Workflow(new ProcessFactory(), persistence, null) {
+
+			@Override
+			public void send(ProcessStatus processStatus) {
+				new Thread(() -> receive(processStatus)).start();
+			}
+		};
+		workflow.receive(createProcessMessage());
 		waitForProcess(persistence);
 		List<ProcessStatus> messages = messagesOf(persistence.read("finished/1.process"));
 		assertThat(messages.get(1).stateInfo().name(), is("CreateString"));
@@ -39,12 +43,12 @@ public class BpmWithSubprocessCalling extends BpmTest {
 		else assertThat(exitStateStatus(messages, "HandleSubprocessEnding").taskInfo().result(), is("false"));
 	}
 
-	private Message createProcessMessage() {
-		return new Message(ProcessStatus)
+	private ProcessStatus createProcessMessage() {
+		return new ProcessStatus(new Message(ProcessStatus)
 				.set("ts", "2019-01-01T00:00:00Z")
 				.set("id", "1")
 				.set("name", "StringContentReviewer")
-				.set("status", "Enter");
+				.set("status", "Enter"));
 	}
 
 	static class StringContentReviewerProcess extends Process {
@@ -73,7 +77,7 @@ public class BpmWithSubprocessCalling extends BpmTest {
 			return new Task(CallActivity) {
 				@Override
 				public Result execute() {
-					messageHub.sendMessage(ProcessStatus, new ProcessStatus("2", "StringChecker", Status.Enter, "1", "1", "CallSubprocess").message());
+					workflow.receive(new ProcessStatus("2", "StringChecker", Status.Enter, "1", "1", "CallSubprocess"));
 					return new Result("subprocess called StringChecker");
 				}
 			};
