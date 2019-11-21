@@ -2,24 +2,26 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.OperationInfo;
+import io.intino.alexandria.schemas.OperationSign;
 import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.UserMessage;
+import io.intino.alexandria.ui.displays.components.operation.SignChecker;
 import io.intino.alexandria.ui.displays.notifiers.OperationNotifier;
 import io.intino.alexandria.ui.resources.Asset;
 import io.intino.alexandria.ui.spark.UIFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.function.Function;
 
 public class Operation<DN extends OperationNotifier, B extends Box> extends Component<DN, B> {
     private String title;
     private boolean readonly = false;
     private String icon;
     private Mode mode;
-    private Function<String, Boolean> signChecker;
+    private SignChecker signChecker;
+	private String signReason;
 
-    public enum Mode { Link, Button, IconButton, MaterialIconButton }
+	public enum Mode { Link, Button, IconButton, MaterialIconButton }
 
     public Operation(B box) {
         super(box);
@@ -72,7 +74,17 @@ public class Operation<DN extends OperationNotifier, B extends Box> extends Comp
         notifyUser(message, UserMessage.Type.Info);
     }
 
-    @Override
+	public void checkSign(OperationSign info) {
+		if (signChecker == null) notifier.checkSignResult(true);
+		notifier.checkSignResult(signChecker.check(info.sign(), info.reason()));
+		this.signReason = info.reason();
+	}
+
+	public String signReason() {
+		return this.signReason;
+	}
+
+	@Override
     protected void init() {
         super.init();
         if (isResourceIcon()) refreshIcon();
@@ -98,14 +110,9 @@ public class Operation<DN extends OperationNotifier, B extends Box> extends Comp
         return this;
     }
 
-    protected Operation<DN, B> _signChecker(Function<String, Boolean> checker) {
+    protected Operation<DN, B> _signChecker(SignChecker checker) {
         this.signChecker = checker;
         return this;
-    }
-
-    public void checkSign(String sign) {
-        if (signChecker == null) notifier.checkSignResult(true);
-        notifier.checkSignResult(signChecker.apply(sign));
     }
 
     UIFile defaultFile() {

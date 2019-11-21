@@ -15,7 +15,6 @@ public class AsemedGenerationTest {
 	private static final String ASEMED_MIRROR = "AsemedMirror";
 
 	@Test
-	@Ignore
 	public void testAsemedMirrorGeneration() {
 		File gen = new File("test-gen", ASEMED_MIRROR.toLowerCase());
 		KonosGraph graph = new Graph().loadStashes(ASEMED_MIRROR).as(KonosGraph.class);

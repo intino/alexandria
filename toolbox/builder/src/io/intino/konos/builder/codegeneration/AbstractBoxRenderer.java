@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.codegeneration.Settings.DataHubManifest;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.*;
 import io.intino.plugin.project.LegioConfiguration;
@@ -11,8 +12,9 @@ import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
+
+import static io.intino.konos.builder.codegeneration.Formatters.firstLowerCase;
 
 
 public class AbstractBoxRenderer extends Renderer {
@@ -41,6 +43,7 @@ public class AbstractBoxRenderer extends Renderer {
 		sentinels(root, boxName);
 		datalake(root);
 		messageHub(root, boxName);
+		terminal(root, boxName);
 		workflow(root);
 		if (hasAuthenticatedApis()) root.add("authenticationValidator", new FrameBuilder().add("type", "Basic"));
 		graph.datamartList().forEach(d -> datamart(root, d));
@@ -84,6 +87,40 @@ public class AbstractBoxRenderer extends Renderer {
 		root.add("datalake", builder);
 	}
 
+	private void terminal(FrameBuilder root, String boxName) {
+		DataHubManifest manifest = settings.dataHubManifest();
+		if (manifest == null) return;
+		FrameBuilder builder = new FrameBuilder("terminal").
+				add("name", manifest.terminal).
+				add("qn", manifest.qn).
+				add("package", packageName()).
+				add("box", boxName());
+		manifest.parameters.forEach(p -> builder.add("parameter", parameter(p, "conf", p.contains("directory") ? "file" : "standard")));
+		Frame[] subscriber = graph.subscriberList().stream().map(s -> terminalFrameOf(s, manifest, boxName).toFrame()).toArray(Frame[]::new);
+		if (subscriber.length != 0) builder.add("subscriber", subscriber);
+		root.add("terminal", builder.toFrame());
+	}
+
+	private FrameBuilder terminalFrameOf(Subscriber subscriber, DataHubManifest manifest, String boxName) {
+		String type = manifest.tankClasses.get(subscriber.channel());
+		FrameBuilder builder = new FrameBuilder("subscriber", "terminal").
+				add("package", packageName()).
+				add("name", subscriber.name$()).
+				add("box", boxName).
+				add("terminal", manifest.qn).
+				add("type", type).
+				add("typeName", type.substring(type.lastIndexOf(".") + 1));
+		if (subscriber.subscriberId() != null) builder.add("subscriberId", subscriber.subscriberId());
+		if (manifest.messageContexts.get(type.substring(type.lastIndexOf(".") + 1)).size() > 1) {
+			String context = subscriber.channel().substring(0, subscriber.channel().lastIndexOf(".")).replace(".", "-");
+			builder.add("context",
+					new FrameBuilder("context").
+							add("value", firstLowerCase(Formatters.snakeCaseToCamelCase().format(context).toString())).
+							add("type", type).toFrame());
+		}
+		return builder;
+	}
+
 	private void messageHub(FrameBuilder root, String boxName) {
 		MessageHub hub = graph.messageHub();
 		if (hub == null) return;
@@ -96,7 +133,7 @@ public class AbstractBoxRenderer extends Renderer {
 		builder.add("box", boxName());
 		Frame[] feederFrames = graph.feederList().stream().filter(f -> !f.sensorList().isEmpty()).map(this::frameOf).toArray(Frame[]::new);
 		if (feederFrames.length != 0) builder.add("feeder", feederFrames);
-		Frame[] mounterFrames = graph.mounterList().stream().filter(Mounter::isRealtime).map(m -> frameOf(m, boxName)).toArray(Frame[]::new);
+		Frame[] mounterFrames = graph.subscriberList().stream().map(s -> frameOf(s, boxName).add("messageHub").toFrame()).toArray(Frame[]::new);
 		if (mounterFrames.length != 0) builder.add("mounter", mounterFrames);
 		root.add("messagehub", builder.toFrame());
 	}
@@ -107,13 +144,11 @@ public class AbstractBoxRenderer extends Renderer {
 		konosParameters.add("workspace");
 	}
 
-	private Frame frameOf(Mounter m, String boxName) {
-		Mounter.Realtime mounter = m.asRealtime();
-		FrameBuilder[] subscriptions = mounter.sourceList().stream().filter(s -> Objects.nonNull(s.channel())).map(Mounter.Realtime.Source::channel).map(t ->
-				new FrameBuilder("subscription").add("tankName", t).add("box", boxName).
-						add("package", packageName()).add("name", mounter.name$()).add("subscriberId", mounter.subscriberId())).toArray(FrameBuilder[]::new);
-		FrameBuilder mounterFrame = new FrameBuilder("mounter", "realtime");
-		return mounterFrame.add("name", mounter.name$()).add("subscription", subscriptions).toFrame();
+	private FrameBuilder frameOf(Subscriber subscriber, String boxName) {
+		FrameBuilder builder = new FrameBuilder("subscriber").add("package", packageName()).add("name", subscriber.name$()).
+				add("source", subscriber.channel());
+		if (subscriber.subscriberId() != null) builder.add("subscriberId", subscriber.subscriberId());
+		return builder.add("box", boxName);
 	}
 
 	@NotNull
@@ -208,4 +243,6 @@ public class AbstractBoxRenderer extends Renderer {
 	private Template template() {
 		return Formatters.customize(new AbstractBoxTemplate());
 	}
+
+
 }

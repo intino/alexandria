@@ -262,6 +262,12 @@
 			<version>1.9.5</version>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>io.intino.tara</groupId>
+            <artifactId>magritte</artifactId>
+            <version>3.0.0</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 
 </project>

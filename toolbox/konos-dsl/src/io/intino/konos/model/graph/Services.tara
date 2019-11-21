@@ -2,7 +2,7 @@ dsl Proteo
 
 use Component
 use Bpm
-use Datalake
+use DataHub
 use DataTypes
 
 Concept:Named Service

@@ -6,33 +6,32 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.search.GlobalSearchScope;
-import io.intino.konos.builder.codegeneration.adapter.AdapterRenderer;
 import io.intino.konos.builder.codegeneration.bpm.BpmRenderer;
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
-import io.intino.konos.builder.codegeneration.datalake.DatalakeRenderer;
+import io.intino.konos.builder.codegeneration.datahub.DatalakeRenderer;
+import io.intino.konos.builder.codegeneration.datahub.adapter.AdapterRenderer;
+import io.intino.konos.builder.codegeneration.datahub.messagehub.MessageHubRenderer;
+import io.intino.konos.builder.codegeneration.datahub.mounter.MounterRenderer;
+import io.intino.konos.builder.codegeneration.datahub.subscriber.SubscriberRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
 import io.intino.konos.builder.codegeneration.feeder.FeederRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
-import io.intino.konos.builder.codegeneration.messagehub.MessageHubRenderer;
-import io.intino.konos.builder.codegeneration.mounter.MounterRenderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
-import io.intino.konos.builder.codegeneration.services.messaging.MessagingRequestRenderer;
-import io.intino.konos.builder.codegeneration.services.messaging.MessagingServiceRenderer;
+import io.intino.konos.builder.codegeneration.sentinel.ListenerRenderer;
+import io.intino.konos.builder.codegeneration.sentinel.SentinelsRenderer;
 import io.intino.konos.builder.codegeneration.services.jmx.JMXOperationsServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.jmx.JMXServerRenderer;
+import io.intino.konos.builder.codegeneration.services.messaging.MessagingRequestRenderer;
+import io.intino.konos.builder.codegeneration.services.messaging.MessagingServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTResourceRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
-import io.intino.konos.builder.codegeneration.sentinel.SentinelsRenderer;
-import io.intino.konos.builder.codegeneration.sentinel.ListenerRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.plugin.codeinsight.linemarkers.InterfaceToJavaImplementation;
 import io.intino.plugin.dependencyresolution.LanguageResolver;
 import io.intino.tara.compiler.shared.Configuration;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.configurationOf;
 
@@ -67,6 +66,7 @@ public class FullRenderer {
 		jms();
 		datalake();
 		messageHub();
+		subscribers();
 		mounters();
 		adapters();
 		feeders();
@@ -117,6 +117,10 @@ public class FullRenderer {
 
 	private void mounters() {
 		new MounterRenderer(settings, graph).execute();
+	}
+
+	private void subscribers() {
+		new SubscriberRenderer(settings, graph).execute();
 	}
 
 	private void adapters() {
