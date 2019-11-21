@@ -4,7 +4,6 @@ Artifact("io.intino.alexandria", "1.0.0") bpm-framework
 	Imports
 		Compile("io.intino.alexandria", "message", "1.0.0")
 		Compile("io.intino.alexandria", "logger", "2.1.0")
-		Compile("io.intino.alexandria", "json", "1.0.1")
 		Test("junit", "junit", "LATEST")
 
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)

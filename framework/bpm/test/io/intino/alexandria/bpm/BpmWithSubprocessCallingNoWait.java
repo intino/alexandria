@@ -34,7 +34,7 @@ public class BpmWithSubprocessCallingNoWait extends BpmTest {
 		waitForProcess(persistence);
 		List<ProcessStatus> messages1 = messagesOf(persistence.read("finished/1.process"));
 		List<ProcessStatus> messages2 = messagesOf(persistence.read("finished/2.process"));
-		assertThat(messages1.get(0).message().toString(), is(createProcessMessage().message().toString()));
+		assertThat(messages1.get(0).get().toString(), is(createProcessMessage().get().toString()));
 	}
 
 	private ProcessStatus createProcessMessage() {

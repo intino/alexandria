@@ -107,7 +107,7 @@ public class ProcessStatus implements Comparable<ProcessStatus> {
 		message.add(new Message(Task).set(User, user).set(Duration, duration).set(Result, result.result()));
 	}
 
-	public Message message() {
+	public Message get() {
 		return this.message;
 	}
 

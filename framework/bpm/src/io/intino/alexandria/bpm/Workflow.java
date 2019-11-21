@@ -20,7 +20,6 @@ import static java.util.stream.Collectors.toList;
 
 public abstract class Workflow {
 	public static final String EventType = "ProcessStatus";
-	private final String channel;
 	private final PersistenceManager persistence;
 	private ProcessFactory factory;
 	private Map<String, Process> processes = new ConcurrentHashMap<>();
@@ -34,7 +33,6 @@ public abstract class Workflow {
 		this.persistence = persistence;
 		this.factory = factory;
 		loadActiveProcesses();
-		this.channel = domain == null || domain.isEmpty() ? EventType : domain + "." + EventType;
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			while (!advancingProcesses.isEmpty()) {
 				try {
@@ -119,7 +117,7 @@ public abstract class Workflow {
 	private void write(String path, List<ProcessStatus> messages) {
 		try {
 			MessageWriter writer = new MessageWriter(persistence.write(path));
-			for (ProcessStatus message : new ArrayList<>(messages)) writer.write(message.message());
+			for (ProcessStatus message : new ArrayList<>(messages)) writer.write(message.get());
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
