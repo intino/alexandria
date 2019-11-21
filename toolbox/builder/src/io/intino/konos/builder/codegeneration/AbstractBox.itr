@@ -439,10 +439,13 @@ def trigger(authenticationValidator)
 end
 
 
-def type(custom & file) trigger(parameter)
-	new java.io.File(configuration().get("$value+customParameter"))
+def type(conf & file) trigger(parameter)
+	new java.io.File(configuration().get("$value"))
 end
 
+def type(conf) trigger(parameter)
+	configuration().get("$value")
+end
 
 def type(custom) trigger(parameter)
 	configuration().get("$value+customParameter")
