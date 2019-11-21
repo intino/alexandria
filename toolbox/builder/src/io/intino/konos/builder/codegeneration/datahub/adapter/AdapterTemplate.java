@@ -1,4 +1,4 @@
-package io.intino.konos.builder.codegeneration.adapter;
+package io.intino.konos.builder.codegeneration.datahub.adapter;
 
 import io.intino.itrules.RuleSet;
 import io.intino.itrules.Template;

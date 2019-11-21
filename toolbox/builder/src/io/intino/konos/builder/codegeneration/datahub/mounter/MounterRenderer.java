@@ -1,4 +1,4 @@
-package io.intino.konos.builder.codegeneration.mounter;
+package io.intino.konos.builder.codegeneration.datahub.mounter;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
@@ -6,7 +6,6 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Mounter;
-import io.intino.konos.model.graph.Schema;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -35,10 +34,10 @@ public class MounterRenderer {
 			final String mounterName = mounter.name$();
 			final FrameBuilder builder = baseFrame(mounter);
 			if (mounter.isPopulation()) populationMounter(mounter, mounterName, builder);
-			else if (mounter.isRealtime() && !alreadyRendered(sourceMounters, mounterName))
-				realtimeMounter(mounter, mounterName, builder);
-			else if (!mounter.isRealtime() && !alreadyRendered(sourceMounters, mounterName))
+			else if (mounter.isBatch() && !alreadyRendered(sourceMounters, mounterName))
 				batchMounter(mounter.asBatch(), mounterName, builder);
+			else if (!alreadyRendered(sourceMounters, mounterName))
+				mounter(mounter, mounterName, builder);
 		}
 	}
 
@@ -50,8 +49,7 @@ public class MounterRenderer {
 				add("name", mounter.name$());
 	}
 
-	private void realtimeMounter(Mounter mounter, String mounterName, FrameBuilder builder) {
-		realtimeMounter(builder, mounter);
+	private void mounter(Mounter mounter, String mounterName, FrameBuilder builder) {
 		settings.classes().put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "mounters." + mounterName);
 		writeFrame(sourceMounters, mounterName, customize(new MounterTemplate()).render(builder.toFrame()));
 	}
@@ -78,17 +76,6 @@ public class MounterRenderer {
 			writeFrame(sourceMounters, mounter.name$() + "MounterFunctions", customize(new MounterTemplate()).render(baseFrame.toFrame()));
 	}
 
-	private void realtimeMounter(FrameBuilder builder, Mounter mounter) {
-		builder.add("realtime");
-		if (mounter.asRealtime().sourceList().size() == 1) {
-			Schema schema = mounter.asRealtime().source(0).schema();
-			if (schema != null) {
-				String packageName = settings.packageName();
-				builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName));
-				builder.add("type", new FrameBuilder("schema").add("package", packageName).add("name", schema.name$()));
-			} else builder.add("type", "message");
-		}
-	}
 
 	private Object name(String tank) {
 		return tank.replace(".", " ");

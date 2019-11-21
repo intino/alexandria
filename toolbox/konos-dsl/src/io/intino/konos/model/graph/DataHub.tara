@@ -9,6 +9,9 @@ Concept:{0..1} MessageHub
 		var string password
 		var string clientId
 
+Concept:Named Subscriber
+	var string subscriberId
+	var string channel
 
 Concept:{0..1} Datalake
 	var string path
@@ -27,7 +30,7 @@ Concept:Named Datamart
 
 Concept:Named Adapter
 
-Concept:Named:RequiresAspect:MessageHubNeeded Mounter
+Concept:Named Mounter
 	var Datamart datamart
 	Aspect MounterType
 		sub Population
@@ -50,11 +53,6 @@ Concept:Named:RequiresAspect:MessageHubNeeded Mounter
 		sub Batch
 			Concept:{1..*} Source
 				var string tank
-		sub Realtime
-			var string subscriberId
-			Concept:{1..*} Source
-				var string channel
-				var Schema schema
 //	sub TimeLine
 //		Concept Select extends Realtime.Select
 //			var word:{Sum Average Count Custom} aggregator

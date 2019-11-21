@@ -10,7 +10,11 @@ Component operation as Decorated
 	Notification refreshIcon as Text
 	Notification checkSignResult as Bool
 
-	Request checkSign as Text
+	Request checkSign as Object(OperationSign)
+
+Schema OperationSign
+	Attribute sign as Text
+	Attribute reason as Text
 
 Component task as Decorated ExtensionOf(operation)
 	Request execute

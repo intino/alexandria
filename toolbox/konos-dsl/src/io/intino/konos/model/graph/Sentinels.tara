@@ -15,5 +15,3 @@ Concept Sentinel
 			var string[] directories
 			var word[]:{OnCreate OnDelete OnModify} events
 		sub MailListener
-		sub:MessageHubNeeded MessageListener
-			var string[] channels
