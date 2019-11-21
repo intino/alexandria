@@ -1,21 +1,33 @@
 package io.intino.konos.builder.codegeneration;
 
+import com.google.gson.Gson;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import io.intino.alexandria.logger.Logger;
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
+import io.intino.plugin.dependencyresolution.DependencyCatalog;
+import io.intino.plugin.project.LegioConfiguration;
 import io.intino.tara.compiler.shared.Configuration;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.createIfNotExists;
+import static io.intino.tara.compiler.shared.Configuration.Model.Level.Solution;
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.configurationOf;
 
 public class Settings {
 	private Project project;
 	private Module module;
+	private LegioConfiguration moduleConfiguration;
+	private DataHubManifest dataHubManifest;
 	private Module webModule;
 	private String parent;
 	private File res;
@@ -30,13 +42,15 @@ public class Settings {
 	}
 
 	public Settings(Module module, File src, File gen, File res, String packageName, ElementCache cache) {
-		module(module);
 		project(module == null ? null : module.getProject());
+		module(module);
+		moduleConfiguration(configurationOf(module()));
 		res(res);
 		src(src);
 		gen(gen);
 		packageName(packageName);
 		cache(cache);
+		loadManifest();
 	}
 
 	public Project project() {
@@ -126,8 +140,17 @@ public class Settings {
 	}
 
 	public String boxName() {
-		if (boxName == null) boxName = snakeCaseToCamelCase(module() != null ? configurationOf(module()).artifactId() : Configuration.Model.Level.Solution.name());
+		if (boxName == null)
+			boxName = snakeCaseToCamelCase(module() != null ? moduleConfiguration.artifactId() : Solution.name());
 		return boxName;
+	}
+
+	public LegioConfiguration moduleConfiguration() {
+		return moduleConfiguration;
+	}
+
+	public DataHubManifest dataHubManifest() {
+		return dataHubManifest;
 	}
 
 	public Map<String, String> classes() {
@@ -137,6 +160,10 @@ public class Settings {
 	public Settings classes(Map<String, String> classes) {
 		this.classes = classes;
 		return this;
+	}
+
+	private void moduleConfiguration(Configuration configuration) {
+		moduleConfiguration = configuration instanceof LegioConfiguration ? (LegioConfiguration) configuration : null;
 	}
 
 	private File accessorRes() {
@@ -149,6 +176,28 @@ public class Settings {
 
 	private File accessorGen() {
 		return createIfNotExists(new File(root(Target.Accessor) + File.separator + "gen"));
+	}
+
+
+	private void loadManifest() {
+		dataHubManifest = loadManifest(moduleConfiguration().dataHub());
+	}
+
+	private DataHubManifest loadManifest(DependencyCatalog.Dependency dependency) {
+		if (dependency == null) return null;
+		try {
+			File jar = dependency.jar();
+			ZipFile zipFile = new ZipFile(jar);
+			Enumeration<? extends ZipEntry> entries = zipFile.entries();
+			while (entries.hasMoreElements()) {
+				ZipEntry entry = entries.nextElement();
+				if (entry.getName().equals("terminal.mf"))
+					return new Gson().fromJson(new String(zipFile.getInputStream(entry).readAllBytes()), DataHubManifest.class);
+			}
+		} catch (IOException e) {
+			Logger.error(e);
+		}
+		return null;
 	}
 
 	public Settings clone() {
@@ -166,4 +215,15 @@ public class Settings {
 		result.classes = classes;
 		return result;
 	}
+
+	public static class DataHubManifest {
+		public String terminal;
+		public String qn;
+		public List<String> parameters;
+		public List<String> publish;
+		public List<String> subscribe;
+		public Map<String, String> tankClasses;
+		public Map<String, List<String>> messageContexts;
+	}
+
 }
