@@ -20,8 +20,12 @@ public class FileEventStore implements Datalake.EventStore {
 		return FS.foldersIn(root).map(FileEventTank::new);
 	}
 
+	public File root() {
+		return root;
+	}
+
 	@Override
-	public Tank tank(String name) {
+	public FileEventTank tank(String name) {
 		return new FileEventTank(new File(root, name));
 	}
 
