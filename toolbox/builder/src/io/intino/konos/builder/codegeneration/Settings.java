@@ -44,7 +44,7 @@ public class Settings {
 	public Settings(Module module, File src, File gen, File res, String packageName, ElementCache cache) {
 		project(module == null ? null : module.getProject());
 		module(module);
-		moduleConfiguration(configurationOf(module()));
+		moduleConfiguration(configurationOf(module));
 		res(res);
 		src(src);
 		gen(gen);
@@ -141,7 +141,7 @@ public class Settings {
 
 	public String boxName() {
 		if (boxName == null)
-			boxName = snakeCaseToCamelCase(module() != null ? moduleConfiguration.artifactId() : Solution.name());
+			boxName = snakeCaseToCamelCase(moduleConfiguration != null ? moduleConfiguration.artifactId() : Solution.name());
 		return boxName;
 	}
 
