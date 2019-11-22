@@ -28,7 +28,10 @@ public class FileEventTank implements Datalake.EventStore.Tank {
 	@Override
 	public ZimStream content(Predicate<Timetag> filter) {
 		return ZimStream.Sequence.of(zimStreams(filter));
+	}
 
+	public File root() {
+		return root;
 	}
 
 	private ZimStream[] zimStreams(Predicate<Timetag> filter) {

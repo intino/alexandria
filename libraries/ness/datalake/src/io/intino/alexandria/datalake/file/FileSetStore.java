@@ -24,7 +24,7 @@ public class FileSetStore implements Datalake.SetStore {
 	}
 
 	@Override
-	public Tank tank(String name) {
+	public FileSetTank tank(String name) {
 		return new FileSetTank(new File(root, name));
 	}
 
