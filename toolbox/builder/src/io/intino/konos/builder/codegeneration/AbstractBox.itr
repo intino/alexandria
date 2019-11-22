@@ -267,11 +267,7 @@ def type(messageHub) trigger(init)
 end
 
 def type(terminal) trigger(subscriber)
-	this.terminal.subscribe(new $terminal.$typeName~Consumer() {
-			public void accept($type e) {
-				new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e);
-			}
-		}[, "$subscriberId"][, $context]);
+	this.terminal.subscribe(($terminal.$typeName~Consumer) e -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e)[, "$subscriberId"][, $context]);
 end
 
 def trigger(context)
