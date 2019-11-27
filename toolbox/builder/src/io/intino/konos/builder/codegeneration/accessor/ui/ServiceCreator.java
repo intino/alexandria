@@ -10,6 +10,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.io.ZipUtil;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Formatters;
@@ -46,10 +48,9 @@ import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class ServiceCreator extends UIRenderer {
 
+	private static final String LegioArtifact = "artifact.legio";
 	private final Project project;
 	private final Service.UI service;
-
-	private static final String LegioArtifact = "artifact.legio";
 
 	public ServiceCreator(Settings settings, Service.UI service) {
 		super(settings, Target.Accessor);
@@ -83,7 +84,8 @@ public class ServiceCreator extends UIRenderer {
 			final ModifiableRootModel model = ModuleRootManager.getInstance(webModule).getModifiableModel();
 			final File moduleRoot = new File(webModule.getModuleFilePath()).getParentFile();
 			moduleRoot.mkdirs();
-			model.commit();
+			VirtualFile file = VfsUtil.findFile(moduleRoot.toPath(), true);
+			if (file != null) model.addContentEntry(file);
 			boolean created = createConfigurationFile(moduleRoot, service.name$());
 			if (created) addWebDependency(register(webModule, newExternalProvider(webModule)));
 		}));
@@ -154,6 +156,7 @@ public class ServiceCreator extends UIRenderer {
 	}
 
 	private void addWebDependency(Configuration webConf) {
+		webConf.reload();
 		((LegioConfiguration) TaraUtil.configurationOf(settings.module())).addDependency(WEB, webConf.groupId() + ":" + webConf.artifactId() + ":" + webConf.version());
 	}
 
