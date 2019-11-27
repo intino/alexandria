@@ -86,6 +86,7 @@ public class ServiceCreator extends UIRenderer {
 			moduleRoot.mkdirs();
 			VirtualFile file = VfsUtil.findFile(moduleRoot.toPath(), true);
 			if (file != null) model.addContentEntry(file);
+			model.commit();
 			boolean created = createConfigurationFile(moduleRoot, service.name$());
 			if (created) addWebDependency(register(webModule, newExternalProvider(webModule)));
 		}));

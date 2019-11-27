@@ -2,10 +2,7 @@ package io.intino.test;
 
 import io.intino.alexandria.tabb.Row;
 import io.intino.alexandria.tabb.Tabb;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,13 +48,12 @@ public class TabbTest {
 		Tabb tabb = new Tabb(test).remove("201806C85CCO8605231N4").consolidate();
 		Assert.assertEquals(10995, tabb.manifest().size());
 		AtomicInteger count = new AtomicInteger(0);
-		tabb.iterator().forEachRemaining(r -> {
-			count.getAndIncrement();
-		});
+		tabb.iterator().forEachRemaining(r -> count.getAndIncrement());
 		Assert.assertEquals(10995, count.get());
 	}
 
 	@Test
+	@Ignore
 	public void original() throws IOException {
 		Tabb tabb = new Tabb(source);
 		tabb.iterator().forEachRemaining(this::print);
@@ -68,6 +64,7 @@ public class TabbTest {
 	}
 
 	@Test
+	@Ignore
 	public void test() throws IOException {
 		Tabb tabb = new Tabb(test);
 		tabb.iterator().forEachRemaining(this::print);
