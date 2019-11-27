@@ -3,7 +3,7 @@ package io.intino.test;
 import io.intino.alexandria.tabb.ColumnStream;
 import io.intino.alexandria.tabb.ColumnStream.Type;
 import io.intino.alexandria.tabb.TabbBuilder;
-import io.intino.alexandria.tabb.streamers. ObjectStreamer;
+import io.intino.alexandria.tabb.streamers.ObjectStreamer;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,7 +29,7 @@ public class ObjectStreamer_ {
 	}
 
 	@Test
-	public void should_create_streams_from_list() throws IOException {
+	public void should_create_streams_from_list() {
 		ColumnStream[] streams = createStreams();
 		assertThat(streams[0].name()).isEqualTo("name");
 		assertThat(streams[1].name()).isEqualTo("gender");
@@ -77,7 +77,7 @@ public class ObjectStreamer_ {
 	}
 
 	private ObjectStreamer.Selector<Person> nameSelector() {
-		return new ObjectStreamer.Selector<Person>() {
+		return new ObjectStreamer.Selector<>() {
 			@Override
 			public String name() {
 				return "name";
@@ -89,6 +89,11 @@ public class ObjectStreamer_ {
 			}
 
 			@Override
+			public boolean isIndex() {
+				return false;
+			}
+
+			@Override
 			public Object select(Person person) {
 				return person.name;
 			}
@@ -96,7 +101,7 @@ public class ObjectStreamer_ {
 	}
 
 	private ObjectStreamer.Selector<Person> genderSelector() {
-		return new ObjectStreamer.Selector<Person>() {
+		return new ObjectStreamer.Selector<>() {
 			@Override
 			public String name() {
 				return "gender";
@@ -108,6 +113,11 @@ public class ObjectStreamer_ {
 			}
 
 			@Override
+			public boolean isIndex() {
+				return false;
+			}
+
+			@Override
 			public Object select(Person person) {
 				return person.gender.ordinal();
 			}
@@ -115,7 +125,7 @@ public class ObjectStreamer_ {
 	}
 
 	private ObjectStreamer.Selector<Person> childrenSelector() {
-		return new ObjectStreamer.Selector<Person>() {
+		return new ObjectStreamer.Selector<>() {
 			@Override
 			public String name() {
 				return "children";
@@ -127,6 +137,11 @@ public class ObjectStreamer_ {
 			}
 
 			@Override
+			public boolean isIndex() {
+				return false;
+			}
+
+			@Override
 			public Object select(Person person) {
 				return person.children;
 			}
@@ -134,7 +149,7 @@ public class ObjectStreamer_ {
 	}
 
 	private ObjectStreamer.Selector<Person> salarySelector() {
-		return new ObjectStreamer.Selector<Person>() {
+		return new ObjectStreamer.Selector<>() {
 			@Override
 			public String name() {
 				return "salary";
@@ -143,6 +158,11 @@ public class ObjectStreamer_ {
 			@Override
 			public Type type() {
 				return Type.Double;
+			}
+
+			@Override
+			public boolean isIndex() {
+				return false;
 			}
 
 			@Override

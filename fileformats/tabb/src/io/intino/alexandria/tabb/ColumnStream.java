@@ -7,6 +7,8 @@ public interface ColumnStream {
 
 	String name();
 
+	boolean isIndex();
+
 	Type type();
 
 	boolean hasNext();
@@ -19,17 +21,23 @@ public interface ColumnStream {
 
 	enum Type {
 		String {
-            @Override
-            public byte[] toByteArray(Object object) {
-                if (object == null) return notAvailable();
-                return (object.toString() + '\0').getBytes();
-            }
+			@Override
+			public byte[] toByteArray(Object object) {
+				if (object == null) return notAvailable();
+				return (object.toString() + '\0').getBytes();
+			}
 
-            @Override
-            public byte[] notAvailable() {
-                return new byte[] {0};
-            }
-        },
+			@Override
+			public byte[] notAvailable() {
+				return new byte[]{0};
+			}
+
+
+			@Override
+			public Object parse(String value) {
+				return value;
+			}
+		},
 		Nominal {
 			@Override
 			public byte[] toByteArray(Object object) {
@@ -40,6 +48,11 @@ public interface ColumnStream {
 			@Override
 			public byte[] notAvailable() {
 				return NotAvailable32;
+			}
+
+			@Override
+			public Object parse(String value) {
+				return value;
 			}
 		},
 		Long {
@@ -54,6 +67,12 @@ public interface ColumnStream {
 				return NotAvailable64;
 			}
 
+
+			@Override
+			public Object parse(String value) {
+				return java.lang.Long.valueOf(value);
+			}
+
 		},
 		Integer {
 			@Override
@@ -65,6 +84,11 @@ public interface ColumnStream {
 			@Override
 			public byte[] notAvailable() {
 				return NotAvailable32;
+			}
+
+			@Override
+			public Object parse(String value) {
+				return java.lang.Integer.valueOf(value);
 			}
 		},
 
@@ -83,6 +107,11 @@ public interface ColumnStream {
 			public byte[] notAvailable() {
 				return NotAvailable64;
 			}
+
+			@Override
+			public Object parse(String value) {
+				return java.lang.Double.valueOf(value);
+			}
 		},
 		Boolean {
 			@Override
@@ -99,6 +128,11 @@ public interface ColumnStream {
 			public byte[] notAvailable() {
 				return NotAvailable32;
 			}
+
+			@Override
+			public Object parse(String value) {
+				return java.lang.Boolean.valueOf(value);
+			}
 		},
 		Datetime {
 			@Override
@@ -110,6 +144,10 @@ public interface ColumnStream {
 			@Override
 			public byte[] notAvailable() {
 				return NotAvailable32;
+			}
+
+			public Object parse(String value) {
+				return java.time.LocalDateTime.parse(value);
 			}
 		},
 		Instant {
@@ -123,6 +161,11 @@ public interface ColumnStream {
 			public byte[] notAvailable() {
 				return NotAvailable32;
 			}
+
+			@Override
+			public Object parse(String value) {
+				return java.time.Instant.parse(value);
+			}
 		};
 
 		private static final byte[] NotAvailable64 = Type.Long.toByteArray(0x7ff00000000007a2L);
@@ -131,6 +174,8 @@ public interface ColumnStream {
 		public abstract byte[] toByteArray(Object object);
 
 		public abstract byte[] notAvailable();
+
+		public abstract Object parse(String value);
 	}
 
 
