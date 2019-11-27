@@ -32,10 +32,6 @@ public class FileSetTank implements Datalake.SetStore.Tank {
 		return FS.foldersIn(root, FS.Sort.Reversed).map(FileSetTub::new).findFirst().orElse(currentTub());
 	}
 
-	public Tub on(Timetag tag) {
-		return new FileSetTub(new File(root, tag.value()));
-	}
-
 	@Override
 	public Stream<Tub> tubs() {
 		return FS.foldersIn(root).map(FileSetTub::new);
@@ -49,6 +45,14 @@ public class FileSetTank implements Datalake.SetStore.Tank {
 	@Override
 	public Stream<Tub> tubs(Timetag from, Timetag to) {
 		return StreamSupport.stream(from.iterateTo(to).spliterator(), false).map(this::on);
+	}
+
+	public Tub on(Timetag tag) {
+		return new FileSetTub(new File(root, tag.value()));
+	}
+
+	public File root() {
+		return root;
 	}
 
 	private FileSetTub currentTub() {

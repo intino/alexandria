@@ -20,20 +20,6 @@ public class MappColumnStreamer implements ColumnStreamer {
 		this.reader = reader;
 	}
 
-	private static MappStream.Item nullItem() {
-		return new MappStream.Item() {
-			@Override
-			public long key() {
-				return -1;
-			}
-
-			@Override
-			public String value() {
-				return null;
-			}
-		};
-	}
-
 	public void add(Selector selector) {
 		selectors.add(selector);
 	}
@@ -46,6 +32,11 @@ public class MappColumnStreamer implements ColumnStreamer {
 			@Override
 			public String name() {
 				return s.name();
+			}
+
+			@Override
+			public boolean isIndex() {
+				return false; //TODO
 			}
 
 			@Override
@@ -82,6 +73,20 @@ public class MappColumnStreamer implements ColumnStreamer {
 	private MappStream.Item getCurrent(long key) {
 		if (key > this.current.key()) this.current = reader.next();
 		return this.current;
+	}
+
+	private static MappStream.Item nullItem() {
+		return new MappStream.Item() {
+			@Override
+			public long key() {
+				return -1;
+			}
+
+			@Override
+			public String value() {
+				return null;
+			}
+		};
 	}
 
 	public interface Selector {

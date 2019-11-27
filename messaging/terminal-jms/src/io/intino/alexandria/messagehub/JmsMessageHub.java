@@ -10,10 +10,7 @@ import javax.jms.*;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -28,11 +25,12 @@ import static javax.jms.Session.SESSION_TRANSACTED;
 public class JmsMessageHub implements MessageHub {
 	private final Map<String, JmsProducer> producers;
 	private final Map<String, JmsConsumer> consumers;
+	private final Map<String, List<Consumer<Message>>> messageConsumers;
 	private final Map<Consumer<javax.jms.Message>, Integer> jmsConsumers;
+	private final MessageOutBox messageOutBox;
 	private Connection connection;
 	private Session session;
 	private AtomicBoolean connected = new AtomicBoolean(false);
-	private final MessageOutBox messageOutBox;
 	private ScheduledExecutorService scheduler;
 
 	public JmsMessageHub(String brokerUrl, String user, String password, String clientId, File messageCacheDirectory) {
@@ -56,6 +54,7 @@ public class JmsMessageHub implements MessageHub {
 			}
 		} else Logger.warn("Broker url is null");
 		jmsConsumers = new HashMap<>();
+		messageConsumers = new HashMap<>();
 		scheduler = Executors.newScheduledThreadPool(1);
 		scheduler.scheduleAtFixedRate(recoverMessages(), 0, 1, TimeUnit.HOURS);
 	}
@@ -63,6 +62,7 @@ public class JmsMessageHub implements MessageHub {
 
 	@Override
 	public void sendMessage(String channel, Message message) {
+		messageConsumers.getOrDefault(channel, Collections.emptyList()).forEach(messageConsumer -> messageConsumer.accept(message));
 		if (connected.get() && !messageOutBox.isEmpty()) scheduler.execute(recoverMessages());
 		if (!doSendMessage(channel, message)) messageOutBox.push(channel, message);
 	}
@@ -91,7 +91,7 @@ public class JmsMessageHub implements MessageHub {
 	@Override
 	public void attachListener(String channel, Consumer<Message> onMessageReceived) {
 		if (session == null) return;
-		this.consumers.putIfAbsent(channel, topicConsumer(channel));
+		registerConsumer(channel, onMessageReceived);
 		JmsConsumer consumer = this.consumers.get(channel);
 		if (consumer == null) return;
 		Consumer<javax.jms.Message> messageConsumer = m -> onMessageReceived.accept(MessageDeserializer.deserialize(m));
@@ -102,7 +102,7 @@ public class JmsMessageHub implements MessageHub {
 	@Override
 	public void attachListener(String channel, String subscriberId, Consumer<Message> onMessageReceived) {
 		if (session == null) return;
-		this.consumers.putIfAbsent(channel, topicConsumer(channel));
+		registerConsumer(channel, onMessageReceived);
 		TopicConsumer consumer = (TopicConsumer) this.consumers.get(channel);
 		if (consumer == null) return;
 		Consumer<javax.jms.Message> messageConsumer = m -> onMessageReceived.accept(MessageDeserializer.deserialize(m));
@@ -115,6 +115,7 @@ public class JmsMessageHub implements MessageHub {
 		if (this.consumers.containsKey(channel)) {
 			this.consumers.get(channel).close();
 			this.consumers.remove(channel);
+			this.messageConsumers.get(channel).clear();
 		}
 	}
 
@@ -122,6 +123,7 @@ public class JmsMessageHub implements MessageHub {
 	public void detachListeners(Consumer<Message> consumer) {
 		Integer code = jmsConsumers.get(consumer);
 		if (code == null) return;
+		messageConsumers.values().forEach(list -> list.remove(consumer));
 		for (JmsConsumer jc : consumers.values()) {
 			List<Consumer<javax.jms.Message>> toRemove = jc.listeners().stream().filter(l -> l.hashCode() == code).collect(Collectors.toList());
 			toRemove.forEach(jc::removeListener);
@@ -171,6 +173,12 @@ public class JmsMessageHub implements MessageHub {
 		} catch (JMSException e) {
 			Logger.error(e);
 		}
+	}
+
+	private void registerConsumer(String channel, Consumer<Message> onMessageReceived) {
+		this.consumers.putIfAbsent(channel, topicConsumer(channel));
+		this.messageConsumers.putIfAbsent(channel, new ArrayList<>());
+		this.messageConsumers.get(channel).add(onMessageReceived);
 	}
 
 	private boolean doSendMessage(String channel, Message message) {
@@ -227,13 +235,6 @@ public class JmsMessageHub implements MessageHub {
 		}
 	}
 
-
-	private static String createRandomString() {
-		Random random = new Random(System.currentTimeMillis());
-		long randomLong = random.nextLong();
-		return Long.toHexString(randomLong);
-	}
-
 	private Runnable recoverMessages() {
 		return () -> {
 			if (messageOutBox.isEmpty()) return;
@@ -243,6 +244,12 @@ public class JmsMessageHub implements MessageHub {
 				else return;
 			}
 		};
+	}
+
+	private static String createRandomString() {
+		Random random = new Random(System.currentTimeMillis());
+		long randomLong = random.nextLong();
+		return Long.toHexString(randomLong);
 	}
 
 	private static javax.jms.Message serialize(Message message) throws IOException, JMSException {

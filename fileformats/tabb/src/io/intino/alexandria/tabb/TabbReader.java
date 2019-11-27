@@ -1,19 +1,13 @@
 package io.intino.alexandria.tabb;
 
 import io.intino.alexandria.logger.Logger;
-import io.intino.alexandria.tabb.ColumnStream.Type;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import static java.util.stream.Collectors.toList;
 
@@ -46,97 +40,19 @@ public class TabbReader {
 
 	public Value get(int index) {
 		ColumnStream stream = columns.get(index);
-		return new Value(stream.type(), new Mode(info.columns(stream.name())[0].modes), (byte[]) stream.value());
-	}
-
-	public static class Value {
-		private final Type type;
-		private final Mode mode;
-		private final byte[] value;
-
-		Value(Type type, Mode mode, byte[] value) {
-			this.type = type;
-			this.mode = mode;
-			this.value = value;
-		}
-
-		private static int get32(byte[] data) {
-			return (data[0] & 0xFF) << 24 | (data[1] & 0xFF) << 16 | (data[2] & 0xFF) << 8 | (data[3] & 0xFF);
-		}
-
-		private static long get64(byte[] data) {
-			return (data[0] & 0xFFL) << 56 | (data[1] & 0xFFL) << 48 | (data[2] & 0xFFL) << 40 | (data[3] & 0xFFL) << 32 |
-					(data[4] & 0xFFL) << 24 | (data[5] & 0xFFL) << 16 | (data[6] & 0xFFL) << 8 | (data[7] & 0xFFL);
-		}
-
-		public Type type() {
-			return type;
-		}
-
-		public Mode mode() {
-			return mode;
-		}
-
-		public boolean isAvailable() {
-			return !Arrays.equals(type.notAvailable(), value);
-		}
-
-		public int asInteger() {
-			return get32(isAvailable() ? value : Type.Integer.notAvailable());
-		}
-
-		public double asDouble() {
-			return get64(isAvailable() ? value : Type.Double.notAvailable());
-		}
-
-		public boolean asBoolean() {
-			return get32(value) == 1;//FIXME Na??
-		}
-
-		public Long asLong() {
-			return get64(isAvailable() ? value : Type.Long.notAvailable());
-		}
-
-		public LocalDateTime asDatetime() {
-			return null;
-		}
-
-		public Instant asInstant() {
-			return Instant.ofEpochSecond(asInteger());
-		}
-
-		public String asString() {
-			return isAvailable() ? mode.features[get32(value)] : null;
-		}
-	}
-
-	static class ZipEntryReader {
-
-		static InputStream openEntry(File file, String entryName) throws IOException {
-			ZipFile zipFile = new ZipFile(file);
-			Enumeration<? extends ZipEntry> entries = zipFile.entries();
-			while (entries.hasMoreElements()) {
-				ZipEntry entry = entries.nextElement();
-				if (entryName.equals(entry.getName())) return zipFile.getInputStream(entry);
-			}
-			return null;
-		}
-
+		return new Value(stream.type(), new Mode(info.columns(stream.name())[0].features), (byte[]) stream.value());
 	}
 
 	static class TabbColumnStream implements ColumnStream {
-
-		private final File file;
 		private final TabbManifest.ColumnInfo column;
 		private final byte[] value;
 		private InputStream inputStream;
 
 		TabbColumnStream(File file, TabbManifest.ColumnInfo column) {
-			this.file = file;
 			this.column = column;
 			value = new byte[size()];
 			try {
-				inputStream = new BufferedInputStream(ZipEntryReader.openEntry(file, column.name + ColumnExtension));
+				inputStream = new BufferedInputStream(ZipHandler.openEntry(file, column.name + ColumnExtension));
 			} catch (IOException e) {
 				Logger.error(e);
 			}
@@ -151,6 +67,11 @@ public class TabbReader {
 		@Override
 		public String name() {
 			return column.name;
+		}
+
+		@Override
+		public boolean isIndex() {
+			return column.isIndex;
 		}
 
 		@Override
@@ -191,7 +112,7 @@ public class TabbReader {
 			try {
 				inputStream.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.error(e);
 			}
 		}
 	}
