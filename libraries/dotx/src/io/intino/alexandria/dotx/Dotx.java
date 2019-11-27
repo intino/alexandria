@@ -86,6 +86,11 @@ public class Dotx {
 				while (entries.hasMoreElements())
 					create(zos, new ZipEntry(entries.nextElement().getName()));
 			}
+			close();
+		}
+
+		void close() throws IOException {
+			zin.close();
 		}
 
 		private void create(ZipOutputStream zos, ZipEntry entry) throws IOException {
