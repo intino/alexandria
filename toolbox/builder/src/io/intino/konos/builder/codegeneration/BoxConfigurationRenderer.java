@@ -5,15 +5,13 @@ import io.intino.itrules.Template;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.legio.graph.Parameter;
 import io.intino.plugin.project.LegioConfiguration;
-import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 
 import java.util.Set;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
 public class BoxConfigurationRenderer extends Renderer {
-	private final Configuration configuration;
+	private final LegioConfiguration configuration;
 	private final Set<String> params;
 	private boolean isTara;
 
@@ -21,9 +19,9 @@ public class BoxConfigurationRenderer extends Renderer {
 		super(settings, Target.Owner);
 		this.isTara = isTara;
 		this.params = params;
-		this.configuration = module() != null ? TaraUtil.configurationOf(module()) : null;
+		this.configuration = settings.moduleConfiguration();
 		if (configuration != null)
-			for (Parameter parameter : ((LegioConfiguration) configuration).graph().artifact().parameterList())
+			for (Parameter parameter : configuration.graph().artifact().parameterList())
 				this.params.add(parameter.name());
 	}
 

@@ -10,7 +10,6 @@ import io.intino.konos.model.graph.Service;
 
 import java.io.File;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
@@ -28,6 +27,7 @@ public class RouteDispatcherRenderer extends UIRenderer {
 	protected void render() {
 		FrameBuilder builder = buildFrame();
 		createIfNotExists(displaysFolder(src(), target));
+		createIfNotExists(displaysFolder(gen(), target));
 		File routeDispatcher = fileOf(displaysFolder(src(), target), "RouteDispatcher", target);
 		if (!routeDispatcher.exists()) Commons.write(routeDispatcher.toPath(), setup(new RouteDispatcherTemplate()).render(builder.toFrame()));
 		Commons.write(fileOf(displaysFolder(gen(), target), "AbstractRouteDispatcher", target).toPath(), setup(new RouteDispatcherTemplate()).render(builder.add("gen").toFrame()));

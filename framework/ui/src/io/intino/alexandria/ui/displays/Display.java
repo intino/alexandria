@@ -276,6 +276,10 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		childrenToRemove.forEach(d -> removeChild(d, container));
 	}
 
+	public void clear() {
+		clear(DefaultInstanceContainer);
+	}
+
 	public void clear(String container) {
 		children(container).ifPresent(children -> children.forEach(d -> {
 			d.remove();

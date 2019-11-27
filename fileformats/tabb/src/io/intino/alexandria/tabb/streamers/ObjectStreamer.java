@@ -56,6 +56,11 @@ public class ObjectStreamer<T> implements ColumnStreamer {
 			}
 
 			@Override
+			public boolean isIndex() {
+				return selector.isIndex();
+			}
+
+			@Override
 			public Type type() {
 				return selector.type();
 			}
@@ -99,6 +104,8 @@ public class ObjectStreamer<T> implements ColumnStreamer {
 
 		Type type();
 
+		boolean isIndex();
+
 		Object select(T t);
 	}
 
@@ -106,6 +113,7 @@ public class ObjectStreamer<T> implements ColumnStreamer {
 		boolean canAdd(T current);
 
 		void add(T item);
+
 		Iterator<R> items();
 
 		void clear();

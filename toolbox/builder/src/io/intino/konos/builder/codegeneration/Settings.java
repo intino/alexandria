@@ -44,7 +44,7 @@ public class Settings {
 	public Settings(Module module, File src, File gen, File res, String packageName, ElementCache cache) {
 		project(module == null ? null : module.getProject());
 		module(module);
-		moduleConfiguration(configurationOf(module()));
+		moduleConfiguration(configurationOf(module));
 		res(res);
 		src(src);
 		gen(gen);
@@ -141,7 +141,7 @@ public class Settings {
 
 	public String boxName() {
 		if (boxName == null)
-			boxName = snakeCaseToCamelCase(module() != null ? moduleConfiguration.artifactId() : Solution.name());
+			boxName = snakeCaseToCamelCase(moduleConfiguration != null ? moduleConfiguration.artifactId() : Solution.name());
 		return boxName;
 	}
 
@@ -201,17 +201,9 @@ public class Settings {
 	}
 
 	public Settings clone() {
-		Settings result = new Settings();
-		result.project = project;
-		result.module = module;
+		Settings result = new Settings(module, src, gen, res, packageName, cache);
 		result.webModule = webModule;
 		result.parent = parent;
-		result.res = res;
-		result.src = src;
-		result.gen = gen;
-		result.cache = cache;
-		result.packageName = packageName;
-		result.boxName = boxName;
 		result.classes = classes;
 		return result;
 	}

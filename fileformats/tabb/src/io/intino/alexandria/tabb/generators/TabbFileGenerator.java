@@ -60,6 +60,10 @@ public class TabbFileGenerator implements FileGenerator {
 		return stream.type();
 	}
 
+	public boolean isIndex() {
+		return stream.isIndex();
+	}
+
 	public Mode mode() {
 		return new Mode(modes.keySet().toArray(new String[0]));
 	}
