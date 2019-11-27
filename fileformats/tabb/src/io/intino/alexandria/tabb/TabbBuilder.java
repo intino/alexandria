@@ -1,5 +1,6 @@
 package io.intino.alexandria.tabb;
 
+import io.intino.alexandria.tabb.TabbManifest.ColumnInfo;
 import io.intino.alexandria.tabb.generators.ArffFileGenerator;
 import io.intino.alexandria.tabb.generators.CsvFileGenerator;
 import io.intino.alexandria.tabb.generators.TabbFileGenerator;
@@ -7,12 +8,10 @@ import io.intino.alexandria.tabb.generators.TabbFileGenerator;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static io.intino.alexandria.tabb.ColumnStream.ColumnExtension;
-import static io.intino.alexandria.tabb.ColumnStream.Type.Nominal;
-import static java.lang.String.join;
+import static io.intino.alexandria.tabb.ZipHandler.writeEntry;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.zip.Deflater.BEST_COMPRESSION;
@@ -94,34 +93,10 @@ public class TabbBuilder {
 		os.close();
 	}
 
-	private void writeEntry(ZipOutputStream zos, String name, InputStream is) throws IOException {
-		zos.putNextEntry(new ZipEntry(name));
-		byte[] bytes = new byte[1024];
-		int length;
-		while ((length = is.read(bytes)) >= 0)
-			zos.write(bytes, 0, length);
-		zos.closeEntry();
-	}
-
 	private InputStream createManifest(List<TabbFileGenerator> tabbGenerators) throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
-		writer.write("name\ttype\tsize\tmode\n");
-		for (TabbFileGenerator tabbGenerator : tabbGenerators) {
-			writer.write(tabbGenerator.name() + "\t" + tabbGenerator.type().name() + "\t" + tabbGenerator.size());
-			addNominalModes(writer, tabbGenerator);
-			writer.write("\n");
-		}
-		writer.close();
-		return new ByteArrayInputStream(out.toByteArray());
-	}
-
-	private void addNominalModes(BufferedWriter writer, TabbFileGenerator tabbGenerator) throws IOException {
-		if (tabbGenerator.type() == Nominal) writer.write("\t" + serialize(tabbGenerator.mode()));
-	}
-
-	private String serialize(Mode mode) {
-		return join("|", mode.features);
+		return TabbManifest.serialize(tabbGenerators.stream().
+				map(t -> new ColumnInfo(t.name(), t.type(), t.isIndex(), t.size(), t.mode() != null ? t.mode().features : null)).
+				toArray(ColumnInfo[]::new));
 	}
 
 	private InputStream createColumnStream(TabbFileGenerator column) throws FileNotFoundException {
@@ -139,7 +114,8 @@ public class TabbBuilder {
 
 	private class ExporterFactory {
 		private FileGenerator create(TabbBuilder.Format f, File file) {
-			if (f.equals(Format.arff)) return new ArffFileGenerator(streams).destination(file.getParentFile(), baseName(file.getName()));
+			if (f.equals(Format.arff))
+				return new ArffFileGenerator(streams).destination(file.getParentFile(), baseName(file.getName()));
 			return new CsvFileGenerator(streams).destination(file.getParentFile(), baseName(file.getName()));
 		}
 	}
