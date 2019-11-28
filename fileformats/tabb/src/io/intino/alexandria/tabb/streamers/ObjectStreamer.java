@@ -7,6 +7,7 @@ import io.intino.alexandria.tabb.ColumnStreamer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 
 import static java.util.Collections.emptyIterator;
 import static java.util.stream.Collectors.toList;
@@ -158,8 +159,50 @@ public class ObjectStreamer<T> implements ColumnStreamer {
 				}
 			};
 		}
+	}
 
+	public static class ObjectSelector<T> implements ObjectStreamer.Selector<T> {
+		private final String name;
+		private final ColumnStream.Type type;
+		private final Function<T, Object> keyExtractor;
 
+		public ObjectSelector(String name, ColumnStream.Type type, Function<T, Object> keyExtractor) {
+			this.name = name;
+			this.type = type;
+			this.keyExtractor = keyExtractor;
+		}
+
+		@Override
+		public String name() {
+			return name;
+		}
+
+		@Override
+		public ColumnStream.Type type() {
+			return type;
+		}
+
+		@Override
+		public boolean isIndex() {
+			return false;
+		}
+
+		@Override
+		public Object select(T object) {
+			return keyExtractor.apply(object);
+		}
+	}
+
+	public static class IndexSelector<T> extends ObjectSelector {
+
+		private IndexSelector(String name, ColumnStream.Type type, Function<? super T, Object> keyExtractor) {
+			super(name, type, keyExtractor);
+		}
+
+		@Override
+		public boolean isIndex() {
+			return true;
+		}
 	}
 
 }

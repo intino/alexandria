@@ -8,16 +8,20 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.time.Instant;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TabbTest {
 
-	private File source = new File("test-res/tabbs/example.tabb");
-	private File test = new File(source.getParentFile(), "test.tabb");
+	private File bigSource = new File("test-res/tabbs/big.tabb");
+	private File smallSource = new File("test-res/tabbs/small.tabb");
+	private File test = new File(bigSource.getParentFile(), "test.tabb");
+	private File smallTest = new File(smallSource.getParentFile(), "smallTest.tabb");
 
 	@Before
 	public void setUp() throws Exception {
-		Files.copy(source.toPath(), new File(source.getParentFile(), "test.tabb").toPath(), StandardCopyOption.REPLACE_EXISTING);
+		Files.copy(bigSource.toPath(), new File(bigSource.getParentFile(), "test.tabb").toPath(), StandardCopyOption.REPLACE_EXISTING);
+		Files.copy(smallSource.toPath(), new File(smallSource.getParentFile(), "smallTest.tabb").toPath(), StandardCopyOption.REPLACE_EXISTING);
 	}
 
 	@Test
@@ -29,6 +33,17 @@ public class TabbTest {
 	@Test
 	public void removeTest() throws IOException {
 		new Tabb(test).remove("201806C85CCO8605231N4");
+	}
+
+	@Test
+	public void appendTest() throws IOException {
+		new Tabb(smallTest).append(new Object[]{"201806", Instant.now(), "C85", "CCO8605231N4", 1L});
+	}
+
+	@Test
+	public void appendAndConsolidateTest() throws IOException {
+		//Remove 2 and append 1
+		Tabb tabb = new Tabb(smallTest).append(new Object[]{"201806", Instant.now(), "C85", "CCO8605231N4", 1L}).consolidate();
 	}
 
 	@Test
@@ -54,13 +69,20 @@ public class TabbTest {
 
 	@Test
 	@Ignore
-	public void original() throws IOException {
-		Tabb tabb = new Tabb(source);
+	public void bigSource() throws IOException {
+		Tabb tabb = new Tabb(bigSource);
+		tabb.iterator().forEachRemaining(this::print);
+	}
+
+	@Test
+	@Ignore
+	public void smallSource() throws IOException {
+		Tabb tabb = new Tabb(smallSource);
 		tabb.iterator().forEachRemaining(this::print);
 	}
 
 	private void print(Row r) {
-		System.out.println(r.get(0).asString() + " : " + r.get(1).asInstant() + " : " + r.get(4).asString() + " : " + r.get(5).asString() + " : " + r.get(6).asLong() + " : " + r.get(9).asInteger());
+		System.out.println(r.get(0).asString() + " : " + r.get(1).asInstant() + " : " + r.get(2).asString() + " : " + r.get(3).asString() + " : " + r.get(4).asLong());
 	}
 
 	@Test
@@ -72,6 +94,7 @@ public class TabbTest {
 
 	@After
 	public void tearDown() throws Exception {
-		Files.copy(test.toPath(), new File(test.getParentFile(), "test.zip").toPath(), StandardCopyOption.REPLACE_EXISTING);
+		Files.move(test.toPath(), new File(test.getParentFile(), "test.zip").toPath(), StandardCopyOption.REPLACE_EXISTING);
+		Files.move(smallTest.toPath(), new File(smallTest.getParentFile(), "smallTest.zip").toPath(), StandardCopyOption.REPLACE_EXISTING);
 	}
 }
