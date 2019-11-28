@@ -61,10 +61,13 @@ public class JmsMessageHub implements MessageHub {
 
 
 	@Override
-	public void sendMessage(String channel, Message message) {
+	public synchronized void sendMessage(String channel, Message message) {
 		messageConsumers.getOrDefault(channel, Collections.emptyList()).forEach(messageConsumer -> messageConsumer.accept(message));
-		if (connected.get() && !messageOutBox.isEmpty()) scheduler.execute(recoverMessages());
-		if (!doSendMessage(channel, message)) messageOutBox.push(channel, message);
+		new Thread(() -> {
+			if (connected.get() && !messageOutBox.isEmpty()) scheduler.execute(recoverMessages());
+			if (!doSendMessage(channel, message)) messageOutBox.push(channel, message);
+		}).start();
+
 	}
 
 	public void requestResponse(String channel, String message, Consumer<String> onResponse) {

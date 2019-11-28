@@ -33,6 +33,11 @@ public class SingletonStreamer implements ColumnStreamer {
 			}
 
 			@Override
+			public boolean isIndex() {
+				return false;
+			}
+
+			@Override
 			public Type type() {
 				return Type.Boolean;
 			}
