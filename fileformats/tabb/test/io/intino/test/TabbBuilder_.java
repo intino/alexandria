@@ -5,6 +5,7 @@ import io.intino.alexandria.tabb.ColumnStream;
 import io.intino.alexandria.tabb.ColumnStream.Type;
 import io.intino.alexandria.tabb.TabbBuilder;
 import io.intino.alexandria.tabb.TabbReader;
+import io.intino.alexandria.tabb.Value;
 import io.intino.alexandria.tabb.streamers.MappColumnStreamer;
 import org.junit.After;
 import org.junit.Test;
@@ -39,7 +40,7 @@ public class TabbBuilder_ {
 		TabbReader tabb = tabbReader();
 		assertThat(tabb.size()).isEqualTo(3);
 		tabb.next();
-		TabbReader.Value value = tabbReader().get(0);
+		Value value = tabbReader().get(0);
 		assertThat(value).isNotNull();
 		assertThat(value.isAvailable());
 		assertThat(value.type()).isEqualTo(Type.Nominal);
@@ -64,7 +65,7 @@ public class TabbBuilder_ {
 		int i = 0;
 		while (tabb.hasNext()) {
 			tabb.next();
-			TabbReader.Value value = tabb.get(0);
+			Value value = tabb.get(0);
 			assertThat(value.mode().features.length).isEqualTo(50000);
 			assertThat(value).isNotNull();
 			assertThat(value.isAvailable());
@@ -83,7 +84,7 @@ public class TabbBuilder_ {
 		builder.save(new File(tabbDirectory, "result.tabb"));
 		TabbReader tabb = tabbReader();
 		tabb.next();
-		TabbReader.Value value = tabb.get(0);
+		Value value = tabb.get(0);
 		assertThat(value).isNotNull();
 		assertThat(value.type()).isEqualTo(Nominal);
 		assertThat(value.isAvailable());
@@ -107,7 +108,7 @@ public class TabbBuilder_ {
 		int i = 0;
 		while (tabb.hasNext()) {
 			tabb.next();
-			TabbReader.Value value = tabb.get(0);
+			Value value = tabb.get(0);
 			assertThat(value).isNotNull();
 			assertThat(value.isAvailable());
 			assertThat(value.type()).isEqualTo(Type.Integer);
@@ -132,8 +133,8 @@ public class TabbBuilder_ {
 		TabbReader tabbReader = tabbReader();
 
 		tabbReader.next();
-		TabbReader.Value value1 = tabbReader.get(0);
-		TabbReader.Value value2 = tabbReader.get(1);
+		Value value1 = tabbReader.get(0);
+		Value value2 = tabbReader.get(1);
 		assertThat(value1).isNotNull();
 		assertThat(value1.isAvailable());
 		assertThat(value1.type()).isEqualTo(Nominal);
@@ -165,6 +166,11 @@ public class TabbBuilder_ {
 			@Override
 			public String name() {
 				return name;
+			}
+
+			@Override
+			public boolean isIndex() {
+				return false;
 			}
 
 			@Override
@@ -205,7 +211,7 @@ public class TabbBuilder_ {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
 //		resultTabbFile().delete();
 	}
 

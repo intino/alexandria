@@ -201,17 +201,9 @@ public class Settings {
 	}
 
 	public Settings clone() {
-		Settings result = new Settings();
-		result.project = project;
-		result.module = module;
+		Settings result = new Settings(module, src, gen, res, packageName, cache);
 		result.webModule = webModule;
 		result.parent = parent;
-		result.res = res;
-		result.src = src;
-		result.gen = gen;
-		result.cache = cache;
-		result.packageName = packageName;
-		result.boxName = boxName;
 		result.classes = classes;
 		return result;
 	}
