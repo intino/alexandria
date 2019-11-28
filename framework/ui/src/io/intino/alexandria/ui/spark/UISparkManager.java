@@ -87,7 +87,7 @@ public class UISparkManager extends SparkManager<PushService> {
 
 	private String languageOf(String language) {
 		if (language == null) return null;
-		return Locale.forLanguageTag(language).toString().replaceAll("_.*", "");
+		return Locale.forLanguageTag(language).toString().replaceAll(".*_", "").toLowerCase();
 	}
 
 }
