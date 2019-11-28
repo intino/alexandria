@@ -195,7 +195,7 @@ public class ObjectStreamer<T> implements ColumnStreamer {
 
 	public static class IndexSelector<T> extends ObjectSelector {
 
-		private IndexSelector(String name, ColumnStream.Type type, Function<? super T, Object> keyExtractor) {
+		public IndexSelector(String name, ColumnStream.Type type, Function<? super T, Object> keyExtractor) {
 			super(name, type, keyExtractor);
 		}
 
