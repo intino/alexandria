@@ -19,7 +19,7 @@ public enum Language implements Rule<Enum> {
 	Kashmiri("ks"), Kurdish("ku"), Komi("kv"), Cornish("kw"), Kyrgyz("ky"), Latin("la"), Luxembourgish("lb"),
 	Ganda("lg"), Limburgish("li"), Lingala("ln"), Lao("lo"), Lithuanian("lt"), LubaKatanga("lu"), Latvian("lv"),
 	Malagasy("mg"), Marshallese("mh"), Māori("mi"), Macedonian("mk"), Malayalam("ml"), Mongolian("mn"), Marathi("mr"),
-	Malay("ms"), Maltese("mt"), Burmese("my"), Nauru("na"), NorwegianBokmal("nb"), NorthNdebele("nd"), Nepali("ne"),
+	Malay("ms"), Maltese("mt"), Mexican("mx"), Burmese("my"), Nauru("na"), NorwegianBokmal("nb"), NorthNdebele("nd"), Nepali("ne"),
 	Ndonga("ng"), Dutch("nl"), NorwegianNynorsk("nn"), Norwegian("no"), SouthNdebele("nr"), Navajo("nv"), Chichewa("ny"),
 	Occitan("oc"), Ojibwe("oj"), Oromo("om"), Oriya("or"), Ossetian("os"), Panjabi("pa"), Pali("pi"), Polish("pl"),
 	Pashto("ps"), Portuguese("pt"), Quechua("qu"), Romansh("rm"), Kirundi("rn"), Romanian("ro"), Russian("ru"),
