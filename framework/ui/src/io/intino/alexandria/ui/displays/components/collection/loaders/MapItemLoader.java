@@ -7,6 +7,8 @@ import io.intino.alexandria.ui.model.datasource.temporal.TemporalMapDatasource;
 
 import java.util.List;
 
+import static java.util.Collections.emptyList;
+
 public class MapItemLoader<Item> extends ItemLoader<MapDatasource<Item>, Item> {
 	private BoundingBox boundingBox;
 
@@ -20,7 +22,8 @@ public class MapItemLoader<Item> extends ItemLoader<MapDatasource<Item>, Item> {
 	}
 
 	public List<PlaceMark<Item>> placeMarks() {
-		if (source instanceof TemporalMapDatasource) return ((TemporalMapDatasource)source).placeMarks(timetag, condition, filters, boundingBox);
+		if (source instanceof TemporalMapDatasource)
+			return timetag != null ? ((TemporalMapDatasource)source).placeMarks(timetag, condition, filters, boundingBox) : emptyList();
 		return source.placeMarks(condition, filters, boundingBox);
 	}
 

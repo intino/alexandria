@@ -81,8 +81,10 @@ public class ItemLoader<DS extends Datasource<Item>, Item> {
 	}
 
 	private long calculateItemCount(String condition) {
-		if (source instanceof TemporalDatasource) return ((TemporalDatasource) source).itemCount(timetag, condition, filters);
-		else if (source instanceof TemporalPageDatasource) return ((TemporalPageDatasource) source).itemCount(timetag, condition, filters);
+		if (source instanceof TemporalDatasource)
+			return timetag != null ? ((TemporalDatasource) source).itemCount(timetag, condition, filters) : 0;
+		else if (source instanceof TemporalPageDatasource)
+			return timetag != null ? ((TemporalPageDatasource) source).itemCount(timetag, condition, filters) : 0;
 		else if (source instanceof MemoryDatasource) return ((MemoryDatasource) source).itemCount(condition, filters);
 		else if (source instanceof MapDatasource) return ((MapDatasource) source).placeMarkCount(condition, filters);
 		else if (source instanceof PageDatasource) return ((PageDatasource) source).itemCount(condition, filters);

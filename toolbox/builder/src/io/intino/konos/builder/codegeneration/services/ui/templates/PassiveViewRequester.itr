@@ -76,6 +76,7 @@ end
 def type(request & asset) trigger(request)
 	if (operation.equals("$name")) {
 		io.intino.alexandria.ui.spark.UIFile file = display.$name($parameter);
+		if (file == null) return;
 		manager.write(file.content(), file.label(), file.embedded());
 		return;
 	}
