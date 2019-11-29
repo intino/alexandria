@@ -168,14 +168,18 @@ export default class Operation extends AbstractOperation {
 	};
 
 	execute = () => {
+	    if (this._readonly()) return;
+
 		if (this.requireAffirm()) {
 			this.setState({ openAffirm : true });
 			return;
 		}
+
 		if (this.requireSign()) {
 			this.setState({ openSign : true });
 			return;
 		}
+		
 		this.requester.execute();
 	};
 
