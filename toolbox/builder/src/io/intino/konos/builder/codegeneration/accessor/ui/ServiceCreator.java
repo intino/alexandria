@@ -157,8 +157,8 @@ public class ServiceCreator extends UIRenderer {
 	}
 
 	private void addWebDependency(Configuration webConf) {
-		webConf.reload();
-		((LegioConfiguration) TaraUtil.configurationOf(settings.module())).addDependency(WEB, webConf.groupId() + ":" + webConf.artifactId() + ":" + webConf.version());
+		boolean added = ((LegioConfiguration) TaraUtil.configurationOf(settings.module())).addDependency(WEB, webConf.groupId() + ":" + webConf.artifactId() + ":" + webConf.version());
+		if (added) webConf.reload();
 	}
 
 	private Module findModule(String name) {
