@@ -70,14 +70,14 @@ public class TabbManifest {
 		return collect.subList(1, collect.size());
 	}
 
-	static class ColumnInfo {
+	public static class ColumnInfo {
 		String name;
 		ColumnStream.Type type;
 		boolean isIndex;
 		long size;
 		String[] features;
 
-		ColumnInfo(String name, ColumnStream.Type type, boolean isIndex, long size, String[] features) {
+		public ColumnInfo(String name, ColumnStream.Type type, boolean isIndex, long size, String[] features) {
 			this.name = name;
 			this.type = type;
 			this.isIndex = isIndex;
