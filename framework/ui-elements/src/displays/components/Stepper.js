@@ -49,6 +49,7 @@ class Stepper extends AbstractStepper {
 			active: undefined,
 			allowNext: true,
 			allowBack: true,
+			visibleList: [],
 		};
 	};
 
@@ -94,7 +95,8 @@ class Stepper extends AbstractStepper {
 	};
 
 	_renderStepper() {
-		const { orientation, children } = this.props;
+		const { orientation } = this.props;
+		const children = this._visibleChildren();
 		return (
 			<MuiStepper orientation={orientation}>{
 				React.Children.map(children,
@@ -104,18 +106,25 @@ class Stepper extends AbstractStepper {
 		);
 	};
 
+	_visibleChildren() {
+		const { children } = this.props;
+		const visibleList = this.state.visibleList;
+		return children.filter((child, i) => visibleList[i] == true);
+	};
+
 	_renderToolbar() {
 	    if (this.props.style === "NoToolbar") return;
-		const count = React.Children.count(this.props.children);
+		const count = React.Children.count(this._visibleChildren());
 		return (<div>
-			<MuiButton onClick={() => this.requester.back()} disabled={this.state.active <= 0 || !this.state.allowBack}>Back</MuiButton>
-			<MuiButton onClick={() => this.requester.next()} disabled={this.state.active >= count || !this.state.allowNext}>Next</MuiButton>
+			<MuiButton onClick={() => this.requester.back()} disabled={this.state.active <= 0 || !this.state.allowBack}>{this.translate("Back")}</MuiButton>
+			<MuiButton onClick={() => this.requester.next()} disabled={this.state.active >= count || !this.state.allowNext}>{this.translate("Next")}</MuiButton>
 		</div>);
 	};
 
-	refresh({active, allowNext, allowBack}) {
-		this.setState({active,allowNext,allowBack});
-	}
+	refresh({active, allowNext, allowBack, visibleList}) {
+		this.setState({active,allowNext,allowBack,visibleList});
+	};
+
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(Stepper));
