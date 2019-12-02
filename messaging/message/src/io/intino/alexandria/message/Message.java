@@ -1,7 +1,5 @@
 package io.intino.alexandria.message;
 
-import io.intino.alexandria.Resource;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,21 +7,10 @@ import java.time.Instant;
 import java.util.*;
 
 import static io.intino.alexandria.message.Event.TS;
-import static java.util.Arrays.stream;
 
 public class Message {
 	static final String AttachmentHeader = "[&]";
-	private static Value NullValue = new Value() {
-		@Override
-		public String data() {
-			return null;
-		}
-
-		@Override
-		public <T> T as(Class<T> type) {
-			return null;
-		}
-	};
+	private static Value NullValue = new NullValue();
 	private String type;
 	private Message owner;
 	private Event event;
@@ -56,41 +43,11 @@ public class Message {
 	}
 
 	public Value get(final String attribute) {
-		return contains(attribute) ? new Value() {
-			@Override
-			public String data() {
-				return use(attribute).value;
-			}
+		return contains(attribute) ? new DataValue(use(attribute).value, attachments) : NullValue;
+	}
 
-			@Override
-			@SuppressWarnings("unchecked")
-			public <T> T as(Class<T> type) {
-				String value = use(attribute).value;
-				return value != null ? (T) fill(Parser.of(type).parse(value)) : null;
-			}
-
-			private Object fill(Object object) {
-				if (object == null) return null;
-				if (object instanceof Resource) return fill((Resource) object);
-				if (object instanceof Resource[]) return fill((Resource[]) object);
-				return object;
-			}
-
-
-			private Resource[] fill(Resource[] resources) {
-				return stream(resources).map(this::fill).toArray(Resource[]::new);
-			}
-
-			private Resource fill(Resource resource) {
-				String key = new String(resource.bytes());
-				return new Resource(resource.name(), attachments.getOrDefault(key, new byte[0]));
-			}
-
-			@Override
-			public String toString() {
-				return use(attribute).value;
-			}
-		} : NullValue;
+	public Value getOrDefault(final String attribute) {
+		return contains(attribute) ? new DataValue(use(attribute).value, attachments) : NullValue;
 	}
 
 	public Message set(String attribute, String value) {
@@ -345,7 +302,20 @@ public class Message {
 		String data();
 
 		<T> T as(Class<T> type);
+
+		Instant asInstant();
+
+		int asInteger();
+
+		Long asLong();
+
+		String asString();
+
+		double asDouble();
+
+		boolean asBoolean();
 	}
+
 
 	static class Attribute {
 		String name;
