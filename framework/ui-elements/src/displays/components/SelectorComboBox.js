@@ -11,7 +11,7 @@ const styles = theme => ({
 	container : {
 		position: "relative",
 		minWidth: "170px",
-		width: "calc(100% - 32px)",
+		width: "100%",
 	},
 	readonly : {
 		position: "absolute",

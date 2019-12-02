@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.events.BeforeListener;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.Listener;
 import io.intino.alexandria.ui.displays.notifiers.BaseDialogNotifier;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 
 public class BaseDialog<DN extends BaseDialogNotifier, B extends Box> extends AbstractBaseDialog<DN, B> {
     private String title;
-    private java.util.List<Listener> beforeOpenListeners = new ArrayList<>();
+    private java.util.List<BeforeListener> beforeOpenListeners = new ArrayList<>();
     private java.util.List<Listener> openListeners = new ArrayList<>();
     private java.util.List<Listener> closeListeners = new ArrayList<>();
 
@@ -17,7 +18,7 @@ public class BaseDialog<DN extends BaseDialogNotifier, B extends Box> extends Ab
         super(box);
     }
 
-    public BaseDialog onBeforeOpen(Listener listener) {
+    public BaseDialog onBeforeOpen(BeforeListener listener) {
         beforeOpenListeners.add(listener);
         return this;
     }
@@ -33,7 +34,7 @@ public class BaseDialog<DN extends BaseDialogNotifier, B extends Box> extends Ab
     }
 
     public void open() {
-        notifyBeforeOpen();
+        if (!notifyBeforeOpen()) return;
         notifier.open();
         notifyOpen();
     }
@@ -54,8 +55,8 @@ public class BaseDialog<DN extends BaseDialogNotifier, B extends Box> extends Ab
         return this;
     }
 
-    private void notifyBeforeOpen() {
-        beforeOpenListeners.forEach(l -> l.accept(new Event(this)));
+    private boolean notifyBeforeOpen() {
+        return beforeOpenListeners.stream().allMatch(l -> l.accept(new Event(this)));
     }
 
     private void notifyOpen() {

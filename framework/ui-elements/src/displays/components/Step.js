@@ -13,20 +13,22 @@ import Delayer from "../../util/Delayer";
 const styles = theme => ({});
 
 class Step extends AbstractStep {
-	state = {
-		icon: undefined,
-		isActive: false,
-		isDisabled: false,
-		isCompleted: false
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new StepNotifier(this);
 		this.requester = new StepRequester(this);
+		this.state = {
+		    ...this.state,
+            icon: undefined,
+            isActive: false,
+            isDisabled: false,
+            isCompleted: false
+		};
 	};
 
 	render() {
+		if (!this.state.visible) return (<React.Fragment/>);
 		return (this.props.showContent) ? this._renderContent() : this._renderStep();
 	};
 

@@ -33,7 +33,7 @@ public class MimeTypes {
 	}
 
 	public static String extensionOf(String contentType) {
-		return extensions.getOrDefault(contentType, "");
+		return extensions.getOrDefault(contentType, ".bin");
 	}
 
 	static {
@@ -67,6 +67,7 @@ public class MimeTypes {
 		contentTypes.put(".odp", "application/vnd.oasis.opendocument.presentation");
 		contentTypes.put(".ods", "application/vnd.oasis.opendocument.spreadsheet");
 		contentTypes.put(".odt", "application/vnd.oasis.opendocument.text");
+		contentTypes.put(".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		contentTypes.put(".oga", "audio/ogg");
 		contentTypes.put(".ogv", "video/ogg");
 		contentTypes.put(".ogx", "application/ogg");

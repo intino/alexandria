@@ -106,6 +106,7 @@ Schema StepperInfo
     Attribute active as Integer
     Attribute allowNext as Bool
     Attribute allowBack as Bool
+    Attribute visibleList as Bool List
 
 Schema StepInfo
     Attribute icon as Text

@@ -25,6 +25,7 @@ public class DialogExamplesMold extends AbstractDialogExamplesMold<UiFrameworkBo
         dialog1.onBeforeOpen((event) -> {
             field1.value("");
             field2.value("");
+            return true;
         });
         acceptButton.onExecute((event -> {
             String value1 = field1.value() != null && !field1.value().isEmpty() ? field1.value() : "(no value)";
