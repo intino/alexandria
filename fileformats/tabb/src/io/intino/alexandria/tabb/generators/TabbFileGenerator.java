@@ -77,6 +77,7 @@ public class TabbFileGenerator implements FileGenerator {
 	}
 
 	private Object register(Object value) {
+		if (value == null) return null;
 		if (type() != Type.Nominal) return value;
 		String nominal = value.toString().replace('\n', '|');
 		if (!modes.containsKey(nominal)) modes.put(nominal, modes.size());

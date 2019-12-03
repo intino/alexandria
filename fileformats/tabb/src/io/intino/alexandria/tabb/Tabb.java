@@ -40,7 +40,9 @@ public class Tabb {
 
 				@Override
 				public boolean hasNext() {
-					return reader.hasNext();
+					boolean hasNext = reader.hasNext();
+					if (!hasNext) reader.close();
+					return hasNext;
 				}
 
 				@Override
@@ -108,7 +110,6 @@ public class Tabb {
 				});
 			}
 			columns.forEach(Tabbc::close);
-
 			updateTabb(temp, columns);
 			return this;
 		} catch (IOException e) {

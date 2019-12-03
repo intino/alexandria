@@ -47,8 +47,7 @@ def type(mounter & batch)
 	package $package+validPackage.mounters;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
-	import io.intino.alexandria.message.Message;
-	import io.intino.alexandria.zim.ZimStream;
+	import io.intino.alexandria.event.EventStream;
 
     public class $name+FirstUpperCase {
 
@@ -62,7 +61,7 @@ def type(mounter & batch)
 		}
 
     	public void execute() {
-            ZimStream.Merge stream = new ZimStream.Merge($tank+content...[, ]);
+            EventStream.Merge stream = new EventStream.Merge($tank+content...[, ]);
             while(stream.hasNext()) {
                 process(stream.next());
             }
@@ -79,8 +78,6 @@ def type(mounter)
 	package $package+validPackage.mounters;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
-	import io.intino.alexandria.message.Message;
-	import io.intino.alexandria.message.MessageCast;
 	import io.intino.alexandria.logger.Logger;
 
 	public class $name+FirstUpperCase {
@@ -90,7 +87,7 @@ def type(mounter)
 			this.box = box;
 		}
 
-		public void handle(Message message) {
+		public void handle(Event event) {
 
 		}
 	}
@@ -161,10 +158,6 @@ end
 
 def type(schemaImport)
 	import $package.schemas.*;
-end
-
-def attribute(this:message) trigger(typeClass)
-	io.intino.alexandria.message.Message
 end
 
 def type(schema) trigger(typeClass)

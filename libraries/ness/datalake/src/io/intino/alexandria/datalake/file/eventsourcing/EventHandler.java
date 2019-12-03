@@ -1,7 +1,7 @@
 package io.intino.alexandria.datalake.file.eventsourcing;
 
-import io.intino.alexandria.message.Message;
+import io.intino.alexandria.event.Event;
 
 public interface EventHandler {
-	void handle(Message message);
+	void handle(Event event);
 }

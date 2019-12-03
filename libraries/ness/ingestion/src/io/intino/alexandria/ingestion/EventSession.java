@@ -3,9 +3,9 @@ package io.intino.alexandria.ingestion;
 import io.intino.alexandria.Fingerprint;
 import io.intino.alexandria.Session;
 import io.intino.alexandria.Timetag;
-import io.intino.alexandria.message.Message;
-import io.intino.alexandria.message.MessageWriter;
+import io.intino.alexandria.event.Event;
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.message.MessageWriter;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -23,12 +23,12 @@ public class EventSession {
 		this.provider = provider;
 	}
 
-	public void put(String tank, Timetag timetag, Message... messages) {
-		put(tank, timetag, Arrays.stream(messages));
+	public void put(String tank, Timetag timetag, Event... events) {
+		put(tank, timetag, Arrays.stream(events));
 	}
 
-	public void put(String tank, Timetag timetag, Stream<Message> messages) {
-		put(writerOf(tank, timetag), messages);
+	public void put(String tank, Timetag timetag, Stream<Event> eventStream) {
+		put(writerOf(tank, timetag), eventStream);
 	}
 
 	public void flush() {
@@ -47,13 +47,13 @@ public class EventSession {
 		}
 	}
 
-	private void put(MessageWriter writer, Stream<Message> messages) {
-		messages.forEach(m -> write(writer, m));
+	private void put(MessageWriter writer, Stream<Event> events) {
+		events.forEach(e -> write(writer, e));
 	}
 
-	private void write(MessageWriter writer, Message message) {
+	private void write(MessageWriter writer, Event event) {
 		try {
-			writer.write(message);
+			writer.write(event.toMessage());
 		} catch (IOException e) {
 			Logger.error(e);
 		}

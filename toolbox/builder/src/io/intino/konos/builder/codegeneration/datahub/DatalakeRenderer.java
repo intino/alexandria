@@ -40,7 +40,7 @@ public class DatalakeRenderer {
 		settings.classes().put("Datalake", "Datalake");
 		File destination = genDirectory;
 		if (!Commons.javaFile(destination, "Datalake").exists())
-			writeFrame(destination, "Datalake", customize(new io.intino.konos.builder.codegeneration.datalake.DatalakeTemplate()).render(builder.toFrame()));
+			writeFrame(destination, "Datalake", customize(new DatalakeTemplate()).render(builder.toFrame()));
 	}
 
 	private List<String> tanksOf(Mounter.Batch mounter) {
