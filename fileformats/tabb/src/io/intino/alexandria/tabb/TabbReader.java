@@ -11,7 +11,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-public class TabbReader {
+public class TabbReader implements AutoCloseable {
 	private final TabbManifest info;
 	private final List<TabbColumnStream> columns;
 

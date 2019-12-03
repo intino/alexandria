@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.0") message
+Artifact("io.intino.alexandria", "2.0.0") message
 	Imports
 		Compile("io.intino.alexandria", "primitives", "1.0.4")
 		Test("junit", "junit", "LATEST")

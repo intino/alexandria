@@ -1,12 +1,13 @@
 package io.intino.alexandria.bpm;
 
+import io.intino.alexandria.event.Event;
 import io.intino.alexandria.message.Message;
 
 import java.time.Instant;
 
 import static io.intino.alexandria.bpm.Workflow.EventType;
 
-public class ProcessStatus implements Comparable<ProcessStatus> {
+public class ProcessStatus extends Event implements Comparable<ProcessStatus> {
 
 	private static final String Owner = "owner";
 	private static final String Task = "Task";
@@ -20,10 +21,9 @@ public class ProcessStatus implements Comparable<ProcessStatus> {
 	private static final String Id = "id";
 	private static final String CallbackProcess = "callbackProcess";
 	private static final String CallbackState = "callbackState";
-	private final Message message;
 
 	public ProcessStatus(String id, String name, Process.Status processStatus) {
-		this(new Message(EventType)
+		super(new Message(EventType)
 				.set(Ts, Instant.now().toString())
 				.set(Id, id)
 				.set(Name, name)
@@ -31,7 +31,7 @@ public class ProcessStatus implements Comparable<ProcessStatus> {
 	}
 
 	public ProcessStatus(String id, String name, Process.Status processStatus, String owner, String callbackProcess, String callbackState) {
-		this(new Message(EventType)
+		super(new Message(EventType)
 				.set(Ts, Instant.now().toString())
 				.set(Id, id)
 				.set(Name, name)
@@ -41,8 +41,12 @@ public class ProcessStatus implements Comparable<ProcessStatus> {
 				.set(CallbackState, callbackState));
 	}
 
+	public ProcessStatus(Event event) {
+		super(event.toMessage());
+	}
+
 	public ProcessStatus(Message message) {
-		this.message = message;
+		super(message);
 	}
 
 	public Instant ts() {

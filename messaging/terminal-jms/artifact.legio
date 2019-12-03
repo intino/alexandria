@@ -2,8 +2,9 @@ dsl Legio
 
 Artifact("io.intino.alexandria", "1.0.0") terminal-jms
 	Imports
-		Compile("io.intino.alexandria","message", "1.0.0")
+		Compile("io.intino.alexandria", "event", "1.0.0")
 		Compile("io.intino.alexandria", "jms", "1.2.0")
+		Compile("io.intino.alexandria", "json", "1.0.1")
 		Test("junit", "junit", "LATEST")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.releases)

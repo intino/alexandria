@@ -44,7 +44,7 @@ public abstract class Workflow {
 		}));
 	}
 
-	public void exitState(String processId, String processName, String stateName, Task.Result result){
+	public void exitState(String processId, String processName, String stateName, Task.Result result) {
 		send(new ProcessStatus(processId, processName, Running)
 				.addStateInfo(stateName, State.Status.Exit)
 				.addTaskInfo(result));
@@ -226,7 +226,7 @@ public abstract class Workflow {
 		send(status);
 	}
 
-	public void receive(ProcessStatus processStatus){
+	public void receive(ProcessStatus processStatus) {
 		process(processStatus);
 	}
 

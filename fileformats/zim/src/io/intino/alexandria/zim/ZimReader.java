@@ -1,8 +1,8 @@
 package io.intino.alexandria.zim;
 
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageReader;
-import io.intino.alexandria.logger.Logger;
 
 import java.io.*;
 import java.util.Iterator;
@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 
 import static java.util.Arrays.stream;
-import static java.util.Comparator.comparing;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class ZimReader implements ZimStream {
@@ -40,11 +39,30 @@ public class ZimReader implements ZimStream {
 	}
 
 	public ZimReader(Stream<Message> stream) {
-		this(stream.sorted(comparing(m -> m.asEvent().instant())).iterator());
+		this(stream.iterator());
 	}
 
 	public ZimReader(Iterator<Message> iterator) {
 		this.iterator = iterator;
+	}
+
+	public Iterator<Message> iterator() {
+		return iterator;
+	}
+
+	@Override
+	public Message current() {
+		return current;
+	}
+
+	@Override
+	public Message next() {
+		return current = iterator.hasNext() ? iterator.next() : null;
+	}
+
+	@Override
+	public boolean hasNext() {
+		return iterator.hasNext();
 	}
 
 	private static Iterator<Message> iteratorOf(InputStream is) {
@@ -107,21 +125,6 @@ public class ZimReader implements ZimStream {
 
 	private static BufferedInputStream fileInputStream(File file) throws FileNotFoundException {
 		return new BufferedInputStream(new FileInputStream(file));
-	}
-
-	@Override
-	public Message current() {
-		return current;
-	}
-
-	@Override
-	public Message next() {
-		return current = iterator.hasNext() ? iterator.next() : null;
-	}
-
-	@Override
-	public boolean hasNext() {
-		return iterator.hasNext();
 	}
 
 }

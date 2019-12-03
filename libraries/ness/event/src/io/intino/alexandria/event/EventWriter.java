@@ -1,7 +1,6 @@
-package io.intino.alexandria.zim;
+package io.intino.alexandria.event;
 
 import io.intino.alexandria.logger.Logger;
-import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageWriter;
 
 import java.io.BufferedOutputStream;
@@ -17,39 +16,39 @@ import java.util.zip.GZIPOutputStream;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 @SuppressWarnings({"WeakerAccess"})
-public class ZimBuilder {
+public class EventWriter {
 	private final File source;
 
-	public ZimBuilder(File file) {
+	public EventWriter(File file) {
 		this.source = file;
 		file.getParentFile().mkdirs();
 	}
 
-	public void put(Message... messages) {
-		put(new ZimReader(messages));
+	public void put(Event... messages) {
+		put(new EventReader(messages));
 	}
 
-	public void put(List<Message> messages) {
-		put(new ZimReader(messages));
+	public void put(List<Event> messages) {
+		put(new EventReader(messages));
 	}
 
-	public void put(Stream<Message> stream) {
-		put(new ZimReader(stream));
+	public void put(Stream<Event> stream) {
+		put(new EventReader(stream));
 	}
 
-	public void put(ZimStream zimStream) {
+	public void put(EventStream eventStream) {
 		try {
-			Files.move(merge(zimStream).toPath(), source.toPath(), REPLACE_EXISTING);
+			Files.move(merge(eventStream).toPath(), source.toPath(), REPLACE_EXISTING);
 		} catch (IOException e) {
 			Logger.error(e);
 		}
 	}
 
-	private File merge(ZimStream data) {
+	private File merge(EventStream data) {
 		File file = tempFile();
 		try (MessageWriter writer = new MessageWriter(zipStream(file))) {
-			ZimStream stream = mergeFileWith(data);
-			while (stream.hasNext()) writer.write(stream.next());
+			EventStream stream = mergeFileWith(data);
+			while (stream.hasNext()) writer.write(stream.next().toMessage());
 		} catch (IOException e) {
 			Logger.error(e);
 		}
@@ -63,15 +62,15 @@ public class ZimBuilder {
 
 	private File tempFile() {
 		try {
-			return File.createTempFile("builder#", ".zim");
+			return File.createTempFile("eventwriter#", ".zim");
 		} catch (IOException e) {
 			Logger.error(e);
-			return new File("builder#" + UUID.randomUUID().toString() + ".zim");
+			return new File("eventwriter#" + UUID.randomUUID().toString() + ".zim");
 		}
 	}
 
-	private ZimStream mergeFileWith(ZimStream data) {
-		return new ZimStream.Sequence(new ZimReader(source), data);
+	private EventStream mergeFileWith(EventStream data) {
+		return new EventStream.Sequence(new EventReader(source), data);
 	}
 
 }

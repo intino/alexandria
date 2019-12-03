@@ -30,10 +30,10 @@ public class EventSessionManager_ {
 		EventSession session = handler.createEventSession();
 		List<Message> messageList = new ArrayList<>();
 		for (int i = 0; i < 30; i++) {
-			LocalDateTime now = LocalDateTime.of(2019, 02, 28, 16, 15 + i);
+			LocalDateTime now = LocalDateTime.of(2019, 2, 28, 16, 15 + i);
 			Message message = message(now.toInstant(ZoneOffset.UTC), i);
 			messageList.add(message);
-			session.put("tank1", new Timetag(now, Scale.Hour), message);
+			session.put("tank1", new Timetag(now, Scale.Hour), new Tank1(message));
 		}
 		session.close();
 		handler.pushTo(stageFolder);

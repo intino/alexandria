@@ -6,14 +6,12 @@ import java.io.InputStream;
 import java.time.Instant;
 import java.util.*;
 
-import static io.intino.alexandria.message.Event.TS;
 
 public class Message {
 	static final String AttachmentHeader = "[&]";
 	private static Value NullValue = new NullValue();
 	private String type;
 	private Message owner;
-	private Event event;
 	private Map<String, Attribute> attributes;
 	private List<Message> components;
 	private Map<String, byte[]> attachments;
@@ -46,16 +44,6 @@ public class Message {
 		return contains(attribute) ? new DataValue(use(attribute).value, attachments) : NullValue;
 	}
 
-	public Value getOrDefault(final String attribute) {
-		return contains(attribute) ? new DataValue(use(attribute).value, attachments) : NullValue;
-	}
-
-	public Message set(String attribute, String value) {
-		remove(attribute);
-		use(attribute).value = value;
-		return this;
-	}
-
 	public Message set(String attribute, Boolean value) {
 		return set(attribute, value.toString());
 	}
@@ -82,6 +70,12 @@ public class Message {
 
 	public Message set(String attribute, String value, byte[] content) {
 		return set(attribute, value + "@" + attach(content));
+	}
+
+	public Message set(String attribute, String value) {
+		remove(attribute);
+		use(attribute).value = value;
+		return this;
 	}
 
 	public Message append(String attribute, Boolean value) {
@@ -113,18 +107,6 @@ public class Message {
 
 	public Message append(String attribute, String name, byte[] content) {
 		return append(attribute, name + "@" + attach(content));
-	}
-
-	public boolean isEvent() {
-		return contains(TS);
-	}
-
-	public Event asEvent() {
-		return isEvent() ? event() : null;
-	}
-
-	private Event event() {
-		return event != null ? event : (event = new Event(this));
 	}
 
 	public Message rename(String attribute, String newName) {
@@ -277,7 +259,7 @@ public class Message {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(type, owner, event, attributes, components, attachments);
+		return Objects.hash(type, owner, attributes, components, attachments);
 	}
 
 	private static String indent(String text) {
@@ -316,7 +298,6 @@ public class Message {
 		boolean asBoolean();
 	}
 
-
 	static class Attribute {
 		String name;
 		String value;
@@ -329,7 +310,6 @@ public class Message {
 		public String toString() {
 			return name + ":" + value;
 		}
-
 	}
 
 	private static class UUID {
@@ -341,11 +321,8 @@ public class Message {
 			return true;
 		}
 
-
 		static String random() {
 			return java.util.UUID.randomUUID().toString();
 		}
 	}
-
 }
-

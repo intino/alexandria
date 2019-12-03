@@ -10,7 +10,7 @@ def type(adapter)
 			this.box = box;
 		}
 
-		public void exectute() {
+		public void execute() {
 
 		}
 	}

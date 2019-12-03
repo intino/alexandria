@@ -2,9 +2,9 @@ package io.intino.alexandria.datalake;
 
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
+import io.intino.alexandria.event.EventStream;
 import io.intino.alexandria.mapp.MappReader;
 import io.intino.alexandria.zet.ZetStream;
-import io.intino.alexandria.zim.ZimStream;
 
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -27,9 +27,9 @@ public interface Datalake {
 
 			String name();
 
-			ZimStream content();
+			EventStream content();
 
-			ZimStream content(Predicate<Timetag> filter);
+			EventStream content(Predicate<Timetag> filter);
 		}
 	}
 
@@ -83,7 +83,6 @@ public interface Datalake {
 			Variable variable(String name);
 		}
 
-
 		class Variable {
 			public final String name;
 			public final String value;
@@ -93,6 +92,5 @@ public interface Datalake {
 				this.value = value;
 			}
 		}
-
 	}
 }

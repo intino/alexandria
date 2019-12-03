@@ -254,7 +254,7 @@ def type(terminal) trigger(init)
 		$subscriber...[$NL]
 	}
 	]
-	Logger.info("Terminal connected to Data Hub!");
+	Logger.info("Terminal connected to Event Hub!");
 end
 
 def type(messageHub) trigger(init)
