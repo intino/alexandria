@@ -3,15 +3,15 @@ package io.intino.alexandria.sealing;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.file.FileDatalake;
+import io.intino.alexandria.event.Event;
+import io.intino.alexandria.event.EventReader;
 import io.intino.alexandria.ingestion.EventSession;
 import io.intino.alexandria.ingestion.SessionHandler;
 import io.intino.alexandria.ingestion.SetSession;
-import io.intino.alexandria.message.Message;
 import io.intino.alexandria.mapp.Mapp;
 import io.intino.alexandria.mapp.MappReader;
 import io.intino.alexandria.mapp.MappStream;
 import io.intino.alexandria.zet.ZetReader;
-import io.intino.alexandria.zim.ZimReader;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -36,7 +36,7 @@ public class SessionManagerTests {
 	@Test
 	public void should_create_a_session() throws IOException {
 		SessionHandler handler = new SessionHandler(LOCAL_STAGE);
-		List<Message> messageList = createEvents(handler);
+		List<Event> messageList = createEvents(handler);
 		Timetag timetag = createSets(handler);
 
 		handler.pushTo(STAGE_FOLDER);
@@ -57,25 +57,25 @@ public class SessionManagerTests {
 		return timetag;
 	}
 
-	private List<Message> createEvents(SessionHandler handler) {
+	private List<Event> createEvents(SessionHandler handler) {
 		EventSession eventSession = handler.createEventSession();
-		List<Message> messageList = new ArrayList<>();
+		List<Event> eventList = new ArrayList<>();
 		for (int i = 0; i < 30; i++) {
 			LocalDateTime now = LocalDateTime.of(2019, 02, 28, 04, 15 + i);
-			Message message = message(now.toInstant(ZoneOffset.UTC), i);
-			messageList.add(message);
-			eventSession.put("tank1", new Timetag(now, Scale.Hour), message);
+			Event event = event(now.toInstant(ZoneOffset.UTC), i);
+			eventList.add(event);
+			eventSession.put("tank1", new Timetag(now, Scale.Hour), new Tank1(event));
 		}
 		eventSession.close();
-		return messageList;
+		return eventList;
 	}
 
-	private void checkEvents(List<Message> messageList) {
-		ZimReader reader = new ZimReader(new File("temp/datalake/events/tank1/2019022804.zim"));
+	private void checkEvents(List<Event> eventList) {
+		EventReader reader = new EventReader(new File("temp/datalake/events/tank1/2019022804.zim"));
 		for (int i = 0; i < 30; i++) {
-			Message next = reader.next();
-			assertEquals(next.get("ts"), messageList.get(i).get("ts"));
-			assertEquals(next.get("entries"), messageList.get(i).get("entries"));
+			Tank1 next = new Tank1(reader.next());
+			assertEquals(next.ts(), eventList.get(i).ts());
+			assertEquals(next.entries(), new Tank1(eventList.get(i)).entries());
 		}
 	}
 
@@ -93,10 +93,9 @@ public class SessionManagerTests {
 		assertEquals(line, "0;var;value");
 	}
 
-
 	//TODO: merge with existing event files
-	private Message message(Instant instant, int index) {
-		return new Message("tank1").set("ts", instant.toString()).set("entries", index);
+	private Event event(Instant instant, int index) {
+		return new Tank1().entries(index).ts(instant);
 	}
 
 	@After

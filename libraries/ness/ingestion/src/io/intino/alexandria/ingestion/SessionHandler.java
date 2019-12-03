@@ -118,6 +118,58 @@ public class SessionHandler {
 		OutputStream outputStream(String name, Session.Type type);
 	}
 
+	private static class FileSessionData implements SessionData {
+		private final File file;
+
+		FileSessionData(File file) {
+			this.file = file;
+		}
+
+		@Override
+		public InputStream inputStream() {
+			try {
+				return new FileInputStream(file);
+			} catch (FileNotFoundException e) {
+				Logger.error(e);
+				return null;
+			}
+		}
+
+		public File file() {
+			return file;
+		}
+
+		@Override
+		public OutputStream outputStream() {
+			try {
+				if (!file.exists()) file.createNewFile();
+				return new BufferedOutputStream(new FileOutputStream(file));
+			} catch (IOException e) {
+				Logger.error(e);
+				return null;
+			}
+		}
+	}
+
+	private static class MemorySessionData implements SessionData {
+
+		private final ByteArrayOutputStream outputStream;
+
+		public MemorySessionData() {
+			this.outputStream = new ByteArrayOutputStream();
+		}
+
+		@Override
+		public InputStream inputStream() {
+			return new ByteArrayInputStream(outputStream.toByteArray());
+		}
+
+		@Override
+		public OutputStream outputStream() {
+			return outputStream;
+		}
+	}
+
 	private class PrivateProvider implements Provider {
 
 		public OutputStream outputStream(Session.Type type) {
@@ -183,57 +235,5 @@ public class SessionHandler {
 			return sessionData.outputStream();
 		}
 
-	}
-
-	private class FileSessionData implements SessionData {
-		private final File file;
-
-		FileSessionData(File file) {
-			this.file = file;
-		}
-
-		@Override
-		public InputStream inputStream() {
-			try {
-				return new FileInputStream(file);
-			} catch (FileNotFoundException e) {
-				Logger.error(e);
-				return null;
-			}
-		}
-
-		public File file() {
-			return file;
-		}
-
-		@Override
-		public OutputStream outputStream() {
-			try {
-				if (!file.exists()) file.createNewFile();
-				return new BufferedOutputStream(new FileOutputStream(file));
-			} catch (IOException e) {
-				Logger.error(e);
-				return null;
-			}
-		}
-	}
-
-	private class MemorySessionData implements SessionData {
-
-		private final ByteArrayOutputStream outputStream;
-
-		public MemorySessionData() {
-			this.outputStream = new ByteArrayOutputStream();
-		}
-
-		@Override
-		public InputStream inputStream() {
-			return new ByteArrayInputStream(outputStream.toByteArray());
-		}
-
-		@Override
-		public OutputStream outputStream() {
-			return outputStream;
-		}
 	}
 }

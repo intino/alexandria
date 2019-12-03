@@ -63,9 +63,9 @@ def type(datalake & nfs)
 					destinationTank.mkdirs();
 					File file = new File(this.originDatalakePath + "/events/" + tank);
 					if (!file.exists()) continue;
-					List<File> zims = java.util.Arrays.asList(file.listFiles(f-> f.getName().endsWith(".zim")));
-					zims.sort(Comparator.comparing(File::getName));
-					copyZims(zims, destinationTank);
+					List<File> eventFiles = java.util.Arrays.asList(file.listFiles(f-> f.getName().endsWith(".zim")));
+					eventFiles.sort(Comparator.comparing(File::getName));
+					copyEventFiles(eventFiles, destinationTank);
 				}
 			}
 
@@ -81,7 +81,7 @@ def type(datalake & nfs)
 				}
 			}
 
-			private void copyZims(List<File> zims, File destinationTank) throws IOException {
+			private void copyEventFiles(List<File> zims, File destinationTank) throws IOException {
 				String startingTimetag = this.startingTimetag + ".zim";
 				for (File zim : zims)
 					if (zim.getName().replace(".zim", "").compareTo(startingTimetag) >= 0 && !new File(destinationTank, zim.getName()).exists())

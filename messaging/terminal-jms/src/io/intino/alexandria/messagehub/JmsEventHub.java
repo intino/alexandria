@@ -1,9 +1,10 @@
 package io.intino.alexandria.messagehub;
 
+import io.intino.alexandria.event.Event;
+import io.intino.alexandria.event.EventHub;
 import io.intino.alexandria.jms.*;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
-import io.intino.alexandria.message.MessageHub;
 import io.intino.alexandria.message.MessageWriter;
 
 import javax.jms.*;
@@ -22,25 +23,25 @@ import static io.intino.alexandria.jms.MessageReader.textFrom;
 import static javax.jms.Session.AUTO_ACKNOWLEDGE;
 import static javax.jms.Session.SESSION_TRANSACTED;
 
-public class JmsMessageHub implements MessageHub {
+public class JmsEventHub implements EventHub {
 	private final Map<String, JmsProducer> producers;
 	private final Map<String, JmsConsumer> consumers;
-	private final Map<String, List<Consumer<Message>>> messageConsumers;
+	private final Map<String, List<Consumer<Event>>> eventConsumers;
 	private final Map<Consumer<javax.jms.Message>, Integer> jmsConsumers;
-	private final MessageOutBox messageOutBox;
+	private final EventOutBox messageOutBox;
 	private Connection connection;
 	private Session session;
 	private AtomicBoolean connected = new AtomicBoolean(false);
 	private ScheduledExecutorService scheduler;
 
-	public JmsMessageHub(String brokerUrl, String user, String password, String clientId, File messageCacheDirectory) {
+	public JmsEventHub(String brokerUrl, String user, String password, String clientId, File messageCacheDirectory) {
 		this(brokerUrl, user, password, clientId, false, messageCacheDirectory);
 	}
 
-	public JmsMessageHub(String brokerUrl, String user, String password, String clientId, boolean transactedSession, File messageCacheDirectory) {
+	public JmsEventHub(String brokerUrl, String user, String password, String clientId, boolean transactedSession, File messageCacheDirectory) {
 		producers = new HashMap<>();
 		consumers = new HashMap<>();
-		this.messageOutBox = new MessageOutBox(messageCacheDirectory);
+		this.messageOutBox = new EventOutBox(messageCacheDirectory);
 		if (brokerUrl != null && !brokerUrl.isEmpty()) {
 			try {
 				connection = BusConnector.createConnection(brokerUrl, user, password, connectionListener());
@@ -54,18 +55,18 @@ public class JmsMessageHub implements MessageHub {
 			}
 		} else Logger.warn("Broker url is null");
 		jmsConsumers = new HashMap<>();
-		messageConsumers = new HashMap<>();
+		eventConsumers = new HashMap<>();
 		scheduler = Executors.newScheduledThreadPool(1);
 		scheduler.scheduleAtFixedRate(recoverMessages(), 0, 1, TimeUnit.HOURS);
 	}
 
 
 	@Override
-	public synchronized void sendMessage(String channel, Message message) {
-		messageConsumers.getOrDefault(channel, Collections.emptyList()).forEach(messageConsumer -> messageConsumer.accept(message));
+	public synchronized void sendEvent(String channel, Event event) {
+		eventConsumers.getOrDefault(channel, Collections.emptyList()).forEach(messageConsumer -> messageConsumer.accept(event));
 		new Thread(() -> {
 			if (connected.get() && !messageOutBox.isEmpty()) scheduler.execute(recoverMessages());
-			if (!doSendMessage(channel, message)) messageOutBox.push(channel, message);
+			if (!doSendMessage(channel, event)) messageOutBox.push(channel, event);
 		}).start();
 
 	}
@@ -92,23 +93,23 @@ public class JmsMessageHub implements MessageHub {
 	}
 
 	@Override
-	public void attachListener(String channel, Consumer<Message> onMessageReceived) {
+	public void attachListener(String channel, Consumer<Event> onMessageReceived) {
 		if (session == null) return;
 		registerConsumer(channel, onMessageReceived);
 		JmsConsumer consumer = this.consumers.get(channel);
 		if (consumer == null) return;
-		Consumer<javax.jms.Message> messageConsumer = m -> onMessageReceived.accept(MessageDeserializer.deserialize(m));
+		Consumer<javax.jms.Message> messageConsumer = e -> onMessageReceived.accept(new Event(MessageDeserializer.deserialize(e)));
 		jmsConsumers.put(messageConsumer, messageConsumer.hashCode());
 		consumer.listen(messageConsumer);
 	}
 
 	@Override
-	public void attachListener(String channel, String subscriberId, Consumer<Message> onMessageReceived) {
+	public void attachListener(String channel, String subscriberId, Consumer<Event> onMessageReceived) {
 		if (session == null) return;
 		registerConsumer(channel, onMessageReceived);
 		TopicConsumer consumer = (TopicConsumer) this.consumers.get(channel);
 		if (consumer == null) return;
-		Consumer<javax.jms.Message> messageConsumer = m -> onMessageReceived.accept(MessageDeserializer.deserialize(m));
+		Consumer<javax.jms.Message> messageConsumer = m -> onMessageReceived.accept(new Event(MessageDeserializer.deserialize(m)));
 		jmsConsumers.put(messageConsumer, messageConsumer.hashCode());
 		consumer.listen(messageConsumer, subscriberId);
 	}
@@ -118,15 +119,15 @@ public class JmsMessageHub implements MessageHub {
 		if (this.consumers.containsKey(channel)) {
 			this.consumers.get(channel).close();
 			this.consumers.remove(channel);
-			this.messageConsumers.get(channel).clear();
+			this.eventConsumers.get(channel).clear();
 		}
 	}
 
 	@Override
-	public void detachListeners(Consumer<Message> consumer) {
+	public void detachListeners(Consumer<Event> consumer) {
 		Integer code = jmsConsumers.get(consumer);
 		if (code == null) return;
-		messageConsumers.values().forEach(list -> list.remove(consumer));
+		eventConsumers.values().forEach(list -> list.remove(consumer));
 		for (JmsConsumer jc : consumers.values()) {
 			List<Consumer<javax.jms.Message>> toRemove = jc.listeners().stream().filter(l -> l.hashCode() == code).collect(Collectors.toList());
 			toRemove.forEach(jc::removeListener);
@@ -178,19 +179,19 @@ public class JmsMessageHub implements MessageHub {
 		}
 	}
 
-	private void registerConsumer(String channel, Consumer<Message> onMessageReceived) {
+	private void registerConsumer(String channel, Consumer<Event> onMessageReceived) {
 		this.consumers.putIfAbsent(channel, topicConsumer(channel));
-		this.messageConsumers.putIfAbsent(channel, new ArrayList<>());
-		this.messageConsumers.get(channel).add(onMessageReceived);
+		this.eventConsumers.putIfAbsent(channel, new ArrayList<>());
+		this.eventConsumers.get(channel).add(onMessageReceived);
 	}
 
-	private boolean doSendMessage(String channel, Message message) {
+	private boolean doSendMessage(String channel, Event event) {
 		if (session == null || !connected.get()) return false;
 		try {
 			producers.putIfAbsent(channel, new TopicProducer(session, channel));
 			JmsProducer producer = producers.get(channel);
 			if (producer == null) return false;
-			return producer.produce(serialize(message));
+			return producer.produce(serialize(event));
 		} catch (JMSException | IOException e) {
 			Logger.error(e);
 			return false;
@@ -242,7 +243,7 @@ public class JmsMessageHub implements MessageHub {
 		return () -> {
 			if (messageOutBox.isEmpty()) return;
 			while (!messageOutBox.isEmpty()) {
-				Map.Entry<String, Message> poll = messageOutBox.get();
+				Map.Entry<String, Event> poll = messageOutBox.get();
 				if (doSendMessage(poll.getKey(), poll.getValue())) messageOutBox.pop();
 				else return;
 			}
@@ -255,10 +256,10 @@ public class JmsMessageHub implements MessageHub {
 		return Long.toHexString(randomLong);
 	}
 
-	private static javax.jms.Message serialize(Message message) throws IOException, JMSException {
+	private static javax.jms.Message serialize(Event event) throws IOException, JMSException {
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		MessageWriter messageWriter = new MessageWriter(os);
-		messageWriter.write(message);
+		messageWriter.write(event.toMessage());
 		messageWriter.close();
 		return io.intino.alexandria.jms.MessageWriter.write(os.toString());
 	}
