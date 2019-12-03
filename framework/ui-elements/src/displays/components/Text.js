@@ -64,6 +64,7 @@ class Text extends AbstractText {
 	style() {
 		var result = super.style();
 		if (this.props.color != null) result.color = this.props.color;
+		if (this.state.color != null) result.color = this.state.color;
 		if (!this.state.highlighted) return result;
 		result.color = this.state.highlighted.text;
 		result.background = this.state.highlighted.background;

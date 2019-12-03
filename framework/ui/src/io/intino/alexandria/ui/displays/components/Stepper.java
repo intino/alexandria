@@ -88,7 +88,7 @@ public class Stepper<DN extends StepperNotifier, B extends Box> extends Abstract
     }
 
     private boolean allowNext(){
-        return visiblePosOfActive() < visibleStepsCount()-1 && steps().get(this.active).allowNext();
+        return visiblePosOfActive() < visibleStepsCount() && steps().get(this.active).allowNext();
     }
 
     private boolean allowBack() {
