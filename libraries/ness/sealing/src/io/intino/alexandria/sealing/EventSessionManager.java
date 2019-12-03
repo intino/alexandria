@@ -4,10 +4,10 @@ import io.intino.alexandria.Fingerprint;
 import io.intino.alexandria.Session;
 import io.intino.alexandria.datalake.file.FS;
 import io.intino.alexandria.datalake.file.FileEventStore;
+import io.intino.alexandria.event.EventReader;
+import io.intino.alexandria.event.EventStream;
+import io.intino.alexandria.event.EventWriter;
 import io.intino.alexandria.logger.Logger;
-import io.intino.alexandria.zim.ZimBuilder;
-import io.intino.alexandria.zim.ZimReader;
-import io.intino.alexandria.zim.ZimStream;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,8 +30,8 @@ public class EventSessionManager {
 		return FS.allFilesIn(stage, f -> f.getName().endsWith(Session.EventSessionExtension) && f.length() > 0f);
 	}
 
-	private static ZimReader reader(File zimFile) {
-		return new ZimReader(zimFile);
+	private static EventReader reader(File zimFile) {
+		return new EventReader(zimFile);
 	}
 
 	private static Fingerprint fingerprintOf(File file) {
@@ -56,7 +56,7 @@ public class EventSessionManager {
 		}
 
 		private void seal(File datalakeFile, List<File> files) {
-			new ZimBuilder(datalakeFile).put(zimStreamOf(files));
+			new EventWriter(datalakeFile).put(eventStreamOf(files));
 		}
 
 		private List<File> sort(List<File> files) {
@@ -69,8 +69,8 @@ public class EventSessionManager {
 			}
 		}
 
-		private ZimStream.Merge zimStreamOf(List<File> files) {
-			return ZimStream.Merge.of(files.stream().map(EventSessionManager::reader).toArray(ZimStream[]::new));
+		private EventStream.Merge eventStreamOf(List<File> files) {
+			return EventStream.Merge.of(files.stream().map(EventSessionManager::reader).toArray(EventStream[]::new));
 		}
 
 		private File datalakeFile(Fingerprint fingerprint) {

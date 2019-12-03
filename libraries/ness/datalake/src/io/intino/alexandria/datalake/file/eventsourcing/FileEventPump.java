@@ -1,8 +1,8 @@
 package io.intino.alexandria.datalake.file.eventsourcing;
 
 import io.intino.alexandria.datalake.Datalake;
-import io.intino.alexandria.message.Message;
-import io.intino.alexandria.zim.ZimStream;
+import io.intino.alexandria.event.Event;
+import io.intino.alexandria.event.EventStream;
 
 import java.util.Arrays;
 
@@ -16,17 +16,17 @@ public class FileEventPump implements EventPump {
 	@Override
 	public Reflow reflow(Reflow.Filter filter) {
 		return new Reflow() {
-			private ZimStream is = new ZimStream.Merge(tankInputStreams());
+			private EventStream is = new EventStream.Merge(tankInputStreams());
 
-			ZimStream tankInputStream(Datalake.EventStore.Tank tank) {
+			EventStream tankInputStream(Datalake.EventStore.Tank tank) {
 				return tank.content(ts -> filter.allow(tank, ts));
 			}
 
-			private ZimStream[] tankInputStreams() {
+			private EventStream[] tankInputStreams() {
 				return store.tanks()
 						.filter(filter::allow)
 						.map(this::tankInputStream)
-						.toArray(ZimStream[]::new);
+						.toArray(EventStream[]::new);
 			}
 
 			public boolean hasNext() {
@@ -43,10 +43,10 @@ public class FileEventPump implements EventPump {
 
 
 	private static class ReflowBlock {
-		private final ZimStream is;
+		private final EventStream is;
 		private final EventHandler[] eventHandlers;
 
-		ReflowBlock(ZimStream is, EventHandler[] eventHandlers) {
+		ReflowBlock(EventStream is, EventHandler[] eventHandlers) {
 			this.is = is;
 			this.eventHandlers = eventHandlers;
 		}
@@ -58,8 +58,8 @@ public class FileEventPump implements EventPump {
 		private int process(int messages) {
 			int pendingMessages = messages;
 			while (is.hasNext() && pendingMessages-- >= 0) {
-				Message message = is.next();
-				Arrays.stream(eventHandlers).forEach(mh -> mh.handle(message));
+				Event event = is.next();
+				Arrays.stream(eventHandlers).forEach(mh -> mh.handle(event));
 			}
 			return messages - pendingMessages;
 		}

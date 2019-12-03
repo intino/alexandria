@@ -2,8 +2,8 @@ package io.intino.alexandria.datalake.file;
 
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
-import io.intino.alexandria.zim.ZimReader;
-import io.intino.alexandria.zim.ZimStream;
+import io.intino.alexandria.event.EventReader;
+import io.intino.alexandria.event.EventStream;
 
 import java.io.File;
 import java.util.function.Predicate;
@@ -21,25 +21,25 @@ public class FileEventTank implements Datalake.EventStore.Tank {
 	}
 
 	@Override
-	public ZimStream content() {
-		return ZimStream.Sequence.of(zimStreams(t -> true));
+	public EventStream content() {
+		return EventStream.Sequence.of(eventStreams(t -> true));
 	}
 
 	@Override
-	public ZimStream content(Predicate<Timetag> filter) {
-		return ZimStream.Sequence.of(zimStreams(filter));
+	public EventStream content(Predicate<Timetag> filter) {
+		return EventStream.Sequence.of(eventStreams(filter));
 	}
 
 	public File root() {
 		return root;
 	}
 
-	private ZimStream[] zimStreams(Predicate<Timetag> filter) {
+	private EventStream[] eventStreams(Predicate<Timetag> filter) {
 		return FS.filesIn(root, f -> f.getName().endsWith(FileEventStore.EventExtension))
 				.sorted()
 				.filter(f -> filter.test(timetagOf(f)))
-				.map(ZimReader::new)
-				.toArray(ZimStream[]::new);
+				.map(EventReader::new)
+				.toArray(EventStream[]::new);
 	}
 
 	private Timetag timetagOf(File file) {
