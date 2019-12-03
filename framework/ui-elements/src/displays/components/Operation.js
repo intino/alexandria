@@ -114,9 +114,11 @@ export default class Operation extends AbstractOperation {
 
 	renderMaterialIconButton = () => {
 		const {classes} = this.props;
+		const style = this.style();
+		if (this.state.color != null) style.color = this.state.color;
 		return (<IconButton color="primary" aria-label={this._title()} disabled={this._readonly()}
 							onClick={this.handleClick.bind(this)} className={classes.materialIconButton}
-							style={this.style()} size={this._size()}>
+							style={style} size={this._size()}>
 				<OperationMui icon={this._icon()}/>
 			</IconButton>
 		);
@@ -174,12 +176,10 @@ export default class Operation extends AbstractOperation {
 			this.setState({ openAffirm : true });
 			return;
 		}
-
 		if (this.requireSign()) {
 			this.setState({ openSign : true });
 			return;
 		}
-		
 		this.requester.execute();
 	};
 
