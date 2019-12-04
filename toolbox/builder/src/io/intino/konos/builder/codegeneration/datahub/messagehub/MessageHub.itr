@@ -1,7 +1,7 @@
 def type(messagehub & jms)
 	package $package+validPackage;
 
-    public class MessageHub extends io.intino.alexandria.messagehub.JmsMessageHub {
+    public class MessageHub extends io.intino.alexandria.event.JmsEventHub {
 		public MessageHub(String url, String user, String password, String clientId) {
 			super(url, user, password, clientId);
 		}

@@ -5,7 +5,7 @@ Artifact(groupId = "io.intino.alexandria", version = "1.0.0") event
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Compile("io.intino.alexandria", "zim", "2.0.0")
 		Test("junit", "junit", "LATEST")
-	Package(mode = ModulesAndLibrariesLinkedByManifest)
+	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.release)
 
 

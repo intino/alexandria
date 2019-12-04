@@ -189,7 +189,7 @@ end
 
 
 def type(terminal) trigger(setup)
-	this.terminal = new $qn(new io.intino.alexandria.messagehub.JmsMessageHub($parameter...[, ]));
+	this.terminal = new $qn(new io.intino.alexandria.event.JmsEventHub($parameter...[, ]));
 end
 
 def type(jms & messageHub) trigger(setup)
