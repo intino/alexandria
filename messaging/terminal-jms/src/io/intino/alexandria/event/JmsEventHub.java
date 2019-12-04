@@ -1,7 +1,5 @@
-package io.intino.alexandria.messagehub;
+package io.intino.alexandria.event;
 
-import io.intino.alexandria.event.Event;
-import io.intino.alexandria.event.EventHub;
 import io.intino.alexandria.jms.*;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;

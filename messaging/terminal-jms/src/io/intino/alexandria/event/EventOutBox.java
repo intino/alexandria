@@ -1,7 +1,6 @@
-package io.intino.alexandria.messagehub;
+package io.intino.alexandria.event;
 
 import com.google.gson.Gson;
-import io.intino.alexandria.event.Event;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.MessageReader;
 
