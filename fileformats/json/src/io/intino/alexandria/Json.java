@@ -1,9 +1,9 @@
 package io.intino.alexandria;
 
 import com.google.gson.*;
-import sun.misc.IOUtils;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
@@ -36,9 +36,14 @@ public class Json {
 				create();
 	}
 
-	private static byte[] toByteArray(InputStream inputStream) {
+	private static byte[] toByteArray(InputStream is) {
 		try {
-			return IOUtils.readFully(inputStream, -1, false);
+			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+			int nRead;
+			byte[] data = new byte[1024];
+			while ((nRead = is.read(data, 0, data.length)) != -1) buffer.write(data, 0, nRead);
+			buffer.flush();
+			return buffer.toByteArray();
 		} catch (IOException e) {
 			return new byte[0];
 		}

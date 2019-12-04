@@ -1,5 +1,5 @@
 import io.intino.alexandria.event.Event;
-import io.intino.alexandria.messagehub.JmsEventHub;
+import io.intino.alexandria.event.JmsEventHub;
 import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
