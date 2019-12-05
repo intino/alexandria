@@ -88,7 +88,7 @@ public class Tabb {
 			remove(id);
 			removeFromUpdates(id);
 			removeFromAppends(id);
-			ZipHandler.appendToEntry(file, appendFile, stream(row).map(Object::toString).collect(joining(";")) + "\n");
+			ZipHandler.appendToEntry(file, appendFile, stream(row).map(o -> o != null ? o.toString() : "").collect(joining(";")) + "\n");
 			return this;
 		} catch (IOException e) {
 			Logger.error(e);
