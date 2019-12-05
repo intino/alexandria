@@ -84,7 +84,7 @@ public class Tabb {
 		try {
 			if (row.length != manifest.columns().length)
 				throw new IllegalArgumentException("Row size differ with the columns");
-			String id = idOf(stream(row).map(Object::toString).toArray(String[]::new), indexColumns());
+			String id = idOf(stream(row).map(o -> o != null ? o.toString() : "").toArray(String[]::new), indexColumns());
 			remove(id);
 			removeFromUpdates(id);
 			removeFromAppends(id);
