@@ -55,7 +55,7 @@ public class Dotx {
 		}
 
 		private String valueOf(String key) {
-			return tagOf(data.get(key)).replace("\n", CRLF);
+			return tagOf(data.get(key)).replace("\n", CRLF).replace("&", "&amp;");
 		}
 
 		private String tagOf(String name) {
