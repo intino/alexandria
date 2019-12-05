@@ -1,5 +1,6 @@
 import React from "react";
 import Typography from '@material-ui/core/Typography';
+import Tooltip from '@material-ui/core/Tooltip';
 import { withStyles } from '@material-ui/core/styles';
 import Block from "./Block";
 import AbstractText from "../../../gen/displays/components/AbstractText";
@@ -55,8 +56,13 @@ class Text extends AbstractText {
 			<Block layout="horizontal">
 				{ ComponentBehavior.labelBlock(this.props) }
 				{this.props.prefix !== undefined ? <Typography variant={variant} className={classes.prefix}>{this.props.prefix}:</Typography> : undefined }
-				<Typography variant={variant} className={classes.value} style={this.style()}>{value}</Typography>
-				{ this.props.suffix !== undefined ? <Typography variant={variant} className={classes.suffix}>{this.props.suffix}</Typography> : undefined }
+                {this._requireEllipsis(value) ?
+                    <Tooltip title={this.state.title} placement="top">
+                        <Typography variant={variant} className={classes.value} style={this.style()}>{value}</Typography>
+                    </Tooltip> :
+                    <Typography variant={variant} className={classes.value} style={this.style()}>{value}</Typography>
+                }
+				{this.props.suffix !== undefined ? <Typography variant={variant} className={classes.suffix}>{this.props.suffix}</Typography> : undefined}
 			</Block>
 		);
 	};

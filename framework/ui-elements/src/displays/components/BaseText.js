@@ -8,16 +8,22 @@ export default class BaseText extends AbstractBaseText {
         this.state = {
             ...this.state,
 			value : this.props.value,
+			title : this.props.value,
             highlighted : this.props.highlighted,
         }
     };
 
     refresh = (value) => {
-		this.setState({ "value": value != null ? value : "" });
+        const finalValue = this._requireEllipsis(value) ? value.substring(0, this.props.cropWithEllipsis) + "..." : value;
+		this.setState({ value: finalValue != null ? finalValue : "", title: value != null ? value : "" });
     };
 
     refreshHighlight = (highlighted) => {
         this.setState({ highlighted: { text: this._textColor(highlighted), background: this._backgroundColor(highlighted) }});
+    };
+
+    _requireEllipsis = (value) => {
+        return this.props.cropWithEllipsis != null && value.length > this.props.cropWithEllipsis;
     };
 
     _textColor = (highlighted) => {
