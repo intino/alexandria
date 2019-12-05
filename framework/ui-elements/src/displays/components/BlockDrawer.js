@@ -68,7 +68,7 @@ class BlockDrawer extends AbstractBlockDrawer {
 	};
 
 	handleMouseOver = () => {
-	    Delayer.execute(this, () => this.setState({temporaryOpened: true}), 1200);
+	    Delayer.execute(this, () => this.setState({temporaryOpened: true}), 5000);
 	};
 
 	handleMouseOut = () => {

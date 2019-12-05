@@ -11,6 +11,7 @@ Concept DataComponents
 		var string value = empty
 		var string prefix = empty
 		var string suffix = empty
+		var integer:{Chars} cropWithEllipsis = -1 Chars
 		Aspect Multiple
 		Aspect Highlighted
         	var string textColor
