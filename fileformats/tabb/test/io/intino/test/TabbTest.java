@@ -12,11 +12,10 @@ import java.nio.file.StandardCopyOption;
 import java.time.Instant;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Ignore
 public class TabbTest {
 
 	private File bigSource = new File("test-res/tabbs/big.tabb");
-	private File readSource = new File("test-res/tabbs/201903.tabb");
+	private File readSource = new File("test-res/tabbs/201903_2.tabb");
 	private File smallSource = new File("test-res/tabbs/small.tabb");
 	private File test = new File(bigSource.getParentFile(), "test.tabb");
 	private File smallTest = new File(smallSource.getParentFile(), "smallTest.tabb");
@@ -32,10 +31,13 @@ public class TabbTest {
 	public void readTest() throws IOException {
 		TabbReader tabb = new TabbReader(readSource);
 		while (tabb.hasNext()) {
-			tabb.next();
-			System.out.println(tabb.get(0).asInstant());
-			System.out.println(tabb.get(1).asString());
-			System.out.println(tabb.get(2).asString());
+			Row next = tabb.next();
+			System.out.println(next.get(0).asInstant());
+			System.out.println(next.get(1).asString());
+			System.out.println(next.get(2).asString());
+			System.out.println(next.get(3).asString());
+			System.out.println(next.get(4).asDouble());
+			System.out.println();
 		}
 	}
 

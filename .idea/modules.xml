@@ -39,7 +39,7 @@
       <module fileurl="file://$PROJECT_DIR$/framework/ui-elements/ui-elements.iml" filepath="$PROJECT_DIR$/framework/ui-elements/ui-elements.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/zet/zet.iml" filepath="$PROJECT_DIR$/fileformats/zet/zet.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/zim/zim.iml" filepath="$PROJECT_DIR$/fileformats/zim/zim.iml" group="fileformats" />
-      <module fileurl="file://$PROJECT_DIR$/fileformats/epoch/zip.iml" filepath="$PROJECT_DIR$/fileformats/epoch/zip.iml" group="fileformats" />
+      <module fileurl="file://$PROJECT_DIR$/fileformats/zip/zip.iml" filepath="$PROJECT_DIR$/fileformats/zip/zip.iml" group="fileformats" />
     </modules>
   </component>
 </project>
