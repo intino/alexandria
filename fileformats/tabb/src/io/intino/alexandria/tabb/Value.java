@@ -1,5 +1,6 @@
 package io.intino.alexandria.tabb;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -63,7 +64,7 @@ public class Value {
 	}
 
 	public String asString() {
-		return isAvailable() ? mode.features[get32(value)] : null;
+		return isAvailable() ? new String(value, StandardCharsets.UTF_8) : null;
 	}
 
 	public static Value of(ColumnStream.Type type, Mode mode, Object value) {

@@ -200,7 +200,11 @@ public class Tabb {
 	}
 
 	private String idOf(Row row, List<Integer> indices, ColumnInfo[] columns) {
-		return indices.stream().map(i -> columns[i].features[row.get(i).asInteger()]).collect(joining());
+		return indices.stream().map(i -> valueOf(row.get(i), columns[i])).collect(joining());
+	}
+
+	private String valueOf(Value value, ColumnInfo column) {
+		return column.type.equals(Nominal) ? column.features[value.asInteger()] : value.asString();
 	}
 
 	private void createTabbFile(File file, List<Tabbc> columns) throws IOException {

@@ -26,10 +26,11 @@ public class JmsEventHub implements EventHub {
 	private final Map<String, JmsConsumer> consumers;
 	private final Map<String, List<Consumer<Event>>> eventConsumers;
 	private final Map<Consumer<javax.jms.Message>, Integer> jmsConsumers;
-	private final EventOutBox messageOutBox;
+	private final EventOutBox eventOutBox;
 	private Connection connection;
 	private Session session;
 	private AtomicBoolean connected = new AtomicBoolean(false);
+	private AtomicBoolean recoveringEvents = new AtomicBoolean(false);
 	private ScheduledExecutorService scheduler;
 
 	public JmsEventHub(String brokerUrl, String user, String password, String clientId, File messageCacheDirectory) {
@@ -39,7 +40,7 @@ public class JmsEventHub implements EventHub {
 	public JmsEventHub(String brokerUrl, String user, String password, String clientId, boolean transactedSession, File messageCacheDirectory) {
 		producers = new HashMap<>();
 		consumers = new HashMap<>();
-		this.messageOutBox = new EventOutBox(messageCacheDirectory);
+		this.eventOutBox = new EventOutBox(messageCacheDirectory);
 		if (brokerUrl != null && !brokerUrl.isEmpty()) {
 			try {
 				connection = BusConnector.createConnection(brokerUrl, user, password, connectionListener());
@@ -55,21 +56,21 @@ public class JmsEventHub implements EventHub {
 		jmsConsumers = new HashMap<>();
 		eventConsumers = new HashMap<>();
 		scheduler = Executors.newScheduledThreadPool(1);
-		scheduler.scheduleAtFixedRate(recoverMessages(), 0, 1, TimeUnit.HOURS);
+		scheduler.scheduleAtFixedRate(this::recoverEvents, 0, 1, TimeUnit.HOURS);
 	}
 
 
 	@Override
 	public synchronized void sendEvent(String channel, Event event) {
-		eventConsumers.getOrDefault(channel, Collections.emptyList()).forEach(messageConsumer -> messageConsumer.accept(event));
+		eventConsumers.getOrDefault(channel, Collections.emptyList()).forEach(eventConsumer -> eventConsumer.accept(event));
 		new Thread(() -> {
-			if (connected.get() && !messageOutBox.isEmpty()) scheduler.execute(recoverMessages());
-			if (!doSendMessage(channel, event)) messageOutBox.push(channel, event);
+			if (connected.get() && !eventOutBox.isEmpty() && !recoveringEvents.get()) recoverEvents();
+			if (!doSendEvent(channel, event)) eventOutBox.push(channel, event);
 		}).start();
 
 	}
 
-	public void requestResponse(String channel, String message, Consumer<String> onResponse) {
+	public void requestResponse(String channel, String event, Consumer<String> onResponse) {
 		if (session == null) {
 			Logger.error("Session is null");
 			return;
@@ -80,7 +81,7 @@ public class JmsEventHub implements EventHub {
 			MessageConsumer consumer = session.createConsumer(temporaryQueue);
 			consumer.setMessageListener(m -> acceptMessage(onResponse, consumer, (TextMessage) m));
 			final TextMessage txtMessage = session.createTextMessage();
-			txtMessage.setText(message);
+			txtMessage.setText(event);
 			txtMessage.setJMSReplyTo(temporaryQueue);
 			txtMessage.setJMSCorrelationID(createRandomString());
 			producer.produce(txtMessage);
@@ -91,25 +92,25 @@ public class JmsEventHub implements EventHub {
 	}
 
 	@Override
-	public void attachListener(String channel, Consumer<Event> onMessageReceived) {
+	public void attachListener(String channel, Consumer<Event> onEventReceived) {
 		if (session == null) return;
-		registerConsumer(channel, onMessageReceived);
+		registerConsumer(channel, onEventReceived);
 		JmsConsumer consumer = this.consumers.get(channel);
 		if (consumer == null) return;
-		Consumer<javax.jms.Message> messageConsumer = e -> onMessageReceived.accept(new Event(MessageDeserializer.deserialize(e)));
-		jmsConsumers.put(messageConsumer, messageConsumer.hashCode());
-		consumer.listen(messageConsumer);
+		Consumer<javax.jms.Message> eventConsumer = e -> onEventReceived.accept(new Event(MessageDeserializer.deserialize(e)));
+		jmsConsumers.put(eventConsumer, eventConsumer.hashCode());
+		consumer.listen(eventConsumer);
 	}
 
 	@Override
-	public void attachListener(String channel, String subscriberId, Consumer<Event> onMessageReceived) {
+	public void attachListener(String channel, String subscriberId, Consumer<Event> onEventReceived) {
 		if (session == null) return;
-		registerConsumer(channel, onMessageReceived);
+		registerConsumer(channel, onEventReceived);
 		TopicConsumer consumer = (TopicConsumer) this.consumers.get(channel);
 		if (consumer == null) return;
-		Consumer<javax.jms.Message> messageConsumer = m -> onMessageReceived.accept(new Event(MessageDeserializer.deserialize(m)));
-		jmsConsumers.put(messageConsumer, messageConsumer.hashCode());
-		consumer.listen(messageConsumer, subscriberId);
+		Consumer<javax.jms.Message> eventConsumer = m -> onEventReceived.accept(new Event(MessageDeserializer.deserialize(m)));
+		jmsConsumers.put(eventConsumer, eventConsumer.hashCode());
+		consumer.listen(eventConsumer, subscriberId);
 	}
 
 	@Override
@@ -133,23 +134,23 @@ public class JmsEventHub implements EventHub {
 	}
 
 	@Override
-	public void attachRequestListener(String channel, RequestConsumer onMessageReceived) {
+	public void attachRequestListener(String channel, RequestConsumer onRequestReceived) {
 		if (session == null) return;
-		this.consumers.putIfAbsent(channel, queueConsumer(channel));
+		if (!this.consumers.containsKey(channel)) this.consumers.put(channel, queueConsumer(channel));
 		JmsConsumer consumer = this.consumers.get(channel);
 		if (consumer == null) return;
 		if (!(consumer instanceof QueueConsumer)) {
 			Logger.error("Already exists a topic and queue with this path " + channel);
 			return;
 		}
-		consumer.listen(message -> new Thread(() -> {
+		consumer.listen(event -> new Thread(() -> {
 			try {
-				String result = onMessageReceived.accept(textFrom(message));
+				String result = onRequestReceived.accept(textFrom(event));
 				if (result == null) return;
 				session.createTextMessage().setText(result);
-				message.setJMSCorrelationID(message.getJMSCorrelationID());
-				QueueProducer producer = new QueueProducer(session, message.getJMSReplyTo());
-				producer.produce(message);
+				event.setJMSCorrelationID(event.getJMSCorrelationID());
+				QueueProducer producer = new QueueProducer(session, event.getJMSReplyTo());
+				producer.produce(event);
 				producer.close();
 			} catch (JMSException e) {
 				Logger.error(e);
@@ -177,16 +178,16 @@ public class JmsEventHub implements EventHub {
 		}
 	}
 
-	private void registerConsumer(String channel, Consumer<Event> onMessageReceived) {
-		this.consumers.putIfAbsent(channel, topicConsumer(channel));
+	private void registerConsumer(String channel, Consumer<Event> onEventReceived) {
+		if (!this.consumers.containsKey(channel)) this.consumers.put(channel, topicConsumer(channel));
 		this.eventConsumers.putIfAbsent(channel, new ArrayList<>());
-		this.eventConsumers.get(channel).add(onMessageReceived);
+		this.eventConsumers.get(channel).add(onEventReceived);
 	}
 
-	private boolean doSendMessage(String channel, Event event) {
+	private boolean doSendEvent(String channel, Event event) {
 		if (session == null || !connected.get()) return false;
 		try {
-			producers.putIfAbsent(channel, new TopicProducer(session, channel));
+			if (!this.producers.containsKey(channel)) producers.put(channel, new TopicProducer(session, channel));
 			JmsProducer producer = producers.get(channel);
 			if (producer == null) return false;
 			return producer.produce(serialize(event));
@@ -237,15 +238,15 @@ public class JmsEventHub implements EventHub {
 		}
 	}
 
-	private Runnable recoverMessages() {
-		return () -> {
-			if (messageOutBox.isEmpty()) return;
-			while (!messageOutBox.isEmpty()) {
-				Map.Entry<String, Event> poll = messageOutBox.get();
-				if (doSendMessage(poll.getKey(), poll.getValue())) messageOutBox.pop();
-				else return;
+	private void recoverEvents() {
+		recoveringEvents.set(true);
+		if (!eventOutBox.isEmpty())
+			while (!eventOutBox.isEmpty()) {
+				Map.Entry<String, Event> event = eventOutBox.get();
+				if (doSendEvent(event.getKey(), event.getValue())) eventOutBox.pop();
+				else break;
 			}
-		};
+		recoveringEvents.set(false);
 	}
 
 	private static String createRandomString() {
