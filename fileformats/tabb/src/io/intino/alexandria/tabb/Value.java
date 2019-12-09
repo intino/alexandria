@@ -47,6 +47,10 @@ public class Value {
 		return Double.longBitsToDouble(get64(isAvailable() ? value : ColumnStream.Type.Double.notAvailable()));
 	}
 
+	public String asNominal() {
+		return isAvailable() ? mode.features[get32(value)] : null;
+	}
+
 	public boolean asBoolean() {
 		return get32(value) == 1;//FIXME Na??
 	}
