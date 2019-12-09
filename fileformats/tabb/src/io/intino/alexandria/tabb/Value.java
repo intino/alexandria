@@ -44,7 +44,7 @@ public class Value {
 	}
 
 	public double asDouble() {
-		return get64(isAvailable() ? value : ColumnStream.Type.Double.notAvailable());
+		return Double.longBitsToDouble(get64(isAvailable() ? value : ColumnStream.Type.Double.notAvailable()));
 	}
 
 	public boolean asBoolean() {
