@@ -24,7 +24,7 @@ public abstract class JmsConsumer {
 		try {
 			listeners.add(listener);
 			if (this.consumer == null) {
-				this.consumer = session.createConsumer(destination);
+				this.consumer = session.createConsumer(destination, null, true);
 				consumer.setMessageListener(m -> listeners.forEach(l -> l.accept(m)));
 			}
 		} catch (Exception e) {
@@ -32,11 +32,11 @@ public abstract class JmsConsumer {
 		}
 	}
 
-    public List<Consumer<Message>>  listeners() {
-        return Collections.unmodifiableList(listeners);
-    }
+	public List<Consumer<Message>> listeners() {
+		return Collections.unmodifiableList(listeners);
+	}
 
-    public void removeListener(Consumer<Message> listener) {
+	public void removeListener(Consumer<Message> listener) {
 		listeners.remove(listener);
 	}
 
