@@ -7,11 +7,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
 
+import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 
-public class TabbReader implements AutoCloseable {
+public class TabbReader implements Iterator<Row>, AutoCloseable {
 	private final TabbManifest info;
 	private final List<TabbColumnStream> columns;
 
@@ -34,19 +37,24 @@ public class TabbReader implements AutoCloseable {
 		return columns.get(0).hasNext();
 	}
 
-	public void next() {
+	public Row next() {
 		columns.forEach(ColumnStream::next);
+		return columns.stream().map(this::valueOf).collect(toCollection(Row::new));
 	}
 
 	public Value get(int index) {
-		ColumnStream stream = columns.get(index);
+		return valueOf(columns.get(index));
+	}
+
+	private Value valueOf(ColumnStream stream) {
 		return new Value(stream.type(), new Mode(info.columns(stream.name())[0].features), (byte[]) stream.value());
 	}
 
 	static class TabbColumnStream implements ColumnStream {
 		private final TabbManifest.ColumnInfo column;
-		private final byte[] value;
+		private byte[] value;
 		private InputStream inputStream;
+		private Scanner scanner;
 
 		TabbColumnStream(File file, TabbManifest.ColumnInfo column) {
 			this.column = column;
@@ -59,8 +67,8 @@ public class TabbReader implements AutoCloseable {
 		}
 
 		private int size() {
-			if (column.type.equals(Type.Double)) return Double.SIZE / 8;
-			else if (column.type.equals(Type.Long)) return Long.SIZE / 8;
+			if (Type.Double.equals(column.type)) return Double.SIZE / 8;
+			else if (Type.Long.equals(column.type)) return Long.SIZE / 8;
 			else return Integer.SIZE / 8;
 		}
 
@@ -92,10 +100,17 @@ public class TabbReader implements AutoCloseable {
 		@Override
 		public void next() {
 			try {
-				inputStream.read(value);
+				if (type().equals(Type.String)) value = readStringValue();
+				else inputStream.read(value);
 			} catch (IOException e) {
 				Logger.error(e);
 			}
+		}
+
+		private byte[] readStringValue() {
+			scanner = scanner == null ? new Scanner(inputStream).useDelimiter("\0") : scanner;
+			String result = scanner.hasNext() ? scanner.next() : "";
+			return result.getBytes();
 		}
 
 		@Override
