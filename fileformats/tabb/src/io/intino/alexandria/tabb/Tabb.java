@@ -84,11 +84,11 @@ public class Tabb {
 		try {
 			if (row.length != manifest.columns().length)
 				throw new IllegalArgumentException("Row size differ with the columns");
-			String id = idOf(stream(row).map(o -> o != null ? o.toString() : "").toArray(String[]::new), indexColumns());
+			String id = idOf(stream(row).map(o -> o != null ? o.toString() : "null").toArray(String[]::new), indexColumns());
 			remove(id);
 			removeFromUpdates(id);
 			removeFromAppends(id);
-			ZipHandler.appendToEntry(file, appendFile, stream(row).map(o -> o != null ? o.toString() : "").collect(joining(";")) + "\n");
+			ZipHandler.appendToEntry(file, appendFile, stream(row).map(o -> o != null ? o.toString() : "null").collect(joining(";")) + "\n");
 			return this;
 		} catch (IOException e) {
 			Logger.error(e);
@@ -104,8 +104,8 @@ public class Tabb {
 			for (String[] row : loadAppends()) {
 				range(0, row.length).forEachOrdered(i -> {
 					Tabbc tabbc = columns.get(i);
-					Object value = tabbc.type.parse(row[i]);
-					if (tabbc.type == Nominal) tabbc.features.add(value.toString());
+					Object value = row[i].equals("null") ? null : tabbc.type.parse(row[i]);
+					if (tabbc.type == Nominal && value != null) tabbc.features.add(value.toString());
 					tabbc.write(value(tabbc, value));
 				});
 			}
@@ -213,7 +213,7 @@ public class Tabb {
 	}
 
 	private byte[] value(Tabbc column, Object object) {
-		return column.type.toByteArray(column.type == Nominal ? column.features.indexOf(object.toString()) : object);
+		return column.type.toByteArray(column.type == Nominal && object != null ? column.features.indexOf(object.toString()) : object);
 	}
 
 	private InputStream createColumnStream(Tabbc column) throws FileNotFoundException {
