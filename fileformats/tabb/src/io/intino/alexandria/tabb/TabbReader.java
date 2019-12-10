@@ -10,8 +10,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.zip.ZipFile;
 
-import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 
 public class TabbReader implements Iterator<Row>, AutoCloseable {
@@ -20,9 +20,14 @@ public class TabbReader implements Iterator<Row>, AutoCloseable {
 
 	public TabbReader(File file, String... columns) throws IOException {
 		this.info = TabbManifest.of(file);
-		this.columns = Arrays.stream(info.columns(columns))
+		List<String> selectedColumns = Arrays.asList(columns);
+		this.columns = info.columns().stream().filter(i -> selectedColumns.isEmpty() || selectedColumns.contains(i.name))
 				.map(c -> new TabbColumnStream(file, c))
 				.collect(toList());
+	}
+
+	public TabbManifest manifest() {
+		return info;
 	}
 
 	public void close() {
@@ -39,7 +44,9 @@ public class TabbReader implements Iterator<Row>, AutoCloseable {
 
 	public Row next() {
 		columns.forEach(ColumnStream::next);
-		return columns.stream().map(this::valueOf).collect(toCollection(Row::new));
+		Row values = new Row(columns.size());
+		for (TabbColumnStream c : columns) values.add(valueOf(c));
+		return values;
 	}
 
 	public Value get(int index) {
@@ -47,12 +54,13 @@ public class TabbReader implements Iterator<Row>, AutoCloseable {
 	}
 
 	private Value valueOf(ColumnStream stream) {
-		return new Value(stream.type(), new Mode(info.columns(stream.name())[0].features), (byte[]) stream.value());
+		return new Value(stream.type(), new Mode(info.column(stream.name()).features.toArray(new String[0])), (byte[]) stream.value());
 	}
 
 	static class TabbColumnStream implements ColumnStream {
 		private final TabbManifest.ColumnInfo column;
 		private byte[] value;
+		private ZipFile file;
 		private InputStream inputStream;
 		private Scanner scanner;
 
@@ -60,7 +68,8 @@ public class TabbReader implements Iterator<Row>, AutoCloseable {
 			this.column = column;
 			value = new byte[size()];
 			try {
-				inputStream = new BufferedInputStream(ZipHandler.openEntry(file, column.name + ColumnExtension));
+				this.file = new ZipFile(file);
+				inputStream = new BufferedInputStream(ZipHandler.openEntry(this.file, column.name + ColumnExtension));
 			} catch (IOException e) {
 				Logger.error(e);
 			}
@@ -126,6 +135,7 @@ public class TabbReader implements Iterator<Row>, AutoCloseable {
 		public void close() {
 			try {
 				inputStream.close();
+				file.close();
 			} catch (IOException e) {
 				Logger.error(e);
 			}

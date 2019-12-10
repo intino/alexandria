@@ -1,28 +1,33 @@
 package io.intino.alexandria.tabb;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.List;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static io.intino.alexandria.tabb.ColumnStream.Type.Nominal;
 import static java.lang.String.join;
-import static java.util.stream.Collectors.toList;
 
 public class TabbManifest {
 	static final String FileName = ".manifest";
-	private final ColumnInfo[] columns;
+	private final Map<String, ColumnInfo> columns;
+	private long size;
 
 	private TabbManifest(ColumnInfo[] columns) {
-		this.columns = columns;
+		this.size = columns[0].size;
+		this.columns = Arrays.stream(columns).collect(Collectors.toMap(c -> c.name, c -> c, (e1, e2) -> e1, LinkedHashMap::new));
 	}
 
-	public ColumnInfo[] columns(String... filter) {
-		if (filter.length == 0) return this.columns;
-		return Arrays.stream(this.columns).filter(c -> Arrays.stream(filter).anyMatch(f -> c.name.equals(f))).toArray(ColumnInfo[]::new);
+	public Collection<ColumnInfo> columns() {
+		return columns.values();
+	}
+
+	public ColumnInfo column(String name) {
+		return columns.get(name);
 	}
 
 	public long size() {
-		return columns[0].size;
+		return size;
 	}
 
 	static InputStream serialize(ColumnInfo[] columns) throws IOException {
@@ -39,24 +44,18 @@ public class TabbManifest {
 	}
 
 	static TabbManifest of(File file) throws IOException {
-		InputStream inputStream = inputStream(file);
-		TabbManifest tabbManifest = new TabbManifest(readManifest(inputStream).stream().
+		return new TabbManifest(readManifest(file).stream().
 				map(line -> line.split("\t")).
 				map(l -> new ColumnInfo(l[0], ColumnStream.Type.valueOf(l[1]), Boolean.parseBoolean(l[2]), Long.parseLong(l[3]), modes(l))).
 				toArray(ColumnInfo[]::new));
-		inputStream.close();
-		return tabbManifest;
 	}
 
-	static InputStream inputStream(File file) throws IOException {
-		return ZipHandler.openEntry(file, FileName);
-	}
 
 	private static void addNominalModes(BufferedWriter writer, ColumnInfo info) throws IOException {
 		if (info.type == Nominal) writer.write("\t" + serialize(info.features));
 	}
 
-	private static String serialize(String[] features) {
+	private static String serialize(List<String> features) {
 		return join("|", features);
 	}
 
@@ -64,9 +63,8 @@ public class TabbManifest {
 		return fields.length > 4 ? fields[4].split("\\|") : new String[0];
 	}
 
-	private static List<String> readManifest(InputStream inputStream) throws IOException {
-		List<String> collect = new BufferedReader(new InputStreamReader(inputStream)).lines().collect(toList());
-		inputStream.close();
+	private static List<String> readManifest(File tabbFile) throws IOException {
+		List<String> collect = Arrays.asList(new String(ZipHandler.readEntry(tabbFile, FileName), StandardCharsets.UTF_8).split("\n"));
 		return collect.subList(1, collect.size());
 	}
 
@@ -75,14 +73,14 @@ public class TabbManifest {
 		ColumnStream.Type type;
 		boolean isIndex;
 		long size;
-		String[] features;
+		List<String> features;
 
 		public ColumnInfo(String name, ColumnStream.Type type, boolean isIndex, long size, String[] features) {
 			this.name = name;
 			this.type = type;
 			this.isIndex = isIndex;
 			this.size = size;
-			this.features = features;
+			this.features = new Tabb.SetList(Arrays.asList(features));
 		}
 	}
 }
