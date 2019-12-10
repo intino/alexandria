@@ -19,7 +19,6 @@ public class TopicConsumer extends JmsConsumer {
 			this.subscriberId = subscriberId;
 			if (this.consumer == null) {
 				this.consumer = session.createDurableSubscriber((Topic) destination, subscriberId, null, true);
-				this.consumer = session.createConsumer(destination);
 				consumer.setMessageListener(m -> listeners.forEach(l -> l.accept(m)));
 			}
 		} catch (JMSException e) {

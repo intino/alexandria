@@ -21,7 +21,7 @@ class EventOutBox {
 
 	void push(String channel, Event event) {
 		try {
-			Files.write(new File(directory, Instant.now().toString().replace(":", "_") + ".json").toPath(), new Gson().toJson(new SavedEvent(channel, event.toString())).getBytes());
+			Files.write(new File(directory, Instant.now().toString().replace(":", "_") + "_" + UUID.randomUUID().toString() + ".json").toPath(), new Gson().toJson(new SavedEvent(channel, event.toString())).getBytes());
 		} catch (IOException e) {
 			Logger.error(e);
 		}
