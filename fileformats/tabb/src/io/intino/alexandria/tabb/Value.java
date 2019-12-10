@@ -71,6 +71,22 @@ public class Value {
 		return isAvailable() ? new String(value, StandardCharsets.UTF_8) : null;
 	}
 
+	public Object asObject() {
+		return isAvailable() ? value() : null;
+	}
+
+	private Object value() {
+		if (type.equals(ColumnStream.Type.Nominal)) return asNominal();
+		if (type.equals(ColumnStream.Type.String)) return asString();
+		if (type.equals(ColumnStream.Type.Instant)) return asInstant();
+		if (type.equals(ColumnStream.Type.Double)) return asDouble();
+		if (type.equals(ColumnStream.Type.Integer)) return asInteger();
+		if (type.equals(ColumnStream.Type.Long)) return asLong();
+		if (type.equals(ColumnStream.Type.Boolean)) return asBoolean();
+		if (type.equals(ColumnStream.Type.Datetime)) return asDatetime();
+		return null;
+	}
+
 	public static Value of(ColumnStream.Type type, Mode mode, Object value) {
 		return new Value(type, mode, type.toByteArray(mode != null ? Arrays.asList(mode.features).indexOf(value.toString()) : value));
 	}

@@ -9,7 +9,6 @@
     <orderEntry type="jdk" jdkName="11" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="mapp" />
-    <orderEntry type="module" module-name="logger" />
     <orderEntry type="library" name="Intino: com.opencsv:opencsv:4.1" level="project" />
     <orderEntry type="library" name="Intino: org.apache.commons:commons-lang3:3.6" level="project" />
     <orderEntry type="library" name="Intino: org.apache.commons:commons-text:1.1" level="project" />
@@ -22,5 +21,7 @@
     <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13-rc-2" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:zet:1.0.5" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
+    <orderEntry type="module" module-name="zet" />
+    <orderEntry type="module" module-name="message" />
   </component>
 </module>
