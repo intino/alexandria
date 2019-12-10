@@ -104,7 +104,7 @@ public class UIGenerationTest {
 	}
 
 	private void execute(File gen, String workingPackage, String... stashes) {
-		KonosGraph graph = new Graph().loadStashes(stashes).as(KonosGraph.class).init();
+		KonosGraph graph = new Graph().loadStashes(stashes).as(KonosGraph.class).init("test");
 		ElementCache cache = loadCache(gen, graph);
 		Settings settings = TestUtil.settings(gen, workingPackage.toLowerCase(), cache);
 		cleanTestDirectory();

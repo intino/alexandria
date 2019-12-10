@@ -180,7 +180,7 @@ public class Settings {
 
 
 	private void loadManifest() {
-		dataHubManifest = loadManifest(moduleConfiguration().dataHub());
+		dataHubManifest = moduleConfiguration() != null ? loadManifest(moduleConfiguration().dataHub()) : null;
 	}
 
 	private DataHubManifest loadManifest(DependencyCatalog.Dependency dependency) {
@@ -206,6 +206,12 @@ public class Settings {
 		result.parent = parent;
 		result.classes = classes;
 		return result;
+	}
+
+	public String graphName() {
+		String result = project != null ? project.getName() : "";
+		result += module != null ? module.getName() : "";
+		return !result.isEmpty() ? result : "test";
 	}
 
 	public static class DataHubManifest {

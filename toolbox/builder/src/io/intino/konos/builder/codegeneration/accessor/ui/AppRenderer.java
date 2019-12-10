@@ -64,7 +64,7 @@ public class AppRenderer extends UIRenderer {
 	}
 
 	private Object normalize(String parent) {
-		return parent.replaceAll("\\\\", "/").replaceAll("^.:", "");
+		return parent != null ? parent.replaceAll("\\\\", "/").replaceAll("^.:", "") : parent;
 	}
 
 	private FrameBuilder alexandriaFrame(String name) {

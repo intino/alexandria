@@ -1,8 +1,6 @@
 dsl Konos
 
 
-DataHubTerminal(url = "{bus_url}", user = "{user}", password = "pass", clientId = "clientId") as JmsBus
-
 Datamart("{datamart}") datamart
 
 Datalake datalake as NfsMirrored
@@ -66,13 +64,6 @@ Mounter(datamart = datamart, format = Arff) inspeccionados as Population
 	Source("Demanda.FactorCargaPromedioDiario", type = String)
 	Source("Demanda.FactorPotencia", type = String)
 	Source("Revision.Inspeccionado", type = String)
-
-Mounter(datamart = datamart) ajustes as Realtime("subs1")
-	Source("asemed.Ajuste", schema = Ajuste)
-
-Mounter(datamart = datamart) criterios as Realtime("subs2")
-	Source("asemed.Criterio", schema = Criterio)
-	Source("asemed.CriterioBorrado", schema = CriterioBorrado)
 
 Feeder("asemed.Ajuste") ajusteFeeder
 Feeder("asemed.Criterio" "asemed.CriterioBorrado") criteriosFeeder

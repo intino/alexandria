@@ -15,12 +15,16 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/cuenta/:id/:view") cuentaView as Page(homeTemplate)
 	Resource(path = "/cuenta/a/b/c/:id/:view") cuentaView as Page(homeTemplate)
 	Resource(path = "/ingresos") ingresos as Page(homeTemplate)
-	Resource(path = "/ingreso/:name") ingreso as Page(homeTemplate)
+	Resource(path = "/ingreso/:name") ingreso as Page(notLoggedHomeTemplate)
 
 Template homeTemplate
 	Text aaa as Editable(placeholder="Números de aaa") Memo
 
 Template root as Accessible(parameters = "a" "b")
+
+Display notLoggedDisplay
+
+Template notLoggedHomeTemplate as ExtensionOf(notLoggedDisplay)
 
 Theme theme1
 	type = Normal

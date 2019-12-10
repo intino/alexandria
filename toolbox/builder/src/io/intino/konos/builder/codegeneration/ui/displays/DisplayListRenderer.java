@@ -16,7 +16,7 @@ public class DisplayListRenderer extends UIRenderer {
 
 	public DisplayListRenderer(Settings settings, Service.UI service, TemplateProvider templateProvider, Target target) {
 		super(settings, target);
-		this.displays = service.graph().rootDisplays();
+		this.displays = service.graph().rootDisplays(settings.graphName());
 		this.templateProvider = templateProvider;
 	}
 

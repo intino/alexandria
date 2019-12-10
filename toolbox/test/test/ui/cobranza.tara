@@ -7,22 +7,6 @@ MessageHub as JmsBus(url = "{messagehub_url}", user = "{messagehub_user}", passw
 
 Datamart(path = "{datamart_path}") datamart
 
-Mounter(datamart) contratoFirmadoMounter as Realtime(subscriberId = "cobranza")
-	Source(channel = "ContratoFirmado", schema = empty)
-Mounter(datamart) cuentaAbiertaMounter as Realtime(subscriberId = "cobranza")
-	Source(channel = "ContratoAbierta", schema = empty)
-Mounter(datamart) amortizacionCreadaMounter as Realtime(subscriberId = "amortizacionCreada")
-	Source("amortizacionCreada", schema = empty)
-Mounter(datamart) liquidacionCreadaMounter as Realtime(subscriberId = "liquidacionCreada")
-	Source("liquidacionCreada", schema = empty)
-Mounter(datamart) facturacionEmitidaMounter as Realtime(subscriberId = "facturacionEmitida")
-	Source("FacturacionEmitida", schema = empty)
-Mounter(datamart) ingresoRecibidoMounter as Realtime(subscriberId = "ingresoRecibido")
-	Source("IngresoRecibido", schema = empty)
-	Source("IngresoConciliado", schema = empty)
-Mounter(datamart) asientoCreadoMounter as Realtime(subscriberId = "asientoCreado")
-	Source("AsientoCreado", schema = empty)
-
 Service CobranzaElements as UI(port = "{port}", title = "Gestión Comercial. Cobranza", favicon = "")
 	Authentication(by="{federation_url}")
 	Resource(path = "/") home as Page(homeTemplate) Main Confidential
