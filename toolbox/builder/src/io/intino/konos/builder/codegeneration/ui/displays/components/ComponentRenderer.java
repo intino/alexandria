@@ -226,7 +226,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			Template template = element.a$(Stamp.class).template();
 			builder.add("template", template.name$());
 			builder.add("type", template.name$());
-			builder.add("generic", KonosGraph.isParentComponent(template) ? "<>" : "");
+			builder.add("generic", KonosGraph.isParent(settings.graphName(), template) ? "<>" : "");
 			return true;
 		}
 

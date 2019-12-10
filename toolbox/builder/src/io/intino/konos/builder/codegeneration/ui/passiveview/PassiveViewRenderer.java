@@ -117,12 +117,12 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	protected boolean isGeneric(PassiveView element) {
-		return element.isExtensionOf() || (element.i$(Component.class) && element.graph().isParentComponent(element.a$(Component.class)));
+		return element.isExtensionOf() || KonosGraph.isParent(settings.graphName(), element);
 	}
 
 	protected String genericParent(PassiveView element) {
 		if (element.isExtensionOf()) return firstUpperCase(element.asExtensionOf().parentView().name$());
-		return target == Target.Accessor ? firstUpperCase(typeOf(element)) : "io.intino.alexandria.ui.displays.Component";
+		return (target != Target.Accessor ? "io.intino.alexandria.ui.displays." : "") + firstUpperCase(typeOf(element));
 	}
 
 	protected String packageTypeRelativeDirectory(PassiveView passiveView) {
@@ -373,7 +373,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	private void registerCollectionImports(Set<String> imported, Component component, FrameBuilder builder) {
-		if (component.i$(CatalogComponents.Table.class)) addComponentsImports(imported, component.graph().rowsDisplays().stream().map(r -> r.a$(Component.class)).collect(toList()), builder);
+		if (component.i$(CatalogComponents.Table.class)) addComponentsImports(imported, component.graph().rowsDisplays(settings.graphName()).stream().map(r -> r.a$(Component.class)).collect(toList()), builder);
 		else addComponentsImports(imported, component.a$(CatalogComponents.Collection.class).moldList().stream().map(CatalogComponents.Collection.Mold::item).collect(toList()), builder);
 	}
 }

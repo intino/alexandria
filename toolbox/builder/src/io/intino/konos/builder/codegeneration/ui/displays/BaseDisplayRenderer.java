@@ -101,8 +101,8 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		KonosGraph graph = element.graph();
 		if (graph.templateList().size() > 0) frame.add("templatesImport", buildBaseFrame().add("templatesImport"));
 		if (graph.blockList().size() > 0) frame.add("blocksImport", buildBaseFrame().add("blocksImport"));
-		if (graph.itemsDisplays().size() > 0) frame.add("itemsImport", buildBaseFrame().add("itemsImport"));
-		if (graph.rowsDisplays().size() > 0) frame.add("rowsImport", buildBaseFrame().add("rowsImport"));
+		if (graph.itemsDisplays(settings.graphName()).size() > 0) frame.add("itemsImport", buildBaseFrame().add("itemsImport"));
+		if (graph.rowsDisplays(settings.graphName()).size() > 0) frame.add("rowsImport", buildBaseFrame().add("rowsImport"));
 		if (!ElementHelper.isRoot(componentOf(element)) || (element.isAccessible() && accessible))
 			frame.add("displayRegistration", displayRegistrationFrame(accessible));
 		frame.add("requesterDirectory", typeOf(element).equalsIgnoreCase("Display") || typeOf(element).equalsIgnoreCase("Display") ? "." : "..");

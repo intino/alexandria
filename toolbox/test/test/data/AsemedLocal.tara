@@ -1,7 +1,5 @@
 dsl Konos
 
-DataHubTerminal as JmsBus(url = "", user = "", password = "", clientId = "")
-
 Datalake(path = "{path}") datalake as Local
 
 Datamart("{datamart}") datamart
@@ -17,12 +15,6 @@ Mounter(datamart) inspeccionados as Population(format = Arff)
 
 Mounter(datamart) criterios as Batch
 	Source("asemed.Criterio")
-
-Mounter(datamart) allCriterios as Realtime(subscriberId = "")
-	Source("asemed.Criterio", Criterio)
-	Source("asemed.CriterioBorrado", CriterioBorrado)
-	Source("asemed.CriterioModificado", CriterioModificado)
-	Source("asemed.CriterioSentencia", CriterioSentencia)
 
 
 Feeder("asemed.Ajuste") ajusteFeeder

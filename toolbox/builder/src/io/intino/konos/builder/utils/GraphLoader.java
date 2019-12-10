@@ -81,7 +81,7 @@ public class GraphLoader {
 			}
 		}).loadStashes("Konos").loadStashes(stashes);
 		if (graph == null) return null;
-		final KonosGraph konosGraph = graph.as(KonosGraph.class).init();
+		final KonosGraph konosGraph = graph.as(KonosGraph.class).init(module.getName());
 		Thread.currentThread().setContextClassLoader(currentLoader);
 		return konosGraph;
 	}

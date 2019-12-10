@@ -1,21 +1,19 @@
 dsl Konos
 
-DataHubTerminal messageHub as JmsBus("{bus}", "{bus-user}", "{bus-password}", "{bus-client-id}")
-
-Service ProcessInbox as Messaging(messageHub)
-	domain = "unit1"
-	Request("status") status
-		Response as Object(ServerStatus)
-	Request("reboot") reboot
-		Parameter process as Object(Budget)
-		Response as Bool
-	Request("deploy") deploy
-		Parameter process as Object(Budget)
-		Response
-	Request("task") task as ProcessTrigger(wf.helloWorld)
-		Parameter process as Object(ProcessSchema)
-		Response as Object(schema = DeployResult)
-
+//Service ProcessInbox as Messaging(messageHub)
+//	domain = "unit1"
+//	Request("status") status
+//		Response as Object(ServerStatus)
+//	Request("reboot") reboot
+//		Parameter process as Object(Budget)
+//		Response as Bool
+//	Request("deploy") deploy
+//		Parameter process as Object(Budget)
+//		Response
+//	Request("task") task as ProcessTrigger(wf.helloWorld)
+//		Parameter process as Object(ProcessSchema)
+//		Response as Object(schema = DeployResult)
+//
 Workflow("unit1") wf
 	Process(bpmn = "service.bpmn") service
 	Process(bpmn = "helloworld.bpmn") helloWorld

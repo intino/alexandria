@@ -10,10 +10,10 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
-	private static Set<String> hierarchyDisplays = null;
-	private static List<CatalogComponents.Collection.Mold.Item> items = null;
-	private static List<PrivateComponents.Row> rows = null;
-	private static List<CatalogComponents.Table> tables = null;
+	private static Map<String, Set<String>> hierarchyDisplays = null;
+	private static Map<String, List<CatalogComponents.Collection.Mold.Item>> items = null;
+	private static Map<String, List<PrivateComponents.Row>> rows = null;
+	private static Map<String, List<CatalogComponents.Table>> tables = null;
 
 	public KonosGraph(Graph graph) {
 		super(graph);
@@ -23,9 +23,9 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		super(graph, wrapper);
 	}
 
-	public KonosGraph init() {
+	public KonosGraph init(String group) {
 		resetCache();
-		createPrivateComponents();
+		createPrivateComponents(group);
 		return this;
 	}
 
@@ -35,36 +35,39 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		rows = null;
 	}
 
-	public List<Display> rootDisplays() {
+	public List<Display> rootDisplays(String group) {
 		KonosGraph graph = this;
 		List<Display> rootDisplays = graph.displayList().stream().filter(d -> d.core$().ownerAs(PassiveView.class) == null).collect(toList());
-		rootDisplays.addAll(itemsDisplays());
-		rootDisplays.addAll(rowsDisplays());
+		rootDisplays.addAll(itemsDisplays(group));
+		rootDisplays.addAll(rowsDisplays(group));
 		return rootDisplays;
 	}
 
-	public List<CatalogComponents.Collection.Mold.Item> itemsDisplays() {
-		if (items == null) items = core$().find(CatalogComponents.Collection.Mold.Item.class);
-		return items;
+	public List<CatalogComponents.Collection.Mold.Item> itemsDisplays(String group) {
+		if (!items.containsKey(group))
+			items.put(group, core$().find(CatalogComponents.Collection.Mold.Item.class));
+		return items.get(group);
 	}
 
-	public List<PrivateComponents.Row> rowsDisplays() {
-		if (rows == null) rows = core$().find(PrivateComponents.Row.class);
-		return rows;
+	public List<PrivateComponents.Row> rowsDisplays(String group) {
+		if (!rows.containsKey(group))
+			rows.put(group, core$().find(PrivateComponents.Row.class));
+		return rows.get(group);
 	}
 
-	public static List<CatalogComponents.Table> tablesDisplays(KonosGraph graph) {
-		if (tables == null) tables = graph.core$().find(CatalogComponents.Table.class);
-		return tables;
+	public static List<CatalogComponents.Table> tablesDisplays(KonosGraph graph, String group) {
+		if (!tables.containsKey(group))
+			tables.put(group, graph.core$().find(CatalogComponents.Table.class));
+		return tables.get(group);
 	}
 
 	public static Template templateFor(Service.UI.Resource resource) {
 		return resource.asPage().template();
 	}
 
-	public static boolean isParentComponent(Component component) {
-		loadParentComponents(component.graph());
-		return hierarchyDisplays.contains(component.name$());
+	public static boolean isParent(String group, PassiveView passiveView) {
+		loadParents(group, passiveView.graph());
+		return hierarchyDisplays.get(group).contains(passiveView.name$());
 	}
 
 	public Set<String> findCustomParameters(Service.Messaging service) {
@@ -99,13 +102,13 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		return list;
 	}
 
-	private static void loadParentComponents(KonosGraph graph) {
-		if (hierarchyDisplays != null) return;
-		hierarchyDisplays = graph.core$().find(PassiveView.ExtensionOf.class).stream().map(d -> d.core$().as(PassiveView.ExtensionOf.class).parentView().name$()).collect(toSet());
+	private static void loadParents(String group, KonosGraph graph) {
+		if (hierarchyDisplays.containsKey(group)) return;
+		hierarchyDisplays.put(group, graph.core$().find(PassiveView.ExtensionOf.class).stream().map(d -> d.core$().as(PassiveView.ExtensionOf.class).parentView().name$()).collect(toSet()));
 	}
 
-	private void createPrivateComponents() {
-		tablesDisplays(this).forEach(this::createUiTableRow);
+	private void createPrivateComponents(String group) {
+		tablesDisplays(this, group).forEach(this::createUiTableRow);
 	}
 
 	private void createUiTableRow(CatalogComponents.Table element) {
