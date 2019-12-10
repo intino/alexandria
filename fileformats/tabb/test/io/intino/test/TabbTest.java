@@ -75,7 +75,7 @@ public class TabbTest {
 
 	@Test
 	public void appendFullTest() throws IOException {
-		new Tabb(otherTest).append(new Object[]{
+		Tabb tabb = new Tabb(otherTest).append(new Object[]{
 				"201912",
 				Instant.now(),
 				Instant.now(),
@@ -83,7 +83,7 @@ public class TabbTest {
 				"M001",
 				"342352344",
 				"342352344",
-				2.345,
+				2345L,
 				234235432L,
 				234235432L,
 				16,
