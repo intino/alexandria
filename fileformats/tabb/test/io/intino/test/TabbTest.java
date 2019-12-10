@@ -2,6 +2,7 @@ package io.intino.test;
 
 import io.intino.alexandria.tabb.Row;
 import io.intino.alexandria.tabb.Tabb;
+import io.intino.alexandria.tabb.TabbReader;
 import org.junit.*;
 
 import java.io.File;
@@ -14,6 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TabbTest {
 
 	private File bigSource = new File("test-res/tabbs/big.tabb");
+	private File readSource = new File("test-res/tabbs/201903_2.tabb");
 	private File smallSource = new File("test-res/tabbs/small.tabb");
 	private File test = new File(bigSource.getParentFile(), "test.tabb");
 	private File smallTest = new File(smallSource.getParentFile(), "smallTest.tabb");
@@ -22,6 +24,21 @@ public class TabbTest {
 	public void setUp() throws Exception {
 		Files.copy(bigSource.toPath(), new File(bigSource.getParentFile(), "test.tabb").toPath(), StandardCopyOption.REPLACE_EXISTING);
 		Files.copy(smallSource.toPath(), new File(smallSource.getParentFile(), "smallTest.tabb").toPath(), StandardCopyOption.REPLACE_EXISTING);
+	}
+
+	@Test
+	@Ignore
+	public void readTest() throws IOException {
+		TabbReader tabb = new TabbReader(readSource);
+		while (tabb.hasNext()) {
+			Row next = tabb.next();
+			System.out.println(next.get(0).asInstant());
+			System.out.println(next.get(1).asString());
+			System.out.println(next.get(2).asString());
+			System.out.println(next.get(3).asString());
+			System.out.println(next.get(4).asDouble());
+			System.out.println();
+		}
 	}
 
 	@Test

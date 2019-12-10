@@ -33,6 +33,8 @@ class ZipHandler {
 			Path nf = fs.getPath(entryName);
 			try (Writer writer = Files.newBufferedWriter(nf, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
 				writer.write(value);
+			} finally {
+				fs.close();
 			}
 		}
 	}
@@ -43,6 +45,8 @@ class ZipHandler {
 			Path nf = fs.getPath(entryName);
 			try (Writer writer = Files.newBufferedWriter(nf, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
 				writer.write(value);
+			} finally {
+				fs.close();
 			}
 		}
 	}

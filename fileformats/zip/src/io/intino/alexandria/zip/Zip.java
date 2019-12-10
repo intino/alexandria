@@ -44,6 +44,8 @@ public class Zip {
 		try (FileSystem fs = FileSystems.newFileSystem(URI.create("jar:" + path.toUri()), Map.of("create", "true"), ClassLoader.getSystemClassLoader())) {
 			try (Writer writer = Files.newBufferedWriter(fs.getPath(filePath), StandardCharsets.UTF_8, options)) {
 				writer.write(value);
+			} finally {
+				fs.close();
 			}
 		}
 	}
@@ -52,6 +54,7 @@ public class Zip {
 		Path path = Paths.get(file.getAbsolutePath());
 		try (FileSystem fs = FileSystems.newFileSystem(URI.create("jar:" + path.toUri()), Map.of("create", "true"), ClassLoader.getSystemClassLoader())) {
 			Files.write(fs.getPath(filePath), stream.readAllBytes(), options);
+			fs.close();
 		}
 	}
 }
