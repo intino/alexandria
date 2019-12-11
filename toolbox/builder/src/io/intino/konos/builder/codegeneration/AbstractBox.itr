@@ -188,7 +188,7 @@ def type(datalake) trigger(setup)
 end
 
 def type(terminal) trigger(setup)
-	io.intino.alexandria.event.JmsEventHub eventHub = new io.intino.alexandria.event.JmsEventHub($parameter...[, ]);
+	this.eventHub = new io.intino.alexandria.event.JmsEventHub($parameter...[, ]);
 	this.terminal = new $qn(eventHub);
 end
 
@@ -307,6 +307,7 @@ def type(messageHub) trigger(field)
 end
 
 def type(terminal) trigger(field)
+	private io.intino.alexandria.event.JmsEventHub eventHub;
 	private $qn terminal;
 end
 
