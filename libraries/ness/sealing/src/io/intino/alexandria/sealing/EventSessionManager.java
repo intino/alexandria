@@ -2,6 +2,7 @@ package io.intino.alexandria.sealing;
 
 import io.intino.alexandria.Fingerprint;
 import io.intino.alexandria.Session;
+import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.file.FS;
 import io.intino.alexandria.datalake.file.FileEventStore;
 import io.intino.alexandria.event.EventReader;
@@ -19,11 +20,11 @@ import java.util.stream.Stream;
 
 public class EventSessionManager {
 
-	public static void seal(File stageFolder, File eventStoreFolder, File tempFolder) {
+	public static void seal(File stageFolder, File eventStoreFolder, List<Datalake.EventStore.Tank> avoidSorting, File tempFolder) {
 		eventSessions(stageFolder)
 				.collect(Collectors.groupingBy(EventSessionManager::fingerprintOf)).entrySet()
 				.stream().sorted(Comparator.comparing(t -> t.getKey().toString()))
-				.parallel().forEach(e -> new Sealer(eventStoreFolder, tempFolder).seal(e.getKey(), e.getValue()));
+				.parallel().forEach(e -> new Sealer(eventStoreFolder, avoidSorting, tempFolder).seal(e.getKey(), e.getValue()));
 	}
 
 	private static Stream<File> eventSessions(File stage) {
@@ -44,24 +45,28 @@ public class EventSessionManager {
 
 	private static class Sealer {
 		private final File eventStoreFolder;
+		private final List<String> avoidSorting;
 		private final File tempFolder;
 
-		Sealer(File eventStoreFolder, File tempFolder) {
+		Sealer(File eventStoreFolder, List<Datalake.EventStore.Tank> avoidSorting, File tempFolder) {
 			this.eventStoreFolder = eventStoreFolder;
+			this.avoidSorting = avoidSorting.stream().map(Datalake.EventStore.Tank::name).collect(Collectors.toList());
 			this.tempFolder = tempFolder;
 		}
 
 		public void seal(Fingerprint fingerprint, List<File> files) {
-			seal(datalakeFile(fingerprint), sort(files));
+			seal(datalakeFile(fingerprint), sort(fingerprint, files));
 		}
 
 		private void seal(File datalakeFile, List<File> files) {
 			new EventWriter(datalakeFile).put(eventStreamOf(files));
 		}
 
-		private List<File> sort(List<File> files) {
+		private List<File> sort(Fingerprint fingerprint, List<File> files) {
 			try {
-				for (File file : files) new EventSorter(file, tempFolder).sort();
+				for (File file : files) {
+					if (!avoidSorting.contains(fingerprint.tank())) new EventSorter(file, tempFolder).sort();
+				}
 				return files;
 			} catch (IOException e) {
 				Logger.error(e);

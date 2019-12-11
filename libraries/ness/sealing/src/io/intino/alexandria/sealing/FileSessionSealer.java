@@ -1,8 +1,10 @@
 package io.intino.alexandria.sealing;
 
+import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.file.FileDatalake;
 
 import java.io.File;
+import java.util.List;
 
 public class FileSessionSealer implements SessionSealer {
 	private final File stageFolder;
@@ -15,11 +17,13 @@ public class FileSessionSealer implements SessionSealer {
 		this.stage = new FileStage(stageFolder);
 	}
 
-	public void seal() {
-		sealEvents();
+	@Override
+	public void seal(List<Datalake.EventStore.Tank> avoidSorting) {
+		sealEvents(avoidSorting);
 		sealSets();
 		makeSetIndexes();
 		stage.clear();
+
 	}
 
 	private void makeSetIndexes() {
@@ -30,8 +34,8 @@ public class FileSessionSealer implements SessionSealer {
 		SetSessionManager.seal(stageFolder, datalake.setStoreFolder(), tempFolder());
 	}
 
-	private void sealEvents() {
-		EventSessionManager.seal(stageFolder, datalake.eventStoreFolder(), tempFolder());
+	private void sealEvents(List<Datalake.EventStore.Tank> avoidSorting) {
+		EventSessionManager.seal(stageFolder, datalake.eventStoreFolder(), avoidSorting, tempFolder());
 	}
 
 	private File tempFolder() {
