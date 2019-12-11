@@ -187,9 +187,9 @@ def type(datalake) trigger(setup)
 	this.datalake = new io.intino.alexandria.datalake.file.FileDatalake(new java.io.File($path+parameter));
 end
 
-
 def type(terminal) trigger(setup)
-	this.terminal = new $qn(new io.intino.alexandria.event.JmsEventHub($parameter...[, ]));
+	io.intino.alexandria.event.JmsEventHub eventHub = new io.intino.alexandria.event.JmsEventHub($parameter...[, ]);
+	this.terminal = new $qn(eventHub);
 end
 
 def type(jms & messageHub) trigger(setup)
@@ -329,6 +329,10 @@ end
 def type(terminal) trigger(getter)
 	public $qn terminal() {
 		return this.terminal;
+	}
+
+	public io.intino.alexandria.event.JmsEventHub eventHub() {
+		return this.eventHub;
 	}
 end
 
