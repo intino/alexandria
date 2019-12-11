@@ -46,7 +46,7 @@ public class Dotx {
 
 		String process(String line) {
 			for (String key : data.keySet())
-				line = line.replaceAll(fieldOf(key), valueOf(key));
+				line = line.replace(fieldOf(key), valueOf(key));
 			return line;
 		}
 

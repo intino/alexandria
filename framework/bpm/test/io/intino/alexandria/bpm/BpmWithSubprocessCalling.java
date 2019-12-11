@@ -24,7 +24,7 @@ public class BpmWithSubprocessCalling extends BpmTest {
 	@Test
 	public void name() throws InterruptedException {
 		PersistenceManager.InMemoryPersistenceManager persistence = new PersistenceManager.InMemoryPersistenceManager();
-		workflow = new Workflow(new ProcessFactory(), persistence, null) {
+		workflow = new Workflow(new ProcessFactory(), persistence) {
 
 			@Override
 			public void send(ProcessStatus processStatus) {

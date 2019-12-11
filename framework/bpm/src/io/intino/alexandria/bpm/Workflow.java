@@ -25,11 +25,11 @@ public abstract class Workflow {
 	private Map<String, Process> processes = new ConcurrentHashMap<>();
 	private Set<String> advancingProcesses = new HashSet<>();
 
-	public Workflow(ProcessFactory factory, String domain) {
-		this(factory, new InMemoryPersistenceManager(), domain);
+	public Workflow(ProcessFactory factory) {
+		this(factory, new InMemoryPersistenceManager());
 	}
 
-	public Workflow(ProcessFactory factory, PersistenceManager persistence, String domain) {
+	public Workflow(ProcessFactory factory, PersistenceManager persistence) {
 		this.persistence = persistence;
 		this.factory = factory;
 		loadActiveProcesses();

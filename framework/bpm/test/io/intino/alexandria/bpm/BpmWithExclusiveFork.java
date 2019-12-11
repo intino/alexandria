@@ -17,7 +17,7 @@ public class BpmWithExclusiveFork extends BpmTest {
 	@Test
 	public void name() throws InterruptedException {
 		InMemoryPersistenceManager manager = new InMemoryPersistenceManager();
-		new Workflow((id, name) -> new StringContentReviewerProcess(id), manager, null) {
+		new Workflow((id, name) -> new StringContentReviewerProcess(id), manager) {
 
 			@Override
 			public void send(ProcessStatus processStatus) {
