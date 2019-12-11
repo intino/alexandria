@@ -27,9 +27,25 @@ public interface Datalake {
 
 			String name();
 
+			Scale scale();
+
+			Stream<EventStore.Tub> tubs();
+
+			EventStore.Tub first();
+
+			EventStore.Tub last();
+
+			EventStore.Tub on(Timetag tag);
+
 			EventStream content();
 
 			EventStream content(Predicate<Timetag> filter);
+		}
+
+		interface Tub {
+			Timetag timetag();
+
+			EventStream events();
 		}
 	}
 
