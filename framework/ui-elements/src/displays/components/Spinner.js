@@ -10,19 +10,23 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 const styles = theme => ({});
 
 class Spinner extends AbstractSpinner {
-	state = {
-		loading: true
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new SpinnerNotifier(this);
 		this.requester = new SpinnerRequester(this);
+		this.state = {
+		    ...this.state,
+            loading: true
+		}
 	};
 
 	render() {
+		if (!this.state.visible) return (<React.Fragment/>);
+
 		const mode = this.props.mode != null ? this.props.mode : "Rise";
 		const color = this.color();
+
 		if (mode === "Bar") return (<BarLoader color={color} loading={true}/>);
 		else if (mode === "Circle") return (<CircleLoader color={color} loading={true}/>);
 		else if (mode === "Hash") return (<HashLoader color={color} loading={true}/>);

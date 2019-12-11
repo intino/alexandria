@@ -34,6 +34,7 @@ public class Stepper<DN extends StepperNotifier, B extends Box> extends Abstract
     @Override
     public <D extends Display> D register(D child) {
         D registered = super.register(child);
+        if (child instanceof Step) ((Step)child).visible(true);
         updateSteps();
         return registered;
     }
