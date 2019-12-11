@@ -15,6 +15,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
@@ -38,6 +39,28 @@ public class EventSessionManager_ {
 		session.close();
 		handler.pushTo(stageFolder);
 		new FileSessionSealer(new FileDatalake(datalake), stageFolder).seal();
+		ZimReader reader = new ZimReader(new File("temp/datalake/events/tank1/2019022816.zim"));
+		for (int i = 0; i < 30; i++) {
+			Message next = reader.next();
+			assertEquals(next.get("ts").data(), messageList.get(i).get("ts").data());
+			assertEquals(next.get("entries").data(), messageList.get(i).get("entries").data());
+		}
+	}
+
+	@Test
+	public void should_create_an_event_session_without_sorting() {
+		SessionHandler handler = new SessionHandler(new File("temp/events"));
+		EventSession session = handler.createEventSession();
+		List<Message> messageList = new ArrayList<>();
+		for (int i = 0; i < 30; i++) {
+			LocalDateTime now = LocalDateTime.of(2019, 2, 28, 16, 15 + i);
+			Message message = message(now.toInstant(ZoneOffset.UTC), i);
+			messageList.add(message);
+			session.put("tank1", new Timetag(now, Scale.Hour), new Tank1(message));
+		}
+		session.close();
+		handler.pushTo(stageFolder);
+		new FileSessionSealer(new FileDatalake(datalake), stageFolder).seal(Collections.singletonList(new FileDatalake(datalake).eventStore().tank("tank1")));
 		ZimReader reader = new ZimReader(new File("temp/datalake/events/tank1/2019022816.zim"));
 		for (int i = 0; i < 30; i++) {
 			Message next = reader.next();
