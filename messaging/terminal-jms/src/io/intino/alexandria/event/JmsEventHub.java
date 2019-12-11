@@ -243,6 +243,7 @@ public class JmsEventHub implements EventHub {
 		if (!eventOutBox.isEmpty())
 			while (!eventOutBox.isEmpty()) {
 				Map.Entry<String, Event> event = eventOutBox.get();
+				if (event == null) continue;
 				if (doSendEvent(event.getKey(), event.getValue())) eventOutBox.pop();
 				else break;
 			}
