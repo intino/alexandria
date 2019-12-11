@@ -8,6 +8,7 @@ Concept:{0..1} MessageHub
 		var string user
 		var string password
 		var string clientId
+		var string outBoxDirectory
 
 Concept:Named Subscriber
 	var string subscriberId

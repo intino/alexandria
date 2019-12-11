@@ -1,12 +1,16 @@
 package io.intino.alexandria.datalake.file;
 
+import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
-import io.intino.alexandria.event.EventReader;
+import io.intino.alexandria.datalake.Datalake.EventStore.Tub;
 import io.intino.alexandria.event.EventStream;
+import io.intino.alexandria.event.EventStream.Sequence;
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class FileEventTank implements Datalake.EventStore.Tank {
 	private final File root;
@@ -21,28 +25,45 @@ public class FileEventTank implements Datalake.EventStore.Tank {
 	}
 
 	@Override
+	public Scale scale() {
+		return first().timetag().scale();
+	}
+
+	@Override
+	public Stream<Tub> tubs() {
+		return FS.filesIn(root, pathname -> pathname.getName().endsWith(FileEventStore.EventExtension)).map(FileEventTub::new);
+	}
+
+	@Override
+	public Tub first() {
+		return tubs().findFirst().orElse(currentTub());
+	}
+
+	@Override
+	public Tub last() {
+		return FS.foldersIn(root, FS.Sort.Reversed).map(FileEventTub::new).findFirst().orElse(currentTub());
+	}
+
+	@Override
+	public Tub on(Timetag tag) {
+		return new FileEventTub(new File(root, tag.value()));
+	}
+
+	@Override
 	public EventStream content() {
-		return EventStream.Sequence.of(eventStreams(t -> true));
+		return Sequence.of(tubs().map(Tub::events).toArray(EventStream[]::new));
 	}
 
 	@Override
 	public EventStream content(Predicate<Timetag> filter) {
-		return EventStream.Sequence.of(eventStreams(filter));
+		return Sequence.of(tubs().filter(t -> filter.test(t.timetag())).map(Tub::events).toArray(EventStream[]::new));
 	}
 
 	public File root() {
 		return root;
 	}
 
-	private EventStream[] eventStreams(Predicate<Timetag> filter) {
-		return FS.filesIn(root, f -> f.getName().endsWith(FileEventStore.EventExtension))
-				.sorted()
-				.filter(f -> filter.test(timetagOf(f)))
-				.map(EventReader::new)
-				.toArray(EventStream[]::new);
-	}
-
-	private Timetag timetagOf(File file) {
-		return new Timetag(file.getName().replace(FileEventStore.EventExtension, ""));
+	private FileEventTub currentTub() {
+		return new FileEventTub(new File(root, new Timetag(LocalDateTime.now(), Scale.Month).toString()));
 	}
 }

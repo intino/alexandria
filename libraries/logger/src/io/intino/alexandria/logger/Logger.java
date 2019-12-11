@@ -4,12 +4,17 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.LogRecord;
 
+import static java.util.Collections.singletonList;
+
 public class Logger {
-	private static List<LogHandler> out = Arrays.asList(new PrintStreamLogHandler(System.out));
-	private static List<LogHandler> err = Arrays.asList(new PrintStreamLogHandler(System.err));
+	private static List<LogHandler> out = new ArrayList<>(singletonList(new PrintStreamLogHandler(System.out)));
+	private static List<LogHandler> err = new ArrayList<>(singletonList(new PrintStreamLogHandler(System.err)));
 	private static List<String> excludedPackages = new ArrayList<>();
 	private static Set<Level> excludedLevels = new HashSet<>();
 	private static String pattern = "[%level]\nts: %date\nsource: %C\nmessage: %m\n";
@@ -68,11 +73,11 @@ public class Logger {
 		excludedLevels.remove(level);
 	}
 
-	public static void addErrorhandler(LogHandler stream) {
+	public static void addErrorHandler(LogHandler stream) {
 		err.add(stream);
 	}
 
-	public static void addOuthandler(LogHandler stream) {
+	public static void addOutHandler(LogHandler stream) {
 		out.add(stream);
 	}
 

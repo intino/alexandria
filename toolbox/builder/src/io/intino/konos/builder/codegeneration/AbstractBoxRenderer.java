@@ -127,7 +127,12 @@ public class AbstractBoxRenderer extends Renderer {
 		FrameBuilder builder = new FrameBuilder("messagehub");
 		if (hub.isJmsBus()) {
 			MessageHub.JmsBus jmsHub = hub.asJmsBus();
-			builder.add("jms").add("parameter", parameter(jmsHub.url())).add("parameter", parameter(jmsHub.user())).add("parameter", parameter(jmsHub.password())).add("parameter", parameter(jmsHub.clientId()));
+			builder.add("jms").
+					add("parameter", parameter(jmsHub.url())).
+					add("parameter", parameter(jmsHub.user())).
+					add("parameter", parameter(jmsHub.password())).
+					add("parameter", parameter(jmsHub.clientId())).
+					add("parameter", parameter(jmsHub.outBoxDirectory()));
 		}
 		builder.add("package", packageName());
 		builder.add("box", boxName());

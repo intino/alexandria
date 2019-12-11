@@ -161,7 +161,7 @@ def type(datalake) trigger(import)
 end
 
 def type(messageHub) trigger(import)
-	import io.intino.alexandria.message.MessageHub;
+	import io.intino.alexandria.event.EventHub;
 end
 
 def trigger(uiBox)
