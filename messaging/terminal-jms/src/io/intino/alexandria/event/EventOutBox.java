@@ -6,7 +6,6 @@ import io.intino.alexandria.message.MessageReader;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.Instant;
 import java.util.*;
@@ -32,7 +31,9 @@ class EventOutBox {
 		Collections.sort(files);
 		if (files.isEmpty()) return null;
 		try {
-			SavedEvent savedEvent = new Gson().fromJson(new String(Files.readAllBytes(files.get(0).toPath()), StandardCharsets.UTF_8), SavedEvent.class);
+			String json = Files.readString(files.get(0).toPath());
+			if (json.isEmpty() || json.isBlank()) return null;
+			SavedEvent savedEvent = new Gson().fromJson(json, SavedEvent.class);
 			return new AbstractMap.SimpleEntry<>(savedEvent.channel, new Event(new MessageReader(savedEvent.message).next()));
 		} catch (IOException e) {
 			Logger.error(e);
@@ -48,7 +49,10 @@ class EventOutBox {
 	}
 
 	boolean isEmpty() {
-		return Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(".json"))).length == 0;
+		File[] files = Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(".json")));
+		for (File file : files) if (file.length() == 0) file.delete();
+		files = Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(".json")));
+		return files.length == 0;
 	}
 
 	private static class SavedEvent {
