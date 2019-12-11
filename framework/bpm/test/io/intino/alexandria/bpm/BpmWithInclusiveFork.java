@@ -18,7 +18,7 @@ public class BpmWithInclusiveFork extends BpmTest {
 	@Test
 	public void name() throws InterruptedException {
 		PersistenceManager.InMemoryPersistenceManager persistence = new PersistenceManager.InMemoryPersistenceManager();
-		new Workflow((id, name) -> new JoinTwoBranches(id), persistence, null) {
+		new Workflow((id, name) -> new JoinTwoBranches(id), persistence) {
 
 			@Override
 			public void send(ProcessStatus processStatus) {
