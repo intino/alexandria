@@ -17,19 +17,23 @@ const styles = theme => ({
 });
 
 class TextCode extends AbstractTextCode {
-	state = {
-		value: this.props.value
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new TextCodeNotifier(this);
 		this.requester = new TextCodeRequester(this);
+		this.state = {
+			...this.state,
+    		value: this.props.value
+		}
 	};
 
 	render() {
+		if (!this.state.visible) return (<React.Fragment/>);
+
 		const {classes} = this.props;
 		const value = CodeBehavior.clean(this.state.value);
+
 		return (
 			<React.Fragment>
 				<code style={this.style()} className={classes.value}

@@ -9,17 +9,18 @@ const styles = theme => ({});
 
 export default class Frame extends AbstractFrame {
 
-	state = {
-		display : null
-	};
-
 	constructor(props) {
 		super(props);
 		this.notifier = new FrameNotifier(this);
 		this.requester = new FrameRequester(this);
+        this.state = {
+            ...this.state,
+            display : null
+        };
 	};
 
 	render() {
+		if (!this.state.visible) return (<React.Fragment/>);
 		return (<div style={this.style()}>{this.renderInstances()}</div>);
 	};
 

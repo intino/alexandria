@@ -19,7 +19,7 @@ def type(dispatcher & gen)
 
         @Override
         public void dispatch(Soul soul, String address) {
-            address = address.replace(soul.session().browser().basePath(), "");
+            address = address.replaceFirst(soul.session().browser().basePath(), "");
             List<String> params = paramsOf(address);
             [$resource+call...[$NL]]
         }

@@ -10,10 +10,10 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
-	private static Map<String, Set<String>> hierarchyDisplays = null;
-	private static Map<String, List<CatalogComponents.Collection.Mold.Item>> items = null;
-	private static Map<String, List<PrivateComponents.Row>> rows = null;
-	private static Map<String, List<CatalogComponents.Table>> tables = null;
+	private static Map<String, Set<String>> hierarchyDisplays = new HashMap<>();
+	private static Map<String, List<CatalogComponents.Collection.Mold.Item>> items = new HashMap<>();
+	private static Map<String, List<PrivateComponents.Row>> rows = new HashMap<>();
+	private static Map<String, List<CatalogComponents.Table>> tables = new HashMap<>();
 
 	public KonosGraph(Graph graph) {
 		super(graph);
@@ -30,9 +30,9 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 	}
 
 	private void resetCache() {
-		tables = null;
-		items = null;
-		rows = null;
+		tables = new HashMap<>();
+		items = new HashMap<>();
+		rows = new HashMap<>();
 	}
 
 	public List<Display> rootDisplays(String group) {
