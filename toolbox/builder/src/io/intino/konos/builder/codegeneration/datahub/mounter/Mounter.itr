@@ -79,6 +79,7 @@ def type(mounter)
 
 	import $package+validPackage.$box+firstUpperCase~Box;
 	import io.intino.alexandria.logger.Logger;
+	import io.intino.alexandria.event.Event;
 
 	public class $name+FirstUpperCase {
 		private $box+validName+firstUpperCase~Box box;

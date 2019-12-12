@@ -11,8 +11,9 @@ Concept:{0..1} MessageHub
 		var string outBoxDirectory
 
 Concept:Named Subscriber
+	var string tank
 	var string subscriberId
-	var string channel
+	var string context = empty
 
 Concept:{0..1} Datalake
 	var string path
