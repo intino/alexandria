@@ -30,7 +30,7 @@ public class SubscriberRenderer {
 			final FrameBuilder builder = baseFrame(subscriber);
 			Settings.DataHubManifest manifest = settings.dataHubManifest();
 			if (manifest == null) return;
-			String type = manifest.tankClasses.get(subscriber.channel());
+			String type = manifest.tankClasses.get(subscriber.tank());
 			if (type == null) return;
 			builder.add("type", type);
 			builder.add("typeName", type.substring(type.lastIndexOf(".") + 1));
