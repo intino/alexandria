@@ -82,6 +82,14 @@ public class Message {
 		return append(use(attribute), value.toString());
 	}
 
+	public Message append(String attribute, Instant value) {
+		return append(use(attribute), value.toString());
+	}
+
+	public Message append(String attribute, Long value) {
+		return append(use(attribute), value.toString());
+	}
+
 	public Message append(String attribute, Integer value) {
 		return append(use(attribute), value.toString());
 	}
@@ -94,19 +102,19 @@ public class Message {
 		return append(use(attribute), value);
 	}
 
-	private Message append(Attribute attribute, String value) {
-		attribute.value =
-				(attribute.value == null ? "" : attribute.value + "\n") +
-						(value == null ? "\0" : value);
-		return this;
-	}
-
 	public Message append(String attribute, String name, InputStream is) {
 		return append(attribute, name, contentOf(is));
 	}
 
 	public Message append(String attribute, String name, byte[] content) {
 		return append(attribute, name + "@" + attach(content));
+	}
+
+	private Message append(Attribute attribute, String value) {
+		attribute.value =
+				(attribute.value == null ? "" : attribute.value + "\n") +
+						(value == null ? "\0" : value);
+		return this;
 	}
 
 	public Message rename(String attribute, String newName) {
@@ -119,6 +127,15 @@ public class Message {
 	public Message remove(String attribute) {
 		detach(use(attribute).value);
 		attributes.remove(attribute.toLowerCase());
+		return this;
+	}
+
+	public Message remove(String attribute, Object value) {
+		detach(use(attribute).value);
+		Attribute attr = attributes.get(attribute.toLowerCase());
+		if (attr == null) return this;
+		attr.value = attr.value.replace(value.toString() + "\n", "");
+		if (attr.value.isEmpty()) remove(attribute);
 		return this;
 	}
 

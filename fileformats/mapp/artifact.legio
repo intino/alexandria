@@ -2,7 +2,7 @@ dsl Legio
 
 Artifact("io.intino.alexandria", "1.0.0") mapp
 	Imports
-		Compile("io.intino.alexandria", "logger", "2.0.0")
+		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Test("junit", "junit", "LATEST")
 		Test("org.assertj", "assertj-core", "3.11.1")
 
