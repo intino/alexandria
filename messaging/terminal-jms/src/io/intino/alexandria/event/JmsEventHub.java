@@ -147,10 +147,11 @@ public class JmsEventHub implements EventHub {
 			try {
 				String result = onRequestReceived.accept(textFrom(event));
 				if (result == null) return;
-				session.createTextMessage().setText(result);
-				event.setJMSCorrelationID(event.getJMSCorrelationID());
+				TextMessage response = session.createTextMessage();
+				response.setText(result);
+				response.setJMSCorrelationID(event.getJMSCorrelationID());
 				QueueProducer producer = new QueueProducer(session, event.getJMSReplyTo());
-				producer.produce(event);
+				producer.produce(response);
 				producer.close();
 			} catch (JMSException e) {
 				Logger.error(e);
