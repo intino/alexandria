@@ -106,6 +106,11 @@ public abstract class Process {
 	void resume(List<ProcessStatus> statuses) {
 		this.processStatusList.clear();
 		this.processStatusList.addAll(statuses);
+		this.processStatusList.stream()
+				.filter(p -> p.stateInfo() != null)
+				.filter(p -> p.stateInfo().status().equals("Enter"))
+				.filter(p -> exitStateStatus(p.stateInfo().name()) == null)
+				.forEach(p -> state(p.stateInfo().name()).task().execute());
 	}
 
 	protected void onAbort() {
