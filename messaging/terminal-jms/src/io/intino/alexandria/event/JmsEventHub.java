@@ -218,6 +218,7 @@ public class JmsEventHub implements EventHub {
 			@Override
 			public void transportResumed() {
 				connected.set(true);
+				Logger.info("Connection with Data Hub stablished!");
 			}
 		};
 	}
