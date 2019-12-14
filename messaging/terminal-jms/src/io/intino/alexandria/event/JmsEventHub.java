@@ -48,6 +48,7 @@ public class JmsEventHub implements EventHub {
 					if (clientId != null && !clientId.isEmpty()) connection.setClientID(clientId);
 					connection.start();
 					session = connection.createSession(transactedSession, transactedSession ? SESSION_TRANSACTED : AUTO_ACKNOWLEDGE);
+					Logger.info("Connection with Data Hub stablished!");
 				} else Logger.error("Connection is null");
 			} catch (JMSException e) {
 				Logger.error(e);
