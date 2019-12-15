@@ -59,8 +59,18 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
 	}
 
 	public void notifyChange(Double value) {
+    	if (!checkRange(value)) {
+    		notifier.refresh(this.value);
+    		return;
+		}
 		this.value = value;
 		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));
+	}
+
+	private boolean checkRange(Double value) {
+		if (min != null && value < min) return false;
+		if (max != null && value > max) return false;
+		return true;
 	}
 
 	protected NumberEditable _value(double value) {

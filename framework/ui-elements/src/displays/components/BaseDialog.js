@@ -9,6 +9,7 @@ export default class BaseDialog extends AbstractBaseDialog {
 	state = {
 		title: this.props.title,
 		opened: false,
+		modal: false,
 	};
 
 	static Styles = theme => ({

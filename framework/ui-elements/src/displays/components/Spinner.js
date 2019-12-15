@@ -27,7 +27,7 @@ class Spinner extends AbstractSpinner {
 		const mode = this.props.mode != null ? this.props.mode : "Rise";
 		const color = this.color();
 
-		if (mode === "Bar") return (<BarLoader color={color} loading={true}/>);
+		if (mode === "Bar") return (<BarLoader color={color} width={300} loading={true}/>);
 		else if (mode === "Circle") return (<CircleLoader color={color} loading={true}/>);
 		else if (mode === "Hash") return (<HashLoader color={color} loading={true}/>);
 		else if (mode === "Ring") return (<RingLoader color={color} loading={true}/>);
