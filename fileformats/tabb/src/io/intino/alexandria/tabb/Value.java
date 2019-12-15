@@ -48,7 +48,7 @@ public class Value {
 	}
 
 	public String asNominal() {
-		return isAvailable() ? mode.features[get32(value)] : null;
+		return isAvailable() ? mode.features().get(get32(value)) : null;
 	}
 
 	public boolean asBoolean() {

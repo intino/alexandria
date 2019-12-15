@@ -44,13 +44,13 @@ public class TabbBuilder_ {
 		assertThat(value).isNotNull();
 		assertThat(value.isAvailable());
 		assertThat(value.type()).isEqualTo(Type.Nominal);
-		assertThat(value.asString()).isEqualTo("test1");
+		assertThat(value.asNominal()).isEqualTo("test1");
 		tabb.next();
 		value = tabb.get(0);
-		assertThat(value.asString()).isEqualTo("test2");
+		assertThat(value.asNominal()).isEqualTo("test2");
 		tabb.next();
 		value = tabb.get(0);
-		assertThat(value.asString()).isEqualTo("test1");
+		assertThat(value.asNominal()).isEqualTo("test1");
 	}
 
 	@Test
@@ -66,11 +66,11 @@ public class TabbBuilder_ {
 		while (tabb.hasNext()) {
 			tabb.next();
 			Value value = tabb.get(0);
-			assertThat(value.mode().features.length).isEqualTo(50000);
+			assertThat(value.mode().features().size()).isEqualTo(50000);
 			assertThat(value).isNotNull();
 			assertThat(value.isAvailable());
 			assertThat(value.type()).isEqualTo(Type.Nominal);
-			assertThat(value.asString()).isEqualTo("test" + i);
+			assertThat(value.asNominal()).isEqualTo("test" + i);
 			i++;
 		}
 	}
@@ -88,10 +88,10 @@ public class TabbBuilder_ {
 		assertThat(value).isNotNull();
 		assertThat(value.type()).isEqualTo(Nominal);
 		assertThat(value.isAvailable());
-		assertThat(value.asString()).isEqualTo("test1");
+		assertThat(value.asNominal()).isEqualTo("test1");
 		tabb.next();
 		value = tabb.get(0);
-		assertThat(value.asString()).isEqualTo("test2");
+		assertThat(value.asNominal()).isEqualTo("test2");
 		assertThat(!tabb.hasNext());
 
 	}
@@ -129,7 +129,7 @@ public class TabbBuilder_ {
 		streamer.add(new MappColumnStreamer.BypassSelector("letters", Nominal));
 		builder.add(streamer.get());
 		builder.save(new File(tabbDirectory, "result.tabb"));
-		assertThat(resultTabbFile().length()).isEqualTo(435);
+		assertThat(resultTabbFile().length()).isEqualTo(447);
 		TabbReader tabbReader = tabbReader();
 
 		tabbReader.next();
@@ -138,7 +138,7 @@ public class TabbBuilder_ {
 		assertThat(value1).isNotNull();
 		assertThat(value1.isAvailable());
 		assertThat(value1.type()).isEqualTo(Nominal);
-		assertThat(value1.asString()).isEqualTo("test1");
+		assertThat(value1.asNominal()).isEqualTo("test1");
 		assertThat(value2).isNotNull();
 		assertThat(!value2.isAvailable());
 		assertThat(value2.type()).isEqualTo(Nominal);
@@ -146,14 +146,14 @@ public class TabbBuilder_ {
 		tabbReader.next();
 		value1 = tabbReader.get(0);
 		value2 = tabbReader.get(1);
-		assertThat(value1.asString()).isEqualTo("test2");
-		assertThat(value2.asString()).isEqualTo("a");
+		assertThat(value1.asNominal()).isEqualTo("test2");
+		assertThat(value2.asNominal()).isEqualTo("a");
 
 		tabbReader.next();
 		value1 = tabbReader.get(0);
 		value2 = tabbReader.get(1);
-		assertThat(value1.asString()).isEqualTo("test1");
-		assertThat(value2.asString()).isEqualTo("b");
+		assertThat(value1.asNominal()).isEqualTo("test1");
+		assertThat(value2.asNominal()).isEqualTo("b");
 		assertThat(!tabbReader.hasNext());
 	}
 

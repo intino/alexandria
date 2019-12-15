@@ -221,7 +221,7 @@ public class Tabb implements Iterator<Row> {
 		ZipOutputStream os = new ZipOutputStream(new FileOutputStream(file));
 		os.setLevel(BEST_COMPRESSION);
 		for (Tabbc c : columns) writeEntry(os, c.name() + ColumnExtension, createColumnStream(c));
-		ColumnInfo[] collect = columns.stream().map(c -> new ColumnInfo(c.name, c.type, c.isIndex, c.size, c.features.toArray(new String[0]))).toArray(ColumnInfo[]::new);
+		ColumnInfo[] collect = columns.stream().map(c -> new ColumnInfo(c.name, c.type, c.isIndex, c.size, c.features)).toArray(ColumnInfo[]::new);
 		writeEntry(os, TabbManifest.FileName, TabbManifest.serialize(collect));
 		os.close();
 	}

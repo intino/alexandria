@@ -7,6 +7,7 @@ import io.intino.alexandria.tabb.FileGenerator;
 import io.intino.alexandria.tabb.Mode;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -65,7 +66,7 @@ public class TabbFileGenerator implements FileGenerator {
 	}
 
 	public Mode mode() {
-		return new Mode(modes.keySet().toArray(new String[0]));
+		return new Mode(new ArrayList<>(modes.keySet()));
 	}
 
 	public long size() {
