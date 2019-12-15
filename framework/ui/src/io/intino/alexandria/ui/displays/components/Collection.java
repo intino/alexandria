@@ -145,7 +145,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
 
     void notifyRefresh() {
         if (refreshListeners.size() <= 0) return;
-        List<Object> items = children().stream().map(d -> ((CollectionItemDisplay) d).item()).collect(toList());
+        List<Object> items = children().stream().filter(c -> c instanceof CollectionItemDisplay).map(d -> ((CollectionItemDisplay) d).item()).collect(toList());
         refreshListeners.forEach(l -> l.accept(new RefreshEvent(this, items)));
     }
 

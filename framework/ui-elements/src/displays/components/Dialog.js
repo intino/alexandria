@@ -32,6 +32,8 @@ class Dialog extends AbstractDialog {
 		return (
 			<MuiDialog fullScreen={this.props.fullscreen} open={this.state.opened}
 					   onClose={this.handleClose.bind(this)}
+					   disableBackdropClick={this.state.modal}
+					   disableEscapeKeyDown={this.state.modal}
 					   TransitionComponent={this.props.fullscreen ? BaseDialog.Transition : undefined}>
 				{this.renderTitle()}
 				{this.renderContent(() => children)}

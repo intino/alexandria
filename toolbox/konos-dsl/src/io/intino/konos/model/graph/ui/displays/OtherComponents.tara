@@ -70,6 +70,7 @@ Concept OtherComponents
 		Aspect Relative
 		Aspect Animated
 		Aspect FullScreen
+		Aspect Modal
 		sub Dialog
 			has Component
 
@@ -81,6 +82,7 @@ Concept OtherComponents
 		sub CollectionDialog
 			var boolean allowSearch = true
 			has:{0..1} CatalogComponents.Collection
+
 	Concept Divider extends Component
 
 	Concept Portal extends Component

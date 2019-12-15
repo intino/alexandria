@@ -29,6 +29,7 @@ public class DialogRenderer extends SizedRenderer<AbstractDialog> {
 		result.add("abstractdialog");
 		result.add("title", element.title());
 		if (element.isFullScreen()) result.add("fullscreen", true);
+		if (element.isModal()) result.add("modal", true);
 		addTransition(result);
 		addAlertDialogProperties(result);
 		addCollectionDialogProperties(result);
