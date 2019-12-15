@@ -90,8 +90,8 @@ class VirtualIterator implements Iterator<Row>, AutoCloseable {
 		return value(info, object);
 	}
 
-	private Value value(ColumnInfo column, Object object) {
-		return new Value(column.type, new Mode(column.features.toArray(new String[0])), column.type.toByteArray(column.type == Nominal && object != null ? column.features.indexOf(object) : object));
+	private Value value(ColumnInfo info, Object object) {
+		return new Value(info.type, new Mode(info.features), info.type.toByteArray(info.type == Nominal && object != null ? info.features.indexOf(object) : object));
 	}
 
 	private String idOf(Row row) {

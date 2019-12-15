@@ -54,7 +54,7 @@ public class TabbReader implements Iterator<Row>, AutoCloseable {
 	}
 
 	private Value valueOf(ColumnStream stream) {
-		return new Value(stream.type(), new Mode(info.column(stream.name()).features.toArray(new String[0])), (byte[]) stream.value());
+		return new Value(stream.type(), new Mode(info.column(stream.name()).features), (byte[]) stream.value());
 	}
 
 	static class TabbColumnStream implements ColumnStream {
