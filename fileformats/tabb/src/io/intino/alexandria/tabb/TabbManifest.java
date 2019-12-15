@@ -59,8 +59,8 @@ public class TabbManifest {
 		return join("|", features);
 	}
 
-	private static String[] modes(String[] fields) {
-		return fields.length > 4 ? fields[4].split("\\|") : new String[0];
+	private static List<String> modes(String[] fields) {
+		return fields.length > 4 ? new ArrayList<>(Arrays.asList(fields[4].split("\\|"))) : new ArrayList<>();
 	}
 
 	private static List<String> readManifest(File tabbFile) throws IOException {
@@ -75,12 +75,12 @@ public class TabbManifest {
 		long size;
 		List<String> features;
 
-		public ColumnInfo(String name, ColumnStream.Type type, boolean isIndex, long size, String[] features) {
+		public ColumnInfo(String name, ColumnStream.Type type, boolean isIndex, long size, List<String> features) {
 			this.name = name;
 			this.type = type;
 			this.isIndex = isIndex;
 			this.size = size;
-			this.features = new Tabb.SetList(Arrays.asList(features));
+			this.features = new Tabb.SetList(features);
 		}
 	}
 }

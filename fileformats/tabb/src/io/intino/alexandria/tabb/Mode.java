@@ -1,10 +1,16 @@
 package io.intino.alexandria.tabb;
 
-public class Mode {
-	public final String[] features;
+import java.util.Collections;
+import java.util.List;
 
-	public Mode(String... features) {
+public class Mode {
+	final List<String> features;
+
+	public Mode(List<String> features) {
 		this.features = features;
 	}
 
+	public List<String> features() {
+		return Collections.unmodifiableList(features);
+	}
 }

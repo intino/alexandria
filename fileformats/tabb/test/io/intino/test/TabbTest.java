@@ -17,16 +17,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TabbTest {
 	private File bigSource = new File("test-res/tabbs/big.tabb");
 	private File otherSource = new File("test-res/tabbs/other.tabb");
+	private File otherSource2 = new File("test-res/tabbs/other2.tabb");
+	private File otherSource3 = new File("test-res/tabbs/other3.tabb");
 	private File smallSource = new File("test-res/tabbs/small.tabb");
 	private File test = new File(bigSource.getParentFile(), "test.tabb");
 	private File smallTest = new File(smallSource.getParentFile(), "smallTest.tabb");
 	private File otherTest = new File("test-res/tabbs/otherTest.tabb");
+	private File otherTest2 = new File("test-res/tabbs/otherTest2.tabb");
+	private File otherTest3 = new File("test-res/tabbs/otherTest3.tabb");
 
 	@Before
 	public void setUp() throws Exception {
 		Files.copy(bigSource.toPath(), new File(bigSource.getParentFile(), "test.tabb").toPath(), StandardCopyOption.REPLACE_EXISTING);
 		Files.copy(smallSource.toPath(), new File(smallSource.getParentFile(), "smallTest.tabb").toPath(), StandardCopyOption.REPLACE_EXISTING);
 		Files.copy(otherSource.toPath(), new File(otherSource.getParentFile(), "otherTest.tabb").toPath(), StandardCopyOption.REPLACE_EXISTING);
+		Files.copy(otherSource2.toPath(), new File(otherSource2.getParentFile(), "otherTest2.tabb").toPath(), StandardCopyOption.REPLACE_EXISTING);
+		Files.copy(otherSource3.toPath(), new File(otherSource3.getParentFile(), "otherTest3.tabb").toPath(), StandardCopyOption.REPLACE_EXISTING);
 	}
 
 	@Test
@@ -92,6 +98,18 @@ public class TabbTest {
 				"43534543",
 				"201911",
 				null});
+	}
+
+	@Test
+	@Ignore
+	public void readOther3Test() throws IOException {
+		Tabb tabb = new Tabb(otherTest3);
+		while (tabb.hasNext()) {
+			Row next = tabb.next();
+			String x = next.get(0).asNominal() + next.get(5).asNominal() + next.get(10).asNominal();
+			if(next.get(5).asNominal().equals("551011200067")) System.out.println("rpu");
+			if (x.equals("20191155101120006704")) Assert.fail();
+		}
 	}
 
 	@Test
@@ -175,5 +193,7 @@ public class TabbTest {
 		Files.move(test.toPath(), new File(test.getParentFile(), "test.zip").toPath(), StandardCopyOption.REPLACE_EXISTING);
 		Files.move(smallTest.toPath(), new File(smallTest.getParentFile(), "smallTest.zip").toPath(), StandardCopyOption.REPLACE_EXISTING);
 		Files.move(otherTest.toPath(), new File(otherTest.getParentFile(), "otherTest.zip").toPath(), StandardCopyOption.REPLACE_EXISTING);
+		Files.move(otherTest2.toPath(), new File(otherTest2.getParentFile(), "otherTest2.zip").toPath(), StandardCopyOption.REPLACE_EXISTING);
+		Files.move(otherTest3.toPath(), new File(otherTest3.getParentFile(), "otherTest3.zip").toPath(), StandardCopyOption.REPLACE_EXISTING);
 	}
 }
