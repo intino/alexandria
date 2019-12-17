@@ -23,7 +23,11 @@ class DataValue implements Message.Value {
 
 	@Override
 	public <T> T as(Class<T> type) {
-		return data != null ? (T) fill(Parser.of(type).parse(data)) : null;
+		if (data != null) return (T) fill(Parser.of(type).parse(data));
+		else {
+			if (type.isArray()) return (T) new Object[0];
+			return null;
+		}
 	}
 
 	@Override
