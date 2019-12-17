@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -37,12 +38,18 @@ public class Zip {
 		return false;
 	}
 
-	public InputStream read(ZipFile zipFile, String filePath) throws IOException {
+	public String read(String filePath) throws IOException {
+		ZipFile zipFile = new ZipFile(file);
 		Enumeration<? extends ZipEntry> entries = zipFile.entries();
 		while (entries.hasMoreElements()) {
 			ZipEntry entry = entries.nextElement();
-			if (filePath.equals(entry.getName())) return zipFile.getInputStream(entry);
+			if (filePath.equals(entry.getName())) {
+				String text = new String(zipFile.getInputStream(entry).readAllBytes(), StandardCharsets.UTF_8);
+				zipFile.close();
+				return text;
+			}
 		}
+		zipFile.close();
 		return null;
 	}
 
@@ -64,6 +71,15 @@ public class Zip {
 		try (FileSystem fs = filesystems.get(path)) {
 			Files.write(fs.getPath(filePath), stream.readAllBytes(), options);
 		}
+	}
+
+	public static InputStream read(ZipFile zipFile, String filePath) throws IOException {
+		Enumeration<? extends ZipEntry> entries = zipFile.entries();
+		while (entries.hasMoreElements()) {
+			ZipEntry entry = entries.nextElement();
+			if (filePath.equals(entry.getName())) return zipFile.getInputStream(entry);
+		}
+		return null;
 	}
 
 	private static FileSystem newFileSystem(Path path) throws IOException {
