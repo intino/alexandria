@@ -1,7 +1,7 @@
 dsl Konos
 
 MessageHub messageHub as JmsBus("{cesar-bus}", "{bus-user}", "{bus-password}", "{bus-client-id}")
-
+	outBoxDirectory = empty
 Service ConsulJms as Messaging(messageHub)
 	domain="{serverId"
 	Request("status") status

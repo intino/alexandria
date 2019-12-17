@@ -4,6 +4,7 @@ Sentinel everyMonth as ClockListener(pattern = "0 0 12 1 1/1 ? *")
 Datalake(path = "{datalake_path}") as Local
 
 MessageHub as JmsBus(url = "{messagehub_url}", user = "{messagehub_user}", password = "{messagehub_password}", clientId = "{messagehub_clientId}")
+	outBoxDirectory = empty
 
 Datamart(path = "{datamart_path}") datamart
 
