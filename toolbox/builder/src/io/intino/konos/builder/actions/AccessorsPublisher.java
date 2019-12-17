@@ -200,10 +200,15 @@ class AccessorsPublisher {
 		configuration.releaseRepositories().forEach((u, i) -> builder.add("repository", createRepositoryFrame(u, i, "release")));
 		SimpleEntry<String, String> distroRepo = configuration.distributionReleaseRepository();
 		builder.add("repository", createRepositoryFrame(distroRepo.getKey(), distroRepo.getValue(), "distribution"));
-		builder.add("dependency", new FrameBuilder(service.core$().conceptList().stream().map(s -> s.id().split("\\$")[1].toLowerCase()).toArray(String[]::new)).add("value", "").toFrame());
+		builder.add("dependency", new FrameBuilder(serviceTypes(service)).add("value", "").toFrame());
 		final File pomFile = new File(root, "pom.xml");
 		Commons.write(pomFile.toPath(), new AccessorPomTemplate().render(builder.toFrame()));
 		return pomFile;
+	}
+
+	@NotNull
+	private String[] serviceTypes(Service service) {
+		return service.core$().conceptList().stream().map(s -> (s.id().contains("$") ? s.id().split("\\$")[1] : s.id()).toLowerCase()).toArray(String[]::new);
 	}
 
 	private Frame createRepositoryFrame(String url, String id, String type) {
