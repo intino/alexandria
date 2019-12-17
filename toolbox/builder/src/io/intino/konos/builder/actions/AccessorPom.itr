@@ -64,7 +64,7 @@ def type(pom)
 	</distributionManagement>
 
 	<dependencies>
-		$dependency
+		$dependency...[$NL]
 	</dependencies>
 </project>
 end
@@ -118,7 +118,7 @@ def type(jmx) trigger(dependency)
 	</dependency>
 end
 
-def type(jms) trigger(dependency)
+def type(messaging) trigger(dependency)
 	<dependency>
 		<groupId>io.intino.alexandria</groupId>
 		<artifactId>jms</artifactId>
