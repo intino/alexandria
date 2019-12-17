@@ -49,10 +49,7 @@ class EventOutBox {
 	}
 
 	boolean isEmpty() {
-		File[] files = Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(".json")));
-		for (File file : files) if (file.length() == 0) file.delete();
-		files = Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(".json")));
-		return files.length == 0;
+		return Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(".json"))).length == 0;
 	}
 
 	private static class SavedEvent {

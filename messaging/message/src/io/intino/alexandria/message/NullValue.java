@@ -10,6 +10,7 @@ class NullValue implements Message.Value {
 
 	@Override
 	public <T> T as(Class<T> type) {
+		if (type.isArray()) return (T) new Object[0];
 		return null;
 	}
 
