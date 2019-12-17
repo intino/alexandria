@@ -68,8 +68,8 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
 	}
 
 	private boolean checkRange(Double value) {
-		if (min != null && value < min) return false;
-		if (max != null && value > max) return false;
+		if (min != null && min != -1 && value < min) return false;
+		if (max != null && max != -1 && value > max) return false;
 		return true;
 	}
 
