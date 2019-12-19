@@ -1,17 +1,16 @@
 package io.intino.alexandria.zip;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
+import java.io.*;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
 import java.nio.file.*;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 import static java.util.Collections.singletonMap;
 
@@ -22,6 +21,13 @@ public class Zip {
 
 	public Zip(File file) {
 		this.file = file;
+	}
+
+	public Zip create() throws IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		ZipOutputStream zipOutputStream = new ZipOutputStream(out);
+		zipOutputStream.close();
+		return this;
 	}
 
 	public boolean exists(String filePath) throws IOException {
@@ -54,6 +60,7 @@ public class Zip {
 	}
 
 	public void write(String filePath, String value, StandardOpenOption... options) throws IOException {
+		if (!file.exists()) create();
 		Path path = Paths.get(file.getAbsolutePath()).toRealPath();
 		if (!filesystems.containsKey(path) || !filesystems.get(path).isOpen())
 			filesystems.put(path, newFileSystem(path));
@@ -65,6 +72,7 @@ public class Zip {
 	}
 
 	public void write(String filePath, InputStream stream, StandardOpenOption... options) throws IOException {
+		if (!file.exists()) create();
 		Path path = Paths.get(file.getAbsolutePath()).toRealPath();
 		if (!filesystems.containsKey(path) || !filesystems.get(path).isOpen())
 			filesystems.put(path, newFileSystem(path));
