@@ -24,8 +24,7 @@ public class Zip {
 	}
 
 	public Zip create() throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		ZipOutputStream zipOutputStream = new ZipOutputStream(out);
+		ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(this.file));
 		zipOutputStream.close();
 		return this;
 	}
