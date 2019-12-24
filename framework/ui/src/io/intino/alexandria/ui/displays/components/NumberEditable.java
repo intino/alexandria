@@ -11,6 +11,7 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
 	private Double max;
 	private Double step;
 	private boolean readonly;
+	private ChangeListener beforeChangeListener = null;
 	private ChangeListener changeListener = null;
 
     public NumberEditable(B box) {
@@ -53,6 +54,11 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
 		return this;
 	}
 
+	public NumberEditable<DN, B> onBeforeChange(ChangeListener listener) {
+		this.beforeChangeListener = listener;
+		return this;
+	}
+
 	public NumberEditable<DN, B> onChange(ChangeListener listener) {
 		this.changeListener = listener;
 		return this;
@@ -62,6 +68,14 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
     	if (!checkRange(value)) {
     		notifier.refresh(this.value);
     		return;
+		}
+		if (beforeChangeListener != null) {
+			ChangeEvent event = new ChangeEvent(this, value);
+			beforeChangeListener.accept(event);
+			if (event.cancel()) {
+				notifier.refresh(this.value);
+				return;
+			}
 		}
 		this.value = value;
 		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));

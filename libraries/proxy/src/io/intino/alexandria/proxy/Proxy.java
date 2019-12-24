@@ -1,6 +1,5 @@
 package io.intino.alexandria.proxy;
 
-import io.intino.alexandria.logger.Logger;
 import org.apache.http.Header;
 import spark.Request;
 import spark.Response;
@@ -116,12 +115,20 @@ public class Proxy {
 	}
 
 	private String pathOf(Request request) {
-		String uri = request.uri();
-		String path = localUrl.getPath();
+		String uri = format(request.uri());
+		String path = removeAddressPath(request, localUrl.getPath());
 		uri = uri.replace(path, "");
 		uri = uri.replace(path.substring(0, path.lastIndexOf("/")), "");
 //		if ((uri.length() >= localUrl.getPath().length()) && uri.substring(0, localUrl.getPath().length()).equals(localUrl.getPath())) uri = uri.substring(localUrl.getPath().length());
 		return uri;
+	}
+
+	private String format(String uri) {
+		return uri.startsWith("//") ? uri.substring(1) : uri;
+	}
+
+	private String removeAddressPath(Request request, String path) {
+		return path.replace(request.raw().getHeader("X-Forwarded-Path"), "");
 	}
 
 	private String adaptParameter(String key, String value) {

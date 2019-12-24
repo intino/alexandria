@@ -21,6 +21,7 @@ export default class FileEditable extends AbstractFile {
 	};
 
 	handleChange(e) {
+	    this.requester.notifyUploading();
 		this.requester.notifyChange(e.target.files[0]);
 		this.setState({ value: e.target.value });
 	}

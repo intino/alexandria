@@ -38,6 +38,7 @@ Component baseFile as Decorated
 Component file as Decorated ExtensionOf(baseFile)
 Component fileEditable as Decorated ExtensionOf(baseFile)
 	Notification refreshReadonly as Bool
+	Request notifyUploading
 	Request notifyChange as File
 
 Component baseImage as Decorated
