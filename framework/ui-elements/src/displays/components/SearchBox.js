@@ -125,17 +125,17 @@ class SearchBox extends AbstractSearchBox {
 	countMessage = () => {
 		if (!this.existResults()) return undefined;
 		let message = "";
-		if (this.state.count === 0) message = "no results";
-		else if (this.state.count === 1) message = "one result";
-		else if (this.state.count >= 1000) message = "1k+ results";
-		else message = this.state.count + " results";
+		if (this.state.count === 0) message = this.translate("no results");
+		else if (this.state.count === 1) message = this.translate("one result");
+		else if (this.state.count >= 1000) message = "1k+ " + this.translate("results");
+		else message = this.state.count + " " + this.translate("results");
 		return this.translate(message);
 	};
 
 	countHint = () => {
 		if (!this.existResults()) return undefined;
 		if (this.state.count < 1000) return;
-		return this.translate(NumberUtil.format(this.state.count, this.translate("0,0")) + " results");
+		return this.translate(NumberUtil.format(this.state.count, this.translate("0,0")) + " " + this.translate("results"));
 	};
 
 	existResults = () => {
