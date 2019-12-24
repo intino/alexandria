@@ -6,7 +6,6 @@ import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.magritte.Graph;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -17,7 +16,6 @@ public class CesarGenerationTest {
 	private static final String CONSUL = "consul";
 
 	@Test
-	@Ignore
 	public void testCesar() {
 		File gen = new File("test-gen", CESAR);
 		KonosGraph graph = new Graph().loadStashes("Cesar").as(KonosGraph.class);

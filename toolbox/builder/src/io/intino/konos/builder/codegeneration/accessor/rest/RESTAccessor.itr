@@ -110,43 +110,43 @@ def type(parameter & query & list) trigger(declaration)
 	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", String.valueOf(gsonWriter.toJson($name+SnakeCaseToCamelCase+firstLowerCase)));
 end
 
-def type(parameter & query & required) type(dateData)  trigger(declaration)
+def type(parameter & query & required) type(date)  trigger(declaration)
 	put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase.toInstant().toEpochMilli()));
 end
 
-def type(parameter & query & required) type(dateTimeData)  trigger(declaration)
+def type(parameter & query & required) type(dateTime)  trigger(declaration)
 	put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase.toEpochMilli()));
 end
 
-def type(parameter & query & required & textData) trigger(declaration)
+def type(parameter & query & required & text) trigger(declaration)
 	put("$name", $name+SnakeCaseToCamelCase+firstLowerCase);
 end
 
-def type(parameter & query & required) type(boolData | integerData | realData | longIntegerData) trigger(declaration)
+def type(parameter & query & required) type(bool | integer | real | longInteger) trigger(declaration)
 	put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase));
 end
 
-def type(parameter & query & required & objectData) trigger(declaration)
+def type(parameter & query & required & object) trigger(declaration)
 	put("$name", String.valueOf(gsonWriter.toJson($name+SnakeCaseToCamelCase+firstLowerCase)));
 end
 
-def type(parameter & query) type(dateData) trigger(declaration)
+def type(parameter & query) type(date) trigger(declaration)
 	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase.toInstant().toEpochMilli()));
 end
 
-def type(parameter & query) type(dateTimeData | dateData) trigger(declaration)
+def type(parameter & query) type(dateTime | date) trigger(declaration)
 	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase.toEpochMilli()));
 end
 
-def type(parameter & query) type(textData) trigger(declaration)
+def type(parameter & query) type(text) trigger(declaration)
 	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", $name+SnakeCaseToCamelCase+firstLowerCase);
 end
 
-def type(parameter & query) type(boolData | integerData | realData | longIntegerData) trigger(declaration)
+def type(parameter & query) type(bool | integer | real | longInteger) trigger(declaration)
 	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase));
 end
 
-def type(parameter & objectData) type(query | body) trigger(declaration)
+def type(parameter & object) type(query | body) trigger(declaration)
 	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", encode(String.valueOf(gsonWriter.toJson($name+SnakeCaseToCamelCase+firstLowerCase))));
 end
 

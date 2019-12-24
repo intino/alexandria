@@ -180,11 +180,11 @@ def type(parameter) trigger(name)
 	$name+snakeCaseToCamelCase+firstLowerCase
 end
 
-def type(parameter & objectData) trigger(assign)
+def type(parameter & object) trigger(assign)
 	message.setText(new Gson().toJson($name));
 end
 
-def type(parameter & fileData) trigger(assign)
+def type(parameter & file) trigger(assign)
 	message.writeBytes(toByteArray($name.content()));
 end
 
@@ -200,7 +200,7 @@ def type(reply) trigger(type)
 	Text
 end
 
-def type(reply & fileData) trigger(type)
+def type(reply & file) trigger(type)
 	Bytes
 end
 
@@ -216,7 +216,7 @@ def attribute(this:Integer) trigger(format)
 	Int
 end
 
-def type(reply & fileData) trigger(reply)
+def type(reply & file) trigger(reply)
 	byte$[] bytes = new byte$[(int) ((BytesMessage) message).getBodyLength()];
 	((BytesMessage) message).readBytes(bytes);
 	callback(new io.intino.alexandria.Resource("file","", new java.io.ByteArrayInputStream(bytes)));

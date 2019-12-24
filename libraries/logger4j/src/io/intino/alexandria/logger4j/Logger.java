@@ -35,7 +35,8 @@ public class Logger {
 
 			private String formatMessage(String message, ThrowableInformation throwable) {
 				if (message == null) return formatMessage(throwable);
-				return "\n\t" + formatMessage(message) + (throwable != null ? ("\n\t\n\tCaused by:" + formatMessage(throwable)) : "");
+				String result = formatMessage(message) + (throwable != null ? ("\n\t\n\tCaused by:" + formatMessage(throwable)) : "");
+				return result.contains("\n") ? "\n\t" + result : result;
 			}
 
 			private String formatMessage(String message) {
