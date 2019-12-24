@@ -20,6 +20,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.LaxRedirectStrategy;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -371,7 +372,7 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 
 	private HttpClient client() {
 		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(this.timeOutMillis).build();
-		return HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
+		return HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).setDefaultRequestConfig(requestConfig).build();
 	}
 
 	private Response doGet(URL url, String path, List<NameValuePair> parameters) throws RestfulFailure {

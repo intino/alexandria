@@ -52,7 +52,7 @@ public abstract class Bot {
 	}
 
 	public void execute() throws IOException {
-		SlackSessionFactory.SlackSessionFactoryBuilder builder = getSlackSessionBuilder(token).withAutoreconnectOnDisconnection(true);
+		SlackSessionFactory.SlackSessionFactoryBuilder builder = getSlackSessionBuilder(token).withAutoreconnectOnDisconnection(true).withConnectionHeartbeat(0, null);
 		if(System.getProperty("http.proxyHost") != null)
 			builder.withProxy(Proxy.Type.HTTP, System.getProperty("http.proxyHost"), Integer.parseInt(System.getProperty("http.proxyPort")));
 		if(System.getProperty("https.proxyHost") != null)
