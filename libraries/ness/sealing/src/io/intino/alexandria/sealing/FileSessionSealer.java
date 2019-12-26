@@ -38,7 +38,6 @@ public class FileSessionSealer implements SessionSealer {
 		makeSetIndexes();
 		stage.clear();
 		unlock();
-		System.out.println("Finished");
 	}
 
 	private void lock() {
