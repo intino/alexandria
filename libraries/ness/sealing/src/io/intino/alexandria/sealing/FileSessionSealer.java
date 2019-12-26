@@ -2,8 +2,10 @@ package io.intino.alexandria.sealing;
 
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.file.FileDatalake;
+import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class FileSessionSealer implements SessionSealer {
@@ -18,12 +20,46 @@ public class FileSessionSealer implements SessionSealer {
 	}
 
 	@Override
-	public void seal(List<Datalake.EventStore.Tank> avoidSorting) {
+	public synchronized void seal(List<Datalake.EventStore.Tank> avoidSorting) {
+		if (isSealing()) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+			}
+		}
+		lock();
 		sealEvents(avoidSorting);
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			Logger.error(e);
+		}
 		sealSets();
 		makeSetIndexes();
 		stage.clear();
+		unlock();
+		System.out.println("Finished");
+	}
 
+	private void lock() {
+		try {
+			lockFile().createNewFile();
+		} catch (IOException e) {
+			Logger.error(e);
+		}
+	}
+
+	private void unlock() {
+		lockFile().delete();
+		notify();
+	}
+
+	private boolean isSealing() {
+		return lockFile().exists();
+	}
+
+	private File lockFile() {
+		return new File(datalake.root(), ".lock");
 	}
 
 	private void makeSetIndexes() {
