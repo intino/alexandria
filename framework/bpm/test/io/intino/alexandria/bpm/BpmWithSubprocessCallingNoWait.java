@@ -33,8 +33,12 @@ public class BpmWithSubprocessCallingNoWait extends BpmTest {
 		workflow.send(createProcessMessage());
 		waitForProcess(persistence);
 		List<ProcessStatus> messages1 = messagesOf(persistence.read("finished/1.process"));
-		List<ProcessStatus> messages2 = messagesOf(persistence.read("finished/2.process"));
 		assertThat(messages1.get(0).get().toString(), is(createProcessMessage().get().toString()));
+		Map<String, String> data = data(persistence, "finished/1.data");
+		Map<String, String> data2 = data(persistence, "finished/2.data");
+		if (data.get("CreateString").equals("Hello"))
+			assertThat(data2.get("CheckString"), is("true"));
+		else assertThat(data2.get("CheckString"), is("false"));
 	}
 
 	private ProcessStatus createProcessMessage() {
@@ -57,9 +61,9 @@ public class BpmWithSubprocessCallingNoWait extends BpmTest {
 		private Task createString() {
 			return new Task(Automatic) {
 				@Override
-				public Result execute() {
+				public void execute() {
 					memory.put(id(), Math.random() < 0.5 ? "Hello" : "Goodbye");
-					return new Result("create string executed");
+					data.put("CreateString", memory.get(id()));
 				}
 
 			};
@@ -68,14 +72,13 @@ public class BpmWithSubprocessCallingNoWait extends BpmTest {
 		private Task callSubprocess() {
 			return new Task(Automatic) {
 				@Override
-				public Result execute() {
+				public void execute() {
 					workflow.send(new ProcessStatus(new Message(ProcessStatus)
 							.set("ts", "2019-01-01T00:00:00Z")
 							.set("id", "2")
 							.set("name", "StringChecker")
 							.set("owner", "1")
 							.set("status", "Enter")));
-					return new Result("subprocess called StringChecker");
 				}
 			};
 		}
@@ -96,8 +99,8 @@ public class BpmWithSubprocessCallingNoWait extends BpmTest {
 		private Task checkString() {
 			return new Task(Automatic) {
 				@Override
-				public Result execute() {
-					return new Result(memory.get(owner()).equals("Hello") + "");
+				public void execute() {
+					data.put("CheckString", memory.get(owner()).equals("Hello") + "");
 				}
 
 			};

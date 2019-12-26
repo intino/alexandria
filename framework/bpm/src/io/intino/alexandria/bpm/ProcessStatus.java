@@ -12,7 +12,6 @@ public class ProcessStatus extends Event implements Comparable<ProcessStatus> {
 	private static final String Owner = "owner";
 	private static final String Task = "Task";
 	private static final String State = "State";
-	private static final String Result = "result";
 	private static final String User = "user";
 	private static final String Duration = "duration";
 	private static final String Name = "name";
@@ -98,17 +97,8 @@ public class ProcessStatus extends Event implements Comparable<ProcessStatus> {
 		return !message.components(Task).isEmpty();
 	}
 
-	public TaskInfo taskInfo() {
-		return hasTaskInfo() ? new TaskInfo(message.components(Task).get(0)) : null;
-	}
-
-	public ProcessStatus addTaskInfo(io.intino.alexandria.bpm.Task.Result result) {
-		message.add(new Message(Task).set(Result, result.result()));
-		return this;
-	}
-
-	public void addTaskInfo(String user, String duration, io.intino.alexandria.bpm.Task.Result result) {
-		message.add(new Message(Task).set(User, user).set(Duration, duration).set(Result, result.result()));
+	public void addTaskInfo(String user, String duration) {
+		message.add(new Message(Task).set(User, user).set(Duration, duration));
 	}
 
 	public Message get() {
@@ -143,27 +133,4 @@ public class ProcessStatus extends Event implements Comparable<ProcessStatus> {
 		}
 	}
 
-	public static class TaskInfo {
-		private final String user;
-		private final String duration;
-		private final String result;
-
-		private TaskInfo(Message state) {
-			this.user = state.contains(User) ? state.get(User).data() : null;
-			this.duration = state.contains(Duration) ? state.get(Duration).data() : null;
-			this.result = state.contains(Result) ? state.get(Result).data() : null;
-		}
-
-		public String user() {
-			return user;
-		}
-
-		public String duration() {
-			return duration;
-		}
-
-		public String result() {
-			return result;
-		}
-	}
 }

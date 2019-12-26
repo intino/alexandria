@@ -3,8 +3,8 @@ package io.intino.alexandria.bpm;
 import io.intino.alexandria.message.Message;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static io.intino.alexandria.bpm.Link.Type.Inclusive;
 import static io.intino.alexandria.bpm.State.Type.Initial;
@@ -31,9 +31,10 @@ public class BpmWithInclusiveFork extends BpmTest {
 		assertThat(messages.get(1).stateInfo().status(), is("Enter"));
 		assertThat(messages.get(2).stateInfo().name(), is("CreateString"));
 		assertThat(messages.get(2).stateInfo().status(), is("Exit"));
-		if (exitStateStatus(messages, "CreateString").taskInfo().result().equals("Hello:Goodbye"))
-			assertThat(exitStateStatus(messages, "JoinResult").taskInfo().result(), is("Hi:Bye"));
-		else assertThat(exitStateStatus(messages, "JoinResult").taskInfo().result(), is("Bye:Hi"));
+		Map<String, String> data = data(persistence, "finished/1.data");
+		if (data.get("CreateString").equals("Hello:Goodbye"))
+			assertThat(data.get("JoinResult"), is("Hi:Bye"));
+		else assertThat(data.get("JoinResult"), is("Bye:Hi"));
 	}
 
 	private ProcessStatus createProcessMessage() {
@@ -61,8 +62,8 @@ public class BpmWithInclusiveFork extends BpmTest {
 		private Task createString() {
 			return new Task(Automatic) {
 				@Override
-				public Result execute() {
-					return new Result(Math.random() < 0.5 ? "Hello:Goodbye" : "Goodbye:Hello");
+				public void execute() {
+					data.put("CreateString", Math.random() < 0.5 ? "Hello:Goodbye" : "Goodbye:Hello");
 				}
 
 			};
@@ -72,27 +73,20 @@ public class BpmWithInclusiveFork extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				public Result execute() {
-					String[] result = resultOfState("CreateString").split(":");
-					return new Result(result[0].equals("Hello") ? "0-Hi" : "1-Hi");
+				public void execute() {
+					String[] result = data.get("CreateString").split(":");
+					data.put("ProcessHello", result[0].equals("Hello") ? "0-Hi" : "1-Hi");
 				}
 			};
-		}
-
-		private String resultOfState(String stateName) {
-			return new ArrayList<>(processStatusList).stream().filter(m -> {
-				if (!m.hasStateInfo()) return false;
-				return m.stateInfo().name().equals(stateName) && m.stateInfo().status().equals("Exit");
-			}).findFirst().get().taskInfo().result();
 		}
 
 		private Task processGoodbye() {
 			return new Task(Automatic) {
 
 				@Override
-				public Result execute() {
-					String[] result = resultOfState("CreateString").split(":");
-					return new Result(result[0].equals("Goodbye") ? "0-Bye" : "1-Bye");
+				public void execute() {
+					String[] result = data.get("CreateString").split(":");
+					data.put("ProcessGoodbye", result[0].equals("Goodbye") ? "0-Bye" : "1-Bye");
 				}
 			};
 		}
@@ -102,10 +96,10 @@ public class BpmWithInclusiveFork extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				public Result execute() {
-					String[] hello = resultOfState("ProcessHello").split("-");
-					String[] goodbye = resultOfState("ProcessGoodbye").split("-");
-					return new Result(hello[0].equals("0") ? hello[1] + ":" + goodbye[1] : goodbye[1] + ":" + hello[1]);
+				public void execute() {
+					String[] hello = data.get("ProcessHello").split("-");
+					String[] goodbye = data.get("ProcessGoodbye").split("-");
+					data.put("JoinResult", hello[0].equals("0") ? hello[1] + ":" + goodbye[1] : goodbye[1] + ":" + hello[1]);
 				}
 			};
 		}

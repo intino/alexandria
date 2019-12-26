@@ -11,23 +11,12 @@ public abstract class Task {
 		return true;
 	}
 
-	public abstract Result execute();
+	public abstract void execute();
 
-	Type type(){
+	Type type() {
 		return type;
 	}
 
 	public enum Type {Automatic, Manual, CallActivity}
 
-	public static class Result {
-		private String result;
-
-		public Result(String result) {
-			this.result = result;
-		}
-
-		public String result() {
-			return result;
-		}
-	}
 }
