@@ -13,7 +13,7 @@ public class JmsTerminalTest {
 	@Test
 	@Ignore
 	public void testMessageOutBox() throws InterruptedException {
-		JmsEventHub eventHub = new JmsEventHub("failover:(tcp://localhost:63000)", "user1", "1234", "", new File("outBox"));
+		JmsEventHub eventHub = new JmsEventHub("tcp://localhost:63000", "user1", "1234", "", new File("outBox"));
 		while (true) {
 			eventHub.sendEvent("lalala", new TestEvent("tt").field1("v1"));
 			Thread.sleep(10000);

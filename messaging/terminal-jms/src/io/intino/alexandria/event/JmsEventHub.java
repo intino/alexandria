@@ -49,7 +49,7 @@ public class JmsEventHub implements EventHub {
 					connection.start();
 					session = connection.createSession(transactedSession, transactedSession ? SESSION_TRANSACTED : AUTO_ACKNOWLEDGE);
 					Logger.info("Connection with Data Hub stablished!");
-				} else Logger.error("Connection is null");
+				} else Logger.error("Connection with Data Hub couldn't be stablished");
 			} catch (JMSException e) {
 				Logger.error(e);
 			}
@@ -94,7 +94,6 @@ public class JmsEventHub implements EventHub {
 
 	@Override
 	public void attachListener(String channel, Consumer<Event> onEventReceived) {
-		if (session == null) return;
 		registerConsumer(channel, onEventReceived);
 		JmsConsumer consumer = this.consumers.get(channel);
 		if (consumer == null) return;
@@ -105,7 +104,6 @@ public class JmsEventHub implements EventHub {
 
 	@Override
 	public void attachListener(String channel, String subscriberId, Consumer<Event> onEventReceived) {
-		if (session == null) return;
 		registerConsumer(channel, onEventReceived);
 		TopicConsumer consumer = (TopicConsumer) this.consumers.get(channel);
 		if (consumer == null) return;
@@ -181,9 +179,10 @@ public class JmsEventHub implements EventHub {
 	}
 
 	private void registerConsumer(String channel, Consumer<Event> onEventReceived) {
-		if (!this.consumers.containsKey(channel)) this.consumers.put(channel, topicConsumer(channel));
 		this.eventConsumers.putIfAbsent(channel, new ArrayList<>());
 		this.eventConsumers.get(channel).add(onEventReceived);
+		if (!this.consumers.containsKey(channel) && session != null)
+			this.consumers.put(channel, topicConsumer(channel));
 	}
 
 	private boolean doSendEvent(String channel, Event event) {
@@ -217,8 +216,10 @@ public class JmsEventHub implements EventHub {
 
 			@Override
 			public void transportResumed() {
+				Logger.info("Connection with Data Hub resumed!");
 				connected.set(true);
-				Logger.info("Connection with Data Hub stablished!");
+				if (!eventConsumers.isEmpty() && consumers.isEmpty())
+					for (String channel : eventConsumers.keySet()) consumers.put(channel, topicConsumer(channel));
 			}
 		};
 	}
