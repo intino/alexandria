@@ -4,6 +4,7 @@ import io.intino.alexandria.message.Message;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static io.intino.alexandria.bpm.Link.Type.Exclusive;
 import static io.intino.alexandria.bpm.Link.Type.Inclusive;
@@ -36,14 +37,16 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 		assertThat(messages.get(3).stateInfo().status(), is("Enter"));
 		assertThat(messages.get(4).stateInfo().name(), is("CheckContainsHello"));
 		assertThat(messages.get(4).stateInfo().status(), is("Exit"));
-		if (exitStateStatus(messages, "CreateString").taskInfo().result().equals("Hello")) {
-			assertThat(exitStateStatus(messages, "ProcessHello2").taskInfo().result(), is("Processing hello2"));
+
+		Map<String, String> data = data(persistence, "finished/1.data");
+		if (data.get("CreateString").equals("Hello")) {
+			assertThat(data.get("ProcessHello2"), is("Processing hello2"));
 			assertThat(exitStateStatus(messages, "ProcessGoodbye2").stateInfo().status(), is("Skipped"));
-			assertThat(exitStateStatus(messages, "Terminate").taskInfo().result(), is("hello2"));
+			assertThat(data.get("Terminate"), is("hello2"));
 		} else {
-			assertThat(exitStateStatus(messages, "ProcessGoodbye2").taskInfo().result(), is("Processing goodbye2"));
+			assertThat(data.get("ProcessGoodbye2"), is("Processing goodbye2"));
 			assertThat(exitStateStatus(messages, "ProcessHello2").stateInfo().status(), is("Skipped"));
-			assertThat(exitStateStatus(messages, "Terminate").taskInfo().result(), is("bye2"));
+			assertThat(data.get("Terminate"), is("bye2"));
 		}
 	}
 
@@ -79,8 +82,8 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 		private Task createString() {
 			return new Task(Automatic) {
 				@Override
-				public Result execute() {
-					return new Result(Math.random() < 0.5 ? "Hello" : "Goodbye");
+				public void execute() {
+					data.put("CreateString", Math.random() < 0.5 ? "Hello" : "Goodbye");
 				}
 
 			};
@@ -89,9 +92,8 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 		private Task checkContainsHelloTask() {
 			return new Task(Automatic) {
 				@Override
-				public Result execute() {
-					ProcessStatus last = exitStateStatus("CreateString");
-					return new Result(last.taskInfo().result().contains("Hello") + "");
+				public void execute() {
+					data.put("CheckContainsHello", data.get("CreateString").equals("Hello") + "");
 				}
 			};
 		}
@@ -101,13 +103,11 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 
 				@Override
 				public boolean accept() {
-					ProcessStatus last = exitStateStatus("CheckContainsHello");
-					return last.taskInfo().result().equals("true");
+					return data.get("CheckContainsHello").equals("true");
 				}
 
 				@Override
-				public Result execute() {
-					return new Result("Processing hello");
+				public void execute() {
 				}
 			};
 		}
@@ -116,8 +116,8 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				public Result execute() {
-					return new Result("Processing hello2");
+				public void execute() {
+					data.put("ProcessHello2", "Processing hello2");
 				}
 			};
 		}
@@ -126,8 +126,7 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				public Result execute() {
-					return new Result("Processing goodbye");
+				public void execute() {
 				}
 			};
 		}
@@ -136,8 +135,8 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				public Result execute() {
-					return new Result(exitStateStatus("ProcessHello2").stateInfo().status().equals("Exit") ? "hello2" :
+				public void execute() {
+					data.put("Terminate", exitStateStatus("ProcessHello2").stateInfo().status().equals("Exit") ? "hello2" :
 							exitStateStatus("ProcessGoodbye2").stateInfo().status().equals("Exit") ? "bye2" : "none");
 				}
 			};
@@ -147,8 +146,8 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				public Result execute() {
-					return new Result("Processing goodbye2");
+				public void execute() {
+					data.put("ProcessGoodbye2", "Processing goodbye2");
 				}
 			};
 		}

@@ -38,9 +38,10 @@ public class BpmWithSubprocessCalling extends BpmTest {
 		assertThat(messages.get(1).stateInfo().status(), is("Enter"));
 		assertThat(messages.get(2).stateInfo().name(), is("CreateString"));
 		assertThat(messages.get(2).stateInfo().status(), is("Exit"));
-		if (exitStateStatus(messages, "CreateString").taskInfo().result().equals("Hello"))
-			assertThat(exitStateStatus(messages, "HandleSubprocessEnding").taskInfo().result(), is("true"));
-		else assertThat(exitStateStatus(messages, "HandleSubprocessEnding").taskInfo().result(), is("false"));
+		Map<String, String> data = data(persistence, "finished/1.data");
+		if (data.get("CreateString").equals("Hello"))
+			assertThat(data.get("HandleSubprocessEnding"), is("true"));
+		else assertThat(data.get("HandleSubprocessEnding"), is("false"));
 	}
 
 	private ProcessStatus createProcessMessage() {
@@ -65,9 +66,9 @@ public class BpmWithSubprocessCalling extends BpmTest {
 		private Task createString() {
 			return new Task(Automatic) {
 				@Override
-				public Result execute() {
+				public void execute() {
 					memory.put(id(), Math.random() < 0.5 ? "Hello" : "Goodbye");
-					return new Result(memory.get(id()));
+					data.put("CreateString", memory.get(id()));
 				}
 
 			};
@@ -76,9 +77,8 @@ public class BpmWithSubprocessCalling extends BpmTest {
 		private Task callSubprocess() {
 			return new Task(CallActivity) {
 				@Override
-				public Result execute() {
+				public void execute() {
 					workflow.receive(new ProcessStatus("2", "StringChecker", Status.Enter, "1", "1", "CallSubprocess"));
-					return new Result("subprocess called StringChecker");
 				}
 			};
 		}
@@ -86,8 +86,8 @@ public class BpmWithSubprocessCalling extends BpmTest {
 		private Task handleSubprocessEnding() {
 			return new Task(Automatic) {
 				@Override
-				public Result execute() {
-					return new Result(memory.get("2"));
+				public void execute() {
+					data.put("HandleSubprocessEnding", memory.get("2"));
 				}
 			};
 		}
@@ -108,8 +108,8 @@ public class BpmWithSubprocessCalling extends BpmTest {
 		private Task checkString() {
 			return new Task(Automatic) {
 				@Override
-				public Result execute() {
-					return new Result(memory.put(id(), memory.get(owner()).equals("Hello") + ""));
+				public void execute() {
+					memory.put(id(), memory.get(owner()).equals("Hello") + "");
 				}
 
 			};
