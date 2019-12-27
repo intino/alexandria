@@ -15,7 +15,6 @@
     <orderEntry type="module" module-name="mapp" />
     <orderEntry type="module" module-name="tris" />
     <orderEntry type="module" module-name="session" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:message:1.0.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:zet:1.0.5" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.4" level="project" />
     <orderEntry type="module" module-name="event" />
@@ -24,5 +23,7 @@
     <orderEntry type="module" module-name="logger" />
     <orderEntry type="module" module-name="zim" />
     <orderEntry type="module" module-name="datalake" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
+    <orderEntry type="module" module-name="message" />
   </component>
 </module>
