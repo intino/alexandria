@@ -33,7 +33,6 @@ public class AbstractBoxRenderer extends Renderer {
 	public void render() {
 		FrameBuilder root = new FrameBuilder("box");
 		root.add("name", boxName()).add("package", packageName());
-		if (hasModel) root.add("tara", boxName());
 		parent(root);
 		services(root);
 		sentinels(root);
