@@ -5,15 +5,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 import static java.util.stream.Collectors.toList;
 
 public abstract class Process {
 
 	protected final List<ProcessStatus> processStatusList = new ArrayList<>();
+	private final Map<String, String> data = new HashMap<>();
 	private final String id;
 	private List<Link> links = new ArrayList<>();
 	private Map<String, State> states = new HashMap<>();
+	private Semaphore semaphore = new Semaphore(1);
+
 	protected Process(String id) {
 		this.id = id;
 	}
@@ -29,6 +33,18 @@ public abstract class Process {
 	public void register(ProcessStatus status) {
 //		int index = binarySearch(processStatusList, status) + 1;
 		processStatusList.add(status);
+	}
+
+	public void acquire() throws InterruptedException {
+		semaphore.acquire();
+	}
+
+	public boolean isBusy(){
+		return semaphore.availablePermits() == 0;
+	}
+
+	public void release() {
+		semaphore.release();
 	}
 
 	public State state(String state) {
@@ -52,7 +68,7 @@ public abstract class Process {
 	}
 
 	private boolean stateCovered(String state) {
-		return processStatusList.stream().anyMatch(s -> s.hasStateInfo() && s.stateInfo().name().equals(state));
+		return processStatusList().stream().anyMatch(s -> s.hasStateInfo() && s.stateInfo().name().equals(state));
 	}
 
 	boolean predecessorsHaveFinished(String state) {
@@ -68,13 +84,29 @@ public abstract class Process {
 	}
 
 	protected ProcessStatus exitStateStatus(String stateName) {
-		return new ArrayList<>(processStatusList).stream()
+		return processStatusList().stream()
 				.filter(s -> s.hasStateInfo() && s.stateInfo().name().equals(stateName) && s.stateInfo().isTerminated())
 				.findFirst().orElse(null);
 	}
 
+	public String get(String key) {
+		return data.get(key.toLowerCase());
+	}
+
+	public boolean containsKey(String key) {
+		return data.containsKey(key.toLowerCase());
+	}
+
+	public String put(String key, String value) {
+		return data.put(key.toLowerCase(), value);
+	}
+
+	private List<ProcessStatus> processStatusList() {
+		return new ArrayList<>(processStatusList);
+	}
+
 	private boolean stateFinished(String stateName) {
-		return processStatusList.stream()
+		return processStatusList().stream()
 				.filter(ProcessStatus::hasStateInfo)
 				.map(ProcessStatus::stateInfo)
 				.anyMatch(s -> s.name().equals(stateName) && s.isTerminated());
@@ -89,7 +121,7 @@ public abstract class Process {
 	}
 
 	protected String owner() {
-		return processStatusList.get(0).owner();
+		return processStatusList().get(0).owner();
 	}
 
 	public abstract String name();
@@ -98,12 +130,19 @@ public abstract class Process {
 		return processStatusList;
 	}
 
+	public Map<String, String> data() {
+		return data;
+	}
+
 	public boolean isFinished() {
+		List<ProcessStatus> processStatusList = processStatusList();
 		String status = processStatusList.get(processStatusList.size() - 1).processStatus();
 		return status.equals("Exit") || status.equals("Aborted");
 	}
 
-	void resume(List<ProcessStatus> statuses) {
+	void resume(List<ProcessStatus> statuses, Map<String, String> data) {
+		this.data.clear();
+		this.data.putAll(data);
 		this.processStatusList.clear();
 		this.processStatusList.addAll(statuses);
 		this.processStatusList.stream()
@@ -117,7 +156,7 @@ public abstract class Process {
 	}
 
 	public String finishStatus() {
-		return processStatusList.get(processStatusList.size() - 1).processStatus();
+		return processStatusList().get(processStatusList().size() - 1).processStatus();
 	}
 
 	public enum Status {Enter, Running, Exit}

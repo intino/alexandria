@@ -1,11 +1,11 @@
 package io.intino.konos.builder.codegeneration;
 
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.Computable;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.search.GlobalSearchScope;
 import io.intino.konos.builder.codegeneration.bpm.BpmRenderer;
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.builder.codegeneration.datahub.DatalakeRenderer;
@@ -31,8 +31,12 @@ import io.intino.konos.model.graph.KonosGraph;
 import io.intino.plugin.codeinsight.linemarkers.InterfaceToJavaImplementation;
 import io.intino.plugin.dependencyresolution.LanguageResolver;
 import io.intino.tara.compiler.shared.Configuration;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static com.intellij.psi.search.GlobalSearchScope.moduleWithDependenciesAndLibrariesScope;
+import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
+import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.configurationOf;
 
 public class FullRenderer {
@@ -179,14 +183,21 @@ public class FullRenderer {
 			if (language == null || language.generationPackage() == null) return null;
 			final String workingPackage = language.generationPackage().replace(".graph", "");
 			String artifact = LanguageResolver.languageId(language.name(), language.effectiveVersion()).split(":")[1];
-			PsiClass aClass = ApplicationManager.getApplication().runReadAction((Computable<PsiClass>) () -> facade.findClass(workingPackage + ".box." + Formatters.firstUpperCase(Formatters.snakeCaseToCamelCase().format(artifact).toString()) + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)));
+			Application application = ApplicationManager.getApplication();
+			PsiClass aClass = application.runReadAction((Computable<PsiClass>) () -> facade.findClass(parentBoxName(workingPackage, artifact), moduleWithDependenciesAndLibrariesScope(module)));
+			if (aClass == null)
+				aClass = application.runReadAction((Computable<PsiClass>) () -> facade.findClass(parentBoxName(workingPackage, language.name()), moduleWithDependenciesAndLibrariesScope(module)));
 			if (aClass != null)
-				return workingPackage.toLowerCase() + ".box." + Formatters.firstUpperCase(language.name());
+				return workingPackage.toLowerCase() + ".box." + firstUpperCase(language.name());
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 		return null;
+	}
 
+	@NotNull
+	private String parentBoxName(String workingPackage, String name) {
+		return workingPackage + ".box." + firstUpperCase(snakeCaseToCamelCase().format(name).toString()) + "Box";
 	}
 
 	private boolean hasModel() {
