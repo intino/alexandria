@@ -2,14 +2,17 @@ package io.intino.alexandria.bpm;
 
 import io.intino.alexandria.bpm.PersistenceManager.InMemoryPersistenceManager;
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageReader;
 import io.intino.alexandria.message.MessageWriter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static io.intino.alexandria.bpm.Link.Type.Default;
@@ -18,7 +21,6 @@ import static io.intino.alexandria.bpm.Process.Status.Enter;
 import static io.intino.alexandria.bpm.Process.Status.Running;
 import static io.intino.alexandria.bpm.Task.Type.Automatic;
 import static java.lang.Thread.sleep;
-import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -40,8 +42,7 @@ public abstract class Workflow {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			while (processes.values().stream().anyMatch(Process::isBusy)) {
 				try {
-					System.out.println("waiting");
-					sleep(100);
+					sleep(1000);
 				} catch (InterruptedException e) {
 					Logger.error(e);
 				}
@@ -59,18 +60,13 @@ public abstract class Workflow {
 			List<ProcessStatus> statuses = messagesOf("active/" + path);
 			ProcessStatus status = statuses.get(0);
 			processes.put(status.processId(), factory.createProcess(status.processId(), status.processName()));
-			process(status.processId()).resume(statuses, dataOf(path));
+			process(status.processId()).resume(statuses, dataOf("active/" + path));
 		});
 	}
 
 	private Map<String, String> dataOf(String path) {
-		try {
-			return stream(new String(persistence.read(dataPath(path)).readAllBytes()).split("\n"))
-					.collect(toMap(l -> l.split(";")[0], l -> l.split(";")[1]));
-		} catch (IOException e) {
-			Logger.error(e);
-			return Collections.emptyMap();
-		}
+		Message message = new MessageReader(persistence.read(dataPath(path))).next();
+		return message.attributes().stream().collect(toMap(a -> a, a -> message.get(a).asString()));
 	}
 
 	private void process(ProcessStatus status) {
@@ -113,8 +109,8 @@ public abstract class Workflow {
 
 	private void releaseSemaphore(ProcessStatus status) {
 		Process process = process(status.processId());
-		if(process == null) return;
-		if(process.isBusy()) process.release();
+		if (process == null) return;
+		if (process.isBusy()) process.release();
 	}
 
 	private void persistProcess(Process process) {
@@ -138,7 +134,9 @@ public abstract class Workflow {
 
 			if (data == null) return;
 			PrintWriter p = new PrintWriter(persistence.write(dataPath(path)));
-			p.print(data.entrySet().stream().map(e -> e.getKey() + ";" + e.getValue()).collect(Collectors.joining("\n")));
+			Message message = new Message("Data");
+			data.forEach(message::set);
+			p.print(message.toString());
 			p.close();
 		} catch (IOException e) {
 			Logger.error(e);
@@ -192,7 +190,7 @@ public abstract class Workflow {
 	private void getSemaphore(ProcessStatus status) {
 		try {
 			Process process = process(status.processId());
-			if(process == null) return;
+			if (process == null) return;
 			process.acquire();
 		} catch (InterruptedException e) {
 			Logger.error(e);
@@ -264,7 +262,7 @@ public abstract class Workflow {
 	public abstract void send(ProcessStatus processStatus);
 
 	private void sendRejectionMessage(Process process, Link link) {
-		sendMessage(rejectMessage(process, process.state(link.to())));
+		new Thread(() -> sendMessage(rejectMessage(process, process.state(link.to())))).start();
 	}
 
 	private void propagateRejectionOnBranch(Process process, String state) {

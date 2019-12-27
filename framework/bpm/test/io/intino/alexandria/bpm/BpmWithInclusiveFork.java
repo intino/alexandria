@@ -32,9 +32,9 @@ public class BpmWithInclusiveFork extends BpmTest {
 		assertThat(messages.get(2).stateInfo().name(), is("CreateString"));
 		assertThat(messages.get(2).stateInfo().status(), is("Exit"));
 		Map<String, String> data = data(persistence, "finished/1.data");
-		if (data.get("CreateString").equals("Hello:Goodbye"))
-			assertThat(data.get("JoinResult"), is("Hi:Bye"));
-		else assertThat(data.get("JoinResult"), is("Bye:Hi"));
+		if (data.get("createstring").equals("Hello:Goodbye"))
+			assertThat(data.get("joinresult"), is("Hi:Bye"));
+		else assertThat(data.get("joinresult"), is("Bye:Hi"));
 	}
 
 	private ProcessStatus createProcessMessage() {
@@ -63,7 +63,8 @@ public class BpmWithInclusiveFork extends BpmTest {
 			return new Task(Automatic) {
 				@Override
 				public void execute() {
-					data.put("CreateString", Math.random() < 0.5 ? "Hello:Goodbye" : "Goodbye:Hello");
+					put("CreateString", Math.random() < 0.5 ? "Hello:Goodbye" : "Goodbye:Hello");
+					put("CreateString", Math.random() < 0.5 ? "Hello:Goodbye" : "Goodbye:Hello");
 				}
 
 			};
@@ -74,8 +75,8 @@ public class BpmWithInclusiveFork extends BpmTest {
 
 				@Override
 				public void execute() {
-					String[] result = data.get("CreateString").split(":");
-					data.put("ProcessHello", result[0].equals("Hello") ? "0-Hi" : "1-Hi");
+					String[] result = get("CreateString").split(":");
+					put("ProcessHello", result[0].equals("Hello") ? "0-Hi" : "1-Hi");
 				}
 			};
 		}
@@ -85,8 +86,8 @@ public class BpmWithInclusiveFork extends BpmTest {
 
 				@Override
 				public void execute() {
-					String[] result = data.get("CreateString").split(":");
-					data.put("ProcessGoodbye", result[0].equals("Goodbye") ? "0-Bye" : "1-Bye");
+					String[] result = get("CreateString").split(":");
+					put("ProcessGoodbye", result[0].equals("Goodbye") ? "0-Bye" : "1-Bye");
 				}
 			};
 		}
@@ -97,9 +98,9 @@ public class BpmWithInclusiveFork extends BpmTest {
 
 				@Override
 				public void execute() {
-					String[] hello = data.get("ProcessHello").split("-");
-					String[] goodbye = data.get("ProcessGoodbye").split("-");
-					data.put("JoinResult", hello[0].equals("0") ? hello[1] + ":" + goodbye[1] : goodbye[1] + ":" + hello[1]);
+					String[] hello = get("ProcessHello").split("-");
+					String[] goodbye = get("ProcessGoodbye").split("-");
+					put("JoinResult", hello[0].equals("0") ? hello[1] + ":" + goodbye[1] : goodbye[1] + ":" + hello[1]);
 				}
 			};
 		}

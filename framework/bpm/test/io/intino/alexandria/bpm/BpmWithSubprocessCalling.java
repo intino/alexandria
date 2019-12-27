@@ -39,9 +39,9 @@ public class BpmWithSubprocessCalling extends BpmTest {
 		assertThat(messages.get(2).stateInfo().name(), is("CreateString"));
 		assertThat(messages.get(2).stateInfo().status(), is("Exit"));
 		Map<String, String> data = data(persistence, "finished/1.data");
-		if (data.get("CreateString").equals("Hello"))
-			assertThat(data.get("HandleSubprocessEnding"), is("true"));
-		else assertThat(data.get("HandleSubprocessEnding"), is("false"));
+		if (data.get("createstring").equals("Hello"))
+			assertThat(data.get("handlesubprocessending"), is("true"));
+		else assertThat(data.get("handlesubprocessending"), is("false"));
 	}
 
 	private ProcessStatus createProcessMessage() {
@@ -68,7 +68,7 @@ public class BpmWithSubprocessCalling extends BpmTest {
 				@Override
 				public void execute() {
 					memory.put(id(), Math.random() < 0.5 ? "Hello" : "Goodbye");
-					data.put("CreateString", memory.get(id()));
+					put("CreateString", memory.get(id()));
 				}
 
 			};
@@ -87,7 +87,7 @@ public class BpmWithSubprocessCalling extends BpmTest {
 			return new Task(Automatic) {
 				@Override
 				public void execute() {
-					data.put("HandleSubprocessEnding", memory.get("2"));
+					put("HandleSubprocessEnding", memory.get("2"));
 				}
 			};
 		}

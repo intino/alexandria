@@ -1,11 +1,12 @@
 package io.intino.alexandria.bpm;
 
-import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageReader;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -23,13 +24,8 @@ abstract class BpmTest {
 	}
 
 	Map<String, String> data(PersistenceManager.InMemoryPersistenceManager persistence, String path) {
-		try {
-			return Arrays.stream(new String(persistence.read(path).readAllBytes()).split("\n"))
-					.collect(toMap(l -> l.split(";")[0], l -> l.split(";")[1]));
-		} catch (IOException e) {
-			Logger.error(e);
-			return Collections.emptyMap();
-		}
+		Message message = new MessageReader(persistence.read(path)).next();
+		return message.attributes().stream().collect(toMap(a -> a, a -> message.get(a).asString()));
 	}
 
 	ProcessStatus exitStateStatus(List<ProcessStatus> processStatusList, String stateName) {

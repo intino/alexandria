@@ -37,11 +37,11 @@ public class BpmWithExclusiveFork extends BpmTest {
 		assertThat(messages.get(4).stateInfo().name(), is("CheckContainsHello"));
 		assertThat(messages.get(4).stateInfo().status(), is("Exit"));
 		Map<String, String> data = data(manager, "finished/1.data");
-		if (data.get("CreateString").equals("Hello")) {
-			assertThat(data.get("ProcessHello"), is("Processing hello"));
+		if (data.get("createstring").equals("Hello")) {
+			assertThat(data.get("processhello"), is("Processing hello"));
 			assertThat(exitStateStatus(messages, "ProcessGoodbye").stateInfo().status(), is("Rejected"));
 		} else {
-			assertThat(data.get("ProcessGoodbye"), is("Processing goodbye"));
+			assertThat(data.get("processgoodbye"), is("Processing goodbye"));
 			assertThat(exitStateStatus(messages, "ProcessHello").stateInfo().status(), is("Rejected"));
 		}
 	}
@@ -63,7 +63,7 @@ public class BpmWithExclusiveFork extends BpmTest {
 			return new Task(Automatic) {
 				@Override
 				public void execute() {
-					data.put("CreateString", Math.random() < 0.5 ? "Hello" : "Goodbye");
+					put("CreateString", Math.random() < 0.5 ? "Hello" : "Goodbye");
 				}
 
 			};
@@ -73,7 +73,7 @@ public class BpmWithExclusiveFork extends BpmTest {
 			return new Task(Automatic) {
 				@Override
 				public void execute() {
-					data.put("CheckContainsHello", data.get("CreateString").contains("Hello") + "");
+					put("CheckContainsHello", get("CreateString").contains("Hello") + "");
 				}
 			};
 		}
@@ -83,12 +83,12 @@ public class BpmWithExclusiveFork extends BpmTest {
 
 				@Override
 				public boolean accept() {
-					return data.get("CheckContainsHello").equals("true");
+					return get("CheckContainsHello").equals("true");
 				}
 
 				@Override
 				public void execute() {
-					data.put("ProcessHello", "Processing hello");
+					put("ProcessHello", "Processing hello");
 				}
 			};
 		}
@@ -98,7 +98,7 @@ public class BpmWithExclusiveFork extends BpmTest {
 
 				@Override
 				public void execute() {
-					data.put("ProcessGoodbye", "Processing goodbye");
+					put("ProcessGoodbye", "Processing goodbye");
 				}
 			};
 		}

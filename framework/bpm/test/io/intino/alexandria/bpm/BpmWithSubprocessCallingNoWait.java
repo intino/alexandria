@@ -36,9 +36,9 @@ public class BpmWithSubprocessCallingNoWait extends BpmTest {
 		assertThat(messages1.get(0).get().toString(), is(createProcessMessage().get().toString()));
 		Map<String, String> data = data(persistence, "finished/1.data");
 		Map<String, String> data2 = data(persistence, "finished/2.data");
-		if (data.get("CreateString").equals("Hello"))
-			assertThat(data2.get("CheckString"), is("true"));
-		else assertThat(data2.get("CheckString"), is("false"));
+		if (data.get("createstring").equals("Hello"))
+			assertThat(data2.get("checkstring"), is("true"));
+		else assertThat(data2.get("checkstring"), is("false"));
 	}
 
 	private ProcessStatus createProcessMessage() {
@@ -63,7 +63,7 @@ public class BpmWithSubprocessCallingNoWait extends BpmTest {
 				@Override
 				public void execute() {
 					memory.put(id(), Math.random() < 0.5 ? "Hello" : "Goodbye");
-					data.put("CreateString", memory.get(id()));
+					put("CreateString", memory.get(id()));
 				}
 
 			};
@@ -100,7 +100,7 @@ public class BpmWithSubprocessCallingNoWait extends BpmTest {
 			return new Task(Automatic) {
 				@Override
 				public void execute() {
-					data.put("CheckString", memory.get(owner()).equals("Hello") + "");
+					put("CheckString", memory.get(owner()).equals("Hello") + "");
 				}
 
 			};

@@ -38,14 +38,14 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 		assertThat(messages.get(4).stateInfo().status(), is("Exit"));
 
 		Map<String, String> data = data(persistence, "finished/1.data");
-		if (data.get("CreateString").equals("Hello")) {
-			assertThat(data.get("ProcessHello2"), is("Processing hello2"));
+		if (data.get("createstring").equals("Hello")) {
+			assertThat(data.get("processhello2"), is("Processing hello2"));
 			assertThat(exitStateStatus(messages, "ProcessGoodbye2").stateInfo().status(), is("Skipped"));
-			assertThat(data.get("Terminate"), is("hello2"));
+			assertThat(data.get("terminate"), is("hello2"));
 		} else {
-			assertThat(data.get("ProcessGoodbye2"), is("Processing goodbye2"));
+			assertThat(data.get("processgoodbye2"), is("Processing goodbye2"));
 			assertThat(exitStateStatus(messages, "ProcessHello2").stateInfo().status(), is("Skipped"));
-			assertThat(data.get("Terminate"), is("bye2"));
+			assertThat(data.get("terminate"), is("bye2"));
 		}
 	}
 
@@ -73,7 +73,7 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 			return new Task(Automatic) {
 				@Override
 				public void execute() {
-					data.put("CreateString", Math.random() < 0.5 ? "Hello" : "Goodbye");
+					put("CreateString", Math.random() < 0.5 ? "Hello" : "Goodbye");
 				}
 
 			};
@@ -83,7 +83,7 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 			return new Task(Automatic) {
 				@Override
 				public void execute() {
-					data.put("CheckContainsHello", data.get("CreateString").equals("Hello") + "");
+					put("CheckContainsHello", get("CreateString").equals("Hello") + "");
 				}
 			};
 		}
@@ -93,7 +93,7 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 
 				@Override
 				public boolean accept() {
-					return data.get("CheckContainsHello").equals("true");
+					return get("CheckContainsHello").equals("true");
 				}
 
 				@Override
@@ -107,7 +107,7 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 
 				@Override
 				public void execute() {
-					data.put("ProcessHello2", "Processing hello2");
+					put("ProcessHello2", "Processing hello2");
 				}
 			};
 		}
@@ -126,7 +126,7 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 
 				@Override
 				public void execute() {
-					data.put("Terminate", exitStateStatus("ProcessHello2").stateInfo().status().equals("Exit") ? "hello2" :
+					put("Terminate", exitStateStatus("ProcessHello2").stateInfo().status().equals("Exit") ? "hello2" :
 							exitStateStatus("ProcessGoodbye2").stateInfo().status().equals("Exit") ? "bye2" : "none");
 				}
 			};
@@ -137,7 +137,7 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 
 				@Override
 				public void execute() {
-					data.put("ProcessGoodbye2", "Processing goodbye2");
+					put("ProcessGoodbye2", "Processing goodbye2");
 				}
 			};
 		}
