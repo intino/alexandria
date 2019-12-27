@@ -1,6 +1,5 @@
 package io.intino.alexandria.bpm;
 
-import io.intino.alexandria.message.Message;
 import org.junit.Test;
 
 import java.util.List;
@@ -25,7 +24,7 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 			public void send(ProcessStatus processStatus) {
 				new Thread(() -> receive(processStatus)).start();
 			}
-		}.send(createProcessMessage());
+		}.registerProcess(new StringContentReviewerProcess("1"));
 		waitForProcess(persistence);
 		List<ProcessStatus> messages = messagesOf(persistence.read("finished/1.process"));
 		assertThat(messages.get(0).processStatus(), is("Enter"));
@@ -48,15 +47,6 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 			assertThat(exitStateStatus(messages, "ProcessHello2").stateInfo().status(), is("Skipped"));
 			assertThat(data.get("Terminate"), is("bye2"));
 		}
-	}
-
-
-	private ProcessStatus createProcessMessage() {
-		return new ProcessStatus(new Message("ProcessStatus")
-				.set("ts", "2019-01-01T00:00:00Z")
-				.set("id", "1")
-				.set("name", "StringContentReviewer")
-				.set("status", "Enter"));
 	}
 
 	static class StringContentReviewerProcess extends Process {
