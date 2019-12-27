@@ -4,7 +4,7 @@ Artifact(groupId = "io.intino.alexandria", version = "1.0.0") driver
 
 	Imports
 		Compile("io.intino.alexandria", "json", "1.0.1")
-		Compile("io.intino.alexandria", "logger", "2.0.0")
+		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Compile("com.jcraft","jsch", "0.1.55")
 
 		Test("junit", "junit", "LATEST")

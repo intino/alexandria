@@ -78,6 +78,7 @@ public class Zip {
 		try (FileSystem fs = filesystems.get(path)) {
 			Files.write(fs.getPath(filePath), stream.readAllBytes(), options);
 		}
+		stream.close();
 	}
 
 	public static InputStream read(ZipFile zipFile, String filePath) throws IOException {
