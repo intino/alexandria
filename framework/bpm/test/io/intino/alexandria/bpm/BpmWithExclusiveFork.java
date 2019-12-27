@@ -24,7 +24,7 @@ public class BpmWithExclusiveFork extends BpmTest {
 			public void send(ProcessStatus processStatus) {
 				new Thread(() -> receive(processStatus)).start();
 			}
-		}.send(createProcessMessage());
+		}.registerProcess(new StringContentReviewerProcess("1"));
 		waitForProcess(manager);
 		List<ProcessStatus> messages = messagesOf(manager.read("finished/1.process"));
 		assertThat(messages.get(0).processStatus(), is("Enter"));
@@ -44,10 +44,6 @@ public class BpmWithExclusiveFork extends BpmTest {
 			assertThat(data.get("ProcessGoodbye"), is("Processing goodbye"));
 			assertThat(exitStateStatus(messages, "ProcessHello").stateInfo().status(), is("Rejected"));
 		}
-	}
-
-	private ProcessStatus createProcessMessage() {
-		return new ProcessStatus("1", "StringContentReviewer", Process.Status.Enter);
 	}
 
 	static class StringContentReviewerProcess extends Process {

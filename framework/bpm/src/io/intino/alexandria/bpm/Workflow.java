@@ -14,6 +14,7 @@ import java.util.stream.StreamSupport;
 
 import static io.intino.alexandria.bpm.Link.Type.Default;
 import static io.intino.alexandria.bpm.Link.Type.Exclusive;
+import static io.intino.alexandria.bpm.Process.Status.Enter;
 import static io.intino.alexandria.bpm.Process.Status.Running;
 import static io.intino.alexandria.bpm.Task.Type.Automatic;
 import static java.lang.Thread.sleep;
@@ -160,6 +161,12 @@ public abstract class Workflow {
 		Process process = factory.createProcess(status.processId(), status.processName());
 		processes.put(status.processId(), process);
 		process.register(status);
+		invoke(process, process.initialState());
+	}
+
+	public void registerProcess(Process process) {
+		processes.put(process.id(), process);
+		process.register(new ProcessStatus(process.id(), process.name(), Enter));
 		invoke(process, process.initialState());
 	}
 
