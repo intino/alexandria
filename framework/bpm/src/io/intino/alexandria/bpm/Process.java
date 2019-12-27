@@ -12,7 +12,7 @@ import static java.util.stream.Collectors.toList;
 public abstract class Process {
 
 	protected final List<ProcessStatus> processStatusList = new ArrayList<>();
-	protected final Map<String, String> data = new HashMap<>();
+	private final Map<String, String> data = new HashMap<>();
 	private final String id;
 	private List<Link> links = new ArrayList<>();
 	private Map<String, State> states = new HashMap<>();
@@ -87,6 +87,18 @@ public abstract class Process {
 		return processStatusList().stream()
 				.filter(s -> s.hasStateInfo() && s.stateInfo().name().equals(stateName) && s.stateInfo().isTerminated())
 				.findFirst().orElse(null);
+	}
+
+	public String get(String key) {
+		return data.get(key.toLowerCase());
+	}
+
+	public boolean containsKey(String key) {
+		return data.containsKey(key.toLowerCase());
+	}
+
+	public String put(String key, String value) {
+		return data.put(key.toLowerCase(), value);
 	}
 
 	private List<ProcessStatus> processStatusList() {
