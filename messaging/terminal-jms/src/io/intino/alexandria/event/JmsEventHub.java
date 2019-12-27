@@ -4,6 +4,7 @@ import io.intino.alexandria.jms.*;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageWriter;
+import org.apache.activemq.ActiveMQConnection;
 
 import javax.jms.*;
 import java.io.ByteArrayOutputStream;
@@ -40,26 +41,33 @@ public class JmsEventHub implements EventHub {
 	public JmsEventHub(String brokerUrl, String user, String password, String clientId, boolean transactedSession, File messageCacheDirectory) {
 		producers = new HashMap<>();
 		consumers = new HashMap<>();
+		jmsConsumers = new HashMap<>();
+		eventConsumers = new HashMap<>();
 		this.eventOutBox = new EventOutBox(messageCacheDirectory);
 		if (brokerUrl != null && !brokerUrl.isEmpty()) {
-			try {
+			Thread thread = Thread.currentThread();
+			new Thread(() -> {
 				connection = BusConnector.createConnection(brokerUrl, user, password, connectionListener());
-				if (connection != null) {
+				thread.interrupt();
+			}).start();
+			try {
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+				}
+				if (connection != null && ((ActiveMQConnection) connection).isStarted()) {
 					if (clientId != null && !clientId.isEmpty()) connection.setClientID(clientId);
 					connection.start();
-					session = connection.createSession(transactedSession, transactedSession ? SESSION_TRANSACTED : AUTO_ACKNOWLEDGE);
+					session = createSession(transactedSession);
 					Logger.info("Connection with Data Hub stablished!");
 				} else Logger.error("Connection with Data Hub couldn't be stablished");
 			} catch (JMSException e) {
 				Logger.error(e);
 			}
 		} else Logger.warn("Broker url is null");
-		jmsConsumers = new HashMap<>();
-		eventConsumers = new HashMap<>();
 		scheduler = Executors.newScheduledThreadPool(1);
 		scheduler.scheduleAtFixedRate(this::recoverEvents, 0, 1, TimeUnit.HOURS);
 	}
-
 
 	@Override
 	public synchronized void sendEvent(String channel, Event event) {
@@ -178,6 +186,10 @@ public class JmsEventHub implements EventHub {
 		}
 	}
 
+	private Session createSession(boolean transactedSession) throws JMSException {
+		return connection.createSession(transactedSession, transactedSession ? SESSION_TRANSACTED : AUTO_ACKNOWLEDGE);
+	}
+
 	private void registerConsumer(String channel, Consumer<Event> onEventReceived) {
 		this.eventConsumers.putIfAbsent(channel, new ArrayList<>());
 		this.eventConsumers.get(channel).add(onEventReceived);
@@ -218,8 +230,12 @@ public class JmsEventHub implements EventHub {
 			public void transportResumed() {
 				Logger.info("Connection with Data Hub resumed!");
 				connected.set(true);
-				if (!eventConsumers.isEmpty() && consumers.isEmpty())
+				if (!eventConsumers.isEmpty() && consumers.isEmpty()) try {
+					session = createSession(false);
 					for (String channel : eventConsumers.keySet()) consumers.put(channel, topicConsumer(channel));
+				} catch (JMSException e) {
+					Logger.error(e);
+				}
 			}
 		};
 	}
