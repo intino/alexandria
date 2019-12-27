@@ -60,7 +60,7 @@ public class JmsEventHub implements EventHub {
 					connection.start();
 					session = createSession(transactedSession);
 					Logger.info("Connection with Data Hub stablished!");
-				} else Logger.error("Connection with Data Hub couldn't be stablished");
+				}
 			} catch (JMSException e) {
 				Logger.error(e);
 			}
@@ -228,7 +228,7 @@ public class JmsEventHub implements EventHub {
 
 			@Override
 			public void transportResumed() {
-				Logger.info("Connection with Data Hub resumed!");
+				Logger.info("Connection with Data Hub stablished!");
 				connected.set(true);
 				if (!eventConsumers.isEmpty() && consumers.isEmpty()) try {
 					session = createSession(false);
