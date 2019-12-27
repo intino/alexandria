@@ -116,11 +116,11 @@ public class Logger {
 		StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
 		for (int i = 1; i < stElements.length; i++) {
 			StackTraceElement ste = stElements[i];
-			if (!ste.getClassName().equals(Logger.class.getName()) && ste.getClassName().indexOf("java.lang.Thread") != 0) {
+			if (!ste.getClassName().equals(Logger.class.getName())) {
 				return ste.getClassName() + ":" + ste.getMethodName() + ":" + ste.getLineNumber();
 			}
 		}
-		return null;
+		return "unknown";
 	}
 
 	private static boolean isDebugging() {
