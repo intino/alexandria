@@ -12,12 +12,15 @@ public class BeforeDisplayRequest implements Resource {
         this.manager = manager;
     }
 
+    public void execute(UIClient client) throws AlexandriaException {
+        if (client == null) return;
+        manager.linkToThread(client);
+    }
+
     @Override
     public void execute() throws AlexandriaException {
         String clientId = manager.fromQuery("clientId", String.class);
-        UIClient client = manager.client(clientId);
-        if (client != null)
-            manager.linkToThread(client);
+        execute(manager.client(clientId));
     }
 
 }
