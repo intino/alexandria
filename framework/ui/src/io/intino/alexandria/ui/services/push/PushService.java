@@ -27,7 +27,9 @@ public class PushService extends io.intino.alexandria.rest.spark.PushService<UIS
 		String requester = message.sender();
 
 		try {
+			linkToThread(client);
 			requesterMap.get(requester).execute(client, message);
+			unlinkFromThread();
 		}
 		catch (Throwable e) {
 			Logger.error(e);

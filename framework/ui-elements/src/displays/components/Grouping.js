@@ -17,9 +17,14 @@ class Grouping extends AbstractGrouping {
         super(props);
         this.notifier = new GroupingNotifier(this);
         this.requester = new GroupingRequester(this);
+        this.state = {
+            ...this.state,
+        }
     };
 
     render() {
+        if (!this.state.visible) return (<React.Fragment/>);
+
         const { classes } = this.props;
         return (
             <div className={classes.container} style={this.style()}>
