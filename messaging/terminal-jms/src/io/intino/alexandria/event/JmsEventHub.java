@@ -4,6 +4,7 @@ import io.intino.alexandria.jms.*;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageWriter;
+import org.apache.activemq.ActiveMQConnection;
 
 import javax.jms.*;
 import java.io.ByteArrayOutputStream;
@@ -40,26 +41,41 @@ public class JmsEventHub implements EventHub {
 	public JmsEventHub(String brokerUrl, String user, String password, String clientId, boolean transactedSession, File messageCacheDirectory) {
 		producers = new HashMap<>();
 		consumers = new HashMap<>();
+		jmsConsumers = new HashMap<>();
+		eventConsumers = new HashMap<>();
 		this.eventOutBox = new EventOutBox(messageCacheDirectory);
 		if (brokerUrl != null && !brokerUrl.isEmpty()) {
+			Thread thread = Thread.currentThread();
+			new Thread(() -> {
+				initConnection(brokerUrl, user, password, clientId);
+				thread.interrupt();
+			}).start();
 			try {
-				connection = BusConnector.createConnection(brokerUrl, user, password, connectionListener());
-				if (connection != null) {
-					if (clientId != null && !clientId.isEmpty()) connection.setClientID(clientId);
-					connection.start();
-					session = connection.createSession(transactedSession, transactedSession ? SESSION_TRANSACTED : AUTO_ACKNOWLEDGE);
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+				}
+				if (connection != null && ((ActiveMQConnection) connection).isStarted()) {
+					session = createSession(transactedSession);
 					Logger.info("Connection with Data Hub stablished!");
-				} else Logger.error("Connection is null");
+				}
 			} catch (JMSException e) {
 				Logger.error(e);
 			}
 		} else Logger.warn("Broker url is null");
-		jmsConsumers = new HashMap<>();
-		eventConsumers = new HashMap<>();
 		scheduler = Executors.newScheduledThreadPool(1);
 		scheduler.scheduleAtFixedRate(this::recoverEvents, 0, 1, TimeUnit.HOURS);
 	}
 
+	private void initConnection(String brokerUrl, String user, String password, String clientId) {
+		try {
+			connection = BusConnector.createConnection(brokerUrl, user, password, connectionListener());
+			if (clientId != null && !clientId.isEmpty()) connection.setClientID(clientId);
+			connection.start();
+		} catch (JMSException e) {
+			Logger.error(e);
+		}
+	}
 
 	@Override
 	public synchronized void sendEvent(String channel, Event event) {
@@ -94,7 +110,6 @@ public class JmsEventHub implements EventHub {
 
 	@Override
 	public void attachListener(String channel, Consumer<Event> onEventReceived) {
-		if (session == null) return;
 		registerConsumer(channel, onEventReceived);
 		JmsConsumer consumer = this.consumers.get(channel);
 		if (consumer == null) return;
@@ -105,7 +120,6 @@ public class JmsEventHub implements EventHub {
 
 	@Override
 	public void attachListener(String channel, String subscriberId, Consumer<Event> onEventReceived) {
-		if (session == null) return;
 		registerConsumer(channel, onEventReceived);
 		TopicConsumer consumer = (TopicConsumer) this.consumers.get(channel);
 		if (consumer == null) return;
@@ -180,10 +194,15 @@ public class JmsEventHub implements EventHub {
 		}
 	}
 
+	private Session createSession(boolean transactedSession) throws JMSException {
+		return connection.createSession(transactedSession, transactedSession ? SESSION_TRANSACTED : AUTO_ACKNOWLEDGE);
+	}
+
 	private void registerConsumer(String channel, Consumer<Event> onEventReceived) {
-		if (!this.consumers.containsKey(channel)) this.consumers.put(channel, topicConsumer(channel));
 		this.eventConsumers.putIfAbsent(channel, new ArrayList<>());
 		this.eventConsumers.get(channel).add(onEventReceived);
+		if (!this.consumers.containsKey(channel) && session != null)
+			this.consumers.put(channel, topicConsumer(channel));
 	}
 
 	private boolean doSendEvent(String channel, Event event) {
@@ -217,8 +236,14 @@ public class JmsEventHub implements EventHub {
 
 			@Override
 			public void transportResumed() {
-				connected.set(true);
 				Logger.info("Connection with Data Hub stablished!");
+				connected.set(true);
+				if (!eventConsumers.isEmpty() && consumers.isEmpty()) try {
+					session = createSession(false);
+					for (String channel : eventConsumers.keySet()) consumers.put(channel, topicConsumer(channel));
+				} catch (JMSException e) {
+					Logger.error(e);
+				}
 			}
 		};
 	}

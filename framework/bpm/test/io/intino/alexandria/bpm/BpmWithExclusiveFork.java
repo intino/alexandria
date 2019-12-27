@@ -4,6 +4,7 @@ import io.intino.alexandria.bpm.PersistenceManager.InMemoryPersistenceManager;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static io.intino.alexandria.bpm.Link.Type.Exclusive;
 import static io.intino.alexandria.bpm.State.Type.Initial;
@@ -23,7 +24,7 @@ public class BpmWithExclusiveFork extends BpmTest {
 			public void send(ProcessStatus processStatus) {
 				new Thread(() -> receive(processStatus)).start();
 			}
-		}.send(createProcessMessage());
+		}.registerProcess(new StringContentReviewerProcess("1"));
 		waitForProcess(manager);
 		List<ProcessStatus> messages = messagesOf(manager.read("finished/1.process"));
 		assertThat(messages.get(0).processStatus(), is("Enter"));
@@ -35,17 +36,14 @@ public class BpmWithExclusiveFork extends BpmTest {
 		assertThat(messages.get(3).stateInfo().status(), is("Enter"));
 		assertThat(messages.get(4).stateInfo().name(), is("CheckContainsHello"));
 		assertThat(messages.get(4).stateInfo().status(), is("Exit"));
-		if (exitStateStatus(messages, "CreateString").taskInfo().result().equals("Hello")) {
-			assertThat(exitStateStatus(messages, "ProcessHello").taskInfo().result(), is("Processing hello"));
+		Map<String, String> data = data(manager, "finished/1.data");
+		if (data.get("createstring").equals("Hello")) {
+			assertThat(data.get("processhello"), is("Processing hello"));
 			assertThat(exitStateStatus(messages, "ProcessGoodbye").stateInfo().status(), is("Rejected"));
 		} else {
-			assertThat(exitStateStatus(messages, "ProcessGoodbye").taskInfo().result(), is("Processing goodbye"));
+			assertThat(data.get("processgoodbye"), is("Processing goodbye"));
 			assertThat(exitStateStatus(messages, "ProcessHello").stateInfo().status(), is("Rejected"));
 		}
-	}
-
-	private ProcessStatus createProcessMessage() {
-		return new ProcessStatus("1", "StringContentReviewer", Process.Status.Enter);
 	}
 
 	static class StringContentReviewerProcess extends Process {
@@ -64,8 +62,8 @@ public class BpmWithExclusiveFork extends BpmTest {
 		private Task createString() {
 			return new Task(Automatic) {
 				@Override
-				public Result execute() {
-					return new Result(Math.random() < 0.5 ? "Hello" : "Goodbye");
+				public void execute() {
+					put("CreateString", Math.random() < 0.5 ? "Hello" : "Goodbye");
 				}
 
 			};
@@ -74,9 +72,8 @@ public class BpmWithExclusiveFork extends BpmTest {
 		private Task checkContainsHelloTask() {
 			return new Task(Automatic) {
 				@Override
-				public Result execute() {
-					ProcessStatus last = exitStateStatus("CreateString");
-					return new Result(last.taskInfo().result().contains("Hello") + "");
+				public void execute() {
+					put("CheckContainsHello", get("CreateString").contains("Hello") + "");
 				}
 			};
 		}
@@ -86,13 +83,12 @@ public class BpmWithExclusiveFork extends BpmTest {
 
 				@Override
 				public boolean accept() {
-					ProcessStatus last = exitStateStatus("CheckContainsHello");
-					return last.taskInfo().result().equals("true");
+					return get("CheckContainsHello").equals("true");
 				}
 
 				@Override
-				public Result execute() {
-					return new Result("Processing hello");
+				public void execute() {
+					put("ProcessHello", "Processing hello");
 				}
 			};
 		}
@@ -101,8 +97,8 @@ public class BpmWithExclusiveFork extends BpmTest {
 			return new Task(Automatic) {
 
 				@Override
-				public Result execute() {
-					return new Result("Processing goodbye");
+				public void execute() {
+					put("ProcessGoodbye", "Processing goodbye");
 				}
 			};
 		}
