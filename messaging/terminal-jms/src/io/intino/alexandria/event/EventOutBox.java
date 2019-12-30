@@ -12,9 +12,11 @@ import java.util.*;
 
 class EventOutBox {
 	private final File directory;
+	private List<File> files;
 
 	EventOutBox(File directory) {
 		this.directory = directory.getAbsoluteFile();
+		this.files = new ArrayList<>();
 		if (!directory.exists()) directory.mkdirs();
 	}
 
@@ -42,14 +44,22 @@ class EventOutBox {
 	}
 
 	void pop() {
-		List<File> files = Arrays.asList(Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(".json"))));
-		Collections.sort(files);
+		reloadOutBox();
 		if (files.isEmpty()) return;
 		files.get(0).delete();
+		files.remove(0);
 	}
 
 	boolean isEmpty() {
-		return Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(".json"))).length == 0;
+		return files.isEmpty() || reloadOutBox().isEmpty();
+	}
+
+	private List<File> reloadOutBox() {
+		if (files.isEmpty()) {
+			files = Arrays.asList(Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(".json"))));
+			Collections.sort(files);
+		}
+		return this.files;
 	}
 
 	private static class SavedEvent {

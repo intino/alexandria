@@ -84,7 +84,6 @@ public class JmsEventHub implements EventHub {
 			if (connected.get() && !eventOutBox.isEmpty() && !recoveringEvents.get()) recoverEvents();
 			if (!doSendEvent(channel, event)) eventOutBox.push(channel, event);
 		}).start();
-
 	}
 
 	public void requestResponse(String channel, String event, Consumer<String> onResponse) {
