@@ -3,6 +3,7 @@ package io.intino.alexandria.ui.services.push;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.rest.spark.RequestAdapter;
 import io.intino.alexandria.ui.displays.requesters.DisplayPushRequester;
+import org.eclipse.jetty.io.EofException;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.HashMap;
@@ -32,7 +33,8 @@ public class PushService extends io.intino.alexandria.rest.spark.PushService<UIS
 			unlinkFromThread();
 		}
 		catch (Throwable e) {
-			Logger.error(e);
+			if (e instanceof EofException) Logger.debug(e.getMessage());
+			else Logger.error(e);
 		}
 	}
 

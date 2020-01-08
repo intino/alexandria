@@ -57,7 +57,7 @@ class User extends AbstractUser {
             <div className="layout horizontal">
                 <a ref={this.trigger} onClick={this.handleOpenDialog.bind(this)} title={info.fullName} className={!photoWithFullname || hasChildren ? classes.trigger : undefined}><img className={classes.photo} src={info.photo} title={info.fullName}/></a>
                 {photoWithFullname &&
-                <div style={{marginLeft:"10px"}}>
+                <div style={{marginLeft:"10px",marginTop:"5px"}}>
                     <div className="layout vertical center-justified hidden-ifmobile">
                         <Typography variant={variant}>{info.fullName}</Typography>
                         <Link className={classes.link} component="button" variant={variant} onClick={this.handleLogout.bind(this)}>{this.translate("Logout")}</Link>

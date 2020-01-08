@@ -2,20 +2,16 @@ package io.intino.alexandria.zif;
 
 import java.io.*;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
+
 public class Zif {
-	public final static String Identifier = "id/";
 	private List<Assertion> assertions;
 
 	public Zif() {
@@ -40,7 +36,8 @@ public class Zif {
 			while (true) {
 				String line = reader.readLine();
 				if (line == null) break;
-				append(assertionOf(line));
+				if (line.isEmpty()) continue;
+ 				append(assertionOf(line));
 			}
 		}
 	}
@@ -63,6 +60,10 @@ public class Zif {
 		save(new FileOutputStream(file));
 	}
 
+	public List<Assertion> get(String id) {
+		return assertions.stream().filter(a->a.id.equals(id)).collect(toList());
+	}
+
 	private Assertion assertionOf(String line) {
 		return new Assertion(line.split("\t"));
 	}
@@ -83,48 +84,26 @@ public class Zif {
 		}
 	}
 
-	public List<Assertion> get(String id) {
-		return assertions.stream()
-				.filter(a-> a.id().equals(id))
-				.collect(toList());
+	public Search search(String property, String text) {
+		return search(a->a.property.contains(property) && a.value.contains(text));
 	}
 
-	public boolean exists(String id) {
-		return new Search(a -> a.equalTo(id)).size() == 1;
-	}
-
-	public Search search(String text) {
-		return new Search(a -> a.contains(text));
-	}
-
-	public Search search(String property, Condition condition) {
-		return new Search(a->a.property().equals(property), condition);
+	public Search search(Predicate<Assertion> predicate) {
+		return new Search(predicate);
 	}
 
 	public class Search {
 		private final Set<String> ids = new HashSet<>();
-		private final Condition condition;
 
-		Search(Predicate<? super Assertion> predicate) {
-			this.condition = assertion -> true;
+		Search(Predicate<Assertion> predicate) {
 			this.apply(predicate);
 		}
 
-		Search(Predicate<? super Assertion> predicate, Condition condition) {
-			this.condition = condition;
-			this.apply(predicate);
-		}
 
 		private void apply(Predicate<? super Assertion> predicate) {
 			assertions.stream()
 				.filter(predicate)
-				.forEach(this::evaluate);
-		}
-
-		private boolean evaluate(Assertion assertion) {
-			return condition.evaluate(assertion) ?
-					ids.add(assertion.id()) :
-					ids.remove(assertion.id());
+				.forEach(a -> ids.add(a.id()));
 		}
 
 		public boolean contains(String id) {
@@ -135,36 +114,21 @@ public class Zif {
 			return ids.size();
 		}
 
-		public String describe() {
-			return describe("");
-		}
-
-		public String describe(String property) {
-			StringBuilder result = new StringBuilder();
-			for (String id : ids) result.append(describe(property, id));
-			return result.length() > 0 ? result.toString().substring(1) : "";
-		}
-
-		private String describe(String property, String id) {
-			return "\n[" + id  + "]\n" +
-					describe(property, assertions.stream()
-							.filter(a->a.id().equals(id))
-							.filter(a->a.property().startsWith(property))
-			);
-		}
-		private String describe(String property, Stream<Assertion> stream) {
-			return stream
-					.map(a->a.property().substring(property.length()) + ": " + a.value())
-					.collect(joining("\n")) + "\n";
-		}
-
 		public List<String> asList() {
 			return new ArrayList<>(ids);
 		}
-	}
 
-	public interface Condition {
-		boolean evaluate(Assertion assertion);
+		public Iterator<String> iterator() {
+			return ids.iterator();
+		}
+
+		public String first() {
+			return ids.isEmpty() ? "" : ids.iterator().next();
+		}
+
+		public Stream<String> stream() {
+			return ids.stream();
+		}
 	}
 
 	public static class Assertion {
@@ -203,14 +167,6 @@ public class Zif {
 		@Override
 		public String toString() {
 			return ts.toString() + "\t" + id + "\t" + property + "\t" + value;
-		}
-
-		public boolean equalTo(String value) {
-			return id.equals(value) || this.property.startsWith(Identifier) && this.value.equalsIgnoreCase(value);
-		}
-
-		public boolean contains(String value) {
-			return id.equals(value) || this.property.startsWith(Identifier) && this.value.contains(value);
 		}
 
 	}

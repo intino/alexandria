@@ -36,7 +36,7 @@ public class PushServiceHandler {
 
 	@OnWebSocketError
 	public void onError(Throwable error) {
-		Logger.error(error);
+		Logger.debug(error.getMessage());
 	}
 
 	@OnWebSocketClose
