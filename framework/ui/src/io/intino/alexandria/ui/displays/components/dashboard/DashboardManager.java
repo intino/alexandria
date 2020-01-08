@@ -11,7 +11,6 @@ import io.intino.alexandria.ui.services.push.UISession;
 import io.intino.alexandria.ui.spark.UISparkManager;
 import spark.Request;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -96,7 +95,7 @@ public class DashboardManager {
 				PrintWriter writer = manager.response().raw().getWriter();
 				writer.print("Could not load dashboard. Contact administrator.");
 				writer.close();
-			} catch (IOException e) {
+			} catch (Throwable e) {
 			}
 		}
 	}
