@@ -1,9 +1,9 @@
 package io.intino.alexandria.slack;
 
-import com.ullink.slack.simpleslackapi.*;
-import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
-import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import io.intino.alexandria.logger.Logger;
+import io.intino.slackapi.*;
+import io.intino.slackapi.events.SlackMessagePosted;
+import io.intino.slackapi.impl.SlackSessionFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -14,7 +14,7 @@ import java.io.*;
 import java.net.Proxy;
 import java.util.*;
 
-import static com.ullink.slack.simpleslackapi.impl.SlackSessionFactory.getSlackSessionBuilder;
+import static io.intino.slackapi.impl.SlackSessionFactory.getSlackSessionBuilder;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 
