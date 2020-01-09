@@ -72,7 +72,7 @@ class AccessorsPublisher {
 		List<Service> services = collectServices();
 		if (!createSources(services)) return;
 		try {
-			mvn(services, configuration, "");
+			mvn(services, configuration, "install");
 		} catch (IOException | MavenInvocationException e) {
 			notifyError(e.getMessage());
 			LOG.error(e.getMessage());
