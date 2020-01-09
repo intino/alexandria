@@ -10,14 +10,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import static java.util.Collections.singletonMap;
 
 public class Zip {
+	private static final int BUFFER_SIZE = 4096;
 	private final File file;
 	private final Map<Path, FileSystem> filesystems = new HashMap<>();
-
 
 	public Zip(File file) {
 		this.file = file;
@@ -79,6 +80,34 @@ public class Zip {
 			Files.write(fs.getPath(filePath), stream.readAllBytes(), options);
 		}
 		stream.close();
+	}
+
+	public void unzip(String destDirectory) throws IOException {
+		File destDir = new File(destDirectory);
+		if (!destDir.exists()) destDir.mkdir();
+		ZipInputStream zin = new ZipInputStream(new FileInputStream(file));
+		ZipEntry entry = zin.getNextEntry();
+		while (entry != null) {
+			String filePath = destDirectory + File.separator + entry.getName();
+			if (!entry.isDirectory()) extractFile(zin, filePath);
+			else {
+				File dir = new File(filePath);
+				dir.mkdir();
+			}
+			zin.closeEntry();
+			entry = zin.getNextEntry();
+		}
+		zin.close();
+	}
+
+	private void extractFile(ZipInputStream zipIn, String filePath) throws IOException {
+		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath));
+		byte[] bytesIn = new byte[BUFFER_SIZE];
+		int read = 0;
+		while ((read = zipIn.read(bytesIn)) != -1) {
+			bos.write(bytesIn, 0, read);
+		}
+		bos.close();
 	}
 
 	public static InputStream read(ZipFile zipFile, String filePath) throws IOException {
