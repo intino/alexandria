@@ -72,7 +72,7 @@ class AccessorsPublisher {
 		List<Service> services = collectServices();
 		if (!createSources(services)) return;
 		try {
-			mvn(services, configuration, "");
+			mvn(services, configuration, "install");
 		} catch (IOException | MavenInvocationException e) {
 			notifyError(e.getMessage());
 			LOG.error(e.getMessage());
@@ -113,7 +113,7 @@ class AccessorsPublisher {
 	}
 
 	private List<Service> collectServices() {
-		return graph.serviceList().stream().filter(s -> !s.isUI() && !s.isSlackBot()).collect(Collectors.toList());
+		return graph.serviceList().stream().filter(s -> !s.isUI() && !s.isSlackBot() && !s.isJMX()).collect(Collectors.toList());
 	}
 
 	private void mvn(List<Service> services, Configuration conf, String goal) throws MavenInvocationException, IOException {
