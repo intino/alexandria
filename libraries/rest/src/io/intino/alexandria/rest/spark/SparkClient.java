@@ -98,8 +98,7 @@ public class SparkClient implements Client {
 	}
 
 	private void runQueueManager() {
-		queueTimer = new Timer();
-
+		queueTimer = new Timer("spark queue timer");
 		queueTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
