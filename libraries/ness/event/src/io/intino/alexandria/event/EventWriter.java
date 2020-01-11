@@ -70,7 +70,7 @@ public class EventWriter {
 	}
 
 	private EventStream mergeFileWith(EventStream data) {
-		return new EventStream.Sequence(new EventReader(source), data);
+		return new EventStream.Merge(new EventReader(source), data);
 	}
 
 }
