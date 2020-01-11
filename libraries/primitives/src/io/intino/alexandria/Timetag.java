@@ -11,19 +11,19 @@ import static java.lang.Integer.parseInt;
 
 public class Timetag {
 	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-	private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+	private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd000000");
 	private final String tag;
 
 	public Timetag(LocalDateTime dateTime, Scale scale) {
-		this.tag = dateTimeFormatter.format(dateTime).substring(0, sizeOf(scale));
+		this(dateTimeFormatter.format(dateTime).substring(0, sizeOf(scale)));
 	}
 
 	public Timetag(Instant instant, Scale scale) {
-		this.tag = dateTimeFormatter.format(instant).substring(0, sizeOf(scale));
+		this(toString(instant).substring(0, sizeOf(scale)));
 	}
 
 	public Timetag(LocalDate date, Scale scale) {
-		this.tag = dateFormatter.format(date).substring(0, sizeOf(scale));
+		this(dateFormatter.format(date).substring(0, sizeOf(scale)));
 	}
 
 	public Timetag(String tag) {
@@ -156,8 +156,12 @@ public class Timetag {
 	}
 
 
-	private int sizeOf(Scale scale) {
+	private static int sizeOf(Scale scale) {
 		return scale.ordinal() * 2 + 4;
+	}
+
+	private static String toString(Instant instant) {
+		return instant.toString().replaceAll("[-TZ\\.:]","");
 	}
 
 	@Override
