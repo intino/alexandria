@@ -117,7 +117,7 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
         try {
             notifier.showLoading();
             String location = execute();
-            Timer timer = new Timer();
+            Timer timer = new Timer("Dashboard notifier");
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() { notifier.refresh(new DashboardInfo().location(location).driverDefined(driver != null).adminMode(adminMode));
