@@ -109,7 +109,7 @@ public class EventSorter {
 	}
 
 	private boolean isTS(String line) {
-		return line.startsWith("ts");
+		return line.startsWith("ts:");
 	}
 
 	private boolean isMainHeader(String line) {
