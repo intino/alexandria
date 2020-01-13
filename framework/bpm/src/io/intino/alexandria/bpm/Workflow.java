@@ -251,8 +251,10 @@ public abstract class Workflow {
 	}
 
 	private void sendMessage(ProcessStatus status) {
-		processes.get(status.processId()).register(status);
-		send(status);
+		new Thread(() -> {
+			processes.get(status.processId()).register(status);
+			send(status);
+		}).start();
 	}
 
 	public void receive(ProcessStatus processStatus) {
