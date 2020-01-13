@@ -1,17 +1,29 @@
 package io.intino.alexandria;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
+import java.util.List;
 
 import static java.lang.Integer.parseInt;
 
 public class Timetag {
-	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+	private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd000000");
 	private final String tag;
 
-	public Timetag(LocalDateTime datetime, Scale scale) {
-		this.tag = formatter.format(datetime).substring(0, sizeOf(scale));
+	public Timetag(LocalDateTime dateTime, Scale scale) {
+		this(dateTimeFormatter.format(dateTime).substring(0, sizeOf(scale)));
+	}
+
+	public Timetag(Instant instant, Scale scale) {
+		this(toString(instant).substring(0, sizeOf(scale)));
+	}
+
+	public Timetag(LocalDate date, Scale scale) {
+		this(dateFormatter.format(date).substring(0, sizeOf(scale)));
 	}
 
 	public Timetag(String tag) {
@@ -26,8 +38,52 @@ public class Timetag {
 		return new Timetag(datetime, scale);
 	}
 
+	public static Timetag of(LocalDate date, Scale scale) {
+		return new Timetag(date, scale);
+	}
+
+	public static Timetag of(Instant instant, Scale scale) {
+		return new Timetag(instant, scale);
+	}
+
+	public int year() {
+		return parseInt(tag.substring(0, 4));
+	}
+
+	public int month() {
+		return hasMonth() ? parseInt((tag).substring(4, 6)) : 1;
+	}
+
+	public int day() {
+		return hasDay() ? parseInt((tag).substring(6, 8)) : 1;
+	}
+
+	public int hour() {
+		return hasHour() ? parseInt((tag).substring(8, 10)) : 0;
+	}
+
+	public int minute() {
+		return hasMinute() ? parseInt((tag).substring(10, 12)) : 0;
+	}
+
+	public boolean hasMonth() {
+		return precision() > 0;
+	}
+
+	public boolean hasDay() {
+		return precision() > 1;
+	}
+
+	public boolean hasHour() {
+		return precision() > 2;
+	}
+
+	public boolean hasMinute() {
+		return precision() > 3;
+	}
+
 	public LocalDateTime datetime() {
-		return new Parser().parse();
+		return LocalDateTime.of(year(), month(), day(), hour(), minute());
 	}
 
 	public Scale scale() {
@@ -50,11 +106,19 @@ public class Timetag {
 	}
 
 	public Timetag next() {
-		return new Timetag(calculate(+1), scale());
+		return next(1);
+	}
+
+	public Timetag next(int count) {
+		return new Timetag(calculate(+count), scale());
 	}
 
 	public Timetag previous() {
-		return new Timetag(calculate(-1), scale());
+		return previous(1);
+	}
+
+	public Timetag previous(int count) {
+		return new Timetag(calculate(-count), scale());
 	}
 
 	public Iterable<Timetag> iterateTo(Timetag to) {
@@ -92,13 +156,24 @@ public class Timetag {
 	}
 
 
-	private int sizeOf(Scale scale) {
+	private static int sizeOf(Scale scale) {
 		return scale.ordinal() * 2 + 4;
+	}
+
+	private static String toString(Instant instant) {
+		return instant.toString().replaceAll("[-TZ\\.:]","");
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		return tag.equals(((Timetag) o).tag);
+		if (o instanceof String) return tag.equals(o);
+		if (o instanceof Timetag) return tag.equals(((Timetag) o).tag);
+		if (o instanceof Instant) return tag.equals(new Timetag((Instant) o, scale()).tag);
+		return false;
+	}
+
+	public boolean isIn(List<Timetag> timetags) {
+		return timetags.stream().anyMatch(t -> t.equals(this));
 	}
 
 	@Override
@@ -109,56 +184,6 @@ public class Timetag {
 	@Override
 	public String toString() {
 		return tag;
-	}
-
-	public class Parser {
-
-		private final int precision;
-
-		public Parser() {
-			this.precision = precision();
-		}
-
-		private LocalDateTime parse() {
-			return LocalDateTime.of(year(), month(), day(), hour(), minute());
-		}
-
-		private int year() {
-			return parseInt(tag.substring(0, 4));
-		}
-
-		private int month() {
-			return hasMonth() ? parseInt((tag).substring(4, 6)) : 1;
-		}
-
-		private int day() {
-			return hasDay() ? parseInt((tag).substring(6, 8)) : 1;
-		}
-
-		private int hour() {
-			return hasHour() ? parseInt((tag).substring(8, 10)) : 0;
-		}
-
-		private int minute() {
-			return hasMinute() ? parseInt((tag).substring(10, 12)) : 0;
-		}
-
-		private boolean hasMonth() {
-			return precision > 0;
-		}
-
-		private boolean hasDay() {
-			return precision > 1;
-		}
-
-		private boolean hasHour() {
-			return precision > 2;
-		}
-
-		private boolean hasMinute() {
-			return precision > 3;
-		}
-
 	}
 
 }

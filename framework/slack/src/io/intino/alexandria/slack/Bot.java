@@ -1,9 +1,9 @@
 package io.intino.alexandria.slack;
 
-import com.ullink.slack.simpleslackapi.*;
-import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
-import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import io.intino.alexandria.logger.Logger;
+import io.intino.slackapi.*;
+import io.intino.slackapi.events.SlackMessagePosted;
+import io.intino.slackapi.impl.SlackSessionFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -14,7 +14,7 @@ import java.io.*;
 import java.net.Proxy;
 import java.util.*;
 
-import static com.ullink.slack.simpleslackapi.impl.SlackSessionFactory.getSlackSessionBuilder;
+import static io.intino.slackapi.impl.SlackSessionFactory.getSlackSessionBuilder;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 
@@ -53,13 +53,24 @@ public abstract class Bot {
 
 	public void execute() throws IOException {
 		SlackSessionFactory.SlackSessionFactoryBuilder builder = getSlackSessionBuilder(token).withAutoreconnectOnDisconnection(true).withConnectionHeartbeat(0, null);
-		if(System.getProperty("http.proxyHost") != null)
+		if (System.getProperty("http.proxyHost") != null)
 			builder.withProxy(Proxy.Type.HTTP, System.getProperty("http.proxyHost"), Integer.parseInt(System.getProperty("http.proxyPort")));
-		if(System.getProperty("https.proxyHost") != null)
+		if (System.getProperty("https.proxyHost") != null)
 			builder.withProxy(Proxy.Type.HTTP, System.getProperty("https.proxyHost"), Integer.parseInt(System.getProperty("https.proxyPort")));
 		session = builder.build();
 		session.addMessagePostedListener(this::talk);
 		session.connect();
+		session.addSlackDisconnectedListener((event, session) -> {
+			Logger.info(event.getEventType().name());
+			if (!session.isConnected()) {
+				try {
+					session.connect();
+					Logger.info("Reconnected");
+				} catch (IOException e) {
+					Logger.error(e);
+				}
+			}
+		});
 		initContexts();
 	}
 
@@ -89,7 +100,8 @@ public abstract class Bot {
 			Object response = talk(userName, messageContent, createMessageProperties(message));
 			if (response == null || (response instanceof String && response.toString().isEmpty())) return;
 			if (response instanceof String) session.sendMessage(message.getChannel(), response.toString());
-			else if (response instanceof SlackAttachment) session.sendMessage(message.getChannel(), "", (SlackAttachment) response);
+			else if (response instanceof SlackAttachment)
+				session.sendMessage(message.getChannel(), "", (SlackAttachment) response);
 		} catch (Throwable e) {
 			Logger.error(e);
 			session.sendMessage(message.getChannel(), "Command Error. Try `help` to see the options");

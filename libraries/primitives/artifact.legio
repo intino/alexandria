@@ -3,6 +3,9 @@ dsl Legio
 Artifact("io.intino.alexandria", "1.0.4") primitives
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.releases)
+	Imports
+		Test("junit", "junit", "4.12")
+		Test("org.assertj", "assertj-core", "3.8.0")
 
 Repository("intino-maven") intino
 	Release("https://artifactory.intino.io/artifactory/release-libraries") releases

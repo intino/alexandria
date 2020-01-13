@@ -13,7 +13,7 @@ public class DelayerUtil {
 
 	public static void execute(Display display, Consumer<Void> callback, int delay) {
 		if (timers.containsKey(display)) timers.get(display).cancel();
-		timers.put(display, new Timer());
+		timers.put(display, new Timer("delayer util timer"));
 		timers.get(display).schedule(new TimerTask() {
 			@Override
 			public void run() {

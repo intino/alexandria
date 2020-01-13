@@ -107,7 +107,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 	selection = (options) => {
 		const multiple = this.props.multipleSelection;
 		const selectedOptions = this.state.selection.map(s => this.option(options, s));
-		return multiple ? selectedOptions : (selectedOptions.length > 0 ? selectedOptions[0] : undefined);
+		return multiple ? selectedOptions : (selectedOptions.length > 0 ? selectedOptions[0] : "");
 	};
 
 	option = (options, key) => {

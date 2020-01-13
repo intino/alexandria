@@ -63,16 +63,24 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 	protected boolean isLogged() {
 		if (!isFederated()) return true;
 
-		AuthService authService = authService();
-
 		String authId = manager.fromQuery("authId", String.class);
 		Authentication authentication = authenticationOf(authId).orElse(null);
-		return authentication != null && authService.valid(authentication.accessToken());
+		if (authentication == null) return false;
+
+		return isLogged(authentication.accessToken());
 	}
 
 	protected boolean isLogged(Token accessToken) {
-		if (!isFederated()) return true;
-		return authService().valid(accessToken);
+		try {
+			if (!isFederated()) return true;
+			AuthService authService = authService();
+			if (!authService.valid(accessToken)) return false;
+			authenticate(manager.currentSession(), accessToken);
+			return true;
+		} catch (CouldNotObtainInfo e) {
+			Logger.error(e);
+			return false;
+		}
 	}
 
 	protected synchronized void authenticate() {

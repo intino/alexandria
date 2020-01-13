@@ -44,16 +44,17 @@ export const BaseGroupingStyles = theme => ({
 export default class BaseGrouping extends AbstractBaseGrouping {
     static DefaultPageSize = 5;
 
-    state = {
-        groups : [],
-        visibleGroups : [],
-        selection: [],
-        pageSize: BaseGrouping.DefaultPageSize,
-        condition: null
-    };
-
     constructor(props) {
         super(props);
+        this.state = {
+            ...this.state,
+            groups : [],
+            visibleGroups : [],
+            selection: [],
+            pageSize: BaseGrouping.DefaultPageSize,
+            condition: null,
+            visible: this.props.visible != null ? this.props.visible : true,
+        };
     };
 
     renderToolbar = () => {

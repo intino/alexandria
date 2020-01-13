@@ -77,7 +77,7 @@ const PushService = (function () {
     service.send = function(message, app) {
         if (app == null) app = "Default";
         const socket = this.connections[app];
-        if (socket != null && socket.ready) socket.send(JSON.stringify(message));
+        if (socket != null && socket.ready) socket.send(encodeURIComponent(JSON.stringify(message)));
         else service.pendingMessages.push({ message: message, app: app });
     };
 

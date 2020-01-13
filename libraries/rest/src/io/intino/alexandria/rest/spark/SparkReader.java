@@ -3,7 +3,7 @@ package io.intino.alexandria.rest.spark;
 import java.io.InputStream;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
 @SuppressWarnings("unchecked")
@@ -34,6 +34,6 @@ public class SparkReader {
 	}
 
 	private static byte[] readBytes(String object) {
-		return object.getBytes(Charset.forName("UTF-8"));
+		return object.getBytes(StandardCharsets.UTF_8);
 	}
 }

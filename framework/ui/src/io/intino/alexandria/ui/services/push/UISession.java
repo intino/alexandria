@@ -76,4 +76,5 @@ public class UISession extends SparkSession<UIClient> {
     public Token token() {
         return this.token;
     }
+
 }

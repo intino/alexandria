@@ -47,7 +47,7 @@ public class JmsEventHub implements EventHub {
 		if (brokerUrl != null && !brokerUrl.isEmpty()) {
 			Thread thread = Thread.currentThread();
 			new Thread(() -> {
-				connection = BusConnector.createConnection(brokerUrl, user, password, connectionListener());
+				initConnection(brokerUrl, user, password, clientId);
 				thread.interrupt();
 			}).start();
 			try {
@@ -56,17 +56,25 @@ public class JmsEventHub implements EventHub {
 				} catch (InterruptedException e) {
 				}
 				if (connection != null && ((ActiveMQConnection) connection).isStarted()) {
-					if (clientId != null && !clientId.isEmpty()) connection.setClientID(clientId);
-					connection.start();
 					session = createSession(transactedSession);
 					Logger.info("Connection with Data Hub stablished!");
-				} else Logger.error("Connection with Data Hub couldn't be stablished");
+				}
 			} catch (JMSException e) {
 				Logger.error(e);
 			}
 		} else Logger.warn("Broker url is null");
 		scheduler = Executors.newScheduledThreadPool(1);
 		scheduler.scheduleAtFixedRate(this::recoverEvents, 0, 1, TimeUnit.HOURS);
+	}
+
+	private void initConnection(String brokerUrl, String user, String password, String clientId) {
+		try {
+			connection = BusConnector.createConnection(brokerUrl, user, password, connectionListener());
+			if (clientId != null && !clientId.isEmpty()) connection.setClientID(clientId);
+			connection.start();
+		} catch (JMSException e) {
+			Logger.error(e);
+		}
 	}
 
 	@Override
@@ -76,7 +84,6 @@ public class JmsEventHub implements EventHub {
 			if (connected.get() && !eventOutBox.isEmpty() && !recoveringEvents.get()) recoverEvents();
 			if (!doSendEvent(channel, event)) eventOutBox.push(channel, event);
 		}).start();
-
 	}
 
 	public void requestResponse(String channel, String event, Consumer<String> onResponse) {
@@ -228,7 +235,7 @@ public class JmsEventHub implements EventHub {
 
 			@Override
 			public void transportResumed() {
-				Logger.info("Connection with Data Hub resumed!");
+				Logger.info("Connection with Data Hub stablished!");
 				connected.set(true);
 				if (!eventConsumers.isEmpty() && consumers.isEmpty()) try {
 					session = createSession(false);
