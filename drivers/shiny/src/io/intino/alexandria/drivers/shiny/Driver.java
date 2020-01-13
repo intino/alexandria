@@ -4,7 +4,6 @@ import io.intino.alexandria.drivers.Program;
 import io.intino.alexandria.drivers.shiny.functions.CleanQueryParam;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.proxy.ProxyAdapter;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -64,13 +63,11 @@ public class Driver implements io.intino.alexandria.drivers.Driver<URL, io.intin
 
 	@Override
 	public void unPublish(String program) {
-		try {
-			File file = shinyProgramDirectory(program);
-			if (!file.exists()) return;
-			FileUtils.deleteDirectory(file);
-		} catch (IOException e) {
-			Logger.error(e);
-		}
+		File uiFile = new File(shinyProgramDirectory(program) + "/ui.R");
+		if (uiFile.exists()) uiFile.delete();
+
+		File serverFile = new File(shinyProgramDirectory(program) + "/server.R");
+		if (serverFile.exists()) serverFile.delete();
 	}
 
 	@Override

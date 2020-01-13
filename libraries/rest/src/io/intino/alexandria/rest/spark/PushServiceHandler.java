@@ -36,7 +36,7 @@ public class PushServiceHandler {
 
 	@OnWebSocketError
 	public void onError(Throwable error) {
-		Logger.error(error);
+		Logger.debug(error.getMessage());
 	}
 
 	@OnWebSocketClose
@@ -88,7 +88,7 @@ public class PushServiceHandler {
 
 	private void doCloseDelayed(Session session, String sessionId) {
 		SparkClient client = client(session);
-		Timer timer = new Timer();
+		Timer timer = new Timer("Push service delayed close");
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
@@ -99,7 +99,7 @@ public class PushServiceHandler {
 	}
 
 	private void doClose(String sessionId, SparkClient client) {
-		if (client == null) pushService.onClose(client);
+		if (client != null) pushService.onClose(client);
 		clientsMap.remove(sessionId);
 		if (!closeTimersMap.containsKey(sessionId)) return;
 		closeTimersMap.get(sessionId).cancel();

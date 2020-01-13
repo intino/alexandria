@@ -10,8 +10,10 @@ import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
 import io.intino.alexandria.ui.displays.notifiers.BaseSliderNotifier;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static java.util.stream.Collectors.toList;
 
@@ -209,7 +211,7 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		}
 
 		nextValue();
-		this.playerStepTimer = new Timer();
+		this.playerStepTimer = new Timer("playerStepTimer");
 		this.playerStepTimer.schedule(new TimerTask() {
 			@Override
 			public void run() {

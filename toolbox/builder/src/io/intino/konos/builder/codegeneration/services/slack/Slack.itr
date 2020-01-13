@@ -4,7 +4,7 @@ def type(slack & gen)
 	import $package+ValidPackage.slack.*;
 
 	import io.intino.alexandria.slack.Bot;
-	import com.ullink.slack.simpleslackapi.SlackAttachment;
+	import io.intino.slackapi.SlackAttachment;
 	import java.io.IOException;
 	import java.util.Arrays;
 

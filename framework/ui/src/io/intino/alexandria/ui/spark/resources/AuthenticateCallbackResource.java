@@ -30,7 +30,9 @@ public class AuthenticateCallbackResource extends Resource {
         try {
             verifyAccessToken();
             listenForLogOut(action);
-            action.whenLoggedIn(userOf(userInfo()));
+
+            UserInfo info = userInfo();
+            if (info != null) action.whenLoggedIn(userOf(info));
 
             manager.redirect(manager.baseUrl() + manager.userHomePath());
         } catch (CouldNotObtainAccessToken error) {
@@ -51,7 +53,9 @@ public class AuthenticateCallbackResource extends Resource {
 
     private void listenForLogOut(AuthenticateCallbackAction action) {
         try {
-            authService().addPushListener(accessToken(), pushListener(action));
+            Token accessToken = accessToken();
+            if (accessToken == null) return;
+            authService().addPushListener(accessToken, pushListener(action));
         } catch (CouldNotObtainInfo error) {
             error.printStackTrace();
         }
@@ -59,7 +63,8 @@ public class AuthenticateCallbackResource extends Resource {
 
     @Override
     protected Token accessToken() {
-        return authentication().orElse(null).accessToken();
+        Authentication authentication = authentication().orElse(null);
+        return authentication != null ? authentication.accessToken() : null;
     }
 
     private AuthService.FederationNotificationListener pushListener(AuthenticateCallbackAction action) {
@@ -77,7 +82,8 @@ public class AuthenticateCallbackResource extends Resource {
 
     private UserInfo userInfo() {
         try {
-            return authService().me(accessToken());
+            Token accessToken = accessToken();
+            return accessToken != null ? authService().me(accessToken) : null;
         } catch (CouldNotObtainInfo error) {
             error.printStackTrace();
             throw new RuntimeException(error);

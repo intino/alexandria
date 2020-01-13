@@ -56,7 +56,7 @@ public abstract class Soul implements DisplayRepository {
     }
 
     public <T extends Display> List<T> displays(Class<T> clazz) {
-        return displays.values().stream().filter(c -> clazz.isAssignableFrom(c.getClass())).map(clazz::cast).collect(toList());
+        return new ArrayList<>(displays.values()).stream().filter(c -> clazz.isAssignableFrom(c.getClass())).map(clazz::cast).collect(toList());
     }
 
     public <T extends Display> T display(Class<T> clazz) {

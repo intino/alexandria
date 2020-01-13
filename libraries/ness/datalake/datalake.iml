@@ -15,12 +15,12 @@
     <orderEntry type="module" module-name="message" />
     <orderEntry type="module" module-name="mapp" />
     <orderEntry type="module" module-name="tris" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:message:1.0.0" level="project" />
     <orderEntry type="module" module-name="zet" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.4" level="project" />
     <orderEntry type="module" module-name="event" />
     <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13-rc-2" level="project" />
     <orderEntry type="module" module-name="logger" />
     <orderEntry type="module" module-name="zim" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
   </component>
 </module>

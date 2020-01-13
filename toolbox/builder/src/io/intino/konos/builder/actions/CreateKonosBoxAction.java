@@ -185,8 +185,10 @@ public class CreateKonosBoxAction extends KonosAction {
 	private VirtualFile createDirectory(Module module, String name) {
 		final Application a = ApplicationManager.getApplication();
 		if (!a.isWriteAccessAllowed()) {
-			a.invokeAndWait(()-> a.runWriteAction((Computable<VirtualFile>) () -> create(module, name)));
-			return getGenRoot(module);
+			a.invokeAndWait(() -> a.runWriteAction((Computable<VirtualFile>) () -> create(module, name)));
+			if (name.equalsIgnoreCase("gen")) return getGenRoot(module);
+			if (name.equalsIgnoreCase("res")) return getResRoot(module);
+			return null;
 		}
 		return create(module, name);
 	}

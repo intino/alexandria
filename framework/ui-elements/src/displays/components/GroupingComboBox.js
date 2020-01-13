@@ -26,9 +26,14 @@ class GroupingComboBox extends AbstractGroupingComboBox {
         super(props);
         this.notifier = new GroupingComboBoxNotifier(this);
         this.requester = new GroupingComboBoxRequester(this);
+        this.state = {
+            ...this.state,
+        }
     };
 
     render() {
+        if (!this.state.visible) return (<React.Fragment/>);
+
         const { classes } = this.props;
         const selectedOptions = this.state.selection.map(s => this._groupOf(s));
         return (
