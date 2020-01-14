@@ -18,6 +18,7 @@ class EventOutBox {
 		this.directory = directory.getAbsoluteFile();
 		this.files = new ArrayList<>();
 		if (!directory.exists()) directory.mkdirs();
+		else reloadOutBox();
 	}
 
 	void push(String channel, Event event) {
