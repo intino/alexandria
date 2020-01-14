@@ -69,7 +69,7 @@ class EventOutBox {
 
 	private List<File> reloadOutBox() {
 		if (files.isEmpty()) {
-			files = new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(".json"))));
+			files = new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(".json")))));
 			Collections.sort(files);
 		}
 		return this.files;
