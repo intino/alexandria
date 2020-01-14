@@ -14,6 +14,7 @@ import java.time.ZoneOffset;
 import java.util.*;
 
 class EventOutBox {
+	private static final String INL = ".inl";
 	private final File directory;
 	private List<File> files;
 
@@ -26,14 +27,14 @@ class EventOutBox {
 
 	void push(String channel, Event event) {
 		try {
-			Files.write(new File(directory, channel + "#" + timetag(event) + "#" + UUID.randomUUID().toString() + ".inl").toPath(), event.toString().getBytes());
+			Files.write(new File(directory, channel + "#" + timetag(event) + "#" + UUID.randomUUID().toString() + INL).toPath(), event.toString().getBytes());
 		} catch (IOException e) {
 			Logger.error(e);
 		}
 	}
 
 	Map.Entry<String, Event> get() {
-		List<File> files = Arrays.asList(Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(".inl"))));
+		List<File> files = Arrays.asList(Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(INL))));
 		files.sort(Comparator.comparingLong(File::lastModified));
 		if (files.isEmpty()) return null;
 		try {
@@ -69,7 +70,7 @@ class EventOutBox {
 
 	private List<File> reloadOutBox() {
 		if (files.isEmpty()) {
-			files = new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(".json")))));
+			files = new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(INL)))));
 			Collections.sort(files);
 		}
 		return this.files;
