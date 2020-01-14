@@ -1,6 +1,5 @@
 package io.intino.alexandria.event;
 
-import com.google.gson.Gson;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.logger.Logger;
@@ -34,15 +33,13 @@ class EventOutBox {
 	}
 
 	Map.Entry<String, Event> get() {
-		List<File> files = Arrays.asList(Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(INL))));
 		files.sort(Comparator.comparingLong(File::lastModified));
 		if (files.isEmpty()) return null;
 		try {
 			File file = files.get(0);
-			String json = Files.readString(file.toPath());
-			if (json.isEmpty() || json.isBlank()) return null;
-			SavedEvent savedEvent = new Gson().fromJson(json, SavedEvent.class);
-			return new AbstractMap.SimpleEntry<>(tank(file), new Event(new MessageReader(savedEvent.message).next()));
+			String inl = Files.readString(file.toPath());
+			if (inl.isEmpty() || inl.isBlank()) return null;
+			return new AbstractMap.SimpleEntry<>(tank(file), new Event(new MessageReader(inl).next()));
 		} catch (IOException e) {
 			Logger.error(e);
 			return null;
@@ -65,25 +62,15 @@ class EventOutBox {
 	}
 
 	boolean isEmpty() {
-		return files.isEmpty() || reloadOutBox().isEmpty();
+		return reloadOutBox().isEmpty();
 	}
 
 	private List<File> reloadOutBox() {
 		if (files.isEmpty()) {
 			files = new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(INL)))));
-			Collections.sort(files);
+			files.sort(Comparator.comparingLong(File::lastModified));
 		}
 		return this.files;
-	}
-
-	private static class SavedEvent {
-		String channel;
-		String message;
-
-		SavedEvent(String channel, String message) {
-			this.channel = channel;
-			this.message = message;
-		}
 	}
 
 }
