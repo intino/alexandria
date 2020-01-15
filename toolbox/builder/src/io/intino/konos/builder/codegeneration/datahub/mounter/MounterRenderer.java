@@ -30,14 +30,16 @@ public class MounterRenderer {
 	}
 
 	public void execute() {
+		Settings.DataHubManifest manifest = settings.dataHubManifest();
 		for (Mounter mounter : mounters) {
 			final String mounterName = mounter.name$();
 			final FrameBuilder builder = baseFrame(mounter);
-			if (mounter.isPopulation()) populationMounter(mounter, mounterName, builder);
+			if (mounter.isPopulation())
+				populationMounter(mounter, mounterName, builder);
 			else if (mounter.isBatch() && !alreadyRendered(sourceMounters, mounterName))
 				batchMounter(mounter.asBatch(), mounterName, builder);
-			else if (!alreadyRendered(sourceMounters, mounterName))
-				mounter(mounter, mounterName, builder);
+			else if (manifest != null && mounter.isRealTime() && !alreadyRendered(sourceMounters, mounterName))
+				realtimeMounter(mounter, mounterName, manifest, builder);
 		}
 	}
 
@@ -49,7 +51,8 @@ public class MounterRenderer {
 				add("name", mounter.name$());
 	}
 
-	private void mounter(Mounter mounter, String mounterName, FrameBuilder builder) {
+	private void realtimeMounter(Mounter mounter, String mounterName, Settings.DataHubManifest manifest, FrameBuilder builder) {
+		builder.add("type", manifest.tankClasses.get(mounter.asRealTime().tank())).add("realtime");
 		settings.classes().put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "mounters." + mounterName);
 		writeFrame(sourceMounters, mounterName, customize(new MounterTemplate()).render(builder.toFrame()));
 	}
