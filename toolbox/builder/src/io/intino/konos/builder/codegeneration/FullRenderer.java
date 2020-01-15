@@ -11,6 +11,7 @@ import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.builder.codegeneration.datahub.DatalakeRenderer;
 import io.intino.konos.builder.codegeneration.datahub.adapter.AdapterRenderer;
 import io.intino.konos.builder.codegeneration.datahub.messagehub.MessageHubRenderer;
+import io.intino.konos.builder.codegeneration.datahub.mounter.MounterFactoryRenderer;
 import io.intino.konos.builder.codegeneration.datahub.mounter.MounterRenderer;
 import io.intino.konos.builder.codegeneration.datahub.subscriber.SubscriberRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
@@ -120,6 +121,7 @@ public class FullRenderer {
 	}
 
 	private void mounters() {
+		new MounterFactoryRenderer(settings, graph).execute();
 		new MounterRenderer(settings, graph).execute();
 	}
 

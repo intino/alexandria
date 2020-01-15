@@ -1,0 +1,37 @@
+def type(factory)
+	package $package.mounters;
+    ​
+    import io.intino.alexandria.event.Event;
+    import $package+validPackage.$box+firstUpperCase~Box;
+    ​
+    import java.util.HashMap;
+    import java.util.Map;
+    import java.util.stream.Stream;
+    ​
+    public class MounterFactory {
+    	private Map<String, Mounter> mounters = new HashMap<>();
+    ​
+    	public MounterFactory(FacturacionBox box) {
+    		$mounter+put...[$NL]
+    	}
+    ​
+    	public Mounter mounterOf(Class clazz) {
+    		return mounters.get(clazz.getCanonicalName());
+    	}
+    ​
+    	public <E extends Event> Mounter mounterOf(E event) {
+    		return mounterOf(event.getClass());
+    	}
+    ​
+    	public <E extends Event> void handle(E... events) {
+    		Stream.of(events).forEach(event -> {
+    			Mounter mounter = mounterOf(event);
+    			if (mounter != null) mounter.handle(event);
+    		});
+    	}
+    }
+end
+
+def trigger(put)
+	mounters.put($name+FirstUpperCase.class.getCanonicalName(), new $name+FirstUpperCase(box));
+end
