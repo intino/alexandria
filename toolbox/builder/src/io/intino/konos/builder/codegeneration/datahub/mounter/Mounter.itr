@@ -57,7 +57,6 @@ def type(mounter & batch)
 		public $name+FirstUpperCase($box+validName+firstUpperCase~Box box) {
 			this.box = box;
 			$tank+constructor...[$NL]
-
 		}
 
     	public void execute() {
@@ -81,14 +80,14 @@ def type(mounter)
 	import io.intino.alexandria.logger.Logger;
 	import io.intino.alexandria.event.Event;
 
-	public class $name+FirstUpperCase {
+	public class $name+FirstUpperCase implements Mounter<$type> {
 		private $box+validName+firstUpperCase~Box box;
 
 		public $name+FirstUpperCase($box+validName+firstUpperCase~Box box) {
 			this.box = box;
 		}
 
-		public void handle(Event event) {
+		public void handle($type event) {
 
 		}
 	}

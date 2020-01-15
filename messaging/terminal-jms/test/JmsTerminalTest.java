@@ -5,8 +5,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.util.Objects;
+import java.time.Instant;
 
 public class JmsTerminalTest {
 
@@ -21,19 +20,19 @@ public class JmsTerminalTest {
 	}
 
 	@Test
-	@Ignore
+//	@Ignore
 	public void testPutAndHandle() throws InterruptedException {
 		JmsEventHub eventHub = new JmsEventHub("failover:(tcp://localhost:63000)", "comercial.cuentamaestra", "comercial.cuentamaestra", "cobranza", new File("outBox"));
-		new Thread(() -> eventHub.attachListener("lalala", m -> System.out.println(m.toString()))).start();
+//		new Thread(() -> eventHub.attachListener("lalala", m -> System.out.println(m.toString()))).start();
 		while (true) {
-			eventHub.sendEvent("lalala", new TestEvent("tt").field1("v1"));
+			eventHub.sendEvent("comercial.cuentamaestra.GestionCobro", new TestEvent("GestionCobro").field1("v1").ts(Instant.now()));
 			Thread.sleep(10000);
 		}
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		for (File outBox : Objects.requireNonNull(new File("outBox").listFiles())) Files.delete(outBox.toPath());
+//		for (File outBox : Objects.requireNonNull(new File("outBox").listFiles())) Files.delete(outBox.toPath());
 	}
 
 	public static class TestEvent extends Event {
