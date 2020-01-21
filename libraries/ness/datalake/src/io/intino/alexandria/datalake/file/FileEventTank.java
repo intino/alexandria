@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import static io.intino.alexandria.datalake.file.FileEventStore.EventExtension;
+
 public class FileEventTank implements Datalake.EventStore.Tank {
 	private final File root;
 
@@ -31,7 +33,7 @@ public class FileEventTank implements Datalake.EventStore.Tank {
 
 	@Override
 	public Stream<Tub> tubs() {
-		return FS.filesIn(root, pathname -> pathname.getName().endsWith(FileEventStore.EventExtension)).map(FileEventTub::new);
+		return FS.filesIn(root, pathname -> pathname.getName().endsWith(EventExtension)).map(FileEventTub::new);
 	}
 
 	@Override
@@ -46,7 +48,7 @@ public class FileEventTank implements Datalake.EventStore.Tank {
 
 	@Override
 	public Tub on(Timetag tag) {
-		return new FileEventTub(new File(root, tag.value()));
+		return new FileEventTub(new File(root, tag.value() + EventExtension));
 	}
 
 	@Override

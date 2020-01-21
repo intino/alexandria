@@ -5,9 +5,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.*;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -29,6 +27,16 @@ public class Zip {
 		zipOutputStream.close();
 		return this;
 	}
+
+	public List<String> entries() throws IOException {
+		ZipFile zipFile = new ZipFile(file);
+		Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
+		List<String> entries = new ArrayList<>();
+		while (zipEntries.hasMoreElements()) entries.add(zipEntries.nextElement().getName());
+		zipFile.close();
+		return entries;
+	}
+
 
 	public boolean exists(String filePath) throws IOException {
 		ZipFile zipFile = new ZipFile(file);
