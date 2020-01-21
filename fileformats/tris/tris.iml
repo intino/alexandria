@@ -14,5 +14,7 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
     <orderEntry type="module" module-name="logger" />
     <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13-rc-2" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13" level="project" />
   </component>
 </module>

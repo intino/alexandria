@@ -3,6 +3,7 @@ import AbstractOperation from "../../../gen/displays/components/AbstractOperatio
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, IconButton, Typography } from "@material-ui/core";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import TextField from '@material-ui/core/TextField';
+import Delayer from 'alexandria-ui-elements/src/util/Delayer';
 
 const OperationMui = React.lazy(() => {
 	return new Promise(resolve => {
@@ -11,6 +12,7 @@ const OperationMui = React.lazy(() => {
 });
 
 export default class Operation extends AbstractOperation {
+    static Delay = 200;
 
 	static Styles = theme => ({
 		link : {
@@ -165,8 +167,7 @@ export default class Operation extends AbstractOperation {
 
 	handleClick(e) {
 		if (this._readonly()) return;
-		e.stopPropagation();
-		this.execute();
+	    Delayer.execute(this, () => this.execute(), Operation.Delay);
 	};
 
 	execute = () => {
@@ -183,9 +184,11 @@ export default class Operation extends AbstractOperation {
 		this.requester.execute();
 	};
 
-	handleAffirmAccept = () => {
-		this.setState({ openAffirm : false });
-		this.requester.execute();
+	handleAffirmAccept = (e) => {
+	    Delayer.execute(this, () => {
+            this.setState({ openAffirm : false });
+            this.requester.execute();
+	    }, Operation.Delay);
 	};
 
 	handleAffirmClose = () => {
@@ -208,12 +211,14 @@ export default class Operation extends AbstractOperation {
 	    if (e.key === "Enter") this.handleSignAccept();
 	};
 
-	handleSignAccept = () => {
-	    if (this.requireSignReason() && this.state.signInfo.reason === "") {
-	        this.showError(this.translate("Reason must be filled"));
-	        return;
-	    }
-		this.requester.checkSign(this.state.signInfo);
+	handleSignAccept = (e) => {
+	    Delayer.execute(this, () => {
+            if (this.requireSignReason() && this.state.signInfo.reason === "") {
+                this.showError(this.translate("Reason must be filled"));
+                return;
+            }
+            this.requester.checkSign(this.state.signInfo);
+	    }, Operation.Delay);
 	};
 
 	checkSignResult = (value) => {

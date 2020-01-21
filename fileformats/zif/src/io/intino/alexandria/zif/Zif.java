@@ -11,7 +11,7 @@ import java.util.zip.GZIPOutputStream;
 import static java.util.stream.Collectors.toList;
 
 
-public class Zif {
+public class Zif implements Iterable<Zif.Assertion> {
 	private List<Assertion> assertions;
 
 	public Zif() {
@@ -90,6 +90,11 @@ public class Zif {
 
 	public Search search(Predicate<Assertion> predicate) {
 		return new Search(predicate);
+	}
+
+	@Override
+	public Iterator<Assertion> iterator() {
+		return assertions.iterator();
 	}
 
 	public class Search {

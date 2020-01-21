@@ -76,6 +76,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	protected FrameBuilder addOwner(FrameBuilder builder) {
 		if (owner != null) builder.add("owner", (ElementHelper.isRoot(owner) ? "Abstract" : "") + firstUpperCase(owner.name$()));
+		Component parentComponent = element.core$().ownerAs(Component.class);
+		if (element.i$(Stamp.class) && parentComponent != null && !ElementHelper.isRoot(parentComponent)) builder.add("parentId", shortId(parentComponent));
 		return builder;
 	}
 
@@ -104,8 +106,10 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private FrameBuilder referenceFrame(Component component) {
 		ComponentRenderer renderer = factory.renderer(settings, component, templateProvider, target);
 		FrameBuilder builder = new FrameBuilder("reference").add(typeOf(component)).add("name", component.name$());
+		Component parentComponent = component.core$().ownerAs(Component.class);
 		builder.add("box", boxName());
 		builder.add("id", shortId(component));
+		if (parentComponent != null) builder.add("parentId", nameOf(parentComponent));
 		builder.add("properties", renderer.properties());
 		addOwner(builder);
 		addExtends(component, builder);
