@@ -99,7 +99,7 @@ public class PushServiceHandler {
 	}
 
 	private void doClose(String sessionId, SparkClient client) {
-		if (client == null) pushService.onClose(client);
+		if (client != null) pushService.onClose(client);
 		clientsMap.remove(sessionId);
 		if (!closeTimersMap.containsKey(sessionId)) return;
 		closeTimersMap.get(sessionId).cancel();

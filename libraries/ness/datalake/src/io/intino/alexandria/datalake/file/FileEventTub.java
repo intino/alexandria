@@ -28,4 +28,7 @@ public class FileEventTub implements Datalake.EventStore.Tub {
 		return new EventReader(zim);
 	}
 
+	public File file() {
+		return zim;
+	}
 }

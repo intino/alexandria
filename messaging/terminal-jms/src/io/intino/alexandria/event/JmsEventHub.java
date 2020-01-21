@@ -11,6 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -79,7 +80,7 @@ public class JmsEventHub implements EventHub {
 
 	@Override
 	public synchronized void sendEvent(String channel, Event event) {
-		eventConsumers.getOrDefault(channel, Collections.emptyList()).forEach(eventConsumer -> eventConsumer.accept(event));
+		new ArrayList<>(eventConsumers.getOrDefault(channel, Collections.emptyList())).forEach(eventConsumer -> eventConsumer.accept(event));
 		new Thread(() -> {
 			if (connected.get() && !eventOutBox.isEmpty() && !recoveringEvents.get()) recoverEvents();
 			if (!doSendEvent(channel, event)) eventOutBox.push(channel, event);
@@ -198,7 +199,7 @@ public class JmsEventHub implements EventHub {
 	}
 
 	private void registerConsumer(String channel, Consumer<Event> onEventReceived) {
-		this.eventConsumers.putIfAbsent(channel, new ArrayList<>());
+		this.eventConsumers.putIfAbsent(channel, new CopyOnWriteArrayList<>());
 		this.eventConsumers.get(channel).add(onEventReceived);
 		if (!this.consumers.containsKey(channel) && session != null)
 			this.consumers.put(channel, topicConsumer(channel));

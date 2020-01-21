@@ -270,8 +270,12 @@ public abstract class Workflow {
 		for (Link link : links) {
 			if (!process.predecessorsHaveFinished(link.to())) continue;
 			if (anyPredecessorHasExited(process, link)) invoke(process, process.state(link.to()));
-			else sendMessage(skipMessage(process, process.state(link.to())));
+			else sendSkipMessage(process, link);
 		}
+	}
+
+	private void sendSkipMessage(Process process, Link link) {
+		new Thread(() -> sendMessage(skipMessage(process, process.state(link.to())))).start();
 	}
 
 	private boolean anyPredecessorHasExited(Process process, Link link) {
