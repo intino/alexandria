@@ -6,19 +6,27 @@ Service RestService as REST(port = "9000", host = "")
 			Parameter(in=query) a as Text
 
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
-	Use(className = "org.example.unit1.box.ui.Unit1Elements", url = "http://unit1") unit1
 	Resource(path = "/") home as Page(homeTemplate) Main Confidential
-	Resource(path = "/cobranzas") cobranzas as Page(homeTemplate)
-	Resource(path = "/cobranza/:name") cobranza as Page(homeTemplate)
-	Resource(path = "/cuentas") cuentas as Page(homeTemplate)
-	Resource(path = "/cuenta/:id") cuenta as Page(homeTemplate)
-	Resource(path = "/cuenta/:id/:view") cuentaView as Page(homeTemplate)
-	Resource(path = "/cuenta/a/b/c/:id/:view") cuentaView as Page(homeTemplate)
-	Resource(path = "/ingresos") ingresos as Page(homeTemplate)
-	Resource(path = "/ingreso/:name") ingreso as Page(notLoggedHomeTemplate)
 
 Template homeTemplate
-	Text aaa as Editable(placeholder="Números de aaa") Memo
+	Stamp(template=template1) template1
+	Stamp(template=template2) template2
+
+Template template1
+	Stamp(template=examplePanel) example1
+
+Template template2
+	Stamp(template=examplePanel) example2
+
+Template examplePanel
+	OpenDialog(title="abcde", dialog=dialog1) accept as Button
+
+	Dialog(title = "ejemplo") dialog1
+		Stamp(template=exampleDialog) dialog
+
+Template exampleDialog
+	Task(title="Cambia algo") accept as Button
+	Text(value="Hola mundo!") value
 
 Template root as Accessible(parameters = "a" "b")
 
