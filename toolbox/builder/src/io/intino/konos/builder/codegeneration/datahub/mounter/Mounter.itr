@@ -43,53 +43,36 @@ def type(mounter & population)
 	}
 end
 
-def type(mounter & batch)
-	package $package+validPackage.mounters;
+def type(mounter)
+	package $package+validPackage.$datamart.mounters;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
-	import io.intino.alexandria.event.EventStream;
+	import io.intino.alexandria.event.Event;
 
-    public class $name+FirstUpperCase {
+	import $package+validPackage.Mounter;
 
+	public class $name+FirstUpperCase implements Mounter {
 		private $box+validName+firstUpperCase~Box box;
-		$tank+field...[$NL]
 
 		public $name+FirstUpperCase($box+validName+firstUpperCase~Box box) {
 			this.box = box;
-			$tank+constructor...[$NL]
 		}
 
-    	public void execute() {
-            EventStream.Merge stream = new EventStream.Merge($tank+content...[, ]);
-            while(stream.hasNext()) {
-                process(stream.next());
-            }
-        }
+		$type+method...[$NL$NL]
 
-    	private void process(Message message) {
-
-        }
+		public void handle(Event event) {
+			$type+switch...[$NL$NL]
+		}
 	}
 end
 
+def trigger(switch)
+	if	(event instanceof $this) handle(($this) event);
+end
 
-def type(mounter)
-	package $package+validPackage.mounters;
+def trigger(method)
+	public void handle($this event) {
 
-	import $package+validPackage.$box+firstUpperCase~Box;
-	import io.intino.alexandria.logger.Logger;
-	import io.intino.alexandria.event.Event;
-
-	public class $name+FirstUpperCase implements Mounter<$type> {
-		private $box+validName+firstUpperCase~Box box;
-
-		public $name+FirstUpperCase($box+validName+firstUpperCase~Box box) {
-			this.box = box;
-		}
-
-		public void handle($type event) {
-
-		}
 	}
 end
 

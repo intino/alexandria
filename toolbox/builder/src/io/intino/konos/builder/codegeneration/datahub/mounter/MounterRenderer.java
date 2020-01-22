@@ -4,43 +4,44 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.graph.Datamart;
+import io.intino.konos.model.graph.Datamart.Mounter;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.Mounter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class MounterRenderer {
 	private final Settings settings;
-	private final List<Mounter> mounters;
 	private final File sourceMounters;
+	private final KonosGraph graph;
 	private File genMounters;
 
 	public MounterRenderer(Settings settings, KonosGraph graph) {
 		this.settings = settings;
-		this.mounters = graph.mounterList();
+		this.graph = graph;
 		this.sourceMounters = new File(settings.src(Target.Owner), "mounters");
 		this.genMounters = new File(settings.gen(Target.Owner), "mounters");
 	}
 
 	public void execute() {
 		Settings.DataHubManifest manifest = settings.dataHubManifest();
-		for (Mounter mounter : mounters) {
-			final String mounterName = mounter.name$();
-			final FrameBuilder builder = baseFrame(mounter);
-			if (mounter.isPopulation())
-				populationMounter(mounter, mounterName, builder);
-			else if (mounter.isBatch() && !alreadyRendered(sourceMounters, mounterName))
-				batchMounter(mounter.asBatch(), mounterName, builder);
-			else if (manifest != null && mounter.isRealTime() && !alreadyRendered(sourceMounters, mounterName))
-				realtimeMounter(mounter, mounterName, manifest, builder);
-		}
+		for (Datamart datamart : graph.datamartList())
+			for (Mounter mounter : datamart.mounterList()) {
+				final String mounterName = mounter.name$();
+				final FrameBuilder builder = baseFrame(mounter);
+				if (mounter.isPopulation())
+					populationMounter(mounter, mounterName, builder);
+				else if (manifest != null && !alreadyRendered(sourceMounters, mounterName))
+					eventMounter(mounter, mounterName, manifest, builder);
+			}
 	}
 
 	@NotNull
@@ -51,17 +52,15 @@ public class MounterRenderer {
 				add("name", mounter.name$());
 	}
 
-	private void realtimeMounter(Mounter mounter, String mounterName, Settings.DataHubManifest manifest, FrameBuilder builder) {
-		builder.add("type", manifest.tankClasses.get(mounter.asRealTime().tank())).add("realtime");
-		settings.classes().put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "mounters." + mounterName);
-		writeFrame(sourceMounters, mounterName, customize(new MounterTemplate()).render(builder.toFrame()));
+	private void eventMounter(Mounter mounter, String mounterName, Settings.DataHubManifest manifest, FrameBuilder builder) {
+		String datamart = mounter.core$().ownerAs(Datamart.class).name$();
+		builder.add("event").add("datamart", datamart).add("type", types(mounter, manifest));
+		settings.classes().put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "mounters." + datamart + "." + mounterName);
+		writeFrame(new File(sourceMounters, datamart), mounterName, customize(new MounterTemplate()).render(builder.toFrame()));
 	}
 
-	private void batchMounter(Mounter.Batch mounter, String mounterName, FrameBuilder builder) {
-		builder.add("batch");
-		mounter.sourceList().forEach(source -> builder.add("tank", new FrameBuilder("tank").add("qn", source.tank()).add("name", name(source.tank()))));
-		writeFrame(new File(settings.src(Target.Owner), "mounters"), mounterName, customize(new MounterTemplate()).render(builder));
-		settings.classes().put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "mounters." + mounterName);
+	private String[] types(Mounter mounter, Settings.DataHubManifest manifest) {
+		return mounter.asEvent().requireList().stream().map(r -> manifest.tankClasses.get(r.tank())).filter(Objects::nonNull).toArray(String[]::new);
 	}
 
 	private void populationMounter(Mounter mounter, String mounterName, FrameBuilder builder) {
@@ -89,7 +88,7 @@ public class MounterRenderer {
 		mounter.sourceList().stream().map(this::buildersOf).forEach(frames::addAll);
 		builder.add("population").
 				add("column", frames.toArray(new FrameBuilder[0])).
-				add("datamart", mounter.datamart().name$()).
+				add("datamart", mounter.core$().ownerAs(Datamart.class).name$()).
 				add("format", mounter.format().name());
 	}
 
