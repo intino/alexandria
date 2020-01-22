@@ -4,11 +4,13 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.model.graph.Datamart;
+import io.intino.konos.model.graph.Datamart.Mounter;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.Mounter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +24,7 @@ public class MounterFactoryRenderer {
 
 	public MounterFactoryRenderer(Settings settings, KonosGraph graph) {
 		this.settings = settings;
-		this.mounters = graph.mounterList().stream().filter(Mounter::isRealTime).collect(Collectors.toList());
+		this.mounters = graph.datamartList().stream().map(Datamart::mounterList).flatMap(Collection::stream).collect(Collectors.toList());
 		this.genMounters = new File(settings.gen(Target.Owner), "mounters");
 	}
 

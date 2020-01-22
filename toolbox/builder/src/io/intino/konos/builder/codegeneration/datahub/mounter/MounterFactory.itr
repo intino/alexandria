@@ -5,33 +5,38 @@ def type(factory)
     import $package+validPackage.$box+firstUpperCase~Box;
     ​
     import java.util.HashMap;
+    import java.util.List;
     import java.util.Map;
     import java.util.stream.Stream;
     ​
     public class MounterFactory {
-    	private Map<String, Mounter> mounters = new HashMap<>();
+    	private Map<String, List<Mounter>> mounters = new HashMap<>();
     ​
-    	public MounterFactory(FacturacionBox box) {
-    		$mounter+put...[$NL]
+    	public MounterFactory($box+firstUpperCase~Box box) {
+    		$event+put...[$NL]
     	}
     ​
-    	public Mounter mounterOf(Class clazz) {
+    	public List<Mounter> mountersOf(Class<? extends Event> clazz) {
     		return mounters.get(clazz.getCanonicalName());
     	}
     ​
-    	public <E extends Event> Mounter mounterOf(E event) {
-    		return mounterOf(event.getClass());
+    	public List<Mounter> mountersOf(Event event) {
+    		return mountersOf(event.getClass());
     	}
     ​
-    	public <E extends Event> void handle(E... events) {
+    	public void handle(Event... events) {
     		Stream.of(events).forEach(event -> {
-    			Mounter mounter = mounterOf(event);
-    			if (mounter != null) mounter.handle(event);
+    			List<Mounter> mounters = mountersOf(event);
+    			if (mounters != null) mounters.forEach(m -> m.handle(event));
     		});
     	}
     }
 end
 
 def trigger(put)
-	mounters.put($name+FirstUpperCase.class.getCanonicalName(), new $name+FirstUpperCase(box));
+	mounters.put($name+FirstUpperCase.class.getCanonicalName(), java.util.List.of($mounter...[, ]);
+end
+
+def trigger(mounter)
+	new $package.$name+FirstUpperCase(box)
 end
