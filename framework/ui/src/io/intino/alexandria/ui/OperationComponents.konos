@@ -33,6 +33,8 @@ Component download as Decorated ExtensionOf(operation)
 
 	Request(Asset) execute
 
+// in CatalogComponents exists downloadCollection component also
+
 Component openPage as Decorated ExtensionOf(operation)
 	Notification open as Text
 	Request execute

@@ -20,6 +20,7 @@ import static io.intino.konos.model.graph.BIComponents.*;
 
 public class ComponentRendererFactory {
 
+	@SuppressWarnings("unchecked")
 	public <T extends UIRenderer> T renderer(Settings settings, Component component, TemplateProvider provider, Target target) {
 		if (component.i$(Text.class)) return (T) new TextRenderer(settings, component.a$(Text.class), provider, target);
 		if (component.i$(Date.class)) return (T) new DateRenderer(settings, component.a$(Date.class), provider, target);
@@ -51,6 +52,7 @@ public class ComponentRendererFactory {
 		if (component.i$(CatalogComponents.Collection.Mold.Heading.class)) return (T) new HeadingRenderer(settings, component.a$(CatalogComponents.Collection.Mold.Heading.class), provider, target);
 		if (component.i$(CatalogComponents.Collection.Mold.Item.class)) return (T) new ItemRenderer(settings, component.a$(CatalogComponents.Collection.Mold.Item.class), provider, target);
 		if (component.i$(CatalogComponents.SearchBox.class)) return (T) new SearchBoxRenderer(settings, component.a$(CatalogComponents.SearchBox.class), provider, target);
+		if (component.i$(CatalogComponents.DownloadCollection.class)) return (T) new DownloadCollectionRenderer(settings, component.a$(CatalogComponents.DownloadCollection.class), provider, target);
 
 		if (component.i$(Toolbar.class)) return (T) new ToolbarRenderer(settings, component.a$(Toolbar.class), provider, target);
 		if (component.i$(OpenPage.class)) return (T) new OpenPageRenderer(settings, component.a$(OpenPage.class), provider, target);

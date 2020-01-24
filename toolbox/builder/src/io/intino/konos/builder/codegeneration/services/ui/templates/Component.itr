@@ -309,6 +309,10 @@ def type(binding & searchbox)
 	if ($name != null) $name.bindTo($collection...[,]);
 end
 
+def type(binding & downloadcollection)
+	if ($name != null) $name.bindTo($collection...[,]);
+end
+
 def type(binding & temporalslider)
 	if ($name != null) $name.bindTo($collection...[,]);
 end
