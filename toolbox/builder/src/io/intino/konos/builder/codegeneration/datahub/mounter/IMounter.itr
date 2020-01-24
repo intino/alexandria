@@ -3,7 +3,7 @@ def type(factory)
     ​
     import io.intino.alexandria.event.Event;
     ​
-    public interface Mounter<E extends Event> {
+    public interface Mounter<Event> {
     	void handle(E event);
     }
 end
