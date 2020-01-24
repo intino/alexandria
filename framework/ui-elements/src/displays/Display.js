@@ -129,10 +129,14 @@ export default class Display extends PassiveView {
         return this.state[name] != null ? this.state[name] : this.props[name];
     };
 
-    _context(container) {
-        var result = (this.props.context != null ? this.props.context() + "." : "") + this.props.id;
-        if (container != null) result += "." + container;
-        return result;
+//    _context(container) {
+//        var result = (this.props.context != null ? this.props.context() + "." : "") + this.props.id;
+//        if (container != null) result += "." + container;
+//        return result;
+//    };
+
+    _context() {
+        return (this.props.owner != null ? this.props.owner() + "." : "") + this.props.id;
     };
 
     _owner() {

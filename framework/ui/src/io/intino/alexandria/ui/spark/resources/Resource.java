@@ -78,7 +78,7 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 			authenticate(manager.currentSession(), accessToken);
 			return true;
 		} catch (CouldNotObtainInfo e) {
-			Logger.error(e);
+			Logger.debug(e.getMessage());
 			return false;
 		}
 	}
@@ -222,8 +222,8 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 		try {
 			registerAuthentication(authenticationId, authService().authenticate());
 			return authenticationOf(authenticationId).get();
-		} catch (SpaceAuthCallbackUrlIsNull spaceAuthCallbackUrlIsNull) {
-			spaceAuthCallbackUrlIsNull.printStackTrace();
+		} catch (SpaceAuthCallbackUrlIsNull error) {
+			Logger.debug(error.getMessage());
 			return null;
 		}
 	}
@@ -234,7 +234,7 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 			if (url == null) return null;
 			return RequestHelper.post(url).toString();
 		} catch (CouldNotObtainAuthorizationUrl | CouldNotObtainRequestToken | IOException e) {
-			Logger.error(e);
+			Logger.debug(e.getMessage());
 			return null;
 		}
 	}
