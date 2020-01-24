@@ -46,6 +46,7 @@ Concept CatalogComponents
 		var Collection[] collections
 		Aspect ComboBox
         	var string placeholder = ""
+
 	Concept:Named Sorting extends Component
 		var Collection[] collections
 
@@ -53,6 +54,5 @@ Concept CatalogComponents
 		var Collection[] collections
 		var string placeholder = empty
 
-
-
-
+	Concept:Named DownloadCollection extends Component
+		var Collection[] collections
