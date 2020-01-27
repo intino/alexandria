@@ -32,7 +32,7 @@ def type(box)
 		public AbstractBox(String$[] args) {
 			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
 		}
-		
+
 		public AbstractBox($name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration) {
 			[owner = new $parent~Box(configuration);]
 			this.configuration = configuration;
@@ -113,6 +113,8 @@ def type(box)
 		private void initUI() {
 			$service+ui...[$NL]
 		}
+
+		[$hasUi+translatorServiceInitialization]
 
 		private void initDatalake() {
 			[$datalake+init]
@@ -218,6 +220,7 @@ end
 
 def type(service & ui) trigger(ui)
 	[if ($parameter == null || !io.intino.alexandria.rest.AlexandriaSparkBuilder.isUI()) return;]
+	[this.initTranslatorService()];
 	io.intino.alexandria.ui.UISpark sparkInstance = (io.intino.alexandria.ui.UISpark) io.intino.alexandria.rest.AlexandriaSparkBuilder.instance();
 	io.intino.alexandria.ui.services.push.PushService pushService = new io.intino.alexandria.ui.services.push.PushService();
 	$package+validPackage.ui.displays.RouteDispatcher routeDispatcher = new $package+validPackage.ui.displays.RouteDispatcher();
@@ -401,6 +404,14 @@ end
 
 def trigger(authservice)
 	protected abstract io.intino.alexandria.ui.services.AuthService authService(java.net.URL authServiceUrl);
+end
+
+def trigger(translatorServiceInitialization)
+	private void initTranslatorService() {
+	    translatorService = new io.intino.alexandria.ui.services.TranslatorService();
+	    translatorService.addAll($package+validPackage.I18n.dictionaries());
+	    translatorService.addAll(io.intino.alexandria.I18n.dictionaries());
+	}
 end
 
 def trigger(registerSoul)

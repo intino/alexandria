@@ -69,9 +69,10 @@ public class Download<DN extends DownloadNotifier, B extends Box> extends Abstra
 
     private UIFile executeDownloadCollection() {
         if (formatter == null) {
-            notifyUser("You must implement formatter for downloading collections", UserMessage.Type.Error);
+            notifyUser(translate("You must implement formatter for downloading collections"), UserMessage.Type.Error);
             return defaultFile();
         }
+        notifyUser(translate("Downloading. It might take a few minutes, please, wait..."), UserMessage.Type.Loading);
         return new UIFile() {
             @Override
             public String label() {
@@ -80,7 +81,9 @@ public class Download<DN extends DownloadNotifier, B extends Box> extends Abstra
 
             @Override
             public InputStream content() {
-                return new ByteArrayInputStream(serializeEntries().getBytes());
+                String content = serializeEntries();
+                notifyUser(translate("Downloaded"), UserMessage.Type.Success);
+                return new ByteArrayInputStream(content.getBytes());
             }
         };
     }
