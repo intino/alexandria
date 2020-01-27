@@ -108,6 +108,11 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         behavior.removeSorting(sorting);
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> List<T> items(String... sortings) {
+        return behavior.items(sortings);
+    }
+
     public long itemCount() {
         return behavior.itemCount();
     }
@@ -160,5 +165,4 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         notifier.setup(new CollectionSetup().itemCount(behavior.itemCount()));
         notifyReady();
     }
-
 }

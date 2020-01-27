@@ -2,19 +2,19 @@ dsl Konos
 
 Datalake(path = "{path}") datalake as Local
 
-Datamart("{datamart}") datamart
-Datamart("{datamart}") datamart2
+//Datamart("{datamart}") datamart
+//Datamart("{datamart}") datamart2
 
-Mounter(datamart) inspeccionados as Population(format = Arff)
-	Split("DA" "DB") porDivisiones
+//Mounter(datamart) inspeccionados as Population(format = Arff)
+//	Split("DA" "DB") porDivisiones
+//
+//	Source("revisionInspeccion", type = Long) as Id
+//	Source("revisionInspeccion", type = Timetag)
+//	Source("EsCFE", type = Boolean)  as Constant(value = "sss")
 
-	Source("revisionInspeccion", type = Long) as Id
-	Source("revisionInspeccion", type = Timetag)
-	Source("EsCFE", type = Boolean)  as Constant(value = "sss")
 
-
-Mounter(datamart) criterios as Batch
-	Source("asemed.Criterio")
+//Mounter(datamart) criterios as Batch
+//	Source("asemed.Criterio")
 
 
 Feeder("asemed.Ajuste") ajusteFeeder

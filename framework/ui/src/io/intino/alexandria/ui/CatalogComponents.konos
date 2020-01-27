@@ -46,6 +46,3 @@ Component sorting as Decorated
 Component searchBox as Decorated
 	Notification refreshCount as LongInteger
 	Request search as Text
-
-Component downloadCollection as Decorated ExtensionOf(operation)
-	Request(Asset) execute

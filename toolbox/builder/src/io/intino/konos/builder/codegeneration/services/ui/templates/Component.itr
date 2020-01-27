@@ -309,7 +309,7 @@ def type(binding & searchbox)
 	if ($name != null) $name.bindTo($collection...[,]);
 end
 
-def type(binding & downloadcollection)
+def type(binding & download)
 	if ($name != null) $name.bindTo($collection...[,]);
 end
 

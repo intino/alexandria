@@ -9,6 +9,11 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(homeTemplate) Main Confidential
 
 Template homeTemplate
+	DownloadCollection(collections=table1)
+	Table table1
+		Mold
+			Item(height = 10px) aaa
+
 	Stamp(template=template1) template1
 	Stamp(template=template2) template2
 

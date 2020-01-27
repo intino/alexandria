@@ -96,6 +96,8 @@ Concept OperationComponents
 			var integer:{Days} rangeMax = -1 Days
 		sub Download
 			var string[] options = empty
+			var CatalogComponents.Collection collection = empty
+
 		sub Task
 			Aspect Switches
             	var word:{On Off} state = Off
