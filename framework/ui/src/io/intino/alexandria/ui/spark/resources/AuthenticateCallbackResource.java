@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.spark.resources;
 
 import io.intino.alexandria.exceptions.AlexandriaException;
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
 import io.intino.alexandria.ui.services.AuthService;
 import io.intino.alexandria.ui.services.AuthService.Authentication;
@@ -85,8 +86,8 @@ public class AuthenticateCallbackResource extends Resource {
             Token accessToken = accessToken();
             return accessToken != null ? authService().me(accessToken) : null;
         } catch (CouldNotObtainInfo error) {
-            error.printStackTrace();
-            throw new RuntimeException(error);
+            Logger.debug(error.getMessage());
+            return null;
         }
     }
 

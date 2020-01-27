@@ -1,6 +1,5 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.I18n;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.UserInfo;
 import io.intino.alexandria.ui.Asset;
@@ -48,7 +47,7 @@ public class User<DN extends UserNotifier, B extends Box> extends AbstractUser<B
     }
 
     private UserInfo info(io.intino.alexandria.ui.services.push.User user) {
-        String fullName = user != null ? user.fullName() : I18n.translate("anonymous", language());
+        String fullName = user != null ? user.fullName() : translate("anonymous");
         URL photo = user != null ? user.photo() : null;
         String color = color() != null ? color() : "#2096F3";
         String photoLink = photo != null ? photoLink(photo) : AvatarUtil.generateAvatar(fullName, color);

@@ -226,7 +226,7 @@ public class AbstractBoxRenderer extends Renderer {
 
 	private void ui(FrameBuilder builder) {
 		if (!graph.uiServiceList().isEmpty()) {
-			final FrameBuilder uiFrame = new FrameBuilder();
+			final FrameBuilder uiFrame = new FrameBuilder().add("package", packageName());
 			if (settings.parent() != null) uiFrame.add("parent", settings.parent());
 			builder.add("hasUi", uiFrame);
 			builder.add("uiAuthentication", uiFrame);

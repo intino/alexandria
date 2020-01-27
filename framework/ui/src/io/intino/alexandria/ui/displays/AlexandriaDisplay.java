@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.notifiers.DisplayNotifier;
 import io.intino.alexandria.ui.services.push.UISession;
 import io.intino.alexandria.ui.services.push.User;
@@ -30,6 +31,10 @@ public abstract class AlexandriaDisplay<DN extends DisplayNotifier, B extends Bo
         } catch (MalformedURLException e) {
             return null;
         }
+    }
+
+    public String translate(String word) {
+        return ((AlexandriaUiBox)box()).translatorService().translate(word, language());
     }
 
     public String language() {

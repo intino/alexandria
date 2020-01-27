@@ -1,6 +1,5 @@
 package io.intino.alexandria.ui.displays.templates;
 
-import io.intino.alexandria.I18n;
 import io.intino.alexandria.schemas.Widget;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.EventsDisplay;
@@ -32,8 +31,8 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         showLoading();
         if (item() == null) return;
         Widget widget = item();
-        title.value(I18n.translate(widget.getClass().getSimpleName().replace("Widget", ""), language()));
-        description.value(I18n.translate(widget.description(), language()));
+        title.value(translate(widget.getClass().getSimpleName().replace("Widget", "")));
+        description.value(translate(widget.description()));
         highlightFacets.addAll(widget.facets());
         updateExamplesVisibility();
         updateInfo();
@@ -72,7 +71,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
     private void updateInfo() {
         if (infoAdded) return;
         Widget widget = item();
-        facetsNames.value(widget.facets().size() > 0 ? String.join(", ", widget.facets()) : I18n.translate("no facets", language()));
+        facetsNames.value(widget.facets().size() > 0 ? String.join(", ", widget.facets()) : translate("no facets"));
         refreshProperties();
         refreshMethods();
         refreshEventsDisplay();
