@@ -53,6 +53,3 @@ Concept CatalogComponents
 	Concept:Named SearchBox extends Component
 		var Collection[] collections
 		var string placeholder = empty
-
-	Concept:Named DownloadCollection extends Component
-		var Collection[] collections

@@ -58,6 +58,10 @@ public abstract class CollectionBehavior<DS extends Datasource<Item>, Item, IL e
 		computeUpdate(e -> itemLoader.removeSorting(sorting));
 	}
 
+	public List<Item> items(String... sortings) {
+		return itemLoader.items(sortings);
+	}
+
 	public long itemCount() {
 		return itemLoader.itemCount();
 	}

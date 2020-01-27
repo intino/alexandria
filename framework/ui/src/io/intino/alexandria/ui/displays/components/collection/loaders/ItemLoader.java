@@ -10,8 +10,11 @@ import io.intino.alexandria.ui.model.datasource.temporal.TemporalDatasource;
 import io.intino.alexandria.ui.model.datasource.temporal.TemporalPageDatasource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+
+import static java.util.Collections.emptyList;
 
 public class ItemLoader<DS extends Datasource<Item>, Item> {
 	private long itemCount;
@@ -65,6 +68,19 @@ public class ItemLoader<DS extends Datasource<Item>, Item> {
 
 	public void removeSorting(String sorting) {
 		this.sortings.remove(sorting);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Item> items(String... sortings) {
+		int itemCount = Long.valueOf(itemCount()).intValue();
+		List<String> sortingList = Arrays.asList(sortings);
+		if (source instanceof TemporalDatasource)
+			return timetag != null ? ((TemporalDatasource) source).items(timetag, 0, itemCount, condition, filters, sortingList) : emptyList();
+		else if (source instanceof TemporalPageDatasource)
+			return timetag != null ? ((TemporalPageDatasource) source).items(timetag, 0, itemCount, condition, filters, sortingList) : emptyList();
+		else if (source instanceof MemoryDatasource) return ((MemoryDatasource) source).items(0, itemCount, condition, filters, sortingList);
+		else if (source instanceof PageDatasource) return ((PageDatasource) source).items(0, itemCount, condition, filters, sortingList);
+		return emptyList();
 	}
 
 	public long itemCount() {

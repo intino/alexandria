@@ -6,7 +6,7 @@ Datalake(path = "{datalake_path}") as Local
 MessageHub as JmsBus(url = "{messagehub_url}", user = "{messagehub_user}", password = "{messagehub_password}", clientId = "{messagehub_clientId}")
 	outBoxDirectory = empty
 
-Datamart(path = "{datamart_path}") datamart
+//Datamart(path = "{datamart_path}") datamart
 
 Service CobranzaElements as UI(port = "{port}", title = "Gestión Comercial. Cobranza", favicon = "")
 	Authentication(by="{federation_url}")

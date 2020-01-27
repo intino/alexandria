@@ -18,9 +18,11 @@ Artifact("io.intino.alexandria", "3.0.1") ui-framework
 
 		Test("junit", "junit", "LATEST")
 		Web(groupId = "io.intino.alexandria", artifactId = "ui-framework-elements", version = "3.0.0")
+		Web(groupId = "io.intino.alexandria", artifactId = "ui-framework-elements", version = "3.0.1")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.dist)
+	Parameter(name = "workspace")
 	Parameter(name = "workspace")
 
 Repository("intino-maven") intino
