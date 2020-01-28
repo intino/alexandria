@@ -42,7 +42,7 @@ public class AuthenticateCallbackResource extends Resource {
     }
 
     private void verifyAccessToken() throws CouldNotObtainAccessToken {
-        Optional<Authentication> authentication = authenticationOf(manager.fromQuery("authId", String.class));
+        Optional<Authentication> authentication = authenticationOf(manager.currentSession(), manager.fromQuery("authId", String.class));
 
         if (!authentication.isPresent())
             return;
