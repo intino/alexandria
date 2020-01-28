@@ -64,8 +64,11 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 		if (!isFederated()) return true;
 
 		String authId = manager.fromQuery("authId", String.class);
-		Authentication authentication = authenticationOf(authId).orElse(null);
-		if (authentication == null) return false;
+		Authentication authentication = authenticationOf(manager.currentSession(), authId).orElse(null);
+		if (authentication == null) {
+
+			return false;
+		}
 
 		return isLogged(authentication.accessToken());
 	}
@@ -84,18 +87,18 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 	}
 
 	protected synchronized void authenticate() {
-		String authenticate = authenticate(manager.baseUrl());
+		String authenticate = authenticate(manager.currentSession(), manager.baseUrl());
 		if (authenticate == null) authenticate = manager.baseUrl();
 		manager.redirect(authenticate);
 	}
 
-	protected synchronized String authenticate(String baseUrl) {
+	protected synchronized String authenticate(UISession session, String baseUrl) {
 		String authId = UUID.randomUUID().toString();
 		Space space = space();
 		space.setAuthId(authId);
 		space.setBaseUrl(baseUrl);
-		saveAuthenticationId(authId);
-		Authentication authentication = createAuthentication(authId);
+		saveAuthenticationId(session, authId);
+		Authentication authentication = createAuthentication(session, authId);
 		return authenticate(authentication);
 	}
 
@@ -106,15 +109,15 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 		session.token(accessToken);
 	}
 
-	protected void logout() {
-		Optional<Authentication> authentication = authentication(this.manager.currentSession().id());
+	protected void logout(UISession session) {
+		Optional<Authentication> authentication = authentication(session.id());
 
 		if (!authentication.isPresent())
 			return;
 
 		try {
 			authentication.get().invalidate();
-			removeAuthentication(manager.currentSession().id());
+			removeAuthentication(session.id());
 		} catch (CouldNotInvalidateAccessToken error) {
 			error.printStackTrace();
 		}
@@ -140,7 +143,7 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 	}
 
 	Optional<Authentication> authentication() {
-		return authenticationOf(manager.fromQuery("authId", String.class));
+		return authenticationOf(manager.currentSession(), manager.fromQuery("authId", String.class));
 	}
 
 	Optional<Authentication> authentication(String sessionId) {
@@ -148,8 +151,8 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 		return Optional.ofNullable(authenticationMap.get(authenticationId));
 	}
 
-	Optional<Authentication> authenticationOf(String authenticationId) {
-		return Optional.ofNullable(authenticationMap.get(locateAuthenticationId(authenticationId)));
+	Optional<Authentication> authenticationOf(UISession session, String authenticationId) {
+		return Optional.ofNullable(authenticationMap.get(locateAuthenticationId(session, authenticationId)));
 	}
 
 	void removeAuthentication(String sessionId) {
@@ -204,24 +207,24 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 		authenticationMap.put(authenticationId, authentication);
 	}
 
-	private String locateAuthenticationId(String authenticationId) {
+	private String locateAuthenticationId(UISession session, String authenticationId) {
 
 		if (authenticationId != null && !authenticationId.isEmpty()) {
-			saveAuthenticationId(authenticationId);
+			saveAuthenticationId(session, authenticationId);
 			return authenticationId;
 		}
 
 		return authenticationIdMap.get(manager.currentSession().id());
 	}
 
-	private void saveAuthenticationId(String authenticationId) {
-		authenticationIdMap.put(manager.currentSession().id(), authenticationId);
+	private void saveAuthenticationId(UISession session, String authenticationId) {
+		authenticationIdMap.put(session.id(), authenticationId);
 	}
 
-	private Authentication createAuthentication(String authenticationId) {
+	private Authentication createAuthentication(UISession session, String authenticationId) {
 		try {
 			registerAuthentication(authenticationId, authService().authenticate());
-			return authenticationOf(authenticationId).get();
+			return authenticationOf(session, authenticationId).get();
 		} catch (SpaceAuthCallbackUrlIsNull error) {
 			Logger.debug(error.getMessage());
 			return null;

@@ -38,7 +38,9 @@ public class SparkManager<P extends PushService> {
 	}
 
 	public SparkSession currentSession() {
-		return (SparkSession) pushService.session(request.session().id());
+		String sessionId = request.cookie(sessionCookieName());
+		if (sessionId == null) sessionId = request.session().id();
+		return (SparkSession) pushService.session(sessionId);
 	}
 
 	public void write(Object object) {
@@ -163,15 +165,23 @@ public class SparkManager<P extends PushService> {
 	private void setUpSessionCookiePath() {
 		HttpServletRequest request = this.request.raw();
 		HttpSession session = request.getSession();
+		String sessionCookieName = sessionCookieName();
 
-		if (request.getParameter("JSESSIONID") != null) {
-			Cookie userCookie = new Cookie("JSESSIONID", request.getParameter("JSESSIONID"));
+		if (request.getParameter(sessionCookieName) != null) {
+			Cookie userCookie = new Cookie(sessionCookieName, request.getParameter(sessionCookieName));
 			response.raw().addCookie(userCookie);
-		} else {
+		} else if (this.request.cookie(sessionCookieName) == null) {
 			String sessionId = session.getId();
-			Cookie userCookie = new Cookie("JSESSIONID", sessionId);
+			Cookie userCookie = new Cookie(sessionCookieName, sessionId);
 			response.raw().addCookie(userCookie);
 		}
+	}
+
+	private String sessionCookieName() {
+		String header = request.raw().getHeader(XForwardedPath);
+		String sessionCookieName = header != null ? header.replace("/", "") : "federacion";
+		if (sessionCookieName.isEmpty()) sessionCookieName = "federacion";
+		return sessionCookieName;
 	}
 
 	private String generateBaseUrl() {

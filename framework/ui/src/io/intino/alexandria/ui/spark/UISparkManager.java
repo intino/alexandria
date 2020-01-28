@@ -48,7 +48,7 @@ public class UISparkManager extends SparkManager<PushService> {
 	}
 
 	public UISession currentSession() {
-		return (UISession) pushService.session(request.session().id());
+		return (UISession) super.currentSession();
 	}
 
 	public UISession session(String id) {

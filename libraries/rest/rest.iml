@@ -35,5 +35,7 @@
     <orderEntry type="library" name="Intino: eu.medsea.mimeutil:mime-util:2.1.1" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.4" level="project" />
     <orderEntry type="module" module-name="json" />
+    <orderEntry type="module" module-name="primitives" />
+    <orderEntry type="module" module-name="logger" />
   </component>
 </module>
