@@ -17,13 +17,23 @@ def type(box)
 			return this;
 		}
 
-		public io.intino.alexandria.core.Box open() {
-			return super.open();
+
+		protected void beforeStart() {
+
 		}
 
-		public void close() {
-			super.close();
+		protected void afterStart() {
+
 		}
+
+		protected void beforeStop() {
+
+		}
+
+		protected void afterStop() {
+
+		}
+
 
 		[$rest]
 		[$authenticationValidator]
