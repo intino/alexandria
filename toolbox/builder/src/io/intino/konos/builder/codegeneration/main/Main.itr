@@ -7,8 +7,8 @@ def type(main)
 		public static void main(String$[] args) {
 			$name+SnakeCaseToCamelCase+firstUpperCase~Box box = new $name+SnakeCaseToCamelCase+firstUpperCase~Box(args);
 			[$model]
-			box.open();
-			Runtime.getRuntime().addShutdownHook(new Thread(box::close));
+			box.start();
+			Runtime.getRuntime().addShutdownHook(new Thread(box::stop));
 		}
 	}
 end

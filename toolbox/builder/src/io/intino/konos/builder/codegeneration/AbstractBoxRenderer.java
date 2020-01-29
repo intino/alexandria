@@ -159,7 +159,7 @@ public class AbstractBoxRenderer extends Renderer {
 	private void workflow(FrameBuilder root) {
 		if (graph.workflow() == null || graph.workflow().processList().isEmpty()) return;
 		root.add("workflow", buildBaseFrame().add("workflow"));
-		konosParameters.add("workspace");
+		konosParameters.add("home");
 	}
 
 	private FrameBuilder frameOf(Subscriber subscriber) {
