@@ -53,8 +53,13 @@ def type(box)
 			return this;
 		}
 
-		public io.intino.alexandria.core.Box open() {
-			if (owner != null) owner.open();
+		protected abstract void beforeStart();
+
+		protected abstract void afterStart();
+
+		public io.intino.alexandria.core.Box start() {
+			beforeStart();
+			if (owner != null) owner.start();
 			initUI();
 			initRESTServices();
 			initJMXServices();
@@ -65,16 +70,22 @@ def type(box)
 			initSentinels();
 			initSlackBots();
 			initWorkflow();
+			afterStart();
 			return this;
 		}
 
-		public void close() {
-			if (owner != null) owner.close();
+		public void stop() {
+			beforeStop();
+			if (owner != null) owner.stop();
 			[$spark...[$NL]]
 			[$service+close...[$NL]]
 			[$messagehub+close]
 			[$terminal+close]
+			afterStop();
 		}
+		protected abstract void beforeStop();
+
+		protected abstract void afterStop();
 
 		[$hasUi+registerSoul]
 
@@ -87,8 +98,6 @@ def type(box)
 		[$terminal+getter]
 
 		[$datalake+getter]
-
-		[$datamart+getter...[$NL$NL]]
 
 		[$sentinel+getter...[$NL$NL]]
 
@@ -356,12 +365,6 @@ end
 def type(workflow) trigger(getter)
 	public $package.bpm.Workflow workflow() {
 		return this.workflow;
-	}
-end
-
-def type(datamart) trigger(getter)
-	public java.io.File $name+firstLowerCase~Datamart() {
-		return new java.io.File($path+parameter);
 	}
 end
 

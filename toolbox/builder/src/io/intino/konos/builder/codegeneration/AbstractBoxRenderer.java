@@ -26,7 +26,7 @@ public class AbstractBoxRenderer extends Renderer {
 		this.configuration = module() != null ? TaraUtil.configurationOf(module()) : null;
 		this.hasModel = hasModel;
 		this.konosParameters = new HashSet<>();
-		this.konosParameters.add("workspace");
+		this.konosParameters.add("home");
 	}
 
 	@Override
