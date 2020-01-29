@@ -49,7 +49,7 @@ def type(mounter)
 	import $package+validPackage.$box+firstUpperCase~Box;
 	import io.intino.alexandria.event.Event;
 
-	import $package+validPackage.Mounter;
+	import $package+validPackage.mounters.Mounter;
 
 	public class $name+FirstUpperCase implements Mounter {
 		private $box+validName+firstUpperCase~Box box;
