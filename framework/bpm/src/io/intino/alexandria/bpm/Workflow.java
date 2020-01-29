@@ -56,12 +56,23 @@ public abstract class Workflow {
 	}
 
 	private void loadActiveProcesses() {
-		persistence.list("active/").forEach(path -> {
-			List<ProcessStatus> statuses = messagesOf("active/" + path);
-			ProcessStatus status = statuses.get(0);
-			processes.put(status.processId(), factory.createProcess(status.processId(), status.processName()));
-			process(status.processId()).resume(statuses, dataOf("active/" + path));
-		});
+		long loaded = 0;
+		List<String> paths = persistence.list("active/");
+		for (String path : paths)
+			try {
+				loadProcess(path);
+				loaded++;
+			} catch (Throwable e) {
+				Logger.error("Process at " + path + " failed when loading.", e);
+			}
+		Logger.info("Number of active processes: " + paths.size() + ". Number of processes loaded: " + loaded);
+	}
+
+	private void loadProcess(String path) {
+		List<ProcessStatus> statuses = messagesOf("active/" + path);
+		ProcessStatus status = statuses.get(0);
+		processes.put(status.processId(), factory.createProcess(status.processId(), status.processName()));
+		process(status.processId()).resume(statuses, dataOf("active/" + path));
 	}
 
 	private Map<String, String> dataOf(String path) {
