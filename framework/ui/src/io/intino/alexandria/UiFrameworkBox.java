@@ -20,12 +20,28 @@ public class UiFrameworkBox extends AbstractBox {
 		return this;
 	}
 
+	@Override
+	protected void beforeStart() {
+	}
+
+	@Override
+	protected void afterStart() {
+	}
+
+	@Override
+	protected void beforeStop() {
+	}
+
+	@Override
+	protected void afterStop() {
+	}
+
 	public io.intino.alexandria.core.Box open() {
-		return super.open();
+		return super.start();
 	}
 
 	public void close() {
-		super.close();
+		super.stop();
 	}
 
 	@Override
