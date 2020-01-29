@@ -22,13 +22,17 @@ public class MounterRenderer {
 	private final Settings settings;
 	private final File sourceMounters;
 	private final KonosGraph graph;
+	private final File src;
+	private final File gen;
 	private File genMounters;
 
 	public MounterRenderer(Settings settings, KonosGraph graph) {
 		this.settings = settings;
 		this.graph = graph;
-		this.sourceMounters = new File(settings.src(Target.Owner), "mounters");
-		this.genMounters = new File(settings.gen(Target.Owner), "mounters");
+		src = settings.src(Target.Owner);
+		this.sourceMounters = new File(src, "mounters");
+		gen = settings.gen(Target.Owner);
+		this.genMounters = new File(gen, "mounters");
 	}
 
 	public void execute() {
@@ -37,10 +41,8 @@ public class MounterRenderer {
 			for (Mounter mounter : datamart.mounterList()) {
 				final String mounterName = mounter.name$();
 				final FrameBuilder builder = baseFrame(mounter);
-				if (mounter.isPopulation())
-					populationMounter(mounter, mounterName, builder);
-				else if (manifest != null && !alreadyRendered(sourceMounters, mounterName))
-					eventMounter(mounter, mounterName, manifest, builder);
+				if (mounter.isPopulation()) populationMounter(mounter, mounterName, builder);
+				else if (manifest != null) eventMounter(mounter, mounterName, manifest, builder);
 			}
 	}
 
@@ -56,7 +58,10 @@ public class MounterRenderer {
 		String datamart = mounter.core$().ownerAs(Datamart.class).name$();
 		builder.add("event").add("datamart", datamart).add("type", types(mounter, manifest));
 		settings.classes().put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "mounters." + datamart + "." + mounterName);
-		writeFrame(new File(sourceMounters, datamart), mounterName, customize(new MounterTemplate()).render(builder.toFrame()));
+		File destination = new File(src, datamart + File.separator + "mounters");
+		if (!alreadyRendered(destination, mounterName)) {
+			writeFrame(destination, mounterName, customize(new MounterTemplate()).render(builder.toFrame()));
+		}
 	}
 
 	private String[] types(Mounter mounter, Settings.DataHubManifest manifest) {
