@@ -32,16 +32,14 @@ public class BoxRenderer extends Renderer {
 	public void render() {
 		if (configuration() == null) return;
 		final String name = settings.boxName();
-		if (Commons.javaFile(src(), snakeCaseToCamelCase(name) + "Box").exists()) {
-			return;
-		}
+		if (Commons.javaFile(src(), snakeCaseToCamelCase(name) + "Box").exists()) return;
 		FrameBuilder builder = new FrameBuilder("Box").add("package", packageName()).add("name", name);
 		if (isTara) builder.add("tara", fillTara());
 		DumbService.getInstance(module().getProject()).setAlternativeResolveEnabled(true);
 		final JavaPsiFacade facade = JavaPsiFacade.getInstance(module().getProject());
 		if (facade.findClass("io.intino.konos.server.ui.services.AuthService", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module())) != null)
 			builder.add("rest", name);
-
+		if (!graph.datamartList().isEmpty()) builder.add("datamart", "datamart");
 		if (hasAuthenticatedApis()) builder.add("authenticationValidator", new FrameBuilder().add("type", "Basic"));
 		DumbService.getInstance(module().getProject()).setAlternativeResolveEnabled(false);
 		Commons.writeFrame(src(), snakeCaseToCamelCase(name) + "Box", template().render(builder.toFrame()));
