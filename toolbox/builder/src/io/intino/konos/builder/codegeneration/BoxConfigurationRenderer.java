@@ -36,7 +36,7 @@ public class BoxConfigurationRenderer extends Renderer {
 			builder.add("parent", parent());
 		if (isTara) builder.add("tara", "");
 		for (String parameter : params) {
-			if (parameter.equalsIgnoreCase("workspace")) continue;
+			if (parameter.equalsIgnoreCase("home")) continue;
 			builder.add("parameter", new FrameBuilder().add("name", nameOf(parameter)).add("value", parameter));
 		}
 		return boxName;
