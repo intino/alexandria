@@ -1,9 +1,9 @@
 def type(factory)
-	package $package;
-    ​
+	package $package.mounters;
+
     import io.intino.alexandria.event.Event;
-    ​
-    public interface Mounter<Event> {
-    	void handle(E event);
+
+    public interface Mounter {
+    	void handle(Event event);
     }
 end

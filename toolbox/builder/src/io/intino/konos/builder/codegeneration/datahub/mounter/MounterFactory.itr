@@ -1,29 +1,29 @@
 def type(factory)
 	package $package.mounters;
-    ​
+
     import io.intino.alexandria.event.Event;
     import $package+validPackage.$box+firstUpperCase~Box;
-    ​
+
     import java.util.HashMap;
     import java.util.List;
     import java.util.Map;
     import java.util.stream.Stream;
-    ​
+
     public class MounterFactory {
     	private Map<String, List<Mounter>> mounters = new HashMap<>();
-    ​
+
     	public MounterFactory($box+firstUpperCase~Box box) {
     		$event+put...[$NL]
     	}
-    ​
+
     	public List<Mounter> mountersOf(Class<? extends Event> clazz) {
     		return mounters.get(clazz.getCanonicalName());
     	}
-    ​
+
     	public List<Mounter> mountersOf(Event event) {
     		return mountersOf(event.getClass());
     	}
-    ​
+
     	public void handle(Event... events) {
     		Stream.of(events).forEach(event -> {
     			List<Mounter> mounters = mountersOf(event);
@@ -34,9 +34,9 @@ def type(factory)
 end
 
 def trigger(put)
-	mounters.put($name+FirstUpperCase.class.getCanonicalName(), java.util.List.of($mounter...[, ]);
+	mounters.put($name.class.getCanonicalName(), java.util.List.of($mounter...[, ]));
 end
 
 def trigger(mounter)
-	new $package.$name+FirstUpperCase(box)
+	new $package.$datamart+lowercase.mounters.$name+FirstUpperCase(box)
 end

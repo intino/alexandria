@@ -26,7 +26,7 @@ public class AbstractBoxRenderer extends Renderer {
 		this.configuration = module() != null ? TaraUtil.configurationOf(module()) : null;
 		this.hasModel = hasModel;
 		this.konosParameters = new HashSet<>();
-		this.konosParameters.add("workspace");
+		this.konosParameters.add("home");
 	}
 
 	@Override
@@ -159,7 +159,7 @@ public class AbstractBoxRenderer extends Renderer {
 	private void workflow(FrameBuilder root) {
 		if (graph.workflow() == null || graph.workflow().processList().isEmpty()) return;
 		root.add("workflow", buildBaseFrame().add("workflow"));
-		konosParameters.add("workspace");
+		konosParameters.add("home");
 	}
 
 	private FrameBuilder frameOf(Subscriber subscriber) {

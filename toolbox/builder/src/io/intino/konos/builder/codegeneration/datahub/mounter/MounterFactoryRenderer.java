@@ -10,8 +10,7 @@ import io.intino.konos.model.graph.KonosGraph;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
@@ -30,12 +29,31 @@ public class MounterFactoryRenderer {
 
 	public void execute() {
 		if (mounters.isEmpty()) return;
+		Settings.DataHubManifest manifest = settings.dataHubManifest();
+		if (manifest == null) return;
+
 		FrameBuilder builder = baseFrame("factory");
-		for (Mounter mounter : mounters) builder.add("mounter", baseFrame("mounter").add("name", mounter.name$()));
+		Map<String, List<Mounter>> map = map(mounters, manifest);
+
+		for (String event : map.keySet())
+			builder.add("event", baseFrame("event").
+					add("name", event).
+					add("mounter", map.get(event).stream().map(m -> baseFrame("mounter").add("datamart", m.core$().owner().name()).add("name", m.name$()).toFrame()).toArray(Frame[]::new)));
 		settings.classes().put(Mounter.class.getSimpleName() + "#" + "MounterFactory", "mounters.mounterFactory");
 		Frame object = builder.toFrame();
 		writeFrame(genMounters, "MounterFactory", customize(new MounterFactoryTemplate()).render(object));
 		writeFrame(genMounters, "Mounter", customize(new IMounterTemplate()).render(object));
+	}
+
+	private Map<String, List<Mounter>> map(List<Mounter> mounters, Settings.DataHubManifest manifest) {
+		Map<String, List<Mounter>> mountersByRequire = new HashMap<>();
+		for (Mounter mounter : mounters)
+			mounter.asEvent().requireList().forEach(r -> {
+				String key = manifest.tankClasses.get(r.tank());
+				if (!mountersByRequire.containsKey(key)) mountersByRequire.put(key, new ArrayList<>());
+				mountersByRequire.get(key).add(mounter);
+			});
+		return mountersByRequire;
 	}
 
 	@NotNull
