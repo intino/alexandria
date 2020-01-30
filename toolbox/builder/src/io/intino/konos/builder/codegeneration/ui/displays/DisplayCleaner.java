@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.ui.displays;
 
 import io.intino.konos.builder.codegeneration.Cleaner;
 import io.intino.konos.builder.codegeneration.ElementReference;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
@@ -10,8 +10,8 @@ import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
 public class DisplayCleaner extends Cleaner {
 	private ElementReference reference;
 
-	public DisplayCleaner(Settings settings, ElementReference reference) {
-		super(settings);
+	public DisplayCleaner(CompilationContext compilationContext, ElementReference reference) {
+		super(compilationContext);
 		this.reference = reference;
 	}
 

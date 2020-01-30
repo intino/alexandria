@@ -8,7 +8,7 @@ import io.intino.bpmparser.Task;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
@@ -26,20 +26,20 @@ import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class BpmRenderer extends Renderer {
-	private final Settings settings;
+	private final CompilationContext compilationContext;
 	private final List<Process> processes;
 	private final File src;
 	private final File gen;
 	private final String businessUnit;
 	private List<String> stateServices = new ArrayList<>();
 
-	public BpmRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Owner);
-		this.settings = settings;
+	public BpmRenderer(CompilationContext compilationContext, KonosGraph graph) {
+		super(compilationContext, Target.Owner);
+		this.compilationContext = compilationContext;
 		this.businessUnit = graph.workflow() != null ? graph.workflow().businessUnit() : null;
 		this.processes = graph.workflow() != null ? graph.workflow().processList() : Collections.emptyList();
-		this.src = new File(settings.src(Target.Owner), "bpm");
-		this.gen = new File(settings.gen(Target.Owner), "bpm");
+		this.src = new File(compilationContext.src(Target.Owner), "bpm");
+		this.gen = new File(compilationContext.gen(Target.Owner), "bpm");
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class BpmRenderer extends Renderer {
 
 	private void renderBpm() {
 		if (processes.isEmpty()) return;
-		FrameBuilder builder = new FrameBuilder("workflow").add("box", settings.boxName()).add("package", settings.packageName()).add("businessUnit", businessUnit).add(settings.boxName()).add("process", processes.stream().map(p -> frameOf(p)).toArray(Frame[]::new));
+		FrameBuilder builder = new FrameBuilder("workflow").add("box", compilationContext.boxName()).add("package", compilationContext.packageName()).add("businessUnit", businessUnit).add(compilationContext.boxName()).add("process", processes.stream().map(p -> frameOf(p)).toArray(Frame[]::new));
 		writeFrame(gen, "Workflow", customize(new WorkflowTemplate()).render(builder.toFrame()));
 	}
 
@@ -62,8 +62,8 @@ public class BpmRenderer extends Renderer {
 		for (Process process : processes) {
 			stateServices.clear();
 			final FrameBuilder builder = new FrameBuilder("process").
-					add("box", settings.boxName()).
-					add("package", settings.packageName()).
+					add("box", compilationContext.boxName()).
+					add("package", compilationContext.packageName()).
 					add("businessUnit", businessUnit).
 					add("name", process.name$());
 			File file = new File(process.bpmn().getFile());
@@ -74,7 +74,7 @@ public class BpmRenderer extends Renderer {
 				walk(builder, process, initial);
 				for (String stateService : stateServices)
 					builder.add("accessor", new FrameBuilder("accessor").add("name", stateService));
-				settings.classes().put(process.getClass().getSimpleName() + "#" + process.name$(), "bpm." + process.name$());
+				compilationContext.classes().put(process.getClass().getSimpleName() + "#" + process.name$(), "bpm." + process.name$());
 				writeFrame(gen, "Abstract" + firstUpperCase(process.name$()), customize(new ProcessTemplate()).render(builder.toFrame()));
 				if (!alreadyRendered(src, process.name$()))
 					writeFrame(src, process.name$(), customize(new ProcessTemplate()).render(builder.add("src").toFrame()));

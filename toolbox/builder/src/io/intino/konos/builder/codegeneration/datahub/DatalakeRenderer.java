@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.datahub;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Datalake;
@@ -17,27 +17,27 @@ import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class DatalakeRenderer {
-	private final Settings settings;
+	private final CompilationContext compilationContext;
 	private final KonosGraph graph;
 	private final File genDirectory;
 
-	public DatalakeRenderer(Settings settings, KonosGraph graph) {
+	public DatalakeRenderer(CompilationContext compilationContext, KonosGraph graph) {
 		this.graph = graph;
-		this.settings = settings;
-		this.genDirectory = settings.gen(Target.Owner);
+		this.compilationContext = compilationContext;
+		this.genDirectory = compilationContext.gen(Target.Owner);
 	}
 
 	public void execute() {
 		Datalake datalake = graph.datalake();
 		if (datalake == null || !(datalake.isNfsMirrored() || datalake.isSshMirrored())) return;
-		final FrameBuilder builder = new FrameBuilder("datalake", datalake.isNfsMirrored() ? "nfs" : "ssh").add("package", settings.packageName());
+		final FrameBuilder builder = new FrameBuilder("datalake", datalake.isNfsMirrored() ? "nfs" : "ssh").add("package", compilationContext.packageName());
 		List<String> eventTanks = new ArrayList<>();
 //		graph.mounterList().stream().filter(Mounter::isBatch).map(Mounter::asBatch).forEach(mounter -> eventTanks.addAll(tanksOf(mounter)));
 //		List<String> setTanks = new ArrayList<>();
 //		builder.add("eventTank", eventTanks.toArray(new String[0]));
 //		graph.mounterList().stream().filter(Mounter::isPopulation).map(Mounter::asPopulation).forEach(mounter -> setTanks.addAll(tanksOf(mounter)));
 //		builder.add("setTank", setTanks.toArray(new String[0]));TODO
-		settings.classes().put("Datalake", "Datalake");
+		compilationContext.classes().put("Datalake", "Datalake");
 		File destination = genDirectory;
 		if (!Commons.javaFile(destination, "Datalake").exists())
 			writeFrame(destination, "Datalake", customize(new DatalakeTemplate()).render(builder.toFrame()));

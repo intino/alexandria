@@ -5,13 +5,13 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.itrules.formatters.StringFormatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Parameter;
 import io.intino.konos.model.graph.Service;
 import io.intino.konos.model.graph.Workflow;
-import org.jetbrains.annotations.NotNull;
+
 
 import java.util.List;
 import java.util.Locale;
@@ -24,8 +24,8 @@ public class MessagingServiceRenderer extends Renderer {
 	private final List<Service.Messaging> services;
 	private final Workflow workflow;
 
-	public MessagingServiceRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Owner);
+	public MessagingServiceRenderer(CompilationContext compilationContext, KonosGraph graph) {
+		super(compilationContext, Target.Owner);
 		this.services = graph.serviceList(Service::isMessaging).map(Service::asMessaging).collect(Collectors.toList());
 		this.workflow = graph.workflow();
 	}
@@ -51,7 +51,7 @@ public class MessagingServiceRenderer extends Renderer {
 		writeFrame(gen(), nameOf(service), template().render(builder.toFrame()));
 	}
 
-	@NotNull
+
 	private String nameOf(Service.Messaging service) {
 		return StringFormatters.get(Locale.getDefault()).get("firstuppercase").format(service.name$()).toString() + "Service";
 	}

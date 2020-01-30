@@ -1,6 +1,6 @@
 package io.intino.konos.builder.codegeneration.action;
 
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.model.graph.Service;
 import io.intino.konos.model.graph.Service.REST.Resource;
 
@@ -10,8 +10,8 @@ import java.util.stream.Stream;
 public class RESTResourceActionRenderer extends ActionRenderer {
 	private final Resource.Operation operation;
 
-	public RESTResourceActionRenderer(Settings settings, Resource.Operation operation) {
-		super(settings, "resource");
+	public RESTResourceActionRenderer(CompilationContext compilationContext, Resource.Operation operation) {
+		super(compilationContext, "resource");
 		this.operation = operation;
 	}
 

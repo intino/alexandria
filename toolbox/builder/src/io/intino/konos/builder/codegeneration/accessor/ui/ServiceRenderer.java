@@ -1,6 +1,6 @@
 package io.intino.konos.builder.codegeneration.accessor.ui;
 
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.accessor.ui.resource.ResourceListRenderer;
 import io.intino.konos.builder.codegeneration.ui.I18nRenderer;
@@ -11,19 +11,19 @@ import io.intino.konos.model.graph.Service;
 public class ServiceRenderer extends UIRenderer {
 	private final Service.UI service;
 
-	public ServiceRenderer(Settings settings, Service.UI service) {
-		super(settings, Target.Accessor);
+	public ServiceRenderer(CompilationContext compilationContext, Service.UI service) {
+		super(compilationContext, Target.Accessor);
 		this.service = service;
 	}
 
 	@Override
 	public void render() {
-		new AppRenderer(settings, service).execute();
-		new ThemeRenderer(settings, service).execute();
-		new I18nRenderer(settings, service, target).execute();
-		new DisplaysManifestRenderer(settings, service).execute();
-		new DisplayListRenderer(settings, service, new AccessorTemplateProvider(), target).execute();
-		new ResourceListRenderer(settings, service).execute();
+		new AppRenderer(compilationContext, service).execute();
+		new ThemeRenderer(compilationContext, service).execute();
+		new I18nRenderer(compilationContext, service, target).execute();
+		new DisplaysManifestRenderer(compilationContext, service).execute();
+		new DisplayListRenderer(compilationContext, service, new AccessorTemplateProvider(), target).execute();
+		new ResourceListRenderer(compilationContext, service).execute();
 	}
 
 }

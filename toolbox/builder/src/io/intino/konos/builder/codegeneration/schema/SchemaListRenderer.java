@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.schema;
 
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Schema;
@@ -21,20 +21,20 @@ public class SchemaListRenderer extends Renderer {
 	private final File destination;
 	private final String packageName;
 
-	public SchemaListRenderer(Settings settings, KonosGraph graph) {
-		this(settings, graph, null);
+	public SchemaListRenderer(CompilationContext compilationContext, KonosGraph graph) {
+		this(compilationContext, graph, null);
 	}
 
-	public SchemaListRenderer(Settings settings, KonosGraph graph, File destination) {
-		this(settings, graph, destination, null);
+	public SchemaListRenderer(CompilationContext compilationContext, KonosGraph graph, File destination) {
+		this(compilationContext, graph, destination, null);
 	}
 
-	public SchemaListRenderer(Settings settings, KonosGraph graph, File destination, String packageName) {
-		super(settings, Target.Owner);
+	public SchemaListRenderer(CompilationContext compilationContext, KonosGraph graph, File destination, String packageName) {
+		super(compilationContext, Target.Owner);
 		this.schemas = graph.core$().find(Schema.class).stream().filter(s -> !s.core$().owner().is(Schema.class)).collect(toList());
 		this.services = graph.serviceList();
 		this.destination = destination != null ? destination : gen();
-		this.packageName = packageName != null ? packageName : settings.packageName();
+		this.packageName = packageName != null ? packageName : compilationContext.packageName();
 	}
 
 	public void clean() {
@@ -47,7 +47,7 @@ public class SchemaListRenderer extends Renderer {
 	}
 
 	public void render() {
-		schemas.forEach(s -> new SchemaRenderer(settings, s, destination, packageName).execute());
+		schemas.forEach(s -> new SchemaRenderer(compilationContext, s, destination, packageName).execute());
 	}
 
 	private String subPackage(Schema schema) {

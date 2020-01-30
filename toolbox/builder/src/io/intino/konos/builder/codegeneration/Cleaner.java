@@ -13,31 +13,31 @@ import static io.intino.konos.builder.helpers.CodeGenerationHelper.fileOf;
 
 public abstract class Cleaner {
 	protected final ElementHelper elementHelper;
-	protected final Settings settings;
+	protected final CompilationContext compilationContext;
 
 	protected static final List<String> ExcludedDirectories = Arrays.asList("displays", "graph", ".cache");
 
-	public Cleaner(Settings settings) {
-		this.settings = settings;
+	public Cleaner(CompilationContext compilationContext) {
+		this.compilationContext = compilationContext;
 		this.elementHelper = new ElementHelper();
 	}
 
 	public abstract void execute();
 
 	protected File res(Target target) {
-		return settings.res(target);
+		return compilationContext.res(target);
 	}
 
 	protected File src(Target target) {
-		return settings.src(target);
+		return compilationContext.src(target);
 	}
 
 	protected File gen(Target target) {
-		return settings.gen(target);
+		return compilationContext.gen(target);
 	}
 
 	protected ElementCache cache() {
-		return settings.cache();
+		return compilationContext.cache();
 	}
 
 	protected String typeOf(Layer element) {

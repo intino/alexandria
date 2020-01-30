@@ -16,7 +16,7 @@ public class AsemedGenerationTest {
 	public void testAsemedGeneration() {
 		File gen = new File("test-gen", ASEMED);
 		KonosGraph graph = new Graph().loadStashes("Asemed").as(KonosGraph.class);
-		new FullRenderer(graph, TestUtil.settings(gen, ASEMED)).execute();
+		new FullRenderer(graph, TestUtil.settings(gen, ASEMED), compiledFiles).execute();
 	}
 
 }

@@ -3,7 +3,7 @@ package io.intino.konos.builder.codegeneration.exception;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.model.graph.KonosGraph;
 
@@ -20,8 +20,8 @@ public class ExceptionRenderer extends Renderer {
 	private static final String EXCEPTIONS = "exceptions";
 	private final List<io.intino.konos.model.graph.Exception> exceptions;
 
-	public ExceptionRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Owner);
+	public ExceptionRenderer(CompilationContext compilationContext, KonosGraph graph) {
+		super(compilationContext, Target.Owner);
 		this.exceptions = graph.exceptionList();
 	}
 

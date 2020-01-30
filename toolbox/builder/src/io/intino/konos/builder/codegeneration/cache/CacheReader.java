@@ -4,7 +4,6 @@ import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.io.Stash;
 import io.intino.tara.magritte.stores.FileSystemStore;
 import io.intino.tara.magritte.utils.StoreAuditor;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +42,7 @@ public class CacheReader extends HashMap<String, Integer> {
 		return auditor;
 	}
 
-	@NotNull
+
 	private FileSystemStore store(Stash konosStash) {
 		return new FileSystemStore(folder) {
 			@Override

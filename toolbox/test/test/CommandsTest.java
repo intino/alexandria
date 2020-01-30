@@ -16,7 +16,7 @@ public class CommandsTest {
 	public void testModel() throws Exception {
 		File gen = new File("test-gen", COMMANDS);
 		KonosGraph graph = new Graph().loadStashes("Command").as(KonosGraph.class);
-		new FullRenderer(graph, TestUtil.settings(gen, COMMANDS)).execute();
+		new FullRenderer(graph, TestUtil.settings(gen, COMMANDS), compiledFiles).execute();
 	}
 
 	@Test

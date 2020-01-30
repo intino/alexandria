@@ -9,7 +9,6 @@ import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.Service.REST.Resource;
 import io.intino.konos.model.graph.Service.REST.Resource.Parameter.In;
 import io.intino.tara.magritte.Layer;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -48,7 +47,7 @@ public class OpenApiDescriptor {
 		return spec;
 	}
 
-	@NotNull
+
 	private String version() {
 		if (service.info() == null || service.info().version() == null) return "";
 		return "/" + service.info().version();
@@ -180,7 +179,7 @@ public class OpenApiDescriptor {
 		return map;
 	}
 
-	@NotNull
+
 	private SwaggerSpec.Definition.Property propertyFrom(Schema.Attribute attribute) {
 		final SwaggerSpec.Definition.Property property = new SwaggerSpec.Definition.Property();
 		property.type = transform(attribute.asType());

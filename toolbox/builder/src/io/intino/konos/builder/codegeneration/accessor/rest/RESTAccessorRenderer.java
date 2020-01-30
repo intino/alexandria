@@ -5,7 +5,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.helpers.Commons;
@@ -18,8 +18,6 @@ import io.intino.konos.model.graph.Service.REST.Resource;
 import io.intino.konos.model.graph.Service.REST.Resource.Operation;
 import io.intino.konos.model.graph.Service.REST.Resource.Parameter;
 import io.intino.tara.magritte.Layer;
-import org.jetbrains.annotations.NotNull;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,15 +30,15 @@ public class RESTAccessorRenderer extends Renderer {
 	private final Service.REST service;
 	private File destination;
 
-	public RESTAccessorRenderer(Settings settings, Service.REST restService, File destination) {
-		super(settings, Target.Owner);
+	public RESTAccessorRenderer(CompilationContext compilationContext, Service.REST restService, File destination) {
+		super(compilationContext, Target.Owner);
 		this.service = restService;
 		this.destination = destination;
 	}
 
 	@Override
 	public void render() {
-		new SchemaListRenderer(settings, service.graph(), destination).execute();
+		new SchemaListRenderer(compilationContext, service.graph(), destination).execute();
 		processService(service);
 	}
 
@@ -64,7 +62,7 @@ public class RESTAccessorRenderer extends Renderer {
 		else if (restService.authenticatedWithToken() != null) builder.add("token", "");
 	}
 
-	@NotNull
+
 	private List<Frame> framesOf(Service.REST restService, Resource resource) {
 		return resource.operationList().stream().
 				map(operation -> processOperation(operation, restService.authenticated() != null,

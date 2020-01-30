@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.operation;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.OperationRenderer;
@@ -9,8 +9,8 @@ import io.intino.konos.model.graph.OperationComponents.OpenDrawer;
 
 public class OpenDrawerRenderer extends OperationRenderer<OpenDrawer> {
 
-	public OpenDrawerRenderer(Settings settings, OpenDrawer component, TemplateProvider provider, Target target) {
-		super(settings, component, provider, target);
+	public OpenDrawerRenderer(CompilationContext compilationContext, OpenDrawer component, TemplateProvider provider, Target target) {
+		super(compilationContext, component, provider, target);
 	}
 
 	@Override

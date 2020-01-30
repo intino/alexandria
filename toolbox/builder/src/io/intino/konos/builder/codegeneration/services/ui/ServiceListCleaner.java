@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.services.ui;
 
 import io.intino.konos.builder.codegeneration.Cleaner;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayListCleaner;
 import io.intino.konos.model.graph.KonosGraph;
@@ -10,8 +10,8 @@ import io.intino.konos.model.graph.Service;
 public class ServiceListCleaner extends Cleaner {
 	private final KonosGraph graph;
 
-	public ServiceListCleaner(Settings settings, KonosGraph graph) {
-		super(settings);
+	public ServiceListCleaner(CompilationContext compilationContext, KonosGraph graph) {
+		super(compilationContext);
 		this.graph = graph;
 	}
 
@@ -21,7 +21,7 @@ public class ServiceListCleaner extends Cleaner {
 	}
 
 	private void cleanService(Service.UI service) {
-		if (settings.webModule() != null) clean(gen(Target.Accessor));
-		new DisplayListCleaner(settings, service).execute();
+		if (compilationContext.webModuleDirectory() != null) clean(gen(Target.Accessor));
+		new DisplayListCleaner(compilationContext, service).execute();
 	}
 }

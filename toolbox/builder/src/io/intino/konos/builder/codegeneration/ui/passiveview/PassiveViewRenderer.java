@@ -3,7 +3,7 @@ package io.intino.konos.builder.codegeneration.ui.passiveview;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.ElementRenderer;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
@@ -31,8 +31,8 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	public static final String ProjectComponentImport = "projectComponentImport";
 	public static final String AlexandriaComponentImport = "alexandriaComponentImport";
 
-	protected PassiveViewRenderer(Settings settings, C element, TemplateProvider templateProvider, Target target) {
-		super(settings, element, templateProvider, target);
+	protected PassiveViewRenderer(CompilationContext compilationContext, C element, TemplateProvider templateProvider, Target target) {
+		super(compilationContext, element, templateProvider, target);
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	protected boolean isGeneric(PassiveView element) {
-		return element.isExtensionOf() || KonosGraph.isParent(settings.graphName(), element);
+		return element.isExtensionOf() || KonosGraph.isParent(compilationContext.graphName(), element);
 	}
 
 	protected String genericParent(PassiveView element) {
@@ -373,7 +373,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	private void registerCollectionImports(Set<String> imported, Component component, FrameBuilder builder) {
-		if (component.i$(CatalogComponents.Table.class)) addComponentsImports(imported, component.graph().rowsDisplays(settings.graphName()).stream().map(r -> r.a$(Component.class)).collect(toList()), builder);
+		if (component.i$(CatalogComponents.Table.class)) addComponentsImports(imported, component.graph().rowsDisplays(compilationContext.graphName()).stream().map(r -> r.a$(Component.class)).collect(toList()), builder);
 		else addComponentsImports(imported, component.a$(CatalogComponents.Collection.class).moldList().stream().map(CatalogComponents.Collection.Mold::item).collect(toList()), builder);
 	}
 }

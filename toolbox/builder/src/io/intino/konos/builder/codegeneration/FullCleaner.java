@@ -6,15 +6,15 @@ import io.intino.konos.model.graph.KonosGraph;
 public class FullCleaner extends Cleaner {
 	private final KonosGraph graph;
 
-	public FullCleaner(Settings settings, KonosGraph graph) {
-		super(settings);
+	public FullCleaner(CompilationContext compilationContext, KonosGraph graph) {
+		super(compilationContext);
 		this.graph = graph;
 	}
 
 	@Override
 	public void execute() {
 		clean(gen(Target.Owner));
-		new ServiceListCleaner(settings, graph).execute();
+		new ServiceListCleaner(compilationContext, graph).execute();
 	}
 
 }

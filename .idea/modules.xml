@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/framework/bpm/bpm.iml" filepath="$PROJECT_DIR$/framework/bpm/bpm.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/toolbox/builder/builder.iml" filepath="$PROJECT_DIR$/toolbox/builder/builder.iml" group="toolbox" />
+      <module fileurl="file://$PROJECT_DIR$/toolbox/builder-constants/builder-constants.iml" filepath="$PROJECT_DIR$/toolbox/builder-constants/builder-constants.iml" />
       <module fileurl="file://$PROJECT_DIR$/framework/core/core.iml" filepath="$PROJECT_DIR$/framework/core/core.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/libraries/ness/datalake/datalake.iml" filepath="$PROJECT_DIR$/libraries/ness/datalake/datalake.iml" group="eventsourcing" />
       <module fileurl="file://$PROJECT_DIR$/libraries/dotx/dotx.iml" filepath="$PROJECT_DIR$/libraries/dotx/dotx.iml" group="libraries" />

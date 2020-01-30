@@ -1,9 +1,8 @@
 package io.intino.konos.builder.codegeneration.ui;
 
-import com.intellij.openapi.diagnostic.Logger;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.builder.helpers.ElementHelper;
@@ -13,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.logging.Logger;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
@@ -22,8 +22,8 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 	protected final C element;
 	protected final TemplateProvider templateProvider;
 
-	protected ElementRenderer(Settings settings, C element, TemplateProvider templateProvider, Target target) {
-		super(settings, target);
+	protected ElementRenderer(CompilationContext compilationContext, C element, TemplateProvider templateProvider, Target target) {
+		super(compilationContext, target);
 		this.element = element;
 		this.templateProvider = templateProvider;
 	}
@@ -70,7 +70,7 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 			File file = fileOf(packageFolder, name, target);
 			Files.write(file.toPath(), text.getBytes(StandardCharsets.UTF_8));
 		} catch (IOException e) {
-			Logger.getInstance("Konos: ").error(e.getMessage(), e);
+			Logger.getGlobal().severe(e.getMessage());
 		}
 	}
 

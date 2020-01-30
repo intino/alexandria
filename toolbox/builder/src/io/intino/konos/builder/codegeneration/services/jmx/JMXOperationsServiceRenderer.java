@@ -5,7 +5,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.JMXActionRenderer;
 import io.intino.konos.builder.helpers.Commons;
@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 public class JMXOperationsServiceRenderer extends Renderer {
 	private final List<Service.JMX> services;
 
-	public JMXOperationsServiceRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Owner);
+	public JMXOperationsServiceRenderer(CompilationContext compilationContext, KonosGraph graph) {
+		super(compilationContext, Target.Owner);
 		this.services = graph.serviceList(Service::isJMX).map(Service::asJMX).collect(Collectors.toList());
 	}
 
@@ -59,7 +59,7 @@ public class JMXOperationsServiceRenderer extends Renderer {
 
 	private void createCorrespondingActions(List<Operation> operations) {
 		for (Operation operation : operations)
-			new JMXActionRenderer(settings, operation).execute();
+			new JMXActionRenderer(compilationContext, operation).execute();
 	}
 
 	private Frame frameOf(Operation operation) {

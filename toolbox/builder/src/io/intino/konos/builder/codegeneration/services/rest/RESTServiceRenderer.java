@@ -1,12 +1,11 @@
 package io.intino.konos.builder.codegeneration.services.rest;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
+import io.intino.alexandria.zip.Zip;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.swagger.SwaggerProfileGenerator;
 import io.intino.konos.builder.helpers.Commons;
@@ -14,7 +13,6 @@ import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Service;
 import io.intino.konos.model.graph.Service.REST.Resource;
 import io.intino.tara.magritte.Layer;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,22 +24,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipInputStream;
 
-import static com.intellij.platform.templates.github.ZipUtil.unzip;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
-import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.getSourceRoots;
 import static java.util.stream.Collectors.toList;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class RESTServiceRenderer extends Renderer {
+	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 	private final List<Service.REST> services;
-	@NotNull
 	private final KonosGraph graph;
 
-	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
-
-	public RESTServiceRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Owner);
+	public RESTServiceRenderer(CompilationContext compilationContext, KonosGraph graph) {
+		super(compilationContext, Target.Owner);
 		this.services = graph.serviceList(Service::isREST).map(Service::asREST).collect(toList());
 		this.graph = graph;
 	}
@@ -62,7 +56,7 @@ public class RESTServiceRenderer extends Renderer {
 
 	private void copyAssets(File www) {
 		try {
-			unzip(null, www, new ZipInputStream(this.getClass().getResourceAsStream("/swagger/assets.zip")), null, null, false);
+			Zip.unzip(new ZipInputStream(this.getClass().getResourceAsStream("/swagger/assets.zip")), www.getAbsolutePath());
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -107,17 +101,10 @@ public class RESTServiceRenderer extends Renderer {
 	}
 
 	private File findResource(String logo) {
-		VirtualFile resRoot = getResRoot(module());
+		File resRoot = compilationContext.configuration().resDirectory();
 		if (resRoot == null) return null;
 		File file = new File(resRoot.getPath(), logo);
 		return file.exists() ? file : null;
-	}
-
-	private VirtualFile getResRoot(Module module) {
-		if (module == null) return null;
-		for (VirtualFile file : getSourceRoots(module))
-			if (file.isDirectory() && "res".equals(file.getName())) return file;
-		return null;
 	}
 
 	private void processService(Service.REST service, File gen) {

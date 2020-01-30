@@ -4,7 +4,7 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.helpers.Commons;
@@ -24,8 +24,8 @@ public class MessagingAccessorRenderer extends Renderer {
 	private final Workflow workflow;
 	private File destination;
 
-	public MessagingAccessorRenderer(Settings settings, Service.Messaging application, Workflow workflow, File destination) {
-		super(settings, Target.Owner);
+	public MessagingAccessorRenderer(CompilationContext compilationContext, Service.Messaging application, Workflow workflow, File destination) {
+		super(compilationContext, Target.Owner);
 		this.service = application;
 		this.workflow = workflow;
 		this.destination = destination;
@@ -33,7 +33,7 @@ public class MessagingAccessorRenderer extends Renderer {
 
 	@Override
 	public void render() {
-		new SchemaListRenderer(settings, service.graph(), destination).execute();
+		new SchemaListRenderer(compilationContext, service.graph(), destination).execute();
 		processService(service);
 	}
 

@@ -5,13 +5,13 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Data;
 import io.intino.konos.model.graph.Schema;
 import io.intino.konos.model.graph.Service;
-import org.jetbrains.annotations.NotNull;
+
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,11 +26,11 @@ public class SchemaRenderer extends Renderer {
 	private final File destination;
 	private final String packageName;
 
-	public SchemaRenderer(Settings settings, Schema schema, File destination, String packageName) {
-		super(settings, Target.Owner);
+	public SchemaRenderer(CompilationContext compilationContext, Schema schema, File destination, String packageName) {
+		super(compilationContext, Target.Owner);
 		this.schema = schema;
 		this.destination = destination != null ? destination : gen();
-		this.packageName = packageName != null ? packageName : settings.packageName();
+		this.packageName = packageName != null ? packageName : compilationContext.packageName();
 	}
 
 	public void render() {
@@ -70,12 +70,12 @@ public class SchemaRenderer extends Renderer {
 		return builder.toFrame();
 	}
 
-	@NotNull
+
 	private Frame[] components(Schema schema, String packageName, Set<Schema> processed) {
 		return schema.schemaList().stream().filter(processed::add).map(s -> createSchemaFrame(s, packageName, processed)).toArray(Frame[]::new);
 	}
 
-	@NotNull
+
 	private FrameBuilder[] collectAttributes(Schema schema) {
 		List<FrameBuilder> attributes = new ArrayList<>();
 		addAll(attributes, processAttributes(schema.attributeList()));

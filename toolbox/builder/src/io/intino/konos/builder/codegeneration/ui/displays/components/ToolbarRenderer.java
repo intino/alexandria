@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.CatalogComponents;
@@ -9,8 +9,8 @@ import io.intino.konos.model.graph.OperationComponents.Toolbar;
 
 public class ToolbarRenderer extends ComponentRenderer<Toolbar> {
 
-	public ToolbarRenderer(Settings settings, Toolbar component, TemplateProvider provider, Target target) {
-		super(settings, component, provider, target);
+	public ToolbarRenderer(CompilationContext compilationContext, Toolbar component, TemplateProvider provider, Target target) {
+		super(compilationContext, component, provider, target);
 	}
 
 	@Override
