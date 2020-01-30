@@ -1,10 +1,10 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "3.0.1") ui-framework
+Artifact("io.intino.alexandria", "3.0.2") ui-framework
 	Box("Konos", "7.0.1") > targetPackage = ""
 	Code("io.intino.alexandria")
 	Imports
-		Compile("io.intino.alexandria", "core-framework", "2.0.1")
+		Provided("io.intino.alexandria", "core-framework", "2.0.2")
 		Compile("io.intino.alexandria", "rest", "2.1.0")
 		Compile("io.intino.alexandria", "rest-accessor", "1.0.7")
 		Compile("io.intino.alexandria", "logger4j", "1.0.0")
@@ -13,17 +13,16 @@ Artifact("io.intino.alexandria", "3.0.1") ui-framework
 		Compile("org.locationtech.jts", "jts-core", "1.16.1")
 		Compile("io.intino.alexandria", "driver-shiny", "1.0.0")
 		Compile("io.intino.alexandria", "driver-r", "1.0.0")
-
-		Web("io.intino.alexandria", "ui-framework-elements", "2.1.0")
+		Web("io.intino.alexandria", "ui-framework-elements", "3.0.2")
 
 		Test("junit", "junit", "LATEST")
-		Web(groupId = "io.intino.alexandria", artifactId = "ui-framework-elements", version = "3.0.0")
 		Web(groupId = "io.intino.alexandria", artifactId = "ui-framework-elements", version = "3.0.1")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.dist)
 	Parameter(name = "workspace")
 	Parameter(name = "workspace")
+	Parameter(name = "home")
 
 Repository("intino-maven") intino
 	Release("https://artifactory.intino.io/artifactory/releases")

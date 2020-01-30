@@ -7,7 +7,7 @@ public class Main {
 	public static void main(String[] args) {
 		io.intino.alexandria.logger4j.Logger.init(Level.ERROR);
 		Box box = new UiFrameworkBox(args);
-		box.open();
-		Runtime.getRuntime().addShutdownHook(new Thread(box::close));
+		box.start();
+		Runtime.getRuntime().addShutdownHook(new Thread(box::stop));
 	}
 }
