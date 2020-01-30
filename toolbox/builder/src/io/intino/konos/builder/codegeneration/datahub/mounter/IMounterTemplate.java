@@ -7,7 +7,7 @@ public class IMounterTemplate extends Template {
 
 	public RuleSet ruleSet() {
 		return new RuleSet().add(
-			rule().condition((type("factory"))).output(literal("package ")).output(mark("package")).output(literal(";\n​\nimport io.intino.alexandria.event.Event;\n​\npublic interface Mounter<Event> {\n\tvoid handle(E event);\n}"))
+				rule().condition((type("factory"))).output(literal("package ")).output(mark("package")).output(literal(".mounters;\n\nimport io.intino.alexandria.event.Event;\n\npublic interface Mounter {\n\tvoid handle(Event event);\n}"))
 		);
 	}
 }

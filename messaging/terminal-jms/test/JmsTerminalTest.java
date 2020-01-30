@@ -20,7 +20,7 @@ public class JmsTerminalTest {
 	}
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void testPutAndHandle() throws InterruptedException {
 		JmsEventHub eventHub = new JmsEventHub("failover:(tcp://localhost:63000)", "comercial.cuentamaestra", "comercial.cuentamaestra", "cobranza", new File("outBox"));
 //		new Thread(() -> eventHub.attachListener("lalala", m -> System.out.println(m.toString()))).start();

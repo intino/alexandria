@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "2.0.1") core-framework
+Artifact("io.intino.alexandria", "2.0.2") core-framework
 	Imports
 		Compile("io.intino.alexandria", "json", "1.0.1")
 		Provided("io.intino.alexandria", "message", "2.0.0")

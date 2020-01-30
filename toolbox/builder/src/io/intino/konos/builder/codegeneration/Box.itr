@@ -17,15 +17,23 @@ def type(box)
 			return this;
 		}
 
-		$datamart+init
 
-		public io.intino.alexandria.core.Box open() {
-			return super.open();
+		protected void beforeStart() {
+
 		}
 
-		public void close() {
-			super.close();
+		protected void afterStart() {
+
 		}
+
+		protected void beforeStop() {
+
+		}
+
+		protected void afterStop() {
+
+		}
+
 
 		[$rest]
 		[$authenticationValidator]
@@ -47,11 +55,5 @@ end
 def trigger(authenticationValidator)
 	public io.intino.alexandria.rest.security.$type+FirstUpperCase~AuthenticationValidator authenticationValidator() {
 		return token -> false;
-	}
-end
-
-def trigger(init)
-	public void initDatamarts() {
-
 	}
 end

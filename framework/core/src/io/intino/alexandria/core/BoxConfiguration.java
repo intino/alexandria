@@ -6,14 +6,14 @@ import java.util.Map;
 public abstract class BoxConfiguration {
 
 	protected Map<String, String> args;
-	protected File workspace;
+	protected File home;
 
 	public BoxConfiguration(String[] args) {
 		this.args = argsToMap(args);
-		if (workspace == null) {
-			if (this.args.get("workspace") != null)
-				workspace = new java.io.File(this.args.get("workspace"));
-			else workspace = new java.io.File("./workspace");
+		if (home == null) {
+			if (this.args.get("home") != null)
+				home = new java.io.File(this.args.get("home"));
+			else home = new java.io.File("./home");
 		}
 	}
 
@@ -21,8 +21,8 @@ public abstract class BoxConfiguration {
 		return args.get(key);
 	}
 
-	public java.io.File workspace() {
-		return this.workspace;
+	public java.io.File home() {
+		return this.home;
 	}
 
 	private Map<String, String> argsToMap(String[] args) {
