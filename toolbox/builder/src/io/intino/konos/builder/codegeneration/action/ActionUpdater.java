@@ -1,136 +1,61 @@
 package io.intino.konos.builder.codegeneration.action;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.compiler.shared.PostCompileFieldActionMessage;
+import io.intino.konos.compiler.shared.PostCompileMethodActionMessage;
 import io.intino.konos.model.graph.Data;
 import io.intino.konos.model.graph.Exception;
 import io.intino.konos.model.graph.Parameter;
 import io.intino.konos.model.graph.Response;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
-import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
 import static io.intino.konos.builder.codegeneration.Formatters.firstLowerCase;
 import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.returnType;
-import static java.util.Arrays.stream;
 
 
 class ActionUpdater {
 
-	private final Project project;
+	private final CompilationContext compilationContext;
+	private final File destination;
 	private final String packageName;
 	private final List<? extends Parameter> parameters;
 	private final List<Exception> exceptions;
 	private final Response response;
-	private final PsiFile file;
-	private Application application = ApplicationManager.getApplication();
 
-	ActionUpdater(Project project, File destination, String packageName, List<? extends Parameter> parameters, List<Exception> exceptions, Response response) {
-		this.project = project;
+	ActionUpdater(CompilationContext compilationContext, File destination, String packageName, List<? extends Parameter> parameters, List<Exception> exceptions, Response response) {
+		this.compilationContext = compilationContext;
+		this.destination = destination;
 		this.packageName = packageName;
 		this.parameters = parameters;
 		this.exceptions = exceptions;
 		this.response = response;
-		this.file = application.runReadAction((Computable<PsiFile>) () -> {
-			VirtualFile fileByIoFile = VfsUtil.findFileByIoFile(destination, true);
-			return PsiManager.getInstance(project).findFile(Objects.requireNonNull(fileByIoFile));
-		});
 	}
 
 	void update() {
-		PsiClass psiClass = application.runReadAction((Computable<PsiClass>) () -> {
-			if (!(file instanceof PsiJavaFile) || ((PsiJavaFile) file).getClasses()[0] == null) return null;
-			return ((PsiJavaFile) file).getClasses()[0];
-		});
-		if (!ApplicationManager.getApplication().isWriteAccessAllowed())
-			runWriteCommandAction(project, () -> update(psiClass));
-		else update(psiClass);
+		parameters.forEach(p -> compilationContext.postCompileActionMessages().add(new PostCompileFieldActionMessage(compilationContext.module(), destination, "public",
+				false, formatType(p.asType(), p.isList()), nameOf(p))));
+		compilationContext.postCompileActionMessages().add(new PostCompileFieldActionMessage(compilationContext.module(), destination, "public",
+				false, "io.intino.konos.Box", "box"));
+		compilationContext.postCompileActionMessages().add(new PostCompileMethodActionMessage(compilationContext.module(), destination, "execute",
+				false, Collections.emptyList(), response == null ? "void" : returnType(response, packageName), exceptions()));
 	}
 
-	private void update(PsiClass psiClass) {
-		updateFields(psiClass);
-		if (psiClass.getMethods().length > 0) {
-			PsiMethod method = findExecuteMethod(psiClass);
-			if (method == null) return;
-			updateExceptions(method);
-			updateReturnType(method);
-		}
-	}
-
-	private PsiMethod findExecuteMethod(PsiClass psiClass) {
-		for (PsiMethod method : psiClass.findMethodsByName("execute", false))
-			if (!method.hasTypeParameters()) return method;
-		return null;
-	}
-
-	private void updateFields(PsiClass psiClass) {
-		if (DumbService.isDumb(project)) DumbService.getInstance(project).smartInvokeLater(() -> doUpdateFields(psiClass));
-		else doUpdateFields(psiClass);
-	}
-
-	private void doUpdateFields(PsiClass psiClass) {
-		final PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(project);
-		parameters.stream().
-				filter(parameter -> stream(psiClass.getAllFields()).noneMatch(f -> nameOf(parameter).equalsIgnoreCase(f.getName()))).
-				forEach(parameter -> psiClass.addAfter(createField(psiClass, elementFactory, parameter), psiClass.getLBrace().getNextSibling()));
-		if (stream(psiClass.getAllFields()).noneMatch(f -> "box".equalsIgnoreCase(f.getName())))
-			psiClass.addAfter(createGraphField(psiClass, elementFactory), psiClass.getLBrace().getNextSibling());
-	}
-
-	private void updateExceptions(PsiMethod psiMethod) {
-		final PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(project);
-//		for (PsiJavaCodeReferenceElement element : psiMethod.getThrowsList().getReferenceElements()) element.delete();
-		for (Exception exception : exceptions) {
-			if (!hasException(psiMethod.getThrowsList().getReferenceElements(), exception))
-				psiMethod.getThrowsList().add(elementFactory.createReferenceFromText(exception.core$().owner().owner() == null ? exceptionReference(exception) : exception.code().name(), psiMethod));
-		}
-	}
-
-	private boolean hasException(PsiJavaCodeReferenceElement[] referenceElements, Exception exception) {
-		for (PsiJavaCodeReferenceElement referenceElement : referenceElements)
-			if (exception.code().name().equals(referenceElement.getReferenceName())) return true;
-		return false;
+	private List<String> exceptions() {
+		return exceptions.stream().map(e -> e.core$().owner().owner() == null ? exceptionReference(e) : e.code().name()).collect(Collectors.toList());
 	}
 
 	private String exceptionReference(Exception exception) {
 		return packageName + ".exceptions." + Commons.firstUpperCase(exception.name$());
 	}
 
-	private void updateReturnType(PsiMethod psiMethod) {
-		final PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(project);
-		psiMethod.getReturnTypeElement().replace(elementFactory.createTypeElement(elementFactory.createTypeFromText(response == null ? "void" : returnType(response, packageName), psiMethod)));
-	}
-
-	private PsiField createField(PsiClass psiClass, PsiElementFactory elementFactory, Parameter parameter) {
-		PsiField field = elementFactory.createField(nameOf(parameter), elementFactory.createTypeFromText(formatType(parameter.asType(), parameter.isList()), psiClass));
-		if (field.getModifierList() == null) return field;
-		field.getModifierList().setModifierProperty(PsiModifier.PUBLIC, true);
-		field.getModifierList().setModifierProperty(PsiModifier.PRIVATE, false);
-		return field;
-	}
-
-	@NotNull
 	private String nameOf(Parameter parameter) {
 		return firstLowerCase(snakeCaseToCamelCase().format(parameter.name$()).toString());
-	}
-
-	private PsiField createGraphField(PsiClass psiClass, PsiElementFactory elementFactory) {
-		PsiField field = elementFactory.createField("box", elementFactory.createTypeFromText("io.intino.konos.Box", psiClass));
-		if (field.getModifierList() == null) return field;
-		field.getModifierList().setModifierProperty(PsiModifier.PUBLIC, true);
-		field.getModifierList().setModifierProperty(PsiModifier.PRIVATE, false);
-		return field;
 	}
 
 	private String formatType(Data.Type typeData, boolean list) {

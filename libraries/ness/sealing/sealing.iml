@@ -18,12 +18,15 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:zet:1.0.5" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.4" level="project" />
     <orderEntry type="module" module-name="event" />
-    <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13-rc-2" level="project" />
-    <orderEntry type="module" module-name="ingestion" />
     <orderEntry type="module" module-name="logger" />
-    <orderEntry type="module" module-name="zim" />
-    <orderEntry type="module" module-name="datalake" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
-    <orderEntry type="module" module-name="message" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:datalake:2.0.0" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:event:1.0.0" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:zim:2.0.0" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:message:2.0.0" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:mapp:1.0.0" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:tris:1.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: io.intino.alexandria:ingestion:2.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13" level="project" />
   </component>
 </module>

@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.accessor.ui.resource;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.PageTemplate;
 import io.intino.konos.builder.helpers.Commons;
@@ -20,8 +20,8 @@ import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 
 public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.resource.ResourceRenderer {
 
-	public ResourceRenderer(Settings settings, Service.UI.Resource resource) {
-		super(settings, resource, Target.Accessor);
+	public ResourceRenderer(CompilationContext compilationContext, Service.UI.Resource resource) {
+		super(compilationContext, resource, Target.Accessor);
 	}
 
 	@Override

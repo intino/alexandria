@@ -1,6 +1,6 @@
 package io.intino.konos.builder.codegeneration.ui.resource;
 
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.model.graph.Display;
@@ -14,15 +14,15 @@ public class ResourceListRenderer extends UIRenderer {
 	protected final List<Service.UI.Resource> resourceList;
 	protected final List<Display.Accessible> accessibleDisplays;
 
-	public ResourceListRenderer(Settings settings, KonosGraph graph, Target target) {
-		super(settings, target);
+	public ResourceListRenderer(CompilationContext compilationContext, KonosGraph graph, Target target) {
+		super(compilationContext, target);
 		this.resourceList = graph.core$().find(Service.UI.Resource.class);
 		this.accessibleDisplays = graph.displayList(Display::isAccessible).map(Display::asAccessible).collect(Collectors.toList());
 	}
 
 	@Override
 	public void render() {
-		resourceList.forEach(r -> new ResourceRenderer(settings, r, target).execute());
-		accessibleDisplays.forEach(d -> new AccessibleDisplayRenderer(settings, d, target).execute());
+		resourceList.forEach(r -> new ResourceRenderer(compilationContext, r, target).execute());
+		accessibleDisplays.forEach(d -> new AccessibleDisplayRenderer(compilationContext, d, target).execute());
 	}
 }

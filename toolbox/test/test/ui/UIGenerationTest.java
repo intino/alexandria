@@ -37,7 +37,7 @@ public class UIGenerationTest {
 	public void testCobranzaUi() throws Exception {
 		File gen = new File(TestUtil.DIR, "cobranza");
 		KonosGraph graph = new Graph().loadStashes("Cobranza").as(KonosGraph.class);
-		new FullRenderer(graph, TestUtil.settings(gen, "cobranza", loadCache(gen, graph))).execute();
+		new FullRenderer(graph, TestUtil.settings(gen, "cobranza", loadCache(gen, graph)), compiledFiles).execute();
 		//for (Service.UI service : graph.uiServiceList()) new ServiceRenderer(new Settings().src(gen).gen(gen).cache(loadCache(gen, graph)), service).execute();
 	}
 
@@ -45,7 +45,7 @@ public class UIGenerationTest {
 	public void testUiAndDisplays() throws Exception {
 		File gen = new File(TestUtil.DIR, UI);
 		KonosGraph graph = new Graph().loadStashes(UI).as(KonosGraph.class);
-		new FullRenderer(graph, TestUtil.settings(gen, UI, loadCache(gen, graph))).execute();
+		new FullRenderer(graph, TestUtil.settings(gen, UI, loadCache(gen, graph)), compiledFiles).execute();
 		for (Service.UI service : graph.uiServiceList()) new ServiceRenderer(new Settings().src(gen).gen(gen).cache(loadCache(gen, graph)), service).execute();
 	}
 
@@ -53,7 +53,7 @@ public class UIGenerationTest {
 	public void testDialog() throws Exception {
 		File gen = new File(TestUtil.DIR, DIALOG);
 		KonosGraph graph = new Graph().loadStashes(DIALOG).as(KonosGraph.class);
-		new FullRenderer(graph, TestUtil.settings(gen, DIALOG, loadCache(gen, graph))).execute();
+		new FullRenderer(graph, TestUtil.settings(gen, DIALOG, loadCache(gen, graph)), compiledFiles).execute();
 	}
 
 	@Test
@@ -109,7 +109,7 @@ public class UIGenerationTest {
 		Settings settings = TestUtil.settings(gen, workingPackage.toLowerCase(), cache);
 		cleanTestDirectory();
 		gen.mkdirs();
-		new FullRenderer(graph, TestUtil.settings(gen, workingPackage.toLowerCase(), cache)).execute();
+		new FullRenderer(graph, TestUtil.settings(gen, workingPackage.toLowerCase(), cache), compiledFiles).execute();
 		for (Service.UI service : graph.uiServiceList()) new ServiceRenderer(settings, service).execute();
 		new CacheWriter(gen).save(cache);
 	}

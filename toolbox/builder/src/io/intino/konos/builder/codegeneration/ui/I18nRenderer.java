@@ -3,7 +3,7 @@ package io.intino.konos.builder.codegeneration.ui;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.I18nTemplate;
 import io.intino.konos.builder.helpers.Commons;
@@ -18,8 +18,8 @@ import static io.intino.konos.builder.helpers.CodeGenerationHelper.folder;
 public class I18nRenderer extends UIRenderer {
 	private final Service.UI service;
 
-	public I18nRenderer(Settings settings, Service.UI service, Target target) {
-		super(settings, target);
+	public I18nRenderer(CompilationContext compilationContext, Service.UI service, Target target) {
+		super(compilationContext, target);
 		this.service = service;
 	}
 

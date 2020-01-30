@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.templates.RouteDispatcherTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
@@ -18,8 +18,8 @@ import static java.util.stream.Collectors.toList;
 public class RouteDispatcherRenderer extends UIRenderer {
 	private final Service.UI service;
 
-	public RouteDispatcherRenderer(Settings settings, Service.UI service, Target target) {
-		super(settings, target);
+	public RouteDispatcherRenderer(CompilationContext compilationContext, Service.UI service, Target target) {
+		super(compilationContext, target);
 		this.service = service;
 	}
 

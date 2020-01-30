@@ -5,13 +5,12 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.ActionTemplate;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Sentinel;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,8 +23,8 @@ public class ListenerRenderer extends Renderer {
 	private final List<Sentinel.SystemListener> systemSentinels;
 	private final List<Sentinel> sentinels;
 
-	public ListenerRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Owner);
+	public ListenerRenderer(CompilationContext compilationContext, KonosGraph graph) {
+		super(compilationContext, Target.Owner);
 		this.systemSentinels = graph.sentinelList(Sentinel::isSystemListener).map(Sentinel::asSystemListener).collect(Collectors.toList());
 		this.sentinels = graph.sentinelList().stream().filter(t -> !t.isSystemListener()).collect(Collectors.toList());
 	}
@@ -91,10 +90,10 @@ public class ListenerRenderer extends Renderer {
 		return new File(gen(), "scheduling");
 	}
 
-	@NotNull
+
 	private FrameBuilder baseFrame(String... types) {
 		return new FrameBuilder(types)
-				.add("box", settings.boxName())
-				.add("package", settings.packageName());
+				.add("box", compilationContext.boxName())
+				.add("package", compilationContext.packageName());
 	}
 }

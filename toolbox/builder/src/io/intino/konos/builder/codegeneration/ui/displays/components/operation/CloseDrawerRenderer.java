@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.operation;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.OperationRenderer;
@@ -9,8 +9,8 @@ import io.intino.konos.model.graph.OperationComponents.CloseDrawer;
 
 public class CloseDrawerRenderer extends OperationRenderer<CloseDrawer> {
 
-	public CloseDrawerRenderer(Settings settings, CloseDrawer component, TemplateProvider provider, Target target) {
-		super(settings, component, provider, target);
+	public CloseDrawerRenderer(CompilationContext compilationContext, CloseDrawer component, TemplateProvider provider, Target target) {
+		super(compilationContext, component, provider, target);
 	}
 
 	@Override

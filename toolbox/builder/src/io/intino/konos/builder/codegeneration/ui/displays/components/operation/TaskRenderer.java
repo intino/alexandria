@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.operation;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.OperationRenderer;
@@ -9,8 +9,8 @@ import io.intino.konos.model.graph.OperationComponents.Task;
 
 public class TaskRenderer extends OperationRenderer<Task> {
 
-	public TaskRenderer(Settings settings, Task component, TemplateProvider provider, Target target) {
-		super(settings, component, provider, target);
+	public TaskRenderer(CompilationContext compilationContext, Task component, TemplateProvider provider, Target target) {
+		super(compilationContext, component, provider, target);
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
@@ -29,8 +29,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private static final ComponentRendererFactory factory = new ComponentRendererFactory();
 	private static final Map<String, FrameBuilder> componentFrameMap = new HashMap<>();
 
-	public ComponentRenderer(Settings settings, C component, TemplateProvider provider, Target target) {
-		super(settings, component, provider, target);
+	public ComponentRenderer(CompilationContext compilationContext, C component, TemplateProvider provider, Target target) {
+		super(compilationContext, component, provider, target);
 		this.decorated = ElementHelper.isRoot(component);
 	}
 
@@ -104,7 +104,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private FrameBuilder referenceFrame(Component component) {
-		ComponentRenderer renderer = factory.renderer(settings, component, templateProvider, target);
+		ComponentRenderer renderer = factory.renderer(compilationContext, component, templateProvider, target);
 		FrameBuilder builder = new FrameBuilder("reference").add(typeOf(component)).add("name", component.name$());
 		Component parentComponent = component.core$().ownerAs(Component.class);
 		builder.add("box", boxName());
@@ -168,7 +168,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private UIRenderer componentRenderer(Component component) {
-		ComponentRenderer renderer = factory.renderer(settings, component, templateProvider, target);
+		ComponentRenderer renderer = factory.renderer(compilationContext, component, templateProvider, target);
 		renderer.buildChildren(true);
 		renderer.decorated(decorated);
 		renderer.owner(owner);
@@ -230,7 +230,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			Template template = element.a$(Stamp.class).template();
 			builder.add("template", template.name$());
 			builder.add("type", template.name$());
-			builder.add("generic", KonosGraph.isParent(settings.graphName(), template) ? "<>" : "");
+			builder.add("generic", KonosGraph.isParent(compilationContext.graphName(), template) ? "<>" : "");
 			return true;
 		}
 

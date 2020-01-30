@@ -4,7 +4,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Exception;
@@ -22,8 +22,8 @@ public abstract class ActionRenderer extends Renderer {
 
 	public enum ContextType { Default, Spark }
 
-	public ActionRenderer(Settings settings, String... types) {
-		super(settings, Target.Owner);
+	public ActionRenderer(CompilationContext compilationContext, String... types) {
+		super(compilationContext, Target.Owner);
 		this.types = types;
 	}
 
@@ -45,7 +45,7 @@ public abstract class ActionRenderer extends Renderer {
 			createNewClass(name, serviceName, response, parameters, exceptions, schemas);
 		} else {
 			File newDestiny = Commons.javaFile(destinyPackage(destiny), firstUpperCase(snakeCaseToCamelCase(name)) + suffix());
-			new ActionUpdater(project(), newDestiny, packageName(), parameters, exceptions, response).update();
+			new ActionUpdater(compilationContext, newDestiny, packageName(), parameters, exceptions, response).update();
 		}
 	}
 

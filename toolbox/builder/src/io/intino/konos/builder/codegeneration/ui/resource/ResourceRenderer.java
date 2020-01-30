@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.resource;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.templates.ResourceTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
@@ -17,8 +17,8 @@ import static io.intino.konos.builder.helpers.CodeGenerationHelper.resourceFolde
 public class ResourceRenderer extends UIRenderer {
 	protected final Service.UI.Resource resource;
 
-	public ResourceRenderer(Settings settings, Service.UI.Resource resource, Target target) {
-		super(settings, target);
+	public ResourceRenderer(CompilationContext compilationContext, Service.UI.Resource resource, Target target) {
+		super(compilationContext, target);
 		this.resource = resource;
 	}
 
@@ -31,7 +31,7 @@ public class ResourceRenderer extends UIRenderer {
 		if (resource.isConfidential()) builder.add("confidential", "");
 		Commons.writeFrame(resourceFolder(gen(), target), resourceFilename(resource.name$()), setup(new ResourceTemplate()).render(builder.toFrame()));
 
-		new PageRenderer(settings, resource).execute();
+		new PageRenderer(compilationContext, resource).execute();
 	}
 
 	private FrameBuilder[] parameters(Service.UI.Resource resource) {

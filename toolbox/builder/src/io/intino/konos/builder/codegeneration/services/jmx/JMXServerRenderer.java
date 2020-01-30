@@ -4,7 +4,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Service;
@@ -19,8 +19,8 @@ import static io.intino.konos.builder.helpers.Commons.writeFrame;
 public class JMXServerRenderer extends Renderer {
 	private final List<Service.JMX> services;
 
-	public JMXServerRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Owner);
+	public JMXServerRenderer(CompilationContext compilationContext, KonosGraph graph) {
+		super(compilationContext, Target.Owner);
 		this.services = graph.serviceList(Service::isJMX).map(Service::asJMX).collect(Collectors.toList());
 	}
 

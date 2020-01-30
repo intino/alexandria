@@ -16,7 +16,7 @@ public class HappySenseTest {
 	public void testCreation() {
 		KonosGraph graph = new Graph().loadStashes("Happysense").as(KonosGraph.class);
 		File gen = new File("test-gen", HAPPYSENSE);
-		new FullRenderer(graph, TestUtil.settings(gen, HAPPYSENSE)).execute();
+		new FullRenderer(graph, TestUtil.settings(gen, HAPPYSENSE), compiledFiles).execute();
 //		graph.rESTServiceList().forEach(a -> new RESTAccessorRenderer(a, new File("test-gen/happysense"), HAPPYSENSE).execute());
 	}
 }

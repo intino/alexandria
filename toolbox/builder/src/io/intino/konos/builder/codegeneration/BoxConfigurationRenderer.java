@@ -2,27 +2,24 @@ package io.intino.konos.builder.codegeneration;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.legio.graph.Parameter;
-import io.intino.plugin.project.LegioConfiguration;
 
 import java.util.Set;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
 public class BoxConfigurationRenderer extends Renderer {
-	private final LegioConfiguration configuration;
+	private final CompilerConfiguration configuration;
 	private final Set<String> params;
 	private boolean isTara;
 
-	BoxConfigurationRenderer(Settings settings, boolean isTara, Set<String> params) {
-		super(settings, Target.Owner);
+	BoxConfigurationRenderer(CompilationContext compilationContext, boolean isTara, Set<String> params) {
+		super(compilationContext, Target.Owner);
 		this.isTara = isTara;
 		this.params = params;
-		this.configuration = settings.moduleConfiguration();
-		if (configuration != null)
-			for (Parameter parameter : configuration.graph().artifact().parameterList())
-				this.params.add(parameter.name());
+		this.configuration = compilationContext.configuration();
+		this.params.addAll(configuration.parameters());
 	}
 
 	@Override
@@ -33,7 +30,7 @@ public class BoxConfigurationRenderer extends Renderer {
 	}
 
 	private String fillFrame(FrameBuilder builder) {
-		final String boxName = settings.boxName();
+		final String boxName = compilationContext.boxName();
 		builder.add("name", boxName).add("package", packageName());
 		if (parent() != null && configuration != null && configuration.model() != null && !configuration.model().level().isPlatform())
 			builder.add("parent", parent());

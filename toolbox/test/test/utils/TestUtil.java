@@ -22,7 +22,7 @@ public class TestUtil {
 	}
 
 	public static Settings settings(File gen, String packageDir, ElementCache cache) {
-		return new Settings(null, gen, gen, gen, packageDir, cache).webModule(webModule());
+		return new Settings(null, gen, gen, gen, packageDir, cache).webModuleDirectory(webModule());
 	}
 
 	private static Module webModule() {

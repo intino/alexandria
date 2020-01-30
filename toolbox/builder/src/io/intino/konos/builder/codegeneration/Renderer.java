@@ -1,26 +1,23 @@
 package io.intino.konos.builder.codegeneration;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
 import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.CatalogComponents;
 import io.intino.konos.model.graph.PrivateComponents;
-import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.magritte.Layer;
-import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 
 import java.io.File;
 import java.util.Map;
 
 public abstract class Renderer {
-	protected final Settings settings;
+	protected final CompilationContext compilationContext;
 	protected final ElementHelper elementHelper;
 	protected final Target target;
 
-	protected Renderer(Settings settings, Target target) {
-		this.settings = settings;
+	protected Renderer(CompilationContext compilationContext, Target target) {
+		this.compilationContext = compilationContext;
 		this.elementHelper = new ElementHelper();
 		this.target = target;
 	}
@@ -31,56 +28,56 @@ public abstract class Renderer {
 
 	protected abstract void render();
 
-	public Project project() {
-		return settings.project();
+	public String project() {
+		return compilationContext.project();
 	}
 
 	public String boxName() {
-		return settings.boxName();
+		return compilationContext.boxName();
 	}
 
-	protected Configuration configuration() {
-		return module() != null ? TaraUtil.configurationOf(module()) : null;
+	protected CompilerConfiguration configuration() {
+		return compilationContext.configuration();
 	}
 
 	protected String packageName() {
-		return settings.packageName();
+		return compilationContext.packageName();
 	}
 
-	protected Module module() {
-		return settings.module();
+	protected String module() {
+		return compilationContext.module();
 	}
 
 	protected String parent() {
-		return settings.parent();
+		return compilationContext.parent();
 	}
 
 	protected File root() {
-		return settings.root(target);
+		return compilationContext.root(target);
 	}
 
 	protected File res() {
-		return settings.res(target);
+		return compilationContext.res(target);
 	}
 
 	protected File src() {
-		return settings.src(target);
+		return compilationContext.src(target);
 	}
 
 	protected File gen() {
-		return settings.gen(target);
+		return compilationContext.gen(target);
 	}
 
 	protected Map<String, String> classes() {
-		return settings.classes();
+		return compilationContext.classes();
 	}
 
 	protected ElementCache cache() {
-		return settings.cache();
+		return compilationContext.cache();
 	}
 
 	public FrameBuilder buildBaseFrame() {
-		return new FrameBuilder().add("box", boxName()).add("package", settings.packageName());
+		return new FrameBuilder().add("box", boxName()).add("package", compilationContext.packageName());
 	}
 
 	protected boolean isRendered(Layer element) {
@@ -95,7 +92,7 @@ public abstract class Renderer {
 	}
 
 	protected void saveRendered(Layer element) {
-		settings.cache().add(element);
+		compilationContext.cache().add(element);
 	}
 
 }

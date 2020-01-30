@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.datahub.adapter;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Adapter;
@@ -14,23 +14,23 @@ import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class AdapterRenderer {
-	private final Settings settings;
+	private final CompilationContext compilationContext;
 	private final List<Adapter> adapters;
 
-	public AdapterRenderer(Settings settings, KonosGraph graph) {
-		this.settings = settings;
+	public AdapterRenderer(CompilationContext compilationContext, KonosGraph graph) {
+		this.compilationContext = compilationContext;
 		this.adapters = graph.adapterList();
 	}
 
 	public void execute() {
 		for (Adapter adapter : adapters) {
 			final FrameBuilder builder = new FrameBuilder("adapter").
-					add("box", settings.boxName()).
-					add("package", settings.packageName()).
+					add("box", compilationContext.boxName()).
+					add("package", compilationContext.packageName()).
 					add("name", adapter.name$());
-			final File directory = new File(settings.src(Target.Owner), "adapters");
+			final File directory = new File(compilationContext.src(Target.Owner), "adapters");
 			final String adapterName = adapter.name$();
-			settings.classes().put(adapter.getClass().getSimpleName() + "#" + adapter.name$(), "adapters." + adapterName);
+			compilationContext.classes().put(adapter.getClass().getSimpleName() + "#" + adapter.name$(), "adapters." + adapterName);
 			if (!alreadyRendered(directory, adapterName))
 				writeFrame(directory, adapterName, customize(new AdapterTemplate()).render(builder.toFrame()));
 		}

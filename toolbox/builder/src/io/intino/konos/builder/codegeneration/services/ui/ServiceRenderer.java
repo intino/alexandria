@@ -3,7 +3,7 @@ package io.intino.konos.builder.codegeneration.services.ui;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.templates.ServiceTemplate;
 import io.intino.konos.builder.codegeneration.ui.I18nRenderer;
@@ -24,20 +24,20 @@ import static io.intino.konos.model.graph.PassiveView.Request.ResponseType.Asset
 public class ServiceRenderer extends UIRenderer {
 	private final Service.UI service;
 
-	public ServiceRenderer(Settings settings, Service.UI service) {
-		super(settings, Target.Owner);
+	public ServiceRenderer(CompilationContext compilationContext, Service.UI service) {
+		super(compilationContext, Target.Owner);
 		this.service = service;
 	}
 
 	@Override
 	public void render() {
 		createUi();
-		new I18nRenderer(settings, service, target).execute();
-		new RouteDispatcherRenderer(settings, service, target).execute();
+		new I18nRenderer(compilationContext, service, target).execute();
+		new RouteDispatcherRenderer(compilationContext, service, target).execute();
 	}
 
 	private void createUi() {
-		final List<Display> displays = service.graph().rootDisplays(settings.graphName());
+		final List<Display> displays = service.graph().rootDisplays(compilationContext.graphName());
 		FrameBuilder builder = buildFrame().add("ui").add("name", service.name$()).add("resource", resourcesFrame(service.resourceList()));
 		if (userHome(service) != null) builder.add("userHome", userHome(service).name$());
 		if (!displays.isEmpty())

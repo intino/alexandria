@@ -6,7 +6,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.RESTNotificationActionRenderer;
 import io.intino.konos.builder.codegeneration.action.RESTResourceActionRenderer;
@@ -28,8 +28,8 @@ public class RESTResourceRenderer extends Renderer {
 	private static final String NOTIFICATIONS_PACKAGE = "rest/notifications";
 	private final List<Service.REST> services;
 
-	public RESTResourceRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Owner);
+	public RESTResourceRenderer(CompilationContext compilationContext, KonosGraph graph) {
+		super(compilationContext, Target.Owner);
 		this.services = graph.serviceList(Service::isREST).map(Service::asREST).collect(Collectors.toList());
 	}
 
@@ -65,11 +65,11 @@ public class RESTResourceRenderer extends Renderer {
 	}
 
 	private void createCorrespondingAction(Operation operation) {
-		new RESTResourceActionRenderer(settings, operation).execute();
+		new RESTResourceActionRenderer(compilationContext, operation).execute();
 	}
 
 	private void createCorrespondingAction(Notification notification) {
-		new RESTNotificationActionRenderer(settings, notification).execute();
+		new RESTNotificationActionRenderer(compilationContext, notification).execute();
 	}
 
 	private Frame frameOf(Resource resource, Operation operation) {

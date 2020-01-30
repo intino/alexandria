@@ -1,57 +1,24 @@
 package io.intino.konos.builder.codegeneration.services.ui;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.psi.*;
-import io.intino.konos.builder.codegeneration.Settings;
-import org.jetbrains.annotations.NotNull;
+import io.intino.konos.builder.codegeneration.CompilationContext;
+import io.intino.konos.compiler.shared.PostCompileMethodActionMessage;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.Collections;
 
 public abstract class Updater {
-	protected final Settings settings;
-	protected final PsiFile file;
-	protected final PsiElementFactory factory;
-	private Application application = ApplicationManager.getApplication();
+	protected final CompilationContext compilationContext;
+	protected File file;
 
-	public Updater(Settings settings, File file) {
-		Project project = settings.project();
-		this.file = project == null ? null : application.runReadAction((Computable<PsiFile>) () -> PsiManager.getInstance(project).findFile(Objects.requireNonNull(VfsUtil.findFileByIoFile(file, true))));
-		this.settings = settings;
-		this.factory = project == null ? null : JavaPsiFacade.getElementFactory(project);
+	public Updater(CompilationContext compilationContext, File file) {
+		this.compilationContext = compilationContext;
+		this.file = file;
 	}
 
 	public abstract void update();
 
-	@NotNull
-	protected PsiMethod createMethod(String name, String returnType) {
-		final PsiMethod method = factory.createMethod(name, factory.createTypeFromText(returnType, null));
-		method.getModifierList().setModifierProperty("static", true);
-		return method;
-	}
 
-	@NotNull
-	protected PsiClass createClass(String text, PsiClass context) {
-		return factory.createClassFromText(text, context).getInnerClasses()[0];
-	}
-
-
-	@NotNull
-	protected PsiClass createInnerClass(String name) {
-		return factory.createClass(name);
-	}
-
-	@NotNull
-	protected PsiMethod createMethodFromText(String text) {
-		return factory.createMethodFromText(text, null);
-	}
-
-	protected PsiClass innerClass(PsiClass psiClass, String name) {
-		return Arrays.stream(psiClass.getInnerClasses()).filter(c -> name.equals(c.getName())).findFirst().orElse(null);
+	protected void createMethod(String name, String returnType) {
+		compilationContext.postCompileActionMessages().add(new PostCompileMethodActionMessage(compilationContext.module(), file, name, true, Collections.emptyList(), returnType));
 	}
 }

@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.accessor.ui;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.DisplaysManifestTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
@@ -25,14 +25,14 @@ public class DisplaysManifestRenderer extends UIRenderer {
 	private final Service.UI service;
 	private final Set<String> renderedDisplays = new HashSet<>();
 
-	protected DisplaysManifestRenderer(Settings settings, Service.UI service) {
-		super(settings, Target.Accessor);
+	protected DisplaysManifestRenderer(CompilationContext compilationContext, Service.UI service) {
+		super(compilationContext, Target.Accessor);
 		this.service = service;
 	}
 
 	@Override
 	public void render() {
-		Set<Display> displays = service.graph().rootDisplays(settings.graphName()).stream().filter(this::isBaseType).collect(toSet());
+		Set<Display> displays = service.graph().rootDisplays(compilationContext.graphName()).stream().filter(this::isBaseType).collect(toSet());
 		Set<PassiveView> baseDisplays = baseDisplays(displays);
 		renderDisplays(displays, baseDisplays);
 		renderedDisplays.clear();

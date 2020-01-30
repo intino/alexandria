@@ -16,7 +16,7 @@ public class SlackGenerationTest {
 	public void testSlack() throws Exception {
 		File gen = new File("test-gen", SLACK);
 		KonosGraph graph = new Graph().loadStashes("Slack").as(KonosGraph.class);
-		new FullRenderer(graph, TestUtil.settings(gen, SLACK)).execute();
+		new FullRenderer(graph, TestUtil.settings(gen, SLACK), compiledFiles).execute();
 	}
 
 }
