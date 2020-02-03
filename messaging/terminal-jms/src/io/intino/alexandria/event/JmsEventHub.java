@@ -5,6 +5,7 @@ import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageWriter;
 import org.apache.activemq.ActiveMQConnection;
+import org.apache.activemq.ActiveMQSession;
 
 import javax.jms.*;
 import java.io.ByteArrayOutputStream;
@@ -58,7 +59,10 @@ public class JmsEventHub implements EventHub {
 				}
 				if (connection != null && ((ActiveMQConnection) connection).isStarted()) {
 					session = createSession(transactedSession);
-					Logger.info("Connection with Data Hub stablished!");
+					if (session != null && ((ActiveMQSession) session).isRunning()) {
+						connected.set(true);
+						Logger.info("Connection with Data Hub stablished!");
+					}
 				}
 			} catch (JMSException e) {
 				Logger.error(e);
@@ -236,7 +240,7 @@ public class JmsEventHub implements EventHub {
 
 			@Override
 			public void transportResumed() {
-				Logger.info("Connection with Data Hub stablished!");
+				Logger.info("Connection with Data Hub resumed!");
 				connected.set(true);
 				if (!eventConsumers.isEmpty() && consumers.isEmpty()) try {
 					session = createSession(false);
