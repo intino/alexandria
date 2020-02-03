@@ -1,6 +1,8 @@
 package io.intino.alexandria.bpm;
 
 
+import io.intino.alexandria.logger.Logger;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +41,7 @@ public abstract class Process {
 		semaphore.acquire();
 	}
 
-	public boolean isBusy(){
+	public boolean isBusy() {
 		return semaphore.availablePermits() == 0;
 	}
 
@@ -149,7 +151,13 @@ public abstract class Process {
 				.filter(p -> p.stateInfo() != null)
 				.filter(p -> p.stateInfo().status().equals("Enter"))
 				.filter(p -> exitStateStatus(p.stateInfo().name()) == null)
-				.forEach(p -> state(p.stateInfo().name()).task().execute());
+				.forEach(p -> {
+					State state = state(p.stateInfo().name());
+					Task task = state.task();
+					task.execute();
+					if (task.type() == Task.Type.Automatic)
+						Logger.warn(id() + " is stuck in a state with an automatic task. State: " + state.name() + ". Process type: " + this.name());
+				});
 	}
 
 	protected void onAbort() {
