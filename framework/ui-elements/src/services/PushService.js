@@ -7,7 +7,7 @@ const PushService = (function () {
     service.retries = [];
 
     service.openConnection = function (name, url) {
-        var socketUrl = url + "&r=" + Math.random();
+        var socketUrl = url;
         var socket = new WebSocket(socketUrl);
         socket.name = name;
         socket.ready = false;

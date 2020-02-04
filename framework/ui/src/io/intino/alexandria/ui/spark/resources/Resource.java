@@ -87,18 +87,18 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 	}
 
 	protected synchronized void authenticate() {
-		String authenticate = authenticate(manager.baseUrl());
+		String authenticate = authenticate(manager.currentSession(), manager.baseUrl());
 		if (authenticate == null) authenticate = manager.baseUrl();
 		manager.redirect(authenticate);
 	}
 
-	protected synchronized String authenticate(String baseUrl) {
+	protected synchronized String authenticate(UISession session, String baseUrl) {
 		String authId = UUID.randomUUID().toString();
 		Space space = space();
 		space.setAuthId(authId);
 		space.setBaseUrl(baseUrl);
-		saveAuthenticationId(this.manager.currentSession(), authId);
-		Authentication authentication = createAuthentication(this.manager.currentSession(), authId);
+		saveAuthenticationId(session, authId);
+		Authentication authentication = createAuthentication(session, authId);
 		return authenticate(authentication);
 	}
 
@@ -109,17 +109,17 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 		session.token(accessToken);
 	}
 
-	protected void logout() {
-		Optional<Authentication> authentication = authentication(this.manager.currentSession().id());
+	protected void logout(UISession session) {
+		Optional<Authentication> authentication = authentication(session.id());
 
 		if (!authentication.isPresent())
 			return;
 
 		try {
 			authentication.get().invalidate();
-			removeAuthentication(this.manager.currentSession().id());
+			removeAuthentication(session.id());
 		} catch (CouldNotInvalidateAccessToken error) {
-			error.printStackTrace();
+			Logger.debug(error.getMessage());
 		}
 	}
 
