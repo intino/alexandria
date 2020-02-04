@@ -48,10 +48,10 @@ def type(resource & accessibleDisplay)
 			page.session.whenLogin(new Function<String, String>() {
 				@Override
 				public String apply(String baseUrl) {
-					return $name+firstUpperCase~ProxyResource.this.authenticate(baseUrl);
+					return $name+firstUpperCase~ProxyResource.this.authenticate(page.session, baseUrl);
 				}
 			});
-			page.session.whenLogout(b -> logout());
+			page.session.whenLogout(b -> logout(page.session));
 			page.box = box;
 			page.clientId = client.id();
 			page.googleApiKey = "";
@@ -132,10 +132,10 @@ def type(resource)
 			page.session.whenLogin(new Function<String, String>() {
 				@Override
 				public String apply(String baseUrl) {
-					return $name+firstUpperCase~Resource.this.authenticate(baseUrl);
+					return $name+firstUpperCase~Resource.this.authenticate(page.session, baseUrl);
 				}
 			});
-			page.session.whenLogout(b -> logout());
+			page.session.whenLogout(b -> logout(page.session));
 			page.box = box;
 			page.clientId = clientId;
 			[page.googleApiKey = $googleApiKey+format;]

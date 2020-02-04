@@ -41,6 +41,7 @@ public class SparkManager<P extends PushService> {
 		String sessionId = request.cookie(sessionCookieName());
 		if (sessionId == null) sessionId = request.session().id();
 		return (SparkSession) pushService.session(sessionId);
+//		return (SparkSession) pushService.session(request.session().id());
 	}
 
 	public void write(Object object) {
@@ -163,6 +164,17 @@ public class SparkManager<P extends PushService> {
 	}
 
 	private void setUpSessionCookiePath() {
+//		HttpServletRequest request = this.request.raw();
+//		HttpSession session = request.getSession();
+//
+//		if (request.getParameter("JSESSIONID") != null) {
+//			Cookie userCookie = new Cookie("JSESSIONID", request.getParameter("JSESSIONID"));
+//			response.raw().addCookie(userCookie);
+//		} else {
+//			String sessionId = session.getId();
+//			Cookie userCookie = new Cookie("JSESSIONID", sessionId);
+//			response.raw().addCookie(userCookie);
+//		}
 		HttpServletRequest request = this.request.raw();
 		HttpSession session = request.getSession();
 		String sessionCookieName = sessionCookieName();
