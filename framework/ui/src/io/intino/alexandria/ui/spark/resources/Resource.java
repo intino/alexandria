@@ -119,7 +119,7 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 			authentication.get().invalidate();
 			removeAuthentication(session.id());
 		} catch (CouldNotInvalidateAccessToken error) {
-			error.printStackTrace();
+			Logger.debug(error.getMessage());
 		}
 	}
 
