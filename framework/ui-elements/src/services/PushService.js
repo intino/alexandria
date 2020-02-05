@@ -7,7 +7,8 @@ const PushService = (function () {
     service.retries = [];
 
     service.openConnection = function (name, url) {
-        var socket = new WebSocket(url);
+        var socketUrl = url;
+        var socket = new WebSocket(socketUrl);
         socket.name = name;
         socket.ready = false;
 
@@ -45,10 +46,10 @@ const PushService = (function () {
             try {
                 service.retries[socket.name]++;
                 console.log("WebSocket connection lost. Status code: " + e.code + ". Retry: " + service.retries[socket.name] + ".");
-                service.openConnection(socket.name, url);
+                service.openConnection(socket.name, socketUrl);
             }
             catch(e) {
-                window.setTimeout(service.openConnection(socket.name, url), 1000*2);
+                window.setTimeout(service.openConnection(socket.name, socketUrl), 1000*2);
             }
         }
 
