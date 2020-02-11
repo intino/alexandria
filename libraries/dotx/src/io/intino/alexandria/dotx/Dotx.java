@@ -10,7 +10,7 @@ import java.util.zip.ZipOutputStream;
 
 public class Dotx {
 	private static final String CRLF = "</w:t></w:r><w:r><w:rPr><w:noProof/><w:sz w:val=\"16\"/><w:szCs w:val=\"16\"/></w:rPr><w:br/></w:r><w:r><w:rPr><w:noProof/><w:sz w:val=\"16\"/><w:szCs w:val=\"16\"/></w:rPr><w:t>";
-	private File template;
+	private final File template;
 	private final Content content;
 
 	public static Dotx from(File template) {
@@ -19,11 +19,16 @@ public class Dotx {
 
 	public Dotx replace(String replacements) {
 		for (String line : replacements.split("\n"))
-			this.content.replace(line.split(":"));
+			this.content.put(line.split(":"));
 		return this;
 	}
 
 	public Dotx replace(String field, String value) {
+		this.content.put(field, value);
+		return this;
+	}
+
+	public Dotx replace(String field, byte[] value) {
 		this.content.put(field, value);
 		return this;
 	}
@@ -34,20 +39,16 @@ public class Dotx {
 
 	private Dotx(File template) {
 		this.template = template;
-		this.content = new Content(new HashMap<>());
+		this.content = new Content();
 	}
 
 	private static final class Content {
-		private final Map<String, String> data;
+		private final Map<String, String> fields;
+		private final Map<String, byte[]> images;
 
-		Content(Map<String, String> data) {
-			this.data = data;
-		}
-
-		String process(String line) {
-			for (String key : data.keySet())
-				line = line.replace(fieldOf(key), valueOf(key));
-			return line;
+		Content() {
+			this.fields = new HashMap<>();
+			this.images = new HashMap<>();
 		}
 
 		private String fieldOf(String key) {
@@ -55,7 +56,7 @@ public class Dotx {
 		}
 
 		private String valueOf(String key) {
-			return tagOf(data.get(key)).replace("\n", CRLF).replace("&", "&amp;");
+			return tagOf(fields.get(key)).replace("\n", CRLF).replace("&", "&amp;");
 		}
 
 		private String tagOf(String name) {
@@ -63,13 +64,30 @@ public class Dotx {
 		}
 
 		void put(String field, String value) {
-			this.data.put(field,value);
+			this.fields.put(field,value);
 		}
 
-		void replace(String[] data) {
-			this.data.put(data[0],data[1]);
+		void put(String field, byte[] value) {
+			this.images.put(field, value);
 		}
 
+		void put(String[] data) {
+			this.fields.put(data[0],data[1]);
+		}
+
+		String replace(String line) {
+			for (String key : fields.keySet())
+				line = line.replace(fieldOf(key), valueOf(key));
+			return line;
+		}
+
+		byte[] image(String name) {
+			return images.get(name);
+		}
+
+		public boolean hasImage(String name) {
+			return images.containsKey(name);
+		}
 	}
 
 	private final class Zip {
@@ -100,10 +118,18 @@ public class Dotx {
 		}
 
 		private void copy(ZipEntry entry, ZipOutputStream zos) throws IOException {
-			if (isDocument(entry))
-				copyDocument(zin.getInputStream(entry), zos);
-			else
-				copyFile(zin.getInputStream(entry), zos);
+			if (isDocument(entry)) replaceDocument(zin.getInputStream(entry), zos);
+			else if (isReplacedImage(entry)) zos.write(imageOf(entry));
+			else copyFile(zin.getInputStream(entry), zos);
+		}
+
+		private byte[] imageOf(ZipEntry entry) {
+			return content.image(entry.getName().substring(11));
+		}
+
+		private boolean isReplacedImage(ZipEntry entry) {
+			if (!entry.getName().startsWith("word/media/")) return false;
+			return content.hasImage(entry.getName().substring(11));
 		}
 
 		private boolean isDocument(ZipEntry entry) {
@@ -116,12 +142,12 @@ public class Dotx {
 			is.close();
 		}
 
-		private void copyDocument(InputStream is, ZipOutputStream zos) throws IOException {
+		private void replaceDocument(InputStream is, ZipOutputStream zos) throws IOException {
 			try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
 				while (true) {
 					String line = reader.readLine();
 					if (line == null) break;
-					zos.write(content.process(line).getBytes());
+					zos.write(content.replace(line).getBytes());
 				}
 			}
 		}
