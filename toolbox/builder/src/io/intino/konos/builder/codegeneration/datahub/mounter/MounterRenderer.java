@@ -58,7 +58,7 @@ public class MounterRenderer {
 		String datamart = mounter.core$().ownerAs(Datamart.class).name$();
 		builder.add("event").add("datamart", datamart).add("type", types(mounter, manifest));
 		settings.classes().put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "mounters." + datamart + "." + mounterName);
-		File destination = new File(src, datamart + File.separator + "mounters");
+		File destination = new File(src, datamart.toLowerCase() + File.separator + "mounters");
 		if (!alreadyRendered(destination, mounterName)) {
 			writeFrame(destination, mounterName, customize(new MounterTemplate()).render(builder.toFrame()));
 		}
