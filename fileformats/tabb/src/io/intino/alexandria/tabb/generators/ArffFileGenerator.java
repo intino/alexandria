@@ -3,6 +3,7 @@ package io.intino.alexandria.tabb.generators;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.tabb.ColumnStream;
 import io.intino.alexandria.tabb.ColumnStream.Type;
+import io.intino.alexandria.tabb.ExplicitColumnStream;
 import io.intino.alexandria.tabb.FileGenerator;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
@@ -23,6 +24,7 @@ public class ArffFileGenerator implements FileGenerator {
 
 	public ArffFileGenerator(List<ColumnStream> streams) {
 		this.streams = streams;
+		streams.stream().filter(f -> f instanceof ExplicitColumnStream).forEach(s -> modes.put(s, new HashSet<>(((ExplicitColumnStream) s).modes())));
 	}
 
 	public FileGenerator destination(File directory, String name) {
