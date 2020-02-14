@@ -19,20 +19,21 @@ const styles = props => ({
 });
 
 class DateEditable extends AbstractDateEditable {
-	state = {
-		value : this.props.value,
-		readonly : this.props.readonly,
-		empty : false,
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new DateEditableNotifier(this);
 		this.requester = new DateEditableRequester(this);
+        this.state = {
+            ...this.state,
+            value : this.props.value,
+            readonly : this.props.readonly,
+            empty : false,
+        };
 	};
 
 	handleChange(moment) {
-		if (!moment.isValid()) return;
+		if (moment == null || !moment.isValid()) return;
 		this._notifyChange(moment.toDate());
 	};
 
@@ -44,7 +45,7 @@ class DateEditable extends AbstractDateEditable {
 		return (
 			<div style={this.style()}>
 				{ !timePicker ? <MuiPickersUtilsProvider utils={MomentUtils}><KeyboardDatePicker variant="inline" placeholder={pattern} autoOk
-																								 disabled={this.state.readonly || this.state.empty}
+																								 disabled={this.state.readonly}
 																								 format={pattern} className={classes.date} mask={this.props.mask}
 																								 value={this.state.value} onChange={this.handleChange.bind(this)}
 																								 minDate={min} maxDate={max} label={dateLabel}
