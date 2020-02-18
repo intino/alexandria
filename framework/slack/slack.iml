@@ -1,24 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="true">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_11" inherit-compiler-output="true">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Intino: javax.websocket:javax.websocket-api:1.1" level="project" />
-    <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.8.0" level="project" />
-    <orderEntry type="library" name="Intino: org.apache.httpcomponents:httpclient:4.5.3" level="project" />
-    <orderEntry type="library" name="Intino: org.apache.httpcomponents:httpcore:4.4.6" level="project" />
-    <orderEntry type="library" name="Intino: commons-logging:commons-logging:1.2" level="project" />
-    <orderEntry type="library" name="Intino: commons-codec:commons-codec:1.9" level="project" />
-    <orderEntry type="library" name="Intino: org.apache.httpcomponents:httpmime:4.5.3" level="project" />
-    <orderEntry type="library" name="Intino: org.threeten:threetenbp:1.3.1" level="project" />
-    <orderEntry type="library" name="Intino: org.glassfish.tyrus.bundles:tyrus-standalone-client:1.13.1" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
     <orderEntry type="module" module-name="logger" />
-    <orderEntry type="library" name="Intino: io.intino:slack-api:1.0.0" level="project" />
-    <orderEntry type="library" name="Intino: org.slf4j:slf4j-api:1.7.25" level="project" />
     <orderEntry type="library" name="Intino: org.apache.commons:commons-lang3:3.4" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.12" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: org.hamcrest:hamcrest-core:1.3" level="project" />
+    <orderEntry type="library" name="Intino: javax.websocket:javax.websocket-api:1.1" level="project" />
+    <orderEntry type="library" name="Intino: javax.websocket:javax.websocket-client-api:1.1" level="project" />
+    <orderEntry type="library" name="Intino: org.glassfish.tyrus.bundles:tyrus-standalone-client:1.13" level="project" />
+    <orderEntry type="library" name="Intino: com.github.seratch:jslack:3.4.1" level="project" />
+    <orderEntry type="library" name="Intino: com.github.seratch:jslack-api-model:3.4.1" level="project" />
+    <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.8.6" level="project" />
+    <orderEntry type="library" name="Intino: com.github.seratch:jslack-api-client:3.4.1" level="project" />
+    <orderEntry type="library" name="Intino: com.squareup.okhttp3:okhttp:4.2.2" level="project" />
+    <orderEntry type="library" name="Intino: com.squareup.okio:okio:2.2.2" level="project" />
+    <orderEntry type="library" name="Intino: org.jetbrains.kotlin:kotlin-stdlib:1.3.50" level="project" />
+    <orderEntry type="library" name="Intino: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50" level="project" />
+    <orderEntry type="library" name="Intino: org.jetbrains:annotations:13.0" level="project" />
+    <orderEntry type="library" name="Intino: org.slf4j:slf4j-api:1.7.29" level="project" />
+    <orderEntry type="library" name="Intino: com.github.seratch:jslack-app-backend:3.4.1" level="project" />
+    <orderEntry type="module" module-name="logger4j" />
+    <orderEntry type="library" name="Intino: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
+    <orderEntry type="library" name="Intino: log4j:log4j:1.2.17" level="project" />
   </component>
 </module>
