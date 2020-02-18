@@ -44,7 +44,7 @@ def type(mounter & population)
 end
 
 def type(mounter)
-	package $package+validPackage.$datamart.mounters;
+	package $package+validPackage.$datamart+validPackage+lowercase.mounters;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
 	import io.intino.alexandria.event.Event;
