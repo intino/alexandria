@@ -126,8 +126,10 @@ Concept:Named Service
 		var function:HomesProvider homeList = 'return self.resourceList().stream().filter(Service.UI.Resource::isMain).collect(toList());';
 		var function:TemplatesProvider templates = 'return self.resourceList().stream().map(r-> r.asPage().template()).collect(Collectors.toList());';
     	Concept Use
-    		var string className
-    		var string url
+    		var string package
+    		var string name
+    		var string service
+    		var string url = empty
     	var string port
     	var string title
     	var string favicon

@@ -12,7 +12,6 @@
     <orderEntry type="jdk" jdkName="11" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.13-rc-2" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.13" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.intino.tara:magritte:3.0.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.intino.tara:io:3.0.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.esotericsoftware:kryo:4.0.0" level="project" />

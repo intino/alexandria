@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AbstractExport from "../../../gen/displays/components/AbstractExport";
 import ExportNotifier from "../../../gen/displays/notifiers/ExportNotifier";
 import ExportRequester from "../../../gen/displays/requesters/ExportRequester";
-import Operation from "./Operation";
+import Actionable from "./Actionable";
 import { Select, MenuItem, FormControl, FormHelperText, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@material-ui/core";
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from "@date-io/moment";
@@ -12,7 +12,7 @@ import { withSnackbar } from 'notistack';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
-	...Operation.Styles,
+	...Actionable.Styles,
 	options : {
 		marginBottom: "20px",
 		width: "100%"
@@ -44,10 +44,10 @@ class Export extends AbstractExport {
 	};
 
 	render = () => {
-		const operation = this.renderOperation();
+		const actionable = this.renderActionable();
 		return (
 			<Suspense fallback={<div style={{width: "24px", ...this.style()}}/>}>
-				{this.renderRangeDialog()}{operation}
+				{this.renderRangeDialog()}{actionable}
 			</Suspense>
 		);
 	};

@@ -32,7 +32,7 @@ public class AccessibleDisplayRenderer extends UIRenderer {
 		builder.add(display.getClass().getSimpleName());
 
 		builder.add("parameter", parameters(display));
-		if (target == Target.Owner) Commons.writeFrame(resourceFolder(gen(), target), resourceFilename(display.name$(), "ProxyResource"), setup(new ResourceTemplate()).render(builder.toFrame()));
+//		if (target == Target.Owner) Commons.writeFrame(resourceFolder(gen(), target), resourceFilename(display.name$(), "ProxyResource"), setup(new ResourceTemplate()).render(builder.toFrame()));
 
 		new AccessibleDisplayActionRenderer(settings, display).execute();
 

@@ -38,7 +38,8 @@ def type(webpack)
         resolve: {
             alias: {
                 [$alias]
-                "app-elements": path.resolve(__dirname, '.')
+                "app-elements": path.resolve(__dirname, '.'),
+                "$webModuleName": path.resolve(__dirname, '.')
             }
         },
         plugins: $[

@@ -5,11 +5,10 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.collection.BindingCollectionRenderer;
-import io.intino.konos.model.graph.BIComponents;
-import io.intino.konos.model.graph.BIComponents.AbstractSlider;
-
-import static io.intino.konos.model.graph.BIComponents.Slider;
-import static io.intino.konos.model.graph.BIComponents.TemporalSlider;
+import io.intino.konos.model.graph.VisualizationComponents;
+import io.intino.konos.model.graph.VisualizationComponents.AbstractSlider;
+import io.intino.konos.model.graph.VisualizationComponents.Slider;
+import io.intino.konos.model.graph.VisualizationComponents.TemporalSlider;
 
 public class SliderRenderer extends BindingCollectionRenderer<AbstractSlider> {
 

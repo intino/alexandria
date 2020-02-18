@@ -1,0 +1,53 @@
+package io.intino.konos.builder.codegeneration.ui.displays.components.actionable;
+
+import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.displays.components.ActionableRenderer;
+import io.intino.konos.model.graph.Addressable;
+import io.intino.konos.model.graph.InteractionComponents;
+
+public class ActionRenderer extends ActionableRenderer {
+
+	public ActionRenderer(Settings settings, InteractionComponents.Actionable component, TemplateProvider provider, Target target) {
+		super(settings, component, provider, target);
+	}
+
+	@Override
+	protected void fill(FrameBuilder builder) {
+		super.fill(builder);
+		if (element.asAction().context() == InteractionComponents.Actionable.Action.Context.Selection) builder.add("selection");
+		addMethod(builder);
+	}
+
+	@Override
+	public FrameBuilder properties() {
+		FrameBuilder result = super.properties();
+		if (element.i$(InteractionComponents.Switch.class)) {
+			result.add("switches");
+			result.add("state", element.a$(InteractionComponents.Switch.class).state().name());
+		}
+		addAddressableProperties(result);
+		return result;
+	}
+
+	private void addMethod(FrameBuilder builder) {
+		if (!element.isAddressable()) return;
+		builder.add("methods", addressedMethod());
+	}
+
+	private FrameBuilder addressedMethod() {
+		FrameBuilder result = addOwner(buildBaseFrame()).add("method").add(InteractionComponents.Actionable.Action.class.getSimpleName()).add("addressable");
+		result.add("name", nameOf(element));
+		return result;
+	}
+
+	private void addAddressableProperties(FrameBuilder builder) {
+		if (!element.isAddressable()) return;
+		Addressable addressable = element.asAddressable();
+		String path = addressable.addressableResource().path();
+		builder.add("path", path);
+	}
+
+}

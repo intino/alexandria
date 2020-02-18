@@ -9,6 +9,7 @@ import io.intino.konos.builder.codegeneration.ui.ElementRenderer;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.*;
+import io.intino.konos.model.graph.InteractionComponents.Switch;
 import io.intino.konos.model.graph.OtherComponents.Selector;
 import io.intino.konos.model.graph.PassiveView.Notification;
 import io.intino.konos.model.graph.PassiveView.Request;
@@ -130,7 +131,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	protected void addComponentsImports(FrameBuilder builder) {
-		if (element.i$(PrivateComponents.Row.class)) addComponentsImports(element.a$(PrivateComponents.Row.class).items().stream().map(i -> i.a$(Component.class)).collect(toList()), builder);
+		if (element.i$(HelperComponents.Row.class)) addComponentsImports(element.a$(HelperComponents.Row.class).items().stream().map(i -> i.a$(Component.class)).collect(toList()), builder);
 		else addComponentsImports(components(element), builder);
 	}
 
@@ -145,15 +146,15 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (passiveView.i$(Block.class)) components.addAll(passiveView.a$(Block.class).componentList());
 		if (passiveView.i$(io.intino.konos.model.graph.Template.class)) components.addAll(passiveView.a$(io.intino.konos.model.graph.Template.class).componentList());
 		if (passiveView.i$(OtherComponents.Snackbar.class)) components.addAll(passiveView.a$(OtherComponents.Snackbar.class).componentList());
-		if (passiveView.i$(BIComponents.Stepper.class)) components.addAll(passiveView.a$(BIComponents.Stepper.class).stepList());
-		if (passiveView.i$(BIComponents.Stepper.Step.class)) components.addAll(passiveView.a$(BIComponents.Stepper.Step.class).componentList());
+		if (passiveView.i$(VisualizationComponents.Stepper.class)) components.addAll(passiveView.a$(VisualizationComponents.Stepper.class).stepList());
+		if (passiveView.i$(VisualizationComponents.Stepper.Step.class)) components.addAll(passiveView.a$(VisualizationComponents.Stepper.Step.class).componentList());
 		if (passiveView.i$(OtherComponents.Header.class)) components.addAll(passiveView.a$(OtherComponents.Header.class).componentList());
 		if (passiveView.i$(Selector.class)) components.addAll(passiveView.a$(Selector.class).componentList());
 		if (passiveView.i$(OtherComponents.User.class)) components.addAll(passiveView.a$(OtherComponents.User.class).componentList());
 		if (passiveView.i$(CatalogComponents.Table.class)) components.addAll(passiveView.a$(CatalogComponents.Table.class).moldList().stream().filter(m -> m.heading() != null).map(CatalogComponents.Collection.Mold::heading).collect(toList()));
 		if (passiveView.i$(CatalogComponents.Collection.Mold.Heading.class)) components.addAll(passiveView.a$(CatalogComponents.Collection.Mold.Heading.class).componentList());
 		if (passiveView.i$(CatalogComponents.Collection.Mold.Item.class)) components.addAll(passiveView.a$(CatalogComponents.Collection.Mold.Item.class).componentList());
-		if (passiveView.i$(OperationComponents.Toolbar.class)) components.addAll(passiveView.a$(OperationComponents.Toolbar.class).componentList());
+		if (passiveView.i$(InteractionComponents.Toolbar.class)) components.addAll(passiveView.a$(InteractionComponents.Toolbar.class).componentList());
 		if (passiveView.i$(OtherComponents.Dialog.class)) components.addAll(passiveView.a$(OtherComponents.Dialog.class).componentList());
 		if (passiveView.i$(OtherComponents.DecisionDialog.class)) components.add(passiveView.a$(OtherComponents.DecisionDialog.class).selector());
 		if (passiveView.i$(OtherComponents.CollectionDialog.class)) components.add(passiveView.a$(OtherComponents.CollectionDialog.class).collection());
@@ -167,7 +168,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	private List<String> facets(PassiveView passiveView) {
 		List<String> result = new ArrayList<>();
-		if (passiveView.i$(OperationComponents.Task.Switches.class)) result.add("Switches");
+		if (passiveView.i$(Switch.class)) result.add("Switch");
 		if (passiveView.i$(Editable.class)) result.add("Editable");
 		if (passiveView.i$(DataComponents.Text.Code.class)) result.add("Code");
 		if (passiveView.i$(Block.Drawer.class)) result.add("Drawer");
@@ -192,6 +193,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		result.add("type", importTypeOf(passiveView, multiple));
 		result.add("directory", directoryOf(passiveView));
 		result.add("componentDirectory", componentDirectoryOf(passiveView, multiple));
+		if (settings.webModule() != null) result.add("webModuleName", settings.webModule().getName());
 		if (!multiple) addFacets(passiveView, result);
 		return result;
 	}
@@ -204,7 +206,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	protected Object importTypeOf(PassiveView passiveView, boolean multiple) {
 		if (multiple) return "multiple";
-		if (passiveView.i$(CatalogComponents.Collection.Mold.Item.class) || passiveView.i$(PrivateComponents.Row.class)) return passiveView.name$();
+		if (passiveView.i$(CatalogComponents.Collection.Mold.Item.class) || passiveView.i$(HelperComponents.Row.class)) return passiveView.name$();
 		return typeOf(passiveView);
 	}
 
@@ -226,7 +228,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (passiveView.i$(OtherComponents.Frame.class)) return componentDirectoryOf(passiveView.a$(OtherComponents.Frame.class).display(), multiple);
 		if (passiveView.i$(io.intino.konos.model.graph.Template.class)) return "templates";
 		if (passiveView.i$(CatalogComponents.Collection.Mold.Item.class)) return "items";
-		if (passiveView.i$(PrivateComponents.Row.class)) return "rows";
+		if (passiveView.i$(HelperComponents.Row.class)) return "rows";
 		if (passiveView.i$(Component.class)) return "components";
 		return null;
 	}
@@ -337,7 +339,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			if (!imported.contains(key)) builder.add(importType, importOf(c, importType, isProjectComponent ? false : multiple));
 			imported.add(key);
 			if (c.i$(CatalogComponents.Collection.class)) registerCollectionImports(imported, c, builder);
-			if (c.i$(PrivateComponents.Row.class)) registerRowImports(imported, c, builder);
+			if (c.i$(HelperComponents.Row.class)) registerRowImports(imported, c, builder);
 			if (!c.i$(CatalogComponents.Collection.Mold.Item.class)) addComponentsImports(imported, components(c), builder);
 		});
 	}
@@ -350,7 +352,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	protected boolean isProjectComponent(Component component) {
 		if (component.i$(OtherComponents.Stamp.class)) return true;
 		if (component.i$(OtherComponents.Frame.class)) return true;
-		if (component.i$(PrivateComponents.Row.class)) return true;
+		if (component.i$(HelperComponents.Row.class)) return true;
 		if (component.i$(CatalogComponents.Collection.Mold.Item.class)) return true;
 		return false;
 	}
@@ -369,7 +371,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	private void registerRowImports(Set<String> imported, Component component, FrameBuilder builder) {
-		addComponentsImports(imported, component.a$(PrivateComponents.Row.class).items().stream().map(i -> i.a$(Component.class)).collect(toList()), builder);
+		addComponentsImports(imported, component.a$(HelperComponents.Row.class).items().stream().map(i -> i.a$(Component.class)).collect(toList()), builder);
 	}
 
 	private void registerCollectionImports(Set<String> imported, Component component, FrameBuilder builder) {

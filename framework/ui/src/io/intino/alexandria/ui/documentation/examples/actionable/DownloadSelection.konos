@@ -1,0 +1,23 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) downloadSelectionExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filledNoAir)
+				Toolbar toolbar as Linked(to=list6)
+					Button(title="download") download as Download(context=Selection) Affirmed("Are you sure you want to download selection?")
+						options = "only title" "full info"
+				List(itemClass="io.intino.alexandria.ui.documentation.Person") list6 as Selectable(multiple=true)
+					Mold > Item(height=60px,width=30%) downloadSelectionMold > Text firstName
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Toolbar toolbar as Linked(to\=list)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Button(title\="download") download as Download(context\=Selection) Affirmed("Are you sure you want to download selection?")
+						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list as Selectable(multiple\=true)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) mold > Text firstName
+						=========

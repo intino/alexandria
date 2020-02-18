@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
+
 
 public class AbstractBoxRenderer extends Renderer {
 	private final KonosGraph graph;
@@ -228,6 +230,7 @@ public class AbstractBoxRenderer extends Renderer {
 		if (!graph.uiServiceList().isEmpty()) {
 			final FrameBuilder uiFrame = new FrameBuilder().add("package", packageName());
 			if (settings.parent() != null) uiFrame.add("parent", settings.parent());
+			graph.uiServiceList().forEach(service -> service.useList().forEach(use -> uiFrame.add("useDictionaries", dictionariesOf(use))));
 			builder.add("hasUi", uiFrame);
 			builder.add("uiAuthentication", uiFrame);
 			builder.add("uiEdition", uiFrame);
@@ -242,8 +245,16 @@ public class AbstractBoxRenderer extends Renderer {
 			builder.add("authentication", parameter(service.authentication().by()).toFrame());
 		if (service.edition() != null)
 			builder.add("edition", new FrameBuilder(isCustom(service.edition().by()) ? "custom" : "standard").add("value", service.edition().by()).toFrame());
-		service.useList().forEach(use -> builder.add("use", use.className() + "Service"));
+		service.useList().forEach(use -> builder.add("use", serviceNameOf(use)));
 		return builder.toFrame();
+	}
+
+	private String serviceNameOf(Service.UI.Use use) {
+		return use.package$() + "." + use.name().toLowerCase() + ".box.ui." + firstUpperCase(use.service()) + "Service";
+	}
+
+	private String dictionariesOf(Service.UI.Use use) {
+		return use.package$() + "." + use.name().toLowerCase() + ".box.I18n.dictionaries()";
 	}
 
 	private boolean isCustom(String value) {

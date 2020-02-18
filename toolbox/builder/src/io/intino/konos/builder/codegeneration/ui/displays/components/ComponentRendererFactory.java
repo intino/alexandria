@@ -6,17 +6,16 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.collection.*;
 import io.intino.konos.builder.codegeneration.ui.displays.components.data.*;
-import io.intino.konos.builder.codegeneration.ui.displays.components.operation.*;
+import io.intino.konos.builder.codegeneration.ui.displays.components.actionable.*;
 import io.intino.konos.builder.codegeneration.ui.displays.components.other.*;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.DataComponents.Date;
 import io.intino.konos.model.graph.DataComponents.File;
 import io.intino.konos.model.graph.DataComponents.Image;
 import io.intino.konos.model.graph.DataComponents.Text;
-import io.intino.konos.model.graph.OperationComponents.*;
+import io.intino.konos.model.graph.InteractionComponents.Actionable;
+import io.intino.konos.model.graph.InteractionComponents.Toolbar;
 import io.intino.konos.model.graph.OtherComponents.Header;
-
-import static io.intino.konos.model.graph.BIComponents.*;
 
 public class ComponentRendererFactory {
 
@@ -29,18 +28,18 @@ public class ComponentRendererFactory {
 		if (component.i$(DataComponents.Number.class)) return (T) new NumberRenderer(settings, component.a$(DataComponents.Number.class), provider, target);
 		if (component.i$(DataComponents.Location.class)) return (T) new LocationRenderer(settings, component.a$(DataComponents.Location.class), provider, target);
 
-		if (component.i$(Spinner.class)) return (T) new SpinnerRenderer(settings, component.a$(BIComponents.Spinner.class), provider, target);
+		if (component.i$(VisualizationComponents.Spinner.class)) return (T) new SpinnerRenderer(settings, component.a$(VisualizationComponents.Spinner.class), provider, target);
 		if (component.i$(OtherComponents.Selector.class)) return (T) new SelectorRenderer(settings, component.a$(OtherComponents.Selector.class), provider, target);
-		if (component.i$(AbstractSlider.class)) return (T) new SliderRenderer(settings, component.a$(AbstractSlider.class), provider, target);
+		if (component.i$(VisualizationComponents.AbstractSlider.class)) return (T) new SliderRenderer(settings, component.a$(VisualizationComponents.AbstractSlider.class), provider, target);
 		if (component.i$(Block.class)) return (T) new BlockRenderer(settings, component.a$(Block.class), provider, target);
-		if (component.i$(Chart.class)) return (T) new ChartRenderer(settings, component.a$(Chart.class), provider, target);
-		if (component.i$(Dashboard.class)) return (T) new DashboardRenderer(settings, component.a$(BIComponents.Dashboard.class), provider, target);
+		if (component.i$(VisualizationComponents.Chart.class)) return (T) new ChartRenderer(settings, component.a$(VisualizationComponents.Chart.class), provider, target);
+		if (component.i$(VisualizationComponents.Dashboard.class)) return (T) new DashboardRenderer(settings, component.a$(VisualizationComponents.Dashboard.class), provider, target);
 		if (component.i$(OtherComponents.AbstractDialog.class)) return (T) new DialogRenderer(settings, component.a$(OtherComponents.AbstractDialog.class), provider, target);
 		if (component.i$(OtherComponents.BaseIcon.class)) return (T) new IconRenderer(settings, component.a$(OtherComponents.BaseIcon.class), provider, target);
 		if (component.i$(OtherComponents.Portal.class)) return (T) new PortalRenderer(settings, component.a$(OtherComponents.Portal.class), provider, target);
 		if (component.i$(OtherComponents.User.class)) return (T) new UserRenderer(settings, component.a$(OtherComponents.User.class), provider, target);
-		if (component.i$(Stepper.class)) return (T) new StepperRenderer(settings, component.a$(Stepper.class), provider, target);
-		if (component.i$(Stepper.Step.class)) return (T) new StepRenderer(settings, component.a$(Stepper.Step.class), provider, target);
+		if (component.i$(VisualizationComponents.Stepper.class)) return (T) new StepperRenderer(settings, component.a$(VisualizationComponents.Stepper.class), provider, target);
+		if (component.i$(VisualizationComponents.Stepper.Step.class)) return (T) new StepRenderer(settings, component.a$(VisualizationComponents.Stepper.Step.class), provider, target);
 
 		if (component.i$(Template.class)) return (T) new TemplateRenderer(settings, component.a$(Template.class), provider, target);
 		if (component.i$(Header.class)) return (T) new HeaderRenderer(settings, component.a$(Header.class), provider, target);
@@ -54,18 +53,17 @@ public class ComponentRendererFactory {
 		if (component.i$(CatalogComponents.SearchBox.class)) return (T) new SearchBoxRenderer(settings, component.a$(CatalogComponents.SearchBox.class), provider, target);
 
 		if (component.i$(Toolbar.class)) return (T) new ToolbarRenderer(settings, component.a$(Toolbar.class), provider, target);
-		if (component.i$(OpenPage.class)) return (T) new OpenPageRenderer(settings, component.a$(OpenPage.class), provider, target);
-		if (component.i$(OpenSite.class)) return (T) new OpenSiteRenderer(settings, component.a$(OpenSite.class), provider, target);
-		if (component.i$(OpenDrawer.class)) return (T) new OpenDrawerRenderer(settings, component.a$(OpenDrawer.class), provider, target);
-		if (component.i$(CloseDrawer.class)) return (T) new CloseDrawerRenderer(settings, component.a$(CloseDrawer.class), provider, target);
-		if (component.i$(OpenBlock.class)) return (T) new OpenBlockRenderer(settings, component.a$(OpenBlock.class), provider, target);
-		if (component.i$(Download.class)) return (T) new DownloadRenderer(settings, component.a$(Download.class), provider, target);
-		if (component.i$(DownloadSelection.class)) return (T) new DownloadSelectionRenderer(settings, component.a$(DownloadSelection.class), provider, target);
-		if (component.i$(Export.class)) return (T) new ExportRenderer(settings, component.a$(Export.class), provider, target);
-		if (component.i$(OpenDialog.class)) return (T) new OpenDialogRenderer(settings, component.a$(OpenDialog.class), provider, target);
-		if (component.i$(CloseDialog.class)) return (T) new CloseDialogRenderer(settings, component.a$(CloseDialog.class), provider, target);
-		if (component.i$(OperationComponents.Task.class)) return (T) new TaskRenderer(settings, component.a$(OperationComponents.Task.class), provider, target);
-		if (component.i$(Operation.class)) return (T) new OperationRenderer(settings, component.a$(Operation.class), provider, target);
+		if (component.i$(Actionable.OpenPage.class)) return (T) new OpenPageRenderer(settings, component.a$(Actionable.class), provider, target);
+		if (component.i$(Actionable.OpenSite.class)) return (T) new OpenSiteRenderer(settings, component.a$(Actionable.class), provider, target);
+		if (component.i$(Actionable.OpenDrawer.class)) return (T) new OpenDrawerRenderer(settings, component.a$(Actionable.class), provider, target);
+		if (component.i$(Actionable.CloseDrawer.class)) return (T) new CloseDrawerRenderer(settings, component.a$(Actionable.class), provider, target);
+		if (component.i$(Actionable.OpenBlock.class)) return (T) new OpenBlockRenderer(settings, component.a$(Actionable.class), provider, target);
+		if (component.i$(Actionable.Download.class)) return (T) new DownloadRenderer(settings, component.a$(Actionable.class), provider, target);
+		if (component.i$(Actionable.Export.class)) return (T) new ExportRenderer(settings, component.a$(Actionable.class), provider, target);
+		if (component.i$(Actionable.OpenDialog.class)) return (T) new OpenDialogRenderer(settings, component.a$(Actionable.class), provider, target);
+		if (component.i$(Actionable.CloseDialog.class)) return (T) new CloseDialogRenderer(settings, component.a$(Actionable.class), provider, target);
+		if (component.i$(Actionable.Action.class)) return (T) new ActionRenderer(settings, component.a$(Actionable.class), provider, target);
+		if (component.i$(Actionable.class)) return (T) new ActionableRenderer(settings, component.a$(Actionable.class), provider, target);
 
 		return (T) new ComponentRenderer(settings, component, provider, target);
 	}

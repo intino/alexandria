@@ -6,7 +6,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.CatalogComponents;
-import io.intino.konos.model.graph.PrivateComponents;
+import io.intino.konos.model.graph.HelperComponents;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.magritte.Layer;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
@@ -86,7 +86,7 @@ public abstract class Renderer {
 	protected boolean isRendered(Layer element) {
 		if (element == null) return false;
 		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) return false;
-		if (element.i$(PrivateComponents.Row.class)) return false;
+		if (element.i$(HelperComponents.Row.class)) return false;
 		return !cache().isDirty(element);
 	}
 

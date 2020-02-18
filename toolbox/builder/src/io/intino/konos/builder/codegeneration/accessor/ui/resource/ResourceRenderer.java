@@ -68,7 +68,7 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 		FrameBuilder result = new FrameBuilder("accessibleImport");
 		result.add("name", use.name$());
 		result.add("url", use.url());
-		result.add("elements", camelCaseToSnakeCase(use.className().substring(use.className().lastIndexOf(".")+1)));
+		result.add("elements", camelCaseToSnakeCase(use.service()));
 		return result.toFrame();
 	}
 

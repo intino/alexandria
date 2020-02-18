@@ -226,8 +226,8 @@ const CollectionBehavior = (collection) => {
         const prevSelectionCount = self.collection.selectionCount != null ? self.collection.selectionCount : 0;
         const selection = self.updateSelection(item);
         if (multiple) {
-            if (prevSelectionCount == 0 || (prevSelectionCount > 0 && selection.length <= 0)) self.collection.setState({selection: selection});
-            self.refreshItemsRendered(self.items(), null, self.collection.itemsWindow);
+            //if (prevSelectionCount == 0 || (prevSelectionCount > 0 && selection.length <= 0)) self.collection.setState({selection: selection});
+            //self.refreshItemsRendered(self.items(), null, self.collection.itemsWindow);
             self.collection.selectionCount = selection.length;
         }
 

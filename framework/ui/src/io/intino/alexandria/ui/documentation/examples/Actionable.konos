@@ -1,0 +1,103 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) actionableExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Button(title="operation") operation1 as Action
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Button(title\="operation") as Action
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Button facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Button(title="operation") operation2 as Action
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Button(title\="operation") as Action
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="IconButton facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				IconButton(title="operation", icon="/icons/operation.png") operation3 as Action
+			Block > Text as Code(language=Html)
+					value
+						=========
+						IconButton(title\="operation", icon\="/icons/operation.png") as Action
+						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="MaterialIconButton facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				MaterialIconButton(title="operation", icon="Add") operation4 as Action
+			Block > Text as Code(language=Html)
+					value
+						=========
+						MaterialIconButton(title\="operation",icon\="Add") as Action<br/><br/>
+						for icons gallery, refer to <a href\="https://material.io/tools/icons" target\="_blank">material.io</a>
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Affirmed facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Button(title="operation") operation5 as Action Affirmed("Are you sure you want to execute operation?")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Button(title\="operation") as Action Affirmed("Are you sure you want to execute operation?")
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Highlighted facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Button(title="operation 1", highlight=Outline) operation6 as Action
+				Button(title="operation 2", highlight=Fill) operation7 as Action
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Button(title\="operation 1", highlight\="Outline") as Action<br/>
+						Button(title\="operation 2", highlight\="Fill") as Action<br/>
+						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Switches facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Switch(title="edition", state=Off) operation8 as Action
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Switch(title\="edition", state\=Off) as Action
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Signed facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Button(title="edition") operation9 as Action Signed(signText="Fill your password before continue")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Button(title\="edition") as Action Signed(signText\="Fill your password before continue")
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Signed facet with reason property")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Button(title="edition") operation10 as Action Signed(signText="Fill your password before continue", reasonText="Fill reason")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Button(title\="edition") as Action Signed(signText\="Fill your password before continue", reasonText\="Fill reason")
+						=========

@@ -81,7 +81,7 @@ def type(alexandriaComponentImport)
 end
 
 def type(projectComponentImport)
-	import Displays$name+firstUpperCase from "app-elements/[$directory]/displays/[$componentDirectory/]$name+firstUpperCase";
+	import Displays$name+firstUpperCase from "$webModuleName/[$directory]/displays/[$componentDirectory/]$name+firstUpperCase";
 end
 
 def type(displayExtends & generic & isExtensionOf)
