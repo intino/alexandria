@@ -19,8 +19,10 @@ import com.google.gson.JsonParser;
 import io.intino.alexandria.logger.Logger;
 
 import javax.websocket.DeploymentException;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.*;
 
 import static java.util.stream.Collectors.toMap;
@@ -80,29 +82,45 @@ public abstract class Bot {
 		}
 	}
 
-	public void sendToUser(String userName, String message) throws IOException, SlackApiException {
+	public void sendToUser(String userName, String message) {
 		User user = findUserByName(userName);
 		if (user == null) return;
-		sendMessage(channelOf(user), message);
+		try {
+			sendMessage(channelOf(user), message);
+		} catch (IOException | SlackApiException e) {
+			Logger.error(e);
+		}
 	}
 
-	public void sendToUser(String userName, String fileName, String title, InputStream attachment) throws IOException, SlackApiException {
+	public void sendToUser(String userName, String fileName, String title, InputStream attachment) {
 		final User user = findUserByName(userName);
 		if (user == null) return;
-		sendAttachment(channelOf(user), attachment, fileName, title);
+		try {
+			sendAttachment(channelOf(user), attachment, fileName, title);
+		} catch (IOException | SlackApiException e) {
+			Logger.error(e);
+		}
 	}
 
 	public void sendMessage(String channel, String message) {
 		rtm.sendMessage(buildResponse(channel, message));
 	}
 
-	public void sendAttachment(String channel, InputStream attachment, String fileName, String title) throws IOException, SlackApiException {
-		slack.methods().filesUpload(FilesUploadRequest.builder().channels(List.of(channel)).filename(fileName).title(title).fileData(attachment.readAllBytes()).build());
+	public void sendAttachment(String channel, InputStream attachment, String fileName, String title) {
+		try {
+			slack.methods().filesUpload(FilesUploadRequest.builder().channels(List.of(channel)).filename(fileName).title(title).fileData(attachment.readAllBytes()).build());
+		} catch (IOException | SlackApiException e) {
+			Logger.error(e);
+		}
 	}
 
 
-	public void sendAttachment(String channel, byte[] attachment, String fileName, String title) throws IOException, SlackApiException {
-		slack.methods().filesUpload(FilesUploadRequest.builder().channels(List.of(channel)).filename(fileName).title(title).fileData(attachment).build());
+	public void sendAttachment(String channel, byte[] attachment, String fileName, String title) {
+		try {
+			slack.methods().filesUpload(FilesUploadRequest.builder().channels(List.of(channel)).filename(fileName).title(title).fileData(attachment).build());
+		} catch (IOException | SlackApiException e) {
+			Logger.error(e);
+		}
 	}
 
 	public User findUserById(String user) {
@@ -111,6 +129,18 @@ public abstract class Bot {
 
 	public User findUserByName(String user) {
 		return users.stream().filter(u -> !u.isBot() && u.getName().equals(user)).findFirst().orElse(null);
+	}
+
+	public Object talk(String userName, String message, MessageProperties properties) {
+		String[] content = Arrays.stream(message.split(" ")).filter(s -> !s.trim().isEmpty()).map(this::decode).toArray(String[]::new);
+		CommandInfo commandInfo = commandsInfo.get((contexts().get(userName).command.isEmpty() || isBundledCommand(content[0].toLowerCase()) ? "" : contexts().get(userName).command + "$") + content[0].toLowerCase());
+		final String context = commandInfo != null ? commandInfo.context : "";
+		final String commandKey = (context.isEmpty() ? "" : context + "$") + content[0].toLowerCase();
+		Command command = commandNotFound();
+		if (commandInfo != null && commands.containsKey(commandKey) && isInContext(commandKey, userName))
+			command = commands.get(commandKey);
+		else if (commands.containsKey(commandKey) && Objects.equals(context, "")) command = commands.get(commandKey);
+		return command.execute(properties, content.length > 1 ? Arrays.copyOfRange(content, 1, content.length) : new String[0]);
 	}
 
 	protected Slack session() {
@@ -152,26 +182,14 @@ public abstract class Bot {
 				if (userName == null || isAlreadyProcessed(request) || isMine(request)) return;
 				Object response = talk(userName, request.getText(), createMessageProperties(request.getChannel(), userName, request.getTs(), attachment(request)));
 				if (response == null || (response instanceof String && response.toString().isEmpty())) return;
-				if (response instanceof InputStream)
-					sendAttachment(request.getChannel(), (InputStream) response, "", "");
+				if (response instanceof SlackAttachment)
+					sendAttachment(request.getChannel(), ((SlackAttachment) response).inputStream, ((SlackAttachment) response).fileName, ((SlackAttachment) response).title);
 				else sendMessage(request.getChannel(), response.toString());
 			} catch (Throwable e) {
 				Logger.error(e);
 				sendMessage(request.getChannel(), "Command Error. Try `help` to see the options");
 			}
 		}
-	}
-
-	private Object talk(String userName, String message, MessageProperties properties) {
-		String[] content = Arrays.stream(message.split(" ")).filter(s -> !s.trim().isEmpty()).map(this::decode).toArray(String[]::new);
-		CommandInfo commandInfo = commandsInfo.get((contexts().get(userName).command.isEmpty() || isBundledCommand(content[0].toLowerCase()) ? "" : contexts().get(userName).command + "$") + content[0].toLowerCase());
-		final String context = commandInfo != null ? commandInfo.context : "";
-		final String commandKey = (context.isEmpty() ? "" : context + "$") + content[0].toLowerCase();
-		Command command = commandNotFound();
-		if (commandInfo != null && commands.containsKey(commandKey) && isInContext(commandKey, userName))
-			command = commands.get(commandKey);
-		else if (commands.containsKey(commandKey) && Objects.equals(context, "")) command = commands.get(commandKey);
-		return command.execute(properties, content.length > 1 ? Arrays.copyOfRange(content, 1, content.length) : new String[0]);
 	}
 
 	private String buildResponse(String channel, String message) {
@@ -195,7 +213,13 @@ public abstract class Bot {
 
 	private SlackAttachment attachment(com.github.seratch.jslack.api.model.Message request) {
 		if (request.getFiles() == null || request.getFiles().isEmpty()) return null;
-		return new SlackAttachment(request.getFiles().get(0));
+		try {
+			File file = request.getFiles().get(0);
+			return new SlackAttachment(new URL(file.getUrlPrivateDownload()).openStream(), file.getName(), file.getTitle());
+		} catch (IOException e) {
+			Logger.error(e);
+			return null;
+		}
 	}
 
 	private String channelOf(User user) throws IOException, SlackApiException {
@@ -251,10 +275,6 @@ public abstract class Bot {
 		return commandKey.equalsIgnoreCase("help") || commandKey.equalsIgnoreCase("where") || commandKey.equalsIgnoreCase("exit");
 	}
 
-	//	public interface TextCommand extends Command {
-//		String execute(MessageProperties properties, String... args);
-//	}
-//
 	public interface Command {
 		Object execute(MessageProperties properties, String... args);
 	}
@@ -304,11 +324,33 @@ public abstract class Bot {
 		}
 	}
 
-	private static class SlackAttachment {
-		private final File file;
+	public static class SlackAttachment {
+		private final InputStream inputStream;
+		private final String title;
+		private final String fileName;
 
-		public SlackAttachment(File file) {
-			this.file = file;
+		public SlackAttachment(InputStream inputStream, String title, String fileName) {
+			this.inputStream = inputStream;
+			this.title = title;
+			this.fileName = fileName;
+		}
+
+		public SlackAttachment(byte[] bytes, String title, String fileName) {
+			this.inputStream = new ByteArrayInputStream(bytes);
+			this.title = title;
+			this.fileName = fileName;
+		}
+
+		public InputStream getInputStream() {
+			return inputStream;
+		}
+
+		public String getTitle() {
+			return title;
+		}
+
+		public String getFileName() {
+			return fileName;
 		}
 	}
 
