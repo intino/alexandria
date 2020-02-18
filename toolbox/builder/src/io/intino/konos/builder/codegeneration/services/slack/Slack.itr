@@ -40,8 +40,8 @@ def type(slack & gen)
 			});
 			$request+add...[$NL]
 			try {
-				execute();
-				this.$name+snakeCaseToCamelCase+firstLowerCase~Slack.init(session());
+				connect();
+				this.$name+snakeCaseToCamelCase+firstLowerCase~Slack.init(session(), users());
 				$level+init...[$NL]
 			} catch (IOException e) {
 				io.intino.alexandria.logger.Logger.error(e.getMessage(), e);
