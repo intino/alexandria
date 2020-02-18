@@ -3,11 +3,11 @@ def type(reference) trigger(declaration)
 end
 
 def type(reference & item)
-	if ($name == null) $name = register(new $name+firstUpperCase(($box+firstUpperCase~Box)box()).<$name+firstUpperCase>id("$id").<$name+firstUpperCase>item($owner.this.item()).owner($owner.this));
+	if ($name == null) $name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").<$name+firstUpperCase>item($owner.this.item()).owner($owner.this));
 end
 
 def type(reference)
-	if ($name == null) $name = register(new $name+firstUpperCase(($box+firstUpperCase~Box)box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+	if ($name == null) $name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
 def type(component & child & collection) trigger(declarations)
@@ -71,7 +71,7 @@ def type(method & highlighted)
 end
 
 def type(method & signed)
-    public $name+firstUpperCase signChecker(io.intino.alexandria.ui.displays.components.operation.SignChecker checker) {
+    public $name+firstUpperCase signChecker(io.intino.alexandria.ui.displays.components.actionable.SignChecker checker) {
         this._signChecker(checker);
         return this;
     }
@@ -89,7 +89,7 @@ def type(method & collection & table)
 	[$selectionMethod]
 
 	public $name+firstUpperCase~Row create([$itemClass item]) {
-		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row(($box+firstUpperCase~Box)box());
+		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row([($concreteBox+firstUpperCase~Box)]box());
 		row.id(java.util.UUID.randomUUID().toString());
 		[row.item($itemVariable);]
 		return row;
@@ -236,11 +236,11 @@ def type(component & child & collection) trigger(rootReferences)
 end
 
 def type(component & child & stamp & multiple) trigger(rootReferences)
-	if ($name == null) $name = register(new $name+firstUpperCase(($box+firstUpperCase~Box)box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+	if ($name == null) $name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
 def type(component & child & stamp & single) trigger(rootReferences)
-	if ($name == null) $name = register(new $template+firstUpperCase$generic(($box+firstUpperCase~Box)box()).id("$id"));
+	if ($name == null) $name = register(new $template+firstUpperCase$generic([($concreteBox+firstUpperCase~Box)]box()).id("$id"));
 end
 
 def type(component & child) trigger(rootReferences)
@@ -278,11 +278,11 @@ def type(component & child) trigger(initializations)
 end
 
 def type(component & child & stamp & multiple)
-	if ($name == null) $name = register(new $name+firstUpperCase(($box+firstUpperCase~Box)box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+	if ($name == null) $name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
 def type(component & child & stamp & single)
-	if ($name == null) $name = register(new $template+firstUpperCase$generic(($box+firstUpperCase~Box)box()).id("$id"));
+	if ($name == null) $name = register(new $template+firstUpperCase$generic([($concreteBox+firstUpperCase~Box)]box()).id("$id"));
 end
 
 def type(component & child)
@@ -361,7 +361,7 @@ def type(implements & dynamicloaded)
 	implements io.intino.alexandria.ui.displays.components.DynamicLoaded
 end
 
-def type(implements & addressable & task)
+def type(implements & addressable & action)
 	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
 end
 
@@ -373,12 +373,12 @@ def type(implements)
 	implements --undefined--
 end
 
-def type(properties & operation) trigger(common)
+def type(properties & actionable) trigger(common)
 	[_title("$title");]
 	[_color("$color");]
 	[_readonly($readonly);]
-	[_mode(io.intino.alexandria.ui.displays.components.Operation.Mode.valueOf("$mode+firstUpperCase"));]
-	[$operationMode]
+	[_mode(io.intino.alexandria.ui.displays.components.Actionable.Mode.valueOf("$mode+firstUpperCase"));]
+	[$actionableMode]
 end
 
 def type(properties) trigger(common)
@@ -433,12 +433,12 @@ def type(properties & opensite) trigger(specific)
 	[_site("$site");]
 end
 
-def type(properties & switches) trigger(specific)
+def type(properties & switch) trigger(specific)
     [_path("$path");]
-    [_state(io.intino.alexandria.ui.displays.events.operation.ToggleEvent.State.valueOf("$state"));]
+    [_state(io.intino.alexandria.ui.displays.events.actionable.ToggleEvent.State.valueOf("$state"));]
 end
 
-def type(properties & task) trigger(specific)
+def type(properties & action) trigger(specific)
 	[_path("$path");]
 end
 
@@ -455,7 +455,7 @@ def type(properties & download) trigger(specific)
 	[_options(java.util.Arrays.asList("$option...[","]"));]
 end
 
-def type(properties & downloadselection) trigger(specific)
+def type(properties & download & selection) trigger(specific)
 	[_options(java.util.Arrays.asList("$option...[","]"));]
 end
 
@@ -550,11 +550,11 @@ def trigger(ordinalMethod)
 	_add(new io.intino.alexandria.ui.displays.components.slider.ordinals.$name+firstUpperCase~Ordinal());
 end
 
-def type(operationMode & iconbutton)
+def type(actionableMode & iconbutton)
 	_icon("$icon");
 end
 
-def type(operationMode & materialiconbutton)
+def type(actionableMode & materialiconbutton)
 	_icon("$icon");
 end
 
@@ -589,7 +589,7 @@ end
 
 def type(item) trigger(addMethod)
 	$methodAccessibility $name+firstUpperCase create$methodName+firstUpperCase([$itemClass element]) {
-		$name+firstUpperCase result = new $name+firstUpperCase(($box+firstUpperCase~Box)box());
+		$name+firstUpperCase result = new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box());
 		result.id(java.util.UUID.randomUUID().toString());
 		[result.item($itemVariable);]
 		return result;

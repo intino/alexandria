@@ -1,4 +1,5 @@
 import React from "react";
+import { Checkbox } from "@material-ui/core";
 import { withStyles } from '@material-ui/core/styles';
 import { withSnackbar } from 'notistack';
 import AbstractTable from "../../../gen/displays/components/AbstractTable";
@@ -38,6 +39,12 @@ const styles = theme => ({
             display: 'block'
         }
     },
+    selectAll : {
+        display: "none",
+        position: "absolute",
+        top: "0",
+        left: "0",
+    }
 });
 
 class Table extends AbstractTable {
@@ -50,6 +57,10 @@ class Table extends AbstractTable {
         this.header = React.createRef();
     };
 
+    handleCheck = () => {
+        this.requester.selectAll();
+    };
+
     render() {
         const { classes } = this.props;
         const selectable = this.props.selection != null;
@@ -59,9 +70,12 @@ class Table extends AbstractTable {
         const headerClass = height <= minHeight ? classes.withScroller : classes.withoutScroller;
 
         return (
-            <div ref={this.container} style={{height:"100%",width:"100%"}}>
+            <div ref={this.container} style={{height:"100%",width:"100%"}} className="layout vertical flex">
                 { ComponentBehavior.labelBlock(this.props) }
-                <div ref={this.header} className={classNames(classes.headerView, headerClass, "layout horizontal", selectable ? classes.selectable : {})}>{this.props.children}</div>
+                <div ref={this.header} className={classNames(classes.headerView, headerClass, "layout horizontal center", selectable ? classes.selectable : {})} style={{position:"relative"}}>
+                    <div className={classNames(classes.selectAll, selectable ? classes.selectable : {})}><Checkbox className={classes.selector} onChange={this.handleCheck.bind(this)} /></div>
+                    {this.props.children}
+                </div>
                 <div className="layout flex" style={{width:"100%",height:"calc(100% - " + headerHeight + "px)"}}><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width))}</AutoSizer></div>
             </div>
         );

@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AbstractOpenBlock from "../../../gen/displays/components/AbstractOpenBlock";
 import OpenBlockNotifier from "../../../gen/displays/notifiers/OpenBlockNotifier";
 import OpenBlockRequester from "../../../gen/displays/requesters/OpenBlockRequester";
-import Operation from "./Operation"
+import Actionable from "./Actionable"
 import { withSnackbar } from 'notistack';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
@@ -17,5 +17,5 @@ class OpenBlock extends AbstractOpenBlock {
 
 }
 
-export default withStyles(Operation.Styles, { withTheme: true })(withSnackbar(OpenBlock));
-DisplayFactory.register("OpenBlock", withStyles(Operation.Styles, { withTheme: true })(withSnackbar(OpenBlock)));
+export default withStyles(Actionable.Styles, { withTheme: true })(withSnackbar(OpenBlock));
+DisplayFactory.register("OpenBlock", withStyles(Actionable.Styles, { withTheme: true })(withSnackbar(OpenBlock)));

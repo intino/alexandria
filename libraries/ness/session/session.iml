@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.4" level="project" />
+    <orderEntry type="module" module-name="primitives" />
   </component>
 </module>

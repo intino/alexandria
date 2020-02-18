@@ -9,7 +9,7 @@ Template docsTemplate as Decorated
 			Image(value="images/intino.png") as Absolute(80px, 80px)
 			Text(value="intino", format=h3)
 			Block(layout=Horizontal Center, format=headerToolbar, spacing=DP24) links
-				OpenPage(page=UiElements.home, title="home") as Link
+				Link(title="home") as OpenPage(page=UiElements.home)
 				Text(value="docs")
 
 	Block(layout=Wrap, spacing=DP40, format=containerAirLarge) body
@@ -25,7 +25,7 @@ Template docsTemplate as Decorated
 
 Template(layout=Vertical Flexible, modelClass="io.intino.alexandria.schemas.Widget") widgetSummaryMold as Decorated Relative(height=100%)
 	Block(layout=Vertical Flexible) as Paper Absolute(width=400px)
-		OpenPage(title = "", page = UiElements.widgetType, format=h6, size=Large) title as Link
+		Link(title = "", format=h6, size=Large) title as OpenPage(page = UiElements.widgetType)
 		Block(layout=Flexible) > Text description
 		Text(format=body2) facets as Multiple(arrangement=Horizontal) Highlighted("white","#679164")
 

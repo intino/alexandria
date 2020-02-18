@@ -15,7 +15,6 @@ export const CollectionStyles = theme => ({
 		paddingLeft: "35px !important"
 	},
 	selector : {
-		display: "none",
 		position: "absolute",
 		left: "-5px"
 	},

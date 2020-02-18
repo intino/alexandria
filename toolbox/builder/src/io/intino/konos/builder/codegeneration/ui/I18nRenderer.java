@@ -1,5 +1,6 @@
 package io.intino.konos.builder.codegeneration.ui;
 
+import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
@@ -32,9 +33,31 @@ public class I18nRenderer extends UIRenderer {
 	@Override
 	public FrameBuilder buildFrame() {
 		FrameBuilder frame = super.buildFrame().add("i18n");
+		if (!isAlexandriaUi()) frame.add("use", alexandriaUseFrame());
+		service.useList().forEach(use -> frame.add("use", frameOf(use)));
 		List<Translator> translators = service.graph().translatorList();
 		translators.forEach(t -> frame.add("translator", frameOf(t)));
 		return frame;
+	}
+
+	private boolean isAlexandriaUi() {
+		String groupId = settings.moduleConfiguration().graph().artifact().groupId();
+		String artifactName = settings.moduleConfiguration().graph().artifact().name$();
+		return groupId.equalsIgnoreCase("io.intino.alexandria") && artifactName.equalsIgnoreCase("ui-framework");
+	}
+
+	private Frame alexandriaUseFrame() {
+		FrameBuilder result = new FrameBuilder("use");
+		result.add("name", "AlexandriaUi");
+		result.add("service", "alexandria-ui-elements");
+		return result.toFrame();
+	}
+
+	private Frame frameOf(Service.UI.Use use) {
+		FrameBuilder result = new FrameBuilder("use");
+		result.add("name", use.name());
+		result.add("service", use.service());
+		return result.toFrame();
 	}
 
 	private Frame frameOf(Translator translator) {

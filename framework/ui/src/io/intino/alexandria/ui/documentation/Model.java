@@ -4,9 +4,9 @@ import io.intino.alexandria.schemas.Method;
 import io.intino.alexandria.schemas.Parameter;
 import io.intino.alexandria.schemas.Property;
 import io.intino.alexandria.schemas.Widget;
+import io.intino.alexandria.ui.documentation.model.actionable.*;
 import io.intino.alexandria.ui.documentation.model.collection.*;
 import io.intino.alexandria.ui.documentation.model.data.*;
-import io.intino.alexandria.ui.documentation.model.operation.*;
 import io.intino.alexandria.ui.documentation.model.other.*;
 
 import java.util.Arrays;
@@ -52,7 +52,7 @@ public class Model {
 		map.put(WidgetType.Slider, new SliderWidget());
 		map.put(WidgetType.Selector, new SelectorWidget());
 		map.put(WidgetType.Table, new TableWidget());
-		map.put(WidgetType.Task, new TaskWidget());
+		map.put(WidgetType.Task, new ActionWidget());
 		map.put(WidgetType.OpenPage, new OpenPageWidget());
 		map.put(WidgetType.OpenBlock, new OpenBlockWidget());
 		map.put(WidgetType.Export, new ExportWidget());

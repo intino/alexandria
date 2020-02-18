@@ -5,7 +5,7 @@ import OpenDrawerNotifier from "../../../gen/displays/notifiers/OpenDrawerNotifi
 import OpenDrawerRequester from "../../../gen/displays/requesters/OpenDrawerRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
-import Operation from "./Operation";
+import Actionable from "./Actionable";
 
 class OpenDrawer extends AbstractOpenDrawer {
 
@@ -15,8 +15,7 @@ class OpenDrawer extends AbstractOpenDrawer {
 		this.requester = new OpenDrawerRequester(this);
 	};
 
-
 }
 
-export default withStyles(Operation.Styles, { withTheme: true })(withSnackbar(OpenDrawer));
-DisplayFactory.register("OpenDrawer", withStyles(Operation.Styles, { withTheme: true })(withSnackbar(OpenDrawer)));
+export default withStyles(Actionable.Styles, { withTheme: true })(withSnackbar(OpenDrawer));
+DisplayFactory.register("OpenDrawer", withStyles(Actionable.Styles, { withTheme: true })(withSnackbar(OpenDrawer)));

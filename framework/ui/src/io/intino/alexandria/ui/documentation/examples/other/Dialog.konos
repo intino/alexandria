@@ -8,29 +8,29 @@ Template(layout=Vertical, spacing=DP8) dialogExamplesMold as Decorated
 		Block as Relative(width=33%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				OpenDialog(title="custom dialog", dialog=dialog1) as Button
+				Button(title="custom dialog") as OpenDialog(dialog=dialog1)
 				Dialog(format=containerAirLarge, title = "custom dialog") dialog1
 					Text field1 as Editable(placeholder="field 1")
 					Text field2 as Editable(placeholder="field 2")
 					Block(layout=Horizontal EndJustified, spacing=DP8, format=airTop)
-						CloseDialog(title="Close", dialog=dialog1) as Button
-						Task(title="Accept") acceptButton as Button
+						Button(title="Close") as CloseDialog(dialog=dialog1)
+						Button(title="Accept") acceptButton as Action
 			Block > Text as Code(language=Html)
 					value
 						=========
-						OpenDialog(title\="custom dialog", dialog\=dialog) as Button
+						Button(title\="custom dialog") as OpenDialog(dialog\=dialog)
 						Dialog(format\=containerAirLarge, title \= "custom dialog") dialog
 						&nbsp;&nbsp;&nbsp;&nbsp;Text field1 as Editable
 						&nbsp;&nbsp;&nbsp;&nbsp;Text field2 as Editable
 						&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal EndJustified)
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CloseDialog(title\="Close", dialog\=dialog) as Button
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Task(title\="Accept") as Button
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Button(title\="Close") as CloseDialog(dialog\=dialog)
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Button(title\="Accept") as Action
 						=========
 
 		Block as Relative(width=33%, height=100%)
 			Text(format=h6, value="No facets. Decision dialog")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				OpenDialog(title="decision dialog", dialog=dialog2) as Button
+				Button(title="decision dialog") as OpenDialog(dialog=dialog2)
 				DecisionDialog(format=containerAirLarge, title = "decision dialog") dialog2
 					Selector selector1 as ListBox
 						Block(layout=Horizontal Center, spacing=DP8) option1 as Option
@@ -42,7 +42,7 @@ Template(layout=Vertical, spacing=DP8) dialogExamplesMold as Decorated
 			Block > Text as Code(language=Html)
 					value
 						=========
-						OpenDialog(title\="decision dialog", dialog\=dialog) as Button
+						Button(title\="decision dialog") as OpenDialog(dialog\=dialog)
 						DecisionDialog(format\=containerAirLarge, title \= "decision dialog") dialog
 						&nbsp;&nbsp;&nbsp;&nbsp;Selector selector1 as ComboBox
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text option1 as Option Labeled("Option 1")
@@ -52,14 +52,14 @@ Template(layout=Vertical, spacing=DP8) dialogExamplesMold as Decorated
 		Block as Relative(width=33%, height=100%)
 			Text(format=h6, value="No facets. Alert dialog")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				OpenDialog(title="alert dialog", dialog=dialog3) as Button
+				Button(title="alert dialog") as OpenDialog(dialog=dialog3)
 				AlertDialog(format=containerAirLarge, title = "alert dialog") dialog3 as Absolute(width=350px)
 					message = "Intino is cool!"
 					closeLabel = "OK!"
 			Block > Text as Code(language=Html)
 					value
 						=========
-						OpenDialog(title\="alert dialog", dialog\=dialog) as Button
+						Button(title\="alert dialog") as OpenDialog(dialog\=dialog)
 						AlertDialog(format\=containerAirLarge, title \= "alert dialog") dialog as Absolute(width\=350px)
 						&nbsp;&nbsp;&nbsp;&nbsp;message \= "Intino is cool!"
 						&nbsp;&nbsp;&nbsp;&nbsp;acceptLabel \= "OK!"
@@ -69,7 +69,7 @@ Template(layout=Vertical, spacing=DP8) dialogExamplesMold as Decorated
 		Block as Relative(width=33%, height=100%)
 			Text(format=h6, value="No facets. Collection dialog")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				OpenDialog(title="collection dialog", dialog=dialog4) as Button
+				Button(title="collection dialog") as OpenDialog(dialog=dialog4)
 				CollectionDialog(format=containerAirLarge, title = "collection dialog") dialog4
 					allowSearch = true
 					List(itemClass="io.intino.alexandria.ui.documentation.Person") list1 as Selectable
@@ -77,7 +77,7 @@ Template(layout=Vertical, spacing=DP8) dialogExamplesMold as Decorated
 			Block > Text as Code(language=Html)
 					value
 						=========
-						OpenDialog(title\="collection dialog", dialog\=dialog) as Button
+						Button(title\="collection dialog") as OpenDialog(dialog\=dialog)
 						CollectionDialog(format\=containerAirLarge, title \= "collection dialog") dialog
 						&nbsp;&nbsp;&nbsp;&nbsp;allowSearch \= true
 						&nbsp;&nbsp;&nbsp;&nbsp;List list1 as Selectable > Mold > Item(height \= 100px) itemMold
@@ -86,7 +86,7 @@ Template(layout=Vertical, spacing=DP8) dialogExamplesMold as Decorated
 		Block as Relative(width=33%, height=100%)
 			Text(format=h6, value="Fullscreen facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				OpenDialog(title="fullscreen dialog", dialog=dialog5) as Button
+				Button(title="fullscreen dialog") as OpenDialog(dialog=dialog5)
 				AlertDialog(format=containerAirLarge, title = "full screen dialog") dialog5 as Absolute(width=350px) FullScreen
 					message = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce lobortis lacinia leo, sed fringilla libero. Pellentesque at venenatis orci. Sed enim sem, blandit vel massa ut, semper blandit sapien. Suspendisse potenti. Etiam euismod nibh a scelerisque placerat. Duis maximus eget ipsum pretium auctor. Mauris malesuada metus vel dolor laoreet, eget mollis mauris condimentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam id nisl nibh. Mauris mattis nulla non lacinia tincidunt. Ut id orci sit amet nisl viverra rutrum in eu neque.
                                Donec ac ex in nisl feugiat sagittis. Curabitur vehicula sed felis nec blandit. Mauris eu urna at dui feugiat laoreet. Aliquam iaculis feugiat scelerisque. Maecenas suscipit est mauris, non aliquet metus molestie in. Suspendisse finibus malesuada ante et dapibus. Mauris et dapibus massa, eu posuere nunc. Ut a lacus lectus. Morbi non vulputate eros. Morbi egestas vehicula risus, egestas sollicitudin velit elementum in. Nulla ut euismod tortor. Vestibulum tempor justo fringilla mollis hendrerit."
@@ -94,7 +94,7 @@ Template(layout=Vertical, spacing=DP8) dialogExamplesMold as Decorated
 			Block > Text as Code(language=Html)
 					value
 						=========
-						OpenDialog(title\="fullscreen dialog", dialog\=dialog) as Button
+						Button(title\="fullscreen dialog") as OpenDialog(dialog\=dialog)
 						AlertDialog(format\=containerAirLarge, title \= "full screen dialog") dialog as Absolute(width\=350px) Fullscreen
 						&nbsp;&nbsp;&nbsp;&nbsp;message \= "Intino is cool!"
 						&nbsp;&nbsp;&nbsp;&nbsp;acceptLabel \= "OK!"
