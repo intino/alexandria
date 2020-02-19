@@ -343,7 +343,7 @@ def type(terminal) trigger(getter)
 		return this.terminal;
 	}
 
-	public io.intino.alexandria.event.JmsEventHub eventHub() {
+	protected io.intino.alexandria.event.JmsEventHub eventHub() {
 		return this.eventHub;
 	}
 end
@@ -391,6 +391,10 @@ end
 
 def type(messageHub) trigger(close)
 	if (messageHub != null) messageHub.stop();
+end
+
+def type(service & slack) trigger(close)
+	this.$name+SnakeCaseToCamelCase+FirstLowerCase.disconnect();
 end
 
 def type(service) trigger(close)

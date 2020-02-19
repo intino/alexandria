@@ -75,6 +75,7 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.0.1" level="project" />
     <orderEntry type="module" module-name="rest" />
     <orderEntry type="module" module-name="ui-elements" />
-    <orderEntry type="library" scope="PROVIDED" name="Intino: io.intino.alexandria:core-framework:2.0.2" level="project" />
+    <orderEntry type="module" module-name="core" />
+    <orderEntry type="module" module-name="message" />
   </component>
 </module>

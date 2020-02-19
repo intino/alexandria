@@ -1,22 +1,31 @@
 package io.intino.alexandria.slack;
 
+import com.github.seratch.jslack.Slack;
+import com.github.seratch.jslack.SlackConfig;
+import com.github.seratch.jslack.api.methods.SlackApiException;
+import com.github.seratch.jslack.api.methods.request.files.FilesUploadRequest;
+import com.github.seratch.jslack.api.methods.request.users.UsersConversationsRequest;
+import com.github.seratch.jslack.api.methods.request.users.UsersListRequest;
+import com.github.seratch.jslack.api.methods.response.users.UsersConversationsResponse;
+import com.github.seratch.jslack.api.methods.response.users.UsersListResponse;
+import com.github.seratch.jslack.api.model.File;
+import com.github.seratch.jslack.api.model.User;
+import com.github.seratch.jslack.api.rtm.RTMClient;
+import com.github.seratch.jslack.api.rtm.message.Message;
+import com.github.seratch.jslack.common.json.GsonFactory;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.intino.alexandria.logger.Logger;
-import io.intino.slackapi.*;
-import io.intino.slackapi.events.SlackMessagePosted;
-import io.intino.slackapi.impl.SlackSessionFactory;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
 
-import java.io.*;
-import java.net.Proxy;
+import javax.websocket.DeploymentException;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.*;
 
-import static io.intino.slackapi.impl.SlackSessionFactory.getSlackSessionBuilder;
 import static java.util.stream.Collectors.toMap;
-import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 
 public abstract class Bot {
 	private final String token;
@@ -24,7 +33,12 @@ public abstract class Bot {
 	private final Map<String, CommandInfo> commandsInfo = new LinkedHashMap<>();
 	private final Set<String> processedMessages = new LinkedHashSet<>();
 	protected Map<String, Context> usersContext = new LinkedHashMap<>();
-	private SlackSession session;
+	private List<User> users;
+	private Slack slack;
+	private RTMClient rtm;
+	private Gson gson = GsonFactory.createCamelCase(SlackConfig.DEFAULT);
+	private JsonParser jsonParser = new JsonParser();
+	private User botIdentity;
 
 	public Bot(String token) {
 		this.token = token;
@@ -51,61 +65,70 @@ public abstract class Bot {
 		return usersContext;
 	}
 
-	public void execute() throws IOException {
-		SlackSessionFactory.SlackSessionFactoryBuilder builder = getSlackSessionBuilder(token).withAutoreconnectOnDisconnection(true).withConnectionHeartbeat(0, null);
-		if (System.getProperty("http.proxyHost") != null)
-			builder.withProxy(Proxy.Type.HTTP, System.getProperty("http.proxyHost"), Integer.parseInt(System.getProperty("http.proxyPort")));
-		if (System.getProperty("https.proxyHost") != null)
-			builder.withProxy(Proxy.Type.HTTP, System.getProperty("https.proxyHost"), Integer.parseInt(System.getProperty("https.proxyPort")));
-		session = builder.build();
-		session.addMessagePostedListener(this::talk);
-		session.connect();
-		session.addSlackDisconnectedListener((event, session) -> {
-			Logger.info(event.getEventType().name());
-			if (!session.isConnected()) {
-				try {
-					session.connect();
-					Logger.info("Reconnected");
-				} catch (IOException e) {
-					Logger.error(e);
-				}
-			}
-		});
-		initContexts();
+	public void connect() throws IOException, DeploymentException {
+		slack = Slack.getInstance();
+		rtm = slack.rtm(token);
+		init();
+		rtm.connect();
+		botIdentity = rtm.getConnectedBotUser();
+		rtm.addMessageHandler(this::handleMessage);
 	}
-
 
 	public void disconnect() {
 		try {
-			this.session.disconnect();
+			this.rtm.disconnect();
 		} catch (Exception e) {
 			Logger.error(e);
 		}
 	}
 
-	private String parameters(List<String> parameters) {
-		return parameters.isEmpty() ? "" : " `" + String.join("` `", parameters) + "`";
-	}
-
-	private void initContexts() {
-		for (SlackUser slackUser : session.getUsers()) usersContext.put(slackUser.getUserName(), new Context(""));
-	}
-
-	private void talk(SlackMessagePosted message, SlackSession session) {
+	public void sendToUser(String userName, String message) {
+		User user = findUserByName(userName);
+		if (user == null) return;
 		try {
-			if (message.getSender().isBot() || isAlreadyProcessed(message) || isMine(message)) return;
-			final String messageContent = message.getSlackFile() != null ? messageContent(message) : unescapeHtml4(message.getMessageContent());
-
-			String userName = message.getSender().getUserName();
-			Object response = talk(userName, messageContent, createMessageProperties(message));
-			if (response == null || (response instanceof String && response.toString().isEmpty())) return;
-			if (response instanceof String) session.sendMessage(message.getChannel(), response.toString());
-			else if (response instanceof SlackAttachment)
-				session.sendMessage(message.getChannel(), "", (SlackAttachment) response);
-		} catch (Throwable e) {
+			sendMessage(channelOf(user), message);
+		} catch (IOException | SlackApiException e) {
 			Logger.error(e);
-			session.sendMessage(message.getChannel(), "Command Error. Try `help` to see the options");
 		}
+	}
+
+	public void sendToUser(String userName, String fileName, String title, InputStream attachment) {
+		final User user = findUserByName(userName);
+		if (user == null) return;
+		try {
+			sendAttachment(channelOf(user), attachment, fileName, title);
+		} catch (IOException | SlackApiException e) {
+			Logger.error(e);
+		}
+	}
+
+	public void sendMessage(String channel, String message) {
+		rtm.sendMessage(buildResponse(channel, message));
+	}
+
+	public void sendAttachment(String channel, InputStream attachment, String fileName, String title) {
+		try {
+			slack.methods().filesUpload(FilesUploadRequest.builder().channels(List.of(channel)).filename(fileName).title(title).fileData(attachment.readAllBytes()).build());
+		} catch (IOException | SlackApiException e) {
+			Logger.error(e);
+		}
+	}
+
+
+	public void sendAttachment(String channel, byte[] attachment, String fileName, String title) {
+		try {
+			slack.methods().filesUpload(FilesUploadRequest.builder().channels(List.of(channel)).filename(fileName).title(title).fileData(attachment).build());
+		} catch (IOException | SlackApiException e) {
+			Logger.error(e);
+		}
+	}
+
+	public User findUserById(String user) {
+		return users.stream().filter(u -> !u.isBot() && u.getId().equals(user)).findFirst().orElse(null);
+	}
+
+	public User findUserByName(String user) {
+		return users.stream().filter(u -> !u.isBot() && u.getName().equals(user)).findFirst().orElse(null);
 	}
 
 	public Object talk(String userName, String message, MessageProperties properties) {
@@ -118,66 +141,14 @@ public abstract class Bot {
 			command = commands.get(commandKey);
 		else if (commands.containsKey(commandKey) && Objects.equals(context, "")) command = commands.get(commandKey);
 		return command.execute(properties, content.length > 1 ? Arrays.copyOfRange(content, 1, content.length) : new String[0]);
-
 	}
 
-	private String decode(String message) {
-		if (message.startsWith("<") && message.endsWith(">") && message.contains("|"))
-			return message.substring(message.indexOf("|" + 1), message.length() - 1);
-		return message;
+	protected Slack session() {
+		return slack;
 	}
 
-	private String messageContent(SlackMessagePosted message) {
-		String comment = message.getSlackFile().getComment();
-		String str = "ha comentado: ";
-		return comment != null ? unescapeHtml4(comment) : message.getMessageContent().substring(message.getMessageContent().indexOf(str) + str.length());
-	}
-
-	private boolean isAlreadyProcessed(SlackMessagePosted message) {
-		final boolean added = processedMessages.add(message.getTimestamp());
-		if (processedMessages.size() > 10) processedMessages.remove(processedMessages.iterator().next());
-		return !added;
-	}
-
-	private boolean isMine(SlackMessagePosted message) {
-		return session.sessionPersona().getId().equals(message.getSender().getId());
-	}
-
-	private Command commandNotFound() {
-		return (messageProperties, args) -> "Command not found";
-	}
-
-	private MessageProperties createMessageProperties(SlackMessagePosted message) {
-		return new MessageProperties() {
-			public String channel() {
-				return message.getChannel().getName();
-			}
-
-			public String username() {
-				return message.getSender().getUserName();
-			}
-
-			public String userRealName() {
-				return message.getSender().getRealName();
-			}
-
-			public String userTimeZone() {
-				return message.getSender().getTimeZone();
-			}
-
-			public Context context() {
-				return usersContext.get(message.getSender().getUserName());
-			}
-
-			@Override
-			public BotFile file() {
-				return message.getSlackFile() == null ? null : new BotFile(message.getSlackFile());
-			}
-		};
-	}
-
-	protected SlackSession session() {
-		return session;
+	protected List<User> users() {
+		return users;
 	}
 
 	protected void add(String name, List<String> parameters, List<String> components, String description, Command command) {
@@ -190,33 +161,109 @@ public abstract class Bot {
 		commandsInfo.put((context.isEmpty() ? "" : context + "$") + name, new CommandInfo(parameters, context, components, description));
 	}
 
-	public void send(String channelDestination, String message) {
-		SlackChannel channel = slackChannel(channelDestination);
-		if (channel == null) return;
-		session.sendMessage(channel, message);
+	private void init() {
+		try {
+			UsersListResponse response = slack.methods().usersList(UsersListRequest.builder().token(token).build());
+			this.users = response.getMembers();
+			response.getMembers().stream().filter(u -> !u.isBot() && !u.isAppUser()).forEach(member -> usersContext.put(member.getName(), new Context("")));
+		} catch (IOException | SlackApiException e) {
+			Logger.error(e);
+		}
 	}
 
-	public void sendToUser(String user, String message) {
-		SlackUser slackUser = session.findUserById(user);
-		if (slackUser == null) slackUser = session.findUserByUserName(user);
-		if (slackUser == null) return;
-		session.sendMessageToUser(slackUser, message, null);
+	private void handleMessage(String m) {
+		JsonObject json = jsonParser.parse(m).getAsJsonObject();
+		if (json.get("type") != null && json.get("type").getAsString().equals("message")) {
+			com.github.seratch.jslack.api.model.Message request = gson.fromJson(json, com.github.seratch.jslack.api.model.Message.class);
+			try {
+				User userById = findUserById(request.getUser());
+				if (userById == null) return;
+				String userName = userById.getName();
+				if (userName == null || isAlreadyProcessed(request) || isMine(request)) return;
+				Object response = talk(userName, request.getText(), createMessageProperties(request.getChannel(), userName, request.getTs(), attachment(request)));
+				if (response == null || (response instanceof String && response.toString().isEmpty())) return;
+				if (response instanceof SlackAttachment)
+					sendAttachment(request.getChannel(), ((SlackAttachment) response).inputStream, ((SlackAttachment) response).fileName, ((SlackAttachment) response).title);
+				else sendMessage(request.getChannel(), response.toString());
+			} catch (Throwable e) {
+				Logger.error(e);
+				sendMessage(request.getChannel(), "Command Error. Try `help` to see the options");
+			}
+		}
 	}
 
-	public void sendToUser(String userID, String message, File attachment) {
-		final SlackUser user = session.findUserById(userID);
-		if (user == null) return;
-		session.sendMessageToUser(user, message, attachment != null ? new SlackAttachment(attachment.getName(), "", "", "") : null);
+	private String buildResponse(String channel, String message) {
+		return gson.toJson(Message.builder().channel(channel).id(System.currentTimeMillis()).text(message).build());
 	}
 
-	public void sendFile(String channelDestination, String name, byte[] content) {
-		SlackChannel channel = slackChannel(channelDestination);
-		if (channel == null) return;
-		session.sendFile(channel, content, name);
+	private String parameters(List<String> parameters) {
+		return parameters.isEmpty() ? "" : " `" + String.join("` `", parameters) + "`";
 	}
 
-	private SlackChannel slackChannel(String channel) {
-		return session.getChannels().stream().filter(c -> channel.equals(c.getId()) || channel.equals(c.getName())).findFirst().orElse(null);
+	private String decode(String message) {
+		if (message.startsWith("<") && message.endsWith(">"))
+			if (message.contains("|")) return message.substring(message.indexOf("|" + 1), message.length() - 1);
+			else return message.substring(1, message.length() - 1);
+		return message;
+	}
+
+	private boolean isMine(com.github.seratch.jslack.api.model.Message request) {
+		return request.getUser().equals(botIdentity.getId());
+	}
+
+	private SlackAttachment attachment(com.github.seratch.jslack.api.model.Message request) {
+		if (request.getFiles() == null || request.getFiles().isEmpty()) return null;
+		try {
+			File file = request.getFiles().get(0);
+			return new SlackAttachment(new URL(file.getUrlPrivateDownload()).openStream(), file.getName(), file.getTitle());
+		} catch (IOException e) {
+			Logger.error(e);
+			return null;
+		}
+	}
+
+	private String channelOf(User user) throws IOException, SlackApiException {
+		UsersConversationsResponse response = slack.methods().usersConversations(UsersConversationsRequest.builder().user(user.getId()).build());
+		return response.getChannels().get(0).getId();
+	}
+
+	private boolean isAlreadyProcessed(com.github.seratch.jslack.api.model.Message message) {
+		final boolean added = processedMessages.add(message.getTs());
+		if (processedMessages.size() > 10) processedMessages.remove(processedMessages.iterator().next());
+		return !added;
+	}
+
+	private Command commandNotFound() {
+		return (messageProperties, args) -> "Command not found";
+	}
+
+	private MessageProperties createMessageProperties(String channel, String user, String ts, SlackAttachment attachment) {
+		return new MessageProperties() {
+			public String channel() {
+				return channel;
+			}
+
+			public String username() {
+				return user;
+			}
+
+			public String ts() {
+				return ts;
+			}
+
+			public String timeZone() {
+				return findUserByName(user).getTz();
+			}
+
+			public Context context() {
+				return usersContext.get(user);
+			}
+
+			public SlackAttachment attachment() {
+				return attachment;
+			}
+
+		};
 	}
 
 	private boolean isInContext(String commandKey, String userName) {
@@ -226,10 +273,6 @@ public abstract class Bot {
 
 	private boolean isBundledCommand(String commandKey) {
 		return commandKey.equalsIgnoreCase("help") || commandKey.equalsIgnoreCase("where") || commandKey.equalsIgnoreCase("exit");
-	}
-
-	public interface TextCommand extends Command {
-		String execute(MessageProperties properties, String... args);
 	}
 
 	public interface Command {
@@ -245,13 +288,13 @@ public abstract class Bot {
 
 		String username();
 
-		String userRealName();
+		String ts();
 
-		String userTimeZone();
+		String timeZone();
 
 		Context context();
 
-		BotFile file();
+		SlackAttachment attachment();
 
 	}
 
@@ -281,6 +324,36 @@ public abstract class Bot {
 		}
 	}
 
+	public static class SlackAttachment {
+		private final InputStream inputStream;
+		private final String title;
+		private final String fileName;
+
+		public SlackAttachment(InputStream inputStream, String title, String fileName) {
+			this.inputStream = inputStream;
+			this.title = title;
+			this.fileName = fileName;
+		}
+
+		public SlackAttachment(byte[] bytes, String title, String fileName) {
+			this.inputStream = new ByteArrayInputStream(bytes);
+			this.title = title;
+			this.fileName = fileName;
+		}
+
+		public InputStream getInputStream() {
+			return inputStream;
+		}
+
+		public String getTitle() {
+			return title;
+		}
+
+		public String getFileName() {
+			return fileName;
+		}
+	}
+
 	public class CommandInfo {
 		private final List<String> parameters;
 		private final String description;
@@ -306,42 +379,4 @@ public abstract class Bot {
 			return description;
 		}
 	}
-
-	public class BotFile {
-		String name;
-		String url;
-
-		public BotFile(SlackFile file) {
-			this.name = file.getName();
-			this.url = unescapeHtml4(file.getUrlPrivateDownload()).replace("<|>", "");
-		}
-
-		public String name() {
-			return name;
-		}
-
-		public String url() {
-			return url;
-		}
-
-		public String textContent() {
-			try {
-				HttpClient client = HttpClientBuilder.create().build();
-				HttpGet request = new HttpGet(url);
-				request.addHeader("Authorization", "Bearer " + token);
-				HttpResponse response = client.execute(request);
-				HttpEntity entity = response.getEntity();
-				if (entity != null) try (InputStream stream = entity.getContent()) {
-					StringBuilder builder = new StringBuilder();
-					BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-					String line;
-					while ((line = reader.readLine()) != null) builder.append(line).append("\n");
-					return builder.toString();
-				}
-			} catch (Exception ignored) {
-			}
-			return "";
-		}
-	}
-
 }
