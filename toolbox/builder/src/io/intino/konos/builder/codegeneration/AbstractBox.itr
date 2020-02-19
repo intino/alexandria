@@ -393,7 +393,7 @@ def type(messageHub) trigger(close)
 	if (messageHub != null) messageHub.stop();
 end
 
-def type(slack) trigger(close)
+def type(service & slack) trigger(close)
 	this.$name+SnakeCaseToCamelCase+FirstLowerCase.disconnect();
 end
 

@@ -52,7 +52,7 @@ public class AbstractBoxTemplate extends Template {
 				rule().condition((trigger("spark"))).output(literal("io.intino.alexandria.rest.AlexandriaSparkBuilder.instance().stop();")),
 				rule().condition((type("terminal")), (trigger("close"))).output(literal("if (terminal != null) terminal.stop();")),
 				rule().condition((type("messageHub")), (trigger("close"))).output(literal("if (messageHub != null) messageHub.stop();")),
-				rule().condition((type("slack")), (trigger("close"))).output(literal("this.")).output(mark("name", "SnakeCaseToCamelCase", "FirstLowerCase")).output(literal(".disconnect();")),
+				rule().condition((allTypes("service", "slack")), (trigger("close"))).output(literal("this.")).output(mark("name", "SnakeCaseToCamelCase", "FirstLowerCase")).output(literal(".disconnect();")),
 				rule().condition((type("service")), (trigger("close"))),
 				rule().condition((type("service"))),
 				rule().condition((type("sentinel")), (trigger("getter"))).output(literal("public io.intino.alexandria.scheduler.AlexandriaScheduler scheduler() {\n\treturn this.scheduler;\n}")),
@@ -65,16 +65,16 @@ public class AbstractBoxTemplate extends Template {
 				rule().condition((type("custom")), (trigger("parameter"))).output(literal("configuration().get(\"")).output(mark("value", "customParameter")).output(literal("\")")),
 				rule().condition((type("custom")), (trigger("authentication"))).output(literal("url(configuration().get(\"")).output(mark("value", "customParameter")).output(literal("\"))")),
 				rule().condition((type("custom")), (trigger("edition"))).output(literal("url(configuration().get(\"")).output(mark("value", "customParameter")).output(literal("\"))")),
-			rule().condition((type("file")), (trigger("parameter"))).output(mark("value")),
-			rule().condition((type("int")), (trigger("parameter"))).output(mark("value")),
-			rule().condition((trigger("parameter"))).output(literal("\"")).output(mark("value")).output(literal("\"")),
-			rule().condition((trigger("authentication"))).output(literal("url(\"")).output(mark("value")).output(literal("\")")),
-			rule().condition((trigger("edition"))).output(literal("url(\"")).output(mark("value")).output(literal("\")")),
-			rule().condition((trigger("parentinit"))),
-			rule().condition((trigger("hide"))),
-			rule().condition((trigger("hideui"))).output(literal(";")),
-			rule().condition((trigger("hideui"))).output(literal(";")),
-			rule().condition((trigger("hidedatalake"))).output(literal(";"))
+				rule().condition((type("file")), (trigger("parameter"))).output(mark("value")),
+				rule().condition((type("int")), (trigger("parameter"))).output(mark("value")),
+				rule().condition((trigger("parameter"))).output(literal("\"")).output(mark("value")).output(literal("\"")),
+				rule().condition((trigger("authentication"))).output(literal("url(\"")).output(mark("value")).output(literal("\")")),
+				rule().condition((trigger("edition"))).output(literal("url(\"")).output(mark("value")).output(literal("\")")),
+				rule().condition((trigger("parentinit"))),
+				rule().condition((trigger("hide"))),
+				rule().condition((trigger("hideui"))).output(literal(";")),
+				rule().condition((trigger("hideui"))).output(literal(";")),
+				rule().condition((trigger("hidedatalake"))).output(literal(";"))
 		);
 	}
 }
