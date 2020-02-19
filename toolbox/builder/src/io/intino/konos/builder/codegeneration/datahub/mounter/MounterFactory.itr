@@ -16,12 +16,12 @@ def type(factory)
     		$event+put...[$NL]
     	}
 
-    	public List<Mounter> mountersOf(Class<? extends Event> clazz) {
-    		return mounters.get(clazz.getCanonicalName());
-    	}
-
     	public List<Mounter> mountersOf(Event event) {
-    		return mountersOf(event.getClass());
+			return mountersOf(event.toMessage().type());
+		}
+
+    	public List<Mounter> mountersOf(String eventType) {
+    		return mounters.get(eventType);
     	}
 
     	public void handle(Event... events) {
@@ -34,7 +34,7 @@ def type(factory)
 end
 
 def trigger(put)
-	mounters.put($name.class.getCanonicalName(), java.util.List.of($mounter...[, ]));
+	mounters.put("$type", java.util.List.of($mounter...[, ]));
 end
 
 def trigger(mounter)
