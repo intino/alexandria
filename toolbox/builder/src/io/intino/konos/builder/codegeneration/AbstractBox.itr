@@ -343,7 +343,7 @@ def type(terminal) trigger(getter)
 		return this.terminal;
 	}
 
-	public io.intino.alexandria.event.JmsEventHub eventHub() {
+	protected io.intino.alexandria.event.JmsEventHub eventHub() {
 		return this.eventHub;
 	}
 end
