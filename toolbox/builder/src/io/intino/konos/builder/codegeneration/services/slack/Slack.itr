@@ -43,7 +43,7 @@ def type(slack & gen)
 				connect();
 				this.$name+snakeCaseToCamelCase+firstLowerCase~Slack.init(session(), users());
 				$level+init...[$NL]
-			} catch (IOException e) {
+			} catch (IOException | javax.websocket.DeploymentException e) {
 				io.intino.alexandria.logger.Logger.error(e.getMessage(), e);
 			}
 		}
