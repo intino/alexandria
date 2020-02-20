@@ -82,6 +82,14 @@ public abstract class Bot {
 		}
 	}
 
+	public void reconnect() {
+		try {
+			this.rtm.reconnect();
+		} catch (Exception e) {
+			Logger.error(e);
+		}
+	}
+
 	public void sendToUser(String userName, String message) {
 		User user = findUserByName(userName);
 		if (user == null) return;
@@ -189,6 +197,9 @@ public abstract class Bot {
 				Logger.error(e);
 				sendMessage(request.getChannel(), "Command Error. Try `help` to see the options");
 			}
+		} else if (json.get("type").getAsString().equals("goodbye")) {
+			disconnect();
+			reconnect();
 		}
 	}
 
