@@ -5,6 +5,7 @@ import CloseDrawerNotifier from "../../../gen/displays/notifiers/CloseDrawerNoti
 import CloseDrawerRequester from "../../../gen/displays/requesters/CloseDrawerRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
+import Actionable from "./Actionable";
 
 const styles = theme => ({});
 
@@ -16,8 +17,7 @@ class CloseDrawer extends AbstractCloseDrawer {
 		this.requester = new CloseDrawerRequester(this);
 	};
 
-
 }
 
-export default withStyles(styles, { withTheme: true })(withSnackbar(CloseDrawer));
-DisplayFactory.register("CloseDrawer", withStyles(styles, { withTheme: true })(withSnackbar(CloseDrawer)));
+export default withStyles(Actionable.Styles, { withTheme: true })(withSnackbar(CloseDrawer));
+DisplayFactory.register("CloseDrawer", withStyles(Actionable.Styles, { withTheme: true })(withSnackbar(CloseDrawer)));

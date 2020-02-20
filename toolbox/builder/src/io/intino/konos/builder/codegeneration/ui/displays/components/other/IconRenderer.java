@@ -5,11 +5,10 @@ import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
-import io.intino.konos.model.graph.OperationComponents.Operation;
 import io.intino.konos.model.graph.OtherComponents.BaseIcon;
 import io.intino.konos.model.graph.OtherComponents.Icon;
 
-public class IconRenderer<O extends Operation> extends ComponentRenderer<BaseIcon> {
+public class IconRenderer extends ComponentRenderer<BaseIcon> {
 
 	public IconRenderer(CompilationContext compilationContext, BaseIcon component, TemplateProvider provider, Target target) {
 		super(compilationContext, component, provider, target);

@@ -5,7 +5,7 @@ import OpenSiteNotifier from "../../../gen/displays/notifiers/OpenSiteNotifier";
 import OpenSiteRequester from "../../../gen/displays/requesters/OpenSiteRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
-import Operation from "./Operation"
+import Actionable from "./Actionable"
 
 class OpenSite extends AbstractOpenSite {
 
@@ -20,10 +20,13 @@ class OpenSite extends AbstractOpenSite {
 	};
 
 	open = (site) => {
-		if (this.props.target === "blank") window.open(site, "_blank");
+		if (this.props.target === "blank") {
+		    window.open(site, site);
+		    return false;
+		}
 		else window.location.href = site;
 	};
 }
 
-export default withStyles(Operation.Styles, { withTheme: true })(withSnackbar(OpenSite));
-DisplayFactory.register("OpenSite", withStyles(Operation.Styles, { withTheme: true })(withSnackbar(OpenSite)));
+export default withStyles(Actionable.Styles, { withTheme: true })(withSnackbar(OpenSite));
+DisplayFactory.register("OpenSite", withStyles(Actionable.Styles, { withTheme: true })(withSnackbar(OpenSite)));

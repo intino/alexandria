@@ -39,6 +39,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		String frameId = frameId();
 		if (componentFrameMap.containsKey(frameId)) return componentFrameMap.get(frameId);
 		FrameBuilder builder = super.buildFrame().add("component");
+		if (!belongsToAccessible(element)) builder.add("concreteBox", boxName());
 		addOwner(builder);
 		addProperties(builder);
 		if (buildChildren) builder.add("child");
@@ -108,6 +109,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		FrameBuilder builder = new FrameBuilder("reference").add(typeOf(component)).add("name", component.name$());
 		Component parentComponent = component.core$().ownerAs(Component.class);
 		builder.add("box", boxName());
+		if (!belongsToAccessible(component)) builder.add("concreteBox", boxName());
 		builder.add("id", shortId(component));
 		if (parentComponent != null) builder.add("parentId", nameOf(parentComponent));
 		builder.add("properties", renderer.properties());
@@ -176,7 +178,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private List<Component> references(Component component) {
-		if (element.i$(PrivateComponents.Row.class)) return element.a$(PrivateComponents.Row.class).items().stream().map(i -> i.a$(Component.class)).collect(Collectors.toList());
+		if (element.i$(HelperComponents.Row.class)) return element.a$(HelperComponents.Row.class).items().stream().map(i -> i.a$(Component.class)).collect(Collectors.toList());
 		return component.components();
 	}
 

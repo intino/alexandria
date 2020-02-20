@@ -15,7 +15,7 @@ use Grouping
 use DownloadSelection
 use Download
 use Export
-use Operation
+use Actionable
 use Table
 use List
 use Block
@@ -49,7 +49,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block downloadExamples as Conditional > Stamp(template=downloadExamplesMold)
 			Block downloadSelectionExamples as Conditional > Stamp(template=downloadSelectionExamplesMold)
 			Block exportExamples as Conditional > Stamp(template=exportExamplesMold)
-			Block operationExamples as Conditional > Stamp(template=operationExamplesMold)
+			Block actionableExamples as Conditional > Stamp(template=actionableExamplesMold)
 			Block groupingExamples as Conditional > Stamp(template=groupingExamplesMold)
 			Block sortingExamples as Conditional > Stamp(template=sortingExamplesMold)
 			Block searchBoxExamples as Conditional > Stamp(template=searchBoxExamplesMold)

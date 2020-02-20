@@ -89,7 +89,7 @@ Schema FileInfo
 Schema LocationSetup
 	Attribute icon as Text
 
-Schema OperationInfo
+Schema ActionableInfo
 	Attribute title as Text
 	Attribute disabled as Bool
 

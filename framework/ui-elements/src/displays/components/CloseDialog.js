@@ -5,6 +5,7 @@ import CloseDialogNotifier from "../../../gen/displays/notifiers/CloseDialogNoti
 import CloseDialogRequester from "../../../gen/displays/requesters/CloseDialogRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
+import Actionable from "./Actionable";
 
 const styles = theme => ({});
 
@@ -18,5 +19,5 @@ class CloseDialog extends AbstractCloseDialog {
 
 }
 
-export default withStyles(styles, { withTheme: true })(withSnackbar(CloseDialog));
-DisplayFactory.register("CloseDialog", withStyles(styles, { withTheme: true })(withSnackbar(CloseDialog)));
+export default withStyles(Actionable.Styles, { withTheme: true })(CloseDialog);
+DisplayFactory.register("CloseDialog", withStyles(Actionable.Styles, { withTheme: true })(CloseDialog));

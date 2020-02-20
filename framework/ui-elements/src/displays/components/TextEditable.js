@@ -42,8 +42,8 @@ class TextEditable extends AbstractTextEditable {
 		if (!this.state.visible) return (<React.Fragment/>);
 
 		const { classes } = this.props;
-		const label = this.props.label !== "" ? this.props.label : undefined;
-		const placeholder = this.props.placeholder !== "" ? this.props.placeholder : undefined;
+		const label = this.props.label !== "" ? this.translate(this.props.label) : undefined;
+		const placeholder = this.props.placeholder !== "" ? this.translate(this.props.placeholder) : undefined;
 		const type = this.props.type != null ? this.props.type : undefined;
 
 		return (

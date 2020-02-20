@@ -6,7 +6,71 @@ Service RestService as REST(port = "9000", host = "")
 			Parameter(in=query) a as Text
 
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
+	Use(package="io.intino.hola", name="abcd", service="abcdElements")
 	Resource(path = "/") home as Page(homeTemplate) Main Confidential
+	Resource(path = "/") home2 as Page(teamEditor) Confidential
+	Resource(path = "/molds") molds as Page(molds) Confidential
+
+Template(format=air) molds as Relative(height=100%, width=100%) Accessible
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=49%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal)
+				Block(format=containerAirMedium, spacing=DP24) as Absolute(width=200px)
+					Grouping(format=whiteBackground,collections=list1) gender1 as Labeled("gender")
+					Grouping(format=whiteBackground,collections=list1) ageGroup1 as Labeled("age group")
+				List(itemClass="io.intino.alexandria.ui.documentation.Person") list1
+					Mold > Item(height=60px,width=30%) grouping1Mold
+							Text firstName1
+							Block(layout=Horizontal, spacing=DP16)
+								Text(format=description) gender1
+								Text(format=description) age1 as Labeled("age")
+
+Template(format=air) teamEditor as Relative(height=100%, width=100%) Accessible
+	Block(layout=Horizontal) toolbar
+		MaterialIconButton(title="Previous identity", format=airRight, icon="NavigateBefore", size=Small) previous as Action
+		MaterialIconButton(title="Next identity", format=airRight, icon="NavigateNext", size=Small) next as Action
+		MaterialIconButton(title="Add identity", format=airRight, icon="Add", size=Small) openAddIdentity as OpenDialog(dialog=identityDialogBox)
+		MaterialIconButton(title="Edit identity", format=airRight, icon="Create", size=Small) openEditIdentity as OpenDialog(dialog=identityDialogBox)
+		Text search as Editable(placeholder="Search identity...")
+
+	Block(layout=Vertical Flexible)
+    	Block(layout=Vertical Flexible) as Relative(height=100%)
+			Stamp(template=identityViewer) identityViewer
+		Block(layout=Horizontal)
+			Block(layout=Vertical Flexible) > Text info
+
+	Dialog(title="Edit identity") identityDialogBox
+		Block(layout=Vertical Flexible) main as Relative(width=100%)
+			Stamp(template=identityDialog) dialog
+		Divider
+		Block(layout=Horizontal EndJustified)
+			Button(title="Cancel", format=airRight) cancel as Action
+			Button(title="Accept", highlight=Fill) accept as Action
+
+Template(layout=Vertical Flexible) identityViewer as Accessible
+	Block(visible=false, layout=Vertical CenterCenter) emptyLayer as Relative(height=100%) > Text(value="No results found", format=h5)
+	Block(visible=false, layout=Vertical CenterCenter) loadingLayer as Relative(height=100%) > Spinner
+	Block(layout=Horizontal Flexible, visible=false) mainLayer
+		Block(format=whiteBackground air airRight, layout=Vertical Flexible) featuresPanel as Relative(width=33%, offsetWidth=20px) > Text(value="Features", format=h5 airBottom) featuresTitle; Stamp(template=definitionViewer) featuresStamp as Multiple
+		Block(format=whiteBackground air airRight, layout=Vertical Flexible) credentialsPanel as Relative(width=33%, offsetWidth=20px) > Text(value="Credentials", format=h5 airBottom) credentialsTitle; Stamp(template=definitionViewer) credentialsStamp as Multiple
+		Block(format=whiteBackground air, layout=Vertical Flexible) rolesPanel as Relative(width=33%, offsetWidth=20px) > Text(value="Roles", format=h5 airBottom) rolesTitle; Stamp(template=definitionViewer) rolesStamp as Multiple
+
+Template(format=airBottom) definitionViewer
+	Text(format=description) property
+	Text value
+
+Template(layout=Vertical Flexible) identityDialog
+	Stamp(template=identityEditor) identityEditor
+
+Template(layout=Vertical Flexible) identityEditor
+	Block(visible=false, layout=Vertical CenterCenter) loadingLayer as Relative(height=100%) > Spinner
+	Block(layout=Horizontal Flexible, visible=false) mainLayer
+		Block(layout=Vertical Flexible) > Stamp(template=definitionEditor) definitionsStamp as Multiple
+
+Template(format=airBottom, layout=Horizontal Center) definitionEditor
+	Block as Relative(width=50%) > Text(format=description) property
+	Block(layout=Vertical Flexible) > Text value as Editable
 
 Template homeTemplate
 	Table table1
@@ -16,20 +80,20 @@ Template homeTemplate
 	Stamp(template=template1) template1
 	Stamp(template=template2) template2
 
-Template template1
+Template template1 as Accessible
 	Stamp(template=examplePanel) example1
 
 Template template2
 	Stamp(template=examplePanel) example2
 
 Template examplePanel
-	OpenDialog(title="abcde", dialog=dialog1) accept as Button
+	Button(title="abcde") accept as OpenDialog(dialog=dialog1)
 
 	Dialog(title = "ejemplo") dialog1
 		Stamp(template=exampleDialog) dialog
 
 Template exampleDialog
-	Task(title="Cambia algo") accept as Button
+	Button(title="Cambia algo") accept as Action
 	Text(value="Hola mundo!") value
 
 Template root as Accessible(parameters = "a" "b")

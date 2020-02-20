@@ -16,6 +16,10 @@ def type(box & decorated) trigger(type)
 	B
 end
 
+def type(box & accessible) trigger(type)
+	Box
+end
+
 def type(box) trigger(type)
 	$box+firstUpperCase~Box
 end

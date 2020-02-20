@@ -1,8 +1,8 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.ui.displays.events.operation.DownloadSelectionEvent;
-import io.intino.alexandria.ui.displays.events.operation.DownloadSelectionListener;
+import io.intino.alexandria.ui.displays.events.actionable.DownloadSelectionEvent;
+import io.intino.alexandria.ui.displays.events.actionable.DownloadSelectionListener;
 import io.intino.alexandria.ui.displays.notifiers.DownloadSelectionNotifier;
 
 import java.util.List;

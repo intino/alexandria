@@ -70,16 +70,16 @@ Template(layout=Vertical, spacing=DP8) listExamplesMold as Decorated
 			Text(format=h6, value="Selectable facet with Toolbar")
 			Block(spacing=DP8, format=filledNoAir)
 				Toolbar toolbar5 as Linked(to=list5)
-					Task(title="add") add as MaterialIconButton(icon="Add")
-					TaskSelection(title="remove") remove as MaterialIconButton(icon="Delete") Affirmed("Are you sure you want to delete the element?")
+					MaterialIconButton(title="add", icon="Add") add as Action
+					MaterialIconButton(title="remove", icon="Delete") remove as Action(context=Selection) Affirmed("Are you sure you want to delete the element?")
 				List(itemClass="io.intino.alexandria.ui.documentation.Person") list5 as Selectable(multiple=true)
 					Mold > Item(height=60px,width=30%) list5Mold > Text firstName
 			Block > Text as Code(language=Html)
 					value
 						=========
 						Toolbar toolbar5 as Linked(to\=list5)<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Task(title\="añadir") add as MaterialIconButton(icon\="Add")<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;TaskSelection(title\="eliminar") as MaterialIconButton(icon\="Delete")<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;MaterialIconButton(title\="añadir", icon\="Add") add as Action<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;MaterialIconButton(title\="eliminar", icon\="Delete") as Action(context\=Selection) Affirmed("Are you sure you want to delete the element?")<br/>
 						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list5 as Selectable(multiple\=true)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) list5Mold > Text firstName<br/>
 						=========
