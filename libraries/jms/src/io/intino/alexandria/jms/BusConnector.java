@@ -8,9 +8,6 @@ import javax.jms.Connection;
 import javax.jms.JMSException;
 
 public class BusConnector {
-	static {
-		io.intino.alexandria.logger4j.Logger.init();
-	}
 
 	public static Connection createConnection(String brokerURL, String user, String password, ConnectionListener listener) {
 		try {
