@@ -3,12 +3,12 @@ package io.intino.alexandria.ui.displays.templates;
 import io.intino.alexandria.schemas.Widget;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.EventsDisplay;
-import io.intino.alexandria.ui.documentation.model.OperationWidget;
+import io.intino.alexandria.ui.documentation.model.ActionableWidget;
 import io.intino.alexandria.ui.documentation.model.collection.*;
 import io.intino.alexandria.ui.documentation.model.data.*;
-import io.intino.alexandria.ui.documentation.model.operation.DownloadSelectionWidget;
-import io.intino.alexandria.ui.documentation.model.operation.DownloadWidget;
-import io.intino.alexandria.ui.documentation.model.operation.ExportWidget;
+import io.intino.alexandria.ui.documentation.model.actionable.DownloadSelectionWidget;
+import io.intino.alexandria.ui.documentation.model.actionable.DownloadWidget;
+import io.intino.alexandria.ui.documentation.model.actionable.ExportWidget;
 import io.intino.alexandria.ui.documentation.model.other.*;
 
 public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
@@ -55,7 +55,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         exportExamples.visible(widget instanceof ExportWidget);
         downloadExamples.visible(widget instanceof DownloadWidget);
         downloadSelectionExamples.visible(widget instanceof DownloadSelectionWidget);
-        operationExamples.visible(widget instanceof OperationWidget && !(widget instanceof ExportWidget) && !(widget instanceof DownloadWidget) && !(widget instanceof DownloadSelectionWidget));
+        actionableExamples.visible(widget instanceof ActionableWidget && !(widget instanceof ExportWidget) && !(widget instanceof DownloadWidget) && !(widget instanceof DownloadSelectionWidget));
         groupingExamples.visible(widget instanceof GroupingWidget);
         sortingExamples.visible(widget instanceof SortingWidget);
         searchBoxExamples.visible(widget instanceof SearchBoxWidget);

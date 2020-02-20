@@ -39,6 +39,7 @@ Format("border:'1px solid',width:'100%'") bordered
 Format("minHeight:'300px'") paperFormat
 Format("borderBottom:'1px dotted #ddd',width:'100%',marginBottom:'10px'") underline
 Format("fontSize:'10pt',color:'grey'") description
+Format("minHeight:'200px'") minTableHeight
 
 // Cards
 Format("textAlign:'left',color:'#B71A1C',padding:'10px'") cardTitle

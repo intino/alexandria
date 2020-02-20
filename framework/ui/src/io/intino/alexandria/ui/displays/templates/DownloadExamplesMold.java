@@ -1,7 +1,7 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.ui.AlexandriaUiBox;
-import io.intino.alexandria.ui.displays.events.operation.DownloadListener;
+import io.intino.alexandria.ui.displays.events.actionable.DownloadListener;
 import io.intino.alexandria.ui.spark.UIFile;
 
 import java.io.ByteArrayInputStream;

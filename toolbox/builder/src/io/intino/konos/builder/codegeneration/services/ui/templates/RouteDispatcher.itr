@@ -64,11 +64,11 @@ def type(dispatcher)
 end
 
 def type(resource & main) trigger(call)
-    if (address.length() <= 1) dispatch$name+firstUpperCase(soul);
+    if (address.length() <= 1) { dispatch$name+firstUpperCase(soul); return; }
 end
 
 def type(resource) trigger(call)
-    else if (address.matches(patterns.get("$name"))) dispatch$name+firstUpperCase(soul[, $param+call...[, ]]);
+    if (address.matches(patterns.get("$name"))) { dispatch$name+firstUpperCase(soul[, $param+call...[, ]]); return; }
 end
 
 def type(resource & main) trigger(declaration)

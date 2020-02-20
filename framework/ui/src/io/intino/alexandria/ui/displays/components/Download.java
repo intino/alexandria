@@ -2,8 +2,8 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.UserMessage;
-import io.intino.alexandria.ui.displays.events.operation.DownloadEvent;
-import io.intino.alexandria.ui.displays.events.operation.DownloadListener;
+import io.intino.alexandria.ui.displays.events.actionable.DownloadEvent;
+import io.intino.alexandria.ui.displays.events.actionable.DownloadListener;
 import io.intino.alexandria.ui.displays.notifiers.DownloadNotifier;
 import io.intino.alexandria.ui.spark.UIFile;
 

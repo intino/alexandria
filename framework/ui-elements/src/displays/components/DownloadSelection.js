@@ -3,12 +3,12 @@ import { withStyles } from '@material-ui/core/styles';
 import AbstractDownloadSelection from "../../../gen/displays/components/AbstractDownloadSelection";
 import DownloadSelectionNotifier from "../../../gen/displays/notifiers/DownloadSelectionNotifier";
 import DownloadSelectionRequester from "../../../gen/displays/requesters/DownloadSelectionRequester";
-import DownloadDialog from "./operation/DownloadDialog";
-import Operation from "./Operation";
+import DownloadDialog from "./actionable/DownloadDialog";
+import Actionable from "./Actionable";
 import { withSnackbar } from 'notistack';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
-const styles = theme => ({...Operation.Styles(theme)});
+const styles = theme => ({...Actionable.Styles(theme)});
 
 class DownloadSelection extends AbstractDownloadSelection {
 
@@ -25,10 +25,10 @@ class DownloadSelection extends AbstractDownloadSelection {
 	};
 
 	render = () => {
-		const operation = this.renderOperation();
+		const actionable = this.renderActionable();
 		return (
 			<Suspense fallback={<div style={{width: "24px", ...this.style()}}/>}>
-				{this.renderDownloadDialog()}{operation}
+				{this.renderDownloadDialog()}{actionable}
 			</Suspense>
 		);
 	};

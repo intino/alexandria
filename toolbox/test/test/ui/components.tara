@@ -107,7 +107,7 @@ Template widgetTypeTemplate as Decorated
 			Image(value="images/intino.png") as Absolute(80px, 80px)
 			Text(value="intino", format=h3)
 			Block(layout=Horizontal Center, format=headerToolbar, spacing=DP24) links
-				OpenPage(page=UiElements.home, title="home") as Link
+				Link(title="home") as OpenPage(page=UiElements.home)
 
 	Block(format=containerAirLarge)
 		Stamp(template=widgetMold) widget

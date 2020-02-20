@@ -1,0 +1,67 @@
+dsl Konos
+
+use Schemas
+
+Component toolbar as Decorated
+
+Component actionable as Decorated
+	Notification refresh as Object(ActionableInfo)
+	Notification refreshReadonly as Bool
+	Notification refreshIcon as Text
+	Notification checkSignResult as Bool
+
+	Request checkSign as Object(ActionableSign)
+
+Schema ActionableSign
+	Attribute sign as Text
+	Attribute reason as Text
+
+Component action as Decorated ExtensionOf(actionable)
+	Request execute
+
+Component actionSwitch as Decorated ExtensionOf(actionable)
+	Notification refreshState as Text
+	Request toggle
+
+Component export as Decorated ExtensionOf(actionable)
+	Request changeParams as Object(ExportParams)
+
+	Request(Asset) execute
+
+Component download as Decorated ExtensionOf(actionable)
+	Request changeParams as Text
+
+	Request(Asset) execute
+
+// in CatalogComponents exists downloadCollection component also
+
+Component openPage as Decorated ExtensionOf(actionable)
+	Notification open as Text
+	Request execute
+
+Component openSite as Decorated ExtensionOf(actionable)
+	Notification open as Text
+	Request execute
+
+Component openBlock as Decorated ExtensionOf(actionable)
+	Request execute
+
+Component openDialog as Decorated ExtensionOf(actionable)
+	Request execute
+
+Component closeDialog as Decorated ExtensionOf(actionable)
+	Request execute
+
+Component openDrawer as Decorated ExtensionOf(actionable)
+	Request execute
+
+Component closeDrawer as Decorated ExtensionOf(actionable)
+	Request execute
+
+Component baseSelectionAction as Decorated ExtensionOf(actionable)
+Component selectionAction as Decorated ExtensionOf(baseSelectionAction)
+	Request execute
+
+Component downloadSelection as Decorated ExtensionOf(baseSelectionAction)
+	Request changeParams as Text
+	Request(Asset) execute

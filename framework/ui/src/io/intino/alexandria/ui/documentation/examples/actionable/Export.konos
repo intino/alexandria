@@ -1,0 +1,46 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) exportExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with from")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Button(title="export...", from="2011-12-03T00:00:00Z") export1 as Export
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Export(title\="export...", from\="2011-12-03T00:00:00Z") as Button
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with from and to")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Button(title="export...") export2 as Export
+					from="2011-12-03T00:00:00Z"
+					to="2011-12-08T00:00:00Z"
+					min="2011-12-01T00:00:00Z"
+					max="2011-12-31T00:00:00Z"
+					rangeMax = 7 Days
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Button(title\="export...") as Export<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;from\="2011-12-03T00:00:00Z"<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;to\="2011-12-03T00:00:00Z"<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;min\="2011-12-03T00:00:00Z"<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;max\="2011-12-03T00:00:00Z"<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;rangeMax\=7 Days
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with options")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Button(title="export...") export3 as Export(options="a" "b")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Button(title\="export...") as Export(options\="a" "b")
+						=========

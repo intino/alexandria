@@ -32,6 +32,7 @@ const CollectionBehavior = (collection) => {
 
         if (collection.state.loading) return self.renderLoading(height, width);
         if (items.length <= 0) return self.renderEmpty(height, width);
+        collection.state.selection = [];
 
         self.collection.itemsRenderedCalled = false;
         window.setTimeout(() => self.forceNotifyItemsRendered(items), 50);
@@ -226,8 +227,8 @@ const CollectionBehavior = (collection) => {
         const prevSelectionCount = self.collection.selectionCount != null ? self.collection.selectionCount : 0;
         const selection = self.updateSelection(item);
         if (multiple) {
-            if (prevSelectionCount == 0 || (prevSelectionCount > 0 && selection.length <= 0)) self.collection.setState({selection: selection});
-            self.refreshItemsRendered(self.items(), null, self.collection.itemsWindow);
+            //if (prevSelectionCount == 0 || (prevSelectionCount > 0 && selection.length <= 0)) self.collection.setState({selection: selection});
+            //self.refreshItemsRendered(self.items(), null, self.collection.itemsWindow);
             self.collection.selectionCount = selection.length;
         }
 

@@ -18,7 +18,7 @@ Template homeTemplate
 			Text(value="intino", format=h3)
 			Block(layout=Horizontal Center, format=headerToolbar, spacing=DP24) links
 				Text(value="home")
-				OpenPage(page=UiElements.docs, title = "docs") as Link
+				Link(title = "docs") as OpenPage(page=UiElements.docs)
 
 	Block(format=containerAirLarge) as Parallax("images/background1.jpg") Absolute(height=500px)
 		Block(layout=Vertical Center) as Relative(width=70%)

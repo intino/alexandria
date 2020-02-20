@@ -2,7 +2,7 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.events.Event;
-import io.intino.alexandria.ui.displays.events.operation.CloseListener;
+import io.intino.alexandria.ui.displays.events.actionable.CloseListener;
 import io.intino.alexandria.ui.displays.notifiers.CloseDrawerNotifier;
 
 public class CloseDrawer<DN extends CloseDrawerNotifier, B extends Box> extends AbstractCloseDrawer<DN, B> {

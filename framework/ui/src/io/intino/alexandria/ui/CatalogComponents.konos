@@ -1,6 +1,6 @@
 dsl Konos
 
-use OperationComponents
+use ActionableComponents
 use Schemas
 
 Component collection as Decorated
@@ -8,6 +8,7 @@ Component collection as Decorated
 	Notification refresh
 	Notification refreshItemCount as LongInteger
 	Request selection as Text List
+	Request selectAll
 
 Component pageCollection as Decorated ExtensionOf(collection)
 	Notification setup as Object(PageCollectionSetup)

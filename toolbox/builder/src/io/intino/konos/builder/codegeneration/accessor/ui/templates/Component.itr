@@ -50,8 +50,8 @@ def type(properties & multiple) trigger(common)
 	[ label="$label"][ format="$format...[ ]"][ visible={$visible}]
 end
 
-def type(properties & operation) trigger(common)
-	[ title="$title"][ target="$target"][ mode="$operationMode"][ icon="$icon"][ affirmed="$affirmed"][ signed={{text:"$signText",reason:"$reasonText"}}][ readonly={$readonly}][ size="$size"][ format="$format...[ ]"][ highlighted="$highlighted"][ visible={$visible}]
+def type(properties & actionable) trigger(common)
+	[ title="$title"][ target="$target"][ mode="$actionableMode"][ icon="$icon"][ affirmed="$affirmed"][ signed={{text:"$signText",reason:"$reasonText"}}][ readonly={$readonly}][ size="$size"][ format="$format...[ ]"][ highlighted="$highlighted"][ visible={$visible}]
 end
 
 def type(properties & abstractslider) trigger(common)
@@ -158,7 +158,7 @@ def type(properties & spinner) trigger(specific)
 	[ mode="$mode"]
 end
 
-def type(properties & switches) trigger(specific)
+def type(properties & switch) trigger(specific)
     [ state="$state"]
 end
 
@@ -170,7 +170,7 @@ def type(properties & download) trigger(specific)
 	[ options={$["$option...[","]"$]}]
 end
 
-def type(properties & downloadselection) trigger(specific)
+def type(properties & download & selection) trigger(specific)
 	[ options={$["$option...[","]"$]}]
 end
 
@@ -209,7 +209,7 @@ def type(highlighted)
 	{text:"$text",background:"$background"}
 end
 
-def type(operationMode)
+def type(actionableMode)
 	$mode
 end
 

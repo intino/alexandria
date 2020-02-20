@@ -67,64 +67,65 @@ Concept:Named Template extends Component
 	Aspect Relative
 
 
-Concept OperationComponents
+Concept InteractionComponents
+
 	Concept Toolbar extends Component
 		has Component
 		Aspect Linked
         	var CatalogComponents.Collection to
-        	has OperationComponents.SelectionOperation
+        	has Actionable
 
-	Concept Operation extends Component is abstract
+	Concept Actionable extends Component is abstract
 		var string title
 		var word:{Blank Self Parent Top} target = Self
 		var word:{Small Medium Large} size = Medium
 
-		sub OpenDrawer > var Block.Drawer drawer
-		sub CloseDrawer > var Block.Drawer drawer
-		sub OpenPage > var Service.UI.Resource.Page page
-		sub OpenSite > var string site
-		sub OpenBlock > var Block.Conditional block
-		sub OpenDialog > var OtherComponents.AbstractDialog dialog
-		sub CloseDialog > var OtherComponents.AbstractDialog dialog
-		sub Export
-			var string[] options = empty
-			var instant from = empty
-			var instant to = empty
-			var instant min = empty
-			var instant max = empty
-			var integer:{Days} rangeMin = -1 Days
-			var integer:{Days} rangeMax = -1 Days
-		sub Download
-			var string[] options = empty
-			var CatalogComponents.Collection collection = empty
+		sub Link
+		sub AbstractButton
+			var word:{None Outline Fill} highlight = None
+			sub Button
+			sub IconButton
+				var string icon
+			sub MaterialIconButton
+				var string icon
+		sub Switch
+			var word:{On Off} state = Off
+		sub Toggle
 
-		sub Task
-			Aspect Switches
-            	var word:{On Off} state = Off
-            Aspect Addressable
-		Aspect Link
-		Aspect Button
-		Aspect IconButton extends Button
-			var string icon
-		Aspect MaterialIconButton extends Button
-			var string icon
-		Aspect Affirmed
-			var string affirmText
-		Aspect Signed
-			var string signText
-			var string reasonText = empty
-		Aspect Highlighted
-        	var word:{Outline Fill} style = Fill
 		Aspect Readonly
-	Concept SelectionOperation extends Operation is abstract
-		sub DownloadSelection
-			var string[] options = empty
-		sub TaskSelection
+		Aspect Addressable
 
-Concept:{0..1} BIComponents
+		Aspect Secured
+			sub Affirmed
+				var string affirmText
+			sub Signed
+				var string signText
+				var string reasonText = empty
+
+		Aspect Behavior
+			sub Action > var word:{CurrentObject Selection} context = CurrentObject
+			sub OpenDrawer > var Block.Drawer drawer
+			sub CloseDrawer > var Block.Drawer drawer
+			sub OpenPage > var Service.UI.Resource.Page page
+			sub OpenSite > var string site
+			sub OpenBlock > var Block.Conditional block
+			sub OpenDialog > var OtherComponents.AbstractDialog dialog
+			sub CloseDialog > var OtherComponents.AbstractDialog dialog
+			sub Export
+				var string[] options = empty
+				var instant from = empty
+				var instant to = empty
+				var instant min = empty
+				var instant max = empty
+				var integer:{Days} rangeMin = -1 Days
+				var integer:{Days} rangeMax = -1 Days
+			sub Download
+				var string[] options = empty
+				var CatalogComponents.Collection collection = empty
+				var word:{CurrentObject Selection} context = CurrentObject
+
+Concept:{0..1} VisualizationComponents
 	Concept KPI extends Component
-	Concept Spinner extends Component
-		var word:{Bar Circle Hash Ring Rise} mode = Rise
 
 	Concept Chart extends Component
 		var Dataframe input
@@ -143,6 +144,10 @@ Concept:{0..1} BIComponents
 		Concept Parameter
 			var string name
 			var string value
+
+	Concept Spinner extends Component
+		var word:{Bar Circle Hash Ring Rise} mode = Rise
+
 	Concept Stepper extends Component
 		var word:{Horizontal Vertical} orientation = Horizontal
 		var word:{Top Bottom Left Right} position = Bottom
@@ -151,6 +156,7 @@ Concept:{0..1} BIComponents
 			has Component
 			Aspect MaterialIcon
 				var string icon
+
 	Concept AbstractSlider extends Component
 		var word:{Vertical Horizontal} arrangement = Horizontal
 		var word:{Full ToolbarOnly SliderOnly} style = Full
@@ -175,10 +181,10 @@ Concept:{0..1} BIComponents
 
 
 
-Concept PrivateComponents
-	Concept PrivateComponent extends Component
+Concept HelperComponents
+	Concept HelperComponent extends Component
 
-	Concept Row extends PrivateComponent
+	Concept Row extends HelperComponent
 		var CatalogComponents.Collection.Mold.Item[] items
 
 Facet Editable

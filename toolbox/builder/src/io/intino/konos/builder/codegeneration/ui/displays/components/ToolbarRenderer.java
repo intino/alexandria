@@ -5,7 +5,7 @@ import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.CatalogComponents;
-import io.intino.konos.model.graph.OperationComponents.Toolbar;
+import io.intino.konos.model.graph.InteractionComponents.Toolbar;
 
 public class ToolbarRenderer extends ComponentRenderer<Toolbar> {
 

@@ -121,6 +121,10 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         selectionListeners.forEach(l -> l.accept(new SelectionEvent(this, itemsOf(selection))));
     }
 
+    public void selectAll() {
+        //TODO ---- selectionListeners ----;
+    }
+
     private List<Object> itemsOf(String[] selectionArray) {
         List<String> selection = Arrays.asList(selectionArray);
         return children().stream().filter(d -> selection.contains(d.id())).map(this::itemOf).collect(toList());

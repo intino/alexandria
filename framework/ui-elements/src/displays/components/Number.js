@@ -80,8 +80,8 @@ class Number extends AbstractNumber {
 		const style = this.props.style;
 		if (style == null) return this._defaultFormat();
 		const format = this._addDecimals("0");
-		if (style === "Currency") return "(" + format + "a)";
-		else if (style === "Bytes") return "(" + format + "b)";
+		if (style === "Currency") return format + "a";
+		else if (style === "Bytes") return format + "b";
 		else if (style === "Percentage" && this.state.suffix == null) return "(" + format + "%)";
 		else if (style === "Exponential" && this.state.suffix == null) return "(" + format + "e+0)";
 		return this._defaultFormat();

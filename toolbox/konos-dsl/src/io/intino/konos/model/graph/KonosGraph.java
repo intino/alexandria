@@ -12,7 +12,7 @@ import static java.util.stream.Collectors.toSet;
 public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 	private static Map<String, Set<String>> hierarchyDisplays = new HashMap<>();
 	private static Map<String, List<CatalogComponents.Collection.Mold.Item>> items = new HashMap<>();
-	private static Map<String, List<PrivateComponents.Row>> rows = new HashMap<>();
+	private static Map<String, List<HelperComponents.Row>> rows = new HashMap<>();
 	private static Map<String, List<CatalogComponents.Table>> tables = new HashMap<>();
 
 	public KonosGraph(Graph graph) {
@@ -49,9 +49,8 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		return items.get(group);
 	}
 
-	public List<PrivateComponents.Row> rowsDisplays(String group) {
-		if (!rows.containsKey(group))
-			rows.put(group, core$().find(PrivateComponents.Row.class));
+	public List<HelperComponents.Row> rowsDisplays(String group) {
+		if (!rows.containsKey(group)) rows.put(group, core$().find(HelperComponents.Row.class));
 		return rows.get(group);
 	}
 
@@ -114,8 +113,8 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 	private void createUiTableRow(CatalogComponents.Table element) {
 		List<CatalogComponents.Collection.Mold.Item> itemList = element.moldList().stream().map(CatalogComponents.Collection.Mold::item).collect(toList());
 		String name = firstUpperCase(element.name$()) + "Row";
-		PrivateComponents privateComponents = privateComponentsList().size() <= 0 ? create().privateComponents() : privateComponents(0);
-		PrivateComponents.Row row = privateComponents.rowList().stream().filter(c -> c.name$().equals(name)).findFirst().orElse(null);
+		HelperComponents privateComponents = helperComponentsList().size() <= 0 ? create().helperComponents() : helperComponents(0);
+		HelperComponents.Row row = privateComponents.rowList().stream().filter(c -> c.name$().equals(name)).findFirst().orElse(null);
 		if (row == null) privateComponents.create(name).row(itemList);//TODO parameters antes no estaba, es empty list correcto? ask mario
 	}
 
