@@ -64,7 +64,9 @@ class DateEditable extends AbstractDateEditable {
 	};
 
 	refresh = (value) => {
-		const date = value != null ? new Date(value) : null;
+	    const _date = new Date(value);
+		const _utcDate = new Date(_date.getUTCFullYear(), _date.getUTCMonth(), _date.getUTCDate(), _date.getUTCHours(), _date.getUTCMinutes(), _date.getUTCSeconds(), _date.getUTCMilliseconds())
+		const date = value != null ? _utcDate : null;
 		this.setState({ value: date, empty: date == null });
 	};
 

@@ -25,7 +25,7 @@ public class ActionRenderer extends ActionableRenderer {
 	public FrameBuilder properties() {
 		FrameBuilder result = super.properties();
 		if (element.i$(InteractionComponents.Switch.class)) {
-			result.add("switches");
+			result.add("switch");
 			result.add("state", element.a$(InteractionComponents.Switch.class).state().name());
 		}
 		addAddressableProperties(result);

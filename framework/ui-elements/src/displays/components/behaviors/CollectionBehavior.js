@@ -32,6 +32,7 @@ const CollectionBehavior = (collection) => {
 
         if (collection.state.loading) return self.renderLoading(height, width);
         if (items.length <= 0) return self.renderEmpty(height, width);
+        collection.state.selection = [];
 
         self.collection.itemsRenderedCalled = false;
         window.setTimeout(() => self.forceNotifyItemsRendered(items), 50);

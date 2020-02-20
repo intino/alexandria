@@ -1,8 +1,8 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.ui.displays.events.operation.ToggleEvent;
-import io.intino.alexandria.ui.displays.events.operation.ToggleListener;
+import io.intino.alexandria.ui.displays.events.actionable.ToggleEvent;
+import io.intino.alexandria.ui.displays.events.actionable.ToggleListener;
 import io.intino.alexandria.ui.displays.notifiers.ActionSwitchNotifier;
 
 public class ActionSwitch<DN extends ActionSwitchNotifier, B extends Box> extends AbstractActionSwitch<DN, B> {
