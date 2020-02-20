@@ -2,18 +2,20 @@ package io.intino.alexandria.slack;
 
 import com.github.seratch.jslack.Slack;
 import com.github.seratch.jslack.SlackConfig;
+import com.github.seratch.jslack.api.methods.MethodsClient;
 import com.github.seratch.jslack.api.methods.SlackApiException;
+import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest;
 import com.github.seratch.jslack.api.methods.request.files.FilesUploadRequest;
 import com.github.seratch.jslack.api.methods.request.users.UsersConversationsRequest;
 import com.github.seratch.jslack.api.methods.request.users.UsersListRequest;
-import com.github.seratch.jslack.api.methods.response.users.UsersConversationsResponse;
 import com.github.seratch.jslack.api.methods.response.users.UsersListResponse;
+import com.github.seratch.jslack.api.model.Conversation;
 import com.github.seratch.jslack.api.model.File;
 import com.github.seratch.jslack.api.model.User;
 import com.github.seratch.jslack.api.rtm.RTMClient;
-import com.github.seratch.jslack.api.rtm.message.Message;
 import com.github.seratch.jslack.common.json.GsonFactory;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.intino.alexandria.logger.Logger;
@@ -39,6 +41,7 @@ public abstract class Bot {
 	private Gson gson = GsonFactory.createCamelCase(SlackConfig.DEFAULT);
 	private JsonParser jsonParser = new JsonParser();
 	private User botIdentity;
+	private MethodsClient methods;
 
 	public Bot(String token) {
 		this.token = token;
@@ -77,6 +80,23 @@ public abstract class Bot {
 	public void disconnect() {
 		try {
 			this.rtm.disconnect();
+			this.slack.close();
+		} catch (Exception e) {
+			Logger.error(e);
+		}
+	}
+
+	public void rtmDisconnect() {
+		try {
+			this.rtm.disconnect();
+		} catch (Exception e) {
+			Logger.error(e);
+		}
+	}
+
+	public void reconnect() {
+		try {
+			this.rtm.reconnect();
 		} catch (Exception e) {
 			Logger.error(e);
 		}
@@ -85,39 +105,34 @@ public abstract class Bot {
 	public void sendToUser(String userName, String message) {
 		User user = findUserByName(userName);
 		if (user == null) return;
-		try {
-			sendMessage(channelOf(user), message);
-		} catch (IOException | SlackApiException e) {
-			Logger.error(e);
-		}
+		sendMessage(user.getId(), message);
 	}
 
 	public void sendToUser(String userName, String fileName, String title, InputStream attachment) {
 		final User user = findUserByName(userName);
 		if (user == null) return;
-		try {
-			sendAttachment(channelOf(user), attachment, fileName, title);
-		} catch (IOException | SlackApiException e) {
-			Logger.error(e);
-		}
+		sendAttachment(user.getId(), attachment, fileName, title);
 	}
 
 	public void sendMessage(String channel, String message) {
-		rtm.sendMessage(buildResponse(channel, message));
+		try {
+			methods.chatPostMessage(ChatPostMessageRequest.builder().asUser(true).channel(channel).text(message).build());
+		} catch (IOException | SlackApiException e) {
+			Logger.error(e);
+		}
 	}
 
 	public void sendAttachment(String channel, InputStream attachment, String fileName, String title) {
 		try {
-			slack.methods().filesUpload(FilesUploadRequest.builder().channels(List.of(channel)).filename(fileName).title(title).fileData(attachment.readAllBytes()).build());
+			methods.filesUpload(FilesUploadRequest.builder().channels(List.of(channel)).filename(fileName).title(title).fileData(attachment.readAllBytes()).build());
 		} catch (IOException | SlackApiException e) {
 			Logger.error(e);
 		}
 	}
 
-
 	public void sendAttachment(String channel, byte[] attachment, String fileName, String title) {
 		try {
-			slack.methods().filesUpload(FilesUploadRequest.builder().channels(List.of(channel)).filename(fileName).title(title).fileData(attachment).build());
+			methods.filesUpload(FilesUploadRequest.builder().channels(List.of(channel)).filename(fileName).title(title).fileData(attachment).build());
 		} catch (IOException | SlackApiException e) {
 			Logger.error(e);
 		}
@@ -129,6 +144,10 @@ public abstract class Bot {
 
 	public User findUserByName(String user) {
 		return users.stream().filter(u -> !u.isBot() && u.getName().equals(user)).findFirst().orElse(null);
+	}
+
+	private List<Conversation> channels(User user) throws IOException, SlackApiException {
+		return methods.usersConversations(UsersConversationsRequest.builder().user(user.getId()).build()).getChannels();
 	}
 
 	public Object talk(String userName, String message, MessageProperties properties) {
@@ -163,7 +182,8 @@ public abstract class Bot {
 
 	private void init() {
 		try {
-			UsersListResponse response = slack.methods().usersList(UsersListRequest.builder().token(token).build());
+			methods = slack.methods(token);
+			UsersListResponse response = methods.usersList(UsersListRequest.builder().token(token).build());
 			this.users = response.getMembers();
 			response.getMembers().stream().filter(u -> !u.isBot() && !u.isAppUser()).forEach(member -> usersContext.put(member.getName(), new Context("")));
 		} catch (IOException | SlackApiException e) {
@@ -173,7 +193,8 @@ public abstract class Bot {
 
 	private void handleMessage(String m) {
 		JsonObject json = jsonParser.parse(m).getAsJsonObject();
-		if (json.get("type") != null && json.get("type").getAsString().equals("message")) {
+		JsonElement type = json.get("type");
+		if (type != null && type.getAsString().equals("message")) {
 			com.github.seratch.jslack.api.model.Message request = gson.fromJson(json, com.github.seratch.jslack.api.model.Message.class);
 			try {
 				User userById = findUserById(request.getUser());
@@ -189,11 +210,10 @@ public abstract class Bot {
 				Logger.error(e);
 				sendMessage(request.getChannel(), "Command Error. Try `help` to see the options");
 			}
+		} else if (type != null && type.getAsString().equals("goodbye")) {
+			rtmDisconnect();
+			reconnect();
 		}
-	}
-
-	private String buildResponse(String channel, String message) {
-		return gson.toJson(Message.builder().channel(channel).id(System.currentTimeMillis()).text(message).build());
 	}
 
 	private String parameters(List<String> parameters) {
@@ -220,11 +240,6 @@ public abstract class Bot {
 			Logger.error(e);
 			return null;
 		}
-	}
-
-	private String channelOf(User user) throws IOException, SlackApiException {
-		UsersConversationsResponse response = slack.methods().usersConversations(UsersConversationsRequest.builder().user(user.getId()).build());
-		return response.getChannels().get(0).getId();
 	}
 
 	private boolean isAlreadyProcessed(com.github.seratch.jslack.api.model.Message message) {

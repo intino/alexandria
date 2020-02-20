@@ -4,7 +4,6 @@ def type(slack & gen)
 	import $package+ValidPackage.slack.*;
 
 	import io.intino.alexandria.slack.Bot;
-	import io.intino.slackapi.SlackAttachment;
 	import java.io.IOException;
 	import java.util.Arrays;
 
@@ -43,8 +42,8 @@ def type(slack & gen)
 				connect();
 				this.$name+snakeCaseToCamelCase+firstLowerCase~Slack.init(session(), users());
 				$level+init...[$NL]
-			} catch (IOException e) {
-				io.intino.alexandria.logger.Logger.error(e.getMessage(), e);
+			} catch (IOException | javax.websocket.DeploymentException e) {
+				io.intino.alexandria.logger.Logger.error(e);
 			}
 		}
 
@@ -94,7 +93,7 @@ def type(level) trigger(constructor)
 end
 
 def type(level) trigger(init)
-	$name+slashToCamelCase+firstLowerCase~Slack.init(session());
+	$name+slashToCamelCase+firstLowerCase~Slack.init(session(), users());
 end
 
 def type(request) trigger(add)
