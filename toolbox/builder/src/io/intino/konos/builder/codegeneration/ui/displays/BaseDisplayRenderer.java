@@ -121,8 +121,8 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 			frame.add("implements", new FrameBuilder("implements", DynamicLoaded.class.getSimpleName()));
 		if (element.i$(Collection.Selectable.class))
 			frame.add("implements", new FrameBuilder("implements", Collection.Selectable.class.getSimpleName()));
-		if (element.i$(Actionable.Addressable.class))
-			frame.add("implements", new FrameBuilder("implements", Actionable.Addressable.class.getSimpleName(), Actionable.Addressable.class.getSimpleName()).add("name", nameOf(element)));
+		if (element.i$(Actionable.Action.class) && element.i$(Actionable.Addressable.class))
+			frame.add("implements", new FrameBuilder("implements", Actionable.Action.class.getSimpleName(), Actionable.Addressable.class.getSimpleName()).add("name", nameOf(element)));
 		if (element.i$(Selector.Addressable.class))
 			frame.add("implements", new FrameBuilder("implements", Selector.class.getSimpleName(), Selector.Addressable.class.getSimpleName()).add("name", nameOf(element)));
 	}

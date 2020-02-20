@@ -2,7 +2,7 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.events.Event;
-import io.intino.alexandria.ui.displays.events.operation.OpenListener;
+import io.intino.alexandria.ui.displays.events.actionable.OpenListener;
 import io.intino.alexandria.ui.displays.notifiers.OpenDialogNotifier;
 
 public class OpenDialog<DN extends OpenDialogNotifier, B extends Box> extends AbstractOpenDialog<DN, B> {

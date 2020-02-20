@@ -2,8 +2,8 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.ExportParams;
-import io.intino.alexandria.ui.displays.events.operation.ExportEvent;
-import io.intino.alexandria.ui.displays.events.operation.ExportListener;
+import io.intino.alexandria.ui.displays.events.actionable.ExportEvent;
+import io.intino.alexandria.ui.displays.events.actionable.ExportListener;
 import io.intino.alexandria.ui.displays.notifiers.ExportNotifier;
 import io.intino.alexandria.ui.spark.UIFile;
 
