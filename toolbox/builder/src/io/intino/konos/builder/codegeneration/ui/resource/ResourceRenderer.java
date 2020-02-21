@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.resource;
 
 import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.templates.ResourceTemplate;
@@ -11,8 +12,8 @@ import io.intino.konos.model.graph.Service;
 import java.util.List;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
-import static io.intino.konos.builder.helpers.CodeGenerationHelper.resourceFilename;
-import static io.intino.konos.builder.helpers.CodeGenerationHelper.resourceFolder;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
 
 public class ResourceRenderer extends UIRenderer {
 	protected final Service.UI.Resource resource;
@@ -30,8 +31,9 @@ public class ResourceRenderer extends UIRenderer {
 		if (uiService.googleApiKey() != null) builder.add("googleApiKey", customize("googleApiKey", uiService.googleApiKey()));
 		if (resource.isConfidential()) builder.add("confidential", "");
 		Commons.writeFrame(resourceFolder(gen(), target), resourceFilename(resource.name$()), setup(new ResourceTemplate()).render(builder.toFrame()));
-
-		new PageRenderer(compilationContext, resource).execute();
+		if (target.equals(Target.Owner))
+			context.compiledFiles().add(new OutputItem(javaFile(resourceFolder(gen(), target), resourceFilename(resource.name$())).getAbsolutePath()));
+		new PageRenderer(context, resource).execute();
 	}
 
 	private FrameBuilder[] parameters(Service.UI.Resource resource) {

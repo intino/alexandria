@@ -32,7 +32,7 @@ public class DisplaysManifestRenderer extends UIRenderer {
 
 	@Override
 	public void render() {
-		Set<Display> displays = service.graph().rootDisplays(compilationContext.graphName()).stream().filter(this::isBaseType).collect(toSet());
+		Set<Display> displays = service.graph().rootDisplays(context.graphName()).stream().filter(this::isBaseType).collect(toSet());
 		Set<PassiveView> baseDisplays = baseDisplays(displays);
 		renderDisplays(displays, baseDisplays);
 		renderedDisplays.clear();

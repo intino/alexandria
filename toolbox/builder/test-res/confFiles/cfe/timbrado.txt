@@ -21,6 +21,8 @@ project.path
 /Users/oroncal/workspace/b.cfe/gestioncomercial
 module.path
 /Users/oroncal/workspace/b.cfe/gestioncomercial/timbrado
+web.module.path
+/Users/oroncal/workspace/b.cfe/gestioncomercial/timbrado-elements
 src.path
 /Users/oroncal/workspace/b.cfe/gestioncomercial/timbrado/src
 

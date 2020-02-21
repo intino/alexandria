@@ -105,7 +105,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private FrameBuilder referenceFrame(Component component) {
-		ComponentRenderer renderer = factory.renderer(compilationContext, component, templateProvider, target);
+		ComponentRenderer renderer = factory.renderer(context, component, templateProvider, target);
 		FrameBuilder builder = new FrameBuilder("reference").add(typeOf(component)).add("name", component.name$());
 		Component parentComponent = component.core$().ownerAs(Component.class);
 		builder.add("box", boxName());
@@ -170,7 +170,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private UIRenderer componentRenderer(Component component) {
-		ComponentRenderer renderer = factory.renderer(compilationContext, component, templateProvider, target);
+		ComponentRenderer renderer = factory.renderer(context, component, templateProvider, target);
 		renderer.buildChildren(true);
 		renderer.decorated(decorated);
 		renderer.owner(owner);
@@ -232,7 +232,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			Template template = element.a$(Stamp.class).template();
 			builder.add("template", template.name$());
 			builder.add("type", template.name$());
-			builder.add("generic", KonosGraph.isParent(compilationContext.graphName(), template) ? "<>" : "");
+			builder.add("generic", KonosGraph.isParent(context.graphName(), template) ? "<>" : "");
 			return true;
 		}
 

@@ -1,7 +1,7 @@
 package io.intino.konos;
 
+import io.intino.Configuration;
 import io.intino.konos.builder.CompilerConfiguration;
-import io.intino.tara.compiler.shared.Configuration.Artifact.Model.Level;
 
 import java.io.*;
 import java.util.List;
@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import static io.intino.konos.compiler.shared.KonosBuildConstants.*;
+import static java.io.File.separator;
 
 class CompilationInfoExtractor {
 	private static final Logger LOG = Logger.getGlobal();
@@ -82,7 +83,7 @@ class CompilationInfoExtractor {
 				configuration.parentInterface(reader.readLine());
 				break;
 			case LIBRARY:
-				configuration.datahubLibrary(new File(reader.readLine()));
+				configuration.datahubLibrary(findLibraryInRepository(reader.readLine()));
 				break;
 			case PROJECT_PATH:
 				configuration.projectDirectory(new File(reader.readLine()));
@@ -90,11 +91,8 @@ class CompilationInfoExtractor {
 			case MODULE_PATH:
 				configuration.moduleDirectory(new File(reader.readLine()));
 				break;
-			case WEB_MODULE_PATH:
-				configuration.webModuleDirectory(new File(reader.readLine()));
-				break;
 			case LEVEL:
-				configuration.model().level(Level.valueOf(reader.readLine()));
+				configuration.model().level(Configuration.Artifact.Model.Level.valueOf(reader.readLine()));
 				break;
 			case GROUP_ID:
 				configuration.groupId(reader.readLine());
@@ -120,6 +118,13 @@ class CompilationInfoExtractor {
 			default:
 				break;
 		}
+	}
+
+	private static File findLibraryInRepository(String library) {
+		String[] split = library.split(":");
+		File directory = new File(System.getProperty("user.home") + separator + ".m2" + separator + "repository" +
+				separator + split[0].replace(".", separator) + separator + split[1] + separator + split[2] );
+		return new File(directory, split[1] + "-" + split[2] + ".jar");
 	}
 
 	private static void readSrcPaths(List<File> srcPaths, BufferedReader reader) throws IOException {

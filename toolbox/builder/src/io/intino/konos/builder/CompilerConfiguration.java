@@ -1,6 +1,6 @@
 package io.intino.konos.builder;
 
-import io.intino.tara.compiler.shared.Configuration.Artifact.Model.Level;
+import io.intino.Configuration.Artifact.Model.Level;
 import tara.dsl.Konos;
 
 import java.io.File;

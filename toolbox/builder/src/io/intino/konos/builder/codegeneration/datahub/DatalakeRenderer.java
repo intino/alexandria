@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.datahub;
 
 import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
@@ -14,33 +15,36 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class DatalakeRenderer {
-	private final CompilationContext compilationContext;
+	private final CompilationContext context;
 	private final KonosGraph graph;
 	private final File genDirectory;
 
-	public DatalakeRenderer(CompilationContext compilationContext, KonosGraph graph) {
+	public DatalakeRenderer(CompilationContext context, KonosGraph graph) {
 		this.graph = graph;
-		this.compilationContext = compilationContext;
-		this.genDirectory = compilationContext.gen(Target.Owner);
+		this.context = context;
+		this.genDirectory = context.gen(Target.Owner);
 	}
 
 	public void execute() {
 		Datalake datalake = graph.datalake();
 		if (datalake == null || !(datalake.isNfsMirrored() || datalake.isSshMirrored())) return;
-		final FrameBuilder builder = new FrameBuilder("datalake", datalake.isNfsMirrored() ? "nfs" : "ssh").add("package", compilationContext.packageName());
+		final FrameBuilder builder = new FrameBuilder("datalake", datalake.isNfsMirrored() ? "nfs" : "ssh").add("package", context.packageName());
 		List<String> eventTanks = new ArrayList<>();
 //		graph.mounterList().stream().filter(Mounter::isBatch).map(Mounter::asBatch).forEach(mounter -> eventTanks.addAll(tanksOf(mounter)));
 //		List<String> setTanks = new ArrayList<>();
 //		builder.add("eventTank", eventTanks.toArray(new String[0]));
 //		graph.mounterList().stream().filter(Mounter::isPopulation).map(Mounter::asPopulation).forEach(mounter -> setTanks.addAll(tanksOf(mounter)));
 //		builder.add("setTank", setTanks.toArray(new String[0]));TODO
-		compilationContext.classes().put("Datalake", "Datalake");
+		context.classes().put("Datalake", "Datalake");
 		File destination = genDirectory;
-		if (!Commons.javaFile(destination, "Datalake").exists())
+		if (!Commons.javaFile(destination, "Datalake").exists()) {
 			writeFrame(destination, "Datalake", customize(new DatalakeTemplate()).render(builder.toFrame()));
+			context.compiledFiles().add(new OutputItem(javaFile(destination, "Datalake").getAbsolutePath()));
+		}
 	}
 
 //	private List<String> tanksOf(Mounter.Batch mounter) {

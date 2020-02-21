@@ -4,6 +4,7 @@ import io.intino.alexandria.zip.Zip;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
@@ -26,6 +27,7 @@ import java.util.zip.ZipInputStream;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static java.util.stream.Collectors.toList;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
@@ -101,7 +103,7 @@ public class RESTServiceRenderer extends Renderer {
 	}
 
 	private File findResource(String logo) {
-		File resRoot = compilationContext.configuration().resDirectory();
+		File resRoot = context.configuration().resDirectory();
 		if (resRoot == null) return null;
 		File file = new File(resRoot.getPath(), logo);
 		return file.exists() ? file : null;
@@ -125,6 +127,7 @@ public class RESTServiceRenderer extends Renderer {
 		final String className = snakeCaseToCamelCase(service.name$()) + "Service";
 		classes().put(service.getClass().getSimpleName() + "#" + service.name$(), className);
 		Commons.writeFrame(gen, className, template().render(builder.toFrame()));
+		context.compiledFiles().add(new OutputItem(javaFile(gen(), className).getAbsolutePath()));
 	}
 
 	private Frame[] notificationsFrame(List<Service.REST.Notification> list) {

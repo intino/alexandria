@@ -23,7 +23,7 @@ public class DisplayListRenderer extends UIRenderer {
 	@Override
 	public void render() {
 		DisplayRendererFactory factory = new DisplayRendererFactory();
-		displays.forEach(d -> factory.renderer(compilationContext, d, templateProvider, target).execute());
+		displays.forEach(d -> factory.renderer(context, d, templateProvider, target).execute());
 	}
 
 }

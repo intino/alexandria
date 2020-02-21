@@ -15,7 +15,24 @@ public class AcceptedKonosRunner {
 	}
 
 	@Test
-	public void timbradoM2() {
+	public void timbrado() {
 		KonoscRunner.main(new String[]{home + "confFiles/cfe/timbrado.txt"});
+	}
+
+
+	@Test
+	public void cuentamaestra() {
+		KonoscRunner.main(new String[]{home + "confFiles/cfe/cuentamaestra.txt"});
+	}
+
+
+	@Test
+	public void cesarDh() {
+		KonoscRunner.main(new String[]{home + "confFiles/cesar/cesar-dh.txt"});
+	}
+
+	@Test
+	public void cesar() {
+		KonoscRunner.main(new String[]{home + "confFiles/cesar/cesar.txt"});
 	}
 }

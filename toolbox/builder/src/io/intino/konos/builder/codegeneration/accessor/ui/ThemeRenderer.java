@@ -33,7 +33,6 @@ public class ThemeRenderer extends UIRenderer {
 		}
 		service.graph().formatList().forEach(r -> builder.add("format", frameOf(r)));
 		Commons.write(new File(gen() + File.separator + "Theme.js").toPath(), setup(new ThemeTemplate()).render(builder.toFrame()));
-		if (theme != null) saveRendered(theme);
 	}
 
 	private Frame palette(Theme theme) {

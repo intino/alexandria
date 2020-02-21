@@ -32,12 +32,12 @@ public class ServiceRenderer extends UIRenderer {
 	@Override
 	public void render() {
 		createUi();
-		new I18nRenderer(compilationContext, service, target).execute();
-		new RouteDispatcherRenderer(compilationContext, service, target).execute();
+		new I18nRenderer(context, service, target).execute();
+		new RouteDispatcherRenderer(context, service, target).execute();
 	}
 
 	private void createUi() {
-		final List<Display> displays = service.graph().rootDisplays(compilationContext.graphName());
+		final List<Display> displays = service.graph().rootDisplays(context.graphName());
 		FrameBuilder builder = buildFrame().add("ui").add("name", service.name$()).add("resource", resourcesFrame(service.resourceList()));
 		if (userHome(service) != null) builder.add("userHome", userHome(service).name$());
 		if (!displays.isEmpty())

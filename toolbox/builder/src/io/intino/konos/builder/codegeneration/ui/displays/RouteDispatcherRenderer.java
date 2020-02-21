@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays;
 
 import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.templates.RouteDispatcherTemplate;
@@ -31,6 +32,8 @@ public class RouteDispatcherRenderer extends UIRenderer {
 		File routeDispatcher = fileOf(displaysFolder(src(), target), "RouteDispatcher", target);
 		if (!routeDispatcher.exists()) Commons.write(routeDispatcher.toPath(), setup(new RouteDispatcherTemplate()).render(builder.toFrame()));
 		Commons.write(fileOf(displaysFolder(gen(), target), "AbstractRouteDispatcher", target).toPath(), setup(new RouteDispatcherTemplate()).render(builder.add("gen").toFrame()));
+		if (target.equals(Target.Owner))
+			context.compiledFiles().add(new OutputItem(fileOf(displaysFolder(gen(), target), "AbstractRouteDispatcher", target).getAbsolutePath()));
 	}
 
 	@Override

@@ -8,6 +8,9 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static io.intino.konos.builder.codegeneration.Formatters.firstLowerCase;
+import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
+
 class BotActionsUpdater {
 
 	private final CompilationContext compilationContext;
@@ -25,7 +28,7 @@ class BotActionsUpdater {
 	}
 
 	private void addMethod(Request request) {
-		compilationContext.postCompileActionMessages().add(new PostCompileMethodActionMessage(compilationContext.module(), destination, request.name$(), false, parameters(request), "String"));
+		compilationContext.postCompileActionMessages().add(new PostCompileMethodActionMessage(compilationContext.module(), destination, firstLowerCase(snakeCaseToCamelCase().format(request.name$()).toString()), false, parameters(request), "String"));
 	}
 
 	private List<String> parameters(Request request) {

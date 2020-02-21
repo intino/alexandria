@@ -38,7 +38,7 @@ public class RESTAccessorRenderer extends Renderer {
 
 	@Override
 	public void render() {
-		new SchemaListRenderer(compilationContext, service.graph(), destination).execute();
+		new SchemaListRenderer(context, service.graph(), destination).execute();
 		processService(service);
 	}
 

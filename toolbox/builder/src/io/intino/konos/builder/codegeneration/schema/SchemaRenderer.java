@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.schema;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.CompilationContext;
@@ -19,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static java.util.Collections.addAll;
 
 public class SchemaRenderer extends Renderer {
@@ -41,7 +43,7 @@ public class SchemaRenderer extends Renderer {
 		final Frame frame = createSchemaFrame(schema, packageName);
 		classes().put(Schema.class.getSimpleName() + "#" + schema.name$(), subPackage.replace(File.separator, ".") + "." + schema.name$());
 		Commons.writeFrame(packageFolder, schema.name$(), template().render(new FrameBuilder("root").add("root", rootPackage).add("package", packageName).add("schema", frame)));
-		saveRendered(schema);
+		context.compiledFiles().add(new OutputItem(javaFile(packageFolder, schema.name$()).getAbsolutePath()));
 	}
 
 	public Frame createSchemaFrame(Schema schema, String packageName) {

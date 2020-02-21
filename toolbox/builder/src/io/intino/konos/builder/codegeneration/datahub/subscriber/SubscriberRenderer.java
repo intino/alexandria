@@ -7,7 +7,6 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Subscriber;
 
-
 import java.io.File;
 import java.util.List;
 
@@ -15,36 +14,35 @@ import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class SubscriberRenderer {
-	private final CompilationContext compilationContext;
+	private final CompilationContext context;
 	private final List<Subscriber> subscribers;
 	private final File srcSubscribers;
 
-	public SubscriberRenderer(CompilationContext compilationContext, KonosGraph graph) {
-		this.compilationContext = compilationContext;
+	public SubscriberRenderer(CompilationContext context, KonosGraph graph) {
+		this.context = context;
 		this.subscribers = graph.subscriberList();
-		this.srcSubscribers = new File(compilationContext.src(Target.Owner), "subscribers");
+		this.srcSubscribers = new File(context.src(Target.Owner), "subscribers");
 	}
 
 	public void execute() {
 		for (Subscriber subscriber : subscribers) {
 			final FrameBuilder builder = baseFrame(subscriber);
-			CompilationContext.DataHubManifest manifest = compilationContext.dataHubManifest();
+			CompilationContext.DataHubManifest manifest = context.dataHubManifest();
 			if (manifest == null) return;
 			String type = manifest.tankClasses.get(subscriber.tank());
 			if (type == null) return;
 			builder.add("type", type);
 			builder.add("typeName", type.substring(type.lastIndexOf(".") + 1));
-			compilationContext.classes().put(subscriber.getClass().getSimpleName() + "#" + subscriber.name$(), "subscribers." + subscriber.name$());
+			context.classes().put(subscriber.getClass().getSimpleName() + "#" + subscriber.name$(), "subscribers." + subscriber.name$());
 			if (!alreadyRendered(srcSubscribers, subscriber.name$()))
 				writeFrame(srcSubscribers, subscriber.name$(), customize(new SubscriberTemplate()).render(builder.toFrame()));
 		}
 	}
 
-
 	private FrameBuilder baseFrame(Subscriber subscriber) {
 		return new FrameBuilder("subscriber").
-				add("box", compilationContext.boxName()).
-				add("package", compilationContext.packageName()).
+				add("box", context.boxName()).
+				add("package", context.packageName()).
 				add("name", subscriber.name$());
 	}
 

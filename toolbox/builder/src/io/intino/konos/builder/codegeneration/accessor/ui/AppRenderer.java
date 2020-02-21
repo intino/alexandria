@@ -36,7 +36,7 @@ public class AppRenderer extends UIRenderer {
 		service.resourceList().forEach(r -> {
 			FrameBuilder builder = new FrameBuilder("app");
 			builder.add("page", new FrameBuilder("page").add("value", r.name$()).toFrame());
-			builder.add("webModuleName", compilationContext.webModuleDirectory() != null ? compilationContext.webModuleDirectory().getName() : "");
+			builder.add("webModuleName", context.webModuleDirectory() != null ? context.webModuleDirectory().getName() : "");
 			if (!patternOf(r).isEmpty()) builder.add("pattern", patternOf(r));
 			Commons.write(new File(gen() + File.separator + "apps" + File.separator + firstUpperCase(r.name$()) + ".js").toPath(), setup(new AppTemplate()).render(builder.toFrame()));
 		});
@@ -53,13 +53,13 @@ public class AppRenderer extends UIRenderer {
 	private void writeWebPack() {
 		Template template = new WebPackTemplate();
 		FrameBuilder builder = new FrameBuilder("webpack");
-		builder.add("outDirectory", compilationContext.configuration().outDirectory());
+		builder.add("outDirectory", context.configuration().outDirectory());
 		builder.add("exclude", alexandriaFrame("exclude"));
 		builder.add("alias", alexandriaFrame("alias"));
-		builder.add("webModuleName", compilationContext.webModuleDirectory() != null ? compilationContext.webModuleDirectory().getName() : "");
+		builder.add("webModuleName", context.webModuleDirectory() != null ? context.webModuleDirectory().getName() : "");
 		if (isAlexandria(project())) builder.add("alexandriaProject", "true");
 		service.resourceList().forEach(r -> builder.add("page", new FrameBuilder("page").add("value", r.name$()).toFrame()));
-		Commons.write(new File(root() + File.separator + "webpack.config.js").toPath(), setup(template).render(builder.toFrame()));
+		Commons.write(new File(root() , "webpack.config.js").toPath(), setup(template).render(builder.toFrame()));
 	}
 
 	private Object normalize(String parent) {

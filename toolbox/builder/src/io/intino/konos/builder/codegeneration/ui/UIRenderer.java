@@ -26,11 +26,11 @@ public abstract class UIRenderer extends Renderer {
 	}
 
 	protected String parent() {
-		return compilationContext.parent();
+		return context.parent();
 	}
 
 	protected Map<String, String> classes() {
-		return compilationContext.classes();
+		return context.classes();
 	}
 
 	protected Template setup(Template template) {

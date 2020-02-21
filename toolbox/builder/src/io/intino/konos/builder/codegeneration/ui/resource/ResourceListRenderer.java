@@ -22,7 +22,7 @@ public class ResourceListRenderer extends UIRenderer {
 
 	@Override
 	public void render() {
-		resourceList.forEach(r -> new ResourceRenderer(compilationContext, r, target).execute());
-		accessibleDisplays.forEach(d -> new AccessibleDisplayRenderer(compilationContext, d, target).execute());
+		resourceList.forEach(r -> new ResourceRenderer(context, r, target).execute());
+		accessibleDisplays.forEach(d -> new AccessibleDisplayRenderer(context, d, target).execute());
 	}
 }

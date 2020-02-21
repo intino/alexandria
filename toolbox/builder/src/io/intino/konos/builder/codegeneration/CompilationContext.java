@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import io.intino.alexandria.logger.Logger;
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.compiler.shared.PostCompileActionMessage;
 
 import java.io.File;
@@ -17,8 +16,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.Configuration.Artifact.Model.Level.Solution;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.createIfNotExists;
-import static io.intino.tara.compiler.shared.Configuration.Artifact.Model.Level.Solution;
 
 public class CompilationContext {
 	private List<OutputItem> compiledFiles;
@@ -27,16 +26,14 @@ public class CompilationContext {
 	private DataHubManifest dataHubManifest;
 	private File webModuleDirectory;
 	private String parent;
-	private ElementCache cache;
 	private String boxName = null;
 	private Map<String, String> classes = new HashMap<>();
 
 	public CompilationContext() {
 	}
 
-	public CompilationContext(CompilerConfiguration configuration, List<PostCompileActionMessage> postCompileActionMessages, ElementCache cache, List<OutputItem> compiledFiles) {
+	public CompilationContext(CompilerConfiguration configuration, List<PostCompileActionMessage> postCompileActionMessages,  List<OutputItem> compiledFiles) {
 		configuration(configuration);
-		cache(cache);
 		loadManifest();
 		this.postCompileActionMessages = postCompileActionMessages;
 		this.compiledFiles = compiledFiles;
@@ -54,6 +51,10 @@ public class CompilationContext {
 		return configuration.webModuleDirectory();
 	}
 
+	public void webModuleDirectory(File file) {
+		configuration.webModuleDirectory(file);
+	}
+
 	public String parent() {
 		return configuration.parentInterface();
 	}
@@ -63,9 +64,13 @@ public class CompilationContext {
 		return this;
 	}
 
+	public List<OutputItem> compiledFiles() {
+		return compiledFiles;
+	}
+
 	public File root(Target target) {
 		String rootDir = target == Target.Owner ? configuration.moduleDirectory().getAbsolutePath() : configuration.webModuleDirectory().getAbsolutePath();
-		return createIfNotExists(new File(rootDir).getParentFile());
+		return createIfNotExists(new File(rootDir));
 	}
 
 	public File res(Target target) {
@@ -80,14 +85,6 @@ public class CompilationContext {
 		return createIfNotExists(target == Target.Owner ? new File(configuration.genDirectory(), packageName().replace(".", File.separator)) : accessorGen());
 	}
 
-	public ElementCache cache() {
-		return cache;
-	}
-
-	public CompilationContext cache(ElementCache cache) {
-		this.cache = cache;
-		return this;
-	}
 
 	public String packageName() {
 		return configuration.generationPackage();
@@ -138,7 +135,7 @@ public class CompilationContext {
 	}
 
 	private DataHubManifest loadManifest(File jar) {
-		if (jar == null) return null;
+		if (jar == null || !jar.exists()) return null;
 		try {
 			ZipFile zipFile = new ZipFile(jar);
 			Enumeration<? extends ZipEntry> entries = zipFile.entries();
@@ -154,7 +151,7 @@ public class CompilationContext {
 	}
 
 	public CompilationContext clone() {
-		CompilationContext result = new CompilationContext(configuration, postCompileActionMessages, cache, compiledFiles);
+		CompilationContext result = new CompilationContext(configuration, postCompileActionMessages, compiledFiles);
 		result.webModuleDirectory = webModuleDirectory;
 		result.parent = parent;
 		result.classes = classes;

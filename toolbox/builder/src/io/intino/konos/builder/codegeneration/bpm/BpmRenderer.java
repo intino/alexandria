@@ -7,8 +7,9 @@ import io.intino.bpmparser.State;
 import io.intino.bpmparser.Task;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Renderer;
+import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.CompilationContext;
+import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
@@ -22,8 +23,7 @@ import java.util.*;
 import static io.intino.bpmparser.State.Type.Initial;
 import static io.intino.bpmparser.State.Type.Terminal;
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
-import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
-import static io.intino.konos.builder.helpers.Commons.writeFrame;
+import static io.intino.konos.builder.helpers.Commons.*;
 
 public class BpmRenderer extends Renderer {
 	private final CompilationContext compilationContext;
@@ -51,6 +51,7 @@ public class BpmRenderer extends Renderer {
 	private void renderBpm() {
 		if (processes.isEmpty()) return;
 		FrameBuilder builder = new FrameBuilder("workflow").add("box", compilationContext.boxName()).add("package", compilationContext.packageName()).add("businessUnit", businessUnit).add(compilationContext.boxName()).add("process", processes.stream().map(p -> frameOf(p)).toArray(Frame[]::new));
+		context.compiledFiles().add(new OutputItem(javaFile(gen, "Workflow").getAbsolutePath()));
 		writeFrame(gen, "Workflow", customize(new WorkflowTemplate()).render(builder.toFrame()));
 	}
 

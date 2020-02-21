@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.ui;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
@@ -17,6 +18,7 @@ import java.util.logging.Logger;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
 
 public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 	protected final C element;
@@ -32,7 +34,6 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 	public void execute() {
 		if (isRendered(element)) return;
 		super.execute();
-		saveRendered(element);
 	}
 
 	protected final void write(FrameBuilder builder) {
@@ -62,6 +63,8 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 		final String abstractValue = builder.is("accessible") ? "" : (ElementHelper.isRoot(element) ? "Abstract" : "");
 		final String newDisplay = displayFilename(snakeCaseToCamelCase(abstractValue + firstUpperCase(element.name$())), suffix);
 		writeFrame(displayFolder(gen(), type, target), newDisplay, template.render(builder.add("gen").toFrame()));
+		if (target.equals(Target.Owner))
+			context.compiledFiles().add(new OutputItem(javaFile(displayFolder(gen(), type, target), newDisplay).getAbsolutePath()));
 	}
 
 	public void writeFrame(File packageFolder, String name, String text) {

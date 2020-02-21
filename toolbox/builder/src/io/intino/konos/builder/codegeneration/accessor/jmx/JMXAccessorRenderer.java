@@ -33,7 +33,7 @@ public class JMXAccessorRenderer extends Renderer {
 
 	@Override
 	public void render() {
-		new SchemaListRenderer(compilationContext, service.graph(), destination, packageName).execute();
+		new SchemaListRenderer(context, service.graph(), destination, packageName).execute();
 		createInterface(service);
 		createService(service);
 	}
