@@ -24,7 +24,7 @@ public class ArffFileGenerator implements FileGenerator {
 
 	public ArffFileGenerator(List<ColumnStream> streams) {
 		this.streams = streams;
-		streams.stream().filter(f -> f instanceof ExplicitColumnStream).forEach(s -> modes.put(s, new HashSet<>(((ExplicitColumnStream) s).modes())));
+		streams.stream().filter(f -> f instanceof ExplicitColumnStream).forEach(s -> modes.put(s, new LinkedHashSet<>(((ExplicitColumnStream) s).modes())));
 	}
 
 	public FileGenerator destination(File directory, String name) {
@@ -83,9 +83,9 @@ public class ArffFileGenerator implements FileGenerator {
 				if (value == null) return NULL_VALUE;
 				else {
 					if (stream.type().equals(Type.Nominal))
-						return "\'" + register(stream, value) + "\'";
+						return "'" + register(stream, value) + "'";
 					if (stream.type().equals(Type.Boolean) || stream.type().equals(Type.String))
-						return "\'" + value + "\'";
+						return "'" + value + "'";
 					return value.toString();
 				}
 			}
@@ -94,8 +94,8 @@ public class ArffFileGenerator implements FileGenerator {
 	}
 
 	private String register(ColumnStream stream, Object value) {
-		if (!modes.containsKey(stream)) modes.put(stream, new LinkedHashSet<>());
 		String nominal = value.toString().replace('\n', '|');
+		if (!modes.containsKey(stream)) modes.put(stream, new LinkedHashSet<>());
 		modes.get(stream).add(nominal);
 		return nominal;
 	}

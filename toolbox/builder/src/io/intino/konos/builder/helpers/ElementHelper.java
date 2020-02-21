@@ -1,13 +1,11 @@
 package io.intino.konos.builder.helpers;
 
-import io.intino.alexandria.ui.displays.components.selector.Selection;
 import io.intino.konos.builder.codegeneration.ElementReference;
 import io.intino.konos.builder.utils.IdGenerator;
 import io.intino.konos.model.graph.InteractionComponents;
 import io.intino.tara.magritte.Layer;
 import io.intino.tara.magritte.Node;
 import io.intino.tara.magritte.Predicate;
-import org.joda.time.Days;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -16,20 +16,19 @@ import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstLowerCase;
 import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
-import static io.intino.konos.builder.helpers.Commons.returnType;
 
 
-class ActionUpdater {
+public class ActionUpdater {
 
-	private final CompilationContext compilationContext;
+	private final CompilationContext context;
 	private final File destination;
 	private final String packageName;
 	private final List<? extends Parameter> parameters;
 	private final List<Exception> exceptions;
 	private final Response response;
 
-	ActionUpdater(CompilationContext compilationContext, File destination, String packageName, List<? extends Parameter> parameters, List<Exception> exceptions, Response response) {
-		this.compilationContext = compilationContext;
+	public ActionUpdater(CompilationContext context, File destination, String packageName, List<? extends Parameter> parameters, List<Exception> exceptions, Response response) {
+		this.context = context;
 		this.destination = destination;
 		this.packageName = packageName;
 		this.parameters = parameters;
@@ -37,13 +36,18 @@ class ActionUpdater {
 		this.response = response;
 	}
 
-	void update() {
-		parameters.forEach(p -> compilationContext.postCompileActionMessages().add(new PostCompileFieldActionMessage(compilationContext.module(), destination, "public",
+	public void update() {
+		parameters.forEach(p -> context.postCompileActionMessages().add(new PostCompileFieldActionMessage(context.module(), destination, "public",
 				false, formatType(p.asType(), p.isList()), nameOf(p))));
-		compilationContext.postCompileActionMessages().add(new PostCompileFieldActionMessage(compilationContext.module(), destination, "public",
+		context.postCompileActionMessages().add(new PostCompileFieldActionMessage(context.module(), destination, "public",
 				false, "io.intino.konos.Box", "box"));
-		compilationContext.postCompileActionMessages().add(new PostCompileMethodActionMessage(compilationContext.module(), destination, "execute",
-				false, Collections.emptyList(), response == null ? "void" : returnType(response, packageName), exceptions()));
+		context.postCompileActionMessages().add(new PostCompileMethodActionMessage(context.module(), destination, "execute",
+				false, Collections.emptyList(), response == null ? "void" : returnType(), exceptions()));
+	}
+
+	private String returnType() {
+		String type = Commons.fullReturnType(response, packageName);
+		return !type.contains(".") && !type.equals("void") ? "java.lang." + type : type;
 	}
 
 	private List<String> exceptions() {

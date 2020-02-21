@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.services.jmx;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.CompilationContext;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class JMXServerRenderer extends Renderer {
@@ -36,6 +38,7 @@ public class JMXServerRenderer extends Renderer {
 				.add("name", service.name$())
 				.add("box", boxName())
 				.add("package", packageName()).toFrame()));
+		context.compiledFiles().add(new OutputItem(javaFile(gen(), "JMX" + snakeCaseToCamelCase(service.name$())).getAbsolutePath()));
 	}
 
 	private Template template() {

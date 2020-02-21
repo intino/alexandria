@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.ui.passiveview;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.ElementRenderer;
@@ -22,8 +23,8 @@ import java.util.Set;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
-import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayNotifierFolder;
-import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayRequesterFolder;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.model.graph.PassiveView.Request.ResponseType.Asset;
 import static java.util.stream.Collectors.toList;
 
@@ -93,6 +94,8 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		Frame frame = builder.toFrame();
 		String name = snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + "Requester");
 		writeFrame(displayRequesterFolder(gen(), target), name, displayRequesterTemplate(builder).render(frame));
+		if (target.equals(Target.Owner))
+			context.compiledFiles().add(new OutputItem(javaFile(displayRequesterFolder(gen(), target), name).getAbsolutePath()));
 	}
 
 	protected void writePushRequester(PassiveView element, FrameBuilder builder) {
@@ -102,12 +105,16 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (accessible || template == null) return;
 		String name = snakeCaseToCamelCase(element.name$() + "PushRequester");
 		writeFrame(displayRequesterFolder(gen(), target), name, template.render(frame));
+		if (target.equals(Target.Owner))
+			context.compiledFiles().add(new OutputItem(javaFile(displayRequesterFolder(gen(), target), name).getAbsolutePath()));
 	}
 
 	protected void writeNotifier(PassiveView element, FrameBuilder builder) {
 		Frame frame = builder.toFrame();
-		String notifierName = snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + "Notifier");
-		writeFrame(displayNotifierFolder(gen(), target), notifierName, displayNotifierTemplate(builder).render(frame));
+		String name = snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + "Notifier");
+		writeFrame(displayNotifierFolder(gen(), target), name, displayNotifierTemplate(builder).render(frame));
+		if (target.equals(Target.Owner))
+			context.compiledFiles().add(new OutputItem(javaFile(displayNotifierFolder(gen(), target), name).getAbsolutePath()));
 	}
 
 	protected void addGeneric(PassiveView element, FrameBuilder builder) {
@@ -118,7 +125,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	protected boolean isGeneric(PassiveView element) {
-		return element.isExtensionOf() || KonosGraph.isParent(compilationContext.graphName(), element);
+		return element.isExtensionOf() || KonosGraph.isParent(context.graphName(), element);
 	}
 
 	protected String genericParent(PassiveView element) {
@@ -193,7 +200,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		result.add("type", importTypeOf(passiveView, multiple));
 		result.add("directory", directoryOf(passiveView));
 		result.add("componentDirectory", componentDirectoryOf(passiveView, multiple));
-		if (settings.webModule() != null) result.add("webModuleName", settings.webModule().getName());
+		if (context.webModuleDirectory().exists()) result.add("webModuleName", context.webModuleDirectory().getName());
 		if (!multiple) addFacets(passiveView, result);
 		return result;
 	}
@@ -375,7 +382,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	private void registerCollectionImports(Set<String> imported, Component component, FrameBuilder builder) {
-		if (component.i$(CatalogComponents.Table.class)) addComponentsImports(imported, component.graph().rowsDisplays(compilationContext.graphName()).stream().map(r -> r.a$(Component.class)).collect(toList()), builder);
+		if (component.i$(CatalogComponents.Table.class)) addComponentsImports(imported, component.graph().rowsDisplays(context.graphName()).stream().map(r -> r.a$(Component.class)).collect(toList()), builder);
 		else addComponentsImports(imported, component.a$(CatalogComponents.Collection.class).moldList().stream().map(CatalogComponents.Collection.Mold::item).collect(toList()), builder);
 	}
 }

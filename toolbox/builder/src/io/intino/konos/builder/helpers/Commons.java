@@ -85,7 +85,8 @@ public class Commons {
 	public static String path(Resource resource) {
 		Service.REST service = resource.core$().ownerAs(Service.REST.class);
 		String basePath = basePath(service.basePath());
-		if (service.info() != null && service.info().version() != null) basePath = basePath + service.info().version() + "/";
+		if (service.info() != null && service.info().version() != null)
+			basePath = basePath + service.info().version() + "/";
 		String resourcePath = resource.path();
 		return (basePath + resourcePath).replace("//", "/");
 	}
@@ -119,6 +120,15 @@ public class Commons {
 		String innerPackage = response.isObject() && response.asObject().isComponent() ? String.join(".", packageName, "schemas.") : "";
 		String type = innerPackage + response.asType().type();
 		return response.isList() ? "List<" + type + ">" : type;
+	}
+
+	public static String fullReturnType(Response response, String packageName) {
+		if (response == null) return "void";
+		if (response.i$(Redirect.class)) return String.class.getName();
+		if (response.asType() == null) return "void";
+		String innerPackage = response.isObject() ? String.join(".", packageName, "schemas.") : "";
+		String type = innerPackage + response.asType().type();
+		return response.isList() ? "java.util.List<" + type + ">" : type;
 	}
 
 	public static int fileParameters(Operation operation) {

@@ -3,30 +3,27 @@ package io.intino.konos.builder.codegeneration;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
-import io.intino.konos.builder.codegeneration.Settings.DataHubManifest;
+import io.intino.konos.builder.CompilerConfiguration;
+import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.CompilationContext.DataHubManifest;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.compiler.shared.PostCompileConfigurationParameterActionMessage;
 import io.intino.konos.model.graph.*;
-import io.intino.plugin.project.LegioConfiguration;
-import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
-
+import static io.intino.konos.builder.helpers.Commons.javaFile;
 
 public class AbstractBoxRenderer extends Renderer {
 	private final KonosGraph graph;
-	private final Configuration configuration;
-	private final boolean hasModel;
+	private final CompilerConfiguration configuration;
 	private final Set<String> konosParameters;
 
-	AbstractBoxRenderer(Settings settings, KonosGraph graph, boolean hasModel) {
-		super(settings, Target.Owner);
+	AbstractBoxRenderer(CompilationContext compilationContext, KonosGraph graph, boolean hasModel) {
+		super(compilationContext, Target.Owner);
 		this.graph = graph;
-		this.configuration = module() != null ? TaraUtil.configurationOf(module()) : null;
-		this.hasModel = hasModel;
+		this.configuration = compilationContext.configuration();
 		this.konosParameters = new HashSet<>();
 		this.konosParameters.add("home");
 	}
@@ -43,8 +40,8 @@ public class AbstractBoxRenderer extends Renderer {
 		terminal(root);
 		workflow(root);
 		if (hasAuthenticatedApis()) root.add("authenticationValidator", new FrameBuilder().add("type", "Basic"));
-		graph.datamartList().forEach(d -> datamart(root, d));
-		Commons.writeFrame(settings.gen(Target.Owner), "AbstractBox", template().render(root.toFrame()));
+		Commons.writeFrame(context.gen(Target.Owner), "AbstractBox", template().render(root.toFrame()));
+		context.compiledFiles().add(new OutputItem(javaFile(gen(), "AbstractBox").getAbsolutePath()));
 		notifyNewParameters();
 	}
 
@@ -52,12 +49,8 @@ public class AbstractBoxRenderer extends Renderer {
 		return konosParameters;
 	}
 
-	private void datamart(FrameBuilder root, Datamart datamart) {
-		root.add("datamart", new FrameBuilder("datamart").add("name", datamart.name$()).add("path", parameter(datamart.name$())));
-	}
-
 	private void notifyNewParameters() {
-		new ParameterPublisher((LegioConfiguration) configuration).publish(konosParameters);
+		konosParameters.forEach(p -> context.postCompileActionMessages().add(new PostCompileConfigurationParameterActionMessage(context.module(), p)));
 	}
 
 	private void sentinels(FrameBuilder builder) {
@@ -85,7 +78,7 @@ public class AbstractBoxRenderer extends Renderer {
 	}
 
 	private void terminal(FrameBuilder root) {
-		DataHubManifest manifest = settings.dataHubManifest();
+		DataHubManifest manifest = context.dataHubManifest();
 		if (manifest == null) return;
 		FrameBuilder builder = new FrameBuilder("terminal").
 				add("name", manifest.terminal).
@@ -117,7 +110,7 @@ public class AbstractBoxRenderer extends Renderer {
 		}
 	}
 
-	@NotNull
+
 	private FrameBuilder subscriberFrame(Subscriber subscriber, DataHubManifest manifest) {
 		FrameBuilder builder = new FrameBuilder("subscriber", "terminal").
 				add("package", packageName()).
@@ -171,12 +164,10 @@ public class AbstractBoxRenderer extends Renderer {
 		return builder.add("box", boxName());
 	}
 
-	@NotNull
 	private FrameBuilder parameter(String parameter, String... types) {
 		return new FrameBuilder(types).add("parameter").add(isCustom(parameter) ? "custom" : "standard").add("value", parameter);
 	}
 
-	@NotNull
 	private Frame parameter(Service.SlackBot service) {
 		return new FrameBuilder(isCustom(service.token()) ? "custom" : "standard").add("value", service.token()).toFrame();
 	}
@@ -229,8 +220,7 @@ public class AbstractBoxRenderer extends Renderer {
 	private void ui(FrameBuilder builder) {
 		if (!graph.uiServiceList().isEmpty()) {
 			final FrameBuilder uiFrame = new FrameBuilder().add("package", packageName());
-			if (settings.parent() != null) uiFrame.add("parent", settings.parent());
-			graph.uiServiceList().forEach(service -> service.useList().forEach(use -> uiFrame.add("useDictionaries", dictionariesOf(use))));
+			if (context.parent() != null) uiFrame.add("parent", context.parent());
 			builder.add("hasUi", uiFrame);
 			builder.add("uiAuthentication", uiFrame);
 			builder.add("uiEdition", uiFrame);

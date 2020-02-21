@@ -47,7 +47,7 @@ public class SchemaListRenderer extends Renderer {
 	}
 
 	public void render() {
-		schemas.forEach(s -> new SchemaRenderer(compilationContext, s, destination, packageName).execute());
+		schemas.forEach(s -> new SchemaRenderer(context, s, destination, packageName).execute());
 	}
 
 	private String subPackage(Schema schema) {

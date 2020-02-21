@@ -46,7 +46,7 @@ public class SlackRenderer extends Renderer {
 	}
 
 	private void updateBot(Service.SlackBot service, String name) {
-		new BotActionsUpdater(compilationContext, Commons.javaFile(new File(src(), "slack"), name), service.requestList()).update();
+		new BotActionsUpdater(context, Commons.javaFile(new File(src(), "slack"), name), service.requestList()).update();
 	}
 
 	private void newBotActions(Service.SlackBot service) {

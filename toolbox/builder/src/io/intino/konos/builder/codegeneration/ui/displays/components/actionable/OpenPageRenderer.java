@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.actionable;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ActionableRenderer;
@@ -10,8 +10,8 @@ import io.intino.konos.model.graph.Service;
 
 public class OpenPageRenderer extends ActionableRenderer {
 
-	public OpenPageRenderer(Settings settings, InteractionComponents.Actionable component, TemplateProvider provider, Target target) {
-		super(settings, component, provider, target);
+	public OpenPageRenderer(CompilationContext context, InteractionComponents.Actionable component, TemplateProvider provider, Target target) {
+		super(context, component, provider, target);
 	}
 
 	@Override

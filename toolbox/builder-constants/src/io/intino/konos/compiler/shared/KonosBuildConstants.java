@@ -7,6 +7,9 @@ public class KonosBuildConstants {
 	public static final String PROJECT = "project";
 	public static final String KONOSC = "Konosc";
 	public static final String ACTION_MESSAGE = "%%postaction%%";
+	public static final String START_ACTIONS_MESSAGE = "%%postaction%%";
+	public static final String END_ACTIONS_MESSAGE = "/%postaction%%";
+	public static final String REFRESH_MESSAGE = "%%refresh%%";
 	public static final String REFRESH_BUILDER_MESSAGE_SEPARATOR = "#";
 	public static final String SRC_PATH = "src.path";
 	public static final String FINAL_OUTPUTPATH = "final_outputpath";
@@ -16,8 +19,8 @@ public class KonosBuildConstants {
 	public static final String COMPILED_END = "/%c";
 	public static final String BUILD_END = "%end%";
 	public static final String TO_RECOMPILE_START = "%%rc";
-	public static final String MESSAGE_ACTION_START = "%%maction";
-	public static final String MESSAGE_ACTION_END = "/%maction";
+	public static final String MESSAGE_ACTION_START = "%%action";
+	public static final String MESSAGE_ACTION_END = "/%action";
 	public static final String TO_RECOMPILE_END = "/%rc";
 	public static final String MESSAGES_START = "%%m";
 	public static final String MESSAGES_END = "/%m";

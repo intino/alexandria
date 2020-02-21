@@ -3,9 +3,10 @@ package io.intino.konos.builder.codegeneration.services.jmx;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.JMXActionRenderer;
 import io.intino.konos.builder.helpers.Commons;
@@ -18,6 +19,8 @@ import io.intino.konos.model.graph.Service.JMX.Operation;
 import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static io.intino.konos.builder.helpers.Commons.javaFile;
 
 public class JMXOperationsServiceRenderer extends Renderer {
 	private final List<Service.JMX> services;
@@ -46,6 +49,8 @@ public class JMXOperationsServiceRenderer extends Renderer {
 		for (Operation operation : service.operationList())
 			builder.add("operation", frameOf(operation));
 		Commons.writeFrame(destinationPackage(), service.name$() + "MBean", template().render(builder));
+		context.compiledFiles().add(new OutputItem(javaFile(destinationPackage(), service.name$() + "MBean").getAbsolutePath()));
+
 	}
 
 	private void createImplementation(Service.JMX service) {
@@ -55,11 +60,12 @@ public class JMXOperationsServiceRenderer extends Renderer {
 				.add("package", packageName())
 				.add("operation", service.operationList().stream().map(this::frameOf).toArray(Frame[]::new));
 		Commons.writeFrame(destinationPackage(), service.name$(), template().render(builder));
+		context.compiledFiles().add(new OutputItem(javaFile(destinationPackage(), service.name$()).getAbsolutePath()));
 	}
 
 	private void createCorrespondingActions(List<Operation> operations) {
 		for (Operation operation : operations)
-			new JMXActionRenderer(compilationContext, operation).execute();
+			new JMXActionRenderer(context, operation).execute();
 	}
 
 	private Frame frameOf(Operation operation) {

@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.ui.resource;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.ActionRenderer;
@@ -13,8 +14,7 @@ import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.format;
-import static io.intino.konos.builder.helpers.Commons.extractUrlPathParameters;
-import static io.intino.konos.builder.helpers.Commons.writeFrame;
+import static io.intino.konos.builder.helpers.Commons.*;
 import static io.intino.konos.model.graph.KonosGraph.templateFor;
 
 public class PageRenderer extends ActionRenderer {
@@ -49,6 +49,8 @@ public class PageRenderer extends ActionRenderer {
 		if (!alreadyRendered(src(), resource.name$()))
 			writeFrame(destinyPackage(src()), resource.name$() + suffix(), template().render(builder.toFrame()));
 		writeFrame(destinyPackage(gen()), "Abstract" + firstUpperCase(resource.name$()) + suffix(), template().render(builder.add("gen").toFrame()));
+		if (target.equals(Target.Owner))
+			context.compiledFiles().add(new OutputItem(javaFile(destinyPackage(gen()), "Abstract" + firstUpperCase(resource.name$()) + suffix()).getAbsolutePath()));
 	}
 
 	@Override

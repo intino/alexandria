@@ -2,11 +2,9 @@ package io.intino.konos.builder;
 
 public class OutputItem {
 	private final String myOutputPath;
-	private final String mySourceFileName;
 
-	OutputItem(String sourceFileName, String outputFilePath) {
+	public OutputItem(String outputFilePath) {
 		myOutputPath = outputFilePath;
-		mySourceFileName = sourceFileName;
 	}
 
 	public String getOutputPath() {
@@ -14,6 +12,6 @@ public class OutputItem {
 	}
 
 	public String getSourceFile() {
-		return mySourceFileName;
+		return null;
 	}
 }

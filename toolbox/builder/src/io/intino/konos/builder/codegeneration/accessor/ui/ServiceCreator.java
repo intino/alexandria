@@ -1,15 +1,14 @@
 package io.intino.konos.builder.codegeneration.accessor.ui;
 
 import io.intino.alexandria.zip.Zip;
-import io.intino.konos.compiler.shared.PostCompileDependantWebModuleActionMessage;
 import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
+import io.intino.konos.compiler.shared.PostCompileDependantWebModuleActionMessage;
 import io.intino.konos.model.graph.Service;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -34,15 +33,11 @@ public class ServiceCreator extends UIRenderer {
 	@Override
 	public void render() {
 		try {
-			if (compilationContext.configuration().webModuleDirectory() == null) {
-				compilationContext.configuration().webModuleDirectory(new File(compilationContext.configuration().moduleDirectory().getParentFile(), service.name$()));
-				compilationContext.postCompileActionMessages().add(new PostCompileDependantWebModuleActionMessage(compilationContext.configuration().module(), service.name$()));
-			} else {
-				createSkeleton();
-			}
-			new ServiceRenderer(compilationContext, service).execute();
+			context.postCompileActionMessages().add(new PostCompileDependantWebModuleActionMessage(context.configuration().module(), service.name$()));
+			if (!context.configuration().webModuleDirectory().exists()) createSkeleton();
+			new ServiceRenderer(context, service).execute();
 		} catch (IOException e) {
-			e.printStackTrace();
+			LoggerFactory.getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
 		}
 	}
 

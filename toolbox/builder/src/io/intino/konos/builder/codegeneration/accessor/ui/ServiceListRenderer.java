@@ -20,7 +20,6 @@ public class ServiceListRenderer extends UIRenderer {
 	@Override
 	public void render() {
 		List<Service.UI> services = graph.serviceList(Service::isUI).map(Service::asUI).collect(Collectors.toList());
-		services.forEach(s -> new ServiceCreator(compilationContext, s).execute());
+		services.forEach(s -> new ServiceCreator(context, s).execute());
 	}
-
 }

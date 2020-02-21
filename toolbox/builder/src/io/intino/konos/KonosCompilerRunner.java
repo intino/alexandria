@@ -29,14 +29,14 @@ class KonosCompilerRunner {
 		this.verbose = verbose;
 	}
 
-	boolean run(File argsFile) {
+	void run(File argsFile) {
 		final CompilerConfiguration config = new CompilerConfiguration();
 		final Map<File, Boolean> sources = new LinkedHashMap<>();
 		CompilationInfoExtractor.getInfoFromArgsFile(argsFile, config, sources);
 		config.setVerbose(verbose);
 		config.out(System.out);
 		this.out = config.out();
-		if (sources.isEmpty()) return true;
+		if (sources.isEmpty()) return;
 		if (verbose) out.println(PRESENTABLE_MESSAGE + "Konosc: loading sources...");
 		final List<CompilerMessage> messages = new ArrayList<>();
 		final List<PostCompileActionMessage> postCompileActionMessages = new ArrayList<>();
@@ -47,7 +47,6 @@ class KonosCompilerRunner {
 			processActions(postCompileActionMessages);
 		out.println();
 		out.print(BUILD_END);
-		return false;
 	}
 
 	private List<OutputItem> compile(CompilerConfiguration config, Map<File, Boolean> sources, List<CompilerMessage> messages, List<PostCompileActionMessage> postCompileActionMessages) {
@@ -63,7 +62,7 @@ class KonosCompilerRunner {
 
 	private void report(Map<File, Boolean> srcFiles, List<OutputItem> compiled) {
 		if (compiled.isEmpty()) reportNotCompiledItems(srcFiles);
-		else reportCompiledItems(compiled);
+		else reportCompiledItems(srcFiles.keySet().iterator().next(), compiled);
 		out.println();
 	}
 
@@ -89,9 +88,9 @@ class KonosCompilerRunner {
 	}
 
 	private void processActions(List<PostCompileActionMessage> postCompileActionMessages) {
-		for (PostCompileActionMessage message : postCompileActionMessages) {
-			printMessage(message);
-		}
+		out.print(START_ACTIONS_MESSAGE);
+		postCompileActionMessages.forEach(this::printMessage);
+		out.print(END_ACTIONS_MESSAGE);
 	}
 
 	private void printMessage(CompilerMessage message) {
@@ -117,12 +116,12 @@ class KonosCompilerRunner {
 		out.println();
 	}
 
-	private void reportCompiledItems(List<OutputItem> compiledFiles) {
+	private void reportCompiledItems(File srcFile, List<OutputItem> compiledFiles) {
 		for (OutputItem compiledFile : compiledFiles) {
 			out.print(COMPILED_START);
 			out.print(compiledFile.getOutputPath());
 			out.print(SEPARATOR);
-			out.print(compiledFile.getSourceFile());
+			out.print(srcFile);
 			out.print(COMPILED_END);
 			out.println();
 		}

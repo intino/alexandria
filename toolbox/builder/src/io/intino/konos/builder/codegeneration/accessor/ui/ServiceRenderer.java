@@ -18,12 +18,12 @@ public class ServiceRenderer extends UIRenderer {
 
 	@Override
 	public void render() {
-		new AppRenderer(compilationContext, service).execute();
-		new ThemeRenderer(compilationContext, service).execute();
-		new I18nRenderer(compilationContext, service, target).execute();
-		new DisplaysManifestRenderer(compilationContext, service).execute();
-		new DisplayListRenderer(compilationContext, service, new AccessorTemplateProvider(), target).execute();
-		new ResourceListRenderer(compilationContext, service).execute();
+		new AppRenderer(context, service).execute();
+		new ThemeRenderer(context, service).execute();
+		new I18nRenderer(context, service, target).execute();
+		new DisplaysManifestRenderer(context, service).execute();
+		new DisplayListRenderer(context, service, new AccessorTemplateProvider(), target).execute();
+		new ResourceListRenderer(context, service).execute();
 	}
 
 }

@@ -2,12 +2,11 @@ package io.intino.konos.builder;
 
 import cottons.utils.Files;
 import io.intino.konos.CompilerMessage;
-import io.intino.konos.builder.codegeneration.FullRenderer;
 import io.intino.konos.builder.codegeneration.CompilationContext;
-import io.intino.konos.builder.codegeneration.cache.CacheReader;
-import io.intino.konos.builder.codegeneration.cache.CacheWriter;
+import io.intino.konos.builder.codegeneration.FullRenderer;
 import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.compiler.shared.PostCompileActionMessage;
+import io.intino.konos.compiler.shared.PostCompileConfigurationDependencyActionMessage;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.io.Stash;
 
@@ -23,7 +22,6 @@ public class KonosCompiler {
 	private static Map<String, Boolean> firstTimeMap = new HashMap<>();
 	private final CompilerConfiguration configuration;
 	private final List<CompilerMessage> collector;
-	private Map<String, List<String>> outputItems = new HashMap<>();
 
 	private final List<PostCompileActionMessage> postCompileActionMessages;
 
@@ -40,11 +38,14 @@ public class KonosCompiler {
 				configuration.out().println(PRESENTABLE_MESSAGE + "Konosc: Compiling model...");
 			GraphLoader graphLoader = new GraphLoader();
 			KonosGraph graph = graphLoader.loadGraph(configuration, sources);
+			if (graph == null) return compiledFiles;
 			if (configuration.isVerbose())
 				configuration.out().println(PRESENTABLE_MESSAGE + "Konosc: Rendering classes...");
 			render(graph, graphLoader.konosStash(), compiledFiles);
+			updateDependencies(requiredDependencies(graph));
 			return compiledFiles;
 		} catch (Exception e) {
+			e.printStackTrace();
 			processCompilationException(e);
 		} finally {
 //			addWarnings(collector);TODO
@@ -52,12 +53,46 @@ public class KonosCompiler {
 		return compiledFiles;
 	}
 
+	private void updateDependencies(Map<String, String> requiredDependencies) {
+		if (configuration.groupId().equals("io.intino.alexandria")) return;
+		for (Map.Entry<String, String> entry : requiredDependencies.entrySet())
+			postCompileActionMessages.add(new PostCompileConfigurationDependencyActionMessage(configuration.module(), entry.getKey() + ":" + entry.getValue()));
+	}
+
+	private Map<String, String> requiredDependencies(KonosGraph graph) {
+		Map<String, String> dependencies = Manifest.load().dependencies;
+		if (graph.jmxServiceList().isEmpty()) remove(dependencies, "jmx");
+		if (graph.messagingServiceList().isEmpty()) remove(dependencies, ":jms");
+		if (graph.sentinelList().isEmpty()) remove(dependencies, "scheduler");
+		if (graph.datalake() == null) {
+			remove(dependencies, "datalake");
+			remove(dependencies, "sshj");
+		} else if (!graph.datalake().isSshMirrored()) remove(dependencies, "sshj");
+		if (graph.messageHub() == null) {
+			remove(dependencies, "message");
+			remove(dependencies, "terminal-jms");
+		}
+		if (graph.messageHub() != null && !graph.messageHub().isJmsBus()) remove(dependencies, "terminal-jms");
+		if (graph.uiServiceList().isEmpty()) remove(dependencies, "ui");
+		if (graph.restServiceList().isEmpty()) remove(dependencies, "rest");
+		if (graph.workflow() == null) remove(dependencies, "bpm");
+		if (graph.slackBotServiceList().isEmpty()) remove(dependencies, "slack");
+		if (graph.visualizationComponents() == null || graph.visualizationComponents().chartList(c -> c.isAbsolute() || c.isRelative()).isEmpty())
+			remove(dependencies, "driver-r");
+		if (graph.visualizationComponents() == null || graph.visualizationComponents().dashboardList(d -> d.isAbsolute() || d.isRelative()).isEmpty())
+			remove(dependencies, "driver-shiny");
+		return dependencies;
+	}
+
+	private void remove(Map<String, String> dependencies, String type) {
+		String toRemove = null;
+		for (String dep : dependencies.keySet()) if (dep.contains(type)) toRemove = dep;
+		if (toRemove != null) dependencies.remove(toRemove);
+	}
+
 	private void render(KonosGraph graph, Stash stash, List<OutputItem> compiledFiles) throws KonosException {
 		try {
-			File folder = prepareIntinoFolder();
-			io.intino.konos.builder.codegeneration.cache.ElementCache cache = loadCache(folder, graph, stash);
-			new FullRenderer(graph, new CompilationContext(configuration, postCompileActionMessages, cache, compiledFiles)).execute();
-			saveCache(cache, folder);
+			new FullRenderer(graph, new CompilationContext(configuration, postCompileActionMessages,  compiledFiles)).execute();
 		} catch (Exception e) {
 			throw new KonosException(e.getMessage(), e);
 		}
@@ -90,11 +125,4 @@ public class KonosCompiler {
 		return folder;
 	}
 
-	private io.intino.konos.builder.codegeneration.cache.ElementCache loadCache(File folder, KonosGraph graph, Stash stash) {
-		return new CacheReader(folder).load(graph, stash);
-	}
-
-	private void saveCache(io.intino.konos.builder.codegeneration.cache.ElementCache cache, File folder) {
-		new CacheWriter(folder).save(cache);
-	}
 }

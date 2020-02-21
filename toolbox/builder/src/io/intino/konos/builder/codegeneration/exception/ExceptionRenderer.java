@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.exception;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
@@ -42,6 +43,7 @@ public class ExceptionRenderer extends Renderer {
 						.add("name", exception.name$())
 						.add("code", exception.code())
 						.add("package", packageName()).toFrame()));
+		context.compiledFiles().add(new OutputItem(javaFile(destinyPackage(gen()), exception.name$()).getAbsolutePath()));
 	}
 
 	private File destinyPackage(File destiny) {

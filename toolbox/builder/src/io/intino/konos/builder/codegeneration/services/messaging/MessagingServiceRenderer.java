@@ -4,6 +4,7 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.itrules.formatters.StringFormatters;
+import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
@@ -18,6 +19,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class MessagingServiceRenderer extends Renderer {
@@ -49,8 +51,8 @@ public class MessagingServiceRenderer extends Renderer {
 		if (!service.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
 		writeFrame(gen(), nameOf(service), template().render(builder.toFrame()));
+		context.compiledFiles().add(new OutputItem(javaFile(gen(), nameOf(service)).getAbsolutePath()));
 	}
-
 
 	private String nameOf(Service.Messaging service) {
 		return StringFormatters.get(Locale.getDefault()).get("firstuppercase").format(service.name$()).toString() + "Service";

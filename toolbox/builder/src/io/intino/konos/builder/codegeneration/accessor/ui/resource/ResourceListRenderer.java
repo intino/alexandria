@@ -13,8 +13,8 @@ public class ResourceListRenderer extends io.intino.konos.builder.codegeneration
 
 	@Override
 	public void render() {
-		resourceList.forEach(r -> new ResourceRenderer(compilationContext, r).execute());
-		accessibleDisplays.forEach(d -> new AccessibleDisplayRenderer(compilationContext, d, Target.Accessor).execute());
+		resourceList.forEach(r -> new ResourceRenderer(context, r).execute());
+		accessibleDisplays.forEach(d -> new AccessibleDisplayRenderer(context, d, Target.Accessor).execute());
 	}
 
 }
