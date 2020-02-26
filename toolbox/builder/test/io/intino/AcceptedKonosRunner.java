@@ -19,12 +19,10 @@ public class AcceptedKonosRunner {
 		KonoscRunner.main(new String[]{home + "confFiles/cfe/timbrado.txt"});
 	}
 
-
 	@Test
 	public void cuentamaestra() {
 		KonoscRunner.main(new String[]{home + "confFiles/cfe/cuentamaestra.txt"});
 	}
-
 
 	@Test
 	public void cesarDh() {

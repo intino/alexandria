@@ -53,13 +53,13 @@ public class AppRenderer extends UIRenderer {
 	private void writeWebPack() {
 		Template template = new WebPackTemplate();
 		FrameBuilder builder = new FrameBuilder("webpack");
-		builder.add("outDirectory", context.configuration().outDirectory());
+		builder.add("outDirectory", context.configuration().outDirectory().getAbsolutePath());
 		builder.add("exclude", alexandriaFrame("exclude"));
 		builder.add("alias", alexandriaFrame("alias"));
 		builder.add("webModuleName", context.webModuleDirectory() != null ? context.webModuleDirectory().getName() : "");
 		if (isAlexandria(project())) builder.add("alexandriaProject", "true");
 		service.resourceList().forEach(r -> builder.add("page", new FrameBuilder("page").add("value", r.name$()).toFrame()));
-		Commons.write(new File(root() , "webpack.config.js").toPath(), setup(template).render(builder.toFrame()));
+		Commons.write(new File(root(), "webpack.config.js").toPath(), setup(template).render(builder.toFrame()));
 	}
 
 	private Object normalize(String parent) {
