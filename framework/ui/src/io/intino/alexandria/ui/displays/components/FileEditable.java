@@ -1,10 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.MimeTypes;
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.schemas.FileInfo;
-import io.intino.alexandria.ui.Asset;
 import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
 import io.intino.alexandria.ui.displays.events.Event;
@@ -14,18 +11,12 @@ import io.intino.alexandria.ui.displays.notifiers.FileEditableNotifier;
 import java.net.URL;
 
 public class FileEditable<DN extends FileEditableNotifier, B extends Box> extends AbstractFileEditable<DN, B> {
-	private URL value;
-	private String mimeType;
 	private boolean readonly;
 	protected Listener uploadingListener = null;
 	protected ChangeListener changeListener = null;
 
 	public FileEditable(B box) {
 		super(box);
-	}
-
-	public URL value() {
-		return value;
 	}
 
 	public boolean readonly() {
@@ -54,7 +45,7 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	}
 
 	public void refresh() {
-		notifier.refresh(new FileInfo().value(serializedValue()).mimeType(mimeType));
+		notifier.refresh(info());
 	}
 
 	public void notifyUploading() {
@@ -65,19 +56,9 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));
 	}
 
-	protected FileEditable _value(URL value) {
-		this.value = value;
-		this.mimeType = value != null ? MimeTypes.contentTypeOf(value) : null;
-		return this;
-	}
-
 	protected FileEditable<DN, B> _readonly(boolean readonly) {
 		this.readonly = readonly;
 		return this;
-	}
-
-	private String serializedValue() {
-		return value != null ? Asset.toResource(baseAssetUrl(), value).toUrl().toString() : null;
 	}
 
 }

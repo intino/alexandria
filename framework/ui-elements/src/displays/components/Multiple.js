@@ -21,7 +21,7 @@ export default class Multiple extends AbstractMultiple {
 		let style = this._style(multiple);
 		if (!this.state.visible) return (<React.Fragment/>);
 		if (noItemsMessage != null && noItemsMessage !== "" && this.instances(multiple.instances).length <= 0) return (<Typography style={{margin:'5px 0'}} variant="body1">{noItemsMessage}</Typography>);
-		return (<div className={"layout wrap " + layout}>{this.renderInstances(multiple.instances, this._instanceProps(), style)}</div>);
+		return (<div className={"layout wrap " + layout} style={{height:'100%'}}>{this.renderInstances(multiple.instances, this._instanceProps(), style)}</div>);
 	};
 
 	_instanceProps = () => {
@@ -33,7 +33,7 @@ export default class Multiple extends AbstractMultiple {
 	_style = (multiple) => {
 		let spacingStyle = this._spacingStyle(multiple);
 		if (spacingStyle === undefined) spacingStyle = (multiple.arrangement.toLowerCase() === "horizontal") ? { right: 5, bottom: 2 } : {};
-		return { marginRight: spacingStyle.right + "px", marginBottom: spacingStyle.bottom + "px" };
+		return { marginRight: spacingStyle.right + "px", marginBottom: spacingStyle.bottom + "px", ...this.style() };
 	};
 
 	_spacingStyle = (multiple) => {
