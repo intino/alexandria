@@ -34,7 +34,9 @@ class SelectorListBox extends AbstractSelectorListBox {
 	renderChild = (child, key) => {
 		const className = child.props.className;
 		if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
-		return (<ListItem key={key} button onClick={this.handleSelect.bind(this, child.props.name)}>{child}</ListItem>);
+		const selected = this.state.selection[0] === child.props.name;
+		const style = selected ? {background:"#ddd"} : {};
+		return (<ListItem key={key} style={style} button onClick={this.handleSelect.bind(this, child.props.name)}>{child}</ListItem>);
 	};
 
 	handleSelect = (name) => {

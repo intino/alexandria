@@ -84,6 +84,7 @@ Schema KeyPressEventData
 
 Schema FileInfo
 	Attribute value as Text
+	Attribute filename as Text
 	Attribute mimeType as Text
 
 Schema LocationSetup
