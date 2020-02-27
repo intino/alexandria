@@ -1,9 +1,9 @@
 package io.intino.konos.model.graph.rules;
 
-import io.intino.tara.lang.model.EmptyNode;
-import io.intino.tara.lang.model.Node;
-import io.intino.tara.lang.model.Parameter;
-import io.intino.tara.lang.model.rules.NodeRule;
+import io.intino.magritte.lang.model.EmptyNode;
+import io.intino.magritte.lang.model.Node;
+import io.intino.magritte.lang.model.Parameter;
+import io.intino.magritte.lang.model.rules.NodeRule;
 
 import java.util.ArrayList;
 import java.util.List;
