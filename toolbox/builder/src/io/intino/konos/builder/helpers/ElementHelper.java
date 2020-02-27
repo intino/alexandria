@@ -3,9 +3,9 @@ package io.intino.konos.builder.helpers;
 import io.intino.konos.builder.codegeneration.ElementReference;
 import io.intino.konos.builder.utils.IdGenerator;
 import io.intino.konos.model.graph.InteractionComponents;
-import io.intino.tara.magritte.Layer;
-import io.intino.tara.magritte.Node;
-import io.intino.tara.magritte.Predicate;
+import io.intino.magritte.framework.Layer;
+import io.intino.magritte.framework.Node;
+import io.intino.magritte.framework.Predicate;
 
 import java.util.ArrayList;
 import java.util.HashMap;

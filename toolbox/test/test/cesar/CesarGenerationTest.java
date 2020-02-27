@@ -5,7 +5,7 @@ import io.intino.konos.builder.codegeneration.accessor.messaging.MessagingAccess
 import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer;
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.tara.magritte.Graph;
+import io.intino.magritte.framework.Graph;
 import org.junit.Test;
 
 import java.io.File;

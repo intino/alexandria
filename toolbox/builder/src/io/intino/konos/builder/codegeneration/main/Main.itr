@@ -14,6 +14,6 @@ def type(main)
 end
 
 def type(model) trigger(model)
-	io.intino.tara.magritte.Graph graph = new io.intino.tara.magritte.Graph().loadStashes("$name");
+	io.intino.magritte.magritte.Graph graph = new io.intino.magritte.magritte.Graph().loadStashes("$name");
 	box.put(graph).initDatamarts();
 end

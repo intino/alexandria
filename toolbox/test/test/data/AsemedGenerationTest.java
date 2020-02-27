@@ -2,7 +2,7 @@ package data;
 
 import io.intino.konos.builder.codegeneration.FullRenderer;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.tara.magritte.Graph;
+import io.intino.magritte.framework.Graph;
 import org.junit.Ignore;
 import org.junit.Test;
 import utils.TestUtil;

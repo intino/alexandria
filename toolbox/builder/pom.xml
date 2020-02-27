@@ -117,13 +117,13 @@
 			<version>2.8.0</version>
 		</dependency>
 		<dependency>
-			<groupId>io.intino.tara</groupId>
+			<groupId>io.intino.magritte</groupId>
 			<artifactId>builder</artifactId>
 			<version>4.0.0</version>
 		</dependency>
 		<dependency>
-			<groupId>io.intino.tara</groupId>
-			<artifactId>magritte</artifactId>
+			<groupId>io.intino.magritte</groupId>
+			<artifactId>framework</artifactId>
 			<version>3.0.0</version>
 		</dependency>
 		<dependency>

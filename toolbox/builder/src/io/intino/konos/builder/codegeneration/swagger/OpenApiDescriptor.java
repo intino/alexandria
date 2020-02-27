@@ -8,7 +8,7 @@ import io.intino.konos.model.graph.Exception;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.Service.REST.Resource;
 import io.intino.konos.model.graph.Service.REST.Resource.Parameter.In;
-import io.intino.tara.magritte.Layer;
+import io.intino.magritte.framework.Layer;
 
 import java.util.*;
 import java.util.stream.Collectors;

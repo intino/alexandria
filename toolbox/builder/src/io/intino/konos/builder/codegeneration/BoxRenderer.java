@@ -6,8 +6,8 @@ import io.intino.itrules.Template;
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.tara.dsl.Meta;
-import io.intino.tara.dsl.Proteo;
+import io.intino.magritte.dsl.Meta;
+import io.intino.magritte.dsl.Proteo;
 
 import java.util.ArrayList;
 import java.util.List;

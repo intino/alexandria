@@ -53,6 +53,7 @@ public class CompilerConfiguration implements Cloneable {
 	private File projectDirectory;
 	private File webModuleDirectory;
 	private File moduleDirectory;
+	private File configurationDirectory;
 	private List<String> parameters = new ArrayList<>();
 
 	public CompilerConfiguration() {
@@ -164,6 +165,8 @@ public class CompilerConfiguration implements Cloneable {
 
 	public void intinoProjectDirectory(File intinoPath) {
 		this.intinoProjectDirectory = intinoPath;
+		this.configurationDirectory = new File(intinoProjectDirectory, "box" + File.separator + module);
+		configurationDirectory.mkdirs();
 	}
 
 	public File intinoProjectDirectory() {
@@ -215,6 +218,10 @@ public class CompilerConfiguration implements Cloneable {
 
 	public void projectDirectory(File projectDirectory) {
 		this.projectDirectory = projectDirectory;
+	}
+
+	public File configurationDirectory() {
+		return configurationDirectory;
 	}
 
 	public File resDirectory() {
