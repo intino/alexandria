@@ -1,6 +1,6 @@
 package io.intino.konos.model.graph.rules;
 
-import io.intino.tara.lang.model.Rule;
+import io.intino.magritte.lang.model.Rule;
 
 public enum Language implements Rule<Enum> {
 	Afar("aa"), Abkhaz("ab"), Avestan("ae"), Afrikaans("af"), Akan("ak"), Amharic("am"), Aragonese("an"),
