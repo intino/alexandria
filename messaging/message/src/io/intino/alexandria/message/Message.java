@@ -267,7 +267,7 @@ public class Message {
 	}
 
 	private boolean attributeEquals(Message message, String key) {
-		return message.get(key).data().equals(get(key).data());
+		return message.contains(key) && message.get(key).data().equals(get(key).data());
 	}
 
 	private boolean attachmentEquals(Message message, String key) {
