@@ -5,9 +5,14 @@ import io.intino.alexandria.logger.Logger;
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.compiler.shared.PostCompileActionMessage;
+import io.intino.magritte.framework.PersistenceManager;
+import io.intino.magritte.framework.Store;
+import io.intino.magritte.framework.stores.FileSystemStore;
+import io.intino.magritte.framework.utils.StoreAuditor;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -28,11 +33,12 @@ public class CompilationContext {
 	private String parent;
 	private String boxName = null;
 	private Map<String, String> classes = new HashMap<>();
+	private LayerCache cache = null;
 
 	public CompilationContext() {
 	}
 
-	public CompilationContext(CompilerConfiguration configuration, List<PostCompileActionMessage> postCompileActionMessages,  List<OutputItem> compiledFiles) {
+	public CompilationContext(CompilerConfiguration configuration, List<PostCompileActionMessage> postCompileActionMessages, List<OutputItem> compiledFiles) {
 		configuration(configuration);
 		loadManifest();
 		this.postCompileActionMessages = postCompileActionMessages;
@@ -129,6 +135,19 @@ public class CompilationContext {
 		return createIfNotExists(new File(root(Target.Accessor) + File.separator + "gen"));
 	}
 
+	public LayerCache cache() {
+		if (this.cache != null) return cache;
+		return cache = new LayerCache(new FileSystemStore(configuration.configurationDirectory()));
+	}
+
+	public void saveCache(List<String> cache) {
+		File file = new File(configuration.configurationDirectory(), "cache.txt");
+		try {
+			Files.writeString(file.toPath(), String.join("\n", cache));
+		} catch (IOException e) {
+			Logger.error(e);
+		}
+	}
 
 	private void loadManifest() {
 		dataHubManifest = configuration() != null ? loadManifest(configuration().datahubLibrary()) : null;
@@ -176,5 +195,22 @@ public class CompilationContext {
 		public List<String> subscribe;
 		public Map<String, String> tankClasses;
 		public Map<String, List<String>> messageContexts;
+	}
+
+
+	public static class LayerCache extends StoreAuditor {
+
+		public LayerCache(Store store) {
+			super(store);
+		}
+
+		public LayerCache(Store store, String checksumName) {
+			super(store, checksumName);
+		}
+
+		public LayerCache(Store fileSystemStore, PersistenceManager manager, String checksumName) {
+			super(fileSystemStore, manager, checksumName);
+		}
+
 	}
 }

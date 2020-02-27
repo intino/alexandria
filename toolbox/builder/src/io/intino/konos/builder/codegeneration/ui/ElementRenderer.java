@@ -7,7 +7,7 @@ import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.builder.helpers.ElementHelper;
-import io.intino.tara.magritte.Layer;
+import io.intino.magritte.framework.Layer;
 
 import java.io.File;
 import java.io.IOException;

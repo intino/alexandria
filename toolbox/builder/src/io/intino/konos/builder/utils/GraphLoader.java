@@ -2,11 +2,11 @@ package io.intino.konos.builder.utils;
 
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.tara.StashBuilder;
-import io.intino.tara.io.Stash;
-import io.intino.tara.magritte.Graph;
-import io.intino.tara.magritte.loaders.ClassFinder;
-import io.intino.tara.magritte.stores.ResourcesStore;
+import io.intino.magritte.StashBuilder;
+import io.intino.magritte.framework.Graph;
+import io.intino.magritte.framework.loaders.ClassFinder;
+import io.intino.magritte.framework.stores.ResourcesStore;
+import io.intino.magritte.io.Stash;
 import tara.dsl.Konos;
 
 import java.io.ByteArrayOutputStream;

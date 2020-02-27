@@ -1,6 +1,6 @@
 package io.intino.konos.builder.codegeneration;
 
-import io.intino.tara.magritte.Layer;
+import io.intino.magritte.framework.Layer;
 
 public class ElementReference {
 	private String name;

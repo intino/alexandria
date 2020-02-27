@@ -1,11 +1,10 @@
 package utils;
 
-import com.intellij.openapi.module.Module;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.tara.magritte.Graph;
-import io.intino.tara.magritte.stores.ResourcesStore;
+import io.intino.magritte.framework.Graph;
+import io.intino.magritte.framework.stores.ResourcesStore;
 
 import java.io.File;
 import java.net.MalformedURLException;

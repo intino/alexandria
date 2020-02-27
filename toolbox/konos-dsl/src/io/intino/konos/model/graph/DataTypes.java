@@ -1,6 +1,6 @@
 package io.intino.konos.model.graph;
 
-import io.intino.tara.magritte.Node;
+import io.intino.magritte.framework.Node;
 
 public class DataTypes {
 	public static String schemaName(Parameter.Object self) {

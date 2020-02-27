@@ -1,6 +1,6 @@
 package io.intino.konos.model.graph;
 
-import io.intino.tara.magritte.Graph;
+import io.intino.magritte.framework.Graph;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -19,7 +19,7 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		super(graph);
 	}
 
-	public KonosGraph(io.intino.tara.magritte.Graph graph, KonosGraph wrapper) {
+	public KonosGraph(io.intino.magritte.framework.Graph graph, KonosGraph wrapper) {
 		super(graph, wrapper);
 	}
 

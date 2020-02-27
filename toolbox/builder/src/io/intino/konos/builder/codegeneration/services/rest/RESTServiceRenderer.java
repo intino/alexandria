@@ -5,15 +5,15 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.CompilationContext;
+import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.swagger.SwaggerProfileGenerator;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Service;
 import io.intino.konos.model.graph.Service.REST.Resource;
-import io.intino.tara.magritte.Layer;
+import io.intino.magritte.framework.Layer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

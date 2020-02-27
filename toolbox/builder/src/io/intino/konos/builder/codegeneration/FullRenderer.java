@@ -22,11 +22,12 @@ import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.model.graph.KonosGraph;
+import io.intino.magritte.framework.Layer;
 
-import javax.annotation.Nullable;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class FullRenderer {
-	@Nullable
 	private final KonosGraph graph;
 	private final CompilationContext context;
 	private final boolean hasModel;
@@ -59,8 +60,13 @@ public class FullRenderer {
 		ui();
 		box();
 		main();
+		context.saveCache(calculateNewCache());
 //		InterfaceToJavaImplementation.nodeMap.clear();
 //		InterfaceToJavaImplementation.nodeMap.putAll(settings.classes());
+	}
+
+	private List<String> calculateNewCache() {
+		return graph.componentList().stream().map(Layer::name$).collect(Collectors.toList());
 	}
 
 	private void schemas() {

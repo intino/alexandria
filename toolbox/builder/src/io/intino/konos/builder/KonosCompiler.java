@@ -8,7 +8,6 @@ import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.compiler.shared.PostCompileActionMessage;
 import io.intino.konos.compiler.shared.PostCompileConfigurationDependencyActionMessage;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.tara.io.Stash;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public class KonosCompiler {
 			if (graph == null) return compiledFiles;
 			if (configuration.isVerbose())
 				configuration.out().println(PRESENTABLE_MESSAGE + "Konosc: Rendering classes...");
-			render(graph, graphLoader.konosStash(), compiledFiles);
+			render(graph, compiledFiles);
 			updateDependencies(requiredDependencies(graph));
 			return compiledFiles;
 		} catch (Exception e) {
@@ -90,9 +89,9 @@ public class KonosCompiler {
 		if (toRemove != null) dependencies.remove(toRemove);
 	}
 
-	private void render(KonosGraph graph, Stash stash, List<OutputItem> compiledFiles) throws KonosException {
+	private void render(KonosGraph graph, List<OutputItem> compiledFiles) throws KonosException {
 		try {
-			new FullRenderer(graph, new CompilationContext(configuration, postCompileActionMessages,  compiledFiles)).execute();
+			new FullRenderer(graph, new CompilationContext(configuration, postCompileActionMessages, compiledFiles)).execute();
 		} catch (Exception e) {
 			throw new KonosException(e.getMessage(), e);
 		}
@@ -108,7 +107,7 @@ public class KonosCompiler {
 	}
 
 	private void addMessageWithoutLocation(String message, boolean error) {
-		collector.add(new CompilerMessage(error ? io.intino.tara.compiler.core.CompilerMessage.ERROR : io.intino.tara.compiler.core.CompilerMessage.WARNING, message, null, -1, -1));
+		collector.add(new CompilerMessage(error ? io.intino.magritte.compiler.core.CompilerMessage.ERROR : io.intino.magritte.compiler.core.CompilerMessage.WARNING, message, null, -1, -1));
 	}
 
 	private void addErrorMessage(KonosException exception) {

@@ -15,7 +15,7 @@ import io.intino.konos.model.graph.DataComponents.Text;
 import io.intino.konos.model.graph.OtherComponents.Dialog;
 import io.intino.konos.model.graph.OtherComponents.Icon;
 import io.intino.konos.model.graph.OtherComponents.Stamp;
-import io.intino.tara.magritte.Layer;
+import io.intino.magritte.framework.Layer;
 
 import java.util.*;
 import java.util.stream.Collectors;

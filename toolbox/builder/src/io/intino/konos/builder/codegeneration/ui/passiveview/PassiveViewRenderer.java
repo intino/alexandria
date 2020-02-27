@@ -14,7 +14,7 @@ import io.intino.konos.model.graph.InteractionComponents.Switch;
 import io.intino.konos.model.graph.OtherComponents.Selector;
 import io.intino.konos.model.graph.PassiveView.Notification;
 import io.intino.konos.model.graph.PassiveView.Request;
-import io.intino.tara.magritte.Layer;
+import io.intino.magritte.framework.Layer;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,7 +23,8 @@ import java.util.Set;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
-import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayNotifierFolder;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayRequesterFolder;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.model.graph.PassiveView.Request.ResponseType.Asset;
 import static java.util.stream.Collectors.toList;

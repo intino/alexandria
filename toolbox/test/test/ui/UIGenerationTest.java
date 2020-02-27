@@ -8,7 +8,7 @@ import io.intino.konos.builder.codegeneration.cache.CacheWriter;
 import io.intino.konos.builder.codegeneration.cache.ElementCache;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Service;
-import io.intino.tara.magritte.Graph;
+import io.intino.magritte.framework.Graph;
 import org.junit.Test;
 import utils.TestUtil;
 

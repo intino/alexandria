@@ -1,7 +1,7 @@
 package io.intino.konos;
 
 import io.intino.konos.builder.KonosException;
-import io.intino.tara.compiler.shared.TaraBuildConstants;
+import io.intino.magritte.compiler.shared.TaraBuildConstants;
 
 import java.io.File;
 import java.util.logging.Level;

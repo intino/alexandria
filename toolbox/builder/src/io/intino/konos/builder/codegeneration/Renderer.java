@@ -3,7 +3,9 @@ package io.intino.konos.builder.codegeneration;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.helpers.ElementHelper;
-import io.intino.tara.magritte.Layer;
+import io.intino.konos.model.graph.CatalogComponents;
+import io.intino.konos.model.graph.HelperComponents;
+import io.intino.magritte.framework.Layer;
 
 import java.io.File;
 import java.util.Map;
@@ -74,7 +76,10 @@ public abstract class Renderer {
 	}
 
 	protected boolean isRendered(Layer element) {
-		return false;
+		if (element == null) return false;
+		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) return false;
+		if (element.i$(HelperComponents.Row.class)) return false;
+		return context.cache().isModified(element.core$());
 	}
 
 	protected boolean isRoot(Layer element) {
