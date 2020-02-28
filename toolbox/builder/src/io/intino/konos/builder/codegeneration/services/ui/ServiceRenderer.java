@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.services.ui;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.templates.ServiceTemplate;
@@ -18,6 +19,7 @@ import java.util.Set;
 
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.serviceFilename;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.serviceFolder;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 import static io.intino.konos.model.graph.PassiveView.Request.ResponseType.Asset;
 
@@ -44,6 +46,7 @@ public class ServiceRenderer extends UIRenderer {
 			builder.add("display", displaysFrame(displays)).add("displaysImport", packageName());
 		if (service.authentication() != null) builder.add("auth", service.authentication().by());
 		writeFrame(serviceFolder(gen()), serviceFilename(service.name$()), template().render(builder.toFrame()));
+		context.compiledFiles().add(new OutputItem(javaFile(serviceFolder(gen()), serviceFilename(service.name$())).getAbsolutePath()));
 	}
 
 	private Frame[] resourcesFrame(List<Service.UI.Resource> resourceList) {

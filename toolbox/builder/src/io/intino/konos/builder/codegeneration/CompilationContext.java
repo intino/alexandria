@@ -4,15 +4,15 @@ import com.google.gson.Gson;
 import io.intino.alexandria.logger.Logger;
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.cache.CacheReader;
+import io.intino.konos.builder.codegeneration.cache.CacheWriter;
+import io.intino.konos.builder.codegeneration.cache.LayerCache;
 import io.intino.konos.compiler.shared.PostCompileActionMessage;
-import io.intino.magritte.framework.PersistenceManager;
-import io.intino.magritte.framework.Store;
-import io.intino.magritte.framework.stores.FileSystemStore;
-import io.intino.magritte.framework.utils.StoreAuditor;
+import io.intino.konos.model.graph.KonosGraph;
+import io.intino.magritte.io.Stash;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -136,17 +136,15 @@ public class CompilationContext {
 	}
 
 	public LayerCache cache() {
-		if (this.cache != null) return cache;
-		return cache = new LayerCache(new FileSystemStore(configuration.configurationDirectory()));
+		return cache;
 	}
 
-	public void saveCache(List<String> cache) {
-		File file = new File(configuration.configurationDirectory(), "cache.txt");
-		try {
-			Files.writeString(file.toPath(), String.join("\n", cache));
-		} catch (IOException e) {
-			Logger.error(e);
-		}
+	public void loadCache(KonosGraph graph, Stash stash) {
+		this.cache = new CacheReader(configuration.configurationDirectory()).load(graph, stash);
+	}
+
+	public void saveCache() {
+		new CacheWriter(configuration.configurationDirectory()).save(cache);
 	}
 
 	private void loadManifest() {
@@ -197,20 +195,4 @@ public class CompilationContext {
 		public Map<String, List<String>> messageContexts;
 	}
 
-
-	public static class LayerCache extends StoreAuditor {
-
-		public LayerCache(Store store) {
-			super(store);
-		}
-
-		public LayerCache(Store store, String checksumName) {
-			super(store, checksumName);
-		}
-
-		public LayerCache(Store fileSystemStore, PersistenceManager manager, String checksumName) {
-			super(fileSystemStore, manager, checksumName);
-		}
-
-	}
 }

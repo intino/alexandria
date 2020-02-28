@@ -7,6 +7,7 @@ import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.builder.helpers.ElementHelper;
+import io.intino.konos.model.graph.Display;
 import io.intino.magritte.framework.Layer;
 
 import java.io.File;
@@ -32,8 +33,19 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 
 	@Override
 	public void execute() {
-		if (isRendered(element)) return;
+		String type = typeOf(element);
+		File displayFile = javaFile(displayFolder(gen(), type, target), displayName(false));
+		File accessibleFile = javaFile(displayFolder(gen(), type, target), displayName(true));
+		registerOutputs(displayFile, accessibleFile);
+		if (isRendered(element) && displayFile.exists()) return;
 		super.execute();
+	}
+
+	private void registerOutputs(File displayFile, File accessibleFile) {
+		if (!target.equals(Target.Owner)) return;
+		context.compiledFiles().add(new OutputItem(displayFile.getAbsolutePath()));
+		if (element.i$(Display.Accessible.class))
+			context.compiledFiles().add(new OutputItem(accessibleFile.getAbsolutePath()));
 	}
 
 	protected final void write(FrameBuilder builder) {
@@ -59,12 +71,14 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 		Template template = genTemplate(builder);
 		String type = typeOf(element);
 		if (template == null) return;
-		final String suffix = builder.is("accessible") ? "Proxy" : "";
-		final String abstractValue = builder.is("accessible") ? "" : (ElementHelper.isRoot(element) ? "Abstract" : "");
-		final String newDisplay = displayFilename(snakeCaseToCamelCase(abstractValue + firstUpperCase(element.name$())), suffix);
+		final String newDisplay = displayName(builder.is("accessible"));
 		writeFrame(displayFolder(gen(), type, target), newDisplay, template.render(builder.add("gen").toFrame()));
-		if (target.equals(Target.Owner))
-			context.compiledFiles().add(new OutputItem(javaFile(displayFolder(gen(), type, target), newDisplay).getAbsolutePath()));
+	}
+
+	private String displayName(boolean accessible) {
+		final String suffix = accessible ? "Proxy" : "";
+		final String abstractValue = accessible ? "" : (ElementHelper.isRoot(element) ? "Abstract" : "");
+		return displayFilename(snakeCaseToCamelCase(abstractValue + firstUpperCase(element.name$())), suffix);
 	}
 
 	public void writeFrame(File packageFolder, String name, String text) {
