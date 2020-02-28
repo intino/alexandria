@@ -79,7 +79,7 @@ public abstract class Renderer {
 		if (element == null) return false;
 		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) return false;
 		if (element.i$(HelperComponents.Row.class)) return false;
-		return context.cache().isModified(element.core$());
+		return !context.cache().isModified(element);
 	}
 
 	protected boolean isRoot(Layer element) {

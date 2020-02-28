@@ -8,6 +8,7 @@ import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.compiler.shared.PostCompileActionMessage;
 import io.intino.konos.compiler.shared.PostCompileConfigurationDependencyActionMessage;
 import io.intino.konos.model.graph.KonosGraph;
+import io.intino.magritte.io.Stash;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class KonosCompiler {
 			if (graph == null) return compiledFiles;
 			if (configuration.isVerbose())
 				configuration.out().println(PRESENTABLE_MESSAGE + "Konosc: Rendering classes...");
-			render(graph, compiledFiles);
+			render(graph, graphLoader.konosStash(), compiledFiles);
 			updateDependencies(requiredDependencies(graph));
 			return compiledFiles;
 		} catch (Exception e) {
@@ -89,9 +90,11 @@ public class KonosCompiler {
 		if (toRemove != null) dependencies.remove(toRemove);
 	}
 
-	private void render(KonosGraph graph, List<OutputItem> compiledFiles) throws KonosException {
+	private void render(KonosGraph graph, Stash stash, List<OutputItem> compiledFiles) throws KonosException {
 		try {
-			new FullRenderer(graph, new CompilationContext(configuration, postCompileActionMessages, compiledFiles)).execute();
+			CompilationContext context = new CompilationContext(configuration, postCompileActionMessages, compiledFiles);
+			context.loadCache(graph, stash);
+			new FullRenderer(graph, context).execute();
 		} catch (Exception e) {
 			throw new KonosException(e.getMessage(), e);
 		}

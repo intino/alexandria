@@ -60,7 +60,7 @@ public class FullRenderer {
 		ui();
 		box();
 		main();
-		context.saveCache(calculateNewCache());
+		context.saveCache();
 //		InterfaceToJavaImplementation.nodeMap.clear();
 //		InterfaceToJavaImplementation.nodeMap.putAll(settings.classes());
 	}
