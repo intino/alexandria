@@ -74,7 +74,7 @@ public class KonosCompiler {
 		}
 		if (graph.messageHub() != null && !graph.messageHub().isJmsBus()) remove(dependencies, "terminal-jms");
 		if (graph.uiServiceList().isEmpty()) remove(dependencies, "ui");
-		if (graph.restServiceList().isEmpty()) remove(dependencies, "rest");
+		if (!graph.uiServiceList().isEmpty() || graph.restServiceList().isEmpty()) remove(dependencies, "rest");
 		if (graph.workflow() == null) remove(dependencies, "bpm");
 		if (graph.slackBotServiceList().isEmpty()) remove(dependencies, "slack");
 		if (graph.visualizationComponents() == null || graph.visualizationComponents().chartList(c -> c.isAbsolute() || c.isRelative()).isEmpty())

@@ -53,7 +53,7 @@ public class AppRenderer extends UIRenderer {
 	private void writeWebPack() {
 		Template template = new WebPackTemplate();
 		FrameBuilder builder = new FrameBuilder("webpack");
-		builder.add("outDirectory", context.configuration().outDirectory().getAbsolutePath());
+		builder.add("outDirectory", context.configuration().outDirectory().getParentFile().getAbsolutePath());
 		builder.add("exclude", alexandriaFrame("exclude"));
 		builder.add("alias", alexandriaFrame("alias"));
 		builder.add("webModuleName", context.webModuleDirectory() != null ? context.webModuleDirectory().getName() : "");
