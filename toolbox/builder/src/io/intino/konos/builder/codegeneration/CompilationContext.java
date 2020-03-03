@@ -26,6 +26,7 @@ import static io.intino.Configuration.Artifact.Model.Level.Solution;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.createIfNotExists;
 
 public class CompilationContext {
+	private final List<File> sources;
 	private List<OutputItem> compiledFiles;
 	private List<PostCompileActionMessage> postCompileActionMessages;
 	private CompilerConfiguration configuration;
@@ -36,10 +37,8 @@ public class CompilationContext {
 	private Map<String, String> classes = new HashMap<>();
 	private LayerCache cache = null;
 
-	public CompilationContext() {
-	}
-
-	public CompilationContext(CompilerConfiguration configuration, List<PostCompileActionMessage> postCompileActionMessages, List<OutputItem> compiledFiles) {
+	public CompilationContext(CompilerConfiguration configuration, List<PostCompileActionMessage> postCompileActionMessages, List<File> sources, List<OutputItem> compiledFiles) {
+		this.sources = sources;
 		configuration(configuration);
 		loadManifest();
 		this.postCompileActionMessages = postCompileActionMessages;
@@ -144,8 +143,8 @@ public class CompilationContext {
 		return cache;
 	}
 
-	public void loadCache(KonosGraph graph, Stash stash) {
-		this.cache = new CacheReader(configuration.configurationDirectory()).load(graph, stash);
+	public void loadCache(KonosGraph graph, Stash[] stashes) {
+		this.cache = new CacheReader(configuration.configurationDirectory()).load(graph, stashes);
 	}
 
 	public void saveCache() {
@@ -173,7 +172,7 @@ public class CompilationContext {
 	}
 
 	public CompilationContext clone() {
-		CompilationContext result = new CompilationContext(configuration, postCompileActionMessages, compiledFiles);
+		CompilationContext result = new CompilationContext(configuration, postCompileActionMessages, sources, compiledFiles);
 		result.webModuleDirectory = webModuleDirectory;
 		result.parent = parent;
 		result.classes = classes;
@@ -191,10 +190,10 @@ public class CompilationContext {
 	}
 
 	public String sourceFileOf(Layer layer) {
-		String defaultFile = configuration.sources().get(0).getAbsolutePath();
+		String defaultFile = sources.get(0).getAbsolutePath();
 		if (layer == null) return defaultFile;
 		String stash = layer.core$().stash();
-		File file = configuration.sources().stream().filter(f -> f.getName().replace(".konos", "").equals(stash)).findFirst().orElse(null);
+		File file = sources.stream().filter(f -> f.getName().replace(".konos", "").equals(stash)).findFirst().orElse(null);
 		return file == null ? defaultFile : file.getAbsolutePath();
 	}
 

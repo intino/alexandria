@@ -13,7 +13,7 @@ public class OutputItem {
 		return myOutputPath;
 	}
 
-	public String getSourceFile() {
+	public String getSourcePath() {
 		return sourceFilePath;
 	}
 }

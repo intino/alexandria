@@ -41,7 +41,7 @@ public class KonosCompiler {
 			if (graph == null) return compiledFiles;
 			if (configuration.isVerbose())
 				configuration.out().println(PRESENTABLE_MESSAGE + "Konosc: Rendering classes...");
-			render(graph, graphLoader.konosStash(), compiledFiles);
+			render(graph, graphLoader.stashes(), sources, compiledFiles);
 			updateDependencies(requiredDependencies(graph));
 			return compiledFiles;
 		} catch (Exception e) {
@@ -90,10 +90,10 @@ public class KonosCompiler {
 		if (toRemove != null) dependencies.remove(toRemove);
 	}
 
-	private void render(KonosGraph graph, Stash stash, List<OutputItem> compiledFiles) throws KonosException {
+	private void render(KonosGraph graph, Stash[] stashes, List<File> sources, List<OutputItem> compiledFiles) throws KonosException {
 		try {
-			CompilationContext context = new CompilationContext(configuration, postCompileActionMessages, compiledFiles);
-			context.loadCache(graph, stash);
+			CompilationContext context = new CompilationContext(configuration, postCompileActionMessages, sources, compiledFiles);
+			context.loadCache(graph, stashes);
 			new FullRenderer(graph, context).execute();
 		} catch (Exception e) {
 			throw new KonosException(e.getMessage(), e);

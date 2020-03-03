@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GraphLoader {
-	private Stash m1Stash;
+	private Stash[] stashes;
 
 	public KonosGraph loadGraph(CompilerConfiguration configuration, List<File> srcFiles) {
 		ClassFinder.clear();
@@ -28,16 +28,16 @@ public class GraphLoader {
 		if (!srcFiles.isEmpty()) {
 			final ByteArrayOutputStream out = new ByteArrayOutputStream();
 			final StashBuilder stashBuilder = new StashBuilder(srcFiles.stream().collect(Collectors.toMap(f -> f, f -> charset)), new Konos(), configuration.module(), new PrintStream(out));
-			m1Stash = stashBuilder.build();
+			stashes = stashBuilder.build();
 			configuration.project();
 			configuration.out().print(out.toString(StandardCharsets.UTF_8).replaceAll("\ntarac", "\nkonosc").replaceAll("%%rc.*/%rc\n", ""));
-			if (m1Stash == null) return null;
-			else return loadGraph(configuration, m1Stash);
+			if (stashes == null) return null;
+			else return loadGraph(configuration, stashes);
 		} else return loadGraph(configuration);
 	}
 
-	public Stash konosStash() {
-		return m1Stash;
+	public Stash[] stashes() {
+		return stashes;
 	}
 
 	private KonosGraph loadGraph(CompilerConfiguration configuration, Stash... stashes) {
