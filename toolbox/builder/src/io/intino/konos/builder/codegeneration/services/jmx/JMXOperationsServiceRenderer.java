@@ -48,8 +48,8 @@ public class JMXOperationsServiceRenderer extends Renderer {
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()));
 		for (Operation operation : service.operationList())
 			builder.add("operation", frameOf(operation));
-		Commons.writeFrame(destinationPackage(), service.name$() + "MBean", template().render(builder));
-		context.compiledFiles().add(new OutputItem(javaFile(destinationPackage(), service.name$() + "MBean").getAbsolutePath()));
+		Commons.writeFrame(genPackage(), service.name$() + "MBean", template().render(builder));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(genPackage(), service.name$() + "MBean").getAbsolutePath()));
 
 	}
 
@@ -59,8 +59,8 @@ public class JMXOperationsServiceRenderer extends Renderer {
 				.add("box", boxName())
 				.add("package", packageName())
 				.add("operation", service.operationList().stream().map(this::frameOf).toArray(Frame[]::new));
-		Commons.writeFrame(destinationPackage(), service.name$(), template().render(builder));
-		context.compiledFiles().add(new OutputItem(javaFile(destinationPackage(), service.name$()).getAbsolutePath()));
+		Commons.writeFrame(genPackage(), service.name$(), template().render(builder));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(genPackage(), service.name$()).getAbsolutePath()));
 	}
 
 	private void createCorrespondingActions(List<Operation> operations) {
@@ -98,7 +98,7 @@ public class JMXOperationsServiceRenderer extends Renderer {
 		return Formatters.customize(new JMXServerTemplate());
 	}
 
-	private File destinationPackage() {
+	private File genPackage() {
 		return new File(gen(), "jmx");
 	}
 }

@@ -41,8 +41,16 @@ public class AbstractBoxRenderer extends Renderer {
 		workflow(root);
 		if (hasAuthenticatedApis()) root.add("authenticationValidator", new FrameBuilder().add("type", "Basic"));
 		Commons.writeFrame(context.gen(Target.Owner), "AbstractBox", template().render(root.toFrame()));
-		context.compiledFiles().add(new OutputItem(javaFile(gen(), "AbstractBox").getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(sourceFileOf(graph), javaFile(gen(), "AbstractBox").getAbsolutePath()));
 		notifyNewParameters();
+	}
+
+	private String sourceFileOf(KonosGraph graph) {
+		if (!graph.serviceList().isEmpty()) return context.sourceFileOf(graph.serviceList().get(0));
+		if (graph.datalake() != null) return context.sourceFileOf(graph.datalake());
+		if (!graph.schemaList().isEmpty()) return context.sourceFileOf(graph.schemaList().get(0));
+		if (!graph.datamartList().isEmpty()) return context.sourceFileOf(graph.datamartList().get(0));
+		return null;
 	}
 
 	Set<String> customParameters() {

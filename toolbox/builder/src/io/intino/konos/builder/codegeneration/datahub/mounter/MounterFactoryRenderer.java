@@ -42,9 +42,9 @@ public class MounterFactoryRenderer {
 		context.classes().put(Mounter.class.getSimpleName() + "#" + "MounterFactory", "mounters.mounterFactory");
 		Frame object = builder.toFrame();
 		writeFrame(genMounters, "MounterFactory", customize(new MounterFactoryTemplate()).render(object));
-		context.compiledFiles().add(new OutputItem(javaFile(genMounters, "MounterFactory").getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(mounters.get(0)), javaFile(genMounters, "MounterFactory").getAbsolutePath()));
 		writeFrame(genMounters, "Mounter", customize(new IMounterTemplate()).render(object));
-		context.compiledFiles().add(new OutputItem(javaFile(genMounters, "Mounter").getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(mounters.get(0)), javaFile(genMounters, "Mounter").getAbsolutePath()));
 	}
 
 	private Map<String, List<Mounter>> map(List<Mounter> mounters, DataHubManifest manifest) {

@@ -38,7 +38,7 @@ public class MessageHubRenderer {
 		File destination = terminal.isJmsBus() ? genDirectory : sourceDirectory;
 		if (!Commons.javaFile(destination, "MessageHub").exists()) {
 			writeFrame(destination, "MessageHub", customize(new MessageHubTemplate()).render(builder.toFrame()));
-			context.compiledFiles().add(new OutputItem(javaFile(destination,"MessageHub").getAbsolutePath()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(terminal), javaFile(destination, "MessageHub").getAbsolutePath()));
 		}
 	}
 }

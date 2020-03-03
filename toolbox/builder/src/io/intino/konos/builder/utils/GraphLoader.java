@@ -30,7 +30,7 @@ public class GraphLoader {
 			final StashBuilder stashBuilder = new StashBuilder(srcFiles.stream().collect(Collectors.toMap(f -> f, f -> charset)), new Konos(), configuration.module(), new PrintStream(out));
 			m1Stash = stashBuilder.build();
 			configuration.project();
-			configuration.out().print(out.toString(StandardCharsets.UTF_8).replaceAll("\ntarac", "\nkonosc"));
+			configuration.out().print(out.toString(StandardCharsets.UTF_8).replaceAll("\ntarac", "\nkonosc").replaceAll("%%rc.*/%rc\n", ""));
 			if (m1Stash == null) return null;
 			else return loadGraph(configuration, m1Stash);
 		} else return loadGraph(configuration);

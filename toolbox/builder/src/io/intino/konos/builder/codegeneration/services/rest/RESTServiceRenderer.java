@@ -127,7 +127,7 @@ public class RESTServiceRenderer extends Renderer {
 		final String className = snakeCaseToCamelCase(service.name$()) + "Service";
 		classes().put(service.getClass().getSimpleName() + "#" + service.name$(), className);
 		Commons.writeFrame(gen, className, template().render(builder.toFrame()));
-		context.compiledFiles().add(new OutputItem(javaFile(gen(), className).getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(), className).getAbsolutePath()));
 	}
 
 	private Frame[] notificationsFrame(List<Service.REST.Notification> list) {

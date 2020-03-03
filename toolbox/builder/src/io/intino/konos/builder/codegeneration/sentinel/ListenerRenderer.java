@@ -45,7 +45,7 @@ public class ListenerRenderer extends Renderer {
 		targets.add(baseFrame(sentinel.name$()).add("name", sentinel.name$()).toFrame());
 		builder.add("target", targets.toArray(new Frame[0]));
 		writeFrame(destinyPackage(), sentinel.name$() + "Listener", template().render(builder.toFrame()));
-		context.compiledFiles().add(new OutputItem(javaFile(destinyPackage(), sentinel.name$() + "Listener").getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(sentinel), javaFile(destinyPackage(), sentinel.name$() + "Listener").getAbsolutePath()));
 		createCorrespondingAction(sentinel.a$(Sentinel.class));
 	}
 

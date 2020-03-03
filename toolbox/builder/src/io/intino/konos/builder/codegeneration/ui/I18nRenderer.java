@@ -29,7 +29,7 @@ public class I18nRenderer extends UIRenderer {
 		FrameBuilder builder = buildFrame();
 		Commons.write(fileOf(folder(gen(), "/", target), "I18n", target).toPath(), setup(template()).render(builder.toFrame()));
 		if (target.equals(Target.Owner))
-			context.compiledFiles().add(new OutputItem(fileOf(folder(gen(), "/", target), "I18n", target).getAbsolutePath()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), fileOf(folder(gen(), "/", target), "I18n", target).getAbsolutePath()));
 	}
 
 	@Override

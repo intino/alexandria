@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.accessor.ui;
 
 import io.intino.alexandria.zip.Zip;
 import io.intino.konos.builder.codegeneration.CompilationContext;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.compiler.shared.PostCompileDependantWebModuleActionMessage;
@@ -34,7 +35,9 @@ public class ServiceCreator extends UIRenderer {
 	public void render() {
 		try {
 			context.postCompileActionMessages().add(new PostCompileDependantWebModuleActionMessage(context.configuration().module(), service.name$()));
-			if (!context.configuration().webModuleDirectory().exists()) createSkeleton();
+			if (context.webModuleDirectory() == null)
+				context.webModuleDirectory(new File(context.configuration().moduleDirectory().getParentFile(), Formatters.camelCaseToSnakeCase().format(service.name$()).toString()));
+			if (!context.webModuleDirectory().exists()) createSkeleton();
 			new ServiceRenderer(context, service).execute();
 		} catch (IOException e) {
 			LoggerFactory.getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);

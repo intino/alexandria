@@ -43,9 +43,9 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 
 	private void registerOutputs(File displayFile, File accessibleFile) {
 		if (!target.equals(Target.Owner)) return;
-		context.compiledFiles().add(new OutputItem(displayFile.getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), displayFile.getAbsolutePath()));
 		if (element.i$(Display.Accessible.class))
-			context.compiledFiles().add(new OutputItem(accessibleFile.getAbsolutePath()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), accessibleFile.getAbsolutePath()));
 	}
 
 	protected final void write(FrameBuilder builder) {

@@ -16,11 +16,11 @@ public class BoxConfigurationRenderer extends Renderer {
 	private final Set<String> params;
 	private boolean isTara;
 
-	BoxConfigurationRenderer(CompilationContext compilationContext, boolean isTara, Set<String> params) {
-		super(compilationContext, Target.Owner);
+	BoxConfigurationRenderer(CompilationContext context, boolean isTara, Set<String> params) {
+		super(context, Target.Owner);
 		this.isTara = isTara;
 		this.params = params;
-		this.configuration = compilationContext.configuration();
+		this.configuration = context.configuration();
 		this.params.addAll(configuration.parameters());
 	}
 
@@ -29,7 +29,7 @@ public class BoxConfigurationRenderer extends Renderer {
 		FrameBuilder builder = new FrameBuilder("boxconfiguration");
 		final String boxName = fillFrame(builder);
 		Commons.writeFrame(gen(), snakeCaseToCamelCase(boxName) + "Configuration", template().render(builder.toFrame()));
-		context.compiledFiles().add(new OutputItem(javaFile(gen(), snakeCaseToCamelCase(boxName) + "Configuration").getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(null), javaFile(gen(), snakeCaseToCamelCase(boxName) + "Configuration").getAbsolutePath()));
 	}
 
 	private String fillFrame(FrameBuilder builder) {

@@ -4,9 +4,9 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.MessagingRequestActionRenderer;
 import io.intino.konos.builder.helpers.Commons;
@@ -15,7 +15,6 @@ import io.intino.konos.model.graph.Parameter;
 import io.intino.konos.model.graph.Response;
 import io.intino.konos.model.graph.Service;
 import io.intino.konos.model.graph.Service.Messaging.Request;
-
 
 import java.io.File;
 import java.util.List;
@@ -47,7 +46,7 @@ public class MessagingRequestRenderer extends Renderer {
 		if (!request.isProcessTrigger()) {
 			File packageFolder = new File(gen(), REQUESTS);
 			writeFrame(packageFolder, snakeCaseToCamelCase(request.name$()) + "Request", template().render(fillRequestFrame(request)));
-			context.compiledFiles().add(new OutputItem(javaFile(packageFolder, snakeCaseToCamelCase(request.name$()) + "Request").getAbsolutePath()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(request), javaFile(packageFolder, snakeCaseToCamelCase(request.name$()) + "Request").getAbsolutePath()));
 		}
 		createCorrespondingAction(request);
 	}

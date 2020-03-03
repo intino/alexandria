@@ -5,14 +5,13 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.itrules.formatters.StringFormatters;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.CompilationContext;
+import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Parameter;
 import io.intino.konos.model.graph.Service;
 import io.intino.konos.model.graph.Workflow;
-
 
 import java.util.List;
 import java.util.Locale;
@@ -51,7 +50,7 @@ public class MessagingServiceRenderer extends Renderer {
 		if (!service.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
 		writeFrame(gen(), nameOf(service), template().render(builder.toFrame()));
-		context.compiledFiles().add(new OutputItem(javaFile(gen(), nameOf(service)).getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(), nameOf(service)).getAbsolutePath()));
 	}
 
 	private String nameOf(Service.Messaging service) {

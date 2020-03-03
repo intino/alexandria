@@ -55,6 +55,7 @@ public class CompilerConfiguration implements Cloneable {
 	private File moduleDirectory;
 	private File configurationDirectory;
 	private List<String> parameters = new ArrayList<>();
+	private boolean onlyElements = false;
 
 	public CompilerConfiguration() {
 		setWarningLevel(1);
@@ -270,6 +271,14 @@ public class CompilerConfiguration implements Cloneable {
 
 	public void outDirectory(File file) {
 		this.outDirectory = file;
+	}
+
+	public void onlyElements(boolean onlyElements) {
+		this.onlyElements = onlyElements;
+	}
+
+	public boolean onlyElements() {
+		return onlyElements;
 	}
 
 	public static class ModelConfiguration {

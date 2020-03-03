@@ -35,7 +35,7 @@ public class AdapterRenderer {
 			context.classes().put(adapter.getClass().getSimpleName() + "#" + adapter.name$(), "adapters." + adapterName);
 			if (!alreadyRendered(directory, adapterName)) {
 				writeFrame(directory, adapterName, customize(new AdapterTemplate()).render(builder.toFrame()));
-				context.compiledFiles().add(new OutputItem(javaFile(directory, adapterName).getAbsolutePath()));
+				context.compiledFiles().add(new OutputItem(context.sourceFileOf(adapter), javaFile(directory, adapterName).getAbsolutePath()));
 			}
 		}
 	}

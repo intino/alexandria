@@ -43,7 +43,7 @@ public class DatalakeRenderer {
 		File destination = genDirectory;
 		if (!Commons.javaFile(destination, "Datalake").exists()) {
 			writeFrame(destination, "Datalake", customize(new DatalakeTemplate()).render(builder.toFrame()));
-			context.compiledFiles().add(new OutputItem(javaFile(destination, "Datalake").getAbsolutePath()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(datalake), javaFile(destination, "Datalake").getAbsolutePath()));
 		}
 	}
 

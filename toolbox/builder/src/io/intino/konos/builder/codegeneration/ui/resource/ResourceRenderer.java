@@ -12,7 +12,8 @@ import io.intino.konos.model.graph.Service;
 import java.util.List;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
-import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.resourceFilename;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.resourceFolder;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 
 public class ResourceRenderer extends UIRenderer {
@@ -32,7 +33,7 @@ public class ResourceRenderer extends UIRenderer {
 		if (resource.isConfidential()) builder.add("confidential", "");
 		Commons.writeFrame(resourceFolder(gen(), target), resourceFilename(resource.name$()), setup(new ResourceTemplate()).render(builder.toFrame()));
 		if (target.equals(Target.Owner))
-			context.compiledFiles().add(new OutputItem(javaFile(resourceFolder(gen(), target), resourceFilename(resource.name$())).getAbsolutePath()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(resourceFolder(gen(), target), resourceFilename(resource.name$())).getAbsolutePath()));
 		new PageRenderer(context, resource).execute();
 	}
 
