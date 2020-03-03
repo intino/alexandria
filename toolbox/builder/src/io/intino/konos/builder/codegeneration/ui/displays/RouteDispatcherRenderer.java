@@ -30,10 +30,11 @@ public class RouteDispatcherRenderer extends UIRenderer {
 		createIfNotExists(displaysFolder(src(), target));
 		createIfNotExists(displaysFolder(gen(), target));
 		File routeDispatcher = fileOf(displaysFolder(src(), target), "RouteDispatcher", target);
-		if (!routeDispatcher.exists()) Commons.write(routeDispatcher.toPath(), setup(new RouteDispatcherTemplate()).render(builder.toFrame()));
+		if (!routeDispatcher.exists())
+			Commons.write(routeDispatcher.toPath(), setup(new RouteDispatcherTemplate()).render(builder.toFrame()));
 		Commons.write(fileOf(displaysFolder(gen(), target), "AbstractRouteDispatcher", target).toPath(), setup(new RouteDispatcherTemplate()).render(builder.add("gen").toFrame()));
 		if (target.equals(Target.Owner))
-			context.compiledFiles().add(new OutputItem(fileOf(displaysFolder(gen(), target), "AbstractRouteDispatcher", target).getAbsolutePath()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), fileOf(displaysFolder(gen(), target), "AbstractRouteDispatcher", target).getAbsolutePath()));
 	}
 
 	@Override
@@ -57,7 +58,8 @@ public class RouteDispatcherRenderer extends UIRenderer {
 
 	private void addResourceParams(Service.UI.Resource resource, FrameBuilder result) {
 		List<String> params = paramsOf(resource);
-		for (int i=0; i<params.size(); i++) result.add("param", new FrameBuilder().add("param").add("name", params.get(i)).add("index", i));
+		for (int i = 0; i < params.size(); i++)
+			result.add("param", new FrameBuilder().add("param").add("name", params.get(i)).add("index", i));
 	}
 
 	private List<String> paramsOf(Service.UI.Resource resource) {

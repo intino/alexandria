@@ -3,9 +3,9 @@ package io.intino.konos.builder.codegeneration.services.jmx;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Service;
@@ -38,7 +38,7 @@ public class JMXServerRenderer extends Renderer {
 				.add("name", service.name$())
 				.add("box", boxName())
 				.add("package", packageName()).toFrame()));
-		context.compiledFiles().add(new OutputItem(javaFile(gen(), "JMX" + snakeCaseToCamelCase(service.name$())).getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(), "JMX" + snakeCaseToCamelCase(service.name$())).getAbsolutePath()));
 	}
 
 	private Template template() {

@@ -50,7 +50,7 @@ public class PageRenderer extends ActionRenderer {
 			writeFrame(destinyPackage(src()), resource.name$() + suffix(), template().render(builder.toFrame()));
 		writeFrame(destinyPackage(gen()), "Abstract" + firstUpperCase(resource.name$()) + suffix(), template().render(builder.add("gen").toFrame()));
 		if (target.equals(Target.Owner))
-			context.compiledFiles().add(new OutputItem(javaFile(destinyPackage(gen()), "Abstract" + firstUpperCase(resource.name$()) + suffix()).getAbsolutePath()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(destinyPackage(gen()), "Abstract" + firstUpperCase(resource.name$()) + suffix()).getAbsolutePath()));
 	}
 
 	@Override

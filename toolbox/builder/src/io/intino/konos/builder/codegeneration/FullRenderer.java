@@ -22,10 +22,6 @@ import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.magritte.framework.Layer;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class FullRenderer {
 	private final KonosGraph graph;
@@ -43,30 +39,26 @@ public class FullRenderer {
 	}
 
 	private void render() {
-		schemas();
-		exceptions();
-		rest();
-		tasks();
-		jmx();
-		jms();
-		datalake();
-		messageHub();
-		subscribers();
-		mounters();
-		adapters();
-		feeders();
-		processes();
-		slack();
+		if (!context.onlyElements()) {
+			schemas();
+			exceptions();
+			rest();
+			tasks();
+			jmx();
+			jms();
+			datalake();
+			messageHub();
+			subscribers();
+			mounters();
+			adapters();
+			feeders();
+			processes();
+			slack();
+			box();
+			main();
+		}
 		ui();
-		box();
-		main();
 		context.saveCache();
-//		InterfaceToJavaImplementation.nodeMap.clear();
-//		InterfaceToJavaImplementation.nodeMap.putAll(settings.classes());
-	}
-
-	private List<String> calculateNewCache() {
-		return graph.componentList().stream().map(Layer::name$).collect(Collectors.toList());
 	}
 
 	private void schemas() {
@@ -132,7 +124,7 @@ public class FullRenderer {
 
 	private void ui() {
 		ComponentRenderer.clearCache();
-		uiServer();
+		if (!context.onlyElements()) uiServer();
 		uiClient();
 	}
 
@@ -147,7 +139,6 @@ public class FullRenderer {
 	private void box() {
 		AbstractBoxRenderer renderer = new AbstractBoxRenderer(context, graph, hasModel);
 		renderer.execute();
-
 		new BoxRenderer(context, graph, hasModel).execute();
 		new BoxConfigurationRenderer(context, hasModel, renderer.customParameters()).execute();
 	}

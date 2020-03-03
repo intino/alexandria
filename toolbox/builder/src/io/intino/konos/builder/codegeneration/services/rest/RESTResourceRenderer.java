@@ -50,7 +50,7 @@ public class RESTResourceRenderer extends Renderer {
 			final String className = snakeCaseToCamelCase(operation.getClass().getSimpleName() + "_" + resource.name$()) + "Resource";
 			File resourcesPackage = new File(gen(), RESOURCES_PACKAGE);
 			Commons.writeFrame(resourcesPackage, className, template().render(frame));
-			context.compiledFiles().add(new OutputItem(javaFile(resourcesPackage, className).getAbsolutePath()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(resourcesPackage, className).getAbsolutePath()));
 			createCorrespondingAction(operation);
 		}
 	}

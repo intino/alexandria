@@ -68,7 +68,7 @@ public class MounterRenderer {
 		populationMounter(builder, mounter.asPopulation());
 		context.classes().put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "mounters." + mounterName);
 		writeFrame(genMounters, mounter.name$(), customize(new MounterTemplate()).render(builder.toFrame()));
-		context.compiledFiles().add(new OutputItem(javaFile(genMounters, mounter.name$()).getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(mounter), javaFile(genMounters, mounter.name$()).getAbsolutePath()));
 		mounterFunctions(mounter);
 	}
 

@@ -46,7 +46,7 @@ public class ServiceRenderer extends UIRenderer {
 			builder.add("display", displaysFrame(displays)).add("displaysImport", packageName());
 		if (service.authentication() != null) builder.add("auth", service.authentication().by());
 		writeFrame(serviceFolder(gen()), serviceFilename(service.name$()), template().render(builder.toFrame()));
-		context.compiledFiles().add(new OutputItem(javaFile(serviceFolder(gen()), serviceFilename(service.name$())).getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(serviceFolder(gen()), serviceFilename(service.name$())).getAbsolutePath()));
 	}
 
 	private Frame[] resourcesFrame(List<Service.UI.Resource> resourceList) {

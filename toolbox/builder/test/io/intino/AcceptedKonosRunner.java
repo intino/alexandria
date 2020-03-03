@@ -33,4 +33,9 @@ public class AcceptedKonosRunner {
 	public void cesar() {
 		KonoscRunner.main(new String[]{home + "confFiles/cesar/cesar.txt"});
 	}
+
+	@Test
+	public void amidas() {
+		KonoscRunner.main(new String[]{home + "confFiles/amidas/amidas-team.txt"});
+	}
 }

@@ -30,6 +30,7 @@ public class BpmRenderer extends Renderer {
 	private final List<Process> processes;
 	private final File src;
 	private final File gen;
+	private final KonosGraph graph;
 	private final String businessUnit;
 	private List<String> stateServices = new ArrayList<>();
 
@@ -40,6 +41,7 @@ public class BpmRenderer extends Renderer {
 		this.processes = graph.workflow() != null ? graph.workflow().processList() : Collections.emptyList();
 		this.src = new File(compilationContext.src(Target.Owner), "bpm");
 		this.gen = new File(compilationContext.gen(Target.Owner), "bpm");
+		this.graph = graph;
 	}
 
 	@Override
@@ -51,7 +53,7 @@ public class BpmRenderer extends Renderer {
 	private void renderBpm() {
 		if (processes.isEmpty()) return;
 		FrameBuilder builder = new FrameBuilder("workflow").add("box", compilationContext.boxName()).add("package", compilationContext.packageName()).add("businessUnit", businessUnit).add(compilationContext.boxName()).add("process", processes.stream().map(p -> frameOf(p)).toArray(Frame[]::new));
-		context.compiledFiles().add(new OutputItem(javaFile(gen, "Workflow").getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(graph.workflow()), javaFile(gen, "Workflow").getAbsolutePath()));
 		writeFrame(gen, "Workflow", customize(new WorkflowTemplate()).render(builder.toFrame()));
 	}
 

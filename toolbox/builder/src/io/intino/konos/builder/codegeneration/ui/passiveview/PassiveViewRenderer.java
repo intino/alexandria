@@ -72,9 +72,9 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			writePushRequester(elementBuilder);
 		}
 		if (target.equals(Target.Owner)) {
-			context.compiledFiles().add(new OutputItem(requesterFile.getAbsolutePath()));
-			context.compiledFiles().add(new OutputItem(javaFile(displayRequesterFolder(gen(), target), nameOfPassiveViewFile(element, elementBuilder.toFrame(), "PushRequester")).getAbsolutePath()));
-			context.compiledFiles().add(new OutputItem(javaFile(displayNotifierFolder(gen(), target), nameOfPassiveViewFile(element, elementBuilder.toFrame(), "Notifier")).getAbsolutePath()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), requesterFile.getAbsolutePath()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), javaFile(displayRequesterFolder(gen(), target), nameOfPassiveViewFile(element, elementBuilder.toFrame(), "PushRequester")).getAbsolutePath()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), javaFile(displayNotifierFolder(gen(), target), nameOfPassiveViewFile(element, elementBuilder.toFrame(), "Notifier")).getAbsolutePath()));
 		}
 	}
 

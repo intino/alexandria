@@ -62,18 +62,8 @@ class KonosCompilerRunner {
 
 	private void report(Map<File, Boolean> srcFiles, List<OutputItem> compiled) {
 		if (compiled.isEmpty()) reportNotCompiledItems(srcFiles);
-		else reportCompiledItems(srcFiles.keySet().iterator().next(), compiled);
+		else reportCompiledItems(compiled);
 		out.println();
-	}
-
-	public static void cleanOut(CompilerConfiguration configuration) {
-		final String generationPackage = (configuration.generationPackage() == null ? configuration.module() : configuration.generationPackage()).replace(".", File.separator);
-		File out = new File(configuration.outDirectory(), generationPackage.toLowerCase());
-		if (out.exists()) try {
-			FileUtils.deleteDirectory(out);
-		} catch (IOException e) {
-			LOG.severe(e.getMessage());
-		}
 	}
 
 	private void processErrors(List<CompilerMessage> compilerMessages) {
@@ -88,9 +78,11 @@ class KonosCompilerRunner {
 	}
 
 	private void processActions(List<PostCompileActionMessage> postCompileActionMessages) {
-		out.print(START_ACTIONS_MESSAGE);
-		postCompileActionMessages.forEach(this::printMessage);
-		out.print(END_ACTIONS_MESSAGE);
+		if (!postCompileActionMessages.isEmpty()) {
+			out.print(START_ACTIONS_MESSAGE);
+			postCompileActionMessages.forEach(this::printMessage);
+			out.print(END_ACTIONS_MESSAGE);
+		}
 	}
 
 	private void printMessage(CompilerMessage message) {
@@ -116,12 +108,12 @@ class KonosCompilerRunner {
 		out.println();
 	}
 
-	private void reportCompiledItems(File srcFile, List<OutputItem> compiledFiles) {
+	private void reportCompiledItems(List<OutputItem> compiledFiles) {
 		for (OutputItem compiledFile : compiledFiles) {
 			out.print(COMPILED_START);
 			out.print(compiledFile.getOutputPath());
 			out.print(SEPARATOR);
-			out.print(srcFile);
+			out.print(compiledFile.getOutputPath());
 			out.print(COMPILED_END);
 			out.println();
 		}
@@ -133,6 +125,16 @@ class KonosCompilerRunner {
 			out.print(file.getAbsolutePath());
 			out.print(TO_RECOMPILE_END);
 			out.println();
+		}
+	}
+
+	public static void cleanOut(CompilerConfiguration configuration) {
+		final String generationPackage = (configuration.generationPackage() == null ? configuration.module() : configuration.generationPackage()).replace(".", File.separator);
+		File out = new File(configuration.outDirectory(), generationPackage.toLowerCase());
+		if (out.exists()) try {
+			FileUtils.deleteDirectory(out);
+		} catch (IOException e) {
+			LOG.severe(e.getMessage());
 		}
 	}
 }

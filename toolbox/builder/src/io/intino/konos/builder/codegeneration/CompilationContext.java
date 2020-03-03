@@ -9,6 +9,7 @@ import io.intino.konos.builder.codegeneration.cache.CacheWriter;
 import io.intino.konos.builder.codegeneration.cache.LayerCache;
 import io.intino.konos.compiler.shared.PostCompileActionMessage;
 import io.intino.konos.model.graph.KonosGraph;
+import io.intino.magritte.framework.Layer;
 import io.intino.magritte.io.Stash;
 
 import java.io.File;
@@ -43,6 +44,10 @@ public class CompilationContext {
 		loadManifest();
 		this.postCompileActionMessages = postCompileActionMessages;
 		this.compiledFiles = compiledFiles;
+	}
+
+	public boolean onlyElements() {
+		return configuration.onlyElements();
 	}
 
 	public String project() {
@@ -183,6 +188,14 @@ public class CompilationContext {
 
 	public List<PostCompileActionMessage> postCompileActionMessages() {
 		return postCompileActionMessages;
+	}
+
+	public String sourceFileOf(Layer layer) {
+		String defaultFile = configuration.sources().get(0).getAbsolutePath();
+		if (layer == null) return defaultFile;
+		String stash = layer.core$().stash();
+		File file = configuration.sources().stream().filter(f -> f.getName().replace(".konos", "").equals(stash)).findFirst().orElse(null);
+		return file == null ? defaultFile : file.getAbsolutePath();
 	}
 
 	public static class DataHubManifest {
