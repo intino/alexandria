@@ -14,22 +14,18 @@ import com.github.seratch.jslack.api.model.Conversation;
 import com.github.seratch.jslack.api.model.File;
 import com.github.seratch.jslack.api.model.User;
 import com.github.seratch.jslack.api.rtm.RTMClient;
-import com.github.seratch.jslack.common.http.SlackHttpClient;
 import com.github.seratch.jslack.common.json.GsonFactory;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.intino.alexandria.logger.Logger;
-import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.Nullable;
 
 import javax.websocket.DeploymentException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -92,7 +88,9 @@ public abstract class Bot {
 			proxyPort = System.getProperty("https.proxyPort");
 		}
 		if (proxyUrl != null) {
-			return Slack.getInstance(new SlackConfig(), new SlackHttpClient(new OkHttpClient.Builder().proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyUrl, Integer.parseInt(proxyPort)))).build()));
+			SlackConfig slackConfig = new SlackConfig();
+			slackConfig.setProxyUrl("http://" + proxyUrl + ":" + proxyPort);
+			return Slack.getInstance(slackConfig);
 		}
 		return Slack.getInstance();
 	}
@@ -125,7 +123,15 @@ public abstract class Bot {
 	public void sendToUser(String userName, String message) {
 		User user = findUserByName(userName);
 		if (user == null) return;
-		sendMessage(user.getId(), message);
+		sendToUser(user, message);
+	}
+
+	private void sendToUser(User user, String message) {
+		try {
+			methods.chatPostMessage(ChatPostMessageRequest.builder().asUser(true).channel(user.getId()).text(message).build());
+		} catch (IOException | SlackApiException e) {
+			Logger.error(e);
+		}
 	}
 
 	public void sendToUser(String userName, String fileName, String title, InputStream attachment) {

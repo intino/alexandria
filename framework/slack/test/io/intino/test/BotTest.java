@@ -7,11 +7,10 @@ import java.io.IOException;
 
 public class BotTest {
 	public static void main(String[] args) throws IOException, DeploymentException {
-		Bot bot = new Bot("TODO") {
+		Bot bot = new Bot("xoxb-315657435732-cilpRyFZvJOxeyQqkg9gYgji") {
 		};
 		bot.connect();
-		bot.sendToUser("user", "aaaaaaa");
+		bot.sendMessage("notificaciones", "notificacion");
 		bot.disconnect();
 	}
-
 }
