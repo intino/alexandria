@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "2.0.1-SNAPSHOT") slack-framework
+Artifact("io.intino.alexandria", "2.0.1") slack-framework
 	Imports
 		Compile("com.github.seratch", "jslack", "3.4.1")
 		Compile("javax.websocket", "javax.websocket-api", "1.1")
