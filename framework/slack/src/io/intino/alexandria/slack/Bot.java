@@ -81,15 +81,17 @@ public abstract class Bot {
 	}
 
 	private Slack instance() {
-		String proxyUrl = System.getProperty("http.proxyHost");
-		String proxyPort = System.getProperty("http.proxyPort");
+		String prefix = "https";
+		String proxyUrl = System.getProperty("https.proxyHost");
+		String proxyPort = System.getProperty("https.proxyPort");
 		if (proxyUrl == null) {
-			proxyUrl = System.getProperty("https.proxyHost");
-			proxyPort = System.getProperty("https.proxyPort");
+			prefix = "http";
+			proxyUrl = System.getProperty("http.proxyHost");
+			proxyPort = System.getProperty("http.proxyPort");
 		}
 		if (proxyUrl != null) {
 			SlackConfig slackConfig = new SlackConfig();
-			slackConfig.setProxyUrl("http://" + proxyUrl + ":" + proxyPort);
+			slackConfig.setProxyUrl(prefix + "://" + proxyUrl + ":" + proxyPort);
 			return Slack.getInstance(slackConfig);
 		}
 		return Slack.getInstance();
