@@ -8,6 +8,7 @@
     <file url="file://$PROJECT_DIR$/toolbox/builder/res" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/toolbox/konos-dsl" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/toolbox/konos-dsl/res" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/toolbox/konos-dsl/src" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/toolbox/test" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>

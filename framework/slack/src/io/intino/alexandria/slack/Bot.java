@@ -14,18 +14,22 @@ import com.github.seratch.jslack.api.model.Conversation;
 import com.github.seratch.jslack.api.model.File;
 import com.github.seratch.jslack.api.model.User;
 import com.github.seratch.jslack.api.rtm.RTMClient;
+import com.github.seratch.jslack.common.http.SlackHttpClient;
 import com.github.seratch.jslack.common.json.GsonFactory;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.intino.alexandria.logger.Logger;
+import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.Nullable;
 
 import javax.websocket.DeploymentException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -72,12 +76,24 @@ public abstract class Bot {
 	}
 
 	public void connect() throws IOException, DeploymentException {
-		slack = Slack.getInstance();
+		slack = instance();
 		rtm = slack.rtm(token);
 		init();
 		rtm.connect();
 		botIdentity = rtm.getConnectedBotUser();
 		rtm.addMessageHandler(this::handleMessage);
+	}
+
+	private Slack instance() {
+		String proxyUrl = System.getProperty("http.proxyHost");
+		String proxyPort = System.getProperty("http.proxyPort");
+		if (proxyUrl == null) {
+			proxyUrl = System.getProperty("https.proxyHost");
+			proxyPort = System.getProperty("https.proxyPort");
+		}
+		if (proxyUrl != null)
+			return Slack.getInstance(new SlackHttpClient(new OkHttpClient(new OkHttpClient.Builder().proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyUrl, Integer.parseInt(proxyPort)))))));
+		return Slack.getInstance();
 	}
 
 	public void disconnect() {
