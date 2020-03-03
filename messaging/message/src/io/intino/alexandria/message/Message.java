@@ -125,7 +125,8 @@ public class Message {
 	}
 
 	public Message remove(String attribute) {
-		detach(use(attribute).value);
+		String value = use(attribute).value;
+		if (value != null && attachments.containsKey(value.split("@")[0])) detach(value);
 		attributes.remove(attribute.toLowerCase());
 		return this;
 	}
