@@ -1,19 +1,20 @@
 def.file
-/Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Procesos.konos#true
-/Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Tareas.konos#true
-/Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Facturaciones.konos#true
-/Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Expedientes.konos#true
+/Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Acciones.konos#true
 /Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Ingresos.konos#true
 /Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Tablero.konos#true
-/Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Cuentas.konos#true
-/Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Buzones.konos#true
 /Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Expediente.konos#true
-/Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Common.konos#true
-/Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/DataHub.konos#true
+/Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Buzones.konos#true
+/Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Cuentas.konos#true
+/Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Facturaciones.konos#true
 /Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Theme.konos#true
+/Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Tareas.konos#true
+/Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Expedientes.konos#true
+/Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Cuenta.konos#true
+/Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Common.konos#true
+/Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Procesos.konos#true
+/Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/DataHub.konos#true
 /Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/UI.konos#true
 /Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/Service.konos#true
-/Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src/io/provista/gestioncomercial/cuentamaestra/box/ui/Cuenta.konos#true
 
 project
 cfe-suministro-gestioncomercial
@@ -22,7 +23,7 @@ cuenta-maestra
 outputpath
 /Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/gen
 final_outputpath
-/Users/oroncal/workspace/gestioncomercial/out/production/cuenta-maestra
+/Users/oroncal/workspace/gestioncomercial/out/production/cuenta-maestra/
 res.path
 /Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/res
 intino.project.path
@@ -34,6 +35,8 @@ module.path
 src.path
 /Users/oroncal/workspace/gestioncomercial/gestioncomercial/cuenta-maestra/src
 
+level
+Product
 groupId
 io.provista.gestioncomercial
 artifactId
@@ -42,6 +45,8 @@ version
 1.1.0
 module.parameters
 url;port;facturacion_site;contratacion_site;proveedores_site;timbrado_site;federation_url;terminal_url;terminal_password;terminal_user;terminal_working_directory;terminal_clientId;datalake_path;home;tablero_url
+library
+io.provista.datahub:cuenta-maestra-terminal:1.1.0
 generation.package
 io.provista.gestioncomercial.cuentamaestra.box
 encoding

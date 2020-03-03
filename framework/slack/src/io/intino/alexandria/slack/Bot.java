@@ -91,8 +91,9 @@ public abstract class Bot {
 			proxyUrl = System.getProperty("https.proxyHost");
 			proxyPort = System.getProperty("https.proxyPort");
 		}
-		if (proxyUrl != null)
-			return Slack.getInstance(new SlackHttpClient(new OkHttpClient(new OkHttpClient.Builder().proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyUrl, Integer.parseInt(proxyPort)))))));
+		if (proxyUrl != null) {
+			return Slack.getInstance(new SlackConfig(), new SlackHttpClient(new OkHttpClient.Builder().proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyUrl, Integer.parseInt(proxyPort)))).build()));
+		}
 		return Slack.getInstance();
 	}
 

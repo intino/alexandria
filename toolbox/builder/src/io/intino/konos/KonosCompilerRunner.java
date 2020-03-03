@@ -113,7 +113,7 @@ class KonosCompilerRunner {
 			out.print(COMPILED_START);
 			out.print(compiledFile.getOutputPath());
 			out.print(SEPARATOR);
-			out.print(compiledFile.getOutputPath());
+			out.print(compiledFile.getSourcePath());
 			out.print(COMPILED_END);
 			out.println();
 		}

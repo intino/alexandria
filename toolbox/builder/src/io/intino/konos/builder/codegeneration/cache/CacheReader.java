@@ -19,9 +19,8 @@ import static java.util.stream.Collectors.toMap;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class CacheReader extends HashMap<String, Integer> {
-	private final File folder;
-
 	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
+	private final File folder;
 
 	public CacheReader(File folder) {
 		this.folder = folder;
@@ -31,23 +30,24 @@ public class CacheReader extends HashMap<String, Integer> {
 		return load(graph, null);
 	}
 
-	public LayerCache load(KonosGraph graph, Stash konosStash) {
-		StoreAuditor auditor = loadAuditor(graph, konosStash);
+	public LayerCache load(KonosGraph graph, Stash[] stashes) {
+		StoreAuditor auditor = loadAuditor(graph, stashes);
 		return loadCacheFile(auditor);
 	}
 
-	private StoreAuditor loadAuditor(KonosGraph graph, Stash konosStash) {
-		StoreAuditor auditor = new StoreAuditor(store(konosStash));
+	private StoreAuditor loadAuditor(KonosGraph graph, Stash[] stashes) {
+		StoreAuditor auditor = new StoreAuditor(store(stashes));
 		Arrays.stream(graph.core$().openedStashes()).forEach(auditor::trace);
 		return auditor;
 	}
 
 
-	private FileSystemStore store(Stash konosStash) {
+	private FileSystemStore store(Stash[] stashes) {
 		return new FileSystemStore(folder) {
 			@Override
 			public Stash stashFrom(String path) {
-				if (path.equalsIgnoreCase("konos.stash")) return konosStash;
+				Stash stash = Arrays.stream(stashes).filter(s -> s.path.equals(path)).findFirst().orElse(null);
+				if (stash != null) return stash;
 				return super.stashFrom(path);
 			}
 		};
