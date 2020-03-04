@@ -113,7 +113,7 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 	private void createUiTableRow(CatalogComponents.Table element) {
 		List<CatalogComponents.Collection.Mold.Item> itemList = element.moldList().stream().map(CatalogComponents.Collection.Mold::item).collect(toList());
 		String name = firstUpperCase(element.name$()) + "Row";
-		HelperComponents privateComponents = helperComponentsList().size() <= 0 ? create().helperComponents() : helperComponents(0);
+		HelperComponents privateComponents = helperComponentsList().size() <= 0 ? create(element.core$().stash()).helperComponents() : helperComponents(0);
 		HelperComponents.Row row = privateComponents.rowList().stream().filter(c -> c.name$().equals(name)).findFirst().orElse(null);
 		if (row == null) privateComponents.create(name).row(itemList);//TODO parameters antes no estaba, es empty list correcto? ask mario
 	}
