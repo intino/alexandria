@@ -14,10 +14,7 @@ import io.intino.magritte.io.Stash;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -43,6 +40,7 @@ public class CompilationContext {
 		loadManifest();
 		this.postCompileActionMessages = postCompileActionMessages;
 		this.compiledFiles = compiledFiles;
+		sources.sort(Comparator.comparing(File::getName));
 	}
 
 	public boolean onlyElements() {

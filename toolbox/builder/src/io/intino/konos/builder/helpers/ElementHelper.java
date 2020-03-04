@@ -24,7 +24,7 @@ public class ElementHelper {
 	}
 
 	public String shortId(Layer element, String suffix) {
-		return generator.shortId(rootNameOf(element) + nameOf(element) + suffix);
+		return element.name$() + suffix;
 	}
 
 	public String nameOf(Layer element) {
@@ -40,8 +40,8 @@ public class ElementHelper {
 	public String typeOf(Layer element) {
 		if (!typeMap.containsKey(element)) {
 			String type = element.i$(InteractionComponents.Actionable.class) ?
-							typeOfActionable(element.a$(InteractionComponents.Actionable.class)) :
-							element.getClass().getSimpleName();
+					typeOfActionable(element.a$(InteractionComponents.Actionable.class)) :
+					element.getClass().getSimpleName();
 
 			typeMap.put(element, type);
 		}
@@ -84,10 +84,6 @@ public class ElementHelper {
 		return ElementReference.of(nameOf(element), typeOf(element), ElementReference.Context.from(element));
 	}
 
-	public static boolean isRoot(Layer element) {
-		return isRoot(element.core$());
-	}
-
 	private String generateName(Layer element) {
 		return generateName(element.core$(), "");
 	}
@@ -102,15 +98,19 @@ public class ElementHelper {
 		return element.core$().rootNodeId();
 	}
 
-	private static boolean isRoot(Node node) {
-		return node.owner() == null || node.owner() == node.model();
-	}
-
 	private int position(Node element, Node owner) {
 		List<Node> children = owner.componentList();
-		for (int pos = 0; pos< children.size(); pos++)
+		for (int pos = 0; pos < children.size(); pos++)
 			if (children.get(pos).id().equals(element.id())) return pos;
 		return -1;
+	}
+
+	public static boolean isRoot(Layer element) {
+		return isRoot(element.core$());
+	}
+
+	private static boolean isRoot(Node node) {
+		return node.owner() == null || node.owner() == node.model();
 	}
 
 }
