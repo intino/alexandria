@@ -50,7 +50,7 @@ class KonosCompilerRunner {
 	}
 
 	private List<OutputItem> compile(CompilerConfiguration config, Map<File, Boolean> sources, List<CompilerMessage> messages, List<PostCompileActionMessage> postCompileActionMessages) {
-		if (!sources.containsValue(false)) cleanOut(config);
+//		if (!sources.containsValue(false)) cleanOut(config);
 		return new ArrayList<>(compileSources(config, sources, messages, postCompileActionMessages));
 	}
 
@@ -130,7 +130,7 @@ class KonosCompilerRunner {
 
 	public static void cleanOut(CompilerConfiguration configuration) {
 		final String generationPackage = (configuration.generationPackage() == null ? configuration.module() : configuration.generationPackage()).replace(".", File.separator);
-		File out = new File(configuration.outDirectory(), generationPackage.toLowerCase());
+		File out = new File(configuration.genDirectory(), generationPackage.toLowerCase());
 		if (out.exists()) try {
 			FileUtils.deleteDirectory(out);
 		} catch (IOException e) {
