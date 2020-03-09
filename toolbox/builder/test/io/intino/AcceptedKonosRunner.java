@@ -5,6 +5,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 public class AcceptedKonosRunner {
 	private String home;
@@ -16,33 +20,44 @@ public class AcceptedKonosRunner {
 
 	@Test
 	public void timbrado() {
-		KonoscRunner.main(new String[]{home + "confFiles/cfe/timbrado.txt"});
+		KonoscRunner.main(new String[]{temp(home + "confFiles/cfe/timbrado.txt")});
 	}
-
 
 	@Test
 	public void m1() {
-		KonoscRunner.main(new String[]{home + "confFiles/konos/m1.txt"});
+		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/m1.txt")});
 	}
-
 
 	@Test
 	public void cuentamaestra() {
-		KonoscRunner.main(new String[]{home + "confFiles/cfe/cuentamaestra.txt"});
+		KonoscRunner.main(new String[]{temp(home + "confFiles/cfe/cuentamaestra.txt")});
 	}
 
 	@Test
 	public void cesarDh() {
-		KonoscRunner.main(new String[]{home + "confFiles/cesar/cesar-dh.txt"});
+		KonoscRunner.main(new String[]{temp(home + "confFiles/cesar/cesar-dh.txt")});
 	}
 
 	@Test
 	public void cesar() {
-		KonoscRunner.main(new String[]{home + "confFiles/cesar/cesar.txt"});
+		KonoscRunner.main(new String[]{temp(home + "confFiles/cesar/cesar.txt")});
 	}
 
 	@Test
 	public void amidas() {
-		KonoscRunner.main(new String[]{home + "confFiles/amidas/amidas-team.txt"});
+		KonoscRunner.main(new String[]{temp(home + "confFiles/amidas/amidas-team.txt")});
+	}
+
+	private static String temp(String filepath) {
+		try {
+			File file = new File(filepath);
+			String home = System.getProperty("user.home");
+			String text = Files.readString(file.toPath()).replace("$WORKSPACE", home + File.separator + "workspace").replace("$HOME", home);
+			Path temporalFile = Files.createTempFile(file.getName(), ".txt");
+			Files.writeString(temporalFile, text, StandardOpenOption.TRUNCATE_EXISTING);
+			return temporalFile.toFile().getAbsolutePath();
+		} catch (IOException e) {
+			return null;
+		}
 	}
 }
