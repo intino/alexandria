@@ -68,8 +68,8 @@ public class FullRenderer {
 	}
 
 	private void accessors() {
-		graph.restServiceList().forEach(service -> new RESTAccessorRenderer(context, service, new File(context.configuration().genDirectory(), "rest#" + service.name$())).render());
-		graph.jmxServiceList().forEach(service -> new JMXAccessorRenderer(context, service, context.configuration().genDirectory()).render());
+		graph.restServiceList().forEach(service -> new RESTAccessorRenderer(context, service, new File(context.configuration().genDirectory(), "rest#" + service.name$() + File.separator + "src")).render());
+		graph.jmxServiceList().forEach(service -> new JMXAccessorRenderer(context, service, new File(context.configuration().genDirectory(), "jmx#" + service.name$() + File.separator + "src")).render());
 	}
 
 	private void schemas() {
