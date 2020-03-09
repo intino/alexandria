@@ -1,5 +1,6 @@
 package io.intino.konos.builder.codegeneration.accessor.ui;
 
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.zip.Zip;
 import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Formatters;
@@ -9,7 +10,6 @@ import io.intino.konos.compiler.shared.PostCompileDependantWebModuleActionMessag
 import io.intino.konos.model.graph.Service;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +21,6 @@ import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class ServiceCreator extends UIRenderer {
 	private final Service.UI service;
@@ -40,7 +39,7 @@ public class ServiceCreator extends UIRenderer {
 			if (!context.webModuleDirectory().exists()) createSkeleton();
 			new ServiceRenderer(context, service).execute();
 		} catch (IOException e) {
-			LoggerFactory.getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
+			Logger.error(e);
 		}
 	}
 
@@ -60,7 +59,7 @@ public class ServiceCreator extends UIRenderer {
 				copyJarResourcesRecursively(destination, (JarURLConnection) urlConnection);
 			else FileUtils.copyFile(new File(originUrl.getPath()), destination);
 		} catch (Exception e) {
-			LoggerFactory.getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
+			Logger.error(e);
 		}
 	}
 

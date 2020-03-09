@@ -1,5 +1,6 @@
 package io.intino.konos.builder.codegeneration.services.rest;
 
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.zip.Zip;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
@@ -14,8 +15,6 @@ import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Service;
 import io.intino.konos.model.graph.Service.REST.Resource;
 import io.intino.magritte.framework.Layer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,10 +28,8 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static java.util.stream.Collectors.toList;
-import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class RESTServiceRenderer extends Renderer {
-	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 	private final List<Service.REST> services;
 	private final KonosGraph graph;
 
@@ -60,7 +57,7 @@ public class RESTServiceRenderer extends Renderer {
 		try {
 			Zip.unzip(new ZipInputStream(this.getClass().getResourceAsStream("/swagger/assets.zip")), www.getAbsolutePath());
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			Logger.error(e);
 		}
 	}
 
@@ -78,7 +75,7 @@ public class RESTServiceRenderer extends Renderer {
 		try {
 			Files.write(new File(api, "config.json").toPath(), template.render(frame).getBytes());
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			Logger.error(e);
 		}
 	}
 
@@ -88,7 +85,7 @@ public class RESTServiceRenderer extends Renderer {
 		try {
 			Files.copy(resource.toPath(), new File(images, "favicon.png").toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			Logger.error(e);
 		}
 	}
 
@@ -98,7 +95,7 @@ public class RESTServiceRenderer extends Renderer {
 		try {
 			Files.copy(resource.toPath(), new File(images, "logo.png").toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			Logger.error(e);
 		}
 	}
 

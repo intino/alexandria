@@ -304,7 +304,10 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		result.add("name", notification.name$());
 		result.add("target", notification.to().name());
 		if (notification.isType()) {
-			final FrameBuilder parameterFrame = new FrameBuilder().add("parameter").add(notification.asType().type()).add(notification.asType().getClass().getSimpleName().replace("Data", "")).add("value", notification.asType().type());
+			final FrameBuilder parameterFrame = new FrameBuilder().add("parameter")
+					.add(notification.asType().type())
+					.add(notification.asType().getClass().getSimpleName().replace("Data", ""))
+					.add("value", notification.asType().type());
 			if (notification.isList()) parameterFrame.add("list");
 			result.add("parameter", parameterFrame);
 		}

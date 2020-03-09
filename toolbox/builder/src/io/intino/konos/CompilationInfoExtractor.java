@@ -106,7 +106,7 @@ class CompilationInfoExtractor {
 			case PARAMETERS:
 				configuration.parameters(reader.readLine().split(";"));
 				break;
-			case GENERATION_PACKAGE:
+			case BOX_GENERATION_PACKAGE:
 				configuration.generationPackage(reader.readLine());
 				break;
 			case SRC_FILE:
