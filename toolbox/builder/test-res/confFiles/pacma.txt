@@ -35,6 +35,6 @@ version
 module.parameters
 home;port;federation_url
 box.generation.package
-io.provista.pacma
+io.provista.pacma.box
 encoding
 UTF-8
