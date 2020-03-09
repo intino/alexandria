@@ -17,7 +17,6 @@ Artifact("io.intino.alexandria", "3.1.0") ui-framework
 		Web(groupId = "io.intino.alexandria", artifactId = "ui-framework-elements", version = "3.1.0")
 
 		Test("junit", "junit", "LATEST")
-		Compile(groupId = "io.intino.alexandria", artifactId = "ui-framework-elements", version = "3.1.0")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true) as Runnable(mainClass = "io.intino.alexandria.Main")
 	Distribution(intino.dist)
