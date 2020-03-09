@@ -59,7 +59,7 @@ public class AcceptedKonosRunner {
 		try {
 			File file = new File(filepath);
 			String home = System.getProperty("user.home");
-			String text = Files.readString(file.toPath()).replace("$WORKSPACE", configurationWorkspace(home) + File.separator + "workspace").replace("$HOME", home);
+			String text = Files.readString(file.toPath()).replace("$WORKSPACE", configurationWorkspace(home)).replace("$HOME", home);
 			Path temporalFile = Files.createTempFile(file.getName(), ".txt");
 			Files.writeString(temporalFile, text, StandardOpenOption.TRUNCATE_EXISTING);
 			return temporalFile.toFile().getAbsolutePath();
