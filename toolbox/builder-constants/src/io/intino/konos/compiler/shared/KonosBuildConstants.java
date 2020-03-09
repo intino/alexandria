@@ -39,7 +39,7 @@ public class KonosBuildConstants {
 	public static final String LANGUAGE_GENERATION_PACKAGE = "language.generation.package";
 	public static final String PARENT_INTERFACE = "parent.interface";
 	public static final String INTINO_PROJECT_PATH = "intino.project.path";
-	public static final String GENERATION_PACKAGE = "generation.package";
+	public static final String BOX_GENERATION_PACKAGE = "box.generation.package";
 	public static final String ONLY_GENERATE_ELEMENTS = "only.elements";
 	public static final String KONOSC_STUB_GENERATION_FAILED = "error generating stubs";
 

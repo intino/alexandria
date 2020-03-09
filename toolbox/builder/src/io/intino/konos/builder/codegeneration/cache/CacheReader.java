@@ -1,11 +1,10 @@
 package io.intino.konos.builder.codegeneration.cache;
 
+import io.intino.alexandria.logger.Logger;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.magritte.framework.stores.FileSystemStore;
 import io.intino.magritte.framework.utils.StoreAuditor;
 import io.intino.magritte.io.Stash;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,10 +15,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import static java.util.stream.Collectors.toMap;
-import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class CacheReader extends HashMap<String, Integer> {
-	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 	private final File folder;
 
 	public CacheReader(File folder) {
@@ -62,7 +59,7 @@ public class CacheReader extends HashMap<String, Integer> {
 			Map<String, String> marks = properties.entrySet().stream().collect(toMap(e -> (String) e.getKey(), e -> (String) e.getValue()));
 			return new LayerCache(auditor, marks);
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			Logger.error(e);
 			return null;
 		}
 	}
