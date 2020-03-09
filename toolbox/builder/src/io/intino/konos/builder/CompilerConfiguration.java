@@ -1,6 +1,7 @@
 package io.intino.konos.builder;
 
 import io.intino.Configuration.Artifact.Model.Level;
+import io.intino.konos.compiler.shared.KonosBuildConstants.Mode;
 import tara.dsl.Konos;
 
 import java.io.File;
@@ -55,7 +56,7 @@ public class CompilerConfiguration implements Cloneable {
 	private File moduleDirectory;
 	private File configurationDirectory;
 	private List<String> parameters = new ArrayList<>();
-	private boolean onlyElements = false;
+	private Mode mode = Mode.Normal;
 
 	public CompilerConfiguration() {
 		setWarningLevel(1);
@@ -273,12 +274,12 @@ public class CompilerConfiguration implements Cloneable {
 		this.outDirectory = file;
 	}
 
-	public void onlyElements(boolean onlyElements) {
-		this.onlyElements = onlyElements;
+	public void mode(String mode) {
+		this.mode = Mode.valueOf(mode);
 	}
 
-	public boolean onlyElements() {
-		return onlyElements;
+	public Mode mode() {
+		return mode;
 	}
 
 	public static class ModelConfiguration {

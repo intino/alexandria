@@ -7,6 +7,7 @@ import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.cache.CacheReader;
 import io.intino.konos.builder.codegeneration.cache.CacheWriter;
 import io.intino.konos.builder.codegeneration.cache.LayerCache;
+import io.intino.konos.compiler.shared.KonosBuildConstants;
 import io.intino.konos.compiler.shared.PostCompileActionMessage;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.magritte.framework.Layer;
@@ -43,8 +44,8 @@ public class CompilationContext {
 		sources.sort(Comparator.comparing(File::getName));
 	}
 
-	public boolean onlyElements() {
-		return configuration.onlyElements();
+	public KonosBuildConstants.Mode mode() {
+		return configuration.mode();
 	}
 
 	public String project() {
