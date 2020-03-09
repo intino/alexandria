@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/framework/bpm/bpm.iml" filepath="$PROJECT_DIR$/framework/bpm/bpm.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/toolbox/builder/builder.iml" filepath="$PROJECT_DIR$/toolbox/builder/builder.iml" group="toolbox" />
+      <module fileurl="file://$PROJECT_DIR$/toolbox/builder-constants/builder-constants.iml" filepath="$PROJECT_DIR$/toolbox/builder-constants/builder-constants.iml" />
       <module fileurl="file://$PROJECT_DIR$/framework/core/core.iml" filepath="$PROJECT_DIR$/framework/core/core.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/libraries/ness/datalake/datalake.iml" filepath="$PROJECT_DIR$/libraries/ness/datalake/datalake.iml" group="eventsourcing" />
       <module fileurl="file://$PROJECT_DIR$/libraries/dotx/dotx.iml" filepath="$PROJECT_DIR$/libraries/dotx/dotx.iml" group="libraries" />
@@ -33,7 +34,6 @@
       <module fileurl="file://$PROJECT_DIR$/framework/slack/slack.iml" filepath="$PROJECT_DIR$/framework/slack/slack.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/tabb/tabb.iml" filepath="$PROJECT_DIR$/fileformats/tabb/tabb.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/messaging/terminal-jms/terminal-jms.iml" filepath="$PROJECT_DIR$/messaging/terminal-jms/terminal-jms.iml" group="eventsourcing" />
-      <module fileurl="file://$PROJECT_DIR$/toolbox/test/test.iml" filepath="$PROJECT_DIR$/toolbox/test/test.iml" group="toolbox" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/tris/tris.iml" filepath="$PROJECT_DIR$/fileformats/tris/tris.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/framework/ui/ui.iml" filepath="$PROJECT_DIR$/framework/ui/ui.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/framework/ui-elements/ui-elements.iml" filepath="$PROJECT_DIR$/framework/ui-elements/ui-elements.iml" group="framework" />

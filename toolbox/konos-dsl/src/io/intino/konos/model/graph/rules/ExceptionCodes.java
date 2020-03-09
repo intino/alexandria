@@ -1,6 +1,6 @@
 package io.intino.konos.model.graph.rules;
 
-import io.intino.tara.lang.model.Rule;
+import io.intino.magritte.lang.model.Rule;
 
 public enum ExceptionCodes implements Rule<Enum> {
 

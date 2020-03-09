@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.accessor.ui;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.ThemeTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
@@ -18,8 +18,8 @@ import static io.intino.konos.model.graph.Theme.Type.Normal;
 public class ThemeRenderer extends UIRenderer {
 	private final Service.UI service;
 
-	protected ThemeRenderer(Settings settings, Service.UI service) {
-		super(settings, Target.Accessor);
+	protected ThemeRenderer(CompilationContext compilationContext, Service.UI service) {
+		super(compilationContext, Target.Accessor);
 		this.service = service;
 	}
 
@@ -33,7 +33,6 @@ public class ThemeRenderer extends UIRenderer {
 		}
 		service.graph().formatList().forEach(r -> builder.add("format", frameOf(r)));
 		Commons.write(new File(gen() + File.separator + "Theme.js").toPath(), setup(new ThemeTemplate()).render(builder.toFrame()));
-		if (theme != null) saveRendered(theme);
 	}
 
 	private Frame palette(Theme theme) {

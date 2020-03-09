@@ -1,18 +1,16 @@
 package io.intino.konos.builder.codegeneration.services.slack;
 
-import com.intellij.openapi.vfs.VirtualFileManager;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Service;
 import io.intino.konos.model.graph.Service.SlackBot.Request;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -26,8 +24,8 @@ import static io.intino.konos.builder.helpers.Commons.writeFrame;
 public class SlackRenderer extends Renderer {
 	private final List<Service.SlackBot> services;
 
-	public SlackRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Owner);
+	public SlackRenderer(CompilationContext compilationContext, KonosGraph graph) {
+		super(compilationContext, Target.Owner);
 		this.services = graph.serviceList(Service::isSlackBot).map(Service::asSlackBot).collect(Collectors.toList());
 
 	}
@@ -48,8 +46,7 @@ public class SlackRenderer extends Renderer {
 	}
 
 	private void updateBot(Service.SlackBot service, String name) {
-		new BotActionsUpdater(project(), Commons.javaFile(new File(src(), "slack"), name), service.requestList(), boxName()).update();
-		VirtualFileManager.getInstance().asyncRefresh(null);
+		new BotActionsUpdater(context, Commons.javaFile(new File(src(), "slack"), name), service.requestList()).update();
 	}
 
 	private void newBotActions(Service.SlackBot service) {
@@ -87,7 +84,6 @@ public class SlackRenderer extends Renderer {
 		return s.endsWith("|") ? s.substring(0, s.length() - 1) : s;
 	}
 
-	@NotNull
 	private FrameBuilder createFrameBuilder(String name, List<Request> requests, boolean gen) {
 		FrameBuilder builder = new FrameBuilder("slack", (gen ? "gen" : "actions"));
 		builder.add("package", packageName()).
@@ -111,7 +107,8 @@ public class SlackRenderer extends Renderer {
 
 	private Frame createRequestFrame(Request request) {
 		final FrameBuilder builder = new FrameBuilder("request").add("type", request.core$().owner().is(Request.class) ? name(request.core$().ownerAs(Request.class)) : request.core$().owner().name()).add("box", boxName()).add("name", request.name$()).add("description", request.description());
-		if (request.core$().owner().is(Request.class)) builder.add("context", name(request.core$().ownerAs(Request.class)));
+		if (request.core$().owner().is(Request.class))
+			builder.add("context", name(request.core$().ownerAs(Request.class)));
 		builder.add("responseType", request.responseType().equals(Request.ResponseType.Text) ? "String" : "SlackAttachment");
 		final List<Request.Parameter> parameters = request.parameterList();
 		for (int i = 0; i < parameters.size(); i++)

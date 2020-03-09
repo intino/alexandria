@@ -4,9 +4,10 @@ import cottons.utils.MimeTypes;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.RESTNotificationActionRenderer;
 import io.intino.konos.builder.codegeneration.action.RESTResourceActionRenderer;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.model.graph.Service.REST.Resource.Operation;
 
 public class RESTResourceRenderer extends Renderer {
@@ -28,8 +30,8 @@ public class RESTResourceRenderer extends Renderer {
 	private static final String NOTIFICATIONS_PACKAGE = "rest/notifications";
 	private final List<Service.REST> services;
 
-	public RESTResourceRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Owner);
+	public RESTResourceRenderer(CompilationContext compilationContext, KonosGraph graph) {
+		super(compilationContext, Target.Owner);
 		this.services = graph.serviceList(Service::isREST).map(Service::asREST).collect(Collectors.toList());
 	}
 
@@ -46,7 +48,9 @@ public class RESTResourceRenderer extends Renderer {
 		for (Operation operation : resource.operationList()) {
 			Frame frame = frameOf(resource, operation);
 			final String className = snakeCaseToCamelCase(operation.getClass().getSimpleName() + "_" + resource.name$()) + "Resource";
-			Commons.writeFrame(new File(gen(), RESOURCES_PACKAGE), className, template().render(frame));
+			File resourcesPackage = new File(gen(), RESOURCES_PACKAGE);
+			Commons.writeFrame(resourcesPackage, className, template().render(frame));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(resourcesPackage, className).getAbsolutePath()));
 			createCorrespondingAction(operation);
 		}
 	}
@@ -65,11 +69,11 @@ public class RESTResourceRenderer extends Renderer {
 	}
 
 	private void createCorrespondingAction(Operation operation) {
-		new RESTResourceActionRenderer(settings, operation).execute();
+		new RESTResourceActionRenderer(context, operation).execute();
 	}
 
 	private void createCorrespondingAction(Notification notification) {
-		new RESTNotificationActionRenderer(settings, notification).execute();
+		new RESTNotificationActionRenderer(context, notification).execute();
 	}
 
 	private Frame frameOf(Resource resource, Operation operation) {

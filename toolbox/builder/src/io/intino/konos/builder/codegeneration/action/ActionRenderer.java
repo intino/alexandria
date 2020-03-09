@@ -2,9 +2,9 @@ package io.intino.konos.builder.codegeneration.action;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Exception;
@@ -16,14 +16,15 @@ import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
 
 public abstract class ActionRenderer extends Renderer {
 	private final String[] types;
 
-	public enum ContextType { Default, Spark }
+	public enum ContextType {Default, Spark}
 
-	public ActionRenderer(Settings settings, String... types) {
-		super(settings, Target.Owner);
+	public ActionRenderer(CompilationContext context, String... types) {
+		super(context, Target.Owner);
 		this.types = types;
 	}
 
@@ -32,7 +33,7 @@ public abstract class ActionRenderer extends Renderer {
 	}
 
 	protected boolean alreadyRendered(File destiny, String action) {
-		return Commons.javaFile(destinyPackage(destiny), firstUpperCase(snakeCaseToCamelCase(action)) + suffix()).exists();
+		return javaFile(destinyPackage(destiny), firstUpperCase(snakeCaseToCamelCase(action)) + suffix()).exists();
 	}
 
 	protected File destinyPackage(File destiny) {
@@ -40,12 +41,12 @@ public abstract class ActionRenderer extends Renderer {
 	}
 
 	protected void execute(String name, String serviceName, Response response, List<? extends Parameter> parameters, List<Exception> exceptions, List<Schema> schemas) {
-		File destiny = destiny();
+		File destiny = destination();
 		if (!alreadyRendered(destiny, name)) {
 			createNewClass(name, serviceName, response, parameters, exceptions, schemas);
 		} else {
-			File newDestiny = Commons.javaFile(destinyPackage(destiny), firstUpperCase(snakeCaseToCamelCase(name)) + suffix());
-			new ActionUpdater(project(), newDestiny, packageName(), parameters, exceptions, response).update();
+			File newDestination = javaFile(destinyPackage(destiny), firstUpperCase(snakeCaseToCamelCase(name)) + suffix());
+			new ActionUpdater(context, newDestination, packageName(), parameters, exceptions, response).update();
 		}
 	}
 
@@ -70,7 +71,7 @@ public abstract class ActionRenderer extends Renderer {
 			builder.add("throws", exceptions.stream().map(e -> e.code().name()).toArray(String[]::new));
 		if (!schemas.isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName).toFrame());
-		Commons.writeFrame(destinyPackage(destiny()), firstUpperCase(snakeCaseToCamelCase(name)) + suffix(), template().render(builder.toFrame()));
+		Commons.writeFrame(destinyPackage(destination()), firstUpperCase(snakeCaseToCamelCase(name)) + suffix(), template().render(builder.toFrame()));
 	}
 
 	protected FrameBuilder contextPropertyFrame() {
@@ -99,7 +100,7 @@ public abstract class ActionRenderer extends Renderer {
 		return Formatters.customize(new ActionTemplate());
 	}
 
-	private File destiny() {
+	private File destination() {
 		return src();
 	}
 }

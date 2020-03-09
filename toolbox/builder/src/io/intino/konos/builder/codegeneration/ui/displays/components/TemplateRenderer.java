@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.Template;
@@ -9,8 +9,8 @@ import io.intino.konos.model.graph.rules.Spacing;
 
 public class TemplateRenderer extends SizedRenderer<Template> {
 
-	public TemplateRenderer(Settings settings, Template component, TemplateProvider provider, Target target) {
-		super(settings, component, provider, target);
+	public TemplateRenderer(CompilationContext compilationContext, Template component, TemplateProvider provider, Target target) {
+		super(compilationContext, component, provider, target);
 	}
 
 	@Override

@@ -1,38 +1,51 @@
 package io.intino.konos.builder.codegeneration.ui;
 
-import com.intellij.openapi.diagnostic.Logger;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.builder.helpers.ElementHelper;
-import io.intino.tara.magritte.Layer;
+import io.intino.konos.model.graph.Display;
+import io.intino.magritte.framework.Layer;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.logging.Logger;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
 
 public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 	protected final C element;
 	protected final TemplateProvider templateProvider;
 
-	protected ElementRenderer(Settings settings, C element, TemplateProvider templateProvider, Target target) {
-		super(settings, target);
+	protected ElementRenderer(CompilationContext compilationContext, C element, TemplateProvider templateProvider, Target target) {
+		super(compilationContext, target);
 		this.element = element;
 		this.templateProvider = templateProvider;
 	}
 
 	@Override
 	public void execute() {
-		if (isRendered(element)) return;
+		String type = typeOf(element);
+		File displayFile = javaFile(displayFolder(gen(), type, target), displayName(false));
+		File accessibleFile = javaFile(displayFolder(gen(), type, target), displayName(true));
+		registerOutputs(displayFile, accessibleFile);
+		if (isRendered(element) && displayFile.exists()) return;
 		super.execute();
-		saveRendered(element);
+	}
+
+	private void registerOutputs(File displayFile, File accessibleFile) {
+		if (!target.equals(Target.Owner)) return;
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), displayFile.getAbsolutePath()));
+		if (element.i$(Display.Accessible.class))
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), accessibleFile.getAbsolutePath()));
 	}
 
 	protected final void write(FrameBuilder builder) {
@@ -58,10 +71,14 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 		Template template = genTemplate(builder);
 		String type = typeOf(element);
 		if (template == null) return;
-		final String suffix = builder.is("accessible") ? "Proxy" : "";
-		final String abstractValue = builder.is("accessible") ? "" : (ElementHelper.isRoot(element) ? "Abstract" : "");
-		final String newDisplay = displayFilename(snakeCaseToCamelCase(abstractValue + firstUpperCase(element.name$())), suffix);
+		final String newDisplay = displayName(builder.is("accessible"));
 		writeFrame(displayFolder(gen(), type, target), newDisplay, template.render(builder.add("gen").toFrame()));
+	}
+
+	private String displayName(boolean accessible) {
+		final String suffix = accessible ? "Proxy" : "";
+		final String abstractValue = accessible ? "" : (ElementHelper.isRoot(element) ? "Abstract" : "");
+		return displayFilename(snakeCaseToCamelCase(abstractValue + firstUpperCase(element.name$())), suffix);
 	}
 
 	public void writeFrame(File packageFolder, String name, String text) {
@@ -70,7 +87,7 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 			File file = fileOf(packageFolder, name, target);
 			Files.write(file.toPath(), text.getBytes(StandardCharsets.UTF_8));
 		} catch (IOException e) {
-			Logger.getInstance("Konos: ").error(e.getMessage(), e);
+			Logger.getGlobal().severe(e.getMessage());
 		}
 	}
 

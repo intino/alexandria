@@ -1,6 +1,6 @@
 package io.intino.konos.builder.codegeneration.ui.displays;
 
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
@@ -10,8 +10,8 @@ import java.io.File;
 
 public class DisplayRenderer<D extends Display> extends BaseDisplayRenderer<D> {
 
-	public DisplayRenderer(Settings settings, D display, TemplateProvider provider, Target target) {
-		super(settings, display, provider, target);
+	public DisplayRenderer(CompilationContext compilationContext, D display, TemplateProvider provider, Target target) {
+		super(compilationContext, display, provider, target);
 	}
 
 	@Override

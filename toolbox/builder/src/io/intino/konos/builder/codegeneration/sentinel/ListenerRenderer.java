@@ -3,29 +3,32 @@ package io.intino.konos.builder.codegeneration.sentinel;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.ActionTemplate;
+import io.intino.konos.builder.codegeneration.action.ActionUpdater;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Sentinel;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class ListenerRenderer extends Renderer {
 	private final List<Sentinel.SystemListener> systemSentinels;
 	private final List<Sentinel> sentinels;
 
-	public ListenerRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Owner);
+	public ListenerRenderer(CompilationContext compilationContext, KonosGraph graph) {
+		super(compilationContext, Target.Owner);
 		this.systemSentinels = graph.sentinelList(Sentinel::isSystemListener).map(Sentinel::asSystemListener).collect(Collectors.toList());
 		this.sentinels = graph.sentinelList().stream().filter(t -> !t.isSystemListener()).collect(Collectors.toList());
 	}
@@ -42,6 +45,7 @@ public class ListenerRenderer extends Renderer {
 		targets.add(baseFrame(sentinel.name$()).add("name", sentinel.name$()).toFrame());
 		builder.add("target", targets.toArray(new Frame[0]));
 		writeFrame(destinyPackage(), sentinel.name$() + "Listener", template().render(builder.toFrame()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(sentinel), javaFile(destinyPackage(), sentinel.name$() + "Listener").getAbsolutePath()));
 		createCorrespondingAction(sentinel.a$(Sentinel.class));
 	}
 
@@ -63,12 +67,14 @@ public class ListenerRenderer extends Renderer {
 	}
 
 	private void createCorrespondingAction(Sentinel sentinel) {
-		if (!alreadyRendered(src(), sentinel))
+		if (!alreadyRendered(src(), sentinel)) {
 			writeFrame(actionsPackage(src()), sentinel.name$() + "Action", actionTemplate().
 					render(new FrameBuilder("action")
 							.add("name", sentinel.name$())
 							.add("box", boxName())
 							.add("package", packageName()).toFrame()));
+		} else
+			new ActionUpdater(context, javaFile(actionsPackage(src()), sentinel.name$() + "Action"), "actions", Collections.emptyList(), Collections.emptyList(), null).update();
 	}
 
 	private Template actionTemplate() {
@@ -91,10 +97,10 @@ public class ListenerRenderer extends Renderer {
 		return new File(gen(), "scheduling");
 	}
 
-	@NotNull
+
 	private FrameBuilder baseFrame(String... types) {
 		return new FrameBuilder(types)
-				.add("box", settings.boxName())
-				.add("package", settings.packageName());
+				.add("box", context.boxName())
+				.add("package", context.packageName());
 	}
 }

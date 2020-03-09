@@ -8,6 +8,7 @@ import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest
 import com.github.seratch.jslack.api.methods.request.files.FilesUploadRequest;
 import com.github.seratch.jslack.api.methods.request.users.UsersConversationsRequest;
 import com.github.seratch.jslack.api.methods.request.users.UsersListRequest;
+import com.github.seratch.jslack.api.methods.response.users.UsersConversationsResponse;
 import com.github.seratch.jslack.api.methods.response.users.UsersListResponse;
 import com.github.seratch.jslack.api.model.Conversation;
 import com.github.seratch.jslack.api.model.File;
@@ -19,6 +20,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.intino.alexandria.logger.Logger;
+import org.jetbrains.annotations.Nullable;
 
 import javax.websocket.DeploymentException;
 import java.io.ByteArrayInputStream;
@@ -26,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -69,12 +72,29 @@ public abstract class Bot {
 	}
 
 	public void connect() throws IOException, DeploymentException {
-		slack = Slack.getInstance();
+		slack = instance();
 		rtm = slack.rtm(token);
 		init();
 		rtm.connect();
 		botIdentity = rtm.getConnectedBotUser();
 		rtm.addMessageHandler(this::handleMessage);
+	}
+
+	private Slack instance() {
+		String prefix = "https";
+		String proxyUrl = System.getProperty("https.proxyHost");
+		String proxyPort = System.getProperty("https.proxyPort");
+		if (proxyUrl == null) {
+			prefix = "http";
+			proxyUrl = System.getProperty("http.proxyHost");
+			proxyPort = System.getProperty("http.proxyPort");
+		}
+		if (proxyUrl != null) {
+			SlackConfig slackConfig = new SlackConfig();
+			slackConfig.setProxyUrl(prefix + "://" + proxyUrl + ":" + proxyPort);
+			return Slack.getInstance(slackConfig);
+		}
+		return Slack.getInstance();
 	}
 
 	public void disconnect() {
@@ -105,7 +125,15 @@ public abstract class Bot {
 	public void sendToUser(String userName, String message) {
 		User user = findUserByName(userName);
 		if (user == null) return;
-		sendMessage(user.getId(), message);
+		sendToUser(user, message);
+	}
+
+	private void sendToUser(User user, String message) {
+		try {
+			methods.chatPostMessage(ChatPostMessageRequest.builder().asUser(true).channel(user.getId()).text(message).build());
+		} catch (IOException | SlackApiException e) {
+			Logger.error(e);
+		}
 	}
 
 	public void sendToUser(String userName, String fileName, String title, InputStream attachment) {
@@ -114,25 +142,31 @@ public abstract class Bot {
 		sendAttachment(user.getId(), attachment, fileName, title);
 	}
 
-	public void sendMessage(String channel, String message) {
+	public void sendMessage(String channelName, String message) {
 		try {
-			methods.chatPostMessage(ChatPostMessageRequest.builder().asUser(true).channel(channel).text(message).build());
+			Conversation conversation = conversation(channelName);
+			if (conversation == null) return;
+			methods.chatPostMessage(ChatPostMessageRequest.builder().asUser(true).channel(conversation.getId()).text(message).build());
 		} catch (IOException | SlackApiException e) {
 			Logger.error(e);
 		}
 	}
 
-	public void sendAttachment(String channel, InputStream attachment, String fileName, String title) {
+	public void sendAttachment(String channelName, InputStream attachment, String fileName, String title) {
 		try {
-			methods.filesUpload(FilesUploadRequest.builder().channels(List.of(channel)).filename(fileName).title(title).fileData(attachment.readAllBytes()).build());
+			Conversation conversation = conversation(channelName);
+			if (conversation == null) return;
+			methods.filesUpload(FilesUploadRequest.builder().channels(List.of(conversation.getId())).filename(fileName).title(title).fileData(attachment.readAllBytes()).build());
 		} catch (IOException | SlackApiException e) {
 			Logger.error(e);
 		}
 	}
 
-	public void sendAttachment(String channel, byte[] attachment, String fileName, String title) {
+	public void sendAttachment(String channelName, byte[] attachment, String fileName, String title) {
 		try {
-			methods.filesUpload(FilesUploadRequest.builder().channels(List.of(channel)).filename(fileName).title(title).fileData(attachment).build());
+			Conversation conversation = conversation(channelName);
+			if (conversation == null) return;
+			methods.filesUpload(FilesUploadRequest.builder().channels(List.of(conversation.getId())).filename(fileName).title(title).fileData(attachment).build());
 		} catch (IOException | SlackApiException e) {
 			Logger.error(e);
 		}
@@ -246,6 +280,17 @@ public abstract class Bot {
 		final boolean added = processedMessages.add(message.getTs());
 		if (processedMessages.size() > 10) processedMessages.remove(processedMessages.iterator().next());
 		return !added;
+	}
+
+	@Nullable
+	private Conversation conversation(String channelName) throws IOException, SlackApiException {
+		UsersConversationsResponse conversations = methods.usersConversations(UsersConversationsRequest.builder().user(botIdentity.getId()).build());
+		Conversation conversation = conversations.getChannels().stream().filter(c -> c.getName().equals(channelName)).findFirst().orElse(null);
+		if (conversation == null) {
+			Logger.error("Channel " + channelName + " not found. Available channels: " + conversations.getChannels().stream().map(Conversation::getName).collect(Collectors.joining(", ")));
+			return null;
+		}
+		return conversation;
 	}
 
 	private Command commandNotFound() {

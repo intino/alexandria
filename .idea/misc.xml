@@ -11,8 +11,8 @@
         <option value="$PROJECT_DIR$/ide/test/pom.xml" />
         <option value="$PROJECT_DIR$/toolbox/builder/pom.xml" />
         <option value="$PROJECT_DIR$/toolbox/dsl/pom.xml" />
-        <option value="$PROJECT_DIR$/toolbox/test/pom.xml" />
         <option value="$PROJECT_DIR$/toolbox/konos-dsl/pom.xml" />
+        <option value="$PROJECT_DIR$/toolbox/builder-constants/pom.xml" />
       </list>
     </option>
   </component>

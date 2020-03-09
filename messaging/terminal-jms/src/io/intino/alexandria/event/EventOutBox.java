@@ -65,7 +65,7 @@ class EventOutBox {
 		return reloadOutBox().isEmpty();
 	}
 
-	private List<File> reloadOutBox() {
+	private synchronized List<File> reloadOutBox() {
 		if (files.isEmpty()) {
 			files = new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(INL)))));
 			files.sort(Comparator.comparingLong(File::lastModified));

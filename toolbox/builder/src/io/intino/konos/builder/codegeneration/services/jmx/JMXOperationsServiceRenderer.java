@@ -3,9 +3,10 @@ package io.intino.konos.builder.codegeneration.services.jmx;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.JMXActionRenderer;
 import io.intino.konos.builder.helpers.Commons;
@@ -19,11 +20,13 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static io.intino.konos.builder.helpers.Commons.javaFile;
+
 public class JMXOperationsServiceRenderer extends Renderer {
 	private final List<Service.JMX> services;
 
-	public JMXOperationsServiceRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Owner);
+	public JMXOperationsServiceRenderer(CompilationContext compilationContext, KonosGraph graph) {
+		super(compilationContext, Target.Owner);
 		this.services = graph.serviceList(Service::isJMX).map(Service::asJMX).collect(Collectors.toList());
 	}
 
@@ -45,7 +48,9 @@ public class JMXOperationsServiceRenderer extends Renderer {
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()));
 		for (Operation operation : service.operationList())
 			builder.add("operation", frameOf(operation));
-		Commons.writeFrame(destinationPackage(), service.name$() + "MBean", template().render(builder));
+		Commons.writeFrame(genPackage(), service.name$() + "MBean", template().render(builder));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(genPackage(), service.name$() + "MBean").getAbsolutePath()));
+
 	}
 
 	private void createImplementation(Service.JMX service) {
@@ -54,12 +59,13 @@ public class JMXOperationsServiceRenderer extends Renderer {
 				.add("box", boxName())
 				.add("package", packageName())
 				.add("operation", service.operationList().stream().map(this::frameOf).toArray(Frame[]::new));
-		Commons.writeFrame(destinationPackage(), service.name$(), template().render(builder));
+		Commons.writeFrame(genPackage(), service.name$(), template().render(builder));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(genPackage(), service.name$()).getAbsolutePath()));
 	}
 
 	private void createCorrespondingActions(List<Operation> operations) {
 		for (Operation operation : operations)
-			new JMXActionRenderer(settings, operation).execute();
+			new JMXActionRenderer(context, operation).execute();
 	}
 
 	private Frame frameOf(Operation operation) {
@@ -92,7 +98,7 @@ public class JMXOperationsServiceRenderer extends Renderer {
 		return Formatters.customize(new JMXServerTemplate());
 	}
 
-	private File destinationPackage() {
+	private File genPackage() {
 		return new File(gen(), "jmx");
 	}
 }
