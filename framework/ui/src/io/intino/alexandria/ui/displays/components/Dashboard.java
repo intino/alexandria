@@ -161,7 +161,6 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
         if (!driver.isPublished(program))
 			driver.publish(program());
 
-        dashboardManager.register(program, username());
         dashboardManager.listen();
 
         return dashboardManager.dashboardUrl().toString();

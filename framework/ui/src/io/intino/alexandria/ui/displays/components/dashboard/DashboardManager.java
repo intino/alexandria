@@ -31,7 +31,6 @@ public class DashboardManager {
 	private static final String DashboardPath = "/dashboards/%s";
 
 	private static final Map<String, io.intino.alexandria.proxy.Proxy> proxyMap = new HashMap<>();
-	private static final Map<String, String> sessionMap = new HashMap<>();
 
 	public DashboardManager(AlexandriaUiBox box, UISession session, String dashboard, Driver driver) {
 		this.box = box;
@@ -50,12 +49,6 @@ public class DashboardManager {
 		routeManagerReady = true;
 	}
 
-	public void register(String dashboard, String username) {
-		String userKey = username != null ? username : "";
-		proxyMap.put(dashboard + userKey, driver != null ? driver.run(program()) : null);
-		sessionMap.put(session.id(), dashboard + userKey);
-	}
-
 	public URL dashboardUrl() {
 		try {
 			return new URL(session.browser().baseUrl() + dashboardPath());
@@ -69,9 +62,9 @@ public class DashboardManager {
 	}
 
 	private Proxy proxy(String sessionId) {
-		if (!sessionMap.containsKey(sessionId)) return null;
-		if (!proxyMap.containsKey(sessionMap.get(sessionId))) return null;
-		return proxyMap.get(sessionMap.get(sessionId));
+		if (!proxyMap.containsKey(sessionId))
+			proxyMap.put(sessionId, driver != null ? driver.run(program()) : null);
+		return proxyMap.get(sessionId);
 	}
 
 	private io.intino.alexandria.drivers.Program program() {
@@ -107,13 +100,13 @@ public class DashboardManager {
 			if (proxy == null) return;
 			proxy.post(manager.request(), manager.response());
 		} catch (Network.NetworkException e) {
-			Logger.error(e);
+			Logger.debug(e.getMessage());
 		}
 	}
 
 	private boolean validRequest(Request request) {
 		String sessionId = request.session().id();
-		return sessionMap.containsKey(sessionId);
+		return proxy(sessionId) != null;
 	}
 
 }

@@ -6,8 +6,12 @@ import spark.Response;
 
 import javax.servlet.ServletOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Proxy {
 	private URL localUrl;
@@ -25,7 +29,7 @@ public class Proxy {
 		return this;
 	}
 
-	public void get(Request request, Response response) throws Network.NetworkException {
+	public void get(Request request, Response response) throws Network.NetworkException, URISyntaxException {
 		Network network = new Network();
 
 		String query = request.queryString();
@@ -48,7 +52,8 @@ public class Proxy {
 
 			if (isCss(network)) {
 				String subUri = uri.length() > 1 ? uri.substring(1) : uri;
-				textContent = textContent.replaceAll("url\\(\\.\\./", "url(" + localUrl + uri.substring(0, subUri.indexOf("/") + 1) + "/");
+				Path path = Paths.get(uri.substring(0, subUri.lastIndexOf("/") + 1)).getParent();
+				textContent = textContent.replaceAll("url\\(\\.\\./", "url(" + localUrl + path + "/");
 			}
 
 			content = textContent.getBytes();
@@ -68,6 +73,11 @@ public class Proxy {
 	private boolean isCss(Network network) {
 		String contentType = contentType(network);
 		return contentType != null && contentType.contains("text/css");
+	}
+
+	private boolean isJs(Network network) {
+		String contentType = contentType(network);
+		return contentType != null && (contentType.contains("text/javascript") || contentType.contains("application/javascript"));
 	}
 
 	public void post(Request request, Response response) throws Network.NetworkException {
