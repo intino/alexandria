@@ -1,5 +1,7 @@
 package io.intino.konos.builder.codegeneration;
 
+import io.intino.konos.builder.codegeneration.accessor.jmx.JMXAccessorRenderer;
+import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer;
 import io.intino.konos.builder.codegeneration.bpm.BpmRenderer;
 import io.intino.konos.builder.codegeneration.datahub.DatalakeRenderer;
 import io.intino.konos.builder.codegeneration.datahub.adapter.AdapterRenderer;
@@ -21,6 +23,7 @@ import io.intino.konos.builder.codegeneration.services.rest.RESTResourceRenderer
 import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
+import io.intino.konos.compiler.shared.KonosBuildConstants.Mode;
 import io.intino.konos.model.graph.KonosGraph;
 
 public class FullRenderer {
@@ -39,7 +42,7 @@ public class FullRenderer {
 	}
 
 	private void render() {
-		if (!context.onlyElements()) {
+		if (context.mode().equals(Mode.Normal)) {
 			schemas();
 			exceptions();
 			rest();
@@ -56,9 +59,15 @@ public class FullRenderer {
 			slack();
 			box();
 			main();
-		}
-		ui();
-		context.saveCache();
+			ui();
+			context.saveCache();
+		} else if (context.mode().equals(Mode.OnlyElements)) ui();
+		else accessors();
+	}
+
+	private void accessors() {
+		graph.restServiceList().forEach(service -> new RESTAccessorRenderer(context, service, context.configuration().genDirectory()).render());
+		graph.jmxServiceList().forEach(service -> new JMXAccessorRenderer(context, service, context.configuration().genDirectory()).render());
 	}
 
 	private void schemas() {
@@ -124,7 +133,7 @@ public class FullRenderer {
 
 	private void ui() {
 		ComponentRenderer.clearCache();
-		if (!context.onlyElements()) uiServer();
+		if (context.mode() == Mode.Normal) uiServer();
 		uiClient();
 	}
 
