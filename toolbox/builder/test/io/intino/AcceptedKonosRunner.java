@@ -7,9 +7,9 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 public class AcceptedKonosRunner {
@@ -55,6 +55,12 @@ public class AcceptedKonosRunner {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/pacma.txt")});
 	}
 
+
+	@Test
+	public void temp() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/temp/ideaKonosToCompile10.txt")});
+	}
+
 	private static String temp(String filepath) {
 		try {
 			File file = new File(filepath);
@@ -70,7 +76,9 @@ public class AcceptedKonosRunner {
 
 	private static String configurationWorkspace(String home) {
 		try {
-			return new String(AcceptedKonosRunner.class.getResourceAsStream("/confFiles/workspace.txt").readAllBytes());
+			InputStream stream = AcceptedKonosRunner.class.getResourceAsStream("/confFiles/workspace.txt");
+			if (stream == null) return home;
+			return new String(stream.readAllBytes());
 		} catch (IOException e) {
 			Logger.error(e);
 			return home;

@@ -35,6 +35,7 @@ public class RESTAccessorRenderer extends Renderer {
 		super(compilationContext, Target.Owner);
 		this.service = restService;
 		this.destination = destination;
+		this.destination.mkdirs();
 	}
 
 	@Override
