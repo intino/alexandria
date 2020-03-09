@@ -26,6 +26,8 @@ import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRe
 import io.intino.konos.compiler.shared.KonosBuildConstants.Mode;
 import io.intino.konos.model.graph.KonosGraph;
 
+import java.io.File;
+
 public class FullRenderer {
 	private final KonosGraph graph;
 	private final CompilationContext context;
@@ -66,7 +68,7 @@ public class FullRenderer {
 	}
 
 	private void accessors() {
-		graph.restServiceList().forEach(service -> new RESTAccessorRenderer(context, service, context.configuration().genDirectory()).render());
+		graph.restServiceList().forEach(service -> new RESTAccessorRenderer(context, service, new File(context.configuration().genDirectory(), "rest#" + service.name$())).render());
 		graph.jmxServiceList().forEach(service -> new JMXAccessorRenderer(context, service, context.configuration().genDirectory()).render());
 	}
 
