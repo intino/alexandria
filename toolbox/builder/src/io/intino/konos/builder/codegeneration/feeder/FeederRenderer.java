@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.feeder;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Feeder;
@@ -18,28 +18,28 @@ import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class FeederRenderer {
-	private final Settings settings;
+	private final CompilationContext compilationContext;
 	private final List<Feeder> feeders;
 
-	public FeederRenderer(Settings settings, KonosGraph graph) {
-		this.settings = settings;
+	public FeederRenderer(CompilationContext compilationContext, KonosGraph graph) {
+		this.compilationContext = compilationContext;
 		this.feeders = graph.feederList();
 	}
 
 	public void execute() {
 		for (Feeder feeder : feeders) {
 			final FrameBuilder builder = new FrameBuilder("feeder", feeder.sensorList().isEmpty() ? "simple" : "complex").
-					add("box", settings.boxName()).
-					add("package", settings.packageName()).
+					add("box", compilationContext.boxName()).
+					add("package", compilationContext.packageName()).
 					add("name", feeder.name$());
 			for (Sensor sensor : feeder.sensorList())
 				builder.add("sensor", frameOf(sensor, feeder.name$()));
 			builder.add("eventType", feeder.tanks().toArray(new String[0]));
 			final String feederClassName = firstUpperCase(feeder.name$());
-			settings.classes().put(feeder.getClass().getSimpleName() + "#" + feeder.name$(), "feeders." + feederClassName);
-			writeFrame(new File(settings.gen(Target.Owner), "feeders"), "Abstract" + feederClassName, customize(new AbstractFeederTemplate()).render(builder.toFrame()));
-			if (!alreadyRendered(new File(settings.src(Target.Owner), "feeders"), feederClassName))
-				writeFrame(new File(settings.src(Target.Owner), "feeders"), feederClassName, customize(new FeederTemplate()).render(builder.toFrame()));
+			compilationContext.classes().put(feeder.getClass().getSimpleName() + "#" + feeder.name$(), "feeders." + feederClassName);
+			writeFrame(new File(compilationContext.gen(Target.Owner), "feeders"), "Abstract" + feederClassName, customize(new AbstractFeederTemplate()).render(builder.toFrame()));
+			if (!alreadyRendered(new File(compilationContext.src(Target.Owner), "feeders"), feederClassName))
+				writeFrame(new File(compilationContext.src(Target.Owner), "feeders"), feederClassName, customize(new FeederTemplate()).render(builder.toFrame()));
 		}
 	}
 

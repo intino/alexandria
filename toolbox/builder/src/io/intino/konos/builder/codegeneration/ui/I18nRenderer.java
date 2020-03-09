@@ -1,10 +1,10 @@
 package io.intino.konos.builder.codegeneration.ui;
 
-import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.I18nTemplate;
 import io.intino.konos.builder.helpers.Commons;
@@ -19,8 +19,8 @@ import static io.intino.konos.builder.helpers.CodeGenerationHelper.folder;
 public class I18nRenderer extends UIRenderer {
 	private final Service.UI service;
 
-	public I18nRenderer(Settings settings, Service.UI service, Target target) {
-		super(settings, target);
+	public I18nRenderer(CompilationContext compilationContext, Service.UI service, Target target) {
+		super(compilationContext, target);
 		this.service = service;
 	}
 
@@ -28,6 +28,8 @@ public class I18nRenderer extends UIRenderer {
 	public void render() {
 		FrameBuilder builder = buildFrame();
 		Commons.write(fileOf(folder(gen(), "/", target), "I18n", target).toPath(), setup(template()).render(builder.toFrame()));
+		if (target.equals(Target.Owner))
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), fileOf(folder(gen(), "/", target), "I18n", target).getAbsolutePath()));
 	}
 
 	@Override
@@ -41,8 +43,8 @@ public class I18nRenderer extends UIRenderer {
 	}
 
 	private boolean isAlexandriaUi() {
-		String groupId = settings.moduleConfiguration().graph().artifact().groupId();
-		String artifactName = settings.moduleConfiguration().graph().artifact().name$();
+		String groupId = context.configuration().groupId();
+		String artifactName = context.configuration().artifactId();
 		return groupId.equalsIgnoreCase("io.intino.alexandria") && artifactName.equalsIgnoreCase("ui-framework");
 	}
 

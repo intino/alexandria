@@ -5,7 +5,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.codegeneration.services.jmx.JMXServerTemplate;
@@ -24,16 +24,16 @@ public class JMXAccessorRenderer extends Renderer {
 	private File destination;
 	private String packageName;
 
-	public JMXAccessorRenderer(Settings settings, Service.JMX restService, File destination) {
-		super(settings, Target.Owner);
+	public JMXAccessorRenderer(CompilationContext compilationContext, Service.JMX restService, File destination) {
+		super(compilationContext, Target.Owner);
 		this.service = restService;
 		this.destination = new File(destination, "konos");
-		this.packageName = settings.packageName() + ".konos";
+		this.packageName = compilationContext.packageName() + ".konos";
 	}
 
 	@Override
 	public void render() {
-		new SchemaListRenderer(settings, service.graph(), destination, packageName).execute();
+		new SchemaListRenderer(context, service.graph(), destination, packageName).execute();
 		createInterface(service);
 		createService(service);
 	}

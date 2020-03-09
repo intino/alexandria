@@ -3,9 +3,10 @@ package io.intino.konos.builder.codegeneration.services.messaging;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.MessagingRequestActionRenderer;
 import io.intino.konos.builder.helpers.Commons;
@@ -14,21 +15,21 @@ import io.intino.konos.model.graph.Parameter;
 import io.intino.konos.model.graph.Response;
 import io.intino.konos.model.graph.Service;
 import io.intino.konos.model.graph.Service.Messaging.Request;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class MessagingRequestRenderer extends Renderer {
 	private static final String REQUESTS = "requests";
 	private final List<Service.Messaging> services;
 
-	public MessagingRequestRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Owner);
+	public MessagingRequestRenderer(CompilationContext compilationContext, KonosGraph graph) {
+		super(compilationContext, Target.Owner);
 		this.services = graph.serviceList(Service::isMessaging).map(Service::asMessaging).collect(Collectors.toList());
 	}
 
@@ -42,13 +43,16 @@ public class MessagingRequestRenderer extends Renderer {
 	}
 
 	private void processRequest(Request request) {
-		if (!request.isProcessTrigger())
-			writeFrame(new File(gen(), REQUESTS), snakeCaseToCamelCase(request.name$()) + "Request", template().render(fillRequestFrame(request)));
+		if (!request.isProcessTrigger()) {
+			File packageFolder = new File(gen(), REQUESTS);
+			writeFrame(packageFolder, snakeCaseToCamelCase(request.name$()) + "Request", template().render(fillRequestFrame(request)));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(request), javaFile(packageFolder, snakeCaseToCamelCase(request.name$()) + "Request").getAbsolutePath()));
+		}
 		createCorrespondingAction(request);
 	}
 
 	private void createCorrespondingAction(Request request) {
-		new MessagingRequestActionRenderer(settings, request).execute();
+		new MessagingRequestActionRenderer(context, request).execute();
 	}
 
 	private Frame fillRequestFrame(Request request) {
@@ -69,7 +73,7 @@ public class MessagingRequestRenderer extends Renderer {
 		return builder.toFrame();
 	}
 
-	@NotNull
+
 	private Frame call(String returnType, Frame[] parameters) {
 		FrameBuilder builder = new FrameBuilder(returnType, "call");
 		if (parameters.length > 0) builder.add("parameter", parameters);

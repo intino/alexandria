@@ -3,7 +3,8 @@ package io.intino.konos.builder.codegeneration.ui.passiveview;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.ElementRenderer;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
@@ -13,8 +14,9 @@ import io.intino.konos.model.graph.InteractionComponents.Switch;
 import io.intino.konos.model.graph.OtherComponents.Selector;
 import io.intino.konos.model.graph.PassiveView.Notification;
 import io.intino.konos.model.graph.PassiveView.Request;
-import io.intino.tara.magritte.Layer;
+import io.intino.magritte.framework.Layer;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +26,7 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayNotifierFolder;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayRequesterFolder;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.model.graph.PassiveView.Request.ResponseType.Asset;
 import static java.util.stream.Collectors.toList;
 
@@ -32,8 +35,8 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	public static final String ProjectComponentImport = "projectComponentImport";
 	public static final String AlexandriaComponentImport = "alexandriaComponentImport";
 
-	protected PassiveViewRenderer(Settings settings, C element, TemplateProvider templateProvider, Target target) {
-		super(settings, element, templateProvider, target);
+	protected PassiveViewRenderer(CompilationContext compilationContext, C element, TemplateProvider templateProvider, Target target) {
+		super(compilationContext, element, templateProvider, target);
 	}
 
 	@Override
@@ -61,28 +64,18 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		return result;
 	}
 
-	public static Frame frameOf(Layer element, Request request, String packageName) {
-		final FrameBuilder result = new FrameBuilder().add("request");
-		result.add("display", element.name$());
-		if (request.responseType().equals(Asset)) result.add("asset");
-		if (request.isFile()) result.add("file");
-		result.add("name", request.name$());
-		if (request.isType()) {
-			final FrameBuilder parameterFrame = new FrameBuilder().add("parameter").add(request.asType().type()).add(request.asType().getClass().getSimpleName().replace("Data", "")).add("value", parameter(request, packageName));
-			if (request.isList()) parameterFrame.add("list");
-			result.add("parameter", parameterFrame);
-			result.add("parameterSignature", "value");
-		}
-		if (request.responseType() == Asset) result.add("method", new FrameBuilder().add("download", "download"));
-		else if (request.isFile()) result.add("method", new FrameBuilder().add("upload", "upload"));
-		else result.add("method", new FrameBuilder());
-		return result.toFrame();
-	}
-
 	protected void createPassiveViewFiles(FrameBuilder elementBuilder) {
-		writeNotifier(elementBuilder);
-		writeRequester(elementBuilder);
-		writePushRequester(elementBuilder);
+		File requesterFile = javaFile(displayRequesterFolder(gen(), target), nameOfPassiveViewFile(element, elementBuilder.toFrame(), "Requester"));
+		if (context.cache().isModified(element) || !requesterFile.exists()) {
+			writeNotifier(elementBuilder);
+			writeRequester(elementBuilder);
+			writePushRequester(elementBuilder);
+		}
+		if (target.equals(Target.Owner)) {
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), requesterFile.getAbsolutePath()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), javaFile(displayRequesterFolder(gen(), target), nameOfPassiveViewFile(element, elementBuilder.toFrame(), "PushRequester")).getAbsolutePath()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), javaFile(displayNotifierFolder(gen(), target), nameOfPassiveViewFile(element, elementBuilder.toFrame(), "Notifier")).getAbsolutePath()));
+		}
 	}
 
 	protected String type() {
@@ -91,7 +84,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	protected void writeRequester(PassiveView element, FrameBuilder builder) {
 		Frame frame = builder.toFrame();
-		String name = snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + "Requester");
+		String name = nameOfPassiveViewFile(element, frame, "Requester");
 		writeFrame(displayRequesterFolder(gen(), target), name, displayRequesterTemplate(builder).render(frame));
 	}
 
@@ -100,14 +93,18 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		Template template = displayPushRequesterTemplate(builder);
 		boolean accessible = isAccessible(frame);
 		if (accessible || template == null) return;
-		String name = snakeCaseToCamelCase(element.name$() + "PushRequester");
+		String name = nameOfPassiveViewFile(element, frame, "PushRequester");
 		writeFrame(displayRequesterFolder(gen(), target), name, template.render(frame));
 	}
 
 	protected void writeNotifier(PassiveView element, FrameBuilder builder) {
 		Frame frame = builder.toFrame();
-		String notifierName = snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + "Notifier");
-		writeFrame(displayNotifierFolder(gen(), target), notifierName, displayNotifierTemplate(builder).render(frame));
+		String name = nameOfPassiveViewFile(element, frame, "Notifier");
+		writeFrame(displayNotifierFolder(gen(), target), name, displayNotifierTemplate(builder).render(frame));
+	}
+
+	private String nameOfPassiveViewFile(PassiveView element, Frame frame, String suffix) {
+		return snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + suffix);
 	}
 
 	protected void addGeneric(PassiveView element, FrameBuilder builder) {
@@ -118,7 +115,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	protected boolean isGeneric(PassiveView element) {
-		return element.isExtensionOf() || KonosGraph.isParent(settings.graphName(), element);
+		return element.isExtensionOf() || KonosGraph.isParent(context.graphName(), element);
 	}
 
 	protected String genericParent(PassiveView element) {
@@ -131,33 +128,48 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	protected void addComponentsImports(FrameBuilder builder) {
-		if (element.i$(HelperComponents.Row.class)) addComponentsImports(element.a$(HelperComponents.Row.class).items().stream().map(i -> i.a$(Component.class)).collect(toList()), builder);
+		if (element.i$(HelperComponents.Row.class))
+			addComponentsImports(element.a$(HelperComponents.Row.class).items().stream().map(i -> i.a$(Component.class)).collect(toList()), builder);
 		else addComponentsImports(components(element), builder);
 	}
 
 	protected void addComponentsImports(List<Component> componentList, FrameBuilder builder) {
 		HashSet<String> imported = new HashSet<>();
 		addComponentsImports(imported, componentList, builder);
-		if (!imported.contains("Block") && element.i$(io.intino.konos.model.graph.Template.class)) builder.add("alexandriaBlockImport", new FrameBuilder("alexandriaImport").add("name", "Block"));
+		if (!imported.contains("Block") && element.i$(io.intino.konos.model.graph.Template.class))
+			builder.add("alexandriaBlockImport", new FrameBuilder("alexandriaImport").add("name", "Block"));
 	}
 
 	protected List<Component> components(PassiveView passiveView) {
 		List<Component> components = new ArrayList<>();
 		if (passiveView.i$(Block.class)) components.addAll(passiveView.a$(Block.class).componentList());
-		if (passiveView.i$(io.intino.konos.model.graph.Template.class)) components.addAll(passiveView.a$(io.intino.konos.model.graph.Template.class).componentList());
-		if (passiveView.i$(OtherComponents.Snackbar.class)) components.addAll(passiveView.a$(OtherComponents.Snackbar.class).componentList());
-		if (passiveView.i$(VisualizationComponents.Stepper.class)) components.addAll(passiveView.a$(VisualizationComponents.Stepper.class).stepList());
-		if (passiveView.i$(VisualizationComponents.Stepper.Step.class)) components.addAll(passiveView.a$(VisualizationComponents.Stepper.Step.class).componentList());
-		if (passiveView.i$(OtherComponents.Header.class)) components.addAll(passiveView.a$(OtherComponents.Header.class).componentList());
+		if (passiveView.i$(io.intino.konos.model.graph.Template.class))
+			components.addAll(passiveView.a$(io.intino.konos.model.graph.Template.class).componentList());
+		if (passiveView.i$(OtherComponents.Snackbar.class))
+			components.addAll(passiveView.a$(OtherComponents.Snackbar.class).componentList());
+		if (passiveView.i$(VisualizationComponents.Stepper.class))
+			components.addAll(passiveView.a$(VisualizationComponents.Stepper.class).stepList());
+		if (passiveView.i$(VisualizationComponents.Stepper.Step.class))
+			components.addAll(passiveView.a$(VisualizationComponents.Stepper.Step.class).componentList());
+		if (passiveView.i$(OtherComponents.Header.class))
+			components.addAll(passiveView.a$(OtherComponents.Header.class).componentList());
 		if (passiveView.i$(Selector.class)) components.addAll(passiveView.a$(Selector.class).componentList());
-		if (passiveView.i$(OtherComponents.User.class)) components.addAll(passiveView.a$(OtherComponents.User.class).componentList());
-		if (passiveView.i$(CatalogComponents.Table.class)) components.addAll(passiveView.a$(CatalogComponents.Table.class).moldList().stream().filter(m -> m.heading() != null).map(CatalogComponents.Collection.Mold::heading).collect(toList()));
-		if (passiveView.i$(CatalogComponents.Collection.Mold.Heading.class)) components.addAll(passiveView.a$(CatalogComponents.Collection.Mold.Heading.class).componentList());
-		if (passiveView.i$(CatalogComponents.Collection.Mold.Item.class)) components.addAll(passiveView.a$(CatalogComponents.Collection.Mold.Item.class).componentList());
-		if (passiveView.i$(InteractionComponents.Toolbar.class)) components.addAll(passiveView.a$(InteractionComponents.Toolbar.class).componentList());
-		if (passiveView.i$(OtherComponents.Dialog.class)) components.addAll(passiveView.a$(OtherComponents.Dialog.class).componentList());
-		if (passiveView.i$(OtherComponents.DecisionDialog.class)) components.add(passiveView.a$(OtherComponents.DecisionDialog.class).selector());
-		if (passiveView.i$(OtherComponents.CollectionDialog.class)) components.add(passiveView.a$(OtherComponents.CollectionDialog.class).collection());
+		if (passiveView.i$(OtherComponents.User.class))
+			components.addAll(passiveView.a$(OtherComponents.User.class).componentList());
+		if (passiveView.i$(CatalogComponents.Table.class))
+			components.addAll(passiveView.a$(CatalogComponents.Table.class).moldList().stream().filter(m -> m.heading() != null).map(CatalogComponents.Collection.Mold::heading).collect(toList()));
+		if (passiveView.i$(CatalogComponents.Collection.Mold.Heading.class))
+			components.addAll(passiveView.a$(CatalogComponents.Collection.Mold.Heading.class).componentList());
+		if (passiveView.i$(CatalogComponents.Collection.Mold.Item.class))
+			components.addAll(passiveView.a$(CatalogComponents.Collection.Mold.Item.class).componentList());
+		if (passiveView.i$(InteractionComponents.Toolbar.class))
+			components.addAll(passiveView.a$(InteractionComponents.Toolbar.class).componentList());
+		if (passiveView.i$(OtherComponents.Dialog.class))
+			components.addAll(passiveView.a$(OtherComponents.Dialog.class).componentList());
+		if (passiveView.i$(OtherComponents.DecisionDialog.class))
+			components.add(passiveView.a$(OtherComponents.DecisionDialog.class).selector());
+		if (passiveView.i$(OtherComponents.CollectionDialog.class))
+			components.add(passiveView.a$(OtherComponents.CollectionDialog.class).collection());
 		return components;
 	}
 
@@ -193,27 +205,32 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		result.add("type", importTypeOf(passiveView, multiple));
 		result.add("directory", directoryOf(passiveView));
 		result.add("componentDirectory", componentDirectoryOf(passiveView, multiple));
-		if (settings.webModule() != null) result.add("webModuleName", settings.webModule().getName());
+		if (context.webModuleDirectory().exists()) result.add("webModuleName", context.webModuleDirectory().getName());
 		if (!multiple) addFacets(passiveView, result);
 		return result;
 	}
 
 	private String importNameOf(PassiveView passiveView) {
-		if (passiveView.i$(OtherComponents.Stamp.class)) return passiveView.a$(OtherComponents.Stamp.class).template().name$();
-		if (passiveView.i$(OtherComponents.Frame.class)) return passiveView.a$(OtherComponents.Frame.class).display().name$();
+		if (passiveView.i$(OtherComponents.Stamp.class))
+			return passiveView.a$(OtherComponents.Stamp.class).template().name$();
+		if (passiveView.i$(OtherComponents.Frame.class))
+			return passiveView.a$(OtherComponents.Frame.class).display().name$();
 		return nameOf(passiveView);
 	}
 
 	protected Object importTypeOf(PassiveView passiveView, boolean multiple) {
 		if (multiple) return "multiple";
-		if (passiveView.i$(CatalogComponents.Collection.Mold.Item.class) || passiveView.i$(HelperComponents.Row.class)) return passiveView.name$();
+		if (passiveView.i$(CatalogComponents.Collection.Mold.Item.class) || passiveView.i$(HelperComponents.Row.class))
+			return passiveView.name$();
 		return typeOf(passiveView);
 	}
 
 	protected PassiveView componentOf(PassiveView passiveView) {
 		PassiveView component = passiveView;
-		if (passiveView.i$(OtherComponents.Stamp.class)) component = passiveView.a$(OtherComponents.Stamp.class).template();
-		if (passiveView.i$(OtherComponents.Frame.class)) component = passiveView.a$(OtherComponents.Frame.class).display();
+		if (passiveView.i$(OtherComponents.Stamp.class))
+			component = passiveView.a$(OtherComponents.Stamp.class).template();
+		if (passiveView.i$(OtherComponents.Frame.class))
+			component = passiveView.a$(OtherComponents.Frame.class).display();
 		return component;
 	}
 
@@ -224,8 +241,10 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	private String componentDirectoryOf(PassiveView passiveView, boolean multiple) {
 		if (multiple && passiveView.i$(Multiple.class)) return "components";
-		if (passiveView.i$(OtherComponents.Stamp.class)) return componentDirectoryOf(passiveView.a$(OtherComponents.Stamp.class).template(), multiple);
-		if (passiveView.i$(OtherComponents.Frame.class)) return componentDirectoryOf(passiveView.a$(OtherComponents.Frame.class).display(), multiple);
+		if (passiveView.i$(OtherComponents.Stamp.class))
+			return componentDirectoryOf(passiveView.a$(OtherComponents.Stamp.class).template(), multiple);
+		if (passiveView.i$(OtherComponents.Frame.class))
+			return componentDirectoryOf(passiveView.a$(OtherComponents.Frame.class).display(), multiple);
 		if (passiveView.i$(io.intino.konos.model.graph.Template.class)) return "templates";
 		if (passiveView.i$(CatalogComponents.Collection.Mold.Item.class)) return "items";
 		if (passiveView.i$(HelperComponents.Row.class)) return "rows";
@@ -296,10 +315,6 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		return requests.stream().map(r -> frameOf(element, r, packageName())).toArray(Frame[]::new);
 	}
 
-	private static String parameter(Request request, String packageName) {
-		return request.isObject() ? packageName.toLowerCase() + ".schemas." + request.asType().type() : request.asType().type();
-	}
-
 	private Template notifierTemplate(FrameBuilder builder) {
 		return templateProvider.notifierTemplate(element, builder);
 	}
@@ -317,8 +332,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (isGeneric(element) && element.isExtensionOf()) {
 			result.add("parent", genericParent(element));
 			result.add("parentDirectory", componentDirectoryOf(element.asExtensionOf().parentView(), false));
-		}
-		else if (typeOf(element).equalsIgnoreCase("component")) result.add("baseComponent", "");
+		} else if (typeOf(element).equalsIgnoreCase("component")) result.add("baseComponent", "");
 		else if (builder.is("accessible")) result.add("accessible", "");
 		else if (typeOf(element).equalsIgnoreCase("display")) result.add("baseDisplay", "");
 		else if (element.i$(Component.class)) result.add("component", "");
@@ -336,17 +350,21 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			String importType = isProjectComponent(c) ? ProjectComponentImport : AlexandriaComponentImport;
 			registerConcreteImports(c, builder);
 			registerMultipleImport(imported, multiple, type, c, builder);
-			if (!imported.contains(key)) builder.add(importType, importOf(c, importType, isProjectComponent ? false : multiple));
+			if (!imported.contains(key))
+				builder.add(importType, importOf(c, importType, isProjectComponent ? false : multiple));
 			imported.add(key);
 			if (c.i$(CatalogComponents.Collection.class)) registerCollectionImports(imported, c, builder);
 			if (c.i$(HelperComponents.Row.class)) registerRowImports(imported, c, builder);
-			if (!c.i$(CatalogComponents.Collection.Mold.Item.class)) addComponentsImports(imported, components(c), builder);
+			if (!c.i$(CatalogComponents.Collection.Mold.Item.class))
+				addComponentsImports(imported, components(c), builder);
 		});
 	}
 
 	protected void registerConcreteImports(Component component, FrameBuilder builder) {
-		if (component.i$(OtherComponents.Stamp.class) && !builder.contains("alexandriaStampImport")) builder.add("alexandriaStampImport", new FrameBuilder("alexandriaImport").add("name", "Stamp"));
-		if (component.i$(OtherComponents.Frame.class) && !builder.contains("alexandriaFrameImport")) builder.add("alexandriaFrameImport", new FrameBuilder("alexandriaImport").add("name", "Frame"));
+		if (component.i$(OtherComponents.Stamp.class) && !builder.contains("alexandriaStampImport"))
+			builder.add("alexandriaStampImport", new FrameBuilder("alexandriaImport").add("name", "Stamp"));
+		if (component.i$(OtherComponents.Frame.class) && !builder.contains("alexandriaFrameImport"))
+			builder.add("alexandriaFrameImport", new FrameBuilder("alexandriaImport").add("name", "Frame"));
 	}
 
 	protected boolean isProjectComponent(Component component) {
@@ -359,8 +377,10 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	private String keyOf(Component component, String type) {
 		if (component == null) return type;
-		if (component.i$(OtherComponents.Stamp.class)) return component.a$(OtherComponents.Stamp.class).template().name$();
-		if (component.i$(OtherComponents.Frame.class)) return component.a$(OtherComponents.Frame.class).display().name$();
+		if (component.i$(OtherComponents.Stamp.class))
+			return component.a$(OtherComponents.Stamp.class).template().name$();
+		if (component.i$(OtherComponents.Frame.class))
+			return component.a$(OtherComponents.Frame.class).display().name$();
 		return type;
 	}
 
@@ -375,7 +395,31 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	private void registerCollectionImports(Set<String> imported, Component component, FrameBuilder builder) {
-		if (component.i$(CatalogComponents.Table.class)) addComponentsImports(imported, component.graph().rowsDisplays(settings.graphName()).stream().map(r -> r.a$(Component.class)).collect(toList()), builder);
-		else addComponentsImports(imported, component.a$(CatalogComponents.Collection.class).moldList().stream().map(CatalogComponents.Collection.Mold::item).collect(toList()), builder);
+		if (component.i$(CatalogComponents.Table.class))
+			addComponentsImports(imported, component.graph().rowsDisplays(context.graphName()).stream().map(r -> r.a$(Component.class)).collect(toList()), builder);
+		else
+			addComponentsImports(imported, component.a$(CatalogComponents.Collection.class).moldList().stream().map(CatalogComponents.Collection.Mold::item).collect(toList()), builder);
+	}
+
+	public static Frame frameOf(Layer element, Request request, String packageName) {
+		final FrameBuilder result = new FrameBuilder().add("request");
+		result.add("display", element.name$());
+		if (request.responseType().equals(Asset)) result.add("asset");
+		if (request.isFile()) result.add("file");
+		result.add("name", request.name$());
+		if (request.isType()) {
+			final FrameBuilder parameterFrame = new FrameBuilder().add("parameter").add(request.asType().type()).add(request.asType().getClass().getSimpleName().replace("Data", "")).add("value", parameter(request, packageName));
+			if (request.isList()) parameterFrame.add("list");
+			result.add("parameter", parameterFrame);
+			result.add("parameterSignature", "value");
+		}
+		if (request.responseType() == Asset) result.add("method", new FrameBuilder().add("download", "download"));
+		else if (request.isFile()) result.add("method", new FrameBuilder().add("upload", "upload"));
+		else result.add("method", new FrameBuilder());
+		return result.toFrame();
+	}
+
+	private static String parameter(Request request, String packageName) {
+		return request.isObject() ? packageName.toLowerCase() + ".schemas." + request.asType().type() : request.asType().type();
 	}
 }

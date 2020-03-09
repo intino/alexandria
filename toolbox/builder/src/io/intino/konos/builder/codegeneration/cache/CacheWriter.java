@@ -20,12 +20,12 @@ public class CacheWriter extends HashMap<String, Integer> {
 		this.folder = folder;
 	}
 
-	public void save(ElementCache cache) {
+	public void save(LayerCache cache) {
 		saveCacheFile(cache);
 		saveAuditor(cache);
 	}
 
-	private void saveCacheFile(ElementCache cache) {
+	private void saveCacheFile(LayerCache cache) {
 		try {
 			Properties properties = new Properties();
 			properties.putAll(cache);
@@ -35,7 +35,7 @@ public class CacheWriter extends HashMap<String, Integer> {
 		}
 	}
 
-	private void saveAuditor(ElementCache cache) {
+	private void saveAuditor(LayerCache cache) {
 		cache.auditor.commit();
 	}
 }

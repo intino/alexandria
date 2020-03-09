@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.CatalogComponents;
@@ -12,8 +12,8 @@ import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 
 public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 
-	public CollectionRenderer(Settings settings, T component, TemplateProvider provider, Target target) {
-		super(settings, component, provider, target);
+	public CollectionRenderer(CompilationContext compilationContext, T component, TemplateProvider provider, Target target) {
+		super(compilationContext, component, provider, target);
 	}
 
 	@Override

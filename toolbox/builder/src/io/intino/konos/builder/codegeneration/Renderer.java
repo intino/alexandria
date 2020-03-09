@@ -1,26 +1,22 @@
 package io.intino.konos.builder.codegeneration;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.cache.ElementCache;
+import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.CatalogComponents;
 import io.intino.konos.model.graph.HelperComponents;
-import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.magritte.Layer;
-import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
+import io.intino.magritte.framework.Layer;
 
 import java.io.File;
 import java.util.Map;
 
 public abstract class Renderer {
-	protected final Settings settings;
+	protected final CompilationContext context;
 	protected final ElementHelper elementHelper;
 	protected final Target target;
 
-	protected Renderer(Settings settings, Target target) {
-		this.settings = settings;
+	protected Renderer(CompilationContext context, Target target) {
+		this.context = context;
 		this.elementHelper = new ElementHelper();
 		this.target = target;
 	}
@@ -31,71 +27,62 @@ public abstract class Renderer {
 
 	protected abstract void render();
 
-	public Project project() {
-		return settings.project();
+	public String project() {
+		return context.project();
 	}
 
 	public String boxName() {
-		return settings.boxName();
+		return context.boxName();
 	}
 
-	protected Configuration configuration() {
-		return module() != null ? TaraUtil.configurationOf(module()) : null;
+	protected CompilerConfiguration configuration() {
+		return context.configuration();
 	}
 
 	protected String packageName() {
-		return settings.packageName();
+		return context.packageName();
 	}
 
-	protected Module module() {
-		return settings.module();
+	protected String module() {
+		return context.module();
 	}
 
 	protected String parent() {
-		return settings.parent();
+		return context.parent();
 	}
 
 	protected File root() {
-		return settings.root(target);
+		return context.root(target);
 	}
 
 	protected File res() {
-		return settings.res(target);
+		return context.res(target);
 	}
 
 	protected File src() {
-		return settings.src(target);
+		return context.src(target);
 	}
 
 	protected File gen() {
-		return settings.gen(target);
+		return context.gen(target);
 	}
 
 	protected Map<String, String> classes() {
-		return settings.classes();
-	}
-
-	protected ElementCache cache() {
-		return settings.cache();
+		return context.classes();
 	}
 
 	public FrameBuilder buildBaseFrame() {
-		return new FrameBuilder().add("box", boxName()).add("package", settings.packageName());
+		return new FrameBuilder().add("box", boxName()).add("package", context.packageName());
 	}
 
 	protected boolean isRendered(Layer element) {
 		if (element == null) return false;
 		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) return false;
 		if (element.i$(HelperComponents.Row.class)) return false;
-		return !cache().isDirty(element);
+		return !context.cache().isModified(element);
 	}
 
 	protected boolean isRoot(Layer element) {
 		return element.core$().owner() == null || element.core$().owner() == element.core$().model();
 	}
-
-	protected void saveRendered(Layer element) {
-		settings.cache().add(element);
-	}
-
 }

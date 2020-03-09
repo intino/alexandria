@@ -5,7 +5,7 @@
 	<groupId>io.intino.konos</groupId>
 	<artifactId>builder</artifactId>
 	<name>Builder</name>
-	<version>7.1.0</version>
+	<version>8.0.0</version>
 
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -65,6 +65,21 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>io.intino.alexandria</groupId>
+			<artifactId>zip</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.intino</groupId>
+			<artifactId>configuration</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.intino.konos</groupId>
+			<artifactId>konos-builder-constants</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
 			<groupId>io.intino.konos</groupId>
 			<artifactId>model</artifactId>
 			<scope>compile</scope>
@@ -102,15 +117,18 @@
 			<version>2.8.0</version>
 		</dependency>
 		<dependency>
-			<groupId>io.intino.tara</groupId>
-			<artifactId>magritte</artifactId>
-			<scope>provided</scope>
+			<groupId>io.intino.magritte</groupId>
+			<artifactId>builder</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.intino.magritte</groupId>
+			<artifactId>framework</artifactId>
 			<version>3.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.intino.itrules</groupId>
 			<artifactId>engine</artifactId>
-			<scope>provided</scope>
 			<version>1.0.0</version>
 		</dependency>
 		<dependency>
@@ -121,19 +139,25 @@
 		<dependency>
 			<groupId>org.apache.maven.shared</groupId>
 			<artifactId>maven-invoker</artifactId>
-			<scope>provided</scope>
 			<version>2.0.11</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.7.25</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hashids</groupId>
 			<artifactId>hashids</artifactId>
 			<version>1.0.3</version>
 		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 </project>

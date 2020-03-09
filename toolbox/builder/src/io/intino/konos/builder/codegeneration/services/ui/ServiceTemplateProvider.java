@@ -7,7 +7,7 @@ import io.intino.konos.builder.codegeneration.services.ui.templates.*;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.PassiveView;
-import io.intino.tara.magritte.Layer;
+import io.intino.magritte.framework.Layer;
 
 public class ServiceTemplateProvider implements TemplateProvider {
 

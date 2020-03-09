@@ -1,31 +1,14 @@
 package io.intino.konos.builder.codegeneration.accessor.ui;
 
-import com.intellij.ide.highlighter.ModuleFileType;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.WebModuleType;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.io.ZipUtil;
-import io.intino.itrules.FrameBuilder;
+import io.intino.alexandria.zip.Zip;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.accessor.ui.templates.ArtifactTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
+import io.intino.konos.compiler.shared.PostCompileDependantWebModuleActionMessage;
 import io.intino.konos.model.graph.Service;
-import io.intino.plugin.project.LegioConfiguration;
-import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
@@ -34,90 +17,38 @@ import java.io.InputStream;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.*;
+import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static io.intino.konos.builder.codegeneration.Formatters.camelCaseToSnakeCase;
-import static io.intino.konos.builder.helpers.Commons.write;
-import static io.intino.plugin.dependencyresolution.DependencyCatalog.DependencyScope.WEB;
-import static io.intino.tara.plugin.project.configuration.ConfigurationManager.newExternalProvider;
-import static io.intino.tara.plugin.project.configuration.ConfigurationManager.register;
-import static java.util.Arrays.stream;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class ServiceCreator extends UIRenderer {
-
-	private static final String LegioArtifact = "artifact.legio";
-	private final Project project;
 	private final Service.UI service;
 
-	public ServiceCreator(Settings settings, Service.UI service) {
-		super(settings, Target.Accessor);
-		this.project = settings.module() == null ? null : settings.module().getProject();
+	public ServiceCreator(CompilationContext compilationContext, Service.UI service) {
+		super(compilationContext, Target.Accessor);
 		this.service = service;
 	}
 
 	@Override
 	public void render() {
 		try {
-			if (settings.module() == null) return;
-			boolean exists = findModule(service.name$()) != null;
-			settings.webModule(getOrCreateModule());
-			if (!exists) createSkeleton();
-			new ServiceRenderer(settings, service).execute();
+			context.postCompileActionMessages().add(new PostCompileDependantWebModuleActionMessage(context.configuration().module(), service.name$()));
+			if (context.webModuleDirectory() == null)
+				context.webModuleDirectory(new File(context.configuration().moduleDirectory().getParentFile(), Formatters.camelCaseToSnakeCase().format(service.name$()).toString()));
+			if (!context.webModuleDirectory().exists()) createSkeleton();
+			new ServiceRenderer(context, service).execute();
 		} catch (IOException e) {
-			e.printStackTrace();
+			LoggerFactory.getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
 		}
-	}
-
-	private Module getOrCreateModule() {
-		Module m = findModule(service.name$());
-		Application application = ApplicationManager.getApplication();
-		application.invokeAndWait(() -> application.runWriteAction(() -> {
-			if (m != null) {
-				addWebDependency(TaraUtil.configurationOf(m));
-				return;
-			}
-			final ModuleManager manager = ModuleManager.getInstance(project);
-			Module webModule = manager.newModule(moduleImlFilename(service), WebModuleType.WEB_MODULE);
-			final ModifiableRootModel model = ModuleRootManager.getInstance(webModule).getModifiableModel();
-			final File moduleRoot = new File(webModule.getModuleFilePath()).getParentFile();
-			moduleRoot.mkdirs();
-			VirtualFile file = VfsUtil.findFile(moduleRoot.toPath(), true);
-			if (file != null) model.addContentEntry(file);
-			model.commit();
-			boolean created = createConfigurationFile(moduleRoot, service.name$());
-			if (created) addWebDependency(register(webModule, newExternalProvider(webModule)));
-		}));
-		return findModule(service.name$());
-	}
-
-	private boolean createConfigurationFile(File moduleRoot, String name) {
-		final Configuration configuration = TaraUtil.configurationOf(settings.module());
-		FrameBuilder builder = new FrameBuilder("artifact", "legio");
-		builder.add("groupId", configuration.groupId());
-		builder.add("artifactId", camelCaseToSnakeCase().format(name).toString());
-		builder.add("version", configuration.version());
-		final Map<String, List<String>> repositories = reduce(configuration.releaseRepositories());
-		for (String id : repositories.keySet()) {
-			final FrameBuilder repoFrameBuilder = new FrameBuilder("repository", "release").add("id", id);
-			for (String url : repositories.get(id)) repoFrameBuilder.add("url", url);
-			builder.add("repository", repoFrameBuilder);
-		}
-		File file = new File(moduleRoot, LegioArtifact);
-		if (!file.exists()) {
-			write(file.toPath(), new ArtifactTemplate().render(builder));
-			return true;
-		}
-		return false;
 	}
 
 	private void createSkeleton() throws IOException {
 		final File destiny = root();
 		final File file = new File(destiny, "ui.zip");
 		copyResourcesRecursively(this.getClass().getResource("/ui/ui.zip"), file);
-		ZipUtil.extract(file, destiny, null, false);
+		new Zip(file).unzip(destiny.getAbsolutePath());
 		file.delete();
 		new File(destiny, "images").mkdirs();
 	}
@@ -146,34 +77,4 @@ public class ServiceCreator extends UIRenderer {
 			}
 		}
 	}
-
-	private Map<String, List<String>> reduce(Map<String, String> map) {
-		Map<String, List<String>> reduced = new HashMap<>();
-		map.forEach((key, value) -> {
-			reduced.putIfAbsent(value, new ArrayList<>());
-			reduced.get(value).add(key);
-		});
-		return reduced;
-	}
-
-	private void addWebDependency(Configuration webConf) {
-		boolean added = ((LegioConfiguration) TaraUtil.configurationOf(settings.module())).addDependency(WEB, webConf.groupId() + ":" + webConf.artifactId() + ":" + webConf.version());
-		if (added) webConf.reload();
-	}
-
-	private Module findModule(String name) {
-		return ApplicationManager.getApplication().
-				runReadAction((Computable<Module>) () ->
-						stream(ModuleManager.getInstance(project).getModules()).filter(m -> m.getName().equals(toSnakeCase(name))).findFirst().orElse(null));
-	}
-
-	private String toSnakeCase(String name) {
-		return (String) Formatters.camelCaseToSnakeCase().format(name);
-	}
-
-	@NotNull
-	private String moduleImlFilename(Service.UI service) {
-		return project.getBasePath() + File.separator + toSnakeCase(service.name$()) + File.separator + toSnakeCase(service.name$()) + ModuleFileType.DOT_DEFAULT_EXTENSION;
-	}
-
 }

@@ -3,9 +3,10 @@ package io.intino.konos.builder.codegeneration.sentinel;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
@@ -15,11 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static io.intino.konos.builder.helpers.Commons.javaFile;
+
 public class SentinelsRenderer extends Renderer {
 	private final List<Sentinel> sentinels;
 
-	public SentinelsRenderer(Settings settings, KonosGraph graph) {
-		super(settings, Target.Owner);
+	public SentinelsRenderer(CompilationContext compilationContext, KonosGraph graph) {
+		super(compilationContext, Target.Owner);
 		this.sentinels = graph.sentinelList();
 	}
 
@@ -31,6 +34,7 @@ public class SentinelsRenderer extends Renderer {
 						.add("package", packageName())
 						.add("box", boxName())
 						.add("sentinel", processSentinels()).toFrame()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(sentinels.get(0)), javaFile(gen(), "Sentinels").getAbsolutePath()));
 	}
 
 	private Frame[] processSentinels() {

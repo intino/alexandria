@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.ui.displays;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
@@ -12,7 +12,6 @@ import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.InteractionComponents.Actionable;
 import io.intino.konos.model.graph.OtherComponents.Dialog;
-import org.jetbrains.annotations.NotNull;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.model.graph.CatalogComponents.*;
@@ -22,8 +21,8 @@ import static io.intino.konos.model.graph.OtherComponents.*;
 public abstract class BaseDisplayRenderer<D extends Display> extends PassiveViewRenderer<D> {
 	private static final ComponentRendererFactory factory = new ComponentRendererFactory();
 
-	protected BaseDisplayRenderer(Settings settings, D display, TemplateProvider templateProvider, Target target) {
-		super(settings, display, templateProvider, target);
+	protected BaseDisplayRenderer(CompilationContext context, D display, TemplateProvider templateProvider, Target target) {
+		super(context, display, templateProvider, target);
 	}
 
 	@Override
@@ -101,15 +100,14 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		KonosGraph graph = element.graph();
 		if (graph.templateList().size() > 0) frame.add("templatesImport", buildBaseFrame().add("templatesImport"));
 		if (graph.blockList().size() > 0) frame.add("blocksImport", buildBaseFrame().add("blocksImport"));
-		if (graph.itemsDisplays(settings.graphName()).size() > 0) frame.add("itemsImport", buildBaseFrame().add("itemsImport"));
-		if (graph.rowsDisplays(settings.graphName()).size() > 0) frame.add("rowsImport", buildBaseFrame().add("rowsImport"));
+		if (graph.itemsDisplays(context.graphName()).size() > 0) frame.add("itemsImport", buildBaseFrame().add("itemsImport"));
+		if (graph.rowsDisplays(context.graphName()).size() > 0) frame.add("rowsImport", buildBaseFrame().add("rowsImport"));
 		if (!ElementHelper.isRoot(componentOf(element)) || (element.isAccessible() && accessible))
 			frame.add("displayRegistration", displayRegistrationFrame(accessible));
 		frame.add("requesterDirectory", typeOf(element).equalsIgnoreCase("Display") || typeOf(element).equalsIgnoreCase("Display") ? "." : "..");
 		frame.add("notifierDirectory", typeOf(element).equalsIgnoreCase("Display") ? "." : "..");
 	}
 
-	@NotNull
 	private FrameBuilder displayRegistrationFrame(boolean accessible) {
 		FrameBuilder result = buildBaseFrame().add("displayRegistration");
 		if (element.isAccessible() && accessible) result.add("accessible");
@@ -141,15 +139,15 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	protected void addRenderTagFrames(FrameBuilder frame) {
 		FrameBuilder renderTag = new FrameBuilder("renderTag");
 		if (element.i$(Block.class)) {
-			ComponentRenderer renderer = factory.renderer(settings, element.a$(Block.class), templateProvider, target);
+			ComponentRenderer renderer = factory.renderer(context, element.a$(Block.class), templateProvider, target);
 			renderTag.add(Block.class.getSimpleName());
 			renderTag.add("properties", renderer.properties());
 		} else if (element.i$(Template.class)) {
-			ComponentRenderer renderer = factory.renderer(settings, element.a$(Template.class), templateProvider, target);
+			ComponentRenderer renderer = factory.renderer(context, element.a$(Template.class), templateProvider, target);
 			renderTag.add(Template.class.getSimpleName());
 			renderTag.add("properties", renderer.properties());
 		} else if (element.i$(HelperComponents.Row.class)) {
-			ComponentRenderer renderer = factory.renderer(settings, element.a$(HelperComponents.Row.class), templateProvider, target);
+			ComponentRenderer renderer = factory.renderer(context, element.a$(HelperComponents.Row.class), templateProvider, target);
 			renderTag.add(HelperComponents.Row.class.getSimpleName());
 			renderTag.add("properties", renderer.properties());
 		} else if (element.i$(Collection.Mold.Item.class)) {
@@ -174,7 +172,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	protected FrameBuilder componentFrame(Component component) {
-		ComponentRenderer renderer = factory.renderer(settings, component, templateProvider, target);
+		ComponentRenderer renderer = factory.renderer(context, component, templateProvider, target);
 		renderer.buildChildren(true);
 		renderer.decorated(ElementHelper.isRoot(element));
 		renderer.owner(element);

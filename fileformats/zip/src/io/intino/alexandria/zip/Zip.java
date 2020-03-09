@@ -94,6 +94,20 @@ public class Zip {
 		File destDir = new File(destDirectory);
 		if (!destDir.exists()) destDir.mkdir();
 		ZipInputStream zin = new ZipInputStream(new FileInputStream(file));
+		unzip(zin, destDirectory);
+	}
+
+	private static void extractFile(ZipInputStream zipIn, String filePath) throws IOException {
+		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath));
+		byte[] bytesIn = new byte[BUFFER_SIZE];
+		int read = 0;
+		while ((read = zipIn.read(bytesIn)) != -1) {
+			bos.write(bytesIn, 0, read);
+		}
+		bos.close();
+	}
+
+	public static void unzip(ZipInputStream zin, String destDirectory) throws IOException {
 		ZipEntry entry = zin.getNextEntry();
 		while (entry != null) {
 			String filePath = destDirectory + File.separator + entry.getName();
@@ -106,16 +120,6 @@ public class Zip {
 			entry = zin.getNextEntry();
 		}
 		zin.close();
-	}
-
-	private void extractFile(ZipInputStream zipIn, String filePath) throws IOException {
-		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath));
-		byte[] bytesIn = new byte[BUFFER_SIZE];
-		int read = 0;
-		while ((read = zipIn.read(bytesIn)) != -1) {
-			bos.write(bytesIn, 0, read);
-		}
-		bos.close();
 	}
 
 	public static InputStream read(ZipFile zipFile, String filePath) throws IOException {

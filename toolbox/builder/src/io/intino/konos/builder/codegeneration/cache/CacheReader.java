@@ -1,10 +1,9 @@
 package io.intino.konos.builder.codegeneration.cache;
 
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.tara.io.Stash;
-import io.intino.tara.magritte.stores.FileSystemStore;
-import io.intino.tara.magritte.utils.StoreAuditor;
-import org.jetbrains.annotations.NotNull;
+import io.intino.magritte.framework.stores.FileSystemStore;
+import io.intino.magritte.framework.utils.StoreAuditor;
+import io.intino.magritte.io.Stash;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,48 +19,48 @@ import static java.util.stream.Collectors.toMap;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class CacheReader extends HashMap<String, Integer> {
-	private final File folder;
-
 	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
+	private final File folder;
 
 	public CacheReader(File folder) {
 		this.folder = folder;
 	}
 
-	public ElementCache load(KonosGraph graph) {
+	public LayerCache load(KonosGraph graph) {
 		return load(graph, null);
 	}
 
-	public ElementCache load(KonosGraph graph, Stash konosStash) {
-		StoreAuditor auditor = loadAuditor(graph, konosStash);
+	public LayerCache load(KonosGraph graph, Stash[] stashes) {
+		StoreAuditor auditor = loadAuditor(graph, stashes);
 		return loadCacheFile(auditor);
 	}
 
-	private StoreAuditor loadAuditor(KonosGraph graph, Stash konosStash) {
-		StoreAuditor auditor = new StoreAuditor(store(konosStash));
+	private StoreAuditor loadAuditor(KonosGraph graph, Stash[] stashes) {
+		StoreAuditor auditor = new StoreAuditor(store(stashes));
 		Arrays.stream(graph.core$().openedStashes()).forEach(auditor::trace);
 		return auditor;
 	}
 
-	@NotNull
-	private FileSystemStore store(Stash konosStash) {
+
+	private FileSystemStore store(Stash[] stashes) {
 		return new FileSystemStore(folder) {
 			@Override
 			public Stash stashFrom(String path) {
-				if (path.equalsIgnoreCase("konos.stash")) return konosStash;
+				Stash stash = Arrays.stream(stashes).filter(s -> s.path.equals(path)).findFirst().orElse(null);
+				if (stash != null) return stash;
 				return super.stashFrom(path);
 			}
 		};
 	}
 
-	private ElementCache loadCacheFile(StoreAuditor auditor) {
+	private LayerCache loadCacheFile(StoreAuditor auditor) {
 		try {
 			File cacheFile = new File(folder + "/.cache");
-			if (!cacheFile.exists()) return new ElementCache(auditor);
+			if (!cacheFile.exists()) return new LayerCache(auditor);
 			Properties properties = new Properties();
 			properties.load(new FileInputStream(cacheFile));
-			Map<String, String> marks = properties.entrySet().stream().collect(toMap(e -> (String)e.getKey(), e -> (String)e.getValue()));
-			return new ElementCache(auditor, marks);
+			Map<String, String> marks = properties.entrySet().stream().collect(toMap(e -> (String) e.getKey(), e -> (String) e.getValue()));
+			return new LayerCache(auditor, marks);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 			return null;

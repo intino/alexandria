@@ -2,14 +2,14 @@ package io.intino.konos.builder.codegeneration.ui;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.CodeGenerationHelper;
 import io.intino.konos.model.graph.PassiveView;
 import io.intino.konos.model.graph.Service;
-import io.intino.tara.magritte.Layer;
+import io.intino.magritte.framework.Layer;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,8 +17,8 @@ import java.util.stream.Stream;
 
 public abstract class UIRenderer extends Renderer {
 
-	protected UIRenderer(Settings settings, Target target) {
-		super(settings, target);
+	protected UIRenderer(CompilationContext compilationContext, Target target) {
+		super(compilationContext, target);
 	}
 
 	public FrameBuilder buildFrame() {
@@ -26,11 +26,11 @@ public abstract class UIRenderer extends Renderer {
 	}
 
 	protected String parent() {
-		return settings.parent();
+		return context.parent();
 	}
 
 	protected Map<String, String> classes() {
-		return settings.classes();
+		return context.classes();
 	}
 
 	protected Template setup(Template template) {

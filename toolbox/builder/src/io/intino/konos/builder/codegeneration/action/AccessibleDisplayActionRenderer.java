@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.action;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.CodeGenerationHelper;
 import io.intino.konos.model.graph.Display;
@@ -16,11 +16,11 @@ import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class AccessibleDisplayActionRenderer extends ActionRenderer {
 	private final Display.Accessible display;
-	private final Settings configuration;
+	private final CompilationContext configuration;
 
-	public AccessibleDisplayActionRenderer(Settings settings, Display.Accessible display) {
-		super(settings,"accessibleDisplay");
-		this.configuration = settings;
+	public AccessibleDisplayActionRenderer(CompilationContext compilationContext, Display.Accessible display) {
+		super(compilationContext,"accessibleDisplay");
+		this.configuration = compilationContext;
 		this.display = display;
 	}
 
