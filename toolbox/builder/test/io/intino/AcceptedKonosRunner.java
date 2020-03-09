@@ -1,5 +1,6 @@
 package io.intino;
 
+import io.intino.alexandria.logger.Logger;
 import io.intino.konos.KonoscRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 public class AcceptedKonosRunner {
@@ -48,16 +50,30 @@ public class AcceptedKonosRunner {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/amidas/amidas-team.txt")});
 	}
 
+	@Test
+	public void pacma() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/pacma.txt")});
+	}
+
 	private static String temp(String filepath) {
 		try {
 			File file = new File(filepath);
 			String home = System.getProperty("user.home");
-			String text = Files.readString(file.toPath()).replace("$WORKSPACE", home + File.separator + "workspace").replace("$HOME", home);
+			String text = Files.readString(file.toPath()).replace("$WORKSPACE", configurationWorkspace(home) + File.separator + "workspace").replace("$HOME", home);
 			Path temporalFile = Files.createTempFile(file.getName(), ".txt");
 			Files.writeString(temporalFile, text, StandardOpenOption.TRUNCATE_EXISTING);
 			return temporalFile.toFile().getAbsolutePath();
 		} catch (IOException e) {
 			return null;
+		}
+	}
+
+	private static String configurationWorkspace(String home) {
+		try {
+			return new String(AcceptedKonosRunner.class.getResourceAsStream("/confFiles/workspace.txt").readAllBytes());
+		} catch (IOException e) {
+			Logger.error(e);
+			return home;
 		}
 	}
 }
