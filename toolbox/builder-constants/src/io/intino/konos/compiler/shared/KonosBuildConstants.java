@@ -1,7 +1,6 @@
 package io.intino.konos.compiler.shared;
 
 public class KonosBuildConstants {
-
 	public static final String ENCODING = "encoding";
 	public static final String OUTPUTPATH = "outputpath";
 	public static final String PROJECT = "project";
@@ -40,16 +39,18 @@ public class KonosBuildConstants {
 	public static final String PARENT_INTERFACE = "parent.interface";
 	public static final String INTINO_PROJECT_PATH = "intino.project.path";
 	public static final String BOX_GENERATION_PACKAGE = "box.generation.package";
-	public static final String ONLY_GENERATE_ELEMENTS = "only.elements";
+	public static final String COMPILATION_MODE = "compilation.mode";
 	public static final String KONOSC_STUB_GENERATION_FAILED = "error generating stubs";
-
 	public static final String LEVEL = "level";
 	public static final String GROUP_ID = "groupId";
 	public static final String ARTIFACT_ID = "artifactId";
 	public static final String VERSION = "version";
-
-
 	private KonosBuildConstants() {
+	}
+
+
+	public enum Mode {
+		Normal, OnlyElements, Accessors
 	}
 
 }

@@ -115,8 +115,8 @@ class CompilationInfoExtractor {
 			case INTINO_PROJECT_PATH:
 				configuration.intinoProjectDirectory(new File(reader.readLine()));
 				break;
-			case ONLY_GENERATE_ELEMENTS:
-				configuration.onlyElements(true);
+			case COMPILATION_MODE:
+				configuration.mode(reader.readLine());
 				break;
 			default:
 				break;
