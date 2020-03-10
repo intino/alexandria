@@ -30,6 +30,7 @@ public class JmsEventHub implements EventHub {
 	private final Map<String, List<Consumer<Event>>> eventConsumers;
 	private final Map<Consumer<javax.jms.Message>, Integer> jmsConsumers;
 	private final EventOutBox eventOutBox;
+	private final boolean transactedSession;
 	private Connection connection;
 	private Session session;
 	private AtomicBoolean connected = new AtomicBoolean(false);
@@ -41,6 +42,7 @@ public class JmsEventHub implements EventHub {
 	}
 
 	public JmsEventHub(String brokerUrl, String user, String password, String clientId, boolean transactedSession, File messageCacheDirectory) {
+		this.transactedSession = transactedSession;
 		producers = new HashMap<>();
 		consumers = new HashMap<>();
 		jmsConsumers = new HashMap<>();
@@ -69,7 +71,7 @@ public class JmsEventHub implements EventHub {
 			}
 		} else Logger.warn("Broker url is null");
 		scheduler = Executors.newScheduledThreadPool(1);
-		scheduler.scheduleAtFixedRate(this::recoverEvents, 0, 1, TimeUnit.HOURS);
+		scheduler.scheduleAtFixedRate(this::checkConnection, 0, 1, TimeUnit.HOURS);
 	}
 
 	private void initConnection(String brokerUrl, String user, String password, String clientId) {
@@ -241,13 +243,7 @@ public class JmsEventHub implements EventHub {
 			@Override
 			public void transportResumed() {
 				Logger.info("Connection with Data Hub resumed!");
-				connected.set(true);
-				if (!eventConsumers.isEmpty() && consumers.isEmpty()) try {
-					session = createSession(false);
-					for (String channel : eventConsumers.keySet()) consumers.put(channel, topicConsumer(channel));
-				} catch (JMSException e) {
-					Logger.error(e);
-				}
+				checkConnection();
 			}
 		};
 	}
@@ -270,6 +266,16 @@ public class JmsEventHub implements EventHub {
 		}
 	}
 
+	private void checkConnection() {
+		if (!eventConsumers.isEmpty() && consumers.isEmpty()) try {
+			session = createSession(transactedSession);
+			for (String channel : eventConsumers.keySet()) consumers.put(channel, topicConsumer(channel));
+		} catch (JMSException e) {
+			Logger.error(e);
+		}
+		connected.set(true);
+		recoverEvents();
+	}
 	private void recoverEvents() {
 		recoveringEvents.set(true);
 		if (!eventOutBox.isEmpty())
