@@ -4,6 +4,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.action.AccessibleDisplayActionRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.templates.ResourceTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.helpers.Commons;
@@ -31,9 +32,11 @@ public class ResourceRenderer extends UIRenderer {
 		FrameBuilder builder = buildFrame().add("resource").add("name", resource.name$()).add("parameter", parameters(resource));
 		if (uiService.googleApiKey() != null) builder.add("googleApiKey", customize("googleApiKey", uiService.googleApiKey()));
 		if (resource.isConfidential()) builder.add("confidential", "");
+
 		Commons.writeFrame(resourceFolder(gen(), target), resourceFilename(resource.name$()), setup(new ResourceTemplate()).render(builder.toFrame()));
 		if (target.equals(Target.Owner))
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(resourceFolder(gen(), target), resourceFilename(resource.name$())).getAbsolutePath()));
+
 		new PageRenderer(context, resource).execute();
 	}
 

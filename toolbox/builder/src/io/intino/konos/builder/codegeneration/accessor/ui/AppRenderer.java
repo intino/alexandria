@@ -1,8 +1,10 @@
 package io.intino.konos.builder.codegeneration.accessor.ui;
 
+import cottons.utils.StringHelper;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.CompilationContext;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.AppTemplate;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.PassiveViewTemplate;
@@ -69,6 +71,8 @@ public class AppRenderer extends UIRenderer {
 	private FrameBuilder alexandriaFrame(String name) {
 		FrameBuilder result = new FrameBuilder(name);
 		if (isAlexandria(project())) result.add("alexandriaProject");
+		result.add("use", "alexandria-ui-elements");
+		service.useList().forEach(use -> result.add("use", StringHelper.camelCaseToSnakeCase(use.service())));
 		return result;
 	}
 
