@@ -139,7 +139,7 @@ public abstract class Bot {
 	public void sendToUser(String userName, String fileName, String title, InputStream attachment) {
 		final User user = findUserByName(userName);
 		if (user == null) return;
-		sendAttachment(user.getId(), attachment, fileName, title);
+		sendAttachment(user.getId(), fileName, title, attachment);
 	}
 
 	public void sendMessage(String channelName, String message) {
@@ -152,7 +152,7 @@ public abstract class Bot {
 		}
 	}
 
-	public void sendAttachment(String channelName, InputStream attachment, String fileName, String title) {
+	public void sendAttachment(String channelName, String fileName, String title, InputStream attachment) {
 		try {
 			Conversation conversation = conversation(channelName);
 			if (conversation == null) return;
@@ -231,15 +231,15 @@ public abstract class Bot {
 		if (type != null && type.getAsString().equals("message")) {
 			com.github.seratch.jslack.api.model.Message request = gson.fromJson(json, com.github.seratch.jslack.api.model.Message.class);
 			try {
-				User userById = findUserById(request.getUser());
-				if (userById == null) return;
-				String userName = userById.getName();
+				User user = findUserById(request.getUser());
+				if (user == null) return;
+				String userName = user.getName();
 				if (userName == null || isAlreadyProcessed(request) || isMine(request)) return;
 				Object response = talk(userName, request.getText(), createMessageProperties(request.getChannel(), userName, request.getTs(), attachment(request)));
 				if (response == null || (response instanceof String && response.toString().isEmpty())) return;
 				if (response instanceof SlackAttachment)
-					sendAttachment(request.getChannel(), ((SlackAttachment) response).inputStream, ((SlackAttachment) response).fileName, ((SlackAttachment) response).title);
-				else sendMessage(request.getChannel(), response.toString());
+					sendToUser(userName, ((SlackAttachment) response).fileName, ((SlackAttachment) response).title, ((SlackAttachment) response).inputStream);
+				else sendToUser(user, response.toString());
 			} catch (Throwable e) {
 				Logger.error(e);
 				sendMessage(request.getChannel(), "Command Error. Try `help` to see the options");
