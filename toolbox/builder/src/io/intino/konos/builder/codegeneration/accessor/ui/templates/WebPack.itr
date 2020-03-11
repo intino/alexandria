@@ -62,7 +62,7 @@ def type(exclude & alexandriaProject)
 end
 
 def type(exclude)
-    exclude: /node_modules\\/(?!$[alexandria\\-ui\\-elements])/,
+    exclude: /node_modules\\/(?!($use...[|])\\/).*/,
 end
 
 def type(alias & alexandriaProject)

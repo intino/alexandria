@@ -31,7 +31,7 @@ export default class ProxyDisplay extends AbstractProxyDisplay {
 
 		return (
 			<OwnerUnitContext.Provider value={this.state.ownerUnit}>
-				<div id="component">
+				<div id="component" style={{height:"100%",width:"100%"}}>
 					{React.createElement(DisplayFactory.get(this.state.display.type), { id: this.state.display.id })}
 					{this.requester.ready()}
 				</div>
