@@ -19,7 +19,6 @@ import static io.intino.alexandria.bpm.Link.Type.Default;
 import static io.intino.alexandria.bpm.Link.Type.Exclusive;
 import static io.intino.alexandria.bpm.Process.Status.Enter;
 import static io.intino.alexandria.bpm.Process.Status.Running;
-import static io.intino.alexandria.bpm.Task.Type.Automatic;
 import static java.lang.Thread.sleep;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -95,7 +94,7 @@ public abstract class Workflow {
 
 	private void doProcess(Process process, ProcessStatus status) {
 		if (stateExited(status)) {
-			if (!taskIsAutomatic(status)) process.register(status);
+			if (!taskIsSynchronous(status)) process.register(status);
 			if (stateIsTerminal(status)) registerTerminationMessage(status);
 			else advanceProcess(status);
 		} else if (stateRejectedOrSkipped(status)) propagateRejectionOnBranch(process, stateOf(status));
@@ -228,8 +227,8 @@ public abstract class Workflow {
 		return processes.get(status.processId()).state(stateOf(status)).isTerminal();
 	}
 
-	private boolean taskIsAutomatic(ProcessStatus status) {
-		return processes.get(status.processId()).state(stateOf(status)).task().type() == Automatic;
+	private boolean taskIsSynchronous(ProcessStatus status) {
+		return processes.get(status.processId()).state(stateOf(status)).task().type().isSynchronous();
 	}
 
 	private boolean stateExited(ProcessStatus status) {
@@ -257,7 +256,7 @@ public abstract class Workflow {
 		new Thread(() -> {
 			sendMessage(enterMessage(process, state));
 			state.task().execute();
-			if (state.task().type() == Automatic) sendMessage(exitMessage(process, state));
+			if (state.task().type().isSynchronous()) sendMessage(exitMessage(process, state));
 		}).start();
 	}
 

@@ -14,10 +14,10 @@ def type(workflow)
 		public Workflow($box+FirstUpperCase~Box box, File directory) {
 			super(factory(box), new PersistenceManager.FilePersistenceManager(directory));
 			this.box = box;
-			box.terminal().subscribe(($box+FirstUpperCase~Terminal.ProcessStatusConsumer) status -> receive(status));
+			box.terminal().subscribe(($terminal.ProcessStatusConsumer) status -> receive(status));
 		}
 
-		$process+publicMethod...[$NL]
+		$process+publicMethod...[$NL$NL]
 
 		@Override
 		public void send(ProcessStatus processStatus) {

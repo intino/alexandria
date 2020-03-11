@@ -17,6 +17,11 @@ public abstract class Task {
 		return type;
 	}
 
-	public enum Type {Automatic, Manual, CallActivity}
+	public enum Type {
+		Automatic, User, Manual, Service, Script, BusinessRule, Send, Receive, CallActivity;
 
+		public boolean isSynchronous() {
+			return this == Automatic || this == Send || this == Script || this == BusinessRule;
+		}
+	}
 }
