@@ -19,7 +19,7 @@ import io.intino.konos.model.graph.OtherComponents.Header;
 
 public class ComponentRendererFactory {
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public <T extends UIRenderer> T renderer(CompilationContext context, Component component, TemplateProvider provider, Target target) {
 		if (component.i$(Text.class)) return (T) new TextRenderer(context, component.a$(Text.class), provider, target);
 		if (component.i$(Date.class)) return (T) new DateRenderer(context, component.a$(Date.class), provider, target);
@@ -38,6 +38,7 @@ public class ComponentRendererFactory {
 		if (component.i$(OtherComponents.BaseIcon.class)) return (T) new IconRenderer(context, component.a$(OtherComponents.BaseIcon.class), provider, target);
 		if (component.i$(OtherComponents.Portal.class)) return (T) new PortalRenderer(context, component.a$(OtherComponents.Portal.class), provider, target);
 		if (component.i$(OtherComponents.User.class)) return (T) new UserRenderer(context, component.a$(OtherComponents.User.class), provider, target);
+		if (component.i$(OtherComponents.ProxyStamp.class)) return (T) new ProxyStampRenderer(context, component.a$(OtherComponents.ProxyStamp.class), provider, target);
 		if (component.i$(VisualizationComponents.Stepper.class)) return (T) new StepperRenderer(context, component.a$(VisualizationComponents.Stepper.class), provider, target);
 		if (component.i$(VisualizationComponents.Stepper.Step.class)) return (T) new StepRenderer(context, component.a$(VisualizationComponents.Stepper.Step.class), provider, target);
 
