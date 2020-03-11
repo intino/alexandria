@@ -85,4 +85,13 @@ public abstract class Renderer {
 	protected boolean isRoot(Layer element) {
 		return element.core$().owner() == null || element.core$().owner() == element.core$().model();
 	}
+
+	protected boolean isCustomParameter(String value) {
+		return value != null && value.startsWith("{");
+	}
+
+	protected String customParameterValue(String value) {
+		return value != null ? value.substring(1, value.length() - 1) : "";
+	}
+
 }

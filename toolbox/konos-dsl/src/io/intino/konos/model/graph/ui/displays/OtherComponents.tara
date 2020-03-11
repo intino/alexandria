@@ -27,6 +27,10 @@ Concept OtherComponents
 		var Template template
 		Aspect Multiple
 
+	Concept ProxyStamp extends Component
+		var string proxy
+		var Service.UI.Use from
+
 	Concept Header extends Component
 		var word:{Fixed Absolute Sticky Static Relative} position = Relative
 		var integer elevation = 4
