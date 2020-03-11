@@ -9,7 +9,7 @@ import java.util.Map;
 import static io.intino.alexandria.bpm.Link.Type.Inclusive;
 import static io.intino.alexandria.bpm.State.Type.Initial;
 import static io.intino.alexandria.bpm.State.Type.Terminal;
-import static io.intino.alexandria.bpm.Task.Type.Automatic;
+import static io.intino.alexandria.bpm.Task.Type.Default;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -60,7 +60,7 @@ public class BpmWithInclusiveFork extends BpmTest {
 		}
 
 		private Task createString() {
-			return new Task(Automatic) {
+			return new Task(Default) {
 				@Override
 				public void execute() {
 					put("CreateString", Math.random() < 0.5 ? "Hello:Goodbye" : "Goodbye:Hello");
@@ -71,7 +71,7 @@ public class BpmWithInclusiveFork extends BpmTest {
 		}
 
 		private Task processHello() {
-			return new Task(Automatic) {
+			return new Task(Default) {
 
 				@Override
 				public void execute() {
@@ -82,7 +82,7 @@ public class BpmWithInclusiveFork extends BpmTest {
 		}
 
 		private Task processGoodbye() {
-			return new Task(Automatic) {
+			return new Task(Default) {
 
 				@Override
 				public void execute() {
@@ -94,7 +94,7 @@ public class BpmWithInclusiveFork extends BpmTest {
 
 
 		private Task joinResult() {
-			return new Task(Automatic) {
+			return new Task(Default) {
 
 				@Override
 				public void execute() {

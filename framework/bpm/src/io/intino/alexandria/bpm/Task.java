@@ -18,10 +18,10 @@ public abstract class Task {
 	}
 
 	public enum Type {
-		Automatic, User, Manual, Service, Script, BusinessRule, Send, Receive, CallActivity;
+		Default, User, Manual, Service, Script, BusinessRule, Send, Receive, CallActivity;
 
 		public boolean isSynchronous() {
-			return this == Automatic || this == Send || this == Script || this == BusinessRule;
+			return this == Default || this == Send || this == Script || this == BusinessRule;
 		}
 	}
 }

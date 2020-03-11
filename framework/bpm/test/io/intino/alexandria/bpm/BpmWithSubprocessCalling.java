@@ -10,8 +10,8 @@ import java.util.Map;
 import static io.intino.alexandria.bpm.Link.Type.Inclusive;
 import static io.intino.alexandria.bpm.State.Type.Initial;
 import static io.intino.alexandria.bpm.State.Type.Terminal;
-import static io.intino.alexandria.bpm.Task.Type.Automatic;
 import static io.intino.alexandria.bpm.Task.Type.CallActivity;
+import static io.intino.alexandria.bpm.Task.Type.Default;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -64,7 +64,7 @@ public class BpmWithSubprocessCalling extends BpmTest {
 		}
 
 		private Task createString() {
-			return new Task(Automatic) {
+			return new Task(Default) {
 				@Override
 				public void execute() {
 					memory.put(id(), Math.random() < 0.5 ? "Hello" : "Goodbye");
@@ -84,7 +84,7 @@ public class BpmWithSubprocessCalling extends BpmTest {
 		}
 
 		private Task handleSubprocessEnding() {
-			return new Task(Automatic) {
+			return new Task(Default) {
 				@Override
 				public void execute() {
 					put("HandleSubprocessEnding", memory.get("2"));
@@ -106,7 +106,7 @@ public class BpmWithSubprocessCalling extends BpmTest {
 		}
 
 		private Task checkString() {
-			return new Task(Automatic) {
+			return new Task(Default) {
 				@Override
 				public void execute() {
 					memory.put(id(), memory.get(owner()).equals("Hello") + "");
