@@ -9,6 +9,7 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.CompilationContext;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
@@ -45,18 +46,18 @@ public class BpmRenderer extends Renderer {
 	@Override
 	protected void render() {
 		renderProcesses();
-		renderBpm();
+		renderWorkflow();
 	}
 
-	private void renderBpm() {
+	private void renderWorkflow() {
 		if (processes.isEmpty()) return;
 		FrameBuilder builder = new FrameBuilder("workflow").
 				add("box", compilationContext.boxName()).
 				add("package", compilationContext.packageName()).
+				add("terminal", compilationContext.dataHubManifest().qn).
 				add(compilationContext.boxName()).
 				add("process", processes.stream().map(this::frameOf).toArray(Frame[]::new));
-		context.compiledFiles().
-				add(new OutputItem(context.sourceFileOf(graph.workflow()), javaFile(gen, "Workflow").getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(graph.workflow()), javaFile(gen, "Workflow").getAbsolutePath()));
 		writeFrame(gen, "Workflow", customize(new WorkflowTemplate()).render(builder.toFrame()));
 	}
 
@@ -103,21 +104,21 @@ public class BpmRenderer extends Renderer {
 	}
 
 	private void framesFrom(State state, Process process, Map<String, FrameBuilder> states, Map<String, FrameBuilder> links) {
-		states.put(state.name(), frameOf(state, process, typeOf(state)));
+		states.put(format(state), frameOf(state, process, typeOf(state)));
 		for (Link link : state.links()) {
-			if (!states.containsKey(link.state().name()) && !link.state().type().equals(Terminal))
+			if (!states.containsKey(format(link.state())) && !link.state().type().equals(Terminal))
 				framesFrom(link.state(), process, states, links);
-			if (!links.containsKey(state.name() + "#" + link.state().name()))
-				links.put(state.name() + "#" + link.state().name(), frameOf(state, link));
+			if (!links.containsKey(format(state) + "#" + format(link.state())))
+				links.put(format(state) + "#" + format(link.state()), frameOf(state, link));
 		}
 	}
 
 	private FrameBuilder frameOf(State state, Process process, List<State.Type> types) {
-		FrameBuilder builder = new FrameBuilder("state").add("name", state.name());
+		FrameBuilder builder = new FrameBuilder("state").add("name", format(state));
 		if (!types.contains(State.Type.Intermediate))
 			builder.add("type", types.stream().map(Enum::name).toArray(String[]::new));
 		if (state.task() != null) {
-			if (state.task().type().equals(Task.Type.Service)) stateServices.add(state.name());
+			if (state.task().type().equals(Task.Type.Service)) stateServices.add(format(state));
 			builder.add(state.task().type().name())
 					.add("taskType", state.task().type().name())
 					.add("taskName", state.task().id())
@@ -136,7 +137,11 @@ public class BpmRenderer extends Renderer {
 	}
 
 	private FrameBuilder frameOf(State state, Link link) {
-		return new FrameBuilder("link").add("from", state.name()).add("to", link.state().name()).add("type", link.type().name());
+		return new FrameBuilder("link").add("from", format(state)).add("to", format(link.state())).add("type", link.type().name());
+	}
+
+	private String format(State state) {
+		return Formatters.snakeCaseToCamelCase().format(state.name().replace(" ", "_")).toString();
 	}
 
 	private boolean alreadyRendered(File destination, String action) {

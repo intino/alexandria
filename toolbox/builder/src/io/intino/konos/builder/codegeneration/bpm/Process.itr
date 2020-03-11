@@ -3,7 +3,6 @@ def type(process & src)
 
 	import io.intino.alexandria.bpm.Task;
 	import io.intino.alexandria.bpm.Task.Type.*;
-	import io.intino.alexandria.message.MessageHub;
 	import $package+validPackage.$box+FirstUpperCase~Box;
 
 	public class $name+firstUpperCase extends Abstract$name+firstUpperCase {
@@ -12,10 +11,9 @@ def type(process & src)
 			super(box, id);
 		}
 
-		$name+firstUpperCase($box+firstUpperCase~Box box, $parameter+signature...[, ]) {
-			super(UUID.randomUUID().toString());
-			$parameter+put...[$NL]
-			init(box);
+		$name+firstUpperCase($box+firstUpperCase~Box box[, $parameter+signature...[, ]]) {
+			super(box, java.util.UUID.randomUUID().toString());
+			[$parameter+put...[$NL]]
 		}
 
 		$state+execute...[$NL$NL]
@@ -27,7 +25,6 @@ def type(process)
 
 	import static io.intino.alexandria.bpm.State.Type.*;
 	import io.intino.alexandria.bpm.Task;
-    import io.intino.alexandria.message.MessageHub;
     import $package+validPackage.$box+FirstUpperCase~Box;
 
     import java.util.List;
@@ -39,14 +36,8 @@ def type(process)
 		protected $box+firstUpperCase~Box box;
 
 		Abstract$name+firstUpperCase($box+firstUpperCase~Box box, String id) {
-			super(box, id);
+			super(id);
 			this.box = box;
-		}
-
-		Abstract$name+firstUpperCase($box+firstUpperCase~Box box, $parameter+signature...[, ]) {
-			super(UUID.randomUUID().toString());
-			this.box = box;
-			$parameter+put...[$NL]
 			init();
 		}
 
@@ -74,16 +65,16 @@ def trigger(method)
 			public void execute() {
 				execute$name+FirstUpperCase();
 			}
-		}
+		};
 	}
 end
 
 def trigger(abstractExecute)
-	protected abstract execute$name+FirstUpperCase();
+	protected abstract void execute$name+FirstUpperCase();
 end
 
 def trigger(execute)
-	protected execute$name+FirstUpperCase() {
+	protected void execute$name+FirstUpperCase() {
 
 	}
 end
