@@ -61,7 +61,7 @@ public class PageRenderer extends ActionRenderer {
 	private Frame usedUnitFrame(Service.UI.Use use) {
 		FrameBuilder result = new FrameBuilder("usedUnit");
 		result.add(isCustom(use.url()) ? "custom" : "standard");
-		result.add("name", use.name$());
+		result.add("name", use.name().toLowerCase());
 		result.add("url", isCustom(use.url()) ? customValue(use.url()) : use.url());
 		return result.toFrame();
 	}

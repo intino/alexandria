@@ -55,6 +55,10 @@ public class AcceptedKonosRunner {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/pacma.txt")});
 	}
 
+	@Test
+	public void temporal() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/temporal/ideaKonosToCompile.txt")});
+	}
 
 	@Test
 	public void temp() {
