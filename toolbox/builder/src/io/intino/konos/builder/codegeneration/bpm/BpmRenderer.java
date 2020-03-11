@@ -31,13 +31,11 @@ public class BpmRenderer extends Renderer {
 	private final File src;
 	private final File gen;
 	private final KonosGraph graph;
-	private final String businessUnit;
 	private List<String> stateServices = new ArrayList<>();
 
 	public BpmRenderer(CompilationContext compilationContext, KonosGraph graph) {
 		super(compilationContext, Target.Owner);
 		this.compilationContext = compilationContext;
-		this.businessUnit = graph.workflow() != null ? graph.workflow().businessUnit() : null;
 		this.processes = graph.workflow() != null ? graph.workflow().processList() : Collections.emptyList();
 		this.src = new File(compilationContext.src(Target.Owner), "bpm");
 		this.gen = new File(compilationContext.gen(Target.Owner), "bpm");
@@ -52,8 +50,13 @@ public class BpmRenderer extends Renderer {
 
 	private void renderBpm() {
 		if (processes.isEmpty()) return;
-		FrameBuilder builder = new FrameBuilder("workflow").add("box", compilationContext.boxName()).add("package", compilationContext.packageName()).add("businessUnit", businessUnit).add(compilationContext.boxName()).add("process", processes.stream().map(p -> frameOf(p)).toArray(Frame[]::new));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(graph.workflow()), javaFile(gen, "Workflow").getAbsolutePath()));
+		FrameBuilder builder = new FrameBuilder("workflow").
+				add("box", compilationContext.boxName()).
+				add("package", compilationContext.packageName()).
+				add(compilationContext.boxName()).
+				add("process", processes.stream().map(this::frameOf).toArray(Frame[]::new));
+		context.compiledFiles().
+				add(new OutputItem(context.sourceFileOf(graph.workflow()), javaFile(gen, "Workflow").getAbsolutePath()));
 		writeFrame(gen, "Workflow", customize(new WorkflowTemplate()).render(builder.toFrame()));
 	}
 
@@ -64,26 +67,30 @@ public class BpmRenderer extends Renderer {
 	private void renderProcesses() {
 		for (Process process : processes) {
 			stateServices.clear();
-			final FrameBuilder builder = new FrameBuilder("process").
-					add("box", compilationContext.boxName()).
-					add("package", compilationContext.packageName()).
-					add("businessUnit", businessUnit).
-					add("name", process.name$());
-			File file = new File(process.bpmn().getFile());
-			if (!file.exists()) continue;
-			try {
-				BpmnParser bpmnParser = new BpmnParser(new FileInputStream(file));
-				State initial = bpmnParser.getNodeWalker().getInitial().links().get(0).state().type(Initial);
-				walk(builder, process, initial);
-				for (String stateService : stateServices)
-					builder.add("accessor", new FrameBuilder("accessor").add("name", stateService));
-				compilationContext.classes().put(process.getClass().getSimpleName() + "#" + process.name$(), "bpm." + process.name$());
-				writeFrame(gen, "Abstract" + firstUpperCase(process.name$()), customize(new ProcessTemplate()).render(builder.toFrame()));
-				if (!alreadyRendered(src, process.name$()))
-					writeFrame(src, process.name$(), customize(new ProcessTemplate()).render(builder.add("src").toFrame()));
-			} catch (FileNotFoundException e) {
-				Logger.error(e);
-			}
+			File file = process.bpmn() == null ? null : new File(process.bpmn().getFile());
+			if (file == null || !file.exists()) continue;
+			renderProcess(process, file);
+		}
+	}
+
+	private void renderProcess(Process process, File file) {
+		final FrameBuilder builder = new FrameBuilder("process").
+				add("box", compilationContext.boxName()).
+				add("package", compilationContext.packageName()).
+				add("name", process.name$());
+		try {
+			BpmnParser bpmnParser = new BpmnParser(new FileInputStream(file));
+			State initial = bpmnParser.getNodeWalker().getInitial().links().get(0).state().type(Initial);
+			walk(builder, process, initial);
+			for (String stateService : stateServices)
+				builder.add("accessor", new FrameBuilder("accessor").add("name", stateService));
+			compilationContext.classes().put(process.getClass().getSimpleName() + "#" + process.name$(), "bpm." + process.name$());
+			writeFrame(gen, "Abstract" + firstUpperCase(process.name$()), customize(new ProcessTemplate()).render(builder.toFrame()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(process), javaFile(gen, "Abstract" + firstUpperCase(process.name$())).getAbsolutePath()));
+			if (!alreadyRendered(src, process.name$()))
+				writeFrame(src, process.name$(), customize(new ProcessTemplate()).render(builder.add("src").toFrame()));
+		} catch (FileNotFoundException e) {
+			Logger.error(e);
 		}
 	}
 
@@ -114,7 +121,6 @@ public class BpmRenderer extends Renderer {
 			builder.add(state.task().type().name())
 					.add("taskType", state.task().type().name())
 					.add("taskName", state.task().id())
-					.add("businessUnit", businessUnit)
 					.add("process", process.name$());
 		}
 		if (types.contains(Terminal)) state.type(Terminal).links().clear();

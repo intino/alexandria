@@ -4,17 +4,25 @@ def type(workflow)
 	import io.intino.alexandria.bpm.PersistenceManager;
 	import io.intino.alexandria.bpm.ProcessFactory;
 	import io.intino.alexandria.bpm.ProcessStatus;
-	import io.intino.alexandria.message.MessageHub;
 	import $package+validPackage.$box+FirstUpperCase~Box;
 	import java.io.File;
 
 	public class Workflow extends io.intino.alexandria.bpm.Workflow {
 
-		public Workflow($box+FirstUpperCase~Box box, File workspace) {
-			super(box.messageHub(), factory(box), new PersistenceManager.FilePersistenceManager(new File(workspace, "bpm")), "$businessUnit");
+		private $package+validPackage.$box+FirstUpperCase~Box box;
+
+		public Workflow($box+FirstUpperCase~Box box, File directory) {
+			super(factory(box), new PersistenceManager.FilePersistenceManager(directory));
+			this.box = box;
+			box.terminal().subscribe(($box+FirstUpperCase~Terminal.ProcessStatusConsumer) status -> receive(status));
 		}
 
 		$process+publicMethod...[$NL]
+
+		@Override
+		public void send(ProcessStatus processStatus) {
+			box.terminal().publish(processStatus);
+		}
 
 		private static ProcessFactory factory($box+FirstUpperCase~Box box) {
 			return (id, name) -> {
@@ -28,9 +36,13 @@ def type(workflow)
 end
 
 def trigger(publicMethod)
-	public void launch$name+firstUpperCase() {
-		messageHub.sendMessage("ProcessStatus", new ProcessStatus(java.util.UUID.randomUUID().toString(), "$name", io.intino.alexandria.bpm.Process.Status.Enter).message());
+	public void launch$name+firstUpperCase($parameter+signature...[, ]) {
+		registerProcess(new $name+firstUpperCase(box[, $parameter...[, ]]));
 	}
+end
+
+def trigger(signature)
+	String $this
 end
 
 def trigger(process)
