@@ -97,7 +97,6 @@ Concept:Named Service
 			has:{0..1} Response
 			Aspect ProcessTrigger
 				var Workflow.Process process
-				var string path = 'self.graph().workflow().businessUnit() + ".Task"'
 
 		Concept:Named Notification
 			var string path

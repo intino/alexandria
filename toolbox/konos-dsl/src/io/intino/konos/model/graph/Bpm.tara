@@ -3,6 +3,5 @@ dsl Proteo
 use DataTypes
 
 Concept:{0..1} Workflow
-	var string businessUnit
 	Concept:Named Process
 		var resource bpmn = empty

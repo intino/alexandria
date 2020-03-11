@@ -58,7 +58,7 @@ public class AcceptedKonosRunner {
 
 	@Test
 	public void temp() {
-		KonoscRunner.main(new String[]{temp(home + "confFiles/temp/ideaKonosToCompile10.txt")});
+		KonoscRunner.main(new String[]{temp(home + "confFiles/temp/ideaKonosToCompile1.txt")});
 	}
 
 	private static String temp(String filepath) {
