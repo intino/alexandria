@@ -7,12 +7,14 @@ def type(process & src)
 
 	public class $name+firstUpperCase extends Abstract$name+firstUpperCase {
 
-		$name+firstUpperCase($box+firstUpperCase~Box box, String id) {
-			super(box, id);
+		$parameter+fieldName...[$NL]
+
+		$name+firstUpperCase(String id, $box+firstUpperCase~Box box) {
+			super(id, box);
 		}
 
 		$name+firstUpperCase($box+firstUpperCase~Box box[, $parameter+signature...[, ]]) {
-			super(box, java.util.UUID.randomUUID().toString());
+			super(java.util.UUID.randomUUID().toString(), box);
 			[$parameter+put...[$NL]]
 		}
 
@@ -35,7 +37,7 @@ def type(process)
 
 		protected $box+firstUpperCase~Box box;
 
-		Abstract$name+firstUpperCase($box+firstUpperCase~Box box, String id) {
+		Abstract$name+firstUpperCase(String id, $box+firstUpperCase~Box box) {
 			super(id);
 			this.box = box;
 			init();
@@ -83,7 +85,6 @@ def trigger(method)
 
 end
 
-
 def trigger(state)
 	addState(new io.intino.alexandria.bpm.State("$label", execute$method+firstUpperCase()[, $type+lowercase+FirstUpperCase...[, ]]));
 end
@@ -105,5 +106,13 @@ def attribute(this:Inclusive) trigger(linkType)
 end
 
 def trigger(put)
-	put("$name", $name);
+	put($this+firstUpperCase, $this+firstLowerCase);
+end
+
+def trigger(signature)
+	String $this+firstLowerCase
+end
+
+def trigger(fieldName)
+	private static final String $this+FirstUpperCase = "$this";
 end
