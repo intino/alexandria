@@ -1,11 +1,9 @@
 package io.intino.konos.builder.codegeneration.bpm;
 
-import io.intino.alexandria.logger.Logger;
 import io.intino.bpmparser.BpmnParser;
 import io.intino.bpmparser.Link;
 import io.intino.bpmparser.State;
 import io.intino.bpmparser.State.Type;
-import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.CompilationContext;
@@ -21,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -59,43 +58,52 @@ public class BpmRenderer extends Renderer {
 				add("package", compilationContext.packageName()).
 				add("terminal", compilationContext.dataHubManifest().qn).
 				add(compilationContext.boxName()).
-				add("process", processes.stream().map(this::frameOf).toArray(Frame[]::new));
+				add("process", processes.stream().filter(p -> file(p) != null).map(p -> frameOf(p, file(p))).toArray(FrameBuilder[]::new));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(graph.workflow()), javaFile(gen, "Workflow").getAbsolutePath()));
 		writeFrame(gen, "Workflow", customize(new WorkflowTemplate()).render(builder.toFrame()));
-	}
-
-	private Frame frameOf(Process p) {
-		return new FrameBuilder("process").add("name", p.name$()).toFrame();
 	}
 
 	private void renderProcesses() {
 		for (Process process : processes) {
 			stateServices.clear();
-			File file = process.bpmn() == null ? null : new File(process.bpmn().getFile());
-			if (file == null || !file.exists()) continue;
-			renderProcess(process, file);
+			File file = file(process);
+			if (file != null) renderProcess(process, file);
 		}
 	}
 
+	private File file(Process process) {
+		File file = process.bpmn() == null ? null : new File(process.bpmn().getFile());
+		if (file == null || !file.exists()) return null;
+		return file;
+	}
+
 	private void renderProcess(Process process, File file) {
+		final FrameBuilder builder = frameOf(process, file);
+		compilationContext.classes().put(process.getClass().getSimpleName() + "#" + process.name$(), "bpm." + process.name$());
+		writeFrame(gen, "Abstract" + firstUpperCase(process.name$()), customize(new ProcessTemplate()).render(builder.toFrame()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(process), javaFile(gen, "Abstract" + firstUpperCase(process.name$())).getAbsolutePath()));
+		if (!alreadyRendered(src, process.name$()))
+			writeFrame(src, process.name$(), customize(new ProcessTemplate()).render(builder.add("src").toFrame()));
+	}
+
+	private FrameBuilder frameOf(Process process, File bpmn) {
+		BpmnParser bpmnParser;
+		try {
+			bpmnParser = new BpmnParser(new FileInputStream(bpmn));
+		} catch (FileNotFoundException e) {
+			return null;
+		}
 		final FrameBuilder builder = new FrameBuilder("process").
 				add("box", compilationContext.boxName()).
 				add("package", compilationContext.packageName()).
 				add("name", process.name$());
-		try {
-			BpmnParser bpmnParser = new BpmnParser(new FileInputStream(file));
-			for (State state : bpmnParser.states()) {
-				builder.add("state", frameOf(state));
-				state.links().forEach(link -> builder.add("link", frameOf(state, link)));
-			}
-			compilationContext.classes().put(process.getClass().getSimpleName() + "#" + process.name$(), "bpm." + process.name$());
-			writeFrame(gen, "Abstract" + firstUpperCase(process.name$()), customize(new ProcessTemplate()).render(builder.toFrame()));
-			context.compiledFiles().add(new OutputItem(context.sourceFileOf(process), javaFile(gen, "Abstract" + firstUpperCase(process.name$())).getAbsolutePath()));
-			if (!alreadyRendered(src, process.name$()))
-				writeFrame(src, process.name$(), customize(new ProcessTemplate()).render(builder.add("src").toFrame()));
-		} catch (FileNotFoundException e) {
-			Logger.error(e);
+		for (State state : bpmnParser.states()) {
+			builder.add("state", frameOf(state));
+			state.links().forEach(link -> builder.add("link", frameOf(state, link)));
+			if (state.type() == Initial && state.comment() != null)
+				Arrays.stream(state.comment().split("\n")).filter(l -> l.startsWith("*")).forEach(p -> builder.add("parameter", p.substring(1)));
 		}
+		return builder;
 	}
 
 
@@ -104,7 +112,7 @@ public class BpmRenderer extends Renderer {
 		FrameBuilder builder = new FrameBuilder("state").add("method", format(state)).add("label", state.label());
 		if (!types.contains(Type.Intermediate))
 			builder.add("type", types.stream().map(Enum::name).toArray(String[]::new));
-		if (state.taskType().equals(State.TaskType.Service)) stateServices.add(format(state));
+		if (state.taskType() == State.TaskType.Service) stateServices.add(format(state));
 		builder.add("taskType", state.taskType());
 		return builder;
 	}
