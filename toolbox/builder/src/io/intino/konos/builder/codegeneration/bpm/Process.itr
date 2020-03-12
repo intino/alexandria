@@ -59,22 +59,22 @@ end
 
 
 def trigger(method)
-	private Task $name+firstLowerCase() {
+	private Task execute$method+firstUpperCase() {
 		return new Task(Task.Type.$taskType) {
 			@Override
 			public void execute() {
-				execute$name+FirstUpperCase();
+				execute$method+FirstUpperCase();
 			}
 		};
 	}
 end
 
 def trigger(abstractExecute)
-	protected abstract void execute$name+FirstUpperCase();
+	protected abstract void $method+FirstLowerCase();
 end
 
 def trigger(execute)
-	protected void execute$name+FirstUpperCase() {
+	protected void $method+FirstLowerCase() {
 
 	}
 end
@@ -85,14 +85,14 @@ end
 
 
 def trigger(state)
-	addState(new io.intino.alexandria.bpm.State("$name", $name+firstLowerCase()[, $type+lowercase+FirstUpperCase...[, ]]));
+	addState(new io.intino.alexandria.bpm.State("$label", execute$method+firstUpperCase()[, $type+lowercase+FirstUpperCase...[, ]]));
 end
 
 def trigger(link)
 	addLink(new io.intino.alexandria.bpm.Link("$from", "$to", $type+linkType));
 end
 
-def attribute(this:DefaultLine) trigger(linkType)
+def attribute(this:Line) trigger(linkType)
 	io.intino.alexandria.bpm.Link.Type.Default
 end
 
@@ -100,7 +100,7 @@ def attribute(this:Exclusive) trigger(linkType)
 	io.intino.alexandria.bpm.Link.Type.Exclusive
 end
 
-def trigger(linkType)
+def attribute(this:Inclusive) trigger(linkType)
 	io.intino.alexandria.bpm.Link.Type.Inclusive
 end
 
