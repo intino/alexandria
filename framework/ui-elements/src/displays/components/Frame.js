@@ -21,7 +21,7 @@ export default class Frame extends AbstractFrame {
 
 	render() {
 		if (!this.state.visible) return (<React.Fragment/>);
-		return (<div style={this.style()}>{this.renderInstances()}</div>);
+		return (<div style={this.style()}>{this.renderInstances(null, null, this.style())}</div>);
 	};
 
 }
