@@ -9,7 +9,6 @@
       <module fileurl="file://$PROJECT_DIR$/libraries/ness/datalake/datalake.iml" filepath="$PROJECT_DIR$/libraries/ness/datalake/datalake.iml" group="eventsourcing" />
       <module fileurl="file://$PROJECT_DIR$/libraries/dotx/dotx.iml" filepath="$PROJECT_DIR$/libraries/dotx/dotx.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/drivers/driver/driver.iml" filepath="$PROJECT_DIR$/drivers/driver/driver.iml" group="drivers" />
-      <module fileurl="file://$PROJECT_DIR$/libraries/ness/dump/dump.iml" filepath="$PROJECT_DIR$/libraries/ness/dump/dump.iml" group="eventsourcing" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/epoch/epoch.iml" filepath="$PROJECT_DIR$/fileformats/epoch/epoch.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/libraries/ness/event/event.iml" filepath="$PROJECT_DIR$/libraries/ness/event/event.iml" group="eventsourcing" />
       <module fileurl="file://$PROJECT_DIR$/libraries/exceptions/exceptions.iml" filepath="$PROJECT_DIR$/libraries/exceptions/exceptions.iml" group="libraries" />
