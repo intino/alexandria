@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/fileformats/epoch" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/toolbox/builder" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/toolbox/builder-constants" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/toolbox/builder-constants/src" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/toolbox/builder/res" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/toolbox/konos-dsl" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/toolbox/konos-dsl/res" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/toolbox/konos-dsl/src" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
