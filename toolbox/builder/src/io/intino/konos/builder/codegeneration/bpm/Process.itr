@@ -3,7 +3,6 @@ def type(process & src)
 
 	import io.intino.alexandria.bpm.Task;
 	import io.intino.alexandria.bpm.Task.Type.*;
-	import io.intino.alexandria.message.MessageHub;
 	import $package+validPackage.$box+FirstUpperCase~Box;
 
 	public class $name+firstUpperCase extends Abstract$name+firstUpperCase {
@@ -12,7 +11,12 @@ def type(process & src)
 			super(box, id);
 		}
 
-		$state+task...[$NL$NL]
+		$name+firstUpperCase($box+firstUpperCase~Box box[, $parameter+signature...[, ]]) {
+			super(box, java.util.UUID.randomUUID().toString());
+			[$parameter+put...[$NL]]
+		}
+
+		$state+execute...[$NL$NL]
 	}
 end
 
@@ -21,7 +25,6 @@ def type(process)
 
 	import static io.intino.alexandria.bpm.State.Type.*;
 	import io.intino.alexandria.bpm.Task;
-    import io.intino.alexandria.message.MessageHub;
     import $package+validPackage.$box+FirstUpperCase~Box;
 
     import java.util.List;
@@ -31,13 +34,14 @@ def type(process)
     public abstract class Abstract$name+firstUpperCase extends io.intino.alexandria.bpm.Process {
 
 		protected $box+firstUpperCase~Box box;
-    	[$accessor+field...[$NL]]
 
 		Abstract$name+firstUpperCase($box+firstUpperCase~Box box, String id) {
 			super(id);
 			this.box = box;
-			[$accessor+assign...[$NL]]
-			[$accessor+subscribe...[$NL]]
+			init();
+		}
+
+		private void init() {
 			[$state...[$NL]]
 			[$link...[$NL]]
 		}
@@ -47,104 +51,45 @@ def type(process)
 			return "$name+firstUpperCase";
 		}
 
-		$state+abstractTask...[$NL$NL]
+		$state+abstractExecute...[$NL$NL]
 
 		$state+method...[$NL$NL]
 	}
 end
 
-def type(callActivity) trigger(method)
-	private io.intino.alexandria.bpm.Task.Result $name+firstLowerCase() {
-		return new io.intino.alexandria.bpm.Task($taskType) {
+
+def trigger(method)
+	private Task $name+firstLowerCase() {
+		return new Task(Task.Type.$taskType) {
 			@Override
-			public String execute() {
-				box.messageHub().sendMessage("$businessUnit." + io.intino.alexandria.bpm.Workflow.EventType, new io.intino.alexandria.bpm.ProcessStatus(java.util.UUID.randomUUID().toString(), "$taskName", "Enter", id(), id(), "$name").message());
-				return new io.intino.alexandria.bpm.Task.Result("Subprocess called $taskName");
+			public void execute() {
+				execute$name+FirstUpperCase();
 			}
 		};
 	}
 end
 
-def type(service) trigger(method)
-	private io.intino.alexandria.bpm.Task $name+firstLowerCase() {
-		return new io.intino.alexandria.bpm.Task($taskType) {
-			@Override
-			public io.intino.alexandria.bpm.Task.Result execute() {
-				$name+firstLowerCase~Accessor().trigger("$name", new io.intino.alexandria.bpm.Callback("$businessUnit.TaskFinished", id(), "$name").toString(), $name+firstLowerCase~Input());
-				return new io.intino.alexandria.bpm.Task.Result("$name done!");
-			}
-		};
-	}
+def trigger(abstractExecute)
+	protected abstract void execute$name+FirstUpperCase();
+end
 
-	private void accept$name+FirstUpperCase(io.intino.alexandria.message.Message m) {
-		if (m.get("callbackProcess").data().equals(id()) && m.get("callbackState").data().equals("$name+FirstUpperCase")) {
-			io.intino.alexandria.bpm.Task.Result result = on$name+firstUpperCase~Finished(m.contains("data")? io.intino.alexandria.Json.fromString(m.get("data").data(), $name+firstLowerCase~Accessor().outputOf("$process")): null);
-			box.workflow().exitState(id(), name(), m.get("callbackState").data(), result);
-		}
+def trigger(execute)
+	protected void execute$name+FirstUpperCase() {
+
 	}
 end
 
-def type(accessor) trigger(field)
-	protected io.intino.alexandria.bpm.WorkflowAccessor $name+FirstLowerCase~Accessor;
+def trigger(method)
+
 end
 
-def type(accessor) trigger(assign)
-	this.$name+FirstLowerCase~Accessor = $name+FirstLowerCase~Accessor();
-end
-
-def type(accessor) trigger(subscribe)
-	this.$name+FirstLowerCase~Accessor.subscribe(this::accept$name+FirstUpperCase);
-end
 
 def trigger(state)
-	addState(new io.intino.alexandria.bpm.State("$name", $name+firstLowerCase()[, $type+logercase+FirstUpperCase...[, ]]));
+	addState(new io.intino.alexandria.bpm.State("$name", $name+firstLowerCase()[, $type+lowercase+FirstUpperCase...[, ]]));
 end
 
 def trigger(link)
 	addLink(new io.intino.alexandria.bpm.Link("$from", "$to", $type+linkType));
-end
-
-def type(service) trigger(abstractTask)
-	abstract io.intino.alexandria.bpm.WorkflowAccessor $name+firstLowerCase~Accessor();
-
-	abstract Object $name+firstLowerCase~Input();
-
-	abstract Task.Result on$name+firstUpperCase~Finished(Object output);
-end
-
-def type(service) trigger(task)
-	io.intino.alexandria.bpm.WorkflowAccessor $name+firstLowerCase~Accessor() {
-		return null;//TODO
-	}
-
-	Object $name+firstLowerCase~Input() {
-		return null;//TODO
-	}
-
-	Task.Result on$name+firstUpperCase~Finished(Object output) {
-		//TODO
-		return new Task.Result("Done");
-	}
-end
-
-
-def !type(callActivity) trigger(abstractTask)
-	protected abstract io.intino.alexandria.bpm.Task $name+firstLowerCase();
-end
-
-def !type(callActivity) trigger(task)
-	protected io.intino.alexandria.bpm.Task $name+firstLowerCase() {
-		return new Task($taskType) {
-			@Override
-			public io.intino.alexandria.bpm.Task.Result execute() {
-				return new io.intino.alexandria.bpm.Task.Result("TODO");
-			}
-		};
-	}
-end
-
-def attribute(this:CallActivity) trigger(taskType)
-	io.intino.alexandria.bpm.Task.Type.CallActivity
 end
 
 def attribute(this:DefaultLine) trigger(linkType)
@@ -159,18 +104,6 @@ def trigger(linkType)
 	io.intino.alexandria.bpm.Link.Type.Inclusive
 end
 
-def attribute(this:User) trigger(taskType)
-	io.intino.alexandria.bpm.Task.Type.Manual
-end
-
-def attribute(this:Manual) trigger(taskType)
-	io.intino.alexandria.bpm.Task.Type.Manual
-end
-
-def attribute(this:Service) trigger(taskType)
-	io.intino.alexandria.bpm.Task.Type.CallActivity
-end
-
-def trigger(taskType)
-	io.intino.alexandria.bpm.Task.Type.Automatic
+def trigger(put)
+	put("$name", $name);
 end
