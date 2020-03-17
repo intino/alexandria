@@ -1,5 +1,4 @@
 def type(display & accessible)
-soy el display accessible
 end
 
 def type(display)

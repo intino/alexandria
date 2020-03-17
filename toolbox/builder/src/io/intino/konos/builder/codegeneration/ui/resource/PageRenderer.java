@@ -60,9 +60,9 @@ public class PageRenderer extends ActionRenderer {
 
 	private Frame usedUnitFrame(Service.UI.Use use) {
 		FrameBuilder result = new FrameBuilder("usedUnit");
-		result.add(isCustom(use.url()) ? "custom" : "standard");
+		result.add(isCustomParameter(use.url()) ? "custom" : "standard");
 		result.add("name", use.name().toLowerCase());
-		result.add("url", isCustom(use.url()) ? customValue(use.url()) : use.url());
+		result.add("url", isCustomParameter(use.url()) ? customParameterValue(use.url()) : use.url());
 		return result.toFrame();
 	}
 
@@ -75,14 +75,6 @@ public class PageRenderer extends ActionRenderer {
 		return parameters.stream().map(parameter -> new FrameBuilder().add("parameter")
 				.add("type", "String")
 				.add("name", parameter)).toArray(FrameBuilder[]::new);
-	}
-
-	private boolean isCustom(String value) {
-		return value != null && value.startsWith("{");
-	}
-
-	private String customValue(String value) {
-		return value != null ? value.substring(1, value.length() - 1) : "";
 	}
 
 	@Override

@@ -392,6 +392,10 @@ def type(properties & portal) trigger(specific)
 	[$parameter...[$NL]]
 end
 
+def type(properties & proxyStamp) trigger(specific)
+	_proxy(new $proxyPackage.$proxyDisplay+firstUpperCase(new io.intino.alexandria.ui.spark.pages.Unit("$proxyUseName", $proxyUseUrl)));
+end
+
 def type(properties & selector) trigger(specific)
 	[_multipleSelection($multipleSelection);]
 	[_readonly($readonly);]
@@ -610,4 +614,12 @@ end
 
 def type(itemVariable)
     element
+end
+
+def type(useUrl & custom)
+    box().configuration().get("$value")
+end
+
+def type(useUrl)
+    "$value"
 end
