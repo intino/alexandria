@@ -393,7 +393,7 @@ def type(properties & portal) trigger(specific)
 end
 
 def type(properties & proxyStamp) trigger(specific)
-	_proxy(new $proxyPackage.$proxyDisplay+firstUpperCase(session(), new io.intino.alexandria.ui.spark.pages.Unit("$proxyUseName", $proxyUseUrl)));
+	_proxy(new $proxyPackage.$proxyDisplay+firstUpperCase(new io.intino.alexandria.ui.spark.pages.Unit("$proxyUseName", $proxyUseUrl)));
 end
 
 def type(properties & selector) trigger(specific)

@@ -441,29 +441,29 @@ def trigger(registerSoul)
 		return new java.util.ArrayList<>(uiSouls.values());
 	}
 
-		public java.util.Optional<Soul> soul(String clientId) {
-			return java.util.Optional.ofNullable(uiSouls.get(clientId));
-		}
+    public java.util.Optional<Soul> soul(String clientId) {
+        return java.util.Optional.ofNullable(uiSouls.get(clientId));
+    }
 
-		public void registerSoul(String clientId, Soul soul) {
-			[if (owner != null) (($parent~Box) owner).registerSoul(clientId, soul);]
-			uiSouls.put(clientId, soul);
-		}
+    public void registerSoul(String clientId, Soul soul) {
+        [if (owner != null) (($parent~Box) owner).registerSoul(clientId, soul);]
+        uiSouls.put(clientId, soul);
+    }
 
-		public void unRegisterSoul(String clientId) {
-			[if (owner != null) (($parent~Box) owner).unRegisterSoul(clientId);]
-			uiSouls.remove(clientId);
-			if (uiSouls.size() <= 0) notifySoulsClosed();
-		}
+    public void unRegisterSoul(String clientId) {
+        [if (owner != null) (($parent~Box) owner).unRegisterSoul(clientId);]
+        uiSouls.remove(clientId);
+        if (uiSouls.size() <= 0) notifySoulsClosed();
+    }
 
-		public void onSoulsClosed(io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed listener) {
-			[if (owner != null) (($parent~Box) owner).onSoulsClosed(listener);]
-			this.soulsClosedListeners.add(listener);
-		}
+    public void onSoulsClosed(io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed listener) {
+        [if (owner != null) (($parent~Box) owner).onSoulsClosed(listener);]
+        this.soulsClosedListeners.add(listener);
+    }
 
-		private void notifySoulsClosed() {
-			soulsClosedListeners.forEach(l -> l.accept());
-		}
+    private void notifySoulsClosed() {
+        soulsClosedListeners.forEach(l -> l.accept());
+    }
 end
 
 
