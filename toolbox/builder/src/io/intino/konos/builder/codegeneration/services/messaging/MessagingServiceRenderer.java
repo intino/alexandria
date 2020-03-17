@@ -11,7 +11,6 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Parameter;
 import io.intino.konos.model.graph.Service;
-import io.intino.konos.model.graph.Workflow;
 
 import java.util.List;
 import java.util.Locale;
@@ -23,12 +22,10 @@ import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class MessagingServiceRenderer extends Renderer {
 	private final List<Service.Messaging> services;
-	private final Workflow workflow;
 
 	public MessagingServiceRenderer(CompilationContext compilationContext, KonosGraph graph) {
 		super(compilationContext, Target.Owner);
 		this.services = graph.serviceList(Service::isMessaging).map(Service::asMessaging).collect(Collectors.toList());
-		this.workflow = graph.workflow();
 	}
 
 	@Override
@@ -41,7 +38,6 @@ public class MessagingServiceRenderer extends Renderer {
 				add("name", service.name$()).
 				add("box", boxName()).
 				add("package", packageName()).
-				add("businessUnit", workflow != null ? workflow.businessUnit() : "").
 				add("model", service.subscriptionModel().name()).
 				add("request", processRequests(service.requestList(), service.domain(), service.subscriptionModel().name())).
 				add("notification", processNotifications(service.notificationList(), service.subscriptionModel().name()));

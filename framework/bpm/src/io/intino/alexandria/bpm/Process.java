@@ -155,7 +155,7 @@ public abstract class Process {
 					State state = state(p.stateInfo().name());
 					Task task = state.task();
 					task.execute();
-					if (task.type() == Task.Type.Automatic)
+					if (task.type().isSynchronous())
 						Logger.warn(id() + " is stuck in a state with an automatic task. State: " + state.name() + ". Process type: " + this.name());
 				});
 	}

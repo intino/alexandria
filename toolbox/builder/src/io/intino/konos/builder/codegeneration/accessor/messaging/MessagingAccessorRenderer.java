@@ -3,8 +3,8 @@ package io.intino.konos.builder.codegeneration.accessor.messaging;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
-import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.CompilationContext;
+import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.helpers.Commons;
@@ -41,7 +41,6 @@ public class MessagingAccessorRenderer extends Renderer {
 		FrameBuilder builder = new FrameBuilder("accessor");
 		builder.add("name", jmsService.name$());
 		builder.add("package", packageName());
-		if (workflow != null) builder.add("businessUnit", workflow.businessUnit());
 		if (!jmsService.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
 		final List<Service.Messaging.Request> requests = jmsService.core$().findNode(Service.Messaging.Request.class);
