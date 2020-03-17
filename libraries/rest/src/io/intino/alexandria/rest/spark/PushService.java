@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import io.intino.alexandria.Json;
 import io.intino.alexandria.rest.pushservice.Client;
 import io.intino.alexandria.rest.pushservice.Message;
 import io.intino.alexandria.rest.pushservice.Session;
@@ -19,6 +20,7 @@ public abstract class PushService<S extends Session<C>, C extends Client> implem
 	protected final Queue<Function<C, Boolean>> openConnectionListeners = new ConcurrentLinkedQueue<>();
 	private final Map<String, List<Consumer<Message>>> messageListeners = new HashMap<>();
 	protected final Map<String, List<Consumer<C>>> closeConnectionListeners = new HashMap<>();
+	protected final Map<String, List<Consumer<C>>> closeScheduledConnectionListeners = new HashMap<>();
 	protected final SessionManager<S, C> sessionManager;
 
 	private static final JsonParser Parser = new JsonParser();
@@ -51,6 +53,14 @@ public abstract class PushService<S extends Session<C>, C extends Client> implem
 		};
 	}
 
+	@Override
+	public ClosedConnection onCloseScheduled(String clientId) {
+		return consumer -> {
+			closeScheduledConnectionListeners.putIfAbsent(clientId, new ArrayList<>());
+			closeScheduledConnectionListeners.get(clientId).add(consumer);
+		};
+	}
+
 	public abstract S createSession(String id);
 
 	public abstract C createClient(org.eclipse.jetty.websocket.api.Session session);
@@ -70,7 +80,8 @@ public abstract class PushService<S extends Session<C>, C extends Client> implem
 	}
 
 	public void onMessage(C client, String message) {
-		broadcastMessage(client, new Message(message));
+		Message messageObject = message.contains("{") ? Json.fromString(message, Message.class) : new Message(message);
+		broadcastMessage(client, messageObject);
 	}
 
 	public void onClose(C client) {
@@ -79,8 +90,13 @@ public abstract class PushService<S extends Session<C>, C extends Client> implem
 
 		if (closeConnectionListeners.containsKey(client.id()))
 			closeConnectionListeners.get(client.id()).forEach(clientConsumer -> clientConsumer.accept(client));
-
 		closeConnectionListeners.remove(client.id());
+	}
+
+	public void onCloseScheduled(C client) {
+		if (closeScheduledConnectionListeners.containsKey(client.id()))
+			closeScheduledConnectionListeners.get(client.id()).forEach(clientConsumer -> clientConsumer.accept(client));
+		closeScheduledConnectionListeners.remove(client.id());
 	}
 
 	@Override
@@ -124,6 +140,11 @@ public abstract class PushService<S extends Session<C>, C extends Client> implem
 	}
 
 	@Override
+	public boolean existsSession(String id) {
+		return sessionManager.session(id) != null;
+	}
+
+	@Override
 	public S session(String id) {
 		registerSession(id);
 		return sessionManager.session(id);
@@ -139,7 +160,7 @@ public abstract class PushService<S extends Session<C>, C extends Client> implem
 		return sessionManager.currentClient();
 	}
 
-	private void broadcastMessage(C client, Message message) {
+	protected void broadcastMessage(C client, Message message) {
 		messageListeners.get(client.id()).forEach(listener -> listener.accept(message));
 	}
 
