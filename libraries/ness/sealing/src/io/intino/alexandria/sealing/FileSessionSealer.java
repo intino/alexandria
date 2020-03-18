@@ -28,16 +28,30 @@ public class FileSessionSealer implements SessionSealer {
 			}
 		}
 		lock();
-		sealEvents(avoidSorting);
 		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
+			sealEvents(avoidSorting);
+			sealSets();
+			makeSetIndexes();
+		} catch (Throwable e) {
 			Logger.error(e);
 		}
-		sealSets();
-		makeSetIndexes();
-		stage.clear();
 		unlock();
+	}
+
+	private boolean isSealing() {
+		return lockFile().exists();
+	}
+
+	private void sealEvents(List<Datalake.EventStore.Tank> avoidSorting) {
+		EventSessionManager.seal(stageFolder, datalake.eventStoreFolder(), avoidSorting, tempFolder());
+	}
+
+	private void sealSets() {
+		SetSessionManager.seal(stageFolder, datalake.setStoreFolder(), tempFolder());
+	}
+
+	private void makeSetIndexes() {
+		new SetIndexer(datalake.setStoreFolder()).make();
 	}
 
 	private void lock() {
@@ -53,24 +67,8 @@ public class FileSessionSealer implements SessionSealer {
 		notify();
 	}
 
-	private boolean isSealing() {
-		return lockFile().exists();
-	}
-
 	private File lockFile() {
 		return new File(datalake.root(), ".lock");
-	}
-
-	private void makeSetIndexes() {
-		new SetIndexer(datalake.setStoreFolder()).make();
-	}
-
-	private void sealSets() {
-		SetSessionManager.seal(stageFolder, datalake.setStoreFolder(), tempFolder());
-	}
-
-	private void sealEvents(List<Datalake.EventStore.Tank> avoidSorting) {
-		EventSessionManager.seal(stageFolder, datalake.eventStoreFolder(), avoidSorting, tempFolder());
 	}
 
 	private File tempFolder() {

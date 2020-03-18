@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,8 +25,15 @@ public class EventSessionManager {
 		eventSessions(stageFolder)
 				.collect(Collectors.groupingBy(EventSessionManager::fingerprintOf)).entrySet()
 				.stream().sorted(Comparator.comparing(t -> t.getKey().toString()))
-				.parallel().forEach(e -> new Sealer(eventStoreFolder, avoidSorting, tempFolder).seal(e.getKey(), e.getValue()));
+				.parallel().forEach(e -> seal(eventStoreFolder, avoidSorting, tempFolder, e)
+		);
 	}
+
+	private static void seal(File eventStoreFolder, List<Datalake.EventStore.Tank> avoidSorting, File tempFolder, Map.Entry<Fingerprint, List<File>> e) {
+		new EventSealer(eventStoreFolder, avoidSorting, tempFolder).seal(e.getKey(), e.getValue());
+		e.getValue().forEach(f -> f.renameTo(new File(f.getAbsolutePath() + ".treated")));
+	}
+
 
 	private static Stream<File> eventSessions(File stage) {
 		return FS.allFilesIn(stage, f -> f.getName().endsWith(Session.EventSessionExtension) && f.length() > 0f);
@@ -43,12 +51,12 @@ public class EventSessionManager {
 		return file.getName().substring(0, file.getName().indexOf("#")).replace("-", "/").replace(Session.EventSessionExtension, "");
 	}
 
-	private static class Sealer {
+	private static class EventSealer {
 		private final File eventStoreFolder;
 		private final List<String> avoidSorting;
 		private final File tempFolder;
 
-		Sealer(File eventStoreFolder, List<Datalake.EventStore.Tank> avoidSorting, File tempFolder) {
+		EventSealer(File eventStoreFolder, List<Datalake.EventStore.Tank> avoidSorting, File tempFolder) {
 			this.eventStoreFolder = eventStoreFolder;
 			this.avoidSorting = avoidSorting.stream().map(Datalake.EventStore.Tank::name).collect(Collectors.toList());
 			this.tempFolder = tempFolder;
