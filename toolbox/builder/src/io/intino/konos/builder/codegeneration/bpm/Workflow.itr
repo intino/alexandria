@@ -37,14 +37,14 @@ end
 
 def trigger(publicMethod)
 	public void launch$name+firstUpperCase($parameter+signature...[, ]) {
-		registerProcess(new $name+firstUpperCase(box[, $parameter...[, ]]));
+		registerProcess(new $name+firstUpperCase(box[, $parameter+firstLowerCase...[, ]]));
 	}
 end
 
 def trigger(signature)
-	String $this
+	String $this+firstLowerCase
 end
 
 def trigger(process)
-	case "$name": return new $name+firstUpperCase(box, id);
+	case "$name": return new $name+firstUpperCase(id, box);
 end
