@@ -88,6 +88,7 @@ public class PushServiceHandler {
 
 	private void doCloseDelayed(Session session, String sessionId) {
 		SparkClient client = client(session);
+		if (client != null) pushService.onCloseScheduled(client);
 		Timer timer = new Timer("Push service delayed close");
 		timer.schedule(new TimerTask() {
 			@Override

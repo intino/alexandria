@@ -21,29 +21,36 @@ import java.util.Set;
 
 public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Display<DN, Box> {
     private final String type;
-    private final String sessionId;
-    private final String clientId;
-    private final String token;
     private final Unit unit;
     private final String path;
+    private String sessionId;
+    private String clientId;
+    private String token;
     private boolean ready = false;
     private static final JsonParser Parser = new JsonParser();
     private Set<PendingRequest> pendingRequestList = new LinkedHashSet<>();
     private Map<String, String> parameters = new HashMap<>();
 
-    public ProxyDisplay(String type, UISession session, Unit unit, String path) {
+    public ProxyDisplay(String type, Unit unit, String path) {
         super(null);
         this.type = type;
+        this.unit = unit;
+        this.path = path;
+    }
+
+    public ProxyDisplay<DN> session(UISession session) {
         this.sessionId = session.id();
         this.clientId = session.client().id();
         this.token = session.token() != null ? session.token().id() : null;
-        this.unit = unit;
-        this.path = path;
+        return this;
     }
 
     @Override
     public void refresh() {
         try {
+            if (sessionId == null || clientId == null) {
+                throw new RuntimeException("You must set session to start this component");
+            }
             if (!ready) return;
             post("?operation=refreshPersonifiedDisplay", parameters());
         } catch (RestfulFailure | MalformedURLException error) {

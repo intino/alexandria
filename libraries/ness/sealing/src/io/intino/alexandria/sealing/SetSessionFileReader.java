@@ -22,6 +22,14 @@ public class SetSessionFileReader {
 		return chunks.keySet();
 	}
 
+	public File file() {
+		return file;
+	}
+
+	public int size() {
+		return chunks.size();
+	}
+
 	public List<ZetStream> streamsOf(Fingerprint fingerprint) {
 		List<ZetStream> zetStreams = new ArrayList<>();
 		for (Chunk chunk : chunks.getOrDefault(fingerprint, Collections.emptyList())) zetStreams.add(chunk.stream());

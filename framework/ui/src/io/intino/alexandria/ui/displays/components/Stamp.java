@@ -1,10 +1,13 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.UiFrameworkBox;
+import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.notifiers.SpinnerNotifier;
+import io.intino.alexandria.ui.displays.notifiers.StampNotifier;
 
-public class Stamp extends AbstractStamp<UiFrameworkBox> {
+public class Stamp<DN extends StampNotifier, B extends Box> extends AbstractStamp<B> {
 
-    public Stamp(UiFrameworkBox box) {
+    public Stamp(B box) {
         super(box);
     }
 

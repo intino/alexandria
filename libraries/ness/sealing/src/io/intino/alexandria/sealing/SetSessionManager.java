@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 import static io.intino.alexandria.Session.SessionExtension;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 class SetSessionManager {
 	private static final DecimalFormat FORMATTER = new DecimalFormat("#.##");
@@ -29,7 +30,6 @@ class SetSessionManager {
 	private final File setStoreFolder;
 	private final File tempFolder;
 	private int count = 1;
-	private int size;
 
 	private SetSessionManager(List<File> files, File setStoreFolder, File tempFolder) {
 		this.files = files;
@@ -65,9 +65,15 @@ class SetSessionManager {
 
 	private void sealSetMetadataSessions() {
 		Map<File, FileTripleStore.Builder> map = new HashMap<>();
-		loadSetMetadataSessions()
-				.flatMap(TripleStore::all)
-				.forEach(s -> processTriple(s, map));
+		try {
+			loadSetMetadataSessions().forEach((key, value) -> {
+				String[] triple = value.all().flatMap(Arrays::stream).toArray(String[]::new);
+				if (triple.length > 0) processTriple(triple, map);
+				markTreated(key);
+			});
+		} catch (Throwable e) {
+			Logger.error(e);
+		}
 		map.values().forEach(FileTripleStore.Builder::close);
 	}
 
@@ -93,10 +99,10 @@ class SetSessionManager {
 		return map.get(file);
 	}
 
-	private Stream<MemoryTripleStore> loadSetMetadataSessions() {
+	private Map<File, MemoryTripleStore> loadSetMetadataSessions() {
 		return files.parallelStream()
 				.filter(f -> f.getName().endsWith(extensionOf(Session.Type.setMetadata)))
-				.map(f -> new MemoryTripleStore(inputStreamOf(f)));
+				.collect(toMap(f -> f, f -> new MemoryTripleStore(inputStreamOf(f)), (a, b) -> b));
 	}
 
 	private InputStream inputStreamOf(File file) {
@@ -110,9 +116,20 @@ class SetSessionManager {
 
 	private void sealSetSessions() {
 		List<SetSessionFileReader> readers = setSessionReaders();
-		Set<Fingerprint> fingerprints = fingerPrintsIn(readers);
-		size = fingerprints.size();
-		fingerprints.parallelStream().forEach(fp -> {
+		int size = readers.stream().mapToInt(SetSessionFileReader::size).sum();
+		readers.forEach(r -> {
+			sealFingerprints(readers, size, r);
+			markTreated(r.file());
+		});
+
+	}
+
+	private void markTreated(File file) {
+		file.renameTo(new File(file.getAbsolutePath() + ".treated"));
+	}
+
+	private void sealFingerprints(List<SetSessionFileReader> readers, int size, SetSessionFileReader r) {
+		r.fingerprints().parallelStream().forEach(fp -> {
 			if (count % 10000 == 0) Logger.info(FORMATTER.format((count * 100.) / size) + "%");
 			seal(fp, readers);
 			deleteIndex(fp);

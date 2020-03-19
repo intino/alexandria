@@ -54,7 +54,7 @@ class ImageEditable extends AbstractImageEditable {
 
 	render() {
 		const { classes } = this.props;
-		const inputId = this.props.id + "-image-input";
+		const inputId = this._inputId();
 		return (
 			<div style={this.style()}>
 				{this.state.value && <img className={classes.image} title={this.props.label} src={this.state.value} />}
@@ -67,6 +67,16 @@ class ImageEditable extends AbstractImageEditable {
 			</div>
 		);
 	};
+
+	_inputId = () => {
+        var dt = new Date().getTime();
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = (dt + Math.random()*16)%16 | 0;
+            dt = Math.floor(dt/16);
+            return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+        });
+        return uuid + "-image-input";
+    }
 
 	style() {
 		var result = super.style();

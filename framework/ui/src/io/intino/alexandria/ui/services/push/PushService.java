@@ -27,6 +27,11 @@ public class PushService extends io.intino.alexandria.rest.spark.PushService<UIS
 		UIMessage message = RequestAdapter.adaptFromJSON(content, UIMessage.class);
 		String requester = message.sender();
 
+		if (requester == null) {
+			super.onMessage(client, content);
+			return;
+		}
+
 		try {
 			linkToThread(client);
 			requesterMap.get(requester).execute(client, message);

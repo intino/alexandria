@@ -76,6 +76,7 @@ public class ComponentTemplate extends Template {
 			rule().condition((allTypes("properties","actionable")), (trigger("common"))).output(expression().output(literal("_title(\"")).output(mark("title")).output(literal("\");"))).output(literal("\n")).output(expression().output(literal("_color(\"")).output(mark("color")).output(literal("\");"))).output(literal("\n")).output(expression().output(literal("_readonly(")).output(mark("readonly")).output(literal(");"))).output(literal("\n")).output(expression().output(literal("_mode(io.intino.alexandria.ui.displays.components.Actionable.Mode.valueOf(\"")).output(mark("mode", "firstUpperCase")).output(literal("\"));"))).output(literal("\n")).output(expression().output(mark("actionableMode"))),
 			rule().condition((type("properties")), (trigger("common"))).output(expression().output(literal("label(\"")).output(mark("label")).output(literal("\");"))).output(literal("\n")).output(expression().output(literal("name(\"")).output(mark("name")).output(literal("\");"))).output(literal("\n")).output(expression().output(literal("_color(\"")).output(mark("color")).output(literal("\");"))),
 			rule().condition((allTypes("properties","portal")), (trigger("specific"))).output(expression().output(literal("_to(\"")).output(mark("to")).output(literal("\",\"")).output(mark("inName")).output(literal("\");"))).output(literal("\n")).output(expression().output(mark("parameter").multiple("\n"))),
+			rule().condition((allTypes("properties","proxyStamp")), (trigger("specific"))).output(literal("_proxy(new ")).output(mark("proxyPackage")).output(literal(".")).output(mark("proxyDisplay", "firstUpperCase")).output(literal("(new io.intino.alexandria.ui.spark.pages.Unit(\"")).output(mark("proxyUseName")).output(literal("\", ")).output(mark("proxyUseUrl")).output(literal(")));")),
 			rule().condition((allTypes("properties","selector")), (trigger("specific"))).output(expression().output(literal("_multipleSelection(")).output(mark("multipleSelection")).output(literal(");"))).output(literal("\n")).output(expression().output(literal("_readonly(")).output(mark("readonly")).output(literal(");"))).output(literal("\n")).output(expression().output(literal("_path(\"")).output(mark("path")).output(literal("\");"))),
 			rule().condition((allTypes("properties","image","avatar")), (trigger("specific"))).output(expression().output(literal("_text(\"")).output(mark("text")).output(literal("\");"))),
 			rule().condition((allTypes("properties","materialicon")), (trigger("specific"))).output(expression().output(literal("_icon(\"")).output(mark("icon")).output(literal("\");"))),
@@ -120,7 +121,9 @@ public class ComponentTemplate extends Template {
 			rule().condition((allTypes("itemClass","map"))).output(literal("io.intino.alexandria.ui.model.PlaceMark<")).output(mark("value")).output(literal(">")),
 			rule().condition((type("itemClass"))).output(mark("value")),
 			rule().condition((allTypes("itemVariable","map"))).output(literal("element.item()")),
-			rule().condition((type("itemVariable"))).output(literal("element"))
+			rule().condition((type("itemVariable"))).output(literal("element")),
+			rule().condition((allTypes("useUrl","custom"))).output(literal("box().configuration().get(\"")).output(mark("value")).output(literal("\")")),
+			rule().condition((type("useUrl"))).output(literal("\"")).output(mark("value")).output(literal("\""))
 		);
 	}
 }

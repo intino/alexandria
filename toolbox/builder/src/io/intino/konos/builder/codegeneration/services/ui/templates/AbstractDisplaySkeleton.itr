@@ -13,8 +13,8 @@ def type(display & accessible)
 
     public class $name+SnakeCaseToCamelCase+FirstUpperCase~Proxy extends ProxyDisplay<$name+SnakeCaseToCamelCase+FirstUpperCase~ProxyNotifier> {
 
-        public $name+firstUpperCase~Proxy(UISession session, io.intino.alexandria.ui.spark.pages.Unit unit) {
-            super("$name+firstUpperCase", session, unit, "/$name+SnakeCaseToCamelCase+lowercase~proxy");
+        public $name+firstUpperCase~Proxy(io.intino.alexandria.ui.spark.pages.Unit unit) {
+            super("$name+firstUpperCase", unit, "/$name+SnakeCaseToCamelCase+lowercase~proxy");
         }
 
 		[$request+accessible...[$NL$NL]]

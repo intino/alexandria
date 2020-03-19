@@ -14,5 +14,6 @@
     <orderEntry type="module" module-name="zim" />
     <orderEntry type="module" module-name="message" />
     <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13" level="project" />
+    <orderEntry type="module" module-name="primitives" />
   </component>
 </module>
