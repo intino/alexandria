@@ -45,7 +45,6 @@ public class KonosCompiler {
 			updateDependencies(requiredDependencies(graph));
 			return compiledFiles;
 		} catch (Exception e) {
-			e.printStackTrace();
 			processCompilationException(e);
 		} finally {
 //			addWarnings(collector);TODO

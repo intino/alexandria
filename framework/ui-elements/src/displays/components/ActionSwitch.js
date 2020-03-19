@@ -15,14 +15,19 @@ class ActionSwitch extends AbstractActionSwitch {
 		super(props);
 		this.notifier = new ActionSwitchNotifier(this);
 		this.requester = new ActionSwitchRequester(this);
-		this.state.checked = this.props.state === "On";
+		this.state = {
+			...this.state,
+			checked : this.props.state === "On",
+			readonly : this.props.readonly
+		};
 	};
 
 	renderTrigger = () => {
 		if (!this.state.visible) return (<React.Fragment/>);
 		return (
 			<FormControlLabel style={this.style()}
-							  control={<Switch size={this._size()} checked={this.state.checked} onChange={this.handleChange.bind(this)}/>}
+							  control={<Switch size={this._size()} disabled={this.state.readonly}
+							                   checked={this.state.checked} onChange={this.handleChange.bind(this)}/>}
 							  label={this._title()}
 			/>
 		);

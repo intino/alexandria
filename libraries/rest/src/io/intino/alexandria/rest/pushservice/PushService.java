@@ -11,6 +11,8 @@ public interface PushService<S extends Session<C>, C extends Client> extends Ses
 
 	ClosedConnection onClose(String clientId);
 
+	ClosedConnection onCloseScheduled(String clientId);
+
 	void pushBroadcast(Message message);
 
 	void pushToSession(S session, Message message);

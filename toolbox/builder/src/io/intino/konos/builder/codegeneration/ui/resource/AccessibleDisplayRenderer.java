@@ -25,8 +25,6 @@ public class AccessibleDisplayRenderer extends UIRenderer {
 
 	@Override
 	public void render() {
-		if (isRendered(display)) return;
-
 		FrameBuilder builder = buildFrame().add("accessibleDisplay").add("name", display.name$());
 		builder.add("resource");
 		builder.add(display.getClass().getSimpleName());
