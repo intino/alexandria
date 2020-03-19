@@ -37,11 +37,15 @@ public class Grammar implements Iterable<Property> {
 		zipFile.write(Filename, properties.stream().map(p -> p.toString() + "\n").collect(Collectors.joining()));
 	}
 
+	public List<Property> getAll() {
+		return new ArrayList<>(properties);
+	}
+
 	public Property get(String name) {
 		return properties.stream().filter(p->p.name().equals(name)).findFirst().orElse(null);
 	}
 
-	private void loadProperties(String content) throws IOException {
+	private void loadProperties(String content) {
 		if (content == null) return;
 		String[] lines = content.split("\n");
 		Arrays.stream(lines).forEach(line -> {
@@ -58,6 +62,7 @@ public class Grammar implements Iterable<Property> {
 		return new Property(line.split("\t"));
 	}
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public Iterator<Property> iterator() {
 		return properties.iterator();
