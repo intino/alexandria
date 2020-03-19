@@ -19,6 +19,8 @@ def type(process & src)
 		}
 
 		$state+execute...[$NL$NL]
+
+		[$state+accept...[$NL$NL]]
 	}
 end
 
@@ -55,17 +57,23 @@ def type(process)
 
 		$state+abstractExecute...[$NL$NL]
 
+		[$state+abstractaccept...[$NL$NL]]
+
 		$state+method...[$NL$NL]
 	}
 end
-
 
 def trigger(method)
 	private Task execute$method+firstUpperCase() {
 		return new Task(Task.Type.$taskType) {
 			@Override
 			public void execute() {
-				execute$method+FirstUpperCase();
+				$method+FirstLowerCase();
+			}
+
+			@Override
+			public boolean accept() {
+				return accept$method+FirstUpperCase();
 			}
 		};
 	}
@@ -81,8 +89,16 @@ def trigger(execute)
 	}
 end
 
-def trigger(method)
+def trigger(abstractAccept)
+	protected boolean accept$method+FirstUpperCase() {
+		return true;
+	}
+end
 
+def type(conditional) trigger(accept)
+	protected boolean accept$method+FirstUpperCase() {
+		return true;
+	}
 end
 
 def trigger(state)
