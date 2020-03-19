@@ -1,11 +1,9 @@
 package io.intino.konos.builder.codegeneration.bpm;
 
-import io.intino.alexandria.logger.Logger;
 import io.intino.bpmparser.BpmnParser;
 import io.intino.bpmparser.Link;
 import io.intino.bpmparser.State;
-import io.intino.bpmparser.Task;
-import io.intino.itrules.Frame;
+import io.intino.bpmparser.State.Type;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.CompilationContext;
@@ -19,7 +17,11 @@ import io.intino.konos.model.graph.Workflow.Process;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.text.Normalizer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static io.intino.bpmparser.State.Type.Initial;
 import static io.intino.bpmparser.State.Type.Terminal;
@@ -56,92 +58,87 @@ public class BpmRenderer extends Renderer {
 				add("package", compilationContext.packageName()).
 				add("terminal", compilationContext.dataHubManifest().qn).
 				add(compilationContext.boxName()).
-				add("process", processes.stream().map(this::frameOf).toArray(Frame[]::new));
+				add("process", processes.stream().filter(p -> file(p) != null).map(p -> frameOf(p, file(p))).toArray(FrameBuilder[]::new));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(graph.workflow()), javaFile(gen, "Workflow").getAbsolutePath()));
 		writeFrame(gen, "Workflow", customize(new WorkflowTemplate()).render(builder.toFrame()));
-	}
-
-	private Frame frameOf(Process p) {
-		return new FrameBuilder("process").add("name", p.name$()).toFrame();
 	}
 
 	private void renderProcesses() {
 		for (Process process : processes) {
 			stateServices.clear();
-			File file = process.bpmn() == null ? null : new File(process.bpmn().getFile());
-			if (file == null || !file.exists()) continue;
-			renderProcess(process, file);
+			File file = file(process);
+			if (file != null) renderProcess(process, file);
 		}
 	}
 
+	private File file(Process process) {
+		File file = process.bpmn() == null ? null : new File(process.bpmn().getFile());
+		if (file == null || !file.exists()) return null;
+		return file;
+	}
+
 	private void renderProcess(Process process, File file) {
+		final FrameBuilder builder = frameOf(process, file);
+		compilationContext.classes().put(process.getClass().getSimpleName() + "#" + process.name$(), "bpm." + process.name$());
+		writeFrame(gen, "Abstract" + firstUpperCase(process.name$()), customize(new ProcessTemplate()).render(builder.toFrame()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(process), javaFile(gen, "Abstract" + firstUpperCase(process.name$())).getAbsolutePath()));
+		if (!alreadyRendered(src, process.name$()))
+			writeFrame(src, process.name$(), customize(new ProcessTemplate()).render(builder.add("src").toFrame()));
+	}
+
+	private FrameBuilder frameOf(Process process, File bpmn) {
+		BpmnParser bpmnParser;
+		try {
+			bpmnParser = new BpmnParser(new FileInputStream(bpmn));
+		} catch (FileNotFoundException e) {
+			return null;
+		}
 		final FrameBuilder builder = new FrameBuilder("process").
 				add("box", compilationContext.boxName()).
 				add("package", compilationContext.packageName()).
 				add("name", process.name$());
-		try {
-			BpmnParser bpmnParser = new BpmnParser(new FileInputStream(file));
-			State initial = bpmnParser.getNodeWalker().getInitial().links().get(0).state().type(Initial);
-			walk(builder, process, initial);
-			for (String stateService : stateServices)
-				builder.add("accessor", new FrameBuilder("accessor").add("name", stateService));
-			compilationContext.classes().put(process.getClass().getSimpleName() + "#" + process.name$(), "bpm." + process.name$());
-			writeFrame(gen, "Abstract" + firstUpperCase(process.name$()), customize(new ProcessTemplate()).render(builder.toFrame()));
-			context.compiledFiles().add(new OutputItem(context.sourceFileOf(process), javaFile(gen, "Abstract" + firstUpperCase(process.name$())).getAbsolutePath()));
-			if (!alreadyRendered(src, process.name$()))
-				writeFrame(src, process.name$(), customize(new ProcessTemplate()).render(builder.add("src").toFrame()));
-		} catch (FileNotFoundException e) {
-			Logger.error(e);
+		List<State> states = bpmnParser.states();
+		for (State state : states) {
+			builder.add("state", frameOf(state, states));
+			state.links().forEach(link -> builder.add("link", frameOf(state, link)));
+			if (state.type() == Initial && state.comment() != null)
+				Arrays.stream(state.comment().split("\n")).filter(l -> l.trim().startsWith("*")).forEach(p -> builder.add("parameter", p.trim().substring(1)));
 		}
-	}
-
-	private void walk(FrameBuilder builder, Process process, State initial) {
-		Map<String, FrameBuilder> states = new LinkedHashMap<>();
-		Map<String, FrameBuilder> links = new LinkedHashMap<>();
-		framesFrom(initial, process, states, links);
-		builder.add("state", states.values().toArray(new FrameBuilder[0]))
-				.add("link", links.values().toArray(new FrameBuilder[0]));
-	}
-
-	private void framesFrom(State state, Process process, Map<String, FrameBuilder> states, Map<String, FrameBuilder> links) {
-		states.put(format(state), frameOf(state, process, typeOf(state)));
-		for (Link link : state.links()) {
-			if (!states.containsKey(format(link.state())) && !link.state().type().equals(Terminal))
-				framesFrom(link.state(), process, states, links);
-			if (!links.containsKey(format(state) + "#" + format(link.state())))
-				links.put(format(state) + "#" + format(link.state()), frameOf(state, link));
-		}
-	}
-
-	private FrameBuilder frameOf(State state, Process process, List<State.Type> types) {
-		FrameBuilder builder = new FrameBuilder("state").add("name", format(state));
-		if (!types.contains(State.Type.Intermediate))
-			builder.add("type", types.stream().map(Enum::name).toArray(String[]::new));
-		if (state.task() != null) {
-			if (state.task().type().equals(Task.Type.Service)) stateServices.add(format(state));
-			builder.add(state.task().type().name())
-					.add("taskType", state.task().type().name())
-					.add("taskName", state.task().id())
-					.add("process", process.name$());
-		}
-		if (types.contains(Terminal)) state.type(Terminal).links().clear();
 		return builder;
 	}
 
-	private List<State.Type> typeOf(State state) {
-		List<State.Type> types = new ArrayList<>();
-		if (state.type().equals(Initial)) types.add(Initial);
-		if (state.links().isEmpty() || state.links().get(0).state().type().equals(Terminal)) types.add(Terminal);
-		else if (!types.contains(Initial)) types.add(State.Type.Intermediate);
+	private FrameBuilder frameOf(State state, List<State> states) {
+		List<Type> types = typesOf(state);
+		FrameBuilder builder = new FrameBuilder("state", entryLink(state, states)).add("method", format(state)).add("label", state.label());
+		if (!types.contains(Type.Intermediate))
+			builder.add("type", types.stream().map(Enum::name).toArray(String[]::new));
+		if (state.taskType() == State.TaskType.Service) stateServices.add(format(state));
+		builder.add("taskType", state.taskType());
+		return builder;
+	}
+
+	private String entryLink(State state, List<State> states) {
+		for (State s : states) {
+			Link link = s.links().stream().filter(l -> l.to().equals(state)).findFirst().orElse(null);
+			if (link != null && link.type() != Link.Type.Line) return "conditional";
+		}
+		return Link.Type.Line.name();
+	}
+
+	private List<Type> typesOf(State state) {
+		List<Type> types = new ArrayList<>();
+		if (state.type() == Initial) types.add(Initial);
+		if (state.links().isEmpty() || state.type() == Terminal) types.add(Terminal);
+		else if (!types.contains(Initial)) types.add(Type.Intermediate);
 		return types;
 	}
 
 	private FrameBuilder frameOf(State state, Link link) {
-		return new FrameBuilder("link").add("from", format(state)).add("to", format(link.state())).add("type", link.type().name());
+		return new FrameBuilder("link").add("from", state.label()).add("to", link.state().label()).add("type", link.type().name());
 	}
 
 	private String format(State state) {
-		return Formatters.snakeCaseToCamelCase().format(state.name().replace(" ", "_")).toString();
+		return Formatters.snakeCaseToCamelCase().format(Normalizer.normalize(state.label().replaceAll(" |/", "_"), Normalizer.Form.NFKD)).toString();
 	}
 
 	private boolean alreadyRendered(File destination, String action) {

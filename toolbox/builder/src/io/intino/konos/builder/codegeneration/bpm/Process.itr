@@ -7,16 +7,20 @@ def type(process & src)
 
 	public class $name+firstUpperCase extends Abstract$name+firstUpperCase {
 
-		$name+firstUpperCase($box+firstUpperCase~Box box, String id) {
-			super(box, id);
+		$parameter+fieldName...[$NL]
+
+		$name+firstUpperCase(String id, $box+firstUpperCase~Box box) {
+			super(id, box);
 		}
 
 		$name+firstUpperCase($box+firstUpperCase~Box box[, $parameter+signature...[, ]]) {
-			super(box, java.util.UUID.randomUUID().toString());
+			super(java.util.UUID.randomUUID().toString(), box);
 			[$parameter+put...[$NL]]
 		}
 
 		$state+execute...[$NL$NL]
+
+		[$state+accept...[$NL$NL]]
 	}
 end
 
@@ -35,7 +39,7 @@ def type(process)
 
 		protected $box+firstUpperCase~Box box;
 
-		Abstract$name+firstUpperCase($box+firstUpperCase~Box box, String id) {
+		Abstract$name+firstUpperCase(String id, $box+firstUpperCase~Box box) {
 			super(id);
 			this.box = box;
 			init();
@@ -53,46 +57,59 @@ def type(process)
 
 		$state+abstractExecute...[$NL$NL]
 
+		[$state+abstractaccept...[$NL$NL]]
+
 		$state+method...[$NL$NL]
 	}
 end
 
-
 def trigger(method)
-	private Task $name+firstLowerCase() {
+	private Task execute$method+firstUpperCase() {
 		return new Task(Task.Type.$taskType) {
 			@Override
 			public void execute() {
-				execute$name+FirstUpperCase();
+				$method+FirstLowerCase();
+			}
+
+			@Override
+			public boolean accept() {
+				return accept$method+FirstUpperCase();
 			}
 		};
 	}
 end
 
 def trigger(abstractExecute)
-	protected abstract void execute$name+FirstUpperCase();
+	protected abstract void $method+FirstLowerCase();
 end
 
 def trigger(execute)
-	protected void execute$name+FirstUpperCase() {
+	protected void $method+FirstLowerCase() {
 
 	}
 end
 
-def trigger(method)
-
+def trigger(abstractAccept)
+	protected boolean accept$method+FirstUpperCase() {
+		return true;
+	}
 end
 
+def type(conditional) trigger(accept)
+	protected boolean accept$method+FirstUpperCase() {
+		return true;
+	}
+end
 
 def trigger(state)
-	addState(new io.intino.alexandria.bpm.State("$name", $name+firstLowerCase()[, $type+lowercase+FirstUpperCase...[, ]]));
+	addState(new io.intino.alexandria.bpm.State("$label", execute$method+firstUpperCase()[, $type+lowercase+FirstUpperCase...[, ]]));
 end
 
 def trigger(link)
 	addLink(new io.intino.alexandria.bpm.Link("$from", "$to", $type+linkType));
 end
 
-def attribute(this:DefaultLine) trigger(linkType)
+def attribute(this:Line) trigger(linkType)
 	io.intino.alexandria.bpm.Link.Type.Default
 end
 
@@ -100,10 +117,18 @@ def attribute(this:Exclusive) trigger(linkType)
 	io.intino.alexandria.bpm.Link.Type.Exclusive
 end
 
-def trigger(linkType)
+def attribute(this:Inclusive) trigger(linkType)
 	io.intino.alexandria.bpm.Link.Type.Inclusive
 end
 
 def trigger(put)
-	put("$name", $name);
+	put($this+firstUpperCase, $this+firstLowerCase);
+end
+
+def trigger(signature)
+	String $this+firstLowerCase
+end
+
+def trigger(fieldName)
+	private static final String $this+FirstUpperCase = "$this";
 end
