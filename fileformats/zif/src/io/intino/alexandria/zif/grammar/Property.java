@@ -34,8 +34,20 @@ public class Property {
 		this(data[0], data[1], Type.valueOf(data[2]), grammarOf(data), cardinalityOf(data));
 	}
 
+	public String name() {
+		return name;
+	}
+
+	public String label() {
+		return label;
+	}
+
+	public Type type() {
+		return type;
+	}
+
 	public boolean isIdentifier() {
-		return this.name.startsWith(Identifier);
+		return name.startsWith(Identifier);
 	}
 
 	public boolean isFeature() {
@@ -48,14 +60,6 @@ public class Property {
 
 	public boolean isRole() {
 		return name.startsWith(Role);
-	}
-
-	public String name() {
-		return name;
-	}
-
-	public Type type() {
-		return type;
 	}
 
 	public String grammar() {
