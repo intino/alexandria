@@ -1,8 +1,9 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.alexandria", version = "1.0.1") zif
+Artifact(groupId = "io.intino.alexandria", version = "2.0.0") zif
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Imports
+		Compile("io.intino.alexandria", "zip", "1.0.0")
 		Test("junit", "junit", "4.12")
 		Test("org.assertj", "assertj-core", "3.8.0")
 	Distribution(intino.release)
