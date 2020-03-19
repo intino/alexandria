@@ -97,24 +97,32 @@ public class BpmRenderer extends Renderer {
 				add("box", compilationContext.boxName()).
 				add("package", compilationContext.packageName()).
 				add("name", process.name$());
-		for (State state : bpmnParser.states()) {
-			builder.add("state", frameOf(state));
+		List<State> states = bpmnParser.states();
+		for (State state : states) {
+			builder.add("state", frameOf(state, states));
 			state.links().forEach(link -> builder.add("link", frameOf(state, link)));
 			if (state.type() == Initial && state.comment() != null)
-				Arrays.stream(state.comment().split("\n")).filter(l -> l.startsWith("*")).forEach(p -> builder.add("parameter", p.substring(1)));
+				Arrays.stream(state.comment().split("\n")).filter(l -> l.trim().startsWith("*")).forEach(p -> builder.add("parameter", p.trim().substring(1)));
 		}
 		return builder;
 	}
 
-
-	private FrameBuilder frameOf(State state) {
+	private FrameBuilder frameOf(State state, List<State> states) {
 		List<Type> types = typesOf(state);
-		FrameBuilder builder = new FrameBuilder("state").add("method", format(state)).add("label", state.label());
+		FrameBuilder builder = new FrameBuilder("state", entryLink(state, states)).add("method", format(state)).add("label", state.label());
 		if (!types.contains(Type.Intermediate))
 			builder.add("type", types.stream().map(Enum::name).toArray(String[]::new));
 		if (state.taskType() == State.TaskType.Service) stateServices.add(format(state));
 		builder.add("taskType", state.taskType());
 		return builder;
+	}
+
+	private String entryLink(State state, List<State> states) {
+		for (State s : states) {
+			Link link = s.links().stream().filter(l -> l.to().equals(state)).findFirst().orElse(null);
+			if (link != null && link.type() != Link.Type.Line) return "conditional";
+		}
+		return Link.Type.Line.name();
 	}
 
 	private List<Type> typesOf(State state) {
