@@ -11,6 +11,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class Zif_ {
 
+	public static final String ZifFile = "example.zif";
+
 	@Before
 	public void setup() throws IOException {
 		String[][] data = new String[][] {
@@ -33,17 +35,17 @@ public class Zif_ {
 		Zif zif = new Zif();
 		for (String[] line : data)
 			zif.append(line[0], line[1], line[2]);
-		zif.save(new File("identities.zif"));
+		zif.save(new File(ZifFile));
 	}
 
 	@After
 	public void tearDown() {
-		new File("identities.zif").delete();
+		new File(ZifFile).delete();
 	}
 
 	@Test
 	public void should_get_by_id() throws IOException {
-		Zif zif = new Zif(new File("identities.zif"));
+		Zif zif = new Zif(new File(ZifFile));
 		assertThat(zif.get("884d6028-64fd-40f4-9e71-d6d43a4ae18e").size()).isEqualTo(12);
 		for (Zif.Assertion assertion : zif.get("884d6028-64fd-40f4-9e71-d6d43a4ae18e")) {
 			assertThat(assertion.id()).isEqualTo("884d6028-64fd-40f4-9e71-d6d43a4ae18e");
@@ -52,7 +54,7 @@ public class Zif_ {
 
 	@Test
 	public void should_search() throws IOException {
-		Zif zif = new Zif(new File("identities.zif"));
+		Zif zif = new Zif(new File(ZifFile));
 		assertThat(zif.search("identifier/","c2").size()).isEqualTo(0);
 		assertThat(zif.search("id", "44201034R").contains("884d6028-64fd-40f4-9e71-d6d43a4ae18e")).isTrue();
 		assertThat(zif.search("id", "239450391230").contains("884d6028-64fd-40f4-9e71-d6d43a4ae18e")).isTrue();
@@ -60,7 +62,7 @@ public class Zif_ {
 
 	@Test
 	public void should_search_by_property() throws IOException {
-		Zif zif = new Zif(new File("identities.zif"));
+		Zif zif = new Zif(new File(ZifFile));
 		assertThat(zif.search("identifier/dni", "44201034R").contains("884d6028-64fd-40f4-9e71-d6d43a4ae18e")).isTrue();
 		assertThat(zif.search("identifier/rpe", "239450391230").contains("884d6028-64fd-40f4-9e71-d6d43a4ae18e")).isTrue();
 		assertThat(zif.search("feature/status", "enabled").contains("8885e118-537a-4628-a607-b10672103a8f")).isTrue();
@@ -70,7 +72,7 @@ public class Zif_ {
 
 	@Test
 	public void should_search_by_predicate() throws IOException {
-		Zif zif = new Zif(new File("identities.zif"));
+		Zif zif = new Zif(new File(ZifFile));
 		assertThat(zif.search(a->a.property().equals("identifier/dni") && a.value().equals("44201034R")).contains("884d6028-64fd-40f4-9e71-d6d43a4ae18e")).isTrue();
 	}
 

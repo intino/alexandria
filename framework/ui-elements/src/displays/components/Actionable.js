@@ -141,7 +141,7 @@ export default class Actionable extends AbstractActionable {
 		return (
 		    <Dialog onClose={this.handleAffirmClose} open={openAffirm}>
 				<DialogTitle onClose={this.handleAffirmClose}>{this.translate("Affirm")}</DialogTitle>
-				<DialogContent><DialogContentText>{this.props.affirmed}</DialogContentText></DialogContent>
+				<DialogContent><DialogContentText>{this.translate(this.props.affirmed)}</DialogContentText></DialogContent>
 				<DialogActions>
 					<Button onClick={this.handleAffirmClose} color="primary">{this.translate("Cancel")}</Button>
 					<Button variant="contained" onClick={this.handleAffirmAccept} color="primary">{this.translate("OK")}</Button>
@@ -158,11 +158,11 @@ export default class Actionable extends AbstractActionable {
 				<DialogTitle onClose={this.handleSignClose}>{this.translate("Sign")}</DialogTitle>
 				<DialogContent>
 				    <DialogContentText style={{marginBottom:'5px'}}>{this.props.signed.text}</DialogContentText>
-				    <TextField autoFocus={true} style={{width:'100%'}} type="password" value={this.state.signInfo.sign}
+				    <TextField autoFocus={true} style={{width:'100%'}} type="password" value={this.translate(this.state.signInfo.sign)}
 				               onChange={this.handleSignTextChange.bind(this)} onKeyPress={this.handleSignKeypress.bind(this)}/>
 				    {this.requireSignReason() &&
 				        <div style={{marginTop:"25px"}}>
-                            <DialogContentText style={{marginBottom:'5px'}}>{this.props.signed.reason}</DialogContentText>
+                            <DialogContentText style={{marginBottom:'5px'}}>{this.translate(this.props.signed.reason)}</DialogContentText>
                             <TextField autoFocus={true} style={{width:'100%'}} multiline={true} rows={5} value={this.state.signInfo.reason}
                                        onChange={this.handleSignReasonChange.bind(this)} onKeyPress={this.handleSignKeypress.bind(this)}/>
                        </div>

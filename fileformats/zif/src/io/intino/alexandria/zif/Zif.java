@@ -1,45 +1,52 @@
 package io.intino.alexandria.zif;
 
+import io.intino.alexandria.zip.Zip;
+
 import java.io.*;
 import java.time.Instant;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import static java.util.stream.Collectors.toList;
 
 
 public class Zif implements Iterable<Zif.Assertion> {
+	private Grammar grammar;
 	private List<Assertion> assertions;
 
 	public Zif() {
 		this.assertions = new ArrayList<>();
-	}
-
-	public Zif(InputStream is) throws IOException {
-		this();
-		this.load(is);
+		this.grammar = new Grammar();
 	}
 
 	public Zif(File file) throws IOException {
-		this(new FileInputStream(file));
+		this();
+		load(file);
+	}
+
+	public Grammar grammar() {
+		return grammar;
 	}
 
 	public void load(File file) throws IOException {
-		load(new FileInputStream(file));
+		Zip zipFile = new Zip(file);
+		loadAssertions(zipFile.read(file.getName()));
+		loadGrammar(file);
 	}
 
-	public void load(InputStream is) throws IOException {
-		try (BufferedReader reader = readerOf(is)) {
-			while (true) {
-				String line = reader.readLine();
-				if (line == null) break;
-				if (line.isEmpty()) continue;
- 				append(assertionOf(line));
-			}
-		}
+	public List<Assertion> get(String id) {
+		return assertions.stream().filter(a->a.id.equals(id)).collect(toList());
+	}
+
+	public Search search(String property, String text) {
+		return search(a->a.property.contains(property) && a.value.contains(text));
+	}
+
+	public Search search(Predicate<Assertion> predicate) {
+		return new Search(predicate);
 	}
 
 	public void append(Assertion assertion) {
@@ -50,46 +57,28 @@ public class Zif implements Iterable<Zif.Assertion> {
 		append(new Assertion(Instant.now(), id, property, value));
 	}
 
-	public void save(OutputStream os) throws IOException {
-		try (BufferedWriter writer = writerOf(os)) {
-			assertions.forEach(a-> save(writer, a));
-		}
-	}
-
 	public void save(File file) throws IOException {
-		save(new FileOutputStream(file));
+		Zip zip = new Zip(file);
+		if (!file.exists()) zip.create();
+		zip.write(file.getName(), assertions.stream().map(a -> a.toString() + "\n").collect(Collectors.joining()));
+		grammar.save(file);
 	}
 
-	public List<Assertion> get(String id) {
-		return assertions.stream().filter(a->a.id.equals(id)).collect(toList());
+	private void loadAssertions(String content) throws IOException {
+		if (content == null) return;
+		String[] lines = content.split("\n");
+		Arrays.stream(lines).forEach(line -> {
+			if (line.isEmpty()) return;
+			append(assertionOf(line));
+		});
+	}
+
+	private void loadGrammar(File file) throws IOException {
+		grammar = new Grammar(file);
 	}
 
 	private Assertion assertionOf(String line) {
 		return new Assertion(line.split("\t"));
-	}
-
-	private BufferedReader readerOf(InputStream is) throws IOException {
-		return new BufferedReader(new InputStreamReader(new GZIPInputStream((is))));
-	}
-
-	private BufferedWriter writerOf(OutputStream os) throws IOException {
-		return new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream((os))));
-	}
-
-	private void save(BufferedWriter writer, Assertion assertion) {
-		try {
-			writer.write(assertion.toString() + "\n");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public Search search(String property, String text) {
-		return search(a->a.property.contains(property) && a.value.contains(text));
-	}
-
-	public Search search(Predicate<Assertion> predicate) {
-		return new Search(predicate);
 	}
 
 	@Override
