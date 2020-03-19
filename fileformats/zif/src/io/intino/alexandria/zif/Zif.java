@@ -17,6 +17,8 @@ public class Zif implements Iterable<Zif.Assertion> {
 	private Grammar grammar;
 	private List<Assertion> assertions;
 
+	private static final String AssertionsFilename = ".assertions";
+
 	public Zif() {
 		this.assertions = new ArrayList<>();
 		this.grammar = new Grammar();
@@ -33,7 +35,7 @@ public class Zif implements Iterable<Zif.Assertion> {
 
 	public void load(File file) throws IOException {
 		Zip zipFile = new Zip(file);
-		loadAssertions(zipFile.read(file.getName()));
+		loadAssertions(zipFile.read(AssertionsFilename));
 		loadGrammar(file);
 	}
 
@@ -60,7 +62,7 @@ public class Zif implements Iterable<Zif.Assertion> {
 	public void save(File file) throws IOException {
 		Zip zip = new Zip(file);
 		if (!file.exists()) zip.create();
-		zip.write(file.getName(), assertions.stream().map(a -> a.toString() + "\n").collect(Collectors.joining()));
+		zip.write(AssertionsFilename, assertions.stream().map(a -> a.toString() + "\n").collect(Collectors.joining()));
 		grammar.save(file);
 	}
 

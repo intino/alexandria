@@ -15,7 +15,7 @@ import java.util.zip.GZIPInputStream;
 public class Grammar implements Iterable<Property> {
 	private List<Property> properties;
 
-	public static final String Filename = ".grammar";
+	private static final String Filename = ".grammar";
 
 	public Grammar() {
 		this.properties = new ArrayList<>();
