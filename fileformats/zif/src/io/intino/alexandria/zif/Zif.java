@@ -33,6 +33,11 @@ public class Zif implements Iterable<Zif.Assertion> {
 		return grammar;
 	}
 
+	public Zif grammar(Grammar grammar) {
+		this.grammar = grammar;
+		return this;
+	}
+
 	public void load(File file) throws IOException {
 		Zip zipFile = new Zip(file);
 		loadAssertions(zipFile.read(AssertionsFilename));
