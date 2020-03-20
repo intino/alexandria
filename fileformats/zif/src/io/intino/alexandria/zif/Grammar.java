@@ -21,6 +21,10 @@ public class Grammar implements Iterable<Property> {
 		this.properties = new ArrayList<>();
 	}
 
+	public Grammar(List<Property> properties) {
+		this.properties = properties;
+	}
+
 	public Grammar(File file) throws IOException {
 		this();
 		load(file);
