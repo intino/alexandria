@@ -1,5 +1,6 @@
 package io.intino.konos.builder.codegeneration;
 
+import io.intino.konos.builder.KonosException;
 import io.intino.konos.builder.codegeneration.accessor.jmx.JMXAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer;
 import io.intino.konos.builder.codegeneration.bpm.BpmRenderer;
@@ -22,6 +23,8 @@ import io.intino.konos.builder.codegeneration.services.messaging.MessagingServic
 import io.intino.konos.builder.codegeneration.services.rest.RESTResourceRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
+import io.intino.konos.builder.codegeneration.services.soap.SoapOperationRenderer;
+import io.intino.konos.builder.codegeneration.services.soap.SoapServiceRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.compiler.shared.KonosBuildConstants.Mode;
 import io.intino.konos.model.graph.KonosGraph;
@@ -39,15 +42,16 @@ public class FullRenderer {
 		this.hasModel = hasModel();
 	}
 
-	public void execute() {
+	public void execute() throws KonosException {
 		render();
 	}
 
-	private void render() {
+	private void render() throws KonosException {
 		if (context.mode().equals(Mode.Normal)) {
 			schemas();
 			exceptions();
 			rest();
+			soap();
 			tasks();
 			jmx();
 			jms();
@@ -85,6 +89,11 @@ public class FullRenderer {
 		new RESTServiceRenderer(context, graph).execute();
 	}
 
+	private void soap() {
+		new SoapOperationRenderer(context, graph).execute();
+		new SoapServiceRenderer(context, graph).execute();
+	}
+
 	private void jmx() {
 		new JMXOperationsServiceRenderer(context, graph).execute();
 		new JMXServerRenderer(context, graph).execute();
@@ -113,7 +122,7 @@ public class FullRenderer {
 		new MounterRenderer(context, graph).execute();
 	}
 
-	private void subscribers() {
+	private void subscribers() throws KonosException {
 		new SubscriberRenderer(context, graph).execute();
 	}
 
@@ -148,7 +157,7 @@ public class FullRenderer {
 	}
 
 	private void box() {
-		AbstractBoxRenderer renderer = new AbstractBoxRenderer(context, graph, hasModel);
+		AbstractBoxRenderer renderer = new AbstractBoxRenderer(context, graph);
 		renderer.execute();
 		new BoxRenderer(context, graph, hasModel).execute();
 		new BoxConfigurationRenderer(context, hasModel, renderer.customParameters()).execute();

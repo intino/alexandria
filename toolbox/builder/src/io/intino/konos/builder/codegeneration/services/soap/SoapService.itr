@@ -1,0 +1,33 @@
+def type(server)
+	package $package+ValidPackage;
+
+	import io.intino.alexandria.http.AlexandriaSpark;
+	import $package+ValidPackage.soap.operations.*;
+	import io.intino.alexandria.core.Box;
+	import io.intino.alexandria.http.security.DefaultSecurityManager;
+	import io.intino.alexandria.http.spark.SparkPushService;
+
+	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Service {
+
+		public static void setup(AlexandriaSpark server, $box+FirstUpperCase~Box box) {
+			[$secure]
+			[$operation...[$NL]]
+		}
+	}
+end
+
+def type(secure)
+	server.secure(new DefaultSecurityManager(new java.io.File("$file"), "$password"));
+end
+
+def type(operation)
+	server.route($path+format).post(manager -> new $name+SnakeCaseToCamelCase+firstUpperCase~Operation(box, manager).execute());
+end
+
+def type(path) trigger(format)
+	"$name"[$custom...[]]
+end
+
+def trigger(custom)
+	.replace("{$value}", box.configuration().get("$value"))
+end

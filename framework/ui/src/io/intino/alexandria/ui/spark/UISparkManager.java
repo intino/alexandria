@@ -1,6 +1,6 @@
 package io.intino.alexandria.ui.spark;
 
-import io.intino.alexandria.rest.spark.SparkManager;
+import io.intino.alexandria.http.spark.SparkManager;
 import io.intino.alexandria.ui.services.AuthService;
 import io.intino.alexandria.ui.services.push.PushService;
 import io.intino.alexandria.ui.services.push.UIClient;

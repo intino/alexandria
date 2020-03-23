@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.datahub.subscriber;
 
 import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.KonosException;
 import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
@@ -24,7 +25,9 @@ public class SubscriberRenderer {
 		this.srcSubscribers = new File(context.src(Target.Owner), "subscribers");
 	}
 
-	public void execute() {
+	public void execute() throws KonosException {
+		if (!subscribers.isEmpty() && context.dataHubManifest() == null)
+			throw new KonosException("Datahub declaration in artifact is required to instance subscribers");
 		for (Subscriber subscriber : subscribers) {
 			final FrameBuilder builder = baseFrame(subscriber);
 			CompilationContext.DataHubManifest manifest = context.dataHubManifest();

@@ -1,12 +1,12 @@
 package io.intino.alexandria.ui;
 
-import io.intino.alexandria.rest.pushservice.MessageCarrier;
 import io.intino.alexandria.ui.displays.Display;
-import io.intino.alexandria.ui.displays.DisplayRouteManager;
 import io.intino.alexandria.ui.displays.DisplayRouteDispatcher;
+import io.intino.alexandria.ui.displays.DisplayRouteManager;
 import io.intino.alexandria.ui.displays.notifiers.DisplayNotifier;
 import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
 import io.intino.alexandria.ui.spark.UISparkManager;
+import io.intino.alexandria.wss.pushservice.MessageCarrier;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
