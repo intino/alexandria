@@ -1,0 +1,19 @@
+dsl Legio
+
+Artifact(groupId = "io.intino.alexandria", version = "1.0.0") rocketchat
+	Imports
+		Compile("com.rocketchat.livechat", "rocketchat-livechat","0.7.1.9")
+		Compile("com.rocketchat.core", "rocketchat-core", "0.7.1.9")
+
+		Compile("com.github.baloise", "rocket-chat-rest-client", "0.1.2-SNAPSHOT")
+		Compile("io.intino.alexandria", "logger", "2.1.0")
+		Compile("io.intino.alexandria", "logger4j", "1.0.0")
+		Test(groupId = "junit", artifactId = "junit", version = "LATEST")
+	Package(mode = ModulesAndLibrariesLinkedByManifest)
+
+Repository(identifier = "intino-maven")
+	Language(url = "https://artifactory.intino.io/artifactory/releases")
+	Release(url = "https://artifactory.intino.io/artifactory/releases")
+	
+Repository(identifier = "spring")
+	Release(url = "https://repo.spring.io/plugins-release/")
