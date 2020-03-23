@@ -63,8 +63,9 @@ def type(box)
 			beforeStart();
 			if (owner != null) owner.start();
 			initUI();
-			initRESTServices();
-			initJMXServices();
+			initRestServices();
+			initSoapServices();
+			initJmxServices();
 			initDatalake();
 			initMessageHub();
 			initTerminal();
@@ -107,15 +108,19 @@ def type(box)
 
 		[$workflow+getter]
 
-		private void initRESTServices() {
+		private void initRestServices() {
 			$service+rest...[$NL]
+		}
+
+		private void initSoapServices() {
+			$service+soap...[$NL]
 		}
 
 		private void initMessagingServices() {
 			$service+messaging...[$NL]
 		}
 
-		private void initJMXServices() {
+		private void initJmxServices() {
 			$service+jmx...[$NL]
 		}
 
@@ -185,14 +190,21 @@ end
 
 def type(service & ui) trigger(setup)
 	this.authService = [this.authService($authentication)?null];
-	[if($parameter != null && !$parameter.isEmpty())][io.intino.alexandria.rest.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/")];
-	io.intino.alexandria.rest.AlexandriaSparkBuilder.setUI(true);
-	io.intino.alexandria.rest.AlexandriaSparkBuilder.addParameters(this.authService);
+	[if($parameter != null && !$parameter.isEmpty())][io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/")];
+	io.intino.alexandria.http.AlexandriaSparkBuilder.setUI(true);
+	io.intino.alexandria.http.AlexandriaSparkBuilder.addParameters(this.authService);
 end
 
 def type(service & rest) trigger(setup)
-	io.intino.alexandria.rest.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
+	[if($parameter != null && !$parameter.isEmpty()) ]io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
+	$name+SnakeCaseToCamelCase+FirstUpperCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
+
+def type(service & soap) trigger(setup)
+	[if($parameter != null && !$parameter.isEmpty()) ]io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
+	$name+SnakeCaseToCamelCase+FirstUpperCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+end
+
 
 def type(datalake & mirror) trigger(setup)
 	this.datalake = new Datalake(new java.io.File($path+parameter), $parameter...[, ]);
@@ -217,7 +229,7 @@ end
 
 def type(service & jmx) trigger(jmx)
 	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new JMX$name+SnakeCaseToCamelCase+FirstUpperCase().init((($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this));
-	Logger.info("JMX service $name: started!");
+	Logger.info("Jmx service $name: started!");
 end
 
 def type(service & slack) trigger(slack)
@@ -227,14 +239,19 @@ def type(service & slack) trigger(slack)
 end
 
 def type(service & rest) trigger(rest)
-	$name+SnakeCaseToCamelCase+FirstUpperCase~Service.setup(io.intino.alexandria.rest.AlexandriaSparkBuilder.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this).start();
-	Logger.info("REST service $name: started!");
+	[io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();
+	Logger.info("Rest service $name: started!");]
+end
+
+def type(service & soap) trigger(soap)
+	[io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();
+	Logger.info("Soap service $name: started!");]
 end
 
 def type(service & ui) trigger(ui)
-	[if ($parameter == null || !io.intino.alexandria.rest.AlexandriaSparkBuilder.isUI()) return;]
+	[if ($parameter == null || !io.intino.alexandria.http.AlexandriaSparkBuilder.isUI()) return;]
 	[this.initTranslatorService()];
-	io.intino.alexandria.ui.UISpark sparkInstance = (io.intino.alexandria.ui.UISpark) io.intino.alexandria.rest.AlexandriaSparkBuilder.instance();
+	io.intino.alexandria.ui.UISpark sparkInstance = (io.intino.alexandria.ui.UISpark) io.intino.alexandria.http.AlexandriaSparkBuilder.instance();
 	this.pushService = new io.intino.alexandria.ui.services.push.PushService();
 	$package+validPackage.ui.displays.RouteDispatcher routeDispatcher = new $package+validPackage.ui.displays.RouteDispatcher();
 	$package+validPackage.ui.$name+SnakeCaseToCamelCase+FirstUpperCase~Service.init(sparkInstance, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this, pushService, routeDispatcher);
@@ -386,7 +403,7 @@ def type(service) trigger(getter)
 end
 
 def trigger(spark)
-	io.intino.alexandria.rest.AlexandriaSparkBuilder.instance().stop();
+	io.intino.alexandria.http.AlexandriaSparkBuilder.instance().stop();
 end
 
 def type(terminal) trigger(close)
@@ -468,7 +485,7 @@ end
 
 
 def trigger(authenticationValidator)
-	public abstract io.intino.alexandria.rest.security.$type+FirstUpperCase~AuthenticationValidator authenticationValidator();
+	public abstract io.intino.alexandria.http.security.$type+FirstUpperCase~AuthenticationValidator authenticationValidator();
 end
 
 

@@ -76,6 +76,15 @@ Concept:Named Service
 				//TODO si no, debe ser cualquier otro y en caso de ser tipo file el consumes debe ser "multipart/form-data" y el
 				//TODO in debe ser form.
 
+	Aspect Soap
+		var string host
+		var string port
+		var string basePath = ""
+		Concept:Named:{1..*} Operation
+			var string path
+			var string description = empty
+			Concept:{0..1} Input extends Parameter
+			Concept:{0..1} Output extends Response
 	Aspect JMX
 		var string path = ""
 		Concept:Named:{1..*} Operation
@@ -120,6 +129,8 @@ Concept:Named Service
 				var boolean multiple = false
 			var word:{Text Attachment} responseType = Text
 			has Request
+
+	Aspect RocketChatBot extends SlackBot
 
 	Aspect UI
 		var function:HomesProvider homeList = 'return self.resourceList().stream().filter(Service.UI.Resource::isMain).collect(toList());';

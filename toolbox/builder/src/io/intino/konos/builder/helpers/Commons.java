@@ -91,6 +91,12 @@ public class Commons {
 		return (basePath + resourcePath).replace("//", "/");
 	}
 
+	public static String path(Service.Soap.Operation operation) {
+		Service.Soap service = operation.core$().ownerAs(Service.Soap.class);
+		return (basePath(service.basePath()) + operation.path()).replace("//", "/");
+	}
+
+
 	private static String basePath(String path) {
 		path = !path.isEmpty() && !path.endsWith("/") ? path + "/" : path;
 		return path.startsWith("/") ? path.substring(1) : path;

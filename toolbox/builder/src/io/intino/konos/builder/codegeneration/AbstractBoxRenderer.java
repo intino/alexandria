@@ -20,7 +20,7 @@ public class AbstractBoxRenderer extends Renderer {
 	private final CompilerConfiguration configuration;
 	private final Set<String> konosParameters;
 
-	AbstractBoxRenderer(CompilationContext compilationContext, KonosGraph graph, boolean hasModel) {
+	AbstractBoxRenderer(CompilationContext compilationContext, KonosGraph graph) {
 		super(compilationContext, Target.Owner);
 		this.graph = graph;
 		this.configuration = compilationContext.configuration();
@@ -187,6 +187,7 @@ public class AbstractBoxRenderer extends Renderer {
 	private void services(FrameBuilder builder) {
 		if (!graph.messagingServiceList().isEmpty()) builder.add("jms", "");
 		rest(builder);
+		soap(builder);
 		jms(builder);
 		jmx(builder);
 		slackServices(builder);
@@ -198,6 +199,15 @@ public class AbstractBoxRenderer extends Renderer {
 		for (Service.REST service : graph.restServiceList())
 			frame.add("service",
 					new FrameBuilder("service", "rest")
+							.add("name", service.name$())
+							.add("configuration", boxName())
+							.add("parameter", parameter(service.port())).toFrame());
+	}
+
+	private void soap(FrameBuilder frame) {
+		for (Service.Soap service : graph.soapServiceList())
+			frame.add("service",
+					new FrameBuilder("service", "soap")
 							.add("name", service.name$())
 							.add("configuration", boxName())
 							.add("parameter", parameter(service.port())).toFrame());

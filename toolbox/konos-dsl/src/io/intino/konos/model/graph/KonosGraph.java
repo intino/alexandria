@@ -130,6 +130,11 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		return serviceList(Service::isREST).map(Service::asREST).collect(toList());
 	}
 
+
+	public List<Service.Soap> soapServiceList() {
+		return serviceList(Service::isSoap).map(Service::asSoap).collect(toList());
+	}
+
 	public List<Service.UI> uiServiceList() {
 		return serviceList(Service::isUI).map(Service::asUI).collect(toList());
 	}

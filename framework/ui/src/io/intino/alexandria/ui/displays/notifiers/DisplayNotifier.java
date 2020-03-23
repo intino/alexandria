@@ -1,8 +1,8 @@
 package io.intino.alexandria.ui.displays.notifiers;
 
-import io.intino.alexandria.rest.pushservice.MessageCarrier;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.PropertyList;
+import io.intino.alexandria.wss.pushservice.MessageCarrier;
 
 import java.util.ArrayList;
 import java.util.HashMap;

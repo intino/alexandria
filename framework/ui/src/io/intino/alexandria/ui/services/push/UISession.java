@@ -1,8 +1,8 @@
 package io.intino.alexandria.ui.services.push;
 
-import io.intino.alexandria.rest.pushservice.Client;
-import io.intino.alexandria.rest.spark.SparkSession;
+import io.intino.alexandria.http.spark.SparkSession;
 import io.intino.alexandria.ui.services.auth.Token;
+import io.intino.alexandria.wss.pushservice.Client;
 
 public class UISession extends SparkSession<UIClient> {
     private User user;
