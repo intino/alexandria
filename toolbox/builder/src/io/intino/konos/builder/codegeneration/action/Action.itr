@@ -26,8 +26,8 @@ def type(action & notification) !type(ui)
 
 	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
 	import io.intino.alexandria.exceptions.*;
-	import io.intino.alexandria.rest.pushservice.Client;
-    import io.intino.alexandria.rest.spark.SparkNotifier;
+	import io.intino.alexandria.http.pushservice.Client;
+    import io.intino.alexandria.http.spark.SparkNotifier;
 
 	public class $name+snakecaseToCamelCase+firstUpperCase~Action {
 		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
@@ -208,7 +208,7 @@ def type(usedUnit & custom)
 end
 
 def type(contextProperty & spark)
-    public io.intino.alexandria.rest.spark.SparkContext context;
+    public io.intino.alexandria.http.spark.SparkContext context;
 end
 
 def type(contextProperty)

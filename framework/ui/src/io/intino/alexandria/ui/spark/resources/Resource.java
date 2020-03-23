@@ -1,8 +1,8 @@
 package io.intino.alexandria.ui.spark.resources;
 
 import io.intino.alexandria.exceptions.AlexandriaException;
+import io.intino.alexandria.http.pushservice.MessageCarrier;
 import io.intino.alexandria.logger.Logger;
-import io.intino.alexandria.rest.pushservice.MessageCarrier;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.notifiers.DisplayNotifier;
 import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-public abstract class Resource implements io.intino.alexandria.rest.Resource {
+public abstract class Resource implements io.intino.alexandria.http.Resource {
 	static final Map<String, String> authenticationIdMap = new HashMap<>();
 	static final Map<String, Authentication> authenticationMap = new HashMap<>();
 	protected final UISparkManager manager;
@@ -46,8 +46,8 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 	}
 
 	protected String parameterValue(String key) {
-		String value = manager.fromPath(key, String.class);
-		if (value == null || value.isEmpty()) value = manager.fromQuery(key, String.class);
+		String value = manager.fromPath(key);
+		if (value == null || value.isEmpty()) value = manager.fromQuery(key);
 		if (value == null || value.isEmpty()) return null;
 
 		try {
@@ -63,7 +63,7 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 	protected boolean isLogged() {
 		if (!isFederated()) return true;
 
-		String authId = manager.fromQuery("authId", String.class);
+		String authId = manager.fromQuery("authId");
 		Authentication authentication = authenticationOf(manager.currentSession(), authId).orElse(null);
 		if (authentication == null) {
 
@@ -128,7 +128,7 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 	}
 
 	protected Token accessToken() {
-		return Token.build(manager.fromQuery("token", String.class));
+		return Token.build(manager.fromQuery("token"));
 	}
 
 	protected void fillBrowser(UISparkManager manager, UISession session) {
@@ -143,7 +143,7 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 	}
 
 	Optional<Authentication> authentication() {
-		return authenticationOf(manager.currentSession(), manager.fromQuery("authId", String.class));
+		return authenticationOf(manager.currentSession(), manager.fromQuery("authId"));
 	}
 
 	Optional<Authentication> authentication(String sessionId) {

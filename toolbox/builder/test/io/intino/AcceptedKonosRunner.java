@@ -31,6 +31,11 @@ public class AcceptedKonosRunner {
 	}
 
 	@Test
+	public void test() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/ideaKonosToCompile.txt")});
+	}
+
+	@Test
 	public void cuentamaestra() {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/cfe/cuentamaestra.txt")});
 	}
@@ -48,6 +53,11 @@ public class AcceptedKonosRunner {
 	@Test
 	public void amidas() {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/amidas/amidas-team.txt")});
+	}
+
+	@Test
+	public void amidasPlatform() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/amidas/platform.txt")});
 	}
 
 	@Test

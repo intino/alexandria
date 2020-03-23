@@ -1,7 +1,7 @@
 package io.intino.alexandria.ui.services.push;
 
+import io.intino.alexandria.http.spark.RequestAdapter;
 import io.intino.alexandria.logger.Logger;
-import io.intino.alexandria.rest.spark.RequestAdapter;
 import io.intino.alexandria.ui.displays.requesters.DisplayPushRequester;
 import org.eclipse.jetty.io.EofException;
 import org.eclipse.jetty.websocket.api.Session;
@@ -9,7 +9,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PushService extends io.intino.alexandria.rest.spark.PushService<UISession, UIClient> {
+public class PushService extends io.intino.alexandria.http.spark.PushService<UISession, UIClient> {
 	private Map<String, DisplayPushRequester> requesterMap = new HashMap<>();
 
 	@Override

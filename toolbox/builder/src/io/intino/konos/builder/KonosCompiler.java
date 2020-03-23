@@ -11,6 +11,8 @@ import io.intino.konos.model.graph.KonosGraph;
 import io.intino.magritte.io.Stash;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,7 +75,8 @@ public class KonosCompiler {
 		}
 		if (graph.messageHub() != null && !graph.messageHub().isJmsBus()) remove(dependencies, "terminal-jms");
 		if (graph.uiServiceList().isEmpty()) remove(dependencies, "ui");
-		if (!graph.uiServiceList().isEmpty() || graph.restServiceList().isEmpty()) remove(dependencies, "rest");
+		if (graph.restServiceList().isEmpty()) remove(dependencies, "rest");
+		if (graph.soapServiceList().isEmpty()) remove(dependencies, "soap");
 		if (graph.workflow() == null) remove(dependencies, "bpm");
 		if (graph.slackBotServiceList().isEmpty()) remove(dependencies, "slack");
 		if (graph.visualizationComponents() == null || graph.visualizationComponents().chartList(c -> c.isAbsolute() || c.isRelative()).isEmpty())
@@ -95,6 +98,12 @@ public class KonosCompiler {
 			context.loadCache(graph, stashes);
 			new FullRenderer(graph, context).execute();
 		} catch (Exception e) {
+			if(e instanceof NullPointerException){
+				StringWriter sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				String exceptionAsString = sw.toString();
+				throw new KonosException(exceptionAsString, e);
+			}
 			throw new KonosException(e.getMessage(), e);
 		}
 	}

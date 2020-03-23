@@ -40,8 +40,8 @@ public class AssetResource extends Resource {
                 manager.write(new String(content, "UTF-8"), contentType);
             }
             else {
-                String label = manager.fromQueryOrDefault("label", String.class, "");
-                Boolean embedded = manager.fromQueryOrDefault("embedded", Boolean.class, "false");
+                String label = manager.fromQueryOrDefault("label", "");
+                Boolean embedded = manager.fromQueryOrDefault("embedded", "false");
                 manager.write(inputStream, label, embedded);
             }
         } catch (IOException e) {
