@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.rest.spark.ResponseAdapter;
+import io.intino.alexandria.http.spark.ResponseAdapter;
 import io.intino.alexandria.restaccessor.core.RestAccessor;
 import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
 import io.intino.alexandria.schemas.ProxyDisplayInfo;

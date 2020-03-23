@@ -1,0 +1,13 @@
+dsl Legio
+
+Artifact(groupId = "io.intino.alexandria", version = "1.0.0") xml
+	Imports
+		Compile("javax.xml.bind", "jaxb-api", "2.3.1")
+		Compile("javax.activation", "activation", "1.1")
+		Compile("org.glassfish.jaxb", "jaxb-runtime", "2.3.1")
+		Compile("io.intino.alexandria", "logger", "2.1.0")
+	Package(mode = ModulesAndLibrariesLinkedByManifest)
+	Distribution(intino.release)
+
+Repository("intino-maven") intino
+	Release ("https://artifactory.intino.io/artifactory/release-libraries") release

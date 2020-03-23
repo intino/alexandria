@@ -1,0 +1,149 @@
+def type(rocketchat & gen)
+	package $package+ValidPackage;
+
+	import $package+ValidPackage.rocketchat.*;
+
+	import io.intino.alexandria.rocketchat.Bot;
+	import java.io.IOException;
+	import java.util.Arrays;
+
+	public class $name+firstUpperCase+snakeCaseToCamelCase~RocketChatBot extends Bot {
+		private $name+snakeCaseToCamelCase+firstUpperCase~RocketChat $name+snakeCaseToCamelCase+firstLowerCase~RocketChat;
+		$level+field...[$NL]
+
+		public $name+firstUpperCase+snakeCaseToCamelCase~RocketChatBot($box+validname+FirstUpperCase~Box box, String token) {
+			super(token);
+			$name+snakeCaseToCamelCase+firstLowerCase~RocketChat = new $name+snakeCaseToCamelCase+firstUpperCase~RocketChat(box);
+			$level+constructor...[$NL]
+
+			add("help", java.util.Collections.emptyList(), java.util.Collections.emptyList(), "Show this help", (properties, args) -> {
+				final java.util.Map<String, CommandInfo> context = this.commandsInfoByContext(contexts().get(properties.username()).command());
+				StringBuilder builder = new StringBuilder();
+				context.keySet().forEach((c) -> builder.append(formatCommand(c, context.get(c))).append("\\n"));
+				return builder.toString();
+			});
+			add("exit", java.util.Collections.emptyList(), java.util.Collections.emptyList(), "Exit from current level", (properties, args) -> {
+				final Context context = this.contexts().get(properties.username());
+				if (context != null) {
+					String command = context.command();
+					final String message = command.isEmpty() ? "" : "Exited from " + (command.contains("|") ? command.substring(command.lastIndexOf("|") + 1) : command) + " " + String.join(" ", Arrays.asList(context.getObjects()));
+					context.command(command.contains("|") ? command.substring(0, command.lastIndexOf("|")) : "");
+					context.objects(context.getObjects().length > 1 ? Arrays.copyOfRange(context.getObjects(), 0, context.getObjects().length - 1) : new String$[0$]);
+					return message;
+				}
+				return "";
+			});
+			add("where", java.util.Collections.emptyList(), java.util.Collections.emptyList(), "Shows the current level", (properties, args) -> {
+				final Context context = this.contexts().get(properties.username());
+				return context != null ? context : "root";
+			});
+			$request+add...[$NL]
+			try {
+				connect();
+				this.$name+snakeCaseToCamelCase+firstLowerCase~RocketChat.init(session(), users());
+				$level+init...[$NL]
+			} catch (IOException | javax.websocket.DeploymentException e) {
+				io.intino.alexandria.logger.Logger.error(e);
+			}
+		}
+
+		private static String formatCommand(String command, CommandInfo info) {
+			return "`" + command.substring(command.lastIndexOf("$$") + 1) + helpParameters(info.parameters()) + "` " + info.description() + "\\n";
+		}
+
+		private static String helpParameters(java.util.List<String> parameters) {
+			return parameters.isEmpty() ? "" : " <" + String.join("> <", parameters) + ">";
+		}
+	}
+end
+
+def type(slack & actions)
+	package $package+ValidPackage.slack;
+
+	import $package+ValidPackage.$box+validname+FirstUpperCase~Box;
+	import $package+ValidPackage.slack.*;
+	import io.intino.alexandria.slack.Bot;
+	import io.intino.alexandria.slack.Bot.MessageProperties;
+
+	import java.util.Map;
+
+	public class $name+firstUpperCase+snakeCaseToCamelCase~RocketChat {
+
+		private $box+validname+FirstUpperCase~Box box;
+
+		public $name+firstUpperCase+snakeCaseToCamelCase~RocketChat($box+validname+FirstUpperCase~Box box) {
+			this.box = box;
+		}
+
+		public void init(com.ullink.slack.simpleslackapi.RocketChatSession session) {
+
+		}
+
+		$request+method...[$NL$NL]
+	}
+end
+
+
+def type(level) trigger(field)
+	private $name+slashToCamelCase+firstUpperCase~RocketChat $name+slashToCamelCase+firstLowerCase~RocketChat;
+end
+
+def type(level) trigger(constructor)
+	$name+slashToCamelCase+firstLowerCase~RocketChat = new $name+slashToCamelCase+firstUpperCase~RocketChat(box);
+end
+
+def type(level) trigger(init)
+	$name+slashToCamelCase+firstLowerCase~RocketChat.init(session(), users());
+end
+
+def type(request) trigger(add)
+	add("$name+lowerCase", "$context+lowercase", java.util.Arrays.asList($parameter+name...[, ]), java.util.Arrays.asList($component...[, ]), "$description", (properties, args) -> $type+slashToCamelCase+firstLowerCase~RocketChat.$name+snakeCaseToCamelCase+firstLowerCase(properties[, $parameter+cast...[, ]]));
+end
+
+def type(request & newMethod)
+	public String $name+snakeCaseToCamelCase+firstLowerCase(MessageProperties properties[, $parameter...[, ]]) {
+		return "";
+	}
+end
+
+def type(request) trigger(method)
+	public $responseType $name+snakeCaseToCamelCase+firstLowerCase(MessageProperties properties[, $parameter...[, ]]) {
+		return "";
+	}
+end
+
+def trigger(component)
+	"$value"
+end
+
+def type(parameter) trigger(name)
+	"$name"
+end
+
+def type(parameter & Boolean) trigger(cast)
+	args.length > $pos ? Boolean.parseBoolean(args$[~$pos]) : false
+end
+
+def type(parameter & Double) trigger(cast)
+	args.length > $pos ? Double.parseDouble(args$[~$pos]) : 0
+end
+
+def type(parameter & Integer) trigger(cast)
+	args.length > $pos ? Integer.parseInt(args$[~$pos]) : 0
+end
+
+def type(parameter & String & multiple) trigger(cast)
+	args
+end
+
+def type(parameter & String) trigger(cast)
+	args.length > $pos ? args$[~$pos] : ""
+end
+
+def type(parameter & multiple)
+	$type~$[] $name
+end
+
+def type(parameter)
+	$type $name
+end

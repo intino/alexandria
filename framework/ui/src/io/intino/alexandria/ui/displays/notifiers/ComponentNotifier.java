@@ -1,8 +1,8 @@
 package io.intino.alexandria.ui.displays.notifiers;
 
-import io.intino.alexandria.rest.pushservice.MessageCarrier;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.UserMessage;
+import io.intino.alexandria.wss.pushservice.MessageCarrier;
 
 public class ComponentNotifier extends DisplayNotifier {
 

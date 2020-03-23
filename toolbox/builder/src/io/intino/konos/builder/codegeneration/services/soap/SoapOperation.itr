@@ -1,0 +1,103 @@
+def type(operation)
+	package $package.soap.operations;
+
+	import java.util.List;
+	import java.util.ArrayList;
+	import io.intino.alexandria.exceptions.*;
+	import $package.*;
+	import io.intino.alexandria.core.Box;
+	import io.intino.alexandria.http.spark.SparkManager;
+	import io.intino.alexandria.http.spark.SparkPushService;
+
+	$schemaImport
+
+	public class $name+firstUpperCase~Operation {
+
+		private $box+FirstUpperCase~Box box;
+		private SparkManager<SparkPushService> manager;
+		[$authenticationValidator+field]
+
+		public $name+firstUpperCase~Operation($box+FirstUpperCase~Box box, SparkManager manager) {
+			this.box = box;
+			this.manager = manager;
+			$authenticationValidator+assign
+		}
+
+		public void execute() [throws $throws...[, ]] {
+			$returnType+methodCall~fill(new $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action()).execute()[$returnType+ending];
+		}
+
+		private $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action fill($package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action action) {
+			action.box = this.box;
+			action.context = context();
+			[$parameter+assign]
+			return action;
+		}
+
+		[$returnType+method]
+
+		private io.intino.alexandria.http.spark.SparkContext context() {
+			io.intino.alexandria.http.spark.SparkContext context = new io.intino.alexandria.http.spark.SparkContext(manager);
+			$authenticationValidator+put
+			return context;
+		}
+	}
+end
+
+
+def trigger(methodCall)
+	write(
+end
+
+def trigger(ending)
+	)
+end
+
+def attribute(void) trigger(write)
+end
+
+
+def trigger(method)
+	private void write($this+firstUpperCase+ReturnTypeFormatter object) {
+		manager.write(new io.intino.alexandria.Soap().writeEnvelope(object));
+		manager.writeHeader("content-type", "text/xml");
+	}
+end
+
+def type(parameter) trigger(type)
+	$parameterType
+end
+
+
+def type(parameter & defaultvalue) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.from$in+firstUpperCase~OrDefault("$name", $parameterType, "$defaultvalue");
+end
+
+def type(parameter) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = new io.intino.alexandria.Soap().readEnvelope(manager.body());
+end
+
+def type(authenticationValidator) trigger(field)
+	io.intino.alexandria.http.security.$type+FirstUpperCase~AuthenticationValidator validator;
+end
+
+def type(authenticationValidator) trigger(assign)
+	this.validator = box.authenticationValidator();
+end
+
+def type(authenticationValidator) trigger(validate)
+	String auth = manager.fromHeader("Authorization", String.class);
+	if (auth == null || !validator.validate(auth.replace("Basic ", ""))) throw new Unauthorized("Credential not found");
+end
+
+def type(authenticationValidator) trigger(put)
+	context.put("auth", manager.fromHeader("Authorization", String.class).replace("Basic ", ""));
+end
+
+def trigger(parameterType)
+	$value.class
+end
+
+def type(schemaImport)
+	import $package.schemas.*;
+end

@@ -26,13 +26,11 @@
     <orderEntry type="module" module-name="proxy" />
     <orderEntry type="module" module-name="json" />
     <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13" level="project" />
-    <orderEntry type="module" module-name="rest" />
     <orderEntry type="module" module-name="core" />
     <orderEntry type="module" module-name="message" />
     <orderEntry type="module" module-name="primitives" />
     <orderEntry type="library" name="Intino: org.bouncycastle:bcmail-jdk15:1.45" level="project" />
     <orderEntry type="library" name="Intino: org.bouncycastle:bcprov-jdk15:1.45" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
     <orderEntry type="library" name="Intino: com.sparkjava:spark-core:2.7.2" level="project" />
     <orderEntry type="library" name="Intino: org.slf4j:slf4j-api:1.7.13" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-server:9.4.8.v20171121" level="project" />
@@ -52,7 +50,6 @@
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-api:9.4.8.v20171121" level="project" />
     <orderEntry type="library" name="Intino: commons-codec:commons-codec:1.10" level="project" />
     <orderEntry type="library" name="Intino: eu.medsea.mimeutil:mime-util:2.1.1" level="project" />
-    <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.8.0" level="project" />
     <orderEntry type="library" name="Intino: commons-io:commons-io:2.6" level="project" />
     <orderEntry type="library" name="Intino: com.jcraft:jsch:0.1.55" level="project" />
     <orderEntry type="library" name="Intino: com.jcraft:jzlib:1.0.7" level="project" />
@@ -73,5 +70,8 @@
     <orderEntry type="library" name="Intino: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
     <orderEntry type="library" name="Intino: log4j:log4j:1.2.17" level="project" />
     <orderEntry type="module" module-name="ui-elements" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:exceptions:1.0.0" level="project" />
+    <orderEntry type="module" module-name="http" />
+    <orderEntry type="module" module-name="logger" />
   </component>
 </module>
