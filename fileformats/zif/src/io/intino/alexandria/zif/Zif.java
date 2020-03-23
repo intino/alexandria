@@ -146,7 +146,7 @@ public class Zif implements Iterable<Zif.Assertion> {
 		}
 
 		public Assertion(String[] data) {
-			this(Instant.parse(data[0]), data[1], data[2], data[3]);
+			this(Instant.parse(data[0]), data[1], data[2], data.length > 3 ? data[3] : "");
 		}
 
 		public Instant ts() {
