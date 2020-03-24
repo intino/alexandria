@@ -1,10 +1,14 @@
 package io.intino.alexandria.ui;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Collections;
 import java.util.Map;
 
 public class Message {
+    @SerializedName("n")
     private final String name;
+    @SerializedName("p")
     private final Map<String, Object> parameters;
 
     public Message(String name) {
