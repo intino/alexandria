@@ -14,10 +14,10 @@ public class PassiveViewRequesterTemplate extends Template {
 			rule().condition((attribute("", "Display")), (trigger("class"))).output(literal("Display")),
 			rule().condition((allTypes("request","asset")), (trigger("request"))).output(literal("if (operation.equals(\"")).output(mark("name")).output(literal("\")) {\n\tio.intino.alexandria.ui.spark.UIFile file = display.")).output(mark("name")).output(literal("(")).output(mark("parameter")).output(literal(");\n\tif (file == null) return;\n\tmanager.write(file.content(), file.label(), file.embedded());\n\treturn;\n}")),
 			rule().condition((type("request")), (trigger("request"))).output(literal("if (operation.equals(\"")).output(mark("name")).output(literal("\")) {\n\tdisplay.")).output(mark("name")).output(literal("(")).output(mark("parameter")).output(literal(");\n\treturn;\n}")),
-			rule().condition((allTypes("parameter","accessible")), (trigger("parameter"))).output(literal("display.")).output(mark("value", "firstLowercase")).output(literal("(manager.fromQuery(\"")).output(mark("value")).output(literal("\", String.class));")),
-			rule().condition((type("list")), (trigger("parameter"))).output(literal("manager.fromQuery(\"v\", ")).output(mark("value")).output(literal("[].class)")),
-			rule().condition((allTypes("parameter","file")), (trigger("parameter"))).output(literal("manager.fromForm(\"v\", ")).output(mark("value")).output(literal(".class)")),
-			rule().condition((type("parameter")), (trigger("parameter"))).output(literal("manager.fromQuery(\"v\", ")).output(mark("value")).output(literal(".class)")),
+			rule().condition((allTypes("parameter","accessible")), (trigger("parameter"))).output(literal("display.")).output(mark("value", "firstLowercase")).output(literal("(manager.fromQuery(\"")).output(mark("value")).output(literal("\"));")),
+			rule().condition((type("list")), (trigger("parameter"))).output(literal("io.intino.alexandria.Json.fromString(manager.fromQuery(\"v\"), ")).output(mark("value")).output(literal("[].class)")),
+			rule().condition((allTypes("parameter","file")), (trigger("parameter"))).output(literal("manager.fromForm(\"v\")")),
+			rule().condition((type("parameter")), (trigger("parameter"))).output(literal("io.intino.alexandria.Json.fromString(manager.fromQuery(\"v\"), ")).output(mark("value")).output(literal(".class)")),
 			rule().condition((trigger("parameter"))),
 			rule().condition((type("schemaImport"))).output(literal("import ")).output(mark("package")).output(literal(".schemas.*;"))
 		);

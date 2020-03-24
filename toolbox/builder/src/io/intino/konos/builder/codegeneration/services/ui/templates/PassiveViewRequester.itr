@@ -90,19 +90,19 @@ def type(request) trigger(request)
 end
 
 def type(parameter & accessible) trigger(parameter)
-    display.$value+firstLowercase(manager.fromQuery("$value", String.class));
+    display.$value+firstLowercase(manager.fromQuery("$value"));
 end
 
 def type(list) trigger(parameter)
-    manager.fromQuery("v", $value~$[].class)
+    io.intino.alexandria.Json.fromString(manager.fromQuery("v"), $value~$[].class)
 end
 
 def type(parameter & file) trigger(parameter)
-    manager.fromForm("v", $value.class)
+    manager.fromForm("v")
 end
 
 def type(parameter) trigger(parameter)
-    manager.fromQuery("v", $value.class)
+    io.intino.alexandria.Json.fromString(manager.fromQuery("v"), $value.class)
 end
 
 def	trigger(parameter)

@@ -15,7 +15,7 @@ public class PushServiceHandler {
 	private static PushService pushService;
 	private Map<String, SparkClient> clientsMap = new HashMap<>();
 	private Map<String, Timer> closeTimersMap = new HashMap<>();
-	private static final int CloseTimeout = 1000*60*60*24;
+	private static final int CloseTimeout = 1000 * 60 * 60 * 24;
 	private static final int CloseGoingAway = 1001;
 	private static final int CloseReadEOF = 1006;
 
@@ -28,15 +28,15 @@ public class PushServiceHandler {
 		if (client(session) != null) {
 			cancelClose(session);
 			client(session).session(session);
-		}
-		else registerClient(session);
+		} else registerClient(session);
 
 		pushService.onOpen(client(session));
 	}
 
 	@OnWebSocketError
 	public void onError(Session session, Throwable error) {
-		Logger.debug(error.getMessage());
+		if (error.getMessage() != null) Logger.debug(error.getMessage());
+		else Logger.error(error);
 	}
 
 	@OnWebSocketClose

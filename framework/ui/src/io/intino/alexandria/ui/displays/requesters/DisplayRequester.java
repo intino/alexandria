@@ -13,18 +13,18 @@ public abstract class DisplayRequester extends Resource {
 	}
 
 	public <D extends Display> D display() {
-		return display(manager.fromPath("displayId", String.class));
+		return display(manager.fromPath("displayId"));
 	}
 
 	public <D extends Display> D display(String displayId) {
 		if (displayId == null) return null;
-		String[] data = manager.fromPath("displayId", String.class).split(":");
+		String[] data = manager.fromPath("displayId").split(":");
 		UIClient client = manager.currentClient();
 		return client == null ? null : client.soul().displayWithId(data[0], data[1], data[2]);
 	}
 
 	public String operation() {
-		return manager.fromQuery("op", String.class);
+		return manager.fromQuery("op");
 	}
 
 }
