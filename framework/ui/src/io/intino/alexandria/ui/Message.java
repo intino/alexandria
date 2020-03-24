@@ -1,4 +1,4 @@
-package io.intino.alexandria.http.pushservice;
+package io.intino.alexandria.ui;
 
 import java.util.Collections;
 import java.util.Map;

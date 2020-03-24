@@ -3,8 +3,8 @@ package io.intino.alexandria.ui.displays;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import io.intino.alexandria.Json;
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.http.spark.ResponseAdapter;
 import io.intino.alexandria.restaccessor.core.RestAccessor;
 import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
 import io.intino.alexandria.schemas.ProxyDisplayInfo;
@@ -120,8 +120,7 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
     }
 
     private JsonElement serializeParameter(Object value) {
-        String result = ResponseAdapter.adapt(value);
-
+        String result = Json.toString(value);
         try {
             return Parser.parse(result);
         } catch (Exception var4) {

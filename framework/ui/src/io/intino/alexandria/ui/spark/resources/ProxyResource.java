@@ -18,11 +18,11 @@ public abstract class ProxyResource extends Resource {
 	}
 
 	protected UIClient client() {
-		return manager.client(manager.fromQuery("client", String.class));
+		return manager.client(manager.fromQuery("client"));
 	}
 
 	protected UISession session() {
-		return manager.session(manager.fromQuery("session", String.class));
+		return manager.session(manager.fromQuery("session"));
 	}
 
 }

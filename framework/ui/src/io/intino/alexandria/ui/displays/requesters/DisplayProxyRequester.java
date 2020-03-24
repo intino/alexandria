@@ -11,7 +11,7 @@ public abstract class DisplayProxyRequester extends DisplayRequester {
 	}
 
 	public <D extends Display> D personifiedDisplay() {
-		return display(manager.fromPath("personifiedDisplay", String.class));
+		return display(manager.fromPath("personifiedDisplay"));
 	}
 
 }

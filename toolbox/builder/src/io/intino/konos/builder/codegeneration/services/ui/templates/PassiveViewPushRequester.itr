@@ -7,7 +7,6 @@ def type(display)
 	$schemaImport
 
 	import io.intino.alexandria.exceptions.AlexandriaException;
-	import io.intino.alexandria.rest.spark.SparkReader;
 	import io.intino.alexandria.ui.services.push.UIClient;
 	import io.intino.alexandria.ui.services.push.UIMessage;
 	import io.intino.alexandria.ui.spark.UISparkManager;
@@ -46,14 +45,14 @@ def type(request) trigger(request)
 end
 
 def type(list) trigger(parameter)
-	SparkReader.read(data, $value~$[].class)
+	io.intino.alexandria.Json.fromString(data, $value~$[].class)
 end
 
 def type(parameter & file) trigger(parameter)
 end
 
 def type(parameter) trigger(parameter)
-	SparkReader.read(data, $value.class)
+	io.intino.alexandria.Json.fromString(data, $value.class)
 end
 
 def	trigger(parameter)
