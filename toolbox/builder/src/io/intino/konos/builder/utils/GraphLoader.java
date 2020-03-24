@@ -47,7 +47,7 @@ public class GraphLoader {
 			@Override
 			public URL resourceFrom(String path) {
 				try {
-					return new URL("file://" + (configuration.resDirectory().getPath() + File.separator + path));
+					return new File(configuration.resDirectory().getPath() + File.separator + path).toURI().toURL();
 				} catch (MalformedURLException e) {
 					return null;
 				}

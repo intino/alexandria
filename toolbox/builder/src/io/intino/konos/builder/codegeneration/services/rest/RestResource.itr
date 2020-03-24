@@ -166,7 +166,7 @@ def type(list) trigger(parameterType)
 end
 
 def type(authenticationValidator) trigger(field)
-	io.intino.alexandria.rest.security.$type+FirstUpperCase~AuthenticationValidator validator;
+	io.intino.alexandria.http.security.$type+FirstUpperCase~AuthenticationValidator validator;
 end
 
 def type(authenticationValidator) trigger(assign)

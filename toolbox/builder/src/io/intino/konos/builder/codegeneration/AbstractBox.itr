@@ -14,7 +14,7 @@ def type(box)
 
 	[$messagehub+import]
 	[$terminal+import]
-	[import io.intino.alexandria.rest.AlexandriaSpark;$hasREST]
+	[import io.intino.alexandria.http.AlexandriaSpark;$hasREST]
     [import io.intino.alexandria.ui.services.push.PushService$hasUI+hideUi]
     [import io.intino.alexandria.ui.Soul$hasUi+hideUi]
 

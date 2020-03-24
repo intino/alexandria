@@ -19,7 +19,7 @@ public class BeforeDisplayRequest implements Resource {
 
     @Override
     public void execute() throws AlexandriaException {
-        String clientId = manager.fromQuery("clientId", String.class);
+        String clientId = manager.fromQuery("clientId");
         execute(manager.client(clientId));
     }
 
