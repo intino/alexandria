@@ -106,6 +106,7 @@ public class BpmRenderer extends Renderer {
 		List<State> states = bpmnParser.states();
 		for (State state : states) {
 			builder.add("state", frameOf(state, states));
+			state.links().sort((o1, o2) -> Boolean.compare(o1.isDefault(), o2.isDefault()));
 			state.links().forEach(link -> builder.add("link", frameOf(state, link)));
 			if (state.type() == Initial && state.comment() != null)
 				Arrays.stream(state.comment().split("\n")).filter(l -> l.trim().startsWith("*")).forEach(p -> builder.add("parameter", p.trim().substring(1)));
