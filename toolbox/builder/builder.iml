@@ -97,7 +97,7 @@
     <orderEntry type="library" name="Maven: org.antlr:antlr4-runtime:4.8" level="project" />
     <orderEntry type="library" name="Maven: io.intino.magritte:framework:3.0.0" level="project" />
     <orderEntry type="library" name="Maven: io.intino.itrules:engine:1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: io.intino:bpmn-parser:2.0.0" level="project" />
+    <orderEntry type="library" name="Maven: io.intino:bpmn-parser:2.1.0" level="project" />
     <orderEntry type="library" name="Maven: javax.xml.bind:jaxb-api:2.2.11" level="project" />
     <orderEntry type="library" name="Maven: org.hashids:hashids:1.0.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.12" level="project" />
