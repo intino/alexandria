@@ -1,11 +1,13 @@
 package io.intino.alexandria.ui.services.push;
 
-import io.intino.alexandria.http.spark.RequestAdapter;
+import io.intino.alexandria.Json;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.ui.displays.requesters.DisplayPushRequester;
 import org.eclipse.jetty.io.EofException;
 import org.eclipse.jetty.websocket.api.Session;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +26,7 @@ public class PushService extends io.intino.alexandria.http.spark.PushService<UIS
 
 	@Override
 	public void onMessage(UIClient client, String content) {
-		UIMessage message = RequestAdapter.adaptFromJSON(content, UIMessage.class);
+		UIMessage message = Json.fromString(decode(content), UIMessage.class);
 		String requester = message.sender();
 
 		if (requester == null) {
@@ -46,6 +48,14 @@ public class PushService extends io.intino.alexandria.http.spark.PushService<UIS
 	public PushService register(String type, DisplayPushRequester requester) {
 		requesterMap.put(type, requester);
 		return this;
+	}
+
+	private static String decode(String object) {
+		try {
+			return URLDecoder.decode(object, StandardCharsets.UTF_8);
+		} catch (IllegalArgumentException ex) {
+			return object;
+		}
 	}
 
 }

@@ -6,7 +6,7 @@ def type(display & accessible)
 	$schemaImport
 
     public class $name+FirstUpperCase~ProxyNotifier extends io.intino.alexandria.ui.displays.notifiers.ProxyDisplayNotifier  {
-        public $name+FirstUpperCase~ProxyNotifier(io.intino.alexandria.ui.displays.Display display, io.intino.alexandria.rest.pushservice.MessageCarrier carrier) {
+        public $name+FirstUpperCase~ProxyNotifier(io.intino.alexandria.ui.displays.Display display, io.intino.alexandria.http.pushservice.MessageCarrier carrier) {
             super(display, carrier);
         }
     }
@@ -21,7 +21,7 @@ def type(display)
 
     public class $name+FirstUpperCase~Notifier extends $parentType {
 
-        public $name+FirstUpperCase~Notifier(io.intino.alexandria.ui.displays.Display display, io.intino.alexandria.rest.pushservice.MessageCarrier carrier) {
+        public $name+FirstUpperCase~Notifier(io.intino.alexandria.ui.displays.Display display, io.intino.alexandria.http.pushservice.MessageCarrier carrier) {
             super(display, carrier);
         }
 

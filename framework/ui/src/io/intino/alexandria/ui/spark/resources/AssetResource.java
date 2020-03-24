@@ -12,66 +12,61 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 public class AssetResource extends Resource {
-    private final AssetLoader loader;
+	private final AssetLoader loader;
 
-    public AssetResource(AssetLoader loader, UISparkManager manager, DisplayNotifierProvider notifierProvider) {
-        super(manager, notifierProvider);
-        this.loader = loader;
-    }
+	public AssetResource(AssetLoader loader, UISparkManager manager, DisplayNotifierProvider notifierProvider) {
+		super(manager, notifierProvider);
+		this.loader = loader;
+	}
 
-    @Override
-    public void execute() throws AlexandriaException {
-        super.execute();
+	@Override
+	public void execute() throws AlexandriaException {
+		super.execute();
 
-        String name = assetName();
-        String contentType = assetContentTypeOf();
-        InputStream inputStream = null;
+		String name = assetName();
+		String contentType = assetContentTypeOf();
+		InputStream inputStream = null;
 
-        if (isAssetPathRelative(name))
-            name = loader.asset(name).toString();
+		if (isAssetPathRelative(name))
+			name = loader.asset(name).toString();
 
-        try {
-            inputStream = new URL(name).openStream();
-            if (contentType != null && !contentType.isEmpty()) {
-                byte[] content = IOUtils.toByteArray(inputStream);
-                manager.write(new String(content, "UTF-8"), contentType);
-            }
-            else {
-                String label = manager.fromQueryOrDefault("label", "");
-                Boolean embedded = manager.fromQueryOrDefault("embedded", "false");
-                manager.write(inputStream, label, embedded);
-            }
-        } catch (IOException e) {
-            manager.write(new AssetNotFoundException());
-        }
-        finally {
-            StreamUtil.close(inputStream);
-        }
-    }
+		try {
+			inputStream = new URL(name).openStream();
+			if (contentType != null && !contentType.isEmpty()) {
+				byte[] content = IOUtils.toByteArray(inputStream);
+				manager.write(new String(content, StandardCharsets.UTF_8), contentType);
+			} else {
+				String label = manager.fromQueryOrDefault("label", "");
+				boolean embedded = Boolean.parseBoolean(manager.fromQueryOrDefault("embedded", "false"));
+				manager.write(inputStream, label, embedded);
+			}
+		} catch (IOException e) {
+			manager.write(new AssetNotFoundException());
+		} finally {
+			StreamUtil.close(inputStream);
+		}
+	}
 
-    private boolean isAssetPathRelative(String name) {
-        try {
-            new URL(name);
-            return false;
-        } catch (MalformedURLException e) {
-            return true;
-        }
-    }
+	private boolean isAssetPathRelative(String name) {
+		try {
+			new URL(name);
+			return false;
+		} catch (MalformedURLException e) {
+			return true;
+		}
+	}
 
-    private String assetName() {
-        return new String(Base64.getDecoder().decode(manager.fromPath("name", String.class)));
-    }
+	private String assetName() {
+		return new String(Base64.getDecoder().decode(manager.fromPath("name")));
+	}
 
-    private String assetContentTypeOf() {
-        String contentType = manager.fromQuery("contentType", String.class);
-
-        if (contentType == null)
-            return null;
-
-        return new String(Base64.getDecoder().decode(contentType));
-    }
-
+	private String assetContentTypeOf() {
+		String contentType = manager.fromQuery("contentType");
+		if (contentType == null) return null;
+		return new String(Base64.getDecoder().decode(contentType));
+	}
 }

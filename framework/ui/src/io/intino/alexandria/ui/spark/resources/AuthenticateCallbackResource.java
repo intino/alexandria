@@ -42,12 +42,12 @@ public class AuthenticateCallbackResource extends Resource {
     }
 
     private void verifyAccessToken() throws CouldNotObtainAccessToken {
-        Optional<Authentication> authentication = authenticationOf(manager.currentSession(), manager.fromQuery("authId", String.class));
+        Optional<Authentication> authentication = authenticationOf(manager.currentSession(), manager.fromQuery("authId"));
 
         if (!authentication.isPresent())
             return;
 
-        String oauthVerifier = manager.fromQuery("oauth_verifier", String.class);
+        String oauthVerifier = manager.fromQuery("oauth_verifier");
         Token accessToken = authentication.get().accessToken(Verifier.build(oauthVerifier));
         manager.currentSession().token(accessToken);
     }
