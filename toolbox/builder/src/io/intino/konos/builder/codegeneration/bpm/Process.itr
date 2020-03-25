@@ -109,8 +109,12 @@ def trigger(link)
 	addLink(new io.intino.alexandria.bpm.Link("$from", "$to", $type+linkType));
 end
 
-def attribute(this:Line) trigger(linkType)
+def attribute(this:Default) trigger(linkType)
 	io.intino.alexandria.bpm.Link.Type.Default
+end
+
+def attribute(this:Line) trigger(linkType)
+	io.intino.alexandria.bpm.Link.Type.Inclusive
 end
 
 def attribute(this:Exclusive) trigger(linkType)
