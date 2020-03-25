@@ -4,8 +4,10 @@ import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.xml.Xml;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.namespace.QName;
 import java.io.ByteArrayOutputStream;
 
 public class Soap {
@@ -20,11 +22,13 @@ public class Soap {
 	public String writeEnvelope(Object schema) {
 		if (schema == null) return render("");
 		try {
-			JAXBContext context = JAXBContext.newInstance(schema.getClass());
+			Class<?> aClass = schema.getClass();
+			JAXBContext context = JAXBContext.newInstance(aClass);
 			Marshaller m = context.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			QName qName = new QName(aClass.getPackageName(), aClass.getSimpleName());
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			m.marshal(schema, outputStream);
+			m.marshal(new JAXBElement(qName, aClass, schema), outputStream);
 			String text = outputStream.toString().replace("\n", "\n\t\t").trim();
 			return render(text.substring(text.indexOf("\n") + 1));
 		} catch (JAXBException e) {

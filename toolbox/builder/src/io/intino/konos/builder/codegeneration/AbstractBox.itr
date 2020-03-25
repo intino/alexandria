@@ -108,6 +108,8 @@ def type(box)
 
 		[$workflow+getter]
 
+		$service+setupMethod...[$NL$NL]
+
 		private void initRestServices() {
 			$service+rest...[$NL]
 		}
@@ -189,10 +191,21 @@ def trigger(uiBox)
 end
 
 def type(service & ui) trigger(setup)
-	this.authService = [this.authService($authentication)?null];
-	[if($parameter != null && !$parameter.isEmpty())][io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/")];
-	io.intino.alexandria.http.AlexandriaSparkBuilder.setUI(true);
-	io.intino.alexandria.http.AlexandriaSparkBuilder.addParameters(this.authService);
+	setupUi();
+end
+
+def type(service & ui) trigger(setupMethod)
+	public void setupUi() {
+		this.authService = [this.authService($authentication)?null];
+		[if($parameter != null && !$parameter.isEmpty())][io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/")];
+		io.intino.alexandria.http.AlexandriaSparkBuilder.setUI(true);
+		io.intino.alexandria.http.AlexandriaSparkBuilder.addParameters(this.authService);
+		this.pushService = new io.intino.alexandria.ui.services.push.PushService();
+		io.intino.alexandria.ui.UISpark sparkInstance = (io.intino.alexandria.ui.UISpark) io.intino.alexandria.http.AlexandriaSparkBuilder.instance();
+		$package+validPackage.ui.$name+SnakeCaseToCamelCase+FirstUpperCase~Service.init(sparkInstance, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this, pushService,  new $package+validPackage.ui.displays.RouteDispatcher());
+		[$use]
+		io.intino.alexandria.ui.UiElementsService.initDisplays(sparkInstance, pushService);
+	}
 end
 
 def type(service & rest) trigger(setup)
@@ -252,11 +265,6 @@ def type(service & ui) trigger(ui)
 	[if ($parameter == null || !io.intino.alexandria.http.AlexandriaSparkBuilder.isUI()) return;]
 	[this.initTranslatorService()];
 	io.intino.alexandria.ui.UISpark sparkInstance = (io.intino.alexandria.ui.UISpark) io.intino.alexandria.http.AlexandriaSparkBuilder.instance();
-	this.pushService = new io.intino.alexandria.ui.services.push.PushService();
-	$package+validPackage.ui.displays.RouteDispatcher routeDispatcher = new $package+validPackage.ui.displays.RouteDispatcher();
-	$package+validPackage.ui.$name+SnakeCaseToCamelCase+FirstUpperCase~Service.init(sparkInstance, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this, pushService, routeDispatcher);
-	$use
-	io.intino.alexandria.ui.UiElementsService.initDisplays(sparkInstance, pushService);
 	sparkInstance.start();
 	Logger.info("UI $name: started!");
 end

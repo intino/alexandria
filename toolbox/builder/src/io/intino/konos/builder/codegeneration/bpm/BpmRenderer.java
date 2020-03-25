@@ -109,7 +109,9 @@ public class BpmRenderer extends Renderer {
 			state.links().sort((o1, o2) -> Boolean.compare(o1.isDefault(), o2.isDefault()));
 			state.links().forEach(link -> builder.add("link", frameOf(state, link)));
 			if (state.type() == Initial && state.comment() != null)
-				Arrays.stream(state.comment().split("\n")).filter(l -> l.trim().startsWith("*")).forEach(p -> builder.add("parameter", p.trim().substring(1)));
+				Arrays.stream(state.comment().split("\n|\t")).filter(s -> !s.isEmpty() && !s.isBlank()).map(String::trim).
+						filter(l -> l.startsWith("*")).
+						forEach(p -> builder.add("parameter", p.trim().substring(1)));
 		}
 		return builder;
 	}
