@@ -36,11 +36,11 @@
     }
   ],
   "dependencies": {
-    "io.intino.alexandria:core-framework": "2.0.2",
+    "io.intino.alexandria:core-framework": "2.0.3",
     "io.intino.alexandria:scheduler-framework": "1.0.2",
     "io.intino.alexandria:slack-framework": "2.0.3",
-    "io.intino.alexandria:ui-framework": "4.0.0",
-    "io.intino.alexandria:rest": "3.0.0",
+    "io.intino.alexandria:ui-framework": "4.0.1",
+    "io.intino.alexandria:rest": "3.0.1",
     "io.intino.alexandria:soap": "1.0.0",
     "io.intino.alexandria:bpm-framework": "1.0.0",
     "io.intino.alexandria:jmx": "1.0.1",
