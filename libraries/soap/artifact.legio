@@ -1,4 +1,4 @@
-dsl Legio
+xmldsl Legio
 
 Artifact(groupId = "io.intino.alexandria", version = "1.0.0") soap
 	Imports
