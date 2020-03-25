@@ -143,7 +143,7 @@ public class BpmRenderer extends Renderer {
 	}
 
 	private FrameBuilder frameOf(State state, Link link) {
-		return new FrameBuilder("link").add("from", state.label()).add("to", link.state().label()).add("type", link.type().name());
+		return new FrameBuilder("link").add("from", state.label()).add("to", link.state().label()).add("type", link.isDefault() ? "Default" : link.type().name());
 	}
 
 	private String format(State state) {
