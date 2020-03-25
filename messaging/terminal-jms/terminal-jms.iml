@@ -20,8 +20,6 @@
     <orderEntry type="library" name="Intino: org.apache.activemq:activemq-client:5.15.8" level="project" />
     <orderEntry type="module" module-name="logger4j" />
     <orderEntry type="module" module-name="logger" />
-    <orderEntry type="module" module-name="json" />
-    <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.8.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
     <orderEntry type="module" module-name="jms" />
     <orderEntry type="library" name="Intino: commons-net:commons-net:3.6" level="project" />
