@@ -56,9 +56,15 @@ public class SoapOperationRenderer extends Renderer {
 	private Frame frameOf(Operation operation) {
 		FrameBuilder builder = new FrameBuilder("operation");
 		addCommons(operation.name$(), builder);
-		if (operation.input() != null) builder.add("input", type(operation.input().asObject().schema()));
-		if (operation.output() != null) builder.add("returnType", type(operation.output().asObject().schema()));
+		if (operation.input() != null)
+			builder.add("input", input(operation.input().asObject().type(), type(operation.input().asObject().schema()), operation.input().xmlns()));
+		if (operation.output() != null)
+			builder.add("returnType", new FrameBuilder().add("value", type(operation.output().asObject().schema())).add("xmlns", operation.output().xmlns()));
 		return builder.toFrame();
+	}
+
+	private Frame input(String name, String type, String xmlns) {
+		return new FrameBuilder("input").add("name", name).add("type", type).add("xmlns", xmlns).toFrame();
 	}
 
 	private void addCommons(String name, FrameBuilder builder) {

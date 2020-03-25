@@ -30,7 +30,7 @@ def type(operation)
 		private $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action fill($package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action action) {
 			action.box = this.box;
 			action.context = context();
-			[$parameter+assign]
+			[$input+assign]
 			return action;
 		}
 
@@ -58,23 +58,13 @@ end
 
 
 def trigger(method)
-	private void write($this+firstUpperCase+ReturnTypeFormatter object) {
-		manager.write(new io.intino.alexandria.Soap().writeEnvelope(object));
-		manager.writeHeader("content-type", "text/xml");
+	private void write($value+firstUpperCase+ReturnTypeFormatter object) {
+		manager.write(new io.intino.alexandria.Soap().writeEnvelope(object, "$xmlns"), "text/xml");
 	}
 end
 
-def type(parameter) trigger(type)
-	$parameterType
-end
-
-
-def type(parameter & defaultvalue) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.from$in+firstUpperCase~OrDefault("$name", $parameterType, "$defaultvalue");
-end
-
-def type(parameter) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = new io.intino.alexandria.Soap().readEnvelope(manager.body());
+def type(input) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = new io.intino.alexandria.Soap().readEnvelope(manager.body()).body().schema($type.class);
 end
 
 def type(authenticationValidator) trigger(field)

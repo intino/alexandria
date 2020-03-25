@@ -9,10 +9,13 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Exception;
 import io.intino.konos.model.graph.*;
+import io.intino.magritte.framework.Layer;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
@@ -40,7 +43,7 @@ public abstract class ActionRenderer extends Renderer {
 		return new File(destiny, "actions");
 	}
 
-	protected void execute(String name, String serviceName, Response response, List<? extends Parameter> parameters, List<Exception> exceptions, List<Schema> schemas) {
+	protected void execute(String name, String serviceName, Response response, Map<String, ? extends Parameter> parameters, List<Exception> exceptions, List<Schema> schemas) {
 		File destiny = destination();
 		if (!alreadyRendered(destiny, name)) {
 			createNewClass(name, serviceName, response, parameters, exceptions, schemas);
@@ -50,11 +53,25 @@ public abstract class ActionRenderer extends Renderer {
 		}
 	}
 
+	protected void execute(String name, String serviceName, Response response, List<? extends Parameter> parameters, List<Exception> exceptions, List<Schema> schemas) {
+		File destiny = destination();
+		if (!alreadyRendered(destiny, name)) {
+			createNewClass(name, serviceName, response, toMap(parameters), exceptions, schemas);
+		} else {
+			File newDestination = javaFile(destinyPackage(destiny), firstUpperCase(snakeCaseToCamelCase(name)) + suffix());
+			new ActionUpdater(context, newDestination, packageName(), toMap(parameters), exceptions, response).update();
+		}
+	}
+
+	private Map<String, ? extends Parameter> toMap(List<? extends Parameter> parameters) {
+		return parameters.stream().collect(Collectors.toMap(Layer::name$, p -> p));
+	}
+
 	protected String suffix() {
 		return "Action";
 	}
 
-	private void createNewClass(String name, String serviceName, Response response, List<? extends Parameter> parameters, List<Exception> exceptions, List<Schema> schemas) {
+	private void createNewClass(String name, String serviceName, Response response, Map<String, ? extends Parameter> parameters, List<Exception> exceptions, List<Schema> schemas) {
 		String packageName = packageName();
 		FrameBuilder builder = new FrameBuilder("action")
 				.add("name", name)
@@ -80,11 +97,11 @@ public abstract class ActionRenderer extends Renderer {
 		return result;
 	}
 
-	private void setupParameters(List<? extends Parameter> parameters, FrameBuilder builder) {
-		for (Parameter parameter : parameters) {
-			final FrameBuilder parameterBuilder = new FrameBuilder("parameter", parameter.asType().getClass().getSimpleName());
-			if (parameter.isList()) parameterBuilder.add("list");
-			builder.add("parameter", parameterBuilder.add("name", snakeCaseToCamelCase().format(parameter.name$())).add("type", formatType(parameter.asType())).toFrame());
+	private void setupParameters(Map<String, ? extends Parameter> parameters, FrameBuilder builder) {
+		for (Map.Entry<String, ? extends Parameter> parameter : parameters.entrySet()) {
+			final FrameBuilder parameterBuilder = new FrameBuilder("parameter", parameter.getValue().asType().getClass().getSimpleName());
+			if (parameter.getValue().isList()) parameterBuilder.add("list");
+			builder.add("parameter", parameterBuilder.add("name", snakeCaseToCamelCase().format(parameter.getKey())).add("type", formatType(parameter.getValue().asType())).toFrame());
 		}
 	}
 
