@@ -11,6 +11,7 @@
     </content>
     <orderEntry type="jdk" jdkName="11" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: io.intino:bpmn-parser:2.1.0" level="project" />
     <orderEntry type="library" name="Maven: io.intino.alexandria:zip:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: io.intino.alexandria:logger:2.1.0" level="project" />
     <orderEntry type="library" name="Maven: io.intino:configuration:1.0.0" level="project" />

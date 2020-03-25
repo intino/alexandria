@@ -46,7 +46,7 @@ public class SparkManager<P extends PushService> {
 	}
 
 	public void writeHeader(String name, String value) {
-		new SparkWriter(response).writeHeader(name,value);
+		new SparkWriter(response).writeHeader(name, value);
 	}
 
 	public void write(Object object, String name) {
@@ -81,14 +81,23 @@ public class SparkManager<P extends PushService> {
 		return request.params(name) == null ? defaultValue : request.params(name);
 	}
 
-	public String body(String name) {
+	@Deprecated
+	public String body(String value) {
+		return request.body();
+	}
+
+	public String body() {
+		return request.body();
+	}
+
+	public String fromBody() {
 		return request.body();
 	}
 
 	public Resource fromForm(String name) {
 		try {
 			Part part = request.raw().getPart(name);
-			return part != null ?  new Resource(part.getName(), part.getInputStream()).metadata().contentType(part.getContentType()) : null;
+			return part != null ? new Resource(part.getName(), part.getInputStream()).metadata().contentType(part.getContentType()) : null;
 		} catch (ServletException | IOException e) {
 			return null;
 		}

@@ -17,11 +17,31 @@
     <orderEntry type="library" name="Intino: javax.xml.bind:jaxb-api:2.3.1" level="project" />
     <orderEntry type="library" name="Intino: javax.activation:javax.activation-api:1.2.0" level="project" />
     <orderEntry type="module" module-name="logger" />
-    <orderEntry type="library" name="Intino: javax.activation:activation:1.1" level="project" />
-    <orderEntry type="library" name="Intino: org.glassfish.jaxb:jaxb-runtime:2.3.1" level="project" />
-    <orderEntry type="library" name="Intino: org.glassfish.jaxb:txw2:2.3.1" level="project" />
-    <orderEntry type="library" name="Intino: com.sun.istack:istack-commons-runtime:3.0.7" level="project" />
-    <orderEntry type="library" name="Intino: org.jvnet.staxex:stax-ex:1.8" level="project" />
-    <orderEntry type="library" name="Intino: com.sun.xml.fastinfoset:FastInfoset:1.2.15" level="project" />
+    <orderEntry type="module" module-name="json" />
+    <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.8.6" level="project" />
+    <orderEntry type="module" module-name="http" />
+    <orderEntry type="library" name="Intino: org.bouncycastle:bcmail-jdk15:1.45" level="project" />
+    <orderEntry type="library" name="Intino: org.bouncycastle:bcprov-jdk15:1.45" level="project" />
+    <orderEntry type="library" name="Intino: com.sparkjava:spark-core:2.7.2" level="project" />
+    <orderEntry type="library" name="Intino: org.slf4j:slf4j-api:1.7.13" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-server:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: javax.servlet:javax.servlet-api:3.1.0" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-http:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-util:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-io:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-webapp:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-xml:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-servlet:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-security:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-server:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-common:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-client:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-client:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-servlet:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-api:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Intino: commons-codec:commons-codec:1.10" level="project" />
+    <orderEntry type="library" name="Intino: eu.medsea.mimeutil:mime-util:2.1.1" level="project" />
+    <orderEntry type="module" module-name="exceptions" />
+    <orderEntry type="module" module-name="primitives" />
   </component>
 </module>

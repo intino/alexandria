@@ -1,11 +1,10 @@
 package io.intino.alexandria;
 
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.xml.Node;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
 
 public class Envelope {
 	private final Node envelopeNode;
@@ -27,9 +26,9 @@ public class Envelope {
 
 		public <T> T schema(Class<T> t) {
 			try {
-				JAXBContext context = JAXBContext.newInstance(t);
-				Unmarshaller m = context.createUnmarshaller();
-				return (T) m.unmarshal(node.getChildren().get(0).get());
+				JsonObject jsonObject = new JsonObject();
+				node.getChildren().get(0).getChildren().forEach(childNode -> jsonObject.add(childNode.getNodeName(), new JsonPrimitive(childNode.getTextContent())));
+				return Json.gsonReader().fromJson(jsonObject, t);
 			} catch (Exception e) {
 				Logger.error(e);
 				return null;
