@@ -11,13 +11,13 @@ def type(operation)
 
 	$schemaImport
 
-	public class $name+firstUpperCase~Operation {
+	public class $name+snakeCaseToCamelCase+firstUpperCase~Operation {
 
 		private $box+FirstUpperCase~Box box;
 		private SparkManager<SparkPushService> manager;
 		[$authenticationValidator+field]
 
-		public $name+firstUpperCase~Operation($box+FirstUpperCase~Box box, SparkManager manager) {
+		public $name+snakeCaseToCamelCase+firstUpperCase~Operation($box+FirstUpperCase~Box box, SparkManager manager) {
 			this.box = box;
 			this.manager = manager;
 			$authenticationValidator+assign
