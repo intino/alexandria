@@ -8,6 +8,8 @@ Artifact("io.intino.alexandria", "1.0.0") soap
 
 		Test("junit", "junit", "LATEST")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Distribution(release = intino.release)
 
-Repository(identifier = "intino-maven")
-	Release(url = "https://artifactory.intino.io/artifactory/releases")
+Repository(identifier = "intino-maven") intino
+	Release("https://artifactory.intino.io/artifactory/releases")
+	Release("https://artifactory.intino.io/artifactory/release-libraries")release
