@@ -74,7 +74,7 @@ public class ListenerRenderer extends Renderer {
 							.add("box", boxName())
 							.add("package", packageName()).toFrame()));
 		} else
-			new ActionUpdater(context, javaFile(actionsPackage(src()), sentinel.name$() + "Action"), "actions", Collections.emptyList(), Collections.emptyList(), null).update();
+			new ActionUpdater(context, javaFile(actionsPackage(src()), sentinel.name$() + "Action"), "actions", Collections.emptyMap(), Collections.emptyList(), null).update();
 	}
 
 	private Template actionTemplate() {

@@ -20,7 +20,7 @@ public class Json {
 		return gsonReader().fromJson(text, t);
 	}
 
-	private static Gson gsonReader() {
+	public static Gson gsonReader() {
 		return new GsonBuilder().
 				registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, type1, context) -> Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong())).
 				registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, type1, context) -> new Date(json.getAsJsonPrimitive().getAsLong())).
@@ -28,7 +28,7 @@ public class Json {
 				create();
 	}
 
-	private static Gson gsonWriter() {
+	public static Gson gsonWriter() {
 		return new GsonBuilder().
 				registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (instant, type, context) -> new JsonPrimitive(instant.toEpochMilli())).
 				registerTypeAdapter(Date.class, (JsonSerializer<Date>) (date, type, context) -> new JsonPrimitive(date.getTime())).

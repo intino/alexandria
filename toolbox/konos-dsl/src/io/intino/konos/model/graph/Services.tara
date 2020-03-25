@@ -84,7 +84,9 @@ Concept:Named Service
 			var string path
 			var string description = empty
 			Concept:{0..1} Input extends Parameter
+				var string xmlns
 			Concept:{0..1} Output extends Response
+				var string xmlns
 	Aspect JMX
 		var string path = ""
 		Concept:Named:{1..*} Operation

@@ -12,6 +12,7 @@ import io.intino.konos.model.graph.Response;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstLowerCase;
@@ -23,11 +24,11 @@ public class ActionUpdater {
 	private final CompilationContext context;
 	private final File destination;
 	private final String packageName;
-	private final List<? extends Parameter> parameters;
+	private final Map<String, ? extends Parameter> parameters;
 	private final List<Exception> exceptions;
 	private final Response response;
 
-	public ActionUpdater(CompilationContext context, File destination, String packageName, List<? extends Parameter> parameters, List<Exception> exceptions, Response response) {
+	public ActionUpdater(CompilationContext context, File destination, String packageName, Map<String, ? extends Parameter> parameters, List<Exception> exceptions, Response response) {
 		this.context = context;
 		this.destination = destination;
 		this.packageName = packageName;
@@ -37,8 +38,8 @@ public class ActionUpdater {
 	}
 
 	public void update() {
-		parameters.forEach(p -> context.postCompileActionMessages().add(new PostCompileFieldActionMessage(context.module(), destination, "public",
-				false, formatType(p.asType(), p.isList()), nameOf(p))));
+		parameters.entrySet().forEach(p -> context.postCompileActionMessages().add(new PostCompileFieldActionMessage(context.module(), destination, "public",
+				false, formatType(p.getValue().asType(), p.getValue().isList()), nameOf(p.getKey()))));
 		context.postCompileActionMessages().add(new PostCompileFieldActionMessage(context.module(), destination, "public",
 				false, "io.intino.konos.Box", "box"));
 		context.postCompileActionMessages().add(new PostCompileMethodActionMessage(context.module(), destination, "execute",
@@ -58,8 +59,8 @@ public class ActionUpdater {
 		return packageName + ".exceptions." + Commons.firstUpperCase(exception.name$());
 	}
 
-	private String nameOf(Parameter parameter) {
-		return firstLowerCase(snakeCaseToCamelCase().format(parameter.name$()).toString());
+	private String nameOf(String parameter) {
+		return firstLowerCase(snakeCaseToCamelCase().format(parameter).toString());
 	}
 
 	private String formatType(Data.Type typeData, boolean list) {
