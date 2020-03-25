@@ -186,13 +186,13 @@ public class AbstractBoxRenderer extends Renderer {
 
 	private void services(FrameBuilder builder) {
 		if (!graph.messagingServiceList().isEmpty()) builder.add("jms", "");
-		rest(builder);
 		soap(builder);
 		jms(builder);
 		jmx(builder);
 		slackServices(builder);
-		if (!graph.restServiceList().isEmpty() || !graph.uiServiceList().isEmpty()) builder.add("spark", "stop");
 		ui(builder);
+		rest(builder);
+		if (!graph.soapServiceList().isEmpty() || !graph.restServiceList().isEmpty() || !graph.uiServiceList().isEmpty()) builder.add("spark", "stop");
 	}
 
 	private void rest(FrameBuilder frame) {
