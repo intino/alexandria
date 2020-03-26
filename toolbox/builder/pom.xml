@@ -5,7 +5,7 @@
 	<groupId>io.intino.konos</groupId>
 	<artifactId>builder</artifactId>
 	<name>Builder</name>
-	<version>8.1.1</version>
+	<version>8.1.2</version>
 
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -17,7 +17,11 @@
 		<outputDirectory>../../out/production/builder</outputDirectory>
 		<testOutputDirectory>../../out/test/builder</testOutputDirectory>
 		<directory>../../out/build/builder</directory>
-		<resources><resource><directory>res</directory></resource></resources>
+		<resources>
+			<resource>
+				<directory>res</directory>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -111,12 +115,6 @@
 			<version>1.0.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<scope>provided</scope>
-			<version>2.8.0</version>
-		</dependency>
-		<dependency>
 			<groupId>io.intino.magritte</groupId>
 			<artifactId>builder</artifactId>
 			<version>4.0.0</version>
@@ -127,14 +125,14 @@
 			<version>3.0.0</version>
 		</dependency>
 		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.2.11</version>
+		</dependency>
+		<dependency>
 			<groupId>io.intino.itrules</groupId>
 			<artifactId>engine</artifactId>
 			<version>1.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>io.intino</groupId>
-			<artifactId>bpmn-parser</artifactId>
-			<version>2.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hashids</groupId>
