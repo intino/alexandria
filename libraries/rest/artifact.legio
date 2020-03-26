@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "3.0.2") rest
+Artifact("io.intino.alexandria", "3.0.3") rest
 	Imports
 		Compile("io.intino.alexandria", "http", "1.0.1")
 		Compile("io.intino.alexandria", "json", "1.0.2")
