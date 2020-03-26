@@ -40,7 +40,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold as Decorated
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="MaterialIconButton facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				MaterialIconButton(title="operation", icon="Add") operation4 as Action
+				MaterialIconButton(title="operation", icon="Add", size=Medium) operation4 as Action
 			Block > Text as Code(language=Html)
 					value
 						=========
