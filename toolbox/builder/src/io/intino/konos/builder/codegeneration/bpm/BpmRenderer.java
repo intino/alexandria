@@ -1,16 +1,15 @@
 package io.intino.konos.builder.codegeneration.bpm;
 
 import io.intino.alexandria.logger.Logger;
-import io.intino.bpmparser.BpmnParser;
-import io.intino.bpmparser.Link;
-import io.intino.bpmparser.State;
-import io.intino.bpmparser.State.Type;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.bpm.parser.BpmnParser;
+import io.intino.konos.builder.codegeneration.bpm.parser.Link;
+import io.intino.konos.builder.codegeneration.bpm.parser.State;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Workflow.Process;
@@ -26,9 +25,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static io.intino.bpmparser.State.Type.Initial;
-import static io.intino.bpmparser.State.Type.Terminal;
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
+import static io.intino.konos.builder.codegeneration.bpm.parser.State.Type;
+import static io.intino.konos.builder.codegeneration.bpm.parser.State.Type.Initial;
+import static io.intino.konos.builder.codegeneration.bpm.parser.State.Type.Terminal;
 import static io.intino.konos.builder.helpers.Commons.*;
 
 public class BpmRenderer extends Renderer {
@@ -118,7 +118,7 @@ public class BpmRenderer extends Renderer {
 	}
 
 	private FrameBuilder frameOf(State state, List<State> states) {
-		List<Type> types = typesOf(state);
+		List<State.Type> types = typesOf(state);
 		FrameBuilder builder = new FrameBuilder("state", entryLink(state, states)).add("method", format(state)).add("label", state.label());
 		if (!types.contains(Type.Intermediate))
 			builder.add("type", types.stream().map(Enum::name).toArray(String[]::new));
