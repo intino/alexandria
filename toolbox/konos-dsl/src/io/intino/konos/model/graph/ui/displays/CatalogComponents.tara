@@ -1,7 +1,5 @@
 dsl Proteo
 
-
-
 use Component
 
 Concept CatalogComponents
