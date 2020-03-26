@@ -154,11 +154,11 @@ end
 
 
 def type(parameter & defaultvalue) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = RequestAdapter.adapt(manager.from$in+firstUpperCase~OrDefault("$name", "$defaultvalue"), $parameterType);
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrDefault("$name", "$defaultvalue"), $parameterType);
 end
 
 def type(parameter) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = RequestAdapter.adapt(manager.from$in+firstUpperCase("$name"), $parameterType);
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase("$name"), $parameterType);
 end
 
 def type(list) trigger(parameterType)
