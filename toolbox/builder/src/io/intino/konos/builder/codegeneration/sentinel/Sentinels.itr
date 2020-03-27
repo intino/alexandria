@@ -22,7 +22,7 @@ def type(sentinels)
 
 		}
 
-		public static void init(AlexandriaScheduler scheduler, $box+FirstUpperCase~Box box) {
+		public static void init(AlexandriaScheduler scheduler, AlexandriaSpark webServer, $box+FirstUpperCase~Box box) {
 			JobDetail job;
 			try {
 				$sentinel+init...[$NL]
@@ -48,6 +48,14 @@ def type(sentinel) type(DirectoryListenerSentinel) trigger(init)
 			action.event = event;
 			action.execute();
 		}, $event+fullPath...[, ]);
+end
+
+def type(sentinel) type(WebHook) trigger(init)
+	webServer.route($path+format).get(manager -> new $name+SnakeCaseToCamelCase+firstUpperCase~Action(box, manager).execute());
+end
+
+def type(path) trigger(format)
+	"$name"[$custom...[]]
 end
 
 def trigger(fullPath)
