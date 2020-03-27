@@ -36,6 +36,11 @@ public class AcceptedKonosRunner {
 	}
 
 	@Test
+	public void test2() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/ideaKonosToCompile2.txt")});
+	}
+
+	@Test
 	public void cuentamaestra() {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/cfe/cuentamaestra.txt")});
 	}

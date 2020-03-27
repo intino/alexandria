@@ -1,5 +1,7 @@
 package io.intino.alexandria.scheduler.directory;
 
+import io.intino.alexandria.logger.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
@@ -12,6 +14,8 @@ public class DirectorySentinel {
 
 	private DirectoryTask task;
 	private WatchService watcher;
+	private Thread thread;
+	private boolean closed = false;
 
 
 	public enum Event {OnCreate, OnModify, OnDelete}
@@ -21,32 +25,40 @@ public class DirectorySentinel {
 			this.watcher = FileSystems.getDefault().newWatchService();
 			this.task = task;
 			directory.toPath().register(watcher, kindsOf(events));
+			buildTask(task);
 		} catch (IOException e) {
 			this.watcher = null;
 		}
 	}
 
-	public void watch() {
-		while (true) {
-			try {
-				WatchKey key = watcher.take();
-				for (WatchEvent<?> event : key.pollEvents()) {
-					@SuppressWarnings("unchecked")
-					WatchEvent<Path> ev = (WatchEvent<Path>) event;
-					new Thread(() -> task.execute(ev.context().toFile(), eventOf(ev.kind()))).start();
+	private void buildTask(DirectoryTask task) {
+		this.thread = new Thread(() -> {
+			while (!closed) {
+				try {
+					WatchKey key = watcher.take();
+					for (WatchEvent<?> event : key.pollEvents()) {
+						@SuppressWarnings("unchecked")
+						WatchEvent<Path> ev = (WatchEvent<Path>) event;
+						new Thread(() -> task.execute(ev.context().toFile(), eventOf(ev.kind()))).start();
+					}
+					boolean valid = key.reset();
+					if (!valid) break;
+				} catch (InterruptedException | ClosedWatchServiceException ex) {
+					Logger.error(ex);
+					return;
 				}
-				boolean valid = key.reset();
-				if (!valid) break;
-			} catch (InterruptedException | ClosedWatchServiceException ex) {
-				ex.printStackTrace();
-				return;
 			}
-		}
+		});
+	}
+
+	public void watch() {
+		thread.start();
 	}
 
 	public void stop() {
 		try {
 			watcher.close();
+			this.closed = true;
 		} catch (IOException ignored) {
 		}
 	}

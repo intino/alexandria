@@ -114,7 +114,7 @@ export default class Actionable extends AbstractActionable {
                 <IconButton color="primary" disabled={this._readonly()}
                                 onClick={this.handleClick.bind(this)}
                                 className={classes.iconButton} size={this._size()}>
-                    <img src={this._icon()} style={{width:"24px",height:"24px"}}/>
+                    <img src={this._icon()} style={this._addDimensions({})}/>
                 </IconButton>
             </Tooltip>
 		);
@@ -129,7 +129,7 @@ export default class Actionable extends AbstractActionable {
                 <IconButton color="primary" disabled={this._readonly()}
                                 onClick={this.handleClick.bind(this)} className={classes.materialIconButton}
                                 style={style} size={this._size()}>
-                    <ActionableMui icon={this._icon()}/>
+                    <ActionableMui icon={this._icon()} style={this._addDimensions({})}/>
                 </IconButton>
             </Tooltip>
 		);
@@ -285,7 +285,14 @@ export default class Actionable extends AbstractActionable {
 
 	_readonly = () => {
 		return this.state.readonly != null ? this.state.readonly : false;
-	}
+	};
+
+	_addDimensions = (style) => {
+        const large = this._size() === "large";
+        style.width = large ? "48px" : "24px";
+        style.height = large ? "48px" : "24px";
+        return style;
+    };
 
 };
 

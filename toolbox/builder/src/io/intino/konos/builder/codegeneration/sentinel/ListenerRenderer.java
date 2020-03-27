@@ -36,7 +36,7 @@ public class ListenerRenderer extends Renderer {
 	@Override
 	public void render() {
 		this.systemSentinels.forEach(this::processSystemSentinel);
-		this.sentinels.stream().filter(Sentinel::isDirectoryListener).map(Sentinel::asDirectoryListener).forEach(this::processDirectorySentinel);
+		this.sentinels.stream().filter(Sentinel::isDirectoryListener).map(Sentinel::asDirectoryListener).forEach(this::processDirectoryListener);
 	}
 
 	private void processSystemSentinel(Sentinel.SystemListener sentinel) {
@@ -49,7 +49,7 @@ public class ListenerRenderer extends Renderer {
 		createCorrespondingAction(sentinel.a$(Sentinel.class));
 	}
 
-	private void processDirectorySentinel(Sentinel.DirectoryListener sentinel) {
+	private void processDirectoryListener(Sentinel.DirectoryListener sentinel) {
 		FrameBuilder frame = new FrameBuilder("action", "listener")
 				.add("name", sentinel.name$())
 				.add("box", boxName())

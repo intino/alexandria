@@ -1,14 +1,22 @@
 package io.intino.alexandria.ui.services.push;
 
 import io.intino.alexandria.http.pushservice.Client;
+import io.intino.alexandria.http.pushservice.Session;
 import io.intino.alexandria.http.spark.SparkSession;
 import io.intino.alexandria.ui.services.auth.Token;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class UISession extends SparkSession<UIClient> {
     private User user;
     private Browser browser;
     private String device = null;
     private Token token = null;
+    private Map<String, String> preferences = new HashMap<>();
 
     public UISession(String id) {
         super(id);
@@ -75,6 +83,19 @@ public class UISession extends SparkSession<UIClient> {
 
     public Token token() {
         return this.token;
+    }
+
+    public List<String> preferences() {
+        return new ArrayList<>(preferences.values());
+    }
+
+    public String preference(String name) {
+        return preferences.get(name);
+    }
+
+    public Session add(String preference, String value) {
+        preferences.put(preference, value);
+        return this;
     }
 
 }

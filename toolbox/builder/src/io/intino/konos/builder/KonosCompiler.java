@@ -8,6 +8,7 @@ import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.compiler.shared.PostCompileActionMessage;
 import io.intino.konos.compiler.shared.PostCompileConfigurationDependencyActionMessage;
 import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.Sentinel;
 import io.intino.magritte.io.Stash;
 
 import java.io.File;
@@ -81,8 +82,13 @@ public class KonosCompiler {
 		if (graph.slackBotServiceList().isEmpty()) remove(dependencies, "slack");
 		if (graph.visualizationComponents() == null || graph.visualizationComponents().chartList(c -> c.isAbsolute() || c.isRelative()).isEmpty())
 			remove(dependencies, "driver-r");
-		if (graph.visualizationComponents() == null || graph.visualizationComponents().dashboardList(d -> d.isAbsolute() || d.isRelative()).isEmpty())
+		if (graph.visualizationComponents() == null || graph.visualizationComponents().dashboardList(d -> d.isAbsolute() || d.isRelative()).isEmpty()) {
 			remove(dependencies, "driver-shiny");
+		}
+		if (graph.sentinelList().stream().noneMatch(Sentinel::isWebHook) ||
+				!graph.restServiceList().isEmpty() ||
+				!graph.soapServiceList().isEmpty() ||
+				!graph.uiServiceList().isEmpty()) remove(dependencies, "http");
 		return dependencies;
 	}
 
@@ -98,7 +104,7 @@ public class KonosCompiler {
 			context.loadCache(graph, stashes);
 			new FullRenderer(graph, context).execute();
 		} catch (Exception e) {
-			if(e instanceof NullPointerException){
+			if (e instanceof NullPointerException) {
 				StringWriter sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				String exceptionAsString = sw.toString();
