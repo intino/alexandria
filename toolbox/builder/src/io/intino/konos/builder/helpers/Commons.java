@@ -153,4 +153,7 @@ public class Commons {
 		return name.isEmpty() ? name : Character.toUpperCase(name.charAt(0)) + name.substring(1);
 	}
 
+	public static String archetypePath(String path) {
+		return path.replace(".archetype", "").substring(1).replace("+", "().").replace("-", "().") + "()";
+	}
 }
