@@ -5,6 +5,10 @@ import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.services.push.UIClient;
 import io.intino.alexandria.ui.services.push.UIMessage;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 public abstract class DisplayPushRequester {
 
 	public void execute(UIClient client, UIMessage message) {}
@@ -19,7 +23,7 @@ public abstract class DisplayPushRequester {
 	}
 
 	public String data(UIMessage message) {
-		return message.value();
+		return URLDecoder.decode(message.value(), StandardCharsets.UTF_8);
 	}
 
 }
