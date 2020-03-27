@@ -55,13 +55,13 @@ def type(box)
 			return this;
 		}
 
-		protected abstract void beforeStart();
-
-		protected abstract void afterStart();
+		public abstract void beforeStart();
 
 		public io.intino.alexandria.core.Box start() {
+			if (owner != null) owner.beforeStart();
 			beforeStart();
 			if (owner != null) owner.start();
+			initSentinels();
 			initUI();
 			initRestServices();
 			initSoapServices();
@@ -70,25 +70,30 @@ def type(box)
 			initMessageHub();
 			initTerminal();
 			initMessagingServices();
-			initSentinels();
 			initSlackBots();
 			initWorkflow();
+			if (owner != null) owner.afterStart();
 			afterStart();
 			return this;
 		}
 
+		public abstract void afterStart();
+
+		public abstract void beforeStop();
+
 		public void stop() {
+			if (owner != null) owner.beforeStop();
 			beforeStop();
 			if (owner != null) owner.stop();
 			[$spark...[$NL]]
 			[$service+close...[$NL]]
 			[$messagehub+close]
 			[$terminal+close]
+			if (owner != null) owner.afterStop();
 			afterStop();
 		}
-		protected abstract void beforeStop();
 
-		protected abstract void afterStop();
+		public abstract void afterStop();
 
 		[$hasUi+pushService]
 
@@ -279,7 +284,7 @@ def type(service & messaging) trigger(messaging)
 end
 
 def type(sentinel) trigger(init)
-	Sentinels.init(this.scheduler, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	Sentinels.init(this.scheduler, [$hasWeb~io.intino.alexandria.http.AlexandriaSparkBuilder.instance()?null], ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
 
 def type(workflow) trigger(init)
