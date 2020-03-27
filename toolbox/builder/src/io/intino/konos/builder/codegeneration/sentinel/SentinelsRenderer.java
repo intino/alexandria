@@ -48,14 +48,16 @@ public class SentinelsRenderer extends Renderer {
 		return list.toArray(new Frame[0]);
 	}
 
-	private Frame processWebHookSentinel(Sentinel.WebHook webhook) {
-		final FrameBuilder builder = new FrameBuilder().add("sentinel").add(webhook.getClass().getSimpleName()).add("name", webhook.name$());
-		builder.add("path", customize("path", ("/webhook/" + webhook.path()).replace("//", "")));
+	private Frame processWebHookSentinel(Sentinel.WebHook webHook) {
+		final FrameBuilder builder = new FrameBuilder().add("sentinel").add(webHook.getClass().getSimpleName()).add("name", webHook.name$());
+		builder.add("path", customize("path", ("/webhook/" + webHook.path()).replace("//", "/")));
+		builder.add("parameter", webHook.parameterList().stream().map(p -> new FrameBuilder("parameter").add("name", p.name$()).add("in", p.in().name()).toFrame()).toArray(Frame[]::new));
 		return builder.toFrame();
 	}
 
 	private Frame processSentinel(Sentinel.SystemListener task) {
 		final FrameBuilder builder = new FrameBuilder().add("sentinel").add(task.getClass().getSimpleName()).add("name", task.name$());
+		builder.add("package", packageName());
 		List<Frame> jobFrames = new ArrayList<>();
 		if (task.i$(Sentinel.ClockListener.class)) {
 			Sentinel.ClockListener cron = task.a$(Sentinel.ClockListener.class);

@@ -61,6 +61,7 @@ def type(box)
 			if (owner != null) owner.beforeStart();
 			beforeStart();
 			if (owner != null) owner.start();
+			initSentinels();
 			initUI();
 			initRestServices();
 			initSoapServices();
@@ -69,7 +70,6 @@ def type(box)
 			initMessageHub();
 			initTerminal();
 			initMessagingServices();
-			initSentinels();
 			initSlackBots();
 			initWorkflow();
 			if (owner != null) owner.afterStart();
