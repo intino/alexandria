@@ -8,15 +8,17 @@ import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.action.WebHookActionRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Sentinel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
+import static java.util.stream.Collectors.toList;
 
 public class SentinelsRenderer extends Renderer {
 	private final List<Sentinel> sentinels;
@@ -39,13 +41,23 @@ public class SentinelsRenderer extends Renderer {
 
 	private Frame[] processSentinels() {
 		List<Frame> list = new ArrayList<>();
-		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.SystemListener.class)).map(t -> t.a$(Sentinel.SystemListener.class)).map(this::processSentinel).collect(Collectors.toList()));
-		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.DirectoryListener.class)).map(t -> t.a$(Sentinel.DirectoryListener.class)).map(this::processDirectoryListenerSentinel).collect(Collectors.toList()));
+		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.SystemListener.class)).map(t -> t.a$(Sentinel.SystemListener.class)).map(this::processSentinel).collect(toList()));
+		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.DirectoryListener.class)).map(t -> t.a$(Sentinel.DirectoryListener.class)).map(this::processDirectoryListenerSentinel).collect(toList()));
+		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.WebHook.class)).map(t -> t.a$(Sentinel.WebHook.class)).map(this::processWebHookSentinel).collect(toList()));
+		sentinels.stream().filter(t -> t.i$(Sentinel.WebHook.class)).forEach(s -> new WebHookActionRenderer(context, s.asWebHook()).execute());
 		return list.toArray(new Frame[0]);
+	}
+
+	private Frame processWebHookSentinel(Sentinel.WebHook webHook) {
+		final FrameBuilder builder = new FrameBuilder().add("sentinel").add(webHook.getClass().getSimpleName()).add("name", webHook.name$());
+		builder.add("path", customize("path", ("/webhook/" + webHook.path()).replace("//", "/")));
+		builder.add("parameter", webHook.parameterList().stream().map(p -> new FrameBuilder("parameter").add("name", p.name$()).add("in", p.in().name()).toFrame()).toArray(Frame[]::new));
+		return builder.toFrame();
 	}
 
 	private Frame processSentinel(Sentinel.SystemListener task) {
 		final FrameBuilder builder = new FrameBuilder().add("sentinel").add(task.getClass().getSimpleName()).add("name", task.name$());
+		builder.add("package", packageName());
 		List<Frame> jobFrames = new ArrayList<>();
 		if (task.i$(Sentinel.ClockListener.class)) {
 			Sentinel.ClockListener cron = task.a$(Sentinel.ClockListener.class);

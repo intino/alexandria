@@ -1,6 +1,8 @@
 dsl Proteo
 
-Concept Sentinel
+use DataTypes
+
+Concept:Named Sentinel
 	Aspect SentinelAspect
 		!! http://www.quartz-scheduler.org/documentation/quartz-2.1.x/tutorials/crontrigger.html
 		sub SystemListener
@@ -15,3 +17,7 @@ Concept Sentinel
 			var string[] directories
 			var word[]:{OnCreate OnDelete OnModify} events
 		sub MailListener
+		sub WebHook
+			var string path
+			Concept:Named Parameter
+				var word:{Path Query} in
