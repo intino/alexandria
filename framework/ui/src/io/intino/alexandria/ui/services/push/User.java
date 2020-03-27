@@ -62,7 +62,7 @@ public class User {
     }
 
     public List<String> preferences() {
-        return preferences.values().stream().collect(Collectors.toList());
+        return new ArrayList<>(preferences.values());
     }
 
     public String preference(String name) {

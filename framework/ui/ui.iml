@@ -67,7 +67,6 @@
     <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-framework:2.3.15-gfa" level="project" />
     <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-http-server:2.3.15-gfa" level="project" />
     <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-http:2.3.15-gfa" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:exceptions:1.0.0" level="project" />
     <orderEntry type="module" module-name="http" />
     <orderEntry type="module" module-name="logger" />
     <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.8.6" level="project" />
