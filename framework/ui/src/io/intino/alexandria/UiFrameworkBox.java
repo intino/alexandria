@@ -21,19 +21,19 @@ public class UiFrameworkBox extends AbstractBox {
 	}
 
 	@Override
-	protected void beforeStart() {
+	public void beforeStart() {
 	}
 
 	@Override
-	protected void afterStart() {
+	public void afterStart() {
 	}
 
 	@Override
-	protected void beforeStop() {
+	public void beforeStop() {
 	}
 
 	@Override
-	protected void afterStop() {
+	public void afterStop() {
 	}
 
 	public io.intino.alexandria.core.Box open() {
