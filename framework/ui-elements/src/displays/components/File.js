@@ -30,18 +30,20 @@ class File extends AbstractFile {
 	state = {
 		value : this.props.value,
 		filename : this.props.filename,
-		mimeType : null
+		mimeType : null,
+		data : null
 	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new FileNotifier(this);
 		this.requester = new FileRequester(this);
+		this.container = React.createRef();
 	};
 
 	render() {
 		const { classes } = this.props;
-		const file = this.state.value != null ? this.state.value + (this.state.value.indexOf("?") != -1 ? "&" : "?") + "embedded=true" : undefined;
+		const file = this._fileUrl();
 
 		if (file === undefined) return (<React.Fragment/>);
 
@@ -53,7 +55,7 @@ class File extends AbstractFile {
 		return (
 			<Block layout="horizontal flex">
 				{ ComponentBehavior.labelBlock(this.props) }
-				{!this._isPdf() &&
+				{(!this._isPdf() && !this._isXml()) &&
 				    <div style={{height:"100%", width:"100%"}} className="layout vertical flex">
 				        <div style={{height:"50px", background:"#26282B"}}></div>
 				        <div style={{background:"#414447"}} className="layout vertical flex">
@@ -73,18 +75,59 @@ class File extends AbstractFile {
 						</div>
 					</object>
 				}
+				{this._isXml() && this._renderXml()}
 			</Block>
 		);
+	};
+
+	_renderXml = () => {
+	    const file = this._fileUrl();
+		const downloadTitle = this.translate("Download");
+	    this.width = this.container.current != null ? this.container.current.offsetWidth + "px" : (this.width != null ? this.width : "100%");
+	    this.height = this.container.current != null ? this.container.current.offsetHeight-60 + "px" : (this.height != null ? this.height : "100%");
+        if (this.state.data != null) {
+            return (
+                <div style={{overflow:'auto',height:'100%',width:'100%'}}>
+                    <div style={{height:"50px", background:"#26282B"}} className="layout horizontal start-justified">
+                        <Button style={{margin:'8px'}} variant="contained" color="primary" onClick={this._downloadFile.bind(this, file)}><SaveAltIcon style={{marginRight:"5px"}}/>{downloadTitle}</Button>
+                    </div>
+                    <div className="layout vertical flex">
+                        <pre style={{width:this.width,height:this.height,border:0,fontSize:'10pt',background:'#eee',padding:'10px',marginTop:'0',overflow:'auto'}}><code>{this.state.data}></code></pre>
+                    </div>
+                </div>
+            );
+        }
+        return (<div style={{width:'100%',height:'100%'}} ref={this.container}>...{this._loadData()}</div>);
 	};
 
 	_isPdf = () => {
 		return this.state.mimeType != null && this.state.mimeType === "application/pdf";
 	};
 
+	_isXml = () => {
+		return this.state.mimeType != null && this.state.mimeType === "application/xml";
+	};
+
+	_fileUrl = () => {
+	    return this.state.value != null ? this.state.value + (this.state.value.indexOf("?") != -1 ? "&" : "?") + "embedded=true" : undefined;
+	};
+
 	_extension = () => {
 	    if (this.state.mimeType === "application/vnd.ms-excel") return ".xls";
 	    else if (this.state.mimeType === "application/xml") return ".xml";
 	    return ".bin";
+	};
+
+	_loadData = () => {
+	    const file = this._fileUrl();
+	    if (file === undefined) return;
+        var request = this._createHttpRequest();
+        request.open("GET", file, true);
+        request.send(null);
+        const fileWidget = this;
+        request.onreadystatechange = function() {
+          if (request.readyState == 4) fileWidget.setState({data: request.responseText});
+        };
 	};
 
 	style() {
@@ -113,6 +156,16 @@ class File extends AbstractFile {
             location.replace(file);
         }
 	};
+
+	_createHttpRequest = () => {
+        try { return new XMLHttpRequest(); }
+        catch (error) {}
+        try { return new ActiveXObject("Msxml2.XMLHTTP"); }
+        catch (error) {}
+        try {return new ActiveXObject("Microsoft.XMLHTTP");}
+        catch (error) {}
+        throw new Error("Could not create HTTP request object.");
+    };
 
 	_downloadFilename = () => {
         return this.state.filename;
