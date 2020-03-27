@@ -62,8 +62,11 @@ public class AbstractBoxRenderer extends Renderer {
 	}
 
 	private void sentinels(FrameBuilder builder) {
-		if (!graph.sentinelList().isEmpty())
-			builder.add("sentinel", new FrameBuilder("sentinel").add("configuration", boxName()).toFrame());
+		if (!graph.sentinelList().isEmpty()) {
+			FrameBuilder frame = new FrameBuilder("sentinel").add("configuration", boxName());
+			if (graph.sentinelList().stream().anyMatch(Sentinel::isWebHook)) frame.add("hasWeb", "");
+			builder.add("sentinel", frame);
+		}
 	}
 
 	private void datalake(FrameBuilder root) {
@@ -192,7 +195,8 @@ public class AbstractBoxRenderer extends Renderer {
 		slackServices(builder);
 		ui(builder);
 		rest(builder);
-		if (!graph.soapServiceList().isEmpty() || !graph.restServiceList().isEmpty() || !graph.uiServiceList().isEmpty()) builder.add("spark", "stop");
+		if (!graph.soapServiceList().isEmpty() || !graph.restServiceList().isEmpty() || !graph.uiServiceList().isEmpty())
+			builder.add("spark", "stop");
 	}
 
 	private void rest(FrameBuilder frame) {
