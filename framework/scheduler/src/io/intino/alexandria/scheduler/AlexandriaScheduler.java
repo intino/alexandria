@@ -1,12 +1,12 @@
 package io.intino.alexandria.scheduler;
 
+import io.intino.alexandria.scheduler.directory.DirectorySentinel;
 import io.intino.alexandria.scheduler.directory.DirectoryTask;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
-import io.intino.alexandria.scheduler.directory.DirectorySentinel;
 
 import java.io.File;
 import java.util.Date;
