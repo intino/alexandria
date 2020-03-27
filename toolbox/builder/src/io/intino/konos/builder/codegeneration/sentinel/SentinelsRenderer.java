@@ -49,7 +49,7 @@ public class SentinelsRenderer extends Renderer {
 	}
 
 	private Frame processWebHookSentinel(Sentinel.WebHook webHook) {
-		final FrameBuilder builder = new FrameBuilder().add("sentinel").add(webHook.getClass().getSimpleName()).add("name", webHook.name$());
+		final FrameBuilder builder = new FrameBuilder("sentinel").add(webHook.getClass().getSimpleName()).add("name", webHook.name$());
 		builder.add("path", customize("path", ("/webhook/" + webHook.path()).replace("//", "/")));
 		builder.add("parameter", webHook.parameterList().stream().map(p -> new FrameBuilder("parameter").add("name", p.name$()).add("in", p.in().name()).toFrame()).toArray(Frame[]::new));
 		return builder.toFrame();
@@ -81,10 +81,21 @@ public class SentinelsRenderer extends Renderer {
 	private Frame processDirectoryListenerSentinel(Sentinel.DirectoryListener sentinel) {
 		final FrameBuilder builder = new FrameBuilder().add("sentinel").add(sentinel.getClass().getSimpleName())
 				.add("event", sentinel.events().stream().map(Enum::name).toArray(String[]::new))
-				.add("file", sentinel.directories() == null ? "" : sentinel.directories().get(0))
+				.add("file", file(sentinel))
 				.add("name", sentinel.name$())
 				.add("package", packageName());
 		return builder.toFrame();
+	}
+
+	private Frame file(Sentinel.DirectoryListener sentinel) {
+		String directory = sentinel.directory();
+		if (directory.startsWith(".archetype")) {
+			String boxPackage = packageName();
+			boxPackage = boxPackage.substring(0, boxPackage.lastIndexOf("."));
+			String archetypePath = Commons.archetypePath(directory);
+			return new FrameBuilder("archetype").add("package", boxPackage).add("path", archetypePath).toFrame();
+		}
+		return new FrameBuilder("file").add("path", directory).toFrame();
 	}
 
 	private Template template() {

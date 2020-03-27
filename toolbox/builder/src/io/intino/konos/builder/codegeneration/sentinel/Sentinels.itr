@@ -22,7 +22,7 @@ def type(sentinels)
 
 		}
 
-		public static void init(AlexandriaScheduler scheduler, io.intino.alexandria.http.AlexandriaSpark webServer, $box+FirstUpperCase~Box box) {
+		public static void init(AlexandriaScheduler scheduler, java.io.File home, io.intino.alexandria.http.AlexandriaSpark webServer, $box+FirstUpperCase~Box box) {
 			JobDetail job;
 			try {
 				$sentinel+init...[$NL]
@@ -43,25 +43,39 @@ def type(sentinels)
 end
 
 def type(sentinel) type(DirectoryListener) trigger(init)
-	scheduler.watchDirectory("$name", new java.io.File("$file"), (file, event) -> {
+	scheduler.watchDirectory("$name", $file+customizeDirectory, (file, event) -> {
 			$package+ValidPackage.actions.$name+SnakeCaseToCamelCase~Action action = new $package+ValidPackage.actions.$name+SnakeCaseToCamelCase~Action();
 			action.box = box;
 			action.directory = file;
 			action.event = event;
 			action.execute();
-		}, $event+fullPath...[, ]);
+		}, $event+fullEvent...[, ]);
 end
 
-def type(sentinel) type(WebHook) trigger(init)
+def type(archetype) trigger(customizeDirectory)
+	new $package.Archetype(home).$path
+end
+
+def trigger(customizeDirectory)
+	new java.io.File("$path")
+end
+
+def type(sentinel) type(webhook) trigger(init)
 	webServer.route($path+format).get(manager -> $name+SnakeCaseToCamelCase+firstLowerCase~Action(manager).execute());
 end
 
-def type(sentinel) type(WebHook) trigger(actionCall)
+def type(sentinel) type(webhook) trigger(actionCall)
 	private static $name+SnakeCaseToCamelCase+firstUpperCase~Action $name+SnakeCaseToCamelCase+firstLowerCase~Action(io.intino.alexandria.http.spark.SparkManager manager) {
 		$name+SnakeCaseToCamelCase+firstUpperCase~Action action = new $name+SnakeCaseToCamelCase+firstUpperCase~Action();
 		$parameter+assign...[$NL]
 		return action;
 	}
+end
+
+def type(sentinel) type(clockListener) trigger(init)
+	job = newJob($package+ValidPackage.scheduling.$name+SnakeCaseToCamelCase~Listener.class).withIdentity("$name").build();
+	job.getJobDataMap().put("box", box);
+	scheduler.scheduleJob(job, newSet($job...[, ]), true);
 end
 
 def trigger(assign)
@@ -72,15 +86,8 @@ def type(path) trigger(format)
 	"$name"[$custom...[]]
 end
 
-def trigger(fullPath)
+def trigger(fullEvent)
 	io.intino.alexandria.scheduler.directory.DirectorySentinel.Event.$this
-end
-
-def type(sentinel) trigger(init)
-	job = newJob($package+ValidPackage.scheduling.$name+SnakeCaseToCamelCase~Listener.class).withIdentity("$name").build();
-	job.getJobDataMap().put("box", box);
-	scheduler.scheduleJob(job, newSet($job...[, ]), true);
-
 end
 
 def type(cronTrigger) trigger(job)

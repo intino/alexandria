@@ -284,7 +284,7 @@ def type(service & messaging) trigger(messaging)
 end
 
 def type(sentinel) trigger(init)
-	Sentinels.init(this.scheduler, [$hasWeb~io.intino.alexandria.http.AlexandriaSparkBuilder.instance()?null], ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	Sentinels.init(this.scheduler, this.configuration.home(), [$hasWeb~io.intino.alexandria.http.AlexandriaSparkBuilder.instance()?null], ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
 
 def type(workflow) trigger(init)
