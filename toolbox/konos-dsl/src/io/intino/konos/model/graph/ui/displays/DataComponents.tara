@@ -12,6 +12,7 @@ Concept DataComponents
 		var string prefix = empty
 		var string suffix = empty
 		var integer:{Chars} cropWithEllipsis = -1 Chars
+		var boolean translate = false
 		Aspect Multiple
 		Aspect Highlighted
         	var string textColor
@@ -103,6 +104,7 @@ Concept DataComponents
 		Aspect Readonly with Editable
 		Aspect Required with Editable
 		Aspect Focused with Editable
+
 	Concept Location extends Component
 		var string icon = empty
 		var string value = empty
