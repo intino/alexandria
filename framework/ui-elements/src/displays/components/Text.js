@@ -47,11 +47,11 @@ class Text extends AbstractText {
 		if (!this.state.visible) return (<React.Fragment/>);
 
 		const { classes } = this.props;
-		const value = TextBehavior.mode(this.state.value, this.props);
 		const variant = this.variant("body1");
 
+		let value = this.props.translate ? this.translate(this.state.value) : this.state.value;
+		value = TextBehavior.mode(value, this.props);
 		if (value == null || value === "") return (<React.Fragment/>);
-
 		return (
 			<Block layout="horizontal">
 				{ ComponentBehavior.labelBlock(this.props) }

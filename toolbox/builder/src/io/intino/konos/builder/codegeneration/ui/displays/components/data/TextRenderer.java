@@ -40,6 +40,7 @@ public class TextRenderer extends ComponentRenderer<Text> {
 		if (element.isReadonly()) result.add("readonly", element.isReadonly());
 		if (element.isFocused()) result.add("focused", element.isFocused());
 		if (element.cropWithEllipsis() != -1) result.add("cropWithEllipsis", element.cropWithEllipsis());
+		if (element.translate()) result.add("translate", element.translate());
 		if (element.isCode()) {
 			result.add(Text.Code.class.getSimpleName());
 			result.add("language", element.asCode().language().name());
