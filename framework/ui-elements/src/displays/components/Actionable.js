@@ -287,10 +287,11 @@ export default class Actionable extends AbstractActionable {
 		return this.state.readonly != null ? this.state.readonly : false;
 	};
 
-	_addDimensions = (style) => {
+	_addDimensions = (props) => {
         const large = this._size() === "large";
-        style.width = large ? "48px" : "24px";
-        style.height = large ? "48px" : "24px";
+        const style = this.style();
+        props.width = style.width != null ? style.width : (large ? "48px" : "24px");
+        props.height = style.height != null ? style.height : (large ? "48px" : "24px");
         return style;
     };
 
