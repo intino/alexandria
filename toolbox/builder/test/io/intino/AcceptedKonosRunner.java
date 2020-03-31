@@ -26,8 +26,13 @@ public class AcceptedKonosRunner {
 	}
 
 	@Test
-	public void m1() {
-		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/m1.txt")});
+	public void ui_doc() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/doc.txt")});
+	}
+
+	@Test
+	public void ui() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/ui.txt")});
 	}
 
 	@Test

@@ -51,12 +51,32 @@ end
 def type(parameter & file) trigger(parameter)
 end
 
+def type(parameter & String) trigger(parameter)
+	data
+end
+
+def type(parameter & Double) trigger(parameter)
+	Double.parseDouble(data)
+end
+
+def type(parameter & Integer) trigger(parameter)
+	Integer.parseInt(data)
+end
+
+def type(parameter & Long) trigger(parameter)
+	Long.parseLong(data)
+end
+
+def type(parameter & DateTime) trigger(parameter)
+	java.time.Instant.ofEpochMilli(Long.parseLong(data))
+end
+
 def type(parameter) trigger(parameter)
 	io.intino.alexandria.Json.fromString(data, $value.class)
 end
 
 def	trigger(parameter)
-
+	aaaaa
 end
 
 def type(schemaImport)
