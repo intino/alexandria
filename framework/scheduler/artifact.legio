@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.3") scheduler-framework
+Artifact("io.intino.alexandria", "1.1.0") scheduler-framework
 	Imports
 		Compile("org.quartz-scheduler", "quartz", "2.3.2")
 		Compile("org.quartz-scheduler", "quartz-jobs", "2.3.2")
