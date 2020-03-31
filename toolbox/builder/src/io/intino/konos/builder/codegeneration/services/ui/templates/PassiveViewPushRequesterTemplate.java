@@ -14,8 +14,13 @@ public class PassiveViewPushRequesterTemplate extends Template {
 			rule().condition((type("request")), (trigger("request"))).output(literal("if (operation.equals(\"")).output(mark("name")).output(literal("\")) {\n\tdisplay.")).output(mark("name")).output(literal("(")).output(mark("parameter")).output(literal(");\n\treturn;\n}")),
 			rule().condition((type("list")), (trigger("parameter"))).output(literal("io.intino.alexandria.Json.fromString(data, ")).output(mark("value")).output(literal("[].class)")),
 			rule().condition((allTypes("parameter","file")), (trigger("parameter"))),
+			rule().condition((allTypes("parameter","String")), (trigger("parameter"))).output(literal("data")),
+			rule().condition((allTypes("parameter","Double")), (trigger("parameter"))).output(literal("Double.parseDouble(data)")),
+			rule().condition((allTypes("parameter","Integer")), (trigger("parameter"))).output(literal("Integer.parseInt(data)")),
+			rule().condition((allTypes("parameter","Long")), (trigger("parameter"))).output(literal("Long.parseLong(data)")),
+			rule().condition((allTypes("parameter","DateTime")), (trigger("parameter"))).output(literal("java.time.Instant.ofEpochMilli(Long.parseLong(data))")),
 			rule().condition((type("parameter")), (trigger("parameter"))).output(literal("io.intino.alexandria.Json.fromString(data, ")).output(mark("value")).output(literal(".class)")),
-			rule().condition((trigger("parameter"))),
+			rule().condition((trigger("parameter"))).output(literal("aaaaa")),
 			rule().condition((type("schemaImport"))).output(literal("import ")).output(mark("package")).output(literal(".schemas.*;"))
 		);
 	}
