@@ -72,7 +72,7 @@ def type(sentinel) type(webhook) trigger(actionCall)
 	}
 end
 
-def type(sentinel) type(clockListener) trigger(init)
+def type(sentinel) trigger(init)
 	job = newJob($package+ValidPackage.scheduling.$name+SnakeCaseToCamelCase~Listener.class).withIdentity("$name").build();
 	job.getJobDataMap().put("box", box);
 	scheduler.scheduleJob(job, newSet($job...[, ]), true);
