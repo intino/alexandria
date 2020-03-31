@@ -101,10 +101,6 @@ def type(parameter & file) trigger(parameter)
     manager.fromForm("v")
 end
 
-def type(parameter) trigger(parameter)
-    io.intino.alexandria.Json.fromString(manager.fromQuery("v"), $value.class)
-end
-
 def type(parameter & String) trigger(parameter)
 	data
 end
@@ -121,8 +117,13 @@ def type(parameter & Long) trigger(parameter)
 	Long.parseLong(manager.fromQuery("v"))
 end
 
-def type(parameter & Instant) trigger(parameter)
+def type(parameter & DateTime) trigger(parameter)
 	java.time.Instant.ofEpochMilli(Long.parseLong(manager.fromQuery("v")))
+end
+
+
+def type(parameter) trigger(parameter)
+    io.intino.alexandria.Json.fromString(manager.fromQuery("v"), $value.class)
 end
 
 def	trigger(parameter)
