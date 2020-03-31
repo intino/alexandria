@@ -6,14 +6,17 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
 public class DirectorySentinel {
 
 	private DirectoryTask task;
-	private WatchService watcher;
+	private Map<File, WatchService> watchers;
 	private Thread thread;
 	private boolean closed = false;
 
@@ -22,30 +25,38 @@ public class DirectorySentinel {
 
 	public DirectorySentinel(File directory, DirectoryTask task, Event... events) {
 		try {
-			this.watcher = FileSystems.getDefault().newWatchService();
 			this.task = task;
-			directory.toPath().register(watcher, kindsOf(events));
+			this.watchers = new HashMap<>();
+			watchers.put(directory, FileSystems.getDefault().newWatchService());
+			directory.toPath().register(watchers.get(directory), kindsOf(events));
+			if (directory.isDirectory() && directory.exists())
+				for (File subDir : directory.listFiles(f -> f.isDirectory())) {
+					watchers.put(subDir, FileSystems.getDefault().newWatchService());
+					subDir.toPath().register(watchers.get(subDir), kindsOf(events));
+				}
 			buildTask(task);
 		} catch (IOException e) {
-			this.watcher = null;
 		}
 	}
 
 	private void buildTask(DirectoryTask task) {
 		this.thread = new Thread(() -> {
 			while (!closed) {
-				try {
-					WatchKey key = watcher.take();
-					for (WatchEvent<?> event : key.pollEvents()) {
-						@SuppressWarnings("unchecked")
-						WatchEvent<Path> ev = (WatchEvent<Path>) event;
-						new Thread(() -> task.execute(ev.context().toFile(), eventOf(ev.kind()))).start();
+				for (Map.Entry<File, WatchService> entry : watchers.entrySet()) {
+					try {
+						WatchKey key = entry.getValue().poll(1L, TimeUnit.SECONDS);
+						if (key == null) continue;
+						for (WatchEvent<?> event : key.pollEvents()) {
+							@SuppressWarnings("unchecked")
+							WatchEvent<Path> ev = (WatchEvent<Path>) event;
+							new Thread(() -> task.execute(new File(entry.getKey(), ev.context().toString()), eventOf(ev.kind()))).start();
+						}
+						boolean valid = key.reset();
+						if (!valid) break;
+					} catch (InterruptedException | ClosedWatchServiceException ex) {
+						Logger.error(ex);
+						return;
 					}
-					boolean valid = key.reset();
-					if (!valid) break;
-				} catch (InterruptedException | ClosedWatchServiceException ex) {
-					Logger.error(ex);
-					return;
 				}
 			}
 		});
@@ -57,7 +68,7 @@ public class DirectorySentinel {
 
 	public void stop() {
 		try {
-			watcher.close();
+			for (WatchService w : watchers.values()) w.close();
 			this.closed = true;
 		} catch (IOException ignored) {
 		}
