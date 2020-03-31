@@ -20,7 +20,7 @@ export default class Multiple extends AbstractMultiple {
 		let noItemsMessage = multiple.noItemsMessage;
 		let style = this._style(multiple);
 		if (!this.state.visible) return (<React.Fragment/>);
-		if (noItemsMessage != null && noItemsMessage !== "" && this.instances(multiple.instances).length <= 0) return (<Typography style={{margin:'5px 0'}} variant="body1">{noItemsMessage}</Typography>);
+		if (noItemsMessage != null && noItemsMessage !== "" && this.instances(multiple.instances).length <= 0) return (<Typography style={{margin:'5px 0'}} variant="body1">{this.translate(noItemsMessage)}</Typography>);
 		return (<div className={"layout wrap " + layout} style={{height:'100%'}}>{this.renderInstances(multiple.instances, this._instanceProps(), style)}</div>);
 	};
 

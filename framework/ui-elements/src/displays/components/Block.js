@@ -87,8 +87,8 @@ export default class Block extends AbstractBlock {
 		if (this._is("vertical") && this._is("center")) result.margin = "0 auto";
 		if (this.props.style != null) this.applyStyles(this.props.style, result);
 		if (this.props.margin != null) result.margin = this.props.margin;
-		if (this._widthDefined()) result.width = this.props.width;
-		if (this._heightDefined()) result.height = this.props.height;
+		if (this._widthDefined() && result.width == null) result.width = this.props.width;
+		if (this._heightDefined() && result.height == null) result.height = this.props.height;
 		return result;
 	};
 
