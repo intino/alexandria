@@ -121,13 +121,12 @@ def type(parameter & DateTime) trigger(parameter)
 	java.time.Instant.ofEpochMilli(Long.parseLong(manager.fromQuery("v")))
 end
 
-
 def type(parameter) trigger(parameter)
     io.intino.alexandria.Json.fromString(manager.fromQuery("v"), $value.class)
 end
 
 def	trigger(parameter)
-
+	aaaaa $value
 end
 
 def type(schemaImport)

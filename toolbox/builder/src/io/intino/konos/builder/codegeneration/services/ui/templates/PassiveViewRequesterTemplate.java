@@ -23,7 +23,7 @@ public class PassiveViewRequesterTemplate extends Template {
 			rule().condition((allTypes("parameter","Long")), (trigger("parameter"))).output(literal("Long.parseLong(manager.fromQuery(\"v\"))")),
 			rule().condition((allTypes("parameter","DateTime")), (trigger("parameter"))).output(literal("java.time.Instant.ofEpochMilli(Long.parseLong(manager.fromQuery(\"v\")))")),
 			rule().condition((type("parameter")), (trigger("parameter"))).output(literal("io.intino.alexandria.Json.fromString(manager.fromQuery(\"v\"), ")).output(mark("value")).output(literal(".class)")),
-			rule().condition((trigger("parameter"))),
+			rule().condition((trigger("parameter"))).output(literal("aaaaa ")).output(mark("value")),
 			rule().condition((type("schemaImport"))).output(literal("import ")).output(mark("package")).output(literal(".schemas.*;"))
 		);
 	}
