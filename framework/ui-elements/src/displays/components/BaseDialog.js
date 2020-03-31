@@ -50,12 +50,12 @@ export default class BaseDialog extends AbstractBaseDialog {
 		if (this.props.fullscreen) return (
 			<AppBar style={style} className={classes.header}>
 				<div className="layout horizontal flex center">
-					<Typography variant="h5">{this.state.title}</Typography>
+					<Typography variant="h5">{this.translate(this.state.title)}</Typography>
 					<div className="layout horizontal end-justified flex"><IconButton onClick={this.handleClose.bind(this)} className={classes.icon}><Close fontSize="large"/></IconButton></div>
 				</div>
 			</AppBar>
 		);
-		return (<DialogTitle>{this.state.title}</DialogTitle>);
+		return (<DialogTitle>{this.translate(this.state.title)}</DialogTitle>);
 	};
 
 	renderContent = (content) => {
