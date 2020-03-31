@@ -411,7 +411,10 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (request.isFile()) result.add("file");
 		result.add("name", request.name$());
 		if (request.isType()) {
-			final FrameBuilder parameterFrame = new FrameBuilder().add("parameter").add(request.asType().type()).add(request.asType().getClass().getSimpleName().replace("Data", "")).add("value", parameter(request, packageName));
+			final FrameBuilder parameterFrame = new FrameBuilder().add("parameter")
+					.add(request.asType().type())
+					.add(request.asType().getClass().getSimpleName().replace("Data", ""))
+					.add("value", parameter(request, packageName));
 			if (request.isList()) parameterFrame.add("list");
 			result.add("parameter", parameterFrame);
 			result.add("parameterSignature", "value");
