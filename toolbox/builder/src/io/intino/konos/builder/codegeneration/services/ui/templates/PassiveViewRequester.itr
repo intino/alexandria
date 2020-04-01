@@ -102,7 +102,7 @@ def type(parameter & file) trigger(parameter)
 end
 
 def type(parameter & String) trigger(parameter)
-	data
+	manager.fromQuery("v")
 end
 
 def type(parameter & Double) trigger(parameter)

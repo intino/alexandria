@@ -17,7 +17,7 @@ public class PassiveViewRequesterTemplate extends Template {
 			rule().condition((allTypes("parameter","accessible")), (trigger("parameter"))).output(literal("display.")).output(mark("value", "firstLowercase")).output(literal("(manager.fromQuery(\"")).output(mark("value")).output(literal("\"));")),
 			rule().condition((type("list")), (trigger("parameter"))).output(literal("io.intino.alexandria.Json.fromString(manager.fromQuery(\"v\"), ")).output(mark("value")).output(literal("[].class)")),
 			rule().condition((allTypes("parameter","file")), (trigger("parameter"))).output(literal("manager.fromForm(\"v\")")),
-			rule().condition((allTypes("parameter","String")), (trigger("parameter"))).output(literal("data")),
+			rule().condition((allTypes("parameter","String")), (trigger("parameter"))).output(literal("manager.fromQuery(\"v\")")),
 			rule().condition((allTypes("parameter","Double")), (trigger("parameter"))).output(literal("Double.parseDouble(manager.fromQuery(\"v\"))")),
 			rule().condition((allTypes("parameter","Integer")), (trigger("parameter"))).output(literal("Integer.parseInt(manager.fromQuery(\"v\"))")),
 			rule().condition((allTypes("parameter","Long")), (trigger("parameter"))).output(literal("Long.parseLong(manager.fromQuery(\"v\"))")),
