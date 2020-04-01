@@ -144,7 +144,7 @@ end
 
 def type(response) trigger(method)
 	private void write($value+firstUpperCase+ReturnTypeFormatter object) {
-		manager.write(object[, "$format"]);
+		manager.write(io.intino.alexandria.rest.ResponseAdapter.adapt(object)[, "$format"]);
 	}
 end
 
