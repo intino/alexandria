@@ -38,6 +38,8 @@ class DateEditable extends AbstractDateEditable {
 	};
 
 	render() {
+		if (!this.state.visible) return (<React.Fragment/>);
+
 		const { min, max, timePicker, classes } = this.props;
 		const dateLabel = this.translate(this.props.label != null ? this.props.label : "Date");
 		const timeLabel = this.translate(this.props.label != null ? this.props.label : "Time");
