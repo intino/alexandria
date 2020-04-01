@@ -56,10 +56,8 @@ public class SessionManager<S extends Session<C>, C extends Client> implements C
     }
 
     public void unRegister(C client) {
-        String sessionId = client.sessionId();
         client.destroy();
         clientMap.remove(client.id());
-        if (sessionMap.get(sessionId) != null && sessionMap.get(sessionId).clients().size() <= 0) unRegister(sessionMap.get(sessionId));
     }
 
     public void linkToThread(C client) {
