@@ -2,8 +2,8 @@ package io.intino.konos.builder.codegeneration.datahub;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Datalake;
 import io.intino.konos.model.graph.Datamart.Mounter;

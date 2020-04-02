@@ -2,8 +2,9 @@ package io.intino.konos.builder;
 
 import cottons.utils.Files;
 import io.intino.konos.CompilerMessage;
-import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.FullRenderer;
+import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.compiler.shared.PostCompileActionMessage;
 import io.intino.konos.compiler.shared.PostCompileConfigurationDependencyActionMessage;

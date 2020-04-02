@@ -2,21 +2,22 @@ package io.intino.konos.builder.codegeneration.ui.displays;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRendererFactory;
 import io.intino.konos.builder.codegeneration.ui.passiveview.PassiveViewRenderer;
+import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.InteractionComponents.Actionable;
 import io.intino.konos.model.graph.OtherComponents.Dialog;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.konos.model.graph.CatalogComponents.*;
-import static io.intino.konos.model.graph.Component.*;
-import static io.intino.konos.model.graph.OtherComponents.*;
+import static io.intino.konos.model.graph.CatalogComponents.Collection;
+import static io.intino.konos.model.graph.Component.DynamicLoaded;
+import static io.intino.konos.model.graph.OtherComponents.Selector;
+import static io.intino.konos.model.graph.OtherComponents.Stamp;
 
 public abstract class BaseDisplayRenderer<D extends Display> extends PassiveViewRenderer<D> {
 	private static final ComponentRendererFactory factory = new ComponentRendererFactory();

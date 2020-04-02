@@ -1,6 +1,6 @@
 package io.intino.konos;
 
-import io.intino.konos.builder.KonosException;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.magritte.compiler.shared.TaraBuildConstants;
 
 import java.io.File;

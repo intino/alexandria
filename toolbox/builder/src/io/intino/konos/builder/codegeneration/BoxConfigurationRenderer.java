@@ -4,6 +4,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 
 import java.util.Set;
