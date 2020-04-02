@@ -1,12 +1,12 @@
 package io.intino.konos.builder.codegeneration.services.ui;
 
-import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayListRenderer;
 import io.intino.konos.builder.codegeneration.ui.resource.ResourceListRenderer;
+import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Service;
 

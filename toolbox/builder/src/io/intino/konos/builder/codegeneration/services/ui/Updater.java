@@ -1,6 +1,6 @@
 package io.intino.konos.builder.codegeneration.services.ui;
 
-import io.intino.konos.builder.codegeneration.CompilationContext;
+import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.compiler.shared.PostCompileMethodActionMessage;
 
 import java.io.File;

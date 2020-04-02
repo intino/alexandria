@@ -1,4 +1,4 @@
-package io.intino.konos.builder;
+package io.intino.konos.builder.context;
 
 public class KonosException extends Exception {
 	private final boolean fatal;
