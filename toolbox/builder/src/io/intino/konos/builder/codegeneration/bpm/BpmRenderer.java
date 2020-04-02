@@ -1,15 +1,14 @@
 package io.intino.konos.builder.codegeneration.bpm;
 
-import io.intino.alexandria.logger.Logger;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.bpm.parser.BpmnParser;
 import io.intino.konos.builder.codegeneration.bpm.parser.Link;
 import io.intino.konos.builder.codegeneration.bpm.parser.State;
+import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Workflow.Process;
@@ -77,7 +76,6 @@ public class BpmRenderer extends Renderer {
 	private File file(Process process) {
 		File file = process.bpmn() == null ? null : new File(URLDecoder.decode(process.bpmn().getFile(), Charset.defaultCharset()));
 		if (file == null || !file.exists()) {
-			Logger.error("File of process " + process.name$() + " not found: " + (file == null ? null : file.getAbsolutePath()));
 			return null;
 		}
 		return file;

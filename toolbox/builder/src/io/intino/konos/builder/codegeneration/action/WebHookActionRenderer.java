@@ -1,6 +1,6 @@
 package io.intino.konos.builder.codegeneration.action;
 
-import io.intino.konos.builder.codegeneration.CompilationContext;
+import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.graph.Parameter;
 import io.intino.konos.model.graph.Sentinel;
 import io.intino.magritte.framework.Concept;

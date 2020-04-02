@@ -1,6 +1,5 @@
 package io.intino.konos.builder.codegeneration;
 
-import io.intino.konos.builder.KonosException;
 import io.intino.konos.builder.codegeneration.accessor.jmx.JMXAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer;
 import io.intino.konos.builder.codegeneration.bpm.BpmRenderer;
@@ -26,6 +25,8 @@ import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
 import io.intino.konos.builder.codegeneration.services.soap.SoapOperationRenderer;
 import io.intino.konos.builder.codegeneration.services.soap.SoapServiceRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
+import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.compiler.shared.KonosBuildConstants.Mode;
 import io.intino.konos.model.graph.KonosGraph;
 

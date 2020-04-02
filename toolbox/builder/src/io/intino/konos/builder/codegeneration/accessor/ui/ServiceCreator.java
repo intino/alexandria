@@ -2,10 +2,10 @@ package io.intino.konos.builder.codegeneration.accessor.ui;
 
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.zip.Zip;
-import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
+import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.compiler.shared.PostCompileDependantWebModuleActionMessage;
 import io.intino.konos.model.graph.Service;
 import org.apache.commons.io.FileUtils;

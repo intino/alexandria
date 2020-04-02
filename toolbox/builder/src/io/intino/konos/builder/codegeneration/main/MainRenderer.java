@@ -3,10 +3,10 @@ package io.intino.konos.builder.codegeneration.main;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.CompilerConfiguration;
-import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 
 import java.io.File;

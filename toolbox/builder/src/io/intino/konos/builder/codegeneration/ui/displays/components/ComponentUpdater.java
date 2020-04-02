@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
-import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayUpdater;
+import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.graph.Component;
 
 import java.io.File;

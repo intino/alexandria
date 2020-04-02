@@ -1,6 +1,6 @@
 package io.intino.konos.builder.codegeneration.action;
 
-import io.intino.konos.builder.codegeneration.CompilationContext;
+import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.compiler.shared.PostCompileFieldActionMessage;
 import io.intino.konos.compiler.shared.PostCompileMethodActionMessage;

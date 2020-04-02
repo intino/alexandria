@@ -1,11 +1,11 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.data;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.GeoRendererHelper;
+import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.graph.DataComponents.Location;
 
 import java.util.List;
