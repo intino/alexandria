@@ -2,10 +2,10 @@ package io.intino.konos.builder.codegeneration.ui.displays;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.CompilationContext;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.templates.RouteDispatcherTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
+import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Service;
 

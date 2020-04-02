@@ -1,9 +1,10 @@
-package io.intino.konos.builder.codegeneration;
+package io.intino.konos.builder.context;
 
 import com.google.gson.Gson;
 import io.intino.alexandria.logger.Logger;
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.cache.CacheReader;
 import io.intino.konos.builder.codegeneration.cache.CacheWriter;
 import io.intino.konos.builder.codegeneration.cache.LayerCache;
@@ -25,6 +26,7 @@ import static io.intino.konos.builder.helpers.CodeGenerationHelper.createIfNotEx
 
 public class CompilationContext {
 	private final List<File> sources;
+	private final ArrayList<WarningMessage> warningMessages;
 	private List<OutputItem> compiledFiles;
 	private List<PostCompileActionMessage> postCompileActionMessages;
 	private CompilerConfiguration configuration;
@@ -37,11 +39,12 @@ public class CompilationContext {
 
 	public CompilationContext(CompilerConfiguration configuration, List<PostCompileActionMessage> postCompileActionMessages, List<File> sources, List<OutputItem> compiledFiles) {
 		this.sources = sources;
-		configuration(configuration);
-		loadManifest();
 		this.postCompileActionMessages = postCompileActionMessages;
 		this.compiledFiles = compiledFiles;
+		configuration(configuration);
+		loadManifest();
 		sources.sort(Comparator.comparing(File::getName));
+		this.warningMessages = new ArrayList<>();
 	}
 
 	public KonosBuildConstants.Mode mode() {
@@ -75,6 +78,14 @@ public class CompilationContext {
 
 	public List<OutputItem> compiledFiles() {
 		return compiledFiles;
+	}
+
+	public void addWarning(WarningMessage message) {
+		warningMessages.add(message);
+	}
+
+	public List<WarningMessage> warningMessages() {
+		return warningMessages;
 	}
 
 	public File root(Target target) {

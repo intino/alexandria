@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.CompilerConfiguration;
+import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.CatalogComponents;
 import io.intino.konos.model.graph.HelperComponents;
