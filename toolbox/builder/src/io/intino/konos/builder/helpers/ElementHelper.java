@@ -1,7 +1,6 @@
 package io.intino.konos.builder.helpers;
 
 import io.intino.konos.builder.codegeneration.ElementReference;
-import io.intino.konos.builder.utils.IdGenerator;
 import io.intino.konos.model.graph.InteractionComponents;
 import io.intino.magritte.framework.Layer;
 import io.intino.magritte.framework.Node;
@@ -12,11 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.intino.konos.model.graph.Utils.isUUID;
 import static java.util.Collections.reverse;
 
 public class ElementHelper {
-	private static final IdGenerator generator = new IdGenerator();
 	private static Map<Layer, String> typeMap = new HashMap<>();
 
 	public String shortId(Layer element) {
@@ -24,13 +21,34 @@ public class ElementHelper {
 	}
 
 	public String shortId(Layer element, String suffix) {
-		return element.name$() + suffix;
+		return nameOf(element) + suffix;
 	}
 
 	public String nameOf(Layer element) {
-		String result = element.name$();
-		if (!isUUID(result)) return result;
+		String name = element.name$();
+		if (isNamed(name)) {
+			if (isRoot(element.core$())) return name;
+			return ("a" + (anonymousOwner(element) + "_" + name).hashCode()).replace("-", "_");
+		}
 		return generateName(element);
+	}
+
+	private String anonymousOwner(Layer element) {
+		Node owner = element.core$().owner();
+		StringBuilder name = new StringBuilder();
+		while (owner != null && isNamed(owner.name())) {
+			name.insert(0, owner.name() + "_");
+			owner = owner.owner();
+		}
+		if (owner != null) name.insert(0, owner.name() + "_");
+		String id = name.toString();
+		return id.substring(0, id.length() - 1);
+	}
+
+	private boolean isNamed(String name) {
+		if (!name.contains("_")) return true;
+		String[] s = name.split("_");
+		return s.length != 4;
 	}
 
 	public String nameOf(String id) {
@@ -42,7 +60,6 @@ public class ElementHelper {
 			String type = element.i$(InteractionComponents.Actionable.class) ?
 					typeOfActionable(element.a$(InteractionComponents.Actionable.class)) :
 					element.getClass().getSimpleName();
-
 			typeMap.put(element, type);
 		}
 		return typeMap.get(element);
