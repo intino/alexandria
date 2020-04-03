@@ -21,16 +21,19 @@ public class ElementHelper {
 	}
 
 	public String shortId(Layer element, String suffix) {
-		return nameOf(element) + suffix;
+		String name = nameOf(element);
+		if (isNamed(name)) {
+			if (!isRoot(element.core$())) name = generatedName(element, name);
+		} else name = generatedName(element, name);
+		return name + suffix;
+	}
+
+	private String generatedName(Layer element, String name) {
+		return ("a" + (anonymousOwner(element) + "_" + name).hashCode()).replace("-", "_");
 	}
 
 	public String nameOf(Layer element) {
-		String name = element.name$();
-		if (isNamed(name)) {
-			if (isRoot(element.core$())) return name;
-			return ("a" + (anonymousOwner(element) + "_" + name).hashCode()).replace("-", "_");
-		}
-		return generateName(element);
+		return element.name$();
 	}
 
 	private String anonymousOwner(Layer element) {
