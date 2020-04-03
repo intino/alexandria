@@ -31,11 +31,14 @@ public class SentinelsRenderer extends Renderer {
 	@Override
 	public void render() {
 		if (sentinels.isEmpty()) return;
+		FrameBuilder builder = new FrameBuilder("Sentinels")
+				.add("package", packageName())
+				.add("box", boxName())
+				.add("sentinel", processSentinels());
+		if (sentinels.stream().anyMatch(Sentinel::isWebHook)) builder.add("hasWebhook", ",");
 		Commons.writeFrame(gen(), "Sentinels", template().render(
-				new FrameBuilder("Sentinels")
-						.add("package", packageName())
-						.add("box", boxName())
-						.add("sentinel", processSentinels()).toFrame()));
+				builder));
+
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(sentinels.get(0)), javaFile(gen(), "Sentinels").getAbsolutePath()));
 	}
 

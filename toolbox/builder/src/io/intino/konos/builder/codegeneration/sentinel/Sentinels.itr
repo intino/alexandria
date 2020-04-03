@@ -22,7 +22,7 @@ def type(sentinels)
 
 		}
 
-		public static void init(AlexandriaScheduler scheduler, java.io.File home, io.intino.alexandria.http.AlexandriaSpark webServer, $box+FirstUpperCase~Box box) {
+		public static void init(AlexandriaScheduler scheduler, java.io.File home[$hasWebhook io.intino.alexandria.http.AlexandriaSpark webServer], $box+FirstUpperCase~Box box) {
 			JobDetail job;
 			try {
 				$sentinel+init...[$NL]
