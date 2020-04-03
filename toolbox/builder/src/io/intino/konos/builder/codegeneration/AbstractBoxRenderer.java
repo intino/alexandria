@@ -65,7 +65,7 @@ public class AbstractBoxRenderer extends Renderer {
 	private void sentinels(FrameBuilder builder) {
 		if (!graph.sentinelList().isEmpty()) {
 			FrameBuilder frame = new FrameBuilder("sentinel").add("configuration", boxName());
-			if (graph.sentinelList().stream().anyMatch(Sentinel::isWebHook)) frame.add("hasWeb", "");
+			if (graph.sentinelList().stream().anyMatch(Sentinel::isWebHook)) frame.add("hasWebhook", ",");
 			builder.add("sentinel", frame);
 		}
 	}
