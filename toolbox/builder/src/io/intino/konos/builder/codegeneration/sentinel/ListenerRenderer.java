@@ -54,14 +54,14 @@ public class ListenerRenderer extends Renderer {
 				.add("name", sentinel.name$())
 				.add("box", boxName())
 				.add("package", packageName())
-				.add("parameter", parameters(sentinel));
+				.add("parameter", parameters());
 		if (!alreadyRendered(src(), sentinel.a$(Sentinel.class)))
 			writeFrame(actionsPackage(src()), sentinel.name$() + "Action", actionTemplate().render(frame));
 	}
 
-	private Frame[] parameters(Sentinel.FileListener sentinel) {
+	private Frame[] parameters() {
 		List<Frame> list = new ArrayList<>();
-		list.add(new FrameBuilder("parameter").add("type", File.class.getCanonicalName()).add("name", "directory").toFrame());
+		list.add(new FrameBuilder("parameter").add("type", File.class.getCanonicalName()).add("name", "file").toFrame());
 		list.add(new FrameBuilder("parameter").add("type", "io.intino.alexandria.scheduler.directory.DirectorySentinel.Event").add("name", "event").toFrame());
 		return list.toArray(new Frame[0]);
 	}
