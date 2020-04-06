@@ -43,9 +43,13 @@ public class ElementHelper {
 			name.insert(0, owner.name() + "_");
 			owner = owner.owner();
 		}
-		if (owner != null) name.insert(0, owner.name() + "_");
+		if (owner != null) name.insert(0, withOutHashCode(owner.name()) + "_");
 		String id = name.toString();
 		return id.substring(0, id.length() - 1);
+	}
+
+	private String withOutHashCode(String name) {
+		return name.substring(0, name.lastIndexOf("_"));
 	}
 
 	private boolean isNamed(String name) {
