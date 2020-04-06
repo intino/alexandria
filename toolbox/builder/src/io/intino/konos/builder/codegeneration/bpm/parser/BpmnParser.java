@@ -82,9 +82,10 @@ public class BpmnParser {
 
 	private List<String> directIncoming(String outgoingId, boolean isDefault) {
 		for (Node item : tasks) {
-			Node incoming = child(item, "incoming");
-			if (incoming != null && outgoingId.equalsIgnoreCase(incoming.getTextContent()))
-				return List.of(id(item) + "#" + Link.Type.Line + (isDefault ? "#Default" : ""));
+			List<Node> incomings = children(item, "incoming");
+			for (Node incoming : incomings)
+				if (incoming != null && outgoingId.equalsIgnoreCase(incoming.getTextContent()))
+					return List.of(id(item) + "#" + Link.Type.Line + (isDefault ? "#Default" : ""));
 		}
 		return Collections.emptyList();
 	}
