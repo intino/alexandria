@@ -292,7 +292,7 @@ export default class Actionable extends AbstractActionable {
         const style = this.style();
         props.width = style.width != null ? style.width : (large ? "48px" : "24px");
         props.height = style.height != null ? style.height : (large ? "48px" : "24px");
-        return style;
+        return props;
     };
 
 };
