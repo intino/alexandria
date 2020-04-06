@@ -36,7 +36,7 @@ public class ListenerRenderer extends Renderer {
 	@Override
 	public void render() {
 		this.systemSentinels.forEach(this::processSystemSentinel);
-		this.sentinels.stream().filter(Sentinel::isDirectoryListener).map(Sentinel::asDirectoryListener).forEach(this::processDirectoryListener);
+		this.sentinels.stream().filter(Sentinel::isFileListener).map(Sentinel::asFileListener).forEach(this::processFileListener);
 	}
 
 	private void processSystemSentinel(Sentinel.SystemListener sentinel) {
@@ -49,7 +49,7 @@ public class ListenerRenderer extends Renderer {
 		createCorrespondingAction(sentinel.a$(Sentinel.class));
 	}
 
-	private void processDirectoryListener(Sentinel.DirectoryListener sentinel) {
+	private void processFileListener(Sentinel.FileListener sentinel) {
 		FrameBuilder frame = new FrameBuilder("action", "listener")
 				.add("name", sentinel.name$())
 				.add("box", boxName())
@@ -59,7 +59,7 @@ public class ListenerRenderer extends Renderer {
 			writeFrame(actionsPackage(src()), sentinel.name$() + "Action", actionTemplate().render(frame));
 	}
 
-	private Frame[] parameters(Sentinel.DirectoryListener sentinel) {
+	private Frame[] parameters(Sentinel.FileListener sentinel) {
 		List<Frame> list = new ArrayList<>();
 		list.add(new FrameBuilder("parameter").add("type", File.class.getCanonicalName()).add("name", "directory").toFrame());
 		list.add(new FrameBuilder("parameter").add("type", "io.intino.alexandria.scheduler.directory.DirectorySentinel.Event").add("name", "event").toFrame());
