@@ -45,7 +45,7 @@ public class SentinelsRenderer extends Renderer {
 	private Frame[] processSentinels() {
 		List<Frame> list = new ArrayList<>();
 		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.SystemListener.class)).map(t -> t.a$(Sentinel.SystemListener.class)).map(this::processSentinel).collect(toList()));
-		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.FileListener.class)).map(t -> t.a$(Sentinel.FileListener.class)).map(this::processDirectoryListenerSentinel).collect(toList()));
+		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.FileListener.class)).map(t -> t.a$(Sentinel.FileListener.class)).map(this::processFileListenerSentinel).collect(toList()));
 		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.WebHook.class)).map(t -> t.a$(Sentinel.WebHook.class)).map(this::processWebHookSentinel).collect(toList()));
 		sentinels.stream().filter(t -> t.i$(Sentinel.WebHook.class)).forEach(s -> new WebHookActionRenderer(context, s.asWebHook()).execute());
 		return list.toArray(new Frame[0]);
@@ -81,7 +81,7 @@ public class SentinelsRenderer extends Renderer {
 		return builder.toFrame();
 	}
 
-	private Frame processDirectoryListenerSentinel(Sentinel.FileListener sentinel) {
+	private Frame processFileListenerSentinel(Sentinel.FileListener sentinel) {
 		final FrameBuilder builder = new FrameBuilder().add("sentinel").add(sentinel.getClass().getSimpleName())
 				.add("event", sentinel.events().stream().map(Enum::name).toArray(String[]::new))
 				.add("file", file(sentinel))
