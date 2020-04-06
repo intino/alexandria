@@ -13,8 +13,8 @@ Concept:Named Sentinel
 			sub BootListener
 				var integer:{ms} delay = 0 ms
 			sub ShutdownListener
-		sub DirectoryListener
-			var string directory
+		sub FileListener
+			var string file
 			var word[]:{OnCreate OnDelete OnModify} events
 		sub MailListener
 		sub WebHook
