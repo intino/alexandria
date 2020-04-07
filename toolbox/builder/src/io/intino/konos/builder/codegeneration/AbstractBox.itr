@@ -214,11 +214,6 @@ def type(service & ui) trigger(setupMethod)
 	}
 end
 
-def type(service & rest) trigger(setup)
-	[if($parameter != null && !$parameter.isEmpty()) ]io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
-	$name+SnakeCaseToCamelCase+FirstUpperCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
-end
-
 def type(service & soap) trigger(setup)
 	[if($parameter != null && !$parameter.isEmpty()) ]io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
 	$name+SnakeCaseToCamelCase+FirstUpperCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
@@ -258,6 +253,8 @@ def type(service & slack) trigger(slack)
 end
 
 def type(service & rest) trigger(rest)
+	[if($parameter != null && !$parameter.isEmpty()) io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");]
+	[$name+SnakeCaseToCamelCase+FirstUpperCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);]
 	[io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();
 	Logger.info("Rest service $name: started!");]
 end
@@ -268,7 +265,7 @@ def type(service & soap) trigger(soap)
 end
 
 def type(service & ui) trigger(ui)
-	[if ($parameter == null || !io.intino.alexandria.http.AlexandriaSparkBuilder.isUI()) return;]
+	setupUi();
 	[this.initTranslatorService()];
 	io.intino.alexandria.ui.UISpark sparkInstance = (io.intino.alexandria.ui.UISpark) io.intino.alexandria.http.AlexandriaSparkBuilder.instance();
 	sparkInstance.start();
