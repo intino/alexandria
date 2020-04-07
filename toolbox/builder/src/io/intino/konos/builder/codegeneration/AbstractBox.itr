@@ -195,10 +195,6 @@ def trigger(uiBox)
 	io.intino.alexandria.ui.AlexandriaUiBox
 end
 
-def type(service & ui) trigger(setup)
-	setupUi();
-end
-
 def type(service & ui) trigger(setupMethod)
 	public void setupUi() {
 		[if($parameter == null || $parameter.isEmpty())] return;
