@@ -46,7 +46,7 @@ def type(sentinel) type(FileListener) trigger(init)
 	scheduler.watchDirectory("$name", $file+customizeDirectory, (file, event) -> {
 			$package+ValidPackage.actions.$name+SnakeCaseToCamelCase~Action action = new $package+ValidPackage.actions.$name+SnakeCaseToCamelCase~Action();
 			action.box = box;
-			action.directory = file;
+			action.file = file;
 			action.event = event;
 			action.execute();
 		}, $event+fullEvent...[, ]);
