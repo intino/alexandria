@@ -62,6 +62,10 @@ Component selectorMenu as Decorated ExtensionOf(baseSelector)
 	Notification refreshSelected as Object(SelectorMenuSelection)
 	Request select as Integer
 
+Component selectorRadioBox as Decorated ExtensionOf(baseSelector)
+	Notification refreshSelected as Text
+	Request select as Text
+
 Component selectorComboBox as Decorated ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
 	Notification refreshReadonly as Bool
