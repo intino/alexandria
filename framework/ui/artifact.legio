@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "4.0.9") ui-framework
+Artifact("io.intino.alexandria", "4.0.10") ui-framework
 	Box("Konos", "8.2.10") > targetPackage = "io.intino.alexandria"
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.0.4")
@@ -8,7 +8,7 @@ Artifact("io.intino.alexandria", "4.0.9") ui-framework
 		Compile("io.intino.alexandria", "json", "1.0.2")
 		Compile("io.intino.alexandria", "rest-accessor", "1.0.7")
 		Compile("io.intino.alexandria", "logger4j", "1.0.0")
-		Compile("com.opencsv", "opencsv", "4.1")
+		Compile("com.opencsv", "opencsv", "5.1")
 		Compile("org.hashids", "hashids", "1.0.3")
 		Compile("org.locationtech.jts", "jts-core", "1.16.1")
 		Compile("io.intino.alexandria", "driver-shiny", "1.0.0")

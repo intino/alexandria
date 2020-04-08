@@ -4,6 +4,7 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvException;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.ui.displays.components.chart.DataframeColumn;
 import io.intino.alexandria.ui.displays.components.chart.DataframeLoader;
@@ -36,7 +37,7 @@ public class CSVDataSource implements DataframeLoader {
 			addValues(sheet, lines);
 
 			return sheet;
-		} catch (IOException e) {
+		} catch (IOException | CsvException e) {
 			Logger.error(e);
 			return null;
 		}
