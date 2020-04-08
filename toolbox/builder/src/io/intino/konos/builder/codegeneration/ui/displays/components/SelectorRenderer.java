@@ -25,6 +25,7 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 		if (element.isReadonly()) result.add("readonly", element.isReadonly());
 		if (element.isFocused()) result.add("readonly", element.isFocused());
 		addComboBoxProperties(result);
+		addRadioBoxProperties(result);
 		addAddressableProperties(result);
 		return result;
 	}
@@ -34,6 +35,13 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 		String placeholder = element.asComboBox().placeholder();
 		if (placeholder == null || placeholder.isEmpty()) return;
 		builder.add("placeholder", placeholder);
+	}
+
+	private void addRadioBoxProperties(FrameBuilder builder) {
+		if (!element.isRadioBox()) return;
+		String selected = element.asRadioBox().selected();
+		if (selected == null || selected.isEmpty()) return;
+		builder.add("selected", selected);
 	}
 
 	private void addMethod(FrameBuilder builder) {
