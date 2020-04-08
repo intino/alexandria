@@ -69,3 +69,19 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold as Decorated
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") listBoxOption2 as Option<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") listBoxOption3 as Option
 						=========
+
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="RadioBox facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Selector(selected="radioBoxOption1") selector5 as RadioBox
+					Text(value="option 1") radioBoxOption1 as Option
+					Text(value="option 2") radioBoxOption2 as Option
+					Text(value="option 3") radioBoxOption3 as Option
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Selector as RadioBox<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") radioBoxOption1 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") radioBoxOption2 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") radioBoxOption3 as Option
+						=========
