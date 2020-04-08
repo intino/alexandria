@@ -1,7 +1,7 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "4.0.8") ui-framework
-	Box("Konos", "8.2.4") > targetPackage = "io.intino.alexandria"
+Artifact("io.intino.alexandria", "4.0.9") ui-framework
+	Box("Konos", "8.2.10") > targetPackage = "io.intino.alexandria"
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.0.4")
 		Compile("io.intino.alexandria", "http", "1.0.3")
@@ -14,7 +14,7 @@ Artifact("io.intino.alexandria", "4.0.8") ui-framework
 		Compile("io.intino.alexandria", "driver-shiny", "1.0.0")
 		Compile("io.intino.alexandria", "driver-r", "1.0.0")
 
-		Web("io.intino.alexandria", "ui-framework-elements", "4.0.8")
+		Web("io.intino.alexandria", "ui-framework-elements", "4.0.9")
 
 		Test("junit", "junit", "LATEST")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true) as Runnable(mainClass = "io.intino.alexandria.Main")
@@ -27,3 +27,6 @@ Repository("intino-maven") intino
 
 Repository("bedatadriven") bedatadrivenPublic
 	Release("https://nexus.bedatadriven.com/content/groups/public/")
+
+RunConfiguration local
+	Argument(name = "home", value = "")

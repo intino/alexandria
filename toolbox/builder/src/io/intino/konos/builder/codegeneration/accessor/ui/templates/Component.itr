@@ -79,7 +79,7 @@ def type(properties & portal) trigger(specific)
 end
 
 def type(properties & selector) trigger(specific)
-	[ multipleSelection={$multipleSelection}][ readonly={$readonly}][ focused={$focused}][ placeholder="$placeholder"]
+	[ multipleSelection={$multipleSelection}][ readonly={$readonly}][ focused={$focused}][ placeholder="$placeholder"][ selected="$selected"]
 end
 
 def type(properties & image) trigger(specific)
