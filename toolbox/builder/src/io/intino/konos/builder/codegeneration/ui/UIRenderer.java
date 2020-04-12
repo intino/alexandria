@@ -42,8 +42,7 @@ public abstract class UIRenderer extends Renderer {
 	}
 
 	protected Template addFormats(Template template) {
-		Formatters.customize(template);
-		return template;
+		return Formatters.customize(template);
 	}
 
 	protected String typeOf(Layer element) {
