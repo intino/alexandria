@@ -237,6 +237,7 @@ public class JmsEventHub implements EventHub {
 		return new ConnectionListener() {
 			@Override
 			public void transportInterupted() {
+				Logger.warn("Connection with Data Hub interrupted!");
 				connected.set(false);
 			}
 
