@@ -75,17 +75,32 @@ public class JmsEventHub implements EventHub {
 			} catch (InterruptedException e) {
 			}
 			if (connection != null && ((ActiveMQConnection) connection).isStarted()) {
-				if (session != null) session.close();
 				session = createSession(transactedSession);
-				if (session != null && ((ActiveMQSession) session).isRunning()) {
-					connected.set(true);
-					Logger.info("Connection with Data Hub stablished!");
-				}
+				if (session != null && ((ActiveMQSession) session).isRunning()) connected.set(true);
 			}
 		} catch (JMSException e) {
 			Logger.error(e);
 		}
 		started = new AtomicBoolean(true);
+	}
+
+	private void checkConnection() {
+		Logger.debug("Checking DataHub connection...");
+		if (brokerUrl.startsWith("failover") && !connected.get()) return;
+		if (connection != null && ((ActiveMQConnection) connection).isStarted() && ((ActiveMQSession) session).isRunning()) {
+			connected.set(true);
+			return;
+		}
+		try {
+			if (!((ActiveMQSession) session).isClosed()) session.close();
+			connection.close();
+		} catch (JMSException e) {
+			Logger.error(e);
+		}
+		connect();
+		clearProducers();
+		clearConsumers();
+		connected.set(true);
 	}
 
 	private void initConnection() {
@@ -257,10 +272,22 @@ public class JmsEventHub implements EventHub {
 
 			@Override
 			public void transportResumed() {
-				Logger.info("Connection with Data Hub resumed!");
-				checkConnection();
+				Logger.info("Connection with Data Hub stablished!");
+				updateConsumers();
+				connected.set(true);
+
 			}
 		};
+	}
+
+	private void clearProducers() {
+		producers.values().forEach(JmsProducer::close);
+		producers.clear();
+	}
+
+	private void clearConsumers() {
+		consumers.values().forEach(JmsConsumer::close);
+		consumers.clear();
 	}
 
 	private TopicConsumer topicConsumer(String channel) {
@@ -281,23 +308,10 @@ public class JmsEventHub implements EventHub {
 		}
 	}
 
-	private void checkConnection() {
+	private void updateConsumers() {
 		if (!started.get()) return;
-		Logger.debug("Checking connection...");
-		if (connection != null && ((ActiveMQConnection) connection).isStarted() && ((ActiveMQSession) session).isRunning()) {
-			connected.set(true);
-			recoverEvents();
-			return;
-		}
-		try {
-			if (connection == null || !((ActiveMQConnection) connection).isStarted()) initConnection();
-			if (session != null) session.close();
-			if (!eventConsumers.isEmpty() && consumers.isEmpty()) session = createSession(transactedSession);
+		if (!eventConsumers.isEmpty() && consumers.isEmpty())
 			for (String channel : eventConsumers.keySet()) consumers.put(channel, topicConsumer(channel));
-		} catch (JMSException e) {
-			Logger.error(e);
-		}
-		connected.set(true);
 		recoverEvents();
 	}
 
