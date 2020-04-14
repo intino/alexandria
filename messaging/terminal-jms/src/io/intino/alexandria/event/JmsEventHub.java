@@ -59,7 +59,7 @@ public class JmsEventHub implements EventHub {
 		if (brokerUrl != null && !brokerUrl.isEmpty()) connect();
 		else Logger.warn("Broker url is null");
 		scheduler = Executors.newScheduledThreadPool(1);
-		scheduler.scheduleAtFixedRate(this::checkConnection, 0, 1, TimeUnit.HOURS);
+		scheduler.scheduleAtFixedRate(this::checkConnection, 15, 15, TimeUnit.MINUTES);
 	}
 
 	private void connect() {
