@@ -1,15 +1,15 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "2.0.3") slack-framework
+Artifact("io.intino.alexandria", "2.0.4") slack-framework
 	Imports
 		Compile("com.github.seratch", "jslack", "3.4.2")
 		Compile("javax.websocket", "javax.websocket-api", "1.1")
         Compile("org.glassfish.tyrus.bundles", "tyrus-standalone-client", "1.16")
 
-		Compile("org.apache.commons", "commons-lang3", "3.4")
+		Compile("org.apache.commons", "commons-lang3", "3.9")
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Compile("io.intino.alexandria", "logger4j", "1.0.0")
-		Test("junit", "junit", "4.12")
+		Test("junit", "junit", "4.13")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.release, snapshot = intino.snapshot)
 
