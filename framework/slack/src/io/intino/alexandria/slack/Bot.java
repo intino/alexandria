@@ -22,6 +22,7 @@ import com.google.gson.JsonParser;
 import io.intino.alexandria.logger.Logger;
 import org.jetbrains.annotations.Nullable;
 
+import javax.websocket.CloseReason;
 import javax.websocket.DeploymentException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -31,6 +32,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
+import static javax.websocket.CloseReason.CloseCodes.NORMAL_CLOSURE;
 
 public abstract class Bot {
 	private final String token;
@@ -78,6 +80,8 @@ public abstract class Bot {
 		rtm.connect();
 		botIdentity = rtm.getConnectedBotUser();
 		rtm.addMessageHandler(this::handleMessage);
+		rtm.addErrorHandler(this::handleError);
+		rtm.addCloseHandler(this::handleRtmClose);
 	}
 
 	private Slack instance() {
@@ -132,6 +136,7 @@ public abstract class Bot {
 		try {
 			methods.chatPostMessage(ChatPostMessageRequest.builder().asUser(true).channel(user.getId()).text(message).build());
 		} catch (IOException | SlackApiException e) {
+			Logger.error("Error sending message to" + user.getName() + ": " + message);
 			Logger.error(e);
 		}
 	}
@@ -280,6 +285,16 @@ public abstract class Bot {
 		final boolean added = processedMessages.add(message.getTs());
 		if (processedMessages.size() > 10) processedMessages.remove(processedMessages.iterator().next());
 		return !added;
+	}
+
+	private void handleError(Throwable e) {
+		Logger.error(e);
+		reconnect();
+	}
+
+
+	private void handleRtmClose(CloseReason closeReason) {
+		if (closeReason.getCloseCode().equals(NORMAL_CLOSURE)) reconnect();
 	}
 
 	@Nullable
