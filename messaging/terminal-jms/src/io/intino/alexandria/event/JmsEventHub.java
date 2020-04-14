@@ -38,6 +38,7 @@ public class JmsEventHub implements EventHub {
 	private Connection connection;
 	private Session session;
 	private AtomicBoolean connected = new AtomicBoolean(false);
+	private AtomicBoolean started = new AtomicBoolean(false);
 	private AtomicBoolean recoveringEvents = new AtomicBoolean(false);
 	private ScheduledExecutorService scheduler;
 
@@ -74,6 +75,7 @@ public class JmsEventHub implements EventHub {
 			} catch (InterruptedException e) {
 			}
 			if (connection != null && ((ActiveMQConnection) connection).isStarted()) {
+				if (session != null) session.close();
 				session = createSession(transactedSession);
 				if (session != null && ((ActiveMQSession) session).isRunning()) {
 					connected.set(true);
@@ -83,6 +85,7 @@ public class JmsEventHub implements EventHub {
 		} catch (JMSException e) {
 			Logger.error(e);
 		}
+		started = new AtomicBoolean(true);
 	}
 
 	private void initConnection() {
@@ -279,9 +282,17 @@ public class JmsEventHub implements EventHub {
 	}
 
 	private void checkConnection() {
-		if (connection == null || ((ActiveMQConnection) connection).isStarted()) initConnection();
-		if (!eventConsumers.isEmpty() && consumers.isEmpty()) try {
-			session = createSession(transactedSession);
+		if (!started.get()) return;
+		Logger.debug("Checking connection...");
+		if (connection != null && ((ActiveMQConnection) connection).isStarted() && ((ActiveMQSession) session).isRunning()) {
+			connected.set(true);
+			recoverEvents();
+			return;
+		}
+		try {
+			if (connection == null || !((ActiveMQConnection) connection).isStarted()) initConnection();
+			if (session != null) session.close();
+			if (!eventConsumers.isEmpty() && consumers.isEmpty()) session = createSession(transactedSession);
 			for (String channel : eventConsumers.keySet()) consumers.put(channel, topicConsumer(channel));
 		} catch (JMSException e) {
 			Logger.error(e);
