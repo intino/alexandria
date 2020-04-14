@@ -30,6 +30,10 @@ public class JmsEventHub implements EventHub {
 	private final Map<String, List<Consumer<Event>>> eventConsumers;
 	private final Map<Consumer<javax.jms.Message>, Integer> jmsConsumers;
 	private final EventOutBox eventOutBox;
+	private final String brokerUrl;
+	private final String user;
+	private final String password;
+	private final String clientId;
 	private final boolean transactedSession;
 	private Connection connection;
 	private Session session;
@@ -42,39 +46,46 @@ public class JmsEventHub implements EventHub {
 	}
 
 	public JmsEventHub(String brokerUrl, String user, String password, String clientId, boolean transactedSession, File messageCacheDirectory) {
+		this.brokerUrl = brokerUrl;
+		this.user = user;
+		this.password = password;
+		this.clientId = clientId;
 		this.transactedSession = transactedSession;
+		this.eventOutBox = new EventOutBox(messageCacheDirectory);
 		producers = new HashMap<>();
 		consumers = new HashMap<>();
 		jmsConsumers = new HashMap<>();
 		eventConsumers = new HashMap<>();
-		this.eventOutBox = new EventOutBox(messageCacheDirectory);
-		if (brokerUrl != null && !brokerUrl.isEmpty()) {
-			Thread thread = Thread.currentThread();
-			new Thread(() -> {
-				initConnection(brokerUrl, user, password, clientId);
-				thread.interrupt();
-			}).start();
-			try {
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-				}
-				if (connection != null && ((ActiveMQConnection) connection).isStarted()) {
-					session = createSession(transactedSession);
-					if (session != null && ((ActiveMQSession) session).isRunning()) {
-						connected.set(true);
-						Logger.info("Connection with Data Hub stablished!");
-					}
-				}
-			} catch (JMSException e) {
-				Logger.error(e);
-			}
-		} else Logger.warn("Broker url is null");
+		if (brokerUrl != null && !brokerUrl.isEmpty()) connect();
+		else Logger.warn("Broker url is null");
 		scheduler = Executors.newScheduledThreadPool(1);
-		scheduler.scheduleAtFixedRate(this::checkConnection, 0, 1, TimeUnit.HOURS);
+		scheduler.scheduleAtFixedRate(this::checkConnection, 15, 15, TimeUnit.MINUTES);
 	}
 
-	private void initConnection(String brokerUrl, String user, String password, String clientId) {
+	private void connect() {
+		Thread thread = Thread.currentThread();
+		new Thread(() -> {
+			initConnection();
+			thread.interrupt();
+		}).start();
+		try {
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+			}
+			if (connection != null && ((ActiveMQConnection) connection).isStarted()) {
+				session = createSession(transactedSession);
+				if (session != null && ((ActiveMQSession) session).isRunning()) {
+					connected.set(true);
+					Logger.info("Connection with Data Hub stablished!");
+				}
+			}
+		} catch (JMSException e) {
+			Logger.error(e);
+		}
+	}
+
+	private void initConnection() {
 		try {
 			connection = BusConnector.createConnection(brokerUrl, user, password, connectionListener());
 			if (clientId != null && !clientId.isEmpty()) connection.setClientID(clientId);
@@ -268,6 +279,7 @@ public class JmsEventHub implements EventHub {
 	}
 
 	private void checkConnection() {
+		if (connection == null || ((ActiveMQConnection) connection).isStarted()) initConnection();
 		if (!eventConsumers.isEmpty() && consumers.isEmpty()) try {
 			session = createSession(transactedSession);
 			for (String channel : eventConsumers.keySet()) consumers.put(channel, topicConsumer(channel));
@@ -277,6 +289,7 @@ public class JmsEventHub implements EventHub {
 		connected.set(true);
 		recoverEvents();
 	}
+
 	private void recoverEvents() {
 		recoveringEvents.set(true);
 		if (!eventOutBox.isEmpty())
