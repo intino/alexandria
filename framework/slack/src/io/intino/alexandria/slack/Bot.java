@@ -294,7 +294,8 @@ public abstract class Bot {
 
 
 	private void handleRtmClose(CloseReason closeReason) {
-		if (closeReason.getCloseCode().equals(NORMAL_CLOSURE)) reconnect();
+		Logger.error("Bot session Closed:" + closeReason.getReasonPhrase());
+		if (!closeReason.getCloseCode().equals(NORMAL_CLOSURE)) reconnect();
 	}
 
 	@Nullable
