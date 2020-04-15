@@ -42,6 +42,7 @@ Concept CatalogComponents
 
 	Concept:Named Grouping extends Component
 		var Collection[] collections
+		var integer pageSize = 5
 		Aspect ComboBox
         	var string placeholder = ""
 

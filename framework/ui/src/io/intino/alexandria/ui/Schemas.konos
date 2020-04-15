@@ -114,3 +114,7 @@ Schema StepInfo
     Attribute isActive as Bool
     Attribute isDisabled as Bool
     Attribute isCompleted as Bool
+
+Schema DialogSize
+	Attribute width as Text
+	Attribute height as Text
