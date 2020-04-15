@@ -1,15 +1,25 @@
 import React from "react";
-import {Typography, DialogTitle, AppBar, Slide, DialogContent} from "@material-ui/core"
+import {Typography, DialogTitle, AppBar, Slide, DialogContent, Paper} from "@material-ui/core"
 import AbstractBaseDialog from "../../../gen/displays/components/AbstractBaseDialog";
 import { IconButton } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import 'alexandria-ui-elements/res/styles/layout.css';
+import Draggable from 'react-draggable';
+
+export const makeDraggable = (id, style, props) => {
+  return (
+    <Draggable handle={"#" + id + "_draggable"} cancel={'[class*="MuiDialogContent-root"]'}>
+      <Paper {...props} style={style}/>
+    </Draggable>
+  );
+}
 
 export default class BaseDialog extends AbstractBaseDialog {
 	state = {
 		title: this.props.title,
+		size: { height: this.props.height, width: this.props.width },
 		opened: false,
-		modal: false,
+		modal: this.props.modal,
 	};
 
 	static Styles = theme => ({
@@ -32,14 +42,6 @@ export default class BaseDialog extends AbstractBaseDialog {
 		super(props);
 	};
 
-	style() {
-		var result = super.style();
-		if (result == null) result = {};
-		if (this._widthDefined() && !this.props.fullscreen) result.width = this.props.width;
-		if (this._heightDefined() && !this.props.fullscreen) result.height = this.props.height;
-		return result;
-	};
-
 	handleClose = () => {
 		this.requester.close();
 	};
@@ -55,7 +57,7 @@ export default class BaseDialog extends AbstractBaseDialog {
 				</div>
 			</AppBar>
 		);
-		return (<DialogTitle>{this.translate(this.state.title)}</DialogTitle>);
+		return (<DialogTitle style={{cursor:'move'}} id={this.props.id + "_draggable"}>{this.translate(this.state.title)}</DialogTitle>);
 	};
 
 	renderContent = (content) => {
@@ -75,4 +77,25 @@ export default class BaseDialog extends AbstractBaseDialog {
 		this.setState({title});
 	};
 
+	refreshSize = (size) => {
+		this.setState({size});
+	};
+
+	sizeStyle = () => {
+	    const result = {};
+	    if (this._widthDefined()) {
+	        result.width = this.state.size.width;
+	        result.margin = "0 auto";
+	    }
+	    if (this._heightDefined()) result.height = this.state.size.height;
+	    return result;
+	}
+
+	_widthDefined = () => {
+	    return this.state.size.width != null && this.state.size.width.indexOf("-1") === -1;
+	}
+
+	_heightDefined = () => {
+	    return this.state.size.height != null && this.state.size.height.indexOf("-1") === -1;
+	}
 }

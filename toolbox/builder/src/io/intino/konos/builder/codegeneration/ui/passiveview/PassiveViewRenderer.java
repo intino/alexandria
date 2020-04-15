@@ -186,6 +186,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (passiveView.i$(Block.Drawer.class)) result.add("Drawer");
 		if (passiveView.i$(Block.Badge.class)) result.add("Badge");
 		if (passiveView.i$(Block.Conditional.class)) result.add("Conditional");
+		if (passiveView.i$(Block.Popover.class)) result.add("Popover");
 		if (passiveView.i$(Block.Splitter.class)) result.add("Splitter");
 		if (passiveView.i$(Selector.Tabs.class)) result.add("Tabs");
 		if (passiveView.i$(Selector.Menu.class)) result.add("Menu");

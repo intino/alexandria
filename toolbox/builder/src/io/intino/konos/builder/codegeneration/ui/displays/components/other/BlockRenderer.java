@@ -31,6 +31,7 @@ public class BlockRenderer extends SizedRenderer<Block> {
 		addBadge(result);
 		addParallax(result);
 		addDrawer(result);
+		addPopover(result);
 		addTransition(result);
 		addSplitter(result);
 		if (element.hidden() != null && element.hidden() != Block.Hidden.Never)
@@ -78,6 +79,14 @@ public class BlockRenderer extends SizedRenderer<Block> {
 		drawerFrame.add("position", drawerBlock.position().name());
 		drawerFrame.add("variant", drawerBlock.variant().name());
 		builder.add("drawer", drawerFrame);
+	}
+
+	private void addPopover(FrameBuilder builder) {
+		if (!element.isPopover()) return;
+		Block.Popover popoverBlock = element.asPopover();
+		FrameBuilder popoverFrame = new FrameBuilder("popover");
+		popoverFrame.add("position", popoverBlock.position().name());
+		builder.add("popover", popoverFrame);
 	}
 
 	private void addTransition(FrameBuilder builder) {

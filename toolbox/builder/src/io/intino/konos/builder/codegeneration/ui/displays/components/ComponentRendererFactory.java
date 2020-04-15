@@ -62,6 +62,7 @@ public class ComponentRendererFactory {
 		if (component.i$(Actionable.Download.class)) return (T) new DownloadRenderer(context, component.a$(Actionable.class), provider, target);
 		if (component.i$(Actionable.Export.class)) return (T) new ExportRenderer(context, component.a$(Actionable.class), provider, target);
 		if (component.i$(Actionable.OpenDialog.class)) return (T) new OpenDialogRenderer(context, component.a$(Actionable.class), provider, target);
+		if (component.i$(Actionable.OpenPopover.class)) return (T) new OpenPopoverRenderer(context, component.a$(Actionable.class), provider, target);
 		if (component.i$(Actionable.CloseDialog.class)) return (T) new CloseDialogRenderer(context, component.a$(Actionable.class), provider, target);
 		if (component.i$(Actionable.Action.class)) return (T) new ActionRenderer(context, component.a$(Actionable.class), provider, target);
 		if (component.i$(Actionable.class)) return (T) new ActionableRenderer(context, component.a$(Actionable.class), provider, target);

@@ -49,6 +49,9 @@ Component openBlock as Decorated ExtensionOf(actionable)
 Component openDialog as Decorated ExtensionOf(actionable)
 	Request execute
 
+Component openPopover as Decorated ExtensionOf(actionable)
+	Request execute
+
 Component closeDialog as Decorated ExtensionOf(actionable)
 	Request execute
 

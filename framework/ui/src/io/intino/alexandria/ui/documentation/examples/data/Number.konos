@@ -12,7 +12,8 @@ Template(layout=Vertical, spacing=DP8) numberExamplesMold as Decorated
 				Block > Text number1Code as Code(language=Html)
 						value
 							=========
-							Number(value\=10, label\="Campo numérico") number1
+							Number(value\=10, label\="Campo numérico") number1<br/>
+							in java called to number1.countDecimals(10)
 							=========
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="No facets with prefix and suffix")

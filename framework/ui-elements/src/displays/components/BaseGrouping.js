@@ -51,7 +51,7 @@ export default class BaseGrouping extends AbstractBaseGrouping {
             groups : [],
             visibleGroups : [],
             selection: [],
-            pageSize: BaseGrouping.DefaultPageSize,
+            pageSize: this.props.pageSize != null ? this.props.pageSize : BaseGrouping.DefaultPageSize,
             condition: null,
             visible: this.props.visible != null ? this.props.visible : true,
         };
@@ -87,7 +87,7 @@ export default class BaseGrouping extends AbstractBaseGrouping {
     };
 
     handleMoreGroups = () => {
-        const newPageSize = this.state.pageSize+BaseGrouping.DefaultPageSize;
+        const newPageSize = this.state.pageSize+this.props.pageSize;
         this.setState({ pageSize: newPageSize, visibleGroups: this.visibleGroups(this.state.groups, newPageSize, this.state.condition)});
     };
 

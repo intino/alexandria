@@ -60,7 +60,7 @@ Template(layout=Vertical, spacing=DP8) groupingExamplesMold as Decorated
 			Text(format=h6, value="No facets with many options")
 			Block(spacing=DP8, format=filledNoAir)
 				Block(format=containerAirMedium, spacing=DP24) as Relative(width=100%)
-					Grouping(format=whiteBackground,collections=empty) country1 as Labeled("country")
+					Grouping(format=whiteBackground,collections=empty,pageSize=6) country1 as Labeled("country")
 			Block > Text as Code(language=Html)
 					value
 						=========

@@ -16,17 +16,15 @@ const styles = theme => ({
 });
 
 class NumberEditable extends AbstractNumberEditable {
-	state = {
-		value : "",
-		readonly: this.props.readonly,
-		prefix: this.props.prefix,
-		suffix: this.props.suffix,
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new NumberEditableNotifier(this);
 		this.requester = new NumberEditableRequester(this);
+        this.state = {
+            ...this.state,
+            readonly: this.props.readonly,
+        };
 	};
 
 	handleChange(e) {
