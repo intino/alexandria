@@ -115,7 +115,7 @@ public class RESTServiceRenderer extends Renderer {
 				add("resource", framesOf(service.resourceList()));
 		if (!service.notificationList().isEmpty()) {
 			builder.add("notification", notificationsFrame(service.notificationList()));
-			if (graph.serviceList(Service::isUI).findAny().isPresent())
+			if (graph.serviceList(Service::isUI).findAny().isEmpty())
 				builder.add("hasNotifications", notificationsFrame(service.notificationList()));
 		}
 		final Service.REST.AuthenticatedWithCertificate secure = service.authenticatedWithCertificate();
