@@ -107,7 +107,7 @@ def type(properties & abstractdialog) trigger(specific)
 end
 
 def type(properties & block) trigger(specific)
-	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"][ collapsible="$collapsible"][ $paper][ $badge][ $drawer][ animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}][ hidden="$hidden"][ splitMobileLabel="$splitMobileLabel"]
+	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"][ collapsible="$collapsible"][ $paper][ $badge][ $drawer][ $popover][ animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}][ hidden="$hidden"][ splitMobileLabel="$splitMobileLabel"]
 end
 
 def type(properties & date) trigger(specific)
@@ -183,7 +183,7 @@ def type(properties & slider) trigger(specific)
 end
 
 def type(properties & grouping) trigger(specific)
-    [ placeholder="$placeholder"]
+    [ pageSize={$pageSize}][ placeholder="$placeholder"]
 end
 
 def type(properties & stepper) trigger(specific)
@@ -199,6 +199,10 @@ end
 
 def type(drawer)
 	position="$position" variant="$variant"
+end
+
+def type(popover)
+	position="$position"
 end
 
 def type(code)

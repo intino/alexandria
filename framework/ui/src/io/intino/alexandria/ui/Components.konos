@@ -24,6 +24,10 @@ Component blockDrawer as Decorated
 	Notification refresh as Bool
 	Request toggle
 
+Component blockPopover as Decorated
+	Notification refresh as Text
+	Request close
+
 Component option as Decorated
 Component chart as Decorated
 	Notification showLoading
@@ -110,6 +114,7 @@ Component baseDialog as Decorated
 	Notification open
 	Notification close
 	Notification refreshTitle as Text
+	Notification refreshSize as Object(DialogSize)
 
 	Request open
 	Request close

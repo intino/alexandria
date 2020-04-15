@@ -44,7 +44,8 @@ Concept Block extends Component
     	var Component.Option selected = empty
     Aspect Animated
     Aspect Multiple
-
+    Aspect Popover
+    	var word:{TopLeft TopCenter TopRight LeftTop LeftCenter LeftBottom RightTop RightCenter RightBottom BottomLeft BottomCenter BottomRight} position = BottomCenter
 
 Concept:Named Template extends Component
 	var string modelClass = empty
@@ -111,6 +112,7 @@ Concept InteractionComponents
 			sub OpenBlock > var Block.Conditional block
 			sub OpenDialog > var OtherComponents.AbstractDialog dialog
 			sub CloseDialog > var OtherComponents.AbstractDialog dialog
+			sub OpenPopover > var Block.Popover popover
 			sub Export
 				var string[] options = empty
 				var instant from = empty

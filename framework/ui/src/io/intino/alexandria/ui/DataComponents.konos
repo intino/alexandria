@@ -4,6 +4,7 @@ use Schemas
 
 Component baseNumber as Decorated
 	Notification refresh as Real
+	Notification refreshDecimals as Integer
 	Notification refreshExpanded as Bool
 	Notification refreshPrefix as Text
 	Notification refreshSuffix as Text

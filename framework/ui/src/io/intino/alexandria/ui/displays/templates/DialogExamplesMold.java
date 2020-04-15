@@ -22,6 +22,7 @@ public class DialogExamplesMold extends AbstractDialogExamplesMold<UiFrameworkBo
     }
 
     private void initDialog1() {
+        //dialog1.size("1000px", "300px");
         dialog1.onBeforeOpen((event) -> {
             field1.value("");
             field2.value("");

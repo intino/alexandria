@@ -8,6 +8,7 @@ import { withSnackbar } from 'notistack';
 import {Dialog, DialogContent, Slide} from "@material-ui/core";
 import SearchBox from "./SearchBox";
 import BaseDialog from "./BaseDialog";
+import { makeDraggable } from "./BaseDialog";
 
 const styles = theme => ({
 	...BaseDialog.Styles(theme),
@@ -29,7 +30,14 @@ class CollectionDialog extends AbstractCollectionDialog {
 
 	render() {
 		return (
-			<Dialog fullScreen={this.props.fullscreen} open={this.state.opened} onClose={this.handleClose.bind(this)} TransitionComponent={this.props.fullscreen ? BaseDialog.Transition : undefined}>
+			<Dialog fullScreen={this.props.fullscreen} open={this.state.opened}
+                    fullWidth={this._widthDefined()} maxWidth={this._widthDefined() ? "xl" : "xs"}
+			        onClose={this.handleClose.bind(this)}
+                    disableBackdropClick={this.state.modal}
+                    disableEscapeKeyDown={this.state.modal}
+			        TransitionComponent={this.props.fullscreen ? BaseDialog.Transition : undefined}
+			        PaperComponent={!this.props.fullscreen ? makeDraggable.bind(this, this.props.id, this.sizeStyle()) : undefined}
+                    aria-labelledby={this.props.id + "_draggable"}>
 				{this.renderTitle()}
 				{this.renderContent(() => this.content())}
 			</Dialog>

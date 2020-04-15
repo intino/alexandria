@@ -337,6 +337,10 @@ def type(binding & closedrawer)
 	if ($name != null) $name.bindTo($drawer);
 end
 
+def type(binding & openpopover)
+	if ($name != null) $name.bindTo($popover);
+end
+
 def type(binding & decisiondialog)
 	if ($name != null) $name.bindTo($selector);
 end
@@ -418,6 +422,7 @@ def type(properties & block) trigger(specific)
 	[$background+resourceMethod]
 	[$badge]
 	[$drawer]
+	[$popover]
 end
 
 def type(properties & image) trigger(specific)
@@ -567,6 +572,9 @@ def type(badge)
 end
 
 def type(drawer)
+end
+
+def type(popover)
 end
 
 def type(selectionMethod)

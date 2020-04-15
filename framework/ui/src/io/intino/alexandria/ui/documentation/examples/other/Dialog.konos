@@ -70,7 +70,7 @@ Template(layout=Vertical, spacing=DP8) dialogExamplesMold as Decorated
 			Text(format=h6, value="No facets. Collection dialog")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Button(title="collection dialog") as OpenDialog(dialog=dialog4)
-				CollectionDialog(format=containerAirLarge, title = "collection dialog") dialog4
+				CollectionDialog(format=containerAirLarge, title = "collection dialog") dialog4 as Relative(width=80%, height=60%)
 					allowSearch = true
 					List(itemClass="io.intino.alexandria.ui.documentation.Person") list1 as Selectable
 						Mold > Item(height = 30px) dialog4ListMold > Text firstName
@@ -96,6 +96,23 @@ Template(layout=Vertical, spacing=DP8) dialogExamplesMold as Decorated
 						=========
 						Button(title\="fullscreen dialog") as OpenDialog(dialog\=dialog)
 						AlertDialog(format\=containerAirLarge, title \= "full screen dialog") dialog as Absolute(width\=350px) Fullscreen
+						&nbsp;&nbsp;&nbsp;&nbsp;message \= "Intino is cool!"
+						&nbsp;&nbsp;&nbsp;&nbsp;acceptLabel \= "OK!"
+						=========
+
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="Modal facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Button(title="modal dialog") as OpenDialog(dialog=dialog6)
+				AlertDialog(format=containerAirLarge, title = "full screen dialog") dialog6 as Relative(width=60%, height=40%) Modal
+					message = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce lobortis lacinia leo, sed fringilla libero. Pellentesque at venenatis orci. Sed enim sem, blandit vel massa ut, semper blandit sapien. Suspendisse potenti. Etiam euismod nibh a scelerisque placerat. Duis maximus eget ipsum pretium auctor. Mauris malesuada metus vel dolor laoreet, eget mollis mauris condimentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam id nisl nibh. Mauris mattis nulla non lacinia tincidunt. Ut id orci sit amet nisl viverra rutrum in eu neque.
+                               Donec ac ex in nisl feugiat sagittis. Curabitur vehicula sed felis nec blandit. Mauris eu urna at dui feugiat laoreet. Aliquam iaculis feugiat scelerisque. Maecenas suscipit est mauris, non aliquet metus molestie in. Suspendisse finibus malesuada ante et dapibus. Mauris et dapibus massa, eu posuere nunc. Ut a lacus lectus. Morbi non vulputate eros. Morbi egestas vehicula risus, egestas sollicitudin velit elementum in. Nulla ut euismod tortor. Vestibulum tempor justo fringilla mollis hendrerit."
+					closeLabel = "OK!"
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Button(title\="fullscreen dialog") as OpenDialog(dialog\=dialog)
+						AlertDialog(format\=containerAirLarge, title \= "full screen dialog") dialog as Absolute(width\=350px) Modal
 						&nbsp;&nbsp;&nbsp;&nbsp;message \= "Intino is cool!"
 						&nbsp;&nbsp;&nbsp;&nbsp;acceptLabel \= "OK!"
 						=========
