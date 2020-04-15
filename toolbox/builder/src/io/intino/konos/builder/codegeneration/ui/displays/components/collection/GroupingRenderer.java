@@ -20,6 +20,7 @@ public class GroupingRenderer extends BindingCollectionRenderer<Grouping> {
 	@Override
 	public FrameBuilder properties() {
 		FrameBuilder properties = super.properties();
+		if (!element.isComboBox()) properties.add("pageSize", element.pageSize());
 		addComboBoxProperties(properties);
 		return properties;
 	}

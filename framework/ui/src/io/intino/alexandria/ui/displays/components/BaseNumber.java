@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.components.AbstractBaseNumber;
 import io.intino.alexandria.ui.displays.notifiers.BaseNumberNotifier;
 
 public class BaseNumber<DN extends BaseNumberNotifier, B extends Box> extends AbstractBaseNumber<DN, B> {
@@ -10,9 +11,14 @@ public class BaseNumber<DN extends BaseNumberNotifier, B extends Box> extends Ab
         super(box);
     }
 
-    public BaseNumber expanded(boolean value) {
+    public BaseNumber<DN, B> expanded(boolean value) {
         this.expanded = value;
         notifier.refreshExpanded(value);
+        return this;
+    }
+
+    public BaseNumber<DN, B> countDecimals(int count) {
+        notifier.refreshDecimals(count);
         return this;
     }
 
@@ -20,12 +26,12 @@ public class BaseNumber<DN extends BaseNumberNotifier, B extends Box> extends Ab
         return expanded;
     }
 
-    public BaseNumber prefix(String prefix) {
+    public BaseNumber<DN, B> prefix(String prefix) {
         notifier.refreshSuffix(prefix);
         return this;
     }
 
-    public BaseNumber suffix(String suffix) {
+    public BaseNumber<DN, B> suffix(String suffix) {
         notifier.refreshSuffix(suffix);
         return this;
     }

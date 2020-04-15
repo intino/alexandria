@@ -195,3 +195,17 @@ Template(layout=Vertical, spacing=DP8) blockExamplesMold as Decorated
 						Block as Badge(value\=10)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value")
 						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Popover facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Button(title="open popover") as OpenPopover(popover=popoverBlock)
+				Block(layout=Horizontal, format=air) popoverBlock as Popover(position=BottomCenter)
+					Text(value="popover content", format=body1)
+			Block > Text block8Code as Code(language=Html)
+					value
+						=========
+						Button as OpenPopover(popover\=popoverBlock)<br/>
+						Block popoverBlock as Popover<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="popover content")
+						=========

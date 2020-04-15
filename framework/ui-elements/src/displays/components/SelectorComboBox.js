@@ -10,7 +10,7 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 const styles = theme => ({
 	container : {
 		position: "relative",
-		minWidth: "170px",
+		minWidth: "85px",
 		width: "100%",
 	},
 	readonly : {
@@ -50,7 +50,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 						placeholder={this.selectMessage()} options={items}
 						className="basic-multi-select" classNamePrefix="select"
 						components={{ Option: this.renderOption.bind(this)}}
-						value={value}
+						menuPlacement="auto" value={value}
 						onChange={this.handleChange.bind(this)}
 						onMenuOpen={this.handleOpen.bind(this)}/>
 			</div>

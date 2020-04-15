@@ -83,7 +83,7 @@ export default class Actionable extends AbstractActionable {
 		const {classes} = this.props;
 		const className = this._readonly() ? classes.readonly : classes.link;
 		return (
-		    <a onClick={this.handleClick.bind(this)} disabled={this._readonly()}>
+		    <a id={this.props.id} onClick={this.handleClick.bind(this)} disabled={this._readonly()}>
 				<Typography style={this.style()} variant={this.variant("body1")} className={className}>{this._title()}</Typography>
 			</a>
 		);
@@ -92,7 +92,7 @@ export default class Actionable extends AbstractActionable {
 	renderButton = () => {
 		const {classes} = this.props;
 		return (
-		    <Button style={this.style()} size={this._size()} color="primary" variant={this._highlightVariant()}
+		    <Button id={this.props.id} style={this.style()} size={this._size()} color="primary" variant={this._highlightVariant()}
 						disabled={this._readonly()} onClick={this.handleClick.bind(this)}
 						className={classes.button}>
 				{this._title()}
@@ -100,39 +100,30 @@ export default class Actionable extends AbstractActionable {
 		);
 	};
 
-	_highlightVariant = () => {
-		const highlighted = this.props.highlighted;
-		if (highlighted == null) return undefined;
-		else if (highlighted.toLowerCase() === "outline") return "outlined";
-		return "contained";
-	};
-
 	renderIconButton = () => {
 		const {classes} = this.props;
-		return (
-            <Tooltip title={this._title()}>
-                <IconButton color="primary" disabled={this._readonly()}
-                                onClick={this.handleClick.bind(this)}
-                                className={classes.iconButton} size={this._size()}>
-                    <img src={this._icon()} style={this._addDimensions({})}/>
-                </IconButton>
-            </Tooltip>
-		);
+		const button = (
+            <IconButton id={this.props.id} color="primary" disabled={this._readonly()}
+                            onClick={this.handleClick.bind(this)}
+                            className={classes.iconButton} size={this._size()}>
+                <img src={this._icon()} style={this._addDimensions({})}/>
+            </IconButton>
+        );
+		return this._readonly() ? button : (<Tooltip title={this._title()}>{button}</Tooltip>);
 	};
 
 	renderMaterialIconButton = () => {
 		const {classes} = this.props;
 		const style = this.style();
 		if (this.state.color != null) style.color = this.state.color;
-		return (
-            <Tooltip title={this._title()}>
-                <IconButton color="primary" disabled={this._readonly()}
-                                onClick={this.handleClick.bind(this)} className={classes.materialIconButton}
-                                style={style} size={this._size()}>
-                    <ActionableMui icon={this._icon()} style={this._addDimensions({})}/>
-                </IconButton>
-            </Tooltip>
+		const button = (
+            <IconButton id={this.props.id} color="primary" disabled={this._readonly()}
+                            onClick={this.handleClick.bind(this)} className={classes.materialIconButton}
+                            style={style} size={this._size()}>
+                <ActionableMui icon={this._icon()} style={this._addDimensions({})}/>
+            </IconButton>
 		);
+		return this._readonly() ? button : (<Tooltip title={this._title()}>{button}</Tooltip>);
 	};
 
 	renderAffirm = () => {
@@ -268,6 +259,13 @@ export default class Actionable extends AbstractActionable {
 		if (!this.requireSign()) return false;
 		const reason = this.props.signed.reason;
 		return reason != null && reason !== "";
+	};
+
+	_highlightVariant = () => {
+		const highlighted = this.props.highlighted;
+		if (highlighted == null) return undefined;
+		else if (highlighted.toLowerCase() === "outline") return "outlined";
+		return "contained";
 	};
 
 	_title = () => {

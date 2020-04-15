@@ -12,6 +12,7 @@ public class NumberExamplesMold extends AbstractNumberExamplesMold<AlexandriaUiB
     @Override
     public void init() {
         super.init();
+        number1.countDecimals(10);
         number3.onChange((event) -> number3.notifyUser(String.format("Valor: %.0f", (double)event.value()), UserMessage.Type.Info));
     }
 

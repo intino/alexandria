@@ -45,10 +45,6 @@ class Number extends AbstractNumber {
 		this.requester = new NumberRequester(this);
 		this.state = {
 			...this.state,
-			value : this.props.value,
-			expanded : this.props.expanded,
-			prefix : this.props.prefix,
-			suffix : this.props.suffix,
 		}
 	};
 
@@ -92,7 +88,7 @@ class Number extends AbstractNumber {
 	};
 
 	_addDecimals = (format) => {
-		const decimals = this.props.decimals != null ? this.props.decimals : 0;
+		const decimals = this.state.decimals != null ? this.state.decimals : 0;
 		if (decimals > 0) format += ".";
 		for (let i=0; i<decimals; i++) format += "0";
 		return format;
