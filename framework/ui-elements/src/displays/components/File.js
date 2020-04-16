@@ -139,7 +139,7 @@ class File extends AbstractFile {
 	};
 
 	refresh = (info) => {
-		this.setState({ "value" : info.value, "filename": info.filename, "mimeType": info.mimeType });
+		this.setState({ "value" : info.value, "filename": info.filename, "mimeType": info.mimeType, data: null });
 	};
 
 	_downloadFile = (file) => {
