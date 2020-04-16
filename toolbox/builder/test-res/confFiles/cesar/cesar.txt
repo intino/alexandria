@@ -33,10 +33,10 @@ Cesar
 version
 3.0.0
 module.parameters
-port;workspace;slackToken;terminal_url;terminal_password;terminal_user;terminal_clientId;terminal_working_directory
+port;home;slackToken;terminal_url;terminal_password;terminal_user;terminal_clientId;terminal_working_directory
 library
 io.intino.cesar.datahub:cesar-terminal:1.0.0
-generation.package
+box.generation.package
 io.intino.cesar.box
 encoding
 UTF-8
