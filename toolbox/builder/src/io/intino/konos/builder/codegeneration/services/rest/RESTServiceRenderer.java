@@ -107,7 +107,7 @@ public class RESTServiceRenderer extends Renderer {
 	}
 
 	private void processService(Service.REST service, File gen) {
-		if (service.resourceList().isEmpty()) return;
+		if (service.resourceList().isEmpty() && service.notificationList().isEmpty()) return;
 		FrameBuilder builder = new FrameBuilder("server").
 				add("name", service.name$()).
 				add("box", boxName()).
@@ -116,7 +116,7 @@ public class RESTServiceRenderer extends Renderer {
 		if (!service.notificationList().isEmpty()) {
 			builder.add("notification", notificationsFrame(service.notificationList()));
 			if (graph.serviceList(Service::isUI).findAny().isEmpty())
-				builder.add("hasNotifications", notificationsFrame(service.notificationList()));
+				builder.add("hasNotifications", "true");
 		}
 		final Service.REST.AuthenticatedWithCertificate secure = service.authenticatedWithCertificate();
 		if (secure != null && secure.store() != null)
