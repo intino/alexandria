@@ -35,10 +35,14 @@
     <orderEntry type="library" name="Intino: com.jcraft:jsch:0.1.55" level="project" />
     <orderEntry type="library" name="Intino: com.jcraft:jzlib:1.0.7" level="project" />
     <orderEntry type="module" module-name="r" />
-    <orderEntry type="library" name="Intino: net.rforge:Rserve:0.6-8.1" level="project" />
-    <orderEntry type="library" name="Intino: net.rforge:REngine:0.6-8.1" level="project" />
-    <orderEntry type="module" module-name="json" />
-    <orderEntry type="library" name="Intino: commons-io:commons-io:2.6" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.0.1" level="project" />
+    <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.8.0" level="project" />
+    <orderEntry type="library" name="Intino: org.apache.httpcomponents:httpclient:4.5.7" level="project" />
+    <orderEntry type="library" name="Intino: org.apache.httpcomponents:httpcore:4.4.11" level="project" />
+    <orderEntry type="library" name="Intino: commons-codec:commons-codec:1.11" level="project" />
+    <orderEntry type="library" name="Intino: org.apache.httpcomponents:httpmime:4.5.7" level="project" />
+    <orderEntry type="library" name="Intino: org.apache.httpcomponents:fluent-hc:4.5.7" level="project" />
+    <orderEntry type="library" name="Intino: commons-io:commons-io:2.4" level="project" />
   </component>
 </module>
