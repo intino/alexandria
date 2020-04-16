@@ -26,7 +26,7 @@ class SelectorTabs extends AbstractSelectorTabs {
 	    const children = this.children();
         return (
             <Tabs value={selected} variant="fullWidth"
-                  onChange={this.handleChange.bind(this)} color={this.props.color}>
+                  onChange={this.handleChange.bind(this)} color={this.props.color} style={this.style()}>
                 {React.Children.map(children, (child, i) => { return this.renderTab(child); })}
             </Tabs>
         );
