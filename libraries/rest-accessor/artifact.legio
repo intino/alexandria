@@ -1,20 +1,20 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.7") rest-accessor
+Artifact("io.intino.alexandria", "1.1.0") rest-accessor
 	Imports
 		Compile("io.intino.alexandria", "exceptions", "1.0.0")
 		Compile("io.intino.alexandria", "primitives", "1.0.4")
 		Compile("io.intino.alexandria", "logger", "2.1.0")
-		Compile("org.bouncycastle", "bcmail-jdk15", "1.45")
-		Compile("org.bouncycastle", "bcprov-jdk15", "1.45")
-		Compile("org.apache.httpcomponents", "httpcore", "4.4.4")
-		Compile("org.apache.httpcomponents", "httpmime", "4.5.1")
-		Compile("org.apache.httpcomponents", "httpclient", "4.5.1")
-		Compile("org.apache.commons", "commons-lang3", "3.4")
+		Compile("org.bouncycastle", "bcmail-jdk15", "1.46")
+		Compile("org.bouncycastle", "bcprov-jdk15", "1.46")
+		Compile("org.apache.httpcomponents", "httpcore", "4.4.9")
+		Compile("org.apache.httpcomponents", "httpmime", "4.5.12")
+		Compile("org.apache.httpcomponents", "httpclient", "4.5.12")
+		Compile("org.apache.commons", "commons-lang3", "3.9")
 		Compile("commons-io", "commons-io", "2.6")
-		Compile("org.glassfish.tyrus", "tyrus-client", "1.8.3")
-		Compile("org.glassfish.tyrus", "tyrus-container-grizzly-client", "1.8.3")
-		Test("junit", "junit", "4.12")
+		Compile("org.glassfish.tyrus", "tyrus-client", "1.16")
+		Compile("org.glassfish.tyrus", "tyrus-container-grizzly-client", "1.16")
+		Test("junit", "junit", "4.13")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(release=intino.release)
 
