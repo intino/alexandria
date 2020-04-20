@@ -29,5 +29,7 @@
     <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-http:2.3.22" level="project" />
     <orderEntry type="library" name="Intino: org.bouncycastle:bcmail-jdk15:1.45" level="project" />
     <orderEntry type="library" name="Intino: org.bouncycastle:bcprov-jdk15:1.45" level="project" />
+    <orderEntry type="module" module-name="json" />
+    <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.8.6" level="project" />
   </component>
 </module>
