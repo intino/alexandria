@@ -14,11 +14,9 @@ Artifact("io.intino.alexandria", "4.1.4") ui-framework
 		Compile("io.intino.alexandria", "driver-shiny", "1.0.0")
 		Compile("io.intino.alexandria", "driver-r", "1.0.0")
 
-		Web("io.intino.alexandria", "ui-framework-elements", "4.1.3")
+		Web("io.intino.alexandria", "ui-framework-elements", "4.1.4")
 
 		Test("junit", "junit", "LATEST")
-		Web(groupId = "io.intino.alexandria", artifactId = "ui-framework-elements", version = "4.1.4")
-		Web(groupId = "io.intino.alexandria", artifactId = "ui-framework-elements", version = "4.1.4")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true) as Runnable(mainClass = "io.intino.alexandria.Main")
 	Distribution(intino.dist)
