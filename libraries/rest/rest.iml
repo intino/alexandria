@@ -39,7 +39,5 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.4" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
     <orderEntry type="module" module-name="http" />
-    <orderEntry type="library" name="Intino: org.slf4j:slf4j-log4j12:1.5.6" level="project" />
-    <orderEntry type="library" name="Intino: log4j:log4j:1.2.14" level="project" />
   </component>
 </module>
