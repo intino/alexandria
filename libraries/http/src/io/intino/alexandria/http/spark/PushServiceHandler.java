@@ -35,6 +35,16 @@ public class PushServiceHandler {
 
 	@OnWebSocketError
 	public void onError(Session session, Throwable error) {
+		String sessionId = SparkClient.sessionId(session);
+		try {
+			if (closeTimersMap.containsKey(sessionId)) {
+				closeTimersMap.get(sessionId).cancel();
+				closeTimersMap.remove(sessionId);
+			}
+		}
+		catch (Throwable ex) {
+			Logger.error(ex);
+		}
 		if (error.getMessage() != null) Logger.debug(error.getMessage());
 		else Logger.debug(error.toString());
 	}
