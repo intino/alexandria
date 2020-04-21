@@ -14,12 +14,9 @@
     <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: org.hamcrest:hamcrest-core:1.3" level="project" />
     <orderEntry type="module" module-name="xml" />
-    <orderEntry type="library" name="Intino: javax.xml.bind:jaxb-api:2.3.1" level="project" />
-    <orderEntry type="library" name="Intino: javax.activation:javax.activation-api:1.2.0" level="project" />
     <orderEntry type="module" module-name="logger" />
     <orderEntry type="module" module-name="json" />
     <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.8.6" level="project" />
-    <orderEntry type="module" module-name="http" />
     <orderEntry type="library" name="Intino: org.bouncycastle:bcmail-jdk15:1.45" level="project" />
     <orderEntry type="library" name="Intino: org.bouncycastle:bcprov-jdk15:1.45" level="project" />
     <orderEntry type="library" name="Intino: com.sparkjava:spark-core:2.7.2" level="project" />
@@ -43,7 +40,10 @@
     <orderEntry type="library" name="Intino: eu.medsea.mimeutil:mime-util:2.1.1" level="project" />
     <orderEntry type="module" module-name="exceptions" />
     <orderEntry type="module" module-name="primitives" />
-    <orderEntry type="library" name="Intino: org.slf4j:slf4j-log4j12:1.5.6" level="project" />
-    <orderEntry type="library" name="Intino: log4j:log4j:1.2.14" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:http:1.0.1" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:exceptions:1.0.0" level="project" />
+    <orderEntry type="library" name="Intino: com.sun.xml.security:xml-security-impl:1.0" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.4" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
   </component>
 </module>
