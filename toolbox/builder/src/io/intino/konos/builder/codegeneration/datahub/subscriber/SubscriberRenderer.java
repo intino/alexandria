@@ -34,7 +34,10 @@ public class SubscriberRenderer {
 		for (Subscriber subscriber : subscribers) {
 			final FrameBuilder builder = baseFrame(subscriber);
 			String type = manifest.tankClasses.get(subscriber.tank());
-			if (type == null) context.addWarning(new WarningMessage(1, "Tank not found", null, 1, 1));
+			if (type == null) {
+				context.addWarning(new WarningMessage(1, "Tank not found", null, 1, 1));
+				continue;
+			}
 			builder.add("type", type);
 			builder.add("typeName", type.substring(type.lastIndexOf(".") + 1));
 			context.classes().put(subscriber.getClass().getSimpleName() + "#" + subscriber.name$(), "subscribers." + subscriber.name$());
