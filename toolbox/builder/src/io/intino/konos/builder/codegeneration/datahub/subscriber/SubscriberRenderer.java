@@ -4,6 +4,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
+import io.intino.konos.builder.context.WarningMessage;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Subscriber;
@@ -26,14 +27,17 @@ public class SubscriberRenderer {
 	}
 
 	public void execute() throws KonosException {
-		if (!subscribers.isEmpty() && context.dataHubManifest() == null)
-			throw new KonosException("Datahub declaration in artifact is required to instance subscribers");
+		CompilationContext.DataHubManifest manifest = context.dataHubManifest();
+		if (!subscribers.isEmpty() && manifest == null)
+			throw new KonosException("Data hub declaration in artifact is required to instance subscribers");
+		if (manifest == null) return;
 		for (Subscriber subscriber : subscribers) {
 			final FrameBuilder builder = baseFrame(subscriber);
-			CompilationContext.DataHubManifest manifest = context.dataHubManifest();
-			if (manifest == null) return;
 			String type = manifest.tankClasses.get(subscriber.tank());
-			if (type == null) return;
+			if (type == null) {
+				context.addWarning(new WarningMessage(1, "Tank not found", null, 1, 1));
+				continue;
+			}
 			builder.add("type", type);
 			builder.add("typeName", type.substring(type.lastIndexOf(".") + 1));
 			context.classes().put(subscriber.getClass().getSimpleName() + "#" + subscriber.name$(), "subscribers." + subscriber.name$());

@@ -50,7 +50,7 @@ class KonosCompilerRunner {
 	}
 
 	private List<OutputItem> compile(CompilerConfiguration config, Map<File, Boolean> sources, List<CompilerMessage> messages, List<PostCompileActionMessage> postCompileActionMessages) {
-		if (!sources.containsValue(false)) cleanOut(config);
+		if (!sources.containsValue(false) && config.mode().equals(Mode.Normal)) cleanOut(config);
 		return new ArrayList<>(compileSources(config, sources, messages, postCompileActionMessages));
 	}
 
