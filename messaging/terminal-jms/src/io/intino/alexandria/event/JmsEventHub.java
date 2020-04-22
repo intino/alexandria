@@ -60,22 +60,22 @@ public class JmsEventHub implements EventHub {
 		jmsConsumers = new HashMap<>();
 		eventConsumers = new HashMap<>();
 		threads = new ArrayList<>();
-		if (brokerUrl != null && !brokerUrl.isEmpty()) connect();
-		else Logger.warn("Broker url is null");
-		scheduler = Executors.newScheduledThreadPool(1);
-		scheduler.scheduleAtFixedRate(this::checkConnection, 15, 15, TimeUnit.MINUTES);
 	}
 
-	private void connect() {
+	public void start() {
+		if (brokerUrl == null || brokerUrl.isEmpty()) {
+			Logger.warn("Broker url is null");
+			return;
+		}
 		Thread thread = Thread.currentThread();
 		new Thread(() -> {
 			initConnection();
 			thread.interrupt();
-		}).start();
+		}, "JmsEventHub start").start();
 		try {
 			try {
 				Thread.sleep(5000);
-			} catch (InterruptedException e) {
+			} catch (InterruptedException ignored) {
 			}
 			if (connection != null && ((ActiveMQConnection) connection).isStarted()) {
 				session = createSession(transactedSession);
@@ -85,6 +85,8 @@ public class JmsEventHub implements EventHub {
 			Logger.error(e);
 		}
 		started = new AtomicBoolean(true);
+		scheduler = Executors.newScheduledThreadPool(1);
+		scheduler.scheduleAtFixedRate(this::checkConnection, 15, 15, TimeUnit.MINUTES);
 	}
 
 	private void checkConnection() {
@@ -99,15 +101,8 @@ public class JmsEventHub implements EventHub {
 			connected.set(true);
 			return;
 		}
-		try {
-			if (!((ActiveMQSession) session).isClosed()) session.close();
-			connection.close();
-		} catch (JMSException e) {
-			Logger.error(e);
-		}
-		connect();
-		clearProducers();
-		clearConsumers();
+		stop();
+		start();
 		connected.set(true);
 	}
 
@@ -231,9 +226,12 @@ public class JmsEventHub implements EventHub {
 		consumers.values().forEach(JmsConsumer::close);
 		consumers.clear();
 		producers.values().forEach(JmsProducer::close);
+		producers.clear();
 		try {
 			session.close();
 			connection.close();
+			session = null;
+			connection = null;
 		} catch (JMSException e) {
 			Logger.error(e);
 		}
