@@ -290,11 +290,10 @@ def type(datalake & mirror) trigger(init)
 end
 
 def type(terminal) trigger(init)
-	[if(this.terminal != null) {
+	if (this.terminal != null) {
 		terminal.start();
 		$subscriber...[$NL]
 	}
-	]
 end
 
 def type(messageHub) trigger(init)
