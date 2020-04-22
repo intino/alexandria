@@ -28,5 +28,6 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.4" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:zim:2.0.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:message:2.0.0" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:event:1.1.0" level="project" />
   </component>
 </module>
