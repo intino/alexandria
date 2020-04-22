@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static io.intino.alexandria.jms.MessageReader.textFrom;
+import static java.lang.Thread.State.TERMINATED;
 import static javax.jms.Session.AUTO_ACKNOWLEDGE;
 import static javax.jms.Session.SESSION_TRANSACTED;
 
@@ -41,6 +42,7 @@ public class JmsEventHub implements EventHub {
 	private AtomicBoolean started = new AtomicBoolean(false);
 	private AtomicBoolean recoveringEvents = new AtomicBoolean(false);
 	private ScheduledExecutorService scheduler;
+	private List<Thread> threads;
 
 	public JmsEventHub(String brokerUrl, String user, String password, String clientId, File messageCacheDirectory) {
 		this(brokerUrl, user, password, clientId, false, messageCacheDirectory);
@@ -57,6 +59,7 @@ public class JmsEventHub implements EventHub {
 		consumers = new HashMap<>();
 		jmsConsumers = new HashMap<>();
 		eventConsumers = new HashMap<>();
+		threads = new ArrayList<>();
 		if (brokerUrl != null && !brokerUrl.isEmpty()) connect();
 		else Logger.warn("Broker url is null");
 		scheduler = Executors.newScheduledThreadPool(1);
@@ -86,8 +89,13 @@ public class JmsEventHub implements EventHub {
 
 	private void checkConnection() {
 		Logger.debug("Checking DataHub connection...");
-		if (brokerUrl.startsWith("failover") && !connected.get()) return;
+		threads.removeAll(threads.stream().filter(t -> !t.getState().equals(TERMINATED)).collect(Collectors.toList()));
+		if (brokerUrl.startsWith("failover") && !connected.get()) {
+			Logger.debug("Currently disconnected. Waiting for reconnection...");
+			return;
+		}
 		if (connection != null && ((ActiveMQConnection) connection).isStarted() && ((ActiveMQSession) session).isRunning()) {
+			Logger.debug("Currently Connected");
 			connected.set(true);
 			return;
 		}
@@ -116,10 +124,12 @@ public class JmsEventHub implements EventHub {
 	@Override
 	public synchronized void sendEvent(String channel, Event event) {
 		new ArrayList<>(eventConsumers.getOrDefault(channel, Collections.emptyList())).forEach(eventConsumer -> eventConsumer.accept(event));
-		new Thread(() -> {
+		Thread thread = new Thread(() -> {
 			if (connected.get() && !eventOutBox.isEmpty() && !recoveringEvents.get()) recoverEvents();
 			if (!doSendEvent(channel, event)) eventOutBox.push(channel, event);
-		}).start();
+		}, "JmsEventHub.SendEvent");
+		threads.add(thread);
+		thread.start();
 	}
 
 	public void requestResponse(String channel, String event, Consumer<String> onResponse) {
