@@ -291,6 +291,7 @@ end
 
 def type(terminal) trigger(init)
 	[if(this.terminal != null) {
+		terminal.start();
 		$subscriber...[$NL]
 	}
 	]
