@@ -94,7 +94,7 @@ def type(parameter & accessible) trigger(parameter)
 end
 
 def type(list) trigger(parameter)
-    io.intino.alexandria.Json.fromString(manager.fromQuery("v"), $value~$[].class)
+    java.util.List.of(io.intino.alexandria.Json.fromString(manager.fromQuery("v"), $value~$[].class))
 end
 
 def type(parameter & file) trigger(parameter)

@@ -12,7 +12,7 @@ public class PassiveViewPushRequesterTemplate extends Template {
 			rule().condition((allTypes("request","file")), (trigger("request"))),
 			rule().condition((allTypes("request","asset")), (trigger("request"))),
 			rule().condition((type("request")), (trigger("request"))).output(literal("if (operation.equals(\"")).output(mark("name")).output(literal("\")) {\n\tdisplay.")).output(mark("name")).output(literal("(")).output(mark("parameter")).output(literal(");\n\treturn;\n}")),
-			rule().condition((type("list")), (trigger("parameter"))).output(literal("io.intino.alexandria.Json.fromString(data, ")).output(mark("value")).output(literal("[].class)")),
+			rule().condition((type("list")), (trigger("parameter"))).output(literal("java.util.List.of(io.intino.alexandria.Json.fromString(data, ")).output(mark("value")).output(literal("[].class))")),
 			rule().condition((allTypes("parameter","file")), (trigger("parameter"))),
 			rule().condition((allTypes("parameter","String")), (trigger("parameter"))).output(literal("data")),
 			rule().condition((allTypes("parameter","Double")), (trigger("parameter"))).output(literal("Double.parseDouble(data)")),
