@@ -15,5 +15,6 @@
     <orderEntry type="module" module-name="message" />
     <orderEntry type="module" module-name="logger" />
     <orderEntry type="module" module-name="primitives" />
+    <orderEntry type="library" scope="TEST" name="Intino: org.assertj:assertj-core:3.15.0" level="project" />
   </component>
 </module>

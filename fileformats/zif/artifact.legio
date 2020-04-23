@@ -5,7 +5,7 @@ Artifact(groupId = "io.intino.alexandria", version = "2.0.0") zif
 	Imports
 		Compile("io.intino.alexandria", "zip", "1.0.0")
 		Test("junit", "junit", "4.12")
-		Test("org.assertj", "assertj-core", "3.8.0")
+		Test("org.assertj", "assertj-core", "3.15.0")
 	Distribution(intino.release)
 
 Repository("intino-maven") intino

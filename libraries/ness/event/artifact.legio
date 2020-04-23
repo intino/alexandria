@@ -1,13 +1,12 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.alexandria", version = "1.1.0") event
+Artifact("io.intino.alexandria", "1.2.0") event
 	Imports
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Compile("io.intino.alexandria", "zim", "2.0.0")
 		Test("junit", "junit", "LATEST")
-	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.release)
 
-
-Repository(identifier = "intino-maven") intino
+Repository("intino-maven") intino
 	Release("https://artifactory.intino.io/artifactory/release-libraries") release

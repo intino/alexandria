@@ -61,7 +61,6 @@ def type(box)
 			if (owner != null) owner.beforeStart();
 			beforeStart();
 			if (owner != null) owner.start();
-			initSentinels();
 			initUI();
 			initRestServices();
 			initSoapServices();
@@ -69,6 +68,7 @@ def type(box)
 			initDatalake();
 			initMessageHub();
 			initTerminal();
+			initSentinels();
 			initMessagingServices();
 			initSlackBots();
 			initWorkflow();
@@ -290,18 +290,17 @@ def type(datalake & mirror) trigger(init)
 end
 
 def type(terminal) trigger(init)
-	[if(this.terminal != null) {
+	if (this.terminal != null) {
 		terminal.start();
 		$subscriber...[$NL]
 	}
-	]
 end
 
 def type(messageHub) trigger(init)
 	[if(this.messageHub != null) {
 		$subscriber...[$NL]
-	}
-	]
+	}]
+
 	[registerFeeders();$feeder+hide]
 	Logger.info("Message Hub connected!");
 end
