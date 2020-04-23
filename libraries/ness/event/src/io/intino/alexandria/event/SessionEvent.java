@@ -4,8 +4,10 @@ import java.time.Instant;
 import java.util.UUID;
 
 public class SessionEvent extends Event {
+	public static final String PATH = "Session";
+
 	public SessionEvent() {
-		super("Session");
+		super(PATH);
 		ts = Instant.now();
 		ss = UUID.randomUUID() + "@" + ts.toString();
 	}
