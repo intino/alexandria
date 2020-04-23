@@ -5,7 +5,7 @@ Artifact("io.intino.alexandria", "2.0.0") zim
 		Compile("io.intino.alexandria", "message", "2.0.0")
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Test("junit", "junit", "4.12")
-		Test("org.assertj", "assertj-core", "3.12.2")
+		Test("org.assertj", "assertj-core", "3.15.0")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.releases)
 

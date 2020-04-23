@@ -1,14 +1,14 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "2.1.0") datalake
+Artifact("io.intino.alexandria", "2.2.0") datalake
 	Imports
-		Compile("io.intino.alexandria", "event", "1.1.0")
+		Compile("io.intino.alexandria", "event", "1.2.0")
 		Compile("io.intino.alexandria", "zet", "1.0.5")
 		Compile("io.intino.alexandria", "mapp", "1.0.0")
 		Compile("io.intino.alexandria", "tris", "1.0.0")
 		Compile("io.intino.alexandria", "primitives", "1.0.4")
 		Test("junit", "junit", "LATEST")
-		Test("org.assertj", "assertj-core", "3.11.1")
+		Test("org.assertj", "assertj-core", "3.15.0")
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.release)
 
