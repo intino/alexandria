@@ -15,10 +15,9 @@
     <orderEntry type="module" module-name="primitives" />
     <orderEntry type="module" module-name="zet" />
     <orderEntry type="module" module-name="tris" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13" level="project" />
-    <orderEntry type="module" module-name="event" />
     <orderEntry type="module" module-name="logger" />
+    <orderEntry type="module" module-name="event" />
     <orderEntry type="module" module-name="zim" />
     <orderEntry type="module" module-name="message" />
   </component>
