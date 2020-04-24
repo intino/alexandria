@@ -1,6 +1,8 @@
 package io.intino.alexandria.bpm;
 
 
+import io.intino.alexandria.Scale;
+import io.intino.alexandria.Timetag;
 import io.intino.alexandria.logger.Logger;
 
 import java.util.ArrayList;
@@ -165,6 +167,10 @@ public abstract class Process {
 
 	public String finishStatus() {
 		return processStatusList().get(processStatusList().size() - 1).processStatus();
+	}
+
+	public String timetag() {
+		return Timetag.of(processStatusList.get(0).ts(), Scale.Month).toString();
 	}
 
 	public enum Status {Enter, Running, Exit}

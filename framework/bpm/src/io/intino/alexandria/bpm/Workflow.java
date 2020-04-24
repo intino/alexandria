@@ -1,5 +1,7 @@
 package io.intino.alexandria.bpm;
 
+import io.intino.alexandria.Scale;
+import io.intino.alexandria.Timetag;
 import io.intino.alexandria.bpm.PersistenceManager.InMemoryPersistenceManager;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
@@ -8,6 +10,7 @@ import io.intino.alexandria.message.MessageWriter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -106,13 +109,14 @@ public abstract class Workflow {
 	}
 
 	private void addMessageToFinishedProcess(ProcessStatus status) {
-		List<ProcessStatus> statuses = messagesOf(finishedPathOf(status.processId()));
-		if (statuses.isEmpty()) {
+		String finishedPath = finishedPathOf(status.processId());
+		if (finishedPath == null) {
 			Logger.error("Received status from non-existing process: " + status.processId());
 			return;
 		}
+		List<ProcessStatus> statuses = messagesOf(finishedPath);
 		statuses.add(status);
-		write(finishedPathOf(status.processId()), statuses, null);
+		write(finishedPath, statuses, null);
 	}
 
 	private List<ProcessStatus> messagesOf(String path) {
@@ -132,7 +136,7 @@ public abstract class Workflow {
 			terminateProcess(process);
 			persistence.delete(activePathOf(process.id()));
 			persistence.delete(dataPath(activePathOf(process.id())));
-			write(finishedPathOf(process.id()), process);
+			write(finishedPathOf(process), process);
 		} else write(activePathOf(process.id()), process);
 	}
 
@@ -165,8 +169,19 @@ public abstract class Workflow {
 		return "active/" + id + ".process";
 	}
 
-	private String finishedPathOf(String id) {
-		return "finished/" + id + ".process";
+	private String finishedPathOf(Process process) {
+		return "finished/" + process.timetag() + "/" + process.id() + ".process";
+	}
+
+	private String finishedPathOf(String processId) {
+		Timetag timetag = Timetag.of(Instant.now(), Scale.Month);
+		Timetag until = timetag.previous(10);
+		while (!timetag.isBefore(until)) {
+			String path = "finished/" + timetag + "/" + processId + ".process";
+			if (persistence.exists(path)) return path;
+			timetag = timetag.previous();
+		}
+		return null;
 	}
 
 	private void initProcess(ProcessStatus status) {

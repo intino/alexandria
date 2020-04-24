@@ -20,6 +20,8 @@ public interface PersistenceManager {
 
 	OutputStream write(String path);
 
+	boolean exists(String path);
+
 	class FilePersistenceManager implements PersistenceManager {
 		private final File directory;
 
@@ -61,6 +63,11 @@ public interface PersistenceManager {
 				return null;
 			}
 		}
+
+		@Override
+		public boolean exists(String path) {
+			return new File(directory, path).exists();
+		}
 	}
 
 	class InMemoryPersistenceManager implements PersistenceManager {
@@ -88,6 +95,11 @@ public interface PersistenceManager {
 		public OutputStream write(String path) {
 			content.put(path, new ByteArrayOutputStream());
 			return content.get(path);
+		}
+
+		@Override
+		public boolean exists(String path) {
+			return content.containsKey(path);
 		}
 	}
 }

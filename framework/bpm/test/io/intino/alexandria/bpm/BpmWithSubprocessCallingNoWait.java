@@ -1,12 +1,15 @@
 package io.intino.alexandria.bpm;
 
+import io.intino.alexandria.Timetag;
 import io.intino.alexandria.message.Message;
 import org.junit.Test;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.intino.alexandria.Scale.Month;
 import static io.intino.alexandria.bpm.Link.Type.Inclusive;
 import static io.intino.alexandria.bpm.State.Type.Initial;
 import static io.intino.alexandria.bpm.State.Type.Terminal;
@@ -32,10 +35,10 @@ public class BpmWithSubprocessCallingNoWait extends BpmTest {
 		};
 		workflow.send(createProcessMessage());
 		waitForProcess(persistence);
-		List<ProcessStatus> messages1 = messagesOf(persistence.read("finished/1.process"));
+		List<ProcessStatus> messages1 = messagesOf(persistence.read("finished/201901/1.process"));
 		assertThat(messages1.get(0).get().toString(), is(createProcessMessage().get().toString()));
-		Map<String, String> data = data(persistence, "finished/1.data");
-		Map<String, String> data2 = data(persistence, "finished/2.data");
+		Map<String, String> data = data(persistence, "finished/201901/1.data");
+		Map<String, String> data2 = data(persistence, "finished/201901/2.data");
 		if (data.get("createstring").equals("Hello"))
 			assertThat(data2.get("checkstring"), is("true"));
 		else assertThat(data2.get("checkstring"), is("false"));

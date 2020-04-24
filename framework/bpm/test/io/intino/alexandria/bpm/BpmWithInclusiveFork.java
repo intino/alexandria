@@ -1,11 +1,14 @@
 package io.intino.alexandria.bpm;
 
+import io.intino.alexandria.Timetag;
 import io.intino.alexandria.message.Message;
 import org.junit.Test;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
+import static io.intino.alexandria.Scale.Month;
 import static io.intino.alexandria.bpm.Link.Type.Inclusive;
 import static io.intino.alexandria.bpm.State.Type.Initial;
 import static io.intino.alexandria.bpm.State.Type.Terminal;
@@ -26,12 +29,12 @@ public class BpmWithInclusiveFork extends BpmTest {
 			}
 		}.send(createProcessMessage());
 		waitForProcess(persistence);
-		List<ProcessStatus> messages = messagesOf(persistence.read("finished/1.process"));
+		List<ProcessStatus> messages = messagesOf(persistence.read("finished/201901/1.process"));
 		assertThat(messages.get(1).stateInfo().name(), is("CreateString"));
 		assertThat(messages.get(1).stateInfo().status(), is("Enter"));
 		assertThat(messages.get(2).stateInfo().name(), is("CreateString"));
 		assertThat(messages.get(2).stateInfo().status(), is("Exit"));
-		Map<String, String> data = data(persistence, "finished/1.data");
+		Map<String, String> data = data(persistence, "finished/201901/1.data");
 		if (data.get("createstring").equals("Hello:Goodbye"))
 			assertThat(data.get("joinresult"), is("Hi:Bye"));
 		else assertThat(data.get("joinresult"), is("Bye:Hi"));

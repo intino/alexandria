@@ -1,10 +1,13 @@
 package io.intino.alexandria.bpm;
 
+import io.intino.alexandria.Timetag;
 import org.junit.Test;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
+import static io.intino.alexandria.Scale.Month;
 import static io.intino.alexandria.bpm.Link.Type.Exclusive;
 import static io.intino.alexandria.bpm.Link.Type.Inclusive;
 import static io.intino.alexandria.bpm.State.Type.Initial;
@@ -26,7 +29,7 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 			}
 		}.registerProcess(new StringContentReviewerProcess("1"));
 		waitForProcess(persistence);
-		List<ProcessStatus> messages = messagesOf(persistence.read("finished/1.process"));
+		List<ProcessStatus> messages = messagesOf(persistence.read("finished/" + Timetag.of(Instant.now(), Month) + "/1.process"));
 		assertThat(messages.get(0).processStatus(), is("Enter"));
 		assertThat(messages.get(1).stateInfo().name(), is("CreateString"));
 		assertThat(messages.get(1).stateInfo().status(), is("Enter"));
@@ -37,7 +40,7 @@ public class BpmWithExclusiveForkAndDeathPath extends BpmTest {
 		assertThat(messages.get(4).stateInfo().name(), is("CheckContainsHello"));
 		assertThat(messages.get(4).stateInfo().status(), is("Exit"));
 
-		Map<String, String> data = data(persistence, "finished/1.data");
+		Map<String, String> data = data(persistence, "finished/" + Timetag.of(Instant.now(), Month) + "/1.data");
 		if (data.get("createstring").equals("Hello")) {
 			assertThat(data.get("processhello2"), is("Processing hello2"));
 			assertThat(exitStateStatus(messages, "ProcessGoodbye2").stateInfo().status(), is("Skipped"));
