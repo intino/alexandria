@@ -228,8 +228,8 @@ public class JmsEventHub implements EventHub {
 		producers.values().forEach(JmsProducer::close);
 		producers.clear();
 		try {
-			session.close();
-			connection.close();
+			if (session != null) session.close();
+			if (connection != null) connection.close();
 			session = null;
 			connection = null;
 		} catch (JMSException e) {
