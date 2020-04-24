@@ -19,6 +19,7 @@ public class PassiveViewRequesterTemplate extends Template {
 			rule().condition((trigger("request"))).output(mark("name")).output(literal(" = (")).output(expression().output(mark("parameterSignature"))).output(literal(") => {\n    if (this.addToHistory(")).output(expression().output(mark("parameterSignature"))).output(literal(")) return;\n    ")).output(mark("method")).output(literal("({ op: \"")).output(mark("name")).output(literal("\", s: \"")).output(mark("display", "lowercase")).output(literal("\", d: this.element.props.id, o: this.element.props.owner(), c: this.element.props.context()")).output(expression().output(literal(", v: ")).output(mark("parameter"))).output(literal("}, this.element.ownerUnit());\n};")),
 			rule().condition((type("object")), (trigger("parameter"))).output(literal("encodeURIComponent(JSON.stringify(value))")),
 			rule().condition((type("list")), (trigger("parameter"))).output(literal("encodeURIComponent(JSON.stringify(value))")),
+			rule().condition((type("file")), (trigger("parameter"))).output(literal("value")),
 			rule().condition((trigger("parameter"))).output(literal("encodeURIComponent(value)")),
 			rule().condition((attribute("upload")), (trigger("method"))).output(literal("this.fileService.upload")),
 			rule().condition((attribute("download")), (trigger("method"))).output(literal("this.fileService.download")),
