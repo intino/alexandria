@@ -133,7 +133,7 @@ public abstract class Process {
 	}
 
 	public Map<String, String> data() {
-		return data;
+		return new HashMap<>(data);
 	}
 
 	public boolean isFinished() {

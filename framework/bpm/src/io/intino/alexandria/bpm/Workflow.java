@@ -49,6 +49,10 @@ public abstract class Workflow {
 		}));
 	}
 
+	public List<Process> processes() {
+		return new ArrayList<>(processes.values());
+	}
+
 	public void exitState(String processId, String processName, String stateName) {
 		send(new ProcessStatus(processId, processName, Running)
 				.addStateInfo(stateName, State.Status.Exit));
