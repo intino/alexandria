@@ -59,7 +59,7 @@ def type(list) trigger(parameter)
 end
 
 def trigger(parameter)
-	value
+	encodeURIComponent(value)
 end
 
 def attribute(upload) trigger(method)

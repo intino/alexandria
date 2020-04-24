@@ -45,7 +45,7 @@ def type(request) trigger(request)
 end
 
 def type(list) trigger(parameter)
-	io.intino.alexandria.Json.fromString(data, $value~$[].class)
+	java.util.List.of(io.intino.alexandria.Json.fromString(data, $value~$[].class))
 end
 
 def type(parameter & file) trigger(parameter)

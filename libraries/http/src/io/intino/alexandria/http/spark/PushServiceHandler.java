@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-@WebSocket
+@WebSocket(maxTextMessageSize = 5 * 1024 * 1024)
 public class PushServiceHandler {
 	private static PushService pushService;
 	private Map<String, SparkClient> clientsMap = new HashMap<>();
