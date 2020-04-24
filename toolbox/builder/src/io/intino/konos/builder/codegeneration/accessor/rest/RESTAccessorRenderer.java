@@ -137,7 +137,7 @@ public class RESTAccessorRenderer extends Renderer {
 	private Frame doInvoke(Operation operation, boolean authenticated, boolean cert) {
 		final FrameBuilder builder = new FrameBuilder("doInvoke")
 				.add("relativePath", processPath(Commons.path(operation.core$().ownerAs(Resource.class))))
-				.add("type", operation.response().isFile() ? "getResource" : operation.getClass().getSimpleName().toLowerCase());
+				.add("type", operation.response() != null && operation.response().isFile() ? "getResource" : operation.getClass().getSimpleName().toLowerCase());
 		if (authenticated) builder.add("auth");
 		if (cert) builder.add("cert");
 		if (Commons.queryParameters(operation) > 0 || Commons.bodyParameters(operation) > 0)
