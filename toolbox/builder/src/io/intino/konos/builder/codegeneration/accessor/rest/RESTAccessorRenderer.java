@@ -130,14 +130,14 @@ public class RESTAccessorRenderer extends Renderer {
 		else if (response.isDate()) result = dateInvokeSentence(response.asDate());
 		else if (response.isDateTime()) result = dateTimeInvokeSentence(response.asDateTime());
 		else result = primitiveInvokeSentence(response.asType());
-		if (response.isList()) result.add("list");
+		if (response != null && response.isList()) result.add("list");
 		return result.add("doInvoke", doInvoke(operation, authenticated, cert)).toFrame();
 	}
 
 	private Frame doInvoke(Operation operation, boolean authenticated, boolean cert) {
 		final FrameBuilder builder = new FrameBuilder("doInvoke")
 				.add("relativePath", processPath(Commons.path(operation.core$().ownerAs(Resource.class))))
-				.add("type", operation.response().isFile() ? "getResource" : operation.getClass().getSimpleName().toLowerCase());
+				.add("type", operation.response() != null && operation.response().isFile() ? "getResource" : operation.getClass().getSimpleName().toLowerCase());
 		if (authenticated) builder.add("auth");
 		if (cert) builder.add("cert");
 		if (Commons.queryParameters(operation) > 0 || Commons.bodyParameters(operation) > 0)

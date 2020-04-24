@@ -5,9 +5,8 @@ Artifact("io.intino.alexandria", "1.2.0") event
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Compile("io.intino.alexandria", "zim", "2.0.0")
 		Test("junit", "junit", "LATEST")
-	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.release)
-
 
 Repository("intino-maven") intino
 	Release("https://artifactory.intino.io/artifactory/release-libraries") release

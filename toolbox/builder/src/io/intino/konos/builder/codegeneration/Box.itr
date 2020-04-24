@@ -18,19 +18,19 @@ def type(box)
 		}
 
 
-		protected void beforeStart() {
+		public void beforeStart() {
 
 		}
 
-		protected void afterStart() {
+		public void afterStart() {
 
 		}
 
-		protected void beforeStop() {
+		public void beforeStop() {
 
 		}
 
-		protected void afterStop() {
+		public void afterStop() {
 
 		}
 

@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static io.intino.alexandria.jms.MessageReader.textFrom;
+import static java.lang.Thread.State.TERMINATED;
 import static javax.jms.Session.AUTO_ACKNOWLEDGE;
 import static javax.jms.Session.SESSION_TRANSACTED;
 
@@ -41,6 +42,7 @@ public class JmsEventHub implements EventHub {
 	private AtomicBoolean started = new AtomicBoolean(false);
 	private AtomicBoolean recoveringEvents = new AtomicBoolean(false);
 	private ScheduledExecutorService scheduler;
+	private List<Thread> threads;
 
 	public JmsEventHub(String brokerUrl, String user, String password, String clientId, File messageCacheDirectory) {
 		this(brokerUrl, user, password, clientId, false, messageCacheDirectory);
@@ -57,22 +59,23 @@ public class JmsEventHub implements EventHub {
 		consumers = new HashMap<>();
 		jmsConsumers = new HashMap<>();
 		eventConsumers = new HashMap<>();
-		if (brokerUrl != null && !brokerUrl.isEmpty()) connect();
-		else Logger.warn("Broker url is null");
-		scheduler = Executors.newScheduledThreadPool(1);
-		scheduler.scheduleAtFixedRate(this::checkConnection, 15, 15, TimeUnit.MINUTES);
+		threads = new ArrayList<>();
 	}
 
-	private void connect() {
+	public void start() {
+		if (brokerUrl == null || brokerUrl.isEmpty()) {
+			Logger.warn("Broker url is null");
+			return;
+		}
 		Thread thread = Thread.currentThread();
 		new Thread(() -> {
 			initConnection();
 			thread.interrupt();
-		}).start();
+		}, "JmsEventHub start").start();
 		try {
 			try {
 				Thread.sleep(5000);
-			} catch (InterruptedException e) {
+			} catch (InterruptedException ignored) {
 			}
 			if (connection != null && ((ActiveMQConnection) connection).isStarted()) {
 				session = createSession(transactedSession);
@@ -82,24 +85,24 @@ public class JmsEventHub implements EventHub {
 			Logger.error(e);
 		}
 		started = new AtomicBoolean(true);
+		scheduler = Executors.newScheduledThreadPool(1);
+		scheduler.scheduleAtFixedRate(this::checkConnection, 15, 15, TimeUnit.MINUTES);
 	}
 
 	private void checkConnection() {
 		Logger.debug("Checking DataHub connection...");
-		if (brokerUrl.startsWith("failover") && !connected.get()) return;
+		threads.removeAll(threads.stream().filter(t -> !t.getState().equals(TERMINATED)).collect(Collectors.toList()));
+		if (brokerUrl.startsWith("failover") && !connected.get()) {
+			Logger.debug("Currently disconnected. Waiting for reconnection...");
+			return;
+		}
 		if (connection != null && ((ActiveMQConnection) connection).isStarted() && ((ActiveMQSession) session).isRunning()) {
+			Logger.debug("Currently Connected");
 			connected.set(true);
 			return;
 		}
-		try {
-			if (!((ActiveMQSession) session).isClosed()) session.close();
-			connection.close();
-		} catch (JMSException e) {
-			Logger.error(e);
-		}
-		connect();
-		clearProducers();
-		clearConsumers();
+		stop();
+		start();
 		connected.set(true);
 	}
 
@@ -116,10 +119,12 @@ public class JmsEventHub implements EventHub {
 	@Override
 	public synchronized void sendEvent(String channel, Event event) {
 		new ArrayList<>(eventConsumers.getOrDefault(channel, Collections.emptyList())).forEach(eventConsumer -> eventConsumer.accept(event));
-		new Thread(() -> {
+		Thread thread = new Thread(() -> {
 			if (connected.get() && !eventOutBox.isEmpty() && !recoveringEvents.get()) recoverEvents();
 			if (!doSendEvent(channel, event)) eventOutBox.push(channel, event);
-		}).start();
+		}, "JmsEventHub.SendEvent");
+		threads.add(thread);
+		thread.start();
 	}
 
 	public void requestResponse(String channel, String event, Consumer<String> onResponse) {
@@ -221,9 +226,12 @@ public class JmsEventHub implements EventHub {
 		consumers.values().forEach(JmsConsumer::close);
 		consumers.clear();
 		producers.values().forEach(JmsProducer::close);
+		producers.clear();
 		try {
 			session.close();
 			connection.close();
+			session = null;
+			connection = null;
 		} catch (JMSException e) {
 			Logger.error(e);
 		}

@@ -22,7 +22,7 @@ class DecisionDialog extends AbstractDecisionDialog {
 	render() {
 		return (
 			<MuiDialog fullScreen={this.props.fullscreen} open={this.state.opened}
-			           fullWidth={this._widthDefined()} maxWidth={this._widthDefined() ? "xl" : "xs"}
+			           fullWidth={this._widthDefined()} maxWidth={this._widthDefined() ? "xl" : "sm"}
 			           onClose={this.handleClose.bind(this)}
 					   disableBackdropClick={this.state.modal}
 					   disableEscapeKeyDown={this.state.modal}

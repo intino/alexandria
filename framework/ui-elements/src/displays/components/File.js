@@ -92,7 +92,7 @@ class File extends AbstractFile {
                         <Button style={{margin:'8px'}} variant="contained" color="primary" onClick={this._downloadFile.bind(this, file)}><SaveAltIcon style={{marginRight:"5px"}}/>{downloadTitle}</Button>
                     </div>
                     <div className="layout vertical flex">
-                        <pre style={{width:this.width,height:this.height,border:0,fontSize:'10pt',background:'#eee',padding:'10px',marginTop:'0',overflow:'auto'}}><code>{this.state.data}></code></pre>
+                        <pre style={{width:this.width,height:this.height,border:0,fontSize:'10pt',background:'#eee',padding:'10px',marginTop:'0',overflow:'auto'}}><code>{this.state.data}</code></pre>
                     </div>
                 </div>
             );
@@ -139,7 +139,7 @@ class File extends AbstractFile {
 	};
 
 	refresh = (info) => {
-		this.setState({ "value" : info.value, "filename": info.filename, "mimeType": info.mimeType });
+		this.setState({ "value" : info.value, "filename": info.filename, "mimeType": info.mimeType, data: null });
 	};
 
 	_downloadFile = (file) => {

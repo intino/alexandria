@@ -22,7 +22,7 @@ class AlertDialog extends AbstractAlertDialog {
 	render() {
 		return (
 			<Dialog fullScreen={this.props.fullscreen}
-                    fullWidth={this._widthDefined()} maxWidth={this._widthDefined() ? "xl" : "xs"}
+                    fullWidth={this._widthDefined()} maxWidth={this._widthDefined() ? "xl" : "sm"}
 			        open={this.state.opened} onClose={this.handleClose.bind(this)}
                     disableBackdropClick={this.state.modal}
                     disableEscapeKeyDown={this.state.modal}

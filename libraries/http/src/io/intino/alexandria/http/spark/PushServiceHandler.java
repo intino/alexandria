@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-@WebSocket
+@WebSocket(maxTextMessageSize = 5 * 1024 * 1024)
 public class PushServiceHandler {
 	private static PushService pushService;
 	private Map<String, SparkClient> clientsMap = new HashMap<>();
@@ -35,8 +35,18 @@ public class PushServiceHandler {
 
 	@OnWebSocketError
 	public void onError(Session session, Throwable error) {
+		String sessionId = SparkClient.sessionId(session);
+		try {
+			if (closeTimersMap.containsKey(sessionId)) {
+				closeTimersMap.get(sessionId).cancel();
+				closeTimersMap.remove(sessionId);
+			}
+		}
+		catch (Throwable ex) {
+			Logger.error(ex);
+		}
 		if (error.getMessage() != null) Logger.debug(error.getMessage());
-		else Logger.error(error);
+		else Logger.debug(error.toString());
 	}
 
 	@OnWebSocketClose
