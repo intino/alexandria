@@ -7,9 +7,9 @@ Artifact("io.intino.alexandria", "1.2.4-SNAPSHOT") bpm-framework
 		Test("junit", "junit", "LATEST")
 
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
-	Distribution(intino.release, snapshot =intino.snapshot)
+	Distribution(intino.release, snapshot=intino.snapshot)
 
 Repository("intino-maven") intino
 	Release("https://artifactory.intino.io/artifactory/releases")
-	Snapshot("https://artifactory.intino.io/artifactory/snapshots") snapshot
+	Snapshot("https://artifactory.intino.io/artifactory/snapshots-frameworks") snapshot
 	Release("https://artifactory.intino.io/artifactory/release-frameworks") release
