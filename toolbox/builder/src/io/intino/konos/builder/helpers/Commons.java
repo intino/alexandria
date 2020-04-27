@@ -1,5 +1,7 @@
 package io.intino.konos.builder.helpers;
 
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.model.graph.Data;
 import io.intino.konos.model.graph.Redirect;
 import io.intino.konos.model.graph.Response;
@@ -35,6 +37,16 @@ public class Commons {
 		} catch (IOException e) {
 			LOG.severe(e.getMessage());
 		}
+	}
+
+	public static Frame fileFrame(String directory, String packageName) {
+		if (directory.startsWith(".archetype")) {
+			String boxPackage = packageName;
+			boxPackage = boxPackage.substring(0, boxPackage.lastIndexOf("."));
+			String archetypePath = Commons.archetypePath(directory);
+			return new FrameBuilder("archetype").add("package", boxPackage).add("path", archetypePath).toFrame();
+		}
+		return new FrameBuilder("file").add("path", directory).toFrame();
 	}
 
 	public static void write(File file, String text) {

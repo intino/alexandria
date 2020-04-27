@@ -84,21 +84,10 @@ public class SentinelsRenderer extends Renderer {
 	private Frame processFileListenerSentinel(Sentinel.FileListener sentinel) {
 		final FrameBuilder builder = new FrameBuilder().add("sentinel").add(sentinel.getClass().getSimpleName())
 				.add("event", sentinel.events().stream().map(Enum::name).toArray(String[]::new))
-				.add("file", file(sentinel))
+				.add("file", Commons.fileFrame(sentinel.file(), packageName()))
 				.add("name", sentinel.name$())
 				.add("package", packageName());
 		return builder.toFrame();
-	}
-
-	private Frame file(Sentinel.FileListener sentinel) {
-		String directory = sentinel.file();
-		if (directory.startsWith(".archetype")) {
-			String boxPackage = packageName();
-			boxPackage = boxPackage.substring(0, boxPackage.lastIndexOf("."));
-			String archetypePath = Commons.archetypePath(directory);
-			return new FrameBuilder("archetype").add("package", boxPackage).add("path", archetypePath).toFrame();
-		}
-		return new FrameBuilder("file").add("path", directory).toFrame();
 	}
 
 	private Template template() {

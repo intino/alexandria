@@ -282,7 +282,7 @@ def type(sentinel) trigger(init)
 end
 
 def type(workflow) trigger(init)
-	this.workflow = new $package.bpm.Workflow(($box+SnakeCaseToCamelCase+FirstUpperCase~Box)this, $parameter);
+	this.workflow = new $package.bpm.Workflow(($box+SnakeCaseToCamelCase+FirstUpperCase~Box)this[, $parameter]);
 end
 
 def type(datalake & mirror) trigger(init)

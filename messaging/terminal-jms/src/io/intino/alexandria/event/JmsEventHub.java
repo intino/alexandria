@@ -36,13 +36,13 @@ public class JmsEventHub implements EventHub {
 	private final String password;
 	private final String clientId;
 	private final boolean transactedSession;
+	private final AtomicBoolean connected = new AtomicBoolean(false);
+	private final AtomicBoolean started = new AtomicBoolean(false);
+	private final AtomicBoolean recoveringEvents = new AtomicBoolean(false);
+	private final List<Thread> threads;
+	private ScheduledExecutorService scheduler;
 	private Connection connection;
 	private Session session;
-	private AtomicBoolean connected = new AtomicBoolean(false);
-	private AtomicBoolean started = new AtomicBoolean(false);
-	private AtomicBoolean recoveringEvents = new AtomicBoolean(false);
-	private ScheduledExecutorService scheduler;
-	private List<Thread> threads;
 
 	public JmsEventHub(String brokerUrl, String user, String password, String clientId, File messageCacheDirectory) {
 		this(brokerUrl, user, password, clientId, false, messageCacheDirectory);
@@ -84,7 +84,7 @@ public class JmsEventHub implements EventHub {
 		} catch (JMSException e) {
 			Logger.error(e);
 		}
-		started = new AtomicBoolean(true);
+		started.set(true);
 		scheduler = Executors.newScheduledThreadPool(1);
 		scheduler.scheduleAtFixedRate(this::checkConnection, 15, 15, TimeUnit.MINUTES);
 	}
@@ -228,8 +228,8 @@ public class JmsEventHub implements EventHub {
 		producers.values().forEach(JmsProducer::close);
 		producers.clear();
 		try {
-			session.close();
-			connection.close();
+			if (session != null) session.close();
+			if (connection != null) connection.close();
 			session = null;
 			connection = null;
 		} catch (JMSException e) {
