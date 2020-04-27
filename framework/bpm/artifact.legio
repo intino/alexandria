@@ -11,4 +11,5 @@ Artifact("io.intino.alexandria", "1.2.4-SNAPSHOT") bpm-framework
 
 Repository("intino-maven") intino
 	Release("https://artifactory.intino.io/artifactory/releases")
+	Snapshot("https://artifactory.intino.io/artifactory/snapshots")
 	Release("https://artifactory.intino.io/artifactory/release-frameworks") release
