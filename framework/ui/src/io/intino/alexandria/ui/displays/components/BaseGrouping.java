@@ -34,8 +34,8 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 		return this;
 	}
 
-	public void select(String[] groups) {
-		this.selection = Arrays.asList(groups);
+	public void select(List<String> groups) {
+		this.selection = new ArrayList<>(groups);
 		notifySelection();
 		collections.forEach(c -> c.filter(key(), selection));
 	}
