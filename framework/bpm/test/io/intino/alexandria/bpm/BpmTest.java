@@ -3,6 +3,7 @@ package io.intino.alexandria.bpm;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageReader;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,5 +33,9 @@ abstract class BpmTest {
 		return new ArrayList<>(processStatusList).stream()
 				.filter(s -> s.hasStateInfo() && s.stateInfo().name().equals(stateName) && s.stateInfo().isTerminated())
 				.findFirst().orElse(null);
+	}
+
+	public static void main(String[] args) {
+		BpmViewer temp = new BpmViewer(new PersistenceManager.FilePersistenceManager(new File("temp")));
 	}
 }

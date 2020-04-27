@@ -45,13 +45,13 @@ public class BpmViewer {
 
 	public List<ProcessInfo> activeProcesses() {
 		return persistenceManager.list("active").stream()
-				.map(ProcessInfo::new)
+				.map(processPath -> new ProcessInfo("active/" + processPath))
 				.collect(Collectors.toList());
 	}
 
 	public List<ProcessInfo> finishedProcesses(Timetag timetag) {
 		return persistenceManager.list("finished/" + timetag).stream()
-				.map(ProcessInfo::new)
+				.map(processPath -> new ProcessInfo("finished/" + timetag + "/" + processPath))
 				.collect(Collectors.toList());
 	}
 
