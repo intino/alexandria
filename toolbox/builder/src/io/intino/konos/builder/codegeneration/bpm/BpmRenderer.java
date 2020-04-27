@@ -11,6 +11,7 @@ import io.intino.konos.builder.codegeneration.bpm.parser.State;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.Workflow;
 import io.intino.konos.model.graph.Workflow.Process;
 
 import java.io.File;
@@ -36,12 +37,14 @@ public class BpmRenderer extends Renderer {
 	private final File src;
 	private final File gen;
 	private final KonosGraph graph;
+	private final Workflow workflow;
 	private List<String> stateServices = new ArrayList<>();
 
 	public BpmRenderer(CompilationContext compilationContext, KonosGraph graph) {
 		super(compilationContext, Target.Owner);
 		this.compilationContext = compilationContext;
-		this.processes = graph.workflow() != null ? graph.workflow().processList() : Collections.emptyList();
+		this.workflow = graph.workflow();
+		this.processes = workflow != null ? graph.workflow().processList() : Collections.emptyList();
 		this.src = new File(compilationContext.src(Target.Owner), "bpm");
 		this.gen = new File(compilationContext.gen(Target.Owner), "bpm");
 		this.graph = graph;
@@ -58,12 +61,14 @@ public class BpmRenderer extends Renderer {
 		FrameBuilder builder = new FrameBuilder("workflow").
 				add("box", compilationContext.boxName()).
 				add("package", compilationContext.packageName()).
+				add("directory", Commons.fileFrame(workflow.directory(), packageName())).
 				add("terminal", compilationContext.dataHubManifest().qn).
 				add(compilationContext.boxName()).
 				add("process", processes.stream().filter(p -> file(p) != null).map(p -> frameOf(p, file(p))).toArray(FrameBuilder[]::new));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(graph.workflow()), javaFile(gen, "Workflow").getAbsolutePath()));
 		writeFrame(gen, "Workflow", customize(new WorkflowTemplate()).render(builder.toFrame()));
 	}
+
 
 	private void renderProcesses() {
 		for (Process process : processes) {

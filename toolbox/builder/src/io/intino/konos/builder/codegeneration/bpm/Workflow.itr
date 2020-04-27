@@ -11,8 +11,8 @@ def type(workflow)
 
 		private $package+validPackage.$box+FirstUpperCase~Box box;
 
-		public Workflow($box+FirstUpperCase~Box box, File directory) {
-			super(factory(box), new PersistenceManager.FilePersistenceManager(directory));
+		public Workflow($box+FirstUpperCase~Box box) {
+			super(factory(box), new PersistenceManager.FilePersistenceManager($directory+customizeDirectory));
 			this.box = box;
 			box.terminal().subscribe(($terminal.ProcessStatusConsumer) status -> receive(status));
 		}
@@ -47,4 +47,12 @@ end
 
 def trigger(process)
 	case "$name": return new $name+firstUpperCase(id, box);
+end
+
+def type(archetype) trigger(customizeDirectory)
+	new $package.Archetype(box.configuration().home()).$path
+end
+
+def trigger(customizeDirectory)
+	new java.io.File("$path")
 end
