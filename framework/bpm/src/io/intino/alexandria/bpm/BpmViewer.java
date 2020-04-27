@@ -58,6 +58,7 @@ public class BpmViewer {
 	public class ProcessInfo {
 		private final String processPath;
 		private final String dataPath;
+		private List<ProcessStatus> processStatusList;
 
 		public ProcessInfo(String processPath) {
 			this.processPath = processPath;
@@ -65,8 +66,8 @@ public class BpmViewer {
 		}
 
 		public List<ProcessStatus> processStatuses() {
-			return stream(new MessageReader(persistenceManager.read(processPath)).spliterator(), false)
-					.map(ProcessStatus::new).collect(toList());
+			return processStatusList == null ? processStatusList = stream(new MessageReader(persistenceManager.read(processPath)).spliterator(), false)
+					.map(ProcessStatus::new).collect(toList()) : processStatusList;
 		}
 
 		public Map<String, String> data() {
@@ -74,12 +75,20 @@ public class BpmViewer {
 			return message.attributes().stream().collect(toMap(a -> a, a -> message.get(a).asString()));
 		}
 
-		public boolean isFinished(){
+		public boolean isFinished() {
 			return processPath.contains("finished");
 		}
 
 		public String processPath() {
 			return processPath;
+		}
+
+		public String id() {
+			return processStatuses().get(0).processId();
+		}
+
+		public String name() {
+			return processStatuses().get(0).processName();
 		}
 	}
 
