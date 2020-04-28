@@ -29,8 +29,8 @@ public class SelectorListBox<DN extends SelectorListBoxNotifier, B extends Box> 
 		notifier.refreshSelection(selection);
 	}
 
-	public void updateSelection(String[] selection) {
-		this.selection = Arrays.asList(selection);
+	public void updateSelection(List<String> selection) {
+		this.selection = new ArrayList<>(selection);
 		notifySelection();
 	}
 }

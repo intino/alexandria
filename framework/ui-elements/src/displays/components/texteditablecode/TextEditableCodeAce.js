@@ -5,6 +5,7 @@ import "brace/mode/html";
 import "brace/mode/java";
 import "brace/mode/javascript";
 import "brace/mode/r";
+import "./mode/inl";
 
 import "brace/theme/eclipse";
 import "brace/theme/monokai";
