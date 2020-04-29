@@ -117,7 +117,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         return behavior.itemCount();
     }
 
-    public void selection(String[] selection) {
+    public void selection(List<String> selection) {
         selectionListeners.forEach(l -> l.accept(new SelectionEvent(this, itemsOf(selection))));
     }
 
@@ -125,8 +125,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         //TODO ---- selectionListeners ----;
     }
 
-    private List<Object> itemsOf(String[] selectionArray) {
-        List<String> selection = Arrays.asList(selectionArray);
+    private List<Object> itemsOf(List<String> selection) {
         return children().stream().filter(d -> selection.contains(d.id())).map(this::itemOf).collect(toList());
     }
 

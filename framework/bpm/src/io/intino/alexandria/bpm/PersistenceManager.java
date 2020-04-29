@@ -1,20 +1,22 @@
 package io.intino.alexandria.bpm;
 
+import io.intino.alexandria.Timetag;
+
 import java.io.*;
 import java.nio.file.Files;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 public interface PersistenceManager {
 
 	void delete(String path);
 
 	List<String> list(String path);
+
+	List<Timetag> finishedTimetags();
 
 	InputStream read(String path);
 
@@ -39,6 +41,14 @@ public interface PersistenceManager {
 		public List<String> list(String path) {
 			File file = new File(directory, path);
 			return file.exists() ? asList(file.list((f, n) -> n.endsWith(".process"))) : Collections.emptyList();
+		}
+
+		@Override
+		public List<Timetag> finishedTimetags() {
+			return Arrays.stream(new File(directory, "finished").listFiles(f -> f.isDirectory()))
+					.filter(f -> f.getName().length() == 6)
+					.map(f -> Timetag.of(f.getName()))
+					.collect(toList());
 		}
 
 		@Override
@@ -84,6 +94,14 @@ public interface PersistenceManager {
 					.filter(k -> !k.equals(path) && k.startsWith(path))
 					.map(p -> p.substring(path.length()))
 					.collect(toList());
+		}
+
+		@Override
+		public List<Timetag> finishedTimetags() {
+			return new ArrayList<>(content.keySet().stream()
+					.filter(k -> k.startsWith("finished"))
+					.map(p -> Timetag.of(p.substring(p.indexOf("/"), p.lastIndexOf("/"))))
+					.collect(toSet()));
 		}
 
 		@Override

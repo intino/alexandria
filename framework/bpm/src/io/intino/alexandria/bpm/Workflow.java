@@ -1,7 +1,5 @@
 package io.intino.alexandria.bpm;
 
-import io.intino.alexandria.Scale;
-import io.intino.alexandria.Timetag;
 import io.intino.alexandria.bpm.PersistenceManager.InMemoryPersistenceManager;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
@@ -10,7 +8,6 @@ import io.intino.alexandria.message.MessageWriter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,22 +60,22 @@ public abstract class Workflow {
 
 	private void loadActiveProcesses() {
 		long loaded = 0;
-		List<String> paths = persistence.list("active/");
-		for (String path : paths)
+		List<BpmViewer.ProcessInfo> activeProcesses = new BpmViewer(persistence).activeProcesses();
+		for (BpmViewer.ProcessInfo activeProcess : activeProcesses)
 			try {
-				loadProcess(path);
+				loadProcess(activeProcess);
 				loaded++;
 			} catch (Throwable e) {
-				Logger.error("Process at " + path + " failed when loading.", e);
+				Logger.error("Process at " + activeProcess.processPath() + " failed when loading.", e);
 			}
-		Logger.info("Number of active processes: " + paths.size() + ". Number of processes loaded: " + loaded);
+		Logger.info("Number of active processes: " + activeProcesses.size() + ". Number of processes loaded: " + loaded);
 	}
 
-	private void loadProcess(String path) {
-		List<ProcessStatus> statuses = messagesOf("active/" + path);
+	private void loadProcess(BpmViewer.ProcessInfo activeProcess) {
+		List<ProcessStatus> statuses = activeProcess.processStatuses();
 		ProcessStatus status = statuses.get(0);
 		processes.put(status.processId(), factory.createProcess(status.processId(), status.processName()));
-		process(status.processId()).resume(statuses, dataOf("active/" + path));
+		process(status.processId()).resume(statuses, activeProcess.data());
 	}
 
 	private Map<String, String> dataOf(String path) {
@@ -166,22 +163,19 @@ public abstract class Workflow {
 	}
 
 	private String activePathOf(String id) {
-		return "active/" + id + ".process";
+		return new BpmViewer(persistence).activePathOf(id);
 	}
 
 	private String finishedPathOf(Process process) {
-		return "finished/" + process.timetag() + "/" + process.id() + ".process";
+		return new BpmViewer(persistence).finishedPathOf(process.timetag(), process.id());
 	}
 
 	private String finishedPathOf(String processId) {
-		Timetag timetag = Timetag.of(Instant.now(), Scale.Month);
-		Timetag until = timetag.previous(10);
-		while (!timetag.isBefore(until)) {
-			String path = "finished/" + timetag + "/" + processId + ".process";
-			if (persistence.exists(path)) return path;
-			timetag = timetag.previous();
-		}
-		return null;
+		return new BpmViewer(persistence).processInfo(processId).processPath();
+	}
+
+	public PersistenceManager persistence() {
+		return persistence;
 	}
 
 	private void initProcess(ProcessStatus status) {
