@@ -28,7 +28,8 @@ public interface PersistenceManager {
 		private final File directory;
 
 		public FilePersistenceManager(File directory) {
-			directory.mkdirs();
+			new File(directory, "active").mkdirs();
+			new File(directory, "finished").mkdirs();
 			this.directory = directory;
 		}
 

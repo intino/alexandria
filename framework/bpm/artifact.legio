@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.2.4-SNAPSHOT") bpm-framework
+Artifact("io.intino.alexandria", "1.2.4") bpm-framework
 	Imports
 		Compile("io.intino.alexandria", "event", "1.2.0")
 		Compile("io.intino.alexandria", "logger", "2.1.0")
