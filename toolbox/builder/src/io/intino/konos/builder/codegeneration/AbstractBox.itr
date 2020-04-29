@@ -173,7 +173,7 @@ def type(box)
 			Logger.addHandler(handler);
 		}
 
-		private java.net.URL url(String url) {
+		protected java.net.URL url(String url) {
 			try {
 				return new java.net.URL(url);
 			} catch (java.net.MalformedURLException e) {
