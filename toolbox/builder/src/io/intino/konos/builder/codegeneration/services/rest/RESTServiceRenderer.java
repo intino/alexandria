@@ -13,8 +13,11 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.graph.Service.REST.Authentication.WithCertificate;
 import io.intino.konos.model.graph.Service.REST.Resource;
+import io.intino.magritte.framework.Concept;
 import io.intino.magritte.framework.Layer;
+import io.intino.magritte.framework.Predicate;
 
 import java.io.File;
 import java.io.IOException;
@@ -107,24 +110,36 @@ public class RESTServiceRenderer extends Renderer {
 	}
 
 	private void processService(Service.REST service, File gen) {
+		final String className = snakeCaseToCamelCase(service.name$()) + "Service";
 		if (service.resourceList().isEmpty() && service.notificationList().isEmpty()) return;
 		FrameBuilder builder = new FrameBuilder("server").
 				add("name", service.name$()).
 				add("box", boxName()).
 				add("package", packageName()).
-				add("resource", framesOf(service.resourceList()));
+				add("resource", framesOf(service.resourceList(), service.authentication()));
 		if (!service.notificationList().isEmpty()) {
 			builder.add("notification", notificationsFrame(service.notificationList()));
-			if (graph.serviceList(Service::isUI).findAny().isEmpty())
-				builder.add("hasNotifications", "true");
+			if (graph.serviceList(Service::isUI).findAny().isEmpty()) builder.add("hasNotifications", "true");
 		}
-		final Service.REST.AuthenticatedWithCertificate secure = service.authenticatedWithCertificate();
-		if (secure != null && secure.store() != null)
-			builder.add("secure", new FrameBuilder("secure").add("file", secure.store()).add("password", secure.storePassword()).toFrame());
-		final String className = snakeCaseToCamelCase(service.name$()) + "Service";
+		if (service.authentication() != null) {
+			if (service.authentication().isWithCertificate()) {
+				WithCertificate secure = service.authentication().asWithCertificate();
+				if (secure != null && secure.store() != null)
+					builder.add("authenticationWithCertificate", new FrameBuilder("secure").add("file", secure.store()).add("password", secure.storePassword()).toFrame());
+			} else {
+				builder.add("authenticator", new FrameBuilder("authenticator").add("service", service.name$()));
+				createAuthenticatorClass(service.authentication(), className);
+			}
+		}
 		classes().put(service.getClass().getSimpleName() + "#" + service.name$(), className);
 		Commons.writeFrame(gen, className, template().render(builder.toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(), className).getAbsolutePath()));
+	}
+
+	private void createAuthenticatorClass(Service.REST.Authentication authentication, String service) {
+		if (javaFile(src(), service + "Authenticator").exists()) return;
+		FrameBuilder builder = new FrameBuilder(authentication.isBasic() ? "basic" : "bearer").add("box", boxName()).add("service", service).add("package", packageName());
+		Commons.writeFrame(src(), service + "Authenticator", authenticatorTemplate().render(builder.toFrame()));
 	}
 
 	private Frame[] notificationsFrame(List<Service.REST.Notification> list) {
@@ -137,21 +152,30 @@ public class RESTServiceRenderer extends Renderer {
 		return frames.toArray(new Frame[0]);
 	}
 
-	private Frame[] framesOf(List<Resource> resources) {
-		List<Frame> list = new ArrayList<>();
-		for (Resource resource : resources) list.addAll(processResource(resource, resource.operationList()));
-		return list.toArray(new Frame[0]);
+	private Frame[] framesOf(List<Resource> resources, Service.REST.Authentication authentication) {
+		return resources.stream().map(r -> processResource(r, authentication, r.operationList())).flatMap(List::stream).toArray(Frame[]::new);
 	}
 
-	private List<Frame> processResource(Resource resource, List<Resource.Operation> operations) {
-		return operations.stream().map(operation -> new FrameBuilder("resource", operation.getClass().getSimpleName())
+	private List<Frame> processResource(Resource resource, Service.REST.Authentication authentication, List<Resource.Operation> operations) {
+		return operations.stream().map(operation -> frameOf(operation, resource, authentication)).collect(toList());
+	}
+
+	private Frame frameOf(Resource.Operation operation, Resource resource, Service.REST.Authentication authentication) {
+		FrameBuilder builder = new FrameBuilder("resource", operation.getClass().getSimpleName())
 				.add("name", resource.name$())
 				.add("operation", operation.getClass().getSimpleName())
 				.add("path", customize("path", Commons.path(resource)))
-				.add("method", operation.getClass().getSimpleName()).toFrame()).collect(toList());
+				.add("method", operation.getClass().getSimpleName());
+		if (authentication != null)
+			builder.add("authenticate", new FrameBuilder(authentication.core$().conceptList().stream().filter(Concept::isAspect).map(Predicate::name).toArray(String[]::new)));
+		return builder.toFrame();
 	}
 
 	private Template template() {
 		return customize(new RESTServiceTemplate());
+	}
+
+	private Template authenticatorTemplate() {
+		return customize(new RestAuthenticatorTemplate());
 	}
 }

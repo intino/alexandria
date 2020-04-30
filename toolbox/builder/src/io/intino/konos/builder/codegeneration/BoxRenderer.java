@@ -17,12 +17,10 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 
 public class BoxRenderer extends Renderer {
-	private final KonosGraph graph;
 	private boolean isTara;
 
-	BoxRenderer(CompilationContext context, KonosGraph graph, boolean isTara) {
+	BoxRenderer(CompilationContext context, boolean isTara) {
 		super(context, Target.Owner);
-		this.graph = graph;
 		this.isTara = isTara;
 	}
 
@@ -33,18 +31,7 @@ public class BoxRenderer extends Renderer {
 		if (Commons.javaFile(src(), snakeCaseToCamelCase(name) + "Box").exists()) return;
 		FrameBuilder builder = new FrameBuilder("Box").add("package", packageName()).add("name", name);
 		if (isTara) builder.add("tara", fillTara());
-//		DumbService.getInstance(module().getProject()).setAlternativeResolveEnabled(true);
-//		final JavaPsiFacade facade = JavaPsiFacade.getInstance(module().getProject());
-//		if (facade.findClass("io.intino.konos.server.ui.services.AuthService", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module())) != null)
-//			builder.add("rest", name);TODO
-
-		if (hasAuthenticatedApis()) builder.add("authenticationValidator", new FrameBuilder().add("type", "Basic"));
-//		DumbService.getInstance(module().getProject()).setAlternativeResolveEnabled(false);
 		Commons.writeFrame(src(), snakeCaseToCamelCase(name) + "Box", template().render(builder.toFrame()));
-	}
-
-	private boolean hasAuthenticatedApis() {
-		return graph.serviceList(service -> service.isREST() && service.asREST().authenticatedWithToken() != null).findAny().isPresent();
 	}
 
 	private Frame fillTara() {

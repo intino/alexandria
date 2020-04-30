@@ -1,0 +1,31 @@
+def type(basic)
+	package $package+ValidPackage;
+
+	public class $service+firstUpperCase+SnakeCaseToCamelCase~Authenticator {
+		private $box+FirstUpperCase~Box box;
+
+		public $service+firstUpperCase+SnakeCaseToCamelCase~Authenticator($box+FirstUpperCase~Box box) {
+			this.box = box;
+		}
+
+		public boolean isAuthenticated(String user, String password) {
+			return false;
+		}
+	}
+end
+
+def type(bearer)
+	package $package+ValidPackage;
+
+	public class $service+firstUpperCase+SnakeCaseToCamelCase~Authenticator {
+	 	private $box+FirstUpperCase~Box box;
+
+	 	public $service+firstUpperCase+SnakeCaseToCamelCase~Authenticator($box+FirstUpperCase~Box box) {
+			this.box = box;
+		}
+
+		public boolean isAuthenticated(String token) {
+			return false;
+		}
+	}
+end

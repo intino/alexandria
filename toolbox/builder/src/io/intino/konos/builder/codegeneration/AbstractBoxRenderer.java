@@ -40,7 +40,6 @@ public class AbstractBoxRenderer extends Renderer {
 		messageHub(root);
 		terminal(root);
 		workflow(root);
-		if (hasAuthenticatedApis()) root.add("authenticationValidator", new FrameBuilder().add("type", "Basic"));
 		Commons.writeFrame(context.gen(Target.Owner), "AbstractBox", template().render(root.toFrame()));
 		context.compiledFiles().add(new OutputItem(sourceFileOf(graph), javaFile(gen(), "AbstractBox").getAbsolutePath()));
 		notifyNewParameters();
@@ -215,10 +214,6 @@ public class AbstractBoxRenderer extends Renderer {
 							.add("name", service.name$())
 							.add("configuration", boxName())
 							.add("parameter", parameter(service.port())).toFrame());
-	}
-
-	private boolean hasAuthenticatedApis() {
-		return graph.restServiceList().stream().anyMatch(restService -> restService.authenticatedWithToken() != null);
 	}
 
 	private void jms(FrameBuilder frame) {

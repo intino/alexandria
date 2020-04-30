@@ -38,12 +38,18 @@ public class OpenApiDescriptor {
 		for (Resource resource : service.resourceList())
 			spec.paths.put(resource.path(), createPath(resource));
 		spec.definitions = createDefinitions();
-		if (service.authenticatedWithToken() != null) {
-			spec.securityDefinitions = new HashMap<>();
-			spec.securityDefinitions.put("basic", new SecurityDefinition().type("basic"));
-			spec.security = new ArrayList<>();
-			spec.security.add(new SwaggerSpec.SecuritySchema().basic());
-		}
+		if (service.authentication() != null)
+			if (service.authentication().isBasic()) {
+				spec.securityDefinitions = new HashMap<>();
+				spec.securityDefinitions.put("basic", new SecurityDefinition().type("basic"));
+				spec.security = new ArrayList<>();
+				spec.security.add(new SwaggerSpec.SecuritySchema().basic());
+			}else if (service.authentication().isBearer()){
+				spec.securityDefinitions = new HashMap<>();
+				spec.securityDefinitions.put("bearer", new SecurityDefinition().type("bearer"));
+				spec.security = new ArrayList<>();
+				spec.security.add(new SwaggerSpec.SecuritySchema().bearer());
+			}
 		return spec;
 	}
 

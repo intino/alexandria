@@ -22,19 +22,16 @@ def type(accessor)
 		private static Gson gsonWriter = gsonWriter();
 		private RestAccessor accessor;
 		private RestAccessorNotifier notifier = new RestAccessorNotifier();
-		[$certificate~private URL certificate;]
-		[$token~private String token;]
+		$authentication+field
 
-		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url[, $certificate~URL certificate][$token, String token]) {
+		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url[, $authentication+parameter]) {
 			this.url = url;
-			[$certificate~this.certificate = certificate;]
-			[$token~this.token = token;]
+			$authentication+assign
 			this.accessor = new RestAccessor();
 		}
 
-		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url, int timeoutMillis[, $certificate~URL certificate][$token, String token]) {
+		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url, int timeoutMillis[, $authentication+parameter]) {
 			this.url = url;
-			[$certificate~this.certificate = certificate;]
 			[$token~this.token = token;]
 			this.accessor = new RestAccessor(timeoutMillis);
 		}
@@ -97,6 +94,43 @@ def type(notification)
 		this.notifier.close();
 	}
 end
+
+def type(authentication & basic) trigger(parameter)
+	String user, String password
+end
+
+def type(authentication & bearer) trigger(parameter)
+	String token
+end
+
+def type(authentication & withCertificate) trigger(parameter)
+	URL certificate
+end
+
+def type(authentication & withCertificate) trigger(assign)
+	this.certificate = certificate;
+end
+
+def type(authentication & basic) trigger(assign)
+	this.token = io.intino.alexandria.Base64.encode((user + ":" + password).getBytes());
+end
+
+def type(authentication & bearer) trigger(assign)
+	this.token = token;
+end
+
+def type(authentication & withCertificate) trigger(assign)
+	this.certificate = certificate;
+end
+
+def type(authentication) type(basic | bearer) trigger(field)
+	private String token;
+end
+
+def type(authentication & withCertificate) trigger(field)
+	private URL certificate;
+end
+
 
 def type(parameter) trigger(signature)
 	$parameterType $name+SnakeCaseToCamelCase+firstLowerCase
@@ -229,8 +263,8 @@ def type(exceptionResponse) trigger(declaration)
 	$exceptionName
 end
 
-def type(auth & cert & doInvoke)
-	accessor.secure(this.url, $certificate~this.certificate, this.password).$type+firstLowerCase($relativePath[, $parameters][, Arrays.asList($inputStream...[,])])
+def type(auth & WithCertificate & doInvoke)
+	accessor.secure(this.url, this.certificate, this.password).$type+firstLowerCase($relativePath[, $parameters][, Arrays.asList($inputStream...[,])])
 end
 
 def type(auth & doInvoke)

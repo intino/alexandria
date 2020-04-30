@@ -20,16 +20,13 @@ def type(notification)
 
 		private $box+FirstUpperCase~Box box;
 		private SparkManager<SparkPushService> manager;
-		[$authenticationValidator+field]
 
 		public $name+firstUpperCase~Notification($box+FirstUpperCase~Box box, SparkManager manager) {
 			this.box = box;
 			this.manager = manager;
-			$authenticationValidator+assign
 		}
 
 		public void execute() [throws $throws...[, ]] {
-			[$authenticationValidator+validate]
 			Session session = manager.currentSession();
 			String clientId = java.util.UUID.randomUUID().toString();
 			$package+validPackage.actions.$name+firstUpperCase~Action action = fill(new $package+validPackage.actions.$name+firstUpperCase~Action());
@@ -83,16 +80,13 @@ def type(resource)
 
 		private $box+FirstUpperCase~Box box;
 		private SparkManager<SparkPushService> manager;
-		[$authenticationValidator+field]
 
 		public $operation+firstUpperCase$name+firstUpperCase~Resource($box+FirstUpperCase~Box box, SparkManager manager) {
 			this.box = box;
 			this.manager = manager;
-			$authenticationValidator+assign
 		}
 
 		public void execute() [throws $throws...[, ]] {
-			[$authenticationValidator+validate]
 			[$returnType+methodCall]fill(new $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action()).execute()[$returnType+ending];
 		}
 
@@ -173,21 +167,8 @@ def type(list) trigger(parameterType)
 	com.google.gson.reflect.TypeToken.getParameterized(java.util.ArrayList.class, $value.class).getType()
 end
 
-def type(authenticationValidator) trigger(field)
-	io.intino.alexandria.http.security.$type+FirstUpperCase~AuthenticationValidator validator;
-end
-
-def type(authenticationValidator) trigger(assign)
-	this.validator = box.authenticationValidator();
-end
-
-def type(authenticationValidator) trigger(validate)
-	String auth = manager.fromHeader("Authorization");
-	if (auth == null || !validator.validate(auth.replace("Basic ", ""))) throw new Unauthorized("Credential not found");
-end
-
 def type(authenticationValidator) trigger(put)
-	context.put("auth", manager.fromHeader("Authorization").replace("Basic ", ""));
+	context.put("Authorization", manager.fromHeader("Authorization").replace("Basic ", ""));
 end
 
 def trigger(parameterType)

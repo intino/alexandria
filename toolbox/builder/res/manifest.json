@@ -38,10 +38,10 @@
   "dependencies": {
     "io.intino.alexandria:core-framework": "2.0.4",
     "io.intino.alexandria:scheduler-framework": "1.1.0",
-    "io.intino.alexandria:http": "1.0.6",
+    "io.intino.alexandria:http": "1.0.7",
     "io.intino.alexandria:slack-framework": "2.0.3",
     "io.intino.alexandria:ui-framework": "4.1.6",
-    "io.intino.alexandria:rest": "3.0.7",
+    "io.intino.alexandria:rest": "3.0.8",
     "io.intino.alexandria:soap": "1.0.0",
     "io.intino.alexandria:bpm-framework": "1.1.0",
     "io.intino.alexandria:jmx": "1.0.1",

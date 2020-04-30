@@ -168,10 +168,16 @@ public class SwaggerSpec {
 
 	public static class SecuritySchema {
 		List<String> basic = null;
+		List<String> bearer = null;
 		List<String> api_key = null;
 
 		public SecuritySchema basic() {
 			basic = new ArrayList<>();
+			return this;
+		}
+
+		public SecuritySchema bearer() {
+			bearer = new ArrayList<>();
 			return this;
 		}
 	}

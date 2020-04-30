@@ -162,8 +162,6 @@ def type(box)
 			[$workflow+init]
 		}
 
-		[$authenticationValidator]
-
 		private void initJavaLogger() {
 			final java.util.logging.Logger Logger = java.util.logging.Logger.getGlobal();
 			final ConsoleHandler handler = new ConsoleHandler();
@@ -490,12 +488,6 @@ def trigger(registerSoul)
         soulsClosedListeners.forEach(l -> l.accept());
     }
 end
-
-
-def trigger(authenticationValidator)
-	public abstract io.intino.alexandria.http.security.$type+FirstUpperCase~AuthenticationValidator authenticationValidator();
-end
-
 
 def type(conf & file) trigger(parameter)
 	new java.io.File(configuration().get("$value"))

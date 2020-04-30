@@ -62,8 +62,7 @@ public class RESTResourceRenderer extends Renderer {
 		addCommons(notification.name$(), builder);
 		builder.add("parameter", notificationParameters(notification.parameterList()));
 		builder.add("returnType", notificationResponse());
-		authenticated(service, builder);
-		if (service.authenticatedWithToken() != null) builder.add("throws", "Unauthorized");
+		if (service.authentication() != null) builder.add("throws", "Unauthorized");
 		Commons.writeFrame(new File(gen(), NOTIFICATIONS_PACKAGE), className, template().render(builder.toFrame()));
 		createCorrespondingAction(notification);
 	}
@@ -85,15 +84,14 @@ public class RESTResourceRenderer extends Renderer {
 		if (hasResponse(operation)) builder.add("returnType", frameOf(operation.response()));
 		if (!resource.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
-		authenticated(resource.core$().ownerAs(Service.REST.class), builder);
 		return builder.toFrame();
 	}
 
-	private void authenticated(Service.REST service, FrameBuilder builder) {
-		final Service.REST.AuthenticatedWithToken authenticated = service.authenticatedWithToken();
-		if (authenticated != null)
-			builder.add("authenticationValidator", new FrameBuilder("authenticationValidator").add("type", "Basic").toFrame());
-	}
+//	private void authenticated(Service.REST service, FrameBuilder builder) {
+//		final Service.REST.AuthenticatedWithToken authenticated = service.authenticatedWithToken();
+//		if (authenticated != null)
+//			builder.add("authenticationValidator", new FrameBuilder("authenticationValidator").add("type", "Basic").toFrame());
+//	}
 
 	private void addCommons(String name, FrameBuilder builder) {
 		builder.add("package", packageName());
@@ -117,9 +115,7 @@ public class RESTResourceRenderer extends Renderer {
 	}
 
 	private String[] throwCodes(Operation resource) {
-		final Service.REST.AuthenticatedWithToken authenticated = resource.core$().ownerAs(Service.REST.class).authenticatedWithToken();
 		List<String> throwCodes = resource.exceptionList().stream().map(r -> r.code().toString()).collect(Collectors.toList());
-		if (authenticated != null) throwCodes.add("Unauthorized");
 		return throwCodes.isEmpty() ? new String[]{"Unknown"} : throwCodes.toArray(new String[0]);
 	}
 
@@ -134,8 +130,7 @@ public class RESTResourceRenderer extends Renderer {
 	private Frame parameter(Parameter parameter) {
 		final FrameBuilder builder = new FrameBuilder("parameter", parameter.in().toString(), parameter.asType().getClass().getSimpleName(), (parameter.isRequired() ? "required" : "optional"));
 		if (parameter.isList()) builder.add("List");
-		builder
-				.add("name", parameter.name$())
+		builder.add("name", parameter.name$())
 				.add("parameterType", parameterType(parameter))
 				.add("in", parameter.in().name());
 		if (parameter.isRequired()) return builder.toFrame();

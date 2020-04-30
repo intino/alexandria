@@ -13,11 +13,14 @@ import io.intino.konos.model.graph.Data;
 import io.intino.konos.model.graph.Exception;
 import io.intino.konos.model.graph.Response;
 import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.graph.Service.REST.Authentication;
 import io.intino.konos.model.graph.Service.REST.Notification;
 import io.intino.konos.model.graph.Service.REST.Resource;
 import io.intino.konos.model.graph.Service.REST.Resource.Operation;
 import io.intino.konos.model.graph.Service.REST.Resource.Parameter;
+import io.intino.magritte.framework.Concept;
 import io.intino.magritte.framework.Layer;
+import io.intino.magritte.framework.Predicate;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,7 +32,7 @@ import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class RESTAccessorRenderer extends Renderer {
 	private final Service.REST service;
-	private File destination;
+	private final File destination;
 
 	public RESTAccessorRenderer(CompilationContext compilationContext, Service.REST restService, File destination) {
 		super(compilationContext, Target.Owner);
@@ -45,48 +48,50 @@ public class RESTAccessorRenderer extends Renderer {
 	}
 
 	private void processService(Service.REST service) {
-		FrameBuilder frame = new FrameBuilder("accessor");
-		frame.add("name", service.name$());
-		frame.add("package", packageName());
-		setupAuthentication(service, frame);
+		FrameBuilder builder = new FrameBuilder("accessor");
+		builder.add("name", service.name$());
+		builder.add("package", packageName());
+		setupAuthentication(service, builder);
 		if (!service.graph().schemaList().isEmpty())
-			frame.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()));
+			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()));
 		List<Frame> resourceFrames = new ArrayList<>();
 		service.core$().findNode(Resource.class).stream().map(resource -> framesOf(service, resource)).forEach(resourceFrames::addAll);
-		frame.add("resource", resourceFrames.toArray(new Frame[0]));
-		frame.add("notification", service.notificationList().stream().map(notification -> frameOf(service, notification)).toArray(Frame[]::new));
-		writeFrame(destination, snakeCaseToCamelCase(service.name$()) + "Accessor", template().render(frame));
+		builder.add("resource", resourceFrames.toArray(new Frame[0]));
+		builder.add("notification", service.notificationList().stream().map(notification -> frameOf(service, notification)).toArray(Frame[]::new));
+		writeFrame(destination, snakeCaseToCamelCase(service.name$()) + "Accessor", template().render(builder));
 	}
 
 	private void setupAuthentication(Service.REST restService, FrameBuilder builder) {
-		if (restService.authenticated() != null) builder.add("auth", "");
-		if (restService.authenticatedWithCertificate() != null) builder.add("certificate", "");
-		else if (restService.authenticatedWithToken() != null) builder.add("token", "");
+		if (restService.authentication() != null)
+			builder.add("authentication", new FrameBuilder("authentication", authentication()));
+	}
+
+	private String authentication() {
+		return service.authentication().core$().conceptList().stream().filter(Concept::isAspect).map(Predicate::name).findFirst().orElse(null);
 	}
 
 
 	private List<Frame> framesOf(Service.REST restService, Resource resource) {
 		return resource.operationList().stream().
-				map(operation -> processOperation(operation, restService.authenticated() != null,
-						restService.authenticatedWithCertificate() != null)).collect(Collectors.toList());
+				map(operation -> processOperation(operation, restService.authentication())).collect(Collectors.toList());
 	}
 
 	private Frame frameOf(Service.REST restService, Notification notification) {
 		FrameBuilder notificationBuilder = new FrameBuilder("notification").add("path", notification.path()).add("name", notification.name$());
-		if (restService.authenticatedWithToken() != null) notificationBuilder.add("secure", "");
+		if (restService.authentication() != null) notificationBuilder.add("secure", "");
 		if (Commons.queryParameters(notification) > 0 || Commons.bodyParameters(notification) > 0)
 			notificationBuilder.add("parameters", "parameters");
 		notificationBuilder.add("parameter", notificationParameters(notification.parameterList()));
 		return notificationBuilder.toFrame();
 	}
 
-	private Frame processOperation(Operation operation, boolean authenticated, boolean cert) {
+	private Frame processOperation(Operation operation, Authentication authentication) {
 		return new FrameBuilder("resource")
 				.add("returnType", Commons.returnType(operation.response(), packageName()))
 				.add("operation", operation.getClass().getSimpleName())
 				.add("name", operation.core$().owner().name())
 				.add("parameter", parameters(operation.parameterList()))
-				.add("invokeSentence", invokeSentence(operation, authenticated, cert))
+				.add("invokeSentence", invokeSentence(operation, authentication))
 				.add("exceptionResponses", exceptionResponses(operation)).toFrame();
 	}
 
@@ -121,7 +126,7 @@ public class RESTAccessorRenderer extends Renderer {
 		return parameter.i$(Data.List.class) ? "List<" + value + ">" : value;
 	}
 
-	private Frame invokeSentence(Operation operation, boolean authenticated, boolean cert) {
+	private Frame invokeSentence(Operation operation, Authentication authentication) {
 		Response response = operation.response();
 		FrameBuilder result;
 		if (response == null || response.asType() == null) result = voidInvokeSentence();
@@ -131,15 +136,17 @@ public class RESTAccessorRenderer extends Renderer {
 		else if (response.isDateTime()) result = dateTimeInvokeSentence(response.asDateTime());
 		else result = primitiveInvokeSentence(response.asType());
 		if (response != null && response.isList()) result.add("list");
-		return result.add("doInvoke", doInvoke(operation, authenticated, cert)).toFrame();
+		return result.add("doInvoke", doInvoke(operation, authentication)).toFrame();
 	}
 
-	private Frame doInvoke(Operation operation, boolean authenticated, boolean cert) {
+	private Frame doInvoke(Operation operation, Authentication authentication) {
 		final FrameBuilder builder = new FrameBuilder("doInvoke")
 				.add("relativePath", processPath(Commons.path(operation.core$().ownerAs(Resource.class))))
 				.add("type", operation.response() != null && operation.response().isFile() ? "getResource" : operation.getClass().getSimpleName().toLowerCase());
-		if (authenticated) builder.add("auth");
-		if (cert) builder.add("cert");
+		if (authentication != null) {
+			builder.add("auth");
+			builder.add(authentication());
+		}
 		if (Commons.queryParameters(operation) > 0 || Commons.bodyParameters(operation) > 0)
 			builder.add("parameters", "parameters");
 		if (Commons.fileParameters(operation) > 0)

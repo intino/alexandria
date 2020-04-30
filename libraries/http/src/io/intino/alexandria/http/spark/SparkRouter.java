@@ -24,28 +24,34 @@ public class SparkRouter<SM extends SparkManager> {
 		this.path = path;
 	}
 
-	public void before(AlexandriaSpark.ResourceCaller<SM> caller) {
+	public SparkRouter<SM> before(AlexandriaSpark.ResourceCaller<SM> caller) {
 		service.before(path, (rq, rs) -> before(caller, manager(rq, rs)));
+		return this;
 	}
 
-	public void get(AlexandriaSpark.ResourceCaller<SM> caller) {
+	public SparkRouter<SM> get(AlexandriaSpark.ResourceCaller<SM> caller) {
 		service.get(path, (rq, rs) -> SparkRouter.this.execute(caller, SparkRouter.this.manager(rq, rs)));
+		return this;
 	}
 
-	public void post(AlexandriaSpark.ResourceCaller<SM> caller) {
+	public SparkRouter<SM> post(AlexandriaSpark.ResourceCaller<SM> caller) {
 		service.post(path, (rq, rs) -> execute(caller, manager(rq, rs)));
+		return this;
 	}
 
-	public void put(AlexandriaSpark.ResourceCaller<SM> caller) {
+	public SparkRouter<SM> put(AlexandriaSpark.ResourceCaller<SM> caller) {
 		service.put(path, (rq, rs) -> execute(caller, manager(rq, rs)));
+		return this;
 	}
 
-	public void delete(AlexandriaSpark.ResourceCaller<SM> caller) {
+	public SparkRouter<SM> delete(AlexandriaSpark.ResourceCaller<SM> caller) {
 		service.delete(path, (rq, rs) -> execute(caller, manager(rq, rs)));
+		return this;
 	}
 
-	public void after(AlexandriaSpark.ResourceCaller<SM> caller) {
+	public SparkRouter<SM> after(AlexandriaSpark.ResourceCaller<SM> caller) {
 		service.after(path, (rq, rs) -> after(caller, manager(rq, rs)));
+		return this;
 	}
 
 	public void push(PushService service) {

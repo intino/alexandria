@@ -4,13 +4,14 @@ def type(server)
 	import io.intino.alexandria.http.AlexandriaSpark;
 	import $package+ValidPackage.rest.resources.*;
 	import io.intino.alexandria.core.Box;
-	import io.intino.alexandria.http.security.DefaultSecurityManager;
-	import io.intino.alexandria.http.spark.SparkPushService;
 
-	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Service {
+	public class $name+firstUpperCase+SnakeCaseToCamelCase~Service {
+
+		[$authenticator+field]
 
 		public static AlexandriaSpark setup(AlexandriaSpark server, $box+FirstUpperCase~Box box) {
-			[$secure]
+			[$authenticator+assign]
+			[$authenticationWithCertificate]
 			[$hasNotifications]
 			[$notification...[$NL]]
 			[$resource...[$NL]]
@@ -20,8 +21,16 @@ def type(server)
 	}
 end
 
-def type(secure)
-	server.secure(new DefaultSecurityManager(new java.io.File("$file"), "$password"));
+def type(authenticator) trigger(assign)
+	authenticator = new $service+firstUpperCase+SnakeCaseToCamelCase~ServiceAuthenticator(box);
+end
+
+def type(authenticator) trigger(field)
+	private static $service+firstUpperCase+SnakeCaseToCamelCase~ServiceAuthenticator authenticator;
+end
+
+def type(authenticationWithCertificate)
+	server.secure(new io.intino.alexandria.http.security.DefaultSecurityManager(new java.io.File("$file"), "$password"));
 end
 
 def trigger(notification)
@@ -29,7 +38,15 @@ def trigger(notification)
 end
 
 def type(resource)
-	server.route($path+format).$method+firstlowerCase(manager -> new $operation+firstUpperCase~$name+firstUpperCase+SnakeCaseToCamelCase~Resource(box, manager).execute());
+	server.route($path+format)[$authenticate].$method+firstlowerCase(manager -> new $operation+firstUpperCase~$name+firstUpperCase+SnakeCaseToCamelCase~Resource(box, manager).execute());
+end
+
+def type(bearer) trigger(authenticate)
+	.before(manager -> { if (!authenticator.isAuthenticated( manager.fromHeader("Authorization").replace("Bearer ", ""))) throw new io.intino.alexandria.exceptions.Forbidden("Credential not found");})
+end
+
+def type(basic) trigger(authenticate)
+	.before(manager -> { if (!authenticator.isAuthenticated( manager.fromHeader("Authorization").replace("Basic ", ""))) throw new io.intino.alexandria.exceptions.Forbidden("Credential not found");})
 end
 
 def type(path) trigger(format)
@@ -41,5 +58,5 @@ def trigger(custom)
 end
 
 def trigger(hasNotifications)
-	if (!io.intino.alexandria.http.AlexandriaSparkBuilder.isUI()) server.route("/push").push(new SparkPushService());
+	if (!io.intino.alexandria.http.AlexandriaSparkBuilder.isUI()) server.route("/push").push(new io.intino.alexandria.http.spark.SparkPushService());
 end
