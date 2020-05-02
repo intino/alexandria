@@ -69,11 +69,6 @@ public abstract class Component<DN extends ComponentNotifier, B extends Box> ext
 		return this;
 	}
 
-	public <T> T trace(Class<T> clazz) {
-		String value = session().client().cookie(id());
-		return value != null ? Json.fromString(URLDecoder.decode(value, StandardCharsets.UTF_8), clazz) : null;
-	}
-
 	protected Component _color(String color) {
 		this.color = color;
 		return this;

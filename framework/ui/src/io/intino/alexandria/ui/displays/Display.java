@@ -1,5 +1,6 @@
 package io.intino.alexandria.ui.displays;
 
+import io.intino.alexandria.Json;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.International;
 import io.intino.alexandria.ui.Soul;
@@ -10,6 +11,8 @@ import io.intino.alexandria.ui.services.push.UISession;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -160,6 +163,15 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 
 	public String id() {
 		return id;
+	}
+
+	public <T> T trace(Class<T> clazz) {
+		return trace(clazz, id());
+	}
+
+	public <T> T trace(Class<T> clazz, String name) {
+		String value = session().client().cookie(name);
+		return value != null ? Json.fromString(URLDecoder.decode(value, StandardCharsets.UTF_8), clazz) : null;
 	}
 
 	public void remove() {

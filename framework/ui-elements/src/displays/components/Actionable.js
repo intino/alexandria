@@ -64,6 +64,7 @@ export default class Actionable extends AbstractActionable {
 		if (!this.state.visible) return (<React.Fragment/>);
 		return (
 			<React.Fragment>
+                {this.renderTraceConsent()}
 				{this.renderAffirm()}
 				{this.renderSign()}
 				{this.renderTrigger()}
