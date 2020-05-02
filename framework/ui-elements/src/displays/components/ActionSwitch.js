@@ -17,7 +17,7 @@ class ActionSwitch extends AbstractActionSwitch {
 		this.requester = new ActionSwitchRequester(this);
 		this.state = {
 			...this.state,
-			checked : this.props.state === "On",
+			checked : this.traceValue() != null ? this.traceValue() : this.props.state === "On",
 			readonly : this.props.readonly
 		};
 	};
@@ -39,6 +39,7 @@ class ActionSwitch extends AbstractActionSwitch {
 
 	handleChange = () => {
 		this.requester.toggle();
+		this.trace(!this.state.checked);
 	};
 }
 

@@ -2,6 +2,7 @@ import React from "react";
 import PassiveView from "./PassiveView";
 import Typography from "@material-ui/core/Typography";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import CookieConsent, { Cookies } from "react-cookie-consent";
 
 export const enrichDisplayProperties = (instance) => {
     instance.pl.context = () => { return instance.pl.o };
@@ -10,10 +11,12 @@ export const enrichDisplayProperties = (instance) => {
 
 export default class Display extends PassiveView {
     address = null;
-    state = {};
 
     constructor(props) {
         super(props);
+        this.state = {
+            traceable: this.props.traceable
+        }
     };
 
     addInstance = (instance) => {
@@ -135,6 +138,28 @@ export default class Display extends PassiveView {
 //        return result;
 //    };
 
+    trace = (value, name) => {
+        if (!this.state.traceable) return;
+        if (!this._traceConsentAccepted()) return;
+        Cookies.set(name != null ? name : this.props.id, JSON.stringify(value));
+    };
+
+    traceValue = (name) => {
+        if (!this.state.traceable) return null;
+        if (!this._traceConsentAccepted()) return null;
+        const value = Cookies.get(name != null ? name : this.props.id);
+        return value != null ? JSON.parse(value) : null;
+    };
+
+    renderTraceConsent = () => {
+        if (!this.state.traceable) return (<React.Fragment/>);
+        return (
+            <CookieConsent cookieName={this._traceConsentVariable()} buttonText={this.translate("I understand")} buttonStyle={{fontSize:'11pt'}}>
+                <div style={{textAlign:'left',fontSize:'11pt'}}>{this.translate("This website uses cookies to enhance the user experience.")}</div>
+            </CookieConsent>
+        );
+    };
+
     _context() {
         return (this.props.owner != null ? this.props.owner() + "." : "") + this.props.id;
     };
@@ -149,4 +174,11 @@ export default class Display extends PassiveView {
         this.setState(object);
     };
 
+    _traceConsentAccepted = () => {
+        return Cookies.get(this._traceConsentVariable()) != null;
+    };
+
+    _traceConsentVariable = () => {
+        return Application.configuration.url.replace(/[^\w\s]/gi, '');
+    };
 }

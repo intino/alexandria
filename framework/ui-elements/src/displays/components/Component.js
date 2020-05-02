@@ -4,14 +4,14 @@ import Theme from "app-elements/gen/Theme";
 import ComponentNotifier from "../notifiers/ComponentNotifier";
 import {RiseLoader} from "react-spinners";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
-import CookieConsent, { Cookies } from "react-cookie-consent";
 
 export default class Component extends AlexandriaDisplay {
 
     state = {
         loading: true,
         visible: this.props.visible != null ? this.props.visible : true,
-        color: this.props.color != null ? this.props.color : null
+        color: this.props.color != null ? this.props.color : null,
+        ...this.state
     };
 
     constructor(props) {
@@ -90,33 +90,4 @@ export default class Component extends AlexandriaDisplay {
         return this.props.height != null && this.props.height.indexOf("-1") === -1;
     };
 
-    _trace = (value) => {
-        if (!this.props.traceable) return;
-        if (!this._traceConsentAccepted()) return;
-        Cookies.set(this.props.id, JSON.stringify(value));
-    };
-
-    _traceValue = () => {
-        if (!this.props.traceable) return null;
-        if (!this._traceConsentAccepted()) return null;
-        const value = Cookies.get(this.props.id);
-        return value != null ? JSON.parse(value) : null;
-    };
-
-    _traceConsentAccepted = () => {
-        return Cookies.get(this._traceConsentVariable()) != null;
-    };
-
-    _traceConsent = () => {
-        if (!this.props.traceable) return (<React.Fragment/>);
-        return (
-            <CookieConsent cookieName={this._traceConsentVariable()} buttonText={this.translate("I understand")} buttonStyle={{fontSize:'11pt'}}>
-                <div style={{textAlign:'left',fontSize:'11pt'}}>{this.translate("This website uses cookies to enhance the user experience.")}</div>
-            </CookieConsent>
-        );
-    };
-
-    _traceConsentVariable = () => {
-        return Application.configuration.url.replace(/[^\w\s]/gi, '');
-    };
 }

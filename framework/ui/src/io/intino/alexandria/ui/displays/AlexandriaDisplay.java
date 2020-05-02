@@ -1,5 +1,6 @@
 package io.intino.alexandria.ui.displays;
 
+import io.intino.alexandria.Json;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.notifiers.DisplayNotifier;
@@ -8,6 +9,8 @@ import io.intino.alexandria.ui.services.push.User;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 public abstract class AlexandriaDisplay<DN extends DisplayNotifier, B extends Box> extends Display<DN, B> {
 

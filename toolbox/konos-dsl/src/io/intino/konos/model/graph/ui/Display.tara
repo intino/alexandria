@@ -26,7 +26,6 @@ Concept:Named Display extends PassiveView
 	has Block
 
 	Aspect Accessible
-	Aspect Decorated
 
 Facet Addressable
 	var Service.UI.Resource addressableResource
