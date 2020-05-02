@@ -110,8 +110,8 @@ export default class Component extends AlexandriaDisplay {
     _traceConsent = () => {
         if (!this.props.traceable) return (<React.Fragment/>);
         return (
-            <CookieConsent cookieName={this._traceConsentVariable()}>
-                this.translate("This website uses cookies to enhance the user experience.");
+            <CookieConsent cookieName={this._traceConsentVariable()} buttonText={this.translate("I understand")} buttonStyle={{fontSize:'11pt'}}>
+                <div style={{textAlign:'left',fontSize:'11pt'}}>{this.translate("This website uses cookies to enhance the user experience.")}</div>
             </CookieConsent>
         );
     };
