@@ -90,4 +90,8 @@ public class UISparkManager extends SparkManager<PushService> {
 		return Locale.forLanguageTag(language).toString().replaceAll(".*_", "").toLowerCase();
 	}
 
+	public java.util.Map<String, String> cookies() {
+		return request.cookies();
+	}
+
 }

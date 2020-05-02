@@ -38,16 +38,16 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold as Decorated
 						=========
 
 		Block as Relative(width=33%, height=100%)
-			Text(format=h6, value="ComboBox facet")
+			Text(format=h6, value="ComboBox facet with Traceable (cookie is used)")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				Selector selector3 as ComboBox
+				Selector selector3 as ComboBox Traceable
 					Text(value="option 1") comboBoxOption1 as Option
 					Text(value="option 2") comboBoxOption2 as Option
 					Text(value="option 3") comboBoxOption3 as Option
 			Block > Text as Code(language=Html)
 					value
 						=========
-						Selector as ComboBox<br/>
+						Selector as ComboBox Traceable<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") comboBoxOption1 as Option<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") comboBoxOption2 as Option<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") comboBoxOption3 as Option

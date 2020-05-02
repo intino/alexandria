@@ -28,4 +28,5 @@ public class SelectorExamplesMold extends AbstractSelectorExamplesMold<UiFramewo
         }
         selector1.notifyUser(String.format("%s option selected", selection.get(0)), UserMessage.Type.Info);
     }
+
 }

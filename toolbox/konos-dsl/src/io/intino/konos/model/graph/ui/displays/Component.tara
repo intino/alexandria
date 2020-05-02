@@ -17,6 +17,9 @@ Concept:Named Component extends Display
 	Aspect Labeled
 	Aspect DynamicLoaded
     	var word:{VerySlow Slow Fast VeryFast} loadTime = VeryFast
+	Aspect Traceable
+		var integer maxAge = -1
+		var boolean secure = false
 
 Concept Block extends Component
 	var word[]:Layout layout = Vertical

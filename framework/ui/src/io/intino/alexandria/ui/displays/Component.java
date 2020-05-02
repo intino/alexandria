@@ -1,5 +1,6 @@
 package io.intino.alexandria.ui.displays;
 
+import io.intino.alexandria.Json;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.HideListener;
@@ -64,6 +65,11 @@ public abstract class Component<DN extends ComponentNotifier, B extends Box> ext
 	public Component<DN, B> hide() {
 		updateVisibility(false);
 		return this;
+	}
+
+	public <T> T trace(Class<T> clazz) {
+		String value = session().client().cookie(id());
+		return value != null ? Json.fromString(value, clazz) : null;
 	}
 
 	protected Component _color(String color) {

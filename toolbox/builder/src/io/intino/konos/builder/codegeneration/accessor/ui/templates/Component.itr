@@ -47,19 +47,19 @@ def type(method)
 end
 
 def type(properties & multiple) trigger(common)
-	[ label="$label"][ format="$format...[ ]"][ visible={$visible}]
+	[ label="$label"][ format="$format...[ ]"][ visible={$visible}][ traceable={$traceable}]
 end
 
 def type(properties & actionable) trigger(common)
-	[ title="$title"][ target="$target"][ mode="$actionableMode"][ icon="$icon"][ affirmed="$affirmed"][ signed={{text:"$signText",reason:"$reasonText"}}][ readonly={$readonly}][ size="$size"][ format="$format...[ ]"][ highlighted="$highlighted"][ visible={$visible}]
+	[ title="$title"][ target="$target"][ mode="$actionableMode"][ icon="$icon"][ affirmed="$affirmed"][ traceable={$traceable}][ signed={{text:"$signText",reason:"$reasonText"}}][ readonly={$readonly}][ size="$size"][ format="$format...[ ]"][ highlighted="$highlighted"][ visible={$visible}]
 end
 
 def type(properties & abstractslider) trigger(common)
-	[ label="$label"][ format="$format...[ ]"][ color="$color"][ arrangement="$arrangement"][ animation={{interval:$interval,loop:$loop}}][ readonly={$readonly}][ visible={$visible}][ style="$style"]
+	[ label="$label"][ format="$format...[ ]"][ color="$color"][ traceable={$traceable}][ arrangement="$arrangement"][ animation={{interval:$interval,loop:$loop}}][ readonly={$readonly}][ visible={$visible}][ style="$style"]
 end
 
 def type(properties) trigger(common)
-	[ name="$name"][ label="$label"][ format="$format...[ ]"][ color="$color"][ visible={$visible}][ multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing}}]
+	[ name="$name"][ label="$label"][ format="$format...[ ]"][ color="$color"][ visible={$visible}][ traceable={$traceable}][ multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing}}]
 end
 
 def type(properties & template) trigger(specific)

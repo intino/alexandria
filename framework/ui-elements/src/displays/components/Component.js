@@ -4,6 +4,7 @@ import Theme from "app-elements/gen/Theme";
 import ComponentNotifier from "../notifiers/ComponentNotifier";
 import {RiseLoader} from "react-spinners";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
+import CookieConsent, { Cookies } from "react-cookie-consent";
 
 export default class Component extends AlexandriaDisplay {
 
@@ -89,4 +90,33 @@ export default class Component extends AlexandriaDisplay {
         return this.props.height != null && this.props.height.indexOf("-1") === -1;
     };
 
+    _trace = (value) => {
+        if (!this.props.traceable) return;
+        if (!this._traceConsentAccepted()) return;
+        Cookies.set(this.props.id, encodeURIComponent(JSON.stringify(value)));
+    };
+
+    _traceValue = () => {
+        if (!this.props.traceable) return null;
+        if (!this._traceConsentAccepted()) return null;
+        const value = Cookies.get(this.props.id);
+        return value != null ? JSON.parse(decodeURIComponent(value)) : null;
+    };
+
+    _traceConsentAccepted = () => {
+        return Cookies.get(this._traceConsentVariable()) != null;
+    };
+
+    _traceConsent = () => {
+        if (!this.props.traceable) return (<React.Fragment/>);
+        return (
+            <CookieConsent cookieName={this._traceConsentVariable()}>
+                this.translate("This website uses cookies to enhance the user experience.");
+            </CookieConsent>
+        );
+    };
+
+    _traceConsentVariable = () => {
+        return Application.configuration.url.replace(/[^\w\s]/gi, '');
+    };
 }

@@ -24,15 +24,16 @@ const styles = theme => ({
 });
 
 class SelectorComboBox extends AbstractSelectorComboBox {
-	state = {
-		selection: [],
-		readonly: this.props.readonly
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new SelectorComboBoxNotifier(this);
 		this.requester = new SelectorComboBoxRequester(this);
+        this.state = {
+            selection: this._traceValue() ? this._traceValue() : [],
+            readonly: this.props.readonly,
+            ...this.state
+        };
 	};
 
 	render() {
@@ -42,8 +43,10 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		const label = this.props.label;
 		const value = this.selection(items);
 		const color = this.state.readonly ? theme.palette.grey.primary : "inherit";
+
 		return (
 			<div className={classes.container} style={this.style()}>
+                {this._traceConsent()}
 				{label != null && label !== "" ? <Typography variant={this.variant("subtitle1")} style={{color:color}}>{label}</Typography> : undefined }
 				<Select isMulti={multiple} isDisabled={this.state.readonly} isSearchable
 						closeMenuOnSelect={!multiple} autoFocus={this.props.focused}
@@ -74,6 +77,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 	handleChange = (selectedOptions) => {
 		const multi = this.props.multipleSelection;
 		const selection = multi ? selectedOptions.map(s => s.value) : [ selectedOptions.value ];
+		this._trace(selection);
 		this.requester.updateSelection(selection);
 		this.setState({ selection: selection });
 	};

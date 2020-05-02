@@ -140,6 +140,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (element.isOption()) result.add("name", element.asOption().name$());
 		if (element.i$(Labeled.class)) result.add("label", element.a$(Labeled.class).label());
 		if (!element.visible()) result.add("visible", element.visible());
+		if (element.isTraceable()) result.add("traceable", true);
 		if (element.i$(Multiple.class)) {
 			Multiple abstractMultiple = element.a$(Multiple.class);
 			result.add("instances", nameOf(element));
