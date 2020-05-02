@@ -7,6 +7,8 @@ import io.intino.alexandria.ui.displays.events.HideListener;
 import io.intino.alexandria.ui.displays.events.ShowListener;
 import io.intino.alexandria.ui.displays.notifiers.ComponentNotifier;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +71,7 @@ public abstract class Component<DN extends ComponentNotifier, B extends Box> ext
 
 	public <T> T trace(Class<T> clazz) {
 		String value = session().client().cookie(id());
-		return value != null ? Json.fromString(value, clazz) : null;
+		return value != null ? Json.fromString(URLDecoder.decode(value, StandardCharsets.UTF_8), clazz) : null;
 	}
 
 	protected Component _color(String color) {
