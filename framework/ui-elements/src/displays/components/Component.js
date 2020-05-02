@@ -93,14 +93,14 @@ export default class Component extends AlexandriaDisplay {
     _trace = (value) => {
         if (!this.props.traceable) return;
         if (!this._traceConsentAccepted()) return;
-        Cookies.set(this.props.id, encodeURIComponent(JSON.stringify(value)));
+        Cookies.set(this.props.id, JSON.stringify(value));
     };
 
     _traceValue = () => {
         if (!this.props.traceable) return null;
         if (!this._traceConsentAccepted()) return null;
         const value = Cookies.get(this.props.id);
-        return value != null ? JSON.parse(decodeURIComponent(value)) : null;
+        return value != null ? JSON.parse(value) : null;
     };
 
     _traceConsentAccepted = () => {
