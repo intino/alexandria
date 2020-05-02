@@ -4,7 +4,7 @@ Artifact("io.intino.alexandria", "4.3.0") ui-framework
 	Box("Konos", "8.7.0") > targetPackage = "io.intino.alexandria"
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.0.4")
-		Compile("io.intino.alexandria", "http", "1.0.6")
+		Compile("io.intino.alexandria", "http", "1.0.7")
 		Compile("io.intino.alexandria", "json", "1.0.2")
 		Compile("io.intino.alexandria", "rest-accessor", "1.0.7")
 		Compile("io.intino.alexandria", "logger4j", "1.0.0")
