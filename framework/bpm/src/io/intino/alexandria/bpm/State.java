@@ -1,6 +1,8 @@
 package io.intino.alexandria.bpm;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static io.intino.alexandria.bpm.State.Type.Initial;
@@ -30,7 +32,7 @@ public class State {
 		return task;
 	}
 
-	public boolean isInitial(){
+	public boolean isInitial() {
 		return type.contains(Initial);
 	}
 
@@ -38,6 +40,11 @@ public class State {
 		return type.contains(Terminal);
 	}
 
+	public List<Type> types() {
+		return new ArrayList<>(type);
+	}
+
 	public enum Type {Initial, Normal, Terminal}
+
 	public enum Status {Enter, Exit, Rejected, Skipped}
 }

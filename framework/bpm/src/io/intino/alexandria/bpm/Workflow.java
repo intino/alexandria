@@ -6,19 +6,18 @@ import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageReader;
 import io.intino.alexandria.message.MessageWriter;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static io.intino.alexandria.bpm.Link.Type.Default;
 import static io.intino.alexandria.bpm.Link.Type.Exclusive;
-import static io.intino.alexandria.bpm.Process.Status.Enter;
-import static io.intino.alexandria.bpm.Process.Status.Running;
+import static io.intino.alexandria.bpm.Process.Status.*;
 import static java.lang.Thread.sleep;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -102,6 +101,7 @@ public abstract class Workflow {
 			if (stateIsTerminal(status)) registerTerminationMessage(status);
 			else advanceProcess(status);
 		} else if (stateRejectedOrSkipped(status)) propagateRejectionOnBranch(process, stateOf(status));
+		if (status.processStatus().equals(Aborted.name())) process.abort();
 		persistProcess(process);
 	}
 
@@ -113,7 +113,7 @@ public abstract class Workflow {
 		}
 		List<ProcessStatus> statuses = messagesOf(finishedPath);
 		statuses.add(status);
-		write(finishedPath, statuses, null);
+		write(finishedPath, statuses);
 	}
 
 	private List<ProcessStatus> messagesOf(String path) {
@@ -133,33 +133,58 @@ public abstract class Workflow {
 			terminateProcess(process);
 			persistence.delete(activePathOf(process.id()));
 			persistence.delete(dataPath(activePathOf(process.id())));
+			persistence.delete(definitionPath(activePathOf(process.id())));
 			write(finishedPathOf(process), process);
 		} else write(activePathOf(process.id()), process);
 	}
 
 	private void write(String path, Process process) {
-		write(path, new ArrayList<>(process.messages()), new HashMap<>(process.data()));
+		write(path, new ArrayList<>(process.messages()));
+		write(path, new HashMap<>(process.data()));
+		if (!persistence.exists(definitionPath(path)))
+			write(path, process.states(), process.links());
 	}
 
-	private void write(String path, List<ProcessStatus> messages, Map<String, String> data) {
+	private void write(String path, Map<String, String> data) {
+		if (data == null) return;
+		PrintWriter p = new PrintWriter(persistence.write(dataPath(path)));
+		Message message = new Message("Data");
+		data.forEach(message::set);
+		p.print(message.toString());
+		p.close();
+	}
+
+	private void write(String path, List<ProcessStatus> messages) {
 		try {
 			MessageWriter writer = new MessageWriter(persistence.write(path));
 			for (ProcessStatus message : new ArrayList<>(messages)) writer.write(message.get());
 			writer.close();
-
-			if (data == null) return;
-			PrintWriter p = new PrintWriter(persistence.write(dataPath(path)));
-			Message message = new Message("Data");
-			data.forEach(message::set);
-			p.print(message.toString());
-			p.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Logger.error(e);
 		}
 	}
 
+	private void write(String path, List<State> states, List<Link> links) {
+		PrintWriter p = new PrintWriter(persistence.write(definitionPath(path)));
+		states.forEach(s -> {
+			Message message = new Message("State");
+			message.set("name", s.name()).set("type", s.types().stream().map(Enum::name).collect(Collectors.joining(", "))).set("taskType", s.task().type().name());
+			p.write(message.toString() + "\n\n");
+		});
+		links.forEach(l -> {
+			Message message = new Message("Link");
+			message.set("from", l.from()).set("to", l.to()).set("type", l.type().name());
+			p.write(message.toString() + "\n\n");
+		});
+		p.close();
+	}
+
 	private String dataPath(String path) {
 		return path.replace(".process", ".data");
+	}
+
+	private String definitionPath(String path) {
+		return path.replace(".process", ".definition");
 	}
 
 	private String activePathOf(String id) {
