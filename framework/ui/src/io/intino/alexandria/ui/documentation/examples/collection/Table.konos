@@ -3,7 +3,7 @@ dsl Konos
 use Collection
 use Theme
 
-Template(layout=Vertical, spacing=DP8) tableExamplesMold as Decorated
+Template(layout=Vertical, spacing=DP8) tableExamplesMold
 
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=48%, height=100%)

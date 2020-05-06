@@ -2,7 +2,7 @@ dsl Konos
 
 use Theme
 
-Template(layout=Vertical, spacing=DP8) dashboardExamplesMold as Decorated
+Template(layout=Vertical, spacing=DP8) dashboardExamplesMold
 
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=100%, height=100%)

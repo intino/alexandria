@@ -4,7 +4,7 @@ use Widget
 use Main
 use Theme
 
-Template widgetTypeTemplate as Decorated
+Template widgetTypeTemplate
 	Header(color="white", format=air) as Absolute(height=100px)
 		Block(layout=Horizontal Center, spacing=DP24)
 			Image(value="images/intino.png") as Absolute(80px, 80px)
