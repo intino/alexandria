@@ -144,7 +144,7 @@ public class BpmViewer {
 		}
 	}
 
-	interface Definition{
+	public interface Definition{
 		List<State> states();
 		List<Link> links();
 
