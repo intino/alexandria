@@ -5,10 +5,7 @@ import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.logger.Logger;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Semaphore;
 
 import static java.util.stream.Collectors.toList;
@@ -19,11 +16,19 @@ public abstract class Process {
 	private final Map<String, String> data = new HashMap<>();
 	private final String id;
 	private List<Link> links = new ArrayList<>();
-	private Map<String, State> states = new HashMap<>();
+	private Map<String, State> states = new LinkedHashMap<>();
 	private Semaphore semaphore = new Semaphore(1);
 
 	protected Process(String id) {
 		this.id = id;
+	}
+
+	public List<State> states(){
+		return new ArrayList<>(states.values());
+	}
+
+	public List<Link> links(){
+		return new ArrayList<>(links);
 	}
 
 	protected void addState(State state) {
@@ -173,5 +178,8 @@ public abstract class Process {
 		return Timetag.of(processStatusList.get(0).ts(), Scale.Month).toString();
 	}
 
-	public enum Status {Enter, Running, Exit}
+	public void abort() {
+	}
+
+	public enum Status {Enter, Running, Exit, Aborted}
 }
