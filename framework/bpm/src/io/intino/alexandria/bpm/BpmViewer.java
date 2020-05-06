@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.StreamSupport.stream;
@@ -58,17 +59,68 @@ public class BpmViewer {
 	public class ProcessInfo {
 		private final String processPath;
 		private final String dataPath;
+		private final String definitionPath;
 		private List<ProcessStatus> processStatusList;
 
 		public ProcessInfo(String processPath) {
 			this.processPath = processPath;
 			this.dataPath = processPath.replace(".process", ".data");
+			this.definitionPath = processPath.replace(".process", ".definition");
 		}
 
 		public List<ProcessStatus> processStatuses() {
 			return processStatusList == null ? processStatusList = stream(new MessageReader(persistenceManager.read(processPath)).spliterator(), false)
 					.map(ProcessStatus::new).collect(toList()) : processStatusList;
 		}
+
+		public Definition definition(){
+			if(!persistenceManager.exists(definitionPath)) return null;
+			List<Message> messages = stream(new MessageReader(persistenceManager.read(definitionPath)).spliterator(), false).collect(toList());
+			return new Definition() {
+				@Override
+				public List<State> states() {
+					return messages.stream().filter(m -> m.type().equals("State"))
+							.map(m -> new State() {
+								@Override
+								public String name() {
+									return m.get("name").asString();
+								}
+
+								@Override
+								public List<String> types() {
+									return asList(m.get("type").asString().split(", "));
+								}
+
+								@Override
+								public String taskType() {
+									return m.get("taskType").asString();
+								}
+							}).collect(toList());
+				}
+
+				@Override
+				public List<Link> links() {
+					return messages.stream().filter(m -> m.type().equals("Link"))
+							.map(m -> new Link() {
+								@Override
+								public String from() {
+									return m.get("from").asString();
+								}
+
+								@Override
+								public String to() {
+									return m.get("to").asString();
+								}
+
+								@Override
+								public String type() {
+									return m.get("type").asString();
+								}
+
+							}).collect(toList());
+				}
+			};
+		};
 
 		public Map<String, String> data() {
 			Message message = new MessageReader(persistenceManager.read(dataPath)).next();
@@ -92,5 +144,21 @@ public class BpmViewer {
 		}
 	}
 
+	interface Definition{
+		List<State> states();
+		List<Link> links();
+
+		interface State{
+			String name();
+			List<String> types();
+			String taskType();
+		}
+
+		interface Link{
+			String from();
+			String to();
+			String type();
+		}
+	}
 
 }
