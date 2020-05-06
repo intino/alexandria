@@ -28,7 +28,7 @@ use Text
 use Theme
 use Schemas
 
-Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widgetMold as Decorated DynamicLoaded(loadTime=Slow)
+Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widgetMold as DynamicLoaded(loadTime=Slow)
 	Text(value="Widget", format=h3) title
 	Text(format=body1) highlightFacets as Multiple(arrangement=Horizontal) Highlighted("white","#679164")
 	Text(format=body1 airBottom) description
@@ -75,7 +75,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Text(value="Events", format=h5 underline)
 			Frame(display=eventsDisplay) events
 
-Template(modelClass="io.intino.alexandria.schemas.Property", format=airBottom) propertyMold as Decorated
+Template(modelClass="io.intino.alexandria.schemas.Property", format=airBottom) propertyMold
 	Text(format=body2 facetsAbsolute, value="", mode=Uppercase) facets
 	Block(layout=Horizontal StartJustified)
 		Text(format=h6) name
@@ -87,7 +87,7 @@ Template(modelClass="io.intino.alexandria.schemas.Property", format=airBottom) p
 		Text(format=body2 widgetType, value=":&nbsp;&nbsp;") valuesSeparator
 		Text(format=body2) values
 
-Template(modelClass="io.intino.alexandria.schemas.Method", format=airBottom) methodMold as Decorated
+Template(modelClass="io.intino.alexandria.schemas.Method", format=airBottom) methodMold
 	Text(format=body2 facetsAbsolute, value="", mode=Uppercase) facets
 	Block(layout=Horizontal StartJustified)
 		Text(format=h6) name
@@ -98,11 +98,11 @@ Template(modelClass="io.intino.alexandria.schemas.Method", format=airBottom) met
 		Text(format=h6 widgetType, mode = Lowercase) returnType
 	Text(format=body2, value="") description
 
-Template(layout=Horizontal, modelClass="io.intino.alexandria.schemas.Parameter") methodParamMold as Decorated
+Template(layout=Horizontal, modelClass="io.intino.alexandria.schemas.Parameter") methodParamMold
 	Text(format=h6) name
 	Text(format=h6, value=":&nbsp;")
 	Text(format=h6) type
 	Text(format=h6) comma
 
-Display eventsDisplay as Decorated
+Display eventsDisplay
 	Notification refresh as Object(Method) List

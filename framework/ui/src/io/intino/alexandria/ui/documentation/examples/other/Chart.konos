@@ -4,7 +4,7 @@ use Theme
 
 Dataframe iris as CSV("data/iris.csv")
 
-Template(layout=Vertical, spacing=DP8) chartExamplesMold as Decorated
+Template(layout=Vertical, spacing=DP8) chartExamplesMold
 
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=32%, height=100%)

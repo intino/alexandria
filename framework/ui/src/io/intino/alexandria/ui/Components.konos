@@ -2,39 +2,39 @@ dsl Konos
 
 use Schemas
 
-Component template as Decorated
+Component template
 
-Component block as Decorated
+Component block
 	Notification refreshSpacing as Text
 	Notification refreshLayout as Text
 
-Component blockConditional as Decorated
+Component blockConditional
 
-Component blockSplitter as Decorated
+Component blockSplitter
 	Notification show as Integer
 	Request back
 
-Component blockParallax as Decorated
+Component blockParallax
 	Notification refresh as Text
 
-Component blockBadge as Decorated
+Component blockBadge
 	Notification refresh as Integer
 
-Component blockDrawer as Decorated
+Component blockDrawer
 	Notification refresh as Bool
 	Request toggle
 
-Component blockPopover as Decorated
+Component blockPopover
 	Notification refresh as Text
 	Request close
 
-Component option as Decorated
-Component chart as Decorated
+Component option
+Component chart
 	Notification showLoading
 	Notification refresh as Object(ChartInfo)
 	Notification refreshError as Text
 
-Component dashboard as Decorated
+Component dashboard
 	Notification showLoading
 	Notification showSettings as Object(DashboardSettingsInfo)
 	Notification hideSettings
@@ -46,50 +46,50 @@ Component dashboard as Decorated
 	Request saveServerScript as Text
 	Request saveUiScript as Text
 
-Component header as Decorated
-Component tabs as Decorated
-Component tab as Decorated
+Component header
+Component tabs
+Component tab
 
-Component baseIcon as Decorated
+Component baseIcon
 	Notification refreshIcon as Text
-Component icon as Decorated ExtensionOf(baseIcon)
-Component materialIcon as Decorated ExtensionOf(baseIcon)
+Component icon as ExtensionOf(baseIcon)
+Component materialIcon as ExtensionOf(baseIcon)
 
-Component optionList as Decorated
-Component frame as Decorated
+Component optionList
+Component frame
 	Notification refreshDisplay as Text
 
-Component baseSelector as Decorated
+Component baseSelector
 	Request optionsRendered
 
-Component selectorMenu as Decorated ExtensionOf(baseSelector)
+Component selectorMenu as ExtensionOf(baseSelector)
 	Notification refreshSelected as Object(SelectorMenuSelection)
 	Request select as Integer
 
-Component selectorRadioBox as Decorated ExtensionOf(baseSelector)
+Component selectorRadioBox as ExtensionOf(baseSelector)
 	Notification refreshSelected as Text
 	Request select as Text
 
-Component selectorComboBox as Decorated ExtensionOf(baseSelector)
+Component selectorComboBox as ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
 	Notification refreshReadonly as Bool
 	Request updateSelection as Text List
 	Request refresh
 
-Component selectorListBox as Decorated ExtensionOf(baseSelector)
+Component selectorListBox as ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
 	Request updateSelection as Text List
 
-Component selectorTabs as Decorated ExtensionOf(baseSelector)
+Component selectorTabs as ExtensionOf(baseSelector)
 	Notification refreshSelected as Integer
 	Request select as Integer
 
-Component multiple as Decorated
+Component multiple
 
-Component spinner as Decorated
+Component spinner
 	Notification refreshLoading as Bool
 
-Component baseSlider as Decorated
+Component baseSlider
 	Notification refreshOrdinals as Object(Ordinal) List
 	Notification refreshSelected as Object(Selected)
 	Notification refreshSelectedOrdinal as Text
@@ -104,13 +104,13 @@ Component baseSlider as Decorated
 	Request play
 	Request pause
 
-Component slider as Decorated ExtensionOf(baseSlider)
-Component temporalSlider as Decorated ExtensionOf(baseSlider)
+Component slider as ExtensionOf(baseSlider)
+Component temporalSlider as ExtensionOf(baseSlider)
 
-Component stamp as Decorated
-Component proxyStamp as Decorated
+Component stamp
+Component proxyStamp
 
-Component baseDialog as Decorated
+Component baseDialog
 	Notification open
 	Notification close
 	Notification refreshTitle as Text
@@ -119,25 +119,25 @@ Component baseDialog as Decorated
 	Request open
 	Request close
 
-Component dialog as Decorated ExtensionOf(baseDialog)
-Component alertDialog as Decorated ExtensionOf(baseDialog)
-Component decisionDialog as Decorated ExtensionOf(baseDialog)
-Component collectionDialog as Decorated ExtensionOf(baseDialog)
+Component dialog as ExtensionOf(baseDialog)
+Component alertDialog as ExtensionOf(baseDialog)
+Component decisionDialog as ExtensionOf(baseDialog)
+Component collectionDialog as ExtensionOf(baseDialog)
 
-Component divider as Decorated
-Component user as Decorated
+Component divider
+Component user
 	Notification refresh as Object(UserInfo)
 
 	Request logout
 	Request refreshChildren
 
-Component portal as Decorated
+Component portal
 
-Component stepper as Decorated
+Component stepper
     Notification refresh as Object(StepperInfo)
     Request next
     Request back
 
-Component step as Decorated
+Component step
     Notification refresh as Object(StepInfo)
     Request contentRendered
