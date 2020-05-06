@@ -34,19 +34,40 @@ class SelectorListBox extends AbstractSelectorListBox {
 	renderChild = (child, key) => {
 		const className = child.props.className;
 		if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
-		const selected = this.state.selection[0] === child.props.name;
+		const selected = this.isInSelection(child.props.name);
 		const style = selected ? {background:"#ddd"} : {};
 		return (<ListItem key={key} style={style} button onClick={this.handleSelect.bind(this, child.props.name)}>{child}</ListItem>);
 	};
 
 	handleSelect = (name) => {
-		this.requester.updateSelection([ name ]);
-		this.setState({ selection: [ name ] });
+		const multi = this.props.multipleSelection;
+	    const selection = multi ? this.updateSelection(name) : [ name ];
+		this.requester.updateSelection(selection);
+		this.setState({ selection: selection });
 	};
 
 	refreshSelection = (value) => {
 		this.setState({ selection: value });
 	};
+
+	updateSelection = (name) => {
+	    const result = [];
+	    let found = false;
+	    for (let i=0; i<this.state.selection.length; i++) {
+	        if (this.state.selection[i] === name) found = true;
+	        else result.push(this.state.selection[i]);
+	    }
+        if (!found) result.push(name);
+	    return result;
+	};
+
+	isInSelection = (name) => {
+	    const result = [];
+	    for (let i=0; i<this.state.selection.length; i++)
+	        if (this.state.selection[i] === name) return true;
+	    return false;
+    };
+
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(SelectorListBox));
