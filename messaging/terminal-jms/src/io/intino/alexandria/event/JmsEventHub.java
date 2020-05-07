@@ -91,7 +91,7 @@ public class JmsEventHub implements EventHub {
 
 	private void checkConnection() {
 		Logger.debug("Checking DataHub connection...");
-		threads.removeAll(threads.stream().filter(t -> !t.getState().equals(TERMINATED)).collect(Collectors.toList()));
+		threads.removeAll(threads.stream().filter(t -> t.getState().equals(TERMINATED)).collect(Collectors.toList()));
 		if (brokerUrl.startsWith("failover") && !connected.get()) {
 			Logger.debug("Currently disconnected. Waiting for reconnection...");
 			return;
@@ -281,9 +281,8 @@ public class JmsEventHub implements EventHub {
 			@Override
 			public void transportResumed() {
 				Logger.info("Connection with Data Hub stablished!");
-				updateConsumers();
 				connected.set(true);
-
+				recoverConsumers();
 			}
 		};
 	}
@@ -316,10 +315,11 @@ public class JmsEventHub implements EventHub {
 		}
 	}
 
-	private void updateConsumers() {
+	private void recoverConsumers() {
 		if (!started.get()) return;
 		if (!eventConsumers.isEmpty() && consumers.isEmpty())
 			for (String channel : eventConsumers.keySet()) consumers.put(channel, topicConsumer(channel));
+		this.recoveringEvents.set(false);
 		recoverEvents();
 	}
 
