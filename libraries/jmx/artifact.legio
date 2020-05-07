@@ -13,4 +13,4 @@ Repository("intino-maven") intino
 	Release("https://artifactory.intino.io/artifactory/release-libraries") release
 
 Repository("maven2-repository.dev.java.net")
-	Release("http://download.java.net/maven/2/")
+	Release("https://download.java.net/maven/2/")
