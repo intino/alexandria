@@ -101,6 +101,8 @@ public class JmsEventHub implements EventHub {
 			connected.set(true);
 			return;
 		}
+		threads.forEach(Thread::interrupt);
+		threads.clear();
 		stop();
 		start();
 		connected.set(true);
