@@ -86,7 +86,7 @@ public class JmsEventHub implements EventHub {
 		}
 		started.set(true);
 		scheduler = Executors.newScheduledThreadPool(1);
-		scheduler.scheduleAtFixedRate(this::checkConnection, 15, 15, TimeUnit.MINUTES);
+		scheduler.scheduleAtFixedRate(this::checkConnection, 15, 1, TimeUnit.MINUTES);
 	}
 
 	private void checkConnection() {
@@ -122,7 +122,7 @@ public class JmsEventHub implements EventHub {
 	public synchronized void sendEvent(String channel, Event event) {
 		new ArrayList<>(eventConsumers.getOrDefault(channel, Collections.emptyList())).forEach(eventConsumer -> eventConsumer.accept(event));
 		Thread thread = new Thread(() -> {
-			if (connected.get() && !eventOutBox.isEmpty() && !recoveringEvents.get()) recoverEvents();
+			if (connected.get()) recoverEvents();
 			if (!doSendEvent(channel, event)) eventOutBox.push(channel, event);
 		}, "JmsEventHub.SendEvent");
 		threads.add(thread);
@@ -282,7 +282,7 @@ public class JmsEventHub implements EventHub {
 
 			@Override
 			public void transportResumed() {
-				Logger.info("Connection with Data Hub stablished!");
+				Logger.info("Connection with Data Hub established!");
 				connected.set(true);
 				recoverConsumers();
 			}
@@ -326,14 +326,17 @@ public class JmsEventHub implements EventHub {
 	}
 
 	private void recoverEvents() {
+		if (recoveringEvents.get()) return;
 		recoveringEvents.set(true);
-		if (!eventOutBox.isEmpty())
-			while (!eventOutBox.isEmpty()) {
-				Map.Entry<String, Event> event = eventOutBox.get();
-				if (event == null) continue;
-				if (doSendEvent(event.getKey(), event.getValue())) eventOutBox.pop();
-				else break;
-			}
+		synchronized (eventOutBox) {
+			if (!eventOutBox.isEmpty())
+				while (!eventOutBox.isEmpty()) {
+					Map.Entry<String, Event> event = eventOutBox.get();
+					if (event == null) continue;
+					if (doSendEvent(event.getKey(), event.getValue())) eventOutBox.pop();
+					else break;
+				}
+		}
 		recoveringEvents.set(false);
 	}
 
