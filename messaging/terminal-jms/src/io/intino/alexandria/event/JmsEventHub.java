@@ -282,7 +282,7 @@ public class JmsEventHub implements EventHub {
 
 			@Override
 			public void transportResumed() {
-				Logger.info("Connection with Data Hub stablished!");
+				Logger.info("Connection with Data Hub established!");
 				connected.set(true);
 				recoverConsumers();
 			}
@@ -338,7 +338,6 @@ public class JmsEventHub implements EventHub {
 				}
 		}
 		recoveringEvents.set(false);
-
 	}
 
 	private static String createRandomString() {
