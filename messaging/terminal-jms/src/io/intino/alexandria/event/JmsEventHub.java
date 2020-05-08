@@ -86,12 +86,12 @@ public class JmsEventHub implements EventHub {
 		}
 		started.set(true);
 		scheduler = Executors.newScheduledThreadPool(1);
-		scheduler.scheduleAtFixedRate(this::checkConnection, 15, 15, TimeUnit.MINUTES);
+		scheduler.scheduleAtFixedRate(this::checkConnection, 15, 1, TimeUnit.MINUTES);
 	}
 
 	private void checkConnection() {
 		Logger.debug("Checking DataHub connection...");
-		threads.removeAll(threads.stream().filter(t -> !t.getState().equals(TERMINATED)).collect(Collectors.toList()));
+		threads.removeAll(threads.stream().filter(t -> t.getState().equals(TERMINATED)).collect(Collectors.toList()));
 		if (brokerUrl.startsWith("failover") && !connected.get()) {
 			Logger.debug("Currently disconnected. Waiting for reconnection...");
 			return;
@@ -101,6 +101,8 @@ public class JmsEventHub implements EventHub {
 			connected.set(true);
 			return;
 		}
+		threads.forEach(Thread::interrupt);
+		threads.clear();
 		stop();
 		start();
 		connected.set(true);
@@ -120,7 +122,7 @@ public class JmsEventHub implements EventHub {
 	public synchronized void sendEvent(String channel, Event event) {
 		new ArrayList<>(eventConsumers.getOrDefault(channel, Collections.emptyList())).forEach(eventConsumer -> eventConsumer.accept(event));
 		Thread thread = new Thread(() -> {
-			if (connected.get() && !eventOutBox.isEmpty() && !recoveringEvents.get()) recoverEvents();
+			if (connected.get()) recoverEvents();
 			if (!doSendEvent(channel, event)) eventOutBox.push(channel, event);
 		}, "JmsEventHub.SendEvent");
 		threads.add(thread);
@@ -280,10 +282,9 @@ public class JmsEventHub implements EventHub {
 
 			@Override
 			public void transportResumed() {
-				Logger.info("Connection with Data Hub stablished!");
-				updateConsumers();
+				Logger.info("Connection with Data Hub established!");
 				connected.set(true);
-
+				recoverConsumers();
 			}
 		};
 	}
@@ -316,22 +317,26 @@ public class JmsEventHub implements EventHub {
 		}
 	}
 
-	private void updateConsumers() {
+	private void recoverConsumers() {
 		if (!started.get()) return;
 		if (!eventConsumers.isEmpty() && consumers.isEmpty())
 			for (String channel : eventConsumers.keySet()) consumers.put(channel, topicConsumer(channel));
+		this.recoveringEvents.set(false);
 		recoverEvents();
 	}
 
 	private void recoverEvents() {
+		if (recoveringEvents.get()) return;
 		recoveringEvents.set(true);
-		if (!eventOutBox.isEmpty())
-			while (!eventOutBox.isEmpty()) {
-				Map.Entry<String, Event> event = eventOutBox.get();
-				if (event == null) continue;
-				if (doSendEvent(event.getKey(), event.getValue())) eventOutBox.pop();
-				else break;
-			}
+		synchronized (eventOutBox) {
+			if (!eventOutBox.isEmpty())
+				while (!eventOutBox.isEmpty()) {
+					Map.Entry<String, Event> event = eventOutBox.get();
+					if (event == null) continue;
+					if (doSendEvent(event.getKey(), event.getValue())) eventOutBox.pop();
+					else break;
+				}
+		}
 		recoveringEvents.set(false);
 	}
 

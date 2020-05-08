@@ -101,7 +101,10 @@ public abstract class Workflow {
 			if (stateIsTerminal(status)) registerTerminationMessage(status);
 			else advanceProcess(status);
 		} else if (stateRejectedOrSkipped(status)) propagateRejectionOnBranch(process, stateOf(status));
-		if (status.processStatus().equals(Aborted.name())) process.abort();
+		if (status.processStatus().equals(Aborted.name())){
+			process.register(status);
+			process.abort();
+		}
 		persistProcess(process);
 	}
 
