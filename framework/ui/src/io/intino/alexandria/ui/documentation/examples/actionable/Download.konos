@@ -2,7 +2,7 @@ dsl Konos
 
 use Theme
 
-Template(layout=Vertical, spacing=DP8) downloadExamplesMold as Decorated
+Template(layout=Vertical, spacing=DP8) downloadExamplesMold
 
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=32%, height=100%)

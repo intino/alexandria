@@ -2,7 +2,7 @@ dsl Konos
 
 use Theme
 
-Template(layout=Vertical, spacing=DP8) searchBoxExamplesMold as Decorated
+Template(layout=Vertical, spacing=DP8) searchBoxExamplesMold
 
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=49%, height=100%)

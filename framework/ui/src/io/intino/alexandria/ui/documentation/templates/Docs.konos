@@ -3,7 +3,7 @@ dsl Konos
 use Main
 use Theme
 
-Template docsTemplate as Decorated
+Template docsTemplate
 	Header(color="white", format=air) as Absolute(height=100px)
 		Block(layout=Horizontal Center, spacing=DP24)
 			Image(value="images/intino.png") as Absolute(80px, 80px)
@@ -23,7 +23,7 @@ Template docsTemplate as Decorated
 			Stamp(template=widgetSummaryMold,spacing=DP16,arrangement=Horizontal) otherWidgets as Multiple(noItemsMessage="no widgets")
 
 
-Template(layout=Vertical Flexible, modelClass="io.intino.alexandria.schemas.Widget") widgetSummaryMold as Decorated Relative(height=100%)
+Template(layout=Vertical Flexible, modelClass="io.intino.alexandria.schemas.Widget") widgetSummaryMold as Relative(height=100%)
 	Block(layout=Vertical Flexible) as Paper Absolute(width=400px)
 		Link(title = "", format=h6, size=Large) title as OpenPage(page = UiElements.widgetType)
 		Block(layout=Flexible) > Text description

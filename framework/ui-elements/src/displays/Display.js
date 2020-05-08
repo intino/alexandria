@@ -10,6 +10,7 @@ export const enrichDisplayProperties = (instance) => {
 };
 
 export default class Display extends PassiveView {
+    static TraceConsentRendered;
     address = null;
 
     constructor(props) {
@@ -153,6 +154,8 @@ export default class Display extends PassiveView {
 
     renderTraceConsent = () => {
         if (!this.state.traceable) return (<React.Fragment/>);
+        if (Display.TraceConsentRendered != undefined && Display.TraceConsentRendered != this.props.id) return (<React.Fragment/>);
+        Display.TraceConsentRendered = this.props.id;
         return (
             <CookieConsent cookieName={this._traceConsentVariable()} buttonText={this.translate("I understand")} buttonStyle={{fontSize:'11pt'}}>
                 <div style={{textAlign:'left',fontSize:'11pt'}}>{this.translate("This website uses cookies to enhance the user experience.")}</div>
