@@ -167,9 +167,6 @@ public abstract class Process {
 				});
 	}
 
-	protected void onAbort() {
-	}
-
 	public String finishStatus() {
 		return processStatusList().get(processStatusList().size() - 1).processStatus();
 	}
