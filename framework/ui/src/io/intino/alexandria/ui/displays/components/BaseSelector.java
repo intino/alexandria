@@ -103,6 +103,13 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         notifier.addressed(address);
     }
 
+    String nameOf(String label) {
+        if (label == null) return null;
+        int position = position(label);
+        if (position == -1) return null;
+        return nameOf(position);
+    }
+
     String nameOf(int option) {
         if (option == -1) return null;
         SelectorOption child = findOption(option);
@@ -120,7 +127,8 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         List<SelectorOption> options = options();
         for (int i = 0; i< options.size(); i++) {
             SelectorOption selectorOption = options.get(i);
-            if (selectorOption.name().equalsIgnoreCase(option) || selectorOption.id().equals(option))
+            if (selectorOption.name().equalsIgnoreCase(option) || selectorOption.id().equals(option) ||
+                ((selectorOption instanceof BaseText) && ((BaseText<?,?>)selectorOption).value().equals(option)))
                 return i;
         }
         return -1;

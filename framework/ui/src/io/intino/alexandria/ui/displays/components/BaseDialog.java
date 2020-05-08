@@ -61,6 +61,8 @@ public class BaseDialog<DN extends BaseDialogNotifier, B extends Box> extends Ab
     }
 
     public BaseDialog<DN, B> relativeSize(int width, int height) {
+        if (width > 100) width = 100;
+        if (height > 100) height = 100;
         return size(width + "%", height + "%");
     }
 

@@ -21,7 +21,7 @@ public class SelectorRadioBox<DN extends SelectorRadioBoxNotifier, B extends Box
     }
 
 	public void select(String value) {
-		notifier.refreshSelected(value);
+		notifier.refreshSelected(nameOf(value));
 		if (selected != null && selected.equals(value)) return;
 		selected = value;
 		notifySelection();
