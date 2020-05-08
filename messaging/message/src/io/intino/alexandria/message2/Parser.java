@@ -1,4 +1,4 @@
-package io.intino.alexandria.message;
+package io.intino.alexandria.message2;
 
 interface Parser {
     Object parse(String text);

@@ -1,7 +1,7 @@
 package io.intino.test;
 
-import io.intino.alexandria.message.Message;
-import io.intino.alexandria.message.MessageReader;
+import io.intino.alexandria.message2.Message;
+import io.intino.alexandria.message2.MessageReader;
 import org.junit.Test;
 
 import java.time.Instant;

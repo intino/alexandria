@@ -6,6 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/test-res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/res" type="java-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -13,5 +14,6 @@
     <orderEntry type="module" module-name="primitives" />
     <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: org.assertj:assertj-core:3.15.0" level="project" />
+    <orderEntry type="library" name="Intino: org.antlr:antlr4-runtime:4.8" level="project" />
   </component>
 </module>

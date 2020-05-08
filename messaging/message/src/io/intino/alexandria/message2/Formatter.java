@@ -1,4 +1,4 @@
-package io.intino.alexandria.message;
+package io.intino.alexandria.message2;
 
 interface Formatter {
     String format(Object value);

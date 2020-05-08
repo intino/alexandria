@@ -1,8 +1,8 @@
 package io.intino.test;
 
-import io.intino.alexandria.message.Message;
-import io.intino.alexandria.message.MessageBuilder;
-import io.intino.alexandria.message.MessageReader;
+import io.intino.alexandria.message2.Message;
+import io.intino.alexandria.message2.MessageBuilder;
+import io.intino.alexandria.message2.MessageReader;
 import io.intino.test.schemas.*;
 import org.junit.Test;
 
@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import static io.intino.alexandria.message.MessageCast.cast;
+import static io.intino.alexandria.message2.MessageCast.cast;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class MessageCast_ {

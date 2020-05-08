@@ -1,4 +1,4 @@
-package io.intino.alexandria.message;
+package io.intino.alexandria.message2;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

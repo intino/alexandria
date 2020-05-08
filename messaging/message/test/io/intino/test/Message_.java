@@ -1,7 +1,7 @@
 package io.intino.test;
 
 import io.intino.alexandria.Resource;
-import io.intino.alexandria.message.Message;
+import io.intino.alexandria.message2.Message;
 import org.junit.Test;
 
 import java.util.UUID;

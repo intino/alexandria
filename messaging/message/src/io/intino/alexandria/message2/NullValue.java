@@ -1,4 +1,4 @@
-package io.intino.alexandria.message;
+package io.intino.alexandria.message2;
 
 import java.time.Instant;
 

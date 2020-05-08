@@ -1,4 +1,4 @@
-package io.intino.alexandria.message;
+package io.intino.alexandria.message2;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
