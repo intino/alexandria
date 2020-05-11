@@ -61,6 +61,8 @@ public class BpmViewer {
 		private final String dataPath;
 		private final String definitionPath;
 		private List<ProcessStatus> processStatusList;
+		private Definition definition;
+		private Map<String, String> data;
 
 		public ProcessInfo(String processPath) {
 			this.processPath = processPath;
@@ -69,62 +71,75 @@ public class BpmViewer {
 		}
 
 		public List<ProcessStatus> processStatuses() {
-			return processStatusList == null ? processStatusList = stream(new MessageReader(persistenceManager.read(processPath)).spliterator(), false)
-					.map(ProcessStatus::new).collect(toList()) : processStatusList;
+			if(processStatusList != null) return processStatusList;
+			MessageReader messageReader = new MessageReader(persistenceManager.read(processPath));
+			processStatusList = stream(messageReader.spliterator(), false).map(ProcessStatus::new).collect(toList());
+			messageReader.close();
+			return processStatusList;
 		}
 
 		public Definition definition(){
+			if(definition != null) return definition;
 			if(!persistenceManager.exists(definitionPath)) return null;
-			List<Message> messages = stream(new MessageReader(persistenceManager.read(definitionPath)).spliterator(), false).collect(toList());
-			return new Definition() {
+			MessageReader reader = new MessageReader(persistenceManager.read(definitionPath));
+			List<Message> messages = stream(reader.spliterator(), false).collect(toList());
+			List<Definition.State> states = messages.stream().filter(m -> m.type().equals("State"))
+					.map(m -> new Definition.State() {
+						@Override
+						public String name() {
+							return m.get("name").asString();
+						}
+
+						@Override
+						public List<String> types() {
+							return asList(m.get("type").asString().split(", "));
+						}
+
+						@Override
+						public String taskType() {
+							return m.get("taskType").asString();
+						}
+					}).collect(toList());
+			List<Definition.Link> links = messages.stream().filter(m -> m.type().equals("Link"))
+					.map(m -> new Definition.Link() {
+						@Override
+						public String from() {
+							return m.get("from").asString();
+						}
+
+						@Override
+						public String to() {
+							return m.get("to").asString();
+						}
+
+						@Override
+						public String type() {
+							return m.get("type").asString();
+						}
+
+					}).collect(toList());
+			definition = new Definition() {
 				@Override
 				public List<State> states() {
-					return messages.stream().filter(m -> m.type().equals("State"))
-							.map(m -> new State() {
-								@Override
-								public String name() {
-									return m.get("name").asString();
-								}
-
-								@Override
-								public List<String> types() {
-									return asList(m.get("type").asString().split(", "));
-								}
-
-								@Override
-								public String taskType() {
-									return m.get("taskType").asString();
-								}
-							}).collect(toList());
+					return states;
 				}
 
 				@Override
 				public List<Link> links() {
-					return messages.stream().filter(m -> m.type().equals("Link"))
-							.map(m -> new Link() {
-								@Override
-								public String from() {
-									return m.get("from").asString();
-								}
-
-								@Override
-								public String to() {
-									return m.get("to").asString();
-								}
-
-								@Override
-								public String type() {
-									return m.get("type").asString();
-								}
-
-							}).collect(toList());
+					return links;
 				}
 			};
+			reader.close();
+			return definition;
 		};
 
 		public Map<String, String> data() {
-			Message message = new MessageReader(persistenceManager.read(dataPath)).next();
-			return message.attributes().stream().collect(toMap(a -> a, a -> message.get(a).asString()));
+			if(data != null) return data;
+			MessageReader reader = new MessageReader(persistenceManager.read(dataPath));
+			Message message = reader.next();
+			data = message.attributes().stream().collect(toMap(a -> a, a -> message.get(a).asString()));
+			reader.close();
+			return data;
 		}
 
 		public boolean isFinished() {
