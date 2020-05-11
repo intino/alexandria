@@ -77,6 +77,5 @@
     <orderEntry type="library" name="Intino: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
     <orderEntry type="library" name="Intino: log4j:log4j:1.2.17" level="project" />
     <orderEntry type="module" module-name="http" />
-    <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>
