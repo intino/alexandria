@@ -1,4 +1,4 @@
-package io.intino.alexandria.message.exceptions;
+package io.intino.alexandria.message.parser.exceptions;
 
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;

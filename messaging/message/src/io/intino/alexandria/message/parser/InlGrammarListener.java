@@ -1,4 +1,4 @@
-// Generated from /Users/oroncal/workspace/alexandria/messaging/message/src/io/intino/alexandria/message/parser/InlGrammar.g4 by ANTLR 4.8
+// Generated from /Users/oroncal/workspace/konos/messaging/message/src/io/intino/alexandria/message/parser/InlGrammar.g4 by ANTLR 4.8
 package io.intino.alexandria.message.parser;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -57,6 +57,26 @@ public interface InlGrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAttribute(InlGrammar.AttributeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link InlGrammar#multilineValue}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultilineValue(InlGrammar.MultilineValueContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link InlGrammar#multilineValue}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultilineValue(InlGrammar.MultilineValueContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link InlGrammar#value}.
+	 * @param ctx the parse tree
+	 */
+	void enterValue(InlGrammar.ValueContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link InlGrammar#value}.
+	 * @param ctx the parse tree
+	 */
+	void exitValue(InlGrammar.ValueContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link InlGrammar#typeName}.
 	 * @param ctx the parse tree

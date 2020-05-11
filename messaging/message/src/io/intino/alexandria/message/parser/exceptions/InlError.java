@@ -1,4 +1,4 @@
-package io.intino.alexandria.message.exceptions;
+package io.intino.alexandria.message.parser.exceptions;
 
 public class InlError {
 	protected final int line;

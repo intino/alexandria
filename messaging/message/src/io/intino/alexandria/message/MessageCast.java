@@ -1,19 +1,16 @@
-package io.intino.alexandria.message2;
-
-import io.intino.alexandria.Resource;
+package io.intino.alexandria.message;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
 
-import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
 
 
 public class MessageCast {
-	private static Map<Class, String> classNames = new HashMap<>();
-	private static Map<String, Field> fields = new HashMap<>();
-	private Message message;
+	private static final Map<Class, String> classNames = new HashMap<>();
+	private static final Map<String, Field> fields = new HashMap<>();
+	private final Message message;
 
 	private MessageCast(Message message) {
 		this.message = message;
@@ -32,33 +29,17 @@ public class MessageCast {
 	private <T> void fillAttributes(Message message, Class<T> aClass, Object object) throws IllegalAccessException {
 		for (String attribute : message.attributes()) {
 			Field field = fieldByName(aClass, attribute);
-            if (field == null) continue;
-            setField(field, object, valueOf(message, attribute, field));
-        }
+			if (field == null) continue;
+			setField(field, object, valueOf(message, attribute, field));
+		}
 	}
 
-    private Object valueOf(Message message, String attribute, Field field) {
-        return fillValue(parserOf(field).parse(message.get(attribute).toString()));
-    }
-
-    private Object fillValue(Object object) {
-        if (object == null) return null;
-        if (object instanceof Resource) return fillValue((Resource) object);
-        if (object instanceof Resource[]) return fillValue((Resource[]) object);
-        return object;
-    }
-
-	private Resource[] fillValue(Resource[] resources) {
-		return stream(resources).map(this::fillValue).toArray(Resource[]::new);
-    }
-
-	private Resource fillValue(Resource resource) {
-		String key = new String(resource.bytes());
-		return new Resource(resource.name(), message.attachment(key));
-    }
+	private Object valueOf(Message message, String attribute, Field field) {
+		return parserOf(field).parse(message.get(attribute).toString());
+	}
 
 	@SuppressWarnings({"unchecked"})
-    private <T> void fillComponents(Message message, Class<T> aClass, Object object) throws IllegalAccessException {
+	private <T> void fillComponents(Message message, Class<T> aClass, Object object) throws IllegalAccessException {
 		for (Message component : message.components()) {
 			Field field = fieldByName(aClass, component.type());
 			if (field != null)
@@ -85,14 +66,14 @@ public class MessageCast {
 	}
 
 	@SuppressWarnings("unchecked")
-    private static List append(List current, Object value) {
+	private static List append(List current, Object value) {
 		if (current == null) current = new ArrayList();
 		current.add(value);
 		return current;
 	}
 
 	@SuppressWarnings("unchecked")
-    private static List append(List current, List value) {
+	private static List append(List current, List value) {
 		if (current == null) current = new ArrayList();
 		current.addAll(value);
 		return current;
@@ -164,7 +145,7 @@ public class MessageCast {
 
 	private Parser parserOf(final String name) {
 		return new Parser() {
-			Parser parser = Parser.of(arrayClass());
+			final Parser parser = Parser.of(arrayClass());
 
 			private Class<?> arrayClass() {
 				try {
@@ -177,15 +158,14 @@ public class MessageCast {
 
 			@Override
 			public Object parse(String text) {
-				Object[] array = (Object[]) fillValue(parser.parse(text));
+				Object[] array = (Object[]) parser.parse(text);
 				return array != null ? Arrays.asList(array) : emptyList();
 			}
 		};
 	}
 
 	@SuppressWarnings("unchecked")
-    public <T> T as(Class<T> aClass) throws IllegalAccessException {
+	public <T> T as(Class<T> aClass) throws IllegalAccessException {
 		return message != null ? (T) fillObject(message, aClass, create(aClass)) : null;
 	}
-
 }

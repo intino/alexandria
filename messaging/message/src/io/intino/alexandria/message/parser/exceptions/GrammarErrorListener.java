@@ -1,4 +1,4 @@
-package io.intino.alexandria.message.exceptions;
+package io.intino.alexandria.message.parser.exceptions;
 
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.RecognitionException;

@@ -1,6 +1,5 @@
-package io.intino.alexandria.message2;
+package io.intino.alexandria.message;
 
-import io.intino.alexandria.Resource;
 
 import java.lang.reflect.Array;
 import java.time.Instant;
@@ -33,7 +32,6 @@ class ParserFactory {
         parsers.put(Double.class, parsers.get(double.class));
         parsers.put(String.class, text -> text);
         parsers.put(Instant.class, Instant::parse);
-        parsers.put(Resource.class, Resource::parse);
         parsers.put(Boolean[].class, ArrayParser.of(Boolean.class)::parse);
         parsers.put(Byte[].class, ArrayParser.of(Byte.class)::parse);
         parsers.put(Integer[].class, ArrayParser.of(Integer.class)::parse);
@@ -42,7 +40,6 @@ class ParserFactory {
         parsers.put(Double[].class, ArrayParser.of(Double.class)::parse);
         parsers.put(String[].class, ArrayParser.of(String.class)::parse);
         parsers.put(Instant[].class, ArrayParser.of(Instant.class)::parse);
-        parsers.put(Resource[].class, ArrayParser.of(Resource.class)::parse);
     }
 
     static class ArrayParser {
@@ -59,7 +56,7 @@ class ParserFactory {
         }
 
         Object parse(String text) {
-            String[] lines = text.split("\n");
+            String[] lines = text.split("\u0001");
             Object result = Array.newInstance(type, lines.length);
             for (int i = 0; i < lines.length; i++) {
                 set(result, i, (NullValue.equals(lines[i]) ? null : parser.parse(lines[i])));

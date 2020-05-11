@@ -1,4 +1,4 @@
-// Generated from /Users/oroncal/workspace/alexandria/messaging/message/src/io/intino/alexandria/message/parser/InlGrammar.g4 by ANTLR 4.8
+// Generated from /Users/oroncal/workspace/konos/messaging/message/src/io/intino/alexandria/message/parser/InlGrammar.g4 by ANTLR 4.8
 package io.intino.alexandria.message.parser;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -71,6 +71,30 @@ public class InlGrammarBaseListener implements InlGrammarListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitAttribute(InlGrammar.AttributeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMultilineValue(InlGrammar.MultilineValueContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMultilineValue(InlGrammar.MultilineValueContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterValue(InlGrammar.ValueContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitValue(InlGrammar.ValueContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

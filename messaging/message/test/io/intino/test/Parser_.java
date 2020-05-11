@@ -1,70 +1,65 @@
 package io.intino.test;
 
-import io.intino.alexandria.message.exceptions.SyntaxException;
+import io.intino.alexandria.message.parser.InlGrammar;
 import io.intino.alexandria.message.parser.InlLexicon;
-import io.intino.alexandria.message.parser.InlParser;
+import io.intino.alexandria.message.MessageReader;
+import io.intino.alexandria.message.parser.MessageStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.VocabularyImpl;
-import org.junit.Assert;
 import org.junit.Test;
 
-import static org.antlr.v4.runtime.CharStreams.fromString;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class Parser_ {
 	@Test
-	public void simple_message() {
-		String inl = "[Teacher]\n" +
-				"name: Jose\n" +
-				"money: 50.0\n" +
-				"birthDate: 1984-11-01T22:34:25Z\n" +
-				"university: ULPGC\n";
-		try {
-			showLexicon(inl);
-			checkGrammar(inl);
-		} catch (SyntaxException e) {
-			Assert.fail("'error'   ->    " + e.errors().get(0).message());
+	public void should_split_messages() {
+		MessageStream stream = new MessageStream(new ByteArrayInputStream(inl1.getBytes()), StandardCharsets.UTF_8);
+		while (stream.hasNext()) {
+			System.out.println(stream.next());
+			System.out.println();
+			System.out.println();
 		}
+		stream = new MessageStream(new ByteArrayInputStream(inl2.getBytes()), StandardCharsets.UTF_8);
+		while (stream.hasNext()) {
+			System.out.println(stream.next());
+			System.out.println();
+			System.out.println();
+		}
+	}
+
+	@Test
+	public void simple_message() throws IOException {
+		messagesFrom(inl1);
+
+	}
+
+	@Test
+	public void should_read_message_with_components() {
+		messagesFrom(inl2);
 	}
 
 
 	@Test
-	public void should_read_messages_in_a_class_with_parent() {
-		String inl = "[Teacher]\n" +
-				"name: Jose\n" +
-				"money: 50.0\n" +
-				"birthDate: 1984-11-01T22:34:25Z\n" +
-				"university: ULPGC\n" +
-				"\n" +
-				"[Teacher.Country]\n" +
-				"name: Spain\n" +
-				"\n" +
-				"[Teacher]\n" +
-				"name: Juan\n" +
-				"money: 40.0\n" +
-				"birthDate: 1978-04-02T00:00:00Z\n" +
-				"university: ULL\n" +
-				"\n" +
-				"[Teacher.Country]\n" +
-				"name: France\n" +
-				"\n" +
-				"[Teacher.Country]\n" +
-				"name: Germany\n";
-		try {
-			showLexicon(inl);
-			checkGrammar(inl);
-		} catch (SyntaxException e) {
-			Assert.fail("'error'   ->    " + e.errors().get(0).message());
+	public void should_read_message_with_multiline_attribute() throws IOException {
+		showLexicon(inl3);
+		messagesFrom(inl3);
+	}
+
+
+	private void messagesFrom(String input) {
+		MessageReader reader = new MessageReader(input);
+		while (reader.hasNext()) {
+			System.out.println(reader.next());
+			System.out.println("------------------------------");
 		}
 	}
 
-
-	private String textFromKey(String key) {
-		return key;
-	}
-
-	private InlLexicon showLexicon(String text) {
-		InlLexicon lexer = new InlLexicon(fromString(text));
+	private void showLexicon(String text) throws IOException {
+		InlLexicon lexer = new InlLexicon(CharStreams.fromStream(new ByteArrayInputStream(text.getBytes())));
 		lexer.reset();
 		Token token;
 		while ((token = lexer.nextToken()).getType() != -1) {
@@ -73,17 +68,12 @@ public class Parser_ {
 			System.out.print(name + ", ");
 		}
 		System.out.println();
-		return lexer;
 	}
 
 	private String tokenName(InlLexicon lexer, Token token) {
-		if (token.getType() == 21) return "C";
-		return lexer.getVocabulary().getSymbolicName(token.getType());
-	}
-
-	private void checkGrammar(String input) throws SyntaxException {
-		InlParser parser = new InlParser(input);
-		parser.parse();
+		if (token.getType() == InlGrammar.CHARACTER) return "C";
+		String symbolicName = lexer.getVocabulary().getSymbolicName(token.getType());
+		return symbolicName == null ? String.valueOf(token.getType()) : symbolicName;
 	}
 
 	private String getExpectedTokens(Parser recognizer) {
@@ -93,4 +83,42 @@ public class Parser_ {
 			return "";
 		}
 	}
+
+
+	String inl1 = "[Teacher]\n" +
+			"name: Jose\n" +
+			"money: 50.0\n" +
+			"birthDate: 1984-11-01T22:34:25Z\n" +
+			"university: ULPGC\n";
+	String inl2 = "[Teacher]\n" +
+			"name: Jose\n" +
+			"money: 50.0\n" +
+			"birthDate: 1984-11-01T22:34:25Z\n" +
+			"university: ULPGC\n" +
+			"\n" +
+			"[Teacher.Country]\n" +
+			"name: Spain\n" +
+			"\n" +
+			"[Teacher]\n" +
+			"name: Juan\n" +
+			"money: 40.0\n" +
+			"birthDate: 1978-04-02T00:00:00Z\n" +
+			"university: ULL\n" +
+			"\n" +
+			"[Teacher.Country]\n" +
+			"name: France\n" +
+			"\n" +
+			"[Teacher.Country]\n" +
+			"name: Germany\n";
+
+	String inl3 = "[ERROR]\n" +
+			"ts: 2020-05-05T19:24:32.533342Z\n" +
+			"source: io.intino.alexandria.jms.TopicConsumer:close:36\n" +
+			"message:\n" +
+			"\tjavax.jms.IllegalStateException: The Session is closed\n" +
+			"\t\tat org.apache.activemq.ActiveMQSession.checkClosed(ActiveMQSession.java:771)\n" +
+			"\t\tat java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)\n" +
+			"\t\tat java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:305)\n" +
+			"\t\tat java.base/java.lang.Thread.run(Thread.java:834)\n";
+
 }

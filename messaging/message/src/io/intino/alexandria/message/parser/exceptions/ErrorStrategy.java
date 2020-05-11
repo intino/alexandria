@@ -1,4 +1,4 @@
-package io.intino.alexandria.message.exceptions;
+package io.intino.alexandria.message.parser.exceptions;
 
 import org.antlr.v4.runtime.*;
 
@@ -39,7 +39,7 @@ public class ErrorStrategy extends DefaultErrorStrategy {
 	}
 
 	public void reportError(Parser recognizer, RecognitionException e) {
-//		printParameters(recognizer);
+		printParameters(recognizer);
 		throw new InputMismatchException(recognizer);
 	}
 

@@ -1,6 +1,6 @@
 package io.intino.test;
 
-import io.intino.alexandria.message2.MessageBuilder;
+import io.intino.alexandria.message.MessageBuilder;
 import io.intino.test.schemas.*;
 import org.junit.Test;
 
