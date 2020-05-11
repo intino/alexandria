@@ -19,6 +19,7 @@ public class SelectorExamplesMold extends AbstractSelectorExamplesMold<UiFramewo
         selector3.onSelect(e -> notify(e.selection()));
         selector4.onSelect(e -> notify(e.selection()));
         selector5.onSelect(e -> notify(e.selection()));
+        selector5.select("option 3");
     }
 
     private void notify(List<String> selection) {

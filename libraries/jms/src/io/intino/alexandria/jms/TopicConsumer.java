@@ -1,6 +1,7 @@
 package io.intino.alexandria.jms;
 
 import io.intino.alexandria.logger.Logger;
+import org.apache.activemq.ActiveMQSession;
 
 import javax.jms.*;
 import java.util.function.Consumer;
@@ -30,7 +31,7 @@ public class TopicConsumer extends JmsConsumer {
 		try {
 			if (consumer == null) return;
 			consumer.close();
-			if (subscriberId != null) session.unsubscribe(subscriberId);
+			if (subscriberId != null && !((ActiveMQSession) session).isClosed()) session.unsubscribe(subscriberId);
 		} catch (InvalidDestinationException ignored) {
 		} catch (JMSException e) {
 			Logger.error(e);
