@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.2.1") jms
+Artifact("io.intino.alexandria", "1.2.2") jms
 	Imports
 		Compile("io.intino.alexandria", "logger4j", "1.0.0")
 		Compile("io.intino.alexandria", "logger", "2.1.0")
@@ -12,5 +12,5 @@ Artifact("io.intino.alexandria", "1.2.1") jms
 
 
 Repository("intino-maven") intino
-	Release(url = "https://artifactory.intino.io/artifactory/releases")
-	Release(url = "https://artifactory.intino.io/artifactory/release-libraries") release
+	Release("https://artifactory.intino.io/artifactory/releases")
+	Release("https://artifactory.intino.io/artifactory/release-libraries") release
