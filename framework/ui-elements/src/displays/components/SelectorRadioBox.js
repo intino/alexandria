@@ -17,7 +17,7 @@ class SelectorRadioBox extends AbstractSelectorRadioBox {
 		this.notifier = new SelectorRadioBoxNotifier(this);
 		this.requester = new SelectorRadioBoxRequester(this);
         this.state = {
-            selected : null,
+            selected : "",
             ...this.state
         };
 	};
