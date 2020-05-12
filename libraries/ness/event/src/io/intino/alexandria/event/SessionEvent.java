@@ -51,16 +51,6 @@ public class SessionEvent extends Event {
 		return this;
 	}
 
-	public SessionEvent set(String attribute, String value, InputStream is) {
-		message.set(attribute, value, is);
-		return this;
-	}
-
-	public SessionEvent set(String attribute, String value, byte[] content) {
-		message.set(attribute, value, content);
-		return this;
-	}
-
 	public SessionEvent set(String attribute, String value) {
 		message.set(attribute, value);
 		return this;

@@ -25,7 +25,6 @@
     <orderEntry type="library" name="Intino: commons-net:commons-net:3.6" level="project" />
     <orderEntry type="library" name="Intino: javax.jmdns:jmdns:3.4.1" level="project" />
     <orderEntry type="library" name="Intino: org.apache.activemq:activemq-client:5.15.12" level="project" />
-    <orderEntry type="library" name="Intino: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
-    <orderEntry type="library" name="Intino: log4j:log4j:1.2.17" level="project" />
+    <orderEntry type="library" name="Intino: org.antlr:antlr4-runtime:4.8" level="project" />
   </component>
 </module>

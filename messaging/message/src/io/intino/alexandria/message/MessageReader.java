@@ -6,6 +6,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Token;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.logging.Logger;
@@ -36,6 +37,14 @@ public class MessageReader implements Iterator<Message> {
 		} catch (Exception e) {
 			Logger.getGlobal().severe(e.getMessage());
 			return null;
+		}
+	}
+
+	public void close() {
+		try {
+			messageStream.close();
+		} catch (IOException e) {
+			Logger.getGlobal().severe(e.getMessage());
 		}
 	}
 

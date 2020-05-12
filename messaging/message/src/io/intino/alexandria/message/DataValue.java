@@ -1,6 +1,7 @@
 package io.intino.alexandria.message;
 
 import java.time.Instant;
+import java.util.List;
 
 class DataValue implements Message.Value {
 	private final String data;
@@ -50,6 +51,9 @@ class DataValue implements Message.Value {
 
 	@Override
 	public boolean asBoolean() {
+		return Boolean.parseBoolean(data);
+	}
+	public List<String[]> asTable() {
 		return Boolean.parseBoolean(data);
 	}
 

@@ -1,9 +1,16 @@
 dsl Legio
 
+<<<<<<< HEAD
 Artifact("io.intino.alexandria", "1.3.4") terminal-jms
 	Imports
 		Compile("io.intino.alexandria", "event", "1.2.0")
 		Compile("io.intino.alexandria", "jms", "1.2.2")
+=======
+Artifact("io.intino.alexandria", "2.0.0") terminal-jms
+	Imports
+		Compile("io.intino.alexandria", "event", "2.0.0")
+		Compile("io.intino.alexandria", "jms", "1.2.1")
+>>>>>>> propagating depenencies
 		Compile("io.intino.alexandria", "primitives", "1.0.4")
 		Test("junit", "junit", "LATEST")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)

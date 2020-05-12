@@ -1,9 +1,9 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.2.0") event
+Artifact("io.intino.alexandria", "2.0.0") event
 	Imports
+		Compile("io.intino.alexandria", "zim", "3.0.0")
 		Compile("io.intino.alexandria", "logger", "2.1.0")
-		Compile("io.intino.alexandria", "zim", "2.0.0")
 		Test("junit", "junit", "LATEST")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.release)

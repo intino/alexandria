@@ -4,7 +4,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 
-public class MessageStream implements Iterator<String> {
+public class MessageStream implements Iterator<String>, AutoCloseable {
 	private final BufferedReader reader;
 	private int last = 0;
 
@@ -20,6 +20,11 @@ public class MessageStream implements Iterator<String> {
 	@Override
 	public boolean hasNext() {
 		return last != -1;
+	}
+
+	@Override
+	public void close() throws IOException {
+		reader.close();
 	}
 
 	@Override
