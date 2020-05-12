@@ -1,6 +1,5 @@
 lexer grammar InlLexicon;
 @header{
-	import static io.intino.alexandria.message.parser.InlGrammar.CHARACTER;
 }
 @lexer::members {
 }
@@ -29,6 +28,6 @@ mode ATTR_MODE;
 	A_NEWLINE_INDENT:'\n\t'             {   setType(NEWLINE_INDENT); };
 	A_NEWLINE:'\n'                      {   setType(NEWLINE); } -> mode(DEFAULT_MODE);
 	A_SP:' ' 							{   setType(SP); };
-	A_CHARACTER:.                       {   setType(CHARACTER); };
+	VALUE:~'\n'+                  	{   setType(VALUE); };
 
 

@@ -1,6 +1,5 @@
 package io.intino.test;
 
-import io.intino.alexandria.message.parser.InlGrammar;
 import io.intino.alexandria.message.parser.InlLexicon;
 import io.intino.alexandria.message.MessageReader;
 import io.intino.alexandria.message.parser.MessageStream;
@@ -33,15 +32,16 @@ public class Parser_ {
 
 	@Test
 	public void simple_message() throws IOException {
+		showLexicon(inl1);
 		messagesFrom(inl1);
 
 	}
 
 	@Test
-	public void should_read_message_with_components() {
+	public void should_read_message_with_components() throws IOException {
+		showLexicon(inl2);
 		messagesFrom(inl2);
 	}
-
 
 	@Test
 	public void should_read_message_with_multiline_attribute() throws IOException {
@@ -71,7 +71,7 @@ public class Parser_ {
 	}
 
 	private String tokenName(InlLexicon lexer, Token token) {
-		if (token.getType() == InlGrammar.CHARACTER) return "C";
+		if (token.getType() == InlLexicon.VALUE) return "VALUE";
 		String symbolicName = lexer.getVocabulary().getSymbolicName(token.getType());
 		return symbolicName == null ? String.valueOf(token.getType()) : symbolicName;
 	}
@@ -119,6 +119,7 @@ public class Parser_ {
 			"\t\tat org.apache.activemq.ActiveMQSession.checkClosed(ActiveMQSession.java:771)\n" +
 			"\t\tat java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)\n" +
 			"\t\tat java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:305)\n" +
-			"\t\tat java.base/java.lang.Thread.run(Thread.java:834)\n";
+			"\t\tat java.base/java.lang.Thread.run(Thread.java:834)\n"+
+			"addiotionalInfo: during execution\n";
 
 }

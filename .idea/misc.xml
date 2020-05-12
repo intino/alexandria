@@ -21,7 +21,6 @@
           <option name="encoding" value="" />
           <option name="pkg" value="io.intino.alexandria.message.parser" />
           <option name="language" value="" />
-          <option name="generateVisitor" value="true" />
         </PerGrammarGenerationSettings>
       </list>
     </option>

@@ -1,9 +1,6 @@
 package io.intino.alexandria.message.parser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 
@@ -16,7 +13,7 @@ public class MessageStream implements Iterator<String> {
 	}
 
 	public MessageStream(InputStream stream, Charset charset) {
-		reader = new BufferedReader(new InputStreamReader(stream, charset));
+		reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(stream), charset));
 		init();
 	}
 
