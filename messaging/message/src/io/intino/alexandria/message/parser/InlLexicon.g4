@@ -9,7 +9,6 @@ RSQUARE   			: ']';
 COLON               : ':' {setType(COLON);} -> mode(ATTR_MODE);
 
 DOT		            : '.';
-
 IDENTIFIER          : (LETTER | UNDERDASH) (DIGIT | LETTER | UNDERDASH)*;
 
 NEWLINE_INDENT		: NEWLINE '\t';
