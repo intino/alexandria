@@ -1,7 +1,5 @@
 package io.intino.alexandria.message;
 
-import io.intino.alexandria.message.Message;
-
 import java.time.Instant;
 
 class NullValue implements Message.Value {

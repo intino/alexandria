@@ -6,9 +6,9 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Token;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.logging.Logger;
 
 import static io.intino.alexandria.message.parser.InlLexicon.*;
 
@@ -31,9 +31,10 @@ public class MessageReader implements Iterator<Message> {
 
 	public Message next() {
 		try {
-			if (current == null) return null;
+			if (current == null || current.isEmpty() || current.isBlank()) return null;
 			return nextMessage();
 		} catch (Exception e) {
+			Logger.getGlobal().severe(e.getMessage());
 			return null;
 		}
 	}
@@ -70,18 +71,23 @@ public class MessageReader implements Iterator<Message> {
 			current = iterator.next();
 			if (current.getType() == LSQUARE) break;
 		}
+		String identifier = messageIdentifier(iterator);
+		iterator.next();
+		String[] contexts = identifier.split("\\.");
+		Message message = new Message(contexts[contexts.length - 1]);
+		loadAttributes(message, iterator);
+		return new AbstractMap.SimpleEntry<>(contexts.length - 1, message);
+	}
+
+	private String messageIdentifier(Iterator<Token> iterator) {
 		StringBuilder idb = new StringBuilder();
+		Token current;
 		while (iterator.hasNext()) {
 			current = iterator.next();
 			if (current.getType() == RSQUARE) break;
 			else idb.append(current.getText());
 		}
-		iterator.next();
-		String id = idb.toString();
-		String[] contexts = id.split("\\.");
-		Message message = new Message(contexts[contexts.length - 1]);
-		loadAttributes(message, iterator);
-		return new AbstractMap.SimpleEntry<>(contexts.length - 1, message);
+		return idb.toString();
 	}
 
 	private void loadAttributes(Message message, Iterator<Token> iterator) {
@@ -92,12 +98,16 @@ public class MessageReader implements Iterator<Message> {
 			iterator.next();
 			Token next = iterator.next();
 			String value;
-			if (next.getType() == VALUE) {
-				value = next.getText();
-				iterator.next();
+			if (isInLineValue(next)) {
+				value = next.getText().substring(1);
+				if (iterator.hasNext()) iterator.next();
 			} else value = multiline(iterator, next);
-			message.set(attributeName, value.trim());
+			message.set(attributeName, value);
 		}
+	}
+
+	private boolean isInLineValue(Token next) {
+		return next.getType() == VALUE;
 	}
 
 	private String multiline(Iterator<Token> iterator, Token last) {
@@ -105,17 +115,13 @@ public class MessageReader implements Iterator<Message> {
 		StringBuilder builder = new StringBuilder();
 		while (iterator.hasNext() && current.getType() != NEWLINE) {
 			current = iterator.next();
-			if (current.getType() == VALUE) builder.append(current.getText()).append("\n");
+			if (current.getType() == VALUE) builder.append("\n").append(current.getText());
 		}
-		return builder.toString();
+		return builder.toString().substring(1);
 	}
 
 	private List<Token> lexicon(String text) {
 		InlLexicon lexer = new InlLexicon(CharStreams.fromString(text));
-		lexer.reset();
-		List<Token> tokens = new ArrayList<>();
-		Token token;
-		while ((token = lexer.nextToken()).getType() != -1) tokens.add(token);
-		return tokens;
+		return (List<Token>) lexer.getAllTokens();
 	}
 }

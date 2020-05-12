@@ -3,7 +3,7 @@ dsl Legio
 Artifact("io.intino.alexandria", "3.0.0") message
 	Imports
 		Compile("org.antlr", "antlr4-runtime", "4.8")
-		Test("junit", "junit", "LATEST")
+		Test("junit", "junit", "4.13")
 		Test("org.assertj", "assertj-core", "3.15.0")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)

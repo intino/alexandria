@@ -11,7 +11,8 @@ public class Adeudos {
 	public static void main(String[] args) throws FileNotFoundException {
 		while (true) {
 			MessageReader messageReader = new MessageReader(new FileInputStream(new File("./messaging/message/test-res/adeudos.inl")));
-			messageReader.forEachRemaining(message -> {});
+			messageReader.forEachRemaining(message -> {
+			});
 		}
 	}
 }

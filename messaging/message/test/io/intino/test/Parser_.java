@@ -1,7 +1,7 @@
 package io.intino.test;
 
-import io.intino.alexandria.message.parser.InlLexicon;
 import io.intino.alexandria.message.MessageReader;
+import io.intino.alexandria.message.parser.InlLexicon;
 import io.intino.alexandria.message.parser.MessageStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Parser;
@@ -119,7 +119,7 @@ public class Parser_ {
 			"\t\tat org.apache.activemq.ActiveMQSession.checkClosed(ActiveMQSession.java:771)\n" +
 			"\t\tat java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)\n" +
 			"\t\tat java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:305)\n" +
-			"\t\tat java.base/java.lang.Thread.run(Thread.java:834)\n"+
+			"\t\tat java.base/java.lang.Thread.run(Thread.java:834)\n" +
 			"addiotionalInfo: during execution\n";
 
 }

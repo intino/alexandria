@@ -4,10 +4,11 @@ import java.time.Instant;
 import java.util.*;
 
 public class Message {
+	static final char listSeparator = '\u0001';
 	private static final Value NullValue = new NullValue();
+	private final Map<String, String> attributes;
 	private String type;
 	private Message owner;
-	private final Map<String, Attribute> attributes;
 	private List<Message> components;
 
 	public Message(String type) {
@@ -34,7 +35,7 @@ public class Message {
 	}
 
 	public Value get(final String attribute) {
-		return contains(attribute) ? new DataValue(use(attribute).value) : NullValue;
+		return contains(attribute) ? new DataValue(attributes.get(attribute)) : NullValue;
 	}
 
 	public Message set(String attribute, Boolean value) {
@@ -58,67 +59,44 @@ public class Message {
 	}
 
 	public Message set(String attribute, String value) {
-		remove(attribute);
-		use(attribute).value = value;
+		attributes.put(attribute, value);
 		return this;
 	}
 
 	public Message append(String attribute, Boolean value) {
-		return append(use(attribute), value.toString());
+		return append(attribute, value.toString());
 	}
 
 	public Message append(String attribute, Instant value) {
-		return append(use(attribute), value.toString());
+		return append(attribute, value.toString());
 	}
 
 	public Message append(String attribute, Long value) {
-		return append(use(attribute), value.toString());
+		return append(attribute, value.toString());
 	}
 
 	public Message append(String attribute, Integer value) {
-		return append(use(attribute), value.toString());
+		return append(attribute, value.toString());
 	}
 
 	public Message append(String attribute, Double value) {
-		return append(use(attribute), value.toString());
+		return append(attribute, value.toString());
 	}
 
 	public Message append(String attribute, String value) {
-		return append(use(attribute), value);
-	}
-
-	private Message append(Attribute attribute, String value) {
-		attribute.value = (attribute.value == null ? "" : attribute.value + "\n") + (value == null ? "\0" : value);
+		String before = attributes.putIfAbsent(attribute, value);
+		if (before != null) attributes.put(attribute, before + listSeparator + (value == null ? "\0" : value));
 		return this;
 	}
 
 	public Message rename(String attribute, String newName) {
-		use(attribute).name = newName;
-		add(use(attribute));
-		remove(attribute);
+		attributes.put(newName, attributes.remove(attribute));
 		return this;
 	}
 
 	public Message remove(String attribute) {
-		attributes.remove(attribute.toLowerCase());
+		attributes.remove(attribute);
 		return this;
-	}
-
-	public Message remove(String attribute, Object value) {
-		Attribute attr = attributes.get(attribute.toLowerCase());
-		if (attr == null) return this;
-		attr.value = attr.value.replace(value.toString() + "\n", "");
-		if (attr.value.isEmpty()) remove(attribute);
-		return this;
-	}
-
-	private Attribute use(String attribute) {
-		if (!contains(attribute)) add(new Attribute(attribute));
-		return attributes.get(attribute.toLowerCase());
-	}
-
-	private void add(Attribute attribute) {
-		attributes.put(attribute.name.toLowerCase(), attribute);
 	}
 
 	public List<Message> components() {
@@ -156,13 +134,13 @@ public class Message {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[").append(qualifiedType()).append("]\n");
-		for (Attribute attribute : attributes.values()) sb.append(stringOf(attribute)).append("\n");
+		for (Map.Entry<String, String> attribute : attributes.entrySet()) sb.append(stringOf(attribute)).append("\n");
 		for (Message component : components()) sb.append("\n").append(component.toString());
 		return sb.toString();
 	}
 
-	private String stringOf(Attribute attribute) {
-		return attribute.name + ":" + (isMultiline(attribute.value) ? indent(attribute.value) : " " + attribute.value);
+	private String stringOf(Map.Entry<String, String> attribute) {
+		return attribute.getKey() + ":" + (isMultiline(attribute.getValue()) ? indent(attribute.getValue()) : " " + attribute.getValue());
 	}
 
 	private boolean isMultiline(String value) {
@@ -178,7 +156,7 @@ public class Message {
 	}
 
 	public boolean contains(String attribute) {
-		return attributes.containsKey(attribute.toLowerCase());
+		return attributes.containsKey(attribute);
 	}
 
 	@Override
@@ -222,31 +200,5 @@ public class Message {
 		boolean asBoolean();
 	}
 
-	static class Attribute {
-		String name;
-		String value;
 
-		Attribute(String name) {
-			this.name = name;
-		}
-
-		@Override
-		public String toString() {
-			return name + ":" + value;
-		}
-	}
-
-	private static class UUID {
-		private static final int[] HyphenPositions = new int[]{8, 13, 18, 23};
-
-		static boolean is(String str) {
-			for (int n : HyphenPositions)
-				if (str.charAt(n) != '-') return false;
-			return true;
-		}
-
-		static String random() {
-			return java.util.UUID.randomUUID().toString();
-		}
-	}
 }

@@ -28,17 +28,17 @@ public class Message_ {
 		assertThat(message.get("taps").as(Integer.class)).isEqualTo(100);
 		assertThat(message.toString()).isEqualTo(
 				"[Status]\n" +
+						"battery: 80.0\n" +
 						"cpuUsage: 11.95\n" +
 						"isPlugged: true\n" +
 						"isScreenOn: false\n" +
 						"temperature: 29.0\n" +
 						"created: 2017-03-22T12:56:18Z\n" +
-						"battery: 80.0\n" +
 						"taps: 100\n");
 	}
 
 	@Test
-	public void should_contain_multiline_attributes() {
+	public void should_contain_list_attributes() {
 		Message message = new Message("Multiline")
 				.append("name", "John")
 				.append("age", 30)
@@ -46,18 +46,13 @@ public class Message_ {
 				.append("comment", "hello")
 				.append("comment", "world")
 				.append("comment", "!!!");
-		assertThat(message.get("age").toString()).isEqualTo("30\n20");
-		assertThat(message.get("comment").toString()).isEqualTo("hello\nworld\n!!!");
+		assertThat(message.get("age").toString()).isEqualTo("30\u000120");
+		assertThat(message.get("comment").toString()).isEqualTo("hello\u0001world\u0001!!!");
 		assertThat(message.toString()).isEqualTo("" +
 				"[Multiline]\n" +
 				"name: John\n" +
-				"age:\n" +
-				"\t30\n" +
-				"\t20\n" +
-				"comment:\n" +
-				"\thello\n" +
-				"\tworld\n" +
-				"\t!!!\n");
+				"age: 30\u000120\n" +
+				"comment: hello\u0001world\u0001!!!\n");
 	}
 
 	@Test
@@ -71,6 +66,7 @@ public class Message_ {
 				.set("created", "2017-03-22T12:56:18Z")
 				.remove("battery")
 				.remove("isscreenon");
+		message.remove("isScreenOn");
 		assertThat(message.contains("battery")).isEqualTo(false);
 		assertThat(message.contains("isScreenOn")).isEqualTo(false);
 		assertThat(message.contains("isPlugged")).isEqualTo(true);

@@ -143,16 +143,16 @@ public class MessageCast_ {
 						"    at android.app.ActivityThread.main(ActivityThread.java:5666)\n" +
 						"    at java.lang.reflect.Method.invoke(Native Method)\n" +
 						"    at java.lang.reflect.Method.invoke(Method.java:372)\n" +
-						"\n" +
+						"\t\n" +
 						"    at com.android.compiler.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:959)\n" +
-						"    at com.android.compiler.os.ZygoteInit.main(ZygoteInit.java:754)\n\n";
+						"    at com.android.compiler.os.ZygoteInit.main(ZygoteInit.java:754)";
 
 		String str =
 				"[Crash]\n" +
 						"instant: 2017-03-21T07:39:00Z\n" +
 						"app: io.intino.consul\n" +
-						"deviceId: b367172b0c6fe726\n" +
-						"stack:\n" + indent(stack) + "\n";
+						"stack:\n" + indent(stack) + "\n" +
+						"deviceId: b367172b0c6fe726\n";
 
 		MessageReader messages = new MessageReader(str);
 		Message message = messages.next();
@@ -164,7 +164,7 @@ public class MessageCast_ {
 		assertThat(crash.instant.toString()).isEqualTo("2017-03-21T07:39:00Z");
 		assertThat(crash.app).isEqualTo("io.intino.consul");
 		assertThat(crash.deviceId).isEqualTo("b367172b0c6fe726");
-		assertThat(crash.stack).isEqualTo(stack.trim());
+		assertThat(crash.stack).isEqualTo(stack);
 	}
 
 	@Test
@@ -231,15 +231,15 @@ public class MessageCast_ {
 
 	@Test
 	public void should_cast_schema_4() throws IllegalAccessException {
-		String str =
-				"[InfrastructureOperation]\n" +
-						"ts: 2018-05-22T11:17:20.895Z\n" +
-						"operation: Add\n" +
-						"user: cesar\n" +
-						"objectType: Responsible\n" +
-						"objectID: josejuanhernandez\n" +
-						"parameters: " + "josejuanhernandez\u0001" + "U0CU1BD7E\u0001" + "josejuanhernandez@siani.es";
-		InfrastructureOperation op = cast(new MessageReader(str).next()).as(InfrastructureOperation.class);
+		String str = "[InfrastructureOperation]\n" +
+				"ts: 2018-05-22T11:17:20.895Z\n" +
+				"operation: Add\n" +
+				"user: cesar\n" +
+				"objectType: Responsible\n" +
+				"objectID: josejuanhernandez\n" +
+				"parameters: " + "josejuanhernandez\u0001" + "U0CU1BD7E\u0001" + "josejuanhernandez@siani.es\n";
+		Message next = new MessageReader(str).next();
+		InfrastructureOperation op = cast(next).as(InfrastructureOperation.class);
 		assertThat(op.operation()).isEqualTo("Add");
 		assertThat(op.user()).isEqualTo("cesar");
 		assertThat(op.objectType()).isEqualTo("Responsible");
