@@ -1,7 +1,9 @@
 package io.intino.alexandria.message;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 class DataValue implements Message.Value {
 	private final String data;
@@ -53,8 +55,10 @@ class DataValue implements Message.Value {
 	public boolean asBoolean() {
 		return Boolean.parseBoolean(data);
 	}
-	public List<String[]> asTable() {
-		return Boolean.parseBoolean(data);
+
+	@Override
+	public List<Message.Value[]> asTable() {
+		return Arrays.stream(data.split("\\u0001")).map(r -> Arrays.stream(r.split("\t")).map(DataValue::new).toArray(Message.Value[]::new)).collect(Collectors.toList());
 	}
 
 	@Override

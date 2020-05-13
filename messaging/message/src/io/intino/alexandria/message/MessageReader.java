@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 import static io.intino.alexandria.message.parser.InlLexicon.*;
 
-public class MessageReader implements Iterator<Message> {
+public class MessageReader implements Iterator<Message>, Iterable<Message> {
 	private final MessageStream messageStream;
 	private String current;
 
@@ -80,15 +80,15 @@ public class MessageReader implements Iterator<Message> {
 			current = iterator.next();
 			if (current.getType() == LSQUARE) break;
 		}
-		String identifier = messageIdentifier(iterator);
+		String type = readType(iterator);
 		iterator.next();
-		String[] contexts = identifier.split("\\.");
+		String[] contexts = type.split("\\.");
 		Message message = new Message(contexts[contexts.length - 1]);
-		loadAttributes(message, iterator);
+		readAttributes(message, iterator);
 		return new AbstractMap.SimpleEntry<>(contexts.length - 1, message);
 	}
 
-	private String messageIdentifier(Iterator<Token> iterator) {
+	private String readType(Iterator<Token> iterator) {
 		StringBuilder idb = new StringBuilder();
 		Token current;
 		while (iterator.hasNext()) {
@@ -99,7 +99,7 @@ public class MessageReader implements Iterator<Message> {
 		return idb.toString();
 	}
 
-	private void loadAttributes(Message message, Iterator<Token> iterator) {
+	private void readAttributes(Message message, Iterator<Token> iterator) {
 		while (iterator.hasNext()) {
 			Token id = iterator.next();
 			if (id.getType() == NEWLINE) break;
@@ -132,5 +132,10 @@ public class MessageReader implements Iterator<Message> {
 	private List<Token> lexicon(String text) {
 		InlLexicon lexer = new InlLexicon(CharStreams.fromString(text));
 		return (List<Token>) lexer.getAllTokens();
+	}
+
+	@Override
+	public Iterator<Message> iterator() {
+		return this;
 	}
 }

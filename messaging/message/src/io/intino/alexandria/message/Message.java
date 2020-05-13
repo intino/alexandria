@@ -198,7 +198,7 @@ public class Message {
 		double asDouble();
 
 		boolean asBoolean();
+
+		List<Value[]> asTable();
 	}
-
-
 }
