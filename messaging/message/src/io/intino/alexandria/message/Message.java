@@ -99,6 +99,11 @@ public class Message {
 		return this;
 	}
 
+	public Message remove(String attribute, Object value) {
+		attributes.computeIfPresent(attribute, (k, v) -> v.replace(value.toString(), "").replace(String.valueOf(listSeparator) + listSeparator, String.valueOf(listSeparator)));
+		return this;
+	}
+
 	public List<Message> components() {
 		return components == null ? new ArrayList<>() : new ArrayList<>(components);
 	}
