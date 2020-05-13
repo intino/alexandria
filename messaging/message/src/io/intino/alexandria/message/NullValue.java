@@ -1,6 +1,8 @@
 package io.intino.alexandria.message;
 
 import java.time.Instant;
+import java.util.Collections;
+import java.util.List;
 
 class NullValue implements Message.Value {
 	@Override
@@ -42,5 +44,10 @@ class NullValue implements Message.Value {
 	@Override
 	public boolean asBoolean() {
 		return false;
+	}
+
+	@Override
+	public List<Message.Value[]> asTable() {
+		return Collections.emptyList();
 	}
 }

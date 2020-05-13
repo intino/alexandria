@@ -45,19 +45,9 @@ public class MessageBuilder_ {
 
 		assertThat(MessageBuilder.toMessage(menu).toString()).isEqualTo(
 				"[Menu]\n" +
-						"meals:\n" +
-						"\tSoup\n" +
-						"\tLobster\n" +
-						"\tMussels\n" +
-						"\tCake\n" +
-						"prices:\n" +
-						"\t5.0\n" +
-						"\t24.5\n" +
-						"\t8.0\n" +
-						"\t7.0\n" +
-						"availability:\n" +
-						"\ttrue\n" +
-						"\tfalse\n"
+						"meals: " + "Soup\u0001" + "Lobster\u0001" + "Mussels\u0001" + "Cake\n" +
+						"prices: " + "5.0\u0001" + "24.5\u0001" + "8.0\u0001" + "7.0\n" +
+						"availability: " + "true\u0001" + "false\n"
 		);
 	}
 
@@ -66,9 +56,8 @@ public class MessageBuilder_ {
 		Menu menu = new Menu(new String[]{}, new Double[]{}, new Boolean[]{true, false});
 		assertThat(MessageBuilder.toMessage(menu).toString()).isEqualTo(
 				"[Menu]\n" +
-						"availability:\n" +
-						"\ttrue\n" +
-						"\tfalse\n");
+						"availability: " + "true\u0001" + "false\n"
+		);
 	}
 
 	@Test
@@ -91,30 +80,18 @@ public class MessageBuilder_ {
 	public void should_serialize_empty_array_attributes_of_a_class() {
 		Menu menu = new Menu(new String[]{}, new Double[]{}, new Boolean[]{true, false});
 		assertThat(MessageBuilder.toMessage(menu).toString()).isEqualTo(
-				"[Menu]\n" +
-						"availability:\n" +
-						"\ttrue\n" +
-						"\tfalse\n");
+				"[Menu]\n" + "availability: " + "true\u0001" + "false\n");
 	}
 
 	@Test
 	public void should_build_array_attribute_with_null_values_of_a_class() {
+
 		Menu menu = new Menu(new String[]{"Soup", null, "Mussels", "Cake"}, new Double[]{5.0, null, 8.0, 7.0}, new Boolean[]{true, false});
 		assertThat(MessageBuilder.toMessage(menu).toString()).isEqualTo(
 				"[Menu]\n" +
-						"meals:\n" +
-						"\tSoup\n" +
-						"\t\0\n" +
-						"\tMussels\n" +
-						"\tCake\n" +
-						"prices:\n" +
-						"\t5.0\n" +
-						"\t\0\n" +
-						"\t8.0\n" +
-						"\t7.0\n" +
-						"availability:\n" +
-						"\ttrue\n" +
-						"\tfalse\n");
+						"meals: " + "Soup\u0001" + "\0\u0001" + "Mussels\u0001" + "Cake\n" +
+						"prices: " + "5.0\u0001" + "\0\u0001" + "8.0\u0001" + "7.0\n" +
+						"availability: " + "true\u0001" + "false\n");
 	}
 
 	@Test
@@ -123,7 +100,7 @@ public class MessageBuilder_ {
 		assertThat(MessageBuilder.toMessage(person).toString()).isEqualTo(
 				"[Person]\n" +
 						"name: Jose\n" +
-						"gender: Male\n" + 
+						"gender: Male\n" +
 						"money: 50.0\n");
 	}
 

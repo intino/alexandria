@@ -67,7 +67,7 @@ public class ZimReader implements ZimStream {
 
 	private static Iterator<Message> iteratorOf(InputStream is) {
 		MessageReader source = readerOf(is);
-		return new Iterator<Message>() {
+		return new Iterator<>() {
 			private Message current;
 			private Message next;
 
@@ -87,12 +87,8 @@ public class ZimReader implements ZimStream {
 				if (current != next) return true;
 				next = nextMessageFromSource();
 				boolean hasNext = next != null;
-				if (!hasNext) close();
+				if (!hasNext) source.close();
 				return hasNext;
-			}
-
-			void close() {
-				source.close();
 			}
 
 		};

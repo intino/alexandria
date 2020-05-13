@@ -1,19 +1,15 @@
 package io.intino.alexandria.message;
 
-import io.intino.alexandria.Resource;
-
 import java.time.Instant;
-import java.util.Map;
-
-import static java.util.Arrays.stream;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 class DataValue implements Message.Value {
 	private final String data;
-	private final Map<String, byte[]> attachments;
 
-	public DataValue(String data, Map<String, byte[]> attachments) {
+	public DataValue(String data) {
 		this.data = data;
-		this.attachments = attachments;
 	}
 
 	@Override
@@ -23,7 +19,7 @@ class DataValue implements Message.Value {
 
 	@Override
 	public <T> T as(Class<T> type) {
-		if (data != null) return (T) fill(Parser.of(type).parse(data));
+		if (data != null) return (T) Parser.of(type).parse(data);
 		else {
 			if (type.isArray()) return (T) new Object[0];
 			return null;
@@ -60,20 +56,9 @@ class DataValue implements Message.Value {
 		return Boolean.parseBoolean(data);
 	}
 
-	private Object fill(Object object) {
-		if (object == null) return null;
-		if (object instanceof Resource) return fill((Resource) object);
-		if (object instanceof Resource[]) return fill((Resource[]) object);
-		return object;
-	}
-
-	private Resource[] fill(Resource[] resources) {
-		return stream(resources).map(this::fill).toArray(Resource[]::new);
-	}
-
-	private Resource fill(Resource resource) {
-		String key = new String(resource.bytes());
-		return new Resource(resource.name(), attachments.getOrDefault(key, new byte[0]));
+	@Override
+	public List<Message.Value[]> asTable() {
+		return Arrays.stream(data.split("\\u0001")).map(r -> Arrays.stream(r.split("\t")).map(DataValue::new).toArray(Message.Value[]::new)).collect(Collectors.toList());
 	}
 
 	@Override

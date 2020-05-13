@@ -61,7 +61,7 @@ public class EventReader implements EventStream {
 	}
 
 	private static Iterator<Event> iteratorOf(Iterator<Message> iterator) {
-		return new Iterator<Event>() {
+		return new Iterator<>() {
 			@Override
 			public boolean hasNext() {
 				return iterator.hasNext();

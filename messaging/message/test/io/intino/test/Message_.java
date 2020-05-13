@@ -1,10 +1,7 @@
 package io.intino.test;
 
-import io.intino.alexandria.Resource;
 import io.intino.alexandria.message.Message;
 import org.junit.Test;
-
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,8 +9,7 @@ public class Message_ {
 
 	@Test
 	public void overrideAttribute() {
-		new Message("aaaa").set("nombre", "aaa@aaaa").set("nombre", "aaaa").attachment(UUID.randomUUID().toString());
-
+		new Message("aaaa").set("nombre", "aaa@aaaa").set("nombre", "aaaa");
 	}
 
 	@Test
@@ -32,17 +28,17 @@ public class Message_ {
 		assertThat(message.get("taps").as(Integer.class)).isEqualTo(100);
 		assertThat(message.toString()).isEqualTo(
 				"[Status]\n" +
+						"battery: 80.0\n" +
 						"cpuUsage: 11.95\n" +
 						"isPlugged: true\n" +
 						"isScreenOn: false\n" +
 						"temperature: 29.0\n" +
 						"created: 2017-03-22T12:56:18Z\n" +
-						"battery: 80.0\n" +
 						"taps: 100\n");
 	}
 
 	@Test
-	public void should_contain_multiline_attributes() {
+	public void should_contain_list_attributes() {
 		Message message = new Message("Multiline")
 				.append("name", "John")
 				.append("age", 30)
@@ -50,18 +46,13 @@ public class Message_ {
 				.append("comment", "hello")
 				.append("comment", "world")
 				.append("comment", "!!!");
-		assertThat(message.get("age").toString()).isEqualTo("30\n20");
-		assertThat(message.get("comment").toString()).isEqualTo("hello\nworld\n!!!");
+		assertThat(message.get("age").toString()).isEqualTo("30\u000120");
+		assertThat(message.get("comment").toString()).isEqualTo("hello\u0001world\u0001!!!");
 		assertThat(message.toString()).isEqualTo("" +
 				"[Multiline]\n" +
 				"name: John\n" +
-				"age:\n" +
-				"\t30\n" +
-				"\t20\n" +
-				"comment:\n" +
-				"\thello\n" +
-				"\tworld\n" +
-				"\t!!!\n");
+				"age: 30\u000120\n" +
+				"comment: hello\u0001world\u0001!!!\n");
 	}
 
 	@Test
@@ -75,6 +66,7 @@ public class Message_ {
 				.set("created", "2017-03-22T12:56:18Z")
 				.remove("battery")
 				.remove("isscreenon");
+		message.remove("isScreenOn");
 		assertThat(message.contains("battery")).isEqualTo(false);
 		assertThat(message.contains("isScreenOn")).isEqualTo(false);
 		assertThat(message.contains("isPlugged")).isEqualTo(true);
@@ -109,68 +101,5 @@ public class Message_ {
 		message.type("sensor");
 		assertThat(message.is("sensor")).isEqualTo(true);
 		assertThat(message.contains("battery")).isEqualTo(true);
-	}
-
-	@Test
-	public void should_handle_attachments() {
-		Message message = new Message("Document")
-				.set("name", "my attachment")
-				.set("file1", "photo.png", data(120))
-				.set("file2", "cv.pdf", data(80))
-				.append("file2", "xx.png", data(0))
-				.append("file2", "yy.png", data(100));
-		assertThat(message.get("file1").as(Resource.class).name()).isEqualTo("photo.png");
-		assertThat(message.get("file1").as(Resource.class).bytes().length).isEqualTo(120);
-		assertThat(message.get("file1").as(Resource.class).bytes()).isEqualTo(data(120));
-		assertThat(message.get("file1").as(Resource[].class).length).isEqualTo(1);
-		assertThat(message.get("file1").as(Resource[].class)[0].name()).isEqualTo("photo.png");
-		assertThat(message.get("file2").as(Resource[].class).length).isEqualTo(3);
-		assertThat(message.get("file2").as(Resource[].class)[0].name()).isEqualTo("cv.pdf");
-		assertThat(message.get("file2").as(Resource[].class)[0].bytes()).isEqualTo(data(80));
-		assertThat(message.get("file2").as(Resource[].class)[1].bytes()).isEqualTo(data(0));
-		assertThat(message.get("file2").as(Resource[].class)[2].bytes()).isEqualTo(data(100));
-		assertThat(message.attachments().size()).isEqualTo(4);
-		assertThat(withoutUUID(message.toString())).isEqualTo(
-				"[Document]\n" +
-						"name: my attachment\n" +
-						"file1: photo.png@...\n" +
-						"file2:\n" +
-						"\tcv.pdf@...\n" +
-						"\txx.png@...\n" +
-						"\tyy.png@...\n" +
-						"\n" +
-						"[&]\n");
-	}
-
-	@Test
-	public void should_update_attachments() {
-		Message message = new Message("Document")
-				.set("file", "0.png", data(0))
-				.remove("file")
-				.set("file", "0.png", data(128));
-		assertThat(message.get("file").as(Resource.class).type()).isEqualTo("png");
-		assertThat(message.get("file").as(Resource.class).bytes().length).isEqualTo(128);
-		assertThat(message.get("file").as(Resource.class).bytes()).isEqualTo(data(128));
-		assertThat(message.attachments().size()).isEqualTo(1);
-		assertThat(withoutUUID(message.toString())).isEqualTo(
-				"[Document]\n" +
-						"file: 0.png@...\n" +
-						"\n" +
-						"[&]\n");
-	}
-
-	private byte[] data(int size) {
-		byte[] data = new byte[size];
-		for (int i = 0; i < size; i++) data[i] = (byte) i;
-		return data;
-	}
-
-	private String withoutUUID(String str) {
-		StringBuilder sb = new StringBuilder();
-		for (String s : str.split("\n")) {
-			if (s.contains("@")) s = s.substring(0, s.indexOf('@') + 1) + "...";
-			sb.append(s).append('\n');
-		}
-		return sb.toString();
 	}
 }
