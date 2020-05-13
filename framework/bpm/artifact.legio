@@ -3,6 +3,7 @@ dsl Legio
 Artifact("io.intino.alexandria", "1.3.0") bpm-framework
 	Imports
 		Compile("io.intino.alexandria", "event", "2.0.0")
+		Compile("io.intino.alexandria", "primitives", "1.0.4")
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Test("junit", "junit", "LATEST")
 
