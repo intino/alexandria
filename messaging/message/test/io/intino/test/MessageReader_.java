@@ -151,8 +151,26 @@ public class MessageReader_ {
 		assertThat(messages.next()).isNull();
 	}
 
+
 	@Test
-	public void should_read_message_with_multiline_attribute() {
+	public void should_read_message_with_multiline_attribute1() {
+		String inl = "[Contactos.Contacto]\n" +
+				"nombre: LIC RAUL ALFONSO CABALLERO CONTRERAS\n" +
+				"telefonos:\n" +
+				"\t01\n" +
+				"\t0177\n" +
+				"\t01771\n" +
+				"\t01771202\n" +
+				"\t017712026837\n" +
+				"cargo: CONTRALOR INTERNO\n" +
+				"tipo: Comercial\n" +
+				"email: raul.caballero@hidalgo.gob\n";
+		Message message = new MessageReader(inl).next();
+		String telefonos = message.get("telefonos").asString();
+		System.out.println(telefonos);
+	}
+	@Test
+	public void should_read_message_with_multiline_attribut2() {
 		String inl = "[ERROR]\n" +
 				"ts: 2020-05-05T19:24:32.533342Z\n" +
 				"source: io.intino.alexandria.jms.TopicConsumer:close:36\n" +

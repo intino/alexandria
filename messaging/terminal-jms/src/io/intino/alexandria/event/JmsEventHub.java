@@ -29,7 +29,7 @@ public class JmsEventHub implements EventHub {
 	private final Map<String, JmsProducer> producers;
 	private final Map<String, JmsConsumer> consumers;
 	private final Map<String, List<Consumer<Event>>> eventConsumers;
-	private final Map<Consumer<javax.jms.Message>, Integer> jmsConsumers;
+	private final Map<Consumer<Event>, Integer> jmsConsumers;
 	private final EventOutBox eventOutBox;
 	private final String brokerUrl;
 	private final String user;
@@ -57,7 +57,7 @@ public class JmsEventHub implements EventHub {
 		this.eventOutBox = new EventOutBox(messageCacheDirectory);
 		producers = new HashMap<>();
 		consumers = new HashMap<>();
-		jmsConsumers = new HashMap<>();
+		jmsConsumers = new HashMap<Consumer<Event>, Integer>();
 		eventConsumers = new HashMap<>();
 		threads = new ArrayList<>();
 	}
@@ -156,7 +156,7 @@ public class JmsEventHub implements EventHub {
 		JmsConsumer consumer = this.consumers.get(channel);
 		if (consumer == null) return;
 		Consumer<javax.jms.Message> eventConsumer = e -> onEventReceived.accept(new Event(MessageDeserializer.deserialize(e)));
-		jmsConsumers.put(eventConsumer, eventConsumer.hashCode());
+		jmsConsumers.put(onEventReceived, eventConsumer.hashCode());
 		consumer.listen(eventConsumer);
 	}
 
@@ -166,7 +166,7 @@ public class JmsEventHub implements EventHub {
 		TopicConsumer consumer = (TopicConsumer) this.consumers.get(channel);
 		if (consumer == null) return;
 		Consumer<javax.jms.Message> eventConsumer = m -> onEventReceived.accept(new Event(MessageDeserializer.deserialize(m)));
-		jmsConsumers.put(eventConsumer, eventConsumer.hashCode());
+		jmsConsumers.put(onEventReceived, eventConsumer.hashCode());
 		consumer.listen(eventConsumer, subscriberId);
 	}
 
@@ -183,11 +183,11 @@ public class JmsEventHub implements EventHub {
 	public void detachListeners(Consumer<Event> consumer) {
 		Integer code = jmsConsumers.get(consumer);
 		if (code == null) return;
-		eventConsumers.values().forEach(list -> list.remove(consumer));
 		for (JmsConsumer jc : consumers.values()) {
 			List<Consumer<javax.jms.Message>> toRemove = jc.listeners().stream().filter(l -> l.hashCode() == code).collect(Collectors.toList());
 			toRemove.forEach(jc::removeListener);
 		}
+		eventConsumers.values().forEach(list -> list.remove(consumer));
 	}
 
 	@Override
