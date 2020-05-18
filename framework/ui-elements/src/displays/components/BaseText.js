@@ -23,7 +23,7 @@ export default class BaseText extends AbstractBaseText {
     };
 
     _requireEllipsis = (value) => {
-        return this.props.cropWithEllipsis != null && value.length > this.props.cropWithEllipsis;
+        return this.props.cropWithEllipsis != null && value != null && value.length > this.props.cropWithEllipsis;
     };
 
     _textColor = (highlighted) => {

@@ -32,7 +32,7 @@ class BlockPopover extends AbstractBlockPopover {
 					anchorEl={trigger != null ? trigger : undefined}
 					anchorOrigin={{vertical: this._anchorOriginVertical(),horizontal: this._anchorOriginHorizontal()}}
                     transformOrigin={{vertical: this._transformOriginVertical(), horizontal: this._transformOriginHorizontal()}}
-					><div class="layout vertical flexible" style={{width:"100%",height:"100%",...this.style()}}>{this.props.children}</div></Popover>
+					><div className="layout vertical flexible" style={{width:"100%",height:"100%",...this.style()}}>{this.props.children}</div></Popover>
 		);
 	};
 

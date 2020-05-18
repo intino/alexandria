@@ -45,10 +45,15 @@ class Map extends AbstractMap {
 
 	render() {
 		const container = this.container.current;
-		const height = $(container).height();
+		let height = $(container).height();
 		return (
 			<div ref={this.container} className="layout flex">
-				<GoogleMap className="map" zoom={this.props.zoom.defaultZoom} center={GeoBehavior.center(this)} onLoad={this.registerMap.bind(this)}>
+				<GoogleMap
+				    className="map"
+				    mapContainerStyle={{height:"100%"}}
+				    zoom={this.props.zoom.defaultZoom}
+				    center={GeoBehavior.center(this)}
+				    onLoad={this.registerMap.bind(this)}>
 					<div style={{height: height, width: '100%'}}/>
 					{this.renderLayer()}
 				</GoogleMap>

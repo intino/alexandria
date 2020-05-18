@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/framework/allotropy/allotropy.iml" filepath="$PROJECT_DIR$/framework/allotropy/allotropy.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/framework/bpm/bpm.iml" filepath="$PROJECT_DIR$/framework/bpm/bpm.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/toolbox/builder/builder.iml" filepath="$PROJECT_DIR$/toolbox/builder/builder.iml" group="toolbox" />
       <module fileurl="file://$PROJECT_DIR$/toolbox/builder-constants/builder-constants.iml" filepath="$PROJECT_DIR$/toolbox/builder-constants/builder-constants.iml" group="toolbox" />
