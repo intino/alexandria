@@ -1,0 +1,13 @@
+dsl Legio
+
+Artifact("io.intino.alexandria", "1.0.0") allotropy-framework
+	Imports
+		Test("junit", "junit", "LATEST")
+
+	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Distribution(intino.release, snapshot=intino.snapshot)
+
+Repository("intino-maven") intino
+	Release("https://artifactory.intino.io/artifactory/releases")
+	Snapshot("https://artifactory.intino.io/artifactory/snapshot-frameworks") snapshot
+	Release("https://artifactory.intino.io/artifactory/release-frameworks") release
