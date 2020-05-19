@@ -44,7 +44,7 @@ public class MessageStream implements Iterator<String>, AutoCloseable {
 			e.printStackTrace();
 		}
 		if (builder.length() > 0) builder.insert(0, '[');
-		return builder.toString();
+		return builder.toString().replace("\r\n", "\n");
 	}
 
 	private void init() {
