@@ -1,7 +1,7 @@
-def type(jms)
+def type(messaging)
 	package $package;
 
-	import io.intino.alexandria.message.MessageHub;
+	import io.intino.alexandria.terminal.Connector;
 	import io.intino.alexandria.logger.Logger;
 
 	import java.io.ByteArrayOutputStream;
@@ -12,118 +12,25 @@ def type(jms)
 	public class $name+firstUpperCase~Service {
 		private final $box+firstUpperCase~Box box;
 		private final $box+firstUpperCase~Configuration configuration;
-		private final MessageHub messageHub;
+		private final Connector connector;
 
-		public $name+firstUpperCase~Service(MessageHub messageHub, $box+firstUpperCase~Box box) {
+		public $name+firstUpperCase~Service(Connector connector, $box+firstUpperCase~Box box) {
 			this.box = box;
 			this.configuration = box.configuration();
-			this.messageHub = messageHub;
-			[registerProcessListener()$hasProcess]
+			this.connector = connector;
 			$request...[$NL]
 		}
-
-		private void registerProcessListener() {
-			messageHub.attachListener("Task", "$box+lowercase-task", message -> {
-				String name = message.get("name").data();
-				$request+processlistener...[$NL]
-			});
-			messageHub.attachListener(["$businessUnit." +] io.intino.alexandria.bpm.Workflow.EventType, message -> {
-				io.intino.alexandria.bpm.ProcessStatus status = new io.intino.alexandria.bpm.ProcessStatus(message);
-				if (!status.hasCallback()) return;
-				String callback = message.get("callback").data();
-				Object data = dispatcher(status.processName()).onResponse();
-				io.intino.alexandria.message.Message result = new io.intino.alexandria.message.Message(callback.substring(callback.lastIndexOf(".") + 1))
-					.set("callbackProcess", status.callbackProcess())
-					.set("callbackState", status.callbackState())
-					.set("data", io.intino.alexandria.Json.toString(data));
-				messageHub.sendMessage(callback, result);
-			});
-		}
-
-		[$notification...[$NL$NL]]
-
-		private InboxDispatcher dispatcher(String name) {
-			$request+processSelect...[$NL]
-			return null;
-		}
-
-		public interface InboxDispatcher<Response> {
-			Response onResponse();
-		}
 	}
 end
 
-def type(process) trigger(processListener)
-	if (name.equalsIgnoreCase("$process")) {
-		String callbackData = message.get("callback").data();
-		io.intino.alexandria.bpm.Callback callback = io.intino.alexandria.bpm.Callback.from(callbackData);
-		new $package.actions.$name+FirstUpperCase~Action(box).onRequest([io.intino.alexandria.Json.fromString(message.get("data").data(), $parameter+type.class)]);
-		messageHub.sendMessage("$businessUnit." + io.intino.alexandria.bpm.Workflow.EventType, new io.intino.alexandria.bpm.ProcessStatus(java.util.UUID.randomUUID().toString(), "$process", io.intino.alexandria.bpm.Process.Status.Enter, message.get("owner").data(), callback.requesterId(), callback.requesterState()).message().set("callback", callback.value()));
-	}
+def type(request)
+	connector.attachListener($path+format, (r, c) -> new $package.requests.$name+firstUpperCase~Request(box, connector, c).accept(r));
 end
 
-def !type(process) trigger(processListener)
-end
-
-def type(process) trigger(processSelect)
-	if (name.equalsIgnoreCase("$name")) return new $package.actions.$name+FirstUpperCase~Action(box);
-end
-
-def !type(process) trigger(processSelect)
-end
-
-def !type(process) type(request)
-	messageHub.attachRequestListener($queue+format, m -> new $package.requests.$name+firstUpperCase~Request(box).execute());
-end
-
-def type(notification)
-	public void notify$name+firstUpperCase([$parameter+signature...[, ]]) throws JMSException {//TODO
-		final $returnMessageType~Message message = session.create$returnMessageType~Message();
-		fill$name+firstUpperCase~Message(message[, $parameter+name...[, ]]);
-		new $model~Producer(session, $queue+format).produce(message);
-	}
-
-	private void fill$name+firstUpperCase~Message($returnMessageType~Message message[, $parameter+signature...[, ]]) throws JMSException {
-		$parameter+assign...[$NL]
-	}
-end
-
-def type(queue) trigger(format)
+def type(path) trigger(format)
 	"$name"[$custom...[]]
 end
 
 def trigger(custom)
 	.replace("{$value}", configuration.get("$value"))
-end
-
-def type(parameter) trigger(type)
-	$type+formatted
-end
-
-def type(parameter) trigger(name)
-	$name+SnakeCaseToCamelCase+firstLowerCase
-end
-
-def type(parameter) trigger(signature)
-	$type $name+SnakeCaseToCamelCase+firstLowerCase
-end
-
-def type(parameter & fileData) trigger(assign)
-	message.writeBytes(toByteArray($name));
-end
-
-def type(parameter & objectData) trigger(assign)
-	message.setText(new Gson().toJson($name));
-end
-
-def type(parameter) trigger(assign)
-	message.set$type+formatted~Property("$name", $name);
-end
-
-def attribute(Integer) trigger(formatted)
-	Int
-end
-
-def type(schemaImport)
-	import $package.schemas.*;
 end

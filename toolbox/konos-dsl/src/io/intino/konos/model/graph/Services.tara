@@ -98,28 +98,13 @@ Concept:Named Service
 		Concept:Named Notification
 
 	Aspect Messaging
-		var MessageHub messageHub
-		var string domain
-		var word:{Queue Topic} subscriptionModel = Topic
+		var string context
+		var word:{Queue Topic} subscriptionModel = Queue
 		Concept:Named Request
 			var string path
-			has:Named Parameter
-			var Exception[] exceptionRefs = empty
+			has:{0..1} Parameter
 			has Exception
 			has:{0..1} Response
-			Aspect ProcessTrigger
-				var Workflow.Process process
-
-		Concept:Named Notification
-			var string path
-			has:Named Parameter
-		Concept Authentication
-			sub CredentialSecured
-				var string username
-				var string password
-			sub CertificateSecured
-				var string certificate
-
 
 	Aspect SlackBot
 		var string token

@@ -1,5 +1,5 @@
 import io.intino.alexandria.event.Event;
-import io.intino.alexandria.event.JmsEventHub;
+import io.intino.alexandria.terminal.JmsConnector;
 import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -12,7 +12,7 @@ public class JmsTerminalTest {
 	@Test
 	@Ignore
 	public void testMessageOutBox() throws InterruptedException {
-		JmsEventHub eventHub = new JmsEventHub("tcp://localhost:63000", "user1", "1234", "", new File("outBox"));
+		JmsConnector eventHub = new JmsConnector("tcp://localhost:63000", "user1", "1234", "", new File("outBox"));
 		while (true) {
 			eventHub.sendEvent("lalala", new TestEvent("tt").field1("v1"));
 			Thread.sleep(10000);
@@ -22,7 +22,7 @@ public class JmsTerminalTest {
 	@Test
 	@Ignore
 	public void testPutAndHandle() throws InterruptedException {
-		JmsEventHub eventHub = new JmsEventHub("failover:(tcp://localhost:63000)", "comercial.cuentamaestra", "comercial.cuentamaestra", "cobranza", new File("outBox"));
+		JmsConnector eventHub = new JmsConnector("failover:(tcp://localhost:63000)", "comercial.cuentamaestra", "comercial.cuentamaestra", "cobranza", new File("outBox"));
 //		new Thread(() -> eventHub.attachListener("lalala", m -> System.out.println(m.toString()))).start();
 		while (true) {
 			eventHub.sendEvent("comercial.cuentamaestra.GestionCobro", new TestEvent("GestionCobro").field1("v1").ts(Instant.now()));
