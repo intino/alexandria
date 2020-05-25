@@ -42,7 +42,7 @@ public class AbstractBoxTemplate extends Template {
 				rule().condition((type("workflow")), (trigger("field"))).output(literal("private ")).output(mark("package")).output(literal(".bpm.Workflow workflow;")),
 				rule().condition((allTypes("service", "messaging")), (trigger("getter"))).output(literal("public ")).output(mark("name", "SnakeCaseToCamelCase", "firstUpperCase")).output(literal("Service ")).output(mark("name", "SnakeCaseToCamelCase", "firstlowerCase")).output(literal("() {\n\treturn ")).output(mark("name", "SnakeCaseToCamelCase", "firstlowerCase")).output(literal(";\n}")),
 				rule().condition((type("datalake")), (trigger("getter"))).output(literal("public io.intino.alexandria.datalake.Datalake datalake() {\n\treturn this.datalake;\n}")),
-				rule().condition((type("terminal")), (trigger("getter"))).output(literal("public ")).output(mark("qn")).output(literal(" terminal() {\n\treturn this.terminal;\n}\n\nprotected io.intino.alexandria.terminal.Connector datahubConnector() {\n\treturn this.eventHub;\n}")),
+				rule().condition((type("terminal")), (trigger("getter"))).output(literal("public ")).output(mark("qn")).output(literal(" terminal() {\n\treturn this.terminal;\n}\n\nprotected io.intino.alexandria.terminal.Connector datahubConnector() {\n\treturn this.connector;\n}")),
 				rule().condition((type("workflow")), (trigger("getter"))).output(literal("public ")).output(mark("package")).output(literal(".bpm.Workflow workflow() {\n\treturn this.workflow;\n}")),
 				rule().condition((trigger("feeder"))).output(literal("io.intino.alexandria.core.Feeders.get().register(new ")).output(mark("package", "validPackage")).output(literal(".datalake.feeders.")).output(mark("name", "FirstUpperCase")).output(literal("((")).output(mark("box", "FirstUpperCase")).output(literal("Box) this));")),
 				rule().condition((allTypes("service", "slack")), (trigger("getter"))).output(literal("public ")).output(mark("name", "SnakeCaseToCamelCase", "firstUpperCase")).output(literal("SlackBot ")).output(mark("name", "SnakeCaseToCamelCase", "firstlowerCase")).output(literal("() {\n\treturn (")).output(mark("name", "SnakeCaseToCamelCase", "firstUpperCase")).output(literal("SlackBot) ")).output(mark("name", "SnakeCaseToCamelCase", "firstlowerCase")).output(literal(";\n}")),
@@ -71,8 +71,8 @@ public class AbstractBoxTemplate extends Template {
 				rule().condition((trigger("parentinit"))),
 				rule().condition((trigger("hide"))),
 				rule().condition((trigger("hideui"))).output(literal(";")),
-			rule().condition((trigger("hideui"))).output(literal(";")),
-			rule().condition((trigger("hidedatalake"))).output(literal(";"))
+				rule().condition((trigger("hideui"))).output(literal(";")),
+				rule().condition((trigger("hidedatalake"))).output(literal(";"))
 		);
 	}
 }

@@ -351,7 +351,7 @@ def type(terminal) trigger(getter)
 	}
 
 	protected io.intino.alexandria.terminal.Connector datahubConnector() {
-		return this.eventHub;
+		return this.connector;
 	}
 end
 
