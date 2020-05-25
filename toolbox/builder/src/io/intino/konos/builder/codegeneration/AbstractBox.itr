@@ -220,7 +220,7 @@ def type(datalake) trigger(setup)
 end
 
 def type(terminal) trigger(setup)
-	this.terminal = new $qn(eventHub);
+	this.terminal = new $qn(connector);
 end
 
 def type(connector) trigger(setup)
