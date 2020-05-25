@@ -350,7 +350,7 @@ def type(terminal) trigger(getter)
 		return this.terminal;
 	}
 
-	protected io.intino.alexandria.event.JmsEventHub eventHub() {
+	protected io.intino.alexandria.terminal.Connector datahubConnector() {
 		return this.eventHub;
 	}
 end
