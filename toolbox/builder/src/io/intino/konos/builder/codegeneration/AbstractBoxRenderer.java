@@ -156,23 +156,12 @@ public class AbstractBoxRenderer extends Renderer {
 		root.add("workflow", buildBaseFrame().add("workflow"));
 	}
 
-	private FrameBuilder frameOf(Subscriber subscriber) {
-		FrameBuilder builder = new FrameBuilder("subscriber").add("package", packageName()).add("name", subscriber.name$()).
-				add("source", subscriber.event());
-		if (subscriber.subscriberId() != null) builder.add("subscriberId", subscriber.subscriberId());
-		return builder.add("box", boxName());
-	}
-
 	private FrameBuilder parameter(String parameter, String... types) {
 		return new FrameBuilder(types).add("parameter").add(isCustom(parameter) ? "custom" : "standard").add("value", parameter);
 	}
 
 	private Frame parameter(Service.SlackBot service) {
 		return new FrameBuilder(isCustom(service.token()) ? "custom" : "standard").add("value", service.token()).toFrame();
-	}
-
-	private Frame frameOf(Feeder feeder) {
-		return new FrameBuilder("feeder").add("package", packageName()).add("name", feeder.name$()).add("box", boxName()).toFrame();
 	}
 
 	private void services(FrameBuilder builder) {
