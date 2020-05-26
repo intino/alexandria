@@ -96,21 +96,21 @@ public class AbstractBoxRenderer extends Renderer {
 				add("qn", manifest.qn).
 				add("package", packageName()).
 				add("box", boxName());
-		Frame[] subscriber = graph.subscriberList().stream().filter(s -> manifest.tankClasses.containsKey(s.tank())).map(s -> subscriberFramesOf(s, manifest)).flatMap(Collection::stream).map(FrameBuilder::toFrame).toArray(Frame[]::new);
+		Frame[] subscriber = graph.subscriberList().stream().filter(s -> manifest.tankClasses.containsKey(s.event())).map(s -> subscriberFramesOf(s, manifest)).flatMap(Collection::stream).map(FrameBuilder::toFrame).toArray(Frame[]::new);
 		if (subscriber.length != 0) builder.add("subscriber", subscriber);
 		root.add("terminal", builder.toFrame());
 	}
 
 	private List<FrameBuilder> subscriberFramesOf(Subscriber subscriber, DataHubManifest manifest) {
-		String tankClass = manifest.tankClasses.get(subscriber.tank());
+		String tankClass = manifest.tankClasses.get(subscriber.event());
 		if (subscriber.context() != null) {
 			FrameBuilder builder = subscriberFrame(subscriber, manifest);
 			contextFrame(tankClass, builder, subscriber.context());
 			return Collections.singletonList(builder);
 		} else {
 			List<FrameBuilder> builders = new ArrayList<>();
-			if (manifest.messageContexts.get(subscriber.tank()).size() > 1)
-				for (String context : manifest.messageContexts.get(subscriber.tank())) {
+			if (manifest.messageContexts.get(subscriber.event()).size() > 1)
+				for (String context : manifest.messageContexts.get(subscriber.event())) {
 					FrameBuilder builder = subscriberFrame(subscriber, manifest);
 					contextFrame(tankClass, builder, context);
 					builders.add(builder);
@@ -126,7 +126,8 @@ public class AbstractBoxRenderer extends Renderer {
 				add("name", subscriber.name$()).
 				add("box", boxName()).
 				add("terminal", manifest.qn).
-				add("tank", subscriber.tank());
+				add("eventQn", subscriber.event().replace(".", "")).
+				add("event", subscriber.event());
 		if (subscriber.subscriberId() != null) builder.add("subscriberId", subscriber.subscriberId());
 		return builder;
 	}
@@ -155,23 +156,12 @@ public class AbstractBoxRenderer extends Renderer {
 		root.add("workflow", buildBaseFrame().add("workflow"));
 	}
 
-	private FrameBuilder frameOf(Subscriber subscriber) {
-		FrameBuilder builder = new FrameBuilder("subscriber").add("package", packageName()).add("name", subscriber.name$()).
-				add("source", subscriber.tank());
-		if (subscriber.subscriberId() != null) builder.add("subscriberId", subscriber.subscriberId());
-		return builder.add("box", boxName());
-	}
-
 	private FrameBuilder parameter(String parameter, String... types) {
 		return new FrameBuilder(types).add("parameter").add(isCustom(parameter) ? "custom" : "standard").add("value", parameter);
 	}
 
 	private Frame parameter(Service.SlackBot service) {
 		return new FrameBuilder(isCustom(service.token()) ? "custom" : "standard").add("value", service.token()).toFrame();
-	}
-
-	private Frame frameOf(Feeder feeder) {
-		return new FrameBuilder("feeder").add("package", packageName()).add("name", feeder.name$()).add("box", boxName()).toFrame();
 	}
 
 	private void services(FrameBuilder builder) {

@@ -220,7 +220,7 @@ def type(datalake) trigger(setup)
 end
 
 def type(terminal) trigger(setup)
-	this.terminal = new $qn(eventHub);
+	this.terminal = new $qn(connector);
 end
 
 def type(connector) trigger(setup)
@@ -290,7 +290,7 @@ def type(terminal) trigger(init)
 end
 
 def type(terminal) trigger(subscriber)
-	this.terminal.subscribe(($terminal.$tank~Consumer) e -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e)[, "$subscriberId"][, $context]);
+	this.terminal.subscribe(($terminal.$eventQn~Consumer) e -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e)[, "$subscriberId"][, $context]);
 end
 
 def trigger(context)
@@ -350,8 +350,8 @@ def type(terminal) trigger(getter)
 		return this.terminal;
 	}
 
-	protected io.intino.alexandria.event.JmsEventHub eventHub() {
-		return this.eventHub;
+	protected io.intino.alexandria.terminal.Connector datahubConnector() {
+		return this.connector;
 	}
 end
 
