@@ -33,7 +33,7 @@ public class SubscriberRenderer {
 		if (manifest == null) return;
 		for (Subscriber subscriber : subscribers) {
 			final FrameBuilder builder = baseFrame(subscriber);
-			String type = manifest.tankClasses.get(subscriber.tank());
+			String type = manifest.tankClasses.get(subscriber.event());
 			if (type == null) {
 				context.addWarning(new WarningMessage(1, "Tank not found", null, 1, 1));
 				continue;

@@ -210,7 +210,6 @@ public class CompilationContext {
 	public static class DataHubManifest {
 		public String terminal;
 		public String qn;
-		public List<String> parameters;
 		public List<String> publish;
 		public List<String> subscribe;
 		public Map<String, String> tankClasses;

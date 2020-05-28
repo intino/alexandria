@@ -43,11 +43,9 @@ public class MessagingRequestRenderer extends Renderer {
 	}
 
 	private void processRequest(Request request) {
-		if (!request.isProcessTrigger()) {
-			File packageFolder = new File(gen(), REQUESTS);
-			writeFrame(packageFolder, snakeCaseToCamelCase(request.name$()) + "Request", template().render(fillRequestFrame(request)));
-			context.compiledFiles().add(new OutputItem(context.sourceFileOf(request), javaFile(packageFolder, snakeCaseToCamelCase(request.name$()) + "Request").getAbsolutePath()));
-		}
+		File packageFolder = new File(gen(), REQUESTS);
+		writeFrame(packageFolder, snakeCaseToCamelCase(request.name$()) + "Request", template().render(fillRequestFrame(request)));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(request), javaFile(packageFolder, snakeCaseToCamelCase(request.name$()) + "Request").getAbsolutePath()));
 		createCorrespondingAction(request);
 	}
 
@@ -57,26 +55,25 @@ public class MessagingRequestRenderer extends Renderer {
 
 	private Frame fillRequestFrame(Request request) {
 		final String returnType = Commons.returnType(request.response());
-		Frame[] parameters = parameters(request.parameterList());
+		Frame parameter = parameterFrame(request.parameter());
 		FrameBuilder builder = new FrameBuilder("request").
 				add("name", request.name$()).
 				add("box", boxName()).
 				add("package", packageName()).
-				add("call", call(returnType, parameters));
-		if (parameters.length > 0) builder.add("parameter", parameters);
+				add("call", call(returnType, parameter));
+		if (parameter != null) builder.add("parameter", parameter);
 		if (!returnType.equals("void"))
 			builder.add("returnType", returnType).add("returnMessageType", messageType(request.response()));
-		if (!request.exceptionList().isEmpty() || !request.exceptionRefs().isEmpty())
-			builder.add("exception", "");
+		if (!request.exceptionList().isEmpty()) builder.add("exception", "");
 		if (!request.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
 		return builder.toFrame();
 	}
 
 
-	private Frame call(String returnType, Frame[] parameters) {
+	private Frame call(String returnType, Frame parameter) {
 		FrameBuilder builder = new FrameBuilder(returnType, "call");
-		if (parameters.length > 0) builder.add("parameter", parameters);
+		if (parameter != null) builder.add("parameter", parameter);
 		return builder.toFrame();
 	}
 
@@ -84,14 +81,11 @@ public class MessagingRequestRenderer extends Renderer {
 		return response.isFile() ? "Bytes" : "Text";
 	}
 
-	private Frame[] parameters(List<Parameter> parameters) {
-		return parameters.stream().map(this::parameter).toArray(Frame[]::new);
-	}
-
-	private Frame parameter(Parameter parameter) {
-		final FrameBuilder builder = new FrameBuilder("parameter", parameter.asType().getClass().getSimpleName());
-		if (parameter.isList()) builder.add("List");
-		return builder.add("name", parameter.name$()).add("type", parameter.asType().type()).toFrame();
+	private Frame parameterFrame(Parameter parameter) {
+		if (parameter == null) return null;
+		return new FrameBuilder("parameter", parameter.asType().getClass().getSimpleName())
+				.add("name", parameter.name$())
+				.add("type", parameter.asType().type()).toFrame();
 	}
 
 	private Template template() {

@@ -20,11 +20,11 @@
     <orderEntry type="module" module-name="zet" />
     <orderEntry type="module" module-name="primitives" />
     <orderEntry type="module" module-name="datalake" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:event:1.2.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:zim:2.0.0" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:message:2.0.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.4" level="project" />
     <orderEntry type="library" name="Intino: org.antlr:antlr4-runtime:4.8" level="project" />
+    <orderEntry type="module" module-name="event" />
+    <orderEntry type="module" module-name="zim" />
+    <orderEntry type="module" module-name="message" />
   </component>
 </module>

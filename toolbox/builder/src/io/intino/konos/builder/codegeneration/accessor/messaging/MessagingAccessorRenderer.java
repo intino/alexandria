@@ -9,8 +9,8 @@ import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Parameter;
+import io.intino.konos.model.graph.Response;
 import io.intino.konos.model.graph.Service;
-import io.intino.konos.model.graph.Workflow;
 
 import java.io.File;
 import java.util.HashSet;
@@ -21,13 +21,11 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
 public class MessagingAccessorRenderer extends Renderer {
 	private final Service.Messaging service;
-	private final Workflow workflow;
 	private File destination;
 
-	public MessagingAccessorRenderer(CompilationContext compilationContext, Service.Messaging application, Workflow workflow, File destination) {
+	public MessagingAccessorRenderer(CompilationContext compilationContext, Service.Messaging application, File destination) {
 		super(compilationContext, Target.Owner);
 		this.service = application;
-		this.workflow = workflow;
 		this.destination = destination;
 	}
 
@@ -44,9 +42,8 @@ public class MessagingAccessorRenderer extends Renderer {
 		if (!jmsService.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
 		final List<Service.Messaging.Request> requests = jmsService.core$().findNode(Service.Messaging.Request.class);
-		if (requests.stream().anyMatch(Service.Messaging.Request::isProcessTrigger)) builder.add("hasProcess", ";");
 		final Set<String> customParameters = extractCustomParameters(requests);
-		builder.add("request", requests.stream().map(request -> processRequest(request, customParameters).toFrame()).toArray(Frame[]::new));
+		builder.add("request", requests.stream().map(request -> processRequest(request, jmsService).toFrame()).toArray(Frame[]::new));
 		for (String parameter : customParameters) builder.add("custom", parameter);
 		Commons.writeFrame(destination, snakeCaseToCamelCase(jmsService.name$()) + "Accessor", getTemplate().render(builder.toFrame()));
 	}
@@ -57,37 +54,35 @@ public class MessagingAccessorRenderer extends Renderer {
 		return set;
 	}
 
-	private FrameBuilder processRequest(Service.Messaging.Request request, Set<String> customParameters) {
+	private FrameBuilder processRequest(Service.Messaging.Request request, Service.Messaging service) {
 		final FrameBuilder builder = new FrameBuilder("request")
 				.add("name", request.name$())
-				.add("queue", request.path())
-				.add("parameter", parameters(request.parameterList()))
-				.add("messageType", messageType(request.parameterList()));
+				.add("service", service.name$())
+				.add("path", "service" + chainContext(service.context()) + request.path());
+		if (request.parameter() != null)
+			builder.add("parameter", parameterFrame(request.parameter()));
 		if (request.response() != null && request.response().isType()) {
 			builder.add("reply");
-			final FrameBuilder reply = new FrameBuilder();
-			if (request.response().isList()) reply.add("list");
-			builder.add("reply", reply.add("reply").add(request.response().asType().getClass().getSimpleName()).add("value", request.response().asType().type()));
+			builder.add("response", responseFrame(request.response()));
 		}
-		customParameters.forEach(parameter -> builder.add("custom", parameter));
 		return builder;
 	}
 
-	private String messageType(List<Parameter> parameters) {
-		for (Parameter parameter : parameters) if (parameter.isFile()) return "Bytes";
-		return "Text";
+	private String chainContext(String context) {
+		return (context != null && !context.isEmpty() ? "." + context + "." : "");
 	}
 
-	private Frame[] parameters(List<Parameter> parameters) {
-		return parameters.stream().map(this::parameter).toArray(Frame[]::new);
-	}
-
-	private Frame parameter(Parameter parameter) {
-		return new FrameBuilder("parameter", parameter.asType().getClass().getSimpleName())
+	private Frame parameterFrame(Parameter parameter) {
+		return new FrameBuilder("value")
 				.add("name", parameter.name$())
 				.add("type", parameter.asType().type()).toFrame();
 	}
 
+	private Frame responseFrame(Response response) {
+		return new FrameBuilder("value")
+				.add("name", response.name$())
+				.add("type", response.asType().type()).toFrame();
+	}
 
 	private Template getTemplate() {
 		return new MessagingAccessorTemplate()

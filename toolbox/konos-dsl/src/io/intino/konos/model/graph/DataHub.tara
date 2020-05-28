@@ -11,7 +11,7 @@ Concept:{0..1} MessageHub
 		var string outBoxDirectory
 
 Concept:Named Subscriber
-	var string tank
+	var string event
 	var string subscriberId
 	var string context = empty
 

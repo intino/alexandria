@@ -25,7 +25,7 @@ public class AbstractBoxRenderer extends Renderer {
 		super(compilationContext, Target.Owner);
 		this.graph = graph;
 		this.configuration = compilationContext.configuration();
-		this.konosParameters = new HashSet<>();
+		this.konosParameters = new LinkedHashSet<>();
 		this.konosParameters.add("home");
 	}
 
@@ -34,10 +34,10 @@ public class AbstractBoxRenderer extends Renderer {
 		FrameBuilder root = new FrameBuilder("box");
 		root.add("name", boxName()).add("package", packageName());
 		parent(root);
+		connector(root);
 		services(root);
 		sentinels(root);
 		datalake(root);
-		messageHub(root);
 		terminal(root);
 		workflow(root);
 		Commons.writeFrame(context.gen(Target.Owner), "AbstractBox", template().render(root.toFrame()));
@@ -96,22 +96,21 @@ public class AbstractBoxRenderer extends Renderer {
 				add("qn", manifest.qn).
 				add("package", packageName()).
 				add("box", boxName());
-		manifest.parameters.forEach(p -> builder.add("parameter", parameter(p, "conf", p.contains("directory") ? "file" : "standard")));
-		Frame[] subscriber = graph.subscriberList().stream().filter(s -> manifest.tankClasses.containsKey(s.tank())).map(s -> subscriberFramesOf(s, manifest)).flatMap(Collection::stream).map(FrameBuilder::toFrame).toArray(Frame[]::new);
+		Frame[] subscriber = graph.subscriberList().stream().filter(s -> manifest.tankClasses.containsKey(s.event())).map(s -> subscriberFramesOf(s, manifest)).flatMap(Collection::stream).map(FrameBuilder::toFrame).toArray(Frame[]::new);
 		if (subscriber.length != 0) builder.add("subscriber", subscriber);
 		root.add("terminal", builder.toFrame());
 	}
 
 	private List<FrameBuilder> subscriberFramesOf(Subscriber subscriber, DataHubManifest manifest) {
-		String tankClass = manifest.tankClasses.get(subscriber.tank());
+		String tankClass = manifest.tankClasses.get(subscriber.event());
 		if (subscriber.context() != null) {
 			FrameBuilder builder = subscriberFrame(subscriber, manifest);
 			contextFrame(tankClass, builder, subscriber.context());
 			return Collections.singletonList(builder);
 		} else {
 			List<FrameBuilder> builders = new ArrayList<>();
-			if (manifest.messageContexts.get(subscriber.tank()).size() > 1)
-				for (String context : manifest.messageContexts.get(subscriber.tank())) {
+			if (manifest.messageContexts.get(subscriber.event()).size() > 1)
+				for (String context : manifest.messageContexts.get(subscriber.event())) {
 					FrameBuilder builder = subscriberFrame(subscriber, manifest);
 					contextFrame(tankClass, builder, context);
 					builders.add(builder);
@@ -121,14 +120,14 @@ public class AbstractBoxRenderer extends Renderer {
 		}
 	}
 
-
 	private FrameBuilder subscriberFrame(Subscriber subscriber, DataHubManifest manifest) {
 		FrameBuilder builder = new FrameBuilder("subscriber", "terminal").
 				add("package", packageName()).
 				add("name", subscriber.name$()).
 				add("box", boxName()).
 				add("terminal", manifest.qn).
-				add("tank", subscriber.tank());
+				add("eventQn", subscriber.event().replace(".", "")).
+				add("event", subscriber.event());
 		if (subscriber.subscriberId() != null) builder.add("subscriberId", subscriber.subscriberId());
 		return builder;
 	}
@@ -140,38 +139,21 @@ public class AbstractBoxRenderer extends Renderer {
 						add("type", tankClass).toFrame());
 	}
 
-	private void messageHub(FrameBuilder root) {
-		MessageHub hub = graph.messageHub();
-		if (hub == null) return;
-		FrameBuilder builder = new FrameBuilder("messagehub");
-		if (hub.isJmsBus()) {
-			MessageHub.JmsBus jmsHub = hub.asJmsBus();
-			builder.add("jms").
-					add("parameter", parameter(jmsHub.url())).
-					add("parameter", parameter(jmsHub.user())).
-					add("parameter", parameter(jmsHub.password())).
-					add("parameter", parameter(jmsHub.clientId())).
-					add("parameter", parameter(jmsHub.outBoxDirectory()));
-		}
+	private void connector(FrameBuilder root) {
+		if (graph.messagingServiceList().isEmpty() && context.dataHubManifest() == null) return;
+		String[] parameters = new String[]{"datahub_url", "datahub_user", "datahub_password", "datahub_clientId", "datahub_outbox_directory"};
+		FrameBuilder builder = new FrameBuilder("connector");
+		for (String p : parameters)
+			builder.add("parameter", parameter(p, "conf", p.contains("directory") ? "file" : "standard"));
 		builder.add("package", packageName());
 		builder.add("box", boxName());
-		Frame[] feederFrames = graph.feederList().stream().filter(f -> !f.sensorList().isEmpty()).map(this::frameOf).toArray(Frame[]::new);
-		if (feederFrames.length != 0) builder.add("feeder", feederFrames);
-		Frame[] mounterFrames = graph.subscriberList().stream().map(s -> frameOf(s).add("messageHub").toFrame()).toArray(Frame[]::new);
-		if (mounterFrames.length != 0) builder.add("mounter", mounterFrames);
-		root.add("messagehub", builder.toFrame());
+		root.add("connector", builder.toFrame());
+		Collections.addAll(konosParameters, parameters);
 	}
 
 	private void workflow(FrameBuilder root) {
 		if (graph.workflow() == null || graph.workflow().processList().isEmpty()) return;
 		root.add("workflow", buildBaseFrame().add("workflow"));
-	}
-
-	private FrameBuilder frameOf(Subscriber subscriber) {
-		FrameBuilder builder = new FrameBuilder("subscriber").add("package", packageName()).add("name", subscriber.name$()).
-				add("source", subscriber.tank());
-		if (subscriber.subscriberId() != null) builder.add("subscriberId", subscriber.subscriberId());
-		return builder.add("box", boxName());
 	}
 
 	private FrameBuilder parameter(String parameter, String... types) {
@@ -182,14 +164,10 @@ public class AbstractBoxRenderer extends Renderer {
 		return new FrameBuilder(isCustom(service.token()) ? "custom" : "standard").add("value", service.token()).toFrame();
 	}
 
-	private Frame frameOf(Feeder feeder) {
-		return new FrameBuilder("feeder").add("package", packageName()).add("name", feeder.name$()).add("box", boxName()).toFrame();
-	}
-
 	private void services(FrameBuilder builder) {
 		if (!graph.messagingServiceList().isEmpty()) builder.add("jms", "");
 		soap(builder);
-		jms(builder);
+		messaging(builder);
 		jmx(builder);
 		slackServices(builder);
 		ui(builder);
@@ -216,9 +194,9 @@ public class AbstractBoxRenderer extends Renderer {
 							.add("parameter", parameter(service.port())).toFrame());
 	}
 
-	private void jms(FrameBuilder frame) {
+	private void messaging(FrameBuilder frame) {
 		for (Service.Messaging service : graph.messagingServiceList())
-			frame.add("service", new FrameBuilder("service", "jms").add("name", service.name$()).add("configuration", boxName()));
+			frame.add("service", new FrameBuilder("service", "messaging").add("name", service.name$()).add("configuration", boxName()));
 	}
 
 	private void jmx(FrameBuilder frame) {

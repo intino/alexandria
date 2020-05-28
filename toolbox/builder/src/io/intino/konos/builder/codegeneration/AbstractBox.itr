@@ -21,7 +21,7 @@ def type(box)
 	public abstract class AbstractBox extends [$hasUi+uiBox?io.intino.alexandria.core.Box] {
 		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;
 		[$service+field...[$NL]]
-		[$messagehub+field]
+		[$connector+field]
 		[$terminal+field]
 		[$datalake+field]
 		[$sentinel+field]
@@ -39,9 +39,9 @@ def type(box)
 			[owner = new $parent~Box(configuration);]
 			this.configuration = configuration;
 			initJavaLogger();
+			[$connector+setup]
 			[$service+setup...[$NL]]
 			[$datalake+setup]
-			[$messagehub+setup]
 			[$terminal+setup]
 		}
 
@@ -62,14 +62,15 @@ def type(box)
 			beforeStart();
 			if (owner != null) owner.start();
 			initUI();
+			initConnector();
+			initRestServices();
 			initRestServices();
 			initSoapServices();
 			initJmxServices();
 			initDatalake();
-			initMessageHub();
 			initTerminal();
-			initSentinels();
 			initMessagingServices();
+			initSentinels();
 			initSlackBots();
 			initWorkflow();
 			if (owner != null) owner.afterStart();
@@ -86,9 +87,8 @@ def type(box)
 			beforeStop();
 			if (owner != null) owner.stop();
 			[$spark...[$NL]]
-			[$service+close...[$NL]]
-			[$messagehub+close]
-			[$terminal+close]
+			[$service+stop...[$NL]]
+			[$connector+stop]
 			if (owner != null) owner.afterStop();
 			afterStop();
 		}
@@ -102,8 +102,6 @@ def type(box)
 		[$service+getter...[$NL$NL]]
 
 		[$hasUi+authService]
-
-		[$messagehub+getter]
 
 		[$terminal+getter]
 
@@ -145,10 +143,9 @@ def type(box)
 			[$datalake+init]
 		}
 
-		private void initMessageHub() {
-			[$messagehub+init]
+		private void initConnector() {
+			[$connector+init]
 		}
-
 
 		private void initTerminal() {
 			[$terminal+init]
@@ -185,8 +182,8 @@ def type(datalake) trigger(import)
 	import io.intino.alexandria.datalake.Datalake;
 end
 
-def type(messageHub) trigger(import)
-	import io.intino.alexandria.event.EventHub;
+def type(connector) trigger(import)
+	import io.intino.alexandria.terminal.Connector;
 end
 
 def trigger(uiBox)
@@ -223,16 +220,11 @@ def type(datalake) trigger(setup)
 end
 
 def type(terminal) trigger(setup)
-	this.eventHub = new io.intino.alexandria.event.JmsEventHub($parameter...[, ]);
-	this.terminal = new $qn(eventHub);
+	this.terminal = new $qn(connector);
 end
 
-def type(jms & messageHub) trigger(setup)
-	this.messageHub = new $package.MessageHub($parameter...[, ]);
-end
-
-def type(messageHub) trigger(setup)
-	this.messageHub = new $package.MessageHub(($box+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+def type(connector) trigger(setup)
+	this.connector = new io.intino.alexandria.terminal.JmsConnector($parameter...[, ]);
 end
 
 def type(service & jmx) trigger(jmx)
@@ -272,7 +264,7 @@ def trigger(use)
 end
 
 def type(service & messaging) trigger(messaging)
-	this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(this.messageHub, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(this.connector, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 	Logger.info("Messaging service $name: started!");
 end
 
@@ -288,32 +280,21 @@ def type(datalake & mirror) trigger(init)
 	this.datalake.init();
 end
 
+def type(connector) trigger(init)
+	if (connector instanceof io.intino.alexandria.terminal.JmsConnector) ((io.intino.alexandria.terminal.JmsConnector) connector).start();
+end
 def type(terminal) trigger(init)
 	if (this.terminal != null) {
-		terminal.start();
 		$subscriber...[$NL]
 	}
 end
 
-def type(messageHub) trigger(init)
-	[if(this.messageHub != null) {
-		$subscriber...[$NL]
-	}]
-
-	[registerFeeders();$feeder+hide]
-	Logger.info("Message Hub connected!");
-end
-
 def type(terminal) trigger(subscriber)
-	this.terminal.subscribe(($terminal.$tank~Consumer) e -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e)[, "$subscriberId"][, $context]);
+	this.terminal.subscribe(($terminal.$eventQn~Consumer) e -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e)[, "$subscriberId"][, $context]);
 end
 
 def trigger(context)
 	$type.Context.$value
-end
-
-def type(messageHub) trigger(subscriber)
-	this.messageHub.attachListener("$source", "$subscriberId", m -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).handle(m));
 end
 
 def type(service & jmx) trigger(field)
@@ -340,12 +321,11 @@ def type(datalake) trigger(field)
 	private io.intino.alexandria.datalake.Datalake datalake;
 end
 
-def type(messageHub) trigger(field)
-	private $package.MessageHub messageHub;
+def type(connector) trigger(field)
+	private io.intino.alexandria.terminal.Connector connector;
 end
 
 def type(terminal) trigger(field)
-	private io.intino.alexandria.event.JmsEventHub eventHub;
 	private $qn terminal;
 end
 
@@ -370,23 +350,9 @@ def type(terminal) trigger(getter)
 		return this.terminal;
 	}
 
-	protected io.intino.alexandria.event.JmsEventHub eventHub() {
-		return this.eventHub;
+	protected io.intino.alexandria.terminal.Connector datahubConnector() {
+		return this.connector;
 	}
-end
-
-def type(messagehub) trigger(getter)
-	public io.intino.alexandria.message.MessageHub messageHub() {
-		return this.messageHub;
-	}
-
-	[public io.intino.alexandria.core.Feeders feeders() {
-		return io.intino.alexandria.core.Feeders.get();
-	}
-
-	private void registerFeeders() {
-		$feeder...[$NL]
-	}]
 end
 
 def type(workflow) trigger(getter)
@@ -412,19 +378,15 @@ def trigger(spark)
 	io.intino.alexandria.http.AlexandriaSparkBuilder.instance().stop();
 end
 
-def type(terminal) trigger(close)
-	if (terminal != null) terminal.stop();
+def type(connector) trigger(stop)
+	if (connector instanceof io.intino.alexandria.terminal.JmsConnector) ((io.intino.alexandria.terminal.JmsConnector) connector).stop();
 end
 
-def type(messageHub) trigger(close)
-	if (messageHub != null) messageHub.stop();
-end
-
-def type(service & slack) trigger(close)
+def type(service & slack) trigger(stop)
 	this.$name+SnakeCaseToCamelCase+FirstLowerCase.disconnect();
 end
 
-def type(service) trigger(close)
+def type(service) trigger(stop)
 end
 
 def type(service)
