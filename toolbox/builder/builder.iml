@@ -11,6 +11,8 @@
     </content>
     <orderEntry type="jdk" jdkName="11" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: io.intino.magritte:builder:4.1.1" level="project" />
+    <orderEntry type="library" name="Maven: io.intino.magritte:language:1.3.1" level="project" />
     <orderEntry type="library" name="Maven: io.intino.alexandria:zip:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: io.intino.alexandria:logger:2.1.0" level="project" />
     <orderEntry type="library" name="Maven: io.intino:configuration:1.0.0" level="project" />
@@ -83,8 +85,8 @@
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: io.intino.cottons:cotton-utils:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tika:tika-core:0.4" level="project" />
-    <orderEntry type="library" name="Maven: io.intino.magritte:builder:4.0.0" level="project" />
-    <orderEntry type="library" name="Maven: io.intino.magritte:language:1.3.0" level="project" />
+    <orderEntry type="library" name="Maven: io.intino.magritte:builder:4.1.1" level="project" />
+    <orderEntry type="library" name="Maven: io.intino.magritte:language:1.3.1" level="project" />
     <orderEntry type="library" name="Maven: io.intino.magritte:io:3.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.esotericsoftware:kryo:4.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.esotericsoftware:reflectasm:1.11.3" level="project" />

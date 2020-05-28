@@ -45,16 +45,16 @@ def !type(primitive) type(single) trigger(declaration)
 	private $type+firstUpperCase $name+firstLowerCase[ = $defaultValue];
 end
 
+def type(map) trigger(declaration)
+	private java.util.Map<$key+firstUpperCase, $value+firstUpperCase> $name+firstLowerCase = new java.util.HashMap<>();
+end
+
 def type(multiple & member) trigger(declaration)
 	private java.util.List<$type+firstUpperCase> $name+firstLowerCase = new java.util.ArrayList<>();
 end
 
 def type(multiple) trigger(declaration)
 	private java.util.List<$type> $name+firstLowerCase = new java.util.ArrayList<>();
-end
-
-def type(attributeMap) trigger(declaration)
-	private java.util.Map<String, String> $name = new java.util.HashMap<>();
 end
 
 def type(word & single) trigger(getter)
@@ -93,13 +93,16 @@ def type(multiple) trigger(getter)
 	}
 end
 
-def type(attributeMap) trigger(getter)
-	public java.util.List<String> attributeNames() {
-		return new java.util.ArrayList<>(this.$name.keySet());
+def type(map) trigger(getter)
+	public java.util.Map<$key, $value> $name+firstLowerCase() {
+		return this.$name+firstLowerCase;
 	}
+end
 
-	public String attributeValue(String key) {
-		return this.$name.get(key);
+def type(map) trigger(setter)
+	public $element+firstUpperCase $name+firstLowerCase(java.util.Map<$key, $value> $name+firstLowerCase) {
+		this.$name+firstLowerCase = $name+firstLowerCase;
+		return this;
 	}
 end
 
@@ -144,9 +147,3 @@ def type(multiple) trigger(setter)
 	}
 end
 
-def type(attributeMap) trigger(setter)
-	public $element+firstUpperCase addAttribute(String key, String value) {
-		this.$name.put(key, value);
-		return this;
-	}
-end

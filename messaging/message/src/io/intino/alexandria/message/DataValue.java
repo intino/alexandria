@@ -5,11 +5,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class DataValue implements Message.Value {
+public class DataValue implements Message.Value {
 	private final String data;
 
 	public DataValue(String data) {
 		this.data = data;
+	}
+
+	public DataValue(Object data) {
+		this.data = data.toString();
 	}
 
 	@Override

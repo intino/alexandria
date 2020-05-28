@@ -81,7 +81,6 @@ public class SchemaRenderer extends Renderer {
 		List<FrameBuilder> attributes = new ArrayList<>();
 		addAll(attributes, processAttributes(schema.attributeList()));
 		addAll(attributes, processSchemasAsAttribute(schema.schemaList()));
-		if (schema.attributeMap() != null) attributes.add(processAttributeMap(schema.attributeMap()));
 		attributes.forEach(f -> f.add("element", schema.name$()));
 		return attributes.toArray(new FrameBuilder[0]);
 	}
@@ -104,6 +103,7 @@ public class SchemaRenderer extends Renderer {
 		else if (attribute.isFile()) return process(attribute.asFile());
 		else if (attribute.isLongInteger()) return process(attribute.asLongInteger());
 		else if (attribute.isWord()) return process(attribute.asWord());
+		else if (attribute.isMap()) return process(attribute.asMap());
 		else if (attribute.isObject())
 			return processSchemaAsAttribute(attribute.asObject().schema(), attribute.name$(), attribute.isList());
 		return null;
@@ -136,10 +136,6 @@ public class SchemaRenderer extends Renderer {
 				.add("type", attribute.type());
 	}
 
-	private FrameBuilder processAttributeMap(Schema.AttributeMap map) {
-		return new FrameBuilder("attributeMap").add("name", map.name$());
-	}
-
 	private FrameBuilder process(Data.Bool attribute) {
 		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
@@ -153,7 +149,6 @@ public class SchemaRenderer extends Renderer {
 				.add("type", attribute.type());
 		if (attribute.defaultValue() != null) builder.add("defaultValue", "\"" + attribute.defaultValue() + "\"");
 		return builder;
-
 	}
 
 	private FrameBuilder process(Data.DateTime attribute) {
@@ -174,6 +169,13 @@ public class SchemaRenderer extends Renderer {
 				.add("name", a.name$())
 				.add("words", attribute.values().toArray(new String[0]))
 				.add("type", a.name$());
+	}
+
+	private FrameBuilder process(Data.Map attribute) {
+		return new FrameBuilder("map")
+				.add("name", attribute.a$(Schema.Attribute.class).name$())
+				.add("key", attribute.key().asType().type())
+				.add("value", attribute.value().asType().type());
 	}
 
 	private FrameBuilder processSchemaAsAttribute(Schema schema, String name, boolean multiple) {

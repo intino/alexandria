@@ -35,6 +35,10 @@ Concept Data is abstract
 			var Schema schema
 			var string type = @schemaName is reactive private
 			var boolean isComponent = @isComponent is reactive private
+		sub Map
+			var string type = "java.util.Map" is reactive private
+			Concept:{1..1}:RequiresAspect Key extends Data
+			Concept:{1..1}:RequiresAspect Value extends Data
 
 
 Concept:Named Parameter extends Data is component
@@ -44,9 +48,7 @@ Concept:Named Parameter extends Data is component
 Concept Schema
 	var boolean isRequired = false
 	var boolean multiple = true
-	!! AttributeMap is able to gather all parameters that are unknown when defining the schema. This can be consulted on runtime in the Action classes
-	Concept:{0..1} AttributeMap
-	!! Attribute of the member
+	!! Attribute of the schema
 	Concept:Named:RequiresAspect Attribute extends Data
 		var boolean isRequired = true
 	has Schema

@@ -5,7 +5,7 @@ def type(request)
 	import $package.*;
 	import com.google.gson.Gson;
 	import io.intino.alexandria.core.Box;
-	import io.intino.alexandria.message.MessageHub.RequestConsumer;
+	import io.intino.alexandria.terminal.Connector;
 
 	import javax.jms.*;
 	import java.util.List;
@@ -13,15 +13,18 @@ def type(request)
 	import java.util.logging.Logger;
 	$schemaImport
 
-	public class $name+firstUpperCase~Request implements RequestConsumer {
+	public class $name+firstUpperCase~Request {
+		private final $box+firstUpperCase~Box box;
+		private final Connector connector;
+		private final String responsePath;
 
-		private $box+firstUpperCase~Box box;
-
-		public $name+firstUpperCase~Request($box+firstUpperCase~Box box) {
+		public $name+firstUpperCase~Request($box+firstUpperCase~Box box, Connector connector, String responsePath) {
 			this.box = box;
+			this.connector = connector;
+			this.responsePath = responsePath;
 		}
 
-		public String accept(String request) {
+		public void accept(String request) {
 			try {
 				$call
 			} [$exception+catch]
@@ -30,7 +33,7 @@ def type(request)
 			}
 		}
 
-		private $package.actions.$name+firstUpperCase~Action actionFor([$parameter+signature...[, ]]) {
+		private $package.actions.$name+firstUpperCase~Action actionFor($parameter+signature) {
 			final $package.actions.$name+firstUpperCase~Action action = new $package.actions.$name+firstUpperCase~Action();
 			action.box = this.box;
 			[$parameter+assign]
@@ -40,17 +43,16 @@ def type(request)
 end
 
 def !type(void) trigger(call)
-	return io.intino.alexandria.Json.toString(actionFor([io.intino.alexandria.Json.fromString(request, $parameter+type.class)]).execute());
+	connector.sendMessage(responsePath, io.intino.alexandria.Json.toString(actionFor([io.intino.alexandria.Json.fromString(request, $parameter+type.class)]).execute()));
 end
 
 def trigger(call)
 	actionFor([io.intino.alexandria.Json.fromString(request, $parameter+type.class)]).execute();
-	return null;
 end
 
 def trigger(catch)
 	catch (AlexandriaException e) {
-		response(session, replyTo(request), exceptionMessage(session, idOf(request), e));
+		connector.sendMessage(responsePath, e.getMessage());
 	}
 end
 
@@ -60,15 +62,6 @@ end
 
 def type(parameter) trigger(signature)
 	$type+FirstUpperCase $name+SnakeCaseToCamelCase+firstLowerCase
-end
-
-
-def type(parameter) type(fileData) trigger(type)
-	io.intino.alexandria.Resource
-end
-
-def type(parameter) type(list) trigger(type)
-	java.util.List<$type>
 end
 
 def type(parameter) trigger(type)

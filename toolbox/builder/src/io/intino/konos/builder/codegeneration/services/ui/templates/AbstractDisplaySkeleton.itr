@@ -147,12 +147,12 @@ def trigger(parameterValue)
 	value
 end
 
-def type(parameter)
-	$value
-end
-
 def trigger(method)
     public void $value+firstLowerCase(String value) {
         add("$value", value);
     }
+end
+
+def type(parameter)
+	$value
 end

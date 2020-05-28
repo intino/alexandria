@@ -5,7 +5,7 @@
 	<groupId>io.intino.konos</groupId>
 	<artifactId>builder</artifactId>
 	<name>Builder</name>
-	<version>8.7.1</version>
+	<version>8.8.3</version>
 
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -122,7 +122,7 @@
 		<dependency>
 			<groupId>io.intino.magritte</groupId>
 			<artifactId>builder</artifactId>
-			<version>4.0.0</version>
+			<version>4.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>io.intino.magritte</groupId>
