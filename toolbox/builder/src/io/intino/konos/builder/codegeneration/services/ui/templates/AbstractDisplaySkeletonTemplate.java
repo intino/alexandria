@@ -27,8 +27,8 @@ public class AbstractDisplaySkeletonTemplate extends Template {
 			rule().condition((allTypes("methods","dynamicloaded"))).output(literal("@Override\npublic io.intino.alexandria.ui.displays.components.DynamicLoaded.LoadTime loadTime() {\n\treturn io.intino.alexandria.ui.displays.components.DynamicLoaded.LoadTime.valueOf(\"")).output(mark("loadTime")).output(literal("\");\n}\n\n@Override\npublic void showLoading() {\n\tnotifier.refreshLoading(true);\n}\n\n@Override\npublic void hideLoading() {\n\tnotifier.refreshLoading(false);\n}")),
 			rule().condition((type("request")), (trigger("accessible"))).output(literal("public void ")).output(mark("name")).output(literal("(")).output(expression().output(mark("parameter")).output(literal(" value"))).output(literal(") {\n\trequest(\"")).output(mark("name")).output(literal("\"")).output(expression().output(literal(", ")).output(mark("parameter", "parameterValue"))).output(literal(");\n}")),
 			rule().condition((trigger("parametervalue"))).output(literal("value")),
-			rule().condition((type("parameter"))).output(mark("value")),
-			rule().condition((trigger("method"))).output(literal("public void ")).output(mark("value", "firstLowerCase")).output(literal("(String value) {\n    add(\"")).output(mark("value")).output(literal("\", value);\n}"))
+			rule().condition((trigger("method"))).output(literal("public void ")).output(mark("value", "firstLowerCase")).output(literal("(String value) {\n    add(\"")).output(mark("value")).output(literal("\", value);\n}")),
+			rule().condition((type("parameter"))).output(mark("value"))
 		);
 	}
 }
