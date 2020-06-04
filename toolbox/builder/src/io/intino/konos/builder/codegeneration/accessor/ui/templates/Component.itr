@@ -87,7 +87,7 @@ def type(properties & image) trigger(specific)
 end
 
 def type(properties & file) trigger(specific)
-	[ width="$width"][ height="$height"][ dropZone={$dropZone}]
+	[ width="$width"][ height="$height"][ dropZone={$dropZone}][ maxSize={$maxSize}][ allowedTypes={$[$allowedTypes$]}]
 end
 
 def type(properties & chart) trigger(specific)
