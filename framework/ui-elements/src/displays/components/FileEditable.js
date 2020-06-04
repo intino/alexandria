@@ -52,13 +52,15 @@ export default class FileEditable extends AbstractFile {
 	_renderDropZone = () => {
 	    return (
 	        <DropzoneArea
-	            /*acceptedFiles={['image/*']}*/
-	            dropzoneText={this.translate("Drag and drop an image here or click")}
-                style={{border:'1px solid red'}}
+	            acceptedFiles={this._allowedTypes()}
+	            dropzoneText={this.translate("Drag and drop a file here or click")}
+                filesLimit={1}
+                maxFileSize={this.props.maxSize != null ? this.props.maxSize : 30000000}
 	            onChange={(files) => {
 	                if (files.length <= 0) return;
+	                if (files.length > 1) return;
 	                this.saveFile(files[0], files[0].name);
-                }}/>
+            }}/>
         );
 	};
 
@@ -67,6 +69,26 @@ export default class FileEditable extends AbstractFile {
             <input type="file" value={this.state.value} disabled={this.state.readonly ? true : undefined}
                    onChange={this.handleChange.bind(this)}></input>
         );
+	};
+
+	_allowedTypes = () => {
+	    if (this.props.allowedTypes == null) return ['image/*', 'video/*', 'application/*', 'text/*'];
+	    let result = [];
+	    if (this._containsType("Image")) result.push("image/*");
+	    if (this._containsType("Video")) result.push("video/*");
+	    if (this._containsType("Application")) result.push("application/*");
+	    if (this._containsType("Text")) result.push("text/*");
+	    if (this._containsType("Xml")) result.push(".xml");
+	    if (this._containsType("Html")) result.push("text/html");
+	    if (this._containsType("Pdf")) result.push("application/pdf");
+	    return result;
+	};
+
+	_containsType = (type) => {
+	    for (let i=0; i<this.props.allowedTypes.length; i++) {
+	        if (this.props.allowedTypes[i] == type) return true;
+	    }
+	    return false;
 	}
 
 	refresh = (value) => {
