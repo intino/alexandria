@@ -47,6 +47,7 @@ Concept DataComponents
 		Aspect Multiple
 		Aspect Editable
         	var boolean showPreview = false
+        	var boolean showDropZone = false
         	Concept:{0..1} Validation
         		var double:{kbytes} maxSize
         		var string[] allowedExtensions = empty
