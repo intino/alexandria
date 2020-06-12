@@ -29,6 +29,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static java.util.Collections.*;
@@ -625,6 +626,6 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 	}
 
 	private static String toString(InputStream content) throws IOException {
-		return IOUtils.toString(content, "UTF-8");
+		return IOUtils.toString(content, StandardCharsets.UTF_8);
 	}
 }
