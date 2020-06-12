@@ -64,7 +64,6 @@ def type(box)
 			initUI();
 			initConnector();
 			initRestServices();
-			initRestServices();
 			initSoapServices();
 			initJmxServices();
 			initDatalake();
