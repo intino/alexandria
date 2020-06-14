@@ -3,7 +3,6 @@ package io.intino.alexandria.restaccessor;
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
 
-import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -81,11 +80,4 @@ public interface RestAccessor {
 		Response delete(String path, Map<String, String> parameters) throws RestfulFailure;
 	}
 
-	interface Response {
-		int code();
-
-		String content();
-
-		InputStream contentAsStream();
-	}
 }

@@ -2,9 +2,10 @@ package io.intino.alexandria.restaccessor;
 
 import io.intino.alexandria.Base64;
 import io.intino.alexandria.Resource;
-import io.intino.alexandria.restaccessor.RestAccessor.Response;
+import io.intino.alexandria.restaccessor.adapters.RequestAdapter;
 import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -12,6 +13,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.InputStreamBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.message.BasicNameValuePair;
@@ -20,17 +26,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RestAccessorBuilder {
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.apache.http.entity.ContentType.APPLICATION_OCTET_STREAM;
+import static org.apache.http.entity.ContentType.MULTIPART_FORM_DATA;
+import static org.apache.http.entity.mime.HttpMultipartMode.BROWSER_COMPATIBLE;
+
+public class RestQueryBuilder {
 	private enum Auth {
 		Basic, Bearer;
 		private String token;
-
 
 		Auth with(String token) {
 			this.token = token;
@@ -46,52 +55,52 @@ public class RestAccessorBuilder {
 	private final List<NameValuePair> queryParameters;
 	private final HttpClient client;
 	private final Map<String, String> headerParameters;
-	private final Map<String, String> entityParameters;
+	private final Map<String, String> entityParts;
 	private final List<Resource> resources;
 	private int timeOutMillis;
 	private Auth auth;
 
-	public RestAccessorBuilder(URL url) {
+	public RestQueryBuilder(URL url) {
 		this.url = url;
 		timeOutMillis = 120 * 1000;
 		queryParameters = new ArrayList<>();
 		headerParameters = new LinkedHashMap<>();
-		entityParameters = new LinkedHashMap<>();
+		entityParts = new LinkedHashMap<>();
 		resources = new ArrayList<>();
 		this.client = client();
 	}
 
-	public RestAccessorBuilder timeOut(int timeOutMillis) {
+	public RestQueryBuilder timeOut(int timeOutMillis) {
 		this.timeOutMillis = timeOutMillis;
 		return this;
 	}
 
-	public RestAccessorBuilder basicAuth(String user, String password) {
+	public RestQueryBuilder basicAuth(String user, String password) {
 		auth = Auth.Basic.with(Base64.encode((user + ":" + password).getBytes()));
 		return this;
 	}
 
-	public RestAccessorBuilder bearerAuth(String token) {
+	public RestQueryBuilder bearerAuth(String token) {
 		auth = Auth.Bearer.with(Base64.encode((token).getBytes()));
 		return this;
 	}
 
-	public RestAccessorBuilder queryParameter(String name, String value) {
-		queryParameters.add(new BasicNameValuePair(name, value));
+	public RestQueryBuilder queryParameter(String name, Object value) {
+		if (value != null) queryParameters.add(new BasicNameValuePair(name, RequestAdapter.adapt(value)));
 		return this;
 	}
 
-	public RestAccessorBuilder headerParameter(String name, String value) {
-		headerParameters.put(name, value);
+	public RestQueryBuilder headerParameter(String name, Object value) {
+		if (value != null) headerParameters.put(name, RequestAdapter.adapt(value));
 		return this;
 	}
 
-	public RestAccessorBuilder entityParameter(String name, String value) {
-		entityParameters.put(name, value);
+	public RestQueryBuilder entityPart(String name, Object content) {
+		if (content != null) entityParts.put(name, RequestAdapter.adapt(content));
 		return this;
 	}
 
-	public RestAccessorBuilder entityResource(Resource resource) {
+	public RestQueryBuilder entityPart(Resource resource) {
 		resources.add(resource);
 		return this;
 	}
@@ -122,9 +131,8 @@ public class RestAccessorBuilder {
 			method.setURI(new URIBuilder(pathUrl(url, path)).setParameters(queryParameters).build());
 			if (auth != null) method.setHeader(HttpHeaders.AUTHORIZATION, auth.name() + " " + auth.token);
 			headerParameters.forEach(method::setHeader);
-			entityParameters.forEach((key, value) -> {
-
-			});
+			if (!entityParts.isEmpty() && method instanceof HttpEntityEnclosingRequestBase)
+				((HttpEntityEnclosingRequestBase) method).setEntity(buildEntity());
 			return () -> {
 				try {
 					return responseFrom(client.execute(method));
@@ -132,10 +140,28 @@ public class RestAccessorBuilder {
 					throw new RestfulFailure(e.getMessage());
 				}
 			};
-
 		} catch (URISyntaxException exception) {
 			throw new RestfulFailure(exception.getMessage());
 		}
+	}
+
+	private HttpEntity buildEntity() {
+		if (resources.isEmpty() && entityParts.size() == 1)
+			return stringEntity(String.valueOf(entityParts.values().iterator().next()));
+		return multipartEntity();
+	}
+
+	private HttpEntity multipartEntity() {
+		MultipartEntityBuilder builder = MultipartEntityBuilder.create().setContentType(MULTIPART_FORM_DATA).setMode(BROWSER_COMPATIBLE).setCharset(UTF_8);
+		resources.forEach(r -> builder.addPart(r.name(), new InputStreamBody(r.stream(), r.type() != null ? ContentType.create(r.type()) : APPLICATION_OCTET_STREAM, r.name())));
+		entityParts.forEach((key, value) -> builder.addPart(key, new StringBody(value, ContentType.APPLICATION_JSON)));
+		return builder.build();
+	}
+
+	private HttpEntity stringEntity(String body) {
+		StringEntity entity = new StringEntity(body, ContentType.APPLICATION_JSON);
+		entity.setContentEncoding(UTF_8.displayName());
+		return entity;
 	}
 
 	private HttpClient client() {
@@ -144,10 +170,10 @@ public class RestAccessorBuilder {
 	}
 
 	private HttpRequestBase method(String methodName) {
-		if (methodName.equals(HttpGet.METHOD_NAME)) return new HttpGet();
-		if (methodName.equals(HttpPost.METHOD_NAME)) return new HttpPost();
-		if (methodName.equals(HttpPatch.METHOD_NAME)) return new HttpPatch();
-		if (methodName.equals(HttpPut.METHOD_NAME)) return new HttpPut();
+		if (HttpGet.METHOD_NAME.equals(methodName)) return new HttpGet();
+		if (HttpPost.METHOD_NAME.equals(methodName)) return new HttpPost();
+		if (HttpPatch.METHOD_NAME.equals(methodName)) return new HttpPatch();
+		if (HttpPut.METHOD_NAME.equals(methodName)) return new HttpPut();
 		return new HttpDelete();
 	}
 
@@ -157,11 +183,23 @@ public class RestAccessorBuilder {
 		return path.isEmpty() ? baseUrl : baseUrl + (path.startsWith("/") ? path : "/" + path);
 	}
 
-	private Response responseFrom(HttpResponse response) {
+	private Response responseFrom(HttpResponse response) throws RestfulFailure {
 		try {
-			return new RestResponse(response.getStatusLine().getStatusCode(), response.getEntity().getContent());
+			int status = response.getStatusLine().getStatusCode();
+			if (status < 200 || status >= 300)
+				throw new RestfulFailure(String.valueOf(status), getErrorMessage(response));
+			return new RestResponse(status, response.getEntity().getContent());
 		} catch (IOException e) {
 			return new RestResponse(response.getStatusLine().getStatusCode(), null);
+		}
+	}
+
+	private String getErrorMessage(HttpResponse response) {
+		try {
+			InputStream content = response.getEntity().getContent();
+			return IOUtils.toString(content, UTF_8);
+		} catch (IOException e) {
+			return "";
 		}
 	}
 
@@ -185,7 +223,7 @@ public class RestAccessorBuilder {
 		@Override
 		public String content() {
 			try {
-				return IOUtils.toString(content, StandardCharsets.UTF_8);
+				return IOUtils.toString(content, UTF_8);
 			} catch (IOException e) {
 				return null;
 			}
