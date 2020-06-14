@@ -6,76 +6,69 @@ def type(accessor)
     import java.util.Arrays;
 	import java.net.URL;
 	import io.intino.alexandria.exceptions.*;
-	import io.intino.alexandria.Resource;
-	import io.intino.alexandria.restaccessor.core.RestAccessor;
 	import io.intino.alexandria.restaccessor.core.RestAccessorNotifier;
 	import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
-	import com.google.gson.Gson;
-	import com.google.gson.GsonBuilder;
-	import com.google.gson.reflect.TypeToken;
-	
+
 	$schemaImport
 
 	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Accessor {
-		private URL url;
-		private static Gson gsonReader = gsonReader();
-		private static Gson gsonWriter = gsonWriter();
-		private RestAccessor accessor;
-		private RestAccessorNotifier notifier = new RestAccessorNotifier();
+		private final URL url;
+		private final int timeoutMillis = 120 * 1000;
+		private final RestAccessorNotifier notifier = new RestAccessorNotifier();
 		$authentication+field
 
 		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url[, $authentication+parameter]) {
 			this.url = url;
 			$authentication+assign
-			this.accessor = new RestAccessor();
 		}
 
 		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url, int timeoutMillis[, $authentication+parameter]) {
 			this.url = url;
-			[$token~this.token = token;]
-			this.accessor = new RestAccessor(timeoutMillis);
+			this.timeoutMillis = timeoutMillis;
+			$authentication+assign
 		}
 
 		$resource...[$NL$NL]
 
 		$notification...[$NL$NL]
-
-		private String encode(String value) {
-			try {
-				return java.net.URLEncoder.encode(value, "UTF-8");
-			} catch (java.io.UnsupportedEncodingException e) {
-				io.intino.alexandria.logger.Logger.error(e.getMessage(), e);
-				return "";
-			}
-		}
-
-		private static Gson gsonReader() {
-            return new GsonBuilder().
-                registerTypeAdapter(java.time.Instant.class, (com.google.gson.JsonDeserializer<java.time.Instant>) (json, type1, jsonDeserializationContext) -> java.time.Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong())).
-                registerTypeAdapter(java.util.Date.class, (com.google.gson.JsonDeserializer<java.util.Date>) (json, type1, jsonDeserializationContext) -> new java.util.Date(json.getAsJsonPrimitive().getAsLong())).
-                create();
-		}
-
-		private static Gson gsonWriter() {
-            return new GsonBuilder().
-                registerTypeAdapter(java.time.Instant.class, (com.google.gson.JsonSerializer<java.time.Instant>) (instant, type, context) -> new com.google.gson.JsonPrimitive(instant.toEpochMilli())).
-                registerTypeAdapter(java.util.Date.class, (com.google.gson.JsonSerializer<java.util.Date>) (date, type, context) -> new com.google.gson.JsonPrimitive(date.getTime())).
-                create();
-        }
 	}
 end
 
 def type(resource)
-	public $returnType+firstUpperCase+ReturnTypeFormatter $operation+firstLowerCase~$name+SnakeCaseToCamelCase+firstUpperCase($parameter+signature...[, ]) $exceptionResponses+declaration {
+	public $response $method+firstLowerCase~$name+SnakeCaseToCamelCase+firstUpperCase($parameter+signature...[, ]) $exceptionResponses+declaration {
 		try {
-			[java.util.Map<String, String> parameters = new java.util.HashMap<String, String>() {{
-				$parameter+declaration...[$NL]
-			}};]
-			$invokeSentence
+			io.intino.alexandria.restaccessor.Response response = new io.intino.alexandria.restaccessor.RestQueryBuilder(this.url).timeOut(this.timeoutMillis)[.$auth][.$parameter...[.]][.$body...[.]][.$resource...[.]].$method+lowercase($path);
+			$response+return
 		} catch (RestfulFailure e) {
 			$exceptionResponses+throws
 		}
 	}
+end
+
+def type(parameter & query) trigger(parameter)
+	queryParameter("$name", $name)
+end
+def type(parameter & header) trigger(parameter)
+	headerParameter("$name", $name)
+end
+
+def type(list) trigger(return)
+	return io.intino.alexandria.restaccessor.adapters.ResponseAdapter.adapt(response.content(), new com.google.gson.reflect.TypeToken<Array$value>(){}.getType());
+end
+
+def !type(list) !attribute(value:void) trigger(return)
+	return io.intino.alexandria.restaccessor.adapters.ResponseAdapter.adapt(response.content(), $value.class);
+end
+
+def type(file) trigger(return)
+	return io.intino.alexandria.Resource("content", response.contentAsStream());
+end
+
+def trigger(return)
+end
+
+def trigger(response)
+	$value
 end
 
 def type(notification)
@@ -95,6 +88,14 @@ def type(notification)
 	}
 end
 
+def type(basic) trigger(auth)
+	basicAuth(this.user, this.pasword)
+end
+
+def type(bearer) trigger(auth)
+	bearerAuth(this.token)
+end
+
 def type(authentication & basic) trigger(parameter)
 	String user, String password
 end
@@ -112,7 +113,8 @@ def type(authentication & withCertificate) trigger(assign)
 end
 
 def type(authentication & basic) trigger(assign)
-	this.token = io.intino.alexandria.Base64.encode((user + ":" + password).getBytes());
+	this.user = user;
+	this.password = password;
 end
 
 def type(authentication & bearer) trigger(assign)
@@ -123,123 +125,21 @@ def type(authentication & withCertificate) trigger(assign)
 	this.certificate = certificate;
 end
 
-def type(authentication) type(basic | bearer) trigger(field)
-	private String token;
+def type(authentication) type(basic) trigger(field)
+	private final String user;
+	private final String password;
+end
+
+def type(authentication) type(bearer) trigger(field)
+	private final String token;
 end
 
 def type(authentication & withCertificate) trigger(field)
-	private URL certificate;
+	private final URL certificate;
 end
-
 
 def type(parameter) trigger(signature)
 	$parameterType $name+SnakeCaseToCamelCase+firstLowerCase
-end
-
-def type(parameter) trigger(invoke)
-	parameters
-end
-
-def type(parameter & query & list) trigger(declaration)
-	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", String.valueOf(gsonWriter.toJson($name+SnakeCaseToCamelCase+firstLowerCase)));
-end
-
-def type(parameter & query & required) type(date)  trigger(declaration)
-	put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase.toInstant().toEpochMilli()));
-end
-
-def type(parameter & query & required) type(dateTime)  trigger(declaration)
-	put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase.toEpochMilli()));
-end
-
-def type(parameter & query & required & text) trigger(declaration)
-	put("$name", $name+SnakeCaseToCamelCase+firstLowerCase);
-end
-
-def type(parameter & query & required) type(bool | integer | real | longInteger) trigger(declaration)
-	put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase));
-end
-
-def type(parameter & query & required & object) trigger(declaration)
-	put("$name", String.valueOf(gsonWriter.toJson($name+SnakeCaseToCamelCase+firstLowerCase)));
-end
-
-def type(parameter & query) type(date) trigger(declaration)
-	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase.toInstant().toEpochMilli()));
-end
-
-def type(parameter & query) type(dateTime | date) trigger(declaration)
-	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase.toEpochMilli()));
-end
-
-def type(parameter & query) type(text) trigger(declaration)
-	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", $name+SnakeCaseToCamelCase+firstLowerCase);
-end
-
-def type(parameter & query) type(bool | integer | real | longInteger) trigger(declaration)
-	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase));
-end
-
-def type(parameter & object) type(query | body) trigger(declaration)
-	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", encode(String.valueOf(gsonWriter.toJson($name+SnakeCaseToCamelCase+firstLowerCase))));
-end
-
-def type(parameter) trigger(declaration)
-end
-
-def type(parameter) trigger(fileDeclaration)
-end
-
-def type(invokeSentence & void)
-	$doInvoke;
-end
-
-def type(invokeSentence & object & list)
-    return gsonReader.fromJson($doInvoke.content(), new TypeToken<$returnType>(){}.getType());
-end
-
-def type(invokeSentence & object)
-	return gsonReader.fromJson($doInvoke.content(), $returnType.class);
-end
-
-def type(invokeSentence & file & list)
-	return null; //TODO
-end
-
-def type(invokeSentence & file)
-	return $doInvoke;
-end
-
-def type(invokeSentence & date & list)
-	return null; //TODO
-end
-
-def type(invokeSentence) type(date | instant)
-	return gsonReader.fromJson($doInvoke.content(), $returnType.class);
-end
-
-def type(invokeSentence & datetime & list)
-    return gsonReader.fromJson($doInvoke.content(), new TypeToken<ArrayList<Instant>>(){}.getType());
-end
-
-def type(invokeSentence & datetime)
-	return java.time.Instant.ofEpochMilli(Long.valueOf($doInvoke.content()));
-end
-
-def type(invokeSentence & primitive & int & list)
-    return gsonReader.fromJson($doInvoke.content(), new TypeToken<ArrayList<Integer>>(){}.getType());
-end
-
-def type(invokeSentence & primitive & int)
-	return Integer.valueOf($doInvoke.content());
-end
-
-def type(invokeSentence & primitive & list)
-    return gsonReader.fromJson($doInvoke.content(), new TypeToken<ArrayList<$returnType>>(){}.getType());
-end
-
-def type(invokeSentence & primitive)
-	return $returnType+firstUpperCase.valueOf($doInvoke.content());
 end
 
 def type(exceptionResponses & none) trigger(throws)
@@ -263,26 +163,6 @@ def type(exceptionResponse) trigger(declaration)
 	$exceptionName
 end
 
-def type(auth & WithCertificate & doInvoke)
-	accessor.secure(this.url, this.certificate, this.password).$type+firstLowerCase($relativePath[, $parameters][, Arrays.asList($inputStream...[,])])
-end
-
-def type(auth & doInvoke)
-	accessor.secure(this.url, this.token).$type+firstLowerCase($relativePath[, $parameters][, Arrays.asList($inputStream...[,])])
-end
-
-def type(doInvoke)
-	accessor.$type+firstLowerCase(this.url, $relativePath[, $parameters][, Arrays.asList($inputStream...[,])])
-end
-
-def type(doInvoke)
-	accessor.$type+firstLowerCase(this.url, $relativePath[, $parameters][, Arrays.asList($inputStream...[,])])
-end
-
 def type(schemaImport) trigger(schemaImport)
 	import $package.schemas.*;
-end
-
-def trigger(inputStream)
-    new io.intino.alexandria.Resource("$this", $this)
 end

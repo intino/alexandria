@@ -2,6 +2,7 @@ package io.intino.alexandria.restaccessor.core;
 
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.restaccessor.Response;
 import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
@@ -29,6 +30,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static java.util.Collections.*;
@@ -625,6 +627,6 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 	}
 
 	private static String toString(InputStream content) throws IOException {
-		return IOUtils.toString(content, "UTF-8");
+		return IOUtils.toString(content, StandardCharsets.UTF_8);
 	}
 }

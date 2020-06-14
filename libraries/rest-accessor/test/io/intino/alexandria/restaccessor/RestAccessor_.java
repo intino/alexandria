@@ -23,7 +23,7 @@ public class RestAccessor_ {
 	@Test
 	public void should_post_data_encoded_with_utf8() throws RestfulFailure {
 		io.intino.alexandria.restaccessor.RestAccessor client = new RestAccessor();
-		io.intino.alexandria.restaccessor.RestAccessor.Response post = client.post(localhost(), "/encoding", new HashMap<String, String>() {{
+		Response post = client.post(localhost(), "/encoding", new HashMap<String, String>() {{
 			put("param1", "holá");
 			put("param2", "adiós");
 		}});
@@ -36,7 +36,7 @@ public class RestAccessor_ {
 		Resource resource = new Resource("example", new ByteArrayInputStream(new byte[0]));
 //		resource.addParameter("param1", "holá");
 //		resource.addParameter("param2", "adiós");
-		io.intino.alexandria.restaccessor.RestAccessor.Response post = client.post(localhost(), "/encoding", resource);
+		Response post = client.post(localhost(), "/encoding", resource);
 		Assert.assertEquals("name: param1, value: holá;name: param2, value: adiós;filesCount: 1", post.content());
 	}
 

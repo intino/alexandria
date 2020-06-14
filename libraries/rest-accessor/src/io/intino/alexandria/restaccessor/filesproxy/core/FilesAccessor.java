@@ -1,6 +1,7 @@
 package io.intino.alexandria.restaccessor.filesproxy.core;
 
 import io.intino.alexandria.Resource;
+import io.intino.alexandria.restaccessor.Response;
 import io.intino.alexandria.restaccessor.core.RestAccessor;
 import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
 import io.intino.alexandria.restaccessor.filesproxy.FilesApi;
@@ -44,7 +45,7 @@ public class FilesAccessor implements FilesApi {
 			@Override
 			public String upload(String path, Resource resource) throws FilesApiFailure {
 				try {
-					io.intino.alexandria.restaccessor.RestAccessor.Response response = secure().post(pathOf(path), resource);
+					Response response = secure().post(pathOf(path), resource);
 					return response.content();
 				} catch (RestfulFailure error) {
 					throw new FilesApiFailure(error.getMessage());
