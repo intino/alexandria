@@ -13,7 +13,7 @@ def type(accessor)
 
 	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Accessor {
 		private final URL url;
-		private final int timeoutMillis = 120 * 1000;
+		private int timeoutMillis = 120 * 1000;
 		private final RestAccessorNotifier notifier = new RestAccessorNotifier();
 		$authentication+field
 
