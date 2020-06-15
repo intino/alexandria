@@ -104,23 +104,23 @@ public class AbstractBoxRenderer extends Renderer {
 	private List<FrameBuilder> subscriberFramesOf(Subscriber subscriber, DataHubManifest manifest) {
 		String tankClass = manifest.tankClasses.get(subscriber.event());
 		if (subscriber.context() != null) {
-			FrameBuilder builder = subscriberFrame(subscriber, manifest);
+			FrameBuilder builder = subscriberFrame(subscriber, manifest, subscriber.context());
 			contextFrame(tankClass, builder, subscriber.context());
 			return Collections.singletonList(builder);
 		} else {
 			List<FrameBuilder> builders = new ArrayList<>();
 			if (manifest.messageContexts.get(subscriber.event()).size() > 1)
 				for (String context : manifest.messageContexts.get(subscriber.event())) {
-					FrameBuilder builder = subscriberFrame(subscriber, manifest);
+					FrameBuilder builder = subscriberFrame(subscriber, manifest, context);
 					contextFrame(tankClass, builder, context);
 					builders.add(builder);
 				}
-			else builders.add(subscriberFrame(subscriber, manifest));
+			else builders.add(subscriberFrame(subscriber, manifest, ""));
 			return builders;
 		}
 	}
 
-	private FrameBuilder subscriberFrame(Subscriber subscriber, DataHubManifest manifest) {
+	private FrameBuilder subscriberFrame(Subscriber subscriber, DataHubManifest manifest, String context) {
 		FrameBuilder builder = new FrameBuilder("subscriber", "terminal").
 				add("package", packageName()).
 				add("name", subscriber.name$()).
@@ -128,7 +128,7 @@ public class AbstractBoxRenderer extends Renderer {
 				add("terminal", manifest.qn).
 				add("eventQn", subscriber.event().replace(".", "")).
 				add("event", subscriber.event());
-		if (subscriber.subscriberId() != null) builder.add("subscriberId", subscriber.subscriberId());
+		if (subscriber.subscriberId() != null) builder.add("subscriberId", subscriber.subscriberId() + context);
 		return builder;
 	}
 
