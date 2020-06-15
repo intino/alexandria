@@ -87,6 +87,7 @@ public class SparkRouter<SM extends SparkManager> {
 			caller.call((SM) manager);
 		} catch (AlexandriaException e) {
 			manager.response.status(Integer.parseInt(e.code()));
+			manager.response.body(e.toString());
 			error(e.message(), e);
 		}
 	}
@@ -98,7 +99,7 @@ public class SparkRouter<SM extends SparkManager> {
 		} catch (AlexandriaException e) {
 			manager.response.status(Integer.parseInt(e.code()));
 			manager.response.body(e.toString());
-			return e.message();
+			return e.toString();
 		}
 		return "OK";
 	}
@@ -108,6 +109,7 @@ public class SparkRouter<SM extends SparkManager> {
 			caller.call((SM) manager);
 		} catch (AlexandriaException e) {
 			manager.response.status(Integer.parseInt(e.code()));
+			manager.response.body(e.toString());
 			error(e.message(), e);
 		}
 	}
