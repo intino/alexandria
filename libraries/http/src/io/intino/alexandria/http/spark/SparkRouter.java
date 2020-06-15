@@ -97,7 +97,7 @@ public class SparkRouter<SM extends SparkManager> {
 			caller.call((SM) manager);
 		} catch (AlexandriaException e) {
 			manager.response.status(Integer.parseInt(e.code()));
-			manager.response.body();
+			manager.response.body(e.toString());
 			return e.message();
 		}
 		return "OK";

@@ -1,9 +1,12 @@
 package io.intino.alexandria.restaccessor;
 
 import io.intino.alexandria.Base64;
+import io.intino.alexandria.Json;
 import io.intino.alexandria.Resource;
+import io.intino.alexandria.exceptions.AlexandriaException;
+import io.intino.alexandria.exceptions.ExceptionFactory;
+import io.intino.alexandria.exceptions.InternalServerError;
 import io.intino.alexandria.restaccessor.adapters.RequestAdapter;
-import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
@@ -105,27 +108,27 @@ public class RestQueryBuilder {
 		return this;
 	}
 
-	public Response get(String path) throws RestfulFailure {
+	public Response get(String path) throws AlexandriaException {
 		return buildRequest(HttpGet.METHOD_NAME, path).execute();
 	}
 
-	public Response post(String path) throws RestfulFailure {
+	public Response post(String path) throws AlexandriaException {
 		return buildRequest(HttpPost.METHOD_NAME, path).execute();
 	}
 
-	public Response put(String path) throws RestfulFailure {
+	public Response put(String path) throws AlexandriaException {
 		return buildRequest(HttpPut.METHOD_NAME, path).execute();
 	}
 
-	public Response patch(String path) throws RestfulFailure {
+	public Response patch(String path) throws AlexandriaException {
 		return buildRequest(HttpPatch.METHOD_NAME, path).execute();
 	}
 
-	public Response delete(String path) throws RestfulFailure {
+	public Response delete(String path) throws AlexandriaException {
 		return buildRequest(HttpDelete.METHOD_NAME, path).execute();
 	}
 
-	private MethodExecutor buildRequest(String methodName, String path) throws RestfulFailure {
+	private MethodExecutor buildRequest(String methodName, String path) throws AlexandriaException {
 		try {
 			HttpRequestBase method = method(methodName);
 			method.setURI(new URIBuilder(pathUrl(url, path)).setParameters(queryParameters).build());
@@ -137,11 +140,11 @@ public class RestQueryBuilder {
 				try {
 					return responseFrom(client.execute(method));
 				} catch (IOException e) {
-					throw new RestfulFailure(e.getMessage());
+					throw new InternalServerError(e.getMessage());
 				}
 			};
 		} catch (URISyntaxException exception) {
-			throw new RestfulFailure(exception.getMessage());
+			throw new InternalServerError(exception.getMessage());
 		}
 	}
 
@@ -183,18 +186,25 @@ public class RestQueryBuilder {
 		return path.isEmpty() ? baseUrl : baseUrl + (path.startsWith("/") ? path : "/" + path);
 	}
 
-	private Response responseFrom(HttpResponse response) throws RestfulFailure {
+	private Response responseFrom(HttpResponse response) throws AlexandriaException {
 		try {
-			int status = response.getStatusLine().getStatusCode();
-			if (status < 200 || status >= 300)
-				throw new RestfulFailure(String.valueOf(status), getErrorMessage(response));
-			return new RestResponse(status, response.getEntity().getContent());
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode < 200 || statusCode >= 300) {
+				String bodyContent = getBodyContent(response);
+				throw exception(statusCode, bodyContent);
+			}
+			return new RestResponse(statusCode, response.getEntity().getContent());
 		} catch (IOException e) {
 			return new RestResponse(response.getStatusLine().getStatusCode(), null);
 		}
 	}
 
-	private String getErrorMessage(HttpResponse response) {
+	private AlexandriaException exception(int statusCode, String bodyContent) {
+		AlexandriaException e = Json.fromString(bodyContent, AlexandriaException.class);
+		return ExceptionFactory.from(statusCode, e.getMessage(), e.parameters());
+	}
+
+	private String getBodyContent(HttpResponse response) {
 		try {
 			InputStream content = response.getEntity().getContent();
 			return IOUtils.toString(content, UTF_8);
@@ -204,7 +214,7 @@ public class RestQueryBuilder {
 	}
 
 	interface MethodExecutor {
-		Response execute() throws RestfulFailure;
+		Response execute() throws AlexandriaException;
 	}
 
 	public static class RestResponse implements Response {

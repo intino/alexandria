@@ -5,7 +5,7 @@ import java.util.Map;
 public interface AlexandriaError {
 	String code();
 
-	String label();
+	String message();
 
 	Map<String, String> parameters();
 }
