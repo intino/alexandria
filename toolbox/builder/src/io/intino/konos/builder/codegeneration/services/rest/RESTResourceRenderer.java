@@ -116,7 +116,7 @@ public class RESTResourceRenderer extends Renderer {
 
 	private String[] throwCodes(Operation resource) {
 		List<String> throwCodes = resource.exceptionList().stream().map(r -> r.code().toString()).collect(Collectors.toList());
-		return throwCodes.isEmpty() ? new String[]{"Unknown"} : throwCodes.toArray(new String[0]);
+		return throwCodes.isEmpty() ? new String[]{"InternalServerError"} : throwCodes.toArray(new String[0]);
 	}
 
 	private Frame[] parameters(List<? extends Parameter> parameters) {
