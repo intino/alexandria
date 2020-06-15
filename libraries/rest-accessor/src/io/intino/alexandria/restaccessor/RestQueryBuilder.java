@@ -190,8 +190,7 @@ public class RestQueryBuilder {
 		try {
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode < 200 || statusCode >= 300) {
-				String bodyContent = getBodyContent(response);
-				throw exception(statusCode, bodyContent);
+				throw exception(statusCode, bodyContent(response));
 			}
 			return new RestResponse(statusCode, response.getEntity().getContent());
 		} catch (IOException e) {
@@ -200,11 +199,12 @@ public class RestQueryBuilder {
 	}
 
 	private AlexandriaException exception(int statusCode, String bodyContent) {
-		AlexandriaException e = Json.fromString(bodyContent, AlexandriaException.class);
-		return ExceptionFactory.from(statusCode, e.getMessage(), e.parameters());
+		AlexandriaException e = bodyContent.startsWith("{") ? Json.fromString(bodyContent, AlexandriaException.class) : null;
+		if (e != null) return ExceptionFactory.from(statusCode, e.getMessage(), e.parameters());
+		return ExceptionFactory.from(statusCode, bodyContent, Map.of());
 	}
 
-	private String getBodyContent(HttpResponse response) {
+	private String bodyContent(HttpResponse response) {
 		try {
 			InputStream content = response.getEntity().getContent();
 			return IOUtils.toString(content, UTF_8);

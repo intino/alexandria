@@ -36,7 +36,7 @@ public class AcceptedKonosRunner {
 	}
 
 	@Test
-	public void test() {
+	public void testAccessors() {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/ideaKonosToCompile.txt")});
 	}
 
