@@ -200,8 +200,9 @@ public class RestQueryBuilder {
 	}
 
 	private AlexandriaException exception(int statusCode, String bodyContent) {
-		AlexandriaException e = Json.fromString(bodyContent, AlexandriaException.class);
-		return ExceptionFactory.from(statusCode, e.getMessage(), e.parameters());
+		AlexandriaException e = bodyContent.startsWith("{") ? Json.fromString(bodyContent, AlexandriaException.class) : null;
+		if (e != null) return ExceptionFactory.from(statusCode, e.getMessage(), e.parameters());
+		return ExceptionFactory.from(statusCode, bodyContent, Map.of());
 	}
 
 	private String getBodyContent(HttpResponse response) {
