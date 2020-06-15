@@ -19,7 +19,7 @@ public class FilesApiFailure extends Exception implements AlexandriaError {
 	}
 
 	@Override
-	public String label() {
+	public String message() {
 		return reason;
 	}
 

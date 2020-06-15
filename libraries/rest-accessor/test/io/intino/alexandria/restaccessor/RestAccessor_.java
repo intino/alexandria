@@ -16,10 +16,6 @@ import java.util.HashMap;
 public class RestAccessor_ {
 	private static final String BaseUrl = "http://localhost:8080";
 
-	@BeforeClass
-	public static void setUpClass() {
-	}
-
 	@Test
 	public void should_post_data_encoded_with_utf8() throws RestfulFailure {
 		io.intino.alexandria.restaccessor.RestAccessor client = new RestAccessor();
@@ -46,6 +42,10 @@ public class RestAccessor_ {
 		} catch (MalformedURLException e) {
 			return null;
 		}
+	}
+
+	@BeforeClass
+	public static void setUpClass() {
 	}
 
 }

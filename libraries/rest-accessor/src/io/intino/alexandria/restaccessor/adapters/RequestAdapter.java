@@ -33,7 +33,7 @@ public class RequestAdapter {
 	private static String adaptError(AlexandriaError error) {
 		JsonObject object = new JsonObject();
 		object.addProperty("code", error.code());
-		object.addProperty("label", error.label());
+		object.addProperty("label", error.message());
 		adaptParameters(object, error.parameters());
 		return object.toString();
 	}
