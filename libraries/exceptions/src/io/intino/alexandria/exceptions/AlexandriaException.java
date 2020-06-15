@@ -5,7 +5,7 @@ import java.util.Map;
 import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.joining;
 
-public abstract class AlexandriaException extends Throwable implements AlexandriaError {
+public class AlexandriaException extends Throwable implements AlexandriaError {
 	private final Map<String, String> parameters;
 	private final String code;
 
