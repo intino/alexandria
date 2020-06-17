@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.services.slack;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
@@ -19,6 +20,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class SlackRenderer extends Renderer {
@@ -40,7 +42,10 @@ public class SlackRenderer extends Renderer {
 		final FrameBuilder builder = createFrameBuilder(service.name$(), service.requestList(), true);
 		for (String level : collectLevels(service).keySet())
 			builder.add("level", new FrameBuilder("level").add("name", level).toFrame());
-		writeFrame(gen(), snakeCaseToCamelCase(service.name$()) + "SlackBot", template().render(builder));
+		String className = snakeCaseToCamelCase(service.name$()) + "SlackBot";
+		writeFrame(gen(), className, template().render(builder));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(), className).getAbsolutePath()));
+
 		if (alreadyRendered(new File(src(), "slack"), srcName)) updateBot(service, srcName);
 		else newBotActions(service);
 	}

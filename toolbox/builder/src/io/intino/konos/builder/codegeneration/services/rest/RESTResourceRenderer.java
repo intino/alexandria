@@ -63,7 +63,10 @@ public class RESTResourceRenderer extends Renderer {
 		builder.add("parameter", notificationParameters(notification.parameterList()));
 		builder.add("returnType", notificationResponse());
 		if (service.authentication() != null) builder.add("throws", "Unauthorized");
-		Commons.writeFrame(new File(gen(), NOTIFICATIONS_PACKAGE), className, template().render(builder.toFrame()));
+		File genNotifications = new File(gen(), NOTIFICATIONS_PACKAGE);
+		Commons.writeFrame(genNotifications, className, template().render(builder.toFrame()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(genNotifications, className).getAbsolutePath()));
+
 		createCorrespondingAction(notification);
 	}
 

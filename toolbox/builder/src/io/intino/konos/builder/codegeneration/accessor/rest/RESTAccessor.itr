@@ -37,7 +37,12 @@ end
 def type(resource)
 	public $response $method+firstLowerCase~$name+SnakeCaseToCamelCase+firstUpperCase($parameter+signature...[, ]) $exceptionResponses+declaration {
 		try {
-			io.intino.alexandria.restaccessor.Response response = new io.intino.alexandria.restaccessor.RestQueryBuilder(this.url).timeOut(this.timeoutMillis)[.$auth][.$parameter...[.]][.$body...[.]][.$resource...[.]].$method+lowercase($path);
+			io.intino.alexandria.restaccessor.Response response = new io.intino.alexandria.restaccessor.RestQueryBuilder(this.url).timeOut(this.timeoutMillis)
+				[.$auth]
+				[.$parameter...[.$NL]]
+				[.$body...[.$NL]]
+				[.$resource...[.$NL]].
+				$method+lowercase($path);
 			$response+return
 		} catch (AlexandriaException e) {
 			$exceptionResponses+throws
@@ -74,11 +79,8 @@ end
 def type(notification)
 	public void listen$name+SnakeCaseToCamelCase+firstUppercase([$parameter+signature...[, ], ]java.util.function.Consumer<String> listener) throws InternalServerError {
 		try {
-			[java.util.Map<String, String> parameters = new java.util.HashMap<String, String>() {{
-				$parameter+declaration...[$NL]
-			}};]
-			this.notifier.listen(listener, accessor.[$secure~secure(this.url, this.token)].post("$path"[, $parameters]).content().trim());
-		} catch (RestfulFailure e) {
+			this.notifier.listen(listener, new io.intino.alexandria.restaccessor.RestQueryBuilder(this.url).timeOut(this.timeoutMillis)[.$auth][.$parameter...[.]].post("$path").content().trim());
+		} catch (AlexandriaException e) {
 			throw new InternalServerError(e.message());
 		}
 	}

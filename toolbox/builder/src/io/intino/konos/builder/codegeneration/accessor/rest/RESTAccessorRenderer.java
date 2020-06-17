@@ -70,25 +70,27 @@ public class RESTAccessorRenderer extends Renderer {
 	}
 
 	private Frame frameOf(Notification notification) {
-		FrameBuilder notificationBuilder = new FrameBuilder("notification").add("path", notification.path()).add("name", notification.name$());
-		if (service.authentication() != null) notificationBuilder.add("secure", "");
-		if (Commons.queryParameters(notification) > 0 || Commons.bodyParameters(notification) > 0)
-			notificationBuilder.add("parameters", "parameters");
-		notificationBuilder.add("parameter", notificationParameters(notification.parameterList()));
-		return notificationBuilder.toFrame();
+		FrameBuilder builder = new FrameBuilder("notification").add("path", notification.path()).add("name", notification.name$());
+		if (service.authentication() != null) builder.add("auth", new FrameBuilder("authentication", authentication()));
+		builder.add("parameter", notificationParameters(notification.parameterList()));
+		return builder.toFrame();
 	}
 
 	private Frame processOperation(Operation operation, Authentication authentication) {
 		FrameBuilder builder = new FrameBuilder("resource")
 				.add("path", processPath(Commons.path(operation.core$().ownerAs(Resource.class))))
-				.add("response", new FrameBuilder(operation.response() != null && operation.response().isType() ? operation.response().asType().type() : "void", operation.response() != null && operation.response().isList() ? "list" : "single").
+				.add("response", new FrameBuilder(responseType(operation)).
 						add("value", Commons.returnType(operation.response(), packageName())))
-						.add("method", operation.getClass().getSimpleName())
-						.add("name", operation.core$().owner().name())
-						.add("parameter", parameters(operation.parameterList()))
-						.add("exceptionResponses", exceptionResponses(operation));
+				.add("method", operation.getClass().getSimpleName())
+				.add("name", operation.core$().owner().name())
+				.add("parameter", parameters(operation.parameterList()))
+				.add("exceptionResponses", exceptionResponses(operation));
 		if (authentication != null) builder.add("auth", new FrameBuilder("authentication", authentication()));
 		return builder.toFrame();
+	}
+
+	private String[] responseType(Operation operation) {
+		return new String[]{operation.response() != null && operation.response().isType() ? operation.response().asType().type() : "void", operation.response() != null && operation.response().isList() ? "list" : "single"};
 	}
 
 	private Frame[] parameters(List<Parameter> parameters) {
@@ -108,7 +110,7 @@ public class RESTAccessorRenderer extends Renderer {
 	private Frame parameter(Notification.Parameter parameter) {
 		return new FrameBuilder("parameter", parameter.isList() ? "list" : "single", parameter.in().toString(), (parameter.isRequired() ? "required" : "optional"), parameter.asType().getClass().getSimpleName())
 				.add("name", parameter.name$())
-				.add("type", parameterType(parameter)).toFrame();
+				.add("parameterType", parameterType(parameter)).toFrame();
 	}
 
 	private String parameterType(Parameter parameter) {
