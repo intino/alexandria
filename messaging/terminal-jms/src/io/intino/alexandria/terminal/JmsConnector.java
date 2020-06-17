@@ -377,16 +377,15 @@ public class JmsConnector implements Connector {
 	}
 
 	private void checkConnection() {
-		Logger.debug("Checking DataHub connection...");
 		if (brokerUrl.startsWith("failover") && !connected.get()) {
-			Logger.debug("Currently disconnected. Waiting for reconnection...");
+			Logger.debug("Datahub currently disconnected. Waiting for reconnection...");
 			return;
 		}
 		if (connection != null && ((ActiveMQConnection) connection).isStarted() && ((ActiveMQSession) session).isRunning()) {
-			Logger.debug("Currently Connected");
 			connected.set(true);
 			return;
 		}
+		Logger.debug("Restarting datahub connection...");
 		stop();
 		start();
 		connected.set(true);

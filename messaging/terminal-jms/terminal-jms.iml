@@ -10,7 +10,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="logger4j" />
     <orderEntry type="module" module-name="logger" />
-    <orderEntry type="module" module-name="exceptions" />
     <orderEntry type="module" module-name="primitives" />
     <orderEntry type="library" name="Intino: org.slf4j:slf4j-api:1.7.25" level="project" />
     <orderEntry type="library" name="Intino: org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1" level="project" />

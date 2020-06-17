@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "3.0.1") terminal-jms
+Artifact("io.intino.alexandria", "3.0.2") terminal-jms
 	Imports
 		Compile("io.intino.alexandria", "event", "2.0.1")
 		Compile("io.intino.alexandria", "jms", "1.2.2")
