@@ -37,7 +37,12 @@ end
 def type(resource)
 	public $response $method+firstLowerCase~$name+SnakeCaseToCamelCase+firstUpperCase($parameter+signature...[, ]) $exceptionResponses+declaration {
 		try {
-			io.intino.alexandria.restaccessor.Response response = new io.intino.alexandria.restaccessor.RestQueryBuilder(this.url).timeOut(this.timeoutMillis)[.$auth][.$parameter...[.]][.$body...[.]][.$resource...[.]].$method+lowercase($path);
+			io.intino.alexandria.restaccessor.Response response = new io.intino.alexandria.restaccessor.RestQueryBuilder(this.url).timeOut(this.timeoutMillis)
+				[.$auth]
+				[.$parameter...[.$NL]]
+				[.$body...[.$NL]]
+				[.$resource...[.$NL]].
+				$method+lowercase($path);
 			$response+return
 		} catch (AlexandriaException e) {
 			$exceptionResponses+throws
