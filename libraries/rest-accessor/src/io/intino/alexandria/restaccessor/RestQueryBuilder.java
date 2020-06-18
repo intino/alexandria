@@ -84,7 +84,7 @@ public class RestQueryBuilder {
 	}
 
 	public RestQueryBuilder bearerAuth(String token) {
-		auth = Auth.Bearer.with(Base64.encode((token).getBytes()));
+		auth = Auth.Bearer.with(token);
 		return this;
 	}
 
