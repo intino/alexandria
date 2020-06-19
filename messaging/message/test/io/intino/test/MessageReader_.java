@@ -208,6 +208,45 @@ public class MessageReader_ {
 
 	}
 
+	@Test
+	public void should_read_log_message() {
+		String inl = "[ERROR]\n" +
+				"ts: 2020-06-19T11:00:52.105720Z\n" +
+				"source: spark.http.matching.GeneralError:modify\n" +
+				"message: \t\n" +
+				"\tCaused by:\n" +
+				"\tjava.lang.NullPointerException\n" +
+				"\t\tat com.monentia.smartbeach.control.box.actions.GetSensorAction.execute(GetSensorAction.java:19)\n" +
+				"\t\tat com.monentia.smartbeach.control.box.rest.resources.GetSensorResource.execute(GetSensorResource.java:25)\n" +
+				"\t\tat com.monentia.smartbeach.control.box.ControlServiceService.lambda$setup$4(ControlServiceService.java:14)\n" +
+				"\t\tat io.intino.alexandria.http.spark.SparkRouter.execute(SparkRouter.java:97)\n" +
+				"\t\tat io.intino.alexandria.http.spark.SparkRouter.lambda$get$1(SparkRouter.java:33)\n" +
+				"\t\tat spark.RouteImpl$1.handle(RouteImpl.java:72)\n" +
+				"\t\tat spark.http.matching.Routes.execute(Routes.java:61)\n" +
+				"\t\tat spark.http.matching.MatcherFilter.doFilter(MatcherFilter.java:130)\n" +
+				"\t\tat spark.embeddedserver.jetty.JettyHandler.doHandle(JettyHandler.java:50)\n" +
+				"\t\tat org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1568)\n" +
+				"\t\tat org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141)\n" +
+				"\t\tat org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:132)\n" +
+				"\t\tat org.eclipse.jetty.server.Server.handle(Server.java:530)\n" +
+				"\t\tat org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:347)\n" +
+				"\t\tat org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:256)\n" +
+				"\t\tat org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:279)\n" +
+				"\t\tat org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:102)\n" +
+				"\t\tat org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.java:124)\n" +
+				"\t\tat org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:247)\n" +
+				"\t\tat org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.produce(EatWhatYouKill.java:140)\n" +
+				"\t\tat org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:131)\n" +
+				"\t\tat org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:382)\n" +
+				"\t\tat org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:708)\n" +
+				"\t\tat org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:626)\n" +
+				"\t\tat java.base/java.lang.Thread.run(Thread.java:834)";
+		Message message = new MessageReader(inl).next();
+		assertThat(message).isNotNull();
+		assertThat(message.get("value").asString()).isNotNull();
+
+	}
+
 	private Instant instant(int y, int m, int d, int h, int mn, int s) {
 		return LocalDateTime.of(y, m, d, h, mn, s).atZone(ZoneId.of("UTC")).toInstant();
 	}

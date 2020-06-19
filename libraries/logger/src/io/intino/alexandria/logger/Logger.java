@@ -13,6 +13,10 @@ import java.util.logging.LogRecord;
 import static java.util.Collections.singletonList;
 
 public class Logger {
+	public enum Level {
+		ERROR, WARN, INFO, DEBUG, TRACE
+	}
+
 	private static List<LogHandler> out = new ArrayList<>(singletonList(new PrintStreamLogHandler(System.out)));
 	private static List<LogHandler> err = new ArrayList<>(singletonList(new PrintStreamLogHandler(System.err)));
 	private static List<String> excludedPackages = new ArrayList<>();
@@ -107,6 +111,7 @@ public class Logger {
 	}
 
 	private static String formatMessage(Throwable e) {
+		if (e == null) return "Null";
 		StringWriter writer = new StringWriter();
 		e.printStackTrace(new PrintWriter(writer));
 		return "\n\t" + writer.toString().replace("\n", "\n\t");
@@ -130,10 +135,6 @@ public class Logger {
 	private static boolean isExcluded() {
 		String caller = caller();
 		return excludedPackages.stream().anyMatch(caller::startsWith);
-	}
-
-	public enum Level {
-		ERROR, WARN, INFO, DEBUG, TRACE
 	}
 
 	public interface LogHandler {
