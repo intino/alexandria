@@ -191,6 +191,23 @@ public class MessageReader_ {
 				"\tat java.base/java.lang.Thread.run(Thread.java:834)");
 	}
 
+	@Test
+	public void should_read_embeded_message() {
+		String inl = "[ProcessLog]\n" +
+				"ts: 2020-06-18T13:30:58.349496Z\n" +
+				"serverId: deploy-alpgc-smartbeach-dev\n" +
+				"id: com.monentia.smartbeach:control\n" +
+				"value:\n" +
+				"\t[INFO]\n" +
+				"\tts: 2020-06-18T13:30:58.329749Z\n" +
+				"\tsource: io.intino.alexandria.terminal.JmsConnector$1:transportResumed:306\n" +
+				"\tmessage: Connection with Data Hub established!\n";
+		Message message = new MessageReader(inl).next();
+		assertThat(message).isNotNull();
+		assertThat(message.get("value").asString()).isNotNull();
+
+	}
+
 	private Instant instant(int y, int m, int d, int h, int mn, int s) {
 		return LocalDateTime.of(y, m, d, h, mn, s).atZone(ZoneId.of("UTC")).toInstant();
 	}

@@ -1,10 +1,10 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "3.0.1") sealing
+Artifact("io.intino.alexandria", "3.0.2") sealing
 	Imports
-		Compile("io.intino.alexandria", "datalake", "3.0.1")
+		Compile("io.intino.alexandria", "datalake", "3.0.2")
 		Compile("io.intino.alexandria", "mapp", "1.0.0")
-		Test("io.intino.alexandria", "ingestion", "3.0.1")
+		Test("io.intino.alexandria", "ingestion", "3.0.2")
 		Test("junit", "junit", "LATEST")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.release)

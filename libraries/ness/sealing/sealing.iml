@@ -26,5 +26,7 @@
     <orderEntry type="module" module-name="event" />
     <orderEntry type="module" module-name="zim" />
     <orderEntry type="module" module-name="message" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:zim:3.0.1" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:message:3.0.1" level="project" />
   </component>
 </module>
