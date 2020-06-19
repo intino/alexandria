@@ -11,10 +11,8 @@ import java.io.StringWriter;
 import java.time.Instant;
 
 public class Logger {
-
-	private static String pattern = "[%level]\nts: %date\nsource: %C\nmessage: %m\n";
-
-	private static ConsoleAppender appender = new ConsoleAppender();
+	private static final String pattern = "[%level]\nts: %date\nsource: %C\nmessage:%m\n";
+	private static final ConsoleAppender appender = new ConsoleAppender();
 
 	public static void init() {
 		init(Level.INFO);
@@ -30,13 +28,16 @@ public class Logger {
 
 			@Override
 			public String format(LoggingEvent record) {
-				return pattern.replace("%level", record.getLevel().toString()).replace("%date", Instant.now().toString()).replace("%C", record.getLocationInformation().getClassName() + ":" + record.getLocationInformation().getMethodName()).replace("%m", formatMessage(record.getRenderedMessage(), record.getThrowableInformation()));
+				return pattern.replace("%level", record.getLevel().toString()).
+						replace("%date", Instant.now().toString()).
+						replace("%C", record.getLocationInformation().getClassName() + ":" + record.getLocationInformation().getMethodName()).
+						replace("%m", formatMessage(record.getRenderedMessage(), record.getThrowableInformation()));
 			}
 
 			private String formatMessage(String message, ThrowableInformation throwable) {
 				if (message == null) return formatMessage(throwable);
 				String result = formatMessage(message) + (throwable != null ? ("\n\t\n\tCaused by:" + formatMessage(throwable)) : "");
-				return result.contains("\n") ? "\n\t" + result : result;
+				return result.contains("\n") ? "\n\t" + result : " " + result;
 			}
 
 			private String formatMessage(String message) {

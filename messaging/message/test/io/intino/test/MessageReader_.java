@@ -205,7 +205,6 @@ public class MessageReader_ {
 		Message message = new MessageReader(inl).next();
 		assertThat(message).isNotNull();
 		assertThat(message.get("value").asString()).isNotNull();
-
 	}
 
 	@Test
@@ -213,7 +212,7 @@ public class MessageReader_ {
 		String inl = "[ERROR]\n" +
 				"ts: 2020-06-19T11:00:52.105720Z\n" +
 				"source: spark.http.matching.GeneralError:modify\n" +
-				"message: \t\n" +
+				"message:\n" +
 				"\tCaused by:\n" +
 				"\tjava.lang.NullPointerException\n" +
 				"\t\tat com.monentia.smartbeach.control.box.actions.GetSensorAction.execute(GetSensorAction.java:19)\n" +
@@ -243,8 +242,7 @@ public class MessageReader_ {
 				"\t\tat java.base/java.lang.Thread.run(Thread.java:834)";
 		Message message = new MessageReader(inl).next();
 		assertThat(message).isNotNull();
-		assertThat(message.get("value").asString()).isNotNull();
-
+		assertThat(message.get("message").asString()).isNotNull();
 	}
 
 	private Instant instant(int y, int m, int d, int h, int mn, int s) {
