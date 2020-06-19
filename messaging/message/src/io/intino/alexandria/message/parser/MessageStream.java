@@ -35,9 +35,9 @@ public class MessageStream implements Iterator<String>, AutoCloseable {
 			char current = 0;
 			int r;
 			while ((r = reader.read()) != -1 && (last != '\n' || r != '[')) {
-				last = current;
 				current = (char) r;
 				builder.append(current);
+				last = current;
 			}
 			last = r;
 		} catch (IOException e) {
