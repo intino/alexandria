@@ -205,7 +205,6 @@ public class MessageReader_ {
 		Message message = new MessageReader(inl).next();
 		assertThat(message).isNotNull();
 		assertThat(message.get("value").asString()).isNotNull();
-
 	}
 
 	@Test
