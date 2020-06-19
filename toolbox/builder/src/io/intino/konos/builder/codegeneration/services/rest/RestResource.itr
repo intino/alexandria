@@ -168,7 +168,7 @@ def type(list) trigger(parameterType)
 end
 
 def type(authenticationValidator) trigger(put)
-	context.put("Authorization", manager.fromHeader("Authorization").replace("Basic ", ""));
+	context.put("Authorization", manager.fromHeader("Authorization").replace("$type ", ""));
 end
 
 def trigger(parameterType)

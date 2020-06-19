@@ -83,6 +83,7 @@ public class RESTResourceRenderer extends Renderer {
 		addCommons(resource.name$(), builder);
 		builder.add("operation", operation.getClass().getSimpleName());
 		builder.add("throws", throwCodes(operation));
+		authenticated(resource.core$().ownerAs(Service.REST.class), builder);
 		builder.add("parameter", parameters(operation.parameterList()));
 		if (hasResponse(operation)) builder.add("returnType", frameOf(operation.response()));
 		if (!resource.graph().schemaList().isEmpty())
@@ -90,11 +91,14 @@ public class RESTResourceRenderer extends Renderer {
 		return builder.toFrame();
 	}
 
-//	private void authenticated(Service.REST service, FrameBuilder builder) {
-//		final Service.REST.AuthenticatedWithToken authenticated = service.authenticatedWithToken();
-//		if (authenticated != null)
-//			builder.add("authenticationValidator", new FrameBuilder("authenticationValidator").add("type", "Basic").toFrame());
-//	}
+	private void authenticated(Service.REST service, FrameBuilder builder) {
+		if (service.authentication() != null) {
+			FrameBuilder b = new FrameBuilder("authenticationValidator");
+			if (service.authentication().isBasic()) b.add("type", "Basic");
+			else b.add("type", "Bearer");
+			builder.add("authenticationValidator", b.toFrame());
+		}
+	}
 
 	private void addCommons(String name, FrameBuilder builder) {
 		builder.add("package", packageName());

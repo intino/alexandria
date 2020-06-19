@@ -13,19 +13,19 @@ public class RestResourceTemplate extends Template {
 			rule().condition((type("redirect")), (trigger("methodcall"))).output(literal("redirect(")),
 			rule().condition((type("response")), (trigger("methodcall"))).output(literal("write(")),
 			rule().condition((attribute("void")), (trigger("ending"))),
-			rule().condition((trigger("ending"))).output(literal(")")),
-			rule().condition((attribute("void")), (trigger("write"))),
-			rule().condition((type("redirect")), (trigger("method"))).output(literal("private void redirect(String url) {\n\tmanager.redirect(url);\n}")),
-			rule().condition((type("response")), (trigger("method"))).output(literal("private void write(")).output(mark("value", "firstUpperCase", "ReturnTypeFormatter")).output(literal(" object) {\n\tmanager.write(io.intino.alexandria.rest.ResponseAdapter.adapt(object)")).output(expression().output(literal(", \"")).output(mark("format")).output(literal("\""))).output(literal(");\n}")),
-			rule().condition((type("parameter")), (trigger("type"))).output(mark("parameterType")),
-			rule().condition((allTypes("parameter","defaultvalue")), (attribute("in", "body")), (trigger("assign"))).output(literal("action.")).output(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).output(literal(" = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from")).output(mark("in", "firstUpperCase")).output(literal("OrDefault(\"")).output(mark("defaultvalue")).output(literal("\"), ")).output(mark("parameterType")).output(literal(");")),
-			rule().condition((allTypes("parameter","defaultvalue")), (trigger("assign"))).output(literal("action.")).output(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).output(literal(" = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from")).output(mark("in", "firstUpperCase")).output(literal("OrDefault(\"")).output(mark("name")).output(literal("\", \"")).output(mark("defaultvalue")).output(literal("\"), ")).output(mark("parameterType")).output(literal(");")),
-			rule().condition((type("parameter")), (attribute("in", "body")), (trigger("assign"))).output(literal("action.")).output(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).output(literal(" = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from")).output(mark("in", "firstUpperCase")).output(literal("(), ")).output(mark("parameterType")).output(literal(");")),
-			rule().condition((type("parameter")), (trigger("assign"))).output(literal("action.")).output(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).output(literal(" = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from")).output(mark("in", "firstUpperCase")).output(literal("(\"")).output(mark("name")).output(literal("\"), ")).output(mark("parameterType")).output(literal(");")),
-			rule().condition((type("list")), (trigger("parametertype"))).output(literal("com.google.gson.reflect.TypeToken.getParameterized(java.util.ArrayList.class, ")).output(mark("value")).output(literal(".class).getType()")),
-			rule().condition((type("authenticationValidator")), (trigger("put"))).output(literal("context.put(\"Authorization\", manager.fromHeader(\"Authorization\").replace(\"Basic \", \"\"));")),
-			rule().condition((trigger("parametertype"))).output(mark("value")).output(literal(".class")),
-			rule().condition((type("schemaImport"))).output(literal("import ")).output(mark("package")).output(literal(".schemas.*;"))
+				rule().condition((trigger("ending"))).output(literal(")")),
+				rule().condition((attribute("void")), (trigger("write"))),
+				rule().condition((type("redirect")), (trigger("method"))).output(literal("private void redirect(String url) {\n\tmanager.redirect(url);\n}")),
+				rule().condition((type("response")), (trigger("method"))).output(literal("private void write(")).output(mark("value", "firstUpperCase", "ReturnTypeFormatter")).output(literal(" object) {\n\tmanager.write(io.intino.alexandria.rest.ResponseAdapter.adapt(object)")).output(expression().output(literal(", \"")).output(mark("format")).output(literal("\""))).output(literal(");\n}")),
+				rule().condition((type("parameter")), (trigger("type"))).output(mark("parameterType")),
+				rule().condition((allTypes("parameter", "defaultvalue")), (attribute("in", "body")), (trigger("assign"))).output(literal("action.")).output(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).output(literal(" = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from")).output(mark("in", "firstUpperCase")).output(literal("OrDefault(\"")).output(mark("defaultvalue")).output(literal("\"), ")).output(mark("parameterType")).output(literal(");")),
+				rule().condition((allTypes("parameter", "defaultvalue")), (trigger("assign"))).output(literal("action.")).output(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).output(literal(" = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from")).output(mark("in", "firstUpperCase")).output(literal("OrDefault(\"")).output(mark("name")).output(literal("\", \"")).output(mark("defaultvalue")).output(literal("\"), ")).output(mark("parameterType")).output(literal(");")),
+				rule().condition((type("parameter")), (attribute("in", "body")), (trigger("assign"))).output(literal("action.")).output(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).output(literal(" = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from")).output(mark("in", "firstUpperCase")).output(literal("(), ")).output(mark("parameterType")).output(literal(");")),
+				rule().condition((type("parameter")), (trigger("assign"))).output(literal("action.")).output(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).output(literal(" = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from")).output(mark("in", "firstUpperCase")).output(literal("(\"")).output(mark("name")).output(literal("\"), ")).output(mark("parameterType")).output(literal(");")),
+				rule().condition((type("list")), (trigger("parametertype"))).output(literal("com.google.gson.reflect.TypeToken.getParameterized(java.util.ArrayList.class, ")).output(mark("value")).output(literal(".class).getType()")),
+				rule().condition((type("authenticationValidator")), (trigger("put"))).output(literal("context.put(\"Authorization\", manager.fromHeader(\"Authorization\").replace(\"")).output(mark("type")).output(literal(" \", \"\"));")),
+				rule().condition((trigger("parametertype"))).output(mark("value")).output(literal(".class")),
+				rule().condition((type("schemaImport"))).output(literal("import ")).output(mark("package")).output(literal(".schemas.*;"))
 		);
 	}
 }
