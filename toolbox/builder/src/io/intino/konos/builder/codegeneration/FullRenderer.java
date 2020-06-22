@@ -120,7 +120,7 @@ public class FullRenderer {
 		new MessageHubRenderer(context, graph).execute();
 	}
 
-	private void mounters() {
+	private void mounters() throws KonosException {
 		new MounterFactoryRenderer(context, graph).execute();
 		new MounterRenderer(context, graph).execute();
 	}
