@@ -143,6 +143,10 @@ def type(parameter & list) trigger(type)
 	public java.util.List<$type> $name+snakecaseToCamelCase+FirstLowerCase;
 end
 
+def type(parameter & word) trigger(type)
+	public String $name+snakecaseToCamelCase+FirstLowerCase;
+end
+
 def type(parameter) trigger(type)
 	public $type $name+snakecaseToCamelCase+FirstLowerCase;
 end
