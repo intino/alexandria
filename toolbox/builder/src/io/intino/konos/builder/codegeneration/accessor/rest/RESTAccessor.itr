@@ -40,9 +40,7 @@ def type(resource)
 			io.intino.alexandria.restaccessor.Response response = new io.intino.alexandria.restaccessor.RestQueryBuilder(this.url).timeOut(this.timeoutMillis)
 				[.$auth]
 				[.$parameter...[.$NL]]
-				[.$body...[.$NL]]
-				[.$resource...[.$NL]].
-				$method+lowercase($path);
+				.$method+lowercase($path);
 			$response+return
 		} catch (AlexandriaException e) {
 			$exceptionResponses+throws
@@ -55,6 +53,14 @@ def type(parameter & query) trigger(parameter)
 end
 def type(parameter & header) trigger(parameter)
 	headerParameter("$name", $name)
+end
+
+def !type(file) type(parameter & body) trigger(parameter)
+	entityPart("$name", $name)
+end
+
+def type(file) type(parameter & body) trigger(parameter)
+	entityPart($name)
 end
 
 def type(list) trigger(return)
