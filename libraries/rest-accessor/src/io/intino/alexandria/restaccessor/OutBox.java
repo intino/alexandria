@@ -19,7 +19,7 @@ public class OutBox {
 	protected final File directory;
 	protected List<File> files;
 
-	OutBox(File directory, int retryIntervalSeconds) {
+	public OutBox(File directory, int retryIntervalSeconds) {
 		this.directory = directory;
 		this.reloadOutBox();
 		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
