@@ -38,7 +38,7 @@ public class OutBox {
 		}
 	}
 
-	void push(Request request) {
+	public void push(Request request) {
 		try {
 			File file = new File(directory, UUID.randomUUID().toString() + JSON);
 			Files.write(file.toPath(), request.toString().getBytes());
@@ -83,7 +83,7 @@ public class OutBox {
 		files.remove(0);
 	}
 
-	protected synchronized void reloadOutBox() {
+	private synchronized void reloadOutBox() {
 		if (files.isEmpty()) {
 			files = new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(JSON)))));
 			files.sort(Comparator.comparingLong(File::lastModified));

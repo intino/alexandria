@@ -210,7 +210,7 @@ public class RequestBuilder {
 		}
 	}
 
-	interface Request {
+	public interface Request {
 		Response execute() throws AlexandriaException;
 	}
 
