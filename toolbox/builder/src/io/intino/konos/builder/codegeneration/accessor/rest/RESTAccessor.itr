@@ -45,7 +45,7 @@ end
 
 def type(resource)
 	public $response $method+firstLowerCase~$name+SnakeCaseToCamelCase+firstUpperCase($parameter+signature...[, ]) $exceptionResponses+declaration {
-		Request request = new RequestBuilder(this.url).timeOut(this.timeoutMillis)
+		RequestBuilder.Request request = new RequestBuilder(this.url).timeOut(this.timeoutMillis)
 			[.$auth]
 			[.$parameter...[$NL.]]
 			.build(RequestBuilder.Method.$method+upperCase, $path);
@@ -54,7 +54,7 @@ def type(resource)
 			[$response+return]
 		} catch (AlexandriaException e) {
 			$exceptionResponses+throws
-			if (outBoxDirectory != null) outbox.push(request);
+			if (outBox != null) outBox.push(request);
 			throw new InternalServerError(e.message());
 		}
 	}
