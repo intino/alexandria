@@ -6,6 +6,7 @@ import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.CompilationContext.DataHubManifest;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.model.graph.Datamart;
 import io.intino.konos.model.graph.Datamart.Mounter;
 import io.intino.konos.model.graph.KonosGraph;
@@ -21,7 +22,7 @@ import static io.intino.konos.builder.helpers.Commons.writeFrame;
 public class MounterFactoryRenderer {
 	private final CompilationContext context;
 	private final List<Mounter> mounters;
-	private File genMounters;
+	private final File genMounters;
 
 	public MounterFactoryRenderer(CompilationContext context, KonosGraph graph) {
 		this.context = context;
@@ -29,10 +30,11 @@ public class MounterFactoryRenderer {
 		this.genMounters = new File(context.gen(Target.Owner), "mounters");
 	}
 
-	public void execute() {
+	public void execute() throws KonosException {
 		if (mounters.isEmpty()) return;
 		DataHubManifest manifest = context.dataHubManifest();
-
+		if (manifest == null)
+			throw new KonosException("Is required the Data hub declaration in artifact to instance subscribers");
 		FrameBuilder builder = baseFrame("factory");
 		Map<String, List<Mounter>> map = map(mounters, manifest);
 		for (String event : map.keySet())

@@ -6,6 +6,7 @@ def type(accessor)
     import java.util.Arrays;
 	import java.net.URL;
 	import io.intino.alexandria.exceptions.*;
+	import io.intino.alexandria.restaccessor.RequestBuilder;
 	import io.intino.alexandria.restaccessor.core.RestAccessorNotifier;
 	import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
 
@@ -13,8 +14,9 @@ def type(accessor)
 
 	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Accessor {
 		private final URL url;
-		private int timeoutMillis = 120 * 1000;
 		private final RestAccessorNotifier notifier = new RestAccessorNotifier();
+		private int timeoutMillis = 120 * 1_000;
+		private OutBox outBox = null;
 		$authentication+field
 
 		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url[, $authentication+parameter]) {
@@ -28,6 +30,13 @@ def type(accessor)
 			$authentication+assign
 		}
 
+		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url, int timeoutMillis, java.io.File outBoxDirectory, int intervalRetrySeconds[, $authentication+parameter]) {
+			this.url = url;
+			this.timeoutMillis = timeoutMillis;
+			this.outBox = new OutBox(outBoxDirectory, intervalRetrySeconds);
+			$authentication+assign
+		}
+
 		$resource...[$NL$NL]
 
 		$notification...[$NL$NL]
@@ -36,16 +45,17 @@ end
 
 def type(resource)
 	public $response $method+firstLowerCase~$name+SnakeCaseToCamelCase+firstUpperCase($parameter+signature...[, ]) $exceptionResponses+declaration {
+		Request request = new RequestBuilder(this.url).timeOut(this.timeoutMillis)
+			[.$auth]
+			[.$parameter...[$NL.]]
+			.build(RequestBuilder.Method.$method+upperCase, $path);
 		try {
-			io.intino.alexandria.restaccessor.Response response = new io.intino.alexandria.restaccessor.RestQueryBuilder(this.url).timeOut(this.timeoutMillis)
-				[.$auth]
-				[.$parameter...[.$NL]]
-				[.$body...[.$NL]]
-				[.$resource...[.$NL]].
-				$method+lowercase($path);
+			io.intino.alexandria.restaccessor.Response response = request.execute();
 			$response+return
 		} catch (AlexandriaException e) {
 			$exceptionResponses+throws
+			if (outBoxDirectory != null) outbox.push(request);
+			throw new InternalServerError(e.message());
 		}
 	}
 end
@@ -55,6 +65,14 @@ def type(parameter & query) trigger(parameter)
 end
 def type(parameter & header) trigger(parameter)
 	headerParameter("$name", $name)
+end
+
+def !type(file) type(parameter & body) trigger(parameter)
+	entityPart("$name", $name)
+end
+
+def type(file) type(parameter & body) trigger(parameter)
+	entityPart($name)
 end
 
 def type(list) trigger(return)
@@ -78,8 +96,12 @@ end
 
 def type(notification)
 	public void listen$name+SnakeCaseToCamelCase+firstUppercase([$parameter+signature...[, ], ]java.util.function.Consumer<String> listener) throws InternalServerError {
+		RequestBuilder.Request request = new RequestBuilder(this.url).timeOut(this.timeoutMillis)
+			[.$auth]
+			[.$parameter...[.]]
+			.build(RequestBuilder.Method.POST, "$path");
 		try {
-			this.notifier.listen(listener, new io.intino.alexandria.restaccessor.RestQueryBuilder(this.url).timeOut(this.timeoutMillis)[.$auth][.$parameter...[.]].post("$path").content().trim());
+			this.notifier.listen(listener, request.execute().content().trim());
 		} catch (AlexandriaException e) {
 			throw new InternalServerError(e.message());
 		}
@@ -150,7 +172,6 @@ end
 
 def type(exceptionResponses) trigger(throws)
 	$exceptionResponse+throws...[$NLelse ]
-	throw new InternalServerError(e.message());
 end
 
 def type(exceptionResponse) trigger(throws)
