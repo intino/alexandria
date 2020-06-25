@@ -7,7 +7,6 @@ import io.intino.alexandria.restaccessor.RequestBuilder.Request;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -51,13 +50,7 @@ public class OutBox {
 	private Request peek() {
 		String requestContent = get();
 		if (requestContent == null) return null;
-		try {
-			return Json.fromString(requestContent, RequestBuilder.class).build();
-		} catch (URISyntaxException e) {
-			Logger.error(e);
-			pop();
-			return null;
-		}
+		return Json.fromString(requestContent, RequestBuilder.class).build();
 	}
 
 	private String get() {

@@ -27,6 +27,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -115,25 +116,25 @@ public class RequestBuilder {
 	}
 
 
-	public Request build(Method method, String path) throws URISyntaxException {
+	public Request build(Method method, String path) {
 		this.method = method;
 		this.path = path;
 		return build();
 	}
 
-	Request build() throws URISyntaxException {
-		HttpRequestBase request = method(this.method.name());
-		request.setURI(new URIBuilder(pathUrl(url, path)).setParameters(queryParameters).build());
-		if (auth != null) request.setHeader(HttpHeaders.AUTHORIZATION, auth.name() + " " + auth.token);
-		headerParameters.forEach(request::setHeader);
-		if (!entityParts.isEmpty() && request instanceof HttpEntityEnclosingRequestBase)
-			((HttpEntityEnclosingRequestBase) request).setEntity(buildEntity());
+	Request build() {
 		return new Request() {
 			@Override
 			public Response execute() throws AlexandriaException {
 				try {
+					HttpRequestBase request = method(method.name());
+					if (auth != null) request.setHeader(HttpHeaders.AUTHORIZATION, auth.name() + " " + auth.token);
+					headerParameters.forEach(request::setHeader);
+					if (!entityParts.isEmpty() && request instanceof HttpEntityEnclosingRequestBase)
+						((HttpEntityEnclosingRequestBase) request).setEntity(buildEntity());
+					request.setURI(buildUrl());
 					return RequestBuilder.this.responseFrom(client.execute(request));
-				} catch (IOException e) {
+				} catch (IOException | URISyntaxException e) {
 					throw new InternalServerError(e.getMessage());
 				}
 			}
@@ -143,6 +144,10 @@ public class RequestBuilder {
 				return Json.toString(RequestBuilder.this);
 			}
 		};
+	}
+
+	private URI buildUrl() throws URISyntaxException {
+		return new URIBuilder(pathUrl(url, path)).setParameters(queryParameters).build();
 	}
 
 	private HttpEntity buildEntity() {

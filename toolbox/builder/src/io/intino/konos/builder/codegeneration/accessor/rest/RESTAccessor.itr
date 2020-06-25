@@ -166,10 +166,6 @@ def type(parameter) trigger(signature)
 	$parameterType $name+SnakeCaseToCamelCase+firstLowerCase
 end
 
-def type(exceptionResponses & none) trigger(throws)
-	throw new InternalServerError(e.message());
-end
-
 def type(exceptionResponses) trigger(throws)
 	$exceptionResponse+throws...[$NLelse ]
 end
