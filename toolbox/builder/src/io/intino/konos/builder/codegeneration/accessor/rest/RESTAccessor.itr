@@ -16,7 +16,7 @@ def type(accessor)
 		private final URL url;
 		private final RestAccessorNotifier notifier = new RestAccessorNotifier();
 		private int timeoutMillis = 120 * 1_000;
-		private OutBox outBox = null;
+		private io.intino.alexandria.restaccessor.OutBox outBox = null;
 		$authentication+field
 
 		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url[, $authentication+parameter]) {
@@ -33,7 +33,7 @@ def type(accessor)
 		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url, int timeoutMillis, java.io.File outBoxDirectory, int intervalRetrySeconds[, $authentication+parameter]) {
 			this.url = url;
 			this.timeoutMillis = timeoutMillis;
-			this.outBox = new OutBox(outBoxDirectory, intervalRetrySeconds);
+			this.outBox = new io.intino.alexandria.restaccessor.OutBox(outBoxDirectory, intervalRetrySeconds);
 			$authentication+assign
 		}
 
@@ -51,7 +51,7 @@ def type(resource)
 			.build(RequestBuilder.Method.$method+upperCase, $path);
 		try {
 			io.intino.alexandria.restaccessor.Response response = request.execute();
-			$response+return
+			[$response+return]
 		} catch (AlexandriaException e) {
 			$exceptionResponses+throws
 			if (outBoxDirectory != null) outbox.push(request);
