@@ -39,7 +39,7 @@ import static org.apache.http.entity.ContentType.APPLICATION_OCTET_STREAM;
 import static org.apache.http.entity.ContentType.MULTIPART_FORM_DATA;
 import static org.apache.http.entity.mime.HttpMultipartMode.BROWSER_COMPATIBLE;
 
-public class RestQueryBuilder {
+public class RequestBuilder {
 	private enum Auth {
 		Basic, Bearer;
 		private String token;
@@ -54,6 +54,10 @@ public class RestQueryBuilder {
 		}
 	}
 
+	public enum Method {
+		GET, POST, PUT, PATCH, DELETE
+	}
+
 	private final URL url;
 	private final List<NameValuePair> queryParameters;
 	private final HttpClient client;
@@ -62,8 +66,10 @@ public class RestQueryBuilder {
 	private final List<Resource> resources;
 	private int timeOutMillis;
 	private Auth auth;
+	private Method method;
+	private String path;
 
-	public RestQueryBuilder(URL url) {
+	public RequestBuilder(URL url) {
 		this.url = url;
 		timeOutMillis = 120 * 1000;
 		queryParameters = new ArrayList<>();
@@ -73,79 +79,70 @@ public class RestQueryBuilder {
 		this.client = client();
 	}
 
-	public RestQueryBuilder timeOut(int timeOutMillis) {
+	public RequestBuilder timeOut(int timeOutMillis) {
 		this.timeOutMillis = timeOutMillis;
 		return this;
 	}
 
-	public RestQueryBuilder basicAuth(String user, String password) {
+	public RequestBuilder basicAuth(String user, String password) {
 		auth = Auth.Basic.with(Base64.encode((user + ":" + password).getBytes()));
 		return this;
 	}
 
-	public RestQueryBuilder bearerAuth(String token) {
+	public RequestBuilder bearerAuth(String token) {
 		auth = Auth.Bearer.with(token);
 		return this;
 	}
 
-	public RestQueryBuilder queryParameter(String name, Object value) {
+	public RequestBuilder queryParameter(String name, Object value) {
 		if (value != null) queryParameters.add(new BasicNameValuePair(name, RequestAdapter.adapt(value)));
 		return this;
 	}
 
-	public RestQueryBuilder headerParameter(String name, Object value) {
+	public RequestBuilder headerParameter(String name, Object value) {
 		if (value != null) headerParameters.put(name, RequestAdapter.adapt(value));
 		return this;
 	}
 
-	public RestQueryBuilder entityPart(String name, Object content) {
+	public RequestBuilder entityPart(String name, Object content) {
 		if (content != null) entityParts.put(name, RequestAdapter.adapt(content));
 		return this;
 	}
 
-	public RestQueryBuilder entityPart(Resource resource) {
+	public RequestBuilder entityPart(Resource resource) {
 		resources.add(resource);
 		return this;
 	}
 
-	public Response get(String path) throws AlexandriaException {
-		return buildRequest(HttpGet.METHOD_NAME, path).execute();
+
+	public Request build(Method method, String path) throws URISyntaxException {
+		this.method = method;
+		this.path = path;
+		return build();
 	}
 
-	public Response post(String path) throws AlexandriaException {
-		return buildRequest(HttpPost.METHOD_NAME, path).execute();
-	}
-
-	public Response put(String path) throws AlexandriaException {
-		return buildRequest(HttpPut.METHOD_NAME, path).execute();
-	}
-
-	public Response patch(String path) throws AlexandriaException {
-		return buildRequest(HttpPatch.METHOD_NAME, path).execute();
-	}
-
-	public Response delete(String path) throws AlexandriaException {
-		return buildRequest(HttpDelete.METHOD_NAME, path).execute();
-	}
-
-	private MethodExecutor buildRequest(String methodName, String path) throws AlexandriaException {
-		try {
-			HttpRequestBase method = method(methodName);
-			method.setURI(new URIBuilder(pathUrl(url, path)).setParameters(queryParameters).build());
-			if (auth != null) method.setHeader(HttpHeaders.AUTHORIZATION, auth.name() + " " + auth.token);
-			headerParameters.forEach(method::setHeader);
-			if (!entityParts.isEmpty() && method instanceof HttpEntityEnclosingRequestBase)
-				((HttpEntityEnclosingRequestBase) method).setEntity(buildEntity());
-			return () -> {
+	Request build() throws URISyntaxException {
+		HttpRequestBase request = method(this.method.name());
+		request.setURI(new URIBuilder(pathUrl(url, path)).setParameters(queryParameters).build());
+		if (auth != null) request.setHeader(HttpHeaders.AUTHORIZATION, auth.name() + " " + auth.token);
+		headerParameters.forEach(request::setHeader);
+		if (!entityParts.isEmpty() && request instanceof HttpEntityEnclosingRequestBase)
+			((HttpEntityEnclosingRequestBase) request).setEntity(buildEntity());
+		return new Request() {
+			@Override
+			public Response execute() throws AlexandriaException {
 				try {
-					return responseFrom(client.execute(method));
+					return RequestBuilder.this.responseFrom(client.execute(request));
 				} catch (IOException e) {
 					throw new InternalServerError(e.getMessage());
 				}
-			};
-		} catch (URISyntaxException exception) {
-			throw new InternalServerError(exception.getMessage());
-		}
+			}
+
+			@Override
+			public String toString() {
+				return Json.toString(RequestBuilder.this);
+			}
+		};
 	}
 
 	private HttpEntity buildEntity() {
@@ -213,7 +210,7 @@ public class RestQueryBuilder {
 		}
 	}
 
-	interface MethodExecutor {
+	interface Request {
 		Response execute() throws AlexandriaException;
 	}
 

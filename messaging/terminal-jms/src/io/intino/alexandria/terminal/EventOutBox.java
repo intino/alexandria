@@ -43,7 +43,9 @@ class EventOutBox extends OutBox {
 
 	void push(String channel, Event event) {
 		try {
-			Files.write(new File(directory, channel + "#" + timetag(event) + "#" + UUID.randomUUID().toString() + INL).toPath(), event.toString().getBytes());
+			File file = new File(directory, channel + "#" + timetag(event) + "#" + UUID.randomUUID().toString() + INL);
+			Files.write(file.toPath(), event.toString().getBytes());
+			files.add(file);
 		} catch (IOException e) {
 			Logger.error(e);
 		}

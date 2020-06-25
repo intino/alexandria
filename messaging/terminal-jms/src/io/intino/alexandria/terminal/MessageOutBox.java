@@ -35,6 +35,16 @@ class MessageOutBox extends OutBox {
 		}
 	}
 
+	void push(String path, String message) {
+		try {
+			File file = new File(directory, path + "#" + UUID.randomUUID().toString() + JSON);
+			Files.write(file.toPath(), message.getBytes());
+			files.add(file);
+		} catch (IOException e) {
+			Logger.error(e);
+		}
+	}
+
 	@Override
 	protected String extension() {
 		return JSON;
@@ -43,14 +53,6 @@ class MessageOutBox extends OutBox {
 	@Override
 	protected String destination(File file) {
 		return file.getName().substring(0, file.getName().indexOf("#"));
-	}
-
-	void push(String path, String message) {
-		try {
-			Files.write(new File(directory, path + "#" + UUID.randomUUID().toString() + JSON).toPath(), message.getBytes());
-		} catch (IOException e) {
-			Logger.error(e);
-		}
 	}
 
 

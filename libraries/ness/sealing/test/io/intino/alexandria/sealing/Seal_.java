@@ -7,9 +7,8 @@ import java.io.File;
 import java.time.Instant;
 
 public class Seal_ {
-
 	private static final File STAGE_FOLDER = new File("../temp/stage");
-	private File DATALAKE = new File("../temp/datalake");
+	private final File DATALAKE = new File("../temp/datalake");
 
 	@Test
 	public void should_create_a_session() {
