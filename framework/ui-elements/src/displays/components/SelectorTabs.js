@@ -27,20 +27,32 @@ class SelectorTabs extends AbstractSelectorTabs {
         return (
             <Tabs value={selected} variant="fullWidth"
                   onChange={this.handleChange.bind(this)} color={this.props.color} style={this.style()}>
-                {React.Children.map(children, (child, i) => { return this.renderTab(child); })}
+                {React.Children.map(children, (child, i) => { return this.renderTab(child, i); })}
             </Tabs>
         );
     }
 
-    renderTab = (tab) => {
+    renderTab = (tab, i) => {
 	    const className = tab.props.className;
         if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
-        return tab.props.visible === false ? null : (<Tab label={tab}/>);
+        return this._isVisible(i) ? (<Tab label={tab}/>) : null;
     };
 
     refreshSelected = (tab) => {
         this.setState({ selected: tab });
 	};
+
+    refreshOptionsVisibility = (options) => {
+        this.setState({ hiddenOptions: options });
+	};
+
+	_isVisible = (pos) => {
+	    const hiddenOptions = this.state.hiddenOptions;
+	    for (var i=0; i<hiddenOptions.length; i++) {
+	        if (hiddenOptions[i] == pos) return false;
+	    }
+	    return true;
+	}
 
 	handleChange = (e, value) => {
         this.requester.select(value);

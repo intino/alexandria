@@ -4,11 +4,13 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.components.selector.SelectorOption;
 import io.intino.alexandria.ui.displays.notifiers.SelectorTabsNotifier;
 
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SelectorTabs<DN extends SelectorTabsNotifier, B extends Box> extends AbstractSelectorTabs<DN, B> {
 	private int selected = -1;
+	private Set<Integer> hiddenOptions = new HashSet<>();
 
     public SelectorTabs(B box) {
         super(box);
@@ -25,6 +27,18 @@ public class SelectorTabs<DN extends SelectorTabsNotifier, B extends Box> extend
 		if (this.selected == option) return;
 		this.selected = option;
 		notifySelection();
+	}
+
+	public void showOption(String option) {
+		int position = position(option);
+		hiddenOptions.remove(position);
+		notifier.refreshOptionsVisibility(new ArrayList<>(hiddenOptions));
+	}
+
+	public void hideOption(String option) {
+		int position = position(option);
+		hiddenOptions.add(position);
+		notifier.refreshOptionsVisibility(new ArrayList<>(hiddenOptions));
 	}
 
 	public void show(String option) {
