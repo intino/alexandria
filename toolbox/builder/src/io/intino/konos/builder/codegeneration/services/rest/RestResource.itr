@@ -154,6 +154,9 @@ def type(parameter & defaultvalue) trigger(assign)
 	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrDefault("$name", "$defaultvalue"), $parameterType);
 end
 
+def type(parameter) attribute(in:form) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.from$in+firstUpperCase("$name");
+end
 
 def type(parameter) attribute(in:body) trigger(assign)
 	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase(), $parameterType);
