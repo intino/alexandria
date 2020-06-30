@@ -9,46 +9,61 @@ import static java.util.Comparator.comparingLong;
 
 @SuppressWarnings("WeakerAccess")
 public class MappBuilder {
-	private Index index = new Index();
-	private Map<String, Integer> map = new HashMap<>();
+	private final Index index = new Index();
+	private final Map<String, Integer> map = new HashMap<>();
 
 	public MappBuilder() {
+	}
+
+	public MappBuilder(MappStream stream) {
+		put(stream);
 	}
 
 	public MappBuilder(List<String> values) {
 		values.forEach(this::map);
 	}
 
-	public void put(long key, String... value) {
+	public MappBuilder put(long key, String... value) {
 		index.put(key, map(String.join("\n", value)));
+		return this;
 	}
 
-	public void put(long[] keys, String... value) {
+	public MappBuilder put(long[] keys, String... value) {
 		put(keys, map(String.join("\n", value)));
+		return this;
 	}
 
-	public void put(long key, List<String> value) {
+	public MappBuilder put(long key, List<String> value) {
 		index.put(key, map(String.join("\n", value)));
+		return this;
 	}
 
-	public void put(long[] keys, List<String> value) {
+	public MappBuilder put(long[] keys, List<String> value) {
 		put(keys, map(String.join("\n", value)));
+		return this;
 	}
 
-	private void put(long[] keys, int value) {
-		stream(keys).forEach(k -> index.put(k, value));
-	}
-
-	public void put(MappStream stream) {
+	public MappBuilder put(MappStream stream) {
 		while (stream.hasNext()) put(stream.next());
+		return this;
 	}
 
-	public void put(MappStream.Item item) {
+	public MappBuilder put(MappStream.Item item) {
 		index.put(item.key(), map(String.join("\n", item.value())));
+		return this;
+	}
+
+	public MappBuilder remove(long key) {
+		index.remove(key);
+		return this;
 	}
 
 	public void save(File file) throws IOException {
 		save(new FileOutputStream(file));
+	}
+
+	private void put(long[] keys, int value) {
+		stream(keys).forEach(k -> index.put(k, value));
 	}
 
 	private int map(String object) {
@@ -75,11 +90,32 @@ public class MappBuilder {
 		return map.entrySet().stream().sorted(Comparator.comparingInt(Map.Entry::getValue)).map(Map.Entry::getKey).collect(Collectors.toList());
 	}
 
-	public class IndexToByteArray {
+	private static class Index {
+		private final Comparator<Mapp.Entry> comparator = comparingLong(o -> o.key);
+		private final List<Mapp.Entry> ids = new ArrayList<>();
+
+		void put(long key, int value) {
+			ids.add(new Mapp.Entry(key, value));
+		}
+
+		private void sort() {
+			ids.sort(comparator);
+		}
+
+		public int size() {
+			return ids.size();
+		}
+
+		public void remove(long key) {
+			ids.removeAll(ids.stream().filter(i -> i.key == key).collect(Collectors.toList()));
+		}
+	}
+
+	public static class IndexToByteArray {
+		private final Mapp.Entry[] data = new Mapp.Entry[256];
+		private final Index index;
 		private long base = -1;
-		private Mapp.Entry[] data = new Mapp.Entry[256];
 		private int count = 0;
-		private Index index;
 
 		public IndexToByteArray(Index index) {
 			this.index = index;
@@ -148,23 +184,5 @@ public class MappBuilder {
 			}
 			stream.write((byte) value);
 		}
-	}
-
-	private class Index {
-		private final Comparator<Mapp.Entry> comparator = comparingLong(o -> o.key);
-		private final List<Mapp.Entry> ids = new ArrayList<>();
-
-		void put(long key, int value) {
-			ids.add(new Mapp.Entry(key, value));
-		}
-
-		private void sort() {
-			ids.sort(comparator);
-		}
-
-		public int size() {
-			return ids.size();
-		}
-
 	}
 }
