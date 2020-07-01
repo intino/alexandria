@@ -57,7 +57,7 @@ public class RESTAccessorRenderer extends Renderer {
 		builder.add("resource", service.core$().findNode(Resource.class).stream().map(this::framesOf).flatMap(List::stream).toArray(Frame[]::new));
 		builder.add("notification", service.notificationList().stream().map(this::frameOf).toArray(Frame[]::new));
 		for (Parameter enumParameter : enumParameters)
-			builder.add("enumParameter", new FrameBuilder("enumParameter").add("name", enumParameter.name$()).add("value", enumParameter.asWord().values().toArray(String[]::new)));
+			builder.add("enumParameter", new FrameBuilder("enumParameter").add("name", enumParameter.name$()).add("class", enumParameter.core$().ownerAs(Resource.class).name$() + firstUpperCase(enumParameter.name$())).add("value", enumParameter.asWord().values().toArray(String[]::new)));
 		writeFrame(destination, snakeCaseToCamelCase(service.name$()) + "Accessor", template().render(builder));
 	}
 
@@ -123,7 +123,7 @@ public class RESTAccessorRenderer extends Renderer {
 		String type;
 		if (parameter.isWord()) {
 			enumParameters.add(parameter);
-			type = firstUpperCase(parameter.name$());
+			type = firstUpperCase(parameter.core$().ownerAs(Resource.class).name$() + firstUpperCase(parameter.name$()));
 		} else type = (parameter.isObject() && parameter.asObject().isComponent() ?
 				String.join(".", packageName(), "schemas.") : "") + parameter.asType().type();
 		return parameter.isList() ? "List<" + type + ">" : type;

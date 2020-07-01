@@ -86,7 +86,7 @@ def type(resource)
 			this.manager = manager;
 		}
 
-		public void execute() [throws $throws...[, ]] {
+		public void execute() throws AlexandriaException {
 			[$returnType+methodCall]fill(new $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action()).execute()[$returnType+ending];
 		}
 
