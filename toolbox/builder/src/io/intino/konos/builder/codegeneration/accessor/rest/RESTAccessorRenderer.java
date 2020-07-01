@@ -20,21 +20,25 @@ import io.intino.magritte.framework.Concept;
 import io.intino.magritte.framework.Predicate;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class RESTAccessorRenderer extends Renderer {
 	private final Service.REST service;
 	private final File destination;
+	private final List<Parameter> enumParameters;
 
 	public RESTAccessorRenderer(CompilationContext compilationContext, Service.REST restService, File destination) {
 		super(compilationContext, Target.Owner);
 		this.service = restService;
 		this.destination = destination;
 		this.destination.mkdirs();
+		this.enumParameters = new ArrayList<>();
 	}
 
 	@Override
@@ -52,6 +56,8 @@ public class RESTAccessorRenderer extends Renderer {
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()));
 		builder.add("resource", service.core$().findNode(Resource.class).stream().map(this::framesOf).flatMap(List::stream).toArray(Frame[]::new));
 		builder.add("notification", service.notificationList().stream().map(this::frameOf).toArray(Frame[]::new));
+		for (Parameter enumParameter : enumParameters)
+			builder.add("enumParameter", new FrameBuilder("enumParameter").add("name", enumParameter.name$()).add("value", enumParameter.asWord().values().toArray(String[]::new)));
 		writeFrame(destination, snakeCaseToCamelCase(service.name$()) + "Accessor", template().render(builder));
 	}
 
@@ -114,7 +120,12 @@ public class RESTAccessorRenderer extends Renderer {
 	}
 
 	private String parameterType(Parameter parameter) {
-		String type = (parameter.isObject() && parameter.asObject().isComponent() ? String.join(".", packageName(), "schemas.") : "") + parameter.asType().type();
+		String type;
+		if (parameter.isWord()) {
+			enumParameters.add(parameter);
+			type = firstUpperCase(parameter.name$());
+		} else type = (parameter.isObject() && parameter.asObject().isComponent() ?
+				String.join(".", packageName(), "schemas.") : "") + parameter.asType().type();
 		return parameter.isList() ? "List<" + type + ">" : type;
 	}
 
