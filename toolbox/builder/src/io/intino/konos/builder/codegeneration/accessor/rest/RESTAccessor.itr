@@ -18,6 +18,7 @@ def type(accessor)
 		private int timeoutMillis = 120 * 1_000;
 		private io.intino.alexandria.restaccessor.OutBox outBox = null;
 		$authentication+field
+		$enumParameter...[$NL$NL]
 
 		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url[, $authentication+parameter]) {
 			this.url = url;
@@ -60,9 +61,18 @@ def type(resource)
 	}
 end
 
+def type(parameter & query & word) trigger(parameter)
+	queryParameter("$name", $name.name())
+end
+
 def type(parameter & query) trigger(parameter)
 	queryParameter("$name", $name)
 end
+
+def type(parameter & header & word) trigger(parameter)
+	headerParameter("$name", $name.name())
+end
+
 def type(parameter & header) trigger(parameter)
 	headerParameter("$name", $name)
 end
@@ -73,6 +83,12 @@ end
 
 def type(file) type(parameter & body) trigger(parameter)
 	entityPart($name)
+end
+
+def trigger(enumParameter)
+	public enum $name+FirstUpperCase {
+		$value...[, ]
+	}
 end
 
 def type(list) trigger(return)

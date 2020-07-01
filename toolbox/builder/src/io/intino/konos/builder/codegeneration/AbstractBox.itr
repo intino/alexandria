@@ -242,7 +242,7 @@ def type(service & rest) trigger(rest)
 	io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
 	[$name+SnakeCaseToCamelCase+FirstUpperCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);]
 	[io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();
-	Logger.info("Rest service $name: started!");]
+	Logger.info("Rest service $name: started at port " + $parameter + "!");]
 end
 
 def type(service & soap) trigger(soap)
