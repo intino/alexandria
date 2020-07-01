@@ -15,7 +15,7 @@ public class RESTAccessorTemplate extends Template {
 				rule().condition((allTypes("parameter", "header")), (trigger("parameter"))).output(literal("headerParameter(\"")).output(mark("name")).output(literal("\", ")).output(mark("name")).output(literal(")")),
 				rule().condition(not(type("file")), (allTypes("parameter", "body")), (trigger("parameter"))).output(literal("entityPart(\"")).output(mark("name")).output(literal("\", ")).output(mark("name")).output(literal(")")),
 				rule().condition((type("file")), (allTypes("parameter", "body")), (trigger("parameter"))).output(literal("entityPart(")).output(mark("name")).output(literal(")")),
-				rule().condition((trigger("enumparameter"))).output(literal("public enum ")).output(mark("name", "FirstUpperCase")).output(literal(" {\n\t")).output(mark("value").multiple(", ")).output(literal("\n}")),
+				rule().condition((trigger("enumparameter"))).output(literal("public enum ")).output(mark("class", "FirstUpperCase")).output(literal(" {\n\t")).output(mark("value").multiple(", ")).output(literal("\n}")),
 				rule().condition((type("list")), (trigger("return"))).output(literal("return io.intino.alexandria.restaccessor.adapters.ResponseAdapter.adapt(response.content(), new com.google.gson.reflect.TypeToken<Array")).output(mark("value")).output(literal(">(){}.getType());")),
 				rule().condition(not(type("list")), not(attribute("value", "void")), (trigger("return"))).output(literal("return io.intino.alexandria.restaccessor.adapters.ResponseAdapter.adapt(response.content(), ")).output(mark("value")).output(literal(".class);")),
 				rule().condition((type("file")), (trigger("return"))).output(literal("return io.intino.alexandria.Resource(\"content\", response.contentAsStream());")),

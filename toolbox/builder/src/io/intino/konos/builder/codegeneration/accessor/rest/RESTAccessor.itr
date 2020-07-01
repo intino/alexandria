@@ -86,7 +86,7 @@ def type(file) type(parameter & body) trigger(parameter)
 end
 
 def trigger(enumParameter)
-	public enum $name+FirstUpperCase {
+	public enum $class+FirstUpperCase {
 		$value...[, ]
 	}
 end
