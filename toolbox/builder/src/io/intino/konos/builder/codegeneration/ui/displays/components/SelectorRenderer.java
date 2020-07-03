@@ -24,10 +24,19 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 		result.add("multipleSelection", element.multipleSelection() ? "true" : "false");
 		if (element.isReadonly()) result.add("readonly", element.isReadonly());
 		if (element.isFocused()) result.add("readonly", element.isFocused());
+		addMenuProperties(result);
 		addComboBoxProperties(result);
 		addRadioBoxProperties(result);
 		addAddressableProperties(result);
+		addToggleBoxProperties(result);
 		return result;
+	}
+
+	private void addMenuProperties(FrameBuilder builder) {
+		if (!element.isMenu()) return;
+		Selector.Menu.Layout layout = element.asMenu().layout();
+		if (layout == null) return;
+		builder.add("layout", layout.name());
 	}
 
 	private void addComboBoxProperties(FrameBuilder builder) {
@@ -42,6 +51,16 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 		String selected = element.asRadioBox().selected();
 		if (selected == null || selected.isEmpty()) return;
 		builder.add("selected", selected);
+	}
+
+	private void addToggleBoxProperties(FrameBuilder builder) {
+		if (!element.isToggleBox()) return;
+		Selector.ToggleBox toggleBox = element.asToggleBox();
+		String selected = toggleBox.selected();
+		if (selected != null && !selected.isEmpty()) builder.add("selected", selected);
+		Selector.ToggleBox.Layout layout = toggleBox.layout();
+		builder.add("layout", layout.name());
+		builder.add("size", toggleBox.size().name());
 	}
 
 	private void addMethod(FrameBuilder builder) {

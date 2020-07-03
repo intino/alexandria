@@ -35,10 +35,10 @@ export default class BlockConditional extends AbstractBlockConditional {
 		return (
 			<div style={styles} className={classNames}>
 				<Block label={this.props.label}
-					   style={this.style()}
+					   /*style={this.style()}*/
 					   layout={this.props.layout}
-					   width={this.props.width}
-					   height={this.props.height}
+					   /*width={this.props.width}
+					   height={this.props.height}*/
 					   spacing={this.props.spacing}>
 					{this.props.children}
 				</Block>

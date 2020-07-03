@@ -31,7 +31,7 @@ class List extends AbstractList {
 	};
 
 	render() {
-		return (<div className="flex" style={{width:"100%"}}><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width))}</AutoSizer></div>);
+		return (<div ref={this.container} className="flex" style={{width:"100%"}}><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width))}</AutoSizer></div>);
 	};
 
 }

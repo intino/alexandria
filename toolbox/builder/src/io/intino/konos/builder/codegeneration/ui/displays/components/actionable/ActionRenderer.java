@@ -28,6 +28,10 @@ public class ActionRenderer extends ActionableRenderer {
 			result.add("switch");
 			result.add("state", element.a$(InteractionComponents.Switch.class).state().name());
 		}
+		else if (element.i$(InteractionComponents.AbstractToggle.class)) {
+			result.add("toggle");
+			result.add("state", element.a$(InteractionComponents.AbstractToggle.class).state().name());
+		}
 		addAddressableProperties(result);
 		return result;
 	}

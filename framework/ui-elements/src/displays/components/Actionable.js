@@ -96,7 +96,7 @@ export default class Actionable extends AbstractActionable {
 		    <Button id={this.props.id} style={this.style()} size={this._size()} color="primary" variant={this._highlightVariant()}
 						disabled={this._readonly()} onClick={this.handleClick.bind(this)}
 						className={classes.button}>
-				{this._title()}
+				{this.renderContent()}
 			</Button>
 		);
 	};
@@ -107,7 +107,7 @@ export default class Actionable extends AbstractActionable {
             <IconButton id={this.props.id} color="primary" disabled={this._readonly()}
                             onClick={this.handleClick.bind(this)}
                             className={classes.iconButton} size={this._size()}>
-                <img src={this._icon()} style={this._addDimensions({})}/>
+                {this.renderContent()}
             </IconButton>
         );
 		return this._readonly() ? button : (<Tooltip title={this._title()}>{button}</Tooltip>);
@@ -121,10 +121,17 @@ export default class Actionable extends AbstractActionable {
             <IconButton id={this.props.id} color="primary" disabled={this._readonly()}
                             onClick={this.handleClick.bind(this)} className={classes.materialIconButton}
                             style={style} size={this._size()}>
-                <ActionableMui icon={this._icon()} style={this._addDimensions({})}/>
+                {this.renderContent()}
             </IconButton>
 		);
 		return this._readonly() ? button : (<Tooltip title={this._title()}>{button}</Tooltip>);
+	};
+
+	renderContent = () => {
+		const mode = this.props.mode.toLowerCase();
+		if (mode === "button" || mode === "toggle") return (<div>{this._title()}</div>);
+		else if (mode === "iconbutton" || mode === "icontoggle") return (<img src={this._icon()} style={this._addDimensions({})}/>);
+		else if (mode === "materialiconbutton" || mode === "materialicontoggle") return (<ActionableMui icon={this._icon()} style={this._addDimensions({})}/>);
 	};
 
 	renderAffirm = () => {

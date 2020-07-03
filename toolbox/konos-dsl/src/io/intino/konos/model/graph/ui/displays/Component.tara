@@ -94,7 +94,14 @@ Concept InteractionComponents
 				var string icon
 		sub Switch
 			var word:{On Off} state = Off
-		sub Toggle
+		sub AbstractToggle
+			var word:{On Off} state = Off
+
+			sub Toggle
+			sub IconToggle
+				var string icon
+			sub MaterialIconToggle
+				var string icon
 
 		Aspect Readonly
 		Aspect Addressable
@@ -116,6 +123,8 @@ Concept InteractionComponents
 			sub OpenDialog > var OtherComponents.AbstractDialog dialog
 			sub CloseDialog > var OtherComponents.AbstractDialog dialog
 			sub OpenPopover > var Block.Popover popover
+			sub SelectPreviousItem > var CatalogComponents.Collection collection
+			sub SelectNextItem > var CatalogComponents.Collection collection
 			sub Export
 				var string[] options = empty
 				var instant from = empty

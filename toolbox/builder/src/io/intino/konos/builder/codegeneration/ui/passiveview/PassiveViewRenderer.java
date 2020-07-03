@@ -10,7 +10,10 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.*;
+import io.intino.konos.model.graph.InteractionComponents.IconToggle;
+import io.intino.konos.model.graph.InteractionComponents.MaterialIconToggle;
 import io.intino.konos.model.graph.InteractionComponents.Switch;
+import io.intino.konos.model.graph.InteractionComponents.Toggle;
 import io.intino.konos.model.graph.OtherComponents.Selector;
 import io.intino.konos.model.graph.PassiveView.Notification;
 import io.intino.konos.model.graph.PassiveView.Request;
@@ -181,6 +184,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	private List<String> facets(PassiveView passiveView) {
 		List<String> result = new ArrayList<>();
 		if (passiveView.i$(Switch.class)) result.add("Switch");
+		if (passiveView.i$(Toggle.class) || passiveView.i$(IconToggle.class) || passiveView.i$(MaterialIconToggle.class)) result.add("Toggle");
 		if (passiveView.i$(Editable.class)) result.add("Editable");
 		if (passiveView.i$(DataComponents.Text.Code.class)) result.add("Code");
 		if (passiveView.i$(Block.Drawer.class)) result.add("Drawer");
@@ -190,6 +194,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (passiveView.i$(Block.Splitter.class)) result.add("Splitter");
 		if (passiveView.i$(Selector.Tabs.class)) result.add("Tabs");
 		if (passiveView.i$(Selector.Menu.class)) result.add("Menu");
+		if (passiveView.i$(Selector.ToggleBox.class)) result.add("ToggleBox");
 		if (passiveView.i$(Selector.ComboBox.class)) result.add("ComboBox");
 		if (passiveView.i$(CatalogComponents.Grouping.ComboBox.class)) result.add("ComboBox");
 		if (passiveView.i$(Selector.ListBox.class)) result.add("ListBox");

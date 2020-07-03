@@ -22,7 +22,7 @@ const CollectionBehaviorCheckbox = (props) => {
 const CollectionBehavior = (collection) => {
     const PaginationHeight = 56;
     collection._widths = {};
-    const self = { collection };
+    const self = { collection, selection: [] };
 
     window.addEventListener("resize", () => self.refreshDelayed());
 
@@ -32,7 +32,7 @@ const CollectionBehavior = (collection) => {
 
         if (collection.state.loading) return self.renderLoading(height, width);
         if (items.length <= 0) return self.renderEmpty(height, width);
-        collection.state.selection = [];
+        if (self.isMultipleSelection()) self.selection = [];
 
         self.collection.itemsRenderedCalled = false;
         window.setTimeout(() => self.forceNotifyItemsRendered(items), 50);
@@ -154,10 +154,12 @@ const CollectionBehavior = (collection) => {
 
         var selectable = self.collection.props.selection != null;
         var multiple = self.isMultipleSelection();
-        var selecting = self.collection.state.selection.length > 0;
+        var selecting = self.selection.length > 0;
         const id = item != null ? item.pl.id : undefined;
+        const classNamesValue = classNames(classes.itemView, "layout horizontal center item", selectable && multiple ? classes.selectable : undefined, selecting ? classes.selecting : undefined);
+        const finalStyle = selectable && !multiple && self.isItemSelected(item) ? { ...style, ...self.getSelectedStyleRules() } : style;
         return (
-            <div style={style} key={index} onClick={selectable && !multiple ? self.handleSelect.bind(self, id) : undefined} className={classNames(classes.itemView, "layout horizontal center", selectable ? classes.selectable : undefined, selecting ? classes.selecting : undefined)}>
+            <div id={self.elementId(id)} style={finalStyle} key={index} onClick={selectable && !multiple ? self.handleSelect.bind(self, id) : undefined} className={classNamesValue}>
                 {/*{multiple ? <Checkbox checked={self.isItemSelected(item)} className={classes.selector} onChange={self.handleSelect.bind(self, id)} /> : undefined}*/}
                 {multiple ? <CollectionBehaviorCheckbox checked={self.isItemSelected(item)} classes={classes} onCheck={self.handleSelect.bind(self, id)} /> : undefined}
                 {view}
@@ -203,12 +205,12 @@ const CollectionBehavior = (collection) => {
 
     self.isItemSelected = (item) => {
         if (item == null) return false;
-        return self.collection.state.selection.indexOf(item.pl.id) !== -1;
+        return self.selection.indexOf(item.pl.id) !== -1;
     };
 
     self.updateSelection = (item) => {
         const multiple = self.isMultipleSelection();
-        var selection = multiple ? self.collection.state.selection : [];
+        var selection = multiple ? self.selection : [];
         var index = selection.indexOf(item);
         if (index !== -1) selection.splice(index, 1);
         else selection.push(item);
@@ -276,6 +278,55 @@ const CollectionBehavior = (collection) => {
         return self.refreshItemsRendered(items, null, self.collection.itemsWindow);
     };
 
+    self.refreshSelection = (selection) => {
+        if (self.selection != null && self.selection.length > 0) self.removeSelectedStyle(self.selection[0]);
+        self.selection = selection;
+        var selectable = self.collection.props.selection != null;
+        var multiple = self.isMultipleSelection();
+        if (!selectable || multiple) return;
+        if (self.selection != null && self.selection.length > 0) self.addSelectedStyle(self.selection[0]);
+    };
+
+    self.getSelectedStyleRules = () => {
+        return {
+            border: "1px solid black",
+            borderRadius: "5px",
+            background: "white"
+        };
+    };
+
+    self.addSelectedStyleRules = (style) => {
+        if (style == null) return;
+        style.border = "1px solid black";
+        style.borderRadius = "5px";
+        style.background = "white";
+        return style;
+    };
+
+    self.addSelectedStyle = (id) => {
+        const element = $(self.collection.container.current).find("#" + self.elementId(id)).get(0);
+        self.addSelectedStyleRules(element.style);
+    };
+
+    self.removeSelectedStyle = (id) => {
+        const element = $(self.collection.container.current).find("#" + self.elementId(id)).get(0);
+        if (element == null || element.style == null) return;
+        element.style.border = "0";
+        element.style.borderRadius = "0";
+        element.style.background = "transparent";
+    };
+
+    self.findSelectedItem = () => {
+        const selection = self.selection;
+        if (selection == null || selection.length < 0) return null;
+        return selection[0];
+    }
+
+    self.elementId = (id) => {
+        if (id == null) return null;
+        return "_" + id.replace(/-/g, "");
+    };
+
     return {
         renderCollection: (height, width) => {
             return self.renderCollection(height, width);
@@ -285,6 +336,9 @@ const CollectionBehavior = (collection) => {
         },
         refresh: () => {
             self.refresh();
+        },
+        refreshSelection: (selection) => {
+            self.refreshSelection(selection);
         }
     };
 };

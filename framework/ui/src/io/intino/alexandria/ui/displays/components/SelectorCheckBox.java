@@ -1,16 +1,16 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.ui.displays.notifiers.SelectorListBoxNotifier;
+import io.intino.alexandria.ui.displays.notifiers.SelectorCheckBoxNotifier;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SelectorListBox<DN extends SelectorListBoxNotifier, B extends Box> extends AbstractSelectorListBox<DN, B> {
-	private java.util.List<String> selection = new ArrayList<>();
+public class SelectorCheckBox<DN extends SelectorCheckBoxNotifier, B extends Box> extends AbstractSelectorCheckBox<DN, B> {
+	private List<String> selection = new ArrayList<>();
 
-    public SelectorListBox(B box) {
+    public SelectorCheckBox(B box) {
         super(box);
     }
 

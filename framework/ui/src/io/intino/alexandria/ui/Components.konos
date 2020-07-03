@@ -70,11 +70,19 @@ Component selectorRadioBox as ExtensionOf(baseSelector)
 	Notification refreshSelected as Text
 	Request select as Text
 
+Component selectorCheckBox as ExtensionOf(baseSelector)
+	Notification refreshSelection as Text List
+	Request updateSelection as Text List
+
 Component selectorComboBox as ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
 	Notification refreshReadonly as Bool
 	Request updateSelection as Text List
 	Request refresh
+
+Component selectorToggleBox as ExtensionOf(baseSelector)
+	Notification refreshSelection as Text List
+	Request updateSelection as Text List
 
 Component selectorListBox as ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
