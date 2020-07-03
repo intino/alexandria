@@ -53,7 +53,6 @@ class Table extends AbstractTable {
         super(props);
         this.notifier = new TableNotifier(this);
         this.requester = new TableRequester(this);
-        this.container = React.createRef();
         this.header = React.createRef();
     };
 
@@ -64,6 +63,7 @@ class Table extends AbstractTable {
     render() {
         const { classes } = this.props;
         const selectable = this.props.selection != null;
+        const multiple = this.props.selection != null && this.props.selection === "multiple";
         const headerHeight = this.header.current != null ? this.header.current.offsetHeight : 0;
         const minHeight = this.props.itemHeight * this.state.itemCount;
         const height = this.container.current != null ? this.container.current.offsetHeight : 0;
@@ -72,7 +72,7 @@ class Table extends AbstractTable {
         return (
             <div ref={this.container} style={{height:"100%",width:"100%"}} className="layout vertical flex">
                 { ComponentBehavior.labelBlock(this.props) }
-                <div ref={this.header} className={classNames(classes.headerView, headerClass, "layout horizontal center", selectable ? classes.selectable : {})} style={{position:"relative"}}>
+                <div ref={this.header} className={classNames(classes.headerView, headerClass, "layout horizontal center", selectable && multiple ? classes.selectable : {})} style={{position:"relative"}}>
                     <div className={classNames(classes.selectAll, selectable ? classes.selectable : {})}><Checkbox className={classes.selector} onChange={this.handleCheck.bind(this)} /></div>
                     {this.props.children}
                 </div>

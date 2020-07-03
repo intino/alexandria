@@ -24,6 +24,9 @@ public class ActionableExamplesMold extends AbstractActionableExamplesMold<Alexa
         operation6.onExecute((event) -> operation6.notifyUser("User clicked operation"));
         operation7.onExecute((event) -> operation7.notifyUser("User clicked operation"));
         operation8.onToggle((event) -> operation7.notifyUser("Edition state to " + event.state().name()));
+        operation11.onToggle((event) -> operation11.notifyUser("Edition state to " + event.state().name()));
+        operation12.onToggle((event) -> operation12.notifyUser("Edition state to " + event.state().name()));
+        operation13.onToggle((event) -> operation13.notifyUser("Edition state to " + event.state().name()));
     }
 
 }

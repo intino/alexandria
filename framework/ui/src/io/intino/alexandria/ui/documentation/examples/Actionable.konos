@@ -6,17 +6,17 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=32%, height=100%)
-			Text(format=h6, value="No facets")
+			Text(format=h6, value="Link")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				Button(title="operation") operation1 as Action
+				Link(title="operation") operation1 as Action
 			Block > Text as Code(language=Html)
 					value
 						=========
-						Button(title\="operation") as Action
+						Link(title\="operation") as Action
 						=========
 
 		Block as Relative(width=32%, height=100%)
-			Text(format=h6, value="Button facet")
+			Text(format=h6, value="Button")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Button(title="operation") operation2 as Action
 			Block > Text as Code(language=Html)
@@ -26,7 +26,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						=========
 
 		Block as Relative(width=32%, height=100%)
-			Text(format=h6, value="IconButton facet")
+			Text(format=h6, value="IconButton")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				IconButton(title="operation", icon="/icons/operation.png") operation3 as Action
 			Block > Text as Code(language=Html)
@@ -38,7 +38,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 	Block(layout=Horizontal, spacing=DP24)
 
 		Block as Relative(width=32%, height=100%)
-			Text(format=h6, value="MaterialIconButton facet")
+			Text(format=h6, value="MaterialIconButton")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				MaterialIconButton(title="operation", icon="Add", size=Medium) operation4 as Action
 			Block > Text as Code(language=Html)
@@ -59,7 +59,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						=========
 
 		Block as Relative(width=32%, height=100%)
-			Text(format=h6, value="Highlighted facet")
+			Text(format=h6, value="Highlight attribute")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Button(title="operation 1", highlight=Outline) operation6 as Action
 				Button(title="operation 2", highlight=Fill) operation7 as Action
@@ -73,7 +73,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 	Block(layout=Horizontal, spacing=DP24)
 
 		Block as Relative(width=32%, height=100%)
-			Text(format=h6, value="Switches facet")
+			Text(format=h6, value="Switch")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Switch(title="edition", state=Off) operation8 as Action
 			Block > Text as Code(language=Html)
@@ -100,4 +100,36 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 					value
 						=========
 						Button(title\="edition") as Action Signed(signText\="Fill your password before continue", reasonText\="Fill reason")
+						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Toggle")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Toggle(title="edition", state=Off) operation11 as Action
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Toggle(title\="edition", state\=Off) as Action
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="IconToggle")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				IconToggle(title="operation", icon="/icons/operation.png") operation13 as Action
+			Block > Text as Code(language=Html)
+					value
+						=========
+						IconToggle(title\="operation", icon\="/icons/operation.png") as Action
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="MaterialIconToggle")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				MaterialIconToggle(title="edition", state=On, icon="FilterList") operation12 as Action
+			Block > Text as Code(language=Html)
+					value
+						=========
+						MaterialIconToggle(title\="edition", state\=On, icon\="FilterList") as Action
 						=========

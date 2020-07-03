@@ -4,9 +4,14 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.components.selector.Selection;
 import io.intino.alexandria.ui.displays.components.selector.Selector;
+import io.intino.alexandria.ui.displays.components.selector.SelectorOption;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.Listener;
+import io.intino.alexandria.ui.displays.events.actionable.ToggleEvent;
+import io.intino.alexandria.ui.displays.notifiers.ActionSwitchNotifier;
 import io.intino.alexandria.ui.displays.notifiers.BlockConditionalNotifier;
+
+import java.util.Optional;
 
 public abstract class BlockConditional<DN extends BlockConditionalNotifier, B extends Box> extends AbstractBlockConditional<B> implements Selection {
     private boolean initialized = false;
@@ -32,6 +37,12 @@ public abstract class BlockConditional<DN extends BlockConditionalNotifier, B ex
         selector.onSelect(e -> updateVisibility(e.selection().contains(option)));
     }
 
+    @Override
+    public void bindTo(ActionToggle action, String option) {
+        updateVisibility(action, option);
+        action.onToggle(e -> updateVisibility(e.state() == ToggleEvent.State.On));
+    }
+
     public abstract void initConditional();
 
     @Override
@@ -47,6 +58,12 @@ public abstract class BlockConditional<DN extends BlockConditionalNotifier, B ex
         java.util.List<String> selection = selector.selection();
         if (selection.size() <= 0 || !selection.contains(option)) return;
         updateVisibility(true);
+    }
+
+    private void updateVisibility(ActionToggle action, String option) {
+        if (action == null) return;
+        ToggleEvent.State state = action.state();
+        updateVisibility(state == ToggleEvent.State.On);
     }
 
     protected void initComponent() {

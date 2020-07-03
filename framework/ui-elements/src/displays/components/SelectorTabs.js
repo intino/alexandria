@@ -12,7 +12,8 @@ const styles = theme => ({});
 
 class SelectorTabs extends AbstractSelectorTabs {
     state = {
-        selected: -1
+        selected: -1,
+        hiddenOptions: []
     };
 
 	constructor(props) {

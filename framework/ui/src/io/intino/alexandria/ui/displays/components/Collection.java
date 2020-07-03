@@ -19,6 +19,8 @@ import io.intino.alexandria.ui.model.Datasource;
 
 import java.util.List;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -30,6 +32,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     private List<RefreshListener> refreshListeners = new ArrayList<>();
     private List<Listener> readyListeners = new ArrayList<>();
     private boolean ready = false;
+    private List<String> selection;
 
     public Collection(B box) {
         super(box);
@@ -52,6 +55,10 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
 
     public void onRefresh(RefreshListener listener) {
         this.refreshListeners.add(listener);
+    }
+
+    public void unRefresh(RefreshListener listener) {
+        this.refreshListeners.remove(listener);
     }
 
     public void onReady(Listener listener) {
@@ -118,15 +125,54 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     }
 
     public void selection(List<String> selection) {
+        this.selection = selection;
         selectionListeners.forEach(l -> l.accept(new SelectionEvent(this, itemsOf(selection))));
+        notifier.refreshSelection(selection);
     }
 
     public void selectAll() {
-        //TODO ---- selectionListeners ----;
+        selection(children().stream().map(Display::id).collect(Collectors.toList()));
+    }
+
+    public boolean canSelectPreviousItem() {
+        List<Display> children = children();
+        if (children.size() <= 0) return false;
+        int index = indexOfSelection();
+        return index > 0;
+    }
+
+    public Object selectPreviousItem() {
+        List<Display> children = children();
+        if (children.size() <= 0) return null;
+        int index = indexOfSelection()-1;
+        if (index < 0) index = 0;
+        selection(Collections.singletonList(children.get(index).id()));
+        return itemOf(children.get(index));
+    }
+
+    public boolean canSelectNextItem() {
+        List<Display> children = children();
+        if (children.size() <= 0) return false;
+        int index = indexOfSelection();
+        return index < children.size()-1;
+    }
+
+    public Object selectNextItem() {
+        List<Display> children = children();
+        if (children.size() <= 0) return null;
+        int index = indexOfSelection()+1;
+        if (index >= children.size()) index = children.size()-1;
+        selection(Collections.singletonList(children.get(index).id()));
+        return itemOf(children.get(index));
     }
 
     private List<Object> itemsOf(List<String> selection) {
         return children().stream().filter(d -> selection.contains(d.id())).map(this::itemOf).collect(toList());
+    }
+
+    @Override
+    public List<Display> children() {
+        return super.children().stream().filter(c -> c instanceof CollectionItemDisplay).collect(Collectors.toList());
     }
 
     protected Object itemOf(Display display) {
@@ -143,6 +189,10 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
 
     protected void addSelectionListener(SelectionListener listener) {
         this.selectionListeners.add(listener);
+    }
+
+    protected void removeSelectionListener(SelectionListener listener) {
+        this.selectionListeners.remove(listener);
     }
 
     protected abstract AddItemEvent itemEvent(Display c);
@@ -168,4 +218,15 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         notifier.setup(new CollectionSetup().itemCount(behavior.itemCount()));
         notifyReady();
     }
+
+    private int indexOfSelection() {
+        if (selection == null || selection.size() <= 0) return -1;
+        List<Display> children = children();
+        int index;
+        for (index=0; index<children.size(); index++) {
+            if (selection.contains(children.get(index).id())) break;
+        }
+        return index;
+    }
+
 }

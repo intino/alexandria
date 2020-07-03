@@ -51,7 +51,7 @@ def type(properties & multiple) trigger(common)
 end
 
 def type(properties & actionable) trigger(common)
-	[ title="$title"][ target="$target"][ mode="$actionableMode"][ icon="$icon"][ affirmed="$affirmed"][ traceable={$traceable}][ signed={{text:"$signText",reason:"$reasonText"}}][ readonly={$readonly}][ size="$size"][ format="$format...[ ]"][ highlighted="$highlighted"][ visible={$visible}]
+	[ title="$title"][ name="$name"][ target="$target"][ mode="$actionableMode"][ icon="$icon"][ affirmed="$affirmed"][ traceable={$traceable}][ signed={{text:"$signText",reason:"$reasonText"}}][ readonly={$readonly}][ size="$size"][ format="$format...[ ]"][ highlighted="$highlighted"][ visible={$visible}]
 end
 
 def type(properties & abstractslider) trigger(common)
@@ -79,7 +79,7 @@ def type(properties & portal) trigger(specific)
 end
 
 def type(properties & selector) trigger(specific)
-	[ multipleSelection={$multipleSelection}][ readonly={$readonly}][ focused={$focused}][ placeholder="$placeholder"][ selected="$selected"]
+	[ multipleSelection={$multipleSelection}][ readonly={$readonly}][ focused={$focused}][ placeholder="$placeholder"][ selected="$selected"][ layout="$layout"][ size="$size"]
 end
 
 def type(properties & image) trigger(specific)
@@ -159,6 +159,10 @@ def type(properties & spinner) trigger(specific)
 end
 
 def type(properties & switch) trigger(specific)
+    [ state="$state"]
+end
+
+def type(properties & toggle) trigger(specific)
     [ state="$state"]
 end
 

@@ -14,6 +14,9 @@ export const CollectionStyles = theme => ({
 	selectable : {
 		paddingLeft: "35px !important"
 	},
+	selected : {
+        background: "blue"
+    },
 	selector : {
 		position: "absolute",
 		left: "-5px"
@@ -26,16 +29,17 @@ export const CollectionStyles = theme => ({
 });
 
 export default class Collection extends AbstractCollection {
-	state = {
-		selection: [],
-		itemCount: 20,
-		pageSize: 20,
-		page: 0
-	};
 
 	constructor(props) {
 		super(props);
 		this.behavior = new CollectionBehavior(this);
+        this.container = React.createRef();
+        this.state = {
+            itemCount: 20,
+            pageSize: 20,
+            page: 0,
+            ...this.state
+        };
 	};
 
 	setup = (info) => {
@@ -48,6 +52,10 @@ export default class Collection extends AbstractCollection {
 
 	refreshItemCount = (itemCount) => {
 		this.setState({ itemCount });
+	};
+
+	refreshSelection = (selection) => {
+		this.behavior.refreshSelection(selection);
 	};
 }
 

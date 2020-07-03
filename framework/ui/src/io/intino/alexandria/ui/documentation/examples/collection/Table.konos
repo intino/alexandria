@@ -20,16 +20,33 @@ Template(layout=Vertical, spacing=DP8) tableExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=70%) table2Mold > Text lastName as Editable
 						=========
 
-		Block as Relative(width=48%, height=100%)
+		Block example2 as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with heading")
-			Block(spacing=DP8, format=filledNoAir)
-				Table(itemClass="io.intino.alexandria.ui.documentation.Person") table2
+			Block(spacing=DP8, format=filledNoAir) block2
+				Table(itemClass="io.intino.alexandria.ui.documentation.Person") table2 as Selectable(multiple=false)
 					Mold
 						Heading firstNameHeading > Text(value="first name")
 						Item(height=60px,width=30%) table21Mold > Text firstName
 					Mold
 						Heading lastNameHeading > Text(value="last name")
 						Item(height=60px,width=70%) table22Mold > Text lastName
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Table(itemClass\="io.intino.alexandria.ui.documentation.Person") table<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Heading firstNameHeading > Text(value\="first name")<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item(height\=60px,width\=30%) table21Mold > Text firstName<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Heading lastNameHeading > Text(value\="last name")<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item(height\=60px,width\=70%) table22Mold > Text lastName
+						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Selectable collection buttons")
+			Block(layout=Horizontal CenterCenter Flexible, spacing=DP8, format=filledNoAir)
+				MaterialIconButton(title="Previous", icon="KeyboardArrowLeft", format=airRight) previous as SelectPreviousItem(collection=example2.block2.table2)
+				MaterialIconButton(title="Next", icon="KeyboardArrowRight") next as SelectNextItem(collection=example2.block2.table2)
 			Block > Text as Code(language=Html)
 					value
 						=========

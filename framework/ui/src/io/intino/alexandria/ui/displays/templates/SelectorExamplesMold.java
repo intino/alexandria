@@ -18,8 +18,10 @@ public class SelectorExamplesMold extends AbstractSelectorExamplesMold<UiFramewo
         selector2.onSelect(e -> notify(e.selection()));
         selector3.onSelect(e -> notify(e.selection()));
         selector4.onSelect(e -> notify(e.selection()));
-        selector5.onSelect(e -> notify(e.selection()));
         selector5.select("option 3");
+        selector5.onSelect(e -> notify(e.selection()));
+        selector6.onSelect(e -> notify(e.selection()));
+        selector7.onSelect(e -> notify(e.selection()));
     }
 
     private void notify(List<String> selection) {
@@ -27,7 +29,7 @@ public class SelectorExamplesMold extends AbstractSelectorExamplesMold<UiFramewo
             selector1.notifyUser("no option selected", UserMessage.Type.Info);
             return;
         }
-        selector1.notifyUser(String.format("%s option selected", selection.get(0)), UserMessage.Type.Info);
+        selector1.notifyUser("Selection: " + String.join(", ", selection), UserMessage.Type.Info);
     }
 
 }

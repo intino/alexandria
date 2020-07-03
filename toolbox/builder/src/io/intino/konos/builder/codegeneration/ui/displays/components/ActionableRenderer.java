@@ -36,6 +36,7 @@ public class ActionableRenderer extends ComponentRenderer<InteractionComponents.
 			if (signed.reasonText() != null) properties.add("reasonText", signed.reasonText());
 		}
 		if (element.i$(InteractionComponents.MaterialIconButton.class)) properties.add("icon", element.a$(InteractionComponents.MaterialIconButton.class).icon());
+		else if (element.i$(InteractionComponents.MaterialIconToggle.class)) properties.add("icon", element.a$(InteractionComponents.MaterialIconToggle.class).icon());
 		return properties;
 	}
 
@@ -56,6 +57,8 @@ public class ActionableRenderer extends ComponentRenderer<InteractionComponents.
 		result.add("mode", mode());
 		if (element.i$(InteractionComponents.IconButton.class)) result.add("icon", element.a$(InteractionComponents.IconButton.class).icon());
 		else if (element.i$(InteractionComponents.MaterialIconButton.class)) result.add("icon", element.a$(InteractionComponents.MaterialIconButton.class).icon());
+		else if (element.i$(InteractionComponents.IconToggle.class)) result.add("icon", element.a$(InteractionComponents.IconToggle.class).icon());
+		else if (element.i$(InteractionComponents.MaterialIconToggle.class)) result.add("icon", element.a$(InteractionComponents.MaterialIconToggle.class).icon());
 		return result;
 	}
 
@@ -63,6 +66,9 @@ public class ActionableRenderer extends ComponentRenderer<InteractionComponents.
 		if (element.i$(InteractionComponents.IconButton.class)) return InteractionComponents.IconButton.class.getSimpleName();
 		else if (element.i$(InteractionComponents.MaterialIconButton.class)) return InteractionComponents.MaterialIconButton.class.getSimpleName();
 		else if (element.i$(InteractionComponents.Button.class)) return InteractionComponents.Button.class.getSimpleName();
+		else if (element.i$(InteractionComponents.IconToggle.class)) return InteractionComponents.IconToggle.class.getSimpleName();
+		else if (element.i$(InteractionComponents.MaterialIconToggle.class)) return InteractionComponents.MaterialIconToggle.class.getSimpleName();
+		else if (element.i$(InteractionComponents.Toggle.class)) return InteractionComponents.Toggle.class.getSimpleName();
 		return InteractionComponents.Link.class.getSimpleName();
 	}
 

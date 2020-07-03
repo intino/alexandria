@@ -110,7 +110,8 @@ public class BlockRenderer extends SizedRenderer<Block> {
 		Component.Option option = element.asConditional().selected();
 		if (option == null) return;
 
-		Selector selector = option.core$().ownerAs(Selector.class);
+		Component selector = option.core$().ownerAs(Selector.class);
+		if (selector == null) selector = option.asComponent();
 		builder.add("binding", new FrameBuilder("binding")
 				.add("name", nameOf(element))
 				.add("selector", selector.name$())

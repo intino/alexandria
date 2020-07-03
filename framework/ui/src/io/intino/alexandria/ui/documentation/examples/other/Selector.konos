@@ -85,3 +85,36 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") radioBoxOption2 as Option<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") radioBoxOption3 as Option
 						=========
+
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="ToggleBox facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Selector(selected="toggleBoxOption1") selector6 as ToggleBox
+					Text(value="option 1") toggleBoxOption1 as Option
+					Text(value="option 2") toggleBoxOption2 as Option
+					Text(value="option 3") toggleBoxOption3 as Option
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Selector as ToggleBox<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") toggleBoxOption1 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") toggleBoxOption2 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") toggleBoxOption3 as Option
+						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="CheckBox facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Selector selector7 as CheckBox
+					Text(value="option 1") checkBoxOption1 as Option
+					Text(value="option 2") checkBoxOption2 as Option
+					Text(value="option 3") checkBoxOption3 as Option
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Selector as CheckBox<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") checkBoxOption1 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") checkBoxOption2 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") checkBoxOption3 as Option
+						=========

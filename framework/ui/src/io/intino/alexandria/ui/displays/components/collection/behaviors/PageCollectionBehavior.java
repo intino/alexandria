@@ -52,7 +52,9 @@ public class PageCollectionBehavior<DS extends PageDatasource<Item>, Item> exten
 	@Override
 	protected void update() {
 		PageItemLoader<DS, Item> itemLoader = itemLoader();
-		while (page > itemLoader.pageCount() && page > 0) page--;
+		int count = itemLoader.pageCount();
+		while (page > count && page > 0) page--;
+		if (count == 0) return;
 		collection().add(itemLoader.page(page));
 	}
 

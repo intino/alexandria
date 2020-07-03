@@ -23,6 +23,10 @@ Component actionSwitch as ExtensionOf(actionable)
 	Notification refreshState as Text
 	Request toggle
 
+Component actionToggle as ExtensionOf(actionable)
+	Notification refreshState as Text
+	Request toggle
+
 Component export as ExtensionOf(actionable)
 	Request changeParams as Object(ExportParams)
 
@@ -59,6 +63,12 @@ Component openDrawer as ExtensionOf(actionable)
 	Request execute
 
 Component closeDrawer as ExtensionOf(actionable)
+	Request execute
+
+Component selectNextItem as ExtensionOf(actionable)
+	Request execute
+
+Component selectPreviousItem as ExtensionOf(actionable)
 	Request execute
 
 Component baseSelectionAction as ExtensionOf(actionable)

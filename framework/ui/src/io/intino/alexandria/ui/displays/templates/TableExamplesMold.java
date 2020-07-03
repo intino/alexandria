@@ -1,7 +1,10 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.ui.AlexandriaUiBox;
+import io.intino.alexandria.ui.displays.UserMessage;
+import io.intino.alexandria.ui.displays.events.SelectionEvent;
 import io.intino.alexandria.ui.displays.events.collection.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.collection.SelectItemEvent;
 import io.intino.alexandria.ui.displays.rows.Table1Row;
 import io.intino.alexandria.ui.displays.rows.Table2Row;
 import io.intino.alexandria.ui.documentation.Person;
@@ -19,6 +22,7 @@ public class TableExamplesMold extends AbstractTableExamplesMold<AlexandriaUiBox
         super.init();
         init(table1, Datasources.personDatasource());
         init(table2, Datasources.personDatasource());
+        table2.onSelect(this::notifyPersonSelected);
     }
 
     private void init(io.intino.alexandria.ui.displays.components.Table table, PageDatasource datasource) {
@@ -45,6 +49,11 @@ public class TableExamplesMold extends AbstractTableExamplesMold<AlexandriaUiBox
 
     private void logInfo(Person person, String info) {
         System.out.println(String.format("ha cambiado el valor del campo %s a %s", person.firstName(), info));
+    }
+
+    private void notifyPersonSelected(SelectionEvent e) {
+        Person person = (Person) e.selection().get(0);
+        table2.notifyUser(person.firstName() + " was selected", UserMessage.Type.Info);
     }
 
 }

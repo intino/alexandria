@@ -341,6 +341,14 @@ def type(binding & openpopover)
 	if ($name != null) $name.bindTo($popover);
 end
 
+def type(binding & opennextitem)
+	if ($name != null) $name.bindTo($collection);
+end
+
+def type(binding & openpreviousitem)
+	if ($name != null) $name.bindTo($collection);
+end
+
 def type(binding & decisiondialog)
 	if ($name != null) $name.bindTo($selector);
 end
@@ -443,6 +451,11 @@ def type(properties & opensite) trigger(specific)
 end
 
 def type(properties & switch) trigger(specific)
+    [_path("$path");]
+    [_state(io.intino.alexandria.ui.displays.events.actionable.ToggleEvent.State.valueOf("$state"));]
+end
+
+def type(properties & toggle) trigger(specific)
     [_path("$path");]
     [_state(io.intino.alexandria.ui.displays.events.actionable.ToggleEvent.State.valueOf("$state"));]
 end
@@ -563,7 +576,15 @@ def type(actionableMode & iconbutton)
 	_icon("$icon");
 end
 
+def type(actionableMode & icontoggle)
+	_icon("$icon");
+end
+
 def type(actionableMode & materialiconbutton)
+	_icon("$icon");
+end
+
+def type(actionableMode & materialicontoggle)
 	_icon("$icon");
 end
 

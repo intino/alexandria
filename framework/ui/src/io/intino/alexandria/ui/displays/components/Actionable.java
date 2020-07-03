@@ -20,7 +20,7 @@ public class Actionable<DN extends ActionableNotifier, B extends Box> extends Co
     private SignChecker signChecker;
     private String signReason;
 
-    public enum Mode { Link, Button, IconButton, MaterialIconButton }
+    public enum Mode { Link, Button, IconButton, MaterialIconButton, Toggle, IconToggle, MaterialIconToggle }
 
     public Actionable(B box) {
         super(box);
@@ -134,7 +134,7 @@ public class Actionable<DN extends ActionableNotifier, B extends Box> extends Co
     }
 
     private boolean isResourceIcon() {
-        return mode == Mode.IconButton && icon != null && Actionable.class.getResource(this.icon) != null;
+        return (mode == Mode.IconButton || mode == Mode.IconToggle) && icon != null && Actionable.class.getResource(this.icon) != null;
     }
 
 }

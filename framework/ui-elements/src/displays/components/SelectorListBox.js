@@ -50,24 +50,6 @@ class SelectorListBox extends AbstractSelectorListBox {
 		this.setState({ selection: value });
 	};
 
-	updateSelection = (name) => {
-	    const result = [];
-	    let found = false;
-	    for (let i=0; i<this.state.selection.length; i++) {
-	        if (this.state.selection[i] === name) found = true;
-	        else result.push(this.state.selection[i]);
-	    }
-        if (!found) result.push(name);
-	    return result;
-	};
-
-	isInSelection = (name) => {
-	    const result = [];
-	    for (let i=0; i<this.state.selection.length; i++)
-	        if (this.state.selection[i] === name) return true;
-	    return false;
-    };
-
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(SelectorListBox));

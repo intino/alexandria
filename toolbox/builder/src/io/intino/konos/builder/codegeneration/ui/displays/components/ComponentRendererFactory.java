@@ -64,6 +64,8 @@ public class ComponentRendererFactory {
 		if (component.i$(Actionable.OpenDialog.class)) return (T) new OpenDialogRenderer(context, component.a$(Actionable.class), provider, target);
 		if (component.i$(Actionable.OpenPopover.class)) return (T) new OpenPopoverRenderer(context, component.a$(Actionable.class), provider, target);
 		if (component.i$(Actionable.CloseDialog.class)) return (T) new CloseDialogRenderer(context, component.a$(Actionable.class), provider, target);
+		if (component.i$(Actionable.SelectNextItem.class)) return (T) new SelectNextItemRenderer(context, component.a$(Actionable.class), provider, target);
+		if (component.i$(Actionable.SelectPreviousItem.class)) return (T) new SelectPreviousItemRenderer(context, component.a$(Actionable.class), provider, target);
 		if (component.i$(Actionable.Action.class)) return (T) new ActionRenderer(context, component.a$(Actionable.class), provider, target);
 		if (component.i$(Actionable.class)) return (T) new ActionableRenderer(context, component.a$(Actionable.class), provider, target);
 

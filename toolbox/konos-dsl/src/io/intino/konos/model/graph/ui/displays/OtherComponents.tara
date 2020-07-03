@@ -44,7 +44,7 @@ Concept OtherComponents
 		Aspect Addressable
 		Aspect Tabs
         Aspect Menu
-			var word:{Horizontal Vertical} layout
+			var word:{Horizontal Vertical} layout = Vertical
         Aspect ListBox
         Aspect RadioBox
         	!! The value that should initially be selected, defaults to the first value.
@@ -54,6 +54,10 @@ Concept OtherComponents
         	var string[] selected = empty
         Aspect ComboBox
         	var string placeholder = ""
+        Aspect ToggleBox
+        	var word:{Small Medium Large} size = Medium
+        	var string selected = empty
+        	var word:{Horizontal Vertical} layout = Horizontal
         Aspect Readonly
         Aspect Required with RadioBox, CheckBox, ComboBox
         Aspect Focused with RadioBox, CheckBox, ComboBox
