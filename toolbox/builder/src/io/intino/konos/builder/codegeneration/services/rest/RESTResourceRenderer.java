@@ -111,7 +111,7 @@ public class RESTResourceRenderer extends Renderer {
 	}
 
 	private Frame frameOf(Response response) {
-		FrameBuilder builder = new FrameBuilder(response.getClass().getSimpleName()).add("value", Commons.returnType(response, packageName()));
+		FrameBuilder builder = new FrameBuilder(response.getClass().getSimpleName(), response.asType().getClass().getSimpleName()).add("value", Commons.returnType(response, packageName()));
 		if (response.isText() && response.dataFormat() != Response.DataFormat.html)
 			builder.add("format", MimeTypes.get(response.dataFormat().toString()));
 		return builder.toFrame();
