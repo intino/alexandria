@@ -1,5 +1,5 @@
 def.file
-/Users/oroncal/workspace/b.cfe/gestioncomercial/procurador/src/io/provista/procurador/Api.konos#true
+/Users/oroncal/workspace/b.cfe/gestioncomercial/procurador/src/io/provista/procurador/box/Api.konos#true
 
 project
 cfe-suministro-gestioncomercial

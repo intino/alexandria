@@ -136,6 +136,12 @@ def type(redirect) trigger(method)
 	}
 end
 
+def type(response & file) trigger(method)
+	private void write($value+firstUpperCase+ReturnTypeFormatter object) {
+		manager.write(object);
+	}
+end
+
 def type(response) trigger(method)
 	private void write($value+firstUpperCase+ReturnTypeFormatter object) {
 		manager.write(io.intino.alexandria.rest.ResponseAdapter.adapt(object)[, "$format"]);

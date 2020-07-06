@@ -21,8 +21,6 @@ module.path
 src.path
 /Users/oroncal/workspace/b.cfe/servicio-ventanilla/service/src
 
-compilation.mode
-Accessors
 level
 Product
 groupId
