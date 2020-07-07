@@ -73,6 +73,8 @@ public class Zip {
 		if (!filesystems.containsKey(path) || !filesystems.get(path).isOpen())
 			filesystems.put(path, newFileSystem(path));
 		try (FileSystem fs = filesystems.get(path)) {
+			Path parent = fs.getPath(filePath).getParent();
+			if (Files.notExists(parent)) Files.createDirectory(parent);
 			try (Writer writer = Files.newBufferedWriter(fs.getPath(filePath), options)) {
 				writer.write(value);
 			}
@@ -85,6 +87,8 @@ public class Zip {
 		if (!filesystems.containsKey(path) || !filesystems.get(path).isOpen())
 			filesystems.put(path, newFileSystem(path));
 		try (FileSystem fs = filesystems.get(path)) {
+			Path parent = fs.getPath(filePath).getParent();
+			if (Files.notExists(parent)) Files.createDirectory(parent);
 			Files.write(fs.getPath(filePath), stream.readAllBytes(), options);
 		}
 		stream.close();
