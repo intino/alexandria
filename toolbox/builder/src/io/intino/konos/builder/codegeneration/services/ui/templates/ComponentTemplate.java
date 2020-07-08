@@ -112,6 +112,7 @@ public class ComponentTemplate extends Template {
 			rule().condition((type("parameterMethod"))).output(literal("_add(\"")).output(mark("name")).output(literal("\", \"")).output(mark("value")).output(literal("\");")),
 			rule().condition((trigger("resourcemethod"))).output(literal("_")).output(mark("name")).output(literal("(")).output(mark("owner")).output(literal(".class.getResource(\"")).output(mark("value")).output(literal("\"));")),
 			rule().condition((trigger("ordinalmethod"))).output(literal("_add(new io.intino.alexandria.ui.displays.components.slider.ordinals.")).output(mark("name", "firstUpperCase")).output(literal("Ordinal());")),
+			rule().condition((allTypes("actionableMode","splitbutton"))).output(expression().output(literal("_options(java.util.Arrays.asList(\"")).output(mark("option").multiple("\",\"")).output(literal("\"));"))).output(literal("\n")).output(expression().output(literal("_option(\"")).output(mark("default")).output(literal("\");"))),
 			rule().condition((allTypes("actionableMode","iconbutton"))).output(literal("_icon(\"")).output(mark("icon")).output(literal("\");")),
 			rule().condition((allTypes("actionableMode","icontoggle"))).output(literal("_icon(\"")).output(mark("icon")).output(literal("\");")),
 			rule().condition((allTypes("actionableMode","materialiconbutton"))).output(literal("_icon(\"")).output(mark("icon")).output(literal("\");")),

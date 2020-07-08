@@ -572,6 +572,11 @@ def trigger(ordinalMethod)
 	_add(new io.intino.alexandria.ui.displays.components.slider.ordinals.$name+firstUpperCase~Ordinal());
 end
 
+def type(actionableMode & splitbutton)
+    [_options(java.util.Arrays.asList("$option...[","]"));]
+    [_option("$default");]
+end
+
 def type(actionableMode & iconbutton)
 	_icon("$icon");
 end

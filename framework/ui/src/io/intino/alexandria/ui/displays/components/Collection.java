@@ -126,7 +126,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
 
     public void selection(List<String> selection) {
         this.selection = selection;
-        selectionListeners.forEach(l -> l.accept(new SelectionEvent(this, itemsOf(selection))));
+        new ArrayList<>(selectionListeners).forEach(l -> l.accept(new SelectionEvent(this, itemsOf(selection))));
         notifier.refreshSelection(selection);
     }
 

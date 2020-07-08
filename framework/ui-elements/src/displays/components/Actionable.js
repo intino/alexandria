@@ -181,17 +181,23 @@ export default class Actionable extends AbstractActionable {
 	};
 
 	execute = () => {
-	    if (this._readonly()) return;
+	    if (!this.canExecute()) return;
+		this.requester.execute();
+	};
+
+	canExecute = () => {
+	    if (this._readonly()) return false;
 
 		if (this.requireAffirm()) {
 			this.setState({ openAffirm : true });
-			return;
+			return false;
 		}
 		if (this.requireSign()) {
 			this.setState({ openSign : true });
-			return;
+			return false;
 		}
-		this.requester.execute();
+
+		return true;
 	};
 
 	handleAffirmAccept = (e) => {

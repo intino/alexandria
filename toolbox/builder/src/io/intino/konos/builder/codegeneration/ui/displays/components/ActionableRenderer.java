@@ -59,6 +59,10 @@ public class ActionableRenderer extends ComponentRenderer<InteractionComponents.
 		else if (element.i$(InteractionComponents.MaterialIconButton.class)) result.add("icon", element.a$(InteractionComponents.MaterialIconButton.class).icon());
 		else if (element.i$(InteractionComponents.IconToggle.class)) result.add("icon", element.a$(InteractionComponents.IconToggle.class).icon());
 		else if (element.i$(InteractionComponents.MaterialIconToggle.class)) result.add("icon", element.a$(InteractionComponents.MaterialIconToggle.class).icon());
+		else if (element.i$(InteractionComponents.SplitButton.class)) {
+			result.add("option", element.a$(InteractionComponents.SplitButton.class).options().toArray());
+			result.add("default", element.a$(InteractionComponents.SplitButton.class).defaultOption());
+		}
 		return result;
 	}
 
@@ -69,6 +73,7 @@ public class ActionableRenderer extends ComponentRenderer<InteractionComponents.
 		else if (element.i$(InteractionComponents.IconToggle.class)) return InteractionComponents.IconToggle.class.getSimpleName();
 		else if (element.i$(InteractionComponents.MaterialIconToggle.class)) return InteractionComponents.MaterialIconToggle.class.getSimpleName();
 		else if (element.i$(InteractionComponents.Toggle.class)) return InteractionComponents.Toggle.class.getSimpleName();
+		else if (element.i$(InteractionComponents.SplitButton.class)) return InteractionComponents.SplitButton.class.getSimpleName();
 		return InteractionComponents.Link.class.getSimpleName();
 	}
 
