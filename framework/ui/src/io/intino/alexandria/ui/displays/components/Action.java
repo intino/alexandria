@@ -1,18 +1,13 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
-import io.intino.alexandria.schemas.*;
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.components.AbstractAction;
 import io.intino.alexandria.ui.displays.components.addressable.Addressable;
 import io.intino.alexandria.ui.displays.events.Event;
-import io.intino.alexandria.ui.displays.events.TaskListener;
+import io.intino.alexandria.ui.displays.events.ActionListener;
 import io.intino.alexandria.ui.displays.notifiers.ActionNotifier;
 
 public class Action<DN extends ActionNotifier, B extends Box> extends AbstractAction<DN, B> implements Addressable {
-    private TaskListener taskListener;
+    private ActionListener actionListener;
     private String path;
     private String address;
 
@@ -20,13 +15,13 @@ public class Action<DN extends ActionNotifier, B extends Box> extends AbstractAc
         super(box);
     }
 
-    public void onExecute(TaskListener listener) {
-        this.taskListener = listener;
+    public void onExecute(ActionListener listener) {
+        this.actionListener = listener;
     }
 
     public void execute() {
-        if (this.taskListener == null) return;
-        this.taskListener.accept(new Event(this));
+        if (this.actionListener == null) return;
+        this.actionListener.accept(new Event(this));
     }
 
     @Override

@@ -77,8 +77,7 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 	private void addAddressableProperties(FrameBuilder builder) {
 		if (!element.isAddressable()) return;
 		Selector.Addressable addressable = element.asAddressable();
-		String path = addressable.addressableResource().path();
-		builder.add("path", path);
+		builder.add("path", addressable.addressableResource() != null ? addressable.addressableResource().path() : "");
 	}
 
 	@Override

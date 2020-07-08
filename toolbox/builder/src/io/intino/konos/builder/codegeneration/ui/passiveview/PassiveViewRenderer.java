@@ -184,6 +184,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	private List<String> facets(PassiveView passiveView) {
 		List<String> result = new ArrayList<>();
 		if (passiveView.i$(Switch.class)) result.add("Switch");
+		if (passiveView.i$(InteractionComponents.SplitButton.class)) result.add("Split");
 		if (passiveView.i$(Toggle.class) || passiveView.i$(IconToggle.class) || passiveView.i$(MaterialIconToggle.class)) result.add("Toggle");
 		if (passiveView.i$(Editable.class)) result.add("Editable");
 		if (passiveView.i$(DataComponents.Text.Code.class)) result.add("Code");

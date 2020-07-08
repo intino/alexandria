@@ -20,7 +20,7 @@ public class Actionable<DN extends ActionableNotifier, B extends Box> extends Co
     private SignChecker signChecker;
     private String signReason;
 
-    public enum Mode { Link, Button, IconButton, MaterialIconButton, Toggle, IconToggle, MaterialIconToggle }
+    public enum Mode { Link, Button, IconButton, MaterialIconButton, Toggle, IconToggle, MaterialIconToggle, SplitButton }
 
     public Actionable(B box) {
         super(box);

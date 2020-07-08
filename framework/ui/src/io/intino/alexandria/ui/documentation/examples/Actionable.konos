@@ -133,3 +133,15 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						=========
 						MaterialIconToggle(title\="edition", state\=On, icon\="FilterList") as Action
 						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="SplitButton")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				SplitButton(title="edition", options = "option 1" "option 2", defaultOption="option 1") operation14 as Action
+			Block > Text as Code(language=Html)
+					value
+						=========
+						SplitButton(title\="edition", options\="option 1" "option 2", defaultOption\="option 1") as Action
+						=========

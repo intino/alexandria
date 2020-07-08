@@ -19,6 +19,10 @@ Schema ActionableSign
 Component action as ExtensionOf(actionable)
 	Request execute
 
+Component actionSplit as ExtensionOf(actionable)
+	Notification refreshOption as Text
+	Request execute as Text
+
 Component actionSwitch as ExtensionOf(actionable)
 	Notification refreshState as Text
 	Request toggle

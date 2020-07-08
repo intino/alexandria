@@ -32,6 +32,11 @@ public class ActionRenderer extends ActionableRenderer {
 			result.add("toggle");
 			result.add("state", element.a$(InteractionComponents.AbstractToggle.class).state().name());
 		}
+		else if (element.i$(InteractionComponents.SplitButton.class)) {
+			result.add("splitbutton");
+			result.add("option", element.a$(InteractionComponents.SplitButton.class).options().toArray());
+			result.add("default", element.a$(InteractionComponents.SplitButton.class).defaultOption());
+		}
 		addAddressableProperties(result);
 		return result;
 	}
@@ -50,8 +55,7 @@ public class ActionRenderer extends ActionableRenderer {
 	private void addAddressableProperties(FrameBuilder builder) {
 		if (!element.isAddressable()) return;
 		Addressable addressable = element.asAddressable();
-		String path = addressable.addressableResource().path();
-		builder.add("path", path);
+		builder.add("path", addressable.addressableResource() != null ? addressable.addressableResource().path() : "");
 	}
 
 }

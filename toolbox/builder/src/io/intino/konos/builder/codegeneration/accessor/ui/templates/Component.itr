@@ -166,6 +166,10 @@ def type(properties & toggle) trigger(specific)
     [ state="$state"]
 end
 
+def type(properties & splitbutton) trigger(specific)
+	[ options={$["$option...[","]"$]}][ defaultOption="$default"]
+end
+
 def type(properties & export) trigger(specific)
 	[ from={$from}][ to={$to}][ min={$min}][ max={$max}][ range={{min:$rangeMin,max:$rangeMax}}][ options={$["$option...[","]"$]}]
 end
