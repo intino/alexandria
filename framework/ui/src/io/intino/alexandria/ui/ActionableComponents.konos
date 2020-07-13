@@ -8,6 +8,7 @@ Component actionable
 	Notification refresh as Object(ActionableInfo)
 	Notification refreshReadonly as Bool
 	Notification refreshIcon as Text
+	Notification refreshAffirmed as Text
 	Notification checkSignResult as Bool
 
 	Request checkSign as Object(ActionableSign)

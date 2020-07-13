@@ -20,7 +20,8 @@ public class MimeTypes {
 
 	public static String contentTypeOf(URI uri) {
 		String uriString = uri.toString();
-		return contentTypeOf(uriString.substring(uriString.lastIndexOf(".")));
+		int pos = uriString.lastIndexOf(".");
+		return pos != -1 ? contentTypeOf(uriString.substring(pos)) : null;
 	}
 
 	public static String contentTypeOf(String extension) {

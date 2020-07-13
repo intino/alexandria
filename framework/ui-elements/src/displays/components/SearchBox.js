@@ -88,17 +88,15 @@ class SearchBox extends AbstractSearchBox {
 						<div className={classes.searchIcon}>
 							<SearchIcon/>
 						</div>
-						<form autoComplete="off">
-							<InputBase
-								placeholder={placeholder}
-								onChange={this.handleSearch.bind(this)}
-								ref={this.input}
-								classes={{
-									root: classes.inputRoot,
-									input: classes.inputInput,
-								}}
-							/>
-						</form>
+                        <InputBase
+                            placeholder={placeholder}
+                            onChange={this.handleSearch.bind(this)}
+                            ref={this.input}
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput,
+                            }}
+                        />
 					</Paper>
 					<div className={classNames(classes.count, "layout horizontal end-justified")}><div title={this.countHint()}>{this.countMessage()}</div></div>
 				</div>

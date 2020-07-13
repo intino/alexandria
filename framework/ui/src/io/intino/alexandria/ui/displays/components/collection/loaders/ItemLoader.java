@@ -3,12 +3,15 @@ package io.intino.alexandria.ui.displays.components.collection.loaders;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.ui.model.Datasource;
 import io.intino.alexandria.ui.model.datasource.Filter;
+import io.intino.alexandria.ui.model.datasource.filters.RangeFilter;
+import io.intino.alexandria.ui.model.datasource.filters.GroupFilter;
 import io.intino.alexandria.ui.model.datasource.MapDatasource;
 import io.intino.alexandria.ui.model.datasource.MemoryDatasource;
 import io.intino.alexandria.ui.model.datasource.PageDatasource;
 import io.intino.alexandria.ui.model.datasource.temporal.TemporalDatasource;
 import io.intino.alexandria.ui.model.datasource.temporal.TemporalPageDatasource;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -34,15 +37,35 @@ public class ItemLoader<DS extends Datasource<Item>, Item> {
 		return this;
 	}
 
+	public ItemLoader clearFilters() {
+		condition = null;
+		filters.clear();
+		this.itemCount = calculateItemCount(condition);
+		return this;
+	}
+
 	public ItemLoader filter(String grouping, List<String> groups) {
 		if (groups.size() <= 0) remove(grouping);
 		else {
 			Filter filter = filter(grouping);
-			if (filter == null) filters.add(new Filter(grouping, groups));
-			else filter.groups(groups);
+			if (filter == null) filters.add(new GroupFilter(grouping, groups));
+			else ((GroupFilter)filter).groups(groups);
 		}
 		this.itemCount = calculateItemCount(condition);
 		return this;
+	}
+
+	public ItemLoader filter(String grouping, Instant from, Instant to) {
+		Filter filter = filter(grouping);
+		if (filter == null) filters.add(new RangeFilter(grouping, from, to));
+		else ((RangeFilter)filter).from(from).to(to);
+		this.itemCount = calculateItemCount(condition);
+		return this;
+	}
+
+	public void removeFilter(String grouping) {
+		remove(grouping);
+		this.itemCount = calculateItemCount(condition);
 	}
 
 	public ItemLoader condition(String condition) {

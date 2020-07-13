@@ -46,7 +46,7 @@ class ActionSplit extends AbstractActionSplit {
 
 	renderDialog = () => {
 	    return (
-            <Popper open={this.state.open} anchorEl={this.anchorRef.current} role={undefined} transition disablePortal>
+            <Popper open={this.state.open} anchorEl={this.anchorRef.current} role={undefined} transition disablePortal style={{zIndex:1}}>
               {({ TransitionProps, placement }) => (
                 <Grow {...TransitionProps} style={{transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'}}>
                   <Paper>

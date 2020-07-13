@@ -118,7 +118,7 @@ def type(parameter & Long) trigger(parameter)
 end
 
 def type(parameter & DateTime) trigger(parameter)
-	java.time.Instant.ofEpochMilli(Long.parseLong(manager.fromQuery("v")))
+	manager.fromQuery("v") != null ? java.time.Instant.ofEpochMilli(Long.parseLong(manager.fromQuery("v"))) : null
 end
 
 def type(parameter) trigger(parameter)

@@ -10,17 +10,15 @@ import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.Listener;
 import io.intino.alexandria.ui.displays.events.SelectionEvent;
 import io.intino.alexandria.ui.displays.events.SelectionListener;
-import io.intino.alexandria.ui.displays.events.collection.AddItemEvent;
-import io.intino.alexandria.ui.displays.events.collection.AddItemListener;
-import io.intino.alexandria.ui.displays.events.collection.RefreshEvent;
-import io.intino.alexandria.ui.displays.events.collection.RefreshListener;
+import io.intino.alexandria.ui.displays.events.collection.*;
 import io.intino.alexandria.ui.displays.notifiers.CollectionNotifier;
 import io.intino.alexandria.ui.model.Datasource;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -30,6 +28,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     private java.util.List<SelectionListener> selectionListeners = new ArrayList<>();
     private AddItemListener addItemListener;
     private List<RefreshListener> refreshListeners = new ArrayList<>();
+    private List<RefreshCountListener> refreshItemCountListeners = new ArrayList<>();
     private List<Listener> readyListeners = new ArrayList<>();
     private boolean ready = false;
     private List<String> selection;
@@ -57,6 +56,10 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         this.refreshListeners.add(listener);
     }
 
+    public void onRefreshItemCount(RefreshCountListener listener) {
+        this.refreshItemCountListeners.add(listener);
+    }
+
     public void unRefresh(RefreshListener listener) {
         this.refreshListeners.remove(listener);
     }
@@ -74,7 +77,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     public void reload() {
         if (behavior == null) return;
         behavior.reload();
-        notifier.refreshItemCount(behavior.itemCount());
+        notifyRefreshItemCount();
     }
 
     public boolean ready() {
@@ -85,22 +88,38 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         return (D) source;
     }
 
+    public void clearFilters() {
+        behavior.clearFilters();
+        notifyRefreshItemCount();
+    }
+
     public void filter(String grouping, List<String> groups) {
         if (behavior == null) return;
         behavior.filter(grouping, groups);
-        notifier.refreshItemCount(behavior.itemCount());
+        notifyRefreshItemCount();
+    }
+
+    public void filter(String grouping, Instant from, Instant to) {
+        if (behavior == null) return;
+        behavior.filter(grouping, from, to);
+        notifyRefreshItemCount();
     }
 
     public void filter(String condition) {
         if (behavior == null) return;
         behavior.condition(condition);
-        notifier.refreshItemCount(behavior.itemCount());
+        notifyRefreshItemCount();
     }
 
     public void filter(Timetag timetag) {
         if (behavior == null) return;
         behavior.timetag(timetag);
-        notifier.refreshItemCount(behavior.itemCount());
+        notifyRefreshItemCount();
+    }
+
+    public void removeFilter(String grouping) {
+        behavior.removeFilter(grouping);
+        notifyRefreshItemCount();
     }
 
     public void sortings(List<String> sortings) {
@@ -128,6 +147,32 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         this.selection = selection;
         new ArrayList<>(selectionListeners).forEach(l -> l.accept(new SelectionEvent(this, itemsOf(selection))));
         notifier.refreshSelection(selection);
+    }
+
+    public int findItem(Function<Object, Boolean> checker) {
+        List<Display> children = children();
+        int index;
+        for (index=0; index<children.size(); index++) {
+            if (checker.apply(itemOf(children.get(index)))) return index;
+        }
+        return -1;
+    }
+
+    public void select(int index) {
+        List<Display> children = children();
+        if (children.size() <= 0) return;
+        if (index < 0) return;
+        if (index > children.size()-1) return;
+        selection(Collections.singletonList(children.get(index).id()));
+    }
+
+    public void refresh(int index, Object item) {
+        List<Display> children = children();
+        if (children.size() <= 0) return;
+        if (index < 0) return;
+        if (index > children.size()-1) return;
+        ((CollectionItemDisplay)children.get(index)).update(item);
+        addItemListener().ifPresent(l -> l.accept(itemEvent(children.get(index))));
     }
 
     public void selectAll() {
@@ -207,6 +252,13 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         refreshListeners.forEach(l -> l.accept(new RefreshEvent(this, items)));
     }
 
+    void notifyRefreshItemCount() {
+        if (refreshItemCountListeners.size() <= 0) return;
+        long count = behavior.itemCount();
+        notifier.refreshItemCount(count);
+        refreshItemCountListeners.forEach(l -> l.accept(new RefreshCountEvent(this, count)));
+    }
+
     void notifyReady() {
         readyListeners.forEach(l -> l.accept(new Event(this)));
         ready = true;
@@ -224,9 +276,9 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         List<Display> children = children();
         int index;
         for (index=0; index<children.size(); index++) {
-            if (selection.contains(children.get(index).id())) break;
+            if (selection.contains(children.get(index).id())) return index;
         }
-        return index;
+        return -1;
     }
 
 }

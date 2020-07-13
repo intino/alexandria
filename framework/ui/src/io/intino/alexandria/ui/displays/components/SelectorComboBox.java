@@ -32,6 +32,12 @@ public class SelectorComboBox<DN extends SelectorComboBoxNotifier, B extends Box
 		return this;
 	}
 
+	public SelectorComboBox<DN, B> multipleSelection(boolean multipleSelection) {
+		_multipleSelection(multipleSelection);
+		notifier.refreshMultipleSelection(multipleSelection);
+		return this;
+	}
+
 	@Override
 	public void reset() {
 		select();

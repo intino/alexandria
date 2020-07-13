@@ -52,6 +52,11 @@ public class Actionable<DN extends ActionableNotifier, B extends Box> extends Co
         return readonly;
     }
 
+    public Actionable<DN, B> affirmed(String text) {
+        notifier.refreshAffirmed(text);
+        return this;
+    }
+
     public Actionable<DN, B> enable() {
         _readonly(false);
         notifier.refreshReadonly(readonly);

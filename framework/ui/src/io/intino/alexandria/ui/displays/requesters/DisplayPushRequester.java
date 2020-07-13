@@ -23,7 +23,7 @@ public abstract class DisplayPushRequester {
 	}
 
 	public String data(UIMessage message) {
-		if (message.value() == null) return null;
+		if (message.value() == null || message.value().equals("null")) return null;
 		return URLDecoder.decode(message.value(), StandardCharsets.UTF_8);
 	}
 
