@@ -44,6 +44,7 @@ export default class Actionable extends AbstractActionable {
 			readonly: this.props.readonly,
 			openAffirm : false,
 			openSign : false,
+			affirmed : this.props.affirmed != null ? this.props.affirmed : null,
 			signInfo : {
 			    sign: "",
 			    reason: ""
@@ -140,7 +141,7 @@ export default class Actionable extends AbstractActionable {
 		return (
 		    <Dialog onClose={this.handleAffirmClose} open={openAffirm}>
 				<DialogTitle onClose={this.handleAffirmClose}>{this.translate("Affirm")}</DialogTitle>
-				<DialogContent><DialogContentText>{this.translate(this.props.affirmed)}</DialogContentText></DialogContent>
+				<DialogContent><DialogContentText>{this.translate(this.state.affirmed)}</DialogContentText></DialogContent>
 				<DialogActions>
 					<Button onClick={this.handleAffirmClose} color="primary">{this.translate("Cancel")}</Button>
 					<Button variant="contained" onClick={this.handleAffirmAccept} color="primary">{this.translate("OK")}</Button>
@@ -261,8 +262,12 @@ export default class Actionable extends AbstractActionable {
 		this.setState({ icon: value });
 	};
 
+	refreshAffirmed = (value) => {
+		this.setState({ affirmed: value });
+	};
+
 	requireAffirm = () => {
-		return this.props.affirmed != null && this.props.affirmed !== "";
+		return this.state.affirmed != null && this.state.affirmed !== "";
 	};
 
 	requireSign = () => {

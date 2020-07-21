@@ -22,8 +22,8 @@ public abstract class List<B extends Box, ItemComponent extends io.intino.alexan
     }
 
     @Override
-    protected AddItemEvent itemEvent(Display display) {
-        return new AddItemEvent(this, (ItemComponent)display, ((ItemComponent)display).item());
+    protected AddItemEvent itemEvent(Display display, int index) {
+        return new AddItemEvent(this, (ItemComponent)display, ((ItemComponent)display).item(), index);
     }
 
     @Override

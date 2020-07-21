@@ -32,6 +32,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
         this.state = {
             selection: this.traceValue() ? this.traceValue() : [],
             readonly: this.props.readonly,
+            multipleSelection: this.props.multipleSelection != null ? this.props.multipleSelection : false,
             ...this.state
         };
 	};
@@ -39,7 +40,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 	render() {
 		const { classes, theme } = this.props;
 		const items = this.items();
-		const multiple = this.props.multipleSelection;
+		const multiple = this.state.multipleSelection;
 		const label = this.props.label;
 		const value = this.selection(items);
 		const color = this.state.readonly ? theme.palette.grey.primary : "inherit";
@@ -75,7 +76,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 	};
 
 	handleChange = (selectedOptions) => {
-		const multi = this.props.multipleSelection;
+		const multi = this.state.multipleSelection;
 		const selection = multi ? selectedOptions.map(s => s.value) : [ selectedOptions.value ];
 		this.trace(selection);
 		this.requester.updateSelection(selection);
@@ -108,8 +109,12 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		this.setState({ readonly });
 	};
 
+	refreshMultipleSelection = (multipleSelection) => {
+		this.setState({ multipleSelection });
+	};
+
 	selection = (options) => {
-		const multiple = this.props.multipleSelection;
+		const multiple = this.state.multipleSelection;
 		const selectedOptions = this.state.selection.map(s => this.option(options, s));
 		return multiple ? selectedOptions : (selectedOptions.length > 0 ? selectedOptions[0] : "");
 	};

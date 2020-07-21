@@ -5,7 +5,10 @@ import ImageEditableNotifier from "../../../gen/displays/notifiers/ImageEditable
 import ImageEditableRequester from "../../../gen/displays/requesters/ImageEditableRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
-import { AddAPhoto } from '@material-ui/icons';
+import { IconButton } from '@material-ui/core';
+import { AddAPhoto, Clear } from '@material-ui/icons';
+import ComponentBehavior from "./behaviors/ComponentBehavior";
+import Theme from "app-elements/gen/Theme";
 
 const styles = theme => ({
 	input: {
@@ -14,18 +17,26 @@ const styles = theme => ({
 	image: {
 		display: "block",
 		position: "absolute",
-		height: "100%",
+		height: "calc(100% - 20px)",
 		width: "100%"
 	},
 	overlay: {
 		position: "absolute",
 		background: "rgba(0, 0, 0, 0.4)",
+		border: "1px solid #efefef",
 		width: "100%",
-		height: "100%",
-		display: "flex",
+		height: "calc(100% - 20px)",
 		"justify-content": "center",
 		"align-items": "center",
 		cursor: "pointer"
+	},
+	bordered: {
+		position: "absolute",
+		border: "1px solid #efefef",
+		width: "100%",
+		height: "calc(100% - 20px)",
+		"justify-content": "center",
+		"align-items": "center",
 	},
 	icon: {
 		color: "#e8e8e8"
@@ -33,15 +44,16 @@ const styles = theme => ({
 });
 
 class ImageEditable extends AbstractImageEditable {
-	state = {
-		value: this.props.value,
-		readonly: this.props.readonly
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new ImageEditableNotifier(this);
 		this.requester = new ImageEditableRequester(this);
+		this.state = {
+            ...this.state,
+            value: this.props.value,
+            readonly: this.props.readonly,
+        }
 	};
 
 	refresh = (value) => {
@@ -52,18 +64,32 @@ class ImageEditable extends AbstractImageEditable {
 		this.requester.notifyChange(e.target.files[0]);
 	};
 
+	handleRemove(e) {
+		this.requester.notifyChange(null);
+	};
+
 	render() {
 		const { classes } = this.props;
 		const inputId = this._inputId();
+		const theme = Theme.get();
+		const labelDisplay = this.state.readonly ? "none" : "flex";
+		const borderDisplay = this.state.readonly ? "flex" : "none";
+		const removeButtonDisplay = this.state.readonly || this.state.value == null ? "none" : "flex";
 		return (
 			<div style={this.style()}>
-				{this.state.value && <img className={classes.image} title={this.props.label} src={this.state.value} />}
-				<label htmlFor={inputId} className={classes.overlay}>
-					<AddAPhoto className={classes.icon} />
-				</label>
-				<input accept="image/*" id={inputId} type="file"
-					   className={classes.input} onChange={this.handleChange.bind(this)}
-					   disabled={this.state.readonly} />
+			    { ComponentBehavior.labelBlock(this.props, "body1", { color: theme.palette.grey.primary, marginRight: '5px', fontSize: "9pt", color: "#777777" }) }
+                {this.state.value && <img className={classes.image} title={this.props.label} src={this.state.value} />}
+                <label htmlFor={inputId} className={classes.overlay} style={{display:labelDisplay}}>
+                    <AddAPhoto className={classes.icon} />
+                </label>
+                <div className={classes.bordered} style={{display:borderDisplay}}></div>
+                <input accept="image/*" id={inputId} type="file"
+                       className={classes.input} onChange={this.handleChange.bind(this)}
+                       disabled={this.state.readonly} />
+                <IconButton color="primary" aria-label="upload picture" size="small" component="span" onClick={this.handleRemove.bind(this)}
+                            style={{position:'absolute',right:"0",zIndex:"1",background:'white',marginTop:'-12px',marginRight:'-12px',border:'1px solid #efefef',display:removeButtonDisplay}}>
+                    <Clear />
+                </IconButton>
 			</div>
 		);
 	};

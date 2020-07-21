@@ -50,7 +50,7 @@ Concept DataComponents
         	var boolean showDropZone = false
         	Concept:{0..1} Validation
         		var double:{kbytes} maxSize = 3000 kbytes
-        		var word[]:{Image Video Application Text Xml Html Pdf} allowedTypes = Image Video Application Text
+        		var word[]:{Image Video Application Text Xml Html Pdf Excel} allowedTypes = Image Video Application Text
         Aspect Readonly with Editable
         Aspect Required with Editable
         Aspect Focused with Editable

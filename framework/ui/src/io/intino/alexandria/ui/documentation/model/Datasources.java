@@ -6,6 +6,7 @@ import io.intino.alexandria.ui.model.Datasource;
 import io.intino.alexandria.ui.model.Geometry;
 import io.intino.alexandria.ui.model.PlaceMark;
 import io.intino.alexandria.ui.model.datasource.*;
+import io.intino.alexandria.ui.model.datasource.filters.GroupFilter;
 import io.intino.alexandria.ui.model.locations.Point;
 import io.intino.alexandria.ui.model.locations.Polygon;
 import io.intino.alexandria.ui.model.locations.Polyline;
@@ -176,8 +177,8 @@ public class Datasources {
 	}
 
 	private static List<Person> filter(List<Person> population, Filter filter, Function<Object, String> valueFunction) {
-		if (filter == null || filter.groups().isEmpty()) return population;
-		return population.stream().filter(person -> filter.groups().contains(valueFunction.apply(person))).collect(toList());
+		if (filter == null || ((GroupFilter)filter).groups().isEmpty()) return population;
+		return population.stream().filter(person -> ((GroupFilter)filter).groups().contains(valueFunction.apply(person))).collect(toList());
 	}
 
 	private static Filter getFilter(String name, List<Filter> filters) {

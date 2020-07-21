@@ -13,6 +13,7 @@ public class Icon<DN extends IconNotifier, B extends Box> extends AbstractIcon<D
     }
 
     public Icon<DN, B> icon(URL icon) {
+    	if (icon == null) return this;
         icon(serialize(icon));
         return this;
     }

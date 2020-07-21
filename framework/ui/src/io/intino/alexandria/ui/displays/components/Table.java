@@ -22,8 +22,8 @@ public abstract class Table<B extends Box, ItemComponent extends Row, Item> exte
 	}
 
 	@Override
-	protected AddItemEvent itemEvent(Display display) {
-		return new AddItemEvent(this, (ItemComponent)display, ((ItemComponent)display).item());
+	protected AddItemEvent itemEvent(Display display, int index) {
+		return new AddItemEvent(this, (ItemComponent)display, ((ItemComponent)display).item(), index);
 	}
 
 	@Override

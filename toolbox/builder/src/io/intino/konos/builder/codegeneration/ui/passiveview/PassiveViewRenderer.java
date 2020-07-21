@@ -220,8 +220,10 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	private String importNameOf(PassiveView passiveView) {
 		if (passiveView.i$(OtherComponents.Stamp.class))
 			return passiveView.a$(OtherComponents.Stamp.class).template().name$();
-		if (passiveView.i$(OtherComponents.Frame.class))
-			return passiveView.a$(OtherComponents.Frame.class).display().name$();
+		if (passiveView.i$(OtherComponents.Frame.class)) {
+			Display display = passiveView.a$(OtherComponents.Frame.class).display();
+			return display != null ? display.name$() : nameOf(passiveView);
+		}
 		return nameOf(passiveView);
 	}
 
@@ -236,8 +238,10 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		PassiveView component = passiveView;
 		if (passiveView.i$(OtherComponents.Stamp.class))
 			component = passiveView.a$(OtherComponents.Stamp.class).template();
-		if (passiveView.i$(OtherComponents.Frame.class))
-			component = passiveView.a$(OtherComponents.Frame.class).display();
+		if (passiveView.i$(OtherComponents.Frame.class)) {
+			Display display = passiveView.a$(OtherComponents.Frame.class).display();
+			component = display != null ? display : passiveView;
+		}
 		return component;
 	}
 
@@ -250,8 +254,10 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (multiple && passiveView.i$(Multiple.class)) return "components";
 		if (passiveView.i$(OtherComponents.Stamp.class))
 			return componentDirectoryOf(passiveView.a$(OtherComponents.Stamp.class).template(), multiple);
-		if (passiveView.i$(OtherComponents.Frame.class))
-			return componentDirectoryOf(passiveView.a$(OtherComponents.Frame.class).display(), multiple);
+		if (passiveView.i$(OtherComponents.Frame.class)) {
+			Display display = passiveView.a$(OtherComponents.Frame.class).display();
+			return display != null ? componentDirectoryOf(display, multiple) : null;
+		}
 		if (passiveView.i$(io.intino.konos.model.graph.Template.class)) return "templates";
 		if (passiveView.i$(CatalogComponents.Collection.Mold.Item.class)) return "items";
 		if (passiveView.i$(HelperComponents.Row.class)) return "rows";
@@ -360,7 +366,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			String importType = isProjectComponent(c) ? ProjectComponentImport : AlexandriaComponentImport;
 			registerConcreteImports(c, builder);
 			registerMultipleImport(imported, multiple, type, c, builder);
-			if (!imported.contains(key))
+			if (key != null && !imported.contains(key))
 				builder.add(importType, importOf(c, importType, isProjectComponent ? false : multiple));
 			imported.add(key);
 			if (c.i$(CatalogComponents.Collection.class)) registerCollectionImports(imported, c, builder);
@@ -389,8 +395,10 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (component == null) return type;
 		if (component.i$(OtherComponents.Stamp.class))
 			return component.a$(OtherComponents.Stamp.class).template().name$();
-		if (component.i$(OtherComponents.Frame.class))
-			return component.a$(OtherComponents.Frame.class).display().name$();
+		if (component.i$(OtherComponents.Frame.class)) {
+			Display display = component.a$(OtherComponents.Frame.class).display();
+			return display != null ? display.name$() : null;
+		}
 		return type;
 	}
 

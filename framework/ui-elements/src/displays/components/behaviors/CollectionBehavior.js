@@ -289,7 +289,7 @@ const CollectionBehavior = (collection) => {
 
     self.getSelectedStyleRules = () => {
         return {
-            border: "1px solid black",
+            border: "1px solid #3f50b5",
             borderRadius: "5px",
             background: "white"
         };
@@ -297,7 +297,7 @@ const CollectionBehavior = (collection) => {
 
     self.addSelectedStyleRules = (style) => {
         if (style == null) return;
-        style.border = "1px solid black";
+        style.border = "1px solid #3f50b5";
         style.borderRadius = "5px";
         style.background = "white";
         return style;

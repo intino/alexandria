@@ -68,7 +68,7 @@ def type(parameter & Long) trigger(parameter)
 end
 
 def type(parameter & DateTime) trigger(parameter)
-	java.time.Instant.ofEpochMilli(Long.parseLong(data))
+	data != null ? java.time.Instant.ofEpochMilli(Long.parseLong(data)) : null
 end
 
 def type(parameter) trigger(parameter)

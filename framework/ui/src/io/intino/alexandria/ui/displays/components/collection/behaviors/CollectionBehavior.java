@@ -5,6 +5,7 @@ import io.intino.alexandria.ui.displays.components.collection.Collection;
 import io.intino.alexandria.ui.displays.components.collection.loaders.ItemLoader;
 import io.intino.alexandria.ui.model.Datasource;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -34,8 +35,20 @@ public abstract class CollectionBehavior<DS extends Datasource<Item>, Item, IL e
 		computeUpdate(e -> this.itemLoader.reload());
 	}
 
+	public void clearFilters() {
+		computeUpdate(e -> itemLoader.clearFilters());
+	}
+
 	public void filter(String grouping, List<String> groups) {
 		computeUpdate(e -> itemLoader.filter(grouping, groups));
+	}
+
+	public void filter(String grouping, Instant from, Instant to) {
+		computeUpdate(e -> itemLoader.filter(grouping, from, to));
+	}
+
+	public void removeFilter(String grouping) {
+		computeUpdate(e -> itemLoader.removeFilter(grouping));
 	}
 
 	public void condition(String condition) {

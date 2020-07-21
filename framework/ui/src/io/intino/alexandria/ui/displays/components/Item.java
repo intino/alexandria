@@ -5,7 +5,7 @@ import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.components.collection.CollectionItemDisplay;
 import io.intino.alexandria.ui.displays.notifiers.ItemNotifier;
 
-public class Item<DN extends ItemNotifier, Type, B extends Box> extends Component<DN, B> implements CollectionItemDisplay {
+public class Item<DN extends ItemNotifier, Type, B extends Box> extends Component<DN, B> implements CollectionItemDisplay<Type> {
     private Type item;
 
     public Item(B box) {
@@ -15,6 +15,11 @@ public class Item<DN extends ItemNotifier, Type, B extends Box> extends Componen
     @Override
     public Type item() {
         return this.item;
+    }
+
+    @Override
+    public void update(Type item) {
+        item(item);
     }
 
     public Item<DN, Type, B> item(Type item) {

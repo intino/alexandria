@@ -6,13 +6,13 @@ import io.intino.alexandria.http.pushservice.SessionManager;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 public abstract class PushService<S extends Session<C>, C extends Client> implements io.intino.alexandria.http.pushservice.PushService<S, C> {
-
-	protected final Queue<Function<C, Boolean>> openConnectionListeners = new ConcurrentLinkedQueue<>();
 	private final Map<String, List<Consumer<String>>> messageListeners = new HashMap<>();
+	protected final Queue<Function<C, Boolean>> openConnectionListeners = new ConcurrentLinkedQueue<>();
 	protected final Map<String, List<Consumer<C>>> closeConnectionListeners = new HashMap<>();
 	protected final Map<String, List<Consumer<C>>> closeScheduledConnectionListeners = new HashMap<>();
 	protected final SessionManager<S, C> sessionManager;

@@ -34,7 +34,7 @@ public abstract class Soul implements DisplayRepository {
     }
 
     public void destroy() {
-        displays.values().forEach(Display::remove);
+        new ArrayList<>(displays.values()).stream().filter(Objects::nonNull).forEach(Display::remove);
         displays.clear();
     }
 

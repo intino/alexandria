@@ -24,6 +24,12 @@ public class ActionSwitch<DN extends ActionSwitchNotifier, B extends Box> extend
 
     public ActionSwitch<DN, B> state(ToggleEvent.State state) {
         _state(state);
+        notifier.refreshState(state.name());
+        return this;
+    }
+
+    public ActionSwitch<DN, B> toggle(ToggleEvent.State state) {
+        state(state);
         notifyToggle();
         return this;
     }

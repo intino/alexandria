@@ -77,6 +77,7 @@ Component selectorCheckBox as ExtensionOf(baseSelector)
 Component selectorComboBox as ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
 	Notification refreshReadonly as Bool
+	Notification refreshMultipleSelection as Bool
 	Request updateSelection as Text List
 	Request refresh
 

@@ -1,5 +1,6 @@
 package io.intino.alexandria.ui.displays.components.collection;
 
-public interface CollectionItemDisplay {
-	<Item> Item item();
+public interface CollectionItemDisplay<Type> {
+	Type item();
+	void update(Type item);
 }
