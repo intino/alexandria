@@ -1,7 +1,7 @@
 import React from "react";
 import { withStyles } from '@material-ui/core/styles';
 import classNames from "classnames";
-import { Radio, FormControl, FormControlLabel, FormLabel, RadioGroup } from '@material-ui/core';
+import { Typography, Radio, FormControl, FormControlLabel, FormLabel, RadioGroup } from '@material-ui/core';
 import AbstractSelectorRadioBox from "../../../gen/displays/components/AbstractSelectorRadioBox";
 import SelectorRadioBoxNotifier from "../../../gen/displays/notifiers/SelectorRadioBoxNotifier";
 import SelectorRadioBoxRequester from "../../../gen/displays/requesters/SelectorRadioBoxRequester";
@@ -29,7 +29,7 @@ class SelectorRadioBox extends AbstractSelectorRadioBox {
 		this._index = -1;
 		return (
             <FormControl component="fieldset">
-                {label != null && label !== "" ? <FormLabel component="legend"><Typography variant={this.variant("subtitle1")} style={{color:color}}>{label}</Typography></FormLabel> : undefined }
+                {label != null && label !== "" ? <FormLabel component="legend"><Typography variant={this.variant("subtitle1")} style={{color:this.props.color}}>{label}</Typography></FormLabel> : undefined }
                 <RadioGroup value={selected} onChange={this.handleSelect.bind(this)}>
                     {React.Children.map(children, (child, i) => { return this.renderItem(child); })}
                 </RadioGroup>

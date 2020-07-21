@@ -172,7 +172,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         if (index < 0) return;
         if (index > children.size()-1) return;
         ((CollectionItemDisplay)children.get(index)).update(item);
-        addItemListener().ifPresent(l -> l.accept(itemEvent(children.get(index))));
+        addItemListener().ifPresent(l -> l.accept(itemEvent(children.get(index), index)));
     }
 
     public void selectAll() {
@@ -240,7 +240,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         this.selectionListeners.remove(listener);
     }
 
-    protected abstract AddItemEvent itemEvent(Display c);
+    protected abstract AddItemEvent itemEvent(Display c, int index);
 
     Optional<AddItemListener> addItemListener() {
         return Optional.ofNullable(addItemListener);

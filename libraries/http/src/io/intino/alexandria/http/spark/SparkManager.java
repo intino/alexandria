@@ -97,7 +97,7 @@ public class SparkManager<P extends PushService> {
 	public Resource fromForm(String name) {
 		try {
 			Part part = request.raw().getPart(name);
-			return part != null ? new Resource(part.getName(), part.getInputStream()).metadata().contentType(part.getContentType()) : null;
+			return part != null ? new Resource(part.getSubmittedFileName(), part.getInputStream()).metadata().contentType(part.getContentType()) : null;
 		} catch (ServletException | IOException e) {
 			return null;
 		}

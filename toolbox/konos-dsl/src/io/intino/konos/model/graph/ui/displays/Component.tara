@@ -232,6 +232,7 @@ Facet Animated
 
 Facet Multiple
 	var string noItemsMessage = empty
+	var boolean wrapItems = true
 	var word:{Vertical Horizontal} arrangement = Vertical
 	var word:Spacing spacing = None
 

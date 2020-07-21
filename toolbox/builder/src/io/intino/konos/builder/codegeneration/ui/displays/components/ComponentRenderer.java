@@ -147,6 +147,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			result.add("multipleArrangement", abstractMultiple.arrangement().name());
 			result.add("multipleSpacing", abstractMultiple.spacing().value());
 			result.add("multipleNoItemsMessage", abstractMultiple.noItemsMessage() != null ? abstractMultiple.noItemsMessage() : "");
+			result.add("multipleWrapItems", abstractMultiple.wrapItems());
 		}
 		if (element.format() != null) {
 			String[] format = element.format().stream().map(Layer::name$).toArray(String[]::new);

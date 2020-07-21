@@ -9,6 +9,8 @@ import io.intino.alexandria.ui.displays.events.collection.AddItemEvent;
 import io.intino.alexandria.ui.displays.notifiers.PageCollectionNotifier;
 import io.intino.alexandria.ui.model.datasource.PageDatasource;
 
+import java.util.List;
+
 public abstract class PageCollection<DN extends PageCollectionNotifier, B extends Box> extends AbstractPageCollection<DN, B> {
     private int pageSize;
 
@@ -18,7 +20,11 @@ public abstract class PageCollection<DN extends PageCollectionNotifier, B extend
 
     public void notifyItemsRendered(io.intino.alexandria.schemas.CollectionItemsRenderedInfo info) {
         promisedChildren(info.items()).forEach(this::register);
-        children(info.visible()).forEach(c -> addItemListener().ifPresent(l -> l.accept(itemEvent(c))));
+        List<Display> children = children(info.visible());
+        for (int i=0; i<children.size(); i++) {
+            final int index = i;
+            addItemListener().ifPresent(l -> l.accept(itemEvent(children.get(index), index)));
+        }
         notifyRefresh();
     }
 
@@ -44,7 +50,7 @@ public abstract class PageCollection<DN extends PageCollectionNotifier, B extend
         return this;
     }
 
-    protected abstract AddItemEvent itemEvent(Display c);
+    protected abstract AddItemEvent itemEvent(Display c, int index);
 
     @Override
     void setup() {

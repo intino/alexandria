@@ -37,7 +37,7 @@ export default class FileEditable extends AbstractFile {
 		const label = this.props.label !== "" ? this.props.label : undefined;
 		const theme = Theme.get();
 		return (
-			<Block layout="vertical center flex" style={this.style()}>
+			<Block layout="vertical" style={this.style()}>
 				{ ComponentBehavior.labelBlock(this.props, "body1", { color: theme.palette.grey.primary, marginRight: '5px' }) }
 				{this._renderComponent()}
 			</Block>
@@ -55,7 +55,7 @@ export default class FileEditable extends AbstractFile {
 	            acceptedFiles={this._allowedTypes()}
 	            dropzoneText={this.translate("Drag and drop a file here or click")}
                 filesLimit={1}
-                maxFileSize={this.props.maxSize != null ? this.props.maxSize : 30000000}
+                maxFileSize={this.props.maxSize != null ? this.props.maxSize : 300000000}
 	            onChange={(files) => {
 	                if (files.length <= 0) return;
 	                if (files.length > 1) return;
@@ -81,6 +81,10 @@ export default class FileEditable extends AbstractFile {
 	    if (this._containsType("Xml")) result.push(".xml");
 	    if (this._containsType("Html")) result.push("text/html");
 	    if (this._containsType("Pdf")) result.push("application/pdf");
+	    if (this._containsType("Excel")) {
+	        result.push("application/vnd.ms-excel");
+	        result.push("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+	    }
 	    return result;
 	};
 

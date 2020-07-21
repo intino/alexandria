@@ -38,7 +38,11 @@ public abstract class Map<B extends Box, ItemComponent extends io.intino.alexand
         ItemComponent component = create(itemPlaceMark);
         addPromise(component, "rows");
         promisedChildren().forEach(this::register);
-        children().forEach(c -> addItemListener().ifPresent(l -> l.accept(itemEvent(c))));
+        List<Display> children = children();
+        for (int i=0; i<children.size(); i++) {
+            final int index = i;
+            addItemListener().ifPresent(l -> l.accept(itemEvent(children.get(index), index)));
+        }
         notifyRefresh();
         return component;
     }
@@ -75,8 +79,8 @@ public abstract class Map<B extends Box, ItemComponent extends io.intino.alexand
     }
 
     @Override
-    protected AddItemEvent itemEvent(Display display) {
-        return new AddItemEvent(this, (ItemComponent)display, ((ItemComponent)display).item());
+    protected AddItemEvent itemEvent(Display display, int index) {
+        return new AddItemEvent(this, (ItemComponent)display, ((ItemComponent)display).item(), index);
     }
 
     @Override
