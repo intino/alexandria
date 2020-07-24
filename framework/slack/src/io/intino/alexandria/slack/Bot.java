@@ -29,13 +29,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
-import static javax.websocket.CloseReason.CloseCodes.NORMAL_CLOSURE;
 
 public abstract class Bot {
+	private static final Gson gson = GsonFactory.createCamelCase(SlackConfig.DEFAULT);
+	private static final JsonParser jsonParser = new JsonParser();
 	private final String token;
+	private final AtomicBoolean isClosing = new AtomicBoolean(false);
 	private final Map<String, Command> commands = new LinkedHashMap<>();
 	private final Map<String, CommandInfo> commandsInfo = new LinkedHashMap<>();
 	private final Set<String> processedMessages = new LinkedHashSet<>();
@@ -43,8 +46,6 @@ public abstract class Bot {
 	private List<User> users;
 	private Slack slack;
 	private RTMClient rtm;
-	private Gson gson = GsonFactory.createCamelCase(SlackConfig.DEFAULT);
-	private JsonParser jsonParser = new JsonParser();
 	private User botIdentity;
 	private MethodsClient methods;
 
@@ -74,6 +75,7 @@ public abstract class Bot {
 	}
 
 	public void connect() throws IOException, DeploymentException {
+		isClosing.set(false);
 		slack = instance();
 		rtm = slack.rtm(token);
 		init();
@@ -103,6 +105,7 @@ public abstract class Bot {
 
 	public void disconnect() {
 		try {
+			isClosing.set(true);
 			this.rtm.disconnect();
 			this.slack.close();
 		} catch (Exception e) {
@@ -295,7 +298,7 @@ public abstract class Bot {
 
 	private void handleRtmClose(CloseReason closeReason) {
 		Logger.error("Bot session Closed:" + closeReason.getCloseCode() + "; " + closeReason.getReasonPhrase());
-		if (!closeReason.getCloseCode().equals(NORMAL_CLOSURE)) {
+		if (!isClosing.get()) {
 			try {
 				rtm.disconnect();
 			} catch (IOException ignored) {
