@@ -6,8 +6,8 @@ Artifact("io.intino.alexandria", "2.0.4") core-framework
 		Provided("io.intino.alexandria", "primitives", "1.0.4")
 		Test("junit", "junit", "4.12")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
-	Distribution(intino.release)
+	Distribution("intino-maven")
+		Release("https://artifactory.intino.io/artifactory/release-libraries")
 
-Repository("intino-maven") intino
+Repository("intino-maven")
 	Release("https://artifactory.intino.io/artifactory/releases")
-	Release("https://artifactory.intino.io/artifactory/release-frameworks") release

@@ -5,7 +5,8 @@ Artifact("io.intino.alexandria", "1.0.0") xml
 		Compile("javax.xml.bind", "jaxb-api", "2.3.1")
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
-	Distribution(intino.release)
+	Distribution("intino-maven")
+		Release("https://artifactory.intino.io/artifactory/release-libraries")
 
-Repository("intino-maven") intino
-	Release("https://artifactory.intino.io/artifactory/release-libraries") release
+Repository("intino-maven")
+	Release("https://artifactory.intino.io/artifactory/releases")

@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.alexandria", version = "1.0.0") driver-r
+Artifact("io.intino.alexandria", "1.0.0") driver-r
 	Imports
 		Compile("io.intino.alexandria", "driver", "1.0.0")
 		Compile("io.intino.alexandria", "logger", "2.0.0")
@@ -9,9 +9,8 @@ Artifact(groupId = "io.intino.alexandria", version = "1.0.0") driver-r
 
 		Test("junit", "junit", "LATEST")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
-	Distribution(intino.release)
+	Distribution("intino-maven")
+		Release("https://artifactory.intino.io/artifactory/release-libraries")
 
-Repository(identifier = "intino-maven") intino
-	Language(url = "https://artifactory.intino.io/artifactory/releases")
-	Release(url = "https://artifactory.intino.io/artifactory/releases")
-	Release(url = "https://artifactory.intino.io/artifactory/release-libraries") release
+Repository("intino-maven")
+	Release("https://artifactory.intino.io/artifactory/releases")

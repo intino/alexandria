@@ -5,7 +5,8 @@ Artifact(groupId = "io.intino.alexandria", version = "1.0.3") zip
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
-	Distribution(intino.release)
+	Distribution("intino-maven")
+		Release("https://artifactory.intino.io/artifactory/release-libraries")
 
-Repository("intino-maven") intino
-	Release("https://artifactory.intino.io/artifactory/release-libraries") release
+Repository("intino-maven")
+	Release("https://artifactory.intino.io/artifactory/releases")

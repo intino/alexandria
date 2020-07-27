@@ -19,12 +19,12 @@ Artifact("io.intino.alexandria", "4.3.12") ui-framework
 		Test("junit", "junit", "LATEST")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true) as Runnable(mainClass = "io.intino.alexandria.Main")
-	Distribution(intino.dist)
+	Distribution("intino-maven")
+		Release("https://artifactory.intino.io/artifactory/release-libraries")
 	Parameter(name = "home")
 
-Repository("intino-maven") intino
+Repository("intino-maven")
 	Release("https://artifactory.intino.io/artifactory/releases")
-	Release("https://artifactory.intino.io/artifactory/release-frameworks") dist
 
 Repository("bedatadriven") bedatadrivenPublic
 	Release("https://nexus.bedatadriven.com/content/groups/public/")
