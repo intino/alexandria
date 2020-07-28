@@ -1,14 +1,11 @@
 package io.intino.alexandria.ui.displays;
 
-import io.intino.alexandria.Json;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.HideListener;
 import io.intino.alexandria.ui.displays.events.ShowListener;
 import io.intino.alexandria.ui.displays.notifiers.ComponentNotifier;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 

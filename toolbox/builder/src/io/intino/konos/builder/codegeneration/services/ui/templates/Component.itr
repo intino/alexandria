@@ -393,6 +393,10 @@ def type(properties & actionable) trigger(common)
 	[$actionableMode]
 end
 
+def type(properties & dashboard) trigger(common)
+	[$parameter...[$NL]]
+end
+
 def type(properties) trigger(common)
 	[label("$label");]
 	[name("$name");]
@@ -488,11 +492,18 @@ def type(properties & chart) trigger(specific)
 	[_output("$output");]
 end
 
-def type(properties & dashboard) trigger(specific)
+def type(properties & dashboard & shiny) trigger(specific)
     [$serverScript+resourceMethod]
     [$uiScript+resourceMethod]
 	[$resource+resourceMethod...[$NL]]
-	[$parameter...[$NL]]
+end
+
+def type(properties & dashboard & metabase) trigger(specific)
+    [_url("$url");]
+    [_secretKey("$secretKey");]
+    [_bordered($bordered);]
+    [_titled($titled);]
+    [_theme(io.intino.alexandria.ui.displays.components.DashboardMetabase.Theme.$theme);]
 end
 
 def type(properties & number) trigger(specific)

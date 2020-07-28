@@ -6,14 +6,14 @@ import io.intino.alexandria.drivers.Program;
 import io.intino.alexandria.drivers.program.Resource;
 import io.intino.alexandria.drivers.program.Script;
 import io.intino.alexandria.logger.Logger;
-import io.intino.alexandria.schemas.DashboardInfo;
-import io.intino.alexandria.schemas.DashboardSettingsInfo;
+import io.intino.alexandria.schemas.DashboardShinyInfo;
+import io.intino.alexandria.schemas.DashboardShinySettingsInfo;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.components.dashboard.DashboardManager;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.Listener;
-import io.intino.alexandria.ui.displays.notifiers.DashboardNotifier;
+import io.intino.alexandria.ui.displays.notifiers.DashboardShinyNotifier;
 import io.intino.alexandria.ui.utils.DelayerUtil;
 import io.intino.alexandria.ui.utils.IOUtils;
 
@@ -26,82 +26,59 @@ import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Dashboard<DN extends DashboardNotifier, B extends Box> extends AbstractDashboard<B> {
+public class DashboardShiny<DN extends DashboardShinyNotifier, B extends Box> extends AbstractDashboardShiny<DN, B> {
     private Driver driver;
     private URL serverScript;
     private URL uiScript;
-    private java.util.Map<String, Object> parameterMap = new HashMap<>();
     private List<URL> resourceList = new ArrayList<>();
-    private boolean adminMode = false;
     private DashboardNameProvider dashboardNameProvider = null;
     private Listener closeSettingsListener = null;
 
-    public Dashboard(B box) {
+    public DashboardShiny(B box) {
         super(box);
     }
 
-    public Dashboard parameters(java.util.Map<String, Object> parameters) {
-        this.parameterMap = parameters;
-        refresh();
-        return this;
-    }
-
-	public Dashboard<DN, B> serverScript(URL script) {
+	public DashboardShiny<DN, B> serverScript(URL script) {
 		_serverScript(script);
 		return this;
 	}
 
-	public Dashboard<DN, B> uiScript(URL script) {
+	public DashboardShiny<DN, B> uiScript(URL script) {
 		_uiScript(script);
 		return this;
 	}
 
-	public Dashboard<DN, B> addResource(URL resource) {
+	public DashboardShiny<DN, B> addResource(URL resource) {
     	this.resourceList.add(resource);
     	return this;
 	}
 
-    public Dashboard<DN, B> adminMode(boolean value) {
-    	_adminMode(value);
-    	return this;
-	}
-
-    public Dashboard dashboardNameProvider(DashboardNameProvider provider) {
+    public DashboardShiny dashboardNameProvider(DashboardNameProvider provider) {
 		this.dashboardNameProvider = provider;
 		return this;
 	}
 
-	public Dashboard onCloseSettings(Listener listener) {
+	public DashboardShiny onCloseSettings(Listener listener) {
 		this.closeSettingsListener = listener;
 		return this;
 	}
 
-	public Dashboard driver(Driver driver) {
+	public DashboardShiny driver(Driver driver) {
 		this.driver = driver;
 		return this;
 	}
 
-	protected Dashboard _adminMode(boolean value) {
-		this.adminMode = value;
-		return this;
-	}
-
-	protected Dashboard _serverScript(URL script) {
+	protected DashboardShiny _serverScript(URL script) {
 		this.serverScript = script;
 		return this;
 	}
 
-	protected Dashboard _uiScript(URL script) {
+	protected DashboardShiny _uiScript(URL script) {
 		this.uiScript = script;
 		return this;
 	}
 
-	protected Dashboard _add(String parameter, String value) {
-		parameterMap.put(parameter, value);
-		return this;
-	}
-
-	protected Dashboard _add(URL resource) {
+	protected DashboardShiny _add(URL resource) {
 		resourceList.add(resource);
 		return this;
 	}
@@ -120,7 +97,7 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
             Timer timer = new Timer("Dashboard notifier");
             timer.schedule(new TimerTask() {
                 @Override
-                public void run() { notifier.refresh(new DashboardInfo().location(location).driverDefined(driver != null).adminMode(adminMode));
+                public void run() { notifier.refresh(new DashboardShinyInfo().location(location).driverDefined(driver != null).adminMode(adminMode()));
                 }
             }, 1000);
         }
@@ -130,7 +107,7 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
     }
 
     public void showSettings() {
-    	notifier.showSettings(new DashboardSettingsInfo().serverScript(contentOf(serverScript)).uiScript(contentOf(uiScript)));
+    	notifier.showSettings(new DashboardShinySettingsInfo().serverScript(contentOf(serverScript)).uiScript(contentOf(uiScript)));
 	}
 
 	public void hideSettings() {
@@ -170,11 +147,11 @@ public class Dashboard<DN extends DashboardNotifier, B extends Box> extends Abst
         String name = programName();
 		List<Script> scripts = Arrays.asList(scriptOf(serverScript), scriptOf(uiScript));
 		List<Resource> resources = resourceList.stream().map(this::resourceOf).collect(Collectors.toList());
-		return new Program().name(name).parameters(parameterMap).scripts(scripts).resources(resources).parameters(parameterMap);
+		return new Program().name(name).parameters(parameters()).scripts(scripts).resources(resources).parameters(parameters());
     }
 
 	private Program programOf(URL script) {
-		return new Program().name(programName()).parameters(parameterMap).scripts(Collections.singletonList(scriptOf(script)));
+		return new Program().name(programName()).parameters(parameters()).scripts(Collections.singletonList(scriptOf(script)));
 	}
 
     private String contentOf(URL file) {

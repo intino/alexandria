@@ -10,17 +10,20 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 const styles = theme => ({});
 
 class BlockBadge extends AbstractBlockBadge {
-	state = {
-		value : this.props.value
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new BlockBadgeNotifier(this);
 		this.requester = new BlockBadgeRequester(this);
+        this.state = {
+            ...this.state,
+            value : this.props.value
+        };
 	};
 
 	render() {
+		if (!this.state.visible) return (<React.Fragment/>);
+
 		const { showZero, max, mode } = this.props;
 		return (
 			<Badge color="primary" style={this.style()} badgeContent={this.state.value}

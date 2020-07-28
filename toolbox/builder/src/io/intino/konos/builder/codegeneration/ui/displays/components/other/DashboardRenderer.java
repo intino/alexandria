@@ -16,11 +16,30 @@ public class DashboardRenderer extends SizedRenderer<Dashboard> {
 	@Override
 	public FrameBuilder properties() {
 		FrameBuilder result = super.properties();
-		if (element.serverScript() != null && !element.serverScript().isEmpty()) result.add("serverScript", resourceMethodFrame("serverScript", element.serverScript()));
-		if (element.uiScript() != null && !element.uiScript().isEmpty()) result.add("uiScript", resourceMethodFrame("uiScript", element.uiScript()));
-		element.resources().forEach(r -> result.add("resource", resourceMethodFrame("add", r)));
+		addShinyFacet(result);
+		addMetabaseFacet(result);
 		element.parameterList().forEach(p -> result.add("parameter", parameterMethodFrame(p.name(), p.value())));
 		return result;
+	}
+
+	private void addShinyFacet(FrameBuilder builder) {
+		if (!element.isShiny()) return;
+		builder.add("shiny");
+		Dashboard.Shiny shiny = element.asShiny();
+		if (shiny.serverScript() != null && !shiny.serverScript().isEmpty()) builder.add("serverScript", resourceMethodFrame("serverScript", shiny.serverScript()));
+		if (shiny.uiScript() != null && !shiny.uiScript().isEmpty()) builder.add("uiScript", resourceMethodFrame("uiScript", shiny.uiScript()));
+		shiny.resources().forEach(r -> builder.add("resource", resourceMethodFrame("add", r)));
+	}
+
+	private void addMetabaseFacet(FrameBuilder builder) {
+		if (!element.isMetabase()) return;
+		builder.add("metabase");
+		Dashboard.Metabase metabase = element.asMetabase();
+		builder.add("url", metabase.url());
+		builder.add("secretKey", metabase.secretKey());
+		builder.add("bordered", metabase.bordered());
+		builder.add("titled", metabase.titled());
+		builder.add("theme", metabase.theme().name());
 	}
 
 	@Override

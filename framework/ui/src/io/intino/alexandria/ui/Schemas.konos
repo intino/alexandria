@@ -46,12 +46,16 @@ Schema ChartInfo
 	Attribute mode as Text
 	Attribute config as Text
 
-Schema DashboardInfo
+Schema DashboardShinyInfo
 	Attribute location as Text
 	Attribute adminMode as Bool
 	Attribute driverDefined as Bool
 
-Schema DashboardSettingsInfo
+Schema DashboardMetabaseInfo
+	Attribute location as Text
+	Attribute adminMode as Bool
+
+Schema DashboardShinySettingsInfo
 	Attribute serverScript as Text
 	Attribute uiScript as Text
 

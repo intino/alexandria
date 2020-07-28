@@ -15,17 +15,17 @@ const styles = theme => ({
 
 export default class BaseLocation extends AbstractBaseLocation {
 
-	state = {
-		location: null,
-		icon: null
-	};
-
 	constructor(props) {
 		super(props);
 		this.notifier = new BaseLocationNotifier(this);
 		this.requester = new BaseLocationRequester(this);
 		this.container = React.createRef();
 		this.googleMapLayer = React.createRef();
+        this.state = {
+            ...this.state,
+            location: null,
+            icon: null
+        }
 	};
 
 	renderLayer = (content) => {
@@ -47,6 +47,11 @@ export default class BaseLocation extends AbstractBaseLocation {
 
 	resize = function() {
 		const container = this.container.current;
+		const height = $(container).height();
+		if (height == 0) {
+		    window.setTimeout(() => this.resize(), 100);
+		    return;
+		}
 		this.googleMapLayer.current.style.height = $(container).height() + "px";
 	};
 

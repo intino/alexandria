@@ -153,14 +153,25 @@ Concept:{0..1} VisualizationComponents
 		Aspect Relative
 
 	Concept Dashboard extends Component
-		var string serverScript
-		var string uiScript
-		var string[] resources = empty
-		Aspect Absolute
-		Aspect Relative
+
 		Concept Parameter
 			var string name
 			var string value
+
+		Aspect Absolute
+		Aspect Relative
+
+		Aspect Shiny
+			var string serverScript
+			var string uiScript
+			var string[] resources = empty
+
+		Aspect Metabase
+			var string url
+			var string secretKey
+			var boolean bordered = true
+			var boolean titled = false
+			var word:{Dark Light} theme = Light
 
 	Concept Spinner extends Component
 		var word:{Bar Circle Hash Ring Rise} mode = Rise
