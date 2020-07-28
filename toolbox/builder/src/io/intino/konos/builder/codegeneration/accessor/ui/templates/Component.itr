@@ -47,19 +47,23 @@ def type(method)
 end
 
 def type(properties & multiple) trigger(common)
-	[ label="$label"][ format="$format...[ ]"][ visible={$visible}][ traceable={$traceable}]
+	[ label="$label"][ format="$format...[ ]"][ visible={$visible}][ traceable={$traceable}][ style="$style"]
 end
 
 def type(properties & actionable) trigger(common)
-	[ title="$title"][ name="$name"][ target="$target"][ mode="$actionableMode"][ icon="$icon"][ affirmed="$affirmed"][ traceable={$traceable}][ signed={{text:"$signText",reason:"$reasonText"}}][ readonly={$readonly}][ size="$size"][ format="$format...[ ]"][ highlighted="$highlighted"][ visible={$visible}]
+	[ title="$title"][ name="$name"][ target="$target"][ mode="$actionableMode"][ icon="$icon"][ affirmed="$affirmed"][ traceable={$traceable}][ signed={{text:"$signText",reason:"$reasonText"}}][ readonly={$readonly}][ size="$size"][ format="$format...[ ]"][ highlighted="$highlighted"][ visible={$visible}][ style="$style"]
 end
 
 def type(properties & abstractslider) trigger(common)
 	[ label="$label"][ format="$format...[ ]"][ color="$color"][ traceable={$traceable}][ arrangement="$arrangement"][ animation={{interval:$interval,loop:$loop}}][ readonly={$readonly}][ visible={$visible}][ style="$style"]
 end
 
+def type(properties & dashboard) trigger(common)
+	[ width="$width"][ height="$height"][ style="$style"]
+end
+
 def type(properties) trigger(common)
-	[ name="$name"][ label="$label"][ format="$format...[ ]"][ color="$color"][ visible={$visible}][ traceable={$traceable}][ multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing,wrap:$multipleWrapItems}}]
+	[ name="$name"][ label="$label"][ format="$format...[ ]"][ color="$color"][ visible={$visible}][ traceable={$traceable}][ multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing,wrap:$multipleWrapItems}}][ style="$style"]
 end
 
 def type(properties & template) trigger(specific)
@@ -94,10 +98,6 @@ def type(properties & chart) trigger(specific)
 	[ width="$width"][ height="$height"]
 end
 
-def type(properties & dashboard) trigger(specific)
-	[ width="$width"][ height="$height"]
-end
-
 def type(properties & alertdialog) trigger(specific)
 	[ title="$title"][ modal={$modal}][ fullscreen={$fullscreen}][ message="$message"][ closeLabel="$close"][ width="$width"][ height="$height"][ animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}]
 end
@@ -119,7 +119,7 @@ def type(properties & user) trigger(specific)
 end
 
 def type(properties & number) trigger(specific)
-	[ value={$value}][ prefix="$prefix"][ suffix="$suffix"][ min={$min}][ max={$max}][ step={$step}][ readonly={$readonly}][ focused={$focused}][ decimals={$decimals}][ style="$style"][ expanded={$expanded}]
+	[ value={$value}][ prefix="$prefix"][ suffix="$suffix"][ min={$min}][ max={$max}][ step={$step}][ readonly={$readonly}][ focused={$focused}][ decimals={$decimals}][ expanded={$expanded}]
 end
 
 def type(properties & header) trigger(specific)
@@ -195,7 +195,7 @@ def type(properties & grouping) trigger(specific)
 end
 
 def type(properties & stepper) trigger(specific)
-   [ orientation="$orientation+lowercase"][ position="$position+lowercase"][ style="$style"]
+   [ orientation="$orientation+lowercase"][ position="$position+lowercase"]
 end
 
 def type(properties) trigger(specific)

@@ -21,6 +21,25 @@ public class MessageReader_ {
 	}
 
 	@Test
+	public void should_read_content_with_complex_message() {
+		MessageReader messages = new MessageReader(this.getClass().getResourceAsStream("/test1.inl"));
+		Message next = messages.next();
+		assertThat(next).isNotNull();
+		assertThat(messages.hasNext()).isFalse();
+	}
+
+	@Test
+	public void should_read_content_with_embed_message() {
+		MessageReader messages = new MessageReader(this.getClass().getResourceAsStream("/test2.inl"));
+		Message next = messages.next();
+		assertThat(next).isNotNull();
+		assertThat(messages.hasNext()).isFalse();
+		String value = next.get("value").asString();
+		messages = new MessageReader(value);
+		messages.iterator().forEachRemaining(System.out::println);
+	}
+
+	@Test
 	public void should_read_messages_in_a_class_with_parent() {
 		String inl = "[Teacher]\n" +
 				"name: Jose\n" +
@@ -169,6 +188,7 @@ public class MessageReader_ {
 		String telefonos = message.get("telefonos").asString();
 		System.out.println(telefonos);
 	}
+
 	@Test
 	public void should_read_message_with_multiline_attribut2() {
 		String inl = "[ERROR]\n" +

@@ -9,7 +9,7 @@ import java.util.Arrays;
 public class DashboardWidget extends BaseWidget {
 
 	public DashboardWidget() {
-		super("This widget allows rendering Dashboards from R language.");
+		super("This widget allows rendering Dashboards.");
 		facets(Arrays.asList("Absolute", "Relative"));
 	}
 

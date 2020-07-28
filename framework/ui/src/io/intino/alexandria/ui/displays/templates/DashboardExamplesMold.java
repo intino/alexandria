@@ -12,8 +12,25 @@ public class DashboardExamplesMold extends AbstractDashboardExamplesMold<UiFrame
     @Override
     public void init() {
         super.init();
-        alexandriaDashboard.adminMode(true);
-        alexandriaDashboard.driver(new Driver("http://10.13.13.37:3838"));
-        alexandriaDashboard.refresh();
+        initShinyDashboard();
+        initMetabaseDashboard();
+    }
+
+    private void initShinyDashboard() {
+        shinyDashboard.adminMode(true);
+        shinyDashboard.driver(new Driver("http://10.13.13.37:3838"));
+        shinyDashboard.refresh();
+    }
+
+    private void initMetabaseDashboard() {
+        dashboard.onChange(e -> {
+            metabaseDashboard.dashboard(((Double)e.value()).intValue());
+            metabaseDashboard.refresh();
+        });
+        secretKey.onChange(e -> {
+            metabaseDashboard.secretKey(e.value());
+            metabaseDashboard.refresh();
+        });
+        metabaseDashboard.refresh();
     }
 }

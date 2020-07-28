@@ -14,7 +14,6 @@
     <orderEntry type="library" name="Intino: org.bouncycastle:bcmail-jdk15:1.45" level="project" />
     <orderEntry type="library" name="Intino: org.bouncycastle:bcprov-jdk15:1.45" level="project" />
     <orderEntry type="library" name="Intino: com.sparkjava:spark-core:2.7.2" level="project" />
-    <orderEntry type="library" name="Intino: org.slf4j:slf4j-api:1.7.13" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-server:9.4.8.v20171121" level="project" />
     <orderEntry type="library" name="Intino: javax.servlet:javax.servlet-api:3.1.0" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-http:9.4.8.v20171121" level="project" />
@@ -44,7 +43,6 @@
     <orderEntry type="library" name="Intino: commons-collections:commons-collections:3.2.2" level="project" />
     <orderEntry type="library" name="Intino: org.apache.commons:commons-collections4:4.4" level="project" />
     <orderEntry type="library" name="Intino: org.hashids:hashids:1.0.3" level="project" />
-    <orderEntry type="library" name="Intino: org.locationtech.jts:jts-core:1.16.1" level="project" />
     <orderEntry type="module" module-name="shiny" />
     <orderEntry type="library" name="Intino: org.apache.httpcomponents:fluent-hc:4.5.7" level="project" />
     <orderEntry type="module" module-name="proxy" />
@@ -55,7 +53,6 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
     <orderEntry type="library" name="Intino: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
     <orderEntry type="library" name="Intino: log4j:log4j:1.2.17" level="project" />
-    <orderEntry type="module" module-name="message" />
     <orderEntry type="library" name="Intino: com.jcraft:jsch:0.1.55" level="project" />
     <orderEntry type="library" name="Intino: com.jcraft:jzlib:1.0.7" level="project" />
     <orderEntry type="library" name="Intino: net.rforge:Rserve:0.6-8.1" level="project" />
@@ -75,6 +72,14 @@
     <orderEntry type="module" module-name="http" />
     <orderEntry type="module" module-name="exceptions" />
     <orderEntry type="library" name="Intino: com.opencsv:opencsv:5.2" level="project" />
+    <orderEntry type="library" name="Intino: org.slf4j:slf4j-api:1.7.13" level="project" />
     <orderEntry type="module" module-name="ui-elements" />
+    <orderEntry type="library" name="Intino: com.auth0:java-jwt:3.10.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Intino: com.fasterxml.jackson.core:jackson-databind:2.10.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Intino: com.fasterxml.jackson.core:jackson-annotations:2.10.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Intino: com.fasterxml.jackson.core:jackson-core:2.10.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Intino: commons-codec:commons-codec:1.14" level="project" />
+    <orderEntry type="library" name="Intino: org.locationtech.jts:jts-core:1.16.1" level="project" />
+    <orderEntry type="module" module-name="message" />
   </component>
 </module>

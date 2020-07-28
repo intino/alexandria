@@ -111,6 +111,14 @@ class BlockPopover extends AbstractBlockPopover {
 	    if (position == "LeftBottom") return "right";
 	    return "center";
 	};
+
+	style() {
+		var result = super.style();
+		if (result == null) result = {};
+		if (this._widthDefined() && result.width == null) result.width = this.props.width;
+		if (this._heightDefined() && result.height == null) result.height = this.props.height;
+		return result;
+	};
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(BlockPopover));

@@ -6,18 +6,37 @@ Template(layout=Vertical, spacing=DP8) dashboardExamplesMold
 
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=100%, height=100%)
-			Text(format=h6, value="No facets with adminMode(true)")
+			Text(format=h6, value="Shiny facet with adminMode(true)")
 			Block(format=filledNoAirExtraLarge)
 				Block as Absolute(height=600px)
-					Dashboard alexandriaDashboard
+					Dashboard shinyDashboard as Shiny
 						serverScript = "data/dashboard/server.R"
 						uiScript = "data/dashboard/ui.R"
 
 				Block > Text dashboard1Code as Code(language=Html)
 						value
 							=========
-							Dashboard dashboard<br/>
+							Dashboard dashboard as Shiny<br/>
 							&nbsp;&nbsp;&nbsp;&nbsp;serverScript \= "data/dashboard/server.R"<br/>
 							&nbsp;&nbsp;&nbsp;&nbsp;uiScript \= "data/dashboard/ui.R"<br/>
 							&nbsp;&nbsp;&nbsp;&nbsp;Parameter("param1", "abcd")
+							=========
+
+		Block as Relative(width=100%, height=100%)
+			Text(format=h6, value="Metabase facet")
+			Block(format=filledNoAirExtraLarge)
+				Block as Absolute(height=600px)
+					Block(layout=Vertical Flexible)
+						Dashboard metabaseDashboard as Metabase
+							url = "http://localhost:3000"
+							secretKey = ""
+					Block(layout=Horizontal End CenterCenter, format=air)
+						Block(format=airRight) as Absolute(width=100px) > Number(min=0, max=1000) dashboard as Editable("Fill dashboard provided by Metabase") Labeled("Dashboard")
+						Text secretKey as Editable("Fill secret key provided by Metabase") Labeled("Secret Key")
+				Block > Text as Code(language=Html)
+						value
+							=========
+							Dashboard dashboard as Metabase<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;url \= "http://localhost:3000"<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;secretKey \= ""<br/>
 							=========

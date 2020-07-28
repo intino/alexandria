@@ -4,6 +4,7 @@ import io.intino.alexandria.ui.model.Geometry;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class Point extends Geometry {
 	private double latitude;
@@ -35,7 +36,7 @@ public class Point extends Geometry {
 
 	@Override
 	public String toWkt() {
-		return String.format("POINT(%f %f)", latitude, longitude);
+		return String.format(Locale.ENGLISH, "POINT(%f %f)", latitude, longitude);
 	}
 
 }

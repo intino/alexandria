@@ -7,6 +7,13 @@ import Block from "./Block";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
 import Theme from "app-elements/gen/Theme";
 import { DropzoneArea } from 'material-ui-dropzone';
+import 'alexandria-ui-elements/res/styles/components/fileeditable/styles.css';
+
+const styles = theme => ({
+	dropzoneText: {
+		background: "red",
+	},
+});
 
 export default class FileEditable extends AbstractFile {
 
@@ -37,7 +44,7 @@ export default class FileEditable extends AbstractFile {
 		const label = this.props.label !== "" ? this.props.label : undefined;
 		const theme = Theme.get();
 		return (
-			<Block layout="vertical" style={this.style()}>
+			<Block layout="vertical flex" style={this.style()}>
 				{ ComponentBehavior.labelBlock(this.props, "body1", { color: theme.palette.grey.primary, marginRight: '5px' }) }
 				{this._renderComponent()}
 			</Block>
@@ -50,12 +57,16 @@ export default class FileEditable extends AbstractFile {
 	};
 
 	_renderDropZone = () => {
+		const { classes } = this.props;
 	    return (
 	        <DropzoneArea
 	            acceptedFiles={this._allowedTypes()}
 	            dropzoneText={this.translate("Drag and drop a file here or click")}
+	            dropzoneClass="fileeditable-dropzone"
+	            dropzoneParagraphClass="fileeditable-dropzone-paragraph"
                 filesLimit={1}
                 maxFileSize={this.props.maxSize != null ? this.props.maxSize : 300000000}
+                showPreviewsInDropzone={false}
 	            onChange={(files) => {
 	                if (files.length <= 0) return;
 	                if (files.length > 1) return;

@@ -34,17 +34,23 @@ Component chart
 	Notification refresh as Object(ChartInfo)
 	Notification refreshError as Text
 
-Component dashboard
+Component baseDashboard
 	Notification showLoading
-	Notification showSettings as Object(DashboardSettingsInfo)
+
+Component dashboardShiny as ExtensionOf(baseDashboard)
+	Notification showSettings as Object(DashboardShinySettingsInfo)
 	Notification hideSettings
-	Notification refresh as Object(DashboardInfo)
+	Notification refresh as Object(DashboardShinyInfo)
 	Notification refreshError as Text
 
 	Request showSettings
 	Request hideSettings
 	Request saveServerScript as Text
 	Request saveUiScript as Text
+
+Component dashboardMetabase as ExtensionOf(baseDashboard)
+	Notification refresh as Object(DashboardMetabaseInfo)
+	Notification refreshError as Text
 
 Component header
 Component tabs

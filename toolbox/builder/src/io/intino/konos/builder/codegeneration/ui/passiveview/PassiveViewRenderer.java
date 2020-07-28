@@ -17,6 +17,7 @@ import io.intino.konos.model.graph.InteractionComponents.Toggle;
 import io.intino.konos.model.graph.OtherComponents.Selector;
 import io.intino.konos.model.graph.PassiveView.Notification;
 import io.intino.konos.model.graph.PassiveView.Request;
+import io.intino.konos.model.graph.VisualizationComponents.Dashboard;
 import io.intino.magritte.framework.Layer;
 
 import java.io.File;
@@ -203,6 +204,8 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (passiveView.i$(Selector.CheckBox.class)) result.add("CheckBox");
 		if (passiveView.i$(DataComponents.Image.Avatar.class)) result.add("Avatar");
 		if (passiveView.i$(Block.Parallax.class)) result.add("Parallax");
+		if (passiveView.i$(Dashboard.Shiny.class)) result.add("Shiny");
+		if (passiveView.i$(Dashboard.Metabase.class)) result.add("Metabase");
 		return result;
 	}
 
@@ -368,7 +371,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			registerMultipleImport(imported, multiple, type, c, builder);
 			if (key != null && !imported.contains(key))
 				builder.add(importType, importOf(c, importType, isProjectComponent ? false : multiple));
-			imported.add(key);
+			if (key != null) imported.add(key);
 			if (c.i$(CatalogComponents.Collection.class)) registerCollectionImports(imported, c, builder);
 			if (c.i$(HelperComponents.Row.class)) registerRowImports(imported, c, builder);
 			if (!c.i$(CatalogComponents.Collection.Mold.Item.class))
