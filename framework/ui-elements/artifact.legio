@@ -33,8 +33,9 @@ Artifact("io.intino.alexandria", "4.3.14") ui-framework-elements
 		WebComponent("material-ui-dropzone", "^3.1.0")
 
 	Package(LibrariesLinkedByManifest)
-	Distribution(intino.release)
+	Distribution("intino-maven")
+		Release("https://artifactory.intino.io/artifactory/release-libraries")
 
-Repository("intino-maven") intino
+Repository("intino-maven")
 	Release("https://artifactory.intino.io/artifactory/releases")
 	Release("https://artifactory.intino.io/artifactory/release-frameworks") release

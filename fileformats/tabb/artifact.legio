@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.alexandria", version = "2.1.0") tabb
+Artifact("io.intino.alexandria", "2.1.0") tabb
 	Imports
 		Compile("com.opencsv", "opencsv", "4.1")
 		Compile("io.intino.itrules", "engine", "1.0.0")
@@ -10,9 +10,8 @@ Artifact(groupId = "io.intino.alexandria", version = "2.1.0") tabb
 		Test("junit", "junit", "LATEST")
 		Test("org.assertj", "assertj-core", "3.15.0")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
-	Distribution(intino.release)
+	Distribution("intino-maven")
+		Release("https://artifactory.intino.io/artifactory/release-libraries")
 
-Repository(identifier = "intino-maven") intino
-	Language(url = "https://artifactory.intino.io/artifactory/releases")
-	Release(url = "https://artifactory.intino.io/artifactory/releases")
-	Release(url = "https://artifactory.intino.io/artifactory/release-libraries") release
+Repository("intino-maven")
+	Release("https://artifactory.intino.io/artifactory/releases")

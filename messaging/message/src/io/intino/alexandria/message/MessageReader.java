@@ -126,7 +126,7 @@ public class MessageReader implements Iterator<Message>, Iterable<Message> {
 			current = iterator.next();
 			if (current.getType() == VALUE) builder.append("\n").append(current.getText());
 		}
-		return builder.toString().substring(1);
+		return builder.length() == 0 ? "" : builder.toString().substring(1);
 	}
 
 	private List<Token> lexicon(String text) {

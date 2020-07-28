@@ -8,9 +8,8 @@ Artifact("io.intino.alexandria", "1.2.4") jms
 		Compile("org.apache.activemq", "activemq-client", "5.15.12")
 		Test("junit", "junit", "4.13")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
-	Distribution(intino.release)
+	Distribution("intino-maven")
+		Release("https://artifactory.intino.io/artifactory/release-libraries")
 
-
-Repository("intino-maven") intino
+Repository("intino-maven")
 	Release("https://artifactory.intino.io/artifactory/releases")
-	Release("https://artifactory.intino.io/artifactory/release-libraries") release

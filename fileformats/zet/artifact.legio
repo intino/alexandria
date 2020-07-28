@@ -7,7 +7,8 @@ Artifact("io.intino.alexandria", "1.0.5") zet
 		Test("org.assertj", "assertj-core", "3.15.0")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
-	Distribution(intino.release)
+	Distribution("intino-maven")
+		Release("https://artifactory.intino.io/artifactory/release-libraries")
 
-Repository(identifier = "intino-maven") intino
-	Release(url = "https://artifactory.intino.io/artifactory/release-libraries")release
+Repository("intino-maven")
+	Release("https://artifactory.intino.io/artifactory/releases")
