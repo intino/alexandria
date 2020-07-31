@@ -7,6 +7,7 @@ export default class BaseText extends AbstractBaseText {
         super(props);
         this.state = {
             ...this.state,
+			error: null,
 			value : this.props.value,
 			title : this.props.value,
             highlighted : this.props.highlighted,
@@ -15,7 +16,11 @@ export default class BaseText extends AbstractBaseText {
 
     refresh = (value) => {
         const finalValue = this._requireEllipsis(value) ? value.substring(0, this.props.cropWithEllipsis) + "..." : value;
-		this.setState({ value: finalValue != null ? finalValue : "", title: value != null ? value : "" });
+		this.setState({ value: finalValue != null ? finalValue : "", title: value != null ? value : "", error: null });
+    };
+
+    refreshError = (value) => {
+		this.setState({ error: value });
     };
 
     refreshHighlight = (highlighted) => {

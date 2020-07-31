@@ -22,6 +22,10 @@ public class BaseText<DN extends BaseTextNotifier, B extends Box> extends Abstra
         notifier.refresh(value);
     }
 
+    public void error(String error) {
+        notifier.refreshError(error);
+    }
+
     protected BaseText<DN, B> _value(String value) {
         this.value = value;
         return this;

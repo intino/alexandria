@@ -28,7 +28,7 @@ public class TemplateRenderer extends BaseDisplayRenderer<Template> {
 		FrameBuilder frame = super.buildFrame();
 		List<Component> components = element.componentList();
 		addComponentsImports(components, frame);
-		components.forEach(c -> addComponent(c, frame));
+		components.forEach(c -> addComponent(c, virtualParent(), frame));
 		frame.add("componentReferences", componentReferencesFrame());
 		return frame;
 	}
@@ -41,7 +41,7 @@ public class TemplateRenderer extends BaseDisplayRenderer<Template> {
 	}
 
 	private void addComponents(FrameBuilder frame) {
-		element.componentList().forEach(c -> addComponent(c, frame));
+		element.componentList().forEach(c -> addComponent(c, virtualParent(), frame));
 	}
 
 }

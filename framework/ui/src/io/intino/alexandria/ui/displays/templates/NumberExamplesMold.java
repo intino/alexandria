@@ -14,6 +14,7 @@ public class NumberExamplesMold extends AbstractNumberExamplesMold<AlexandriaUiB
         super.init();
         number1.countDecimals(10);
         number3.onChange((event) -> number3.notifyUser(String.format("Valor: %.0f", (double)event.value()), UserMessage.Type.Info));
+        number7.error("Field value is wrong");
     }
 
 }

@@ -38,7 +38,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	private String label = "";
 	private String name = "";
 
-	private static final String DefaultInstanceContainer = "__elements";
+	public static final String DefaultInstanceContainer = "__elements";
 
 	public Display(B box) {
 		this.box = box;

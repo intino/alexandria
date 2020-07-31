@@ -5,6 +5,7 @@ import io.intino.magritte.framework.Graph;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -40,6 +41,7 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		List<Display> rootDisplays = graph.displayList().stream().filter(d -> d.core$().ownerAs(PassiveView.class) == null).collect(toList());
 		rootDisplays.addAll(itemsDisplays(group));
 		rootDisplays.addAll(rowsDisplays(group));
+		rootDisplays.addAll(collectionsDisplays(group));
 		return rootDisplays;
 	}
 
@@ -52,6 +54,27 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 	public List<HelperComponents.Row> rowsDisplays(String group) {
 		if (!rows.containsKey(group)) rows.put(group, core$().find(HelperComponents.Row.class));
 		return rows.get(group);
+	}
+
+	public List<CatalogComponents.Collection> collectionsDisplays(String group) {
+		KonosGraph graph = this;
+		return graph.displayList().stream().filter(d -> d.core$().ownerAs(PassiveView.class) == null && d.i$(CatalogComponents.Collection.class)).map(d -> d.a$(CatalogComponents.Collection.class)).collect(Collectors.toList());
+	}
+
+	public List<CatalogComponents.Table> tablesDisplays(String group) {
+		return collectionsDisplays(group).stream().filter(c -> c.i$(CatalogComponents.Table.class)).map(c -> c.a$(CatalogComponents.Table.class)).collect(Collectors.toList());
+	}
+
+	public List<CatalogComponents.List> listsDisplays(String group) {
+		return collectionsDisplays(group).stream().filter(c -> c.i$(CatalogComponents.List.class)).map(c -> c.a$(CatalogComponents.List.class)).collect(Collectors.toList());
+	}
+
+	public List<CatalogComponents.Magazine> magazinesDisplays(String group) {
+		return collectionsDisplays(group).stream().filter(c -> c.i$(CatalogComponents.Magazine.class)).map(c -> c.a$(CatalogComponents.Magazine.class)).collect(Collectors.toList());
+	}
+
+	public List<CatalogComponents.Map> mapsDisplays(String group) {
+		return collectionsDisplays(group).stream().filter(c -> c.i$(CatalogComponents.Map.class)).map(c -> c.a$(CatalogComponents.Map.class)).collect(Collectors.toList());
 	}
 
 	public static List<CatalogComponents.Table> tablesDisplays(KonosGraph graph, String group) {

@@ -11,7 +11,7 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import GeoBehavior from "./behaviors/GeoBehavior";
 import GeometryUtil from "../../util/GeometryUtil";
 
-const styles = theme => ({
+export const MapStyles = theme => ({
 	...CollectionStyles(theme),
 	message : {
 		position: "absolute",
@@ -27,7 +27,7 @@ const styles = theme => ({
 	}
 });
 
-class Map extends AbstractMap {
+export class EmbeddedMap extends AbstractMap {
 
 	state = {
 		placeMarks: [],
@@ -144,5 +144,11 @@ class Map extends AbstractMap {
 	};
 }
 
-export default withStyles(styles, { withTheme: true })(Map);
-DisplayFactory.register("Map", withStyles(styles, { withTheme: true })(Map));
+class Map extends EmbeddedMap {
+    constructor(props) {
+        super(props);
+    }
+}
+
+export default withStyles(MapStyles, { withTheme: true })(Map);
+DisplayFactory.register("Map", withStyles(MapStyles, { withTheme: true })(Map));

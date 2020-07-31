@@ -23,7 +23,12 @@ public abstract class CollectionComponentRenderer<C extends Component> extends C
 		int position = position();
 		if (position == 0) result.add("paddingLeft", "paddingLeft");
 		result.add("paddingSize", position == 0 ? "20" : "10");
+		result.add("hidden", hidden().name());
 		return result;
+	}
+
+	private CatalogComponents.Collection.Mold.Hidden hidden() {
+		return element.core$().ownerAs(CatalogComponents.Collection.Mold.class).hidden();
 	}
 
 	private int width() {

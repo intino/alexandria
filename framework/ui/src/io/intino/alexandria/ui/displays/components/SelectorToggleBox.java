@@ -30,14 +30,21 @@ public class SelectorToggleBox<DN extends SelectorToggleBoxNotifier, B extends B
 		select();
 	}
 
+	public void selection(String... options) {
+		selection(Arrays.asList(options));
+	}
+
+	public void selection(List<String> selection) {
+		this.selection = selection;
+		notifier.refreshSelection(selection);
+	}
+
 	public void select(String... options) {
 		updateSelection(Arrays.asList(options));
 	}
 
-	public void updateSelection(List<String> selection) {
-		this.selection = new ArrayList<>(selection);
-		notifier.refreshSelection(selection);
+	public void updateSelection(List<String> options) {
+		selection(options);
 		notifySelection();
 	}
-
 }

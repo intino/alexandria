@@ -16,6 +16,7 @@ public class TextExamplesMold extends AbstractTextExamplesMold<AlexandriaUiBox> 
         text2.value("lorem ipsum");
         text3.value("lorem ipsum");
         text3.onChange((event) -> text3.notifyUser(String.format("Valor: %s", (String)event.value()), UserMessage.Type.Info));
+        text4.error("Field value is wrong");
         textCode2.onChange((event) -> textCode2.notifyUser(String.format("Valor: %s", (String)event.value()), UserMessage.Type.Info));
     }
 

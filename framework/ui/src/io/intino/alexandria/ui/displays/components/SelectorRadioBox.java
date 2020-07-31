@@ -20,10 +20,14 @@ public class SelectorRadioBox<DN extends SelectorRadioBoxNotifier, B extends Box
         super(box);
     }
 
-	public void select(String value) {
+	public void selection(String value) {
 		notifier.refreshSelected(nameOf(value));
 		if (selected != null && selected.equals(value)) return;
 		selected = value;
+	}
+
+	public void select(String value) {
+    	selection(value);
 		notifySelection();
 	}
 

@@ -10,6 +10,9 @@ def type(reference)
 	if ($name == null) $name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
+def type(component & child & collection & embedded) trigger(declarations)
+end
+
 def type(component & child & collection) trigger(declarations)
 	public [$ancestors+firstUpperCase...[.].] $name+firstUpperCase $name;
 	[$heading+declarations...[$NL]]
@@ -85,6 +88,14 @@ def type(method & addressable)
     }
 end
 
+def type(method & collectionbox)
+    @Override
+    public $name+firstUpperCase set(java.util.function.Function<String, String> addressFromPathResolver) {
+        address(addressFromPathResolver.apply(path()));
+        return this;
+    }
+end
+
 def type(method & collection & table)
 	[$selectionMethod]
 
@@ -107,6 +118,19 @@ def type(component & child) trigger(method)
 end
 
 def type(component & child & stamp & single) trigger(class)
+end
+
+def type(component & child & collection & embedded) trigger(class)
+	public class $name+firstUpperCase extends $package.ui.displays[.$packageType~s].$name+firstUpperCase {
+        public $name+firstUpperCase($abstractBox+type box) {
+            this(($concreteBox+firstUpperCase~Box)box);
+        }
+		public $name+firstUpperCase($concreteBox+firstUpperCase~Box box) {
+			super(box);
+			[$properties+common]
+			[$properties+specific]
+		}
+	}
 end
 
 def type(component & child & collection) trigger(class)
@@ -210,6 +234,9 @@ end
 def type(component & child & multipleblock) trigger(rootChildReferences)
 end
 
+def type(component & child & collection & embedded) trigger(rootChildReferences)
+end
+
 def type(component & child & collection) trigger(rootChildReferences)
 	[if ($parent != null)] $name = [$ancestorsNotMe...[.].]$name;
 	[$heading+rootChildReferences...[$NL]]
@@ -220,6 +247,9 @@ def type(component & child) trigger(rootChildReferences)
 	[$component+rootChildReferences...[$NL]]
 end
 
+def type(component & child & collection & embedded) trigger(childReferences)
+end
+
 def type(component & child & collection) trigger(childReferences)
 	[if ($parent != null)] $name = [$ancestors...[.].]$name;
 	[$heading+childReferences...[$NL]]
@@ -228,6 +258,9 @@ end
 def type(component & child) trigger(childReferences)
 	[if ($parent != null)] $name = [$ancestors...[.].]$name;
 	[$component+childReferences...[$NL]]
+end
+
+def type(component & child & collection & embedded) trigger(rootReferences)
 end
 
 def type(component & child & collection) trigger(rootReferences)
@@ -248,6 +281,9 @@ def type(component & child) trigger(rootReferences)
 	[$component+rootChildReferences...[$NL]]
 end
 
+def type(component & child & collection & embedded) trigger(references)
+end
+
 def type(component & child & collection) trigger(references)
 	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 	[$heading+childReferences...[$NL]]
@@ -265,6 +301,9 @@ end
 def type(component & child) trigger(conditionalReferences)
 	if ($name == null) $name = [$ancestorsNotMe...[.].]$name;
 	[$binding]
+end
+
+def type(component & child & collection & embedded) trigger(initializations)
 end
 
 def type(component & child & collection) trigger(initializations)
@@ -354,6 +393,14 @@ def type(binding & decisiondialog)
 end
 
 def type(binding & collectiondialog)
+	if ($name != null) $name.bindTo($collection);
+end
+
+def type(binding & collectionbox & add)
+	if ($name != null) $name.bindTo($name.$collection);
+end
+
+def type(binding & collectionbox)
 	if ($name != null) $name.bindTo($collection);
 end
 

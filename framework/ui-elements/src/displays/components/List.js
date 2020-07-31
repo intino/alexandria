@@ -8,7 +8,7 @@ import 'alexandria-ui-elements/res/styles/layout.css';
 import {CollectionStyles} from "./Collection";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
-const styles = theme => ({
+export const ListStyles = theme => ({
 	...CollectionStyles(theme),
 	itemView : {
 		height: "100%",
@@ -22,7 +22,7 @@ const styles = theme => ({
 	},
 });
 
-class List extends AbstractList {
+export class EmbeddedList extends AbstractList {
 
 	constructor(props) {
 		super(props);
@@ -36,5 +36,11 @@ class List extends AbstractList {
 
 }
 
-export default withStyles(styles, { withTheme: true })(List);
-DisplayFactory.register("List", withStyles(styles, { withTheme: true })(List));
+class List extends EmbeddedList {
+    constructor(props) {
+        super(props);
+    }
+}
+
+export default withStyles(ListStyles, { withTheme: true })(List);
+DisplayFactory.register("List", withStyles(ListStyles, { withTheme: true })(List));

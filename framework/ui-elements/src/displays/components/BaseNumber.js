@@ -6,6 +6,7 @@ export default class BaseNumber extends AbstractBaseNumber {
 	constructor(props) {
 		super(props);
 		this.state = {
+			error: null,
 			value : this.props.value,
 		    decimals: this.props.decimals != null ? this.props.decimals : 0,
 			expanded : this.props.expanded,
@@ -17,6 +18,10 @@ export default class BaseNumber extends AbstractBaseNumber {
 
 	refresh = (value) => {
 	};
+
+    refreshError = (value) => {
+		this.setState({ error: value });
+    };
 
 	refreshExpanded = (value) => {
 		this.setState({expanded : value});

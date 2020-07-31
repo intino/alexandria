@@ -49,14 +49,17 @@ public class SelectorComboBox<DN extends SelectorComboBoxNotifier, B extends Box
 		children().stream().filter(c -> c instanceof SelectorOption).forEach(Display::refresh);
 	}
 
-	public void select(String... options) {
-		updateSelection(Arrays.asList(options));
+	public void selection(String... selection) {
+		selection(Arrays.asList(selection));
 	}
 
-	public void updateSelection(List<String> selection) {
-		this.selection = new ArrayList<>(selection);
+	public void selection(List<String> selection) {
+		this.selection = selection;
 		notifier.refreshSelection(this.selection);
-		notifySelection();
+	}
+
+	public void select(String... options) {
+		updateSelection(Arrays.asList(options));
 	}
 
 	protected SelectorComboBox<DN, B> _readonly(boolean readonly) {
@@ -64,4 +67,8 @@ public class SelectorComboBox<DN extends SelectorComboBoxNotifier, B extends Box
 		return this;
 	}
 
+	public void updateSelection(List<String> options) {
+		selection(options);
+		notifySelection();
+	}
 }

@@ -3,7 +3,7 @@ dsl Proteo
 use Component
 
 Concept CatalogComponents
-	Concept Collection extends Component
+	Concept:Named Collection extends Component
 		var string sourceClass = empty
 		var string itemClass = empty
 		var string noItemsMessage = empty
@@ -12,6 +12,7 @@ Concept CatalogComponents
 		var boolean scrollingMark = true
 
 		Concept:{1..*} Mold
+			var word:{Never Always IfMobile IfNotMobile} hidden = Never
 			Concept:{0..1} Heading extends Component
 				has Component
 			Concept:{1..1} Item extends Component > has Component

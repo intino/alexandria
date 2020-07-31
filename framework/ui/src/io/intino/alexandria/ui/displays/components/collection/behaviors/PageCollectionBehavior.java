@@ -9,7 +9,7 @@ import java.util.List;
 
 public class PageCollectionBehavior<DS extends PageDatasource<Item>, Item> extends CollectionBehavior<DS, Item, PageItemLoader<DS, Item>> {
 	private int page = 0;
-	private static final int DefaultPageSize = 20;
+	public static final int DefaultPageSize = 20;
 
 	public PageCollectionBehavior(Collection collection) {
 		super(collection);

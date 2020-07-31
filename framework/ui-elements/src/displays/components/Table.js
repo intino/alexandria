@@ -14,7 +14,7 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
 import Block from "./Block";
 
-const styles = theme => ({
+export const TableStyles = theme => ({
     ...CollectionStyles(theme),
     label: {
         color: theme.palette.grey.primary,
@@ -47,7 +47,7 @@ const styles = theme => ({
     }
 });
 
-class Table extends AbstractTable {
+export class EmbeddedTable extends AbstractTable {
 
     constructor(props) {
         super(props);
@@ -83,5 +83,11 @@ class Table extends AbstractTable {
 
 }
 
-export default withStyles(styles, { withTheme: true })(withSnackbar(Table));
-DisplayFactory.register("Table", withStyles(styles, { withTheme: true })(withSnackbar(Table)));
+class Table extends EmbeddedTable {
+    constructor(props) {
+        super(props);
+    }
+}
+
+export default withStyles(TableStyles, { withTheme: true })(withSnackbar(Table));
+DisplayFactory.register("Table", withStyles(TableStyles, { withTheme: true })(withSnackbar(Table)));

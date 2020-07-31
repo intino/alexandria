@@ -10,6 +10,8 @@ import io.intino.alexandria.ui.displays.components.AbstractDashboardMetabase;
 import io.intino.alexandria.ui.displays.notifiers.DashboardMetabaseNotifier;
 
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -102,8 +104,8 @@ public class DashboardMetabase<DN extends DashboardMetabaseNotifier, B extends B
 
     private String location() {
         String header = base64(Header);
-        String payload = base64(payload()).replace("=","");
-        String signature = base64(sign(header, payload)).replace("=","").replace("+","-");
+        String payload = base64(payload());
+        String signature = base64(sign(header, payload));
         String token = header + "." + payload + "." + signature;
         return url + "/embed/dashboard/" + token + "#bordered=" + bordered + "&titled=" + titled + (theme == Theme.Dark ? "&theme=night" : "");
     }
@@ -141,8 +143,15 @@ public class DashboardMetabase<DN extends DashboardMetabaseNotifier, B extends B
         return base64(text.getBytes());
     }
 
-    private String base64(byte[] bytes) {
-        return Base64.encode(bytes);
+    public static String base64(byte[] data) {
+        byte[] encode = new org.apache.commons.codec.binary.Base64().encode(data);
+        for (int i = 0; i < encode.length; i++) {
+            if (encode[i] == '+') {
+                encode[i] = '-';
+            } else if (encode[i] == '/') {
+                encode[i] = '_';
+            }
+        }
+        return new String(encode).replace("=","");
     }
-
 }

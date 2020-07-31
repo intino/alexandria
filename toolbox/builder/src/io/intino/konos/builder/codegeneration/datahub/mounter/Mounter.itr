@@ -27,7 +27,7 @@ def type(mounter & population)
 	import java.io.IOException;
 
 	public class $name+FirstUpperCase {
-		public $box+validName+firstUpperCase~Box box;
+		public final $box+validName+firstUpperCase~Box box;
 
 		public void pump(Timetag from, Timetag to, Predicate<Timetag> filter) {
 			from.iterateTo(to).forEach(timetag -> {
@@ -52,7 +52,7 @@ def type(mounter)
 	import $package+validPackage.mounters.Mounter;
 
 	public class $name+FirstUpperCase implements Mounter {
-		private $box+validName+firstUpperCase~Box box;
+		private final $box+validName+firstUpperCase~Box box;
 
 		public $name+FirstUpperCase($box+validName+firstUpperCase~Box box) {
 			this.box = box;

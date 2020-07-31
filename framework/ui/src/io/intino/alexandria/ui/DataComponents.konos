@@ -4,6 +4,7 @@ use Schemas
 
 Component baseNumber
 	Notification refresh as Real
+	Notification refreshError as Text
 	Notification refreshDecimals as Integer
 	Notification refreshExpanded as Bool
 	Notification refreshPrefix as Text
@@ -16,6 +17,7 @@ Component numberEditable as ExtensionOf(baseNumber)
 
 Component baseDate
 	Notification refresh as DateTime
+	Notification refreshError as Text
 Component date as ExtensionOf(baseDate)
 Component dateEditable as ExtensionOf(baseDate)
 	Notification refreshReadonly as Bool
@@ -23,6 +25,7 @@ Component dateEditable as ExtensionOf(baseDate)
 
 Component baseText
 	Notification refresh as Text
+	Notification refreshError as Text
 	Notification refreshHighlight as Object(Highlight)
 Component text as ExtensionOf(baseText)
 Component textCode as ExtensionOf(baseText)

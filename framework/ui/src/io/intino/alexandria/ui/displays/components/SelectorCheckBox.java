@@ -24,13 +24,22 @@ public class SelectorCheckBox<DN extends SelectorCheckBoxNotifier, B extends Box
 		select();
 	}
 
+	public void selection(String... options) {
+		selection(Arrays.asList(options));
+	}
+
+	public void selection(List<String> selection) {
+		this.selection = selection;
+		notifier.refreshSelection(this.selection);
+	}
+
 	public void select(String... options) {
 		updateSelection(Arrays.asList(options));
 	}
 
-	public void updateSelection(List<String> selection) {
-		this.selection = new ArrayList<>(selection);
-		notifier.refreshSelection(this.selection);
+	public void updateSelection(List<String> options) {
+		selection(options);
 		notifySelection();
 	}
+
 }

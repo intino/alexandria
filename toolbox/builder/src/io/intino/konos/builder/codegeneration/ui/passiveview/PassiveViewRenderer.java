@@ -35,12 +35,21 @@ import static io.intino.konos.model.graph.PassiveView.Request.ResponseType.Asset
 import static java.util.stream.Collectors.toList;
 
 public abstract class PassiveViewRenderer<C extends PassiveView> extends ElementRenderer<C> {
+	private Display virtualParent;
 
 	public static final String ProjectComponentImport = "projectComponentImport";
 	public static final String AlexandriaComponentImport = "alexandriaComponentImport";
 
 	protected PassiveViewRenderer(CompilationContext compilationContext, C element, TemplateProvider templateProvider, Target target) {
 		super(compilationContext, element, templateProvider, target);
+	}
+
+	public Display virtualParent() {
+		return virtualParent;
+	}
+
+	public void virtualParent(Display parent) {
+		this.virtualParent = parent;
 	}
 
 	@Override
@@ -51,9 +60,10 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	public FrameBuilder buildFrame(boolean accessible) {
 		FrameBuilder result = super.buildFrame();
 		if (accessible) result.add("accessible");
+		if (element.i$(CatalogComponents.Collection.class)) result.add("collection");
 		FrameBuilder extensionFrame = extensionFrame(accessible);
 		String type = type();
-		result.add("id", shortId(element));
+		result.add("id", shortId(element, virtualParent != null ? virtualParent.name$() : ""));
 		result.add("type", type);
 		addParentImport(result);
 		result.add("parentType", extensionFrame);
@@ -157,7 +167,11 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			components.addAll(passiveView.a$(VisualizationComponents.Stepper.Step.class).componentList());
 		if (passiveView.i$(OtherComponents.Header.class))
 			components.addAll(passiveView.a$(OtherComponents.Header.class).componentList());
-		if (passiveView.i$(Selector.class)) components.addAll(passiveView.a$(Selector.class).componentList());
+		if (passiveView.i$(Selector.class)) {
+			if (passiveView.i$(Selector.CollectionBox.class) && passiveView.a$(Selector.CollectionBox.class).source() != null)
+				components.add(passiveView.a$(Selector.CollectionBox.class).source());
+			else components.addAll(passiveView.a$(Selector.class).componentList());
+		}
 		if (passiveView.i$(OtherComponents.User.class))
 			components.addAll(passiveView.a$(OtherComponents.User.class).componentList());
 		if (passiveView.i$(CatalogComponents.Table.class))
@@ -198,6 +212,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (passiveView.i$(Selector.Menu.class)) result.add("Menu");
 		if (passiveView.i$(Selector.ToggleBox.class)) result.add("ToggleBox");
 		if (passiveView.i$(Selector.ComboBox.class)) result.add("ComboBox");
+		if (passiveView.i$(Selector.CollectionBox.class)) result.add("CollectionBox");
 		if (passiveView.i$(CatalogComponents.Grouping.ComboBox.class)) result.add("ComboBox");
 		if (passiveView.i$(Selector.ListBox.class)) result.add("ListBox");
 		if (passiveView.i$(Selector.RadioBox.class)) result.add("RadioBox");
@@ -354,7 +369,10 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		} else if (typeOf(element).equalsIgnoreCase("component")) result.add("baseComponent", "");
 		else if (builder.is("accessible")) result.add("accessible", "");
 		else if (typeOf(element).equalsIgnoreCase("display")) result.add("baseDisplay", "");
-		else if (element.i$(Component.class)) result.add("component", "");
+		else if (element.i$(Component.class)) {
+			if (isEmbeddedComponent(element.a$(Component.class))) result.add("embeddedComponent", "");
+			else result.add("component", "");
+		}
 		else if (ElementHelper.isRoot(element)) result.add("abstract", "");
 		builder.add("parent", result);
 	}
@@ -392,6 +410,11 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (component.i$(HelperComponents.Row.class)) return true;
 		if (component.i$(CatalogComponents.Collection.Mold.Item.class)) return true;
 		return false;
+	}
+
+	protected boolean isEmbeddedComponent(Component component) {
+		if (!component.i$(CatalogComponents.Collection.class)) return false;
+		return component.core$().graph().rootList().contains(component.core$());
 	}
 
 	private String keyOf(Component component, String type) {

@@ -25,6 +25,32 @@ def type(display & accessible)
 	[$displayRegistration+declaration]
 end
 
+def type(display & collection)
+	import React from "react";
+	[$alexandriaBlockImport]
+	[$alexandriaStampImport]
+	[$alexandriaFrameImport]
+	[$alexandriaComponentImport...[$NL]]
+	[$projectComponentImport...[$NL]]
+	[$parent+import]
+	[import $notDecorated+firstUpperCase~Notifier from "$notifierDirectory/notifiers/$notDecorated+firstUpperCase~Notifier";]
+	[import $notDecorated+firstUpperCase~Requester from "$requesterDirectory/requesters/$notDecorated+firstUpperCase~Requester";]
+	[$displayRegistration+import]
+
+	export default class $abstract$name+firstUpperCase extends $displayExtends {
+
+		constructor(props) {
+			super(props);
+			[this.notifier = new $notDecorated+firstUpperCase~Notifier(this);]
+			[this.requester = new $notDecorated+firstUpperCase~Requester(this);]
+			[$properties+initialization]
+    	};
+
+	}
+
+	[$displayRegistration+declaration]
+end
+
 def type(display)
 	import React from "react";
 	[$alexandriaBlockImport]
@@ -48,6 +74,7 @@ def type(display)
 
 		render() {
 		    const display = !this.state.visible ? {display:'none'} : undefined;
+		    const className = "layout vertical center-justified" + (this.hiddenClass() !== "" ? " " + this.hiddenClass() : "");
 			return [this.$baseMethod](
 				[$renderTag]
 					[$reference...[$NL]]
@@ -74,6 +101,10 @@ end
 
 def type(alexandriaImport)
 	import Ui$name+firstUpperCase from "alexandria-ui-elements/src/displays/components/$name+firstUpperCase";
+end
+
+def type(alexandriaImport & embedded)
+	import { Embedded$name+firstUpperCase as Ui$name+firstUpperCase } from "alexandria-ui-elements/src/displays/components/$name+firstUpperCase";
 end
 
 def type(alexandriaComponentImport)
@@ -121,7 +152,7 @@ def type(renderTag & block)
 end
 
 def type(renderTag & item)
-	<div style={{width:"100%",height:"100%",...this.props.style,...this.style(),...display}} className="layout vertical center-justified">
+	<div style={{width:"100%",height:"100%",...this.props.style,...this.style(),...display}} className={className}>
 end
 
 def type(renderTag)
@@ -149,6 +180,10 @@ end
 
 def attribute(baseComponent) trigger(import)
 	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/components/Component";
+end
+
+def attribute(embeddedComponent) trigger(import)
+	import { Embedded$value+firstUpperCase as Ui$value+firstUpperCase } from "alexandria-ui-elements/src/displays/components/$value+firstUpperCase";
 end
 
 def attribute(component) trigger(import)

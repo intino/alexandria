@@ -19,8 +19,40 @@ def type(row) trigger(import)
 	import $name+firstUppercase from "../$directory/displays/rows/$name+firstUppercase"
 end
 
+def type(table & accessible) trigger(import)
+	import $name+firstUppercase~Proxy from "./displays/tables/$name+firstUppercase~Proxy"
+end
+
+def type(table) trigger(import)
+	import $name+firstUppercase from "../$directory/displays/tables/$name+firstUppercase"
+end
+
+def type(list & accessible) trigger(import)
+	import $name+firstUppercase~Proxy from "./displays/lists/$name+firstUppercase~Proxy"
+end
+
+def type(list) trigger(import)
+	import $name+firstUppercase from "../$directory/displays/lists/$name+firstUppercase"
+end
+
+def type(magazine & accessible) trigger(import)
+	import $name+firstUppercase~Proxy from "./displays/magazines/$name+firstUppercase~Proxy"
+end
+
+def type(magazine) trigger(import)
+	import $name+firstUppercase from "../$directory/displays/magazines/$name+firstUppercase"
+end
+
 def type(template & accessible) trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/templates/$name+firstUppercase~Proxy"
+end
+
+def type(map & accessible) trigger(import)
+	import $name+firstUppercase~Proxy from "./displays/maps/$name+firstUppercase~Proxy"
+end
+
+def type(map) trigger(import)
+	import $name+firstUppercase from "../$directory/displays/maps/$name+firstUppercase"
 end
 
 def type(template) trigger(import)

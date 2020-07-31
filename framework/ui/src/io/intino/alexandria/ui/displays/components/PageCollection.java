@@ -12,7 +12,7 @@ import io.intino.alexandria.ui.model.datasource.PageDatasource;
 import java.util.List;
 
 public abstract class PageCollection<DN extends PageCollectionNotifier, B extends Box> extends AbstractPageCollection<DN, B> {
-    private int pageSize;
+    private int pageSize = PageCollectionBehavior.DefaultPageSize;
 
     public PageCollection(B box) {
         super(box);

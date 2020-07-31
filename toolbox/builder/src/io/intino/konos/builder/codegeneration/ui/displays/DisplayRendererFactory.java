@@ -20,6 +20,11 @@ public class DisplayRendererFactory {
 			renderer.owner(display);
 			return (T) renderer;
 		}
+		if (display.i$(CatalogComponents.Collection.class)) {
+			ComponentRenderer renderer = new io.intino.konos.builder.codegeneration.ui.displays.components.CollectionRenderer(compilationContext, display.a$(CatalogComponents.Collection.class), provider, target);
+			renderer.owner(display);
+			return (T) renderer;
+		}
 		if (display.i$(CatalogComponents.Collection.Mold.Item.class)) {
 			ItemRenderer renderer = new ItemRenderer(compilationContext, display.a$(CatalogComponents.Collection.Mold.Item.class), provider, target);
 			renderer.owner(display);

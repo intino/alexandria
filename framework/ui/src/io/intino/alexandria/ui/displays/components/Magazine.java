@@ -6,6 +6,7 @@ import io.intino.alexandria.ui.displays.components.collection.Collection;
 import io.intino.alexandria.ui.displays.components.collection.behaviors.PageCollectionBehavior;
 import io.intino.alexandria.ui.displays.events.collection.AddItemEvent;
 import io.intino.alexandria.ui.displays.notifiers.ListNotifier;
+import io.intino.alexandria.ui.model.Datasource;
 import io.intino.alexandria.ui.model.datasource.PageDatasource;
 
 public abstract class Magazine<B extends Box, ItemComponent extends io.intino.alexandria.ui.displays.components.Item, Item> extends AbstractList<ListNotifier, B> implements Collection<ItemComponent, Item> {
@@ -14,9 +15,9 @@ public abstract class Magazine<B extends Box, ItemComponent extends io.intino.al
         super(box);
     }
 
-    public Magazine<B, ItemComponent, Item> source(PageDatasource source) {
+    @Override
+    public <D extends Datasource> void source(D source) {
         source(source, new PageCollectionBehavior<PageDatasource<Item>, Item>(this));
-        return this;
     }
 
     @Override

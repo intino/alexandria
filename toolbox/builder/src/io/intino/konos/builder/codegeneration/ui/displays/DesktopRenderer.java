@@ -47,7 +47,7 @@ public class DesktopRenderer extends BaseDisplayRenderer<Template> {
 		Template.Desktop template = element.asDesktop();
 		List<Component> components = template.header().componentList();
 		addComponentsImports(components, builder);
-		components.forEach(c -> addComponent(c, builder));
+		components.forEach(c -> addComponent(c, virtualParent(), builder));
 	}
 
 //	private void addTab(Tab tab, Frame frame) {

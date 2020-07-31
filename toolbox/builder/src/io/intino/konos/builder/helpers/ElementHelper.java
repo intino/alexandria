@@ -1,7 +1,9 @@
 package io.intino.konos.builder.helpers;
 
 import io.intino.konos.builder.codegeneration.ElementReference;
+import io.intino.konos.model.graph.CatalogComponents;
 import io.intino.konos.model.graph.InteractionComponents;
+import io.intino.konos.model.graph.KonosGraph;
 import io.intino.magritte.framework.Layer;
 import io.intino.magritte.framework.Node;
 import io.intino.magritte.framework.Predicate;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.reverse;
 
@@ -23,7 +26,7 @@ public class ElementHelper {
 	public String shortId(Layer element, String suffix) {
 		String name = nameOf(element);
 		if (isNamed(name)) {
-			if (!isRoot(element.core$())) name = generatedName(element, name);
+			if (!isRoot(element.core$()) || isEmbedded(element.core$())) name = generatedName(element, name);
 		} else name = generatedName(element, name);
 		return name + suffix;
 	}
@@ -140,4 +143,8 @@ public class ElementHelper {
 		return node.owner() == null || node.owner() == node.model();
 	}
 
+	private static boolean isEmbedded(Node node) {
+		KonosGraph graph = node.graph().as(KonosGraph.class);
+		return graph.collectionsDisplays(null).stream().map(Layer::core$).collect(Collectors.toList()).contains(node);
+	}
 }

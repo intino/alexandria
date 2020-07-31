@@ -11,6 +11,10 @@ import java.util.function.Consumer;
 public class DelayerUtil {
 	private static Map<Display, Timer> timers = new HashMap<>();
 
+	public static void execute(Display display, Consumer<Void> callback) {
+		execute(display, callback);
+	}
+
 	public static void execute(Display display, Consumer<Void> callback, int delay) {
 		if (timers.containsKey(display)) timers.get(display).cancel();
 		timers.put(display, new Timer("delayer util timer"));
@@ -20,7 +24,7 @@ public class DelayerUtil {
 				callback.accept(null);
 				timers.remove(display);
 			}
-		}, 1000);
+		}, delay);
 	}
 
 }

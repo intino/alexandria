@@ -4,6 +4,7 @@ import AbstractHeading from "../../../gen/displays/components/AbstractHeading";
 import HeadingNotifier from "../../../gen/displays/notifiers/HeadingNotifier";
 import HeadingRequester from "../../../gen/displays/requesters/HeadingRequester";
 import 'alexandria-ui-elements/res/styles/layout.css';
+import 'alexandria-ui-elements/res/styles/mobile.css';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({});
@@ -18,8 +19,9 @@ class Heading extends AbstractHeading {
 	};
 
 	render() {
-		return (<div className="layout vertical center-justified" style={{height:Heading.Height,...this.props.style,...this.style()}}>{this.props.children}</div>);
-	}
+	    const className = "layout vertical center-justified" + (this.hiddenClass() !== "" ? " " + this.hiddenClass() : "");
+		return (<div className={className} style={{height:Heading.Height,...this.props.style,...this.style()}}>{this.props.children}</div>);
+	};
 
 }
 

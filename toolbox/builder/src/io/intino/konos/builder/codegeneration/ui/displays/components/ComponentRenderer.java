@@ -40,6 +40,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (componentFrameMap.containsKey(frameId)) return componentFrameMap.get(frameId);
 		FrameBuilder builder = super.buildFrame().add("component");
 		if (!belongsToAccessible(element)) builder.add("concreteBox", boxName());
+		if (isEmbeddedComponent(element)) builder.add("embedded");
 		addOwner(builder);
 		addProperties(builder);
 		if (buildChildren) builder.add("child");
@@ -93,20 +94,22 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private void addComponents(Component component, FrameBuilder builder) {
 		addComponentsImports(builder);
 		components(component).forEach(c -> {
-			FrameBuilder componentBuilder = buildChildren ? childFrame(c) : componentFrame(c);
+			Component virtualParent = c.i$(CatalogComponents.Collection.class) && component.i$(OtherComponents.Selector.CollectionBox.class) ? component : null;
+			FrameBuilder componentBuilder = buildChildren ? childFrame(c, virtualParent) : componentFrame(c, virtualParent);
 			builder.add( "component", componentBuilder);
 		});
 	}
 
 	private void addReferences(Component component, FrameBuilder builder) {
 		Set<Component> components = new LinkedHashSet<>(references(component));
-		builder.add("componentReferences", componentReferencesFrame());
+		if (target == Target.Owner) builder.add("componentReferences", componentReferencesFrame());
 		components.forEach(c -> builder.add( "reference", referenceFrame(c)));
 	}
 
 	private FrameBuilder referenceFrame(Component component) {
 		ComponentRenderer renderer = factory.renderer(context, component, templateProvider, target);
 		FrameBuilder builder = new FrameBuilder("reference").add(typeOf(component)).add("name", component.name$());
+		if (isEmbeddedComponent(component)) builder.add("embedded");
 		Component parentComponent = component.core$().ownerAs(Component.class);
 		builder.add("box", boxName());
 		if (!belongsToAccessible(component)) builder.add("concreteBox", boxName());
@@ -118,19 +121,19 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return builder;
 	}
 
-	@Override
-	protected FrameBuilder componentFrame(Component component) {
-		return componentRenderer(component).buildFrame();
+	protected FrameBuilder componentFrame(Component component, Component virtualParent) {
+		return componentRenderer(component, virtualParent).buildFrame();
 	}
 
-	protected FrameBuilder childFrame(Component component) {
-		FrameBuilder result = componentRenderer(component).buildFrame();
+	protected FrameBuilder childFrame(Component component, Component virtualParent) {
+		FrameBuilder result = componentRenderer(component, virtualParent).buildFrame();
 		String[] ancestors = ancestors(component);
 		Component parent = component.core$().ownerAs(Component.class);
 		if (parent != null) result.add("parent", nameOf(parent));
-		result.add("ancestors", ancestors);
-		result.add("ancestorsNotMe", Arrays.copyOfRange(ancestors, 1, ancestors.length));
-		result.add("value", componentRenderer(component).buildFrame().add("addType", typeOf(component)));
+		if (isEmbeddedComponent(component)) result.add("embedded");
+		if (!result.contains("ancestors")) result.add("ancestors", ancestors);
+		if (!result.contains("ancestorsNotMe")) result.add("ancestorsNotMe", ancestors.length > 0 ? Arrays.copyOfRange(ancestors, 1, ancestors.length) : new String[0]);
+		result.add("value", componentRenderer(component, virtualParent).buildFrame().add("addType", typeOf(component)));
 		return result;
 	}
 
@@ -171,16 +174,18 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return result.toArray(new String[0]);
 	}
 
-	private UIRenderer componentRenderer(Component component) {
+	private UIRenderer componentRenderer(Component component, Component virtualParent) {
 		ComponentRenderer renderer = factory.renderer(context, component, templateProvider, target);
 		renderer.buildChildren(true);
 		renderer.decorated(decorated);
 		renderer.owner(owner);
+		renderer.virtualParent(virtualParent);
 		return renderer;
 	}
 
 	private List<Component> references(Component component) {
 		if (element.i$(HelperComponents.Row.class)) return element.a$(HelperComponents.Row.class).items().stream().map(i -> i.a$(Component.class)).collect(Collectors.toList());
+		if (element.i$(OtherComponents.Selector.CollectionBox.class) && element.a$(OtherComponents.Selector.CollectionBox.class).source() != null) return Collections.emptyList();
 		return component.components();
 	}
 
@@ -317,13 +322,13 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (componentList == null) return result;
 
 		result.add("forRoot");
-		componentList.forEach(c -> addComponent(c, result));
+		componentList.forEach(c -> addComponent(c, virtualParent(), result));
 
 		return componentList.size() > 0 ? result : null;
 	}
 
 	private String frameId() {
-		return nameOf(element) + (owner != null ? owner.name$() : "") + target.name() + buildChildren + decorated;
+		return nameOf(element) + (buildChildren && virtualParent() != null ? virtualParent().name$() : "") + (owner != null ? owner.name$() : "") + target.name() + buildChildren + decorated;
 	}
 
 }
