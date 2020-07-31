@@ -14,6 +14,7 @@ import io.intino.konos.model.graph.InteractionComponents.Actionable;
 import io.intino.konos.model.graph.OtherComponents.Dialog;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.model.graph.CatalogComponents.Collection;
 import static io.intino.konos.model.graph.Component.DynamicLoaded;
 import static io.intino.konos.model.graph.OtherComponents.Selector;
@@ -76,6 +77,10 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		FrameBuilder result = new FrameBuilder("displayExtends");
 		if (element.i$(Dialog.class)) result.add(Dialog.class.getSimpleName());
 		if (element.i$(Template.class)) result.add(Template.class.getSimpleName());
+		if (element.i$(CatalogComponents.List.class) || element.i$(CatalogComponents.Magazine.class) ||
+			element.i$(CatalogComponents.Table.class) || element.i$(CatalogComponents.Map.class))
+			result.add("collection");
+		if (element.i$(CatalogComponents.Table.class)) result.add(CatalogComponents.Table.class.getSimpleName());
 		if (element.i$(Collection.Mold.Item.class)) result.add(Collection.Mold.Item.class.getSimpleName());
 		if (element.i$(HelperComponents.Row.class)) result.add(HelperComponents.Row.class.getSimpleName());
 		addGeneric(element, result);
@@ -84,6 +89,12 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (element.i$(Template.class)) {
 			String modelClass = element.a$(Template.class).modelClass();
 			result.add("modelClass", modelClass != null ? modelClass : "java.lang.Void");
+		}
+		if (element.i$(Collection.class)) {
+			Collection.Mold mold = element.a$(Collection.class).mold(0);
+			String itemClass = element.a$(Collection.class).itemClass();
+			result.add("componentType", firstUpperCase(nameOf(mold.item())));
+			result.add("itemClass", itemClass != null ? itemClass : "java.lang.Void");
 		}
 		if (element.i$(Collection.Mold.Item.class)) {
 			String itemClass = element.a$(Collection.Mold.Item.class).core$().ownerAs(Collection.class).itemClass();
@@ -103,6 +114,10 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (graph.blockList().size() > 0) frame.add("blocksImport", buildBaseFrame().add("blocksImport"));
 		if (graph.itemsDisplays(context.graphName()).size() > 0) frame.add("itemsImport", buildBaseFrame().add("itemsImport"));
 		if (graph.rowsDisplays(context.graphName()).size() > 0) frame.add("rowsImport", buildBaseFrame().add("rowsImport"));
+		if (graph.tablesDisplays(context.graphName()).size() > 0) frame.add("tablesImport", buildBaseFrame().add("tablesImport"));
+		if (graph.listsDisplays(context.graphName()).size() > 0) frame.add("listsImport", buildBaseFrame().add("listsImport"));
+		if (graph.magazinesDisplays(context.graphName()).size() > 0) frame.add("magazinesImport", buildBaseFrame().add("magazinesImport"));
+		if (graph.mapsDisplays(context.graphName()).size() > 0) frame.add("mapsImport", buildBaseFrame().add("mapsImport"));
 		if (!ElementHelper.isRoot(componentOf(element)) || (element.isAccessible() && accessible))
 			frame.add("displayRegistration", displayRegistrationFrame(accessible));
 		frame.add("requesterDirectory", typeOf(element).equalsIgnoreCase("Display") || typeOf(element).equalsIgnoreCase("Display") ? "." : "..");
@@ -172,16 +187,17 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		frame.add("abstractBox", abstractBoxFrame);
 	}
 
-	protected FrameBuilder componentFrame(Component component) {
+	protected FrameBuilder componentFrame(Component component, Display virtualParent) {
 		ComponentRenderer renderer = factory.renderer(context, component, templateProvider, target);
 		renderer.buildChildren(true);
 		renderer.decorated(ElementHelper.isRoot(element));
 		renderer.owner(element);
+		renderer.virtualParent(virtualParent);
 		return renderer.buildFrame();
 	}
 
-	protected void addComponent(Component component, FrameBuilder builder) {
-		builder.add("component", componentFrame(component));
+	protected void addComponent(Component component, Display virtualParent, FrameBuilder builder) {
+		builder.add("component", componentFrame(component, virtualParent));
 	}
 
 	protected boolean belongsToAccessible(Display element) {

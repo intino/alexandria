@@ -100,6 +100,12 @@ Component selectorTabs as ExtensionOf(baseSelector)
 	Notification refreshOptionsVisibility as Integer List
 	Request select as Integer
 
+Component selectorCollectionBox as ExtensionOf(baseSelector)
+	Notification refreshSelected as Text
+	Notification refreshReadonly as Bool
+	Request search as Text
+	Request opened
+
 Component multiple
 
 Component spinner

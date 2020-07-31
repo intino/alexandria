@@ -6,7 +6,7 @@ def type(child) trigger(declaration)
 end
 
 def type(block & child) trigger(child)
-	$value
+    $value
 end
 
 def type(child) trigger(child)
@@ -111,7 +111,7 @@ def type(properties & block) trigger(specific)
 end
 
 def type(properties & date) trigger(specific)
-	[ pattern="$pattern"][ mode="$mode"][ value={new Date($value)}][ timePicker={$timePicker}][ mask="$mask"][ allowEmpty={$allowEmpty}]
+	[ pattern="$pattern"][ mode="$mode"][ value={new Date($value)}][ timePicker={$timePicker}][ mask="$mask"][ allowEmpty={$allowEmpty}][ views={$["$view...[","]"$]}]
 end
 
 def type(properties & user) trigger(specific)
@@ -119,7 +119,7 @@ def type(properties & user) trigger(specific)
 end
 
 def type(properties & number) trigger(specific)
-	[ value={$value}][ prefix="$prefix"][ suffix="$suffix"][ min={$min}][ max={$max}][ step={$step}][ readonly={$readonly}][ focused={$focused}][ decimals={$decimals}][ expanded={$expanded}]
+	[ value={$value}][ prefix="$prefix"][ suffix="$suffix"][ min={$min}][ max={$max}][ step={$step}][ readonly={$readonly}][ focused={$focused}][ decimals={$decimals}][ expanded={$expanded}][ helperText="$helperText"]
 end
 
 def type(properties & header) trigger(specific)
@@ -131,7 +131,7 @@ def type(properties & code) trigger(specific)
 end
 
 def type(properties & text) trigger(specific)
-	[ mode="$mode"][ editionMode="$editionMode"][ rows={$rows}][ prefix="$prefix"][ suffix="$suffix"][ translate={$translate}][ cropWithEllipsis={$cropWithEllipsis}][ value="$defaultValue"][ placeholder="$placeholder"][ readonly={$readonly}][ focused={$focused}][ highlighted={$highlighted}][ type="$type"]
+	[ mode="$mode"][ editionMode="$editionMode"][ rows={$rows}][ prefix="$prefix"][ suffix="$suffix"][ translate={$translate}][ cropWithEllipsis={$cropWithEllipsis}][ value="$defaultValue"][ placeholder="$placeholder"][ readonly={$readonly}][ focused={$focused}][ highlighted={$highlighted}][ type="$type"][ helperText="$helperText"]
 end
 
 def type(properties & location) trigger(specific)
@@ -147,11 +147,11 @@ def type(properties & collection) trigger(specific)
 end
 
 def type(properties & heading) trigger(specific)
-	 style={{width:"$width~%",paddingRight:"10px"[,$paddingLeft:"10px"]}}
+	 style={{width:"$width~%",paddingRight:"10px"[,$paddingLeft:"10px"]}}[ hidden="$hidden"]
 end
 
 def type(properties & item) trigger(specific)
-	 style={{width:"$width~%",paddingRight:"10px"[,$paddingLeft:"10px"]}}
+	 style={{width:"$width~%",paddingRight:"10px"[,$paddingLeft:"10px"]}}[ hidden="$hidden"]
 end
 
 def type(properties & spinner) trigger(specific)

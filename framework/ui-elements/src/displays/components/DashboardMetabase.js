@@ -1,11 +1,13 @@
 import React from "react";
-import { Typography, Spinner } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import AbstractDashboardMetabase from "../../../gen/displays/components/AbstractDashboardMetabase";
 import DashboardMetabaseNotifier from "../../../gen/displays/notifiers/DashboardMetabaseNotifier";
 import DashboardMetabaseRequester from "../../../gen/displays/requesters/DashboardMetabaseRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
+import Spinner from "alexandria-ui-elements/src/displays/components/Spinner";
 import { withSnackbar } from 'notistack';
+import 'alexandria-ui-elements/res/styles/layout.css';
 
 const styles = theme => ({
 	container : {
@@ -36,7 +38,7 @@ class DashboardMetabase extends AbstractDashboardMetabase {
 		this.requester = new DashboardMetabaseRequester(this);
         this.state = {
             ...this.state,
-            loading : false,
+            loading : true,
             error : undefined,
             location: undefined,
             adminMode: false,
@@ -53,7 +55,7 @@ class DashboardMetabase extends AbstractDashboardMetabase {
 			return (<div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><Typography style={this.style()} className={classes.error}>{error}</Typography></div>);
 
         return (
-			<div className={classes.container} style={this.style()} ref={this.container}>
+			<div className={classes.container} style={this.style()}>
 				{this.state.loading ? <div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><Spinner/></div> : undefined}
 				{(!this.state.loading && location != null) && <iframe className={classes.container} style={frameStyle} src={location}/>}
             </div>
@@ -61,7 +63,7 @@ class DashboardMetabase extends AbstractDashboardMetabase {
     }
 
 	showLoading = () => {
-		this.setState({ "loading" : true, "error" : undefined });
+		this.setState({ loading : true, error : undefined });
 	};
 
     refresh = (info) => {

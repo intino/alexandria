@@ -7,6 +7,7 @@ import SelectorCheckBoxRequester from "../../../gen/displays/requesters/Selector
 import Divider from './Divider';
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
+import 'alexandria-ui-elements/res/styles/layout.css';
 
 const styles = theme => ({});
 
@@ -26,11 +27,12 @@ class SelectorCheckBox extends AbstractSelectorCheckBox {
 	render() {
 		const children = this.children();
 		const multi = this.props.multipleSelection;
+		const layout = this.props.layout != null ? "layout " + this.props.layout.toLowerCase() + " wrap" : "layout vertical";
 		if (children.length <= 0) return (<div></div>);
 		return (
 		    <FormControl component="fieldset">
                 {this.props.label != null && <FormLabel component="legend">{this.props.label}</FormLabel>}
-                <FormGroup style={this.style()} value={this.state.selection}>
+                <FormGroup className={layout} style={this.style()} value={this.state.selection}>
 				    {React.Children.map(children, (child, i) => { return this.renderChild(child, i); })}
                 </FormGroup>
             </FormControl>

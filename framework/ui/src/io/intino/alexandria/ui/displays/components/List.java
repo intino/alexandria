@@ -6,6 +6,7 @@ import io.intino.alexandria.ui.displays.components.collection.Collection;
 import io.intino.alexandria.ui.displays.components.collection.behaviors.PageCollectionBehavior;
 import io.intino.alexandria.ui.displays.events.collection.AddItemEvent;
 import io.intino.alexandria.ui.displays.notifiers.ListNotifier;
+import io.intino.alexandria.ui.model.Datasource;
 import io.intino.alexandria.ui.model.datasource.PageDatasource;
 
 import java.util.stream.Collectors;
@@ -16,9 +17,9 @@ public abstract class List<B extends Box, ItemComponent extends io.intino.alexan
         super(box);
     }
 
-    public List<B, ItemComponent, Item> source(PageDatasource source) {
+    @Override
+    public <D extends Datasource> void source(D source) {
         source(source, new PageCollectionBehavior<PageDatasource<Item>, Item>(this));
-        return this;
     }
 
     @Override

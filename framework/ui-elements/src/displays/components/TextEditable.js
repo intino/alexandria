@@ -45,12 +45,14 @@ class TextEditable extends AbstractTextEditable {
 		const label = this.props.label !== "" ? this.translate(this.props.label) : undefined;
 		const placeholder = this.props.placeholder !== "" ? this.translate(this.props.placeholder) : undefined;
 		const type = this.props.type != null ? this.props.type : undefined;
+		const error = this.state.error;
 
 		return (
 			<TextField format={this.variant("body1")} style={this.style()} className={classes.default} label={label} type="text"
 					   value={this.state.value} onChange={this.handleChange.bind(this)} /*disabled={this.state.readonly}*/
 					   onKeyPress={this.handleKeypress.bind(this)} type={type} autoFocus={this.props.focused}
 					   placeholder={placeholder} multiline={this._multiline()} rows={this._rowsCount()}
+					   error={error != null} helperText={error != null ? error : this.props.helperText}
 					   InputProps={{
 					       readOnly: this.state.readonly,
 						   startAdornment: this.props.prefix !== undefined ? <InputAdornment position="start">{this.props.prefix}</InputAdornment> : undefined,

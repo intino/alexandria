@@ -56,6 +56,7 @@ public class TextRenderer extends ComponentRenderer<Text> {
 				result.add("rows", element.asMemo().height());
 			}
 			if (editableText.placeholder() != null) result.add("placeholder", editableText.placeholder());
+			if (editableText.helperText() != null) result.add("helperText", editableText.helperText());
 		}
 		return result;
 	}

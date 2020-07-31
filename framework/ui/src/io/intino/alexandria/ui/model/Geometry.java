@@ -26,6 +26,16 @@ public abstract class Geometry {
 		return this instanceof Polyline;
 	}
 
+	public boolean contains(Point point) {
+		try {
+			org.locationtech.jts.geom.Geometry figureGeometry = new WKTReader().read(toWkt());
+			org.locationtech.jts.geom.Geometry pointGeometry = new WKTReader().read(point.toWkt());
+			return figureGeometry.contains(pointGeometry);
+		} catch (ParseException e) {
+			return false;
+		}
+	}
+
 	public static Geometry fromWkt(String value) {
 		try {
 			org.locationtech.jts.geom.Geometry geometry = new WKTReader().read(value);

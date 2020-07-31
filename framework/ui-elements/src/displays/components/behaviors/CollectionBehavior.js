@@ -210,10 +210,16 @@ const CollectionBehavior = (collection) => {
 
     self.updateSelection = (item) => {
         const multiple = self.isMultipleSelection();
-        var selection = multiple ? self.selection : [];
-        var index = selection.indexOf(item);
-        if (index !== -1) selection.splice(index, 1);
-        else selection.push(item);
+        var selection = self.selection;
+        var index = self.selection.indexOf(item);
+        if (index !== -1) {
+            self.removeSelectedStyle(selection[index]);
+            selection.splice(index, 1);
+        }
+        else {
+            if (multiple) selection.push(item);
+            else selection = [item];
+        }
         return selection;
     };
 

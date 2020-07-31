@@ -20,7 +20,12 @@ const styles = theme => ({
 		width: "100%",
 		height: "100%",
 		zIndex: "1",
-	}
+	},
+	label : {
+        fontSize: "10pt",
+        color: "#0000008a",
+        marginBottom: "5px",
+    }
 });
 
 class SelectorComboBox extends AbstractSelectorComboBox {
@@ -48,7 +53,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		return (
 			<div className={classes.container} style={this.style()}>
                 {this.renderTraceConsent()}
-				{label != null && label !== "" ? <Typography variant={this.variant("subtitle1")} style={{color:color}}>{label}</Typography> : undefined }
+				{label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{label}</div> : undefined }
 				<Select isMulti={multiple} isDisabled={this.state.readonly} isSearchable
 						closeMenuOnSelect={!multiple} autoFocus={this.props.focused}
 						placeholder={this.selectMessage()} options={items}

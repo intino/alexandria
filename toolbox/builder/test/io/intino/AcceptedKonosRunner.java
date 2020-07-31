@@ -66,6 +66,11 @@ public class AcceptedKonosRunner {
 	}
 
 	@Test
+	public void tables() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/tables/ideaKonosToCompile.txt")});
+	}
+
+	@Test
 	public void amidasPlatform() {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/amidas/platform.txt")});
 	}

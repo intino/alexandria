@@ -30,6 +30,6 @@ public class Polygon extends Geometry {
 	}
 
 	private String pathToWkt(List<Point> path) {
-		return path.stream().map(Point::toWkt).collect(java.util.stream.Collectors.joining(","));
+		return "(" + path.stream().map(p -> p.latitude() + " " + p.longitude()).collect(java.util.stream.Collectors.joining(",")) + ")";
 	}
 }

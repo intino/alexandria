@@ -54,6 +54,12 @@ export default class Component extends AlexandriaDisplay {
         this.setState({ color: color });
     };
 
+    hiddenClass = () => {
+        const hidden = this.props.hidden;
+        if (hidden == null || hidden === "Never") return "";
+        return "hidden-" + hidden.toLowerCase();
+    };
+
     _addFormats() {
         const { format } = this.props;
         const formats = format != null ? format.split(" ") : [];

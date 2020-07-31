@@ -46,12 +46,17 @@ Concept OtherComponents
         Aspect Menu
 			var word:{Horizontal Vertical} layout = Vertical
         Aspect ListBox
+        Aspect CollectionBox
+        	var CatalogComponents.Collection source = empty
+			has:{0..1} CatalogComponents.Collection
         Aspect RadioBox
         	!! The value that should initially be selected, defaults to the first value.
         	var string selected = empty
+        	var word:{Horizontal Vertical} layout = Vertical
         Aspect CheckBox
         	!! The value(s) that should initially be selected. Defaults to the first value, or no values if Multiple facet is present
         	var string[] selected = empty
+        	var word:{Horizontal Vertical} layout = Vertical
         Aspect ComboBox
         	var string placeholder = ""
         Aspect ToggleBox

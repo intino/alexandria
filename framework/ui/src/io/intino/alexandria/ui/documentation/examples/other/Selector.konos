@@ -118,3 +118,19 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") checkBoxOption2 as Option<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") checkBoxOption3 as Option
 						=========
+
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="CollectionBox facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Selector selector8 as CollectionBox
+					List(itemClass="io.intino.alexandria.ui.documentation.Person") selector8List as Selectable
+						Mold > Item(height = 30px) selector8ListMold > Text firstName
+
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Selector as CollectionBox<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") checkBoxOption1 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") checkBoxOption2 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") checkBoxOption3 as Option
+						=========

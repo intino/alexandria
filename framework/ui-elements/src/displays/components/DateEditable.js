@@ -50,7 +50,7 @@ class DateEditable extends AbstractDateEditable {
 																								 disabled={this.state.readonly}
 																								 format={pattern} className={classes.date} mask={this.props.mask}
 																								 value={this.state.value} onChange={this.handleChange.bind(this)}
-																								 minDate={min} maxDate={max} label={dateLabel}
+																								 minDate={min} maxDate={max} label={dateLabel} views={this.views()}
 																								 minDateMessage={this.translate("Date should not be before minimal date")}
 																								 maxDateMessage={this.translate("Date should not be after maximal date")}/></MuiPickersUtilsProvider> : undefined }
 				{ timePicker ? <MuiPickersUtilsProvider utils={MomentUtils}><KeyboardDateTimePicker variant="inline" placeholder={pattern} autoOk
@@ -84,7 +84,14 @@ class DateEditable extends AbstractDateEditable {
 	_notifyChange = (date) => {
 		this.requester.notifyChange(date != null ? date.getTime() : null);
 		this.setState({ value: date != null ? date : null, empty: date == null || date === ""});
-	}
+	};
+
+	views = () => {
+	    const result = [];
+	    if (this.props.views == null) return ["year", "date", "month"];
+	    for (var i=0; i<this.props.views.length; i++) result.push(this.props.views[i].toLowerCase());
+	    return result;
+	};
 }
 
 export default withStyles(styles, { withTheme: true })(DateEditable);

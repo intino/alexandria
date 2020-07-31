@@ -9,6 +9,7 @@ import io.intino.alexandria.ui.displays.components.collection.behaviors.Collecti
 import io.intino.alexandria.ui.displays.components.collection.behaviors.MapCollectionBehavior;
 import io.intino.alexandria.ui.displays.events.collection.AddItemEvent;
 import io.intino.alexandria.ui.displays.notifiers.MapNotifier;
+import io.intino.alexandria.ui.model.Datasource;
 import io.intino.alexandria.ui.model.datasource.MapDatasource;
 import io.intino.alexandria.ui.model.PlaceMark;
 
@@ -28,9 +29,9 @@ public abstract class Map<B extends Box, ItemComponent extends io.intino.alexand
 
     public enum Type { Cluster, Kml, Heatmap }
 
-    public Map<B, ItemComponent, Item> source(MapDatasource source) {
+    @Override
+    public <D extends Datasource> void source(D source) {
         source(source, new MapCollectionBehavior<Item>(this));
-        return this;
     }
 
     @Override

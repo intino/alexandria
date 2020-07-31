@@ -7,6 +7,7 @@ import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.CodeGenerationHelper;
+import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.PassiveView;
 import io.intino.konos.model.graph.Service;
 import io.intino.magritte.framework.Layer;
@@ -66,6 +67,10 @@ public abstract class UIRenderer extends Renderer {
 		return type.equalsIgnoreCase("display") ||
 			   type.equalsIgnoreCase("component") ||
 			   type.equalsIgnoreCase("template") ||
+			   type.equalsIgnoreCase("table") ||
+			   type.equalsIgnoreCase("list") ||
+			   type.equalsIgnoreCase("map") ||
+			   type.equalsIgnoreCase("magazine") ||
 			   type.equalsIgnoreCase("block") ||
 			   type.equalsIgnoreCase("item") ||
 			   type.equalsIgnoreCase("row");

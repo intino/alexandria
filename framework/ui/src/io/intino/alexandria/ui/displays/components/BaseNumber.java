@@ -35,4 +35,9 @@ public class BaseNumber<DN extends BaseNumberNotifier, B extends Box> extends Ab
         notifier.refreshSuffix(suffix);
         return this;
     }
+
+    public BaseNumber<DN, B> error(String error) {
+        notifier.refreshError(error);
+        return this;
+    }
 }

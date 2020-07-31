@@ -22,19 +22,29 @@ Template(layout=Vertical, spacing=DP8) numberExamplesMold
 				Block > Text number2Code as Code(language=Html)
 						value
 							=========
-							Number(format\=body1 widgetDemo, value\=0, prefix\="Amount", suffix\="$") number1
+							Number(format\=body1 widgetDemo, value\=0, prefix\="Amount", suffix\="$")
 							=========
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="Editable facet")
 			Block(spacing=DP8, format=filled)
-				Number(format=body1 widgetDemo, value = 0, min=0, max=100, step=10, prefix="Price:", suffix="$") number3 as Editable
+				Number(format=body1 widgetDemo, value = 0, min=0, max=100, step=10, prefix="Price:", suffix="$") number3 as Editable(helperText="Some important helper text")
 				Block > Text number3Code as Code(language=Html)
 						value
 							=========
-							Number(format\=body1 widgetDemo, value\=0, min\=0, max\=100, step\=10, prefix\="Price:", suffix\="$") number2 as Editable
+							Number(format\=body1 widgetDemo, value\=0, min\=0, max\=100, step\=10, prefix\="Price:", suffix\="$") as Editable(helperText\="Some important helper text")
 							=========
 
 	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Editable facet with error")
+			Block(spacing=DP8, format=filled)
+				Number(format=body1 widgetDemo, value = 0, min=0, max=100, step=10, prefix="Price:", suffix="$") number7 as Editable
+				Block > Text as Code(language=Html)
+						value
+							=========
+							Number(format\=body1 widgetDemo, value\=0, min\=0, max\=100, step\=10, prefix\="Price:", suffix\="$") as Editable
+							=========
+
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="No facets, Currency style")
 			Block(spacing=DP8, format=filled)
@@ -55,6 +65,7 @@ Template(layout=Vertical, spacing=DP8) numberExamplesMold
 							Number(value\=23232323, style\=Bytes, countDecimals\=2)
 							=========
 
+	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="No facets, Exponential style")
 			Block(spacing=DP8, format=filled)

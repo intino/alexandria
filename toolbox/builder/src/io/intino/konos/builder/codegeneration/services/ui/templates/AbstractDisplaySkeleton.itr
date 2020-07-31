@@ -2,6 +2,10 @@ def type(display & accessible)
 	package $package.ui.displays[.$packageType~s];
 
 	$templatesImport
+	$tablesImport
+	$listsImport
+	$magazinesImport
+	$mapsImport
 	$blocksImport
 	$itemsImport
     import $package+validPackage.ui.displays.notifiers.$name+SnakeCaseToCamelCase+FirstUpperCase~ProxyNotifier;
@@ -33,6 +37,10 @@ def type(display)
 	import $package+validPackage.$box+firstUpperCase~Box;
 
 	$templatesImport
+	$tablesImport
+	$listsImport
+	$magazinesImport
+	$mapsImport
 	$blocksImport
 	$itemsImport
 	$rowsImport
@@ -76,6 +84,14 @@ def type(displayExtends & template)
 	extends io.intino.alexandria.ui.displays.components.Template<$name+firstUpperCase~Notifier, $modelClass, $abstractBox+type>
 end
 
+def type(displayExtends & table)
+	extends io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<$abstractBox+type, $name+firstUpperCase~Row, $itemClass>
+end
+
+def type(displayExtends & collection)
+	extends io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<$abstractBox+type, $componentType, $itemClass>
+end
+
 def type(displayExtends & item)
 	extends io.intino.alexandria.ui.displays.components.Item<$name+firstUpperCase~Notifier, $itemClass, $abstractBox+type>
 end
@@ -94,6 +110,22 @@ end
 
 def type(templatesImport)
 	import $package+validPackage.ui.displays.templates.*;
+end
+
+def type(tablesImport)
+	import $package+validPackage.ui.displays.tables.*;
+end
+
+def type(listsImport)
+	import $package+validPackage.ui.displays.lists.*;
+end
+
+def type(magazinesImport)
+	import $package+validPackage.ui.displays.magazines.*;
+end
+
+def type(mapsImport)
+	import $package+validPackage.ui.displays.maps.*;
 end
 
 def type(blocksImport)

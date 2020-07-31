@@ -16,16 +16,25 @@ public class SelectorTabs<DN extends SelectorTabsNotifier, B extends Box> extend
         super(box);
     }
 
-	public void select(String option) {
+	public void selection(String option) {
 		int position = position(option);
 		if (position == -1) return;
-		this.select(position);
+		selection(position);
 	}
 
-	public void select(int option) {
+	public void selection(int option) {
 		notifier.refreshSelected(option);
 		if (this.selected == option) return;
 		this.selected = option;
+	}
+
+	public void select(String option) {
+    	selection(option);
+		notifySelection();
+	}
+
+	public void select(int option) {
+    	selection(option);
 		notifySelection();
 	}
 

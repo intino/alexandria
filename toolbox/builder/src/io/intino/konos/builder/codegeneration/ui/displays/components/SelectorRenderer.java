@@ -4,6 +4,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.model.graph.CatalogComponents;
 import io.intino.konos.model.graph.OtherComponents.Selector;
 
 public class SelectorRenderer extends ComponentRenderer<Selector> {
@@ -15,7 +16,8 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 	@Override
 	protected void fill(FrameBuilder builder) {
 		super.fill(builder);
-		addMethod(builder);
+		addBinding(builder);
+		addAddressableMethod(builder);
 	}
 
 	@Override
@@ -26,6 +28,7 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 		if (element.isFocused()) result.add("readonly", element.isFocused());
 		addMenuProperties(result);
 		addComboBoxProperties(result);
+		addCheckBoxProperties(result);
 		addRadioBoxProperties(result);
 		addAddressableProperties(result);
 		addToggleBoxProperties(result);
@@ -46,11 +49,17 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 		builder.add("placeholder", placeholder);
 	}
 
+	private void addCheckBoxProperties(FrameBuilder builder) {
+		if (!element.isCheckBox()) return;
+		builder.add("layout", element.asCheckBox().layout().name());
+	}
+
 	private void addRadioBoxProperties(FrameBuilder builder) {
 		if (!element.isRadioBox()) return;
 		String selected = element.asRadioBox().selected();
 		if (selected == null || selected.isEmpty()) return;
 		builder.add("selected", selected);
+		builder.add("layout", element.asRadioBox().layout().name());
 	}
 
 	private void addToggleBoxProperties(FrameBuilder builder) {
@@ -63,7 +72,24 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 		builder.add("size", toggleBox.size().name());
 	}
 
-	private void addMethod(FrameBuilder builder) {
+	private void addBinding(FrameBuilder builder) {
+		addCollectionBoxBinding(builder);
+	}
+
+	private void addCollectionBoxBinding(FrameBuilder builder) {
+		if (!element.isCollectionBox()) return;
+		Selector.CollectionBox collectionBox = element.asCollectionBox();
+		CatalogComponents.Collection collection = collectionBox.source() != null ? collectionBox.source() : collectionBox.collection();
+		if (collection == null) return;
+		FrameBuilder binding = buildBaseFrame().add("binding").add("collectionbox");
+		if (collectionBox.source() != null) binding.add("add");
+		if (!belongsToAccessible(element)) binding.add("concreteBox", boxName());
+		binding.add("name", nameOf(element));
+		binding.add("collection", nameOf(collection));
+		builder.add("binding", binding);
+	}
+
+	private void addAddressableMethod(FrameBuilder builder) {
 		if (!element.isAddressable()) return;
 		builder.add("methods", addressedMethod());
 	}
