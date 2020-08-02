@@ -1,8 +1,8 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "3.1.0") rest
+Artifact("io.intino.alexandria", "3.1.1") rest
 	Imports
-		Compile("io.intino.alexandria", "http", "1.1.0")
+		Compile("io.intino.alexandria", "http", "1.1.1")
 		Compile("io.intino.alexandria", "json", "1.0.2")
 	Package(mode = ModulesAndLibrariesLinkedByManifest)
 	Distribution("intino-maven")

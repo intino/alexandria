@@ -90,6 +90,10 @@ public class SparkManager<P extends PushService> {
 		return request.body();
 	}
 
+	public byte[] fromBodyAsBytes() {
+		return request.bodyAsBytes();
+	}
+
 	public String fromBody() {
 		return request.body();
 	}
