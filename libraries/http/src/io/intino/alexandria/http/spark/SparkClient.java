@@ -13,7 +13,7 @@ public class SparkClient implements Client {
 	private Session session;
 	private final Map<String, String> queryString;
 	private String language = null;
-	private List<String> messagesQueue = new ArrayList<>();
+	private final List<String> messagesQueue = new ArrayList<>();
 	private Timer queueTimer;
 
 	public SparkClient(Session session) {
