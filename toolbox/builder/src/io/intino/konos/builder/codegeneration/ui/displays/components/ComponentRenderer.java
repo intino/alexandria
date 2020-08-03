@@ -94,9 +94,9 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private void addComponents(Component component, FrameBuilder builder) {
 		addComponentsImports(builder);
 		components(component).forEach(c -> {
-			Component virtualParent = c.i$(CatalogComponents.Collection.class) && component.i$(OtherComponents.Selector.CollectionBox.class) ? component : null;
+			Display virtualParent = virtualParent() != null ? virtualParent() : (c.i$(CatalogComponents.Collection.class) && component.i$(OtherComponents.Selector.CollectionBox.class) ? component : null);
 			FrameBuilder componentBuilder = buildChildren ? childFrame(c, virtualParent) : componentFrame(c, virtualParent);
-			builder.add( "component", componentBuilder);
+			builder.add("component", componentBuilder);
 		});
 	}
 
@@ -108,6 +108,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	private FrameBuilder referenceFrame(Component component) {
 		ComponentRenderer renderer = factory.renderer(context, component, templateProvider, target);
+		renderer.virtualParent(virtualParent());
 		FrameBuilder builder = new FrameBuilder("reference").add(typeOf(component)).add("name", component.name$());
 		if (isEmbeddedComponent(component)) builder.add("embedded");
 		Component parentComponent = component.core$().ownerAs(Component.class);
@@ -125,7 +126,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return componentRenderer(component, virtualParent).buildFrame();
 	}
 
-	protected FrameBuilder childFrame(Component component, Component virtualParent) {
+	protected FrameBuilder childFrame(Component component, Display virtualParent) {
 		FrameBuilder result = componentRenderer(component, virtualParent).buildFrame();
 		String[] ancestors = ancestors(component);
 		Component parent = component.core$().ownerAs(Component.class);
@@ -174,7 +175,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return result.toArray(new String[0]);
 	}
 
-	private UIRenderer componentRenderer(Component component, Component virtualParent) {
+	private UIRenderer componentRenderer(Component component, Display virtualParent) {
 		ComponentRenderer renderer = factory.renderer(context, component, templateProvider, target);
 		renderer.buildChildren(true);
 		renderer.decorated(decorated);

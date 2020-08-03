@@ -1,24 +1,24 @@
 def.file
-/tmp/borrame/src/example/UI.konos#true
+/Users/mcaballero/Documentos/borrame/borrame/src/example/UI.konos#true
 
 project
 borrame
 module
 borrame
 outputpath
-/tmp/borrame/gen
+/Users/mcaballero/Documentos/borrame/borrame/gen
 final_outputpath
-/tmp/borrame/out/production/borrame/
+/Users/mcaballero/Documentos/borrame/borrame/out/production/borrame/
 res.path
-/tmp/borrame/res
+/Users/mcaballero/Documentos/borrame/borrame/res
 intino.project.path
-/tmp/borrame/.intino
+/Users/mcaballero/Documentos/borrame/borrame/.intino
 project.path
-/tmp/borrame
+/Users/mcaballero/Documentos/borrame
 module.path
-/tmp/borrame
+/Users/mcaballero/Documentos/borrame
 src.path
-/tmp/borrame/src
+/Users/mcaballero/Documentos/borrame/borrame/src
 
 groupId
 org.example
