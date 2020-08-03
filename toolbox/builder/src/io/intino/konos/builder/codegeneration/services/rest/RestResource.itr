@@ -165,7 +165,7 @@ def type(parameter) attribute(in:form) trigger(assign)
 end
 
 def type(parameter & file)  attribute(in:body) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.fromBodyAsBytes();
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = new io.intino.alexandria.Resource("$name", manager.fromBodyAsBytes());
 end
 
 def type(parameter) attribute(in:body) trigger(assign)
