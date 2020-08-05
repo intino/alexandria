@@ -246,6 +246,9 @@ Facet Multiple
 	var boolean wrapItems = true
 	var word:{Vertical Horizontal} arrangement = Vertical
 	var word:Spacing spacing = None
+	Concept:{0..1} Count
+		var integer min = 0
+		var integer max = -1
 
 Facet Labeled
 	var string label

@@ -9,7 +9,12 @@ import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
 import 'alexandria-ui-elements/res/styles/layout.css';
 
-const styles = theme => ({});
+const styles = theme => ({
+    options : {
+        maxHeight: "200px",
+        overflow: 'auto'
+    }
+});
 
 class SelectorCheckBox extends AbstractSelectorCheckBox {
 
@@ -25,17 +30,20 @@ class SelectorCheckBox extends AbstractSelectorCheckBox {
 	};
 
 	render() {
+		const { classes } = this.props;
 		const children = this.children();
 		const multi = this.props.multipleSelection;
 		const layout = this.props.layout != null ? "layout " + this.props.layout.toLowerCase() + " wrap" : "layout vertical";
 		if (children.length <= 0) return (<div></div>);
 		return (
-		    <FormControl component="fieldset">
+		    <React.Fragment>
                 {this.props.label != null && <FormLabel component="legend">{this.props.label}</FormLabel>}
-                <FormGroup className={layout} style={this.style()} value={this.state.selection}>
-				    {React.Children.map(children, (child, i) => { return this.renderChild(child, i); })}
-                </FormGroup>
-            </FormControl>
+                <FormControl className={classes.options} component="fieldset" disabled={this.state.readonly}>
+                    <FormGroup className={layout} style={this.style()} value={this.state.selection}>
+                        {React.Children.map(children, (child, i) => { return this.renderChild(child, i); })}
+                    </FormGroup>
+                </FormControl>
+		    </React.Fragment>
 		);
 	};
 
@@ -63,6 +71,10 @@ class SelectorCheckBox extends AbstractSelectorCheckBox {
 
 	refreshSelection = (value) => {
 		this.setState({ selection: value });
+	};
+
+	refreshReadonly = (readonly) => {
+		this.setState({ readonly });
 	};
 
 	_size = () => {

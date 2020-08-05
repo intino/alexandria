@@ -1,7 +1,7 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.ui.AlexandriaUiBox;
-import io.intino.alexandria.ui.displays.events.collection.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.AddItemEvent;
 import io.intino.alexandria.ui.displays.items.SearchBox1Mold;
 import io.intino.alexandria.ui.documentation.Person;
 import io.intino.alexandria.ui.documentation.model.Datasources;

@@ -7,7 +7,7 @@ import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.Collection;
 import io.intino.alexandria.ui.displays.components.collection.behaviors.CollectionBehavior;
 import io.intino.alexandria.ui.displays.components.collection.behaviors.MapCollectionBehavior;
-import io.intino.alexandria.ui.displays.events.collection.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.AddItemEvent;
 import io.intino.alexandria.ui.displays.notifiers.MapNotifier;
 import io.intino.alexandria.ui.model.Datasource;
 import io.intino.alexandria.ui.model.datasource.MapDatasource;

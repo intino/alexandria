@@ -146,11 +146,15 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (element.isTraceable()) result.add("traceable", true);
 		if (element.i$(Multiple.class)) {
 			Multiple abstractMultiple = element.a$(Multiple.class);
+			result.add("multiple");
 			result.add("instances", nameOf(element));
 			result.add("multipleArrangement", abstractMultiple.arrangement().name());
 			result.add("multipleSpacing", abstractMultiple.spacing().value());
 			result.add("multipleNoItemsMessage", abstractMultiple.noItemsMessage() != null ? abstractMultiple.noItemsMessage() : "");
 			result.add("multipleWrapItems", abstractMultiple.wrapItems());
+			result.add("multipleEditable", element.i$(Editable.class));
+			result.add("multipleMin", abstractMultiple.count() != null ? abstractMultiple.count().min() : 0);
+			result.add("multipleMax", abstractMultiple.count() != null ? abstractMultiple.count().max() : -1);
 		}
 		if (element.format() != null) {
 			String[] format = element.format().stream().map(Layer::name$).toArray(String[]::new);
@@ -213,6 +217,11 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			if (message != null) builder.add("noItemsMessage", message);
 			FrameBuilder methodsFrame = addOwner(buildBaseFrame()).add("method").add("multiple");
 			methodsFrame.add("componentType", multipleComponentType(element));
+			methodsFrame.add("componentName", multipleComponentName(element));
+			if (element.i$(Editable.class)) {
+				methodsFrame.add("editableMethods", new FrameBuilder("editableMethods"));
+				if (!isMultipleSpecificComponent(element)) methodsFrame.add("editableClass", editableClassFrame());
+			}
 			String objectType = multipleObjectType(element);
 			if (objectType != null) {
 				methodsFrame.add("objectType", objectType);
@@ -222,6 +231,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			builder.add("methods", methodsFrame);
 			builder.add("multiple");
 			builder.add("componentType", multipleComponentType(element));
+			builder.add("componentName", multipleComponentName(element));
+			if (!isMultipleSpecificComponent(element) && element.i$(Editable.class)) builder.add("componentPrefix", nameOf(element));
 			if (objectType != null) builder.add("objectType", objectType);
 		}
 
@@ -253,6 +264,15 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return false;
 	}
 
+	private FrameBuilder editableClassFrame() {
+		FrameBuilder result = new FrameBuilder("editableClass");
+		result.add("componentType", multipleComponentType(element));
+		result.add("componentName", multipleComponentName(element));
+		addDecoratedFrames(result, decorated);
+		result.add("componentProperties", properties().add("componentClass"));
+		return result;
+	}
+
 	private void addProperties(FrameBuilder builder) {
 		FrameBuilder properties = properties();
 		if (properties.slots() <= 0) return;
@@ -261,12 +281,23 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	private String multipleComponentType(C element) {
 		String prefix = "io.intino.alexandria.ui.displays.components.";
-		if (element.i$(Text.Multiple.class)) return prefix + "Text";
-		if (element.i$(File.Multiple.class)) return prefix + "File";
-		if (element.i$(Image.Multiple.class)) return prefix + "Image";
-		if (element.i$(Icon.Multiple.class)) return prefix + "Icon";
-		if (element.i$(DataComponents.Number.Multiple.class)) return prefix + "Number";
-		if (element.i$(DataComponents.Date.Multiple.class)) return prefix + "Date";
+		String name = multipleComponentName(element);
+		if (name == null) return null;
+		return element.i$(Stamp.Multiple.class) || element.i$(Block.Multiple.class) ? name : prefix + name;
+	}
+
+	private boolean isMultipleSpecificComponent(C element) {
+		return element.i$(Stamp.Multiple.class) || element.i$(Block.Multiple.class);
+	}
+
+	private String multipleComponentName(C element) {
+		String editable = element.i$(Editable.class) ? "Editable" : "";
+		if (element.i$(Text.Multiple.class)) return "Text" + editable;
+		if (element.i$(File.Multiple.class)) return "File" + editable;
+		if (element.i$(Image.Multiple.class)) return "Image" + editable;
+		if (element.i$(Icon.Multiple.class)) return "Icon" + editable;
+		if (element.i$(DataComponents.Number.Multiple.class)) return "Number" + editable;
+		if (element.i$(DataComponents.Date.Multiple.class)) return "Date" + editable;
 		if (element.i$(Stamp.Multiple.class)) return firstUpperCase(element.a$(Stamp.Multiple.class).template().name$());
 		if (element.i$(Block.Multiple.class)) return firstUpperCase(nameOf(element));
 		return null;
@@ -274,8 +305,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	private String multipleObjectType(C element) {
 		if (element.i$(Text.Multiple.class)) return "java.lang.String";
-		if (element.i$(File.Multiple.class)) return "java.net.URL";
-		if (element.i$(Image.Multiple.class)) return "java.net.URL";
+		if (element.i$(File.Multiple.class)) return "io.intino.alexandria.ui.File";
+		if (element.i$(Image.Multiple.class)) return "io.intino.alexandria.ui.File";
 		if (element.i$(Icon.Multiple.class)) return "java.net.URL";
 		if (element.i$(DataComponents.Number.Multiple.class)) return "java.lang.Double";
 		if (element.i$(DataComponents.Date.Multiple.class)) return "java.time.Instant";

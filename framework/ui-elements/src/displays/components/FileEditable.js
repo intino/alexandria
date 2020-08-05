@@ -3,6 +3,7 @@ import AbstractFile from "../../../gen/displays/components/AbstractFile";
 import FileEditableNotifier from "../../../gen/displays/notifiers/FileEditableNotifier";
 import FileEditableRequester from "../../../gen/displays/requesters/FileEditableRequester";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import File from "./File";
 import Block from "./Block";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
 import Theme from "app-elements/gen/Theme";
@@ -23,7 +24,7 @@ export default class FileEditable extends AbstractFile {
 		this.requester = new FileEditableRequester(this);
 		this.state = {
 		    ...this.state,
-            value : "",
+            info : "",
             readonly : this.props.readonly
         };
 	};
@@ -42,13 +43,21 @@ export default class FileEditable extends AbstractFile {
 		if (!this.state.visible) return (<React.Fragment/>);
 
 		const label = this.props.label !== "" ? this.props.label : undefined;
+		const width = this.props.width != null ? this.props.width : "100%";
+		const height = this.props.height != null ? this.props.height : "100%";
 		const theme = Theme.get();
 		return (
-			<Block layout="vertical flex" style={this.style()}>
+			<Block layout="vertical flex" style={{...this.style(),width:width,height:height}}>
 				{ ComponentBehavior.labelBlock(this.props, "body1", { color: theme.palette.grey.primary, marginRight: '5px' }) }
+				{this._renderPreview()}
 				{this._renderComponent()}
 			</Block>
 		);
+	};
+
+	_renderPreview = () => {
+	    if (!this.props.preview) return (<React.Fragment/>);
+	    return (<div style={{...this.style(),marginBottom:'10px'}}>{this.renderInstances()}</div>);
 	};
 
 	_renderComponent = () => {
@@ -77,7 +86,7 @@ export default class FileEditable extends AbstractFile {
 
 	_renderInput = () => {
         return (
-            <input type="file" value={this.state.value} disabled={this.state.readonly ? true : undefined}
+            <input type="file" disabled={this.state.readonly ? true : undefined}
                    onChange={this.handleChange.bind(this)}></input>
         );
 	};
@@ -106,8 +115,8 @@ export default class FileEditable extends AbstractFile {
 	    return false;
 	}
 
-	refresh = (value) => {
-		this.setState({ "value": value });
+	refresh = (info) => {
+		this.setState({ info });
 	};
 
 	refreshReadonly = (readonly) => {

@@ -311,7 +311,7 @@ const CollectionBehavior = (collection) => {
 
     self.addSelectedStyle = (id) => {
         const element = $(self.collection.container.current).find("#" + self.elementId(id)).get(0);
-        self.addSelectedStyleRules(element.style);
+        if (element != null) self.addSelectedStyleRules(element.style);
     };
 
     self.removeSelectedStyle = (id) => {

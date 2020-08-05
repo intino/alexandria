@@ -8,6 +8,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import { withSnackbar } from 'notistack';
 import Delayer from '../../util/Delayer';
+import TextBehavior from "./behaviors/TextBehavior";
 
 const styles = theme => ({
 	default : {
@@ -29,12 +30,12 @@ class TextEditable extends AbstractTextEditable {
 	};
 
 	handleChange(e) {
-		this.setState({ value: e.target.value });
+		this.setState({ value: TextBehavior.mode(e.target.value, this.props) });
 		Delayer.execute(this, () => this.requester.notifyChange(this.state.value), 500);
 	};
 
 	handleKeypress(e) {
-		this.requester.notifyKeyPress({ keyCode: e.key, value: e.target.value });
+		this.requester.notifyKeyPress({ keyCode: e.key, value: TextBehavior.mode(e.target.value, this.props) });
 		this.setState({ value: e.target.value });
 	};
 
@@ -52,7 +53,7 @@ class TextEditable extends AbstractTextEditable {
 					   value={this.state.value} onChange={this.handleChange.bind(this)} /*disabled={this.state.readonly}*/
 					   onKeyPress={this.handleKeypress.bind(this)} type={type} autoFocus={this.props.focused}
 					   placeholder={placeholder} multiline={this._multiline()} rows={this._rowsCount()}
-					   error={error != null} helperText={error != null ? error : this.props.helperText}
+					   error={error != null} helperText={this.state.readonly ? undefined : (error != null ? error : this.props.helperText) }
 					   InputProps={{
 					       readOnly: this.state.readonly,
 						   startAdornment: this.props.prefix !== undefined ? <InputAdornment position="start">{this.props.prefix}</InputAdornment> : undefined,

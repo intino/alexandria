@@ -1,11 +1,12 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.components.editable.Editable;
 import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
 import io.intino.alexandria.ui.displays.notifiers.NumberEditableNotifier;
 
-public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> extends AbstractNumberEditable<DN, B> {
+public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> extends AbstractNumberEditable<DN, B> implements Editable<DN, B> {
 	private Double value;
 	private Double min;
 	private Double max;
@@ -34,8 +35,21 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
 		return step;
 	}
 
+	@Override
 	public boolean readonly() {
 		return readonly;
+	}
+
+	@Override
+	public void reload() {
+		notifier.refresh(value());
+	}
+
+	@Override
+	public NumberEditable<DN, B> readonly(boolean readonly) {
+		_readonly(readonly);
+		notifier.refreshReadonly(readonly);
+		return this;
 	}
 
 	public NumberEditable value(double value) {
@@ -48,17 +62,12 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
 		return this;
 	}
 
-	public NumberEditable<DN, B> readonly(boolean readonly) {
-		_readonly(readonly);
-		notifier.refreshReadonly(readonly);
-		return this;
-	}
-
 	public NumberEditable<DN, B> onBeforeChange(ChangeListener listener) {
 		this.beforeChangeListener = listener;
 		return this;
 	}
 
+	@Override
 	public NumberEditable<DN, B> onChange(ChangeListener listener) {
 		this.changeListener = listener;
 		return this;

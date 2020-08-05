@@ -88,7 +88,7 @@ class DateEditable extends AbstractDateEditable {
 
 	views = () => {
 	    const result = [];
-	    if (this.props.views == null) return ["year", "date", "month"];
+	    if (this.props.views == null) return ["date"];
 	    for (var i=0; i<this.props.views.length; i++) result.push(this.props.views[i].toLowerCase());
 	    return result;
 	};

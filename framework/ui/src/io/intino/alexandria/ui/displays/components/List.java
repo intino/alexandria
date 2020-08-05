@@ -4,7 +4,7 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.Collection;
 import io.intino.alexandria.ui.displays.components.collection.behaviors.PageCollectionBehavior;
-import io.intino.alexandria.ui.displays.events.collection.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.AddItemEvent;
 import io.intino.alexandria.ui.displays.notifiers.ListNotifier;
 import io.intino.alexandria.ui.model.Datasource;
 import io.intino.alexandria.ui.model.datasource.PageDatasource;

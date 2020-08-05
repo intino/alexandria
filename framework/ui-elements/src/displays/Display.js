@@ -50,10 +50,12 @@ export default class Display extends PassiveView {
         let id = params.id;
         let container = params.c;
         const instances = this.instances(container);
-        for (var i = 0; i < instances.length; i++)
-            if (instances[i].pl.id === id) break;
-        if (i >= instances.length) return;
-        this._registerInstances(container, instances.splice(i, 1));
+        let newInstances = [];
+        for (var i = 0; i < instances.length; i++) {
+            if (instances[i].pl.id === id) continue;
+            newInstances.push(instances[i]);
+        }
+        this._registerInstances(container, newInstances);
     };
 
     clearContainer = (params) => {
@@ -80,17 +82,21 @@ export default class Display extends PassiveView {
     };
 
     renderInstances = (container, props, style) => {
-        if (container == null) container = "__elements";
-        let instances = this.state[container];
-        if (instances == null || instances.length <= 0) {
-            if (props != null && props.noItemsMessage != null) return (<Typography>{this.translate(props.noItemsMessage)}</Typography>);
-            return;
-        }
+        let instances = this.instances(container);
+        if (instances == null || instances.length <= 0) return this.renderEmptyInstances(props);
         return instances.map((instance, index) => {
             enrichDisplayProperties(instance);
             this.copyProps(props, instance.pl);
-            return (<div key={index} style={style}>{React.createElement(DisplayFactory.get(instance.tp), instance.pl)}</div>);
+            return this.renderInstance(instance, props, style, index)
         });
+    };
+
+    renderEmptyInstances = (props) => {
+        return props != null && props.noItemsMessage != null ? (<Typography style={{margin:'5px 0'}} variant="body1">{this.translate(props.noItemsMessage)}</Typography>) : undefined;
+    };
+
+    renderInstance = (instance, props, style, index) => {
+        return (<div key={index} style={style}>{React.createElement(DisplayFactory.get(instance.tp), instance.pl)}</div>);
     };
 
     buildApplicationUrl = (path) => {

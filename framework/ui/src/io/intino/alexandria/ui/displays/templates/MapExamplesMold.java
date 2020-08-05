@@ -1,7 +1,7 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.ui.AlexandriaUiBox;
-import io.intino.alexandria.ui.displays.events.collection.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.AddItemEvent;
 import io.intino.alexandria.ui.displays.items.Map1Mold;
 import io.intino.alexandria.ui.displays.items.Map2Mold;
 import io.intino.alexandria.ui.displays.items.Map3Mold;

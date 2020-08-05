@@ -1,13 +1,14 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.components.editable.Editable;
 import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
 import io.intino.alexandria.ui.displays.notifiers.DateEditableNotifier;
 
 import java.time.Instant;
 
-public class DateEditable<DN extends DateEditableNotifier, B extends Box> extends AbstractDateEditable<DN, B> {
+public class DateEditable<DN extends DateEditableNotifier, B extends Box> extends AbstractDateEditable<DN, B> implements Editable<DN, B> {
 	private Instant min;
 	private Instant max;
 	private Instant value;
@@ -30,8 +31,21 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 		return this.max;
 	}
 
+	@Override
 	public boolean readonly() {
 		return readonly;
+	}
+
+	@Override
+	public void reload() {
+    	notifier.refresh(value());
+	}
+
+	@Override
+	public DateEditable<DN, B> readonly(boolean readonly) {
+		_readonly(readonly);
+		notifier.refreshReadonly(readonly);
+		return this;
 	}
 
 	public void value(Instant value) {
@@ -39,12 +53,7 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 		notifier.refresh(value);
 	}
 
-	public DateEditable<DN, B> readonly(boolean readonly) {
-		_readonly(readonly);
-		notifier.refreshReadonly(readonly);
-		return this;
-	}
-
+	@Override
 	public DateEditable<DN, B> onChange(ChangeListener listener) {
 		this.changeListener = listener;
 		return this;

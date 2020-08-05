@@ -1,4 +1,4 @@
-package io.intino.alexandria.ui.displays.events.collection;
+package io.intino.alexandria.ui.displays.events.editable;
 
 import io.intino.alexandria.ui.displays.events.AddItemEvent;
 

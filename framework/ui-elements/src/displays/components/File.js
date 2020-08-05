@@ -27,18 +27,19 @@ const styles = theme => ({
 });
 
 class File extends AbstractFile {
-	state = {
-		value : this.props.value,
-		filename : this.props.filename,
-		mimeType : null,
-		data : null
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new FileNotifier(this);
 		this.requester = new FileRequester(this);
 		this.container = React.createRef();
+		this.state = {
+		    ...this.state,
+            value : this.props.value,
+            filename : this.props.filename,
+            mimeType : this.props.mimeType,
+            data : null
+		}
 	};
 
 	render() {

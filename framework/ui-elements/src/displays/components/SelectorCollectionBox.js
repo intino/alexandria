@@ -45,7 +45,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 		this.state = {
 		    ...this.state,
             readonly: this.props.readonly,
-		    selected: null,
+		    selected: undefined,
 		    trigger: null,
 		}
 	};
@@ -93,7 +93,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
     };
 
 	refreshSelected = (value) => {
-	    this.setState({ selected: value, trigger: null });
+	    this.setState({ selected: value != null ? value : undefined, trigger: null });
 	};
 
 	refreshReadonly = (readonly) => {

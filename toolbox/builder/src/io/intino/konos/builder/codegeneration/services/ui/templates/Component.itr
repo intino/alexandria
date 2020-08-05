@@ -36,13 +36,20 @@ def type(component & child) trigger(declaration)
 end
 
 def type(method & multiple)
+	[$editableMethods]
+	[$editableClass]
 	@Override
-	public $componentType add([$objectType value]) {
-		$componentType child = new $componentType(box());
+	public $componentName add([$objectType value]) {
+		$componentName child = new $componentName(box());
 		child.id(java.util.UUID.randomUUID().toString());
 		add(child, "$name");
 		[child.value($objectTypeValue);]
+        notifyAdd(child[, $objectTypeValue]);
 		return child;
+	}
+	@Override
+	public void remove($componentName child) {
+		removeChild(child, "$name");
 	}
 	public void clear() {
 	    super.clear("$name");
@@ -208,7 +215,7 @@ def type(component & child) trigger(class)
 end
 
 def type(extends & multiple)
-	io.intino.alexandria.ui.displays.components.Multiple<$abstractBox+type, $componentType, $objectType>
+	io.intino.alexandria.ui.displays.components.Multiple<$abstractBox+type, [$componentPrefix+firstUpperCase~.]$componentName, $objectType>
 end
 
 def type(extends & collection & table)
@@ -465,10 +472,6 @@ def type(properties & selector) trigger(specific)
 	[_path("$path");]
 end
 
-def type(properties & image & avatar) trigger(specific)
-	[_text("$text");]
-end
-
 def type(properties & materialicon) trigger(specific)
 	[_icon("$icon");]
 end
@@ -484,13 +487,38 @@ def type(properties & block) trigger(specific)
 	[$popover]
 end
 
+def type(properties & image & avatar) trigger(specific)
+	[_text("$text");]
+end
+
+def type(properties & image & multiple & componentClass) trigger(specific)
+	[$value+resourceMethod]
+	[$defaultValue+resourceMethod]
+	[_readonly($readonly);]
+end
+
+def type(properties & image & multiple) trigger(specific)
+	[_readonly($readonly);]
+end
+
 def type(properties & image) trigger(specific)
 	[$value+resourceMethod]
 	[$defaultValue+resourceMethod]
+	[_readonly($readonly);]
+end
+
+def type(properties & file & multiple & componentClass) trigger(specific)
+	[$value+resourceMethod]
+	[_readonly($readonly);]
+end
+
+def type(properties & file & multiple) trigger(specific)
+	[_readonly($readonly);]
 end
 
 def type(properties & file) trigger(specific)
 	[$value+resourceMethod]
+	[_readonly($readonly);]
 end
 
 def type(properties & openpage) trigger(specific)
@@ -553,6 +581,17 @@ def type(properties & dashboard & metabase) trigger(specific)
     [_theme(io.intino.alexandria.ui.displays.components.DashboardMetabase.Theme.$theme);]
 end
 
+def type(properties & number & multiple & componentClass) trigger(specific)
+	[_value($value);]
+	[_min($min);]
+	[_max($max);]
+	[_readonly($readonly);]
+end
+
+def type(properties & number & multiple) trigger(specific)
+	[_readonly($readonly);]
+end
+
 def type(properties & number) trigger(specific)
 	[_value($value);]
 	[_min($min);]
@@ -560,10 +599,31 @@ def type(properties & number) trigger(specific)
 	[_readonly($readonly);]
 end
 
+def type(properties & date & multiple & componentClass) trigger(specific)
+	[_value(java.time.Instant.ofEpochMilli($value~L));]
+	[_min(java.time.Instant.ofEpochMilli($min~L));]
+	[_max(java.time.Instant.ofEpochMilli($max~L));]
+	[_readonly($readonly);]
+end
+
+def type(properties & date & multiple) trigger(specific)
+	[_readonly($readonly);]
+end
+
 def type(properties & date) trigger(specific)
 	[_value(java.time.Instant.ofEpochMilli($value~L));]
 	[_min(java.time.Instant.ofEpochMilli($min~L));]
 	[_max(java.time.Instant.ofEpochMilli($max~L));]
+	[_readonly($readonly);]
+end
+
+def type(properties & text & multiple & componentClass) trigger(specific)
+	[_value("$defaultValue");]
+	[_readonly($readonly);]
+end
+
+def type(properties & text & multiple) trigger(specific)
+	[_readonly($readonly);]
 end
 
 def type(properties & text) trigger(specific)
@@ -571,9 +631,20 @@ def type(properties & text) trigger(specific)
 	[_readonly($readonly);]
 end
 
+def type(properties & location & multiple & componentClass) trigger(specific)
+	[$icon+resourceMethod]
+	[_value("$value");]
+	[_readonly($readonly);]
+end
+
+def type(properties & location & multiple) trigger(specific)
+	[_readonly($readonly);]
+end
+
 def type(properties & location) trigger(specific)
 	[$icon+resourceMethod]
 	[_value("$value");]
+	[_readonly($readonly);]
 end
 
 def type(properties & collection & map) trigger(specific)
@@ -665,6 +736,28 @@ def type(selectionMethod)
 	public void onSelect(io.intino.alexandria.ui.displays.events.SelectionListener listener) {
 		super.addSelectionListener(listener);
 	}
+end
+
+def type(editableMethods)
+	public void onAdd(io.intino.alexandria.ui.displays.events.editable.AddItemListener listener) {
+		super.addItemListener(listener);
+	}
+	public void onChange(io.intino.alexandria.ui.displays.events.editable.ChangeItemListener listener) {
+		super.changeItemListener(listener);
+	}
+	public void onRemove(io.intino.alexandria.ui.displays.events.editable.RemoveItemListener listener) {
+		super.removeItemListener(listener);
+	}
+end
+
+def type(editableClass)
+    public class $componentName extends $componentType {
+        public $componentName($abstractBox+type box) {
+            super(box);
+            [$componentProperties+common]
+            [$componentProperties+specific]
+        }
+    }
 end
 
 def type(item) trigger(addDeclaration)

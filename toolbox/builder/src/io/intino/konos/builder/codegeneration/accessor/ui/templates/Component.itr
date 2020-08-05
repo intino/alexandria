@@ -46,10 +46,6 @@ end
 def type(method)
 end
 
-def type(properties & multiple) trigger(common)
-	[ label="$label"][ format="$format...[ ]"][ visible={$visible}][ traceable={$traceable}][ style="$style"]
-end
-
 def type(properties & actionable) trigger(common)
 	[ title="$title"][ name="$name"][ target="$target"][ mode="$actionableMode"][ icon="$icon"][ affirmed="$affirmed"][ traceable={$traceable}][ signed={{text:"$signText",reason:"$reasonText"}}][ readonly={$readonly}][ size="$size"][ format="$format...[ ]"][ highlighted="$highlighted"][ visible={$visible}][ style="$style"]
 end
@@ -63,7 +59,7 @@ def type(properties & dashboard) trigger(common)
 end
 
 def type(properties) trigger(common)
-	[ name="$name"][ label="$label"][ format="$format...[ ]"][ color="$color"][ visible={$visible}][ traceable={$traceable}][ multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing,wrap:$multipleWrapItems}}][ style="$style"]
+	[ name="$name"][ label="$label"][ format="$format...[ ]"][ color="$color"][ visible={$visible}][ traceable={$traceable}][ multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing,editable:$multipleEditable,wrap:$multipleWrapItems,count:{min:$multipleMin,max:$multipleMax}}}][ style="$style"]
 end
 
 def type(properties & template) trigger(specific)
@@ -91,7 +87,7 @@ def type(properties & image) trigger(specific)
 end
 
 def type(properties & file) trigger(specific)
-	[ width="$width"][ height="$height"][ dropZone={$dropZone}][ maxSize={$maxSize}][ allowedTypes={$[$allowedTypes$]}]
+	[ width="$width"][ height="$height"][ preview={$preview}][ dropZone={$dropZone}][ maxSize={$maxSize}][ allowedTypes={$[$allowedTypes$]}]
 end
 
 def type(properties & chart) trigger(specific)
