@@ -26,6 +26,7 @@ Concept OtherComponents
 	Concept Stamp extends Component
 		var Template template
 		Aspect Multiple
+		Aspect Editable
 
 	Concept ProxyStamp extends Component
 		var string proxy
@@ -48,6 +49,7 @@ Concept OtherComponents
         Aspect ListBox
         Aspect CollectionBox
         	var CatalogComponents.Collection source = empty
+        	var string placeholder = ""
 			has:{0..1} CatalogComponents.Collection
         Aspect RadioBox
         	!! The value that should initially be selected, defaults to the first value.

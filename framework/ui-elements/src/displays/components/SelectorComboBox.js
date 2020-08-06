@@ -36,7 +36,6 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		this.requester = new SelectorComboBoxRequester(this);
         this.state = {
             selection: this.traceValue() ? this.traceValue() : [],
-            readonly: this.props.readonly,
             multipleSelection: this.props.multipleSelection != null ? this.props.multipleSelection : false,
             ...this.state
         };
@@ -108,10 +107,6 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 
 	refreshSelection = (selection) => {
 		this.setState({ selection: selection });
-	};
-
-	refreshReadonly = (readonly) => {
-		this.setState({ readonly });
 	};
 
 	refreshMultipleSelection = (multipleSelection) => {

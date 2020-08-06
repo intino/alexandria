@@ -16,6 +16,7 @@ public class SelectorMenu<DN extends SelectorMenuNotifier, B extends Box> extend
 		super(box);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> selection() {
 		return Collections.singletonList(nameOf(selected));

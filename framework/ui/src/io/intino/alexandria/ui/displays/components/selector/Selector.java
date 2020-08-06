@@ -5,7 +5,7 @@ import io.intino.alexandria.ui.displays.events.SelectionListener;
 import java.util.List;
 
 public interface Selector {
-	List<String> selection();
+	<T> List<T> selection();
 	List<SelectorOption> options();
 	void reset();
 	void add(SelectorOption option);

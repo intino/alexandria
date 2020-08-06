@@ -9,22 +9,12 @@ import java.util.List;
 
 public class SelectorCheckBox<DN extends SelectorCheckBoxNotifier, B extends Box> extends AbstractSelectorCheckBox<DN, B> {
 	private List<String> selection = new ArrayList<>();
-	private boolean readonly;
 
     public SelectorCheckBox(B box) {
         super(box);
     }
 
-	public boolean readonly() {
-		return readonly;
-	}
-
-	public SelectorCheckBox<DN, B> readonly(boolean readonly) {
-		_readonly(readonly);
-		notifier.refreshReadonly(readonly);
-		return this;
-	}
-
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> selection() {
 		return selection;
@@ -53,8 +43,4 @@ public class SelectorCheckBox<DN extends SelectorCheckBoxNotifier, B extends Box
 		notifySelection();
 	}
 
-	protected SelectorCheckBox<DN, B> _readonly(boolean readonly) {
-		this.readonly = readonly;
-		return this;
-	}
 }

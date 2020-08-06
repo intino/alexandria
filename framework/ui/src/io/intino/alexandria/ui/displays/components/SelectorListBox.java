@@ -14,6 +14,7 @@ public class SelectorListBox<DN extends SelectorListBoxNotifier, B extends Box> 
         super(box);
     }
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> selection() {
 		return selection;

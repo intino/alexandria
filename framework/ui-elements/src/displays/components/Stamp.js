@@ -15,7 +15,6 @@ class Stamp extends AbstractStamp {
 		this.requester = new StampRequester(this);
 	};
 
-
 }
 
 export default withStyles(styles, { withTheme: true })(Stamp);

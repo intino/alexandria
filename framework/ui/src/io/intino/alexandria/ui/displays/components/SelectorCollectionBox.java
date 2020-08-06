@@ -2,33 +2,34 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.components.collection.Selectable;
+import io.intino.alexandria.ui.displays.events.SelectionEvent;
 import io.intino.alexandria.ui.displays.notifiers.SelectorCollectionBoxNotifier;
-import io.intino.alexandria.ui.documentation.Person;
 import io.intino.alexandria.ui.model.Datasource;
-import io.intino.alexandria.ui.model.datasource.PageDatasource;
-import io.intino.alexandria.ui.utils.DelayerUtil;
 
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNotifier, B extends Box> extends AbstractSelectorCollectionBox<DN, B> {
-    private boolean readonly;
-    private Object selected = null;
+    private java.util.List<Object> selection = new ArrayList<>();
     private Collection collection;
-    private SearchBox searchBox;
     private ValueProvider valueProvider;
 
     public SelectorCollectionBox(B box) {
         super(box);
     }
 
-    public boolean readonly() {
-        return readonly;
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Object> selection() {
+        return selection;
     }
 
-    public SelectorCollectionBox<DN, B> readonly(boolean readonly) {
-        _readonly(readonly);
-        notifier.refreshReadonly(readonly);
+    public SelectorCollectionBox<DN, B> multipleSelection(boolean multipleSelection) {
+        _multipleSelection(multipleSelection);
+        notifier.refreshMultipleSelection(multipleSelection);
         return this;
     }
 
@@ -44,8 +45,10 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
 
     public void bindTo(Selectable collection) {
         this.collection = (Collection) collection;
-        searchBox.bindTo((Collection) collection);
-        collection().ifPresent(c -> collection.onSelect((event) -> updateSelection(event.selection())));
+        collection().ifPresent(c -> collection.onSelect((event) -> {
+            updateSelection(event);
+            ((Collection) collection).reload();
+        }));
     }
 
     public SelectorCollectionBox<DN, B> valueProvider(ValueProvider valueProvider) {
@@ -64,43 +67,55 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
     @Override
     public void init() {
         super.init();
-        createSearchBox();
         collection().ifPresent(Collection::init);
     }
 
     @Override
-    public List<String> selection() {
-        if (selected == null) return Collections.emptyList();
-        return Collections.singletonList(selected.toString());
-    }
-
-    @Override
     public void reset() {
-        selected = null;
-        notifier.refreshSelected(null);
+        select();
     }
 
     public void opened() {
-        searchBox.search("");
         collection().ifPresent(Collection::reload);
     }
 
-    public <T> void selection(T... selection) {
+    public <T extends Object> void selection(T... selection) {
         selection(Arrays.asList(selection));
     }
 
-    public <T> void selection(List<T> selection) {
-        this.selected = selection.size() > 0 ? selection.get(0) : null;
-        notifier.refreshSelected(valueOf(selected));
+    public <T extends Object> void selection(List<T> selection) {
+        this.selection = new ArrayList<>(selection);
+        notifier.refreshSelection(this.selection.stream().map(this::valueOf).collect(toList()));
     }
 
-    protected SelectorCollectionBox<DN, B> _readonly(boolean readonly) {
-        this.readonly = readonly;
-        return this;
+    public void select(String... options) {
+        updateSelection(Arrays.asList(options));
     }
 
-    private <T> void updateSelection(List<T> selection) {
-        selection(selection);
+    public void clearSelection() {
+        updateSelection(new ArrayList<>());
+    }
+
+    public void unSelect(String option) {
+        updateSelection(selection.stream().filter(i -> !option.equals(valueOf(i))).collect(Collectors.toList()));
+        collection.reload();
+    }
+
+    private void updateSelection(SelectionEvent event) {
+        Object selected = event.selection().size() > 0 ? event.selection().get(0) : null;
+        if (multipleSelection()) {
+            if (selected == null) return;
+            boolean found = selection.stream().anyMatch(i -> valueOf(selected).equals(valueOf(i)));
+            if (found) selection = selection.stream().filter(i -> !valueOf(selected).equals(valueOf(i))).collect(toList());
+            else selection.add(selected);
+        } else {
+            selection = selected != null ? Collections.singletonList(selected) : Collections.emptyList();
+        }
+        updateSelection(selection);
+    }
+
+    private <T> void updateSelection(List<T> options) {
+        selection(options);
         notifySelection(selection);
     }
 
@@ -111,11 +126,6 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
 
     private Optional<Collection> collection() {
         return Optional.ofNullable(collection);
-    }
-
-    private void createSearchBox() {
-        searchBox = new SearchBox<>(box()).id(UUID.randomUUID().toString());
-        add(searchBox, DefaultInstanceContainer);
     }
 
     public interface ValueProvider {

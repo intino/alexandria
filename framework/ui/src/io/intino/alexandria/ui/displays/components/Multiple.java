@@ -3,6 +3,7 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.Display;
+import io.intino.alexandria.ui.displays.components.collection.Selectable;
 import io.intino.alexandria.ui.displays.components.editable.Editable;
 import io.intino.alexandria.ui.displays.events.AddItemEvent;
 import io.intino.alexandria.ui.displays.events.ChangeItemEvent;
@@ -81,7 +82,7 @@ public abstract class Multiple<B extends Box, C extends Component, V extends Obj
     protected Multiple<B, C, V> notifyAdd(C child, V value) {
         int index = children().size()-1;
         if (addItemListener != null) addItemListener.accept(new AddItemEvent(this, child, value, index));
-        addChangeListener(child, value, index);
+        addListeners(child, value, index);
         _readonly(child, readonly);
         return this;
     }
@@ -91,9 +92,24 @@ public abstract class Multiple<B extends Box, C extends Component, V extends Obj
         return this;
     }
 
+    private void addListeners(C child, V value, int index) {
+        addSelectListener(child, value, index);
+        addChangeListener(child, value, index);
+    }
+
+    private void addSelectListener(C child, V value, int index) {
+        if (!(child instanceof Selectable)) return;
+        ((Selectable)child).onSelect(e -> notifySelect(child, e.selection(), index));
+    }
+
     private void addChangeListener(C child, V value, int index) {
         if (!(child instanceof Editable)) return;
         ((Editable)child).onChange(e -> notifyChange(child, e.value(), index));
+    }
+
+    private void notifySelect(C child, List<V> selection, int index) {
+        if (changeItemListener == null) return;
+        changeItemListener.accept(new ChangeItemEvent(this, child, selection, index));
     }
 
     private void notifyChange(C child, V value, int index) {

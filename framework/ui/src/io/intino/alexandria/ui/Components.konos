@@ -66,6 +66,7 @@ Component frame
 	Notification refreshDisplay as Text
 
 Component baseSelector
+	Notification refreshReadonly as Bool
 	Request optionsRendered
 
 Component selectorMenu as ExtensionOf(baseSelector)
@@ -78,12 +79,10 @@ Component selectorRadioBox as ExtensionOf(baseSelector)
 
 Component selectorCheckBox as ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
-	Notification refreshReadonly as Bool
 	Request updateSelection as Text List
 
 Component selectorComboBox as ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
-	Notification refreshReadonly as Bool
 	Notification refreshMultipleSelection as Bool
 	Request updateSelection as Text List
 	Request refresh
@@ -102,9 +101,11 @@ Component selectorTabs as ExtensionOf(baseSelector)
 	Request select as Integer
 
 Component selectorCollectionBox as ExtensionOf(baseSelector)
-	Notification refreshSelected as Text
-	Notification refreshReadonly as Bool
+	Notification refreshSelection as Text List
+	Notification refreshMultipleSelection as Bool
 	Request search as Text
+	Request clearSelection
+	Request unSelect as Text
 	Request opened
 
 Component multiple
@@ -134,6 +135,7 @@ Component slider as ExtensionOf(baseSlider)
 Component temporalSlider as ExtensionOf(baseSlider)
 
 Component stamp
+Component stampEditable
 Component proxyStamp
 
 Component baseDialog

@@ -28,6 +28,7 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 		if (element.isFocused()) result.add("readonly", element.isFocused());
 		addMenuProperties(result);
 		addComboBoxProperties(result);
+		addCollectionBoxProperties(result);
 		addCheckBoxProperties(result);
 		addRadioBoxProperties(result);
 		addAddressableProperties(result);
@@ -45,6 +46,13 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 	private void addComboBoxProperties(FrameBuilder builder) {
 		if (!element.isComboBox()) return;
 		String placeholder = element.asComboBox().placeholder();
+		if (placeholder == null || placeholder.isEmpty()) return;
+		builder.add("placeholder", placeholder);
+	}
+
+	private void addCollectionBoxProperties(FrameBuilder builder) {
+		if (!element.isCollectionBox()) return;
+		String placeholder = element.asCollectionBox().placeholder();
 		if (placeholder == null || placeholder.isEmpty()) return;
 		builder.add("placeholder", placeholder);
 	}

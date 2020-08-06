@@ -16,6 +16,13 @@ public class SelectorTabs<DN extends SelectorTabsNotifier, B extends Box> extend
         super(box);
     }
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> selection() {
+		if (selected == -1) return Collections.emptyList();
+		return Collections.singletonList(nameOf(selected));
+	}
+
 	public void selection(String option) {
 		int position = position(option);
 		if (position == -1) return;
@@ -58,12 +65,6 @@ public class SelectorTabs<DN extends SelectorTabsNotifier, B extends Box> extend
 	public void hide(String option) {
 		SelectorOption component = findOption(position(option));
 		component.visible(false);
-	}
-
-	@Override
-	public List<String> selection() {
-		if (selected == -1) return Collections.emptyList();
-    	return Collections.singletonList(nameOf(selected));
 	}
 
 	@Override

@@ -20,6 +20,12 @@ public class SelectorRadioBox<DN extends SelectorRadioBoxNotifier, B extends Box
         super(box);
     }
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> selection() {
+		return singletonList(selected);
+	}
+
 	public void selection(String value) {
 		notifier.refreshSelected(nameOf(value));
 		if (selected != null && selected.equals(value)) return;
@@ -29,11 +35,6 @@ public class SelectorRadioBox<DN extends SelectorRadioBoxNotifier, B extends Box
 	public void select(String value) {
     	selection(value);
 		notifySelection();
-	}
-
-	@Override
-	public List<String> selection() {
-		return singletonList(selected);
 	}
 
 	@Override

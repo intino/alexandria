@@ -41,14 +41,15 @@ export default class FileEditable extends AbstractFile {
 
 	render() {
 		if (!this.state.visible) return (<React.Fragment/>);
-
+        const { classes } = this.props;
+        const theme = Theme.get();
 		const label = this.props.label !== "" ? this.props.label : undefined;
 		const width = this.props.width != null ? this.props.width : "100%";
 		const height = this.props.height != null ? this.props.height : "100%";
-		const theme = Theme.get();
+		const color = this.state.readonly ? theme.palette.grey.primary : "inherit";
 		return (
 			<Block layout="vertical flex" style={{...this.style(),width:width,height:height}}>
-				{ ComponentBehavior.labelBlock(this.props, "body1", { color: theme.palette.grey.primary, marginRight: '5px' }) }
+                {label != null && label !== "" ? <div style={{color:color,fontSize:"10pt",color:"#0000008a",marginBottom:"5px"}}>{label}</div> : undefined }
 				{this._renderPreview()}
 				{this._renderComponent()}
 			</Block>
