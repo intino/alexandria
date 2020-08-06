@@ -1,0 +1,10 @@
+dsl Legio
+
+Artifact("io.intino.alexandria", "1.0.0") bot
+	Imports
+		Compile("io.intino.alexandria", "logger", "2.1.0")
+		Compile("io.intino.alexandria", "logger4j", "1.0.1")
+	Package(mode = ModulesAndLibrariesLinkedByManifest)
+
+Repository(identifier = "intino-maven")
+	Release(url = "https://artifactory.intino.io/artifactory/releases")
