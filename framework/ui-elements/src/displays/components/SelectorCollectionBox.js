@@ -47,7 +47,8 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 		this.state = {
 		    ...this.state,
 		    selection: this.traceValue() ? this.traceValue() : [],
-            multipleSelection: this.props.multipleSelection != null ? this.props.multipleSelection : false
+            multipleSelection: this.props.multipleSelection != null ? this.props.multipleSelection : false,
+            opened: false
 		}
 	};
 
@@ -64,14 +65,15 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
                 {this.renderTraceConsent()}
 				{label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{label}</div> : undefined }
 				<Select isMulti={multiple} isDisabled={this.state.readonly} isSearchable
-						closeMenuOnSelect={!multiple} autoFocus={this.props.focused}
+						closeMenuOnSelect={!multiple} autoFocus={this.props.focused} menuIsOpen={this.state.opened}
 						placeholder={this.selectMessage()}
 						className="basic-multi-select" classNamePrefix="select"
                         components={{ Option: this.renderOption.bind(this), MenuList: this.renderDialog.bind(this)}}
 						value={value} options={items}
 						onChange={this.handleChange.bind(this)}
 						onInputChange={this.handleSearch.bind(this)}
-						onMenuOpen={this.handleOpen.bind(this)}/>
+						onMenuOpen={this.handleOpen.bind(this)}
+						onMenuClose={this.handleClose.bind(this)}/>
 			</div>
         );
     };
@@ -111,12 +113,12 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 	};
 
     open = () => {
-        this.setState({ trigger : this.triggerComponent.current});
+        this.setState({ opened: true });
         this.requester.opened();
     };
 
     close = () => {
-        this.setState({ trigger: null });
+        this.setState({ opened: false });
     };
 
     handleChange = (value, method) => {
@@ -128,6 +130,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
     };
 
     handleSearch = (value) => {
+        this.open();
         Delayer.execute(this, () => this.requester.search(value), 500);
     };
 
@@ -135,6 +138,10 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
         if (this.state.readonly) return;
         if (this.state.trigger != null) return;
         this.open();
+    };
+
+    handleClose = (e) => {
+        this.close();
     };
 
 	style() {

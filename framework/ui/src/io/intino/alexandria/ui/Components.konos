@@ -103,6 +103,7 @@ Component selectorTabs as ExtensionOf(baseSelector)
 Component selectorCollectionBox as ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
 	Notification refreshMultipleSelection as Bool
+	Notification close
 	Request search as Text
 	Request clearSelection
 	Request unSelect as Text

@@ -69,6 +69,7 @@ public class Stepper<DN extends StepperNotifier, B extends Box> extends Abstract
     public void select(int pos) {
         this.active = pos;
         updateActive();
+        if (steps().size() > pos) steps().get(pos).refresh();
     }
 
     public void next() {

@@ -84,7 +84,7 @@ class Stepper extends AbstractStepper {
 		const children  = React.Children.toArray(this.props.children);
 		const isInRange = this._inRange(active, children.length);
 		return (
-			<div className={this.props.classes.content} style={{height:"100%"}}>
+			<div className={this.props.classes.content} style={{height:"100%",overflow:'auto'}}>
 				{ isInRange && React.cloneElement(children[active], { showContent: true })}
 			</div>
 		);

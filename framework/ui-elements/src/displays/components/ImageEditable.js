@@ -87,7 +87,7 @@ class ImageEditable extends AbstractImageEditable {
                        className={classes.input} onChange={this.handleChange.bind(this)}
                        disabled={this.state.readonly} />
                 <IconButton color="primary" aria-label="upload picture" size="small" component="span" onClick={this.handleRemove.bind(this)}
-                            style={{position:'absolute',right:"0",zIndex:"1",background:'white',marginTop:'-12px',marginRight:'-12px',border:'1px solid #efefef',display:removeButtonDisplay}}>
+                            style={{position:'absolute',right:"0",zIndex:"0",background:'white',marginTop:'-12px',marginRight:'-12px',border:'1px solid #efefef',display:removeButtonDisplay}}>
                     <Clear />
                 </IconButton>
 			</div>

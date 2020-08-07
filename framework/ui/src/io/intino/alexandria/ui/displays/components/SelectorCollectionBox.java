@@ -47,7 +47,8 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
         this.collection = (Collection) collection;
         collection().ifPresent(c -> collection.onSelect((event) -> {
             updateSelection(event);
-            ((Collection) collection).reload();
+            if (multipleSelection()) ((Collection) collection).reload();
+            else notifier.close();
         }));
     }
 
