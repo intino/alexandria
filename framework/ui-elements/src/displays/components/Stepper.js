@@ -71,7 +71,7 @@ class Stepper extends AbstractStepper {
 		const classNames = clsx(position, classes);
 		const isTop =  this._isTop();
 		return (
-			<div className={classNames} style={{height:"100%"}}>
+			<div className={classNames} style={{height:"100%",overflow:'auto'}}>
 				{isTop && this._renderStepper()}
 				{this._renderActive()}
 				{!isTop && this._renderStepper()}
@@ -84,7 +84,7 @@ class Stepper extends AbstractStepper {
 		const children  = React.Children.toArray(this.props.children);
 		const isInRange = this._inRange(active, children.length);
 		return (
-			<div className={this.props.classes.content} style={{height:"100%",overflow:'auto'}}>
+			<div className={this.props.classes.content} style={{height:"100%"}}>
 				{ isInRange && React.cloneElement(children[active], { showContent: true })}
 			</div>
 		);

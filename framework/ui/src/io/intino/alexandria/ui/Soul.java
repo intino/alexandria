@@ -107,11 +107,10 @@ public abstract class Soul implements DisplayRepository {
     }
 
     private Display findDisplay(String context, String id) {
-        String[] contextArray = context != null ? context.split("\\.") : new String[0];
-        for (int i=0; i<contextArray.length; i++) {
-            String key = String.join(".", Arrays.copyOfRange(contextArray, i, contextArray.length)) + id;
-            if (displays.containsKey(key)) return displays.get(key);
-        }
-        return null;
+        List<String> contextList = context != null ? Arrays.asList(context.split("\\.")) : new ArrayList<>();
+        return displays.entrySet().stream().filter(e -> {
+            String key = e.getKey();
+            return key.endsWith(id) && contextList.stream().allMatch(key::contains);
+        }).map(Map.Entry::getValue).findFirst().orElse(null);
     }
 }
