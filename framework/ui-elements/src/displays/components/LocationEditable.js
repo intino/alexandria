@@ -20,16 +20,17 @@ const styles = theme => ({
 });
 
 class LocationEditable extends AbstractLocationEditable {
-	state = {
-		drawingControl: true,
-		drawingMode: null,
-		readonly: this.props.readonly,
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new LocationEditableNotifier(this);
 		this.requester = new LocationEditableRequester(this);
+        this.state = {
+            ...this.state,
+            drawingControl: true,
+            drawingMode: null,
+            readonly: this.props.readonly,
+        };
 	};
 
 	render() {
@@ -101,6 +102,8 @@ class LocationEditable extends AbstractLocationEditable {
 	};
 
 	refresh = (location) => {
+	    if (this.selectedShape != null) this.selectedShape.setMap(null);
+	    this.selectedShape = null;
 		this.setState({ location: location, drawingControl : location == null });
 	};
 

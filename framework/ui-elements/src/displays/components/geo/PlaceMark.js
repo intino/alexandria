@@ -19,23 +19,24 @@ export default class PlaceMark extends I18nComponent {
         const location = placeMark.location;
         const googleMapStructure = GeometryUtil.toGoogleMapStructure(location);
         const clusterer = this.props.clusterer;
+        const label = placeMark.label != null ? {text:placeMark.label} : undefined;
         var icon = {url:placeMark.icon != null ? placeMark.icon : (this.props.icon != null ? this.props.icon : undefined),labelOrigin: new google.maps.Point(9, 10)};
         if (icon.url === undefined) icon = undefined;
         if (location.type === "Polyline") return (
             <React.Fragment>
                 {clusterer == null && <Polyline path={googleMapStructure}/> }
-                <Marker clusterer={clusterer} icon={icon} label={{text:placeMark.label}} position={GeometryUtil.centerOf(placeMark.location)} onClick={this.showInfo.bind(this)}>{this.renderInfoWindow()}</Marker>
+                <Marker clusterer={clusterer} icon={icon} label={label} position={GeometryUtil.centerOf(placeMark.location)} onClick={this.showInfo.bind(this)}>{this.renderInfoWindow()}</Marker>
             </React.Fragment>
         );
         else if (location.type === "Polygon") return (
             <React.Fragment>
                 {clusterer == null && <Polygon paths={googleMapStructure}/> }
-                <Marker clusterer={clusterer} icon={icon} label={{text:placeMark.label}} position={GeometryUtil.centerOf(placeMark.location)} onClick={this.showInfo.bind(this)}>
+                <Marker clusterer={clusterer} icon={icon} label={label} position={GeometryUtil.centerOf(placeMark.location)} onClick={this.showInfo.bind(this)}>
                     {this.renderInfoWindow()}
                 </Marker>
             </React.Fragment>
         );
-        return (<Marker icon={icon} label={{text:placeMark.label}} position={googleMapStructure} clusterer={clusterer} onClick={this.showInfo.bind(this)}>{this.renderInfoWindow()}</Marker>);
+        return (<Marker icon={icon} label={label} position={googleMapStructure} clusterer={clusterer} onClick={this.showInfo.bind(this)}>{this.renderInfoWindow()}</Marker>);
     };
 
     renderInfoWindow = () => {

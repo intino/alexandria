@@ -49,7 +49,8 @@ public class DialogRenderer extends SizedRenderer<AbstractDialog> {
 		if (!element.i$(OtherComponents.AlertDialog.class)) return;
 		OtherComponents.AlertDialog dialog = element.a$(OtherComponents.AlertDialog.class);
 		builder.add("message", dialog.message());
-		builder.add("close", dialog.closeLabel());
+		builder.add("closeLabel", dialog.closeLabel());
+		if (dialog.acceptLabel() != null) builder.add("acceptLabel", dialog.acceptLabel());
 	}
 
 	private void addCollectionDialogProperties(FrameBuilder builder) {

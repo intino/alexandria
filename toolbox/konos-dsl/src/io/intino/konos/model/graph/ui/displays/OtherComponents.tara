@@ -92,6 +92,7 @@ Concept OtherComponents
 		sub AlertDialog
 			var string message
 			var string closeLabel = "Close"
+			var string acceptLabel = empty
 		sub DecisionDialog
 			has:{1..1} Selector
 		sub CollectionDialog

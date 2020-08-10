@@ -95,7 +95,7 @@ def type(properties & chart) trigger(specific)
 end
 
 def type(properties & alertdialog) trigger(specific)
-	[ title="$title"][ modal={$modal}][ fullscreen={$fullscreen}][ message="$message"][ closeLabel="$close"][ width="$width"][ height="$height"][ animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}]
+	[ title="$title"][ modal={$modal}][ fullscreen={$fullscreen}][ message="$message"][ closeLabel="$closeLabel"][ acceptLabel="$acceptLabel"][ width="$width"][ height="$height"][ animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}]
 end
 
 def type(properties & abstractdialog) trigger(specific)

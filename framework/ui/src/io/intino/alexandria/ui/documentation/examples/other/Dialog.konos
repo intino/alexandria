@@ -55,7 +55,7 @@ Template(layout=Vertical, spacing=DP8) dialogExamplesMold
 				Button(title="alert dialog") as OpenDialog(dialog=dialog3)
 				AlertDialog(format=containerAirLarge, title = "alert dialog") dialog3 as Absolute(width=350px)
 					message = "Intino is cool!"
-					closeLabel = "OK!"
+					closeLabel = "Cancel"
 			Block > Text as Code(language=Html)
 					value
 						=========

@@ -26,7 +26,11 @@ public class Polyline extends Geometry {
 
 	@Override
 	public String toWkt() {
-		return String.format("LINESTRING(%s)", String.join(",", path.stream().map(Point::toWkt).collect(toList())));
+		String result = pathToWkt(path);
+		return String.format("LINESTRING(%s)", String.join(",", result));
 	}
 
+	private String pathToWkt(List<Point> path) {
+		return path.stream().map(p -> p.latitude() + " " + p.longitude()).collect(java.util.stream.Collectors.joining(","));
+	}
 }

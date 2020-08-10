@@ -150,6 +150,7 @@ Component baseDialog
 
 Component dialog as ExtensionOf(baseDialog)
 Component alertDialog as ExtensionOf(baseDialog)
+	Request accept
 Component decisionDialog as ExtensionOf(baseDialog)
 Component collectionDialog as ExtensionOf(baseDialog)
 

@@ -28,6 +28,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     private List<RefreshCountListener> refreshItemCountListeners = new ArrayList<>();
     private List<Listener> readyListeners = new ArrayList<>();
     private boolean ready = false;
+    private boolean allowMultiSelection = false;
     private List<String> selection;
 
     public Collection(B box) {
@@ -140,6 +141,19 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
 
     public long itemCount() {
         return behavior.itemCount();
+    }
+
+    public boolean allowMultiSelection() {
+        return allowMultiSelection;
+    }
+
+    public void allowMultiSelection(boolean value) {
+        this.allowMultiSelection = value;
+        notifier.refreshAllowMultiSelection(value);
+    }
+
+    public List<String> selection() {
+        return selection;
     }
 
     public void selection(List<String> selection) {

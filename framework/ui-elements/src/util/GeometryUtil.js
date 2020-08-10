@@ -66,10 +66,11 @@ const GeometryUtil = (function () {
             var SW = bounds.getSouthWest();
             var NW = new google.maps.LatLng(NE.lat(), SW.lng());
             var SE = new google.maps.LatLng(SW.lat(), NE.lng());
-            return {type: 'Polygon', paths: [{ pointList : _toPoints([NE, NW, SW, SE]) }]};
+            return {type: 'Polygon', paths: [{ pointList : _toPoints([NW, NE, SE, SW, NW]) }]};
         },
         toPolygon: (googleMapsPolygon) => {
             const paths = _toPaths(googleMapsPolygon.getPaths());
+            paths.map((path) => path.pointList.push(path.pointList[0]));
             return {type: 'Polygon', paths: paths };
         },
         toPolyline: (googleMapsPolygon) => {

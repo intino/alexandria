@@ -1,7 +1,9 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.schemas.LocationCenter;
 import io.intino.alexandria.schemas.LocationSetup;
+import io.intino.alexandria.schemas.LocationZoomRange;
 import io.intino.alexandria.ui.Asset;
 import io.intino.alexandria.ui.displays.components.geo.PlaceMarkBuilder;
 import io.intino.alexandria.ui.displays.notifiers.BaseLocationNotifier;
@@ -21,14 +23,29 @@ public class BaseLocation<DN extends BaseLocationNotifier, B extends Box> extend
         return value;
     }
 
-    public <D extends BaseLocation> D value(String value) {
-        return value(Geometry.fromWkt(value));
+    public BaseLocation<DN, B> value(String value) {
+        return value(value != null ? Geometry.fromWkt(value) : null);
     }
 
-    public <D extends BaseLocation> D value(Geometry location) {
+    public BaseLocation<DN, B> value(Geometry location) {
         _value(location);
         refresh();
-        return (D) this;
+        return this;
+    }
+
+    public BaseLocation<DN, B> zoom(int zoom) {
+        notifier.refreshZoom(zoom);
+        return this;
+    }
+
+    public BaseLocation<DN, B> zoomRange(int min, int max) {
+        notifier.refreshZoomRange(new LocationZoomRange().min(min).max(max));
+        return this;
+    }
+
+    public BaseLocation<DN, B> center(double latitude, double longitude) {
+        notifier.refreshCenter(new LocationCenter().lat(latitude).lng(longitude));
+        return this;
     }
 
     @Override
@@ -40,8 +57,7 @@ public class BaseLocation<DN extends BaseLocationNotifier, B extends Box> extend
 
     @Override
     public void refresh() {
-        if (value == null) return;
-        notifier.refresh(PlaceMarkBuilder.buildGeometry(value));
+        notifier.refresh(value != null ? PlaceMarkBuilder.buildGeometry(value) : null);
     }
 
     protected <D extends BaseLocation> D _icon(URL icon) {

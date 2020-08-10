@@ -8,6 +8,7 @@ Component collection
 	Notification refresh
 	Notification refreshItemCount as LongInteger
 	Notification refreshSelection as Text List
+	Notification refreshAllowMultiSelection as Bool
 	Request selection as Text List
 	Request selectAll
 

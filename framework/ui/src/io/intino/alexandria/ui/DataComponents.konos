@@ -58,6 +58,9 @@ Component imageEditable as ExtensionOf(baseImage)
 Component baseLocation
 	Notification setup as Object(LocationSetup)
 	Notification refresh as Object(Geometry)
+	Notification refreshZoom as Integer
+	Notification refreshZoomRange as Object(LocationZoomRange)
+	Notification refreshCenter as Object(LocationCenter)
 
 Component location as ExtensionOf(baseLocation)
 Component locationEditable as ExtensionOf(baseLocation)

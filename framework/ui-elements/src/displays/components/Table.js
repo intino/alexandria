@@ -63,7 +63,7 @@ export class EmbeddedTable extends AbstractTable {
     render() {
         const { classes } = this.props;
         const selectable = this.props.selection != null;
-        const multiple = this.props.selection != null && this.props.selection === "multiple";
+        const multiple = this.allowMultiSelection();
         const headerHeight = this.header.current != null ? this.header.current.offsetHeight : 0;
         const minHeight = this.props.itemHeight * this.state.itemCount;
         const height = this.container.current != null ? this.container.current.offsetHeight : 0;
