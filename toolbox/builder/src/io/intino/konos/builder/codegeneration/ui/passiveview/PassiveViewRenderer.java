@@ -1,5 +1,6 @@
 package io.intino.konos.builder.codegeneration.ui.passiveview;
 
+import cottons.utils.StringHelper;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
@@ -226,16 +227,20 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	private FrameBuilder importOf(PassiveView passiveView, String container, boolean multiple) {
 		FrameBuilder result = new FrameBuilder(container);
+		if (passiveView.i$(OtherComponents.AppStamp.class)) result.add("appstamp");
 		result.add("name", importNameOf(passiveView));
 		result.add("type", importTypeOf(passiveView, multiple));
 		result.add("directory", directoryOf(passiveView));
 		result.add("componentDirectory", componentDirectoryOf(passiveView, multiple));
+		if (passiveView.i$(OtherComponents.AppStamp.class)) result.add("appModuleName", StringHelper.camelCaseToSnakeCase(passiveView.a$(OtherComponents.AppStamp.class).app().service()));
 		if (context.webModuleDirectory().exists()) result.add("webModuleName", context.webModuleDirectory().getName());
 		if (!multiple) addFacets(passiveView, result);
 		return result;
 	}
 
 	private String importNameOf(PassiveView passiveView) {
+		if (passiveView.i$(OtherComponents.AppStamp.class))
+			return passiveView.a$(OtherComponents.AppStamp.class).template();
 		if (passiveView.i$(OtherComponents.Stamp.class))
 			return passiveView.a$(OtherComponents.Stamp.class).template().name$();
 		if (passiveView.i$(OtherComponents.Frame.class)) {
@@ -387,8 +392,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			String importType = isProjectComponent(c) ? ProjectComponentImport : AlexandriaComponentImport;
 			registerConcreteImports(c, builder);
 			registerMultipleImport(imported, multiple, type, c, builder);
-			if (key != null && !imported.contains(key))
-				builder.add(importType, importOf(c, importType, isProjectComponent ? false : multiple));
+			if (key != null && !imported.contains(key)) builder.add(importType, importOf(c, importType, isProjectComponent ? false : multiple));
 			if (key != null) imported.add(key);
 			if (c.i$(CatalogComponents.Collection.class)) registerCollectionImports(imported, c, builder);
 			if (c.i$(HelperComponents.Row.class)) registerRowImports(imported, c, builder);
@@ -405,7 +409,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	protected boolean isProjectComponent(Component component) {
-		if (component.i$(OtherComponents.Stamp.class)) return true;
+		if (component.i$(OtherComponents.BaseStamp.class)) return true;
 		if (component.i$(OtherComponents.Frame.class)) return true;
 		if (component.i$(HelperComponents.Row.class)) return true;
 		if (component.i$(CatalogComponents.Collection.Mold.Item.class)) return true;
@@ -419,6 +423,8 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	private String keyOf(Component component, String type) {
 		if (component == null) return type;
+		if (component.i$(OtherComponents.AppStamp.class))
+			return component.a$(OtherComponents.AppStamp.class).template();
 		if (component.i$(OtherComponents.Stamp.class))
 			return component.a$(OtherComponents.Stamp.class).template().name$();
 		if (component.i$(OtherComponents.Frame.class)) {

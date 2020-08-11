@@ -11,6 +11,7 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.InteractionComponents.Actionable;
+import io.intino.konos.model.graph.OtherComponents.BaseStamp;
 import io.intino.konos.model.graph.OtherComponents.Dialog;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
@@ -177,7 +178,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	protected void addDecoratedFrames(FrameBuilder frame, boolean decorated) {
-		boolean isAbstract = decorated && !element.i$(Stamp.class);
+		boolean isAbstract = decorated && !element.i$(BaseStamp.class);
 		if (isAbstract) frame.add("abstract", "Abstract");
 		else frame.add("notDecorated", element.name$());
 		FrameBuilder abstractBoxFrame = new FrameBuilder().add("box");

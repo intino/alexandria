@@ -111,6 +111,10 @@ def type(alexandriaComponentImport)
 	import Ui$type+firstUpperCase$facet...[] from "alexandria-ui-elements/src/displays/[$componentDirectory/]$type+firstUpperCase$facet...[]";
 end
 
+def type(projectComponentImport & appstamp)
+	import Displays$name+firstUpperCase from "$appModuleName/src/displays/templates/$name+firstUpperCase";
+end
+
 def type(projectComponentImport)
 	import Displays$name+firstUpperCase from "$webModuleName/[$directory]/displays/[$componentDirectory/]$name+firstUpperCase";
 end

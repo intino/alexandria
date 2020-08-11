@@ -18,7 +18,11 @@ def type(component & child & collection) trigger(declarations)
 	[$heading+declarations...[$NL]]
 end
 
-def type(component & child & stamp & single) trigger(declarations)
+def type(component & child & appstamp & single) trigger(declarations)
+	public $appPackage.$template+firstUpperCase $name;
+end
+
+def type(component & child & basestamp & single) trigger(declarations)
 	public $template+firstUpperCase $name;
 end
 
@@ -27,7 +31,11 @@ def type(component & child) trigger(declarations)
 	[$component+declarations...[$NL]]
 end
 
-def type(component & child & stamp & single) trigger(declaration)
+def type(component & child & appstamp & single) trigger(declaration)
+	public $appPackage.$template+firstUpperCase $name;
+end
+
+def type(component & child & basestamp & single) trigger(declaration)
 	public $template+firstUpperCase $name;
 end
 
@@ -40,7 +48,7 @@ def type(method & multiple)
 	[$editableClass]
 	@Override
 	public $componentName add([$objectType value]) {
-		$componentName child = new $componentName(box());
+		$componentName child = new $componentName(box()[.$componentAppBox+lowerCase()]);
 		child.id(java.util.UUID.randomUUID().toString());
 		add(child, "$name");
 		[child.value($objectTypeValue);]
@@ -124,7 +132,7 @@ end
 def type(component & child) trigger(method)
 end
 
-def type(component & child & stamp & single) trigger(class)
+def type(component & child & basestamp & single) trigger(class)
 end
 
 def type(component & child & collection & embedded) trigger(class)
@@ -230,7 +238,7 @@ def type(extends & item)
 	io.intino.alexandria.ui.displays.components.Item<$abstractBox+type, $itemClass>
 end
 
-def type(extends & stamp)
+def type(extends & basestamp)
 	$type+firstUpperCase
 end
 
@@ -275,11 +283,19 @@ def type(component & child & collection) trigger(rootReferences)
 	[$heading+rootChildReferences...[$NL]]
 end
 
-def type(component & child & stamp & multiple) trigger(rootReferences)
+def type(component & child & appstamp & multiple) trigger(rootReferences)
+	if ($name == null) $name = register(new $appPackage.$name+firstUpperCase([($appBox~Box)]box().owner()).<$appPackage.$name+firstUpperCase>id("$id").owner($owner.this));
+end
+
+def type(component & child & basestamp & multiple) trigger(rootReferences)
 	if ($name == null) $name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
-def type(component & child & stamp & single) trigger(rootReferences)
+def type(component & child & appstamp & single) trigger(rootReferences)
+	if ($name == null) $name = register(new $appPackage.$template+firstUpperCase$generic([($appBox~Box)]box().owner()).id("$id"));
+end
+
+def type(component & child & basestamp & single) trigger(rootReferences)
 	if ($name == null) $name = register(new $template+firstUpperCase$generic([($concreteBox+firstUpperCase~Box)]box()).id("$id"));
 end
 
@@ -323,11 +339,19 @@ def type(component & child) trigger(initializations)
 	[$component+initializations...[$NL]]
 end
 
-def type(component & child & stamp & multiple)
+def type(component & child & appstamp & multiple)
 	if ($name == null) $name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
-def type(component & child & stamp & single)
+def type(component & child & basestamp & multiple)
+	if ($name == null) $name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+end
+
+def type(component & child & appstamp & single)
+	if ($name == null) $name = register(new $appPackage.$template+firstUpperCase$generic([($appBox~Box)]box().owner()).id("$id"));
+end
+
+def type(component & child & basestamp & single)
 	if ($name == null) $name = register(new $template+firstUpperCase$generic([($concreteBox+firstUpperCase~Box)]box()).id("$id"));
 end
 

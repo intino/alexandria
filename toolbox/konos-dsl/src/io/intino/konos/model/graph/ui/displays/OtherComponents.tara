@@ -23,14 +23,32 @@ Concept OtherComponents
 		Aspect Circular
         Aspect Linear
 
-	Concept Stamp extends Component
-		var Template template
+	Concept BaseStamp extends Component
 		Aspect Multiple
 		Aspect Editable
 
-	Concept ProxyStamp extends Component
-		var string proxy
-		var Service.UI.Use from
+		!! Renders template in this component
+		sub Stamp
+			var Template template
+
+		!! Stamps template that belongs to owner project
+		sub AppStamp
+			var Service.UI.Use app
+			var string template
+
+		!! Stamps template from other app. DEPRECATED
+		sub ProxyStamp
+			var string proxy
+			var Service.UI.Use from
+
+	!! This component provides an entry point to other app by using its proxy display. Display defined must has Accessible facet in the other app.
+	Concept Portal extends Component
+		var string to
+		var word:{Display Template} type = Template
+		var Service.UI.Use in
+		Concept Parameter
+			var string name
+			var string value
 
 	Concept Header extends Component
 		var word:{Fixed Absolute Sticky Static Relative} position = Relative
@@ -100,11 +118,3 @@ Concept OtherComponents
 			has:{0..1} CatalogComponents.Collection
 
 	Concept Divider extends Component
-
-	Concept Portal extends Component
-		var string to
-		var word:{Display Template} type = Template
-		var Service.UI.Use in
-		Concept Parameter
-			var string name
-			var string value

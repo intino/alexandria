@@ -12,6 +12,7 @@ import io.intino.konos.model.graph.CatalogComponents.Collection.Mold;
 import io.intino.konos.model.graph.DataComponents.File;
 import io.intino.konos.model.graph.DataComponents.Image;
 import io.intino.konos.model.graph.DataComponents.Text;
+import io.intino.konos.model.graph.OtherComponents.BaseStamp;
 import io.intino.konos.model.graph.OtherComponents.Dialog;
 import io.intino.konos.model.graph.OtherComponents.Icon;
 import io.intino.konos.model.graph.OtherComponents.Stamp;
@@ -79,7 +80,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	protected FrameBuilder addOwner(FrameBuilder builder) {
 		if (owner != null) builder.add("owner", (ElementHelper.isRoot(owner) ? "Abstract" : "") + firstUpperCase(owner.name$()));
 		Component parentComponent = element.core$().ownerAs(Component.class);
-		if (element.i$(Stamp.class) && parentComponent != null && !ElementHelper.isRoot(parentComponent)) builder.add("parentId", shortId(parentComponent));
+		if (element.i$(BaseStamp.class) && parentComponent != null && !ElementHelper.isRoot(parentComponent)) builder.add("parentId", shortId(parentComponent));
 		return builder;
 	}
 
@@ -218,6 +219,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			FrameBuilder methodsFrame = addOwner(buildBaseFrame()).add("method").add("multiple");
 			methodsFrame.add("componentType", multipleComponentType(element));
 			methodsFrame.add("componentName", multipleComponentName(element));
+			if (element.i$(OtherComponents.AppStamp.class)) methodsFrame.add("componentAppBox", element.a$(OtherComponents.AppStamp.class).app().name());
 			if (element.i$(Editable.class)) {
 				methodsFrame.add("editableMethods", new FrameBuilder("editableMethods"));
 				if (!isMultipleSpecificComponent(element)) methodsFrame.add("editableClass", editableClassFrame());
@@ -244,13 +246,19 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			return true;
 		}
 
-		if (element.i$(Stamp.class)) {
-			builder.add("stamp");
+		if (element.i$(BaseStamp.class)) {
+			builder.add("basestamp");
 			if (!element.i$(Multiple.class)) builder.add("single");
-			Template template = element.a$(Stamp.class).template();
-			builder.add("template", template.name$());
-			builder.add("type", template.name$());
-			builder.add("generic", KonosGraph.isParent(context.graphName(), template) ? "<>" : "");
+			if (element.i$(OtherComponents.AppStamp.class)) builder.add("appstamp");
+			String templateName = templateName(element.a$(BaseStamp.class));
+			builder.add("template", templateName);
+			builder.add("type", templateName);
+			builder.add("generic", genericOf(element.a$(BaseStamp.class)));
+			if (element.i$(OtherComponents.AppStamp.class)) {
+				Service.UI.Use app = element.a$(OtherComponents.AppStamp.class).app();
+				builder.add("appPackage", appStampPackage(app));
+				builder.add("appBox", appStampBox(app));
+			}
 			return true;
 		}
 
@@ -262,6 +270,31 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		}
 
 		return false;
+	}
+
+	private String appStampPackage(Service.UI.Use use) {
+		return use.package$() + "." + use.name().toLowerCase() + ".box.ui.displays.templates";
+	}
+
+	private String appStampBox(Service.UI.Use use) {
+		return use.package$() + "." + use.name().toLowerCase() + ".box." + use.name();
+	}
+
+	private Object genericOf(BaseStamp stamp) {
+		if (stamp.i$(Stamp.class)) {
+			boolean parent = KonosGraph.isParent(context.graphName(), element.a$(Stamp.class).template());
+			return parent ? "<>" : "";
+		}
+		return "";
+	}
+
+	private String templateName(BaseStamp stamp) {
+		if (stamp.i$(OtherComponents.AppStamp.class)) return stamp.a$(OtherComponents.AppStamp.class).template();
+		if (stamp.i$(OtherComponents.Stamp.class)) {
+			Template template = stamp.a$(Stamp.class).template();
+			return template != null ? template.name$() : null;
+		}
+		return null;
 	}
 
 	private FrameBuilder editableClassFrame() {
@@ -283,11 +316,11 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		String prefix = "io.intino.alexandria.ui.displays.components.";
 		String name = multipleComponentName(element);
 		if (name == null) return null;
-		return element.i$(Stamp.Multiple.class) || element.i$(Block.Multiple.class) ? name : prefix + name;
+		return element.i$(BaseStamp.Multiple.class) || element.i$(Block.Multiple.class) ? name : prefix + name;
 	}
 
 	private boolean isMultipleSpecificComponent(C element) {
-		return element.i$(Stamp.Multiple.class) || element.i$(Block.Multiple.class);
+		return element.i$(BaseStamp.Multiple.class) || element.i$(Block.Multiple.class);
 	}
 
 	private String multipleComponentName(C element) {
@@ -298,7 +331,13 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (element.i$(Icon.Multiple.class)) return "Icon" + editable;
 		if (element.i$(DataComponents.Number.Multiple.class)) return "Number" + editable;
 		if (element.i$(DataComponents.Date.Multiple.class)) return "Date" + editable;
-		if (element.i$(Stamp.Multiple.class)) return firstUpperCase(element.a$(Stamp.Multiple.class).template().name$());
+		if (element.i$(Stamp.Multiple.class)) {
+			if (element.i$(OtherComponents.AppStamp.class)) {
+				OtherComponents.AppStamp appStamp = element.a$(OtherComponents.AppStamp.class);
+				return appStampPackage(appStamp.app()) + "." + firstUpperCase(appStamp.template());
+			}
+			return firstUpperCase(element.a$(Stamp.class).template().name$());
+		}
 		if (element.i$(Block.Multiple.class)) return firstUpperCase(nameOf(element));
 		return null;
 	}
@@ -311,7 +350,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (element.i$(DataComponents.Number.Multiple.class)) return "java.lang.Double";
 		if (element.i$(DataComponents.Date.Multiple.class)) return "java.time.Instant";
 		if (element.i$(Stamp.Multiple.class)) {
-			String modelClass = element.a$(Stamp.Multiple.class).template().modelClass();
+			String modelClass = element.i$(OtherComponents.AppStamp.class) ? "java.lang.Void" : element.a$(Stamp.class).template().modelClass();
 			return modelClass != null ? modelClass : "java.lang.Void";
 		}
 		if (element.i$(Block.Multiple.class)) return "java.lang.Void";
