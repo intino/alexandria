@@ -30,7 +30,7 @@ export default class Actionable extends AbstractActionable {
 			cursor: "pointer"
 		},
 		readonly : {
-			color: theme.palette.grey.primary,
+			color: theme.palette.grey.A700,
 			cursor: "default"
 		},
 	});

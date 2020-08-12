@@ -139,12 +139,6 @@ export default class Display extends PassiveView {
         return this.state[name] != null ? this.state[name] : this.props[name];
     };
 
-//    _context(container) {
-//        var result = (this.props.context != null ? this.props.context() + "." : "") + this.props.id;
-//        if (container != null) result += "." + container;
-//        return result;
-//    };
-
     trace = (value, name) => {
         if (!this.state.traceable) return;
         if (!this._traceConsentAccepted()) return;
@@ -170,7 +164,9 @@ export default class Display extends PassiveView {
     };
 
     _context() {
-        return (this.props.owner != null ? this.props.owner() + "." : "") + this.props.id;
+        const context = this.props.context != null ? this.props.context() + "." : "";
+        const owner = this.props.owner != null ? this.props.owner() + "." : "";
+        return context + this.props.id;
     };
 
     _owner() {

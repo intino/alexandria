@@ -36,7 +36,7 @@ class SelectorCheckBox extends AbstractSelectorCheckBox {
 	render() {
 		const { classes, theme } = this.props;
 		const label = this.props.label;
-		const color = this.state.readonly ? theme.palette.grey.primary : "inherit";
+		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
 		return (
 		    <div style={this.style()}>
                 {label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{label}</div> : undefined }

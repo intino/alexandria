@@ -14,7 +14,7 @@ import SaveAltIcon from '@material-ui/icons/SaveAlt';
 
 const styles = theme => ({
 	label: {
-		color: theme.palette.grey.primary,
+		color: theme.palette.grey.A700,
 		marginRight: "5px"
 	},
 	value: {
@@ -55,7 +55,7 @@ class File extends AbstractFile {
 
 		return (
 			<Block layout="horizontal flex">
-				{ ComponentBehavior.labelBlock(this.props) }
+				{ ComponentBehavior.labelBlock(this.props, 'body1', this.style()) }
 				{(!this._isPdf() && !this._isXml()) &&
 				    <div style={{height:"100%", width:"100%"}} className="layout vertical flex">
 				        <div style={{height:"50px", background:"#26282B"}}></div>

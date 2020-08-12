@@ -46,7 +46,7 @@ export default class FileEditable extends AbstractFile {
 		const label = this.props.label !== "" ? this.props.label : undefined;
 		const width = this.props.width != null ? this.props.width : "100%";
 		const height = this.props.height != null ? this.props.height : "100%";
-		const color = this.state.readonly ? theme.palette.grey.primary : "inherit";
+		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
 		return (
 			<Block layout="vertical flex" style={{...this.style(),width:width,height:height}}>
                 {label != null && label !== "" ? <div style={{color:color,fontSize:"10pt",color:"#0000008a",marginBottom:"5px"}}>{label}</div> : undefined }

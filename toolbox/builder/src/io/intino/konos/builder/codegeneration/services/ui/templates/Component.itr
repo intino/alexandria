@@ -292,7 +292,7 @@ def type(component & child & basestamp & multiple) trigger(rootReferences)
 end
 
 def type(component & child & appstamp & single) trigger(rootReferences)
-	if ($name == null) $name = register(new $appPackage.$template+firstUpperCase$generic([($appBox~Box)]box().owner()).id("$id"));
+	if ($name == null) $name = register(new $appPackage.$template+firstUpperCase$generic([($appBox~Box)]box().owner()).<$appPackage.$template+firstUpperCase$generic>id("$id").owner($owner.this));
 end
 
 def type(component & child & basestamp & single) trigger(rootReferences)
@@ -348,7 +348,7 @@ def type(component & child & basestamp & multiple)
 end
 
 def type(component & child & appstamp & single)
-	if ($name == null) $name = register(new $appPackage.$template+firstUpperCase$generic([($appBox~Box)]box().owner()).id("$id"));
+	if ($name == null) $name = register(new $appPackage.$template+firstUpperCase$generic([($appBox~Box)]box().owner()).<$appPackage.$template+firstUpperCase$generic>id("$id").owner($owner.this));
 end
 
 def type(component & child & basestamp & single)

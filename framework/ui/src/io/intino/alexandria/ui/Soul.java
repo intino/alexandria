@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -65,7 +66,7 @@ public abstract class Soul implements DisplayRepository {
     }
 
     public <T extends Display> T displayWithId(String owner, String context, String id) {
-        Display display = findDisplay(context, id);
+        Display display = findDisplay(owner, context, id);
         if (display != null) return (T) display;
         String ownerId = owner != null && !owner.isEmpty() ? owner : "";
         String key = ownerId + id;
@@ -106,11 +107,18 @@ public abstract class Soul implements DisplayRepository {
         this.displays.remove(id);
     }
 
-    private Display findDisplay(String context, String id) {
-        List<String> contextList = context != null ? Arrays.asList(context.split("\\.")) : new ArrayList<>();
-        return displays.entrySet().stream().filter(e -> {
+    private Display findDisplay(String owner, String context, String id) {
+        List<String> contextList = context != null && !context.isEmpty() ? Arrays.asList(context.split("\\.")) : new ArrayList<>();
+        List<Display> result = displays.entrySet().stream().filter(e -> {
             String key = e.getKey();
-            return key.endsWith(id) && contextList.stream().allMatch(key::contains);
-        }).map(Map.Entry::getValue).findFirst().orElse(null);
+            return key.endsWith(owner + id) && (e.getValue().owner() == null || containsAll(contextList, e.getValue().owner().path()));
+        }).map(Map.Entry::getValue).collect(toList());
+        return result.size() > 0 ? result.get(0) : null;
+    }
+
+    private boolean containsAll(List<String> contextList, String owner) {
+        List<String> ownerList = Arrays.asList(owner.split("\\."));
+        if (ownerList.size() < contextList.size()) return contextList.containsAll(ownerList);
+        else return ownerList.containsAll(contextList);
     }
 }

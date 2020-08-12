@@ -6,6 +6,7 @@ def.file
 /Users/mcaballero/Proyectos/goros-example/coordinacion/src/es/laspalmasgc/externa/viasyobras/coordinacion/box/ui/definitions/Formulario2.konos#true
 /Users/mcaballero/Proyectos/goros-example/coordinacion/src/es/laspalmasgc/externa/viasyobras/coordinacion/box/ui/definitions/Formulario3.konos#true
 /Users/mcaballero/Proyectos/goros-example/coordinacion/src/es/laspalmasgc/externa/viasyobras/coordinacion/box/ui/definitions/Formulario1.konos#true
+/Users/mcaballero/Proyectos/goros-example/coordinacion/src/es/laspalmasgc/externa/viasyobras/coordinacion/box/ui/definitions/Tasks.konos#true
 /Users/mcaballero/Proyectos/goros-example/coordinacion/src/es/laspalmasgc/externa/viasyobras/coordinacion/box/ui/definitions/Documento1.konos#true
 /Users/mcaballero/Proyectos/goros-example/coordinacion/src/es/laspalmasgc/externa/viasyobras/coordinacion/box/ui/definitions/Tesauro1.konos#true
 /Users/mcaballero/Proyectos/goros-example/coordinacion/src/es/laspalmasgc/externa/viasyobras/coordinacion/box/ui/definitions/Activity1.konos#true

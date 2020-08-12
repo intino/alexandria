@@ -17,7 +17,7 @@ import Block from "./Block";
 export const TableStyles = theme => ({
     ...CollectionStyles(theme),
     label: {
-        color: theme.palette.grey.primary,
+        color: theme.palette.grey.A700,
         marginRight: "5px"
     },
     headerView : {

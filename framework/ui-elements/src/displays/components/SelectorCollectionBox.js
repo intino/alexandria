@@ -58,7 +58,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 		const label = this.props.label;
 		const items = this.items();
 		const value = this.selection(items);
-		const color = this.state.readonly ? theme.palette.grey.primary : "inherit";
+		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
 
 	    return (
 			<div className={classes.container} style={this.style()}>

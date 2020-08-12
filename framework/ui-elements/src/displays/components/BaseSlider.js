@@ -158,7 +158,7 @@ export default class BaseSlider extends AbstractBaseSlider {
 
 	renderValue = () => {
 		const { theme } = this.props;
-		return (<div style={{color: this.state.readonly ? theme.palette.grey.primary : "black"}}>{this.getFormattedValue()}</div>);
+		return (<div style={{color: this.state.readonly ? theme.palette.grey.A700 : "black"}}>{this.getFormattedValue()}</div>);
 	};
 
 	getValue = () => {
