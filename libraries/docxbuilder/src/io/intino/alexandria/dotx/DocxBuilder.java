@@ -8,36 +8,36 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-public class Dotx {
+public class DocxBuilder {
 	private static final String CRLF = "</w:t></w:r><w:r><w:rPr><w:noProof/><w:sz w:val=\"16\"/><w:szCs w:val=\"16\"/></w:rPr><w:br/></w:r><w:r><w:rPr><w:noProof/><w:sz w:val=\"16\"/><w:szCs w:val=\"16\"/></w:rPr><w:t>";
 	private final File template;
 	private final Content content;
 
-	public static Dotx from(File template) {
-		return new Dotx(template);
+	public static DocxBuilder create(File template) {
+		return new DocxBuilder(template);
 	}
 
-	public Dotx replace(String replacements) {
+	public DocxBuilder replace(String replacements) {
 		for (String line : replacements.split("\n"))
 			this.content.put(line.split(":"));
 		return this;
 	}
 
-	public Dotx replace(String field, String value) {
+	public DocxBuilder replace(String field, String value) {
 		this.content.put(field, value);
 		return this;
 	}
 
-	public Dotx replace(String field, byte[] value) {
+	public DocxBuilder replace(String field, byte[] value) {
 		this.content.put(field, value);
 		return this;
 	}
 
-	public void to(File result) throws IOException {
-		new Zip(template).to(result);
+	public void save(File file) throws IOException {
+		new Zip(template).to(file);
 	}
 
-	private Dotx(File template) {
+	private DocxBuilder(File template) {
 		this.template = template;
 		this.content = new Content();
 	}

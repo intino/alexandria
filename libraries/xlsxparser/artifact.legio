@@ -1,0 +1,12 @@
+dsl Legio
+
+Artifact("io.intino.alexandria", "1.0.0") xlsxparser
+	Imports
+		Compile("org.apache.poi", "poi", "4.1.1")
+		Compile("org.apache.poi", "poi-ooxml", "4.1.1")
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Distribution("intino-maven")
+		Release("https://artifactory.intino.io/artifactory/release-libraries")
+
+Repository("intino-maven")
+	Release("https://artifactory.intino.io/artifactory/releases")

@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.0") dotx
+Artifact("io.intino.alexandria", "1.0.0") docxbuilder
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution("intino-maven")
 		Release("https://artifactory.intino.io/artifactory/release-libraries")
