@@ -10,7 +10,7 @@ public class ExampleXlsbuilder {
 		new File("temp").mkdirs();
 		File csv = new File("temp/example.csv");
 		String ending = Files.readString(new File("test-res/ending.csv").toPath());
-		Files.write(csv.toPath(), ("\n\n\n\n$id;$name;$address;$municipality;#amount\n" +
+		Files.write(csv.toPath(), ("\n\n\n\n\n\n$id;$name;$address;$municipality;#amount\n" +
 				"Id1;Company1;Address1;Municipality1;30.23\n" +
 				"Id2;Company2;Address2;Municipality2;3034242.23\n" +
 				"Id3;Company3;Address3;Municipality3;23123.23\n" + ending).getBytes());
