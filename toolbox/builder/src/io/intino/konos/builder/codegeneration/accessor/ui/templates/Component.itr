@@ -31,6 +31,10 @@ def type(extends & multiple)
 	UiMultiple
 end
 
+def type(extends & displaystamp)
+	Ui$type+firstUpperCase$facet...[]
+end
+
 def type(extends & basestamp)
 	Displays$type+firstUpperCase
 end
@@ -72,10 +76,6 @@ end
 
 def type(properties & materialicon) trigger(specific)
 	[ icon="$icon"]
-end
-
-def type(properties & portal) trigger(specific)
-    [ to="$to"]
 end
 
 def type(properties & selector) trigger(specific)
@@ -192,6 +192,10 @@ end
 
 def type(properties & stepper) trigger(specific)
    [ orientation="$orientation+lowercase"][ position="$position+lowercase"]
+end
+
+def type(properties & frame) trigger(specific)
+   [ width="$width"][ height="$height"][ url="$url"]
 end
 
 def type(properties) trigger(specific)

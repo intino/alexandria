@@ -11,15 +11,13 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.InteractionComponents.Actionable;
-import io.intino.konos.model.graph.OtherComponents.BaseStamp;
-import io.intino.konos.model.graph.OtherComponents.Dialog;
+import io.intino.konos.model.graph.OtherComponents.*;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.model.graph.CatalogComponents.Collection;
 import static io.intino.konos.model.graph.Component.DynamicLoaded;
 import static io.intino.konos.model.graph.OtherComponents.Selector;
-import static io.intino.konos.model.graph.OtherComponents.Stamp;
 
 public abstract class BaseDisplayRenderer<D extends Display> extends PassiveViewRenderer<D> {
 	private static final ComponentRendererFactory factory = new ComponentRendererFactory();
@@ -178,7 +176,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	protected void addDecoratedFrames(FrameBuilder frame, boolean decorated) {
-		boolean isAbstract = decorated && !element.i$(BaseStamp.class);
+		boolean isAbstract = decorated && !(element.i$(TemplateStamp.class) || element.i$(OwnerTemplateStamp.class) || element.i$(ProxyStamp.class));
 		if (isAbstract) frame.add("abstract", "Abstract");
 		else frame.add("notDecorated", element.name$());
 		FrameBuilder abstractBoxFrame = new FrameBuilder().add("box");

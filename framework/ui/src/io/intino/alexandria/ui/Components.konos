@@ -62,8 +62,6 @@ Component icon as ExtensionOf(baseIcon)
 Component materialIcon as ExtensionOf(baseIcon)
 
 Component optionList
-Component frame
-	Notification refreshDisplay as Text
 
 Component baseSelector
 	Notification refreshReadonly as Bool
@@ -135,9 +133,14 @@ Component baseSlider
 Component slider as ExtensionOf(baseSlider)
 Component temporalSlider as ExtensionOf(baseSlider)
 
-Component stamp
-Component stampEditable
+Component templateStamp
+Component templateStampEditable
+Component displayStamp
+	Notification refreshDisplay as Text
 Component proxyStamp
+
+Component frame
+	Notification refresh as Text
 
 Component baseDialog
 	Notification open
@@ -160,8 +163,6 @@ Component user
 
 	Request logout
 	Request refreshChildren
-
-Component portal
 
 Component stepper
     Notification refresh as Object(StepperInfo)

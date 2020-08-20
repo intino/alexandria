@@ -21,6 +21,12 @@ public class EventsDisplay extends AbstractEventsDisplay<AlexandriaUiBox> {
     @Override
     public void init() {
         super.init();
+        refresh();
+    }
+
+    @Override
+    public void refresh() {
+        super.refresh();
         notifier.refresh(eventList);
     }
 }

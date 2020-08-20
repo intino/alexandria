@@ -10,12 +10,12 @@ Template(layout=Vertical, spacing=DP8) listExamplesMold
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAir)
 				List(itemClass="io.intino.alexandria.ui.documentation.Item") list1
-					Mold > Item(height=60px) list1Mold > Stamp(template=itemMold) stamp
+					Mold > Item(height=60px) list1Mold > TemplateStamp(template=itemMold) stamp
 			Block > Text as Code(language=Html)
 					value
 						=========
 						List(itemClass\="io.intino.alexandria.ui.documentation.Item") list<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item listMold > Stamp(template\=itemMold) stamp<br/><br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item listMold > TemplateStamp(template\=itemMold) stamp<br/><br/>
 
 						Template(modelClass\="io.intino.alexandria.ui.documentation.Item") itemMold<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal Center, spacing\=DP8)<br/>
@@ -27,12 +27,12 @@ Template(layout=Vertical, spacing=DP8) listExamplesMold
 			Text(format=h6, value="No facets and no mark on scrolling")
 			Block(spacing=DP8, format=filledNoAir)
 				List(itemClass="io.intino.alexandria.ui.documentation.Item", scrollingMark=false) list2
-					Mold > Item(height=60px) list2Mold > Stamp(template=itemMold) stamp
+					Mold > Item(height=60px) list2Mold > TemplateStamp(template=itemMold) stamp
 			Block > Text as Code(language=Html)
 					value
 						=========
 						List(itemClass\="io.intino.alexandria.ui.documentation.Item", loadingMark\=false) list<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item listMold > Stamp(template\=itemMold) stamp<br/><br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item listMold > TemplateStamp(template\=itemMold) stamp<br/><br/>
 
 						Template(modelClass\="io.intino.alexandria.ui.documentation.Item") itemMold<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal Center, spacing\=DP8)<br/>

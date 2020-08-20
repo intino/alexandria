@@ -33,6 +33,7 @@ class EventsDisplay extends AbstractEventsDisplay {
 	};
 
 	render() {
+	console.log("hola");
 		const {classes} = this.props;
 		const eventList = this.state.eventList;
 		return (

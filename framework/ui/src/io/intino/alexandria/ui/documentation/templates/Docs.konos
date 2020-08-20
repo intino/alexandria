@@ -14,13 +14,13 @@ Template docsTemplate
 
 	Block(layout=Wrap, spacing=DP40, format=containerAirLarge) body
 		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) dataBlock as Labeled("data widgets")
-			Stamp(template=widgetSummaryMold,spacing=DP16,arrangement=Horizontal) dataWidgets as Multiple(noItemsMessage="no widgets")
+			TemplateStamp(template=widgetSummaryMold,spacing=DP16,arrangement=Horizontal) dataWidgets as Multiple(noItemsMessage="no widgets")
 		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) catalogBlock as Labeled("catalog widgets")
-			Stamp(template=widgetSummaryMold,spacing=DP16,arrangement=Horizontal) catalogWidgets as Multiple(noItemsMessage="no widgets")
+			TemplateStamp(template=widgetSummaryMold,spacing=DP16,arrangement=Horizontal) catalogWidgets as Multiple(noItemsMessage="no widgets")
 		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) operationBlock as Labeled("operation widgets")
-			Stamp(template=widgetSummaryMold,spacing=DP16,arrangement=Horizontal) operationWidgets as Multiple(noItemsMessage="no widgets")
+			TemplateStamp(template=widgetSummaryMold,spacing=DP16,arrangement=Horizontal) operationWidgets as Multiple(noItemsMessage="no widgets")
 		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) otherBlock as Labeled("other widgets")
-			Stamp(template=widgetSummaryMold,spacing=DP16,arrangement=Horizontal) otherWidgets as Multiple(noItemsMessage="no widgets")
+			TemplateStamp(template=widgetSummaryMold,spacing=DP16,arrangement=Horizontal) otherWidgets as Multiple(noItemsMessage="no widgets")
 
 
 Template(layout=Vertical Flexible, modelClass="io.intino.alexandria.schemas.Widget") widgetSummaryMold as Relative(height=100%)
@@ -76,14 +76,14 @@ Template(layout=Vertical Flexible, modelClass="io.intino.alexandria.schemas.Widg
 //					Text(value="Wizard") wizard as Option
 //
 //		Block(layout=Vertical Flexible, format=air) panels
-//			Block textPanel as Conditional(docsTemplate.body.header.menu.basicSection.text) > Block textBlock as Stamp(widgetMold)
-//			Block numberPanel as Conditional(docsTemplate.body.header.menu.basicSection.number) > Block numberBlock as Stamp(widgetMold)
-//			Block imagePanel as Conditional(docsTemplate.body.header.menu.basicSection.image) > Block imageBlock as Stamp(widgetMold)
-//			Block filePanel as Conditional(docsTemplate.body.header.menu.basicSection.file) > Block fileBlock as Stamp(widgetMold)
-//			Block datePanel as Conditional(docsTemplate.body.header.menu.basicSection.date) > Block dateBlock as Stamp(widgetMold)
+//			Block textPanel as Conditional(docsTemplate.body.header.menu.basicSection.text) > Block textBlock as TemplateStamp(widgetMold)
+//			Block numberPanel as Conditional(docsTemplate.body.header.menu.basicSection.number) > Block numberBlock as TemplateStamp(widgetMold)
+//			Block imagePanel as Conditional(docsTemplate.body.header.menu.basicSection.image) > Block imageBlock as TemplateStamp(widgetMold)
+//			Block filePanel as Conditional(docsTemplate.body.header.menu.basicSection.file) > Block fileBlock as TemplateStamp(widgetMold)
+//			Block datePanel as Conditional(docsTemplate.body.header.menu.basicSection.date) > Block dateBlock as TemplateStamp(widgetMold)
 //
-//			Block collectionPanel as Conditional(docsTemplate.body.header.menu.catalogSection.collection) > Block collectionBlock as Stamp(widgetMold)
-//			Block catalogPanel as Conditional(docsTemplate.body.header.menu.catalogSection.catalog) > Block catalogBlock as Stamp(widgetMold)
+//			Block collectionPanel as Conditional(docsTemplate.body.header.menu.catalogSection.collection) > Block collectionBlock as TemplateStamp(widgetMold)
+//			Block catalogPanel as Conditional(docsTemplate.body.header.menu.catalogSection.catalog) > Block catalogBlock as TemplateStamp(widgetMold)
 //
-//			Block blockPanel as Conditional(docsTemplate.body.header.menu.otherSection.block) > Block blockBlock as Stamp(widgetMold)
-//			Block chartPanel as Conditional(docsTemplate.body.header.menu.otherSection.chart) > Block chartBlock as Stamp(widgetMold)
+//			Block blockPanel as Conditional(docsTemplate.body.header.menu.otherSection.block) > Block blockBlock as TemplateStamp(widgetMold)
+//			Block chartPanel as Conditional(docsTemplate.body.header.menu.otherSection.chart) > Block chartBlock as TemplateStamp(widgetMold)

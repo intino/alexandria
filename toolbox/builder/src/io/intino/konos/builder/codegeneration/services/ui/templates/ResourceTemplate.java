@@ -13,7 +13,7 @@ public class ResourceTemplate extends Template {
 			rule().condition((type("parameter")), (trigger("dispatch"))).output(literal("page.")).output(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")),
 			rule().condition((type("parameter"))).output(literal("page.")).output(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).output(literal(" = parameterValue(\"")).output(mark("name")).output(literal("\");")),
 			rule().condition((type("googleApiKey")), (trigger("format"))).output(literal("\"")).output(mark("name")).output(literal("\"")).output(expression().output(mark("custom").multiple(""))),
-			rule().condition((trigger("custom"))).output(literal(".replace(\"{")).output(mark("value")).output(literal("}\", box.configuration().get(\"")).output(mark("value")).output(literal("\"))"))
+			rule().condition((trigger("custom"))).output(literal(".replace(\"{")).output(mark("")).output(literal("}\", box.configuration().get(\"")).output(mark("")).output(literal("\"))"))
 		);
 	}
 }

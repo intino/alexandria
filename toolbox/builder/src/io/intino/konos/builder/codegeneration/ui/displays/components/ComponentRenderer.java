@@ -12,10 +12,7 @@ import io.intino.konos.model.graph.CatalogComponents.Collection.Mold;
 import io.intino.konos.model.graph.DataComponents.File;
 import io.intino.konos.model.graph.DataComponents.Image;
 import io.intino.konos.model.graph.DataComponents.Text;
-import io.intino.konos.model.graph.OtherComponents.BaseStamp;
-import io.intino.konos.model.graph.OtherComponents.Dialog;
-import io.intino.konos.model.graph.OtherComponents.Icon;
-import io.intino.konos.model.graph.OtherComponents.Stamp;
+import io.intino.konos.model.graph.OtherComponents.*;
 import io.intino.magritte.framework.Layer;
 
 import java.util.*;
@@ -219,7 +216,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			FrameBuilder methodsFrame = addOwner(buildBaseFrame()).add("method").add("multiple");
 			methodsFrame.add("componentType", multipleComponentType(element));
 			methodsFrame.add("componentName", multipleComponentName(element));
-			if (element.i$(OtherComponents.AppStamp.class)) methodsFrame.add("componentAppBox", element.a$(OtherComponents.AppStamp.class).app().name());
+			if (element.i$(OwnerTemplateStamp.class)) methodsFrame.add("componentOwnerBox", element.a$(OwnerTemplateStamp.class).owner().name());
 			if (element.i$(Editable.class)) {
 				methodsFrame.add("editableMethods", new FrameBuilder("editableMethods"));
 				if (!isMultipleSpecificComponent(element)) methodsFrame.add("editableClass", editableClassFrame());
@@ -246,18 +243,19 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			return true;
 		}
 
-		if (element.i$(BaseStamp.class)) {
+		if (element.i$(BaseStamp.class) && !element.i$(DisplayStamp.class)) {
 			builder.add("basestamp");
 			if (!element.i$(Multiple.class)) builder.add("single");
-			if (element.i$(OtherComponents.AppStamp.class)) builder.add("appstamp");
+			if (element.i$(OwnerTemplateStamp.class)) builder.add("ownertemplatestamp");
+			if (element.i$(DisplayStamp.class)) builder.add("displaystamp");
 			String templateName = templateName(element.a$(BaseStamp.class));
 			builder.add("template", templateName);
 			builder.add("type", templateName);
 			builder.add("generic", genericOf(element.a$(BaseStamp.class)));
-			if (element.i$(OtherComponents.AppStamp.class)) {
-				Service.UI.Use app = element.a$(OtherComponents.AppStamp.class).app();
-				builder.add("appPackage", appStampPackage(app));
-				builder.add("appBox", appStampBox(app));
+			if (element.i$(OwnerTemplateStamp.class)) {
+				Service.UI.Use owner = element.a$(OwnerTemplateStamp.class).owner();
+				builder.add("ownerPackage", ownerTemplateStampPackage(owner));
+				builder.add("ownerBox", ownerTemplateStampBox(owner));
 			}
 			return true;
 		}
@@ -272,26 +270,26 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return false;
 	}
 
-	private String appStampPackage(Service.UI.Use use) {
+	private String ownerTemplateStampPackage(Service.UI.Use use) {
 		return use.package$() + "." + use.name().toLowerCase() + ".box.ui.displays.templates";
 	}
 
-	private String appStampBox(Service.UI.Use use) {
+	private String ownerTemplateStampBox(Service.UI.Use use) {
 		return use.package$() + "." + use.name().toLowerCase() + ".box." + use.name();
 	}
 
 	private Object genericOf(BaseStamp stamp) {
-		if (stamp.i$(Stamp.class)) {
-			boolean parent = KonosGraph.isParent(context.graphName(), element.a$(Stamp.class).template());
+		if (stamp.i$(TemplateStamp.class)) {
+			boolean parent = KonosGraph.isParent(context.graphName(), element.a$(TemplateStamp.class).template());
 			return parent ? "<>" : "";
 		}
 		return "";
 	}
 
 	private String templateName(BaseStamp stamp) {
-		if (stamp.i$(OtherComponents.AppStamp.class)) return stamp.a$(OtherComponents.AppStamp.class).template();
-		if (stamp.i$(OtherComponents.Stamp.class)) {
-			Template template = stamp.a$(Stamp.class).template();
+		if (stamp.i$(OtherComponents.OwnerTemplateStamp.class)) return stamp.a$(OwnerTemplateStamp.class).template();
+		if (stamp.i$(OtherComponents.TemplateStamp.class)) {
+			Template template = stamp.a$(TemplateStamp.class).template();
 			return template != null ? template.name$() : null;
 		}
 		return null;
@@ -331,12 +329,12 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (element.i$(Icon.Multiple.class)) return "Icon" + editable;
 		if (element.i$(DataComponents.Number.Multiple.class)) return "Number" + editable;
 		if (element.i$(DataComponents.Date.Multiple.class)) return "Date" + editable;
-		if (element.i$(Stamp.Multiple.class)) {
-			if (element.i$(OtherComponents.AppStamp.class)) {
-				OtherComponents.AppStamp appStamp = element.a$(OtherComponents.AppStamp.class);
-				return appStampPackage(appStamp.app()) + "." + firstUpperCase(appStamp.template());
+		if (element.i$(BaseStamp.Multiple.class)) {
+			if (element.i$(OtherComponents.OwnerTemplateStamp.class)) {
+				OwnerTemplateStamp stamp = element.a$(OwnerTemplateStamp.class);
+				return ownerTemplateStampPackage(stamp.owner()) + "." + firstUpperCase(stamp.template());
 			}
-			return firstUpperCase(element.a$(Stamp.class).template().name$());
+			return firstUpperCase(element.a$(TemplateStamp.class).template().name$());
 		}
 		if (element.i$(Block.Multiple.class)) return firstUpperCase(nameOf(element));
 		return null;
@@ -349,8 +347,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (element.i$(Icon.Multiple.class)) return "java.net.URL";
 		if (element.i$(DataComponents.Number.Multiple.class)) return "java.lang.Double";
 		if (element.i$(DataComponents.Date.Multiple.class)) return "java.time.Instant";
-		if (element.i$(Stamp.Multiple.class)) {
-			String modelClass = element.i$(OtherComponents.AppStamp.class) ? "java.lang.Void" : element.a$(Stamp.class).template().modelClass();
+		if (element.i$(BaseStamp.Multiple.class)) {
+			String modelClass = element.i$(OwnerTemplateStamp.class) ? "java.lang.Void" : element.a$(TemplateStamp.class).template().modelClass();
 			return modelClass != null ? modelClass : "java.lang.Void";
 		}
 		if (element.i$(Block.Multiple.class)) return "java.lang.Void";

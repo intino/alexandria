@@ -4,12 +4,21 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.ProxyDisplay;
 import io.intino.alexandria.ui.displays.notifiers.ProxyStampNotifier;
 
+import java.util.HashMap;
+
 @SuppressWarnings("rawtypes")
 public class ProxyStamp<DN extends ProxyStampNotifier, B extends Box> extends AbstractProxyStamp<B> {
     private ProxyDisplay proxy;
+    private java.util.Map<String, String> parameters = new HashMap<>();
 
     public ProxyStamp(B box) {
         super(box);
+    }
+
+    public ProxyStamp parameter(String name, String value) {
+        parameters.put(name, value);
+        refreshProxy();
+        return this;
     }
 
     @Override
@@ -32,5 +41,10 @@ public class ProxyStamp<DN extends ProxyStampNotifier, B extends Box> extends Ab
         if (children().size() > 0) return;
         proxy.session(session());
         add(proxy);
+    }
+
+    private void refreshProxy() {
+        proxy.parameters(parameters);
+        proxy.refresh();
     }
 }

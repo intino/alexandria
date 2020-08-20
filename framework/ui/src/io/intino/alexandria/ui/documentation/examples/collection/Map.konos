@@ -13,7 +13,7 @@ Template(layout=Vertical, spacing=DP8) mapExamplesMold
 					icon = "icons/placemark.png"
 					Zoom(defaultZoom = 6, min = 1, max = 18)
 					Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
-					Mold > Item(height=60px) map1Mold > Stamp(template=itemMold) stamp
+					Mold > Item(height=60px) map1Mold > TemplateStamp(template=itemMold) stamp
 			Block > Text as Code(language=Html)
 					value
 						=========
@@ -21,7 +21,7 @@ Template(layout=Vertical, spacing=DP8) mapExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;icon\="icons/placemark.png"
 						&nbsp;&nbsp;&nbsp;&nbsp;Zoom(defaultZoom\=14, min\=1, max\=18)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Center(latitude\=28.146773457066104, longitude\=-15.418557420532238)<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item mapMold > Stamp(template\=itemMold) stamp<br/><br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item mapMold > TemplateStamp(template\=itemMold) stamp<br/><br/>
 
 						Template(modelClass\="io.intino.alexandria.ui.documentation.Item") itemMold<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal Center, spacing\=DP8)<br/>
@@ -35,14 +35,14 @@ Template(layout=Vertical, spacing=DP8) mapExamplesMold
 				Map(itemClass="io.intino.alexandria.ui.documentation.Item") map2 as Cluster
 					Zoom(defaultZoom = 4, min = 1, max = 18)
 					Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
-					Mold > Item(height=60px) map2Mold > Stamp(template=itemMold) stamp
+					Mold > Item(height=60px) map2Mold > TemplateStamp(template=itemMold) stamp
 			Block > Text as Code(language=Html)
 					value
 						=========
 						Map(itemClass\="io.intino.alexandria.ui.documentation.Item") map as Clustered<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Zoom(defaultZoom\=14, min\=1, max\=18)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Center(latitude\=28.146773457066104, longitude\=-15.418557420532238)<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item mapMold > Stamp(template\=itemMold) stamp<br/><br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item mapMold > TemplateStamp(template\=itemMold) stamp<br/><br/>
 
 						Template(modelClass\="io.intino.alexandria.ui.documentation.Item") itemMold<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal Center, spacing\=DP8)<br/>
@@ -57,14 +57,14 @@ Template(layout=Vertical, spacing=DP8) mapExamplesMold
 				Map(itemClass="io.intino.alexandria.ui.documentation.Item") map3 as Heatmap
 					Zoom(defaultZoom = 4, min = 1, max = 18)
 					Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
-					Mold > Item(height=60px) map3Mold > Stamp(template=itemMold) stamp
+					Mold > Item(height=60px) map3Mold > TemplateStamp(template=itemMold) stamp
 			Block > Text as Code(language=Html)
 					value
 						=========
 						Map(itemClass\="io.intino.alexandria.ui.documentation.Item") map as Heatmap<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Zoom(defaultZoom\=14, min\=1, max\=18)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Center(latitude\=28.146773457066104, longitude\=-15.418557420532238)<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item mapMold > Stamp(template\=itemMold) stamp<br/><br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item mapMold > TemplateStamp(template\=itemMold) stamp<br/><br/>
 
 						Template(modelClass\="io.intino.alexandria.ui.documentation.Item") itemMold<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal Center, spacing\=DP8)<br/>
@@ -78,14 +78,14 @@ Template(layout=Vertical, spacing=DP8) mapExamplesMold
 				Map(itemClass="io.intino.alexandria.ui.documentation.Item") map4 as Kml(layer="data/example.kml")
 					Zoom(defaultZoom = 4, min = 1, max = 18)
 					Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
-					Mold > Item(height=60px) map4Mold > Stamp(template=itemMold) stamp
+					Mold > Item(height=60px) map4Mold > TemplateStamp(template=itemMold) stamp
 			Block > Text as Code(language=Html)
 					value
 						=========
 						Map(itemClass\="io.intino.alexandria.ui.documentation.Item") map as Kml(layer\="data/example.kml")<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Zoom(defaultZoom\=14, min\=1, max\=18)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Center(latitude\=28.146773457066104, longitude\=-15.418557420532238)<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item mapMold > Stamp(template\=itemMold) stamp<br/><br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item mapMold > TemplateStamp(template\=itemMold) stamp<br/><br/>
 
 						Template(modelClass\="io.intino.alexandria.ui.documentation.Item") itemMold<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal Center, spacing\=DP8)<br/>

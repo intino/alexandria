@@ -25,6 +25,7 @@ public class ProxyStampRenderer extends ComponentRenderer<ProxyStamp> {
 		properties.add("proxyUseName", from.name().toLowerCase());
 		properties.add("proxyUseUrl", useUrlFrame());
 		properties.add("type", ProxyStamp.class.getSimpleName());
+		element.parameterList().forEach(p -> properties.add("parameter", parameterMethodFrame(p.name(), p.value())));
 		return properties;
 	}
 
