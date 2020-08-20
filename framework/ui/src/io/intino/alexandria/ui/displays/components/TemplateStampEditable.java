@@ -4,13 +4,13 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.components.editable.Editable;
 import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
-import io.intino.alexandria.ui.displays.notifiers.StampEditableNotifier;
+import io.intino.alexandria.ui.displays.notifiers.TemplateStampEditableNotifier;
 
-public class StampEditable<DN extends StampEditableNotifier, B extends Box> extends AbstractStampEditable<B> implements Editable<DN, B> {
+public class TemplateStampEditable<DN extends TemplateStampEditableNotifier, B extends Box> extends AbstractTemplateStampEditable<B> implements Editable<DN, B> {
     private boolean readonly;
     private ChangeListener changeListener = null;
 
-    public StampEditable(B box) {
+    public TemplateStampEditable(B box) {
         super(box);
     }
 
@@ -31,14 +31,14 @@ public class StampEditable<DN extends StampEditableNotifier, B extends Box> exte
     }
 
     @Override
-    public StampEditable<DN, B> readonly(boolean readonly) {
+    public TemplateStampEditable<DN, B> readonly(boolean readonly) {
         this.readonly = readonly;
         children().stream().filter(c -> c instanceof Editable).forEach(c -> ((Editable<?,?>)c).readonly(readonly));
         return this;
     }
 
     @Override
-    public StampEditable<DN, B> onChange(ChangeListener listener) {
+    public TemplateStampEditable<DN, B> onChange(ChangeListener listener) {
         this.changeListener = listener;
         return this;
     }

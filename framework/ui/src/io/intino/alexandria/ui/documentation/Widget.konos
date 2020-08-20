@@ -36,44 +36,45 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 	Block(layout=Vertical, spacing=DP24)
 		Block examples
 			Text(value="Examples", format=h5 underline) examplesTitle
-			Block textExamples as Conditional > Stamp(template=textExamplesMold)
-			Block numberExamples as Conditional > Stamp(template=numberExamplesMold)
-			Block fileExamples as Conditional > Stamp(template=fileExamplesMold)
-			Block imageExamples as Conditional > Stamp(template=imageExamplesMold)
-			Block dateExamples as Conditional > Stamp(template=dateExamplesMold)
-			Block chartExamples as Conditional > Stamp(template=chartExamplesMold)
-			Block blockExamples as Conditional > Stamp(template=blockExamplesMold)
-			Block listExamples as Conditional > Stamp(template=listExamplesMold)
-			Block tableExamples as Conditional > Stamp(template=tableExamplesMold)
-			Block mapExamples as Conditional > Stamp(template=mapExamplesMold)
-			Block downloadExamples as Conditional > Stamp(template=downloadExamplesMold)
-			Block downloadSelectionExamples as Conditional > Stamp(template=downloadSelectionExamplesMold)
-			Block exportExamples as Conditional > Stamp(template=exportExamplesMold)
-			Block actionableExamples as Conditional > Stamp(template=actionableExamplesMold)
-			Block groupingExamples as Conditional > Stamp(template=groupingExamplesMold)
-			Block sortingExamples as Conditional > Stamp(template=sortingExamplesMold)
-			Block searchBoxExamples as Conditional > Stamp(template=searchBoxExamplesMold)
-			Block sliderExamples as Conditional > Stamp(template=sliderExamplesMold)
-			Block dashboardExamples as Conditional > Stamp(template=dashboardExamplesMold)
-			Block dialogExamples as Conditional > Stamp(template=dialogExamplesMold)
-			Block dividerExamples as Conditional > Stamp(template=dividerExamplesMold)
-			Block userExamples as Conditional > Stamp(template=userExamplesMold)
-			Block locationExamples as Conditional > Stamp(template=locationExamplesMold)
-			Block selectorExamples as Conditional > Stamp(template=selectorExamplesMold)
-			Block stepperExamples as Conditional > Stamp(template=stepperExamplesMold)
+			Block textExamples as Conditional > TemplateStamp(template=textExamplesMold)
+			Block numberExamples as Conditional > TemplateStamp(template=numberExamplesMold)
+			Block fileExamples as Conditional > TemplateStamp(template=fileExamplesMold)
+			Block imageExamples as Conditional > TemplateStamp(template=imageExamplesMold)
+			Block dateExamples as Conditional > TemplateStamp(template=dateExamplesMold)
+			Block chartExamples as Conditional > TemplateStamp(template=chartExamplesMold)
+			Block blockExamples as Conditional > TemplateStamp(template=blockExamplesMold)
+			Block listExamples as Conditional > TemplateStamp(template=listExamplesMold)
+			Block tableExamples as Conditional > TemplateStamp(template=tableExamplesMold)
+			Block mapExamples as Conditional > TemplateStamp(template=mapExamplesMold)
+			Block downloadExamples as Conditional > TemplateStamp(template=downloadExamplesMold)
+			Block downloadSelectionExamples as Conditional > TemplateStamp(template=downloadSelectionExamplesMold)
+			Block exportExamples as Conditional > TemplateStamp(template=exportExamplesMold)
+			Block actionableExamples as Conditional > TemplateStamp(template=actionableExamplesMold)
+			Block groupingExamples as Conditional > TemplateStamp(template=groupingExamplesMold)
+			Block sortingExamples as Conditional > TemplateStamp(template=sortingExamplesMold)
+			Block searchBoxExamples as Conditional > TemplateStamp(template=searchBoxExamplesMold)
+			Block sliderExamples as Conditional > TemplateStamp(template=sliderExamplesMold)
+			Block dashboardExamples as Conditional > TemplateStamp(template=dashboardExamplesMold)
+			Block dialogExamples as Conditional > TemplateStamp(template=dialogExamplesMold)
+			Block dividerExamples as Conditional > TemplateStamp(template=dividerExamplesMold)
+			Block userExamples as Conditional > TemplateStamp(template=userExamplesMold)
+			Block locationExamples as Conditional > TemplateStamp(template=locationExamplesMold)
+			Block selectorExamples as Conditional > TemplateStamp(template=selectorExamplesMold)
+			Block stepperExamples as Conditional > TemplateStamp(template=stepperExamplesMold)
+			Block frameExamples as Conditional > TemplateStamp(template=frameExamplesMold)
 
 		Block facets
 			Text(value="Facets", format=h5 underline)
 			Text facetsNames
 		Block
 			Text(value="Properties", format=h5 underline)
-			Stamp(template=propertyMold) properties as Multiple(noItemsMessage="no properties")
+			TemplateStamp(template=propertyMold) properties as Multiple(noItemsMessage="no properties")
 		Block
 			Text(value="Methods", format=h5 underline)
-			Stamp(template=methodMold) methods as Multiple(noItemsMessage="no methods")
+			TemplateStamp(template=methodMold) methods as Multiple(noItemsMessage="no methods")
 		Block
 			Text(value="Events", format=h5 underline)
-			Frame(display=eventsDisplay) events
+			DisplayStamp(display=eventsDisplay) events
 
 Template(modelClass="io.intino.alexandria.schemas.Property", format=airBottom) propertyMold
 	Text(format=body2 facetsAbsolute, value="", mode=Uppercase) facets
@@ -92,7 +93,7 @@ Template(modelClass="io.intino.alexandria.schemas.Method", format=airBottom) met
 	Block(layout=Horizontal StartJustified)
 		Text(format=h6) name
 		Text(format=h6, value="(")
-		Stamp(template=methodParamMold) params as Multiple
+		TemplateStamp(template=methodParamMold) params as Multiple
 		Text(format=h6, value=")")
 		Text(format=h6, value=":&nbsp;&nbsp;")
 		Text(format=h6 widgetType, mode = Lowercase) returnType

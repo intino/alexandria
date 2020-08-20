@@ -36,9 +36,9 @@ public class ComponentRendererFactory {
 		if (component.i$(VisualizationComponents.Dashboard.class)) return (T) new DashboardRenderer(context, component.a$(VisualizationComponents.Dashboard.class), provider, target);
 		if (component.i$(OtherComponents.AbstractDialog.class)) return (T) new DialogRenderer(context, component.a$(OtherComponents.AbstractDialog.class), provider, target);
 		if (component.i$(OtherComponents.BaseIcon.class)) return (T) new IconRenderer(context, component.a$(OtherComponents.BaseIcon.class), provider, target);
-		if (component.i$(OtherComponents.Portal.class)) return (T) new PortalRenderer(context, component.a$(OtherComponents.Portal.class), provider, target);
 		if (component.i$(OtherComponents.User.class)) return (T) new UserRenderer(context, component.a$(OtherComponents.User.class), provider, target);
 		if (component.i$(OtherComponents.ProxyStamp.class)) return (T) new ProxyStampRenderer(context, component.a$(OtherComponents.ProxyStamp.class), provider, target);
+		if (component.i$(OtherComponents.Frame.class)) return (T) new FrameRenderer(context, component.a$(OtherComponents.Frame.class), provider, target);
 		if (component.i$(VisualizationComponents.Stepper.class)) return (T) new StepperRenderer(context, component.a$(VisualizationComponents.Stepper.class), provider, target);
 		if (component.i$(VisualizationComponents.Stepper.Step.class)) return (T) new StepRenderer(context, component.a$(VisualizationComponents.Stepper.Step.class), provider, target);
 

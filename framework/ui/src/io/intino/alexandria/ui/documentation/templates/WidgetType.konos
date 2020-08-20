@@ -14,4 +14,4 @@ Template widgetTypeTemplate
 				Link(title="docs") as OpenPage(page=UiElements.docs)
 
 	Block(format=containerAirLarge)
-		Stamp(template=widgetMold) widget
+		TemplateStamp(template=widgetMold) widget

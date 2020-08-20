@@ -1,8 +1,8 @@
 def type(display & accessible)
 	import React from "react";
 	[$alexandriaBlockImport]
-	[$alexandriaStampImport]
-	[$alexandriaFrameImport]
+	[$alexandriaTemplateStampImport]
+	[$alexandriaDisplayStampImport]
 	[$alexandriaComponentImport...[$NL]]
 	[$projectComponentImport...[$NL]]
 	[$parent+import]
@@ -28,8 +28,8 @@ end
 def type(display & collection)
 	import React from "react";
 	[$alexandriaBlockImport]
-	[$alexandriaStampImport]
-	[$alexandriaFrameImport]
+	[$alexandriaTemplateStampImport]
+	[$alexandriaDisplayStampImport]
 	[$alexandriaComponentImport...[$NL]]
 	[$projectComponentImport...[$NL]]
 	[$parent+import]
@@ -54,8 +54,8 @@ end
 def type(display)
 	import React from "react";
 	[$alexandriaBlockImport]
-	[$alexandriaStampImport]
-	[$alexandriaFrameImport]
+	[$alexandriaTemplateStampImport]
+	[$alexandriaDisplayStampImport]
 	[$alexandriaComponentImport...[$NL]]
 	[$projectComponentImport...[$NL]]
 	[$parent+import]
@@ -111,8 +111,8 @@ def type(alexandriaComponentImport)
 	import Ui$type+firstUpperCase$facet...[] from "alexandria-ui-elements/src/displays/[$componentDirectory/]$type+firstUpperCase$facet...[]";
 end
 
-def type(projectComponentImport & appstamp)
-	import Displays$name+firstUpperCase from "$appModuleName/src/displays/templates/$name+firstUpperCase";
+def type(projectComponentImport & ownertemplatestamp)
+	import Displays$name+firstUpperCase from "$ownerModuleName/src/displays/templates/$name+firstUpperCase";
 end
 
 def type(projectComponentImport)
