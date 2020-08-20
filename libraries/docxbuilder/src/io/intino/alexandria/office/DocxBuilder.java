@@ -1,4 +1,4 @@
-package io.intino.alexandria.dotx;
+package io.intino.alexandria.office;
 
 import java.io.*;
 import java.util.Enumeration;
