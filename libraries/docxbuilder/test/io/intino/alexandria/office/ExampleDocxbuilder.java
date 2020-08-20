@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 
-public class Example {
+public class ExampleDocxbuilder {
 
 	public static void main(String[] args) throws IOException {
 		new File("temp").mkdirs();

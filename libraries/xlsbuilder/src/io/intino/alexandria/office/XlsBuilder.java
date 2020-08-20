@@ -10,7 +10,7 @@ import java.util.*;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 
-public class XlsxBuilder {
+public class XlsBuilder {
 	private final HSSFWorkbook wb;
 	private final HSSFCreationHelper helper;
 	private final Map<Sheet, HSSFPatriarch> patriarchs = new HashMap<>();
@@ -21,7 +21,7 @@ public class XlsxBuilder {
 	private final HSSFCellStyle text;
 	private final Set<Short> styles = new HashSet<>();
 
-	private XlsxBuilder() {
+	private XlsBuilder() {
 		this.wb = new HSSFWorkbook();
 		this.helper = wb.getCreationHelper();
 
@@ -32,11 +32,11 @@ public class XlsxBuilder {
 		this.text = style(font(10, false), HorizontalAlignment.LEFT);
 	}
 
-	public static XlsxBuilder create() {
-		return new XlsxBuilder();
+	public static XlsBuilder create() {
+		return new XlsBuilder();
 	}
 
-	public XlsxBuilder append(String sheetName, File csvFile) throws IOException {
+	public XlsBuilder append(String sheetName, File csvFile) throws IOException {
 		HSSFSheet sheet = wb.createSheet(sheetName);
 		patriarchs.put(sheet, sheet.createDrawingPatriarch());
 		try (BufferedReader reader = new BufferedReader(new FileReader(csvFile))) {

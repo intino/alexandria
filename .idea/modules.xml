@@ -43,7 +43,7 @@
       <module fileurl="file://$PROJECT_DIR$/fileformats/tris/tris.iml" filepath="$PROJECT_DIR$/fileformats/tris/tris.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/framework/ui/ui.iml" filepath="$PROJECT_DIR$/framework/ui/ui.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/framework/ui-elements/ui-elements.iml" filepath="$PROJECT_DIR$/framework/ui-elements/ui-elements.iml" group="framework" />
-      <module fileurl="file://$PROJECT_DIR$/libraries/xlsxbuilder/xlsxbuilder.iml" filepath="$PROJECT_DIR$/libraries/xlsxbuilder/xlsxbuilder.iml" group="office" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/xlsbuilder/xlsbuilder.iml" filepath="$PROJECT_DIR$/libraries/xlsbuilder/xlsbuilder.iml" group="office" />
       <module fileurl="file://$PROJECT_DIR$/libraries/xlsxparser/xlsxparser.iml" filepath="$PROJECT_DIR$/libraries/xlsxparser/xlsxparser.iml" group="office" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/xml/xml.iml" filepath="$PROJECT_DIR$/fileformats/xml/xml.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/zet/zet.iml" filepath="$PROJECT_DIR$/fileformats/zet/zet.iml" group="fileformats" />
