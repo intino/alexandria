@@ -1,10 +1,10 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.0") pdf-builder
+Artifact("io.intino.alexandria", "1.0.1") pdf-builder
 	Imports
-		Compile("fr.opensagres.xdocreport", "fr.opensagres.poi.xwpf.converter.core", "2.0.1")
-		Compile("fr.opensagres.xdocreport", "fr.opensagres.poi.xwpf.converter.pdf", "2.0.1")
-		Compile("fr.opensagres.xdocreport", "fr.opensagres.xdocreport.itext.extension", "2.0.1")
+		Compile("fr.opensagres.xdocreport", "fr.opensagres.poi.xwpf.converter.core", "2.0.2")
+		Compile("fr.opensagres.xdocreport", "fr.opensagres.poi.xwpf.converter.pdf", "2.0.2")
+		Compile("fr.opensagres.xdocreport", "fr.opensagres.xdocreport.itext.extension", "2.0.2")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution("intino-maven")
 		Release("https://artifactory.intino.io/artifactory/release-libraries")
