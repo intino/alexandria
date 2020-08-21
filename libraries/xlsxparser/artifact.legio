@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.1") xlsxparser
+Artifact("io.intino.alexandria", "1.0.0") xlsx-parser
 	Imports
 		Compile("org.apache.poi", "poi", "4.1.1")
 		Compile("org.apache.poi", "poi-ooxml", "4.1.1")
