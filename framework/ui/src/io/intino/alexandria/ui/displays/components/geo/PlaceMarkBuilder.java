@@ -31,9 +31,11 @@ public class PlaceMarkBuilder {
 
 	public static Geometry buildGeometry(io.intino.alexandria.ui.model.Geometry location) {
 		Geometry result = new Geometry().type(typeOf(location));
-		fillPoint(location, result);
-		fillPolygon(location, result);
-		fillPolyline(location, result);
+		if (location != null) {
+			fillPoint(location, result);
+			fillPolygon(location, result);
+			fillPolyline(location, result);
+		}
 		return result;
 	}
 
@@ -78,8 +80,10 @@ public class PlaceMarkBuilder {
 	}
 
 	private static Geometry.Type typeOf(io.intino.alexandria.ui.model.Geometry location) {
-		if (location.isPolyline()) return Geometry.Type.Polyline;
-		else if (location.isPolygon()) return Geometry.Type.Polygon;
+		if (location != null) {
+			if (location.isPolyline()) return Geometry.Type.Polyline;
+			else if (location.isPolygon()) return Geometry.Type.Polygon;
+		}
 		return Geometry.Type.Point;
 	}
 
