@@ -36,6 +36,7 @@ public class MessageReader implements Iterator<Message>, Iterable<Message> {
 			return nextMessage();
 		} catch (Exception e) {
 			Logger.getGlobal().severe(e.getMessage());
+			current = null;
 			return null;
 		}
 	}
