@@ -103,7 +103,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	protected void writeRequester(PassiveView element, FrameBuilder builder) {
 		Frame frame = builder.toFrame();
 		String name = nameOfPassiveViewFile(element, frame, "Requester");
-		writeFrame(displayRequesterFolder(gen(), target), name, displayRequesterTemplate(builder).render(frame));
+		if (hasConcreteRequester(element)) writeFrame(displayRequesterFolder(gen(), target), name, displayRequesterTemplate(builder).render(frame));
 	}
 
 	protected void writePushRequester(PassiveView element, FrameBuilder builder) {
@@ -112,13 +112,13 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		boolean accessible = isAccessible(frame);
 		if (accessible || template == null) return;
 		String name = nameOfPassiveViewFile(element, frame, "PushRequester");
-		writeFrame(displayRequesterFolder(gen(), target), name, template.render(frame));
+		if (hasConcreteRequester(element)) writeFrame(displayRequesterFolder(gen(), target), name, template.render(frame));
 	}
 
 	protected void writeNotifier(PassiveView element, FrameBuilder builder) {
 		Frame frame = builder.toFrame();
 		String name = nameOfPassiveViewFile(element, frame, "Notifier");
-		writeFrame(displayNotifierFolder(gen(), target), name, displayNotifierTemplate(builder).render(frame));
+		if (hasConcreteNotifier(element)) writeFrame(displayNotifierFolder(gen(), target), name, displayNotifierTemplate(builder).render(frame));
 	}
 
 	private String nameOfPassiveViewFile(PassiveView element, Frame frame, String suffix) {
@@ -234,7 +234,9 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		result.add("name", importNameOf(passiveView));
 		result.add("type", importTypeOf(passiveView, multiple));
 		result.add("directory", directoryOf(passiveView));
-		result.add("componentDirectory", componentDirectoryOf(passiveView, multiple));
+		String componentDirectory = componentDirectoryOf(passiveView, multiple);
+		result.add("componentTarget", (componentDirectory != null && componentDirectory.equals("components")) || hasAbstractClass(passiveView) ? "src" : "gen");
+		result.add("componentDirectory", componentDirectory);
 		if (passiveView.i$(OwnerTemplateStamp.class)) result.add("ownerModuleName", StringHelper.camelCaseToSnakeCase(passiveView.a$(OwnerTemplateStamp.class).owner().service()));
 		if (context.webModuleDirectory().exists()) result.add("webModuleName", context.webModuleDirectory().getName());
 		if (!multiple) addFacets(passiveView, result);
@@ -273,7 +275,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	private String directoryOf(PassiveView passiveView) {
 		PassiveView component = componentOf(passiveView);
-		return ElementHelper.isRoot(component) ? "src" : "gen";
+		return ElementHelper.isRoot(component) && hasAbstractClass(component) ? "src" : "gen";
 	}
 
 	private String componentDirectoryOf(PassiveView passiveView, boolean multiple) {
@@ -406,7 +408,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	protected void registerConcreteImports(Component component, FrameBuilder builder) {
 		if (component.i$(TemplateStamp.class) && !builder.contains("alexandriaTemplateStampImport"))
-			builder.add("alexandriaTemplateStampImport", new FrameBuilder("alexandriaImport").add("name", "Stamp"));
+			builder.add("alexandriaTemplateStampImport", new FrameBuilder("alexandriaImport").add("name", "TemplateStamp"));
 		if (component.i$(DisplayStamp.class) && !builder.contains("alexandriaDisplayStampImport"))
 			builder.add("alexandriaDisplayStampImport", new FrameBuilder("alexandriaImport").add("name", "DisplayStamp"));
 	}

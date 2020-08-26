@@ -20,6 +20,12 @@ public class SelectorRadioBox<DN extends SelectorRadioBoxNotifier, B extends Box
         super(box);
     }
 
+	@Override
+	public void didMount() {
+		super.didMount();
+		select(selected);
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> selection() {

@@ -5,6 +5,7 @@ import io.intino.alexandria.schemas.*;
 import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.components.actionable.SignChecker;
+import io.intino.alexandria.ui.displays.components.addressable.Addressed;
 import io.intino.alexandria.ui.displays.notifiers.ActionableNotifier;
 import io.intino.alexandria.ui.resources.Asset;
 import io.intino.alexandria.ui.spark.UIFile;
@@ -20,7 +21,7 @@ public class Actionable<DN extends ActionableNotifier, B extends Box> extends Co
     private SignChecker signChecker;
     private String signReason;
 
-    public enum Mode { Link, Button, IconButton, MaterialIconButton, Toggle, IconToggle, MaterialIconToggle, SplitButton }
+    public enum Mode { Link, Button, IconButton, MaterialIconButton, Toggle, IconToggle, MaterialIconToggle, SplitButton, AvatarIconButton }
 
     public Actionable(B box) {
         super(box);
@@ -89,7 +90,7 @@ public class Actionable<DN extends ActionableNotifier, B extends Box> extends Co
     }
 
     @Override
-    protected void init() {
+    public void init() {
         super.init();
         if (isResourceIcon()) refreshIcon();
     }

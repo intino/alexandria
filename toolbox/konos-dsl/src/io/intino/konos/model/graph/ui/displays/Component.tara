@@ -95,6 +95,7 @@ Concept InteractionComponents
 				var string icon
 			sub MaterialIconButton
 				var string icon
+			sub AvatarIconButton
 		sub Switch
 			var word:{On Off} state = Off
 		sub AbstractToggle

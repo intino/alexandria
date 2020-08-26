@@ -56,7 +56,7 @@ def type(map) trigger(import)
 end
 
 def type(template) trigger(import)
-	import $name+firstUppercase from "../$directory/displays/templates/$name+firstUppercase"
+	import $name+firstUppercase from "../gen/displays/templates/$name+firstUppercase"
 end
 
 def type(block & accessible) trigger(import)

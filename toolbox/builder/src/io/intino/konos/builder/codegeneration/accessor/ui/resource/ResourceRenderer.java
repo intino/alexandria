@@ -61,6 +61,7 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 	private void addPageDisplayOrigin(FrameBuilder builder, Display display) {
 		FrameBuilder originFrame = new FrameBuilder();
 		if (ElementHelper.isRoot(display)) originFrame.add("decorated", "");
+		if (ElementHelper.isRoot(display) && hasAbstractClass(display)) originFrame.add("hasAbstract", "");
 		builder.add("pageDisplayOrigin", originFrame);
 	}
 

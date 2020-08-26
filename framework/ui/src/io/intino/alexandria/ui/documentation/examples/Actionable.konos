@@ -145,3 +145,13 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						=========
 						SplitButton(title\="edition", options\="option 1" "option 2", defaultOption\="option 1") as Action
 						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="AvatarIconButton")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				AvatarIconButton(title="I am avatar", highlight=Fill) operation15 as Action
+			Block > Text as Code(language=Html)
+					value
+						=========
+						AvatarIconButton(title\="I am avatar") as Action
+						=========

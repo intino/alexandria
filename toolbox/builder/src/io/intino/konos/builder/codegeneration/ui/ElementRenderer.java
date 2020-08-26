@@ -49,7 +49,7 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 	}
 
 	protected final void write(FrameBuilder builder) {
-		writeSrc(builder);
+		if (hasAbstractClass(element)) writeSrc(builder);
 		writeGen(builder);
 	}
 
@@ -77,7 +77,7 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 
 	private String displayName(boolean accessible) {
 		final String suffix = accessible ? "Proxy" : "";
-		final String abstractValue = accessible ? "" : (ElementHelper.isRoot(element) ? "Abstract" : "");
+		final String abstractValue = accessible ? "" : (ElementHelper.isRoot(element) && hasAbstractClass(element) ? "Abstract" : "");
 		return displayFilename(snakeCaseToCamelCase(abstractValue + firstUpperCase(element.name$())), suffix);
 	}
 

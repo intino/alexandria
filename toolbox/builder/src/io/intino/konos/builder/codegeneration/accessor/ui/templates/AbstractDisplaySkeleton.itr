@@ -25,6 +25,49 @@ def type(display & accessible)
 	[$displayRegistration+declaration]
 end
 
+def type(display & noAbstract)
+	import React from "react";
+	import { withStyles } from '@material-ui/core/styles';
+	[$alexandriaBlockImport]
+	[$alexandriaTemplateStampImport]
+	[$alexandriaDisplayStampImport]
+	[$alexandriaComponentImport...[$NL]]
+	[$projectComponentImport...[$NL]]
+	[$parent+import]
+	import $name+firstUpperCase~Notifier from "alexandria-ui-elements/gen/displays/notifiers/$notifier~Notifier";
+	import $name+firstUpperCase~Requester from "alexandria-ui-elements/gen/displays/requesters/$requester~Requester";
+    import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
+    import { withSnackbar } from 'notistack';
+
+	const styles = theme => ({});
+
+	class $name+firstUpperCase extends $displayExtends {
+
+		constructor(props) {
+			super(props);
+			this.notifier = new $name+firstUpperCase~Notifier(this);
+			this.requester = new $name+firstUpperCase~Requester(this);
+			[$properties+initialization]
+		};
+
+		render() {
+		    const display = !this.state.visible ? {display:'none'} : undefined;
+		    const className = "layout vertical center-justified" + (this.hiddenClass() !== "" ? " " + this.hiddenClass() : "");
+			return [this.$baseMethod](
+				[$renderTag]
+					[$reference...[$NL]]
+					[$component...[$NL]]
+				[$renderTag+end]
+			);
+		}
+
+		$notification...[$NL$NL]
+	}
+
+	export default withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase));
+    DisplayFactory.register("$name+firstUpperCase", withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase)));
+end
+
 def type(display & collection)
 	import React from "react";
 	[$alexandriaBlockImport]
@@ -108,11 +151,11 @@ def type(alexandriaImport & embedded)
 end
 
 def type(alexandriaComponentImport)
-	import Ui$type+firstUpperCase$facet...[] from "alexandria-ui-elements/src/displays/[$componentDirectory/]$type+firstUpperCase$facet...[]";
+	import Ui$type+firstUpperCase$facet...[] from "alexandria-ui-elements/[$componentTarget]/displays/[$componentDirectory/]$type+firstUpperCase$facet...[]";
 end
 
 def type(projectComponentImport & ownertemplatestamp)
-	import Displays$name+firstUpperCase from "$ownerModuleName/src/displays/templates/$name+firstUpperCase";
+	import Displays$name+firstUpperCase from "$ownerModuleName/gen/displays/templates/$name+firstUpperCase";
 end
 
 def type(projectComponentImport)

@@ -1,5 +1,6 @@
 dsl Konos
 
+use Frame
 use Stepper
 use Selector
 use Location

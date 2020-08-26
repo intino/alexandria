@@ -48,6 +48,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		result.add("display");
 		result.add(typeOf(element));
 		if (accessible) result.add("accessible");
+		if (!hasAbstractClass(element)) result.add("noAbstract");
 		addParametrized(result);
 		addExtends(result);
 		addImports(result, accessible);
@@ -55,6 +56,8 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		addMethods(result);
 		addRenderTagFrames(result);
 		addDecoratedFrames(result);
+		result.add("notifier", notifierName(element));
+		result.add("requester", requesterName(element));
 		result.add("componentType", element.components().stream().map(this::typeOf).distinct().map(type -> new FrameBuilder().add("componentType", type).toFrame()).toArray(Frame[]::new));
 		if (element.parentDisplay() != null) addParent(element, result);
 		if (!element.graph().schemaList().isEmpty())
@@ -67,6 +70,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	private void addParametrized(FrameBuilder frame) {
 		FrameBuilder result = new FrameBuilder("parametrized");
 		result.add("name", element.name$());
+		result.add("notifier", element.i$(Template.class) ? "Template" : element.name$());
 		addGeneric(element, result);
 		addDecoratedFrames(result);
 		frame.add("parametrized", result.toFrame());
@@ -117,6 +121,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (graph.listsDisplays(context.graphName()).size() > 0) frame.add("listsImport", buildBaseFrame().add("listsImport"));
 		if (graph.magazinesDisplays(context.graphName()).size() > 0) frame.add("magazinesImport", buildBaseFrame().add("magazinesImport"));
 		if (graph.mapsDisplays(context.graphName()).size() > 0) frame.add("mapsImport", buildBaseFrame().add("mapsImport"));
+		frame.add("notifierImport", notifierImportFrame(element));
 		if (!ElementHelper.isRoot(componentOf(element)) || (element.isAccessible() && accessible))
 			frame.add("displayRegistration", displayRegistrationFrame(accessible));
 		frame.add("requesterDirectory", typeOf(element).equalsIgnoreCase("Display") || typeOf(element).equalsIgnoreCase("Display") ? "." : "..");

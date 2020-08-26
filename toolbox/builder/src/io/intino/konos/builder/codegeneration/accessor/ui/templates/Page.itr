@@ -72,8 +72,12 @@ def type(resource & html)
 	</html>
 end
 
-def attribute(decorated) trigger(origin)
+def attribute(hasAbstract) trigger(origin)
 	../../src
+end
+
+def attribute(decorated) trigger(origin)
+	../../gen
 end
 
 def trigger(origin)

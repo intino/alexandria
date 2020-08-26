@@ -49,6 +49,12 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
     }
 
     @Override
+    public void didMount() {
+        super.didMount();
+        if (validAddress()) notifier.addressed(address);
+    }
+
+    @Override
     public java.util.List<SelectorOption> options() {
         return findOptions();
     }

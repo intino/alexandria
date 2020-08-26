@@ -51,7 +51,7 @@ def type(method)
 end
 
 def type(properties & actionable) trigger(common)
-	[ title="$title"][ name="$name"][ target="$target"][ mode="$actionableMode"][ icon="$icon"][ affirmed="$affirmed"][ traceable={$traceable}][ signed={{text:"$signText",reason:"$reasonText"}}][ readonly={$readonly}][ size="$size"][ format="$format...[ ]"][ highlighted="$highlighted"][ visible={$visible}][ style="$style"]
+	[ title="$title"][ name="$name"][ target="$target"][ mode="$actionableMode"][ icon="$icon"][ affirmed="$affirmed"][ traceable={$traceable}][ signed={{text:"$signText",reason:"$reasonText"}}][ readonly={$readonly}][ size="$size"][ format="$format...[ ]"][ highlighted="$highlighted"][ visible={$visible}][ style="$style"][ color="$color"]
 end
 
 def type(properties & abstractslider) trigger(common)

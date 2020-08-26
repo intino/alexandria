@@ -6,12 +6,16 @@ import io.intino.alexandria.ui.services.push.UIClient;
 import io.intino.alexandria.ui.services.push.UIMessage;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 public abstract class DisplayPushRequester {
 
-	public void execute(UIClient client, UIMessage message) {}
+	public void execute(UIClient client, UIMessage message) {
+		Display display = display(client, message);
+		if (display == null) return;
+		String operation = operation(message);
+		if (operation.equals("didMount")) display.didMount();
+	}
 
 	public <D extends Display> D display(UIClient client, UIMessage message) {
 		Soul soul = client != null ? client.soul() : null;

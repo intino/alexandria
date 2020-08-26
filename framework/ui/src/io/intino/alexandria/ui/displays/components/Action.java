@@ -2,6 +2,7 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.components.addressable.Addressable;
+import io.intino.alexandria.ui.displays.components.addressable.Addressed;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.ActionListener;
 import io.intino.alexandria.ui.displays.notifiers.ActionNotifier;
@@ -27,6 +28,12 @@ public class Action<DN extends ActionNotifier, B extends Box> extends AbstractAc
     @Override
     public void init() {
         super.init();
+        if (validAddress()) notifier.addressed(address);
+    }
+
+    @Override
+    public void didMount() {
+        super.didMount();
         if (validAddress()) notifier.addressed(address);
     }
 

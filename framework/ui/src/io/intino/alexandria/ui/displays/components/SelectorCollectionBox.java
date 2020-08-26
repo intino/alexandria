@@ -21,6 +21,12 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
         super(box);
     }
 
+    @Override
+    public void didMount() {
+        super.didMount();
+        updateSelection(selection);
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public List<Object> selection() {

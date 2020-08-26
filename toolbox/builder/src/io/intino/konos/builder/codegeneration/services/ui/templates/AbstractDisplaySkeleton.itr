@@ -44,7 +44,7 @@ def type(display)
 	$blocksImport
 	$itemsImport
 	$rowsImport
-	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
+	$notifierImport
 
     public [$abstract+lowerCase] class $abstract$name+firstUpperCase$parametrized $displayExtends[ $implements] {
     	[$reference+declaration...[$NL]]
@@ -68,6 +68,26 @@ def type(display)
 	}
 end
 
+def type(notifierImport & table)
+    import io.intino.alexandria.ui.displays.notifiers.TableNotifier;
+end
+
+def type(notifierImport & item)
+    import io.intino.alexandria.ui.displays.notifiers.ItemNotifier;
+end
+
+def type(notifierImport & row)
+    import io.intino.alexandria.ui.displays.notifiers.RowNotifier;
+end
+
+def type(notifierImport & template)
+    import io.intino.alexandria.ui.displays.notifiers.TemplateNotifier;
+end
+
+def type(notifierImport)
+    import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
+end
+
 def type(parametrized & generic)
 	<DN extends $name+firstUpperCase~Notifier, $abstractBox+extension>
 end
@@ -81,7 +101,7 @@ def type(displayExtends & generic)
 end
 
 def type(displayExtends & template)
-	extends io.intino.alexandria.ui.displays.components.Template<$name+firstUpperCase~Notifier, $modelClass, $abstractBox+type>
+	extends io.intino.alexandria.ui.displays.components.Template<TemplateNotifier, $modelClass, $abstractBox+type>
 end
 
 def type(displayExtends & table)
@@ -93,11 +113,11 @@ def type(displayExtends & collection)
 end
 
 def type(displayExtends & item)
-	extends io.intino.alexandria.ui.displays.components.Item<$name+firstUpperCase~Notifier, $itemClass, $abstractBox+type>
+	extends io.intino.alexandria.ui.displays.components.Item<ItemNotifier, $itemClass, $abstractBox+type>
 end
 
 def type(displayExtends & row)
-	extends io.intino.alexandria.ui.displays.components.Row<$name+firstUpperCase~Notifier, $itemClass, $abstractBox+type>
+	extends io.intino.alexandria.ui.displays.components.Row<RowNotifier, $itemClass, $abstractBox+type>
 end
 
 def type(displayExtends & dialog)

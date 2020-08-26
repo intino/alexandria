@@ -40,7 +40,7 @@ export default class BlockConditional extends AbstractBlockConditional {
 					   /*width={this.props.width}
 					   height={this.props.height}*/
 					   spacing={this.props.spacing}>
-					{this.props.children}
+					{this.state.visible && this.props.children}
 				</Block>
 			</div>
 		);

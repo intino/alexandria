@@ -20,6 +20,13 @@ export default class Display extends PassiveView {
         }
     };
 
+	componentDidMount() {
+	    if (this.props.id == null) return;
+	    if (this.props.owner == null) return;
+	    if (this.props.context == null) return;
+	    this.requester.didMount();
+    };
+
     addInstance = (instance) => {
         let instances = this.instances(instance.c);
         instances.push(instance);

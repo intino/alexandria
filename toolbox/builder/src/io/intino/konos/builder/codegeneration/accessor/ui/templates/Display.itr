@@ -1,6 +1,9 @@
 def type(display & accessible)
 end
 
+def type(display & template)
+end
+
 def type(display & collection)
 	import React from "react";
 	import { withStyles } from '@material-ui/core/styles';
