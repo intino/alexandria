@@ -41,9 +41,6 @@ def type(ui)
 		}
 
 		private static void registerNotifiers() {
-            register(io.intino.alexandria.ui.displays.notifiers.TemplateNotifier.class).forDisplay(io.intino.alexandria.ui.displays.components.Template.class);
-            register(io.intino.alexandria.ui.displays.notifiers.ItemNotifier.class).forDisplay(io.intino.alexandria.ui.displays.components.Item.class);
-            register(io.intino.alexandria.ui.displays.notifiers.RowNotifier.class).forDisplay(io.intino.alexandria.ui.displays.components.Row.class);
 			$display+notifier...[$NL]
 		}
 	}
@@ -77,7 +74,9 @@ def type(display & proxy) trigger(notifier)
 	register($name+firstUpperCase~ProxyNotifier.class).forDisplay($package+validPackage.ui.displays.[$type~s.]$name+firstUpperCase~Proxy.class);
 end
 
-def type(withoutNotifier) trigger(notifier)
+def type(display & genericNotifier) trigger(notifier)
+	register(io.intino.alexandria.ui.displays.notifiers.$generic+firstUpperCase~Notifier.class).forDisplay($package+validPackage.ui.displays.[$type~s.]$name+firstUpperCase.class);
+	[$display+notifier]
 end
 
 def type(display) trigger(notifier)

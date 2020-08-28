@@ -54,10 +54,10 @@ const GeometryUtil = (function () {
             return null;
         },
         firstPoint: (geometry) => {
-            let lat, lng;
-            if (geometry.type === "Point") { lat = geometry.point.lat; lng = geometry.point.lng }
-            else if (geometry.type === "Polyline") { lat = geometry.path.pointList[0].lat; lng = geometry.path.pointList[0].lng }
-            else if (geometry.type === "Polygon") { lat = geometry.paths[0].pointList[0].lat; lng = geometry.paths[0].pointList[0].lng }
+            let lat = -1000, lng = -1000;
+            if (geometry.type === "Point" && geometry.point != null) { lat = geometry.point.lat; lng = geometry.point.lng }
+            else if (geometry.type === "Polyline" && geometry.path != null) { lat = geometry.path.pointList[0].lat; lng = geometry.path.pointList[0].lng }
+            else if (geometry.type === "Polygon" && geometry.paths.length > 0) { lat = geometry.paths[0].pointList[0].lat; lng = geometry.paths[0].pointList[0].lng }
             return new google.maps.LatLng(lat, lng);
         },
         rectangleToPolygon: (googleMapsRectangle) => {

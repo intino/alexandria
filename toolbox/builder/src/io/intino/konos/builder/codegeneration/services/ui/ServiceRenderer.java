@@ -81,7 +81,10 @@ public class ServiceRenderer extends UIRenderer {
 		final FrameBuilder result = newDisplayFrame(display, new FrameBuilder("display"));
 		if (display.isAccessible())
 			result.add("accessible").add("display", newDisplayFrame(display, new FrameBuilder("display").add("proxy")));
-		if (!hasConcreteNotifier(display)) result.add("withoutNotifier");
+		if (!hasConcreteNotifier(display)) {
+			result.add("genericNotifier");
+			result.add("generic", notifierName(display));
+		}
 		return result.toFrame();
 	}
 

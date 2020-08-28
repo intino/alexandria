@@ -59,10 +59,12 @@ const CollectionBehavior = (collection) => {
     };
 
     self.renderList = (items, height, width, onItemsRendered, ref) => {
+        let itemHeight = self.collection.props.itemHeight;
+        if (width <= 800) itemHeight += (itemHeight/2);
         const itemCount = self.collection.props.navigable == null ? self.collection.state.itemCount : self.collection.state.pageSize;
         return (<ReactWindowList useIsScrolling={self.collection.props.scrollingMark} ref={ref} onScroll={self.scrolling.bind(self, items)}
                                  onItemsRendered={self.refreshItemsRendered.bind(self, items, onItemsRendered)}
-                                 height={height} width={width} itemCount={itemCount} itemSize={self.collection.props.itemHeight}>
+                                 height={height} width={width} itemCount={itemCount} itemSize={itemHeight}>
                 {self.renderItem.bind(self, items)}
             </ReactWindowList>
         );
