@@ -8,8 +8,7 @@ Artifact("io.intino.alexandria", "3.0.3") ingestion
 		Compile("io.intino.alexandria", "tris", "1.0.0")
 		Test("junit", "junit", "LATEST")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
-	Distribution("intino-maven")
-		Release("https://artifactory.intino.io/artifactory/release-libraries")
+	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
 Repository("intino-maven")
 	Release("https://artifactory.intino.io/artifactory/releases")

@@ -11,8 +11,7 @@ Artifact("io.intino.alexandria", "2.0.8") slack-framework
 		Compile("io.intino.alexandria", "logger4j", "1.0.1")
 		Test("junit", "junit", "4.13")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
-	Distribution("intino-maven")
-		Release("https://artifactory.intino.io/artifactory/release-libraries")
+	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
 Repository("intino-maven")
 	Release("https://artifactory.intino.io/artifactory/releases")

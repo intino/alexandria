@@ -35,7 +35,7 @@ public class MessageReader implements Iterator<Message>, Iterable<Message> {
 			if (current == null || current.isEmpty() || current.isBlank()) return null;
 			return nextMessage();
 		} catch (Exception e) {
-			Logger.getGlobal().severe(e.getMessage());
+			Logger.getGlobal().severe(e.getMessage() + ":" + current);
 			current = null;
 			return null;
 		}

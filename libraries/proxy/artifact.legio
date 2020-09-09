@@ -10,8 +10,7 @@ Artifact("io.intino.alexandria", "1.0.0") proxy
 		Compile("commons-io", "commons-io", "2.4")
 		Test("junit", "junit", "4.12")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources=true)
-	Distribution("intino-maven")
-		Release("https://artifactory.intino.io/artifactory/release-libraries")
+	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
 Repository("intino-maven")
 	Release("https://artifactory.intino.io/artifactory/releases")

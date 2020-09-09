@@ -6,8 +6,7 @@ Artifact("io.intino.alexandria", "1.0.1") pdf-builder
 		Compile("fr.opensagres.xdocreport", "fr.opensagres.poi.xwpf.converter.pdf", "2.0.2")
 		Compile("fr.opensagres.xdocreport", "fr.opensagres.xdocreport.itext.extension", "2.0.2")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
-	Distribution("intino-maven")
-		Release("https://artifactory.intino.io/artifactory/release-libraries")
+	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
 Repository("intino-maven")
 	Release("https://artifactory.intino.io/artifactory/releases")
