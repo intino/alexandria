@@ -1,5 +1,6 @@
 package io.intino.konos.builder.codegeneration.ui.passiveview;
 
+import cottons.utils.StringHelper;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
@@ -14,7 +15,10 @@ import io.intino.konos.model.graph.InteractionComponents.IconToggle;
 import io.intino.konos.model.graph.InteractionComponents.MaterialIconToggle;
 import io.intino.konos.model.graph.InteractionComponents.Switch;
 import io.intino.konos.model.graph.InteractionComponents.Toggle;
+import io.intino.konos.model.graph.OtherComponents.DisplayStamp;
+import io.intino.konos.model.graph.OtherComponents.OwnerTemplateStamp;
 import io.intino.konos.model.graph.OtherComponents.Selector;
+import io.intino.konos.model.graph.OtherComponents.TemplateStamp;
 import io.intino.konos.model.graph.PassiveView.Notification;
 import io.intino.konos.model.graph.PassiveView.Request;
 import io.intino.konos.model.graph.VisualizationComponents.Dashboard;
@@ -99,7 +103,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	protected void writeRequester(PassiveView element, FrameBuilder builder) {
 		Frame frame = builder.toFrame();
 		String name = nameOfPassiveViewFile(element, frame, "Requester");
-		writeFrame(displayRequesterFolder(gen(), target), name, displayRequesterTemplate(builder).render(frame));
+		if (hasConcreteRequester(element)) writeFrame(displayRequesterFolder(gen(), target), name, displayRequesterTemplate(builder).render(frame));
 	}
 
 	protected void writePushRequester(PassiveView element, FrameBuilder builder) {
@@ -108,13 +112,13 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		boolean accessible = isAccessible(frame);
 		if (accessible || template == null) return;
 		String name = nameOfPassiveViewFile(element, frame, "PushRequester");
-		writeFrame(displayRequesterFolder(gen(), target), name, template.render(frame));
+		if (hasConcreteRequester(element)) writeFrame(displayRequesterFolder(gen(), target), name, template.render(frame));
 	}
 
 	protected void writeNotifier(PassiveView element, FrameBuilder builder) {
 		Frame frame = builder.toFrame();
 		String name = nameOfPassiveViewFile(element, frame, "Notifier");
-		writeFrame(displayNotifierFolder(gen(), target), name, displayNotifierTemplate(builder).render(frame));
+		if (hasConcreteNotifier(element)) writeFrame(displayNotifierFolder(gen(), target), name, displayNotifierTemplate(builder).render(frame));
 	}
 
 	private String nameOfPassiveViewFile(PassiveView element, Frame frame, String suffix) {
@@ -226,20 +230,26 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	private FrameBuilder importOf(PassiveView passiveView, String container, boolean multiple) {
 		FrameBuilder result = new FrameBuilder(container);
+		if (passiveView.i$(OwnerTemplateStamp.class)) result.add("ownertemplatestamp");
 		result.add("name", importNameOf(passiveView));
 		result.add("type", importTypeOf(passiveView, multiple));
 		result.add("directory", directoryOf(passiveView));
-		result.add("componentDirectory", componentDirectoryOf(passiveView, multiple));
+		String componentDirectory = componentDirectoryOf(passiveView, multiple);
+		result.add("componentTarget", (componentDirectory != null && componentDirectory.equals("components")) || hasAbstractClass(passiveView) ? "src" : "gen");
+		result.add("componentDirectory", componentDirectory);
+		if (passiveView.i$(OwnerTemplateStamp.class)) result.add("ownerModuleName", StringHelper.camelCaseToSnakeCase(passiveView.a$(OwnerTemplateStamp.class).owner().service()));
 		if (context.webModuleDirectory().exists()) result.add("webModuleName", context.webModuleDirectory().getName());
 		if (!multiple) addFacets(passiveView, result);
 		return result;
 	}
 
 	private String importNameOf(PassiveView passiveView) {
-		if (passiveView.i$(OtherComponents.Stamp.class))
-			return passiveView.a$(OtherComponents.Stamp.class).template().name$();
-		if (passiveView.i$(OtherComponents.Frame.class)) {
-			Display display = passiveView.a$(OtherComponents.Frame.class).display();
+		if (passiveView.i$(OwnerTemplateStamp.class))
+			return passiveView.a$(OwnerTemplateStamp.class).template();
+		if (passiveView.i$(TemplateStamp.class))
+			return passiveView.a$(TemplateStamp.class).template().name$();
+		if (passiveView.i$(DisplayStamp.class)) {
+			Display display = passiveView.a$(DisplayStamp.class).display();
 			return display != null ? display.name$() : nameOf(passiveView);
 		}
 		return nameOf(passiveView);
@@ -254,10 +264,10 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	protected PassiveView componentOf(PassiveView passiveView) {
 		PassiveView component = passiveView;
-		if (passiveView.i$(OtherComponents.Stamp.class))
-			component = passiveView.a$(OtherComponents.Stamp.class).template();
-		if (passiveView.i$(OtherComponents.Frame.class)) {
-			Display display = passiveView.a$(OtherComponents.Frame.class).display();
+		if (passiveView.i$(TemplateStamp.class))
+			component = passiveView.a$(TemplateStamp.class).template();
+		if (passiveView.i$(DisplayStamp.class)) {
+			Display display = passiveView.a$(DisplayStamp.class).display();
 			component = display != null ? display : passiveView;
 		}
 		return component;
@@ -265,15 +275,15 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	private String directoryOf(PassiveView passiveView) {
 		PassiveView component = componentOf(passiveView);
-		return ElementHelper.isRoot(component) ? "src" : "gen";
+		return ElementHelper.isRoot(component) && hasAbstractClass(component) ? "src" : "gen";
 	}
 
 	private String componentDirectoryOf(PassiveView passiveView, boolean multiple) {
 		if (multiple && passiveView.i$(Multiple.class)) return "components";
-		if (passiveView.i$(OtherComponents.Stamp.class))
-			return componentDirectoryOf(passiveView.a$(OtherComponents.Stamp.class).template(), multiple);
-		if (passiveView.i$(OtherComponents.Frame.class)) {
-			Display display = passiveView.a$(OtherComponents.Frame.class).display();
+		if (passiveView.i$(TemplateStamp.class))
+			return componentDirectoryOf(passiveView.a$(TemplateStamp.class).template(), multiple);
+		if (passiveView.i$(DisplayStamp.class)) {
+			Display display = passiveView.a$(DisplayStamp.class).display();
 			return display != null ? componentDirectoryOf(display, multiple) : null;
 		}
 		if (passiveView.i$(io.intino.konos.model.graph.Template.class)) return "templates";
@@ -387,8 +397,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			String importType = isProjectComponent(c) ? ProjectComponentImport : AlexandriaComponentImport;
 			registerConcreteImports(c, builder);
 			registerMultipleImport(imported, multiple, type, c, builder);
-			if (key != null && !imported.contains(key))
-				builder.add(importType, importOf(c, importType, isProjectComponent ? false : multiple));
+			if (key != null && !imported.contains(key)) builder.add(importType, importOf(c, importType, isProjectComponent ? false : multiple));
 			if (key != null) imported.add(key);
 			if (c.i$(CatalogComponents.Collection.class)) registerCollectionImports(imported, c, builder);
 			if (c.i$(HelperComponents.Row.class)) registerRowImports(imported, c, builder);
@@ -398,15 +407,14 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	protected void registerConcreteImports(Component component, FrameBuilder builder) {
-		if (component.i$(OtherComponents.Stamp.class) && !builder.contains("alexandriaStampImport"))
-			builder.add("alexandriaStampImport", new FrameBuilder("alexandriaImport").add("name", "Stamp"));
-		if (component.i$(OtherComponents.Frame.class) && !builder.contains("alexandriaFrameImport"))
-			builder.add("alexandriaFrameImport", new FrameBuilder("alexandriaImport").add("name", "Frame"));
+		if (component.i$(TemplateStamp.class) && !builder.contains("alexandriaTemplateStampImport"))
+			builder.add("alexandriaTemplateStampImport", new FrameBuilder("alexandriaImport").add("name", "TemplateStamp"));
+		if (component.i$(DisplayStamp.class) && !builder.contains("alexandriaDisplayStampImport"))
+			builder.add("alexandriaDisplayStampImport", new FrameBuilder("alexandriaImport").add("name", "DisplayStamp"));
 	}
 
 	protected boolean isProjectComponent(Component component) {
-		if (component.i$(OtherComponents.Stamp.class)) return true;
-		if (component.i$(OtherComponents.Frame.class)) return true;
+		if (component.i$(OtherComponents.BaseStamp.class)) return true;
 		if (component.i$(HelperComponents.Row.class)) return true;
 		if (component.i$(CatalogComponents.Collection.Mold.Item.class)) return true;
 		return false;
@@ -419,10 +427,12 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	private String keyOf(Component component, String type) {
 		if (component == null) return type;
-		if (component.i$(OtherComponents.Stamp.class))
-			return component.a$(OtherComponents.Stamp.class).template().name$();
-		if (component.i$(OtherComponents.Frame.class)) {
-			Display display = component.a$(OtherComponents.Frame.class).display();
+		if (component.i$(OwnerTemplateStamp.class))
+			return component.a$(OwnerTemplateStamp.class).template();
+		if (component.i$(TemplateStamp.class))
+			return component.a$(TemplateStamp.class).template().name$();
+		if (component.i$(DisplayStamp.class)) {
+			Display display = component.a$(DisplayStamp.class).display();
 			return display != null ? display.name$() : null;
 		}
 		return type;

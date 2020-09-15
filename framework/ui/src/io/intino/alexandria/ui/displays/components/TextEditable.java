@@ -2,10 +2,11 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.KeyPressEventData;
+import io.intino.alexandria.ui.displays.components.editable.Editable;
 import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.notifiers.TextEditableNotifier;
 
-public class TextEditable<DN extends TextEditableNotifier, B extends Box> extends AbstractTextEditable<DN, B> {
+public class TextEditable<DN extends TextEditableNotifier, B extends Box> extends AbstractTextEditable<DN, B> implements Editable<DN, B> {
     private boolean readonly;
     private ChangeListener changeListener = null;
     private KeyPressListener keyPressListener = null;
@@ -17,16 +18,24 @@ public class TextEditable<DN extends TextEditableNotifier, B extends Box> extend
         super(box);
     }
 
+    @Override
     public boolean readonly() {
         return readonly;
     }
 
+    @Override
+    public void reload() {
+        notifier.refresh(value());
+    }
+
+    @Override
     public TextEditable<DN, B> readonly(boolean readonly) {
         _readonly(readonly);
         notifier.refreshReadonly(readonly);
         return this;
     }
 
+    @Override
     public TextEditable<DN, B> onChange(ChangeListener listener) {
         this.changeListener = listener;
         return this;

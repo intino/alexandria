@@ -6,6 +6,9 @@ def type(display)
 			super(element);
 		};
 		[$request...[$NL]]
+        didMount = () => {
+    	    this.pushService.send({ op: "didMount", s: "$name+lowerCase", d: this.element.props.id, o: this.element.props.owner(), c: this.element.props.context()}, this.element.ownerUnit());
+        };
 	}
 end
 

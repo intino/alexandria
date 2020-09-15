@@ -33,13 +33,22 @@ class AlertDialog extends AbstractAlertDialog {
 				{this.renderContent(() => <DialogContentText>{this.props.message}</DialogContentText>)}
 				<DialogActions>
 					<Button onClick={this.handleClose.bind(this)} color="primary">{this.closeLabel()}</Button>
+					{this.props.acceptLabel != null && <Button onClick={this.handleAccept.bind(this)} color="primary">{this.acceptLabel()}</Button>}
 				</DialogActions>
 			</Dialog>
 		);
 	};
 
+	handleAccept = () => {
+	    this.requester.accept();
+	};
+
 	closeLabel = () => {
 		return this.translate(this.props.closeLabel != null ? this.props.closeLabel : "Close");
+	};
+
+	acceptLabel = () => {
+		return this.translate(this.props.acceptLabel != null ? this.props.acceptLabel : "Accept");
 	};
 
 }

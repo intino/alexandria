@@ -214,13 +214,19 @@ public class AbstractBoxRenderer extends Renderer {
 
 	private void ui(FrameBuilder builder) {
 		if (!graph.uiServiceList().isEmpty()) {
-			final FrameBuilder uiFrame = new FrameBuilder().add("package", packageName());
+			final FrameBuilder uiFrame = uiFrame();
 			if (context.parent() != null) uiFrame.add("parent", context.parent());
 			builder.add("hasUi", uiFrame);
 			builder.add("uiAuthentication", uiFrame);
 			builder.add("uiEdition", uiFrame);
 			builder.add("service", graph.uiServiceList().stream().map(s -> ui(s, boxName())).toArray(Frame[]::new));
 		}
+	}
+
+	private FrameBuilder uiFrame() {
+		FrameBuilder result = new FrameBuilder().add("package", packageName());
+		graph.uiServiceList().forEach(service -> service.useList().forEach(use -> result.add("useDictionaries", dictionariesOf(use))));
+		return result;
 	}
 
 	private Frame ui(Service.UI service, String name) {

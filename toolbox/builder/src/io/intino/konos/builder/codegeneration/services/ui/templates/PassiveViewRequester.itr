@@ -37,7 +37,6 @@ def type(display)
 	import $package+validPackage.*;
 	$schemaImport
 
-	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 	import io.intino.alexandria.exceptions.AlexandriaException;
 	import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
 	import io.intino.alexandria.ui.spark.UISparkManager;

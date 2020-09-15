@@ -211,7 +211,7 @@ end
 
 
 def type(datalake & mirror) trigger(setup)
-	this.datalake = new Datalake(new java.io.File($path+parameter), $parameter...[, ]);
+	this.datalake = new Datalake(new java.io.File($path+parameter)[, $parameter...[, ]]);
 end
 
 def type(datalake) trigger(setup)

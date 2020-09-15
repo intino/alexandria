@@ -35,6 +35,7 @@ export default class Collection extends AbstractCollection {
 		this.behavior = new CollectionBehavior(this);
         this.container = React.createRef();
         this.state = {
+            multiSelection: this.props.selection != null && this.props.selection === "multiple",
             itemCount: 20,
             pageSize: 20,
             page: 0,
@@ -56,6 +57,15 @@ export default class Collection extends AbstractCollection {
 
 	refreshSelection = (selection) => {
 		this.behavior.refreshSelection(selection);
+	};
+
+	refreshAllowMultiSelection = (value) => {
+		this.setState({ multiSelection: value });
+	};
+
+	allowMultiSelection = () => {
+        if (this.state.multiSelection != null) return this.state.multiSelection;
+        return this.props.selection != null && this.props.selection === "multiple";
 	};
 }
 

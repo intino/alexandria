@@ -94,6 +94,14 @@ Schema FileInfo
 Schema LocationSetup
 	Attribute icon as Text
 
+Schema LocationCenter
+	Attribute lat as Real
+	Attribute lng as Real
+
+Schema LocationZoomRange
+	Attribute min as Integer
+	Attribute max as Integer
+
 Schema ActionableInfo
 	Attribute title as Text
 	Attribute disabled as Bool

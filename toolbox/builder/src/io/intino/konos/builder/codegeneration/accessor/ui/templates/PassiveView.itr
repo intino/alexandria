@@ -52,14 +52,19 @@ def type(notifier)
 				}
 			};
 
-			function _containsAll(owner, context) {
-				if (context == null) return false;
-				let contextList = context.split(".");
-				for (var i=0; i<contextList.length; i++) {
-					if (owner.indexOf(contextList$[i$]) === -1) return false;
-				}
-				return true;
-			}
+            function _containsAll(owner, context) {
+                if (context == null) return false;
+                let contextList = context.split(".");
+                let ownerList = owner.split(".");
+                return ownerList.length > contextList.length ? _containsInList(owner, contextList) : _containsInList(context, ownerList);
+            }
+
+            function _containsInList(content, list) {
+                for (var i=0; i<list.length; i++) {
+                    if (content.indexOf(list$[i$]) === -1) return false;
+                }
+                return true;
+            }
 
 			function _register(registration) {
 				this.pushRegistrations.push(registration);

@@ -11,25 +11,21 @@ import java.util.List;
 
 public class SelectorComboBox<DN extends SelectorComboBoxNotifier, B extends Box> extends AbstractSelectorComboBox<DN, B> {
 	private java.util.List<String> selection = new ArrayList<>();
-	private boolean readonly;
 
 	public SelectorComboBox(B box) {
         super(box);
     }
 
 	@Override
+	public void didMount() {
+		super.didMount();
+		updateSelection(selection);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
 	public List<String> selection() {
 		return selection;
-	}
-
-	public boolean readonly() {
-		return readonly;
-	}
-
-	public SelectorComboBox<DN, B> readonly(boolean readonly) {
-		_readonly(readonly);
-		notifier.refreshReadonly(readonly);
-		return this;
 	}
 
 	public SelectorComboBox<DN, B> multipleSelection(boolean multipleSelection) {
@@ -60,11 +56,6 @@ public class SelectorComboBox<DN extends SelectorComboBoxNotifier, B extends Box
 
 	public void select(String... options) {
 		updateSelection(Arrays.asList(options));
-	}
-
-	protected SelectorComboBox<DN, B> _readonly(boolean readonly) {
-		this.readonly = readonly;
-		return this;
 	}
 
 	public void updateSelection(List<String> options) {

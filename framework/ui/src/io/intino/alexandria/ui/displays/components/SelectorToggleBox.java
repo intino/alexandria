@@ -21,6 +21,13 @@ public class SelectorToggleBox<DN extends SelectorToggleBoxNotifier, B extends B
 	}
 
 	@Override
+	public void didMount() {
+		super.didMount();
+		updateSelection(selection);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
 	public java.util.List<String> selection() {
 		return selection;
 	}

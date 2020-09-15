@@ -1,6 +1,6 @@
 import React from "react";
 import { withStyles } from '@material-ui/core/styles';
-import { FormLabel, FormControl, FormGroup, FormControlLabel, Checkbox } from '@material-ui/core';
+import { FormControl, FormGroup, FormControlLabel, Checkbox } from '@material-ui/core';
 import AbstractSelectorCheckBox from "../../../gen/displays/components/AbstractSelectorCheckBox";
 import SelectorCheckBoxNotifier from "../../../gen/displays/notifiers/SelectorCheckBoxNotifier";
 import SelectorCheckBoxRequester from "../../../gen/displays/requesters/SelectorCheckBoxRequester";
@@ -9,7 +9,17 @@ import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
 import 'alexandria-ui-elements/res/styles/layout.css';
 
-const styles = theme => ({});
+const styles = theme => ({
+    options : {
+        maxHeight: "200px",
+        overflow: 'auto'
+    },
+	label : {
+        fontSize: "10pt",
+        color: "#0000008a",
+        marginBottom: "5px",
+    }
+});
 
 class SelectorCheckBox extends AbstractSelectorCheckBox {
 
@@ -19,21 +29,32 @@ class SelectorCheckBox extends AbstractSelectorCheckBox {
 		this.requester = new SelectorCheckBoxRequester(this);
         this.state = {
             selection: this.traceValue() ? this.traceValue() : (this.props.selected != null ? [ this.props.selected ] : []),
-            readonly: this.props.readonly,
             ...this.state
         };
 	};
 
 	render() {
+		const { classes, theme } = this.props;
+		const label = this.props.label;
+		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
+		return (
+		    <div style={this.style()}>
+                {label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{label}</div> : undefined }
+                {this.renderChildren()}
+		    </div>
+		);
+	};
+
+	renderChildren = () => {
+		const { classes } = this.props;
 		const children = this.children();
-		const multi = this.props.multipleSelection;
 		const layout = this.props.layout != null ? "layout " + this.props.layout.toLowerCase() + " wrap" : "layout vertical";
+		const multi = this.props.multipleSelection;
 		if (children.length <= 0) return (<div></div>);
 		return (
-		    <FormControl component="fieldset">
-                {this.props.label != null && <FormLabel component="legend">{this.props.label}</FormLabel>}
+            <FormControl className={classes.options} component="fieldset" disabled={this.state.readonly}>
                 <FormGroup className={layout} style={this.style()} value={this.state.selection}>
-				    {React.Children.map(children, (child, i) => { return this.renderChild(child, i); })}
+                    {React.Children.map(children, (child, i) => { return this.renderChild(child, i); })}
                 </FormGroup>
             </FormControl>
 		);

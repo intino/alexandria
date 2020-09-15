@@ -20,6 +20,13 @@ export default class Display extends PassiveView {
         }
     };
 
+	componentDidMount() {
+	    if (this.props.id == null) return;
+	    if (this.props.owner == null) return;
+	    if (this.props.context == null) return;
+	    this.requester.didMount();
+    };
+
     addInstance = (instance) => {
         let instances = this.instances(instance.c);
         instances.push(instance);
@@ -50,10 +57,12 @@ export default class Display extends PassiveView {
         let id = params.id;
         let container = params.c;
         const instances = this.instances(container);
-        for (var i = 0; i < instances.length; i++)
-            if (instances[i].pl.id === id) break;
-        if (i >= instances.length) return;
-        this._registerInstances(container, instances.splice(i, 1));
+        let newInstances = [];
+        for (var i = 0; i < instances.length; i++) {
+            if (instances[i].pl.id === id) continue;
+            newInstances.push(instances[i]);
+        }
+        this._registerInstances(container, newInstances);
     };
 
     clearContainer = (params) => {
@@ -80,17 +89,21 @@ export default class Display extends PassiveView {
     };
 
     renderInstances = (container, props, style) => {
-        if (container == null) container = "__elements";
-        let instances = this.state[container];
-        if (instances == null || instances.length <= 0) {
-            if (props != null && props.noItemsMessage != null) return (<Typography>{this.translate(props.noItemsMessage)}</Typography>);
-            return;
-        }
+        let instances = this.instances(container);
+        if (instances == null || instances.length <= 0) return this.renderEmptyInstances(props);
         return instances.map((instance, index) => {
             enrichDisplayProperties(instance);
             this.copyProps(props, instance.pl);
-            return (<div key={index} style={style}>{React.createElement(DisplayFactory.get(instance.tp), instance.pl)}</div>);
+            return this.renderInstance(instance, props, style, index)
         });
+    };
+
+    renderEmptyInstances = (props) => {
+        return props != null && props.noItemsMessage != null ? (<Typography style={{margin:'5px 0'}} variant="body1">{this.translate(props.noItemsMessage)}</Typography>) : undefined;
+    };
+
+    renderInstance = (instance, props, style, index) => {
+        return (<div key={index} style={style}>{React.createElement(DisplayFactory.get(instance.tp), instance.pl)}</div>);
     };
 
     buildApplicationUrl = (path) => {
@@ -133,12 +146,6 @@ export default class Display extends PassiveView {
         return this.state[name] != null ? this.state[name] : this.props[name];
     };
 
-//    _context(container) {
-//        var result = (this.props.context != null ? this.props.context() + "." : "") + this.props.id;
-//        if (container != null) result += "." + container;
-//        return result;
-//    };
-
     trace = (value, name) => {
         if (!this.state.traceable) return;
         if (!this._traceConsentAccepted()) return;
@@ -164,7 +171,9 @@ export default class Display extends PassiveView {
     };
 
     _context() {
-        return (this.props.owner != null ? this.props.owner() + "." : "") + this.props.id;
+        const context = this.props.context != null ? this.props.context() + "." : "";
+        const owner = this.props.owner != null ? this.props.owner() + "." : "";
+        return context + this.props.id;
     };
 
     _owner() {

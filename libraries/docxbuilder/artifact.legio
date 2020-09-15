@@ -1,0 +1,11 @@
+dsl Legio
+
+Artifact("io.intino.alexandria", "1.0.0") docx-builder
+	Imports
+		Test("junit", "junit", "4.13")
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Distribution("intino-maven")
+		Release("https://artifactory.intino.io/artifactory/release-libraries")
+
+Repository("intino-maven")
+	Release("https://artifactory.intino.io/artifactory/releases")

@@ -73,7 +73,7 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
     }
 
     @Override
-    protected void init() {
+    public void init() {
         super.init();
         try {
             notifier.refresh(new ProxyDisplayInfo().unit(unit.name()).display(new ProxyDisplayInfo.Display().id(id() + "_").type(type)));

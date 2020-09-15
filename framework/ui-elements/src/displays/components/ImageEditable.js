@@ -77,7 +77,7 @@ class ImageEditable extends AbstractImageEditable {
 		const removeButtonDisplay = this.state.readonly || this.state.value == null ? "none" : "flex";
 		return (
 			<div style={this.style()}>
-			    { ComponentBehavior.labelBlock(this.props, "body1", { color: theme.palette.grey.primary, marginRight: '5px', fontSize: "9pt", color: "#777777" }) }
+			    { ComponentBehavior.labelBlock(this.props, "body1", { color: theme.palette.grey.A700, marginRight: '5px', fontSize: "9pt", color: "#777777" }) }
                 {this.state.value && <img className={classes.image} title={this.props.label} src={this.state.value} />}
                 <label htmlFor={inputId} className={classes.overlay} style={{display:labelDisplay}}>
                     <AddAPhoto className={classes.icon} />
@@ -87,7 +87,7 @@ class ImageEditable extends AbstractImageEditable {
                        className={classes.input} onChange={this.handleChange.bind(this)}
                        disabled={this.state.readonly} />
                 <IconButton color="primary" aria-label="upload picture" size="small" component="span" onClick={this.handleRemove.bind(this)}
-                            style={{position:'absolute',right:"0",zIndex:"1",background:'white',marginTop:'-12px',marginRight:'-12px',border:'1px solid #efefef',display:removeButtonDisplay}}>
+                            style={{position:'absolute',right:"0",zIndex:"0",background:'white',marginTop:'-12px',marginRight:'-12px',border:'1px solid #efefef',display:removeButtonDisplay}}>
                     <Clear />
                 </IconButton>
 			</div>

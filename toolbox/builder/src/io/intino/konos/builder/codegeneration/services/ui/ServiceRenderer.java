@@ -11,16 +11,16 @@ import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.RouteDispatcherRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.graph.CatalogComponents;
 import io.intino.konos.model.graph.Display;
+import io.intino.konos.model.graph.HelperComponents;
 import io.intino.konos.model.graph.Service;
 
 import java.util.List;
 import java.util.Set;
 
-import static io.intino.konos.builder.helpers.CodeGenerationHelper.serviceFilename;
-import static io.intino.konos.builder.helpers.CodeGenerationHelper.serviceFolder;
-import static io.intino.konos.builder.helpers.Commons.javaFile;
-import static io.intino.konos.builder.helpers.Commons.writeFrame;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
+import static io.intino.konos.builder.helpers.Commons.*;
 import static io.intino.konos.model.graph.PassiveView.Request.ResponseType.Asset;
 
 public class ServiceRenderer extends UIRenderer {
@@ -42,8 +42,11 @@ public class ServiceRenderer extends UIRenderer {
 		final List<Display> displays = service.graph().rootDisplays(context.graphName());
 		FrameBuilder builder = buildFrame().add("ui").add("name", service.name$()).add("resource", resourcesFrame(service.resourceList()));
 		if (userHome(service) != null) builder.add("userHome", userHome(service).name$());
-		if (!displays.isEmpty())
+		if (!displays.isEmpty()) {
 			builder.add("display", displaysFrame(displays)).add("displaysImport", packageName());
+			boolean hasNotifiers = displays.stream().anyMatch(this::hasConcreteNotifier);
+			if (hasNotifiers) builder.add("notifiersImport", packageName()).add("requestersImport", packageName());
+		}
 		if (service.authentication() != null) builder.add("auth", service.authentication().by());
 		writeFrame(serviceFolder(gen()), serviceFilename(service.name$()), template().render(builder.toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(serviceFolder(gen()), serviceFilename(service.name$())).getAbsolutePath()));
@@ -78,6 +81,10 @@ public class ServiceRenderer extends UIRenderer {
 		final FrameBuilder result = newDisplayFrame(display, new FrameBuilder("display"));
 		if (display.isAccessible())
 			result.add("accessible").add("display", newDisplayFrame(display, new FrameBuilder("display").add("proxy")));
+		if (!hasConcreteNotifier(display)) {
+			result.add("genericNotifier");
+			result.add("generic", notifierName(display));
+		}
 		return result.toFrame();
 	}
 
@@ -85,6 +92,7 @@ public class ServiceRenderer extends UIRenderer {
 		String type = typeOf(display);
 		if (!type.equalsIgnoreCase("display")) builder.add("type", typeOf(display).toLowerCase());
 		builder.add("name", nameOf(display)).add("package", packageName());
+		builder.add("requesterType", requesterTypeOf(display));
 		if (display.requestList().stream().anyMatch(r -> r.responseType().equals(Asset)))
 			builder.add("asset", display.name$());
 		return builder;

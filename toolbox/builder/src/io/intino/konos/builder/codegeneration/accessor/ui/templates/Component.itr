@@ -31,7 +31,11 @@ def type(extends & multiple)
 	UiMultiple
 end
 
-def type(extends & stamp)
+def type(extends & displaystamp)
+	Ui$type+firstUpperCase$facet...[]
+end
+
+def type(extends & basestamp)
 	Displays$type+firstUpperCase
 end
 
@@ -46,12 +50,8 @@ end
 def type(method)
 end
 
-def type(properties & multiple) trigger(common)
-	[ label="$label"][ format="$format...[ ]"][ visible={$visible}][ traceable={$traceable}][ style="$style"]
-end
-
 def type(properties & actionable) trigger(common)
-	[ title="$title"][ name="$name"][ target="$target"][ mode="$actionableMode"][ icon="$icon"][ affirmed="$affirmed"][ traceable={$traceable}][ signed={{text:"$signText",reason:"$reasonText"}}][ readonly={$readonly}][ size="$size"][ format="$format...[ ]"][ highlighted="$highlighted"][ visible={$visible}][ style="$style"]
+	[ title="$title"][ name="$name"][ target="$target"][ mode="$actionableMode"][ icon="$icon"][ affirmed="$affirmed"][ traceable={$traceable}][ signed={{text:"$signText",reason:"$reasonText"}}][ readonly={$readonly}][ size="$size"][ format="$format...[ ]"][ highlighted="$highlighted"][ visible={$visible}][ style="$style"][ color="$color"]
 end
 
 def type(properties & abstractslider) trigger(common)
@@ -63,23 +63,19 @@ def type(properties & dashboard) trigger(common)
 end
 
 def type(properties) trigger(common)
-	[ name="$name"][ label="$label"][ format="$format...[ ]"][ color="$color"][ visible={$visible}][ traceable={$traceable}][ multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing,wrap:$multipleWrapItems}}][ style="$style"]
+	[ name="$name"][ label="$label"][ format="$format...[ ]"][ color="$color"][ visible={$visible}][ traceable={$traceable}][ multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing,editable:$multipleEditable,wrap:$multipleWrapItems,count:{min:$multipleMin,max:$multipleMax}}}][ style="$style"]
 end
 
 def type(properties & template) trigger(specific)
 	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"]
 end
 
-def type(properties & stamp) trigger(specific)
+def type(properties & basestamp) trigger(specific)
 	[ spacing="$spacing"]
 end
 
 def type(properties & materialicon) trigger(specific)
 	[ icon="$icon"]
-end
-
-def type(properties & portal) trigger(specific)
-    [ to="$to"]
 end
 
 def type(properties & selector) trigger(specific)
@@ -91,7 +87,7 @@ def type(properties & image) trigger(specific)
 end
 
 def type(properties & file) trigger(specific)
-	[ width="$width"][ height="$height"][ dropZone={$dropZone}][ maxSize={$maxSize}][ allowedTypes={$[$allowedTypes$]}]
+	[ width="$width"][ height="$height"][ preview={$preview}][ dropZone={$dropZone}][ maxSize={$maxSize}][ allowedTypes={$[$allowedTypes$]}]
 end
 
 def type(properties & chart) trigger(specific)
@@ -99,7 +95,7 @@ def type(properties & chart) trigger(specific)
 end
 
 def type(properties & alertdialog) trigger(specific)
-	[ title="$title"][ modal={$modal}][ fullscreen={$fullscreen}][ message="$message"][ closeLabel="$close"][ width="$width"][ height="$height"][ animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}]
+	[ title="$title"][ modal={$modal}][ fullscreen={$fullscreen}][ message="$message"][ closeLabel="$closeLabel"][ acceptLabel="$acceptLabel"][ width="$width"][ height="$height"][ animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}]
 end
 
 def type(properties & abstractdialog) trigger(specific)
@@ -196,6 +192,10 @@ end
 
 def type(properties & stepper) trigger(specific)
    [ orientation="$orientation+lowercase"][ position="$position+lowercase"]
+end
+
+def type(properties & frame) trigger(specific)
+   [ width="$width"][ height="$height"][ url="$url"]
 end
 
 def type(properties) trigger(specific)

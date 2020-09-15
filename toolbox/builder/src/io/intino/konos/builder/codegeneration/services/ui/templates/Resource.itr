@@ -209,5 +209,5 @@ def type(googleApiKey) trigger(format)
 end
 
 def trigger(custom)
-	.replace("{$value}", box.configuration().get("$value"))
+	.replace("{$this}", box.configuration().get("$this"))
 end

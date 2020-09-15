@@ -1,29 +1,31 @@
 import React from "react";
-import { OutlinedInput, Popover, InputAdornment, Icon } from '@material-ui/core';
-import { KeyboardArrowDown } from '@material-ui/icons';
+import Select, { components } from "react-select";
 import { withStyles } from '@material-ui/core/styles';
 import AbstractSelectorCollectionBox from "../../../gen/displays/components/AbstractSelectorCollectionBox";
 import SelectorCollectionBoxNotifier from "../../../gen/displays/notifiers/SelectorCollectionBoxNotifier";
 import SelectorCollectionBoxRequester from "../../../gen/displays/requesters/SelectorCollectionBoxRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
+import Delayer from '../../util/Delayer';
 import classNames from 'classnames';
 import { withSnackbar } from 'notistack';
 import 'alexandria-ui-elements/res/styles/layout.css';
 
 const styles = theme => ({
-	trigger : {
-	    width: '100% !important',
-	    background: 'white'
-	},
-	popover : {
-	    marginTop: '10px'
+	container : {
+		position: "relative",
+		minWidth: "85px",
+		width: "100%",
 	},
 	content : {
 	    padding: '10px'
 	},
-	search : {
-		padding: "0 10px",
-		marginBottom: "5px"
+	readonly : {
+		position: "absolute",
+		top: "0",
+		left: "0",
+		width: "100%",
+		height: "100%",
+		zIndex: "1",
 	},
 	label : {
         fontSize: "10pt",
@@ -44,73 +46,92 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 		this.triggerComponent = React.createRef();
 		this.state = {
 		    ...this.state,
-            readonly: this.props.readonly,
-		    selected: null,
-		    trigger: null,
+		    selection: this.traceValue() ? this.traceValue() : [],
+            multipleSelection: this.props.multipleSelection != null ? this.props.multipleSelection : false,
+            opened: false
 		}
 	};
 
 	render() {
-		const { classes } = this.props;
-		const opened = this.state.trigger != null;
-	    const trigger = this.state.trigger;
-	    const height = this._height() + "px";
-	    const width = this._width() + "px";
+		const { classes, theme } = this.props;
+		const multiple = this.state.multipleSelection;
 		const label = this.props.label;
+		const items = this.items();
+		const value = this.selection(items);
+		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
+
 	    return (
-            <React.Fragment>
-                {label != null && label !== "" ? <div className={classes.label}>{label}</div> : undefined }
-                <OutlinedInput className={classes.trigger} fullWidth variant="outlined" margin="dense"
-                           value={this.state.selected} autoFocus
-                           onClick={this.handleOpen.bind(this)}
-                           onChange={this.handleChange.bind(this)}
-                           inputRef={input => input && input.focus()}
-                           readOnly={this.state.readonly}
-                           style={this.style()}
-                           endAdornment={
-                                <InputAdornment position="end">
-                                    <Icon edge="end"><KeyboardArrowDown /></Icon>
-                                </InputAdornment>
-                           }
-                           ref={this.triggerComponent}>
-               </OutlinedInput>
-                <Popover className={classes.popover} open={opened} anchorEl={trigger != null ? trigger : undefined} onClose={this.handleClose.bind(this)}
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'center',
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'center',
-                    }}>
-                    <div className={classNames("layout vertical flexible", classes.content)} style={{width:width,height:height,...this.style()}}>
-                        <div className={classes.search}>{this.renderInstances()}</div>
-                        <div className="layout vertical flex" style={{height:'calc(100% - 55px)'}}>{this.props.children}</div>
-                    </div>
-                </Popover>
-            </React.Fragment>
+			<div className={classes.container} style={this.style()}>
+                {this.renderTraceConsent()}
+				{label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{label}</div> : undefined }
+				<Select isMulti={multiple} isDisabled={this.state.readonly} isSearchable
+						closeMenuOnSelect={!multiple} autoFocus={this.props.focused} menuIsOpen={this.state.opened}
+						placeholder={this.selectMessage()}
+						className="basic-multi-select" classNamePrefix="select"
+                        components={{ Option: this.renderOption.bind(this), MenuList: this.renderDialog.bind(this)}}
+						value={value} options={items}
+						onChange={this.handleChange.bind(this)}
+						onInputChange={this.handleSearch.bind(this)}
+						onMenuOpen={this.handleOpen.bind(this)}
+						onMenuClose={this.handleClose.bind(this)}/>
+			</div>
         );
     };
 
-	refreshSelected = (value) => {
-	    this.setState({ selected: value, trigger: null });
+	renderOption = (options) => {
+		const { data, isDisabled, ...props } = options;
+		const item = data.item;
+		const { classes } = this.props;
+		return !isDisabled ? (
+			<components.Option {...props} className={classes.container}><div>{item}</div></components.Option>
+		) : null;
 	};
 
-	refreshReadonly = (readonly) => {
-		this.setState({ readonly });
+    renderDialog = (props) => {
+		const { classes } = this.props;
+	    const height = this._height() + "px";
+	    const width = this._width() + "px";
+        return (
+            <React.Fragment>
+                <div className={classNames("layout vertical flexible", classes.content)} style={{width:'100%',height:height,...this.style()}}>
+                    <div className={classes.search}>{this.renderInstances()}</div>
+                    <div className="layout vertical flex" style={{height:'calc(100% - 55px)'}}>{this.props.children}</div>
+                </div>
+                <components.MenuList {...props}>
+                    <div style={{display:'none'}}>{props.children}</div>
+                </components.MenuList>
+            </React.Fragment>
+        );
+    }
+
+	refreshSelection = (selection) => {
+		this.setState({ selection: selection });
+	};
+
+	refreshMultipleSelection = (multipleSelection) => {
+		this.setState({ multipleSelection });
 	};
 
     open = () => {
-        this.setState({ trigger : this.triggerComponent.current});
+        this.setState({ opened: true });
         this.requester.opened();
     };
 
     close = () => {
-        this.setState({ trigger: null });
+        this.setState({ opened: false });
     };
 
-    handleChange = (e) => {
-        this.requester.search(e.value);
+    handleChange = (value, method) => {
+        switch (method.action) {
+            case 'pop-value' : { this.requester.unSelect(method.removedValue.value); break; }
+            case 'remove-value' : { this.requester.unSelect(method.removedValue.value); break; }
+            case 'clear' : { this.requester.clearSelection(); break; }
+        }
+    };
+
+    handleSearch = (value) => {
+        this.open();
+        Delayer.execute(this, () => this.requester.search(value), 500);
     };
 
     handleOpen = (e) => {
@@ -119,7 +140,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
         this.open();
     };
 
-    handleClose = () => {
+    handleClose = (e) => {
         this.close();
     };
 
@@ -140,6 +161,34 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 	    const width = this.triggerComponent.current != null ? this.triggerComponent.current.offsetWidth : SelectorCollectionBoxMinWidth;
 	    return width > SelectorCollectionBoxMinWidth ? width : SelectorCollectionBoxMinWidth;
 	};
+
+    items = () => {
+        const selection = this.state.selection;
+        const result = [];
+        for (let i=0; i<selection.length; i++) {
+            result.push({ value: selection[i], label: selection[i], item: selection[i] });
+    	}
+        return result;
+    };
+
+	selection = (options) => {
+		const multiple = this.state.multipleSelection;
+		const selectedOptions = this.state.selection.map(s => this.option(options, s));
+		return multiple ? selectedOptions : (selectedOptions.length > 0 ? selectedOptions[0] : "");
+	};
+
+	option = (options, key) => {
+		for (var i=0; i<options.length; i++) {
+			if (options[i].value === key || options[i].label === key) return options[i];
+		}
+		return null;
+	};
+
+	selectMessage = () => {
+		const placeholder = this.props.placeholder;
+		return this.translate(placeholder != null && placeholder !== "" ? placeholder : "Select an option");
+	};
+
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(SelectorCollectionBox));

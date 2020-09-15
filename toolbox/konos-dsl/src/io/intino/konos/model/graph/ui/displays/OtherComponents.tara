@@ -23,13 +23,35 @@ Concept OtherComponents
 		Aspect Circular
         Aspect Linear
 
-	Concept Stamp extends Component
-		var Template template
+	Concept BaseStamp extends Component
 		Aspect Multiple
+		Aspect Editable
 
-	Concept ProxyStamp extends Component
-		var string proxy
-		var Service.UI.Use from
+		!! Renders template in this component
+		sub TemplateStamp
+			var Template template
+
+		sub DisplayStamp
+			var Display display
+
+		!! Stamps template that belongs to owner project
+		sub OwnerTemplateStamp
+			var Service.UI.Use owner
+			var string template
+
+		!! Stamps template from other app
+		sub ProxyStamp
+			var string proxy
+			var Service.UI.Use from
+
+			Concept Parameter
+				var string name
+				var string value
+
+	Concept Frame extends Component
+		var string url
+		Aspect Absolute
+		Aspect Relative
 
 	Concept Header extends Component
 		var word:{Fixed Absolute Sticky Static Relative} position = Relative
@@ -48,6 +70,7 @@ Concept OtherComponents
         Aspect ListBox
         Aspect CollectionBox
         	var CatalogComponents.Collection source = empty
+        	var string placeholder = ""
 			has:{0..1} CatalogComponents.Collection
         Aspect RadioBox
         	!! The value that should initially be selected, defaults to the first value.
@@ -66,9 +89,6 @@ Concept OtherComponents
         Aspect Readonly
         Aspect Required with RadioBox, CheckBox, ComboBox
         Aspect Focused with RadioBox, CheckBox, ComboBox
-
-	Concept Frame extends Component
-		var Display display
 
 	Concept BaseIcon extends Component
 		var string icon
@@ -90,6 +110,7 @@ Concept OtherComponents
 		sub AlertDialog
 			var string message
 			var string closeLabel = "Close"
+			var string acceptLabel = empty
 		sub DecisionDialog
 			has:{1..1} Selector
 		sub CollectionDialog
@@ -97,11 +118,3 @@ Concept OtherComponents
 			has:{0..1} CatalogComponents.Collection
 
 	Concept Divider extends Component
-
-	Concept Portal extends Component
-		var string to
-		var word:{Display Template} type = Template
-		var Service.UI.Use in
-		Concept Parameter
-			var string name
-			var string value

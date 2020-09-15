@@ -8,6 +8,4 @@ public class DateExamplesMold extends AbstractDateExamplesMold<AlexandriaUiBox> 
         super(box);
     }
 
-
-
 }

@@ -14,20 +14,20 @@ import classnames from "classnames";
 
 const styles = theme => ({
 	label: {
-		color: theme.palette.grey.primary,
+		color: theme.palette.grey.A700,
 		marginRight: "5px"
 	},
 	value : {
 		margin: "0 !important"
 	},
 	prefix : {
-		color: theme.palette.grey.primary,
+		color: theme.palette.grey.A700,
 		fontSize: "10pt",
 //		marginTop: "2px",
 		marginRight: "3px"
 	},
 	suffix : {
-		color: theme.palette.grey.primary,
+		color: theme.palette.grey.A700,
 		fontSize: "10pt",
 		marginLeft: "3px"
 	},
@@ -60,7 +60,7 @@ class Number extends AbstractNumber {
 
 		return (
 			<Block layout="horizontal center" style={this.style()}>
-				{ ComponentBehavior.labelBlock(this.props) }
+				{ ComponentBehavior.labelBlock(this.props, 'body1', {...this.style(),margin:'0 5px 0 0'}) }
 				{this.state.prefix !== undefined ? <Typography variant={variant} className={classes.prefix}>{this.state.prefix}</Typography> : undefined }
 				<Typography className={classnames(expandedClass, classes.value)} onClick={this.handleToggleExpanded.bind(this)} variant={variant} style={this.style()}>{NumberUtil.format(value, this.translate(format))}</Typography>
 				{ this.state.suffix !== undefined ? <Typography variant={variant} className={classes.suffix}>{this.state.suffix}</Typography> : undefined }

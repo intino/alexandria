@@ -134,7 +134,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		return session;
 	}
 
-	protected void init() {
+	public void init() {
 	}
 
 	protected <S extends Soul> S soul() {
@@ -156,6 +156,9 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	}
 
 	public void update() {
+	}
+
+	public void didMount() {
 	}
 
 	public void refresh() {

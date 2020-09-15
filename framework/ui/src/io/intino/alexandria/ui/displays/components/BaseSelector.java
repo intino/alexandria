@@ -16,25 +16,41 @@ import java.util.List;
 import java.util.UUID;
 
 public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Box> extends AbstractBaseSelector<DN, B> implements io.intino.alexandria.ui.displays.components.selector.Selector, Addressable {
+    private boolean readonly;
     private boolean multipleSelection = false;
     private String path;
     private String address;
+    private java.util.List<SelectionListener> selectionListeners = new ArrayList<>();
 
     public BaseSelector(B box) {
         super(box);
     }
 
-    private java.util.List<SelectionListener> selectionListeners = new ArrayList<>();
-
     @Override
-    public BaseSelector onSelect(SelectionListener selectionListener) {
+    public BaseSelector<DN, B> onSelect(SelectionListener selectionListener) {
         this.selectionListeners.add(selectionListener);
+        return this;
+    }
+
+    public boolean readonly() {
+        return readonly;
+    }
+
+    public BaseSelector<DN, B> readonly(boolean readonly) {
+        _readonly(readonly);
+        notifier.refreshReadonly(readonly);
         return this;
     }
 
     @Override
     public void init() {
         super.init();
+        if (validAddress()) notifier.addressed(address);
+    }
+
+    @Override
+    public void didMount() {
+        super.didMount();
         if (validAddress()) notifier.addressed(address);
     }
 
@@ -76,6 +92,15 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
 
     public String path() {
         return this.path;
+    }
+
+    public boolean multipleSelection() {
+        return multipleSelection;
+    }
+
+    protected BaseSelector<DN, B> _readonly(boolean readonly) {
+        this.readonly = readonly;
+        return this;
     }
 
     protected BaseSelector<DN, B> _multipleSelection(boolean value) {

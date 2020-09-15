@@ -47,7 +47,7 @@ public class PlaceMark<O> {
 	public static PlaceMark build(String label, String location) {
 		PlaceMark result = new PlaceMark();
 		result.label(label);
-		result.location(Geometry.fromWkt(location));
+		result.location(location != null ? Geometry.fromWkt(location) : null);
 		return result;
 	}
 

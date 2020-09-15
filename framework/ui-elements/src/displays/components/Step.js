@@ -42,8 +42,8 @@ class Step extends AbstractStep {
 		const stepProps = { active: isActive, disabled: isDisabled, completed: isCompleted };
 		const labelProps = { icon : (icon || index + 1), StepIconComponent: (icon ? StepIcon : undefined) };
 		return (
-			<MuiStep key={index} {...stepProps}>
-				<MuiStepLabel {...labelProps}>{label}</MuiStepLabel>
+			<MuiStep key={index} {...stepProps} style={{marginRight:"10px"}}>
+				<MuiStepLabel {...labelProps}>{this.translate(label)}</MuiStepLabel>
 			</MuiStep>
 		);
 	};

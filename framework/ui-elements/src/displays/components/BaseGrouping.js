@@ -14,7 +14,7 @@ export const BaseGroupingStyles = theme => ({
         padding: "0 7px"
     },
     count : {
-        color: theme.palette.grey.primary
+        color: theme.palette.grey.A700
     },
     group : {
         paddingLeft : "0"
@@ -23,7 +23,7 @@ export const BaseGroupingStyles = theme => ({
         padding: "0 10px",
     },
     filterMessage : {
-        color: theme.palette.grey.primary,
+        color: theme.palette.grey.A700,
         fontSize: "8pt",
     },
     showMore : {

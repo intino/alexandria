@@ -5,6 +5,7 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import Delayer from 'alexandria-ui-elements/src/util/Delayer';
+import StringUtil from 'alexandria-ui-elements/src/util/StringUtil';
 
 const ActionableMui = React.lazy(() => {
 	return new Promise(resolve => {
@@ -30,7 +31,7 @@ export default class Actionable extends AbstractActionable {
 			cursor: "pointer"
 		},
 		readonly : {
-			color: theme.palette.grey.primary,
+			color: theme.palette.grey.A700,
 			cursor: "default"
 		},
 	});
@@ -78,6 +79,7 @@ export default class Actionable extends AbstractActionable {
 		if (mode === "button") return this.renderButton();
 		else if (mode === "iconbutton") return this.renderIconButton();
 		else if (mode === "materialiconbutton") return this.renderMaterialIconButton();
+		else if (mode === "avatariconbutton") return this.renderAvatarIconButton();
 		return this.renderLink();
 	};
 
@@ -123,6 +125,33 @@ export default class Actionable extends AbstractActionable {
                             onClick={this.handleClick.bind(this)} className={classes.materialIconButton}
                             style={style} size={this._size()}>
                 {this.renderContent()}
+            </IconButton>
+		);
+		return this._readonly() ? button : (<Tooltip title={this._title()}>{button}</Tooltip>);
+	};
+
+	renderAvatarIconButton = () => {
+		const {classes} = this.props;
+		const highlighted = this.props.highlighted != null && this.props.highlighted.toLowerCase() === "fill";
+		const style = this.style();
+        const large = this._size() === "large";
+        const width = style.width != null ? style.width : (large ? "48px" : "24px");
+        const height = style.height != null ? style.height : (large ? "48px" : "24px");
+        const color = highlighted ? "white" : "inherit";
+        const background = highlighted ? (this.props.color != null ? this.props.color : "#3f51b5") : "transparent";
+        const border = highlighted ? "0" : "1px solid " + (this.props.color != null ? this.props.color : "#3f51b5");
+        const fontSize = large ? "18pt" : "12pt";
+        const paddingLeft = large ? "1px" : "0";
+        const paddingTop = large ? "10px" : "3px";
+        const title = StringUtil.initials(this.state.title, 1);
+		if (this.state.color != null) style.color = this.state.color;
+		const button = (
+            <IconButton id={this.props.id} color="primary" disabled={this._readonly()}
+                            onClick={this.handleClick.bind(this)} className={classes.materialIconButton}
+                            style={style} size={this._size()}>
+                <div style={{width:width,height:height,background:background,border:border,
+                             borderRadius:'40px',color:color,fontSize:fontSize,
+                             paddingTop:paddingTop,paddingLeft:paddingLeft}}>{title}</div>
             </IconButton>
 		);
 		return this._readonly() ? button : (<Tooltip title={this._title()}>{button}</Tooltip>);

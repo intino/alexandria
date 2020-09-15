@@ -5,7 +5,7 @@ import io.intino.alexandria.schemas.CollectionMoreItems;
 import io.intino.alexandria.schemas.PageCollectionSetup;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.behaviors.PageCollectionBehavior;
-import io.intino.alexandria.ui.displays.events.collection.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.AddItemEvent;
 import io.intino.alexandria.ui.displays.notifiers.PageCollectionNotifier;
 import io.intino.alexandria.ui.model.datasource.PageDatasource;
 

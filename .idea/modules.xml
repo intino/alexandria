@@ -3,12 +3,13 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/framework/allotropy/allotropy.iml" filepath="$PROJECT_DIR$/framework/allotropy/allotropy.iml" group="framework" />
+      <module fileurl="file://$PROJECT_DIR$/framework/bot/bot.iml" filepath="$PROJECT_DIR$/framework/bot/bot.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/framework/bpm/bpm.iml" filepath="$PROJECT_DIR$/framework/bpm/bpm.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/toolbox/builder/builder.iml" filepath="$PROJECT_DIR$/toolbox/builder/builder.iml" group="toolbox" />
       <module fileurl="file://$PROJECT_DIR$/toolbox/builder-constants/builder-constants.iml" filepath="$PROJECT_DIR$/toolbox/builder-constants/builder-constants.iml" group="toolbox" />
       <module fileurl="file://$PROJECT_DIR$/framework/core/core.iml" filepath="$PROJECT_DIR$/framework/core/core.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/libraries/ness/datalake/datalake.iml" filepath="$PROJECT_DIR$/libraries/ness/datalake/datalake.iml" group="eventsourcing" />
-      <module fileurl="file://$PROJECT_DIR$/libraries/dotx/dotx.iml" filepath="$PROJECT_DIR$/libraries/dotx/dotx.iml" group="fileformats" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/docxbuilder/docxbuilder.iml" filepath="$PROJECT_DIR$/libraries/docxbuilder/docxbuilder.iml" group="office" />
       <module fileurl="file://$PROJECT_DIR$/drivers/driver/driver.iml" filepath="$PROJECT_DIR$/drivers/driver/driver.iml" group="drivers" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/epoch/epoch.iml" filepath="$PROJECT_DIR$/fileformats/epoch/epoch.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/libraries/ness/event/event.iml" filepath="$PROJECT_DIR$/libraries/ness/event/event.iml" group="eventsourcing" />
@@ -23,6 +24,7 @@
       <module fileurl="file://$PROJECT_DIR$/libraries/logger4j/logger4j.iml" filepath="$PROJECT_DIR$/libraries/logger4j/logger4j.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/mapp/mapp.iml" filepath="$PROJECT_DIR$/fileformats/mapp/mapp.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/messaging/message/message.iml" filepath="$PROJECT_DIR$/messaging/message/message.iml" group="messaging" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/pdfbuilder/pdfbuilder.iml" filepath="$PROJECT_DIR$/libraries/pdfbuilder/pdfbuilder.iml" group="office" />
       <module fileurl="file://$PROJECT_DIR$/libraries/primitives/primitives.iml" filepath="$PROJECT_DIR$/libraries/primitives/primitives.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/proxy/proxy.iml" filepath="$PROJECT_DIR$/libraries/proxy/proxy.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/drivers/r/r.iml" filepath="$PROJECT_DIR$/drivers/r/r.iml" group="drivers" />
@@ -36,10 +38,13 @@
       <module fileurl="file://$PROJECT_DIR$/framework/slack/slack.iml" filepath="$PROJECT_DIR$/framework/slack/slack.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/libraries/soap/soap.iml" filepath="$PROJECT_DIR$/libraries/soap/soap.iml" group="services" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/tabb/tabb.iml" filepath="$PROJECT_DIR$/fileformats/tabb/tabb.iml" group="fileformats" />
+      <module fileurl="file://$PROJECT_DIR$/framework/telegram/telegram.iml" filepath="$PROJECT_DIR$/framework/telegram/telegram.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/messaging/terminal-jms/terminal-jms.iml" filepath="$PROJECT_DIR$/messaging/terminal-jms/terminal-jms.iml" group="eventsourcing" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/tris/tris.iml" filepath="$PROJECT_DIR$/fileformats/tris/tris.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/framework/ui/ui.iml" filepath="$PROJECT_DIR$/framework/ui/ui.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/framework/ui-elements/ui-elements.iml" filepath="$PROJECT_DIR$/framework/ui-elements/ui-elements.iml" group="framework" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/xlsbuilder/xlsbuilder.iml" filepath="$PROJECT_DIR$/libraries/xlsbuilder/xlsbuilder.iml" group="office" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/xlsxparser/xlsxparser.iml" filepath="$PROJECT_DIR$/libraries/xlsxparser/xlsxparser.iml" group="office" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/xml/xml.iml" filepath="$PROJECT_DIR$/fileformats/xml/xml.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/zet/zet.iml" filepath="$PROJECT_DIR$/fileformats/zet/zet.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/zif/zif.iml" filepath="$PROJECT_DIR$/fileformats/zif/zif.iml" group="fileformats" />

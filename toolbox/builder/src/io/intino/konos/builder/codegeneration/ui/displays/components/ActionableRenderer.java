@@ -41,9 +41,9 @@ public class ActionableRenderer extends ComponentRenderer<InteractionComponents.
 	}
 
 	private void addHighlight(FrameBuilder properties) {
-		if (!element.i$(InteractionComponents.Button.class)) return;
-		InteractionComponents.Button button = element.a$(InteractionComponents.Button.class);
-		if (button.highlight() == InteractionComponents.Button.Highlight.None) return;
+		if (!element.i$(InteractionComponents.AbstractButton.class)) return;
+		InteractionComponents.AbstractButton button = element.a$(InteractionComponents.AbstractButton.class);
+		if (button.highlight() == InteractionComponents.AbstractButton.Highlight.None) return;
 		properties.add("highlighted", button.highlight().name());
 	}
 
@@ -74,6 +74,7 @@ public class ActionableRenderer extends ComponentRenderer<InteractionComponents.
 		else if (element.i$(InteractionComponents.MaterialIconToggle.class)) return InteractionComponents.MaterialIconToggle.class.getSimpleName();
 		else if (element.i$(InteractionComponents.Toggle.class)) return InteractionComponents.Toggle.class.getSimpleName();
 		else if (element.i$(InteractionComponents.SplitButton.class)) return InteractionComponents.SplitButton.class.getSimpleName();
+		else if (element.i$(InteractionComponents.AvatarIconButton.class)) return InteractionComponents.AvatarIconButton.class.getSimpleName();
 		return InteractionComponents.Link.class.getSimpleName();
 	}
 

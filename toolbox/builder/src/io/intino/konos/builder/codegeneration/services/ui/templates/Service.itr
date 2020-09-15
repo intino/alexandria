@@ -1,8 +1,8 @@
 def type(ui)
 	package $package+validPackage.ui;
 	[import $displaysImport+validPackage.ui.displays.*;]
-	[import $displaysImport+validPackage.ui.displays.notifiers.*;]
-	[import $displaysImport+validPackage.ui.displays.requesters.*;]
+	[import $notifiersImport+validPackage.ui.displays.notifiers.*;]
+	[import $requestersImport+validPackage.ui.displays.requesters.*;]
 	import $package+validPackage.ui.resources.*;
 	[import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;]
 	[import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Configuration;]
@@ -74,6 +74,11 @@ def type(display & proxy) trigger(notifier)
 	register($name+firstUpperCase~ProxyNotifier.class).forDisplay($package+validPackage.ui.displays.[$type~s.]$name+firstUpperCase~Proxy.class);
 end
 
+def type(display & genericNotifier) trigger(notifier)
+	register(io.intino.alexandria.ui.displays.notifiers.$generic+firstUpperCase~Notifier.class).forDisplay($package+validPackage.ui.displays.[$type~s.]$name+firstUpperCase.class);
+	[$display+notifier]
+end
+
 def type(display) trigger(notifier)
 	register($name+firstUpperCase~Notifier.class).forDisplay($package+validPackage.ui.displays.[$type~s.]$name+firstUpperCase.class);
 	[$display+notifier]
@@ -85,16 +90,16 @@ end
 
 def type(display & proxy) trigger(proxy)
 	spark.route("/$name+lowercase~proxy/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
-	spark.route("/$name+lowercase~proxy/:displayId").post(manager -> new $name+firstUppercase~ProxyRequester(manager, notifierProvider()).execute());
+	spark.route("/$name+lowercase~proxy/:displayId").post(manager -> new $name+firstUpperCase~ProxyRequester(manager, notifierProvider()).execute());
 	spark.route("/$name+lowercase~proxy/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
 end
 
 def type(display)
 	spark.route("/$name+lowercase/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
-	spark.route("/$name+lowercase/:displayId").post(manager -> new $name+firstUppercase~Requester(manager, notifierProvider()).execute());
+	spark.route("/$name+lowercase/:displayId").post(manager -> new $requesterType~Requester(manager, notifierProvider()).execute());
 	[$asset]
 	spark.route("/$name+lowercase/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
-	pushService.register("$name+lowercase", new $name+firstUppercase~PushRequester());
+	pushService.register("$name+lowercase", new $requesterType~PushRequester());
 	$display+proxy
 end
 

@@ -54,10 +54,10 @@ const GeometryUtil = (function () {
             return null;
         },
         firstPoint: (geometry) => {
-            let lat, lng;
-            if (geometry.type === "Point") { lat = geometry.point.lat; lng = geometry.point.lng }
-            else if (geometry.type === "Polyline") { lat = geometry.path.pointList[0].lat; lng = geometry.path.pointList[0].lng }
-            else if (geometry.type === "Polygon") { lat = geometry.paths[0].pointList[0].lat; lng = geometry.paths[0].pointList[0].lng }
+            let lat = -1000, lng = -1000;
+            if (geometry.type === "Point" && geometry.point != null) { lat = geometry.point.lat; lng = geometry.point.lng }
+            else if (geometry.type === "Polyline" && geometry.path != null) { lat = geometry.path.pointList[0].lat; lng = geometry.path.pointList[0].lng }
+            else if (geometry.type === "Polygon" && geometry.paths.length > 0) { lat = geometry.paths[0].pointList[0].lat; lng = geometry.paths[0].pointList[0].lng }
             return new google.maps.LatLng(lat, lng);
         },
         rectangleToPolygon: (googleMapsRectangle) => {
@@ -66,10 +66,11 @@ const GeometryUtil = (function () {
             var SW = bounds.getSouthWest();
             var NW = new google.maps.LatLng(NE.lat(), SW.lng());
             var SE = new google.maps.LatLng(SW.lat(), NE.lng());
-            return {type: 'Polygon', paths: [{ pointList : _toPoints([NE, NW, SW, SE]) }]};
+            return {type: 'Polygon', paths: [{ pointList : _toPoints([NW, NE, SE, SW, NW]) }]};
         },
         toPolygon: (googleMapsPolygon) => {
             const paths = _toPaths(googleMapsPolygon.getPaths());
+            paths.map((path) => path.pointList.push(path.pointList[0]));
             return {type: 'Polygon', paths: paths };
         },
         toPolyline: (googleMapsPolygon) => {

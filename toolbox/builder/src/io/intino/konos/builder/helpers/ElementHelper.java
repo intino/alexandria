@@ -1,5 +1,6 @@
 package io.intino.konos.builder.helpers;
 
+import cottons.utils.StringHelper;
 import io.intino.konos.builder.codegeneration.ElementReference;
 import io.intino.konos.model.graph.CatalogComponents;
 import io.intino.konos.model.graph.InteractionComponents;
@@ -8,10 +9,7 @@ import io.intino.magritte.framework.Layer;
 import io.intino.magritte.framework.Node;
 import io.intino.magritte.framework.Predicate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.reverse;
@@ -36,7 +34,22 @@ public class ElementHelper {
 	}
 
 	public String nameOf(Layer element) {
-		return element.name$();
+		String name = element.name$();
+		if (name.contains("_")) {
+			String rootName = rootNameOf(element);
+			name = name.replace(rootName, shortName(StringHelper.camelCaseToSnakeCase(rootName)));
+		}
+		return name;
+	}
+
+	private String shortName(String snakeName) {
+		return Arrays.stream(snakeName.split("-")).map(this::initials).collect(Collectors.joining(""));
+	}
+
+	private String initials(String name) {
+		String initials = name.replaceAll("[a-z]", "");
+		if (!initials.isEmpty()) return initials;
+		return name.length() > 2 ? name.substring(0, 3) : name;
 	}
 
 	private String anonymousOwner(Layer element) {
@@ -124,8 +137,13 @@ public class ElementHelper {
 		return generateName(owner, name) + position(element, owner);
 	}
 
-	private String rootNameOf(Layer element) {
+	private String rootPathOf(Layer element) {
 		return element.core$().rootNodeId();
+	}
+
+	private String rootNameOf(Layer element) {
+		String path = rootPathOf(element);
+		return path != null ? path.split("#")[0] : "";
 	}
 
 	private int position(Node element, Node owner) {

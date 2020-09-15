@@ -6,6 +6,7 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.CatalogComponents;
 import io.intino.konos.model.graph.HelperComponents;
+import io.intino.konos.model.graph.OtherComponents;
 import io.intino.magritte.framework.Layer;
 
 import java.io.File;

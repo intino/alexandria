@@ -1,9 +1,0 @@
-dsl Legio
-
-Artifact("io.intino.alexandria", "1.0.0") dotx
-	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
-	Distribution("intino-maven")
-		Release("https://artifactory.intino.io/artifactory/release-libraries")
-
-Repository("intino-maven")
-	Release("https://artifactory.intino.io/artifactory/releases")

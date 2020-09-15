@@ -122,7 +122,7 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 		Block as Relative(width=33%, height=100%)
 			Text(format=h6, value="CollectionBox facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				Selector selector8 as CollectionBox
+				Selector selector8 as CollectionBox(multipleSelection=false)
 					List(itemClass="io.intino.alexandria.ui.documentation.Person") selector8List as Selectable
 						Mold > Item(height = 30px) selector8ListMold > Text firstName
 

@@ -7,7 +7,7 @@ public class PassiveViewRequesterTemplate extends Template {
 
 	public RuleSet ruleSet() {
 		return new RuleSet().add(
-			rule().condition((type("display"))).output(mark("import")).output(literal("\n\nexport default class ")).output(mark("name", "firstUpperCase")).output(mark("proxy")).output(literal("Requester extends ")).output(mark("parentType")).output(literal(" {\n\tconstructor(element) {\n\t\tsuper(element);\n\t};\n\t")).output(expression().output(mark("request").multiple("\n"))).output(literal("\n}")),
+			rule().condition((type("display"))).output(mark("import")).output(literal("\n\nexport default class ")).output(mark("name", "firstUpperCase")).output(mark("proxy")).output(literal("Requester extends ")).output(mark("parentType")).output(literal(" {\n\tconstructor(element) {\n\t\tsuper(element);\n\t};\n\t")).output(expression().output(mark("request").multiple("\n"))).output(literal("\n    didMount = () => {\n\t    this.pushService.send({ op: \"didMount\", s: \"")).output(mark("name", "lowerCase")).output(literal("\", d: this.element.props.id, o: this.element.props.owner(), c: this.element.props.context()}, this.element.ownerUnit());\n    };\n}")),
 			rule().condition((attribute("extensionof")), (trigger("import"))).output(literal("import ")).output(mark("parent", "firstUpperCase")).output(literal("Requester from \"./")).output(mark("parent", "firstUpperCase")).output(literal("Requester\"")),
 			rule().condition((attribute("accessible")), (trigger("import"))).output(literal("import Requester from \"alexandria-ui-elements/gen/displays/requesters/ProxyDisplayRequester\";")),
 			rule().condition((trigger("import"))).output(literal("import Requester from \"./Requester\";")),

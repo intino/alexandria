@@ -24,7 +24,9 @@ export default class BaseLocation extends AbstractBaseLocation {
         this.state = {
             ...this.state,
             location: null,
-            icon: null
+            icon: null,
+            center: null,
+            zoom: null,
         }
 	};
 
@@ -35,7 +37,7 @@ export default class BaseLocation extends AbstractBaseLocation {
 
 		return (
 			<div ref={this.container} className="layout flex" style={{height:"100%"}}>
-				<GoogleMap className={classes.map} zoom={this.props.zoom.defaultZoom}
+				<GoogleMap className={classes.map} zoom={GeoBehavior.zoom(this).defaultZoom}
 						   center={GeoBehavior.center(this)}>
 					<div ref={this.googleMapLayer} style={{width:'100%'}}/>
 					{this.renderPlaceMark()}
@@ -72,4 +74,17 @@ export default class BaseLocation extends AbstractBaseLocation {
 		this.setState({ location: location });
 	};
 
+    refreshCenter = (center) => {
+        this.setState({ center });
+    };
+
+    refreshZoom = (value) => {
+        const zoom = GeoBehavior.zoom(this);
+        this.setState({ min: zoom.min, max: zoom.max, defaultZoom: value });
+    };
+
+    refreshZoomRange = (range) => {
+        const zoom = GeoBehavior.zoom(this);
+        this.setState({ min: range.min, max: range.max, defaultZoom: zoom.defaultZoom });
+    };
 }

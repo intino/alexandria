@@ -17,14 +17,8 @@ public class File<DN extends FileNotifier, B extends Box> extends AbstractFile<D
 		refresh();
 	}
 
-	public void value(URL value) {
-		_value(value);
-		refresh();
-	}
-
 	public void refresh() {
 		notifier.refresh(info());
 	}
-
 
 }

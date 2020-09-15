@@ -6,10 +6,7 @@ import io.intino.alexandria.schemas.CollectionSetup;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.CollectionItemDisplay;
 import io.intino.alexandria.ui.displays.components.collection.behaviors.CollectionBehavior;
-import io.intino.alexandria.ui.displays.events.Event;
-import io.intino.alexandria.ui.displays.events.Listener;
-import io.intino.alexandria.ui.displays.events.SelectionEvent;
-import io.intino.alexandria.ui.displays.events.SelectionListener;
+import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.events.collection.*;
 import io.intino.alexandria.ui.displays.notifiers.CollectionNotifier;
 import io.intino.alexandria.ui.model.Datasource;
@@ -31,6 +28,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     private List<RefreshCountListener> refreshItemCountListeners = new ArrayList<>();
     private List<Listener> readyListeners = new ArrayList<>();
     private boolean ready = false;
+    private boolean allowMultiSelection = false;
     private List<String> selection;
 
     public Collection(B box) {
@@ -143,6 +141,19 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
 
     public long itemCount() {
         return behavior.itemCount();
+    }
+
+    public boolean allowMultiSelection() {
+        return allowMultiSelection;
+    }
+
+    public void allowMultiSelection(boolean value) {
+        this.allowMultiSelection = value;
+        notifier.refreshAllowMultiSelection(value);
+    }
+
+    public List<String> selection() {
+        return selection;
     }
 
     public void selection(List<String> selection) {

@@ -12,8 +12,8 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	label: {
-		color: theme.palette.grey.primary,
-		marginRight: "10px"
+		color: theme.palette.grey.A700,
+		marginRight: "5px"
 	},
 	value: {
 		color: "inherit"
@@ -40,8 +40,8 @@ class Date extends AbstractDate {
 		const hasMode = this.props.mode != null;
 
 		return (
-			<Block layout="horizontal">
-				{ ComponentBehavior.labelBlock(this.props) }
+			<Block layout="horizontal center">
+				{ ComponentBehavior.labelBlock(this.props, 'body1', {...this.style(),margin:'0 5px 0 0'}) }
 				<Typography variant={this.variant("body1")} className={classes.value} style={this.style()}>
 					{this.state.value &&
 					<Moment format={!hasMode ? pattern : undefined}

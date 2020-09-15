@@ -12,9 +12,7 @@ import io.intino.konos.model.graph.CatalogComponents.Collection.Mold;
 import io.intino.konos.model.graph.DataComponents.File;
 import io.intino.konos.model.graph.DataComponents.Image;
 import io.intino.konos.model.graph.DataComponents.Text;
-import io.intino.konos.model.graph.OtherComponents.Dialog;
-import io.intino.konos.model.graph.OtherComponents.Icon;
-import io.intino.konos.model.graph.OtherComponents.Stamp;
+import io.intino.konos.model.graph.OtherComponents.*;
 import io.intino.magritte.framework.Layer;
 
 import java.util.*;
@@ -79,7 +77,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	protected FrameBuilder addOwner(FrameBuilder builder) {
 		if (owner != null) builder.add("owner", (ElementHelper.isRoot(owner) ? "Abstract" : "") + firstUpperCase(owner.name$()));
 		Component parentComponent = element.core$().ownerAs(Component.class);
-		if (element.i$(Stamp.class) && parentComponent != null && !ElementHelper.isRoot(parentComponent)) builder.add("parentId", shortId(parentComponent));
+		if (element.i$(BaseStamp.class) && parentComponent != null && !ElementHelper.isRoot(parentComponent)) builder.add("parentId", shortId(parentComponent));
 		return builder;
 	}
 
@@ -94,7 +92,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private void addComponents(Component component, FrameBuilder builder) {
 		addComponentsImports(builder);
 		components(component).forEach(c -> {
-			Component virtualParent = c.i$(CatalogComponents.Collection.class) && component.i$(OtherComponents.Selector.CollectionBox.class) ? component : null;
+			Display virtualParent = virtualParent() != null ? virtualParent() : (c.i$(CatalogComponents.Collection.class) && component.i$(OtherComponents.Selector.CollectionBox.class) ? component : null);
 			FrameBuilder componentBuilder = buildChildren ? childFrame(c, virtualParent) : componentFrame(c, virtualParent);
 			builder.add( "component", componentBuilder);
 		});
@@ -125,7 +123,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return componentRenderer(component, virtualParent).buildFrame();
 	}
 
-	protected FrameBuilder childFrame(Component component, Component virtualParent) {
+	protected FrameBuilder childFrame(Component component, Display virtualParent) {
 		FrameBuilder result = componentRenderer(component, virtualParent).buildFrame();
 		String[] ancestors = ancestors(component);
 		Component parent = component.core$().ownerAs(Component.class);
@@ -146,11 +144,15 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (element.isTraceable()) result.add("traceable", true);
 		if (element.i$(Multiple.class)) {
 			Multiple abstractMultiple = element.a$(Multiple.class);
+			result.add("multiple");
 			result.add("instances", nameOf(element));
 			result.add("multipleArrangement", abstractMultiple.arrangement().name());
 			result.add("multipleSpacing", abstractMultiple.spacing().value());
 			result.add("multipleNoItemsMessage", abstractMultiple.noItemsMessage() != null ? abstractMultiple.noItemsMessage() : "");
 			result.add("multipleWrapItems", abstractMultiple.wrapItems());
+			result.add("multipleEditable", element.i$(Editable.class));
+			result.add("multipleMin", abstractMultiple.count() != null ? abstractMultiple.count().min() : 0);
+			result.add("multipleMax", abstractMultiple.count() != null ? abstractMultiple.count().max() : -1);
 		}
 		if (element.format() != null) {
 			String[] format = element.format().stream().map(Layer::name$).toArray(String[]::new);
@@ -174,7 +176,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return result.toArray(new String[0]);
 	}
 
-	private UIRenderer componentRenderer(Component component, Component virtualParent) {
+	private UIRenderer componentRenderer(Component component, Display virtualParent) {
 		ComponentRenderer renderer = factory.renderer(context, component, templateProvider, target);
 		renderer.buildChildren(true);
 		renderer.decorated(decorated);
@@ -213,6 +215,12 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			if (message != null) builder.add("noItemsMessage", message);
 			FrameBuilder methodsFrame = addOwner(buildBaseFrame()).add("method").add("multiple");
 			methodsFrame.add("componentType", multipleComponentType(element));
+			methodsFrame.add("componentName", multipleComponentName(element));
+			if (element.i$(OwnerTemplateStamp.class)) methodsFrame.add("componentOwnerBox", element.a$(OwnerTemplateStamp.class).owner().name());
+			if (element.i$(Editable.class)) {
+				methodsFrame.add("editableMethods", new FrameBuilder("editableMethods"));
+				if (!isMultipleSpecificComponent(element)) methodsFrame.add("editableClass", editableClassFrame());
+			}
 			String objectType = multipleObjectType(element);
 			if (objectType != null) {
 				methodsFrame.add("objectType", objectType);
@@ -222,6 +230,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			builder.add("methods", methodsFrame);
 			builder.add("multiple");
 			builder.add("componentType", multipleComponentType(element));
+			builder.add("componentName", multipleComponentName(element));
+			if (!isMultipleSpecificComponent(element) && element.i$(Editable.class)) builder.add("componentPrefix", nameOf(element));
 			if (objectType != null) builder.add("objectType", objectType);
 		}
 
@@ -233,13 +243,20 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			return true;
 		}
 
-		if (element.i$(Stamp.class)) {
-			builder.add("stamp");
+		if (element.i$(BaseStamp.class) && !element.i$(DisplayStamp.class)) {
+			builder.add("basestamp");
 			if (!element.i$(Multiple.class)) builder.add("single");
-			Template template = element.a$(Stamp.class).template();
-			builder.add("template", template.name$());
-			builder.add("type", template.name$());
-			builder.add("generic", KonosGraph.isParent(context.graphName(), template) ? "<>" : "");
+			if (element.i$(OwnerTemplateStamp.class)) builder.add("ownertemplatestamp");
+			if (element.i$(DisplayStamp.class)) builder.add("displaystamp");
+			String templateName = templateName(element.a$(BaseStamp.class));
+			builder.add("template", templateName);
+			builder.add("type", templateName);
+			builder.add("generic", genericOf(element.a$(BaseStamp.class)));
+			if (element.i$(OwnerTemplateStamp.class)) {
+				Service.UI.Use owner = element.a$(OwnerTemplateStamp.class).owner();
+				builder.add("ownerPackage", ownerTemplateStampPackage(owner));
+				builder.add("ownerBox", ownerTemplateStampBox(owner));
+			}
 			return true;
 		}
 
@@ -253,6 +270,40 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return false;
 	}
 
+	private String ownerTemplateStampPackage(Service.UI.Use use) {
+		return use.package$() + "." + use.name().toLowerCase() + ".box.ui.displays.templates";
+	}
+
+	private String ownerTemplateStampBox(Service.UI.Use use) {
+		return use.package$() + "." + use.name().toLowerCase() + ".box." + use.name();
+	}
+
+	private Object genericOf(BaseStamp stamp) {
+		if (stamp.i$(TemplateStamp.class)) {
+			boolean parent = KonosGraph.isParent(context.graphName(), element.a$(TemplateStamp.class).template());
+			return parent ? "<>" : "";
+		}
+		return "";
+	}
+
+	private String templateName(BaseStamp stamp) {
+		if (stamp.i$(OtherComponents.OwnerTemplateStamp.class)) return stamp.a$(OwnerTemplateStamp.class).template();
+		if (stamp.i$(OtherComponents.TemplateStamp.class)) {
+			Template template = stamp.a$(TemplateStamp.class).template();
+			return template != null ? template.name$() : null;
+		}
+		return null;
+	}
+
+	private FrameBuilder editableClassFrame() {
+		FrameBuilder result = new FrameBuilder("editableClass");
+		result.add("componentType", multipleComponentType(element));
+		result.add("componentName", multipleComponentName(element));
+		addDecoratedFrames(result, decorated);
+		result.add("componentProperties", properties().add("componentClass"));
+		return result;
+	}
+
 	private void addProperties(FrameBuilder builder) {
 		FrameBuilder properties = properties();
 		if (properties.slots() <= 0) return;
@@ -261,26 +312,43 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	private String multipleComponentType(C element) {
 		String prefix = "io.intino.alexandria.ui.displays.components.";
-		if (element.i$(Text.Multiple.class)) return prefix + "Text";
-		if (element.i$(File.Multiple.class)) return prefix + "File";
-		if (element.i$(Image.Multiple.class)) return prefix + "Image";
-		if (element.i$(Icon.Multiple.class)) return prefix + "Icon";
-		if (element.i$(DataComponents.Number.Multiple.class)) return prefix + "Number";
-		if (element.i$(DataComponents.Date.Multiple.class)) return prefix + "Date";
-		if (element.i$(Stamp.Multiple.class)) return firstUpperCase(element.a$(Stamp.Multiple.class).template().name$());
+		String name = multipleComponentName(element);
+		if (name == null) return null;
+		return element.i$(BaseStamp.Multiple.class) || element.i$(Block.Multiple.class) ? name : prefix + name;
+	}
+
+	private boolean isMultipleSpecificComponent(C element) {
+		return element.i$(BaseStamp.Multiple.class) || element.i$(Block.Multiple.class);
+	}
+
+	private String multipleComponentName(C element) {
+		String editable = element.i$(Editable.class) ? "Editable" : "";
+		if (element.i$(Text.Multiple.class)) return "Text" + editable;
+		if (element.i$(File.Multiple.class)) return "File" + editable;
+		if (element.i$(Image.Multiple.class)) return "Image" + editable;
+		if (element.i$(Icon.Multiple.class)) return "Icon" + editable;
+		if (element.i$(DataComponents.Number.Multiple.class)) return "Number" + editable;
+		if (element.i$(DataComponents.Date.Multiple.class)) return "Date" + editable;
+		if (element.i$(BaseStamp.Multiple.class)) {
+			if (element.i$(OtherComponents.OwnerTemplateStamp.class)) {
+				OwnerTemplateStamp stamp = element.a$(OwnerTemplateStamp.class);
+				return ownerTemplateStampPackage(stamp.owner()) + "." + firstUpperCase(stamp.template());
+			}
+			return firstUpperCase(element.a$(TemplateStamp.class).template().name$());
+		}
 		if (element.i$(Block.Multiple.class)) return firstUpperCase(nameOf(element));
 		return null;
 	}
 
 	private String multipleObjectType(C element) {
 		if (element.i$(Text.Multiple.class)) return "java.lang.String";
-		if (element.i$(File.Multiple.class)) return "java.net.URL";
-		if (element.i$(Image.Multiple.class)) return "java.net.URL";
+		if (element.i$(File.Multiple.class)) return "io.intino.alexandria.ui.File";
+		if (element.i$(Image.Multiple.class)) return "io.intino.alexandria.ui.File";
 		if (element.i$(Icon.Multiple.class)) return "java.net.URL";
 		if (element.i$(DataComponents.Number.Multiple.class)) return "java.lang.Double";
 		if (element.i$(DataComponents.Date.Multiple.class)) return "java.time.Instant";
-		if (element.i$(Stamp.Multiple.class)) {
-			String modelClass = element.a$(Stamp.Multiple.class).template().modelClass();
+		if (element.i$(BaseStamp.Multiple.class)) {
+			String modelClass = element.i$(OwnerTemplateStamp.class) ? "java.lang.Void" : element.a$(TemplateStamp.class).template().modelClass();
 			return modelClass != null ? modelClass : "java.lang.Void";
 		}
 		if (element.i$(Block.Multiple.class)) return "java.lang.Void";

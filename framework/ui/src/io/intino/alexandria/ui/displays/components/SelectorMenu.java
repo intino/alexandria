@@ -17,6 +17,13 @@ public class SelectorMenu<DN extends SelectorMenuNotifier, B extends Box> extend
 	}
 
 	@Override
+	public void didMount() {
+		super.didMount();
+		select(selected);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
 	public List<String> selection() {
 		return Collections.singletonList(nameOf(selected));
 	}

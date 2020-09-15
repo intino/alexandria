@@ -12,20 +12,20 @@ import ComponentBehavior from "./behaviors/ComponentBehavior";
 
 const styles = theme => ({
 	label: {
-		color: theme.palette.grey.primary,
+		color: theme.palette.grey.A700,
 		marginRight: "5px"
 	},
 	value: {
 		color: 'inherit',
 	},
 	prefix : {
-		color: theme.palette.grey.primary,
+		color: theme.palette.grey.A700,
 		fontSize: "10pt",
 		marginTop: "2px",
 		marginRight: "3px"
 	},
 	suffix : {
-		color: theme.palette.grey.primary,
+		color: theme.palette.grey.A700,
 		fontSize: "10pt",
 		marginTop: "2px",
 		marginLeft: "3px"
@@ -53,8 +53,8 @@ class Text extends AbstractText {
 		value = TextBehavior.mode(value, this.props);
 		if (value == null || value === "") return (<React.Fragment/>);
 		return (
-			<Block layout="horizontal">
-				{ ComponentBehavior.labelBlock(this.props) }
+			<Block layout="horizontal center">
+				{ ComponentBehavior.labelBlock(this.props, 'body1', {...this.style(),margin:'0 5px 0 0'}) }
 				{this.props.prefix !== undefined ? <Typography variant={variant} className={classes.prefix}>{this.props.prefix}:</Typography> : undefined }
                 {this._requireEllipsis(value) ?
                     <Tooltip title={this.state.title} placement="top">

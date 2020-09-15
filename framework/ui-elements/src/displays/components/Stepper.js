@@ -71,7 +71,7 @@ class Stepper extends AbstractStepper {
 		const classNames = clsx(position, classes);
 		const isTop =  this._isTop();
 		return (
-			<div className={classNames} style={{height:"100%"}}>
+			<div className={classNames} style={{height:"100%",overflow:'auto'}}>
 				{isTop && this._renderStepper()}
 				{this._renderActive()}
 				{!isTop && this._renderStepper()}

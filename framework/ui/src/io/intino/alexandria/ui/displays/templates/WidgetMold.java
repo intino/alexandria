@@ -66,6 +66,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         locationExamples.visible(widget instanceof LocationWidget);
         selectorExamples.visible(widget instanceof SelectorWidget);
         stepperExamples.visible(widget instanceof StepperWidget);
+        frameExamples.visible(widget instanceof FrameWidget);
     }
 
     private void updateInfo() {
@@ -87,7 +88,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
     }
 
     private void refreshEventsDisplay() {
-        events.<EventsDisplay>get().events(item().eventList());
+        events.<EventsDisplay>display().events(item().eventList());
         events.refresh();
     }
 

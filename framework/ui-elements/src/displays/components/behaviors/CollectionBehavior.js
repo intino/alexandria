@@ -32,7 +32,7 @@ const CollectionBehavior = (collection) => {
 
         if (collection.state.loading) return self.renderLoading(height, width);
         if (items.length <= 0) return self.renderEmpty(height, width);
-        if (self.isMultipleSelection()) self.selection = [];
+        if (self.allowMultiSelection()) self.selection = [];
 
         self.collection.itemsRenderedCalled = false;
         window.setTimeout(() => self.forceNotifyItemsRendered(items), 50);
@@ -59,10 +59,12 @@ const CollectionBehavior = (collection) => {
     };
 
     self.renderList = (items, height, width, onItemsRendered, ref) => {
+        let itemHeight = self.collection.props.itemHeight;
+        if (width <= 800) itemHeight += (itemHeight/2);
         const itemCount = self.collection.props.navigable == null ? self.collection.state.itemCount : self.collection.state.pageSize;
         return (<ReactWindowList useIsScrolling={self.collection.props.scrollingMark} ref={ref} onScroll={self.scrolling.bind(self, items)}
                                  onItemsRendered={self.refreshItemsRendered.bind(self, items, onItemsRendered)}
-                                 height={height} width={width} itemCount={itemCount} itemSize={self.collection.props.itemHeight}>
+                                 height={height} width={width} itemCount={itemCount} itemSize={itemHeight}>
                 {self.renderItem.bind(self, items)}
             </ReactWindowList>
         );
@@ -153,7 +155,7 @@ const CollectionBehavior = (collection) => {
         else view = isScrolling ? self.scrollingView(width, classes) : (<div style={style} key={index} className={classNames(classes.itemView, "layout horizontal center")}>&nbsp;</div>);
 
         var selectable = self.collection.props.selection != null;
-        var multiple = self.isMultipleSelection();
+        var multiple = self.allowMultiSelection();
         var selecting = self.selection.length > 0;
         const id = item != null ? item.pl.id : undefined;
         const classNamesValue = classNames(classes.itemView, "layout horizontal center item", selectable && multiple ? classes.selectable : undefined, selecting ? classes.selecting : undefined);
@@ -167,8 +169,8 @@ const CollectionBehavior = (collection) => {
         );
     };
 
-    self.isMultipleSelection = () => {
-        return self.collection.props.selection != null && self.collection.props.selection === "multiple";
+    self.allowMultiSelection = () => {
+        return self.collection.allowMultiSelection();
     };
 
     self.refreshItemsRendered = (items, callback, { overscanStartIndex, overscanStopIndex, visibleStartIndex, visibleStopIndex }) => {
@@ -209,7 +211,7 @@ const CollectionBehavior = (collection) => {
     };
 
     self.updateSelection = (item) => {
-        const multiple = self.isMultipleSelection();
+        const multiple = self.allowMultiSelection();
         var selection = self.selection;
         var index = self.selection.indexOf(item);
         if (index !== -1) {
@@ -228,7 +230,7 @@ const CollectionBehavior = (collection) => {
         e.stopPropagation();
 
         const selectable = self.collection.props.selection != null;
-        const multiple = self.isMultipleSelection();
+        const multiple = self.allowMultiSelection();
 
         if (!selectable) return;
 
@@ -288,7 +290,7 @@ const CollectionBehavior = (collection) => {
         if (self.selection != null && self.selection.length > 0) self.removeSelectedStyle(self.selection[0]);
         self.selection = selection;
         var selectable = self.collection.props.selection != null;
-        var multiple = self.isMultipleSelection();
+        var multiple = self.allowMultiSelection();
         if (!selectable || multiple) return;
         if (self.selection != null && self.selection.length > 0) self.addSelectedStyle(self.selection[0]);
     };
@@ -311,7 +313,7 @@ const CollectionBehavior = (collection) => {
 
     self.addSelectedStyle = (id) => {
         const element = $(self.collection.container.current).find("#" + self.elementId(id)).get(0);
-        self.addSelectedStyleRules(element.style);
+        if (element != null) self.addSelectedStyleRules(element.style);
     };
 
     self.removeSelectedStyle = (id) => {

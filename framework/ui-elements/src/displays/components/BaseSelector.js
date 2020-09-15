@@ -6,6 +6,13 @@ export default class BaseSelector extends AbstractBaseSelector {
 
 	constructor(props) {
 		super(props);
+		this.state = {
+            readonly: this.props.readonly,
+		};
+	};
+
+	refreshReadonly = (readonly) => {
+		this.setState({ readonly });
 	};
 
 	children = () => {

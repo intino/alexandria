@@ -1,6 +1,8 @@
 package io.intino.alexandria.ui.displays.requesters;
 
+import io.intino.alexandria.exceptions.AlexandriaException;
 import io.intino.alexandria.ui.displays.Display;
+import io.intino.alexandria.ui.displays.components.Actionable;
 import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
 import io.intino.alexandria.ui.services.push.UIClient;
 import io.intino.alexandria.ui.spark.UISparkManager;
@@ -25,6 +27,20 @@ public abstract class DisplayRequester extends Resource {
 
 	public String operation() {
 		return manager.fromQuery("op");
+	}
+
+	@Override
+	public void execute() throws AlexandriaException {
+		Actionable display = display();
+		if (display == null) return;
+		String operation = operation();
+
+		if (operation.equals("refresh")) {
+			display.refresh();
+			return;
+		}
+
+		super.execute();
 	}
 
 }
