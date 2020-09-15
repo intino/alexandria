@@ -5,8 +5,7 @@ Artifact("io.intino.alexandria", "3.1.2") rest
 		Compile("io.intino.alexandria", "http", "1.1.2")
 		Compile("io.intino.alexandria", "json", "1.0.2")
 	Package(mode = ModulesAndLibrariesLinkedByManifest)
-	Distribution("intino-maven")
-		Release("https://artifactory.intino.io/artifactory/release-libraries")
+	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
 Repository("intino-maven")
 	Release("https://artifactory.intino.io/artifactory/releases")

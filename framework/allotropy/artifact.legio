@@ -3,8 +3,7 @@ dsl Legio
 Artifact("io.intino.alexandria", "1.0.0") allotropy-framework
 	Imports > Test("junit", "junit", "LATEST")
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
-	Distribution("intino-maven")
-		Release("https://artifactory.intino.io/artifactory/release-libraries")
+	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
 Repository("intino-maven")
 	Release("https://artifactory.intino.io/artifactory/releases")

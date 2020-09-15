@@ -28,5 +28,6 @@
     <orderEntry type="library" name="Intino: org.glassfish.tyrus.bundles:tyrus-standalone-client:1.16" level="project" />
     <orderEntry type="library" name="Intino: org.apache.commons:commons-lang3:3.9" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13" level="project" />
+    <orderEntry type="library" name="Intino: org.slf4j:slf4j-api:1.7.25" level="project" />
   </component>
 </module>

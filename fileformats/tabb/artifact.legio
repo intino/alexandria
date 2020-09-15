@@ -10,8 +10,7 @@ Artifact("io.intino.alexandria", "2.1.0") tabb
 		Test("junit", "junit", "LATEST")
 		Test("org.assertj", "assertj-core", "3.15.0")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
-	Distribution("intino-maven")
-		Release("https://artifactory.intino.io/artifactory/release-libraries")
+	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
 Repository("intino-maven")
 	Release("https://artifactory.intino.io/artifactory/releases")

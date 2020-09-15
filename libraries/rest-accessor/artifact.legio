@@ -17,8 +17,7 @@ Artifact("io.intino.alexandria", "2.1.0") rest-accessor
 		Compile("org.glassfish.tyrus", "tyrus-container-grizzly-client", "1.16")
 		Test("junit", "junit", "4.13")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
-	Distribution("intino-maven")
-		Release("https://artifactory.intino.io/artifactory/release-libraries")
+	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
 Repository("intino-maven")
 	Release("https://artifactory.intino.io/artifactory/releases")

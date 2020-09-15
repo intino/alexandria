@@ -1,14 +1,13 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "3.0.5") terminal-jms
+Artifact("io.intino.alexandria", "3.0.6") terminal-jms
 	Imports
 		Compile("io.intino.alexandria", "event", "2.0.3")
 		Compile("io.intino.alexandria", "jms", "1.2.4")
 		Compile("io.intino.alexandria", "primitives", "1.0.4")
 		Test("junit", "junit", "4.13")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
-	Distribution("intino-maven")
-		Release("https://artifactory.intino.io/artifactory/release-libraries")
+	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
 Repository("intino-maven")
 	Release("https://artifactory.intino.io/artifactory/releases")
