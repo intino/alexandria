@@ -154,7 +154,7 @@ public class ElementHelper {
 	}
 
 	public static boolean isRoot(Layer element) {
-		return isRoot(element.core$());
+		return element != null && isRoot(element.core$());
 	}
 
 	private static boolean isRoot(Node node) {

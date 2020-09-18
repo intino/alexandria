@@ -10,6 +10,7 @@ import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.events.collection.*;
 import io.intino.alexandria.ui.displays.notifiers.CollectionNotifier;
 import io.intino.alexandria.ui.model.Datasource;
+import io.intino.alexandria.ui.model.datasource.Filter;
 
 import java.time.Instant;
 import java.util.List;
@@ -91,6 +92,16 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     public void clearFilters() {
         behavior.clearFilters();
         notifyRefreshItemCount();
+    }
+
+    public String condition() {
+        if (behavior == null) return null;
+        return behavior.condition();
+    }
+
+    public java.util.List<Filter> filters() {
+        if (behavior == null) return Collections.emptyList();
+        return behavior.filters();
     }
 
     public void filter(String grouping, List<String> groups) {

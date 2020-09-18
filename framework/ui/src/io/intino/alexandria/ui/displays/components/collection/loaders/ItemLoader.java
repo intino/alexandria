@@ -44,6 +44,10 @@ public class ItemLoader<DS extends Datasource<Item>, Item> {
 		return this;
 	}
 
+	public java.util.List<Filter> filters() {
+		return filters;
+	}
+
 	public ItemLoader filter(String grouping, List<String> groups) {
 		if (groups.size() <= 0) remove(grouping);
 		else {
@@ -66,6 +70,10 @@ public class ItemLoader<DS extends Datasource<Item>, Item> {
 	public void removeFilter(String grouping) {
 		remove(grouping);
 		this.itemCount = calculateItemCount(condition);
+	}
+
+	public String condition() {
+		return condition;
 	}
 
 	public ItemLoader condition(String condition) {

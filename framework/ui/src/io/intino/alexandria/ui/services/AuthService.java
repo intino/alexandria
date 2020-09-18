@@ -23,6 +23,7 @@ public interface AuthService {
         Token accessToken();
         Token accessToken(Verifier verifier) throws CouldNotObtainAccessToken;
         void invalidate() throws CouldNotInvalidateAccessToken;
+        int version();
     }
 
     interface FederationNotificationListener {
