@@ -280,8 +280,10 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	private String componentDirectoryOf(PassiveView passiveView, boolean multiple) {
 		if (multiple && passiveView.i$(Multiple.class)) return "components";
-		if (passiveView.i$(TemplateStamp.class))
-			return componentDirectoryOf(passiveView.a$(TemplateStamp.class).template(), multiple);
+		if (passiveView.i$(TemplateStamp.class)) {
+			io.intino.konos.model.graph.Template template = passiveView.a$(TemplateStamp.class).template();
+			return template != null ? componentDirectoryOf(template, multiple) : null;
+		}
 		if (passiveView.i$(DisplayStamp.class)) {
 			Display display = passiveView.a$(DisplayStamp.class).display();
 			return display != null ? componentDirectoryOf(display, multiple) : null;
@@ -429,8 +431,10 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (component == null) return type;
 		if (component.i$(OwnerTemplateStamp.class))
 			return component.a$(OwnerTemplateStamp.class).template();
-		if (component.i$(TemplateStamp.class))
-			return component.a$(TemplateStamp.class).template().name$();
+		if (component.i$(TemplateStamp.class)) {
+			io.intino.konos.model.graph.Template template = component.a$(TemplateStamp.class).template();
+			return template != null ? template.name$() : null;
+		}
 		if (component.i$(DisplayStamp.class)) {
 			Display display = component.a$(DisplayStamp.class).display();
 			return display != null ? display.name$() : null;

@@ -233,9 +233,12 @@ public abstract class Resource implements io.intino.alexandria.http.Resource {
 
 	private String authenticate(Authentication authentication) {
 		try {
-			URL url = authentication.authenticationUrl(authentication.requestToken());
-			if (url == null) return null;
-			return RequestHelper.post(url).toString();
+			if (authentication.version() == Authentication.Version.OAuth1) {
+				URL url = authentication.authenticationUrl(authentication.requestToken());
+				if (url == null) return null;
+				return RequestHelper.post(url).toString();
+			}
+			return authentication.authenticationUrl(null).toString();
 		} catch (CouldNotObtainAuthorizationUrl | CouldNotObtainRequestToken | IOException e) {
 			Logger.debug(e.getMessage());
 			return null;

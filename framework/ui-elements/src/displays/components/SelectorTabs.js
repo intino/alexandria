@@ -11,18 +11,19 @@ import { withSnackbar } from 'notistack';
 const styles = theme => ({});
 
 class SelectorTabs extends AbstractSelectorTabs {
-    state = {
-        selected: -1,
-        hiddenOptions: []
-    };
 
 	constructor(props) {
 		super(props);
 		this.notifier = new SelectorTabsNotifier(this);
 		this.requester = new SelectorTabsRequester(this);
+		this.state = {
+            selected: -1,
+            hiddenOptions: []
+        };
 	};
 
 	render() {
+	    if (!this.state.visible) return (<React.Fragment/>);
 	    const selected = this.state.selected !== -1 ? this.state.selected : 0;
 	    const children = this.children();
         return (

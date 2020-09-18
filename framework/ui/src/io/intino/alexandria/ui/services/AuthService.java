@@ -18,11 +18,14 @@ public interface AuthService {
     void addPushListener(Token accessToken, FederationNotificationListener listener) throws CouldNotObtainInfo;
 
     interface Authentication {
+        enum Version { OAuth1, OAuth2 }
+
         Token requestToken() throws CouldNotObtainRequestToken;
         URL authenticationUrl(Token requestToken) throws CouldNotObtainAuthorizationUrl;
         Token accessToken();
         Token accessToken(Verifier verifier) throws CouldNotObtainAccessToken;
         void invalidate() throws CouldNotInvalidateAccessToken;
+        Version version();
     }
 
     interface FederationNotificationListener {

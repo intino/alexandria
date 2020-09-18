@@ -4,6 +4,7 @@ import io.intino.alexandria.Timetag;
 import io.intino.alexandria.ui.displays.components.collection.Collection;
 import io.intino.alexandria.ui.displays.components.collection.loaders.ItemLoader;
 import io.intino.alexandria.ui.model.Datasource;
+import io.intino.alexandria.ui.model.datasource.Filter;
 
 import java.time.Instant;
 import java.util.List;
@@ -35,6 +36,10 @@ public abstract class CollectionBehavior<DS extends Datasource<Item>, Item, IL e
 		computeUpdate(e -> this.itemLoader.reload());
 	}
 
+	public java.util.List<Filter> filters() {
+		return itemLoader.filters();
+	}
+
 	public void clearFilters() {
 		computeUpdate(e -> itemLoader.clearFilters());
 	}
@@ -49,6 +54,10 @@ public abstract class CollectionBehavior<DS extends Datasource<Item>, Item, IL e
 
 	public void removeFilter(String grouping) {
 		computeUpdate(e -> itemLoader.removeFilter(grouping));
+	}
+
+	public String condition() {
+		return itemLoader.condition();
 	}
 
 	public void condition(String condition) {

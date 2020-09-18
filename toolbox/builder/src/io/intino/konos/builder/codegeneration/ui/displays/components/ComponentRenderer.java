@@ -279,7 +279,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private Object genericOf(BaseStamp stamp) {
-		if (stamp.i$(TemplateStamp.class)) {
+		if (stamp.i$(TemplateStamp.class) && element.a$(TemplateStamp.class).template() != null) {
 			boolean parent = KonosGraph.isParent(context.graphName(), element.a$(TemplateStamp.class).template());
 			return parent ? "<>" : "";
 		}
