@@ -48,6 +48,7 @@ public class AuthenticateCallbackResource extends Resource {
             return;
 
         String oauthVerifier = manager.fromQuery("oauth_verifier");
+        if (oauthVerifier == null) oauthVerifier = manager.fromQuery("code");
         Token accessToken = authentication.get().accessToken(Verifier.build(oauthVerifier));
         manager.currentSession().token(accessToken);
     }

@@ -233,7 +233,7 @@ public abstract class Resource implements io.intino.alexandria.http.Resource {
 
 	private String authenticate(Authentication authentication) {
 		try {
-			if (authentication.version() == 1) {
+			if (authentication.version() == Authentication.Version.OAuth1) {
 				URL url = authentication.authenticationUrl(authentication.requestToken());
 				if (url == null) return null;
 				return RequestHelper.post(url).toString();

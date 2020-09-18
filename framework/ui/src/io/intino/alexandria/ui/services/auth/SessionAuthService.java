@@ -52,6 +52,11 @@ public class SessionAuthService implements AuthService {
 			public void invalidate() throws CouldNotInvalidateAccessToken {
 			}
 
+			@Override
+			public Version version() {
+				return Version.OAuth1;
+			}
+
 			private void createPair() {
 			}
 		};
