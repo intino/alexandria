@@ -17,6 +17,7 @@ class SelectorTabs extends AbstractSelectorTabs {
 		this.notifier = new SelectorTabsNotifier(this);
 		this.requester = new SelectorTabsRequester(this);
 		this.state = {
+		    ...this.state,
             selected: -1,
             hiddenOptions: []
         };
