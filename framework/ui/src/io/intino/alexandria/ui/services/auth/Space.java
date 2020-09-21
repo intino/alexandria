@@ -5,32 +5,51 @@ import java.net.URL;
 
 public class Space {
     private final URL authServiceUrl;
-    private final String authCallbackPath = "/authenticate-callback";
     private String baseUrl;
     private String authId;
+    private String name = "space";
+    private String title = "";
+    private String secret = "1234";
 
     public Space(URL authServiceUrl) {
         this.authServiceUrl = authServiceUrl;
     }
 
-    public void setBaseUrl(String url) {
+    public Space setBaseUrl(String url) {
         baseUrl = url;
+        return this;
     }
 
-    public void setAuthId(String authId) {
+    public Space setAuthId(String authId) {
         this.authId = authId;
-    }
-
-    public String name() {
-        return "space";
+        return this;
     }
 
     public String title() {
-        return "";
+        return title;
+    }
+
+    public Space title(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public String name() {
+        return name;
+    }
+
+    public Space name(String name) {
+        this.name = name;
+        return this;
     }
 
     public String secret() {
-        return "1234";
+        return secret;
+    }
+
+    public Space secret(String secret) {
+        this.secret = secret;
+        return this;
     }
 
     public URL url() {
@@ -47,7 +66,7 @@ public class Space {
 
     public URL authCallbackUrl() {
         try {
-            return new URL(home().toString() + authCallbackPath + "?authId=" + authId);
+            return new URL(home().toString() + "/authenticate-callback?authId=" + authId);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return null;

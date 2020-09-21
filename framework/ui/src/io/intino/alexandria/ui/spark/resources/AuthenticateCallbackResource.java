@@ -35,14 +35,10 @@ public class AuthenticateCallbackResource extends Resource {
             UserInfo info = userInfo();
             if (info != null) action.whenLoggedIn(userOf(info));
 
-            manager.redirect(manager.baseUrl() + userHomePath());
+            manager.redirect(manager.baseUrl() + manager.userHomePath() + "?authId=" + manager.fromQuery("authId"));
         } catch (CouldNotObtainAccessToken error) {
             manager.write(error);
         }
-    }
-
-    private String userHomePath() {
-        return !manager.userHomePath().isEmpty() ? manager.userHomePath() : "?authId=" + manager.fromQuery("authId");
     }
 
     private void verifyAccessToken() throws CouldNotObtainAccessToken {
