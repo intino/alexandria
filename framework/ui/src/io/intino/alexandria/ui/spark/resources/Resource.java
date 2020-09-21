@@ -233,7 +233,8 @@ public abstract class Resource implements io.intino.alexandria.http.Resource {
 
 	private String authenticate(Authentication authentication) {
 		try {
-			if (authentication.version() == Authentication.Version.OAuth1) {
+			Authentication.Version version = version(authentication);
+			if (version == Authentication.Version.OAuth1) {
 				URL url = authentication.authenticationUrl(authentication.requestToken());
 				if (url == null) return null;
 				return RequestHelper.post(url).toString();
@@ -242,6 +243,15 @@ public abstract class Resource implements io.intino.alexandria.http.Resource {
 		} catch (CouldNotObtainAuthorizationUrl | CouldNotObtainRequestToken | IOException e) {
 			Logger.debug(e.getMessage());
 			return null;
+		}
+	}
+
+	private Authentication.Version version(Authentication authentication) {
+		try {
+			return authentication.version();
+		}
+		catch (Throwable ex) {
+			return Authentication.Version.OAuth1; // Compatibility mode with older versions of federation
 		}
 	}
 
