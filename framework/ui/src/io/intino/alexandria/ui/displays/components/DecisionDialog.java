@@ -17,6 +17,7 @@ public class DecisionDialog<DN extends DecisionDialogNotifier, B extends Box> ex
     public void bindTo(Selector selector) {
         this.selector = selector;
         selector.onSelect(event -> {
+        	if (event.selection().size() == 0) return;
             close();
             notifySelect(event);
         });
