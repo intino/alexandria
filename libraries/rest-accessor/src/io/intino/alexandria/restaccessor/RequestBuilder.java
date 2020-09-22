@@ -151,7 +151,7 @@ public class RequestBuilder {
 	}
 
 	private HttpEntity buildEntity() {
-		if (resources.isEmpty() && entityParts.size() == 1)
+		if (entityParts.size() == 1)
 			return stringEntity(String.valueOf(entityParts.values().iterator().next()));
 		return multipartEntity();
 	}
