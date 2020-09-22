@@ -8,6 +8,7 @@ import MomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import 'alexandria-ui-elements/res/styles/layout.css';
+import moment from 'moment';
 
 const styles = props => ({
 	date : {
@@ -34,7 +35,7 @@ class DateEditable extends AbstractDateEditable {
 
 	handleChange(moment) {
 		if (moment == null || !moment.isValid()) return;
-		this._notifyChange(moment.toDate());
+		this._notifyChange(this.noZoneDate(moment));
 	};
 
 	render() {
@@ -69,7 +70,7 @@ class DateEditable extends AbstractDateEditable {
 	    const _date = new Date(value);
 		const _utcDate = new Date(_date.getUTCFullYear(), _date.getUTCMonth(), _date.getUTCDate(), _date.getUTCHours(), _date.getUTCMinutes(), _date.getUTCSeconds(), _date.getUTCMilliseconds())
 		const date = value != null ? _utcDate : null;
-		this.setState({ value: date, empty: date == null });
+		this.setState({ value: _date, empty: _date == null });
 	};
 
 	refreshReadonly = (readonly) => {
@@ -92,6 +93,12 @@ class DateEditable extends AbstractDateEditable {
 	    for (var i=0; i<this.props.views.length; i++) result.push(this.props.views[i].toLowerCase());
 	    return result;
 	};
+
+    noZoneDate = (localeMoment) => {
+        var m1 = moment(localeMoment);
+        var offsetInMinutes = m1.utcOffset();
+        return m1.utc().add(offsetInMinutes, 'm').toDate();
+    };
 }
 
 export default withStyles(styles, { withTheme: true })(DateEditable);
