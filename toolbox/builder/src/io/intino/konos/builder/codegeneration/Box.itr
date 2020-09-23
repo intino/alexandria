@@ -4,7 +4,7 @@ def type(box)
 	public class $name+SnakeCaseToCamelCase+firstUpperCase~Box extends AbstractBox {
 
 		public $name+SnakeCaseToCamelCase+firstUpperCase~Box(String$[] args) {
-			this(new ConciliacionConfiguration(args));
+			this(new $name+SnakeCaseToCamelCase+firstUpperCase~Configuration(args));
 		}
 
 		public $name+SnakeCaseToCamelCase+firstUpperCase~Box($name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
