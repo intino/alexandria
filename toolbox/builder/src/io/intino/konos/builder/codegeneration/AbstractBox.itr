@@ -289,10 +289,10 @@ def type(terminal) trigger(init)
 end
 
 def type(terminal) trigger(subscriber)
-	this.terminal.subscribe(($terminal.$eventQn+FirstUpperCase~Consumer) e -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e)[, "$subscriberId"][, $context]);
+	this.terminal.subscribe(($terminal.$eventQn+FirstUpperCase~Consumer) e -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e)[, "$subscriberId"][, $split...[, ]]);
 end
 
-def trigger(context)
+def trigger(split)
 	$type.Split.$value
 end
 

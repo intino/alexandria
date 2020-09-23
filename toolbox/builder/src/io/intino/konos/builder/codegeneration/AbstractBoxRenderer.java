@@ -11,7 +11,9 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.compiler.shared.PostCompileConfigurationParameterActionMessage;
 import io.intino.konos.model.graph.*;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
@@ -96,31 +98,25 @@ public class AbstractBoxRenderer extends Renderer {
 				add("qn", manifest.qn).
 				add("package", packageName()).
 				add("box", boxName());
-		Frame[] subscriber = graph.subscriberList().stream().filter(s -> manifest.tankClasses.containsKey(s.event())).map(s -> subscriberFramesOf(s, manifest)).flatMap(Collection::stream).map(FrameBuilder::toFrame).toArray(Frame[]::new);
+		Frame[] subscriber = graph.subscriberList().stream().filter(s -> manifest.tankClasses.containsKey(s.event())).map(s -> subscriberFrameOf(s, manifest)).toArray(Frame[]::new);
 		if (subscriber.length != 0) builder.add("subscriber", subscriber);
 		root.add("terminal", builder.toFrame());
 	}
 
-	private List<FrameBuilder> subscriberFramesOf(Subscriber subscriber, DataHubManifest manifest) {
+	private Frame subscriberFrameOf(Subscriber subscriber, DataHubManifest manifest) {
 		String tankClass = manifest.tankClasses.get(subscriber.event());
-		if (subscriber.context() != null) {
-			FrameBuilder builder = subscriberFrame(subscriber, manifest, subscriber.context());
-			contextFrame(tankClass, builder, subscriber.context());
-			return Collections.singletonList(builder);
-		} else {
-			List<FrameBuilder> builders = new ArrayList<>();
+		FrameBuilder builder = subscriberFrame(subscriber, manifest);
+		if (!subscriber.splits().isEmpty())
+			subscriber.splits().forEach(s -> splitFrame(tankClass, builder, s));
+		else {
 			if (manifest.messageContexts.get(subscriber.event()).size() > 1)
-				for (String context : manifest.messageContexts.get(subscriber.event())) {
-					FrameBuilder builder = subscriberFrame(subscriber, manifest, context);
-					contextFrame(tankClass, builder, context);
-					builders.add(builder);
-				}
-			else builders.add(subscriberFrame(subscriber, manifest, ""));
-			return builders;
+				for (String context : manifest.messageContexts.get(subscriber.event()))
+					splitFrame(tankClass, builder, context);
 		}
+		return builder.toFrame();
 	}
 
-	private FrameBuilder subscriberFrame(Subscriber subscriber, DataHubManifest manifest, String context) {
+	private FrameBuilder subscriberFrame(Subscriber subscriber, DataHubManifest manifest) {
 		FrameBuilder builder = new FrameBuilder("subscriber", "terminal").
 				add("package", packageName()).
 				add("name", subscriber.name$()).
@@ -128,15 +124,14 @@ public class AbstractBoxRenderer extends Renderer {
 				add("terminal", manifest.qn).
 				add("eventQn", subscriber.event().replace(".", "")).
 				add("event", subscriber.event());
-		if (subscriber.subscriberId() != null) builder.add("subscriberId", subscriber.subscriberId() + context);
+		if (subscriber.subscriberId() != null) builder.add("subscriberId", subscriber.subscriberId());
 		return builder;
 	}
 
-	private void contextFrame(String tankClass, FrameBuilder builder, String context) {
-		builder.add("context",
-				new FrameBuilder("context").
-						add("value", Formatters.snakeCaseToCamelCase().format(context.replace(".", "-")).toString()).
-						add("type", tankClass).toFrame());
+	private void splitFrame(String tankClass, FrameBuilder builder, String context) {
+		builder.add("split", new FrameBuilder("split").
+				add("value", Formatters.snakeCaseToCamelCase().format(context.replace(".", "-")).toString()).
+				add("type", tankClass).toFrame());
 	}
 
 	private void connector(FrameBuilder root) {

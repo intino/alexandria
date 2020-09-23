@@ -13,7 +13,7 @@ Concept:{0..1} MessageHub
 Concept:Named Subscriber
 	var string event
 	var string subscriberId
-	var string context = empty
+	var string[] splits = empty
 
 Concept:{0..1} Datalake
 	var string path
