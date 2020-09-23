@@ -293,7 +293,7 @@ def type(terminal) trigger(subscriber)
 end
 
 def trigger(context)
-	$type.Context.$value
+	$type.Split.$value
 end
 
 def type(service & jmx) trigger(field)
