@@ -13,6 +13,7 @@ import io.intino.konos.model.graph.*;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
@@ -109,9 +110,11 @@ public class AbstractBoxRenderer extends Renderer {
 		if (!subscriber.splits().isEmpty())
 			subscriber.splits().forEach(s -> splitFrame(tankClass, builder, s));
 		else {
-			if (manifest.messageContexts.get(subscriber.event()).size() > 1)
-				for (String context : manifest.messageContexts.get(subscriber.event()))
-					splitFrame(tankClass, builder, context);
+			if (manifest.messageContexts.get(subscriber.event()).size() > 1) {
+				List<String> strings = manifest.messageContexts.get(subscriber.event());
+				strings.sort(String::compareTo);
+				for (String context : strings) splitFrame(tankClass, builder, context);
+			}
 		}
 		return builder.toFrame();
 	}
