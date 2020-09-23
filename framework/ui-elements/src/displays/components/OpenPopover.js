@@ -14,8 +14,20 @@ class OpenPopover extends AbstractOpenPopover {
 		super(props);
 		this.notifier = new OpenPopoverNotifier(this);
 		this.requester = new OpenPopoverRequester(this);
+		this.state = {
+		    ...this.state,
+		    triggerId : null,
+		};
 	};
 
+    refreshTriggerId = (triggerId) => {
+        this.setState({triggerId});
+    };
+
+    triggerId = () => {
+        if (this.state.triggerId != null) return this.state.triggerId;
+        return this.props.id;
+    };
 
 }
 

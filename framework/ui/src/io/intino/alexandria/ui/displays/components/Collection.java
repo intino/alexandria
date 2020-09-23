@@ -36,6 +36,13 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         super(box);
     }
 
+    @Override
+    public void didMount() {
+        super.didMount();
+        clear();
+        setup();
+    }
+
     public abstract <D extends Datasource> void source(D source);
 
     Collection<DN, B> source(Datasource source, CollectionBehavior behavior) {
@@ -277,7 +284,6 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     }
 
     void notifyRefreshItemCount() {
-        if (refreshItemCountListeners.size() <= 0) return;
         long count = behavior.itemCount();
         notifier.refreshItemCount(count);
         refreshItemCountListeners.forEach(l -> l.accept(new RefreshCountEvent(this, count)));

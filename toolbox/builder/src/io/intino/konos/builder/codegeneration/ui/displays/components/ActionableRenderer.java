@@ -6,6 +6,8 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.graph.InteractionComponents;
 
+import java.util.UUID;
+
 public class ActionableRenderer extends ComponentRenderer<InteractionComponents.Actionable> {
 
 	public ActionableRenderer(CompilationContext context, InteractionComponents.Actionable component, TemplateProvider provider, Target target) {

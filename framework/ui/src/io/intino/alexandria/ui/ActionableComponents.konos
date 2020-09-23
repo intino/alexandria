@@ -59,6 +59,7 @@ Component openDialog as ExtensionOf(actionable)
 	Request execute
 
 Component openPopover as ExtensionOf(actionable)
+	Notification refreshTriggerId as Text
 	Request execute
 
 Component closeDialog as ExtensionOf(actionable)

@@ -12,6 +12,7 @@ import io.intino.alexandria.ui.spark.UIFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.UUID;
 
 public class Actionable<DN extends ActionableNotifier, B extends Box> extends Component<DN, B> {
     private String title;
