@@ -15,6 +15,11 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 	private static Map<String, List<CatalogComponents.Collection.Mold.Item>> items = new HashMap<>();
 	private static Map<String, List<HelperComponents.Row>> rows = new HashMap<>();
 	private static Map<String, List<CatalogComponents.Table>> tables = new HashMap<>();
+	private List<CatalogComponents.Collection> collectionDisplays;
+	private List<CatalogComponents.Table> tableDisplays;
+	private List<CatalogComponents.List> listDisplays;
+	private List<CatalogComponents.Magazine> magazines;
+	private List<CatalogComponents.Map> mapDisplays;
 
 	public KonosGraph(Graph graph) {
 		super(graph);
@@ -58,23 +63,33 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 
 	public List<CatalogComponents.Collection> collectionsDisplays(String group) {
 		KonosGraph graph = this;
-		return graph.displayList().stream().filter(d -> d.core$().ownerAs(PassiveView.class) == null && d.i$(CatalogComponents.Collection.class)).map(d -> d.a$(CatalogComponents.Collection.class)).collect(Collectors.toList());
+		if (collectionDisplays == null)
+			collectionDisplays = graph.displayList().stream().filter(d -> d.core$().ownerAs(PassiveView.class) == null && d.i$(CatalogComponents.Collection.class)).map(d -> d.a$(CatalogComponents.Collection.class)).collect(Collectors.toList());
+		return collectionDisplays;
 	}
 
 	public List<CatalogComponents.Table> tablesDisplays(String group) {
-		return collectionsDisplays(group).stream().filter(c -> c.i$(CatalogComponents.Table.class)).map(c -> c.a$(CatalogComponents.Table.class)).collect(Collectors.toList());
+		if (tableDisplays == null)
+			tableDisplays = collectionsDisplays(group).stream().filter(c -> c.i$(CatalogComponents.Table.class)).map(c -> c.a$(CatalogComponents.Table.class)).collect(toList());
+		return this.tableDisplays;
 	}
 
 	public List<CatalogComponents.List> listsDisplays(String group) {
-		return collectionsDisplays(group).stream().filter(c -> c.i$(CatalogComponents.List.class)).map(c -> c.a$(CatalogComponents.List.class)).collect(Collectors.toList());
+		if (listDisplays == null)
+			listDisplays = collectionsDisplays(group).stream().filter(c -> c.i$(CatalogComponents.List.class)).map(c -> c.a$(CatalogComponents.List.class)).collect(toList());
+		return listDisplays;
 	}
 
 	public List<CatalogComponents.Magazine> magazinesDisplays(String group) {
-		return collectionsDisplays(group).stream().filter(c -> c.i$(CatalogComponents.Magazine.class)).map(c -> c.a$(CatalogComponents.Magazine.class)).collect(Collectors.toList());
+		if (magazines == null)
+			magazines = collectionsDisplays(group).stream().filter(c -> c.i$(CatalogComponents.Magazine.class)).map(c -> c.a$(CatalogComponents.Magazine.class)).collect(toList());
+		return magazines;
 	}
 
 	public List<CatalogComponents.Map> mapsDisplays(String group) {
-		return collectionsDisplays(group).stream().filter(c -> c.i$(CatalogComponents.Map.class)).map(c -> c.a$(CatalogComponents.Map.class)).collect(Collectors.toList());
+		if (mapDisplays == null)
+			mapDisplays = collectionsDisplays(group).stream().filter(c -> c.i$(CatalogComponents.Map.class)).map(c -> c.a$(CatalogComponents.Map.class)).collect(toList());
+		return mapDisplays;
 	}
 
 	public static List<CatalogComponents.Table> tablesDisplays(KonosGraph graph, String group) {
@@ -138,7 +153,8 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		String name = firstUpperCase(element.name$()) + "Row";
 		HelperComponents privateComponents = helperComponentsList().size() <= 0 ? create(element.core$().stash()).helperComponents() : helperComponents(0);
 		HelperComponents.Row row = privateComponents.rowList().stream().filter(c -> c.name$().equals(name)).findFirst().orElse(null);
-		if (row == null) privateComponents.create(name).row(itemList);//TODO parameters antes no estaba, es empty list correcto? ask mario
+		if (row == null)
+			privateComponents.create(name).row(itemList);//TODO parameters antes no estaba, es empty list correcto? ask mario
 	}
 
 	private static String firstUpperCase(String value) {
