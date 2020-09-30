@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.selector.SelectorOption;
 import io.intino.alexandria.ui.displays.notifiers.SelectorComboBoxNotifier;

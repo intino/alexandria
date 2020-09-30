@@ -21,6 +21,7 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
     private String path;
     private String address;
     private java.util.List<SelectionListener> selectionListeners = new ArrayList<>();
+    private List<Component> components = new ArrayList<>();
 
     public BaseSelector(B box) {
         super(box);
@@ -51,6 +52,7 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
     @Override
     public void didMount() {
         super.didMount();
+        reloadComponents();
         if (validAddress()) notifier.addressed(address);
     }
 
@@ -79,6 +81,12 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
     }
 
     @Override
+    public void clear() {
+        super.clear();
+        components.clear();
+    }
+
+    @Override
     public void addDivider() {
         Divider divider = new Divider(box());
         PropertyList properties = divider.properties();
@@ -96,6 +104,12 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
 
     public boolean multipleSelection() {
         return multipleSelection;
+    }
+
+    protected void reloadComponents() {
+        List<Component> components = new ArrayList<>(this.components);
+        clear();
+        components.forEach(this::add);
     }
 
     protected BaseSelector<DN, B> _readonly(boolean readonly) {
@@ -179,6 +193,7 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
     }
 
     private <D extends Display> D addOption(Component option) {
+        components.add(option);
         PropertyList properties = option.properties();
         properties.addClassName("option");
         properties.put("id", option.id());
