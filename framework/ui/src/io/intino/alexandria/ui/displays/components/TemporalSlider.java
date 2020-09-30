@@ -26,6 +26,12 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
         super(box);
     }
 
+    @Override
+    public void didMount() {
+        super.didMount();
+        updateRange();
+    }
+
     public Instant min() {
         return min;
     }
@@ -84,6 +90,16 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
         return Timetag.of(localDate, scale());
     }
 
+    public Scale scale() {
+        Ordinal ordinal = ordinal();
+        if (ordinal instanceof YearOrdinal) return Scale.Year;
+        if (ordinal instanceof MonthOrdinal) return Scale.Month;
+        if (ordinal instanceof DayOrdinal) return Scale.Day;
+        if (ordinal instanceof HourOrdinal) return Scale.Hour;
+        if (ordinal instanceof MinuteOrdinal) return Scale.Minute;
+        return Scale.Day;
+    }
+
     protected TemporalSlider _range(Instant min, Instant max) {
         this.min = min;
         this.max = max;
@@ -109,16 +125,6 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
 
     private void notifyCollections() {
         collections.forEach(c -> c.filter(timetag()));
-    }
-
-    private Scale scale() {
-        Ordinal ordinal = ordinal();
-        if (ordinal instanceof YearOrdinal) return Scale.Year;
-        if (ordinal instanceof MonthOrdinal) return Scale.Month;
-        if (ordinal instanceof DayOrdinal) return Scale.Day;
-        if (ordinal instanceof HourOrdinal) return Scale.Hour;
-        if (ordinal instanceof MinuteOrdinal) return Scale.Minute;
-        return Scale.Day;
     }
 
     @Override

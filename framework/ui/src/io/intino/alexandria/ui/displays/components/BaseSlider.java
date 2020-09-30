@@ -8,6 +8,7 @@ import io.intino.alexandria.ui.displays.components.slider.Ordinal;
 import io.intino.alexandria.ui.displays.components.slider.Range;
 import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
+import io.intino.alexandria.ui.displays.events.SelectListener;
 import io.intino.alexandria.ui.displays.notifiers.BaseSliderNotifier;
 
 import java.util.ArrayList;
@@ -31,6 +32,12 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 	public BaseSlider(B box) {
         super(box);
     }
+
+	@Override
+	public void didMount() {
+		super.didMount();
+		refresh();
+	}
 
 	public BaseSlider onChange(ChangeListener listener) {
 		this.changeListener = listener;

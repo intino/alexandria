@@ -13,6 +13,13 @@ public class DisplayStamp<DN extends DisplayStampNotifier, B extends Box> extend
         super(box);
     }
 
+    @Override
+    public void didMount() {
+        super.didMount();
+        add(this.display);
+        refresh();
+    }
+
     public <D extends Display> D get() {
         return (D) this.display;
     }
@@ -24,7 +31,6 @@ public class DisplayStamp<DN extends DisplayStampNotifier, B extends Box> extend
     public void display(Display display) {
         this.display = display;
         this.display.id(UUID.randomUUID().toString());
-        add(this.display);
     }
 
     @Override

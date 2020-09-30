@@ -72,6 +72,7 @@ export default class Block extends AbstractBlock {
 		const hasSpacing = this._hasSpacing();
 
 		return React.Children.map(this.props.children, (child, i) => {
+            if (child == null) return (<React.Fragment/>);
 			if (hasSpacing) {
 				let spacing = this._spacing();
 				let props = child.type !== "div" ? { spacingstyle: spacing } : { style: { marginBottom: spacing.bottom + "px", marginRight: spacing.right + "px" } };

@@ -2,6 +2,7 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.Component;
+import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.selector.Selection;
 import io.intino.alexandria.ui.displays.components.selector.Selector;
 import io.intino.alexandria.ui.displays.components.selector.SelectorOption;

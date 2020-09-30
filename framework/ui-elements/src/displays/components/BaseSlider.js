@@ -174,7 +174,7 @@ export default class BaseSlider extends AbstractBaseSlider {
 		return (
 			<Select value={this.state.ordinal} style={{width:"100%"}} isDisabled={this.state.readonly}
 					onChange={this.handleOrdinalChange.bind(this)}>
-				{this.state.ordinals.map((ordinal, i) => <MenuItem key={i} value={ordinal.name}>{ordinal.label}</MenuItem>)}
+				{this.state.ordinals.map((ordinal, i) => <MenuItem key={i} value={ordinal.name}>{this.translate(ordinal.label)}</MenuItem>)}
 			</Select>
 		);
 	};
