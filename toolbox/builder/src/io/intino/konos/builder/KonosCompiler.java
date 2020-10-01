@@ -72,7 +72,7 @@ public class KonosCompiler {
 			remove(dependencies, "datalake");
 			remove(dependencies, "sshj");
 		} else if (!graph.datalake().isSshMirrored()) remove(dependencies, "sshj");
-		if (graph.messagingServiceList().isEmpty() && context.dataHubManifest() == null)
+		if (graph.messagingServiceList().isEmpty() || context.dataHubManifest() != null)
 			remove(dependencies, "terminal-jms");
 		if (graph.uiServiceList().isEmpty()) remove(dependencies, "ui");
 		if (graph.restServiceList().isEmpty()) remove(dependencies, "rest");
