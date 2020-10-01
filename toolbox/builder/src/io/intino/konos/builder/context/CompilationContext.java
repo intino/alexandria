@@ -27,8 +27,8 @@ import static io.intino.konos.builder.helpers.CodeGenerationHelper.createIfNotEx
 public class CompilationContext {
 	private final List<File> sources;
 	private final ArrayList<WarningMessage> warningMessages;
-	private List<OutputItem> compiledFiles;
-	private List<PostCompileActionMessage> postCompileActionMessages;
+	private final List<OutputItem> compiledFiles;
+	private final List<PostCompileActionMessage> postCompileActionMessages;
 	private CompilerConfiguration configuration;
 	private DataHubManifest dataHubManifest;
 	private File webModuleDirectory;
