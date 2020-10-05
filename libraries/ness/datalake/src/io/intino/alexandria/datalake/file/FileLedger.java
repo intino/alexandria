@@ -5,11 +5,11 @@ import io.intino.alexandria.datalake.Datalake;
 import java.io.File;
 import java.util.stream.Stream;
 
-public class FileLedStore implements Datalake.LedStore {
+public class FileLedger implements Datalake.LedStore {
 	public static final String LedExtension = ".led";
 	private final File root;
 
-	public FileLedStore(File root) {
+	public FileLedger(File root) {
 		this.root = root;
 		this.root.mkdirs();
 	}

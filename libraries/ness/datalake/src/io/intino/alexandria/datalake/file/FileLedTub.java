@@ -9,7 +9,7 @@ import java.io.File;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.datalake.file.FileLedStore.LedExtension;
+import static io.intino.alexandria.datalake.file.FileLedger.LedExtension;
 
 public class FileLedTub implements Datalake.LedStore.Tub {
 	private final File root;

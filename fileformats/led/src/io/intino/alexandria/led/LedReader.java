@@ -9,14 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LedReader {
-
 	private final InputStream inputStream;
 
 	public LedReader(InputStream inputStream) {
 		this.inputStream = inputStream;
 	}
 
-	public <R extends Item> Led<R> read(Class<R> clazz) {
+	public <R extends Item> PrimaryLed<R> read(Class<R> clazz) {
 		Kryo kryo = new Kryo();
 		kryo.register(clazz);
 		List<R> items = new ArrayList<>();
@@ -29,5 +28,13 @@ public class LedReader {
 			while (!input.eof()) items.add(kryo.readObject(input, clazz));
 		}
 		return new PrimaryLed<>(items);
+	}
+
+	public int size() {
+		int size;
+		try (Input input = new Input(new BufferedInputStream(inputStream))) {
+			size = input.readInt();
+		}
+		return size;
 	}
 }

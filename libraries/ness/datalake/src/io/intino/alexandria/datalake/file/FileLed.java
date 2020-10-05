@@ -6,7 +6,6 @@ import io.intino.alexandria.led.Item;
 import io.intino.alexandria.led.Led;
 import io.intino.alexandria.led.LedReader;
 import io.intino.alexandria.logger.Logger;
-import io.intino.alexandria.zet.ZFile;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,7 +20,7 @@ public class FileLed implements Datalake.LedStore.Led {
 	}
 
 	public String name() {
-		return file.getName().replace(FileLedStore.LedExtension, "");
+		return file.getName().replace(FileLedger.LedExtension, "");
 	}
 
 	@Override
@@ -36,7 +35,7 @@ public class FileLed implements Datalake.LedStore.Led {
 	@Override
 	public int size() {
 		try {
-			return file.exists() ? (int) new ZFile(file).size() : 0;
+			return new LedReader(new FileInputStream(file)).size();
 		} catch (IOException e) {
 			Logger.error(e);
 			return 0;

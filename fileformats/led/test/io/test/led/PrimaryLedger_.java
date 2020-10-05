@@ -1,5 +1,6 @@
 package io.test.led;
 
+import io.intino.alexandria.led.LedWriter;
 import io.intino.alexandria.led.PrimaryLed;
 import org.junit.Test;
 
@@ -26,8 +27,7 @@ public class PrimaryLedger_ {
 	public void should_be_stored_and_loaded() throws IOException {
 		File file = File.createTempFile("ledger","");
 		PrimaryLed<TestItem> original = PrimaryLed.load(TestItem.unsortedList().stream());
-		original.store(new FileOutputStream(file));
-		System.out.println(file.getAbsolutePath());
+		new LedWriter(new FileOutputStream(file)).write(original);
 		PrimaryLed<TestItem> stored = PrimaryLed.load(TestItem.class, new FileInputStream(file));
 		assertThat(original.size()).isEqualTo(stored.size());
 		assertThat(original.iterator().next().id()).isEqualTo(stored.iterator().next().id());
