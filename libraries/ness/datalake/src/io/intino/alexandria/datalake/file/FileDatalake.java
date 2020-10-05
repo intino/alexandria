@@ -28,7 +28,7 @@ public class FileDatalake implements Datalake {
 	}
 
 	@Override
-	public LedStore ledStore() {
+	public Ledger ledStore() {
 		return new FileLedger(ledgerFolder());
 	}
 

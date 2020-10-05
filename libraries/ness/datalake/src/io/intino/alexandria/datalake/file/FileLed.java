@@ -12,7 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class FileLed implements Datalake.LedStore.Led {
+public class FileLed implements Datalake.Ledger.Led {
 	private final File file;
 
 	public FileLed(File file) {

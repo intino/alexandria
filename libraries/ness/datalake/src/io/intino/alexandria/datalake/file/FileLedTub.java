@@ -3,7 +3,7 @@ package io.intino.alexandria.datalake.file;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
-import io.intino.alexandria.datalake.Datalake.LedStore.Led;
+import io.intino.alexandria.datalake.Datalake.Ledger.Led;
 
 import java.io.File;
 import java.util.function.Predicate;
@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 import static io.intino.alexandria.datalake.file.FileLedger.LedExtension;
 
-public class FileLedTub implements Datalake.LedStore.Tub {
+public class FileLedTub implements Datalake.Ledger.Tub {
 	private final File root;
 
 	public FileLedTub(File root) {

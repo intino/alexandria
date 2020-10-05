@@ -5,7 +5,7 @@ import io.intino.alexandria.datalake.Datalake;
 import java.io.File;
 import java.util.stream.Stream;
 
-public class FileLedger implements Datalake.LedStore {
+public class FileLedger implements Datalake.Ledger {
 	public static final String LedExtension = ".led";
 	private final File root;
 
