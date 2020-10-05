@@ -3,22 +3,31 @@ package io.intino.alexandria.led;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LedReader {
 	private final InputStream inputStream;
 
+	public LedReader(File file) {
+		InputStream s;
+		try {
+			s = new BufferedInputStream(new FileInputStream(file));
+		} catch (FileNotFoundException e) {
+			s = InputStream.nullInputStream();
+		}
+		this.inputStream = s;
+	}
+
 	public LedReader(InputStream inputStream) {
 		this.inputStream = inputStream;
 	}
 
-	public <R extends Item> PrimaryLed<R> read(Class<R> clazz) {
+	public <S extends Item> PrimaryLed<S> read(Class<S> clazz) {
 		Kryo kryo = new Kryo();
 		kryo.register(clazz);
-		List<R> items = new ArrayList<>();
+		List<S> items = new ArrayList<>();
 		try (Input input = new Input(new BufferedInputStream(inputStream))) {
 			input.readInt();
 			input.readInt();

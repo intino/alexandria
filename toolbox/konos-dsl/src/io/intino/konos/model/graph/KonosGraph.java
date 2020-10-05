@@ -11,7 +11,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
-	private static Map<String, Set<String>> hierarchyDisplays = new HashMap<>();
+	private static final Map<String, Set<String>> hierarchyDisplays = new HashMap<>();
 	private static Map<String, List<CatalogComponents.Collection.Mold.Item>> items = new HashMap<>();
 	private static Map<String, List<HelperComponents.Row>> rows = new HashMap<>();
 	private static Map<String, List<CatalogComponents.Table>> tables = new HashMap<>();

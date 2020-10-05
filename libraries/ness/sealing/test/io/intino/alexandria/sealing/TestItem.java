@@ -1,4 +1,4 @@
-package io.test.led;
+package io.intino.alexandria.sealing;
 
 import io.intino.alexandria.led.Item;
 

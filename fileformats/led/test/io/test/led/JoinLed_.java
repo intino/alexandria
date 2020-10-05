@@ -12,7 +12,7 @@ import static io.test.led.TestItem.unsortedList;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class JoinLedger_ {
+public class JoinLed_ {
 
 
 	@Test

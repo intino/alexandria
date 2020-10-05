@@ -11,21 +11,21 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PrimaryLedger_ {
+public class PrimaryLed_ {
 
 	@Test
 	public void should_keep_ids_sorted() {
 		PrimaryLed<TestItem> ledger = PrimaryLed.load(TestItem.unsortedList().stream());
 		long previous = Long.MIN_VALUE;
 		for (TestItem item : ledger) {
-			assertThat(item.id() > previous).isTrue();
+			assertThat(item.id()).isGreaterThanOrEqualTo(previous);
 			previous = item.id();
 		}
 	}
 
 	@Test
 	public void should_be_stored_and_loaded() throws IOException {
-		File file = File.createTempFile("ledger","");
+		File file = File.createTempFile("ledger", "");
 		PrimaryLed<TestItem> original = PrimaryLed.load(TestItem.unsortedList().stream());
 		new LedWriter(new FileOutputStream(file)).write(original);
 		PrimaryLed<TestItem> stored = PrimaryLed.load(TestItem.class, new FileInputStream(file));

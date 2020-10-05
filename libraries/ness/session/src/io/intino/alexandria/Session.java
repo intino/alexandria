@@ -5,7 +5,7 @@ import java.io.InputStream;
 public interface Session {
 	String SessionExtension = ".session";
 	String EventSessionExtension = ".event.session";
-	String LedSessionExtension = ".ledger.session";
+	String LedSessionExtension = ".led.session";
 
 	String name();
 

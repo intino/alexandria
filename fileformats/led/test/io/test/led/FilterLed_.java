@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import static io.test.led.TestItem.unsortedList;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-public class FilterLedger_ {
+public class FilterLed_ {
 
 	@Test
 	public void should_filter_no_items() {

@@ -1,12 +1,14 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "3.1.1") sealing
+Artifact("io.intino.alexandria", "3.2.0") sealing
 	Imports
-		Compile("io.intino.alexandria", "datalake", "3.1.1")
+		Compile("io.intino.alexandria", "datalake", "3.2.0")
 		Compile("io.intino.alexandria", "mapp", "1.1.0")
-		Compile("io.intino.alexandria", "session", "1.0.0")
-		Test("io.intino.alexandria", "ingestion", "3.0.3")
+		Compile("io.intino.alexandria", "session", "1.1.0")
+		Test("io.intino.alexandria", "ingestion", "3.1.0")
 		Test("junit", "junit", "4.13")
+		Test("org.assertj", "assertj-core", "3.17.2")
+
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 

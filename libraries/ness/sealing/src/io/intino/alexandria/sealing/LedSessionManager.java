@@ -3,13 +3,12 @@ package io.intino.alexandria.sealing;
 import io.intino.alexandria.Fingerprint;
 import io.intino.alexandria.Session;
 import io.intino.alexandria.datalake.file.FS;
-import io.intino.alexandria.datalake.file.FileEventStore;
+import io.intino.alexandria.datalake.file.FileLedgerStore;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.Comparator;
 import java.util.stream.Stream;
 
 import static java.util.Comparator.comparing;
@@ -17,12 +16,12 @@ import static java.util.Comparator.comparing;
 public class LedSessionManager {
 	public static void seal(File stageFolder, File ledgerStoreFolder) {
 		ledSessions(stageFolder).sorted(comparing(File::getName))
-				.parallel().forEach(e -> sealLed(ledgerStoreFolder, e));
+				.parallel().forEach(e -> sealSession(ledgerStoreFolder, e));
 	}
 
-	private static void sealLed(File eventStoreFolder, File session) {
+	private static void sealSession(File ledgerStoreFolder, File session) {
 		try {
-			File file = datalakeFile(eventStoreFolder, fingerprintOf(session));
+			File file = datalakeFile(ledgerStoreFolder, fingerprintOf(session));
 			FS.copyInto(file, new FileInputStream(session));
 			session.renameTo(new File(session.getAbsolutePath() + ".treated"));
 		} catch (FileNotFoundException e) {
@@ -35,7 +34,7 @@ public class LedSessionManager {
 	}
 
 	private static File datalakeFile(File eventStoreFolder, Fingerprint fingerprint) {
-		File zimFile = new File(eventStoreFolder, fingerprint.toString() + FileEventStore.EventExtension);
+		File zimFile = new File(eventStoreFolder, fingerprint.toString() + FileLedgerStore.LedExtension);
 		zimFile.getParentFile().mkdirs();
 		return zimFile;
 	}

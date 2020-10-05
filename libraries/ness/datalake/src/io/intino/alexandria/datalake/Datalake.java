@@ -19,7 +19,7 @@ public interface Datalake {
 
 	SetStore setStore();
 
-	Ledger ledStore();
+	LedgerStore ledStore();
 
 	interface EventStore {
 
@@ -113,42 +113,26 @@ public interface Datalake {
 		}
 	}
 
-	interface Ledger {
-		Stream<Ledger.Tank> tanks();
+	interface LedgerStore {
+		Stream<LedgerStore.Tank> tanks();
 
-		Ledger.Tank tank(String name);
+		LedgerStore.Tank tank(String name);
 
 		interface Tank {
 			String name();
 
-			Stream<Ledger.Tub> tubs();
+			Stream<LedgerStore.Led> ledger();
 
-			Ledger.Tub first();
+			LedgerStore.Led first();
 
-			Ledger.Tub last();
+			LedgerStore.Led last();
 
-			Ledger.Tub on(Timetag tag);
+			LedgerStore.Led on(Timetag tag);
 
-			Stream<Ledger.Tub> tubs(int count);
-
-			Stream<Ledger.Tub> tubs(Timetag from, Timetag to);
-		}
-
-		interface Tub {
-			Timetag timetag();
-
-			Scale scale();
-
-			Ledger.Led led(String set);
-
-			Stream<Ledger.Led> leds();
-
-			Stream<Ledger.Led> leds(Predicate<Ledger.Led> filter);
+			Stream<LedgerStore.Led> ledger(Timetag from, Timetag to);
 		}
 
 		interface Led {
-			String name();
-
 			Timetag timetag();
 
 			int size();
