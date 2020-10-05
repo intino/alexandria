@@ -1,6 +1,6 @@
-package io.test.ledgers;
+package io.test.led;
 
-import io.intino.alexandria.PrimaryLedger;
+import io.intino.alexandria.led.PrimaryLed;
 import org.junit.Test;
 
 import java.io.File;
@@ -14,7 +14,7 @@ public class PrimaryLedger_ {
 
 	@Test
 	public void should_keep_ids_sorted() {
-		PrimaryLedger<TestItem> ledger = PrimaryLedger.load(TestItem.unsortedList().stream());
+		PrimaryLed<TestItem> ledger = PrimaryLed.load(TestItem.unsortedList().stream());
 		long previous = Long.MIN_VALUE;
 		for (TestItem item : ledger) {
 			assertThat(item.id() > previous).isTrue();
@@ -25,19 +25,21 @@ public class PrimaryLedger_ {
 	@Test
 	public void should_be_stored_and_loaded() throws IOException {
 		File file = File.createTempFile("ledger","");
-		PrimaryLedger<TestItem> original = PrimaryLedger.load(TestItem.unsortedList().stream());
+		PrimaryLed<TestItem> original = PrimaryLed.load(TestItem.unsortedList().stream());
 		original.store(new FileOutputStream(file));
-		PrimaryLedger<TestItem> stored = PrimaryLedger.load(TestItem.class, new FileInputStream(file));
+		System.out.println(file.getAbsolutePath());
+		PrimaryLed<TestItem> stored = PrimaryLed.load(TestItem.class, new FileInputStream(file));
 		assertThat(original.size()).isEqualTo(stored.size());
 		assertThat(original.iterator().next().id()).isEqualTo(stored.iterator().next().id());
 		assertThat(original.iterator().next().i()).isEqualTo(stored.iterator().next().i());
 		assertThat(original.iterator().next().d()).isEqualTo(stored.iterator().next().d());
+//		file.delete();
 	}
 
 	@Test
 	public void should_aggregate() {
-		PrimaryLedger<TestItem> ledger = PrimaryLedger.load(TestItem.unsortedList().stream());
-		PrimaryLedger<TestItem>.Aggregator<TestAggregation> aggregator = ledger.aggregate(TestAggregation.class)
+		PrimaryLed<TestItem> ledger = PrimaryLed.load(TestItem.unsortedList().stream());
+		PrimaryLed<TestItem>.Aggregator<TestAggregation> aggregator = ledger.aggregate(TestAggregation.class)
 				.set(new TestAggregation("TOTAL", i -> true))
 				.set(new TestAggregation(">0", i -> i.i() > 0))
 				.set(new TestAggregation("=0", i -> i.i() == 0))

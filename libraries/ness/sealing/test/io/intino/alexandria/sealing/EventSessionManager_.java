@@ -21,9 +21,8 @@ import java.util.List;
 import static junit.framework.TestCase.assertEquals;
 
 public class EventSessionManager_ {
-
-	private File stageFolder = new File("temp/stage");
-	private File datalake = new File("temp/datalake");
+	private final File stageFolder = new File("temp/stage");
+	private final File datalake = new File("temp/datalake");
 
 	@Test
 	public void should_create_an_event_session() {

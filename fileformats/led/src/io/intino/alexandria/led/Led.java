@@ -1,4 +1,4 @@
-package io.intino.alexandria;
+package io.intino.alexandria.led;
 
 import java.util.Iterator;
 import java.util.List;
@@ -10,17 +10,17 @@ import java.util.stream.StreamSupport;
 
 import static java.util.stream.Collectors.toList;
 
-public interface Ledger<T extends Item> extends Iterable<T> {
+public interface Led<T extends Item> extends Iterable<T> {
 
 	Stream<T> stream();
 	Stream<T> parallelStream();
 
-	class Filter<T extends Item> implements Ledger<T> {
+	class Filter<T extends Item> implements Led<T> {
 
-		private final Ledger<T> ledger;
+		private final Led<T> ledger;
 		private final Predicate<T> predicate;
 
-		public Filter(Ledger<T> ledger, Predicate<T> predicate) {
+		public Filter(Led<T> ledger, Predicate<T> predicate) {
 			this.ledger = ledger;
 			this.predicate = predicate;
 		}
@@ -41,10 +41,10 @@ public interface Ledger<T extends Item> extends Iterable<T> {
 		}
 	}
 
-	class Join<T extends Item> implements Ledger<T> {
-		private final List<Ledger<T>> ledgers;
+	class Join<T extends Item> implements Led<T> {
+		private final List<Led<T>> ledgers;
 
-		public Join(List<Ledger<T>> ledgers) {
+		public Join(List<Led<T>> ledgers) {
 			this.ledgers = ledgers;
 		}
 

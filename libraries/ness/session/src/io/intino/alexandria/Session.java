@@ -5,6 +5,7 @@ import java.io.InputStream;
 public interface Session {
 	String SessionExtension = ".session";
 	String EventSessionExtension = ".event.session";
+	String LedSessionExtension = ".ledger.session";
 
 	String name();
 
@@ -16,5 +17,6 @@ public interface Session {
 		event,
 		set,
 		setMetadata,
+		led
 	}
 }

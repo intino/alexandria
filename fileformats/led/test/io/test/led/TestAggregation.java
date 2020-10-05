@@ -1,6 +1,6 @@
-package io.test.ledgers;
+package io.test.led;
 
-import io.intino.alexandria.Aggregation;
+import io.intino.alexandria.led.Aggregation;
 
 import java.util.function.Predicate;
 

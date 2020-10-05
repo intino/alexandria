@@ -18,9 +18,16 @@
     <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13" level="project" />
     <orderEntry type="module" module-name="logger" />
     <orderEntry type="module" module-name="zim" />
-    <orderEntry type="library" name="Intino: org.antlr:antlr4-runtime:4.8" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
     <orderEntry type="module" module-name="event" />
     <orderEntry type="module" module-name="message" />
+    <orderEntry type="library" name="Intino: org.antlr:antlr4-runtime:4.8" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
+    <orderEntry type="module" module-name="led" />
+    <orderEntry type="library" name="Intino: com.esotericsoftware:kryo:4.0.0" level="project" />
+    <orderEntry type="library" name="Intino: com.esotericsoftware:reflectasm:1.11.3" level="project" />
+    <orderEntry type="library" name="Intino: org.ow2.asm:asm:5.0.4" level="project" />
+    <orderEntry type="library" name="Intino: com.esotericsoftware:minlog:1.3.0" level="project" />
+    <orderEntry type="library" name="Intino: org.objenesis:objenesis:2.2" level="project" />
   </component>
 </module>

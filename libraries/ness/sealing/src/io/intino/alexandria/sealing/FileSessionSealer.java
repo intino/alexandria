@@ -10,13 +10,11 @@ import java.util.List;
 
 public class FileSessionSealer implements SessionSealer {
 	private final File stageFolder;
-	private final FileStage stage;
 	private final FileDatalake datalake;
 
 	public FileSessionSealer(FileDatalake datalake, File stageFolder) {
 		this.datalake = datalake;
 		this.stageFolder = stageFolder;
-		this.stage = new FileStage(stageFolder);
 	}
 
 	@Override
@@ -32,6 +30,7 @@ public class FileSessionSealer implements SessionSealer {
 			sealEvents(avoidSorting);
 			sealSets();
 			makeSetIndexes();
+			sealLeds();
 		} catch (Throwable e) {
 			Logger.error(e);
 		}
@@ -52,6 +51,11 @@ public class FileSessionSealer implements SessionSealer {
 
 	private void makeSetIndexes() {
 		new SetIndexer(datalake.setStoreFolder()).make();
+	}
+
+	private void sealLeds() {
+		LedSessionManager.seal(stageFolder, datalake.ledStoreFolder(), tempFolder());
+
 	}
 
 	private void lock() {
