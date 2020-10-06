@@ -139,6 +139,5 @@ public interface Datalake {
 
 			<T extends Item> io.intino.alexandria.led.Led<T> content(Class<T> clazz);
 		}
-
 	}
 }

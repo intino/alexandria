@@ -36,10 +36,9 @@ public class LedSessionManager_ {
 		new FileSessionSealer(new FileDatalake(DATALAKE), STAGE_FOLDER).seal();
 		PrimaryLed<TestItem> led = new LedReader(new File("temp/datalake/ledger/tank1/" + timetag.value() + ".led")).read(TestItem.class);
 		assertThat(led.size()).isEqualTo(stored.size());
-		assertThat(led.iterator().next().id()).isEqualTo(stored.iterator().next().id());
-		assertThat(led.iterator().next().i()).isEqualTo(stored.iterator().next().i());
-		assertThat(led.iterator().next().d()).isEqualTo(stored.iterator().next().d());
-
+		assertThat(led.iterator().next().id()).isEqualTo(testLed.iterator().next().id());
+		assertThat(led.iterator().next().i()).isEqualTo(testLed.iterator().next().i());
+		assertThat(led.iterator().next().d()).isEqualTo(testLed.iterator().next().d());
 	}
 
 	@After
