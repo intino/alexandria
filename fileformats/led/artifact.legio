@@ -1,12 +1,11 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.alexandria", version = "1.0.0") legder
+Artifact("io.intino.alexandria", "1.0.0") led
 	Imports
 		Compile("com.esotericsoftware", "kryo", "4.0.0")
-		Test(groupId = "junit", artifactId = "junit", version = "LATEST")
+		Test("junit", "junit", "4.13")
 		Test("org.assertj", "assertj-core", "3.17.2")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
-Repository(identifier = "intino-maven")
-	Release(url = "https://artifactory.intino.io/artifactory/releases")
+Repository("intino-maven") > Release("https://artifactory.intino.io/artifactory/releases")

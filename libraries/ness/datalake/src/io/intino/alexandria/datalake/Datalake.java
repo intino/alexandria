@@ -3,6 +3,7 @@ package io.intino.alexandria.datalake;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.event.EventStream;
+import io.intino.alexandria.led.Schema;
 import io.intino.alexandria.mapp.MappReader;
 import io.intino.alexandria.zet.ZetStream;
 
@@ -12,10 +13,13 @@ import java.util.stream.Stream;
 public interface Datalake {
 	String EventStoreFolder = "events";
 	String SetStoreFolder = "sets";
+	String LedStoreFolder = "ledger";
 
 	EventStore eventStore();
 
 	SetStore setStore();
+
+	LedgerStore ledStore();
 
 	interface EventStore {
 
@@ -24,7 +28,6 @@ public interface Datalake {
 		Tank tank(String name);
 
 		interface Tank {
-
 			String name();
 
 			Scale scale();
@@ -107,6 +110,34 @@ public interface Datalake {
 				this.name = name;
 				this.value = value;
 			}
+		}
+	}
+
+	interface LedgerStore {
+		Stream<LedgerStore.Tank> tanks();
+
+		LedgerStore.Tank tank(String name);
+
+		interface Tank {
+			String name();
+
+			Stream<LedgerStore.Led> ledger();
+
+			LedgerStore.Led first();
+
+			LedgerStore.Led last();
+
+			LedgerStore.Led on(Timetag tag);
+
+			Stream<LedgerStore.Led> ledger(Timetag from, Timetag to);
+		}
+
+		interface Led {
+			Timetag timetag();
+
+			int size();
+
+			<T extends Schema> io.intino.alexandria.led.Led<T> content(Class<T> clazz);
 		}
 	}
 }
