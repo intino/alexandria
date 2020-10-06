@@ -1,5 +1,5 @@
 package io.intino.alexandria.led;
 
-public interface Item  {
+public interface Schema {
 	long id();
 }

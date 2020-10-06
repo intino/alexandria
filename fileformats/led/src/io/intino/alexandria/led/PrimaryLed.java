@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
-public class PrimaryLed<T extends Item> implements Led<T> {
+public class PrimaryLed<T extends Schema> implements Led<T> {
 	private final List<T> items;
 
 	PrimaryLed(List<T> items) {
@@ -48,11 +48,11 @@ public class PrimaryLed<T extends Item> implements Led<T> {
 		return this == object || Objects.equals(items, ((PrimaryLed<?>) object).items);
 	}
 
-	public static <T extends Item> PrimaryLed<T> load(Stream<T> stream) {
-		return new PrimaryLed<>(stream.sorted(Comparator.comparingLong(Item::id)).collect(toList()));
+	public static <T extends Schema> PrimaryLed<T> load(Stream<T> stream) {
+		return new PrimaryLed<>(stream.sorted(Comparator.comparingLong(Schema::id)).collect(toList()));
 	}
 
-	public static <T extends Item> PrimaryLed<T> load(Class<T> clazz, InputStream inputStream) {
+	public static <T extends Schema> PrimaryLed<T> load(Class<T> clazz, InputStream inputStream) {
 		return new LedReader(inputStream).read(clazz);
 	}
 

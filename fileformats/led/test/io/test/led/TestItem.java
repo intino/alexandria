@@ -1,12 +1,12 @@
 package io.test.led;
 
-import io.intino.alexandria.led.Item;
+import io.intino.alexandria.led.Schema;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("IntegerDivisionInFloatingPointContext")
-public class TestItem implements Item {
+public class TestItem implements Schema {
 	private long id;
 	private int i;
 	private double d;

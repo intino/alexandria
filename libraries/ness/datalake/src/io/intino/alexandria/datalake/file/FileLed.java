@@ -2,7 +2,7 @@ package io.intino.alexandria.datalake.file;
 
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
-import io.intino.alexandria.led.Item;
+import io.intino.alexandria.led.Schema;
 import io.intino.alexandria.led.Led;
 import io.intino.alexandria.led.LedReader;
 import io.intino.alexandria.logger.Logger;
@@ -39,7 +39,7 @@ public class FileLed implements Datalake.LedgerStore.Led {
 	}
 
 	@Override
-	public <T extends Item> Led<T> content(Class<T> clazz) {
+	public <T extends Schema> Led<T> content(Class<T> clazz) {
 		try {
 			return new LedReader(new FileInputStream(file)).read(clazz);
 		} catch (FileNotFoundException e) {

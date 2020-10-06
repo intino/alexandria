@@ -10,12 +10,12 @@ import java.util.stream.StreamSupport;
 
 import static java.util.stream.Collectors.toList;
 
-public interface Led<T extends Item> extends Iterable<T> {
+public interface Led<T extends Schema> extends Iterable<T> {
 
 	Stream<T> stream();
 	Stream<T> parallelStream();
 
-	class Filter<T extends Item> implements Led<T> {
+	class Filter<T extends Schema> implements Led<T> {
 
 		private final Led<T> ledger;
 		private final Predicate<T> predicate;
@@ -41,7 +41,7 @@ public interface Led<T extends Item> extends Iterable<T> {
 		}
 	}
 
-	class Join<T extends Item> implements Led<T> {
+	class Join<T extends Schema> implements Led<T> {
 		private final List<Led<T>> ledgers;
 
 		public Join(List<Led<T>> ledgers) {
@@ -75,7 +75,7 @@ public interface Led<T extends Item> extends Iterable<T> {
 				}
 
 				private long min() {
-					return next.stream().filter(Objects::nonNull).mapToLong(Item::id).min().orElse(-1);
+					return next.stream().filter(Objects::nonNull).mapToLong(Schema::id).min().orElse(-1);
 				}
 
 				private T itemWithId(long min) {

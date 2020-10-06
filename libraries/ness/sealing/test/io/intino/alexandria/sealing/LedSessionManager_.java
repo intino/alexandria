@@ -29,12 +29,12 @@ public class LedSessionManager_ {
 		LocalDateTime dateTime = LocalDateTime.of(2019, 2, 28, 16, 15);
 		Timetag timetag = new Timetag(dateTime, Scale.Day);
 		LedSession session = handler.createLedSession();
-		List<TestItem> stored = TestItem.unsortedList();
-		PrimaryLed<TestItem> testLed = PrimaryLed.load(stored.stream());
+		List<TestSchema> stored = TestSchema.unsortedList();
+		PrimaryLed<TestSchema> testLed = PrimaryLed.load(stored.stream());
 		session.put("tank1", timetag, testLed);
 		handler.pushTo(STAGE_FOLDER);
 		new FileSessionSealer(new FileDatalake(DATALAKE), STAGE_FOLDER).seal();
-		PrimaryLed<TestItem> led = new LedReader(new File("temp/datalake/ledger/tank1/" + timetag.value() + ".led")).read(TestItem.class);
+		PrimaryLed<TestSchema> led = new LedReader(new File("temp/datalake/ledger/tank1/" + timetag.value() + ".led")).read(TestSchema.class);
 		assertThat(led.size()).isEqualTo(stored.size());
 		assertThat(led.iterator().next().id()).isEqualTo(testLed.iterator().next().id());
 		assertThat(led.iterator().next().i()).isEqualTo(testLed.iterator().next().i());

@@ -19,7 +19,7 @@ public class LedWriter {
 		this.outputStream = outputStream;
 	}
 
-	public void write(PrimaryLed<? extends Item> led) {
+	public void write(PrimaryLed<? extends Schema> led) {
 		Kryo kryo = new Kryo();
 		Class<?> itemClass = led.iterator().next().getClass();
 		List<FieldMask> masks = Arrays.stream(itemClass.getDeclaredFields()).map(this::maskOf).filter(Objects::nonNull).collect(toList());

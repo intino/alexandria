@@ -24,7 +24,7 @@ public class LedReader {
 		this.inputStream = inputStream;
 	}
 
-	public <S extends Item> PrimaryLed<S> read(Class<S> clazz) {
+	public <S extends Schema> PrimaryLed<S> read(Class<S> clazz) {
 		Kryo kryo = new Kryo();
 		kryo.register(clazz);
 		List<S> items = new ArrayList<>();

@@ -21,7 +21,6 @@
     <orderEntry type="module" module-name="event" />
     <orderEntry type="module" module-name="message" />
     <orderEntry type="module" module-name="led" />
-    <orderEntry type="library" name="Intino: org.antlr:antlr4-runtime:4.8" level="project" />
     <orderEntry type="module" module-name="zet" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
     <orderEntry type="library" name="Intino: com.esotericsoftware:kryo:4.0.0" level="project" />
