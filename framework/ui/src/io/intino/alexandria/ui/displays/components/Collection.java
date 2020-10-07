@@ -38,7 +38,6 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
 
     @Override
     public void didMount() {
-        super.didMount();
         notifier.setup(new CollectionSetup().itemCount(behavior.itemCount()));
         notifyReady();
     }

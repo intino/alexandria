@@ -2,6 +2,7 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.MapCollectionSetup;
+import io.intino.alexandria.schemas.PageCollectionSetup;
 import io.intino.alexandria.ui.Asset;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.Collection;
@@ -28,6 +29,12 @@ public abstract class Map<B extends Box, ItemComponent extends io.intino.alexand
     }
 
     public enum Type { Cluster, Kml, Heatmap }
+
+    @Override
+    public void didMount() {
+        notifier.setup(setupSchema());
+        notifyReady();
+    }
 
     @Override
     public <D extends Datasource> void source(D source) {
@@ -88,15 +95,11 @@ public abstract class Map<B extends Box, ItemComponent extends io.intino.alexand
     void setup() {
         MapDatasource source = source();
         if (source == null && type != Type.Kml) return;
-        MapCollectionSetup setup = new MapCollectionSetup();
         if (source != null) {
             CollectionBehavior behavior = behavior();
             behavior.setup(source);
-            setup.itemCount(behavior.itemCount());
         }
-        if (type == Type.Kml) setup.kmlLayer(Asset.toResource(baseAssetUrl(), this.kmlLayer).toUrl().toString());
-        if (icon != null) setup.icon(Asset.toResource(baseAssetUrl(), this.icon).toUrl().toString());
-        notifier.setup(setup);
+        notifier.setup(setupSchema());
         notifyReady();
     }
 
@@ -107,6 +110,14 @@ public abstract class Map<B extends Box, ItemComponent extends io.intino.alexand
     public void showPlaceMark(long pos) {
         MapCollectionBehavior behavior = behavior();
         behavior.showPlaceMark(pos);
+    }
+
+    private MapCollectionSetup setupSchema() {
+        MapCollectionSetup setup = new MapCollectionSetup();
+        if (behavior() != null) setup.itemCount(behavior().itemCount());
+        if (type == Type.Kml) setup.kmlLayer(Asset.toResource(baseAssetUrl(), this.kmlLayer).toUrl().toString());
+        if (icon != null) setup.icon(Asset.toResource(baseAssetUrl(), this.icon).toUrl().toString());
+        return setup;
     }
 
 }

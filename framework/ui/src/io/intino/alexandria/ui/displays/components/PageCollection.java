@@ -2,6 +2,7 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.CollectionMoreItems;
+import io.intino.alexandria.schemas.CollectionSetup;
 import io.intino.alexandria.schemas.PageCollectionSetup;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.behaviors.PageCollectionBehavior;
@@ -16,6 +17,12 @@ public abstract class PageCollection<DN extends PageCollectionNotifier, B extend
 
     public PageCollection(B box) {
         super(box);
+    }
+
+    @Override
+    public void didMount() {
+        notifier.setup(new PageCollectionSetup().pageSize(pageSize).itemCount(behavior().itemCount()));
+        notifyReady();
     }
 
     public void notifyItemsRendered(io.intino.alexandria.schemas.CollectionItemsRenderedInfo info) {
