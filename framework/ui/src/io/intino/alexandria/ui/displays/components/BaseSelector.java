@@ -106,9 +106,19 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         return multipleSelection;
     }
 
+    protected List<Component> components() {
+        return this.components;
+    }
+
+    protected BaseSelector<DN, B> components(List<Component> components) {
+        this.components = components;
+        return this;
+    }
+
     protected void reloadComponents() {
-        List<Component> components = new ArrayList<>(this.components);
+        List<Component> components = new ArrayList<>(this.components.size() > 0 ? this.components : this.children(Component.class));
         clear();
+        this.components = new ArrayList<>();
         components.forEach(this::add);
     }
 

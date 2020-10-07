@@ -65,9 +65,9 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 	private void addRadioBoxProperties(FrameBuilder builder) {
 		if (!element.isRadioBox()) return;
 		String selected = element.asRadioBox().selected();
+		builder.add("layout", element.asRadioBox().layout().name());
 		if (selected == null || selected.isEmpty()) return;
 		builder.add("selected", selected);
-		builder.add("layout", element.asRadioBox().layout().name());
 	}
 
 	private void addToggleBoxProperties(FrameBuilder builder) {

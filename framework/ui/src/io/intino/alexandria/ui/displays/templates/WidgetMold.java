@@ -89,7 +89,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
 
     private void refreshEventsDisplay() {
         events.<EventsDisplay>display().events(item().eventList());
-        events.refresh();
+        //events.refresh();
     }
 
 }
