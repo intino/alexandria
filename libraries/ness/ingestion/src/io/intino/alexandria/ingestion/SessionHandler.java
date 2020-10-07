@@ -14,7 +14,7 @@ import static java.util.UUID.randomUUID;
 
 public class SessionHandler {
 	private final File root;
-	private List<PrivateSession> sessions = new ArrayList<>();
+	private final List<PrivateSession> sessions = new ArrayList<>();
 
 	public SessionHandler() {
 		this.root = null;
@@ -38,6 +38,10 @@ public class SessionHandler {
 
 	public EventSession createEventSession() {
 		return new EventSession(new PrivateProvider());
+	}
+
+	public LedSession createLedSession() {
+		return new LedSession(new PrivateProvider());
 	}
 
 	public void pushTo(URI uri) {
@@ -109,7 +113,6 @@ public class SessionHandler {
 		InputStream inputStream();
 
 		OutputStream outputStream();
-
 	}
 
 	public interface Provider {
@@ -170,6 +173,40 @@ public class SessionHandler {
 		}
 	}
 
+	private static class PrivateSession {
+		private final String name;
+		private final Session.Type type;
+		private final SessionData sessionData;
+
+
+		PrivateSession(String name, Session.Type type, SessionData sessionData) {
+			this.name = name;
+			this.type = type;
+			this.sessionData = sessionData;
+		}
+
+		public String name() {
+			return name;
+		}
+
+		public Session.Type type() {
+			return type;
+		}
+
+		SessionData data() {
+			return sessionData;
+		}
+
+		InputStream inputStream() {
+			return sessionData.inputStream();
+		}
+
+		OutputStream outputStream() {
+			return sessionData.outputStream();
+		}
+
+	}
+
 	private class PrivateProvider implements Provider {
 
 		public OutputStream outputStream(Session.Type type) {
@@ -201,39 +238,5 @@ public class SessionHandler {
 		private String extensionOf(Session.Type type) {
 			return "." + type.name() + Session.SessionExtension;
 		}
-	}
-
-	private class PrivateSession {
-		private final String name;
-		private final Session.Type type;
-		private SessionData sessionData;
-
-
-		PrivateSession(String name, Session.Type type, SessionData sessionData) {
-			this.name = name;
-			this.type = type;
-			this.sessionData = sessionData;
-		}
-
-		public String name() {
-			return name;
-		}
-
-		public Session.Type type() {
-			return type;
-		}
-
-		SessionData data() {
-			return sessionData;
-		}
-
-		InputStream inputStream() {
-			return sessionData.inputStream();
-		}
-
-		OutputStream outputStream() {
-			return sessionData.outputStream();
-		}
-
 	}
 }

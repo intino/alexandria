@@ -10,7 +10,6 @@ import io.intino.konos.compiler.shared.PostCompileActionMessage;
 import io.intino.konos.compiler.shared.PostCompileConfigurationDependencyActionMessage;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Sentinel;
-import io.intino.magritte.io.Stash;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -45,8 +44,10 @@ public class KonosCompiler {
 			if (graph == null) return compiledFiles;
 			if (configuration.isVerbose())
 				configuration.out().println(PRESENTABLE_MESSAGE + "Konosc: Rendering classes...");
-			render(graph, graphLoader.stashes(), sources, compiledFiles);
-			updateDependencies(requiredDependencies(graph));
+			CompilationContext context = new CompilationContext(configuration, postCompileActionMessages, sources, compiledFiles);
+			context.loadCache(graph, graphLoader.stashes());
+			render(graph, context);
+			updateDependencies(requiredDependencies(graph, context));
 			return compiledFiles;
 		} catch (Exception e) {
 			processCompilationException(e);
@@ -62,7 +63,7 @@ public class KonosCompiler {
 			postCompileActionMessages.add(new PostCompileConfigurationDependencyActionMessage(configuration.module(), entry.getKey() + ":" + entry.getValue()));
 	}
 
-	private Map<String, String> requiredDependencies(KonosGraph graph) {
+	private Map<String, String> requiredDependencies(KonosGraph graph, CompilationContext context) {
 		Map<String, String> dependencies = Manifest.load().dependencies;
 		if (graph.jmxServiceList().isEmpty()) remove(dependencies, "jmx");
 		if (graph.messagingServiceList().isEmpty()) remove(dependencies, ":jms");
@@ -71,7 +72,8 @@ public class KonosCompiler {
 			remove(dependencies, "datalake");
 			remove(dependencies, "sshj");
 		} else if (!graph.datalake().isSshMirrored()) remove(dependencies, "sshj");
-		if (graph.messagingServiceList().isEmpty()) remove(dependencies, "terminal-jms");
+		if (graph.messagingServiceList().isEmpty() || context.dataHubManifest() != null)
+			remove(dependencies, "terminal-jms");
 		if (graph.uiServiceList().isEmpty()) remove(dependencies, "ui");
 		if (graph.restServiceList().isEmpty()) remove(dependencies, "rest");
 		if (graph.soapServiceList().isEmpty()) remove(dependencies, "soap");
@@ -95,10 +97,9 @@ public class KonosCompiler {
 		if (toRemove != null) dependencies.remove(toRemove);
 	}
 
-	private void render(KonosGraph graph, Stash[] stashes, List<File> sources, List<OutputItem> compiledFiles) throws KonosException {
+	private void render(KonosGraph graph, CompilationContext context) throws KonosException {
 		try {
-			CompilationContext context = new CompilationContext(configuration, postCompileActionMessages, sources, compiledFiles);
-			context.loadCache(graph, stashes);
+
 			new FullRenderer(graph, context).execute();
 		} catch (Exception e) {
 			if (e instanceof NullPointerException) {

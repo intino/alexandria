@@ -20,6 +20,7 @@
       <module fileurl="file://$PROJECT_DIR$/libraries/jmx/jmx.iml" filepath="$PROJECT_DIR$/libraries/jmx/jmx.iml" group="services" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/json/json.iml" filepath="$PROJECT_DIR$/fileformats/json/json.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/toolbox/konos-dsl/konos-dsl.iml" filepath="$PROJECT_DIR$/toolbox/konos-dsl/konos-dsl.iml" group="toolbox" />
+      <module fileurl="file://$PROJECT_DIR$/fileformats/led/led.iml" filepath="$PROJECT_DIR$/fileformats/led/led.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/libraries/logger/logger.iml" filepath="$PROJECT_DIR$/libraries/logger/logger.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/logger4j/logger4j.iml" filepath="$PROJECT_DIR$/libraries/logger4j/logger4j.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/mapp/mapp.iml" filepath="$PROJECT_DIR$/fileformats/mapp/mapp.iml" group="fileformats" />

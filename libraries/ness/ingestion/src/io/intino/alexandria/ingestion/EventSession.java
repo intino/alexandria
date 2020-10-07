@@ -17,7 +17,7 @@ import java.util.zip.GZIPOutputStream;
 
 public class EventSession {
 	private final Map<Fingerprint, MessageWriter> writers = new HashMap<>();
-	private SessionHandler.Provider provider;
+	private final SessionHandler.Provider provider;
 
 	public EventSession(SessionHandler.Provider provider) {
 		this.provider = provider;

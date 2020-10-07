@@ -3,6 +3,7 @@ test-gen
 out
 .idea/libraries
 .idea/dictionaries
+.idea/shelf
 test-res/*.stash
 target/
 workspace.xml

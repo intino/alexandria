@@ -1,0 +1,11 @@
+dsl Legio
+
+Artifact("io.intino.alexandria", "1.0.0") led
+	Imports
+		Compile("com.esotericsoftware", "kryo", "4.0.0")
+		Test("junit", "junit", "4.13")
+		Test("org.assertj", "assertj-core", "3.17.2")
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
+
+Repository("intino-maven") > Release("https://artifactory.intino.io/artifactory/releases")
