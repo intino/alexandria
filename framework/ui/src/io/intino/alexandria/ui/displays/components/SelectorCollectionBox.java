@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.components.collection.Selectable;
 import io.intino.alexandria.ui.displays.events.SelectionEvent;
 import io.intino.alexandria.ui.displays.notifiers.SelectorCollectionBoxNotifier;
@@ -106,6 +107,13 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
     public void unSelect(String option) {
         updateSelection(selection.stream().filter(i -> !option.equals(valueOf(i))).collect(Collectors.toList()));
         collection.reload();
+    }
+
+    protected void reloadComponents() {
+        List<Component> components = new ArrayList<>(this.components().size() > 0 ? this.components() : Collections.emptyList());
+        clear();
+        this.components(new ArrayList<>());
+        components.forEach(this::add);
     }
 
     private void updateSelection(SelectionEvent event) {

@@ -2,6 +2,7 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.SelectorMenuSelection;
+import io.intino.alexandria.ui.displays.components.selector.SelectorOption;
 import io.intino.alexandria.ui.displays.notifiers.SelectorMenuNotifier;
 
 import java.util.Collections;
@@ -57,7 +58,8 @@ public class SelectorMenu<DN extends SelectorMenuNotifier, B extends Box> extend
 	}
 
 	private List<String> ancestors(int option) {
-		return findOption(option).ancestors().stream().map(Block::label).filter(Objects::nonNull).collect(Collectors.toList());
+		SelectorOption optionFound = findOption(option);
+		return optionFound != null ? optionFound.ancestors().stream().map(Block::label).filter(Objects::nonNull).collect(Collectors.toList()) : Collections.emptyList();
 	}
 
 }

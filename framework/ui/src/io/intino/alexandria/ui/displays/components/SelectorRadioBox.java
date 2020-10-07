@@ -11,6 +11,7 @@ import io.intino.alexandria.ui.displays.notifiers.SelectorRadioBoxNotifier;
 
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 public class SelectorRadioBox<DN extends SelectorRadioBoxNotifier, B extends Box> extends AbstractSelectorRadioBox<DN, B> {
@@ -29,7 +30,7 @@ public class SelectorRadioBox<DN extends SelectorRadioBoxNotifier, B extends Box
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> selection() {
-		return singletonList(selected);
+		return selected != null ? singletonList(selected) : emptyList();
 	}
 
 	public void selection(String value) {
