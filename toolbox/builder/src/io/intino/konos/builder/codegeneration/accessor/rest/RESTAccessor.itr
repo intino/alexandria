@@ -96,7 +96,7 @@ def type(list) trigger(return)
 end
 
 def type(file) trigger(return)
-	return io.intino.alexandria.Resource(response.headers().getOrDefault("fileName", "content"), response.contentType(), response.contentAsStream());
+	return new io.intino.alexandria.Resource(response.headers().getOrDefault("fileName", "content"), response.contentType(), response.contentAsStream());
 end
 
 def !type(list) !attribute(value:void) trigger(return)
