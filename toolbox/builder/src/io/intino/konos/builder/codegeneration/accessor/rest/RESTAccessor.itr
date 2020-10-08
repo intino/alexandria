@@ -96,7 +96,9 @@ def type(list) trigger(return)
 end
 
 def type(file) trigger(return)
-	return new io.intino.alexandria.Resource(response.headers().getOrDefault("fileName", "content"), response.contentType(), response.contentAsStream());
+	String filename = !response.headers().containsKey("Content-Disposition") ? "filename=content":
+		Arrays.stream(response.headers().get("Content-Disposition").split(";")).filter(c-> c.startsWith("filename")).findFirst().orElse(null);
+	return new io.intino.alexandria.Resource(filename.split("=")$[1], response.contentType(), response.contentAsStream());
 end
 
 def !type(list) !attribute(value:void) trigger(return)
