@@ -8,10 +8,7 @@ import io.intino.alexandria.exceptions.ExceptionFactory;
 import io.intino.alexandria.exceptions.InternalServerError;
 import io.intino.alexandria.restaccessor.adapters.RequestAdapter;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
+import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.*;
@@ -30,10 +27,8 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.http.entity.ContentType.APPLICATION_OCTET_STREAM;
@@ -194,9 +189,9 @@ public class RequestBuilder {
 			if (statusCode < 200 || statusCode >= 300) {
 				throw exception(statusCode, bodyContent(response));
 			}
-			return new RestResponse(statusCode, response.getEntity().getContent());
+			return new RestResponse(statusCode, response.getAllHeaders(), response.getEntity().getContent());
 		} catch (IOException e) {
-			return new RestResponse(response.getStatusLine().getStatusCode(), null);
+			return new RestResponse(response.getStatusLine().getStatusCode(), response.getAllHeaders(), null);
 		}
 	}
 
@@ -222,14 +217,26 @@ public class RequestBuilder {
 	public static class RestResponse implements Response {
 		private final int code;
 		private final InputStream content;
+		private final Map<String, String> headers;
 
-		public RestResponse(int code, InputStream content) {
+		public RestResponse(int code, Header[] headers, InputStream content) {
 			this.code = code;
+			this.headers = Arrays.stream(headers).flatMap(h -> Arrays.stream(h.getElements())).collect(Collectors.toMap(HeaderElement::getName, HeaderElement::getValue));
 			this.content = content;
 		}
 
 		public int code() {
 			return code;
+		}
+
+		@Override
+		public Map<String, String> headers() {
+			return headers;
+		}
+
+		@Override
+		public String contentType() {
+			return headers.get("Content-Type");
 		}
 
 		@Override
@@ -240,6 +247,7 @@ public class RequestBuilder {
 				return null;
 			}
 		}
+
 
 		@Override
 		public InputStream contentAsStream() {

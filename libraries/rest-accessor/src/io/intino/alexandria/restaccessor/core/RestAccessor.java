@@ -5,10 +5,7 @@ import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.restaccessor.Response;
 import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
+import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -32,8 +29,10 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.*;
+import static java.util.stream.Collectors.toMap;
 
 public class RestAccessor implements io.intino.alexandria.restaccessor.RestAccessor {
 
@@ -604,6 +603,18 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 				} catch (IOException e) {
 					return null;
 				}
+			}
+
+			@Override
+			public Map<String, String> headers() {
+				return Arrays.stream(response.getAllHeaders()).
+						flatMap(h -> Arrays.stream(h.getElements())).
+						collect(toMap(HeaderElement::getName, HeaderElement::getValue));
+			}
+
+			@Override
+			public String contentType() {
+				return headers().get("Content-Type");
 			}
 
 			@Override

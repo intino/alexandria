@@ -95,12 +95,12 @@ def type(list) trigger(return)
 	return io.intino.alexandria.restaccessor.adapters.ResponseAdapter.adapt(response.content(), new com.google.gson.reflect.TypeToken<Array$value>(){}.getType());
 end
 
-def !type(list) !attribute(value:void) trigger(return)
-	return io.intino.alexandria.restaccessor.adapters.ResponseAdapter.adapt(response.content(), $value.class);
+def type(file) trigger(return)
+	return io.intino.alexandria.Resource(response.headers().getOrDefault("fileName", "content"), response.contentType(), response.contentAsStream());
 end
 
-def type(file) trigger(return)
-	return io.intino.alexandria.Resource("content", response.contentAsStream());
+def !type(list) !attribute(value:void) trigger(return)
+	return io.intino.alexandria.restaccessor.adapters.ResponseAdapter.adapt(response.content(), $value.class);
 end
 
 def trigger(return)
