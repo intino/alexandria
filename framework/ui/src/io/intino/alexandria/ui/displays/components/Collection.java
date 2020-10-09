@@ -248,6 +248,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     }
 
     private List<Integer> itemsIndexOf(List<String> selection) {
+        if (selection == null) return Collections.emptyList();
         List<Integer> indexList = new ArrayList<>();
         for (int i = 0; i < children().size(); i++) {
             if (selection.contains(children().get(i).id()))
@@ -284,6 +285,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     protected abstract AddItemEvent itemEvent(Display c, int index);
 
     protected void refreshSelection(List<Integer> selectedIndexList) {
+        if (selectedIndexList.isEmpty()) return;
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
