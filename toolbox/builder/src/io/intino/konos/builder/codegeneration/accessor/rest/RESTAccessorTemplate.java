@@ -17,7 +17,7 @@ public class RESTAccessorTemplate extends Template {
 			rule().condition((type("file")), (allTypes("parameter","body")), (trigger("parameter"))).output(literal("entityPart(")).output(mark("name")).output(literal(")")),
 			rule().condition((trigger("enumparameter"))).output(literal("public enum ")).output(mark("class", "FirstUpperCase")).output(literal(" {\n\t")).output(mark("value").multiple(", ")).output(literal("\n}")),
 			rule().condition((type("list")), (trigger("return"))).output(literal("return io.intino.alexandria.restaccessor.adapters.ResponseAdapter.adapt(response.content(), new com.google.gson.reflect.TypeToken<Array")).output(mark("value")).output(literal(">(){}.getType());")),
-			rule().condition((type("file")), (trigger("return"))).output(literal("return io.intino.alexandria.Resource(response.headers().getOrDefault(\"fileName\", \"content\"), response.contentType(), response.contentAsStream());")),
+			rule().condition((type("file")), (trigger("return"))).output(literal("String filename = !response.headers().containsKey(\"Content-Disposition\") ? \"filename=content\":\n\tArrays.stream(response.headers().get(\"Content-Disposition\").split(\";\")).filter(c-> c.startsWith(\"filename\")).findFirst().orElse(null);\nreturn new io.intino.alexandria.Resource(filename.split(\"=\")[1], response.contentType(), response.contentAsStream());")),
 			rule().condition(not(type("list")), not(attribute("value", "void")), (trigger("return"))).output(literal("return io.intino.alexandria.restaccessor.adapters.ResponseAdapter.adapt(response.content(), ")).output(mark("value")).output(literal(".class);")),
 			rule().condition((trigger("return"))),
 			rule().condition((trigger("response"))).output(mark("value")),

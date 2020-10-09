@@ -221,7 +221,7 @@ public class RequestBuilder {
 
 		public RestResponse(int code, Header[] headers, InputStream content) {
 			this.code = code;
-			this.headers = Arrays.stream(headers).flatMap(h -> Arrays.stream(h.getElements())).collect(Collectors.toMap(HeaderElement::getName, HeaderElement::getValue));
+			this.headers = Arrays.stream(headers).collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue, (v1, v2) -> v1));
 			this.content = content;
 		}
 

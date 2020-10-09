@@ -10,6 +10,7 @@ import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Exception;
+import io.intino.konos.model.graph.Response;
 import io.intino.konos.model.graph.Service;
 import io.intino.konos.model.graph.Service.REST.Authentication;
 import io.intino.konos.model.graph.Service.REST.Notification;
@@ -85,7 +86,7 @@ public class RESTAccessorRenderer extends Renderer {
 	private Frame processOperation(Operation operation, Authentication authentication) {
 		FrameBuilder builder = new FrameBuilder("resource")
 				.add("path", processPath(Commons.path(operation.core$().ownerAs(Resource.class))))
-				.add("response", new FrameBuilder(responseType(operation)).
+				.add("response", new FrameBuilder(responseType(operation.response())).
 						add("value", Commons.returnType(operation.response(), packageName())))
 				.add("method", operation.getClass().getSimpleName())
 				.add("name", operation.core$().owner().name())
@@ -95,8 +96,11 @@ public class RESTAccessorRenderer extends Renderer {
 		return builder.toFrame();
 	}
 
-	private String[] responseType(Operation operation) {
-		return new String[]{operation.response() != null && operation.response().isType() ? operation.response().asType().type() : "void", operation.response() != null && operation.response().isList() ? "list" : "single"};
+	private String[] responseType(Response response) {
+		List<String> types = new ArrayList<>(List.of(response != null && response.isType() ? response.asType().type() : "void"));
+		if (response != null)
+			types.addAll(response.core$().layerList().stream().map(l -> l.contains("$") ? l.substring(l.indexOf("$") + 1) : l).collect(Collectors.toList()));
+		return types.toArray(new String[0]);
 	}
 
 	private Frame[] parameters(List<Parameter> parameters) {

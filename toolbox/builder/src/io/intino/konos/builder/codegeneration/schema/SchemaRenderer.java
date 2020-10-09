@@ -172,10 +172,10 @@ public class SchemaRenderer extends Renderer {
 	}
 
 	private FrameBuilder process(Data.Map attribute) {
-		return new FrameBuilder("map")
+		return new FrameBuilder("map", attribute.value().isList() ? "valueList" : "valueSingle", attribute.key().isList() ? "keyList" : "keySingle")
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
-				.add("key", attribute.key().asType().type())
-				.add("value", attribute.value().asType().type());
+				.add("key", new FrameBuilder(attribute.key().isList() ? "list" : "single").add("type", attribute.key().asType().type()))
+				.add("value", new FrameBuilder(attribute.value().isList() ? "list" : "single").add("type", attribute.value().asType().type()));
 	}
 
 	private FrameBuilder processSchemaAsAttribute(Schema schema, String name, boolean multiple) {

@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "2.1.1") rest-accessor
+Artifact("io.intino.alexandria", "2.1.2") rest-accessor
 	Imports
 		Compile("io.intino.alexandria", "exceptions", "2.0.0")
 		Compile("io.intino.alexandria", "primitives", "1.0.4")
