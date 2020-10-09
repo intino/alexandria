@@ -46,7 +46,7 @@ def !type(primitive) type(single) trigger(declaration)
 end
 
 def type(map) trigger(declaration)
-	private java.util.Map<$key+firstUpperCase, $value+firstUpperCase> $name+firstLowerCase = new java.util.HashMap<>();
+	private java.util.Map<$key+renderMapType, $value+renderMapType> $name+firstLowerCase = new java.util.HashMap<>();
 end
 
 def type(multiple & member) trigger(declaration)
@@ -94,16 +94,23 @@ def type(multiple) trigger(getter)
 end
 
 def type(map) trigger(getter)
-	public java.util.Map<$key, $value> $name+firstLowerCase() {
+	public java.util.Map<$key+renderMapType, $value+renderMapType> $name+firstLowerCase() {
 		return this.$name+firstLowerCase;
 	}
 end
 
 def type(map) trigger(setter)
-	public $element+firstUpperCase $name+firstLowerCase(java.util.Map<$key, $value> $name+firstLowerCase) {
+	public $element+firstUpperCase $name+firstLowerCase(java.util.Map<$key+renderMapType, $value+renderMapType> $name+firstLowerCase) {
 		this.$name+firstLowerCase = $name+firstLowerCase;
 		return this;
 	}
+end
+
+def type(list) trigger(renderMapType)
+	java.util.List<$type+firstUpperCase>
+end
+def trigger(renderMapType)
+	$type+firstUpperCase
 end
 
 def type(word & single) trigger(setter)
