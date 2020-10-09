@@ -86,14 +86,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         List<Integer> selectedIndexList = itemsIndexOf(selection);
         behavior.reload();
         notifyRefreshItemCount();
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                notifySelection(selectedIndexList);
-            }
-        }, 500);
-
+        refreshSelection(selectedIndexList);
     }
 
     public boolean ready() {
@@ -289,6 +282,16 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     }
 
     protected abstract AddItemEvent itemEvent(Display c, int index);
+
+    protected void refreshSelection(List<Integer> selectedIndexList) {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                notifySelection(selectedIndexList);
+            }
+        }, 500);
+    }
 
     Optional<AddItemListener> addItemListener() {
         return Optional.ofNullable(addItemListener);
