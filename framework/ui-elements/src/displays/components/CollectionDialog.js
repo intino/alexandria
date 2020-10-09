@@ -5,7 +5,7 @@ import CollectionDialogNotifier from "../../../gen/displays/notifiers/Collection
 import CollectionDialogRequester from "../../../gen/displays/requesters/CollectionDialogRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
-import {Dialog, DialogContent, Slide} from "@material-ui/core";
+import {Dialog, DialogContent, DialogActions, Button, Divider, Slide} from "@material-ui/core";
 import SearchBox from "./SearchBox";
 import BaseDialog from "./BaseDialog";
 import { makeDraggable } from "./BaseDialog";
@@ -26,6 +26,11 @@ class CollectionDialog extends AbstractCollectionDialog {
 		super(props);
 		this.notifier = new CollectionDialogNotifier(this);
 		this.requester = new CollectionDialogRequester(this);
+		this.acceptButton = React.createRef();
+		this.state = {
+		    ...this.state,
+		    selectionCount : 0,
+		};
 	};
 
 	render() {
@@ -40,8 +45,25 @@ class CollectionDialog extends AbstractCollectionDialog {
                     aria-labelledby={this.props.id + "_draggable"}>
 				{this.renderTitle()}
 				{this.renderContent(() => this.content())}
+                {this.renderToolbar()}
 			</Dialog>
 		);
+	};
+
+	refreshSelectionCount = (selectionCount) => {
+	    this.setState({selectionCount});
+	};
+
+	renderToolbar = (content) => {
+	    return (
+	        <React.Fragment>
+                <Divider component="li" style={{listStyle:"none"}}/>
+                <DialogActions>
+                    <Button onClick={this.handleClose.bind(this)} color="primary" style={{marginRight:'10px'}}>{this.closeLabel()}</Button>
+                    <Button ref={this.acceptButton} onClick={this.handleAccept.bind(this)} color="primary" variant="contained" disabled={this.state.selectionCount<=0}>{this.acceptLabel()}</Button>
+                </DialogActions>
+            </React.Fragment>
+	    );
 	};
 
 	content = () => {
@@ -52,6 +74,18 @@ class CollectionDialog extends AbstractCollectionDialog {
 				<div className="layout vertical flex" style={{height:'calc(100% - 55px)'}}>{this.props.children}</div>
 			</React.Fragment>
 		);
+	};
+
+	handleAccept = () => {
+	    this.requester.accept();
+	};
+
+	closeLabel = () => {
+		return this.translate(this.props.closeLabel != null ? this.props.closeLabel : "Close");
+	};
+
+	acceptLabel = () => {
+		return this.translate(this.props.acceptLabel != null ? this.props.acceptLabel : "Accept");
 	};
 
 	style() {

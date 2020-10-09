@@ -83,8 +83,17 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
 
     public void reload() {
         if (behavior == null) return;
+        List<Integer> selectedIndexList = itemsIndexOf(selection);
         behavior.reload();
         notifyRefreshItemCount();
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                notifySelection(selectedIndexList);
+            }
+        }, 500);
+
     }
 
     public boolean ready() {
@@ -245,6 +254,15 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         return children().stream().filter(d -> selection.contains(d.id())).map(this::itemOf).collect(toList());
     }
 
+    private List<Integer> itemsIndexOf(List<String> selection) {
+        List<Integer> indexList = new ArrayList<>();
+        for (int i = 0; i < children().size(); i++) {
+            if (selection.contains(children().get(i).id()))
+                indexList.add(i);
+        }
+        return indexList;
+    }
+
     @Override
     public List<Display> children() {
         return super.children().stream().filter(c -> c instanceof CollectionItemDisplay).collect(Collectors.toList());
@@ -308,6 +326,12 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
             if (selection.contains(children.get(index).id())) return index;
         }
         return -1;
+    }
+
+    private void notifySelection(List<Integer> indexList) {
+        List<Display> children = children();
+        if (children.size() <= 0) return;
+        notifier.refreshSelection(indexList.stream().map(i -> i < children.size() ? children.get(i).id() : null).filter(Objects::nonNull).collect(toList()));
     }
 
 }

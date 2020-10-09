@@ -156,6 +156,8 @@ Component alertDialog as ExtensionOf(baseDialog)
 	Request accept
 Component decisionDialog as ExtensionOf(baseDialog)
 Component collectionDialog as ExtensionOf(baseDialog)
+	Notification refreshSelectionCount as Integer
+	Request accept
 
 Component divider
 Component user

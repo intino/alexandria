@@ -30,7 +30,7 @@ export default class Multiple extends AbstractMultiple {
 		return (
 		    <div style={{height:height,...this.style()}}>
                 { ComponentBehavior.labelBlock(this.props, "body1", { fontSize:"10pt",color:"#0000008a",marginBottom: "5px" }) }
-                <div className={"layout flex " + (wrap ? "wrap " : "") + layout} style={{height:height}}>
+                <div className={"layout flex " + (wrap ? "wrap " : "") + layout} style={{height:height,...this.style()}}>
                     {this.renderInstances(multiple.instances, this._instanceProps(), style)}
                 </div>
                 { multiple.editable && this._renderAdd() }
@@ -42,7 +42,7 @@ export default class Multiple extends AbstractMultiple {
 		const multiple = this.props.multiple;
         return (
             <div key={index} className="layout horizontal center" style={{...style}}>
-                <div className="layout flex" style={style}>{React.createElement(DisplayFactory.get(instance.tp), instance.pl)}</div>
+                <div className="layout flex" style={{...style,...this.style(),height:'100%'}}>{React.createElement(DisplayFactory.get(instance.tp), instance.pl)}</div>
                 { multiple.editable && this._removeAllowed(index) && this._renderRemove(index) }
             </div>
         );
@@ -103,7 +103,7 @@ export default class Multiple extends AbstractMultiple {
 	_style = (multiple) => {
 		let spacingStyle = this._spacingStyle(multiple);
 		if (spacingStyle === undefined) spacingStyle = (multiple.arrangement.toLowerCase() === "horizontal") ? { right: 5, bottom: 2 } : { right: 0, bottom: 0 };
-		return { marginRight: spacingStyle.right + "px", marginBottom: spacingStyle.bottom + "px", height: "calc(100% - " + spacingStyle.bottom + "px)" };
+		return { marginRight: spacingStyle.right + "px", marginBottom: spacingStyle.bottom + "px"/*, height: "calc(100% - " + spacingStyle.bottom + "px)"*/ };
 	};
 
 	_spacingStyle = (multiple) => {
