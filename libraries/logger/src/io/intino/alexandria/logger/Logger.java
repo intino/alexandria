@@ -17,11 +17,11 @@ public class Logger {
 		ERROR, WARN, INFO, DEBUG, TRACE
 	}
 
-	private static List<LogHandler> out = new ArrayList<>(singletonList(new PrintStreamLogHandler(System.out)));
-	private static List<LogHandler> err = new ArrayList<>(singletonList(new PrintStreamLogHandler(System.err)));
-	private static List<String> excludedPackages = new ArrayList<>();
-	private static Set<Level> excludedLevels = new HashSet<>();
-	private static String pattern = "[%level]\nts: %date\nsource: %C\nmessage: %m\n";
+	private static final List<LogHandler> out = new ArrayList<>(singletonList(new PrintStreamLogHandler(System.out)));
+	private static final List<LogHandler> err = new ArrayList<>(singletonList(new PrintStreamLogHandler(System.err)));
+	private static final List<String> excludedPackages = new ArrayList<>();
+	private static final Set<Level> excludedLevels = new HashSet<>();
+	private static final String pattern = "[%level]\nts: %date\nsource: %C\nmessage: %m\n";
 
 	static {
 		excludedLevels.add(Level.TRACE);

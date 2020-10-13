@@ -121,7 +121,6 @@ class SetSessionManager {
 			sealFingerprints(readers, size, r);
 			markTreated(r.file());
 		});
-
 	}
 
 	private void markTreated(File file) {
