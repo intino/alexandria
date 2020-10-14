@@ -235,7 +235,7 @@ public class JmsConnector implements Connector {
 	}
 
 	private boolean doSendEvent(String path, Event event) {
-		if (session == null || !connected.get()) return false;
+		if (cannotSendMessage()) return false;
 		try {
 			producers.putIfAbsent(path, new TopicProducer(session, path));
 			JmsProducer producer = producers.get(path);
@@ -271,7 +271,7 @@ public class JmsConnector implements Connector {
 	}
 
 	private boolean cannotSendMessage() {
-		return session == null || !connected.get() || recoveringEvents.get();
+		return session == null || !connected.get();
 	}
 
 	private boolean sendMessage(JmsProducer producer, javax.jms.Message message) {
@@ -348,7 +348,7 @@ public class JmsConnector implements Connector {
 		recoverEventsAndMessages();
 	}
 
-	private void recoverEventsAndMessages() {
+	private synchronized void recoverEventsAndMessages() {
 		if (recoveringEvents.get()) return;
 		recoveringEvents.set(true);
 		recoverEvents();

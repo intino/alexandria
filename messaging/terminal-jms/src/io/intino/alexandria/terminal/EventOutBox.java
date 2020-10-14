@@ -33,7 +33,7 @@ class EventOutBox extends OutBox {
 				return null;
 			}
 			String content = Files.readString(file.toPath());
-			if (content.isEmpty() || content.isBlank()){
+			if (content.isEmpty() || content.isBlank()) {
 				file.delete();
 				files.remove(file);
 				return null;
