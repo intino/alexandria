@@ -235,7 +235,7 @@ public class JmsConnector implements Connector {
 	}
 
 	private boolean doSendEvent(String path, Event event) {
-		if (session == null || !connected.get() || recoveringEvents.get()) return false;
+		if (session == null || !connected.get()) return false;
 		try {
 			producers.putIfAbsent(path, new TopicProducer(session, path));
 			JmsProducer producer = producers.get(path);

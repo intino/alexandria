@@ -24,7 +24,6 @@
     <orderEntry type="module" module-name="mapp" />
     <orderEntry type="module" module-name="led" />
     <orderEntry type="module" module-name="zet" />
-    <orderEntry type="library" name="Intino: org.antlr:antlr4-runtime:4.8" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
     <orderEntry type="library" name="Intino: com.esotericsoftware:kryo:4.0.0" level="project" />
     <orderEntry type="library" name="Intino: com.esotericsoftware:reflectasm:1.11.3" level="project" />
