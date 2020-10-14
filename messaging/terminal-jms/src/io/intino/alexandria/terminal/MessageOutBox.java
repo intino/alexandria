@@ -27,7 +27,11 @@ class MessageOutBox extends OutBox {
 				return null;
 			}
 			String content = Files.readString(file.toPath());
-			if (content.isEmpty() || content.isBlank()) return null;
+			if (content.isEmpty() || content.isBlank()) {
+				files.remove(file);
+				file.delete();
+				return null;
+			}
 			return new AbstractMap.SimpleEntry<>(destination(file), content);
 		} catch (IOException e) {
 			Logger.error(e);

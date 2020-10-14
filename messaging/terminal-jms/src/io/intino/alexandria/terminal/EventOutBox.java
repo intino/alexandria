@@ -33,7 +33,11 @@ class EventOutBox extends OutBox {
 				return null;
 			}
 			String content = Files.readString(file.toPath());
-			if (content.isEmpty() || content.isBlank()) return null;
+			if (content.isEmpty() || content.isBlank()){
+				file.delete();
+				files.remove(file);
+				return null;
+			}
 			return new AbstractMap.SimpleEntry<>(destination(file), new Event(new MessageReader(content).next()));
 		} catch (IOException e) {
 			Logger.error(e);
