@@ -82,6 +82,7 @@ public class JmsConnector implements Connector {
 			} catch (InterruptedException ignored) {
 			}
 			if (connection != null && ((ActiveMQConnection) connection).isStarted()) {
+				clearProducers();
 				session = createSession(transactedSession);
 				if (session != null && ((ActiveMQSession) session).isRunning()) connected.set(true);
 			}
@@ -237,7 +238,7 @@ public class JmsConnector implements Connector {
 	private boolean doSendEvent(String path, Event event) {
 		if (cannotSendMessage()) return false;
 		try {
-			producers.putIfAbsent(path, new TopicProducer(session, path));
+			topicProducer(path);
 			JmsProducer producer = producers.get(path);
 			return sendMessage(producer, serialize(event));
 		} catch (JMSException | IOException e) {
@@ -249,7 +250,7 @@ public class JmsConnector implements Connector {
 	private boolean doSendMessage(String path, String message) {
 		if (cannotSendMessage()) return false;
 		try {
-			producers.putIfAbsent(path, new QueueProducer(session, path));
+			queueProducer(path);
 			JmsProducer producer = producers.get(path);
 			return sendMessage(producer, serialize(message));
 		} catch (JMSException | IOException e) {
@@ -261,13 +262,21 @@ public class JmsConnector implements Connector {
 	private boolean doSendMessage(String path, String message, String replyTo) {
 		if (cannotSendMessage()) return false;
 		try {
-			producers.putIfAbsent(path, new QueueProducer(session, path));
+			queueProducer(path);
 			JmsProducer producer = producers.get(path);
 			return sendMessage(producer, serialize(message, replyTo));
 		} catch (JMSException | IOException e) {
 			Logger.error(e);
 			return false;
 		}
+	}
+
+	private void topicProducer(String path) throws JMSException {
+		producers.putIfAbsent(path, new TopicProducer(session, path));
+	}
+
+	private void queueProducer(String path) throws JMSException {
+		producers.putIfAbsent(path, new QueueProducer(session, path));
 	}
 
 	private boolean cannotSendMessage() {
