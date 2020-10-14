@@ -45,6 +45,7 @@ public class JmsConnector implements Connector {
 	private final AtomicBoolean recoveringEvents = new AtomicBoolean(false);
 	private Connection connection;
 	private Session session;
+	private ScheduledExecutorService scheduler;
 
 	public JmsConnector(String brokerUrl, String user, String password, String clientId, File messageCacheDirectory) {
 		this(brokerUrl, user, password, clientId, false, messageCacheDirectory);
@@ -90,13 +91,14 @@ public class JmsConnector implements Connector {
 			Logger.error(e);
 		}
 		started.set(true);
-		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-		scheduler.scheduleAtFixedRate(this::checkConnection, 15, 1, TimeUnit.MINUTES);
+		if (scheduler == null) {
+			scheduler = Executors.newScheduledThreadPool(1);
+			scheduler.scheduleAtFixedRate(this::checkConnection, 15, 1, TimeUnit.MINUTES);
+		}
 	}
 
 	@Override
 	public synchronized void sendEvent(String path, Event event) {
-		recoverEventsAndMessages();
 		new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList())).forEach(eventConsumer -> eventConsumer.accept(event));
 		if (!doSendEvent(path, event)) eventOutBox.push(path, event);
 	}
@@ -109,6 +111,12 @@ public class JmsConnector implements Connector {
 		Consumer<javax.jms.Message> eventConsumer = e -> onEventReceived.accept(new Event(MessageDeserializer.deserialize(e)));
 		jmsEventConsumers.put(onEventReceived, eventConsumer.hashCode());
 		consumer.listen(eventConsumer);
+	}
+
+	@Override
+	public void sendMessage(String path, String message) {
+		recoverEventsAndMessages();
+		if (!doSendMessage(path, message)) messageOutBox.push(path, message);
 	}
 
 	@Override
@@ -130,12 +138,6 @@ public class JmsConnector implements Connector {
 			toRemove.forEach(jc::removeListener);
 		}
 		eventConsumers.values().forEach(list -> list.remove(consumer));
-	}
-
-	@Override
-	public void sendMessage(String path, String message) {
-		recoverEventsAndMessages();
-		if (!doSendMessage(path, message)) messageOutBox.push(path, message);
 	}
 
 	@Override
