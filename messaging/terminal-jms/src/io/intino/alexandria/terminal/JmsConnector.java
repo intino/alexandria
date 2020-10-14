@@ -72,11 +72,20 @@ public class JmsConnector implements Connector {
 			Logger.warn("Broker url is null");
 			return;
 		}
+		connect();
+		started.set(true);
+		if (scheduler == null) {
+			scheduler = Executors.newScheduledThreadPool(1);
+			scheduler.scheduleAtFixedRate(this::checkConnection, 15, 1, TimeUnit.MINUTES);
+		}
+	}
+
+	private void connect() {
 		Thread thread = Thread.currentThread();
 		new Thread(() -> {
 			initConnection();
 			thread.interrupt();
-		}, "JmsEventHub start").start();
+		}, "jms-connector.connect").start();
 		try {
 			try {
 				Thread.sleep(5000);
@@ -89,11 +98,6 @@ public class JmsConnector implements Connector {
 			}
 		} catch (JMSException e) {
 			Logger.error(e);
-		}
-		started.set(true);
-		if (scheduler == null) {
-			scheduler = Executors.newScheduledThreadPool(1);
-			scheduler.scheduleAtFixedRate(this::checkConnection, 15, 1, TimeUnit.MINUTES);
 		}
 	}
 
@@ -402,7 +406,7 @@ public class JmsConnector implements Connector {
 		}
 		Logger.debug("Restarting data-hub connection...");
 		stop();
-		start();
+		connect();
 		connected.set(true);
 	}
 
