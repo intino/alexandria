@@ -42,7 +42,6 @@ public class JmsConnector implements Connector {
 	private final boolean transactedSession;
 	private final AtomicBoolean connected = new AtomicBoolean(false);
 	private final AtomicBoolean started = new AtomicBoolean(false);
-	private final AtomicBoolean recoveringEvents = new AtomicBoolean(false);
 	private Connection connection;
 	private Session session;
 	private ScheduledExecutorService scheduler;
@@ -94,7 +93,10 @@ public class JmsConnector implements Connector {
 			if (connection != null && ((ActiveMQConnection) connection).isStarted()) {
 				clearProducers();
 				session = createSession(transactedSession);
-				if (session != null && ((ActiveMQSession) session).isRunning()) connected.set(true);
+				if (session != null && ((ActiveMQSession) session).isRunning()) {
+					connected.set(true);
+					recoverEventsAndMessages();
+				}
 			}
 		} catch (JMSException e) {
 			Logger.error(e);
@@ -359,16 +361,12 @@ public class JmsConnector implements Connector {
 		if (!started.get()) return;
 		if (!eventConsumers.isEmpty() && consumers.isEmpty())
 			for (String path : eventConsumers.keySet()) consumers.put(path, topicConsumer(path));
-		this.recoveringEvents.set(false);
 		recoverEventsAndMessages();
 	}
 
 	private synchronized void recoverEventsAndMessages() {
-		if (recoveringEvents.get()) return;
-		recoveringEvents.set(true);
 		recoverEvents();
 		recoverMessages();
-		recoveringEvents.set(false);
 	}
 
 	private void recoverEvents() {
