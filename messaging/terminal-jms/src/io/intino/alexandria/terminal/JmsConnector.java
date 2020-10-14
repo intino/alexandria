@@ -95,6 +95,7 @@ public class JmsConnector implements Connector {
 
 	@Override
 	public synchronized void sendEvent(String path, Event event) {
+		recoverEventsAndMessages();
 		new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList())).forEach(eventConsumer -> eventConsumer.accept(event));
 		if (!doSendEvent(path, event)) eventOutBox.push(path, event);
 	}
@@ -132,6 +133,7 @@ public class JmsConnector implements Connector {
 
 	@Override
 	public void sendMessage(String path, String message) {
+		recoverEventsAndMessages();
 		if (!doSendMessage(path, message)) messageOutBox.push(path, message);
 	}
 
@@ -272,10 +274,10 @@ public class JmsConnector implements Connector {
 		return session == null || !connected.get() || recoveringEvents.get();
 	}
 
-	private boolean sendMessage(JmsProducer producer, javax.jms.Message payload) {
+	private boolean sendMessage(JmsProducer producer, javax.jms.Message message) {
 		final boolean[] result = {false};
 		try {
-			Thread thread = new Thread(() -> result[0] = producer.produce(payload));
+			Thread thread = new Thread(() -> result[0] = producer.produce(message));
 			thread.start();
 			thread.join(1000);
 			thread.interrupt();
@@ -343,27 +345,18 @@ public class JmsConnector implements Connector {
 		if (!eventConsumers.isEmpty() && consumers.isEmpty())
 			for (String path : eventConsumers.keySet()) consumers.put(path, topicConsumer(path));
 		this.recoveringEvents.set(false);
-		recoverEvents();
-		recoverMessages();
+		recoverEventsAndMessages();
 	}
 
-	private void recoverMessages() {
+	private void recoverEventsAndMessages() {
+		if (recoveringEvents.get()) return;
 		recoveringEvents.set(true);
-		synchronized (messageOutBox) {
-			if (!messageOutBox.isEmpty())
-				while (!messageOutBox.isEmpty()) {
-					Map.Entry<String, String> message = messageOutBox.get();
-					if (message == null) continue;
-					if (doSendMessage(message.getKey(), message.getValue())) messageOutBox.pop();
-					else break;
-				}
-		}
+		recoverEvents();
+		recoverMessages();
 		recoveringEvents.set(false);
 	}
 
 	private void recoverEvents() {
-		if (recoveringEvents.get()) return;
-		recoveringEvents.set(true);
 		synchronized (eventOutBox) {
 			if (!eventOutBox.isEmpty())
 				while (!eventOutBox.isEmpty()) {
@@ -373,7 +366,18 @@ public class JmsConnector implements Connector {
 					else break;
 				}
 		}
-		recoveringEvents.set(false);
+	}
+
+	private void recoverMessages() {
+		synchronized (messageOutBox) {
+			if (!messageOutBox.isEmpty())
+				while (!messageOutBox.isEmpty()) {
+					Map.Entry<String, String> message = messageOutBox.get();
+					if (message == null) continue;
+					if (doSendMessage(message.getKey(), message.getValue())) messageOutBox.pop();
+					else break;
+				}
+		}
 	}
 
 	private void checkConnection() {
