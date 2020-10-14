@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 public interface Datalake {
 	String EventStoreFolder = "events";
 	String SetStoreFolder = "sets";
-	String LedStoreFolder = "ledger";
+	String LedStoreFolder = "transactions";
 
 	EventStore eventStore();
 
