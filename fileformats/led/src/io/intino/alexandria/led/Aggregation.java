@@ -2,9 +2,13 @@ package io.intino.alexandria.led;
 
 import java.util.function.Predicate;
 
-public interface Aggregation<X extends Aggregation, T extends Schema> {
+public interface Aggregation<SELF extends Aggregation<SELF, T>, T extends Schema> {
+
 	String label();
-	X add(T item);
+
+	SELF add(T schema);
+
 	int count();
+
 	Predicate<T> predicate();
 }
