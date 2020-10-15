@@ -9,8 +9,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class FileMetadata {
-
-	private static Map<File, TripleStore> tripleStores = new HashMap<>();
+	private static final Map<File, TripleStore> tripleStores = new HashMap<>();
 
 	public static Stream<String[]> of(FileSet set) {
 		return metadataTripleStoreOf(set).matches(set.name());

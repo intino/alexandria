@@ -13,13 +13,13 @@ import java.util.stream.Stream;
 public interface Datalake {
 	String EventStoreFolder = "events";
 	String SetStoreFolder = "sets";
-	String LedStoreFolder = "transactions";
+	String TransactionStoreFolder = "transactions";
 
 	EventStore eventStore();
 
 	SetStore setStore();
 
-	LedStore ledStore();
+	TransactionStore transactionStore();
 
 	interface EventStore {
 
@@ -113,26 +113,26 @@ public interface Datalake {
 		}
 	}
 
-	interface LedStore {
-		Stream<LedStore.Tank> tanks();
+	interface TransactionStore {
+		Stream<TransactionStore.Tank> tanks();
 
-		LedStore.Tank tank(String name);
+		TransactionStore.Tank tank(String name);
 
 		interface Tank {
 			String name();
 
-			Stream<LedStore.Led> ledger();
+			Stream<Transaction> transactions();
 
-			LedStore.Led first();
+			Transaction first();
 
-			LedStore.Led last();
+			Transaction last();
 
-			LedStore.Led on(Timetag tag);
+			Transaction on(Timetag tag);
 
-			Stream<LedStore.Led> ledger(Timetag from, Timetag to);
+			Stream<Transaction> transactions(Timetag from, Timetag to);
 		}
 
-		interface Led {
+		interface Transaction {
 			Timetag timetag();
 
 			int size();

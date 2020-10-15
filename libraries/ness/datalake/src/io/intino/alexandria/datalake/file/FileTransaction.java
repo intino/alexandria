@@ -12,16 +12,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class FileLed implements Datalake.LedStore.Led {
+public class FileTransaction implements Datalake.TransactionStore.Transaction {
 	private final File file;
 
-	public FileLed(File file) {
+	public FileTransaction(File file) {
 		this.file = file;
 	}
 
 	@Override
 	public Timetag timetag() {
-		return new Timetag(file.getName().replace(FileLedStore.LedExtension, ""));
+		return new Timetag(file.getName().replace(FileTransactionStore.LedExtension, ""));
 	}
 
 	public File file() {

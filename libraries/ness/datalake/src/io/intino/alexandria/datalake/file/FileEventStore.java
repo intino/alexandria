@@ -9,7 +9,7 @@ import static io.intino.alexandria.zim.ZimReader.ZimExtension;
 
 public class FileEventStore implements Datalake.EventStore {
 	public static final String EventExtension = ZimExtension;
-	private File root;
+	private final File root;
 
 	public FileEventStore(File root) {
 		this.root = root;

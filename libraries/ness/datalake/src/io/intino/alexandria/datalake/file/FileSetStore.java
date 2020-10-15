@@ -10,7 +10,6 @@ public class FileSetStore implements Datalake.SetStore {
 	public static final String MetadataFilename = ".metadata";
 	public static final String IndexFileName = ".mapp";
 
-
 	private final File root;
 
 	public FileSetStore(File root) {
@@ -27,6 +26,4 @@ public class FileSetStore implements Datalake.SetStore {
 	public FileSetTank tank(String name) {
 		return new FileSetTank(new File(root, name));
 	}
-
-
 }
