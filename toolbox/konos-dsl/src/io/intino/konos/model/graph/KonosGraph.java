@@ -15,11 +15,13 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 	private static Map<String, List<CatalogComponents.Collection.Mold.Item>> items = new HashMap<>();
 	private static Map<String, List<HelperComponents.Row>> rows = new HashMap<>();
 	private static Map<String, List<CatalogComponents.Table>> tables = new HashMap<>();
+	private static Map<String, List<CatalogComponents.DynamicTable>> dynamicTables = new HashMap<>();
 	private List<CatalogComponents.Collection> collectionDisplays;
 	private List<CatalogComponents.Table> tableDisplays;
 	private List<CatalogComponents.List> listDisplays;
 	private List<CatalogComponents.Magazine> magazines;
 	private List<CatalogComponents.Map> mapDisplays;
+	private List<CatalogComponents.DynamicTable> dynamicTablesDisplays;
 
 	public KonosGraph(Graph graph) {
 		super(graph);
@@ -92,10 +94,22 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		return mapDisplays;
 	}
 
+	public List<CatalogComponents.DynamicTable> dynamicTablesDisplays(String group) {
+		if (dynamicTablesDisplays == null)
+			dynamicTablesDisplays = collectionsDisplays(group).stream().filter(c -> c.i$(CatalogComponents.Magazine.class)).map(c -> c.a$(CatalogComponents.DynamicTable.class)).collect(toList());
+		return dynamicTablesDisplays;
+	}
+
 	public static List<CatalogComponents.Table> tablesDisplays(KonosGraph graph, String group) {
 		if (!tables.containsKey(group))
 			tables.put(group, graph.core$().find(CatalogComponents.Table.class));
 		return tables.get(group);
+	}
+
+	public static List<CatalogComponents.DynamicTable> dynamicTablesDisplays(KonosGraph graph, String group) {
+		if (!dynamicTables.containsKey(group))
+			dynamicTables.put(group, graph.core$().find(CatalogComponents.DynamicTable.class));
+		return dynamicTables.get(group);
 	}
 
 	public static Template templateFor(Service.UI.Resource resource) {
@@ -146,9 +160,10 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 
 	private void createPrivateComponents(String group) {
 		tablesDisplays(this, group).forEach(this::createUiTableRow);
+		dynamicTablesDisplays(this, group).forEach(this::createUiTableRow);
 	}
 
-	private void createUiTableRow(CatalogComponents.Table element) {
+	private void createUiTableRow(CatalogComponents.Collection element) {
 		List<CatalogComponents.Collection.Mold.Item> itemList = element.moldList().stream().map(CatalogComponents.Collection.Mold::item).collect(toList());
 		String name = firstUpperCase(element.name$()) + "Row";
 		HelperComponents privateComponents = helperComponentsList().size() <= 0 ? create(element.core$().stash()).helperComponents() : helperComponents(0);

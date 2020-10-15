@@ -5,7 +5,7 @@ import io.intino.alexandria.schemas.LocationCenter;
 import io.intino.alexandria.schemas.LocationSetup;
 import io.intino.alexandria.schemas.LocationZoomRange;
 import io.intino.alexandria.ui.Asset;
-import io.intino.alexandria.ui.displays.components.geo.PlaceMarkBuilder;
+import io.intino.alexandria.ui.displays.components.collection.builders.PlaceMarkBuilder;
 import io.intino.alexandria.ui.displays.notifiers.BaseLocationNotifier;
 import io.intino.alexandria.ui.model.Geometry;
 

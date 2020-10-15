@@ -19,7 +19,7 @@ public class Model {
 
 	public enum WidgetType {
 		Text, Number, Image, File, Date, Location,
-		Chart, Block, List, Table, Task, OpenPage, OpenBlock, Export,
+		Chart, Block, List, Table, DynamicTable, Task, OpenPage, OpenBlock, Export,
 		Download, DownloadSelection,
 		Grouping, Sorting, SearchBox, Map, Slider, Selector,
 		Dashboard, Dialog, Divider, User, Stepper, Frame;
@@ -52,6 +52,7 @@ public class Model {
 		map.put(WidgetType.Slider, new SliderWidget());
 		map.put(WidgetType.Selector, new SelectorWidget());
 		map.put(WidgetType.Table, new TableWidget());
+		map.put(WidgetType.DynamicTable, new DynamicTableWidget());
 		map.put(WidgetType.Task, new ActionWidget());
 		map.put(WidgetType.OpenPage, new OpenPageWidget());
 		map.put(WidgetType.OpenBlock, new OpenBlockWidget());

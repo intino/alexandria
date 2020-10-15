@@ -77,3 +77,17 @@ Template(layout=Vertical, spacing=DP8) groupingExamplesMold
 						=========
 						Grouping(collections\=empty) country as Labeled("country") ComboBox<br/>
 						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=49%, height=100%)
+			Text(format=h6, value="AttachedTo facet with many options")
+			Block(spacing=DP8, format=filledNoAir)
+				Block(format=containerAirMedium, spacing=DP24) as Relative(width=100%)
+					Grouping(format=whiteBackground,collections=empty,pageSize=6) country3 as Labeled("country")
+					Grouping(format=whiteBackground,collections=empty,pageSize=6) city as Labeled("city") AttachedTo(grouping=country3)
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Grouping(collections\=empty,pageSize\=6) country as Labeled("country")
+						Grouping(collections\=empty,pageSize\=6) city as Labeled("city") AttachedTo(grouping\=country)
+						=========

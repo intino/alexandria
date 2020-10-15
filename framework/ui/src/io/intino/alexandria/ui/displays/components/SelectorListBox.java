@@ -17,7 +17,7 @@ public class SelectorListBox<DN extends SelectorListBoxNotifier, B extends Box> 
 	@Override
 	public void didMount() {
 		super.didMount();
-		updateSelection(selection);
+		selection(selection);
 	}
 
 	@SuppressWarnings("unchecked")

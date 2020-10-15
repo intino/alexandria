@@ -1,5 +1,6 @@
 dsl Konos
 
+use DynamicTable
 use Frame
 use Stepper
 use Selector
@@ -46,6 +47,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block blockExamples as Conditional > TemplateStamp(template=blockExamplesMold)
 			Block listExamples as Conditional > TemplateStamp(template=listExamplesMold)
 			Block tableExamples as Conditional > TemplateStamp(template=tableExamplesMold)
+			Block dynamicTableExamples as Conditional > TemplateStamp(template=dynamicTableExamplesMold)
 			Block mapExamples as Conditional > TemplateStamp(template=mapExamplesMold)
 			Block downloadExamples as Conditional > TemplateStamp(template=downloadExamplesMold)
 			Block downloadSelectionExamples as Conditional > TemplateStamp(template=downloadSelectionExamplesMold)

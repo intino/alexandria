@@ -1,8 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.ui.displays.events.SelectionEvent;
-import io.intino.alexandria.ui.displays.events.SelectionListener;
+import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.notifiers.BaseGroupingNotifier;
 import io.intino.alexandria.ui.model.datasource.Group;
 
@@ -17,15 +16,31 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	private List<Collection> collections = new ArrayList<>();
 	private List<String> selection;
 	private SelectionListener selectionListener;
+	private SelectionListener attachedListener;
 	private List<Group> groups = new ArrayList<>();
 
 	public BaseGrouping(B box) {
         super(box);
     }
 
-    public BaseGrouping onSelect(SelectionListener listener) {
+	@Override
+	public void didMount() {
+		super.didMount();
+		notifier.refreshVisibility(isVisible());
+	}
+
+	public List<String> selection() {
+		return selection;
+	}
+
+	public BaseGrouping onSelect(SelectionListener listener) {
     	this.selectionListener = listener;
     	return this;
+	}
+
+	public BaseGrouping onAttachedChanges(SelectionListener listener) {
+		this.attachedListener = listener;
+		return this;
 	}
 
 	public BaseGrouping groups(List<Group> groups) {
@@ -47,6 +62,11 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 			if (collection.ready()) loadGroups();
 			else collection.onReady((event) -> loadGroups());
 		}
+		return this;
+	}
+
+	public BaseGrouping<DN, B> attachTo(Grouping grouping) {
+		grouping.onSelect(e -> notifyAttachedChanges(e.selection()));
 		return this;
 	}
 
@@ -81,8 +101,11 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 
 	private void notifySelection() {
 		notifier.refreshSelection(selection);
-		if (selectionListener == null) return;
-		selectionListener.accept(new SelectionEvent(this, selection));
+		if (selectionListener != null) selectionListener.accept(new SelectionEvent(this, selection));
+	}
+
+	private void notifyAttachedChanges(List<String> selection) {
+		this.attachedListener.accept(new SelectionEvent(this, selection));
 	}
 
 }

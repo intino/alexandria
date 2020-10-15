@@ -13,6 +13,12 @@ public class BaseText<DN extends BaseTextNotifier, B extends Box> extends Abstra
         super(box);
     }
 
+    @Override
+    public void didMount() {
+        super.didMount();
+        notifier.refresh(value);
+    }
+
     public String value() {
         return value;
     }

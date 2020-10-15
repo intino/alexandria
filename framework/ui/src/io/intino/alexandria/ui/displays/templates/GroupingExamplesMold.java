@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.ui.AlexandriaUiBox;
+import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.events.AddItemEvent;
 import io.intino.alexandria.ui.displays.items.Grouping1Mold;
 import io.intino.alexandria.ui.displays.items.Grouping2Mold;
@@ -27,6 +28,9 @@ public class GroupingExamplesMold extends AbstractGroupingExamplesMold<Alexandri
         list2.onAddItem(this::onAddItem);
         country1.groups(countries());
         country2.groups(countries());
+        country3.groups(countries());
+        city.groups(Arrays.asList(new Group().label("City1"), new Group().label("City2")));
+        city.onAttachedChanges(e -> notifyUser("City grouping: Country changes its value", UserMessage.Type.Info));
     }
 
     private void onAddItem(AddItemEvent event) {

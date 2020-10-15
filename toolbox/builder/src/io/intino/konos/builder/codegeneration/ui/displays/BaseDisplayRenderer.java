@@ -81,9 +81,11 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (element.i$(Dialog.class)) result.add(Dialog.class.getSimpleName());
 		if (element.i$(Template.class)) result.add(Template.class.getSimpleName());
 		if (element.i$(CatalogComponents.List.class) || element.i$(CatalogComponents.Magazine.class) ||
-			element.i$(CatalogComponents.Table.class) || element.i$(CatalogComponents.Map.class))
+			element.i$(CatalogComponents.Table.class) || element.i$(CatalogComponents.Map.class) ||
+			element.i$(CatalogComponents.DynamicTable.class))
 			result.add("collection");
 		if (element.i$(CatalogComponents.Table.class)) result.add(CatalogComponents.Table.class.getSimpleName());
+		if (element.i$(CatalogComponents.DynamicTable.class)) result.add(CatalogComponents.DynamicTable.class.getSimpleName());
 		if (element.i$(Collection.Mold.Item.class)) result.add(Collection.Mold.Item.class.getSimpleName());
 		if (element.i$(HelperComponents.Row.class)) result.add(HelperComponents.Row.class.getSimpleName());
 		addGeneric(element, result);
@@ -121,6 +123,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (graph.listsDisplays(context.graphName()).size() > 0) frame.add("listsImport", buildBaseFrame().add("listsImport"));
 		if (graph.magazinesDisplays(context.graphName()).size() > 0) frame.add("magazinesImport", buildBaseFrame().add("magazinesImport"));
 		if (graph.mapsDisplays(context.graphName()).size() > 0) frame.add("mapsImport", buildBaseFrame().add("mapsImport"));
+		if (graph.dynamicTablesDisplays(context.graphName()).size() > 0) frame.add("dynamicTablesImport", buildBaseFrame().add("dynamicTablesImport"));
 		frame.add("notifierImport", notifierImportFrame(element));
 		if (!ElementHelper.isRoot(componentOf(element)) || (element.isAccessible() && accessible))
 			frame.add("displayRegistration", displayRegistrationFrame(accessible));

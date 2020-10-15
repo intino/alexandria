@@ -199,6 +199,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		FrameBuilder result = new FrameBuilder("extends");
 		if (element.i$(CatalogComponents.Collection.class)) result.add("collection");
 		if (element.i$(CatalogComponents.Table.class)) result.add("table");
+		if (element.i$(CatalogComponents.DynamicTable.class)) result.add("dynamictable");
 		result.add("name", nameOf(element));
 
 		if (!addSpecificTypes(result)) result.add("type", type());

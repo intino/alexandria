@@ -110,7 +110,7 @@ const CollectionBehavior = (collection) => {
     self.forceNotifyItemsRendered = (items) => {
         if (self.collection.forceTimeout != null) window.clearTimeout(self.collection.forceTimeout);
         self.collection.forceTimeout = window.setTimeout(() => {
-            if (self.collection.itemsRenderedCalled) return;
+            if (self.collection.itemsWindow == null || self.collection.itemsRenderedCalled) return;
             self.refreshItemsRendered(items, null, self.collection.itemsWindow);
             self.collection.itemsRenderedCalled = true;
         }, 50);

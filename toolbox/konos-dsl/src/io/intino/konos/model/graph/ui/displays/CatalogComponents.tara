@@ -40,12 +40,16 @@ Concept CatalogComponents
             Aspect Kml
             	var string layer
             Aspect Heatmap
+		sub DynamicTable
 
 	Concept:Named Grouping extends Component
 		var Collection[] collections
 		var integer pageSize = 5
 		Aspect ComboBox
         	var string placeholder = ""
+        Aspect AttachedTo
+        	var Grouping grouping
+        	var string value = empty
 
 	Concept:Named Sorting extends Component
 		var Collection[] collections

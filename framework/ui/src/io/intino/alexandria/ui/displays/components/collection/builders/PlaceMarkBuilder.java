@@ -1,4 +1,4 @@
-package io.intino.alexandria.ui.displays.components.geo;
+package io.intino.alexandria.ui.displays.components.collection.builders;
 
 import io.intino.alexandria.schemas.Geometry;
 import io.intino.alexandria.schemas.Path;

@@ -3,6 +3,7 @@ package io.intino.alexandria.ui.displays.templates;
 import io.intino.alexandria.schemas.Widget;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.EventsDisplay;
+import io.intino.alexandria.ui.displays.components.DynamicTable;
 import io.intino.alexandria.ui.documentation.model.ActionableWidget;
 import io.intino.alexandria.ui.documentation.model.collection.*;
 import io.intino.alexandria.ui.documentation.model.data.*;
@@ -51,6 +52,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         blockExamples.visible(widget instanceof BlockWidget);
         listExamples.visible(widget instanceof ListWidget);
         tableExamples.visible(widget instanceof TableWidget);
+        dynamicTableExamples.visible(widget instanceof DynamicTableWidget);
         mapExamples.visible(widget instanceof MapWidget);
         exportExamples.visible(widget instanceof ExportWidget);
         downloadExamples.visible(widget instanceof DownloadWidget);

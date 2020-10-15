@@ -180,6 +180,8 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			components.addAll(passiveView.a$(OtherComponents.User.class).componentList());
 		if (passiveView.i$(CatalogComponents.Table.class))
 			components.addAll(passiveView.a$(CatalogComponents.Table.class).moldList().stream().filter(m -> m.heading() != null).map(CatalogComponents.Collection.Mold::heading).collect(toList()));
+		if (passiveView.i$(CatalogComponents.DynamicTable.class))
+			components.addAll(passiveView.a$(CatalogComponents.DynamicTable.class).moldList().stream().filter(m -> m.heading() != null).map(CatalogComponents.Collection.Mold::heading).collect(toList()));
 		if (passiveView.i$(CatalogComponents.Collection.Mold.Heading.class))
 			components.addAll(passiveView.a$(CatalogComponents.Collection.Mold.Heading.class).componentList());
 		if (passiveView.i$(CatalogComponents.Collection.Mold.Item.class))
@@ -453,7 +455,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	private void registerCollectionImports(Set<String> imported, Component component, FrameBuilder builder) {
-		if (component.i$(CatalogComponents.Table.class))
+		if (component.i$(CatalogComponents.Table.class) || component.i$(CatalogComponents.DynamicTable.class))
 			addComponentsImports(imported, component.graph().rowsDisplays(context.graphName()).stream().map(r -> r.a$(Component.class)).collect(toList()), builder);
 		else
 			addComponentsImports(imported, component.a$(CatalogComponents.Collection.class).moldList().stream().map(CatalogComponents.Collection.Mold::item).collect(toList()), builder);

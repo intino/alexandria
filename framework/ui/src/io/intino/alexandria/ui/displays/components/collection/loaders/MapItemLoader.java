@@ -23,7 +23,7 @@ public class MapItemLoader<Item> extends ItemLoader<MapDatasource<Item>, Item> {
 
 	public List<PlaceMark<Item>> placeMarks() {
 		if (source instanceof TemporalMapDatasource)
-			return timetag != null ? ((TemporalMapDatasource)source).placeMarks(timetag, condition, filters, boundingBox) : emptyList();
+			return timetag != null ? ((TemporalMapDatasource<Item>)source).placeMarks(timetag, condition, filters, boundingBox) : emptyList();
 		return source.placeMarks(condition, filters, boundingBox);
 	}
 

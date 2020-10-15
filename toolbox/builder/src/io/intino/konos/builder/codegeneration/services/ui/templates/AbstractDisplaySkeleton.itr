@@ -6,6 +6,7 @@ def type(display & accessible)
 	$listsImport
 	$magazinesImport
 	$mapsImport
+	$dynamicTablesImport
 	$blocksImport
 	$itemsImport
     import $package+validPackage.ui.displays.notifiers.$name+SnakeCaseToCamelCase+FirstUpperCase~ProxyNotifier;
@@ -41,6 +42,7 @@ def type(display)
 	$listsImport
 	$magazinesImport
 	$mapsImport
+	$dynamicTablesImport
 	$blocksImport
 	$itemsImport
 	$rowsImport
@@ -70,6 +72,10 @@ end
 
 def type(notifierImport & table)
     import io.intino.alexandria.ui.displays.notifiers.TableNotifier;
+end
+
+def type(notifierImport & dynamictable)
+    import io.intino.alexandria.ui.displays.notifiers.DynamicTableNotifier;
 end
 
 def type(notifierImport & item)
@@ -105,6 +111,10 @@ def type(displayExtends & template)
 end
 
 def type(displayExtends & table)
+	extends io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<$abstractBox+type, $name+firstUpperCase~Row, $itemClass>
+end
+
+def type(displayExtends & dynamictable)
 	extends io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<$abstractBox+type, $name+firstUpperCase~Row, $itemClass>
 end
 
@@ -146,6 +156,10 @@ end
 
 def type(mapsImport)
 	import $package+validPackage.ui.displays.maps.*;
+end
+
+def type(dynamicTablesImport)
+	import $package+validPackage.ui.displays.dynamictables.*;
 end
 
 def type(blocksImport)

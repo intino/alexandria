@@ -20,7 +20,7 @@ public class SelectorMenu<DN extends SelectorMenuNotifier, B extends Box> extend
 	@Override
 	public void didMount() {
 		super.didMount();
-		select(selected);
+		selection(selected);
 	}
 
 	@SuppressWarnings("unchecked")

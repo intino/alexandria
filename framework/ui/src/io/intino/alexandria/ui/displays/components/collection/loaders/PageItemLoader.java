@@ -16,6 +16,10 @@ public class PageItemLoader<DS extends Datasource<Item>, Item> extends ItemLoade
 		this.pageSize = pageSize;
 	}
 
+	public int pageSize() {
+		return pageSize;
+	}
+
 	public PageItemLoader pageSize(int size) {
 		this.pageSize = size;
 		return this;

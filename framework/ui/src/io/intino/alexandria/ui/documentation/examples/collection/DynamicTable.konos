@@ -1,0 +1,29 @@
+dsl Konos
+
+use Collection
+use Theme
+
+Template(layout=Vertical, spacing=DP8) dynamicTableExamplesMold
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=100%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(layout=Vertical Flexible, spacing=DP8, format=filledNoAir)
+				DynamicTable(itemClass="io.intino.alexandria.ui.documentation.Person") dynamicTable1
+					Mold
+						Heading dynFirstNameHeading > Text(value="first name")
+						Item(height=60px,width=30%) dynFirstNameItem > Text firstName
+					Mold
+						Heading dynLastNameHeading > Text(value="last name")
+						Item(height=60px,width=70%) dynLastNameItem > Text lastName
+			Block > Text as Code(language=Html)
+					value
+						=========
+						DynamicTable(itemClass\="io.intino.alexandria.ui.documentation.Person") table<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Heading dynFirstNameHeading > Text(value\="first name")<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item(height\=60px,width\=30%) dynFirstNameItem > Text firstName<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Heading dynLastNameHeading > Text(value\="last name")<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item(height\=60px,width\=70%) dynLastNameItem > Text lastName<br/>
+						=========

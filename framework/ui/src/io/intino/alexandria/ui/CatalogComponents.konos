@@ -19,6 +19,11 @@ Component pageCollection as ExtensionOf(collection)
 	Request notifyItemsRendered as Object(CollectionItemsRenderedInfo)
 	Request loadMoreItems as Object(CollectionMoreItems)
 
+Component dynamicTable as ExtensionOf(pageCollection)
+	Notification setup as Object(DynamicTableSetup)
+	Notification sections as Object(DynamicTableSection) List
+	Request showItems as Object(DynamicTableShowItemsParams)
+
 Component map as ExtensionOf(collection)
 	Notification setup as Object(MapCollectionSetup)
 	Notification placeMarks as Object(PlaceMark) List

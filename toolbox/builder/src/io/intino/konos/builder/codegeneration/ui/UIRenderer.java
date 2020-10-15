@@ -68,6 +68,7 @@ public abstract class UIRenderer extends Renderer {
 			   type.equalsIgnoreCase("component") ||
 			   type.equalsIgnoreCase("template") ||
 			   type.equalsIgnoreCase("table") ||
+			   type.equalsIgnoreCase("dynamictable") ||
 			   type.equalsIgnoreCase("list") ||
 			   type.equalsIgnoreCase("map") ||
 			   type.equalsIgnoreCase("magazine") ||
@@ -86,6 +87,7 @@ public abstract class UIRenderer extends Renderer {
 		if (target == Target.Owner) return true;
 		return !element.i$(io.intino.konos.model.graph.Template.class) &&
 				!element.i$(CatalogComponents.Table.class) &&
+				!element.i$(CatalogComponents.DynamicTable.class) &&
 				!element.i$(CatalogComponents.Collection.Mold.Item.class) &&
 				!element.i$(HelperComponents.Row.class);
 	}
@@ -93,6 +95,7 @@ public abstract class UIRenderer extends Renderer {
 	protected boolean hasConcreteNotifier(PassiveView element) {
 		return !element.i$(CatalogComponents.Collection.Mold.Item.class) &&
 				!element.i$(CatalogComponents.Table.class) &&
+				!element.i$(CatalogComponents.DynamicTable.class) &&
 				!element.i$(HelperComponents.Row.class) &&
 				!element.i$(io.intino.konos.model.graph.Template.class);
 	}
@@ -100,6 +103,7 @@ public abstract class UIRenderer extends Renderer {
 	protected boolean hasConcreteRequester(PassiveView element) {
 		return !element.i$(CatalogComponents.Collection.Mold.Item.class) &&
 				!element.i$(CatalogComponents.Table.class) &&
+				!element.i$(CatalogComponents.DynamicTable.class) &&
 				!element.i$(HelperComponents.Row.class) &&
 				!element.i$(io.intino.konos.model.graph.Template.class);
 	}
@@ -117,6 +121,7 @@ public abstract class UIRenderer extends Renderer {
 		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) return "Item";
 		if (element.i$(HelperComponents.Row.class)) return "Row";
 		if (element.i$(CatalogComponents.Table.class)) return "Table";
+		if (element.i$(CatalogComponents.DynamicTable.class)) return "DynamicTable";
 		return firstUpperCase(element.name$());
 	}
 
@@ -125,6 +130,7 @@ public abstract class UIRenderer extends Renderer {
 		if (display.i$(CatalogComponents.Collection.Mold.Item.class)) return "io.intino.alexandria.ui.displays.requesters.Item";
 		if (display.i$(HelperComponents.Row.class)) return "io.intino.alexandria.ui.displays.requesters.Row";
 		if (display.i$(CatalogComponents.Table.class)) return "io.intino.alexandria.ui.displays.requesters.Table";
+		if (display.i$(CatalogComponents.DynamicTable.class)) return "io.intino.alexandria.ui.displays.requesters.DynamicTable";
 		return firstUpperCase(nameOf(display));
 	}
 
@@ -135,6 +141,7 @@ public abstract class UIRenderer extends Renderer {
 		if (element.i$(HelperComponents.Row.class)) result.add("row");
 		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) result.add("item");
 		if (element.i$(CatalogComponents.Table.class)) result.add("table");
+		if (element.i$(CatalogComponents.DynamicTable.class)) result.add("dynamictable");
 		return result;
 	}
 

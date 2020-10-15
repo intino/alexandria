@@ -136,7 +136,7 @@ export default class BaseSlider extends AbstractBaseSlider {
 					{this.renderAnimationControls()}
 					{!this.toolbarOnly() && this.renderValue()}
 				</div>
-				{!this.toolbarOnly() && <div className="layout horizontal">{this.renderOrdinals()}</div>}
+				{<div className="layout horizontal">{this.renderOrdinals()}</div>}
 			</div>
 		);
 	};

@@ -23,7 +23,7 @@ public class SelectorToggleBox<DN extends SelectorToggleBoxNotifier, B extends B
 	@Override
 	public void didMount() {
 		super.didMount();
-		updateSelection(selection);
+		selection(selection);
 	}
 
 	@SuppressWarnings("unchecked")

@@ -20,7 +20,7 @@ public class SelectorComboBox<DN extends SelectorComboBoxNotifier, B extends Box
 	@Override
 	public void didMount() {
 		super.didMount();
-		updateSelection(selection);
+		selection(selection);
 	}
 
 	@SuppressWarnings("unchecked")

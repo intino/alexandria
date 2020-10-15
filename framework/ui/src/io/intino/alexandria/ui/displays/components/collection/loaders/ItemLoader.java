@@ -2,12 +2,9 @@ package io.intino.alexandria.ui.displays.components.collection.loaders;
 
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.ui.model.Datasource;
-import io.intino.alexandria.ui.model.datasource.Filter;
+import io.intino.alexandria.ui.model.datasource.*;
 import io.intino.alexandria.ui.model.datasource.filters.RangeFilter;
 import io.intino.alexandria.ui.model.datasource.filters.GroupFilter;
-import io.intino.alexandria.ui.model.datasource.MapDatasource;
-import io.intino.alexandria.ui.model.datasource.MemoryDatasource;
-import io.intino.alexandria.ui.model.datasource.PageDatasource;
 import io.intino.alexandria.ui.model.datasource.temporal.TemporalDatasource;
 import io.intino.alexandria.ui.model.datasource.temporal.TemporalPageDatasource;
 
@@ -118,16 +115,7 @@ public class ItemLoader<DS extends Datasource<Item>, Item> {
 		return itemCount;
 	}
 
-	private Filter filter(String grouping) {
-		return filters.stream().filter(f -> f.grouping().equalsIgnoreCase(grouping)).findFirst().orElse(null);
-	}
-
-	private void remove(String grouping) {
-		Filter filter = filter(grouping);
-		if (filter != null) filters.remove(filter);
-	}
-
-	private long calculateItemCount(String condition) {
+	protected long calculateItemCount(String condition) {
 		if (source instanceof TemporalDatasource)
 			return timetag != null ? ((TemporalDatasource) source).itemCount(timetag, condition, filters) : 0;
 		else if (source instanceof TemporalPageDatasource)
@@ -136,6 +124,15 @@ public class ItemLoader<DS extends Datasource<Item>, Item> {
 		else if (source instanceof MapDatasource) return ((MapDatasource) source).placeMarkCount(condition, filters);
 		else if (source instanceof PageDatasource) return ((PageDatasource) source).itemCount(condition, filters);
 		return 0;
+	}
+
+	private Filter filter(String grouping) {
+		return filters.stream().filter(f -> f.grouping().equalsIgnoreCase(grouping)).findFirst().orElse(null);
+	}
+
+	private void remove(String grouping) {
+		Filter filter = filter(grouping);
+		if (filter != null) filters.remove(filter);
 	}
 
 }

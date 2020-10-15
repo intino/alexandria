@@ -1,5 +1,27 @@
 dsl Konos
 
+Schema DynamicTableSection
+	Attribute label as Text
+	Attribute color as Text
+	Attribute sections as Object(DynamicTableSection) List
+	Attribute columns as Object(DynamicTableColumn) List
+	Attribute rows as Object(DynamicTableRow) List
+
+Schema DynamicTableColumn
+	Attribute label as Text
+
+Schema DynamicTableRow
+	Attribute label as Text
+	Attribute cells as Object(DynamicTableCell) List
+
+Schema DynamicTableCell
+	Attribute label as Text
+	Attribute value as Real
+
+Schema DynamicTableShowItemsParams
+	Attribute section as Text
+	Attribute row as Text
+
 Schema PlaceMark
 	Attribute location as Object(Geometry)
 	Attribute label as Text
@@ -25,6 +47,9 @@ Schema CollectionSetup
 Schema MapCollectionSetup as ExtensionOf(CollectionSetup)
 	Attribute kmlLayer as Text
 	Attribute icon as Text
+
+Schema DynamicTableSetup as ExtensionOf(CollectionSetup)
+	Attribute pageSize as Integer
 
 Schema PageCollectionSetup as ExtensionOf(CollectionSetup)
 	Attribute pageSize as Integer

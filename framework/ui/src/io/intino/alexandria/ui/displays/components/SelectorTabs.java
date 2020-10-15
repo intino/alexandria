@@ -19,7 +19,7 @@ public class SelectorTabs<DN extends SelectorTabsNotifier, B extends Box> extend
 	@Override
 	public void didMount() {
 		super.didMount();
-		select(selected);
+		selection(selected);
 	}
 
 	@SuppressWarnings("unchecked")

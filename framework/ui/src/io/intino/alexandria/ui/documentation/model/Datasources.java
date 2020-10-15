@@ -7,6 +7,9 @@ import io.intino.alexandria.ui.model.Geometry;
 import io.intino.alexandria.ui.model.PlaceMark;
 import io.intino.alexandria.ui.model.datasource.*;
 import io.intino.alexandria.ui.model.datasource.filters.GroupFilter;
+import io.intino.alexandria.ui.model.dynamictable.Column;
+import io.intino.alexandria.ui.model.dynamictable.Row;
+import io.intino.alexandria.ui.model.dynamictable.Section;
 import io.intino.alexandria.ui.model.locations.Point;
 import io.intino.alexandria.ui.model.locations.Polygon;
 import io.intino.alexandria.ui.model.locations.Polyline;
@@ -19,7 +22,7 @@ import static io.intino.alexandria.ui.displays.components.Map.Type.Cluster;
 import static io.intino.alexandria.ui.displays.components.Map.Type.Heatmap;
 import static io.intino.alexandria.ui.documentation.Person.Gender.Female;
 import static io.intino.alexandria.ui.documentation.Person.Gender.Male;
-import static java.util.Collections.emptyList;
+import static java.util.Collections.*;
 import static java.util.stream.Collectors.toList;
 
 public class Datasources {
@@ -68,6 +71,72 @@ public class Datasources {
 
 	public static MapDatasource<Item> heatDatasource() {
 		return locatedItemDatasource(itemPopulation(), Heatmap);
+	}
+
+	public static DynamicTableDatasource<Person> dynamicTablePersonDatasource() {
+		return new DynamicTableDatasource<Person>() {
+			@Override
+			public List<Section> sections(String dimension, String drill, String condition, List<Filter> filters) {
+				if (dimension == null) return emptyList();
+				return Arrays.asList(residencial(), comercial());
+			}
+
+			@Override
+			public List<Person> items(int start, int count, Section section, String row, String condition, List<Filter> filters, List<String> sortings) {
+				return personPopulation().subList(start, start+count);
+			}
+
+			@Override
+			public long itemCount(Section section, String row, String condition, List<Filter> filters) {
+				return personPopulation().size();
+			}
+
+			@Override
+			public List<Group> groups(String key) {
+				return null;
+			}
+
+			private Section residencial() {
+				Section residencial = new Section("Residencial", "grey");
+				Section cartera = residencial.add("Cartera", "#115293");
+				cartera.columns("clientes", "adeudos", "kwh", "importe", "iva", "dap");
+				cartera.add("DA", 1, 11, 12, 12, 13, 1);
+				cartera.add("DB", 11, 1, 2, 4, 5, 2);
+				Section carteraVencida = residencial.add("Cartera Vencida", "#720427");
+				carteraVencida.columns("clientes", "adeudos", "importe");
+				carteraVencida.add("DA", 21212, 1212, 121);
+				carteraVencida.add("DB", 192, 823, 12);
+				Section carteraRezago = residencial.add("Cartera Rezago", "#896908");
+				carteraRezago.columns("clientes", "adeudos", "importe");
+				carteraRezago.add("DA", 128, 23, 12);
+				carteraRezago.add("DB", 339, 232, 2);
+				return residencial;
+			}
+
+			private Section comercial() {
+				Section residencial = new Section("Comercial", "grey");
+				Section cartera = new Section("Cartera", "#115293");
+				residencial.add(cartera);
+				cartera.columns("clientes", "adeudos", "kwh", "importe", "iva", "dap");
+				cartera.add("DA", 1, 11, 12, 12, 13, 1);
+				cartera.add("DB", 11, 1, 2, 4, 5, 2);
+				Section carteraVencida = new Section("Cartera Vencida", "#720427");
+				residencial.add(carteraVencida);
+				carteraVencida.columns("clientes", "adeudos", "importe");
+				carteraVencida.add("DA", 21212, 1212, 121);
+				carteraVencida.add("DB", 192, 823, 12);
+				Section carteraRezago = new Section("Cartera Rezago", "#896908");
+				residencial.add(carteraRezago);
+				carteraRezago.columns("clientes", "adeudos", "importe");
+				carteraRezago.add("DA", 128, 23, 12);
+				carteraRezago.add("DB", 339, 232, 2);
+				return residencial;
+			}
+
+			private Column column(String name, double value) {
+				return new Column(name, value);
+			}
+		};
 	}
 
 	public static PageDatasource<Person> personDatasource() {

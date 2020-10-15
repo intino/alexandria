@@ -121,6 +121,17 @@ def type(method & collection & table)
 	}
 end
 
+def type(method & collection & dynamictable)
+	[$selectionMethod]
+
+	public $name+firstUpperCase~Row create([$itemClass item]) {
+		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row([($concreteBox+firstUpperCase~Box)]box());
+		row.id(java.util.UUID.randomUUID().toString());
+		[row.item($itemVariable);]
+		return row;
+	}
+end
+
 def type(method & collection)
 	$selectionMethod
 	[$item+addMethod...[$NL$NL]]
@@ -252,6 +263,10 @@ def type(extends & collection & table)
 	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<$abstractBox+type, io.intino.alexandria.ui.displays.components.Row, $itemClass>
 end
 
+def type(extends & collection & dynamictable)
+	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<$abstractBox+type, io.intino.alexandria.ui.displays.components.Row, $itemClass>
+end
+
 def type(extends & collection)
 	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<$abstractBox+type, $componentType, $itemClass>
 end
@@ -355,6 +370,7 @@ end
 def type(component & child) trigger(conditionalReferences)
 	if ($name == null) $name = [$ancestorsNotMe...[.].]$name;
 	[$binding]
+	[$attachedTo]
 end
 
 def type(component & child & collection & embedded) trigger(initializations)
@@ -362,11 +378,13 @@ end
 
 def type(component & child & collection) trigger(initializations)
 	[$binding]
+	[$attachedTo]
 	[$heading+initializations...[$NL]]
 end
 
 def type(component & child) trigger(initializations)
 	[$binding]
+	[$attachedTo]
 	[$component+initializations...[$NL]]
 end
 
@@ -472,6 +490,10 @@ end
 
 def type(binding)
 	if ($name != null) $name.bindTo($selector, "$option");
+end
+
+def type(attachedTo & grouping)
+	if ($name != null) $name.attachTo($grouping);
 end
 
 def type(implements & selectable)
