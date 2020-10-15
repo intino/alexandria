@@ -2,16 +2,16 @@ package io.intino.alexandria.datalake.file;
 
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
-import io.intino.alexandria.datalake.Datalake.LedgerStore;
+import io.intino.alexandria.datalake.Datalake.LedStore;
 
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static io.intino.alexandria.datalake.file.FileLedgerStore.LedExtension;
+import static io.intino.alexandria.datalake.file.FileLedStore.LedExtension;
 
-public class FileLedTank implements LedgerStore.Tank {
+public class FileLedTank implements LedStore.Tank {
 	private final File root;
 
 	public FileLedTank(File root) {
@@ -24,27 +24,27 @@ public class FileLedTank implements LedgerStore.Tank {
 	}
 
 	@Override
-	public LedgerStore.Led first() {
+	public LedStore.Led first() {
 		return ledger().findFirst().orElse(currentLed());
 	}
 
 	@Override
-	public LedgerStore.Led last() {
+	public LedStore.Led last() {
 		return FS.foldersIn(root, FS.Sort.Reversed).map(FileLed::new).findFirst().orElse(currentLed());
 	}
 
 	@Override
-	public Stream<LedgerStore.Led> ledger() {
+	public Stream<LedStore.Led> ledger() {
 		return FS.foldersIn(root).map(FileLed::new);
 	}
 
 
 	@Override
-	public Stream<LedgerStore.Led> ledger(Timetag from, Timetag to) {
+	public Stream<LedStore.Led> ledger(Timetag from, Timetag to) {
 		return StreamSupport.stream(from.iterateTo(to).spliterator(), false).map(this::on);
 	}
 
-	public LedgerStore.Led on(Timetag tag) {
+	public LedStore.Led on(Timetag tag) {
 		return new FileLed(new File(root, tag.value() + LedExtension));
 	}
 

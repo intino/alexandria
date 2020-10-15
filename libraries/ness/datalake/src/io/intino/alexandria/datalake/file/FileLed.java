@@ -12,7 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class FileLed implements Datalake.LedgerStore.Led {
+public class FileLed implements Datalake.LedStore.Led {
 	private final File file;
 
 	public FileLed(File file) {
@@ -21,7 +21,7 @@ public class FileLed implements Datalake.LedgerStore.Led {
 
 	@Override
 	public Timetag timetag() {
-		return new Timetag(file.getName().replace(FileLedgerStore.LedExtension, ""));
+		return new Timetag(file.getName().replace(FileLedStore.LedExtension, ""));
 	}
 
 	public File file() {

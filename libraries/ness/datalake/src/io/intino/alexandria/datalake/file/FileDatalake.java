@@ -28,8 +28,8 @@ public class FileDatalake implements Datalake {
 	}
 
 	@Override
-	public LedgerStore ledStore() {
-		return new FileLedgerStore(ledgerFolder());
+	public FileLedStore ledStore() {
+		return new FileLedStore(ledgerFolder());
 	}
 
 	public File root() {

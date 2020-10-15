@@ -3,7 +3,7 @@ package io.intino.alexandria.sealing;
 import io.intino.alexandria.Fingerprint;
 import io.intino.alexandria.Session;
 import io.intino.alexandria.datalake.file.FS;
-import io.intino.alexandria.datalake.file.FileLedgerStore;
+import io.intino.alexandria.datalake.file.FileLedStore;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
@@ -34,7 +34,7 @@ public class LedSessionManager {
 	}
 
 	private static File datalakeFile(File eventStoreFolder, Fingerprint fingerprint) {
-		File zimFile = new File(eventStoreFolder, fingerprint.toString() + FileLedgerStore.LedExtension);
+		File zimFile = new File(eventStoreFolder, fingerprint.toString() + FileLedStore.LedExtension);
 		zimFile.getParentFile().mkdirs();
 		return zimFile;
 	}
