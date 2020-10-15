@@ -13,9 +13,9 @@ import java.util.stream.Stream;
 
 import static java.util.Comparator.comparing;
 
-public class LedSessionManager {
+public class TransactionSessionManager {
 	public static void seal(File stageFolder, File ledgerStoreFolder) {
-		ledSessions(stageFolder).sorted(comparing(File::getName))
+		transactionSessions(stageFolder).sorted(comparing(File::getName))
 				.parallel().forEach(e -> sealSession(ledgerStoreFolder, e));
 	}
 
@@ -29,7 +29,7 @@ public class LedSessionManager {
 		}
 	}
 
-	private static Stream<File> ledSessions(File stage) {
+	private static Stream<File> transactionSessions(File stage) {
 		return FS.allFilesIn(stage, f -> f.getName().endsWith(Session.LedSessionExtension) && f.length() > 0f);
 	}
 

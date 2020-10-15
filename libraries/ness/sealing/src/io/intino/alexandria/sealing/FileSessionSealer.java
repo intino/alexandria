@@ -54,7 +54,7 @@ public class FileSessionSealer implements SessionSealer {
 	}
 
 	private void sealLedger() {
-		LedSessionManager.seal(stageFolder, datalake.ledgerFolder());
+		TransactionSessionManager.seal(stageFolder, datalake.ledgerFolder());
 
 	}
 
