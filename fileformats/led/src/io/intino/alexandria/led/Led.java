@@ -6,9 +6,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public interface Led<T extends Schema> extends Iterable<T>, AutoCloseable {
-
-	int elementSize();
-
 	Stream<T> stream();
 
 	default Stream<T> parallelStream() {
@@ -18,6 +15,8 @@ public interface Led<T extends Schema> extends Iterable<T>, AutoCloseable {
 	default Iterator<T> iterator() {
 		return stream().iterator();
 	}
+
+	int schemaSize();
 
 	class Filter<T extends Schema> implements Led<T> {
 		private final Led<T> led;
@@ -29,8 +28,8 @@ public interface Led<T extends Schema> extends Iterable<T>, AutoCloseable {
 		}
 
 		@Override
-		public int elementSize() {
-			return led.elementSize();
+		public int schemaSize() {
+			return led.schemaSize();
 		}
 
 		@Override
@@ -49,33 +48,25 @@ public interface Led<T extends Schema> extends Iterable<T>, AutoCloseable {
 		}
 
 		@Override
-		public void close() throws Exception {
-
+		public void close() {
 		}
 
 	}
 
 	class Join<T extends Schema> implements Led<T> {
-		private final int elementSize;
-		private final List<Led<T>> ledgers;
+		private final List<Led<T>> leds;
 
-		public Join(int elementSize, List<Led<T>> ledgers) {
-			this.elementSize = elementSize;
-			this.ledgers = ledgers;
-		}
-
-		@Override
-		public int elementSize() {
-			return elementSize;
+		public Join(List<Led<T>> leds) {
+			this.leds = leds;
 		}
 
 		@Override
 		public Stream<T> stream() {
-			return ledgers.stream().flatMap(this::expand).sorted();
+			return leds.stream().flatMap(this::expand).sorted();
 		}
 
-		private Stream<T> expand(Led<T> ledger) {
-			return ledger.parallelStream();
+		private Stream<T> expand(Led<T> led) {
+			return led.parallelStream();
 		}
 
 		@Override
@@ -86,6 +77,11 @@ public interface Led<T extends Schema> extends Iterable<T>, AutoCloseable {
 		@Override
 		public Iterator<T> iterator() {
 			return stream().iterator();
+		}
+
+		@Override
+		public int schemaSize() {
+			return leds.get(0).schemaSize();
 		}
 
 		@Override

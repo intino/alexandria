@@ -24,19 +24,12 @@ public final class StackAllocators {
 		return new SingleStackAllocator<>(store, address, elementSize, provider);
 	}
 
-	public static <E extends Schema> StackAllocator<E> newManaged(int elementSize, long elementCount,
-																  SchemaFactory<E> provider) {
-
-		if (elementCount < 0) {
-			throw new IllegalArgumentException("Element count is negative");
-		}
-		if (elementCount > Integer.MAX_VALUE) {
+	public static <E extends Schema> StackAllocator<E> newManaged(int elementSize, long elementCount, SchemaFactory<E> provider) {
+		if (elementCount < 0) throw new IllegalArgumentException("Element count is negative");
+		if (elementCount > Integer.MAX_VALUE)
 			throw new IllegalArgumentException("Element Count too large for managed byte store");
-		}
 		final long size = elementSize * elementCount;
-		if (size > Integer.MAX_VALUE) {
-			throw new IllegalArgumentException("Size too large for managed byte store");
-		}
+		if (size > Integer.MAX_VALUE) throw new IllegalArgumentException("Size too large for managed byte store");
 		final ByteBuffer buffer = allocBuffer((int) size);
 		ModifiableMemoryAddress address = ModifiableMemoryAddress.of(buffer);
 		ByteStore store = new ByteBufferStore(buffer, address, 0, (int) size);
@@ -45,7 +38,6 @@ public final class StackAllocators {
 
 	public static <E extends Schema> StackAllocator<E> newManaged(int elementSize, ByteBuffer buffer,
 																  SchemaFactory<E> provider) {
-
 		ModifiableMemoryAddress address = ModifiableMemoryAddress.of(buffer);
 		ByteStore store = new ByteBufferStore(buffer, address, 0, buffer.remaining());
 		return new SingleStackAllocator<>(store, address, elementSize, provider);

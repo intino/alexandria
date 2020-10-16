@@ -13,5 +13,5 @@ public interface IndexedAllocator<T extends Schema> extends SchemaAllocator<T> {
 
 	long byteSize();
 
-	int count();
+	int size();
 }

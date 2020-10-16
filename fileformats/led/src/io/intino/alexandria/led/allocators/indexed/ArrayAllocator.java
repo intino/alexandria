@@ -18,7 +18,6 @@ import java.util.stream.IntStream;
 import static io.intino.alexandria.led.util.MemoryUtils.*;
 
 public class ArrayAllocator<T extends Schema> implements IndexedAllocator<T> {
-
 	private ByteBufferStore[] stores;
 	private final ModifiableMemoryAddress[] addresses;
 	private final Map<Integer, Integer> indices;
@@ -76,7 +75,7 @@ public class ArrayAllocator<T extends Schema> implements IndexedAllocator<T> {
 	}
 
 	@Override
-	public int count() {
+	public int size() {
 		return Arrays.stream(stores).mapToInt(this::countElements).sum();
 	}
 

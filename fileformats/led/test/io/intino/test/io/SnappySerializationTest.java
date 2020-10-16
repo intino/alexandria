@@ -3,8 +3,8 @@ package io.intino.test.io;
 import io.intino.alexandria.led.IndexedLed;
 import io.intino.alexandria.led.allocators.SchemaAllocator;
 import io.intino.alexandria.led.allocators.indexed.ListAllocator;
-import io.intino.alexandria.led.io.SnappyLedReader;
-import io.intino.alexandria.led.io.SnappyLedWriter;
+import io.intino.alexandria.led.io.LedReader;
+import io.intino.alexandria.led.io.LedWriter;
 import io.intino.test.schemas.TestSchemaObj;
 import org.junit.After;
 import org.junit.Test;
@@ -44,16 +44,16 @@ public class SnappySerializationTest {
 	private void serialize(List<TestSchemaObj> original) {
 		long start;
 		start = System.currentTimeMillis();
-		new SnappyLedWriter(tempFile).write(IndexedLed.of(TestSchemaObj.SIZE, original));
+		new LedWriter(tempFile).write(IndexedLed.of(original));
 		System.out.println(">> Serialized " + NUM_ELEMENTS + "(" + TestSchemaObj.SIZE + " bytes each) in " + (System.currentTimeMillis() - start) / 1000 + " seconds");
 	}
 
 	private void deserialize(List<TestSchemaObj> original) {
 		long start;
 		start = System.currentTimeMillis();
-		IndexedLed<TestSchemaObj> generated = new SnappyLedReader(tempFile).read(TestSchemaObj::new);
+		IndexedLed<TestSchemaObj> generated = new LedReader(tempFile).read(TestSchemaObj::new);
 		System.out.println(">> Deserialized " + NUM_ELEMENTS + "(" + TestSchemaObj.SIZE + " bytes each) in " + (System.currentTimeMillis() - start) / 1000 + " seconds");
-		assertEquals(original.size(), generated.count());
+		assertEquals(original.size(), generated.size());
 		IntStream.range(0, original.size())
 				.parallel()
 				.forEach(i -> assertEquals(original.get(i), generated.get(i)));

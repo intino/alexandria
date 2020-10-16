@@ -101,7 +101,7 @@ public class ListAllocator<T extends Schema> implements IndexedAllocator<T> {
 	}
 
 	@Override
-	public int count() {
+	public int size() {
 		return lastIndex;
 	}
 

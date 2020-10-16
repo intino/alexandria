@@ -46,6 +46,11 @@ public class TestSchemaObj extends Schema {
 		return getAlignedLong(0);
 	}
 
+	@Override
+	public int size() {
+		return SIZE;
+	}
+
 	public TestSchemaObj id(long id) {
 		setAlignedLong(ID_OFFSET, id);
 		return this;

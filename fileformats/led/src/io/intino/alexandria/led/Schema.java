@@ -1,6 +1,5 @@
 package io.intino.alexandria.led;
 
-
 import io.intino.alexandria.led.buffers.BigEndianBitBuffer;
 import io.intino.alexandria.led.buffers.BitBuffer;
 import io.intino.alexandria.led.buffers.LittleEndianBitBuffer;
@@ -9,7 +8,6 @@ import io.intino.alexandria.led.util.OffHeapObject;
 
 import java.nio.ByteOrder;
 import java.util.Objects;
-
 
 public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 	private final BitBuffer bitBuffer;
@@ -23,6 +21,8 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 	}
 
 	public abstract long id();
+
+	public abstract int size();
 
 	@Override
 	public int hashCode() {

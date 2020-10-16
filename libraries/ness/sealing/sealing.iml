@@ -27,6 +27,7 @@
     <orderEntry type="module" module-name="message" />
     <orderEntry type="module" module-name="zet" />
     <orderEntry type="module" module-name="ingestion" scope="TEST" />
+    <orderEntry type="library" scope="TEST" name="Intino: org.antlr:antlr4-runtime:4.8" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: com.esotericsoftware:kryo:4.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: com.esotericsoftware:reflectasm:1.11.3" level="project" />

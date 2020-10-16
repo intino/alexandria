@@ -6,22 +6,20 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public interface IndexedLed<T extends Schema> extends Led<T> {
-	static <E extends Schema> IndexedLed<E> of(int elementSize, List<E> list) {
-		list.sort(Comparator.comparingLong(Schema::id));
-		return ledFromList(elementSize, list);
-	}
+	long size();
 
-	long count();
-
-	default long sizeInBytes() {
-		return count() * elementSize();
-	}
+	int schemaSize();
 
 	T get(int index);
 
 	List<T> getAll();
 
-	private static <E extends Schema> IndexedLed<E> ledFromList(int elementSize, List<E> list) {
+	static <E extends Schema> IndexedLed<E> of(List<E> list) {
+		list.sort(Comparator.comparingLong(Schema::id));
+		return ledFromList(list);
+	}
+
+	private static <E extends Schema> IndexedLed<E> ledFromList(List<E> list) {
 		return new IndexedLed<>() {
 			private final List<E> theList = Collections.unmodifiableList(list);
 
@@ -30,8 +28,13 @@ public interface IndexedLed<T extends Schema> extends Led<T> {
 			}
 
 			@Override
-			public long count() {
+			public long size() {
 				return theList.size();
+			}
+
+			@Override
+			public int schemaSize() {
+				return list.isEmpty() ? 0: list.get(0).size();
 			}
 
 			@Override
@@ -42,11 +45,6 @@ public interface IndexedLed<T extends Schema> extends Led<T> {
 			@Override
 			public List<E> getAll() {
 				return theList;
-			}
-
-			@Override
-			public int elementSize() {
-				return elementSize;
 			}
 
 			@Override

@@ -55,7 +55,7 @@ public class UnmanagedIndexedAllocator<T extends Schema> implements IndexedAlloc
 	}
 
 	@Override
-	public int count() {
+	public int size() {
 		return (int) (byteSize() / elementSize);
 	}
 

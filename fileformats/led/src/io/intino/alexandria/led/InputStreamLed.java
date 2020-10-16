@@ -34,11 +34,6 @@ public class InputStreamLed<T extends Schema> implements Led<T> {
 	}
 
 	@Override
-	public int elementSize() {
-		return elementSize;
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
 	public synchronized Stream<T> stream() {
 		InputStream inputStream = inputStreamSupplier.get();

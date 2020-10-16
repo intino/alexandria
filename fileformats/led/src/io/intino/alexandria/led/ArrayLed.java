@@ -27,8 +27,13 @@ public class ArrayLed<T extends Schema> implements IndexedLed<T> {
 	}
 
 	@Override
-	public long count() {
-		return allocator.count();
+	public long size() {
+		return allocator.size();
+	}
+
+	@Override
+	public int schemaSize() {
+		return allocator.elementSize();
 	}
 
 	@Override
@@ -42,13 +47,8 @@ public class ArrayLed<T extends Schema> implements IndexedLed<T> {
 	}
 
 	@Override
-	public int elementSize() {
-		return allocator.elementSize();
-	}
-
-	@Override
 	public Stream<T> stream() {
-		return IntStream.range(0, (int) count()).mapToObj(this::get);
+		return IntStream.range(0, (int) size()).mapToObj(this::get);
 	}
 
 	public long byteSize() {

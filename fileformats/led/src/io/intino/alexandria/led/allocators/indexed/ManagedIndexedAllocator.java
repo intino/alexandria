@@ -60,7 +60,7 @@ public class ManagedIndexedAllocator<T extends Schema> implements IndexedAllocat
 	}
 
 	@Override
-	public int count() {
+	public int size() {
 		return (int) (byteSize() / elementSize);
 	}
 

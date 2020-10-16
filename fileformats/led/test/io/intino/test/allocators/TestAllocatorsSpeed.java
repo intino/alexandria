@@ -61,24 +61,13 @@ public class TestAllocatorsSpeed {
 	}
 
 	private static void warmUp() throws InterruptedException {
-
 		final int n = NUM_ELEMENTS / 10_000;
-
-		final long ustackAllocatorTime = benchmark(n, StackAllocators.newUnmanaged(TestSchemaObj.SIZE, n,
-				TestSchemaObj::new));
-
+		final long ustackAllocatorTime = benchmark(n, StackAllocators.newUnmanaged(TestSchemaObj.SIZE, n, TestSchemaObj::new));
 		final long stackAllocatorTime = benchmark(n, StackAllocators.newManaged(TestSchemaObj.SIZE, n, TestSchemaObj::new));
-
-		final long stackListAllocatorTime = benchmark(n, new StackListAllocator<>(n / 10, TestSchemaObj.SIZE,
-				TestSchemaObj::new, StackAllocators::newManaged));
-
-		final long stackListAllocatorReservedTime = benchmark(n, new StackListAllocator<>(10, n / 10, TestSchemaObj.SIZE,
-				TestSchemaObj::new, StackAllocators::newManaged));
-
+		final long stackListAllocatorTime = benchmark(n, new StackListAllocator<>(n / 10, TestSchemaObj.SIZE, TestSchemaObj::new, StackAllocators::newManaged));
+		final long stackListAllocatorReservedTime = benchmark(n, new StackListAllocator<>(10, n / 10, TestSchemaObj.SIZE, TestSchemaObj::new, StackAllocators::newManaged));
 		final long arrayAllocatorTime = benchmark(n, new ArrayAllocator<>(10, n / 10, TestSchemaObj.SIZE, TestSchemaObj::new));
-
 		final long listAllocatorTime = benchmark(n, new ListAllocator<>(n / 10, TestSchemaObj.SIZE, TestSchemaObj::new));
-
 		final long defaultAllocatorTime = benchmark(n, new DefaultAllocator<>(TestSchemaObj.SIZE, TestSchemaObj::new));
 	}
 
