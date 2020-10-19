@@ -16,19 +16,17 @@ import java.util.Queue;
 import static io.intino.alexandria.led.util.MemoryUtils.*;
 
 public class ListAllocator<T extends Schema> implements IndexedAllocator<T> {
-
-	private List<ByteBufferStore> stores;
 	private final List<ModifiableMemoryAddress> addresses;
 	private final int elementSize;
 	private final SchemaFactory<T> factory;
 	private final int elementsCountPerBuffer;
 	private final Queue<Integer> freeIndices;
+	private List<ByteBufferStore> stores;
 	private int lastIndex;
 
 	public ListAllocator(long elementsCountPerBuffer, int elementSize, SchemaFactory<T> factory) {
-		if (elementsCountPerBuffer * elementSize > Integer.MAX_VALUE) {
+		if (elementsCountPerBuffer * elementSize > Integer.MAX_VALUE)
 			throw new IllegalArgumentException("Size too large for ByteBufferStore");
-		}
 		this.elementSize = elementSize;
 		this.factory = factory;
 		this.elementsCountPerBuffer = (int) elementsCountPerBuffer;
@@ -39,9 +37,7 @@ public class ListAllocator<T extends Schema> implements IndexedAllocator<T> {
 
 	@Override
 	public T malloc(int index) {
-		while (index > lastPossibleIndex()) {
-			allocateNewByteStore();
-		}
+		while (index > lastPossibleIndex()) allocateNewByteStore();
 		final int storeIndex = storeIndex(index);
 		final ByteStore store = stores.get(storeIndex);
 		final int relativeIndex = storeRelativeIndex(index);
@@ -58,18 +54,14 @@ public class ListAllocator<T extends Schema> implements IndexedAllocator<T> {
 
 	@Override
 	public void clear(int index) {
-		if (index > lastIndex) {
-			return;
-		}
+		if (index > lastIndex) return;
 		final int storeIndex = storeIndex(index);
 		final int relativeIndex = storeRelativeIndex(index);
 		memset(addresses.get(storeIndex).get() + relativeIndex * elementSize, elementSize, 0);
 	}
 
 	public void free(int index) {
-		if (index > lastIndex) {
-			return;
-		}
+		if (index > lastIndex) return;
 		if (index == lastIndex) {
 			--lastIndex;
 			return;
@@ -78,14 +70,9 @@ public class ListAllocator<T extends Schema> implements IndexedAllocator<T> {
 	}
 
 	public void free(Schema schema) {
-		int index = 0;
+		int index;
 		final long address = schema.address();
-		for (ByteStore store : stores) {
-			if (store.address() == address) {
-				break;
-			}
-			index += countElements(store);
-		}
+		index = stores.stream().takeWhile(store -> store.address() != address).mapToInt(this::countElements).sum();
 		index += schema.baseOffset() / elementSize;
 		free(index);
 		schema.invalidate();
@@ -112,11 +99,8 @@ public class ListAllocator<T extends Schema> implements IndexedAllocator<T> {
 	@Override
 	public T malloc() {
 		int index;
-		if (!freeIndices.isEmpty()) {
-			index = freeIndices.poll();
-		} else {
-			index = lastIndex++;
-		}
+		if (!freeIndices.isEmpty()) index = freeIndices.poll();
+		else index = lastIndex++;
 		return malloc(index);
 	}
 
@@ -154,17 +138,12 @@ public class ListAllocator<T extends Schema> implements IndexedAllocator<T> {
 	}
 
 	private int storeIndex(int elementIndex) {
-
 		long end = 0;
-
 		for (int i = 0; i < stores.size(); i++) {
 			ByteStore store = stores.get(i);
 			end += store.byteSize() / elementSize;
-			if (elementIndex < end) {
-				return i;
-			}
+			if (elementIndex < end) return i;
 		}
-
 		throw new IndexOutOfBoundsException(elementIndex + " out of " + end);
 	}
 
