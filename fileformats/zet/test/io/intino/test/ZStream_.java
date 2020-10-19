@@ -1,7 +1,7 @@
 package io.intino.test;
 
-import io.intino.alexandria.zet.ZInputStream;
-import io.intino.alexandria.zet.ZOutputStream;
+import io.intino.alexandria.zet.io.ZInputStream;
+import io.intino.alexandria.zet.io.ZOutputStream;
 import org.junit.Before;
 import org.junit.Test;
 

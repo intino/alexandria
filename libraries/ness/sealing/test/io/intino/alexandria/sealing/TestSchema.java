@@ -30,6 +30,7 @@ public class TestSchema extends Schema {
 	public static final int G_OFFSET = F_OFFSET + F_BITS;
 	public static final int G_BITS = 4;
 
+	public static final int SIZE = (int) Math.ceil((G_OFFSET + G_BITS) / (float) Byte.SIZE);
 	// private long id;
 	// private short a;
 	// private int b;
@@ -158,7 +159,7 @@ public class TestSchema extends Schema {
 	}
 
 	public static List<TestSchema> unsortedList() {
-		SchemaAllocator<TestSchema> allocator = StackAllocators.newManaged((int) Math.ceil((G_OFFSET + G_BITS) / (float) Byte.SIZE), 1000, TestSchema::new);
+		SchemaAllocator<TestSchema> allocator = StackAllocators.newManaged(SIZE, 1000, TestSchema::new);
 		List<TestSchema> result = new ArrayList<>();
 		for (int i = 10; i <= 1000; i += 5) {
 			int id = (int) Math.cos(i / 20 * Math.PI) * i;
@@ -168,7 +169,7 @@ public class TestSchema extends Schema {
 	}
 
 	public static List<TestSchema> anotherList() {
-		SchemaAllocator<TestSchema> allocator = StackAllocators.newManaged((int) Math.ceil((G_OFFSET + G_BITS) / (float) Byte.SIZE), 3000, TestSchema::new);
+		SchemaAllocator<TestSchema> allocator = StackAllocators.newManaged(SIZE, 3000, TestSchema::new);
 		List<TestSchema> result = new ArrayList<>();
 		for (int i = 2000; i <= 3000; i += 5) {
 			int id = (int) Math.cos(i / 20 * Math.PI) * i;

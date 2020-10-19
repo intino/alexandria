@@ -3,6 +3,7 @@ package io.intino.alexandria.datalake;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.event.EventStream;
+import io.intino.alexandria.led.LedStream;
 import io.intino.alexandria.led.Schema;
 import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.mapp.MappReader;
@@ -138,7 +139,7 @@ public interface Datalake {
 
 			int size();
 
-			<T extends Schema> io.intino.alexandria.led.Led<T> content(SchemaFactory<T> clazz);
+			<T extends Schema> LedStream<T> content(SchemaFactory<T> clazz);
 		}
 	}
 }
