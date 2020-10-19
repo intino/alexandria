@@ -1,4 +1,4 @@
-package io.intino.alexandria.zet;
+package io.intino.alexandria.zet.io;
 
 import java.io.DataInputStream;
 import java.io.EOFException;

@@ -1,6 +1,7 @@
 package io.intino.alexandria.zet;
 
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.zet.io.ZInputStream;
 
 import java.io.*;
 import java.util.Arrays;

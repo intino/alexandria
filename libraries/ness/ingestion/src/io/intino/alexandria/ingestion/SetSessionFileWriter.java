@@ -3,7 +3,7 @@ package io.intino.alexandria.ingestion;
 import io.intino.alexandria.Fingerprint;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.logger.Logger;
-import io.intino.alexandria.zet.ZOutputStream;
+import io.intino.alexandria.zet.io.ZOutputStream;
 
 import java.io.*;
 import java.util.*;

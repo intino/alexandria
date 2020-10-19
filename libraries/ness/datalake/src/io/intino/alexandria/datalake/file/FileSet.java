@@ -4,7 +4,7 @@ import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.Datalake.SetStore.Variable;
 import io.intino.alexandria.logger.Logger;
-import io.intino.alexandria.zet.ZFile;
+import io.intino.alexandria.zet.io.ZFile;
 import io.intino.alexandria.zet.ZetReader;
 import io.intino.alexandria.zet.ZetStream;
 
