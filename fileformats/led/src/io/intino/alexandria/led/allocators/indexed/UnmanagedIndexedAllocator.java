@@ -70,7 +70,7 @@ public class UnmanagedIndexedAllocator<T extends Schema> implements IndexedAlloc
 	}
 
 	@Override
-	public int elementSize() {
+	public int schemaSize() {
 		return elementSize;
 	}
 

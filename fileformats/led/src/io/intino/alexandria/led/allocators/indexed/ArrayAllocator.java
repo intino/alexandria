@@ -90,7 +90,7 @@ public class ArrayAllocator<T extends Schema> implements IndexedAllocator<T> {
 	}
 
 	@Override
-	public int elementSize() {
+	public int schemaSize() {
 		return elementSize;
 	}
 

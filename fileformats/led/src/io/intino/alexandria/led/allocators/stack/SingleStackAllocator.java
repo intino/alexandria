@@ -64,7 +64,7 @@ public class SingleStackAllocator<T extends Schema> implements StackAllocator<T>
 	}
 
 	@Override
-	public int elementSize() {
+	public int schemaSize() {
 		return elementSize;
 	}
 

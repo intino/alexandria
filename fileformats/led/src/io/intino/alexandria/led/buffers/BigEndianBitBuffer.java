@@ -18,7 +18,6 @@ public class BigEndianBitBuffer extends AbstractBitBuffer {
 		final int additionalBytes = (int) abs(min(byteSize() - byteIndex - numBytes, 0));
 		byteIndex -= additionalBytes;
 		final int bitOffset = (numBytes * Byte.SIZE - bitCount - offsetOf(bitIndex)) - additionalBytes * Byte.SIZE;
-
 		return getInteger(bitCount, bitOffset, byteIndex, numBytes);
 	}
 
@@ -28,8 +27,6 @@ public class BigEndianBitBuffer extends AbstractBitBuffer {
 		final int additionalBytes = (int) abs(min(byteSize() - byteIndex - numBytes, 0));
 		byteIndex -= additionalBytes;
 		final int bitOffset = (numBytes * Byte.SIZE - bitCount - offsetOf(bitIndex)) - additionalBytes * Byte.SIZE;
-
 		setInteger(bitCount, value, byteIndex, numBytes, bitOffset);
 	}
-
 }

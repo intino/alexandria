@@ -14,20 +14,20 @@ public class ManagedIndexedAllocator<T extends Schema> implements IndexedAllocat
 
 	private ByteBufferStore store;
 	private final ModifiableMemoryAddress address;
-	private final int elementSize;
+	private final int schemaSize;
 	private final SchemaFactory<T> factory;
 
-	public ManagedIndexedAllocator(ByteBuffer buffer, int baseOffset, int size, int elementSize, SchemaFactory<T> factory) {
-		this.elementSize = elementSize;
+	public ManagedIndexedAllocator(ByteBuffer buffer, int baseOffset, int size, int schemaSize, SchemaFactory<T> factory) {
+		this.schemaSize = schemaSize;
 		this.factory = factory;
 		address = ModifiableMemoryAddress.of(buffer);
 		store = new ByteBufferStore(buffer, address, baseOffset, size);
 	}
 
-	public ManagedIndexedAllocator(long elementsCount, int elementSize, SchemaFactory<T> factory) {
-		this.elementSize = elementSize;
+	public ManagedIndexedAllocator(long elementsCount, int schemaSize, SchemaFactory<T> factory) {
+		this.schemaSize = schemaSize;
 		this.factory = factory;
-		final long size = elementsCount * elementSize;
+		final long size = elementsCount * schemaSize;
 		if (size > Integer.MAX_VALUE) {
 			throw new IllegalArgumentException("Size too large for ManagedIndexedAllocator");
 		}
@@ -38,8 +38,8 @@ public class ManagedIndexedAllocator<T extends Schema> implements IndexedAllocat
 
 	@Override
 	public T malloc(int index) {
-		final int offset = index * elementSize;
-		return factory.newInstance(store.slice(offset, elementSize));
+		final int offset = index * schemaSize;
+		return factory.newInstance(store.slice(offset, schemaSize));
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class ManagedIndexedAllocator<T extends Schema> implements IndexedAllocat
 
 	@Override
 	public void clear(int index) {
-		memset(address.get() + index * elementSize, elementSize, 0);
+		memset(address.get() + index * schemaSize, schemaSize, 0);
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class ManagedIndexedAllocator<T extends Schema> implements IndexedAllocat
 
 	@Override
 	public int size() {
-		return (int) (byteSize() / elementSize);
+		return (int) (byteSize() / schemaSize);
 	}
 
 	@Override
@@ -75,8 +75,8 @@ public class ManagedIndexedAllocator<T extends Schema> implements IndexedAllocat
 	}
 
 	@Override
-	public int elementSize() {
-		return elementSize;
+	public int schemaSize() {
+		return schemaSize;
 	}
 
 	@Override

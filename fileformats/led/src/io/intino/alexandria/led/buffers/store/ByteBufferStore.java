@@ -9,7 +9,6 @@ import static io.intino.alexandria.led.util.MemoryUtils.memset;
 import static java.util.Objects.requireNonNull;
 
 public class ByteBufferStore implements ByteStore {
-
 	private final ByteBuffer buffer;
 	private final MemoryAddress address;
 	private final int baseOffset;
@@ -124,12 +123,9 @@ public class ByteBufferStore implements ByteStore {
 
 	@Override
 	public ByteStore slice(long offset, long size) {
-		if (offset + baseOffset > Integer.MAX_VALUE) {
+		if (offset + baseOffset > Integer.MAX_VALUE)
 			throw new IllegalArgumentException("Offset too large for ByteBufferStore");
-		}
-		if (size > Integer.MAX_VALUE) {
-			throw new IllegalArgumentException("Size too large for ByteBufferStore");
-		}
+		if (size > Integer.MAX_VALUE) throw new IllegalArgumentException("Size too large for ByteBufferStore");
 		return new ByteBufferStore(buffer, address, baseOffset + (int) offset, (int) size);
 	}
 }

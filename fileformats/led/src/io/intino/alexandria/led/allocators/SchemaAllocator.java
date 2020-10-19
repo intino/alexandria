@@ -8,7 +8,7 @@ public interface SchemaAllocator<T extends Schema> extends AutoCloseable {
 
 	T calloc();
 
-	int elementSize();
+	int schemaSize();
 
 	void clear();
 

@@ -35,7 +35,7 @@ public class DefaultAllocator<T extends Schema> implements SchemaAllocator<T> {
 	}
 
 	@Override
-	public int elementSize() {
+	public int schemaSize() {
 		return elementSize;
 	}
 

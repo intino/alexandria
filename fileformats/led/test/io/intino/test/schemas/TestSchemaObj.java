@@ -3,12 +3,29 @@ package io.intino.test.schemas;
 import io.intino.alexandria.led.Schema;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static io.intino.alexandria.led.util.BitUtils.byteIndex;
 import static io.intino.alexandria.led.util.BitUtils.roundUp2;
 
 public class TestSchemaObj extends Schema {
+	public enum SimpleWord {
+		A(1), B(2), C(1);
+		int value;
+
+		SimpleWord(int value) {
+			this.value = value;
+		}
+
+		public int value() {
+			return value;
+		}
+	}
+
 	public static final int ID_OFFSET = 0;
 	public static final int ID_BITS = Long.SIZE;
 	public static final int A_OFFSET = ID_OFFSET + ID_BITS;
@@ -25,9 +42,12 @@ public class TestSchemaObj extends Schema {
 	public static final int F_BITS = Double.SIZE;
 	public static final int G_OFFSET = F_OFFSET + F_BITS;
 	public static final int G_BITS = 4;
-
-	public static final int SIZE = (int) Math.ceil((G_OFFSET + G_BITS) / (float) Byte.SIZE);
-
+	public static final int H_OFFSET = G_OFFSET + G_BITS;
+	public static final int H_BITS = 4;
+	public static final int I_OFFSET = H_OFFSET + H_BITS;
+	public static final int I_BITS = 4;
+	public static final int J_OFFSET = I_OFFSET + I_BITS;
+	public static final int J_BITS = 2;
 	// private long id;
 	// private short a;
 	// private int b;
@@ -36,6 +56,7 @@ public class TestSchemaObj extends Schema {
 	// private long e;
 	// private double f;
 	// private byte g;
+	public static final int SIZE = (int) Math.ceil((I_OFFSET + I_BITS) / (float) Byte.SIZE);
 
 	public TestSchemaObj(ByteStore store) {
 		super(store);
@@ -119,6 +140,36 @@ public class TestSchemaObj extends Schema {
 		return this;
 	}
 
+	public SimpleWord h() {
+		final int word = (int) getInteger(H_OFFSET, H_BITS);
+		return word == NULL ? null : SimpleWord.values()[word - 1];
+	}
+
+	public TestSchemaObj h(SimpleWord h) {
+		setInteger(H_OFFSET, H_BITS, h == null ? NULL : h.ordinal() + 1);
+		return this;
+	}
+
+	public String i() {
+		final int word = (int) getInteger(I_OFFSET, I_BITS);
+		return word == NULL ? null : ResourceWord.values().get(word);
+	}
+
+	public TestSchemaObj i(String i) {
+		setInteger(I_OFFSET, I_BITS, i == null ? NULL : ResourceWord.indexOf(i));
+		return this;
+	}
+
+	public Boolean j() {
+		final int word = (int) getInteger(I_OFFSET, I_BITS);
+		return word == NULL ? null : word == 1;
+	}
+
+	public TestSchemaObj j(Boolean i) {
+		setInteger(J_OFFSET, J_BITS, i == null ? NULL : i ? 1 : 2);
+		return this;
+	}
+
 	@Override
 	public String toString() {
 		return "TestSchemaObj{"
@@ -140,11 +191,8 @@ public class TestSchemaObj extends Schema {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof TestSchemaObj)) {
-			return false;
-		}
+		if (!(obj instanceof TestSchemaObj)) return false;
 		TestSchemaObj o = (TestSchemaObj) obj;
-
 		return id() == o.id()
 				&& a() == o.a()
 				&& b() == o.b()
@@ -153,5 +201,22 @@ public class TestSchemaObj extends Schema {
 				&& e() == o.e()
 				&& f() == o.f()
 				&& g() == o.g();
+	}
+
+	public static class ResourceWord {
+		private static final Map<Integer, String> values;
+
+		static {
+			values = new BufferedReader(new InputStreamReader(ResourceWord.class.getResourceAsStream("ResourceWord.tsv"))).lines().map(l -> l.split("\t")).collect(Collectors.toMap(l -> Integer.parseInt(l[0]), l -> l[1]));
+		}
+
+		public static Map<Integer, String> values() {
+			return values;
+		}
+
+		public static long indexOf(String i) {
+			Map.Entry<Integer, String> e = values.entrySet().stream().filter(en -> en.getValue().equals(i)).findFirst().orElse(null);
+			return e == null ? NULL : e.getKey();
+		}
 	}
 }

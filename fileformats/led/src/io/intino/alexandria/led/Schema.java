@@ -13,11 +13,9 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 	private final BitBuffer bitBuffer;
 
 	public Schema(ByteStore store) {
-		if (ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN) {
-			bitBuffer = new LittleEndianBitBuffer(store);
-		} else {
-			bitBuffer = new BigEndianBitBuffer(store);
-		}
+		bitBuffer = ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN ?
+				new LittleEndianBitBuffer(store) :
+				new BigEndianBitBuffer(store);
 	}
 
 	public abstract long id();
@@ -31,12 +29,8 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
+		if (obj == null) return false;
+		if (obj.getClass() != getClass()) return false;
 		Schema other = (Schema) obj;
 		return notNull() && other.notNull() && id() == other.id();
 	}
