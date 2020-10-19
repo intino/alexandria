@@ -14,8 +14,8 @@ public class DefaultAllocator<T extends Schema> implements SchemaAllocator<T> {
 	private final int elementSize;
 	private final SchemaFactory<T> factory;
 
-	public DefaultAllocator(int elementSize, SchemaFactory<T> factory) {
-		this.elementSize = elementSize;
+	public DefaultAllocator(int schemaSize, SchemaFactory<T> factory) {
+		this.elementSize = schemaSize;
 		this.factory = factory;
 	}
 

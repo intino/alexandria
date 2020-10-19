@@ -16,8 +16,8 @@ import java.util.stream.Stream;
 public class ManagedIndexedLed<S extends Schema> implements Led<S> {
 	private final IndexedAllocator<S> allocator;
 
-	public ManagedIndexedLed(ByteBuffer buffer, int baseOffset, int size, int elementSize, SchemaFactory<S> factory) {
-		allocator = new ManagedIndexedAllocator<>(buffer, baseOffset, size, elementSize, factory);
+	public ManagedIndexedLed(ByteBuffer buffer, int baseOffset, int size, int schemaSize, SchemaFactory<S> factory) {
+		allocator = new ManagedIndexedAllocator<>(buffer, baseOffset, size, schemaSize, factory);
 	}
 
 	public long size() {
