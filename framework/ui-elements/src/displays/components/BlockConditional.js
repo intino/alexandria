@@ -5,6 +5,7 @@ import BlockConditionalRequester from "../../../gen/displays/requesters/BlockCon
 import Block from "./Block";
 import BlockBehavior from "./behaviors/BlockBehavior";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import BrowserUtil from "../../util/BrowserUtil";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import 'alexandria-ui-elements/res/styles/mobile.css';
 
@@ -52,6 +53,7 @@ export default class BlockConditional extends AbstractBlockConditional {
 		result.display = this.state.visible ? "" : "none";
 		if (this._widthDefined()) result.width = this.props.width;
 		if (this._heightDefined()) result.height = this.props.height;
+		if (result.height === "100.0%" && BrowserUtil.isFirefox()) result.height = "100vh";
 		return result;
 	};
 
