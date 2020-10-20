@@ -97,16 +97,16 @@ public class Datasources {
 			}
 
 			private Section residencial() {
-				Section residencial = new Section("Residencial", "grey");
-				Section cartera = residencial.add("Cartera", "#115293");
+				Section residencial = new Section("Residencial", "white", "grey", 12);
+				Section cartera = residencial.add("Cartera", "white", "#115293", 11);
 				cartera.columns("clientes", "adeudos", "kwh", "importe", "iva", "dap");
 				cartera.add("DA", 1, 11, 12, 12, 13, 1);
 				cartera.add("DB", 11, 1, 2, 4, 5, 2);
-				Section carteraVencida = residencial.add("Cartera Vencida", "#720427");
+				Section carteraVencida = residencial.add("Cartera Vencida", "white", "#720427", 11);
 				carteraVencida.columns("clientes", "adeudos", "importe");
 				carteraVencida.add("DA", 21212, 1212, 121);
 				carteraVencida.add("DB", 192, 823, 12);
-				Section carteraRezago = residencial.add("Cartera Rezago", "#896908");
+				Section carteraRezago = residencial.add("Cartera Rezago", "white", "#896908", 11);
 				carteraRezago.columns("clientes", "adeudos", "importe");
 				carteraRezago.add("DA", 128, 23, 12);
 				carteraRezago.add("DB", 339, 232, 2);
@@ -114,18 +114,18 @@ public class Datasources {
 			}
 
 			private Section comercial() {
-				Section residencial = new Section("Comercial", "grey");
-				Section cartera = new Section("Cartera", "#115293");
+				Section residencial = new Section("Comercial", "white", "grey", 11);
+				Section cartera = new Section("Cartera", "white", "#115293", 11);
 				residencial.add(cartera);
 				cartera.columns("clientes", "adeudos", "kwh", "importe", "iva", "dap");
 				cartera.add("DA", 1, 11, 12, 12, 13, 1);
 				cartera.add("DB", 11, 1, 2, 4, 5, 2);
-				Section carteraVencida = new Section("Cartera Vencida", "#720427");
+				Section carteraVencida = new Section("Cartera Vencida", "white", "#720427", 11);
 				residencial.add(carteraVencida);
 				carteraVencida.columns("clientes", "adeudos", "importe");
 				carteraVencida.add("DA", 21212, 1212, 121);
 				carteraVencida.add("DB", 192, 823, 12);
-				Section carteraRezago = new Section("Cartera Rezago", "#896908");
+				Section carteraRezago = new Section("Cartera Rezago", "white", "#896908", 11);
 				residencial.add(carteraRezago);
 				carteraRezago.columns("clientes", "adeudos", "importe");
 				carteraRezago.add("DA", 128, 23, 12);

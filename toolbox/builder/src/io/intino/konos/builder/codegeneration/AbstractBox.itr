@@ -255,7 +255,7 @@ def type(service & ui) trigger(ui)
 	[this.initTranslatorService()];
 	io.intino.alexandria.ui.UISpark sparkInstance = (io.intino.alexandria.ui.UISpark) io.intino.alexandria.http.AlexandriaSparkBuilder.instance();
 	sparkInstance.start();
-	Logger.info("UI $name: started!");
+	Logger.info("UI $name: started at port " + $parameter + "!");]
 end
 
 def trigger(use)

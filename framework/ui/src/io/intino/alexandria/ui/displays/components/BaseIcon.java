@@ -10,6 +10,12 @@ public class BaseIcon<DN extends BaseIconNotifier, B extends Box> extends Abstra
         super(box);
     }
 
+    @Override
+    public void didMount() {
+        super.didMount();
+        refreshIcon();
+    }
+
     protected BaseIcon<DN, B> _icon(String icon) {
         this.icon = icon;
         return this;

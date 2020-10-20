@@ -9,17 +9,21 @@ import java.util.stream.Stream;
 public class Section {
 	private String label;
 	private String color;
+	private String backgroundColor;
+	private int fontSize;
 	private List<Row> rowList = new ArrayList<>();
 	private List<Section> sectionList = new ArrayList<>();
 	private List<String> columnNames = new ArrayList<>();
 
 	public Section(String label) {
-		this(label, "#efefef");
+		this(label, "black", "#efefef", 12);
 	}
 
-	public Section(String label, String color) {
+	public Section(String label, String color, String backgroundColor, int fontSizeInPt) {
 		this.label = label;
 		this.color = color;
+		this.backgroundColor = backgroundColor;
+		this.fontSize = fontSizeInPt;
 	}
 
 	public String label() {
@@ -37,6 +41,24 @@ public class Section {
 
 	public Section color(String color) {
 		this.color = color;
+		return this;
+	}
+
+	public String backgroundColor() {
+		return backgroundColor;
+	}
+
+	public Section backgroundColor(String backgroundColor) {
+		this.backgroundColor = backgroundColor;
+		return this;
+	}
+
+	public int fontSize() {
+		return fontSize;
+	}
+
+	public Section fontSize(int fontSize) {
+		this.fontSize = fontSize;
 		return this;
 	}
 
@@ -79,8 +101,12 @@ public class Section {
 		return sectionList;
 	}
 
-	public Section add(String label, String color) {
-		return add(new Section(label, color));
+	public Section add(String label) {
+		return add(new Section(label));
+	}
+
+	public Section add(String label, String color, String backgroundColor, int fontSize) {
+		return add(new Section(label, color, backgroundColor, fontSize));
 	}
 
 	public Section add(Section section) {

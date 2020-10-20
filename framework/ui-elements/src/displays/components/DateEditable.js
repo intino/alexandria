@@ -27,6 +27,7 @@ class DateEditable extends AbstractDateEditable {
 		this.requester = new DateEditableRequester(this);
         this.state = {
             ...this.state,
+            pattern : this.props.pattern !== "" ? this.props.pattern : undefined,
             value : this.props.value,
             readonly : this.props.readonly,
             empty : false,
@@ -42,9 +43,9 @@ class DateEditable extends AbstractDateEditable {
 		if (!this.state.visible) return (<React.Fragment/>);
 
 		const { min, max, timePicker, classes } = this.props;
-		const dateLabel = this.translate(this.props.label != null ? this.props.label : "Date");
-		const timeLabel = this.translate(this.props.label != null ? this.props.label : "Time");
-		const pattern = this.props.pattern !== "" ? this.props.pattern : undefined;
+		const dateLabel = this.translate(this.props.label != null ? this.props.label : undefined);
+		const timeLabel = this.translate(this.props.label != null ? this.props.label : undefined);
+		const pattern = this.state.pattern;
 		return (
 			<div style={this.style()}>
 				{ !timePicker ? <MuiPickersUtilsProvider utils={MomentUtils}><KeyboardDatePicker variant="inline" placeholder={pattern} autoOk
@@ -71,6 +72,10 @@ class DateEditable extends AbstractDateEditable {
 		const _utcDate = new Date(_date.getUTCFullYear(), _date.getUTCMonth(), _date.getUTCDate(), _date.getUTCHours(), _date.getUTCMinutes(), _date.getUTCSeconds(), _date.getUTCMilliseconds())
 		const date = value != null ? _utcDate : null;
         this.setState({ value: date, empty: date == null });
+	};
+
+	refreshPattern = (pattern) => {
+	    this.setState({ pattern });
 	};
 
 	refreshReadonly = (readonly) => {

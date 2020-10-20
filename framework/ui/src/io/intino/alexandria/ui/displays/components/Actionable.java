@@ -28,6 +28,12 @@ public class Actionable<DN extends ActionableNotifier, B extends Box> extends Co
         super(box);
     }
 
+    @Override
+    public void didMount() {
+        super.didMount();
+        if (isResourceIcon()) refreshIcon();
+    }
+
     public String title() {
         return title;
     }
