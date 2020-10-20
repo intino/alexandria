@@ -3,35 +3,40 @@ package io.intino.alexandria.led.leds;
 import io.intino.alexandria.led.Led;
 import io.intino.alexandria.led.Transaction;
 import io.intino.alexandria.led.allocators.TransactionFactory;
-import io.intino.alexandria.led.allocators.indexed.IndexedAllocator;
-import io.intino.alexandria.led.allocators.indexed.ManagedIndexedAllocator;
+import io.intino.alexandria.led.allocators.indexed.ListAllocator;
 
-import java.nio.ByteBuffer;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class ManagedIndexedLed<S extends Transaction> implements Led<S> {
-	private final IndexedAllocator<S> allocator;
+public class DynamicLed <S extends Transaction> implements Led<S> {
+	private final ListAllocator<S> allocator;
+	private final int transactionSize;
 
-	public ManagedIndexedLed(ByteBuffer buffer, int baseOffset, int size, int transactionSize, TransactionFactory<S> factory) {
-		allocator = new ManagedIndexedAllocator<>(buffer, baseOffset, size, transactionSize, factory);
+	public DynamicLed(int schemaSize, TransactionFactory<S> factory) {
+		this.transactionSize = schemaSize;
+		this.allocator = new ListAllocator<>(1000, schemaSize, factory);
 	}
 
+	public Transaction newSchema() {
+		return allocator.malloc();
+	}
+
+	@Override
 	public long size() {
 		return allocator.size();
 	}
 
 	@Override
 	public int transactionSize() {
-		return allocator.transactionSize();
+		return transactionSize;
 	}
 
 	@Override
 	public Iterator<S> iterator() {
-		return elements().listIterator();
+		return elements().iterator();
 	}
 
 	@Override
@@ -41,9 +46,5 @@ public class ManagedIndexedLed<S extends Transaction> implements Led<S> {
 
 	private Stream<S> stream() {
 		return IntStream.range(0, (int) size()).mapToObj(allocator::malloc);
-	}
-
-	private long byteSize() {
-		return allocator.byteSize();
 	}
 }

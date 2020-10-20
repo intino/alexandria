@@ -1,10 +1,10 @@
-package io.intino.test.io;
+package io.intino.test;
 
 import io.intino.alexandria.led.*;
 import io.intino.alexandria.led.allocators.SchemaAllocator;
 import io.intino.alexandria.led.allocators.indexed.ListAllocator;
 import io.intino.alexandria.led.leds.ListLed;
-import io.intino.test.schemas.TestSchemaObj;
+import io.intino.test.transactions.TestTransaction;
 import org.junit.After;
 import org.junit.Test;
 
@@ -17,10 +17,10 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static io.intino.alexandria.led.util.BitUtils.maxPossibleNumber;
-import static io.intino.test.schemas.TestSchemaObj.*;
+import static io.intino.test.transactions.TestTransaction.*;
 import static org.junit.Assert.assertEquals;
 
-public class WriterTest {
+public class LedWriter_ {
 	private static final int NUM_ELEMENTS = 1_000_000;
 	private static final File tempFile = new File("temp/snappy_test.led");
 	private static final Random RANDOM = new Random();
@@ -28,27 +28,27 @@ public class WriterTest {
 
 	@Test
 	public void should_write_and_read() {
-		List<TestSchemaObj> original = generateTestSchemaObjs(
-				new ListAllocator<>(NUM_ELEMENTS / 10, TestSchemaObj.SIZE, TestSchemaObj::new))
+		List<TestTransaction> original = generateTestSchemaObjs(
+				new ListAllocator<>(NUM_ELEMENTS / 10, TestTransaction.SIZE, TestTransaction::new))
 				.collect(Collectors.toList());
 		write(original);
 		read(original);
 	}
 
-	private void write(List<TestSchemaObj> original) {
+	private void write(List<TestTransaction> original) {
 		long start;
-		original.sort(Comparator.comparingLong(Schema::id));
-		Led<TestSchemaObj> led = new ListLed<>(original);
+		original.sort(Comparator.comparingLong(Transaction::id));
+		Led<TestTransaction> led = new ListLed<>(original);
 		start = System.currentTimeMillis();
 		new LedWriter(tempFile).write(led);
-		System.out.println(">> Serialized " + NUM_ELEMENTS + "(" + TestSchemaObj.SIZE + " bytes each) in " + (System.currentTimeMillis() - start) / 1000 + " seconds");
+		System.out.println(">> Serialized " + NUM_ELEMENTS + "(" + TestTransaction.SIZE + " bytes each) in " + (System.currentTimeMillis() - start) / 1000 + " seconds");
 	}
 
-	private void read(List<TestSchemaObj> original) {
+	private void read(List<TestTransaction> original) {
 		long start;
 		start = System.currentTimeMillis();
-		LedStream<TestSchemaObj> led = new LedReader(tempFile).read(TestSchemaObj::new);
-		System.out.println(">> Deserialized " + NUM_ELEMENTS + "(" + TestSchemaObj.SIZE + " bytes each) in " + (System.currentTimeMillis() - start) / 1000 + " seconds");
+		LedStream<TestTransaction> led = new LedReader(tempFile).read(TestTransaction::new);
+		System.out.println(">> Deserialized " + NUM_ELEMENTS + "(" + TestTransaction.SIZE + " bytes each) in " + (System.currentTimeMillis() - start) / 1000 + " seconds");
 		AtomicInteger size = new AtomicInteger();
 		IntStream.range(0, original.size()).forEach(i -> {
 			assertEquals(original.get(i), led.next());
@@ -57,8 +57,8 @@ public class WriterTest {
 		assertEquals(original.size(), size.get());
 	}
 
-	private Stream<TestSchemaObj> generateTestSchemaObjs(SchemaAllocator<TestSchemaObj> allocator) {
-		Stream<TestSchemaObj> stream = IntStream.range(0, NUM_ELEMENTS)
+	private Stream<TestTransaction> generateTestSchemaObjs(SchemaAllocator<TestTransaction> allocator) {
+		Stream<TestTransaction> stream = IntStream.range(0, NUM_ELEMENTS)
 				.parallel()
 				.unordered()
 				.mapToObj(i -> allocator.malloc()

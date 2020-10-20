@@ -1,10 +1,10 @@
 package io.intino.alexandria.led.allocators.stack;
 
-import io.intino.alexandria.led.Schema;
-import io.intino.alexandria.led.allocators.SchemaFactory;
+import io.intino.alexandria.led.Transaction;
+import io.intino.alexandria.led.allocators.TransactionFactory;
 
 @FunctionalInterface
-public interface StackAllocatorFactory<T extends Schema> {
+public interface StackAllocatorFactory<T extends Transaction> {
 
-	StackAllocator<T> create(int elementSize, long elementCount, SchemaFactory<T> schemaFactory);
+	StackAllocator<T> create(int elementSize, long elementCount, TransactionFactory<T> schemaFactory);
 }

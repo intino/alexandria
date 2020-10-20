@@ -9,10 +9,10 @@ import io.intino.alexandria.led.util.OffHeapObject;
 import java.nio.ByteOrder;
 import java.util.Objects;
 
-public abstract class Schema implements OffHeapObject, Comparable<Schema> {
+public abstract class Transaction implements OffHeapObject, Comparable<Transaction> {
 	private final BitBuffer bitBuffer;
 
-	public Schema(ByteStore store) {
+	public Transaction(ByteStore store) {
 		bitBuffer = ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN ?
 				new LittleEndianBitBuffer(store) :
 				new BigEndianBitBuffer(store);
@@ -31,7 +31,7 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 	public boolean equals(Object obj) {
 		if (obj == null) return false;
 		if (obj.getClass() != getClass()) return false;
-		Schema other = (Schema) obj;
+		Transaction other = (Transaction) obj;
 		return notNull() && other.notNull() && id() == other.id();
 	}
 
@@ -50,7 +50,7 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 	}
 
 	@Override
-	public int compareTo(Schema o) {
+	public int compareTo(Transaction o) {
 		return Long.compare(id(), o.id());
 	}
 

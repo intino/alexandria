@@ -3,10 +3,10 @@ package io.intino.alexandria.led;
 import java.util.Iterator;
 import java.util.List;
 
-public interface Led<S extends Schema> {
+public interface Led<S extends Transaction> {
 	long size();
 
-	int schemaSize();
+	int transactionSize();
 
 	Iterator<S> iterator();
 

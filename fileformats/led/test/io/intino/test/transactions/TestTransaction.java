@@ -1,6 +1,6 @@
-package io.intino.test.schemas;
+package io.intino.test.transactions;
 
-import io.intino.alexandria.led.Schema;
+import io.intino.alexandria.led.Transaction;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 
 import java.io.BufferedReader;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import static io.intino.alexandria.led.util.BitUtils.byteIndex;
 import static io.intino.alexandria.led.util.BitUtils.roundUp2;
 
-public class TestSchemaObj extends Schema {
+public class TestTransaction extends Transaction {
 	public enum SimpleWord {
 		A(1), B(2), C(1);
 		int value;
@@ -58,7 +58,7 @@ public class TestSchemaObj extends Schema {
 	// private byte g;
 	public static final int SIZE = (int) Math.ceil((I_OFFSET + I_BITS) / (float) Byte.SIZE);
 
-	public TestSchemaObj(ByteStore store) {
+	public TestTransaction(ByteStore store) {
 		super(store);
 	}
 
@@ -72,7 +72,7 @@ public class TestSchemaObj extends Schema {
 		return SIZE;
 	}
 
-	public TestSchemaObj id(long id) {
+	public TestTransaction id(long id) {
 		setAlignedLong(ID_OFFSET, id);
 		return this;
 	}
@@ -81,7 +81,7 @@ public class TestSchemaObj extends Schema {
 		return (short) getInteger(A_OFFSET, A_BITS);
 	}
 
-	public TestSchemaObj a(short a) {
+	public TestTransaction a(short a) {
 		setInteger(A_OFFSET, A_BITS, a);
 		return this;
 	}
@@ -90,7 +90,7 @@ public class TestSchemaObj extends Schema {
 		return (int) getInteger(B_OFFSET, B_BITS);
 	}
 
-	public TestSchemaObj b(int b) {
+	public TestTransaction b(int b) {
 		setInteger(B_OFFSET, B_BITS, b);
 		return this;
 	}
@@ -99,7 +99,7 @@ public class TestSchemaObj extends Schema {
 		return getAlignedFloat(byteIndex(C_OFFSET));
 	}
 
-	public TestSchemaObj c(float c) {
+	public TestTransaction c(float c) {
 		setAlignedFloat(byteIndex(C_OFFSET), c);
 		return this;
 	}
@@ -108,7 +108,7 @@ public class TestSchemaObj extends Schema {
 		return (int) getInteger(D_OFFSET, D_BITS);
 	}
 
-	public TestSchemaObj d(int d) {
+	public TestTransaction d(int d) {
 		setInteger(D_OFFSET, D_BITS, d);
 		return this;
 	}
@@ -117,7 +117,7 @@ public class TestSchemaObj extends Schema {
 		return getInteger(E_OFFSET, E_BITS);
 	}
 
-	public TestSchemaObj e(long e) {
+	public TestTransaction e(long e) {
 		setInteger(E_OFFSET, E_BITS, e);
 		return this;
 	}
@@ -126,7 +126,7 @@ public class TestSchemaObj extends Schema {
 		return getAlignedDouble(byteIndex(F_OFFSET));
 	}
 
-	public TestSchemaObj f(double f) {
+	public TestTransaction f(double f) {
 		setAlignedDouble(byteIndex(F_OFFSET), f);
 		return this;
 	}
@@ -135,7 +135,7 @@ public class TestSchemaObj extends Schema {
 		return (byte) getInteger(G_OFFSET, G_BITS);
 	}
 
-	public TestSchemaObj g(byte g) {
+	public TestTransaction g(byte g) {
 		setInteger(G_OFFSET, G_BITS, g);
 		return this;
 	}
@@ -145,7 +145,7 @@ public class TestSchemaObj extends Schema {
 		return word == NULL ? null : SimpleWord.values()[word - 1];
 	}
 
-	public TestSchemaObj h(SimpleWord h) {
+	public TestTransaction h(SimpleWord h) {
 		setInteger(H_OFFSET, H_BITS, h == null ? NULL : h.ordinal() + 1);
 		return this;
 	}
@@ -155,7 +155,7 @@ public class TestSchemaObj extends Schema {
 		return word == NULL ? null : ResourceWord.values().get(word);
 	}
 
-	public TestSchemaObj i(String i) {
+	public TestTransaction i(String i) {
 		setInteger(I_OFFSET, I_BITS, i == null ? NULL : ResourceWord.indexOf(i));
 		return this;
 	}
@@ -165,7 +165,7 @@ public class TestSchemaObj extends Schema {
 		return word == NULL ? null : word == 1;
 	}
 
-	public TestSchemaObj j(Boolean i) {
+	public TestTransaction j(Boolean i) {
 		setInteger(J_OFFSET, J_BITS, i == null ? NULL : i ? 1 : 2);
 		return this;
 	}
@@ -191,8 +191,8 @@ public class TestSchemaObj extends Schema {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof TestSchemaObj)) return false;
-		TestSchemaObj o = (TestSchemaObj) obj;
+		if (!(obj instanceof TestTransaction)) return false;
+		TestTransaction o = (TestTransaction) obj;
 		return id() == o.id()
 				&& a() == o.a()
 				&& b() == o.b()

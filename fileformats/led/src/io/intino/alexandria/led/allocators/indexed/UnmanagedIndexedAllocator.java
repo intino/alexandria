@@ -1,7 +1,7 @@
 package io.intino.alexandria.led.allocators.indexed;
 
-import io.intino.alexandria.led.Schema;
-import io.intino.alexandria.led.allocators.SchemaFactory;
+import io.intino.alexandria.led.Transaction;
+import io.intino.alexandria.led.allocators.TransactionFactory;
 import io.intino.alexandria.led.buffers.store.NativePointerStore;
 import io.intino.alexandria.led.util.MemoryUtils;
 import io.intino.alexandria.led.util.ModifiableMemoryAddress;
@@ -9,21 +9,21 @@ import io.intino.alexandria.led.util.ModifiableMemoryAddress;
 import static io.intino.alexandria.led.util.MemoryUtils.NULL;
 import static io.intino.alexandria.led.util.MemoryUtils.memset;
 
-public class UnmanagedIndexedAllocator<T extends Schema> implements IndexedAllocator<T> {
+public class UnmanagedIndexedAllocator<T extends Transaction> implements IndexedAllocator<T> {
 
 	private NativePointerStore store;
 	private final ModifiableMemoryAddress address;
 	private final int elementSize;
-	private final SchemaFactory<T> factory;
+	private final TransactionFactory<T> factory;
 
-	public UnmanagedIndexedAllocator(long baseAddress, long baseOffset, long size, int elementSize, SchemaFactory<T> factory) {
+	public UnmanagedIndexedAllocator(long baseAddress, long baseOffset, long size, int elementSize, TransactionFactory<T> factory) {
 		this.elementSize = elementSize;
 		this.factory = factory;
 		this.address = new ModifiableMemoryAddress(baseAddress);
 		store = new NativePointerStore(address, baseOffset, size);
 	}
 
-	public UnmanagedIndexedAllocator(long elementsCount, int elementSize, SchemaFactory<T> factory) {
+	public UnmanagedIndexedAllocator(long elementsCount, int elementSize, TransactionFactory<T> factory) {
 		this.elementSize = elementSize;
 		this.factory = factory;
 		final long size = elementsCount * elementSize;
@@ -70,7 +70,7 @@ public class UnmanagedIndexedAllocator<T extends Schema> implements IndexedAlloc
 	}
 
 	@Override
-	public int schemaSize() {
+	public int transactionSize() {
 		return elementSize;
 	}
 
