@@ -3,7 +3,7 @@ package io.intino.alexandria.sealing;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.file.FileDatalake;
-import io.intino.alexandria.ingestion.LedSession;
+import io.intino.alexandria.ingestion.TransactionSession;
 import io.intino.alexandria.ingestion.SessionHandler;
 import io.intino.alexandria.led.Led;
 import io.intino.alexandria.led.LedStream;
@@ -35,7 +35,7 @@ public class LedSessionManager_ {
 		SessionHandler handler = new SessionHandler(LOCAL_STAGE);
 		LocalDateTime dateTime = LocalDateTime.of(2019, 2, 28, 16, 15);
 		Timetag timetag = new Timetag(dateTime, Scale.Day);
-		LedSession session = handler.createLedSession();
+		TransactionSession session = handler.createTransactionSession();
 		List<TestSchema> stored = unsortedList();
 		stored.sort(Comparator.comparingLong(Transaction::id));
 		Led<TestSchema> testLed = new ListLed<>(stored);

@@ -6,10 +6,10 @@ import io.intino.alexandria.Timetag;
 import io.intino.alexandria.led.Led;
 import io.intino.alexandria.led.LedWriter;
 
-public class LedSession {
+public class TransactionSession {
 	private final SessionHandler.Provider provider;
 
-	public LedSession(SessionHandler.Provider provider) {
+	public TransactionSession(SessionHandler.Provider provider) {
 		this.provider = provider;
 	}
 
