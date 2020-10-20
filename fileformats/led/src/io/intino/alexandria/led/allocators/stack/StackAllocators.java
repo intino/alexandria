@@ -1,7 +1,7 @@
 package io.intino.alexandria.led.allocators.stack;
 
-import io.intino.alexandria.led.Schema;
-import io.intino.alexandria.led.allocators.SchemaFactory;
+import io.intino.alexandria.led.Transaction;
+import io.intino.alexandria.led.allocators.TransactionFactory;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.buffers.store.NativePointerStore;
@@ -14,8 +14,8 @@ import static io.intino.alexandria.led.util.MemoryUtils.allocBuffer;
 
 public final class StackAllocators {
 
-	public static <E extends Schema> StackAllocator<E> newUnmanaged(int elementSize, long elementCount,
-																	SchemaFactory<E> provider) {
+	public static <E extends Transaction> StackAllocator<E> newUnmanaged(int elementSize, long elementCount,
+																		 TransactionFactory<E> provider) {
 
 		final long size = elementSize * elementCount;
 		final long ptr = MemoryUtils.malloc(size);
@@ -24,7 +24,7 @@ public final class StackAllocators {
 		return new SingleStackAllocator<>(store, address, elementSize, provider);
 	}
 
-	public static <E extends Schema> StackAllocator<E> newManaged(int elementSize, long elementCount, SchemaFactory<E> provider) {
+	public static <E extends Transaction> StackAllocator<E> newManaged(int elementSize, long elementCount, TransactionFactory<E> provider) {
 		if (elementCount < 0) throw new IllegalArgumentException("Element count is negative");
 		if (elementCount > Integer.MAX_VALUE)
 			throw new IllegalArgumentException("Element Count too large for managed byte store");
@@ -36,8 +36,8 @@ public final class StackAllocators {
 		return new SingleStackAllocator<>(store, address, elementSize, provider);
 	}
 
-	public static <E extends Schema> StackAllocator<E> newManaged(int elementSize, ByteBuffer buffer,
-																  SchemaFactory<E> provider) {
+	public static <E extends Transaction> StackAllocator<E> newManaged(int elementSize, ByteBuffer buffer,
+																	   TransactionFactory<E> provider) {
 		ModifiableMemoryAddress address = ModifiableMemoryAddress.of(buffer);
 		ByteStore store = new ByteBufferStore(buffer, address, 0, buffer.remaining());
 		return new SingleStackAllocator<>(store, address, elementSize, provider);

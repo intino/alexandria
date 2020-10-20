@@ -241,8 +241,8 @@ def type(service & rest) trigger(rest)
 	[if($parameter == null || $parameter.isEmpty()) return;]
 	io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
 	[$name+SnakeCaseToCamelCase+FirstUpperCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);]
-	[io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();
-	Logger.info("Rest service $name: started at port " + $parameter + "!");]
+	[io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();]
+	Logger.info("Rest service $name: started at port " + $parameter + "!");
 end
 
 def type(service & soap) trigger(soap)
@@ -255,7 +255,7 @@ def type(service & ui) trigger(ui)
 	[this.initTranslatorService()];
 	io.intino.alexandria.ui.UISpark sparkInstance = (io.intino.alexandria.ui.UISpark) io.intino.alexandria.http.AlexandriaSparkBuilder.instance();
 	sparkInstance.start();
-	Logger.info("UI $name: started at port " + $parameter + "!");]
+	Logger.info("UI $name: started at port " + $parameter + "!");
 end
 
 def trigger(use)

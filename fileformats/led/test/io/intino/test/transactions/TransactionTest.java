@@ -1,4 +1,4 @@
-package io.intino.test.schemas;
+package io.intino.test.transactions;
 
 import io.intino.alexandria.led.allocators.DefaultAllocator;
 import io.intino.alexandria.led.allocators.SchemaAllocator;
@@ -9,17 +9,17 @@ import java.util.Random;
 
 import static io.intino.alexandria.led.util.BitUtils.maxPossibleNumber;
 import static io.intino.alexandria.led.util.MemoryUtils.memset;
-import static io.intino.test.schemas.TestSchemaObj.*;
+import static io.intino.test.transactions.TestTransaction.*;
 import static org.junit.Assert.assertEquals;
 
-public class TestSchemaObjTest {
+public class TransactionTest {
 	private final Random random;
-	private final SchemaAllocator<TestSchemaObj> allocator;
-	private TestSchemaObj schema;
+	private final SchemaAllocator<TestTransaction> allocator;
+	private TestTransaction schema;
 
-	public TestSchemaObjTest() {
+	public TransactionTest() {
 		random = new Random();
-		allocator = new DefaultAllocator<>(SIZE, TestSchemaObj::new);
+		allocator = new DefaultAllocator<>(SIZE, TestTransaction::new);
 	}
 
 	@Before

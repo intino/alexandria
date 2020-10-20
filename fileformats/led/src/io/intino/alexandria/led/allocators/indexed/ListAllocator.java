@@ -1,7 +1,7 @@
 package io.intino.alexandria.led.allocators.indexed;
 
-import io.intino.alexandria.led.Schema;
-import io.intino.alexandria.led.allocators.SchemaFactory;
+import io.intino.alexandria.led.Transaction;
+import io.intino.alexandria.led.allocators.TransactionFactory;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.util.MemoryUtils;
@@ -15,19 +15,19 @@ import java.util.Queue;
 
 import static io.intino.alexandria.led.util.MemoryUtils.*;
 
-public class ListAllocator<T extends Schema> implements IndexedAllocator<T> {
+public class ListAllocator<T extends Transaction> implements IndexedAllocator<T> {
 	private final List<ModifiableMemoryAddress> addresses;
 	private final int elementSize;
-	private final SchemaFactory<T> factory;
+	private final TransactionFactory<T> factory;
 	private final int elementsCountPerBuffer;
 	private final Queue<Integer> freeIndices;
 	private List<ByteBufferStore> stores;
 	private int lastIndex;
 
-	public ListAllocator(long elementsCountPerBuffer, int elementSize, SchemaFactory<T> factory) {
-		if (elementsCountPerBuffer * elementSize > Integer.MAX_VALUE)
+	public ListAllocator(long elementsCountPerBuffer, int transactionSize, TransactionFactory<T> factory) {
+		if (elementsCountPerBuffer * transactionSize > Integer.MAX_VALUE)
 			throw new IllegalArgumentException("Size too large for ByteBufferStore");
-		this.elementSize = elementSize;
+		this.elementSize = transactionSize;
 		this.factory = factory;
 		this.elementsCountPerBuffer = (int) elementsCountPerBuffer;
 		stores = new ArrayList<>();
@@ -43,6 +43,21 @@ public class ListAllocator<T extends Schema> implements IndexedAllocator<T> {
 		final int relativeIndex = storeRelativeIndex(index);
 		final int offset = relativeIndex * elementSize;
 		return factory.newInstance(store.slice(offset, elementSize));
+	}
+
+	@Override
+	public T malloc() {
+		int index;
+		if (!freeIndices.isEmpty()) index = freeIndices.poll();
+		else index = lastIndex++;
+		return malloc(index);
+	}
+
+	@Override
+	public T calloc() {
+		T instance = malloc();
+		instance.clear();
+		return instance;
 	}
 
 	@Override
@@ -69,7 +84,7 @@ public class ListAllocator<T extends Schema> implements IndexedAllocator<T> {
 		freeIndices.add(index);
 	}
 
-	public void free(Schema schema) {
+	public void free(Transaction schema) {
 		int index;
 		final long address = schema.address();
 		index = stores.stream().takeWhile(store -> store.address() != address).mapToInt(this::countElements).sum();
@@ -97,22 +112,7 @@ public class ListAllocator<T extends Schema> implements IndexedAllocator<T> {
 	}
 
 	@Override
-	public T malloc() {
-		int index;
-		if (!freeIndices.isEmpty()) index = freeIndices.poll();
-		else index = lastIndex++;
-		return malloc(index);
-	}
-
-	@Override
-	public T calloc() {
-		T instance = malloc();
-		instance.clear();
-		return instance;
-	}
-
-	@Override
-	public int schemaSize() {
+	public int transactionSize() {
 		return elementSize;
 	}
 

@@ -1,6 +1,6 @@
 package io.intino.alexandria.sealing;
 
-import io.intino.alexandria.led.Schema;
+import io.intino.alexandria.led.Transaction;
 import io.intino.alexandria.led.allocators.SchemaAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.led.buffers.store.ByteStore;
@@ -12,7 +12,7 @@ import java.util.Objects;
 import static io.intino.alexandria.led.util.BitUtils.byteIndex;
 import static io.intino.alexandria.led.util.BitUtils.roundUp2;
 
-public class TestSchema extends Schema {
+public class TestSchema extends Transaction {
 	public static final int ID_OFFSET = 0;
 	public static final int ID_BITS = Long.SIZE;
 	public static final int A_OFFSET = ID_OFFSET + ID_BITS;
