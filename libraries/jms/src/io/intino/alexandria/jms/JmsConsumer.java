@@ -41,7 +41,7 @@ public abstract class JmsConsumer {
 	}
 
 	public void close() {
-		try {
+		if (consumer != null) try {
 			consumer.close();
 		} catch (JMSException e) {
 			Logger.error(e);
