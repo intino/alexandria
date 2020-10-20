@@ -4,7 +4,7 @@ import io.intino.alexandria.datalake.file.FileSetStore;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.mapp.MappBuilder;
 import io.intino.alexandria.mapp.MappStream;
-import io.intino.alexandria.zet.ZFile;
+import io.intino.alexandria.zet.io.ZFile;
 import io.intino.alexandria.zet.ZetReader;
 
 import java.io.ByteArrayInputStream;
