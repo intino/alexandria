@@ -8,7 +8,7 @@ import io.intino.alexandria.ingestion.SessionHandler;
 import io.intino.alexandria.led.Led;
 import io.intino.alexandria.led.LedStream;
 import io.intino.alexandria.led.LedReader;
-import io.intino.alexandria.led.Schema;
+import io.intino.alexandria.led.Transaction;
 import io.intino.alexandria.led.allocators.SchemaAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.led.leds.ListLed;
@@ -37,7 +37,7 @@ public class LedSessionManager_ {
 		Timetag timetag = new Timetag(dateTime, Scale.Day);
 		LedSession session = handler.createLedSession();
 		List<TestSchema> stored = unsortedList();
-		stored.sort(Comparator.comparingLong(Schema::id));
+		stored.sort(Comparator.comparingLong(Transaction::id));
 		Led<TestSchema> testLed = new ListLed<>(stored);
 		session.put("tank1", timetag, testLed);
 		handler.pushTo(STAGE_FOLDER);

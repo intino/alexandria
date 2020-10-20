@@ -3,23 +3,22 @@ package io.intino.alexandria.led;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
-public interface LedStream<T extends Schema> extends Iterator<T>, AutoCloseable {
-	int schemaSize();
+public interface LedStream<S extends Transaction> extends Iterator<S>, AutoCloseable {
+	int transactionSize();
 
-	class Filter<T extends Schema> implements LedStream<T> {
-		private final LedStream<T> led;
-		private final Predicate<T> predicate;
+	class Filter<S extends Transaction> implements LedStream<S> {
+		private final LedStream<S> led;
+		private final Predicate<S> predicate;
 
-		public Filter(LedStream<T> ledStream, Predicate<T> predicate) {
+		public Filter(LedStream<S> ledStream, Predicate<S> predicate) {
 			this.led = ledStream;
 			this.predicate = predicate;
 		}
 
 		@Override
-		public int schemaSize() {
-			return led.schemaSize();
+		public int transactionSize() {
+			return led.transactionSize();
 		}
 
 		@Override
@@ -28,7 +27,7 @@ public interface LedStream<T extends Schema> extends Iterator<T>, AutoCloseable 
 		}
 
 		@Override
-		public T next() {
+		public S next() {
 			return null;
 		}
 
@@ -37,16 +36,16 @@ public interface LedStream<T extends Schema> extends Iterator<T>, AutoCloseable 
 		}
 	}
 
-	class Join<T extends Schema> implements LedStream<T> {
-		private final List<LedStream<T>> leds;
+	class Join<S extends Transaction> implements LedStream<S> {
+		private final List<LedStream<S>> leds;
 
-		public Join(List<LedStream<T>> leds) {
+		public Join(List<LedStream<S>> leds) {
 			this.leds = leds;
 		}
 
 		@Override
-		public int schemaSize() {
-			return leds.get(0).schemaSize();
+		public int transactionSize() {
+			return leds.get(0).transactionSize();
 		}
 
 		@Override
@@ -59,7 +58,7 @@ public interface LedStream<T extends Schema> extends Iterator<T>, AutoCloseable 
 		}
 
 		@Override
-		public T next() {
+		public S next() {
 			return null;
 		}
 	}

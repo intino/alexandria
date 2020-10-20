@@ -1,9 +1,9 @@
 package io.intino.alexandria.led.allocators.indexed;
 
-import io.intino.alexandria.led.Schema;
+import io.intino.alexandria.led.Transaction;
 import io.intino.alexandria.led.allocators.SchemaAllocator;
 
-public interface IndexedAllocator<T extends Schema> extends SchemaAllocator<T> {
+public interface IndexedAllocator<T extends Transaction> extends SchemaAllocator<T> {
 
 	T malloc(int index);
 

@@ -1,7 +1,7 @@
 package io.intino.alexandria.led.allocators.indexed;
 
-import io.intino.alexandria.led.Schema;
-import io.intino.alexandria.led.allocators.SchemaFactory;
+import io.intino.alexandria.led.Transaction;
+import io.intino.alexandria.led.allocators.TransactionFactory;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
 import io.intino.alexandria.led.util.MemoryUtils;
 import io.intino.alexandria.led.util.ModifiableMemoryAddress;
@@ -10,24 +10,24 @@ import java.nio.ByteBuffer;
 
 import static io.intino.alexandria.led.util.MemoryUtils.*;
 
-public class ManagedIndexedAllocator<T extends Schema> implements IndexedAllocator<T> {
+public class ManagedIndexedAllocator<T extends Transaction> implements IndexedAllocator<T> {
 
 	private ByteBufferStore store;
 	private final ModifiableMemoryAddress address;
-	private final int schemaSize;
-	private final SchemaFactory<T> factory;
+	private final int transactionSize;
+	private final TransactionFactory<T> factory;
 
-	public ManagedIndexedAllocator(ByteBuffer buffer, int baseOffset, int size, int schemaSize, SchemaFactory<T> factory) {
-		this.schemaSize = schemaSize;
+	public ManagedIndexedAllocator(ByteBuffer buffer, int baseOffset, int size, int transactionSize, TransactionFactory<T> factory) {
+		this.transactionSize = transactionSize;
 		this.factory = factory;
 		address = ModifiableMemoryAddress.of(buffer);
 		store = new ByteBufferStore(buffer, address, baseOffset, size);
 	}
 
-	public ManagedIndexedAllocator(long elementsCount, int schemaSize, SchemaFactory<T> factory) {
-		this.schemaSize = schemaSize;
+	public ManagedIndexedAllocator(long elementsCount, int transactionSize, TransactionFactory<T> factory) {
+		this.transactionSize = transactionSize;
 		this.factory = factory;
-		final long size = elementsCount * schemaSize;
+		final long size = elementsCount * transactionSize;
 		if (size > Integer.MAX_VALUE) {
 			throw new IllegalArgumentException("Size too large for ManagedIndexedAllocator");
 		}
@@ -38,8 +38,8 @@ public class ManagedIndexedAllocator<T extends Schema> implements IndexedAllocat
 
 	@Override
 	public T malloc(int index) {
-		final int offset = index * schemaSize;
-		return factory.newInstance(store.slice(offset, schemaSize));
+		final int offset = index * transactionSize;
+		return factory.newInstance(store.slice(offset, transactionSize));
 	}
 
 	@Override
@@ -47,21 +47,6 @@ public class ManagedIndexedAllocator<T extends Schema> implements IndexedAllocat
 		T instance = malloc(index);
 		instance.clear();
 		return instance;
-	}
-
-	@Override
-	public void clear(int index) {
-		memset(address.get() + index * schemaSize, schemaSize, 0);
-	}
-
-	@Override
-	public long byteSize() {
-		return store.byteSize();
-	}
-
-	@Override
-	public int size() {
-		return (int) (byteSize() / schemaSize);
 	}
 
 	@Override
@@ -75,8 +60,23 @@ public class ManagedIndexedAllocator<T extends Schema> implements IndexedAllocat
 	}
 
 	@Override
-	public int schemaSize() {
-		return schemaSize;
+	public void clear(int index) {
+		memset(address.get() + index * transactionSize, transactionSize, 0);
+	}
+
+	@Override
+	public long byteSize() {
+		return store.byteSize();
+	}
+
+	@Override
+	public int size() {
+		return (int) (byteSize() / transactionSize);
+	}
+
+	@Override
+	public int transactionSize() {
+		return transactionSize;
 	}
 
 	@Override
