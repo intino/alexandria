@@ -87,6 +87,7 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 
 	public void update(long value) {
 		value(value);
+		notifyListener();
 	}
 
 	public BaseSlider<DN, B> readonly(boolean value) {
@@ -97,10 +98,12 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 
 	public void previous() {
 		value(value-1);
+		notifyListener();
 	}
 
 	public void next() {
 		value(value+1);
+		notifyListener();
 	}
 
 	public void play() {
@@ -141,7 +144,6 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 	void notifyChange() {
 		notifier.refreshSelected(selectedValue());
 		notifier.refreshToolbar(toolbarState());
-		notifyListener();
 		notifyObservers();
 	}
 
@@ -197,6 +199,7 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		ordinal(ordinalList.stream().filter(o -> o.name().equals(name)).findFirst().orElse(null));
 		notifier.refreshSelectedOrdinal(name);
 		value(value);
+		notifyListener();
 	}
 
 	ToolbarState toolbarState() {

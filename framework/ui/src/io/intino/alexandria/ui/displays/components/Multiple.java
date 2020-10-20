@@ -24,6 +24,12 @@ public abstract class Multiple<B extends Box, C extends Component, V extends Obj
         super(box);
     }
 
+    @Override
+    public void didMount() {
+        super.didMount();
+        notifier.refreshVisibility(visible());
+    }
+
     public void addAll(List<V> values) {
         values.forEach(this::add);
     }

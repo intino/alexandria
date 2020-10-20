@@ -11,7 +11,7 @@ import java.util.List;
 
 public abstract class Component<DN extends ComponentNotifier, B extends Box> extends AlexandriaDisplay<DN, B> {
 	private String color;
-	private boolean visible = false;
+	private boolean visible = true;
 	private List<ShowListener> showListeners = new ArrayList<>();
 	private List<HideListener> hideListeners = new ArrayList<>();
 
@@ -49,6 +49,10 @@ public abstract class Component<DN extends ComponentNotifier, B extends Box> ext
 
 	public boolean isHidden() {
 		return !visible;
+	}
+
+	public boolean visible() {
+		return visible;
 	}
 
 	public <T extends Component> T visible(boolean value) {

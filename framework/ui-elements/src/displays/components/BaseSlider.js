@@ -114,7 +114,7 @@ export default class BaseSlider extends AbstractBaseSlider {
 	};
 
 	renderSlider = () => {
-		if (this.toolbarOnly()) return (<React.Fragment/>);
+		if (!this.allowSlider()) return (<React.Fragment/>);
 
 		const range = this.state.range;
 		const ordinal = this.state.ordinals[0];
@@ -128,20 +128,22 @@ export default class BaseSlider extends AbstractBaseSlider {
 	};
 
 	renderToolbar = () => {
-		if (this.sliderOnly()) return (<React.Fragment/>);
+		if (!this.allowToolbar()) return (<React.Fragment/>);
 		const { classes } = this.props;
+		const display = !this.allowNavigation() || this.ordinalSelectorOnly() ? "none" : "block";
+		const mainSpacing = !this.navigationOnly() ? classes.doubleSpacing : {};
 		return (
-			<div className={classNames("layout horizontal", classes.doubleSpacing)}>
-				<div className={classNames("layout horizontal center", classes.doubleSpacing)}>
-					{this.renderAnimationControls()}
-					{!this.toolbarOnly() && this.renderValue()}
-				</div>
-				{<div className="layout horizontal">{this.renderOrdinals()}</div>}
+			<div className={classNames("layout horizontal", mainSpacing)}>
+                <div className={classNames("layout horizontal center", classes.doubleSpacing)} style={{display:display}}>
+                    {this.allowNavigation() && this.renderNavigationControls()}
+                    {(!this.navigationOnly() && !this.ordinalSelectorOnly()) && this.renderValue()}
+                </div>
+				{!this.navigationOnly() && <div className="layout horizontal">{this.renderOrdinals()}</div>}
 			</div>
 		);
 	};
 
-	renderAnimationControls = () => {
+	renderNavigationControls = () => {
 		const toolbar = this.state.toolbar;
 		const canPrevious = toolbar != null ? toolbar.canPrevious : false;
 		const canNext = toolbar != null ? toolbar.canNext : false;
@@ -172,7 +174,7 @@ export default class BaseSlider extends AbstractBaseSlider {
 	renderOrdinals = () => {
 		if (this.state.ordinals.length <= 1 || this.state.ordinal == null) return null;
 		return (
-			<Select value={this.state.ordinal} style={{width:"100%"}} isDisabled={this.state.readonly}
+			<Select value={this.state.ordinal} style={{width:"100%"}} isdisabled={this.state.readonly}
 					onChange={this.handleOrdinalChange.bind(this)}>
 				{this.state.ordinals.map((ordinal, i) => <MenuItem key={i} value={ordinal.name}>{this.translate(ordinal.label)}</MenuItem>)}
 			</Select>
@@ -222,6 +224,10 @@ export default class BaseSlider extends AbstractBaseSlider {
 	handlePause = () => { this.requester.pause(); };
 	handleNext = () => { this.requester.next(); };
 
+	full = () => {
+		return this.props.style == null || this.props.style.toLowerCase() === "full";
+	};
+
 	toolbarOnly = () => {
 		return this.props.style != null && this.props.style.toLowerCase() === "toolbaronly";
 	};
@@ -229,4 +235,28 @@ export default class BaseSlider extends AbstractBaseSlider {
 	sliderOnly = () => {
 		return this.props.style != null && this.props.style.toLowerCase() === "slideronly";
 	};
+
+	navigationOnly = () => {
+		return this.props.style != null && this.props.style.toLowerCase() === "navigationonly";
+	};
+
+	ordinalSelectorOnly = () => {
+		return this.props.style != null && this.props.style.toLowerCase() === "ordinalselectoronly";
+	};
+
+    allowToolbar = () => {
+        return this.full() || this.allowOrdinalSelector() || this.allowNavigation();
+    };
+
+    allowSlider = () => {
+        return this.full() || this.sliderOnly();
+    };
+
+    allowOrdinalSelector = () => {
+        return this.full() || this.toolbarOnly() || this.ordinalSelectorOnly();
+    };
+
+    allowNavigation = () => {
+        return this.full() || this.toolbarOnly() || this.navigationOnly();
+    };
 }

@@ -31,6 +31,11 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 		return this.max;
 	}
 
+	public DateEditable<DN, B> pattern(String pattern) {
+		notifier.refreshPattern(pattern);
+		return this;
+	}
+
 	@Override
 	public boolean readonly() {
 		return readonly;

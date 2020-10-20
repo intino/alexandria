@@ -108,7 +108,7 @@ public abstract class DynamicTable<B extends Box, ItemComponent extends io.intin
     }
 
     public void refreshSections(List<Section> sections) {
-        notifier.sections(DynamicTableBuilder.buildList(sections, baseAssetUrl()));
+        notifier.sections(DynamicTableBuilder.buildList(sections, language()));
     }
 
     public void showItems(DynamicTableShowItemsParams params) {

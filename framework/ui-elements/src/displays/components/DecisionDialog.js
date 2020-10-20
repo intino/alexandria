@@ -30,7 +30,7 @@ class DecisionDialog extends AbstractDecisionDialog {
 			           PaperComponent={!this.props.fullscreen ? makeDraggable.bind(this, this.props.id, this.sizeStyle()) : undefined}
                        aria-labelledby={this.props.id + "_draggable"}>
 				{this.renderTitle()}
-				{this.renderContent(() => this.props.children)}
+				{this.renderContent(() => <div style={{maxHeight:'300px',overflow:'auto',height:'100%'}}>{this.props.children}</div>)}
 			</MuiDialog>
 		);
 	};

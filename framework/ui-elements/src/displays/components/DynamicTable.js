@@ -5,13 +5,15 @@ import DynamicTableNotifier from "../../../gen/displays/notifiers/DynamicTableNo
 import DynamicTableRequester from "../../../gen/displays/requesters/DynamicTableRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
-import { Table, TableHead, TableBody, TableRow, TableCell, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Checkbox, IconButton } from '@material-ui/core';
+import { Table, TableHead, TableBody, TableRow, TableCell, Typography, Dialog,
+         DialogActions, DialogContent, DialogTitle, Checkbox, IconButton, FormControlLabel } from '@material-ui/core';
 import Clear from '@material-ui/icons/Clear';
 import classNames from "classnames";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
 import AutoSizer from 'react-virtualized-auto-sizer';
 import BaseDialog from "./BaseDialog";
 import {CollectionStyles} from "./Collection";
+import 'alexandria-ui-elements/res/styles/layout.css';
 
 export const DynamicTableStyles = theme => ({
 	...CollectionStyles(theme),
@@ -19,7 +21,6 @@ export const DynamicTableStyles = theme => ({
         marginBottom: '20px',
     },
     headerCell : {
-        textAlign: 'center !important',
     },
     rowLabel : {
         border:'0',
@@ -35,7 +36,6 @@ export const DynamicTableStyles = theme => ({
     },
     rowCell : {
         textAlign:'right',
-        border: '1px solid black'
     },
     label: {
         color: theme.palette.grey.A700,
@@ -70,7 +70,12 @@ export const DynamicTableStyles = theme => ({
         background: theme.palette.primary.main,
         color: 'white',
         padding: '3px 24px',
-    }
+    },
+    rowRelativeValue : {
+        width:'65px',
+        display:'inline-block',
+        color:'#777',
+    },
 });
 
 export class EmbeddedDynamicTable extends AbstractDynamicTable {
@@ -85,6 +90,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 		    open: false,
 		    section: null,
 		    row: null,
+            showRelativeValues: false,
 		    ...this.state,
 		};
 	};
@@ -93,16 +99,25 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         if (this.state.sections.length <= 0) return this.renderEmpty();
         return (
             <div>
+                {this.renderToggleRelativeValues()}
                 {this.state.sections.map((s, index) => this.renderTable(s, index))}
                 {this.renderDialog()}
             </div>
         );
     };
 
-    renderTable = (section) => {
+    renderToggleRelativeValues = () => {
+        return (
+            <div className="layout horizontal end-justified" style={{marginBottom:'5px'}}>
+                <FormControlLabel control={<Checkbox checked={this.state.showRelativeValues} onChange={this.handleToggleRelativeValues.bind(this)} name="toggleRelativeValues" color="primary"/>} label={this.translate("Show percentages")}/>
+            </div>
+        );
+    };
+
+    renderTable = (section, index) => {
         const { classes } = this.props;
         return (
-            <Table size='small' className={classes.table}>
+            <Table size='small' className={classes.table} key={index}>
                 <TableHead>{this.renderHeader(section)}</TableHead>
                 <TableBody>{this.renderBody(section)}</TableBody>
             </Table>
@@ -111,30 +126,34 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 
     renderHeader = (section) => {
         const sectionsArray = this.treeToArray(section);
-        return (<React.Fragment>{sectionsArray.map(list => this.renderHeaderRow(list))}</React.Fragment>);
+        const labelSize = this.maxLabelSize(section);
+        if (this.state.sections.length == 1 && sectionsArray[0].length == 1 && sectionsArray[0][0].sections.length == 0)
+            sectionsArray.shift();
+        return (<React.Fragment>{sectionsArray.map((list, index) => this.renderHeaderRow(list, labelSize, index))}</React.Fragment>);
     };
 
-    renderHeaderRow = (sections) => {
+    renderHeaderRow = (sections, rowLabelWidth, index) => {
         const { classes } = this.props;
         return (
-            <TableRow>
-                <TableCell className={classes.rowLabel}></TableCell>
-                {sections.map(section => this.renderHeaderCell(section))}
-                <TableCell className={classes.rowActions}></TableCell>
+            <TableRow key={index}>
+                <TableCell className={classes.rowLabel} style={{width:rowLabelWidth+"px"}}></TableCell>
+                {sections.map((section, index) => this.renderHeaderCell(section, index))}
             </TableRow>
         );
     };
 
-    renderHeaderCell = (section) => {
+    renderHeaderCell = (section, index) => {
         const { classes } = this.props;
         const colSpan = this.childrenColumnsCount(section);
-        const color = section.color !== "" ? "white" : "black";
-        const backgroundColor = section.color;
-        const fontSize = '11pt';
+        const color = section.color;
+        const backgroundColor = section.backgroundColor;
+        const fontSize = section.fontSize + "pt";
+        const textAlign = section.textAlign != null ? section.textAlign : "center";
         return (
             <TableCell className={classNames(classes.rowCell, classes.headerCell)}
                        colSpan={colSpan}
-                       style={{color:color,backgroundColor:backgroundColor,fontSize:fontSize}}>
+                       style={{color:color,backgroundColor:backgroundColor,fontSize:fontSize,textAlign:textAlign}}
+                       key={index}>
                 {section.label}
             </TableCell>
         );
@@ -152,24 +171,31 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     renderBodyRow = (mainSection, sections, rowIndex) => {
         const { classes } = this.props;
         const rowLabel = this.rowLabel(sections, rowIndex);
+        const style = this.isRowHighlighted(sections, rowIndex) ? { fontWeight: "bold"} : {};
         return (
-            <TableRow>
-                <TableCell className={classes.rowLabel}>{rowLabel}</TableCell>
-                {sections.map(section => this.renderBodyCells(section, rowIndex))}
-                <TableCell className={classes.rowActions}>
-                    <a className={classes.rowAction} onClick={this.handleShowItems.bind(this, mainSection, rowLabel)}>{this.translate("show")}</a>
+            <TableRow key={rowIndex}>
+                <TableCell className={classes.rowLabel} style={style}>
+                    <a className={classes.rowAction} onClick={this.handleShowItems.bind(this, mainSection, rowLabel)}>{rowLabel}</a>
                 </TableCell>
+                {sections.map((section, index) => this.renderBodyCells(section, rowIndex, index))}
             </TableRow>
         );
     };
 
-    renderBodyCells = (section, rowIndex) => {
-        return (<React.Fragment>{section.rows[rowIndex].cells.map(c => this.renderBodyCell(c))}</React.Fragment>);
+    renderBodyCells = (section, rowIndex, idx) => {
+        return (<React.Fragment>{section.rows[rowIndex].cells.map((c, index) => this.renderBodyCell(c, index))}</React.Fragment>);
     };
 
-    renderBodyCell = (cell) => {
+    renderBodyCell = (cell, index) => {
         const { classes } = this.props;
-        return (<TableCell className={classes.rowCell}>{cell.value}</TableCell>);
+        const style = cell.highlighted ? { fontWeight: "bold"} : {};
+        const relative = cell.relative !== "-1" && this.state.showRelativeValues ? cell.relative : undefined;
+        return (
+            <TableCell key={index} className={classes.rowCell} style={style}>
+                {cell.absolute}
+                {relative !== undefined && <span className={classes.rowRelativeValue}>&nbsp;{relative}%</span>}
+            </TableCell>
+        );
     };
 
     renderDialog = () => {
@@ -220,6 +246,15 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         this.requester.selectAll();
     };
 
+    maxLabelSize = (section) => {
+        const sections = this.leafSections(section);
+        if (sections.length <= 0) return 250;
+        const countRows = sections[0].rows.length;
+        var result = 0;
+        for (var i=0; i<countRows; i++) result = Math.max(result, (sections[0].rows[i].label.length * 10) + 20);
+        return result;
+    };
+
     treeToArray = (section) => {
         const result = [];
         this.registerItemInArray(section, result, 0);
@@ -233,7 +268,10 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         for (var i=0; i<item.sections.length; i++) this.registerItemInArray(item.sections[i], itemsArray, level+1);
         if (item.columns == null) item.columns = [];
         for (var i=0; i<item.columns.length; i++) {
-            item.columns[i].color = item.color;
+            item.columns[i].color = "black";
+            item.columns[i].backgroundColor = "transparent";
+            item.columns[i].fontSize = 11;
+            item.columns[i].textAlign = "right !important";
             this.registerItemInArray(item.columns[i], itemsArray, level+1);
         }
     }
@@ -261,6 +299,12 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         return rowIndex < section.rows.length ? section.rows[rowIndex].label : "";
     }
 
+    isRowHighlighted = (sections, rowIndex) => {
+        if (sections.length <= 0) return false;
+        const section = sections[0];
+        return rowIndex < section.rows.length ? section.rows[rowIndex].highlighted : false;
+    }
+
     renderEmpty = () => {
         const noItemsMessage = this.props.noItemsMessage != null ? this.props.noItemsMessage : "No elements";
         return (<Typography style={{height:'100%',width:'100%',padding:"10px 0",fontSize:'13pt'}} className="layout horizontal center-center">{this.translate(noItemsMessage)}</Typography>);
@@ -268,6 +312,10 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 
     sections = (sections) => {
         this.setState({sections});
+    };
+
+    handleToggleRelativeValues = () => {
+        this.setState({showRelativeValues: !this.state.showRelativeValues});
     };
 
 }
