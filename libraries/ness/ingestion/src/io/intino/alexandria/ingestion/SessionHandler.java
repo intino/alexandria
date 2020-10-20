@@ -40,8 +40,8 @@ public class SessionHandler {
 		return new EventSession(new PrivateProvider());
 	}
 
-	public LedSession createLedSession() {
-		return new LedSession(new PrivateProvider());
+	public TransactionSession createTransactionSession() {
+		return new TransactionSession(new PrivateProvider());
 	}
 
 	public void pushTo(URI uri) {
