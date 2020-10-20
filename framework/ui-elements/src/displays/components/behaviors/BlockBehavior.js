@@ -23,6 +23,13 @@ const BlockBehavior = (function () {
         return "hidden-" + hidden.toLowerCase();
     }
 
+    function directionOf(animation) {
+        let direction = animation.direction.toLowerCase();
+        if (direction === "top") return "up";
+        if (direction === "bottom") return "down";
+        return direction;
+    }
+
     return {
         classNames : (block) => {
             let result = layoutClasses(block);
@@ -31,7 +38,8 @@ const BlockBehavior = (function () {
         },
         renderAnimation : (animation, visible, content) => {
             const duration = parseInt(animation.duration);
-            if (animation.mode === "Slide") return (<Slide in={visible} timeout={duration} direction={animation.direction.toLowerCase()}>{content}</Slide>);
+            const direction = directionOf(animation);
+            if (animation.mode === "Slide") return (<Slide in={visible} timeout={duration} direction={direction}>{content}</Slide>);
             else if (animation.mode === "Fade") return (<Fade in={visible} timeout={duration}>{content}</Fade>);
             else if (animation.mode === "Grow") return (<Grow in={visible} timeout={duration}>{content}</Grow>);
             else if (animation.mode === "Zoom") return (<Zoom in={visible} timeout={duration}>{content}</Zoom>);

@@ -90,7 +90,12 @@ export default class Block extends AbstractBlock {
 		if (this.props.margin != null) result.margin = this.props.margin;
 		if (this._widthDefined() && result.width == null) result.width = this.props.width;
 		if (this._heightDefined() && result.height == null) result.height = this.props.height;
+		if (result.height === "100.0%" && this.isFirefox()) result.height = "100vh";
 		return result;
+	};
+
+	isFirefox = () => {
+        return typeof InstallTrigger !== 'undefined';
 	};
 
 	_is = (layout) => {
