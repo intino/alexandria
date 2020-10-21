@@ -6,7 +6,7 @@ Artifact("io.intino.alexandria", "1.0.0") driver-shiny
 		Compile("io.intino.alexandria", "proxy", "1.0.0")
 		Compile("io.intino.alexandria", "driver-r", "1.0.0")
 
-		Test("junit", "junit", "LATEST")
+		Test("junit", "junit", "4.13")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 

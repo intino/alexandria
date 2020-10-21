@@ -6,7 +6,7 @@ Artifact("io.intino.alexandria", "1.0.0") soap
 		Compile("io.intino.alexandria", "xml", "1.0.0")
 		Compile("io.intino.alexandria", "json", "1.0.2")
 
-		Test("junit", "junit", "LATEST")
+		Test("junit", "junit", "4.13")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 

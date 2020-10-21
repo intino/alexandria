@@ -17,7 +17,7 @@ Artifact("io.intino.alexandria", "4.5.3") ui-framework
 
 		Web("io.intino.alexandria", "ui-framework-elements", "4.5.3")
 
-		Test("junit", "junit", "LATEST")
+		Test("junit", "junit", "4.13")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true) as Runnable(mainClass = "io.intino.alexandria.Main")
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
