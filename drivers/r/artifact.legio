@@ -7,7 +7,7 @@ Artifact("io.intino.alexandria", "1.0.0") driver-r
 		Compile("commons-io", "commons-io", "2.6")
 		Compile("net.rforge", "Rserve", "0.6-8.1")
 
-		Test("junit", "junit", "LATEST")
+		Test("junit", "junit", "4.13")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 

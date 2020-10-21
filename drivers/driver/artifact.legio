@@ -6,7 +6,7 @@ Artifact("io.intino.alexandria", "1.0.0") driver
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Compile("com.jcraft","jsch", "0.1.55")
 
-		Test("junit", "junit", "LATEST")
+		Test("junit", "junit", "4.13")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 

@@ -8,7 +8,10 @@ import Block from "./Block";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
 import Theme from "app-elements/gen/Theme";
 import { DropzoneArea } from 'material-ui-dropzone';
+import { IconButton } from "@material-ui/core";
+import { Cancel } from "@material-ui/icons";
 import 'alexandria-ui-elements/res/styles/components/fileeditable/styles.css';
+import 'alexandria-ui-elements/res/styles/layout.css';
 
 const styles = theme => ({
 	dropzoneText: {
@@ -24,13 +27,18 @@ export default class FileEditable extends AbstractFile {
 		this.requester = new FileEditableRequester(this);
 		this.state = {
 		    ...this.state,
-            info : "",
-            readonly : this.props.readonly
+            value : null,
+            readonly : this.props.readonly,
+            editable : false,
         };
 	};
 
 	handleChange(e) {
 	    this.saveFile(e.target.files[0], e.target.value);
+	};
+
+	handleClear(e) {
+	    this.saveFile(null, null);
 	};
 
 	saveFile(file, value) {
@@ -87,10 +95,34 @@ export default class FileEditable extends AbstractFile {
 
 	_renderInput = () => {
         return (
-            <input type="file" disabled={this.state.readonly ? true : undefined}
-                   onChange={this.handleChange.bind(this)}></input>
+            <React.Fragment>
+                {this.state.value != null && this._renderInputValue()}
+                {this.state.value == null && this._renderInputField()}
+            </React.Fragment>
         );
 	};
+
+	_renderInputValue = () => {
+	    return (
+	        <div className="layout horizontal center" style={{padding:'0 5px',border:'1px solid #ddd',marginBottom:'4px'}}>
+	            <div className="layout vertical flex" style={{marginRight:'10px'}}>{this.filename()}</div>
+	            <IconButton size="small" onClick={this.handleClear.bind(this)}><Cancel/></IconButton>
+            </div>
+        );
+	};
+
+	filename = () => {
+	    const id = this.state.value.substr(this.state.value.lastIndexOf("/")+1);
+	    let filename = id;
+	    try { filename = atob(id); }
+        catch (e) {}
+	    return filename.indexOf("/") !== -1 ? filename.substr(filename.lastIndexOf("/")+1) : filename;
+	};
+
+	_renderInputField = () => {
+	    return (<input type="file" disabled={this.state.readonly ? true : undefined}
+	                   onChange={this.handleChange.bind(this)}></input>);
+    };
 
 	_allowedTypes = () => {
 	    if (this.props.allowedTypes == null) return ['image/*', 'video/*', 'application/*', 'text/*'];
@@ -117,7 +149,7 @@ export default class FileEditable extends AbstractFile {
 	}
 
 	refresh = (info) => {
-		this.setState({ info });
+		this.setState({ value: info.value });
 	};
 
 	refreshReadonly = (readonly) => {

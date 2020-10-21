@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import static io.intino.alexandria.ui.utils.UUIDUtil.isUUID;
 import static java.util.stream.Collectors.toList;
 
 public abstract class Soul implements DisplayRepository {
@@ -70,7 +71,7 @@ public abstract class Soul implements DisplayRepository {
         if (display != null) return (T) display;
         String ownerId = owner != null && !owner.isEmpty() ? owner : "";
         String key = ownerId + id;
-        if (!displays.containsKey(key)) key = ownerId + id;
+        if (!displays.containsKey(key)) key = id;
         return displays.containsKey(key) ? (T) displays.get(key) : null;
     }
 
@@ -94,6 +95,7 @@ public abstract class Soul implements DisplayRepository {
         String context = display.owner() != null ? display.owner().path() : "";
         this.displays.put(ownerId + display.id(), display);
         this.displays.put(context + display.id(), display);
+        if (isUUID(display.id())) this.displays.put(display.id(), display);
         registerListeners.forEach(listener -> listener.accept(display));
     }
 

@@ -23,6 +23,12 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	}
 
 	@Override
+	public void didMount() {
+		super.didMount();
+		refresh();
+	}
+
+	@Override
 	public void init() {
 		super.init();
 		createPreview();
