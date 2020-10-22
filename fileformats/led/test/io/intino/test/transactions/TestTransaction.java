@@ -64,7 +64,7 @@ public class TestTransaction extends Transaction {
 
 	@Override
 	public long id() {
-		return getAlignedLong(0);
+		return bitBuffer.getAlignedLong(0);
 	}
 
 	@Override
@@ -73,100 +73,100 @@ public class TestTransaction extends Transaction {
 	}
 
 	public TestTransaction id(long id) {
-		setAlignedLong(ID_OFFSET, id);
+		bitBuffer.setAlignedLong(ID_OFFSET, id);
 		return this;
 	}
 
 	public short a() {
-		return (short) getInteger(A_OFFSET, A_BITS);
+		return bitBuffer.getShortNBits(A_OFFSET, A_BITS);
 	}
 
 	public TestTransaction a(short a) {
-		setInteger(A_OFFSET, A_BITS, a);
+		bitBuffer.setShortNBits(A_OFFSET, A_BITS, a);
 		return this;
 	}
 
 	public int b() {
-		return (int) getInteger(B_OFFSET, B_BITS);
+		return bitBuffer.getIntegerNBits(B_OFFSET, B_BITS);
 	}
 
 	public TestTransaction b(int b) {
-		setInteger(B_OFFSET, B_BITS, b);
+		bitBuffer.setIntegerNBits(B_OFFSET, B_BITS, b);
 		return this;
 	}
 
 	public float c() {
-		return getAlignedFloat(byteIndex(C_OFFSET));
+		return bitBuffer.getAlignedReal32Bits(C_OFFSET);
 	}
 
 	public TestTransaction c(float c) {
-		setAlignedFloat(byteIndex(C_OFFSET), c);
+		bitBuffer.setAlignedReal32Bits(C_OFFSET, c);
 		return this;
 	}
 
 	public int d() {
-		return (int) getInteger(D_OFFSET, D_BITS);
+		return bitBuffer.getIntegerNBits(D_OFFSET, D_BITS);
 	}
 
 	public TestTransaction d(int d) {
-		setInteger(D_OFFSET, D_BITS, d);
+		bitBuffer.setIntegerNBits(D_OFFSET, D_BITS, d);
 		return this;
 	}
 
 	public long e() {
-		return getInteger(E_OFFSET, E_BITS);
+		return bitBuffer.getLongNBits(E_OFFSET, E_BITS);
 	}
 
 	public TestTransaction e(long e) {
-		setInteger(E_OFFSET, E_BITS, e);
+		bitBuffer.setLongNBits(E_OFFSET, E_BITS, e);
 		return this;
 	}
 
 	public double f() {
-		return getAlignedDouble(byteIndex(F_OFFSET));
+		return bitBuffer.getAlignedReal64Bits(F_OFFSET);
 	}
 
 	public TestTransaction f(double f) {
-		setAlignedDouble(byteIndex(F_OFFSET), f);
+		bitBuffer.setAlignedReal64Bits(F_OFFSET, f);
 		return this;
 	}
 
 	public byte g() {
-		return (byte) getInteger(G_OFFSET, G_BITS);
+		return bitBuffer.getByteNBits(G_OFFSET, G_BITS);
 	}
 
 	public TestTransaction g(byte g) {
-		setInteger(G_OFFSET, G_BITS, g);
+		bitBuffer.setIntegerNBits(G_OFFSET, G_BITS, g);
 		return this;
 	}
 
 	public SimpleWord h() {
-		final int word = (int) getInteger(H_OFFSET, H_BITS);
+		final byte word = bitBuffer.getByteNBits(H_OFFSET, H_BITS);
 		return word == NULL ? null : SimpleWord.values()[word - 1];
 	}
 
 	public TestTransaction h(SimpleWord h) {
-		setInteger(H_OFFSET, H_BITS, h == null ? NULL : h.ordinal() + 1);
+		bitBuffer.setByteNBits(H_OFFSET, H_BITS, (byte)(h == null ? NULL : h.ordinal() + 1));
 		return this;
 	}
 
 	public String i() {
-		final int word = (int) getInteger(I_OFFSET, I_BITS);
+		final int word = bitBuffer.getByteNBits(I_OFFSET, I_BITS);
 		return word == NULL ? null : ResourceWord.values().get(word);
 	}
 
 	public TestTransaction i(String i) {
-		setInteger(I_OFFSET, I_BITS, i == null ? NULL : ResourceWord.indexOf(i));
+		bitBuffer.setByteNBits(I_OFFSET, I_BITS, (byte)(i == null ? NULL : ResourceWord.indexOf(i)));
 		return this;
 	}
 
 	public Boolean j() {
-		final int word = (int) getInteger(I_OFFSET, I_BITS);
+		final byte word = bitBuffer.getByteNBits(I_OFFSET, I_BITS);
 		return word == NULL ? null : word == 1;
 	}
 
 	public TestTransaction j(Boolean i) {
-		setInteger(J_OFFSET, J_BITS, i == null ? NULL : i ? 1 : 2);
+		bitBuffer.setByteNBits(J_OFFSET, J_BITS, (byte)(i == null ? NULL : i ? 1 : 2));
 		return this;
 	}
 
