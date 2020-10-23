@@ -1,22 +1,18 @@
 package io.intino.alexandria.led;
 
-import io.intino.alexandria.led.leds.ListLed;
 import io.intino.alexandria.logger.Logger;
 import org.xerial.snappy.SnappyOutputStream;
 
 import java.io.*;
-import java.nio.ByteBuffer;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static io.intino.alexandria.led.util.MemoryUtils.memcpy;
 
 public class LedWriter {
+
 	private final int bufferSize = 1024;
 	private final OutputStream destination;
 
@@ -29,7 +25,7 @@ public class LedWriter {
 		this.destination = destination;
 	}
 
-	public OutputStream outputStream(File destination) {
+	public FileOutputStream outputStream(File destination) {
 		try {
 			return new FileOutputStream(destination);
 		} catch (FileNotFoundException e) {
@@ -43,8 +39,7 @@ public class LedWriter {
 	}
 
 	public void write(LedStream<? extends Transaction> led) {
-		Iterable<? extends Transaction> iterable = () -> (Iterator<Transaction>) led;
-		serialize(new ListLed<>(StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList())));
+		serialize(led);
 	}
 
 	private void serialize(Led<? extends Transaction> led) {
@@ -55,8 +50,9 @@ public class LedWriter {
 		final int numBatches = (int) Math.ceil(led.size() / (float) bufferSize);
 		List<? extends Transaction> elements = led.elements();
 		try (OutputStream fos = this.destination) {
-			fos.write(ByteBuffer.allocate(4).putInt((int) size).array());
-			fos.write(ByteBuffer.allocate(4).putInt(transactionSize).array());
+			LedHeader header = new LedHeader();
+			header.elementCount(size).elementSize(transactionSize);
+			fos.write(header.toByteArray());
 			try (SnappyOutputStream outputStream = new SnappyOutputStream(fos)) {
 				for (int i = 0; i < numBatches; i++) {
 					final int start = i * bufferSize;
@@ -81,8 +77,9 @@ public class LedWriter {
 
 	private void serialize(LedStream<? extends Transaction> led) {
 		try (OutputStream fos = this.destination) {
-			fos.write(ByteBuffer.allocate(4).putInt(0).array()); //TODO
-			fos.write(ByteBuffer.allocate(4).putInt(led.transactionSize()).array());
+			LedHeader header = new LedHeader();
+			header.elementCount(LedHeader.UNKNOWN_SIZE).elementSize(led.transactionSize());
+			fos.write(header.toByteArray());
 			try (SnappyOutputStream outputStream = new SnappyOutputStream(fos)) {
 				final int transactionSize = led.transactionSize();
 				final byte[] outputBuffer = new byte[bufferSize * transactionSize];

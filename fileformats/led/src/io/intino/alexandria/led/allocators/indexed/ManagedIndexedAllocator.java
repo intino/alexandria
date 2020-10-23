@@ -61,7 +61,7 @@ public class ManagedIndexedAllocator<T extends Transaction> implements IndexedAl
 
 	@Override
 	public void clear(int index) {
-		memset(address.get() + index * transactionSize, transactionSize, 0);
+		// memset(address.get() + index * transactionSize, transactionSize, 0);
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class ManagedIndexedAllocator<T extends Transaction> implements IndexedAl
 	}
 
 	@Override
-	public int size() {
+	public long size() {
 		return (int) (byteSize() / transactionSize);
 	}
 

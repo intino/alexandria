@@ -50,6 +50,11 @@ public class StackListAllocator<T extends Transaction> implements StackAllocator
 	}
 
 	@Override
+	public long size() {
+		return (currentStackAllocator.get() * stackSize()) / elementSize;
+	}
+
+	@Override
 	public synchronized T malloc() {
 		if (stackAllocators.isEmpty()) {
 			allocateNewStack();

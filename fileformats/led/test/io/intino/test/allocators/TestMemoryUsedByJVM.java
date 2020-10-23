@@ -2,7 +2,7 @@ package io.intino.test.allocators;
 
 import io.intino.alexandria.led.Transaction;
 import io.intino.alexandria.led.allocators.DefaultAllocator;
-import io.intino.alexandria.led.allocators.SchemaAllocator;
+import io.intino.alexandria.led.allocators.TransactionAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.led.allocators.stack.StackListAllocator;
 import io.intino.test.transactions.TestTransaction;
@@ -59,7 +59,7 @@ public class TestMemoryUsedByJVM {
 		System.out.println(">> StackListAllocator: " + stackListAllocatorMemory / BYTES_TO_MB + " MB used");
 	}
 
-	private static long getMemoryUsed(SchemaAllocator<TestTransaction> allocator) {
+	private static long getMemoryUsed(TransactionAllocator<TestTransaction> allocator) {
 		RUNTIME.gc();
 		final long startMemory = usedMemory();
 		Transaction schema = null;

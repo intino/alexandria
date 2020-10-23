@@ -2,7 +2,7 @@ package io.intino.test.allocators;
 
 import io.intino.alexandria.led.Transaction;
 import io.intino.alexandria.led.allocators.DefaultAllocator;
-import io.intino.alexandria.led.allocators.SchemaAllocator;
+import io.intino.alexandria.led.allocators.TransactionAllocator;
 import io.intino.alexandria.led.allocators.indexed.ArrayAllocator;
 import io.intino.alexandria.led.allocators.indexed.ListAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
@@ -71,11 +71,11 @@ public class TestAllocatorsSpeed {
 		final long defaultAllocatorTime = benchmark(n, new DefaultAllocator<>(TestTransaction.SIZE, TestTransaction::new));
 	}
 
-	private static long benchmark(SchemaAllocator<TestTransaction> allocator) throws InterruptedException {
+	private static long benchmark(TransactionAllocator<TestTransaction> allocator) throws InterruptedException {
 		return benchmark(NUM_ELEMENTS, allocator);
 	}
 
-	private static long benchmark(int n, SchemaAllocator<TestTransaction> allocator) throws InterruptedException {
+	private static long benchmark(int n, TransactionAllocator<TestTransaction> allocator) throws InterruptedException {
 
 		Runtime.getRuntime().gc();
 

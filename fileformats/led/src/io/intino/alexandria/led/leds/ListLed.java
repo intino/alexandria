@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class ListLed<S extends Transaction> implements Led<S> {
+
 	private final List<S> list;
 
 	public ListLed(List<S> list) {
@@ -22,6 +23,11 @@ public class ListLed<S extends Transaction> implements Led<S> {
 	@Override
 	public int transactionSize() {
 		return list.isEmpty() ? 0 : list.get(0).size();
+	}
+
+	@Override
+	public S transaction(int index) {
+		return list.get(index);
 	}
 
 	@Override

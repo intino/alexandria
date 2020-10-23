@@ -12,6 +12,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class DynamicLed <S extends Transaction> implements Led<S> {
+
 	private final ListAllocator<S> allocator;
 	private final int transactionSize;
 
@@ -20,7 +21,7 @@ public class DynamicLed <S extends Transaction> implements Led<S> {
 		this.allocator = new ListAllocator<>(1000, schemaSize, factory);
 	}
 
-	public Transaction newSchema() {
+	public Transaction newTransaction() {
 		return allocator.malloc();
 	}
 
@@ -32,6 +33,14 @@ public class DynamicLed <S extends Transaction> implements Led<S> {
 	@Override
 	public int transactionSize() {
 		return transactionSize;
+	}
+
+	@Override
+	public S transaction(int index) {
+		if(index >= size()) {
+			throw new IndexOutOfBoundsException("Index >= " + size());
+		}
+		return allocator.malloc(index);
 	}
 
 	@Override

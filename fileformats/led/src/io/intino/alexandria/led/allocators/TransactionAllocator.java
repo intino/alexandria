@@ -2,7 +2,9 @@ package io.intino.alexandria.led.allocators;
 
 import io.intino.alexandria.led.Transaction;
 
-public interface SchemaAllocator<T extends Transaction> extends AutoCloseable {
+public interface TransactionAllocator<T extends Transaction> extends AutoCloseable {
+
+	long size();
 
 	T malloc();
 

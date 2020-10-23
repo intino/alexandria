@@ -9,7 +9,7 @@ import io.intino.alexandria.led.Led;
 import io.intino.alexandria.led.LedStream;
 import io.intino.alexandria.led.LedReader;
 import io.intino.alexandria.led.Transaction;
-import io.intino.alexandria.led.allocators.SchemaAllocator;
+import io.intino.alexandria.led.allocators.TransactionAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.led.leds.ListLed;
 import org.junit.After;
@@ -50,7 +50,7 @@ public class LedSessionManager_ {
 	}
 
 	private List<TestSchema> unsortedList() {
-		SchemaAllocator<TestSchema> allocator = StackAllocators.newManaged(TestSchema.SIZE, 1000, TestSchema::new);
+		TransactionAllocator<TestSchema> allocator = StackAllocators.newManaged(TestSchema.SIZE, 1000, TestSchema::new);
 		List<TestSchema> result = new ArrayList<>();
 		for (int i = 10; i <= 1000; i += 5) {
 			int id = (int) Math.cos(i / 20 * Math.PI) * i;
