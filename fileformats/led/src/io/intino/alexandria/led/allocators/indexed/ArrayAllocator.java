@@ -75,7 +75,7 @@ public class ArrayAllocator<T extends Transaction> implements IndexedAllocator<T
 	}
 
 	@Override
-	public int size() {
+	public long size() {
 		return Arrays.stream(stores).mapToInt(this::countElements).sum();
 	}
 
@@ -96,7 +96,7 @@ public class ArrayAllocator<T extends Transaction> implements IndexedAllocator<T
 
 	@Override
 	public void clear() {
-		Arrays.stream(stores).forEach(ByteBufferStore::clear);
+		// Arrays.stream(stores).forEach(ByteBufferStore::clear);
 	}
 
 	@Override

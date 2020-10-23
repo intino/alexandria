@@ -1,13 +1,10 @@
 package io.intino.test.transactions;
 
 import io.intino.alexandria.led.allocators.DefaultAllocator;
-import io.intino.alexandria.led.allocators.SchemaAllocator;
-import io.intino.alexandria.led.util.BitUtils;
-import io.intino.alexandria.led.util.MemoryUtils;
+import io.intino.alexandria.led.allocators.TransactionAllocator;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.nio.ByteOrder;
 import java.util.Random;
 
 import static io.intino.alexandria.led.util.BitUtils.maxPossibleNumber;
@@ -17,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 
 public class TransactionTest {
 	private final Random random;
-	private final SchemaAllocator<TestTransaction> allocator;
+	private final TransactionAllocator<TestTransaction> allocator;
 	private TestTransaction schema;
 
 	public TransactionTest() {

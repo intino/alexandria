@@ -13,11 +13,14 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class ManagedIndexedLed<S extends Transaction> implements Led<S> {
+import static java.util.Objects.requireNonNull;
+
+public class IndexedLed<S extends Transaction> implements Led<S> {
+
 	private final IndexedAllocator<S> allocator;
 
-	public ManagedIndexedLed(ByteBuffer buffer, int baseOffset, int size, int transactionSize, TransactionFactory<S> factory) {
-		allocator = new ManagedIndexedAllocator<>(buffer, baseOffset, size, transactionSize, factory);
+	public IndexedLed(IndexedAllocator<S> allocator) {
+		this.allocator = requireNonNull(allocator);
 	}
 
 	public long size() {
@@ -30,8 +33,16 @@ public class ManagedIndexedLed<S extends Transaction> implements Led<S> {
 	}
 
 	@Override
+	public S transaction(int index) {
+		if(index >= size()) {
+			throw new IndexOutOfBoundsException("Index >= " + size());
+		}
+		return allocator.malloc(index);
+	}
+
+	@Override
 	public Iterator<S> iterator() {
-		return elements().listIterator();
+		return stream().iterator();
 	}
 
 	@Override
@@ -41,9 +52,5 @@ public class ManagedIndexedLed<S extends Transaction> implements Led<S> {
 
 	private Stream<S> stream() {
 		return IntStream.range(0, (int) size()).mapToObj(allocator::malloc);
-	}
-
-	private long byteSize() {
-		return allocator.byteSize();
 	}
 }

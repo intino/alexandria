@@ -48,6 +48,11 @@ public class SingleStackAllocator<T extends Transaction> implements StackAllocat
 	}
 
 	@Override
+	public long size() {
+		return stackSize() / elementSize;
+	}
+
+	@Override
 	public synchronized T malloc() {
 		if (remainingBytes() < elementSize) {
 			throw new StackAllocatorOverflowException();

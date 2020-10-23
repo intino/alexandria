@@ -1,7 +1,7 @@
 package io.intino.test;
 
 import io.intino.alexandria.led.*;
-import io.intino.alexandria.led.allocators.SchemaAllocator;
+import io.intino.alexandria.led.allocators.TransactionAllocator;
 import io.intino.alexandria.led.allocators.indexed.ListAllocator;
 import io.intino.alexandria.led.leds.ListLed;
 import io.intino.test.transactions.TestTransaction;
@@ -47,17 +47,17 @@ public class LedWriter_ {
 	private void read(List<TestTransaction> original) {
 		long start;
 		start = System.currentTimeMillis();
-		LedStream<TestTransaction> led = new LedReader(tempFile).read(TestTransaction::new);
+		Led<TestTransaction> led = new LedReader(tempFile).readAll(TestTransaction::new);
 		System.out.println(">> Deserialized " + NUM_ELEMENTS + "(" + TestTransaction.SIZE + " bytes each) in " + (System.currentTimeMillis() - start) / 1000 + " seconds");
 		AtomicInteger size = new AtomicInteger();
 		IntStream.range(0, original.size()).forEach(i -> {
-			assertEquals(original.get(i), led.next());
+			assertEquals(original.get(i), led.transaction(i));
 			size.getAndIncrement();
 		});
 		assertEquals(original.size(), size.get());
 	}
 
-	private Stream<TestTransaction> generateTestSchemaObjs(SchemaAllocator<TestTransaction> allocator) {
+	private Stream<TestTransaction> generateTestSchemaObjs(TransactionAllocator<TestTransaction> allocator) {
 		Stream<TestTransaction> stream = IntStream.range(0, NUM_ELEMENTS)
 				.parallel()
 				.unordered()

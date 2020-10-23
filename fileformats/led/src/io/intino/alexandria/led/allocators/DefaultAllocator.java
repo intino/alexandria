@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
 
 import static io.intino.alexandria.led.util.MemoryUtils.allocBuffer;
 
-public class DefaultAllocator<T extends Transaction> implements SchemaAllocator<T> {
+public class DefaultAllocator<T extends Transaction> implements TransactionAllocator<T> {
 
 	private final int elementSize;
 	private final TransactionFactory<T> factory;
@@ -17,6 +17,11 @@ public class DefaultAllocator<T extends Transaction> implements SchemaAllocator<
 	public DefaultAllocator(int transactionSize, TransactionFactory<T> factory) {
 		this.elementSize = transactionSize;
 		this.factory = factory;
+	}
+
+	@Override
+	public long size() {
+		return Long.MAX_VALUE;
 	}
 
 	@Override

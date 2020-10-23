@@ -1,8 +1,11 @@
 package io.intino.alexandria.led;
 
 import io.intino.alexandria.led.allocators.TransactionFactory;
+import io.intino.alexandria.led.allocators.indexed.IndexedAllocator;
+import io.intino.alexandria.led.allocators.indexed.IndexedAllocatorFactory;
 import io.intino.alexandria.led.allocators.stack.StackAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
+import io.intino.alexandria.led.leds.IndexedLed;
 import io.intino.alexandria.logger.Logger;
 import org.xerial.snappy.SnappyInputStream;
 
@@ -16,6 +19,7 @@ import static io.intino.alexandria.led.util.MemoryUtils.allocBuffer;
 import static io.intino.alexandria.led.util.MemoryUtils.memcpy;
 
 public class LedReader {
+
 	private final InputStream is;
 
 	public LedReader(File file) {
@@ -28,21 +32,34 @@ public class LedReader {
 
 	public int size() {
 		try (InputStream stream = is) {
-			int anInt = ByteBuffer.wrap(stream.readNBytes(4)).getInt();
+			int size = (int) LedHeader.from(stream).elementCount();
 			is.reset();
-			return anInt;
+			return size;
 		} catch (IOException e) {
 			Logger.error(e);
-			return 0;
+			return (int) LedHeader.UNKNOWN_SIZE;
 		}
+	}
+
+	public <S extends Transaction> Led<S> readAll(TransactionFactory<S> factory) {
+		return readAll(getDefaultAllocatorFactory(), factory);
+	}
+
+	public <S extends Transaction> Led<S> readAll(IndexedAllocatorFactory<S> allocatorFactory, TransactionFactory<S> factory) {
+		LedHeader header = LedHeader.from(this.is);
+		try(SnappyInputStream inputStream = new SnappyInputStream(this.is)) {
+			IndexedAllocator<S> allocator = allocatorFactory.create(inputStream, header.elementCount(), header.elementSize(), factory);
+			return new IndexedLed<>(allocator);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public <S extends Transaction> LedStream<S> read(TransactionFactory<S> factory) {
 		try {
-			ByteBuffer header = ByteBuffer.wrap(is.readNBytes(8));
-			int ledSize = header.getInt();
-			long transactionSize = header.getInt();
-			return allocate(new SnappyInputStream(is), factory, (int) transactionSize);
+			LedHeader header = LedHeader.from(is);
+			return allocate(new SnappyInputStream(is), factory, header.elementSize());
 		} catch (IOException e) {
 			Logger.error(e);
 		}
@@ -61,7 +78,19 @@ public class LedReader {
 		}
 	}
 
+	private <S extends Transaction> IndexedAllocatorFactory<S> getDefaultAllocatorFactory() {
+		return (inputStream, elementCount, elementSize, factory) -> {
+
+			if(elementCount >= 0 && elementCount * elementSize < Integer.MAX_VALUE) {
+				return IndexedAllocatorFactory.newManagedIndexedAllocator(inputStream, elementCount, elementSize, factory);
+			}
+
+			return IndexedAllocatorFactory.newArrayAllocator(inputStream, elementCount, elementSize, factory);
+		};
+	}
+
 	private static class ReaderLedStream<T extends Transaction> implements LedStream<T> {
+
 		private static final int INPUT_BUFFER_MIN_SIZE = 1024;
 
 		private final InputStream inputStream;
@@ -141,6 +170,5 @@ public class LedReader {
 		public void close() throws Exception {
 			inputStream.close();
 		}
-
 	}
 }

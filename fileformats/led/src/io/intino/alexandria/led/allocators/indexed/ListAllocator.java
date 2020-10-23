@@ -103,7 +103,7 @@ public class ListAllocator<T extends Transaction> implements IndexedAllocator<T>
 	}
 
 	@Override
-	public int size() {
+	public long size() {
 		return lastIndex;
 	}
 
@@ -118,7 +118,9 @@ public class ListAllocator<T extends Transaction> implements IndexedAllocator<T>
 
 	@Override
 	public void clear() {
-		stores.forEach(ByteBufferStore::clear);
+		lastIndex = 0;
+		freeIndices.clear();
+		// stores.forEach(ByteBufferStore::clear);
 	}
 
 	@Override

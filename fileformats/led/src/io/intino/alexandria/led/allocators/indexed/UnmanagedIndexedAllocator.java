@@ -55,8 +55,8 @@ public class UnmanagedIndexedAllocator<T extends Transaction> implements Indexed
 	}
 
 	@Override
-	public int size() {
-		return (int) (byteSize() / elementSize);
+	public long size() {
+		return (byteSize() / elementSize);
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class UnmanagedIndexedAllocator<T extends Transaction> implements Indexed
 
 	@Override
 	public void clear() {
-		store.clear();
+		// store.clear();
 	}
 
 	@Override
