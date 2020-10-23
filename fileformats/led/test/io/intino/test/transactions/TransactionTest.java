@@ -2,9 +2,12 @@ package io.intino.test.transactions;
 
 import io.intino.alexandria.led.allocators.DefaultAllocator;
 import io.intino.alexandria.led.allocators.SchemaAllocator;
+import io.intino.alexandria.led.util.BitUtils;
+import io.intino.alexandria.led.util.MemoryUtils;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.nio.ByteOrder;
 import java.util.Random;
 
 import static io.intino.alexandria.led.util.BitUtils.maxPossibleNumber;

@@ -17,53 +17,57 @@ public interface BitBuffer extends OffHeapObject {
 
 	long endOffset();
 
-	long getInteger(int bitIndex, int bitCount);
+	byte getByteNBits(int bitIndex, int bitCount);
 
-	float getFloat(int bitIndex);
+	short getShortNBits(int bitIndex, int bitCount);
 
-	double getDouble(int bitIndex);
+	int getIntegerNBits(int bitIndex, int bitCount);
 
-	void setInteger(int bitIndex, int bitCount, long value);
+	long getLongNBits(int bitIndex, int bitCount);
 
-	void setInt8(int byteIndex, int bitOffset, int bitCount, long value);
+	float getReal32Bits(int bitIndex);
 
-	void setInt16(int byteIndex, int bitOffset, int bitCount, long value);
+	double getReal64Bits(int bitIndex);
 
-	void setInt32(int byteIndex, int bitOffset, int bitCount, long value);
+	void setByteNBits(int bitIndex, int bitCount, byte value);
 
-	void setInt64(int byteIndex, int bitOffset, int bitCount, long value);
+	void setShortNBits(int bitIndex, int bitCount, short value);
 
-	void setFloat(int bitIndex, float value);
+	void setIntegerNBits(int bitIndex, int bitCount, int value);
 
-	void setDouble(int bitIndex, double value);
+	void setLongNBits(int bitIndex, int bitCount, long value);
 
-	byte getAlignedByte(int byteIndex);
+	void setReal32Bits(int bitIndex, float value);
 
-	short getAlignedShort(int byteIndex);
+	void setReal64Bits(int bitIndex, double value);
 
-	char getAlignedChar(int byteIndex);
+	byte getAlignedByte(int bitIndex);
 
-	int getAlignedInt(int byteIndex);
+	short getAlignedShort(int bitIndex);
 
-	long getAlignedLong(int byteIndex);
+	char getAlignedChar(int bitIndex);
 
-	float getAlignedFloat(int byteIndex);
+	int getAlignedInteger(int bitIndex);
 
-	double getAlignedDouble(int byteIndex);
+	long getAlignedLong(int bitIndex);
 
-	void setAlignedByte(int byteIndex, byte value);
+	float getAlignedReal32Bits(int bitIndex);
 
-	void setAlignedShort(int byteIndex, short value);
+	double getAlignedReal64Bits(int bitIndex);
 
-	void setAlignedChar(int byteIndex, char value);
+	void setAlignedByte(int bitIndex, byte value);
 
-	void setAlignedInt(int byteIndex, int value);
+	void setAlignedShort(int bitIndex, short value);
 
-	void setAlignedLong(int byteIndex, long value);
+	void setAlignedChar(int bitIndex, char value);
 
-	void setAlignedFloat(int byteIndex, float value);
+	void setAlignedInteger(int bitIndex, int value);
 
-	void setAlignedDouble(int byteIndex, double value);
+	void setAlignedLong(int bitIndex, long value);
+
+	void setAlignedReal32Bits(int bitIndex, float value);
+
+	void setAlignedReal64Bits(int bitIndex, double value);
 
 	void clear();
 
