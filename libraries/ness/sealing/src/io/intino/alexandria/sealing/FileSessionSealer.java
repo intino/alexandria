@@ -30,7 +30,7 @@ public class FileSessionSealer implements SessionSealer {
 			sealEvents(avoidSorting);
 			sealSets();
 			makeSetIndexes();
-			sealLedger();
+			sealTransactions();
 		} catch (Throwable e) {
 			Logger.error(e);
 		}
@@ -53,9 +53,8 @@ public class FileSessionSealer implements SessionSealer {
 		new SetIndexer(datalake.setStoreFolder()).make();
 	}
 
-	private void sealLedger() {
-		TransactionSessionManager.seal(stageFolder, datalake.ledgerFolder());
-
+	private void sealTransactions() {
+		TransactionSessionManager.seal(stageFolder, datalake.transactionStoreFolder());
 	}
 
 	private void lock() {

@@ -5,5 +5,4 @@ Artifact("io.intino.alexandria", "1.1.0") session
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
-Repository("intino-maven")
-	Release("https://artifactory.intino.io/artifactory/releases")
+Repository("intino-maven") > Release("https://artifactory.intino.io/artifactory/releases")

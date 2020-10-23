@@ -21,7 +21,7 @@ public class FileTransaction implements Datalake.TransactionStore.Transaction {
 
 	@Override
 	public Timetag timetag() {
-		return new Timetag(file.getName().replace(FileTransactionStore.LedExtension, ""));
+		return new Timetag(file.getName().replace(FileTransactionStore.TransactionExtension, ""));
 	}
 
 	public File file() {

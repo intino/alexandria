@@ -6,10 +6,13 @@ import io.intino.alexandria.datalake.Datalake.TransactionStore;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static io.intino.alexandria.datalake.file.FileTransactionStore.LedExtension;
+import static io.intino.alexandria.datalake.file.FileTransactionStore.TransactionExtension;
 
 public class FileTransactionTank implements TransactionStore.Tank {
 	private final File root;
@@ -25,34 +28,39 @@ public class FileTransactionTank implements TransactionStore.Tank {
 
 	@Override
 	public TransactionStore.Transaction first() {
-		return transactions().findFirst().orElse(currentLed());
+		return transactions().findFirst().orElse(currentTransaction());
 	}
 
 	@Override
 	public TransactionStore.Transaction last() {
-		return FS.foldersIn(root, FS.Sort.Reversed).map(FileTransaction::new).findFirst().orElse(currentLed());
+		List<File> files = transactionFiles().collect(Collectors.toList());
+		return files.isEmpty() ? null : new FileTransaction(files.get(files.size() - 1));
 	}
 
 	@Override
 	public Stream<TransactionStore.Transaction> transactions() {
-		return FS.foldersIn(root).map(FileTransaction::new);
+		return transactionFiles().map(FileTransaction::new);
 	}
-
 
 	@Override
 	public Stream<TransactionStore.Transaction> transactions(Timetag from, Timetag to) {
-		return StreamSupport.stream(from.iterateTo(to).spliterator(), false).map(this::on);
+		return StreamSupport.stream(from.iterateTo(to).spliterator(), false).map(this::on).filter(Objects::nonNull);
 	}
 
 	public TransactionStore.Transaction on(Timetag tag) {
-		return new FileTransaction(new File(root, tag.value() + LedExtension));
+		File file = new File(root, tag.value() + TransactionExtension);
+		return file.exists() ? new FileTransaction(file) : null;
 	}
 
 	public File root() {
 		return root;
 	}
 
-	private FileTransaction currentLed() {
-		return new FileTransaction(new File(root, new Timetag(LocalDateTime.now(), Scale.Month).toString() + LedExtension));
+	private FileTransaction currentTransaction() {
+		return new FileTransaction(new File(root, new Timetag(LocalDateTime.now(), Scale.Month).toString() + TransactionExtension));
+	}
+
+	private Stream<File> transactionFiles() {
+		return FS.filesIn(root, path -> path.getName().endsWith(TransactionExtension));
 	}
 }
