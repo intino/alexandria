@@ -46,79 +46,79 @@ public class TestSchema extends Transaction {
 
 	@Override
 	public long id() {
-		return getAlignedLong(0);
+		return bitBuffer.getAlignedLong(0);
 	}
 
 	@Override
 	public int size() {
-		return (int) Math.ceil((G_OFFSET + G_BITS) / (float) Byte.SIZE);
+		return SIZE;
 	}
 
 	public TestSchema id(long id) {
-		setAlignedLong(ID_OFFSET, id);
+		bitBuffer.setAlignedLong(ID_OFFSET, id);
 		return this;
 	}
 
 	public short a() {
-		return (short) getInteger(A_OFFSET, A_BITS);
+		return bitBuffer.getShortNBits(A_OFFSET, A_BITS);
 	}
 
 	public TestSchema a(short a) {
-		setInteger(A_OFFSET, A_BITS, a);
+		bitBuffer.setShortNBits(A_OFFSET, A_BITS, a);
 		return this;
 	}
 
 	public int b() {
-		return (int) getInteger(B_OFFSET, B_BITS);
+		return bitBuffer.getIntegerNBits(B_OFFSET, B_BITS);
 	}
 
 	public TestSchema b(int b) {
-		setInteger(B_OFFSET, B_BITS, b);
+		bitBuffer.setIntegerNBits(B_OFFSET, B_BITS, b);
 		return this;
 	}
 
 	public float c() {
-		return getAlignedFloat(byteIndex(C_OFFSET));
+		return bitBuffer.getAlignedReal32Bits(C_OFFSET);
 	}
 
 	public TestSchema c(float c) {
-		setAlignedFloat(byteIndex(C_OFFSET), c);
+		bitBuffer.setAlignedReal32Bits(C_OFFSET, c);
 		return this;
 	}
 
 	public int d() {
-		return (int) getInteger(D_OFFSET, D_BITS);
+		return bitBuffer.getIntegerNBits(D_OFFSET, D_BITS);
 	}
 
 	public TestSchema d(int d) {
-		setInteger(D_OFFSET, D_BITS, d);
+		bitBuffer.setIntegerNBits(D_OFFSET, D_BITS, d);
 		return this;
 	}
 
 	public long e() {
-		return getInteger(E_OFFSET, E_BITS);
+		return bitBuffer.getLongNBits(E_OFFSET, E_BITS);
 	}
 
 	public TestSchema e(long e) {
-		setInteger(E_OFFSET, E_BITS, e);
+		bitBuffer.setLongNBits(E_OFFSET, E_BITS, e);
 		return this;
 	}
 
 	public double f() {
-		return getAlignedDouble(byteIndex(F_OFFSET));
+		return bitBuffer.getAlignedReal64Bits(F_OFFSET);
 	}
 
 	public TestSchema f(double f) {
-		setAlignedDouble(byteIndex(F_OFFSET), f);
+		bitBuffer.setAlignedReal64Bits(F_OFFSET, f);
 		return this;
 	}
 
 	public byte g() {
-		return (byte) getInteger(G_OFFSET, G_BITS);
+		return bitBuffer.getByteNBits(G_OFFSET, G_BITS);
 	}
 
 	public TestSchema g(byte g) {
-		setInteger(G_OFFSET, G_BITS, g);
+		bitBuffer.setByteNBits(G_OFFSET, G_BITS, g);
 		return this;
 	}
 
