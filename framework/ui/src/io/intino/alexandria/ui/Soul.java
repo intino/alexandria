@@ -119,8 +119,8 @@ public abstract class Soul implements DisplayRepository {
     }
 
     private boolean containsAll(List<String> contextList, String owner) {
-        List<String> ownerList = Arrays.asList(owner.split("\\."));
-        if (ownerList.size() < contextList.size()) return contextList.containsAll(ownerList);
+        List<String> ownerList = owner != null ? Arrays.asList(owner.split("\\.")) : Collections.emptyList();
+        if (ownerList.size() > 0 && ownerList.size() < contextList.size()) return contextList.containsAll(ownerList);
         else return ownerList.containsAll(contextList);
     }
 }
