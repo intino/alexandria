@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.2-SNAPSHOT") led
+Artifact("io.intino.alexandria", "1.0.2") led
 	Imports
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 
