@@ -9,7 +9,10 @@ import io.intino.alexandria.event.EventStream.Sequence;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.intino.alexandria.datalake.file.FileEventStore.EventExtension;
@@ -33,7 +36,7 @@ public class FileEventTank implements Datalake.EventStore.Tank {
 
 	@Override
 	public Stream<Tub> tubs() {
-		return FS.filesIn(root, pathname -> pathname.getName().endsWith(EventExtension)).map(FileEventTub::new);
+		return tubFiles().map(FileEventTub::new);
 	}
 
 	@Override
@@ -43,7 +46,8 @@ public class FileEventTank implements Datalake.EventStore.Tank {
 
 	@Override
 	public Tub last() {
-		return FS.foldersIn(root, FS.Sort.Reversed).map(FileEventTub::new).findFirst().orElse(currentTub());
+		List<File> files = tubFiles().collect(Collectors.toList());
+		return files.isEmpty() ? null : new FileEventTub(files.get(files.size() - 1));
 	}
 
 	@Override
@@ -63,6 +67,10 @@ public class FileEventTank implements Datalake.EventStore.Tank {
 
 	public File root() {
 		return root;
+	}
+
+	private Stream<File> tubFiles() {
+		return FS.filesIn(root, pathname -> pathname.getName().endsWith(EventExtension));
 	}
 
 	private FileEventTub currentTub() {

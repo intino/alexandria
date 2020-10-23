@@ -14,14 +14,14 @@ import java.util.stream.Stream;
 import static java.util.Comparator.comparing;
 
 public class TransactionSessionManager {
-	public static void seal(File stageFolder, File ledgerStoreFolder) {
+	public static void seal(File stageFolder, File transactionStoreFolder) {
 		transactionSessions(stageFolder).sorted(comparing(File::getName))
-				.parallel().forEach(e -> sealSession(ledgerStoreFolder, e));
+				.parallel().forEach(e -> sealSession(transactionStoreFolder, e));
 	}
 
-	private static void sealSession(File ledgerStoreFolder, File session) {
+	private static void sealSession(File transactionStoreFolder, File session) {
 		try {
-			File file = datalakeFile(ledgerStoreFolder, fingerprintOf(session));
+			File file = datalakeFile(transactionStoreFolder, fingerprintOf(session));
 			FS.copyInto(file, new FileInputStream(session));
 			session.renameTo(new File(session.getAbsolutePath() + ".treated"));
 		} catch (FileNotFoundException e) {
@@ -34,7 +34,7 @@ public class TransactionSessionManager {
 	}
 
 	private static File datalakeFile(File eventStoreFolder, Fingerprint fingerprint) {
-		File zimFile = new File(eventStoreFolder, fingerprint.toString() + FileTransactionStore.LedExtension);
+		File zimFile = new File(eventStoreFolder, fingerprint.toString() + FileTransactionStore.TransactionExtension);
 		zimFile.getParentFile().mkdirs();
 		return zimFile;
 	}

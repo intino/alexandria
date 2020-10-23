@@ -6,7 +6,7 @@ import java.io.File;
 import java.util.stream.Stream;
 
 public class FileTransactionStore implements Datalake.TransactionStore {
-	public static final String LedExtension = ".led";
+	public static final String TransactionExtension = ".led";
 	private final File root;
 
 	public FileTransactionStore(File root) {
