@@ -20,25 +20,29 @@ import static io.intino.alexandria.led.util.MemoryUtils.memcpy;
 
 public class LedReader {
 
-	private final InputStream is;
+	private final InputStream source;
+	private final File sourceFile;
 
 	public LedReader(File file) {
-		this(inputStreamOf(file));
+		this.source = inputStreamOf(file);
+		this.sourceFile = file;
 	}
 
-	public LedReader(InputStream is) {
-		this.is = is;
+	public LedReader(InputStream source) {
+		this.source = source;
+		this.sourceFile = null;
 	}
 
 	public int size() {
-		try (InputStream stream = is) {
-			int size = (int) LedHeader.from(stream).elementCount();
-			is.reset();
-			return size;
-		} catch (IOException e) {
-			Logger.error(e);
+		if(sourceFile == null) {
 			return (int) LedHeader.UNKNOWN_SIZE;
 		}
+		try(RandomAccessFile raFile = new RandomAccessFile(sourceFile, "r")) {
+			return (int) raFile.readLong();
+		} catch (IOException e) {
+			Logger.error(e);
+		}
+		return (int) LedHeader.UNKNOWN_SIZE;
 	}
 
 	public <S extends Transaction> Led<S> readAll(TransactionFactory<S> factory) {
@@ -46,8 +50,8 @@ public class LedReader {
 	}
 
 	public <S extends Transaction> Led<S> readAll(IndexedAllocatorFactory<S> allocatorFactory, TransactionFactory<S> factory) {
-		LedHeader header = LedHeader.from(this.is);
-		try(SnappyInputStream inputStream = new SnappyInputStream(this.is)) {
+		LedHeader header = LedHeader.from(this.source);
+		try(SnappyInputStream inputStream = new SnappyInputStream(this.source)) {
 			IndexedAllocator<S> allocator = allocatorFactory.create(inputStream, header.elementCount(), header.elementSize(), factory);
 			return new IndexedLed<>(allocator);
 		} catch (IOException e) {
@@ -58,8 +62,8 @@ public class LedReader {
 
 	public <S extends Transaction> LedStream<S> read(TransactionFactory<S> factory) {
 		try {
-			LedHeader header = LedHeader.from(is);
-			return allocate(new SnappyInputStream(is), factory, header.elementSize());
+			LedHeader header = LedHeader.from(source);
+			return allocate(new SnappyInputStream(source), factory, header.elementSize());
 		} catch (IOException e) {
 			Logger.error(e);
 		}
