@@ -1,6 +1,6 @@
 package io.intino.alexandria.led;
 
-import io.intino.alexandria.led.leds.IteratorLed;
+import io.intino.alexandria.led.leds.IteratorLedStream;
 
 import java.util.Iterator;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 public interface LedStream<S extends Transaction> extends Iterator<S>, AutoCloseable {
 
 	static <T extends Transaction> LedStream<T> empty() {
-		return IteratorLed.fromStream(0, Stream.empty());
+		return IteratorLedStream.fromStream(0, Stream.empty());
 	}
 
 

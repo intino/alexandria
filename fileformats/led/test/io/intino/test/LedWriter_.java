@@ -3,6 +3,7 @@ package io.intino.test;
 import io.intino.alexandria.led.*;
 import io.intino.alexandria.led.allocators.TransactionAllocator;
 import io.intino.alexandria.led.allocators.indexed.ListAllocator;
+import io.intino.alexandria.led.leds.IteratorLedStream;
 import io.intino.alexandria.led.leds.ListLed;
 import io.intino.test.transactions.TestTransaction;
 import org.junit.After;
@@ -31,23 +32,25 @@ public class LedWriter_ {
 		List<TestTransaction> original = generateTestSchemaObjs(
 				new ListAllocator<>(NUM_ELEMENTS / 10, TestTransaction.SIZE, TestTransaction::new))
 				.collect(Collectors.toList());
+		original.sort(Comparator.comparingLong(Transaction::id));
 		write(original);
 		read(original);
 	}
 
 	private void write(List<TestTransaction> original) {
 		long start;
-		original.sort(Comparator.comparingLong(Transaction::id));
-		Led<TestTransaction> led = new ListLed<>(original);
+		LedStream<TestTransaction> led = new IteratorLedStream<>(SIZE, original.iterator());
 		start = System.currentTimeMillis();
 		new LedWriter(tempFile).write(led);
 		System.out.println(">> Serialized " + NUM_ELEMENTS + "(" + TestTransaction.SIZE + " bytes each) in " + (System.currentTimeMillis() - start) / 1000 + " seconds");
 	}
 
 	private void read(List<TestTransaction> original) {
+		LedReader reader = new LedReader(tempFile);
+		assertEquals(original.size(), reader.size());
 		long start;
 		start = System.currentTimeMillis();
-		Led<TestTransaction> led = new LedReader(tempFile).readAll(TestTransaction::new);
+		Led<TestTransaction> led = reader.readAll(TestTransaction::new);
 		System.out.println(">> Deserialized " + NUM_ELEMENTS + "(" + TestTransaction.SIZE + " bytes each) in " + (System.currentTimeMillis() - start) / 1000 + " seconds");
 		AtomicInteger size = new AtomicInteger();
 		IntStream.range(0, original.size()).forEach(i -> {
