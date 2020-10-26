@@ -51,7 +51,7 @@ public class LedReader {
 			IndexedAllocator<S> allocator = allocatorFactory.create(inputStream, header.elementCount(), header.elementSize(), factory);
 			return new IndexedLed<>(allocator);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logger.error(e);
 		}
 		return null;
 	}

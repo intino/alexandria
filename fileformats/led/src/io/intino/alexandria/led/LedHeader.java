@@ -1,5 +1,7 @@
 package io.intino.alexandria.led;
 
+import io.intino.alexandria.logger.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -17,7 +19,7 @@ public class LedHeader {
             inputStream.read(buffer);
             return new LedHeader(ByteBuffer.wrap(buffer));
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.error(e);
         }
         return null;
     }

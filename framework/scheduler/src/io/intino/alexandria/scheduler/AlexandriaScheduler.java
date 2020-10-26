@@ -1,5 +1,6 @@
 package io.intino.alexandria.scheduler;
 
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.scheduler.directory.DirectorySentinel;
 import io.intino.alexandria.scheduler.directory.DirectoryTask;
 import org.quartz.JobDetail;
@@ -17,14 +18,14 @@ import java.util.Set;
 public class AlexandriaScheduler {
 
 	private Scheduler scheduler;
-	private Map<String, DirectorySentinel> sentinels = new HashMap<>();
+	private final Map<String, DirectorySentinel> sentinels = new HashMap<>();
 
 
 	public AlexandriaScheduler() {
 		try {
 			scheduler = StdSchedulerFactory.getDefaultScheduler();
 		} catch (SchedulerException e) {
-			e.printStackTrace();
+			Logger.error(e);
 		}
 	}
 
