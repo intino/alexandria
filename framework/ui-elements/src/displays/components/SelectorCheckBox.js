@@ -62,13 +62,13 @@ class SelectorCheckBox extends AbstractSelectorCheckBox {
 
 	renderChild = (child, key) => {
 		const className = child.props.className;
-		const selected = this.isInSelection(child.props.name);
+		const selected = this.isInSelection(this._name(child));
 		if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
 		return (<FormControlLabel value={this._name(child)} control={<Checkbox checked={selected}>{child}</Checkbox>} label={this._label(child)} onChange={this.handleChange.bind(this, this._name(child))}/>);
 	};
 
 	_name = (item) => {
-		return item.props.name;
+		return item.props.name != null ? item.props.name : item.props.value;
 	};
 
 	_label = (item) => {

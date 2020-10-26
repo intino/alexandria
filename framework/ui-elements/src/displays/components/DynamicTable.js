@@ -183,7 +183,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     };
 
     renderBodyCells = (section, rowIndex, idx) => {
-        return (<React.Fragment>{section.rows[rowIndex].cells.map((c, index) => this.renderBodyCell(c, index))}</React.Fragment>);
+        return (<React.Fragment key={rowIndex}>{section.rows[rowIndex].cells.map((c, index) => this.renderBodyCell(c, index))}</React.Fragment>);
     };
 
     renderBodyCell = (cell, index) => {

@@ -106,9 +106,10 @@ export default class Actionable extends AbstractActionable {
 
 	renderIconButton = () => {
 		const {classes} = this.props;
+		const style = this._readonly() ? { filter: "grayscale(100%)" } : {};
 		const button = (
             <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()}
-                            onClick={this.handleClick.bind(this)}
+                            onClick={this.handleClick.bind(this)} style={style}
                             className={classes.iconButton} size={this._size()}>
                 {this.renderContent()}
             </IconButton>

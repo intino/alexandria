@@ -22,6 +22,7 @@ Component date as ExtensionOf(baseDate)
 Component dateEditable as ExtensionOf(baseDate)
 	Notification refreshReadonly as Bool
 	Notification refreshPattern as Text
+	Notification refreshRange as Object(Range)
 	Request notifyChange as DateTime
 
 Component baseText

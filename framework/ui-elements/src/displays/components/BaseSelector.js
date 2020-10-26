@@ -35,7 +35,7 @@ export default class BaseSelector extends AbstractBaseSelector {
 	        if (this.state.selection[i] === name) found = true;
 	        else result.push(this.state.selection[i]);
 	    }
-        if (!found) result.push(name);
+        if (!found && name != null) result.push(name);
 	    return result;
 	};
 

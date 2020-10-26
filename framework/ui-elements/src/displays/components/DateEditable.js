@@ -28,6 +28,7 @@ class DateEditable extends AbstractDateEditable {
         this.state = {
             ...this.state,
             pattern : this.props.pattern !== "" ? this.props.pattern : undefined,
+            range : { min: this.props.min, max: this.props.max },
             value : this.props.value,
             readonly : this.props.readonly,
             empty : false,
@@ -42,7 +43,8 @@ class DateEditable extends AbstractDateEditable {
 	render() {
 		if (!this.state.visible) return (<React.Fragment/>);
 
-		const { min, max, timePicker, classes } = this.props;
+		const { timePicker, classes } = this.props;
+		const range = this.state.range;
 		const dateLabel = this.translate(this.props.label != null ? this.props.label : undefined);
 		const timeLabel = this.translate(this.props.label != null ? this.props.label : undefined);
 		const pattern = this.state.pattern;
@@ -52,14 +54,14 @@ class DateEditable extends AbstractDateEditable {
 																								 disabled={this.state.readonly}
 																								 format={pattern} className={classes.date} mask={this.props.mask}
 																								 value={this.state.value} onChange={this.handleChange.bind(this)}
-																								 minDate={min} maxDate={max} label={dateLabel} views={this.views()}
+																								 minDate={range.min} maxDate={range.max} label={dateLabel} views={this.views()}
 																								 minDateMessage={this.translate("Date should not be before minimal date")}
 																								 maxDateMessage={this.translate("Date should not be after maximal date")}/></MuiPickersUtilsProvider> : undefined }
 				{ timePicker ? <MuiPickersUtilsProvider utils={MomentUtils}><KeyboardDateTimePicker variant="inline" placeholder={pattern} autoOk
 																									disabled={this.state.readonly}
 																									format={pattern} className={classes.datetime}
 																									value={this.state.value} onChange={this.handleChange.bind(this)}
-																									minDate={min} maxDate={max} label={timeLabel}
+																									minDate={range.min} maxDate={range.max} label={timeLabel}
 																									minDateMessage={this.translate("Date should not be before minimal date")}
 																									maxDateMessage={this.translate("Date should not be after maximal date")}/></MuiPickersUtilsProvider> : undefined }
 				{this.props.allowEmpty && <FormControlLabel control={<Checkbox disabled={this.state.readonly} checked={this.state.empty} onChange={this.handleAllowEmpty.bind(this)} />} label={this.translate("sin definir")} />}
@@ -80,6 +82,10 @@ class DateEditable extends AbstractDateEditable {
 
 	refreshReadonly = (readonly) => {
 		this.setState({ readonly });
+	};
+
+	refreshRange = (range) => {
+		this.setState({ range });
 	};
 
 	handleAllowEmpty = (e) => {
