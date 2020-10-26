@@ -68,7 +68,7 @@ public class JmsConnector implements Connector {
 
 	public void start() {
 		if (brokerUrl == null || brokerUrl.isEmpty()) {
-			Logger.warn("Broker url is null");
+			Logger.warn("Invalid broker URL. Connection aborted");
 			return;
 		}
 		connect();
@@ -80,16 +80,12 @@ public class JmsConnector implements Connector {
 	}
 
 	private void connect() {
-		Thread thread = Thread.currentThread();
-		new Thread(() -> {
-			initConnection();
-			thread.interrupt();
-		}, "jms-connector.connect").start();
 		try {
-			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException ignored) {
+			if (!Broker.isRunning(brokerUrl)) {
+				Logger.warn("Broker Unreachable. Connection aborted");
+				return;
 			}
+			initConnection();
 			if (connection != null && ((ActiveMQConnection) connection).isStarted()) {
 				clearProducers();
 				session = createSession(transactedSession);
@@ -419,8 +415,10 @@ public class JmsConnector implements Connector {
 	private void initConnection() {
 		try {
 			connection = BusConnector.createConnection(brokerUrl, user, password, connectionListener());
-			if (clientId != null && !clientId.isEmpty()) connection.setClientID(clientId);
-			connection.start();
+			if (connection != null) {
+				if (clientId != null && !clientId.isEmpty()) connection.setClientID(clientId);
+				connection.start();
+			}
 		} catch (JMSException e) {
 			Logger.error(e);
 		}
