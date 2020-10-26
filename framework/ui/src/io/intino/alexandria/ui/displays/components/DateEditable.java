@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.schemas.Range;
 import io.intino.alexandria.ui.displays.components.editable.Editable;
 import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
@@ -27,8 +28,27 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 		return this.min;
 	}
 
+	public DateEditable<DN, B> min(Instant min) {
+		_min(min);
+		notifier.refreshRange(range());
+		return this;
+	}
+
 	public Instant max() {
 		return this.max;
+	}
+
+	public DateEditable<DN, B> max(Instant max) {
+		_max(max);
+		notifier.refreshRange(range());
+		return this;
+	}
+
+	public DateEditable<DN, B> range(Instant min, Instant max) {
+		_min(min);
+		_max(max);
+		notifier.refreshRange(range());
+		return this;
 	}
 
 	public DateEditable<DN, B> pattern(String pattern) {
@@ -87,6 +107,13 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 	protected DateEditable<DN, B> _readonly(boolean readonly) {
 		this.readonly = readonly;
 		return this;
+	}
+
+	private Range range() {
+		Range range = new Range();
+		if (min != null) range.min(min.toEpochMilli());
+		if (max != null) range.max(max.toEpochMilli());
+		return range;
 	}
 
 }
