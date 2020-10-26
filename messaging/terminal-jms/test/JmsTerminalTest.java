@@ -1,10 +1,16 @@
 import io.intino.alexandria.event.Event;
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.terminal.JmsConnector;
 import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.http.HttpResponse;
 import java.time.Instant;
 
 public class JmsTerminalTest {
