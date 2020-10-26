@@ -237,9 +237,9 @@ public class JmsConnector implements Connector {
 		if (!this.consumers.containsKey(path) && session != null) this.consumers.put(path, topicConsumer(path));
 	}
 
-	private void registerMessageConsumer(String path, MessageConsumer onEventReceived) {
+	private void registerMessageConsumer(String path, MessageConsumer onMessageReceived) {
 		this.messageConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
-		this.messageConsumers.get(path).add(onEventReceived);
+		this.messageConsumers.get(path).add(onMessageReceived);
 		if (session != null) this.consumers.putIfAbsent(path, queueConsumer(path));
 	}
 
@@ -361,7 +361,15 @@ public class JmsConnector implements Connector {
 		if (!started.get()) return;
 		if (!eventConsumers.isEmpty() && consumers.isEmpty())
 			for (String path : eventConsumers.keySet()) consumers.put(path, topicConsumer(path));
-		recoverEventsAndMessages();
+		if (!messageConsumers.isEmpty())
+			for (String path : messageConsumers.keySet()) {
+				if (!consumers.containsKey(path) && session != null) consumers.put(path, queueConsumer(path));
+				for (MessageConsumer mConsumer : messageConsumers.get(path)) {
+					Consumer<javax.jms.Message> messageConsumer = m -> mConsumer.accept(textFrom(m), callback(m));
+					jmsMessageConsumers.put(mConsumer, messageConsumer.hashCode());
+					consumers.get(path).listen(messageConsumer);
+				}
+			}
 	}
 
 	private synchronized void recoverEventsAndMessages() {
