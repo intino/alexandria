@@ -1,8 +1,8 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "3.2.3") sealing
+Artifact("io.intino.alexandria", "3.2.4") sealing
 	Imports
-		Compile("io.intino.alexandria", "datalake", "3.2.3")
+		Compile("io.intino.alexandria", "datalake", "3.2.4")
 		Compile("io.intino.alexandria", "mapp", "1.1.0")
 		Compile("io.intino.alexandria", "session", "1.1.0")
 		Test("io.intino.alexandria", "ingestion", "3.1.3")
