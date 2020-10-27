@@ -1,12 +1,10 @@
 package io.intino.alexandria.datalake.file;
 
-import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.Datalake.SetStore.Tub;
 
 import java.io.File;
-import java.time.LocalDateTime;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
