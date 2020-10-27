@@ -24,12 +24,12 @@ public class FileSetTank implements Datalake.SetStore.Tank {
 
 	@Override
 	public Tub first() {
-		return tubs().findFirst().orElse(currentTub());
+		return tubs().findFirst().orElse(null);
 	}
 
 	@Override
 	public Tub last() {
-		return FS.foldersIn(root, FS.Sort.Reversed).map(FileSetTub::new).findFirst().orElse(currentTub());
+		return FS.foldersIn(root, FS.Sort.Reversed).map(FileSetTub::new).findFirst().orElse(null);
 	}
 
 	@Override
@@ -53,10 +53,6 @@ public class FileSetTank implements Datalake.SetStore.Tank {
 
 	public File root() {
 		return root;
-	}
-
-	private FileSetTub currentTub() {
-		return new FileSetTub(new File(root, new Timetag(LocalDateTime.now(), Scale.Month).toString()));
 	}
 
 }
