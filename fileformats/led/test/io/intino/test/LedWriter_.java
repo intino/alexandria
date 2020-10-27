@@ -32,7 +32,7 @@ public class LedWriter_ {
 		List<TestTransaction> original = generateTestSchemaObjs(
 				new ListAllocator<>(NUM_ELEMENTS / 10, TestTransaction.SIZE, TestTransaction::new))
 				.collect(Collectors.toList());
-		original.sort(Comparator.comparingLong(Transaction::id));
+		original.sort(Comparator.comparingLong(TestTransaction::id));
 		write(original);
 		read(original);
 	}
