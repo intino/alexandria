@@ -153,7 +153,7 @@ public class LedReader {
 					.mapToObj(index -> allocator.malloc());
 		}
 
-		private ByteBuffer read(InputStream inputStream) {
+		private synchronized ByteBuffer read(InputStream inputStream) {
 			try {
 				if (inputStream == null || inputStream.available() <= 0) return null;
 				byte[] inputBuffer = new byte[INPUT_BUFFER_MIN_SIZE * transactionSize];
