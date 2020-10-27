@@ -19,7 +19,7 @@ public abstract class Transaction implements OffHeapObject, Comparable<Transacti
 				new BigEndianBitBuffer(store);
 	}
 
-	public abstract long id();
+	protected abstract long id();
 
 	public abstract int size();
 

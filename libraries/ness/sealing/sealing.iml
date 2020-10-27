@@ -27,6 +27,5 @@
     <orderEntry type="module" module-name="zet" />
     <orderEntry type="module" module-name="led" />
     <orderEntry type="module" module-name="ingestion" scope="TEST" />
-    <orderEntry type="library" scope="TEST" name="Intino: io.intino.alexandria:led:1.0.2" level="project" />
   </component>
 </module>
