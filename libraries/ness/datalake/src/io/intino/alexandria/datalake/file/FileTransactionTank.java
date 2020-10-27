@@ -1,11 +1,9 @@
 package io.intino.alexandria.datalake.file;
 
-import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake.TransactionStore;
 
 import java.io.File;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -28,7 +26,7 @@ public class FileTransactionTank implements TransactionStore.Tank {
 
 	@Override
 	public TransactionStore.Transaction first() {
-		return transactions().findFirst().orElse(currentTransaction());
+		return transactions().findFirst().orElse(null);
 	}
 
 	@Override
@@ -54,10 +52,6 @@ public class FileTransactionTank implements TransactionStore.Tank {
 
 	public File root() {
 		return root;
-	}
-
-	private FileTransaction currentTransaction() {
-		return new FileTransaction(new File(root, new Timetag(LocalDateTime.now(), Scale.Month).toString() + TransactionExtension));
 	}
 
 	private Stream<File> transactionFiles() {
