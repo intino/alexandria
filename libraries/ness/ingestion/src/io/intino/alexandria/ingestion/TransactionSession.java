@@ -19,6 +19,6 @@ public class TransactionSession {
 	}
 
 	public void put(String tank, Timetag timetag, LedStream<?> stream) {
-		new LedWriter(provider.outputStream(Fingerprint.of(tank, timetag).name(), Session.Type.led)).write(stream);
+		new LedWriter(provider.file(Fingerprint.of(tank, timetag).name(), Session.Type.led)).write(stream);
 	}
 }
