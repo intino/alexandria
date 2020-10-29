@@ -21,5 +21,6 @@
     <orderEntry type="library" scope="TEST" name="Intino: org.assertj:assertj-core:3.15.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:mapp:1.0.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
   </component>
 </module>
