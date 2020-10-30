@@ -128,4 +128,4 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 }
 
 export default withStyles(styles, { withTheme: true })(SelectorComboBox);
-DisplayFactory.register("SelectorComboBox", withStyles(styles, { withTheme: true })(SelectorComboBox));
+DisplayFactoryM.register("SelectorComboBox", withStyles(styles, { withTheme: true })(SelectorComboBox));

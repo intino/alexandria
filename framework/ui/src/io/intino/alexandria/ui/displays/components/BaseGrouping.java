@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -101,7 +102,15 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 
 	private void notifySelection() {
 		notifier.refreshSelection(selection);
-		if (selectionListener != null) selectionListener.accept(new SelectionEvent(this, selection));
+		if (selectionListener != null) selectionListener.accept(new SelectionEvent(this, namesOf(selection)));
+	}
+
+	private List<String> namesOf(List<String> selection) {
+		return selection.stream().map(v -> groupOf(v).name()).collect(Collectors.toList());
+	}
+
+	private Group groupOf(String key) {
+		return groups.stream().filter(g -> g.name().equals(key) || g.label().equals(key)).findFirst().orElse(null);
 	}
 
 	private void notifyAttachedChanges(List<String> selection) {

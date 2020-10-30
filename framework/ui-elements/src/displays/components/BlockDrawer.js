@@ -26,10 +26,7 @@ const styles = theme => ({
 			duration: theme.transitions.duration.leavingScreen,
 		}),
 		overflowX: 'hidden',
-		width: theme.spacing(5),
-		[theme.breakpoints.up('sm')]: {
-			width: theme.spacing(7),
-		},
+		width: theme.spacing(7),
 	},
 });
 
