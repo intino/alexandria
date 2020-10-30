@@ -5,10 +5,8 @@ import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.notifiers.BaseGroupingNotifier;
 import io.intino.alexandria.ui.model.datasource.Group;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -31,7 +29,7 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	}
 
 	public List<String> selection() {
-		return selection;
+		return namesOf(selection);
 	}
 
 	public BaseGrouping onSelect(SelectionListener listener) {
@@ -53,7 +51,7 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	public void select(List<String> groups) {
 		this.selection = new ArrayList<>(groups);
 		notifySelection();
-		collections.forEach(c -> c.filter(key(), selection));
+		collections.forEach(c -> c.filter(key(), namesOf(selection)));
 	}
 
 	public BaseGrouping<DN, B> bindTo(Collection... collections) {
@@ -106,7 +104,7 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	}
 
 	private List<String> namesOf(List<String> selection) {
-		return selection.stream().map(v -> groupOf(v).name()).collect(Collectors.toList());
+		return selection != null ? selection.stream().map(v -> groupOf(v).name()).collect(Collectors.toList()) : null;
 	}
 
 	private Group groupOf(String key) {
