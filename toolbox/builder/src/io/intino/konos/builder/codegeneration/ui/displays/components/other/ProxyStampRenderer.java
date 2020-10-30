@@ -40,7 +40,7 @@ public class ProxyStampRenderer extends ComponentRenderer<ProxyStamp> {
 	}
 
 	private String proxyStampPackage(Service.UI.Use use) {
-		return use.package$() + "." + use.name().toLowerCase() + ".box.ui.displays.templates";
+		return use.package$() + ".box.ui.displays.templates";
 	}
 
 }

@@ -1,9 +1,19 @@
 package io.intino.alexandria.ui.model.datasource;
 
 public class Group {
+	private String name;
 	private String label;
 	private int count;
 	private String color;
+
+	public String name() {
+		return name;
+	}
+
+	public Group name(String name) {
+		this.name = name;
+		return this;
+	}
 
 	public String label() {
 		return label;
@@ -11,6 +21,7 @@ public class Group {
 
 	public Group label(String label) {
 		this.label = label;
+		if (name == null) name = label;
 		return this;
 	}
 

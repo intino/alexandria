@@ -272,11 +272,11 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private String ownerTemplateStampPackage(Service.UI.Use use) {
-		return use.package$() + "." + use.name().toLowerCase() + ".box.ui.displays.templates";
+		return use.package$() + ".box.ui.displays.templates";
 	}
 
 	private String ownerTemplateStampBox(Service.UI.Use use) {
-		return use.package$() + "." + use.name().toLowerCase() + ".box." + use.name();
+		return use.package$() + ".box." + use.name();
 	}
 
 	private Object genericOf(BaseStamp stamp) {

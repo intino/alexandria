@@ -16,7 +16,7 @@ class Icon extends AbstractIcon {
 	};
 
 	render() {
-		return this.renderLayer(<img src={this._icon()} style={{width:"24px",height:"24px"}}/>);
+		return this.renderLayer(<img src={this._icon()} style={{width:"24px",height:"24px",...this.style()}}/>);
 	}
 }
 

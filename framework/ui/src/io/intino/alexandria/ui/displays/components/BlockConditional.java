@@ -20,6 +20,13 @@ public abstract class BlockConditional<DN extends BlockConditionalNotifier, B ex
 
     public BlockConditional(B box) {
         super(box);
+        updateVisible(false);
+    }
+
+    @Override
+    public void didMount() {
+        super.didMount();
+        if (isVisible()) show();
     }
 
     @Override

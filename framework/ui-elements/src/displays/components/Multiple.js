@@ -102,8 +102,8 @@ export default class Multiple extends AbstractMultiple {
 
 	_style = (multiple) => {
 		let spacingStyle = this._spacingStyle(multiple);
-		if (spacingStyle === undefined) spacingStyle = (multiple.arrangement.toLowerCase() === "horizontal") ? { right: 5, bottom: 2 } : { right: 0, bottom: 0 };
-		return { marginRight: spacingStyle.right + "px", marginBottom: spacingStyle.bottom + "px"/*, height: "calc(100% - " + spacingStyle.bottom + "px)"*/ };
+		if (spacingStyle === undefined) spacingStyle = (multiple.arrangement.toLowerCase() === "horizontal") ? { right: 5, top: 2, bottom: 2 } : { right: 0, top: 0, bottom: 0 };
+		return { marginRight: spacingStyle.right + "px", marginTop: spacingStyle.top + "px", marginBottom: spacingStyle.bottom + "px"/*, height: "calc(100% - " + spacingStyle.bottom + "px)"*/ };
 	};
 
 	_spacingStyle = (multiple) => {

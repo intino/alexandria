@@ -239,11 +239,11 @@ public class AbstractBoxRenderer extends Renderer {
 	}
 
 	private String serviceNameOf(Service.UI.Use use) {
-		return use.package$() + "." + use.name().toLowerCase() + ".box.ui." + firstUpperCase(use.service()) + "Service";
+		return use.package$() + ".box.ui." + firstUpperCase(use.service()) + "Service";
 	}
 
 	private String dictionariesOf(Service.UI.Use use) {
-		return use.package$() + "." + use.name().toLowerCase() + ".box.I18n.dictionaries()";
+		return use.package$() + ".box.I18n.dictionaries()";
 	}
 
 	private boolean isCustom(String value) {
