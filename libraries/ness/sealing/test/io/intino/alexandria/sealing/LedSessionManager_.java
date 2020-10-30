@@ -37,7 +37,7 @@ public class LedSessionManager_ {
 		Timetag timetag = new Timetag(dateTime, Scale.Day);
 		TransactionSession session = handler.createTransactionSession();
 		List<TestSchema> stored = unsortedList();
-		stored.sort(Comparator.comparingLong(Transaction::id));
+		stored.sort(Comparator.comparingLong(TestSchema::id));
 		Led<TestSchema> testLed = new ListLed<>(stored);
 		session.put("tank1", timetag, testLed);
 		handler.pushTo(STAGE_FOLDER);

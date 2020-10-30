@@ -15,14 +15,17 @@ public class LedWriter {
 
 	private final int bufferSize = 1024;
 	private final OutputStream destination;
+	private final File destinationFile;
 
 	public LedWriter(File destination) {
 		destination.getAbsoluteFile().getParentFile().mkdirs();
+		this.destinationFile = destination;
 		this.destination = outputStream(destination);
 	}
 
 	public LedWriter(OutputStream destination) {
 		this.destination = destination;
+		destinationFile = null;
 	}
 
 	public FileOutputStream outputStream(File destination) {
@@ -75,34 +78,44 @@ public class LedWriter {
 		}
 	}
 
-	private void serialize(LedStream<? extends Transaction> led) {
+	private void serialize(LedStream<? extends Transaction> ledStream) {
+		long elementCount = 0;
 		try (OutputStream fos = this.destination) {
 			LedHeader header = new LedHeader();
-			header.elementCount(LedHeader.UNKNOWN_SIZE).elementSize(led.transactionSize());
+			header.elementCount(LedHeader.UNKNOWN_SIZE).elementSize(ledStream.transactionSize());
 			fos.write(header.toByteArray());
 			try (SnappyOutputStream outputStream = new SnappyOutputStream(fos)) {
-				final int transactionSize = led.transactionSize();
+				final int transactionSize = ledStream.transactionSize();
 				final byte[] outputBuffer = new byte[bufferSize * transactionSize];
-				final ExecutorService writeToOutputStreamThread = Executors.newSingleThreadExecutor();
 				int offset = 0;
-				while (led.hasNext()) {
-					Transaction schema = led.next();
+				while (ledStream.hasNext()) {
+					Transaction schema = ledStream.next();
 					memcpy(schema.address(), schema.baseOffset(), outputBuffer, offset, transactionSize);
 					offset += transactionSize;
 					if (offset == outputBuffer.length) {
-						writeToOutputStreamThread.submit(() -> writeToOutputStream(outputStream, outputBuffer));
+						writeToOutputStream(outputStream, outputBuffer);
 						offset = 0;
 					}
+					++elementCount;
 				}
 				if (offset > 0) {
-					final int size = offset;
-					writeToOutputStreamThread.submit(() -> writeToOutputStream(outputStream, outputBuffer, 0, size));
+					writeToOutputStream(outputStream, outputBuffer, 0, offset);
 				}
-				writeToOutputStreamThread.shutdown();
-				writeToOutputStreamThread.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
-			} catch (IOException | InterruptedException e) {
+			} catch (IOException e) {
 				Logger.error(e);
 			}
+		} catch (IOException e) {
+			Logger.error(e);
+		}
+		if(destinationFile != null) {
+			overrideHeader(elementCount, ledStream.transactionSize());
+		}
+	}
+
+	private void overrideHeader(long elementCount, int transactionSize) {
+		try(RandomAccessFile raFile = new RandomAccessFile(destinationFile, "rw")) {
+			raFile.writeLong(elementCount);
+			raFile.writeInt(transactionSize);
 		} catch (IOException e) {
 			Logger.error(e);
 		}

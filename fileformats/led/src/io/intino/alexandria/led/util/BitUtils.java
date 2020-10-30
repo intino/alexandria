@@ -60,7 +60,7 @@ public final class BitUtils {
 
 	public static int getMinimumBytesForBits(int bitIndex, int bitCount) {
 		final int bitOffset = offsetOf(bitIndex);
-		final int numBytes = (bitOffset + bitCount) / 8 + 1;
+		final int numBytes = (int)Math.ceil((bitOffset + bitCount) / 8.0);
 		return roundToJavaPrimitiveSize(numBytes);
 	}
 

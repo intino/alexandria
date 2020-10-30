@@ -113,12 +113,16 @@ public class SessionHandler {
 		InputStream inputStream();
 
 		OutputStream outputStream();
+
+		File outputFile();
 	}
 
 	public interface Provider {
 		OutputStream outputStream(Session.Type type);
 
 		OutputStream outputStream(String name, Session.Type type);
+
+		File file(String name, Session.Type type);
 	}
 
 	private static class FileSessionData implements SessionData {
@@ -152,6 +156,11 @@ public class SessionHandler {
 				return null;
 			}
 		}
+
+		@Override
+		public File outputFile() {
+			return file;
+		}
 	}
 
 	private static class MemorySessionData implements SessionData {
@@ -170,6 +179,11 @@ public class SessionHandler {
 		@Override
 		public OutputStream outputStream() {
 			return outputStream;
+		}
+
+		@Override
+		public File outputFile() {
+			return null;
 		}
 	}
 
@@ -205,6 +219,9 @@ public class SessionHandler {
 			return sessionData.outputStream();
 		}
 
+		public File file() {
+			return sessionData.outputFile();
+		}
 	}
 
 	private class PrivateProvider implements Provider {
@@ -217,6 +234,13 @@ public class SessionHandler {
 			PrivateSession session = session(name + suffix(), type);
 			sessions.add(session);
 			return session.outputStream();
+		}
+
+		@Override
+		public File file(String name, Session.Type type) {
+			PrivateSession session = session(name + suffix(), type);
+			sessions.add(session);
+			return session.file();
 		}
 
 		private PrivateSession session(String name, Session.Type type) {
