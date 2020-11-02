@@ -1,6 +1,5 @@
 package io.intino.konos.builder;
 
-import cottons.utils.Files;
 import io.intino.konos.CompilerMessage;
 import io.intino.konos.builder.codegeneration.FullRenderer;
 import io.intino.konos.builder.context.CompilationContext;
@@ -36,15 +35,15 @@ public class KonosCompiler {
 
 	public List<OutputItem> compile(List<File> sources) {
 		List<OutputItem> compiledFiles = new ArrayList<>();
+		if (configuration.isVerbose())
+			configuration.out().println(PRESENTABLE_MESSAGE + "Konosc: Compiling model...");
+		GraphLoader graphLoader = new GraphLoader();
+		KonosGraph graph = graphLoader.loadGraph(configuration, sources);
+		if (graph == null) return compiledFiles;
+		if (configuration.isVerbose())
+			configuration.out().println(PRESENTABLE_MESSAGE + "Konosc: Rendering classes...");
+		CompilationContext context = new CompilationContext(configuration, postCompileActionMessages, sources, compiledFiles);
 		try {
-			if (configuration.isVerbose())
-				configuration.out().println(PRESENTABLE_MESSAGE + "Konosc: Compiling model...");
-			GraphLoader graphLoader = new GraphLoader();
-			KonosGraph graph = graphLoader.loadGraph(configuration, sources);
-			if (graph == null) return compiledFiles;
-			if (configuration.isVerbose())
-				configuration.out().println(PRESENTABLE_MESSAGE + "Konosc: Rendering classes...");
-			CompilationContext context = new CompilationContext(configuration, postCompileActionMessages, sources, compiledFiles);
 			context.loadCache(graph, graphLoader.stashes());
 			render(graph, context);
 			updateDependencies(requiredDependencies(graph, context));
@@ -52,7 +51,7 @@ public class KonosCompiler {
 		} catch (Exception e) {
 			processCompilationException(e);
 		} finally {
-//			addWarnings(collector);TODO
+			addWarnings(context.warningMessages());
 		}
 		return compiledFiles;
 	}
@@ -129,14 +128,7 @@ public class KonosCompiler {
 		collector.add(new CompilerMessage(CompilerMessage.ERROR, exception.getMessage(), "null", -1, -1));
 	}
 
-
-	private File prepareIntinoFolder() {
-		String intinoFolder = configuration.intinoProjectDirectory() + File.separator + "box" + File.separator + configuration.module();
-		File folder = new File(intinoFolder);
-		if (folder.exists() && !firstTimeMap.containsKey(intinoFolder)) Files.removeDir(folder);
-		if (!folder.exists()) folder.mkdirs();
-		firstTimeMap.put(intinoFolder, true);
-		return folder;
+	private void addWarnings(List<io.intino.konos.builder.context.WarningMessage> warningMessages) {
+		warningMessages.forEach(w -> collector.add(new CompilerMessage(CompilerMessage.WARNING, w.message(), w.owner() == null ? "null" : w.owner().getAbsolutePath(), w.line(), w.column())));
 	}
-
 }
