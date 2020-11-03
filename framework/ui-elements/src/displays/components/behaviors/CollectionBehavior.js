@@ -339,6 +339,9 @@ const CollectionBehavior = (collection) => {
         renderCollection: (height, width) => {
             return self.renderCollection(height, width);
         },
+        renderLoading: () => {
+            return self.renderLoading();
+        },
         items : () => {
             return self.items();
         },

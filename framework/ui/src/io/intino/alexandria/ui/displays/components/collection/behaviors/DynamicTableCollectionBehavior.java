@@ -86,8 +86,10 @@ public class DynamicTableCollectionBehavior<Item> extends CollectionBehavior<Dyn
 
 	@Override
 	public void update() {
+		collection().loading(true);
 		updateSections();
 		updateItems();
+		collection().loading(false);
 	}
 
 	void updateSections() {

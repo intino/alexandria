@@ -22,7 +22,10 @@ Component pageCollection as ExtensionOf(collection)
 Component dynamicTable as ExtensionOf(pageCollection)
 	Notification setup as Object(DynamicTableSetup)
 	Notification sections as Object(DynamicTableSection) List
-	Request showItems as Object(DynamicTableShowItemsParams)
+	Notification selectRowProvided as Bool
+	Notification openRow as Text
+	Request selectRow as Object(DynamicTableRowParams)
+	Request showItems as Object(DynamicTableRowParams)
 
 Component map as ExtensionOf(collection)
 	Notification setup as Object(MapCollectionSetup)
