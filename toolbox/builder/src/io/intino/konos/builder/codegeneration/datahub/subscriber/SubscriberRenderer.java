@@ -35,7 +35,7 @@ public class SubscriberRenderer {
 			final FrameBuilder builder = baseFrame(subscriber);
 			String type = manifest.tankClasses.get(subscriber.event());
 			if (type == null) {
-				context.addWarning(new WarningMessage(1, "Tank not found", null, 1, 1));
+				context.addWarning(new WarningMessage("Tank " + subscriber.event() + " not found. Available: " + String.join("; ", manifest.tankClasses.keySet()), null, 1, 1));
 				continue;
 			}
 			builder.add("type", type);

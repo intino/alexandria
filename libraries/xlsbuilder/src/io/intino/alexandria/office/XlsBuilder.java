@@ -160,7 +160,7 @@ public class XlsBuilder {
 	}
 
 	private HSSFRichTextString format(String value) {
-		return helper.createRichTextString(value.replaceAll("^[#*$]*", ""));
+		return helper.createRichTextString(value.replaceAll("^[#*$ ]*", ""));
 	}
 
 	private Define defineFor(String variable, String value) {
