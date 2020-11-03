@@ -23,7 +23,7 @@ Schema DynamicTableCell
 	Attribute relative as Text
 	Attribute(defaultValue=false) highlighted as Bool
 
-Schema DynamicTableShowItemsParams
+Schema DynamicTableRowParams
 	Attribute section as Text
 	Attribute row as Text
 
@@ -55,6 +55,7 @@ Schema MapCollectionSetup as ExtensionOf(CollectionSetup)
 
 Schema DynamicTableSetup as ExtensionOf(CollectionSetup)
 	Attribute pageSize as Integer
+	Attribute openRowExternal as Bool
 
 Schema PageCollectionSetup as ExtensionOf(CollectionSetup)
 	Attribute pageSize as Integer

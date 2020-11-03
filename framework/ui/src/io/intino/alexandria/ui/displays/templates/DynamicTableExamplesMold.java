@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
+import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.rows.DynamicTable1Row;
 import io.intino.alexandria.ui.documentation.Person;
 import io.intino.alexandria.ui.documentation.model.Datasources;

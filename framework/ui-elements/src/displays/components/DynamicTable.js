@@ -90,6 +90,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 		    open: false,
 		    section: null,
 		    row: null,
+		    selectRowProvided: false,
             showRelativeValues: false,
 		    ...this.state,
 		};
@@ -231,7 +232,11 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     };
 
     handleShowItems = (section, row) => {
-        this.setState({open:true, section:section, row:row});
+        if (this.state.selectRowProvided) {
+            this.requester.selectRow({ section: section.label, row: row });
+            return;
+        }
+        this.setState({open:true, section: section, row:row});
     };
 
     handleOpen = () => {
@@ -244,6 +249,10 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 
     handleCheck = () => {
         this.requester.selectAll();
+    };
+
+    openRow = (address) => {
+        window.open(address);
     };
 
     maxLabelSize = (section) => {
@@ -312,6 +321,10 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 
     sections = (sections) => {
         this.setState({sections});
+    };
+
+    selectRowProvided = (value) => {
+        this.setState({selectRowProvided: value});
     };
 
     handleToggleRelativeValues = () => {
