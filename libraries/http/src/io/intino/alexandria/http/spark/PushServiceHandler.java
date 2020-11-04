@@ -1,19 +1,19 @@
 package io.intino.alexandria.http.spark;
 
+import io.intino.alexandria.http.pushservice.Client;
 import io.intino.alexandria.logger.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
+import org.eclipse.jetty.websocket.common.WebSocketSession;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.net.URI;
+import java.util.*;
 
 @WebSocket(maxTextMessageSize = 5 * 1024 * 1024)
 public class PushServiceHandler {
 	private static PushService pushService;
-	private Map<String, SparkClient> clientsMap = new HashMap<>();
+	private Map<String, List<SparkClient>> clientsMap = new HashMap<>();
 	private Map<String, Timer> closeTimersMap = new HashMap<>();
 	private static final int CloseTimeout = 1000 * 60 * 60 * 24;
 	private static final int CloseGoingAway = 1001;
@@ -25,7 +25,8 @@ public class PushServiceHandler {
 
 	@OnWebSocketConnect
 	public void onConnect(Session session) throws Exception {
-		if (client(session) != null) {
+		Client client = client(session);
+		if (client != null) {
 			cancelClose(session);
 			client(session).session(session);
 		} else registerClient(session);
@@ -63,7 +64,8 @@ public class PushServiceHandler {
 
 	@OnWebSocketMessage
 	public void onMessage(Session session, String message) {
-		if (client(session) == null) {
+		Client client = client(session);
+		if (client == null) {
 			try {
 				session.disconnect();
 			} catch (IOException e) {
@@ -75,13 +77,16 @@ public class PushServiceHandler {
 
 	protected SparkClient client(Session session) {
 		String sessionId = id(session);
-		return clientsMap.get(sessionId);
+		if (!clientsMap.containsKey(sessionId)) return null;
+		String clientId = clientId(session);
+		return clientsMap.get(sessionId).stream().filter(c -> c.id().equals(clientId)).findFirst().orElse(null);
 	}
 
 	protected SparkClient registerClient(Session session) {
 		String sessionId = id(session);
 		SparkClient client = (SparkClient) PushServiceHandler.pushService.createClient(session);
-		clientsMap.put(sessionId, client);
+		if (!clientsMap.containsKey(sessionId)) clientsMap.put(sessionId, new ArrayList<>());
+		clientsMap.get(sessionId).add(client);
 		return client;
 	}
 
@@ -111,16 +116,31 @@ public class PushServiceHandler {
 
 	private void doClose(String sessionId, SparkClient client) {
 		if (client != null) pushService.onClose(client);
-		clientsMap.remove(sessionId);
+		removeClientFromClientsMap(sessionId, client);
 		if (!closeTimersMap.containsKey(sessionId)) return;
 		closeTimersMap.get(sessionId).cancel();
 		closeTimersMap.remove(sessionId);
+	}
+
+	private void removeClientFromClientsMap(String sessionId, SparkClient client) {
+		if (!clientsMap.containsKey(sessionId)) return;
+		List<SparkClient> clientList = clientsMap.get(sessionId);
+		SparkClient savedClient = client != null ? clientList.stream().filter(c -> c.id().equals(client.id())).findFirst().orElse(null) : null;
+		if (savedClient != null) clientsMap.get(sessionId).remove(savedClient);
+		if (clientsMap.get(sessionId).size() <= 0) clientsMap.remove(sessionId);
 	}
 
 	private void refreshSession(Session session) {
 		SparkClient client = registerClient(session);
 		client.session(session);
 		pushService.linkToThread(client);
+	}
+
+	private String clientId(Session session) {
+		String[] params = ((WebSocketSession) session).getRequestURI().getQuery().split("&");
+		if (params.length <= 0) return null;
+		String[] split = params[0].split("=");
+		return split.length > 1 ? split[1] : null;
 	}
 
 }
