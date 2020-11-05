@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "3.2.5") datalake
+Artifact("io.intino.alexandria", "3.2.6") datalake
 	Imports
 		Compile("io.intino.alexandria", "event", "2.0.3")
 		Compile("io.intino.alexandria", "zet", "1.0.6")
