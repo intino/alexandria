@@ -19,6 +19,6 @@ public class LittleEndianBitBuffer extends AbstractBitBuffer {
 		final int additionalBytes = (int) abs(min(byteSize() - byteIndex - numBytes, 0));
 		byteIndex -= additionalBytes;
 		final int bitOffset = offsetOf(bitIndex) + additionalBytes * Byte.SIZE;
-		return new BitInfo(byteIndex, numBytes, bitOffset);
+		return new BitInfo(byteIndex, numBytes, bitOffset, bitCount);
 	}
 }
