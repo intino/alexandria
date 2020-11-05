@@ -37,12 +37,23 @@ public class XlsBuilder {
 	}
 
 	public XlsBuilder append(String sheetName, File csvFile) throws IOException {
-		HSSFSheet sheet = wb.createSheet(sheetName);
-		patriarchs.put(sheet, sheet.createDrawingPatriarch());
 		try (BufferedReader reader = new BufferedReader(new FileReader(csvFile))) {
-			create(sheet, reader);
+			create(newSheet(sheetName), reader);
 		}
 		return this;
+	}
+
+	public XlsBuilder append(String sheetName, String csvContent) throws IOException {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(csvContent.getBytes())))) {
+			create(newSheet(sheetName), reader);
+		}
+		return this;
+	}
+
+	private HSSFSheet newSheet(String sheetName) {
+		HSSFSheet sheet = wb.createSheet(sheetName);
+		patriarchs.put(sheet, sheet.createDrawingPatriarch());
+		return sheet;
 	}
 
 	public void save(File file) throws IOException {
