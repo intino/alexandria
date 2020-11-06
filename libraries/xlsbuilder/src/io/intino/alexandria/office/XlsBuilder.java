@@ -365,6 +365,7 @@ public class XlsBuilder {
 				@Override
 				public void execute(Sheet sheet) {
 					CellStyle backgroundStyle = sheet.getWorkbook().createCellStyle();
+					backgroundStyle.cloneStyleFrom(sheet.getRow(firstRow()).getCell(firstCol()).getCellStyle());
 					backgroundStyle.setFillForegroundColor(IndexedColors.valueOf(colorName()).getIndex());
 					backgroundStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 					for (int i = firstRow(); i <= lastRow() ; i++)
