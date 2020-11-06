@@ -1,0 +1,16 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) microSiteExamplesMold
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=100%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(format=filledNoAirExtraLarge)
+				MicroSite(site="/data/microsite.zip") site
+				Block > Text as Code(language=Html)
+						value
+							=========
+							MicroSite(site\=empty) site
+							=========

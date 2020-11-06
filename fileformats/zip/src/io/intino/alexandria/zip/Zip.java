@@ -1,5 +1,7 @@
 package io.intino.alexandria.zip;
 
+import io.intino.alexandria.logger.Logger;
+
 import java.io.*;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -79,6 +81,22 @@ public class Zip {
 				writer.write(value);
 			}
 		}
+	}
+
+	public void write(Map<String, String> entries) throws IOException {
+		if (!file.exists()) create();
+		FileOutputStream fos = new FileOutputStream(file);
+		ZipOutputStream zos = new ZipOutputStream(fos);
+		entries.forEach((key, value) -> {
+			try {
+				zos.putNextEntry(new ZipEntry(key));
+				zos.write(value.getBytes());
+				zos.closeEntry();
+			} catch (IOException e) {
+				Logger.error(e);
+			}
+		});
+		zos.close();
 	}
 
 	public void write(String filePath, InputStream stream, StandardOpenOption... options) throws IOException {

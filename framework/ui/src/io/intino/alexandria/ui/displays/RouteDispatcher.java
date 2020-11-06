@@ -15,4 +15,8 @@ public class RouteDispatcher extends AbstractRouteDispatcher {
     public void dispatchWidgetType(Soul soul, String type) {
         // TODO
     }
+
+    @Override
+    public void dispatchMicroSite(Soul soul, String page) {
+    }
 }
