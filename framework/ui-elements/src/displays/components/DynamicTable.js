@@ -7,6 +7,7 @@ import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
 import { Table, TableHead, TableBody, TableRow, TableCell, Typography, Dialog,
          DialogActions, DialogContent, DialogTitle, Checkbox, IconButton, FormControlLabel } from '@material-ui/core';
+import {RiseLoader} from "react-spinners";
 import Clear from '@material-ui/icons/Clear';
 import classNames from "classnames";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
@@ -86,7 +87,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 		this.requester = new DynamicTableRequester(this);
 		this.header = React.createRef();
 		this.state = {
-		    sections: [],
+		    sections: null,
 		    open: false,
 		    section: null,
 		    row: null,
@@ -97,6 +98,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 	};
 
     render() {
+        if (this.state.sections == null) return this.renderLoading();
         if (this.state.sections.length <= 0) return this.renderEmpty();
         return (
             <div>
@@ -319,6 +321,11 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     renderEmpty = () => {
         const noItemsMessage = this.props.noItemsMessage != null ? this.props.noItemsMessage : "No elements";
         return (<Typography style={{height:'100%',width:'100%',padding:"10px 0",fontSize:'13pt',paddingTop:'100px'}} className="layout horizontal center-justified">{this.translate(noItemsMessage)}</Typography>);
+    };
+
+    renderLoading = () => {
+        const { theme } = this.props;
+        return (<div style={{position:'absolute',top:'50%',left:'43%'}}><RiseLoader color={theme.palette.secondary.main} loading={true}/></div>);
     };
 
     sections = (sections) => {
