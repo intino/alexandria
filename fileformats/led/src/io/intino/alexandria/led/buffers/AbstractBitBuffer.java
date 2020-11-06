@@ -53,46 +53,46 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 
 	@Override
 	public byte getByteNBits(int bitIndex, int bitCount) {
-		return (byte) getNBits(bitIndex, bitCount, computeBitInfo(bitIndex, bitCount));
+		return (byte) getNBits(computeBitInfo(bitIndex, bitCount));
 	}
 
 	@Override
 	public short getShortNBits(int bitIndex, int bitCount) {
-		return (short) getNBits(bitIndex, bitCount, computeBitInfo(bitIndex, bitCount));
+		return (short) getNBits(computeBitInfo(bitIndex, bitCount));
 	}
 
 	@Override
 	public int getIntegerNBits(int bitIndex, int bitCount) {
-		return (int) getNBits(bitIndex, bitCount, computeBitInfo(bitIndex, bitCount));
+		return (int) getNBits(computeBitInfo(bitIndex, bitCount));
 	}
 
 	@Override
 	public long getLongNBits(int bitIndex, int bitCount) {
-		return getNBits(bitIndex, bitCount, computeBitInfo(bitIndex, bitCount));
+		return getNBits(computeBitInfo(bitIndex, bitCount));
 	}
 
-	private long getNBits(int bitIndex, int bitCount, BitInfo bitInfo) {
+	private long getNBits(BitInfo bitInfo) {
 		long value;
 		switch(bitInfo.numBytes) {
 			case Byte.BYTES:
-				value = getAlignedByte(bitIndex);
+				value = getAlignedByte(bitInfo.bitIndex());
 				value &= 0xFF;
 				break;
 			case Short.BYTES:
-				value = getAlignedShort(bitIndex);
+				value = getAlignedShort(bitInfo.bitIndex());
 				value &= 0XFFFF;
 				break;
 			case Integer.BYTES:
-				value = getAlignedInteger(bitIndex);
+				value = getAlignedInteger(bitInfo.bitIndex());
 				value &= 0xFFFFFFFF;
 				break;
 			case Long.BYTES:
-				value = getAlignedLong(bitIndex);
+				value = getAlignedLong(bitInfo.bitIndex());
 				break;
 			default:
-				throw new IllegalArgumentException("Unsupported number of bits " + bitCount);
+				throw new IllegalArgumentException("Unsupported number of bits " + bitInfo.bitCount);
 		}
-		return BitUtils.read(value, bitInfo.bitOffset, bitCount);
+		return BitUtils.read(value, bitInfo.bitOffset, bitInfo.bitCount);
 	}
 
 	@Override
@@ -111,39 +111,39 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 
 	@Override
 	public void setByteNBits(int bitIndex, int bitCount, byte value) {
-		setNBits(bitIndex, bitCount, value, computeBitInfo(bitIndex, bitCount));
+		setNBits(value, computeBitInfo(bitIndex, bitCount));
 	}
 
 	@Override
 	public void setShortNBits(int bitIndex, int bitCount, short value) {
-		setNBits(bitIndex, bitCount, value, computeBitInfo(bitIndex, bitCount));
+		setNBits(value, computeBitInfo(bitIndex, bitCount));
 	}
 
 	@Override
 	public void setIntegerNBits(int bitIndex, int bitCount, int value) {
-		setNBits(bitIndex, bitCount, value, computeBitInfo(bitIndex, bitCount));
+		setNBits(value, computeBitInfo(bitIndex, bitCount));
 	}
 
 	public void setLongNBits(int bitIndex, int bitCount, long value) {
-		setNBits(bitIndex, bitCount, value, computeBitInfo(bitIndex, bitCount));
+		setNBits(value, computeBitInfo(bitIndex, bitCount));
 	}
 
-	private void setNBits(int bitIndex, int bitCount, long value, BitInfo bitInfo) {
+	private void setNBits(long value, BitInfo bitInfo) {
 		switch(bitInfo.numBytes) {
 			case Byte.BYTES:
-				setInt8(bitIndex, bitInfo.byteIndex, bitInfo.bitOffset, bitCount, value);
+				setInt8(bitInfo.bitIndex(), bitInfo.byteIndex, bitInfo.bitOffset, bitInfo.bitCount, value);
 				break;
 			case Short.BYTES:
-				setInt16(bitIndex, bitInfo.byteIndex, bitInfo.bitOffset, bitCount, value);
+				setInt16(bitInfo.bitIndex(), bitInfo.byteIndex, bitInfo.bitOffset, bitInfo.bitCount, value);
 				break;
 			case Integer.BYTES:
-				setInt32(bitIndex, bitInfo.byteIndex, bitInfo.bitOffset, bitCount, value);
+				setInt32(bitInfo.bitIndex(), bitInfo.byteIndex, bitInfo.bitOffset, bitInfo.bitCount, value);
 				break;
 			case Long.BYTES:
-				setInt64(bitIndex, bitInfo.byteIndex, bitInfo.bitOffset, bitCount, value);
+				setInt64(bitInfo.bitIndex(), bitInfo.byteIndex, bitInfo.bitOffset, bitInfo.bitCount, value);
 				break;
 			default:
-				throw new IllegalArgumentException("Unsupported number of bits " + bitCount);
+				throw new IllegalArgumentException("Unsupported number of bits " + bitInfo.bitCount);
 		}
 	}
 
@@ -299,16 +299,22 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 		return store instanceof ReadOnlyByteStore;
 	}
 
-	protected final class BitInfo {
+	protected static final class BitInfo {
 
 		private final int byteIndex;
 		private final int numBytes;
 		private final int bitOffset;
+		private final int bitCount;
 
-		public BitInfo(int byteIndex, int numBytes, int bitOffset) {
+		public BitInfo(int byteIndex, int numBytes, int bitOffset, int bitCount) {
 			this.byteIndex = byteIndex;
 			this.numBytes = numBytes;
 			this.bitOffset = bitOffset;
+			this.bitCount = bitCount;
+		}
+
+		public int bitIndex() {
+			return byteIndex * Byte.SIZE;
 		}
 	}
 }
