@@ -260,20 +260,27 @@ public class XlsBuilder {
 
 		public Define column(String definition) {
 			return new Define() {
+				private HSSFCellStyle styleBold;
+				private HSSFCellStyle style;
 				private final String[] split = definition.split(":");
 
 				@Override
 				public void execute(Sheet sheet) {
 					sheet.setColumnWidth(col(), size());
-					setColumnStyle(sheet, col(), style(format(), alignment()));
+					style = style(format(), alignment());
+					styleBold = style(format(), alignment());
+					styleBold.setFont(font(10, true));
+					setColumnStyle(sheet, col(), style);
 				}
 
 				private void setColumnStyle(Sheet sheet, int column, CellStyle style) {
 					for (Row row : sheet) {
 						Cell cell = row.getCell(column);
 						if (cell == null) continue;
-						if (styles.contains(cell.getCellStyle().getIndex())) continue;
-						cell.setCellStyle(style);
+						CellStyle cellStyle = cell.getCellStyle();
+						HSSFFont font = wb.getFontAt(cellStyle.getFontIndex());
+						if (styles.contains(cellStyle.getIndex()) && font.getFontHeight() != 10) continue;
+						cell.setCellStyle(font.getBold() ? styleBold : style);
 					}
 				}
 
