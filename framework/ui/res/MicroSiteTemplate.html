@@ -1,0 +1,103 @@
+<html>
+	<head>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+		<style>
+			body {
+				font-family: 'Roboto', sans-serif;
+				background: #fafafa;
+				font-weight: 300;
+				padding: 0;
+				margin: 0;
+			}
+			.header {
+				background:white;
+				border-bottom:1px solid #efefef;
+			}
+			.content {
+				margin: 10px 20px;
+			}
+			.noData {
+				text-align: center;
+				width: 100%;
+				margin: 10px;
+				color: #777;
+				font-size: 12pt;
+			}
+			h1 {
+				margin-top: 0;
+				margin-bottom: 0;
+			}
+			.description {
+				color: #555;
+			}
+			.page {
+				font-size: 14pt;
+			}
+			table {
+				width: 100%;
+			}
+			table th {
+				font-weight: 400;
+			}
+			table th, table td {
+				height: 20px;
+				padding: 5px;
+				text-align: right;
+				border-bottom: 1px solid rgba(224, 224, 224, 1);
+				font-size: 11pt;
+				white-space: nowrap;
+			}
+			table td {
+				color: black;
+				font-weight: 300;
+			}
+			table tr {
+				background: white;
+			}
+			table tr.even {
+				background: #F5F5F5;
+			}
+			nav {
+				width: 100%;
+				margin: 10px auto;
+			}
+			nav a, nav select {
+				margin-right: 10px;
+			}
+			nav a {
+				color: #2896F3;
+				cursor: pointer;
+				font-size: 11pt;
+			}
+			nav a[disabled] {
+				color: grey;
+				cursor: default;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="header"><img style="width:178px" src="::logo::"/></div>
+		<div class="content">
+			<div style="margin-bottom:20px">
+				<h1>::title::</h1>
+				<div class="description">::description::</div>
+				<div class="page">::currentPage::</div>
+			</div>
+			<nav style="display:::toolbarDisplay::;">
+				<a onclick="window.location.href = ::previousPage:: + '.html';" ::previousPageDisabled::>::before::</a>
+				<select onchange="window.location.href = this.options[this.selectedIndex].value + '.html';">::options::</select>
+				<a onclick="window.location.href = ::nextPage:: + '.html';" ::nextPageDisabled::>::next::</a>
+			</nav>
+			<table cellpadding="0" cellspacing="0">
+				::transactionHeader::
+				::transactions::
+			</table>
+			<div class="noData" style="display:::noTransactionsDisplay::;">No se han encontrado transacciones</div>
+			<nav style="display:::toolbarDisplay::;">
+				<a onclick="window.location.href = ::previousPage:: + '.html';" ::previousPageDisabled::>::before::</a>
+				<select onchange="window.location.href = this.options[this.selectedIndex].value + '.html';">::options::</select>
+				<a onclick="window.location.href = ::nextPage:: + '.html';" ::nextPageDisabled::>::next::</a>
+			</nav>
+		</div>
+	</body>
+</html>

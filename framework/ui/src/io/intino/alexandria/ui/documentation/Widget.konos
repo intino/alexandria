@@ -1,5 +1,6 @@
 dsl Konos
 
+use MicroSite
 use DynamicTable
 use Frame
 use Stepper
@@ -65,6 +66,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block selectorExamples as Conditional > TemplateStamp(template=selectorExamplesMold)
 			Block stepperExamples as Conditional > TemplateStamp(template=stepperExamplesMold)
 			Block frameExamples as Conditional > TemplateStamp(template=frameExamplesMold)
+			Block microSiteExamples as Conditional > TemplateStamp(template=microSiteExamplesMold) microSiteExamplesMold
 
 		Block facets
 			Text(value="Facets", format=h5 underline)

@@ -172,11 +172,13 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     renderBodyRow = (mainSection, sections, rowIndex) => {
         const { classes } = this.props;
         const rowLabel = this.rowLabel(sections, rowIndex);
-        const style = this.isRowHighlighted(sections, rowIndex) ? { fontWeight: "bold"} : {};
+        const totalRow = this.isTotalRow(sections, rowIndex);
+        const style = totalRow ? { fontWeight: "bold"} : {};
         return (
             <TableRow key={rowIndex}>
                 <TableCell className={classes.rowLabel} style={style}>
-                    <a className={classes.rowAction} onClick={this.handleShowItems.bind(this, mainSection, rowLabel)}>{rowLabel}</a>
+                    {!totalRow && <a className={classes.rowAction} onClick={this.handleShowItems.bind(this, mainSection, rowLabel)}>{rowLabel}</a>}
+                    {totalRow && <div>{rowLabel}</div>}
                 </TableCell>
                 {sections.map((section, index) => this.renderBodyCells(section, rowIndex, index))}
             </TableRow>
@@ -189,7 +191,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 
     renderBodyCell = (cell, index) => {
         const { classes } = this.props;
-        const style = cell.highlighted ? { fontWeight: "bold"} : {};
+        const style = cell.isTotalRow ? { fontWeight: "bold"} : {};
         const relative = cell.relative !== "-1" && this.state.showRelativeValues ? cell.relative : undefined;
         return (
             <TableCell key={index} className={classes.rowCell} style={style}>
@@ -308,15 +310,15 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         return rowIndex < section.rows.length ? section.rows[rowIndex].label : "";
     }
 
-    isRowHighlighted = (sections, rowIndex) => {
+    isTotalRow = (sections, rowIndex) => {
         if (sections.length <= 0) return false;
         const section = sections[0];
-        return rowIndex < section.rows.length ? section.rows[rowIndex].highlighted : false;
+        return rowIndex < section.rows.length ? section.rows[rowIndex].isTotalRow : false;
     }
 
     renderEmpty = () => {
         const noItemsMessage = this.props.noItemsMessage != null ? this.props.noItemsMessage : "No elements";
-        return (<Typography style={{height:'100%',width:'100%',padding:"10px 0",fontSize:'13pt'}} className="layout horizontal center-center">{this.translate(noItemsMessage)}</Typography>);
+        return (<Typography style={{height:'100%',width:'100%',padding:"10px 0",fontSize:'13pt',paddingTop:'100px'}} className="layout horizontal center-justified">{this.translate(noItemsMessage)}</Typography>);
     };
 
     sections = (sections) => {

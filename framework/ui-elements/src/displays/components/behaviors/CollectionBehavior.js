@@ -104,7 +104,7 @@ const CollectionBehavior = (collection) => {
 
     self.renderEmpty = (height, width) => {
         const noItemsMessage = self.collection.props.noItemsMessage != null ? self.collection.props.noItemsMessage : "No elements";
-        return (<Typography style={{height, width, padding:"10px 0",fontSize:'13pt'}} className="layout horizontal center-center">{self.collection.translate(noItemsMessage)}</Typography>);
+        return (<Typography style={{height, width, padding:"10px 0",fontSize:'13pt',paddingTop:'100px'}} className="layout horizontal center-justified">{self.collection.translate(noItemsMessage)}</Typography>);
     };
 
     self.forceNotifyItemsRendered = (items) => {
