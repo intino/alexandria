@@ -6,3 +6,7 @@
 #define column 2:18:Left:0:Address
 #define column 3:12:Left:0:Municipality
 #define column 4:10:Right:#,##0.00:Amount
+#define freezing 7:5
+#define freezing 10:1
+#define background 6:0:6:4:GREY_25_PERCENT
+#define border 7:0:9:4:THIN
