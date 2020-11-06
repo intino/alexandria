@@ -557,6 +557,10 @@ def type(properties & icon) trigger(specific)
 	[$icon+resourceMethod]
 end
 
+def type(properties & microsite) trigger(specific)
+	[$site+resourceMethod]
+end
+
 def type(properties & block) trigger(specific)
 	[$background+resourceMethod]
 	[$badge]

@@ -139,6 +139,11 @@ Component displayStamp
 	Notification refreshDisplay as Text
 Component proxyStamp
 
+Component microSite
+	Notification renderPage as Text
+	Notification renderPageNotFound
+	Request(Asset) download
+
 Component frame
 	Notification refresh as Text
 

@@ -15,7 +15,7 @@ Schema DynamicTableColumn
 Schema DynamicTableRow
 	Attribute label as Text
 	Attribute cells as Object(DynamicTableCell) List
-	Attribute(defaultValue=false) highlighted as Bool
+	Attribute(defaultValue=false) isTotalRow as Bool
 
 Schema DynamicTableCell
 	Attribute label as Text

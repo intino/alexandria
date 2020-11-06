@@ -9,7 +9,8 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 
 	Resource(path = "/") home as Page(homeTemplate) Main
 	Resource(path = "/docs") docs as Page(docsTemplate)
-	Resource(path = "/docs/data/:type") widgetType as Page(widgetTypeTemplate)
+	Resource(path = "/docs/data/:type/") widgetType as Page(widgetTypeTemplate)
+	Resource(path = "/docs/data/microsite/:page") microSite as Page(widgetTypeTemplate)
 
 Template homeTemplate
 	Header(color="white", format=air) as Absolute(height=100px)

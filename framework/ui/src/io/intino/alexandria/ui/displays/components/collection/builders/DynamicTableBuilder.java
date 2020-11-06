@@ -55,7 +55,7 @@ public class DynamicTableBuilder {
 		DynamicTableRow row = new DynamicTableRow();
 		row.label("Total");
 		row.cells(rows.get(0).columns().stream().map(c -> buildCell(c.name(), totalValues.get(c.name()), 100.0, language).highlighted(true)).collect(toList()));
-		row.highlighted(true);
+		row.isTotalRow(true);
 		return row;
 	}
 

@@ -10,6 +10,10 @@ public class WidgetTypeTemplate extends AbstractWidgetTypeTemplate<AlexandriaUiB
         super(box);
     }
 
+    public WidgetMold widget() {
+        return widget;
+    }
+
     @Override
     public void init() {
         super.init();

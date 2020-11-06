@@ -23,6 +23,9 @@ Concept OtherComponents
 		Aspect Circular
         Aspect Linear
 
+    Concept MicroSite extends Component
+    	var string site
+
 	Concept BaseStamp extends Component
 		Aspect Multiple
 		Aspect Editable

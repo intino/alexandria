@@ -21,7 +21,7 @@ public class WidgetSummaryMold extends AbstractWidgetSummaryMold<AlexandriaUiBox
     private void updateTitle() {
         String simpleName = item().getClass().getSimpleName().replace("Widget", "");
         title.title(translate(simpleName));
-        title.path("/docs/data/" + simpleName.toLowerCase());
+        title.path("/docs/data/" + simpleName.toLowerCase() + "/");
     }
 
 }
