@@ -46,6 +46,7 @@ public interface LedStream<S extends Transaction> extends Iterator<S>, AutoClose
 	}
 
 	class Join<S extends Transaction> implements LedStream<S> {
+
 		private final List<LedStream<S>> leds;
 
 		public Join(List<LedStream<S>> leds) {
