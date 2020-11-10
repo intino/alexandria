@@ -7,7 +7,9 @@ import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
 import io.intino.alexandria.ui.displays.notifiers.DateEditableNotifier;
 
+import javax.swing.text.View;
 import java.time.Instant;
+import java.util.stream.Collectors;
 
 public class DateEditable<DN extends DateEditableNotifier, B extends Box> extends AbstractDateEditable<DN, B> implements Editable<DN, B> {
 	private Instant min;
@@ -15,6 +17,10 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 	private Instant value;
 	private boolean readonly;
 	private ChangeListener changeListener = null;
+
+	public enum View {
+		Year, Date, Month;
+	}
 
     public DateEditable(B box) {
         super(box);
@@ -53,6 +59,11 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 
 	public DateEditable<DN, B> pattern(String pattern) {
 		notifier.refreshPattern(pattern);
+		return this;
+	}
+
+	public DateEditable<DN, B> views(java.util.List<DateEditable.View> views) {
+		notifier.refreshViews(views.stream().map(Enum::name).collect(Collectors.toList()));
 		return this;
 	}
 
