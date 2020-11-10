@@ -7,15 +7,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 	private final Config config;
 	private final Translator translator;
+	private final Map<String, String> pages = new HashMap<>();
 
 	public MicroSiteBuilderOfTsv(Config config) {
 		this(config, null);
@@ -29,43 +28,47 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 	public void generate(File tsv, File out) {
 		try {
 			Zip zip = new Zip(out);
+			pages.clear();
 			String content = new String(Files.readAllBytes(tsv.toPath()));
+			addTsv(content);
+			if (content.isEmpty()) return;
 			List<String> lines = Arrays.asList(content.split("\n"));
-			addTsv(zip, content);
-			generatePages(zip, lines);
+			generatePages(lines);
+			zip.write(pages);
 		} catch (IOException e) {
 			Logger.error(e);
 		}
 	}
 
-	private void addTsv(Zip zip, String tsv) throws IOException {
-		zip.write("data.tsv", tsv);
+	private void addTsv(String tsv) throws IOException {
+		pages.put("data.tsv", tsv);
 	}
 
-	private void generatePages(Zip zip, List<String> lines) throws IOException {
+	private void generatePages(List<String> lines) throws IOException {
 		int countPages = pageOf(lines.size())+1;
 		int currentPage = 0;
 		StringBuilder collection = new StringBuilder();
 		for (int i=0; i<lines.size(); i++) {
 			int page = pageOf(i);
 			if (page != currentPage) {
-				generatePage(zip, page-1, countPages, collection);
+				generatePage(page-1, countPages, collection);
 				collection = new StringBuilder();
+				currentPage++;
 			}
 			collection.append(toRow(lines.get(i)));
 		}
-		generatePage(zip, countPages-1, countPages, collection);
+		generatePage(countPages-1, countPages, collection);
 	}
 
-	private void generatePage(Zip zip, int page, int countPages, StringBuilder collection) throws IOException {
-		String pageContent = generatePage(page+1, countPages, collection);
-		if (page == 0) zip.write("index.html", pageContent);
-		zip.write(page+1 + ".html", pageContent);
+	private void generatePage(int page, int countPages, StringBuilder collection) {
+		String pageContent = pageContent(page+1, countPages, collection);
+		if (page == 0) pages.put("index.html", pageContent);
+		pages.put(page+1 + ".html", pageContent);
 	}
 
-	private String generatePage(int page, int countPages, StringBuilder collection) {
+	private String pageContent(int page, int countPages, StringBuilder collection) {
 		String content = template();
-		String options = IntStream.range(0, countPages).mapToObj(j -> "<option value='" + (j+1) + "'" + (page == j ? " selected" : "") + ">" + translate("Page") + " " + (j+1) + "</option>").collect(Collectors.joining());
+		String options = IntStream.range(0, countPages).mapToObj(j -> "<option value='" + (j+1) + "'" + (page == j+1 ? " selected" : "") + ">" + translate("Page") + " " + (j+1) + "</option>").collect(Collectors.joining());
 		content = content.replace("::logo::", config.logo());
 		content = content.replace("::title::", config.title());
 		content = content.replace("::description::", config.description() != null ? config.description() : "");
@@ -75,7 +78,7 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 		content = content.replace("::nextPage::", String.valueOf(page+1));
 		content = content.replace("::noTransactionsDisplay::", collection.length() > 0 ? "none" : "block");
 		content = content.replace("::toolbarDisplay::", collection.length() > 0 ? "block" : "none");
-		content = content.replace("::currentPage::", translate("Page") + " " + page + " " + translate("de") + " " + countPages);
+		content = content.replace("::currentPage::", translate("Page") + " " + page + " " + translate("of") + " " + countPages);
 		content = content.replace("::previousPageDisabled::", page == 1 ? "disabled" : "");
 		content = content.replace("::nextPageDisabled::", page == countPages ? "disabled" : "");
 		content = content.replace("::toolbarDisplay::", countPages > 1 ? "block" : "none");
@@ -107,7 +110,7 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 		private String title;
 		private String logo;
 		private String description;
-		private int pageSize = 10_000;
+		private int pageSize = 1_000;
 		private List<Column> columns = new ArrayList<>();
 
 		public String title() {

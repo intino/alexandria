@@ -7,7 +7,7 @@ import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
 import { Table, TableHead, TableBody, TableRow, TableCell, Typography, Dialog,
          DialogActions, DialogContent, DialogTitle, Checkbox, IconButton, FormControlLabel } from '@material-ui/core';
-import {RiseLoader} from "react-spinners";
+import {RiseLoader, PulseLoader} from "react-spinners";
 import Clear from '@material-ui/icons/Clear';
 import classNames from "classnames";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
@@ -110,9 +110,13 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     };
 
     renderToggleRelativeValues = () => {
+        const { theme } = this.props;
         return (
-            <div className="layout horizontal end-justified" style={{marginBottom:'5px'}}>
-                <FormControlLabel control={<Checkbox checked={this.state.showRelativeValues} onChange={this.handleToggleRelativeValues.bind(this)} name="toggleRelativeValues" color="primary"/>} label={this.translate("Show percentages")}/>
+            <div className="layout horizontal flex" style={{width:'100%'}}>
+                <div className="layout horizontal center-center flex">{this.state.loading && <PulseLoader color={theme.palette.secondary.main} size={8} loading={true}/>}</div>
+                <div className="layout horizontal end-justified" style={{marginBottom:'5px'}}>
+                    <FormControlLabel control={<Checkbox checked={this.state.showRelativeValues} onChange={this.handleToggleRelativeValues.bind(this)} name="toggleRelativeValues" color="primary"/>} label={this.translate("Show percentages")}/>
+                </div>
             </div>
         );
     };

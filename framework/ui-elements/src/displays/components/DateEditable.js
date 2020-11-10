@@ -31,6 +31,7 @@ class DateEditable extends AbstractDateEditable {
             range : { min: this.props.min, max: this.props.max },
             value : this.props.value,
             readonly : this.props.readonly,
+            views : this.props.views,
             empty : false,
         };
 	};
@@ -88,6 +89,10 @@ class DateEditable extends AbstractDateEditable {
 		this.setState({ range });
 	};
 
+	refreshViews = (views) => {
+		this.setState({ views });
+	};
+
 	handleAllowEmpty = (e) => {
 		const checked = e.target.checked;
 		this._notifyChange(checked ? null : new Date());
@@ -100,8 +105,8 @@ class DateEditable extends AbstractDateEditable {
 
 	views = () => {
 	    const result = [];
-	    if (this.props.views == null) return ["date"];
-	    for (var i=0; i<this.props.views.length; i++) result.push(this.props.views[i].toLowerCase());
+	    if (this.state.views == null) return ["date"];
+	    for (var i=0; i<this.state.views.length; i++) result.push(this.state.views[i].toLowerCase());
 	    return result;
 	};
 
