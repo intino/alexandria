@@ -40,8 +40,10 @@ export default class Multiple extends AbstractMultiple {
 
     renderInstance = (instance, props, style, index) => {
 		const multiple = this.props.multiple;
+		const fixedStyle = {...this.style(),...style};
+		if (fixedStyle.width == null) fixedStyle.width = 'auto';
         return (
-            <div key={index} className="layout horizontal center" style={{...style,width:'auto'}}>
+            <div key={index} className="layout horizontal center" style={fixedStyle}>
                 <div className="layout flex" style={{...style,...this.style(),height:'100%'}}>{React.createElement(DisplayFactory.get(instance.tp), instance.pl)}</div>
                 { multiple.editable && this._removeAllowed(index) && this._renderRemove(index) }
             </div>
