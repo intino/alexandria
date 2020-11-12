@@ -17,6 +17,7 @@ public class IteratorLedStream<T extends Transaction> implements LedStream<T> {
 
     private final Iterator<T> iterator;
     private final int transactionSize;
+    private Runnable onClose;
 
     public IteratorLedStream(int transactionSize, Iterator<T> iterator) {
         this.iterator = requireNonNull(iterator);
@@ -25,7 +26,10 @@ public class IteratorLedStream<T extends Transaction> implements LedStream<T> {
 
     @Override
     public void close() throws Exception {
-
+        if(onClose != null) {
+            onClose.run();
+            onClose = null;
+        }
     }
 
     @Override
@@ -36,6 +40,12 @@ public class IteratorLedStream<T extends Transaction> implements LedStream<T> {
     @Override
     public T next() {
         return iterator.next();
+    }
+
+    @Override
+    public LedStream<T> onClose(Runnable onClose) {
+        this.onClose = onClose;
+        return this;
     }
 
     @Override
