@@ -11,6 +11,20 @@ public interface ZetStream {
 
 	boolean hasNext();
 
+	default Iterator<Long> asIterator(){
+		return new Iterator<>() {
+			@Override
+			public boolean hasNext() {
+				return ZetStream.this.hasNext();
+			}
+
+			@Override
+			public Long next() {
+				return ZetStream.this.next();
+			}
+		};
+	}
+
 	@SuppressWarnings({"WeakerAccess", "unused"})
 	class Difference implements ZetStream {
 
