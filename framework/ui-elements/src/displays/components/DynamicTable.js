@@ -8,7 +8,7 @@ import { withSnackbar } from 'notistack';
 import { Table, TableHead, TableBody, TableRow, TableCell, Typography, Dialog,
          DialogActions, DialogContent, DialogTitle, Checkbox, IconButton, FormControlLabel } from '@material-ui/core';
 import {RiseLoader, PulseLoader} from "react-spinners";
-import Clear from '@material-ui/icons/Clear';
+import { Clear, ArrowBack } from '@material-ui/icons';
 import classNames from "classnames";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -32,6 +32,10 @@ export const DynamicTableStyles = theme => ({
         textAlign:'left',
     },
     rowAction : {
+        color: theme.palette.primary.main,
+        cursor: 'pointer',
+    },
+    columnAction : {
         color: theme.palette.primary.main,
         cursor: 'pointer',
     },
@@ -91,6 +95,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 		    open: false,
 		    section: null,
 		    row: null,
+		    column: null,
 		    selectRowProvided: false,
             showRelativeValues: false,
 		    ...this.state,
@@ -102,71 +107,130 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         if (this.state.sections.length <= 0) return this.renderEmpty();
         return (
             <div>
-                {this.renderToggleRelativeValues()}
-                {this.state.sections.map((s, index) => this.renderTable(s, index))}
+                {this.renderToolbar()}
+                {this.renderTable()}
                 {this.renderDialog()}
             </div>
         );
     };
 
-    renderToggleRelativeValues = () => {
-        const { theme } = this.props;
+    renderToolbar = () => {
+        const { classes, theme } = this.props;
         return (
-            <div className="layout horizontal flex" style={{width:'100%'}}>
-                <div className="layout horizontal center-center flex">{this.state.loading && <PulseLoader color={theme.palette.secondary.main} size={8} loading={true}/>}</div>
-                <div className="layout horizontal end-justified" style={{marginBottom:'5px'}}>
+            <div className="layout horizontal center flex" style={{width:'100%',marginBottom:'5px'}}>
+                <div className="layout horizontal">
+                    {this.state.column &&
+                        <div className="layout horizontal center">
+                            <IconButton color='primary' onClick={this.handleBack.bind(this)}><ArrowBack/></IconButton>
+                            <Typography variant="h5" style={{marginBottom:'4px'}}>{this.state.column.label}</Typography>
+                        </div>
+                    }
+                </div>
+                <div className="layout horizontal center-center flex">
+                    {this.state.loading && <PulseLoader color={theme.palette.secondary.main} size={8} loading={true}/>}
+                </div>
+                <div className="layout horizontal end-justified center">
                     <FormControlLabel control={<Checkbox checked={this.state.showRelativeValues} onChange={this.handleToggleRelativeValues.bind(this)} name="toggleRelativeValues" color="primary"/>} label={this.translate("Show percentages")}/>
                 </div>
             </div>
         );
     };
 
-    renderTable = (section, index) => {
+    renderTable = () => {
+        return this._isMainView() ? this.renderMainView() : this.renderDetailView();
+    };
+
+    renderMainView = () => {
+        return this.state.sections.map((s, index) => this.renderSection(s, index));
+    };
+
+    renderDetailView = () => {
+        const { classes } = this.props;
+        return (
+            <div className="layout horizontal flex">
+                {this.state.sections.map((s, index) => this.renderDetailSection(s, index))}
+            </div>
+        );
+    };
+
+    renderDetailSection = (section, index) => {
+        const classNames = "layout vertical" + (this.state.sections.length <= 1 ? "" : " flex");
+        return (<div className={classNames} style={{marginRight:'1px'}}>{this.renderSection(section, index)}</div>);
+    };
+
+    renderSection = (section, index) => {
         const { classes } = this.props;
         return (
             <Table size='small' className={classes.table} key={index}>
-                <TableHead>{this.renderHeader(section)}</TableHead>
-                <TableBody>{this.renderBody(section)}</TableBody>
+                <TableHead>{this.renderHeader(section, index)}</TableHead>
+                <TableBody>{this.renderBody(section, index)}</TableBody>
             </Table>
         );
     };
 
-    renderHeader = (section) => {
+    renderHeader = (section, index) => {
         const sectionsArray = this.treeToArray(section);
         const labelSize = this.maxLabelSize(section);
         if (this.state.sections.length == 1 && sectionsArray[0].length == 1 && sectionsArray[0][0].sections.length == 0)
             sectionsArray.shift();
-        return (<React.Fragment>{sectionsArray.map((list, index) => this.renderHeaderRow(list, labelSize, index))}</React.Fragment>);
+        return (
+            <React.Fragment>
+                {sectionsArray.map((list, index) => this.renderHeaderRow(section, list, labelSize, index))}
+            </React.Fragment>
+        );
     };
 
-    renderHeaderRow = (sections, rowLabelWidth, index) => {
+    renderHeaderRow = (mainSection, sections, rowLabelWidth, index) => {
         const { classes } = this.props;
+        const isMainView = this._isMainView();
+        const visible = isMainView || (!isMainView && mainSection == this.state.sections[0]);
         return (
             <TableRow key={index}>
-                <TableCell className={classes.rowLabel} style={{width:rowLabelWidth+"px"}}></TableCell>
-                {sections.map((section, index) => this.renderHeaderCell(section, index))}
+                {visible && <TableCell className={classes.rowLabel}><div style={{minWidth:rowLabelWidth+"px",width:rowLabelWidth+"px"}}></div></TableCell>}
+                {sections.map((section, index) => isMainView || (!isMainView && this.isSelectedColumnIn(section, sections)) ? this.renderHeaderCell(section, index) : null)}
             </TableRow>
         );
     };
 
+    isSelectedColumnIn = (section, sections) => {
+        let offset = 0;
+        const isTerminal = this.childrenColumnsCount(section) == 0;
+        for (let i=0; i<sections.length; i++) {
+            if (isTerminal) {
+                if (sections[i] == section) return i == this.state.column.index;
+            }
+            else {
+                const childrenCount = this.childrenColumnsCount(sections[i]);
+                if (sections[i] == section) return offset <= this.state.column.index && offset+childrenCount-1 >= this.state.column.index;
+                offset += childrenCount;
+            }
+        }
+        return false;
+    };
+
     renderHeaderCell = (section, index) => {
         const { classes } = this.props;
-        const colSpan = this.childrenColumnsCount(section);
+        const columnCount = this.childrenColumnsCount(section);
+        const isMainView = this._isMainView();
+        const colSpan = this._isMainView() ? columnCount : (this.isLeafSection(section) && index == this.state.column.index ? 1 : 0);
         const color = section.color;
         const backgroundColor = section.backgroundColor;
         const fontSize = section.fontSize + "pt";
         const textAlign = section.textAlign != null ? section.textAlign : "center";
+        const selectable = section.selectable;
+        if (!isMainView && selectable && index != this.state.column.index) return null;
         return (
             <TableCell className={classNames(classes.rowCell, classes.headerCell)}
                        colSpan={colSpan}
-                       style={{color:color,backgroundColor:backgroundColor,fontSize:fontSize,textAlign:textAlign}}
+                       style={{backgroundColor:backgroundColor,fontSize:fontSize,textAlign:textAlign}}
                        key={index}>
-                {section.label}
+                {(!selectable || (!isMainView && selectable)) && <span style={{color:color,whiteSpace:'nowrap'}}>{section.label}</span>}
+                {isMainView && selectable && <a className={classes.columnAction} onClick={this.handleFilterColumn.bind(this, section, index)}>{section.label}</a>}
             </TableCell>
         );
     };
 
-    renderBody = (section) => {
+    renderBody = (section, index) => {
         const sections = this.leafSections(section);
         if (sections.length <= 0) return;
         const countRows = sections[0].rows.length;
@@ -180,27 +244,42 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const rowLabel = this.rowLabel(sections, rowIndex);
         const totalRow = this.isTotalRow(sections, rowIndex);
         const style = totalRow ? { fontWeight: "bold"} : {};
+        const isMainView = this._isMainView();
         return (
             <TableRow key={rowIndex}>
-                <TableCell className={classes.rowLabel} style={style}>
-                    {!totalRow && <a className={classes.rowAction} onClick={this.handleShowItems.bind(this, mainSection, rowLabel)}>{rowLabel}</a>}
-                    {totalRow && <div>{rowLabel}</div>}
-                </TableCell>
-                {sections.map((section, index) => this.renderBodyCells(section, rowIndex, index))}
+                {(isMainView || (!isMainView && mainSection == this.state.sections[0])) &&
+                    <TableCell className={classes.rowLabel} style={style}>
+                        {(!totalRow && isMainView) && <a className={classes.rowAction} onClick={this.handleShowItems.bind(this, mainSection, rowLabel)}>{rowLabel}</a>}
+                        {(totalRow || !isMainView) && <div>{rowLabel}</div>}
+                    </TableCell>
+                }
+                {sections.map((section, index) => this.renderBodyCells(section, rowIndex, index, this.columnOffset(sections, index)))}
             </TableRow>
         );
     };
 
-    renderBodyCells = (section, rowIndex, idx) => {
-        return (<React.Fragment key={rowIndex}>{section.rows[rowIndex].cells.map((c, index) => this.renderBodyCell(c, index))}</React.Fragment>);
+    columnOffset = (sections, index) => {
+        let result = 0;
+        for (let i=0; i<sections.length; i++) {
+            if (i == index) return result;
+            result += this.childrenColumnsCount(sections[i]);
+        }
+        return result;
     };
 
-    renderBodyCell = (cell, index) => {
+    renderBodyCells = (section, rowIndex, idx, offset) => {
+        const isMainView = this._isMainView();
+        const row = section.rows[rowIndex];
+        return (<React.Fragment key={rowIndex}>{row.cells.map((c, index) => (isMainView || (!isMainView && offset+index == this.state.column.index)) ? this.renderBodyCell(section, row, c, index) : null)}</React.Fragment>);
+    };
+
+    renderBodyCell = (section, row, cell, index) => {
         const { classes } = this.props;
-        const style = cell.isTotalRow ? { fontWeight: "bold"} : {};
+        const style = cell.isTotalRow ? { fontWeight: "bold" } : {};
         const relative = cell.relative !== "-1" && this.state.showRelativeValues ? cell.relative : undefined;
+        const title = cell.label + " " + this.translate("of") + " " + row.label + " " + this.translate("in") + " " + section.label;
         return (
-            <TableCell key={index} className={classes.rowCell} style={style}>
+            <TableCell title={title} key={index} className={classes.rowCell} style={{whiteSpace:'nowrap',...style}}>
                 {cell.absolute}
                 {relative !== undefined && <span className={classes.rowRelativeValue}>&nbsp;{relative}%</span>}
             </TableCell>
@@ -268,12 +347,13 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         if (sections.length <= 0) return 250;
         const countRows = sections[0].rows.length;
         var result = 0;
-        for (var i=0; i<countRows; i++) result = Math.max(result, (sections[0].rows[i].label.length * 11) + 20);
+        for (var i=0; i<countRows; i++) result = Math.max(result, (sections[0].rows[i].label.length * 7) + 20);
         return result;
     };
 
     treeToArray = (section) => {
         const result = [];
+        const isDetailView = !this._isMainView();
         this.registerItemInArray(section, result, 0);
         return result;
     };
@@ -286,6 +366,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         if (item.columns == null) item.columns = [];
         for (var i=0; i<item.columns.length; i++) {
             item.columns[i].color = "black";
+            item.columns[i].selectable = true;
             item.columns[i].backgroundColor = "transparent";
             item.columns[i].fontSize = 11;
             item.columns[i].textAlign = "right !important";
@@ -300,8 +381,12 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     };
 
     leafSectionsOf = (section, result) => {
-        if (section.sections.length <= 0) result.push(section);
+        if (this.isLeafSection(section)) result.push(section);
         for (var i=0; i<section.sections.length; i++) this.leafSectionsOf(section.sections[i], result);
+    };
+
+    isLeafSection = (section) => {
+        return section.sections.length == 0;
     };
 
     childrenColumnsCount = (section) => {
@@ -342,6 +427,18 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 
     handleToggleRelativeValues = () => {
         this.setState({showRelativeValues: !this.state.showRelativeValues});
+    };
+
+    handleFilterColumn = (column, index) => {
+        this.setState({ column: { index: index, label: column.label } })
+    };
+
+    handleBack = () => {
+        this.setState({ column: null })
+    };
+
+    _isMainView = () => {
+        return this.state.column == null;
     };
 
 }
