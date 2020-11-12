@@ -1,15 +1,51 @@
 package io.intino.alexandria.led;
 
+import io.intino.alexandria.led.allocators.TransactionFactory;
 import io.intino.alexandria.led.buffers.BigEndianBitBuffer;
 import io.intino.alexandria.led.buffers.BitBuffer;
 import io.intino.alexandria.led.buffers.LittleEndianBitBuffer;
 import io.intino.alexandria.led.buffers.store.ByteStore;
+import io.intino.alexandria.led.util.MemoryUtils;
 import io.intino.alexandria.led.util.OffHeapObject;
+import io.intino.alexandria.logger.Logger;
 
+import java.lang.reflect.Constructor;
 import java.nio.ByteOrder;
 import java.util.Objects;
 
 public abstract class Transaction implements OffHeapObject, Comparable<Transaction> {
+
+	public static long idOf(Transaction transaction) {
+		return MemoryUtils.getLong(transaction.address(), transaction.baseOffset());
+	}
+
+	public static <T extends Transaction> int sizeOf(Class<T> type) {
+		try {
+			return (int) type.getField("SIZE").get(null);
+		} catch (IllegalAccessException | NoSuchFieldException e) {
+			Logger.error(e);
+		}
+		return -1;
+	}
+
+	/**
+	 * This uses reflection!!
+	 * */
+	public static <T extends Transaction>TransactionFactory<T> factoryOf(Class<T> type) {
+		try {
+			final Constructor<T> constructor = type.getConstructor(ByteStore.class);
+			return store -> {
+				try {
+					return constructor.newInstance(store);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			};
+		} catch (NoSuchMethodException e) {
+			Logger.error(e);
+			throw new RuntimeException(e);
+		}
+	}
 
 	protected final BitBuffer bitBuffer;
 
