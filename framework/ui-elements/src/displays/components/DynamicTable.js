@@ -7,6 +7,7 @@ import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
 import { Table, TableHead, TableBody, TableRow, TableCell, Typography, Dialog,
          DialogActions, DialogContent, DialogTitle, Checkbox, IconButton, FormControlLabel } from '@material-ui/core';
+import {RiseLoader, PulseLoader} from "react-spinners";
 import Clear from '@material-ui/icons/Clear';
 import classNames from "classnames";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
@@ -86,7 +87,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 		this.requester = new DynamicTableRequester(this);
 		this.header = React.createRef();
 		this.state = {
-		    sections: [],
+		    sections: null,
 		    open: false,
 		    section: null,
 		    row: null,
@@ -97,6 +98,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 	};
 
     render() {
+        if (this.state.sections == null) return this.renderLoading();
         if (this.state.sections.length <= 0) return this.renderEmpty();
         return (
             <div>
@@ -108,9 +110,13 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     };
 
     renderToggleRelativeValues = () => {
+        const { theme } = this.props;
         return (
-            <div className="layout horizontal end-justified" style={{marginBottom:'5px'}}>
-                <FormControlLabel control={<Checkbox checked={this.state.showRelativeValues} onChange={this.handleToggleRelativeValues.bind(this)} name="toggleRelativeValues" color="primary"/>} label={this.translate("Show percentages")}/>
+            <div className="layout horizontal flex" style={{width:'100%'}}>
+                <div className="layout horizontal center-center flex">{this.state.loading && <PulseLoader color={theme.palette.secondary.main} size={8} loading={true}/>}</div>
+                <div className="layout horizontal end-justified" style={{marginBottom:'5px'}}>
+                    <FormControlLabel control={<Checkbox checked={this.state.showRelativeValues} onChange={this.handleToggleRelativeValues.bind(this)} name="toggleRelativeValues" color="primary"/>} label={this.translate("Show percentages")}/>
+                </div>
             </div>
         );
     };
@@ -172,11 +178,13 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     renderBodyRow = (mainSection, sections, rowIndex) => {
         const { classes } = this.props;
         const rowLabel = this.rowLabel(sections, rowIndex);
-        const style = this.isRowHighlighted(sections, rowIndex) ? { fontWeight: "bold"} : {};
+        const totalRow = this.isTotalRow(sections, rowIndex);
+        const style = totalRow ? { fontWeight: "bold"} : {};
         return (
             <TableRow key={rowIndex}>
                 <TableCell className={classes.rowLabel} style={style}>
-                    <a className={classes.rowAction} onClick={this.handleShowItems.bind(this, mainSection, rowLabel)}>{rowLabel}</a>
+                    {!totalRow && <a className={classes.rowAction} onClick={this.handleShowItems.bind(this, mainSection, rowLabel)}>{rowLabel}</a>}
+                    {totalRow && <div>{rowLabel}</div>}
                 </TableCell>
                 {sections.map((section, index) => this.renderBodyCells(section, rowIndex, index))}
             </TableRow>
@@ -189,7 +197,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 
     renderBodyCell = (cell, index) => {
         const { classes } = this.props;
-        const style = cell.highlighted ? { fontWeight: "bold"} : {};
+        const style = cell.isTotalRow ? { fontWeight: "bold"} : {};
         const relative = cell.relative !== "-1" && this.state.showRelativeValues ? cell.relative : undefined;
         return (
             <TableCell key={index} className={classes.rowCell} style={style}>
@@ -260,7 +268,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         if (sections.length <= 0) return 250;
         const countRows = sections[0].rows.length;
         var result = 0;
-        for (var i=0; i<countRows; i++) result = Math.max(result, (sections[0].rows[i].label.length * 10) + 20);
+        for (var i=0; i<countRows; i++) result = Math.max(result, (sections[0].rows[i].label.length * 11) + 20);
         return result;
     };
 
@@ -308,15 +316,20 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         return rowIndex < section.rows.length ? section.rows[rowIndex].label : "";
     }
 
-    isRowHighlighted = (sections, rowIndex) => {
+    isTotalRow = (sections, rowIndex) => {
         if (sections.length <= 0) return false;
         const section = sections[0];
-        return rowIndex < section.rows.length ? section.rows[rowIndex].highlighted : false;
+        return rowIndex < section.rows.length ? section.rows[rowIndex].isTotalRow : false;
     }
 
     renderEmpty = () => {
         const noItemsMessage = this.props.noItemsMessage != null ? this.props.noItemsMessage : "No elements";
-        return (<Typography style={{height:'100%',width:'100%',padding:"10px 0",fontSize:'13pt'}} className="layout horizontal center-center">{this.translate(noItemsMessage)}</Typography>);
+        return (<Typography style={{height:'100%',width:'100%',padding:"10px 0",fontSize:'13pt',paddingTop:'100px'}} className="layout horizontal center-justified">{this.translate(noItemsMessage)}</Typography>);
+    };
+
+    renderLoading = () => {
+        const { theme } = this.props;
+        return (<div style={{position:'absolute',top:'50%',left:'43%'}}><RiseLoader color={theme.palette.secondary.main} loading={true}/></div>);
     };
 
     sections = (sections) => {

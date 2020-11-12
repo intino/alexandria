@@ -2,6 +2,9 @@ package io.intino.alexandria.office;
 
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellRangeUtil;
+import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.util.IOUtils;
 
 import java.io.*;
@@ -37,12 +40,23 @@ public class XlsBuilder {
 	}
 
 	public XlsBuilder append(String sheetName, File csvFile) throws IOException {
-		HSSFSheet sheet = wb.createSheet(sheetName);
-		patriarchs.put(sheet, sheet.createDrawingPatriarch());
 		try (BufferedReader reader = new BufferedReader(new FileReader(csvFile))) {
-			create(sheet, reader);
+			create(newSheet(sheetName), reader);
 		}
 		return this;
+	}
+
+	public XlsBuilder append(String sheetName, String csvContent) throws IOException {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(csvContent.getBytes())))) {
+			create(newSheet(sheetName), reader);
+		}
+		return this;
+	}
+
+	private HSSFSheet newSheet(String sheetName) {
+		HSSFSheet sheet = wb.createSheet(sheetName);
+		patriarchs.put(sheet, sheet.createDrawingPatriarch());
+		return sheet;
 	}
 
 	public void save(File file) throws IOException {
@@ -168,6 +182,9 @@ public class XlsBuilder {
 		if (variable.equalsIgnoreCase("image")) return new DefineFactory().image(value);
 		if (variable.equalsIgnoreCase("column")) return new DefineFactory().column(value);
 		if (variable.equalsIgnoreCase("cell")) return new DefineFactory().cell(value);
+		if (variable.equalsIgnoreCase("background")) return new DefineFactory().background(value);
+		if (variable.equalsIgnoreCase("freezing")) return new DefineFactory().freezing(value);
+		if (variable.equalsIgnoreCase("border")) return new DefineFactory().border(value);
 		return new DefineFactory().Null();
 	}
 
@@ -243,20 +260,27 @@ public class XlsBuilder {
 
 		public Define column(String definition) {
 			return new Define() {
+				private HSSFCellStyle styleBold;
+				private HSSFCellStyle style;
 				private final String[] split = definition.split(":");
 
 				@Override
 				public void execute(Sheet sheet) {
 					sheet.setColumnWidth(col(), size());
-					setColumnStyle(sheet, col(), style(format(), alignment()));
+					style = style(format(), alignment());
+					styleBold = style(format(), alignment());
+					styleBold.setFont(font(10, true));
+					setColumnStyle(sheet, col(), style);
 				}
 
 				private void setColumnStyle(Sheet sheet, int column, CellStyle style) {
 					for (Row row : sheet) {
 						Cell cell = row.getCell(column);
 						if (cell == null) continue;
-						if (styles.contains(cell.getCellStyle().getIndex())) continue;
-						cell.setCellStyle(style);
+						CellStyle cellStyle = cell.getCellStyle();
+						HSSFFont font = wb.getFontAt(cellStyle.getFontIndex());
+						if (styles.contains(cellStyle.getIndex()) && font.getFontHeight() != 10) continue;
+						cell.setCellStyle(font.getBold() ? styleBold : style);
 					}
 				}
 
@@ -339,6 +363,84 @@ public class XlsBuilder {
 
 		public Define Null() {
 			return sheet -> {
+			};
+		}
+
+		public Define background(String definition) {
+			return new Define() {
+				private final String[] split = definition.split(":");
+				@Override
+				public void execute(Sheet sheet) {
+					CellStyle backgroundStyle = sheet.getWorkbook().createCellStyle();
+					backgroundStyle.cloneStyleFrom(sheet.getRow(firstRow()).getCell(firstCol()).getCellStyle());
+					backgroundStyle.setFillForegroundColor(IndexedColors.valueOf(colorName()).getIndex());
+					backgroundStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+					for (int i = firstRow(); i <= lastRow() ; i++)
+						for (int j = firstCol(); j <= lastCol(); j++)
+							sheet.getRow(i).getCell(j).setCellStyle(backgroundStyle);
+				}
+
+				private int firstRow() {
+					return parseInt(split[0]);
+				}
+				private int lastRow() {
+					return parseInt(split[2]);
+				}
+				private int firstCol() {
+					return parseInt(split[1]);
+				}
+				private int lastCol() {
+					return parseInt(split[3]);
+				}
+				private String colorName() {
+					return split[4];
+				}
+			};
+		}
+		public Define freezing(String definition) {
+			return new Define() {
+				private final String[] split = definition.split(":");
+				@Override
+				public void execute(Sheet sheet) {
+					sheet.createFreezePane(splitCol(), splitRow());
+				}
+
+				private int splitRow() {
+					return parseInt(split[0]);
+				}
+				private int splitCol() {
+					return parseInt(split[1]);
+				}
+			};
+		}
+		public Define border(String definition) {
+			return new Define() {
+				private final String[] split = definition.split(":");
+				@Override
+				public void execute(Sheet sheet) {
+					CellRangeAddress region = new CellRangeAddress(firstRow(), lastRow(), firstCol(), lastCol());
+					BorderStyle border = BorderStyle.valueOf(borderName());
+					RegionUtil.setBorderBottom(border, region, sheet);
+					RegionUtil.setBorderLeft(border, region, sheet);
+					RegionUtil.setBorderTop(border, region, sheet);
+					RegionUtil.setBorderRight(border, region, sheet);
+				}
+
+				private int firstRow() {
+					return parseInt(split[0]);
+				}
+				private int lastRow() {
+					return parseInt(split[2]);
+				}
+				private int firstCol() {
+					return parseInt(split[1]);
+				}
+				private int lastCol() {
+					return parseInt(split[3]);
+				}
+				private String borderName() {
+					return split[4];
+				}
 			};
 		}
 	}

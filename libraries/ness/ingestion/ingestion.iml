@@ -20,7 +20,7 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
     <orderEntry type="module" module-name="event" />
     <orderEntry type="module" module-name="message" />
-    <orderEntry type="module" module-name="led" />
     <orderEntry type="module" module-name="zet" />
+    <orderEntry type="module" module-name="led" />
   </component>
 </module>

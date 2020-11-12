@@ -133,11 +133,11 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
     }
 
     protected void notifySelection(List selection) {
-        selectionListeners.forEach(l -> l.accept(new SelectionEvent(this, selection)));
+        selectionListeners.parallelStream().forEach(l -> l.accept(new SelectionEvent(this, selection)));
     }
 
     protected void notifySelection() {
-        selectionListeners.forEach(l -> l.accept(new SelectionEvent(this, selection())));
+        selectionListeners.parallelStream().forEach(l -> l.accept(new SelectionEvent(this, selection())));
     }
 
     protected BaseSelector<DN, B> _path(String path) {

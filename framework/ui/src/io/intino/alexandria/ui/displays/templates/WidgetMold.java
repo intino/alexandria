@@ -69,6 +69,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         selectorExamples.visible(widget instanceof SelectorWidget);
         stepperExamples.visible(widget instanceof StepperWidget);
         frameExamples.visible(widget instanceof FrameWidget);
+        microSiteExamples.visible(widget instanceof MicroSiteWidget);
     }
 
     private void updateInfo() {
