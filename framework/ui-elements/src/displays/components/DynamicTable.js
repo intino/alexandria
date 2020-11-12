@@ -268,7 +268,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         if (sections.length <= 0) return 250;
         const countRows = sections[0].rows.length;
         var result = 0;
-        for (var i=0; i<countRows; i++) result = Math.max(result, (sections[0].rows[i].label.length * 10) + 20);
+        for (var i=0; i<countRows; i++) result = Math.max(result, (sections[0].rows[i].label.length * 11) + 20);
         return result;
     };
 
