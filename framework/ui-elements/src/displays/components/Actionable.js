@@ -3,7 +3,6 @@ import AbstractActionable from "../../../gen/displays/components/AbstractActiona
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, IconButton, Typography } from "@material-ui/core";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import TextField from '@material-ui/core/TextField';
-import Tooltip from '@material-ui/core/Tooltip';
 import Delayer from 'alexandria-ui-elements/src/util/Delayer';
 import StringUtil from 'alexandria-ui-elements/src/util/StringUtil';
 
@@ -114,7 +113,7 @@ export default class Actionable extends AbstractActionable {
                 {this.renderContent()}
             </IconButton>
         );
-		return this._readonly() ? button : (<Tooltip title={this._title()}>{button}</Tooltip>);
+		return button;
 	};
 
 	renderMaterialIconButton = () => {
@@ -128,7 +127,7 @@ export default class Actionable extends AbstractActionable {
                 {this.renderContent()}
             </IconButton>
 		);
-		return this._readonly() ? button : (<Tooltip title={this._title()}>{button}</Tooltip>);
+		return button;
 	};
 
 	renderAvatarIconButton = () => {
@@ -155,14 +154,14 @@ export default class Actionable extends AbstractActionable {
                              paddingTop:paddingTop,paddingLeft:paddingLeft}}>{title}</div>
             </IconButton>
 		);
-		return this._readonly() ? button : (<Tooltip title={this._title()}>{button}</Tooltip>);
+		return button;
 	};
 
 	renderContent = () => {
 		const mode = this.props.mode.toLowerCase();
 		if (mode === "button" || mode === "toggle") return (<div>{this._title()}</div>);
-		else if (mode === "iconbutton" || mode === "icontoggle") return (<img src={this._icon()} style={this._addDimensions({})}/>);
-		else if (mode === "materialiconbutton" || mode === "materialicontoggle") return (<ActionableMui icon={this._icon()} style={this._addDimensions({})}/>);
+		else if (mode === "iconbutton" || mode === "icontoggle") return (<img title={this._title()} src={this._icon()} style={this._addDimensions({})}/>);
+		else if (mode === "materialiconbutton" || mode === "materialicontoggle") return (<ActionableMui titleAccess={this._title()} icon={this._icon()} style={this._addDimensions({})}/>);
 	};
 
 	renderAffirm = () => {
