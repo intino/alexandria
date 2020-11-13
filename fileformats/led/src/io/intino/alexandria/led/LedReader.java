@@ -4,6 +4,7 @@ import io.intino.alexandria.led.allocators.TransactionFactory;
 import io.intino.alexandria.led.allocators.indexed.IndexedAllocator;
 import io.intino.alexandria.led.allocators.indexed.IndexedAllocatorFactory;
 import io.intino.alexandria.led.leds.IndexedLed;
+import io.intino.alexandria.led.leds.InputLedStream;
 import io.intino.alexandria.logger.Logger;
 import org.xerial.snappy.SnappyInputStream;
 

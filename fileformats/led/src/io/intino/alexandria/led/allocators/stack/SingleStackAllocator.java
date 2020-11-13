@@ -21,7 +21,7 @@ public class SingleStackAllocator<T extends Transaction> implements StackAllocat
 	private final AtomicLong stackPointer;
 	private final TransactionFactory<T> factory;
 
-	SingleStackAllocator(ByteStore store, ModifiableMemoryAddress address, int elementSize, TransactionFactory<T> factory) {
+	public SingleStackAllocator(ByteStore store, ModifiableMemoryAddress address, int elementSize, TransactionFactory<T> factory) {
 		this.elementSize = elementSize;
 		this.stack = store;
 		this.factory = factory;

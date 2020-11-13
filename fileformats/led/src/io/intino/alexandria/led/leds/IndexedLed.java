@@ -1,6 +1,7 @@
 package io.intino.alexandria.led.leds;
 
 import io.intino.alexandria.led.Led;
+import io.intino.alexandria.led.LedStream;
 import io.intino.alexandria.led.Transaction;
 import io.intino.alexandria.led.allocators.TransactionFactory;
 import io.intino.alexandria.led.allocators.indexed.IndexedAllocator;
@@ -42,15 +43,20 @@ public class IndexedLed<S extends Transaction> implements Led<S> {
 
 	@Override
 	public Iterator<S> iterator() {
-		return stream().iterator();
+		return stream2().iterator();
 	}
 
 	@Override
 	public List<S> elements() {
-		return stream().collect(Collectors.toList());
+		return stream2().collect(Collectors.toList());
 	}
 
-	private Stream<S> stream() {
+	private Stream<S> stream2() {
 		return IntStream.range(0, (int) size()).mapToObj(allocator::malloc);
+	}
+
+	@Override
+	public LedStream<S> stream() {
+		return null;
 	}
 }

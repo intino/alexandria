@@ -50,10 +50,10 @@ public class DynamicLed <S extends Transaction> implements Led<S> {
 
 	@Override
 	public List<S> elements() {
-		return stream().collect(Collectors.toList());
+		return stream2().collect(Collectors.toList());
 	}
 
-	private Stream<S> stream() {
+	private Stream<S> stream2() {
 		return IntStream.range(0, (int) size()).mapToObj(allocator::malloc);
 	}
 }
