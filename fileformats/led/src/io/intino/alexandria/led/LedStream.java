@@ -6,6 +6,7 @@ import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.led.allocators.stack.StackListAllocator;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.leds.IteratorLedStream;
+import io.intino.alexandria.led.util.iterators.IteratorUtils;
 import io.intino.alexandria.led.util.iterators.MergedIterator;
 
 import java.io.File;
@@ -21,13 +22,52 @@ import java.util.stream.StreamSupport;
 import static io.intino.alexandria.led.Transaction.idOf;
 import static io.intino.alexandria.led.Transaction.sizeOf;
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toList;
 
 public interface LedStream<T extends Transaction> extends Iterator<T>, AutoCloseable {
 
-	String SIZE = "SIZE";
-
 	static <T extends Transaction> LedStream<T> empty() {
 		return IteratorLedStream.fromStream(0, Stream.empty());
+	}
+
+	static <T extends Transaction> LedStream<T> fromStream(int transactionSize, Stream<T> stream) {
+		return IteratorLedStream.fromStream(transactionSize, stream);
+	}
+
+	static <T extends Transaction> LedStream<T> of(int transactionSize, T... transactions) {
+		return fromStream(transactionSize, Arrays.stream(transactions));
+	}
+
+	static <T extends Transaction> LedStream<T> singleton(int transactionSize, T transaction) {
+		return fromStream(transactionSize, Stream.of(transaction));
+	}
+
+	static <T extends Transaction> LedStream<T> merged(Stream<LedStream<T>> ledStreams) {
+		return merged(ledStreams.iterator());
+	}
+
+	static <T extends Transaction> LedStream<T> merged(Iterator<LedStream<T>> iterator) {
+		if(!iterator.hasNext()) {
+			return empty();
+		}
+		return iterator.next().merge(IteratorUtils.streamOf(iterator));
+	}
+
+	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass) {
+		return new LedStreamBuilder<>(transactionClass);
+	}
+
+	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass, int numElementsPerBlock) {
+		return new LedStreamBuilder<>(transactionClass, numElementsPerBlock);
+	}
+
+	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass, TransactionFactory<T> factory) {
+		return new LedStreamBuilder<>(transactionClass, factory);
+	}
+
+	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass,
+													  TransactionFactory<T> factory, int numElementsPerBlock) {
+		return new LedStreamBuilder<>(transactionClass, factory, numElementsPerBlock);
 	}
 
 	int transactionSize();
@@ -152,50 +192,8 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 		ledWriter.write(this);
 	}
 
-	LedStream<T> onClose(Runnable onClose);
-
-	class LedStreamWrapper<T extends Transaction> implements LedStream<T> {
-
-		private final LedStream<T> ledStream;
-		private Runnable onClose;
-		private boolean closed;
-
-		public LedStreamWrapper(LedStream<T> ledStream) {
-			this.ledStream = requireNonNull(ledStream);
-		}
-
-		@Override
-		public int transactionSize() {
-			return ledStream.transactionSize();
-		}
-
-		@Override
-		public boolean hasNext() {
-			return ledStream.hasNext();
-		}
-
-		@Override
-		public T next() {
-			return ledStream.next();
-		}
-
-		@Override
-		public LedStream<T> onClose(Runnable onClose) {
-			this.onClose = onClose;
-			return this;
-		}
-
-		@Override
-		public void close() throws Exception {
-			if(closed) {
-				return;
-			}
-			if(onClose != null) {
-				onClose.run();
-			}
-			ledStream.close();
-			closed = true;
-		}
+	default LedStream<T> onClose(Runnable onClose) {
+		return this;
 	}
 
 	abstract class LedStreamOperation<T extends Transaction, R extends Transaction> implements LedStream<R> {
@@ -299,7 +297,7 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 		private Long otherCurrentId;
 
 		public RemoveAll(LedStream<T> source, LedStream<?> other) {
-			this(source, other.mapToObj(Transaction::idOf).sorted().iterator());
+			this(source, other.mapToObj(Transaction::idOf).iterator());
 		}
 
 		public RemoveAll(LedStream<T> source, Iterator<Long> idIterator) {
@@ -409,7 +407,7 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 		private T current;
 
 		public RetainAll(LedStream<T> source, LedStream<?> other) {
-			this(source, other.mapToObj(Transaction::idOf).sorted().iterator());
+			this(source, other.mapToObj(Transaction::idOf).iterator());
 		}
 
 		public RetainAll(LedStream<T> source, Iterator<Long> idIterator) {
@@ -462,7 +460,7 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 
 	class Map<T extends Transaction, R extends Transaction> extends LedStream.LedStreamOperation<T, R> {
 
-		private static final int DEFAULT_ELEMENTS_PER_STACK = 2048;
+		private static final int DEFAULT_ELEMENTS_PER_STACK = 1024;
 
 
 		private final TransactionAllocator<R> allocator;
@@ -498,5 +496,16 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 		private static <R extends Transaction> TransactionAllocator<R> getDefaultAllocator(int rSize, TransactionFactory<R> factory) {
 			return new StackListAllocator<>(DEFAULT_ELEMENTS_PER_STACK, rSize, factory, StackAllocators::newManaged);
 		}
+	}
+
+	interface Builder<T extends Transaction> {
+
+		Class<T> transactionClass();
+
+		int transactionSize();
+
+		Builder<T> create(Consumer<T> initializer);
+
+		LedStream<T> build();
 	}
 }

@@ -1,5 +1,7 @@
-package io.intino.alexandria.led;
+package io.intino.alexandria.led.leds;
 
+import io.intino.alexandria.led.LedStream;
+import io.intino.alexandria.led.Transaction;
 import io.intino.alexandria.led.allocators.TransactionFactory;
 import io.intino.alexandria.led.allocators.stack.StackAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;

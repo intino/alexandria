@@ -5,12 +5,14 @@ import io.intino.alexandria.led.LedBuilder;
 import io.intino.alexandria.led.LedWriter;
 import io.intino.test.transactions.TestTransaction;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
 
+@Ignore
 public class LedBuilder_ {
-	private static final File tempFile = new File("temp/snappy_test.led");
+	private static final File tempFile = new File("snappy_test.led");
 
 	@Test
 	public void should_build_led() {

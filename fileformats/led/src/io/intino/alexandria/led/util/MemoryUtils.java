@@ -7,6 +7,8 @@ import java.lang.reflect.Field;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 
 import static java.util.Objects.requireNonNull;
 
@@ -29,6 +31,17 @@ public final class MemoryUtils {
 
 	public static void defaultByteOrder(ByteOrder byteOrder) {
 		defaultByteOrder = requireNonNull(byteOrder);
+	}
+
+	public static MappedByteBuffer map(FileChannel fileChannel, FileChannel.MapMode mode, long baseOffset, long size) {
+		try {
+			MappedByteBuffer mappedByteBuffer = fileChannel.map(mode, baseOffset, size);
+			mappedByteBuffer.order(defaultByteOrder());
+			return mappedByteBuffer;
+		} catch(Exception e) {
+			Logger.error(e);
+			throw new RuntimeException(e);
+		}
 	}
 
 	public static ByteBuffer allocBuffer(long size) {
