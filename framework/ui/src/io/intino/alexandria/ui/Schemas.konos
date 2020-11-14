@@ -19,8 +19,8 @@ Schema DynamicTableRow
 
 Schema DynamicTableCell
 	Attribute label as Text
-	Attribute absolute as Text
-	Attribute relative as Text
+	Attribute absolute as Real
+	Attribute relative as Real
 	Attribute(defaultValue=false) highlighted as Bool
 
 Schema DynamicTableRowParams

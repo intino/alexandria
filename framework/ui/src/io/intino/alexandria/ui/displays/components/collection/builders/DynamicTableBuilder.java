@@ -87,13 +87,9 @@ public class DynamicTableBuilder {
 	private static DynamicTableCell buildCell(String name, Double absolute, Double relative, String language) {
 		DynamicTableCell result = new DynamicTableCell();
 		result.label(name);
-		result.absolute(formatNumber(absolute, language));
-		result.relative(formatNumber(relative, language));
+		result.absolute(absolute);
+		result.relative(relative);
 		return result;
-	}
-
-	private static String formatNumber(double value, String language) {
-		return NumberFormat.getNumberInstance(Locale.forLanguageTag(language)).format(round(value, 2));
 	}
 
 	private static double round(double value, int places) {
