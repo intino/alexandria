@@ -204,7 +204,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         return (
             <div className="layout horizontal flex">
                 {this.state.sections.map((s, index) => this.renderDetailSection(s, index))}
-                {this.renderDetailSection(this.createDetailTotalSection(), this.state.sections.length+1)}
+                {this.state.sections.length > 1 && this.renderDetailSection(this.createDetailTotalSection(), this.state.sections.length+1)}
             </div>
         );
     };
