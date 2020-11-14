@@ -247,12 +247,13 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
             const cell = this.rowCell(totalRow, i);
             cell.label = row.cells[i].label;
             cell.absolute += row.cells[i].absolute;
+            cell.relative = parseFloat(cell.relative + row.cells[i].relative).toFixed(2);
         }
     };
 
     rowCell = (row, i) => {
         if (row.cells.length > i) return row.cells[i];
-        let result = { label: "", absolute: 0, relative: '100', isTotalRow: false, highlighted: false};
+        let result = { label: "", absolute: 0, relative: 0, isTotalRow: false, highlighted: false};
         row.cells.push(result);
         return result;
     };
