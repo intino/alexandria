@@ -100,7 +100,7 @@ public class Datasources {
 				Section residencial = new Section("Residencial", "white", "grey", 12);
 				Section cartera = residencial.add("Cartera", "white", "#115293", 11);
 				cartera.columns("clientes", "adeudos", "kwh", "importe", "iva", "dap");
-				cartera.add("DA", 1, 11, 12, 12, 13, 1);
+				cartera.add("DA", 1, 11, 12111, 12, 13, 1);
 				cartera.add("DB", 11, 1, 2, 4, 5, 2);
 				Section carteraVencida = residencial.add("Cartera Vencida", "white", "#720427", 11);
 				carteraVencida.columns("clientes", "adeudos", "importe");
