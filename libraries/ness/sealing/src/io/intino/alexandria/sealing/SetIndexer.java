@@ -26,6 +26,7 @@ public class SetIndexer {
 
 	public SetIndexer(File tank) {
 		this.tank = tank;
+		tank.mkdirs();
 	}
 
 	public void make() {
