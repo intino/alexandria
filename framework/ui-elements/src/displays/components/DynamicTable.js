@@ -227,7 +227,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     aggregateTotalRows = (totalSection) => {
         const sections = this.state.sections;
         for (let i=0; i<sections.length; i++) this.aggregateSection(sections[i], totalSection);
-        this.applyTotalSectionFormula(totalSection);
+        this.applyTotalSectionOperator(totalSection);
     };
 
     aggregateSection = (section, totalSection) => {
@@ -259,15 +259,16 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         return result;
     };
 
-    applyTotalSectionFormula = (section) => {
-        for (let i=0; i<section.sections.length; i++) this.applyTotalSectionFormula(section.sections[i]);
-        for (let i=0; i<section.rows.length; i++) this.applyTotalRowFormula(section, section.rows[i]);
+    applyTotalSectionOperator = (section) => {
+        for (let i=0; i<section.sections.length; i++) this.applyTotalSectionOperator(section.sections[i]);
+        for (let i=0; i<section.rows.length; i++) this.applyTotalRowOperator(section, section.rows[i]);
     };
 
-    applyTotalRowFormula = (section, row) => {
+    applyTotalRowOperator = (section, row) => {
         for (let i=0; i<row.cells.length; i++) {
             const cell = row.cells[i];
-            cell.absolute = row.cells[i].absolute / this.state.sections.length;
+            const operator = this.cellOperator(section, cell);
+            cell.absolute = operator === "Average" ? (cell.absolute / this.state.sections.length) : cell.absolute;
         }
     };
 
