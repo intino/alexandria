@@ -451,7 +451,7 @@ def trigger(registerSoul)
 end
 
 def type(conf & file) trigger(parameter)
-	new java.io.File(configuration().get("$value"))
+	configuration().get("$value") == null ? null : new java.io.File(configuration().get("$value"))
 end
 
 def type(conf) trigger(parameter)
