@@ -81,7 +81,7 @@ export const DynamicTableStyles = theme => ({
     rowRelativeValue : {
         width:'65px',
         display:'inline-block',
-        color:'#777',
+        color:'#007143',
     },
     columnSelector : {
         width: '250px',
@@ -408,7 +408,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
             <TableCell title={title} key={index} className={classes.rowCell} style={{whiteSpace:'nowrap',...style}}>
                 {NumberUtil.format(cell.absolute, format)}
                 {metric !== "" && <span style={{fontSize:'9pt',marginLeft:'5px',color:'#777'}}>{metric}</span>}
-                {relative !== undefined && <span className={classes.rowRelativeValue}>&nbsp;{relative}%</span>}
+                {relative !== undefined && <span className={classes.rowRelativeValue}>&nbsp;{relative}<span style={{fontSize:'9pt',marginLeft:'5px',color:'#777'}}>%</span></span>}
             </TableCell>
         );
     };
