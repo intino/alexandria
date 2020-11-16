@@ -11,12 +11,12 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class DynamicLed <S extends Transaction> implements Led<S> {
+public class DynamicLed<T extends Transaction> implements Led<T> {
 
-	private final ListAllocator<S> allocator;
+	private final ListAllocator<T> allocator;
 	private final int transactionSize;
 
-	public DynamicLed(int schemaSize, TransactionFactory<S> factory) {
+	public DynamicLed(int schemaSize, TransactionFactory<T> factory) {
 		this.transactionSize = schemaSize;
 		this.allocator = new ListAllocator<>(1000, schemaSize, factory);
 	}
@@ -36,24 +36,10 @@ public class DynamicLed <S extends Transaction> implements Led<S> {
 	}
 
 	@Override
-	public S transaction(int index) {
+	public T transaction(int index) {
 		if(index >= size()) {
 			throw new IndexOutOfBoundsException("Index >= " + size());
 		}
 		return allocator.malloc(index);
-	}
-
-	@Override
-	public Iterator<S> iterator() {
-		return elements().iterator();
-	}
-
-	@Override
-	public List<S> elements() {
-		return stream2().collect(Collectors.toList());
-	}
-
-	private Stream<S> stream2() {
-		return IntStream.range(0, (int) size()).mapToObj(allocator::malloc);
 	}
 }

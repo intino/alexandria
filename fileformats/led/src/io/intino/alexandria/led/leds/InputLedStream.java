@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -28,7 +29,7 @@ public class InputLedStream<T extends Transaction> implements LedStream<T> {
     private final TransactionFactory<T> provider;
     private final Iterator<T> iterator;
     private Runnable onClose;
-    private boolean closed;
+    private final AtomicBoolean closed;
 
     public InputLedStream(InputStream inputStream, Class<T> transactionClass) {
         this(inputStream, factoryOf(transactionClass), sizeOf(transactionClass), DEFAULT_BUFFER_SIZE);
@@ -48,6 +49,7 @@ public class InputLedStream<T extends Transaction> implements LedStream<T> {
         this.provider = factory;
         this.iterator = stream().iterator();
         this.bufferSize = bufferSize;
+        closed = new AtomicBoolean();
     }
 
     public int bufferSize() {
@@ -123,13 +125,14 @@ public class InputLedStream<T extends Transaction> implements LedStream<T> {
 
     @Override
     public void close() throws Exception {
-        if (closed) {
+        if (closed.get()) {
             return;
         }
         if (onClose != null) {
             onClose.run();
+            onClose = null;
         }
         inputStream.close();
-        closed = true;
+        closed.set(true);
     }
 }
