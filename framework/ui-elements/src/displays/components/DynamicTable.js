@@ -227,11 +227,12 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     aggregateTotalRows = (totalSection) => {
         const sections = this.state.sections;
         for (let i=0; i<sections.length; i++) this.aggregateSection(sections[i], totalSection);
+        this.applyTotalSectionFormula(totalSection);
     };
 
     aggregateSection = (section, totalSection) => {
         for (let i=0; i<section.sections.length; i++) this.aggregateSection(section.sections[i], totalSection.sections[i]);
-        for (let i=0; i<section.rows.length; i++) this.aggregateSectionRow(section.rows[i], this.sectionRow(totalSection, i));
+        for (let i=0; i<section.rows.length; i++) this.aggregateSectionRow(section, section.rows[i], this.sectionRow(totalSection, i));
     };
 
     sectionRow = (section, i) => {
@@ -241,7 +242,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         return result;
     };
 
-    aggregateSectionRow = (row, totalRow) => {
+    aggregateSectionRow = (section, row, totalRow) => {
         totalRow.label = row.label;
         for (let i=0; i<row.cells.length; i++) {
             const cell = this.rowCell(totalRow, i);
@@ -256,6 +257,18 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         let result = { label: "", absolute: 0, relative: 0, isTotalRow: false, highlighted: false};
         row.cells.push(result);
         return result;
+    };
+
+    applyTotalSectionFormula = (section) => {
+        for (let i=0; i<section.sections.length; i++) this.applyTotalSectionFormula(section.sections[i]);
+        for (let i=0; i<section.rows.length; i++) this.applyTotalRowFormula(section, section.rows[i]);
+    };
+
+    applyTotalRowFormula = (section, row) => {
+        for (let i=0; i<row.cells.length; i++) {
+            const cell = row.cells[i];
+            cell.absolute = row.cells[i].absolute / this.state.sections.length;
+        }
     };
 
     renderDetailSection = (section, index) => {
@@ -384,15 +397,34 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 
     renderBodyCell = (section, row, cell, index) => {
         const { classes } = this.props;
+        const operator = this.cellOperator(section, cell);
+        const metric = this.cellMetric(section, cell);
         const style = cell.isTotalRow ? { fontWeight: "bold" } : {};
-        const relative = cell.relative !== "-1" && this.state.showRelativeValues ? cell.relative : undefined;
+        const relative = cell.relative !== "-1" && this.state.showRelativeValues && metric !== "%" ? cell.relative : undefined;
         const title = cell.label + " " + this.translate("in") + " " + row.label + " " + this.translate("in") + " " + section.label;
+        const value = operator === "Average" ? cell.absolute : cell.absolute;
+        const format = operator === "Average" ? "0,0.00" : "0,0";
         return (
             <TableCell title={title} key={index} className={classes.rowCell} style={{whiteSpace:'nowrap',...style}}>
-                {NumberUtil.format(cell.absolute, "0,0")}
+                {NumberUtil.format(cell.absolute, format)}
+                {metric !== "" && <span style={{fontSize:'9pt',marginLeft:'5px',color:'#777'}}>{metric}</span>}
                 {relative !== undefined && <span className={classes.rowRelativeValue}>&nbsp;{relative}%</span>}
             </TableCell>
         );
+    };
+
+    cellMetric = (section, cell) => {
+        for (let i=0; i<section.columns.length; i++) {
+            if (section.columns[i].label === cell.label) return section.columns[i].metric;
+        }
+        return "";
+    };
+
+    cellOperator = (section, cell) => {
+        for (let i=0; i<section.columns.length; i++) {
+            if (section.columns[i].label === cell.label) return section.columns[i].operator;
+        }
+        return null;
     };
 
     renderDialog = () => {

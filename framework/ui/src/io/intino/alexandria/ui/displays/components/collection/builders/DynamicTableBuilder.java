@@ -4,13 +4,12 @@ import io.intino.alexandria.schemas.DynamicTableCell;
 import io.intino.alexandria.schemas.DynamicTableColumn;
 import io.intino.alexandria.schemas.DynamicTableRow;
 import io.intino.alexandria.schemas.DynamicTableSection;
+import io.intino.alexandria.ui.model.dynamictable.Cell;
 import io.intino.alexandria.ui.model.dynamictable.Column;
 import io.intino.alexandria.ui.model.dynamictable.Row;
 import io.intino.alexandria.ui.model.dynamictable.Section;
 
-import java.net.URL;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
@@ -30,18 +29,24 @@ public class DynamicTableBuilder {
 		result.backgroundColor(section.backgroundColor());
 		result.fontSize(section.fontSize());
 		result.columns(buildColumnList(section));
-		result.rows(buildRowList(section.rows(), calculateTotal(section.rows()), language));
+		result.rows(buildRowList(section.rows(), calculateTotal(section, section.rows()), language));
 		result.sections(buildList(section.sections(), language));
 		return result;
 	}
 
-	private static Map<String, Double> calculateTotal(List<Row> rows) {
+	private static Map<String, Double> calculateTotal(Section section, List<Row> rows) {
 		Map<String, Double> result = new HashMap<>();
-		rows.forEach(r -> r.columns().forEach(c -> {
-			if (!result.containsKey(c.name())) result.put(c.name(), 0.0);
-			result.put(c.name(), result.get(c.name()) + c.value());
+		rows.forEach(r -> r.cells().forEach(cell -> {
+			if (!result.containsKey(cell.name())) result.put(cell.name(), 0.0);
+			result.put(cell.name(), result.get(cell.name()) + cell.value());
 		}));
+		result.forEach((key, value) -> result.put(key, calculateTotal(section.column(key), value, rows.size())));
 		return result;
+	}
+
+	private static Double calculateTotal(Column column, Double value, int rowsCount) {
+		if (column.operator() == Column.Operator.Average) return rowsCount > 0 ? value / rowsCount : 0;
+		return value;
 	}
 
 	private static List<DynamicTableRow> buildRowList(List<Row> rows, Map<String, Double> totalValues, String language) {
@@ -54,7 +59,7 @@ public class DynamicTableBuilder {
 	private static DynamicTableRow totalRow(List<Row> rows, Map<String, Double> totalValues, String language) {
 		DynamicTableRow row = new DynamicTableRow();
 		row.label("Total");
-		row.cells(rows.get(0).columns().stream().map(c -> buildCell(c.name(), totalValues.get(c.name()), 100.0, language).highlighted(true)).collect(toList()));
+		row.cells(rows.get(0).cells().stream().map(c -> buildCell(c.name(), totalValues.get(c.name()), 100.0, language).highlighted(true)).collect(toList()));
 		row.isTotalRow(true);
 		return row;
 	}
@@ -62,25 +67,30 @@ public class DynamicTableBuilder {
 	private static DynamicTableRow build(Row row, Map<String, Double> totalValues, String language) {
 		DynamicTableRow result = new DynamicTableRow();
 		result.label(row.label());
-		result.cells(buildCellList(row.columns(), totalValues, language));
+		result.cells(buildCellList(row.cells(), totalValues, language));
 		return result;
 	}
 
 	private static List<DynamicTableColumn> buildColumnList(Section section) {
 		List<Row> rows = section.rows();
 		if (rows.size() <= 0) return Collections.emptyList();
-		return rows.get(0).columns().stream().map(DynamicTableBuilder::build).collect(toList());
+		return rows.get(0).cells().stream().map(c -> build(c, section.column(c.name()))).collect(toList());
 	}
 
-	private static DynamicTableColumn build(Column column) {
-		return new DynamicTableColumn().label(column.name());
+	private static DynamicTableColumn build(Cell cell, Column column) {
+		return new DynamicTableColumn().label(column.label()).operator(operatorOf(column.operator())).metric(column.metric());
 	}
 
-	private static List<DynamicTableCell> buildCellList(List<Column> columns, Map<String, Double> totalValues, String language) {
+	private static DynamicTableColumn.Operator operatorOf(Column.Operator operator) {
+		if (operator == Column.Operator.Average) return DynamicTableColumn.Operator.Average;
+		return DynamicTableColumn.Operator.Sum;
+	}
+
+	private static List<DynamicTableCell> buildCellList(List<Cell> columns, Map<String, Double> totalValues, String language) {
 		return columns.stream().map(c -> buildCell(c, totalValues.getOrDefault(c.name(), 0.0), language)).collect(toList());
 	}
 
-	private static DynamicTableCell buildCell(Column column, Double total, String language) {
+	private static DynamicTableCell buildCell(Cell column, Double total, String language) {
 		return buildCell(column.name(), column.value(), total != 0 ? round(column.value() / total * 100.0, 2) : 0.0, language);
 	}
 

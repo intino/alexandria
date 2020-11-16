@@ -1,29 +1,41 @@
 package io.intino.alexandria.ui.model.dynamictable;
 
 public class Column {
-	private String name;
-	private Double value;
+	private String label;
+	private Operator operator;
+	private String metric = "";
 
-	public Column(String name, double value) {
-		this.name = name;
-		this.value = value;
+	public enum Operator { Sum, Average }
+
+	public Column(String label, Operator operator) {
+		this.label = label;
+		this.operator = operator;
 	}
 
-	public String name() {
-		return name;
+	public String label() {
+		return label;
 	}
 
-	public Column name(String name) {
-		this.name = name;
+	public Column label(String label) {
+		this.label = label;
 		return this;
 	}
 
-	public Double value() {
-		return value;
+	public Operator operator() {
+		return operator;
 	}
 
-	public Column value(Double value) {
-		this.value = value;
+	public Column operator(Operator operator) {
+		this.operator = operator;
+		return this;
+	}
+
+	public String metric() {
+		return metric;
+	}
+
+	public Column metric(String metric) {
+		this.metric = metric;
 		return this;
 	}
 }
