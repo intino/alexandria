@@ -43,6 +43,7 @@ export const DynamicTableStyles = theme => ({
     },
     rowCell : {
         textAlign:'right',
+        borderRight: '1px solid #e0e0e0',
     },
     label: {
         color: theme.palette.grey.A700,
