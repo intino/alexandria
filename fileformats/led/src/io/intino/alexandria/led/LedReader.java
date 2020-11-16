@@ -40,32 +40,43 @@ public class LedReader {
 		return (int) LedHeader.UNKNOWN_SIZE;
 	}
 
-	public <S extends Transaction> Led<S> readAll(TransactionFactory<S> factory) {
+	public <T extends Transaction> Led<T> readAll(TransactionFactory<T> factory) {
 		return readAll(getDefaultAllocatorFactory(), factory);
 	}
 
-	public <S extends Transaction> Led<S> readAll(IndexedAllocatorFactory<S> allocatorFactory, TransactionFactory<S> factory) {
+	public <T extends Transaction> Led<T> readAll(IndexedAllocatorFactory<T> allocatorFactory, TransactionFactory<T> factory) {
+		try {
+			if(source.available() == 0) {
+				return Led.empty();
+			}
+		} catch(Exception e) {
+			Logger.error(e);
+			return Led.empty();
+		}
 		LedHeader header = LedHeader.from(this.source);
 		try(SnappyInputStream inputStream = new SnappyInputStream(this.source)) {
-			IndexedAllocator<S> allocator = allocatorFactory.create(inputStream, header.elementCount(), header.elementSize(), factory);
+			IndexedAllocator<T> allocator = allocatorFactory.create(inputStream, header.elementCount(), header.elementSize(), factory);
 			return new IndexedLed<>(allocator);
 		} catch (IOException e) {
 			Logger.error(e);
 		}
-		return null;
+		return Led.empty();
 	}
 
-	public <S extends Transaction> LedStream<S> read(TransactionFactory<S> factory) {
+	public <T extends Transaction> LedStream<T> read(TransactionFactory<T> factory) {
 		try {
+			if(source.available() == 0) {
+				return LedStream.empty();
+			}
 			LedHeader header = LedHeader.from(source);
 			return allocate(new SnappyInputStream(source), factory, header.elementSize());
 		} catch (IOException e) {
 			Logger.error(e);
 		}
-		return null;
+		return LedStream.empty();
 	}
 
-	private <S extends Transaction> LedStream<S> allocate(SnappyInputStream inputStream, TransactionFactory<S> factory, int transactionSize) {
+	private <T extends Transaction> LedStream<T> allocate(SnappyInputStream inputStream, TransactionFactory<T> factory, int transactionSize) {
 		return new InputLedStream<>(inputStream, factory, transactionSize);
 	}
 
@@ -73,17 +84,17 @@ public class LedReader {
 		try {
 			return new FileInputStream(file);
 		} catch (FileNotFoundException e) {
+			Logger.error("Failed to create FileInputStream for file " + file +
+					". Probably too many files has been opened.", e);
 			return new ByteArrayInputStream(new byte[0]);
 		}
 	}
 
-	private <S extends Transaction> IndexedAllocatorFactory<S> getDefaultAllocatorFactory() {
+	private <T extends Transaction> IndexedAllocatorFactory<T> getDefaultAllocatorFactory() {
 		return (inputStream, elementCount, elementSize, factory) -> {
-
 			if(elementCount >= 0 && elementCount * elementSize < Integer.MAX_VALUE) {
 				return IndexedAllocatorFactory.newManagedIndexedAllocator(inputStream, elementCount, elementSize, factory);
 			}
-
 			return IndexedAllocatorFactory.newArrayAllocator(inputStream, elementCount, elementSize, factory);
 		};
 	}

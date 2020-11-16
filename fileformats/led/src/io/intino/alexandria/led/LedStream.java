@@ -30,6 +30,10 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 		return IteratorLedStream.fromStream(0, Stream.empty());
 	}
 
+	static<T extends Transaction> LedStream<T> fromLed(Led<T> led) {
+		return led.toLedStream();
+	}
+
 	static <T extends Transaction> LedStream<T> fromStream(int transactionSize, Stream<T> stream) {
 		return IteratorLedStream.fromStream(transactionSize, stream);
 	}
