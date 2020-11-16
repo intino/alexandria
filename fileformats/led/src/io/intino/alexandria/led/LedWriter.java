@@ -51,7 +51,6 @@ public class LedWriter {
 		final long size = led.size();
 		final int transactionSize = led.transactionSize();
 		final int numBatches = (int) Math.ceil(led.size() / (float) bufferSize);
-		List<? extends Transaction> elements = led.elements();
 		try (OutputStream fos = this.destination) {
 			LedHeader header = new LedHeader();
 			header.elementCount(size).elementSize(transactionSize);
@@ -62,18 +61,16 @@ public class LedWriter {
 					final int numElements = (int) Math.min(bufferSize, led.size() - start);
 					byte[] outputBuffer = new byte[numElements * transactionSize];
 					for (int j = 0; j < numElements; j++) {
-						Transaction src = elements.get(j + start);
+						Transaction src = led.transaction(j + start);
 						final long offset = j * transactionSize;
 						memcpy(src.address(), src.baseOffset(), outputBuffer, offset, transactionSize);
 					}
 					executor.submit(() -> writeToOutputStream(outputStream, outputBuffer));
 				}
 				executor.shutdown();
-				executor.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
-			} catch (IOException | InterruptedException e) {
-				Logger.error(e);
+				executor.awaitTermination(Integer.MAX_VALUE, TimeUnit.MILLISECONDS);
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Logger.error(e);
 		}
 	}
@@ -101,10 +98,8 @@ public class LedWriter {
 				if (offset > 0) {
 					writeToOutputStream(outputStream, outputBuffer, 0, offset);
 				}
-			} catch (IOException e) {
-				Logger.error(e);
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Logger.error(e);
 		}
 		if(destinationFile != null) {
@@ -121,11 +116,11 @@ public class LedWriter {
 		}
 	}
 
-	private void writeToOutputStream(SnappyOutputStream outputStream, byte[] outputBuffer) {
+	private void writeToOutputStream(OutputStream outputStream, byte[] outputBuffer) {
 		writeToOutputStream(outputStream, outputBuffer, 0, outputBuffer.length);
 	}
 
-	private void writeToOutputStream(SnappyOutputStream outputStream, byte[] outputBuffer, int offset, int size) {
+	private void writeToOutputStream(OutputStream outputStream, byte[] outputBuffer, int offset, int size) {
 		try {
 			outputStream.write(outputBuffer, offset, size);
 		} catch (IOException e) {

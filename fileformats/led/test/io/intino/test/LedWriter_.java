@@ -22,7 +22,7 @@ import static io.intino.test.transactions.TestTransaction.*;
 import static org.junit.Assert.assertEquals;
 
 public class LedWriter_ {
-	private static final int NUM_ELEMENTS = 1_000_000;
+	private static final int NUM_ELEMENTS = 10_000_000;
 	private static final File tempFile = new File("temp/snappy_test.led");
 	private static final Random RANDOM = new Random();
 	private static final AtomicLong RPU = new AtomicLong();
@@ -41,7 +41,7 @@ public class LedWriter_ {
 		long start;
 		LedStream<TestTransaction> led = new IteratorLedStream<>(SIZE, original.iterator());
 		start = System.currentTimeMillis();
-		new LedWriter(tempFile).write(led);
+		new LedWriter(tempFile).write(Led.fromLedStream(led));
 		System.out.println(">> Serialized " + NUM_ELEMENTS + "(" + TestTransaction.SIZE + " bytes each) in " + (System.currentTimeMillis() - start) / 1000 + " seconds");
 	}
 

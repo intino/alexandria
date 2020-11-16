@@ -4,7 +4,6 @@ import io.intino.alexandria.led.allocators.TransactionFactory;
 import io.intino.alexandria.led.allocators.stack.SingleStackAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocator;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
-import io.intino.alexandria.led.leds.InputLedStream;
 import io.intino.alexandria.led.util.ModifiableMemoryAddress;
 import io.intino.alexandria.logger.Logger;
 
