@@ -4,16 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Section {
 	private String label;
 	private String color;
 	private String backgroundColor;
 	private int fontSize;
+	private List<Column> columns = new ArrayList<>();
 	private List<Row> rowList = new ArrayList<>();
 	private List<Section> sectionList = new ArrayList<>();
-	private List<String> columnNames = new ArrayList<>();
 
 	public Section(String label) {
 		this(label, "black", "#efefef", 12);
@@ -66,18 +65,22 @@ public class Section {
 		return rowList;
 	}
 
-	public List<String> columns() {
-		return columnNames;
+	public List<Column> columns() {
+		return columns;
 	}
 
-	public Section columns(String... columnNames) {
-		columns(Arrays.asList(columnNames));
+	public Section columns(String... columns) {
+		columns(Arrays.stream(columns).map(c -> new Column(c, Column.Operator.Sum)).collect(Collectors.toList()));
 		return this;
 	}
 
-	public Section columns(List<String> columnNameList) {
-		this.columnNames = columnNameList;
+	public Section columns(List<Column> columnList) {
+		this.columns = columnList;
 		return this;
+	}
+
+	public Column column(String label) {
+		return columns.stream().filter(c -> c.label().equals(label)).findFirst().orElse(null);
 	}
 
 	public Section add(String rowLabel, List<Double> values) {
@@ -86,8 +89,8 @@ public class Section {
 
 	public Section add(String rowLabel, double... values) {
 		Row row = new Row(rowLabel);
-		if (columnNames.size() != values.length) throw new NumberFormatException("Columns and value size must be equal");
-		for (int i = 0; i < values.length; i++) row.add(new Column(columnNames.get(i), values[i]));
+		if (columns.size() != values.length) throw new NumberFormatException("Columns and value size must be equal");
+		for (int i = 0; i < values.length; i++) row.add(new Cell(columns.get(i).label(), values[i]));
 		rowList.add(row);
 		return this;
 	}

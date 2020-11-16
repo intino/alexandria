@@ -11,6 +11,8 @@ Schema DynamicTableSection
 
 Schema DynamicTableColumn
 	Attribute label as Text
+	Attribute operator as Word("Sum" "Average")
+	Attribute metric as Text
 
 Schema DynamicTableRow
 	Attribute label as Text

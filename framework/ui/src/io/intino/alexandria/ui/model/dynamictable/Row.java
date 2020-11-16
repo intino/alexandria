@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Row {
 	private String label;
-	private List<Column> columns = new ArrayList<>();
+	private List<Cell> cells = new ArrayList<>();
 
 	public Row(String label) {
 		this.label = label;
@@ -20,21 +20,21 @@ public class Row {
 		return this;
 	}
 
-	public Column column(String name) {
-		return columns.stream().filter(c -> c.name().equals(name)).findFirst().orElse(null);
+	public Cell cell(String name) {
+		return cells.stream().filter(c -> c.name().equals(name)).findFirst().orElse(null);
 	}
 
-	public List<Column> columns() {
-		return columns;
+	public List<Cell> cells() {
+		return cells;
 	}
 
 	public Row add(String column, double value) {
-		add(new Column(column, value));
+		add(new Cell(column, value));
 		return this;
 	}
 
-	public Row add(Column column) {
-		columns.add(column);
+	public Row add(Cell cell) {
+		cells.add(cell);
 		return this;
 	}
 }
