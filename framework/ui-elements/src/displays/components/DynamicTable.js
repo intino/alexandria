@@ -43,7 +43,12 @@ export const DynamicTableStyles = theme => ({
     },
     rowCell : {
         textAlign:'right',
+        borderTop: '1px solid #e0e0e0',
         borderRight: '1px solid #e0e0e0',
+        borderLeft: '1px solid #e0e0e0',
+    },
+    detailRowCell : {
+        borderLeft: '0',
     },
     label: {
         color: theme.palette.grey.A700,
@@ -275,7 +280,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 
     renderDetailSection = (section, index) => {
         const classNames = "layout vertical" + (this.state.sections.length <= 1 ? "" : " flex");
-        return (<div className={classNames} style={{marginRight:'1px'}}>{this.renderSection(section, index)}</div>);
+        return (<div className={classNames}>{this.renderSection(section, index)}</div>);
     };
 
     renderSection = (section, index) => {
@@ -311,7 +316,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         return (
             <TableRow key={index}>
                 {visible && <TableCell className={classes.rowLabel}><div style={{minWidth:rowLabelWidth+"px",width:rowLabelWidth+"px"}}></div></TableCell>}
-                {sections.map((section, index) => isMainView || (!isMainView && this.isSelectedColumnIn(section, sections)) ? this.renderHeaderCell(section, index) : null)}
+                {sections.map((section, index) => isMainView || (!isMainView && this.isSelectedColumnIn(section, sections)) ? this.renderHeaderCell(mainSection, section, index) : null)}
             </TableRow>
         );
     };
@@ -332,7 +337,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         return false;
     };
 
-    renderHeaderCell = (section, index) => {
+    renderHeaderCell = (mainSection, section, index) => {
         const { classes } = this.props;
         const columnCount = this.childrenColumnsCount(section);
         const isMainView = this._isMainView();
@@ -342,9 +347,10 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const fontSize = section.fontSize + "pt";
         const textAlign = section.textAlign != null ? section.textAlign : "center";
         const selectable = section.selectable;
+        const className = isMainView || this.state.sections[0] == mainSection ? classNames(classes.rowCell) : classNames(classes.rowCell, classes.detailRowCell);
         if (!isMainView && selectable && index != this.state.column.index) return null;
         return (
-            <TableCell className={classNames(classes.rowCell, classes.headerCell)}
+            <TableCell className={className}
                        colSpan={colSpan}
                        style={{backgroundColor:backgroundColor,fontSize:fontSize,textAlign:textAlign}}
                        key={index}>
@@ -377,7 +383,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                         {(totalRow || !isMainView) && <div>{rowLabel}</div>}
                     </TableCell>
                 }
-                {sections.map((section, index) => this.renderBodyCells(section, rowIndex, index, this.columnOffset(sections, index)))}
+                {sections.map((section, index) => this.renderBodyCells(mainSection, section, rowIndex, index, this.columnOffset(sections, index)))}
             </TableRow>
         );
     };
@@ -391,13 +397,13 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         return result;
     };
 
-    renderBodyCells = (section, rowIndex, idx, offset) => {
+    renderBodyCells = (mainSection, section, rowIndex, idx, offset) => {
         const isMainView = this._isMainView();
         const row = section.rows[rowIndex];
-        return (<React.Fragment key={rowIndex}>{row.cells.map((c, index) => (isMainView || (!isMainView && offset+index == this.state.column.index)) ? this.renderBodyCell(section, row, c, index) : null)}</React.Fragment>);
+        return (<React.Fragment key={rowIndex}>{row.cells.map((c, index) => (isMainView || (!isMainView && offset+index == this.state.column.index)) ? this.renderBodyCell(mainSection, section, row, c, index) : null)}</React.Fragment>);
     };
 
-    renderBodyCell = (section, row, cell, index) => {
+    renderBodyCell = (mainSection, section, row, cell, index) => {
         const { classes } = this.props;
         const operator = this.cellOperator(section, cell);
         const metric = this.cellMetric(section, cell);
@@ -406,8 +412,9 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const title = cell.label + " " + this.translate("in") + " " + row.label + " " + this.translate("in") + " " + section.label;
         const value = operator === "Average" ? cell.absolute : cell.absolute;
         const format = operator === "Average" ? "0,0.00" : "0,0";
+        const className = this._isMainView() || this.state.sections[0] == mainSection ? classNames(classes.rowCell) : classNames(classes.rowCell, classes.detailRowCell);
         return (
-            <TableCell title={title} key={index} className={classes.rowCell} style={{whiteSpace:'nowrap',...style}}>
+            <TableCell title={title} key={index} className={className} style={{whiteSpace:'nowrap',...style}}>
                 {NumberUtil.format(cell.absolute, format)}
                 {metric !== "" && <span style={{fontSize:'9pt',marginLeft:'5px',color:'#777'}}>{metric}</span>}
                 {relative !== undefined && <span className={classes.rowRelativeValue}>&nbsp;{relative}<span style={{fontSize:'9pt',marginLeft:'5px',color:'#777'}}>%</span></span>}
