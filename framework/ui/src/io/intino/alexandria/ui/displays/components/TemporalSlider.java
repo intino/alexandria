@@ -150,7 +150,7 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
     }
 
     private long toLong(TimeScale timeScale, Instant instant) {
-        return timeScale.instantsBetween(min, instant) - 1;
+        return timeScale.instantsBetween(min, instant);
     }
 
 }
