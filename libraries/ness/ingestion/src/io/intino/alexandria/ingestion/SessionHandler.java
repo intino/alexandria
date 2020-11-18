@@ -28,12 +28,12 @@ public class SessionHandler {
 
 	public SetSession createSetSession() {
 		PrivateProvider provider = new PrivateProvider();
-		return new SetSession(provider, new SetSessionFileWriter(provider.outputStream(Session.Type.set)));
+		return new SetSession(provider);
 	}
 
 	public SetSession createSetSession(int autoFlushSize) {
 		PrivateProvider provider = new PrivateProvider();
-		return new SetSession(provider, new SetSessionFileWriter(provider.outputStream(Session.Type.set)), autoFlushSize);
+		return new SetSession(provider, autoFlushSize);
 	}
 
 	public EventSession createEventSession() {
