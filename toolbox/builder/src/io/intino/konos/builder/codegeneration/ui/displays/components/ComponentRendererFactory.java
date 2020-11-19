@@ -47,6 +47,7 @@ public class ComponentRendererFactory {
 		if (component.i$(Header.class)) return (T) new HeaderRenderer(context, component.a$(Header.class), provider, target);
 
 		if (component.i$(CatalogComponents.Grouping.class)) return (T) new GroupingRenderer(context, component.a$(CatalogComponents.Grouping.class), provider, target);
+		if (component.i$(CatalogComponents.GroupingToolbar.class)) return (T) new GroupingToolbarRenderer(context, component.a$(CatalogComponents.GroupingToolbar.class), provider, target);
 		if (component.i$(CatalogComponents.Sorting.class)) return (T) new SortingRenderer(context, component.a$(CatalogComponents.Sorting.class), provider, target);
 		if (component.i$(CatalogComponents.Map.class)) return (T) new MapRenderer(context, component.a$(CatalogComponents.Map.class), provider, target);
 		if (component.i$(CatalogComponents.Collection.class)) return (T) new CollectionRenderer(context, component.a$(CatalogComponents.Collection.class), provider, target);

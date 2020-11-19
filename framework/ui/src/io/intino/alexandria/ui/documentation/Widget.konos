@@ -15,6 +15,7 @@ use Map
 use SearchBox
 use Sorting
 use Grouping
+use GroupingToolbar
 use DownloadSelection
 use Download
 use Export
@@ -55,6 +56,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block exportExamples as Conditional > TemplateStamp(template=exportExamplesMold)
 			Block actionableExamples as Conditional > TemplateStamp(template=actionableExamplesMold)
 			Block groupingExamples as Conditional > TemplateStamp(template=groupingExamplesMold)
+			Block groupingToolbarExamples as Conditional > TemplateStamp(template=groupingToolbarExamplesMold)
 			Block sortingExamples as Conditional > TemplateStamp(template=sortingExamplesMold)
 			Block searchBoxExamples as Conditional > TemplateStamp(template=searchBoxExamplesMold)
 			Block sliderExamples as Conditional > TemplateStamp(template=sliderExamplesMold)

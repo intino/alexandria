@@ -17,6 +17,7 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	private SelectionListener selectionListener;
 	private SelectionListener attachedListener;
 	private List<Group> groups = new ArrayList<>();
+	private GroupingToolbar toolbar;
 
 	public BaseGrouping(B box) {
         super(box);
@@ -42,7 +43,7 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 		return this;
 	}
 
-	public BaseGrouping groups(List<Group> groups) {
+	public BaseGrouping<DN, B> groups(List<Group> groups) {
 		_groups(groups);
 		refresh();
 		return this;
@@ -51,7 +52,12 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	public void select(List<String> groups) {
 		this.selection = new ArrayList<>(groups);
 		notifySelection();
-		collections.forEach(c -> c.filter(key(), namesOf(selection)));
+		notifyBindings();
+	}
+
+	public BaseGrouping<DN, B> bindTo(GroupingToolbar toolbar) {
+		this.toolbar = toolbar;
+		return this;
 	}
 
 	public BaseGrouping<DN, B> bindTo(Collection... collections) {
@@ -69,19 +75,27 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 		return this;
 	}
 
+	public String key() {
+		return label() != null && !label().isEmpty() ? label() : name();
+	}
+
 	@Override
 	public void refresh() {
 		super.refresh();
 		if (groups.size() > 0) refreshGroups();
 	}
 
+	protected java.util.List<Collection> _collectionBindings() {
+		return collections;
+	}
+
+	protected List<Group> groupsOf(List<String> names) {
+		return names.stream().map(this::groupOf).collect(Collectors.toList());
+	}
+
 	protected BaseGrouping _groups(List<Group> groups) {
 		this.groups = groups;
 		return this;
-	}
-
-	private String key() {
-		return label() != null && !label().isEmpty() ? label() : name();
 	}
 
 	private void loadGroups() {
@@ -101,6 +115,11 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	private void notifySelection() {
 		notifier.refreshSelection(selection);
 		if (selectionListener != null) selectionListener.accept(new SelectionEvent(this, namesOf(selection)));
+	}
+
+	private void notifyBindings() {
+		if (toolbar != null) toolbar.filter(key(), namesOf(selection));
+		else collections.forEach(c -> c.filter(key(), namesOf(selection)));
 	}
 
 	private List<String> namesOf(List<String> selection) {

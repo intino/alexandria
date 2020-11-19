@@ -42,6 +42,9 @@ Concept CatalogComponents
             Aspect Heatmap
 		sub DynamicTable
 
+	Concept:Named GroupingToolbar extends Component
+		var Grouping[] groupings
+
 	Concept:Named Grouping extends Component
 		var Collection[] collections
 		var integer pageSize = 5

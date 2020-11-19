@@ -118,6 +118,12 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         notifyRefreshItemCount();
     }
 
+    public void filter(java.util.Map<String, List<String>> groupings) {
+        if (behavior == null) return;
+        behavior.filter(groupings);
+        notifyRefreshItemCount();
+    }
+
     public void filter(String grouping, Instant from, Instant to) {
         if (behavior == null) return;
         behavior.filter(grouping, from, to);

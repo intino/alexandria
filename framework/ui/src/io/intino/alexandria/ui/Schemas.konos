@@ -70,6 +70,10 @@ Schema CollectionMoreItems
 	Attribute start as Integer
 	Attribute stop as Integer
 
+Schema GroupingToolbarFilter
+	Attribute name as Text
+	Attribute options as Text List
+
 Schema Group
 	Attribute label as Text
 	Attribute count as Integer

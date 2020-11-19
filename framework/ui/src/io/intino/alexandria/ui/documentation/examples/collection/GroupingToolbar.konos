@@ -1,0 +1,29 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) groupingToolbarExamplesMold
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=49%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filledNoAir)
+				Block(spacing=DP8, format=filledNoAir, layout=Horizontal) content
+					Block(format=containerAirMedium, spacing=DP24) groupings as Absolute(width=200px)
+						Grouping(format=whiteBackground,collections=right.list1) gender1 as Labeled("gender")
+						Grouping(format=whiteBackground,collections=right.list1) ageGroup1 as Labeled("age group")
+					Block(layout=Vertical Flexible, format=airTop) right
+						Block > GroupingToolbar(groupings=groupings.gender1 groupings.ageGroup1, format=whiteBackground airBottom)
+						List(itemClass="io.intino.alexandria.ui.documentation.Person") list1
+							Mold > Item(height=60px,width=30%) groupingToolbar1Mold
+									Text firstName1
+									Block(layout=Horizontal, spacing=DP16)
+										Text(format=description) gender1
+										Text(format=description) age1 as Labeled("age")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						GroupingToolbar(groupings\=gender ageGroup)<br/>
+						Grouping(collections\=list1) gender as Labeled("gender")<br/>
+						Grouping(collections\=list1) ageGroup as Labeled("age group")<br/>
+						=========
