@@ -9,10 +9,7 @@ import io.intino.alexandria.ui.model.datasource.temporal.TemporalDatasource;
 import io.intino.alexandria.ui.model.datasource.temporal.TemporalPageDatasource;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Collections.emptyList;
 
@@ -46,12 +43,13 @@ public class ItemLoader<DS extends Datasource<Item>, Item> {
 	}
 
 	public ItemLoader filter(String grouping, List<String> groups) {
-		if (groups.size() <= 0) remove(grouping);
-		else {
-			Filter filter = filter(grouping);
-			if (filter == null) filters.add(new GroupFilter(grouping, groups));
-			else ((GroupFilter)filter).groups(groups);
-		}
+		filterGrouping(grouping, groups);
+		this.itemCount = calculateItemCount(condition);
+		return this;
+	}
+
+	public ItemLoader filter(Map<String, List<String>> groupings) {
+		groupings.forEach(this::filterGrouping);
 		this.itemCount = calculateItemCount(condition);
 		return this;
 	}
@@ -133,6 +131,15 @@ public class ItemLoader<DS extends Datasource<Item>, Item> {
 	private void remove(String grouping) {
 		Filter filter = filter(grouping);
 		if (filter != null) filters.remove(filter);
+	}
+
+	private void filterGrouping(String grouping, List<String> groups) {
+		if (groups.size() <= 0) remove(grouping);
+		else {
+			Filter filter = filter(grouping);
+			if (filter == null) filters.add(new GroupFilter(grouping, groups));
+			else ((GroupFilter)filter).groups(groups);
+		}
 	}
 
 }

@@ -76,6 +76,7 @@ public class ComponentTemplate extends Template {
 			rule().condition((type("facet"))).output(mark("name", "firstUpperCase")),
 			rule().condition((allTypes("binding","toolbar"))).output(literal("if (")).output(mark("name")).output(literal(" != null) ")).output(mark("name")).output(literal(".bindTo(")).output(mark("collection")).output(literal(");")),
 			rule().condition((allTypes("binding","grouping"))).output(literal("if (")).output(mark("name")).output(literal(" != null) ")).output(mark("name")).output(literal(".bindTo(")).output(mark("collection").multiple(",")).output(literal(");")),
+			rule().condition((allTypes("binding","groupingToolbar"))).output(literal("if (")).output(mark("name")).output(literal(" != null) ")).output(mark("name")).output(literal(".bindTo(")).output(mark("grouping").multiple(",")).output(literal(");")),
 			rule().condition((allTypes("binding","sorting"))).output(literal("if (")).output(mark("name")).output(literal(" != null) ")).output(mark("name")).output(literal(".bindTo(")).output(mark("collection").multiple(",")).output(literal(");")),
 			rule().condition((allTypes("binding","searchbox"))).output(literal("if (")).output(mark("name")).output(literal(" != null) ")).output(mark("name")).output(literal(".bindTo(")).output(mark("collection").multiple(",")).output(literal(");")),
 			rule().condition((allTypes("binding","download"))).output(literal("if (")).output(mark("name")).output(literal(" != null) ")).output(mark("name")).output(literal(".bindTo(")).output(mark("collection").multiple(",")).output(literal(");")),
