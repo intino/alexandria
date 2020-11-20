@@ -4,16 +4,11 @@ import io.intino.alexandria.logger.Logger;
 import io.intino.test.transactions.TestTransaction;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.File;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
-import static java.nio.file.StandardOpenOption.READ;
-import static java.nio.file.StandardOpenOption.WRITE;
 import static org.junit.Assert.*;
 
 public class LedStreamBuilderTest {
@@ -21,12 +16,13 @@ public class LedStreamBuilderTest {
     @Test
     public void test() {
         System.out.println(TestTransaction.SIZE);
-        LedStream.Builder<TestTransaction> builder = LedStream.builder(TestTransaction.class);
+        LedStream.Builder<TestTransaction> builder = LedStream.builder(TestTransaction.class, 5_000_000, new File("temp"));
         Random random = new Random();
         double start = System.currentTimeMillis();
-        for(int i = 0;i < 10_000_000;i++) {
+        final int numElements = 40_000_000;
+        for(int i = 0;i < numElements;i++) {
             long id = i;
-            builder.create(t -> t.id(random.nextInt()));
+            builder.append(t -> t.id(random.nextInt()));
             if(i % 1_000_000 == 0) {
                 double time = (System.currentTimeMillis() - start) / 1000.0;
                 System.out.println(">> Created " + i + " elements (" + time + " seconds)");
@@ -38,14 +34,20 @@ public class LedStreamBuilderTest {
         start = System.currentTimeMillis();
 
         try(LedStream<TestTransaction> ledStream = builder.build()) {
-            long lastId = Long.MIN_VALUE;
-            int i = 0;
-            while(ledStream.hasNext()) {
-                final long id = ledStream.next().id();
-                assertTrue(i + " => " + id + " < " + lastId, lastId <= id);
-                lastId = id;
-                ++i;
+            for (int i = 0; i < numElements + 100; i++) {
+                ledStream.hasNext();
             }
+
+            AtomicLong lastId = new AtomicLong(Long.MIN_VALUE);
+            AtomicInteger i = new AtomicInteger();
+
+            ledStream.peek(item -> {
+                final long id = item.id();
+                assertTrue(i.get() + " => " + id + " < " + lastId, lastId.get() <= id);
+                lastId.set(id);
+                i.incrementAndGet();
+            }).serialize(new File("temp/ledstreambuilder_full_led_" + numElements +".led"));
+
         } catch (Exception e) {
             Logger.error(e);
         }

@@ -12,7 +12,7 @@ public class IteratorUtils {
         return StreamSupport.stream(spliteratorOf(iterator), false);
     }
 
-    private static <T> Spliterator<T> spliteratorOf(Iterator<T> iterator) {
+    public static <T> Spliterator<T> spliteratorOf(Iterator<T> iterator) {
         return Spliterators.spliteratorUnknownSize(iterator, Spliterator.SORTED);
     }
 

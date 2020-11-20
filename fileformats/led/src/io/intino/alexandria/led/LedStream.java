@@ -8,6 +8,7 @@ import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.leds.IteratorLedStream;
 import io.intino.alexandria.led.util.iterators.IteratorUtils;
 import io.intino.alexandria.led.util.iterators.MergedIterator;
+import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -61,17 +62,35 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 		return new LedStreamBuilder<>(transactionClass);
 	}
 
+	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass, File tempDirectory) {
+		return new LedStreamBuilder<>(transactionClass, tempDirectory);
+	}
+
 	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass, int numElementsPerBlock) {
 		return new LedStreamBuilder<>(transactionClass, numElementsPerBlock);
+	}
+
+	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass, int numElementsPerBlock, File tempDirectory) {
+		return new LedStreamBuilder<>(transactionClass, numElementsPerBlock, tempDirectory);
 	}
 
 	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass, TransactionFactory<T> factory) {
 		return new LedStreamBuilder<>(transactionClass, factory);
 	}
 
+	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass, TransactionFactory<T> factory, File tempDirectory) {
+		return new LedStreamBuilder<>(transactionClass, factory, tempDirectory);
+	}
+
 	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass,
 													  TransactionFactory<T> factory, int numElementsPerBlock) {
 		return new LedStreamBuilder<>(transactionClass, factory, numElementsPerBlock);
+	}
+
+	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass,
+													  TransactionFactory<T> factory, int numElementsPerBlock,
+													  File tempDirectory) {
+		return new LedStreamBuilder<>(transactionClass, factory, numElementsPerBlock, tempDirectory);
 	}
 
 	int transactionSize();
@@ -508,7 +527,7 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 
 		int transactionSize();
 
-		Builder<T> create(Consumer<T> initializer);
+		Builder<T> append(Consumer<T> initializer);
 
 		LedStream<T> build();
 	}
