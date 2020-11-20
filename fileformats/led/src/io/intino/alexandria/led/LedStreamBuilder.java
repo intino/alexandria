@@ -69,6 +69,7 @@ public final class LedStreamBuilder<T extends Transaction> implements LedStream.
         this.transactionClass = transactionClass;
         this.transactionSize = Transaction.sizeOf(transactionClass);
         this.factory = factory;
+        tempDirectory.mkdirs();
         this.tempDirectory = tempDirectory.toPath();
         tempLeds = new ArrayList<>();
         tempLeds.add(createTempFile());
