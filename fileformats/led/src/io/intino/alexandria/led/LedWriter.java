@@ -4,7 +4,6 @@ import io.intino.alexandria.logger.Logger;
 import org.xerial.snappy.SnappyOutputStream;
 
 import java.io.*;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -13,7 +12,10 @@ import static io.intino.alexandria.led.util.MemoryUtils.memcpy;
 
 public class LedWriter {
 
-	private final int bufferSize = 1024;
+	private static final int DEFAULT_BUFFER_SIZE = 4096;
+
+
+	private int bufferSize = DEFAULT_BUFFER_SIZE;
 	private final OutputStream destination;
 	private final File destinationFile;
 
@@ -28,7 +30,16 @@ public class LedWriter {
 		destinationFile = null;
 	}
 
-	public FileOutputStream outputStream(File destination) {
+	public int bufferSize() {
+		return bufferSize;
+	}
+
+	public LedWriter bufferSize(int bufferSize) {
+		this.bufferSize = bufferSize;
+		return this;
+	}
+
+	private FileOutputStream outputStream(File destination) {
 		try {
 			return new FileOutputStream(destination);
 		} catch (FileNotFoundException e) {
@@ -99,6 +110,7 @@ public class LedWriter {
 					writeToOutputStream(outputStream, outputBuffer, 0, offset);
 				}
 			}
+			ledStream.close();
 		} catch (Exception e) {
 			Logger.error(e);
 		}
