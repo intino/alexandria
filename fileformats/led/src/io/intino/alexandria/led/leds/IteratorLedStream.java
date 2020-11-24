@@ -11,7 +11,7 @@ import static java.util.Objects.requireNonNull;
 public class IteratorLedStream<T extends Transaction> implements LedStream<T> {
 
     public static <S extends Transaction> IteratorLedStream<S> fromStream(int transactionSize, Stream<S> stream) {
-        return new IteratorLedStream<>(transactionSize, stream.sorted().iterator());
+        return new IteratorLedStream<>(transactionSize, stream.iterator());
     }
 
 
