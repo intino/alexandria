@@ -4,13 +4,11 @@ import io.intino.alexandria.led.allocators.TransactionAllocator;
 import io.intino.alexandria.led.allocators.TransactionFactory;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.led.allocators.stack.StackListAllocator;
-import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.leds.IteratorLedStream;
 import io.intino.alexandria.led.util.iterators.IteratorUtils;
 import io.intino.alexandria.led.util.iterators.MergedIterator;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -22,7 +20,6 @@ import java.util.stream.StreamSupport;
 import static io.intino.alexandria.led.Transaction.idOf;
 import static io.intino.alexandria.led.Transaction.sizeOf;
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toList;
 
 public interface LedStream<T extends Transaction> extends Iterator<T>, AutoCloseable {
 
@@ -58,20 +55,38 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 	}
 
 	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass) {
-		return new LedStreamBuilder<>(transactionClass);
+		return new HeapLedStreamBuilder<>(transactionClass);
+	}
+
+	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass, File tempDirectory) {
+		return new HeapLedStreamBuilder<>(transactionClass, tempDirectory);
 	}
 
 	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass, int numElementsPerBlock) {
-		return new LedStreamBuilder<>(transactionClass, numElementsPerBlock);
+		return new HeapLedStreamBuilder<>(transactionClass, numElementsPerBlock);
+	}
+
+	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass, int numElementsPerBlock, File tempDirectory) {
+		return new HeapLedStreamBuilder<>(transactionClass, numElementsPerBlock, tempDirectory);
 	}
 
 	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass, TransactionFactory<T> factory) {
-		return new LedStreamBuilder<>(transactionClass, factory);
+		return new HeapLedStreamBuilder<>(transactionClass, factory);
+	}
+
+	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass, TransactionFactory<T> factory, File tempDirectory) {
+		return new HeapLedStreamBuilder<>(transactionClass, factory, tempDirectory);
 	}
 
 	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass,
 													  TransactionFactory<T> factory, int numElementsPerBlock) {
-		return new LedStreamBuilder<>(transactionClass, factory, numElementsPerBlock);
+		return new HeapLedStreamBuilder<>(transactionClass, factory, numElementsPerBlock);
+	}
+
+	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass,
+													  TransactionFactory<T> factory, int numElementsPerBlock,
+													  File tempDirectory) {
+		return new HeapLedStreamBuilder<>(transactionClass, factory, numElementsPerBlock, tempDirectory);
 	}
 
 	int transactionSize();
@@ -508,7 +523,7 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 
 		int transactionSize();
 
-		Builder<T> create(Consumer<T> initializer);
+		Builder<T> append(Consumer<T> initializer);
 
 		LedStream<T> build();
 	}

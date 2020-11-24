@@ -359,7 +359,7 @@ public class JmsConnector implements Connector {
 		if (!started.get()) return;
 		if (!eventConsumers.isEmpty() && consumers.isEmpty())
 			for (String path : eventConsumers.keySet()) consumers.put(path, topicConsumer(path));
-		if (!messageConsumers.isEmpty())
+		if (!messageConsumers.isEmpty() && consumers.isEmpty())
 			for (String path : messageConsumers.keySet()) {
 				if (!consumers.containsKey(path) && session != null) consumers.put(path, queueConsumer(path));
 				for (MessageConsumer mConsumer : messageConsumers.get(path)) {

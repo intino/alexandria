@@ -7,12 +7,12 @@ import io.intino.alexandria.led.buffers.store.ByteBufferStore;
 import io.intino.alexandria.led.util.ModifiableMemoryAddress;
 import io.intino.alexandria.logger.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -21,36 +21,56 @@ import java.util.function.Consumer;
 
 import static io.intino.alexandria.led.util.MemoryUtils.allocBuffer;
 
-public final class LedStreamBuilder<T extends Transaction> implements LedStream.Builder<T> {
+public final class HeapLedStreamBuilder<T extends Transaction> implements LedStream.Builder<T> {
 
     private static final int DEFAULT_NUM_TRANSACTIONS_PER_BLOCK = 5_000_000;
-    private static final Path SYSTEM_TEMP_DIR = Paths.get(System.getProperty("java.io.tmpdir"));
+    private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
 
     private final int transactionSize;
     private final Class<T> transactionClass;
     private final TransactionFactory<T> factory;
     private final List<Path> tempLeds;
+    private final Path tempDirectory;
     private ByteBuffer buffer;
     private StackAllocator<T> allocator;
     private Queue<T> sortedQueue;
     private volatile boolean buildInvoked;
 
-    public LedStreamBuilder(Class<T> transactionClass) {
+    public HeapLedStreamBuilder(Class<T> transactionClass) {
         this(transactionClass, Transaction.factoryOf(transactionClass));
     }
 
-    public LedStreamBuilder(Class<T> transactionClass, int numTransactionsPerBlock) {
+    public HeapLedStreamBuilder(Class<T> transactionClass, File tempDirectory) {
+        this(transactionClass, Transaction.factoryOf(transactionClass), tempDirectory);
+    }
+
+    public HeapLedStreamBuilder(Class<T> transactionClass, int numTransactionsPerBlock) {
         this(transactionClass, Transaction.factoryOf(transactionClass), numTransactionsPerBlock);
     }
 
-    public LedStreamBuilder(Class<T> transactionClass, TransactionFactory<T> factory) {
+    public HeapLedStreamBuilder(Class<T> transactionClass, int numTransactionsPerBlock, File tempDirectory) {
+        this(transactionClass, Transaction.factoryOf(transactionClass), numTransactionsPerBlock, tempDirectory);
+    }
+
+    public HeapLedStreamBuilder(Class<T> transactionClass, TransactionFactory<T> factory) {
         this(transactionClass, factory, DEFAULT_NUM_TRANSACTIONS_PER_BLOCK);
     }
 
-    public LedStreamBuilder(Class<T> transactionClass, TransactionFactory<T> factory, int numTransactionsPerBlock) {
+    public HeapLedStreamBuilder(Class<T> transactionClass, TransactionFactory<T> factory, File tempDirectory) {
+        this(transactionClass, factory, DEFAULT_NUM_TRANSACTIONS_PER_BLOCK, tempDirectory);
+    }
+
+    public HeapLedStreamBuilder(Class<T> transactionClass, TransactionFactory<T> factory, int numTransactionsPerBlock) {
+        this(transactionClass, factory, numTransactionsPerBlock, SYSTEM_TEMP_DIR);
+    }
+
+    public HeapLedStreamBuilder(Class<T> transactionClass, TransactionFactory<T> factory,
+                                int numTransactionsPerBlock, File tempDirectory) {
         this.transactionClass = transactionClass;
         this.transactionSize = Transaction.sizeOf(transactionClass);
         this.factory = factory;
+        tempDirectory.mkdirs();
+        this.tempDirectory = tempDirectory.toPath();
         tempLeds = new ArrayList<>();
         tempLeds.add(createTempFile());
         buffer = allocBuffer(numTransactionsPerBlock * transactionSize);
@@ -60,9 +80,12 @@ public final class LedStreamBuilder<T extends Transaction> implements LedStream.
         sortedQueue = new PriorityQueue<>(numTransactionsPerBlock);
     }
 
+    public Path tempDirectory() {
+        return tempDirectory;
+    }
+
     private String getTempFilePrefix() {
-        return getClass().getSimpleName() + '.' +
-                transactionClass.getSimpleName();
+        return transactionClass.getSimpleName();
     }
 
     @Override
@@ -76,7 +99,7 @@ public final class LedStreamBuilder<T extends Transaction> implements LedStream.
     }
 
     @Override
-    public LedStream.Builder<T> create(Consumer<T> initializer) {
+    public LedStream.Builder<T> append(Consumer<T> initializer) {
         if(buildInvoked) {
             throw new IllegalStateException("Method build has been called, cannot create more transactions.");
         }
@@ -96,7 +119,7 @@ public final class LedStreamBuilder<T extends Transaction> implements LedStream.
 
     private Path createTempFile() {
         try {
-            return Files.createTempFile(SYSTEM_TEMP_DIR, getTempFilePrefix(), ".tmp");
+            return Files.createTempFile(tempDirectory, getTempFilePrefix(), ".led.tmp");
         } catch (IOException e) {
             Logger.error(e);
             throw new RuntimeException(e);
@@ -138,9 +161,11 @@ public final class LedStreamBuilder<T extends Transaction> implements LedStream.
     private void deleteAllTempFiles() {
         for(Path tempLedFile : tempLeds) {
             try {
-                Files.delete(tempLedFile);
-                tempLedFile.toFile().delete();
-                tempLedFile.toFile().deleteOnExit();
+                if(Files.exists(tempLedFile)) {
+                    Files.delete(tempLedFile);
+                    tempLedFile.toFile().delete();
+                    tempLedFile.toFile().deleteOnExit();
+                }
             } catch (IOException e) {
                 Logger.error(e);
             }
