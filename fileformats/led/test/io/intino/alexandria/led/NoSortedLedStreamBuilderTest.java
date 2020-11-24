@@ -8,6 +8,8 @@ import java.io.File;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertTrue;
 

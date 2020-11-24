@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static io.intino.alexandria.led.util.MemoryUtils.allocBuffer;
 
