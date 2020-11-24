@@ -6,6 +6,7 @@ import io.intino.alexandria.Timetag;
 import io.intino.alexandria.led.LedStream;
 import io.intino.alexandria.led.LedWriter;
 import io.intino.alexandria.led.Transaction;
+import io.intino.alexandria.led.UnsortedLedStreamBuilder;
 
 import java.io.File;
 import java.util.HashMap;
