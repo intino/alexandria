@@ -41,7 +41,11 @@ public class SessionHandler {
 	}
 
 	public TransactionSession createTransactionSession() {
-		return new TransactionSession(new PrivateProvider());
+		return new TransactionSession(new PrivateProvider(), new File(root, "temp"));
+	}
+
+	public TransactionSession createTransactionSession(int transactionBufferSize) {
+		return new TransactionSession(new PrivateProvider(), new File(root, "temp"), transactionBufferSize);
 	}
 
 	public void pushTo(URI uri) {
