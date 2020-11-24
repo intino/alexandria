@@ -39,7 +39,7 @@ public class LedSessionManager_ {
 		List<TestSchema> stored = unsortedList();
 		stored.sort(Comparator.comparingLong(TestSchema::id));
 		Led<TestSchema> testLed = new ListLed<>(stored);
-		session.put("tank1", timetag, testLed);
+		session.put("tank1", timetag, TestSchema.class,t->t.c(1));
 		handler.pushTo(STAGE_FOLDER);
 		new FileSessionSealer(new FileDatalake(DATALAKE), STAGE_FOLDER).seal();
 		LedStream<TestSchema> stream = new LedReader(new File("temp/datalake/transactions/tank1/" + timetag.value() + ".led")).read(TestSchema::new);
