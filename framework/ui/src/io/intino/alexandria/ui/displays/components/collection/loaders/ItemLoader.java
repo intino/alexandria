@@ -49,6 +49,7 @@ public class ItemLoader<DS extends Datasource<Item>, Item> {
 	}
 
 	public ItemLoader filter(Map<String, List<String>> groupings) {
+		filters.clear();
 		groupings.forEach(this::filterGrouping);
 		this.itemCount = calculateItemCount(condition);
 		return this;

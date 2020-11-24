@@ -9,20 +9,20 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-public class LedStreamBuilderTest {
+public class NoSortedLedStreamBuilderTest {
 
     @Test
     public void test() {
         System.out.println(TestTransaction.SIZE);
-        LedStream.Builder<TestTransaction> builder = LedStream.builder(TestTransaction.class, 100_000, new File("temp"));
+        LedStream.Builder<TestTransaction> builder = new ExtSortLedStreamBuilder<>(TestTransaction.class, new File("temp"));
         Random random = new Random();
         double start = System.currentTimeMillis();
         final int numElements = 100_000_000;
         for(int i = 0;i < numElements;i++) {
             long id = i;
-            builder.append(t -> t.id(random.nextInt(Integer.MAX_VALUE / 2)));
+            builder.append(t -> t.id(random.nextInt()));
             if(i % 1_000_000 == 0) {
                 double time = (System.currentTimeMillis() - start) / 1000.0;
                 System.out.println(">> Created " + i + " elements (" + time + " seconds)");
@@ -34,20 +34,7 @@ public class LedStreamBuilderTest {
         start = System.currentTimeMillis();
 
         try(LedStream<TestTransaction> ledStream = builder.build()) {
-            for (int i = 0; i < numElements + 100; i++) {
-                ledStream.hasNext();
-            }
-
-            AtomicLong lastId = new AtomicLong(Long.MIN_VALUE);
-            AtomicInteger i = new AtomicInteger();
-
-            ledStream.peek(item -> {
-                final long id = item.id();
-                assertTrue(i.get() + " => " + id + " < " + lastId, lastId.get() <= id);
-                lastId.set(id);
-                i.incrementAndGet();
-            }).serialize(new File("temp/ledstreambuilder_full_led_" + numElements +".led"));
-
+            ledStream.serialize(new File("temp/u_ledstreambuilder_full_led_" + numElements +".led"));
         } catch (Exception e) {
             Logger.error(e);
         }

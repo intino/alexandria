@@ -20,7 +20,7 @@ import static java.nio.file.StandardOpenOption.*;
 
 public class ExtSortLedStreamBuilder<T extends Transaction> implements LedStream.Builder<T> {
 
-    private static final int DEFAULT_NUM_ELEMENTS_PER_BLOCK = 8 * 1024;
+    private static final int DEFAULT_NUM_ELEMENTS_PER_BLOCK = 10_000;
 
 
     private final Class<T> transactionClass;
@@ -28,8 +28,14 @@ public class ExtSortLedStreamBuilder<T extends Transaction> implements LedStream
     private final TransactionFactory<T> factory;
     private final Path tempDirectory;
     private Path tempLedFile;
-    private final ByteBuffer buffer;
-    private final StackAllocator<T> allocator;
+    private ByteBuffer buffer;
+    private StackAllocator<T> allocator;
+    private FileChannel fileChannel;
+
+    public ExtSortLedStreamBuilder(Class<T> transactionClass, File tempDirectory) {
+        this(transactionClass, Transaction.factoryOf(transactionClass),
+                DEFAULT_NUM_ELEMENTS_PER_BLOCK, tempDirectory);
+    }
 
     public ExtSortLedStreamBuilder(Class<T> transactionClass, TransactionFactory<T> factory,
                                    int numElementsPerBlock, File tempDirectory) {
@@ -37,8 +43,22 @@ public class ExtSortLedStreamBuilder<T extends Transaction> implements LedStream
         this.transactionSize = Transaction.sizeOf(transactionClass);
         this.factory = factory;
         this.tempDirectory = tempDirectory.toPath();
+        if(numElementsPerBlock % 2 != 0) {
+            throw new IllegalArgumentException("NumElementsPerBlock must be even");
+        }
         buffer = allocBuffer(numElementsPerBlock * transactionSize);
         this.allocator = StackAllocators.newManaged(transactionSize, buffer, factory);
+        createTempFile();
+    }
+
+    private void createTempFile() {
+        try {
+            Files.createDirectories(tempDirectory);
+            tempLedFile = Files.createTempFile(tempDirectory, transactionClass.getSimpleName(), "_u.led.tmp");
+            fileChannel = FileChannel.open(tempLedFile, WRITE, APPEND);
+        } catch(Exception e) {
+            Logger.error(e);
+        }
     }
 
     @Override
@@ -63,17 +83,12 @@ public class ExtSortLedStreamBuilder<T extends Transaction> implements LedStream
 
     private void writeCurrentBlockAndClear() {
         try {
-            if(Files.notExists(tempLedFile)) {
-                Files.createDirectories(tempDirectory);
-                tempLedFile = Files.createTempFile(tempDirectory, transactionClass.getSimpleName(), "_u.led.tmp");
+            buffer.limit((int) allocator.stackPointer());
+            while(buffer.hasRemaining()) {
+                fileChannel.write(buffer);
             }
-            try(FileChannel channel = FileChannel.open(tempLedFile, WRITE, APPEND)) {
-                while(buffer.hasRemaining()) {
-                    channel.write(buffer);
-                }
-                buffer.clear();
-                allocator.clear();
-            }
+            buffer.clear();
+            allocator.clear();
         } catch (IOException e) {
             Logger.error(e);
         }
@@ -97,10 +112,9 @@ public class ExtSortLedStreamBuilder<T extends Transaction> implements LedStream
     private void externalMergeSort() {
         try {
             Path sortedTempFile = Files.createTempFile(tempDirectory, transactionClass.getSimpleName(), "_s.led.tmp");
-
+            fileChannel.close();
             try(FileChannel readChannel = FileChannel.open(tempLedFile, READ);
                 FileChannel writeChannel = FileChannel.open(sortedTempFile, WRITE)) {
-
                 doMergeSort(readChannel, writeChannel);
             }
             Files.delete(tempLedFile);
@@ -114,6 +128,7 @@ public class ExtSortLedStreamBuilder<T extends Transaction> implements LedStream
 
     private void doMergeSort(FileChannel readChannel, FileChannel writeChannel) throws Exception {
         final long size = readChannel.size();
+        final int maxBlockSize = buffer.capacity() / 2;
         final long numBlocks = size / buffer.capacity();
     }
 }
