@@ -14,7 +14,7 @@ import static java.util.Collections.singletonList;
 
 public class Logger {
 	public enum Level {
-		ERROR, WARN, INFO, DEBUG, TRACE
+		ERROR, WARN, INFO, NOTIFICATION, DEBUG, TRACE
 	}
 
 	private static final List<LogHandler> out = new ArrayList<>(singletonList(new PrintStreamLogHandler(System.out)));
@@ -39,6 +39,11 @@ public class Logger {
 	public static void info(String message) {
 		if (isExcluded() || excludedLevels.contains(Level.INFO)) return;
 		out.forEach(o -> o.publish(format(Level.INFO, message)));
+	}
+
+	public static void notification(String message) {
+		if (isExcluded() || excludedLevels.contains(Level.NOTIFICATION)) return;
+		out.forEach(o -> o.publish(format(Level.NOTIFICATION, message)));
 	}
 
 	public static void warn(String message) {

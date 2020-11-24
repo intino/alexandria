@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Consider using {@link LedStreamBuilder} first when performance is critical.
+ * Consider using {@link HeapLedStreamBuilder} first when performance is critical.
  *
  * */
 public class LedBuilder<T extends Transaction> implements Led.Builder<T> {
