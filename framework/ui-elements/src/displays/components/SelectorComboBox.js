@@ -42,6 +42,8 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 	};
 
 	render() {
+		if (!this.state.visible) return (<React.Fragment/>);
+
 		const { classes, theme } = this.props;
 		const items = this.items();
 		const multiple = this.state.multipleSelection;

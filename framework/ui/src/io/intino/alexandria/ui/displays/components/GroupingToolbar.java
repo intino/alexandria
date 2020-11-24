@@ -19,6 +19,7 @@ public class GroupingToolbar<DN extends GroupingToolbarNotifier, B extends Box> 
     private List<Grouping<?, ?>> groupings = new ArrayList<>();
     private ApplyFiltersListener applyFiltersListener;
     private Listener resetFiltersListener;
+    private boolean reseting = false;
 
     public GroupingToolbar(B box) {
         super(box);
@@ -27,6 +28,7 @@ public class GroupingToolbar<DN extends GroupingToolbarNotifier, B extends Box> 
     public GroupingToolbar<DN, B> filter(String grouping, List<String> groups) {
         if (groups.size() <= 0) filtersMap.remove(grouping);
         else filtersMap.put(grouping, groups);
+        if (!reseting && filtersMap.size() <= 0) clearCollections();
         refreshFilters();
         return this;
     }
@@ -48,16 +50,17 @@ public class GroupingToolbar<DN extends GroupingToolbarNotifier, B extends Box> 
     }
 
     public GroupingToolbar<DN, B> reset() {
+        reseting = true;
         filtersMap.clear();
         groupings.forEach(g -> g.select(Collections.emptyList()));
-        collections().forEach(Collection::clearFilters);
+        clearCollections();
         if (resetFiltersListener != null) resetFiltersListener.accept(new Event(this));
+        reseting = false;
         return this;
     }
 
     public GroupingToolbar<DN, B> removeFilter(String filter) {
         groupingOf(filter).ifPresent(g -> g.select(Collections.emptyList()));
-        if (filtersMap.size() <= 0) collections().forEach(Collection::clearFilters);
         return this;
     }
 
@@ -66,6 +69,10 @@ public class GroupingToolbar<DN extends GroupingToolbarNotifier, B extends Box> 
         this.groupings.addAll(Arrays.asList(groupings));
         this.groupings.forEach(g -> g.bindTo(this));
         return this;
+    }
+
+    private void clearCollections() {
+        collections().forEach(Collection::clearFilters);
     }
 
     private void refreshFilters() {
