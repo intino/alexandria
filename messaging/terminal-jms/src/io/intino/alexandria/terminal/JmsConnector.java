@@ -73,31 +73,31 @@ public class JmsConnector implements Connector {
 			Logger.warn("Invalid broker URL. Connection aborted");
 			return;
 		}
-		connect();
+		try {
+			connect();
+		} catch (JMSException e) {
+			Logger.error(e);
+		}
 		started.set(true);
 		if (scheduler == null) {
 			scheduler = Executors.newScheduledThreadPool(1);
-			scheduler.scheduleAtFixedRate(this::checkConnection, 15, 1, TimeUnit.MINUTES);
+			scheduler.scheduleAtFixedRate(this::checkConnection, 15, 10, TimeUnit.MINUTES);
 		}
 	}
 
-	private void connect() {
-		try {
-			if (!Broker.isRunning(brokerUrl)) {
-				Logger.warn("Broker Unreachable. Connection aborted");
-				return;
+	private void connect() throws JMSException {
+		if (!Broker.isRunning(brokerUrl)) {
+			Logger.warn("Broker Unreachable. Connection aborted");
+			return;
+		}
+		initConnection();
+		if (connection != null && ((ActiveMQConnection) connection).isStarted()) {
+			clearProducers();
+			session = createSession(transactedSession);
+			if (session != null && ((ActiveMQSession) session).isRunning()) {
+				connected.set(true);
+				recoverEventsAndMessages();
 			}
-			initConnection();
-			if (connection != null && ((ActiveMQConnection) connection).isStarted()) {
-				clearProducers();
-				session = createSession(transactedSession);
-				if (session != null && ((ActiveMQSession) session).isRunning()) {
-					connected.set(true);
-					recoverEventsAndMessages();
-				}
-			}
-		} catch (JMSException e) {
-			Logger.error(e);
 		}
 	}
 
@@ -412,7 +412,10 @@ public class JmsConnector implements Connector {
 		}
 		Logger.debug("Restarting data-hub connection...");
 		stop();
-		connect();
+		try {
+			connect();
+		} catch (JMSException e) {
+		}
 		connected.set(true);
 	}
 
