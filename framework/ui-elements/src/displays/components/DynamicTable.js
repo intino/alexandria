@@ -123,6 +123,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 		    page: 0,
 		    column: null,
 		    selectRowProvided: false,
+            hideZeros: false,
             showRelativeValues: false,
 		    ...this.state,
 		};
@@ -161,6 +162,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                     {this.state.loading && <PulseLoader color={theme.palette.secondary.main} size={8} loading={true}/>}
                 </div>
                 <div className="layout horizontal end-justified center">
+                    <FormControlLabel control={<Checkbox checked={this.state.hideZeros} onChange={this.handleToggleHideZeros.bind(this)} name="toggleHideZeros" color="primary"/>} label={this.translate("Hide zeros")}/>
                     <FormControlLabel control={<Checkbox checked={this.state.showRelativeValues} onChange={this.handleToggleRelativeValues.bind(this)} name="toggleRelativeValues" color="primary"/>} label={this.translate("Show percentages")}/>
                 </div>
             </div>
@@ -280,11 +282,14 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 
     renderDetailSection = (section, index) => {
         const classNames = "layout vertical" + (this.state.sections.length <= 1 ? "" : " flex");
+        if (index !== 0 && this.state.hideZeros && this._isZeroSection(section)) return (<React.Fragment/>);
         return (<div className={classNames}>{this.renderSection(section, index)}</div>);
     };
 
     renderSection = (section, index) => {
         const { classes } = this.props;
+        const isMainView = this._isMainView();
+        if ((isMainView || (!isMainView && index != 0)) && this.state.hideZeros && this._isZeroSection(section)) return (<React.Fragment/>);
         return (
             <Table size='small' className={classes.table} key={index}>
                 <TableHead>{this.renderHeader(section, index)}</TableHead>
@@ -375,6 +380,8 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const totalRow = this.isTotalRow(sections, rowIndex);
         const style = totalRow ? { fontWeight: "bold"} : {};
         const isMainView = this._isMainView();
+        const hideRow = this.state.hideZeros && ((isMainView && this._isZeroRow(sections, rowIndex)) || (!isMainView && this._isZeroRow(this.state.sections, rowIndex)));
+        if (hideRow) return (<React.Fragment/>);
         return (
             <TableRow key={rowIndex}>
                 {(isMainView || (!isMainView && mainSection == this.state.sections[0])) &&
@@ -386,6 +393,37 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                 {sections.map((section, index) => this.renderBodyCells(mainSection, section, rowIndex, index, this.columnOffset(sections, index)))}
             </TableRow>
         );
+    };
+
+    _isZeroSection = (section) => {
+        for (let i=0; i<section.rows.length; i++) {
+            const row = section.rows[i];
+            for (let j=0; j<row.cells.length; j++) {
+                if (row.cells[j].absolute != 0) return false;
+            }
+        }
+        return true;
+    };
+
+    _isZeroRow = (sections, rowIndex) => {
+        for (let i=0; i<sections.length; i++) {
+            const section = sections[i];
+            if (section.sections.length > 0) return this._isZeroRow(section.sections, rowIndex);
+            else if (!this._isZeroCells(section, rowIndex)) return false;
+        }
+        return true;
+    };
+
+    _isZeroCells = (section, rowIndex) => {
+        const isMainView = this._isMainView();
+        const row = section.rows[rowIndex];
+        if (row == null) return false;
+        for (let j=0; j<row.cells.length; j++) {
+            const value = row.cells[j].absolute;
+            const checkCell = isMainView || (!isMainView && j == this.state.column.index);
+            if (checkCell && value !== 0) return false;
+        }
+        return true;
     };
 
     columnOffset = (sections, index) => {
@@ -581,6 +619,10 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 
     handleToggleRelativeValues = () => {
         this.setState({showRelativeValues: !this.state.showRelativeValues});
+    };
+
+    handleToggleHideZeros = () => {
+        this.setState({hideZeros: !this.state.hideZeros});
     };
 
     handleFilterColumn = (column, index) => {

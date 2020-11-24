@@ -103,14 +103,17 @@ public class Datasources {
 				cartera.column("clientes (%)").operator(Column.Operator.Average);
 				cartera.add("DA", 1, 11, 12111, 12, 13, 1);
 				cartera.add("DB", 11, 1, 2, 4, 5, 2);
+				cartera.add("DC", 0, 0, 0, 0, 0, 0);
 				Section carteraVencida = residencial.add("Cartera Vencida", "white", "#720427", 11);
 				carteraVencida.columns("clientes", "adeudos", "importe");
 				carteraVencida.add("DA", 21212, 1212, 121);
 				carteraVencida.add("DB", 192, 823, 12);
+				carteraVencida.add("DC", 0, 0, 0);
 				Section carteraRezago = residencial.add("Cartera Rezago", "white", "#896908", 11);
 				carteraRezago.columns("clientes", "adeudos", "importe");
 				carteraRezago.add("DA", 128, 23, 12);
 				carteraRezago.add("DB", 339, 232, 2);
+				carteraRezago.add("DC", 0, 0, 0);
 				return residencial;
 			}
 
@@ -122,16 +125,19 @@ public class Datasources {
 				cartera.column("clientes (%)").operator(Column.Operator.Average);
 				cartera.add("DA", 1, 11, 12, 12, 13, 1);
 				cartera.add("DB", 11, 1, 2, 4, 5, 2);
+				cartera.add("DC", 0, 0, 0, 0, 0, 0);
 				Section carteraVencida = new Section("Cartera Vencida", "white", "#720427", 11);
 				residencial.add(carteraVencida);
 				carteraVencida.columns("clientes", "adeudos", "importe");
 				carteraVencida.add("DA", 21212, 1212, 121);
 				carteraVencida.add("DB", 192, 823, 12);
+				carteraVencida.add("DC", 0, 0, 0);
 				Section carteraRezago = new Section("Cartera Rezago", "white", "#896908", 11);
 				residencial.add(carteraRezago);
 				carteraRezago.columns("clientes", "adeudos", "importe");
 				carteraRezago.add("DA", 128, 23, 12);
 				carteraRezago.add("DB", 339, 232, 2);
+				carteraRezago.add("DC", 0, 0, 0);
 				return residencial;
 			}
 
