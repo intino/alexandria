@@ -38,7 +38,7 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
     }
 
     public UnsortedLedStreamBuilder(Class<T> transactionClass, TransactionFactory<T> factory,
-									int numElementsPerBlock, File tempDirectory) {
+                                    int numElementsPerBlock, File tempDirectory) {
         this.transactionClass = transactionClass;
         this.transactionSize = Transaction.sizeOf(transactionClass);
         this.factory = factory;
@@ -96,8 +96,26 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
 
     @Override
     public LedStream<T> build() {
-        externalMergeSort();
-        return new InputLedStream<>(getInputStream(), factory, transactionSize);
+        free();
+        return new InputLedStream<>(getInputStream(), factory, transactionSize)
+                .onClose(this::deleteTempFile);
+    }
+
+    private void deleteTempFile() {
+        tempLedFile.toFile().delete();
+        tempLedFile.toFile().deleteOnExit();
+    }
+
+    private void free() {
+        try {
+            allocator.free();
+            allocator = null;
+            buffer = null;
+            fileChannel.close();
+            fileChannel = null;
+        } catch(Exception e) {
+            Logger.error(e);
+        }
     }
 
     private InputStream getInputStream() {
@@ -107,28 +125,5 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
             Logger.error(e);
             throw new RuntimeException(e);
         }
-    }
-
-    private void externalMergeSort() {
-        try {
-            Path sortedTempFile = Files.createTempFile(tempDirectory, transactionClass.getSimpleName(), "_s.led.tmp");
-            fileChannel.close();
-            try(FileChannel readChannel = FileChannel.open(tempLedFile, READ);
-                FileChannel writeChannel = FileChannel.open(sortedTempFile, WRITE)) {
-                doMergeSort(readChannel, writeChannel);
-            }
-            Files.delete(tempLedFile);
-            tempLedFile.toFile().deleteOnExit();
-            tempLedFile = sortedTempFile;
-        } catch(Exception e) {
-            Logger.error(e);
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void doMergeSort(FileChannel readChannel, FileChannel writeChannel) throws Exception {
-        final long size = readChannel.size();
-        final int maxBlockSize = buffer.capacity() / 2;
-        final long numBlocks = size / buffer.capacity();
     }
 }
