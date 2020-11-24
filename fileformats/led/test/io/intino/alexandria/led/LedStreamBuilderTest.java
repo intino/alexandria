@@ -2,6 +2,7 @@ package io.intino.alexandria.led;
 
 import io.intino.alexandria.logger.Logger;
 import io.intino.test.transactions.TestTransaction;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -10,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.Assert.*;
-
+@Ignore
 public class LedStreamBuilderTest {
 
     @Test
