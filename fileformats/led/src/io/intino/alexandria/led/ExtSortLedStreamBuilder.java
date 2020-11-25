@@ -6,9 +6,7 @@ import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.led.leds.InputLedStream;
 import io.intino.alexandria.logger.Logger;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
@@ -31,6 +29,7 @@ public class ExtSortLedStreamBuilder<T extends Transaction> implements LedStream
     private ByteBuffer buffer;
     private StackAllocator<T> allocator;
     private FileChannel fileChannel;
+    private long numTransactions;
 
     public ExtSortLedStreamBuilder(Class<T> transactionClass, File tempDirectory) {
         this(transactionClass, Transaction.factoryOf(transactionClass),
@@ -56,9 +55,14 @@ public class ExtSortLedStreamBuilder<T extends Transaction> implements LedStream
             Files.createDirectories(tempDirectory);
             tempLedFile = Files.createTempFile(tempDirectory, transactionClass.getSimpleName(), "_u.led.tmp");
             fileChannel = FileChannel.open(tempLedFile, WRITE, APPEND);
+            reserveHeader();
         } catch(Exception e) {
             Logger.error(e);
         }
+    }
+
+    private void reserveHeader() throws IOException {
+        fileChannel.write(ByteBuffer.allocate(LedHeader.SIZE));
     }
 
     @Override
@@ -78,6 +82,7 @@ public class ExtSortLedStreamBuilder<T extends Transaction> implements LedStream
         if(allocator.remainingBytes() == 0) {
             writeCurrentBlockAndClear();
         }
+        ++numTransactions;
         return this;
     }
 
@@ -97,7 +102,39 @@ public class ExtSortLedStreamBuilder<T extends Transaction> implements LedStream
     @Override
     public LedStream<T> build() {
         externalMergeSort();
-        return new InputLedStream<>(getInputStream(), factory, transactionSize);
+        writeHeader();
+        free();
+        return new InputLedStream<>(getInputStream(), factory, transactionSize)
+                .onClose(this::deleteTempFile);
+    }
+
+    private void writeHeader() {
+        LedHeader header = new LedHeader();
+        header.elementCount(numTransactions);
+        header.elementSize(transactionSize);
+        try(RandomAccessFile file = new RandomAccessFile(tempLedFile.toFile(), "rw")) {
+            file.writeLong(header.elementCount());
+            file.writeInt(header.elementSize());
+        } catch (IOException e) {
+            Logger.error(e);
+        }
+    }
+
+    private void deleteTempFile() {
+        tempLedFile.toFile().delete();
+        tempLedFile.toFile().deleteOnExit();
+    }
+
+    private void free() {
+        try {
+            allocator.free();
+            allocator = null;
+            buffer = null;
+            fileChannel.close();
+            fileChannel = null;
+        } catch(Exception e) {
+            Logger.error(e);
+        }
     }
 
     private InputStream getInputStream() {

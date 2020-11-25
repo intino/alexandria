@@ -20,10 +20,10 @@ public class LedStreamBuilderTest {
         LedStream.Builder<TestTransaction> builder = LedStream.builder(TestTransaction.class, 100_000, new File("temp"));
         Random random = new Random();
         double start = System.currentTimeMillis();
-        final int numElements = 100_000_000;
+        final int numElements = 10_000_000;
         for(int i = 0;i < numElements;i++) {
             long id = i;
-            builder.append(t -> t.id(random.nextInt(Integer.MAX_VALUE / 2)));
+            builder.append(t -> t.id(random.nextInt(Integer.MAX_VALUE / 10)));
             if(i % 1_000_000 == 0) {
                 double time = (System.currentTimeMillis() - start) / 1000.0;
                 System.out.println(">> Created " + i + " elements (" + time + " seconds)");
@@ -35,9 +35,6 @@ public class LedStreamBuilderTest {
         start = System.currentTimeMillis();
 
         try(LedStream<TestTransaction> ledStream = builder.build()) {
-            for (int i = 0; i < numElements + 100; i++) {
-                ledStream.hasNext();
-            }
 
             AtomicLong lastId = new AtomicLong(Long.MIN_VALUE);
             AtomicInteger i = new AtomicInteger();

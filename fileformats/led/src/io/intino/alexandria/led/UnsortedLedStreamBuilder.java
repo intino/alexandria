@@ -6,9 +6,7 @@ import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.led.leds.InputLedStream;
 import io.intino.alexandria.logger.Logger;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
@@ -20,7 +18,7 @@ import static java.nio.file.StandardOpenOption.*;
 
 public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStream.Builder<T> {
 
-    private static final int DEFAULT_NUM_ELEMENTS_PER_BLOCK = 10_000;
+    private static final int DEFAULT_NUM_ELEMENTS_PER_BLOCK = 500_000;
 
 
     private final Class<T> transactionClass;
@@ -31,14 +29,26 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
     private ByteBuffer buffer;
     private StackAllocator<T> allocator;
     private FileChannel fileChannel;
+    private long numTransactions;
+    private final boolean keepFileChannelOpen;
 
     public UnsortedLedStreamBuilder(Class<T> transactionClass, File tempDirectory) {
         this(transactionClass, Transaction.factoryOf(transactionClass),
-                DEFAULT_NUM_ELEMENTS_PER_BLOCK, tempDirectory);
+                DEFAULT_NUM_ELEMENTS_PER_BLOCK, tempDirectory, true);
+    }
+
+    public UnsortedLedStreamBuilder(Class<T> transactionClass, File tempDirectory, boolean keepFileChannelOpen) {
+        this(transactionClass, Transaction.factoryOf(transactionClass),
+                DEFAULT_NUM_ELEMENTS_PER_BLOCK, tempDirectory, keepFileChannelOpen);
     }
 
     public UnsortedLedStreamBuilder(Class<T> transactionClass, TransactionFactory<T> factory,
                                     int numElementsPerBlock, File tempDirectory) {
+        this(transactionClass, factory, numElementsPerBlock, tempDirectory, true);
+    }
+
+    public UnsortedLedStreamBuilder(Class<T> transactionClass, TransactionFactory<T> factory,
+                                    int numElementsPerBlock, File tempDirectory, boolean keepFileChannelOpen) {
         this.transactionClass = transactionClass;
         this.transactionSize = Transaction.sizeOf(transactionClass);
         this.factory = factory;
@@ -48,6 +58,7 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
         }
         buffer = allocBuffer(numElementsPerBlock * transactionSize);
         this.allocator = StackAllocators.newManaged(transactionSize, buffer, factory);
+        this.keepFileChannelOpen = keepFileChannelOpen;
         createTempFile();
     }
 
@@ -55,9 +66,26 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
         try {
             Files.createDirectories(tempDirectory);
             tempLedFile = Files.createTempFile(tempDirectory, transactionClass.getSimpleName(), "_u.led.tmp");
-            fileChannel = FileChannel.open(tempLedFile, WRITE, APPEND);
+            if(keepFileChannelOpen) {
+                fileChannel = openFileChannel();
+            }
+            reserveHeader();
         } catch(Exception e) {
             Logger.error(e);
+        }
+    }
+
+    private FileChannel openFileChannel() throws IOException {
+        return FileChannel.open(tempLedFile, WRITE, APPEND);
+    }
+
+    private void reserveHeader() throws IOException {
+        if(!keepFileChannelOpen) {
+            fileChannel = openFileChannel();
+        }
+        fileChannel.write(ByteBuffer.allocate(LedHeader.SIZE));
+        if(!keepFileChannelOpen) {
+            fileChannel.close();
         }
     }
 
@@ -78,14 +106,21 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
         if(allocator.remainingBytes() == 0) {
             writeCurrentBlockAndClear();
         }
+        ++numTransactions;
         return this;
     }
 
     private void writeCurrentBlockAndClear() {
         try {
+            if(!keepFileChannelOpen) {
+                fileChannel = openFileChannel();
+            }
             buffer.limit((int) allocator.stackPointer());
             while(buffer.hasRemaining()) {
                 fileChannel.write(buffer);
+            }
+            if(!keepFileChannelOpen) {
+                fileChannel.close();
             }
             buffer.clear();
             allocator.clear();
@@ -96,9 +131,23 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
 
     @Override
     public LedStream<T> build() {
+        writeCurrentBlockAndClear();
         free();
+        writeHeader();
         return new InputLedStream<>(getInputStream(), factory, transactionSize)
                 .onClose(this::deleteTempFile);
+    }
+
+    private void writeHeader() {
+        LedHeader header = new LedHeader();
+        header.elementCount(numTransactions);
+        header.elementSize(transactionSize);
+        try(RandomAccessFile file = new RandomAccessFile(tempLedFile.toFile(), "rw")) {
+            file.writeLong(header.elementCount());
+            file.writeInt(header.elementSize());
+        } catch (IOException e) {
+            Logger.error(e);
+        }
     }
 
     private void deleteTempFile() {
