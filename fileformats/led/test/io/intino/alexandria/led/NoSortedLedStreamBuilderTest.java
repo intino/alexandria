@@ -18,7 +18,7 @@ public class NoSortedLedStreamBuilderTest {
     @Test
     public void test() {
         System.out.println(TestTransaction.SIZE);
-        LedStream.Builder<TestTransaction> builder = new ExtSortLedStreamBuilder<>(TestTransaction.class, new File("temp"));
+        LedStream.Builder<TestTransaction> builder = new UnsortedLedStreamBuilder<>(TestTransaction.class, new File("temp"));
         Random random = new Random();
         double start = System.currentTimeMillis();
         final int numElements = 100_000_000;

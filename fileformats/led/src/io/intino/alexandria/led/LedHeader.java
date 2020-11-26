@@ -5,6 +5,7 @@ import io.intino.alexandria.logger.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
 import static java.util.Objects.requireNonNull;
 
@@ -39,6 +40,17 @@ public class LedHeader {
         }
     }
 
+    public static LedHeader from(FileChannel fileChannel) {
+        try {
+            ByteBuffer buffer = ByteBuffer.allocate(SIZE);
+            fileChannel.read(buffer);
+            return new LedHeader(buffer.clear());
+        } catch(Exception e) {
+            Logger.error(e);
+        }
+        return null;
+    }
+
     public long elementCount() {
         return data.getLong(0);
     }
@@ -55,6 +67,10 @@ public class LedHeader {
     public LedHeader elementSize(int elementSize) {
         data.putInt(Long.BYTES, elementSize);
         return this;
+    }
+
+    public ByteBuffer data() {
+        return data;
     }
 
     public byte[] toByteArray() {

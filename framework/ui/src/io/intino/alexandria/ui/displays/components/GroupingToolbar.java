@@ -17,7 +17,9 @@ import static java.util.stream.Collectors.toList;
 public class GroupingToolbar<DN extends GroupingToolbarNotifier, B extends Box> extends AbstractGroupingToolbar<B> {
     private java.util.Map<String, List<String>> filtersMap = new HashMap<>();
     private List<Grouping<?, ?>> groupings = new ArrayList<>();
+    private Listener beforeApplyFiltersListener;
     private ApplyFiltersListener applyFiltersListener;
+    private Listener beforeResetFiltersListener;
     private Listener resetFiltersListener;
     private boolean reseting = false;
 
@@ -33,14 +35,18 @@ public class GroupingToolbar<DN extends GroupingToolbarNotifier, B extends Box> 
         return this;
     }
 
+    public GroupingToolbar<DN, B> onBeforeApply(Listener listener) {
+        this.beforeApplyFiltersListener = listener;
+        return this;
+    }
+
     public GroupingToolbar<DN, B> onApply(ApplyFiltersListener listener) {
         this.applyFiltersListener = listener;
         return this;
     }
 
-    public GroupingToolbar<DN, B> apply() {
-        collections().forEach(c -> c.filter(filtersMap));
-        if (applyFiltersListener != null) applyFiltersListener.accept(new ApplyFiltersEvent(this, filtersMap));
+    public GroupingToolbar<DN, B> onBeforeReset(Listener listener) {
+        this.beforeResetFiltersListener = listener;
         return this;
     }
 
@@ -49,8 +55,16 @@ public class GroupingToolbar<DN extends GroupingToolbarNotifier, B extends Box> 
         return this;
     }
 
+    public GroupingToolbar<DN, B> apply() {
+        if (beforeApplyFiltersListener != null) beforeApplyFiltersListener.accept(new Event(this));
+        collections().forEach(c -> c.filter(filtersMap));
+        if (applyFiltersListener != null) applyFiltersListener.accept(new ApplyFiltersEvent(this, filtersMap));
+        return this;
+    }
+
     public GroupingToolbar<DN, B> reset() {
         reseting = true;
+        if (beforeResetFiltersListener != null) beforeResetFiltersListener.accept(new Event(this));
         filtersMap.clear();
         groupings.forEach(g -> g.select(Collections.emptyList()));
         clearCollections();

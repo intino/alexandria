@@ -2,6 +2,7 @@ package io.intino.alexandria.led;
 
 import io.intino.alexandria.logger.Logger;
 import io.intino.test.transactions.TestTransaction;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -23,6 +24,7 @@ public class LedStreamBuilderMultipleInstancesTest {
     private static final int BLOCK_SIZE = 100_000;
     private static final int NUM_DISTINCT_TRANSACTIONS = 10;
 
+    @Ignore
     @Test
     public void test() {
         System.out.println(">> Testing " + TestTransaction.SIZE);

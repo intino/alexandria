@@ -76,7 +76,19 @@ public class LedReader {
 		return LedStream.empty();
 	}
 
-	private <T extends Transaction> LedStream<T> allocate(SnappyInputStream inputStream, TransactionFactory<T> factory, int transactionSize) {
+	public <T extends Transaction> LedStream<T> readUncompressed(int elementSize, TransactionFactory<T> factory) {
+		try {
+			if(source.available() == 0) {
+				return LedStream.empty();
+			}
+			return allocate(source, factory, elementSize);
+		} catch (IOException e) {
+			Logger.error(e);
+		}
+		return LedStream.empty();
+	}
+
+	private <T extends Transaction> LedStream<T> allocate(InputStream inputStream, TransactionFactory<T> factory, int transactionSize) {
 		return new InputLedStream<>(inputStream, factory, transactionSize);
 	}
 
