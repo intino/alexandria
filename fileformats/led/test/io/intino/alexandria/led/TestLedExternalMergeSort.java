@@ -23,7 +23,7 @@ public class TestLedExternalMergeSort {
         // createLed(file);
 
         System.out.println(">> Merging...");
-        LedUtils.mergeSort(file, destFile);
+        LedUtils.sort(file, destFile);
         System.out.println(">> Files merged!");
 
         System.out.println(">> Checking sorting...");

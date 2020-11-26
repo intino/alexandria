@@ -25,39 +25,46 @@ import static java.nio.file.StandardOpenOption.READ;
 import static java.nio.file.StandardOpenOption.WRITE;
 import static java.util.Objects.requireNonNull;
 
-public class LedExternalMergeSort implements LedSortAlgorithm {
+// Memory used = numTransactionsInMemory * transactionSize + priorityQueue of numTransactionsInMemory
+public class LedExternalMergeSort {
 
-    private static final int DEFAULT_CHUNK_NUM_TRANSACTIONS = 1024;
-    private static final int DEFAULT_RUN_NUM_TRANSACTIONS = 1_000_000;
+    private static final int DEFAULT_NUM_TRANSACTIONS_IN_MEMORY = 100_000;
 
     private double start = 0;
 
-    @Override
     public void sort(File srcFile, File destFile) {
+        sort(srcFile.getParentFile(), srcFile, destFile, DEFAULT_NUM_TRANSACTIONS_IN_MEMORY);
+    }
+
+    public void sort(File srcFile, File destFile, int numTransactionsInMemory) {
+        sort(srcFile.getParentFile(), srcFile, destFile, numTransactionsInMemory);
+    }
+
+    public void sort(File tempDirectory, File srcFile, File destFile, int numTransactionsInMemory) {
         try {
             start = System.currentTimeMillis();
-            final ChunkCreationInfo chunkCreationInfo = createSortedChunks(srcFile);
+            final ChunkCreationInfo chunkCreationInfo = createSortedChunks(tempDirectory, srcFile, numTransactionsInMemory);
             mergeSortedChunks(chunkCreationInfo, destFile);
         } catch(Exception e) {
             Logger.error(e);
         }
     }
 
-    private ChunkCreationInfo createSortedChunks(File srcFile) {
+    private ChunkCreationInfo createSortedChunks(File tempDir, File srcFile, int numTransactionsInMemory) {
         //System.out.println(">> Creating sorted chunks... " + time());
         try(FileChannel fileChannel = FileChannel.open(srcFile.toPath(), READ)) {
-            final Path chunkDir = Files.createDirectory(srcFile.getParentFile().toPath()
+            final Path chunkDir = Files.createDirectory(tempDir.toPath()
                     .resolve("ChunksFolder_"+System.nanoTime()));
             final String srcFileName = srcFile.getName();
             LedHeader header = requireNonNull(LedHeader.from(fileChannel));
             final int transactionSize = header.elementSize();
-            final int chunkSize = DEFAULT_RUN_NUM_TRANSACTIONS * transactionSize;
+            final int chunkSize = numTransactionsInMemory * transactionSize;
             final int numChunks = Math.round(header.elementCount() / (float)chunkSize);
             Queue<Path> chunks = new ArrayDeque<>(numChunks);
             ByteBuffer buffer = allocBuffer(chunkSize);
             ByteBuffer tempBuffer = allocBuffer(chunkSize);
             StackAllocator<GenericTransaction> allocator = StackAllocators.newManaged(transactionSize, buffer, GenericTransaction::new);
-            PriorityQueue<GenericTransaction> priorityQueue = new PriorityQueue<>(DEFAULT_RUN_NUM_TRANSACTIONS);
+            PriorityQueue<GenericTransaction> priorityQueue = new PriorityQueue<>(numTransactionsInMemory);
 
             for(int i = 0;fileChannel.position() < fileChannel.size();i++) {
                 Path chunk = Files.createFile(chunkDir.resolve("Chunk["+i+"]_" + srcFileName));
