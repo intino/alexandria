@@ -13,10 +13,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -132,10 +129,16 @@ public final class HeapLedStreamBuilder<T extends Transaction> implements LedStr
             return;
         }
         LedWriter ledWriter = new LedWriter(getCurrentFile().toFile());
-        ledWriter.write(LedStream.fromStream(transactionSize, sortedQueue.stream()));
+        sortedQueue.iterator();
+        ledWriter.write(LedStream.fromStream(transactionSize, getSortedTransactions()));
         sortedQueue.clear();
         buffer.clear();
         allocator.clear();
+    }
+
+    private Stream<T> getSortedTransactions() {
+        return Stream.generate(() -> sortedQueue.poll())
+                .takeWhile(Objects::nonNull);
     }
 
     private Path getCurrentFile() {
@@ -161,14 +164,9 @@ public final class HeapLedStreamBuilder<T extends Transaction> implements LedStr
 
     private void deleteAllTempFiles() {
         for(Path tempLedFile : tempLeds) {
-            try {
-                if(Files.exists(tempLedFile)) {
-                    Files.delete(tempLedFile);
-                    tempLedFile.toFile().delete();
-                    tempLedFile.toFile().deleteOnExit();
-                }
-            } catch (IOException e) {
-                Logger.error(e);
+            if(Files.exists(tempLedFile)) {
+                tempLedFile.toFile().delete();
+                tempLedFile.toFile().deleteOnExit();
             }
         }
         tempLeds.clear();
@@ -176,15 +174,6 @@ public final class HeapLedStreamBuilder<T extends Transaction> implements LedStr
 
     private LedStream<T> read(Path path) {
         return new LedReader(path.toFile()).read(factory);
-    }
-
-    private InputStream createInputStream(Path path) {
-        try {
-            return Files.newInputStream(path);
-        } catch (IOException e) {
-            Logger.error(e);
-            throw new RuntimeException(e);
-        }
     }
 
     private void freeBuildBuffer() {
