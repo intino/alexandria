@@ -1,6 +1,4 @@
-package io.intino.alexandria.ui.displays.components.microsite;
-
-import io.intino.alexandria.ui.documentation.model.other.MicroSiteWidget;
+package io.intino.alexandria.office;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -11,12 +9,12 @@ public class MicroSiteBuilderOfTsv_ {
 		MicroSiteBuilderOfTsv builder = new MicroSiteBuilderOfTsv(config());
 		File temp = new File("./temp/out.zip");
 		temp.getParentFile().mkdirs();
-		builder.generate(fileOf("/example.tsv"), temp);
+		builder.build(fileOf("/example.tsv"), temp);
 	}
 
 	private static File fileOf(String name) {
 		try {
-			return new File(MicroSiteWidget.class.getResource(name).toURI());
+			return new File(MicroSiteBuilderOfTsv_.class.getResource(name).toURI());
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 			return null;
