@@ -1,4 +1,4 @@
-package io.intino.alexandria.ui.displays.components.microsite;
+package io.intino.alexandria.office;
 
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.zip.Zip;
@@ -7,8 +7,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -28,7 +26,7 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 		this.translator = translator;
 	}
 
-	public void generate(File tsv, File out) {
+	public void build(File tsv, File out) {
 		try {
 			Zip zip = new Zip(out);
 			pages.clear();
