@@ -99,7 +99,7 @@ export default class BaseSlider extends AbstractBaseSlider {
 		if (!this.state.visible) return (<React.Fragment/>);
 
 		if (this.state.ordinals.length <= 0)
-			return (<div style={this.style()}>{this.translate("No ordinals defined!")}</div>);
+			return (<div style={this.style()}></div>);
 
 		const range = this.state.range;
 		if (range == null)

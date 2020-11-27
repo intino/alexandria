@@ -16,6 +16,12 @@ const styles = theme => ({
         marginRight:'20px',
         marginTop:'10px',
     },
+    downloadContent: {
+        position:'absolute',
+        right:'0',
+        marginRight:'110px',
+        marginTop:'10px',
+    },
 });
 
 class MicroSite extends AbstractMicroSite {
@@ -27,6 +33,7 @@ class MicroSite extends AbstractMicroSite {
 		this.state = {
 		    content: null,
 		    downloadVisible: false,
+		    downloadContentVisible: false,
 		    ...this.state,
 		};
 	};
@@ -35,10 +42,12 @@ class MicroSite extends AbstractMicroSite {
         const style = "";
         const { classes, theme } = this.props;
         const downloadStyle = this.state.downloadVisible ? { display: 'block' } : { display: 'none' };
+        const downloadContentStyle = this.state.downloadContentVisible ? { display: 'block' } : { display: 'none' };
         if (this.state.content == null) return (<div className="layout vertical flex center-center" style={{height:'100%',width:'100%'}}><RiseLoader color={theme.palette.secondary.main} loading={true}/></div>);
         return (
             <React.Fragment>
-                <Button className={classes.download} style={downloadStyle} size="small" color="primary" onClick={this.handleDownload.bind(this)}>{this.translate("Download")}</Button>
+                <Button className={classes.download} style={{marginRight:'10px',...downloadStyle}} size="small" color="primary" onClick={this.handleDownload.bind(this)}>{this.translate("Download")}</Button>
+                <Button className={classes.downloadContent} style={downloadContentStyle} size="small" color="primary" onClick={this.handleDownloadContent.bind(this)}>{this.translate("Download content")}</Button>
                 <div style={{height:'100%'}} dangerouslySetInnerHTML={{__html: style + this.state.content}}></div>
             </React.Fragment>
         );
@@ -48,6 +57,10 @@ class MicroSite extends AbstractMicroSite {
         this.requester.download();
     };
 
+    handleDownloadContent = () => {
+        this.requester.downloadContent();
+    };
+
     renderPage = (content) => {
         this.setState({content: content, downloadVisible: true});
     };
@@ -55,6 +68,11 @@ class MicroSite extends AbstractMicroSite {
     renderPageNotFound = () => {
         this.setState({content : "<h1 style='height:100%' class='layout vertical flex center-center'>" + this.translate("Page not found") + "</h1>", downloadVisible: false});
     };
+
+    downloadContentVisibility = (value) => {
+        this.setState({ downloadContentVisible: value });
+    };
+
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(MicroSite));

@@ -46,6 +46,7 @@ public class MicroSite<DN extends MicroSiteNotifier, B extends Box> extends Abst
 	public void refresh() {
 		super.refresh();
 		renderPage();
+		notifier.downloadContentVisibility(contentEntry() != null);
 	}
 
 	public UIFile download() {
@@ -65,6 +66,33 @@ public class MicroSite<DN extends MicroSiteNotifier, B extends Box> extends Abst
 				}
 			}
 		};
+	}
+
+	public UIFile downloadContent() {
+		return new UIFile() {
+			@Override
+			public String label() {
+				return contentEntryFilename();
+			}
+
+			@Override
+			public InputStream content() {
+				String content = contentEntry();
+				return new ByteArrayInputStream(content != null ? content.getBytes() : new byte[0]);
+			}
+		};
+	}
+
+	private String contentEntryFilename() {
+		return site.getName().substring(0, site.getName().lastIndexOf(".")) + ".tsv";
+	}
+
+	private String contentEntry() {
+		try {
+			return siteReader.read(contentEntryFilename());
+		} catch (IOException e) {
+			return null;
+		}
 	}
 
 	protected MicroSite<DN, B> _site(URL site) {

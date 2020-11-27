@@ -142,7 +142,10 @@ Component proxyStamp
 Component microSite
 	Notification renderPage as Text
 	Notification renderPageNotFound
+	Notification downloadContentVisibility as Bool
+
 	Request(Asset) download
+	Request(Asset) downloadContent
 
 Component frame
 	Notification refresh as Text
