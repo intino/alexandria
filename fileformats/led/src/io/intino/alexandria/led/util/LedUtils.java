@@ -8,9 +8,19 @@ import java.io.IOException;
 
 public final class LedUtils {
 
-    public static void mergeSort(File srcFile, File destFile) {
+    public static void sort(File srcFile, File destFile) {
         createIfNotExists(destFile);
         new LedExternalMergeSort().sort(srcFile, destFile);
+    }
+
+    public static void sort(File tempDir, File srcFile, File destFile, int numTransactionsInMemory) {
+        createIfNotExists(destFile);
+        new LedExternalMergeSort().sort(tempDir, srcFile, destFile, numTransactionsInMemory);
+    }
+
+    public static void sort(File srcFile, File destFile, int numTransactionsInMemory) {
+        createIfNotExists(destFile);
+        new LedExternalMergeSort().sort(srcFile, destFile, numTransactionsInMemory);
     }
 
     private static void createIfNotExists(File destFile) {
@@ -23,7 +33,6 @@ public final class LedUtils {
             }
         }
     }
-
 
     private LedUtils() {}
 }
