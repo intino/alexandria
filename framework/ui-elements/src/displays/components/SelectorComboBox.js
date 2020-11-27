@@ -62,7 +62,8 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 						components={{ Option: this.renderOption.bind(this)}}
 						menuPlacement="auto" value={value}
 						onChange={this.handleChange.bind(this)}
-						onMenuOpen={this.handleOpen.bind(this)}/>
+						onMenuOpen={this.handleOpen.bind(this)}
+						noOptionsMessage={() => this.translate("No options")}/>
 			</div>
 		);
 	};

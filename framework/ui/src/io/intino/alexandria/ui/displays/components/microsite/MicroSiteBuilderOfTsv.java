@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -36,16 +37,20 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 			Stream<String> content = Files.lines(tsv.toPath());
 			if (count == 0) return;
 			generatePages(content, count);
-			addTsv(zip, tsv);
 			zip.write(pages);
+			addTsv(zip, tsv, filenameOf(out));
 			Logger.info("Site " + tsv.getAbsolutePath() + " generated");
 		} catch (IOException e) {
 			Logger.error(e);
 		}
 	}
 
-	private void addTsv(Zip zip, File tsv) throws IOException {
-		zip.write("data.tsv", new FileInputStream(tsv));
+	private String filenameOf(File file) {
+		return file.getName().substring(0, file.getName().lastIndexOf("."));
+	}
+
+	private void addTsv(Zip zip, File tsv, String filename) throws IOException {
+		zip.write(filename + ".tsv", new FileInputStream(tsv));
 	}
 
 	private void generatePages(Stream<String> lines, long count) {
