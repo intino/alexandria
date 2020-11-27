@@ -59,6 +59,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         downloadSelectionExamples.visible(widget instanceof DownloadSelectionWidget);
         actionableExamples.visible(widget instanceof ActionableWidget && !(widget instanceof ExportWidget) && !(widget instanceof DownloadWidget) && !(widget instanceof DownloadSelectionWidget));
         groupingExamples.visible(widget instanceof GroupingWidget);
+        groupingToolbarExamples.visible(widget instanceof GroupingToolbarWidget);
         sortingExamples.visible(widget instanceof SortingWidget);
         searchBoxExamples.visible(widget instanceof SearchBoxWidget);
         sliderExamples.visible(widget instanceof SliderWidget);

@@ -4,12 +4,14 @@ import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.zip.Zip;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 	private final Config config;
@@ -29,33 +31,38 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 		try {
 			Zip zip = new Zip(out);
 			pages.clear();
-			String content = new String(Files.readAllBytes(tsv.toPath()));
-			addTsv(content);
-			if (content.isEmpty()) return;
-			List<String> lines = Arrays.asList(content.split("\n"));
-			generatePages(lines);
+			long count = Files.lines(tsv.toPath()).count();
+			Logger.info("Generating site for " + tsv.getAbsolutePath() + ". Count pages: " + pageOf(count)+1);
+			Stream<String> content = Files.lines(tsv.toPath());
+			if (count == 0) return;
+			generatePages(content, count);
+			addTsv(zip, tsv);
 			zip.write(pages);
+			Logger.info("Site " + tsv.getAbsolutePath() + " generated");
 		} catch (IOException e) {
 			Logger.error(e);
 		}
 	}
 
-	private void addTsv(String tsv) throws IOException {
-		pages.put("data.tsv", tsv);
+	private void addTsv(Zip zip, File tsv) throws IOException {
+		zip.write("data.tsv", new FileInputStream(tsv));
 	}
 
-	private void generatePages(List<String> lines) throws IOException {
-		int countPages = pageOf(lines.size())+1;
+	private void generatePages(Stream<String> lines, long count) {
+		int countPages = pageOf(count)+1;
 		int currentPage = 0;
+		int i = 0;
 		StringBuilder collection = new StringBuilder();
-		for (int i=0; i<lines.size(); i++) {
+		Iterator<String> iterator = lines.iterator();
+		while (iterator.hasNext()) {
 			int page = pageOf(i);
 			if (page != currentPage) {
 				generatePage(page-1, countPages, collection);
 				collection = new StringBuilder();
 				currentPage++;
 			}
-			collection.append(toRow(lines.get(i)));
+			collection.append(toRow(iterator.next()));
+			i++;
 		}
 		generatePage(countPages-1, countPages, collection);
 	}
@@ -103,7 +110,8 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 
 	private int pageOf(long current) {
 		if (current == 0) return 0;
-		return (int) (Math.floor(current / config.pageSize) + (current % config.pageSize > 0 ? 1 : 0)) - 1;
+		if (config.pageSize == 0) return 0;
+		return (int) (Math.floor((double)current / config.pageSize) + (current % config.pageSize > 0 ? 1 : 0)) - 1;
 	}
 
 	public static class Config {

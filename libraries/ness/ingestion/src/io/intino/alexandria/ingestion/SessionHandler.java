@@ -28,12 +28,12 @@ public class SessionHandler {
 
 	public SetSession createSetSession() {
 		PrivateProvider provider = new PrivateProvider();
-		return new SetSession(provider, new SetSessionFileWriter(provider.outputStream(Session.Type.set)));
+		return new SetSession(provider);
 	}
 
 	public SetSession createSetSession(int autoFlushSize) {
 		PrivateProvider provider = new PrivateProvider();
-		return new SetSession(provider, new SetSessionFileWriter(provider.outputStream(Session.Type.set)), autoFlushSize);
+		return new SetSession(provider, autoFlushSize);
 	}
 
 	public EventSession createEventSession() {
@@ -41,7 +41,11 @@ public class SessionHandler {
 	}
 
 	public TransactionSession createTransactionSession() {
-		return new TransactionSession(new PrivateProvider());
+		return new TransactionSession(new PrivateProvider(), new File(root, "temp"));
+	}
+
+	public TransactionSession createTransactionSession(int transactionBufferSize) {
+		return new TransactionSession(new PrivateProvider(), new File(root, "temp"), transactionBufferSize);
 	}
 
 	public void pushTo(URI uri) {

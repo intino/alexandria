@@ -21,7 +21,7 @@ public class Model {
 		Text, Number, Image, File, Date, Location,
 		Chart, Block, List, Table, DynamicTable, Task, OpenPage, OpenBlock, Export,
 		Download, DownloadSelection,
-		Grouping, Sorting, SearchBox, Map, Slider, Selector,
+		Grouping, GroupingToolbar, Sorting, SearchBox, Map, Slider, Selector,
 		Dashboard, Dialog, Divider, User, Stepper, Frame, MicroSite;
 
 		public static WidgetType from(String type) {
@@ -60,6 +60,7 @@ public class Model {
 		map.put(WidgetType.Download, new DownloadWidget());
 		map.put(WidgetType.DownloadSelection, new DownloadSelectionWidget());
 		map.put(WidgetType.Grouping, new GroupingWidget());
+		map.put(WidgetType.GroupingToolbar, new GroupingToolbarWidget());
 		map.put(WidgetType.Sorting, new SortingWidget());
 		map.put(WidgetType.SearchBox, new SearchBoxWidget());
 		map.put(WidgetType.Dialog, new DialogWidget());

@@ -7,8 +7,8 @@ import io.intino.alexandria.ui.model.Geometry;
 import io.intino.alexandria.ui.model.PlaceMark;
 import io.intino.alexandria.ui.model.datasource.*;
 import io.intino.alexandria.ui.model.datasource.filters.GroupFilter;
+import io.intino.alexandria.ui.model.dynamictable.Cell;
 import io.intino.alexandria.ui.model.dynamictable.Column;
-import io.intino.alexandria.ui.model.dynamictable.Row;
 import io.intino.alexandria.ui.model.dynamictable.Section;
 import io.intino.alexandria.ui.model.locations.Point;
 import io.intino.alexandria.ui.model.locations.Polygon;
@@ -99,17 +99,21 @@ public class Datasources {
 			private Section residencial() {
 				Section residencial = new Section("Residencial", "white", "grey", 12);
 				Section cartera = residencial.add("Cartera", "white", "#115293", 11);
-				cartera.columns("clientes", "adeudos", "kwh", "importe", "iva", "dap");
-				cartera.add("DA", 1, 11, 12, 12, 13, 1);
+				cartera.columns("clientes (%)", "adeudos", "kwh", "importe", "iva", "dap");
+				cartera.column("clientes (%)").operator(Column.Operator.Average);
+				cartera.add("DA", 1, 11, 12111, 12, 13, 1);
 				cartera.add("DB", 11, 1, 2, 4, 5, 2);
+				cartera.add("DC", 0, 0, 0, 0, 0, 0);
 				Section carteraVencida = residencial.add("Cartera Vencida", "white", "#720427", 11);
 				carteraVencida.columns("clientes", "adeudos", "importe");
 				carteraVencida.add("DA", 21212, 1212, 121);
 				carteraVencida.add("DB", 192, 823, 12);
+				carteraVencida.add("DC", 0, 0, 0);
 				Section carteraRezago = residencial.add("Cartera Rezago", "white", "#896908", 11);
 				carteraRezago.columns("clientes", "adeudos", "importe");
 				carteraRezago.add("DA", 128, 23, 12);
 				carteraRezago.add("DB", 339, 232, 2);
+				carteraRezago.add("DC", 0, 0, 0);
 				return residencial;
 			}
 
@@ -117,24 +121,28 @@ public class Datasources {
 				Section residencial = new Section("Comercial", "white", "grey", 11);
 				Section cartera = new Section("Cartera", "white", "#115293", 11);
 				residencial.add(cartera);
-				cartera.columns("clientes", "adeudos", "kwh", "importe", "iva", "dap");
+				cartera.columns("clientes (%)", "adeudos", "kwh", "importe", "iva", "dap");
+				cartera.column("clientes (%)").operator(Column.Operator.Average);
 				cartera.add("DA", 1, 11, 12, 12, 13, 1);
 				cartera.add("DB", 11, 1, 2, 4, 5, 2);
+				cartera.add("DC", 0, 0, 0, 0, 0, 0);
 				Section carteraVencida = new Section("Cartera Vencida", "white", "#720427", 11);
 				residencial.add(carteraVencida);
 				carteraVencida.columns("clientes", "adeudos", "importe");
 				carteraVencida.add("DA", 21212, 1212, 121);
 				carteraVencida.add("DB", 192, 823, 12);
+				carteraVencida.add("DC", 0, 0, 0);
 				Section carteraRezago = new Section("Cartera Rezago", "white", "#896908", 11);
 				residencial.add(carteraRezago);
 				carteraRezago.columns("clientes", "adeudos", "importe");
 				carteraRezago.add("DA", 128, 23, 12);
 				carteraRezago.add("DB", 339, 232, 2);
+				carteraRezago.add("DC", 0, 0, 0);
 				return residencial;
 			}
 
-			private Column column(String name, double value) {
-				return new Column(name, value);
+			private Cell column(String name, double value) {
+				return new Cell(name, value);
 			}
 		};
 	}

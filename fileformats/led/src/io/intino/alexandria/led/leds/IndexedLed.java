@@ -2,24 +2,17 @@ package io.intino.alexandria.led.leds;
 
 import io.intino.alexandria.led.Led;
 import io.intino.alexandria.led.Transaction;
-import io.intino.alexandria.led.allocators.TransactionFactory;
 import io.intino.alexandria.led.allocators.indexed.IndexedAllocator;
-import io.intino.alexandria.led.allocators.indexed.ManagedIndexedAllocator;
 
-import java.nio.ByteBuffer;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
 
-public class IndexedLed<S extends Transaction> implements Led<S> {
+public class IndexedLed<T extends Transaction> implements Led<T> {
 
-	private final IndexedAllocator<S> allocator;
+	private final IndexedAllocator<T> allocator;
 
-	public IndexedLed(IndexedAllocator<S> allocator) {
+	public IndexedLed(IndexedAllocator<T> allocator) {
 		this.allocator = requireNonNull(allocator);
 	}
 
@@ -33,24 +26,10 @@ public class IndexedLed<S extends Transaction> implements Led<S> {
 	}
 
 	@Override
-	public S transaction(int index) {
+	public T transaction(int index) {
 		if(index >= size()) {
 			throw new IndexOutOfBoundsException("Index >= " + size());
 		}
 		return allocator.malloc(index);
-	}
-
-	@Override
-	public Iterator<S> iterator() {
-		return stream().iterator();
-	}
-
-	@Override
-	public List<S> elements() {
-		return stream().collect(Collectors.toList());
-	}
-
-	private Stream<S> stream() {
-		return IntStream.range(0, (int) size()).mapToObj(allocator::malloc);
 	}
 }

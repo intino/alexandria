@@ -424,6 +424,10 @@ def type(binding & grouping)
 	if ($name != null) $name.bindTo($collection...[,]);
 end
 
+def type(binding & groupingToolbar)
+	if ($name != null) $name.bindTo($grouping...[,]);
+end
+
 def type(binding & sorting)
 	if ($name != null) $name.bindTo($collection...[,]);
 end

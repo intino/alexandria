@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -39,7 +40,7 @@ public class FS {
 
 	public static void copyInto(File destination, InputStream inputStream) {
 		try {
-			Files.copy(inputStream, destination.toPath());
+			Files.copy(inputStream, destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			inputStream.close();
 		} catch (IOException e) {
 			Logger.error(e);

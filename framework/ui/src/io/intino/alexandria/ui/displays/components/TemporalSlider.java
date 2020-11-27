@@ -131,7 +131,7 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
     void updateRange() {
         Ordinal ordinal = ordinal();
         if (ordinal == null) return;
-        long count = toLong(max);
+        long count = toLong(max) + 1;
         _range(0, count);
         if (notifier != null) {
             notifier.refreshRange(rangeSchema());

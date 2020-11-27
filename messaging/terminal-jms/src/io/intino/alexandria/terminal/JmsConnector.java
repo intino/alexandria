@@ -33,8 +33,6 @@ public class JmsConnector implements Connector {
 	private final Map<String, List<MessageConsumer>> messageConsumers;
 	private final Map<Consumer<Event>, Integer> jmsEventConsumers;
 	private final Map<MessageConsumer, Integer> jmsMessageConsumers;
-	private final EventOutBox eventOutBox;
-	private final MessageOutBox messageOutBox;
 	private final String brokerUrl;
 	private final String user;
 	private final String password;
@@ -42,6 +40,8 @@ public class JmsConnector implements Connector {
 	private final boolean transactedSession;
 	private final AtomicBoolean connected = new AtomicBoolean(false);
 	private final AtomicBoolean started = new AtomicBoolean(false);
+	private EventOutBox eventOutBox;
+	private MessageOutBox messageOutBox;
 	private Connection connection;
 	private Session session;
 	private ScheduledExecutorService scheduler;
@@ -56,14 +56,16 @@ public class JmsConnector implements Connector {
 		this.password = password;
 		this.clientId = clientId;
 		this.transactedSession = transactedSession;
-		this.eventOutBox = new EventOutBox(new File(outBoxDirectory, "events"));
-		this.messageOutBox = new MessageOutBox(new File(outBoxDirectory, "requests"));
 		producers = new HashMap<>();
 		consumers = new HashMap<>();
 		jmsEventConsumers = new HashMap<>();
 		jmsMessageConsumers = new HashMap<>();
 		eventConsumers = new HashMap<>();
 		messageConsumers = new HashMap<>();
+		if (outBoxDirectory != null) {
+			this.eventOutBox = new EventOutBox(new File(outBoxDirectory, "events"));
+			this.messageOutBox = new MessageOutBox(new File(outBoxDirectory, "requests"));
+		}
 	}
 
 	public void start() {
@@ -71,38 +73,38 @@ public class JmsConnector implements Connector {
 			Logger.warn("Invalid broker URL. Connection aborted");
 			return;
 		}
-		connect();
+		try {
+			connect();
+		} catch (JMSException e) {
+			Logger.error(e);
+		}
 		started.set(true);
 		if (scheduler == null) {
 			scheduler = Executors.newScheduledThreadPool(1);
-			scheduler.scheduleAtFixedRate(this::checkConnection, 15, 1, TimeUnit.MINUTES);
+			scheduler.scheduleAtFixedRate(this::checkConnection, 15, 10, TimeUnit.MINUTES);
 		}
 	}
 
-	private void connect() {
-		try {
-			if (!Broker.isRunning(brokerUrl)) {
-				Logger.warn("Broker Unreachable. Connection aborted");
-				return;
+	private void connect() throws JMSException {
+		if (!Broker.isRunning(brokerUrl)) {
+			Logger.warn("Broker Unreachable. Connection aborted");
+			return;
+		}
+		initConnection();
+		if (connection != null && ((ActiveMQConnection) connection).isStarted()) {
+			clearProducers();
+			session = createSession(transactedSession);
+			if (session != null && ((ActiveMQSession) session).isRunning()) {
+				connected.set(true);
+				recoverEventsAndMessages();
 			}
-			initConnection();
-			if (connection != null && ((ActiveMQConnection) connection).isStarted()) {
-				clearProducers();
-				session = createSession(transactedSession);
-				if (session != null && ((ActiveMQSession) session).isRunning()) {
-					connected.set(true);
-					recoverEventsAndMessages();
-				}
-			}
-		} catch (JMSException e) {
-			Logger.error(e);
 		}
 	}
 
 	@Override
 	public synchronized void sendEvent(String path, Event event) {
 		new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList())).forEach(eventConsumer -> eventConsumer.accept(event));
-		if (!doSendEvent(path, event)) eventOutBox.push(path, event);
+		if (!doSendEvent(path, event) && eventOutBox != null) eventOutBox.push(path, event);
 	}
 
 	@Override
@@ -118,7 +120,7 @@ public class JmsConnector implements Connector {
 	@Override
 	public void sendMessage(String path, String message) {
 		recoverEventsAndMessages();
-		if (!doSendMessage(path, message)) messageOutBox.push(path, message);
+		if (!doSendMessage(path, message) && messageOutBox != null) messageOutBox.push(path, message);
 	}
 
 	@Override
@@ -357,7 +359,7 @@ public class JmsConnector implements Connector {
 		if (!started.get()) return;
 		if (!eventConsumers.isEmpty() && consumers.isEmpty())
 			for (String path : eventConsumers.keySet()) consumers.put(path, topicConsumer(path));
-		if (!messageConsumers.isEmpty())
+		if (!messageConsumers.isEmpty() && consumers.isEmpty())
 			for (String path : messageConsumers.keySet()) {
 				if (!consumers.containsKey(path) && session != null) consumers.put(path, queueConsumer(path));
 				for (MessageConsumer mConsumer : messageConsumers.get(path)) {
@@ -374,6 +376,7 @@ public class JmsConnector implements Connector {
 	}
 
 	private void recoverEvents() {
+		if (eventOutBox == null) return;
 		synchronized (eventOutBox) {
 			if (!eventOutBox.isEmpty())
 				while (!eventOutBox.isEmpty()) {
@@ -386,6 +389,7 @@ public class JmsConnector implements Connector {
 	}
 
 	private void recoverMessages() {
+		if (messageOutBox == null) return;
 		synchronized (messageOutBox) {
 			if (!messageOutBox.isEmpty())
 				while (!messageOutBox.isEmpty()) {
@@ -408,7 +412,10 @@ public class JmsConnector implements Connector {
 		}
 		Logger.debug("Restarting data-hub connection...");
 		stop();
-		connect();
+		try {
+			connect();
+		} catch (JMSException e) {
+		}
 		connected.set(true);
 	}
 

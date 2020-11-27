@@ -8,6 +8,7 @@ import io.intino.alexandria.ui.model.datasource.Filter;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public abstract class CollectionBehavior<DS extends Datasource<Item>, Item, IL extends ItemLoader<DS, Item>> {
@@ -46,6 +47,10 @@ public abstract class CollectionBehavior<DS extends Datasource<Item>, Item, IL e
 
 	public void filter(String grouping, List<String> groups) {
 		computeUpdate(e -> itemLoader.filter(grouping, groups));
+	}
+
+	public void filter(Map<String, List<String>> groupings) {
+		computeUpdate(e -> itemLoader.filter(groupings));
 	}
 
 	public void filter(String grouping, Instant from, Instant to) {

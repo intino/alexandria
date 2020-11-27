@@ -1,7 +1,5 @@
 package io.intino.alexandria.terminal;
 
-import io.intino.alexandria.logger.Logger;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -19,7 +17,6 @@ public class Broker {
 			}
 			return true;
 		} catch (IOException e) {
-			Logger.error(e);
 			return false;
 		}
 	}

@@ -5,22 +5,28 @@ import io.intino.alexandria.led.allocators.TransactionFactory;
 import io.intino.alexandria.led.buffers.store.NativePointerStore;
 import io.intino.alexandria.led.util.MemoryUtils;
 import io.intino.alexandria.led.util.ModifiableMemoryAddress;
+import io.intino.alexandria.led.util.NativePointerCleaner;
 
-import static io.intino.alexandria.led.util.MemoryUtils.NULL;
-import static io.intino.alexandria.led.util.MemoryUtils.memset;
+import java.lang.ref.Cleaner;
+
+import static io.intino.alexandria.led.util.MemoryUtils.*;
 
 public class UnmanagedIndexedAllocator<T extends Transaction> implements IndexedAllocator<T> {
+
+	private static final Cleaner CLEANER = Cleaner.create();
 
 	private NativePointerStore store;
 	private final ModifiableMemoryAddress address;
 	private final int elementSize;
 	private final TransactionFactory<T> factory;
+	private final Cleaner.Cleanable cleanable;
 
 	public UnmanagedIndexedAllocator(long baseAddress, long baseOffset, long size, int elementSize, TransactionFactory<T> factory) {
 		this.elementSize = elementSize;
 		this.factory = factory;
 		this.address = new ModifiableMemoryAddress(baseAddress);
 		store = new NativePointerStore(address, baseOffset, size);
+		cleanable = CLEANER.register(this, new NativePointerCleaner(address));
 	}
 
 	public UnmanagedIndexedAllocator(long elementsCount, int elementSize, TransactionFactory<T> factory) {
@@ -29,6 +35,7 @@ public class UnmanagedIndexedAllocator<T extends Transaction> implements Indexed
 		final long size = elementsCount * elementSize;
 		address = new ModifiableMemoryAddress(MemoryUtils.malloc(size));
 		store = new NativePointerStore(address, 0, size);
+		cleanable = CLEANER.register(this, new NativePointerCleaner(address));
 	}
 
 	@Override
@@ -82,9 +89,9 @@ public class UnmanagedIndexedAllocator<T extends Transaction> implements Indexed
 	@Override
 	public void free() {
 		if (address.get() != NULL) {
-			MemoryUtils.free(store.storeImpl());
+			cleanable.clean();
 			store = null;
-			address.set(NULL);
 		}
 	}
+
 }

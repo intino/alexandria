@@ -26,6 +26,7 @@ public class SetIndexer {
 
 	public SetIndexer(File tank) {
 		this.tank = tank;
+		tank.mkdirs();
 	}
 
 	public void make() {
@@ -61,7 +62,7 @@ public class SetIndexer {
 
 	private MappStream mappStream(Zet zet) {
 		return new MappStream() {
-			ZetReader reader = new ZetReader(zet.inputStream());
+			final ZetReader reader = new ZetReader(zet.inputStream());
 
 			@Override
 			public Item next() {

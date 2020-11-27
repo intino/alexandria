@@ -51,6 +51,13 @@ Component grouping as ExtensionOf(baseGrouping)
 
 Component groupingComboBox as ExtensionOf(baseGrouping)
 
+Component groupingToolbar
+	Notification refreshFilters as Object(GroupingToolbarFilter) List
+
+	Request apply
+	Request reset
+	Request removeFilter as Text
+
 Component sorting
 	Request toggle
 

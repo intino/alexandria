@@ -7,11 +7,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-public class ListLed<S extends Transaction> implements Led<S> {
+public class ListLed<T extends Transaction> implements Led<T> {
 
-	private final List<S> list;
+	private final List<T> list;
 
-	public ListLed(List<S> list) {
+	public ListLed(List<T> list) {
 		this.list = Collections.unmodifiableList(list);
 	}
 
@@ -26,17 +26,17 @@ public class ListLed<S extends Transaction> implements Led<S> {
 	}
 
 	@Override
-	public S transaction(int index) {
+	public T transaction(int index) {
 		return list.get(index);
 	}
 
 	@Override
-	public Iterator<S> iterator() {
+	public Iterator<T> iterator() {
 		return list.iterator();
 	}
 
 	@Override
-	public List<S> elements() {
+	public List<T> elements() {
 		return list;
 	}
 }

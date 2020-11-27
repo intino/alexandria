@@ -11,6 +11,8 @@ Schema DynamicTableSection
 
 Schema DynamicTableColumn
 	Attribute label as Text
+	Attribute operator as Word("Sum" "Average")
+	Attribute metric as Text
 
 Schema DynamicTableRow
 	Attribute label as Text
@@ -19,8 +21,8 @@ Schema DynamicTableRow
 
 Schema DynamicTableCell
 	Attribute label as Text
-	Attribute absolute as Text
-	Attribute relative as Text
+	Attribute absolute as Real
+	Attribute relative as Real
 	Attribute(defaultValue=false) highlighted as Bool
 
 Schema DynamicTableRowParams
@@ -67,6 +69,10 @@ Schema CollectionItemsRenderedInfo
 Schema CollectionMoreItems
 	Attribute start as Integer
 	Attribute stop as Integer
+
+Schema GroupingToolbarFilter
+	Attribute name as Text
+	Attribute options as Text List
 
 Schema Group
 	Attribute label as Text

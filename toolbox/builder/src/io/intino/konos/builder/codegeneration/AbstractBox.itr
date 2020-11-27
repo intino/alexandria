@@ -297,7 +297,7 @@ def trigger(split)
 end
 
 def type(service & jmx) trigger(field)
-	private io.intino.alexandria.jmx.JMXServer $name+SnakeCaseToCamelCase+firstlowerCase;
+	protected io.intino.alexandria.jmx.JMXServer $name+SnakeCaseToCamelCase+firstlowerCase;
 end
 
 def type(service & slack) trigger(field)
@@ -317,19 +317,19 @@ def type(datalake & mirror) trigger(field)
 end
 
 def type(datalake) trigger(field)
-	private io.intino.alexandria.datalake.Datalake datalake;
+	protected io.intino.alexandria.datalake.Datalake datalake;
 end
 
 def type(connector) trigger(field)
-	private io.intino.alexandria.terminal.Connector connector;
+	protected io.intino.alexandria.terminal.Connector connector;
 end
 
 def type(terminal) trigger(field)
-	private $qn terminal;
+	protected $qn terminal;
 end
 
 def type(workflow) trigger(field)
-	private $package.bpm.Workflow workflow;
+	protected $package.bpm.Workflow workflow;
 end
 
 def type(service & messaging) trigger(getter)
@@ -451,7 +451,7 @@ def trigger(registerSoul)
 end
 
 def type(conf & file) trigger(parameter)
-	new java.io.File(configuration().get("$value"))
+	configuration().get("$value") == null ? null : new java.io.File(configuration().get("$value"))
 end
 
 def type(conf) trigger(parameter)
