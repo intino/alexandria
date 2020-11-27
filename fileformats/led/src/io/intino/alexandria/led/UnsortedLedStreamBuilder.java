@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 import static io.intino.alexandria.led.util.MemoryUtils.allocBuffer;
 import static java.nio.file.StandardOpenOption.*;
 
-public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStream.Builder<T> {
+public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStream.Builder<T>, AutoCloseable {
 
     private static final int DEFAULT_NUM_ELEMENTS_PER_BLOCK = 500_000;
 
@@ -130,10 +130,15 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
     }
 
     @Override
-    public LedStream<T> build() {
+    public void close() {
         writeCurrentBlockAndClear();
         free();
         writeHeader();
+    }
+
+    @Override
+    public LedStream<T> build() {
+        close();
         return new InputLedStream<>(getInputStream(), factory, transactionSize)
                 .onClose(this::deleteTempFile);
     }

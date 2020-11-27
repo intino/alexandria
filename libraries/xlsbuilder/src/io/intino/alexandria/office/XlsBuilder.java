@@ -181,6 +181,7 @@ public class XlsBuilder {
 		if (variable.equalsIgnoreCase("text")) return new DefineFactory().text(value);
 		if (variable.equalsIgnoreCase("image")) return new DefineFactory().image(value);
 		if (variable.equalsIgnoreCase("column")) return new DefineFactory().column(value);
+		if (variable.equalsIgnoreCase("columns")) return new DefineFactory().columns(value);
 		if (variable.equalsIgnoreCase("cell")) return new DefineFactory().cell(value);
 		if (variable.equalsIgnoreCase("background")) return new DefineFactory().background(value);
 		if (variable.equalsIgnoreCase("freezing")) return new DefineFactory().freezing(value);
@@ -298,6 +299,57 @@ public class XlsBuilder {
 
 				private short format() {
 					return parseFormat(split[3]);
+				}
+
+			};
+		}
+
+		public Define columns(String definition) {
+			return new Define() {
+				private HSSFCellStyle styleBold;
+				private HSSFCellStyle style;
+				private final String[] split = definition.split(":");
+
+				@Override
+				public void execute(Sheet sheet) {
+					style = style(format(), alignment());
+					styleBold = style(format(), alignment());
+					styleBold.setFont(font(10, true));
+					for (int i = firstCol(); i < lastCol(); i++) {
+						sheet.setColumnWidth(i, size());
+						setColumnStyle(sheet, i, style);
+					}
+				}
+
+				private void setColumnStyle(Sheet sheet, int column, CellStyle style) {
+					for (Row row : sheet) {
+						Cell cell = row.getCell(column);
+						if (cell == null) continue;
+						CellStyle cellStyle = cell.getCellStyle();
+						HSSFFont font = wb.getFontAt(cellStyle.getFontIndex());
+						if (styles.contains(cellStyle.getIndex()) && font.getFontHeight() != 10) continue;
+						cell.setCellStyle(font.getBold() ? styleBold : style);
+					}
+				}
+
+				private int firstCol() {
+					return parseInt(split[0]);
+				}
+
+				private int lastCol() {
+					return parseInt(split[1]);
+				}
+
+				private int size() {
+					return parseInt(split[2]) * 520;
+				}
+
+				private HorizontalAlignment alignment() {
+					return parseAlignment(split[3]);
+				}
+
+				private short format() {
+					return parseFormat(split[4]);
 				}
 
 			};
