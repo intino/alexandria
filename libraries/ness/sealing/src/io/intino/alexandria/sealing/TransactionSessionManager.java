@@ -10,6 +10,7 @@ import io.intino.alexandria.led.LedWriter;
 import io.intino.alexandria.led.Transaction;
 import io.intino.alexandria.led.allocators.TransactionFactory;
 import io.intino.alexandria.led.buffers.store.ByteStore;
+import io.intino.alexandria.led.util.LedUtils;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
@@ -30,12 +31,14 @@ public class TransactionSessionManager {
 
 	private static void sealSession(File transactionStoreFolder, File session) {
 		try {
+			File sorted = sort(session);
 			File destination = datalakeFile(transactionStoreFolder, fingerprintOf(session));
 			if (destination.exists()) {
-				merge(destination, session);
-			} else FS.copyInto(destination, new FileInputStream(session));
+				merge(destination, sorted);
+				sorted.delete();
+			} else Files.move(destination.toPath(), sorted.toPath());
 			session.renameTo(new File(session.getAbsolutePath() + ".treated"));
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			Logger.error(e);
 		}
 	}
@@ -62,6 +65,12 @@ public class TransactionSessionManager {
 
 	private static Fingerprint fingerprintOf(File file) {
 		return new Fingerprint(cleanedNameOf(file));
+	}
+
+	private static File sort(File transactionSession) {
+		File file = new File(transactionSession.getParentFile(), transactionSession.getName() + "sort");
+		LedUtils.sort(transactionSession, file);
+		return file;
 	}
 
 	private static String cleanedNameOf(File file) {
