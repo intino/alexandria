@@ -1,18 +1,27 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.events.Event;
+import io.intino.alexandria.ui.displays.events.actionable.OpenListener;
 import io.intino.alexandria.ui.displays.notifiers.OpenSiteNotifier;
 
 public class OpenSite<DN extends OpenSiteNotifier, B extends Box> extends AbstractOpenSite<DN, B> {
 	private String site;
+	private OpenListener openListener = null;
 
     public OpenSite(B box) {
         super(box);
     }
 
+	public OpenSite<DN, B> onOpen(OpenListener listener) {
+    	this.openListener = listener;
+    	return this;
+	}
+
 	public void execute() {
 		if (site == null) return;
 		notifier.open(site);
+		if (openListener != null) openListener.accept(new Event(this));
 	}
 
 	public String site() {
