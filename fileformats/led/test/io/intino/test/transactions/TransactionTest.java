@@ -5,6 +5,7 @@ import io.intino.alexandria.led.allocators.TransactionAllocator;
 import io.intino.alexandria.led.util.memory.MemoryUtils;
 import io.intino.alexandria.led.util.memory.NativeMemoryTracker;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Random;
@@ -14,6 +15,7 @@ import static io.intino.alexandria.led.util.memory.MemoryUtils.memset;
 import static io.intino.test.transactions.TestTransaction.*;
 import static org.junit.Assert.assertEquals;
 
+@Ignore
 public class TransactionTest {
 
 	static {

@@ -7,6 +7,7 @@ import io.intino.alexandria.led.leds.IteratorLedStream;
 import io.intino.test.transactions.TestTransaction;
 import io.intino.test.transactions.Venta;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.*;
@@ -16,6 +17,7 @@ import java.util.stream.IntStream;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
+@Ignore
 public class LedStreamTest {
 
     private LedStream<TestTransaction> ledStream;

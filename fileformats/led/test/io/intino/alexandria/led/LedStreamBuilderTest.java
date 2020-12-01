@@ -14,6 +14,7 @@ import static org.junit.Assert.*;
 @Ignore
 public class LedStreamBuilderTest {
 
+    @Ignore
     @Test
     public void test() {
         System.out.println(TestTransaction.SIZE);
