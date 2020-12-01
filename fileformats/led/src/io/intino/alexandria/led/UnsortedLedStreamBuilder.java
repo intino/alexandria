@@ -51,6 +51,7 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
         this.transactionClass = transactionClass;
         this.transactionSize = Transaction.sizeOf(transactionClass);
         this.factory = factory;
+        tempFile.getParentFile().mkdirs();
         this.tempLedFile = tempFile.toPath();
         if(numElementsPerBlock % 2 != 0) {
             throw new IllegalArgumentException("NumElementsPerBlock must be even");
