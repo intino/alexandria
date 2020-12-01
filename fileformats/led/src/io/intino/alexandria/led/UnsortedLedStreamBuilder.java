@@ -24,48 +24,45 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
     private final Class<T> transactionClass;
     private final int transactionSize;
     private final TransactionFactory<T> factory;
-    private final Path tempDirectory;
-    private Path tempLedFile;
+    private final Path tempLedFile;
     private ByteBuffer buffer;
     private StackAllocator<T> allocator;
     private FileChannel fileChannel;
     private long numTransactions;
     private final boolean keepFileChannelOpen;
 
-    public UnsortedLedStreamBuilder(Class<T> transactionClass, File tempDirectory) {
+    public UnsortedLedStreamBuilder(Class<T> transactionClass, File tempFile) {
         this(transactionClass, Transaction.factoryOf(transactionClass),
-                DEFAULT_NUM_ELEMENTS_PER_BLOCK, tempDirectory, true);
+                DEFAULT_NUM_ELEMENTS_PER_BLOCK, tempFile, true);
     }
 
-    public UnsortedLedStreamBuilder(Class<T> transactionClass, File tempDirectory, boolean keepFileChannelOpen) {
+    public UnsortedLedStreamBuilder(Class<T> transactionClass, File tempFile, boolean keepFileChannelOpen) {
         this(transactionClass, Transaction.factoryOf(transactionClass),
-                DEFAULT_NUM_ELEMENTS_PER_BLOCK, tempDirectory, keepFileChannelOpen);
+                DEFAULT_NUM_ELEMENTS_PER_BLOCK, tempFile, keepFileChannelOpen);
     }
 
     public UnsortedLedStreamBuilder(Class<T> transactionClass, TransactionFactory<T> factory,
-                                    int numElementsPerBlock, File tempDirectory) {
-        this(transactionClass, factory, numElementsPerBlock, tempDirectory, true);
+                                    int numElementsPerBlock, File tempFile) {
+        this(transactionClass, factory, numElementsPerBlock, tempFile, true);
     }
 
     public UnsortedLedStreamBuilder(Class<T> transactionClass, TransactionFactory<T> factory,
-                                    int numElementsPerBlock, File tempDirectory, boolean keepFileChannelOpen) {
+                                    int numElementsPerBlock, File tempFile, boolean keepFileChannelOpen) {
         this.transactionClass = transactionClass;
         this.transactionSize = Transaction.sizeOf(transactionClass);
         this.factory = factory;
-        this.tempDirectory = tempDirectory.toPath();
+        this.tempLedFile = tempFile.toPath();
         if(numElementsPerBlock % 2 != 0) {
             throw new IllegalArgumentException("NumElementsPerBlock must be even");
         }
         buffer = allocBuffer(numElementsPerBlock * transactionSize);
         this.allocator = StackAllocators.newManaged(transactionSize, buffer, factory);
         this.keepFileChannelOpen = keepFileChannelOpen;
-        createTempFile();
+        setupFile();
     }
 
-    private void createTempFile() {
+    private void setupFile() {
         try {
-            Files.createDirectories(tempDirectory);
-            tempLedFile = Files.createTempFile(tempDirectory, transactionClass.getSimpleName(), "_u.led.tmp");
             if(keepFileChannelOpen) {
                 fileChannel = openFileChannel();
             }
@@ -73,6 +70,10 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
         } catch(Exception e) {
             Logger.error(e);
         }
+    }
+
+    public File tempLedFile() {
+        return tempLedFile.toFile();
     }
 
     private FileChannel openFileChannel() throws IOException {
@@ -127,6 +128,10 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
         } catch (IOException e) {
             Logger.error(e);
         }
+    }
+
+    public void flush() {
+        writeCurrentBlockAndClear();
     }
 
     @Override
