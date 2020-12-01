@@ -10,8 +10,8 @@ import org.xerial.snappy.SnappyInputStream;
 
 import java.io.*;
 
-import static io.intino.alexandria.led.util.MemoryUtils.allocBuffer;
-import static io.intino.alexandria.led.util.MemoryUtils.memcpy;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.memcpy;
 
 public class LedReader {
 
