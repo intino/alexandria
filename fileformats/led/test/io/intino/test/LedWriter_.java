@@ -7,6 +7,7 @@ import io.intino.alexandria.led.leds.IteratorLedStream;
 import io.intino.alexandria.led.leds.ListLed;
 import io.intino.test.transactions.TestTransaction;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -21,6 +22,7 @@ import static io.intino.alexandria.led.util.BitUtils.maxPossibleNumber;
 import static io.intino.test.transactions.TestTransaction.*;
 import static org.junit.Assert.assertEquals;
 
+@Ignore
 public class LedWriter_ {
 	private static final int NUM_ELEMENTS = 10_000_000;
 	private static final File tempFile = new File("temp/snappy_test.led");

@@ -14,6 +14,7 @@ import java.util.Random;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+@Ignore
 public class LedBuilder_ {
 	private static final File tempFile = new File("temp/snappy_test.led");
 	private static final int NUM_ELEMENTS = 1_000_000;

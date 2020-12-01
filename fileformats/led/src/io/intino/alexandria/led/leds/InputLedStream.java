@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 import static io.intino.alexandria.led.Transaction.factoryOf;
 import static io.intino.alexandria.led.Transaction.sizeOf;
-import static io.intino.alexandria.led.util.MemoryUtils.allocBuffer;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
 
 public class InputLedStream<T extends Transaction> implements LedStream<T> {
 

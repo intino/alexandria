@@ -1,6 +1,6 @@
-package io.intino.alexandria.led.util;
+package io.intino.alexandria.led.util.memory;
 
-import static io.intino.alexandria.led.util.MemoryUtils.NULL;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.NULL;
 
 public final class NativePointerCleaner implements Runnable {
 

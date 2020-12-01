@@ -2,6 +2,7 @@ package io.intino.alexandria.led;
 
 import io.intino.alexandria.logger.Logger;
 import io.intino.test.transactions.TestTransaction;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -15,6 +16,7 @@ import static org.junit.Assert.assertTrue;
 
 public class NoSortedLedStreamBuilderTest {
 
+    @Ignore
     @Test
     public void test() {
         System.out.println(TestTransaction.SIZE);

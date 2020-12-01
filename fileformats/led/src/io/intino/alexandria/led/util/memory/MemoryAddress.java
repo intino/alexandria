@@ -1,8 +1,8 @@
-package io.intino.alexandria.led.util;
+package io.intino.alexandria.led.util.memory;
 
 import java.nio.ByteBuffer;
 
-import static io.intino.alexandria.led.util.MemoryUtils.addressOf;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.addressOf;
 
 
 public interface MemoryAddress {

@@ -4,8 +4,8 @@ import io.intino.alexandria.led.Transaction;
 import io.intino.alexandria.led.allocators.TransactionFactory;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
 import io.intino.alexandria.led.buffers.store.ByteStore;
-import io.intino.alexandria.led.util.MemoryUtils;
-import io.intino.alexandria.led.util.ModifiableMemoryAddress;
+import io.intino.alexandria.led.util.memory.MemoryUtils;
+import io.intino.alexandria.led.util.memory.ModifiableMemoryAddress;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static io.intino.alexandria.led.util.MemoryUtils.*;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.*;
 
 public class ArrayAllocator<T extends Transaction> implements IndexedAllocator<T> {
 	private ByteBufferStore[] stores;

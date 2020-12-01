@@ -1,10 +1,10 @@
-package io.intino.alexandria.led.util;
+package io.intino.alexandria.led.util.memory;
 
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
-import static io.intino.alexandria.led.util.MemoryUtils.NULL;
-import static io.intino.alexandria.led.util.MemoryUtils.addressOf;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.NULL;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.addressOf;
 
 public class ModifiableMemoryAddress implements MemoryAddress {
 	private long address;

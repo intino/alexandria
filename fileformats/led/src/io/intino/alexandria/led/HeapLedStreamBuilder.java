@@ -4,12 +4,11 @@ import io.intino.alexandria.led.allocators.TransactionFactory;
 import io.intino.alexandria.led.allocators.stack.SingleStackAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocator;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
-import io.intino.alexandria.led.util.ModifiableMemoryAddress;
+import io.intino.alexandria.led.util.memory.ModifiableMemoryAddress;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,7 +16,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.led.util.MemoryUtils.allocBuffer;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
 
 public final class HeapLedStreamBuilder<T extends Transaction> implements LedStream.Builder<T> {
 

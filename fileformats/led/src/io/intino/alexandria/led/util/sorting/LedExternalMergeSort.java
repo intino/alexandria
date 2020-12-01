@@ -19,8 +19,8 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.led.util.MemoryUtils.*;
-import static io.intino.alexandria.led.util.MemoryUtils.memcpy;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.*;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.memcpy;
 import static java.nio.file.StandardOpenOption.READ;
 import static java.nio.file.StandardOpenOption.WRITE;
 import static java.util.Objects.requireNonNull;

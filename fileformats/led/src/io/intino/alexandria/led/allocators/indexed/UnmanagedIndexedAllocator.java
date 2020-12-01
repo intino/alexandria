@@ -3,13 +3,13 @@ package io.intino.alexandria.led.allocators.indexed;
 import io.intino.alexandria.led.Transaction;
 import io.intino.alexandria.led.allocators.TransactionFactory;
 import io.intino.alexandria.led.buffers.store.NativePointerStore;
-import io.intino.alexandria.led.util.MemoryUtils;
-import io.intino.alexandria.led.util.ModifiableMemoryAddress;
-import io.intino.alexandria.led.util.NativePointerCleaner;
+import io.intino.alexandria.led.util.memory.MemoryUtils;
+import io.intino.alexandria.led.util.memory.ModifiableMemoryAddress;
+import io.intino.alexandria.led.util.memory.NativePointerCleaner;
 
 import java.lang.ref.Cleaner;
 
-import static io.intino.alexandria.led.util.MemoryUtils.*;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.*;
 
 public class UnmanagedIndexedAllocator<T extends Transaction> implements IndexedAllocator<T> {
 

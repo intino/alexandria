@@ -1,9 +1,9 @@
 package io.intino.alexandria.led.buffers.store;
 
-import io.intino.alexandria.led.util.MemoryAddress;
-import io.intino.alexandria.led.util.MemoryUtils;
+import io.intino.alexandria.led.util.memory.MemoryAddress;
+import io.intino.alexandria.led.util.memory.MemoryUtils;
 
-import static io.intino.alexandria.led.util.MemoryUtils.memset;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.memset;
 
 public class NativePointerStore implements ByteStore {
 
