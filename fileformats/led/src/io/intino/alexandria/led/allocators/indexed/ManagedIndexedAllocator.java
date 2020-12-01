@@ -3,12 +3,12 @@ package io.intino.alexandria.led.allocators.indexed;
 import io.intino.alexandria.led.Transaction;
 import io.intino.alexandria.led.allocators.TransactionFactory;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
-import io.intino.alexandria.led.util.MemoryUtils;
-import io.intino.alexandria.led.util.ModifiableMemoryAddress;
+import io.intino.alexandria.led.util.memory.MemoryUtils;
+import io.intino.alexandria.led.util.memory.ModifiableMemoryAddress;
 
 import java.nio.ByteBuffer;
 
-import static io.intino.alexandria.led.util.MemoryUtils.*;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.*;
 
 public class ManagedIndexedAllocator<T extends Transaction> implements IndexedAllocator<T> {
 

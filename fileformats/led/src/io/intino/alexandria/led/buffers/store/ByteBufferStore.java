@@ -1,11 +1,11 @@
 package io.intino.alexandria.led.buffers.store;
 
 
-import io.intino.alexandria.led.util.MemoryAddress;
+import io.intino.alexandria.led.util.memory.MemoryAddress;
 
 import java.nio.ByteBuffer;
 
-import static io.intino.alexandria.led.util.MemoryUtils.memset;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.memset;
 import static java.util.Objects.requireNonNull;
 
 public class ByteBufferStore implements ByteStore {

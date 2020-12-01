@@ -10,8 +10,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.intino.alexandria.led.util.MemoryUtils.allocBuffer;
-import static io.intino.alexandria.led.util.MemoryUtils.memcpy;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.memcpy;
 
 public interface IndexedAllocatorFactory<T extends Transaction> {
 

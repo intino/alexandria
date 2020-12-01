@@ -5,13 +5,13 @@ import io.intino.alexandria.led.allocators.TransactionFactory;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.exceptions.StackAllocatorOverflowException;
 import io.intino.alexandria.led.exceptions.StackAllocatorUnderflowException;
-import io.intino.alexandria.led.util.MemoryUtils;
-import io.intino.alexandria.led.util.ModifiableMemoryAddress;
+import io.intino.alexandria.led.util.memory.MemoryUtils;
+import io.intino.alexandria.led.util.memory.ModifiableMemoryAddress;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static io.intino.alexandria.led.util.MemoryUtils.NULL;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.NULL;
 
 public class SingleStackAllocator<T extends Transaction> implements StackAllocator<T> {
 

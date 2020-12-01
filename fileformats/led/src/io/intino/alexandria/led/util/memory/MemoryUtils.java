@@ -1,4 +1,4 @@
-package io.intino.alexandria.led.util;
+package io.intino.alexandria.led.util.memory;
 
 import io.intino.alexandria.logger.Logger;
 import sun.misc.Unsafe;
@@ -9,6 +9,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.*;
+import java.util.function.Consumer;
 
 import static java.util.Objects.requireNonNull;
 
@@ -23,14 +25,36 @@ public final class MemoryUtils {
 	private static final long BUFFER_CAPACITY_OFFSET;
 	private static final long BUFFER_LIMIT_OFFSET;
 
-	private static ByteOrder defaultByteOrder = ByteOrder.nativeOrder();
+	public static final Configuration<ByteOrder> DEFAULT_BYTE_ORDER = new Configuration<>();
+	public static final Configuration<Boolean> USE_MEMORY_TRACKER = new Configuration<>();
+	public static final Configuration<Consumer<Long>> BEFORE_ALLOCATION_CALLBACK = new Configuration<>();
+	public static final Configuration<Consumer<AllocationInfo>> ALLOCATION_CALLBACK = new Configuration<>();
+	public static final Configuration<Consumer<AllocationInfo>> FREE_CALLBACK = new Configuration<>();
+	private static final Configuration<NativeMemoryTracker> MEMORY_TRACKER = new Configuration<>();
 
-	public static ByteOrder defaultByteOrder() {
-		return defaultByteOrder;
+	public static boolean useMemoryTracker() {
+		if(USE_MEMORY_TRACKER.isEmpty()) {
+			USE_MEMORY_TRACKER.set(false);
+		}
+		return USE_MEMORY_TRACKER.get();
 	}
 
-	public static void defaultByteOrder(ByteOrder byteOrder) {
-		defaultByteOrder = requireNonNull(byteOrder);
+	public static NativeMemoryTracker getMemoryTracker() {
+		if(MEMORY_TRACKER.isEmpty()) {
+			if(useMemoryTracker()) {
+				MEMORY_TRACKER.set(new NativeMemoryTrackerImpl());
+			} else {
+				MEMORY_TRACKER.set(new DummyNativeMemoryTracker());
+			}
+		}
+		return MEMORY_TRACKER.get();
+	}
+
+	public static ByteOrder defaultByteOrder() {
+		if(DEFAULT_BYTE_ORDER.isEmpty()) {
+			DEFAULT_BYTE_ORDER.set(ByteOrder.nativeOrder());
+		}
+		return DEFAULT_BYTE_ORDER.get();
 	}
 
 	public static MappedByteBuffer map(FileChannel fileChannel, FileChannel.MapMode mode, long baseOffset, long size) {
@@ -48,16 +72,46 @@ public final class MemoryUtils {
 		return allocBuffer(size, defaultByteOrder());
 	}
 
-	public static ByteBuffer allocBuffer(long size, ByteOrder order) {
+	public static synchronized ByteBuffer allocBuffer(long size, ByteOrder order) {
 		if (size < 0) {
 			throw new IllegalArgumentException("Size is negative or too large");
 		}
 		if (size > Integer.MAX_VALUE) {
-			throw new IllegalArgumentException("Size " + size + " too large for ByteBuffer");
+			throw new IllegalArgumentException("Size " + size + " too large for ByteBuffer. Do smaller allocations or use unmanaged memory.");
+		}
+		if(!BEFORE_ALLOCATION_CALLBACK.isEmpty()) {
+			BEFORE_ALLOCATION_CALLBACK.get().accept(size);
 		}
 		ByteBuffer buffer = ByteBuffer.allocateDirect((int) size);
 		buffer.order(order);
+		if(useMemoryTracker()) {
+			track(buffer, size, caller());
+		}
 		return buffer;
+	}
+
+	private static void track(ByteBuffer buffer, long size, StackTraceElement[] stackTrace) {
+		NativeMemoryTrackerImpl nativeMemoryTracker = (NativeMemoryTrackerImpl) getMemoryTracker();
+		AllocationInfo allocationInfo = new AllocationInfo(buffer, size, stackTrace);
+		nativeMemoryTracker.track(allocationInfo);
+		if(!ALLOCATION_CALLBACK.isEmpty()) {
+			ALLOCATION_CALLBACK.get().accept(allocationInfo);
+		}
+	}
+
+	private static StackTraceElement[] caller() {
+		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		if(stackTrace.length <= 2) {
+			return new StackTraceElement[0];
+		}
+		int start = 2;
+		for(int i = start;i < stackTrace.length;i++) {
+			if(!stackTrace[i].getClassName().endsWith(MemoryUtils.class.getName())) {
+				start = i;
+				break;
+			}
+		}
+		return Arrays.copyOfRange(stackTrace, start, stackTrace.length);
 	}
 
 	public static long addressOf(Buffer buffer) {
@@ -106,10 +160,26 @@ public final class MemoryUtils {
 	}
 
 	public static void free(long ptr) {
+		if(useMemoryTracker()) {
+			if(!FREE_CALLBACK.isEmpty()) {
+				AllocationInfo allocationInfo = getMemoryTracker().find(ptr);
+				if(allocationInfo != null) {
+					FREE_CALLBACK.get().accept(allocationInfo);
+				}
+			}
+		}
 		UNSAFE.freeMemory(ptr);
 	}
 
 	public static void free(ByteBuffer buffer) {
+		if(useMemoryTracker()) {
+			if(!FREE_CALLBACK.isEmpty()) {
+				AllocationInfo allocationInfo = getMemoryTracker().find(addressOf(buffer));
+				if(allocationInfo != null) {
+					FREE_CALLBACK.get().accept(allocationInfo);
+				}
+			}
+		}
 		UNSAFE.invokeCleaner(buffer);
 	}
 
@@ -246,4 +316,5 @@ public final class MemoryUtils {
 
 	private MemoryUtils() {
 	}
+
 }

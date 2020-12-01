@@ -3,11 +3,11 @@ package io.intino.alexandria.led.allocators;
 import io.intino.alexandria.led.Transaction;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
 import io.intino.alexandria.led.buffers.store.ByteStore;
-import io.intino.alexandria.led.util.MemoryAddress;
+import io.intino.alexandria.led.util.memory.MemoryAddress;
 
 import java.nio.ByteBuffer;
 
-import static io.intino.alexandria.led.util.MemoryUtils.allocBuffer;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
 
 public class DefaultAllocator<T extends Transaction> implements TransactionAllocator<T> {
 
