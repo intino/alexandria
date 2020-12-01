@@ -11,6 +11,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
@@ -30,6 +31,7 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
     private FileChannel fileChannel;
     private long numTransactions;
     private final boolean keepFileChannelOpen;
+    private final AtomicBoolean closed;
 
     public UnsortedLedStreamBuilder(Class<T> transactionClass, File tempFile) {
         this(transactionClass, Transaction.factoryOf(transactionClass),
@@ -59,11 +61,13 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
         buffer = allocBuffer(numElementsPerBlock * transactionSize);
         this.allocator = StackAllocators.newManaged(transactionSize, buffer, factory);
         this.keepFileChannelOpen = keepFileChannelOpen;
+        this.closed = new AtomicBoolean(false);
         setupFile();
     }
 
     private void setupFile() {
         try {
+            Files.createFile(tempLedFile);
             if(keepFileChannelOpen) {
                 fileChannel = openFileChannel();
             }
@@ -113,6 +117,9 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
     }
 
     private void writeCurrentBlockAndClear() {
+        if(closed.get()) {
+            return;
+        }
         try {
             if(!keepFileChannelOpen) {
                 fileChannel = openFileChannel();
@@ -128,22 +135,33 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
             allocator.clear();
         } catch (IOException e) {
             Logger.error(e);
+            throw new RuntimeException(e);
         }
     }
 
-    public void flush() {
+    public boolean isClosed() {
+        return closed.get();
+    }
+
+    public synchronized void flush() {
         writeCurrentBlockAndClear();
     }
 
     @Override
-    public void close() {
-        writeCurrentBlockAndClear();
-        free();
-        writeHeader();
+    public synchronized void close() {
+        if(closed.compareAndSet(false, true)) {
+            writeCurrentBlockAndClear();
+            free();
+            writeHeader();
+        }
     }
 
     @Override
-    public LedStream<T> build() {
+    public synchronized LedStream<T> build() {
+        if(closed.get()) {
+            Logger.warn("Trying to call build over a closed " + getClass().getSimpleName() + "...");
+            return LedStream.empty();
+        }
         close();
         return new InputLedStream<>(getInputStream(), factory, transactionSize)
                 .onClose(this::deleteTempFile);
@@ -158,6 +176,7 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
             file.writeInt(header.elementSize());
         } catch (IOException e) {
             Logger.error(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -175,6 +194,7 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
             fileChannel = null;
         } catch(Exception e) {
             Logger.error(e);
+            throw new RuntimeException(e);
         }
     }
 
