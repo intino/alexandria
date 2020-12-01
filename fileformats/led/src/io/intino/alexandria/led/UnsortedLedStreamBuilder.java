@@ -64,6 +64,7 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
 
     private void setupFile() {
         try {
+            Files.createFile(tempLedFile);
             if(keepFileChannelOpen) {
                 fileChannel = openFileChannel();
             }
