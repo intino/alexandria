@@ -42,7 +42,7 @@ public class LedExternalMergeSort {
 
     public void sort(File tempDirectory, File srcFile, File destFile, int numTransactionsInMemory) {
         try {
-            Logger.info("Starting external merge sort: " + srcFile + " -> " + destFile + "(using " + numTransactionsInMemory + " transactions in memory)...");
+            //Logger.info("Starting external merge sort: " + srcFile + " -> " + destFile + "(using " + numTransactionsInMemory + " transactions in memory)...");
             start = System.currentTimeMillis();
             final ChunkCreationInfo chunkCreationInfo = createSortedChunks(tempDirectory, srcFile, numTransactionsInMemory);
             if(chunkCreationInfo == null) {
@@ -50,7 +50,7 @@ public class LedExternalMergeSort {
             } else {
                 mergeSortedChunks(chunkCreationInfo, destFile);
             }
-            Logger.info("External merge sort finished after " + time());
+            //Logger.info("External merge sort finished after " + time());
         } catch(Exception e) {
             Logger.error(e);
         }
@@ -76,7 +76,7 @@ public class LedExternalMergeSort {
             final long numTransactions = header.elementCount();
             final int chunkSize = numTransactionsInMemory * transactionSize;
             final int numChunks = Math.round(header.elementCount() / (float)chunkSize);
-            Queue<Path> chunks = new ArrayDeque<>(numChunks);
+            Queue<Path> chunks = new LinkedList<>();
             ByteBuffer buffer = allocBuffer(chunkSize);
             ByteBuffer tempBuffer = allocBuffer(chunkSize);
             StackAllocator<GenericTransaction> allocator = StackAllocators.newManaged(transactionSize, buffer, GenericTransaction::new);
@@ -87,7 +87,7 @@ public class LedExternalMergeSort {
                 final int bytesRead = fileChannel.read(buffer.position(0).limit(chunkSize));
                 buffer.clear();
                 writeSortedChunk(chunk, transactionSize, chunkSize, buffer, tempBuffer, allocator, priorityQueue, bytesRead);
-                checkSorting(chunk, transactionSize);
+                //checkSorting(chunk, transactionSize);
                 chunks.add(chunk);
                 priorityQueue.clear();
                 allocator.clear();
@@ -136,7 +136,7 @@ public class LedExternalMergeSort {
     }
 
     private void mergeSortedChunks(ChunkCreationInfo chunkCreationInfo, File destFile) throws IOException {
-        Logger.info("Merging sorted chunks..." + time());
+        //Logger.info("Merging sorted chunks..." + time());
         Queue<Path> chunks = chunkCreationInfo.sortedChunkFiles;
         Path dir = chunkCreationInfo.chunkDirectory;
         if(chunks.size() == 1) {
@@ -153,7 +153,7 @@ public class LedExternalMergeSort {
             Path chunk1 = chunks.remove();
             Path chunk2 = chunks.remove();
             Path mergedChunk = Files.createFile(dir.resolve("Chunk_" + count + "_merged_with_" + (count + 1) + ".led.tmp"));
-            Logger.trace("Creating " + mergedChunk + "..." + time());
+            //Logger.trace("Creating " + mergedChunk + "..." + time());
             MergedIterator<ChunkIterator.TransactionWrapper> mergedIterator = merge(chunk1, chunk2, buffer,
                     transactionSize, chunkSize);
             writeSortedToMergedChunk(mergedChunk, mergedIterator, tempBuffer);
@@ -161,7 +161,7 @@ public class LedExternalMergeSort {
             chunks.add(mergedChunk);
             count += 2;
         }
-        Logger.info("Running final merge..." + time());
+        //Logger.info("Running final merge..." + time());
         free(chunkCreationInfo.buffer);
 
         if(chunks.size() == 2) {
@@ -193,7 +193,7 @@ public class LedExternalMergeSort {
     }
 
     private void checkSorting(Path chunk, int transactionSize) {
-        Logger.trace("Validating sorted chunk " + chunk + "...");
+        //Logger.trace("Validating sorted chunk " + chunk + "...");
         try(LedStream<?> ledStream = readChunk(chunk, transactionSize)) {
             Long previousId = null;
             while(ledStream.hasNext()) {
