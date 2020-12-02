@@ -31,7 +31,7 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 			Zip zip = new Zip(out);
 			pages.clear();
 			long count = Files.lines(tsv.toPath()).count();
-			Logger.info("Generating site for " + tsv.getAbsolutePath() + ". Count pages: " + pageOf(count)+1);
+			Logger.info("Generating site for " + tsv.getAbsolutePath() + ". Count pages: " + (pageOf(count)+1));
 			Iterator<String> content = Files.lines(tsv.toPath()).iterator();
 			if (count == 0) return;
 			generateColumns(content);
