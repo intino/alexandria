@@ -32,7 +32,7 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 			pages.clear();
 			long count = Files.lines(tsv.toPath()).count();
 			Logger.info("Generating site for " + tsv.getAbsolutePath() + ". Count pages: " + pageOf(count)+1);
-			Stream<String> content = Files.lines(tsv.toPath());
+			Iterator<String> content = Files.lines(tsv.toPath()).iterator();
 			if (count == 0) return;
 			generateColumns(content);
 			generatePages(content, count);
@@ -44,9 +44,9 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 		}
 	}
 
-	private void generateColumns(Stream<String> content) {
+	private void generateColumns(Iterator<String> lines) {
 		if (config.columns().size() > 0) return;
-		String header = content.iterator().next();
+		String header = lines.next();
 		String[] columns = header.split("\t");
 		List<Configuration.Column> result = new ArrayList<>();
 		for (int i=0; i<columns.length; i++) result.add(new Configuration.Column(columns[i], i));
@@ -61,20 +61,19 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 		zip.write(filename + ".tsv", new FileInputStream(tsv));
 	}
 
-	private void generatePages(Stream<String> lines, long count) {
+	private void generatePages(Iterator<String> lines, long count) {
 		int countPages = pageOf(count)+1;
 		int currentPage = 0;
 		int i = 0;
 		StringBuilder collection = new StringBuilder();
-		Iterator<String> iterator = lines.iterator();
-		while (iterator.hasNext()) {
+		while (lines.hasNext()) {
 			int page = pageOf(i);
 			if (page != currentPage) {
 				generatePage(page-1, countPages, collection);
 				collection = new StringBuilder();
 				currentPage++;
 			}
-			collection.append(toRow(iterator.next()));
+			collection.append(toRow(lines.next()));
 			i++;
 		}
 		generatePage(countPages-1, countPages, collection);
