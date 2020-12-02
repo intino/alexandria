@@ -1,5 +1,7 @@
 package io.intino.alexandria.led.util.memory;
 
+import io.intino.alexandria.logger.Logger;
+
 import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.Objects.requireNonNull;
@@ -29,7 +31,7 @@ public class Configuration<T> {
 
 	public Configuration<T> set(T value) {
 		if (!isEmpty()) {
-			throw new RuntimeException("Value already set.");
+			Logger.error(new IllegalStateException("Value already set."));
 		}
 		this.value.set(requireNonNull(value));
 		return this;
