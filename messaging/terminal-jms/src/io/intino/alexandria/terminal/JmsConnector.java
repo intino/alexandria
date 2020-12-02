@@ -232,13 +232,13 @@ public class JmsConnector implements Connector {
 	private void registerEventConsumer(String path, Consumer<Event> onEventReceived) {
 		this.eventConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
 		this.eventConsumers.get(path).add(onEventReceived);
-		if (!this.consumers.containsKey(path) && session != null) this.consumers.put(path, topicConsumer(path));
+		if (session != null && !this.consumers.containsKey(path)) this.consumers.put(path, topicConsumer(path));
 	}
 
 	private void registerMessageConsumer(String path, MessageConsumer onMessageReceived) {
 		this.messageConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
 		this.messageConsumers.get(path).add(onMessageReceived);
-		if (session != null) this.consumers.putIfAbsent(path, queueConsumer(path));
+		if (session != null && !this.consumers.containsKey(path)) this.consumers.put(path, queueConsumer(path));
 	}
 
 	private boolean doSendEvent(String path, Event event) {
@@ -278,11 +278,11 @@ public class JmsConnector implements Connector {
 	}
 
 	private void topicProducer(String path) throws JMSException {
-		producers.putIfAbsent(path, new TopicProducer(session, path));
+		if (!producers.containsKey(path)) producers.put(path, new TopicProducer(session, path));
 	}
 
 	private void queueProducer(String path) throws JMSException {
-		producers.putIfAbsent(path, new QueueProducer(session, path));
+		if (!producers.containsKey(path)) producers.put(path, new QueueProducer(session, path));
 	}
 
 	private boolean cannotSendMessage() {
