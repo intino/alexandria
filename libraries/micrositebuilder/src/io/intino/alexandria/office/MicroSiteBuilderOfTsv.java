@@ -13,15 +13,15 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
-	private final Config config;
+	private final Configuration config;
 	private final Translator translator;
 	private final Map<String, String> pages = new HashMap<>();
 
-	public MicroSiteBuilderOfTsv(Config config) {
+	public MicroSiteBuilderOfTsv(Configuration config) {
 		this(config, null);
 	}
 
-	public MicroSiteBuilderOfTsv(Config config, Translator translator) {
+	public MicroSiteBuilderOfTsv(Configuration config, Translator translator) {
 		this.config = config;
 		this.translator = translator;
 	}
@@ -34,6 +34,7 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 			Logger.info("Generating site for " + tsv.getAbsolutePath() + ". Count pages: " + pageOf(count)+1);
 			Stream<String> content = Files.lines(tsv.toPath());
 			if (count == 0) return;
+			generateColumns(content);
 			generatePages(content, count);
 			zip.write(pages);
 			addTsv(zip, tsv, filenameOf(out));
@@ -41,6 +42,15 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 		} catch (IOException e) {
 			Logger.error(e);
 		}
+	}
+
+	private void generateColumns(Stream<String> content) {
+		if (config.columns().size() > 0) return;
+		String header = content.iterator().next();
+		String[] columns = header.split("\t");
+		List<Configuration.Column> result = new ArrayList<>();
+		for (int i=0; i<columns.length; i++) result.add(new Configuration.Column(columns[i], i));
+		config.columns(result);
 	}
 
 	private String filenameOf(File file) {
@@ -102,13 +112,13 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 		return translator != null ? translator.translate(word) : word;
 	}
 
-	private String toHeaderRow(List<Config.Column> columns) {
+	private String toHeaderRow(List<Configuration.Column> columns) {
 		return "<tr>" + columns.stream().map(c -> "<th>" + c.label + "</th>").collect(Collectors.joining()) + "</tr>";
 	}
 
 	private String toRow(String line) {
 		String[] values = line.split("\t");
-		return "<tr>" + config.columns().stream().map(c -> "<td>" + values[c.index] + "</td>").collect(Collectors.joining()) + "</tr>";
+		return "<tr>" + config.columns().stream().map(c -> "<td>" + (values.length > c.index ? values[c.index] : "") + "</td>").collect(Collectors.joining()) + "</tr>";
 	}
 
 	private int pageOf(long current) {
@@ -117,7 +127,7 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 		return (int) (Math.floor((double)current / config.pageSize) + (current % config.pageSize > 0 ? 1 : 0)) - 1;
 	}
 
-	public static class Config {
+	public static class Configuration {
 		private String title;
 		private String logo;
 		private String description;
@@ -128,7 +138,7 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 			return title;
 		}
 
-		public Config title(String title) {
+		public Configuration title(String title) {
 			this.title = title;
 			return this;
 		}
@@ -137,7 +147,7 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 			return logo;
 		}
 
-		public Config logo(String logo) {
+		public Configuration logo(String logo) {
 			this.logo = logo;
 			return this;
 		}
@@ -146,7 +156,7 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 			return description;
 		}
 
-		public Config description(String description) {
+		public Configuration description(String description) {
 			this.description = description;
 			return this;
 		}
@@ -155,7 +165,7 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 			return pageSize;
 		}
 
-		public Config pageSize(int pageSize) {
+		public Configuration pageSize(int pageSize) {
 			this.pageSize = pageSize;
 			return this;
 		}
@@ -164,12 +174,12 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 			return columns;
 		}
 
-		public Config add(Column column) {
+		public Configuration add(Column column) {
 			this.columns.add(column);
 			return this;
 		}
 
-		public Config columns(List<Column> columns) {
+		public Configuration columns(List<Column> columns) {
 			this.columns = columns;
 			return this;
 		}
