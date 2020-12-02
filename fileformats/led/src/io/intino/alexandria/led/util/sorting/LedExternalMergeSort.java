@@ -1,9 +1,6 @@
 package io.intino.alexandria.led.util.sorting;
 
-import io.intino.alexandria.led.GenericTransaction;
-import io.intino.alexandria.led.LedHeader;
-import io.intino.alexandria.led.LedReader;
-import io.intino.alexandria.led.LedStream;
+import io.intino.alexandria.led.*;
 import io.intino.alexandria.led.allocators.stack.StackAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.led.util.iterators.MergedIterator;
@@ -32,6 +29,9 @@ public class LedExternalMergeSort {
 
     private double start = 0;
 
+    public LedExternalMergeSort() {
+    }
+
     public void sort(File srcFile, File destFile) {
         sort(srcFile.getParentFile(), srcFile, destFile, DEFAULT_NUM_TRANSACTIONS_IN_MEMORY);
     }
@@ -42,22 +42,38 @@ public class LedExternalMergeSort {
 
     public void sort(File tempDirectory, File srcFile, File destFile, int numTransactionsInMemory) {
         try {
+            Logger.info("Starting external merge sort: " + srcFile + " -> " + destFile + "(using " + numTransactionsInMemory + " transactions in memory)...");
             start = System.currentTimeMillis();
             final ChunkCreationInfo chunkCreationInfo = createSortedChunks(tempDirectory, srcFile, numTransactionsInMemory);
-            mergeSortedChunks(chunkCreationInfo, destFile);
+            if(chunkCreationInfo == null) {
+                handleEmptyFile(destFile);
+            } else {
+                mergeSortedChunks(chunkCreationInfo, destFile);
+            }
+            Logger.info("External merge sort finished after " + time());
         } catch(Exception e) {
             Logger.error(e);
         }
     }
 
+    private void handleEmptyFile(File destFile) {
+        LedStream.empty().serialize(destFile);
+    }
+
     private ChunkCreationInfo createSortedChunks(File tempDir, File srcFile, int numTransactionsInMemory) {
         //System.out.println(">> Creating sorted chunks... " + time());
         try(FileChannel fileChannel = FileChannel.open(srcFile.toPath(), READ)) {
+            final long fileSize = fileChannel.size();
             final Path chunkDir = Files.createDirectory(tempDir.toPath()
                     .resolve("ChunksFolder_"+System.nanoTime()));
             final String srcFileName = srcFile.getName();
             LedHeader header = requireNonNull(LedHeader.from(fileChannel));
+            if(header.elementCount() == 0) {
+                // Empty file
+                return null;
+            }
             final int transactionSize = header.elementSize();
+            final long numTransactions = header.elementCount();
             final int chunkSize = numTransactionsInMemory * transactionSize;
             final int numChunks = Math.round(header.elementCount() / (float)chunkSize);
             Queue<Path> chunks = new ArrayDeque<>(numChunks);
@@ -66,12 +82,12 @@ public class LedExternalMergeSort {
             StackAllocator<GenericTransaction> allocator = StackAllocators.newManaged(transactionSize, buffer, GenericTransaction::new);
             PriorityQueue<GenericTransaction> priorityQueue = new PriorityQueue<>(numTransactionsInMemory);
 
-            for(int i = 0;fileChannel.position() < fileChannel.size();i++) {
+            for(int i = 0;fileChannel.position() < fileSize;i++) {
                 Path chunk = Files.createFile(chunkDir.resolve("Chunk["+i+"]_" + srcFileName));
                 final int bytesRead = fileChannel.read(buffer.position(0).limit(chunkSize));
                 buffer.clear();
                 writeSortedChunk(chunk, transactionSize, chunkSize, buffer, tempBuffer, allocator, priorityQueue, bytesRead);
-                //checkSorting(chunk, transactionSize);
+                checkSorting(chunk, transactionSize);
                 chunks.add(chunk);
                 priorityQueue.clear();
                 allocator.clear();
@@ -108,6 +124,7 @@ public class LedExternalMergeSort {
         for(int i = 0;i < bytesRead;i+=transactionSize) {
             priorityQueue.add(allocator.malloc());
         }
+        final int limit = priorityQueue.size() * transactionSize;
         final long tempBufferPtr = addressOf(tempBuffer);
         long offset = 0;
         while(!priorityQueue.isEmpty()) {
@@ -115,14 +132,18 @@ public class LedExternalMergeSort {
             memcpy(transaction.address() + transaction.baseOffset(), tempBufferPtr + offset, transactionSize);
             offset += transactionSize;
         }
-
-        tempBuffer.clear();
+        tempBuffer.position(0).limit(limit);
     }
 
     private void mergeSortedChunks(ChunkCreationInfo chunkCreationInfo, File destFile) throws IOException {
-        //System.out.println(">> Merging sorted chunks..." + time());
+        Logger.info("Merging sorted chunks..." + time());
         Queue<Path> chunks = chunkCreationInfo.sortedChunkFiles;
         Path dir = chunkCreationInfo.chunkDirectory;
+        if(chunks.size() == 1) {
+            writeFinalChunkToDestFile(destFile, chunks.remove(), chunkCreationInfo.ledHeader);
+            removeDirectory(dir);
+            return;
+        }
         ByteBuffer buffer = chunkCreationInfo.buffer();
         final int transactionSize = chunkCreationInfo.ledHeader.elementSize();
         final int chunkSize = chunkCreationInfo.chunkSize / 2;
@@ -132,45 +153,58 @@ public class LedExternalMergeSort {
             Path chunk1 = chunks.remove();
             Path chunk2 = chunks.remove();
             Path mergedChunk = Files.createFile(dir.resolve("Chunk_" + count + "_merged_with_" + (count + 1) + ".led.tmp"));
-            //System.out.println(">> Creating " + mergedChunk + "..." + time());
+            Logger.trace("Creating " + mergedChunk + "..." + time());
             MergedIterator<ChunkIterator.TransactionWrapper> mergedIterator = merge(chunk1, chunk2, buffer,
                     transactionSize, chunkSize);
             writeSortedToMergedChunk(mergedChunk, mergedIterator, tempBuffer);
             deleteChunks(chunk1, chunk2);
             chunks.add(mergedChunk);
             count += 2;
-            // checkSorting(mergedChunk, transactionSize);
-            //System.out.println(">> " + mergedChunk + " created successfully!" + time());
         }
-        //System.out.println(">> Doing final merge..." + time());
+        Logger.info("Running final merge..." + time());
         free(chunkCreationInfo.buffer);
-        doFinalMergeAndWriteToDestFile(destFile, chunks.remove(), chunks.remove(), chunkCreationInfo.ledHeader);
-        //System.out.println(">> Merge sort complete!" + time());
+
+        if(chunks.size() == 2) {
+            doFinalMergeAndWriteToDestFile(destFile, chunks.remove(), chunks.remove(), chunkCreationInfo.ledHeader);
+        } else if(chunks.size() == 1) {
+            writeFinalChunkToDestFile(destFile, chunks.remove(), chunkCreationInfo.ledHeader);
+        } else {
+            throw new IllegalStateException("Number of chunks is neither 1 or 2.");
+        }
     }
 
-    private void deleteChunks(Path chunk1, Path chunk2) {
-        final File chunkFile1 = chunk1.toFile();
-        final File chunkFile2 = chunk2.toFile();
-        chunkFile1.deleteOnExit();
-        chunkFile1.delete();
-        chunkFile2.deleteOnExit();
-        chunkFile2.delete();
+    private void removeDirectory(Path dir) {
+        try {
+            Files.delete(dir);
+            File dirFile = dir.toFile();
+            dirFile.delete();
+            dirFile.deleteOnExit();
+        } catch (IOException e) {
+            Logger.warn(e.getMessage());
+        }
+    }
+
+    private void deleteChunks(Path... chunks) {
+        for(Path chunk : chunks) {
+            final File chunkFile = chunk.toFile();
+            chunkFile.delete();
+            chunkFile.deleteOnExit();
+        }
     }
 
     private void checkSorting(Path chunk, int transactionSize) {
-        long lastId = Long.MAX_VALUE;
-        ByteBuffer buffer = allocBuffer(transactionSize);
-        int count = 0;
-        try(FileChannel fileChannel = FileChannel.open(chunk, READ)) {
-            fileChannel.read(buffer);
-            buffer.clear();
-            long id = buffer.getLong(0);
-            if(id > lastId) {
-                throw new AssertionError(chunk + " => " + (count) + ": id > lastId => " + id + " > " + lastId);
+        Logger.trace("Validating sorted chunk " + chunk + "...");
+        try(LedStream<?> ledStream = readChunk(chunk, transactionSize)) {
+            Long previousId = null;
+            while(ledStream.hasNext()) {
+                Transaction transaction = ledStream.next();
+                final long id = Transaction.idOf(transaction);
+                if(previousId != null && id < previousId) {
+                    throw new AssertionError(chunk + " is unsorted: " + previousId + " > " + Transaction.idOf(transaction));
+                }
+                previousId = id;
             }
-            lastId = id;
-            ++count;
-        } catch (IOException e) {
+        } catch (Exception e) {
             Logger.error(e);
         }
     }
@@ -181,6 +215,12 @@ public class LedExternalMergeSort {
         LedStream.merged(Stream.of(readChunk(chunk1, elementSize), readChunk(chunk2, elementSize))).serialize(destFile);
         deleteChunks(chunk1, chunk2);
         deleteDir(chunk1.getParent());
+    }
+
+    private void writeFinalChunkToDestFile(File destFile, Path chunk, LedHeader ledHeader) {
+        final int elementSize = ledHeader.elementSize();
+        LedStream.merged(Stream.of(readChunk(chunk, elementSize))).serialize(destFile);
+        deleteChunks(chunk);
     }
 
     private void deleteDir(Path dir) {
