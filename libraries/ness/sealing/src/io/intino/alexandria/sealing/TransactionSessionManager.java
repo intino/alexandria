@@ -36,7 +36,7 @@ public class TransactionSessionManager {
 			if (destination.exists()) {
 				merge(destination, sorted);
 				sorted.delete();
-			} else Files.move(destination.toPath(), sorted.toPath());
+			} else Files.move(sorted.toPath(), destination.toPath());
 			session.renameTo(new File(session.getAbsolutePath() + ".treated"));
 		} catch (IOException e) {
 			Logger.error(e);
