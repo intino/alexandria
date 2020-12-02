@@ -5,12 +5,12 @@ import io.intino.alexandria.led.allocators.TransactionFactory;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.buffers.store.NativePointerStore;
-import io.intino.alexandria.led.util.MemoryUtils;
-import io.intino.alexandria.led.util.ModifiableMemoryAddress;
+import io.intino.alexandria.led.util.memory.MemoryUtils;
+import io.intino.alexandria.led.util.memory.ModifiableMemoryAddress;
 
 import java.nio.ByteBuffer;
 
-import static io.intino.alexandria.led.util.MemoryUtils.allocBuffer;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
 
 public final class StackAllocators {
 

@@ -5,7 +5,7 @@ import io.intino.alexandria.led.buffers.BigEndianBitBuffer;
 import io.intino.alexandria.led.buffers.BitBuffer;
 import io.intino.alexandria.led.buffers.LittleEndianBitBuffer;
 import io.intino.alexandria.led.buffers.store.ByteStore;
-import io.intino.alexandria.led.util.MemoryUtils;
+import io.intino.alexandria.led.util.memory.MemoryUtils;
 import io.intino.alexandria.led.util.OffHeapObject;
 import io.intino.alexandria.logger.Logger;
 

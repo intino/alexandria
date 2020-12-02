@@ -3,8 +3,8 @@ package io.intino.test.transactions;
 import io.intino.alexandria.led.Transaction;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
 import io.intino.alexandria.led.buffers.store.ByteStore;
-import io.intino.alexandria.led.util.MemoryAddress;
-import io.intino.alexandria.led.util.MemoryUtils;
+import io.intino.alexandria.led.util.memory.MemoryAddress;
+import io.intino.alexandria.led.util.memory.MemoryUtils;
 
 import java.nio.ByteBuffer;
 

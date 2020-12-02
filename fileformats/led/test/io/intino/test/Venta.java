@@ -6,8 +6,8 @@ import io.intino.alexandria.led.buffers.BitBuffer;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.util.BitUtils;
-import io.intino.alexandria.led.util.MemoryAddress;
-import io.intino.alexandria.led.util.MemoryUtils;
+import io.intino.alexandria.led.util.memory.MemoryAddress;
+import io.intino.alexandria.led.util.memory.MemoryUtils;
 
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
