@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.1.1") led
+Artifact("io.intino.alexandria", "1.1.2-SNAPSHOT") led
 	Imports
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Compile("org.xerial.snappy", "snappy-java", "1.1.7.7")

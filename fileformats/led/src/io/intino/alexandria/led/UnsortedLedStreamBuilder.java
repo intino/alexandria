@@ -58,7 +58,7 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
         if(numElementsPerBlock % 2 != 0) {
             throw new IllegalArgumentException("NumElementsPerBlock must be even");
         }
-        buffer = allocBuffer(numElementsPerBlock * transactionSize);
+        buffer = allocBuffer((long) numElementsPerBlock * transactionSize);
         this.allocator = StackAllocators.newManaged(transactionSize, buffer, factory);
         this.keepFileChannelOpen = keepFileChannelOpen;
         this.closed = new AtomicBoolean(false);
@@ -117,9 +117,6 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
     }
 
     private void writeCurrentBlockAndClear() {
-        if(closed.get()) {
-            return;
-        }
         try {
             if(!keepFileChannelOpen) {
                 fileChannel = openFileChannel();
@@ -144,6 +141,9 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
     }
 
     public synchronized void flush() {
+        if(isClosed()) {
+            return;
+        }
         writeCurrentBlockAndClear();
     }
 
