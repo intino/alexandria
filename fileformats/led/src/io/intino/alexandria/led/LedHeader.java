@@ -2,6 +2,7 @@ package io.intino.alexandria.led;
 
 import io.intino.alexandria.logger.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -51,6 +52,15 @@ public class LedHeader {
         return null;
     }
 
+    public static LedHeader from(File file) {
+        try(FileChannel channel = FileChannel.open(file.toPath())) {
+            return from(channel);
+        } catch (IOException e) {
+            Logger.error(e);
+        }
+        return null;
+    }
+
     public long elementCount() {
         return data.getLong(0);
     }
@@ -75,5 +85,13 @@ public class LedHeader {
 
     public byte[] toByteArray() {
         return data.array();
+    }
+
+    @Override
+    public String toString() {
+        return "LedHeader{" +
+                "elementCount=" + elementCount() +
+                ", elementSize=" + elementSize() +
+                '}';
     }
 }

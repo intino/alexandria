@@ -7,9 +7,10 @@ import io.intino.alexandria.led.allocators.stack.StackAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.logger.Logger;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
@@ -17,14 +18,15 @@ import java.util.stream.Stream;
 
 import static io.intino.alexandria.led.Transaction.factoryOf;
 import static io.intino.alexandria.led.Transaction.sizeOf;
+import static io.intino.alexandria.led.util.memory.LedLibraryConfig.DEFAULT_BUFFER_SIZE;
 import static io.intino.alexandria.led.util.memory.LedLibraryConfig.INPUTLEDSTREAM_CONCURRENCY_ENABLED;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
+import static java.nio.file.StandardOpenOption.READ;
 
-public class InputLedStream<T extends Transaction> implements LedStream<T> {
+public class ByteChannelLedStream<T extends Transaction> implements LedStream<T> {
 
-    private static final int DEFAULT_BUFFER_SIZE = 2048;
-
-    private final InputStream inputStream;
+    private final FileChannel byteChannel;
+    private final long fileSize;
     private final int bufferSize;
     private final int transactionSize;
     private final TransactionFactory<T> provider;
@@ -32,25 +34,46 @@ public class InputLedStream<T extends Transaction> implements LedStream<T> {
     private Runnable onClose;
     private final AtomicBoolean closed;
 
-    public InputLedStream(InputStream inputStream, Class<T> transactionClass) {
-        this(inputStream, factoryOf(transactionClass), sizeOf(transactionClass), DEFAULT_BUFFER_SIZE);
+    public ByteChannelLedStream(File file, Class<T> transactionClass) {
+        this(file, factoryOf(transactionClass), sizeOf(transactionClass), DEFAULT_BUFFER_SIZE.get());
     }
 
-    public InputLedStream(InputStream inputStream, Class<T> transactionClass, int bufferSize) {
-        this(inputStream, factoryOf(transactionClass), sizeOf(transactionClass), bufferSize);
+    public ByteChannelLedStream(File file, Class<T> transactionClass, int bufferSize) {
+        this(file, factoryOf(transactionClass), sizeOf(transactionClass), bufferSize);
     }
 
-    public InputLedStream(InputStream inputStream, TransactionFactory<T> factory, int transactionSize) {
-        this(inputStream, factory, transactionSize, DEFAULT_BUFFER_SIZE);
+    public ByteChannelLedStream(File file, TransactionFactory<T> factory, int transactionSize) {
+        this(file, factory, transactionSize, DEFAULT_BUFFER_SIZE.get());
     }
 
-    public InputLedStream(InputStream inputStream, TransactionFactory<T> factory, int transactionSize, int bufferSize) {
-        this.inputStream = inputStream;
+    public ByteChannelLedStream(File file, TransactionFactory<T> factory, int transactionSize, int bufferSize) {
+        this.byteChannel = open(file);
+        fileSize = getFileSize();
         this.transactionSize = transactionSize;
         this.provider = factory;
         this.bufferSize = bufferSize;
         closed = new AtomicBoolean();
         this.iterator = stream().iterator();
+    }
+
+    private long getFileSize() {
+        try {
+            return byteChannel.size();
+        } catch (IOException e) {
+            Logger.error(e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private FileChannel open(File file) {
+        try {
+            FileChannel byteChannel = FileChannel.open(file.toPath(), READ);
+            byteChannel.position(0);
+            return byteChannel;
+        } catch (IOException e) {
+            Logger.error(e);
+            throw new RuntimeException(e);
+        }
     }
 
     public int bufferSize() {
@@ -73,10 +96,9 @@ public class InputLedStream<T extends Transaction> implements LedStream<T> {
         return this;
     }
 
-    @SuppressWarnings("unchecked")
     public synchronized Stream<T> stream() {
-        return Stream.generate(() -> read(inputStream))
-                .takeWhile(inputBuffer -> checkInputBuffer(inputBuffer, inputStream))
+        return Stream.generate(() -> read(byteChannel))
+                .takeWhile(inputBuffer -> checkInputBuffer(inputBuffer, byteChannel))
                 .flatMap(this::allocateAll);
     }
 
@@ -85,15 +107,15 @@ public class InputLedStream<T extends Transaction> implements LedStream<T> {
         return transactionSize;
     }
 
-    private boolean checkInputBuffer(ByteBuffer inputBuffer, InputStream inputStream) {
+    private boolean checkInputBuffer(ByteBuffer inputBuffer, FileChannel byteChannel) {
         if (inputBuffer != null) return true;
-        closeInputStream(inputStream);
+        closeByteChannel(byteChannel);
         return false;
     }
 
-    private synchronized void closeInputStream(InputStream inputStream) {
+    private synchronized void closeByteChannel(FileChannel byteChannel) {
         try {
-            inputStream.close();
+            byteChannel.close();
         } catch (IOException e) {
             Logger.error(e);
         }
@@ -108,16 +130,20 @@ public class InputLedStream<T extends Transaction> implements LedStream<T> {
         return intStream.mapToObj(index -> allocator.malloc());
     }
 
-    private synchronized ByteBuffer read(InputStream inputStream) {
+    private synchronized ByteBuffer read(FileChannel byteChannel) {
         try {
-            if (inputStream == null || inputStream.available() <= 0) return null;
-            byte[] inputBuffer = new byte[bufferSize * transactionSize];
-            int bytesRead;
-            bytesRead = inputStream.read(inputBuffer);
-            if (bytesRead < 0) return null;
-            ByteBuffer buffer = allocBuffer(bytesRead);
-            buffer.put(inputBuffer, 0, bytesRead);
-            buffer.clear();
+            if(byteChannel == null) {
+                return null;
+            }
+            final long filePosition = byteChannel.position();
+            if (!byteChannel.isOpen() || filePosition >= fileSize) {
+                return null;
+            }
+            final int size = (int) Math.min(bufferSize, fileSize - filePosition) * transactionSize;
+            ByteBuffer buffer = allocBuffer(size);
+            int bytesRead = byteChannel.read(buffer);
+            if (bytesRead <= 0) return null;
+            buffer.position(0).limit(bytesRead);
             return buffer;
         } catch (Exception e) {
             Logger.error(e);
@@ -134,7 +160,9 @@ public class InputLedStream<T extends Transaction> implements LedStream<T> {
             onClose.run();
             onClose = null;
         }
-        inputStream.close();
+        if(byteChannel != null) {
+            byteChannel.close();
+        }
         closed.set(true);
     }
 }

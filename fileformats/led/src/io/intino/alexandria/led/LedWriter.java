@@ -4,11 +4,14 @@ import io.intino.alexandria.logger.Logger;
 import org.xerial.snappy.SnappyOutputStream;
 
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import static io.intino.alexandria.led.util.memory.MemoryUtils.memcpy;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.*;
+import static java.nio.file.StandardOpenOption.WRITE;
 
 public class LedWriter {
 
@@ -16,17 +19,17 @@ public class LedWriter {
 
 
 	private int bufferSize = DEFAULT_BUFFER_SIZE;
-	private final OutputStream destination;
+	private final OutputStream destOutputStream;
 	private final File destinationFile;
 
-	public LedWriter(File destination) {
-		destination.getAbsoluteFile().getParentFile().mkdirs();
-		this.destinationFile = destination;
-		this.destination = outputStream(destination);
+	public LedWriter(File destOutputStream) {
+		destOutputStream.getAbsoluteFile().getParentFile().mkdirs();
+		this.destinationFile = destOutputStream;
+		this.destOutputStream = outputStream(destOutputStream);
 	}
 
-	public LedWriter(OutputStream destination) {
-		this.destination = destination;
+	public LedWriter(OutputStream destOutputStream) {
+		this.destOutputStream = destOutputStream;
 		destinationFile = null;
 	}
 
@@ -56,13 +59,72 @@ public class LedWriter {
 		serialize(led);
 	}
 
+	public <T extends Transaction> void writeUncompressed(LedStream<T> ledStream) {
+		if(destinationFile != null) {
+			fastSerializeUncompressed(ledStream);
+		} else {
+			serializeUncompressed(ledStream);
+		}
+	}
+
+	private <T extends Transaction> void fastSerializeUncompressed(LedStream<T> ledStream) {
+		try (FileChannel fileChannel = FileChannel.open(destinationFile.toPath(), WRITE)) {
+			final int transactionSize = ledStream.transactionSize();
+			ByteBuffer outputBuffer = allocBuffer((long) bufferSize * transactionSize);
+			final long destPtr = addressOf(outputBuffer);
+			int offset = 0;
+			while (ledStream.hasNext()) {
+				Transaction transaction = ledStream.next();
+				memcpy(transaction.address() + transaction.baseOffset(), destPtr + offset, transactionSize);
+				offset += transactionSize;
+				if (offset == outputBuffer.capacity()) {
+					fileChannel.write(outputBuffer);
+					outputBuffer.clear();
+					offset = 0;
+				}
+			}
+			if (offset > 0) {
+				outputBuffer.limit(offset);
+				fileChannel.write(outputBuffer);
+				outputBuffer.clear();
+			}
+			destOutputStream.close();
+			ledStream.close();
+		} catch (Exception e) {
+			Logger.error(e);
+		}
+	}
+
+	private <T extends Transaction> void serializeUncompressed(LedStream<T> ledStream) {
+		try (OutputStream outputStream = this.destOutputStream) {
+			final int transactionSize = ledStream.transactionSize();
+			final byte[] outputBuffer = new byte[bufferSize * transactionSize];
+			int offset = 0;
+			while (ledStream.hasNext()) {
+				Transaction schema = ledStream.next();
+				memcpy(schema.address(), schema.baseOffset(), outputBuffer, offset, transactionSize);
+				offset += transactionSize;
+				if (offset == outputBuffer.length) {
+					writeToOutputStream(outputStream, outputBuffer);
+					offset = 0;
+				}
+			}
+			if (offset > 0) {
+				writeToOutputStream(outputStream, outputBuffer, 0, offset);
+			}
+			ledStream.close();
+		} catch (Exception e) {
+			Logger.error(e);
+		}
+	}
+
 	private void serialize(Led<? extends Transaction> led) {
 		if (led.size() == 0) return;
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		final long size = led.size();
 		final int transactionSize = led.transactionSize();
 		final int numBatches = (int) Math.ceil(led.size() / (float) bufferSize);
-		try (OutputStream fos = this.destination) {
+		try (OutputStream fos = this.destOutputStream) {
 			LedHeader header = new LedHeader();
 			header.elementCount(size).elementSize(transactionSize);
 			fos.write(header.toByteArray());
@@ -88,7 +150,7 @@ public class LedWriter {
 
 	private void serialize(LedStream<? extends Transaction> ledStream) {
 		long elementCount = 0;
-		try (OutputStream fos = this.destination) {
+		try (OutputStream fos = this.destOutputStream) {
 			LedHeader header = new LedHeader();
 			header.elementCount(LedHeader.UNKNOWN_SIZE).elementSize(ledStream.transactionSize());
 			fos.write(header.toByteArray());

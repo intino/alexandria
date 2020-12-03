@@ -10,17 +10,18 @@ public final class LedUtils {
 
     public static void sort(File srcFile, File destFile) {
         createIfNotExists(destFile);
-        new LedExternalMergeSort().sort(srcFile, destFile);
+        new LedExternalMergeSort(srcFile, destFile).sort();
     }
 
     public static void sort(File tempDir, File srcFile, File destFile, int numTransactionsInMemory) {
         createIfNotExists(destFile);
-        new LedExternalMergeSort().sort(tempDir, srcFile, destFile, numTransactionsInMemory);
+        new LedExternalMergeSort(srcFile, destFile).chunksDirectory(tempDir).numTransactionsInMemory(numTransactionsInMemory)
+                .sort();
     }
 
     public static void sort(File srcFile, File destFile, int numTransactionsInMemory) {
         createIfNotExists(destFile);
-        new LedExternalMergeSort().sort(srcFile, destFile, numTransactionsInMemory);
+        new LedExternalMergeSort(srcFile, destFile).numTransactionsInMemory(numTransactionsInMemory).sort();
     }
 
     private static void createIfNotExists(File destFile) {

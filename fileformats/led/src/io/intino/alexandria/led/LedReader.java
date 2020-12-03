@@ -3,6 +3,7 @@ package io.intino.alexandria.led;
 import io.intino.alexandria.led.allocators.TransactionFactory;
 import io.intino.alexandria.led.allocators.indexed.IndexedAllocator;
 import io.intino.alexandria.led.allocators.indexed.IndexedAllocatorFactory;
+import io.intino.alexandria.led.leds.ByteChannelLedStream;
 import io.intino.alexandria.led.leds.IndexedLed;
 import io.intino.alexandria.led.leds.InputLedStream;
 import io.intino.alexandria.logger.Logger;
@@ -15,16 +16,16 @@ import static io.intino.alexandria.led.util.memory.MemoryUtils.memcpy;
 
 public class LedReader {
 
-	private final InputStream source;
+	private final InputStream srcInputStream;
 	private final File sourceFile;
 
 	public LedReader(File file) {
-		this.source = inputStreamOf(file);
+		this.srcInputStream = inputStreamOf(file);
 		this.sourceFile = file;
 	}
 
-	public LedReader(InputStream source) {
-		this.source = source;
+	public LedReader(InputStream srcInputStream) {
+		this.srcInputStream = srcInputStream;
 		this.sourceFile = null;
 	}
 
@@ -46,15 +47,15 @@ public class LedReader {
 
 	public <T extends Transaction> Led<T> readAll(IndexedAllocatorFactory<T> allocatorFactory, TransactionFactory<T> factory) {
 		try {
-			if(source.available() == 0) {
+			if(srcInputStream.available() == 0) {
 				return Led.empty();
 			}
 		} catch(Exception e) {
 			Logger.error(e);
 			return Led.empty();
 		}
-		LedHeader header = LedHeader.from(this.source);
-		try(SnappyInputStream inputStream = new SnappyInputStream(this.source)) {
+		LedHeader header = LedHeader.from(this.srcInputStream);
+		try(SnappyInputStream inputStream = new SnappyInputStream(this.srcInputStream)) {
 			IndexedAllocator<T> allocator = allocatorFactory.create(inputStream, header.elementCount(), header.elementSize(), factory);
 			return new IndexedLed<>(allocator);
 		} catch (IOException e) {
@@ -65,11 +66,11 @@ public class LedReader {
 
 	public <T extends Transaction> LedStream<T> read(TransactionFactory<T> factory) {
 		try {
-			if(source.available() == 0) {
+			if(srcInputStream.available() == 0) {
 				return LedStream.empty();
 			}
-			LedHeader header = LedHeader.from(source);
-			return allocate(new SnappyInputStream(source), factory, header.elementSize());
+			LedHeader header = LedHeader.from(srcInputStream);
+			return allocate(new SnappyInputStream(srcInputStream), factory, header.elementSize());
 		} catch (IOException e) {
 			Logger.error(e);
 		}
@@ -78,14 +79,23 @@ public class LedReader {
 
 	public <T extends Transaction> LedStream<T> readUncompressed(int elementSize, TransactionFactory<T> factory) {
 		try {
-			if(source.available() == 0) {
+			if(srcInputStream.available() == 0) {
 				return LedStream.empty();
 			}
-			return allocate(source, factory, elementSize);
+			return allocateUncompressed(factory, elementSize);
 		} catch (IOException e) {
 			Logger.error(e);
 		}
 		return LedStream.empty();
+	}
+
+	private <T extends Transaction> LedStream<T> allocateUncompressed(TransactionFactory<T> factory, int elementSize) {
+		try {
+			srcInputStream.close();
+		} catch (IOException e) {
+			Logger.error(e);
+		}
+		return new ByteChannelLedStream<>(sourceFile, factory, elementSize);
 	}
 
 	private <T extends Transaction> LedStream<T> allocate(InputStream inputStream, TransactionFactory<T> factory, int transactionSize) {
