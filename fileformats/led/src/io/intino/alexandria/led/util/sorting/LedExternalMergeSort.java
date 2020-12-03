@@ -41,7 +41,7 @@ public class LedExternalMergeSort {
         this.srcFile = srcFile;
         this.destFile = destFile;
         destFile.getParentFile().mkdirs();
-        File defaultChunkDir = new File(srcFile.getParentFile(), "Chunks_Dir_" + System.nanoTime());
+        File defaultChunkDir = new File(srcFile.getParentFile(), Thread.currentThread().getName() + "_Chunks_Dir_" + System.nanoTime());
         chunksDirectory(defaultChunkDir);
         numTransactionsInMemory(DEFAULT_NUM_TRANSACTIONS_IN_MEMORY);
     }
@@ -120,8 +120,8 @@ public class LedExternalMergeSort {
             if(debug) {
                 Logger.info("External merge sort finished after " + time());
             }
-        } catch(Exception e) {
-            Logger.error(e);
+        } catch(Throwable e) {
+            Logger.error("Failed to merge sort " + srcFile + " to " + destFile + ": " + e.getMessage(), e);
         } finally {
             freeBuffers();
             chunks = null;
@@ -185,9 +185,8 @@ public class LedExternalMergeSort {
             }
             priorityQueue.clear();
             allocator.clear();
-        } catch (IOException e) {
+        } catch (Throwable e) {
             Logger.error(e);
-            throw new RuntimeException(e);
         }
     }
 
@@ -214,7 +213,6 @@ public class LedExternalMergeSort {
             fileChannel.write(secondaryBuffer);
         } catch (IOException e) {
             Logger.error(e);
-            throw new RuntimeException(e);
         }
     }
 
