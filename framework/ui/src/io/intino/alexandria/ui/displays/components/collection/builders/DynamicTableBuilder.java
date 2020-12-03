@@ -78,7 +78,7 @@ public class DynamicTableBuilder {
 	}
 
 	private static DynamicTableColumn build(Cell cell, Column column) {
-		return new DynamicTableColumn().label(column.label()).operator(operatorOf(column.operator())).metric(column.metric());
+		return new DynamicTableColumn().label(column.label()).operator(operatorOf(column.operator())).metric(column.metric()).countDecimals(column.countDecimals());
 	}
 
 	private static DynamicTableColumn.Operator operatorOf(Column.Operator operator) {
