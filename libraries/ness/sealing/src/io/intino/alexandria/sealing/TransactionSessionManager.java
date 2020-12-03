@@ -19,19 +19,42 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Comparator.comparing;
 
 public class TransactionSessionManager {
-	public static void seal(File stageFolder, File transactionStoreFolder) {
-		transactionSessions(stageFolder).sorted(comparing(File::getName)).forEach(e -> sealSession(transactionStoreFolder, e));
+	public static void seal(File stageFolder, File transactionsStore, File tempFolder) {
+		try {
+			AtomicInteger processed = new AtomicInteger();
+			ExecutorService pool = Executors.newFixedThreadPool(Math.max(4, Runtime.getRuntime().availableProcessors() / 2));
+			List<File> files = transactionSessions(stageFolder).sorted(comparing(File::getName)).collect(Collectors.toList());
+			files.stream().<Runnable>map(e -> () -> {
+				sealSession(transactionsStore, e, tempFolder);
+				notifyProcess(processed, files.size());
+			}).forEach(pool::execute);
+			pool.shutdown();
+			pool.awaitTermination(1, TimeUnit.DAYS);
+		} catch (InterruptedException e) {
+			Logger.error(e);
+		}
 	}
 
-	private static void sealSession(File transactionStoreFolder, File session) {
+	private static void notifyProcess(AtomicInteger processed, int total) {
+		int processedPerc = Math.round(((float) processed.incrementAndGet() / total) * 100);
+		if (processedPerc / 10 > processed.get() / 10) Logger.info("Processed " + processedPerc + "%");
+	}
+
+	private static void sealSession(File transactionStore, File session, File tempFolder) {
 		try {
-			File sorted = sort(session);
-			File destination = datalakeFile(transactionStoreFolder, fingerprintOf(session));
+			File sorted = sort(session, tempFolder);
+			File destination = datalakeFile(transactionStore, fingerprintOf(session));
 			if (destination.exists()) {
 				merge(destination, sorted);
 				sorted.delete();
@@ -66,9 +89,9 @@ public class TransactionSessionManager {
 		return new Fingerprint(cleanedNameOf(file));
 	}
 
-	private static File sort(File transactionSession) {
+	private static File sort(File transactionSession, File tempFolder) {
 		File file = new File(transactionSession.getParentFile(), transactionSession.getName() + ".sort");
-		LedUtils.sort(transactionSession, file, 1_000_000);
+		LedUtils.sort(new File(tempFolder, "Chunks_" + transactionSession.getName() + "_" + Thread.currentThread().getName()), transactionSession, file, 1_000_000);
 		return file;
 	}
 
