@@ -4,6 +4,7 @@ public class Column {
 	private String label;
 	private Operator operator;
 	private String metric = "";
+	private int countDecimals = 0;
 
 	public enum Operator { Sum, Average }
 
@@ -36,6 +37,15 @@ public class Column {
 
 	public Column metric(String metric) {
 		this.metric = metric;
+		return this;
+	}
+
+	public int countDecimals() {
+		return countDecimals;
+	}
+
+	public Column countDecimals(int countDecimals) {
+		this.countDecimals = countDecimals;
 		return this;
 	}
 }

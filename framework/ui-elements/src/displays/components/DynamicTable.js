@@ -449,7 +449,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const relative = cell.relative !== "-1" && this.state.showRelativeValues && metric !== "%" ? cell.relative : undefined;
         const title = cell.label + " " + this.translate("in") + " " + row.label + " " + this.translate("in") + " " + section.label;
         const value = operator === "Average" ? cell.absolute : cell.absolute;
-        const format = operator === "Average" ? "0,0.00" : "0,0";
+        const format = this.cellFormat(section, cell);
         const className = this._isMainView() || this.state.sections[0] == mainSection ? classNames(classes.rowCell) : classNames(classes.rowCell, classes.detailRowCell);
         return (
             <TableCell title={title} key={index} className={className} style={{whiteSpace:'nowrap',...style}}>
@@ -460,18 +460,37 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         );
     };
 
-    cellMetric = (section, cell) => {
+    columnOf = (section, cell) => {
         for (let i=0; i<section.columns.length; i++) {
-            if (section.columns[i].label === cell.label) return section.columns[i].metric;
+            if (section.columns[i].label === cell.label) return section.columns[i];
         }
-        return "";
+        return null;
+    };
+
+    cellMetric = (section, cell) => {
+        const column = this.columnOf(section, cell);
+        return column != null ? column.metric : "";
     };
 
     cellOperator = (section, cell) => {
-        for (let i=0; i<section.columns.length; i++) {
-            if (section.columns[i].label === cell.label) return section.columns[i].operator;
-        }
-        return null;
+        const column = this.columnOf(section, cell);
+        return column != null ? column.operator : null;
+    };
+
+    cellCountDecimals = (section, cell) => {
+        const column = this.columnOf(section, cell);
+        return column != null ? column.countDecimals : 0;
+    };
+
+    cellFormat = (section, cell) => {
+        const operator = this.cellOperator(section, cell);
+        const countDecimals = this.cellCountDecimals(section, cell);
+        let result = "0,0";
+        if (operator === "Average" && countDecimals <= 0) return result + ".00";
+        if (countDecimals <= 0) return result;
+        result += ".";
+        for (let i=0; i<countDecimals; i++) result = result + "0";
+        return result;
     };
 
     renderDialog = () => {
