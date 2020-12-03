@@ -211,6 +211,11 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 		ledWriter.write(this);
 	}
 
+	default void serializeUncompressed(File file) {
+		LedWriter ledWriter = new LedWriter(file);
+		ledWriter.writeUncompressed(this);
+	}
+
 	default LedStream<T> onClose(Runnable onClose) {
 		return this;
 	}

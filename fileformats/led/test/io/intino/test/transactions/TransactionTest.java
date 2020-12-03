@@ -2,6 +2,7 @@ package io.intino.test.transactions;
 
 import io.intino.alexandria.led.allocators.DefaultAllocator;
 import io.intino.alexandria.led.allocators.TransactionAllocator;
+import io.intino.alexandria.led.util.memory.LedLibraryConfig;
 import io.intino.alexandria.led.util.memory.MemoryUtils;
 import io.intino.alexandria.led.util.memory.NativeMemoryTracker;
 import org.junit.Before;
@@ -15,12 +16,11 @@ import static io.intino.alexandria.led.util.memory.MemoryUtils.memset;
 import static io.intino.test.transactions.TestTransaction.*;
 import static org.junit.Assert.assertEquals;
 
-@Ignore
 public class TransactionTest {
 
 	static {
-		MemoryUtils.USE_MEMORY_TRACKER.set(true);
-		MemoryUtils.ALLOCATION_CALLBACK.set(alloc -> System.out.println(alloc.toStringPretty()));
+		LedLibraryConfig.USE_MEMORY_TRACKER.set(true);
+		LedLibraryConfig.ALLOCATION_CALLBACK.set(alloc -> System.out.println(alloc.toStringPretty()));
 	}
 
 	private final Random random;

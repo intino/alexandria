@@ -107,6 +107,10 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
 
     @Override
     public LedStream.Builder<T> append(Consumer<T> initializer) {
+        if(isClosed()) {
+            Logger.error("Trying to use a closed builder.");
+            return this;
+        }
         T transaction = allocator.calloc();
         initializer.accept(transaction);
         if(allocator.remainingBytes() == 0) {

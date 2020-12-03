@@ -9,10 +9,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.Arrays;
 
-import static java.util.Objects.requireNonNull;
+import static io.intino.alexandria.led.util.memory.LedLibraryConfig.*;
 
 public final class MemoryUtils {
 	public static final long NULL = 0L;
@@ -25,12 +24,7 @@ public final class MemoryUtils {
 	private static final long BUFFER_CAPACITY_OFFSET;
 	private static final long BUFFER_LIMIT_OFFSET;
 
-	public static final Configuration<ByteOrder> DEFAULT_BYTE_ORDER = new Configuration<>();
-	public static final Configuration<Boolean> USE_MEMORY_TRACKER = new Configuration<>();
-	public static final Configuration<Consumer<Long>> BEFORE_ALLOCATION_CALLBACK = new Configuration<>();
-	public static final Configuration<Consumer<AllocationInfo>> ALLOCATION_CALLBACK = new Configuration<>();
-	public static final Configuration<Consumer<AllocationInfo>> FREE_CALLBACK = new Configuration<>();
-	private static final Configuration<NativeMemoryTracker> MEMORY_TRACKER = new Configuration<>();
+	private static final LedLibraryConfig.Variable<NativeMemoryTracker> MEMORY_TRACKER = new LedLibraryConfig.Variable<>();
 
 	public static boolean useMemoryTracker() {
 		if(USE_MEMORY_TRACKER.isEmpty()) {
@@ -160,6 +154,9 @@ public final class MemoryUtils {
 	}
 
 	public static void free(long ptr) {
+		if(ptr == NULL) {
+			return;
+		}
 		if(useMemoryTracker()) {
 			if(!FREE_CALLBACK.isEmpty()) {
 				AllocationInfo allocationInfo = getMemoryTracker().find(ptr);
@@ -172,6 +169,9 @@ public final class MemoryUtils {
 	}
 
 	public static void free(ByteBuffer buffer) {
+		if(buffer == null) {
+			return;
+		}
 		if(useMemoryTracker()) {
 			if(!FREE_CALLBACK.isEmpty()) {
 				AllocationInfo allocationInfo = getMemoryTracker().find(addressOf(buffer));
