@@ -14,6 +14,7 @@ import java.util.Random;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@Ignore
 public class TestLedExternalMergeSort {
 
     private static final int NUM_TRANSACTIONS_IN_MEMORY = 100_000;

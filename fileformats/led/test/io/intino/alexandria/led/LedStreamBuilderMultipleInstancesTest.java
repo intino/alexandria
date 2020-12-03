@@ -17,6 +17,7 @@ import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertTrue;
 
+@Ignore
 public class LedStreamBuilderMultipleInstancesTest {
 
     private static final int NUM_ELEMENTS = 500_000_000;
