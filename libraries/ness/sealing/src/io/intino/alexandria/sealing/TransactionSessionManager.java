@@ -25,8 +25,7 @@ import static java.util.Comparator.comparing;
 
 public class TransactionSessionManager {
 	public static void seal(File stageFolder, File transactionStoreFolder) {
-		transactionSessions(stageFolder).sorted(comparing(File::getName))
-				.parallel().forEach(e -> sealSession(transactionStoreFolder, e));
+		transactionSessions(stageFolder).sorted(comparing(File::getName)).forEach(e -> sealSession(transactionStoreFolder, e));
 	}
 
 	private static void sealSession(File transactionStoreFolder, File session) {
@@ -68,8 +67,8 @@ public class TransactionSessionManager {
 	}
 
 	private static File sort(File transactionSession) {
-		File file = new File(transactionSession.getParentFile(), transactionSession.getName() + "sort");
-		LedUtils.sort(transactionSession, file);
+		File file = new File(transactionSession.getParentFile(), transactionSession.getName() + ".sort");
+		LedUtils.sort(transactionSession, file, 1_000_000);
 		return file;
 	}
 
