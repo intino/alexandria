@@ -71,7 +71,8 @@ public final class MemoryUtils {
 			throw new IllegalArgumentException("Size is negative or too large");
 		}
 		if (size > Integer.MAX_VALUE) {
-			throw new IllegalArgumentException("Size " + size + " too large for ByteBuffer. Do smaller allocations or use unmanaged memory.");
+			throw new IllegalArgumentException("Size " + size + " too large for ByteBuffer. " +
+					"Do smaller allocations or use unmanaged memory.");
 		}
 		if(!BEFORE_ALLOCATION_CALLBACK.isEmpty()) {
 			BEFORE_ALLOCATION_CALLBACK.get().accept(size);

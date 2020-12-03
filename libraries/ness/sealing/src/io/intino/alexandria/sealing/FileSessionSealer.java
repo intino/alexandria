@@ -54,7 +54,7 @@ public class FileSessionSealer implements SessionSealer {
 	}
 
 	private void sealTransactions() {
-		TransactionSessionManager.seal(stageFolder, datalake.transactionStoreFolder());
+		TransactionSessionManager.seal(stageFolder, datalake.transactionStoreFolder(), tempFolder());
 	}
 
 	private void lock() {

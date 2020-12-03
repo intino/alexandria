@@ -1,32 +1,32 @@
-package io.intino.other;
+package io.intino.alexandria.led.util.sorting;
 
 import io.intino.alexandria.led.*;
 import io.intino.alexandria.led.util.LedUtils;
-import io.intino.alexandria.led.util.memory.MemoryUtils;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
 
-@Ignore
-@RunWith(Parameterized.class)
-public class TestDigestion2019 {
+class TestDigestion2019 {
 
 	private static final File UNSORTED_SESSION_FILES_DIR = new File("G:\\leds");
 	private static final int NUM_TRANSACTIONS_IN_MEMORY = 500_000;
 
-	static {
-		//MemoryUtils.USE_MEMORY_TRACKER.set(true);
+	public static void main(String[] args) {
+		final int numThreads = Runtime.getRuntime().availableProcessors() - 1;
+		final int numTransactions = 500_000;
+		System.out.println("Num threads = " + numThreads);
+		System.out.println("Num transactions per thread = " + NUM_TRANSACTIONS_IN_MEMORY);
+		ExecutorService threadPool = Executors.newFixedThreadPool(numThreads);
+		for(File srcFile : getParameters()) {
+			TestDigestion2019 test = new TestDigestion2019(srcFile);
+			threadPool.submit(() -> test.doTest(numTransactions));
+		}
 	}
 
-	@Parameterized.Parameters
 	public static Collection<File> getParameters() {
 		File[] files = UNSORTED_SESSION_FILES_DIR.listFiles();
 		if(files == null || files.length == 0) {
@@ -52,22 +52,34 @@ public class TestDigestion2019 {
 		destinationSortedLedFile.getParentFile().mkdirs();
 	}
 
-	@Test
 	public void test() {
+		doTest(NUM_TRANSACTIONS_IN_MEMORY);
+	}
+
+	private void doTest(int numTransactionsInMemory) {
 		try {
 			System.out.println(">> Testing " + sessionUnsortedLedFile + "(" +
 					sessionUnsortedLedFile.length() / 1024.0 / 1024.0 + " MB)...");
 			LedHeader sourceHeader = LedHeader.from(sessionUnsortedLedFile);
-			LedUtils.sort(sessionUnsortedLedFile, destinationSortedLedFile, NUM_TRANSACTIONS_IN_MEMORY);
+			LedUtils.sort(sessionUnsortedLedFile, destinationSortedLedFile, numTransactionsInMemory);
 			System.out.println("	>> Validating result led...");
 			LedHeader destHeader = LedHeader.from(destinationSortedLedFile);
-			assertEquals("Sorting caused lost of information: " + sourceHeader.elementCount() + " != " + destHeader.elementCount(),
+			if(sourceHeader.elementCount() != destHeader.elementCount()) {
+				throw new AssertionError("Incongruent information");
+			}
+			/*
+			Assert.assertEquals("Sorting caused lost of information: " + sourceHeader.elementCount() + " != " + destHeader.elementCount(),
 					sourceHeader.elementCount(), destHeader.elementCount());
+
+			 */
 			try(LedStream<?> ledStream = new LedReader(destinationSortedLedFile).read(GenericTransaction::new)) {
 				long lastId = Long.MIN_VALUE;
 				while(ledStream.hasNext()) {
 					final long id = Transaction.idOf(ledStream.next());
-					assertFalse(sessionUnsortedLedFile + " is not sorted: " + id + " > " + lastId, id > lastId);
+					if(id < lastId) {
+						throw new AssertionError();
+					}
+					// Assert.assertFalse(sessionUnsortedLedFile + " is not sorted: " + id + " > " + lastId, id > lastId);
 					lastId = id;
 				}
 			}
@@ -76,7 +88,8 @@ public class TestDigestion2019 {
 			return;
 		} catch (Throwable e) {
 			e.printStackTrace();
-			fail(e.getMessage());
+			throw new RuntimeException(e);
+			//Assert.fail(e.getMessage());
 		}
 		System.out.println();
 	}
