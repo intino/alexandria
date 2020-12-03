@@ -4,6 +4,7 @@ import io.intino.alexandria.led.*;
 import io.intino.alexandria.led.util.LedUtils;
 import io.intino.alexandria.led.util.memory.MemoryUtils;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
+@Ignore
 @RunWith(Parameterized.class)
 public class TestDigestion2019 {
 
