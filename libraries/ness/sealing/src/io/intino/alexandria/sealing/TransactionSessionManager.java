@@ -41,6 +41,7 @@ public class TransactionSessionManager {
 			}).forEach(pool::execute);
 			pool.shutdown();
 			pool.awaitTermination(1, TimeUnit.DAYS);
+			deleteDirectory(tempFolder);
 		} catch (InterruptedException e) {
 			Logger.error(e);
 		}
@@ -56,7 +57,7 @@ public class TransactionSessionManager {
 			File sorted = sort(session, tempFolder);
 			File destination = datalakeFile(transactionStore, fingerprintOf(session));
 			if (destination.exists()) {
-				merge(destination, sorted);
+				merge(destination, sorted, tempFolder);
 				sorted.delete();
 			} else Files.move(sorted.toPath(), destination.toPath());
 			session.renameTo(new File(session.getAbsolutePath() + ".treated"));
@@ -65,11 +66,12 @@ public class TransactionSessionManager {
 		}
 	}
 
-	private static void merge(File destination, File session) {
+	private static void merge(File destination, File session, File tempFolder) {
 		try {
-			File temp = Files.createTempFile("seal", ".led").toFile();
+			File temp = Files.createTempFile(tempFolder.toPath(),"seal", ".led").toFile();
 			LedStream.merged(Stream.of(new LedReader(destination).read(SealTransaction::new), new LedReader(session).read(SealTransaction::new))).serialize(temp);
 			FS.copyInto(temp, new FileInputStream(session));
+			temp.delete();
 		} catch (IOException e) {
 			Logger.error(e);
 		}
@@ -113,6 +115,12 @@ public class TransactionSessionManager {
 		public int size() {
 			return (int) bitBuffer.byteSize();
 		}
+	}
+
+	private static void deleteDirectory(File directoryToBeDeleted) {
+		File[] allContents = directoryToBeDeleted.listFiles();
+		if (allContents != null) for (File file : allContents) deleteDirectory(file);
+		directoryToBeDeleted.delete();
 	}
 
 }
