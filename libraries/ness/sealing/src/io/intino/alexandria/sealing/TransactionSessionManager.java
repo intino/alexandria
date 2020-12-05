@@ -32,24 +32,28 @@ import static java.util.Comparator.comparing;
 public class TransactionSessionManager {
 	public static void seal(File stageFolder, File transactionsStore, File tempFolder) {
 		try {
-			AtomicInteger processed = new AtomicInteger();
+			AtomicInteger processed = new AtomicInteger(0);
+			AtomicInteger processedPerc = new AtomicInteger(0);
 			ExecutorService pool = Executors.newFixedThreadPool(Math.max(4, Runtime.getRuntime().availableProcessors() / 2));
 			List<File> files = transactionSessions(stageFolder).sorted(comparing(File::getName)).collect(Collectors.toList());
+			if (!files.isEmpty()) Logger.info("Sealing transactions...");
 			files.stream().<Runnable>map(e -> () -> {
 				sealSession(transactionsStore, e, tempFolder);
-				notifyProcess(processed, files.size());
+				notifyProcess(processed, processedPerc, files.size());
 			}).forEach(pool::execute);
 			pool.shutdown();
 			pool.awaitTermination(1, TimeUnit.DAYS);
+			if (!files.isEmpty()) Logger.info("Seal of transactions finished!");
 			deleteDirectory(tempFolder);
 		} catch (InterruptedException e) {
 			Logger.error(e);
 		}
 	}
 
-	private static void notifyProcess(AtomicInteger processed, int total) {
+	private static void notifyProcess(AtomicInteger processed, AtomicInteger currentPerc, int total) {
 		int processedPerc = Math.round(((float) processed.incrementAndGet() / total) * 100);
-		if (processedPerc / 10 > processed.get() / 10) Logger.info("Processed " + processedPerc + "%");
+		if (processedPerc / 10 > processed.get() / 10) Logger.info("Sealed " + processedPerc + "% of transactions");
+		currentPerc.set(processedPerc);
 	}
 
 	private static void sealSession(File transactionStore, File session, File tempFolder) {
