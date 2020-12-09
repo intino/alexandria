@@ -3,7 +3,6 @@ package io.intino.alexandria.office;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.ss.util.CellRangeUtil;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.util.IOUtils;
 
@@ -19,8 +18,8 @@ public class XlsBuilder {
 	private final Map<Sheet, HSSFPatriarch> patriarchs = new HashMap<>();
 	private final HSSFCellStyle level1;
 	private final HSSFCellStyle level2;
-	private final HSSFCellStyle headerText;
-	private final HSSFCellStyle headerNumber;
+	private final HSSFCellStyle boldLeft;
+	private final HSSFCellStyle boldRight;
 	private final HSSFCellStyle text;
 	private final Set<Short> styles = new HashSet<>();
 
@@ -30,8 +29,8 @@ public class XlsBuilder {
 
 		this.level1 = style(font(14, true));
 		this.level2 = style(font(12, true));
-		this.headerText = style(font(10, true), HorizontalAlignment.LEFT);
-		this.headerNumber = style(font(10, true), HorizontalAlignment.RIGHT);
+		this.boldLeft = style(font(10, true), HorizontalAlignment.LEFT);
+		this.boldRight = style(font(10, true), HorizontalAlignment.RIGHT);
 		this.text = style(font(10, false), HorizontalAlignment.LEFT);
 	}
 
@@ -151,10 +150,10 @@ public class XlsBuilder {
 	}
 
 	private CellStyle styleFor(String value) {
-		if (value.startsWith("**")) return level2;
 		if (value.startsWith("*")) return level1;
-		if (value.startsWith("$")) return headerText;
-		if (value.startsWith("#")) return headerNumber;
+		if (value.startsWith("**")) return level2;
+		if (value.startsWith("$")) return boldLeft;
+		if (value.startsWith("#")) return boldRight;
 		if (value.startsWith(" ")) return text;
 		return null;
 	}
@@ -481,11 +480,11 @@ public class XlsBuilder {
 				private int firstRow() {
 					return parseInt(split[0]);
 				}
-				private int lastRow() {
-					return parseInt(split[2]);
-				}
 				private int firstCol() {
 					return parseInt(split[1]);
+				}
+				private int lastRow() {
+					return parseInt(split[2]);
 				}
 				private int lastCol() {
 					return parseInt(split[3]);
