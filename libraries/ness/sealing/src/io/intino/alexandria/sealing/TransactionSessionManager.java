@@ -32,23 +32,28 @@ import static java.util.Comparator.comparing;
 public class TransactionSessionManager {
 	public static void seal(File stageFolder, File transactionsStore, File tempFolder) {
 		try {
-			AtomicInteger processed = new AtomicInteger();
+			AtomicInteger processed = new AtomicInteger(0);
+			AtomicInteger processedPerc = new AtomicInteger(0);
 			ExecutorService pool = Executors.newFixedThreadPool(Math.max(4, Runtime.getRuntime().availableProcessors() / 2));
 			List<File> files = transactionSessions(stageFolder).sorted(comparing(File::getName)).collect(Collectors.toList());
+			if (!files.isEmpty()) Logger.info("Sealing transactions...");
 			files.stream().<Runnable>map(e -> () -> {
 				sealSession(transactionsStore, e, tempFolder);
-				notifyProcess(processed, files.size());
+				notifyProcess(processed, processedPerc, files.size());
 			}).forEach(pool::execute);
 			pool.shutdown();
 			pool.awaitTermination(1, TimeUnit.DAYS);
+			if (!files.isEmpty()) Logger.info("Seal of transactions finished!");
+			deleteDirectory(tempFolder);
 		} catch (InterruptedException e) {
 			Logger.error(e);
 		}
 	}
 
-	private static void notifyProcess(AtomicInteger processed, int total) {
+	private static void notifyProcess(AtomicInteger processed, AtomicInteger currentPerc, int total) {
 		int processedPerc = Math.round(((float) processed.incrementAndGet() / total) * 100);
-		if (processedPerc / 10 > processed.get() / 10) Logger.info("Processed " + processedPerc + "%");
+		if (processedPerc / 10 > processed.get() / 10) Logger.info("Sealed " + processedPerc + "% of transactions");
+		currentPerc.set(processedPerc);
 	}
 
 	private static void sealSession(File transactionStore, File session, File tempFolder) {
@@ -56,7 +61,7 @@ public class TransactionSessionManager {
 			File sorted = sort(session, tempFolder);
 			File destination = datalakeFile(transactionStore, fingerprintOf(session));
 			if (destination.exists()) {
-				merge(destination, sorted);
+				merge(destination, sorted, tempFolder);
 				sorted.delete();
 			} else Files.move(sorted.toPath(), destination.toPath());
 			session.renameTo(new File(session.getAbsolutePath() + ".treated"));
@@ -65,11 +70,12 @@ public class TransactionSessionManager {
 		}
 	}
 
-	private static void merge(File destination, File session) {
+	private static void merge(File destination, File session, File tempFolder) {
 		try {
-			File temp = Files.createTempFile("seal", ".led").toFile();
+			File temp = Files.createTempFile(tempFolder.toPath(),"seal", ".led").toFile();
 			LedStream.merged(Stream.of(new LedReader(destination).read(SealTransaction::new), new LedReader(session).read(SealTransaction::new))).serialize(temp);
 			FS.copyInto(temp, new FileInputStream(session));
+			temp.delete();
 		} catch (IOException e) {
 			Logger.error(e);
 		}
@@ -113,6 +119,12 @@ public class TransactionSessionManager {
 		public int size() {
 			return (int) bitBuffer.byteSize();
 		}
+	}
+
+	private static void deleteDirectory(File directoryToBeDeleted) {
+		File[] allContents = directoryToBeDeleted.listFiles();
+		if (allContents != null) for (File file : allContents) deleteDirectory(file);
+		directoryToBeDeleted.delete();
 	}
 
 }
