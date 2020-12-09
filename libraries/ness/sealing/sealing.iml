@@ -36,5 +36,9 @@
     <orderEntry type="library" name="Intino: org.apache.commons:commons-lang3:3.11" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:mapp:1.1.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:tris:1.0.0" level="project" />
+    <orderEntry type="module" module-name="ingestion" scope="TEST" />
+    <orderEntry type="library" scope="TEST" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: org.xerial.snappy:snappy-java:1.1.8.2" level="project" />
+    <orderEntry type="module" module-name="led" scope="TEST" />
   </component>
 </module>
