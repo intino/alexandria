@@ -5,7 +5,6 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.util.IOUtils;
-import org.apache.poi.util.StringUtil;
 
 import java.io.*;
 import java.util.*;
@@ -160,11 +159,13 @@ public class XlsBuilder {
 	}
 
 	private Object contentOf(String value) {
+		value = value.replaceAll("^[#*$ ]*", "");
 		try {
 			return parseDouble(value);
 		} catch (NumberFormatException e) {
 			return value;
 		}
+
 	}
 
 	private boolean isStyled(String value) {
