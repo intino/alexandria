@@ -159,8 +159,8 @@ public class XlsBuilder {
 	}
 
 	private Object contentOf(String value) {
+		value = value.replaceAll("^[#*$ ]*", "");
 		try {
-			value = value.replaceAll("^[#*$ ]*", "");
 			return parseDouble(value);
 		} catch (NumberFormatException e) {
 			return value;
