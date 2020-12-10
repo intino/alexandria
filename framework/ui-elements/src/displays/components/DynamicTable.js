@@ -411,16 +411,18 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     sort = (s) => {
         if (this.state.orderBy == null) return s;
         let sections = JSON.parse(JSON.stringify(s));
-        let section = this.findSectionToSort(sections);
-        if (section == null) return sections;
-        let rows = this.sortRows(section.rows);
-        for (let i=0; i<sections.length; i++) sections[i] = this.sortSection(sections[i], rows);
+        for (let i=0; i<sections.length; i++) {
+            let section = this.findSectionToSort(sections, i);
+            if (section == null) continue;
+            let rows = this.sortRows(section.rows);
+            sections[i] = this.sortSection(sections[i], rows);
+        }
         return sections;
     };
 
-    findSectionToSort = (sections) => {
+    findSectionToSort = (sections, index) => {
         if (sections.length <= 0) return null;
-        const sectionsArray = this.treeToArray(sections[0]);
+        const sectionsArray = this.treeToArray(sections[index]);
         const leafSections = sectionsArray.length > 1 ? sectionsArray[sectionsArray.length-2] : [];
         if (leafSections.length <= 0) return null;
         let count = 0;
