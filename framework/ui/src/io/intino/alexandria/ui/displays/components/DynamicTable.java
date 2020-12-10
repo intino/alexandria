@@ -10,6 +10,7 @@ import io.intino.alexandria.ui.displays.components.collection.behaviors.DynamicT
 import io.intino.alexandria.ui.displays.components.collection.builders.DynamicTableBuilder;
 import io.intino.alexandria.ui.displays.events.AddItemEvent;
 import io.intino.alexandria.ui.displays.events.Event;
+import io.intino.alexandria.ui.displays.events.Listener;
 import io.intino.alexandria.ui.displays.events.collection.SelectRowEvent;
 import io.intino.alexandria.ui.displays.events.collection.SelectRowListener;
 import io.intino.alexandria.ui.displays.notifiers.DynamicTableNotifier;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class DynamicTable<B extends Box, ItemComponent extends io.intino.alexandria.ui.displays.components.Row, Item> extends AbstractDynamicTable<DynamicTableNotifier, B> implements Collection<ItemComponent, Item> {
+    private Listener selectingRowListener;
     private SelectRowListener selectRowListener;
 
     public DynamicTable(B box) {
@@ -55,6 +57,11 @@ public abstract class DynamicTable<B extends Box, ItemComponent extends io.intin
         DynamicTableCollectionBehavior behavior = behavior();
         if (behavior == null) return this;
         behavior.drill(drill);
+        return this;
+    }
+
+    public DynamicTable onSelectingRow(Listener listener) {
+        this.selectingRowListener = listener;
         return this;
     }
 
@@ -122,6 +129,7 @@ public abstract class DynamicTable<B extends Box, ItemComponent extends io.intin
     }
 
     public void selectRow(DynamicTableRowParams params) {
+        if (selectingRowListener != null) selectingRowListener.accept(new Event(this));
         if (selectRowListener == null) return;
         SelectRowEvent event = new SelectRowEvent(this, sectionOf(params.section()), params.row());
         notifier.openRow(selectRowListener.accept(event));
