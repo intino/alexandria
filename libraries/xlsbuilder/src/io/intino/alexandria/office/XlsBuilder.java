@@ -159,7 +159,7 @@ public class XlsBuilder {
 	}
 
 	private Object contentOf(String value) {
-		if (isStyled(value)) return format(value);
+		value = value.replaceAll("^[#*$ ]*", "");
 		try {
 			return parseDouble(value);
 		} catch (NumberFormatException e) {
@@ -170,10 +170,6 @@ public class XlsBuilder {
 
 	private boolean isStyled(String value) {
 		return value.matches("[#*$ ].*");
-	}
-
-	private HSSFRichTextString format(String value) {
-		return helper.createRichTextString(value.replaceAll("^[#*$ ]*", ""));
 	}
 
 	private Define defineFor(String variable, String value) {
