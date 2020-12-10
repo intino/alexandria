@@ -5,7 +5,7 @@ import DynamicTableNotifier from "../../../gen/displays/notifiers/DynamicTableNo
 import DynamicTableRequester from "../../../gen/displays/requesters/DynamicTableRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
-import { Table, TableHead, TableBody, TableRow, TableCell, Typography, Dialog,
+import { Table, TableHead, TableBody, TableRow, TableCell, TableSortLabel, Typography, Dialog,
          DialogActions, DialogContent, DialogTitle, Checkbox, IconButton, FormControlLabel } from '@material-ui/core';
 import {RiseLoader, PulseLoader} from "react-spinners";
 import { Clear, ArrowBack } from '@material-ui/icons';
@@ -102,7 +102,18 @@ export const DynamicTableStyles = theme => ({
         cursor:'pointer',
         color:'white',
         background:'#006ab0',
-    }
+    },
+    visuallyHidden: {
+        border: 0,
+        clip: 'rect(0 0 0 0)',
+        height: 1,
+        margin: -1,
+        overflow: 'hidden',
+        padding: 0,
+        position: 'absolute',
+        top: 20,
+        width: 1,
+    },
 });
 
 const DynamicTablePageSize = 10;
@@ -125,6 +136,8 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 		    selectRowProvided: false,
             hideZeros: false,
             showRelativeValues: false,
+            order: null,
+            orderBy: null,
 		    ...this.state,
 		};
 	};
@@ -174,10 +187,11 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     };
 
     renderMainView = () => {
+        const sections = this.sort(this.state.sections);
         const end = this._endPos();
         let result = [];
         for (let i=0; i<=end; i++) {
-            result.push(this.renderSection(this.state.sections[i], i));
+            result.push(this.renderSection(sections[i], i));
         };
         if (this.state.page < this._lastPage()) result.push(this.renderShowMoreSections());
         return result;
@@ -209,10 +223,11 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 
     renderDetailView = () => {
         const { classes } = this.props;
+        const sections = this.sort(this.state.sections);
         return (
             <div className="layout horizontal flex">
-                {this.state.sections.map((s, index) => this.renderDetailSection(s, index))}
-                {this.state.sections.length > 1 && this.renderDetailSection(this.createDetailTotalSection(), this.state.sections.length+1)}
+                {sections.map((s, index) => this.renderDetailSection(s, index))}
+                {sections.length > 1 && this.renderDetailSection(this.createDetailTotalSection(), sections.length+1)}
             </div>
         );
     };
@@ -227,9 +242,21 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 		result.fontSize = section.fontSize;
 		result.columns = section.columns;
 		result.rows = [];
-		result.sections = section.sections;
+		result.sections = [];
+		this.copySections(section, result);
 		this.aggregateTotalRows(result);
         return result;
+    };
+
+    copySections = (section, totalSection) => {
+        for (let i=0; i<section.sections.length; i++) {
+            const childSection = section.sections[i];
+            const childTotalSection = { label: childSection.label, color: childSection.color,
+                                        backgroundColor: childSection.backgroundColor, fontSize: childSection.fontSize,
+                                        columns: childSection.columns, rows: [], sections: [] };
+            totalSection.sections.push(childTotalSection);
+            this.copySections(childTotalSection, childSection);
+        }
     };
 
     aggregateTotalRows = (totalSection) => {
@@ -352,6 +379,8 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const fontSize = section.fontSize + "pt";
         const textAlign = section.textAlign != null ? section.textAlign : "center";
         const selectable = section.selectable;
+        const orderBy = this.state.orderBy != null ? this.state.orderBy.label : null;
+        const order = this.state.order;
         const className = isMainView || this.state.sections[0] == mainSection ? classNames(classes.rowCell) : classNames(classes.rowCell, classes.detailRowCell);
         if (!isMainView && selectable && index != this.state.column.index) return null;
         return (
@@ -359,10 +388,102 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                        colSpan={colSpan}
                        style={{backgroundColor:backgroundColor,fontSize:fontSize,textAlign:textAlign,minWidth:'170px'}}
                        key={index}>
-                {(!selectable || (!isMainView && selectable)) && <span style={{color:color,whiteSpace:'nowrap'}}>{section.label}</span>}
-                {isMainView && selectable && <a className={classes.columnAction} onClick={this.handleFilterColumn.bind(this, section, index)}>{section.label}</a>}
+                {(!selectable || (!isMainView && selectable)) &&
+                    <a style={{color:color,whiteSpace:'nowrap',cursor:'pointer'}} onClick={this.handleFilterFirstColumn.bind(this)}>{section.label}</a>
+                }
+                {isMainView && selectable &&
+                    <TableSortLabel active={orderBy === section.label} direction={orderBy === section.label ? order : 'asc'} onClick={this.handleSort.bind(this, section, index)}>
+                        <span>{section.label}</span>
+                        {orderBy === section.label ? (
+                            <span className={classes.visuallyHidden}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</span>
+                        ) : null}
+                    </TableSortLabel>
+                }
             </TableCell>
         );
+    };
+
+    handleSort = (section, index, e) => {
+        const isAsc = this.state.orderBy != null && this.state.orderBy.label === section.label && this.state.orderBy.index === index && this.state.order === 'asc';
+        this.setState({ order: isAsc ? 'desc' : 'asc', orderBy: { label: section.label, index: index } });
+    };
+
+    sort = (s) => {
+        if (this.state.orderBy == null) return s;
+        let sections = JSON.parse(JSON.stringify(s));
+        let section = this.findSectionToSort(sections);
+        if (section == null) return sections;
+        let rows = this.sortRows(section.rows);
+        for (let i=0; i<sections.length; i++) sections[i] = this.sortSection(sections[i], rows);
+        return sections;
+    };
+
+    findSectionToSort = (sections) => {
+        if (sections.length <= 0) return null;
+        const sectionsArray = this.treeToArray(sections[0]);
+        const leafSections = sectionsArray.length > 1 ? sectionsArray[sectionsArray.length-2] : [];
+        if (leafSections.length <= 0) return null;
+        let count = 0;
+        for (let i=0; i<leafSections.length; i++) {
+            count += leafSections[i].columns.length;
+            if (this.state.orderBy.index < count) return leafSections[i];
+        }
+        return null;
+    };
+
+    sortSection = (section, rowsOrder) => {
+        for (let i=0; i<section.sections.length; i++) section.sections[i] = this.sortSection(section.sections[i], rowsOrder);
+        section.rows = this.sortRowsUsing(section.rows, rowsOrder);
+        return section;
+    };
+
+    sortRowsUsing = (rows, rowsOrder) => {
+        if (rows.length <= 0) return rows;
+        let result = [];
+        for (let i=0; i<rowsOrder.length; i++) {
+            let label = rowsOrder[i].label;
+            result.push(this.findRow(rows, label));
+        }
+        return result;
+    };
+
+    findRow = (rows, label) => {
+        for (let i=0; i<rows.length; i++)
+            if (rows[i].label === label) return rows[i];
+        return null;
+    };
+
+    sortRows = (rows) => {
+      const comparator = this.getComparator();
+      const stabilizedThis = rows.map((el, index) => [el, index]);
+      stabilizedThis.sort((a, b) => {
+        const order = comparator(a[0], b[0]);
+        if (order !== 0) return order;
+        return a[1] - b[1];
+      });
+      return stabilizedThis.map((el) => el[0]);
+    }
+
+    getComparator = () => {
+      return this.state.order === 'desc'
+        ? (a, b) => this.descendingComparator(a, b)
+        : (a, b) => -this.descendingComparator(a, b);
+    };
+
+    descendingComparator = (a, b) => {
+        if (a.label === "Total" || b.label === "Total") return 0;
+        const indicator = this.state.orderBy.label;
+        const aValue = this.cellValue(a, indicator);
+        const bValue = this.cellValue(b, indicator);
+        if (bValue < aValue) return -1;
+        if (bValue > aValue) return 1;
+        return 0;
+    };
+
+    cellValue = (row, indicator) => {
+        for (let i=0; i<row.cells.length; i++)
+            if (row.cells[i].label === indicator) return row.cells[i].absolute;
+        return 0;
     };
 
     renderBody = (section, index) => {
@@ -644,8 +765,14 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         this.setState({hideZeros: !this.state.hideZeros});
     };
 
+    handleFilterFirstColumn = () => {
+        const columns = this._selectorColumns();
+        if (columns.length <= 0) return;
+        this.handleFilterColumn(columns[0], columns[0].index);
+    };
+
     handleFilterColumn = (column, index) => {
-        this.setState({ column: { index: index, label: column.label } })
+        this.setState({ column: { index: index, label: column.label }, order: null, orderBy: null });
     };
 
     handleSelectColumn = (value) => {
