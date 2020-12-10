@@ -17,7 +17,7 @@ class TestDigestion2019 {
 
 	public static void main(String[] args) {
 		final int numThreads = Runtime.getRuntime().availableProcessors() - 1;
-		final int numTransactions = 500_000;
+		final int numTransactions = 1_000_000;
 		System.out.println("Num threads = " + numThreads);
 		System.out.println("Num transactions per thread = " + NUM_TRANSACTIONS_IN_MEMORY);
 		ExecutorService threadPool = Executors.newFixedThreadPool(numThreads);

@@ -5,6 +5,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.util.IOUtils;
+import org.apache.poi.util.StringUtil;
 
 import java.io.*;
 import java.util.*;
@@ -159,21 +160,15 @@ public class XlsBuilder {
 	}
 
 	private Object contentOf(String value) {
-		if (isStyled(value)) return format(value);
 		try {
 			return parseDouble(value);
 		} catch (NumberFormatException e) {
 			return value;
 		}
-
 	}
 
 	private boolean isStyled(String value) {
 		return value.matches("[#*$ ].*");
-	}
-
-	private HSSFRichTextString format(String value) {
-		return helper.createRichTextString(value.replaceAll("^[#*$ ]*", ""));
 	}
 
 	private Define defineFor(String variable, String value) {
