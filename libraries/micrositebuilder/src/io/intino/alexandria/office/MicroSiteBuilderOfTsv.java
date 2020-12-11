@@ -10,7 +10,6 @@ import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 	private final Configuration config;
@@ -117,7 +116,16 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 
 	private String toRow(String line) {
 		String[] values = line.split("\t");
-		return "<tr>" + config.columns().stream().map(c -> "<td>" + (values.length > c.index ? values[c.index] : "") + "</td>").collect(Collectors.joining()) + "</tr>";
+		return "<tr>" + config.columns().stream().map(c -> "<td>" + toCell(c, values.length > c.index ? values[c.index] : "") + "</td>").collect(Collectors.joining()) + "</tr>";
+	}
+
+	private String toCell(Configuration.Column column, String value) {
+		return column.type() == Configuration.Column.Type.Link ? toCellLink(column, value) : value;
+	}
+
+	private String toCellLink(Configuration.Column column, String value) {
+		String link = column.linkPattern() != null ? column.linkPattern.replace(":id", value) : null;
+		return link != null ? "<a href=\"" + link + "\" target=\"_blank\">" + value + "</a>": value;
 	}
 
 	private int pageOf(long current) {
@@ -186,10 +194,18 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 		public static class Column {
 			private String label;
 			private int index;
+			private Type type;
+			private String linkPattern;
+
+			public enum Type { Text, Link }
 
 			public Column(String label, int index) {
+				this(label, index, Type.Text);
+			}
+			public Column(String label, int index, Type type) {
 				this.label = label;
 				this.index = index;
+				this.type = type;
 			}
 
 			public String label() {
@@ -207,6 +223,24 @@ public class MicroSiteBuilderOfTsv extends MicroSiteBuilder {
 
 			public Column index(int index) {
 				this.index = index;
+				return this;
+			}
+
+			public Type type() {
+				return type;
+			}
+
+			public Column type(Type type) {
+				this.type = type;
+				return this;
+			}
+
+			public String linkPattern() {
+				return linkPattern;
+			}
+
+			public Column linkPattern(String pattern) {
+				this.linkPattern = pattern;
 				return this;
 			}
 		}
