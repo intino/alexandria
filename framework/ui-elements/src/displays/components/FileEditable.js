@@ -9,7 +9,7 @@ import ComponentBehavior from "./behaviors/ComponentBehavior";
 import Theme from "app-elements/gen/Theme";
 import { DropzoneArea } from 'material-ui-dropzone';
 import { IconButton } from "@material-ui/core";
-import { Cancel } from "@material-ui/icons";
+import { CloudDownload, Cancel } from "@material-ui/icons";
 import 'alexandria-ui-elements/res/styles/components/fileeditable/styles.css';
 import 'alexandria-ui-elements/res/styles/layout.css';
 
@@ -39,6 +39,10 @@ export default class FileEditable extends AbstractFile {
 
 	handleClear(e) {
 	    this.saveFile(null, null);
+	};
+
+	handleDownload(e) {
+	    this.requester.downloadFile();
 	};
 
 	saveFile(file, value) {
@@ -103,10 +107,12 @@ export default class FileEditable extends AbstractFile {
 	};
 
 	_renderInputValue = () => {
+	    const readonly = this.state.value == null || this.state.value === "";
 	    return (
 	        <div className="layout horizontal center" style={{padding:'0 5px',border:'1px solid #ddd',marginBottom:'4px'}}>
 	            <div className="layout vertical flex" style={{marginRight:'10px'}}>{this.filename()}</div>
-	            <IconButton size="small" onClick={this.handleClear.bind(this)}><Cancel/></IconButton>
+	            <IconButton size="small" color="primary" readonly={readonly} onClick={this.handleDownload.bind(this)}><CloudDownload/></IconButton>
+	            <IconButton size="small" color="primary" onClick={this.handleClear.bind(this)}><Cancel/></IconButton>
             </div>
         );
 	};
@@ -116,7 +122,8 @@ export default class FileEditable extends AbstractFile {
 	    let filename = id;
 	    try { filename = atob(id); }
         catch (e) {}
-	    return filename.indexOf("/") !== -1 ? filename.substr(filename.lastIndexOf("/")+1) : filename;
+	    filename = filename.indexOf("/") !== -1 ? filename.substr(filename.lastIndexOf("/")+1) : filename;
+	    return decodeURIComponent(filename);
 	};
 
 	_renderInputField = () => {
