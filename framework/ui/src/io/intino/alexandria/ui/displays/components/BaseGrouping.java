@@ -131,7 +131,8 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	}
 
 	private void notifyAttachedChanges(List<String> selection) {
-		this.attachedListener.accept(new SelectionEvent(this, selection));
+		if (attachedListener == null) return;
+		attachedListener.accept(new SelectionEvent(this, selection));
 	}
 
 }
