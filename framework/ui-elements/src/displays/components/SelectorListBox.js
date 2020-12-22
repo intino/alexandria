@@ -24,7 +24,6 @@ class SelectorListBox extends AbstractSelectorListBox {
 		this.requester = new SelectorListBoxRequester(this);
 		this.state = {
     		...this.state,
-    		selection: [],
 		}
 	};
 
@@ -54,7 +53,8 @@ class SelectorListBox extends AbstractSelectorListBox {
 		const className = child.props.className;
 		if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
 		const selected = this.isInSelection(child.props.name);
-		const style = selected ? {background:"#ddd"} : {};
+		const hidden = this.isHidden(child.props.name);
+		const style = selected ? { background:"#ddd", hidden ? "none" : "block"} : {};
 		return (<ListItem disabled={this.state.readonly} key={key} style={style} button onClick={this.handleSelect.bind(this, child.props.name)}>{child}</ListItem>);
 	};
 
@@ -69,6 +69,9 @@ class SelectorListBox extends AbstractSelectorListBox {
 		this.setState({ selection: value });
 	};
 
+	refreshHiddenOptions = (options) => {
+		this.setState({ hiddenOptions: options });
+	};
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(SelectorListBox));

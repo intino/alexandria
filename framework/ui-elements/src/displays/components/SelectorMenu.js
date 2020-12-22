@@ -33,15 +33,16 @@ const styles = theme => ({
 });
 
 class SelectorMenu extends AbstractSelectorMenu {
-	state = {
-		selected : -1,
-		open : []
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new SelectorMenuNotifier(this);
 		this.requester = new SelectorMenuRequester(this);
+		this.state = {
+		    ...this.state,
+            selected : -1,
+            open : [],
+		}
 	};
 
 	render() {

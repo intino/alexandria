@@ -46,7 +46,6 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 		this.triggerComponent = React.createRef();
 		this.state = {
 		    ...this.state,
-		    selection: this.traceValue() ? this.traceValue() : [],
             multipleSelection: this.props.multipleSelection != null ? this.props.multipleSelection : false,
             opened: false
 		}

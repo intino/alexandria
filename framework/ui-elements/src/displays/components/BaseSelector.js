@@ -9,6 +9,8 @@ export default class BaseSelector extends AbstractBaseSelector {
 		this.state = {
             ...this.state,
             readonly: this.props.readonly,
+    		selection: this.traceValue() ? this.traceValue() : [],
+    		hiddenOptions: [],
 		};
 	};
 
@@ -43,6 +45,13 @@ export default class BaseSelector extends AbstractBaseSelector {
 	    const result = [];
 	    for (let i=0; i<this.state.selection.length; i++)
 	        if (this.state.selection[i] === name) return true;
+	    return false;
+    };
+
+	isHidden = (name) => {
+	    const result = [];
+	    for (let i=0; i<this.state.hiddenOptions.length; i++)
+	        if (this.state.hiddenOptions[i] === name) return true;
 	    return false;
     };
 

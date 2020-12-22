@@ -45,6 +45,7 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 
 	private void addComboBoxProperties(FrameBuilder builder) {
 		if (!element.isComboBox()) return;
+		builder.add("maxMenuHeight", element.asComboBox().maxMenuHeight());
 		String placeholder = element.asComboBox().placeholder();
 		if (placeholder == null || placeholder.isEmpty()) return;
 		builder.add("placeholder", placeholder);
