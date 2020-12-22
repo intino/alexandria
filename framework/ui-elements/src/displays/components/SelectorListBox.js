@@ -50,11 +50,13 @@ class SelectorListBox extends AbstractSelectorListBox {
     };
 
 	renderChild = (child, key) => {
+		const hidden = this.isHidden(child.props.name);
+		if (hidden) return (<React.Fragment/>);
 		const className = child.props.className;
 		if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
 		const selected = this.isInSelection(child.props.name);
-		const hidden = this.isHidden(child.props.name);
-		const style = selected ? { background:"#ddd", hidden ? "none" : "block"} : {};
+		const style = selected ? {background:"#ddd"} : {};
+		style.display = hidden ? "none" : "block";
 		return (<ListItem disabled={this.state.readonly} key={key} style={style} button onClick={this.handleSelect.bind(this, child.props.name)}>{child}</ListItem>);
 	};
 
