@@ -35,7 +35,6 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		this.notifier = new SelectorComboBoxNotifier(this);
 		this.requester = new SelectorComboBoxRequester(this);
         this.state = {
-            selection: this.traceValue() ? this.traceValue() : [],
             multipleSelection: this.props.multipleSelection != null ? this.props.multipleSelection : false,
             ...this.state
         };
@@ -60,7 +59,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 						placeholder={this.selectMessage()} options={items}
 						className="basic-multi-select" classNamePrefix="select"
 						components={{ Option: this.renderOption.bind(this)}}
-						menuPlacement="auto" value={value}
+						menuPlacement="auto" maxMenuHeight={this.props.maxMenuHeight} value={value}
 						onChange={this.handleChange.bind(this)}
 						onMenuOpen={this.handleOpen.bind(this)}
 						noOptionsMessage={() => this.translate("No options")}/>

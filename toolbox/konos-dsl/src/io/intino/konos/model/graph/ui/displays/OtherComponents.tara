@@ -85,6 +85,7 @@ Concept OtherComponents
         	var word:{Horizontal Vertical} layout = Vertical
         Aspect ComboBox
         	var string placeholder = ""
+        	var integer:{px} maxMenuHeight = 200px
         Aspect ToggleBox
         	var word:{Small Medium Large} size = Medium
         	var string selected = empty

@@ -1,14 +1,19 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.Component;
+import io.intino.alexandria.ui.displays.Display;
+import io.intino.alexandria.ui.displays.components.selector.SelectorOption;
 import io.intino.alexandria.ui.displays.notifiers.SelectorListBoxNotifier;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 public class SelectorListBox<DN extends SelectorListBoxNotifier, B extends Box> extends AbstractSelectorListBox<DN, B> {
 	private java.util.List<String> selection = new ArrayList<>();
+	private java.util.Set<String> hiddenOptions = new HashSet<>();
 
     public SelectorListBox(B box) {
         super(box);
@@ -18,6 +23,18 @@ public class SelectorListBox<DN extends SelectorListBoxNotifier, B extends Box> 
 	public void didMount() {
 		super.didMount();
 		selection(selection);
+	}
+
+	public void show(SelectorOption option) {
+    	hiddenOptions.remove(option.name());
+		option.visible(true);
+    	notifier.refreshHiddenOptions(new ArrayList<>(hiddenOptions));
+	}
+
+	public void hide(SelectorOption option) {
+		hiddenOptions.add(option.name());
+		option.visible(false);
+		notifier.refreshHiddenOptions(new ArrayList<>(hiddenOptions));
 	}
 
 	@SuppressWarnings("unchecked")
