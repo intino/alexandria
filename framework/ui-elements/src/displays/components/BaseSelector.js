@@ -48,10 +48,10 @@ export default class BaseSelector extends AbstractBaseSelector {
 	    return false;
     };
 
-	isHidden = (name) => {
+	isHidden = (id) => {
 	    const result = [];
 	    for (let i=0; i<this.state.hiddenOptions.length; i++)
-	        if (this.state.hiddenOptions[i] === name) return true;
+	        if (this.state.hiddenOptions[i] === id) return true;
 	    return false;
     };
 

@@ -50,7 +50,7 @@ class SelectorListBox extends AbstractSelectorListBox {
     };
 
 	renderChild = (child, key) => {
-		const hidden = this.isHidden(child.props.name);
+		const hidden = this.isHidden(child.props.id);
 		if (hidden) return (<React.Fragment/>);
 		const className = child.props.className;
 		if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
