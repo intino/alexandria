@@ -2,7 +2,6 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.Component;
-import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.selector.SelectorOption;
 import io.intino.alexandria.ui.displays.notifiers.SelectorListBoxNotifier;
 
@@ -25,16 +24,21 @@ public class SelectorListBox<DN extends SelectorListBoxNotifier, B extends Box> 
 		selection(selection);
 	}
 
-	public void show(SelectorOption option) {
-    	hiddenOptions.remove(option.name());
+	public void show(Component<?,?> option) {
+    	hiddenOptions.remove(option.id());
 		option.visible(true);
     	notifier.refreshHiddenOptions(new ArrayList<>(hiddenOptions));
 	}
 
-	public void hide(SelectorOption option) {
-		hiddenOptions.add(option.name());
+	public void hide(Component<?,?> option) {
+		hiddenOptions.add(option.id());
 		option.visible(false);
 		notifier.refreshHiddenOptions(new ArrayList<>(hiddenOptions));
+	}
+
+	public void visible(Component<?,?> option, boolean value) {
+    	if (value) show(option);
+    	else hide(option);
 	}
 
 	@SuppressWarnings("unchecked")
