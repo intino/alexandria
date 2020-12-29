@@ -107,6 +107,7 @@ Component selectorCollectionBox as ExtensionOf(baseSelector)
 	Request clearSelection
 	Request unSelect as Text
 	Request opened
+	Request selectOther
 
 Component multiple
 	Notification refreshReadonly as Bool

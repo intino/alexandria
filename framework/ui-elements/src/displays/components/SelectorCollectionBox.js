@@ -31,7 +31,13 @@ const styles = theme => ({
         fontSize: "10pt",
         color: "#0000008a",
         marginBottom: "5px",
-    }
+    },
+	other : {
+	    color: theme.palette.primary.main,
+	    cursor: "pointer",
+	    marginTop: "2px",
+	    marginRight: "2px",
+	},
 });
 
 const SelectorCollectionBoxMinHeight = 300;
@@ -73,6 +79,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 						onInputChange={this.handleSearch.bind(this)}
 						onMenuOpen={this.handleOpen.bind(this)}
 						onMenuClose={this.handleClose.bind(this)}/>
+    			{this.props.allowOther && <div className="layout vertical end"><a className={classes.other} onClick={this.handleAllowOther.bind(this)}>{label != null ? this.translate("Add") + " " + this.translate(label).toLowerCase() : this.translate("Add other")}</a></div>}
 			</div>
         );
     };
@@ -142,6 +149,10 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
     handleClose = (e) => {
         this.close();
     };
+
+	handleAllowOther = () => {
+	    this.requester.selectOther();
+	};
 
 	style() {
 		var result = super.style();
