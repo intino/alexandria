@@ -74,6 +74,7 @@ Concept OtherComponents
         Aspect CollectionBox
         	var CatalogComponents.Collection source = empty
         	var string placeholder = ""
+        	var boolean allowOther = false
 			has:{0..1} CatalogComponents.Collection
         Aspect RadioBox
         	!! The value that should initially be selected, defaults to the first value.

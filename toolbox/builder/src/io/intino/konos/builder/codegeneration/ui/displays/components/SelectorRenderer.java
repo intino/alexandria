@@ -53,7 +53,9 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 
 	private void addCollectionBoxProperties(FrameBuilder builder) {
 		if (!element.isCollectionBox()) return;
-		String placeholder = element.asCollectionBox().placeholder();
+		Selector.CollectionBox collectionBox = element.asCollectionBox();
+		if (collectionBox.allowOther()) builder.add("allowOther", true);
+		String placeholder = collectionBox.placeholder();
 		if (placeholder == null || placeholder.isEmpty()) return;
 		builder.add("placeholder", placeholder);
 	}

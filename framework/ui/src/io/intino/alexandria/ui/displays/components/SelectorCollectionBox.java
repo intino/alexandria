@@ -3,6 +3,8 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.components.collection.Selectable;
+import io.intino.alexandria.ui.displays.events.Event;
+import io.intino.alexandria.ui.displays.events.Listener;
 import io.intino.alexandria.ui.displays.events.SelectionEvent;
 import io.intino.alexandria.ui.displays.notifiers.SelectorCollectionBoxNotifier;
 import io.intino.alexandria.ui.model.Datasource;
@@ -17,6 +19,7 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
     private java.util.List<Object> selection = new ArrayList<>();
     private Collection collection;
     private ValueProvider valueProvider;
+    private Listener selectOtherListener;
 
     public SelectorCollectionBox(B box) {
         super(box);
@@ -26,6 +29,11 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
     public void didMount() {
         super.didMount();
         selection(selection);
+    }
+
+    public SelectorCollectionBox<DN, B> onSelectOther(Listener listener) {
+        this.selectOtherListener = listener;
+        return this;
     }
 
     @SuppressWarnings("unchecked")
@@ -98,6 +106,11 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
 
     public void select(String... options) {
         updateSelection(Arrays.asList(options));
+    }
+
+    public void selectOther() {
+        if (selectOtherListener == null) return;
+        selectOtherListener.accept(new Event(this));
     }
 
     public void clearSelection() {
