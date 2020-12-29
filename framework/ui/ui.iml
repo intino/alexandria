@@ -57,15 +57,6 @@
     <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13" level="project" />
     <orderEntry type="module" module-name="ui-elements" />
     <orderEntry type="module" module-name="zip" />
-    <orderEntry type="library" name="Intino: com.sparkjava:spark-core:2.7.2" level="project" />
-    <orderEntry type="library" name="Intino: org.slf4j:slf4j-api:1.7.13" level="project" />
-    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-server:9.4.8.v20171121" level="project" />
-    <orderEntry type="library" name="Intino: javax.servlet:javax.servlet-api:3.1.0" level="project" />
-    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-http:9.4.8.v20171121" level="project" />
-    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-util:9.4.8.v20171121" level="project" />
-    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-io:9.4.8.v20171121" level="project" />
-    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-webapp:9.4.8.v20171121" level="project" />
-    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-xml:9.4.8.v20171121" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-servlet:9.4.8.v20171121" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-security:9.4.8.v20171121" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-server:9.4.8.v20171121" level="project" />
