@@ -8,9 +8,11 @@ import io.intino.alexandria.ui.displays.events.Listener;
 import io.intino.alexandria.ui.displays.events.SelectionEvent;
 import io.intino.alexandria.ui.displays.notifiers.SelectorCollectionBoxNotifier;
 import io.intino.alexandria.ui.model.Datasource;
+import io.intino.alexandria.ui.utils.DelayerUtil;
 
 import java.util.*;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -20,6 +22,7 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
     private Collection collection;
     private ValueProvider valueProvider;
     private Listener selectOtherListener;
+    private String searchCondition;
 
     public SelectorCollectionBox(B box) {
         super(box);
@@ -73,7 +76,11 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
     }
 
     public void search(String value) {
-        collection.filter(value);
+        DelayerUtil.execute(this, x -> {
+            if (value.equals(searchCondition)) return;
+            collection.filter(value);
+            searchCondition = value;
+        }, 100);
     }
 
     public void selection(String... selection) {

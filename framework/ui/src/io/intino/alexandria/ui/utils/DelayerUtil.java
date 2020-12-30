@@ -12,7 +12,7 @@ public class DelayerUtil {
 	private static Map<Display, Timer> timers = new HashMap<>();
 
 	public static void execute(Display display, Consumer<Void> callback) {
-		execute(display, callback);
+		execute(display, callback, 1000);
 	}
 
 	public static void execute(Display display, Consumer<Void> callback, int delay) {

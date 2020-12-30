@@ -49,6 +49,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 		super(props);
 		this.notifier = new SelectorCollectionBoxNotifier(this);
 		this.requester = new SelectorCollectionBoxRequester(this);
+		this.searchComponent = React.createRef();
 		this.triggerComponent = React.createRef();
 		this.state = {
 		    ...this.state,
@@ -69,7 +70,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 			<div className={classes.container} style={this.style()}>
                 {this.renderTraceConsent()}
 				{label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{label}</div> : undefined }
-				<Select isMulti={multiple} isDisabled={this.state.readonly} isSearchable
+				<Select ref={this.searchComponent} isMulti={multiple} isDisabled={this.state.readonly} isSearchable
 						closeMenuOnSelect={!multiple} autoFocus={this.props.focused} menuIsOpen={this.state.opened}
 						placeholder={this.selectMessage()}
 						className="basic-multi-select" classNamePrefix="select"
@@ -112,6 +113,9 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 
 	refreshSelection = (selection) => {
 		this.setState({ selection: selection });
+		if (this.searchComponent.current == null) return;
+		this.searchComponent.current.blur();
+		this.searchComponent.current.focus();
 	};
 
 	refreshMultipleSelection = (multipleSelection) => {
@@ -119,6 +123,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 	};
 
     open = () => {
+        if (this.state.opened) return;
         this.setState({ opened: true });
         this.requester.opened();
     };
