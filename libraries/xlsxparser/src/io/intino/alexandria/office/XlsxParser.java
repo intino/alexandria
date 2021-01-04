@@ -3,13 +3,14 @@ package io.intino.alexandria.office;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.*;
-import java.util.HashMap;
+import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static java.lang.String.valueOf;
 
 public class XlsxParser {
+	private static SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
 	public static Map<String, String> convert(File file) throws IOException {
 		return convert(WorkbookFactory.create(file));
@@ -43,9 +44,13 @@ public class XlsxParser {
 		switch (cell.getCellType()) {
 			case STRING: return cell.getStringCellValue();
 			case BOOLEAN: return valueOf(cell.getBooleanCellValue());
-			case NUMERIC: return valueOf(cell.getNumericCellValue());
+			case NUMERIC: return numericToString(cell);
 		}
 		return "";
+	}
+
+	private static String numericToString(Cell cell) {
+		return !DateUtil.isCellDateFormatted(cell) ? valueOf(cell.getNumericCellValue()) : format.format(cell.getDateCellValue());
 	}
 
 
