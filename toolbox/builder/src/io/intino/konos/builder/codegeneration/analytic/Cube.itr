@@ -1,0 +1,310 @@
+def type(cube & src)
+	package $package.analytic.cubes;
+
+	import $package.analytic.factors.*;
+
+	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
+		public static final String ID_SEP = " - ";
+
+		public $name+FirstUpperCase(List<Iterable<Abstract$name+FirstUpperCase.View>> views) {
+			super(views);
+		}
+
+		public $name+FirstUpperCase execute() {
+			return ($name+FirstUpperCase) super.execute();
+		}
+
+		public static class View extends Abstract$name+FirstUpperCase.View {
+
+			public View(Fact fact) {
+				super(fact);
+			}
+
+			[$column+viewGetter...[$NL]]
+
+			[$dimension+viewGetter...[$NL]]
+		}
+	}
+end
+
+def type(cube)
+	package $package.analytic.cubes;
+
+    import io.intino.alexandria.led.Transaction;
+    import io.intino.alexandria.led.buffers.store.ByteStore;
+    import io.intino.alexandria.led.util.iterators.MergedIterator;
+    import $package.analytic.factors.*;
+
+    import java.util.*;
+    import java.util.function.Function;
+    import java.util.function.Predicate;
+    import java.util.stream.Stream;
+    import java.util.stream.StreamSupport;
+
+    import static java.util.Comparator.comparingLong;
+    import static java.util.Spliterators.spliteratorUnknownSize;
+
+    public abstract class Abstract$name+FirstUpperCase {
+		private static final String ID_SEP = " - ";
+
+    	protected final List<Iterable<View>> views;
+    	protected final List<Predicate<View>> filterList = new ArrayList<>();
+    	protected final List<Function<View, String>> groupByList = new ArrayList<>();
+    	protected final Map<String, Aggregation> result = new HashMap<>();
+
+    	public Abstract$name+FirstUpperCase(List<Iterable<View>> views) {
+    		this.views = views;
+    	}
+
+    	public $name+FirstUpperCase filter(Predicate<View> predicate) {
+    		filterList.add(predicate);
+    		return ($name+FirstUpperCase) this;
+    	}
+
+    	public $name+FirstUpperCase groupBy(Function<View, String> groupBy) {
+    		groupByList.add(groupBy);
+    		return ($name+FirstUpperCase) this;
+    	}
+
+    	public Iterator<View> detail() {
+			return StreamSupport.stream(spliteratorUnknownSize(mergedIterator(), Spliterator.SORTED), false).filter(this::check).iterator();
+		}
+
+    	protected $name+FirstUpperCase execute() {
+    		result.clear();
+    		resultsByDivision().forEach(this::append);
+    		return ($name+FirstUpperCase) this;
+    	}
+
+    	private Stream<Map<String, Aggregation>> resultsByDivision() {
+    		return views.parallelStream().map(this::resultsByDivision);
+    	}
+
+    	private synchronized void append(Map<String, Aggregation> resultDiv) {
+    		for (Map.Entry<String, Aggregation> entry : resultDiv.entrySet()) {
+    			if (!result.containsKey(entry.getKey())) result.put(entry.getKey(), entry.getValue());
+    			else result.get(entry.getKey()).append(entry.getValue());
+    		}
+    	}
+
+    	private MergedIterator<View> mergedIterator() {
+    		return new MergedIterator<>(views.stream().map(Iterable::iterator), comparingLong(View::id));
+    	}
+
+    	private Map<String, Aggregation> resultsByDivision(Iterable<View> views) {
+    		Map<String, Aggregation> result = new HashMap<>();
+    		for (View view : views) {
+    			if (!check(view)) continue;
+    			String id = idOf(view);
+    			if (!result.containsKey(id)) result.put(id, new Aggregation(id));
+    			result.get(id).append(view);
+    		}
+    		return result;
+    	}
+
+    	private boolean check(View item) {
+    		for (Predicate<View> filter : filterList) if (!filter.test(item)) return false;
+    		return true;
+    	}
+
+    	private String idOf(View item) {
+    		final String$[] id = new String$[groupByList.size()];
+    		for (int j = 0, drillsSize = groupByList.size(); j < drillsSize; j++) id$[j] = groupByList.get(j).apply(item);
+    		return idOf(id);
+    	}
+
+    	private String idOf(String$[] categories) {
+    		return String.join(ID_SEP, categories);
+    	}
+
+    	private String idOf(Iterable<String> categories) {
+    		return String.join(ID_SEP, categories);
+    	}
+
+    	public static class View {
+    		private final Fact fact;
+
+			public View(Fact fact) {
+				this.fact = fact;
+			}
+
+			[$column+viewGetter...[$NL]]
+
+			[$dimension+viewGetter...[$NL]]
+
+			public long id() {
+				return fact.id();
+			}
+    	}
+
+    	public static class Fact extends Transaction {
+			public static final int SIZE = $size;
+
+    		public Fact(ByteStore store) {
+    			super(store);
+    		}
+
+			[$column+getter...[$NL]]
+
+    		@Override
+    		protected long id() {
+    			return $id();
+    		}
+
+    		@Override
+    		public int size() {
+				return SIZE;
+			}
+    	}
+
+    	private class Aggregation {
+    		private String id;
+    		private long cpd;
+    		private List<Long> contratos = new ArrayList<>();
+
+    		public Aggregation(String id) {
+    			this.id = id;
+    		}
+
+    		public void append(View fact) {
+    			cpd += fact.cpd();
+    			if (contratos.isEmpty() || contratos.get(contratos.size() - 1) != fact.id())
+    				contratos.add(fact.id());
+    		}
+
+    		public void append(Aggregation value) {
+    			cpd += value.cpd;
+    			contratos.addAll(value.contratos);
+    		}
+
+    		public String getId() {
+    			return id;
+    		}
+
+    		public long cpd() {
+    			return cpd / contratos.size();
+    		}
+    	}
+    }
+end
+
+def trigger(nbits)
+	NBits
+end
+
+
+def trigger(dimension)
+	public static Predicate<$cube+FirstUpperCase.View> $axis+firstLowerCase(Set<$axis+firstUpperCase.Component> $axis+firstLowerCase~List) {
+		return r -> $axis+firstLowerCase~List.contains(r.$axis+firstLowerCase());
+	}
+
+	public static Function<$cube+FirstUpperCase.View, String> $axis+firstLowerCase() {
+		return r -> r.$axis+firstLowerCase().id();
+	}
+end
+
+def type(column) type(id | longInteger) trigger(getter)
+	public long $name+firstLowerCase() {
+		return bitBuffer.get$aligned~Long[$bits+nbits]($offset[, $bits]);
+	}
+end
+
+def type(column & datetime) trigger(getter)
+	public $type $name+firstLowerCase() {
+		return java.time.Instant.ofEpochMilli(bitBuffer.get$aligned~Long[$bits+nbits]($offset[, $bits]));
+	}
+end
+
+def type(column & date) trigger(getter)
+	public $type $name+firstLowerCase() {
+		return java.time.LocalDate.ofEpochDay(Short.toUnsignedInt(bitBuffer.get$aligned~Short[$bits+nbits]($offset[, $bits])));
+	}
+end
+
+def type(column & factor) trigger(getter)
+	public $type+firstUpperCase.Entry $name+firstLowerCase() {
+		final int value = bitBuffer.getIntegerNBits($offset, $bits);
+		return $type+firstUpperCase.entry(value);
+	}
+end
+
+def type(column & integer) trigger(getter)
+	public int $name+firstLowerCase() {
+		return bitBuffer.get$aligned~Integer[$bits+nbits]($offset[, $bits]);
+	}
+end
+
+def type(column & bool) trigger(getter)
+	public Boolean $name+firstLowerCase() {
+		byte value = bitBuffer.getByteNBits($offset, 2);
+		return value == NULL ? null : value == 2;
+	}
+end
+
+def type(column & real) attribute(size:32) trigger(getter)
+	public float $name+firstLowerCase() {
+		return bitBuffer.getAlignedReal$size~Bits($offset);
+	}
+end
+
+def type(column & real) trigger(getter)
+	public double $name+firstLowerCase() {
+		return bitBuffer.getAlignedReal$size~Bits($offset);
+	}
+end
+
+def type(dimension & factor) trigger(viewGetter)
+	public $type+firstUpperCase.Component $name+firstLowerCase() {
+		//TODO
+		return null;
+	}
+end
+
+def type(dimension & distribution) trigger(viewGetter)
+	public $distribution.Range $name+firstLowerCase() {
+		//TODO
+		return null;
+	}
+end
+
+def type(factor) trigger(viewGetter)
+	public $type+firstUpperCase.Component $name+firstLowerCase() {
+		return fact.$name+firstLowerCase();
+	}
+end
+
+def type(column & integer) trigger(viewGetter)
+	public int $name+firstLowerCase() {
+		//TODO
+		return 0;
+	}
+end
+
+def type(column & real) attribute(size:32) trigger(viewGetter)
+	public float $name+firstLowerCase() {
+		//TODO
+		return 0.;
+	}
+end
+
+def type(column & real) trigger(viewGetter)
+	public double $name+firstLowerCase() {
+		//TODO
+		return 0.;
+	}
+end
+
+def type(column) type(id | longInteger) trigger(viewGetter)
+	public long $name+firstLowerCase() {
+		//TODO
+		return 0L;
+	}
+end
+
+
+def trigger(viewGetter)
+	public $type+firstUpperCase $name+firstLowerCase() {
+		//TODO
+		return null;
+	}
+end

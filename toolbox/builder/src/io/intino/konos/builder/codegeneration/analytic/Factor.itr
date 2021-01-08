@@ -1,0 +1,93 @@
+def type(interface)
+	package $package.analytic;
+
+    import java.util.Collection;
+
+    public interface Factor {
+    	String label();
+
+    	Collection<? extends Component> components();
+
+    	interface Component {
+    		String id();
+
+    		String label();
+    	}
+    }
+end
+
+def type(factor) trigger(getter)
+	public $name+FirstUpperCase.Component $name+FirstLowerCase() {
+		//TODO
+		return null;
+	}
+end
+
+def type(factor)
+	package $package.analytic.factors;
+
+    import $package.analytic.Factor;
+
+    import java.util.*;
+    import java.util.function.Predicate;
+    import java.util.stream.Collectors;
+
+    public class $name+FirstUpperCase implements Factor {
+    	private static $name+FirstUpperCase instance;
+    	private final Map<Integer, $name+FirstUpperCase.Component> componentsByIndex = new HashMap<>();
+    	private final Map<String, $name+FirstUpperCase.Component> componentsByName = new HashMap<>();
+
+    	public static synchronized $name+FirstUpperCase instance() {
+    		return instance = instance != null ? instance : new $name+FirstUpperCase().load("$resourceId");
+    	}
+
+    	public $name+FirstUpperCase load(String resourceId) {
+    		// TODO
+    		return this;
+    	}
+
+    	@Override
+    	public String label() {
+    		return "$label";
+    	}
+
+    	@Override
+    	public Collection<? extends Factor.Component> components() {
+    		return componentsByIndex.values();
+    	}
+
+    	public static $name+FirstUpperCase.Component byName(String name) {
+    		return instance().componentsByName.get(name);
+    	}
+
+    	public static $name+FirstUpperCase.Component byIndex(int index) {
+    		return instance().componentsByIndex.get(index);
+    	}
+
+    	public static List<$name+FirstUpperCase.Component> filter(Predicate<$name+FirstUpperCase.Component> predicate) {
+    		return instance().componentsByIndex.values().stream().filter(predicate).collect(Collectors.toList());
+    	}
+
+    	public static class Component implements Factor.Component {
+    		private final String$[] record;
+
+    		public Component(String$[] record) {
+    			this.record = record;
+    		}
+
+    		@Override
+    		public String id() {
+				//TODO
+    			return record$[0];
+    		}
+
+    		@Override
+    		public String label() {
+				//TODO
+    			return record$[1];
+    		}
+
+    		$factor+getter...[$NL$NL]
+    	}
+    }
+end

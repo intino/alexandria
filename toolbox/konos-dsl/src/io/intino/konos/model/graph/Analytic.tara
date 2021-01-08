@@ -1,0 +1,84 @@
+dsl Proteo
+
+use DataTypes
+
+Concept Axis
+	var string label
+	sub Factor
+		Concept:{0..1} Datasource > var string resourceId
+		has Factor
+		Aspect Dynamic
+	sub Distribution
+		var string unit
+		Concept Range
+			Aspect LowerBound
+				var integer lowerBound
+			Aspect Bound
+				var integer lowerBound
+				var integer upperBound
+			Aspect UpperBound
+				var integer upperBound
+
+Concept Cube
+	Concept:{1..1} Fact
+		Concept Column extends SizedData
+			sub Attribute
+			sub Measure
+	Concept Dimension
+		var string label
+		var Axis axis
+	Concept Indicator
+		var string label
+		var string unit
+		var Fact.Measure measure
+		Aspect Average
+		Aspect Sum
+	Aspect Join
+		var Cube cube
+		var word:{Enabled Disabled} stats = Disabled
+Concept SizedData
+	Aspect List
+	Aspect Type
+		var string type is reactive private
+		var string primitive = 'self.type()' is reactive private
+		var integer:{bits} size = 0 bits
+		var integer:{bits} maxSize = 64 bits is private
+		sub Real
+			var double defaultValue = 0
+			var string type = "Double" is reactive private
+			var string primitive = "double" is reactive private
+			var integer:{bits} size = 64 bits
+		sub Integer
+			var integer defaultValue = 0
+			var string type = "Integer" is reactive private
+			var string primitive = "int" is reactive private
+			var integer:{bits} size = 32 bits
+			var integer:{bits} maxSize = 32 bits is final private
+		sub LongInteger
+			var long defaultValue = 0
+			var string type = "Long" is reactive private
+			var string primitive = "long" is reactive private
+			var integer:{bits} size = 64 bits
+			var integer:{bits} maxSize = 64 bits is final private
+		sub Id
+			var long defaultValue = 0
+			var string type = "Long" is reactive private
+			var string primitive = "long" is reactive private
+			var integer:{bits} size = 64 bits
+		sub Bool
+			var boolean defaultValue = false
+			var string type = "Boolean" is reactive private
+			var string primitive = "boolean" is reactive private
+			var integer:{bits} size = 2 bits is final
+		sub Date
+			var string format = "dd/MM/yyyy"
+			var string type = "java.time.LocalDate" is reactive private
+			var integer:{bits} size = 16 bits
+		sub DateTime
+			var string format = "dd/MM/yyyy HH:mm:ss"
+			var string type = "java.time.Instant" is reactive private
+			var word:{Millis Seconds Minutes Hours} precision = Millis
+			var integer:{bits} size = 64 bits
+		sub Category
+			var Factor factor;
+			var integer:{bits} size
