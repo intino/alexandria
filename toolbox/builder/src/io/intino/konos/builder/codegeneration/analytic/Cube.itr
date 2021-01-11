@@ -6,7 +6,7 @@ def type(cube & src)
 	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
 		public static final String ID_SEP = " - ";
 
-		public $name+FirstUpperCase(List<Iterable<Abstract$name+FirstUpperCase.View>> views) {
+		public $name+FirstUpperCase(java.util.List<Iterable<Abstract$name+FirstUpperCase.View>> views) {
 			super(views);
 		}
 

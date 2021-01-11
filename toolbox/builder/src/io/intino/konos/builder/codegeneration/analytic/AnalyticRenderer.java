@@ -5,6 +5,7 @@ import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.Cube.Fact.Column;
 import io.intino.magritte.framework.Concept;
@@ -38,13 +39,17 @@ public class AnalyticRenderer extends Renderer {
 	private void renderFactors(List<Factor> factorList) {
 		if (factorList.isEmpty()) return;
 		FactorTemplate template = new FactorTemplate();
-		writeFrame(gen, "Factor", customize(template).render(new FrameBuilder("interface").add("package", context.packageName()).toFrame()));
+		writeFrame(gen, "Axis", customize(template).render(new FrameBuilder("interface").add("package", context.packageName()).toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(factorList.get(0)), javaFile(gen, "Factor").getAbsolutePath()));
 		for (Factor factor : factorList) {
-			FrameBuilder fb = new FrameBuilder("factor").add("package", context.packageName()).add("name", factor.name$()).add("label", factor.label());
-			factor.factorList().forEach(child -> fb.add("factor", new FrameBuilder("factor").add("name", child.name$())));
+			FrameBuilder fb = new FrameBuilder("factor").
+					add("package", context.packageName()).add("name", factor.name$()).add("label", factor.label());
+			for (int i = 0; i < factor.factorList().size(); i++)
+				fb.add("factor", new FrameBuilder("factor").add("name", factor.factorList().get(i).name$()).add("index", i + 3));
 			if (factor.datasource() != null) fb.add("resourceId", factor.datasource().resourceId());
-			writeFrame(new File(src, "factors"), factor.name$(), customize(template).render(fb.toFrame()));
+//			if (!alreadyRendered(new File(src, "factors"), factor.name$()))
+				writeFrame(new File(src, "factors"), factor.name$(), customize(template).render(fb.toFrame()));
+			writeFrame(new File(gen, "factors"), "Abstract" + firstUpperCase(factor.name$()), customize(template).render(fb.add("abstract").toFrame()));
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(factor), javaFile(new File(src, "factors"), firstUpperCase(factor.name$())).getAbsolutePath()));
 		}
 	}
@@ -128,14 +133,24 @@ public class AnalyticRenderer extends Renderer {
 	private void renderDistributions(List<Distribution> distributions) {
 		DistributionTemplate template = new DistributionTemplate();
 		for (Distribution d : distributions) {
-			FrameBuilder fb = new FrameBuilder("cube").add("package", context.packageName());
-			for (Distribution.Range range : d.rangeList())
-				if (range.isLowerBound()) fb.add("lower").add("bound", range.asLowerBound().lowerBound());
-				else if (range.isUpperBound()) fb.add("upper").add("bound", range.asUpperBound().upperBound());
+			FrameBuilder fb = new FrameBuilder("distribution").add("package", context.packageName()).add("name", d.name$()).add("label", d.label());
+			fb.add("rangeSize", d.rangeList().size());
+			int index = 0;
+			for (Distribution.Range range : d.rangeList()) {
+				FrameBuilder rangeFb = new FrameBuilder("range").add("index", index);
+				if (range.isLowerBound()) rangeFb.add("lower").add("bound", range.asLowerBound().lowerBound());
+				else if (range.isUpperBound()) rangeFb.add("upper").add("bound", range.asUpperBound().upperBound());
 				else if (range.isBound())
-					fb.add("lower").add("lower", range.asBound().lowerBound()).add("upper", range.asBound().upperBound());
-			writeFrame(new File(src, "factors"), d.name$(), customize(template).render(fb.toFrame()));
+					rangeFb.add("lower", range.asBound().lowerBound()).add("upper", range.asBound().upperBound());
+				fb.add("range", rangeFb);
+				index++;
+			}
+			writeFrame(new File(gen, "distributions"), firstUpperCase(d.name$()), customize(template).render(fb.toFrame()));
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(d), javaFile(new File(gen, "distributions"), firstUpperCase(d.name$())).getAbsolutePath()));
 		}
+	}
+
+	private boolean alreadyRendered(File destination, String name) {
+		return Commons.javaFile(destination, name).exists();
 	}
 }

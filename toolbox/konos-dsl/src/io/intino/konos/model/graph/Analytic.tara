@@ -20,10 +20,13 @@ Concept Axis
 				var integer upperBound
 
 Concept Cube
+	Concept Split > var string[] splits
 	Concept:{1..1} Fact
 		Concept Column extends SizedData
 			sub Attribute
 			sub Measure
+		Aspect Cached
+			var word:{Last First} timetag = Last
 	Concept Dimension
 		var string label
 		var Axis axis
@@ -33,6 +36,7 @@ Concept Cube
 		var Fact.Measure measure
 		Aspect Average
 		Aspect Sum
+	Concept CustomFilter
 	Aspect Join
 		var Cube cube
 		var word:{Enabled Disabled} stats = Disabled
