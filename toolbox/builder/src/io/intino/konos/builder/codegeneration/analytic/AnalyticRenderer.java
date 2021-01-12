@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.analytic;
 
 import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
@@ -9,6 +10,7 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.Cube.Fact.Column;
 import io.intino.magritte.framework.Concept;
+import io.intino.magritte.framework.Layer;
 import io.intino.magritte.framework.Predicate;
 
 import java.io.File;
@@ -44,41 +46,71 @@ public class AnalyticRenderer extends Renderer {
 		for (Factor factor : factorList) {
 			FrameBuilder fb = new FrameBuilder("factor").
 					add("package", context.packageName()).add("name", factor.name$()).add("label", factor.label());
+			if (factor.isDynamic()) fb.add("dynamic", ";");
 			for (int i = 0; i < factor.factorList().size(); i++)
 				fb.add("factor", new FrameBuilder("factor").add("name", factor.factorList().get(i).name$()).add("index", i + 3));
 			if (factor.datasource() != null) fb.add("resourceId", factor.datasource().resourceId());
 //			if (!alreadyRendered(new File(src, "factors"), factor.name$()))
-				writeFrame(new File(src, "factors"), factor.name$(), customize(template).render(fb.toFrame()));
-			writeFrame(new File(gen, "factors"), "Abstract" + firstUpperCase(factor.name$()), customize(template).render(fb.add("abstract").toFrame()));
+			writeFrame(new File(src, "factors"), factor.name$(), customize(template).render(fb.toFrame()));
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(factor), javaFile(new File(src, "factors"), firstUpperCase(factor.name$())).getAbsolutePath()));
+
+			writeFrame(new File(gen, "factors"), "Abstract" + firstUpperCase(factor.name$()), customize(template).render(fb.add("abstract").toFrame()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(factor), javaFile(new File(gen, "factors"), "Abstract" + firstUpperCase(factor.name$())).getAbsolutePath()));
 		}
 	}
 
 	private void renderCubes(List<Cube> cubeList) {
-		CubeTemplate template = new CubeTemplate();
+
 		for (Cube cube : cubeList) {
 			FrameBuilder fb = new FrameBuilder("cube").add("package", context.packageName()).add("name", cube.name$());
-			cube.dimensionList().forEach(selector -> fb.add("dimension", dimensionFrame(cube, selector)));
-			cube.indicatorList().forEach(indicator -> fb.add("indicator", inicatorFrame(cube, indicator)));
+			if (cube.isJoin()) {
+				addDimensionsAndIndicators(cube.asJoin().cube(), fb);
+				fb.add("join", cube.asJoin().cube().name$());
+				if (cube.asJoin().cube().split() != null) addSplit(cube.asJoin().cube(), fb);
+			}
+			addDimensionsAndIndicators(cube, fb);
+			fb.add("id", cube.fact().columnList().stream().filter(SizedData::isId).map(Layer::name$).findFirst().orElse(null));
+			if (cube.split() != null) addSplit(cube, fb);
 			int offset = 0;
 			for (Column column : cube.fact().columnList()) {
 				fb.add("column", columnFrame(column, offset));
 				offset += column.asType().size();
 			}
 			fb.add("size", offset);
-			writeFrame(new File(gen, "cubes"), "Abstract" + firstUpperCase(cube.name$()), customize(template).render(fb.toFrame()));
+			writeFrame(new File(gen, "cubes"), "Abstract" + firstUpperCase(cube.name$()), customize(template(cube)).render(fb.toFrame()));
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(cube), javaFile(new File(gen, "cubes"), "Abstract" + firstUpperCase(cube.name$())).getAbsolutePath()));
-			writeFrame(new File(src, "cubes"), cube.name$(), customize(template).render(fb.add("src").toFrame()));
+//			if (!alreadyRendered(new File(src, "cubes"), cube.name$()))
+			writeFrame(new File(src, "cubes"), cube.name$(), customize(template(cube)).render(fb.add("src").toFrame()));
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(cube), javaFile(new File(src, "cubes"), firstUpperCase(cube.name$())).getAbsolutePath()));
 		}
 	}
 
+	private void addSplit(Cube cube, FrameBuilder fb) {
+		fb.add("split", new FrameBuilder("split").add("name", cube.split().name$()).add("value", cube.split().splits().toArray(new String[0])));
+	}
+
+	private Template template(Cube cube) {
+		return cube.isJoin() ? new JoinCubeTemplate() : new CubeTemplate();
+	}
+
+	private void addDimensionsAndIndicators(Cube cube, FrameBuilder fb) {
+		cube.dimensionList().forEach(selector -> fb.add("dimension", dimensionFrame(cube, selector)));
+		cube.indicatorList().forEach(indicator -> fb.add("indicator", inicatorFrame(cube, indicator)));
+		for (Cube.CustomFilter customFilter : cube.customFilterList())
+			fb.add("customFilter", new FrameBuilder("customFilter").add("cube", cube.name$()).add("name", customFilter.name$()));
+	}
+
 	private FrameBuilder dimensionFrame(Cube cube, Cube.Dimension dimension) {
-		return new FrameBuilder("dimension", dimension.axis().core$().is(Factor.class) ? "factor" : "distribution").add("cube", cube.name$()).add("axis", dimension.axis().name$());
+		FrameBuilder fb = new FrameBuilder("dimension", dimension.axis().core$().is(Factor.class) ? "factor" : "distribution")
+				.add("cube", cube.name$())
+				.add("name", dimension.name$())
+				.add("axis", dimension.axis().name$());
+		if (dimension.axis().i$(Factor.class)) fb.add("type", dimension.axis().name$());
+		return fb;
 	}
 
 	private FrameBuilder inicatorFrame(Cube cube, Cube.Indicator indicator) {
-		return new FrameBuilder("indicator").
+		return new FrameBuilder("indicator").add(indicator.isAverage() ? "average" : "sum").
 				add("cube", cube.name$()).
 				add("name", indicator.name$()).
 				add("label", indicator.label()).
@@ -86,7 +118,7 @@ public class AnalyticRenderer extends Renderer {
 	}
 
 	private FrameBuilder columnFrame(Column column, int offset) {
-		if (column.isCategory()) return processColumn(column.asCategory().factor(), column.name$(), offset);
+		if (column.isCategory()) return processCategoryColumn(column.asCategory(), column.name$(), offset);
 		else return processColumn(column, offset);
 	}
 
@@ -95,7 +127,7 @@ public class AnalyticRenderer extends Renderer {
 		FrameBuilder builder = new FrameBuilder("column", column.core$().is(Cube.Fact.Attribute.class) ? "attribute" : "measure")
 				.add("name", column.a$(Column.class).name$())
 				.add("offset", offset)
-				.add("type", isPrimitive(asType) ? asType.primitive() : asType.type());
+				.add("type", type(asType));
 		column.core$().conceptList().stream().filter(Concept::isAspect).map(Predicate::name).forEach(builder::add);
 		if (isAligned(asType, offset)) builder.add("aligned", "Aligned");
 		else builder.add("bits", asType.size());
@@ -103,18 +135,20 @@ public class AnalyticRenderer extends Renderer {
 		return builder;
 	}
 
-	private FrameBuilder processColumn(Factor factor, String name, int offset) {
-		FrameBuilder builder = new FrameBuilder("attribute", "lookup").
+	private FrameBuilder processCategoryColumn(SizedData.Category category, String name, int offset) {
+		Factor factor = category.factor();
+		FrameBuilder builder = new FrameBuilder("column", "factor").
 				add("name", name).
 				add("type", factor.name$()).
 				add("offset", offset).
-				add("bits", sizeOf(factor));
+				add("bits", category.size());
 		if (!factor.datasource().resourceId().isEmpty()) builder.add("resource");
 		return builder;
 	}
 
-	private Object sizeOf(Factor factor) {
-		return null;
+	private String type(SizedData.Type type) {
+		if (type.i$(SizedData.Category.class)) return type.name$();
+		return isPrimitive(type) ? type.primitive() : type.type();
 	}
 
 	private boolean isAligned(SizedData.Type attribute, int offset) {

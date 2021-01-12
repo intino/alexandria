@@ -73,6 +73,11 @@ def type(factor & abstract)
     		return "$label";
     	}
 
+		[@Override
+		public boolean isDynamic() {
+			return true$dynamic
+		}]
+
     	@Override
     	public Collection<? extends Axis.Component> components() {
     		return componentsByIndex.values();

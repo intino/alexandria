@@ -33,6 +33,7 @@ def type(cube)
     import io.intino.alexandria.led.Transaction;
     import io.intino.alexandria.led.buffers.store.ByteStore;
     import io.intino.alexandria.led.util.iterators.MergedIterator;
+    import io.intino.alexandria.led.util.iterators.StatefulIterator;
 
     import $package.analytic.factors.*;
     import $package.analytic.Axis;
@@ -65,14 +66,20 @@ def type(cube)
 			return nullFact;
 		}
 
-    	[$dimension+method...[$NL$NL]]
+    	$dimension+method...[$NL$NL]
 
-    	[$customFilter+method...[$NL$NL]]
+    	$dimension+abstractMethod...[$NL$NL]
+
+    	$customFilter+method...[$NL$NL]
+
+    	$customFilter+abstractMethod...[$NL$NL]
 
 		public Abstract$name+firstUpperCase execute() {
 			result = new Aggregation$[resultsSize()];
 			results().forEach(this::append);
 			fillCategories();
+			calculateTotals();
+
 			return this;
 		}
 
@@ -85,6 +92,16 @@ def type(cube)
 			for (Aggregation aggregation : result)
 				for (int i = 0; i < aggregation.components.length; i++)
 					components.get(axes.get(i)).add(aggregation.components$[i]);
+		}
+
+		private void calculateTotals() {
+			for (Loader loader : loaders) {
+				if(loader.axes().size() != axes.size()) return;
+				for (int i = 0; i < loader.totals().length; i++) {
+					if(result$[i] == null) continue;
+					result$[i].append(loader.totals()$[i]);
+				}
+			}
 		}
 
 		private int resultsSize() {
@@ -136,22 +153,16 @@ def type(cube)
 			return components;
 		}
 
-		public static class View {
+		public static class View extends Abstract$join+FirstUpperCase.View {
 			private final Fact fact;
 
-			public View(Fact fact) {
+			public View(Fact fact, Abstract$join+FirstUpperCase.Fact $join+firstLowerCase~Fact) {
+				super($join+firstLowerCase~Fact);
 				this.fact = fact;
 			}
 
 			[$column+viewGetter...[$NL]]
 
-			public long id() {
-				return fact.id();
-			}
-
-			public Fact fact() {
-				return fact;
-			}
 		}
 
 		public static class Fact extends Transaction {
@@ -198,6 +209,8 @@ def type(cube)
 			private final Axis.Component$[] components;
 			private final List<Long> ids = new ArrayList<>();
 			$indicator+field...[$NL]
+			private long total$join+FirstUpperCase;
+
 
 			public Aggregation(Axis.Component$[] components) {
 				this.components = components;
@@ -205,14 +218,23 @@ def type(cube)
 
 			public void append(View view) {
 				$indicator+sum...[$NL]
-				if (ids.isEmpty() || ids.get(ids.size() - 1) != view.id())
-					ids.add(view.id());
+				if (ids.isEmpty() || ids.get(ids.size() - 1) != view.id()) ids.add(view.id());
 			}
 
 			public void append(Aggregation aggregation) {
 				$indicator+sumAggregation...[$NL]
 				ids.addAll(aggregation.ids);
 			}
+
+			public Aggregation append(long ids) {
+				this.total$join+FirstUpperCase += ids;
+				return this;
+			}
+
+			public long total$join+FirstUpperCase() {
+				return total$join+FirstUpperCase;
+			}
+
 
 			public Axis.Component$[] components() {
 				return components;
@@ -222,27 +244,95 @@ def type(cube)
 		}
 
     	public static class Loader implements Iterable<View> {
+			private final StatefulIterator<Abstract$name+FirstUpperCase.View> joinIds;
+			private final List<Axis> axes = new ArrayList<>();
+			private long$[] totals;
+			private final List<Predicate<Abstract$join+FirstUpperCase.View>> filters = new ArrayList<>();
+			private final List<Function<Abstract$join+FirstUpperCase.View, Axis.Component>> groupsBy = new ArrayList<>();
 			private final Datasource datasource;
 			[$split+field]
 
 			public Loader(Datasource datasource[, $split+parameter]) {
 				this.datasource = datasource;
 				[$split+assign]
+				this.joinIds = StatefulIterator.of(new Abstract$name+FirstUpperCase.Loader(new Abstract$name+FirstUpperCase.Loader.Datasource(this.datasource.root, this.datasource.from, this.datasource.to)[, $split+name]).iterator());
 			}
 
 			@Override
 			public Iterator<View> iterator() {
-				return StreamSupport.stream(spliteratorUnknownSize(datasource.leds($split+name), Spliterator.SORTED), false)
-						.map(View::new)
+				StatefulIterator<AbstractVentas.Fact> facts = StatefulIterator.of(datasource.leds([$split]));
+				process(joinIds.current());
+				return StreamSupport.stream(Spliterators.spliteratorUnknownSize(facts, Spliterator.SORTED), false)
+						.map(v -> {
+							long id = $name+FirstUpperCase.$join+firstLowerCase~Id(facts.current());
+							while (joinIds.current() != null && joinIds.current().id() < id) {
+								joinIds.next();
+								process(joinIds.current());
+							}
+							if (!facts.hasNext()) end();
+							return new View(v, joinIds.current() != null && joinIds.current().id() == id ?
+									joinIds.current().fact() : Abstract$join+FirstUpperCase.nullFact());
+						})
 						.iterator();
 			}
 
-			public static List<Loader> facts(Datasource datasource[, $split+SetParameter]) {
-				$split+name = $split+name.isEmpty() ? all$split+nameUpper() : $split+name;
-				return $split+name.stream().map(d -> new Loader(datasource, d)).collect(java.util.stream.Collectors.toList());
+			private void end() {
+				while (joinIds.hasNext()) {
+					joinIds.next();
+					process(joinIds.current());
+				}
 			}
 
-			$split+method
+			private int totalsSize() {
+				int accumulator = 1;
+				for (Axis axis : axes) accumulator *= axis.componentCount();
+				return accumulator;
+			}
+
+			private void process(Abstract$join+FirstUpperCase.View view) {
+				if (totals == null) totals = new long$[totalsSize()];
+				for (Predicate<Abstract$join+FirstUpperCase.View> filter : filters) if (!filter.test(view)) return;
+				Axis.Component$[] components = componentsOf(view);
+				totals$[indexOf(components)] += 1;
+			}
+
+			private int indexOf(Axis.Component$[] components) {
+				int index = 0;
+				for (int i = 0; i < components.length; i++) {
+					i *= axes.get(i).componentCount();
+					i += components$[i].index();
+				}
+				return index;
+			}
+
+			private Axis.Component$[] componentsOf(Abstract$join+FirstUpperCase.View item) {
+				Axis.Component$[] components = new Axis.Component$[axes.size()];
+				for (int i = 0; i < components.length; i++) components$[i] = groupsBy.get(i).apply(item);
+				return components;
+			}
+
+			private long totalOf(List<Axis.Component> categories) {
+				return totals$[indexOf(categories.toArray(new Axis.Component$[0]))];
+			}
+
+			private void filter(Predicate<Abstract$join+FirstUpperCase.View> filter) {
+				if (filter == null) return;
+				filters.add(filter);
+			}
+
+			private void by(Axis axis, Function<Abstract$join+FirstUpperCase.View, Axis.Component> dimension) {
+				axes.add(axis);
+				if (dimension == null) return;
+				groupsBy.add(dimension);
+			}
+
+			public List<Axis> axes() {
+				return axes;
+			}
+
+			public long$[] totals() {
+				return totals;
+			}
 
 			public static class Datasource {
 				// TODO cache
@@ -275,15 +365,19 @@ end
 
 def type(customFilter) trigger(method)
 	public Abstract$cube+firstUpperCase filter$name+firstUpperCase() {
-		filterList.add($cube+firstUpperCase.$name+firstLowerCase~Predicate());
+		filterList.add($name+firstLowerCase~Predicate());
 		return this;
 	}
 end
 
-def type(customFilter) trigger(staticMethod)
-	public static Predicate<View> $name+firstLowerCase~Predicate() {
-		return v -> true;
-	}
+def type(customFilter) trigger(abstractMethod)
+	protected abstract Predicate<View> $name+FirstLowerCasePredicate();
+end
+
+def type(dimension) trigger(abstractMethod)
+	protected abstract Predicate<View> $name+firstLowerCase~Predicate(Set<Abstract$name+firstUpperCase.Component> $name+firstLowerCase);
+
+	protected abstract Function<View, Axis.Component> $name+firstLowerCase~Function();
 end
 
 def type(dimension) trigger(staticMethod)
@@ -298,14 +392,14 @@ end
 
 def type(dimension) trigger(method)
 	public Abstract$cube+FirstUpperCase filter$name+firstUpperCase(Set<$name+firstUpperCase.Component> $name+firstLowerCase) {
-		filterList.add($cube+FirstUpperCase.$name+firstLowerCase~Predicate($name+firstLowerCase));
+		filterList.add($name+firstLowerCase~Predicate($name+firstLowerCase));
 		return this;
 	}
 
 	public Abstract$cube+FirstUpperCase groupBy$name+firstUpperCase() {
 		axes.add($name+firstUpperCase.instance());
 		components.put($name+firstUpperCase.instance(), new HashSet<>());
-		groupByList.add($cube+firstUpperCase.$name+firstLowerCase~Function());
+		groupByList.add($name+firstLowerCase~Function());
 		return this;
 	}
 end
