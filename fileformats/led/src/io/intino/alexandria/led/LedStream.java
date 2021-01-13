@@ -1,7 +1,7 @@
 package io.intino.alexandria.led;
 
-import io.intino.alexandria.led.allocators.TransactionAllocator;
-import io.intino.alexandria.led.allocators.TransactionFactory;
+import io.intino.alexandria.led.allocators.SchemaAllocator;
+import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.led.allocators.stack.StackListAllocator;
 import io.intino.alexandria.led.leds.IteratorLedStream;
@@ -17,79 +17,79 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static io.intino.alexandria.led.Transaction.idOf;
-import static io.intino.alexandria.led.Transaction.sizeOf;
+import static io.intino.alexandria.led.Schema.idOf;
+import static io.intino.alexandria.led.Schema.sizeOf;
 import static java.util.Objects.requireNonNull;
 
-public interface LedStream<T extends Transaction> extends Iterator<T>, AutoCloseable {
+public interface LedStream<T extends Schema> extends Iterator<T>, AutoCloseable {
 
-	static <T extends Transaction> LedStream<T> empty() {
+	static <T extends Schema> LedStream<T> empty() {
 		return IteratorLedStream.fromStream(0, Stream.empty());
 	}
 
-	static<T extends Transaction> LedStream<T> fromLed(Led<T> led) {
+	static<T extends Schema> LedStream<T> fromLed(Led<T> led) {
 		return led.toLedStream();
 	}
 
-	static <T extends Transaction> LedStream<T> fromStream(int transactionSize, Stream<T> stream) {
-		return IteratorLedStream.fromStream(transactionSize, stream);
+	static <T extends Schema> LedStream<T> fromStream(int schemaSize, Stream<T> stream) {
+		return IteratorLedStream.fromStream(schemaSize, stream);
 	}
 
-	static <T extends Transaction> LedStream<T> of(int transactionSize, T... transactions) {
-		return fromStream(transactionSize, Arrays.stream(transactions));
+	static <T extends Schema> LedStream<T> of(int schemaSize, T... schemas) {
+		return fromStream(schemaSize, Arrays.stream(schemas));
 	}
 
-	static <T extends Transaction> LedStream<T> singleton(int transactionSize, T transaction) {
-		return fromStream(transactionSize, Stream.of(transaction));
+	static <T extends Schema> LedStream<T> singleton(int schemaSize, T schema) {
+		return fromStream(schemaSize, Stream.of(schema));
 	}
 
-	static <T extends Transaction> LedStream<T> merged(Stream<LedStream<T>> ledStreams) {
+	static <T extends Schema> LedStream<T> merged(Stream<LedStream<T>> ledStreams) {
 		return merged(ledStreams.iterator());
 	}
 
-	static <T extends Transaction> LedStream<T> merged(Iterator<LedStream<T>> iterator) {
+	static <T extends Schema> LedStream<T> merged(Iterator<LedStream<T>> iterator) {
 		if(!iterator.hasNext()) {
 			return empty();
 		}
 		return iterator.next().merge(IteratorUtils.streamOf(iterator));
 	}
 
-	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass) {
-		return new HeapLedStreamBuilder<>(transactionClass);
+	static <T extends Schema> Builder<T> builder(Class<T> schemaClass) {
+		return new HeapLedStreamBuilder<>(schemaClass);
 	}
 
-	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass, File tempDirectory) {
-		return new HeapLedStreamBuilder<>(transactionClass, tempDirectory);
+	static <T extends Schema> Builder<T> builder(Class<T> schemaClass, File tempDirectory) {
+		return new HeapLedStreamBuilder<>(schemaClass, tempDirectory);
 	}
 
-	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass, int numElementsPerBlock) {
-		return new HeapLedStreamBuilder<>(transactionClass, numElementsPerBlock);
+	static <T extends Schema> Builder<T> builder(Class<T> schemaClass, int numElementsPerBlock) {
+		return new HeapLedStreamBuilder<>(schemaClass, numElementsPerBlock);
 	}
 
-	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass, int numElementsPerBlock, File tempDirectory) {
-		return new HeapLedStreamBuilder<>(transactionClass, numElementsPerBlock, tempDirectory);
+	static <T extends Schema> Builder<T> builder(Class<T> schemaClass, int numElementsPerBlock, File tempDirectory) {
+		return new HeapLedStreamBuilder<>(schemaClass, numElementsPerBlock, tempDirectory);
 	}
 
-	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass, TransactionFactory<T> factory) {
-		return new HeapLedStreamBuilder<>(transactionClass, factory);
+	static <T extends Schema> Builder<T> builder(Class<T> schemaClass, SchemaFactory<T> factory) {
+		return new HeapLedStreamBuilder<>(schemaClass, factory);
 	}
 
-	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass, TransactionFactory<T> factory, File tempDirectory) {
-		return new HeapLedStreamBuilder<>(transactionClass, factory, tempDirectory);
+	static <T extends Schema> Builder<T> builder(Class<T> schemaClass, SchemaFactory<T> factory, File tempDirectory) {
+		return new HeapLedStreamBuilder<>(schemaClass, factory, tempDirectory);
 	}
 
-	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass,
-													  TransactionFactory<T> factory, int numElementsPerBlock) {
-		return new HeapLedStreamBuilder<>(transactionClass, factory, numElementsPerBlock);
+	static <T extends Schema> Builder<T> builder(Class<T> schemaClass,
+												 SchemaFactory<T> factory, int numElementsPerBlock) {
+		return new HeapLedStreamBuilder<>(schemaClass, factory, numElementsPerBlock);
 	}
 
-	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass,
-													  TransactionFactory<T> factory, int numElementsPerBlock,
-													  File tempDirectory) {
-		return new HeapLedStreamBuilder<>(transactionClass, factory, numElementsPerBlock, tempDirectory);
+	static <T extends Schema> Builder<T> builder(Class<T> schemaClass,
+												 SchemaFactory<T> factory, int numElementsPerBlock,
+												 File tempDirectory) {
+		return new HeapLedStreamBuilder<>(schemaClass, factory, numElementsPerBlock, tempDirectory);
 	}
 
-	int transactionSize();
+	int schemaSize();
 
 	@Override
 	boolean hasNext();
@@ -113,16 +113,16 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 		return new LedStream.Peek<>(this, consumer);
 	}
 
-	default <R extends Transaction> LedStream<R> map(TransactionAllocator<R> allocator, BiConsumer<T, R> mapper) {
+	default <R extends Schema> LedStream<R> map(SchemaAllocator<R> allocator, BiConsumer<T, R> mapper) {
 		return new LedStream.Map<>(this, allocator, mapper);
 	}
 
-	default <R extends Transaction> LedStream<R> map(int rSize, TransactionFactory<R> factory, BiConsumer<T, R> mapper) {
+	default <R extends Schema> LedStream<R> map(int rSize, SchemaFactory<R> factory, BiConsumer<T, R> mapper) {
 		return new LedStream.Map<>(this, rSize, factory, mapper);
 	}
 
-	default <R extends Transaction> LedStream<R> map(Class<R> newType, BiConsumer<T, R> mapper) {
-		return new LedStream.Map<>(this, sizeOf(newType), Transaction.factoryOf(newType), mapper);
+	default <R extends Schema> LedStream<R> map(Class<R> newType, BiConsumer<T, R> mapper) {
+		return new LedStream.Map<>(this, sizeOf(newType), Schema.factoryOf(newType), mapper);
 	}
 
 	default <R> Stream<R> mapToObj(Function<T, R> mapper) {
@@ -137,7 +137,7 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 		return new LedStream.Merge<>(this, others);
 	}
 
-	default <O extends Transaction> LedStream<T> removeAll(LedStream<O> other) {
+	default <O extends Schema> LedStream<T> removeAll(LedStream<O> other) {
 		return new LedStream.RemoveAll<>(this, other);
 	}
 
@@ -149,7 +149,7 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 		return new LedStream.RemoveAll<>(this, other);
 	}
 
-	default <O extends Transaction> LedStream<T> retainAll(LedStream<O> other) {
+	default <O extends Schema> LedStream<T> retainAll(LedStream<O> other) {
 		return new LedStream.RetainAll<>(this, other);
 	}
 
@@ -220,7 +220,7 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 		return this;
 	}
 
-	abstract class LedStreamOperation<T extends Transaction, R extends Transaction> implements LedStream<R> {
+	abstract class LedStreamOperation<T extends Schema, R extends Schema> implements LedStream<R> {
 
 		protected final LedStream<T> source;
 		private Runnable onClose;
@@ -231,8 +231,8 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 		}
 
 		@Override
-		public int transactionSize() {
-			return source.transactionSize();
+		public int schemaSize() {
+			return source.schemaSize();
 		}
 
 		@Override
@@ -254,7 +254,7 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 		}
 	}
 
-	class Filter<T extends Transaction> extends LedStream.LedStreamOperation<T, T> {
+	class Filter<T extends Schema> extends LedStream.LedStreamOperation<T, T> {
 
 		private final Predicate<T> condition;
 		private T current;
@@ -292,7 +292,7 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 		}
 	}
 
-	class Peek<T extends Transaction> extends LedStream.LedStreamOperation<T, T> {
+	class Peek<T extends Schema> extends LedStream.LedStreamOperation<T, T> {
 
 		private final Consumer<T> consumer;
 
@@ -314,14 +314,14 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 		}
 	}
 
-	class RemoveAll<T extends Transaction> extends LedStream.LedStreamOperation<T, T> {
+	class RemoveAll<T extends Schema> extends LedStream.LedStreamOperation<T, T> {
 
 		private final Iterator<Long> other;
 		private T sourceCurrent;
 		private Long otherCurrentId;
 
 		public RemoveAll(LedStream<T> source, LedStream<?> other) {
-			this(source, other.mapToObj(Transaction::idOf).iterator());
+			this(source, other.mapToObj(Schema::idOf).iterator());
 		}
 
 		public RemoveAll(LedStream<T> source, Iterator<Long> idIterator) {
@@ -400,18 +400,18 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 		}
 	}
 
-	class Merge<T extends Transaction> extends LedStream.LedStreamOperation<T, T> {
+	class Merge<T extends Schema> extends LedStream.LedStreamOperation<T, T> {
 
 		private final MergedIterator<T> mergedIterator;
 
 		public Merge(LedStream<T> source, LedStream<T> other) {
 			super(source);
-			mergedIterator = new MergedIterator<>(Stream.of(source, requireNonNull(other)), Comparator.comparingLong(Transaction::idOf));
+			mergedIterator = new MergedIterator<>(Stream.of(source, requireNonNull(other)), Comparator.comparingLong(Schema::idOf));
 		}
 
 		public Merge(LedStream<T> source, Stream<LedStream<T>> others) {
 			super(source);
-			mergedIterator = new MergedIterator<>(Stream.concat(Stream.of(source), others), Comparator.comparingLong(Transaction::idOf));
+			mergedIterator = new MergedIterator<>(Stream.concat(Stream.of(source), others), Comparator.comparingLong(Schema::idOf));
 		}
 
 		@Override
@@ -425,13 +425,13 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 		}
 	}
 
-	class RetainAll<T extends Transaction> extends LedStream.LedStreamOperation<T, T> {
+	class RetainAll<T extends Schema> extends LedStream.LedStreamOperation<T, T> {
 
 		private final Iterator<Long> other;
 		private T current;
 
 		public RetainAll(LedStream<T> source, LedStream<?> other) {
-			this(source, other.mapToObj(Transaction::idOf).iterator());
+			this(source, other.mapToObj(Schema::idOf).iterator());
 		}
 
 		public RetainAll(LedStream<T> source, Iterator<Long> idIterator) {
@@ -482,27 +482,27 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 		}
 	}
 
-	class Map<T extends Transaction, R extends Transaction> extends LedStream.LedStreamOperation<T, R> {
+	class Map<T extends Schema, R extends Schema> extends LedStream.LedStreamOperation<T, R> {
 
 		private static final int DEFAULT_ELEMENTS_PER_STACK = 1024;
 
 
-		private final TransactionAllocator<R> allocator;
+		private final SchemaAllocator<R> allocator;
 		private final BiConsumer<T, R> mapper;
 
-		public Map(LedStream<T> source, TransactionAllocator<R> allocator, BiConsumer<T, R> mapper) {
+		public Map(LedStream<T> source, SchemaAllocator<R> allocator, BiConsumer<T, R> mapper) {
 			super(source);
 			this.allocator = requireNonNull(allocator);
 			this.mapper = requireNonNull(mapper);
 		}
 
-		public Map(LedStream<T> source, int rSize, TransactionFactory<R> factory, BiConsumer<T, R> mapper) {
+		public Map(LedStream<T> source, int rSize, SchemaFactory<R> factory, BiConsumer<T, R> mapper) {
 			this(source, getDefaultAllocator(rSize, factory), mapper);
 		}
 
 		@Override
-		public int transactionSize() {
-			return allocator.transactionSize();
+		public int schemaSize() {
+			return allocator.schemaSize();
 		}
 
 		@Override
@@ -517,16 +517,16 @@ public interface LedStream<T extends Transaction> extends Iterator<T>, AutoClose
 			return newElement;
 		}
 
-		private static <R extends Transaction> TransactionAllocator<R> getDefaultAllocator(int rSize, TransactionFactory<R> factory) {
+		private static <R extends Schema> SchemaAllocator<R> getDefaultAllocator(int rSize, SchemaFactory<R> factory) {
 			return new StackListAllocator<>(DEFAULT_ELEMENTS_PER_STACK, rSize, factory, StackAllocators::newManaged);
 		}
 	}
 
-	interface Builder<T extends Transaction> {
+	interface Builder<T extends Schema> {
 
-		Class<T> transactionClass();
+		Class<T> schemaClass();
 
-		int transactionSize();
+		int schemaSize();
 
 		Builder<T> append(Consumer<T> initializer);
 

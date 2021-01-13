@@ -51,15 +51,15 @@ public class LedWriter {
 		}
 	}
 
-	public void write(Led<? extends Transaction> led) {
+	public void write(Led<? extends Schema> led) {
 		serialize(led);
 	}
 
-	public void write(LedStream<? extends Transaction> led) {
+	public void write(LedStream<? extends Schema> led) {
 		serialize(led);
 	}
 
-	public <T extends Transaction> void writeUncompressed(LedStream<T> ledStream) {
+	public <T extends Schema> void writeUncompressed(LedStream<T> ledStream) {
 		if(destinationFile != null) {
 			fastSerializeUncompressed(ledStream);
 		} else {
@@ -67,16 +67,16 @@ public class LedWriter {
 		}
 	}
 
-	private <T extends Transaction> void fastSerializeUncompressed(LedStream<T> ledStream) {
+	private <T extends Schema> void fastSerializeUncompressed(LedStream<T> ledStream) {
 		try (FileChannel fileChannel = FileChannel.open(destinationFile.toPath(), WRITE)) {
-			final int transactionSize = ledStream.transactionSize();
-			ByteBuffer outputBuffer = allocBuffer((long) bufferSize * transactionSize);
+			final int schemaSize = ledStream.schemaSize();
+			ByteBuffer outputBuffer = allocBuffer((long) bufferSize * schemaSize);
 			final long destPtr = addressOf(outputBuffer);
 			int offset = 0;
 			while (ledStream.hasNext()) {
-				Transaction transaction = ledStream.next();
-				memcpy(transaction.address() + transaction.baseOffset(), destPtr + offset, transactionSize);
-				offset += transactionSize;
+				Schema schema = ledStream.next();
+				memcpy(schema.address() + schema.baseOffset(), destPtr + offset, schemaSize);
+				offset += schemaSize;
 				if (offset == outputBuffer.capacity()) {
 					fileChannel.write(outputBuffer);
 					outputBuffer.clear();
@@ -95,15 +95,15 @@ public class LedWriter {
 		}
 	}
 
-	private <T extends Transaction> void serializeUncompressed(LedStream<T> ledStream) {
+	private <T extends Schema> void serializeUncompressed(LedStream<T> ledStream) {
 		try (OutputStream outputStream = this.destOutputStream) {
-			final int transactionSize = ledStream.transactionSize();
-			final byte[] outputBuffer = new byte[bufferSize * transactionSize];
+			final int schemaSize = ledStream.schemaSize();
+			final byte[] outputBuffer = new byte[bufferSize * schemaSize];
 			int offset = 0;
 			while (ledStream.hasNext()) {
-				Transaction schema = ledStream.next();
-				memcpy(schema.address(), schema.baseOffset(), outputBuffer, offset, transactionSize);
-				offset += transactionSize;
+				Schema schema = ledStream.next();
+				memcpy(schema.address(), schema.baseOffset(), outputBuffer, offset, schemaSize);
+				offset += schemaSize;
 				if (offset == outputBuffer.length) {
 					writeToOutputStream(outputStream, outputBuffer);
 					offset = 0;
@@ -118,25 +118,25 @@ public class LedWriter {
 		}
 	}
 
-	private void serialize(Led<? extends Transaction> led) {
+	private void serialize(Led<? extends Schema> led) {
 		if (led.size() == 0) return;
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		final long size = led.size();
-		final int transactionSize = led.transactionSize();
+		final int schemaSize = led.schemaSize();
 		final int numBatches = (int) Math.ceil(led.size() / (float) bufferSize);
 		try (OutputStream fos = this.destOutputStream) {
 			LedHeader header = new LedHeader();
-			header.elementCount(size).elementSize(transactionSize);
+			header.elementCount(size).elementSize(schemaSize);
 			fos.write(header.toByteArray());
 			try (SnappyOutputStream outputStream = new SnappyOutputStream(fos)) {
 				for (int i = 0; i < numBatches; i++) {
 					final int start = i * bufferSize;
 					final int numElements = (int) Math.min(bufferSize, led.size() - start);
-					byte[] outputBuffer = new byte[numElements * transactionSize];
+					byte[] outputBuffer = new byte[numElements * schemaSize];
 					for (int j = 0; j < numElements; j++) {
-						Transaction src = led.transaction(j + start);
-						final long offset = j * transactionSize;
-						memcpy(src.address(), src.baseOffset(), outputBuffer, offset, transactionSize);
+						Schema src = led.schema(j + start);
+						final long offset = j * schemaSize;
+						memcpy(src.address(), src.baseOffset(), outputBuffer, offset, schemaSize);
 					}
 					executor.submit(() -> writeToOutputStream(outputStream, outputBuffer));
 				}
@@ -148,20 +148,20 @@ public class LedWriter {
 		}
 	}
 
-	private void serialize(LedStream<? extends Transaction> ledStream) {
+	private void serialize(LedStream<? extends Schema> ledStream) {
 		long elementCount = 0;
 		try (OutputStream fos = this.destOutputStream) {
 			LedHeader header = new LedHeader();
-			header.elementCount(LedHeader.UNKNOWN_SIZE).elementSize(ledStream.transactionSize());
+			header.elementCount(LedHeader.UNKNOWN_SIZE).elementSize(ledStream.schemaSize());
 			fos.write(header.toByteArray());
 			try (SnappyOutputStream outputStream = new SnappyOutputStream(fos)) {
-				final int transactionSize = ledStream.transactionSize();
-				final byte[] outputBuffer = new byte[bufferSize * transactionSize];
+				final int schemaSize = ledStream.schemaSize();
+				final byte[] outputBuffer = new byte[bufferSize * schemaSize];
 				int offset = 0;
 				while (ledStream.hasNext()) {
-					Transaction schema = ledStream.next();
-					memcpy(schema.address(), schema.baseOffset(), outputBuffer, offset, transactionSize);
-					offset += transactionSize;
+					Schema schema = ledStream.next();
+					memcpy(schema.address(), schema.baseOffset(), outputBuffer, offset, schemaSize);
+					offset += schemaSize;
 					if (offset == outputBuffer.length) {
 						writeToOutputStream(outputStream, outputBuffer);
 						offset = 0;
@@ -177,14 +177,14 @@ public class LedWriter {
 			Logger.error(e);
 		}
 		if(destinationFile != null) {
-			overrideHeader(elementCount, ledStream.transactionSize());
+			overrideHeader(elementCount, ledStream.schemaSize());
 		}
 	}
 
-	private void overrideHeader(long elementCount, int transactionSize) {
+	private void overrideHeader(long elementCount, int schemaSize) {
 		try(RandomAccessFile raFile = new RandomAccessFile(destinationFile, "rw")) {
 			raFile.writeLong(elementCount);
-			raFile.writeInt(transactionSize);
+			raFile.writeInt(schemaSize);
 		} catch (IOException e) {
 			Logger.error(e);
 		}

@@ -1,9 +1,8 @@
 package io.intino.alexandria.led;
 
-import io.intino.alexandria.led.util.LedUtils;
 import io.intino.alexandria.led.util.sorting.LedExternalMergeSort;
 import io.intino.alexandria.logger.Logger;
-import io.intino.test.transactions.TestTransaction;
+import io.intino.test.schemas.TestSchema;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 @Ignore
 public class TestLedExternalMergeSort {
 
-    private static final int NUM_TRANSACTIONS_IN_MEMORY = 100_000;
+    private static final int NUM_SCHEMAS_IN_MEMORY = 100_000;
 
     private final File srcFile = new File("temp/unsorted_led.led");
     private final File destFile = new File("temp/sorted_led.led");
@@ -77,7 +76,7 @@ public class TestLedExternalMergeSort {
                 srcFile.length() / 1024.0 / 1024.0 + " MB)...");
         LedHeader sourceHeader = LedHeader.from(srcFile);
         new LedExternalMergeSort(srcFile, destFile)
-                .numTransactionsInMemory(NUM_TRANSACTIONS_IN_MEMORY)
+                .numTransactionsInMemory(NUM_SCHEMAS_IN_MEMORY)
                 .checkChunkSorting(true)
                 .sort();
         System.out.println("	>> Validating result led...");
@@ -87,7 +86,7 @@ public class TestLedExternalMergeSort {
 
         System.out.println(">> Checking sorting...");
 
-        try(LedStream<TestTransaction> ledStream = new LedReader(destFile).read(TestTransaction::new)) {
+        try(LedStream<TestSchema> ledStream = new LedReader(destFile).read(TestSchema::new)) {
 
             long lastId = Long.MIN_VALUE;
 
@@ -105,8 +104,8 @@ public class TestLedExternalMergeSort {
     }
 
     private void createLed(File file, int numTransactions) {
-        System.out.println("Creating unsorted led of " + numTransactions + ", each transaction of " + TestTransaction.SIZE + " bytes...");
-        LedStream.Builder<TestTransaction> builder = new UnsortedLedStreamBuilder<>(TestTransaction.class, file);
+        System.out.println("Creating unsorted led of " + numTransactions + ", each schema of " + TestSchema.SIZE + " bytes...");
+        LedStream.Builder<TestSchema> builder = new UnsortedLedStreamBuilder<>(TestSchema.class, file);
         Random random = new Random();
         double start = System.currentTimeMillis();
         for(int i = 0;i < numTransactions;i++) {

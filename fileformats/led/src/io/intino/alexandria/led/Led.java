@@ -1,6 +1,6 @@
 package io.intino.alexandria.led;
 
-import io.intino.alexandria.led.allocators.TransactionFactory;
+import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.allocators.indexed.IndexedAllocator;
 import io.intino.alexandria.led.leds.IteratorLedStream;
 import io.intino.alexandria.led.leds.ListLed;
@@ -9,34 +9,34 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public interface Led<T extends Transaction> extends Iterable<T> {
+public interface Led<T extends Schema> extends Iterable<T> {
 
-	static <T extends Transaction> Led<T> empty() {
+	static <T extends Schema> Led<T> empty() {
 		return new ListLed<>(Collections.emptyList());
 	}
 
-	static <T extends Transaction> Led<T> fromLedStream(LedStream<T> ledStream) {
+	static <T extends Schema> Led<T> fromLedStream(LedStream<T> ledStream) {
 		return new ListLed<>(ledStream.asJavaStream().collect(Collectors.toUnmodifiableList()));
 	}
 
-	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass) {
-		return new LedBuilder<>(transactionClass);
+	static <T extends Schema> Builder<T> builder(Class<T> schemaClass) {
+		return new LedBuilder<>(schemaClass);
 	}
 
-	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass, TransactionFactory<T> factory) {
-		return new LedBuilder<>(transactionClass, factory);
+	static <T extends Schema> Builder<T> builder(Class<T> schemaClass, SchemaFactory<T> factory) {
+		return new LedBuilder<>(schemaClass, factory);
 	}
 
-	static <T extends Transaction> Builder<T> builder(Class<T> transactionClass, IndexedAllocator<T> allocator) {
-		return new LedBuilder<>(transactionClass, allocator);
+	static <T extends Schema> Builder<T> builder(Class<T> schemaClass, IndexedAllocator<T> allocator) {
+		return new LedBuilder<>(schemaClass, allocator);
 
 	}
 
 	long size();
 
-	int transactionSize();
+	int schemaSize();
 
-	T transaction(int index);
+	T schema(int index);
 
 	@Override
 	default Iterator<T> iterator() {
@@ -47,7 +47,7 @@ public interface Led<T extends Transaction> extends Iterable<T> {
 		return new AbstractList<T>() {
 			@Override
 			public T get(int index) {
-				return transaction(index);
+				return schema(index);
 			}
 
 			@Override
@@ -58,13 +58,13 @@ public interface Led<T extends Transaction> extends Iterable<T> {
 	}
 
 	default LedStream<T> toLedStream() {
-		return new IteratorLedStream<>(transactionSize(), iterator());
+		return new IteratorLedStream<>(schemaSize(), iterator());
 	}
 
-	interface Builder<T extends Transaction> {
-		Class<T> transactionClass();
+	interface Builder<T extends Schema> {
+		Class<T> schemaClass();
 
-		int transactionSize();
+		int schemaSize();
 
 		Builder<T> create(Consumer<T> initializer);
 

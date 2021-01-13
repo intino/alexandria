@@ -6,19 +6,15 @@ import io.intino.alexandria.datalake.file.FS;
 import io.intino.alexandria.datalake.file.FileTransactionStore;
 import io.intino.alexandria.led.LedReader;
 import io.intino.alexandria.led.LedStream;
-import io.intino.alexandria.led.LedWriter;
-import io.intino.alexandria.led.Transaction;
-import io.intino.alexandria.led.allocators.TransactionFactory;
+import io.intino.alexandria.led.Schema;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.util.LedUtils;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -73,7 +69,7 @@ public class TransactionSessionManager {
 	private static void merge(File destination, File session, File tempFolder) {
 		try {
 			File temp = Files.createTempFile(tempFolder.toPath(),"seal", ".led").toFile();
-			LedStream.merged(Stream.of(new LedReader(destination).read(SealTransaction::new), new LedReader(session).read(SealTransaction::new))).serialize(temp);
+			LedStream.merged(Stream.of(new LedReader(destination).read(SealSchema::new), new LedReader(session).read(SealSchema::new))).serialize(temp);
 			FS.copyInto(temp, new FileInputStream(session));
 			temp.delete();
 		} catch (IOException e) {
@@ -105,8 +101,8 @@ public class TransactionSessionManager {
 		return file.getName().substring(0, file.getName().indexOf("#")).replace("-", "/").replace(Session.LedSessionExtension, "");
 	}
 
-	private static class SealTransaction extends Transaction {
-		public SealTransaction(ByteStore store) {
+	private static class SealSchema extends Schema {
+		public SealSchema(ByteStore store) {
 			super(store);
 		}
 

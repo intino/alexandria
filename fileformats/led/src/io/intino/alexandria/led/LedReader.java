@@ -1,6 +1,6 @@
 package io.intino.alexandria.led;
 
-import io.intino.alexandria.led.allocators.TransactionFactory;
+import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.allocators.indexed.IndexedAllocator;
 import io.intino.alexandria.led.allocators.indexed.IndexedAllocatorFactory;
 import io.intino.alexandria.led.leds.ByteChannelLedStream;
@@ -41,11 +41,11 @@ public class LedReader {
 		return (int) LedHeader.UNKNOWN_SIZE;
 	}
 
-	public <T extends Transaction> Led<T> readAll(TransactionFactory<T> factory) {
+	public <T extends Schema> Led<T> readAll(SchemaFactory<T> factory) {
 		return readAll(getDefaultAllocatorFactory(), factory);
 	}
 
-	public <T extends Transaction> Led<T> readAll(IndexedAllocatorFactory<T> allocatorFactory, TransactionFactory<T> factory) {
+	public <T extends Schema> Led<T> readAll(IndexedAllocatorFactory<T> allocatorFactory, SchemaFactory<T> factory) {
 		try {
 			if(srcInputStream.available() == 0) {
 				return Led.empty();
@@ -64,7 +64,7 @@ public class LedReader {
 		return Led.empty();
 	}
 
-	public <T extends Transaction> LedStream<T> read(TransactionFactory<T> factory) {
+	public <T extends Schema> LedStream<T> read(SchemaFactory<T> factory) {
 		try {
 			if(srcInputStream.available() == 0) {
 				return LedStream.empty();
@@ -77,7 +77,7 @@ public class LedReader {
 		return LedStream.empty();
 	}
 
-	public <T extends Transaction> LedStream<T> readUncompressed(int elementSize, TransactionFactory<T> factory) {
+	public <T extends Schema> LedStream<T> readUncompressed(int elementSize, SchemaFactory<T> factory) {
 		try {
 			if(srcInputStream.available() == 0) {
 				return LedStream.empty();
@@ -89,7 +89,7 @@ public class LedReader {
 		return LedStream.empty();
 	}
 
-	private <T extends Transaction> LedStream<T> allocateUncompressed(TransactionFactory<T> factory, int elementSize) {
+	private <T extends Schema> LedStream<T> allocateUncompressed(SchemaFactory<T> factory, int elementSize) {
 		try {
 			srcInputStream.close();
 		} catch (IOException e) {
@@ -98,8 +98,8 @@ public class LedReader {
 		return new ByteChannelLedStream<>(sourceFile, factory, elementSize);
 	}
 
-	private <T extends Transaction> LedStream<T> allocate(InputStream inputStream, TransactionFactory<T> factory, int transactionSize) {
-		return new InputLedStream<>(inputStream, factory, transactionSize);
+	private <T extends Schema> LedStream<T> allocate(InputStream inputStream, SchemaFactory<T> factory, int schemaSize) {
+		return new InputLedStream<>(inputStream, factory, schemaSize);
 	}
 
 	private static InputStream inputStreamOf(File file) {
@@ -112,7 +112,7 @@ public class LedReader {
 		}
 	}
 
-	private <T extends Transaction> IndexedAllocatorFactory<T> getDefaultAllocatorFactory() {
+	private <T extends Schema> IndexedAllocatorFactory<T> getDefaultAllocatorFactory() {
 		return (inputStream, elementCount, elementSize, factory) -> {
 			if(elementCount >= 0 && elementCount * elementSize < Integer.MAX_VALUE) {
 				return IndexedAllocatorFactory.newManagedIndexedAllocator(inputStream, elementCount, elementSize, factory);
