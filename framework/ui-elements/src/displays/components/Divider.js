@@ -20,9 +20,13 @@ class Divider extends AbstractDivider {
 		super(props);
 		this.notifier = new DividerNotifier(this);
 		this.requester = new DividerRequester(this);
+		this.state = {
+		    ...this.state
+		}
 	};
 
 	render() {
+	    if (!this.state.visible) return (<React.Fragment/>);
 		return (<MuiDivider style={this.style()} className={this.props.classes.divider} component="li"/>);
 	};
 }

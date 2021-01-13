@@ -91,6 +91,7 @@ Component selectorToggleBox as ExtensionOf(baseSelector)
 
 Component selectorListBox as ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
+	Notification refreshHiddenOptions as Text List
 	Request updateSelection as Text List
 
 Component selectorTabs as ExtensionOf(baseSelector)
@@ -106,6 +107,7 @@ Component selectorCollectionBox as ExtensionOf(baseSelector)
 	Request clearSelection
 	Request unSelect as Text
 	Request opened
+	Request selectOther
 
 Component multiple
 	Notification refreshReadonly as Bool

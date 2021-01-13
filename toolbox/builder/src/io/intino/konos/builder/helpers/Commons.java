@@ -62,7 +62,7 @@ public class Commons {
 	}
 
 	public static File javaFile(File packageFolder, String name) {
-		return preparedFile(packageFolder, name, "java");
+		return preparedFile(packageFolder, firstUpperCase(name), "java");
 	}
 
 	public static String javaFilename(String name) {

@@ -47,6 +47,7 @@ Component fileEditable as ExtensionOf(baseFile)
 	Notification refreshReadonly as Bool
 	Request notifyUploading
 	Request notifyChange as File
+	Request(Asset) downloadFile
 
 Component baseImage
 	Notification refresh as Text

@@ -2,14 +2,20 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.ui.displays.components.editable.Editable;
 import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.Listener;
 import io.intino.alexandria.ui.displays.notifiers.FileEditableNotifier;
+import io.intino.alexandria.ui.spark.UIFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 public class FileEditable<DN extends FileEditableNotifier, B extends Box> extends AbstractFileEditable<DN, B> implements Editable<DN, B> {
@@ -73,6 +79,27 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 
 	public void notifyChange(Resource value) {
 		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));
+	}
+
+	public UIFile downloadFile() {
+		URL value = value();
+		return new UIFile() {
+			@Override
+			public String label() {
+				String path = value.getPath();
+				return path.contains("/") ? path.substring(path.lastIndexOf("/")+1) : path;
+			}
+
+			@Override
+			public InputStream content() {
+				try {
+					return value.openStream();
+				} catch (IOException e) {
+					Logger.error(e);
+					return new ByteArrayInputStream(new byte[0]);
+				}
+			}
+		};
 	}
 
 	protected FileEditable<DN, B> _readonly(boolean readonly) {

@@ -40,7 +40,7 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 		Block as Relative(width=33%, height=100%)
 			Text(format=h6, value="ComboBox facet with Traceable (cookie is used)")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				Selector selector3 as ComboBox Traceable
+				Selector selector3 as ComboBox(maxMenuHeight=20px) Traceable
 					Text(value="option 1") comboBoxOption1 as Option
 					Text(value="option 2") comboBoxOption2 as Option
 					Text(value="option 3") comboBoxOption3 as Option
@@ -122,14 +122,14 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 		Block as Relative(width=33%, height=100%)
 			Text(format=h6, value="CollectionBox facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				Selector selector8 as CollectionBox(multipleSelection=false)
+				Selector selector8 as CollectionBox(multipleSelection=false, allowOther=true)
 					List(itemClass="io.intino.alexandria.ui.documentation.Person") selector8List as Selectable
 						Mold > Item(height = 30px) selector8ListMold > Text firstName
 
 			Block > Text as Code(language=Html)
 					value
 						=========
-						Selector as CollectionBox<br/>
+						Selector as CollectionBox(allowOther\=true)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") checkBoxOption1 as Option<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") checkBoxOption2 as Option<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") checkBoxOption3 as Option

@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration;
 import io.intino.konos.builder.codegeneration.accessor.jmx.JMXAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.messaging.MessagingAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer;
+import io.intino.konos.builder.codegeneration.analytic.AnalyticRenderer;
 import io.intino.konos.builder.codegeneration.bpm.BpmRenderer;
 import io.intino.konos.builder.codegeneration.datahub.DatalakeRenderer;
 import io.intino.konos.builder.codegeneration.datahub.adapter.AdapterRenderer;
@@ -64,6 +65,7 @@ public class FullRenderer {
 			adapters();
 			feeders();
 			processes();
+			analytic();
 			slack();
 			box();
 			main();
@@ -71,6 +73,10 @@ public class FullRenderer {
 			context.saveCache();
 		} else if (context.mode().equals(Mode.OnlyElements)) ui();
 		else accessors();
+	}
+
+	private void analytic() {
+		new AnalyticRenderer(context, graph).execute();
 	}
 
 	private void accessors() {
