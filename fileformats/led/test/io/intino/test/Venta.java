@@ -1,6 +1,6 @@
 package io.intino.test;
 
-import io.intino.alexandria.led.Transaction;
+import io.intino.alexandria.led.Schema;
 import io.intino.alexandria.led.buffers.AbstractBitBuffer;
 import io.intino.alexandria.led.buffers.BitBuffer;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
@@ -12,7 +12,7 @@ import io.intino.alexandria.led.util.memory.MemoryUtils;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 
-public class Venta extends Transaction {
+public class Venta extends Schema {
 
     public static final int SIZE = (int)Math.ceil(16.625D);
 
@@ -26,7 +26,7 @@ public class Venta extends Transaction {
 
         System.out.println("kwh = " + venta.kwh());
 
-        Field bitBufferField = Transaction.class.getDeclaredField("bitBuffer");
+        Field bitBufferField = Schema.class.getDeclaredField("bitBuffer");
         bitBufferField.setAccessible(true);
         BitBuffer bitBuffer = (BitBuffer) bitBufferField.get(venta);
         Field storeField = AbstractBitBuffer.class.getDeclaredField("store");

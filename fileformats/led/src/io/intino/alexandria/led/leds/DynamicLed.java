@@ -1,27 +1,21 @@
 package io.intino.alexandria.led.leds;
 
 import io.intino.alexandria.led.Led;
-import io.intino.alexandria.led.Transaction;
-import io.intino.alexandria.led.allocators.TransactionFactory;
+import io.intino.alexandria.led.Schema;
+import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.allocators.indexed.ListAllocator;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
-public class DynamicLed<T extends Transaction> implements Led<T> {
+public class DynamicLed<T extends Schema> implements Led<T> {
 
 	private final ListAllocator<T> allocator;
-	private final int transactionSize;
+	private final int schemaSize;
 
-	public DynamicLed(int schemaSize, TransactionFactory<T> factory) {
-		this.transactionSize = schemaSize;
+	public DynamicLed(int schemaSize, SchemaFactory<T> factory) {
+		this.schemaSize = schemaSize;
 		this.allocator = new ListAllocator<>(1000, schemaSize, factory);
 	}
 
-	public Transaction newTransaction() {
+	public Schema newTransaction() {
 		return allocator.malloc();
 	}
 
@@ -31,12 +25,12 @@ public class DynamicLed<T extends Transaction> implements Led<T> {
 	}
 
 	@Override
-	public int transactionSize() {
-		return transactionSize;
+	public int schemaSize() {
+		return schemaSize;
 	}
 
 	@Override
-	public T transaction(int index) {
+	public T schema(int index) {
 		if(index >= size()) {
 			throw new IndexOutOfBoundsException("Index >= " + size());
 		}

@@ -1,8 +1,8 @@
 package io.intino.alexandria.led.leds;
 
 import io.intino.alexandria.led.LedStream;
-import io.intino.alexandria.led.Transaction;
-import io.intino.alexandria.led.allocators.TransactionFactory;
+import io.intino.alexandria.led.Schema;
+import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.allocators.stack.StackAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.logger.Logger;
@@ -15,38 +15,38 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.led.Transaction.factoryOf;
-import static io.intino.alexandria.led.Transaction.sizeOf;
+import static io.intino.alexandria.led.Schema.factoryOf;
+import static io.intino.alexandria.led.Schema.sizeOf;
 import static io.intino.alexandria.led.util.memory.LedLibraryConfig.INPUTLEDSTREAM_CONCURRENCY_ENABLED;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
 
-public class InputLedStream<T extends Transaction> implements LedStream<T> {
+public class InputLedStream<T extends Schema> implements LedStream<T> {
 
     private static final int DEFAULT_BUFFER_SIZE = 2048;
 
     private final InputStream inputStream;
     private final int bufferSize;
-    private final int transactionSize;
-    private final TransactionFactory<T> provider;
+    private final int schemaSize;
+    private final SchemaFactory<T> provider;
     private final Iterator<T> iterator;
     private Runnable onClose;
     private final AtomicBoolean closed;
 
-    public InputLedStream(InputStream inputStream, Class<T> transactionClass) {
-        this(inputStream, factoryOf(transactionClass), sizeOf(transactionClass), DEFAULT_BUFFER_SIZE);
+    public InputLedStream(InputStream inputStream, Class<T> schemaClass) {
+        this(inputStream, factoryOf(schemaClass), sizeOf(schemaClass), DEFAULT_BUFFER_SIZE);
     }
 
-    public InputLedStream(InputStream inputStream, Class<T> transactionClass, int bufferSize) {
-        this(inputStream, factoryOf(transactionClass), sizeOf(transactionClass), bufferSize);
+    public InputLedStream(InputStream inputStream, Class<T> schemaClass, int bufferSize) {
+        this(inputStream, factoryOf(schemaClass), sizeOf(schemaClass), bufferSize);
     }
 
-    public InputLedStream(InputStream inputStream, TransactionFactory<T> factory, int transactionSize) {
-        this(inputStream, factory, transactionSize, DEFAULT_BUFFER_SIZE);
+    public InputLedStream(InputStream inputStream, SchemaFactory<T> factory, int schemaSize) {
+        this(inputStream, factory, schemaSize, DEFAULT_BUFFER_SIZE);
     }
 
-    public InputLedStream(InputStream inputStream, TransactionFactory<T> factory, int transactionSize, int bufferSize) {
+    public InputLedStream(InputStream inputStream, SchemaFactory<T> factory, int schemaSize, int bufferSize) {
         this.inputStream = inputStream;
-        this.transactionSize = transactionSize;
+        this.schemaSize = schemaSize;
         this.provider = factory;
         this.bufferSize = bufferSize;
         closed = new AtomicBoolean();
@@ -81,8 +81,8 @@ public class InputLedStream<T extends Transaction> implements LedStream<T> {
     }
 
     @Override
-    public int transactionSize() {
-        return transactionSize;
+    public int schemaSize() {
+        return schemaSize;
     }
 
     private boolean checkInputBuffer(ByteBuffer inputBuffer, InputStream inputStream) {
@@ -100,8 +100,8 @@ public class InputLedStream<T extends Transaction> implements LedStream<T> {
     }
 
     private Stream<T> allocateAll(ByteBuffer buffer) {
-        StackAllocator<T> allocator = StackAllocators.newManaged(transactionSize, buffer, provider);
-        IntStream intStream = IntStream.range(0, buffer.remaining() / transactionSize);
+        StackAllocator<T> allocator = StackAllocators.newManaged(schemaSize, buffer, provider);
+        IntStream intStream = IntStream.range(0, buffer.remaining() / schemaSize);
         if(INPUTLEDSTREAM_CONCURRENCY_ENABLED.get()) {
             intStream = intStream.sorted().parallel();
         }
@@ -111,7 +111,7 @@ public class InputLedStream<T extends Transaction> implements LedStream<T> {
     private synchronized ByteBuffer read(InputStream inputStream) {
         try {
             if (inputStream == null || inputStream.available() <= 0) return null;
-            byte[] inputBuffer = new byte[bufferSize * transactionSize];
+            byte[] inputBuffer = new byte[bufferSize * schemaSize];
             int bytesRead;
             bytesRead = inputStream.read(inputBuffer);
             if (bytesRead < 0) return null;

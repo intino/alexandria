@@ -1,8 +1,8 @@
 package io.intino.alexandria.led.leds;
 
 import io.intino.alexandria.led.LedStream;
-import io.intino.alexandria.led.Transaction;
-import io.intino.alexandria.led.allocators.TransactionFactory;
+import io.intino.alexandria.led.Schema;
+import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.allocators.stack.StackAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.logger.Logger;
@@ -16,40 +16,40 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.led.Transaction.factoryOf;
-import static io.intino.alexandria.led.Transaction.sizeOf;
+import static io.intino.alexandria.led.Schema.factoryOf;
+import static io.intino.alexandria.led.Schema.sizeOf;
 import static io.intino.alexandria.led.util.memory.LedLibraryConfig.DEFAULT_BUFFER_SIZE;
 import static io.intino.alexandria.led.util.memory.LedLibraryConfig.INPUTLEDSTREAM_CONCURRENCY_ENABLED;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
 import static java.nio.file.StandardOpenOption.READ;
 
-public class ByteChannelLedStream<T extends Transaction> implements LedStream<T> {
+public class ByteChannelLedStream<T extends Schema> implements LedStream<T> {
 
     private final FileChannel byteChannel;
     private final long fileSize;
     private final int bufferSize;
-    private final int transactionSize;
-    private final TransactionFactory<T> provider;
+    private final int schemaSize;
+    private final SchemaFactory<T> provider;
     private final Iterator<T> iterator;
     private Runnable onClose;
     private final AtomicBoolean closed;
 
-    public ByteChannelLedStream(File file, Class<T> transactionClass) {
-        this(file, factoryOf(transactionClass), sizeOf(transactionClass), DEFAULT_BUFFER_SIZE.get());
+    public ByteChannelLedStream(File file, Class<T> schemaClass) {
+        this(file, factoryOf(schemaClass), sizeOf(schemaClass), DEFAULT_BUFFER_SIZE.get());
     }
 
-    public ByteChannelLedStream(File file, Class<T> transactionClass, int bufferSize) {
-        this(file, factoryOf(transactionClass), sizeOf(transactionClass), bufferSize);
+    public ByteChannelLedStream(File file, Class<T> schemaClass, int bufferSize) {
+        this(file, factoryOf(schemaClass), sizeOf(schemaClass), bufferSize);
     }
 
-    public ByteChannelLedStream(File file, TransactionFactory<T> factory, int transactionSize) {
-        this(file, factory, transactionSize, DEFAULT_BUFFER_SIZE.get());
+    public ByteChannelLedStream(File file, SchemaFactory<T> factory, int schemaSize) {
+        this(file, factory, schemaSize, DEFAULT_BUFFER_SIZE.get());
     }
 
-    public ByteChannelLedStream(File file, TransactionFactory<T> factory, int transactionSize, int bufferSize) {
+    public ByteChannelLedStream(File file, SchemaFactory<T> factory, int schemaSize, int bufferSize) {
         this.byteChannel = open(file);
         fileSize = getFileSize();
-        this.transactionSize = transactionSize;
+        this.schemaSize = schemaSize;
         this.provider = factory;
         this.bufferSize = bufferSize;
         closed = new AtomicBoolean();
@@ -103,8 +103,8 @@ public class ByteChannelLedStream<T extends Transaction> implements LedStream<T>
     }
 
     @Override
-    public int transactionSize() {
-        return transactionSize;
+    public int schemaSize() {
+        return schemaSize;
     }
 
     private boolean checkInputBuffer(ByteBuffer inputBuffer, FileChannel byteChannel) {
@@ -122,8 +122,8 @@ public class ByteChannelLedStream<T extends Transaction> implements LedStream<T>
     }
 
     private Stream<T> allocateAll(ByteBuffer buffer) {
-        StackAllocator<T> allocator = StackAllocators.newManaged(transactionSize, buffer, provider);
-        IntStream intStream = IntStream.range(0, buffer.remaining() / transactionSize);
+        StackAllocator<T> allocator = StackAllocators.newManaged(schemaSize, buffer, provider);
+        IntStream intStream = IntStream.range(0, buffer.remaining() / schemaSize);
         if(INPUTLEDSTREAM_CONCURRENCY_ENABLED.get()) {
             intStream = intStream.sorted().parallel();
         }
@@ -139,7 +139,7 @@ public class ByteChannelLedStream<T extends Transaction> implements LedStream<T>
             if (!byteChannel.isOpen() || filePosition >= fileSize) {
                 return null;
             }
-            final int size = (int) Math.min(bufferSize, fileSize - filePosition) * transactionSize;
+            final int size = (int) Math.min(bufferSize, fileSize - filePosition) * schemaSize;
             ByteBuffer buffer = allocBuffer(size);
             int bytesRead = byteChannel.read(buffer);
             if (bytesRead <= 0) return null;

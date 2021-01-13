@@ -1,11 +1,11 @@
 package io.intino.test.allocators;
 
-import io.intino.alexandria.led.Transaction;
+import io.intino.alexandria.led.Schema;
 import io.intino.alexandria.led.allocators.DefaultAllocator;
-import io.intino.alexandria.led.allocators.TransactionAllocator;
+import io.intino.alexandria.led.allocators.SchemaAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.led.allocators.stack.StackListAllocator;
-import io.intino.test.transactions.TestTransaction;
+import io.intino.test.schemas.TestSchema;
 
 public class TestMemoryUsedByJVM {
 	private static final int NUM_ELEMENTS = 20_000_000;
@@ -39,30 +39,30 @@ public class TestMemoryUsedByJVM {
 	}
 
 	private static void testDefaultAllocator() {
-		final long defaultAllocatorMemory = getMemoryUsed(new DefaultAllocator<>(TestTransaction.SIZE, TestTransaction::new));
-		System.out.println("Test Allocator Memory Used (" + NUM_ELEMENTS + " elements, element size in bytes = " + TestTransaction.SIZE + ")");
-		System.out.println(">> Off-Heap memory used: " + (NUM_ELEMENTS * TestTransaction.SIZE) / BYTES_TO_MB + " MB");
+		final long defaultAllocatorMemory = getMemoryUsed(new DefaultAllocator<>(TestSchema.SIZE, TestSchema::new));
+		System.out.println("Test Allocator Memory Used (" + NUM_ELEMENTS + " elements, element size in bytes = " + TestSchema.SIZE + ")");
+		System.out.println(">> Off-Heap memory used: " + (NUM_ELEMENTS * TestSchema.SIZE) / BYTES_TO_MB + " MB");
 		System.out.println(">> DefaultAllocator: " + defaultAllocatorMemory / BYTES_TO_MB + " MB used");
 	}
 
 	private static void testStackAllocator() {
-		final long stackAllocatorMemory = getMemoryUsed(StackAllocators.newManaged(TestTransaction.SIZE, NUM_ELEMENTS, TestTransaction::new));
-		System.out.println("Test Allocator Memory Used (" + NUM_ELEMENTS + " elements, element size in bytes = " + TestTransaction.SIZE + ")");
-		System.out.println(">> Off-Heap memory used: " + (NUM_ELEMENTS * TestTransaction.SIZE) / BYTES_TO_MB + " MB");
+		final long stackAllocatorMemory = getMemoryUsed(StackAllocators.newManaged(TestSchema.SIZE, NUM_ELEMENTS, TestSchema::new));
+		System.out.println("Test Allocator Memory Used (" + NUM_ELEMENTS + " elements, element size in bytes = " + TestSchema.SIZE + ")");
+		System.out.println(">> Off-Heap memory used: " + (NUM_ELEMENTS * TestSchema.SIZE) / BYTES_TO_MB + " MB");
 		System.out.println(">> StackAllocator: " + stackAllocatorMemory / BYTES_TO_MB + " MB used");
 	}
 
 	private static void testStackListAllocator() {
-		final long stackListAllocatorMemory = getMemoryUsed(new StackListAllocator<>(NUM_ELEMENTS / 10, TestTransaction.SIZE, TestTransaction::new, StackAllocators::newManaged));
-		System.out.println("Test Allocator Memory Used (" + NUM_ELEMENTS + " elements, element size in bytes = " + TestTransaction.SIZE + ")");
-		System.out.println(">> Off-Heap memory used: " + (NUM_ELEMENTS * TestTransaction.SIZE) / BYTES_TO_MB + " MB");
+		final long stackListAllocatorMemory = getMemoryUsed(new StackListAllocator<>(NUM_ELEMENTS / 10, TestSchema.SIZE, TestSchema::new, StackAllocators::newManaged));
+		System.out.println("Test Allocator Memory Used (" + NUM_ELEMENTS + " elements, element size in bytes = " + TestSchema.SIZE + ")");
+		System.out.println(">> Off-Heap memory used: " + (NUM_ELEMENTS * TestSchema.SIZE) / BYTES_TO_MB + " MB");
 		System.out.println(">> StackListAllocator: " + stackListAllocatorMemory / BYTES_TO_MB + " MB used");
 	}
 
-	private static long getMemoryUsed(TransactionAllocator<TestTransaction> allocator) {
+	private static long getMemoryUsed(SchemaAllocator<TestSchema> allocator) {
 		RUNTIME.gc();
 		final long startMemory = usedMemory();
-		Transaction schema = null;
+		Schema schema = null;
 		for (int i = 0; i < NUM_ELEMENTS; i++) schema = allocator.malloc();
 		if (schema != null) schema.address();
 		final long usedMemory = usedMemory() - startMemory;

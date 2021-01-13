@@ -1,14 +1,14 @@
 package io.intino.alexandria.led.allocators.stack;
 
-import io.intino.alexandria.led.Transaction;
-import io.intino.alexandria.led.allocators.TransactionFactory;
+import io.intino.alexandria.led.Schema;
+import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.exceptions.StackAllocatorUnderflowException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class StackListAllocator<T extends Transaction> implements StackAllocator<T> {
+public class StackListAllocator<T extends Schema> implements StackAllocator<T> {
 
 	private static final int DEFAULT_INITIAL_STACK_COUNT = 1;
 
@@ -17,11 +17,11 @@ public class StackListAllocator<T extends Transaction> implements StackAllocator
 	private final AtomicInteger currentStackAllocator;
 	private final int elementsPerStack;
 	private final int elementSize;
-	private final TransactionFactory<T> schemaFactory;
+	private final SchemaFactory<T> schemaFactory;
 	private final StackAllocatorFactory<T> stackAllocatorFactory;
 
 	public StackListAllocator(int initialStackCount, int elementsPerStack, int elementSize,
-							  TransactionFactory<T> schemaFactory, StackAllocatorFactory<T> stackAllocatorFactory) {
+                              SchemaFactory<T> schemaFactory, StackAllocatorFactory<T> stackAllocatorFactory) {
 
 		this.stackAllocators = new ArrayList<>();
 		currentStackAllocator = new AtomicInteger(0);
@@ -34,7 +34,7 @@ public class StackListAllocator<T extends Transaction> implements StackAllocator
 	}
 
 	public StackListAllocator(int elementsPerStack, int elementSize,
-							  TransactionFactory<T> schemaFactory, StackAllocatorFactory<T> stackAllocatorFactory) {
+                              SchemaFactory<T> schemaFactory, StackAllocatorFactory<T> stackAllocatorFactory) {
 
 		this(DEFAULT_INITIAL_STACK_COUNT, elementsPerStack, elementSize, schemaFactory, stackAllocatorFactory);
 	}
@@ -81,7 +81,7 @@ public class StackListAllocator<T extends Transaction> implements StackAllocator
 	}
 
 	@Override
-	public int transactionSize() {
+	public int schemaSize() {
 		return elementSize;
 	}
 

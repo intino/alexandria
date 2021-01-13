@@ -1,7 +1,7 @@
 package io.intino.alexandria.led.allocators.stack;
 
-import io.intino.alexandria.led.Transaction;
-import io.intino.alexandria.led.allocators.TransactionFactory;
+import io.intino.alexandria.led.Schema;
+import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.exceptions.StackAllocatorOverflowException;
 import io.intino.alexandria.led.exceptions.StackAllocatorUnderflowException;
@@ -13,15 +13,15 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static io.intino.alexandria.led.util.memory.MemoryUtils.NULL;
 
-public class SingleStackAllocator<T extends Transaction> implements StackAllocator<T> {
+public class SingleStackAllocator<T extends Schema> implements StackAllocator<T> {
 
 	private final int elementSize;
 	private ByteStore stack;
 	private final ModifiableMemoryAddress address;
 	private final AtomicLong stackPointer;
-	private final TransactionFactory<T> factory;
+	private final SchemaFactory<T> factory;
 
-	public SingleStackAllocator(ByteStore store, ModifiableMemoryAddress address, int elementSize, TransactionFactory<T> factory) {
+	public SingleStackAllocator(ByteStore store, ModifiableMemoryAddress address, int elementSize, SchemaFactory<T> factory) {
 		this.elementSize = elementSize;
 		this.stack = store;
 		this.factory = factory;
@@ -69,7 +69,7 @@ public class SingleStackAllocator<T extends Transaction> implements StackAllocat
 	}
 
 	@Override
-	public int transactionSize() {
+	public int schemaSize() {
 		return elementSize;
 	}
 

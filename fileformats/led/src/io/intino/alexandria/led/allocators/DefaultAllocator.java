@@ -1,6 +1,6 @@
 package io.intino.alexandria.led.allocators;
 
-import io.intino.alexandria.led.Transaction;
+import io.intino.alexandria.led.Schema;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.util.memory.MemoryAddress;
@@ -9,13 +9,13 @@ import java.nio.ByteBuffer;
 
 import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
 
-public class DefaultAllocator<T extends Transaction> implements TransactionAllocator<T> {
+public class DefaultAllocator<T extends Schema> implements SchemaAllocator<T> {
 
 	private final int elementSize;
-	private final TransactionFactory<T> factory;
+	private final SchemaFactory<T> factory;
 
-	public DefaultAllocator(int transactionSize, TransactionFactory<T> factory) {
-		this.elementSize = transactionSize;
+	public DefaultAllocator(int schemaSize, SchemaFactory<T> factory) {
+		this.elementSize = schemaSize;
 		this.factory = factory;
 	}
 
@@ -40,7 +40,7 @@ public class DefaultAllocator<T extends Transaction> implements TransactionAlloc
 	}
 
 	@Override
-	public int transactionSize() {
+	public int schemaSize() {
 		return elementSize;
 	}
 

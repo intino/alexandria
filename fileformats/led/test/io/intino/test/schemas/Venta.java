@@ -1,6 +1,6 @@
-package io.intino.test.transactions;
+package io.intino.test.schemas;
 
-import io.intino.alexandria.led.Transaction;
+import io.intino.alexandria.led.Schema;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.util.memory.MemoryAddress;
@@ -8,7 +8,7 @@ import io.intino.alexandria.led.util.memory.MemoryUtils;
 
 import java.nio.ByteBuffer;
 
-public class Venta extends Transaction {
+public class Venta extends Schema {
 
     public static final int SIZE = (int)Math.ceil(16.25D);
 

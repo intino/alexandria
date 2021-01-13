@@ -1,7 +1,7 @@
 package io.intino.alexandria.led.allocators.indexed;
 
-import io.intino.alexandria.led.Transaction;
-import io.intino.alexandria.led.allocators.TransactionFactory;
+import io.intino.alexandria.led.Schema;
+import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.util.memory.MemoryUtils;
@@ -17,18 +17,18 @@ import java.util.stream.IntStream;
 
 import static io.intino.alexandria.led.util.memory.MemoryUtils.*;
 
-public class ArrayAllocator<T extends Transaction> implements IndexedAllocator<T> {
+public class ArrayAllocator<T extends Schema> implements IndexedAllocator<T> {
 	private ByteBufferStore[] stores;
 	private final ModifiableMemoryAddress[] addresses;
 	private final Map<Integer, Integer> indices;
 	private final int elementSize;
-	private final TransactionFactory<T> factory;
+	private final SchemaFactory<T> factory;
 
-	public ArrayAllocator(int capacity, int elementsPerBuffer, int elementSize, TransactionFactory<T> factory) {
+	public ArrayAllocator(int capacity, int elementsPerBuffer, int elementSize, SchemaFactory<T> factory) {
 		this(generateBuffers(capacity, elementsPerBuffer * elementSize), elementSize, factory);
 	}
 
-	public ArrayAllocator(List<ByteBuffer> buffers, int elementSize, TransactionFactory<T> factory) {
+	public ArrayAllocator(List<ByteBuffer> buffers, int elementSize, SchemaFactory<T> factory) {
 		this.elementSize = elementSize;
 		this.factory = factory;
 		addresses = new ModifiableMemoryAddress[buffers.size()];
@@ -90,7 +90,7 @@ public class ArrayAllocator<T extends Transaction> implements IndexedAllocator<T
 	}
 
 	@Override
-	public int transactionSize() {
+	public int schemaSize() {
 		return elementSize;
 	}
 

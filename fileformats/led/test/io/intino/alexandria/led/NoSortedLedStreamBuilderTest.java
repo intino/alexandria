@@ -1,16 +1,12 @@
 package io.intino.alexandria.led;
 
 import io.intino.alexandria.logger.Logger;
-import io.intino.test.transactions.TestTransaction;
+import io.intino.test.schemas.TestSchema;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 import static org.junit.Assert.assertTrue;
 
@@ -19,8 +15,8 @@ public class NoSortedLedStreamBuilderTest {
     @Ignore
     @Test
     public void test() {
-        System.out.println(TestTransaction.SIZE);
-        LedStream.Builder<TestTransaction> builder = new UnsortedLedStreamBuilder<>(TestTransaction.class, new File("temp"));
+        System.out.println(TestSchema.SIZE);
+        LedStream.Builder<TestSchema> builder = new UnsortedLedStreamBuilder<>(TestSchema.class, new File("temp"));
         Random random = new Random();
         double start = System.currentTimeMillis();
         final int numElements = 100_000_000;
@@ -37,7 +33,7 @@ public class NoSortedLedStreamBuilderTest {
 
         start = System.currentTimeMillis();
 
-        try(LedStream<TestTransaction> ledStream = builder.build()) {
+        try(LedStream<TestSchema> ledStream = builder.build()) {
             ledStream.serialize(new File("temp/u_ledstreambuilder_full_led_" + numElements +".led"));
         } catch (Exception e) {
             Logger.error(e);

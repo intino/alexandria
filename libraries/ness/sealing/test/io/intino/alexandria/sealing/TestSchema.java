@@ -1,7 +1,7 @@
 package io.intino.alexandria.sealing;
 
-import io.intino.alexandria.led.Transaction;
-import io.intino.alexandria.led.allocators.TransactionAllocator;
+import io.intino.alexandria.led.Schema;
+import io.intino.alexandria.led.allocators.SchemaAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 
@@ -11,7 +11,7 @@ import java.util.Objects;
 
 import static io.intino.alexandria.led.util.BitUtils.roundUp2;
 
-public class TestSchema extends Transaction {
+public class TestSchema extends Schema {
 	public static final int ID_OFFSET = 0;
 	public static final int ID_BITS = Long.SIZE;
 	public static final int A_OFFSET = ID_OFFSET + ID_BITS;
@@ -158,7 +158,7 @@ public class TestSchema extends Transaction {
 	}
 
 	public static List<TestSchema> unsortedList() {
-		TransactionAllocator<TestSchema> allocator = StackAllocators.newManaged(SIZE, 1000, TestSchema::new);
+		SchemaAllocator<TestSchema> allocator = StackAllocators.newManaged(SIZE, 1000, TestSchema::new);
 		List<TestSchema> result = new ArrayList<>();
 		for (int i = 10; i <= 1000; i += 5) {
 			int id = (int) Math.cos(i / 20 * Math.PI) * i;
@@ -168,7 +168,7 @@ public class TestSchema extends Transaction {
 	}
 
 	public static List<TestSchema> anotherList() {
-		TransactionAllocator<TestSchema> allocator = StackAllocators.newManaged(SIZE, 3000, TestSchema::new);
+		SchemaAllocator<TestSchema> allocator = StackAllocators.newManaged(SIZE, 3000, TestSchema::new);
 		List<TestSchema> result = new ArrayList<>();
 		for (int i = 2000; i <= 3000; i += 5) {
 			int id = (int) Math.cos(i / 20 * Math.PI) * i;

@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
 class TestDigestion2019 {
 
 	private static final File UNSORTED_SESSION_FILES_DIR = new File("G:\\leds");
-	private static final int NUM_TRANSACTIONS_IN_MEMORY = 500_000;
+	private static final int NUM_SCHEMAS_IN_MEMORY = 500_000;
 
 	public static void main(String[] args) {
 		final int numThreads = Runtime.getRuntime().availableProcessors() - 1;
 		final int numTransactions = 1_000_000;
 		System.out.println("Num threads = " + numThreads);
-		System.out.println("Num transactions per thread = " + NUM_TRANSACTIONS_IN_MEMORY);
+		System.out.println("Num schemas per thread = " + NUM_SCHEMAS_IN_MEMORY);
 		ExecutorService threadPool = Executors.newFixedThreadPool(numThreads);
 		for(File srcFile : getParameters()) {
 			TestDigestion2019 test = new TestDigestion2019(srcFile);
@@ -53,7 +53,7 @@ class TestDigestion2019 {
 	}
 
 	public void test() {
-		doTest(NUM_TRANSACTIONS_IN_MEMORY);
+		doTest(NUM_SCHEMAS_IN_MEMORY);
 	}
 
 	private void doTest(int numTransactionsInMemory) {
@@ -72,10 +72,10 @@ class TestDigestion2019 {
 					sourceHeader.elementCount(), destHeader.elementCount());
 
 			 */
-			try(LedStream<?> ledStream = new LedReader(destinationSortedLedFile).read(GenericTransaction::new)) {
+			try(LedStream<?> ledStream = new LedReader(destinationSortedLedFile).read(GenericSchema::new)) {
 				long lastId = Long.MIN_VALUE;
 				while(ledStream.hasNext()) {
-					final long id = Transaction.idOf(ledStream.next());
+					final long id = Schema.idOf(ledStream.next());
 					if(id < lastId) {
 						throw new AssertionError();
 					}

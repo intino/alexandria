@@ -1,7 +1,7 @@
 package io.intino.alexandria.led;
 
 import io.intino.alexandria.logger.Logger;
-import io.intino.test.transactions.TestTransaction;
+import io.intino.test.schemas.TestSchema;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -17,8 +17,8 @@ public class LedStreamBuilderTest {
     @Ignore
     @Test
     public void test() {
-        System.out.println(TestTransaction.SIZE);
-        LedStream.Builder<TestTransaction> builder = LedStream.builder(TestTransaction.class, 100_000, new File("temp"));
+        System.out.println(TestSchema.SIZE);
+        LedStream.Builder<TestSchema> builder = LedStream.builder(TestSchema.class, 100_000, new File("temp"));
         Random random = new Random();
         double start = System.currentTimeMillis();
         final int numElements = 10_000_000;
@@ -35,7 +35,7 @@ public class LedStreamBuilderTest {
 
         start = System.currentTimeMillis();
 
-        try(LedStream<TestTransaction> ledStream = builder.build()) {
+        try(LedStream<TestSchema> ledStream = builder.build()) {
 
             AtomicLong lastId = new AtomicLong(Long.MIN_VALUE);
             AtomicInteger i = new AtomicInteger();

@@ -1,7 +1,7 @@
 package io.intino.alexandria.led.allocators.indexed;
 
-import io.intino.alexandria.led.Transaction;
-import io.intino.alexandria.led.allocators.TransactionFactory;
+import io.intino.alexandria.led.Schema;
+import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.IOException;
@@ -13,12 +13,12 @@ import java.util.List;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.memcpy;
 
-public interface IndexedAllocatorFactory<T extends Transaction> {
+public interface IndexedAllocatorFactory<T extends Schema> {
 
-    static <S extends Transaction> ManagedIndexedAllocator<S> newManagedIndexedAllocator(InputStream inputStream,
-                                                                                         long elementCount,
-                                                                                         int elementSize,
-                                                                                         TransactionFactory<S> factory) {
+    static <S extends Schema> ManagedIndexedAllocator<S> newManagedIndexedAllocator(InputStream inputStream,
+                                                                                    long elementCount,
+                                                                                    int elementSize,
+                                                                                    SchemaFactory<S> factory) {
 
         try {
             if (elementCount < 0) {
@@ -48,10 +48,10 @@ public interface IndexedAllocatorFactory<T extends Transaction> {
         return null;
     }
 
-    static <S extends Transaction> IndexedAllocator<S> newArrayAllocator(InputStream inputStream,
-                                                                         long elementCount,
-                                                                         int elementSize,
-                                                                         TransactionFactory<S> factory) {
+    static <S extends Schema> IndexedAllocator<S> newArrayAllocator(InputStream inputStream,
+                                                                    long elementCount,
+                                                                    int elementSize,
+                                                                    SchemaFactory<S> factory) {
 
         try {
 
@@ -77,6 +77,6 @@ public interface IndexedAllocatorFactory<T extends Transaction> {
 
 
     IndexedAllocator<T> create(InputStream inputStream, long elementCount,
-                               int elementSize, TransactionFactory<T> factory) throws IOException;
+                               int elementSize, SchemaFactory<T> factory) throws IOException;
 
 }

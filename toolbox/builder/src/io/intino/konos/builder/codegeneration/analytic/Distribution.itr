@@ -1,0 +1,113 @@
+def type(distribution)
+	package $package.analytic.distributions;
+
+	import $package.analytic.Axis;
+    import java.util.*;
+    import java.util.stream.Collectors;
+
+    public class $name+FirstUpperCase implements Axis {
+    	private static final $name+FirstUpperCase instance = new $name+FirstUpperCase();
+
+    	private static Range$[] ranges = new Range$[$rangeSize];
+    	private static double$[] limits = new double$[$rangeSize];
+
+    	private $name+FirstUpperCase() {
+    		$range+init...[$NL]
+    		for (int i = 0; i < ranges.length; i++) limits$[i] = ranges$[i].max;
+    	}
+
+		public static $name+FirstUpperCase instance() {
+			return instance;
+		}
+
+    	public String label() {
+    		return "$label";
+    	}
+
+    	public List<Range> ranges() {
+    		return new AbstractList<>() {
+    			@Override
+    			public Range get(int index) {
+    				return ranges$[index];
+    			}
+
+    			@Override
+    			public int size() {
+    				return ranges.length;
+    			}
+    		};
+    	}
+
+    	public static Range rangeOf(double value) {
+    		int index = Arrays.binarySearch(limits, value);
+    		index = index < 0 ? (index + 1) * -1 : index;
+    		return ranges$[index >= ranges.length ? ranges.length - 1 : index];
+    	}
+
+    	@Override
+		public Component byIndex(int index) {
+			return ranges().get(index);
+		}
+
+		@Override
+		public int componentCount() {
+			return ranges().size();
+		}
+
+		@Override
+		public Collection<? extends Component> components() {
+			return null;
+		}
+
+    	public class Range implements Component {
+    		private final double min;
+    		private final double max;
+    		private final String label;
+
+    		public Range(double min, double max, String label) {
+    			this.min = min;
+    			this.max = max;
+    			this.label = label;
+    		}
+
+    		public double min() {
+    			return min;
+    		}
+
+    		public double max() {
+    			return max;
+    		}
+
+			@Override
+			public int index() {
+				return 0;
+			}
+
+			@Override
+			public String id() {
+				return label;
+			}
+
+			public String label() {
+				return label;
+			}
+
+			@Override
+			public Axis axis() {
+				return $name+FirstUpperCase.this;
+			}
+    	}
+    }
+end
+
+def type(range & lower) trigger(init)
+	ranges$[$index] = new Range(Double.MIN_VALUE, $bound, "< $bound");
+end
+
+def type(range & upper) trigger(init)
+		ranges$[2] = new Range($bound, Double.MAX_VALUE, "> $bound"); // TODO Discutir con JJ si son intervalos abiertos o cerrados...
+end
+
+def type(range) trigger(init)
+	ranges$[1] = new Range($lower, $upper, "$lower - $upper");
+end

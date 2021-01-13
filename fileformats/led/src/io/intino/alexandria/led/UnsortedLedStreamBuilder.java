@@ -1,6 +1,6 @@
 package io.intino.alexandria.led;
 
-import io.intino.alexandria.led.allocators.TransactionFactory;
+import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.allocators.stack.StackAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.led.leds.InputLedStream;
@@ -17,14 +17,14 @@ import java.util.function.Consumer;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
 import static java.nio.file.StandardOpenOption.*;
 
-public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStream.Builder<T>, AutoCloseable {
+public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Builder<T>, AutoCloseable {
 
     private static final int DEFAULT_NUM_ELEMENTS_PER_BLOCK = 500_000;
 
 
-    private final Class<T> transactionClass;
-    private final int transactionSize;
-    private final TransactionFactory<T> factory;
+    private final Class<T> schemaClass;
+    private final int schemaSize;
+    private final SchemaFactory<T> factory;
     private final Path tempLedFile;
     private ByteBuffer buffer;
     private StackAllocator<T> allocator;
@@ -33,33 +33,33 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
     private final boolean keepFileChannelOpen;
     private final AtomicBoolean closed;
 
-    public UnsortedLedStreamBuilder(Class<T> transactionClass, File tempFile) {
-        this(transactionClass, Transaction.factoryOf(transactionClass),
+    public UnsortedLedStreamBuilder(Class<T> schemaClass, File tempFile) {
+        this(schemaClass, Schema.factoryOf(schemaClass),
                 DEFAULT_NUM_ELEMENTS_PER_BLOCK, tempFile, true);
     }
 
-    public UnsortedLedStreamBuilder(Class<T> transactionClass, File tempFile, boolean keepFileChannelOpen) {
-        this(transactionClass, Transaction.factoryOf(transactionClass),
+    public UnsortedLedStreamBuilder(Class<T> schemaClass, File tempFile, boolean keepFileChannelOpen) {
+        this(schemaClass, Schema.factoryOf(schemaClass),
                 DEFAULT_NUM_ELEMENTS_PER_BLOCK, tempFile, keepFileChannelOpen);
     }
 
-    public UnsortedLedStreamBuilder(Class<T> transactionClass, TransactionFactory<T> factory,
+    public UnsortedLedStreamBuilder(Class<T> schemaClass, SchemaFactory<T> factory,
                                     int numElementsPerBlock, File tempFile) {
-        this(transactionClass, factory, numElementsPerBlock, tempFile, true);
+        this(schemaClass, factory, numElementsPerBlock, tempFile, true);
     }
 
-    public UnsortedLedStreamBuilder(Class<T> transactionClass, TransactionFactory<T> factory,
+    public UnsortedLedStreamBuilder(Class<T> schemaClass, SchemaFactory<T> factory,
                                     int numElementsPerBlock, File tempFile, boolean keepFileChannelOpen) {
-        this.transactionClass = transactionClass;
-        this.transactionSize = Transaction.sizeOf(transactionClass);
+        this.schemaClass = schemaClass;
+        this.schemaSize = Schema.sizeOf(schemaClass);
         this.factory = factory;
         tempFile.getParentFile().mkdirs();
         this.tempLedFile = tempFile.toPath();
         if(numElementsPerBlock % 2 != 0) {
             throw new IllegalArgumentException("NumElementsPerBlock must be even");
         }
-        buffer = allocBuffer((long) numElementsPerBlock * transactionSize);
-        this.allocator = StackAllocators.newManaged(transactionSize, buffer, factory);
+        buffer = allocBuffer((long) numElementsPerBlock * schemaSize);
+        this.allocator = StackAllocators.newManaged(schemaSize, buffer, factory);
         this.keepFileChannelOpen = keepFileChannelOpen;
         this.closed = new AtomicBoolean(false);
         setupFile();
@@ -96,13 +96,13 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
     }
 
     @Override
-    public Class<T> transactionClass() {
-        return transactionClass;
+    public Class<T> schemaClass() {
+        return schemaClass;
     }
 
     @Override
-    public int transactionSize() {
-        return transactionSize;
+    public int schemaSize() {
+        return schemaSize;
     }
 
     @Override
@@ -111,8 +111,8 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
             Logger.error("Trying to use a closed builder.");
             return this;
         }
-        T transaction = allocator.calloc();
-        initializer.accept(transaction);
+        T schema = allocator.calloc();
+        initializer.accept(schema);
         if(allocator.remainingBytes() == 0) {
             writeCurrentBlockAndClear();
         }
@@ -167,14 +167,14 @@ public class UnsortedLedStreamBuilder<T extends Transaction> implements LedStrea
             return LedStream.empty();
         }
         close();
-        return new InputLedStream<>(getInputStream(), factory, transactionSize)
+        return new InputLedStream<>(getInputStream(), factory, schemaSize)
                 .onClose(this::deleteTempFile);
     }
 
     private void writeHeader() {
         LedHeader header = new LedHeader();
         header.elementCount(numTransactions);
-        header.elementSize(transactionSize);
+        header.elementSize(schemaSize);
         try(RandomAccessFile file = new RandomAccessFile(tempLedFile.toFile(), "rw")) {
             file.writeLong(header.elementCount());
             file.writeInt(header.elementSize());

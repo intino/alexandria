@@ -1,6 +1,6 @@
-package io.intino.test.transactions;
+package io.intino.test.schemas;
 
-import io.intino.alexandria.led.Transaction;
+import io.intino.alexandria.led.Schema;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 
 import java.io.BufferedReader;
@@ -9,10 +9,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static io.intino.alexandria.led.util.BitUtils.byteIndex;
 import static io.intino.alexandria.led.util.BitUtils.roundUp2;
 
-public class TestTransaction extends Transaction {
+public class TestSchema extends Schema {
 	public enum SimpleWord {
 		A(1), B(2), C(1);
 		int value;
@@ -58,7 +57,7 @@ public class TestTransaction extends Transaction {
 	// private byte g;
 	public static final int SIZE = (int) Math.ceil((I_OFFSET + I_BITS) / (float) Byte.SIZE);
 
-	public TestTransaction(ByteStore store) {
+	public TestSchema(ByteStore store) {
 		super(store);
 	}
 
@@ -72,7 +71,7 @@ public class TestTransaction extends Transaction {
 		return SIZE;
 	}
 
-	public TestTransaction id(long id) {
+	public TestSchema id(long id) {
 		bitBuffer.setAlignedLong(ID_OFFSET, id);
 		return this;
 	}
@@ -81,7 +80,7 @@ public class TestTransaction extends Transaction {
 		return bitBuffer.getShortNBits(A_OFFSET, A_BITS);
 	}
 
-	public TestTransaction a(short a) {
+	public TestSchema a(short a) {
 		bitBuffer.setShortNBits(A_OFFSET, A_BITS, a);
 		return this;
 	}
@@ -90,7 +89,7 @@ public class TestTransaction extends Transaction {
 		return bitBuffer.getIntegerNBits(B_OFFSET, B_BITS);
 	}
 
-	public TestTransaction b(int b) {
+	public TestSchema b(int b) {
 		bitBuffer.setIntegerNBits(B_OFFSET, B_BITS, b);
 		return this;
 	}
@@ -99,7 +98,7 @@ public class TestTransaction extends Transaction {
 		return bitBuffer.getAlignedReal32Bits(C_OFFSET);
 	}
 
-	public TestTransaction c(float c) {
+	public TestSchema c(float c) {
 		bitBuffer.setAlignedReal32Bits(C_OFFSET, c);
 		return this;
 	}
@@ -108,7 +107,7 @@ public class TestTransaction extends Transaction {
 		return bitBuffer.getIntegerNBits(D_OFFSET, D_BITS);
 	}
 
-	public TestTransaction d(int d) {
+	public TestSchema d(int d) {
 		bitBuffer.setIntegerNBits(D_OFFSET, D_BITS, d);
 		return this;
 	}
@@ -117,7 +116,7 @@ public class TestTransaction extends Transaction {
 		return bitBuffer.getLongNBits(E_OFFSET, E_BITS);
 	}
 
-	public TestTransaction e(long e) {
+	public TestSchema e(long e) {
 		bitBuffer.setLongNBits(E_OFFSET, E_BITS, e);
 		return this;
 	}
@@ -126,7 +125,7 @@ public class TestTransaction extends Transaction {
 		return bitBuffer.getAlignedReal64Bits(F_OFFSET);
 	}
 
-	public TestTransaction f(double f) {
+	public TestSchema f(double f) {
 		bitBuffer.setAlignedReal64Bits(F_OFFSET, f);
 		return this;
 	}
@@ -135,7 +134,7 @@ public class TestTransaction extends Transaction {
 		return bitBuffer.getByteNBits(G_OFFSET, G_BITS);
 	}
 
-	public TestTransaction g(byte g) {
+	public TestSchema g(byte g) {
 		bitBuffer.setIntegerNBits(G_OFFSET, G_BITS, g);
 		return this;
 	}
@@ -145,7 +144,7 @@ public class TestTransaction extends Transaction {
 		return word == NULL ? null : SimpleWord.values()[word - 1];
 	}
 
-	public TestTransaction h(SimpleWord h) {
+	public TestSchema h(SimpleWord h) {
 		bitBuffer.setByteNBits(H_OFFSET, H_BITS, (byte)(h == null ? NULL : h.ordinal() + 1));
 		return this;
 	}
@@ -155,7 +154,7 @@ public class TestTransaction extends Transaction {
 		return word == NULL ? null : ResourceWord.values().get(word);
 	}
 
-	public TestTransaction i(String i) {
+	public TestSchema i(String i) {
 		bitBuffer.setByteNBits(I_OFFSET, I_BITS, (byte)(i == null ? NULL : ResourceWord.indexOf(i)));
 		return this;
 	}
@@ -165,7 +164,7 @@ public class TestTransaction extends Transaction {
 		return word == NULL ? null : word == 1;
 	}
 
-	public TestTransaction j(Boolean i) {
+	public TestSchema j(Boolean i) {
 		bitBuffer.setByteNBits(J_OFFSET, J_BITS, (byte)(i == null ? NULL : i ? 1 : 2));
 		return this;
 	}
@@ -191,8 +190,8 @@ public class TestTransaction extends Transaction {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof TestTransaction)) return false;
-		TestTransaction o = (TestTransaction) obj;
+		if (!(obj instanceof TestSchema)) return false;
+		TestSchema o = (TestSchema) obj;
 		return id() == o.id()
 				&& a() == o.a()
 				&& b() == o.b()
