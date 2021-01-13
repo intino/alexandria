@@ -1,26 +1,15 @@
 def type(cube & src)
 	package $package.analytic.cubes;
 
-	import java.util.Set;
-	import java.util.function.Function;
-	import java.util.function.Predicate;
-
-	import $package.analytic.factors.*;
-	import $package.analytic.Axis;
-
 	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
 
 		public $name+FirstUpperCase(java.util.List<Loader> loaders) {
 			super(loaders);
 		}
 
-		public $name+FirstUpperCase execute() {
-			return ($name+FirstUpperCase) super.execute();
-		}
-
-		$dimension+staticMethod...[$NL$NL]
-		$customFilter+staticMethod...[$NL$NL]
-		$indicator+staticMethod...[$NL$NL]
+		[$customDimension+staticMethod...[$NL$NL]]
+		[$customFilter+staticMethod...[$NL$NL]]
+		[$customIndicator+staticMethod...[$NL$NL]]
 	}
 end
 
@@ -35,6 +24,7 @@ def type(cube)
     import io.intino.alexandria.led.util.iterators.MergedIterator;
 
     import $package.analytic.factors.*;
+	import $package.analytic.distributions.*;
     import $package.analytic.Axis;
 
 	import java.io.File;
@@ -79,6 +69,10 @@ def type(cube)
     	public Iterator<View> detail() {
 			MergedIterator<View> iterator = new MergedIterator<>(loaders.stream().map(Iterable::iterator), comparingLong(View::id));
 			return StreamSupport.stream(spliteratorUnknownSize(iterator, Spliterator.SORTED), false).filter(this::check).iterator();
+		}
+
+		public Aggregation aggregation(List<Axis.Component> components) {
+			return result$[indexOf(components.toArray(new Axis.Component$[0]))];
 		}
 
 		private void fillCategories() {
@@ -143,7 +137,7 @@ def type(cube)
 				this.fact = fact;
 			}
 
-			[$column+viewGetter...[$NL]]
+			[$column+viewGetter...[$NL$NL]]
 
 			public long id() {
 				return fact.id();
@@ -161,7 +155,7 @@ def type(cube)
 				super(store);
 			}
 
-			[$column+getter...[$NL]]
+			[$column+getter...[$NL$NL]]
 
 			@Override
 			protected long id() {
@@ -181,7 +175,7 @@ def type(cube)
 				super(null);
 			}
 
-			[$column+nullgetter...[$NL]]
+			[$column+nullgetter...[$NL$NL]]
 
 			@Override
 			protected long id() {
@@ -275,47 +269,93 @@ end
 
 def type(customFilter) trigger(method)
 	public Abstract$cube+firstUpperCase filter$name+firstUpperCase() {
-		filterList.add($cube+firstUpperCase.$name+firstLowerCase~Predicate());
+		filterList.add(v -> $cube+firstUpperCase.$name+firstLowerCase~Filter(v));
 		return this;
 	}
 end
 
 def type(customFilter) trigger(staticMethod)
-	public static Predicate<View> $name+firstLowerCase~Predicate() {
-		return v -> true;
+	public static boolean $name+firstLowerCase~Filter(View view) {
+		//TODO
+		return true;
 	}
 end
 
-def type(dimension) trigger(staticMethod)
-	public static Predicate<View> $name+firstLowerCase~Predicate(Set<Abstract$name+FirstUpperCase.Component> $name+firstLowerCase) {
-		return v -> false; //TODO
-	}
-
-	public static Function<View, Axis.Component> $name+firstLowerCase~Function() {
+def type(customDimension) trigger(staticMethod)
+	public static $name+firstLowerCase[$isDistribution~Range] $name+firstLowerCase~Function() {
 		return v -> null; //TODO
 	}
 end
 
-def type(dimension) trigger(method)
-	public Abstract$cube+FirstUpperCase filter$name+firstUpperCase(Set<$name+firstUpperCase.Component> $name+firstLowerCase) {
-		filterList.add($cube+FirstUpperCase.$name+firstLowerCase~Predicate($name+firstLowerCase));
+def type(dimension & factor) trigger(method)
+	public Abstract$cube+firstUpperCase filter$name+firstUpperCase(Set<$axis+firstUpperCase.Component> $axis+firstLowerCase) {
+		filterList.add(v -> $name+firstLowerCase~Filter(v, $axis+firstLowerCase));
 		return this;
 	}
 
 	public Abstract$cube+FirstUpperCase groupBy$name+firstUpperCase() {
-		axes.add($name+firstUpperCase.instance());
-		components.put($name+firstUpperCase.instance(), new HashSet<>());
-		groupByList.add($cube+firstUpperCase.$name+firstLowerCase~Function());
+		axes.add($axis+firstUpperCase.instance());
+		components.put($axis+firstUpperCase.instance(), new HashSet<>());
+		groupByList.add(v -> $name+firstLowerCase~Function(v));
 		return this;
+	}
+
+	public static boolean $name+firstLowerCase~Filter(View view, Set<Abstract$axis+firstUpperCase.Component> $axis+firstLowerCase) {
+		return $axis+firstLowerCase.contains($name+firstLowerCase~Function(view));
+	}
+
+	public static Axis.Component $name+firstLowerCase~Function(View view) {
+		return view.$source()[.$child()];
+	}
+end
+
+def type(dimension & distribution) trigger(method)
+	public Abstract$cube+firstUpperCase filter$name+firstUpperCase(Set<$axis+firstUpperCase.Range> $axis+firstLowerCase) {
+		filterList.add(v -> $name+firstLowerCase~Filter(v, $axis+firstLowerCase));
+		return this;
+	}
+
+	public Abstract$cube+FirstUpperCase groupBy$name+firstUpperCase() {
+		axes.add($axis+firstUpperCase.instance());
+		components.put($axis+firstUpperCase.instance(), new HashSet<>());
+		groupByList.add(v -> $name+firstLowerCase~Function(v));
+		return this;
+	}
+
+	public static boolean $name+firstLowerCase~Filter(View view, Set<$axis+firstUpperCase.Range> $axis+firstLowerCase) {
+		return $axis+firstLowerCase.contains($name+firstLowerCase~Function(view));
+	}
+
+	private static Axis.Component $name+firstLowerCase~Function(View view) {
+		return $axis+firstUpperCase.instance().rangeOf(view.$source+firstLowerCase());
+	}
+end
+
+
+def type(customDimension & distribution) trigger(method)
+	public Abstract$cube+firstUpperCase filter$name+firstUpperCase(Set<$axis.Range> ranges) {//TODO
+		filterList.add(v -> $name+firstLowerCase~Filter(v, ranges));
+		return this;
+	}
+
+	public Abstract$cube+firstUpperCase groupBy$name+firstUpperCase() {
+		axes.add($axis.instance());
+		components.put($axis.instance(), new HashSet<>());
+		groupByList.add(v -> $cube+firstUpperCase.$name+firstLowerCase~Function(v));
+		return this;
+	}
+
+	public static boolean $name+firstLowerCase~Filter(View view, Set<$axis.Range> rangos) {
+		return rangos.contains($cube+firstUpperCase.$name+firstLowerCase~Function(view));
 	}
 end
 
 def type(indicator) trigger(sum)
-	$name+firstLowerCase += $cube+FirstUpperCase.$name+firstLowerCase(view);
+	$name+firstLowerCase += view.$name+firstLowerCase();
 end
 
 def type(indicator) trigger(sumAggregation)
-	cpd += aggregation.cpd;
+	$name+firstLowerCase += aggregation.$name+firstLowerCase;
 end
 
 def type(indicator & average) trigger(field)
