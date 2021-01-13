@@ -64,11 +64,11 @@ public class AnalyticRenderer extends Renderer {
 		for (Cube cube : cubeList) {
 			FrameBuilder fb = new FrameBuilder("cube").add("package", context.packageName()).add("name", cube.name$());
 			if (cube.isJoin()) {
-				addDimensionsAndIndicators(cube.asJoin().cube(), fb);
+				addDimensionsAndIndicators(cube.asJoin().cube(), cube, fb);
 				fb.add("join", cube.asJoin().cube().name$());
 				if (cube.asJoin().cube().split() != null) addSplit(cube.asJoin().cube(), fb);
 			}
-			addDimensionsAndIndicators(cube, fb);
+			addDimensionsAndIndicators(cube, null, fb);
 			fb.add("id", cube.fact().columnList().stream().filter(SizedData::isId).map(Layer::name$).findFirst().orElse(null));
 			if (cube.split() != null) addSplit(cube, fb);
 			int offset = 0;
@@ -93,27 +93,35 @@ public class AnalyticRenderer extends Renderer {
 		return cube.isJoin() ? new JoinCubeTemplate() : new CubeTemplate();
 	}
 
-	private void addDimensionsAndIndicators(Cube cube, FrameBuilder fb) {
-		cube.dimensionList().forEach(selector -> fb.add("dimension", dimensionFrame(cube, selector)));
-		cube.indicatorList().forEach(indicator -> fb.add("indicator", inicatorFrame(cube, indicator)));
+	private void addDimensionsAndIndicators(Cube cube, Cube sourceCube, FrameBuilder fb) {
+		cube.dimensionList().forEach(selector -> fb.add("dimension", dimensionFrame(cube, sourceCube, selector)));
+		cube.indicatorList().forEach(indicator -> fb.add("indicator", inicatorFrame(cube, sourceCube, indicator)));
 		for (Cube.CustomFilter customFilter : cube.customFilterList())
-			fb.add("customFilter", new FrameBuilder("customFilter").add("cube", cube.name$()).add("name", customFilter.name$()));
+			fb.add("customFilter", new FrameBuilder("customFilter")
+					.add("cube", sourceCube != null ? sourceCube.name$() : cube.name$())
+					.add("name", customFilter.name$()));
 	}
 
-	private FrameBuilder dimensionFrame(Cube cube, Cube.Dimension dimension) {
-		FrameBuilder fb = new FrameBuilder("dimension", dimension.axis().core$().is(Factor.class) ? "factor" : "distribution")
-				.add("cube", cube.name$())
-				.add("name", dimension.name$())
-				.add("axis", dimension.axis().name$());
-		if (dimension.axis().i$(Factor.class)) fb.add("type", dimension.axis().name$());
+	private FrameBuilder dimensionFrame(Cube cube, Cube sourceCube, Cube.Dimension dimension) {
+		FrameBuilder fb = new FrameBuilder("dimension", dimension.axis().core$().is(Factor.class) ? "factor" : "distribution").
+				add("cube", sourceCube != null ? sourceCube.name$() : cube.name$()).
+				add("name", dimension.name$()).
+				add("source", dimension.source().name$()).
+				add("axis", dimension.axis().name$());
+		if (dimension.axis().i$(Factor.class)) {
+			fb.add("type", dimension.axis().name$());
+			if (!dimension.source().asCategory().factor().equals(dimension.axis()))
+				fb.add("child", dimension.axis().name$());
+		}
 		return fb;
 	}
 
-	private FrameBuilder inicatorFrame(Cube cube, Cube.Indicator indicator) {
+	private FrameBuilder inicatorFrame(Cube cube, Cube sourceCube, Cube.Indicator indicator) {
 		return new FrameBuilder("indicator").add(indicator.isAverage() ? "average" : "sum").
-				add("cube", cube.name$()).
+				add("cube", sourceCube != null ? sourceCube.name$() : cube.name$()).
 				add("name", indicator.name$()).
 				add("label", indicator.label()).
+				add("source", indicator.source().name$()).
 				add("unit", indicator.unit());
 	}
 

@@ -14,13 +14,13 @@ def type(cube & src)
 			super(loaders);
 		}
 
-		public $name+FirstUpperCase execute() {
-			return ($name+FirstUpperCase) super.execute();
+		public static long $join+firstLowerCase~Id(Abstract$name+FirstUpperCase.Fact fact) {
+			return 0L;//TODO
 		}
 
-		$dimension+staticMethod...[$NL$NL]
-		$customFilter+staticMethod...[$NL$NL]
-		$indicator+staticMethod...[$NL$NL]
+		[$customDimension+staticMethod...[$NL$NL]]
+		[$customFilter+staticMethod...[$NL$NL]]
+		[$customIndicator+staticMethod...[$NL$NL]]
 	}
 end
 
@@ -36,6 +36,7 @@ def type(cube)
     import io.intino.alexandria.led.util.iterators.StatefulIterator;
 
     import $package.analytic.factors.*;
+	import $package.analytic.distributions.*;
     import $package.analytic.Axis;
 
 	import java.io.File;
@@ -66,13 +67,9 @@ def type(cube)
 			return nullFact;
 		}
 
-    	$dimension+method...[$NL$NL]
+    	[$dimension+method...[$NL$NL]]
 
-    	$dimension+abstractMethod...[$NL$NL]
-
-    	$customFilter+method...[$NL$NL]
-
-    	$customFilter+abstractMethod...[$NL$NL]
+    	[$customFilter+method...[$NL$NL]]
 
 		public Abstract$name+firstUpperCase execute() {
 			result = new Aggregation$[resultsSize()];
@@ -162,7 +159,6 @@ def type(cube)
 			}
 
 			[$column+viewGetter...[$NL]]
-
 		}
 
 		public static class Fact extends Transaction {
@@ -240,7 +236,7 @@ def type(cube)
 				return components;
 			}
 
-			$indicator+getter...[$NL$NL]
+			[$indicator+getter...[$NL$NL]]
 		}
 
     	public static class Loader implements Iterable<View> {
@@ -260,7 +256,7 @@ def type(cube)
 
 			@Override
 			public Iterator<View> iterator() {
-				StatefulIterator<AbstractVentas.Fact> facts = StatefulIterator.of(datasource.leds([$split]));
+				StatefulIterator<AbstractVentas.Fact> facts = StatefulIterator.of(datasource.leds([$split+name]));
 				process(joinIds.current());
 				return StreamSupport.stream(Spliterators.spliteratorUnknownSize(facts, Spliterator.SORTED), false)
 						.map(v -> {
@@ -365,19 +361,15 @@ end
 
 def type(customFilter) trigger(method)
 	public Abstract$cube+firstUpperCase filter$name+firstUpperCase() {
-		filterList.add($name+firstLowerCase~Predicate());
+		filterList.add(v -> $cube+firstUpperCase.$name+firstLowerCase~Filter(v));
 		return this;
 	}
 end
 
-def type(customFilter) trigger(abstractMethod)
-	protected abstract Predicate<View> $name+FirstLowerCasePredicate();
-end
-
-def type(dimension) trigger(abstractMethod)
-	protected abstract Predicate<View> $name+firstLowerCase~Predicate(Set<Abstract$name+firstUpperCase.Component> $name+firstLowerCase);
-
-	protected abstract Function<View, Axis.Component> $name+firstLowerCase~Function();
+def type(customFilter) trigger(staticMethod)
+	public static boolean $name+firstLowerCase~Filter(View view) {
+		return true;
+	}
 end
 
 def type(dimension) trigger(staticMethod)
@@ -390,26 +382,58 @@ def type(dimension) trigger(staticMethod)
 	}
 end
 
-def type(dimension) trigger(method)
-	public Abstract$cube+FirstUpperCase filter$name+firstUpperCase(Set<$name+firstUpperCase.Component> $name+firstLowerCase) {
-		filterList.add($name+firstLowerCase~Predicate($name+firstLowerCase));
+def type(dimension & factor) trigger(method)
+	public Abstract$cube+firstUpperCase filter$name+firstUpperCase(Set<$axis+firstUpperCase.Component> $axis+firstLowerCase) {
+		filterList.add(v -> $name+firstLowerCase~Filter(v, $axis+firstLowerCase));
 		return this;
 	}
 
 	public Abstract$cube+FirstUpperCase groupBy$name+firstUpperCase() {
-		axes.add($name+firstUpperCase.instance());
-		components.put($name+firstUpperCase.instance(), new HashSet<>());
-		groupByList.add($name+firstLowerCase~Function());
+		axes.add($axis+firstUpperCase.instance());
+		components.put($axis+firstUpperCase.instance(), new HashSet<>());
+		groupByList.add(v -> $name+firstLowerCase~Function(v));
 		return this;
+	}
+
+	public static boolean $name+firstLowerCase~Filter(View view, Set<Abstract$axis+firstUpperCase.Component> $axis+firstLowerCase) {
+		return $axis+firstLowerCase.contains($name+firstLowerCase~Function(view));
+	}
+
+	public static Axis.Component $name+firstLowerCase~Function(View view) {
+		return view.$source()[.$child()];
 	}
 end
 
+
+def type(dimension & distribution) trigger(method)
+	public Abstract$cube+firstUpperCase filter$name+firstUpperCase(Set<$axis+firstUpperCase.Range> $axis+firstLowerCase) {
+		filterList.add(v -> $name+firstLowerCase~Filter(v, $axis+firstLowerCase));
+		return this;
+	}
+
+	public Abstract$cube+FirstUpperCase groupBy$name+firstUpperCase() {
+		axes.add($axis+firstUpperCase.instance());
+		components.put($axis+firstUpperCase.instance(), new HashSet<>());
+		groupByList.add(v -> $name+firstLowerCase~Function(v));
+		return this;
+	}
+
+	public static boolean $name+firstLowerCase~Filter(View view, Set<$axis+firstUpperCase.Range> $axis+firstLowerCase) {
+		return $axis+firstLowerCase.contains($name+firstLowerCase~Function(view));
+	}
+
+	private static Axis.Component $name+firstLowerCase~Function(View view) {
+		return $axis+firstUpperCase.instance().rangeOf(view.$source+firstLowerCase());
+	}
+end
+
+
 def type(indicator) trigger(sum)
-	$name+firstLowerCase += $cube+FirstUpperCase.$name+firstLowerCase(view);
+	$name+firstLowerCase += view.$name+firstLowerCase();
 end
 
 def type(indicator) trigger(sumAggregation)
-	cpd += aggregation.cpd;
+	$name+firstLowerCase += aggregation.$name+firstLowerCase;
 end
 
 def type(indicator & average) trigger(field)
