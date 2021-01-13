@@ -9,5 +9,4 @@ Artifact("io.intino.alexandria", "1.1.1") scheduler-framework
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
-Repository("intino-maven")
-	Release("https://artifactory.intino.io/artifactory/releases")
+Repository("intino-maven") > Release("https://artifactory.intino.io/artifactory/releases")
