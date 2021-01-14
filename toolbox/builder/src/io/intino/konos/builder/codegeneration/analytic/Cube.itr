@@ -8,7 +8,9 @@ def type(cube & src)
 		}
 
 		[$customDimension+staticMethod...[$NL$NL]]
+
 		[$customFilter+staticMethod...[$NL$NL]]
+
 		[$customIndicator+staticMethod...[$NL$NL]]
 	}
 end
@@ -19,7 +21,7 @@ def type(cube)
     import io.intino.alexandria.Timetag;
     import io.intino.alexandria.led.LedReader;
     import io.intino.alexandria.led.LedStream;
-    import io.intino.alexandria.led.Transaction;
+    import io.intino.alexandria.led.Schema;
     import io.intino.alexandria.led.buffers.store.ByteStore;
     import io.intino.alexandria.led.util.iterators.MergedIterator;
 
@@ -148,7 +150,7 @@ def type(cube)
 			}
 		}
 
-		public static class Fact extends Transaction {
+		public static class Fact extends Schema {
 			public static final int SIZE = $size;
 
 			public Fact(ByteStore store) {

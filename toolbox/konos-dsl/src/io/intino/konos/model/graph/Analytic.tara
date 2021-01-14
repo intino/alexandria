@@ -4,7 +4,7 @@ use DataTypes
 
 Concept Axis
 	var string label
-	sub Factor
+	sub:RootRequiresDatasource Factor
 		Concept:{0..1} Datasource > var string resourceId
 		has Factor
 		Aspect Dynamic
