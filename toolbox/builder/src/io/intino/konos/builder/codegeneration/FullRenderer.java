@@ -1,5 +1,6 @@
 package io.intino.konos.builder.codegeneration;
 
+import io.intino.konos.builder.codegeneration.accessor.analytic.AnalyticBuilderRenderer;
 import io.intino.konos.builder.codegeneration.accessor.jmx.JMXAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.messaging.MessagingAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer;
@@ -82,6 +83,8 @@ public class FullRenderer {
 	private void accessors() {
 		graph.restServiceList().forEach(service -> new RESTAccessorRenderer(context, service, new File(context.configuration().genDirectory(), "rest#" + service.name$() + File.separator + "src")).render());
 		graph.jmxServiceList().forEach(service -> new JMXAccessorRenderer(context, service, new File(context.configuration().genDirectory(), "jmx#" + service.name$() + File.separator + "src")).render());
+		if (!graph.cubeList().isEmpty())
+			new AnalyticBuilderRenderer(context, graph, new File(context.configuration().genDirectory(), "analytic" + File.separator + "src")).render();
 		graph.messagingServiceList().forEach(service -> new MessagingAccessorRenderer(context, service, new File(context.configuration().genDirectory(), "messaging#" + service.name$() + File.separator + "src")).render());
 	}
 
