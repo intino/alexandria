@@ -50,10 +50,10 @@ public class AnalyticRenderer extends Renderer {
 			for (int i = 0; i < factor.factorList().size(); i++)
 				fb.add("factor", new FrameBuilder("factor").add("name", factor.factorList().get(i).name$()).add("index", i + 3));
 			if (factor.datasource() != null) fb.add("resourceId", factor.datasource().resourceId());
-//			if (!alreadyRendered(new File(src, "factors"), factor.name$()))
-			writeFrame(new File(src, "factors"), factor.name$(), customize(template).render(fb.toFrame()));
-			context.compiledFiles().add(new OutputItem(context.sourceFileOf(factor), javaFile(new File(src, "factors"), firstUpperCase(factor.name$())).getAbsolutePath()));
-
+			if (!alreadyRendered(new File(src, "factors"), factor.name$())) {
+				writeFrame(new File(src, "factors"), factor.name$(), customize(template).render(fb.toFrame()));
+				context.compiledFiles().add(new OutputItem(context.sourceFileOf(factor), javaFile(new File(src, "factors"), firstUpperCase(factor.name$())).getAbsolutePath()));
+			}
 			writeFrame(new File(gen, "factors"), "Abstract" + firstUpperCase(factor.name$()), customize(template).render(fb.add("abstract").toFrame()));
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(factor), javaFile(new File(gen, "factors"), "Abstract" + firstUpperCase(factor.name$())).getAbsolutePath()));
 		}
