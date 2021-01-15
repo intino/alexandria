@@ -1,9 +1,8 @@
 package io.intino.test;
 
 import io.intino.alexandria.led.Led;
-import io.intino.alexandria.led.LedBuilder;
 import io.intino.alexandria.led.LedWriter;
-import io.intino.test.transactions.TestTransaction;
+import io.intino.test.schemas.TestSchema;
 import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -21,31 +20,31 @@ public class LedBuilder_ {
 
 	@Test
 	public void should_build_led() {
-		Led<TestTransaction> led = buildLed();
-		for(TestTransaction transaction : led) {
-			assertNotNull(transaction);
+		Led<TestSchema> led = buildLed();
+		for(TestSchema schema : led) {
+			assertNotNull(schema);
 		}
 	}
 
 	@Test
 	public void should_build_and_write_led() {
-		Led<TestTransaction> led = buildLed();
+		Led<TestSchema> led = buildLed();
 		new LedWriter(tempFile).write(led);
 	}
 
 	@Test
 	public void should_be_sorted() {
-		Led<TestTransaction> led = buildLed();
+		Led<TestSchema> led = buildLed();
 		long lastId = Long.MIN_VALUE;
 		for(int i = 0;i < led.size();i++) {
-			final long id = led.transaction(i).id();
+			final long id = led.schema(i).id();
 			assertTrue(id >= lastId);
 			lastId = id;
 		}
 	}
 
-	private Led<TestTransaction> buildLed() {
-		Led.Builder<TestTransaction> builder = Led.builder(TestTransaction.class, TestTransaction::new);
+	private Led<TestSchema> buildLed() {
+		Led.Builder<TestSchema> builder = Led.builder(TestSchema.class, TestSchema::new);
 		Random random = new Random();
 		for (int i = 0; i < NUM_ELEMENTS; i++) {
 			final int id = random.nextInt();

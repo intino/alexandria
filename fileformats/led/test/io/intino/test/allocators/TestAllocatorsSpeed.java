@@ -1,15 +1,13 @@
 package io.intino.test.allocators;
 
-import io.intino.alexandria.led.Transaction;
+import io.intino.alexandria.led.Schema;
 import io.intino.alexandria.led.allocators.DefaultAllocator;
-import io.intino.alexandria.led.allocators.TransactionAllocator;
+import io.intino.alexandria.led.allocators.SchemaAllocator;
 import io.intino.alexandria.led.allocators.indexed.ArrayAllocator;
 import io.intino.alexandria.led.allocators.indexed.ListAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.led.allocators.stack.StackListAllocator;
-import io.intino.alexandria.led.util.memory.MemoryUtils;
-import io.intino.alexandria.led.util.memory.NativeMemoryTracker;
-import io.intino.test.transactions.TestTransaction;
+import io.intino.test.schemas.TestSchema;
 
 public class TestAllocatorsSpeed {
 
@@ -20,21 +18,21 @@ public class TestAllocatorsSpeed {
 
 		// warmUp();
 
-		final long ustackAllocatorTime = benchmark(StackAllocators.newUnmanaged(TestTransaction.SIZE, NUM_ELEMENTS, TestTransaction::new));
+		final long ustackAllocatorTime = benchmark(StackAllocators.newUnmanaged(TestSchema.SIZE, NUM_ELEMENTS, TestSchema::new));
 
-		final long stackAllocatorTime = benchmark(StackAllocators.newManaged(TestTransaction.SIZE, NUM_ELEMENTS, TestTransaction::new));
+		final long stackAllocatorTime = benchmark(StackAllocators.newManaged(TestSchema.SIZE, NUM_ELEMENTS, TestSchema::new));
 
-		final long stackListAllocatorTime = benchmark(new StackListAllocator<>(NUM_ELEMENTS / 10, TestTransaction.SIZE,
-				TestTransaction::new, StackAllocators::newManaged));
+		final long stackListAllocatorTime = benchmark(new StackListAllocator<>(NUM_ELEMENTS / 10, TestSchema.SIZE,
+				TestSchema::new, StackAllocators::newManaged));
 
-		final long stackListAllocatorReservedTime = benchmark(new StackListAllocator<>(10, NUM_ELEMENTS / 10, TestTransaction.SIZE,
-				TestTransaction::new, StackAllocators::newManaged));
+		final long stackListAllocatorReservedTime = benchmark(new StackListAllocator<>(10, NUM_ELEMENTS / 10, TestSchema.SIZE,
+				TestSchema::new, StackAllocators::newManaged));
 
-		final long arrayAllocatorTime = benchmark(new ArrayAllocator<>(10, NUM_ELEMENTS / 10, TestTransaction.SIZE, TestTransaction::new));
+		final long arrayAllocatorTime = benchmark(new ArrayAllocator<>(10, NUM_ELEMENTS / 10, TestSchema.SIZE, TestSchema::new));
 
-		final long listAllocatorTime = benchmark(new ListAllocator<>(NUM_ELEMENTS / 10, TestTransaction.SIZE, TestTransaction::new));
+		final long listAllocatorTime = benchmark(new ListAllocator<>(NUM_ELEMENTS / 10, TestSchema.SIZE, TestSchema::new));
 
-		final long defaultAllocatorTime = benchmark(new DefaultAllocator<>(TestTransaction.SIZE, TestTransaction::new));
+		final long defaultAllocatorTime = benchmark(new DefaultAllocator<>(TestSchema.SIZE, TestSchema::new));
 
 
 		float max = Math.max(Math.max(defaultAllocatorTime, stackAllocatorTime), stackListAllocatorTime);
@@ -52,7 +50,7 @@ public class TestAllocatorsSpeed {
 		final float arrayAllocatorRelativeTime = 100 - (arrayAllocatorTime / max * 100.0f);
 
 
-		System.out.println("Test Allocator Speed (" + NUM_ELEMENTS + " elements, element size in bytes = " + TestTransaction.SIZE + ")");
+		System.out.println("Test Allocator Speed (" + NUM_ELEMENTS + " elements, element size in bytes = " + TestSchema.SIZE + ")");
 		System.out.println(">> DefaultAllocator: " + defaultAllocatorTime / MS_TO_SECONDS + " seconds (" + defaultAllocatorRelativeTime + "% faster)");
 		System.out.println(">> Managed StackAllocator: " + stackAllocatorTime / MS_TO_SECONDS + " seconds (" + stackAllocatorRelativeTime + "% faster)");
 		System.out.println(">> Unmanaged StackAllocator: " + ustackAllocatorTime / MS_TO_SECONDS + " seconds (" + ustackAllocatorRelativeTime + "% faster)");
@@ -64,20 +62,20 @@ public class TestAllocatorsSpeed {
 
 	private static void warmUp() throws InterruptedException {
 		final int n = NUM_ELEMENTS / 10_000;
-		final long ustackAllocatorTime = benchmark(n, StackAllocators.newUnmanaged(TestTransaction.SIZE, n, TestTransaction::new));
-		final long stackAllocatorTime = benchmark(n, StackAllocators.newManaged(TestTransaction.SIZE, n, TestTransaction::new));
-		final long stackListAllocatorTime = benchmark(n, new StackListAllocator<>(n / 10, TestTransaction.SIZE, TestTransaction::new, StackAllocators::newManaged));
-		final long stackListAllocatorReservedTime = benchmark(n, new StackListAllocator<>(10, n / 10, TestTransaction.SIZE, TestTransaction::new, StackAllocators::newManaged));
-		final long arrayAllocatorTime = benchmark(n, new ArrayAllocator<>(10, n / 10, TestTransaction.SIZE, TestTransaction::new));
-		final long listAllocatorTime = benchmark(n, new ListAllocator<>(n / 10, TestTransaction.SIZE, TestTransaction::new));
-		final long defaultAllocatorTime = benchmark(n, new DefaultAllocator<>(TestTransaction.SIZE, TestTransaction::new));
+		final long ustackAllocatorTime = benchmark(n, StackAllocators.newUnmanaged(TestSchema.SIZE, n, TestSchema::new));
+		final long stackAllocatorTime = benchmark(n, StackAllocators.newManaged(TestSchema.SIZE, n, TestSchema::new));
+		final long stackListAllocatorTime = benchmark(n, new StackListAllocator<>(n / 10, TestSchema.SIZE, TestSchema::new, StackAllocators::newManaged));
+		final long stackListAllocatorReservedTime = benchmark(n, new StackListAllocator<>(10, n / 10, TestSchema.SIZE, TestSchema::new, StackAllocators::newManaged));
+		final long arrayAllocatorTime = benchmark(n, new ArrayAllocator<>(10, n / 10, TestSchema.SIZE, TestSchema::new));
+		final long listAllocatorTime = benchmark(n, new ListAllocator<>(n / 10, TestSchema.SIZE, TestSchema::new));
+		final long defaultAllocatorTime = benchmark(n, new DefaultAllocator<>(TestSchema.SIZE, TestSchema::new));
 	}
 
-	private static long benchmark(TransactionAllocator<TestTransaction> allocator) throws InterruptedException {
+	private static long benchmark(SchemaAllocator<TestSchema> allocator) throws InterruptedException {
 		return benchmark(NUM_ELEMENTS, allocator);
 	}
 
-	private static long benchmark(int n, TransactionAllocator<TestTransaction> allocator) throws InterruptedException {
+	private static long benchmark(int n, SchemaAllocator<TestSchema> allocator) throws InterruptedException {
 
 		Runtime.getRuntime().gc();
 
@@ -85,7 +83,7 @@ public class TestAllocatorsSpeed {
 
 		final long startTime = System.currentTimeMillis();
 
-		Transaction schema = null;
+		Schema schema = null;
 
 		for (int i = 0; i < n; i++) {
 			schema = allocator.malloc();

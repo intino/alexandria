@@ -1,6 +1,6 @@
 package io.intino.alexandria.led;
 
-import io.intino.alexandria.led.allocators.TransactionFactory;
+import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.allocators.stack.SingleStackAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocator;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
@@ -18,14 +18,14 @@ import java.util.stream.Stream;
 
 import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
 
-public final class HeapLedStreamBuilder<T extends Transaction> implements LedStream.Builder<T> {
+public final class HeapLedStreamBuilder<T extends Schema> implements LedStream.Builder<T> {
 
-    private static final int DEFAULT_NUM_TRANSACTIONS_PER_BLOCK = 5_000_000;
+    private static final int DEFAULT_NUM_SCHEMAS_PER_BLOCK = 5_000_000;
     private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
 
-    private final int transactionSize;
-    private final Class<T> transactionClass;
-    private final TransactionFactory<T> factory;
+    private final int schemaSize;
+    private final Class<T> schemaClass;
+    private final SchemaFactory<T> factory;
     private final List<Path> tempLeds;
     private final Path tempDirectory;
     private ByteBuffer buffer;
@@ -33,48 +33,48 @@ public final class HeapLedStreamBuilder<T extends Transaction> implements LedStr
     private Queue<T> sortedQueue;
     private volatile boolean buildInvoked;
 
-    public HeapLedStreamBuilder(Class<T> transactionClass) {
-        this(transactionClass, Transaction.factoryOf(transactionClass));
+    public HeapLedStreamBuilder(Class<T> schemaClass) {
+        this(schemaClass, Schema.factoryOf(schemaClass));
     }
 
-    public HeapLedStreamBuilder(Class<T> transactionClass, File tempDirectory) {
-        this(transactionClass, Transaction.factoryOf(transactionClass), tempDirectory);
+    public HeapLedStreamBuilder(Class<T> schemaClass, File tempDirectory) {
+        this(schemaClass, Schema.factoryOf(schemaClass), tempDirectory);
     }
 
-    public HeapLedStreamBuilder(Class<T> transactionClass, int numTransactionsPerBlock) {
-        this(transactionClass, Transaction.factoryOf(transactionClass), numTransactionsPerBlock);
+    public HeapLedStreamBuilder(Class<T> schemaClass, int numSchemasPerBlock) {
+        this(schemaClass, Schema.factoryOf(schemaClass), numSchemasPerBlock);
     }
 
-    public HeapLedStreamBuilder(Class<T> transactionClass, int numTransactionsPerBlock, File tempDirectory) {
-        this(transactionClass, Transaction.factoryOf(transactionClass), numTransactionsPerBlock, tempDirectory);
+    public HeapLedStreamBuilder(Class<T> schemaClass, int numSchemasPerBlock, File tempDirectory) {
+        this(schemaClass, Schema.factoryOf(schemaClass), numSchemasPerBlock, tempDirectory);
     }
 
-    public HeapLedStreamBuilder(Class<T> transactionClass, TransactionFactory<T> factory) {
-        this(transactionClass, factory, DEFAULT_NUM_TRANSACTIONS_PER_BLOCK);
+    public HeapLedStreamBuilder(Class<T> schemaClass, SchemaFactory<T> factory) {
+        this(schemaClass, factory, DEFAULT_NUM_SCHEMAS_PER_BLOCK);
     }
 
-    public HeapLedStreamBuilder(Class<T> transactionClass, TransactionFactory<T> factory, File tempDirectory) {
-        this(transactionClass, factory, DEFAULT_NUM_TRANSACTIONS_PER_BLOCK, tempDirectory);
+    public HeapLedStreamBuilder(Class<T> schemaClass, SchemaFactory<T> factory, File tempDirectory) {
+        this(schemaClass, factory, DEFAULT_NUM_SCHEMAS_PER_BLOCK, tempDirectory);
     }
 
-    public HeapLedStreamBuilder(Class<T> transactionClass, TransactionFactory<T> factory, int numTransactionsPerBlock) {
-        this(transactionClass, factory, numTransactionsPerBlock, SYSTEM_TEMP_DIR);
+    public HeapLedStreamBuilder(Class<T> schemaClass, SchemaFactory<T> factory, int numSchemasPerBlock) {
+        this(schemaClass, factory, numSchemasPerBlock, SYSTEM_TEMP_DIR);
     }
 
-    public HeapLedStreamBuilder(Class<T> transactionClass, TransactionFactory<T> factory,
-                                int numTransactionsPerBlock, File tempDirectory) {
-        this.transactionClass = transactionClass;
-        this.transactionSize = Transaction.sizeOf(transactionClass);
+    public HeapLedStreamBuilder(Class<T> schemaClass, SchemaFactory<T> factory,
+                                int numSchemasPerBlock, File tempDirectory) {
+        this.schemaClass = schemaClass;
+        this.schemaSize = Schema.sizeOf(schemaClass);
         this.factory = factory;
         tempDirectory.mkdirs();
         this.tempDirectory = tempDirectory.toPath();
         tempLeds = new ArrayList<>();
         tempLeds.add(createTempFile());
-        buffer = allocBuffer(numTransactionsPerBlock * transactionSize);
+        buffer = allocBuffer(numSchemasPerBlock * schemaSize);
         ModifiableMemoryAddress address = ModifiableMemoryAddress.of(buffer);
         ByteBufferStore store = new ByteBufferStore(buffer, address, 0, buffer.capacity());
-        allocator = new SingleStackAllocator<>(store, address, transactionSize, factory);
-        sortedQueue = new PriorityQueue<>(numTransactionsPerBlock);
+        allocator = new SingleStackAllocator<>(store, address, schemaSize, factory);
+        sortedQueue = new PriorityQueue<>(numSchemasPerBlock);
     }
 
     public Path tempDirectory() {
@@ -82,27 +82,27 @@ public final class HeapLedStreamBuilder<T extends Transaction> implements LedStr
     }
 
     private String getTempFilePrefix() {
-        return transactionClass.getSimpleName();
+        return schemaClass.getSimpleName();
     }
 
     @Override
-    public Class<T> transactionClass() {
-        return transactionClass;
+    public Class<T> schemaClass() {
+        return schemaClass;
     }
 
     @Override
-    public int transactionSize() {
-        return transactionSize;
+    public int schemaSize() {
+        return schemaSize;
     }
 
     @Override
     public LedStream.Builder<T> append(Consumer<T> initializer) {
         if(buildInvoked) {
-            throw new IllegalStateException("Method build has been called, cannot create more transactions.");
+            throw new IllegalStateException("Method build has been called, cannot create more schemas.");
         }
-        T transaction = newTransaction();
-        initializer.accept(transaction);
-        sortedQueue.add(transaction);
+        T schema = newTransaction();
+        initializer.accept(schema);
+        sortedQueue.add(schema);
         return this;
     }
 
@@ -129,7 +129,7 @@ public final class HeapLedStreamBuilder<T extends Transaction> implements LedStr
         }
         LedWriter ledWriter = new LedWriter(getCurrentFile().toFile());
         sortedQueue.iterator();
-        ledWriter.write(LedStream.fromStream(transactionSize, getSortedTransactions()));
+        ledWriter.write(LedStream.fromStream(schemaSize, getSortedTransactions()));
         sortedQueue.clear();
         buffer.clear();
         allocator.clear();

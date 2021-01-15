@@ -1,22 +1,19 @@
-package io.intino.test.transactions;
+package io.intino.test.schemas;
 
 import io.intino.alexandria.led.allocators.DefaultAllocator;
-import io.intino.alexandria.led.allocators.TransactionAllocator;
+import io.intino.alexandria.led.allocators.SchemaAllocator;
 import io.intino.alexandria.led.util.memory.LedLibraryConfig;
-import io.intino.alexandria.led.util.memory.MemoryUtils;
-import io.intino.alexandria.led.util.memory.NativeMemoryTracker;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Random;
 
 import static io.intino.alexandria.led.util.BitUtils.maxPossibleNumber;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.memset;
-import static io.intino.test.transactions.TestTransaction.*;
+import static io.intino.test.schemas.TestSchema.*;
 import static org.junit.Assert.assertEquals;
 
-public class TransactionTest {
+public class SchemaTest {
 
 	static {
 		LedLibraryConfig.USE_MEMORY_TRACKER.set(true);
@@ -24,12 +21,12 @@ public class TransactionTest {
 	}
 
 	private final Random random;
-	private final TransactionAllocator<TestTransaction> allocator;
-	private TestTransaction schema;
+	private final SchemaAllocator<TestSchema> allocator;
+	private TestSchema schema;
 
-	public TransactionTest() {
+	public SchemaTest() {
 		random = new Random();
-		allocator = new DefaultAllocator<>(SIZE, TestTransaction::new);
+		allocator = new DefaultAllocator<>(SIZE, TestSchema::new);
 	}
 
 	@Before

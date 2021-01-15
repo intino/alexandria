@@ -2,9 +2,9 @@ package io.intino.alexandria.led;
 
 import io.intino.alexandria.led.buffers.store.ByteStore;
 
-public final class GenericTransaction extends Transaction {
+public final class GenericSchema extends Schema {
 
-    public GenericTransaction(ByteStore store) {
+    public GenericSchema(ByteStore store) {
         super(store);
     }
 

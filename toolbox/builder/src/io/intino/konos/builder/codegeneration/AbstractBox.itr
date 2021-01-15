@@ -206,7 +206,6 @@ end
 
 def type(service & soap) trigger(setup)
 	[if($parameter != null && !$parameter.isEmpty()) ]io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
-	$name+SnakeCaseToCamelCase+FirstUpperCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
 
 
@@ -246,6 +245,7 @@ def type(service & rest) trigger(rest)
 end
 
 def type(service & soap) trigger(soap)
+	[$name+SnakeCaseToCamelCase+FirstUpperCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);]
 	[io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();
 	Logger.info("Soap service $name: started!");]
 end

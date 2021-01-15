@@ -1,13 +1,13 @@
 package io.intino.alexandria.led.leds;
 
 import io.intino.alexandria.led.Led;
-import io.intino.alexandria.led.Transaction;
+import io.intino.alexandria.led.Schema;
 
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-public class ListLed<T extends Transaction> implements Led<T> {
+public class ListLed<T extends Schema> implements Led<T> {
 
 	private final List<T> list;
 
@@ -21,12 +21,12 @@ public class ListLed<T extends Transaction> implements Led<T> {
 	}
 
 	@Override
-	public int transactionSize() {
+	public int schemaSize() {
 		return list.isEmpty() ? 0 : list.get(0).size();
 	}
 
 	@Override
-	public T transaction(int index) {
+	public T schema(int index) {
 		return list.get(index);
 	}
 

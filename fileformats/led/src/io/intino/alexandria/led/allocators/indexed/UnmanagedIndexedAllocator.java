@@ -1,7 +1,7 @@
 package io.intino.alexandria.led.allocators.indexed;
 
-import io.intino.alexandria.led.Transaction;
-import io.intino.alexandria.led.allocators.TransactionFactory;
+import io.intino.alexandria.led.Schema;
+import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.buffers.store.NativePointerStore;
 import io.intino.alexandria.led.util.memory.MemoryUtils;
 import io.intino.alexandria.led.util.memory.ModifiableMemoryAddress;
@@ -11,17 +11,17 @@ import java.lang.ref.Cleaner;
 
 import static io.intino.alexandria.led.util.memory.MemoryUtils.*;
 
-public class UnmanagedIndexedAllocator<T extends Transaction> implements IndexedAllocator<T> {
+public class UnmanagedIndexedAllocator<T extends Schema> implements IndexedAllocator<T> {
 
 	private static final Cleaner CLEANER = Cleaner.create();
 
 	private NativePointerStore store;
 	private final ModifiableMemoryAddress address;
 	private final int elementSize;
-	private final TransactionFactory<T> factory;
+	private final SchemaFactory<T> factory;
 	private final Cleaner.Cleanable cleanable;
 
-	public UnmanagedIndexedAllocator(long baseAddress, long baseOffset, long size, int elementSize, TransactionFactory<T> factory) {
+	public UnmanagedIndexedAllocator(long baseAddress, long baseOffset, long size, int elementSize, SchemaFactory<T> factory) {
 		this.elementSize = elementSize;
 		this.factory = factory;
 		this.address = new ModifiableMemoryAddress(baseAddress);
@@ -29,7 +29,7 @@ public class UnmanagedIndexedAllocator<T extends Transaction> implements Indexed
 		cleanable = CLEANER.register(this, new NativePointerCleaner(address));
 	}
 
-	public UnmanagedIndexedAllocator(long elementsCount, int elementSize, TransactionFactory<T> factory) {
+	public UnmanagedIndexedAllocator(long elementsCount, int elementSize, SchemaFactory<T> factory) {
 		this.elementSize = elementSize;
 		this.factory = factory;
 		final long size = elementsCount * elementSize;
@@ -77,7 +77,7 @@ public class UnmanagedIndexedAllocator<T extends Transaction> implements Indexed
 	}
 
 	@Override
-	public int transactionSize() {
+	public int schemaSize() {
 		return elementSize;
 	}
 

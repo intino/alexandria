@@ -1,6 +1,6 @@
 package io.intino.alexandria.led;
 
-import io.intino.alexandria.led.allocators.TransactionFactory;
+import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.buffers.BigEndianBitBuffer;
 import io.intino.alexandria.led.buffers.BitBuffer;
 import io.intino.alexandria.led.buffers.LittleEndianBitBuffer;
@@ -13,13 +13,13 @@ import java.lang.reflect.Constructor;
 import java.nio.ByteOrder;
 import java.util.Objects;
 
-public abstract class Transaction implements OffHeapObject, Comparable<Transaction> {
+public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 
-	public static long idOf(Transaction transaction) {
-		return MemoryUtils.getLong(transaction.address(), transaction.baseOffset());
+	public static long idOf(Schema schema) {
+		return MemoryUtils.getLong(schema.address(), schema.baseOffset());
 	}
 
-	public static <T extends Transaction> int sizeOf(Class<T> type) {
+	public static <T extends Schema> int sizeOf(Class<T> type) {
 		try {
 			return (int) type.getField("SIZE").get(null);
 		} catch (IllegalAccessException | NoSuchFieldException e) {
@@ -31,7 +31,7 @@ public abstract class Transaction implements OffHeapObject, Comparable<Transacti
 	/**
 	 * This uses reflection!!
 	 * */
-	public static <T extends Transaction>TransactionFactory<T> factoryOf(Class<T> type) {
+	public static <T extends Schema> SchemaFactory<T> factoryOf(Class<T> type) {
 		try {
 			final Constructor<T> constructor = type.getConstructor(ByteStore.class);
 			return store -> {
@@ -49,7 +49,7 @@ public abstract class Transaction implements OffHeapObject, Comparable<Transacti
 
 	protected final BitBuffer bitBuffer;
 
-	public Transaction(ByteStore store) {
+	public Schema(ByteStore store) {
 		bitBuffer = ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN ?
 				new LittleEndianBitBuffer(store) :
 				new BigEndianBitBuffer(store);
@@ -68,7 +68,7 @@ public abstract class Transaction implements OffHeapObject, Comparable<Transacti
 	public boolean equals(Object obj) {
 		if (obj == null) return false;
 		if (obj.getClass() != getClass()) return false;
-		Transaction other = (Transaction) obj;
+		Schema other = (Schema) obj;
 		return notNull() && other.notNull() && id() == other.id();
 	}
 
@@ -87,7 +87,7 @@ public abstract class Transaction implements OffHeapObject, Comparable<Transacti
 	}
 
 	@Override
-	public int compareTo(Transaction o) {
+	public int compareTo(Schema o) {
 		return Long.compare(id(), o.id());
 	}
 

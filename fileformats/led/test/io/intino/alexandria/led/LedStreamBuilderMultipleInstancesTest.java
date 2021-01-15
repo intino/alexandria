@@ -1,13 +1,11 @@
 package io.intino.alexandria.led;
 
-import io.intino.alexandria.logger.Logger;
-import io.intino.test.transactions.TestTransaction;
+import io.intino.test.schemas.TestSchema;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -23,20 +21,20 @@ public class LedStreamBuilderMultipleInstancesTest {
     private static final int NUM_ELEMENTS = 500_000_000;
     private static final int NUM_ITERATIONS = 100_000;
     private static final int BLOCK_SIZE = 100_000;
-    private static final int NUM_DISTINCT_TRANSACTIONS = 10;
+    private static final int NUM_DISTINCT_SCHEMAS = 10;
 
     @Ignore
     @Test
     public void test() {
-        System.out.println(">> Testing " + TestTransaction.SIZE);
+        System.out.println(">> Testing " + TestSchema.SIZE);
 
         Random random = new Random();
 
         List<LocalDate> months = LocalDate.of(2019, 1, 1).datesUntil(LocalDate.of(2020, 1, 1))
                 .collect(Collectors.toList());
 
-        List<Map<LocalDate, LedStream.Builder<TestTransaction>>> builders = new ArrayList<>();
-        for(int i = 0;i < NUM_DISTINCT_TRANSACTIONS;i++) {
+        List<Map<LocalDate, LedStream.Builder<TestSchema>>> builders = new ArrayList<>();
+        for(int i = 0;i < NUM_DISTINCT_SCHEMAS;i++) {
             builders.add(new ConcurrentHashMap<>());
         }
 
@@ -46,9 +44,9 @@ public class LedStreamBuilderMultipleInstancesTest {
 
         IntStream.range(0, NUM_ELEMENTS).unordered().sequential().forEach(i -> {
             final LocalDate month = months.get(random.nextInt(months.size()));
-            LedStream.Builder<TestTransaction> builder = builders.get(random.nextInt(builders.size()))
+            LedStream.Builder<TestSchema> builder = builders.get(random.nextInt(builders.size()))
                     .computeIfAbsent(month,
-                    k -> LedStream.builder(TestTransaction.class, BLOCK_SIZE, new File("temp")));
+                    k -> LedStream.builder(TestSchema.class, BLOCK_SIZE, new File("temp")));
             synchronized (builder) {
                 builder.append(t -> t.id(random.nextInt()));
             }
@@ -66,13 +64,13 @@ public class LedStreamBuilderMultipleInstancesTest {
 
         for(var map : builders) {
 
-            for(Map.Entry<LocalDate, LedStream.Builder<TestTransaction>> entry : map.entrySet()) {
+            for(Map.Entry<LocalDate, LedStream.Builder<TestSchema>> entry : map.entrySet()) {
 
                 System.out.println(">> Iterating/Serializing " + entry.getKey() + "...");
 
-                LedStream.Builder<TestTransaction> builder = entry.getValue();
+                LedStream.Builder<TestSchema> builder = entry.getValue();
 
-                try(LedStream<TestTransaction> ledStream = builder.build()) {
+                try(LedStream<TestSchema> ledStream = builder.build()) {
 
                     AtomicLong lastId = new AtomicLong(Long.MIN_VALUE);
                     AtomicInteger i = new AtomicInteger();

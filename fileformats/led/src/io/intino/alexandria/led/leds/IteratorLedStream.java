@@ -1,27 +1,27 @@
 package io.intino.alexandria.led.leds;
 
 import io.intino.alexandria.led.LedStream;
-import io.intino.alexandria.led.Transaction;
+import io.intino.alexandria.led.Schema;
 
 import java.util.Iterator;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
-public class IteratorLedStream<T extends Transaction> implements LedStream<T> {
+public class IteratorLedStream<T extends Schema> implements LedStream<T> {
 
-    public static <S extends Transaction> IteratorLedStream<S> fromStream(int transactionSize, Stream<S> stream) {
-        return new IteratorLedStream<>(transactionSize, stream.iterator());
+    public static <S extends Schema> IteratorLedStream<S> fromStream(int schemaSize, Stream<S> stream) {
+        return new IteratorLedStream<>(schemaSize, stream.iterator());
     }
 
 
     private final Iterator<T> iterator;
-    private final int transactionSize;
+    private final int schemaSize;
     private Runnable onClose;
 
-    public IteratorLedStream(int transactionSize, Iterator<T> iterator) {
+    public IteratorLedStream(int schemaSize, Iterator<T> iterator) {
         this.iterator = requireNonNull(iterator);
-        this.transactionSize = transactionSize;
+        this.schemaSize = schemaSize;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class IteratorLedStream<T extends Transaction> implements LedStream<T> {
     }
 
     @Override
-    public int transactionSize() {
-        return transactionSize;
+    public int schemaSize() {
+        return schemaSize;
     }
 }

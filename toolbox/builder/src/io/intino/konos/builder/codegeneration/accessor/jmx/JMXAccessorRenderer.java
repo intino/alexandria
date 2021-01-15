@@ -21,8 +21,8 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
 public class JMXAccessorRenderer extends Renderer {
 	private final Service.JMX service;
-	private File destination;
-	private String packageName;
+	private final File destination;
+	private final String packageName;
 
 	public JMXAccessorRenderer(CompilationContext compilationContext, Service.JMX restService, File destination) {
 		super(compilationContext, Target.Owner);
