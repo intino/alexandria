@@ -387,6 +387,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
             <TableCell className={className}
                        colSpan={colSpan}
                        style={{backgroundColor:backgroundColor,fontSize:fontSize,textAlign:textAlign,minWidth:'170px'}}
+                       align='right'
                        key={index}>
                 {(!selectable || (!isMainView && selectable)) &&
                     <a style={{color:color,whiteSpace:'nowrap',cursor:'pointer'}} onClick={this.handleFilterFirstColumn.bind(this)}>{section.label}</a>
