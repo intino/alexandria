@@ -50,7 +50,7 @@ def type(distribution)
 		}
 
 		@Override
-		public int componentCount() {
+		public int size() {
 			return ranges().size();
 		}
 

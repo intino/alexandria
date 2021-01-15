@@ -12,7 +12,7 @@ def type(interface)
 
 		Component byIndex(int index);
 
-		int componentCount();
+		int size();
 
 		Collection<? extends Component> components();
 
@@ -38,7 +38,7 @@ end
 def type(factor) trigger(getterInstance)
 	@Override
 	protected $name+firstUpperCase.Component $name+firstLowerCase~Of(String$[] record) {
-		return $name+firstUpperCase.instance().byName(record$[$index]);
+		return $name+firstUpperCase.instance().byId(record$[$index]);
 	}
 end
 
@@ -55,6 +55,10 @@ def type(factor) trigger(assign)
 	$name+firstLowerCase = $name+firstLowerCase~Of(record);
 end
 
+def trigger(NA)
+	"NA"
+end
+
 def type(factor & abstract)
 	package $package.analytic.factors;
 
@@ -65,8 +69,10 @@ def type(factor & abstract)
     import java.util.stream.Collectors;
 
     public abstract class Abstract$name+FirstUpperCase implements Axis {
+    	public final Component NA = new Component(new String$[]{"0", "NA", "NA", $factor+NA...[, ]});
+
     	protected final Map<Integer, Abstract$name+FirstUpperCase.Component> componentsByIndex = new HashMap<>();
-    	protected final Map<String, Abstract$name+FirstUpperCase.Component> componentsByName = new HashMap<>();
+    	protected final Map<String, Abstract$name+FirstUpperCase.Component> componentsById = new HashMap<>();
 
     	@Override
     	public String label() {
@@ -83,8 +89,8 @@ def type(factor & abstract)
     		return componentsByIndex.values();
     	}
 
-    	public Abstract$name+FirstUpperCase.Component byName(String name) {
-    		return componentsByName.get(name);
+    	public Abstract$name+FirstUpperCase.Component byId(String name) {
+    		return componentsById.get(name);
     	}
 
     	public Abstract$name+FirstUpperCase.Component byIndex(int index) {
@@ -96,7 +102,7 @@ def type(factor & abstract)
     	}
 
 		@Override
-		public int componentCount() {
+		public int size() {
 			return 0;
 		}
 

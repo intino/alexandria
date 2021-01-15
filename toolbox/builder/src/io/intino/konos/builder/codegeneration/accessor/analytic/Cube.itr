@@ -1,0 +1,146 @@
+def type(root)
+	package $package+ValidPackage;
+
+	[$factorImport]
+
+	$cube
+end
+
+def trigger(factorImport)
+	import $this.factors.*;
+end
+
+def trigger(cube)
+	public class $name+firstUpperCase extends io.intino.alexandria.led.Schema {
+		[$split]
+		public static final int SIZE = $size;
+
+		public $name+firstUpperCase() {
+			super(defaultByteStore());
+		}
+
+		public $name+firstUpperCase(io.intino.alexandria.led.buffers.store.ByteStore store) {
+			super(store);
+        }
+
+		public int size() {
+			return SIZE;
+		}
+
+		public java.util.Map<String, Object> values() {
+			java.util.Map<String, Object> values = new java.util.LinkedHashMap<>();
+			[$column+map...[$NL]]
+			return values;
+		}
+
+		[protected long id() {
+			return $id();
+		}]
+
+		[$column+setter...[$NL$NL]]
+
+		private static io.intino.alexandria.led.buffers.store.ByteStore defaultByteStore() {
+			java.nio.ByteBuffer buffer = io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer((long) SIZE);
+			io.intino.alexandria.led.util.memory.MemoryAddress address = io.intino.alexandria.led.util.memory.MemoryAddress.of(buffer);
+			return new io.intino.alexandria.led.buffers.store.ByteBufferStore(buffer, address, 0, buffer.capacity());
+		}
+	}
+end
+
+
+def trigger(split)
+	public enum Split {
+		$enum+asEnum...[, ];
+
+		public abstract String qn();
+
+		public static Split splitByQn(String qn) {
+			return java.util.Arrays.stream(values()).filter(c -> c.qn().equals(qn)).findFirst().orElse(null);
+		}
+	}
+end
+
+def trigger(asEnum)
+	$value+snakeCaseToCamelCase {
+		public String qn() {
+			return "$qn";
+		}
+	}
+end
+
+def trigger(nbits)
+	NBits
+end
+
+def trigger(map)
+	values.put("$name", $name+firstLowerCase());
+end
+
+def type(column & integer) trigger(setter)
+	public $owner+firstUpperCase $name+firstLowerCase($type $name+firstLowerCase) {
+		bitBuffer.set$aligned~Integer[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
+		return this;
+	}
+end
+
+def type(column & bool) trigger(setter)
+	public $owner+firstUpperCase $name+firstLowerCase($type $name+firstLowerCase) {
+		bitBuffer.setByteNBits($offset, $bits, (byte) ($name+firstLowerCase ? 2 : 1));
+		return this;
+	}
+end
+
+def type(column & real) attribute(size:32) trigger(setter)
+	public $owner+firstUpperCase $name+firstLowerCase(Float $name+firstLowerCase) {
+		bitBuffer.setAlignedReal$size~Bits($offset, $name+firstLowerCase);
+		return this;
+	}
+end
+
+def type(column & real) trigger(setter)
+	public $owner+firstUpperCase $name+firstLowerCase($type $name+firstLowerCase) {
+		bitBuffer.setAlignedReal$size~Bits($offset, $name+firstLowerCase);
+		return this;
+	}
+end
+
+def type(column) type(id | longInteger) trigger(setter)
+	public $owner+firstUpperCase $name+firstLowerCase($type $name+firstLowerCase) {
+		bitBuffer.set$aligned~Long[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
+		return this;
+	}
+end
+
+
+def type(column & datetime) trigger(setter)
+	public $owner+firstUpperCase $name+firstLowerCase($type $name+firstLowerCase) {
+		bitBuffer.set$aligned~Long[$bits+nbits]($offset[, $bits], $name+firstLowerCase.toEpochMilli());
+		return this;
+	}
+end
+
+def type(column & date) trigger(setter)
+	public $owner+firstUpperCase $name+firstLowerCase($type $name+firstLowerCase) {
+		bitBuffer.set$aligned~Short[$bits+nbits]($offset[, $bits], (short) $name+firstLowerCase.toEpochDay());
+		return this;
+	}
+end
+
+def type(column & factor & resource) trigger(getter)
+	public $type+firstUpperCase.Entry $name+firstLowerCase() {
+		final int value = bitBuffer.getIntegerNBits($offset, $bits);
+		return $type+firstUpperCase.entry(value);
+	}
+end
+
+def type(column & factor & resource) trigger(setter)
+	public $owner+firstUpperCase $name+firstLowerCase(String $name+firstLowerCase) {
+		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $type+firstUpperCase.entry($name+firstLowerCase).index);
+		return this;
+	}
+
+	public $owner+firstUpperCase $name+firstLowerCase($type+firstUpperCase.Entry $name+firstLowerCase) {
+		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $name+firstLowerCase.index);
+		return this;
+	}
+end

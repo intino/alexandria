@@ -19,7 +19,9 @@ def type(cube & src)
 		}
 
 		[$customDimension+staticMethod...[$NL$NL]]
+
 		[$customFilter+staticMethod...[$NL$NL]]
+
 		[$customIndicator+staticMethod...[$NL$NL]]
 	}
 end
@@ -30,7 +32,7 @@ def type(cube)
     import io.intino.alexandria.Timetag;
     import io.intino.alexandria.led.LedReader;
     import io.intino.alexandria.led.LedStream;
-    import io.intino.alexandria.led.Transaction;
+    import io.intino.alexandria.led.Schema;
     import io.intino.alexandria.led.buffers.store.ByteStore;
     import io.intino.alexandria.led.util.iterators.MergedIterator;
     import io.intino.alexandria.led.util.iterators.StatefulIterator;
@@ -103,7 +105,7 @@ def type(cube)
 
 		private int resultsSize() {
 			int accumulator = 1;
-			for (Axis axis : axes) accumulator *= axis.componentCount();
+			for (Axis axis : axes) accumulator *= axis.size();
 			return accumulator;
 		}
 
@@ -133,7 +135,7 @@ def type(cube)
 		private int indexOf(Axis.Component$[] components) {
 			int index = 0;
 			for (int i = 0; i < components.length; i++) {
-				i *= axes.get(i).componentCount();
+				i *= axes.get(i).size();
 				i += components$[i].index();
 			}
 			return index;
@@ -161,7 +163,7 @@ def type(cube)
 			[$column+viewGetter...[$NL]]
 		}
 
-		public static class Fact extends Transaction {
+		public static class Fact extends Schema {
 			public static final int SIZE = $size;
 
 			public Fact(ByteStore store) {
@@ -256,7 +258,7 @@ def type(cube)
 
 			@Override
 			public Iterator<View> iterator() {
-				StatefulIterator<AbstractVentas.Fact> facts = StatefulIterator.of(datasource.leds([$split+name]));
+				StatefulIterator<Abstract$name+FirstUpperCase.Fact> facts = StatefulIterator.of(datasource.leds([$split+name]));
 				process(joinIds.current());
 				return StreamSupport.stream(Spliterators.spliteratorUnknownSize(facts, Spliterator.SORTED), false)
 						.map(v -> {
@@ -281,11 +283,12 @@ def type(cube)
 
 			private int totalsSize() {
 				int accumulator = 1;
-				for (Axis axis : axes) accumulator *= axis.componentCount();
+				for (Axis axis : axes) accumulator *= axis.size();
 				return accumulator;
 			}
 
 			private void process(Abstract$join+FirstUpperCase.View view) {
+				if (view == null) return;
 				if (totals == null) totals = new long$[totalsSize()];
 				for (Predicate<Abstract$join+FirstUpperCase.View> filter : filters) if (!filter.test(view)) return;
 				Axis.Component$[] components = componentsOf(view);
@@ -295,7 +298,7 @@ def type(cube)
 			private int indexOf(Axis.Component$[] components) {
 				int index = 0;
 				for (int i = 0; i < components.length; i++) {
-					i *= axes.get(i).componentCount();
+					i *= axes.get(i).size();
 					i += components$[i].index();
 				}
 				return index;

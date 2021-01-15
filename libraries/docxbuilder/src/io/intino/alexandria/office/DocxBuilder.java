@@ -1,15 +1,19 @@
 package io.intino.alexandria.office;
 
 import java.io.*;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 public class DocxBuilder {
 	private static final String CRLF = "</w:t></w:r><w:r><w:rPr><w:noProof/><w:sz w:val=\"16\"/><w:szCs w:val=\"16\"/></w:rPr><w:br/></w:r><w:r><w:rPr><w:noProof/><w:sz w:val=\"16\"/><w:szCs w:val=\"16\"/></w:rPr><w:t>";
+	private static final String TABLE = "<w:tbl>(.+?)</w:tbl>";
+	private static final String TABLE_CAPTION = "<w:tblCaption w:val=\"([^\"]*)\"/>";
+	private static final String TABLE_ROW = "(<w:tr.+?</w:tr>)";
 	private final File template;
 	private final Content content;
 
@@ -28,6 +32,26 @@ public class DocxBuilder {
 		return this;
 	}
 
+	public interface TableEdition {
+		TableEdition addRow(Map<String, String> columns);
+		DocxBuilder end();
+	}
+
+	public TableEdition table(String table) { // In document, indicate table name on field Title in Table properties dialog
+		return new TableEdition() {
+			@Override
+			public TableEdition addRow(Map<String, String> columns) {
+				DocxBuilder.this.content.add(table, columns);
+				return this;
+			}
+
+			@Override
+			public DocxBuilder end() {
+				return DocxBuilder.this;
+			}
+		};
+	}
+
 	public DocxBuilder replace(String field, byte[] value) {
 		this.content.put(field, value);
 		return this;
@@ -44,11 +68,17 @@ public class DocxBuilder {
 
 	private static final class Content {
 		private final Map<String, String> fields;
+		private final Map<String, List<Map<String, String>>> tables;
 		private final Map<String, byte[]> images;
+		private final Map<String, String> tablesTemplates;
+		private final Map<String, String> rowsTemplates;
 
 		Content() {
 			this.fields = new HashMap<>();
 			this.images = new HashMap<>();
+			this.tables = new HashMap<>();
+			this.tablesTemplates = new HashMap<>();
+			this.rowsTemplates = new HashMap<>();
 		}
 
 		private String fieldOf(String key) {
@@ -57,6 +87,10 @@ public class DocxBuilder {
 
 		private String valueOf(String key) {
 			return tagOf(fields.get(key)).replace("\n", CRLF).replace("&", "&amp;");
+		}
+
+		private String columnOf(String value) {
+			return tagOf(value).replace("\n", CRLF).replace("&", "&amp;");
 		}
 
 		private String tagOf(String name) {
@@ -75,10 +109,64 @@ public class DocxBuilder {
 			this.fields.put(data[0],data[1]);
 		}
 
+		void add(String table, Map<String, String> values) {
+			if (!this.tables.containsKey(table)) this.tables.put(table, new ArrayList<>());
+			this.tables.get(table).add(values);
+		}
+
 		String replace(String line) {
+			registerTablesTemplates(line);
+			line = replaceTables(line);
+			line = replaceFields(line);
+			return line;
+		}
+
+		private String replaceTables(String line) {
+			for (String table : tables.keySet()) {
+				if (tablesTemplates.get(table) == null) continue;
+				line = line.replace(tablesTemplates.get(table), tablesTemplates.get(table).replace(rowsTemplates.get(table), rowsOf(table)));
+			}
+			return line;
+		}
+
+		private String replaceFields(String line) {
 			for (String key : fields.keySet())
 				line = line.replace(fieldOf(key), valueOf(key));
 			return line;
+		}
+
+		private String rowsOf(String table) {
+			return tables.get(table).stream().map(row -> replaceRow(table, row)).filter(Objects::nonNull).collect(Collectors.joining(""));
+		}
+
+		private String replaceRow(String table, Map<String, String> row) {
+			String result = rowsTemplates.get(table);
+			if (result == null) return result;
+			for (Map.Entry<String, String> column : row.entrySet()) {
+				result = result.replace(fieldOf(column.getKey()), columnOf(column.getValue()));
+			}
+			return result;
+		}
+
+		private void registerTablesTemplates(String line) {
+			Matcher tablesMatcher = Pattern.compile(TABLE, Pattern.DOTALL).matcher(line);
+			while (tablesMatcher.find()) {
+				registerTable(tablesMatcher.group(0));
+			}
+		}
+
+		private void registerTable(String tableTemplate) {
+			Matcher tableNameMatcher = Pattern.compile(TABLE_CAPTION).matcher(tableTemplate);
+			if (!tableNameMatcher.find()) return;
+			String tableName = tableNameMatcher.group(1);
+			tablesTemplates.put(tableName, tableTemplate);
+			rowsTemplates.put(tableName, rowTemplate(tableTemplate));
+		}
+
+		private String rowTemplate(String tableTemplate) {
+			Matcher matcher = Pattern.compile(TABLE_ROW).matcher(tableTemplate);
+			if (!matcher.find()) return "";
+			return matcher.group(0);
 		}
 
 		byte[] image(String name) {
