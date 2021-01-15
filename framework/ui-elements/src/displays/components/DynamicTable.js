@@ -6,9 +6,9 @@ import DynamicTableRequester from "../../../gen/displays/requesters/DynamicTable
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
 import { Table, TableHead, TableBody, TableRow, TableCell, TableSortLabel, Typography, Dialog,
-         DialogActions, DialogContent, DialogTitle, Checkbox, IconButton, FormControlLabel } from '@material-ui/core';
+         DialogActions, DialogContent, DialogContentText, DialogTitle, Checkbox, IconButton, Button, FormControlLabel } from '@material-ui/core';
 import {RiseLoader, PulseLoader} from "react-spinners";
-import { Clear, ArrowBack } from '@material-ui/icons';
+import { Clear, ArrowBack, TouchApp } from '@material-ui/icons';
 import classNames from "classnames";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -129,6 +129,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 		this.state = {
 		    sections: null,
 		    open: false,
+		    openConfirm: false,
 		    section: null,
 		    row: null,
 		    page: 0,
@@ -151,6 +152,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                 <div style={{width:this.container.current != null ? this.container.current.offsetWidth+"px" : "100%", overflow:'auto', height:'calc(100% - 40px)'}}>
                     {this.renderTable()}
                 </div>
+                {this.renderConfirmDialog()}
                 {this.renderDialog()}
             </div>
         );
@@ -390,7 +392,9 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                        align='right'
                        key={index}>
                 {(!selectable || (!isMainView && selectable)) &&
-                    <a style={{color:color,whiteSpace:'nowrap',cursor:'pointer'}} onClick={this.handleFilterFirstColumn.bind(this)}>{section.label}</a>
+                    <a className="layout horizontal center-center" style={{color:color,whiteSpace:'nowrap',cursor:'pointer'}} onClick={this.handleFilterFirstColumn.bind(this)}>
+                        {section.label}{isMainView && <TouchApp style={{marginLeft:'5px'}}/>}
+                    </a>
                 }
                 {isMainView && selectable &&
                     <TableSortLabel active={orderBy === section.label} direction={orderBy === section.label ? order : 'asc'} onClick={this.handleSort.bind(this, section, index)}>
@@ -617,6 +621,21 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         return result;
     };
 
+    renderConfirmDialog = () => {
+        return (
+            <Dialog open={this.state.openConfirm} onClose={this.handleCloseConfirm.bind(this)}>
+                <DialogTitle id="alert-dialog-title">{this.translate("Open selected row")}</DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">{this.translate("Are you sure to open selected row?")}</DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={this.handleCloseConfirm.bind(this)} color="primary">{this.translate("Cancel")}</Button>
+                  <Button onClick={this.handleOpenConfirm.bind(this)} color="primary" autoFocus>{this.translate("Accept")}</Button>
+                </DialogActions>
+            </Dialog>
+        );
+    };
+
     renderDialog = () => {
         const { classes } = this.props;
         const selectable = this.props.selection != null;
@@ -650,11 +669,9 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     };
 
     handleShowItems = (section, row) => {
-        if (this.state.selectRowProvided) {
-            this.requester.selectRow({ section: section.label, row: row });
-            return;
-        }
-        this.setState({open:true, section: section, row:row});
+        const selectRowProvided = this.state.selectRowProvided;
+        const state = selectRowProvided ? {openConfirm:true, section: section, row: row} : {open:true, section: section, row: row};
+        this.setState(state);
     };
 
     handleOpen = () => {
@@ -663,6 +680,15 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 
 	handleClose = () => {
         this.setState({open:false});
+    };
+
+    handleOpenConfirm = () => {
+        this.setState({openConfirm:false});
+        this.requester.selectRow({ section: this.state.section.label, row: this.state.row });
+    };
+
+	handleCloseConfirm = () => {
+        this.setState({openConfirm:false});
     };
 
     handleCheck = () => {
