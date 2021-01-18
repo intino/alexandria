@@ -115,7 +115,6 @@ public class AnalyticBuilderRenderer extends Renderer {
 		return (Math.log(N) / Math.log(2));
 	}
 
-
 	private File destinationPackage() {
 		return new File(destination, "jmx");
 	}

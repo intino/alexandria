@@ -4,7 +4,7 @@ use DataTypes
 
 Concept:{0..1} Split > var string[] splits
 
-Concept Axis
+Concept:RequiresAspect Axis
 	var string label
 	Aspect Continuous
 		var string unit
@@ -18,8 +18,8 @@ Concept Axis
     			var integer upperBound
 	Aspect Categorical
 		Concept:{0..1} IncludeLabel
-		Concept Include
-			var Axis[]:Categorical axis
+		Concept:{0..1} Include
+			var Axis[]:Categorical axes
 	Aspect Dynamic with Categorical
 
 Concept:CheckVirtual Cube

@@ -5,6 +5,7 @@ import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.accessor.analytic.AxisTemplate;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.Cube.Fact.Column;
@@ -37,11 +38,11 @@ public class AnalyticRenderer extends Renderer {
 	}
 
 	private void renderAxes(List<Axis> axes) {
-		writeFrame(gen, "Axis", customize(new AxisTemplate()).render(new FrameBuilder("interface").add("package", context.packageName()).toFrame()));
+		writeFrame(gen, "Axis", customize(new CategoricalAxisTemplate()).render(new FrameBuilder("interface").add("package", context.packageName()).toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axes.get(0)), javaFile(gen, "Axis").getAbsolutePath()));
-		for (Axis axis : graph.core$().find(Axis.class))
+		for (Axis axis : axes)
 			if (axis.isCategorical()) renderCategorical(axis.asCategorical());
-			else renderDistribution(axis.asContinuous());
+			else renderContinuous(axis.asContinuous());
 	}
 
 	private void renderCategorical(Axis.Categorical axis) {
@@ -49,11 +50,15 @@ public class AnalyticRenderer extends Renderer {
 				add("package", context.packageName()).add("name", axis.name$()).add("label", axis.label());
 		if (axis.asAxis().isDynamic()) fb.add("dynamic", ";");
 		if (axis.includeLabel() != null)
-			fb.add("include", new FrameBuilder("include").add("name", "label").add("index", 3));
-		for (int i = 0; i < axis.includeList().size(); i++)
-			fb.add("include", new FrameBuilder("include").add("name", axis.includeList().get(i).name$()).add("index", i + offset(axis)));
-		writeFrame(new File(gen, "axes"), firstUpperCase(axis.name$()), customize(new AxisTemplate()).render(fb.add("abstract").toFrame()));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axis), javaFile(new File(gen, "axes"), "Abstract" + firstUpperCase(axis.name$())).getAbsolutePath()));
+			fb.add("include", new FrameBuilder("include").add("name", "label").add("index", 2));
+		int offset = offset(axis);
+		if (axis.include() != null) {
+			List<Axis> includes = axis.include().axes();
+			for (int i = 0; i < includes.size(); i++)
+				fb.add("include", new FrameBuilder("include").add("name", includes.get(i).name$()).add("index", i + offset));
+		}
+		writeFrame(new File(gen, "axes"), firstUpperCase(axis.name$()), customize(new CategoricalAxisTemplate()).render(fb.toFrame()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axis), javaFile(new File(gen, "axes"), firstUpperCase(axis.name$())).getAbsolutePath()));
 	}
 
 	private void renderCubes(List<Cube> cubeList) {
@@ -80,15 +85,16 @@ public class AnalyticRenderer extends Renderer {
 		for (Cube reference : virtualCube.cubes()) {
 			addDimensionsAndIndicators(reference, virtualCube.asCube(), fb);
 			addFact(reference, fb);
-			write(virtualCube.asCube(), fb);
 		}
+		write(virtualCube.asCube(), fb);
 	}
 
 	private void write(Cube cube, FrameBuilder fb) {
-		writeFrame(new File(gen, "cubes"), "Abstract" + firstUpperCase(cube.name$()), customize(template(cube)).render(fb.toFrame()));
+		Template template = customize(template(cube));
+		writeFrame(new File(gen, "cubes"), "Abstract" + firstUpperCase(cube.name$()), template.render(fb.toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(cube), javaFile(new File(gen, "cubes"), "Abstract" + firstUpperCase(cube.name$())).getAbsolutePath()));
-//			if (!alreadyRendered(new File(src, "cubes"), cube.name$()))
-		writeFrame(new File(src, "cubes"), cube.name$(), customize(template(cube)).render(fb.add("src").toFrame()));
+//			if (alreadyRendered(new File(src, "cubes"), cube.name$())) return;
+		writeFrame(new File(src, "cubes"), cube.name$(), template.render(fb.add("src").toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(cube), javaFile(new File(src, "cubes"), firstUpperCase(cube.name$())).getAbsolutePath()));
 	}
 
@@ -119,16 +125,12 @@ public class AnalyticRenderer extends Renderer {
 	}
 
 	private FrameBuilder dimensionFrame(Cube cube, Cube sourceCube, Cube.Dimension dimension) {
-		FrameBuilder fb = new FrameBuilder("dimension", dimension.axis().core$().is(Axis.Categorical.class) ? "categorical" : "distribution").
+		FrameBuilder fb = new FrameBuilder("dimension", dimension.axis().core$().is(Axis.Categorical.class) ? "categorical" : "continuous").
 				add("cube", sourceCube != null ? sourceCube.name$() : cube.name$()).
 				add("name", dimension.name$()).
 				add("source", dimension.attribute().name$()).
 				add("axis", dimension.axis().name$());
-		if (dimension.axis().i$(Axis.Categorical.class)) {
-			fb.add("type", dimension.axis().name$());
-			if (!dimension.attribute().asCategory().axis().equals(dimension.axis()))
-				fb.add("child", dimension.axis().name$());
-		}
+		if (dimension.axis().i$(Axis.Categorical.class)) fb.add("type", dimension.axis().name$());
 		return fb;
 	}
 
@@ -186,8 +188,8 @@ public class AnalyticRenderer extends Renderer {
 		return (Math.log(N) / Math.log(2));
 	}
 
-	private void renderDistribution(Axis.Continuous axis) {
-		FrameBuilder fb = new FrameBuilder("distribution").add("package", context.packageName()).add("name", axis.name$()).add("label", axis.label());
+	private void renderContinuous(Axis.Continuous axis) {
+		FrameBuilder fb = new FrameBuilder("continuous").add("package", context.packageName()).add("name", axis.name$()).add("label", axis.label());
 		fb.add("rangeSize", axis.rangeList().size());
 		int index = 0;
 		for (Axis.Continuous.Range range : axis.rangeList()) {
@@ -199,8 +201,8 @@ public class AnalyticRenderer extends Renderer {
 			fb.add("range", rangeFb);
 			index++;
 		}
-		writeFrame(new File(gen, "distributions"), firstUpperCase(axis.name$()), customize(new DistributionTemplate()).render(fb.toFrame()));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axis), javaFile(new File(gen, "distributions"), firstUpperCase(axis.name$())).getAbsolutePath()));
+		writeFrame(new File(gen, "axes"), firstUpperCase(axis.name$()), customize(new ContinuousAxisTemplate()).render(fb.toFrame()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axis), javaFile(new File(gen, "axes"), firstUpperCase(axis.name$())).getAbsolutePath()));
 	}
 
 }

@@ -12,6 +12,15 @@ def type(cube & src)
 		[$customFilter+staticMethod...[$NL$NL]]
 
 		[$customIndicator+staticMethod...[$NL$NL]]
+
+		public static class Loader extends Abstract$name+FirstUpperCase.Loader {
+
+			public Loader(Datasource datasource[, $split+parameter]) {
+				super(datasource[, $split+name]);
+			}
+
+			// TODO write here a cache if necessary
+		}
 	}
 end
 
@@ -25,8 +34,7 @@ def type(cube)
     import io.intino.alexandria.led.buffers.store.ByteStore;
     import io.intino.alexandria.led.util.iterators.MergedIterator;
 
-    import $package.analytic.factors.*;
-	import $package.analytic.distributions.*;
+	import $package.analytic.axes.*;
     import $package.analytic.Axis;
 
 	import java.io.File;
@@ -42,14 +50,14 @@ def type(cube)
     public abstract class Abstract$name+FirstUpperCase {
 		private static final String ID_SEP = " - ";
 		private static Fact nullFact = new NullFact();
-		private final List<Loader> loaders;
+		private final List<? extends Loader> loaders;
 		private final List<Predicate<View>> filterList = new ArrayList<>();
 		private final List<Axis> axes = new ArrayList<>();
 		private final Map<Axis, Set<Axis.Component>> components = new HashMap<>();
 		private final List<Function<View, Axis.Component>> groupByList = new ArrayList<>();
 		private Aggregation$[] result;
 
-    	public Abstract$name+FirstUpperCase(List<Loader> loaders) {
+    	public Abstract$name+FirstUpperCase(List<? extends Loader> loaders) {
     		this.loaders = loaders;
     	}
 
@@ -238,7 +246,7 @@ def type(cube)
 				return $split+name.stream().map(d -> new Loader(datasource, d)).collect(java.util.stream.Collectors.toList());
 			}
 
-			$split+method
+			[$split+method]
 
 			public static class Datasource {
 				// TODO cache
@@ -289,7 +297,7 @@ def type(customDimension) trigger(staticMethod)
 	}
 end
 
-def type(dimension & factor) trigger(method)
+def type(dimension & categorical) trigger(method)
 	public Abstract$cube+firstUpperCase filter$name+firstUpperCase(Set<$axis+firstUpperCase.Component> $axis+firstLowerCase) {
 		filterList.add(v -> $name+firstLowerCase~Filter(v, $axis+firstLowerCase));
 		return this;
@@ -302,7 +310,7 @@ def type(dimension & factor) trigger(method)
 		return this;
 	}
 
-	public static boolean $name+firstLowerCase~Filter(View view, Set<Abstract$axis+firstUpperCase.Component> $axis+firstLowerCase) {
+	public static boolean $name+firstLowerCase~Filter(View view, Set<$axis+firstUpperCase.Component> $axis+firstLowerCase) {
 		return $axis+firstLowerCase.contains($name+firstLowerCase~Function(view));
 	}
 
@@ -334,7 +342,7 @@ def type(dimension & distribution) trigger(method)
 end
 
 
-def type(customDimension & distribution) trigger(method)
+def type(customDimension & continuous) trigger(method)
 	public Abstract$cube+firstUpperCase filter$name+firstUpperCase(Set<$axis.Range> ranges) {//TODO
 		filterList.add(v -> $name+firstLowerCase~Filter(v, ranges));
 		return this;
@@ -451,9 +459,9 @@ def type(column & date) trigger(getter)
 	}
 end
 
-def type(column & factor) trigger(getter)
+def type(column & categorical) trigger(getter)
 	public $type+firstUpperCase.Component $name+firstLowerCase() {
-		return $type+firstUpperCase.instance().byIndex(bitBuffer.getIntegerNBits($offset, $bits));
+		return $type+firstUpperCase.instance().component(bitBuffer.getIntegerNBits($offset, $bits));
 	}
 end
 
@@ -482,19 +490,19 @@ def type(column & real) trigger(getter)
 	}
 end
 
-def type(dimension & factor) trigger(viewGetter)
+def type(dimension & categorical) trigger(viewGetter)
 	public $type+firstUpperCase.Component $name+firstLowerCase() {
 		return fact.$name+firstLowerCase();
 	}
 end
 
-def type(dimension & distribution) trigger(viewGetter)
-	public $distribution.Range $name+firstLowerCase() {
+def type(dimension & continuous) trigger(viewGetter)
+	public $continuous.Range $name+firstLowerCase() {
 		return fact.$name+firstLowerCase();
 	}
 end
 
-def type(factor) trigger(viewGetter)
+def type(categorical) trigger(viewGetter)
 	public $type+firstUpperCase.Component $name+firstLowerCase() {
 		return fact.$name+firstLowerCase();
 	}

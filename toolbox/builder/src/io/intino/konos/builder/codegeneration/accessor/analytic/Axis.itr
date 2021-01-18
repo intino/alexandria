@@ -6,15 +6,18 @@ def type(interface)
     public interface Axis {
     	String label();
 
+		int size();
+
+		Collection<? extends Component> components();
+
+		Component component(int index);
+
+		Component component(String id);
+
     	default boolean isDynamic() {
 			return false;
 		};
 
-		Component byIndex(int index);
-
-		int size();
-
-		Collection<? extends Component> components();
 
 		interface Component {
 			int index();
