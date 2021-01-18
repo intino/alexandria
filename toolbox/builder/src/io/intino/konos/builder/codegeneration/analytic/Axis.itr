@@ -1,0 +1,163 @@
+def type(interface)
+	package $package.analytic;
+
+    import java.util.Collection;
+
+    public interface Axis {
+    	String label();
+
+    	default boolean isDynamic() {
+			return false;
+		};
+
+		Component component(int index);
+
+		Component component(String id);
+
+		int size();
+
+		Collection<? extends Component> components();
+
+		interface Component {
+			int index();
+
+			String id();
+
+			default String label() {
+				return "";
+			}
+
+			Axis axis();
+		}
+    }
+end
+
+def type(root)
+	package $package+ValidPackage;
+
+	$axis
+end
+
+def type(axis & resource)
+	import java.util.ArrayList;
+    import java.util.List;
+    import java.util.function.Predicate;
+    import java.util.stream.Collectors;
+
+	public class $name+FirstUpperCase {
+		public static final Component NA = new Component($include+defaultValue...[, ]);
+		private static final java.util.Map<Short, Component> components;
+		private static final java.util.Map<String, Component> componentsByName;
+
+		static {
+			components = new java.util.HashMap<>();
+			componentsByName = new java.util.HashMap<>();
+			try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader($name+FirstUpperCase.class.getResourceAsStream("/analytics/axes/$name+FirstUpperCase.tsv")))) {
+				reader.lines().map(l -> l.split("\\t", -1)).
+				map(l -> new Component($include+constructor...[, ])).
+				forEach(e -> {components.put((short) e.index, e); componentsByName.put(e.name, e);});
+			} catch (java.io.IOException e) {
+				io.intino.alexandria.logger.Logger.error(e);
+			}
+		}
+
+		public List<Component> components() {
+			return new ArrayList<>(components.values());
+		}
+
+		public List<Component> components(Predicate<Component> filter) {
+			return components.values().stream().filter(filter).collect(Collectors.toList());
+		}
+
+		public Component component(int index) {
+			return components.getOrDefault((short)index, NA);
+		}
+
+		public Component component(String name) {
+			return componentsByName.getOrDefault(name, NA);
+		}
+
+		public Component component(Predicate<Component> filter) {
+			return components.values().stream().filter(filter).findFirst().orElse(NA);
+		}
+
+		public class Component {
+			$include+declaration...[$NL]
+
+			Component($include+parameter...[, ]) {
+				$include+assign...[$NL]
+			}
+
+			public Axis axis() {
+				$name+FirstUpperCase.this;
+			}
+
+			public boolean equals(Component component) {
+				return this.index == component.index;
+			}
+		}
+	}
+end
+
+def trigger(declaration)
+	public final $type $name+firstLowerCase;
+end
+
+def trigger(parameter)
+	$type $name+firstLowerCase
+end
+
+def type(string | text) trigger(constructor)
+	l.length > $index ? l$[$index] : "NA"
+end
+
+def type(integer) trigger(constructor)
+	l.length > $index ? Integer.parseInt(l$[$index]) : -1
+end
+
+def type(real) trigger(constructor)
+	l.length > $index ? Double.parseDouble(l$[$index]) : Double.NaN
+end
+
+def type(longInteger | long) trigger(constructor)
+	l.length > $index ? Long.parseLong(l$[$index]) : -1L
+end
+
+def type(boolean | bool) trigger(constructor)
+	l.length > $index ? Boolean.parseBoolean(l$[$index]) : false
+end
+
+
+def type(string | text) trigger(defaultValue)
+	"NA"
+end
+
+def type(integer) trigger(defaultValue)
+	0
+end
+
+def type(real) trigger(defaultValue)
+	0.
+end
+
+def type(longInteger | long) trigger(defaultValue)
+	0L
+end
+
+def type(boolean | bool) trigger(defaultValue)
+	false
+end
+
+def trigger(assign)
+	this.$name+firstLowerCase = $name+firstLowerCase;
+end
+
+def trigger(put)
+	components.put((short) $index, $name+FirstUpperCase);
+	componentsByName.put("$name", $name+FirstUpperCase);
+end
+
+
+def trigger(field)
+	public static final Component $name+FirstUpperCase = new Component((short) $index, "$name"[, "$label"]);
+end

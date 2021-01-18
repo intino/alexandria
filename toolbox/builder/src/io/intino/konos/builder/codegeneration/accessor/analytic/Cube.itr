@@ -1,16 +1,6 @@
 def type(root)
 	package $package+ValidPackage;
 
-	[$factorImport]
-
-	$cube
-end
-
-def trigger(factorImport)
-	import $this.factors.*;
-end
-
-def trigger(cube)
 	public class $name+firstUpperCase extends io.intino.alexandria.led.Schema {
 		[$split]
 		public static final int SIZE = $size;
@@ -47,6 +37,9 @@ def trigger(cube)
 	}
 end
 
+def trigger(axisImport)
+	import $this.axis.*;
+end
 
 def trigger(split)
 	public enum Split {
@@ -126,14 +119,14 @@ def type(column & date) trigger(setter)
 	}
 end
 
-def type(column & factor & resource) trigger(getter)
+def type(column & categorical & resource) trigger(getter)
 	public $type+firstUpperCase.Entry $name+firstLowerCase() {
 		final int value = bitBuffer.getIntegerNBits($offset, $bits);
 		return $type+firstUpperCase.entry(value);
 	}
 end
 
-def type(column & factor & resource) trigger(setter)
+def type(column & categorical & resource) trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(String $name+firstLowerCase) {
 		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $type+firstUpperCase.entry($name+firstLowerCase).index);
 		return this;

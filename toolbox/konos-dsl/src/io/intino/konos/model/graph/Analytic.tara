@@ -2,27 +2,34 @@ dsl Proteo
 
 use DataTypes
 
+Concept:{0..1} Split > var string[] splits
+
 Concept Axis
 	var string label
-	sub:RootRequiresDatasource Factor
-		Concept:{0..1} Datasource > var string resourceId
-		has Factor
-		Aspect Dynamic
-	sub Distribution
+	Aspect Continuous
 		var string unit
-		Concept Range
-			Aspect LowerBound
-				var integer lowerBound
-			Aspect Bound
-				var integer lowerBound
-				var integer upperBound
-			Aspect UpperBound
-				var integer upperBound
+    	Concept Range
+    		Aspect LowerBound
+    			var integer lowerBound
+    		Aspect Bound
+    			var integer lowerBound
+    			var integer upperBound
+    		Aspect UpperBound
+    			var integer upperBound
+	Aspect Categorical
+		Concept:{0..1} IncludeLabel
+		Concept Include
+			var Axis[]:Categorical axis
+	Aspect Dynamic with Categorical
 
-Concept Cube
-	Aspect Join > var Cube cube
-	Concept:{0..1} Split > var string[] splits
-	Concept:{1..1} Fact
+Concept:CheckVirtual Cube
+	var word:{Yearly Monthly Daily Hourly} scale
+	var Split splitted = empty
+	Concept Index
+		var Fact.Column column
+		var boolean save
+	Aspect Virtual > var Cube[] cubes
+	Concept:{0..1} Fact
 		Concept:Named Column extends SizedData
 			sub Attribute
 			sub Measure
@@ -31,7 +38,7 @@ Concept Cube
 	Concept:Named:AxisAccomplishSource Dimension
 		var string label
 		var Axis axis
-		var Fact.Column source
+		var Fact.Column attribute
 	Concept:Named Indicator
 		var string label
 		var string unit
@@ -92,5 +99,5 @@ Concept SizedData
 			var word:{Millis Seconds Minutes Hours} precision = Millis
 			var integer:{bits} size = 64 bits
 		sub Category
-			var Factor factor;
-			var integer:{bits} size
+			var Axis:Categorical axis;
+			var integer:{bits} size = 0 bits

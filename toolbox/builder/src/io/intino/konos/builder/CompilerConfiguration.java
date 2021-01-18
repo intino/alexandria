@@ -67,7 +67,7 @@ public class CompilerConfiguration implements Cloneable {
 		sourceEncoding(encoding);
 		this.model = new ModelConfiguration();
 		try {
-			tempDirectory = Files.createTempDirectory("_tara_").toFile();
+			tempDirectory = Files.createTempDirectory("_konos_").toFile();
 		} catch (IOException e) {
 			LOG.log(java.util.logging.Level.SEVERE, e.getMessage(), e);
 		}

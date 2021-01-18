@@ -1,0 +1,30 @@
+package io.intino.konos.builder.codegeneration.analytic;
+
+import io.intino.itrules.RuleSet;
+import io.intino.itrules.Template;
+
+public class AxisTemplate extends Template {
+
+	public RuleSet ruleSet() {
+		return new RuleSet().add(
+			rule().condition((type("interface"))).output(literal("package ")).output(mark("package")).output(literal(".analytic;\n\nimport java.util.Collection;\n\npublic interface Axis {\n\tString label();\n\n\tdefault boolean isDynamic() {\n\t\treturn false;\n\t};\n\n\tComponent component(int index);\n\n\tComponent component(String id);\n\n\tint size();\n\n\tCollection<? extends Component> components();\n\n\tinterface Component {\n\t\tint index();\n\n\t\tString id();\n\n\t\tdefault String label() {\n\t\t\treturn \"\";\n\t\t}\n\n\t\tAxis axis();\n\t}\n}")),
+			rule().condition((type("root"))).output(literal("package ")).output(mark("package", "ValidPackage")).output(literal(";\n\n")).output(mark("axis")),
+			rule().condition((allTypes("axis","resource"))).output(literal("import java.util.ArrayList;\nimport java.util.List;\nimport java.util.function.Predicate;\nimport java.util.stream.Collectors;\n\npublic class ")).output(mark("name", "FirstUpperCase")).output(literal(" {\n\tpublic static final Component NA = new Component(")).output(mark("include", "defaultValue").multiple(", ")).output(literal(");\n\tprivate static final java.util.Map<Short, Component> components;\n\tprivate static final java.util.Map<String, Component> componentsByName;\n\n\tstatic {\n\t\tcomponents = new java.util.HashMap<>();\n\t\tcomponentsByName = new java.util.HashMap<>();\n\t\ttry (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(")).output(mark("name", "FirstUpperCase")).output(literal(".class.getResourceAsStream(\"/analytics/axes/")).output(mark("name", "FirstUpperCase")).output(literal(".tsv\")))) {\n\t\t\treader.lines().map(l -> l.split(\"\\t\", -1)).\n\t\t\tmap(l -> new Component(")).output(mark("include", "constructor").multiple(", ")).output(literal(")).\n\t\t\tforEach(e -> {components.put((short) e.index, e); componentsByName.put(e.name, e);});\n\t\t} catch (java.io.IOException e) {\n\t\t\tio.intino.alexandria.logger.Logger.error(e);\n\t\t}\n\t}\n\n\tpublic List<Component> components() {\n\t\treturn new ArrayList<>(components.values());\n\t}\n\n\tpublic List<Component> components(Predicate<Component> filter) {\n\t\treturn components.values().stream().filter(filter).collect(Collectors.toList());\n\t}\n\n\tpublic Component component(int index) {\n\t\treturn components.getOrDefault((short)index, NA);\n\t}\n\n\tpublic Component component(String name) {\n\t\treturn componentsByName.getOrDefault(name, NA);\n\t}\n\n\tpublic Component component(Predicate<Component> filter) {\n\t\treturn components.values().stream().filter(filter).findFirst().orElse(NA);\n\t}\n\n\tpublic class Component {\n\t\t")).output(mark("include", "declaration").multiple("\n")).output(literal("\n\n\t\tComponent(")).output(mark("include", "parameter").multiple(", ")).output(literal(") {\n\t\t\t")).output(mark("include", "assign").multiple("\n")).output(literal("\n\t\t}\n\n\t\tpublic Axis axis() {\n\t\t\t")).output(mark("name", "FirstUpperCase")).output(literal(".this;\n\t\t}\n\n\t\tpublic boolean equals(Component component) {\n\t\t\treturn this.index == component.index;\n\t\t}\n\t}\n}")),
+			rule().condition((trigger("declaration"))).output(literal("public final ")).output(mark("type")).output(literal(" ")).output(mark("name", "firstLowerCase")).output(literal(";")),
+			rule().condition((trigger("parameter"))).output(mark("type")).output(literal(" ")).output(mark("name", "firstLowerCase")),
+			rule().condition((anyTypes("string","text")), (trigger("constructor"))).output(literal("l.length > ")).output(mark("index")).output(literal(" ? l[")).output(mark("index")).output(literal("] : \"NA\"")),
+			rule().condition((type("integer")), (trigger("constructor"))).output(literal("l.length > ")).output(mark("index")).output(literal(" ? Integer.parseInt(l[")).output(mark("index")).output(literal("]) : -1")),
+			rule().condition((type("real")), (trigger("constructor"))).output(literal("l.length > ")).output(mark("index")).output(literal(" ? Double.parseDouble(l[")).output(mark("index")).output(literal("]) : Double.NaN")),
+			rule().condition((anyTypes("longInteger","long")), (trigger("constructor"))).output(literal("l.length > ")).output(mark("index")).output(literal(" ? Long.parseLong(l[")).output(mark("index")).output(literal("]) : -1L")),
+			rule().condition((anyTypes("boolean","bool")), (trigger("constructor"))).output(literal("l.length > ")).output(mark("index")).output(literal(" ? Boolean.parseBoolean(l[")).output(mark("index")).output(literal("]) : false")),
+			rule().condition((anyTypes("string","text")), (trigger("defaultvalue"))).output(literal("\"NA\"")),
+			rule().condition((type("integer")), (trigger("defaultvalue"))).output(literal("0")),
+			rule().condition((type("real")), (trigger("defaultvalue"))).output(literal("0.")),
+			rule().condition((anyTypes("longInteger","long")), (trigger("defaultvalue"))).output(literal("0L")),
+			rule().condition((anyTypes("boolean","bool")), (trigger("defaultvalue"))).output(literal("false")),
+			rule().condition((trigger("assign"))).output(literal("this.")).output(mark("name", "firstLowerCase")).output(literal(" = ")).output(mark("name", "firstLowerCase")).output(literal(";")),
+			rule().condition((trigger("put"))).output(literal("components.put((short) ")).output(mark("index")).output(literal(", ")).output(mark("name", "FirstUpperCase")).output(literal(");\ncomponentsByName.put(\"")).output(mark("name")).output(literal("\", ")).output(mark("name", "FirstUpperCase")).output(literal(");")),
+			rule().condition((trigger("field"))).output(literal("public static final Component ")).output(mark("name", "FirstUpperCase")).output(literal(" = new Component((short) ")).output(mark("index")).output(literal(", \"")).output(mark("name")).output(literal("\"")).output(expression().output(literal(", \"")).output(mark("label")).output(literal("\""))).output(literal(");"))
+		);
+	}
+}

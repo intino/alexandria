@@ -80,12 +80,17 @@ public class FullRenderer {
 		new AnalyticRenderer(context, graph).execute();
 	}
 
+
 	private void accessors() {
-		graph.restServiceList().forEach(service -> new RESTAccessorRenderer(context, service, new File(context.configuration().genDirectory(), "rest#" + service.name$() + File.separator + "src")).render());
-		graph.jmxServiceList().forEach(service -> new JMXAccessorRenderer(context, service, new File(context.configuration().genDirectory(), "jmx#" + service.name$() + File.separator + "src")).render());
+		graph.restServiceList().forEach(service -> new RESTAccessorRenderer(context, service, genDirectory(context.configuration().genDirectory(), "rest#", service.name$())).render());
+		graph.jmxServiceList().forEach(service -> new JMXAccessorRenderer(context, service, genDirectory(context.configuration().genDirectory(), "jmx#", service.name$())).render());
 		if (!graph.cubeList().isEmpty())
 			new AnalyticBuilderRenderer(context, graph, new File(context.configuration().genDirectory(), "analytic" + File.separator + "src")).render();
-		graph.messagingServiceList().forEach(service -> new MessagingAccessorRenderer(context, service, new File(context.configuration().genDirectory(), "messaging#" + service.name$() + File.separator + "src")).render());
+		graph.messagingServiceList().forEach(service -> new MessagingAccessorRenderer(context, service, genDirectory(context.configuration().genDirectory(), "messaging#", service.name$())).render());
+	}
+
+	private File genDirectory(File tempDirectory, String serviceType, String serviceName) {
+		return new File(tempDirectory, serviceType + "_" + serviceName + File.separator + "src");
 	}
 
 	private void schemas() {
