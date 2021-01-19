@@ -4,7 +4,7 @@ package io.intino.alexandria;
 public class Fingerprint {
 
 	private static final String SEPARATOR = "/";
-	private String fingerprint;
+	private final String fingerprint;
 
 	public Fingerprint(String fingerprint) {
 		this.fingerprint = fingerprint;
