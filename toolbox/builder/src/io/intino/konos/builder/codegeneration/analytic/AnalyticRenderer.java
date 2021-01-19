@@ -5,7 +5,6 @@ import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.accessor.analytic.AxisTemplate;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.Cube.Fact.Column;
@@ -13,7 +12,10 @@ import io.intino.magritte.framework.Concept;
 import io.intino.magritte.framework.Layer;
 import io.intino.magritte.framework.Predicate;
 
-import java.io.File;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
@@ -41,24 +43,8 @@ public class AnalyticRenderer extends Renderer {
 		writeFrame(gen, "Axis", customize(new CategoricalAxisTemplate()).render(new FrameBuilder("interface").add("package", context.packageName()).toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axes.get(0)), javaFile(gen, "Axis").getAbsolutePath()));
 		for (Axis axis : axes)
-			if (axis.isCategorical()) renderCategorical(axis.asCategorical());
-			else renderContinuous(axis.asContinuous());
-	}
-
-	private void renderCategorical(Axis.Categorical axis) {
-		FrameBuilder fb = new FrameBuilder("axis").
-				add("package", context.packageName()).add("name", axis.name$()).add("label", axis.label());
-		if (axis.asAxis().isDynamic()) fb.add("dynamic", ";");
-		if (axis.includeLabel() != null)
-			fb.add("include", new FrameBuilder("include").add("name", "label").add("index", 2));
-		int offset = offset(axis);
-		if (axis.include() != null) {
-			List<Axis> includes = axis.include().axes();
-			for (int i = 0; i < includes.size(); i++)
-				fb.add("include", new FrameBuilder("include").add("name", includes.get(i).name$()).add("index", i + offset));
-		}
-		writeFrame(new File(gen, "axes"), firstUpperCase(axis.name$()), customize(new CategoricalAxisTemplate()).render(fb.toFrame()));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axis), javaFile(new File(gen, "axes"), firstUpperCase(axis.name$())).getAbsolutePath()));
+			if (axis.isCategorical()) renderAxis(axis.asCategorical());
+			else renderAxis(axis.asContinuous());
 	}
 
 	private void renderCubes(List<Cube> cubeList) {
@@ -69,23 +55,25 @@ public class AnalyticRenderer extends Renderer {
 		}
 	}
 
-	private int offset(Axis.Categorical axis) {
-		return axis.includeLabel() != null ? 3 : 2;
-	}
-
 	private void renderCube(Cube cube, FrameBuilder fb) {
 		addDimensionsAndIndicators(cube, null, fb);
 		fb.add("id", cube.fact().columnList().stream().filter(SizedData::isId).map(Layer::name$).findFirst().orElse(null));
 		if (cube.splitted() != null) addSplit(cube, fb);
+		fb.add("index", new FrameBuilder("index", cube.index() != null ? "normal" : "total").add("value", ""));
 		addFact(cube, fb);
 		write(cube, fb);
 	}
 
 	private void renderVirtualCube(Cube.Virtual virtualCube, FrameBuilder fb) {
-		for (Cube reference : virtualCube.cubes()) {
+		for (Cube reference : new Cube[]{virtualCube.main(), virtualCube.join()}) {
 			addDimensionsAndIndicators(reference, virtualCube.asCube(), fb);
 			addFact(reference, fb);
 		}
+		fb.add("index", new FrameBuilder("index", virtualCube.index() != null ? "index" : "total").add("value", ""));
+		fb.add("mainCube", virtualCube.main().name$());
+		fb.add("joinCube", virtualCube.join().name$());
+		fb.add("cube", new String[]{virtualCube.main().name$(), virtualCube.join().name$()});
+		if (virtualCube.main().splitted() != null) addSplit(virtualCube.main(), fb);
 		write(virtualCube.asCube(), fb);
 	}
 
@@ -100,9 +88,12 @@ public class AnalyticRenderer extends Renderer {
 
 	private void addFact(Cube cube, FrameBuilder fb) {
 		int offset = 0;
-		for (Column column : cube.fact().columnList()) {
-			fb.add("column", columnFrame(column, offset));
-			offset += column.asType().size();
+		List<Column> columns = new ArrayList<>(cube.fact().columnList());
+		columns.sort(Comparator.comparingInt(a -> a.asType().size()));
+		Collections.reverse(columns);
+		for (Column column : columns) {
+			fb.add("column", columnFrame(column, offset, cube.name$()));
+			offset += sizeOf(column);
 		}
 		fb.add("size", offset);
 	}
@@ -139,20 +130,22 @@ public class AnalyticRenderer extends Renderer {
 				add("cube", sourceCube != null ? sourceCube.name$() : cube.name$()).
 				add("name", indicator.name$()).
 				add("label", indicator.label()).
+				add("index", new FrameBuilder((sourceCube == null && cube.index() != null) || (sourceCube != null && sourceCube.index() != null) ? "index" : "total")).
 				add("source", indicator.source().name$()).
 				add("unit", indicator.unit());
 	}
 
-	private FrameBuilder columnFrame(Column column, int offset) {
-		if (column.isCategory()) return processCategoryColumn(column.asCategory(), column.name$(), offset);
-		else return processColumn(column, offset);
+	private FrameBuilder columnFrame(Column column, int offset, String cube) {
+		if (column.isCategory()) return processCategoryColumn(column.asCategory(), column.name$(), offset, cube);
+		else return processColumn(column, offset, cube);
 	}
 
-	private FrameBuilder processColumn(Column column, int offset) {
+	private FrameBuilder processColumn(Column column, int offset, String cube) {
 		SizedData.Type asType = column.asType();
 		FrameBuilder builder = new FrameBuilder("column", column.core$().is(Cube.Fact.Attribute.class) ? "attribute" : "measure")
 				.add("name", column.a$(Column.class).name$())
 				.add("offset", offset)
+				.add("cube", cube)
 				.add("type", type(asType));
 		column.core$().conceptList().stream().filter(Concept::isAspect).map(Predicate::name).forEach(builder::add);
 		if (isAligned(asType, offset)) builder.add("aligned", "Aligned");
@@ -161,18 +154,40 @@ public class AnalyticRenderer extends Renderer {
 		return builder;
 	}
 
-	private FrameBuilder processCategoryColumn(SizedData.Category category, String name, int offset) {
-		Axis.Categorical factor = category.axis().asCategorical();
-		return new FrameBuilder("column", "categorical").
-				add("name", name).
-				add("type", factor.name$()).
-				add("offset", offset).
-				add("bits", category.size());
+	private FrameBuilder processCategoryColumn(SizedData.Category column, String name, int offset, String cube) {
+		Axis.Categorical axis = column.axis().asCategorical();
+		return new FrameBuilder("column", "categorical")
+				.add("name", name)
+				.add("type", axis.name$())
+				.add("offset", offset)
+				.add("cube", cube)
+				.add("bits", sizeOf(axis));
+
 	}
 
 	private String type(SizedData.Type type) {
 		if (type.i$(SizedData.Category.class)) return type.name$();
 		return isPrimitive(type) ? type.primitive() : type.type();
+	}
+
+	private Integer sizeOf(Column column) {
+		return column.isCategory() ? sizeOf(column.asCategory().axis().asCategorical()) : column.asType().size();
+	}
+
+	private Integer sizeOf(Axis.Categorical axis) {
+		try {
+			return (int) Math.ceil(log2(countLines(axis) + 1));
+		} catch (IOException e) {
+			return 0;
+		}
+	}
+
+	private int countLines(Axis.Categorical axis) throws IOException {
+		return (int) new BufferedReader(new InputStreamReader(resource(axis))).lines().count();
+	}
+
+	private FileInputStream resource(Axis.Categorical axis) throws FileNotFoundException {
+		return new FileInputStream(this.context.res(Target.Owner).getAbsolutePath() + "/analytic/axes/" + axis.name$() + ".tsv");
 	}
 
 	private boolean isAligned(SizedData.Type attribute, int offset) {
@@ -188,7 +203,28 @@ public class AnalyticRenderer extends Renderer {
 		return (Math.log(N) / Math.log(2));
 	}
 
-	private void renderContinuous(Axis.Continuous axis) {
+	private void renderAxis(Axis.Categorical axis) {
+		FrameBuilder fb = new FrameBuilder("axis").
+				add("package", context.packageName()).add("name", axis.name$()).add("label", axis.label());
+		if (axis.asAxis().isDynamic()) fb.add("dynamic", ";");
+		if (axis.includeLabel() != null)
+			fb.add("include", new FrameBuilder("include").add("name", "label").add("index", 2));
+		int offset = offset(axis);
+		if (axis.include() != null) {
+			List<Axis> includes = axis.include().axes();
+			for (int i = 0; i < includes.size(); i++)
+				fb.add("include", new FrameBuilder("include").add("name", includes.get(i).name$()).add("index", i + offset));
+		}
+		writeFrame(new File(gen, "axes"), firstUpperCase(axis.name$()), customize(new CategoricalAxisTemplate()).render(fb.toFrame()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axis), javaFile(new File(gen, "axes"), firstUpperCase(axis.name$())).getAbsolutePath()));
+	}
+
+	private int offset(Axis.Categorical axis) {
+		return axis.includeLabel() != null ? 3 : 2;
+	}
+
+
+	private void renderAxis(Axis.Continuous axis) {
 		FrameBuilder fb = new FrameBuilder("continuous").add("package", context.packageName()).add("name", axis.name$()).add("label", axis.label());
 		fb.add("rangeSize", axis.rangeList().size());
 		int index = 0;

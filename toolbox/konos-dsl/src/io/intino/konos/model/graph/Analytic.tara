@@ -25,10 +25,10 @@ Concept:RequiresAspect Axis
 Concept:CheckVirtual Cube
 	var word:{Yearly Monthly Daily Hourly} scale
 	var Split splitted = empty
-	Concept Index
-		var Fact.Column column
-		var boolean save
-	Aspect Virtual > var Cube[] cubes
+	Concept:{0..1} Index
+	Aspect Virtual
+		var Cube main
+		var Cube join
 	Concept:{0..1} Fact
 		Concept:Named Column extends SizedData
 			sub Attribute

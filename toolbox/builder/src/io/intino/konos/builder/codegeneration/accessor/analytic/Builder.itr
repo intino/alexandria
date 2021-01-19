@@ -1,31 +1,26 @@
-def type(terminal)
-	package $package+validPackage;
+def type(builder)
+	package $package+validPackage.analytic;
 
-	import io.intino.alexandria.Timetag;
-	import io.intino.alexandria.Scale;
-	import io.intino.alexandria.event.Event;
 	import io.intino.alexandria.logger.Logger;
-	import $package+validPackage.events.*;
+	import $package+validPackage.cubes.*;
 
 	import java.util.function.Consumer;
+	import org.apache.commons.io.FileUtils;
 	import java.util.List;
 
 	public class $name+snakeCaseToCamelCase+firstUpperCase {
-		private final java.io.File dataHubStage;
+		private final java.io.File destination;
 		private final java.io.File temporalStage;
 		private final io.intino.alexandria.ingestion.TransactionSession session;
 
-		public $name+snakeCaseToCamelCase+firstUpperCase(java.io.File destination, java.io.File temporalStage) {
+		public $name+snakeCaseToCamelCase+firstUpperCase(java.io.File destination) {
 			this(destination, temporalStage, new Config());
 		}
 
-		public $name+snakeCaseToCamelCase+firstUpperCase(java.io.File destination, java.io.File temporalStage, Config config) {
+		public $name+snakeCaseToCamelCase+firstUpperCase(java.io.File destination, int factBufferSise) {
 			this.destination = destination;
-			this.temporalStage = temporalStage;
-			this.sessionHandler = new io.intino.alexandria.ingestion.SessionHandler(temporalStage);
-			this.eventSession = sessionHandler.createEventSession();
-			this.setSession = sessionHandler.createSetSession(config.setsBufferSise);
-			this.transactionSession = sessionHandler.createTransactionSession(config.transactionsBufferSise);
+			this.temporalStage = new File(destination, "session" + java.util.UUID.randomUUID().toString());
+			this.session = new io.intino.alexandria.ingestion.SessionHandler(temporalStage).createTransactionSession(factBufferSise);
 		}
 
 		$cube+put...[$NL$NL]
@@ -37,38 +32,23 @@ def type(terminal)
 		public void finish() {
 			session.close();
 			seal();
+			FileUtils.deleteDirectory(temporalStage);
 		}
 
 		private void seal() {
-
+			io.intino.alexandria.sealing.TransactionSessionManager.seal(temporalStage, destination, tempFolder());
 		}
 
-		public static class Config {
-			private int transactionsBufferSise = 1_000_000;
-			private int setsBufferSise = 1_000_000;
-
-			public Config transactionsBufferSise(int transactionsBufferSise) {
-				this.transactionsBufferSise = transactionsBufferSise;
-				return this;
-			}
-
-			public Config setsBufferSise(int setsBufferSise) {
-				this.setsBufferSise = setsBufferSise;
-				return this;
-			}
+		private File tempFolder() {
+			File temp = new File(this.stageFolder, "temp");
+			temp.mkdir();
+			return temp;
 		}
-	}
-
-
-		public interface SessionEventConsumer extends java.util.function.Consumer<io.intino.alexandria.event.SessionEvent> {
-		}
-
-		$event+interface...[$NL$NL]
 	}
 end
 
 def trigger(put)
-	public void feed$namespace+FirstUpperCase$name+FirstUpperCase(String tank, Timetag timetag, java.util.function.Consumer<$qn> fact) {
-		session.put(tank, timetag, $qn.class, fact);
+	public void put$name+FirstUpperCase(String tank, Timetag timetag, java.util.function.Consumer<$name+FirstUpperCase> fact) {
+		session.put(tank, timetag, $name+FirstUpperCase.class, fact);
 	}
 end

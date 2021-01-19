@@ -20,6 +20,10 @@ def type(cube & src)
 
 		[$customIndicator+staticMethod...[$NL$NL]]
 
+		public static boolean matches($cube+matches...[, ]) {
+			return false;
+		}
+
 		public static class Loader extends Abstract$name+FirstUpperCase.Loader {
 
 			public Loader(Datasource datasource[, $split+parameter]) {
@@ -29,6 +33,9 @@ def type(cube & src)
 			// TODO write here a cache if necessary
 		}
 	}
+end
+def trigger(matches)
+	Abstract$this+FirstUpperCase.Fact $this+firstLowerCase
 end
 
 def type(cube)
@@ -59,23 +66,23 @@ def type(cube)
 		private static final String ID_SEP = " - ";
 		private static Fact nullFact = new NullFact();
 		private final List<? extends Loader> loaders;
-		private final List<Predicate<View>> filterList = new ArrayList<>();
+		private final List<Predicate<Fact>> filterList = new ArrayList<>();
 		private final List<Axis> axes = new ArrayList<>();
 		private final Map<Axis, Set<Axis.Component>> components = new HashMap<>();
-		private final List<Function<View, Axis.Component>> groupByList = new ArrayList<>();
+		private final List<Function<Fact, Axis.Component>> groupByList = new ArrayList<>();
 		private Aggregation$[] result;
 
     	public Abstract$name+FirstUpperCase(List<? extends Loader> loaders) {
     		this.loaders = loaders;
     	}
 
-		public static Fact nullFact() {
-			return nullFact;
-		}
-
     	[$dimension+method...[$NL$NL]]
 
     	[$customFilter+method...[$NL$NL]]
+
+		public static Fact nullFact() {
+			return nullFact;
+		}
 
 		public Abstract$name+firstUpperCase execute() {
 			result = new Aggregation$[resultsSize()];
@@ -86,8 +93,8 @@ def type(cube)
 			return this;
 		}
 
-    	public Iterator<View> detail() {
-			MergedIterator<View> iterator = new MergedIterator<>(loaders.stream().map(Iterable::iterator), comparingLong(View::id));
+    	public Iterator<Fact> detail() {
+			MergedIterator<Fact> iterator = new MergedIterator<>(loaders.stream().map(Iterable::iterator), comparingLong(Fact::id));
 			return StreamSupport.stream(spliteratorUnknownSize(iterator, Spliterator.SORTED), false).filter(this::check).iterator();
 		}
 
@@ -117,14 +124,14 @@ def type(cube)
 			return loaders.parallelStream().map(this::results);
 		}
 
-		private Aggregation$[] results(Iterable<View> ledger) {
+		private Aggregation$[] results(Iterable<Fact> facts) {
 			Aggregation$[] result = new Aggregation$[resultsSize()];
-			for (View view : ledger) {
-				if (!check(view)) continue;
-				Axis.Component$[] components = componentsOf(view);
+			for (Fact fact : facts) {
+				if (!check(fact)) continue;
+				Axis.Component$[] components = componentsOf(fact);
 				int index = indexOf(components);
 				if (result$[index] == null) result$[index] = new Aggregation(components);
-				result$[index].append(view);
+				result$[index].append(fact);
 			}
 			return result;
 		}
@@ -145,87 +152,70 @@ def type(cube)
 			return index;
 		}
 
-		private boolean check(View item) {
-			for (Predicate<View> filter : filterList) if (!filter.test(item)) return false;
+		private boolean check(Fact item) {
+			for (Predicate<Fact> filter : filterList) if (!filter.test(item)) return false;
 			return true;
 		}
 
-		private Axis.Component$[] componentsOf(View item) {
+		private Axis.Component$[] componentsOf(Fact item) {
 			Axis.Component$[] components = new Axis.Component$[groupByList.size()];
 			for (int i = 0; i < components.length; i++) components$[i] = groupByList.get(i).apply(item);
 			return components;
 		}
 
-		public static class View {
-			$cube+fieldView...[$NL]
+		public static class Fact {
+			[$cube+fieldFact...[$NL]]
 
-			public View(Fact fact, Abstract$name+FirstUpperCase.Fact $name+firstLowerCase~Fact) {
-				$cube+assingView...[$NL]
+			public Fact($cube+factParameter...[, ]) {
+				$cube+assignFact...[$NL]
 			}
 
-			[$column+viewGetter...[$NL]]
-		}
-
-		public static class Fact extends Schema {
-			public static final int SIZE = $size...[+];
-
-			public Fact(ByteStore store) {
-				super(store);
+			public long id() {
+				return $mainCube+firstLowerCase.id();
 			}
 
-			[$column+getter...[$NL]]
+			[$column+factGetter...[$NL$NL]]
 
-			@Override
-			protected long id() {
-				return $id();
-			}
-
-			@Override
 			public int size() {
-				return SIZE;
+				return $cube+size...[ + ];
 			}
 		}
 
 		public static class NullFact extends Fact {
-			public static final int SIZE = $size;
-
 			private NullFact() {
-				super(null);
+				super(null, null);
 			}
 
-			[$column+nullgetter...[$NL]]
+			[$column+nullgetter...[$NL$NL]]
 
 			@Override
-			protected long id() {
+			public long id() {
 				return -1;
-			}
-
-			@Override
-			public int size() {
-				return SIZE;
 			}
 		}
 
 		private class Aggregation {
 			private final Axis.Component$[] components;
-			private final List<Long> ids = new ArrayList<>();
-			$indicator+field...[$NL]
+			private long aggregationCount = 0;
+			[$index+field]
+			[$indicator+field...[$NL]]
 			private long total$name+FirstUpperCase;
-
 
 			public Aggregation(Axis.Component$[] components) {
 				this.components = components;
 			}
 
-			public void append(View view) {
-				$indicator+sum...[$NL]
-				if (ids.isEmpty() || ids.get(ids.size() - 1) != view.id()) ids.add(view.id());
+			public void append(Fact fact) {
+				[$indicator+sum...[$NL]]
+				[$index+append]
+				aggregationCount++;
 			}
 
 			public void append(Aggregation aggregation) {
-				$indicator+sumAggregation...[$NL]
-				ids.addAll(aggregation.ids);
+				[$indicator+sumAggregation...[$NL]]
+				[$index+append2]
 			}
+
 
 			public Aggregation append(long ids) {
 				this.total$name+FirstUpperCase += ids;
@@ -236,6 +226,7 @@ def type(cube)
 				return total$name+FirstUpperCase;
 			}
 
+			$index+getter
 
 			public Axis.Component$[] components() {
 				return components;
@@ -244,34 +235,34 @@ def type(cube)
 			[$indicator+getter...[$NL$NL]]
 		}
 
-    	public static class Loader implements Iterable<View> {
-			private final StatefulIterator<Abstract$name+FirstUpperCase.View> ids;
+    	public static class Loader implements Iterable<Fact> {
+			private final StatefulIterator<Abstract$joinCube+FirstUpperCase.Fact> ids;
 			private final List<Axis> axes = new ArrayList<>();
 			private long$[] totals;
-			private final List<Predicate<Abstract$name+FirstUpperCase.View>> filters = new ArrayList<>();
-			private final List<Function<Abstract$name+FirstUpperCase.View, Axis.Component>> groupsBy = new ArrayList<>();
+			private final List<Predicate<Abstract$joinCube+FirstUpperCase.Fact>> filters = new ArrayList<>();
+			private final List<Function<Abstract$joinCube+FirstUpperCase.Fact, Axis.Component>> groupsBy = new ArrayList<>();
 			private final Datasource datasource;
 			[$split+field]
 
 			public Loader(Datasource datasource[, $split+parameter]) {
 				this.datasource = datasource;
 				[$split+assign]
-				this.ids = StatefulIterator.of(new Abstract$name+FirstUpperCase.Loader(new Abstract$name+FirstUpperCase.Loader.Datasource(this.datasource.root, this.datasource.from, this.datasource.to)[, $split+name]).iterator());
+				this.ids = StatefulIterator.of(new Abstract$joinCube+FirstUpperCase.Loader(new Abstract$joinCube+FirstUpperCase.Loader.Datasource(this.datasource.root, this.datasource.from, this.datasource.to)[, $split+name]).iterator());
 			}
 
 			@Override
-			public Iterator<View> iterator() {
-				StatefulIterator<Abstract$name+FirstUpperCase.Fact> facts = StatefulIterator.of(datasource.leds([$split+name]));
+			public Iterator<Fact> iterator() {
+				StatefulIterator<Abstract$mainCube+FirstUpperCase.Fact> facts = StatefulIterator.of(new Abstract$mainCube+FirstUpperCase.Loader(new Abstract$mainCube+FirstUpperCase.Loader.Datasource(this.datasource.root, this.datasource.from, this.datasource.to)[, $split+name]).iterator());
 				process(ids.current());
 				return StreamSupport.stream(Spliterators.spliteratorUnknownSize(facts, Spliterator.SORTED), false)
-						.map(v -> {
-							while (ids.current() != null && $name+FirstUpperCase.matches(ids.current(), ventas.current())) {
+						.map(f -> {
+							while (ids.current() != null && $name+FirstUpperCase.matches(facts.current(), ids.current())) {
 								ids.next();
 								process(ids.current());
 							}
 							if (!facts.hasNext()) end();
-							return new View(v, ids.current() != null && ids.current().id() == id ?
-									ids.current().fact() : Abstract$name+FirstUpperCase.nullFact());
+							return new Fact(f, ids.current() != null && $name+FirstUpperCase.matches(facts.current(), ids.current()) ?
+									ids.current() : Abstract$joinCube+FirstUpperCase.nullFact());
 						})
 						.iterator();
 			}
@@ -289,11 +280,11 @@ def type(cube)
 				return accumulator;
 			}
 
-			private void process(Abstract$name+FirstUpperCase.View view) {
-				if (view == null) return;
+			private void process(Abstract$joinCube+FirstUpperCase.Fact fact) {
+				if (fact == null) return;
 				if (totals == null) totals = new long$[totalsSize()];
-				for (Predicate<Abstract$name+FirstUpperCase.View> filter : filters) if (!filter.test(view)) return;
-				Axis.Component$[] components = componentsOf(view);
+				for (Predicate<Abstract$joinCube+FirstUpperCase.Fact> filter : filters) if (!filter.test(fact)) return;
+				Axis.Component$[] components = componentsOf(fact);
 				totals$[indexOf(components)] += 1;
 			}
 
@@ -306,7 +297,7 @@ def type(cube)
 				return index;
 			}
 
-			private Axis.Component$[] componentsOf(Abstract$name+FirstUpperCase.View item) {
+			private Axis.Component$[] componentsOf(Abstract$joinCube+FirstUpperCase.Fact item) {
 				Axis.Component$[] components = new Axis.Component$[axes.size()];
 				for (int i = 0; i < components.length; i++) components$[i] = groupsBy.get(i).apply(item);
 				return components;
@@ -316,12 +307,12 @@ def type(cube)
 				return totals$[indexOf(categories.toArray(new Axis.Component$[0]))];
 			}
 
-			private void filter(Predicate<Abstract$name+FirstUpperCase.View> filter) {
+			private void filter(Predicate<Abstract$joinCube+FirstUpperCase.Fact> filter) {
 				if (filter == null) return;
 				filters.add(filter);
 			}
 
-			private void by(Axis axis, Function<Abstract$name+FirstUpperCase.View, Axis.Component> dimension) {
+			private void by(Axis axis, Function<Abstract$joinCube+FirstUpperCase.Fact, Axis.Component> dimension) {
 				axes.add(axis);
 				if (dimension == null) return;
 				groupsBy.add(dimension);
@@ -336,7 +327,6 @@ def type(cube)
 			}
 
 			public static class Datasource {
-				// TODO cache
 				private final File root;
 				private final Timetag from;
 				private final Timetag to;
@@ -346,18 +336,66 @@ def type(cube)
 					this.from = from;
 					this.to = to;
 				}
-
-				private LedStream<Fact> leds($split+parameter) {
-					return LedStream.merged(StreamSupport.stream(from.iterateTo(to).spliterator(), false).map(t -> on(t[, $split+name])));
-				}
-
-				private LedStream<Fact> on(Timetag timetag[, $split+parameter]) {
-					File file = new File(root + "/" [+ $split+name + "."] + "$name+FirstUpperCase/", timetag.value() + ".led");
-					return file.exists() ? new LedReader(file).read(Fact::new) : LedStream.empty();
-				}
 			}
 		}
     }
+end
+
+
+def type(index & total) trigger(field)
+	private long aggregationTotal = 0;
+	private long last = 0;
+end
+
+def type(index & total) trigger(append)
+	if (last != fact.id()) {
+		aggregationTotal++;
+		last = fact.id();
+	}
+end
+
+def type(index & total) trigger(append2)
+	aggregationTotal += aggregation.aggregationTotal;
+end
+
+def type(index & total) trigger(getter)
+	public long aggregationTotal() {
+		return aggregationTotal;
+	}
+end
+
+def type(index) trigger(field)
+	private final List<Long> ids = new java.util.ArrayList<>();
+end
+
+def type(index) trigger(append)
+	if (ids.isEmpty() || ids.get(ids.size() - 1) != fact.id()) ids.add(fact.id());
+end
+
+def type(index) trigger(append2)
+	ids.addAll(aggregation.ids);
+end
+
+def type(index) trigger(getter)
+	public List<Long> ids() {
+		return ids;
+	}
+end
+
+def trigger(assignFact)
+	this.$this+FirstLowerCase = $this+FirstLowerCase;
+end
+
+def trigger(fieldFact)
+	private final Abstract$this+FirstUpperCase.Fact $this+FirstLowerCase;
+end
+
+def trigger(factParameter)
+	Abstract$this+FirstUpperCase.Fact $this+FirstLowerCase
+end
+
+def trigger(size)
+	$this+FirstLowerCase.size()
 end
 
 def trigger(nbits)
@@ -372,17 +410,17 @@ def type(customFilter) trigger(method)
 end
 
 def type(customFilter) trigger(staticMethod)
-	public static boolean $name+firstLowerCase~Filter(View view) {
+	public static boolean $name+firstLowerCase~Filter(Fact fact) {
 		return true;
 	}
 end
 
 def type(dimension) trigger(staticMethod)
-	public static Predicate<View> $name+firstLowerCase~Predicate(Set<Abstract$name+FirstUpperCase.Component> $name+firstLowerCase) {
+	public static Predicate<Fact> $name+firstLowerCase~Predicate(Set<$name+FirstUpperCase.Component> $name+firstLowerCase) {
 		return v -> false; //TODO
 	}
 
-	public static Function<View, Axis.Component> $name+firstLowerCase~Function() {
+	public static Function<Fact, Axis.Component> $name+firstLowerCase~Function() {
 		return v -> null; //TODO
 	}
 end
@@ -400,12 +438,12 @@ def type(dimension & categorical) trigger(method)
 		return this;
 	}
 
-	public static boolean $name+firstLowerCase~Filter(View view, Set<Abstract$axis+firstUpperCase.Component> $axis+firstLowerCase) {
-		return $axis+firstLowerCase.contains($name+firstLowerCase~Function(view));
+	public static boolean $name+firstLowerCase~Filter(Fact fact, Set<$axis+firstUpperCase.Component> $axis+firstLowerCase) {
+		return $axis+firstLowerCase.contains($name+firstLowerCase~Function(fact));
 	}
 
-	public static Axis.Component $name+firstLowerCase~Function(View view) {
-		return view.$source()[.$child()];
+	public static Axis.Component $name+firstLowerCase~Function(Fact fact) {
+		return fact.$source()[.$child()];
 	}
 end
 
@@ -422,18 +460,18 @@ def type(dimension & distribution) trigger(method)
 		return this;
 	}
 
-	public static boolean $name+firstLowerCase~Filter(View view, Set<$axis+firstUpperCase.Range> $axis+firstLowerCase) {
-		return $axis+firstLowerCase.contains($name+firstLowerCase~Function(view));
+	public static boolean $name+firstLowerCase~Filter(Fact fact, Set<$axis+firstUpperCase.Range> $axis+firstLowerCase) {
+		return $axis+firstLowerCase.contains($name+firstLowerCase~Function(fact));
 	}
 
-	private static Axis.Component $name+firstLowerCase~Function(View view) {
-		return $axis+firstUpperCase.instance().rangeOf(view.$source+firstLowerCase());
+	private static Axis.Component $name+firstLowerCase~Function(Fact fact) {
+		return $axis+firstUpperCase.instance().rangeOf(fact.$source+firstLowerCase());
 	}
 end
 
 
 def type(indicator) trigger(sum)
-	$name+firstLowerCase += view.$name+firstLowerCase();
+	$name+firstLowerCase += fact.$name+firstLowerCase();
 end
 
 def type(indicator) trigger(sumAggregation)
@@ -450,8 +488,16 @@ end
 
 def type(indicator & average) trigger(getter)
 	public double $name+firstLowerCase() {
-		return $name+firstLowerCase / (double) ids.size();
+		return $name+firstLowerCase / (double) $index;
 	}
+end
+
+def type(total) trigger(index)
+	aggregationTotal
+end
+
+def type(index) trigger(index)
+	ids.size()
 end
 
 def type(indicator & sum) trigger(getter)
@@ -461,13 +507,13 @@ def type(indicator & sum) trigger(getter)
 end
 
 def type(indicator & average) trigger(staticMethod)
-	public static double $name(View view) {
+	public static double $name(Fact fact) {
 		return 0.;
 	}
 end
 
 def type(indicator & sum) trigger(staticMethod)
-	public static long $name(View view) {
+	public static long $name(Fact fact) {
 		return 0;
 	}
 end
@@ -504,108 +550,79 @@ end
 
 
 def trigger(dimension)
-	public static Predicate<$cube+FirstUpperCase.View> $axis+firstLowerCase(Set<$axis+firstUpperCase.Component> $axis+firstLowerCase~List) {
+	public static Predicate<$cube+FirstUpperCase.Fact> $axis+firstLowerCase(Set<$axis+firstUpperCase.Component> $axis+firstLowerCase~List) {
 		return r -> $axis+firstLowerCase~List.contains(r.$axis+firstLowerCase());
 	}
 
-	public static Function<$cube+FirstUpperCase.View, String> $axis+firstLowerCase() {
+	public static Function<$cube+FirstUpperCase.Fact, String> $axis+firstLowerCase() {
 		return r -> r.$axis+firstLowerCase().id();
 	}
 end
 
-def type(column) type(id | longInteger) trigger(getter)
-	public long $name+firstLowerCase() {
-		return bitBuffer.get$aligned~Long[$bits+nbits]($offset[, $bits]);
-	}
-end
 
-def type(column & datetime) trigger(getter)
-	public $type $name+firstLowerCase() {
-		return java.time.Instant.ofEpochMilli(bitBuffer.get$aligned~Long[$bits+nbits]($offset[, $bits]));
-	}
-end
-
-def type(column & date) trigger(getter)
-	public $type $name+firstLowerCase() {
-		return java.time.LocalDate.ofEpochDay(Short.toUnsignedInt(bitBuffer.get$aligned~Short[$bits+nbits]($offset[, $bits])));
-	}
-end
-
-def type(column & categorical) trigger(getter)
-	public $type+firstUpperCase.Component $name+firstLowerCase() {
-		return $type+firstUpperCase.instance().component(bitBuffer.getIntegerNBits($offset, $bits));
-	}
-end
-
-def type(column & integer) trigger(getter)
+def type(column & integer) trigger(factGetter)
 	public int $name+firstLowerCase() {
-		return bitBuffer.get$aligned~Integer[$bits+nbits]($offset[, $bits]);
+		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
 
-def type(column & bool) trigger(getter)
-	public Boolean $name+firstLowerCase() {
-		byte value = bitBuffer.getByteNBits($offset, 2);
-		return value == NULL ? null : value == 2;
-	}
-end
-
-def type(column & real) attribute(size:32) trigger(getter)
+def type(column & real) attribute(size:32) trigger(factGetter)
 	public float $name+firstLowerCase() {
-		return bitBuffer.getAlignedReal$size~Bits($offset);
+		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
 
-def type(column & real) trigger(getter)
+def type(column & real) trigger(factGetter)
 	public double $name+firstLowerCase() {
-		return bitBuffer.getAlignedReal$size~Bits($offset);
+		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
 
-def type(dimension & categorical) trigger(viewGetter)
-	public $type+firstUpperCase.Component $name+firstLowerCase() {
-		return $cube.$name+firstLowerCase();
-	}
-end
-
-def type(dimension & distribution) trigger(viewGetter)
-	public $distribution.Range $name+firstLowerCase() {
-		return $cube.$name+firstLowerCase();
-	}
-end
-
-def type(categorical) trigger(viewGetter)
-	public $type+firstUpperCase.Component $name+firstLowerCase() {
-		return $cube.$name+firstLowerCase();
-	}
-end
-
-def type(column & integer) trigger(viewGetter)
-	public int $name+firstLowerCase() {
-		return $cube.$name+firstLowerCase();
-	}
-end
-
-def type(column & real) attribute(size:32) trigger(viewGetter)
-	public float $name+firstLowerCase() {
-		return $cube.$name+firstLowerCase();
-	}
-end
-
-def type(column & real) trigger(viewGetter)
-	public double $name+firstLowerCase() {
-		return $cube.$name+firstLowerCase();
-	}
-end
-
-def type(column) type(id | longInteger) trigger(viewGetter)
+def type(column) type(id | longInteger) trigger(factGetter)
 	public long $name+firstLowerCase() {
-		return $cube.$name+firstLowerCase();
+		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
 
-def trigger(viewGetter)
+def type(column & categorical) trigger(factGetter)
+	public $type+firstUpperCase.Component $name+firstLowerCase() {
+		return $cube+firstLowerCase.$name+firstLowerCase();
+	}
+end
+
+def type(column) trigger(factGetter)
 	public $type+firstUpperCase $name+firstLowerCase() {
-		return $cube.$name+firstLowerCase();
+		return $cube+firstLowerCase.$name+firstLowerCase();
+	}
+end
+
+
+def type(column & categorical) trigger(nullGetter)
+	public $type+firstUpperCase.Component $name+firstLowerCase() {
+		return $type+firstUpperCase.instance().NA;
+	}
+end
+
+def type(column & integer) trigger(nullGetter)
+	public int $name+firstLowerCase() {
+		return -1;
+	}
+end
+
+def type(column & real) attribute(size:32) trigger(nullGetter)
+	public float $name+firstLowerCase() {
+		return -1f;
+	}
+end
+
+def type(column & real) trigger(nullGetter)
+	public double $name+firstLowerCase() {
+		return -1.;
+	}
+end
+
+def type(column & bool) trigger(nullGetter)
+	public Boolean $name+firstLowerCase() {
+		return null;
 	}
 end

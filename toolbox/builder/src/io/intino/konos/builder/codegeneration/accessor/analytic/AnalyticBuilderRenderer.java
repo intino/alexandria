@@ -5,8 +5,10 @@ import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.analytic.CategoricalAxisTemplate;
+import io.intino.konos.builder.codegeneration.analytic.ContinuousAxisTemplate;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.graph.Axis;
 import io.intino.konos.model.graph.Cube;
 import io.intino.konos.model.graph.Cube.Fact.Column;
 import io.intino.konos.model.graph.KonosGraph;
@@ -14,11 +16,15 @@ import io.intino.konos.model.graph.SizedData;
 import io.intino.magritte.framework.Concept;
 import io.intino.magritte.framework.Predicate;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import static io.intino.konos.builder.codegeneration.Formatters.customize;
+import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class AnalyticBuilderRenderer extends Renderer {
 	private final KonosGraph graph;
@@ -30,45 +36,92 @@ public class AnalyticBuilderRenderer extends Renderer {
 		this.graph = graph;
 		this.destination = destination;
 		this.destination.mkdirs();
-		this.packageName = compilationContext.packageName() + ".box";
+		this.packageName = compilationContext.packageName();
 	}
 
 	@Override
 	public void render() {
-		createCube(graph);
-		createBuilder(graph);
+		renderAxes(graph.axisList());
+		renderCubes(graph);
+		renderBuilder(graph);
 	}
 
-	private void createCube(KonosGraph graph) {
-		for (Cube cube : graph.cubeList()) {
-			FrameBuilder builder = new FrameBuilder("cube").add("package", packageName + ".schemas").add("name", cube.name$());
-			builder.add("cube", cube(cube));
-			Commons.writeFrame(destinationPackage(), cube.name$(), builderTemplate().render(builder.toFrame()));
-		}
+	private void renderAxes(List<Axis> axes) {
+		writeFrame(destinationDirectory(), "Axis", customize(new CategoricalAxisTemplate()).render(new FrameBuilder("interface").add("package", context.packageName()).toFrame()));
+		for (Axis axis : axes)
+			if (axis.isCategorical()) renderAxis(axis.asCategorical());
+			else renderAxis(axis.asContinuous());
 	}
 
-	private void createBuilder(KonosGraph graph) {
-		FrameBuilder builder = new FrameBuilder("builder").add("package", packageName).add("name", context.boxName() + "AnalyticBuilder");
-		for (Cube cube : graph.cubeList()) builder.add("cube", cube(cube));
-		Commons.writeFrame(destinationPackage(), context.boxName() + "AnalyticBuilder", builderTemplate().render(builder.toFrame()));
+	private void renderCubes(KonosGraph graph) {
+		graph.cubeList().stream().filter(c -> !c.isVirtual()).forEach(cube -> {
+			writeFrame(new File(destinationDirectory(), "cubes"), cube.name$(), cubeTemplate().render(renderCube(cube).toFrame()));
+		});
 	}
 
-	private FrameBuilder cube(Cube cube) {
-		FrameBuilder fb = new FrameBuilder("cube");
+
+	private FrameBuilder renderCube(Cube cube) {
+		FrameBuilder builder = new FrameBuilder("cube").add("package", packageName).add("name", cube.name$());
 		List<FrameBuilder> list = columns(cube.fact());
-		return fb.add("column", list.toArray(new FrameBuilder[0]));
+		cube.fact().columnList().stream().filter(SizedData::isId).findFirst()
+				.ifPresent(id -> builder.add("id", id.name$()));
+		builder.add("size", cube.fact().columnList().stream().mapToInt(this::sizeOf).sum());
+		builder.add("column", list.toArray(new FrameBuilder[0]));
+		return builder;
 	}
+
+	private void renderBuilder(KonosGraph graph) {
+		FrameBuilder builder = new FrameBuilder("builder").add("package", packageName).add("name", context.boxName() + "AnalyticBuilder");
+		graph.cubeList().stream().filter(c -> !c.isVirtual()).forEach(cube -> builder.add("cube", renderCube(cube)));
+		writeFrame(destinationDirectory(), context.boxName() + "AnalyticBuilder", builderTemplate().render(builder.toFrame()));
+	}
+
+	private void renderAxis(Axis.Categorical axis) {
+		FrameBuilder fb = new FrameBuilder("axis").
+				add("package", context.packageName()).add("name", axis.name$()).add("label", axis.label());
+		if (axis.asAxis().isDynamic()) fb.add("dynamic", ";");
+		if (axis.includeLabel() != null)
+			fb.add("include", new FrameBuilder("include").add("name", "label").add("index", 2));
+		int offset = offset(axis);
+		if (axis.include() != null) {
+			List<Axis> includes = axis.include().axes();
+			for (int i = 0; i < includes.size(); i++)
+				fb.add("include", new FrameBuilder("include").add("name", includes.get(i).name$()).add("index", i + offset));
+		}
+		writeFrame(new File(destinationDirectory(), "axes"), firstUpperCase(axis.name$()), customize(new CategoricalAxisTemplate()).render(fb.toFrame()));
+	}
+
+	private int offset(Axis.Categorical axis) {
+		return axis.includeLabel() != null ? 3 : 2;
+	}
+
+	private void renderAxis(Axis.Continuous axis) {
+		FrameBuilder fb = new FrameBuilder("continuous").add("package", context.packageName()).add("name", axis.name$()).add("label", axis.label());
+		fb.add("rangeSize", axis.rangeList().size());
+		int index = 0;
+		for (Axis.Continuous.Range range : axis.rangeList()) {
+			FrameBuilder rangeFb = new FrameBuilder("range").add("index", index);
+			if (range.isLowerBound()) rangeFb.add("lower").add("bound", range.asLowerBound().lowerBound());
+			else if (range.isUpperBound()) rangeFb.add("upper").add("bound", range.asUpperBound().upperBound());
+			else if (range.isBound())
+				rangeFb.add("lower", range.asBound().lowerBound()).add("upper", range.asBound().upperBound());
+			fb.add("range", rangeFb);
+			index++;
+		}
+		writeFrame(new File(destinationDirectory(), "axes"), firstUpperCase(axis.name$()), customize(new ContinuousAxisTemplate()).render(fb.toFrame()));
+	}
+
 
 	private List<FrameBuilder> columns(Cube.Fact fact) {
 		int offset = 0;
 		List<FrameBuilder> list = new ArrayList<>();
-		List<Column> columns = fact.columnList();
+		List<Column> columns = new ArrayList<>(fact.columnList());
 		columns.sort(Comparator.comparingInt(a -> a.asType().size()));
 		Collections.reverse(columns);
 		for (Column c : columns) {
 			FrameBuilder b = process(c, offset);
 			if (b != null) {
-				offset += c.asType().size();
+				offset += sizeOf(c);
 				list.add(b.add("owner", fact.core$().owner().name()));
 			}
 		}
@@ -103,23 +156,48 @@ public class AnalyticBuilderRenderer extends Renderer {
 		return data.isBool() || data.isInteger() || data.isLongInteger() || data.isReal();
 	}
 
-	private FrameBuilder processCategoryAttribute(SizedData.Category category, String name, int offset) {
-		return new FrameBuilder("column", "factor", "resource").
+	private FrameBuilder processCategoryAttribute(SizedData.Category column, String name, int offset) {
+		return new FrameBuilder("column", "categorical").
 				add("name", name).
-				add("type", category.axis().name$()).
+				add("type", column.axis().name$()).
 				add("offset", offset).
-				add("bits", category.size());
+				add("bits", sizeOf(column.a$(Column.class)));
 	}
 
 	public static double log2(int N) {
 		return (Math.log(N) / Math.log(2));
 	}
 
-	private File destinationPackage() {
-		return new File(destination, "jmx");
+	private Integer sizeOf(Column column) {
+		return column.isCategory() ? sizeOf(column.asCategory().axis().asCategorical()) : column.asType().size();
+	}
+
+	private Integer sizeOf(Axis.Categorical axis) {
+		try {
+			return (int) Math.ceil(log2(countLines(axis) + 1));
+		} catch (IOException e) {
+			return 0;
+		}
+	}
+
+	private int countLines(Axis.Categorical axis) throws IOException {
+		return (int) new BufferedReader(new InputStreamReader(resource(axis))).lines().count();
+	}
+
+
+	private FileInputStream resource(Axis.Categorical axis) throws FileNotFoundException {
+		return new FileInputStream(this.context.res(Target.Owner).getAbsolutePath() + "/analytic/axes/" + axis.name$() + ".tsv");
+	}
+
+	private File destinationDirectory() {
+		return new File(destination, packageName.replace(".", "/") + "/analytic");
 	}
 
 	private Template builderTemplate() {
 		return Formatters.customize(new BuilderTemplate());
+	}
+
+	private Template cubeTemplate() {
+		return Formatters.customize(new CubeTemplate());
 	}
 }

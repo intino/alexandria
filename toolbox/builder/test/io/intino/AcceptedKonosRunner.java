@@ -45,6 +45,12 @@ public class AcceptedKonosRunner {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/accessors.txt")});
 	}
 
+
+	@Test
+	public void analyticBuilder() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/analytic_builder.txt")});
+	}
+
 	@Test
 	public void test2() {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/ideaKonosToCompile2.txt")});
