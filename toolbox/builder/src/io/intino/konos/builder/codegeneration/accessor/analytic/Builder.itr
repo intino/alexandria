@@ -1,26 +1,28 @@
 def type(builder)
 	package $package+validPackage.analytic;
 
+	import $package+validPackage.analytic.cubes.*;
 	import io.intino.alexandria.logger.Logger;
-	import $package+validPackage.cubes.*;
+	import io.intino.alexandria.Timetag;
 
 	import java.util.function.Consumer;
 	import org.apache.commons.io.FileUtils;
+	import java.io.File;
 	import java.util.List;
 
 	public class $name+snakeCaseToCamelCase+firstUpperCase {
 		private final java.io.File destination;
-		private final java.io.File temporalStage;
+		private final java.io.File stage;
 		private final io.intino.alexandria.ingestion.TransactionSession session;
 
 		public $name+snakeCaseToCamelCase+firstUpperCase(java.io.File destination) {
-			this(destination, temporalStage, new Config());
+			this(destination, 1_000_000);
 		}
 
 		public $name+snakeCaseToCamelCase+firstUpperCase(java.io.File destination, int factBufferSise) {
 			this.destination = destination;
-			this.temporalStage = new File(destination, "session" + java.util.UUID.randomUUID().toString());
-			this.session = new io.intino.alexandria.ingestion.SessionHandler(temporalStage).createTransactionSession(factBufferSise);
+			this.stage = new java.io.File(destination, "session" + java.util.UUID.randomUUID().toString());
+			this.session = new io.intino.alexandria.ingestion.SessionHandler(stage).createTransactionSession(factBufferSise);
 		}
 
 		$cube+put...[$NL$NL]
@@ -32,15 +34,19 @@ def type(builder)
 		public void finish() {
 			session.close();
 			seal();
-			FileUtils.deleteDirectory(temporalStage);
+			try {
+				FileUtils.deleteDirectory(stage);
+			} catch (java.io.IOException e) {
+				Logger.error(e);
+			}
 		}
 
 		private void seal() {
-			io.intino.alexandria.sealing.TransactionSessionManager.seal(temporalStage, destination, tempFolder());
+			io.intino.alexandria.sealing.TransactionSessionManager.seal(stage, destination, tempFolder());
 		}
 
 		private File tempFolder() {
-			File temp = new File(this.stageFolder, "temp");
+			File temp = new File(this.stage, "temp");
 			temp.mkdir();
 			return temp;
 		}
