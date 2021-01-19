@@ -4,25 +4,31 @@ def type(builder)
 	import $package+validPackage.analytic.cubes.*;
 	import io.intino.alexandria.logger.Logger;
 	import io.intino.alexandria.Timetag;
+	import io.intino.alexandria.Fingerprint;
+	import io.intino.alexandria.led.Schema;
 
 	import java.util.function.Consumer;
-	import org.apache.commons.io.FileUtils;
+	import java.util.function.Function;
 	import java.io.File;
+	import java.util.Objects;
+
+	import org.apache.commons.io.FileUtils;
 	import java.util.List;
 
 	public class $name+snakeCaseToCamelCase+firstUpperCase {
-		private final java.io.File destination;
-		private final java.io.File stage;
-		private final io.intino.alexandria.ingestion.TransactionSession session;
+		private final File destination;
+		private final File stage;
+		private Session session;
 
-		public $name+snakeCaseToCamelCase+firstUpperCase(java.io.File destination) {
+		public $name+snakeCaseToCamelCase+firstUpperCase(File destination) {
 			this(destination, 1_000_000);
 		}
 
-		public $name+snakeCaseToCamelCase+firstUpperCase(java.io.File destination, int factBufferSise) {
+		public $name+snakeCaseToCamelCase+firstUpperCase(File destination, int factBufferSise) {
 			this.destination = destination;
-			this.stage = new java.io.File(destination, "session" + java.util.UUID.randomUUID().toString());
-			this.session = new io.intino.alexandria.ingestion.SessionHandler(stage).createTransactionSession(factBufferSise);
+			this.stage = new File(destination, "session" + java.util.UUID.randomUUID().toString());
+			this.session = new Session(destination, factBufferSise);
+
 		}
 
 		$cube+put...[$NL$NL]
@@ -33,7 +39,7 @@ def type(builder)
 
 		public void finish() {
 			session.close();
-			seal();
+			make();
 			try {
 				FileUtils.deleteDirectory(stage);
 			} catch (java.io.IOException e) {
@@ -41,14 +47,66 @@ def type(builder)
 			}
 		}
 
-		private void seal() {
-			io.intino.alexandria.sealing.TransactionSessionManager.seal(stage, destination, tempFolder());
+		private void make() {
+			File$[] files = FileUtils.listFiles(stage, new String$[]{"led"}, true).toArray(new File$[0]);
+			io.intino.alexandria.led.util.LedSessionSorter.sort(files, (Function<File, File>) f -> datamartFile(Session.cleanedNameOf(f)), tempFolder());
+		}
+
+		private File datamartFile(String name) {
+			File ledFile = new File(destination, name) + ".led");
+			ledFile.getParentFile().mkdirs();
+			return ledFile;
 		}
 
 		private File tempFolder() {
 			File temp = new File(this.stage, "temp");
 			temp.mkdir();
 			return temp;
+		}
+
+		private static class Session {
+			private final File root;
+			private final java.util.Map<Fingerprint, io.intino.alexandria.led.UnsortedLedStreamBuilder<? extends io.intino.alexandria.led.Schema>> builders;
+			private final int ledBufferSize;
+
+			public Session(File root, int ledBufferSize) {
+				this.root = root;
+				this.ledBufferSize = ledBufferSize;
+				this.builders = new java.util.HashMap();
+			}
+
+			public <T extends io.intino.alexandria.led.Schema> void put(String tank, Timetag timetag, Class<T> schemaClass, java.util.stream.Stream<Consumer<T>> stream) {
+				io.intino.alexandria.led.LedStream.Builder<T> builder = this.builder(Fingerprint.of(tank, timetag), schemaClass);
+				Objects.requireNonNull(builder);
+				stream.forEach(builder::append);
+			}
+
+			public <T extends io.intino.alexandria.led.Schema> void put(String tank, Timetag timetag, Class<T> schemaClass, Consumer<T> transaction) {
+				io.intino.alexandria.led.LedStream.Builder<T> builder = this.builder(Fingerprint.of(tank, timetag), schemaClass);
+				builder.append(transaction);
+			}
+
+			public void close() {
+				this.builders.forEach((f, b) -> {
+					b.close();
+				});
+			}
+
+			private <T extends io.intino.alexandria.led.Schema> io.intino.alexandria.led.LedStream.Builder<T> builder(Fingerprint fingerprint, Class<T> schemaClass) {
+				if (!this.builders.containsKey(fingerprint)) {
+					this.builders.put(fingerprint, new io.intino.alexandria.led.UnsortedLedStreamBuilder(schemaClass, Schema.factoryOf(schemaClass), this.ledBufferSize, fileOf(fingerprint)));
+				}
+				return (io.intino.alexandria.led.LedStream.Builder) this.builders.get(fingerprint);
+			}
+
+			private java.io.File fileOf(Fingerprint fingerprint) {
+				 return new java.io.File(root, fingerprint.name() + ".led.session");
+			}
+
+			private static String cleanedNameOf(File file) {
+				return file.getName().substring(0, file.getName().indexOf("#")).replace("-", "/").replace(".led.session", "");
+			}
+
 		}
 	}
 end

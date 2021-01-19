@@ -82,9 +82,9 @@ public class TransactionSessionManager {
 	}
 
 	private static File datalakeFile(File eventStoreFolder, Fingerprint fingerprint) {
-		File zimFile = new File(eventStoreFolder, fingerprint.toString() + FileTransactionStore.TransactionExtension);
-		zimFile.getParentFile().mkdirs();
-		return zimFile;
+		File ledFile = new File(eventStoreFolder, fingerprint.toString() + FileTransactionStore.TransactionExtension);
+		ledFile.getParentFile().mkdirs();
+		return ledFile;
 	}
 
 	private static Fingerprint fingerprintOf(File file) {
