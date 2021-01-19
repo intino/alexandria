@@ -4,6 +4,7 @@ import io.intino.alexandria.led.allocators.DefaultAllocator;
 import io.intino.alexandria.led.allocators.SchemaAllocator;
 import io.intino.alexandria.led.util.memory.LedLibraryConfig;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Random;
@@ -13,6 +14,7 @@ import static io.intino.alexandria.led.util.memory.MemoryUtils.memset;
 import static io.intino.test.schemas.TestSchema.*;
 import static org.junit.Assert.assertEquals;
 
+@Ignore
 public class SchemaTest {
 
 	static {
