@@ -130,7 +130,7 @@ export default class BaseSlider extends AbstractBaseSlider {
 	renderToolbar = () => {
 		if (!this.allowToolbar()) return (<React.Fragment/>);
 		const { classes } = this.props;
-		const display = !this.allowNavigation() || this.ordinalSelectorOnly() ? "none" : "block";
+		const display = !this.allowNavigation() || this.ordinalSelectorOnly() ? "none" : "inherit";
 		const mainSpacing = !this.navigationOnly() ? classes.doubleSpacing : {};
 		return (
 			<div className={classNames("layout horizontal", mainSpacing)}>
