@@ -1,16 +1,8 @@
-def type(root)
-	package $package+ValidPackage;
+def type(cube)
+	package $package+ValidPackage.analytic.cubes;
 
-	[$factorImport]
+	import $package.analytic.axes.*;
 
-	$cube
-end
-
-def trigger(factorImport)
-	import $this.factors.*;
-end
-
-def trigger(cube)
 	public class $name+firstUpperCase extends io.intino.alexandria.led.Schema {
 		[$split]
 		public static final int SIZE = $size;
@@ -27,15 +19,11 @@ def trigger(cube)
 			return SIZE;
 		}
 
-		public java.util.Map<String, Object> values() {
-			java.util.Map<String, Object> values = new java.util.LinkedHashMap<>();
-			[$column+map...[$NL]]
-			return values;
-		}
-
 		[protected long id() {
 			return $id();
 		}]
+
+		[$column+getter...[$NL$NL]]
 
 		[$column+setter...[$NL$NL]]
 
@@ -47,6 +35,9 @@ def trigger(cube)
 	}
 end
 
+def trigger(axisImport)
+	import $this.axis.*;
+end
 
 def trigger(split)
 	public enum Split {
@@ -70,10 +61,6 @@ end
 
 def trigger(nbits)
 	NBits
-end
-
-def trigger(map)
-	values.put("$name", $name+firstLowerCase());
 end
 
 def type(column & integer) trigger(setter)
@@ -126,20 +113,19 @@ def type(column & date) trigger(setter)
 	}
 end
 
-def type(column & factor & resource) trigger(getter)
-	public $type+firstUpperCase.Entry $name+firstLowerCase() {
-		final int value = bitBuffer.getIntegerNBits($offset, $bits);
-		return $type+firstUpperCase.entry(value);
+def type(column & id) trigger(getter)
+	public long $name+firstLowerCase() {
+		return bitBuffer.get$aligned~Long[$bits+nbits]($offset[, $bits]);
 	}
 end
 
-def type(column & factor & resource) trigger(setter)
+def type(column & categorical) trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(String $name+firstLowerCase) {
-		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $type+firstUpperCase.entry($name+firstLowerCase).index);
+		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $type+firstUpperCase.instance().component($name+firstLowerCase).index);
 		return this;
 	}
 
-	public $owner+firstUpperCase $name+firstLowerCase($type+firstUpperCase.Entry $name+firstLowerCase) {
+	public $owner+firstUpperCase $name+firstLowerCase($type+firstUpperCase.Component $name+firstLowerCase) {
 		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $name+firstLowerCase.index);
 		return this;
 	}

@@ -1,5 +1,5 @@
-def type(distribution)
-	package $package.analytic.distributions;
+def type(continuous)
+	package $package.analytic.axes;
 
 	import $package.analytic.Axis;
     import java.util.*;
@@ -24,6 +24,10 @@ def type(distribution)
     		return "$label";
     	}
 
+		public Component component(String id) {
+			return null;
+		}
+
     	public List<Range> ranges() {
     		return new AbstractList<>() {
     			@Override
@@ -45,7 +49,7 @@ def type(distribution)
     	}
 
     	@Override
-		public Component byIndex(int index) {
+		public Component component(int index) {
 			return ranges().get(index);
 		}
 
