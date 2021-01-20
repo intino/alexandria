@@ -40,6 +40,7 @@ public class AnalyticRenderer extends Renderer {
 	}
 
 	private void renderAxes(List<Axis> axes) {
+		if (axes.isEmpty()) return;
 		writeFrame(gen, "Axis", customize(new CategoricalAxisTemplate()).render(new FrameBuilder("interface").add("package", context.packageName()).toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axes.get(0)), javaFile(gen, "Axis").getAbsolutePath()));
 		for (Axis axis : axes)

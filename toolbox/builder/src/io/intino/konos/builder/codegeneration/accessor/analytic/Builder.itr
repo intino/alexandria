@@ -53,7 +53,7 @@ def type(builder)
 		}
 
 		private File datamartFile(String name) {
-			File ledFile = new File(destination, name) + ".led");
+			File ledFile = new File(destination, name + ".led");
 			ledFile.getParentFile().mkdirs();
 			return ledFile;
 		}
