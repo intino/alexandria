@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
+import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
@@ -78,7 +79,7 @@ public class AnalyticBuilderRenderer extends Renderer {
 
 	private void renderAxis(Axis.Categorical axis) {
 		FrameBuilder fb = new FrameBuilder("axis").
-				add("package", context.packageName()).add("name", axis.name$()).add("label", axis.label());
+				add("package", context.packageName()).add("name", snakeCaseToCamelCase().format(axis.name$()).toString()).add("label", axis.label());
 		if (axis.asAxis().isDynamic()) fb.add("dynamic", ";");
 		if (axis.includeLabel() != null)
 			fb.add("include", new FrameBuilder("include").add("name", "label").add("index", 2));
@@ -88,7 +89,7 @@ public class AnalyticBuilderRenderer extends Renderer {
 			for (int i = 0; i < includes.size(); i++)
 				fb.add("include", new FrameBuilder("include").add("name", includes.get(i).name$()).add("index", i + offset));
 		}
-		writeFrame(new File(destinationDirectory(), "axes"), firstUpperCase(axis.name$()), customize(new CategoricalAxisTemplate()).render(fb.toFrame()));
+		writeFrame(new File(destinationDirectory(), "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString()), customize(new CategoricalAxisTemplate()).render(fb.toFrame()));
 	}
 
 	private int offset(Axis.Categorical axis) {
@@ -96,7 +97,7 @@ public class AnalyticBuilderRenderer extends Renderer {
 	}
 
 	private void renderAxis(Axis.Continuous axis) {
-		FrameBuilder fb = new FrameBuilder("continuous").add("package", context.packageName()).add("name", axis.name$()).add("label", axis.label());
+		FrameBuilder fb = new FrameBuilder("continuous").add("package", context.packageName()).add("name", snakeCaseToCamelCase().format(axis.name$()).toString()).add("label", axis.label());
 		fb.add("rangeSize", axis.rangeList().size());
 		int index = 0;
 		for (Axis.Continuous.Range range : axis.rangeList()) {
@@ -108,7 +109,7 @@ public class AnalyticBuilderRenderer extends Renderer {
 			fb.add("range", rangeFb);
 			index++;
 		}
-		writeFrame(new File(destinationDirectory(), "axes"), firstUpperCase(axis.name$()), customize(new ContinuousAxisTemplate()).render(fb.toFrame()));
+		writeFrame(new File(destinationDirectory(), "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString()), customize(new ContinuousAxisTemplate()).render(fb.toFrame()));
 	}
 
 
