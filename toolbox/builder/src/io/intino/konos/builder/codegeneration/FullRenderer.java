@@ -85,7 +85,7 @@ public class FullRenderer {
 		graph.restServiceList().forEach(service -> new RESTAccessorRenderer(context, service, genDirectory(context.configuration().genDirectory(), "rest#", service.name$())).render());
 		graph.jmxServiceList().forEach(service -> new JMXAccessorRenderer(context, service, genDirectory(context.configuration().genDirectory(), "jmx#", service.name$())).render());
 		if (!graph.cubeList().isEmpty())
-			new AnalyticBuilderRenderer(context, graph, new File(context.configuration().genDirectory(), "analytic" + File.separator + "src")).render();
+			new AnalyticBuilderRenderer(context, graph, new File(context.configuration().genDirectory(), "analytic#analytic" + File.separator + "src")).render();
 		graph.messagingServiceList().forEach(service -> new MessagingAccessorRenderer(context, service, genDirectory(context.configuration().genDirectory(), "messaging#", service.name$())).render());
 	}
 

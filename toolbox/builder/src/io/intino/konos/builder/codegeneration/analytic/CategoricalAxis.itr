@@ -133,7 +133,7 @@ def attribute(name:label) trigger(declaration)
 end
 
 def trigger(declaration)
-	public final $name+firstUpperCase.Component $name+firstLowerCase;
+	public final $name+snakeCaseToCamelCase+firstUpperCase.Component $name+snakeCaseToCamelCase+firstLowerCase;
 end
 
 def attribute(name:label) trigger(defaultValue)
@@ -141,15 +141,15 @@ def attribute(name:label) trigger(defaultValue)
 end
 
 def trigger(defaultValue)
-	$name+firstUpperCase.instance().NA
+	$name+snakeCaseToCamelCase+firstUpperCase.instance().NA
 end
 
 def attribute(name:label) trigger(parameter)
-	String $name+firstLowerCase
+	String $name+snakeCaseToCamelCase+firstLowerCase
 end
 
 def trigger(parameter)
-	$name+firstUpperCase.Component $name+firstLowerCase
+	$name+snakeCaseToCamelCase+firstUpperCase.Component $name+snakeCaseToCamelCase+firstLowerCase
 end
 
 def attribute(name:label) trigger(constructor)
@@ -157,11 +157,11 @@ def attribute(name:label) trigger(constructor)
 end
 
 def trigger(constructor)
-	l.length > $index ? $name+firstUpperCase.instance().component(l$[$index]) : $name+firstUpperCase.instance().NA
+	l.length > $index ? $name+snakeCaseToCamelCase+firstUpperCase.instance().component(l$[$index]) : $name+snakeCaseToCamelCase+firstUpperCase.instance().NA
 end
 
 def trigger(assign)
-	this.$name+firstLowerCase = $name+firstLowerCase;
+	this.$name+snakeCaseToCamelCase+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase;
 end
 
 def trigger(put)
@@ -171,5 +171,5 @@ end
 
 
 def trigger(field)
-	public static final Component $name+FirstUpperCase = new Component($index, "$name"[, "$label"]);
+	public static final Component $name+snakeCaseToCamelCase+FirstUpperCase = new Component($index, "$name"[, "$label"]);
 end

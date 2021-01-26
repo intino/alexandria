@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.analytic;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
@@ -19,6 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
+import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.*;
 
 public class AnalyticRenderer extends Renderer {
@@ -40,6 +42,7 @@ public class AnalyticRenderer extends Renderer {
 	}
 
 	private void renderAxes(List<Axis> axes) {
+		if (axes.isEmpty()) return;
 		writeFrame(gen, "Axis", customize(new CategoricalAxisTemplate()).render(new FrameBuilder("interface").add("package", context.packageName()).toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axes.get(0)), javaFile(gen, "Axis").getAbsolutePath()));
 		for (Axis axis : axes)
@@ -158,7 +161,7 @@ public class AnalyticRenderer extends Renderer {
 		Axis.Categorical axis = column.axis().asCategorical();
 		return new FrameBuilder("column", "categorical")
 				.add("name", name)
-				.add("type", axis.name$())
+				.add("type", snakeCaseToCamelCase().format(axis.name$()).toString())
 				.add("offset", offset)
 				.add("cube", cube)
 				.add("bits", sizeOf(axis));
@@ -187,7 +190,7 @@ public class AnalyticRenderer extends Renderer {
 	}
 
 	private FileInputStream resource(Axis.Categorical axis) throws FileNotFoundException {
-		return new FileInputStream(this.context.res(Target.Owner).getAbsolutePath() + "/analytic/axes/" + axis.name$() + ".tsv");
+		return new FileInputStream(this.context.res(Target.Owner).getAbsolutePath() + "/analytic/axes/" + Formatters.camelCaseToSnakeCase().format(axis.name$()).toString() + ".tsv");
 	}
 
 	private boolean isAligned(SizedData.Type attribute, int offset) {
@@ -205,7 +208,7 @@ public class AnalyticRenderer extends Renderer {
 
 	private void renderAxis(Axis.Categorical axis) {
 		FrameBuilder fb = new FrameBuilder("axis").
-				add("package", context.packageName()).add("name", axis.name$()).add("label", axis.label());
+				add("package", context.packageName()).add("name", snakeCaseToCamelCase().format(axis.name$()).toString()).add("label", axis.label());
 		if (axis.asAxis().isDynamic()) fb.add("dynamic", ";");
 		if (axis.includeLabel() != null)
 			fb.add("include", new FrameBuilder("include").add("name", "label").add("index", 2));
@@ -215,8 +218,8 @@ public class AnalyticRenderer extends Renderer {
 			for (int i = 0; i < includes.size(); i++)
 				fb.add("include", new FrameBuilder("include").add("name", includes.get(i).name$()).add("index", i + offset));
 		}
-		writeFrame(new File(gen, "axes"), firstUpperCase(axis.name$()), customize(new CategoricalAxisTemplate()).render(fb.toFrame()));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axis), javaFile(new File(gen, "axes"), firstUpperCase(axis.name$())).getAbsolutePath()));
+		writeFrame(new File(gen, "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString()), customize(new CategoricalAxisTemplate()).render(fb.toFrame()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axis), javaFile(new File(gen, "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString())).getAbsolutePath()));
 	}
 
 	private int offset(Axis.Categorical axis) {
@@ -225,7 +228,7 @@ public class AnalyticRenderer extends Renderer {
 
 
 	private void renderAxis(Axis.Continuous axis) {
-		FrameBuilder fb = new FrameBuilder("continuous").add("package", context.packageName()).add("name", axis.name$()).add("label", axis.label());
+		FrameBuilder fb = new FrameBuilder("continuous").add("package", context.packageName()).add("name", snakeCaseToCamelCase().format(axis.name$()).toString()).add("label", axis.label());
 		fb.add("rangeSize", axis.rangeList().size());
 		int index = 0;
 		for (Axis.Continuous.Range range : axis.rangeList()) {
@@ -237,8 +240,8 @@ public class AnalyticRenderer extends Renderer {
 			fb.add("range", rangeFb);
 			index++;
 		}
-		writeFrame(new File(gen, "axes"), firstUpperCase(axis.name$()), customize(new ContinuousAxisTemplate()).render(fb.toFrame()));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axis), javaFile(new File(gen, "axes"), firstUpperCase(axis.name$())).getAbsolutePath()));
+		writeFrame(new File(gen, "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString()), customize(new ContinuousAxisTemplate()).render(fb.toFrame()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axis), javaFile(new File(gen, "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString())).getAbsolutePath()));
 	}
 
 }
