@@ -86,9 +86,11 @@ def type(cube)
 		}
 
 		private void fillCategories() {
-			for (Aggregation aggregation : result)
+			for (Aggregation aggregation : result) {
+				if (aggregation == null) continue;
 				for (int i = 0; i < aggregation.components.length; i++)
 					components.get(axes.get(i)).add(aggregation.components$[i]);
+			}
 		}
 
 		private int resultsSize() {
@@ -259,7 +261,7 @@ def type(cube)
 				}
 
 				private LedStream<Fact> on(Timetag timetag[, $split+parameter]) {
-					File file = new File(root + "/" [+ $split+name + "."] + "$name+FirstUpperCase/", timetag.value() + ".led");
+					File file = new File(root + "/" + "$name+FirstUpperCase/" [+ "."+ $split+name], timetag.value() + ".led");
 					return file.exists() ? new LedReader(file).read(Fact::new) : LedStream.empty();
 				}
 			}
