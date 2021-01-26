@@ -183,7 +183,7 @@ def type(cube)
 
 		public static class NullFact extends Fact {
 			private NullFact() {
-				super(null, null);
+				super($cube+nullFactParameter...[, ]);
 			}
 
 			[$column+nullgetter...[$NL$NL]]
@@ -392,6 +392,10 @@ end
 
 def trigger(factParameter)
 	Abstract$this+FirstUpperCase.Fact $this+FirstLowerCase
+end
+
+def trigger(nullFactParameter)
+	Abstract$this+FirstUpperCase.nullFact()
 end
 
 def trigger(size)

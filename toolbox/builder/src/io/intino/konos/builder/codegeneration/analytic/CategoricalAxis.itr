@@ -45,22 +45,22 @@ def type(axis)
     import java.util.concurrent.atomic.AtomicInteger;
 
 
-	public class $name+FirstUpperCase implements Axis {
-		private static $name+FirstUpperCase instance;
+	public class $name+snakeCaseToCamelCase+FirstUpperCase implements Axis {
+		private static $name+snakeCaseToCamelCase+FirstUpperCase instance;
 		public final Component NA = new Component(0, "NA"[,$include+defaultValue...[, ]]);
 		private final java.util.Map<Integer, Component> components;
 		private final java.util.Map<String, Component> componentsByName;
 		private final int size;
 
-		public static $name+FirstUpperCase instance() {
-			return instance == null ? (instance = new $name+FirstUpperCase()): instance;
+		public static $name+snakeCaseToCamelCase+FirstUpperCase instance() {
+			return instance == null ? (instance = new $name+snakeCaseToCamelCase+FirstUpperCase()): instance;
 		}
 
-		private $name+FirstUpperCase() {
+		private $name+snakeCaseToCamelCase+FirstUpperCase() {
 			components = new java.util.HashMap<>();
 			componentsByName = new java.util.HashMap<>();
 			AtomicInteger size = new AtomicInteger();
-			try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader($name+FirstUpperCase.class.getResourceAsStream("/analytic/axes/$name.tsv")))) {
+			try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader($name+snakeCaseToCamelCase+FirstUpperCase.class.getResourceAsStream("/analytic/axes/$name.tsv")))) {
 				reader.lines().map(l -> l.split("\\t", -1)).
 				map(l -> new Component(Integer.parseInt(l$[0]), l$[1][,$include+constructor...[, ]])).
 				forEach(c -> { components.put(c.index, c); componentsByName.put(c.id, c);  size.getAndIncrement(); });
@@ -118,7 +118,7 @@ def type(axis)
 			}
 
 			public Axis axis() {
-				return $name+FirstUpperCase.this;
+				return $name+snakeCaseToCamelCase+FirstUpperCase.this;
 			}
 
 			public boolean equals(Component component) {

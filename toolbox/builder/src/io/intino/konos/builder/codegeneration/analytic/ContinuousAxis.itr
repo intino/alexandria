@@ -5,18 +5,18 @@ def type(continuous)
     import java.util.*;
     import java.util.stream.Collectors;
 
-    public class $name+FirstUpperCase implements Axis {
-    	private static final $name+FirstUpperCase instance = new $name+FirstUpperCase();
+    public class $name+snakeCaseToCamelCase+FirstUpperCase implements Axis {
+    	private static final $name+snakeCaseToCamelCase+FirstUpperCase instance = new $name+snakeCaseToCamelCase+FirstUpperCase();
 
     	private static Range$[] ranges = new Range$[$rangeSize];
     	private static double$[] limits = new double$[$rangeSize];
 
-    	private $name+FirstUpperCase() {
+    	private $name+snakeCaseToCamelCase+FirstUpperCase() {
     		$range+init...[$NL]
     		for (int i = 0; i < ranges.length; i++) limits$[i] = ranges$[i].max;
     	}
 
-		public static $name+FirstUpperCase instance() {
+		public static $name+snakeCaseToCamelCase+FirstUpperCase instance() {
 			return instance;
 		}
 
@@ -98,7 +98,7 @@ def type(continuous)
 
 			@Override
 			public Axis axis() {
-				return $name+FirstUpperCase.this;
+				return $name+snakeCaseToCamelCase+FirstUpperCase.this;
 			}
     	}
     }
