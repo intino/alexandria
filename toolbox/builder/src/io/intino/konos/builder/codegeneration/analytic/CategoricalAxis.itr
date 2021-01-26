@@ -133,7 +133,7 @@ def attribute(name:label) trigger(declaration)
 end
 
 def trigger(declaration)
-	public final $name+firstUpperCase.Component $name+firstLowerCase;
+	public final $name+snakeCaseToCamelCase+firstUpperCase.Component $name+snakeCaseToCamelCase+firstLowerCase;
 end
 
 def attribute(name:label) trigger(defaultValue)
@@ -145,11 +145,11 @@ def trigger(defaultValue)
 end
 
 def attribute(name:label) trigger(parameter)
-	String $name+firstLowerCase
+	String $name+snakeCaseToCamelCase+firstLowerCase
 end
 
 def trigger(parameter)
-	$name+firstUpperCase.Component $name+firstLowerCase
+	$name+snakeCaseToCamelCase+firstUpperCase.Component $name+snakeCaseToCamelCase+firstLowerCase
 end
 
 def attribute(name:label) trigger(constructor)
@@ -161,7 +161,7 @@ def trigger(constructor)
 end
 
 def trigger(assign)
-	this.$name+firstLowerCase = $name+firstLowerCase;
+	this.$name+snakeCaseToCamelCase+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase;
 end
 
 def trigger(put)
@@ -171,5 +171,5 @@ end
 
 
 def trigger(field)
-	public static final Component $name+FirstUpperCase = new Component($index, "$name"[, "$label"]);
+	public static final Component $name+snakeCaseToCamelCase+FirstUpperCase = new Component($index, "$name"[, "$label"]);
 end
