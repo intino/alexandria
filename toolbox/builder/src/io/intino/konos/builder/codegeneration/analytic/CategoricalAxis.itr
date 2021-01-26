@@ -141,7 +141,7 @@ def attribute(name:label) trigger(defaultValue)
 end
 
 def trigger(defaultValue)
-	$name+firstUpperCase.instance().NA
+	$name+snakeCaseToCamelCase+firstUpperCase.instance().NA
 end
 
 def attribute(name:label) trigger(parameter)
@@ -157,7 +157,7 @@ def attribute(name:label) trigger(constructor)
 end
 
 def trigger(constructor)
-	l.length > $index ? $name+firstUpperCase.instance().component(l$[$index]) : $name+firstUpperCase.instance().NA
+	l.length > $index ? $name+snakeCaseToCamelCase+firstUpperCase.instance().component(l$[$index]) : $name+snakeCaseToCamelCase+firstUpperCase.instance().NA
 end
 
 def trigger(assign)
