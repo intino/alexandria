@@ -6,10 +6,10 @@ def type(continuous)
     import java.util.stream.Collectors;
 
     public class $name+snakeCaseToCamelCase+FirstUpperCase implements Axis {
-    	private static final $name+snakeCaseToCamelCase+FirstUpperCase instance = new $name+snakeCaseToCamelCase+FirstUpperCase();
-
     	private static Range$[] ranges = new Range$[$rangeSize];
     	private static double$[] limits = new double$[$rangeSize];
+
+    	private static final $name+snakeCaseToCamelCase+FirstUpperCase instance = new $name+snakeCaseToCamelCase+FirstUpperCase();
 
     	private $name+snakeCaseToCamelCase+FirstUpperCase() {
     		$range+init...[$NL]
@@ -25,7 +25,7 @@ def type(continuous)
     	}
 
 		public Component component(String id) {
-			return null;
+			return ranges$[Integer.parseInt(id)];
 		}
 
     	public List<Range> ranges() {
@@ -60,15 +60,17 @@ def type(continuous)
 
 		@Override
 		public Collection<? extends Component> components() {
-			return null;
+			return ranges();
 		}
 
     	public class Range implements Component {
+    		private final int index;
     		private final double min;
     		private final double max;
     		private final String label;
 
-    		public Range(double min, double max, String label) {
+    		public Range(int index, double min, double max, String label) {
+    			this.index = index;
     			this.min = min;
     			this.max = max;
     			this.label = label;
@@ -84,7 +86,7 @@ def type(continuous)
 
 			@Override
 			public int index() {
-				return 0;
+				return index;
 			}
 
 			@Override
@@ -105,13 +107,13 @@ def type(continuous)
 end
 
 def type(range & lower) trigger(init)
-	ranges$[$index] = new Range(Double.MIN_VALUE, $bound, "< $bound");
+	ranges$[$index] = new Range($index, Double.MIN_VALUE, $bound, "< $bound");
 end
 
 def type(range & upper) trigger(init)
-		ranges$[2] = new Range($bound, Double.MAX_VALUE, "> $bound"); // TODO Discutir con JJ si son intervalos abiertos o cerrados...
+	ranges$[$index] = new Range($index, $bound, Double.MAX_VALUE, "> $bound");
 end
 
 def type(range) trigger(init)
-	ranges$[1] = new Range($lower, $upper, "$lower - $upper");
+	ranges$[$index] = new Range($index, $lower, $upper, "$lower - $upper");
 end

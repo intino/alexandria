@@ -124,7 +124,11 @@ public class AnalyticRenderer extends Renderer {
 				add("name", dimension.name$()).
 				add("source", dimension.attribute().name$()).
 				add("axis", dimension.axis().name$());
-		if (dimension.axis().i$(Axis.Categorical.class)) fb.add("type", dimension.axis().name$());
+		if (dimension.axis().i$(Axis.Categorical.class)) {
+			fb.add("type", dimension.axis().name$());
+			if (!dimension.attribute().asCategory().axis().equals(dimension.axis()))
+				fb.add("child", dimension.axis().name$());
+		}
 		return fb;
 	}
 

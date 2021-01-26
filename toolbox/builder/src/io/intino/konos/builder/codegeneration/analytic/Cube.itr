@@ -95,7 +95,7 @@ def type(cube)
 
 		private int resultsSize() {
 			int accumulator = 1;
-			for (Axis axis : axes) accumulator *= axis.size();
+			for (Axis axis : axes) accumulator *= axis.size() + 1;
 			return accumulator;
 		}
 
@@ -125,8 +125,8 @@ def type(cube)
 		private int indexOf(Axis.Component$[] components) {
 			int index = 0;
 			for (int i = 0; i < components.length; i++) {
-				i *= axes.get(i).size();
-				i += components$[i].index();
+				index *= axes.get(i).size();
+				index += components$[i].index();
 			}
 			return index;
 		}
@@ -189,7 +189,7 @@ def type(cube)
 			}
 		}
 
-		private class Aggregation {
+		public static class Aggregation {
 			private final Axis.Component$[] components;
 			private long aggregationCount = 0;
 			$index+field
@@ -261,7 +261,7 @@ def type(cube)
 				}
 
 				private LedStream<Fact> on(Timetag timetag[, $split+parameter]) {
-					File file = new File(root + "/" + "$name+FirstUpperCase/" [+ "."+ $split+name], timetag.value() + ".led");
+					File file = new File(root + "/$name+FirstUpperCase" [+ "." + $split+name], timetag.value() + ".led");
 					return file.exists() ? new LedReader(file).read(Fact::new) : LedStream.empty();
 				}
 			}
@@ -292,7 +292,7 @@ def type(index & total) trigger(getter)
 end
 
 def type(index) trigger(field)
-	private final List<Long> ids = new java.util.ArrayList<>();
+	private final io.intino.alexandria.led.util.collections.SparseLongList ids = new io.intino.alexandria.led.util.collections.SparseLongList();
 end
 
 def type(index) trigger(append)
@@ -305,7 +305,7 @@ end
 
 def type(index) trigger(getter)
 	public List<Long> ids() {
-		return ids;
+		return ids.asList();
 	}
 end
 
@@ -351,11 +351,11 @@ def type(dimension & categorical) trigger(method)
 	}
 
 	public static Axis.Component $name+firstLowerCase~Function(Fact fact) {
-		return fact.$source()[.$child()];
+		return fact.$source()[.$child];
 	}
 end
 
-def type(dimension & distribution) trigger(method)
+def type(dimension & continuous) trigger(method)
 	public Abstract$cube+firstUpperCase filter$name+firstUpperCase(Set<$axis+firstUpperCase.Range> $axis+firstLowerCase) {
 		filterList.add(v -> $name+firstLowerCase~Filter(v, $axis+firstLowerCase));
 		return this;

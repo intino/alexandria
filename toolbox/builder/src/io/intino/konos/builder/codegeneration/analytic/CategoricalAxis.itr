@@ -47,7 +47,7 @@ def type(axis)
 
 	public class $name+snakeCaseToCamelCase+FirstUpperCase implements Axis {
 		private static $name+snakeCaseToCamelCase+FirstUpperCase instance;
-		public final Component NA = new Component(0, "NA"[,$include+defaultValue...[, ]]);
+		public final Component NA = new Component(0, "NA"[, $include+defaultValue...[, ]]);
 		private final java.util.Map<Integer, Component> components;
 		private final java.util.Map<String, Component> componentsByName;
 		private final int size;
