@@ -20,8 +20,8 @@ def type(cube & src)
 
 		[$customIndicator+staticMethod...[$NL$NL]]
 
-		public static boolean matches($cube+matches...[, ]) {
-			return false;
+		public static long idOf($mainCube+idOf) {
+			return 0L; //TODO
 		}
 
 		public static class Loader extends Abstract$name+FirstUpperCase.Loader {
@@ -34,7 +34,7 @@ def type(cube & src)
 		}
 	}
 end
-def trigger(matches)
+def trigger(idOf)
 	Abstract$this+FirstUpperCase.Fact $this+firstLowerCase
 end
 
@@ -263,12 +263,13 @@ def type(cube)
 				ids.next();
 				return StreamSupport.stream(Spliterators.spliteratorUnknownSize(facts, Spliterator.SORTED), false)
 						.map(f -> {
-							while (ids.current() != null && $name+FirstUpperCase.matches(facts.current(), ids.current())) {
+							long id = $name+FirstUpperCase.idOf(facts.current());
+							while (ids.current() != null && ids.current().id() < id) {
 								ids.next();
 								process(ids.current());
 							}
 							if (!facts.hasNext()) end();
-							return new Fact(f, ids.current() != null && $name+FirstUpperCase.matches(facts.current(), ids.current()) ?
+							return new Fact(f, ids.current() != null && ids.current().id() == id ?
 									ids.current() : Abstract$joinCube+FirstUpperCase.nullFact());
 						})
 						.iterator();
