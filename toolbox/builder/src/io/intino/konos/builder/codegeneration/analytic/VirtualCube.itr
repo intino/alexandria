@@ -98,6 +98,10 @@ def type(cube)
 			return StreamSupport.stream(spliteratorUnknownSize(iterator, Spliterator.SORTED), false).filter(this::check).iterator();
 		}
 
+		public Aggregation aggregation(List<Axis.Component> components) {
+			return result$[indexOf(components.toArray(new Axis.Component$[0]))];
+		}
+
 		private void fillCategories() {
 			for (Aggregation aggregation : result) {
 				if (aggregation == null) continue;
