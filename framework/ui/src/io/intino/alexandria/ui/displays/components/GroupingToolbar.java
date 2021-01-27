@@ -78,6 +78,11 @@ public class GroupingToolbar<DN extends GroupingToolbarNotifier, B extends Box> 
         return this;
     }
 
+    public GroupingToolbar<DN, B> clearFilters() {
+        reset();
+        return this;
+    }
+
     public GroupingToolbar<DN, B> bindTo(Grouping<?, ?>... groupings) {
         this.groupings.clear();
         this.groupings.addAll(Arrays.asList(groupings));

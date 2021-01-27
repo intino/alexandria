@@ -86,14 +86,16 @@ def type(cube)
 		}
 
 		private void fillCategories() {
-			for (Aggregation aggregation : result)
+			for (Aggregation aggregation : result) {
+				if (aggregation == null) continue;
 				for (int i = 0; i < aggregation.components.length; i++)
 					components.get(axes.get(i)).add(aggregation.components$[i]);
+			}
 		}
 
 		private int resultsSize() {
 			int accumulator = 1;
-			for (Axis axis : axes) accumulator *= axis.size();
+			for (Axis axis : axes) accumulator *= axis.size() + 1;
 			return accumulator;
 		}
 
@@ -123,8 +125,8 @@ def type(cube)
 		private int indexOf(Axis.Component$[] components) {
 			int index = 0;
 			for (int i = 0; i < components.length; i++) {
-				i *= axes.get(i).size();
-				i += components$[i].index();
+				index *= axes.get(i).size();
+				index += components$[i].index();
 			}
 			return index;
 		}
@@ -165,7 +167,7 @@ def type(cube)
 			public static final int SIZE = $size;
 
 			private NullFact() {
-				super(null);
+				super(defaultByteStore());
 			}
 
 			[$column+nullgetter...[$NL$NL]]
@@ -179,9 +181,15 @@ def type(cube)
 			public int size() {
 				return SIZE;
 			}
+
+			private static io.intino.alexandria.led.buffers.store.ByteStore defaultByteStore() {
+				java.nio.ByteBuffer buffer = io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer((long) SIZE);
+				io.intino.alexandria.led.util.memory.MemoryAddress address = io.intino.alexandria.led.util.memory.MemoryAddress.of(buffer);
+				return new io.intino.alexandria.led.buffers.store.ByteBufferStore(buffer, address, 0, buffer.capacity());
+			}
 		}
 
-		private class Aggregation {
+		public static class Aggregation {
 			private final Axis.Component$[] components;
 			private long aggregationCount = 0;
 			$index+field
@@ -253,7 +261,7 @@ def type(cube)
 				}
 
 				private LedStream<Fact> on(Timetag timetag[, $split+parameter]) {
-					File file = new File(root + "/" [+ $split+name + "."] + "$name+FirstUpperCase/", timetag.value() + ".led");
+					File file = new File(root + "/$name+FirstUpperCase" [+ "." + $split+name], timetag.value() + ".led");
 					return file.exists() ? new LedReader(file).read(Fact::new) : LedStream.empty();
 				}
 			}
@@ -284,7 +292,7 @@ def type(index & total) trigger(getter)
 end
 
 def type(index) trigger(field)
-	private final List<Long> ids = new java.util.ArrayList<>();
+	private final io.intino.alexandria.led.util.collections.SparseLongList ids = new io.intino.alexandria.led.util.collections.SparseLongList();
 end
 
 def type(index) trigger(append)
@@ -297,7 +305,7 @@ end
 
 def type(index) trigger(getter)
 	public List<Long> ids() {
-		return ids;
+		return ids.asList();
 	}
 end
 
@@ -343,11 +351,11 @@ def type(dimension & categorical) trigger(method)
 	}
 
 	public static Axis.Component $name+firstLowerCase~Function(Fact fact) {
-		return fact.$source()[.$child()];
+		return fact.$source()[.$child];
 	}
 end
 
-def type(dimension & distribution) trigger(method)
+def type(dimension & continuous) trigger(method)
 	public Abstract$cube+firstUpperCase filter$name+firstUpperCase(Set<$axis+firstUpperCase.Range> $axis+firstLowerCase) {
 		filterList.add(v -> $name+firstLowerCase~Filter(v, $axis+firstLowerCase));
 		return this;

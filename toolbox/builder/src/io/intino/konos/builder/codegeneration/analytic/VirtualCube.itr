@@ -98,17 +98,23 @@ def type(cube)
 			return StreamSupport.stream(spliteratorUnknownSize(iterator, Spliterator.SORTED), false).filter(this::check).iterator();
 		}
 
+		public Aggregation aggregation(List<Axis.Component> components) {
+			return result$[indexOf(components.toArray(new Axis.Component$[0]))];
+		}
+
 		private void fillCategories() {
-			for (Aggregation aggregation : result)
+			for (Aggregation aggregation : result) {
+				if (aggregation == null) continue;
 				for (int i = 0; i < aggregation.components.length; i++)
 					components.get(axes.get(i)).add(aggregation.components$[i]);
+			}
 		}
 
 		private void calculateTotals() {
 			for (Loader loader : loaders) {
 				if(loader.axes().size() != axes.size()) return;
 				for (int i = 0; i < loader.totals().length; i++) {
-					if(result$[i] == null) continue;
+					if (result$[i] == null) continue;
 					result$[i].append(loader.totals()$[i]);
 				}
 			}
@@ -146,8 +152,8 @@ def type(cube)
 		private int indexOf(Axis.Component$[] components) {
 			int index = 0;
 			for (int i = 0; i < components.length; i++) {
-				i *= axes.get(i).size();
-				i += components$[i].index();
+				index *= axes.get(i).size();
+				index += components$[i].index();
 			}
 			return index;
 		}
@@ -183,7 +189,7 @@ def type(cube)
 
 		public static class NullFact extends Fact {
 			private NullFact() {
-				super(null, null);
+				super($cube+nullFactParameter...[, ]);
 			}
 
 			[$column+nullgetter...[$NL$NL]]
@@ -194,7 +200,7 @@ def type(cube)
 			}
 		}
 
-		private class Aggregation {
+		public static class Aggregation {
 			private final Axis.Component$[] components;
 			private long aggregationCount = 0;
 			[$index+field]
@@ -394,6 +400,10 @@ def trigger(factParameter)
 	Abstract$this+FirstUpperCase.Fact $this+FirstLowerCase
 end
 
+def trigger(nullFactParameter)
+	Abstract$this+FirstUpperCase.nullFact()
+end
+
 def trigger(size)
 	$this+FirstLowerCase.size()
 end
@@ -443,11 +453,11 @@ def type(dimension & categorical) trigger(method)
 	}
 
 	public static Axis.Component $name+firstLowerCase~Function(Fact fact) {
-		return fact.$source()[.$child()];
+		return fact.$source()[.$child];
 	}
 end
 
-def type(dimension & distribution) trigger(method)
+def type(dimension & continuous) trigger(method)
 	public Abstract$cube+firstUpperCase filter$name+firstUpperCase(Set<$axis+firstUpperCase.Range> $axis+firstLowerCase) {
 		filterList.add(v -> $name+firstLowerCase~Filter(v, $axis+firstLowerCase));
 		return this;
