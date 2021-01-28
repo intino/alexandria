@@ -351,7 +351,7 @@ def type(dimension & categorical) trigger(method)
 	}
 
 	public static Axis.Component $name+firstLowerCase~Function(Fact fact) {
-		return fact.$source()[.$child];
+		return fact.$source+snakeCaseToCamelCase+firstLowerCase()[.$child+snakeCaseToCamelCase+firstLowerCase];
 	}
 end
 
