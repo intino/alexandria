@@ -24,7 +24,15 @@ public class XlsxParser {
 		Map<String, String> result = new LinkedHashMap<>();
 		for (Sheet sheet : wb)
 			result.put(sheet.getSheetName(), convert(sheet));
+		close(wb);
 		return result;
+	}
+
+	private static void close(Workbook wb) {
+		try {
+			wb.close();
+		} catch (IOException ignored) {
+		}
 	}
 
 	private static String convert(Sheet sheet) {
