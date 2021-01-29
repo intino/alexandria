@@ -124,7 +124,11 @@ public class AnalyticRenderer extends Renderer {
 				add("name", dimension.name$()).
 				add("source", dimension.attribute().name$()).
 				add("axis", dimension.axis().name$());
-		if (dimension.axis().i$(Axis.Categorical.class)) fb.add("type", dimension.axis().name$());
+		if (dimension.axis().i$(Axis.Categorical.class)) {
+			fb.add("type", dimension.axis().name$());
+			if (!dimension.attribute().asCategory().axis().equals(dimension.axis()))
+				fb.add("child", dimension.axis().name$());
+		}
 		return fb;
 	}
 
@@ -208,7 +212,7 @@ public class AnalyticRenderer extends Renderer {
 
 	private void renderAxis(Axis.Categorical axis) {
 		FrameBuilder fb = new FrameBuilder("axis").
-				add("package", context.packageName()).add("name", snakeCaseToCamelCase().format(axis.name$()).toString()).add("label", axis.label());
+				add("package", context.packageName()).add("name", axis.name$()).add("label", axis.label());
 		if (axis.asAxis().isDynamic()) fb.add("dynamic", ";");
 		if (axis.includeLabel() != null)
 			fb.add("include", new FrameBuilder("include").add("name", "label").add("index", 2));
