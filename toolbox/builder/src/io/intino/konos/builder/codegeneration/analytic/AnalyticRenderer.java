@@ -3,21 +3,21 @@ package io.intino.konos.builder.codegeneration.analytic;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.*;
+import io.intino.konos.model.graph.Axis;
+import io.intino.konos.model.graph.Cube;
 import io.intino.konos.model.graph.Cube.Fact.Column;
+import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.SizedData;
 import io.intino.magritte.framework.Concept;
 import io.intino.magritte.framework.Layer;
 import io.intino.magritte.framework.Predicate;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.nio.file.Path;
+import java.util.*;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
@@ -27,6 +27,7 @@ public class AnalyticRenderer extends Renderer {
 	private final File src;
 	private final File gen;
 	private final KonosGraph graph;
+	private final Map<String, Integer> axisSizes = new HashMap<>();
 
 	public AnalyticRenderer(CompilationContext context, KonosGraph graph) {
 		super(context, Target.Owner);
@@ -90,15 +91,16 @@ public class AnalyticRenderer extends Renderer {
 	}
 
 	private void addFact(Cube cube, FrameBuilder fb) {
+		calculateColumnSizes(cube.fact().columnList());
 		int offset = 0;
 		List<Column> columns = new ArrayList<>(cube.fact().columnList());
 		columns.sort(Comparator.comparingInt(a -> a.asType().size()));
 		Collections.reverse(columns);
 		for (Column column : columns) {
 			fb.add("column", columnFrame(column, offset, cube.name$()));
-			offset += sizeOf(column);
+			offset += column.asType().size();
 		}
-		fb.add("size", offset);
+		fb.add("size", (int) Math.ceil(offset / 8.));
 	}
 
 	private void addSplit(Cube cube, FrameBuilder fb) {
@@ -168,7 +170,7 @@ public class AnalyticRenderer extends Renderer {
 				.add("type", snakeCaseToCamelCase().format(axis.name$()).toString())
 				.add("offset", offset)
 				.add("cube", cube)
-				.add("bits", sizeOf(axis));
+				.add("bits", column.asSizedData().asType().size());
 
 	}
 
@@ -177,13 +179,16 @@ public class AnalyticRenderer extends Renderer {
 		return isPrimitive(type) ? type.primitive() : type.type();
 	}
 
-	private Integer sizeOf(Column column) {
-		return column.isCategory() ? sizeOf(column.asCategory().axis().asCategorical()) : column.asType().size();
+	private void calculateColumnSizes(List<Column> columns) {
+		for (Column column : columns)
+			if (column.isCategory()) column.asType().size(sizeOf(column.asCategory().axis().asCategorical()));
 	}
 
 	private Integer sizeOf(Axis.Categorical axis) {
 		try {
-			return (int) Math.ceil(log2(countLines(axis) + 1));
+			if (!axisSizes.containsKey(axis.name$()))
+				axisSizes.put(axis.name$(), (int) Math.ceil(log2(countLines(axis) + 1)));
+			return axisSizes.get(axis.name$());
 		} catch (IOException e) {
 			return 0;
 		}
@@ -194,7 +199,7 @@ public class AnalyticRenderer extends Renderer {
 	}
 
 	private FileInputStream resource(Axis.Categorical axis) throws FileNotFoundException {
-		return new FileInputStream(this.context.res(Target.Owner).getAbsolutePath() + "/analytic/axes/" + Formatters.camelCaseToSnakeCase().format(axis.name$()).toString() + ".tsv");
+		return new FileInputStream(axis.tsv().getFile());
 	}
 
 	private boolean isAligned(SizedData.Type attribute, int offset) {
@@ -214,6 +219,7 @@ public class AnalyticRenderer extends Renderer {
 		FrameBuilder fb = new FrameBuilder("axis").
 				add("package", context.packageName()).add("name", axis.name$()).add("label", axis.label());
 		if (axis.asAxis().isDynamic()) fb.add("dynamic", ";");
+		fb.add("resource", axisResource(axis.tsv().getPath()));
 		if (axis.includeLabel() != null)
 			fb.add("include", new FrameBuilder("include").add("name", "label").add("index", 2));
 		int offset = offset(axis);
@@ -224,6 +230,11 @@ public class AnalyticRenderer extends Renderer {
 		}
 		writeFrame(new File(gen, "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString()), customize(new CategoricalAxisTemplate()).render(fb.toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axis), javaFile(new File(gen, "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString())).getAbsolutePath()));
+	}
+
+	private String axisResource(String resource) {
+		Path res = context.res(Target.Owner).toPath();
+		return res.relativize(new File(resource).toPath()).toFile().getPath();
 	}
 
 	private int offset(Axis.Categorical axis) {
