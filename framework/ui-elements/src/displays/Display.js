@@ -109,7 +109,7 @@ export default class Display extends PassiveView {
     buildApplicationUrl = (path) => {
         let configuration = Application.configuration;
         let url = configuration.baseUrl;
-        if (configuration.basePath !== "") url += basePath;
+        if (configuration.basePath !== "") url += configuration.basePath;
         return url + path;
     };
 
