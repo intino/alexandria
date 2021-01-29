@@ -17,6 +17,7 @@ Concept:RequiresAspect Axis
     		Aspect UpperBound
     			var integer upperBound
 	Aspect Categorical
+		var resource tsv
 		Concept:{0..1} IncludeLabel
 		Concept:{0..1} Include
 			var Axis[]:Categorical axes
