@@ -234,7 +234,7 @@ public class AnalyticRenderer extends Renderer {
 
 	private String axisResource(String resource) {
 		Path res = context.res(Target.Owner).toPath();
-		return res.relativize(new File(resource).toPath()).toFile().getPath();
+		return res.relativize(new File(resource).toPath().toAbsolutePath()).toFile().getPath().replace("\\", "/");
 	}
 
 	private int offset(Axis.Categorical axis) {
