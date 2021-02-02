@@ -32,5 +32,6 @@
     <orderEntry type="library" scope="TEST" name="Intino: io.intino.alexandria:ingestion:3.2.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: org.antlr:antlr4-runtime:4.8" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: io.intino.alexandria:led:1.1.4" level="project" />
+    <orderEntry type="module" module-name="ingestion" scope="TEST" />
   </component>
 </module>
