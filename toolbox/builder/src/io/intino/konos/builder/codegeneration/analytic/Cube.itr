@@ -398,7 +398,7 @@ def type(customDimension & continuous) trigger(method)
 end
 
 def type(indicator) trigger(sum)
-	$name+firstLowerCase += fact.$name+firstLowerCase();
+	$name+firstLowerCase += fact.$source+firstLowerCase();
 end
 
 def type(indicator) trigger(sumAggregation)

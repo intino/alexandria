@@ -9,6 +9,7 @@ Concept:RequiresAspect Axis
 	Aspect Continuous
 		var string unit
     	Concept Range
+			var string label = empty
     		Aspect LowerBound
     			var integer lowerBound
     		Aspect Bound

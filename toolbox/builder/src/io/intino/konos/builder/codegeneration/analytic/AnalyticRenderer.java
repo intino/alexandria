@@ -254,6 +254,7 @@ public class AnalyticRenderer extends Renderer {
 			else if (range.isBound())
 				rangeFb.add("lower", range.asBound().lowerBound()).add("upper", range.asBound().upperBound());
 			fb.add("range", rangeFb);
+			if (range.label() != null) rangeFb.add("label", range.label());
 			index++;
 		}
 		writeFrame(new File(gen, "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString()), customize(new ContinuousAxisTemplate()).render(fb.toFrame()));
