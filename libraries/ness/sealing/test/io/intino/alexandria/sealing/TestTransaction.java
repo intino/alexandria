@@ -1,7 +1,7 @@
 package io.intino.alexandria.sealing;
 
-import io.intino.alexandria.led.Schema;
-import io.intino.alexandria.led.allocators.SchemaAllocator;
+import io.intino.alexandria.led.Transaction;
+import io.intino.alexandria.led.allocators.TransactionAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 
@@ -11,7 +11,7 @@ import java.util.Objects;
 
 import static io.intino.alexandria.led.util.BitUtils.roundUp2;
 
-public class TestSchema extends Schema {
+public class TestTransaction extends Transaction {
 	public static final int ID_OFFSET = 0;
 	public static final int ID_BITS = Long.SIZE;
 	public static final int A_OFFSET = ID_OFFSET + ID_BITS;
@@ -39,7 +39,7 @@ public class TestSchema extends Schema {
 	// private double f;
 	// private byte g;
 
-	public TestSchema(ByteStore store) {
+	public TestTransaction(ByteStore store) {
 		super(store);
 	}
 
@@ -53,7 +53,7 @@ public class TestSchema extends Schema {
 		return SIZE;
 	}
 
-	public TestSchema id(long id) {
+	public TestTransaction id(long id) {
 		bitBuffer.setAlignedLong(ID_OFFSET, id);
 		return this;
 	}
@@ -62,7 +62,7 @@ public class TestSchema extends Schema {
 		return bitBuffer.getShortNBits(A_OFFSET, A_BITS);
 	}
 
-	public TestSchema a(short a) {
+	public TestTransaction a(short a) {
 		bitBuffer.setShortNBits(A_OFFSET, A_BITS, a);
 		return this;
 	}
@@ -71,7 +71,7 @@ public class TestSchema extends Schema {
 		return bitBuffer.getIntegerNBits(B_OFFSET, B_BITS);
 	}
 
-	public TestSchema b(int b) {
+	public TestTransaction b(int b) {
 		bitBuffer.setIntegerNBits(B_OFFSET, B_BITS, b);
 		return this;
 	}
@@ -80,7 +80,7 @@ public class TestSchema extends Schema {
 		return bitBuffer.getAlignedReal32Bits(C_OFFSET);
 	}
 
-	public TestSchema c(float c) {
+	public TestTransaction c(float c) {
 		bitBuffer.setAlignedReal32Bits(C_OFFSET, c);
 		return this;
 	}
@@ -89,7 +89,7 @@ public class TestSchema extends Schema {
 		return bitBuffer.getIntegerNBits(D_OFFSET, D_BITS);
 	}
 
-	public TestSchema d(int d) {
+	public TestTransaction d(int d) {
 		bitBuffer.setIntegerNBits(D_OFFSET, D_BITS, d);
 		return this;
 	}
@@ -98,7 +98,7 @@ public class TestSchema extends Schema {
 		return bitBuffer.getLongNBits(E_OFFSET, E_BITS);
 	}
 
-	public TestSchema e(long e) {
+	public TestTransaction e(long e) {
 		bitBuffer.setLongNBits(E_OFFSET, E_BITS, e);
 		return this;
 	}
@@ -107,7 +107,7 @@ public class TestSchema extends Schema {
 		return bitBuffer.getAlignedReal64Bits(F_OFFSET);
 	}
 
-	public TestSchema f(double f) {
+	public TestTransaction f(double f) {
 		bitBuffer.setAlignedReal64Bits(F_OFFSET, f);
 		return this;
 	}
@@ -116,7 +116,7 @@ public class TestSchema extends Schema {
 		return bitBuffer.getByteNBits(G_OFFSET, G_BITS);
 	}
 
-	public TestSchema g(byte g) {
+	public TestTransaction g(byte g) {
 		bitBuffer.setByteNBits(G_OFFSET, G_BITS, g);
 		return this;
 	}
@@ -142,10 +142,10 @@ public class TestSchema extends Schema {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof TestSchema)) {
+		if (!(obj instanceof TestTransaction)) {
 			return false;
 		}
-		TestSchema o = (TestSchema) obj;
+		TestTransaction o = (TestTransaction) obj;
 
 		return id() == o.id()
 				&& a() == o.a()
@@ -157,9 +157,9 @@ public class TestSchema extends Schema {
 				&& g() == o.g();
 	}
 
-	public static List<TestSchema> unsortedList() {
-		SchemaAllocator<TestSchema> allocator = StackAllocators.newManaged(SIZE, 1000, TestSchema::new);
-		List<TestSchema> result = new ArrayList<>();
+	public static List<TestTransaction> unsortedList() {
+		TransactionAllocator<TestTransaction> allocator = StackAllocators.newManaged(SIZE, 1000, TestTransaction::new);
+		List<TestTransaction> result = new ArrayList<>();
 		for (int i = 10; i <= 1000; i += 5) {
 			int id = (int) Math.cos(i / 20 * Math.PI) * i;
 			result.add(allocator.calloc().id(id).b(i - 500).f(i * 100.0 / 20.0));
@@ -167,9 +167,9 @@ public class TestSchema extends Schema {
 		return result;
 	}
 
-	public static List<TestSchema> anotherList() {
-		SchemaAllocator<TestSchema> allocator = StackAllocators.newManaged(SIZE, 3000, TestSchema::new);
-		List<TestSchema> result = new ArrayList<>();
+	public static List<TestTransaction> anotherList() {
+		TransactionAllocator<TestTransaction> allocator = StackAllocators.newManaged(SIZE, 3000, TestTransaction::new);
+		List<TestTransaction> result = new ArrayList<>();
 		for (int i = 2000; i <= 3000; i += 5) {
 			int id = (int) Math.cos(i / 20 * Math.PI) * i;
 			result.add(allocator.calloc().id(id).b(i - 500).f(i * 100.0 / 20.0));
