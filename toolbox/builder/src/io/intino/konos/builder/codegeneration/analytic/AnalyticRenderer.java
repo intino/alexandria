@@ -6,6 +6,7 @@ import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Axis;
 import io.intino.konos.model.graph.Cube;
 import io.intino.konos.model.graph.Cube.Fact.Column;
@@ -85,7 +86,7 @@ public class AnalyticRenderer extends Renderer {
 		Template template = customize(template(cube));
 		writeFrame(new File(gen, "cubes"), "Abstract" + firstUpperCase(cube.name$()), template.render(fb.toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(cube), javaFile(new File(gen, "cubes"), "Abstract" + firstUpperCase(cube.name$())).getAbsolutePath()));
-//			if (alreadyRendered(new File(src, "cubes"), cube.name$())) return;
+		if (alreadyRendered(new File(src, "cubes"), cube.name$())) return;
 		writeFrame(new File(src, "cubes"), cube.name$(), template.render(fb.add("src").toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(cube), javaFile(new File(src, "cubes"), firstUpperCase(cube.name$())).getAbsolutePath()));
 	}
@@ -234,7 +235,7 @@ public class AnalyticRenderer extends Renderer {
 
 	private String axisResource(String resource) {
 		Path res = context.res(Target.Owner).toPath();
-		return res.relativize(new File(resource).toPath()).toFile().getPath();
+		return res.relativize(new File(resource).toPath().toAbsolutePath()).toFile().getPath().replace("\\", "/");
 	}
 
 	private int offset(Axis.Categorical axis) {
@@ -257,6 +258,10 @@ public class AnalyticRenderer extends Renderer {
 		}
 		writeFrame(new File(gen, "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString()), customize(new ContinuousAxisTemplate()).render(fb.toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axis), javaFile(new File(gen, "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString())).getAbsolutePath()));
+	}
+
+	private boolean alreadyRendered(File destination, String action) {
+		return Commons.javaFile(destination, action).exists();
 	}
 
 }
