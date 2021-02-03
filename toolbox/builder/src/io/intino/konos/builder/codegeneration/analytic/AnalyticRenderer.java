@@ -1,5 +1,6 @@
 package io.intino.konos.builder.codegeneration.analytic;
 
+import io.intino.alexandria.logger.Logger;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
@@ -261,8 +262,8 @@ public class AnalyticRenderer extends Renderer {
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axis), javaFile(new File(gen, "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString())).getAbsolutePath()));
 	}
 
-	private boolean alreadyRendered(File destination, String action) {
-		return Commons.javaFile(destination, action).exists();
+	private boolean alreadyRendered(File destination, String name) {
+		return Commons.javaFile(destination, name).exists();
 	}
 
 }
