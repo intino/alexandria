@@ -1,6 +1,5 @@
 package io.intino.konos.builder.codegeneration.analytic;
 
-import io.intino.alexandria.logger.Logger;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
@@ -98,6 +97,12 @@ public class AnalyticRenderer extends Renderer {
 		List<Column> columns = new ArrayList<>(cube.fact().columnList());
 		columns.sort(Comparator.comparingInt(a -> a.asType().size()));
 		Collections.reverse(columns);
+		Column idColumn = columns.stream().filter(SizedData::isId).findFirst().orElse(null);
+		if (idColumn != null) {
+			fb.add("column", columnFrame(idColumn, offset, cube.name$()));
+			offset += idColumn.asType().size();
+		}
+		columns.remove(idColumn);
 		for (Column column : columns) {
 			fb.add("column", columnFrame(column, offset, cube.name$()));
 			offset += column.asType().size();
