@@ -8,29 +8,52 @@ import static java.lang.Math.min;
 
 public final class BitUtils {
 
+	/**
+	 * Reads a region of a value, bitwise. It will return bitCount bits of n from offset position.
+	 *
+	 * */
 	public static long read(long n, int offset, int bitCount) {
 		return (n >> offset) & ones(bitCount);
 	}
 
+	/**
+	 * Writes a region of a value, bitwise. It will write bitCount bits of value into n, at position offset.
+	 *
+	 * */
 	public static long write(long n, long value, int offset, int bitCount) {
-		return (n & zeros(bitCount, offset)) | (value << offset);
+		return (n & zeros(bitCount, offset)) // Clear writable part of the old value
+				| (value << offset); // Writes only the necessary bits at their corresponding positions
 	}
 
-	public static long bitmask(int shift) {
-		return shift == Long.SIZE ? -1L : (1L << shift);
+	/**
+	 * Returns a bitmask consisting of zeros except the bit at position pos
+	 * */
+	public static long bitmask(int pos) {
+		return pos == Long.SIZE ? -1L : (1L << pos);
 	}
 
-	public static long ones(int shift) {
-		final long bitmask = bitmask(shift);
+	/**
+	 * Returns a bitmask consisting of ones from the position 0 to pos (from right to left).
+	 * */
+	public static long ones(int pos) {
+		final long bitmask = bitmask(pos);
 		return bitmask == -1 ? bitmask : bitmask - 1;
 	}
 
-	public static long ones(int n, int shift) {
-		return (ones(n) << shift);
+	/**
+	 * Returns a bitmask consisting of count ones from the position fromPos
+	 *
+	 * */
+	public static long ones(int count, int fromPos) {
+		return (ones(count) << fromPos);
 	}
 
-	public static long zeros(int n, int shift) {
-		return ~ones(n, shift);
+	/**
+	 * Returns a bitmask consisting of count zeros from the position fromPos
+	 *
+	 * */
+	public static long zeros(int count, int fromPos) {
+		return ~ones(count, fromPos);
 	}
 
 	public static String toBinaryString(long value, int padding) {

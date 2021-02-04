@@ -9,6 +9,7 @@ import static io.intino.alexandria.led.util.memory.MemoryUtils.memset;
 import static java.util.Objects.requireNonNull;
 
 public class ByteBufferStore implements ByteStore {
+
 	private final ByteBuffer buffer;
 	private final MemoryAddress address;
 	private final int baseOffset;

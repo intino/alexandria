@@ -24,6 +24,7 @@ public class Test {
 
     public static void main(String[] args) throws InterruptedException {
         ByteBuffer buffer = ByteBuffer.allocateDirect(128);
+        buffer.order(ByteOrder.BIG_ENDIAN);
         ByteBufferStore store = new ByteBufferStore(buffer, ModifiableMemoryAddress.of(buffer), 0, buffer.capacity());
         AbstractBitBuffer bitBuffer = buffer.order() == ByteOrder.LITTLE_ENDIAN ? new LittleEndianBitBuffer(store) : new BigEndianBitBuffer(store);
 
@@ -36,11 +37,15 @@ public class Test {
         System.out.println(bitInfo);
 
         for(int i = 0;i <= 64;i++) {
-            bitBuffer.clear();
+            //bitBuffer.clear();
             final long n = x;
             bitBuffer.setLongNBits(i, bitCount, n);
             final long result = bitBuffer.getLongNBits(i, bitCount);
-            Assert.assertEquals(n, result);
+            if(n != result) {
+                throw new RuntimeException("\nBIT INDEX = "+i + " ==> Expected "+ n + " but was " + result +
+                        "\nORIGIN = " + BitUtils.toBinaryString(n, 64, 8)
+                        + "\nRESULT = " + BitUtils.toBinaryString(result, 64, 8));
+            }
             //System.out.println("=== " + i + " ===");
             //System.out.println("origin = " + BitUtils.toBinaryString(n, 64, 8));
             //System.out.println("result = " + BitUtils.toBinaryString(result, 64, 8));

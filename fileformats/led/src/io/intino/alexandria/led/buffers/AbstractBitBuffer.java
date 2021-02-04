@@ -93,11 +93,13 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 			default:
 				long high = getAlignedLong(bitIndex) << (bitIndex % Byte.SIZE);
 				long low = (getAlignedByte(bitIndex + Long.SIZE) & 0xFF);
-				low = (byte) ((low >>> (Byte.SIZE - (bitIndex % Byte.SIZE))) & 0xFF);
+				int shift = (Byte.SIZE - (bitIndex % Byte.SIZE));
+				low = (byte) ((low >>> shift) & 0xFF);//ones(bitIndex, shift));
 				value = high | low;
-				//System.out.println("VAL =" + BitUtils.toBinaryString(value, 64, 8));
-				//System.out.println("HIGH=" + BitUtils.toBinaryString(high, 64, 8));
-				//System.out.println("LOW =" + BitUtils.toBinaryString(low, 64, 8));
+				System.out.println();
+				System.out.println("VAL =" + BitUtils.toBinaryString(value, 64, 8));
+				System.out.println("HIGH=" + BitUtils.toBinaryString(high, 64, 8));
+				System.out.println("LOW =" + BitUtils.toBinaryString(low, 64, 8));
 				return value;
 		}
 		return BitUtils.read(value, bitInfo.bitOffset, bitInfo.bitCount);
@@ -157,10 +159,12 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 				setInt64(bitIndex, bitInfo.byteIndex, bitInfo.bitOffset, bitInfo.bitCount, value);
 				break;
 			default:
+				final int rindex = bitIndex % Byte.SIZE;
 				long high = value >> (bitIndex % Byte.SIZE);
 				long low = ((value & 0xFFL) << (Byte.SIZE - (bitIndex % Byte.SIZE))) & 0xFFL;
-				setInt64(bitIndex, bitInfo.byteIndex, 0, Long.SIZE - bitIndex, high);
-				setInt8(bitIndex + Long.SIZE, bitInfo.byteIndex + Long.BYTES, 0, bitIndex, low);
+				setInt64(bitIndex, bitInfo.byteIndex, 0, Long.SIZE - rindex, high);
+				setInt8(bitIndex + Long.SIZE, bitInfo.byteIndex + Long.BYTES,
+						Byte.SIZE-rindex, rindex, value);
 
 				//System.out.println("VAL =" + BitUtils.toBinaryString(value, 64, 8));
 				//System.out.println("HIGH=" + BitUtils.toBinaryString(high, 64, 8));
