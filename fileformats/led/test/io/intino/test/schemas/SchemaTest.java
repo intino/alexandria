@@ -75,7 +75,7 @@ public class SchemaTest {
 
 	@Test
 	public void e() {
-		long e = (long) maxPossibleNumber(E_BITS);
+		long e = -12345;//(long) maxPossibleNumber(E_BITS);
 		schema.e(e);
 		assertEquals(schema.toString(), e, schema.e());
 	}

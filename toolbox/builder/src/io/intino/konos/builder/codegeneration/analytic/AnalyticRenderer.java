@@ -6,6 +6,7 @@ import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Axis;
 import io.intino.konos.model.graph.Cube;
 import io.intino.konos.model.graph.Cube.Fact.Column;
@@ -85,7 +86,7 @@ public class AnalyticRenderer extends Renderer {
 		Template template = customize(template(cube));
 		writeFrame(new File(gen, "cubes"), "Abstract" + firstUpperCase(cube.name$()), template.render(fb.toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(cube), javaFile(new File(gen, "cubes"), "Abstract" + firstUpperCase(cube.name$())).getAbsolutePath()));
-//			if (alreadyRendered(new File(src, "cubes"), cube.name$())) return;
+		if (alreadyRendered(new File(src, "cubes"), cube.name$())) return;
 		writeFrame(new File(src, "cubes"), cube.name$(), template.render(fb.add("src").toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(cube), javaFile(new File(src, "cubes"), firstUpperCase(cube.name$())).getAbsolutePath()));
 	}
@@ -96,6 +97,12 @@ public class AnalyticRenderer extends Renderer {
 		List<Column> columns = new ArrayList<>(cube.fact().columnList());
 		columns.sort(Comparator.comparingInt(a -> a.asType().size()));
 		Collections.reverse(columns);
+		Column idColumn = columns.stream().filter(SizedData::isId).findFirst().orElse(null);
+		if (idColumn != null) {
+			fb.add("column", columnFrame(idColumn, offset, cube.name$()));
+			offset += idColumn.asType().size();
+		}
+		columns.remove(idColumn);
 		for (Column column : columns) {
 			fb.add("column", columnFrame(column, offset, cube.name$()));
 			offset += column.asType().size();
@@ -234,7 +241,7 @@ public class AnalyticRenderer extends Renderer {
 
 	private String axisResource(String resource) {
 		Path res = context.res(Target.Owner).toPath();
-		return res.relativize(new File(resource).toPath()).toFile().getPath();
+		return res.relativize(new File(resource).toPath().toAbsolutePath()).toFile().getPath().replace("\\", "/");
 	}
 
 	private int offset(Axis.Categorical axis) {
@@ -253,10 +260,15 @@ public class AnalyticRenderer extends Renderer {
 			else if (range.isBound())
 				rangeFb.add("lower", range.asBound().lowerBound()).add("upper", range.asBound().upperBound());
 			fb.add("range", rangeFb);
+			if (range.label() != null) rangeFb.add("label", range.label());
 			index++;
 		}
 		writeFrame(new File(gen, "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString()), customize(new ContinuousAxisTemplate()).render(fb.toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axis), javaFile(new File(gen, "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString())).getAbsolutePath()));
+	}
+
+	private boolean alreadyRendered(File destination, String name) {
+		return Commons.javaFile(destination, name).exists();
 	}
 
 }

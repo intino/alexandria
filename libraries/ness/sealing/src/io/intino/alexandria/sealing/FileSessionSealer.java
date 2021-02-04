@@ -11,10 +11,16 @@ import java.util.List;
 public class FileSessionSealer implements SessionSealer {
 	private final File stageFolder;
 	private final FileDatalake datalake;
+	private final File tempFolder;
 
 	public FileSessionSealer(FileDatalake datalake, File stageFolder) {
+		this(datalake, stageFolder, tempFolder(stageFolder));
+	}
+
+	public FileSessionSealer(FileDatalake datalake, File stageFolder, File tempFolder) {
 		this.datalake = datalake;
 		this.stageFolder = stageFolder;
+		this.tempFolder = tempFolder;
 	}
 
 	@Override
@@ -42,11 +48,11 @@ public class FileSessionSealer implements SessionSealer {
 	}
 
 	private void sealEvents(List<Datalake.EventStore.Tank> avoidSorting) {
-		EventSessionManager.seal(stageFolder, datalake.eventStoreFolder(), avoidSorting, tempFolder());
+		EventSessionManager.seal(stageFolder, datalake.eventStoreFolder(), avoidSorting, tempFolder);
 	}
 
 	private void sealSets() {
-		SetSessionManager.seal(stageFolder, datalake.setStoreFolder(), tempFolder());
+		SetSessionManager.seal(stageFolder, datalake.setStoreFolder(), tempFolder);
 	}
 
 	private void makeSetIndexes() {
@@ -54,7 +60,7 @@ public class FileSessionSealer implements SessionSealer {
 	}
 
 	private void sealTransactions() {
-		TransactionSessionManager.seal(stageFolder, datalake.transactionStoreFolder(), tempFolder());
+		TransactionSessionManager.seal(stageFolder, datalake.transactionStoreFolder(), tempFolder);
 	}
 
 	private void lock() {
@@ -74,8 +80,8 @@ public class FileSessionSealer implements SessionSealer {
 		return new File(datalake.root(), ".lock");
 	}
 
-	private File tempFolder() {
-		File temp = new File(this.stageFolder, "temp");
+	private static File tempFolder(File stageFolder) {
+		File temp = new File(stageFolder, "temp");
 		temp.mkdir();
 		return temp;
 	}

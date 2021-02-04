@@ -3,6 +3,9 @@ package io.intino.alexandria.led.util;
 
 import org.apache.commons.lang3.StringUtils;
 
+import static java.lang.Math.abs;
+import static java.lang.Math.min;
+
 public final class BitUtils {
 
 	public static long read(long n, int offset, int bitCount) {
@@ -58,20 +61,21 @@ public final class BitUtils {
 		return Math.pow(2, numberOfBits) / 2 - 1;
 	}
 
+	public static int getAdditionalBytes(long bufferSize, int byteIndex, int numBytes) {
+		return (int) abs(min(bufferSize - byteIndex - numBytes, 0));
+	}
+
 	public static int getMinimumBytesForBits(int bitIndex, int bitCount) {
 		final int bitOffset = offsetOf(bitIndex);
 		final int numBytes = (int)Math.ceil((bitOffset + bitCount) / 8.0);
-		return roundToJavaPrimitiveSize(numBytes);
+		return roundSize(numBytes);
 	}
 
-	public static int roundToJavaPrimitiveSize(int n) {
+	public static int roundSize(int n) {
 		if (n == 1 || n == 2 || n == 4 || n == 8) {
 			return n;
 		}
-		if (n < 4) {
-			return 4;
-		}
-		return 8;
+		return Math.max(n, 4);
 	}
 
 	public static String toBinaryString(long value, int padding, int splitSize) {

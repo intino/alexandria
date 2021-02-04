@@ -36,7 +36,7 @@ public class TestSchema extends Schema {
 	public static final int D_OFFSET = C_OFFSET + C_BITS;
 	public static final int D_BITS = 29;
 	public static final int E_OFFSET = D_OFFSET + D_BITS;
-	public static final int E_BITS = 55;
+	public static final int E_BITS = 64;
 	public static final int F_OFFSET = roundUp2(E_OFFSET + E_BITS, Double.SIZE);
 	public static final int F_BITS = Double.SIZE;
 	public static final int G_OFFSET = F_OFFSET + F_BITS;

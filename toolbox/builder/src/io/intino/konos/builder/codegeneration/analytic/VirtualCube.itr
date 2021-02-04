@@ -144,6 +144,7 @@ def type(cube)
 
 		private synchronized void append(Aggregation$[] results) {
 			for (int i = 0; i < results.length; i++) {
+				if (results$[i] == null) continue;
 				if (result$[i] == null) result$[i] = results$[i];
 				else result$[i].append(results$[i]);
 			}
@@ -247,7 +248,7 @@ def type(cube)
 			private long$[] totals;
 			private final List<Predicate<Abstract$joinCube+FirstUpperCase.Fact>> filters = new ArrayList<>();
 			private final List<Function<Abstract$joinCube+FirstUpperCase.Fact, Axis.Component>> groupsBy = new ArrayList<>();
-			private final Datasource datasource;
+			protected final Datasource datasource;
 			[$split+field]
 
 			public Loader(Datasource datasource[, $split+parameter]) {
@@ -343,6 +344,14 @@ def type(cube)
 					this.root = root;
 					this.from = from;
 					this.to = to;
+				}
+
+				public Timetag from() {
+					return from;
+				}
+
+				public Timetag to() {
+					return to;
 				}
 			}
 		}
@@ -483,7 +492,7 @@ end
 
 
 def type(indicator) trigger(sum)
-	$name+firstLowerCase += fact.$name+firstLowerCase();
+	$name+firstLowerCase += fact.$source+firstLowerCase();
 end
 
 def type(indicator) trigger(sumAggregation)
@@ -551,7 +560,7 @@ def type(split) trigger(nameUpper)
 end
 
 def type(split) trigger(field)
-	private final String $name+firstLowerCase;
+	protected final String $name+firstLowerCase;
 end
 
 def type(split) trigger(method)

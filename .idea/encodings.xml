@@ -3,7 +3,6 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/toolbox/builder-constants/src" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/toolbox/builder/res" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/toolbox/konos-dsl/res" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/toolbox/konos-dsl/src" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
