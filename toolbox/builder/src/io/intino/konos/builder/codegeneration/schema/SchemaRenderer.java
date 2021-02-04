@@ -90,7 +90,7 @@ public class SchemaRenderer extends Renderer {
 	}
 
 	private FrameBuilder[] processSchemasAsAttribute(List<Schema> schemas) {
-		return schemas.stream().map(schema -> processSchemaAsAttribute(schema, schema.name$() + (schema.multiple() ? "List" : ""), schema.multiple())).toArray(FrameBuilder[]::new);
+		return schemas.stream().map(schema -> processSchemaAsAttribute(schema, schema.name$(), schema.multiple())).toArray(FrameBuilder[]::new);
 	}
 
 	private FrameBuilder process(Schema.Attribute attribute) {

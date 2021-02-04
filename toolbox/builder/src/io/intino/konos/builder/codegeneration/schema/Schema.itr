@@ -82,8 +82,16 @@ def !type(primitive) type(single) trigger(getter)
 end
 
 def type(multiple & member) trigger(getter)
-	public java.util.List<$type+firstUpperCase> $name+firstLowerCase() {
+	public java.util.List<$type+firstUpperCase> $name+firstLowerCase~List() {
 		return this.$name+firstLowerCase;
+	}
+
+	public java.util.List<$type+firstUpperCase> $name+firstLowerCase~List(java.util.function.Predicate<$type+firstUpperCase> predicate) {
+		return this.$name+firstLowerCase.stream().filter(predicate).collect(java.util.stream.Collectors.toList());
+	}
+
+	public $type+firstUpperCase $name+firstLowerCase(java.util.function.Predicate<$type+firstUpperCase> predicate) {
+		return this.$name+firstLowerCase.stream().filter(predicate).findFirst().orElse(null);
 	}
 end
 
