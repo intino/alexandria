@@ -73,39 +73,52 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 
 	private long getNBits(BitInfo bitInfo) {
 		long value;
+		final int bitIndex = bitInfo.bitIndex;
 		switch(bitInfo.numBytes) {
 			case Byte.BYTES:
-				value = getAlignedByte(bitInfo.bitIndex());
+				value = getAlignedByte(bitIndex);
 				value &= 0xFF;
 				break;
 			case Short.BYTES:
-				value = getAlignedShort(bitInfo.bitIndex());
+				value = getAlignedShort(bitIndex);
 				value &= 0XFFFF;
 				break;
 			case Integer.BYTES:
-				value = getAlignedInteger(bitInfo.bitIndex());
+				value = getAlignedInteger(bitIndex);
 				value &= 0xFFFFFFFF;
 				break;
 			case Long.BYTES:
-				value = getAlignedLong(bitInfo.bitIndex());
+				value = getAlignedLong(bitIndex);
 				break;
 			default:
-				throw new IllegalArgumentException("Unsupported number of bits " + bitInfo.bitCount);
+				long high = getAlignedLong(bitIndex) << (bitIndex % Byte.SIZE);
+				long low = (getAlignedByte(bitIndex + Long.SIZE) & 0xFF);
+				low = (byte) ((low >>> (Byte.SIZE - (bitIndex % Byte.SIZE))) & 0xFF);
+				value = high | low;
+				//System.out.println("VAL =" + BitUtils.toBinaryString(value, 64, 8));
+				//System.out.println("HIGH=" + BitUtils.toBinaryString(high, 64, 8));
+				//System.out.println("LOW =" + BitUtils.toBinaryString(low, 64, 8));
+				return value;
 		}
 		return BitUtils.read(value, bitInfo.bitOffset, bitInfo.bitCount);
 	}
 
 	@Override
 	public float getReal32Bits(int bitIndex) {
-		BitInfo bitInfo = computeBitInfo(bitIndex, 32);
-		final int bits = (int)read(store.getInt(bitInfo.byteIndex), bitInfo.bitOffset, 32);
+		BitInfo bitInfo = computeBitInfo(bitIndex, Float.SIZE);
+		int bits;
+		if(bitInfo.numBytes == Float.BYTES) {
+			bits = (int)read(store.getInt(bitInfo.byteIndex), bitInfo.bitOffset, Float.SIZE);
+		} else {
+			bits = (int) read(store.getLong(bitInfo.byteIndex), bitInfo.bitOffset, Float.SIZE);
+		}
 		return Float.intBitsToFloat(bits);
 	}
 
 	@Override
 	public double getReal64Bits(int bitIndex) {
-		BitInfo bitInfo = computeBitInfo(bitIndex, 64);
-		final long bits = read(store.getLong(bitInfo.byteIndex), bitInfo.bitOffset, 64);
+		BitInfo bitInfo = computeBitInfo(bitIndex, Double.SIZE);
+		final long bits = read(store.getLong(bitInfo.byteIndex), bitInfo.bitOffset, Double.SIZE);
 		return Double.longBitsToDouble(bits);
 	}
 
@@ -129,21 +142,33 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 	}
 
 	private void setNBits(long value, BitInfo bitInfo) {
+		final int bitIndex = bitInfo.bitIndex;
 		switch(bitInfo.numBytes) {
 			case Byte.BYTES:
-				setInt8(bitInfo.bitIndex(), bitInfo.byteIndex, bitInfo.bitOffset, bitInfo.bitCount, value);
+				setInt8(bitIndex, bitInfo.byteIndex, bitInfo.bitOffset, bitInfo.bitCount, value);
 				break;
 			case Short.BYTES:
-				setInt16(bitInfo.bitIndex(), bitInfo.byteIndex, bitInfo.bitOffset, bitInfo.bitCount, value);
+				setInt16(bitIndex, bitInfo.byteIndex, bitInfo.bitOffset, bitInfo.bitCount, value);
 				break;
 			case Integer.BYTES:
-				setInt32(bitInfo.bitIndex(), bitInfo.byteIndex, bitInfo.bitOffset, bitInfo.bitCount, value);
+				setInt32(bitIndex, bitInfo.byteIndex, bitInfo.bitOffset, bitInfo.bitCount, value);
 				break;
 			case Long.BYTES:
-				setInt64(bitInfo.bitIndex(), bitInfo.byteIndex, bitInfo.bitOffset, bitInfo.bitCount, value);
+				setInt64(bitIndex, bitInfo.byteIndex, bitInfo.bitOffset, bitInfo.bitCount, value);
 				break;
 			default:
-				throw new IllegalArgumentException("Unsupported number of bits " + bitInfo.bitCount);
+				long high = value >> (bitIndex % Byte.SIZE);
+				long low = ((value & 0xFFL) << (Byte.SIZE - (bitIndex % Byte.SIZE))) & 0xFFL;
+				setInt64(bitIndex, bitInfo.byteIndex, 0, Long.SIZE - bitIndex, high);
+				setInt8(bitIndex + Long.SIZE, bitInfo.byteIndex + Long.BYTES, 0, bitIndex, low);
+
+				//System.out.println("VAL =" + BitUtils.toBinaryString(value, 64, 8));
+				//System.out.println("HIGH=" + BitUtils.toBinaryString(high, 64, 8));
+				//System.out.println("LOW =" + BitUtils.toBinaryString(low, 64, 8));
+
+				//System.out.println();
+				//setInt64(bitIndex, bitInfo.byteIndex, bitIndex, bitInfo.bitCount, value);
+				//setAlignedByte(bitIndex + Long.SIZE, (byte) (value & 0xFF));
 		}
 	}
 
@@ -165,7 +190,7 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 		store.setInt(byteIndex, newValue);
 	}
 
-	private void setInt64(int bitIndex,int byteIndex, int bitOffset, int bitCount, long value) {
+	private void setInt64(int bitIndex, int byteIndex, int bitOffset, int bitCount, long value) {
 		final long oldValue = getAlignedLong(bitIndex);
 		final long newValue = write(oldValue, value, bitOffset, bitCount);
 		store.setLong(byteIndex, newValue);
@@ -173,27 +198,28 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 
 	@Override
 	public void setReal32Bits(int bitIndex, float value) {
-		BitInfo bitInfo = computeBitInfo(bitIndex, 32);
+		BitInfo bitInfo = computeBitInfo(bitIndex, Float.SIZE);
 		final int bits = Float.floatToIntBits(value);
-		final int newValue = (int) write(0, bits, bitInfo.bitOffset, 32);
-		if(bitInfo.numBytes == 32) {
+		if(bitInfo.numBytes == Float.BYTES) {
+			final int newValue = (int) write(getAlignedInteger(bitIndex), bits, bitInfo.bitOffset, Float.SIZE);
 			store.setInt(bitInfo.byteIndex, newValue);
 		} else {
+			final long newValue = write(getAlignedLong(bitIndex), bits, bitInfo.bitOffset, Float.SIZE);
 			store.setLong(bitInfo.byteIndex, newValue);
 		}
 	}
 
 	@Override
 	public void setReal64Bits(int bitIndex, double value) {
-		BitInfo bitInfo = computeBitInfo(bitIndex, 64);
+		BitInfo bitInfo = computeBitInfo(bitIndex, Double.SIZE);
 		final long bits = Double.doubleToLongBits(value);
-		final long newValue = write(0, bits, bitInfo.bitOffset, 64);
+		final long newValue = write(getAlignedLong(bitIndex), bits, bitInfo.bitOffset, Double.SIZE);
 		store.setLong(bitInfo.byteIndex, newValue);
 	}
 
 	@Override
 	public byte getAlignedByte(int bitIndex) {
-		return store.getByte(byteIndex(bitIndex));
+		return (byte) (store.getByte(byteIndex(bitIndex)) & 0xFF);
 	}
 
 	@Override
@@ -299,22 +325,36 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 		return store instanceof ReadOnlyByteStore;
 	}
 
-	protected static final class BitInfo {
+	public static final class BitInfo {
 
-		private final int byteIndex;
-		private final int numBytes;
-		private final int bitOffset;
-		private final int bitCount;
+		private final short bitIndex;
+		private final short byteIndex;
+		private final short numBytes;
+		private final short bitOffset;
+		private final short bitCount;
 
-		public BitInfo(int byteIndex, int numBytes, int bitOffset, int bitCount) {
-			this.byteIndex = byteIndex;
-			this.numBytes = numBytes;
-			this.bitOffset = bitOffset;
-			this.bitCount = bitCount;
+		public BitInfo(int bitIndex, int byteIndex, int numBytes, int bitOffset, int bitCount) {
+			this.bitIndex = (short) bitIndex;
+			this.byteIndex = (short) byteIndex;
+			this.numBytes = (short) numBytes;
+			this.bitOffset = (short) bitOffset;
+			this.bitCount = (short) bitCount;
 		}
 
-		public int bitIndex() {
-			return byteIndex * Byte.SIZE;
+		//public int bitIndex() {
+		//	return byteIndex * Byte.SIZE;
+		//}
+
+
+		@Override
+		public String toString() {
+			return "BitInfo{" +
+					"bitIndex=" + bitIndex +
+					", byteIndex=" + byteIndex +
+					", numBytes=" + numBytes +
+					", bitOffset=" + bitOffset +
+					", bitCount=" + bitCount +
+					'}';
 		}
 	}
 }
