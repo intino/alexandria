@@ -1,7 +1,9 @@
 package io.intino.test.schemas;
 
 import io.intino.alexandria.led.Schema;
+import io.intino.alexandria.led.util.memory.MemoryUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -25,6 +27,7 @@ public class VentaEnergiaTest {
         assertEquals(VentaEnergia.SIZE, ventaEnergia.size());
     }
 
+    @Ignore
     @Test
     public void id() {
         final long id = 12345;

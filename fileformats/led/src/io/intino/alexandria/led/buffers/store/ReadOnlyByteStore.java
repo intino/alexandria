@@ -1,5 +1,7 @@
 package io.intino.alexandria.led.buffers.store;
 
+import java.nio.ByteOrder;
+
 public final class ReadOnlyByteStore implements ByteStore {
 
 	private static final String UNSUPPORTED_OPERATION_EXCEPTION_MESSAGE =
@@ -10,6 +12,11 @@ public final class ReadOnlyByteStore implements ByteStore {
 
 	public ReadOnlyByteStore(ByteStore store) {
 		this.store = store;
+	}
+
+	@Override
+	public ByteOrder order() {
+		return store.order();
 	}
 
 	@Override

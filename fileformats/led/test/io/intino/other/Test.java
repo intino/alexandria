@@ -12,8 +12,12 @@ import org.junit.Assert;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Random;
 
 import static io.intino.alexandria.led.util.BitUtils.*;
+import static io.intino.alexandria.led.util.memory.MemoryUtils.memset;
+import static io.intino.test.schemas.TestSchema.SIZE;
+import static java.nio.ByteOrder.*;
 
 public class Test {
 
@@ -23,42 +27,42 @@ public class Test {
     private static int byteIndex;
 
     public static void main(String[] args) throws InterruptedException {
-        ByteBuffer buffer = ByteBuffer.allocateDirect(128);
-        buffer.order(ByteOrder.BIG_ENDIAN);
-        ByteBufferStore store = new ByteBufferStore(buffer, ModifiableMemoryAddress.of(buffer), 0, buffer.capacity());
-        AbstractBitBuffer bitBuffer = buffer.order() == ByteOrder.LITTLE_ENDIAN ? new LittleEndianBitBuffer(store) : new BigEndianBitBuffer(store);
+        testLongAlignment(LITTLE_ENDIAN);
+        testLongAlignment(BIG_ENDIAN);
+    }
 
+    private static void testLongAlignment(ByteOrder order) {
 
-        long x = 0b1010101010101010101010101010101010101010101010101010101010101011L;
-        int bitIndex = 1;
-        int bitCount = 64;
+        AbstractBitBuffer bitBuffer = createBitBuffer(128, order);
 
-        BitInfo bitInfo = computeBitInfo(bitIndex, bitCount, buffer.capacity());
-        System.out.println(bitInfo);
+        final int maxBitIndex = (int) (bitBuffer.bitCount() - Long.SIZE - Byte.SIZE);
+        final int maxBitCount = 64;
 
-        for(int i = 0;i <= 64;i++) {
-            //bitBuffer.clear();
-            final long n = x;
-            bitBuffer.setLongNBits(i, bitCount, n);
-            final long result = bitBuffer.getLongNBits(i, bitCount);
-            if(n != result) {
-                throw new RuntimeException("\nBIT INDEX = "+i + " ==> Expected "+ n + " but was " + result +
-                        "\nORIGIN = " + BitUtils.toBinaryString(n, 64, 8)
-                        + "\nRESULT = " + BitUtils.toBinaryString(result, 64, 8));
+        Random random = new Random();
+        for (int i = 0; i < bitBuffer.byteSize(); i++)
+            memset(bitBuffer.address(), 1, random.nextInt() - random.nextInt());
+
+        for(int i = 1;i <= maxBitIndex;i++) {
+            for(int bitCount = 64;bitCount <= maxBitCount;bitCount++) {
+                long x = maxPossibleNumber(bitCount) / 2;
+                bitBuffer.clear();
+                bitBuffer.setLongNBits(i, bitCount, x);
+                final long result = bitBuffer.getLongNBits(i, bitCount);
+                if(x != result) {
+                    System.err.println("[" + order + "] \n(bitIndex="+ i + ",bitCount=" + bitCount + ") ==> Expected "+ x + " but was " + result +
+                            "\nORIGIN = " + BitUtils.toBinaryString(x, 64, 8)
+                            + "\nRESULT = " + BitUtils.toBinaryString(result, 64, 8));
+                }
             }
-            //System.out.println("=== " + i + " ===");
-            //System.out.println("origin = " + BitUtils.toBinaryString(n, 64, 8));
-            //System.out.println("result = " + BitUtils.toBinaryString(result, 64, 8));
-            //System.out.println();
         }
+    }
 
-        //System.out.println("origin = " + ": " + BitUtils.toBinaryString(x, 64, 8));
-        //bitBuffer.setLongNBits(bitIndex, bitCount, x);
-//
-        //long result = bitBuffer.getLongNBits(bitIndex, bitCount);
-        //System.out.println("result = " + ": " + BitUtils.toBinaryString(result, 64, 8));
-//
-        //System.out.println(bitBuffer.toBinaryString(8));
+
+    private static AbstractBitBuffer createBitBuffer(int numBytes, ByteOrder order) {
+        ByteBuffer buffer = ByteBuffer.allocateDirect(numBytes);
+        buffer.order(order);
+        ByteBufferStore store = new ByteBufferStore(buffer, ModifiableMemoryAddress.of(buffer), 0, buffer.capacity());
+        return buffer.order() == LITTLE_ENDIAN ? new LittleEndianBitBuffer(store) : new BigEndianBitBuffer(store);
     }
 
     public static BitInfo computeBitInfo(int bitIndex, int bitCount, int bufferSize) {
@@ -72,25 +76,28 @@ public class Test {
 
     private static void testSigned() {
         ByteBuffer buffer = ByteBuffer.allocateDirect(32);
+        buffer.order(BIG_ENDIAN);
         ByteBufferStore store = new ByteBufferStore(buffer, ModifiableMemoryAddress.of(buffer), 0, buffer.capacity());
-        BitBuffer bitBuffer = buffer.order() == ByteOrder.LITTLE_ENDIAN ? new LittleEndianBitBuffer(store) : new BigEndianBitBuffer(store);
+        BitBuffer bitBuffer = buffer.order() == LITTLE_ENDIAN ? new LittleEndianBitBuffer(store) : new BigEndianBitBuffer(store);
 
         int nBits = 40;
 
-        long input = -1;
+        long input = -12345;
         bitBuffer.setLongNBits(0, nBits, input);
         long output = bitBuffer.getLongNBits(0, nBits);
-        System.out.println("mask = " + BitUtils.toBinaryString(~(1L << (nBits)), 64));
-        System.out.println("outp = " + BitUtils.toBinaryString(output, 64));
-        System.out.println("outs = " + BitUtils.toBinaryString(extendSign(output, nBits+1), 64));
+        System.out.println("mask = " + BitUtils.toBinaryString(input, 64, 8));
+        System.out.println("outp = " + BitUtils.toBinaryString(output, 64, 8));
+        System.out.println("outs = " + BitUtils.toBinaryString(extendSign(output, nBits), 64, 8));
 
-        System.out.println(input + ": " + BitUtils.toBinaryString(input, 64)
-                + "\nvs\n" + output + ": " + BitUtils.toBinaryString(output, 64));
+        System.out.println(input + ": " + BitUtils.toBinaryString(input, 64, 8)
+                + "\nvs\n" + extendSign(output, nBits) + ": " + BitUtils.toBinaryString(extendSign(output, nBits), 64, 8));
     }
 
     private static long extendSign(long n, int nBits) {
-        final long m = 1L << (nBits - 1);
-        return (n ^ m) - m;
+        long shift = Long.SIZE - nBits;
+        return n << shift >> shift;
+        //final long m = 1L << (nBits - 1);
+        //return (n ^ m) - m;
     }
 
     private static void someTests() {

@@ -71,8 +71,8 @@ public class TestSchema extends Schema {
 		return SIZE;
 	}
 
-	public TestSchema id(long id) {
-		bitBuffer.setAlignedLong(ID_OFFSET, id);
+	public TestSchema id(Number id) {
+		bitBuffer.setAlignedLong(ID_OFFSET, id.longValue());
 		return this;
 	}
 
@@ -80,8 +80,8 @@ public class TestSchema extends Schema {
 		return bitBuffer.getShortNBits(A_OFFSET, A_BITS);
 	}
 
-	public TestSchema a(short a) {
-		bitBuffer.setShortNBits(A_OFFSET, A_BITS, a);
+	public TestSchema a(Number a) {
+		bitBuffer.setShortNBits(A_OFFSET, A_BITS, a.shortValue());
 		return this;
 	}
 
@@ -89,8 +89,8 @@ public class TestSchema extends Schema {
 		return bitBuffer.getIntegerNBits(B_OFFSET, B_BITS);
 	}
 
-	public TestSchema b(int b) {
-		bitBuffer.setIntegerNBits(B_OFFSET, B_BITS, b);
+	public TestSchema b(Number b) {
+		bitBuffer.setIntegerNBits(B_OFFSET, B_BITS, b.intValue());
 		return this;
 	}
 
@@ -98,8 +98,8 @@ public class TestSchema extends Schema {
 		return bitBuffer.getAlignedReal32Bits(C_OFFSET);
 	}
 
-	public TestSchema c(float c) {
-		bitBuffer.setAlignedReal32Bits(C_OFFSET, c);
+	public TestSchema c(Number c) {
+		bitBuffer.setAlignedReal32Bits(C_OFFSET, c.floatValue());
 		return this;
 	}
 
@@ -107,8 +107,8 @@ public class TestSchema extends Schema {
 		return bitBuffer.getIntegerNBits(D_OFFSET, D_BITS);
 	}
 
-	public TestSchema d(int d) {
-		bitBuffer.setIntegerNBits(D_OFFSET, D_BITS, d);
+	public TestSchema d(Number d) {
+		bitBuffer.setIntegerNBits(D_OFFSET, D_BITS, d.intValue());
 		return this;
 	}
 
@@ -116,8 +116,8 @@ public class TestSchema extends Schema {
 		return bitBuffer.getLongNBits(E_OFFSET, E_BITS);
 	}
 
-	public TestSchema e(long e) {
-		bitBuffer.setLongNBits(E_OFFSET, E_BITS, e);
+	public TestSchema e(Number e) {
+		bitBuffer.setLongNBits(E_OFFSET, E_BITS, e.longValue());
 		return this;
 	}
 
@@ -125,8 +125,8 @@ public class TestSchema extends Schema {
 		return bitBuffer.getAlignedReal64Bits(F_OFFSET);
 	}
 
-	public TestSchema f(double f) {
-		bitBuffer.setAlignedReal64Bits(F_OFFSET, f);
+	public TestSchema f(Number f) {
+		bitBuffer.setAlignedReal64Bits(F_OFFSET, f.doubleValue());
 		return this;
 	}
 
@@ -134,8 +134,8 @@ public class TestSchema extends Schema {
 		return bitBuffer.getByteNBits(G_OFFSET, G_BITS);
 	}
 
-	public TestSchema g(byte g) {
-		bitBuffer.setIntegerNBits(G_OFFSET, G_BITS, g);
+	public TestSchema g(Number g) {
+		bitBuffer.setIntegerNBits(G_OFFSET, G_BITS, g.intValue());
 		return this;
 	}
 

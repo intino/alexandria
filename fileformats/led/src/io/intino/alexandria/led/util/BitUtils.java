@@ -80,8 +80,9 @@ public final class BitUtils {
 		return Long.SIZE - Long.numberOfLeadingZeros(value);
 	}
 
-	public static double maxPossibleNumber(int numberOfBits) {
-		return Math.pow(2, numberOfBits) / 2 - 1;
+	public static long maxPossibleNumber(int numberOfBits) {
+		final long x = (long) Math.pow(2, numberOfBits);
+		return x / 2 - 1;
 	}
 
 	public static int getAdditionalBytes(long bufferSize, int byteIndex, int numBytes) {
@@ -95,10 +96,9 @@ public final class BitUtils {
 	}
 
 	public static int roundSize(int n) {
-		if (n == 1 || n == 2 || n == 4 || n == 8) {
-			return n;
-		}
-		return Math.max(n, 4);
+		if (n == 1 || n == 2 || n == 4 || n == 8) return n;
+		if (n < 4) return 4;
+		return Math.max(n, 8);
 	}
 
 	public static String toBinaryString(long value, int padding, int splitSize) {

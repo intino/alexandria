@@ -4,6 +4,8 @@ import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.buffers.store.ReadOnlyByteStore;
 import io.intino.alexandria.led.util.BitUtils;
 
+import java.nio.ByteOrder;
+
 import static io.intino.alexandria.led.util.BitUtils.*;
 import static java.lang.Math.abs;
 import static java.lang.Math.min;
@@ -81,7 +83,7 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 				break;
 			case Short.BYTES:
 				value = getAlignedShort(bitIndex);
-				value &= 0XFFFF;
+				value &= 0xFFFF;
 				break;
 			case Integer.BYTES:
 				value = getAlignedInteger(bitIndex);
@@ -91,18 +93,15 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 				value = getAlignedLong(bitIndex);
 				break;
 			default:
-				long high = getAlignedLong(bitIndex) << (bitIndex % Byte.SIZE);
-				long low = (getAlignedByte(bitIndex + Long.SIZE) & 0xFF);
-				int shift = (Byte.SIZE - (bitIndex % Byte.SIZE));
-				low = (byte) ((low >>> shift) & 0xFF);//ones(bitIndex, shift));
-				value = high | low;
-				System.out.println();
-				System.out.println("VAL =" + BitUtils.toBinaryString(value, 64, 8));
-				System.out.println("HIGH=" + BitUtils.toBinaryString(high, 64, 8));
-				System.out.println("LOW =" + BitUtils.toBinaryString(low, 64, 8));
-				return value;
+				final int nBits = Math.abs(bitInfo.bitCount - bitInfo.bitOffset);
+				final int shift = bitIndex % Byte.SIZE;
+				long mask = ones(bitInfo.bitCount, 0);
+				long high = getAlignedLong(bitIndex) << shift;
+				high &= mask;
+				long low = getByteNBits(bitIndex+nBits, shift) & 0xFF;
+				return high | low;
 		}
-		return BitUtils.read(value, bitInfo.bitOffset, bitInfo.bitCount);
+		return read(value, bitInfo.bitOffset, bitInfo.bitCount);
 	}
 
 	@Override
@@ -110,7 +109,7 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 		BitInfo bitInfo = computeBitInfo(bitIndex, Float.SIZE);
 		int bits;
 		if(bitInfo.numBytes == Float.BYTES) {
-			bits = (int)read(store.getInt(bitInfo.byteIndex), bitInfo.bitOffset, Float.SIZE);
+			bits = (int) read(store.getInt(bitInfo.byteIndex), bitInfo.bitOffset, Float.SIZE);
 		} else {
 			bits = (int) read(store.getLong(bitInfo.byteIndex), bitInfo.bitOffset, Float.SIZE);
 		}
@@ -159,20 +158,12 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 				setInt64(bitIndex, bitInfo.byteIndex, bitInfo.bitOffset, bitInfo.bitCount, value);
 				break;
 			default:
-				final int rindex = bitIndex % Byte.SIZE;
-				long high = value >> (bitIndex % Byte.SIZE);
-				long low = ((value & 0xFFL) << (Byte.SIZE - (bitIndex % Byte.SIZE))) & 0xFFL;
-				setInt64(bitIndex, bitInfo.byteIndex, 0, Long.SIZE - rindex, high);
-				setInt8(bitIndex + Long.SIZE, bitInfo.byteIndex + Long.BYTES,
-						Byte.SIZE-rindex, rindex, value);
-
-				//System.out.println("VAL =" + BitUtils.toBinaryString(value, 64, 8));
-				//System.out.println("HIGH=" + BitUtils.toBinaryString(high, 64, 8));
-				//System.out.println("LOW =" + BitUtils.toBinaryString(low, 64, 8));
-
-				//System.out.println();
-				//setInt64(bitIndex, bitInfo.byteIndex, bitIndex, bitInfo.bitCount, value);
-				//setAlignedByte(bitIndex + Long.SIZE, (byte) (value & 0xFF));
+				final int nBits = Math.abs(bitInfo.bitCount - bitInfo.bitOffset);
+				final int shift = bitIndex % Byte.SIZE;
+				long high = value >> shift;// & ones(bitInfo.bitCount - bitIndex, 0);
+				byte low = (byte) (value & 0xFF);
+				setInt64(bitIndex, bitInfo.byteIndex, 0, bitInfo.bitCount, high);
+				setByteNBits(bitIndex + nBits, shift, low);
 		}
 	}
 
@@ -321,7 +312,7 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 
 	@Override
 	public String toString() {
-		return toHexString();
+		return toBinaryString(8);//toHexString();
 	}
 
 	@Override

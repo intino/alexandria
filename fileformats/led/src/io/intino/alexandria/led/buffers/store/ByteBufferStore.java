@@ -4,6 +4,7 @@ package io.intino.alexandria.led.buffers.store;
 import io.intino.alexandria.led.util.memory.MemoryAddress;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import static io.intino.alexandria.led.util.memory.MemoryUtils.memset;
 import static java.util.Objects.requireNonNull;
@@ -30,6 +31,11 @@ public class ByteBufferStore implements ByteStore {
 	@Override
 	public long address() {
 		return address.get();
+	}
+
+	@Override
+	public ByteOrder order() {
+		return buffer.order();
 	}
 
 	@Override

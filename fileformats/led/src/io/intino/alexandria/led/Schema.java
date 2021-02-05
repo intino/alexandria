@@ -13,6 +13,8 @@ import java.lang.reflect.Constructor;
 import java.nio.ByteOrder;
 import java.util.Objects;
 
+import static java.nio.ByteOrder.*;
+
 public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 
 	public static long idOf(Schema schema) {
@@ -50,9 +52,9 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 	protected final BitBuffer bitBuffer;
 
 	public Schema(ByteStore store) {
-		bitBuffer = ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN ?
-				new LittleEndianBitBuffer(store) :
-				new BigEndianBitBuffer(store);
+		bitBuffer = store.order() == LITTLE_ENDIAN
+				? new LittleEndianBitBuffer(store)
+				: new BigEndianBitBuffer(store);
 	}
 
 	protected abstract long id();

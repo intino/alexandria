@@ -7,7 +7,12 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.nio.ByteOrder;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import static io.intino.alexandria.led.util.BitUtils.maxPossibleNumber;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.memset;
@@ -18,8 +23,9 @@ import static org.junit.Assert.assertEquals;
 public class SchemaTest {
 
 	static {
-		LedLibraryConfig.USE_MEMORY_TRACKER.set(true);
-		LedLibraryConfig.ALLOCATION_CALLBACK.set(alloc -> System.out.println(alloc.toStringPretty()));
+		//LedLibraryConfig.USE_MEMORY_TRACKER.set(true);
+		//LedLibraryConfig.ALLOCATION_CALLBACK.set(alloc -> System.out.println(alloc.toStringPretty()));
+		//LedLibraryConfig.DEFAULT_BYTE_ORDER.set(ByteOrder.BIG_ENDIAN);
 	}
 
 	private final Random random;
@@ -36,6 +42,74 @@ public class SchemaTest {
 		schema = allocator.malloc();
 		// Random values in memory
 		for (int i = 0; i < SIZE; i++) memset(schema.address(), 1, random.nextInt() - random.nextInt());
+	}
+
+	@Ignore
+	@Test
+	public void testSetFieldDoesNotModifyOtherFields() {
+		schema = allocator.calloc();
+		List<Function<TestSchema, Number>> getters = getters();
+		List<BiConsumer<TestSchema, Number>> setters = setters();
+		List<Function<Number, Number>> interpreter = interpreters();
+		Number[] lastValues = new Number[getters.size()];
+		Random random = new Random(System.nanoTime());
+
+		for(int i = 0;i < setters.size();i++) {
+			BiConsumer<TestSchema, Number> setter = setters.get(i);
+			final Function<TestSchema, Number> getter = getters.get(i);
+			final Function<Number, Number> interpret = interpreter.get(i);
+			Number value = interpret.apply(random.nextInt());
+			setter.accept(schema, value);
+			// Assert the value is correctly set
+			assertEquals(value, getter.apply(schema));
+			lastValues[i] = value;
+			// Check if other fields have been affected
+			for(int j = 0;j < getters.size();j++) {
+				if(i == j) continue;
+				if(lastValues[j] == null) continue;
+				assertEquals(interpreter.get(j).apply(lastValues[j]), getters.get(j).apply(schema));
+			}
+			System.out.println(schema);
+		}
+	}
+
+	private List<Function<Number, Number>> interpreters() {
+		return List.of(
+				Number::longValue,
+				Number::shortValue,
+				Number::intValue,
+				Number::floatValue,
+				Number::intValue,
+				Number::longValue,
+				Number::doubleValue,
+				Number::intValue
+		);
+	}
+
+	private List<Function<TestSchema, Number>> getters() {
+		return List.of(
+				TestSchema::id,
+				TestSchema::a,
+				TestSchema::b,
+				TestSchema::c,
+				TestSchema::d,
+				TestSchema::e,
+				TestSchema::f,
+				TestSchema::g
+		);
+	}
+
+	private List<BiConsumer<TestSchema, Number>> setters() {
+		return List.of(
+				TestSchema::id,
+				TestSchema::a,
+				TestSchema::b,
+				TestSchema::c,
+				TestSchema::d,
+				TestSchema::e,
+				TestSchema::f,
+				TestSchema::g
+		);
 	}
 
 	@Test
@@ -75,7 +149,8 @@ public class SchemaTest {
 
 	@Test
 	public void e() {
-		long e = -12345;//(long) maxPossibleNumber(E_BITS);
+		schema = allocator.calloc();
+		long e = (long) maxPossibleNumber(E_BITS) / 2;
 		schema.e(e);
 		assertEquals(schema.toString(), e, schema.e());
 	}
