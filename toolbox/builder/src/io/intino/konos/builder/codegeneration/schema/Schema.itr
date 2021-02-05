@@ -49,7 +49,7 @@ def type(map) trigger(declaration)
 	private java.util.Map<$key+renderMapType, $value+renderMapType> $name+firstLowerCase = new java.util.HashMap<>();
 end
 
-def type(multiple & member) trigger(declaration)
+def type(multiple) type(object | schema) trigger(declaration)
 	private java.util.List<$type+firstUpperCase> $name+firstLowerCase = new java.util.ArrayList<>();
 end
 
@@ -81,7 +81,7 @@ def !type(primitive) type(single) trigger(getter)
 	}
 end
 
-def type(multiple & member) trigger(getter)
+def type(multiple & schema) trigger(getter)
 	public java.util.List<$type+firstUpperCase> $name+firstLowerCase~List() {
 		return this.$name+firstLowerCase;
 	}
@@ -92,6 +92,12 @@ def type(multiple & member) trigger(getter)
 
 	public $type+firstUpperCase $name+firstLowerCase(java.util.function.Predicate<$type+firstUpperCase> predicate) {
 		return this.$name+firstLowerCase.stream().filter(predicate).findFirst().orElse(null);
+	}
+end
+
+def type(multiple & object) trigger(getter)
+	public java.util.List<$type+firstUpperCase> $name+firstLowerCase() {
+		return this.$name+firstLowerCase;
 	}
 end
 
@@ -148,7 +154,14 @@ def !type(primitive) type(single) trigger(setter)
 	}
 end
 
-def type(multiple & member) trigger(setter)
+def type(multiple & object) trigger(setter)
+	public $element+firstUpperCase $name+firstLowerCase(java.util.List<$type+firstUpperCase> $name+firstLowerCase) {
+		this.$name+firstLowerCase = $name+firstLowerCase;
+		return this;
+	}
+end
+
+def type(multiple & schema) trigger(setter)
 	public $element+firstUpperCase $name+firstLowerCase~List(java.util.List<$type+firstUpperCase> $name+firstLowerCase) {
 		this.$name+firstLowerCase = $name+firstLowerCase;
 		return this;

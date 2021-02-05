@@ -90,7 +90,7 @@ public class SchemaRenderer extends Renderer {
 	}
 
 	private FrameBuilder[] processSchemasAsAttribute(List<Schema> schemas) {
-		return schemas.stream().map(schema -> processSchemaAsAttribute(schema, schema.name$(), schema.multiple())).toArray(FrameBuilder[]::new);
+		return schemas.stream().map(schema -> processSchema(schema, schema.name$(), schema.multiple())).toArray(FrameBuilder[]::new);
 	}
 
 	private FrameBuilder process(Schema.Attribute attribute) {
@@ -105,7 +105,7 @@ public class SchemaRenderer extends Renderer {
 		else if (attribute.isWord()) return process(attribute.asWord());
 		else if (attribute.isMap()) return process(attribute.asMap());
 		else if (attribute.isObject())
-			return processSchemaAsAttribute(attribute.asObject().schema(), attribute.name$(), attribute.isList());
+			return processObjectAttribute(attribute.asObject().schema(), attribute.name$(), attribute.isList());
 		return null;
 	}
 
@@ -178,8 +178,15 @@ public class SchemaRenderer extends Renderer {
 				.add("value", new FrameBuilder(attribute.value().isList() ? "list" : "single").add("type", attribute.value().asType().type()));
 	}
 
-	private FrameBuilder processSchemaAsAttribute(Schema schema, String name, boolean multiple) {
-		return new FrameBuilder(multiple ? "multiple" : "single", "member", schema.name$())
+	private FrameBuilder processObjectAttribute(Schema schema, String name, boolean multiple) {
+		return new FrameBuilder(multiple ? "multiple" : "single", "object", schema.name$())
+				.add("name", name)
+				.add("type", schema.name$())
+				.add("package", packageOf(schema));
+	}
+
+	private FrameBuilder processSchema(Schema schema, String name, boolean multiple) {
+		return new FrameBuilder(multiple ? "multiple" : "single", "schema", schema.name$())
 				.add("name", name)
 				.add("type", schema.name$())
 				.add("package", packageOf(schema));
