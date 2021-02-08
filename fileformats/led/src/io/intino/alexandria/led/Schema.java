@@ -9,9 +9,14 @@ import io.intino.alexandria.led.util.memory.MemoryUtils;
 import io.intino.alexandria.led.util.OffHeapObject;
 import io.intino.alexandria.logger.Logger;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Constructor;
-import java.nio.ByteOrder;
 import java.util.Objects;
+
+import static java.nio.ByteOrder.*;
 
 public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 
@@ -50,9 +55,9 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 	protected final BitBuffer bitBuffer;
 
 	public Schema(ByteStore store) {
-		bitBuffer = ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN ?
-				new LittleEndianBitBuffer(store) :
-				new BigEndianBitBuffer(store);
+		bitBuffer = store.order() == LITTLE_ENDIAN
+				? new LittleEndianBitBuffer(store)
+				: new BigEndianBitBuffer(store);
 	}
 
 	protected abstract long id();
@@ -132,5 +137,36 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 
 	public String toHexString() {
 		return bitBuffer.toHexString();
+	}
+
+
+	public enum DataType {
+
+		BYTE(Byte.SIZE),
+		UNSIGNED_BYTE(Byte.SIZE),
+		SHORT(Short.SIZE),
+		UNSIGNED_SHORT(Short.SIZE),
+		INT(Integer.SIZE),
+		UNSIGNED_INT(Integer.SIZE),
+		LONG(Long.SIZE),
+		UNSIGNED_LONG(Long.SIZE - 1),
+		FLOAT(Float.SIZE),
+		DOUBLE(Double.SIZE);
+
+		public final int bitCount;
+		public final int byteCount;
+
+		DataType(int bitCount) {
+			this.bitCount = bitCount;
+			this.byteCount = bitCount * Byte.SIZE;
+		}
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.METHOD)
+	@interface Attribute {
+		DataType type();
+		int bitIndex();
+		int bitCount();
 	}
 }

@@ -226,7 +226,7 @@ def type(cube)
 		}
 
     	public static class Loader implements Iterable<Fact> {
-			private final Datasource datasource;
+			protected final Datasource datasource;
 			[$split+field]
 
 			public Loader(Datasource datasource[, $split+parameter]) {
@@ -255,6 +255,14 @@ def type(cube)
 					this.root = root;
 					this.from = from;
 					this.to = to;
+				}
+
+				public Timetag from() {
+					return from;
+				}
+
+				public Timetag to() {
+					return to;
 				}
 
 				private LedStream<Fact> leds($split+parameter) {
@@ -398,7 +406,7 @@ def type(customDimension & continuous) trigger(method)
 end
 
 def type(indicator) trigger(sum)
-	$name+firstLowerCase += fact.$name+firstLowerCase();
+	$name+firstLowerCase += fact.$source+firstLowerCase();
 end
 
 def type(indicator) trigger(sumAggregation)
@@ -466,7 +474,7 @@ def type(split) trigger(nameUpper)
 end
 
 def type(split) trigger(field)
-	private final String $name+firstLowerCase;
+	protected final String $name+firstLowerCase;
 end
 
 def type(split) trigger(method)

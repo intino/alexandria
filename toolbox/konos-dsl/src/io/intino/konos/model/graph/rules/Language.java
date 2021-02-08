@@ -11,14 +11,14 @@ public enum Language implements Rule<Enum> {
 	German("de"), Divehi("dv"), Dzongkha("dz"), Ewe("ee"), GreekModern("el"), English("en"), Esperanto("eo"),
 	Spanish("es"), Estonian("et"), Basque("eu"), Persian("fa"), FulaFulah("ff"), Finnish("fi"),
 	Fijian("fj"), Faroese("fo"), French("fr"), WesternFrisian("fy"), Irish("ga"), ScottishGaelic("gd"),
-	Galician("gl"), Guaraní("gn"), Gujarati("gu"), Manx("gv"), Hausa("ha"), Hebrew("he"), Hindi("hi"),
+	Galician("gl"), Gujarati("gu"), Manx("gv"), Hausa("ha"), Hebrew("he"), Hindi("hi"),
 	HiriMotu("ho"), Croatian("hr"), Haitian("ht"), Hungarian("hu"), Armenian("hy"), Herero("hz"), Interlingua("ia"),
 	Indonesian("id"), Interlingue("ie"), Igbo("ig"), Nuosu("ii"), Inupiaq("ik"), Ido("io"), Icelandic("is"),
 	Italian("it"), Inuktitut("iu"), Japanese("ja"), Javanese("jv"), Georgian("ka"), Kongo("kg"), KikuyuGikuyu("ki"),
 	Kwanyama("kj"), Kazakh("kk"), KalaallisutGreenlandic("kl"), Khmer("km"), Kannada("kn"), Korean("ko"), Kanuri("kr"),
 	Kashmiri("ks"), Kurdish("ku"), Komi("kv"), Cornish("kw"), Kyrgyz("ky"), Latin("la"), Luxembourgish("lb"),
 	Ganda("lg"), Limburgish("li"), Lingala("ln"), Lao("lo"), Lithuanian("lt"), LubaKatanga("lu"), Latvian("lv"),
-	Malagasy("mg"), Marshallese("mh"), Māori("mi"), Macedonian("mk"), Malayalam("ml"), Mongolian("mn"), Marathi("mr"),
+	Malagasy("mg"), Marshallese("mh"), Macedonian("mk"), Malayalam("ml"), Mongolian("mn"), Marathi("mr"),
 	Malay("ms"), Maltese("mt"), Mexican("mx"), Burmese("my"), Nauru("na"), NorwegianBokmal("nb"), NorthNdebele("nd"), Nepali("ne"),
 	Ndonga("ng"), Dutch("nl"), NorwegianNynorsk("nn"), Norwegian("no"), SouthNdebele("nr"), Navajo("nv"), Chichewa("ny"),
 	Occitan("oc"), Ojibwe("oj"), Oromo("om"), Oriya("or"), Ossetian("os"), Panjabi("pa"), Pali("pi"), Polish("pl"),
@@ -28,7 +28,7 @@ public enum Language implements Rule<Enum> {
 	SouthernSSotho("st"), Sundanese("su"), Swedish("sv"), Swahili("sw"), Tamil("ta"), Telugu("te"), Tajik("tg"),
 	Thai("th"), Tigrinya("ti"), Turkmen("tk"), Tagalog("tl"), Tswana("tn"), Tonga("to"), Turkish("tr"), Tsonga("ts"),
 	Tatar("tt"), Twi("tw"), Tahitian("ty"), Uyghur("ug"), Ukrainian("uk"), Urdu("ur"), Uzbek("uz"), Venda("ve"),
-	Vietnamese("vi"), Volapük("vo"), Walloon("wa"), Wolof("wo"), Xhosa("xh"), Yiddish("yi"), Yoruba("yo"),
+	Vietnamese("vi"), Walloon("wa"), Wolof("wo"), Xhosa("xh"), Yiddish("yi"), Yoruba("yo"),
 	ZhuangChuang("za"), Chinese("zh"), Zulu("zu");
 
 	private String code;

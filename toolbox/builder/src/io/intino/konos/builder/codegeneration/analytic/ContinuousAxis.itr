@@ -106,6 +106,18 @@ def type(continuous)
     }
 end
 
+def type(range & lower) attribute(label) trigger(init)
+	ranges$[$index] = new Range($index, Double.MIN_VALUE, $bound, "$label");
+end
+
+def type(range & upper) attribute(label) trigger(init)
+	ranges$[$index] = new Range($index, $bound, Double.MAX_VALUE, "$label");
+end
+
+def type(range) attribute(label) trigger(init)
+	ranges$[$index] = new Range($index, $lower, $upper, "$label");
+end
+
 def type(range & lower) trigger(init)
 	ranges$[$index] = new Range($index, Double.MIN_VALUE, $bound, "< $bound");
 end

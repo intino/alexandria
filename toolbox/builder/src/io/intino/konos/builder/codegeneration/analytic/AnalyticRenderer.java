@@ -97,6 +97,12 @@ public class AnalyticRenderer extends Renderer {
 		List<Column> columns = new ArrayList<>(cube.fact().columnList());
 		columns.sort(Comparator.comparingInt(a -> a.asType().size()));
 		Collections.reverse(columns);
+		Column idColumn = columns.stream().filter(SizedData::isId).findFirst().orElse(null);
+		if (idColumn != null) {
+			fb.add("column", columnFrame(idColumn, offset, cube.name$()));
+			offset += idColumn.asType().size();
+		}
+		columns.remove(idColumn);
 		for (Column column : columns) {
 			fb.add("column", columnFrame(column, offset, cube.name$()));
 			offset += column.asType().size();
@@ -254,14 +260,15 @@ public class AnalyticRenderer extends Renderer {
 			else if (range.isBound())
 				rangeFb.add("lower", range.asBound().lowerBound()).add("upper", range.asBound().upperBound());
 			fb.add("range", rangeFb);
+			if (range.label() != null) rangeFb.add("label", range.label());
 			index++;
 		}
 		writeFrame(new File(gen, "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString()), customize(new ContinuousAxisTemplate()).render(fb.toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axis), javaFile(new File(gen, "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString())).getAbsolutePath()));
 	}
 
-	private boolean alreadyRendered(File destination, String action) {
-		return Commons.javaFile(destination, action).exists();
+	private boolean alreadyRendered(File destination, String name) {
+		return Commons.javaFile(destination, name).exists();
 	}
 
 }

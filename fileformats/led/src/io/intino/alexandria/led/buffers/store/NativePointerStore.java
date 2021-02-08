@@ -3,6 +3,8 @@ package io.intino.alexandria.led.buffers.store;
 import io.intino.alexandria.led.util.memory.MemoryAddress;
 import io.intino.alexandria.led.util.memory.MemoryUtils;
 
+import java.nio.ByteOrder;
+
 import static io.intino.alexandria.led.util.memory.MemoryUtils.memset;
 
 public class NativePointerStore implements ByteStore {
@@ -31,6 +33,11 @@ public class NativePointerStore implements ByteStore {
 	@Override
 	public long byteSize() {
 		return size;
+	}
+
+	@Override
+	public ByteOrder order() { // TODO
+		return ByteOrder.nativeOrder();
 	}
 
 	@Override

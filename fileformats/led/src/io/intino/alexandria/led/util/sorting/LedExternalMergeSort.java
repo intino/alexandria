@@ -153,6 +153,7 @@ public class LedExternalMergeSort {
                 // Empty file
                 if(debug) {
                     Logger.info("File " + srcFileName + " is empty. Not merge sorting.");
+                    return;
                 }
             }
             final int schemaSize = ledHeader.elementSize();
