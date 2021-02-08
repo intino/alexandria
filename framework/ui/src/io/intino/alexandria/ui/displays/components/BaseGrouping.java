@@ -26,6 +26,7 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	@Override
 	public void didMount() {
 		super.didMount();
+		if (selection != null) notifier.refreshSelection(selection);
 		notifier.refreshVisibility(isVisible());
 	}
 
