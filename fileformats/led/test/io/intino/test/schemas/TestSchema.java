@@ -1,10 +1,15 @@
 package io.intino.test.schemas;
 
 import io.intino.alexandria.led.Schema;
+import io.intino.alexandria.led.buffers.store.ByteBufferStore;
 import io.intino.alexandria.led.buffers.store.ByteStore;
+import io.intino.alexandria.led.util.memory.MemoryAddress;
+import io.intino.alexandria.led.util.memory.MemoryUtils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -31,7 +36,7 @@ public class TestSchema extends Schema {
 	public static final int A_BITS = 10;
 	public static final int B_OFFSET = A_OFFSET + A_BITS;
 	public static final int B_BITS = Integer.SIZE;
-	public static final int C_OFFSET = roundUp2(B_OFFSET + B_BITS, Float.SIZE);
+	public static final int C_OFFSET = B_OFFSET + B_BITS;
 	public static final int C_BITS = Float.SIZE;
 	public static final int D_OFFSET = C_OFFSET + C_BITS;
 	public static final int D_BITS = 29;
@@ -40,13 +45,13 @@ public class TestSchema extends Schema {
 	public static final int F_OFFSET = roundUp2(E_OFFSET + E_BITS, Double.SIZE);
 	public static final int F_BITS = Double.SIZE;
 	public static final int G_OFFSET = F_OFFSET + F_BITS;
-	public static final int G_BITS = 4;
+	public static final int G_BITS = 20;
 	public static final int H_OFFSET = G_OFFSET + G_BITS;
-	public static final int H_BITS = 4;
+	public static final int H_BITS = 9;
 	public static final int I_OFFSET = H_OFFSET + H_BITS;
-	public static final int I_BITS = 4;
+	public static final int I_BITS = 9;
 	public static final int J_OFFSET = I_OFFSET + I_BITS;
-	public static final int J_BITS = 2;
+	public static final int J_BITS = 9;
 	// private long id;
 	// private short a;
 	// private int b;
@@ -55,10 +60,36 @@ public class TestSchema extends Schema {
 	// private long e;
 	// private double f;
 	// private byte g;
-	public static final int SIZE = (int) Math.ceil((I_OFFSET + I_BITS) / (float) Byte.SIZE);
+	public static final int SIZE = (int) Math.ceil((J_OFFSET + J_BITS) / (float) Byte.SIZE);
 
 	public TestSchema(ByteStore store) {
 		super(store);
+	}
+
+	public TestSchema(ByteOrder byteOrder) {
+		super(getDefaultByteStore(byteOrder));
+	}
+
+	private static ByteStore getDefaultByteStore(ByteOrder byteOrder) {
+		ByteBuffer buffer = MemoryUtils.allocBuffer(SIZE, byteOrder);
+		MemoryAddress address = MemoryAddress.of(buffer);
+		return new ByteBufferStore(buffer, address, 0, buffer.capacity());
+	}
+
+	int[] fieldSizes() {
+		return new int[] {
+				ID_BITS,
+				A_BITS,
+				B_BITS,
+				C_BITS,
+				D_BITS,
+				E_BITS,
+				F_BITS,
+				G_BITS,
+				H_BITS,
+				ID_BITS,
+				J_BITS
+		};
 	}
 
 	@Override
@@ -95,11 +126,11 @@ public class TestSchema extends Schema {
 	}
 
 	public float c() {
-		return bitBuffer.getAlignedReal32Bits(C_OFFSET);
+		return bitBuffer.getReal32Bits(C_OFFSET);
 	}
 
 	public TestSchema c(Number c) {
-		bitBuffer.setAlignedReal32Bits(C_OFFSET, c.floatValue());
+		bitBuffer.setReal32Bits(C_OFFSET, c.floatValue());
 		return this;
 	}
 

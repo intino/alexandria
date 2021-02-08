@@ -8,7 +8,6 @@ import io.intino.alexandria.led.buffers.LittleEndianBitBuffer;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
 import io.intino.alexandria.led.util.BitUtils;
 import io.intino.alexandria.led.util.memory.ModifiableMemoryAddress;
-import org.junit.Assert;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -16,7 +15,6 @@ import java.util.Random;
 
 import static io.intino.alexandria.led.util.BitUtils.*;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.memset;
-import static io.intino.test.schemas.TestSchema.SIZE;
 import static java.nio.ByteOrder.*;
 
 public class Test {
@@ -27,8 +25,8 @@ public class Test {
     private static int byteIndex;
 
     public static void main(String[] args) throws InterruptedException {
-        testLongAlignment(LITTLE_ENDIAN);
-        testLongAlignment(BIG_ENDIAN);
+        //testLongAlignment(LITTLE_ENDIAN);
+        //testLongAlignment(BIG_ENDIAN);
     }
 
     private static void testLongAlignment(ByteOrder order) {
@@ -42,14 +40,14 @@ public class Test {
         for (int i = 0; i < bitBuffer.byteSize(); i++)
             memset(bitBuffer.address(), 1, random.nextInt() - random.nextInt());
 
-        for(int i = 1;i <= maxBitIndex;i++) {
-            for(int bitCount = 64;bitCount <= maxBitCount;bitCount++) {
-                long x = maxPossibleNumber(bitCount) / 2;
+        for(int bitCount = 64;bitCount <= maxBitCount;bitCount++) {
+            for(int bitIndex = 0;bitIndex < maxBitIndex;bitIndex++) {
+                long x = random.nextLong();
                 bitBuffer.clear();
-                bitBuffer.setLongNBits(i, bitCount, x);
-                final long result = bitBuffer.getLongNBits(i, bitCount);
+                bitBuffer.setLongNBits(bitIndex, bitCount, x);
+                final long result = bitBuffer.getLongNBits(bitIndex, bitCount);
                 if(x != result) {
-                    System.err.println("[" + order + "] \n(bitIndex="+ i + ",bitCount=" + bitCount + ") ==> Expected "+ x + " but was " + result +
+                    System.err.println("[" + order + "] \n(bitIndex="+ bitIndex + ",bitCount=" + bitCount + ") ==> Expected "+ x + " but was " + result +
                             "\nORIGIN = " + BitUtils.toBinaryString(x, 64, 8)
                             + "\nRESULT = " + BitUtils.toBinaryString(result, 64, 8));
                 }
@@ -67,7 +65,7 @@ public class Test {
 
     public static BitInfo computeBitInfo(int bitIndex, int bitCount, int bufferSize) {
         int byteIndex = byteIndex(bitIndex);
-        final int numBytes = getMinimumBytesForBits(bitIndex, bitCount);
+        final int numBytes = getMinimumBytesFor(bitIndex, bitCount);
         final int additionalBytes = getAdditionalBytes(bufferSize, byteIndex, numBytes);
         byteIndex -= additionalBytes;
         final int bitOffset = (numBytes * Byte.SIZE - bitCount - offsetOf(bitIndex)) - additionalBytes * Byte.SIZE;
@@ -111,7 +109,7 @@ public class Test {
         short low = (short) (input & 0xF);
         short output = (short) ((high << bitIndex) | low);
 
-        int minBytes = BitUtils.getMinimumBytesForBits(1, 64);
+        int minBytes = BitUtils.getMinimumBytesFor(1, 64);
         int additionalBytes = BitUtils.getAdditionalBytes(128, 1, minBytes);
         System.out.println(minBytes);
         System.out.println(additionalBytes);

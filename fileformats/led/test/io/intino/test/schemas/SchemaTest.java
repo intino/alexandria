@@ -1,53 +1,55 @@
 package io.intino.test.schemas;
 
-import io.intino.alexandria.led.allocators.DefaultAllocator;
-import io.intino.alexandria.led.allocators.SchemaAllocator;
-import io.intino.alexandria.led.util.memory.LedLibraryConfig;
+import io.intino.alexandria.led.util.BitUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import java.nio.ByteOrder;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import static io.intino.alexandria.led.util.BitUtils.maxPossibleNumber;
+import static io.intino.alexandria.led.util.BitUtils.toBinaryString;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.memset;
 import static io.intino.test.schemas.TestSchema.*;
+import static java.nio.ByteOrder.BIG_ENDIAN;
+import static java.nio.ByteOrder.LITTLE_ENDIAN;
 import static org.junit.Assert.assertEquals;
 
 @Ignore
+@RunWith(Parameterized.class)
 public class SchemaTest {
 
-	static {
-		//LedLibraryConfig.USE_MEMORY_TRACKER.set(true);
-		//LedLibraryConfig.ALLOCATION_CALLBACK.set(alloc -> System.out.println(alloc.toStringPretty()));
-		//LedLibraryConfig.DEFAULT_BYTE_ORDER.set(ByteOrder.BIG_ENDIAN);
+	@Parameterized.Parameters
+	public static Collection<?> getParameters() {
+		return List.of(BIG_ENDIAN, LITTLE_ENDIAN);
 	}
 
 	private final Random random;
-	private final SchemaAllocator<TestSchema> allocator;
+	private final ByteOrder byteOrder;
 	private TestSchema schema;
 
-	public SchemaTest() {
-		random = new Random();
-		allocator = new DefaultAllocator<>(SIZE, TestSchema::new);
+	public SchemaTest(ByteOrder byteOrder) {
+		this.byteOrder = byteOrder;
+		random = new Random(System.nanoTime());
 	}
 
 	@Before
 	public void setup() {
-		schema = allocator.malloc();
+		schema = new TestSchema(byteOrder);
 		// Random values in memory
 		for (int i = 0; i < SIZE; i++) memset(schema.address(), 1, random.nextInt() - random.nextInt());
 	}
 
-	@Ignore
 	@Test
 	public void testSetFieldDoesNotModifyOtherFields() {
-		schema = allocator.calloc();
+		schema = new TestSchema(byteOrder);
 		List<Function<TestSchema, Number>> getters = getters();
 		List<BiConsumer<TestSchema, Number>> setters = setters();
 		List<Function<Number, Number>> interpreter = interpreters();
@@ -55,21 +57,33 @@ public class SchemaTest {
 		Random random = new Random(System.nanoTime());
 
 		for(int i = 0;i < setters.size();i++) {
+			char c = (char)((char)(i-1) + 'a');
+			if(i == 0) {
+				System.out.println("=== id ===");
+			} else {
+				System.out.println("=== " + c + " ===");
+			}
 			BiConsumer<TestSchema, Number> setter = setters.get(i);
 			final Function<TestSchema, Number> getter = getters.get(i);
 			final Function<Number, Number> interpret = interpreter.get(i);
-			Number value = interpret.apply(random.nextInt());
+			Number value = interpret.apply(maxPossibleNumber(schema.fieldSizes()[i]));
 			setter.accept(schema, value);
 			// Assert the value is correctly set
 			assertEquals(value, getter.apply(schema));
 			lastValues[i] = value;
+			//System.out.println(schema);
 			// Check if other fields have been affected
 			for(int j = 0;j < getters.size();j++) {
 				if(i == j) continue;
 				if(lastValues[j] == null) continue;
-				assertEquals(interpreter.get(j).apply(lastValues[j]), getters.get(j).apply(schema));
+				String c2 = j == 0 ? "id" : String.valueOf((char)((char)(j-1) + 'a'));
+				System.out.println("\tChecking " + c2);
+				Number expected = interpreter.get(j).apply(lastValues[j]);
+				Number actual = getters.get(j).apply(schema);
+				assertEquals("\n"+toBinaryString(expected.longValue(), 64, 8)
+								+ "\n"+toBinaryString(actual.longValue(), 64, 8),
+						expected, actual);
 			}
-			System.out.println(schema);
 		}
 	}
 
@@ -82,7 +96,7 @@ public class SchemaTest {
 				Number::intValue,
 				Number::longValue,
 				Number::doubleValue,
-				Number::intValue
+				Number::byteValue
 		);
 	}
 
@@ -135,9 +149,11 @@ public class SchemaTest {
 
 	@Test
 	public void c() {
-		float c = (float) maxPossibleNumber(C_BITS);
-		schema.c(c);
-		assertEquals(c, schema.c(), 0.0f);
+		for(int i = 0;i < 10;i++) {
+			float c = (float) Math.random() * (i + 1);
+			schema.c(c);
+			assertEquals(c, schema.c(), 0.0f);
+		}
 	}
 
 	@Test
@@ -149,8 +165,7 @@ public class SchemaTest {
 
 	@Test
 	public void e() {
-		schema = allocator.calloc();
-		long e = (long) maxPossibleNumber(E_BITS) / 2;
+		long e = Math.abs(new Random().nextInt());//maxPossibleNumber(E_BITS) / 2;
 		schema.e(e);
 		assertEquals(schema.toString(), e, schema.e());
 	}

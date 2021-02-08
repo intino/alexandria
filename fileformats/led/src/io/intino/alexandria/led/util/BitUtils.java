@@ -89,7 +89,7 @@ public final class BitUtils {
 		return (int) abs(min(bufferSize - byteIndex - numBytes, 0));
 	}
 
-	public static int getMinimumBytesForBits(int bitIndex, int bitCount) {
+	public static int getMinimumBytesFor(int bitIndex, int bitCount) {
 		final int bitOffset = offsetOf(bitIndex);
 		final int numBytes = (int)Math.ceil((bitOffset + bitCount) / 8.0);
 		return roundSize(numBytes);
@@ -99,6 +99,11 @@ public final class BitUtils {
 		if (n == 1 || n == 2 || n == 4 || n == 8) return n;
 		if (n < 4) return 4;
 		return Math.max(n, 8);
+	}
+
+	public static long extendSign(long n, int nBits) {
+		final long shift = Long.SIZE - nBits;
+		return n << shift >> shift;
 	}
 
 	public static String toBinaryString(long value, int padding, int splitSize) {
