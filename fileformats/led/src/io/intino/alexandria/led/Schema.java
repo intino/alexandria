@@ -8,13 +8,18 @@ import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.util.memory.MemoryUtils;
 import io.intino.alexandria.led.util.OffHeapObject;
 import io.intino.alexandria.logger.Logger;
+import org.apache.commons.lang3.StringUtils;
 
+import javax.xml.crypto.Data;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Constructor;
-import java.util.Objects;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.nio.ByteOrder.*;
 
@@ -139,6 +144,49 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 		return bitBuffer.toHexString();
 	}
 
+	@Override
+	public String toString() {
+		return toString(false);
+	}
+
+	public String toString(boolean verbose) {
+		Class<? extends Schema> clazz = getClass();
+		SchemaDefinition definition = clazz.getAnnotation(SchemaDefinition.class);
+		if(definition == null) {
+			return super.toString();
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(definition.name());
+		if(verbose) {
+			sb.append("(").append(definition.size()).append(" bytes)");
+		}
+		sb.append(" {");
+
+		final Method[] methods = Arrays.stream(clazz.getMethods())
+				.filter(m -> m.isAnnotationPresent(Attribute.class))
+				.sorted(Comparator.comparingInt(m -> m.getAnnotation(Attribute.class).index()))
+				.toArray(Method[]::new);
+
+		for(int i = 0;i < methods.length;i++) {
+			Method method = methods[i];
+			Attribute attribute = method.getAnnotation(Attribute.class);
+			Object value;
+			try {
+				value = method.invoke(this);
+			} catch (Throwable ignored) {
+				value = null;
+			}
+			if(verbose) {
+				sb.append('[').append(attribute.type().typename())
+						.append(',').append(attribute.index())
+						.append(',').append(attribute.size()).append("] ");
+			}
+			sb.append(attribute.name()).append(" = ").append(value);
+			if(i < methods.length - 1) sb.append(", ");
+		}
+		return sb.append('}').toString();
+	}
 
 	public enum DataType {
 
@@ -151,22 +199,33 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 		LONG(Long.SIZE),
 		UNSIGNED_LONG(Long.SIZE - 1),
 		FLOAT(Float.SIZE),
-		DOUBLE(Double.SIZE);
+		DOUBLE(Double.SIZE),
+		CATEGORY(Long.SIZE);
 
-		public final int bitCount;
-		public final int byteCount;
+		public final int maxSize;
 
-		DataType(int bitCount) {
-			this.bitCount = bitCount;
-			this.byteCount = bitCount * Byte.SIZE;
+		DataType(int maxSize) {
+			this.maxSize = maxSize;
+		}
+
+		public String typename() {
+			return name().toLowerCase();
 		}
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.METHOD)
-	@interface Attribute {
+	public @interface Attribute {
+		String name();
 		DataType type();
-		int bitIndex();
-		int bitCount();
+		int index();
+		int size();
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
+	public @interface SchemaDefinition {
+		String name();
+		int size();
 	}
 }

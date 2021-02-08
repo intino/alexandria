@@ -83,9 +83,9 @@ public class TestDataTypes {
 
     @Test
     public void testSignedLong() {
-        long value = Long.MIN_VALUE;
-        buffer.setAlignedLong(0, value);
-        assertEquals(value, buffer.getAlignedLong(0));
+        long value = -(maxPossibleNumber(40) / 2);
+        buffer.setLongNBits(0, 40, value);
+        assertEquals(value, buffer.getLongNBits(0, 40));
     }
 
     @Test
@@ -93,6 +93,13 @@ public class TestDataTypes {
         long value = maxPossibleNumber(Long.SIZE - 1);
         buffer.setAlignedULong(0, value);
         assertEquals(value, buffer.getAlignedULong(0));
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testUnsignedLong64Bits() {
+        long value = Long.MIN_VALUE;
+        buffer.setULongNBits(0, 64, value);
+        assertEquals(value, buffer.getULongNBits(0, 64));
     }
 
     @Parameterized.Parameters

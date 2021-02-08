@@ -6,6 +6,7 @@ import io.intino.alexandria.led.buffers.BigEndianBitBuffer;
 import io.intino.alexandria.led.buffers.BitBuffer;
 import io.intino.alexandria.led.buffers.LittleEndianBitBuffer;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
+import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.util.BitUtils;
 import io.intino.alexandria.led.util.memory.ModifiableMemoryAddress;
 
@@ -17,7 +18,7 @@ import static io.intino.alexandria.led.util.BitUtils.*;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.memset;
 import static java.nio.ByteOrder.*;
 
-public class Test {
+public class OtherTests {
 
     public static BitInfo bitInfo;
     private static int bitOffset;
