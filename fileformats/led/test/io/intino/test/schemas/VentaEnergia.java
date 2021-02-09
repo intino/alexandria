@@ -1,7 +1,7 @@
 package io.intino.test.schemas;
 
 import io.intino.alexandria.led.Schema;
-import io.intino.alexandria.led.Schema.SchemaDefinition;
+import io.intino.alexandria.led.Schema.Definition;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.util.memory.MemoryAddress;
@@ -11,7 +11,7 @@ import java.nio.ByteBuffer;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@SchemaDefinition(name = "VentaEnergia", size = VentaEnergia.SIZE)
+@Definition(name = "VentaEnergia", size = VentaEnergia.SIZE)
 public class VentaEnergia extends Schema {
 
     public static void main(String[] args) {
