@@ -66,15 +66,9 @@ public class AnalyticBuilderRenderer extends Renderer {
 
 
 	private FrameBuilder renderCube(Cube cube) {
-		FrameBuilder builder = new FrameBuilder("cube").add("package", packageName).add("name", cube.name$());
-		factRenderer.addFact(cube, builder);
-		//List<FrameBuilder> list = columns(cube.fact());
-		//cube.fact().columnList().stream().filter(SizedData::isId).findFirst()
-		//		.ifPresent(id -> builder.add("id", id.name$()));
-		//final int bitSize = cube.fact().columnList().stream().mapToInt(this::sizeOf).sum();
-		//builder.add("size", (int)Math.ceil(bitSize / (float)Byte.SIZE));
-		//builder.add("column", list.toArray(new FrameBuilder[0]));
-		return builder;
+		FrameBuilder fb = new FrameBuilder("cube").add("package", packageName).add("name", cube.name$());
+		factRenderer.addFact(cube, fb);
+		return fb;
 	}
 
 	private void renderBuilder(KonosGraph graph) {

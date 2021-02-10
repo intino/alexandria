@@ -1,6 +1,8 @@
 def type(cube & src)
 	package $package.analytic.cubes;
 
+    import io.intino.alexandria.led.Schema;
+
 	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
 
 		public $name+FirstUpperCase(java.util.List<Loader> loaders) {
@@ -173,7 +175,7 @@ def type(cube)
 
 			@Override
 			public long id() {
-				return bitBuffer.getAlignedLong(0);
+				return $id();
 			}
 
 			@Override
@@ -509,7 +511,7 @@ end
 
 def type(column & bool) trigger(getter)
 	public boolean $name+firstLowerCase() {
-		bitBuffer.getBoolean($offset);
+		return bitBuffer.getBoolean($offset);
 	}
 end
 
