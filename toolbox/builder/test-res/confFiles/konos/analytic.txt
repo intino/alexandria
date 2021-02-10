@@ -1,24 +1,24 @@
 def.file
-/Users/oroncal/workspace/sandbox/cubes-sandbox/src/Analytics.konos#true
+G:/MonentiaDev/intino-cubes-sandbox/src/Analytics.konos#true
 
 project
 cubes-sandbox
 module
 cubes-sandbox
 outputpath
-/Users/oroncal/workspace/sandbox/cubes-sandbox/gen
+G:/MonentiaDev/intino-cubes-sandbox/gen
 final_outputpath
-/Users/oroncal/workspace/sandbox/cubes-sandbox/out/production/cubes-sandbox/
+G:/MonentiaDev/intino-cubes-sandbox/out/production/cubes-sandbox/
 res.path
-/Users/oroncal/workspace/sandbox/cubes-sandbox/res
+G:/MonentiaDev/intino-cubes-sandbox/res
 intino.project.path
-/Users/oroncal/workspace/sandbox/cubes-sandbox/.intino
+G:/MonentiaDev/intino-cubes-sandbox/.intino
 project.path
-/Users/oroncal/workspace/sandbox/cubes-sandbox
+G:/MonentiaDev/intino-cubes-sandbox/
 module.path
-/Users/oroncal/workspace/sandbox/cubes-sandbox
+G:/MonentiaDev/intino-cubes-sandbox/
 src.path
-/Users/oroncal/workspace/sandbox/cubes-sandbox/src
+G:/MonentiaDev/intino-cubes-sandbox/src
 
 groupId
 org.example

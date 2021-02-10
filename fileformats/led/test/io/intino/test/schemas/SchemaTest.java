@@ -184,6 +184,12 @@ public class SchemaTest {
 		assertEquals(g, schema.g());
 	}
 
+	@Test
+	public void h() {
+		boolean value = true;
+		schema.h(value);
+		assertEquals(value, schema.h());
+	}
 
 	private int factorial(int n) {
 		int result = 1;

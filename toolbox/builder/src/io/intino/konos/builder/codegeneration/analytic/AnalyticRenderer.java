@@ -60,9 +60,9 @@ public class AnalyticRenderer extends Renderer {
 
 	private void renderCube(Cube cube, FrameBuilder fb) {
 		addDimensionsAndIndicators(cube, null, fb);
-		fb.add("id", factRenderer.idOf(cube.fact()).name$());
 		if (cube.splitted() != null) addSplit(cube, fb);
-		fb.add("index", new FrameBuilder("index", cube.index() != null ? "normal" : "total").add("value", ""));
+		fb.add("index", new FrameBuilder("index", cube.index() != null ? "normal" : "total")
+				.add("value", ""));
 		factRenderer.addFact(cube, fb);
 		write(cube, fb);
 	}
@@ -90,7 +90,8 @@ public class AnalyticRenderer extends Renderer {
 	}
 
 	private void addSplit(Cube cube, FrameBuilder fb) {
-		fb.add("split", new FrameBuilder("split").add("name", cube.splitted().name$()).add("value", cube.splitted().splits().toArray(new String[0])));
+		fb.add("split", new FrameBuilder("split").add("name", cube.splitted().name$())
+				.add("value", cube.splitted().splits().toArray(new String[0])));
 	}
 
 	private Template template(Cube cube) {

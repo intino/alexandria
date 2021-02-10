@@ -47,7 +47,7 @@ public class TestSchema extends Schema {
 	public static final int G_OFFSET = F_OFFSET + F_BITS;
 	public static final int G_BITS = 20;
 	public static final int H_OFFSET = G_OFFSET + G_BITS;
-	public static final int H_BITS = 9;
+	public static final int H_BITS = 1;
 	public static final int I_OFFSET = H_OFFSET + H_BITS;
 	public static final int I_BITS = 9;
 	public static final int J_OFFSET = I_OFFSET + I_BITS;
@@ -170,13 +170,12 @@ public class TestSchema extends Schema {
 		return this;
 	}
 
-	public SimpleWord h() {
-		final byte word = bitBuffer.getByteNBits(H_OFFSET, H_BITS);
-		return word == NULL ? null : SimpleWord.values()[word - 1];
+	public boolean h() {
+		return bitBuffer.getBoolean(H_OFFSET);
 	}
 
-	public TestSchema h(SimpleWord h) {
-		bitBuffer.setByteNBits(H_OFFSET, H_BITS, (byte)(h == null ? NULL : h.ordinal() + 1));
+	public TestSchema h(boolean h) {
+		bitBuffer.setBoolean(H_OFFSET, h);
 		return this;
 	}
 

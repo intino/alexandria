@@ -1,6 +1,8 @@
 def type(cube & src)
 	package $package.analytic.cubes;
 
+    import io.intino.alexandria.led.Schema;
+
 	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
 
 		public $name+FirstUpperCase(java.util.List<Loader> loaders) {
@@ -143,7 +145,6 @@ def type(cube)
 			return components;
 		}
 
-        @Schema.Definition(name = "$name+firstUpperCase", size = $size)
 		public static class Fact extends Schema {
 
 			public static final int SIZE = $size;
@@ -174,7 +175,7 @@ def type(cube)
 
 			@Override
 			public long id() {
-				return bitBuffer.getAlignedLong(0);
+				return $id();
 			}
 
 			@Override
@@ -491,65 +492,54 @@ def trigger(dimension)
 end
 
 def type(column) type(id) trigger(getter)
-    @Id
-    @Attribute(name = "$name", type = Schema.DataType.LONG, index = 0, size = Long.SIZE)
 	public long $name+firstLowerCase() {
 		return bitBuffer.getAlignedLong(0);
 	}
 end
 
 def type(column) type(longInteger) trigger(getter)
-    @Attribute(name = "$name", type = Schema.DataType.LONG, index = $offset, size = $bits)
 	public long $name+firstLowerCase() {
 		return bitBuffer.get$aligned~Long[$bits+nbits]($offset[, $bits]);
 	}
 end
 
 def type(column) type(integer) trigger(getter)
-    @Attribute(name = "$name", type = Schema.DataType.INT, index = $offset, size = $bits)
 	public int $name+firstLowerCase() {
 		return bitBuffer.get$aligned~Integer[$bits+nbits]($offset[, $bits]);
 	}
 end
 
 def type(column & bool) trigger(getter)
-    @Attribute(name = "$name", type = Schema.DataType.BYTE, index = $offset, size = 2)
-	public Boolean $name+firstLowerCase() {
-		final byte value = bitBuffer.getByteNBits($offset, 2);
-		return value == NULL ? null : value == 2;
+	public boolean $name+firstLowerCase() {
+		return bitBuffer.getBoolean($offset);
 	}
 end
 
 def type(column & datetime) trigger(getter)
-    @Attribute(name = "$name", type = Schema.DataType.LONG, index = $offset, size = $bits)
 	public $type $name+firstLowerCase() {
 		return java.time.Instant.ofEpochMilli(bitBuffer.get$aligned~Long[$bits+nbits]($offset[, $bits]));
 	}
 end
 
 def type(column & date) trigger(getter)
-    @Attribute(name = "$name", type = Schema.DataType.SHORT, index = $offset, size = $bits)
 	public $type $name+firstLowerCase() {
 		return java.time.LocalDate.ofEpochDay(Short.toUnsignedInt(bitBuffer.get$aligned~Short[$bits+nbits]($offset[, $bits])));
 	}
 end
 
 def type(column & categorical) trigger(getter)
-    @Attribute(name = "$name", type = Schema.DataType.INT, index = $offset, size = $bits)
 	public $type+firstUpperCase.Component $name+firstLowerCase() {
 		return $type+firstUpperCase.instance().component(bitBuffer.getIntegerNBits($offset, $bits));
 	}
 end
 
 def type(column & real) attribute(size:32) trigger(getter)
-    @Attribute(name = "$name", type = Schema.DataType.FLOAT, index = $offset, size = $bits)
 	public float $name+firstLowerCase() {
 		return bitBuffer.getAlignedReal$size~Bits($offset);
 	}
 end
 
 def type(column & real) trigger(getter)
-    @Attribute(name = "$name", type = Schema.DataType.DOUBLE, index = $offset, size = $bits)
 	public double $name+firstLowerCase() {
 		return bitBuffer.getAlignedReal$size~Bits($offset);
 	}

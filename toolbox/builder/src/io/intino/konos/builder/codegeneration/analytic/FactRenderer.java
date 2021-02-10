@@ -32,11 +32,12 @@ public class FactRenderer {
     }
 
     public void addFact(Cube cube, FrameBuilder fb) {
+        fb.add("id", idOf(cube.fact()).name$());
         calculateColumnSizes(cube.fact().columnList());
         int offset = 0;
         List<Column> columns = cube.fact().columnList().stream().sorted(COMPARATOR).collect(toList());
         for (Column column : columns) {
-            if(column.isId()) fb.add("id", column.name$());
+            //if(column.isId()) fb.add("id", column.name$());
             final int columnSize = column.asType().size();
             if(getMinimumBytesFor(offset, columnSize) > Long.BYTES)
                 offset = roundUp2(offset, Long.SIZE);
