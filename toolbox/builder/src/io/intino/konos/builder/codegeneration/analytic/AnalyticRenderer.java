@@ -9,12 +9,7 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Axis;
 import io.intino.konos.model.graph.Cube;
-import io.intino.konos.model.graph.Cube.Fact.Column;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.SizedData;
-import io.intino.magritte.framework.Concept;
-import io.intino.magritte.framework.Layer;
-import io.intino.magritte.framework.Predicate;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -25,16 +20,18 @@ import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamel
 import static io.intino.konos.builder.helpers.Commons.*;
 
 public class AnalyticRenderer extends Renderer {
+
 	private final File src;
 	private final File gen;
 	private final KonosGraph graph;
-	private final Map<String, Integer> axisSizes = new HashMap<>();
+	private final FactRenderer factRenderer;
 
 	public AnalyticRenderer(CompilationContext context, KonosGraph graph) {
 		super(context, Target.Owner);
 		this.src = new File(context.src(Target.Owner), "analytic");
 		this.gen = new File(context.gen(Target.Owner), "analytic");
 		this.graph = graph;
+		this.factRenderer = new FactRenderer();
 	}
 
 	@Override
@@ -45,7 +42,8 @@ public class AnalyticRenderer extends Renderer {
 
 	private void renderAxes(List<Axis> axes) {
 		if (axes.isEmpty()) return;
-		writeFrame(gen, "Axis", customize(new CategoricalAxisTemplate()).render(new FrameBuilder("interface").add("package", context.packageName()).toFrame()));
+		writeFrame(gen, "Axis", customize(new CategoricalAxisTemplate()).render(new FrameBuilder("interface")
+				.add("package", context.packageName()).toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axes.get(0)), javaFile(gen, "Axis").getAbsolutePath()));
 		for (Axis axis : axes)
 			if (axis.isCategorical()) renderAxis(axis.asCategorical());
@@ -62,17 +60,17 @@ public class AnalyticRenderer extends Renderer {
 
 	private void renderCube(Cube cube, FrameBuilder fb) {
 		addDimensionsAndIndicators(cube, null, fb);
-		fb.add("id", cube.fact().columnList().stream().filter(SizedData::isId).map(Layer::name$).findFirst().orElse(null));
+		fb.add("id", factRenderer.idOf(cube.fact()).name$());
 		if (cube.splitted() != null) addSplit(cube, fb);
 		fb.add("index", new FrameBuilder("index", cube.index() != null ? "normal" : "total").add("value", ""));
-		addFact(cube, fb);
+		factRenderer.addFact(cube, fb);
 		write(cube, fb);
 	}
 
 	private void renderVirtualCube(Cube.Virtual virtualCube, FrameBuilder fb) {
 		for (Cube reference : new Cube[]{virtualCube.main(), virtualCube.join()}) {
 			addDimensionsAndIndicators(reference, virtualCube.asCube(), fb);
-			addFact(reference, fb);
+			factRenderer.addFact(reference, fb);
 		}
 		fb.add("index", new FrameBuilder("index", virtualCube.index() != null ? "index" : "total").add("value", ""));
 		fb.add("mainCube", virtualCube.main().name$());
@@ -91,25 +89,6 @@ public class AnalyticRenderer extends Renderer {
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(cube), javaFile(new File(src, "cubes"), firstUpperCase(cube.name$())).getAbsolutePath()));
 	}
 
-	private void addFact(Cube cube, FrameBuilder fb) {
-		calculateColumnSizes(cube.fact().columnList());
-		int offset = 0;
-		List<Column> columns = new ArrayList<>(cube.fact().columnList());
-		columns.sort(Comparator.comparingInt(a -> a.asType().size()));
-		Collections.reverse(columns);
-		Column idColumn = columns.stream().filter(SizedData::isId).findFirst().orElse(null);
-		if (idColumn != null) {
-			fb.add("column", columnFrame(idColumn, offset, cube.name$()));
-			offset += idColumn.asType().size();
-		}
-		columns.remove(idColumn);
-		for (Column column : columns) {
-			fb.add("column", columnFrame(column, offset, cube.name$()));
-			offset += column.asType().size();
-		}
-		fb.add("size", (int) Math.ceil(offset / 8.));
-	}
-
 	private void addSplit(Cube cube, FrameBuilder fb) {
 		fb.add("split", new FrameBuilder("split").add("name", cube.splitted().name$()).add("value", cube.splitted().splits().toArray(new String[0])));
 	}
@@ -120,7 +99,7 @@ public class AnalyticRenderer extends Renderer {
 
 	private void addDimensionsAndIndicators(Cube cube, Cube sourceCube, FrameBuilder fb) {
 		cube.dimensionList().forEach(selector -> fb.add("dimension", dimensionFrame(cube, sourceCube, selector)));
-		cube.indicatorList().forEach(indicator -> fb.add("indicator", inicatorFrame(cube, sourceCube, indicator)));
+		cube.indicatorList().forEach(indicator -> fb.add("indicator", indicatorFrame(cube, sourceCube, indicator)));
 		for (Cube.CustomFilter customFilter : cube.customFilterList())
 			fb.add("customFilter", new FrameBuilder("customFilter")
 					.add("cube", sourceCube != null ? sourceCube.name$() : cube.name$())
@@ -141,7 +120,7 @@ public class AnalyticRenderer extends Renderer {
 		return fb;
 	}
 
-	private FrameBuilder inicatorFrame(Cube cube, Cube sourceCube, Cube.Indicator indicator) {
+	private FrameBuilder indicatorFrame(Cube cube, Cube sourceCube, Cube.Indicator indicator) {
 		return new FrameBuilder("indicator").add(indicator.isAverage() ? "average" : "sum").
 				add("cube", sourceCube != null ? sourceCube.name$() : cube.name$()).
 				add("name", indicator.name$()).
@@ -149,77 +128,6 @@ public class AnalyticRenderer extends Renderer {
 				add("index", new FrameBuilder((sourceCube == null && cube.index() != null) || (sourceCube != null && sourceCube.index() != null) ? "index" : "total")).
 				add("source", indicator.source().name$()).
 				add("unit", indicator.unit());
-	}
-
-	private FrameBuilder columnFrame(Column column, int offset, String cube) {
-		if (column.isCategory()) return processCategoryColumn(column.asCategory(), column.name$(), offset, cube);
-		else return processColumn(column, offset, cube);
-	}
-
-	private FrameBuilder processColumn(Column column, int offset, String cube) {
-		SizedData.Type asType = column.asType();
-		FrameBuilder builder = new FrameBuilder("column", column.core$().is(Cube.Fact.Attribute.class) ? "attribute" : "measure")
-				.add("name", column.a$(Column.class).name$())
-				.add("offset", offset)
-				.add("cube", cube)
-				.add("type", type(asType));
-		column.core$().conceptList().stream().filter(Concept::isAspect).map(Predicate::name).forEach(builder::add);
-		if (isAligned(asType, offset)) builder.add("aligned", "Aligned");
-		else builder.add("bits", asType.size());
-		builder.add("size", asType.size());
-		return builder;
-	}
-
-	private FrameBuilder processCategoryColumn(SizedData.Category column, String name, int offset, String cube) {
-		Axis.Categorical axis = column.axis().asCategorical();
-		return new FrameBuilder("column", "categorical")
-				.add("name", name)
-				.add("type", snakeCaseToCamelCase().format(axis.name$()).toString())
-				.add("offset", offset)
-				.add("cube", cube)
-				.add("bits", column.asSizedData().asType().size());
-
-	}
-
-	private String type(SizedData.Type type) {
-		if (type.i$(SizedData.Category.class)) return type.name$();
-		return isPrimitive(type) ? type.primitive() : type.type();
-	}
-
-	private void calculateColumnSizes(List<Column> columns) {
-		for (Column column : columns)
-			if (column.isCategory()) column.asType().size(sizeOf(column.asCategory().axis().asCategorical()));
-	}
-
-	private Integer sizeOf(Axis.Categorical axis) {
-		try {
-			if (!axisSizes.containsKey(axis.name$()))
-				axisSizes.put(axis.name$(), (int) Math.ceil(log2(countLines(axis) + 1)));
-			return axisSizes.get(axis.name$());
-		} catch (IOException e) {
-			return 0;
-		}
-	}
-
-	private int countLines(Axis.Categorical axis) throws IOException {
-		return (int) new BufferedReader(new InputStreamReader(resource(axis))).lines().count();
-	}
-
-	private FileInputStream resource(Axis.Categorical axis) throws FileNotFoundException {
-		return new FileInputStream(axis.tsv().getFile());
-	}
-
-	private boolean isAligned(SizedData.Type attribute, int offset) {
-		return (offset == 0 || log2(offset) % 1 == 0) && attribute.maxSize() == attribute.size();
-	}
-
-	private boolean isPrimitive(SizedData.Type attribute) {
-		SizedData data = attribute.asSizedData();
-		return data.isBool() || data.isInteger() || data.isLongInteger() || data.isId() || data.isReal();
-	}
-
-	public static double log2(int N) {
-		return (Math.log(N) / Math.log(2));
 	}
 
 	private void renderAxis(Axis.Categorical axis) {
@@ -248,7 +156,6 @@ public class AnalyticRenderer extends Renderer {
 		return axis.includeLabel() != null ? 3 : 2;
 	}
 
-
 	private void renderAxis(Axis.Continuous axis) {
 		FrameBuilder fb = new FrameBuilder("continuous").add("package", context.packageName()).add("name", snakeCaseToCamelCase().format(axis.name$()).toString()).add("label", axis.label());
 		fb.add("rangeSize", axis.rangeList().size());
@@ -270,6 +177,5 @@ public class AnalyticRenderer extends Renderer {
 	private boolean alreadyRendered(File destination, String name) {
 		return Commons.javaFile(destination, name).exists();
 	}
-
 }
 

@@ -1,10 +1,14 @@
 def type(cube)
-	package $package+ValidPackage.analytic.cubes;
+	package $package+validPackage~.analytic.cubes;
 
-	import $package.analytic.axes.*;
+    import io.intino.alexandria.led.Schema;
+	import $package+validPackage~.analytic.axes.*;
 
-	public class $name+firstUpperCase extends io.intino.alexandria.led.Schema {
+    @Schema.Definition(name = "$name+firstUpperCase", size = $size)
+	public class $name+firstUpperCase extends Schema {
+
 		[$split]
+
 		public static final int SIZE = $size;
 
 		public $name+firstUpperCase() {
@@ -19,9 +23,9 @@ def type(cube)
 			return SIZE;
 		}
 
-		[protected long id() {
+		protected long id() {
 			return $id();
-		}]
+		}
 
 		[$column+getter...[$NL$NL]]
 
@@ -64,21 +68,21 @@ def trigger(nbits)
 end
 
 def type(column & integer) trigger(setter)
-	public $owner+firstUpperCase $name+firstLowerCase($type $name+firstLowerCase) {
+	public $owner+firstUpperCase $name+firstLowerCase(int $name+firstLowerCase) {
 		bitBuffer.set$aligned~Integer[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
 		return this;
 	}
 end
 
 def type(column & bool) trigger(setter)
-	public $owner+firstUpperCase $name+firstLowerCase($type $name+firstLowerCase) {
+	public $owner+firstUpperCase $name+firstLowerCase(boolean $name+firstLowerCase) {
 		bitBuffer.setByteNBits($offset, $bits, (byte) ($name+firstLowerCase ? 2 : 1));
 		return this;
 	}
 end
 
 def type(column & real) attribute(size:32) trigger(setter)
-	public $owner+firstUpperCase $name+firstLowerCase(Float $name+firstLowerCase) {
+	public $owner+firstUpperCase $name+firstLowerCase(float $name+firstLowerCase) {
 		bitBuffer.setAlignedReal$size~Bits($offset, $name+firstLowerCase);
 		return this;
 	}
@@ -91,13 +95,19 @@ def type(column & real) trigger(setter)
 	}
 end
 
-def type(column) type(id | longInteger) trigger(setter)
-	public $owner+firstUpperCase $name+firstLowerCase($type $name+firstLowerCase) {
+def type(column) type(longInteger) trigger(setter)
+	public $owner+firstUpperCase $name+firstLowerCase(long $name+firstLowerCase) {
 		bitBuffer.set$aligned~Long[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
 		return this;
 	}
 end
 
+def type(column) type(id) trigger(setter)
+	public $owner+firstUpperCase $name+firstLowerCase(long $name+firstLowerCase) {
+		bitBuffer.setAlignedLong(0, $name+firstLowerCase);
+		return this;
+	}
+end
 
 def type(column & datetime) trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase($type $name+firstLowerCase) {
@@ -114,8 +124,10 @@ def type(column & date) trigger(setter)
 end
 
 def type(column & id) trigger(getter)
+    @Id
+    @Attribute(name = "$name", type = Schema.DataType.LONG, index = 0, size = 64)
 	public long $name+firstLowerCase() {
-		return bitBuffer.get$aligned~Long[$bits+nbits]($offset[, $bits]);
+		return bitBuffer.getAlignedLong(0);
 	}
 end
 

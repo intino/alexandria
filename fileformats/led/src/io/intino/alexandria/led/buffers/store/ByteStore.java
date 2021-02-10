@@ -12,6 +12,10 @@ import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
 
 public interface ByteStore extends OffHeapObject {
 
+	static ByteStore empty() {
+		return new EmptyByteStore();
+	}
+
 	static ByteStore wrap(byte[] array, int baseOffset, int size) {
 		ByteBuffer buffer = allocBuffer(array.length);
 		buffer.put(array).clear();
