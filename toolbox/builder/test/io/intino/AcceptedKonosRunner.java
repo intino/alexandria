@@ -45,7 +45,6 @@ public class AcceptedKonosRunner {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/accessors.txt")});
 	}
 
-
 	@Test
 	public void analyticBuilder() {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/analytic_builder.txt")});
@@ -59,6 +58,11 @@ public class AcceptedKonosRunner {
 	@Test
 	public void cuentamaestra() {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/cfe/cuentamaestra.txt")});
+	}
+
+	@Test
+	public void procurador() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/cfe/procurador.txt")});
 	}
 
 	@Test

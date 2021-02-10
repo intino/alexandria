@@ -15,7 +15,7 @@ end
 
 def type(component & child & collection) trigger(declarations)
 	public [$ancestors+firstUpperCase...[.].] $name+firstUpperCase $name;
-	[$heading+declarations...[$NL]]
+	[$component+declarations...[$NL]]
 end
 
 def type(component & child & displaystamp & single) trigger(declarations)
@@ -184,7 +184,7 @@ end
 def type(component & child & collection) trigger(class)
 	public class $name+firstUpperCase extends $extends $implements {
 		[$reference+declaration...[$NL]]
-		[$heading+declaration...[$NL]]
+		[$component+declaration...[$NL]]
 
 		public $name+firstUpperCase($abstractBox+type box) {
 			super(box);
@@ -196,7 +196,7 @@ def type(component & child & collection) trigger(class)
 		public void $methodName() {
 			super.$methodName();
 			[$reference...[$NL]]
-			[$heading+child...[$NL]]
+			[$component+child...[$NL]]
 		}
 		$methods
 		[$component+class...[$NL$NL]]
@@ -295,7 +295,7 @@ end
 
 def type(component & child & collection) trigger(rootChildReferences)
 	[if ($parent != null)] $name = [$ancestorsNotMe...[.].]$name;
-	[$heading+rootChildReferences...[$NL]]
+	[$component+rootChildReferences...[$NL]]
 end
 
 def type(component & child) trigger(rootChildReferences)
@@ -308,7 +308,7 @@ end
 
 def type(component & child & collection) trigger(childReferences)
 	[if ($parent != null)] $name = [$ancestors...[.].]$name;
-	[$heading+childReferences...[$NL]]
+	[$component+childReferences...[$NL]]
 end
 
 def type(component & child) trigger(childReferences)
@@ -321,7 +321,7 @@ end
 
 def type(component & child & collection) trigger(rootReferences)
 	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
-	[$heading+rootChildReferences...[$NL]]
+	[$component+rootChildReferences...[$NL]]
 end
 
 def type(component & child & displaystamp) trigger(rootReferences)
@@ -355,7 +355,7 @@ end
 
 def type(component & child & collection) trigger(references)
 	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
-	[$heading+childReferences...[$NL]]
+	[$component+childReferences...[$NL]]
 end
 
 def type(component & child) trigger(references)
@@ -379,7 +379,7 @@ end
 def type(component & child & collection) trigger(initializations)
 	[$binding]
 	[$attachedTo]
-	[$heading+initializations...[$NL]]
+	[$component+initializations...[$NL]]
 end
 
 def type(component & child) trigger(initializations)
