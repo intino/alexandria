@@ -58,8 +58,11 @@ Component groupingToolbar
 	Request reset
 	Request removeFilter as Text
 
-Component sorting
+Component baseSorting
 	Request toggle
+
+Component sorting as ExtensionOf(baseSorting)
+Component sortingOrderBy as ExtensionOf(baseSorting)
 
 Component searchBox
 	Notification refreshCount as LongInteger

@@ -13,6 +13,18 @@ public class SortingRenderer extends BindingCollectionRenderer<Sorting> {
 	}
 
 	@Override
+	public FrameBuilder properties() {
+		FrameBuilder properties = super.properties();
+		addOrderByProperties(properties);
+		return properties;
+	}
+
+	private void addOrderByProperties(FrameBuilder properties) {
+		if (!element.isOrderBy()) return;
+		properties.add("mode", element.asOrderBy().mode() == Sorting.OrderBy.Mode.Ascending ? "asc" : "desc");
+	}
+
+	@Override
 	public void fill(FrameBuilder builder) {
 		addBinding(builder, element.collections());
 	}
