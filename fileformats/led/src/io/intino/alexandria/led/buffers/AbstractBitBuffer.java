@@ -49,6 +49,19 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 
 	protected abstract BitInfo computeBitInfo(int bitIndex, int bitCount);
 
+	// ================================= BOOLEAN =================================
+
+	@Override
+	public boolean getBoolean(int bitIndex) {
+		final short value = getByteNBits(bitIndex, 1);
+		return value != 0;
+	}
+
+	@Override
+	public void setBoolean(int bitIndex, boolean value) {
+		setByteNBits(bitIndex, 1, (byte) (value ? 1 : 0));
+	}
+
 	// ================================= BYTE =================================
 
 	@Override

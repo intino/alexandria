@@ -198,6 +198,10 @@ def type(properties & frame) trigger(specific)
    [ width="$width"][ height="$height"][ url="$url"]
 end
 
+def type(properties & sorting) trigger(specific)
+	[ mode="$mode"]
+end
+
 def type(properties) trigger(specific)
 end
 

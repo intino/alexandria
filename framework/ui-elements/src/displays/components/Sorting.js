@@ -5,12 +5,10 @@ import SortingNotifier from "../../../gen/displays/notifiers/SortingNotifier";
 import SortingRequester from "../../../gen/displays/requesters/SortingRequester";
 import {Typography} from "@material-ui/core";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import { BaseSortingStyles } from "./BaseSorting";
 
 const styles = theme => ({
-	link : {
-		color: theme.palette.primary.main,
-		cursor: "pointer"
-	},
+    ...BaseSortingStyles(theme),
 });
 
 class Sorting extends AbstractSorting {
@@ -31,9 +29,6 @@ class Sorting extends AbstractSorting {
 		);
 	};
 
-	handleToggle = () => {
-		this.requester.toggle();
-	};
 }
 
 export default withStyles(styles, { withTheme: true })(Sorting);

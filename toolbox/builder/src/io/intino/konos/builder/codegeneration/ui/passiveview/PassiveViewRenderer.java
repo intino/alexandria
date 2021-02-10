@@ -224,6 +224,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (passiveView.i$(Selector.RadioBox.class)) result.add("RadioBox");
 		if (passiveView.i$(Selector.CheckBox.class)) result.add("CheckBox");
 		if (passiveView.i$(DataComponents.Image.Avatar.class)) result.add("Avatar");
+		if (passiveView.i$(CatalogComponents.Sorting.OrderBy.class)) result.add("OrderBy");
 		if (passiveView.i$(Block.Parallax.class)) result.add("Parallax");
 		if (passiveView.i$(Dashboard.Shiny.class)) result.add("Shiny");
 		if (passiveView.i$(Dashboard.Metabase.class)) result.add("Metabase");

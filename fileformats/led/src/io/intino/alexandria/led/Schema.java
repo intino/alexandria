@@ -5,28 +5,26 @@ import io.intino.alexandria.led.buffers.BigEndianBitBuffer;
 import io.intino.alexandria.led.buffers.BitBuffer;
 import io.intino.alexandria.led.buffers.LittleEndianBitBuffer;
 import io.intino.alexandria.led.buffers.store.ByteStore;
-import io.intino.alexandria.led.util.memory.MemoryUtils;
 import io.intino.alexandria.led.util.OffHeapObject;
+import io.intino.alexandria.led.util.memory.MemoryUtils;
 import io.intino.alexandria.logger.Logger;
-import org.apache.commons.lang3.StringUtils;
 
-import javax.xml.crypto.Data;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Objects;
 
-import static java.nio.ByteOrder.*;
+import static java.nio.ByteOrder.LITTLE_ENDIAN;
 
 public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 
 	public static long idOf(Schema schema) {
-		return MemoryUtils.getLong(schema.address(), schema.baseOffset());
+		return schema.id();
 	}
 
 	public static <T extends Schema> int sizeOf(Class<T> type) {
@@ -151,7 +149,7 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 
 	public String toString(boolean verbose) {
 		Class<? extends Schema> clazz = getClass();
-		SchemaDefinition definition = clazz.getAnnotation(SchemaDefinition.class);
+		Definition definition = clazz.getAnnotation(Definition.class);
 		if(definition == null) {
 			return super.toString();
 		}
@@ -188,6 +186,7 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 		return sb.append('}').toString();
 	}
 
+
 	public enum DataType {
 
 		BYTE(Byte.SIZE),
@@ -223,8 +222,13 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.METHOD)
+	public @interface Id {
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.TYPE)
-	public @interface SchemaDefinition {
+	public @interface Definition {
 		String name();
 		int size();
 	}

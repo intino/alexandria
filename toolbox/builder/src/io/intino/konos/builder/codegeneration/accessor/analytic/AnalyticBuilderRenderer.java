@@ -7,6 +7,7 @@ import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.analytic.CategoricalAxisTemplate;
 import io.intino.konos.builder.codegeneration.analytic.ContinuousAxisTemplate;
+import io.intino.konos.builder.codegeneration.analytic.FactRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.graph.Axis;
 import io.intino.konos.model.graph.Cube;
@@ -28,9 +29,11 @@ import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class AnalyticBuilderRenderer extends Renderer {
+
 	private final KonosGraph graph;
 	private final File destination;
 	private final String packageName;
+	private final FactRenderer factRenderer;
 
 	public AnalyticBuilderRenderer(CompilationContext compilationContext, KonosGraph graph, File destination) {
 		super(compilationContext, Target.Owner);
@@ -38,6 +41,7 @@ public class AnalyticBuilderRenderer extends Renderer {
 		this.destination = destination;
 		this.destination.mkdirs();
 		this.packageName = compilationContext.packageName();
+		this.factRenderer = new FactRenderer();
 	}
 
 	@Override
@@ -62,13 +66,9 @@ public class AnalyticBuilderRenderer extends Renderer {
 
 
 	private FrameBuilder renderCube(Cube cube) {
-		FrameBuilder builder = new FrameBuilder("cube").add("package", packageName).add("name", cube.name$());
-		List<FrameBuilder> list = columns(cube.fact());
-		cube.fact().columnList().stream().filter(SizedData::isId).findFirst()
-				.ifPresent(id -> builder.add("id", id.name$()));
-		builder.add("size", cube.fact().columnList().stream().mapToInt(this::sizeOf).sum());
-		builder.add("column", list.toArray(new FrameBuilder[0]));
-		return builder;
+		FrameBuilder fb = new FrameBuilder("cube").add("package", packageName).add("name", cube.name$());
+		factRenderer.addFact(cube, fb);
+		return fb;
 	}
 
 	private void renderBuilder(KonosGraph graph) {

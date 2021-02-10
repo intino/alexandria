@@ -11,12 +11,14 @@ import io.intino.test.schemas.TestSchema;
 
 public class TestAllocatorsSpeed {
 
-	private static final int NUM_ELEMENTS = 20_000_000;
+	private static final int NUM_ELEMENTS = 40_000_000;
 	private static final float MS_TO_SECONDS = 1000.0f;
 
 	public static void main(String[] args) throws InterruptedException {
 
-		// warmUp();
+		warmUp();
+
+		final long defaultAllocatorTime = benchmark(new DefaultAllocator<>(TestSchema.SIZE, TestSchema::new));
 
 		final long ustackAllocatorTime = benchmark(StackAllocators.newUnmanaged(TestSchema.SIZE, NUM_ELEMENTS, TestSchema::new));
 
@@ -31,8 +33,6 @@ public class TestAllocatorsSpeed {
 		final long arrayAllocatorTime = benchmark(new ArrayAllocator<>(10, NUM_ELEMENTS / 10, TestSchema.SIZE, TestSchema::new));
 
 		final long listAllocatorTime = benchmark(new ListAllocator<>(NUM_ELEMENTS / 10, TestSchema.SIZE, TestSchema::new));
-
-		final long defaultAllocatorTime = benchmark(new DefaultAllocator<>(TestSchema.SIZE, TestSchema::new));
 
 
 		float max = Math.max(Math.max(defaultAllocatorTime, stackAllocatorTime), stackListAllocatorTime);
@@ -77,9 +77,11 @@ public class TestAllocatorsSpeed {
 
 	private static long benchmark(int n, SchemaAllocator<TestSchema> allocator) throws InterruptedException {
 
+		System.out.println("Testing Allocator " + allocator.getClass().getSimpleName());
+
 		Runtime.getRuntime().gc();
 
-		Thread.sleep(10);
+		Thread.sleep(100);
 
 		final long startTime = System.currentTimeMillis();
 
@@ -89,11 +91,11 @@ public class TestAllocatorsSpeed {
 			schema = allocator.malloc();
 		}
 
-		if (schema != null) {
-			schema.address();
-		}
-
 		final long time = System.currentTimeMillis() - startTime;
+
+		if (schema != null) {
+			System.setProperty("yyy", String.valueOf(schema.address()));
+		}
 
 		allocator.free();
 

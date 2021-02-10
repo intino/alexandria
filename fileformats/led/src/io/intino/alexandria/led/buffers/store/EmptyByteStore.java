@@ -4,6 +4,8 @@ import java.nio.ByteOrder;
 
 public class EmptyByteStore implements ByteStore {
 
+    private static final byte DEFAULT_VALUE = 0;
+
     @Override
     public ByteOrder order() {
         return ByteOrder.nativeOrder();
@@ -31,7 +33,7 @@ public class EmptyByteStore implements ByteStore {
 
     @Override
     public byte getByte(int byteIndex) {
-        return 0;
+        return DEFAULT_VALUE;
     }
 
     @Override
@@ -41,7 +43,7 @@ public class EmptyByteStore implements ByteStore {
 
     @Override
     public short getShort(int byteIndex) {
-        return 0;
+        return DEFAULT_VALUE;
     }
 
     @Override
@@ -51,7 +53,7 @@ public class EmptyByteStore implements ByteStore {
 
     @Override
     public char getChar(int byteIndex) {
-        return 0;
+        return DEFAULT_VALUE;
     }
 
     @Override
@@ -61,7 +63,7 @@ public class EmptyByteStore implements ByteStore {
 
     @Override
     public int getInt(int byteIndex) {
-        return 0;
+        return DEFAULT_VALUE;
     }
 
     @Override
@@ -71,7 +73,7 @@ public class EmptyByteStore implements ByteStore {
 
     @Override
     public long getLong(int byteIndex) {
-        return 0;
+        return DEFAULT_VALUE;
     }
 
     @Override
@@ -81,7 +83,7 @@ public class EmptyByteStore implements ByteStore {
 
     @Override
     public float getFloat(int byteIndex) {
-        return 0;
+        return DEFAULT_VALUE;
     }
 
     @Override
@@ -91,7 +93,7 @@ public class EmptyByteStore implements ByteStore {
 
     @Override
     public double getDouble(int byteIndex) {
-        return 0;
+        return DEFAULT_VALUE;
     }
 
     @Override

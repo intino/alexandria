@@ -1,6 +1,8 @@
 def type(cube & src)
 	package $package.analytic.cubes;
 
+    import io.intino.alexandria.led.Schema;
+
 	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
 
 		public $name+FirstUpperCase(java.util.List<Loader> loaders) {
@@ -49,7 +51,7 @@ def type(cube)
 
     public abstract class Abstract$name+FirstUpperCase {
 		private static final String ID_SEP = " - ";
-		private static Fact nullFact = new NullFact();
+		private static final Fact nullFact = new NullFact();
 		private final List<? extends Loader> loaders;
 		private final List<Predicate<Fact>> filterList = new ArrayList<>();
 		private final List<Axis> axes = new ArrayList<>();
@@ -143,8 +145,8 @@ def type(cube)
 			return components;
 		}
 
-
 		public static class Fact extends Schema {
+
 			public static final int SIZE = $size;
 
 			public Fact(ByteStore store) {
@@ -165,17 +167,15 @@ def type(cube)
 		}
 
 		public static class NullFact extends Fact {
-			public static final int SIZE = $size;
+			public static final int SIZE = Fact.SIZE;
 
 			private NullFact() {
 				super(defaultByteStore());
 			}
 
-			[$column+nullgetter...[$NL$NL]]
-
 			@Override
 			public long id() {
-				return -1;
+				return $id();
 			}
 
 			@Override
@@ -184,9 +184,7 @@ def type(cube)
 			}
 
 			private static io.intino.alexandria.led.buffers.store.ByteStore defaultByteStore() {
-				java.nio.ByteBuffer buffer = io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer((long) SIZE);
-				io.intino.alexandria.led.util.memory.MemoryAddress address = io.intino.alexandria.led.util.memory.MemoryAddress.of(buffer);
-				return new io.intino.alexandria.led.buffers.store.ByteBufferStore(buffer, address, 0, buffer.capacity());
+				return io.intino.alexandria.led.buffers.store.ByteStore.empty();
 			}
 		}
 
@@ -493,9 +491,27 @@ def trigger(dimension)
 	}
 end
 
-def type(column) type(id | longInteger) trigger(getter)
+def type(column) type(id) trigger(getter)
+	public long $name+firstLowerCase() {
+		return bitBuffer.getAlignedLong(0);
+	}
+end
+
+def type(column) type(longInteger) trigger(getter)
 	public long $name+firstLowerCase() {
 		return bitBuffer.get$aligned~Long[$bits+nbits]($offset[, $bits]);
+	}
+end
+
+def type(column) type(integer) trigger(getter)
+	public int $name+firstLowerCase() {
+		return bitBuffer.get$aligned~Integer[$bits+nbits]($offset[, $bits]);
+	}
+end
+
+def type(column & bool) trigger(getter)
+	public boolean $name+firstLowerCase() {
+		return bitBuffer.getBoolean($offset);
 	}
 end
 
@@ -517,19 +533,6 @@ def type(column & categorical) trigger(getter)
 	}
 end
 
-def type(column & integer) trigger(getter)
-	public int $name+firstLowerCase() {
-		return bitBuffer.get$aligned~Integer[$bits+nbits]($offset[, $bits]);
-	}
-end
-
-def type(column & bool) trigger(getter)
-	public Boolean $name+firstLowerCase() {
-		byte value = bitBuffer.getByteNBits($offset, 2);
-		return value == NULL ? null : value == 2;
-	}
-end
-
 def type(column & real) attribute(size:32) trigger(getter)
 	public float $name+firstLowerCase() {
 		return bitBuffer.getAlignedReal$size~Bits($offset);
@@ -539,36 +542,5 @@ end
 def type(column & real) trigger(getter)
 	public double $name+firstLowerCase() {
 		return bitBuffer.getAlignedReal$size~Bits($offset);
-	}
-end
-
-
-def type(column & categorical) trigger(nullGetter)
-	public $type+firstUpperCase.Component $name+firstLowerCase() {
-		return $type+firstUpperCase.instance().NA;
-	}
-end
-
-def type(column & integer) trigger(nullGetter)
-	public int $name+firstLowerCase() {
-		return -1;
-	}
-end
-
-def type(column & real) attribute(size:32) trigger(nullGetter)
-	public float $name+firstLowerCase() {
-		return -1f;
-	}
-end
-
-def type(column & real) trigger(nullGetter)
-	public double $name+firstLowerCase() {
-		return -1;
-	}
-end
-
-def type(column & bool) trigger(nullGetter)
-	public Boolean $name+firstLowerCase() {
-		return null;
 	}
 end
