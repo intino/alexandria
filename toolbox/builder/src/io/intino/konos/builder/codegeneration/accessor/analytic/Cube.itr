@@ -4,7 +4,6 @@ def type(cube)
     import io.intino.alexandria.led.Schema;
 	import $package+validPackage~.analytic.axes.*;
 
-    @Schema.Definition(name = "$name+firstUpperCase", size = $size)
 	public class $name+firstUpperCase extends Schema {
 
 		[$split]
@@ -76,7 +75,7 @@ end
 
 def type(column & bool) trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(boolean $name+firstLowerCase) {
-		bitBuffer.setByteNBits($offset, $bits, (byte) ($name+firstLowerCase ? 2 : 1));
+		bitBuffer.setBoolean($offset, $name+firstLowerCase);
 		return this;
 	}
 end
@@ -124,8 +123,6 @@ def type(column & date) trigger(setter)
 end
 
 def type(column & id) trigger(getter)
-    @Id
-    @Attribute(name = "$name", type = Schema.DataType.LONG, index = 0, size = 64)
 	public long $name+firstLowerCase() {
 		return bitBuffer.getAlignedLong(0);
 	}

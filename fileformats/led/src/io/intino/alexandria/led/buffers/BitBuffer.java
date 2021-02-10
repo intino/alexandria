@@ -14,6 +14,9 @@ public interface BitBuffer extends OffHeapObject {
 	long baseOffset();
 	long endOffset();
 
+	boolean getBoolean(int bitIndex);
+	void setBoolean(int bitIndex, boolean value);
+
 	byte getByteNBits(int bitIndex, int bitCount);
 	void setByteNBits(int bitIndex, int bitCount, byte value);
 	short getUByteNBits(int bitIndex, int bitCount);
