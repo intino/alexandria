@@ -11,25 +11,20 @@ import java.util.stream.Collectors;
 
 public interface Led<T extends Schema> extends Iterable<T> {
 
-	static <T extends Schema> Led<T> empty() {
-		return new ListLed<>(Collections.emptyList());
+	static <T extends Schema> Led<T> empty(Class<T> schemaClass) {
+		return new ListLed<>(schemaClass, Collections.emptyList());
 	}
 
 	static <T extends Schema> Led<T> fromLedStream(LedStream<T> ledStream) {
-		return new ListLed<>(ledStream.asJavaStream().collect(Collectors.toUnmodifiableList()));
+		return new ListLed<>(ledStream.schemaClass(), ledStream.asJavaStream().collect(Collectors.toUnmodifiableList()));
 	}
 
 	static <T extends Schema> Builder<T> builder(Class<T> schemaClass) {
 		return new LedBuilder<>(schemaClass);
 	}
 
-	static <T extends Schema> Builder<T> builder(Class<T> schemaClass, SchemaFactory<T> factory) {
-		return new LedBuilder<>(schemaClass, factory);
-	}
-
 	static <T extends Schema> Builder<T> builder(Class<T> schemaClass, IndexedAllocator<T> allocator) {
 		return new LedBuilder<>(schemaClass, allocator);
-
 	}
 
 	long size();
@@ -37,6 +32,8 @@ public interface Led<T extends Schema> extends Iterable<T> {
 	int schemaSize();
 
 	T schema(int index);
+
+	Class<T> schemaClass();
 
 	@Override
 	default Iterator<T> iterator() {
@@ -58,10 +55,14 @@ public interface Led<T extends Schema> extends Iterable<T> {
 	}
 
 	default LedStream<T> toLedStream() {
-		return new IteratorLedStream<>(schemaSize(), iterator());
+		return new IteratorLedStream<>(schemaClass(), iterator());
 	}
 
-	interface Builder<T extends Schema> {
+    default UUID serialUUID() {
+		return Schema.getSerialUUID(schemaClass());
+	}
+
+    interface Builder<T extends Schema> {
 		Class<T> schemaClass();
 
 		int schemaSize();

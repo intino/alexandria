@@ -7,6 +7,7 @@ import io.intino.konos.model.graph.Cube.Fact.Column;
 import io.intino.konos.model.graph.SizedData;
 import io.intino.magritte.framework.Concept;
 import io.intino.magritte.framework.Predicate;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.util.Comparator;
@@ -31,20 +32,27 @@ public class FactRenderer {
         axisSizes = new HashMap<>();
     }
 
-    public void addFact(Cube cube, FrameBuilder fb) {
+    public void render(Cube cube, FrameBuilder fb) {
+        SchemaSerialBuilder serialBuilder = new SchemaSerialBuilder(StringUtils.capitalize(cube.name$()));
         fb.add("id", idOf(cube.fact()).name$());
         calculateColumnSizes(cube.fact().columnList());
+        final int lastOffset = addAllColumns(cube, fb, serialBuilder);
+        fb.add("size", calculateFactSize(lastOffset));
+        fb.add("serialUUID", serialBuilder.buildSerialId().toString());
+    }
+
+    private int addAllColumns(Cube cube, FrameBuilder fb, SchemaSerialBuilder serialBuilder) {
         int offset = 0;
         List<Column> columns = cube.fact().columnList().stream().sorted(COMPARATOR).collect(toList());
         for (Column column : columns) {
-            //if(column.isId()) fb.add("id", column.name$());
             final int columnSize = column.asType().size();
             if(getMinimumBytesFor(offset, columnSize) > Long.BYTES)
                 offset = roundUp2(offset, Long.SIZE);
             fb.add("column", columnFrame(column, offset, cube.name$()));
+            serialBuilder.add(column.name$(), type(column.asType()), offset, column.asType().size());
             offset += columnSize;
         }
-        fb.add("size", calculateFactSize(offset));
+        return offset;
     }
 
     private int calculateFactSize(int offset) {

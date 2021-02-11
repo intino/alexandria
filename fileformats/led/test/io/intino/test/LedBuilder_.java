@@ -15,6 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 @Ignore
 public class LedBuilder_ {
+
 	private static final File tempFile = new File("temp/snappy_test.led");
 	private static final int NUM_ELEMENTS = 1_000_000;
 
@@ -44,7 +45,7 @@ public class LedBuilder_ {
 	}
 
 	private Led<TestSchema> buildLed() {
-		Led.Builder<TestSchema> builder = Led.builder(TestSchema.class, TestSchema::new);
+		Led.Builder<TestSchema> builder = Led.builder(TestSchema.class);
 		Random random = new Random();
 		for (int i = 0; i < NUM_ELEMENTS; i++) {
 			final int id = random.nextInt();

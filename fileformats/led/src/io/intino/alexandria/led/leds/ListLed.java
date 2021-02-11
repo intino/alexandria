@@ -9,9 +9,11 @@ import java.util.List;
 
 public class ListLed<T extends Schema> implements Led<T> {
 
+	private final Class<T> schemaClass;
 	private final List<T> list;
 
-	public ListLed(List<T> list) {
+	public ListLed(Class<T> schemaClass, List<T> list) {
+		this.schemaClass = schemaClass;
 		this.list = Collections.unmodifiableList(list);
 	}
 
@@ -28,6 +30,11 @@ public class ListLed<T extends Schema> implements Led<T> {
 	@Override
 	public T schema(int index) {
 		return list.get(index);
+	}
+
+	@Override
+	public Class<T> schemaClass() {
+		return schemaClass;
 	}
 
 	@Override

@@ -7,10 +7,12 @@ import io.intino.alexandria.led.util.memory.MemoryAddress;
 import io.intino.alexandria.led.util.memory.MemoryUtils;
 
 import java.nio.ByteBuffer;
+import java.util.UUID;
 
 public class Venta extends Schema {
 
     public static final int SIZE = (int)Math.ceil(16.25D);
+    public static final UUID SERIAL_UUID = UUID.fromString(Venta.class.getName());
 
     public Venta() {
         super(defaultByteStore());
@@ -22,6 +24,11 @@ public class Venta extends Schema {
 
     public int size() {
         return SIZE;
+    }
+
+    @Override
+    public UUID serialUUID() {
+        return SERIAL_UUID;
     }
 
     public long id() {

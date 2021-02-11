@@ -2,39 +2,52 @@ def type(cube)
 	package $package+validPackage~.analytic.cubes;
 
     import io.intino.alexandria.led.Schema;
+    import io.intino.alexandria.led.allocators.SchemaFactory;
+    import io.intino.alexandria.led.buffers.store.ByteStore;
+    import io.intino.alexandria.led.buffers.store.ByteBufferStore;
+    import java.util.UUID;
 	import $package+validPackage~.analytic.axes.*;
 
 	public class $name+firstUpperCase extends Schema {
 
 		[$split]
 
-		public static final int SIZE = $size;
+		public static final int SIZE = $size; // Bytes
+        public static final UUID SERIAL_UUID = UUID.fromString("$serialUUID");
+        public static final SchemaFactory<$name+firstUpperCase> FACTORY = new SchemaFactory<>($name+firstUpperCase.class) {
+            @Override
+            public $name+firstUpperCase newInstance(ByteStore store) {
+                return new $name+firstUpperCase(store);
+            }
+        };
 
 		public $name+firstUpperCase() {
-			super(defaultByteStore());
+			super(new ByteBufferStore(SIZE));
 		}
 
 		public $name+firstUpperCase(io.intino.alexandria.led.buffers.store.ByteStore store) {
 			super(store);
         }
 
+        @Override
+		public long id() {
+			return $id();
+		}
+
+        @Override
 		public int size() {
 			return SIZE;
 		}
 
-		protected long id() {
-			return $id();
+        @Override
+		public UUID serialUUID() {
+		    return SERIAL_UUID;
 		}
 
 		[$column+getter...[$NL$NL]]
 
 		[$column+setter...[$NL$NL]]
 
-		private static io.intino.alexandria.led.buffers.store.ByteStore defaultByteStore() {
-			java.nio.ByteBuffer buffer = io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer((long) SIZE);
-			io.intino.alexandria.led.util.memory.MemoryAddress address = io.intino.alexandria.led.util.memory.MemoryAddress.of(buffer);
-			return new io.intino.alexandria.led.buffers.store.ByteBufferStore(buffer, address, 0, buffer.capacity());
-		}
 	}
 end
 

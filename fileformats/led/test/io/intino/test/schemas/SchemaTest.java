@@ -47,7 +47,7 @@ public class SchemaTest {
 		for (int i = 0; i < SIZE; i++) memset(schema.address(), 1, random.nextInt() - random.nextInt());
 	}
 
-	@Test
+	@Test(expected = UnsupportedOperationException.class)
 	public void testSetFieldDoesNotModifyOtherFields() {
 		schema = new TestSchema(byteOrder);
 		List<Function<TestSchema, Number>> getters = getters();
@@ -163,7 +163,7 @@ public class SchemaTest {
 		assertEquals(d, schema.d());
 	}
 
-	@Test
+	@Test(expected = UnsupportedOperationException.class)
 	public void e() {
 		long e = Math.abs(new Random().nextInt());//maxPossibleNumber(E_BITS) / 2;
 		schema.e(e);

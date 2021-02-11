@@ -30,4 +30,9 @@ public class IndexedLed<T extends Schema> implements Led<T> {
 		}
 		return allocator.malloc(index);
 	}
+
+	@Override
+	public Class<T> schemaClass() {
+		return allocator.schemaClass();
+	}
 }

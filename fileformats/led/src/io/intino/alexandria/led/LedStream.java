@@ -23,24 +23,28 @@ import static java.util.Objects.requireNonNull;
 
 public interface LedStream<T extends Schema> extends Iterator<T>, AutoCloseable {
 
-	static <T extends Schema> LedStream<T> empty() {
-		return IteratorLedStream.fromStream(0, Stream.empty());
+	static LedStream<? extends Schema> empty() {
+		return IteratorLedStream.fromStream(GenericSchema.class, Stream.empty());
+	}
+
+	static <T extends Schema> LedStream<T> empty(Class<T> schemaClass) {
+		return IteratorLedStream.fromStream(schemaClass, Stream.empty());
 	}
 
 	static<T extends Schema> LedStream<T> fromLed(Led<T> led) {
 		return led.toLedStream();
 	}
 
-	static <T extends Schema> LedStream<T> fromStream(int schemaSize, Stream<T> stream) {
-		return IteratorLedStream.fromStream(schemaSize, stream);
+	static <T extends Schema> LedStream<T> fromStream(Class<T> schemaClass, Stream<T> stream) {
+		return IteratorLedStream.fromStream(schemaClass, stream);
 	}
 
-	static <T extends Schema> LedStream<T> of(int schemaSize, T... schemas) {
-		return fromStream(schemaSize, Arrays.stream(schemas));
+	static <T extends Schema> LedStream<T> of(Class<T> schemaClass, T... schemas) {
+		return fromStream(schemaClass, Arrays.stream(schemas));
 	}
 
-	static <T extends Schema> LedStream<T> singleton(int schemaSize, T schema) {
-		return fromStream(schemaSize, Stream.of(schema));
+	static <T extends Schema> LedStream<T> singleton(Class<T> schemaClass, T schema) {
+		return fromStream(schemaClass, Stream.of(schema));
 	}
 
 	static <T extends Schema> LedStream<T> merged(Stream<LedStream<T>> ledStreams) {
@@ -48,9 +52,6 @@ public interface LedStream<T extends Schema> extends Iterator<T>, AutoCloseable 
 	}
 
 	static <T extends Schema> LedStream<T> merged(Iterator<LedStream<T>> iterator) {
-		if(!iterator.hasNext()) {
-			return empty();
-		}
 		return iterator.next().merge(IteratorUtils.streamOf(iterator));
 	}
 
@@ -68,25 +69,6 @@ public interface LedStream<T extends Schema> extends Iterator<T>, AutoCloseable 
 
 	static <T extends Schema> Builder<T> builder(Class<T> schemaClass, int numElementsPerBlock, File tempDirectory) {
 		return new HeapLedStreamBuilder<>(schemaClass, numElementsPerBlock, tempDirectory);
-	}
-
-	static <T extends Schema> Builder<T> builder(Class<T> schemaClass, SchemaFactory<T> factory) {
-		return new HeapLedStreamBuilder<>(schemaClass, factory);
-	}
-
-	static <T extends Schema> Builder<T> builder(Class<T> schemaClass, SchemaFactory<T> factory, File tempDirectory) {
-		return new HeapLedStreamBuilder<>(schemaClass, factory, tempDirectory);
-	}
-
-	static <T extends Schema> Builder<T> builder(Class<T> schemaClass,
-												 SchemaFactory<T> factory, int numElementsPerBlock) {
-		return new HeapLedStreamBuilder<>(schemaClass, factory, numElementsPerBlock);
-	}
-
-	static <T extends Schema> Builder<T> builder(Class<T> schemaClass,
-												 SchemaFactory<T> factory, int numElementsPerBlock,
-												 File tempDirectory) {
-		return new HeapLedStreamBuilder<>(schemaClass, factory, numElementsPerBlock, tempDirectory);
 	}
 
 	int schemaSize();
@@ -117,12 +99,12 @@ public interface LedStream<T extends Schema> extends Iterator<T>, AutoCloseable 
 		return new LedStream.Map<>(this, allocator, mapper);
 	}
 
-	default <R extends Schema> LedStream<R> map(int rSize, SchemaFactory<R> factory, BiConsumer<T, R> mapper) {
-		return new LedStream.Map<>(this, rSize, factory, mapper);
+	default <R extends Schema> LedStream<R> map(int rSize, Class<R> newType, BiConsumer<T, R> mapper) {
+		return new LedStream.Map<>(this, rSize, newType, mapper);
 	}
 
 	default <R extends Schema> LedStream<R> map(Class<R> newType, BiConsumer<T, R> mapper) {
-		return new LedStream.Map<>(this, sizeOf(newType), Schema.factoryOf(newType), mapper);
+		return new LedStream.Map<>(this, sizeOf(newType), newType, mapper);
 	}
 
 	default <R> Stream<R> mapToObj(Function<T, R> mapper) {
@@ -220,6 +202,8 @@ public interface LedStream<T extends Schema> extends Iterator<T>, AutoCloseable 
 		return this;
 	}
 
+	Class<T> schemaClass();
+
 	abstract class LedStreamOperation<T extends Schema, R extends Schema> implements LedStream<R> {
 
 		protected final LedStream<T> source;
@@ -290,6 +274,11 @@ public interface LedStream<T extends Schema> extends Iterator<T>, AutoCloseable 
 			current = null;
 			return next;
 		}
+
+		@Override
+		public Class<T> schemaClass() {
+			return source.schemaClass();
+		}
 	}
 
 	class Peek<T extends Schema> extends LedStream.LedStreamOperation<T, T> {
@@ -311,6 +300,11 @@ public interface LedStream<T extends Schema> extends Iterator<T>, AutoCloseable 
 			final T next = source.next();
 			consumer.accept(next);
 			return next;
+		}
+
+		@Override
+		public Class<T> schemaClass() {
+			return source.schemaClass();
 		}
 	}
 
@@ -398,6 +392,11 @@ public interface LedStream<T extends Schema> extends Iterator<T>, AutoCloseable 
 			sourceCurrent = null;
 			return next;
 		}
+
+		@Override
+		public Class<T> schemaClass() {
+			return source.schemaClass();
+		}
 	}
 
 	class Merge<T extends Schema> extends LedStream.LedStreamOperation<T, T> {
@@ -422,6 +421,11 @@ public interface LedStream<T extends Schema> extends Iterator<T>, AutoCloseable 
 		@Override
 		public T next() {
 			return mergedIterator.next();
+		}
+
+		@Override
+		public Class<T> schemaClass() {
+			return source.schemaClass();
 		}
 	}
 
@@ -480,6 +484,11 @@ public interface LedStream<T extends Schema> extends Iterator<T>, AutoCloseable 
 			current = null;
 			return next;
 		}
+
+		@Override
+		public Class<T> schemaClass() {
+			return source.schemaClass();
+		}
 	}
 
 	class Map<T extends Schema, R extends Schema> extends LedStream.LedStreamOperation<T, R> {
@@ -496,8 +505,8 @@ public interface LedStream<T extends Schema> extends Iterator<T>, AutoCloseable 
 			this.mapper = requireNonNull(mapper);
 		}
 
-		public Map(LedStream<T> source, int rSize, SchemaFactory<R> factory, BiConsumer<T, R> mapper) {
-			this(source, getDefaultAllocator(rSize, factory), mapper);
+		public Map(LedStream<T> source, int rSize, Class<R> destinationClass, BiConsumer<T, R> mapper) {
+			this(source, getDefaultAllocator(rSize, destinationClass), mapper);
 		}
 
 		@Override
@@ -517,8 +526,13 @@ public interface LedStream<T extends Schema> extends Iterator<T>, AutoCloseable 
 			return newElement;
 		}
 
-		private static <R extends Schema> SchemaAllocator<R> getDefaultAllocator(int rSize, SchemaFactory<R> factory) {
-			return new StackListAllocator<>(DEFAULT_ELEMENTS_PER_STACK, rSize, factory, StackAllocators::newManaged);
+		@Override
+		public Class<R> schemaClass() {
+			return allocator.schemaClass();
+		}
+
+		private static <R extends Schema> SchemaAllocator<R> getDefaultAllocator(int rSize, Class<R> schemaClass) {
+			return new StackListAllocator<>(DEFAULT_ELEMENTS_PER_STACK, rSize, schemaClass, StackAllocators::managedStackAllocator);
 		}
 	}
 

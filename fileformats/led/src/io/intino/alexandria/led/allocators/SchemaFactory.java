@@ -1,7 +1,21 @@
 package io.intino.alexandria.led.allocators;
 
+import io.intino.alexandria.led.Schema;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 
-public interface SchemaFactory<T> {
-	T newInstance(ByteStore store);
+import static java.util.Objects.requireNonNull;
+
+public abstract class SchemaFactory<T extends Schema> {
+
+	private final Class<T> schemaClass;
+
+	public SchemaFactory(Class<T> schemaClass) {
+		this.schemaClass = requireNonNull(schemaClass);
+	}
+
+	public final Class<T> schemaClass() {
+		return schemaClass;
+	}
+
+	public abstract T newInstance(ByteStore store);
 }

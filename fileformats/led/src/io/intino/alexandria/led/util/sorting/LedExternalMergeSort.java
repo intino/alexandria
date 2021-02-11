@@ -202,7 +202,7 @@ public class LedExternalMergeSort {
     }
 
     private StackAllocator<GenericSchema> createAllocator(ByteBuffer buffer) {
-        return StackAllocators.newManaged(schemaSize(), buffer, GenericSchema::new);
+        return StackAllocators.managedStackAllocatorFromBuffer(schemaSize(), buffer, GenericSchema.class);
     }
 
     private void writeSortedChunk(Path chunk, int schemaSize,
@@ -337,7 +337,7 @@ public class LedExternalMergeSort {
     }
 
     private LedStream<GenericSchema> readChunk(Path chunk, int elementSize) {
-        return new LedReader(chunk.toFile()).readUncompressed(elementSize, GenericSchema::new);
+        return new LedReader(chunk.toFile()).readUncompressed(elementSize, GenericSchema.class);
     }
 
 }

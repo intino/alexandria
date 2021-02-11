@@ -14,17 +14,16 @@ import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
 
 public final class StackAllocators {
 
-	public static <E extends Schema> StackAllocator<E> newUnmanaged(int elementSize, long elementCount,
-                                                                    SchemaFactory<E> provider) {
+	public static <E extends Schema> StackAllocator<E> unmanagedStackAllocator(int elementSize, long elementCount, Class<E> schemaClass) {
 
 		final long size = elementSize * elementCount;
 		final long ptr = MemoryUtils.malloc(size);
 		ModifiableMemoryAddress address = new ModifiableMemoryAddress(ptr);
 		ByteStore store = new NativePointerStore(address, 0, size);
-		return new SingleStackAllocator<>(store, address, elementSize, provider);
+		return new SingleStackAllocator<>(store, address, elementSize, schemaClass);
 	}
 
-	public static <E extends Schema> StackAllocator<E> newManaged(int elementSize, long elementCount, SchemaFactory<E> provider) {
+	public static <E extends Schema> StackAllocator<E> managedStackAllocator(int elementSize, long elementCount, Class<E> schemaClass) {
 		if (elementCount < 0) throw new IllegalArgumentException("Element count is negative");
 		if (elementCount > Integer.MAX_VALUE)
 			throw new IllegalArgumentException("Element Count too large for managed byte store");
@@ -33,14 +32,13 @@ public final class StackAllocators {
 		final ByteBuffer buffer = allocBuffer((int) size);
 		ModifiableMemoryAddress address = ModifiableMemoryAddress.of(buffer);
 		ByteStore store = new ByteBufferStore(buffer, address, 0, (int) size);
-		return new SingleStackAllocator<>(store, address, elementSize, provider);
+		return new SingleStackAllocator<>(store, address, elementSize, schemaClass);
 	}
 
-	public static <E extends Schema> StackAllocator<E> newManaged(int elementSize, ByteBuffer buffer,
-                                                                  SchemaFactory<E> provider) {
+	public static <E extends Schema> StackAllocator<E> managedStackAllocatorFromBuffer(int elementSize, ByteBuffer buffer, Class<E> schemaClass) {
 		ModifiableMemoryAddress address = ModifiableMemoryAddress.of(buffer);
 		ByteStore store = new ByteBufferStore(buffer, address, 0, buffer.remaining());
-		return new SingleStackAllocator<>(store, address, elementSize, provider);
+		return new SingleStackAllocator<>(store, address, elementSize, schemaClass);
 	}
 
 	private StackAllocators() {

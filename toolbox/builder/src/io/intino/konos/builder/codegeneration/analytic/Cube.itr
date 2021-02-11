@@ -33,7 +33,9 @@ def type(cube)
     import io.intino.alexandria.led.LedReader;
     import io.intino.alexandria.led.LedStream;
     import io.intino.alexandria.led.Schema;
+    import io.intino.alexandria.led.allocators.SchemaFactory;
     import io.intino.alexandria.led.buffers.store.ByteStore;
+    import io.intino.alexandria.led.buffers.store.ByteBufferStore;
     import io.intino.alexandria.led.util.iterators.MergedIterator;
 
 	import $package.analytic.axes.*;
@@ -147,30 +149,51 @@ def type(cube)
 
 		public static class Fact extends Schema {
 
-			public static final int SIZE = $size;
+			public static final int SIZE = $size; // Bytes
+			public static final UUID SERIAL_UUID = UUID.fromString("$serialUUID");
+			public static final SchemaFactory<Fact> FACTORY = new SchemaFactory<>(Fact.class) {
+			    @Override
+			    public Fact newInstance(ByteStore store) {
+			        return new Fact(store);
+			    }
+			};
+
 
 			public Fact(ByteStore store) {
 				super(store);
 			}
 
-			[$column+getter...[$NL$NL]]
+            @Override
+		    public long id() {
+		    	return $id();
+		    }
 
-			@Override
-			public long id() {
-				return $id();
-			}
+            @Override
+		    public int size() {
+		    	return SIZE;
+		    }
 
-			@Override
-			public int size() {
-				return SIZE;
-			}
+            @Override
+		    public UUID serialUUID() {
+		        return SERIAL_UUID;
+		    }
+
+		    [$column+getter...[$NL$NL]]
 		}
 
 		public static class NullFact extends Fact {
-			public static final int SIZE = Fact.SIZE;
+
+			public static final int SIZE = Fact.SIZE; // Bytes
+			public static final UUID SERIAL_UUID = Fact.SERIAL_UUID;
+            public static final SchemaFactory<NullFact> FACTORY = new SchemaFactory<>(NullFact.class) {
+                @Override
+            	public NullFact newInstance(ByteStore store) {
+            	    return new NullFact();
+            	}
+            };
 
 			private NullFact() {
-				super(defaultByteStore());
+				super(ByteStore.empty());
 			}
 
 			@Override
@@ -183,8 +206,9 @@ def type(cube)
 				return SIZE;
 			}
 
-			private static io.intino.alexandria.led.buffers.store.ByteStore defaultByteStore() {
-				return io.intino.alexandria.led.buffers.store.ByteStore.empty();
+			@Override
+			public UUID serialUUID() {
+			    return SERIAL_UUID;
 			}
 		}
 

@@ -10,6 +10,7 @@ public interface SchemaAllocator<T extends Schema> extends AutoCloseable {
 	int schemaSize();
 	void clear();
 	void free();
+	Class<T> schemaClass();
 
 	@Override
 	default void close() {

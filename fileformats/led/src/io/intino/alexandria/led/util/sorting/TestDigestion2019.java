@@ -72,7 +72,7 @@ class TestDigestion2019 {
 					sourceHeader.elementCount(), destHeader.elementCount());
 
 			 */
-			try(LedStream<?> ledStream = new LedReader(destinationSortedLedFile).read(GenericSchema::new)) {
+			try(LedStream<?> ledStream = new LedReader(destinationSortedLedFile).read(GenericSchema.class)) {
 				long lastId = Long.MIN_VALUE;
 				while(ledStream.hasNext()) {
 					final long id = Schema.idOf(ledStream.next());

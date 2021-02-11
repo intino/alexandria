@@ -2,10 +2,12 @@ package io.intino.alexandria.led.buffers.store;
 
 
 import io.intino.alexandria.led.util.memory.MemoryAddress;
+import io.intino.alexandria.led.util.memory.ModifiableMemoryAddress;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.memset;
 import static java.util.Objects.requireNonNull;
 
@@ -15,6 +17,14 @@ public class ByteBufferStore implements ByteStore {
 	private final MemoryAddress address;
 	private final int baseOffset;
 	private final int size;
+
+	public ByteBufferStore(int size) {
+		ByteBuffer buffer = allocBuffer(size);
+		this.buffer = buffer;
+		this.address = ModifiableMemoryAddress.of(buffer);
+		this.baseOffset = 0;
+		this.size = size;
+	}
 
 	public ByteBufferStore(ByteBuffer buffer, MemoryAddress address, int baseOffset, int size) {
 		this.buffer = requireNonNull(buffer);

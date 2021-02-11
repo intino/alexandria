@@ -63,14 +63,14 @@ public class AnalyticRenderer extends Renderer {
 		if (cube.splitted() != null) addSplit(cube, fb);
 		fb.add("index", new FrameBuilder("index", cube.index() != null ? "normal" : "total")
 				.add("value", ""));
-		factRenderer.addFact(cube, fb);
+		factRenderer.render(cube, fb);
 		write(cube, fb);
 	}
 
 	private void renderVirtualCube(Cube.Virtual virtualCube, FrameBuilder fb) {
 		for (Cube reference : new Cube[]{virtualCube.main(), virtualCube.join()}) {
 			addDimensionsAndIndicators(reference, virtualCube.asCube(), fb);
-			factRenderer.addFact(reference, fb);
+			factRenderer.render(reference, fb);
 		}
 		fb.add("index", new FrameBuilder("index", virtualCube.index() != null ? "index" : "total").add("value", ""));
 		fb.add("mainCube", virtualCube.main().name$());

@@ -1,6 +1,7 @@
 package io.intino.test.schemas;
 
 import io.intino.alexandria.led.Schema;
+import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.util.memory.MemoryAddress;
@@ -12,6 +13,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static io.intino.alexandria.led.util.BitUtils.roundUp2;
@@ -62,6 +64,15 @@ public class TestSchema extends Schema {
 	// private byte g;
 	public static final int SIZE = (int) Math.ceil((J_OFFSET + J_BITS) / (float) Byte.SIZE);
 
+	public static final UUID SERIAL_UUID = UUID.randomUUID();
+
+	public static final SchemaFactory<TestSchema> FACTORY = new SchemaFactory<TestSchema>(TestSchema.class) {
+		@Override
+		public TestSchema newInstance(ByteStore store) {
+			return new TestSchema(store);
+		}
+	};
+
 	public TestSchema(ByteStore store) {
 		super(store);
 	}
@@ -100,6 +111,11 @@ public class TestSchema extends Schema {
 	@Override
 	public int size() {
 		return SIZE;
+	}
+
+	@Override
+	public UUID serialUUID() {
+		return SERIAL_UUID;
 	}
 
 	public TestSchema id(Number id) {

@@ -16,7 +16,7 @@ public final class LedLibraryConfig {
 	public static final LedLibraryConfig.Variable<Consumer<AllocationInfo>> ALLOCATION_CALLBACK = new LedLibraryConfig.Variable<>();
 	public static final LedLibraryConfig.Variable<Consumer<AllocationInfo>> FREE_CALLBACK = new LedLibraryConfig.Variable<>();
 	public static final LedLibraryConfig.Variable<Integer> DEFAULT_BUFFER_SIZE = new LedLibraryConfig.Variable<>(1024);
-	public static final LedLibraryConfig.Variable<Boolean> INPUTLEDSTREAM_CONCURRENCY_ENABLED = new LedLibraryConfig.Variable<>(false);
+	public static final LedLibraryConfig.Variable<Boolean> INPUT_LEDSTREAM_CONCURRENCY_ENABLED = new LedLibraryConfig.Variable<>(false);
 
 
 	public static final class Variable<T> {

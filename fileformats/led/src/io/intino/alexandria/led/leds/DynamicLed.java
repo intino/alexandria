@@ -4,15 +4,16 @@ import io.intino.alexandria.led.Led;
 import io.intino.alexandria.led.Schema;
 import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.allocators.indexed.ListAllocator;
+import io.intino.alexandria.led.util.memory.LedLibraryConfig;
 
 public class DynamicLed<T extends Schema> implements Led<T> {
 
 	private final ListAllocator<T> allocator;
 	private final int schemaSize;
 
-	public DynamicLed(int schemaSize, SchemaFactory<T> factory) {
-		this.schemaSize = schemaSize;
-		this.allocator = new ListAllocator<>(1000, schemaSize, factory);
+	public DynamicLed(Class<T> schemaClass) {
+		this.schemaSize = Schema.sizeOf(schemaClass);
+		this.allocator = new ListAllocator<>(LedLibraryConfig.DEFAULT_BUFFER_SIZE.get(), schemaSize, schemaClass);
 	}
 
 	public Schema newTransaction() {
@@ -35,5 +36,10 @@ public class DynamicLed<T extends Schema> implements Led<T> {
 			throw new IndexOutOfBoundsException("Index >= " + size());
 		}
 		return allocator.malloc(index);
+	}
+
+	@Override
+	public Class<T> schemaClass() {
+		return allocator.schemaClass();
 	}
 }

@@ -18,19 +18,20 @@ import java.util.stream.IntStream;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.*;
 
 public class ArrayAllocator<T extends Schema> implements IndexedAllocator<T> {
+
 	private ByteBufferStore[] stores;
 	private final ModifiableMemoryAddress[] addresses;
 	private final Map<Integer, Integer> indices;
 	private final int elementSize;
 	private final SchemaFactory<T> factory;
 
-	public ArrayAllocator(int capacity, int elementsPerBuffer, int elementSize, SchemaFactory<T> factory) {
-		this(generateBuffers(capacity, elementsPerBuffer * elementSize), elementSize, factory);
+	public ArrayAllocator(int capacity, int elementsPerBuffer, int elementSize, Class<T> schemaClass) {
+		this(generateBuffers(capacity, elementsPerBuffer * elementSize), elementSize, schemaClass);
 	}
 
-	public ArrayAllocator(List<ByteBuffer> buffers, int elementSize, SchemaFactory<T> factory) {
+	public ArrayAllocator(List<ByteBuffer> buffers, int elementSize, Class<T> schemaClass) {
 		this.elementSize = elementSize;
-		this.factory = factory;
+		this.factory = Schema.factoryOf(schemaClass);
 		addresses = new ModifiableMemoryAddress[buffers.size()];
 		stores = new ByteBufferStore[buffers.size()];
 		indices = new HashMap<>(buffers.size());
@@ -66,7 +67,7 @@ public class ArrayAllocator<T extends Schema> implements IndexedAllocator<T> {
 	public void clear(int index) {
 		final int storeIndex = storeIndex(index);
 		final int relativeIndex = storeRelativeIndex(index, storeIndex);
-		memset(addresses[storeIndex].get() + relativeIndex * elementSize, elementSize, 0);
+		memset(addresses[storeIndex].get() + (long) relativeIndex * elementSize, elementSize, 0);
 	}
 
 	@Override
@@ -112,6 +113,11 @@ public class ArrayAllocator<T extends Schema> implements IndexedAllocator<T> {
 			}
 			stores = null;
 		}
+	}
+
+	@Override
+	public Class<T> schemaClass() {
+		return factory.schemaClass();
 	}
 
 	private int storeIndex(int elementIndex) {

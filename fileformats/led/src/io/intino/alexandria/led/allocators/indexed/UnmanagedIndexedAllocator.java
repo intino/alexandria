@@ -21,17 +21,17 @@ public class UnmanagedIndexedAllocator<T extends Schema> implements IndexedAlloc
 	private final SchemaFactory<T> factory;
 	private final Cleaner.Cleanable cleanable;
 
-	public UnmanagedIndexedAllocator(long baseAddress, long baseOffset, long size, int elementSize, SchemaFactory<T> factory) {
+	public UnmanagedIndexedAllocator(long baseAddress, long baseOffset, long size, int elementSize, Class<T> schemaClass) {
 		this.elementSize = elementSize;
-		this.factory = factory;
+		this.factory = Schema.factoryOf(schemaClass);
 		this.address = new ModifiableMemoryAddress(baseAddress);
 		store = new NativePointerStore(address, baseOffset, size);
 		cleanable = CLEANER.register(this, new NativePointerCleaner(address));
 	}
 
-	public UnmanagedIndexedAllocator(long elementsCount, int elementSize, SchemaFactory<T> factory) {
+	public UnmanagedIndexedAllocator(long elementsCount, int elementSize, Class<T> schemaClass) {
 		this.elementSize = elementSize;
-		this.factory = factory;
+		this.factory = Schema.factoryOf(schemaClass);
 		final long size = elementsCount * elementSize;
 		address = new ModifiableMemoryAddress(MemoryUtils.malloc(size));
 		store = new NativePointerStore(address, 0, size);
@@ -53,7 +53,7 @@ public class UnmanagedIndexedAllocator<T extends Schema> implements IndexedAlloc
 
 	@Override
 	public void clear(int index) {
-		memset(address.get() + index * elementSize, elementSize, 0);
+		memset(address.get() + (long) index * elementSize, elementSize, 0);
 	}
 
 	@Override
@@ -92,6 +92,11 @@ public class UnmanagedIndexedAllocator<T extends Schema> implements IndexedAlloc
 			cleanable.clean();
 			store = null;
 		}
+	}
+
+	@Override
+	public Class<T> schemaClass() {
+		return factory.schemaClass();
 	}
 
 }

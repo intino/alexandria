@@ -86,7 +86,7 @@ public class TestLedExternalMergeSort {
 
         System.out.println(">> Checking sorting...");
 
-        try(LedStream<TestSchema> ledStream = new LedReader(destFile).read(TestSchema::new)) {
+        try(LedStream<TestSchema> ledStream = new LedReader(destFile).read(TestSchema.class)) {
 
             long lastId = Long.MIN_VALUE;
 

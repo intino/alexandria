@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 
 @Ignore
 public class LedWriter_ {
+
 	private static final int NUM_ELEMENTS = 10_000_000;
 	private static final File tempFile = new File("temp/snappy_test.led");
 	private static final Random RANDOM = new Random();
@@ -31,7 +32,7 @@ public class LedWriter_ {
 	@Test
 	public void should_write_and_read() {
 		List<TestSchema> original = generateTestSchemaObjs(
-				new ListAllocator<>(NUM_ELEMENTS / 10, TestSchema.SIZE, TestSchema::new))
+				new ListAllocator<>(NUM_ELEMENTS / 10, TestSchema.SIZE, TestSchema.class))
 				.collect(Collectors.toList());
 		original.sort(Comparator.comparingLong(TestSchema::id));
 		write(original);
@@ -40,7 +41,7 @@ public class LedWriter_ {
 
 	private void write(List<TestSchema> original) {
 		long start;
-		LedStream<TestSchema> led = new IteratorLedStream<>(SIZE, original.iterator());
+		LedStream<TestSchema> led = new IteratorLedStream<>(TestSchema.class, original.iterator());
 		start = System.currentTimeMillis();
 		new LedWriter(tempFile).write(Led.fromLedStream(led));
 		System.out.println(">> Serialized " + NUM_ELEMENTS + "(" + TestSchema.SIZE + " bytes each) in " + (System.currentTimeMillis() - start) / 1000 + " seconds");
@@ -51,7 +52,7 @@ public class LedWriter_ {
 		assertEquals(original.size(), reader.size());
 		long start;
 		start = System.currentTimeMillis();
-		Led<TestSchema> led = reader.readAll(TestSchema::new);
+		Led<TestSchema> led = reader.readAll(TestSchema.class);
 		System.out.println(">> Deserialized " + NUM_ELEMENTS + "(" + TestSchema.SIZE + " bytes each) in " + (System.currentTimeMillis() - start) / 1000 + " seconds");
 		AtomicInteger size = new AtomicInteger();
 		IntStream.range(0, original.size()).forEach(i -> {

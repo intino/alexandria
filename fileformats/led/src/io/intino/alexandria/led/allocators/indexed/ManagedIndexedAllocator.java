@@ -17,9 +17,9 @@ public class ManagedIndexedAllocator<T extends Schema> implements IndexedAllocat
 	private final int schemaSize;
 	private final SchemaFactory<T> factory;
 
-	public ManagedIndexedAllocator(ByteBuffer buffer, int baseOffset, int size, int schemaSize, SchemaFactory<T> factory) {
+	public ManagedIndexedAllocator(ByteBuffer buffer, int baseOffset, int size, int schemaSize, Class<T> schemaClass) {
 		this.schemaSize = schemaSize;
-		this.factory = factory;
+		this.factory = Schema.factoryOf(schemaClass);
 		address = ModifiableMemoryAddress.of(buffer);
 		store = new ByteBufferStore(buffer, address, baseOffset, size);
 	}
@@ -91,5 +91,10 @@ public class ManagedIndexedAllocator<T extends Schema> implements IndexedAllocat
 			store = null;
 			address.set(NULL);
 		}
+	}
+
+	@Override
+	public Class<T> schemaClass() {
+		return factory.schemaClass();
 	}
 }

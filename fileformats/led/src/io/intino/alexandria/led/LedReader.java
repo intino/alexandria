@@ -10,6 +10,8 @@ import io.intino.alexandria.logger.Logger;
 import org.xerial.snappy.SnappyInputStream;
 
 import java.io.*;
+import java.util.Objects;
+import java.util.UUID;
 
 import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.memcpy;
@@ -41,52 +43,54 @@ public class LedReader {
 		return (int) LedHeader.UNKNOWN_SIZE;
 	}
 
-	public <T extends Schema> Led<T> readAll(SchemaFactory<T> factory) {
-		return readAll(getDefaultAllocatorFactory(), factory);
+	public <T extends Schema> Led<T> readAll(Class<T> schemaClass) {
+		return readAll(getDefaultAllocatorFactory(), schemaClass);
 	}
 
-	public <T extends Schema> Led<T> readAll(IndexedAllocatorFactory<T> allocatorFactory, SchemaFactory<T> factory) {
+	public <T extends Schema> Led<T> readAll(IndexedAllocatorFactory<T> allocatorFactory, Class<T> schemaClass) {
 		try {
 			if(srcInputStream.available() == 0) {
-				return Led.empty();
+				return Led.empty(schemaClass);
 			}
 		} catch(Exception e) {
 			Logger.error(e);
-			return Led.empty();
+			return Led.empty(schemaClass);
 		}
 		LedHeader header = LedHeader.from(this.srcInputStream);
+		checkSerialUUID(header.uuid(), Schema.getSerialUUID(schemaClass));
 		try(SnappyInputStream inputStream = new SnappyInputStream(this.srcInputStream)) {
-			IndexedAllocator<T> allocator = allocatorFactory.create(inputStream, header.elementCount(), header.elementSize(), factory);
+			IndexedAllocator<T> allocator = allocatorFactory.create(inputStream, header.elementCount(), header.elementSize(), schemaClass);
 			return new IndexedLed<>(allocator);
 		} catch (IOException e) {
 			Logger.error(e);
 		}
-		return Led.empty();
+		return Led.empty(schemaClass);
 	}
 
-	public <T extends Schema> LedStream<T> read(SchemaFactory<T> factory) {
+	public <T extends Schema> LedStream<T> read(Class<T> schemaClass) {
 		try {
 			if(srcInputStream.available() == 0) {
-				return LedStream.empty();
+				return LedStream.empty(schemaClass);
 			}
 			LedHeader header = LedHeader.from(srcInputStream);
-			return allocate(new SnappyInputStream(srcInputStream), factory, header.elementSize());
+			checkSerialUUID(header.uuid(), Schema.getSerialUUID(schemaClass));
+			return allocate(new SnappyInputStream(srcInputStream), schemaClass, header.elementSize());
 		} catch (IOException e) {
 			Logger.error(e);
 		}
-		return LedStream.empty();
+		return LedStream.empty(schemaClass);
 	}
 
-	public <T extends Schema> LedStream<T> readUncompressed(int elementSize, SchemaFactory<T> factory) {
+	public <T extends Schema> LedStream<T> readUncompressed(int elementSize, Class<T> schemaClass) {
 		try {
 			if(srcInputStream.available() == 0) {
-				return LedStream.empty();
+				return LedStream.empty(schemaClass);
 			}
-			return allocateUncompressed(factory, elementSize);
+			return allocateUncompressed(Schema.factoryOf(schemaClass), elementSize);
 		} catch (IOException e) {
 			Logger.error(e);
 		}
-		return LedStream.empty();
+		return LedStream.empty(schemaClass);
 	}
 
 	private <T extends Schema> LedStream<T> allocateUncompressed(SchemaFactory<T> factory, int elementSize) {
@@ -98,8 +102,8 @@ public class LedReader {
 		return new ByteChannelLedStream<>(sourceFile, factory, elementSize);
 	}
 
-	private <T extends Schema> LedStream<T> allocate(InputStream inputStream, SchemaFactory<T> factory, int schemaSize) {
-		return new InputLedStream<>(inputStream, factory, schemaSize);
+	private <T extends Schema> LedStream<T> allocate(InputStream inputStream, Class<T> schemaClass, int schemaSize) {
+		return new InputLedStream<>(inputStream, schemaClass, schemaSize);
 	}
 
 	private static InputStream inputStreamOf(File file) {
@@ -112,12 +116,18 @@ public class LedReader {
 		}
 	}
 
+	private void checkSerialUUID(UUID srcUUID, UUID dstUUID) {
+		if(!Objects.equals(srcUUID, dstUUID)) {
+			throw new SchemaSerialUUIDMismatchException(srcUUID, dstUUID);
+		}
+	}
+
 	private <T extends Schema> IndexedAllocatorFactory<T> getDefaultAllocatorFactory() {
-		return (inputStream, elementCount, elementSize, factory) -> {
+		return (inputStream, elementCount, elementSize, schemaClass) -> {
 			if(elementCount >= 0 && elementCount * elementSize < Integer.MAX_VALUE) {
-				return IndexedAllocatorFactory.newManagedIndexedAllocator(inputStream, elementCount, elementSize, factory);
+				return IndexedAllocatorFactory.newManagedIndexedAllocator(inputStream, elementCount, elementSize, schemaClass);
 			}
-			return IndexedAllocatorFactory.newArrayAllocator(inputStream, elementCount, elementSize, factory);
+			return IndexedAllocatorFactory.newArrayAllocator(inputStream, elementCount, elementSize, schemaClass);
 		};
 	}
 

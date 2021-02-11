@@ -67,7 +67,7 @@ public class AnalyticBuilderRenderer extends Renderer {
 
 	private FrameBuilder renderCube(Cube cube) {
 		FrameBuilder fb = new FrameBuilder("cube").add("package", packageName).add("name", cube.name$());
-		factRenderer.addFact(cube, fb);
+		factRenderer.render(cube, fb);
 		return fb;
 	}
 

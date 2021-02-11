@@ -14,9 +14,9 @@ public class DefaultAllocator<T extends Schema> implements SchemaAllocator<T> {
 	private final int elementSize;
 	private final SchemaFactory<T> factory;
 
-	public DefaultAllocator(int schemaSize, SchemaFactory<T> factory) {
+	public DefaultAllocator(int schemaSize, Class<T> schemaClass) {
 		this.elementSize = schemaSize;
-		this.factory = factory;
+		this.factory = Schema.factoryOf(schemaClass);
 	}
 
 	@Override
@@ -52,5 +52,10 @@ public class DefaultAllocator<T extends Schema> implements SchemaAllocator<T> {
 	@Override
 	public void free() {
 
+	}
+
+	@Override
+	public Class<T> schemaClass() {
+		return factory.schemaClass();
 	}
 }
