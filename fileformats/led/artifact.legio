@@ -6,7 +6,7 @@ Artifact("io.intino.alexandria", "2.2.0") led
 		Compile("org.xerial.snappy", "snappy-java", "1.1.8.2")
 		Compile("org.openjdk.jol", "jol-core", "0.10")
 		Compile("org.apache.commons", "commons-lang3", "3.11")
-
+		Test("org.openjdk.jmh", "jmh-core", "1.27")
 		Test("junit", "junit", "4.13")
 		Test("org.assertj", "assertj-core", "3.17.2")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)

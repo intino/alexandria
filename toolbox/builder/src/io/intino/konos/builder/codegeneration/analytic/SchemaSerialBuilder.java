@@ -7,8 +7,8 @@ public class SchemaSerialBuilder {
     private StringBuilder builder;
     private UUID serialId;
 
-    public SchemaSerialBuilder(String className) {
-        builder = new StringBuilder(className).append("{ ");
+    public SchemaSerialBuilder() {
+        builder = new StringBuilder().append("{ ");
     }
 
     public SchemaSerialBuilder add(String name, String type, int bitIndex, int bitCount) {

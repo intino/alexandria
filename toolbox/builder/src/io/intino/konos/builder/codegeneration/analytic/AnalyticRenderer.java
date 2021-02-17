@@ -5,6 +5,7 @@ import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.facts.FactRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Axis;
@@ -95,7 +96,7 @@ public class AnalyticRenderer extends Renderer {
 	}
 
 	private Template template(Cube cube) {
-		return cube.isVirtual() ? new VirtualCubeTemplate() : new CubeTemplate();
+		return cube.isVirtual() ? new VirtualCubeTemplate() : new CubeWithGettersTemplate();
 	}
 
 	private void addDimensionsAndIndicators(Cube cube, Cube sourceCube, FrameBuilder fb) {

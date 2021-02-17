@@ -7,7 +7,9 @@ import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.analytic.CategoricalAxisTemplate;
 import io.intino.konos.builder.codegeneration.analytic.ContinuousAxisTemplate;
-import io.intino.konos.builder.codegeneration.analytic.FactRenderer;
+import io.intino.konos.builder.codegeneration.analytic.CubeTemplate;
+import io.intino.konos.builder.codegeneration.analytic.CubeWithGettersTemplate;
+import io.intino.konos.builder.codegeneration.facts.FactRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.graph.Axis;
 import io.intino.konos.model.graph.Cube;
@@ -199,6 +201,6 @@ public class AnalyticBuilderRenderer extends Renderer {
 	}
 
 	private Template cubeTemplate() {
-		return Formatters.customize(new CubeTemplate());
+		return Formatters.customize(new CubeWithSettersTemplate());
 	}
 }

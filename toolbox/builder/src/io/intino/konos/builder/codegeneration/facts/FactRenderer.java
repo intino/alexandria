@@ -1,13 +1,13 @@
-package io.intino.konos.builder.codegeneration.analytic;
+package io.intino.konos.builder.codegeneration.facts;
 
 import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.codegeneration.analytic.SchemaSerialBuilder;
 import io.intino.konos.model.graph.Axis;
 import io.intino.konos.model.graph.Cube;
 import io.intino.konos.model.graph.Cube.Fact.Column;
 import io.intino.konos.model.graph.SizedData;
 import io.intino.magritte.framework.Concept;
 import io.intino.magritte.framework.Predicate;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.util.Comparator;
@@ -33,7 +33,7 @@ public class FactRenderer {
     }
 
     public void render(Cube cube, FrameBuilder fb) {
-        SchemaSerialBuilder serialBuilder = new SchemaSerialBuilder(StringUtils.capitalize(cube.name$()));
+        SchemaSerialBuilder serialBuilder = new SchemaSerialBuilder();
         fb.add("id", idOf(cube.fact()).name$());
         calculateColumnSizes(cube.fact().columnList());
         final int lastOffset = addAllColumns(cube, fb, serialBuilder);
