@@ -349,7 +349,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const visible = isMainView || (!isMainView && mainSection == this.state.sections[0]);
         return (
             <TableRow key={index}>
-                {visible && <TableCell className={classes.rowLabel}><div style={{minWidth:rowLabelWidth+"px",width:rowLabelWidth+"px"}}></div></TableCell>}
+                {visible && <TableCell className={classes.rowLabel} style={{minWidth:rowLabelWidth+"px",width:rowLabelWidth+"px"}}><div></div></TableCell>}
                 {sections.map((section, index) => isMainView || (!isMainView && this.isSelectedColumnIn(section, sections)) ? this.renderHeaderCell(mainSection, section, index) : null)}
             </TableRow>
         );
@@ -708,7 +708,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         if (sections.length <= 0) return 250;
         const countRows = sections[0].rows.length;
         var result = 0;
-        for (var i=0; i<countRows; i++) result = Math.max(result, (sections[0].rows[i].label.length * 7) + 20);
+        for (var i=0; i<countRows; i++) result = Math.max(result, (sections[0].rows[i].label.length * 9) + 20);
         return result;
     };
 

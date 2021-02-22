@@ -132,7 +132,7 @@ export default class FileEditable extends AbstractFile {
     };
 
 	_allowedTypes = () => {
-	    if (this.props.allowedTypes == null) return ['image/*', 'video/*', 'application/*', 'text/*'];
+	    if (this.props.allowedTypes == null) return undefined;
 	    let result = [];
 	    if (this._containsType("Image")) result.push("image/*");
 	    if (this._containsType("Video")) result.push("video/*");
