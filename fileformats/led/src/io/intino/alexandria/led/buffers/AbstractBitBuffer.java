@@ -47,8 +47,6 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 		return baseOffset() + byteSize();
 	}
 
-	protected abstract BitInfo computeBitInfo(int bitIndex, int bitCount);
-
 	// ================================= BOOLEAN =================================
 
 	@Override
@@ -66,22 +64,22 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 
 	@Override
 	public byte getByteNBits(int bitIndex, int bitCount) {
-		return (byte) extendSign(getNBits(computeBitInfo(bitIndex, bitCount)), bitCount);
+		return (byte) extendSign(getNBits(bitIndex, bitCount), bitCount);
 	}
 
 	@Override
 	public void setByteNBits(int bitIndex, int bitCount, byte value) {
-		setNBits(value, computeBitInfo(bitIndex, bitCount));
+		setNBits(value, bitIndex, bitCount);
 	}
 
 	@Override
 	public short getUByteNBits(int bitIndex, int bitCount) {
-		return (short) Byte.toUnsignedInt((byte) getNBits(computeBitInfo(bitIndex, bitCount)));
+		return (short) Byte.toUnsignedInt((byte) getNBits(bitIndex, bitCount));
 	}
 
 	@Override
 	public void setUByteNBits(int bitIndex, int bitCount, short value) {
-		setNBits(value & 0xFF, computeBitInfo(bitIndex, bitCount));
+		setNBits(value & 0xFF, bitIndex, bitCount);
 	}
 
 	@Override
@@ -108,23 +106,23 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 
 	@Override
 	public short getShortNBits(int bitIndex, int bitCount) {
-		final long x = extendSign(getNBits(computeBitInfo(bitIndex, bitCount)), bitCount);
+		final long x = extendSign(getNBits(bitIndex, bitCount), bitCount);
 		return (short) x;
 	}
 
 	@Override
 	public void setShortNBits(int bitIndex, int bitCount, short value) {
-		setNBits(value, computeBitInfo(bitIndex, bitCount));
+		setNBits(value, bitIndex, bitCount);
 	}
 
 	@Override
 	public int getUShortNBits(int bitIndex, int bitCount) {
-		return Short.toUnsignedInt((short) getNBits(computeBitInfo(bitIndex, bitCount)));
+		return Short.toUnsignedInt((short) getNBits(bitIndex, bitCount));
 	}
 
 	@Override
 	public void setUShortNBits(int bitIndex, int bitCount, int value) {
-		setNBits(value & 0xFFFF, computeBitInfo(bitIndex, bitCount));
+		setNBits(value & 0xFFFF, bitIndex, bitCount);
 	}
 
 	@Override
@@ -151,22 +149,22 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 
 	@Override
 	public int getIntegerNBits(int bitIndex, int bitCount) {
-		return (int) extendSign(getNBits(computeBitInfo(bitIndex, bitCount)), bitCount);
+		return (int) extendSign(getNBits(bitIndex, bitCount), bitCount);
 	}
 
 	@Override
 	public void setIntegerNBits(int bitIndex, int bitCount, int value) {
-		setNBits(value, computeBitInfo(bitIndex, bitCount));
+		setNBits(value, bitIndex, bitCount);
 	}
 
 	@Override
 	public long getUIntegerNBits(int bitIndex, int bitCount) {
-		return getNBits(computeBitInfo(bitIndex, bitCount)) & 0xFFFFFFFFL;
+		return getNBits(bitIndex, bitCount) & 0xFFFFFFFFL;
 	}
 
 	@Override
 	public void setUIntegerNBits(int bitIndex, int bitCount, long value) {
-		setNBits(value & 0xFFFFFFFFL, computeBitInfo(bitIndex, bitCount));
+		setNBits(value & 0xFFFFFFFFL, bitIndex, bitCount);
 	}
 
 	@Override
@@ -193,24 +191,24 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 
 	@Override
 	public long getLongNBits(int bitIndex, int bitCount) {
-		return extendSign(getNBits(computeBitInfo(bitIndex, bitCount)), bitCount);
+		return extendSign(getNBits(bitIndex, bitCount), bitCount);
 	}
 
 	@Override
 	public void setLongNBits(int bitIndex, int bitCount, long value) {
-		setNBits(value, computeBitInfo(bitIndex, bitCount));
+		setNBits(value, bitIndex, bitCount);
 	}
 
 	@Override
 	public long getULongNBits(int bitIndex, int bitCount) {
 		if(bitCount == Long.SIZE) throw new UnsupportedOperationException("Unsigned long cannot have " + bitCount + " bits");
-		return getNBits(computeBitInfo(bitIndex, bitCount));
+		return getNBits(bitIndex, bitCount);
 	}
 
 	@Override
 	public void setULongNBits(int bitIndex, int bitCount, long value) {
 		if(bitCount == Long.SIZE) throw new UnsupportedOperationException("Unsigned long cannot have " + bitCount + " bits");
-		setNBits(value, computeBitInfo(bitIndex, bitCount));
+		setNBits(value, bitIndex, bitCount);
 	}
 
 	@Override
@@ -237,26 +235,34 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 
 	@Override
 	public float getReal32Bits(int bitIndex) {
-		BitInfo bitInfo = computeBitInfo(bitIndex, Float.SIZE);
+		int byteIndex = byteIndex(bitIndex);
+		final int numBytes = getMinimumBytesFor(bitIndex, Float.SIZE);
+		final int additionalBytes = getAdditionalBytes(byteSize(), byteIndex, numBytes);
+		byteIndex -= additionalBytes;
+		final int bitOffset = computeBitOffset(bitIndex, Float.SIZE, byteIndex, numBytes, additionalBytes);
 		int bits;
-		if(bitInfo.numBytes == Float.BYTES) {
-			bits = (int) read(store.getInt(bitInfo.byteIndex), bitInfo.bitOffset, Float.SIZE);
+		if(numBytes == Float.BYTES) {
+			bits = (int) read(store.getInt(byteIndex), bitOffset, Float.SIZE);
 		} else {
-			bits = (int) read(store.getLong(bitInfo.byteIndex), bitInfo.bitOffset, Float.SIZE);
+			bits = (int) read(store.getLong(byteIndex), bitOffset, Float.SIZE);
 		}
 		return Float.intBitsToFloat(bits);
 	}
 
 	@Override
 	public void setReal32Bits(int bitIndex, float value) {
-		BitInfo bitInfo = computeBitInfo(bitIndex, Float.SIZE);
+		int byteIndex = byteIndex(bitIndex);
+		final int numBytes = getMinimumBytesFor(bitIndex, Float.SIZE);
+		final int additionalBytes = getAdditionalBytes(byteSize(), byteIndex, numBytes);
+		byteIndex -= additionalBytes;
+		final int bitOffset = computeBitOffset(bitIndex, Float.SIZE, byteIndex, numBytes, additionalBytes);
 		final int bits = Float.floatToIntBits(value);
-		if(bitInfo.numBytes == Float.BYTES) {
-			final int newValue = (int) write(getAlignedInteger(bitIndex), bits, bitInfo.bitOffset, Float.SIZE);
-			store.setInt(bitInfo.byteIndex, newValue);
+		if(numBytes == Float.BYTES) {
+			final int newValue = (int) write(getAlignedInteger(bitIndex), bits, bitOffset, Float.SIZE);
+			store.setInt(byteIndex, newValue);
 		} else {
-			final long newValue = write(getAlignedLong(bitIndex), bits, bitInfo.bitOffset, Float.SIZE);
-			store.setLong(bitInfo.byteIndex, newValue);
+			final long newValue = write(getAlignedLong(bitIndex), bits, bitOffset, Float.SIZE);
+			store.setLong(byteIndex, newValue);
 		}
 	}
 
@@ -274,17 +280,25 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 
 	@Override
 	public double getReal64Bits(int bitIndex) {
-		BitInfo bitInfo = computeBitInfo(bitIndex, Double.SIZE);
-		final long bits = read(store.getLong(bitInfo.byteIndex), bitInfo.bitOffset, Double.SIZE);
+		int byteIndex = byteIndex(bitIndex);
+		final int numBytes = getMinimumBytesFor(bitIndex, Double.SIZE);
+		final int additionalBytes = getAdditionalBytes(byteSize(), byteIndex, numBytes);
+		byteIndex -= additionalBytes;
+		final int bitOffset = computeBitOffset(bitIndex, Double.SIZE, byteIndex, numBytes, additionalBytes);
+		final long bits = read(store.getLong(byteIndex), bitOffset, Double.SIZE);
 		return Double.longBitsToDouble(bits);
 	}
 
 	@Override
 	public void setReal64Bits(int bitIndex, double value) {
-		BitInfo bitInfo = computeBitInfo(bitIndex, Double.SIZE);
+		int byteIndex = byteIndex(bitIndex);
+		final int numBytes = getMinimumBytesFor(bitIndex, Double.SIZE);
+		final int additionalBytes = getAdditionalBytes(byteSize(), byteIndex, numBytes);
+		byteIndex -= additionalBytes;
+		final int bitOffset = computeBitOffset(bitIndex, Double.SIZE, byteIndex, numBytes, additionalBytes);
 		final long bits = Double.doubleToLongBits(value);
-		final long newValue = write(getAlignedLong(bitIndex), bits, bitInfo.bitOffset, Double.SIZE);
-		store.setLong(bitInfo.byteIndex, newValue);
+		final long newValue = write(getAlignedLong(bitIndex), bits, bitOffset, Double.SIZE);
+		store.setLong(byteIndex, newValue);
 	}
 
 	@Override
@@ -299,10 +313,14 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 
 	// ================================= ================================= =================================
 
-	private long getNBits(BitInfo bitInfo) {
+	private long getNBits(int bitIndex, int bitCount) {
 		long value;
-		final int bitIndex = bitInfo.bitIndex;
-		switch(bitInfo.numBytes) {
+		int byteIndex = byteIndex(bitIndex);
+		final int numBytes = getMinimumBytesFor(bitIndex, bitCount);
+		final int additionalBytes = getAdditionalBytes(byteSize(), byteIndex, numBytes);
+		byteIndex -= additionalBytes;
+		final int bitOffset = computeBitOffset(bitIndex, bitCount, byteIndex, numBytes, additionalBytes);
+		switch(numBytes) {
 			case Byte.BYTES:
 				value = getAlignedByte(bitIndex);
 				value &= 0xFF;
@@ -319,35 +337,41 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 				value = getAlignedLong(bitIndex);
 				break;
 			default:
-				throw misAlignmentError(bitInfo);
+				throw misAlignmentError(numBytes);
 		}
-		return read(value, bitInfo.bitOffset, bitInfo.bitCount);
+		return read(value, bitOffset, bitCount);
 	}
 
-	private void setNBits(long value, BitInfo bitInfo) {
-		final int bitIndex = bitInfo.bitIndex;
-		switch(bitInfo.numBytes) {
+	private void setNBits(long value, int bitIndex, int bitCount) {
+		int byteIndex = byteIndex(bitIndex);
+		final int numBytes = getMinimumBytesFor(bitIndex, bitCount);
+		final int additionalBytes = getAdditionalBytes(byteSize(), byteIndex, numBytes);
+		byteIndex -= additionalBytes;
+		final int bitOffset = computeBitOffset(bitIndex, bitCount, byteIndex, numBytes, additionalBytes);
+		switch(numBytes) {
 			case Byte.BYTES:
-				setInt8(bitIndex, bitInfo.byteIndex, bitInfo.bitOffset, bitInfo.bitCount, value);
+				setInt8(bitIndex, byteIndex, bitOffset, bitCount, value);
 				break;
 			case Short.BYTES:
-				setInt16(bitIndex, bitInfo.byteIndex, bitInfo.bitOffset, bitInfo.bitCount, value);
+				setInt16(bitIndex, byteIndex, bitOffset, bitCount, value);
 				break;
 			case Integer.BYTES:
-				setInt32(bitIndex, bitInfo.byteIndex, bitInfo.bitOffset, bitInfo.bitCount, value);
+				setInt32(bitIndex, byteIndex, bitOffset, bitCount, value);
 				break;
 			case Long.BYTES:
-				setInt64(bitIndex, bitInfo.byteIndex, bitInfo.bitOffset, bitInfo.bitCount, value);
+				setInt64(bitIndex, byteIndex, bitOffset, bitCount, value);
 				break;
 			default:
-				throw misAlignmentError(bitInfo);
+				throw misAlignmentError(numBytes);
 		}
 	}
 
-	private UnsupportedOperationException misAlignmentError(BitInfo bitInfo) {
-		return new UnsupportedOperationException("Value will use " + bitInfo.numBytes + " bytes due to misalignment." +
+	private UnsupportedOperationException misAlignmentError(int numBytes) {
+		return new UnsupportedOperationException("Value will use " + numBytes + " bytes due to misalignment." +
 				" Align the value to a bit position multiple of " + Long.SIZE);
 	}
+
+	protected abstract int computeBitOffset(int bitIndex, int bitCount, int byteIndex, int numBytes, int additionalBytes);
 
 	private void setInt8(int bitIndex, int byteIndex, int bitOffset, int bitCount, long value) {
 		final byte oldValue = getAlignedByte(bitIndex);
@@ -403,39 +427,11 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 
 	@Override
 	public String toString() {
-		return toBinaryString(8);//toHexString();
+		return toBinaryString(Byte.SIZE);//toHexString();
 	}
 
 	@Override
 	public boolean isReadOnly() {
 		return store instanceof ReadOnlyByteStore;
-	}
-
-	public static final class BitInfo {
-
-		private final short bitIndex;
-		private final short byteIndex;
-		private final short numBytes;
-		private final short bitOffset;
-		private final short bitCount;
-
-		public BitInfo(int bitIndex, int byteIndex, int numBytes, int bitOffset, int bitCount) {
-			this.bitIndex = (short) bitIndex;
-			this.byteIndex = (short) byteIndex;
-			this.numBytes = (short) numBytes;
-			this.bitOffset = (short) bitOffset;
-			this.bitCount = (short) bitCount;
-		}
-
-		@Override
-		public String toString() {
-			return "{" +
-					"bitIndex=" + bitIndex +
-					", byteIndex=" + byteIndex +
-					", numBytes=" + numBytes +
-					", bitOffset=" + bitOffset +
-					", bitCount=" + bitCount +
-					'}';
-		}
 	}
 }

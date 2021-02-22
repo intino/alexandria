@@ -33,8 +33,8 @@ public class LedStreamTest {
     }
 
     private LedStream<TestSchema> createTestTransactionsLedStream(Function<Integer, Integer> indexMapper) {
-        SchemaAllocator<TestSchema> allocator = StackAllocators.newManaged(TestSchema.SIZE, numElements, TestSchema::new);
-        return IteratorLedStream.fromStream(TestSchema.SIZE,
+        SchemaAllocator<TestSchema> allocator = StackAllocators.managedStackAllocator(TestSchema.SIZE, numElements, TestSchema.class);
+        return IteratorLedStream.fromStream(TestSchema.class,
                 IntStream.range(1, numElements).map(indexMapper::apply).mapToObj(i ->
                         allocator.calloc().id(i).a((short) (i + 1)).b(i * 2)));
     }
@@ -63,7 +63,7 @@ public class LedStreamTest {
         Queue<TestSchema> testTransactions = new ArrayDeque<>(numElements);
 
         Iterator<Venta> ventas = ledStream.map(
-                Venta.SIZE, Venta::new, (c, ca) -> {
+                Venta.SIZE, Venta.class, (c, ca) -> {
                     ca.id(c.id()).kwh(c.a()).importe(c.b());
                     testTransactions.add(c);
                 });

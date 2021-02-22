@@ -1,11 +1,13 @@
 package io.intino.alexandria.led;
 
+import io.intino.alexandria.led.util.memory.LedLibraryConfig;
 import io.intino.alexandria.logger.Logger;
 import org.xerial.snappy.SnappyOutputStream;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -15,10 +17,7 @@ import static java.nio.file.StandardOpenOption.WRITE;
 
 public class LedWriter {
 
-	private static final int DEFAULT_BUFFER_SIZE = 4096;
-
-
-	private int bufferSize = DEFAULT_BUFFER_SIZE;
+	private int bufferSize = LedLibraryConfig.DEFAULT_BUFFER_SIZE.get();
 	private final OutputStream destOutputStream;
 	private final File destinationFile;
 
@@ -126,7 +125,7 @@ public class LedWriter {
 		final int numBatches = (int) Math.ceil(led.size() / (float) bufferSize);
 		try (OutputStream fos = this.destOutputStream) {
 			LedHeader header = new LedHeader();
-			header.elementCount(size).elementSize(schemaSize);
+			header.elementCount(size).elementSize(schemaSize).uuid(led.serialUUID());
 			fos.write(header.toByteArray());
 			try (SnappyOutputStream outputStream = new SnappyOutputStream(fos)) {
 				for (int i = 0; i < numBatches; i++) {
@@ -135,7 +134,7 @@ public class LedWriter {
 					byte[] outputBuffer = new byte[numElements * schemaSize];
 					for (int j = 0; j < numElements; j++) {
 						Schema src = led.schema(j + start);
-						final long offset = j * schemaSize;
+						final long offset = (long) j * schemaSize;
 						memcpy(src.address(), src.baseOffset(), outputBuffer, offset, schemaSize);
 					}
 					executor.submit(() -> writeToOutputStream(outputStream, outputBuffer));
@@ -150,11 +149,9 @@ public class LedWriter {
 
 	private void serialize(LedStream<? extends Schema> ledStream) {
 		long elementCount = 0;
-		try (OutputStream fos = this.destOutputStream) {
-			LedHeader header = new LedHeader();
-			header.elementCount(LedHeader.UNKNOWN_SIZE).elementSize(ledStream.schemaSize());
-			fos.write(header.toByteArray());
-			try (SnappyOutputStream outputStream = new SnappyOutputStream(fos)) {
+		try (OutputStream outputStream = this.destOutputStream) {
+			reserveHeader(ledStream, outputStream);
+			try (SnappyOutputStream snappyOutputStream = new SnappyOutputStream(outputStream)) {
 				final int schemaSize = ledStream.schemaSize();
 				final byte[] outputBuffer = new byte[bufferSize * schemaSize];
 				int offset = 0;
@@ -163,13 +160,13 @@ public class LedWriter {
 					memcpy(schema.address(), schema.baseOffset(), outputBuffer, offset, schemaSize);
 					offset += schemaSize;
 					if (offset == outputBuffer.length) {
-						writeToOutputStream(outputStream, outputBuffer);
+						writeToOutputStream(snappyOutputStream, outputBuffer);
 						offset = 0;
 					}
 					++elementCount;
 				}
 				if (offset > 0) {
-					writeToOutputStream(outputStream, outputBuffer, 0, offset);
+					writeToOutputStream(snappyOutputStream, outputBuffer, 0, offset);
 				}
 			}
 			ledStream.close();
@@ -177,14 +174,22 @@ public class LedWriter {
 			Logger.error(e);
 		}
 		if(destinationFile != null) {
-			overrideHeader(elementCount, ledStream.schemaSize());
+			overrideHeader(elementCount, ledStream.schemaSize(), Schema.getSerialUUID(ledStream.schemaClass()));
 		}
 	}
 
-	private void overrideHeader(long elementCount, int schemaSize) {
+	private void reserveHeader(LedStream<? extends Schema> ledStream, OutputStream fos) throws IOException {
+		LedHeader header = new LedHeader();
+		header.elementCount(LedHeader.UNKNOWN_SIZE).elementSize(ledStream.schemaSize()).uuid(Schema.getSerialUUID(ledStream.schemaClass()));
+		fos.write(header.toByteArray());
+	}
+
+	private void overrideHeader(long elementCount, int schemaSize, UUID uuid) {
 		try(RandomAccessFile raFile = new RandomAccessFile(destinationFile, "rw")) {
 			raFile.writeLong(elementCount);
 			raFile.writeInt(schemaSize);
+			raFile.writeLong(uuid.getMostSignificantBits());
+			raFile.writeLong(uuid.getLeastSignificantBits());
 		} catch (IOException e) {
 			Logger.error(e);
 		}

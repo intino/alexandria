@@ -7,12 +7,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
 public class LedHeader {
 
-    public static final int SIZE = Long.BYTES + Integer.BYTES;
+    private static final int ELEMENT_COUNT_INDEX = 0;
+    private static final int ELEMENT_SIZE_INDEX = ELEMENT_COUNT_INDEX + Long.BYTES;
+    private static final int UUID_HIGH_INDEX = ELEMENT_SIZE_INDEX + Integer.BYTES;
+    private static final int UUID_LOW_INDEX = UUID_HIGH_INDEX + Long.BYTES;
+
+    public static final int SIZE = UUID_LOW_INDEX + Long.BYTES;
     public static final long UNKNOWN_SIZE = -1;
 
     public static LedHeader from(InputStream inputStream) {
@@ -62,20 +68,30 @@ public class LedHeader {
     }
 
     public long elementCount() {
-        return data.getLong(0);
+        return data.getLong(ELEMENT_COUNT_INDEX);
     }
 
     public LedHeader elementCount(long elementCount) {
-        data.putLong(0, elementCount);
+        data.putLong(ELEMENT_COUNT_INDEX, elementCount);
         return this;
     }
 
     public int elementSize() {
-        return data.getInt(Long.BYTES);
+        return data.getInt(ELEMENT_SIZE_INDEX);
     }
 
     public LedHeader elementSize(int elementSize) {
-        data.putInt(Long.BYTES, elementSize);
+        data.putInt(ELEMENT_SIZE_INDEX, elementSize);
+        return this;
+    }
+
+    public UUID uuid() {
+        return new UUID(data.getLong(UUID_HIGH_INDEX), data.getLong(UUID_LOW_INDEX));
+    }
+
+    public LedHeader uuid(UUID uuid) {
+        data.putLong(UUID_HIGH_INDEX, uuid.getMostSignificantBits());
+        data.putLong(UUID_LOW_INDEX, uuid.getLeastSignificantBits());
         return this;
     }
 
@@ -92,6 +108,7 @@ public class LedHeader {
         return "LedHeader{" +
                 "elementCount=" + elementCount() +
                 ", elementSize=" + elementSize() +
+                ", uuid=" + uuid() +
                 '}';
     }
 }

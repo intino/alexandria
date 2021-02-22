@@ -16,6 +16,7 @@ import java.util.Queue;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.*;
 
 public class ListAllocator<T extends Schema> implements IndexedAllocator<T> {
+
 	private final List<ModifiableMemoryAddress> addresses;
 	private final int elementSize;
 	private final SchemaFactory<T> factory;
@@ -24,11 +25,11 @@ public class ListAllocator<T extends Schema> implements IndexedAllocator<T> {
 	private List<ByteBufferStore> stores;
 	private int lastIndex;
 
-	public ListAllocator(long elementsCountPerBuffer, int schemaSize, SchemaFactory<T> factory) {
+	public ListAllocator(long elementsCountPerBuffer, int schemaSize, Class<T> schemaClass) {
 		if (elementsCountPerBuffer * schemaSize > Integer.MAX_VALUE)
 			throw new IllegalArgumentException("Size too large for ByteBufferStore");
 		this.elementSize = schemaSize;
-		this.factory = factory;
+		this.factory = Schema.factoryOf(schemaClass);
 		this.elementsCountPerBuffer = (int) elementsCountPerBuffer;
 		stores = new ArrayList<>();
 		addresses = new ArrayList<>();
@@ -137,6 +138,11 @@ public class ListAllocator<T extends Schema> implements IndexedAllocator<T> {
 			stores = null;
 			lastIndex = Integer.MIN_VALUE;
 		}
+	}
+
+	@Override
+	public Class<T> schemaClass() {
+		return factory.schemaClass();
 	}
 
 	private int storeIndex(int elementIndex) {

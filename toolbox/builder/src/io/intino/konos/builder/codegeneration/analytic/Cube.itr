@@ -33,7 +33,9 @@ def type(cube)
     import io.intino.alexandria.led.LedReader;
     import io.intino.alexandria.led.LedStream;
     import io.intino.alexandria.led.Schema;
+    import io.intino.alexandria.led.allocators.SchemaFactory;
     import io.intino.alexandria.led.buffers.store.ByteStore;
+    import io.intino.alexandria.led.buffers.store.ByteBufferStore;
     import io.intino.alexandria.led.util.iterators.MergedIterator;
 
 	import $package.analytic.axes.*;
@@ -147,30 +149,51 @@ def type(cube)
 
 		public static class Fact extends Schema {
 
-			public static final int SIZE = $size;
+			public static final int SIZE = $size; // Bytes
+			public static final UUID SERIAL_UUID = UUID.fromString("$serialUUID");
+			public static final SchemaFactory<Fact> FACTORY = new SchemaFactory<>(Fact.class) {
+			    @Override
+			    public Fact newInstance(ByteStore store) {
+			        return new Fact(store);
+			    }
+			};
+
 
 			public Fact(ByteStore store) {
 				super(store);
 			}
 
-			[$column+getter...[$NL$NL]]
+            @Override
+		    public long id() {
+		    	return $id();
+		    }
 
-			@Override
-			public long id() {
-				return $id();
-			}
+            @Override
+		    public int size() {
+		    	return SIZE;
+		    }
 
-			@Override
-			public int size() {
-				return SIZE;
-			}
+            @Override
+		    public UUID serialUUID() {
+		        return SERIAL_UUID;
+		    }
+
+		    [$column+getter...[$NL$NL]]
 		}
 
 		public static class NullFact extends Fact {
-			public static final int SIZE = Fact.SIZE;
+
+			public static final int SIZE = Fact.SIZE; // Bytes
+			public static final UUID SERIAL_UUID = Fact.SERIAL_UUID;
+            public static final SchemaFactory<NullFact> FACTORY = new SchemaFactory<>(NullFact.class) {
+                @Override
+            	public NullFact newInstance(ByteStore store) {
+            	    return new NullFact();
+            	}
+            };
 
 			private NullFact() {
-				super(defaultByteStore());
+				super(ByteStore.empty());
 			}
 
 			@Override
@@ -183,8 +206,9 @@ def type(cube)
 				return SIZE;
 			}
 
-			private static io.intino.alexandria.led.buffers.store.ByteStore defaultByteStore() {
-				return io.intino.alexandria.led.buffers.store.ByteStore.empty();
+			@Override
+			public UUID serialUUID() {
+			    return SERIAL_UUID;
 			}
 		}
 
@@ -201,7 +225,7 @@ def type(cube)
 			public void append(Fact fact) {
 				$indicator+sum...[$NL]
 				$index+append
-				aggregationCount++;
+				++aggregationTotal;
 			}
 
 			public void append(Aggregation aggregation) {
@@ -269,7 +293,7 @@ def type(cube)
 
 				private LedStream<Fact> on(Timetag timetag[, $split+parameter]) {
 					File file = new File(root + "/$name+FirstUpperCase" [+ "." + $split+name], timetag.value() + ".led");
-					return file.exists() ? new LedReader(file).read(Fact::new) : LedStream.empty();
+					return file.exists() ? new LedReader(file).read(Fact.class) : LedStream.empty(Fact.class);
 				}
 			}
 		}
@@ -283,7 +307,7 @@ end
 
 def type(index & total) trigger(append)
 	if (last != fact.id()) {
-		aggregationTotal++;
+		++aggregationCount;
 		last = fact.id();
 	}
 end
@@ -491,56 +515,4 @@ def trigger(dimension)
 	}
 end
 
-def type(column) type(id) trigger(getter)
-	public long $name+firstLowerCase() {
-		return bitBuffer.getAlignedLong(0);
-	}
-end
 
-def type(column) type(longInteger) trigger(getter)
-	public long $name+firstLowerCase() {
-		return bitBuffer.get$aligned~Long[$bits+nbits]($offset[, $bits]);
-	}
-end
-
-def type(column) type(integer) trigger(getter)
-	public int $name+firstLowerCase() {
-		return bitBuffer.get$aligned~Integer[$bits+nbits]($offset[, $bits]);
-	}
-end
-
-def type(column & bool) trigger(getter)
-	public boolean $name+firstLowerCase() {
-		return bitBuffer.getBoolean($offset);
-	}
-end
-
-def type(column & datetime) trigger(getter)
-	public $type $name+firstLowerCase() {
-		return java.time.Instant.ofEpochMilli(bitBuffer.get$aligned~Long[$bits+nbits]($offset[, $bits]));
-	}
-end
-
-def type(column & date) trigger(getter)
-	public $type $name+firstLowerCase() {
-		return java.time.LocalDate.ofEpochDay(Short.toUnsignedInt(bitBuffer.get$aligned~Short[$bits+nbits]($offset[, $bits])));
-	}
-end
-
-def type(column & categorical) trigger(getter)
-	public $type+firstUpperCase.Component $name+firstLowerCase() {
-		return $type+firstUpperCase.instance().component(bitBuffer.getIntegerNBits($offset, $bits));
-	}
-end
-
-def type(column & real) attribute(size:32) trigger(getter)
-	public float $name+firstLowerCase() {
-		return bitBuffer.getAlignedReal$size~Bits($offset);
-	}
-end
-
-def type(column & real) trigger(getter)
-	public double $name+firstLowerCase() {
-		return bitBuffer.getAlignedReal$size~Bits($offset);
-	}
-end

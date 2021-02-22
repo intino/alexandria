@@ -6,9 +6,9 @@ import io.intino.alexandria.led.buffers.BitBuffer;
 import io.intino.alexandria.led.buffers.LittleEndianBitBuffer;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.util.OffHeapObject;
-import io.intino.alexandria.led.util.memory.MemoryUtils;
 import io.intino.alexandria.logger.Logger;
 
+import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -18,10 +18,11 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.UUID;
 
 import static java.nio.ByteOrder.LITTLE_ENDIAN;
 
-public abstract class Schema implements OffHeapObject, Comparable<Schema> {
+public abstract class Schema implements OffHeapObject, Comparable<Schema>, Serializable {
 
 	public static long idOf(Schema schema) {
 		return schema.id();
@@ -29,29 +30,26 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 
 	public static <T extends Schema> int sizeOf(Class<T> type) {
 		try {
-			return (int) type.getField("SIZE").get(null);
+			return (int) type.getDeclaredField("SIZE").get(null);
 		} catch (IllegalAccessException | NoSuchFieldException e) {
-			Logger.error(e);
+			throw new RuntimeException("SIZE is not defined for this schema class: " + type.getSimpleName(), e);
 		}
-		return -1;
 	}
 
-	/**
-	 * This uses reflection!!
-	 * */
+	public static <T extends Schema> UUID getSerialUUID(Class<T> type) {
+		try {
+			return (UUID) type.getDeclaredField("SERIAL_UUID").get(null);
+		} catch (IllegalAccessException | NoSuchFieldException e) {
+			throw new RuntimeException("SERIAL_UUID is not defined for this schema class: " + type.getSimpleName(), e);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
 	public static <T extends Schema> SchemaFactory<T> factoryOf(Class<T> type) {
 		try {
-			final Constructor<T> constructor = type.getConstructor(ByteStore.class);
-			return store -> {
-				try {
-					return constructor.newInstance(store);
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-			};
-		} catch (NoSuchMethodException e) {
-			Logger.error(e);
-			throw new RuntimeException(e);
+			return (SchemaFactory<T>) type.getDeclaredField("FACTORY").get(null);
+		} catch (IllegalAccessException | NoSuchFieldException e) {
+			throw new RuntimeException("FACTORY is not defined for schema class: " + type.getSimpleName(), e);
 		}
 	}
 
@@ -63,9 +61,9 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 				: new BigEndianBitBuffer(store);
 	}
 
-	protected abstract long id();
-
+	public abstract long id();
 	public abstract int size();
+	public abstract UUID serialUUID();
 
 	@Override
 	public int hashCode() {
@@ -151,13 +149,18 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema> {
 		Class<? extends Schema> clazz = getClass();
 		Definition definition = clazz.getAnnotation(Definition.class);
 		if(definition == null) {
-			return super.toString();
+			return clazz.getSimpleName() + "{" +
+					"id="+ id() +
+					", memoryAddress=" + address() +
+					", byteSize=" + byteSize() +
+					", toBinaryString='" + toBinaryString() + '\'' +
+					'}';
 		}
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(definition.name());
 		if(verbose) {
-			sb.append("(").append(definition.size()).append(" bytes)");
+			sb.append("(").append(definition.size()).append(" bytes)").append("[serialUUID=").append(serialUUID()).append(']');
 		}
 		sb.append(" {");
 

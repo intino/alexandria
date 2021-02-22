@@ -39,21 +39,21 @@ public class TestMemoryUsedByJVM {
 	}
 
 	private static void testDefaultAllocator() {
-		final long defaultAllocatorMemory = getMemoryUsed(new DefaultAllocator<>(TestSchema.SIZE, TestSchema::new));
+		final long defaultAllocatorMemory = getMemoryUsed(new DefaultAllocator<>(TestSchema.SIZE, TestSchema.class));
 		System.out.println("Test Allocator Memory Used (" + NUM_ELEMENTS + " elements, element size in bytes = " + TestSchema.SIZE + ")");
 		System.out.println(">> Off-Heap memory used: " + (NUM_ELEMENTS * TestSchema.SIZE) / BYTES_TO_MB + " MB");
 		System.out.println(">> DefaultAllocator: " + defaultAllocatorMemory / BYTES_TO_MB + " MB used");
 	}
 
 	private static void testStackAllocator() {
-		final long stackAllocatorMemory = getMemoryUsed(StackAllocators.newManaged(TestSchema.SIZE, NUM_ELEMENTS, TestSchema::new));
+		final long stackAllocatorMemory = getMemoryUsed(StackAllocators.managedStackAllocator(TestSchema.SIZE, NUM_ELEMENTS, TestSchema.class));
 		System.out.println("Test Allocator Memory Used (" + NUM_ELEMENTS + " elements, element size in bytes = " + TestSchema.SIZE + ")");
 		System.out.println(">> Off-Heap memory used: " + (NUM_ELEMENTS * TestSchema.SIZE) / BYTES_TO_MB + " MB");
 		System.out.println(">> StackAllocator: " + stackAllocatorMemory / BYTES_TO_MB + " MB used");
 	}
 
 	private static void testStackListAllocator() {
-		final long stackListAllocatorMemory = getMemoryUsed(new StackListAllocator<>(NUM_ELEMENTS / 10, TestSchema.SIZE, TestSchema::new, StackAllocators::newManaged));
+		final long stackListAllocatorMemory = getMemoryUsed(new StackListAllocator<>(NUM_ELEMENTS / 10, TestSchema.SIZE, TestSchema.class, StackAllocators::managedStackAllocator));
 		System.out.println("Test Allocator Memory Used (" + NUM_ELEMENTS + " elements, element size in bytes = " + TestSchema.SIZE + ")");
 		System.out.println(">> Off-Heap memory used: " + (NUM_ELEMENTS * TestSchema.SIZE) / BYTES_TO_MB + " MB");
 		System.out.println(">> StackListAllocator: " + stackListAllocatorMemory / BYTES_TO_MB + " MB used");

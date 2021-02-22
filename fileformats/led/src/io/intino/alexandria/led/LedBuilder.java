@@ -1,11 +1,13 @@
 package io.intino.alexandria.led;
 
-import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.allocators.indexed.IndexedAllocator;
 import io.intino.alexandria.led.allocators.indexed.ListAllocator;
 import io.intino.alexandria.led.leds.ListLed;
+import io.intino.alexandria.led.util.memory.LedLibraryConfig;
 
-import java.util.*;
+import java.util.AbstractList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 import static java.util.Objects.requireNonNull;
@@ -16,7 +18,7 @@ import static java.util.Objects.requireNonNull;
  * */
 public class LedBuilder<T extends Schema> implements Led.Builder<T> {
 
-	public static final int DEFAULT_INITIAL_CAPACITY = 1024;
+	public static final int DEFAULT_INITIAL_CAPACITY = 10_000;
 	public static final float GROW_FACTOR = 1.5f;
 
 
@@ -26,11 +28,7 @@ public class LedBuilder<T extends Schema> implements Led.Builder<T> {
 	private int size;
 
 	public LedBuilder(Class<T> schemaClass) {
-		this(schemaClass, Schema.factoryOf(schemaClass));
-	}
-
-	public LedBuilder(Class<T> schemaClass, SchemaFactory<T> factory) {
-		this(schemaClass, createBuilderDefaultAllocator(Schema.sizeOf(schemaClass), factory));
+		this(schemaClass, createBuilderDefaultAllocator(Schema.sizeOf(schemaClass), schemaClass));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -78,7 +76,7 @@ public class LedBuilder<T extends Schema> implements Led.Builder<T> {
 	}
 
 	public Led<T> build() {
-		return new ListLed<>(getList());
+		return new ListLed<>(schemaClass, getList());
 	}
 
 	private List<T> getList() {
@@ -98,7 +96,7 @@ public class LedBuilder<T extends Schema> implements Led.Builder<T> {
 		};
 	}
 
-	private static <T extends Schema> IndexedAllocator<T> createBuilderDefaultAllocator(int schemaSize, SchemaFactory<T> factory) {
-		return new ListAllocator<>(DEFAULT_INITIAL_CAPACITY, schemaSize, factory);
+	private static <T extends Schema> IndexedAllocator<T> createBuilderDefaultAllocator(int schemaSize, Class<T> schemaClass) {
+		return new ListAllocator<>(DEFAULT_INITIAL_CAPACITY, schemaSize, schemaClass);
 	}
 }

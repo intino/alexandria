@@ -34,46 +34,29 @@ public final class HeapLedStreamBuilder<T extends Schema> implements LedStream.B
     private volatile boolean buildInvoked;
 
     public HeapLedStreamBuilder(Class<T> schemaClass) {
-        this(schemaClass, Schema.factoryOf(schemaClass));
+        this(schemaClass, DEFAULT_NUM_SCHEMAS_PER_BLOCK);
     }
 
     public HeapLedStreamBuilder(Class<T> schemaClass, File tempDirectory) {
-        this(schemaClass, Schema.factoryOf(schemaClass), tempDirectory);
+        this(schemaClass, DEFAULT_NUM_SCHEMAS_PER_BLOCK, tempDirectory);
     }
 
     public HeapLedStreamBuilder(Class<T> schemaClass, int numSchemasPerBlock) {
-        this(schemaClass, Schema.factoryOf(schemaClass), numSchemasPerBlock);
+        this(schemaClass, numSchemasPerBlock, SYSTEM_TEMP_DIR);
     }
 
     public HeapLedStreamBuilder(Class<T> schemaClass, int numSchemasPerBlock, File tempDirectory) {
-        this(schemaClass, Schema.factoryOf(schemaClass), numSchemasPerBlock, tempDirectory);
-    }
-
-    public HeapLedStreamBuilder(Class<T> schemaClass, SchemaFactory<T> factory) {
-        this(schemaClass, factory, DEFAULT_NUM_SCHEMAS_PER_BLOCK);
-    }
-
-    public HeapLedStreamBuilder(Class<T> schemaClass, SchemaFactory<T> factory, File tempDirectory) {
-        this(schemaClass, factory, DEFAULT_NUM_SCHEMAS_PER_BLOCK, tempDirectory);
-    }
-
-    public HeapLedStreamBuilder(Class<T> schemaClass, SchemaFactory<T> factory, int numSchemasPerBlock) {
-        this(schemaClass, factory, numSchemasPerBlock, SYSTEM_TEMP_DIR);
-    }
-
-    public HeapLedStreamBuilder(Class<T> schemaClass, SchemaFactory<T> factory,
-                                int numSchemasPerBlock, File tempDirectory) {
         this.schemaClass = schemaClass;
         this.schemaSize = Schema.sizeOf(schemaClass);
-        this.factory = factory;
+        this.factory = Schema.factoryOf(schemaClass);
         tempDirectory.mkdirs();
         this.tempDirectory = tempDirectory.toPath();
         tempLeds = new ArrayList<>();
         tempLeds.add(createTempFile());
-        buffer = allocBuffer(numSchemasPerBlock * schemaSize);
+        buffer = allocBuffer((long) numSchemasPerBlock * schemaSize);
         ModifiableMemoryAddress address = ModifiableMemoryAddress.of(buffer);
         ByteBufferStore store = new ByteBufferStore(buffer, address, 0, buffer.capacity());
-        allocator = new SingleStackAllocator<>(store, address, schemaSize, factory);
+        allocator = new SingleStackAllocator<>(store, address, schemaSize, schemaClass);
         sortedQueue = new PriorityQueue<>(numSchemasPerBlock);
     }
 
@@ -129,7 +112,7 @@ public final class HeapLedStreamBuilder<T extends Schema> implements LedStream.B
         }
         LedWriter ledWriter = new LedWriter(getCurrentFile().toFile());
         sortedQueue.iterator();
-        ledWriter.write(LedStream.fromStream(schemaSize, getSortedTransactions()));
+        ledWriter.write(LedStream.fromStream(schemaClass, getSortedTransactions()));
         sortedQueue.clear();
         buffer.clear();
         allocator.clear();
@@ -172,7 +155,7 @@ public final class HeapLedStreamBuilder<T extends Schema> implements LedStream.B
     }
 
     private LedStream<T> read(Path path) {
-        return new LedReader(path.toFile()).read(factory);
+        return new LedReader(path.toFile()).read(schemaClass);
     }
 
     private void freeBuildBuffer() {

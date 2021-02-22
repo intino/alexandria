@@ -2,6 +2,7 @@ package io.intino.alexandria.led.allocators.indexed;
 
 import io.intino.alexandria.led.Schema;
 import io.intino.alexandria.led.allocators.SchemaFactory;
+import io.intino.alexandria.led.util.memory.LedLibraryConfig;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.IOException;
@@ -18,7 +19,7 @@ public interface IndexedAllocatorFactory<T extends Schema> {
     static <S extends Schema> ManagedIndexedAllocator<S> newManagedIndexedAllocator(InputStream inputStream,
                                                                                     long elementCount,
                                                                                     int elementSize,
-                                                                                    SchemaFactory<S> factory) {
+                                                                                    Class<S> schemaClass) {
 
         try {
             if (elementCount < 0) {
@@ -30,7 +31,7 @@ public interface IndexedAllocatorFactory<T extends Schema> {
 
             ByteBuffer buffer = allocBuffer(elementCount * elementSize);
 
-            byte[] inputBuffer = new byte[1024];
+            byte[] inputBuffer = new byte[LedLibraryConfig.DEFAULT_BUFFER_SIZE.get()];
 
             int bytesRead;
 
@@ -40,7 +41,7 @@ public interface IndexedAllocatorFactory<T extends Schema> {
 
             buffer.clear();
 
-            return new ManagedIndexedAllocator<>(buffer, 0, buffer.capacity(), elementSize, factory);
+            return new ManagedIndexedAllocator<>(buffer, 0, buffer.capacity(), elementSize, schemaClass);
 
         } catch (IOException e) {
             Logger.error(e);
@@ -51,13 +52,13 @@ public interface IndexedAllocatorFactory<T extends Schema> {
     static <S extends Schema> IndexedAllocator<S> newArrayAllocator(InputStream inputStream,
                                                                     long elementCount,
                                                                     int elementSize,
-                                                                    SchemaFactory<S> factory) {
+                                                                    Class<S> schemaClass) {
 
         try {
 
             List<ByteBuffer> buffers = new ArrayList<>();
 
-            byte[] inputBuffer = new byte[1024 * elementSize];
+            byte[] inputBuffer = new byte[LedLibraryConfig.DEFAULT_BUFFER_SIZE.get() * elementSize];
 
             int bytesRead;
 
@@ -67,7 +68,7 @@ public interface IndexedAllocatorFactory<T extends Schema> {
                 buffers.add(buffer);
             }
 
-            return new ArrayAllocator<>(buffers, elementSize, factory);
+            return new ArrayAllocator<>(buffers, elementSize, schemaClass);
 
         } catch (IOException e) {
             Logger.error(e);
@@ -76,7 +77,6 @@ public interface IndexedAllocatorFactory<T extends Schema> {
     }
 
 
-    IndexedAllocator<T> create(InputStream inputStream, long elementCount,
-                               int elementSize, SchemaFactory<T> factory) throws IOException;
+    IndexedAllocator<T> create(InputStream inputStream, long elementCount, int elementSize, Class<T> schemaClass) throws IOException;
 
 }

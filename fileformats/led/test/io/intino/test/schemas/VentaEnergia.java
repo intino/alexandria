@@ -10,6 +10,7 @@ import io.intino.alexandria.led.util.memory.MemoryUtils;
 import java.nio.ByteBuffer;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Definition(name = "VentaEnergia", size = VentaEnergia.SIZE)
 public class VentaEnergia extends Schema {
@@ -24,6 +25,8 @@ public class VentaEnergia extends Schema {
 
     public static final int SIZE = 52;
 
+    public static final UUID SERIAL_UUID = UUID.randomUUID();
+
     public VentaEnergia() {
         super(defaultByteStore());
     }
@@ -34,6 +37,11 @@ public class VentaEnergia extends Schema {
 
     public int size() {
         return 52;
+    }
+
+    @Override
+    public UUID serialUUID() {
+        return SERIAL_UUID;
     }
 
     public Map<String, Object> values() {
@@ -51,7 +59,7 @@ public class VentaEnergia extends Schema {
     }
 
     @Override
-    protected long id() {
+    public long id() {
         return this.ocr();
     }
 

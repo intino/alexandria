@@ -21,10 +21,10 @@ public class SingleStackAllocator<T extends Schema> implements StackAllocator<T>
 	private final AtomicLong stackPointer;
 	private final SchemaFactory<T> factory;
 
-	public SingleStackAllocator(ByteStore store, ModifiableMemoryAddress address, int elementSize, SchemaFactory<T> factory) {
+	public SingleStackAllocator(ByteStore store, ModifiableMemoryAddress address, int elementSize, Class<T> schemaClass) {
 		this.elementSize = elementSize;
 		this.stack = store;
-		this.factory = factory;
+		this.factory = Schema.factoryOf(schemaClass);
 		stackPointer = new AtomicLong();
 		this.address = address;
 	}
@@ -98,5 +98,10 @@ public class SingleStackAllocator<T extends Schema> implements StackAllocator<T>
 			address.set(NULL);
 			stack = null;
 		}
+	}
+
+	@Override
+	public Class<T> schemaClass() {
+		return factory.schemaClass();
 	}
 }

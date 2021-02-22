@@ -21,22 +21,21 @@ public class StackListAllocator<T extends Schema> implements StackAllocator<T> {
 	private final StackAllocatorFactory<T> stackAllocatorFactory;
 
 	public StackListAllocator(int initialStackCount, int elementsPerStack, int elementSize,
-                              SchemaFactory<T> schemaFactory, StackAllocatorFactory<T> stackAllocatorFactory) {
+                              Class<T> schemaClass, StackAllocatorFactory<T> stackAllocatorFactory) {
 
 		this.stackAllocators = new ArrayList<>();
 		currentStackAllocator = new AtomicInteger(0);
 		this.elementsPerStack = elementsPerStack;
 		this.elementSize = elementSize;
-		this.schemaFactory = schemaFactory;
+		this.schemaFactory = Schema.factoryOf(schemaClass);
 		this.stackAllocatorFactory = stackAllocatorFactory;
 
 		reserve(initialStackCount);
 	}
 
-	public StackListAllocator(int elementsPerStack, int elementSize,
-                              SchemaFactory<T> schemaFactory, StackAllocatorFactory<T> stackAllocatorFactory) {
+	public StackListAllocator(int elementsPerStack, int elementSize, Class<T> schemaClass, StackAllocatorFactory<T> stackAllocatorFactory) {
 
-		this(DEFAULT_INITIAL_STACK_COUNT, elementsPerStack, elementSize, schemaFactory, stackAllocatorFactory);
+		this(DEFAULT_INITIAL_STACK_COUNT, elementsPerStack, elementSize, schemaClass, stackAllocatorFactory);
 	}
 
 	@Override
@@ -116,6 +115,11 @@ public class StackListAllocator<T extends Schema> implements StackAllocator<T> {
 	}
 
 	@Override
+	public Class<T> schemaClass() {
+		return schemaFactory.schemaClass();
+	}
+
+	@Override
 	public long address() {
 		return currentStackAllocator().address();
 	}
@@ -126,7 +130,7 @@ public class StackListAllocator<T extends Schema> implements StackAllocator<T> {
 	}
 
 	private void allocateNewStack() {
-		stackAllocators.add(stackAllocatorFactory.create(elementSize, elementsPerStack, schemaFactory));
+		stackAllocators.add(stackAllocatorFactory.create(elementSize, elementsPerStack, schemaFactory.schemaClass()));
 	}
 
 	private StackAllocator<T> currentStackAllocator() {

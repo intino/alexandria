@@ -5,6 +5,7 @@ import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.facts.FactRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Axis;
@@ -63,14 +64,14 @@ public class AnalyticRenderer extends Renderer {
 		if (cube.splitted() != null) addSplit(cube, fb);
 		fb.add("index", new FrameBuilder("index", cube.index() != null ? "normal" : "total")
 				.add("value", ""));
-		factRenderer.addFact(cube, fb);
+		factRenderer.render(cube, fb);
 		write(cube, fb);
 	}
 
 	private void renderVirtualCube(Cube.Virtual virtualCube, FrameBuilder fb) {
 		for (Cube reference : new Cube[]{virtualCube.main(), virtualCube.join()}) {
 			addDimensionsAndIndicators(reference, virtualCube.asCube(), fb);
-			factRenderer.addFact(reference, fb);
+			factRenderer.render(reference, fb);
 		}
 		fb.add("index", new FrameBuilder("index", virtualCube.index() != null ? "index" : "total").add("value", ""));
 		fb.add("mainCube", virtualCube.main().name$());
@@ -95,7 +96,7 @@ public class AnalyticRenderer extends Renderer {
 	}
 
 	private Template template(Cube cube) {
-		return cube.isVirtual() ? new VirtualCubeTemplate() : new CubeTemplate();
+		return cube.isVirtual() ? new VirtualCubeTemplate() : new CubeWithGettersTemplate();
 	}
 
 	private void addDimensionsAndIndicators(Cube cube, Cube sourceCube, FrameBuilder fb) {

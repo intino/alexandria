@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 import static io.intino.alexandria.led.Schema.factoryOf;
 import static io.intino.alexandria.led.Schema.sizeOf;
 import static io.intino.alexandria.led.util.memory.LedLibraryConfig.DEFAULT_BUFFER_SIZE;
-import static io.intino.alexandria.led.util.memory.LedLibraryConfig.INPUTLEDSTREAM_CONCURRENCY_ENABLED;
+import static io.intino.alexandria.led.util.memory.LedLibraryConfig.INPUT_LEDSTREAM_CONCURRENCY_ENABLED;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
 import static java.nio.file.StandardOpenOption.READ;
 
@@ -29,7 +29,7 @@ public class ByteChannelLedStream<T extends Schema> implements LedStream<T> {
     private final long fileSize;
     private final int bufferSize;
     private final int schemaSize;
-    private final SchemaFactory<T> provider;
+    private final SchemaFactory<T> factory;
     private final Iterator<T> iterator;
     private Runnable onClose;
     private final AtomicBoolean closed;
@@ -50,7 +50,7 @@ public class ByteChannelLedStream<T extends Schema> implements LedStream<T> {
         this.byteChannel = open(file);
         fileSize = getFileSize();
         this.schemaSize = schemaSize;
-        this.provider = factory;
+        this.factory = factory;
         this.bufferSize = bufferSize;
         closed = new AtomicBoolean();
         this.iterator = stream().iterator();
@@ -96,6 +96,11 @@ public class ByteChannelLedStream<T extends Schema> implements LedStream<T> {
         return this;
     }
 
+    @Override
+    public Class<T> schemaClass() {
+        return factory.schemaClass();
+    }
+
     public synchronized Stream<T> stream() {
         return Stream.generate(() -> read(byteChannel))
                 .takeWhile(inputBuffer -> checkInputBuffer(inputBuffer, byteChannel))
@@ -122,9 +127,9 @@ public class ByteChannelLedStream<T extends Schema> implements LedStream<T> {
     }
 
     private Stream<T> allocateAll(ByteBuffer buffer) {
-        StackAllocator<T> allocator = StackAllocators.newManaged(schemaSize, buffer, provider);
+        StackAllocator<T> allocator = StackAllocators.managedStackAllocatorFromBuffer(schemaSize, buffer, schemaClass());
         IntStream intStream = IntStream.range(0, buffer.remaining() / schemaSize);
-        if(INPUTLEDSTREAM_CONCURRENCY_ENABLED.get()) {
+        if(INPUT_LEDSTREAM_CONCURRENCY_ENABLED.get()) {
             intStream = intStream.sorted().parallel();
         }
         return intStream.mapToObj(index -> allocator.malloc());

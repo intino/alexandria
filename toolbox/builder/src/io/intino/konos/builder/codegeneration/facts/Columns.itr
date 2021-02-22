@@ -1,83 +1,57 @@
-def type(cube)
-	package $package+validPackage~.analytic.cubes;
-
-    import io.intino.alexandria.led.Schema;
-    import io.intino.alexandria.led.allocators.SchemaFactory;
-    import io.intino.alexandria.led.buffers.store.ByteStore;
-    import io.intino.alexandria.led.buffers.store.ByteBufferStore;
-    import java.util.UUID;
-	import $package+validPackage~.analytic.axes.*;
-
-	public class $name+firstUpperCase extends Schema {
-
-		[$split]
-
-		public static final int SIZE = $size; // Bytes
-        public static final UUID SERIAL_UUID = UUID.fromString("$serialUUID");
-        public static final SchemaFactory<$name+firstUpperCase> FACTORY = new SchemaFactory<>($name+firstUpperCase.class) {
-            @Override
-            public $name+firstUpperCase newInstance(ByteStore store) {
-                return new $name+firstUpperCase(store);
-            }
-        };
-
-		public $name+firstUpperCase() {
-			super(new ByteBufferStore(SIZE));
-		}
-
-		public $name+firstUpperCase(io.intino.alexandria.led.buffers.store.ByteStore store) {
-			super(store);
-        }
-
-        @Override
-		public long id() {
-			return $id();
-		}
-
-        @Override
-		public int size() {
-			return SIZE;
-		}
-
-        @Override
-		public UUID serialUUID() {
-		    return SERIAL_UUID;
-		}
-
-		[$column+getter...[$NL$NL]]
-
-		[$column+setter...[$NL$NL]]
-
+def type(column) type(id) trigger(getter)
+	public long $name+firstLowerCase() {
+		return bitBuffer.getAlignedLong(0);
 	}
 end
 
-def trigger(axisImport)
-	import $this.axis.*;
-end
-
-def trigger(split)
-	public enum Split {
-		$enum+asEnum...[, ];
-
-		public abstract String qn();
-
-		public static Split splitByQn(String qn) {
-			return java.util.Arrays.stream(values()).filter(c -> c.qn().equals(qn)).findFirst().orElse(null);
-		}
+def type(column) type(longInteger) trigger(getter)
+	public long $name+firstLowerCase() {
+		return bitBuffer.get$aligned~Long[$bits+nbits]($offset[, $bits]);
 	}
 end
 
-def trigger(asEnum)
-	$value+snakeCaseToCamelCase {
-		public String qn() {
-			return "$qn";
-		}
+def type(column) type(integer) trigger(getter)
+	public int $name+firstLowerCase() {
+		return bitBuffer.get$aligned~Integer[$bits+nbits]($offset[, $bits]);
 	}
 end
 
-def trigger(nbits)
-	NBits
+def type(column & bool) trigger(getter)
+	public boolean $name+firstLowerCase() {
+		return bitBuffer.getBoolean($offset);
+	}
 end
+
+def type(column & datetime) trigger(getter)
+	public $type $name+firstLowerCase() {
+		return java.time.Instant.ofEpochMilli(bitBuffer.get$aligned~Long[$bits+nbits]($offset[, $bits]));
+	}
+end
+
+def type(column & date) trigger(getter)
+	public $type $name+firstLowerCase() {
+		return java.time.LocalDate.ofEpochDay(Short.toUnsignedInt(bitBuffer.get$aligned~Short[$bits+nbits]($offset[, $bits])));
+	}
+end
+
+def type(column & categorical) trigger(getter)
+	public $type+firstUpperCase.Component $name+firstLowerCase() {
+		return $type+firstUpperCase.instance().component(bitBuffer.getIntegerNBits($offset, $bits));
+	}
+end
+
+def type(column & real) attribute(size:32) trigger(getter)
+	public float $name+firstLowerCase() {
+		return bitBuffer.getAlignedReal$size~Bits($offset);
+	}
+end
+
+def type(column & real) trigger(getter)
+	public double $name+firstLowerCase() {
+		return bitBuffer.getAlignedReal$size~Bits($offset);
+	}
+end
+
 
 def type(column & integer) trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(int $name+firstLowerCase) {
