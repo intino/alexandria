@@ -126,6 +126,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 		this.requester = new DynamicTableRequester(this);
 		this.header = React.createRef();
 		this.container = React.createRef();
+		this.tableContainer = React.createRef();
 		this.state = {
 		    sections: null,
 		    open: false,
@@ -146,16 +147,22 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     render() {
         if (this.state.sections == null) return this.renderLoading();
         if (this.state.sections.length <= 0) return this.state.loading ? this.renderLoading() : this.renderEmpty();
+        window.setTimeout(this.showTableContainer.bind(this), 100);
         return (
             <div ref={this.container}>
                 {this.renderToolbar()}
-                <div style={{width:this.container.current != null ? this.container.current.offsetWidth+"px" : "100%", overflow:'auto', height:'calc(100% - 40px)'}}>
+                <div ref={this.tableContainer} style={{width:this.container.current != null ? (this.container.current.offsetWidth-15)+"px" : "100%", overflow:'auto', display:'none', height:'calc(100% - 40px)'}}>
                     {this.renderTable()}
                 </div>
                 {this.renderConfirmDialog()}
                 {this.renderDialog()}
             </div>
         );
+    };
+
+    showTableContainer = () => {
+        if (this.tableContainer.current == null) return;
+        this.tableContainer.current.style.display = "block";
     };
 
     renderToolbar = () => {
