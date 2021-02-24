@@ -11,7 +11,6 @@
     <orderEntry type="module" module-name="exceptions" />
     <orderEntry type="module" module-name="primitives" />
     <orderEntry type="module" module-name="logger" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:exceptions:2.0.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.4" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
     <orderEntry type="module" module-name="http" />
