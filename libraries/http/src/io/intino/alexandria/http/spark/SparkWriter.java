@@ -6,6 +6,7 @@ import io.intino.alexandria.logger.Logger;
 import spark.Response;
 import spark.utils.IOUtils;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
@@ -40,16 +41,14 @@ class SparkWriter {
 	private void writeResponse(String message, String contentType) {
 		try {
 			writeResponse(message, contentType, response.raw());
-		} catch (IOException e) {
-			Logger.error(e);
+		} catch (IOException ignored) {
 		}
 	}
 
 	public void writeError(AlexandriaError response, String message) {
 		try {
 			writeResponseError(response.code(), message, this.response.raw());
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ignored) {
 		}
 	}
 
@@ -87,8 +86,7 @@ class SparkWriter {
 			response.setContentType(MimeTypes.getFromFile(file));
 			response.setHeader("Content-Disposition", (embedded ? "inline" : "attachment") + ";filename=" + file.getName());
 			writeResponse(readFile(file), response);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ignored) {
 		}
 	}
 
@@ -99,8 +97,7 @@ class SparkWriter {
 			response.setContentType(contentType);
 			response.setHeader("Content-Disposition", (embedded ? "inline" : "attachment") + ";filename=" + (filename != null ? filename : ("resource." + MimeTypes.getExtension(contentType))));
 			writeResponse(content, response);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ignored) {
 		}
 	}
 
@@ -115,8 +112,7 @@ class SparkWriter {
 			response.setContentLength(content.length);
 			response.getOutputStream().write(content);
 			response.getOutputStream().flush();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ignored) {
 		}
 	}
 
