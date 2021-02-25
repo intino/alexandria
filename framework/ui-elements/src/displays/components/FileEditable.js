@@ -89,10 +89,15 @@ export default class FileEditable extends AbstractFile {
 	            dropzoneParagraphClass="fileeditable-dropzone-paragraph"
                 filesLimit={1}
                 maxFileSize={this.props.maxSize != null ? this.props.maxSize : 300000000}
+                showPreviews={true}
+                useChipsForPreview
+                previewGridProps={{container: { spacing: 1, direction: 'row' }}}
+                previewText={this.translate("Selected file")}
                 showPreviewsInDropzone={false}
-	            onChange={(files) => {
-	                for (var i=0; i<files.length;i++) this.saveFile(files[i], files[i].name);
-                }}
+                showAlerts={false}
+                showFilenames={true}
+	            onDelete={(file) => { this.saveFile(null, null) }}
+	            onChange={(files) => { for (var i=0; i<files.length;i++) this.saveFile(files[i], files[i].name); }}
             />
         );
 	};
