@@ -63,8 +63,10 @@ def type(cube)
     import static java.util.Spliterators.spliteratorUnknownSize;
 
     public abstract class Abstract$name+FirstUpperCase {
+
 		private static final String ID_SEP = " - ";
-		private static Fact nullFact = new NullFact();
+		private static final Fact NULL_FACT = new NullFact();
+
 		private final List<? extends Loader> loaders;
 		private final List<Predicate<Fact>> filterList = new ArrayList<>();
 		private final List<Axis> axes = new ArrayList<>();
@@ -81,7 +83,7 @@ def type(cube)
     	[$customFilter+method...[$NL$NL]]
 
 		public static Fact nullFact() {
-			return nullFact;
+			return NULL_FACT;
 		}
 
 		public Abstract$name+firstUpperCase execute() {
