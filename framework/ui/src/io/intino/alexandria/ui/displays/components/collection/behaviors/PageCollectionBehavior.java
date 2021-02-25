@@ -46,6 +46,7 @@ public class PageCollectionBehavior<DS extends PageDatasource<Item>, Item> exten
 	}
 
 	public long itemCount() {
+		if (itemLoader == null) return 0;
 		return itemLoader.itemCount();
 	}
 

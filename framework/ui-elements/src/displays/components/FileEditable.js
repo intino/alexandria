@@ -84,16 +84,16 @@ export default class FileEditable extends AbstractFile {
 	        <DropzoneArea
 	            acceptedFiles={this._allowedTypes()}
 	            dropzoneText={this.translate("Drag and drop a file here or click")}
+	            fileObjects={this.state.files}
 	            dropzoneClass="fileeditable-dropzone"
 	            dropzoneParagraphClass="fileeditable-dropzone-paragraph"
                 filesLimit={1}
                 maxFileSize={this.props.maxSize != null ? this.props.maxSize : 300000000}
                 showPreviewsInDropzone={false}
 	            onChange={(files) => {
-	                if (files.length <= 0) return;
-	                if (files.length > 1) return;
-	                this.saveFile(files[0], files[0].name);
-            }}/>
+	                for (var i=0; i<files.length;i++) this.saveFile(files[i], files[i].name);
+                }}
+            />
         );
 	};
 
