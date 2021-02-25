@@ -9,6 +9,7 @@ import io.intino.alexandria.ui.services.push.User;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -16,7 +17,7 @@ import static io.intino.alexandria.ui.utils.UUIDUtil.isUUID;
 import static java.util.stream.Collectors.toList;
 
 public abstract class Soul implements DisplayRepository {
-    private final Map<String, Display> displays = new HashMap<>();
+    private final Map<String, Display> displays = new ConcurrentHashMap<>();
     private final List<Consumer<Display>> registerListeners = new ArrayList<>();
     private Consumer<String> redirectListener = null;
     protected final UISession session;
