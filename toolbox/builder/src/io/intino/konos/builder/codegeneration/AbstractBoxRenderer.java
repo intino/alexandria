@@ -29,7 +29,6 @@ public class AbstractBoxRenderer extends Renderer {
 		this.graph = graph;
 		this.configuration = compilationContext.configuration();
 		this.konosParameters = new LinkedHashSet<>();
-		this.konosParameters.add("home");
 	}
 
 	@Override

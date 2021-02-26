@@ -44,7 +44,7 @@ public class UISparkManager extends SparkManager<PushService> {
 	}
 
 	public String requestUrl() {
-		return baseUrl() + this.request.raw().getPathInfo();
+		return baseUrl() + this.request.raw().getRequestURI();
 	}
 
 	public UISession currentSession() {
@@ -94,4 +94,9 @@ public class UISparkManager extends SparkManager<PushService> {
 		return request.cookies();
 	}
 
+	@Override
+	public void redirect(String location) {
+		currentSession().browser().add("callback", requestUrl());
+		super.redirect(location);
+	}
 }

@@ -1,9 +1,11 @@
 package io.intino.alexandria.http.spark;
 
 import io.intino.alexandria.http.pushservice.Client;
+import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WriteCallback;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -57,22 +59,30 @@ public class SparkClient implements Client {
 	}
 
 	@Override
-	public void send(String message) {
-		if (!session.isOpen()) return;
+	public boolean send(String message) {
+		if (!session.isOpen()) return false;
 
-		session.getRemote().sendString(message, new WriteCallback() {
-			@Override
-			public void writeFailed(Throwable throwable) {
-				if (!messagesQueue.contains(message))
-					messagesQueue.add(message);
-			}
+		try {
+			RemoteEndpoint remote = session.getRemote();
+			remote.sendString(message, new WriteCallback() {
+				@Override
+				public void writeFailed(Throwable throwable) {
+					if (!messagesQueue.contains(message))
+						messagesQueue.add(message);
+				}
 
-			@Override
-			public void writeSuccess() {
-				if (messagesQueue.contains(message))
-					messagesQueue.remove(message);
-			}
-		});
+				@Override
+				public void writeSuccess() {
+					if (messagesQueue.contains(message))
+						messagesQueue.remove(message);
+				}
+			});
+			remote.flush();
+		} catch (IOException ignored) {
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override

@@ -5,6 +5,6 @@ public interface Client {
     String sessionId();
     String language();
     void language(String language);
-    void send(String message);
+    boolean send(String message);
     void destroy();
 }
