@@ -12,8 +12,8 @@ def type(boxConfiguration)
 
 		$parameter...[$NL$NL]
 
-		public File home() {
-			return new File(args.getOrDefault("home", System.getProperty("user.home")));
+		public java.io.File home() {
+			return new java.io.File(args.getOrDefault("home", System.getProperty("user.home")));
 		}
 	}
 end
