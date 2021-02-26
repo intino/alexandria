@@ -4,26 +4,30 @@ def type(continuous)
 	import $package.analytic.Axis;
     import java.util.*;
     import java.util.stream.Collectors;
+    import java.util.stream.Stream;
 
     public class $name+snakeCaseToCamelCase+FirstUpperCase implements Axis {
-    	private static Range$[] ranges = new Range$[$rangeSize];
-    	private static double$[] limits = new double$[$rangeSize];
 
-    	private static final $name+snakeCaseToCamelCase+FirstUpperCase instance = new $name+snakeCaseToCamelCase+FirstUpperCase();
+        private static final class Singleton {
+            private static final $name+snakeCaseToCamelCase+FirstUpperCase INSTANCE = new $name+snakeCaseToCamelCase+FirstUpperCase();
+        }
+
+		public static $name+snakeCaseToCamelCase+FirstUpperCase instance() {
+			return Singleton.INSTANCE;
+		}
+
+    	private final Range$[] ranges = new Range$[$rangeSize];
 
     	private $name+snakeCaseToCamelCase+FirstUpperCase() {
     		$range+init...[$NL]
-    		for (int i = 0; i < ranges.length; i++) limits$[i] = ranges$[i].max;
     	}
 
-		public static $name+snakeCaseToCamelCase+FirstUpperCase instance() {
-			return instance;
-		}
-
+        @Override
     	public String label() {
     		return "$label";
     	}
 
+        @Override
 		public Component component(String id) {
 			return ranges$[Integer.parseInt(id)];
 		}
@@ -42,15 +46,35 @@ def type(continuous)
     		};
     	}
 
-    	public static Range rangeOf(double value) {
-    		int index = Arrays.binarySearch(limits, value);
-    		index = index < 0 ? (index + 1) * -1 : index;
-    		return ranges$[index >= ranges.length ? ranges.length - 1 : index];
-    	}
+        public static Range rangeOf(final double value) {
+            final Range$[] ranges = Singleton.INSTANCE.ranges;
+        	int index = binarySearch(ranges, value);
+        	index = index < 0 ? (index + 1) * -1 : index;
+        	return ranges$[index >= ranges.length ? ranges.length - 1 : index];
+        }
+
+        private static int binarySearch(final Range$[] ranges, final double value) {
+        	int low = 0;
+        	int high = ranges.length - 1;
+
+        	while (low <= high) {
+        		final int mid = (low + high) >>> 1;
+        		final double midVal = ranges$[mid].max;
+        		final int comparison = Double.compare(midVal, value);
+
+        		if (comparison < 0)
+        			low = mid + 1;
+        		else if (comparison > 0)
+        			high = mid - 1;
+        		else
+        			return mid;
+        	}
+        	return -(low + 1);
+        }
 
     	@Override
 		public Component component(int index) {
-			return ranges().get(index);
+			return ranges$[index];
 		}
 
 		@Override
@@ -59,11 +83,17 @@ def type(continuous)
 		}
 
 		@Override
-		public Collection<? extends Component> components() {
+		public List<Range> components() {
 			return ranges();
 		}
 
+		@Override
+		public Stream<Range> stream() {
+		    return Arrays.stream(ranges);
+		}
+
     	public class Range implements Component {
+
     		private final int index;
     		private final double min;
     		private final double max;
@@ -94,6 +124,7 @@ def type(continuous)
 				return label;
 			}
 
+            @Override
 			public String label() {
 				return label;
 			}

@@ -13,11 +13,9 @@ import io.intino.konos.model.graph.Cube;
 import io.intino.konos.model.graph.KonosGraph;
 
 import java.io.*;
-import java.nio.file.Path;
 import java.util.*;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
-import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.*;
 
 public class AnalyticRenderer extends Renderer {
@@ -26,13 +24,18 @@ public class AnalyticRenderer extends Renderer {
 	private final File gen;
 	private final KonosGraph graph;
 	private final FactRenderer factRenderer;
+	private final CategoricalAxisRenderer categoricalAxisRenderer;
+	private final ContinuousAxisRenderer continuousAxisRenderer;
 
 	public AnalyticRenderer(CompilationContext context, KonosGraph graph) {
 		super(context, Target.Owner);
 		this.src = new File(context.src(Target.Owner), "analytic");
 		this.gen = new File(context.gen(Target.Owner), "analytic");
+		final File res = context.res(Target.Owner).getAbsoluteFile();
 		this.graph = graph;
 		this.factRenderer = new FactRenderer();
+		this.categoricalAxisRenderer = new CategoricalAxisRenderer(context, gen, res);
+		this.continuousAxisRenderer = new ContinuousAxisRenderer(context, gen);
 	}
 
 	@Override
@@ -43,12 +46,13 @@ public class AnalyticRenderer extends Renderer {
 
 	private void renderAxes(List<Axis> axes) {
 		if (axes.isEmpty()) return;
-		writeFrame(gen, "Axis", customize(new CategoricalAxisTemplate()).render(new FrameBuilder("interface")
-				.add("package", context.packageName()).toFrame()));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axes.get(0)), javaFile(gen, "Axis").getAbsolutePath()));
-		for (Axis axis : axes)
-			if (axis.isCategorical()) renderAxis(axis.asCategorical());
-			else renderAxis(axis.asContinuous());
+		AxisInterfaceRenderer.render(gen, context);
+		for (Axis axis : axes) {
+			if (axis.isCategorical())
+				categoricalAxisRenderer.render(axis.asCategorical());
+			else
+				continuousAxisRenderer.render(axis.asContinuous());
+		}
 	}
 
 	private void renderCubes(List<Cube> cubeList) {
@@ -130,50 +134,6 @@ public class AnalyticRenderer extends Renderer {
 				add("index", new FrameBuilder((sourceCube == null && cube.index() != null) || (sourceCube != null && sourceCube.index() != null) ? "index" : "total")).
 				add("source", indicator.source().name$()).
 				add("unit", indicator.unit());
-	}
-
-	private void renderAxis(Axis.Categorical axis) {
-		FrameBuilder fb = new FrameBuilder("axis").
-				add("package", context.packageName()).add("name", axis.name$()).add("label", axis.label());
-		if (axis.asAxis().isDynamic()) fb.add("dynamic", ";");
-		fb.add("resource", axisResource(axis.tsv().getPath()));
-		if (axis.includeLabel() != null)
-			fb.add("include", new FrameBuilder("include").add("name", "label").add("index", 2));
-		int offset = offset(axis);
-		if (axis.include() != null) {
-			List<Axis> includes = axis.include().axes();
-			for (int i = 0; i < includes.size(); i++)
-				fb.add("include", new FrameBuilder("include").add("name", includes.get(i).name$()).add("index", i + offset));
-		}
-		writeFrame(new File(gen, "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString()), customize(new CategoricalAxisTemplate()).render(fb.toFrame()));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axis), javaFile(new File(gen, "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString())).getAbsolutePath()));
-	}
-
-	private String axisResource(String resource) {
-		Path res = context.res(Target.Owner).toPath();
-		return res.relativize(new File(resource).toPath().toAbsolutePath()).toFile().getPath().replace("\\", "/");
-	}
-
-	private int offset(Axis.Categorical axis) {
-		return axis.includeLabel() != null ? 3 : 2;
-	}
-
-	private void renderAxis(Axis.Continuous axis) {
-		FrameBuilder fb = new FrameBuilder("continuous").add("package", context.packageName()).add("name", snakeCaseToCamelCase().format(axis.name$()).toString()).add("label", axis.label());
-		fb.add("rangeSize", axis.rangeList().size());
-		int index = 0;
-		for (Axis.Continuous.Range range : axis.rangeList()) {
-			FrameBuilder rangeFb = new FrameBuilder("range").add("index", index);
-			if (range.isLowerBound()) rangeFb.add("lower").add("bound", range.asLowerBound().lowerBound());
-			else if (range.isUpperBound()) rangeFb.add("upper").add("bound", range.asUpperBound().upperBound());
-			else if (range.isBound())
-				rangeFb.add("lower", range.asBound().lowerBound()).add("upper", range.asBound().upperBound());
-			fb.add("range", rangeFb);
-			if (range.label() != null) rangeFb.add("label", range.label());
-			index++;
-		}
-		writeFrame(new File(gen, "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString()), customize(new ContinuousAxisTemplate()).render(fb.toFrame()));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axis), javaFile(new File(gen, "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString())).getAbsolutePath()));
 	}
 
 	private boolean alreadyRendered(File destination, String name) {

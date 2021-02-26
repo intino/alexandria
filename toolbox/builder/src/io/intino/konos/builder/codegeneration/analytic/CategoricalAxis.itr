@@ -1,104 +1,84 @@
-def type(interface)
-	package $package.analytic;
-
-    import java.util.Collection;
-
-    	public interface Axis {
-			String label();
-
-			int size();
-
-			Collection<? extends Component> components();
-
-			Component component(int index);
-
-			Component component(String id);
-
-			default boolean isDynamic() {
-				return false;
-			};
-
-
-		interface Component {
-			int index();
-
-			String id();
-
-			default String label() {
-				return "";
-			}
-
-			Axis axis();
-		}
-    }
-end
-
 def type(axis)
 	package $package+ValidPackage.analytic.axes;
 
 	import $package+ValidPackage.analytic.Axis;
 
-	import java.util.ArrayList;
-    import java.util.List;
+	import java.util.*;
+    import java.util.stream.Stream;
     import java.util.function.Predicate;
     import java.util.stream.Collectors;
     import java.util.concurrent.atomic.AtomicInteger;
 
-
 	public class $name+snakeCaseToCamelCase+FirstUpperCase implements Axis {
-		private static $name+snakeCaseToCamelCase+FirstUpperCase instance;
-		public final Component NA = new Component(0, "NA"[, $include+defaultValue...[, ]]);
-		private final java.util.Map<Integer, Component> components;
-		private final java.util.Map<String, Component> componentsByName;
-		private final int size;
 
-		public static $name+snakeCaseToCamelCase+FirstUpperCase instance() {
-			return instance == null ? (instance = new $name+snakeCaseToCamelCase+FirstUpperCase()): instance;
-		}
+        public static final Component NA = new Component(0, "NA"[, $include+defaultValue...[, ]]);
+        [$component...[$NL]]
+
+        private static final class Singleton {
+        	private static final $name+snakeCaseToCamelCase+FirstUpperCase INSTANCE = new $name+snakeCaseToCamelCase+FirstUpperCase();
+        }
+
+        public static $name+snakeCaseToCamelCase+FirstUpperCase instance() {
+        	return Singleton.INSTANCE;
+        }
+
+
+		private final Component$[] components;
+		private final Map<String, Component> componentsByName;
 
 		private $name+snakeCaseToCamelCase+FirstUpperCase() {
-			components = new java.util.HashMap<>();
-			componentsByName = new java.util.HashMap<>();
-			AtomicInteger size = new AtomicInteger();
-			try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader($name+snakeCaseToCamelCase+FirstUpperCase.class.getResourceAsStream("/$resource")))) {
-				reader.lines().map(l -> l.split("\\t", -1)).
-				map(l -> new Component(Integer.parseInt(l$[0]), l$[1][,$include+constructor...[, ]])).
-				forEach(c -> { components.put(c.index, c); componentsByName.put(c.id, c);  size.getAndIncrement(); });
-			} catch (java.io.IOException e) {
-				io.intino.alexandria.logger.Logger.error(e);
-			}
-			this.size = size.get();
+			this.componentsByName = new WeakHashMap<>();
+		    [$components+load]
 		}
 
+        @Override
 		public String label() {
 			return "$label";
 		}
 
+        @Override
 		public int size() {
-			return this.size;
+			return components.length - 1;
 		}
 
-		public List<Component> components() {
-			return new ArrayList<>(components.values());
-		}
+        @Override
+	    public List<Component> components() {
+	    	return new AbstractList<>() {
+	    		@Override
+	    		public Component get(int index) {
+	    			return component(index + 1);
+	    		}
+	    		@Override
+	    		public int size() {
+	    			return $name+snakeCaseToCamelCase+FirstUpperCase~.this.size();
+	    		}
+	    	};
+	    }
 
-		public List<Component> components(Predicate<Component> filter) {
-			return components.values().stream().filter(filter).collect(Collectors.toList());
-		}
+        @Override
+	    public Stream<Component> stream() {
+	    	return Arrays.stream(components).skip(1);
+	    }
 
-		public Component component(int index) {
-			return components.getOrDefault(index, NA);
-		}
+	    public List<Component> components(Predicate<Component> filter) {
+	    	return stream().filter(filter).collect(Collectors.toList());
+	    }
 
-		public Component component(String name) {
-			return componentsByName.getOrDefault(name, NA);
-		}
+        @Override
+	    public Component component(int index) {
+	    	return (index <= 0 || index > size()) ? NA : components$[index];
+	    }
 
-		public Component component(Predicate<Component> filter) {
-			return components.values().stream().filter(filter).findFirst().orElse(NA);
-		}
+        @Override
+	    public Component component(String name) {
+	    	if(!componentsByName.containsKey(name))
+	    		componentsByName.put(name, stream().filter(c -> c.label().equals(name)).findAny().orElse(NA));
+	    	return componentsByName.getOrDefault(name, NA);
+	    }
 
-		public class Component implements Axis.Component {
+
+		public static class Component implements Axis.Component {
+
 			public final int index;
 			public final String id;
 			$include+declaration...[$NL]
@@ -109,23 +89,51 @@ def type(axis)
 				$include+assign...[$NL]
 			}
 
+            @Override
 			public int index() {
 				return index;
 			}
 
+            @Override
 			public String id() {
 				return id;
 			}
 
+			[$include+getter...[$NL$NL]]
+
+            @Override
 			public Axis axis() {
-				return $name+snakeCaseToCamelCase+FirstUpperCase.this;
+				return $name+snakeCaseToCamelCase+FirstUpperCase.instance();
 			}
 
-			public boolean equals(Component component) {
-				return this.index == component.index;
-			}
+		    @Override
+		    public boolean equals(Object o) {
+		    	if (this == o) return true;
+		    	if (o == null || getClass() != o.getClass()) return false;
+		    	Component component = (Component) o;
+		    	return index == component.index;
+		    }
+
+		    @Override
+		    public int hashCode() {
+		    	return Objects.hash(index, id);
+		    }
+
+		    @Override
+		    public String toString() {
+		        StringBuilder sb = new StringBuilder(axis().getClass().getSimpleName());
+		        sb.append(".Component {");
+		        sb.append("index=").append(index);
+		        sb.append(", id=").append(id);
+		        [$include+toString...[$NL]]
+		        return sb.append('}').toString();
+		    }
 		}
 	}
+end
+
+def type(component)
+    public static final Component $name = new Component($index, "$id"[, "$label"][, $include...[, ]]);
 end
 
 def attribute(name:label) trigger(declaration)
@@ -136,12 +144,28 @@ def trigger(declaration)
 	public final $name+snakeCaseToCamelCase+firstUpperCase.Component $name+snakeCaseToCamelCase+firstLowerCase;
 end
 
+def attribute(name:label) trigger(getter)
+	public String $name+snakeCaseToCamelCase+firstLowerCase() {
+	    return $name+snakeCaseToCamelCase+firstLowerCase;
+	}
+end
+
+def trigger(getter)
+	public $name+snakeCaseToCamelCase+firstUpperCase.Component $name+snakeCaseToCamelCase+firstLowerCase() {
+	    return $name+snakeCaseToCamelCase+firstLowerCase;
+	}
+end
+
+def trigger(toString)
+	sb.append(", $name+snakeCaseToCamelCase+firstLowerCase = ").append($name+snakeCaseToCamelCase+firstLowerCase);
+end
+
 def attribute(name:label) trigger(defaultValue)
 	""
 end
 
 def trigger(defaultValue)
-	$name+snakeCaseToCamelCase+firstUpperCase.instance().NA
+	$name+snakeCaseToCamelCase+firstUpperCase.NA
 end
 
 def attribute(name:label) trigger(parameter)
@@ -157,7 +181,7 @@ def attribute(name:label) trigger(constructor)
 end
 
 def trigger(constructor)
-	l.length > $index ? $name+snakeCaseToCamelCase+firstUpperCase.instance().component(l$[$index]) : $name+snakeCaseToCamelCase+firstUpperCase.instance().NA
+	l.length > $index ? $name+snakeCaseToCamelCase+firstUpperCase.instance().component(l$[$index]) : $name+snakeCaseToCamelCase+firstUpperCase.NA
 end
 
 def trigger(assign)
@@ -169,7 +193,23 @@ def trigger(put)
 	componentsByName.put("$name", $name+FirstUpperCase);
 end
 
-
 def trigger(field)
 	public static final Component $name+snakeCaseToCamelCase+FirstUpperCase = new Component($index, "$name"[, "$label"]);
+end
+
+def type(components) attribute(embedded:true) trigger(load)
+    this.components = new Component$[] {NA[, $component...[, ]]};
+end
+
+def type(components) attribute(embedded:false) trigger(load)
+    Component$[] components = new Component$[0];
+    try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(
+        getClass().getResourceAsStream("$resource")))) {
+			components = Stream.concat(Stream.of(NA),
+			reader.lines().map(l -> l.split("\t")).map(l -> new Component(Integer.parseInt(l$[0]),l$[1][,$include+constructor...[, ]]))
+			).toArray(Component$[]::new);
+		} catch (java.io.IOException e) {
+			io.intino.alexandria.logger.Logger.error("Failed to load components of $name+snakeCaseToCamelCase+firstUpperCase", e);
+		}
+		this.components = components;
 end
