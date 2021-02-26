@@ -57,8 +57,8 @@ public class SparkClient implements Client {
 	}
 
 	@Override
-	public void send(String message) {
-		if (!session.isOpen()) return;
+	public boolean send(String message) {
+		if (!session.isOpen()) return false;
 
 		session.getRemote().sendString(message, new WriteCallback() {
 			@Override
@@ -73,6 +73,8 @@ public class SparkClient implements Client {
 					messagesQueue.remove(message);
 			}
 		});
+
+		return true;
 	}
 
 	@Override
