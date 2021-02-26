@@ -14,14 +14,27 @@ import java.util.UUID;
 
 public class AlignedVsNotAligned {
 
+    static {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static final int N = 100_000_000;
     private static double x = Math.random();
 
 
-    private List<String> list;
+    private static List<String> list;
 
-    @Before
-    public void setUp() {
+    public static void main(String[] args) {
+        setUp();
+        testAligned();
+        testNotAligned();
+    }
+
+    public static void setUp() {
         list = new LinkedList<>();
         for(int i = 0;i < N/10;i++) {
             list.add(String.valueOf(Math.log(i+1)));
@@ -29,9 +42,9 @@ public class AlignedVsNotAligned {
         x *= new Random().nextFloat();
     }
 
-    @Test
-    public void testAligned() {
+    public static void testAligned() {
         Aligned aligned = new Aligned();
+        System.out.println("Aligned size = " + aligned.size() + " bytes");
         double start = System.currentTimeMillis();
         for(int i = 0;i < N;i++) {
             aligned.id(i);
@@ -46,9 +59,9 @@ public class AlignedVsNotAligned {
         System.out.println("Time Aligned: " + (end - start) / 1000.0f + " seconds");
     }
 
-    @Test
-    public void testNotAligned() {
+    public static void testNotAligned() {
         NotAligned notAligned = new NotAligned();
+        System.out.println("NotAligned size = " + notAligned.size() + " bytes");
         double start = System.currentTimeMillis();
         for(int i = 0;i < N;i++) {
             notAligned.id(i);
@@ -142,11 +155,11 @@ public class AlignedVsNotAligned {
         private static final int OFFSET1 = 0;
         private static final int SIZE1 = Long.SIZE;
         private static final int OFFSET2 = OFFSET1 + SIZE1;
-        private static final int SIZE2 = Integer.SIZE;
+        private static final int SIZE2 = 20;
         private static final int OFFSET3 = OFFSET2 + SIZE2;
-        private static final int SIZE3 = Short.SIZE;
+        private static final int SIZE3 = 12;
         private static final int OFFSET4 = OFFSET3 + SIZE3;
-        private static final int SIZE4 = Byte.SIZE;
+        private static final int SIZE4 = 3;
 
         public static final int SIZE = (int)Math.ceil((OFFSET4 + SIZE4) /(float) 8);
 

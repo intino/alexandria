@@ -181,6 +181,14 @@ def type(cube)
 		    }
 
 		    [$column+getter...[$NL$NL]]
+
+            @Override
+		    public String toString() {
+		        return "$name+FirstUpperCase~.Fact{"
+		                + "id=" + id()
+		                [$column+toString...[$NL]]
+		                + '}';
+		    }
 		}
 
 		public static class NullFact extends Fact {
@@ -515,6 +523,10 @@ def trigger(dimension)
 	public static Function<$cube+FirstUpperCase.Fact, String> $axis+snakeCaseToCamelCase+firstLowerCase() {
 		return r -> r.$axis+snakeCaseToCamelCase+firstLowerCase().id();
 	}
+end
+
+def type(column) trigger(toString)
+    + ", $name=" + $name()
 end
 
 

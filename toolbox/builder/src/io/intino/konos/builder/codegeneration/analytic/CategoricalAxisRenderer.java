@@ -19,6 +19,8 @@ import static io.intino.konos.builder.helpers.Commons.*;
 public class CategoricalAxisRenderer {
 
     public static final int LABEL_INDEX = 2;
+    public static final int MAX_EMBEDDED_COMPONENTS = 100;
+
     private final CompilationContext context;
     private final File gen;
     private final File res;
@@ -121,12 +123,12 @@ public class CategoricalAxisRenderer {
     }
 
     private String asFieldName(String id) {
-        id = id.replaceAll("\\s+", "_");
+        id = id.replaceAll("\\s+", "_").replace('-', '_');
         return Character.isDigit(id.charAt(0)) ? "_" + id : id;
     }
 
     private boolean isSmallEnough(List<ComponentInfo> components) {
-        return components.size() <= 100;
+        return components.size() <= MAX_EMBEDDED_COMPONENTS;
     }
 
     private List<ComponentInfo> loadFromResource(String resource) {
