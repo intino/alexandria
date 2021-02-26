@@ -2,9 +2,7 @@ package io.intino.alexandria.led.buffers;
 
 import io.intino.alexandria.led.buffers.store.ByteStore;
 
-import static io.intino.alexandria.led.util.BitUtils.*;
-import static java.lang.Math.abs;
-import static java.lang.Math.min;
+import static io.intino.alexandria.led.util.BitUtils.offsetOf;
 
 public class BigEndianBitBuffer extends AbstractBitBuffer {
 
