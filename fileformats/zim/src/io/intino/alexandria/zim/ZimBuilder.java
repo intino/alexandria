@@ -3,6 +3,7 @@ package io.intino.alexandria.zim;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageWriter;
+import org.xerial.snappy.SnappyOutputStream;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -12,7 +13,6 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
-import java.util.zip.GZIPOutputStream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
@@ -56,8 +56,8 @@ public class ZimBuilder {
 		return file;
 	}
 
-	private GZIPOutputStream zipStream(File file) throws IOException {
-		return new GZIPOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
+	private SnappyOutputStream zipStream(File file) throws IOException {
+		return new SnappyOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 	}
 
 

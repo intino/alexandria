@@ -40,14 +40,6 @@ public class SessionHandler {
 		return new EventSession(new PrivateProvider());
 	}
 
-	public TransactionSession createTransactionSession() {
-		return new TransactionSession(new PrivateProvider());
-	}
-
-	public TransactionSession createTransactionSession(int transactionBufferSize) {
-		return new TransactionSession(new PrivateProvider(), transactionBufferSize);
-	}
-
 	public void pushTo(URI uri) {
 		//TODO
 	}
@@ -154,7 +146,7 @@ public class SessionHandler {
 		public OutputStream outputStream() {
 			try {
 				if (!file.exists()) file.createNewFile();
-				return new BufferedOutputStream(new FileOutputStream(file));
+				return new FileOutputStream(file);
 			} catch (IOException e) {
 				Logger.error(e);
 				return null;
