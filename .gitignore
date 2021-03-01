@@ -8,6 +8,7 @@ test-res/*.stash
 target/
 workspace.xml
 dependency-reduced-pom.xml
+.idea/csv-plugin.xml
 .idea/compiler.xml
 alexandria/activity-elements-activity/gulpFile.js
 alexandria/activity-elements-activity/package.json
