@@ -26,7 +26,6 @@ public class EventSession {
 		this(provider, 1_000_000);
 	}
 
-
 	public EventSession(SessionHandler.Provider provider, int autoFlush) {
 		this.provider = provider;
 		this.autoFlush = autoFlush;
