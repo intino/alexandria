@@ -1,11 +1,11 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "3.3.6") sealing
+Artifact("io.intino.alexandria", "4.0.0") sealing
 	Imports
-		Compile("io.intino.alexandria", "datalake", "3.2.13")
+		Compile("io.intino.alexandria", "datalake", "4.0.0")
 		Compile("io.intino.alexandria", "mapp", "1.1.0")
 		Compile("io.intino.alexandria", "session", "1.1.0")
-		Test("io.intino.alexandria", "ingestion", "3.2.4")
+		Test("io.intino.alexandria", "ingestion", "4.0.0")
 		Test("junit", "junit", "4.13")
 		Test("org.assertj", "assertj-core", "3.17.2")
 

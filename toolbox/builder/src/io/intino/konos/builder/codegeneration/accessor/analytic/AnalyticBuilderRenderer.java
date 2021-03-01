@@ -54,7 +54,8 @@ public class AnalyticBuilderRenderer extends Renderer {
 	}
 
 	private void renderAxes(List<Axis> axes) {
-		writeFrame(destinationDirectory(), "Axis", customize(new CategoricalAxisTemplate()).render(new FrameBuilder("interface").add("package", context.packageName()).toFrame()));
+		writeFrame(destinationDirectory(), "Axis", customize(new CategoricalAxisTemplate())
+				.render(new FrameBuilder("interface").add("package", context.packageName()).toFrame()));
 		for (Axis axis : axes)
 			if (axis.isCategorical()) renderAxis(axis.asCategorical());
 			else renderAxis(axis.asContinuous());
@@ -62,7 +63,8 @@ public class AnalyticBuilderRenderer extends Renderer {
 
 	private void renderCubes(KonosGraph graph) {
 		graph.cubeList().stream().filter(c -> !c.isVirtual()).forEach(cube -> {
-			writeFrame(new File(destinationDirectory(), "cubes"), cube.name$(), cubeTemplate().render(renderCube(cube).toFrame()));
+			writeFrame(new File(destinationDirectory(), "cubes"), cube.name$() + "Builder",
+					cubeTemplate().render(renderCube(cube).toFrame()));
 		});
 	}
 
@@ -91,7 +93,8 @@ public class AnalyticBuilderRenderer extends Renderer {
 			for (int i = 0; i < includes.size(); i++)
 				fb.add("include", new FrameBuilder("include").add("name", includes.get(i).name$()).add("index", i + offset));
 		}
-		writeFrame(new File(destinationDirectory(), "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString()), customize(new CategoricalAxisTemplate()).render(fb.toFrame()));
+		writeFrame(new File(destinationDirectory(), "axes"),
+				firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString()), customize(new CategoricalAxisTemplate()).render(fb.toFrame()));
 	}
 
 	private int offset(Axis.Categorical axis) {

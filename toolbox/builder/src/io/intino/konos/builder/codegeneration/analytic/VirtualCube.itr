@@ -173,6 +173,7 @@ def type(cube)
 		}
 
 		public static class Fact {
+
 			[$cube+fieldFact...[$NL]]
 
 			public Fact($cube+factParameter...[, ]) {
@@ -191,6 +192,7 @@ def type(cube)
 		}
 
 		public static class NullFact extends Fact {
+
 			private NullFact() {
 				super($cube+nullFactParameter...[, ]);
 			}

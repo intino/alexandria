@@ -3,12 +3,12 @@ package io.intino.alexandria.zim;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageReader;
+import org.xerial.snappy.SnappyInputStream;
 
 import java.io.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
-import java.util.zip.GZIPInputStream;
 
 import static java.util.Arrays.stream;
 
@@ -23,7 +23,7 @@ public class ZimReader implements ZimStream {
 	}
 
 	public ZimReader(InputStream is) {
-		this(iteratorOf(is instanceof GZIPInputStream ? is : zipStreamOf(is)));
+		this(iteratorOf(is instanceof SnappyInputStream ? is : ZimReader.snZipStreamOf(is)));
 	}
 
 	public ZimReader(String text) {
@@ -100,19 +100,19 @@ public class ZimReader implements ZimStream {
 
 	private static InputStream inputStream(File file) {
 		try {
-			return zipStreamOf(file);
+			return snZipStreamOf(file);
 		} catch (IOException e) {
 			return new ByteArrayInputStream(new byte[0]);
 		}
 	}
 
-	private static InputStream zipStreamOf(File file) throws IOException {
-		return new GZIPInputStream(fileInputStream(file));
+	private static InputStream snZipStreamOf(File file) throws IOException {
+		return new SnappyInputStream(fileInputStream(file));
 	}
 
-	private static InputStream zipStreamOf(InputStream stream) {
+	private static InputStream snZipStreamOf(InputStream stream) {
 		try {
-			return new GZIPInputStream(stream);
+			return new SnappyInputStream(stream);
 		} catch (IOException e) {
 			Logger.error(e);
 			return stream;

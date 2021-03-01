@@ -56,7 +56,7 @@ public class ZimReader_ {
 	}
 
 	@Test
-	public void should_ignore_empty_attributes() {
+	public void should_not_ignore_empty_attributes() {
 		String inl =
 				"[Teacher]\n" +
 						"name: Jose\n" +
@@ -72,21 +72,13 @@ public class ZimReader_ {
 		assertThat(message.is("teacher")).isTrue();
 		assertThat(message.contains("name")).isTrue();
 		assertThat(message.contains("money")).isTrue();
-		assertThat(message.contains("BirthDate")).isTrue();
-		assertThat(message.components("country").get(0).contains("name")).isTrue();
-		assertThat(message.components("country").get(0).contains("continent")).isFalse();
-		assertThat(message.components("country").get(0).get("name").as(String.class)).isEqualTo("Spain");
-		assertThat(message.components("country").get(0).get("continent").as(String.class)).isNull();
+		assertThat(message.contains("birthDate")).isTrue();
+		assertThat(message.components("Country").get(0).contains("name")).isTrue();
+		assertThat(message.components("Country").get(0).contains("continent")).isTrue();
+		assertThat(message.components("Country").get(0).get("name").as(String.class)).isEqualTo("Spain");
+		assertThat(message.components("Country").get(0).get("continent").as(String.class)).isEmpty();
 	}
 
-	@Test
-	public void should_read_messages_with_list() throws FileNotFoundException {
-		ZimReader zimReader = new ZimReader(new FileInputStream("test-res/b.zim"));
-		while (zimReader.hasNext()) {
-			Message next = zimReader.next();
-			System.out.println(next.toString());
-		}
-	}
 
 	@Test
 	public void should_parse_multiline_attributes() {
@@ -99,7 +91,6 @@ public class ZimReader_ {
 						"    at android.app.ActivityThread.main(ActivityThread.java:5666)\n" +
 						"    at java.lang.reflect.Method.invoke(Native Method)\n" +
 						"    at java.lang.reflect.Method.invoke(Method.java:372)\n" +
-						"\n" +
 						"    at com.android.compiler.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:959)\n" +
 						"    at com.android.compiler.os.ZygoteInit.main(ZygoteInit.java:754)" +
 						"\n" +
