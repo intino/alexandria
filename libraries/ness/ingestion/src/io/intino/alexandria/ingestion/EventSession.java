@@ -6,6 +6,7 @@ import io.intino.alexandria.Timetag;
 import io.intino.alexandria.event.Event;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.MessageWriter;
+import org.xerial.snappy.SnappyOutputStream;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -13,18 +14,27 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
-import java.util.zip.GZIPOutputStream;
 
 public class EventSession {
 	private final Map<Fingerprint, MessageWriter> writers = new HashMap<>();
 	private final SessionHandler.Provider provider;
+	private final int autoFlush;
+	private int count = 0;
+
 
 	public EventSession(SessionHandler.Provider provider) {
+		this(provider, 1_000_000);
+	}
+
+
+	public EventSession(SessionHandler.Provider provider, int autoFlush) {
 		this.provider = provider;
+		this.autoFlush = autoFlush;
 	}
 
 	public void put(String tank, Timetag timetag, Event... events) {
 		put(tank, timetag, Arrays.stream(events));
+		if ((count += events.length) >= autoFlush) flush();
 	}
 
 	public void put(String tank, Timetag timetag, Stream<Event> eventStream) {
@@ -69,16 +79,10 @@ public class EventSession {
 	}
 
 	private MessageWriter createWriter(Fingerprint fingerprint) {
-		return new MessageWriter(zipStream(provider.outputStream(fingerprint.name(), Session.Type.event)));
+		return new MessageWriter(snappyStream(provider.outputStream(fingerprint.name(), Session.Type.event)));
 	}
 
-	private GZIPOutputStream zipStream(OutputStream outputStream) {
-		try {
-			return new GZIPOutputStream(outputStream);
-		} catch (IOException e) {
-			Logger.error(e);
-			return null;
-		}
+	private SnappyOutputStream snappyStream(OutputStream outputStream) {
+		return new SnappyOutputStream(outputStream, autoFlush * 100);
 	}
-
 }

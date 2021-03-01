@@ -27,11 +27,6 @@ public class FileDatalake implements Datalake {
 		return new FileSetStore(setStoreFolder());
 	}
 
-	@Override
-	public FileTransactionStore transactionStore() {
-		return new FileTransactionStore(transactionStoreFolder());
-	}
-
 	public File root() {
 		return root;
 	}
@@ -44,7 +39,4 @@ public class FileDatalake implements Datalake {
 		return new File(root, SetStoreFolder);
 	}
 
-	public File transactionStoreFolder() {
-		return new File(root, TransactionStoreFolder);
-	}
 }

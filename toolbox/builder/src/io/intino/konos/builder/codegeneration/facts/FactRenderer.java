@@ -66,18 +66,30 @@ public class FactRenderer {
 
     private FrameBuilder processColumn(Column column, int offset, String cube) {
         SizedData.Type type = column.asType();
-        FrameBuilder builder = new FrameBuilder("column", column.core$().is(Cube.Fact.Attribute.class) ? "attribute" : "measure")
+        final String javaType = type(type);
+
+        FrameBuilder builder = new FrameBuilder("column",
+                javaType,
+                column.core$().is(Cube.Fact.Attribute.class) ? "attribute" : "measure")
                 .add("owner", cube)
                 .add("name", column.a$(Column.class).name$())
                 .add("offset", offset)
                 .add("cube", cube)
-                .add("type", type(type));
-        column.core$().conceptList().stream().filter(Concept::isAspect).map(Predicate::name).forEach(builder::add);
-        if (isAligned(type, offset))
+                .add("type", javaType);
+
+        //column.core$().conceptList().stream().filter(Concept::isAspect).map(Predicate::name).forEach(x -> {
+        //    builder.add(x);
+        //});
+
+        // TODO: check if signed/unsigned
+
+        if (isAligned(javaType, offset, type.size()))
             builder.add("aligned", "Aligned");
         else
             builder.add("bits", type.size());
+
         builder.add("size", type.size());
+
         return builder;
     }
 
@@ -94,7 +106,17 @@ public class FactRenderer {
 
     private String type(SizedData.Type type) {
         if (type.i$(SizedData.Category.class)) return type.name$();
-        return isPrimitive(type) ? type.primitive() : type.type();
+        return isPrimitive(type) ? asJavaType(type) : type.type();
+    }
+
+    private String asJavaType(SizedData.Type type) {
+        if(type.primitive().equals("int")) {
+            if(type.size() <= Byte.SIZE) return "byte";
+            if(type.size() <= Short.SIZE) return "short";
+        } else if(type.primitive().equals("double") && type.size() <= Float.SIZE) {
+            return "float";
+        }
+        return type.primitive();
     }
 
     private int sizeOf(Axis.Categorical axis) {
@@ -107,8 +129,15 @@ public class FactRenderer {
         }
     }
 
-    private boolean isAligned(SizedData.Type attribute, int offset) {
-        return (offset == 0 || log2(offset) % 1 == 0) && attribute.maxSize() == attribute.size();
+    private boolean isAligned(String javaType, int offset, int size) {
+        if(offset % size != 0) return false;
+        return     javaType.equals("int") && size == Integer.SIZE
+                || javaType.equals("short") && size == Short.SIZE
+                || javaType.equals("byte") && size == Byte.SIZE
+                || javaType.equals("boolean") && size == Byte.SIZE
+                || javaType.equals("long") && size == Long.SIZE
+                || javaType.equals("float") && size == Float.SIZE
+                || javaType.equals("double") && size == Double.SIZE;
     }
 
     private boolean isPrimitive(SizedData.Type attribute) {

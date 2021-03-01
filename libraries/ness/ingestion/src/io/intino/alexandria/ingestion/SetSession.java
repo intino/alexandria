@@ -17,7 +17,7 @@ public class SetSession {
 	private int count = 0;
 
 	public SetSession(SessionHandler.Provider provider) {
-		this(provider, 1000000);
+		this(provider, 1_000_000);
 	}
 
 	public SetSession(SessionHandler.Provider provider, int autoFlush) {
