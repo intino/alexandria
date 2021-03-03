@@ -47,27 +47,24 @@ public class AnalyticRenderer extends Renderer {
 	private void renderAxes(List<Axis> axes) {
 		if (axes.isEmpty()) return;
 		AxisInterfaceRenderer.render(gen, context);
-		for (Axis axis : axes) {
-			if (axis.isCategorical())
-				categoricalAxisRenderer.render(axis.asCategorical());
-			else
-				continuousAxisRenderer.render(axis.asContinuous());
-		}
+		axes.stream().filter(Axis::isCategorical).map(Axis::asCategorical).forEach(categoricalAxisRenderer::render);
+		axes.stream().filter(Axis::isContinuous).map(Axis::asContinuous).forEach(continuousAxisRenderer::render);
 	}
 
 	private void renderCubes(List<Cube> cubeList) {
 		for (Cube cube : cubeList) {
 			FrameBuilder fb = new FrameBuilder("cube").add("package", context.packageName()).add("name", cube.name$());
-			if (cube.isVirtual()) renderVirtualCube(cube.asVirtual(), fb);
-			else renderCube(cube, fb);
+			if (cube.isVirtual())
+				renderVirtualCube(cube.asVirtual(), fb);
+			else
+				renderCube(cube, fb);
 		}
 	}
 
 	private void renderCube(Cube cube, FrameBuilder fb) {
 		addDimensionsAndIndicators(cube, null, fb);
 		if (cube.splitted() != null) addSplit(cube, fb);
-		fb.add("index", new FrameBuilder("index", cube.index() != null ? "normal" : "total")
-				.add("value", ""));
+		fb.add("index", new FrameBuilder("index", cube.index() != null ? "normal" : "total").add("value", ""));
 		factRenderer.render(cube, fb);
 		write(cube, fb);
 	}
