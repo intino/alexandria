@@ -11,10 +11,7 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.compiler.shared.PostCompileConfigurationParameterActionMessage;
 import io.intino.konos.model.graph.*;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
@@ -174,7 +171,9 @@ public class AbstractBoxRenderer extends Renderer {
 	}
 
 	private void rest(FrameBuilder frame) {
-		for (Service.REST service : graph.restServiceList())
+		List<Service.REST> services = graph.restServiceList();
+		services.sort(Comparator.<Service.REST>comparingInt(r -> r.notificationList().size()).reversed());
+		for (Service.REST service : services)
 			frame.add("service",
 					new FrameBuilder("service", "rest")
 							.add("name", service.name$())
