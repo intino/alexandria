@@ -206,6 +206,7 @@ def type(cube)
 		}
 
 		public static class Aggregation {
+
 			private final Axis.Component$[] components;
 			private long aggregationCount = 0;
 			[$index+field]
@@ -247,6 +248,7 @@ def type(cube)
 		}
 
     	public static class Loader implements Iterable<Fact> {
+
 			private final StatefulIterator<Abstract$joinCube+FirstUpperCase.Fact> ids;
 			private final List<Axis> axes = new ArrayList<>();
 			private long$[] totals;
@@ -585,26 +587,44 @@ def trigger(dimension)
 end
 
 
-def type(column & integer) trigger(factGetter)
+def type(column & int) trigger(factGetter)
 	public int $name+firstLowerCase() {
 		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
 
-def type(column & real) attribute(size:32) trigger(factGetter)
+def type(column & float) trigger(factGetter)
 	public float $name+firstLowerCase() {
 		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
 
-def type(column & real) trigger(factGetter)
+def type(column & double) trigger(factGetter)
 	public double $name+firstLowerCase() {
 		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
 
-def type(column) type(id | longInteger) trigger(factGetter)
+def type(column) type(id | long) trigger(factGetter)
 	public long $name+firstLowerCase() {
+		return $cube+firstLowerCase.$name+firstLowerCase();
+	}
+end
+
+def type(column) type(byte) trigger(factGetter)
+	public byte $name+firstLowerCase() {
+		return $cube+firstLowerCase.$name+firstLowerCase();
+	}
+end
+
+def type(column) type(short) trigger(factGetter)
+	public short $name+firstLowerCase() {
+		return $cube+firstLowerCase.$name+firstLowerCase();
+	}
+end
+
+def type(column) type(boolean) trigger(factGetter)
+	public boolean $name+firstLowerCase() {
 		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
@@ -628,26 +648,56 @@ def type(column & categorical) trigger(nullGetter)
 	}
 end
 
-def type(column & integer) trigger(nullGetter)
+def type(column & int) trigger(nullGetter)
 	public int $name+firstLowerCase() {
-		return -1;
+		return 0;
 	}
 end
 
-def type(column & real) attribute(size:32) trigger(nullGetter)
+def type(column) type(id | long) trigger(nullGetter)
+	public long $name+firstLowerCase() {
+		return 0L;
+	}
+end
+
+def type(column & short) trigger(nullGetter)
+	public short $name+firstLowerCase() {
+		return 0;
+	}
+end
+
+def type(column & byte) trigger(nullGetter)
+	public byte $name+firstLowerCase() {
+		return 0;
+	}
+end
+
+def type(column & float) trigger(nullGetter)
 	public float $name+firstLowerCase() {
-		return -1f;
+		return 0.0f;
 	}
 end
 
-def type(column & real) trigger(nullGetter)
+def type(column & double) trigger(nullGetter)
 	public double $name+firstLowerCase() {
-		return -1.;
+		return 0.0f;
 	}
 end
 
-def type(column & bool) trigger(nullGetter)
-	public Boolean $name+firstLowerCase() {
-		return null;
+def type(column & boolean) trigger(nullGetter)
+	public boolean $name+firstLowerCase() {
+		return false;
+	}
+end
+
+def type(column & boolean) trigger(nullGetter)
+	public boolean $name+firstLowerCase() {
+		return false;
+	}
+end
+
+def type(column & boolean) trigger(nullGetter)
+	public boolean $name+firstLowerCase() {
+		return false;
 	}
 end
