@@ -189,6 +189,26 @@ def type(cube)
 			public int size() {
 				return $cube+size...[ + ];
 			}
+
+		    @Override
+		    public boolean equals(Object o) {
+		    	if(o == null || o.getClass() != getClass()) return false;
+		    	final Fact other = (Fact) o;
+		    	return Objects.equals($mainCube+firstLowerCase, other.$mainCube+firstLowerCase);
+		    }
+
+		    @Override
+		    public int hashCode() {
+		    	return $mainCube+firstLowerCase.hashCode();
+		    }
+
+		    @Override
+		    public String toString() {
+		    	return "$name~Fact{" +
+		    	        "$mainCube=" + $mainCube+firstLowerCase +
+		    	        ", $joinCube=" + $joinCube+firstLowerCase +
+		    	        "}";
+		    }
 		}
 
 		public static class NullFact extends Fact {
@@ -201,7 +221,7 @@ def type(cube)
 
 			@Override
 			public long id() {
-				return -1;
+				return 0;
 			}
 		}
 
@@ -227,7 +247,6 @@ def type(cube)
 				[$indicator+sumAggregation...[$NL]]
 				[$index+append2]
 			}
-
 
 			public Aggregation append(long ids) {
 				this.total$name+FirstUpperCase += ids;
