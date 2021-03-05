@@ -89,15 +89,15 @@ public class InputLedStream<T extends Schema> implements LedStream<T> {
         return factory.schemaClass();
     }
 
-    public synchronized Stream<T> stream() {
-        return Stream.generate(() -> read(inputStream))
-                .takeWhile(inputBuffer -> checkInputBuffer(inputBuffer, inputStream))
-                .flatMap(this::allocateAll);
-    }
-
     @Override
     public int schemaSize() {
         return schemaSize;
+    }
+
+    private synchronized Stream<T> stream() {
+        return Stream.generate(() -> read(inputStream))
+                .takeWhile(inputBuffer -> checkInputBuffer(inputBuffer, inputStream))
+                .flatMap(this::allocateAll);
     }
 
     private boolean checkInputBuffer(ByteBuffer inputBuffer, InputStream inputStream) {
@@ -117,7 +117,8 @@ public class InputLedStream<T extends Schema> implements LedStream<T> {
     private Stream<T> allocateAll(ByteBuffer buffer) {
         StackAllocator<T> allocator = StackAllocators.managedStackAllocatorFromBuffer(schemaSize, buffer, factory.schemaClass());
         IntStream intStream = IntStream.range(0, buffer.remaining() / schemaSize);
-        if(concurrencyEnabled) intStream = intStream.sorted().parallel();
+        if(concurrencyEnabled)
+            intStream = intStream.sorted().parallel();
         return intStream.mapToObj(index -> allocator.malloc());
     }
 

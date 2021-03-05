@@ -12,7 +12,7 @@ public final class LedLibraryConfig {
 
 	private LedLibraryConfig() {}
 
-	public static final Variable<ByteOrder> DEFAULT_BYTE_ORDER = new Variable<>(ByteOrder.nativeOrder());
+	public static final Variable<ByteOrder> BYTE_ORDER = new Variable<>(ByteOrder.nativeOrder());
 	public static final Variable<Boolean> USE_MEMORY_TRACKER = new Variable<>(false);
 	public static final Variable<Consumer<Long>> BEFORE_ALLOCATION_CALLBACK = new Variable<>();
 	public static final Variable<Consumer<AllocationInfo>> ALLOCATION_CALLBACK = new Variable<>();

@@ -46,7 +46,9 @@ public class SchemaTest {
 		for (int i = 0; i < SIZE; i++) memset(schema.address(), 1, random.nextInt() - random.nextInt());
 	}
 
-	@Test(expected = UnsupportedOperationException.class)
+	@Test
+	//@Ignore
+	//@Test(expected = UnsupportedOperationException.class)
 	public void testSetFieldDoesNotModifyOtherFields() {
 		schema = new TestSchema(byteOrder);
 		List<Function<TestSchema, Number>> getters = getters();

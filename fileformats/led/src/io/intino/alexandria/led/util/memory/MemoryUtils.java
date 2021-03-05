@@ -45,17 +45,10 @@ public final class MemoryUtils {
 		return MEMORY_TRACKER.get();
 	}
 
-	public static ByteOrder defaultByteOrder() {
-		if(DEFAULT_BYTE_ORDER.isEmpty()) {
-			DEFAULT_BYTE_ORDER.set(ByteOrder.nativeOrder());
-		}
-		return DEFAULT_BYTE_ORDER.get();
-	}
-
 	public static MappedByteBuffer map(FileChannel fileChannel, FileChannel.MapMode mode, long baseOffset, long size) {
 		try {
 			MappedByteBuffer mappedByteBuffer = fileChannel.map(mode, baseOffset, size);
-			mappedByteBuffer.order(defaultByteOrder());
+			mappedByteBuffer.order(BYTE_ORDER.get());
 			return mappedByteBuffer;
 		} catch(Exception e) {
 			Logger.error(e);
@@ -64,7 +57,7 @@ public final class MemoryUtils {
 	}
 
 	public static ByteBuffer allocBuffer(long size) {
-		return allocBuffer(size, defaultByteOrder());
+		return allocBuffer(size, BYTE_ORDER.get());
 	}
 
 	public static synchronized ByteBuffer allocBuffer(long size, ByteOrder order) {
