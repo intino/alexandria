@@ -102,7 +102,7 @@ public class XlsBuilder {
 			if (line.startsWith("#define")) {
 				define(sheet, line);
 			} else {
-				create(sheet.createRow((short) i), line.split(";"));
+				create(sheet.createRow(i), line.split(";"));
 			}
 		}
 	}
