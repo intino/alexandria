@@ -1,6 +1,5 @@
 package io.intino.test.schemas;
 
-import io.intino.alexandria.led.util.BitUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
