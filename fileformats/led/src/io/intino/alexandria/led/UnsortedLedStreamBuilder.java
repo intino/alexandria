@@ -56,7 +56,8 @@ public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Bui
         this.schemaSize = Schema.sizeOf(schemaClass);
         this.serialUUID = Schema.getSerialUUID(schemaClass);
         this.factory = factory;
-        tempFile.getParentFile().mkdirs();
+        final File parentFile = tempFile.getParentFile();
+        if(parentFile != null) parentFile.mkdirs();
         this.tempLedFile = tempFile.toPath();
         if(numElementsPerBlock % 2 != 0) {
             throw new IllegalArgumentException("NumElementsPerBlock must be even");

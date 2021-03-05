@@ -78,10 +78,16 @@ public final class MemoryUtils {
 		if(!BEFORE_ALLOCATION_CALLBACK.isEmpty()) {
 			BEFORE_ALLOCATION_CALLBACK.get().accept(size);
 		}
-		ByteBuffer buffer = ByteBuffer.allocateDirect((int) size);
-		buffer.order(order);
-		if(useMemoryTracker()) {
-			track(buffer, size, caller());
+		ByteBuffer buffer;
+		try {
+			buffer = ByteBuffer.allocateDirect((int) size);
+			buffer.order(order);
+			if(useMemoryTracker()) {
+				track(buffer, size, caller());
+			}
+		} catch(OutOfMemoryError e) {
+			Logger.error("Failed to allocate buffer of size " + size + "(int=" + size + "): " + e.getMessage(), e);
+			throw new OutOfMemoryError(e.getMessage());
 		}
 		return buffer;
 	}
