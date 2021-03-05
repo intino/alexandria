@@ -88,7 +88,8 @@ def type(cube)
 		}
 
 		public Aggregation aggregation(List<Axis.Component> components) {
-			return result$[indexOf(components.toArray(new Axis.Component$[0]))];
+		    final int index = indexOf(components);
+			return result$[index];
 		}
 
 		private void fillCategories() {
@@ -137,6 +138,16 @@ def type(cube)
 			}
 			return index;
 		}
+
+		private int indexOf(Collection<Axis.Component> components) {
+        	int index = 0;
+        	int i = 0;
+        	for (Axis.Component component : components) {
+        		index *= axes.get(i++).size();
+        		index += component.index();
+        	}
+        	return index;
+        }
 
 		private boolean check(Fact item) {
 			for (Predicate<Fact> filter : filterList) if (!filter.test(item)) return false;
@@ -223,6 +234,7 @@ def type(cube)
 		}
 
 		public static class Aggregation {
+
 			private final Axis.Component$[] components;
 			private long aggregationCount = 0;
 			$index+field

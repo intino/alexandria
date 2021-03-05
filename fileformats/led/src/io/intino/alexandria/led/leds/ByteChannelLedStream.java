@@ -18,8 +18,8 @@ import java.util.stream.Stream;
 
 import static io.intino.alexandria.led.Schema.factoryOf;
 import static io.intino.alexandria.led.Schema.sizeOf;
-import static io.intino.alexandria.led.util.memory.LedLibraryConfig.DEFAULT_BUFFER_SIZE;
-import static io.intino.alexandria.led.util.memory.LedLibraryConfig.INPUT_LEDSTREAM_CONCURRENCY_ENABLED;
+import static io.intino.alexandria.led.LedLibraryConfig.DEFAULT_BUFFER_SIZE;
+import static io.intino.alexandria.led.LedLibraryConfig.INPUT_LEDSTREAM_CONCURRENCY_ENABLED;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
 import static java.nio.file.StandardOpenOption.READ;
 

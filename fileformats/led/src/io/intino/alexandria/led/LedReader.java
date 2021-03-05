@@ -13,6 +13,7 @@ import java.io.*;
 import java.util.Objects;
 import java.util.UUID;
 
+import static io.intino.alexandria.led.LedLibraryConfig.CHECK_SERIAL_ID;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.memcpy;
 
@@ -32,9 +33,7 @@ public class LedReader {
 	}
 
 	public int size() {
-		if(sourceFile == null) {
-			return (int) LedHeader.UNKNOWN_SIZE;
-		}
+		if(sourceFile == null) return (int) LedHeader.UNKNOWN_SIZE;
 		try(RandomAccessFile raFile = new RandomAccessFile(sourceFile, "r")) {
 			return (int) raFile.readLong();
 		} catch (IOException e) {
@@ -57,7 +56,11 @@ public class LedReader {
 			return Led.empty(schemaClass);
 		}
 		LedHeader header = LedHeader.from(this.srcInputStream);
-		checkSerialUUID(header.uuid(), Schema.getSerialUUID(schemaClass));
+		if(CHECK_SERIAL_ID.get()) checkSerialUUID(header.uuid(), Schema.getSerialUUID(schemaClass));
+		return readAllIntoMemory(allocatorFactory, schemaClass, header);
+	}
+
+	private <T extends Schema> Led<T> readAllIntoMemory(IndexedAllocatorFactory<T> allocatorFactory, Class<T> schemaClass, LedHeader header) {
 		try(SnappyInputStream inputStream = new SnappyInputStream(this.srcInputStream)) {
 			IndexedAllocator<T> allocator = allocatorFactory.create(inputStream, header.elementCount(), header.elementSize(), schemaClass);
 			return new IndexedLed<>(allocator);
@@ -69,12 +72,10 @@ public class LedReader {
 
 	public <T extends Schema> LedStream<T> read(Class<T> schemaClass) {
 		try {
-			if(srcInputStream.available() == 0) {
-				return LedStream.empty(schemaClass);
-			}
+			if(srcInputStream.available() == 0) return LedStream.empty(schemaClass);
 			LedHeader header = LedHeader.from(srcInputStream);
 			checkSerialUUID(header.uuid(), Schema.getSerialUUID(schemaClass));
-			return allocate(new SnappyInputStream(srcInputStream), schemaClass, header.elementSize());
+			return readAsStream(new SnappyInputStream(srcInputStream), schemaClass, header.elementSize());
 		} catch (IOException e) {
 			Logger.error(e);
 		}
@@ -102,7 +103,7 @@ public class LedReader {
 		return new ByteChannelLedStream<>(sourceFile, factory, elementSize);
 	}
 
-	private <T extends Schema> LedStream<T> allocate(InputStream inputStream, Class<T> schemaClass, int schemaSize) {
+	private <T extends Schema> LedStream<T> readAsStream(InputStream inputStream, Class<T> schemaClass, int schemaSize) {
 		return new InputLedStream<>(inputStream, schemaClass, schemaSize);
 	}
 

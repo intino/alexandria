@@ -1,5 +1,6 @@
 package io.intino.alexandria.led.util.memory;
 
+import io.intino.alexandria.led.LedLibraryConfig;
 import io.intino.alexandria.logger.Logger;
 import sun.misc.Unsafe;
 
@@ -11,7 +12,7 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
 
-import static io.intino.alexandria.led.util.memory.LedLibraryConfig.*;
+import static io.intino.alexandria.led.LedLibraryConfig.*;
 
 public final class MemoryUtils {
 	public static final long NULL = 0L;

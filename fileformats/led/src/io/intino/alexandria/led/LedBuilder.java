@@ -3,7 +3,6 @@ package io.intino.alexandria.led;
 import io.intino.alexandria.led.allocators.indexed.IndexedAllocator;
 import io.intino.alexandria.led.allocators.indexed.ListAllocator;
 import io.intino.alexandria.led.leds.ListLed;
-import io.intino.alexandria.led.util.memory.LedLibraryConfig;
 
 import java.util.AbstractList;
 import java.util.Arrays;

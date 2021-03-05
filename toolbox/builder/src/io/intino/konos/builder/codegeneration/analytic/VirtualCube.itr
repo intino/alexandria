@@ -82,10 +82,6 @@ def type(cube)
 
     	[$customFilter+method...[$NL$NL]]
 
-		public static Fact nullFact() {
-			return NULL_FACT;
-		}
-
 		public Abstract$name+firstUpperCase execute() {
 			result = new Aggregation$[resultsSize()];
 			results().forEach(this::append);
