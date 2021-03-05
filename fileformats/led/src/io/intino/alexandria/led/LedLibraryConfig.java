@@ -26,11 +26,11 @@ public final class LedLibraryConfig {
 
 		private final AtomicReference<T> value;
 
-		Variable() {
+		public Variable() {
 			value = new AtomicReference<>();
 		}
 
-		Variable(T defaultValue) {
+		public Variable(T defaultValue) {
 			this();
 			set(defaultValue);
 		}
