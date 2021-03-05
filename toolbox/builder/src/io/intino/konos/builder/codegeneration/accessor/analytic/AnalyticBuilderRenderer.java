@@ -63,11 +63,10 @@ public class AnalyticBuilderRenderer extends Renderer {
 
 	private void renderCubes(KonosGraph graph) {
 		graph.cubeList().stream().filter(c -> !c.isVirtual()).forEach(cube -> {
-			writeFrame(new File(destinationDirectory(), "cubes"), cube.name$() + "Builder",
+			writeFrame(new File(destinationDirectory(), "cubes"), cube.name$(),
 					cubeTemplate().render(renderCube(cube).toFrame()));
 		});
 	}
-
 
 	private FrameBuilder renderCube(Cube cube) {
 		FrameBuilder fb = new FrameBuilder("cube").add("package", packageName).add("name", cube.name$());
@@ -114,85 +113,8 @@ public class AnalyticBuilderRenderer extends Renderer {
 			fb.add("range", rangeFb);
 			index++;
 		}
-		writeFrame(new File(destinationDirectory(), "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString()), customize(new ContinuousAxisTemplate()).render(fb.toFrame()));
-	}
-
-
-	private List<FrameBuilder> columns(Cube.Fact fact) {
-		int offset = 0;
-		List<FrameBuilder> list = new ArrayList<>();
-		List<Column> columns = new ArrayList<>(fact.columnList());
-		columns.sort(Comparator.comparingInt(a -> a.asType().size()));
-		Collections.reverse(columns);
-		for (Column c : columns) {
-			FrameBuilder b = process(c, offset);
-			if (b != null) {
-				offset += sizeOf(c);
-				list.add(b.add("owner", fact.core$().owner().name()));
-			}
-		}
-		return list;
-	}
-
-	private FrameBuilder process(Column column, int offset) {
-		if (column.isCategory())
-			return processCategoryAttribute(column.asCategory(), column.name$(), offset);
-		else return processAttribute(column, offset);
-	}
-
-	private FrameBuilder processAttribute(Column column, int offset) {
-		SizedData.Type type = column.asType();
-		FrameBuilder builder = new FrameBuilder("column")
-				.add("name", column.a$(Column.class).name$())
-				.add("offset", offset)
-				.add("type", isPrimitive(type) ? type.primitive() : type.type());
-		column.core$().conceptList().stream().filter(Concept::isAspect).map(Predicate::name).forEach(builder::add);
-		if (isAligned(type, offset)) builder.add("aligned", "Aligned");
-		else builder.add("bits", type.size());
-		builder.add("size", type.size());
-		return builder;
-	}
-
-	private boolean isAligned(SizedData.Type column, int offset) {
-		return (offset == 0 || log2(offset) % 1 == 0) && column.maxSize() == column.size();
-	}
-
-	private boolean isPrimitive(SizedData.Type column) {
-		SizedData data = column.asSizedData();
-		return data.isBool() || data.isInteger() || data.isLongInteger() || data.isReal();
-	}
-
-	private FrameBuilder processCategoryAttribute(SizedData.Category column, String name, int offset) {
-		return new FrameBuilder("column", "categorical").
-				add("name", name).
-				add("type", column.axis().name$()).
-				add("offset", offset).
-				add("bits", sizeOf(column.a$(Column.class)));
-	}
-
-	public static double log2(int N) {
-		return (Math.log(N) / Math.log(2));
-	}
-
-	private Integer sizeOf(Column column) {
-		return column.isCategory() ? sizeOf(column.asCategory().axis().asCategorical()) : column.asType().size();
-	}
-
-	private Integer sizeOf(Axis.Categorical axis) {
-		try {
-			return (int) Math.ceil(log2(countLines(axis) + 1));
-		} catch (IOException e) {
-			return 0;
-		}
-	}
-
-	private int countLines(Axis.Categorical axis) throws IOException {
-		return (int) new BufferedReader(new InputStreamReader(resource(axis))).lines().count();
-	}
-
-
-	private FileInputStream resource(Axis.Categorical axis) throws FileNotFoundException {
-		return new FileInputStream(this.context.res(Target.Owner).getAbsolutePath() + "/analytic/axes/" + axis.name$() + ".tsv");
+		writeFrame(new File(destinationDirectory(), "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString()),
+				customize(new ContinuousAxisTemplate()).render(fb.toFrame()));
 	}
 
 	private File destinationDirectory() {

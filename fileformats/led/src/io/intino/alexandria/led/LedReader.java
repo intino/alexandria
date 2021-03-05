@@ -14,8 +14,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static io.intino.alexandria.led.LedLibraryConfig.CHECK_SERIAL_ID;
-import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
-import static io.intino.alexandria.led.util.memory.MemoryUtils.memcpy;
 
 public class LedReader {
 
@@ -84,9 +82,7 @@ public class LedReader {
 
 	public <T extends Schema> LedStream<T> readUncompressed(int elementSize, Class<T> schemaClass) {
 		try {
-			if(srcInputStream.available() == 0) {
-				return LedStream.empty(schemaClass);
-			}
+			if(srcInputStream.available() == 0) return LedStream.empty(schemaClass);
 			return allocateUncompressed(Schema.factoryOf(schemaClass), elementSize);
 		} catch (IOException e) {
 			Logger.error(e);

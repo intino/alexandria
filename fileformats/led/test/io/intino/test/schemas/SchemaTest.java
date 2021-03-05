@@ -155,7 +155,6 @@ public class SchemaTest {
 		}
 	}
 
-	@Ignore
 	@Test
 	public void d() {
 		int d = (int) maxPossibleNumber(D_BITS);
@@ -163,6 +162,7 @@ public class SchemaTest {
 		assertEquals(d, schema.d());
 	}
 
+	@Ignore
 	@Test(expected = UnsupportedOperationException.class)
 	public void e() {
 		long e = Math.abs(new Random().nextInt());//maxPossibleNumber(E_BITS) / 2;

@@ -80,13 +80,14 @@ public class CategoricalAxisRenderer {
     }
 
     private void loadComponents(FrameBuilder fb, Axis.Categorical axis, List<Axis> includes) {
-        String resource = axisResource(axis.tsv().getPath());
+        String resource = "/" + axisResource(axis.tsv().getPath());
         List<ComponentInfo> components = loadFromResource(resource);
         final boolean embedded = isSmallEnough(components);
 
         if(embedded) createEmbeddedComponents(fb, axis, includes, components);
 
         FrameBuilder componentsFB = new FrameBuilder("components");
+        componentsFB.add("name", axis.name$());
 
         componentsFB.add("embedded", embedded);
         if(embedded)

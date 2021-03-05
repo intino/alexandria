@@ -507,7 +507,7 @@ def type(dimension & continuous) trigger(method)
 	}
 
 	private static Axis.Component $name+firstLowerCase~Function(Fact fact) {
-		return $axis+snakeCaseToCamelCase+firstUpperCase.instance().rangeOf(fact.$source+firstLowerCase());
+		return $axis+snakeCaseToCamelCase+firstUpperCase.rangeOf(fact.$source+firstLowerCase());
 	}
 end
 
