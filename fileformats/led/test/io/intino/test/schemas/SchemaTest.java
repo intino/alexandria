@@ -155,6 +155,7 @@ public class SchemaTest {
 		}
 	}
 
+	@Ignore
 	@Test
 	public void d() {
 		int d = (int) maxPossibleNumber(D_BITS);
