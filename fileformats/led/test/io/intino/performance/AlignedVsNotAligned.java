@@ -155,7 +155,7 @@ public class AlignedVsNotAligned {
         private static final int OFFSET1 = 0;
         private static final int SIZE1 = Long.SIZE;
         private static final int OFFSET2 = OFFSET1 + SIZE1;
-        private static final int SIZE2 = 20;
+        private static final int SIZE2 = Integer.SIZE;
         private static final int OFFSET3 = OFFSET2 + SIZE2;
         private static final int SIZE3 = 12;
         private static final int OFFSET4 = OFFSET3 + SIZE3;
@@ -188,11 +188,11 @@ public class AlignedVsNotAligned {
         }
 
         public int a() {
-            return bitBuffer.getIntegerNBits(OFFSET2, SIZE2);
+            return bitBuffer.getAlignedInteger(OFFSET2);
         }
 
         public void a(int x) {
-            bitBuffer.setIntegerNBits(OFFSET2, SIZE2, x);
+            bitBuffer.setAlignedInteger(OFFSET2, x);
         }
 
         public short b() {

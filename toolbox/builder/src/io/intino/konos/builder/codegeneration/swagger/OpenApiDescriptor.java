@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.intino.konos.builder.codegeneration.swagger.SwaggerSpec.Path.Operation;
 import io.intino.konos.builder.codegeneration.swagger.SwaggerSpec.SecurityDefinition;
+import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Exception;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.Service.REST.Resource;
@@ -36,7 +37,7 @@ public class OpenApiDescriptor {
 		spec.paths = new LinkedHashMap<>();
 		spec.info = createInfo(service.info());
 		for (Resource resource : service.resourceList())
-			spec.paths.put(resource.path(), createPath(resource));
+			spec.paths.put(reformatPathParameters(resource.path()), createPath(resource));
 		spec.definitions = createDefinitions();
 		if (service.authentication() != null)
 			if (service.authentication().isBasic()) {
@@ -44,13 +45,19 @@ public class OpenApiDescriptor {
 				spec.securityDefinitions.put("basic", new SecurityDefinition().type("basic"));
 				spec.security = new ArrayList<>();
 				spec.security.add(new SwaggerSpec.SecuritySchema().basic());
-			}else if (service.authentication().isBearer()){
+			} else if (service.authentication().isBearer()) {
 				spec.securityDefinitions = new HashMap<>();
-				spec.securityDefinitions.put("bearer", new SecurityDefinition().type("bearer"));
+				spec.securityDefinitions.put("ouath2", new SecurityDefinition().type("oauth2"));
 				spec.security = new ArrayList<>();
 				spec.security.add(new SwaggerSpec.SecuritySchema().bearer());
 			}
 		return spec;
+	}
+
+	private String reformatPathParameters(String path) {
+		List<String> parameters = Commons.extractUrlPathParameters(path);
+		for (String parameter : parameters) path = path.replace(":" + parameter, "{" + parameter + "}");
+		return path;
 	}
 
 
@@ -149,7 +156,8 @@ public class OpenApiDescriptor {
 
 	private String parameterType(In in, Data.Type typeData) {
 		String type = typeData.type();
-		if (typeData.i$(Data.LongInteger.class) || type.equals("java.time.Instant") || type.equalsIgnoreCase("double")) return "number";
+		if (typeData.i$(Data.LongInteger.class) || type.equals("java.time.Instant") || type.equalsIgnoreCase("double"))
+			return "number";
 		if (typeData.i$(Data.File.class) || type.endsWith("Resource")) return "file";
 		if (type.equalsIgnoreCase("java.lang.enum")) return "string";
 		if (typeData.i$(Data.Object.class)) {
@@ -161,7 +169,8 @@ public class OpenApiDescriptor {
 
 	private String transform(Data.Type typeData) {
 		String type = typeData.type();
-		if (typeData.i$(Data.LongInteger.class) || type.equals("java.time.Instant") || type.equalsIgnoreCase("double")) return "number";
+		if (typeData.i$(Data.LongInteger.class) || type.equals("java.time.Instant") || type.equalsIgnoreCase("double"))
+			return "number";
 		if (typeData.i$(Data.File.class) || type.endsWith("Resource")) return "file";
 		if (type.equalsIgnoreCase("java.lang.enum")) return "string";
 		if (typeData.i$(Data.Object.class)) return "object";

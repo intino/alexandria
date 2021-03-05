@@ -103,6 +103,11 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 	}
 
 	@Override
+	public Response put(URL url, String path, String body) throws RestfulFailure {
+		return doPut(url, path, entityOf(body));
+	}
+
+	@Override
 	public Response put(URL url, String path, Map<String, String> parameters) throws RestfulFailure {
 		return doPut(url, path, entityOf(parameters));
 	}

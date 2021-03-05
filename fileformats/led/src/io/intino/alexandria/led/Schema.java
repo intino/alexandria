@@ -142,97 +142,11 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema>, Seria
 
 	@Override
 	public String toString() {
-		return toString(false);
-	}
-
-	public String toString(boolean verbose) {
-		Class<? extends Schema> clazz = getClass();
-		Definition definition = clazz.getAnnotation(Definition.class);
-		if(definition == null) {
-			return clazz.getSimpleName() + "{" +
-					"id="+ id() +
-					", memoryAddress=" + address() +
-					", byteSize=" + byteSize() +
-					", toBinaryString='" + toBinaryString() + '\'' +
-					'}';
-		}
-
-		StringBuilder sb = new StringBuilder();
-		sb.append(definition.name());
-		if(verbose) {
-			sb.append("(").append(definition.size()).append(" bytes)").append("[serialUUID=").append(serialUUID()).append(']');
-		}
-		sb.append(" {");
-
-		final Method[] methods = Arrays.stream(clazz.getMethods())
-				.filter(m -> m.isAnnotationPresent(Attribute.class))
-				.sorted(Comparator.comparingInt(m -> m.getAnnotation(Attribute.class).index()))
-				.toArray(Method[]::new);
-
-		for(int i = 0;i < methods.length;i++) {
-			Method method = methods[i];
-			Attribute attribute = method.getAnnotation(Attribute.class);
-			Object value;
-			try {
-				value = method.invoke(this);
-			} catch (Throwable ignored) {
-				value = null;
-			}
-			if(verbose) {
-				sb.append('[').append(attribute.type().typename())
-						.append(',').append(attribute.index())
-						.append(',').append(attribute.size()).append("] ");
-			}
-			sb.append(attribute.name()).append(" = ").append(value);
-			if(i < methods.length - 1) sb.append(", ");
-		}
-		return sb.append('}').toString();
-	}
-
-
-	public enum DataType {
-
-		BYTE(Byte.SIZE),
-		UNSIGNED_BYTE(Byte.SIZE),
-		SHORT(Short.SIZE),
-		UNSIGNED_SHORT(Short.SIZE),
-		INT(Integer.SIZE),
-		UNSIGNED_INT(Integer.SIZE),
-		LONG(Long.SIZE),
-		UNSIGNED_LONG(Long.SIZE - 1),
-		FLOAT(Float.SIZE),
-		DOUBLE(Double.SIZE),
-		CATEGORY(Long.SIZE);
-
-		public final int maxSize;
-
-		DataType(int maxSize) {
-			this.maxSize = maxSize;
-		}
-
-		public String typename() {
-			return name().toLowerCase();
-		}
-	}
-
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.METHOD)
-	public @interface Attribute {
-		String name();
-		DataType type();
-		int index();
-		int size();
-	}
-
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.METHOD)
-	public @interface Id {
-	}
-
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	public @interface Definition {
-		String name();
-		int size();
+		return getClass().getSimpleName() + "{" +
+				"id="+ id() +
+				", memoryAddress=" + address() +
+				", byteSize=" + byteSize() +
+				", binaryString='" + toBinaryString(Byte.SIZE) + '\'' +
+				'}';
 	}
 }
