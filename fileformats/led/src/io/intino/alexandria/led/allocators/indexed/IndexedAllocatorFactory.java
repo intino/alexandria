@@ -1,8 +1,7 @@
 package io.intino.alexandria.led.allocators.indexed;
 
 import io.intino.alexandria.led.Schema;
-import io.intino.alexandria.led.allocators.SchemaFactory;
-import io.intino.alexandria.led.util.memory.LedLibraryConfig;
+import io.intino.alexandria.led.LedLibraryConfig;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.IOException;

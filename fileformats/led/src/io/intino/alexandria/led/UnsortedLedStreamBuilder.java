@@ -6,7 +6,10 @@ import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.led.leds.InputLedStream;
 import io.intino.alexandria.logger.Logger;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
@@ -16,7 +19,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
-import static java.nio.file.StandardOpenOption.*;
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.WRITE;
 
 public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Builder<T>, AutoCloseable {
 
@@ -56,7 +60,8 @@ public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Bui
         this.schemaSize = Schema.sizeOf(schemaClass);
         this.serialUUID = Schema.getSerialUUID(schemaClass);
         this.factory = factory;
-        tempFile.getParentFile().mkdirs();
+        final File parentFile = tempFile.getParentFile();
+        if(parentFile != null) parentFile.mkdirs();
         this.tempLedFile = tempFile.toPath();
         if(numElementsPerBlock % 2 != 0) {
             throw new IllegalArgumentException("NumElementsPerBlock must be even");
@@ -89,13 +94,9 @@ public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Bui
     }
 
     private void reserveHeader() throws IOException {
-        if(!keepFileChannelOpen) {
-            fileChannel = openFileChannel();
-        }
+        if(!keepFileChannelOpen) fileChannel = openFileChannel();
         fileChannel.write(ByteBuffer.allocate(LedHeader.SIZE));
-        if(!keepFileChannelOpen) {
-            fileChannel.close();
-        }
+        if(!keepFileChannelOpen) fileChannel.close();
     }
 
     @Override
@@ -109,7 +110,7 @@ public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Bui
     }
 
     @Override
-    public LedStream.Builder<T> append(Consumer<T> initializer) {
+    public synchronized LedStream.Builder<T> append(Consumer<T> initializer) {
         if(isClosed()) {
             Logger.error("Trying to use a closed builder.");
             return this;
@@ -170,8 +171,7 @@ public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Bui
             return LedStream.empty(schemaClass);
         }
         close();
-        return new InputLedStream<>(getInputStream(), factory, schemaSize)
-                .onClose(this::deleteTempFile);
+        return new InputLedStream<>(getInputStream(), factory, schemaSize).onClose(this::deleteTempFile);
     }
 
     private void writeHeader() {
@@ -208,7 +208,9 @@ public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Bui
 
     private InputStream getInputStream() {
         try {
-            return Files.newInputStream(tempLedFile);
+            final InputStream inputStream = Files.newInputStream(tempLedFile);
+            inputStream.skip(LedHeader.SIZE);
+            return inputStream;
         } catch (IOException e) {
             Logger.error(e);
             throw new RuntimeException(e);

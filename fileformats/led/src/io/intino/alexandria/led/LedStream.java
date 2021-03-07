@@ -83,6 +83,10 @@ public interface LedStream<T extends Schema> extends Iterator<T>, AutoCloseable 
 		return Spliterators.spliteratorUnknownSize(this, Spliterator.SORTED);
 	}
 
+	default Iterable<T> iterable() {
+		return () -> LedStream.this;
+	}
+
 	default Stream<T> asJavaStream() {
 		return StreamSupport.stream(spliterator(), false);
 	}

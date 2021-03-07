@@ -5,7 +5,7 @@ def type(builder)
 	import io.intino.alexandria.logger.Logger;
 	import io.intino.alexandria.Timetag;
 	import io.intino.alexandria.Fingerprint;
-	import io.intino.alexandria.led.Schema;
+	import io.intino.alexandria.led.*;
 
 	import java.util.function.Consumer;
 	import java.util.function.Function;
@@ -64,9 +64,10 @@ def type(builder)
 			return temp;
 		}
 
-		private static class Session {
+		private static class Session implements AutoCloseable {
+
 			private final File root;
-			private final java.util.Map<Fingerprint, io.intino.alexandria.led.UnsortedLedStreamBuilder<? extends io.intino.alexandria.led.Schema>> builders;
+			private final java.util.Map<Fingerprint, UnsortedLedStreamBuilder<? extends Schema>> builders;
 			private final int ledBufferSize;
 
 			public Session(File root, int ledBufferSize) {
@@ -76,25 +77,25 @@ def type(builder)
 			}
 
 			public <T extends io.intino.alexandria.led.Schema> void put(String tank, Timetag timetag, Class<T> schemaClass, java.util.stream.Stream<Consumer<T>> stream) {
-				io.intino.alexandria.led.LedStream.Builder<T> builder = this.builder(Fingerprint.of(tank, timetag), schemaClass);
+				LedStream.Builder<T> builder = this.builder(Fingerprint.of(tank, timetag), schemaClass);
 				Objects.requireNonNull(builder);
 				stream.forEach(builder::append);
 			}
 
 			public <T extends io.intino.alexandria.led.Schema> void put(String tank, Timetag timetag, Class<T> schemaClass, Consumer<T> transaction) {
-				io.intino.alexandria.led.LedStream.Builder<T> builder = this.builder(Fingerprint.of(tank, timetag), schemaClass);
+				LedStream.Builder<T> builder = this.builder(Fingerprint.of(tank, timetag), schemaClass);
 				builder.append(transaction);
 			}
 
+            @Override
 			public void close() {
-				this.builders.forEach((f, b) -> {
-					b.close();
-				});
+				this.builders.forEach((f, b) -> b.close());
 			}
 
-			private <T extends io.intino.alexandria.led.Schema> io.intino.alexandria.led.LedStream.Builder<T> builder(Fingerprint fingerprint, Class<T> schemaClass) {
+			private <T extends Schema> LedStream.Builder<T> builder(Fingerprint fingerprint, Class<T> schemaClass) {
 				if (!this.builders.containsKey(fingerprint)) {
-					this.builders.put(fingerprint, new io.intino.alexandria.led.UnsortedLedStreamBuilder(schemaClass, Schema.factoryOf(schemaClass), this.ledBufferSize, fileOf(fingerprint)));
+					this.builders.put(fingerprint, new UnsortedLedStreamBuilder(schemaClass, Schema.factoryOf(schemaClass),
+					    this.ledBufferSize, fileOf(fingerprint)));
 				}
 				return (io.intino.alexandria.led.LedStream.Builder) this.builders.get(fingerprint);
 			}

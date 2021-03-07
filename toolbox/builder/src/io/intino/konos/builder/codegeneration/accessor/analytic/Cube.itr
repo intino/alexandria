@@ -8,24 +8,24 @@ def type(cube)
     import java.util.UUID;
 	import $package+validPackage~.analytic.axes.*;
 
-	public class $name+firstUpperCase~Builder extends Schema {
+	public class $name+firstUpperCase extends Schema {
 
 		[$split]
 
 		public static final int SIZE = $size; // Bytes
         public static final UUID SERIAL_UUID = UUID.fromString("$serialUUID");
-        public static final SchemaFactory<$name+firstUpperCase~Builder> FACTORY = new SchemaFactory<>($name+firstUpperCase~Builder.class) {
+        public static final SchemaFactory<$name+firstUpperCase> FACTORY = new SchemaFactory<>($name+firstUpperCase.class) {
             @Override
-            public $name+firstUpperCase~Builder newInstance(ByteStore store) {
-                return new $name+firstUpperCase~Builder(store);
+            public $name+firstUpperCase newInstance(ByteStore store) {
+                return new $name+firstUpperCase(store);
             }
         };
 
-		public $name+firstUpperCase~Builder() {
+		public $name+firstUpperCase() {
 			super(new ByteBufferStore(SIZE));
 		}
 
-		public $name+firstUpperCase~Builder(io.intino.alexandria.led.buffers.store.ByteStore store) {
+		public $name+firstUpperCase(io.intino.alexandria.led.buffers.store.ByteStore store) {
 			super(store);
         }
 

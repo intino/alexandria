@@ -14,15 +14,15 @@ import static org.junit.Assert.*;
 @Ignore
 public class LedStreamBuilderTest {
 
-    @Ignore
+    public static final int NUM_ELEMENTS = 5_000_000;
+
     @Test
     public void test() {
         System.out.println(TestSchema.SIZE);
         LedStream.Builder<TestSchema> builder = LedStream.builder(TestSchema.class, 100_000, new File("temp"));
         Random random = new Random();
         double start = System.currentTimeMillis();
-        final int numElements = 10_000_000;
-        for(int i = 0;i < numElements;i++) {
+        for(int i = 0; i < NUM_ELEMENTS; i++) {
             long id = i;
             builder.append(t -> t.id(random.nextInt(Integer.MAX_VALUE / 10)));
             if(i % 1_000_000 == 0) {
@@ -45,7 +45,7 @@ public class LedStreamBuilderTest {
                 assertTrue(i.get() + " => " + id + " < " + lastId, lastId.get() <= id);
                 lastId.set(id);
                 i.incrementAndGet();
-            }).serialize(new File("temp/ledstreambuilder_full_led_" + numElements +".led"));
+            }).serialize(new File("temp/ledstreambuilder_full_led_" + NUM_ELEMENTS +".led"));
 
         } catch (Exception e) {
             Logger.error(e);

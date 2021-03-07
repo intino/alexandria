@@ -14,6 +14,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -30,7 +31,9 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema>, Seria
 
 	public static <T extends Schema> int sizeOf(Class<T> type) {
 		try {
-			return (int) type.getDeclaredField("SIZE").get(null);
+			final Field size = type.getDeclaredField("SIZE");
+			size.setAccessible(true);
+			return (int) size.get(null);
 		} catch (IllegalAccessException | NoSuchFieldException e) {
 			throw new RuntimeException("SIZE is not defined for this schema class: " + type.getSimpleName(), e);
 		}
@@ -38,7 +41,9 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema>, Seria
 
 	public static <T extends Schema> UUID getSerialUUID(Class<T> type) {
 		try {
-			return (UUID) type.getDeclaredField("SERIAL_UUID").get(null);
+			final Field serialUUID = type.getDeclaredField("SERIAL_UUID");
+			serialUUID.setAccessible(true);
+			return (UUID) serialUUID.get(null);
 		} catch (IllegalAccessException | NoSuchFieldException e) {
 			throw new RuntimeException("SERIAL_UUID is not defined for this schema class: " + type.getSimpleName(), e);
 		}
@@ -47,7 +52,9 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema>, Seria
 	@SuppressWarnings("unchecked")
 	public static <T extends Schema> SchemaFactory<T> factoryOf(Class<T> type) {
 		try {
-			return (SchemaFactory<T>) type.getDeclaredField("FACTORY").get(null);
+			final Field factory = type.getDeclaredField("FACTORY");
+			factory.setAccessible(true);
+			return (SchemaFactory<T>) factory.get(null);
 		} catch (IllegalAccessException | NoSuchFieldException e) {
 			throw new RuntimeException("FACTORY is not defined for schema class: " + type.getSimpleName(), e);
 		}
@@ -144,7 +151,7 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema>, Seria
 	public String toString() {
 		return getClass().getSimpleName() + "{" +
 				"id="+ id() +
-				", memoryAddress=" + address() +
+				", memoryAddress=" + address() + baseOffset() +
 				", byteSize=" + byteSize() +
 				", binaryString='" + toBinaryString(Byte.SIZE) + '\'' +
 				'}';

@@ -1,6 +1,5 @@
 package io.intino.alexandria.led;
 
-import io.intino.alexandria.led.util.memory.LedLibraryConfig;
 import io.intino.alexandria.logger.Logger;
 import org.xerial.snappy.SnappyOutputStream;
 
@@ -119,31 +118,35 @@ public class LedWriter {
 
 	private void serialize(Led<? extends Schema> led) {
 		if (led.size() == 0) return;
-		ExecutorService executor = Executors.newSingleThreadExecutor();
 		final long size = led.size();
 		final int schemaSize = led.schemaSize();
 		final int numBatches = (int) Math.ceil(led.size() / (float) bufferSize);
-		try (OutputStream fos = this.destOutputStream) {
+		try (OutputStream originalOutputStream = this.destOutputStream) {
 			LedHeader header = new LedHeader();
 			header.elementCount(size).elementSize(schemaSize).uuid(led.serialUUID());
-			fos.write(header.toByteArray());
-			try (SnappyOutputStream outputStream = new SnappyOutputStream(fos)) {
-				for (int i = 0; i < numBatches; i++) {
-					final int start = i * bufferSize;
-					final int numElements = (int) Math.min(bufferSize, led.size() - start);
-					byte[] outputBuffer = new byte[numElements * schemaSize];
-					for (int j = 0; j < numElements; j++) {
-						Schema src = led.schema(j + start);
-						final long offset = (long) j * schemaSize;
-						memcpy(src.address(), src.baseOffset(), outputBuffer, offset, schemaSize);
-					}
-					executor.submit(() -> writeToOutputStream(outputStream, outputBuffer));
-				}
-				executor.shutdown();
-				executor.awaitTermination(Integer.MAX_VALUE, TimeUnit.MILLISECONDS);
-			}
+			originalOutputStream.write(header.toByteArray());
+			writeLed(led, schemaSize, numBatches, originalOutputStream);
 		} catch (Exception e) {
 			Logger.error(e);
+		}
+	}
+
+	private void writeLed(Led<? extends Schema> led, int schemaSize, int numBatches, OutputStream fos) throws IOException, InterruptedException {
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		try (SnappyOutputStream outputStream = new SnappyOutputStream(fos)) {
+			for (int i = 0; i < numBatches; i++) {
+				final int start = i * bufferSize;
+				final int numElements = (int) Math.min(bufferSize, led.size() - start);
+				byte[] outputBuffer = new byte[numElements * schemaSize];
+				for (int j = 0; j < numElements; j++) {
+					Schema src = led.schema(j + start);
+					final long offset = (long) j * schemaSize;
+					memcpy(src.address(), src.baseOffset(), outputBuffer, offset, schemaSize);
+				}
+				executor.submit(() -> writeToOutputStream(outputStream, outputBuffer));
+			}
+			executor.shutdown();
+			executor.awaitTermination(Integer.MAX_VALUE, TimeUnit.MILLISECONDS);
 		}
 	}
 
@@ -151,31 +154,34 @@ public class LedWriter {
 		long elementCount = 0;
 		try (OutputStream outputStream = this.destOutputStream) {
 			reserveHeader(ledStream, outputStream);
-			try (SnappyOutputStream snappyOutputStream = new SnappyOutputStream(outputStream)) {
-				final int schemaSize = ledStream.schemaSize();
-				final byte[] outputBuffer = new byte[bufferSize * schemaSize];
-				int offset = 0;
-				while (ledStream.hasNext()) {
-					Schema schema = ledStream.next();
-					memcpy(schema.address(), schema.baseOffset(), outputBuffer, offset, schemaSize);
-					offset += schemaSize;
-					if (offset == outputBuffer.length) {
-						writeToOutputStream(snappyOutputStream, outputBuffer);
-						offset = 0;
-					}
-					++elementCount;
-				}
-				if (offset > 0) {
-					writeToOutputStream(snappyOutputStream, outputBuffer, 0, offset);
-				}
-			}
+			elementCount = writeLedStream(ledStream, elementCount, outputStream);
 			ledStream.close();
 		} catch (Exception e) {
 			Logger.error(e);
 		}
-		if(destinationFile != null) {
+		if(destinationFile != null)
 			overrideHeader(elementCount, ledStream.schemaSize(), Schema.getSerialUUID(ledStream.schemaClass()));
+	}
+
+	private long writeLedStream(LedStream<? extends Schema> ledStream, long elementCount, OutputStream outputStream) throws IOException {
+		try (SnappyOutputStream snappyOutputStream = new SnappyOutputStream(outputStream)) {
+			final int schemaSize = ledStream.schemaSize();
+			final byte[] outputBuffer = new byte[bufferSize * schemaSize];
+			int offset = 0;
+			while (ledStream.hasNext()) {
+				Schema schema = ledStream.next();
+				memcpy(schema.address(), schema.baseOffset(), outputBuffer, offset, schemaSize);
+				offset += schemaSize;
+				if (offset == outputBuffer.length) {
+					writeToOutputStream(snappyOutputStream, outputBuffer);
+					offset = 0;
+				}
+				++elementCount;
+			}
+			if (offset > 0)
+				writeToOutputStream(snappyOutputStream, outputBuffer, 0, offset);
 		}
+		return elementCount;
 	}
 
 	private void reserveHeader(LedStream<? extends Schema> ledStream, OutputStream fos) throws IOException {

@@ -157,7 +157,7 @@ def trigger(getter)
 end
 
 def trigger(toString)
-	sb.append(", $name+snakeCaseToCamelCase+firstLowerCase = ").append($name+snakeCaseToCamelCase+firstLowerCase);
+	sb.append(", $name+snakeCaseToCamelCase+firstLowerCase=").append($name+snakeCaseToCamelCase+firstLowerCase);
 end
 
 def attribute(name:label) trigger(defaultValue)
@@ -203,12 +203,13 @@ end
 
 def type(components) attribute(embedded:false) trigger(load)
     Component$[] components = new Component$[0];
-    try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(
-        getClass().getResourceAsStream("$resource")))) {
+    java.io.InputStream resource = getClass().getResourceAsStream("$resource");
+    if(resource == null) throw new IllegalStateException("$name+snakeCaseToCamelCase+firstUpperCase: Resource " + "$resource" + " not found");
+    try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(resource))) {
 			components = Stream.concat(Stream.of(NA),
 			reader.lines().map(l -> l.split("\t")).map(l -> new Component(Integer.parseInt(l$[0]),l$[1][,$include+constructor...[, ]]))
 			).toArray(Component$[]::new);
-		} catch (java.io.IOException e) {
+		} catch (Exception e) {
 			io.intino.alexandria.logger.Logger.error("Failed to load components of $name+snakeCaseToCamelCase+firstUpperCase", e);
 		}
 		this.components = components;

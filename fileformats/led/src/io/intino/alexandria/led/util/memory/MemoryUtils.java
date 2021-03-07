@@ -1,5 +1,6 @@
 package io.intino.alexandria.led.util.memory;
 
+import io.intino.alexandria.led.LedLibraryConfig;
 import io.intino.alexandria.logger.Logger;
 import sun.misc.Unsafe;
 
@@ -11,7 +12,7 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
 
-import static io.intino.alexandria.led.util.memory.LedLibraryConfig.*;
+import static io.intino.alexandria.led.LedLibraryConfig.*;
 
 public final class MemoryUtils {
 	public static final long NULL = 0L;
@@ -44,17 +45,10 @@ public final class MemoryUtils {
 		return MEMORY_TRACKER.get();
 	}
 
-	public static ByteOrder defaultByteOrder() {
-		if(DEFAULT_BYTE_ORDER.isEmpty()) {
-			DEFAULT_BYTE_ORDER.set(ByteOrder.nativeOrder());
-		}
-		return DEFAULT_BYTE_ORDER.get();
-	}
-
 	public static MappedByteBuffer map(FileChannel fileChannel, FileChannel.MapMode mode, long baseOffset, long size) {
 		try {
 			MappedByteBuffer mappedByteBuffer = fileChannel.map(mode, baseOffset, size);
-			mappedByteBuffer.order(defaultByteOrder());
+			mappedByteBuffer.order(BYTE_ORDER.get());
 			return mappedByteBuffer;
 		} catch(Exception e) {
 			Logger.error(e);
@@ -63,7 +57,7 @@ public final class MemoryUtils {
 	}
 
 	public static ByteBuffer allocBuffer(long size) {
-		return allocBuffer(size, defaultByteOrder());
+		return allocBuffer(size, BYTE_ORDER.get());
 	}
 
 	public static synchronized ByteBuffer allocBuffer(long size, ByteOrder order) {
@@ -77,10 +71,16 @@ public final class MemoryUtils {
 		if(!BEFORE_ALLOCATION_CALLBACK.isEmpty()) {
 			BEFORE_ALLOCATION_CALLBACK.get().accept(size);
 		}
-		ByteBuffer buffer = ByteBuffer.allocateDirect((int) size);
-		buffer.order(order);
-		if(useMemoryTracker()) {
-			track(buffer, size, caller());
+		ByteBuffer buffer;
+		try {
+			buffer = ByteBuffer.allocateDirect((int) size);
+			buffer.order(order);
+			if(useMemoryTracker()) {
+				track(buffer, size, caller());
+			}
+		} catch(OutOfMemoryError e) {
+			Logger.error("Failed to allocate buffer of size " + size + "(int=" + size + "): " + e.getMessage(), e);
+			throw new OutOfMemoryError(e.getMessage());
 		}
 		return buffer;
 	}
