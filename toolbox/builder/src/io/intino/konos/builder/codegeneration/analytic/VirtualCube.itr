@@ -35,7 +35,7 @@ def type(cube & src)
 	}
 end
 def trigger(idOf)
-	Abstract$this+FirstUpperCase.Fact $this+firstLowerCase
+	$this+FirstUpperCase.Fact $this+firstLowerCase
 end
 
 def type(cube)
@@ -274,12 +274,12 @@ def type(cube)
 			public Loader(Datasource datasource[, $split+parameter]) {
 				this.datasource = datasource;
 				[$split+assign]
-				this.ids = StatefulIterator.of(new Abstract$joinCube+FirstUpperCase.Loader(new Abstract$joinCube+FirstUpperCase.Loader.Datasource(this.datasource.root, this.datasource.from, this.datasource.to)[, $split+name]).iterator());
+				this.ids = StatefulIterator.of(new $joinCube+FirstUpperCase.Loader(new $joinCube+FirstUpperCase.Loader.Datasource(this.datasource.root, this.datasource.from, this.datasource.to)[, $split+name]).iterator());
 			}
 
 			@Override
 			public Iterator<Fact> iterator() {
-				StatefulIterator<$mainCube+FirstUpperCase.Fact> facts = StatefulIterator.of(new Abstract$mainCube+FirstUpperCase.Loader(new Abstract$mainCube+FirstUpperCase.Loader.Datasource(this.datasource.root, this.datasource.from, this.datasource.to)[, $split+name]).iterator());
+				StatefulIterator<$mainCube+FirstUpperCase.Fact> facts = StatefulIterator.of(new $mainCube+FirstUpperCase.Loader(new $mainCube+FirstUpperCase.Loader.Datasource(this.datasource.root, this.datasource.from, this.datasource.to)[, $split+name]).iterator());
 				process(ids.current());
 				ids.next();
 				return StreamSupport.stream(Spliterators.spliteratorUnknownSize(facts, Spliterator.SORTED), false)

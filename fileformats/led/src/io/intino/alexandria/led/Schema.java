@@ -31,7 +31,7 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema>, Seria
 
 	public static <T extends Schema> int sizeOf(Class<T> type) {
 		try {
-			final Field size = type.getDeclaredField("SIZE");
+			final Field size = type.getField("SIZE");
 			size.setAccessible(true);
 			return (int) size.get(null);
 		} catch (IllegalAccessException | NoSuchFieldException e) {
@@ -41,7 +41,7 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema>, Seria
 
 	public static <T extends Schema> UUID getSerialUUID(Class<T> type) {
 		try {
-			final Field serialUUID = type.getDeclaredField("SERIAL_UUID");
+			final Field serialUUID = type.getField("SERIAL_UUID");
 			serialUUID.setAccessible(true);
 			return (UUID) serialUUID.get(null);
 		} catch (IllegalAccessException | NoSuchFieldException e) {
@@ -52,7 +52,7 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema>, Seria
 	@SuppressWarnings("unchecked")
 	public static <T extends Schema> SchemaFactory<T> factoryOf(Class<T> type) {
 		try {
-			final Field factory = type.getDeclaredField("FACTORY");
+			final Field factory = type.getField("FACTORY");
 			factory.setAccessible(true);
 			return (SchemaFactory<T>) factory.get(null);
 		} catch (IllegalAccessException | NoSuchFieldException e) {
