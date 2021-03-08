@@ -99,3 +99,5 @@ Concept SizedData
 			var Axis:Categorical axis;
 			var integer:{bits} size = 0 bits
 		sub Virtual
+		sub UnsignedLong with LongInteger
+		sub UnsignedInt with Integer
