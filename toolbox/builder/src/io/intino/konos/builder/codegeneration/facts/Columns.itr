@@ -77,6 +77,19 @@ def type(column & real) trigger(getter)
 end
 
 
+def type(virtualColumn) trigger(abstract)
+    public abstract $type $name+firstLowerCase();
+end
+
+def type(virtualColumn) trigger(implementation)
+    @Override
+    public $type $name+firstLowerCase() {
+        // TODO: compute and return $name+firstLowerCase.
+        return $defaultValue;
+    }
+end
+
+
 def type(column & int) trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(int $name+firstLowerCase) {
 		bitBuffer.set$aligned~Integer[$bits+nbits]($offset[, $bits], $name+firstLowerCase);

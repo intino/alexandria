@@ -10,7 +10,7 @@ def type(cube & src)
 			super(loaders);
 		}
 
-		public static long $name+firstLowerCase~Id(Abstract$name+FirstUpperCase.Fact fact) {
+		public static long $name+firstLowerCase~Id($name+FirstUpperCase.Fact fact) {
 			return 0L;//TODO
 		}
 
@@ -64,8 +64,7 @@ def type(cube)
 
     public abstract class Abstract$name+FirstUpperCase {
 
-		private static final String ID_SEP = " - ";
-		private static final Fact NULL_FACT = new NullFact();
+		public static final Fact NULL_FACT = new NullFact();
 
 		private final List<? extends Loader> loaders;
 		private final List<Predicate<Fact>> filterList = new ArrayList<>();
@@ -264,11 +263,11 @@ def type(cube)
 
     	public static class Loader implements Iterable<Fact> {
 
-			private final StatefulIterator<Abstract$joinCube+FirstUpperCase.Fact> ids;
+			private final StatefulIterator<$joinCube+FirstUpperCase.Fact> ids;
 			private final List<Axis> axes = new ArrayList<>();
 			private long$[] totals;
-			private final List<Predicate<Abstract$joinCube+FirstUpperCase.Fact>> filters = new ArrayList<>();
-			private final List<Function<Abstract$joinCube+FirstUpperCase.Fact, Axis.Component>> groupsBy = new ArrayList<>();
+			private final List<Predicate<$joinCube+FirstUpperCase.Fact>> filters = new ArrayList<>();
+			private final List<Function<$joinCube+FirstUpperCase.Fact, Axis.Component>> groupsBy = new ArrayList<>();
 			protected final Datasource datasource;
 			[$split+field]
 
@@ -280,7 +279,7 @@ def type(cube)
 
 			@Override
 			public Iterator<Fact> iterator() {
-				StatefulIterator<Abstract$mainCube+FirstUpperCase.Fact> facts = StatefulIterator.of(new Abstract$mainCube+FirstUpperCase.Loader(new Abstract$mainCube+FirstUpperCase.Loader.Datasource(this.datasource.root, this.datasource.from, this.datasource.to)[, $split+name]).iterator());
+				StatefulIterator<$mainCube+FirstUpperCase.Fact> facts = StatefulIterator.of(new Abstract$mainCube+FirstUpperCase.Loader(new Abstract$mainCube+FirstUpperCase.Loader.Datasource(this.datasource.root, this.datasource.from, this.datasource.to)[, $split+name]).iterator());
 				process(ids.current());
 				ids.next();
 				return StreamSupport.stream(Spliterators.spliteratorUnknownSize(facts, Spliterator.SORTED), false)
@@ -292,7 +291,7 @@ def type(cube)
 							}
 							if (!facts.hasNext()) end();
 							return new Fact(f, ids.current() != null && ids.current().id() == id ?
-									ids.current() : Abstract$joinCube+FirstUpperCase.nullFact());
+									ids.current() : Abstract$joinCube+FirstUpperCase.NULL_FACT);
 						})
 						.iterator();
 			}
@@ -310,10 +309,10 @@ def type(cube)
 				return accumulator;
 			}
 
-			private void process(Abstract$joinCube+FirstUpperCase.Fact fact) {
+			private void process($joinCube+FirstUpperCase.Fact fact) {
 				if (fact == null) return;
 				if (totals == null) totals = new long$[totalsSize()];
-				for (Predicate<Abstract$joinCube+FirstUpperCase.Fact> filter : filters) if (!filter.test(fact)) return;
+				for (Predicate<$joinCube+FirstUpperCase.Fact> filter : filters) if (!filter.test(fact)) return;
 				Axis.Component$[] components = componentsOf(fact);
 				totals$[indexOf(components)] += 1;
 			}
@@ -327,7 +326,7 @@ def type(cube)
 				return index;
 			}
 
-			private Axis.Component$[] componentsOf(Abstract$joinCube+FirstUpperCase.Fact item) {
+			private Axis.Component$[] componentsOf($joinCube+FirstUpperCase.Fact item) {
 				Axis.Component$[] components = new Axis.Component$[axes.size()];
 				for (int i = 0; i < components.length; i++) components$[i] = groupsBy.get(i).apply(item);
 				return components;
@@ -337,12 +336,12 @@ def type(cube)
 				return totals$[indexOf(categories.toArray(new Axis.Component$[0]))];
 			}
 
-			private void filter(Predicate<Abstract$joinCube+FirstUpperCase.Fact> filter) {
+			private void filter(Predicate<$joinCube+FirstUpperCase.Fact> filter) {
 				if (filter == null) return;
 				filters.add(filter);
 			}
 
-			private void by(Axis axis, Function<Abstract$joinCube+FirstUpperCase.Fact, Axis.Component> dimension) {
+			private void by(Axis axis, Function<$joinCube+FirstUpperCase.Fact, Axis.Component> dimension) {
 				axes.add(axis);
 				if (dimension == null) return;
 				groupsBy.add(dimension);
@@ -425,15 +424,15 @@ def trigger(assignFact)
 end
 
 def trigger(fieldFact)
-	private final Abstract$this+FirstUpperCase.Fact $this+FirstLowerCase;
+	private final $this+FirstUpperCase.Fact $this+FirstLowerCase;
 end
 
 def trigger(factParameter)
-	Abstract$this+FirstUpperCase.Fact $this+FirstLowerCase
+	$this+FirstUpperCase.Fact $this+FirstLowerCase
 end
 
 def trigger(nullFactParameter)
-	Abstract$this+FirstUpperCase.nullFact()
+	Abstract$this+FirstUpperCase.NULL_FACT
 end
 
 def trigger(size)
@@ -656,10 +655,15 @@ def type(column) trigger(factGetter)
 	}
 end
 
+def type(column & virtual) trigger(factGetter)
+	public $type $name+firstLowerCase() {
+		return $cube+firstLowerCase.$name+firstLowerCase();
+	}
+end
 
 def type(column & categorical) trigger(nullGetter)
 	public $type+firstUpperCase.Component $name+firstLowerCase() {
-		return $type+firstUpperCase.instance().NA;
+		return $type+firstUpperCase.NA;
 	}
 end
 

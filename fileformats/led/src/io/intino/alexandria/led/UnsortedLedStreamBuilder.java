@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
 import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
@@ -35,7 +36,7 @@ public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Bui
     private ByteBuffer buffer;
     private StackAllocator<T> allocator;
     private FileChannel fileChannel;
-    private long numTransactions;
+    private final AtomicLong numTransactions;
     private final boolean keepFileChannelOpen;
     private final AtomicBoolean closed;
 
@@ -70,6 +71,7 @@ public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Bui
         this.allocator = StackAllocators.managedStackAllocatorFromBuffer(schemaSize, buffer, schemaClass);
         this.keepFileChannelOpen = keepFileChannelOpen;
         this.closed = new AtomicBoolean(false);
+        this.numTransactions = new AtomicLong();
         setupFile();
     }
 
@@ -110,21 +112,23 @@ public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Bui
     }
 
     @Override
-    public synchronized LedStream.Builder<T> append(Consumer<T> initializer) {
+    public LedStream.Builder<T> append(Consumer<T> initializer) {
         if(isClosed()) {
             Logger.error("Trying to use a closed builder.");
             return this;
         }
-        T schema = allocator.calloc();
-        initializer.accept(schema);
+
+        initializer.accept(allocator.calloc());
+
         if(allocator.remainingBytes() == 0) {
             writeCurrentBlockAndClear();
         }
-        ++numTransactions;
+
+        numTransactions.incrementAndGet();
         return this;
     }
 
-    private void writeCurrentBlockAndClear() {
+    private synchronized void writeCurrentBlockAndClear() {
         try {
             if(!keepFileChannelOpen) {
                 fileChannel = openFileChannel();
@@ -176,7 +180,7 @@ public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Bui
 
     private void writeHeader() {
         LedHeader header = new LedHeader();
-        header.elementCount(numTransactions);
+        header.elementCount(numTransactions.get());
         header.elementSize(schemaSize);
         header.uuid(serialUUID);
         try(RandomAccessFile file = new RandomAccessFile(tempLedFile.toFile(), "rw")) {

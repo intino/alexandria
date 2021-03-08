@@ -21,8 +21,8 @@ import static java.util.stream.Collectors.toList;
 public class FactRenderer {
 
     private static final Comparator<Column> COMPARATOR = (col1, col2) -> {
-        if(col1.isId()) return Integer.MIN_VALUE;
-        if(col2.isId()) return Integer.MAX_VALUE;
+        if(col1.isVirtual() || col1.isId()) return Integer.MIN_VALUE;
+        if(col2.isVirtual() || col2.isId()) return Integer.MAX_VALUE;
         return -Integer.compare(col1.asType().size(), col2.asType().size());
     };
 
@@ -45,14 +45,50 @@ public class FactRenderer {
         int offset = 0;
         List<Column> columns = cube.fact().columnList().stream().sorted(COMPARATOR).collect(toList());
         for (Column column : columns) {
-            final int columnSize = column.asType().size();
-            if(getMinimumBytesFor(offset, columnSize) > Long.BYTES)
-                offset = roundUp2(offset, Long.SIZE);
-            fb.add("column", columnFrame(column, offset, cube.name$()));
-            serialBuilder.add(column.name$(), type(column.asType()), offset, column.asType().size());
-            offset += columnSize;
+            if(column.isVirtual())
+                addVirtualAttribute(cube, fb, column);
+            else
+                offset = addFactAttribute(cube, fb, serialBuilder, offset, column);
         }
         return offset;
+    }
+
+    private void addVirtualAttribute(Cube cube, FrameBuilder fb, Column column) {
+        final SizedData.Type type = column.asType();
+        final String javaType = type(type);
+
+        FrameBuilder columnFB = new FrameBuilder("virtualColumn")
+                .add("cube", cube.name$())
+                .add("type", javaType)
+                .add("name", column.name$())
+                .add("defaultValue", defaultValueOf(javaType));
+
+        fb.add("virtualColumn", columnFB);
+    }
+
+    private String defaultValueOf(String javaType) {
+        switch (javaType) {
+            case "byte":
+            case "short":
+            case "int":
+            case "long":
+                return "0";
+            case "float":
+                return "0.0f";
+            case "double":
+                return "0.0";
+            default:
+                return "null";
+        }
+    }
+
+    private int addFactAttribute(Cube cube, FrameBuilder fb, SchemaSerialBuilder serialBuilder, int offset, Column column) {
+        final int columnSize = column.asType().size();
+        if(getMinimumBytesFor(offset, columnSize) > Long.BYTES)
+            offset = roundUp2(offset, Long.SIZE);
+        fb.add("column", columnFrame(column, offset, cube.name$()));
+        serialBuilder.add(column.name$(), type(column.asType()), offset, column.asType().size());
+        return offset + columnSize;
     }
 
     private int calculateFactSize(int offset) {
@@ -76,10 +112,6 @@ public class FactRenderer {
                 .add("offset", offset)
                 .add("cube", cube)
                 .add("type", javaType);
-
-        //column.core$().conceptList().stream().filter(Concept::isAspect).map(Predicate::name).forEach(x -> {
-        //    builder.add(x);
-        //});
 
         // TODO: check if signed/unsigned
 
@@ -110,13 +142,33 @@ public class FactRenderer {
     }
 
     private String asJavaType(SizedData.Type type) {
-        if(type.primitive().equals("int")) {
+        final String primitive = unboxed(type.primitive());
+        if(primitive.equals("int")) {
             if(type.size() <= Byte.SIZE) return "byte";
             if(type.size() <= Short.SIZE) return "short";
-        } else if(type.primitive().equals("double") && type.size() <= Float.SIZE) {
+        } else if(primitive.equals("double") && type.size() <= Float.SIZE) {
             return "float";
         }
-        return type.primitive();
+        return primitive;
+    }
+
+    private String unboxed(String primitive) {
+        switch (primitive) {
+            case "Byte":
+                return "byte";
+            case "Short":
+                return "short";
+            case "Integer":
+                return "int";
+            case "Long":
+            case "LongInteger":
+                return "long";
+            case "Float":
+                return "float";
+            case "Double":
+                return "double";
+        }
+        return primitive;
     }
 
     private int sizeOf(Axis.Categorical axis) {
@@ -146,8 +198,11 @@ public class FactRenderer {
     }
 
     private void calculateColumnSizes(List<Column> columns) {
-        for (Column column : columns)
-            if (column.isCategory()) column.asType().size(sizeOf(column.asCategory().axis().asCategorical()));
+        for (Column column : columns) {
+            if(column.isVirtual()) continue;
+            if (column.isCategory())
+                column.asType().size(sizeOf(column.asCategory().axis().asCategorical()));
+        }
     }
 
     private int getMinimumBytesFor(int bitIndex, int bitCount) {
