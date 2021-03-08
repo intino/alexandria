@@ -600,6 +600,11 @@ def trigger(dimension)
 	}
 end
 
+def type(column & int & unsigned) trigger(factGetter)
+	public long $name+firstLowerCase() {
+		return $cube+firstLowerCase.$name+firstLowerCase();
+	}
+end
 
 def type(column & int) trigger(factGetter)
 	public int $name+firstLowerCase() {
@@ -625,8 +630,20 @@ def type(column) type(id | long) trigger(factGetter)
 	}
 end
 
+def type(column) type(byte & unsigned) trigger(factGetter)
+	public short $name+firstLowerCase() {
+		return $cube+firstLowerCase.$name+firstLowerCase();
+	}
+end
+
 def type(column) type(byte) trigger(factGetter)
 	public byte $name+firstLowerCase() {
+		return $cube+firstLowerCase.$name+firstLowerCase();
+	}
+end
+
+def type(column) type(short & unsigned) trigger(factGetter)
+	public int $name+firstLowerCase() {
 		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
@@ -667,6 +684,12 @@ def type(column & categorical) trigger(nullGetter)
 	}
 end
 
+def type(column & int & unsigned) trigger(nullGetter)
+	public long $name+firstLowerCase() {
+		return 0;
+	}
+end
+
 def type(column & int) trigger(nullGetter)
 	public int $name+firstLowerCase() {
 		return 0;
@@ -679,7 +702,19 @@ def type(column) type(id | long) trigger(nullGetter)
 	}
 end
 
+def type(column & short & unsigned) trigger(nullGetter)
+	public int $name+firstLowerCase() {
+		return 0;
+	}
+end
+
 def type(column & short) trigger(nullGetter)
+	public short $name+firstLowerCase() {
+		return 0;
+	}
+end
+
+def type(column & byte & unsigned) trigger(nullGetter)
 	public short $name+firstLowerCase() {
 		return 0;
 	}

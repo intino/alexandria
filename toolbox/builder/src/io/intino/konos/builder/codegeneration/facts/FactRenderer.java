@@ -103,17 +103,17 @@ public class FactRenderer {
     private FrameBuilder processColumn(Column column, int offset, String cube) {
         SizedData.Type type = column.asType();
         final String javaType = type(type);
+        final String signType = column.isUnsignedInt() || column.isUnsignedLong() ? "unsigned" : "signed";
 
         FrameBuilder builder = new FrameBuilder("column",
                 javaType,
+                signType,
                 column.core$().is(Cube.Fact.Attribute.class) ? "attribute" : "measure")
                 .add("owner", cube)
                 .add("name", column.a$(Column.class).name$())
                 .add("offset", offset)
                 .add("cube", cube)
                 .add("type", javaType);
-
-        // TODO: check if signed/unsigned
 
         if (isAligned(javaType, offset, type.size()))
             builder.add("aligned", "Aligned");
