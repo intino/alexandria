@@ -11,7 +11,7 @@ def type(cube & src)
 		}
 
 		public static long $name+firstLowerCase~Id($name+FirstUpperCase.Fact fact) {
-			return 0L;//TODO
+			return fact.id();//TODO
 		}
 
 		[$customDimension+staticMethod...[$NL$NL]]
@@ -21,7 +21,7 @@ def type(cube & src)
 		[$customIndicator+staticMethod...[$NL$NL]]
 
 		public static long idOf($mainCube+idOf) {
-			return 0L; //TODO
+			return $mainCube.id(); //TODO
 		}
 
 		public static class Loader extends Abstract$name+FirstUpperCase.Loader {

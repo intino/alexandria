@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
@@ -16,7 +15,7 @@ public class LegacyLedHeader {
     private static final int ELEMENT_COUNT_INDEX = 0;
     private static final int ELEMENT_SIZE_INDEX = ELEMENT_COUNT_INDEX + Long.BYTES;
 
-    public static final int SIZE = ELEMENT_SIZE_INDEX + Long.BYTES;
+    public static final int SIZE = ELEMENT_SIZE_INDEX + Integer.BYTES;
     public static final long UNKNOWN_SIZE = -1;
 
     public static LegacyLedHeader from(InputStream inputStream) {

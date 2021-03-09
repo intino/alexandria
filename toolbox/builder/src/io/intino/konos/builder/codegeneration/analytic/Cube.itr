@@ -100,6 +100,11 @@ def type(cube)
 			return result$[index];
 		}
 
+	    public Aggregation aggregation(Axis.Component... components) {
+            final int index = indexOf(components);
+        	return result$[index];
+        }
+
 		private void fillCategories() {
 			for (Aggregation aggregation : result) {
 				if (aggregation == null) continue;

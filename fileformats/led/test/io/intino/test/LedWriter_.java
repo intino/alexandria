@@ -21,7 +21,6 @@ import static io.intino.alexandria.led.util.BitUtils.maxPossibleNumber;
 import static io.intino.test.schemas.TestSchema.*;
 import static org.junit.Assert.assertEquals;
 
-@Ignore
 public class LedWriter_ {
 
 	private static final int NUM_ELEMENTS = 10_000_000;
