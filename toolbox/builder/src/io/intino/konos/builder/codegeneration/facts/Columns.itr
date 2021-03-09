@@ -203,16 +203,16 @@ def type(column & bool) trigger(setter)
 	}
 end
 
-def type(column & real) attribute(size:32) trigger(setter)
-	public $owner+firstUpperCase~Builder $name+firstLowerCase(float $name+firstLowerCase) {
-		bitBuffer.setAlignedReal$size~Bits($offset, $name+firstLowerCase);
+def type(column & float) trigger(setter)
+	public $owner+firstUpperCase $name+firstLowerCase(float $name+firstLowerCase) {
+		bitBuffer.set$aligned~Real$size~Bits($offset, $name+firstLowerCase);
 		return this;
 	}
 end
 
-def type(column & real) trigger(setter)
-	public $owner+firstUpperCase~Builder $name+firstLowerCase($type $name+firstLowerCase) {
-		bitBuffer.setAlignedReal$size~Bits($offset, $name+firstLowerCase);
+def type(column & double) trigger(setter)
+	public $owner+firstUpperCase $name+firstLowerCase($type $name+firstLowerCase) {
+		bitBuffer.set$aligned~Real$size~Bits($offset, $name+firstLowerCase);
 		return this;
 	}
 end
