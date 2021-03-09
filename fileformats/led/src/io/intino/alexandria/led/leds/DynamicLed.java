@@ -2,9 +2,8 @@ package io.intino.alexandria.led.leds;
 
 import io.intino.alexandria.led.Led;
 import io.intino.alexandria.led.Schema;
-import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.allocators.indexed.ListAllocator;
-import io.intino.alexandria.led.util.memory.LedLibraryConfig;
+import io.intino.alexandria.led.LedLibraryConfig;
 
 public class DynamicLed<T extends Schema> implements Led<T> {
 

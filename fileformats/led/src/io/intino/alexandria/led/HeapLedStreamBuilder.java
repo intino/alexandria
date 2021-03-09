@@ -83,9 +83,18 @@ public final class HeapLedStreamBuilder<T extends Schema> implements LedStream.B
         if(buildInvoked) {
             throw new IllegalStateException("Method build has been called, cannot create more schemas.");
         }
-        T schema = newTransaction();
+
+        T schema;
+        synchronized (this) {
+            schema = newTransaction();
+        }
         initializer.accept(schema);
-        sortedQueue.add(schema);
+
+        //noinspection SynchronizeOnNonFinalField
+        synchronized (sortedQueue) {
+            sortedQueue.add(schema);
+        }
+
         return this;
     }
 

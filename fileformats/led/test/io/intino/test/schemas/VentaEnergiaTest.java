@@ -27,7 +27,6 @@ public class VentaEnergiaTest {
         assertEquals(VentaEnergia.SIZE, ventaEnergia.size());
     }
 
-    @Ignore
     @Test
     public void id() {
         final long id = 12345;
@@ -56,7 +55,7 @@ public class VentaEnergiaTest {
                 if(i == j) continue;
                 assertEquals(lastValues[j], (long)getters.get(j).apply(ventaEnergia));
             }
-            System.out.println(ventaEnergia.values());
+            //System.out.println(ventaEnergia.values());
         }
     }
 
@@ -89,9 +88,6 @@ public class VentaEnergiaTest {
         Random random = new Random(System.nanoTime());
         for(int i = 0;i < 1000000;i++) {
             long value = random.nextLong() - random.nextLong();
-            if(i % 1000 == 0) {
-                System.out.println(value);
-            }
             setter.accept(ventaEnergia, value);
             assertEquals(value, getter.apply(ventaEnergia).longValue());
         }

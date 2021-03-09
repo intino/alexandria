@@ -1,5 +1,6 @@
-package io.intino.alexandria.led;
+package io.intino.alexandria.led.legacy;
 
+import io.intino.alexandria.led.*;
 import io.intino.alexandria.logger.Logger;
 import org.xerial.snappy.SnappyOutputStream;
 
@@ -14,19 +15,19 @@ import java.util.concurrent.TimeUnit;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.*;
 import static java.nio.file.StandardOpenOption.WRITE;
 
-public class LedWriter {
+public class LegacyLedWriter {
 
 	private int bufferSize = LedLibraryConfig.DEFAULT_BUFFER_SIZE.get();
 	private final OutputStream destOutputStream;
 	private final File destinationFile;
 
-	public LedWriter(File destOutputStream) {
+	public LegacyLedWriter(File destOutputStream) {
 		destOutputStream.getAbsoluteFile().getParentFile().mkdirs();
 		this.destinationFile = destOutputStream;
 		this.destOutputStream = outputStream(destOutputStream);
 	}
 
-	public LedWriter(OutputStream destOutputStream) {
+	public LegacyLedWriter(OutputStream destOutputStream) {
 		this.destOutputStream = destOutputStream;
 		destinationFile = null;
 	}
@@ -35,7 +36,7 @@ public class LedWriter {
 		return bufferSize;
 	}
 
-	public LedWriter bufferSize(int bufferSize) {
+	public LegacyLedWriter bufferSize(int bufferSize) {
 		this.bufferSize = bufferSize;
 		return this;
 	}
@@ -122,8 +123,7 @@ public class LedWriter {
 		final int schemaSize = led.schemaSize();
 		final int numBatches = (int) Math.ceil(led.size() / (float) bufferSize);
 		try (OutputStream originalOutputStream = this.destOutputStream) {
-			LedHeader header = new LedHeader();
-			header.elementCount(size).elementSize(schemaSize).uuid(led.serialUUID());
+			LegacyLedHeader header = new LegacyLedHeader();
 			originalOutputStream.write(header.toByteArray());
 			writeLed(led, schemaSize, numBatches, originalOutputStream);
 		} catch (Exception e) {
@@ -185,8 +185,8 @@ public class LedWriter {
 	}
 
 	private void reserveHeader(LedStream<? extends Schema> ledStream, OutputStream fos) throws IOException {
-		LedHeader header = new LedHeader();
-		header.elementCount(LedHeader.UNKNOWN_SIZE).elementSize(ledStream.schemaSize()).uuid(Schema.getSerialUUID(ledStream.schemaClass()));
+		LegacyLedHeader header = new LegacyLedHeader();
+		header.elementCount(LegacyLedHeader.UNKNOWN_SIZE).elementSize(ledStream.schemaSize());
 		fos.write(header.toByteArray());
 	}
 

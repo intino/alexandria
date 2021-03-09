@@ -6,17 +6,22 @@ import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.led.leds.InputLedStream;
 import io.intino.alexandria.logger.Logger;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
 import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
-import static java.nio.file.StandardOpenOption.*;
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.WRITE;
 
 public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Builder<T>, AutoCloseable {
 
@@ -31,7 +36,7 @@ public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Bui
     private ByteBuffer buffer;
     private StackAllocator<T> allocator;
     private FileChannel fileChannel;
-    private long numTransactions;
+    private final AtomicLong numTransactions;
     private final boolean keepFileChannelOpen;
     private final AtomicBoolean closed;
 
@@ -56,7 +61,8 @@ public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Bui
         this.schemaSize = Schema.sizeOf(schemaClass);
         this.serialUUID = Schema.getSerialUUID(schemaClass);
         this.factory = factory;
-        tempFile.getParentFile().mkdirs();
+        final File parentFile = tempFile.getParentFile();
+        if(parentFile != null) parentFile.mkdirs();
         this.tempLedFile = tempFile.toPath();
         if(numElementsPerBlock % 2 != 0) {
             throw new IllegalArgumentException("NumElementsPerBlock must be even");
@@ -65,6 +71,7 @@ public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Bui
         this.allocator = StackAllocators.managedStackAllocatorFromBuffer(schemaSize, buffer, schemaClass);
         this.keepFileChannelOpen = keepFileChannelOpen;
         this.closed = new AtomicBoolean(false);
+        this.numTransactions = new AtomicLong();
         setupFile();
     }
 
@@ -89,13 +96,9 @@ public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Bui
     }
 
     private void reserveHeader() throws IOException {
-        if(!keepFileChannelOpen) {
-            fileChannel = openFileChannel();
-        }
+        if(!keepFileChannelOpen) fileChannel = openFileChannel();
         fileChannel.write(ByteBuffer.allocate(LedHeader.SIZE));
-        if(!keepFileChannelOpen) {
-            fileChannel.close();
-        }
+        if(!keepFileChannelOpen) fileChannel.close();
     }
 
     @Override
@@ -114,16 +117,18 @@ public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Bui
             Logger.error("Trying to use a closed builder.");
             return this;
         }
-        T schema = allocator.calloc();
-        initializer.accept(schema);
+
+        initializer.accept(allocator.calloc());
+
         if(allocator.remainingBytes() == 0) {
             writeCurrentBlockAndClear();
         }
-        ++numTransactions;
+
+        numTransactions.incrementAndGet();
         return this;
     }
 
-    private void writeCurrentBlockAndClear() {
+    private synchronized void writeCurrentBlockAndClear() {
         try {
             if(!keepFileChannelOpen) {
                 fileChannel = openFileChannel();
@@ -170,13 +175,12 @@ public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Bui
             return LedStream.empty(schemaClass);
         }
         close();
-        return new InputLedStream<>(getInputStream(), factory, schemaSize)
-                .onClose(this::deleteTempFile);
+        return new InputLedStream<>(getInputStream(), factory, schemaSize).onClose(this::deleteTempFile);
     }
 
     private void writeHeader() {
         LedHeader header = new LedHeader();
-        header.elementCount(numTransactions);
+        header.elementCount(numTransactions.get());
         header.elementSize(schemaSize);
         header.uuid(serialUUID);
         try(RandomAccessFile file = new RandomAccessFile(tempLedFile.toFile(), "rw")) {
@@ -208,7 +212,9 @@ public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Bui
 
     private InputStream getInputStream() {
         try {
-            return Files.newInputStream(tempLedFile);
+            final InputStream inputStream = Files.newInputStream(tempLedFile);
+            inputStream.skip(LedHeader.SIZE);
+            return inputStream;
         } catch (IOException e) {
             Logger.error(e);
             throw new RuntimeException(e);

@@ -8,24 +8,22 @@ def type(cube)
     import java.util.UUID;
 	import $package+validPackage~.analytic.axes.*;
 
-	public class $name+firstUpperCase~Builder extends Schema {
-
-		[$split]
+	public class $name+firstUpperCase extends Schema {
 
 		public static final int SIZE = $size; // Bytes
         public static final UUID SERIAL_UUID = UUID.fromString("$serialUUID");
-        public static final SchemaFactory<$name+firstUpperCase~Builder> FACTORY = new SchemaFactory<>($name+firstUpperCase~Builder.class) {
+        public static final SchemaFactory<$name+firstUpperCase> FACTORY = new SchemaFactory<>($name+firstUpperCase.class) {
             @Override
-            public $name+firstUpperCase~Builder newInstance(ByteStore store) {
-                return new $name+firstUpperCase~Builder(store);
+            public $name+firstUpperCase newInstance(ByteStore store) {
+                return new $name+firstUpperCase(store);
             }
         };
 
-		public $name+firstUpperCase~Builder() {
+		public $name+firstUpperCase() {
 			super(new ByteBufferStore(SIZE));
 		}
 
-		public $name+firstUpperCase~Builder(io.intino.alexandria.led.buffers.store.ByteStore store) {
+		public $name+firstUpperCase(io.intino.alexandria.led.buffers.store.ByteStore store) {
 			super(store);
         }
 
@@ -46,6 +44,8 @@ def type(cube)
 
 		[$column+setter...[$NL$NL]]
 
+		[$split]
+
 	}
 end
 
@@ -60,7 +60,10 @@ def trigger(split)
 		public abstract String qn();
 
 		public static Split splitByQn(String qn) {
-			return java.util.Arrays.stream(values()).filter(c -> c.qn().equals(qn)).findFirst().orElse(null);
+		    for(Split split : values()) {
+		        if(split.qn().equals(qn)) return split;
+		    }
+		    return null;
 		}
 	}
 end

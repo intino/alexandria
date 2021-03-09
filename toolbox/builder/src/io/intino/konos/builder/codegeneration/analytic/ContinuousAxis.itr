@@ -133,6 +133,29 @@ def type(continuous)
 			public Axis axis() {
 				return $name+snakeCaseToCamelCase+FirstUpperCase.this;
 			}
+
+		    @Override
+		    public boolean equals(Object o) {
+		    	if (this == o) return true;
+		    	if (o == null || getClass() != o.getClass()) return false;
+		    	Range range = (Range) o;
+		    	return index == range.index;
+		    }
+
+		    @Override
+		    public int hashCode() {
+		    	return index;
+		    }
+
+		    @Override
+		    public String toString() {
+		    	return axis().getClass().getSimpleName()+".Range{" +
+		    			"index=" + index +
+		    			", min=" + min +
+		    			", max=" + max +
+		    			", label='" + label + "'" +
+		    			'}';
+		    }
     	}
     }
 end

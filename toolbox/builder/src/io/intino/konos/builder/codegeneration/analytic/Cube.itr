@@ -1,11 +1,13 @@
 def type(cube & src)
 	package $package.analytic.cubes;
 
-    import io.intino.alexandria.led.Schema;
+    import io.intino.alexandria.led.buffers.store.ByteStore;
+
+    import java.util.List;
 
 	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
 
-		public $name+FirstUpperCase(java.util.List<Loader> loaders) {
+		public $name+FirstUpperCase(List<Loader> loaders) {
 			super(loaders);
 		}
 
@@ -23,6 +25,15 @@ def type(cube & src)
 
 			// TODO write here a cache if necessary
 		}
+
+		public static class Fact extends Abstract$name+FirstUpperCase.AbstractFact {
+
+		    public Fact(ByteStore store) {
+		        super(store);
+		    }
+
+		    [$virtualColumn+implementation...[$NL$NL]]
+		}
 	}
 end
 
@@ -35,7 +46,6 @@ def type(cube)
     import io.intino.alexandria.led.Schema;
     import io.intino.alexandria.led.allocators.SchemaFactory;
     import io.intino.alexandria.led.buffers.store.ByteStore;
-    import io.intino.alexandria.led.buffers.store.ByteBufferStore;
     import io.intino.alexandria.led.util.iterators.MergedIterator;
 
 	import $package.analytic.axes.*;
@@ -51,10 +61,12 @@ def type(cube)
     import static java.util.Comparator.comparingLong;
     import static java.util.Spliterators.spliteratorUnknownSize;
 
+    import $package.analytic.cubes.$name+FirstUpperCase.Fact;
+
+    @SuppressWarnings("unused")
     public abstract class Abstract$name+FirstUpperCase {
 
-		private static final String ID_SEP = " - ";
-		private static final Fact NULL_FACT = new NullFact();
+		public static final Fact NULL_FACT = new NullFact();
 
 		private final List<? extends Loader> loaders;
 		private final List<Predicate<Fact>> filterList = new ArrayList<>();
@@ -64,12 +76,8 @@ def type(cube)
 		private Aggregation$[] result;
 
     	public Abstract$name+FirstUpperCase(List<? extends Loader> loaders) {
-    		this.loaders = loaders;
+    		this.loaders = java.util.Objects.requireNonNull(loaders);
     	}
-
-		public static Fact nullFact() {
-			return NULL_FACT;
-		}
 
     	[$dimension+method...[$NL$NL]]
 
@@ -88,8 +96,14 @@ def type(cube)
 		}
 
 		public Aggregation aggregation(List<Axis.Component> components) {
-			return result$[indexOf(components.toArray(new Axis.Component$[0]))];
+		    final int index = indexOf(components);
+			return result$[index];
 		}
+
+	    public Aggregation aggregation(Axis.Component... components) {
+            final int index = indexOf(components);
+        	return result$[index];
+        }
 
 		private void fillCategories() {
 			for (Aggregation aggregation : result) {
@@ -112,6 +126,7 @@ def type(cube)
 		private Aggregation$[] results(Iterable<Fact> facts) {
 			Aggregation$[] result = new Aggregation$[resultsSize()];
 			for (Fact fact : facts) {
+			    fact.setCube(this);
 				if (!check(fact)) continue;
 				Axis.Component$[] components = componentsOf(fact);
 				int index = indexOf(components);
@@ -123,9 +138,12 @@ def type(cube)
 
 		private synchronized void append(Aggregation$[] results) {
 			for (int i = 0; i < results.length; i++) {
-				if (results$[i] == null) continue;
-				if (result$[i] == null) result$[i] = results$[i];
-				else result$[i].append(results$[i]);
+			    final Aggregation aggregation = results$[i];
+				if (aggregation == null) continue;
+				if (result$[i] == null)
+                    result$[i] = aggregation;
+                else
+                    result$[i].append(aggregation);
 			}
 		}
 
@@ -138,6 +156,16 @@ def type(cube)
 			return index;
 		}
 
+		private int indexOf(Collection<Axis.Component> components) {
+        	int index = 0;
+        	int i = 0;
+        	for (Axis.Component component : components) {
+        		index *= axes.get(i++).size();
+        		index += component.index();
+        	}
+        	return index;
+        }
+
 		private boolean check(Fact item) {
 			for (Predicate<Fact> filter : filterList) if (!filter.test(item)) return false;
 			return true;
@@ -149,47 +177,68 @@ def type(cube)
 			return components;
 		}
 
-		public static class Fact extends Schema {
+		public static abstract class AbstractFact extends Schema {
 
-			public static final int SIZE = $size; // Bytes
-			public static final UUID SERIAL_UUID = UUID.fromString("$serialUUID");
-			public static final SchemaFactory<Fact> FACTORY = new SchemaFactory<>(Fact.class) {
-			    @Override
-			    public Fact newInstance(ByteStore store) {
-			        return new Fact(store);
-			    }
-			};
+            public static final int SIZE = $size; // Bytes
+            public static final UUID SERIAL_UUID = UUID.fromString("$serialUUID");
+            public static final SchemaFactory<Fact> FACTORY = new SchemaFactory<>(Fact.class) {
+                @Override
+                public Fact newInstance(ByteStore store) {
+                    return new Fact(store);
+                }
+            };
 
+            private Timetag timetag;
+            private Abstract$name+FirstUpperCase cube;
 
-			public Fact(ByteStore store) {
-				super(store);
-			}
+            public AbstractFact(ByteStore store) {
+            	super(store);
+            }
 
-            @Override
-		    public long id() {
-		    	return $id();
-		    }
+            [$virtualColumn+abstract...[$NL$NL]]
 
-            @Override
-		    public int size() {
-		    	return SIZE;
-		    }
+            [$column+getter...[$NL$NL]]
 
             @Override
-		    public UUID serialUUID() {
-		        return SERIAL_UUID;
-		    }
+            public long id() {
+            	return $id();
+            }
 
-		    [$column+getter...[$NL$NL]]
+            public final Abstract$name+FirstUpperCase cube() {
+                return cube;
+            }
+
+            void setCube(Abstract$name+FirstUpperCase cube) {
+                this.cube = cube;
+            }
+
+            public final Timetag timetag() {
+                return timetag;
+            }
+
+            void setTimetag(Timetag timetag) {
+                this.timetag = timetag;
+            }
 
             @Override
-		    public String toString() {
-		        return "$name+FirstUpperCase~.Fact{"
-		                + "id=" + id()
-		                [$column+toString...[$NL]]
-		                + '}';
-		    }
-		}
+            public int size() {
+            	return SIZE;
+            }
+
+            @Override
+            public UUID serialUUID() {
+                return SERIAL_UUID;
+            }
+
+             @Override
+             public String toString() {
+                 return "$name+FirstUpperCase~.Fact{"
+                         + "id=" + id()
+                         + ", timetag=" + timetag()
+                         [$column+toString...[$NL]]
+                         + '}';
+             }
+        }
 
 		public static class NullFact extends Fact {
 
@@ -223,6 +272,7 @@ def type(cube)
 		}
 
 		public static class Aggregation {
+
 			private final Axis.Component$[] components;
 			private long aggregationCount = 0;
 			$index+field
@@ -256,7 +306,8 @@ def type(cube)
 			$indicator+getter...[$NL$NL]
 		}
 
-    	public static class Loader implements Iterable<Fact> {
+    	public static abstract class Loader implements Iterable<Fact> {
+
 			protected final Datasource datasource;
 			[$split+field]
 
@@ -267,17 +318,13 @@ def type(cube)
 
 			@Override
 			public Iterator<Fact> iterator() {
-				return StreamSupport.stream(spliteratorUnknownSize(datasource.leds($split+name), Spliterator.SORTED), false).iterator();
-			}
-
-			public static List<Loader> facts(Datasource datasource[, $split+SetParameter]) {
-				$split+name = $split+name.isEmpty() ? all$split+nameUpper() : $split+name;
-				return $split+name.stream().map(d -> new Loader(datasource, d)).collect(java.util.stream.Collectors.toList());
+			    return datasource.leds($split+name).asJavaStream().iterator();
 			}
 
 			[$split+method]
 
 			public static class Datasource {
+
 				private final File root;
 				private final Timetag from;
 				private final Timetag to;
@@ -302,7 +349,8 @@ def type(cube)
 
 				private LedStream<Fact> on(Timetag timetag[, $split+parameter]) {
 					File file = new File(root + "/$name+FirstUpperCase" [+ "." + $split+name], timetag.value() + ".led");
-					return file.exists() ? new LedReader(file).read(Fact.class) : LedStream.empty(Fact.class);
+					LedStream<Fact> facts = file.exists() ? new LedReader(file).read(Fact.class) : LedStream.empty(Fact.class);
+					return facts.peek(fact -> fact.setTimetag(timetag));
 				}
 			}
 		}
@@ -356,21 +404,22 @@ end
 
 def type(customFilter) trigger(method)
 	public Abstract$cube+firstUpperCase filter$name+firstUpperCase() {
-		filterList.add(v -> $cube+firstUpperCase.$name+firstLowerCase~Filter(v));
+		filterList.add($cube+FirstUpperCase::$name+firstLowerCase~Filter);
 		return this;
 	}
 end
 
 def type(customFilter) trigger(staticMethod)
 	public static boolean $name+firstLowerCase~Filter(Fact fact) {
-		//TODO
+		// TODO: write here your code
 		return true;
 	}
 end
 
 def type(customDimension) trigger(staticMethod)
 	public static $name+firstLowerCase[$isDistribution~Range] $name+firstLowerCase~Function() {
-		return v -> null; //TODO
+	    // TODO: write here your code
+		return v -> null;
 	}
 end
 
@@ -383,7 +432,7 @@ def type(dimension & categorical) trigger(method)
 	public Abstract$cube+FirstUpperCase groupBy$name+firstUpperCase() {
 		axes.add($axis+snakeCaseToCamelCase+firstUpperCase.instance());
 		components.put($axis+snakeCaseToCamelCase+firstUpperCase.instance(), new HashSet<>());
-		groupByList.add(v -> $name+firstLowerCase~Function(v));
+		groupByList.add(Abstract$cube+FirstUpperCase::$name+firstLowerCase~Function);
 		return this;
 	}
 
@@ -391,7 +440,7 @@ def type(dimension & categorical) trigger(method)
 		return $axis+snakeCaseToCamelCase+firstLowerCase.contains($name+firstLowerCase~Function(fact));
 	}
 
-	public static Axis.Component $name+firstLowerCase~Function(Fact fact) {
+	public static $axis+snakeCaseToCamelCase+firstUpperCase.Component $name+firstLowerCase~Function(Fact fact) {
 		return fact.$source+snakeCaseToCamelCase+firstLowerCase()[.$child+snakeCaseToCamelCase+firstLowerCase];
 	}
 end
@@ -405,7 +454,7 @@ def type(dimension & continuous) trigger(method)
 	public Abstract$cube+FirstUpperCase groupBy$name+firstUpperCase() {
 		axes.add($axis+snakeCaseToCamelCase+firstUpperCase.instance());
 		components.put($axis+snakeCaseToCamelCase+firstUpperCase.instance(), new HashSet<>());
-		groupByList.add(v -> $name+firstLowerCase~Function(v));
+		groupByList.add(Abstract$cube+FirstUpperCase::$name+firstLowerCase~Function);
 		return this;
 	}
 
@@ -413,8 +462,8 @@ def type(dimension & continuous) trigger(method)
 		return $axis+snakeCaseToCamelCase+firstLowerCase.contains($name+firstLowerCase~Function(fact));
 	}
 
-	private static Axis.Component $name+firstLowerCase~Function(Fact fact) {
-		return $axis+snakeCaseToCamelCase+firstUpperCase.instance().rangeOf(fact.$source+firstLowerCase());
+	private static $axis+snakeCaseToCamelCase+firstUpperCase.Range $name+firstLowerCase~Function(Fact fact) {
+		return $axis+snakeCaseToCamelCase+firstUpperCase.rangeOf(fact.$source+firstLowerCase());
 	}
 end
 
@@ -428,7 +477,7 @@ def type(customDimension & continuous) trigger(method)
 	public Abstract$cube+firstUpperCase groupBy$name+firstUpperCase() {
 		axes.add($axis+snakeCaseToCamelCase.instance());
 		components.put($axis+snakeCaseToCamelCase.instance(), new HashSet<>());
-		groupByList.add(v -> $cube+firstUpperCase.$name+firstLowerCase~Function(v));
+		groupByList.add(Abstract$cube+firstUpperCase::$name+firstLowerCase~Function);
 		return this;
 	}
 

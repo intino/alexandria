@@ -21,7 +21,6 @@ import static io.intino.alexandria.led.util.BitUtils.maxPossibleNumber;
 import static io.intino.test.schemas.TestSchema.*;
 import static org.junit.Assert.assertEquals;
 
-@Ignore
 public class LedWriter_ {
 
 	private static final int NUM_ELEMENTS = 10_000_000;
@@ -44,7 +43,8 @@ public class LedWriter_ {
 		LedStream<TestSchema> led = new IteratorLedStream<>(TestSchema.class, original.iterator());
 		start = System.currentTimeMillis();
 		new LedWriter(tempFile).write(Led.fromLedStream(led));
-		System.out.println(">> Serialized " + NUM_ELEMENTS + "(" + TestSchema.SIZE + " bytes each) in " + (System.currentTimeMillis() - start) / 1000 + " seconds");
+		System.out.println(">> Serialized " + NUM_ELEMENTS + "(" + TestSchema.SIZE + " bytes each) in "
+				+ (System.currentTimeMillis() - start) / 1000 + " seconds");
 	}
 
 	private void read(List<TestSchema> original) {
@@ -53,7 +53,8 @@ public class LedWriter_ {
 		long start;
 		start = System.currentTimeMillis();
 		Led<TestSchema> led = reader.readAll(TestSchema.class);
-		System.out.println(">> Deserialized " + NUM_ELEMENTS + "(" + TestSchema.SIZE + " bytes each) in " + (System.currentTimeMillis() - start) / 1000 + " seconds");
+		System.out.println(">> Deserialized " + NUM_ELEMENTS + "(" + TestSchema.SIZE + " bytes each) in "
+				+ (System.currentTimeMillis() - start) / 1000 + " seconds");
 		AtomicInteger size = new AtomicInteger();
 		IntStream.range(0, original.size()).forEach(i -> {
 			assertEquals(original.get(i), led.schema(i));
@@ -72,7 +73,7 @@ public class LedWriter_ {
 						.b(RANDOM.nextInt((int) maxPossibleNumber(B_BITS)))
 						.c(RANDOM.nextFloat() * RANDOM.nextInt())
 						.d(RANDOM.nextInt((int) maxPossibleNumber(D_BITS)))
-						.e(RANDOM.nextInt((int) maxPossibleNumber(E_BITS)))
+						.e(RANDOM.nextInt(Math.abs((int) maxPossibleNumber(E_BITS))))
 						.f(RANDOM.nextDouble() * RANDOM.nextInt())
 						.g((byte) RANDOM.nextInt((int) maxPossibleNumber(G_BITS)))
 				);

@@ -1,5 +1,9 @@
-package io.intino.alexandria.led;
+package io.intino.alexandria.led.legacy;
 
+import io.intino.alexandria.led.Led;
+import io.intino.alexandria.led.LedStream;
+import io.intino.alexandria.led.Schema;
+import io.intino.alexandria.led.SchemaSerialUUIDMismatchException;
 import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.allocators.indexed.IndexedAllocator;
 import io.intino.alexandria.led.allocators.indexed.IndexedAllocatorFactory;
@@ -13,31 +17,29 @@ import java.io.*;
 import java.util.Objects;
 import java.util.UUID;
 
-import static io.intino.alexandria.led.LedLibraryConfig.CHECK_SERIAL_ID;
-
-public class LedReader {
+public class LegacyLedReader {
 
 	private final InputStream srcInputStream;
 	private final File sourceFile;
 
-	public LedReader(File file) {
+	public LegacyLedReader(File file) {
 		this.srcInputStream = inputStreamOf(file);
 		this.sourceFile = file;
 	}
 
-	public LedReader(InputStream srcInputStream) {
+	public LegacyLedReader(InputStream srcInputStream) {
 		this.srcInputStream = srcInputStream;
 		this.sourceFile = null;
 	}
 
 	public int size() {
-		if(sourceFile == null) return (int) LedHeader.UNKNOWN_SIZE;
+		if(sourceFile == null) return (int) LegacyLedHeader.UNKNOWN_SIZE;
 		try(RandomAccessFile raFile = new RandomAccessFile(sourceFile, "r")) {
 			return (int) raFile.readLong();
 		} catch (IOException e) {
 			Logger.error(e);
 		}
-		return (int) LedHeader.UNKNOWN_SIZE;
+		return (int) LegacyLedHeader.UNKNOWN_SIZE;
 	}
 
 	public <T extends Schema> Led<T> readAll(Class<T> schemaClass) {
@@ -53,12 +55,12 @@ public class LedReader {
 			Logger.error(e);
 			return Led.empty(schemaClass);
 		}
-		LedHeader header = LedHeader.from(this.srcInputStream);
-		if(CHECK_SERIAL_ID.get()) checkSerialUUID(header.uuid(), Schema.getSerialUUID(schemaClass));
+		LegacyLedHeader header = LegacyLedHeader.from(this.srcInputStream);
 		return readAllIntoMemory(allocatorFactory, schemaClass, header);
 	}
 
-	private <T extends Schema> Led<T> readAllIntoMemory(IndexedAllocatorFactory<T> allocatorFactory, Class<T> schemaClass, LedHeader header) {
+	private <T extends Schema> Led<T> readAllIntoMemory(IndexedAllocatorFactory<T> allocatorFactory, Class<T> schemaClass,
+														LegacyLedHeader header) {
 		try(SnappyInputStream inputStream = new SnappyInputStream(this.srcInputStream)) {
 			IndexedAllocator<T> allocator = allocatorFactory.create(inputStream, header.elementCount(), header.elementSize(), schemaClass);
 			return new IndexedLed<>(allocator);
@@ -71,8 +73,7 @@ public class LedReader {
 	public <T extends Schema> LedStream<T> read(Class<T> schemaClass) {
 		try {
 			if(srcInputStream.available() == 0) return LedStream.empty(schemaClass);
-			LedHeader header = LedHeader.from(srcInputStream);
-			checkSerialUUID(header.uuid(), Schema.getSerialUUID(schemaClass));
+			LegacyLedHeader header = LegacyLedHeader.from(srcInputStream);
 			return readAsStream(new SnappyInputStream(srcInputStream), schemaClass, header.elementSize());
 		} catch (IOException e) {
 			Logger.error(e);

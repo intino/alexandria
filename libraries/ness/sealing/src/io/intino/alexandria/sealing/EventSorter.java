@@ -1,6 +1,8 @@
 package io.intino.alexandria.sealing;
 
 import io.intino.alexandria.logger.Logger;
+import org.xerial.snappy.SnappyInputStream;
+import org.xerial.snappy.SnappyOutputStream;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -8,8 +10,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 import static java.time.Instant.parse;
 
@@ -81,11 +81,11 @@ public class EventSorter {
 	}
 
 	private OutputStream outputStream() throws IOException {
-		return new GZIPOutputStream(new BufferedOutputStream(new FileOutputStream(file)), true);
+		return new SnappyOutputStream(new FileOutputStream(file));
 	}
 
 	private OutputStream outputStream(File file) throws IOException {
-		return new GZIPOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
+		return new SnappyOutputStream(new FileOutputStream(file));
 	}
 
 	private byte[] bytesOf(RandomAccessFile accessFile, long[] tuple) {
@@ -117,7 +117,7 @@ public class EventSorter {
 	}
 
 	private InputStream inputStream() throws IOException {
-		return new GZIPInputStream(new BufferedInputStream(new FileInputStream(file)));
+		return new SnappyInputStream(new FileInputStream(file));
 
 	}
 }

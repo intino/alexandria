@@ -5,7 +5,7 @@ import io.intino.alexandria.led.Schema;
 import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.allocators.stack.StackAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
-import io.intino.alexandria.led.util.memory.LedLibraryConfig;
+import io.intino.alexandria.led.LedLibraryConfig;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 
 import static io.intino.alexandria.led.Schema.factoryOf;
 import static io.intino.alexandria.led.Schema.sizeOf;
-import static io.intino.alexandria.led.util.memory.LedLibraryConfig.INPUT_LEDSTREAM_CONCURRENCY_ENABLED;
+import static io.intino.alexandria.led.LedLibraryConfig.INPUT_LEDSTREAM_CONCURRENCY_ENABLED;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
 
 public class InputLedStream<T extends Schema> implements LedStream<T> {
@@ -32,6 +32,7 @@ public class InputLedStream<T extends Schema> implements LedStream<T> {
     private final Iterator<T> iterator;
     private Runnable onClose;
     private final AtomicBoolean closed;
+    private boolean concurrencyEnabled = INPUT_LEDSTREAM_CONCURRENCY_ENABLED.get();
 
     public InputLedStream(InputStream inputStream, Class<T> schemaClass) {
         this(inputStream, factoryOf(schemaClass), sizeOf(schemaClass), DEFAULT_BUFFER_SIZE);
@@ -58,6 +59,15 @@ public class InputLedStream<T extends Schema> implements LedStream<T> {
         return bufferSize;
     }
 
+    public boolean concurrencyEnabled() {
+        return this.concurrencyEnabled;
+    }
+
+    public InputLedStream<T> concurrencyEnabled(boolean concurrencyEnabled) {
+        this.concurrencyEnabled = concurrencyEnabled;
+        return this;
+    }
+
     @Override
     public boolean hasNext() {
         return iterator.hasNext();
@@ -79,16 +89,15 @@ public class InputLedStream<T extends Schema> implements LedStream<T> {
         return factory.schemaClass();
     }
 
-    @SuppressWarnings("unchecked")
-    public synchronized Stream<T> stream() {
-        return Stream.generate(() -> read(inputStream))
-                .takeWhile(inputBuffer -> checkInputBuffer(inputBuffer, inputStream))
-                .flatMap(this::allocateAll);
-    }
-
     @Override
     public int schemaSize() {
         return schemaSize;
+    }
+
+    private synchronized Stream<T> stream() {
+        return Stream.generate(() -> read(inputStream))
+                .takeWhile(inputBuffer -> checkInputBuffer(inputBuffer, inputStream))
+                .flatMap(this::allocateAll);
     }
 
     private boolean checkInputBuffer(ByteBuffer inputBuffer, InputStream inputStream) {
@@ -108,9 +117,8 @@ public class InputLedStream<T extends Schema> implements LedStream<T> {
     private Stream<T> allocateAll(ByteBuffer buffer) {
         StackAllocator<T> allocator = StackAllocators.managedStackAllocatorFromBuffer(schemaSize, buffer, factory.schemaClass());
         IntStream intStream = IntStream.range(0, buffer.remaining() / schemaSize);
-        if(INPUT_LEDSTREAM_CONCURRENCY_ENABLED.get()) {
+        if(concurrencyEnabled)
             intStream = intStream.sorted().parallel();
-        }
         return intStream.mapToObj(index -> allocator.malloc());
     }
 
