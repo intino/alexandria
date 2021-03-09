@@ -253,6 +253,11 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 
 	@Override
 	public RestfulSecureConnection secure(URL url, String token) {
+		return secure(url, HttpHeaders.AUTHORIZATION, token);
+	}
+
+	@Override
+	public RestfulSecureConnection secure(URL url, String authHeaderName, String token) {
 		return new RestfulSecureConnection() {
 			@Override
 			public Response get(String path) throws RestfulFailure {
@@ -360,8 +365,8 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 			}
 
 			private Map<String, String> headers() {
-				return new HashMap<String, String>() {{
-					put(HttpHeaders.AUTHORIZATION, token);
+				return new HashMap<>() {{
+					put(authHeaderName, token);
 				}};
 			}
 		};
