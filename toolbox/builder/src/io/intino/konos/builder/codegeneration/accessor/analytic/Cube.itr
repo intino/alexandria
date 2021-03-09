@@ -10,8 +10,6 @@ def type(cube)
 
 	public class $name+firstUpperCase extends Schema {
 
-		[$split]
-
 		public static final int SIZE = $size; // Bytes
         public static final UUID SERIAL_UUID = UUID.fromString("$serialUUID");
         public static final SchemaFactory<$name+firstUpperCase> FACTORY = new SchemaFactory<>($name+firstUpperCase.class) {
@@ -45,6 +43,8 @@ def type(cube)
 		}
 
 		[$column+setter...[$NL$NL]]
+
+		[$split]
 
 	}
 end

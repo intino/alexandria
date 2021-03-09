@@ -77,7 +77,6 @@ def type(cube)
 
     	public Abstract$name+FirstUpperCase(List<? extends Loader> loaders) {
     		this.loaders = java.util.Objects.requireNonNull(loaders);
-    		this.loaders.forEach(loader -> loader.setCube(this));
     	}
 
     	[$dimension+method...[$NL$NL]]
@@ -122,6 +121,7 @@ def type(cube)
 		private Aggregation$[] results(Iterable<Fact> facts) {
 			Aggregation$[] result = new Aggregation$[resultsSize()];
 			for (Fact fact : facts) {
+			    fact.setCube(this);
 				if (!check(fact)) continue;
 				Axis.Component$[] components = componentsOf(fact);
 				int index = indexOf(components);
@@ -133,9 +133,12 @@ def type(cube)
 
 		private synchronized void append(Aggregation$[] results) {
 			for (int i = 0; i < results.length; i++) {
-				if (results$[i] == null) continue;
-				if (result$[i] == null) result$[i] = results$[i];
-				else result$[i].append(results$[i]);
+			    final Aggregation aggregation = results$[i];
+				if (aggregation == null) continue;
+				if (result$[i] == null)
+                    result$[i] = aggregation;
+                else
+                    result$[i].append(aggregation);
 			}
 		}
 
@@ -169,25 +172,6 @@ def type(cube)
 			return components;
 		}
 
-		public static class Context {
-
-		    private final Timetag timetag;
-		    private final Abstract$name+FirstUpperCase cube;
-
-		    public Context(Timetag timetag, Abstract$name+FirstUpperCase cube) {
-		        this.timetag = timetag;
-		        this.cube = cube;
-		    }
-
-		    public Timetag timetag() {
-		        return timetag;
-		    }
-
-		    public Abstract$name+FirstUpperCase cube() {
-		        return cube;
-		    }
-		}
-
 		public static abstract class AbstractFact extends Schema {
 
             public static final int SIZE = $size; // Bytes
@@ -199,7 +183,8 @@ def type(cube)
                 }
             };
 
-            private Context context;
+            private Timetag timetag;
+            private Abstract$name+FirstUpperCase cube;
 
             public AbstractFact(ByteStore store) {
             	super(store);
@@ -214,20 +199,20 @@ def type(cube)
             	return $id();
             }
 
-            public final Timetag timetag() {
-                return context != null ? context.timetag() : null;
-            }
-
             public final Abstract$name+FirstUpperCase cube() {
-                return context != null ? context.cube() : null;
+                return cube;
             }
 
-            public final Context context() {
-                return context;
+            void setCube(Abstract$name+FirstUpperCase cube) {
+                this.cube = cube;
             }
 
-            void setContext(Context context) {
-                this.context = java.util.Objects.requireNonNull(context);
+            public final Timetag timetag() {
+                return timetag;
+            }
+
+            void setTimetag(Timetag timetag) {
+                this.timetag = timetag;
             }
 
             @Override
@@ -318,7 +303,6 @@ def type(cube)
 
     	public static abstract class Loader implements Iterable<Fact> {
 
-            private Abstract$name+FirstUpperCase cube;
 			protected final Datasource datasource;
 			[$split+field]
 
@@ -327,13 +311,9 @@ def type(cube)
 				[$split+assign]
 			}
 
-			void setCube(Abstract$name+FirstUpperCase cube) {
-			    this.cube = java.util.Objects.requireNonNull(cube);
-			}
-
 			@Override
 			public Iterator<Fact> iterator() {
-			    return datasource.leds(cube, $split+name).asJavaStream().iterator();
+			    return datasource.leds($split+name).asJavaStream().iterator();
 			}
 
 			[$split+method]
@@ -358,17 +338,14 @@ def type(cube)
 					return to;
 				}
 
-				private LedStream<Fact> leds(Abstract$name+FirstUpperCase cube, $split+parameter) {
-					return LedStream.merged(StreamSupport.stream(from.iterateTo(to).spliterator(), false).map(t -> {
-					        final Context context = new Context(t, cube);
-					        return on(context[, $split+name]);
-					    }));
+				private LedStream<Fact> leds($split+parameter) {
+					return LedStream.merged(StreamSupport.stream(from.iterateTo(to).spliterator(), false).map(t -> on(t[, $split+name])));
 				}
 
-				private LedStream<Fact> on(Context context[, $split+parameter]) {
-					File file = new File(root + "/$name+FirstUpperCase" [+ "." + $split+name], context.timetag().value() + ".led");
+				private LedStream<Fact> on(Timetag timetag[, $split+parameter]) {
+					File file = new File(root + "/$name+FirstUpperCase" [+ "." + $split+name], timetag.value() + ".led");
 					LedStream<Fact> facts = file.exists() ? new LedReader(file).read(Fact.class) : LedStream.empty(Fact.class);
-					return facts.peek(fact -> fact.setContext(context));
+					return facts.peek(fact -> fact.setTimetag(timetag));
 				}
 			}
 		}
