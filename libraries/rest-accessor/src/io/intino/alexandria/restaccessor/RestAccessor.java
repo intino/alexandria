@@ -47,6 +47,8 @@ public interface RestAccessor {
 
 	RestfulSecureConnection secure(URL url, String token);
 
+	RestfulSecureConnection secure(URL url, String authHeaderName, String token);
+
 	interface RestfulSecureConnection {
 		Response get(String path) throws RestfulFailure;
 

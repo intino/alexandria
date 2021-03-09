@@ -10,8 +10,6 @@ def type(cube)
 
 	public class $name+firstUpperCase extends Schema {
 
-		[$split]
-
 		public static final int SIZE = $size; // Bytes
         public static final UUID SERIAL_UUID = UUID.fromString("$serialUUID");
         public static final SchemaFactory<$name+firstUpperCase> FACTORY = new SchemaFactory<>($name+firstUpperCase.class) {
@@ -46,6 +44,8 @@ def type(cube)
 
 		[$column+setter...[$NL$NL]]
 
+		[$split]
+
 	}
 end
 
@@ -60,7 +60,10 @@ def trigger(split)
 		public abstract String qn();
 
 		public static Split splitByQn(String qn) {
-			return java.util.Arrays.stream(values()).filter(c -> c.qn().equals(qn)).findFirst().orElse(null);
+		    for(Split split : values()) {
+		        if(split.qn().equals(qn)) return split;
+		    }
+		    return null;
 		}
 	}
 end

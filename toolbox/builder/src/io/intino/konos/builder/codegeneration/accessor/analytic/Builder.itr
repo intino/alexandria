@@ -16,18 +16,21 @@ def type(builder)
 	import java.util.List;
 
 	public class $name+snakeCaseToCamelCase+firstUpperCase {
+
+	    private static final int DEFAULT_BUFFER_SIZE = 1_000_000;
+
 		private final File destination;
 		private final File stage;
 		private Session session;
 
 		public $name+snakeCaseToCamelCase+firstUpperCase(File destination) {
-			this(destination, 1_000_000);
+			this(destination, DEFAULT_BUFFER_SIZE);
 		}
 
-		public $name+snakeCaseToCamelCase+firstUpperCase(File destination, int factBufferSise) {
+		public $name+snakeCaseToCamelCase+firstUpperCase(File destination, int factBufferSize) {
 			this.destination = destination;
 			this.stage = new File(destination, "session" + java.util.UUID.randomUUID().toString());
-			this.session = new Session(destination, factBufferSise);
+			this.session = new Session(destination, factBufferSize);
 
 		}
 

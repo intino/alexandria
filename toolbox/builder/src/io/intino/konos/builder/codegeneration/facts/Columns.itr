@@ -4,9 +4,21 @@ def type(column) type(id) trigger(getter)
 	}
 end
 
+def type(column) type(long & unsigned) trigger(getter)
+	public long $name+firstLowerCase() {
+		return bitBuffer.get$aligned~ULong[$bits+nbits]($offset[, $bits]);
+	}
+end
+
 def type(column) type(long) trigger(getter)
 	public long $name+firstLowerCase() {
 		return bitBuffer.get$aligned~Long[$bits+nbits]($offset[, $bits]);
+	}
+end
+
+def type(column) type(int & unsigned) trigger(getter)
+	public long $name+firstLowerCase() {
+		return bitBuffer.get$aligned~UInteger[$bits+nbits]($offset[, $bits]);
 	}
 end
 
@@ -16,9 +28,21 @@ def type(column) type(int) trigger(getter)
 	}
 end
 
+def type(column) type(short & unsigned) trigger(getter)
+	public int $name+firstLowerCase() {
+		return bitBuffer.get$aligned~UShort[$bits+nbits]($offset[, $bits]);
+	}
+end
+
 def type(column) type(short) trigger(getter)
 	public short $name+firstLowerCase() {
 		return bitBuffer.get$aligned~Short[$bits+nbits]($offset[, $bits]);
+	}
+end
+
+def type(column) type(byte & unsigned) trigger(getter)
+	public short $name+firstLowerCase() {
+		return bitBuffer.get$aligned~UByte[$bits+nbits]($offset[, $bits]);
 	}
 end
 
@@ -77,6 +101,25 @@ def type(column & real) trigger(getter)
 end
 
 
+def type(virtualColumn) trigger(abstract)
+    public abstract $type $name+firstLowerCase();
+end
+
+def type(virtualColumn) trigger(implementation)
+    @Override
+    public $type $name+firstLowerCase() {
+        // TODO: compute and return $name+firstLowerCase.
+        return $defaultValue;
+    }
+end
+
+def type(column) type(int & unsigned) trigger(setter)
+	public $owner+firstUpperCase $name+firstLowerCase(int $name+firstLowerCase) {
+		bitBuffer.set$aligned~UInteger[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
+		return this;
+	}
+end
+
 def type(column & int) trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(int $name+firstLowerCase) {
 		bitBuffer.set$aligned~Integer[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
@@ -91,10 +134,16 @@ def type(column & bool) trigger(setter)
 	}
 end
 
-
 def type(column) type(id) trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(long $name+firstLowerCase) {
 		bitBuffer.setAlignedLong(0, $name+firstLowerCase);
+		return this;
+	}
+end
+
+def type(column) type(long & unsigned) trigger(setter)
+	public $owner+firstUpperCase $name+firstLowerCase(long $name+firstLowerCase) {
+		bitBuffer.set$aligned~ULong[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
 		return this;
 	}
 end
@@ -132,6 +181,13 @@ def type(column & categorical) trigger(setter)
 	}
 end
 
+def type(column & integer) type(unsigned) trigger(setter)
+	public $owner+firstUpperCase~Builder $name+firstLowerCase(int $name+firstLowerCase) {
+		bitBuffer.set$aligned~UInteger[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
+		return this;
+	}
+end
+
 
 def type(column & integer) trigger(setter)
 	public $owner+firstUpperCase~Builder $name+firstLowerCase(int $name+firstLowerCase) {
@@ -147,16 +203,23 @@ def type(column & bool) trigger(setter)
 	}
 end
 
-def type(column & real) attribute(size:32) trigger(setter)
-	public $owner+firstUpperCase~Builder $name+firstLowerCase(float $name+firstLowerCase) {
-		bitBuffer.setAlignedReal$size~Bits($offset, $name+firstLowerCase);
+def type(column & float) trigger(setter)
+	public $owner+firstUpperCase $name+firstLowerCase(float $name+firstLowerCase) {
+		bitBuffer.set$aligned~Real$size~Bits($offset, $name+firstLowerCase);
 		return this;
 	}
 end
 
-def type(column & real) trigger(setter)
-	public $owner+firstUpperCase~Builder $name+firstLowerCase($type $name+firstLowerCase) {
-		bitBuffer.setAlignedReal$size~Bits($offset, $name+firstLowerCase);
+def type(column & double) trigger(setter)
+	public $owner+firstUpperCase $name+firstLowerCase($type $name+firstLowerCase) {
+		bitBuffer.set$aligned~Real$size~Bits($offset, $name+firstLowerCase);
+		return this;
+	}
+end
+
+def type(column) type(longInteger & unsigned) trigger(setter)
+	public $owner+firstUpperCase~Builder $name+firstLowerCase(long $name+firstLowerCase) {
+		bitBuffer.set$aligned~ULong[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
 		return this;
 	}
 end
