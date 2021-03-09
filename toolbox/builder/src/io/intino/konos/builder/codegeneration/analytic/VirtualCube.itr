@@ -356,6 +356,7 @@ def type(cube)
 			}
 
 			public static class Datasource {
+
 				private final File root;
 				private final Timetag from;
 				private final Timetag to;
