@@ -125,7 +125,7 @@ def type(cube)
 
 		private int resultsSize() {
 			int accumulator = 1;
-			for (Axis axis : axes) accumulator *= axis.size() + 1;
+			for (Axis axis : axes) accumulator *= axis.getSize() + 1;
 			return accumulator;
 		}
 
@@ -156,7 +156,7 @@ def type(cube)
 		private int indexOf(Axis.Component$[] components) {
 			int index = 0;
 			for (int i = 0; i < components.length; i++) {
-				index *= axes.get(i).size();
+				index *= axes.get(i).getSize();
 				index += components$[i].index();
 			}
 			return index;
@@ -165,7 +165,7 @@ def type(cube)
 		private int indexOf(List<Axis.Component> components) {
         	int index = 0;
         	for (int i = 0; i < components.size(); i++) {
-        		index *= axes.get(i).size();
+        		index *= axes.get(i).getSize();
         		index += components.get(i).index();
         	}
         	return index;
@@ -320,7 +320,7 @@ def type(cube)
 
 			private int totalsSize() {
 				int accumulator = 1;
-				for (Axis axis : axes) accumulator *= axis.size();
+				for (Axis axis : axes) accumulator *= axis.getSize();
 				return accumulator;
 			}
 
@@ -335,7 +335,7 @@ def type(cube)
 			private int indexOf(Axis.Component$[] components) {
 				int index = 0;
 				for (int i = 0; i < components.length; i++) {
-					i *= axes.get(i).size();
+					i *= axes.get(i).getSize();
 					i += components$[i].index();
 				}
 				return index;
@@ -489,8 +489,8 @@ def type(dimension & categorical) trigger(method)
 	}
 
 	public Abstract$cube+FirstUpperCase groupBy$name+firstUpperCase() {
-		axes.add($axis+snakeCaseToCamelCase+firstUpperCase.instance());
-		components.put($axis+snakeCaseToCamelCase+firstUpperCase.instance(), new HashSet<>());
+		axes.add($axis+snakeCaseToCamelCase+firstUpperCase.get());
+		components.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), new HashSet<>());
 		groupByList.add(v -> $name+firstLowerCase~Function(v));
 		return this;
 	}
@@ -511,8 +511,8 @@ def type(dimension & continuous) trigger(method)
 	}
 
 	public Abstract$cube+FirstUpperCase groupBy$name+firstUpperCase() {
-		axes.add($axis+snakeCaseToCamelCase+firstUpperCase.instance());
-		components.put($axis+snakeCaseToCamelCase+firstUpperCase.instance(), new HashSet<>());
+		axes.add($axis+snakeCaseToCamelCase+firstUpperCase.get());
+		components.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), new HashSet<>());
 		groupByList.add(v -> $name+firstLowerCase~Function(v));
 		return this;
 	}

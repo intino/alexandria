@@ -18,10 +18,41 @@ def type(axis)
         	private static final $name+snakeCaseToCamelCase+FirstUpperCase INSTANCE = new $name+snakeCaseToCamelCase+FirstUpperCase();
         }
 
-        public static $name+snakeCaseToCamelCase+FirstUpperCase instance() {
+        // === STATIC METHODS === //
+
+        public static $name+snakeCaseToCamelCase+FirstUpperCase get() {
         	return Singleton.INSTANCE;
         }
 
+		public static String label() {
+			return get().getLabel();
+		}
+
+		public static int size() {
+			return get().getSize();
+		}
+
+	    public static List<Component> components() {
+	    	return get().getComponents();
+	    }
+
+	    public static Stream<Component> stream() {
+	    	return get().toStream();
+	    }
+
+	    public static List<Component> components(Predicate<Component> filter) {
+	    	return get().getComponents(filter);
+	    }
+
+	    public static Component component(int index) {
+	    	return get().getComponent(index);
+	    }
+
+	    public static Component component(String name) {
+	    	return get().getComponent(name);
+	    }
+
+        // === === //
 
 		private final Component$[] components;
 		private final Map<String, Component> componentsByName;
@@ -32,17 +63,17 @@ def type(axis)
 		}
 
         @Override
-		public String label() {
+		public String getLabel() {
 			return "$label";
 		}
 
         @Override
-		public int size() {
+		public int getSize() {
 			return components.length - 1;
 		}
 
         @Override
-	    public List<Component> components() {
+	    public List<Component> getComponents() {
 	    	return new AbstractList<>() {
 	    		@Override
 	    		public Component get(int index) {
@@ -56,21 +87,21 @@ def type(axis)
 	    }
 
         @Override
-	    public Stream<Component> stream() {
+	    public Stream<Component> toStream() {
 	    	return Arrays.stream(components).skip(1);
 	    }
 
-	    public List<Component> components(Predicate<Component> filter) {
+	    public List<Component> getComponents(Predicate<Component> filter) {
 	    	return stream().filter(filter).collect(Collectors.toList());
 	    }
 
         @Override
-	    public Component component(int index) {
+	    public Component getComponent(int index) {
 	    	return (index <= 0 || index > size()) ? NA : components$[index];
 	    }
 
         @Override
-	    public Component component(String name) {
+	    public Component getComponent(String name) {
 	    	if(!componentsByName.containsKey(name))
 	    		componentsByName.put(name, stream().filter(c -> c.label().equals(name)).findAny().orElse(NA));
 	    	return componentsByName.getOrDefault(name, NA);
@@ -103,7 +134,7 @@ def type(axis)
 
             @Override
 			public Axis axis() {
-				return $name+snakeCaseToCamelCase+FirstUpperCase.instance();
+				return $name+snakeCaseToCamelCase+FirstUpperCase.get();
 			}
 
 		    @Override
@@ -181,7 +212,7 @@ def attribute(name:label) trigger(constructor)
 end
 
 def trigger(constructor)
-	l.length > $index ? $name+snakeCaseToCamelCase+firstUpperCase.instance().component(l$[$index]) : $name+snakeCaseToCamelCase+firstUpperCase.NA
+	l.length > $index ? $name+snakeCaseToCamelCase+firstUpperCase.component(l$[$index]) : $name+snakeCaseToCamelCase+firstUpperCase.NA
 end
 
 def trigger(assign)

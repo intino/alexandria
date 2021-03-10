@@ -31,7 +31,6 @@ def type(builder)
 			this.destination = destination;
 			this.stage = new File(destination, "session" + java.util.UUID.randomUUID().toString());
 			this.session = new Session(destination, factBufferSize);
-
 		}
 
 		$cube+put...[$NL$NL]
