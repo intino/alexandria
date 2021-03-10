@@ -23,11 +23,11 @@ def type(interface)
 		};
 
 		default Stream<? extends Component> toStream() {
-		    return components().stream();
+		    return getComponents().stream();
 		}
 
 		default Stream<? extends Component> toParallelStream() {
-		    return stream().parallel();
+		    return toStream().parallel();
 		}
 
 

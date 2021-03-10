@@ -26,24 +26,12 @@ def type(continuous)
         	return get().getSize();
         }
 
-        public static List<Component> components() {
-        	return get().getComponents();
+        public static Component component(String id) {
+        	return get().getComponent(id);
         }
 
-        public static Stream<Component> stream() {
-        	return get().toStream();
-        }
-
-        public static List<Component> components(Predicate<Component> filter) {
-        	return get().getComponents(filter);
-        }
-
-        public static Component component(int index) {
-        	return get().getComponent(index);
-        }
-
-        public static Component component(String name) {
-        	return get().getComponent(name);
+        public static List<Range> ranges() {
+            return get().getRanges();
         }
 
         public static Range rangeOf(final double value) {
@@ -90,7 +78,7 @@ def type(continuous)
 			return ranges$[Integer.parseInt(id)];
 		}
 
-    	public List<Range> ranges() {
+    	public List<Range> getRanges() {
     		return new AbstractList<>() {
     			@Override
     			public Range get(int index) {
