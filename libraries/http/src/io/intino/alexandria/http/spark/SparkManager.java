@@ -146,6 +146,10 @@ public class SparkManager<P extends PushService> {
 		return request.raw().getHeader(name);
 	}
 
+	public String ip() {
+		return request.ip();
+	}
+
 	public String realIp() {
 		HttpServletRequest raw = request.raw();
 		String ip = raw.getHeader("X-Real-IP");
