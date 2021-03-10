@@ -84,7 +84,7 @@ end
 
 def type(column & categorical) trigger(getter)
 	public $type+firstUpperCase.Component $name+firstLowerCase() {
-		return $type+firstUpperCase.instance().component(bitBuffer.getIntegerNBits($offset, $bits));
+		return $type+firstUpperCase.get().component(bitBuffer.getIntegerNBits($offset, $bits));
 	}
 end
 
@@ -171,7 +171,7 @@ end
 
 def type(column & categorical) trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(String $name+firstLowerCase) {
-		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $type+firstUpperCase.instance().component($name+firstLowerCase).index);
+		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $type+firstUpperCase.component($name+firstLowerCase).index);
 		return this;
 	}
 
@@ -260,7 +260,7 @@ end
 
 def type(column & categorical) trigger(setter)
 	public $owner+firstUpperCase~Builder $name+firstLowerCase(String $name+firstLowerCase) {
-		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $type+firstUpperCase.instance().component($name+firstLowerCase).index);
+		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $type+firstUpperCase.component($name+firstLowerCase).index);
 		return this;
 	}
 

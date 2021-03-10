@@ -115,7 +115,7 @@ def type(cube)
 
 		private int resultsSize() {
 			int accumulator = 1;
-			for (Axis axis : axes) accumulator *= axis.size() + 1;
+			for (Axis axis : axes) accumulator *= axis.getSize() + 1;
 			return accumulator;
 		}
 
@@ -150,7 +150,7 @@ def type(cube)
 		private int indexOf(Axis.Component$[] components) {
 			int index = 0;
 			for (int i = 0; i < components.length; i++) {
-				index *= axes.get(i).size();
+				index *= axes.get(i).getSize();
 				index += components$[i].index();
 			}
 			return index;
@@ -160,7 +160,7 @@ def type(cube)
         	int index = 0;
         	int i = 0;
         	for (Axis.Component component : components) {
-        		index *= axes.get(i++).size();
+        		index *= axes.get(i++).getSize();
         		index += component.index();
         	}
         	return index;
@@ -304,6 +304,14 @@ def type(cube)
 			}
 
 			$indicator+getter...[$NL$NL]
+
+			@Override
+			public String toString() {
+			    return "$name+FirstUpperCase.Aggregation{"
+			        + "aggregationCount=" + aggregationCount
+			        $indicator+toString...[$NL]
+			        + "}";
+			}
 		}
 
     	public static abstract class Loader implements Iterable<Fact> {
@@ -430,8 +438,8 @@ def type(dimension & categorical) trigger(method)
 	}
 
 	public Abstract$cube+FirstUpperCase groupBy$name+firstUpperCase() {
-		axes.add($axis+snakeCaseToCamelCase+firstUpperCase.instance());
-		components.put($axis+snakeCaseToCamelCase+firstUpperCase.instance(), new HashSet<>());
+		axes.add($axis+snakeCaseToCamelCase+firstUpperCase.get());
+		components.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), new HashSet<>());
 		groupByList.add(Abstract$cube+FirstUpperCase::$name+firstLowerCase~Function);
 		return this;
 	}
@@ -452,8 +460,8 @@ def type(dimension & continuous) trigger(method)
 	}
 
 	public Abstract$cube+FirstUpperCase groupBy$name+firstUpperCase() {
-		axes.add($axis+snakeCaseToCamelCase+firstUpperCase.instance());
-		components.put($axis+snakeCaseToCamelCase+firstUpperCase.instance(), new HashSet<>());
+		axes.add($axis+snakeCaseToCamelCase+firstUpperCase.get());
+		components.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), new HashSet<>());
 		groupByList.add(Abstract$cube+FirstUpperCase::$name+firstLowerCase~Function);
 		return this;
 	}
@@ -475,8 +483,8 @@ def type(customDimension & continuous) trigger(method)
 	}
 
 	public Abstract$cube+firstUpperCase groupBy$name+firstUpperCase() {
-		axes.add($axis+snakeCaseToCamelCase.instance());
-		components.put($axis+snakeCaseToCamelCase.instance(), new HashSet<>());
+		axes.add($axis+snakeCaseToCamelCase.get);
+		components.put($axis+snakeCaseToCamelCase.get, new HashSet<>());
 		groupByList.add(Abstract$cube+firstUpperCase::$name+firstLowerCase~Function);
 		return this;
 	}
@@ -484,6 +492,10 @@ def type(customDimension & continuous) trigger(method)
 	public static boolean $name+firstLowerCase~Filter(Fact fact, Set<$axis+snakeCaseToCamelCase.Range> rangos) {
 		return rangos.contains($cube+firstUpperCase.$name+firstLowerCase~Function(fact));
 	}
+end
+
+def type(indicator) trigger(toString)
+	 + ", $name+firstLowerCase=" + $name+firstLowerCase~()
 end
 
 def type(indicator) trigger(sum)

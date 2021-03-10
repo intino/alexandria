@@ -8,25 +8,25 @@ def type(interface)
 
     public interface Axis {
 
-		String label();
+		String getLabel();
 
-		int size();
+		int getSize();
 
-		List<? extends Component> components();
+		List<? extends Component> getComponents();
 
-		Component component(int index);
+		Component getComponent(int index);
 
-		Component component(String id);
+		Component getComponent(String id);
 
 		default boolean isDynamic() {
 			return false;
 		};
 
-		default Stream<? extends Component> stream() {
+		default Stream<? extends Component> toStream() {
 		    return components().stream();
 		}
 
-		default Stream<? extends Component> parallelStream() {
+		default Stream<? extends Component> toParallelStream() {
 		    return stream().parallel();
 		}
 

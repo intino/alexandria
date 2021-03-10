@@ -12,39 +12,39 @@ def type(continuous)
             private static final $name+snakeCaseToCamelCase+FirstUpperCase INSTANCE = new $name+snakeCaseToCamelCase+FirstUpperCase();
         }
 
-		public static $name+snakeCaseToCamelCase+FirstUpperCase instance() {
-			return Singleton.INSTANCE;
-		}
+		// === STATIC METHODS === //
 
-    	private final Range$[] ranges = new Range$[$rangeSize];
+        public static $name+snakeCaseToCamelCase+FirstUpperCase get() {
+        	return Singleton.INSTANCE;
+        }
 
-    	private $name+snakeCaseToCamelCase+FirstUpperCase() {
-    		$range+init...[$NL]
-    	}
+        public static String label() {
+        	return get().getLabel();
+        }
 
-        @Override
-    	public String label() {
-    		return "$label";
-    	}
+        public static int size() {
+        	return get().getSize();
+        }
 
-        @Override
-		public Component component(String id) {
-			return ranges$[Integer.parseInt(id)];
-		}
+        public static List<Component> components() {
+        	return get().getComponents();
+        }
 
-    	public List<Range> ranges() {
-    		return new AbstractList<>() {
-    			@Override
-    			public Range get(int index) {
-    				return ranges$[index];
-    			}
+        public static Stream<Component> stream() {
+        	return get().toStream();
+        }
 
-    			@Override
-    			public int size() {
-    				return ranges.length;
-    			}
-    		};
-    	}
+        public static List<Component> components(Predicate<Component> filter) {
+        	return get().getComponents(filter);
+        }
+
+        public static Component component(int index) {
+        	return get().getComponent(index);
+        }
+
+        public static Component component(String name) {
+        	return get().getComponent(name);
+        }
 
         public static Range rangeOf(final double value) {
             final Range$[] ranges = Singleton.INSTANCE.ranges;
@@ -72,23 +72,55 @@ def type(continuous)
         	return -(low + 1);
         }
 
+        // === === //
+
+    	private final Range$[] ranges = new Range$[$rangeSize];
+
+    	private $name+snakeCaseToCamelCase+FirstUpperCase() {
+    		$range+init...[$NL]
+    	}
+
+        @Override
+    	public String getLabel() {
+    		return "$label";
+    	}
+
+        @Override
+		public Component getComponent(String id) {
+			return ranges$[Integer.parseInt(id)];
+		}
+
+    	public List<Range> ranges() {
+    		return new AbstractList<>() {
+    			@Override
+    			public Range get(int index) {
+    				return ranges$[index];
+    			}
+
+    			@Override
+    			public int size() {
+    				return ranges.length;
+    			}
+    		};
+    	}
+
     	@Override
-		public Component component(int index) {
+		public Component getComponent(int index) {
 			return ranges$[index];
 		}
 
 		@Override
-		public int size() {
+		public int getSize() {
 			return ranges().size();
 		}
 
 		@Override
-		public List<Range> components() {
+		public List<Range> getComponents() {
 			return ranges();
 		}
 
 		@Override
-		public Stream<Range> stream() {
+		public Stream<Range> toStream() {
 		    return Arrays.stream(ranges);
 		}
 
