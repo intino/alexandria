@@ -54,6 +54,7 @@ def type(notification)
 		private io.intino.alexandria.http.spark.SparkContext context() {
 			io.intino.alexandria.http.spark.SparkContext context = new io.intino.alexandria.http.spark.SparkContext(manager);
 			[$authenticationValidator+put]
+    		context.put("ip", manager.ip());
 			return context;
 		}
 	}
@@ -102,6 +103,7 @@ def type(resource)
 		private io.intino.alexandria.http.spark.SparkContext context() {
 			io.intino.alexandria.http.spark.SparkContext context = new io.intino.alexandria.http.spark.SparkContext(manager);
 			$authenticationValidator+put
+    		context.put("ip", manager.ip());
 			return context;
 		}
 	}
