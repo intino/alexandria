@@ -75,16 +75,16 @@ def type(builder)
 			public Session(File root, int ledBufferSize) {
 				this.root = root;
 				this.ledBufferSize = ledBufferSize;
-				this.builders = new java.util.HashMap();
+				this.builders = new java.util.HashMap<>();
 			}
 
-			public <T extends io.intino.alexandria.led.Schema> void put(String tank, Timetag timetag, Class<T> schemaClass, java.util.stream.Stream<Consumer<T>> stream) {
+			public <T extends Schema> void put(String tank, Timetag timetag, Class<T> schemaClass, java.util.stream.Stream<Consumer<T>> stream) {
 				LedStream.Builder<T> builder = this.builder(Fingerprint.of(tank, timetag), schemaClass);
 				Objects.requireNonNull(builder);
 				stream.forEach(builder::append);
 			}
 
-			public <T extends io.intino.alexandria.led.Schema> void put(String tank, Timetag timetag, Class<T> schemaClass, Consumer<T> transaction) {
+			public <T extends Schema> void put(String tank, Timetag timetag, Class<T> schemaClass, Consumer<T> transaction) {
 				LedStream.Builder<T> builder = this.builder(Fingerprint.of(tank, timetag), schemaClass);
 				builder.append(transaction);
 			}
