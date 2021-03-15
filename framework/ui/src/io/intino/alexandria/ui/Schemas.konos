@@ -14,6 +14,7 @@ Schema DynamicTableColumn
 	Attribute operator as Word("Sum" "Average")
 	Attribute metric as Text
 	Attribute countDecimals as Integer
+	Attribute color as Text
 
 Schema DynamicTableRow
 	Attribute label as Text
