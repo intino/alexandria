@@ -5,6 +5,7 @@ public class Column {
 	private Operator operator;
 	private String metric = "";
 	private int countDecimals = 0;
+	private String color = "transparent";
 
 	public enum Operator { Sum, Average }
 
@@ -46,6 +47,15 @@ public class Column {
 
 	public Column countDecimals(int countDecimals) {
 		this.countDecimals = countDecimals;
+		return this;
+	}
+
+	public String color() {
+		return color;
+	}
+
+	public Column color(String color) {
+		this.color = color;
 		return this;
 	}
 }

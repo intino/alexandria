@@ -248,6 +248,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         result.label = "Total";
 		result.color = section.color;
 		result.backgroundColor = section.backgroundColor;
+		result.borderColor = section.borderColor;
 		result.fontSize = section.fontSize;
 		result.columns = section.columns;
 		result.rows = [];
@@ -261,7 +262,9 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         for (let i=0; i<section.sections.length; i++) {
             const childSection = section.sections[i];
             const childTotalSection = { label: childSection.label, color: childSection.color,
-                                        backgroundColor: childSection.backgroundColor, fontSize: childSection.fontSize,
+                                        backgroundColor: childSection.backgroundColor,
+                                        borderColor: childSection.borderColor,
+                                        fontSize: childSection.fontSize,
                                         columns: childSection.columns, rows: [], sections: [] };
             totalSection.sections.push(childTotalSection);
             this.copySections(childTotalSection, childSection);
@@ -384,18 +387,18 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const isMainView = this._isMainView();
         const colSpan = this._isMainView() ? columnCount : (this.isLeafSection(section) && index == this.state.column.index ? 1 : 0);
         const color = section.color;
-        const backgroundColor = section.backgroundColor;
-        const fontSize = section.fontSize + "pt";
         const textAlign = section.textAlign != null ? section.textAlign : "center";
         const selectable = section.selectable;
         const orderBy = this.state.orderBy != null ? this.state.orderBy.label : null;
         const order = this.state.order;
         const className = isMainView || this.state.sections[0] == mainSection ? classNames(classes.rowCell) : classNames(classes.rowCell, classes.detailRowCell);
         if (!isMainView && selectable && index != this.state.column.index) return null;
+        const style = {backgroundColor:section.backgroundColor,fontSize:section.fontSize + "pt",textAlign:textAlign,minWidth:'170px'};
+        if (section.borderColor !== "transparent") style.borderBottom = "4px solid " + section.borderColor;
         return (
             <TableCell className={className}
                        colSpan={colSpan}
-                       style={{backgroundColor:backgroundColor,fontSize:fontSize,textAlign:textAlign,minWidth:'170px'}}
+                       style={style}
                        align='right'
                        key={index}>
                 {(!selectable || (!isMainView && selectable)) &&
@@ -733,7 +736,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         for (var i=0; i<item.sections.length; i++) this.registerItemInArray(item.sections[i], itemsArray, level+1);
         if (item.columns == null) item.columns = [];
         for (var i=0; i<item.columns.length; i++) {
-            item.columns[i].color = "black";
+            item.columns[i].borderColor = item.columns[i].color;
             item.columns[i].selectable = true;
             item.columns[i].backgroundColor = "transparent";
             item.columns[i].fontSize = 11;

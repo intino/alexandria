@@ -23,7 +23,7 @@ def type(cube)
 			super(new ByteBufferStore(SIZE));
 		}
 
-		public $name+firstUpperCase(io.intino.alexandria.led.buffers.store.ByteStore store) {
+		public $name+firstUpperCase(ByteStore store) {
 			super(store);
         }
 

@@ -81,7 +81,7 @@ def type(axis)
 	    		}
 	    		@Override
 	    		public int size() {
-	    			return $name+snakeCaseToCamelCase+FirstUpperCase~.this.size();
+	    			return $name+snakeCaseToCamelCase+FirstUpperCase~.size();
 	    		}
 	    	};
 	    }
