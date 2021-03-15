@@ -127,6 +127,27 @@ def type(column & int) trigger(setter)
 	}
 end
 
+def type(column & byte) trigger(setter)
+	public $owner+firstUpperCase $name+firstLowerCase(byte $name+firstLowerCase) {
+		bitBuffer.set$aligned~Byte[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
+		return this;
+	}
+end
+
+def type(column & byte & unsigned) trigger(setter)
+	public $owner+firstUpperCase $name+firstLowerCase(byte $name+firstLowerCase) {
+		bitBuffer.set$aligned~UByte[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
+		return this;
+	}
+end
+
+def type(column & short & unsigned) trigger(setter)
+	public $owner+firstUpperCase $name+firstLowerCase(short $name+firstLowerCase) {
+		bitBuffer.set$aligned~UShort[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
+		return this;
+	}
+end
+
 def type(column & bool) trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(boolean $name+firstLowerCase) {
 		bitBuffer.setBoolean($offset, $name+firstLowerCase);
