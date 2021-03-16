@@ -92,7 +92,9 @@ def type(cube)
 
 	    @Override
         public Iterator<Aggregation> iterator() {
-            return result == null ? Stream.empty() : Arrays.stream(result).filter(java.util.Objects::nonNull).iterator();
+            return result == null
+                ? Stream.<Aggregation>empty().iterator()
+                : Arrays.stream(result).filter(java.util.Objects::nonNull).iterator();
         }
 
     	public Iterator<Fact> detail() {
