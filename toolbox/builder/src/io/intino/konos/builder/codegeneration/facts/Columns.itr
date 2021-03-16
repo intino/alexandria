@@ -84,7 +84,7 @@ end
 
 def type(column & categorical) trigger(getter)
 	public $type+firstUpperCase.Component $name+firstLowerCase() {
-		return $type+firstUpperCase.get().component(bitBuffer.getIntegerNBits($offset, $bits));
+		return $type+firstUpperCase.component(bitBuffer.getIntegerNBits($offset, $bits));
 	}
 end
 
