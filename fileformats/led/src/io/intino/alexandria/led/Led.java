@@ -1,6 +1,5 @@
 package io.intino.alexandria.led;
 
-import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.allocators.indexed.IndexedAllocator;
 import io.intino.alexandria.led.leds.IteratorLedStream;
 import io.intino.alexandria.led.leds.ListLed;
@@ -63,6 +62,7 @@ public interface Led<T extends Schema> extends Iterable<T> {
 	}
 
     interface Builder<T extends Schema> {
+
 		Class<T> schemaClass();
 
 		int schemaSize();

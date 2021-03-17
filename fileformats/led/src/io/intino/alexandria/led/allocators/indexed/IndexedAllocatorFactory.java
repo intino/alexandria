@@ -33,7 +33,6 @@ public interface IndexedAllocatorFactory<T extends Schema> {
             byte[] inputBuffer = new byte[LedLibraryConfig.DEFAULT_BUFFER_SIZE.get()];
 
             int bytesRead;
-
             while((bytesRead = inputStream.read(inputBuffer)) > 0) {
                 buffer.put(inputBuffer, 0, bytesRead);
             }

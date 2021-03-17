@@ -2,13 +2,16 @@ package io.intino.alexandria.led;
 
 import io.intino.alexandria.led.allocators.indexed.IndexedAllocator;
 import io.intino.alexandria.led.allocators.indexed.ListAllocator;
+import io.intino.alexandria.led.leds.ArrayLed;
 import io.intino.alexandria.led.leds.ListLed;
 
 import java.util.AbstractList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
+import static java.lang.System.arraycopy;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -23,18 +26,20 @@ public class LedBuilder<T extends Schema> implements Led.Builder<T> {
 
 	private final Class<T> schemaClass;
 	private final IndexedAllocator<T> allocator;
+	private final AtomicBoolean closed;
 	private T[] sortedTransactions;
 	private int size;
 
 	public LedBuilder(Class<T> schemaClass) {
-		this(schemaClass, createBuilderDefaultAllocator(Schema.sizeOf(schemaClass), schemaClass));
+		this(schemaClass, allocator(Schema.sizeOf(schemaClass), schemaClass));
 	}
 
 	@SuppressWarnings("unchecked")
 	public LedBuilder(Class<T> schemaClass, IndexedAllocator<T> allocator) {
 		this.schemaClass = requireNonNull(schemaClass);
 		this.allocator = requireNonNull(allocator);
-		sortedTransactions = (T[]) new Schema[DEFAULT_INITIAL_CAPACITY];
+		this.sortedTransactions = (T[]) new Schema[DEFAULT_INITIAL_CAPACITY];
+		this.closed = new AtomicBoolean(false);
 	}
 
 	@Override
@@ -49,6 +54,7 @@ public class LedBuilder<T extends Schema> implements Led.Builder<T> {
 
 	@Override
 	public Led.Builder<T> create(Consumer<T> initializer) {
+		if(closed.get()) throw new IllegalStateException("LedBuilder is closed because build was called.");
 		T schema = allocator.malloc();
 		initializer.accept(schema);
 		putInSortedList(schema);
@@ -56,18 +62,20 @@ public class LedBuilder<T extends Schema> implements Led.Builder<T> {
 	}
 
 	private void putInSortedList(T schema) {
-		if(size == sortedTransactions.length) {
+		if(size == sortedTransactions.length)
 			grow();
-		} else if(size == 0) {
-			sortedTransactions[0] = schema;
-		} else {
-			int index = Arrays.binarySearch(sortedTransactions, 0, size, schema);
-			if(index < 0) {
-				index = -index + 1;
-			}
-			System.arraycopy(sortedTransactions, index, sortedTransactions, index + 1, ++size - index);
-			sortedTransactions[index] = schema;
-		}
+
+		if(size == 0)
+			sortedTransactions[size++] = schema;
+		else
+			insertSorted(schema);
+	}
+
+	private void insertSorted(T schema) {
+		int index = Arrays.binarySearch(sortedTransactions, 0, size, schema);
+		if(index < 0) index = -index + 1;
+		arraycopy(sortedTransactions, index, sortedTransactions, index + 1, ++size - index);
+		sortedTransactions[index] = schema;
 	}
 
 	private void grow() {
@@ -75,27 +83,11 @@ public class LedBuilder<T extends Schema> implements Led.Builder<T> {
 	}
 
 	public Led<T> build() {
-		return new ListLed<>(schemaClass, getList());
+		if(!closed.compareAndSet(false, true)) throw new IllegalStateException("This LedBuilder has already been closed");
+		return new ArrayLed<>(schemaClass, sortedTransactions, size);
 	}
 
-	private List<T> getList() {
-		return new AbstractList<>() {
-			@Override
-			public T get(int index) {
-				if(index >= size) {
-					throw new IndexOutOfBoundsException(index + " >= " + size);
-				}
-				return sortedTransactions[index];
-			}
-
-			@Override
-			public int size() {
-				return size;
-			}
-		};
-	}
-
-	private static <T extends Schema> IndexedAllocator<T> createBuilderDefaultAllocator(int schemaSize, Class<T> schemaClass) {
+	private static <T extends Schema> IndexedAllocator<T> allocator(int schemaSize, Class<T> schemaClass) {
 		return new ListAllocator<>(DEFAULT_INITIAL_CAPACITY, schemaSize, schemaClass);
 	}
 }
