@@ -61,7 +61,7 @@ public final class BitUtils {
 	}
 
 	public static int byteIndex(int bitIndex) {
-		return bitIndex >> 3;
+		return bitIndex / Byte.SIZE;
 	}
 
 	public static int bitIndex(int byteIndex) {
