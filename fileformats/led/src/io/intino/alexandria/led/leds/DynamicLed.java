@@ -5,6 +5,9 @@ import io.intino.alexandria.led.Schema;
 import io.intino.alexandria.led.allocators.indexed.ListAllocator;
 import io.intino.alexandria.led.LedLibraryConfig;
 
+import java.util.AbstractList;
+import java.util.List;
+
 public class DynamicLed<T extends Schema> implements Led<T> {
 
 	private final ListAllocator<T> allocator;
@@ -40,5 +43,19 @@ public class DynamicLed<T extends Schema> implements Led<T> {
 	@Override
 	public Class<T> schemaClass() {
 		return allocator.schemaClass();
+	}
+
+	public List<T> asList() {
+		return new AbstractList<T>() {
+			@Override
+			public T get(int index) {
+				return schema(index);
+			}
+
+			@Override
+			public int size() {
+				return (int) DynamicLed.this.size();
+			}
+		};
 	}
 }
