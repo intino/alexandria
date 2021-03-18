@@ -6,6 +6,7 @@ import io.intino.alexandria.led.leds.ArrayLed;
 import io.intino.alexandria.led.leds.ListLed;
 
 import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -62,7 +63,7 @@ public class LedBuilder<T extends Schema> implements Led.Builder<T> {
 	}
 
 	private void putInSortedList(T schema) {
-		if(size == sortedTransactions.length)
+		if(size >= sortedTransactions.length)
 			grow();
 
 		if(size == 0)
@@ -73,9 +74,10 @@ public class LedBuilder<T extends Schema> implements Led.Builder<T> {
 
 	private void insertSorted(T schema) {
 		int index = Arrays.binarySearch(sortedTransactions, 0, size, schema);
-		if(index < 0) index = -index + 1;
-		arraycopy(sortedTransactions, index, sortedTransactions, index + 1, ++size - index);
+		if(index < 0) index = -index - 1;
+		arraycopy(sortedTransactions, index, sortedTransactions, index + 1, size - index);
 		sortedTransactions[index] = schema;
+		++size;
 	}
 
 	private void grow() {
