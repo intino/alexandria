@@ -11,7 +11,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.Assert.*;
-@Ignore
+
+
 public class LedStreamBuilderTest {
 
     public static final int NUM_ELEMENTS = 5_000_000;

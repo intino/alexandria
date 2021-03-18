@@ -6,6 +6,7 @@ import io.intino.alexandria.led.UnsortedLedStreamBuilder;
 import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -16,6 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+@Ignore
 public class UnsortedLedStreamBuilderMultithreading {
 
     private static final int NUM_THREADS = 8;

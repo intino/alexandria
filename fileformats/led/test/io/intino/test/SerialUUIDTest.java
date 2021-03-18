@@ -5,7 +5,10 @@ import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.util.SchemaSerialBuilder;
+import org.apache.commons.io.FileUtils;
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
@@ -15,10 +18,21 @@ import java.util.stream.Stream;
 public class SerialUUIDTest {
 
     private static final File FOLDER = new File("temp/uuid");
-    static {
+    private static final String FILENAME = "contratos-uuid.led";
+
+    @BeforeClass
+    public static void beforeClass() {
         FOLDER.mkdirs();
     }
-    private static final String FILENAME = "contratos-uuid.led";
+
+    @AfterClass
+    public static void afterClass() {
+        try {
+            new File(FOLDER, FILENAME).delete();
+            FileUtils.deleteDirectory(FOLDER);
+        } catch (Exception ignored) {
+        }
+    }
 
     @Test
     public void testUUIDBuilderNotEquals() {

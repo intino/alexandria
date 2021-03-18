@@ -23,12 +23,12 @@ import static java.util.Objects.requireNonNull;
 
 public interface LedStream<T extends Schema> extends Iterator<T>, AutoCloseable {
 
-	static LedStream<? extends Schema> empty() {
-		return IteratorLedStream.fromStream(GenericSchema.class, Stream.empty());
+	static <T extends Schema> LedStream<T> empty(Class<T> schemaClass) {
+		return empty(schemaClass, Schema.sizeOf(schemaClass));
 	}
 
-	static <T extends Schema> LedStream<T> empty(Class<T> schemaClass) {
-		return IteratorLedStream.fromStream(schemaClass, Stream.empty());
+	static <T extends Schema> LedStream<T> empty(Class<T> schemaClass, int schemaSize) {
+		return IteratorLedStream.fromStream(schemaClass, schemaSize, Stream.empty());
 	}
 
 	static<T extends Schema> LedStream<T> fromLed(Led<T> led) {
@@ -207,6 +207,10 @@ public interface LedStream<T extends Schema> extends Iterator<T>, AutoCloseable 
 	}
 
 	Class<T> schemaClass();
+
+	default UUID serialUUID() {
+		return Schema.getSerialUUID(schemaClass());
+	}
 
 	abstract class LedStreamOperation<T extends Schema, R extends Schema> implements LedStream<R> {
 

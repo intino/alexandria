@@ -3,9 +3,7 @@ package io.intino.alexandria.led;
 import io.intino.alexandria.led.util.sorting.LedExternalMergeSort;
 import io.intino.alexandria.logger.Logger;
 import io.intino.test.schemas.TestSchema;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.File;
 import java.util.Random;
@@ -13,80 +11,92 @@ import java.util.Random;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@Ignore
 public class TestLedExternalMergeSort {
 
     private static final int NUM_SCHEMAS_IN_MEMORY = 100_000;
 
-    private final File srcFile = new File("temp/unsorted_led.led");
-    private final File destFile = new File("temp/sorted_led.led");
+    private static final File SRC = new File("temp/unsorted_led.led");
+    private static final File DST = new File("temp/sorted_led.led");
+
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        SRC.delete();
+        DST.delete();
+    }
 
     @Before
     public void setUp() throws Exception {
-        srcFile.delete();
-        destFile.delete();
+        SRC.getParentFile().mkdirs();
+        DST.getParentFile().mkdirs();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        SRC.delete();
+        DST.delete();
     }
 
     @Test
     public void testEmpty() {
-        createLed(srcFile, 0);
+        createLed(SRC, 0);
         mergeSort();
     }
 
     @Test
     public void testOne() {
-        createLed(srcFile, 1);
+        createLed(SRC, 1);
         mergeSort();
     }
 
     @Test
     public void testFew() {
-        createLed(srcFile, 11);
+        createLed(SRC, 11);
         mergeSort();
     }
 
     @Test
     public void testNormal() {
-        createLed(srcFile, 1_501_017);
+        createLed(SRC, 2_501_017);
         mergeSort();
     }
 
+    @Ignore
     @Test
     public void testLarge() {
-        createLed(srcFile, 10_486_926);
+        createLed(SRC, 10_486_926);
         mergeSort();
     }
 
     @Ignore
     @Test
     public void testSuperLarge() {
-        createLed(srcFile, 50_000_001);
+        createLed(SRC, 50_000_001);
         mergeSort();
     }
 
     @Ignore
     @Test
     public void testMegaLarge() {
-        createLed(srcFile, 100_000_001);
+        createLed(SRC, 100_000_001);
         mergeSort();
     }
 
     private void mergeSort() {
-        System.out.println(">> Testing " + srcFile + "(" +
-                srcFile.length() / 1024.0 / 1024.0 + " MB)...");
-        LedHeader sourceHeader = LedHeader.from(srcFile);
-        new LedExternalMergeSort(srcFile, destFile)
+        System.out.println(">> Testing " + SRC + "(" +
+                SRC.length() / 1024.0 / 1024.0 + " MB)...");
+        LedHeader sourceHeader = LedHeader.from(SRC);
+        new LedExternalMergeSort(SRC, DST)
                 .numTransactionsInMemory(NUM_SCHEMAS_IN_MEMORY)
                 .checkChunkSorting(true)
                 .sort();
         System.out.println("	>> Validating result led...");
-        LedHeader destHeader = LedHeader.from(destFile);
+        LedHeader destHeader = LedHeader.from(DST);
         assertEquals("Sorting did not maintain of information: " + sourceHeader.elementCount() + " != " + destHeader.elementCount(),
                 sourceHeader.elementCount(), destHeader.elementCount());
 
         System.out.println(">> Checking sorting...");
 
-        try(LedStream<TestSchema> ledStream = new LedReader(destFile).read(TestSchema.class)) {
+        try(LedStream<TestSchema> ledStream = new LedReader(DST).read(TestSchema.class)) {
 
             long lastId = Long.MIN_VALUE;
 
