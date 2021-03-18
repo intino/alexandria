@@ -1,24 +1,24 @@
 def.file
-G:/MonentiaDev/intino-cubes-sandbox/src/Analytics.konos#true
+C:/Users/naits/Desktop/MonentiaDev/cubes-sandbox/src/Analytics.konos#true
 
 project
 cubes-sandbox
 module
 cubes-sandbox
 outputpath
-G:/MonentiaDev/intino-cubes-sandbox/gen
+C:/Users/naits/Desktop/MonentiaDev/cubes-sandbox/gen
 final_outputpath
-G:/MonentiaDev/intino-cubes-sandbox/out/production/cubes-sandbox/
+C:/Users/naits/Desktop/MonentiaDev/cubes-sandbox/out/production/cubes-sandbox/
 res.path
-G:/MonentiaDev/intino-cubes-sandbox/res
+C:/Users/naits/Desktop/MonentiaDev/cubes-sandbox/res
 intino.project.path
-G:/MonentiaDev/intino-cubes-sandbox/.intino
+C:/Users/naits/Desktop/MonentiaDev/cubes-sandbox/.intino
 project.path
-G:/MonentiaDev/intino-cubes-sandbox/
+C:/Users/naits/Desktop/MonentiaDev/cubes-sandbox/
 module.path
-G:/MonentiaDev/intino-cubes-sandbox/
+C:/Users/naits/Desktop/MonentiaDev/cubes-sandbox/
 src.path
-G:/MonentiaDev/intino-cubes-sandbox/src
+C:/Users/naits/Desktop/MonentiaDev/cubes-sandbox/src
 
 groupId
 org.example
