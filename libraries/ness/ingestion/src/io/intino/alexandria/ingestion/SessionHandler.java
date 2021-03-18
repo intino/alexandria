@@ -40,6 +40,10 @@ public class SessionHandler {
 		return new EventSession(new PrivateProvider());
 	}
 
+	public EventSession createEventSession(int autoFlushSize) {
+		return new EventSession(new PrivateProvider(), autoFlushSize);
+	}
+
 	public void pushTo(URI uri) {
 		//TODO
 	}
