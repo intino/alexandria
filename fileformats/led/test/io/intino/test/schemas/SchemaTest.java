@@ -21,7 +21,6 @@ import static java.nio.ByteOrder.BIG_ENDIAN;
 import static java.nio.ByteOrder.LITTLE_ENDIAN;
 import static org.junit.Assert.assertEquals;
 
-@Ignore
 @RunWith(Parameterized.class)
 public class SchemaTest {
 
@@ -164,8 +163,7 @@ public class SchemaTest {
 		assertEquals(d, schema.d());
 	}
 
-	@Ignore
-	@Test(expected = UnsupportedOperationException.class)
+	@Test//(expected = UnsupportedOperationException.class)
 	public void e() {
 		long e = Math.abs(new Random().nextInt());//maxPossibleNumber(E_BITS) / 2;
 		schema.e(e);

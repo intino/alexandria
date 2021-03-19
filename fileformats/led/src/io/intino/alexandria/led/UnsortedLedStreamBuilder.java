@@ -77,10 +77,8 @@ public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Bui
 
     private void setupFile() {
         try {
-            Files.createFile(tempLedFile);
-            if(keepFileChannelOpen) {
-                fileChannel = openFileChannel();
-            }
+            if(!Files.exists(tempLedFile)) Files.createFile(tempLedFile);
+            if(keepFileChannelOpen) fileChannel = openFileChannel();
             reserveHeader();
         } catch(Exception e) {
             Logger.error(e);
@@ -184,8 +182,7 @@ public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Bui
         header.elementSize(schemaSize);
         header.uuid(serialUUID);
         try(RandomAccessFile file = new RandomAccessFile(tempLedFile.toFile(), "rw")) {
-            file.writeLong(header.elementCount());
-            file.writeInt(header.elementSize());
+            LedHeader.write(header, file);
         } catch (IOException e) {
             Logger.error(e);
             throw new RuntimeException(e);

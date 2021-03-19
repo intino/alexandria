@@ -5,6 +5,11 @@ import io.intino.alexandria.led.Schema;
 
 public class ArrayLed<T extends Schema> implements Led<T> {
 
+    public static <S extends Schema> ArrayLed<S> fromIndexedLed(IndexedLed<S> led, S[] array) {
+        return new ArrayLed<>(led.schemaClass(), led.asList().toArray(array));
+    }
+
+
     private final Class<T> schemaClass;
     private final T[] schemas;
     private final int schemaSize;

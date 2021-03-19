@@ -143,6 +143,7 @@ def type(cube)
 		private Aggregation$[] results(Iterable<Fact> facts) {
 			Aggregation$[] result = new Aggregation$[resultsSize()];
 			for (Fact fact : facts) {
+			    fact.setCube(this);
 				if (!check(fact)) continue;
 				Axis.Component$[] components = componentsOf(fact);
 				int index = indexOf(components);
@@ -192,8 +193,26 @@ def type(cube)
 
 			[$cube+fieldFact...[$NL]]
 
+            private Abstract$name+firstUpperCase cube;
+
 			public Fact($cube+factParameter...[, ]) {
 				$cube+assignFact...[$NL]
+			}
+
+			public $mainCube+firstUpperCase.Fact $mainCube+firstLowerCase() {
+			    return $mainCube+firstLowerCase;
+			}
+
+			public $joinCube+firstUpperCase.Fact $joinCube+firstLowerCase() {
+                return $joinCube+firstLowerCase;
+            }
+
+			public Abstract$name+firstUpperCase cube() {
+			    return cube;
+			}
+
+			public Timetag timetag() {
+			    return $joinCube+firstLowerCase.timetag();
 			}
 
 			public long id() {
@@ -201,6 +220,10 @@ def type(cube)
 			}
 
 			[$column+factGetter...[$NL$NL]]
+
+			void setCube(Abstract$name+firstUpperCase cube) {
+			    this.cube = cube;
+			}
 
 			public int size() {
 				return $cube+size...[ + ];

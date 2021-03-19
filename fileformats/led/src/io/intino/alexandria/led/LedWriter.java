@@ -160,7 +160,7 @@ public class LedWriter {
 			Logger.error(e);
 		}
 		if(destinationFile != null)
-			overrideHeader(elementCount, ledStream.schemaSize(), Schema.getSerialUUID(ledStream.schemaClass()));
+			overrideHeader(elementCount, ledStream.schemaSize(), ledStream.serialUUID());
 	}
 
 	private long writeLedStream(LedStream<? extends Schema> ledStream, long elementCount, OutputStream outputStream) throws IOException {
@@ -186,7 +186,7 @@ public class LedWriter {
 
 	private void reserveHeader(LedStream<? extends Schema> ledStream, OutputStream fos) throws IOException {
 		LedHeader header = new LedHeader();
-		header.elementCount(LedHeader.UNKNOWN_SIZE).elementSize(ledStream.schemaSize()).uuid(Schema.getSerialUUID(ledStream.schemaClass()));
+		header.elementCount(LedHeader.UNKNOWN_SIZE).elementSize(ledStream.schemaSize()).uuid(ledStream.serialUUID());
 		fos.write(header.toByteArray());
 	}
 

@@ -5,9 +5,8 @@ import io.intino.alexandria.led.allocators.SchemaAllocator;
 import io.intino.alexandria.led.allocators.indexed.ListAllocator;
 import io.intino.alexandria.led.leds.IteratorLedStream;
 import io.intino.test.schemas.TestSchema;
-import org.junit.After;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.apache.commons.io.FileUtils;
+import org.junit.*;
 
 import java.io.File;
 import java.util.*;
@@ -27,6 +26,16 @@ public class LedWriter_ {
 	private static final File tempFile = new File("temp/snappy_test.led");
 	private static final Random RANDOM = new Random();
 	private static final AtomicLong RPU = new AtomicLong();
+
+	@BeforeClass
+	public static void beforeClass() throws Exception {
+		tempFile.getParentFile().mkdirs();
+	}
+
+	@AfterClass
+	public static void afterClass() throws Exception {
+		tempFile.delete();
+	}
 
 	@Test
 	public void should_write_and_read() {

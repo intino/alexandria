@@ -11,7 +11,11 @@ import static java.util.Objects.requireNonNull;
 public class IteratorLedStream<T extends Schema> implements LedStream<T> {
 
     public static <S extends Schema> IteratorLedStream<S> fromStream(Class<S> schemaClass, Stream<S> stream) {
-        return new IteratorLedStream<>(schemaClass, stream.iterator());
+        return fromStream(schemaClass, Schema.sizeOf(schemaClass), stream);
+    }
+
+    public static <S extends Schema> IteratorLedStream<S> fromStream(Class<S> schemaClass, int schemaSize, Stream<S> stream) {
+        return new IteratorLedStream<>(schemaClass, schemaSize, stream.iterator());
     }
 
 
@@ -21,9 +25,13 @@ public class IteratorLedStream<T extends Schema> implements LedStream<T> {
     private Runnable onClose;
 
     public IteratorLedStream(Class<T> schemaClass, Iterator<T> iterator) {
+        this(schemaClass, Schema.sizeOf(schemaClass), iterator);
+    }
+
+    public IteratorLedStream(Class<T> schemaClass, int schemaSize, Iterator<T> iterator) {
         this.schemaClass = schemaClass;
         this.iterator = requireNonNull(iterator);
-        this.schemaSize = Schema.sizeOf(schemaClass);
+        this.schemaSize = schemaSize;
     }
 
     @Override

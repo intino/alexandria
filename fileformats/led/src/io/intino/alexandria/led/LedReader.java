@@ -3,6 +3,7 @@ package io.intino.alexandria.led;
 import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.allocators.indexed.IndexedAllocator;
 import io.intino.alexandria.led.allocators.indexed.IndexedAllocatorFactory;
+import io.intino.alexandria.led.leds.ArrayLed;
 import io.intino.alexandria.led.leds.ByteChannelLedStream;
 import io.intino.alexandria.led.leds.IndexedLed;
 import io.intino.alexandria.led.leds.InputLedStream;

@@ -8,7 +8,9 @@ import io.intino.alexandria.led.allocators.indexed.ListAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.led.allocators.stack.StackListAllocator;
 import io.intino.test.schemas.TestSchema;
+import org.junit.Ignore;
 
+@Ignore
 public class TestAllocatorsSpeed {
 
 	private static final int NUM_ELEMENTS = 40_000_000;

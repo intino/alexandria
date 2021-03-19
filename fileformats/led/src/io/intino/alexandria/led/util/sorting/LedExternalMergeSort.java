@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static io.intino.alexandria.led.util.memory.MemoryUtils.*;
@@ -139,7 +140,12 @@ public class LedExternalMergeSort {
     }
 
     private void handleEmptyFile() {
-        LedStream.empty().serialize(destFile);
+        emptyLedStream().serialize(destFile);
+    }
+
+    private LedStream<?> emptyLedStream() {
+        final int schemaSize = ledHeader.elementSize();
+        return new CustomLedStream(LedStream.empty(GenericSchema.class, schemaSize), schemaSize, ledHeader.uuid());
     }
 
     private void createSortedChunks() {
@@ -319,9 +325,13 @@ public class LedExternalMergeSort {
 
     private void doFinalMergeAndWriteToDestFile(File destFile, Path chunk1, Path chunk2, LedHeader ledHeader) {
         final int elementSize = ledHeader.elementSize();
-        LedStream.merged(Stream.of(readChunk(chunk1, elementSize), readChunk(chunk2, elementSize))).serialize(destFile);
+        merged(Stream.of(readChunk(chunk1, elementSize), readChunk(chunk2, elementSize))).serialize(destFile);
         deleteChunks(chunk1, chunk2);
         deleteDir(chunk1.getParent());
+    }
+
+    private LedStream<?> merged(Stream<LedStream<GenericSchema>> chunks) {
+        return new CustomLedStream(LedStream.merged(chunks), ledHeader.elementSize(), ledHeader.uuid());
     }
 
     private void writeFinalChunkToDestFile(File destFile, Path chunk, LedHeader ledHeader) {
@@ -337,7 +347,52 @@ public class LedExternalMergeSort {
     }
 
     private LedStream<GenericSchema> readChunk(Path chunk, int elementSize) {
-        return new LedReader(chunk.toFile()).readUncompressed(elementSize, GenericSchema.class);
+        return new CustomLedStream(
+                new LedReader(chunk.toFile()).readUncompressed(elementSize, GenericSchema.class),
+                elementSize,
+                ledHeader.uuid());
     }
 
+    private static class CustomLedStream implements LedStream<GenericSchema> {
+
+        private final LedStream<GenericSchema> source;
+        private final int schemaSize;
+        private final UUID uuid;
+
+        public CustomLedStream(LedStream<GenericSchema> source, int schemaSize, UUID uuid) {
+            this.source = source;
+            this.schemaSize = schemaSize;
+            this.uuid = uuid;
+        }
+
+        @Override
+        public int schemaSize() {
+            return schemaSize;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return source.hasNext();
+        }
+
+        @Override
+        public GenericSchema next() {
+            return source.next();
+        }
+
+        @Override
+        public Class<GenericSchema> schemaClass() {
+            return source.schemaClass();
+        }
+
+        @Override
+        public UUID serialUUID() {
+            return uuid;
+        }
+
+        @Override
+        public void close() throws Exception {
+            source.close();
+        }
+    }
 }
