@@ -199,6 +199,14 @@ def type(cube)
 				$cube+assignFact...[$NL]
 			}
 
+			public $mainCube+firstUpperCase.Fact $mainCube+firstLowerCase() {
+			    return $mainCube+firstLowerCase;
+			}
+
+			public $joinCube+firstUpperCase.Fact $joinCube+firstLowerCase() {
+                return $joinCube+firstLowerCase;
+            }
+
 			public Abstract$name+firstUpperCase cube() {
 			    return cube;
 			}
