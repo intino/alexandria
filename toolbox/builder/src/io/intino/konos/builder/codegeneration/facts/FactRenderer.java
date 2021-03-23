@@ -63,6 +63,8 @@ public class FactRenderer {
                 .add("name", column.name$())
                 .add("defaultValue", defaultValueOf(javaType));
 
+        if(isPrimitive(type)) columnFB.add("primitive");
+
         fb.add("virtualColumn", columnFB);
     }
 

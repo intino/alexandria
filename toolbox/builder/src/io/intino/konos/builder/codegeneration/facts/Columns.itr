@@ -100,14 +100,25 @@ def type(column & real) trigger(getter)
 	}
 end
 
+def type(virtualColumn & primitive) trigger(abstract)
+    public abstract $type+firstLowerCase $name+firstLowerCase();
+end
 
 def type(virtualColumn) trigger(abstract)
-    public abstract $type $name+firstLowerCase();
+    public abstract $type+firstUpperCase $name+firstLowerCase();
+end
+
+def type(virtualColumn & primitive) trigger(implementation)
+    @Override
+    public $type+firstLowerCase $name+firstLowerCase() {
+        // TODO: compute and return $name+firstLowerCase.
+        return $defaultValue;
+    }
 end
 
 def type(virtualColumn) trigger(implementation)
     @Override
-    public $type $name+firstLowerCase() {
+    public $type+firstUpperCase $name+firstLowerCase() {
         // TODO: compute and return $name+firstLowerCase.
         return $defaultValue;
     }
