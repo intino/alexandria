@@ -32,6 +32,11 @@ public class IndexedLed<T extends Schema> implements Led<T> {
 		return allocator.malloc(index);
 	}
 
+	@Override
+	public Class<T> schemaClass() {
+		return allocator.schemaClass();
+	}
+
 	public List<T> asList() {
 		return new AbstractList<T>() {
 			@Override
@@ -44,10 +49,5 @@ public class IndexedLed<T extends Schema> implements Led<T> {
 				return (int) IndexedLed.this.size();
 			}
 		};
-	}
-
-	@Override
-	public Class<T> schemaClass() {
-		return allocator.schemaClass();
 	}
 }

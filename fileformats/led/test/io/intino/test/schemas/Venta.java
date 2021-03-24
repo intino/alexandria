@@ -1,18 +1,26 @@
 package io.intino.test.schemas;
 
 import io.intino.alexandria.led.Schema;
+import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.buffers.store.ByteBufferStore;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.util.memory.MemoryAddress;
 import io.intino.alexandria.led.util.memory.MemoryUtils;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public class Venta extends Schema {
 
     public static final int SIZE = (int)Math.ceil(16.25D);
-    public static final UUID SERIAL_UUID = UUID.fromString(Venta.class.getName());
+    public static final UUID SERIAL_UUID = UUID.nameUUIDFromBytes(Venta.class.getName().getBytes());
+    public static final SchemaFactory<Venta> FACTORY = new SchemaFactory<>(Venta.class) {
+        @Override
+        public Venta newInstance(ByteStore store) {
+            return new Venta(store);
+        }
+    };
 
     public Venta() {
         super(defaultByteStore());

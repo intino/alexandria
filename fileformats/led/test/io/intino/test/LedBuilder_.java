@@ -3,9 +3,7 @@ package io.intino.test;
 import io.intino.alexandria.led.Led;
 import io.intino.alexandria.led.LedWriter;
 import io.intino.test.schemas.TestSchema;
-import org.junit.After;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.File;
 import java.util.Random;
@@ -13,11 +11,21 @@ import java.util.Random;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@Ignore
+
 public class LedBuilder_ {
 
 	private static final File tempFile = new File("temp/snappy_test.led");
 	private static final int NUM_ELEMENTS = 1_000_000;
+
+	@BeforeClass
+	public static void beforeClass() throws Exception {
+		tempFile.getParentFile().mkdirs();
+	}
+
+	@AfterClass
+	public static void afterClass() throws Exception {
+		tempFile.delete();
+	}
 
 	@Test
 	public void should_build_led() {

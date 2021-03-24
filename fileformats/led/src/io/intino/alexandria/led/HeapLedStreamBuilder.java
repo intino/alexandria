@@ -25,7 +25,6 @@ public final class HeapLedStreamBuilder<T extends Schema> implements LedStream.B
 
     private final int schemaSize;
     private final Class<T> schemaClass;
-    private final SchemaFactory<T> factory;
     private final List<Path> tempLeds;
     private final Path tempDirectory;
     private ByteBuffer buffer;
@@ -48,10 +47,9 @@ public final class HeapLedStreamBuilder<T extends Schema> implements LedStream.B
     public HeapLedStreamBuilder(Class<T> schemaClass, int numSchemasPerBlock, File tempDirectory) {
         this.schemaClass = schemaClass;
         this.schemaSize = Schema.sizeOf(schemaClass);
-        this.factory = Schema.factoryOf(schemaClass);
         tempDirectory.mkdirs();
         this.tempDirectory = tempDirectory.toPath();
-        tempLeds = new ArrayList<>();
+        tempLeds = new LinkedList<>();
         tempLeds.add(createTempFile());
         buffer = allocBuffer((long) numSchemasPerBlock * schemaSize);
         ModifiableMemoryAddress address = ModifiableMemoryAddress.of(buffer);
@@ -79,22 +77,11 @@ public final class HeapLedStreamBuilder<T extends Schema> implements LedStream.B
     }
 
     @Override
-    public LedStream.Builder<T> append(Consumer<T> initializer) {
-        if(buildInvoked) {
-            throw new IllegalStateException("Method build has been called, cannot create more schemas.");
-        }
-
-        T schema;
-        synchronized (this) {
-            schema = newTransaction();
-        }
+    public synchronized LedStream.Builder<T> append(Consumer<T> initializer) {
+        if(buildInvoked) throw new IllegalStateException("Method build has been called, cannot create more schemas.");
+        T schema = newTransaction();
         initializer.accept(schema);
-
-        //noinspection SynchronizeOnNonFinalField
-        synchronized (sortedQueue) {
-            sortedQueue.add(schema);
-        }
-
+        sortedQueue.add(schema);
         return this;
     }
 

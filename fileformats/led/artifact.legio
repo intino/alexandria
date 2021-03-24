@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "2.2.1") led
+Artifact("io.intino.alexandria", "2.2.2") led
 	Imports
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Compile("org.xerial.snappy", "snappy-java", "1.1.8.2")
@@ -8,6 +8,7 @@ Artifact("io.intino.alexandria", "2.2.1") led
 		Compile("org.apache.commons", "commons-lang3", "3.11")
 		Test("junit", "junit", "4.13")
 		Test("org.assertj", "assertj-core", "3.17.2")
+		Test("commons-io", "commons-io", "2.5")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 

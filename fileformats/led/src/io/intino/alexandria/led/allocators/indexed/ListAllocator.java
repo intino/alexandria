@@ -31,9 +31,9 @@ public class ListAllocator<T extends Schema> implements IndexedAllocator<T> {
 		this.elementSize = schemaSize;
 		this.factory = Schema.factoryOf(schemaClass);
 		this.elementsCountPerBuffer = (int) elementsCountPerBuffer;
-		stores = new ArrayList<>();
-		addresses = new ArrayList<>();
-		freeIndices = new ArrayDeque<>();
+		this.stores = new ArrayList<>();
+		this.addresses = new ArrayList<>();
+		this.freeIndices = new ArrayDeque<>();
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class ListAllocator<T extends Schema> implements IndexedAllocator<T> {
 		if (index > lastIndex) return;
 		final int storeIndex = storeIndex(index);
 		final int relativeIndex = storeRelativeIndex(index);
-		memset(addresses.get(storeIndex).get() + relativeIndex * elementSize, elementSize, 0);
+		memset(addresses.get(storeIndex).get() + (long) relativeIndex * elementSize, elementSize, 0);
 	}
 
 	public void free(int index) {
@@ -121,7 +121,6 @@ public class ListAllocator<T extends Schema> implements IndexedAllocator<T> {
 	public void clear() {
 		lastIndex = 0;
 		freeIndices.clear();
-		// stores.forEach(ByteBufferStore::clear);
 	}
 
 	@Override
@@ -164,7 +163,7 @@ public class ListAllocator<T extends Schema> implements IndexedAllocator<T> {
 	}
 
 	private void allocateNewByteStore() {
-		ByteBuffer buffer = allocBuffer(elementsCountPerBuffer * elementSize);
+		ByteBuffer buffer = allocBuffer((long) elementsCountPerBuffer * elementSize);
 		ModifiableMemoryAddress address = ModifiableMemoryAddress.of(buffer);
 		ByteBufferStore store = new ByteBufferStore(buffer, address, buffer.position(), buffer.capacity());
 		stores.add(store);

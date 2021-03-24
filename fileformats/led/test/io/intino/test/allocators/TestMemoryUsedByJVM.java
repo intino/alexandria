@@ -6,7 +6,9 @@ import io.intino.alexandria.led.allocators.SchemaAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
 import io.intino.alexandria.led.allocators.stack.StackListAllocator;
 import io.intino.test.schemas.TestSchema;
+import org.junit.Ignore;
 
+@Ignore
 public class TestMemoryUsedByJVM {
 	private static final int NUM_ELEMENTS = 20_000_000;
 	private static final Runtime RUNTIME = Runtime.getRuntime();

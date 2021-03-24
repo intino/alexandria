@@ -3,18 +3,24 @@ package io.intino.alexandria.led.leds;
 import io.intino.alexandria.led.Led;
 import io.intino.alexandria.led.Schema;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 public class ListLed<T extends Schema> implements Led<T> {
 
+	public static <S extends Schema> ListLed<S> fromIndexedLed(IndexedLed<S> led) {
+		return new ListLed<>(led.schemaClass(), new ArrayList<>(led.asList()));
+	}
+
+
 	private final Class<T> schemaClass;
 	private final List<T> list;
 
 	public ListLed(Class<T> schemaClass, List<T> list) {
 		this.schemaClass = schemaClass;
-		this.list = Collections.unmodifiableList(list);
+		this.list = list;
 	}
 
 	@Override
@@ -44,6 +50,6 @@ public class ListLed<T extends Schema> implements Led<T> {
 
 	@Override
 	public List<T> elements() {
-		return list;
+		return Collections.unmodifiableList(list);
 	}
 }

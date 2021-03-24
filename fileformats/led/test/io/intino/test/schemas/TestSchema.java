@@ -6,6 +6,7 @@ import io.intino.alexandria.led.buffers.store.ByteBufferStore;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.util.memory.MemoryAddress;
 import io.intino.alexandria.led.util.memory.MemoryUtils;
+import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 import static io.intino.alexandria.led.util.BitUtils.roundUp2;
 
 public class TestSchema extends Schema {
+
 	public enum SimpleWord {
 		A(1), B(2), C(1);
 		int value;
@@ -64,9 +66,9 @@ public class TestSchema extends Schema {
 	// private byte g;
 	public static final int SIZE = (int) Math.ceil((J_OFFSET + J_BITS) / (float) Byte.SIZE);
 
-	public static final UUID SERIAL_UUID = UUID.randomUUID();
+	public static final UUID SERIAL_UUID = UUID.nameUUIDFromBytes(TestSchema.class.getName().getBytes());
 
-	public static final SchemaFactory<TestSchema> FACTORY = new SchemaFactory<TestSchema>(TestSchema.class) {
+	public static final SchemaFactory<TestSchema> FACTORY = new SchemaFactory<>(TestSchema.class) {
 		@Override
 		public TestSchema newInstance(ByteStore store) {
 			return new TestSchema(store);
