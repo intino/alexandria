@@ -280,7 +280,7 @@ def type(datalake & mirror) trigger(init)
 end
 
 def type(connector) trigger(init)
-	if (connector instanceof io.intino.alexandria.terminal.JmsConnector && ((JmsConnector) connector).connection() == null) ((io.intino.alexandria.terminal.JmsConnector) connector).start();
+	if (connector instanceof io.intino.alexandria.terminal.JmsConnector && ((io.intino.alexandria.terminal.JmsConnector) connector).connection() == null) ((io.intino.alexandria.terminal.JmsConnector) connector).start();
 end
 def type(terminal) trigger(init)
 	if (this.terminal != null) {
