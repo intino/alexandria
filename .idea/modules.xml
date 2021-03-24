@@ -47,6 +47,7 @@
       <module fileurl="file://$PROJECT_DIR$/libraries/xlsbuilder/xlsbuilder.iml" filepath="$PROJECT_DIR$/libraries/xlsbuilder/xlsbuilder.iml" group="office" />
       <module fileurl="file://$PROJECT_DIR$/libraries/xlsxparser/xlsxparser.iml" filepath="$PROJECT_DIR$/libraries/xlsxparser/xlsxparser.iml" group="office" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/xml/xml.iml" filepath="$PROJECT_DIR$/fileformats/xml/xml.iml" group="fileformats" />
+      <module fileurl="file://$PROJECT_DIR$/fileformats/xml-zip/xml-zip.iml" filepath="$PROJECT_DIR$/fileformats/xml-zip/xml-zip.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/zet/zet.iml" filepath="$PROJECT_DIR$/fileformats/zet/zet.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/zif/zif.iml" filepath="$PROJECT_DIR$/fileformats/zif/zif.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/zim/zim.iml" filepath="$PROJECT_DIR$/fileformats/zim/zim.iml" group="fileformats" />
