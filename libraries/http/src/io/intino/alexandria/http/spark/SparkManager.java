@@ -13,6 +13,7 @@ import javax.servlet.http.Part;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 @SuppressWarnings("unchecked")
 public class SparkManager<P extends PushService> {
@@ -73,6 +74,14 @@ public class SparkManager<P extends PushService> {
 		return request.queryParams(name) == null ? defaultValue : request.queryParams(name);
 	}
 
+	public Map<String, String[]> formAndQueryParameters() {
+		return request.raw().getParameterMap();
+	}
+
+	public String fromFormParameter(String name) {
+		return request.raw().getParameter(name);
+	}
+
 	public String fromPath(String name) {
 		return request.params(name);
 	}
@@ -101,7 +110,7 @@ public class SparkManager<P extends PushService> {
 	public Resource fromForm(String name) {
 		try {
 			Part part = request.raw().getPart(name);
-			return part != null ? new Resource(part.getSubmittedFileName(), part.getInputStream()).metadata().contentType(part.getContentType()) : null;
+			return part != null ? new Resource(part.getSubmittedFileName() == null ? part.getName() : part.getSubmittedFileName(), part.getInputStream()).metadata().contentType(part.getContentType()) : null;
 		} catch (ServletException | IOException e) {
 			return null;
 		}
