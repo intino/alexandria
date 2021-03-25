@@ -48,9 +48,9 @@ public class AnalyticRenderer extends Renderer {
 
 	private void renderAxes(List<Axis> axes) {
 		if (axes.isEmpty()) return;
-		AxisInterfaceRenderer.render(gen, context);
 		axes.stream().filter(Axis::isCategorical).map(Axis::asCategorical).forEach(categoricalAxisRenderer::render);
 		axes.stream().filter(Axis::isContinuous).map(Axis::asContinuous).forEach(continuousAxisRenderer::render);
+		AxisInterfaceRenderer.render(gen, context, axes);
 	}
 
 	private void renderCubes(List<Cube> cubeList) {
