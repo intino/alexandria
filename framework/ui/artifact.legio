@@ -16,16 +16,9 @@ Artifact("io.intino.alexandria", "4.7.4") ui-framework
 		Compile("io.intino.alexandria", "driver-shiny", "1.0.0")
 		Compile("io.intino.alexandria", "driver-r", "1.0.0")
 
-		Web("io.intino.alexandria", "ui-framework-elements", "4.7.2")
+		Web("io.intino.alexandria", "ui-framework-elements", "4.7.4")
 
 		Test("junit", "junit", "4.13")
-		Web(groupId = "io.intino.alexandria", artifactId = "ui-framework-elements", version = "4.6.24")
-		Web(groupId = "io.intino.alexandria", artifactId = "ui-framework-elements", version = "4.7.3")
-		Web(groupId = "io.intino.alexandria", artifactId = "ui-framework-elements", version = "4.7.3")
-		Web(groupId = "io.intino.alexandria", artifactId = "ui-framework-elements", version = "4.7.3")
-		Web(groupId = "io.intino.alexandria", artifactId = "ui-framework-elements", version = "4.7.3")
-		Web(groupId = "io.intino.alexandria", artifactId = "ui-framework-elements", version = "4.7.3")
-		Web(groupId = "io.intino.alexandria", artifactId = "ui-framework-elements", version = "4.7.3")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true) as Runnable(mainClass = "io.intino.alexandria.Main")
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
