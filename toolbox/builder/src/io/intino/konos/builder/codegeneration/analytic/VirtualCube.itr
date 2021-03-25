@@ -102,6 +102,10 @@ def type(cube)
                 : Arrays.stream(result).filter(java.util.Objects::nonNull).iterator();
         }
 
+        public List<Axis> axes() {
+            return List.of([$dimension+getInstance...[, ]]);
+        }
+
     	public Iterator<Fact> detail() {
 			MergedIterator<Fact> iterator = new MergedIterator<>(loaders.stream().map(Iterable::iterator), comparingLong(Fact::id));
 			return StreamSupport.stream(spliteratorUnknownSize(iterator, Spliterator.SORTED), false).filter(this::check).iterator();
@@ -286,7 +290,7 @@ def type(cube)
 			public void append(Fact fact) {
 				[$indicator+sum...[$NL]]
 				[$index+append]
-				aggregationCount++;
+				++aggregationCount;
 			}
 
 			public void append(Aggregation aggregation) {
@@ -297,6 +301,10 @@ def type(cube)
 			public Aggregation append(long ids) {
 				this.total$name+FirstUpperCase += ids;
 				return this;
+			}
+
+			public long aggregationCount() {
+			    return aggregationCount;
 			}
 
 			public long total$name+FirstUpperCase() {
@@ -648,6 +656,9 @@ def type(split) trigger(method)
 	}
 end
 
+def type(dimension) trigger(getInstance)
+    $axis+snakeCaseToCamelCase+firstUpperCase.get()
+end
 
 def trigger(dimension)
 	public static Predicate<$cube+FirstUpperCase.Fact> $axis+snakeCaseToCamelCase+firstLowerCase(Set<$axis+snakeCaseToCamelCase+firstUpperCase.Component> $axis+snakeCaseToCamelCase+firstLowerCase~List) {

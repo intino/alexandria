@@ -5,6 +5,7 @@ import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.graph.Axis;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -123,9 +124,10 @@ public class CategoricalAxisRenderer {
         }
     }
 
-    private String asFieldName(String id) {
-        id = id.replaceAll("\\s+", "_").replace('-', '_');
-        return Character.isDigit(id.charAt(0)) ? "_" + id : id;
+    private String asFieldName(String name) {
+        name = name.replaceAll("\\s+", "_").replace('-', '_');
+        name = StringUtils.stripAccents(name);
+        return Character.isDigit(name.charAt(0)) ? "_" + name : name;
     }
 
     private boolean isSmallEnough(List<ComponentInfo> components) {
