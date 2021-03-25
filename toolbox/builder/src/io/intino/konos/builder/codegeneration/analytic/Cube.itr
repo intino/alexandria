@@ -104,6 +104,10 @@ def type(cube)
                 : Arrays.stream(result).filter(java.util.Objects::nonNull).iterator();
 		}
 
+		public List<Axis> axes() {
+		    return List.of([$dimension+getInstance...[, ]]);
+		}
+
     	public Iterator<Fact> detail() {
 			MergedIterator<Fact> iterator = new MergedIterator<>(loaders.stream().map(Iterable::iterator), comparingLong(Fact::id));
 			return StreamSupport.stream(spliteratorUnknownSize(iterator, Spliterator.SORTED), false).filter(this::check).iterator();
@@ -442,6 +446,10 @@ def type(customDimension) trigger(staticMethod)
 	    // TODO: write here your code
 		return v -> null;
 	}
+end
+
+def type(dimension) trigger(getInstance)
+    $axis+snakeCaseToCamelCase+firstUpperCase.get()
 end
 
 def type(dimension & categorical) trigger(method)
