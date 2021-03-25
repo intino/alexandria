@@ -13,6 +13,12 @@ public class ActionToggle<DN extends ActionToggleNotifier, B extends Box> extend
         super(box);
     }
 
+    @Override
+    public void didMount() {
+        super.didMount();
+        if (state != null) notifier.refreshState(state.name());
+    }
+
     public ActionToggle<DN, B> onToggle(ToggleListener listener) {
         this.toggleListener = listener;
         return this;

@@ -9,7 +9,7 @@ public class XMLZip_ {
 
 	@Test
 	public void name() throws IOException {
-		String s = new XMLZip(new File("000.xz")).get(95);
+		String s = new XMLZip(new File("/tmp/000.xz")).get(82);
 		System.out.println(s);
 	}
 }
