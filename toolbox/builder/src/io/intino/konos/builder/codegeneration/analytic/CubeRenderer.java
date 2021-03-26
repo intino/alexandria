@@ -8,6 +8,7 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Axis;
 import io.intino.konos.model.graph.Cube;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 
@@ -79,8 +80,8 @@ public class CubeRenderer {
     private void addCustomFilters(Cube cube, Cube sourceCube, FrameBuilder fb) {
         for (Cube.CustomFilter customFilter : cube.customFilterList()) {
             fb.add("customFilter", new FrameBuilder("customFilter")
-                .add("cube", sourceCube != null ? sourceCube.name$() : cube.name$())
-                .add("name", customFilter.name$()));
+                    .add("cube", sourceCube != null ? sourceCube.name$() : cube.name$())
+                    .add("name", customFilter.name$()));
         }
     }
 
@@ -101,13 +102,19 @@ public class CubeRenderer {
     }
 
     private FrameBuilder indicatorFrame(Cube cube, Cube sourceCube, Cube.Indicator indicator) {
-        return new FrameBuilder("indicator").add(indicator.isAverage() ? "average" : "sum").
-                add("cube", sourceCube != null ? sourceCube.name$() : cube.name$()).
-                add("name", indicator.name$()).
-                add("label", indicator.label()).
-                add("index", new FrameBuilder((sourceCube == null && cube.index() != null) || (sourceCube != null && sourceCube.index() != null) ? "index" : "total")).
-                add("source", indicator.source().name$()).
-                add("unit", indicator.unit());
+        return new FrameBuilder("indicator").add(indicator.isAverage() ? "average" : "sum")
+                .add("cube", sourceCube != null ? sourceCube.name$() : cube.name$())
+                .add("name", indicator.name$())
+                .add("fieldName", asFieldName(indicator.label()))
+                .add("label", indicator.label())
+                .add("index", new FrameBuilder((sourceCube == null && cube.index() != null) || (sourceCube != null && sourceCube.index() != null) ? "index" : "total"))
+                .add("source", indicator.source().name$())
+                .add("mode", indicator.isAverage() ? "Average" : "Sum")
+                .add("unit", indicator.unit());
+    }
+
+    private String asFieldName(String label) {
+        return StringUtils.stripAccents(label);
     }
 
     private void addSplit(Cube cube, FrameBuilder fb) {
@@ -125,6 +132,11 @@ public class CubeRenderer {
     }
 
     private void addIndex(FrameBuilder fb, Cube.Index index) {
-        fb.add("index", new FrameBuilder("index", index != null ? "normal" : "total").add("value", ""));
+        fb.add("index", new FrameBuilder("index", index != null ? "normal" : "total")
+                .add("mode", "Sum")
+                .add("label", "Total")
+                .add("name", "aggregationTotal")
+                .add("unit", "")
+                .add("value", ""));
     }
 }

@@ -19,6 +19,10 @@ def type(cube & src)
 
 		[$customIndicator+staticMethod...[$NL$NL]]
 
+		public static List<Axis> axes() {
+            return List.of([$dimension+getInstance...[, ]]);
+        }
+
 		public static class Loader extends Abstract$name+FirstUpperCase.Loader {
 
 			public Loader(Datasource datasource[, $split+parameter]) {
@@ -104,7 +108,7 @@ def type(cube)
                 : Arrays.stream(result).filter(java.util.Objects::nonNull).iterator();
 		}
 
-		public List<Axis> axes() {
+		public static List<Axis> axes() {
 		    return List.of([$dimension+getInstance...[, ]]);
 		}
 
@@ -288,6 +292,26 @@ def type(cube)
 			}
 		}
 
+		public enum Indicator {
+
+		    Count("Count", "", Mode.Sum),
+		    [$indicator+enum...[,$NL]];
+
+		    public final String title;
+		    public final String unit;
+		    public final Mode mode;
+
+		    Indicator(String title, String unit, Mode mode) {
+		        this.title = title;
+		        this.unit = unit;
+		        this.mode = mode;
+		    }
+
+		    public enum Mode {
+		        Sum, Average
+		    }
+		}
+
 		public static class Aggregation {
 
 			private final Axis.Component$[] components;
@@ -314,19 +338,28 @@ def type(cube)
 				return aggregationCount;
 			}
 
-			$index+getter
+			[$index+getter]
 
 			public Axis.Component$[] components() {
 				return components;
 			}
 
-			$indicator+getter...[$NL$NL]
+			[$indicator+getter...[$NL$NL]]
+
+			public Number indicator(Indicator indicator) {
+                switch(indicator) {
+                    [$indicator+switchCase...[$NL]]
+                    case Count: return aggregationCount;
+                }
+                return 0L;
+            }
 
 			@Override
 			public String toString() {
 			    return "$name+FirstUpperCase.Aggregation{"
 			        + "aggregationCount=" + aggregationCount
-			        $indicator+toString...[$NL]
+			        [$index+toString...[$NL]]
+			        [$indicator+toString...[$NL]]
 			        + "}";
 			}
 		}
@@ -380,6 +413,14 @@ def type(cube)
 			}
 		}
     }
+end
+
+def type(indicator) trigger(enum)
+    $fieldName+CamelCase+FirstUpperCase~("$label", "$unit", Mode.$mode)
+end
+
+def type(indicator) trigger(switchCase)
+    case $fieldName+CamelCase+FirstUpperCase: return $fieldName+CamelCase+FirstLowerCase;
 end
 
 def type(index & total) trigger(field)
