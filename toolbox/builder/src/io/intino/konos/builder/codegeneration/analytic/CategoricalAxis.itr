@@ -11,6 +11,8 @@ def type(axis)
 
 	public class $name+snakeCaseToCamelCase+FirstUpperCase implements Axis {
 
+	    public static final String AXIS_LABEL = "$label";
+
         public static final Component NA = new Component(0, "NA"[, $include+defaultValue...[, ]]);
         [$component...[$NL]]
 
@@ -25,7 +27,7 @@ def type(axis)
         }
 
 		public static String label() {
-			return get().getLabel();
+			return AXIS_LABEL;
 		}
 
 		public static int size() {
@@ -64,7 +66,7 @@ def type(axis)
 
         @Override
 		public String getLabel() {
-			return "$label";
+			return AXIS_LABEL;
 		}
 
         @Override
@@ -172,7 +174,7 @@ def attribute(name:label) trigger(declaration)
 end
 
 def trigger(declaration)
-	public final $name+snakeCaseToCamelCase+firstUpperCase.Component $name+snakeCaseToCamelCase+firstLowerCase;
+	public final $name+snakeCaseToCamelCase+firstUpperCase.Component $label+snakeCaseToCamelCase+firstLowerCase;
 end
 
 def attribute(name:label) trigger(getter)
@@ -182,13 +184,13 @@ def attribute(name:label) trigger(getter)
 end
 
 def trigger(getter)
-	public $name+snakeCaseToCamelCase+firstUpperCase.Component $name+snakeCaseToCamelCase+firstLowerCase() {
-	    return $name+snakeCaseToCamelCase+firstLowerCase;
+	public $name+snakeCaseToCamelCase+firstUpperCase.Component $label+snakeCaseToCamelCase+firstLowerCase() {
+	    return $label+snakeCaseToCamelCase+firstLowerCase;
 	}
 end
 
 def trigger(toString)
-	sb.append(", $name+snakeCaseToCamelCase+firstLowerCase=").append($name+snakeCaseToCamelCase+firstLowerCase);
+	sb.append(", $label+snakeCaseToCamelCase+firstLowerCase=").append($label+snakeCaseToCamelCase+firstLowerCase);
 end
 
 def attribute(name:label) trigger(defaultValue)
@@ -204,7 +206,7 @@ def attribute(name:label) trigger(parameter)
 end
 
 def trigger(parameter)
-	$name+snakeCaseToCamelCase+firstUpperCase.Component $name+snakeCaseToCamelCase+firstLowerCase
+	$name+snakeCaseToCamelCase+firstUpperCase.Component $label+snakeCaseToCamelCase+firstLowerCase
 end
 
 def attribute(name:label) trigger(constructor)
@@ -216,7 +218,7 @@ def trigger(constructor)
 end
 
 def trigger(assign)
-	this.$name+snakeCaseToCamelCase+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase;
+	this.$label+snakeCaseToCamelCase+firstLowerCase = $label+snakeCaseToCamelCase+firstLowerCase;
 end
 
 def trigger(put)

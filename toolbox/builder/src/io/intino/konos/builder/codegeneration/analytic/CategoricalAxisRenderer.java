@@ -68,7 +68,10 @@ public class CategoricalAxisRenderer {
 
     private void addLabel(FrameBuilder fb, Axis.Categorical axis) {
         if (axis.includeLabel() != null)
-            fb.add("include", new FrameBuilder("include").add("name", "label").add("index", LABEL_INDEX));
+            fb.add("include", new FrameBuilder("include")
+                    .add("name", "label")
+                    .add("label", "label")
+                    .add("index", LABEL_INDEX));
     }
 
     private void addIncludes(FrameBuilder fb, Axis.Categorical axis, List<Axis> includes) {
@@ -76,6 +79,7 @@ public class CategoricalAxisRenderer {
         for (int i = 0; i < includes.size(); i++) {
             fb.add("include", new FrameBuilder("include")
                     .add("name", includes.get(i).name$())
+                    .add("label", asFieldName(includes.get(i).label()))
                     .add("index", i + offset));
         }
     }
