@@ -55,6 +55,7 @@ public class RequestBuilder {
 	}
 
 	private final URL url;
+	private final HttpHost proxy;
 	private final List<NameValuePair> queryParameters;
 	private final HttpClient client;
 	private final Map<String, String> headerParameters;
@@ -66,7 +67,12 @@ public class RequestBuilder {
 	private String path;
 
 	public RequestBuilder(URL url) {
+		this(url, null);
+	}
+
+	public RequestBuilder(URL url, HttpHost proxy) {
 		this.url = url;
+		this.proxy = proxy;
 		timeOutMillis = 120 * 1000;
 		queryParameters = new ArrayList<>();
 		headerParameters = new LinkedHashMap<>();
@@ -123,6 +129,7 @@ public class RequestBuilder {
 			public Response execute() throws AlexandriaException {
 				try {
 					HttpRequestBase request = method(method.name());
+
 					if (auth != null) request.setHeader(HttpHeaders.AUTHORIZATION, auth.name() + " " + auth.token);
 					headerParameters.forEach(request::setHeader);
 					if (!entityParts.isEmpty() && request instanceof HttpEntityEnclosingRequestBase)
@@ -165,7 +172,7 @@ public class RequestBuilder {
 	}
 
 	private HttpClient client() {
-		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(this.timeOutMillis).build();
+		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(this.timeOutMillis).setProxy(proxy).build();
 		return HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).setDefaultRequestConfig(requestConfig).build();
 	}
 
