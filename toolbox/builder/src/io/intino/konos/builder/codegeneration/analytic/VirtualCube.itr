@@ -20,6 +20,12 @@ def type(cube & src)
 
 		[$customIndicator+staticMethod...[$NL$NL]]
 
+		@Override
+        public $name+FirstUpperCase execute() {
+            super.execute();
+            return this;
+        }
+
 		public static List<Axis> axes() {
             return List.of([$dimension+getInstance...[, ]]);
         }
