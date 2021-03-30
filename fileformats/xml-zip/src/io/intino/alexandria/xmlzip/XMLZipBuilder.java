@@ -27,7 +27,7 @@ public class XMLZipBuilder {
 	}
 
 	public XMLZipBuilder add(String line, int index) {
-		lines[index] = line;
+		lines[index] = line + "\n";
 		return this;
 	}
 
