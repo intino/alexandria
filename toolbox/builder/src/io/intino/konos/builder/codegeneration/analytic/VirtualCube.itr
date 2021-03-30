@@ -26,7 +26,7 @@ def type(cube & src)
             return this;
         }
 
-		public static List<Axis> axes() {
+		public static List<Axis> dimensions() {
             return List.of([$dimension+getInstance...[, ]]);
         }
 
@@ -80,7 +80,7 @@ def type(cube)
 		private Predicate<Fact> filter = fact -> true;
 		private final List<Axis> axes = new ArrayList<>();
 		private final Map<Axis, Set<Axis.Component>> components = new HashMap<>();
-		private final List<Function<Fact, Axis.Component>> groupByList = new ArrayList<>();
+		private final List<Function<Fact, ? extends Axis.Component>> groupByList = new ArrayList<>();
 		private Aggregation$[] result;
 
     	public Abstract$name+FirstUpperCase(List<? extends Loader> loaders) {
@@ -90,6 +90,23 @@ def type(cube)
     	[$dimension+method...[$NL$NL]]
 
     	[$customFilter+method...[$NL$NL]]
+
+    	public Abstract$name+FirstUpperCase groupBy(Axis axis) {
+            if(axis == null) throw new NullPointerException("Axis cannot be null");
+            switch(axis.getLabel()) {
+                [$dimension+switchCaseGroupBy...[$NL]]
+            }
+            return this;
+        }
+
+        @SuppressWarnings("unchecked")
+        public Abstract$name+FirstUpperCase filter(Axis axis, Set<? extends Axis.Component> components) {
+            if(axis == null) throw new NullPointerException("Axis cannot be null");
+            switch(axis.getLabel()) {
+                [$dimension+switchCaseFilterBy...[$NL]]
+            }
+            return this;
+        }
 
 		public Abstract$name+firstUpperCase execute() {
 			result = new Aggregation$[resultsSize()];
@@ -114,6 +131,11 @@ def type(cube)
 
         public static List<Axis> axes() {
             return List.of([$dimension+getInstance...[, ]]);
+        }
+
+        public boolean contains(Axis axis, Axis.Component component) {
+            if(!components.containsKey(axis)) return false;
+            return components.get(axis).contains(component);
         }
 
     	public Iterator<Fact> detail() {
@@ -481,7 +503,7 @@ def type(indicator) trigger(enum)
 end
 
 def type(indicator) trigger(switchCase)
-    case $fieldName+CamelCase+FirstUpperCase: return $fieldName+CamelCase+FirstLowerCase;
+    case $fieldName+CamelCase+FirstUpperCase: return $name+snakeCaseToCamelCase+FirstLowerCase;
 end
 
 def type(index & total) trigger(field)
@@ -561,6 +583,14 @@ def type(customFilter) trigger(staticMethod)
 	}
 end
 
+def type(dimension & categorical) trigger(switchCaseGroupBy)
+    case $axis+snakeCaseToCamelCase+firstUpperCase.AXIS_LABEL: return groupBy$name+snakeCaseToCamelCase+firstUpperCase();
+end
+
+def type(dimension & categorical) trigger(switchCaseFilter)
+    case $axis+snakeCaseToCamelCase+firstUpperCase.AXIS_LABEL: return filter$name+snakeCaseToCamelCase+firstUpperCase((Set<$axis+snakeCaseToCamelCase+firstUpperCase.Component>) components);
+end
+
 def type(dimension) trigger(staticMethod)
 	public static Predicate<Fact> $name+snakeCaseToCamelCase+firstLowerCase~Predicate(Set<$name+snakeCaseToCamelCase+FirstUpperCase.Component> $name+snakeCaseToCamelCase+firstLowerCase) {
 		return v -> false; //TODO
@@ -589,7 +619,7 @@ def type(dimension & categorical) trigger(method)
 	}
 
 	public static Axis.Component $name+snakeCaseToCamelCase+firstLowerCase~Function(Fact fact) {
-		return fact.$source+snakeCaseToCamelCase+firstLowerCase()[.$child+snakeCaseToCamelCase+firstLowerCase];
+		return fact.$source+snakeCaseToCamelCase+firstLowerCase()[.$child+snakeCaseToCamelCase+firstLowerCase()];
 	}
 end
 
@@ -610,7 +640,7 @@ def type(dimension & continuous) trigger(method)
 		return $axis+snakeCaseToCamelCase+firstLowerCase.contains($name+snakeCaseToCamelCase+firstLowerCase~Function(fact));
 	}
 
-	private static Axis.Component $name+snakeCaseToCamelCase+firstLowerCase~Function(Fact fact) {
+	public static Axis.Component $name+snakeCaseToCamelCase+firstLowerCase~Function(Fact fact) {
 		return $axis+snakeCaseToCamelCase+firstUpperCase.rangeOf(fact.$source+firstLowerCase());
 	}
 end

@@ -94,8 +94,15 @@ public class CubeRenderer {
 
         if (dimension.axis().i$(Axis.Categorical.class)) {
             fb.add("type", dimension.axis().name$());
-            if (!dimension.attribute().asCategory().axis().equals(dimension.axis()))
-                fb.add("child", dimension.axis().name$());
+            if (!dimension.attribute().asCategory().axis().equals(dimension.axis())) {
+                final String name = dimension.name$();
+                final String axisName = dimension.axis().name$();
+                if(StringUtils.indexOfDifference(name, axisName) < name.length() / 2)
+                    fb.add("child", axisName);
+                else
+                    fb.add("child", name);
+
+            }
         }
 
         return fb;
