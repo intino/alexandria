@@ -49,7 +49,6 @@ public class XMLZipBuilder {
 			String line;
 			while ((line = br.readLine()) != null) sb.append(line.trim());
 		}
-		sb.append("\n");
 		return sb;
 	}
 
