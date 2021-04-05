@@ -11,6 +11,8 @@ import io.intino.konos.model.graph.Cube;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.*;
@@ -45,10 +47,11 @@ public class CubeRenderer {
     }
 
     private void renderVirtualCube(Cube.Virtual virtualCube, FrameBuilder fb) {
+        Set<String> dimensionsAndIndicatorsAlreadyAdded = new HashSet<>();
         for (Cube reference : new Cube[]{virtualCube.main(), virtualCube.join()}) {
-            addDimensionsAndIndicators(reference, virtualCube.asCube(), fb);
-            factRenderer.render(reference, fb);
+            addDimensionsAndIndicators(reference, virtualCube.asCube(), fb, dimensionsAndIndicatorsAlreadyAdded);
         }
+        factRenderer.render(virtualCube, fb);
         addIndex(fb, virtualCube.index());
         fb.add("mainCube", virtualCube.main().name$());
         fb.add("joinCube", virtualCube.join().name$());
@@ -74,6 +77,20 @@ public class CubeRenderer {
     private void addDimensionsAndIndicators(Cube cube, Cube sourceCube, FrameBuilder fb) {
         cube.dimensionList().forEach(selector -> fb.add("dimension", dimensionFrame(cube, sourceCube, selector)));
         cube.indicatorList().forEach(indicator -> fb.add("indicator", indicatorFrame(cube, sourceCube, indicator)));
+        addCustomFilters(cube, sourceCube, fb);
+    }
+
+    private void addDimensionsAndIndicators(Cube cube, Cube sourceCube, FrameBuilder fb, Set<String> filter) {
+        cube.dimensionList().stream()
+                .filter(s -> !filter.contains(s.name$()))
+                .peek(s -> filter.add(s.name$()))
+                .forEach(s -> fb.add("dimension", dimensionFrame(cube, sourceCube, s)));
+
+        cube.indicatorList().stream()
+                .filter(i -> !filter.contains(i.name$()))
+                .peek(i -> filter.add(i.name$()))
+                .forEach(i -> fb.add("indicator", indicatorFrame(cube, sourceCube, i)));
+
         addCustomFilters(cube, sourceCube, fb);
     }
 

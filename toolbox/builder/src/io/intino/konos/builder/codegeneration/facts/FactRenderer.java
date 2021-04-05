@@ -10,10 +10,8 @@ import io.intino.magritte.framework.Concept;
 import io.intino.magritte.framework.Predicate;
 
 import java.io.*;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
 import static java.util.stream.Collectors.toList;
@@ -32,6 +30,14 @@ public class FactRenderer {
         axisSizes = new HashMap<>();
     }
 
+    public void render(Cube.Virtual virtualCube, FrameBuilder fb) {
+        SchemaSerialBuilder serialBuilder = new SchemaSerialBuilder();
+        fb.add("id", idOf(virtualCube.main().fact()).name$());
+        final int lastOffset = addAllColumns(virtualCube, fb, serialBuilder);
+        fb.add("size", calculateFactSize(lastOffset));
+        fb.add("serialUUID", serialBuilder.buildSerialId().toString());
+    }
+
     public void render(Cube cube, FrameBuilder fb) {
         SchemaSerialBuilder serialBuilder = new SchemaSerialBuilder();
         fb.add("id", idOf(cube.fact()).name$());
@@ -42,8 +48,21 @@ public class FactRenderer {
     }
 
     private int addAllColumns(Cube cube, FrameBuilder fb, SchemaSerialBuilder serialBuilder) {
-        int offset = 0;
         List<Column> columns = cube.fact().columnList().stream().sorted(COMPARATOR).collect(toList());
+        return addAllColumns(cube.name$(), columns, fb, serialBuilder);
+    }
+
+    private int addAllColumns(Cube.Virtual virtualCube, FrameBuilder fb, SchemaSerialBuilder serialBuilder) {
+        List<Column> mainColumns = virtualCube.main().fact().columnList().stream().sorted(COMPARATOR).collect(toList());
+        Set<String> mainColumnNames = mainColumns.stream().map(Column::name$).collect(Collectors.toSet());
+        addAllColumns(virtualCube.main().name$(), mainColumns, fb, serialBuilder);
+        List<Column> joinColumns = virtualCube.join().fact().columnList(c -> !mainColumnNames.contains(c.name$())).stream().sorted(COMPARATOR).collect(toList());
+        addAllColumns(virtualCube.join().name$(), joinColumns, fb, serialBuilder);
+        return 0;
+    }
+
+    private int addAllColumns(String cube, List<Column> columns, FrameBuilder fb, SchemaSerialBuilder serialBuilder) {
+        int offset = 0;
         for (Column column : columns) {
             if(column.isVirtual())
                 addVirtualAttribute(cube, fb, column);
@@ -53,12 +72,12 @@ public class FactRenderer {
         return offset;
     }
 
-    private void addVirtualAttribute(Cube cube, FrameBuilder fb, Column column) {
+    private void addVirtualAttribute(String cube, FrameBuilder fb, Column column) {
         final SizedData.Type type = column.asType();
         final String javaType = type(type);
 
         FrameBuilder columnFB = new FrameBuilder("virtualColumn")
-                .add("cube", cube.name$())
+                .add("cube", cube)
                 .add("type", javaType)
                 .add("name", column.name$())
                 .add("defaultValue", defaultValueOf(javaType));
@@ -84,11 +103,11 @@ public class FactRenderer {
         }
     }
 
-    private int addFactAttribute(Cube cube, FrameBuilder fb, SchemaSerialBuilder serialBuilder, int offset, Column column) {
+    private int addFactAttribute(String cube, FrameBuilder fb, SchemaSerialBuilder serialBuilder, int offset, Column column) {
         final int columnSize = column.asType().size();
         if(getMinimumBytesFor(offset, columnSize) > Long.BYTES)
             offset = roundUp2(offset, Long.SIZE);
-        fb.add("column", columnFrame(column, offset, cube.name$()));
+        fb.add("column", columnFrame(column, offset, cube));
         serialBuilder.add(column.name$(), type(column.asType()), offset, column.asType().size());
         return offset + columnSize;
     }
