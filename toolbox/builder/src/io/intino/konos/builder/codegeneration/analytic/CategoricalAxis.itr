@@ -112,8 +112,8 @@ def type(axis)
 
 		public static class Component implements Axis.Component {
 
-			public final int index;
-			public final String id;
+			private final int index;
+			private final String id;
 			$include+declaration...[$NL]
 
 			Component(int index, String id[, $include+parameter...[, ]]) {
@@ -170,11 +170,11 @@ def type(component)
 end
 
 def attribute(name:label) trigger(declaration)
-	public final String $name+firstLowerCase;
+	private final String $name+firstLowerCase;
 end
 
 def trigger(declaration)
-	public final $name+snakeCaseToCamelCase+firstUpperCase.Component $label+snakeCaseToCamelCase+firstLowerCase;
+	private final $name+snakeCaseToCamelCase+firstUpperCase.Component $label+snakeCaseToCamelCase+firstLowerCase;
 end
 
 def attribute(name:label) trigger(getter)
