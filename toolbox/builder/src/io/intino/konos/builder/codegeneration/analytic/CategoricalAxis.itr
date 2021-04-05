@@ -166,7 +166,7 @@ def type(axis)
 end
 
 def type(component)
-    public static final Component $name = new Component($index, "$id"[, "$label"][, $include...[, ]]);
+    public static final Component $name = new Component($index, "$id"[, "$label"][, $include+constructor...[, ]]);
 end
 
 def attribute(name:label) trigger(declaration)
@@ -213,7 +213,11 @@ def attribute(name:label) trigger(constructor)
 	l.length > $index ? l$[$index] : "NA"
 end
 
-def trigger(constructor)
+def type(include) trigger(constructor)
+    $name+snakeCaseToCamelCase+firstUpperCase.component("$id")
+end
+
+def trigger(constructorFromTsv)
 	l.length > $index ? $name+snakeCaseToCamelCase+firstUpperCase.component(l$[$index]) : $name+snakeCaseToCamelCase+firstUpperCase.NA
 end
 
@@ -240,7 +244,7 @@ def type(components) attribute(embedded:false) trigger(load)
     if(resource == null) throw new IllegalStateException("$name+snakeCaseToCamelCase+firstUpperCase: Resource " + "$resource" + " not found");
     try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(resource))) {
 			components = Stream.concat(Stream.of(NA),
-			reader.lines().map(l -> l.split("\t")).map(l -> new Component(Integer.parseInt(l$[0]),l$[1][,$include+constructor...[, ]]))
+			reader.lines().map(l -> l.split("\t")).map(l -> new Component(Integer.parseInt(l$[0]),l$[1][,$include+constructorFromTsv...[, ]]))
 			).toArray(Component$[]::new);
 		} catch (Exception e) {
 			io.intino.alexandria.logger.Logger.error("Failed to load components of $name+snakeCaseToCamelCase+firstUpperCase", e);
