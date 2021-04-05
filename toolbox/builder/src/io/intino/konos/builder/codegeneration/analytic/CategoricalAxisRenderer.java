@@ -66,6 +66,29 @@ public class CategoricalAxisRenderer {
         addIncludes(fb, axis, includes);
     }
 
+    private void loadComponents(FrameBuilder fb, Axis.Categorical axis, List<Axis> includes) {
+        String resource = "/" + axisResource(axis.tsv().getPath());
+        List<ComponentInfo> components = loadFromResource(resource);
+        final boolean embedded = isSmallEnough(components);
+
+        if(embedded) createEmbeddedComponents(fb, axis, includes, components);
+
+        FrameBuilder componentsFB = new FrameBuilder("components");
+        componentsFB.add("name", axis.name$());
+
+        addLabel(componentsFB, axis);
+
+        componentsFB.add("embedded", embedded);
+        if(embedded) {
+            addEmbeddedComponentsToArray(componentsFB, axis, components);
+        } else {
+            componentsFB.add("resource", resource);
+            addIncludes(componentsFB, axis, includes);
+        }
+
+        fb.add("components", componentsFB);
+    }
+
     private void addLabel(FrameBuilder fb, Axis.Categorical axis) {
         if (axis.includeLabel() != null)
             fb.add("include", new FrameBuilder("include")
@@ -95,29 +118,6 @@ public class CategoricalAxisRenderer {
                     .add("id", include)
                     .add("index", i + offset));
         }
-    }
-
-    private void loadComponents(FrameBuilder fb, Axis.Categorical axis, List<Axis> includes) {
-        String resource = "/" + axisResource(axis.tsv().getPath());
-        List<ComponentInfo> components = loadFromResource(resource);
-        final boolean embedded = isSmallEnough(components);
-
-        if(embedded) createEmbeddedComponents(fb, axis, includes, components);
-
-        FrameBuilder componentsFB = new FrameBuilder("components");
-        componentsFB.add("name", axis.name$());
-
-        componentsFB.add("embedded", embedded);
-        if(embedded) {
-            addEmbeddedComponentsToArray(componentsFB, axis, components);
-        } else {
-            componentsFB.add("resource", resource);
-            addIncludes(componentsFB, axis, includes);
-        }
-
-        addLabel(componentsFB, axis);
-
-        fb.add("components", componentsFB);
     }
 
     private void addEmbeddedComponentsToArray(FrameBuilder fb, Axis.Categorical axis, List<ComponentInfo> components) {

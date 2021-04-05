@@ -209,16 +209,16 @@ def trigger(parameter)
 	$name+snakeCaseToCamelCase+firstUpperCase.Component $label+snakeCaseToCamelCase+firstLowerCase
 end
 
-def attribute(name:label) trigger(constructor)
+def attribute(name:label) trigger(constructorFromTsv)
 	l.length > $index ? l$[$index] : "NA"
-end
-
-def type(include) trigger(constructor)
-    $name+snakeCaseToCamelCase+firstUpperCase.component("$id")
 end
 
 def trigger(constructorFromTsv)
 	l.length > $index ? $name+snakeCaseToCamelCase+firstUpperCase.component(l$[$index]) : $name+snakeCaseToCamelCase+firstUpperCase.NA
+end
+
+def trigger(constructor)
+    $name+snakeCaseToCamelCase+firstUpperCase.component("$id")
 end
 
 def trigger(assign)
