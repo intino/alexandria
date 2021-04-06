@@ -4,8 +4,8 @@ def type(cube & src)
     import io.intino.alexandria.Timetag;
     import io.intino.alexandria.led.buffers.store.ByteStore;
 
-    import io.provista.cosmos.box.analytic.Axis;
-    import io.provista.cosmos.box.analytic.axes.*;
+    import $package.analytic.Axis;
+    import $package.analytic.axes.*;
 
     import java.io.File;
     import java.util.*;
@@ -35,10 +35,7 @@ def type(cube & src)
 
 		public static class Loader extends Abstract$name+FirstUpperCase.Loader {
 
-		    public static List<Loader> create(File root, Timetag from, Timetag to, Collection<String> divisions) {
-                return divisions.stream().map(d -> new Loader(new Loader.Datasource(root, from, to), d)).collect(Collectors.toList());
-            }
-
+		    [$splitted+create]
 
 			public Loader(Datasource datasource[, $split+parameter]) {
 				super(datasource[, $split+name]);
@@ -698,6 +695,18 @@ end
 
 def type(column) trigger(toString)
     + ", $name=" + $name()
+end
+
+def type(splitted) attribute(splitted:true) trigger(create)
+    public static List<Loader> create(File root, Timetag from, Timetag to, Collection<String> split) {
+        return split.stream().map(s -> new Loader(new Loader.Datasource(root, from, to), s)).collect(Collectors.toList());
+    }
+end
+
+def type(splitted) attribute(splitted:false) trigger(create)
+    public static List<Loader> create(File root, Timetag from, Timetag to) {
+        return List.of(new Loader(new Loader.Datasource(root, from, to)));
+    }
 end
 
 

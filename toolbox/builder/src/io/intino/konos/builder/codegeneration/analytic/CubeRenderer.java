@@ -40,6 +40,7 @@ public class CubeRenderer {
 
     private void renderCube(Cube cube, FrameBuilder fb) {
         addDimensionsAndIndicators(cube, null, fb);
+        fb.add("splitted", new FrameBuilder("splitted").add("splitted", cube.splitted() != null ? "true" : "false"));
         if (cube.splitted() != null) addSplit(cube, fb);
         addIndex(fb, cube.index());
         factRenderer.render(cube, fb);
@@ -56,6 +57,7 @@ public class CubeRenderer {
         fb.add("mainCube", virtualCube.main().name$());
         fb.add("joinCube", virtualCube.join().name$());
         fb.add("cube", new String[]{virtualCube.main().name$(), virtualCube.join().name$()});
+        fb.add("splitted", new FrameBuilder("splitted").add("splitted", virtualCube.main().splitted() != null ? "true" : "false"));
         if (virtualCube.main().splitted() != null) addSplit(virtualCube.main(), fb);
         write(virtualCube.asCube(), fb);
     }

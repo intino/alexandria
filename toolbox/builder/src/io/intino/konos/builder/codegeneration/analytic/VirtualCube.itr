@@ -4,8 +4,8 @@ def type(cube & src)
     import io.intino.alexandria.Timetag;
     import io.intino.alexandria.led.buffers.store.ByteStore;
 
-    import io.provista.cosmos.box.analytic.Axis;
-    import io.provista.cosmos.box.analytic.axes.*;
+    import $package.analytic.Axis;
+    import $package.analytic.axes.*;
 
     import java.io.File;
     import java.util.*;
