@@ -166,7 +166,7 @@ def type(column & short & unsigned) trigger(setter)
 	}
 end
 
-def type(column & bool) trigger(setter)
+def type(column & boolean) trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(boolean $name+firstLowerCase) {
 		bitBuffer.setBoolean($offset, $name+firstLowerCase);
 		return this;
@@ -235,7 +235,7 @@ def type(column & integer) trigger(setter)
 	}
 end
 
-def type(column & bool) trigger(setter)
+def type(column & boolean) trigger(setter)
 	public $owner+firstUpperCase~Builder $name+firstLowerCase(boolean $name+firstLowerCase) {
 		bitBuffer.setBoolean($offset, $name+firstLowerCase);
 		return this;
