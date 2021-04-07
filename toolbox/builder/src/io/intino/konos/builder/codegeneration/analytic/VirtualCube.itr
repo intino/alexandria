@@ -411,6 +411,16 @@ def type(cube)
                 }
                 return 0L;
             }
+
+            @Override
+            public String toString() {
+                return "$name+FirstUpperCase.Aggregation{"
+                    + "total=" + aggregationTotal
+                    + ", distincts=" + aggregationDistincts
+                    [$index+toString...[$NL]]
+                    [$indicator+toString...[$NL]]
+                    + "}";
+            }
 		}
 
     	public static class Loader implements Iterable<Fact> {

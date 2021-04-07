@@ -102,6 +102,7 @@ public class CategoricalAxisRenderer {
         for (int i = 0; i < includes.size(); i++) {
             fb.add("include", new FrameBuilder("include")
                     .add("name", includes.get(i).name$())
+                    .add("type", includes.get(i).isCategorical() ? "categorical" : "continuous")
                     .add("label", asFieldName(includes.get(i).label()))
                     .add("index", i + offset));
         }
@@ -116,6 +117,7 @@ public class CategoricalAxisRenderer {
                     .add("name", includes.get(i).name$())
                     .add("label", asFieldName(includes.get(i).label()))
                     .add("id", include)
+                    .add("type", includes.get(i).isCategorical() ? "categorical" : "continuous")
                     .add("index", i + offset));
         }
     }

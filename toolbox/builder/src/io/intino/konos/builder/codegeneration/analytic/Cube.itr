@@ -412,8 +412,8 @@ def type(cube)
 			@Override
 			public String toString() {
 			    return "$name+FirstUpperCase.Aggregation{"
-			        + "aggregationTotal=" + aggregationTotal
-			        + "aggregationDistincts=" + aggregationDistincts
+			        + "total=" + aggregationTotal
+			        + ", distincts=" + aggregationDistincts
 			        [$index+toString...[$NL]]
 			        [$indicator+toString...[$NL]]
 			        + "}";

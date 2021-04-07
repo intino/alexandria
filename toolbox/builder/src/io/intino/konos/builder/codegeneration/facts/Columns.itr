@@ -145,6 +145,13 @@ def type(column & byte) trigger(setter)
 	}
 end
 
+def type(column & short) trigger(setter)
+	public $owner+firstUpperCase $name+firstLowerCase(short $name+firstLowerCase) {
+		bitBuffer.set$aligned~Short[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
+		return this;
+	}
+end
+
 def type(column & byte & unsigned) trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(byte $name+firstLowerCase) {
 		bitBuffer.set$aligned~UByte[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
@@ -203,12 +210,12 @@ end
 
 def type(column & categorical) trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(String $name+firstLowerCase) {
-		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $type+firstUpperCase.component($name+firstLowerCase).index);
+		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $type+firstUpperCase.component($name+firstLowerCase).index());
 		return this;
 	}
 
 	public $owner+firstUpperCase $name+firstLowerCase($type+firstUpperCase.Component $name+firstLowerCase) {
-		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $name+firstLowerCase.index);
+		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $name+firstLowerCase.index());
 		return this;
 	}
 end
@@ -292,12 +299,12 @@ end
 
 def type(column & categorical) trigger(setter)
 	public $owner+firstUpperCase~Builder $name+firstLowerCase(String $name+firstLowerCase) {
-		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $type+firstUpperCase.component($name+firstLowerCase).index);
+		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $type+firstUpperCase.component($name+firstLowerCase).index());
 		return this;
 	}
 
 	public $owner+firstUpperCase~Builder $name+firstLowerCase($type+firstUpperCase.Component $name+firstLowerCase) {
-		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $name+firstLowerCase.index);
+		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $name+firstLowerCase.index());
 		return this;
 	}
 end
