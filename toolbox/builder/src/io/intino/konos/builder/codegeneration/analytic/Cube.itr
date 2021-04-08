@@ -1,11 +1,15 @@
 def type(cube & src)
 	package $package.analytic.cubes;
 
+    import io.intino.alexandria.Timetag;
     import io.intino.alexandria.led.buffers.store.ByteStore;
 
+    import $package.analytic.Axis;
     import $package.analytic.axes.*;
 
-    import java.util.List;
+    import java.io.File;
+    import java.util.*;
+    import java.util.stream.Collectors;
 
 	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
 
@@ -30,6 +34,8 @@ def type(cube & src)
         }
 
 		public static class Loader extends Abstract$name+FirstUpperCase.Loader {
+
+		    [$splitted+create]
 
 			public Loader(Datasource datasource[, $split+parameter]) {
 				super(datasource[, $split+name]);
@@ -59,12 +65,14 @@ def type(cube)
     import io.intino.alexandria.led.allocators.SchemaFactory;
     import io.intino.alexandria.led.buffers.store.ByteStore;
     import io.intino.alexandria.led.util.iterators.MergedIterator;
+    import io.intino.alexandria.led.util.collections.SparseLongList;
 
 	import $package.analytic.axes.*;
     import $package.analytic.Axis;
 
 	import java.io.File;
     import java.util.*;
+    import java.util.stream.Collectors;
     import java.util.function.Function;
     import java.util.function.Predicate;
     import java.util.stream.Stream;
@@ -131,7 +139,7 @@ def type(cube)
                 : Arrays.stream(result).filter(java.util.Objects::nonNull).iterator();
 		}
 
-		public static List<Axis> axes() {
+		public static List<Axis> dimensions() {
 		    return List.of([$dimension+getInstance...[, ]]);
 		}
 
@@ -322,8 +330,14 @@ def type(cube)
 
 		public enum Indicator {
 
-		    Count("Count", "", Mode.Sum),
+		    Total("Total", "", Mode.Sum),
+		    Distincts("Distincts", "", Mode.Sum),
 		    [$indicator+enum...[,$NL]];
+
+
+		    public static Indicator byName(String name) {
+		        return Arrays.stream(values()).filter(i -> i.name().equalsIgnoreCase(name)).findFirst().orElse(null);
+		    }
 
 		    public final String title;
 		    public final String unit;
@@ -343,8 +357,10 @@ def type(cube)
 		public static class Aggregation {
 
 			private final Axis.Component$[] components;
-			private long aggregationCount = 0;
-			$index+field
+			private long aggregationTotal = 0L;
+			private long aggregationDistincts = 0L;
+			private long lastID = Long.MIN_VALUE;
+			[$index+field]
 			$indicator+field...[$NL]
 
 			public Aggregation(Axis.Component$[] components) {
@@ -352,18 +368,28 @@ def type(cube)
 			}
 
 			public void append(Fact fact) {
-				$indicator+sum...[$NL]
-				$index+append
+				[$indicator+sum...[$NL]]
+				if (lastID != fact.id()) {
+				    [$index+append]
+                    ++aggregationDistincts;
+                    lastID = fact.id();
+                }
+                ++aggregationTotal;
 			}
 
 			public void append(Aggregation aggregation) {
-				$indicator+sumAggregation...[$NL]
-				$index+append2
-				aggregationCount += aggregation.aggregationCount;
+				[$indicator+sumAggregation...[$NL]]
+				[$index+append2]
+				aggregationDistincts = Math.max(aggregationDistincts(), aggregation.aggregationDistincts());
+				aggregationTotal += aggregation.aggregationTotal();
 			}
 
-			public long aggregationCount() {
-				return aggregationCount;
+			public long aggregationTotal() {
+				return aggregationTotal;
+			}
+
+			public long aggregationDistincts() {
+			    return aggregationDistincts;
 			}
 
 			[$index+getter]
@@ -377,7 +403,8 @@ def type(cube)
 			public Number indicator(Indicator indicator) {
                 switch(indicator) {
                     [$indicator+switchCase...[$NL]]
-                    case Count: return aggregationCount;
+                    case Total: return aggregationTotal;
+                    case Distincts: return aggregationDistincts;
                 }
                 return 0L;
             }
@@ -385,14 +412,15 @@ def type(cube)
 			@Override
 			public String toString() {
 			    return "$name+FirstUpperCase.Aggregation{"
-			        + "aggregationCount=" + aggregationCount
+			        + "total=" + aggregationTotal
+			        + ", distincts=" + aggregationDistincts
 			        [$index+toString...[$NL]]
 			        [$indicator+toString...[$NL]]
 			        + "}";
 			}
 		}
 
-    	public static abstract class Loader implements Iterable<Fact> {
+    	public static class Loader implements Iterable<Fact> {
 
 			protected final Datasource datasource;
 			[$split+field]
@@ -451,35 +479,12 @@ def type(indicator) trigger(switchCase)
     case $fieldName+CamelCase+FirstUpperCase: return $name+snakeCaseToCamelCase+FirstLowerCase;
 end
 
-def type(index & total) trigger(field)
-	private long aggregationTotal = 0;
-	private long last = 0;
-end
-
-def type(index & total) trigger(append)
-	if (last != fact.id()) {
-		++aggregationCount;
-		last = fact.id();
-	}
-	++aggregationTotal;
-end
-
-def type(index & total) trigger(append2)
-	aggregationTotal += aggregation.aggregationTotal;
-end
-
-def type(index & total) trigger(getter)
-	public long aggregationTotal() {
-		return aggregationTotal;
-	}
-end
-
 def type(index) trigger(field)
-	private final io.intino.alexandria.led.util.collections.SparseLongList ids = new io.intino.alexandria.led.util.collections.SparseLongList();
+	private final SparseLongList ids = new SparseLongList();
 end
 
 def type(index) trigger(append)
-	if (ids.isEmpty() || ids.get(ids.size() - 1) != fact.id()) ids.add(fact.id());
+	ids.add(fact.id());
 end
 
 def type(index) trigger(append2)
@@ -614,12 +619,8 @@ end
 
 def type(indicator & average) trigger(getter)
 	public double $name+firstLowerCase() {
-		return $name+firstLowerCase / (double) $index;
+		return $name+firstLowerCase / (double) aggregationDistincts;
 	}
-end
-
-def type(total) trigger(index)
-	aggregationTotal
 end
 
 def type(index) trigger(index)
@@ -694,6 +695,18 @@ end
 
 def type(column) trigger(toString)
     + ", $name=" + $name()
+end
+
+def type(splitted) attribute(splitted:true) trigger(create)
+    public static List<Loader> create(File root, Timetag from, Timetag to, Collection<String> split) {
+        return split.stream().map(s -> new Loader(new Loader.Datasource(root, from, to), s)).collect(Collectors.toList());
+    }
+end
+
+def type(splitted) attribute(splitted:false) trigger(create)
+    public static List<Loader> create(File root, Timetag from, Timetag to) {
+        return List.of(new Loader(new Loader.Datasource(root, from, to)));
+    }
 end
 
 

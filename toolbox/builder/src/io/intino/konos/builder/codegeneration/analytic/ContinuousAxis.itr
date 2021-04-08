@@ -32,6 +32,10 @@ def type(continuous)
         	return get().getComponent(id);
         }
 
+        public static Component component(int index) {
+        	return get().getComponent(index);
+        }
+
         public static List<Range> ranges() {
             return get().getRanges();
         }
