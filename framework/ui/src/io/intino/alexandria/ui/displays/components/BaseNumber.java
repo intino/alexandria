@@ -3,6 +3,9 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.components.AbstractBaseNumber;
 import io.intino.alexandria.ui.displays.notifiers.BaseNumberNotifier;
+import jdk.jfr.Percentage;
+
+import java.util.Currency;
 
 public class BaseNumber<DN extends BaseNumberNotifier, B extends Box> extends AbstractBaseNumber<DN, B> {
     private boolean expanded;
@@ -10,6 +13,8 @@ public class BaseNumber<DN extends BaseNumberNotifier, B extends Box> extends Ab
     public BaseNumber(B box) {
         super(box);
     }
+
+    public enum Style { Number, Currency, Bytes, Percentage, Exponential }
 
     public BaseNumber<DN, B> expanded(boolean value) {
         this.expanded = value;
@@ -38,6 +43,11 @@ public class BaseNumber<DN extends BaseNumberNotifier, B extends Box> extends Ab
 
     public BaseNumber<DN, B> error(String error) {
         notifier.refreshError(error);
+        return this;
+    }
+
+    public BaseNumber<DN, B> style(Style style) {
+        notifier.refreshStyle(style.name());
         return this;
     }
 }
