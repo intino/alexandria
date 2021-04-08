@@ -1,7 +1,9 @@
 def type(reader)
-	package $package+validPackage~.analytic.cubes.schemas;
+	package $package+validPackage~.analytic.cubes;
 
     import io.intino.alexandria.led.Schema;
+    import io.intino.alexandria.led.LedReader;
+    import io.intino.alexandria.led.LedStream;
     import io.intino.alexandria.led.allocators.SchemaFactory;
     import io.intino.alexandria.led.buffers.store.ByteStore;
     import io.intino.alexandria.led.buffers.store.ByteBufferStore;

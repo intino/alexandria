@@ -57,7 +57,7 @@ public class AnalyticBuilderRenderer extends Renderer {
 
 	private void renderCubes(KonosGraph graph) {
 		graph.cubeList().stream().filter(c -> !c.isVirtual()).forEach(cube -> {
-			writeFrame(new File(destinationDirectory(), "cubes.schemas"), cube.name$(),
+			writeFrame(new File(destinationDirectory(), "cubes"), cube.name$(),
 					cubeTemplate().render(renderCube(cube).toFrame()));
 		});
 	}
@@ -76,7 +76,7 @@ public class AnalyticBuilderRenderer extends Renderer {
 
 	private void renderReaders(KonosGraph graph) {
 		graph.cubeList().stream().filter(c -> !c.isVirtual()).forEach(cube -> {
-			writeFrame(new File(destinationDirectory(), "cubes.schemas"), cube.name$() + "Reader",
+			writeFrame(new File(destinationDirectory(), "cubes"), cube.name$() + "Reader",
 					cubeReaderTemplate().render(renderReader(cube).toFrame()));
 		});
 	}

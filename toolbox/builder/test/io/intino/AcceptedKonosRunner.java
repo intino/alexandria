@@ -47,7 +47,7 @@ public class AcceptedKonosRunner {
 
 	@Test
 	public void analyticBuilder() {
-		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/workflow.txt")});
+		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/analytic_builder.txt")});
 	}
 
 	@Test

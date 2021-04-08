@@ -1,5 +1,5 @@
 def type(cube)
-	package $package+validPackage~.analytic.cubes.schemas;
+	package $package+validPackage~.analytic.cubes;
 
     import io.intino.alexandria.led.HeapLedStreamBuilder;
     import io.intino.alexandria.led.Schema;
@@ -62,7 +62,7 @@ def type(cube)
             }
 
             public Builder(int numSchemasPerBlock) {
-                this(numSchemasPerBlock, System.getProperty("java.io.tmpdir"));
+                this(numSchemasPerBlock, new File(System.getProperty("java.io.tmpdir")));
             }
 
             public Builder(int numSchemasPerBlock, File tempDirectory) {
