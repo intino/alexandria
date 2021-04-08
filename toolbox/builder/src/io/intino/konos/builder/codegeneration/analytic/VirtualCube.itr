@@ -1,12 +1,19 @@
 def type(cube & src)
 	package $package.analytic.cubes;
 
-	import $package.analytic.axes.*;
-	import $package.analytic.Axis;
+    import io.intino.alexandria.Timetag;
+    import io.intino.alexandria.led.buffers.store.ByteStore;
+
+    import $package.analytic.Axis;
+    import $package.analytic.axes.*;
+
+    import java.io.File;
+    import java.util.*;
+    import java.util.stream.Collectors;
 
 	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
 
-		public $name+FirstUpperCase(java.util.List<Loader> loaders) {
+		public $name+FirstUpperCase(List<Loader> loaders) {
 			super(loaders);
 		}
 
@@ -26,7 +33,7 @@ def type(cube & src)
             return this;
         }
 
-		public static List<Axis> axes() {
+		public static List<Axis> dimensions() {
             return List.of([$dimension+getInstance...[, ]]);
         }
 
@@ -35,6 +42,11 @@ def type(cube & src)
 		}
 
 		public static class Loader extends Abstract$name+FirstUpperCase.Loader {
+
+		    public static List<Loader> create(File root, Timetag from, Timetag to, Collection<String> divisions) {
+                return divisions.stream().map(d -> new Loader(new Loader.Datasource(root, from, to), d)).collect(Collectors.toList());
+            }
+
 
 			public Loader(Datasource datasource[, $split+parameter]) {
 				super(datasource[, $split+name]);
@@ -58,12 +70,14 @@ def type(cube)
     import io.intino.alexandria.led.buffers.store.ByteStore;
     import io.intino.alexandria.led.util.iterators.MergedIterator;
     import io.intino.alexandria.led.util.iterators.StatefulIterator;
+    import io.intino.alexandria.led.util.collections.SparseLongList;
 
     import $package.analytic.axes.*;
     import $package.analytic.Axis;
 
 	import java.io.File;
     import java.util.*;
+    import java.util.stream.Collectors;
     import java.util.function.Function;
     import java.util.function.Predicate;
     import java.util.stream.Stream;
@@ -80,7 +94,7 @@ def type(cube)
 		private Predicate<Fact> filter = fact -> true;
 		private final List<Axis> axes = new ArrayList<>();
 		private final Map<Axis, Set<Axis.Component>> components = new HashMap<>();
-		private final List<Function<Fact, Axis.Component>> groupByList = new ArrayList<>();
+		private final List<Function<Fact, ? extends Axis.Component>> groupByList = new ArrayList<>();
 		private Aggregation$[] result;
 
     	public Abstract$name+FirstUpperCase(List<? extends Loader> loaders) {
@@ -90,6 +104,23 @@ def type(cube)
     	[$dimension+method...[$NL$NL]]
 
     	[$customFilter+method...[$NL$NL]]
+
+    	public Abstract$name+FirstUpperCase groupBy(Axis axis) {
+            if(axis == null) throw new NullPointerException("Axis cannot be null");
+            switch(axis.getLabel()) {
+                [$dimension+switchCaseGroupBy...[$NL]]
+            }
+            return this;
+        }
+
+        @SuppressWarnings("unchecked")
+        public Abstract$name+FirstUpperCase filter(Axis axis, Set<? extends Axis.Component> components) {
+            if(axis == null) throw new NullPointerException("Axis cannot be null");
+            switch(axis.getLabel()) {
+                [$dimension+switchCaseFilterBy...[$NL]]
+            }
+            return this;
+        }
 
 		public Abstract$name+firstUpperCase execute() {
 			result = new Aggregation$[resultsSize()];
@@ -112,8 +143,13 @@ def type(cube)
                 : Arrays.stream(result).filter(java.util.Objects::nonNull).iterator();
         }
 
-        public static List<Axis> axes() {
+        public static List<Axis> dimensions() {
             return List.of([$dimension+getInstance...[, ]]);
+        }
+
+        public boolean contains(Axis axis, Axis.Component component) {
+            if(!components.containsKey(axis)) return false;
+            return components.get(axis).contains(component);
         }
 
     	public Iterator<Fact> detail() {
@@ -287,8 +323,14 @@ def type(cube)
 
 		public enum Indicator {
 
-		    Count("Count", "", Mode.Sum),
+		    Total("Total", "", Mode.Sum),
+		    Distincts("Distincts", "", Mode.Sum),
 		    [$indicator+enum...[,$NL]];
+
+
+		    public static Indicator byName(String name) {
+		        return Arrays.stream(values()).filter(i -> i.name().equalsIgnoreCase(name)).findFirst().orElse(null);
+		    }
 
 		    public final String title;
 		    public final String unit;
@@ -308,7 +350,9 @@ def type(cube)
 		public static class Aggregation {
 
 			private final Axis.Component$[] components;
-			private long aggregationCount = 0;
+			private long aggregationTotal = 0L;
+			private long aggregationDistincts = 0L;
+			private long lastID = Long.MIN_VALUE;
 			[$index+field]
 			[$indicator+field...[$NL]]
 			private long total$name+FirstUpperCase;
@@ -319,13 +363,19 @@ def type(cube)
 
 			public void append(Fact fact) {
 				[$indicator+sum...[$NL]]
-				[$index+append]
-				++aggregationCount;
+				if(lastID != fact.id()) {
+				    [$index+append]
+				    ++aggregationDistincts;
+				    lastID = fact.id();
+				}
+				++aggregationTotal;
 			}
 
 			public void append(Aggregation aggregation) {
 				[$indicator+sumAggregation...[$NL]]
 				[$index+append2]
+				aggregationDistincts = Math.max(aggregationDistincts, aggregation.aggregationDistincts);
+				aggregationTotal += aggregation.aggregationTotal();
 			}
 
 			public Aggregation append(long ids) {
@@ -333,8 +383,12 @@ def type(cube)
 				return this;
 			}
 
-			public long aggregationCount() {
-			    return aggregationCount;
+			public long aggregationTotal() {
+			    return aggregationTotal;
+			}
+
+			public long aggregationDistincts() {
+			    return aggregationDistincts;
 			}
 
 			public long total$name+FirstUpperCase() {
@@ -352,9 +406,20 @@ def type(cube)
 			public Number indicator(Indicator indicator) {
                 switch(indicator) {
                     [$indicator+switchCase...[$NL]]
-                    case Count: return aggregationCount;
+                    case Total: return aggregationTotal;
+                    case Distincts: return aggregationDistincts;
                 }
                 return 0L;
+            }
+
+            @Override
+            public String toString() {
+                return "$name+FirstUpperCase.Aggregation{"
+                    + "total=" + aggregationTotal
+                    + ", distincts=" + aggregationDistincts
+                    [$index+toString...[$NL]]
+                    [$indicator+toString...[$NL]]
+                    + "}";
             }
 		}
 
@@ -481,37 +546,15 @@ def type(indicator) trigger(enum)
 end
 
 def type(indicator) trigger(switchCase)
-    case $fieldName+CamelCase+FirstUpperCase: return $fieldName+CamelCase+FirstLowerCase;
-end
-
-def type(index & total) trigger(field)
-	private long aggregationTotal = 0;
-	private long last = 0;
-end
-
-def type(index & total) trigger(append)
-	if (last != fact.id()) {
-		aggregationTotal++;
-		last = fact.id();
-	}
-end
-
-def type(index & total) trigger(append2)
-	aggregationTotal += aggregation.aggregationTotal;
-end
-
-def type(index & total) trigger(getter)
-	public long aggregationTotal() {
-		return aggregationTotal;
-	}
+    case $fieldName+CamelCase+FirstUpperCase: return $name+snakeCaseToCamelCase+FirstLowerCase;
 end
 
 def type(index) trigger(field)
-	private final List<Long> ids = new java.util.ArrayList<>();
+	private final SparseLongList ids = new SparseLongList();
 end
 
 def type(index) trigger(append)
-	if (ids.isEmpty() || ids.get(ids.size() - 1) != fact.id()) ids.add(fact.id());
+	ids.add(fact.id());
 end
 
 def type(index) trigger(append2)
@@ -520,7 +563,7 @@ end
 
 def type(index) trigger(getter)
 	public List<Long> ids() {
-		return ids;
+		return ids.asList();
 	}
 end
 
@@ -561,6 +604,14 @@ def type(customFilter) trigger(staticMethod)
 	}
 end
 
+def type(dimension & categorical) trigger(switchCaseGroupBy)
+    case $axis+snakeCaseToCamelCase+firstUpperCase.AXIS_LABEL: return groupBy$name+snakeCaseToCamelCase+firstUpperCase();
+end
+
+def type(dimension & categorical) trigger(switchCaseFilter)
+    case $axis+snakeCaseToCamelCase+firstUpperCase.AXIS_LABEL: return filter$name+snakeCaseToCamelCase+firstUpperCase((Set<$axis+snakeCaseToCamelCase+firstUpperCase.Component>) components);
+end
+
 def type(dimension) trigger(staticMethod)
 	public static Predicate<Fact> $name+snakeCaseToCamelCase+firstLowerCase~Predicate(Set<$name+snakeCaseToCamelCase+FirstUpperCase.Component> $name+snakeCaseToCamelCase+firstLowerCase) {
 		return v -> false; //TODO
@@ -589,7 +640,7 @@ def type(dimension & categorical) trigger(method)
 	}
 
 	public static Axis.Component $name+snakeCaseToCamelCase+firstLowerCase~Function(Fact fact) {
-		return fact.$source+snakeCaseToCamelCase+firstLowerCase()[.$child+snakeCaseToCamelCase+firstLowerCase];
+		return fact.$source+snakeCaseToCamelCase+firstLowerCase()[.$child+snakeCaseToCamelCase+firstLowerCase()];
 	}
 end
 
@@ -610,7 +661,7 @@ def type(dimension & continuous) trigger(method)
 		return $axis+snakeCaseToCamelCase+firstLowerCase.contains($name+snakeCaseToCamelCase+firstLowerCase~Function(fact));
 	}
 
-	private static Axis.Component $name+snakeCaseToCamelCase+firstLowerCase~Function(Fact fact) {
+	public static Axis.Component $name+snakeCaseToCamelCase+firstLowerCase~Function(Fact fact) {
 		return $axis+snakeCaseToCamelCase+firstUpperCase.rangeOf(fact.$source+firstLowerCase());
 	}
 end
@@ -641,12 +692,8 @@ end
 
 def type(indicator & average) trigger(getter)
 	public double $name+firstLowerCase() {
-		return $name+firstLowerCase / (double) $index;
+		return $name+firstLowerCase / (double) aggregationDistincts;
 	}
-end
-
-def type(total) trigger(index)
-	aggregationTotal
 end
 
 def type(index) trigger(index)

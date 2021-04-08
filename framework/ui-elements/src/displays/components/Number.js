@@ -54,7 +54,7 @@ class Number extends AbstractNumber {
 		const variant = this.variant("body1");
 		const expanded = this.state.expanded;
 		const format = expanded ? this._defaultFormat() : this._format();
-		const expandedClass = this.props.style != null ? classes.withExpanded : undefined;
+		const expandedClass = this.state.style != null ? classes.withExpanded : undefined;
 
 		if (value == null || value === "" || !this.state.visible) return (<React.Fragment/>);
 
@@ -73,7 +73,7 @@ class Number extends AbstractNumber {
 	};
 
 	_format = () => {
-		const style = this.props.style;
+		const style = this.state.style;
 		if (style == null) return this._defaultFormat();
 		const format = this._addDecimals("0");
 		if (style === "Currency") return format + "a";
