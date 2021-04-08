@@ -10,6 +10,7 @@ import io.intino.konos.builder.codegeneration.ui.I18nRenderer;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.RouteDispatcherRenderer;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.CatalogComponents;
 import io.intino.konos.model.graph.Display;
@@ -32,7 +33,7 @@ public class ServiceRenderer extends UIRenderer {
 	}
 
 	@Override
-	public void render() {
+	public void render() throws KonosException {
 		createUi();
 		new I18nRenderer(context, service, target).execute();
 		new RouteDispatcherRenderer(context, service, target).execute();

@@ -7,6 +7,7 @@ import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Parameter;
 import io.intino.konos.model.graph.Response;
@@ -30,7 +31,7 @@ public class MessagingAccessorRenderer extends Renderer {
 	}
 
 	@Override
-	public void render() {
+	public void render() throws KonosException {
 		new SchemaListRenderer(context, service.graph(), destination).execute();
 		processService(service);
 	}

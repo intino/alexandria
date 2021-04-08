@@ -4,6 +4,7 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.Service;
 
@@ -21,9 +22,9 @@ public class DisplayListRenderer extends UIRenderer {
 	}
 
 	@Override
-	public void render() {
+	public void render() throws KonosException {
 		DisplayRendererFactory factory = new DisplayRendererFactory();
-		displays.forEach(d -> factory.renderer(context, d, templateProvider, target).execute());
+		for (Display d : displays) factory.renderer(context, d, templateProvider, target).execute();
 	}
 
 }

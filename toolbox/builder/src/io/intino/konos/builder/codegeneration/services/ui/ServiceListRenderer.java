@@ -7,10 +7,13 @@ import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayListRenderer;
 import io.intino.konos.builder.codegeneration.ui.resource.ResourceListRenderer;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Service;
 
 import java.io.File;
+
+import static java.util.stream.Collectors.toList;
 
 public class ServiceListRenderer extends UIRenderer {
 	private final KonosGraph graph;
@@ -21,12 +24,12 @@ public class ServiceListRenderer extends UIRenderer {
 	}
 
 	@Override
-	public void render() {
-		graph.serviceList(Service::isUI).map(Service::asUI).forEach(this::processUIService);
+	public void render() throws KonosException {
+		for (Service service : graph.serviceList(Service::isUI).collect(toList())) processUIService(service.asUI());
 		new ResourceListRenderer(context, graph, Target.Owner).execute();
 	}
 
-	private void processUIService(Service.UI service) {
+	private void processUIService(Service.UI service) throws KonosException {
 		context.webModuleDirectory(new File(context.configuration().moduleDirectory().getParentFile(), Formatters.camelCaseToSnakeCase().format(service.name$()).toString()));
 		new ServiceRenderer(context, service).execute();
 		new DisplayListRenderer(context, service, templateProvider(), target).execute();

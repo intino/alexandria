@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.schema;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Schema;
 import io.intino.konos.model.graph.Service;
@@ -46,8 +47,8 @@ public class SchemaListRenderer extends Renderer {
 		filesToDelete.forEach(File::delete);
 	}
 
-	public void render() {
-		schemas.forEach(s -> new SchemaRenderer(context, s, destination, packageName).execute());
+	public void render() throws KonosException {
+		for (Schema s : schemas) new SchemaRenderer(context, s, destination, packageName).execute();
 	}
 
 	private String subPackage(Schema schema) {
