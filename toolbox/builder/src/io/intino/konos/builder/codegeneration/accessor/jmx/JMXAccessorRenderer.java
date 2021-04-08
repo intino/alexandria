@@ -9,6 +9,7 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.codegeneration.services.jmx.JMXServerTemplate;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Data;
 import io.intino.konos.model.graph.Parameter;
@@ -33,7 +34,7 @@ public class JMXAccessorRenderer extends Renderer {
 	}
 
 	@Override
-	public void render() {
+	public void render() throws KonosException {
 		new SchemaListRenderer(context, service.graph(), destination, packageName).execute();
 		createInterface(service);
 		createService(service);

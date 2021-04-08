@@ -11,6 +11,7 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.RESTNotificationActionRenderer;
 import io.intino.konos.builder.codegeneration.action.RESTResourceActionRenderer;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.Service.REST.Notification;
@@ -35,16 +36,17 @@ public class RESTResourceRenderer extends Renderer {
 		this.services = graph.serviceList(Service::isREST).map(Service::asREST).collect(Collectors.toList());
 	}
 
-	public void render() {
-		services.forEach(this::processService);
+	public void render() throws KonosException {
+		for (Service.REST service : services) processService(service);
 	}
 
-	private void processService(Service.REST service) {
-		service.core$().findNode(Resource.class).forEach(this::processResource);
-		service.core$().findNode(Notification.class).forEach(this::processNotification);
+	private void processService(Service.REST service) throws KonosException {
+		for (Resource resource : service.core$().findNode(Resource.class)) processResource(resource);
+		for (Notification notification : service.core$().findNode(Notification.class))
+			processNotification(notification);
 	}
 
-	private void processResource(Resource resource) {
+	private void processResource(Resource resource) throws KonosException {
 		for (Operation operation : resource.operationList()) {
 			Frame frame = frameOf(resource, operation);
 			final String className = snakeCaseToCamelCase(operation.getClass().getSimpleName() + "_" + resource.name$()) + "Resource";
@@ -55,7 +57,7 @@ public class RESTResourceRenderer extends Renderer {
 		}
 	}
 
-	private void processNotification(Notification notification) {
+	private void processNotification(Notification notification) throws KonosException {
 		final String className = snakeCaseToCamelCase(notification.name$()) + "Notification";
 		Service.REST service = notification.core$().ownerAs(Service.REST.class);
 		FrameBuilder builder = new FrameBuilder("notification").add("path", notification.path());
@@ -70,11 +72,11 @@ public class RESTResourceRenderer extends Renderer {
 		createCorrespondingAction(notification);
 	}
 
-	private void createCorrespondingAction(Operation operation) {
+	private void createCorrespondingAction(Operation operation) throws KonosException {
 		new RESTResourceActionRenderer(context, operation).execute();
 	}
 
-	private void createCorrespondingAction(Notification notification) {
+	private void createCorrespondingAction(Notification notification) throws KonosException {
 		new RESTNotificationActionRenderer(context, notification).execute();
 	}
 
