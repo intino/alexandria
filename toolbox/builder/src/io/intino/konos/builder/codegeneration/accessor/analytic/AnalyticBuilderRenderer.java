@@ -45,6 +45,7 @@ public class AnalyticBuilderRenderer extends Renderer {
 		renderAxes(graph.axisList());
 		renderCubes(graph);
 		renderBuilder(graph);
+		renderReaders(graph);
 	}
 
 	private void renderAxes(List<Axis> axes) {
@@ -56,7 +57,7 @@ public class AnalyticBuilderRenderer extends Renderer {
 
 	private void renderCubes(KonosGraph graph) {
 		graph.cubeList().stream().filter(c -> !c.isVirtual()).forEach(cube -> {
-			writeFrame(new File(destinationDirectory(), "cubes"), cube.name$(),
+			writeFrame(new File(destinationDirectory(), "cubes.schemas"), cube.name$(),
 					cubeTemplate().render(renderCube(cube).toFrame()));
 		});
 	}
@@ -73,15 +74,30 @@ public class AnalyticBuilderRenderer extends Renderer {
 		writeFrame(destinationDirectory(), context.boxName() + "AnalyticBuilder", builderTemplate().render(builder.toFrame()));
 	}
 
+	private void renderReaders(KonosGraph graph) {
+		graph.cubeList().stream().filter(c -> !c.isVirtual()).forEach(cube -> {
+			writeFrame(new File(destinationDirectory(), "cubes.schemas"), cube.name$() + "Reader",
+					cubeReaderTemplate().render(renderReader(cube).toFrame()));
+		});
+	}
+
+	private FrameBuilder renderReader(Cube cube) {
+		return new FrameBuilder("reader").add("package", packageName).add("name", cube.name$());
+	}
+
 	private File destinationDirectory() {
 		return new File(destination, packageName.replace(".", "/") + "/analytic");
 	}
 
 	private Template builderTemplate() {
-		return Formatters.customize(new BuilderTemplate());
+		return Formatters.customize(new AnalyticBuilderTemplate());
 	}
 
 	private Template cubeTemplate() {
-		return Formatters.customize(new CubeWithSettersTemplate());
+		return Formatters.customize(new CubeWithColumnsTemplate());
+	}
+
+	private Template cubeReaderTemplate() {
+		return Formatters.customize(new CubeReaderTemplate());
 	}
 }

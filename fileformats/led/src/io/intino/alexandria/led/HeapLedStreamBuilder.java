@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 
 import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
 
-public final class HeapLedStreamBuilder<T extends Schema> implements LedStream.Builder<T> {
+public class HeapLedStreamBuilder<T extends Schema> implements LedStream.Builder<T> {
 
     private static final int DEFAULT_NUM_SCHEMAS_PER_BLOCK = 5_000_000;
     private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));

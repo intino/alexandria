@@ -1,7 +1,7 @@
 def type(builder)
 	package $package+validPackage.analytic;
 
-	import $package+validPackage.analytic.cubes.*;
+	import $package+validPackage.analytic.cubes.schemas.*;
 	import io.intino.alexandria.logger.Logger;
 	import io.intino.alexandria.Timetag;
 	import io.intino.alexandria.Fingerprint;
