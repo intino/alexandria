@@ -1,7 +1,7 @@
 def type(interface)
-	package $package.analytic;
+	package $package+ValidPackage.analytic;
 
-	import $package.analytic.axes.*;
+	import $package+ValidPackage.analytic.axes.*;
 
     import java.util.List;
     import java.util.stream.Stream;

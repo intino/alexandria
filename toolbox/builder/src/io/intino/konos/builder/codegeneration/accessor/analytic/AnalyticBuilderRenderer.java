@@ -13,6 +13,7 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.graph.Axis;
 import io.intino.konos.model.graph.Cube;
 import io.intino.konos.model.graph.KonosGraph;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.util.List;
@@ -45,7 +46,6 @@ public class AnalyticBuilderRenderer extends Renderer {
 		renderAxes(graph.axisList());
 		renderCubes(graph);
 		renderBuilder(graph);
-		renderReaders(graph);
 	}
 
 	private void renderAxes(List<Axis> axes) {
@@ -57,32 +57,27 @@ public class AnalyticBuilderRenderer extends Renderer {
 
 	private void renderCubes(KonosGraph graph) {
 		graph.cubeList().stream().filter(c -> !c.isVirtual()).forEach(cube -> {
-			writeFrame(new File(destinationDirectory(), "cubes"), cube.name$(),
+			writeFrame(new File(destinationDirectory(), "cubes"), cube.name$() + "Schema",
 					cubeTemplate().render(renderCube(cube).toFrame()));
 		});
 	}
 
 	private FrameBuilder renderCube(Cube cube) {
-		FrameBuilder fb = new FrameBuilder("cube").add("package", packageName).add("name", cube.name$());
-		factRenderer.render(cube, fb);
+		final String className = StringUtils.capitalize(cube.name$()) + "Schema";
+		FrameBuilder fb = new FrameBuilder("cube")
+				.add("package", packageName)
+				.add("cube", StringUtils.capitalize(cube.name$()))
+				.add("name", className);
+		factRenderer.render(className, cube, fb);
 		return fb;
 	}
 
 	private void renderBuilder(KonosGraph graph) {
-		FrameBuilder builder = new FrameBuilder("builder").add("package", packageName).add("name", context.boxName() + "AnalyticBuilder");
-		graph.cubeList().stream().filter(c -> !c.isVirtual()).forEach(cube -> builder.add("cube", renderCube(cube)));
+		FrameBuilder builder = new FrameBuilder("builder").add("package", packageName).add("name",
+				context.boxName() + "AnalyticBuilder");
+		graph.cubeList().stream().filter(c -> !c.isVirtual()).forEach(cube -> builder.add("cube",
+				new FrameBuilder("cube").add("name", cube.name$())));
 		writeFrame(destinationDirectory(), context.boxName() + "AnalyticBuilder", builderTemplate().render(builder.toFrame()));
-	}
-
-	private void renderReaders(KonosGraph graph) {
-		graph.cubeList().stream().filter(c -> !c.isVirtual()).forEach(cube -> {
-			writeFrame(new File(destinationDirectory(), "cubes"), cube.name$() + "Reader",
-					cubeReaderTemplate().render(renderReader(cube).toFrame()));
-		});
-	}
-
-	private FrameBuilder renderReader(Cube cube) {
-		return new FrameBuilder("reader").add("package", packageName).add("name", cube.name$());
 	}
 
 	private File destinationDirectory() {
@@ -95,9 +90,5 @@ public class AnalyticBuilderRenderer extends Renderer {
 
 	private Template cubeTemplate() {
 		return Formatters.customize(new CubeWithColumnsTemplate());
-	}
-
-	private Template cubeReaderTemplate() {
-		return Formatters.customize(new CubeReaderTemplate());
 	}
 }

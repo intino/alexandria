@@ -39,17 +39,21 @@ public class FactRenderer {
     }
 
     public void render(Cube cube, FrameBuilder fb) {
+        render(cube.name$(), cube, fb);
+    }
+
+    public void render(String name, Cube cube, FrameBuilder fb) {
         SchemaSerialBuilder serialBuilder = new SchemaSerialBuilder();
         fb.add("id", idOf(cube.fact()).name$());
         calculateColumnSizes(cube.fact().columnList());
-        final int lastOffset = addAllColumns(cube, fb, serialBuilder);
+        final int lastOffset = addAllColumns(name, cube, fb, serialBuilder);
         fb.add("size", calculateFactSize(lastOffset));
         fb.add("serialUUID", serialBuilder.buildSerialId().toString());
     }
 
-    private int addAllColumns(Cube cube, FrameBuilder fb, SchemaSerialBuilder serialBuilder) {
+    private int addAllColumns(String name, Cube cube, FrameBuilder fb, SchemaSerialBuilder serialBuilder) {
         List<Column> columns = cube.fact().columnList().stream().sorted(COMPARATOR).collect(toList());
-        return addAllColumns(cube.name$(), columns, fb, serialBuilder);
+        return addAllColumns(name, columns, fb, serialBuilder);
     }
 
     private int addAllColumns(Cube.Virtual virtualCube, FrameBuilder fb, SchemaSerialBuilder serialBuilder) {

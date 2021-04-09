@@ -1,7 +1,7 @@
 def type(continuous)
-	package $package.analytic.axes;
+	package $package+ValidPackage.analytic.axes;
 
-	import $package.analytic.Axis;
+	import $package+ValidPackage.analytic.Axis;
     import java.util.*;
     import java.util.stream.Collectors;
     import java.util.stream.Stream;
