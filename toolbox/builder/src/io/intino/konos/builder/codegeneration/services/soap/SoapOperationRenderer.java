@@ -9,6 +9,7 @@ import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.SoapOperationActionRenderer;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Schema;
@@ -32,15 +33,15 @@ public class SoapOperationRenderer extends Renderer {
 		this.services = graph.serviceList(Service::isSoap).map(Service::asSoap).collect(Collectors.toList());
 	}
 
-	public void render() {
-		services.forEach(this::processService);
+	public void render() throws KonosException {
+		for (Service.Soap service : services) processService(service);
 	}
 
-	private void processService(Service.Soap service) {
-		service.operationList().forEach(this::processOperation);
+	private void processService(Service.Soap service) throws KonosException {
+		for (Operation operation : service.operationList()) processOperation(operation);
 	}
 
-	private void processOperation(Operation operation) {
+	private void processOperation(Operation operation) throws KonosException {
 		Frame frame = frameOf(operation);
 		final String className = snakeCaseToCamelCase(operation.name$()) + "Operation";
 		File operationsPackage = new File(gen(), OPERATIONS_PACKAGE);
@@ -49,7 +50,7 @@ public class SoapOperationRenderer extends Renderer {
 		createCorrespondingAction(operation);
 	}
 
-	private void createCorrespondingAction(Operation operation) {
+	private void createCorrespondingAction(Operation operation) throws KonosException {
 		new SoapOperationActionRenderer(context, operation).execute();
 	}
 

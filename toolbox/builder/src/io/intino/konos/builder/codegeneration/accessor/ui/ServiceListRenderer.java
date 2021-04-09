@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.accessor.ui;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Service;
 
@@ -18,8 +19,8 @@ public class ServiceListRenderer extends UIRenderer {
 	}
 
 	@Override
-	public void render() {
+	public void render() throws KonosException {
 		List<Service.UI> services = graph.serviceList(Service::isUI).map(Service::asUI).collect(Collectors.toList());
-		services.forEach(s -> new ServiceCreator(context, s).execute());
+		for (Service.UI s : services) new ServiceCreator(context, s).execute();
 	}
 }

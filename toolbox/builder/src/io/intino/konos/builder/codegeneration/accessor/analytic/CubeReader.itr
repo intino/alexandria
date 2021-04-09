@@ -1,0 +1,57 @@
+def type(reader)
+	package $package+validPackage~.analytic.cubes;
+
+    import io.intino.alexandria.led.Schema;
+    import io.intino.alexandria.led.LedReader;
+    import io.intino.alexandria.led.LedStream;
+    import io.intino.alexandria.led.allocators.SchemaFactory;
+    import io.intino.alexandria.led.buffers.store.ByteStore;
+    import io.intino.alexandria.led.buffers.store.ByteBufferStore;
+    import java.util.UUID;
+    import $package+validPackage~.analytic.axes.*;
+
+    import java.util.stream.*;
+    import java.util.Arrays;
+    import java.util.Comparator;
+    import java.io.*;
+
+	public class $name+firstUpperCase~Reader {
+
+	    public static List<LedStream<$name+firstUpperCase>> readAll(File root, Divisiones.Component division) {
+        	File$[] leds = getLedFiles(new File(root, "$name+firstUpperCase." + division.id()));
+        	return Arrays.stream(leds).map($name+firstUpperCase~Reader::openLedStream).collect(Collectors.toList());
+        }
+
+	    public static LedStream<$name+firstUpperCase> readFirst(File root, Divisiones.Component division) {
+        	File$[] leds = getLedFiles(new File(root, "$name+firstUpperCase." + division.id()));
+        	if(leds.length == 0) return LedStream.empty($name+firstUpperCase.class);
+            return openLedStream(leds$[0]);
+        }
+
+	    public static LedStream<$name+firstUpperCase> readLast(File root, Divisiones.Component division) {
+            File$[] leds = getLedFiles(new File(root, "$name+firstUpperCase." + division.id()));
+            if(leds.length == 0) return LedStream.empty($name+firstUpperCase.class);
+        	return openLedStream(leds$[leds.length - 1]);
+	    }
+
+	    private <T extends Schema> LedStream<T> openLedStream(File led) {
+	    	if(led == null || !led.exists()) return LedStream.empty($name+firstUpperCase.class);
+	    	return new LedReader(led).read($name+firstUpperCase.class);
+	    }
+
+	    public static LedStream<$name+firstUpperCase> readLedStream(File ledFile) {
+            return new LedReader(ledFile).read($name+firstUpperCase.class);
+        }
+
+        public static LedStream<$name+firstUpperCase> readLed(File ledFile) {
+            return new LedReader(ledFile).readAll($name+firstUpperCase.class);
+        }
+
+        private static File$[] getLedFiles(File dir) {
+	    	File$[] leds = dir.listFiles(f -> f.getName().endsWith(".led"));
+	    	if(leds == null || leds.length == 0) return new File$[0];
+	    	Arrays.sort(leds, Comparator.comparing(File::getName));
+	    	return leds;
+        }
+	}
+end

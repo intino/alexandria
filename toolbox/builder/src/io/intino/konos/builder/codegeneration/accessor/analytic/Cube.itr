@@ -1,10 +1,13 @@
 def type(cube)
 	package $package+validPackage~.analytic.cubes;
 
+    import io.intino.alexandria.led.HeapLedStreamBuilder;
     import io.intino.alexandria.led.Schema;
     import io.intino.alexandria.led.allocators.SchemaFactory;
     import io.intino.alexandria.led.buffers.store.ByteStore;
     import io.intino.alexandria.led.buffers.store.ByteBufferStore;
+
+    import java.io.File;
     import java.util.UUID;
 	import $package+validPackage~.analytic.axes.*;
 
@@ -42,10 +45,30 @@ def type(cube)
 		    return SERIAL_UUID;
 		}
 
+		[$column+getter...[$NL$NL]]
 		[$column+setter...[$NL$NL]]
 
 		[$split]
 
+
+		public static class Builder extends HeapLedStreamBuilder<$name+firstUpperCase> {
+
+            public Builder() {
+                this(1_000_000);
+            }
+
+            public Builder(File tempDirectory) {
+                this(1_000_000, tempDirectory);
+            }
+
+            public Builder(int numSchemasPerBlock) {
+                this(numSchemasPerBlock, new File(System.getProperty("java.io.tmpdir")));
+            }
+
+            public Builder(int numSchemasPerBlock, File tempDirectory) {
+                super($name+firstUpperCase.class, numSchemasPerBlock, tempDirectory);
+            }
+        }
 	}
 end
 

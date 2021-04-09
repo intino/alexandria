@@ -661,8 +661,8 @@ def type(dimension & continuous) trigger(method)
 		return $axis+snakeCaseToCamelCase+firstLowerCase.contains($name+snakeCaseToCamelCase+firstLowerCase~Function(fact));
 	}
 
-	public static Axis.Component $name+snakeCaseToCamelCase+firstLowerCase~Function(Fact fact) {
-		return $axis+snakeCaseToCamelCase+firstUpperCase.rangeOf(fact.$source+firstLowerCase());
+	public static $name+snakeCaseToCamelCase+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase~Function(Fact fact) {
+		return $name+snakeCaseToCamelCase+firstUpperCase.rangeOf(fact.$source+firstLowerCase());
 	}
 end
 

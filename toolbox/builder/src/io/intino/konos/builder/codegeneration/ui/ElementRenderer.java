@@ -6,6 +6,7 @@ import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.Display;
 import io.intino.magritte.framework.Layer;
@@ -32,7 +33,7 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 	}
 
 	@Override
-	public void execute() {
+	public void execute() throws KonosException {
 		String type = typeOf(element);
 		File displayFile = javaFile(displayFolder(gen(), type, target), displayName(false));
 		File accessibleFile = javaFile(displayFolder(gen(), type, target), displayName(true));

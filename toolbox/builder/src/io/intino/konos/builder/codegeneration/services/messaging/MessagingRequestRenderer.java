@@ -9,6 +9,7 @@ import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.MessagingRequestActionRenderer;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Parameter;
@@ -34,22 +35,22 @@ public class MessagingRequestRenderer extends Renderer {
 	}
 
 	@Override
-	public void render() {
-		services.forEach(this::processService);
+	public void render() throws KonosException {
+		for (Service.Messaging service : services) processService(service);
 	}
 
-	private void processService(Service.Messaging service) {
-		service.core$().findNode(Request.class).forEach(this::processRequest);
+	private void processService(Service.Messaging service) throws KonosException {
+		for (Request request : service.core$().findNode(Request.class)) processRequest(request);
 	}
 
-	private void processRequest(Request request) {
+	private void processRequest(Request request) throws KonosException {
 		File packageFolder = new File(gen(), REQUESTS);
 		writeFrame(packageFolder, snakeCaseToCamelCase(request.name$()) + "Request", template().render(fillRequestFrame(request)));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(request), javaFile(packageFolder, snakeCaseToCamelCase(request.name$()) + "Request").getAbsolutePath()));
 		createCorrespondingAction(request);
 	}
 
-	private void createCorrespondingAction(Request request) {
+	private void createCorrespondingAction(Request request) throws KonosException {
 		new MessagingRequestActionRenderer(context, request).execute();
 	}
 

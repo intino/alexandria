@@ -172,7 +172,11 @@ def attribute(name:label) trigger(declaration)
 	private final String $name+firstLowerCase;
 end
 
-def trigger(declaration)
+def type(include) attribute(type:continuous) trigger(declaration)
+	private final $name+snakeCaseToCamelCase+firstUpperCase.Range $label+snakeCaseToCamelCase+firstLowerCase;
+end
+
+def type(include) attribute(type:categorical) trigger(declaration)
 	private final $name+snakeCaseToCamelCase+firstUpperCase.Component $label+snakeCaseToCamelCase+firstLowerCase;
 end
 
@@ -182,7 +186,13 @@ def attribute(name:label) trigger(getter)
 	}
 end
 
-def trigger(getter)
+def trigger(getter) attribute(type:continuous)
+	public $name+snakeCaseToCamelCase+firstUpperCase.Range $label+snakeCaseToCamelCase+firstLowerCase() {
+	    return $label+snakeCaseToCamelCase+firstLowerCase;
+	}
+end
+
+def trigger(getter) attribute(type:categorical)
 	public $name+snakeCaseToCamelCase+firstUpperCase.Component $label+snakeCaseToCamelCase+firstLowerCase() {
 	    return $label+snakeCaseToCamelCase+firstLowerCase;
 	}
@@ -208,8 +218,12 @@ def attribute(name:label) trigger(parameter)
 	String $name+snakeCaseToCamelCase+firstLowerCase
 end
 
-def trigger(parameter)
+def attribute(type:categorical) trigger(parameter)
 	$name+snakeCaseToCamelCase+firstUpperCase.Component $label+snakeCaseToCamelCase+firstLowerCase
+end
+
+def attribute(type:continuous) trigger(parameter)
+	$name+snakeCaseToCamelCase+firstUpperCase.Range $label+snakeCaseToCamelCase+firstLowerCase
 end
 
 def attribute(name:label) trigger(constructorFromTsv)

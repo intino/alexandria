@@ -91,8 +91,8 @@ public class AcceptedKonosRunner {
 	}
 
 	@Test
-	public void pacma() {
-		KonoscRunner.main(new String[]{temp(home + "confFiles/pacma.txt")});
+	public void workflow() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/workflow.txt")});
 	}
 
 	@Test

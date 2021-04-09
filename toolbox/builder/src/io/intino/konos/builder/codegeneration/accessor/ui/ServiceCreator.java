@@ -6,6 +6,7 @@ import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.compiler.shared.PostCompileDependantWebModuleActionMessage;
 import io.intino.konos.model.graph.Service;
 import org.apache.commons.io.FileUtils;
@@ -31,7 +32,7 @@ public class ServiceCreator extends UIRenderer {
 	}
 
 	@Override
-	public void render() {
+	public void render() throws KonosException {
 		try {
 			context.postCompileActionMessages().add(new PostCompileDependantWebModuleActionMessage(context.configuration().module(), service.name$()));
 			if (context.webModuleDirectory() == null)

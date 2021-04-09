@@ -105,22 +105,23 @@ public class CubeRenderer {
     }
 
     private FrameBuilder dimensionFrame(Cube cube, Cube sourceCube, Cube.Dimension dimension) {
-        FrameBuilder fb = new FrameBuilder("dimension", dimension.axis().core$().is(Axis.Categorical.class) ? "categorical" : "continuous").
+        final Cube.Fact.Column attribute = dimension.attribute();
+        final String name = dimension.name$();
+        final String axisName = dimension.axis().name$();
+
+        FrameBuilder fb = new FrameBuilder("dimension", dimension.axis().i$(Axis.Categorical.class) ? "categorical" : "continuous").
                 add("cube", sourceCube != null ? sourceCube.name$() : cube.name$()).
-                add("name", dimension.name$()).
-                add("source", dimension.attribute().name$()).
-                add("axis", dimension.axis().name$());
+                add("name", name).
+                add("source", attribute.name$()).
+                add("axis", axisName);
 
         if (dimension.axis().i$(Axis.Categorical.class)) {
             fb.add("type", dimension.axis().name$());
             if (!dimension.attribute().asCategory().axis().equals(dimension.axis())) {
-                final String name = dimension.name$();
-                final String axisName = dimension.axis().name$();
                 if(StringUtils.indexOfDifference(name, axisName) < name.length() / 2)
                     fb.add("child", axisName);
                 else
                     fb.add("child", name);
-
             }
         }
 
