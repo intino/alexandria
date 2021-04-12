@@ -26,22 +26,24 @@ import static io.intino.konos.builder.helpers.Commons.writeFrame;
 public class AnalyticBuilderRenderer extends Renderer {
 
 	private final KonosGraph graph;
-	private final File destination;
+	private final File srcDestination;
+	private final File resDestination;
 	private final String packageName;
 	private final FactRenderer factRenderer;
 	private final CategoricalAxisRenderer categoricalAxisRenderer;
 	private final ContinuousAxisRenderer continuousAxisRenderer;
 
-	public AnalyticBuilderRenderer(CompilationContext compilationContext, KonosGraph graph, File destination) {
+	public AnalyticBuilderRenderer(CompilationContext compilationContext, KonosGraph graph, File src, File resDestination) {
 		super(compilationContext, Target.Owner);
 		this.graph = graph;
-		this.destination = destination;
-		this.destination.mkdirs();
+		this.srcDestination = src;
+		this.resDestination = resDestination;
+		this.srcDestination.mkdirs();
 		this.packageName = compilationContext.packageName();
 		this.factRenderer = new FactRenderer();
 		final File res = context.res(Target.Owner).getAbsoluteFile();
-		this.categoricalAxisRenderer = new CategoricalAxisRenderer(context, destination, res);
-		this.continuousAxisRenderer = new ContinuousAxisRenderer(context, destination);
+		this.categoricalAxisRenderer = new CategoricalAxisRenderer(context, src, res);
+		this.continuousAxisRenderer = new ContinuousAxisRenderer(context, src);
 	}
 
 	@Override
@@ -65,7 +67,7 @@ public class AnalyticBuilderRenderer extends Renderer {
 		if (axes.isEmpty()) return;
 		axes.stream().filter(Axis::isCategorical).map(Axis::asCategorical).forEach(categoricalAxisRenderer::render);
 		axes.stream().filter(Axis::isContinuous).map(Axis::asContinuous).forEach(continuousAxisRenderer::render);
-		AxisInterfaceRenderer.render(destination, context, axes);
+		AxisInterfaceRenderer.render(srcDestination, context, axes);
 	}
 
 	private void renderCubes(KonosGraph graph) {
@@ -94,7 +96,7 @@ public class AnalyticBuilderRenderer extends Renderer {
 	}
 
 	private File destinationDirectory() {
-		return new File(destination, packageName.replace(".", "/") + "/analytic");
+		return new File(srcDestination, packageName.replace(".", "/") + "/analytic");
 	}
 
 	private Template builderTemplate() {

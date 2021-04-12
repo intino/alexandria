@@ -91,7 +91,11 @@ public class FullRenderer {
 		for (Service.Messaging service : graph.messagingServiceList())
 			new MessagingAccessorRenderer(context, service, genDirectory(context.configuration().genDirectory(), "messaging#", service.name$())).render();
 		if (!graph.cubeList().isEmpty())
-			new AnalyticBuilderRenderer(context, graph, new File(context.configuration().genDirectory(), "analytic#analytic" + File.separator + "src")).render();
+			new AnalyticBuilderRenderer(context, graph, new File(analyticBasePath(), "src"),new File(analyticBasePath(), "res")).render();
+	}
+
+	private File analyticBasePath() {
+		return new File(context.configuration().genDirectory(), "analytic#analytic");
 	}
 
 	private File genDirectory(File tempDirectory, String serviceType, String serviceName) {
