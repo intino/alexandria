@@ -1,5 +1,6 @@
 package io.intino.konos.builder.codegeneration.accessor.analytic;
 
+import io.intino.alexandria.logger.Logger;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
@@ -13,9 +14,11 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.graph.Axis;
 import io.intino.konos.model.graph.Cube;
 import io.intino.konos.model.graph.KonosGraph;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
@@ -46,6 +49,16 @@ public class AnalyticBuilderRenderer extends Renderer {
 		renderAxes(graph.axisList());
 		renderCubes(graph);
 		renderBuilder(graph);
+		copyResourcesToDestination();
+	}
+
+	private void copyResourcesToDestination() {
+		final File resources = new File(context.res(Target.Owner).getAbsoluteFile(), "analytic");
+		try {
+			FileUtils.copyDirectory(resources, new File(destination, resources.getName()));
+		} catch (IOException e) {
+			Logger.error(e);
+		}
 	}
 
 	private void renderAxes(List<Axis> axes) {
