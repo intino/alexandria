@@ -53,6 +53,8 @@ def type(axis)
 	    	return get().getComponent(name);
 	    }
 
+	    [$include+staticGetter...[$NL$NL]]
+
         // === === //
 
 		private final Component$[] components;
@@ -170,6 +172,18 @@ end
 
 def attribute(name:label) trigger(declaration)
 	private final String $name+firstLowerCase;
+end
+
+def type(include) attribute(type:continuous) trigger(staticGetter)
+	public static $axis+nakeCaseToUpperCase+firstUpperCase.Component componentBy$label+snakeCaseToCamelCase+firstUpperCase($name+snakeCaseToCamelCase+firstUpperCase.Range range) {
+	    return stream().filter(c -> c.$label+snakeCaseToCamelCase+firstLowerCase().equals(range)).findFirst().orElse(null);
+	}
+end
+
+def type(include) attribute(type:categorical) trigger(staticGetter)
+	public static $axis+nakeCaseToUpperCase+firstUpperCase.Component componentBy$label+snakeCaseToCamelCase+firstUpperCase($name+snakeCaseToCamelCase+firstUpperCase.Component component) {
+	    return stream().filter(c -> c.$label+snakeCaseToCamelCase+firstLowerCase().equals(component)).findFirst().orElse(null);
+	}
 end
 
 def type(include) attribute(type:continuous) trigger(declaration)
