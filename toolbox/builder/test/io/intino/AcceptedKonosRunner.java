@@ -105,6 +105,11 @@ public class AcceptedKonosRunner {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/temp/ideaKonosToCompile1.txt")});
 	}
 
+	@Test
+	public void goros() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/ideaKonosToCompile2.txt")});
+	}
+
 	private static String temp(String filepath) {
 		try {
 			File file = new File(filepath);

@@ -33,17 +33,17 @@ public class AnalyticBuilderRenderer extends Renderer {
 	private final CategoricalAxisRenderer categoricalAxisRenderer;
 	private final ContinuousAxisRenderer continuousAxisRenderer;
 
-	public AnalyticBuilderRenderer(CompilationContext compilationContext, KonosGraph graph, File src, File resDestination) {
+	public AnalyticBuilderRenderer(CompilationContext compilationContext, KonosGraph graph, File srcDestination, File resDestination) {
 		super(compilationContext, Target.Owner);
 		this.graph = graph;
-		this.srcDestination = src;
+		this.srcDestination = srcDestination;
 		this.resDestination = resDestination;
 		this.srcDestination.mkdirs();
 		this.packageName = compilationContext.packageName();
 		this.factRenderer = new FactRenderer();
 		final File res = context.res(Target.Owner).getAbsoluteFile();
-		this.categoricalAxisRenderer = new CategoricalAxisRenderer(context, src, res);
-		this.continuousAxisRenderer = new ContinuousAxisRenderer(context, src);
+		this.categoricalAxisRenderer = new CategoricalAxisRenderer(context, srcDestination, res);
+		this.continuousAxisRenderer = new ContinuousAxisRenderer(context, srcDestination);
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class AnalyticBuilderRenderer extends Renderer {
 	private void copyResourcesToDestination() {
 		final File resources = new File(context.res(Target.Owner).getAbsoluteFile(), "analytic");
 		try {
-			FileUtils.copyDirectory(resources, new File(destination, resources.getName()));
+			FileUtils.copyDirectory(resources, new File(resDestination, resources.getName()));
 		} catch (IOException e) {
 			Logger.error(e);
 		}
