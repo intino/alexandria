@@ -16,7 +16,7 @@ Artifact("io.intino.alexandria", "4.9.1") ui-framework
 		Compile("io.intino.alexandria", "driver-shiny", "1.0.0")
 		Compile("io.intino.alexandria", "driver-r", "1.0.0")
 
-		Web("io.intino.alexandria", "ui-framework-elements", "4.9.0")
+		Web("io.intino.alexandria", "ui-framework-elements", "4.9.1")
 
 		Test("junit", "junit", "4.13")
 
