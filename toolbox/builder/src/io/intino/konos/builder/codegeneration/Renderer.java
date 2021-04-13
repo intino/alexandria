@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.CatalogComponents;
 import io.intino.konos.model.graph.HelperComponents;
@@ -23,11 +24,11 @@ public abstract class Renderer {
 		this.target = target;
 	}
 
-	public void execute() {
+	public void execute() throws KonosException {
 		render();
 	}
 
-	protected abstract void render();
+	protected abstract void render() throws KonosException;
 
 	public String project() {
 		return context.project();

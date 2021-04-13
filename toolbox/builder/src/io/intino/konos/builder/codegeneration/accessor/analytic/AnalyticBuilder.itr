@@ -1,7 +1,7 @@
 def type(builder)
 	package $package+validPackage.analytic;
 
-	import $package+validPackage.analytic.cubes.*;
+	import $package+validPackage.analytic.cubes.schemas.*;
 	import io.intino.alexandria.logger.Logger;
 	import io.intino.alexandria.Timetag;
 	import io.intino.alexandria.Fingerprint;
@@ -29,7 +29,8 @@ def type(builder)
 
 		public $name+snakeCaseToCamelCase+firstUpperCase(File destination, int factBufferSize) {
 			this.destination = destination;
-			this.stage = new File(destination, "session" + java.util.UUID.randomUUID().toString());
+			this.stage = new File(destination, "session_" + java.util.UUID.randomUUID().toString());
+			this.stage.mkdir();
 			this.session = new Session(destination, factBufferSize);
 		}
 
@@ -115,7 +116,7 @@ def type(builder)
 end
 
 def trigger(put)
-	public void put$name+FirstUpperCase(String tank, Timetag timetag, java.util.function.Consumer<$name+FirstUpperCase> fact) {
-		session.put(tank, timetag, $name+FirstUpperCase.class, fact);
+	public void put$name+FirstUpperCase(String tank, Timetag timetag, java.util.function.Consumer<$name+FirstUpperCase~Schema> fact) {
+		session.put(tank, timetag, $name+FirstUpperCase~Schema.class, fact);
 	}
 end

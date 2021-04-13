@@ -1,29 +1,41 @@
 def type(cube)
-	package $package+validPackage~.analytic.cubes;
+	package $package+validPackage~.analytic.cubes.schemas;
 
+    import io.intino.alexandria.led.HeapLedStreamBuilder;
     import io.intino.alexandria.led.Schema;
+    import io.intino.alexandria.led.LedReader;
+    import io.intino.alexandria.led.LedWriter;
+    import io.intino.alexandria.led.LedStream;
+    import io.intino.alexandria.led.Led;
     import io.intino.alexandria.led.allocators.SchemaFactory;
     import io.intino.alexandria.led.buffers.store.ByteStore;
     import io.intino.alexandria.led.buffers.store.ByteBufferStore;
+    import io.intino.alexandria.Timetag;
+
+    import java.util.stream.*;
+    import java.util.List;
+    import java.util.Arrays;
+    import java.util.Comparator;
+    import java.io.File;
     import java.util.UUID;
 	import $package+validPackage~.analytic.axes.*;
 
-	public class $name+firstUpperCase extends Schema {
+	public class $name extends Schema {
 
 		public static final int SIZE = $size; // Bytes
         public static final UUID SERIAL_UUID = UUID.fromString("$serialUUID");
-        public static final SchemaFactory<$name+firstUpperCase> FACTORY = new SchemaFactory<>($name+firstUpperCase.class) {
+        public static final SchemaFactory<$name> FACTORY = new SchemaFactory<>($name.class) {
             @Override
-            public $name+firstUpperCase newInstance(ByteStore store) {
-                return new $name+firstUpperCase(store);
+            public $name newInstance(ByteStore store) {
+                return new $name(store);
             }
         };
 
-		public $name+firstUpperCase() {
+		public $name() {
 			super(new ByteBufferStore(SIZE));
 		}
 
-		public $name+firstUpperCase(ByteStore store) {
+		public $name(ByteStore store) {
 			super(store);
         }
 
@@ -42,10 +54,130 @@ def type(cube)
 		    return SERIAL_UUID;
 		}
 
+		[$column+getter...[$NL$NL]]
+
 		[$column+setter...[$NL$NL]]
+
 
 		[$split]
 
+
+		public static class Builder extends HeapLedStreamBuilder<$name> {
+
+            public Builder() {
+                this(1_000_000);
+            }
+
+            public Builder(File tempDirectory) {
+                this(1_000_000, tempDirectory);
+            }
+
+            public Builder(int numSchemasPerBlock) {
+                this(numSchemasPerBlock, new File(System.getProperty("java.io.tmpdir")));
+            }
+
+            public Builder(int numSchemasPerBlock, File tempDirectory) {
+                super($name.class, numSchemasPerBlock, tempDirectory);
+            }
+        }
+
+        public static class Tank {
+
+            public static File get(File root) {
+                return new File(root, "$cube");
+            }
+
+            public static File get(File root, Divisiones.Component division) {
+                return new File(root, "$cube." + division.id());
+            }
+
+            public static File on(File root, Timetag timetag) {
+                return new File(root, "$cube/" + timetag + ".led");
+            }
+
+            public static File on(File root, Divisiones.Component division, Timetag timetag) {
+                return new File(root, "$cube." + division.id() + "/" + timetag + ".led");
+            }
+        }
+
+        public static class Reader {
+
+            public static List<LedStream<$name>> readAll(File root, Divisiones.Component division) {
+            	File$[] leds = getLedFiles(new File(root, "$cube." + division.id()));
+            	return Arrays.stream(leds).map(Reader::openLedStream).collect(Collectors.toList());
+            }
+
+            public static List<LedStream<$name>> read(File root, Divisiones.Component division, Timetag from, Timetag to) {
+            	File$[] leds = getLedFiles(new File(root, "$cube." + division.id()));
+            	return Arrays.stream(leds)
+            	    .filter(led -> {
+            	        final String name = led.getName();
+            	        final Timetag timetag = Timetag.of(name.substring(0, name.indexOf('.')));
+            	        return (timetag.equals(from) || timetag.isAfter(from)) && (timetag.equals(to) || timetag.isBefore(to));
+            	    })
+            	    .map(Reader::openLedStream)
+            	    .collect(Collectors.toList());
+            }
+
+            public static LedStream<$name> read(File root, Divisiones.Component division, Timetag timetag) {
+            	File$[] leds = getLedFiles(new File(root, "$cube." + division.id()));
+            	return Arrays.stream(leds)
+            	    .filter(led -> {
+            	        final String name = led.getName();
+            	        final Timetag t = Timetag.of(name.substring(0, name.indexOf('.')));
+            	        return t.equals(timetag);
+            	    })
+            	    .map(Reader::openLedStream)
+            	    .findFirst().orElse(null);
+            }
+
+        	public static LedStream<$name> readFirst(File root, Divisiones.Component division) {
+            	File$[] leds = getLedFiles(new File(root, "$cube." + division.id()));
+            	if(leds.length == 0) return LedStream.empty($name.class);
+                return openLedStream(leds$[0]);
+            }
+
+        	public static LedStream<$name> readLast(File root, Divisiones.Component division) {
+                File$[] leds = getLedFiles(new File(root, "$cube." + division.id()));
+                if(leds.length == 0) return LedStream.empty($name.class);
+            	return openLedStream(leds$[leds.length - 1]);
+        	}
+
+        	public static LedStream<$name> readLedStream(File ledFile) {
+                return new LedReader(ledFile).read($name.class);
+            }
+
+            public static Led<$name> readLed(File ledFile) {
+                return new LedReader(ledFile).readAll($name.class);
+            }
+
+            private static LedStream<$name> openLedStream(File led) {
+            	if(led == null || !led.exists()) return LedStream.empty($name.class);
+            	return new LedReader(led).read($name.class);
+            }
+
+            private static File$[] getLedFiles(File dir) {
+        		File$[] leds = dir.listFiles(f -> f.getName().endsWith(".led"));
+        		if(leds == null || leds.length == 0) return new File$[0];
+        		Arrays.sort(leds, Comparator.comparing(File::getName));
+        		return leds;
+            }
+        }
+
+        public static class Writer {
+
+            public static void write(File file, LedStream.Builder<$name> builder) {
+                write(file, builder.build());
+            }
+
+            public static void write(File file, LedStream<$name> ledStream) {
+                new LedWriter(file).write(ledStream);
+            }
+
+            public static void write(File file, Led<$name> led) {
+                new LedWriter(file).write(led);
+            }
+        }
 	}
 end
 

@@ -1,0 +1,9 @@
+def type(cubeBase)
+
+    public abstract class Cube<? extends Schema> extends Iterable<Cube.Aggregation> {
+
+
+
+    }
+	
+end

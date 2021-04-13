@@ -101,6 +101,7 @@ public class CategoricalAxisRenderer {
         final int offset = offset(axis);
         for (int i = 0; i < includes.size(); i++) {
             fb.add("include", new FrameBuilder("include")
+                    .add("axis", axis.name$())
                     .add("name", includes.get(i).name$())
                     .add("type", includes.get(i).isCategorical() ? "categorical" : "continuous")
                     .add("label", asFieldName(includes.get(i).label()))

@@ -91,8 +91,8 @@ public class AcceptedKonosRunner {
 	}
 
 	@Test
-	public void pacma() {
-		KonoscRunner.main(new String[]{temp(home + "confFiles/pacma.txt")});
+	public void workflow() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/workflow.txt")});
 	}
 
 	@Test
@@ -103,6 +103,11 @@ public class AcceptedKonosRunner {
 	@Test
 	public void temp() {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/temp/ideaKonosToCompile1.txt")});
+	}
+
+	@Test
+	public void goros() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/ideaKonosToCompile2.txt")});
 	}
 
 	private static String temp(String filepath) {

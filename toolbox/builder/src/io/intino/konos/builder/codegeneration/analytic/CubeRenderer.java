@@ -79,6 +79,7 @@ public class CubeRenderer {
     private void addDimensionsAndIndicators(Cube cube, Cube sourceCube, FrameBuilder fb) {
         cube.dimensionList().forEach(selector -> fb.add("dimension", dimensionFrame(cube, sourceCube, selector)));
         cube.indicatorList().forEach(indicator -> fb.add("indicator", indicatorFrame(cube, sourceCube, indicator)));
+        cube.customIndicatorList().forEach(indicator -> fb.add("customIndicator", customIndicatorFrame(cube, sourceCube, indicator)));
         addCustomFilters(cube, sourceCube, fb);
     }
 
@@ -93,6 +94,11 @@ public class CubeRenderer {
                 .peek(i -> filter.add(i.name$()))
                 .forEach(i -> fb.add("indicator", indicatorFrame(cube, sourceCube, i)));
 
+        cube.customIndicatorList().stream()
+                .filter(i -> !filter.contains(i.name$()))
+                .peek(i -> filter.add(i.name$()))
+                .forEach(i -> fb.add("indicator", customIndicatorFrame(cube, sourceCube, i)));
+
         addCustomFilters(cube, sourceCube, fb);
     }
 
@@ -105,22 +111,23 @@ public class CubeRenderer {
     }
 
     private FrameBuilder dimensionFrame(Cube cube, Cube sourceCube, Cube.Dimension dimension) {
-        FrameBuilder fb = new FrameBuilder("dimension", dimension.axis().core$().is(Axis.Categorical.class) ? "categorical" : "continuous").
+        final Cube.Fact.Column attribute = dimension.attribute();
+        final String name = dimension.name$();
+        final String axisName = dimension.axis().name$();
+
+        FrameBuilder fb = new FrameBuilder("dimension", dimension.axis().i$(Axis.Categorical.class) ? "categorical" : "continuous").
                 add("cube", sourceCube != null ? sourceCube.name$() : cube.name$()).
-                add("name", dimension.name$()).
-                add("source", dimension.attribute().name$()).
-                add("axis", dimension.axis().name$());
+                add("name", name).
+                add("source", attribute.name$()).
+                add("axis", axisName);
 
         if (dimension.axis().i$(Axis.Categorical.class)) {
             fb.add("type", dimension.axis().name$());
             if (!dimension.attribute().asCategory().axis().equals(dimension.axis())) {
-                final String name = dimension.name$();
-                final String axisName = dimension.axis().name$();
                 if(StringUtils.indexOfDifference(name, axisName) < name.length() / 2)
                     fb.add("child", axisName);
                 else
                     fb.add("child", name);
-
             }
         }
 
@@ -135,6 +142,17 @@ public class CubeRenderer {
                 .add("label", indicator.label())
                 .add("index", new FrameBuilder((sourceCube == null && cube.index() != null) || (sourceCube != null && sourceCube.index() != null) ? "index" : "total"))
                 .add("source", indicator.source().name$())
+                .add("mode", indicator.isAverage() ? "Average" : "Sum")
+                .add("unit", indicator.unit());
+    }
+
+    private FrameBuilder customIndicatorFrame(Cube cube, Cube sourceCube, Cube.CustomIndicator indicator) {
+        return new FrameBuilder("customIndicator").add(indicator.isAverage() ? "average" : "sum")
+                .add("cube", sourceCube != null ? sourceCube.name$() : cube.name$())
+                .add("name", indicator.name$())
+                .add("fieldName", asFieldName(indicator.label()))
+                .add("label", indicator.label())
+                .add("index", new FrameBuilder((sourceCube == null && cube.index() != null) || (sourceCube != null && sourceCube.index() != null) ? "index" : "total"))
                 .add("mode", indicator.isAverage() ? "Average" : "Sum")
                 .add("unit", indicator.unit());
     }
