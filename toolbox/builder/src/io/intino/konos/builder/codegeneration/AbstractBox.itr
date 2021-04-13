@@ -60,18 +60,8 @@ def type(box)
 		public io.intino.alexandria.core.Box start() {
 			if (owner != null) owner.beforeStart();
 			beforeStart();
-			if (owner != null) owner.start();
-			initUI();
-			initConnector();
-			initRestServices();
-			initSoapServices();
-			initJmxServices();
-			initDatalake();
-			initTerminal();
-			initMessagingServices();
-			initSentinels();
-			initSlackBots();
-			initWorkflow();
+			if (owner != null) owner.startServices();
+			startServices();
 			if (owner != null) owner.afterStart();
 			afterStart();
 			return this;
@@ -84,15 +74,35 @@ def type(box)
 		public void stop() {
 			if (owner != null) owner.beforeStop();
 			beforeStop();
-			if (owner != null) owner.stop();
-			[$spark...[$NL]]
-			[$service+stop...[$NL]]
-			[$connector+stop]
+			if (owner != null) owner.stopServices();
+			stopServices();
 			if (owner != null) owner.afterStop();
 			afterStop();
 		}
 
+        @Override
+		public void stopServices() {
+			[$spark...[$NL]]
+			[$service+stop...[$NL]]
+			[$connector+stop]
+		}
+
 		public abstract void afterStop();
+
+        @Override
+		public void startServices() {
+			initUI();
+			initConnector();
+			initRestServices();
+			initSoapServices();
+			initJmxServices();
+			initDatalake();
+			initTerminal();
+			initMessagingServices();
+			initSentinels();
+			initSlackBots();
+			initWorkflow();
+		}
 
 		[$hasUi+pushService]
 

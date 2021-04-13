@@ -22,6 +22,9 @@ public abstract class Box {
 		return owner;
 	}
 
-
 	public abstract BoxConfiguration configuration();
+
+	public abstract void startServices();
+
+	public abstract void stopServices();
 }
