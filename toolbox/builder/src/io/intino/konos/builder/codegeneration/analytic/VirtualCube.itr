@@ -472,18 +472,19 @@ def type(cube)
 
 			@Override
 			public Iterator<Fact> iterator() {
+			    if(!ids.hasNext()) return Stream.<Fact>empty().iterator();
 				StatefulIterator<$mainCube+FirstUpperCase.Fact> facts = StatefulIterator.of(new $mainCube+FirstUpperCase.Loader(new $mainCube+FirstUpperCase.Loader.Datasource(this.datasource.root, this.datasource.from, this.datasource.to)[, $split+name]).iterator());
-				process(ids.current());
 				ids.next();
+				process(ids.current());
 				return StreamSupport.stream(Spliterators.spliteratorUnknownSize(facts, Spliterator.SORTED), false)
 						.map(f -> {
-							long id = $name+FirstUpperCase.idOf(facts.current());
-							while (ids.current() != null && ids.current().id() < id) {
+							final long mainID = $name+FirstUpperCase.idOf(facts.current());
+							while (ids.current() != null && ids.current().id() < mainID) {
 								ids.next();
 								process(ids.current());
 							}
 							if (!facts.hasNext()) end();
-							return new Fact(f, ids.current() != null && ids.current().id() == id ?
+							return new Fact(f, ids.current() != null && ids.current().id() == mainID ?
 									ids.current() : Abstract$joinCube+FirstUpperCase.NULL_FACT);
 						})
 						.iterator();
@@ -494,6 +495,10 @@ def type(cube)
 					ids.next();
 					process(ids.current());
 				}
+			}
+
+			public Timetag from() {
+			    return datasource.from;
 			}
 
 			private int totalsSize() {
@@ -529,15 +534,17 @@ def type(cube)
 				return totals$[indexOf(categories.toArray(new Axis.Component$[0]))];
 			}
 
-			private void filter(Predicate<$joinCube+FirstUpperCase.Fact> filter) {
-				if (filter == null) return;
+			public Loader filter(Predicate<$joinCube+FirstUpperCase.Fact> filter) {
+				if (filter == null) return this;
 				filters.add(filter);
+				return this;
 			}
 
-			private void by(Axis axis, Function<$joinCube+FirstUpperCase.Fact, Axis.Component> dimension) {
+			public Loader groupBy(Axis axis, Function<$joinCube+FirstUpperCase.Fact, Axis.Component> dimension) {
+				if (dimension == null) return this;
 				axes.add(axis);
-				if (dimension == null) return;
 				groupsBy.add(dimension);
+				return this;
 			}
 
 			public List<Axis> axes() {

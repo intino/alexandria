@@ -130,6 +130,14 @@ def type(cube)
             return this;
         }
 
+        public static Function<Fact, Axis.Component> dimension(Axis axis) {
+            if(axis == null) throw new NullPointerException("Axis cannot be null");
+            switch(axis.getLabel()) {
+                [$dimension+switchCaseFunction...[$NL]]
+            }
+            return fact -> null;
+        }
+
 		public Abstract$name+firstUpperCase execute() {
 			result = new Aggregation$[resultsSize()];
 			results().forEach(this::append);
@@ -560,6 +568,10 @@ end
 
 def type(dimension & categorical) trigger(switchCaseGroupBy)
     case $axis+snakeCaseToCamelCase+firstUpperCase.AXIS_LABEL: return groupBy$name+snakeCaseToCamelCase+firstUpperCase();
+end
+
+def type(dimension & categorical) trigger(switchCaseFunction)
+    case $axis+snakeCaseToCamelCase+firstUpperCase.AXIS_LABEL: return $cube+FirstUpperCase::$name+snakeCaseToCamelCase+firstLowerCase~Function;
 end
 
 def type(dimension & categorical) trigger(switchCaseFilter)
