@@ -589,11 +589,22 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const value = operator === "Average" ? cell.absolute : cell.absolute;
         const format = this.cellFormat(section, cell);
         const className = this._isMainView() || this.state.sections[0] == mainSection ? classNames(classes.rowCell) : classNames(classes.rowCell, classes.detailRowCell);
+        const isMainView = this._isMainView();
         return (
             <TableCell title={title} key={index} className={className} style={{whiteSpace:'nowrap',...style}}>
-                {NumberUtil.format(cell.absolute, format)}
-                {metric !== "" && <span style={{fontSize:'9pt',marginLeft:'5px',color:'#777'}}>{metric}</span>}
-                {relative !== undefined && <span className={classes.rowRelativeValue}>&nbsp;{relative}<span style={{fontSize:'9pt',marginLeft:'5px',color:'#777'}}>%</span></span>}
+                {!cell.isTotalRow && !isMainView ?
+                    <a className={classes.rowAction} onClick={this.handleShowItems.bind(this, mainSection, row.label)}>
+                        {NumberUtil.format(cell.absolute, format)}
+                        {metric !== "" && <span style={{fontSize:'9pt',marginLeft:'5px',color:'#777'}}>{metric}</span>}
+                        {relative !== undefined && <span className={classes.rowRelativeValue}>&nbsp;{relative}<span style={{fontSize:'9pt',marginLeft:'5px',color:'#777'}}>%</span></span>}
+                    </a>
+                :
+                    <React.Fragment>
+                        {NumberUtil.format(cell.absolute, format)}
+                        {metric !== "" && <span style={{fontSize:'9pt',marginLeft:'5px',color:'#777'}}>{metric}</span>}
+                        {relative !== undefined && <span className={classes.rowRelativeValue}>&nbsp;{relative}<span style={{fontSize:'9pt',marginLeft:'5px',color:'#777'}}>%</span></span>}
+                    </React.Fragment>
+                }
             </TableCell>
         );
     };
