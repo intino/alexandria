@@ -177,29 +177,22 @@ public class SparkManager<P extends PushService> {
 	}
 
 	private void setUpSessionCookiePath() {
-//		HttpServletRequest request = this.request.raw();
-//		HttpSession session = request.getSession();
-//
-//		if (request.getParameter("JSESSIONID") != null) {
-//			Cookie userCookie = new Cookie("JSESSIONID", request.getParameter("JSESSIONID"));
-//			response.raw().addCookie(userCookie);
-//		} else {
-//			String sessionId = session.getId();
-//			Cookie userCookie = new Cookie("JSESSIONID", sessionId);
-//			response.raw().addCookie(userCookie);
-//		}
-		HttpServletRequest request = this.request.raw();
+ 		HttpServletRequest request = this.request.raw();
 		HttpSession session = request.getSession();
 		String sessionCookieName = sessionCookieName();
 
 		if (request.getParameter(sessionCookieName) != null) {
 			Cookie userCookie = new Cookie(sessionCookieName, request.getParameter(sessionCookieName));
+			userCookie.setHttpOnly(true);
 			response.raw().addCookie(userCookie);
 		} else if (this.request.cookie(sessionCookieName) == null) {
 			String sessionId = session.getId();
 			Cookie userCookie = new Cookie(sessionCookieName, sessionId);
+			userCookie.setHttpOnly(true);
 			response.raw().addCookie(userCookie);
 		}
+
+		response.raw().setHeader("SET-COOKIE", "JSESSIONID=" + session.getId() + "; HttpOnly; SameSite=Strict");
 	}
 
 	private String sessionCookieName() {

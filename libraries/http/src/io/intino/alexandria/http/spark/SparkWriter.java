@@ -70,7 +70,8 @@ class SparkWriter {
 	}
 
 	private void writeResponse(String content, String contentType, HttpServletResponse response) throws IOException {
-		response.setHeader("Access-Control-Allow-Origin", "*");
+		//response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("X-Content-Type-Options", "nosniff");
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		response.setHeader("Pragma", "no-cache");
 		response.setHeader("Expires", "0");
