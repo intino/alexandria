@@ -176,13 +176,13 @@ end
 
 def type(include) attribute(type:continuous) trigger(staticGetter)
 	public static $axis+snakeCaseToCamelCase+firstUpperCase.Component componentBy$label+snakeCaseToCamelCase+firstUpperCase($name+snakeCaseToCamelCase+firstUpperCase.Range range) {
-	    return stream().filter(c -> c.$label+snakeCaseToCamelCase+firstLowerCase().equals(range)).findFirst().orElse(null);
+	    return stream().filter(c -> c.$label+snakeCaseToCamelCase+firstLowerCase().equals(range)).findFirst().orElse(NA);
 	}
 end
 
 def type(include) attribute(type:categorical) trigger(staticGetter)
 	public static $axis+snakeCaseToCamelCase+firstUpperCase.Component componentBy$label+snakeCaseToCamelCase+firstUpperCase($name+snakeCaseToCamelCase+firstUpperCase.Component component) {
-	    return stream().filter(c -> c.$label+snakeCaseToCamelCase+firstLowerCase().equals(component)).findFirst().orElse(null);
+	    return stream().filter(c -> c.$label+snakeCaseToCamelCase+firstLowerCase().equals(component)).findFirst().orElse(NA);
 	}
 end
 

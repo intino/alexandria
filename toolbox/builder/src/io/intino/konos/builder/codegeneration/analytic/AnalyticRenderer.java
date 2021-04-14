@@ -1,22 +1,16 @@
 package io.intino.konos.builder.codegeneration.analytic;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
-import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.facts.FactRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Axis;
 import io.intino.konos.model.graph.Cube;
 import io.intino.konos.model.graph.KonosGraph;
 
-import java.io.*;
-import java.util.*;
-
-import static io.intino.konos.builder.codegeneration.Formatters.customize;
-import static io.intino.konos.builder.helpers.Commons.*;
+import java.io.File;
+import java.util.List;
 
 public class AnalyticRenderer extends Renderer {
 
