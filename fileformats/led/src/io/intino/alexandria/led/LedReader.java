@@ -108,8 +108,7 @@ public class LedReader {
 		try {
 			return new FileInputStream(file);
 		} catch (FileNotFoundException e) {
-			Logger.error("Failed to create FileInputStream for file " + file +
-					". Probably too many files has been opened.", e);
+			Logger.error("Failed to create FileInputStream for file " + file, e);
 			return new ByteArrayInputStream(new byte[0]);
 		}
 	}
