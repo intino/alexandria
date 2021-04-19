@@ -58,6 +58,13 @@ def type(cube)
 
 		[$column+setter...[$NL$NL]]
 
+        @Override
+        public String toString() {
+            return "$name+FirstUpperCase{"
+                    + "id=" + id()
+                    [$column+toString...[$NL]]
+                    + '}';
+        }
 
 		[$split]
 
