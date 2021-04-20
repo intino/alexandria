@@ -1,3 +1,7 @@
+def type(column) trigger(toString)
+    + ", $name=" + $name()
+end
+
 def type(column) type(id) trigger(getter)
 	public long $name+firstLowerCase() {
 		return bitBuffer.getAlignedLong(0);

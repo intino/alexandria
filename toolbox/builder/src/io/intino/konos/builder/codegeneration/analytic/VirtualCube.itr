@@ -62,7 +62,7 @@ def type(cube & src)
                 super(timetag, components, filters);
             }
 
-            [$customIndicator+implementation...[$NL$NL]]
+		    [$customIndicator+implementation...[$NL$NL]]
         }
 	}
 end
@@ -1012,4 +1012,20 @@ def type(virtualColumn) trigger(factGetter)
     public $type+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase() {
         return $cube.$name+firstLowerCase();
     }
+end
+
+def type(customIndicator & sum) trigger(implementation)
+	@Override
+	protected long calculate$name+firstUpperCase() {
+	    // TODO: calculate and return $name+firstLowerCase
+		return 0;
+	}
+end
+
+def type(customIndicator & average) trigger(implementation)
+	@Override
+	protected double calculate$name+firstUpperCase() {
+	    // TODO: calculate and return $name+firstLowerCase
+		return 0.0;
+	}
 end

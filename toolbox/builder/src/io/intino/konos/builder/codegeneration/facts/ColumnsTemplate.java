@@ -7,6 +7,7 @@ public class ColumnsTemplate extends Template {
 
 	public RuleSet ruleSet() {
 		return new RuleSet().add(
+			rule().condition((type("column")), (trigger("tostring"))).output(literal("+ \", ")).output(mark("name")).output(literal("=\" + ")).output(mark("name")).output(literal("()")),
 			rule().condition((type("column")), (type("id")), (trigger("getter"))).output(literal("public long ")).output(mark("name", "firstLowerCase")).output(literal("() {\n\treturn bitBuffer.getAlignedLong(0);\n}")),
 			rule().condition((type("column")), (allTypes("long","unsigned")), (trigger("getter"))).output(literal("public long ")).output(mark("name", "firstLowerCase")).output(literal("() {\n\treturn bitBuffer.get")).output(mark("aligned")).output(literal("ULong")).output(expression().output(mark("bits", "nbits"))).output(literal("(")).output(mark("offset")).output(expression().output(literal(", ")).output(mark("bits"))).output(literal(");\n}")),
 			rule().condition((type("column")), (type("long")), (trigger("getter"))).output(literal("public long ")).output(mark("name", "firstLowerCase")).output(literal("() {\n\treturn bitBuffer.get")).output(mark("aligned")).output(literal("Long")).output(expression().output(mark("bits", "nbits"))).output(literal("(")).output(mark("offset")).output(expression().output(literal(", ")).output(mark("bits"))).output(literal(");\n}")),

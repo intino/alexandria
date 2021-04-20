@@ -97,7 +97,7 @@ public class CubeRenderer {
         cube.customIndicatorList().stream()
                 .filter(i -> !filter.contains(i.name$()))
                 .peek(i -> filter.add(i.name$()))
-                .forEach(i -> fb.add("indicator", customIndicatorFrame(cube, sourceCube, i)));
+                .forEach(i -> fb.add("customIndicator", customIndicatorFrame(cube, sourceCube, i)));
 
         addCustomFilters(cube, sourceCube, fb);
     }
