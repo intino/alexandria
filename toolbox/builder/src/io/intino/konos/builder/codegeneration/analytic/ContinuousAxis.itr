@@ -175,12 +175,7 @@ def type(continuous)
 
 		    @Override
 		    public String toString() {
-		    	return axis().getClass().getSimpleName()+".Range{" +
-		    			"index=" + index +
-		    			", min=" + min +
-		    			", max=" + max +
-		    			", label='" + label + "'" +
-		    			'}';
+		    	return label;
 		    }
     	}
     }

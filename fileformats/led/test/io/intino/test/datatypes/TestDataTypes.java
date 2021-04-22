@@ -40,8 +40,15 @@ public class TestDataTypes {
     }
 
     @Test
+    public void test() {
+        int x = 99;
+        buffer.setIntegerNBits(0, 7, x);
+        assertEquals(x, buffer.getIntegerNBits(0, 7));
+    }
+
+    @Test
     public void testSignedByte() {
-        byte value = -3;
+        byte value = 2; // todo: UNO DE LOS BITS DEBE SER RESERVADO PARA EL SIGNO!!!!!!!!!!!!!!!!! nbits = nbits - 1
         buffer.setByteNBits(0, 3, value);
         assertEquals(value, buffer.getByteNBits(0, 3));
     }
@@ -68,10 +75,17 @@ public class TestDataTypes {
     }
 
     @Test
-    public void testSignedInteger() {
+    public void testSignedAlignedInteger() {
         int value = Integer.MIN_VALUE;
         buffer.setAlignedInteger(0, value);
         assertEquals(value, buffer.getAlignedInteger(0));
+    }
+
+    @Test
+    public void testSignedInteger() {
+        int value = -2;
+        buffer.setIntegerNBits(0, 4, value);
+        assertEquals(value, buffer.getIntegerNBits(0, 4));
     }
 
     @Test
@@ -83,7 +97,7 @@ public class TestDataTypes {
 
     @Test
     public void testSignedLong() {
-        long value = -(maxPossibleNumber(40) / 2);
+        long value = -100;
         buffer.setLongNBits(0, 40, value);
         assertEquals(value, buffer.getLongNBits(0, 40));
     }

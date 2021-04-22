@@ -101,9 +101,10 @@ public final class BitUtils {
 		return Math.max(n, 8);
 	}
 
+	// 1 < nBits <= 64
 	public static long extendSign(long n, int nBits) {
-		final long shift = Long.SIZE - nBits;
-		return n << shift >> shift;
+		final long shift = 64 - nBits;
+		return (n << shift) >> shift;
 	}
 
 	public static String toBinaryString(long value, int padding, int splitSize) {

@@ -322,19 +322,19 @@ public abstract class AbstractBitBuffer implements BitBuffer {
 		final int bitOffset = computeBitOffset(bitIndex, bitCount, byteIndex, numBytes, additionalBytes);
 		switch(numBytes) {
 			case Byte.BYTES:
-				value = getAlignedByte(bitIndex);
+				value = store.getByte(bitIndex);
 				value &= 0xFF;
 				break;
 			case Short.BYTES:
-				value = getAlignedShort(bitIndex);
+				value = store.getShort(bitIndex);
 				value &= 0xFFFF;
 				break;
 			case Integer.BYTES:
-				value = getAlignedInteger(bitIndex);
+				value = store.getInt(bitIndex);
 				value &= 0xFFFFFFFF;
 				break;
 			case Long.BYTES:
-				value = getAlignedLong(bitIndex);
+				value = store.getLong(bitIndex);
 				break;
 			default:
 				throw misAlignmentError(numBytes);

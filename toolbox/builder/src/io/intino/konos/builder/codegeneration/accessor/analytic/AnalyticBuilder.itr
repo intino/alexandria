@@ -20,25 +20,17 @@ def type(builder)
 
 	    private static final int DEFAULT_BUFFER_SIZE = 1_000_000;
 
-		private final File destination;
 		private final File stage;
 		private Session session;
-		private boolean deleteStage = true;
 
-		public $name+snakeCaseToCamelCase+firstUpperCase(File destination) {
-			this(destination, DEFAULT_BUFFER_SIZE);
+		public $name+snakeCaseToCamelCase+firstUpperCase(File stage) {
+			this(stage, DEFAULT_BUFFER_SIZE);
 		}
 
-		public $name+snakeCaseToCamelCase+firstUpperCase(File destination, int factBufferSize) {
-			this.destination = destination;
-			this.stage = new File(destination, "session_" + java.util.UUID.randomUUID().toString());
-			this.stage.mkdir();
-			this.session = new Session(destination, factBufferSize);
+		public $name+snakeCaseToCamelCase+firstUpperCase(File stage, int factBufferSize) {
+			this.stage = stage;
+			this.session = new Session(stage, factBufferSize);
 		}
-
-		public void deleteStage(boolean deleteStage) {
-		    this.deleteStage = deleteStage;
-	    }
 
 		$cube+put...[$NL$NL]
 
@@ -46,33 +38,8 @@ def type(builder)
 			session.flush();
 		}
 
-		public void finish() {
+		public void close() {
 			session.close();
-			make();
-			if(deleteStage) {
-			    try {
-                	FileUtils.deleteDirectory(stage);
-                } catch (java.io.IOException e) {
-                	Logger.error(e);
-                }
-			}
-		}
-
-		private void make() {
-			File$[] files = FileUtils.listFiles(stage, new String$[]{"led"}, true).toArray(new File$[0]);
-			LedSessionSorter.sort(files, (Function<File, File>) f -> datamartFile(Session.cleanedNameOf(f)), tempFolder());
-		}
-
-		private File datamartFile(String name) {
-			File ledFile = new File(destination, name + ".led");
-			ledFile.getParentFile().mkdirs();
-			return ledFile;
-		}
-
-		private File tempFolder() {
-			File temp = new File(this.stage, "temp");
-			temp.mkdir();
-			return temp;
 		}
 
 		private static class Session implements AutoCloseable {
@@ -118,11 +85,34 @@ def type(builder)
 			private java.io.File fileOf(Fingerprint fingerprint) {
 				 return new java.io.File(root, fingerprint.name() + ".led.session");
 			}
+		}
+
+		public static class Sealer {
+
+			public static void seal(File destination, File stage) {
+			    File tempFolder = tempFolder(stage);
+        		File$[] files = FileUtils.listFiles(stage, new String$[]{"session"}, true).toArray(new File$[0]);
+        		LedSessionSorter.sort(files, (Function<File, File>) f -> datamartFile(destination, cleanedNameOf(f)), tempFolder);
+        	}
+
+        	private static File datamartFile(File destination, String name) {
+        		File ledFile = new File(destination, name + ".led");
+        		ledFile.getParentFile().mkdirs();
+        		return ledFile;
+        	}
+
+        	private static File tempFolder(File stage) {
+        		File temp = new File(stage, "temp");
+        		temp.mkdir();
+        		return temp;
+        	}
 
 			private static String cleanedNameOf(File file) {
-				return file.getName().substring(0, file.getName().indexOf("#")).replace("-", "/").replace(".led.session", "");
+			    final String name = file.getName();
+			    int to = file.getName().indexOf("#");
+			    to = to < 0 ? name.length() : to;
+				return name.substring(0, to).replace("-", "/").replace(".led.session", "");
 			}
-
 		}
 	}
 end
