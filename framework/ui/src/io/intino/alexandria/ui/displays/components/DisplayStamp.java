@@ -17,7 +17,7 @@ public class DisplayStamp<DN extends DisplayStampNotifier, B extends Box> extend
     public void didMount() {
         super.didMount();
         clear();
-        add(this.display);
+        if (display != null) add(display);
         refresh();
     }
 

@@ -9,6 +9,7 @@ import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.JMXActionRenderer;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Data;
 import io.intino.konos.model.graph.KonosGraph;
@@ -31,12 +32,12 @@ public class JMXOperationsServiceRenderer extends Renderer {
 	}
 
 	@Override
-	public void render() {
-		this.services.forEach((service) -> {
+	public void render() throws KonosException {
+		for (Service.JMX service : this.services) {
 			createInterface(service);
 			createImplementation(service);
 			createCorrespondingActions(service.operationList());
-		});
+		}
 	}
 
 	private void createInterface(Service.JMX service) {
@@ -63,7 +64,7 @@ public class JMXOperationsServiceRenderer extends Renderer {
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(genPackage(), service.name$()).getAbsolutePath()));
 	}
 
-	private void createCorrespondingActions(List<Operation> operations) {
+	private void createCorrespondingActions(List<Operation> operations) throws KonosException {
 		for (Operation operation : operations)
 			new JMXActionRenderer(context, operation).execute();
 	}

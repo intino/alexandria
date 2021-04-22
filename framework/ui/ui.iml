@@ -38,8 +38,10 @@
     <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13" level="project" />
     <orderEntry type="module" module-name="zip" />
     <orderEntry type="module" module-name="http" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:rest-accessor:2.2.0" level="project" />
     <orderEntry type="module" module-name="rest-accessor" />
     <orderEntry type="library" name="Intino: org.apache.commons:commons-lang3:3.10" level="project" />
+    <orderEntry type="module" module-name="ui-elements" />
     <orderEntry type="library" name="Intino: org.bouncycastle:bcmail-jdk15:1.45" level="project" />
     <orderEntry type="library" name="Intino: org.bouncycastle:bcprov-jdk15:1.45" level="project" />
     <orderEntry type="library" name="Intino: com.sparkjava:spark-core:2.7.2" level="project" />
@@ -81,6 +83,5 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
     <orderEntry type="library" name="Intino: net.rforge:Rserve:0.6-8.1" level="project" />
     <orderEntry type="library" name="Intino: net.rforge:REngine:0.6-8.1" level="project" />
-    <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>

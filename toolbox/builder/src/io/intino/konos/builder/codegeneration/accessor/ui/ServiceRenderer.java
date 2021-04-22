@@ -6,6 +6,7 @@ import io.intino.konos.builder.codegeneration.ui.I18nRenderer;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayListRenderer;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.model.graph.Service;
 
 public class ServiceRenderer extends UIRenderer {
@@ -17,7 +18,7 @@ public class ServiceRenderer extends UIRenderer {
 	}
 
 	@Override
-	public void render() {
+	public void render() throws KonosException {
 		new AppRenderer(context, service).execute();
 		new ThemeRenderer(context, service).execute();
 		new I18nRenderer(context, service, target).execute();

@@ -1,12 +1,14 @@
 def type(continuous)
-	package $package.analytic.axes;
+	package $package+ValidPackage.analytic.axes;
 
-	import $package.analytic.Axis;
+	import $package+ValidPackage.analytic.Axis;
     import java.util.*;
     import java.util.stream.Collectors;
     import java.util.stream.Stream;
 
     public class $name+snakeCaseToCamelCase+FirstUpperCase implements Axis {
+
+        public static final String AXIS_LABEL = "$label";
 
         private static final class Singleton {
             private static final $name+snakeCaseToCamelCase+FirstUpperCase INSTANCE = new $name+snakeCaseToCamelCase+FirstUpperCase();
@@ -19,15 +21,19 @@ def type(continuous)
         }
 
         public static String label() {
-        	return get().getLabel();
+        	return AXIS_LABEL;
         }
 
         public static int size() {
         	return get().getSize();
         }
 
-        public static Component component(String id) {
+        public static Range component(String id) {
         	return get().getComponent(id);
+        }
+
+        public static Range component(int index) {
+        	return get().getComponent(index);
         }
 
         public static List<Range> ranges() {
@@ -70,32 +76,32 @@ def type(continuous)
 
         @Override
     	public String getLabel() {
-    		return "$label";
+    		return AXIS_LABEL;
     	}
 
         @Override
-		public Component getComponent(String id) {
+		public Range getComponent(String id) {
 			return ranges$[Integer.parseInt(id)];
 		}
 
-    	public List<Range> getRanges() {
-    		return new AbstractList<>() {
-    			@Override
-    			public Range get(int index) {
-    				return ranges$[index];
-    			}
-
-    			@Override
-    			public int size() {
-    				return ranges.length;
-    			}
-    		};
-    	}
-
     	@Override
-		public Component getComponent(int index) {
+		public Range getComponent(int index) {
 			return ranges$[index];
 		}
+
+		public List<Range> getRanges() {
+        	return new AbstractList<>() {
+        		@Override
+        		public Range get(int index) {
+        			return ranges$[index];
+        		}
+
+        		@Override
+        		public int size() {
+        			return ranges.length;
+        		}
+        	};
+        }
 
 		@Override
 		public int getSize() {

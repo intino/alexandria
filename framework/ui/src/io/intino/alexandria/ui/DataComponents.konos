@@ -9,6 +9,7 @@ Component baseNumber
 	Notification refreshExpanded as Bool
 	Notification refreshPrefix as Text
 	Notification refreshSuffix as Text
+	Notification refreshStyle as Text
 
 Component number as ExtensionOf(baseNumber)
 Component numberEditable as ExtensionOf(baseNumber)

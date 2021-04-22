@@ -11,6 +11,8 @@ import io.intino.konos.model.graph.Cube;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.*;
@@ -38,6 +40,7 @@ public class CubeRenderer {
 
     private void renderCube(Cube cube, FrameBuilder fb) {
         addDimensionsAndIndicators(cube, null, fb);
+        fb.add("splitted", new FrameBuilder("splitted").add("splitted", cube.splitted() != null ? "true" : "false"));
         if (cube.splitted() != null) addSplit(cube, fb);
         addIndex(fb, cube.index());
         factRenderer.render(cube, fb);
@@ -45,14 +48,16 @@ public class CubeRenderer {
     }
 
     private void renderVirtualCube(Cube.Virtual virtualCube, FrameBuilder fb) {
+        Set<String> dimensionsAndIndicatorsAlreadyAdded = new HashSet<>();
         for (Cube reference : new Cube[]{virtualCube.main(), virtualCube.join()}) {
-            addDimensionsAndIndicators(reference, virtualCube.asCube(), fb);
-            factRenderer.render(reference, fb);
+            addDimensionsAndIndicators(reference, virtualCube.asCube(), fb, dimensionsAndIndicatorsAlreadyAdded);
         }
+        factRenderer.render(virtualCube, fb);
         addIndex(fb, virtualCube.index());
         fb.add("mainCube", virtualCube.main().name$());
         fb.add("joinCube", virtualCube.join().name$());
         fb.add("cube", new String[]{virtualCube.main().name$(), virtualCube.join().name$()});
+        fb.add("splitted", new FrameBuilder("splitted").add("splitted", virtualCube.main().splitted() != null ? "true" : "false"));
         if (virtualCube.main().splitted() != null) addSplit(virtualCube.main(), fb);
         write(virtualCube.asCube(), fb);
     }
@@ -74,6 +79,26 @@ public class CubeRenderer {
     private void addDimensionsAndIndicators(Cube cube, Cube sourceCube, FrameBuilder fb) {
         cube.dimensionList().forEach(selector -> fb.add("dimension", dimensionFrame(cube, sourceCube, selector)));
         cube.indicatorList().forEach(indicator -> fb.add("indicator", indicatorFrame(cube, sourceCube, indicator)));
+        cube.customIndicatorList().forEach(indicator -> fb.add("customIndicator", customIndicatorFrame(cube, sourceCube, indicator)));
+        addCustomFilters(cube, sourceCube, fb);
+    }
+
+    private void addDimensionsAndIndicators(Cube cube, Cube sourceCube, FrameBuilder fb, Set<String> filter) {
+        cube.dimensionList().stream()
+                .filter(s -> !filter.contains(s.name$()))
+                .peek(s -> filter.add(s.name$()))
+                .forEach(s -> fb.add("dimension", dimensionFrame(cube, sourceCube, s)));
+
+        cube.indicatorList().stream()
+                .filter(i -> !filter.contains(i.name$()))
+                .peek(i -> filter.add(i.name$()))
+                .forEach(i -> fb.add("indicator", indicatorFrame(cube, sourceCube, i)));
+
+        cube.customIndicatorList().stream()
+                .filter(i -> !filter.contains(i.name$()))
+                .peek(i -> filter.add(i.name$()))
+                .forEach(i -> fb.add("customIndicator", customIndicatorFrame(cube, sourceCube, i)));
+
         addCustomFilters(cube, sourceCube, fb);
     }
 
@@ -86,16 +111,24 @@ public class CubeRenderer {
     }
 
     private FrameBuilder dimensionFrame(Cube cube, Cube sourceCube, Cube.Dimension dimension) {
-        FrameBuilder fb = new FrameBuilder("dimension", dimension.axis().core$().is(Axis.Categorical.class) ? "categorical" : "continuous").
+        final Cube.Fact.Column attribute = dimension.attribute();
+        final String name = dimension.name$();
+        final String axisName = dimension.axis().name$();
+
+        FrameBuilder fb = new FrameBuilder("dimension", dimension.axis().i$(Axis.Categorical.class) ? "categorical" : "continuous").
                 add("cube", sourceCube != null ? sourceCube.name$() : cube.name$()).
-                add("name", dimension.name$()).
-                add("source", dimension.attribute().name$()).
-                add("axis", dimension.axis().name$());
+                add("name", name).
+                add("source", attribute.name$()).
+                add("axis", axisName);
 
         if (dimension.axis().i$(Axis.Categorical.class)) {
             fb.add("type", dimension.axis().name$());
-            if (!dimension.attribute().asCategory().axis().equals(dimension.axis()))
-                fb.add("child", dimension.axis().name$());
+            if (!dimension.attribute().asCategory().axis().equals(dimension.axis())) {
+                if(StringUtils.indexOfDifference(name, axisName) < name.length() / 2)
+                    fb.add("child", axisName);
+                else
+                    fb.add("child", name);
+            }
         }
 
         return fb;
@@ -109,6 +142,17 @@ public class CubeRenderer {
                 .add("label", indicator.label())
                 .add("index", new FrameBuilder((sourceCube == null && cube.index() != null) || (sourceCube != null && sourceCube.index() != null) ? "index" : "total"))
                 .add("source", indicator.source().name$())
+                .add("mode", indicator.isAverage() ? "Average" : "Sum")
+                .add("unit", indicator.unit());
+    }
+
+    private FrameBuilder customIndicatorFrame(Cube cube, Cube sourceCube, Cube.CustomIndicator indicator) {
+        return new FrameBuilder("customIndicator").add(indicator.isAverage() ? "average" : "sum")
+                .add("cube", sourceCube != null ? sourceCube.name$() : cube.name$())
+                .add("name", indicator.name$())
+                .add("fieldName", asFieldName(indicator.label()))
+                .add("label", indicator.label())
+                .add("index", new FrameBuilder((sourceCube == null && cube.index() != null) || (sourceCube != null && sourceCube.index() != null) ? "index" : "total"))
                 .add("mode", indicator.isAverage() ? "Average" : "Sum")
                 .add("unit", indicator.unit());
     }

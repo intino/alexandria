@@ -1,11 +1,12 @@
 def type(builder)
 	package $package+validPackage.analytic;
 
-	import $package+validPackage.analytic.cubes.*;
+	import $package+validPackage.analytic.cubes.schemas.*;
 	import io.intino.alexandria.logger.Logger;
 	import io.intino.alexandria.Timetag;
 	import io.intino.alexandria.Fingerprint;
 	import io.intino.alexandria.led.*;
+	import io.intino.alexandria.led.util.LedSessionSorter;
 
 	import java.util.function.Consumer;
 	import java.util.function.Function;
@@ -22,6 +23,7 @@ def type(builder)
 		private final File destination;
 		private final File stage;
 		private Session session;
+		private boolean deleteStage = true;
 
 		public $name+snakeCaseToCamelCase+firstUpperCase(File destination) {
 			this(destination, DEFAULT_BUFFER_SIZE);
@@ -29,29 +31,36 @@ def type(builder)
 
 		public $name+snakeCaseToCamelCase+firstUpperCase(File destination, int factBufferSize) {
 			this.destination = destination;
-			this.stage = new File(destination, "session" + java.util.UUID.randomUUID().toString());
+			this.stage = new File(destination, "session_" + java.util.UUID.randomUUID().toString());
+			this.stage.mkdir();
 			this.session = new Session(destination, factBufferSize);
 		}
+
+		public void deleteStage(boolean deleteStage) {
+		    this.deleteStage = deleteStage;
+	    }
 
 		$cube+put...[$NL$NL]
 
 		public void flush() {
-			session.close();
+			session.flush();
 		}
 
 		public void finish() {
 			session.close();
 			make();
-			try {
-				FileUtils.deleteDirectory(stage);
-			} catch (java.io.IOException e) {
-				Logger.error(e);
+			if(deleteStage) {
+			    try {
+                	FileUtils.deleteDirectory(stage);
+                } catch (java.io.IOException e) {
+                	Logger.error(e);
+                }
 			}
 		}
 
 		private void make() {
 			File$[] files = FileUtils.listFiles(stage, new String$[]{"led"}, true).toArray(new File$[0]);
-			io.intino.alexandria.led.util.LedSessionSorter.sort(files, (Function<File, File>) f -> datamartFile(Session.cleanedNameOf(f)), tempFolder());
+			LedSessionSorter.sort(files, (Function<File, File>) f -> datamartFile(Session.cleanedNameOf(f)), tempFolder());
 		}
 
 		private File datamartFile(String name) {
@@ -89,6 +98,10 @@ def type(builder)
 				builder.append(transaction);
 			}
 
+			public void flush() {
+			    this.builders.forEach((f, b) -> b.flush());
+			}
+
             @Override
 			public void close() {
 				this.builders.forEach((f, b) -> b.close());
@@ -115,7 +128,7 @@ def type(builder)
 end
 
 def trigger(put)
-	public void put$name+FirstUpperCase(String tank, Timetag timetag, java.util.function.Consumer<$name+FirstUpperCase> fact) {
-		session.put(tank, timetag, $name+FirstUpperCase.class, fact);
+	public void put$name+FirstUpperCase(String tank, Timetag timetag, java.util.function.Consumer<$name+FirstUpperCase~Schema> fact) {
+		session.put(tank, timetag, $name+FirstUpperCase~Schema.class, fact);
 	}
 end

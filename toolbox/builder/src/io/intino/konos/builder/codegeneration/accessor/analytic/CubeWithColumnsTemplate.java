@@ -4,7 +4,7 @@ import io.intino.itrules.RuleSet;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.facts.ColumnsTemplate;
 
-public class CubeWithSettersTemplate extends Template {
+public class CubeWithColumnsTemplate extends Template {
 
     @Override
     protected RuleSet ruleSet() {

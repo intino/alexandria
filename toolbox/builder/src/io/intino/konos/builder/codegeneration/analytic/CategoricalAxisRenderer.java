@@ -66,20 +66,6 @@ public class CategoricalAxisRenderer {
         addIncludes(fb, axis, includes);
     }
 
-    private void addLabel(FrameBuilder fb, Axis.Categorical axis) {
-        if (axis.includeLabel() != null)
-            fb.add("include", new FrameBuilder("include").add("name", "label").add("index", LABEL_INDEX));
-    }
-
-    private void addIncludes(FrameBuilder fb, Axis.Categorical axis, List<Axis> includes) {
-        final int offset = offset(axis);
-        for (int i = 0; i < includes.size(); i++) {
-            fb.add("include", new FrameBuilder("include")
-                    .add("name", includes.get(i).name$())
-                    .add("index", i + offset));
-        }
-    }
-
     private void loadComponents(FrameBuilder fb, Axis.Categorical axis, List<Axis> includes) {
         String resource = "/" + axisResource(axis.tsv().getPath());
         List<ComponentInfo> components = loadFromResource(resource);
@@ -90,16 +76,51 @@ public class CategoricalAxisRenderer {
         FrameBuilder componentsFB = new FrameBuilder("components");
         componentsFB.add("name", axis.name$());
 
-        componentsFB.add("embedded", embedded);
-        if(embedded)
-            addEmbeddedComponentsToArray(componentsFB, axis, components);
-        else
-            componentsFB.add("resource", resource);
-
         addLabel(componentsFB, axis);
-        addIncludes(componentsFB, axis, includes);
+
+        componentsFB.add("embedded", embedded);
+        if(embedded) {
+            addEmbeddedComponentsToArray(componentsFB, axis, components);
+        } else {
+            componentsFB.add("resource", resource);
+            addIncludes(componentsFB, axis, includes);
+        }
 
         fb.add("components", componentsFB);
+    }
+
+    private void addLabel(FrameBuilder fb, Axis.Categorical axis) {
+        if (axis.includeLabel() != null)
+            fb.add("include", new FrameBuilder("include")
+                    .add("name", "label")
+                    .add("label", "label")
+                    .add("index", LABEL_INDEX));
+    }
+
+    private void addIncludes(FrameBuilder fb, Axis.Categorical axis, List<Axis> includes) {
+        final int offset = offset(axis);
+        for (int i = 0; i < includes.size(); i++) {
+            fb.add("include", new FrameBuilder("include")
+                    .add("axis", axis.name$())
+                    .add("name", includes.get(i).name$())
+                    .add("type", includes.get(i).isCategorical() ? "categorical" : "continuous")
+                    .add("label", asFieldName(includes.get(i).label()))
+                    .add("index", i + offset));
+        }
+    }
+
+    private void addIncludes(ComponentInfo component, FrameBuilder fb, Axis.Categorical axis, List<Axis> includes) {
+        final boolean hasLabel = axis.includeLabel() != null;
+        final int offset = offset(axis);
+        for (int i = 0; i < includes.size(); i++) {
+            final String include = component.field(i + (hasLabel ? 3 : 2));
+            fb.add("include", new FrameBuilder("include")
+                    .add("name", includes.get(i).name$())
+                    .add("label", asFieldName(includes.get(i).label()))
+                    .add("id", include)
+                    .add("type", includes.get(i).isCategorical() ? "categorical" : "continuous")
+                    .add("index", i + offset));
+        }
     }
 
     private void addEmbeddedComponentsToArray(FrameBuilder fb, Axis.Categorical axis, List<ComponentInfo> components) {
@@ -119,7 +140,7 @@ public class CategoricalAxisRenderer {
             if(hasLabel) compFB.add("label", component.label());
             compFB.add("index", component.index());
             compFB.add("id", component.id());
-            addIncludes(compFB, axis, includes);
+            addIncludes(component, compFB, axis, includes);
             fb.add("component", compFB);
         }
     }

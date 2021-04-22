@@ -32,6 +32,7 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.compiler.shared.KonosBuildConstants.Mode;
 import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.Service;
 
 import java.io.File;
 
@@ -76,57 +77,65 @@ public class FullRenderer {
 		else accessors();
 	}
 
-	private void analytic() {
+	private void analytic() throws KonosException {
 		new AnalyticRenderer(context, graph).execute();
 	}
 
 
-	private void accessors() {
-		graph.restServiceList().forEach(service -> new RESTAccessorRenderer(context, service, genDirectory(context.configuration().genDirectory(), "rest#", service.name$())).render());
-		graph.jmxServiceList().forEach(service -> new JMXAccessorRenderer(context, service, genDirectory(context.configuration().genDirectory(), "jmx#", service.name$())).render());
-		graph.messagingServiceList().forEach(service -> new MessagingAccessorRenderer(context, service, genDirectory(context.configuration().genDirectory(), "messaging#", service.name$())).render());
+	private void accessors() throws KonosException {
+		for (Service.REST rest : graph.restServiceList()) {
+			new RESTAccessorRenderer(context, rest, genDirectory(context.configuration().genDirectory(), "rest#", rest.name$())).render();
+		}
+		for (Service.JMX jmx : graph.jmxServiceList())
+			new JMXAccessorRenderer(context, jmx, genDirectory(context.configuration().genDirectory(), "jmx#", jmx.name$())).render();
+		for (Service.Messaging service : graph.messagingServiceList())
+			new MessagingAccessorRenderer(context, service, genDirectory(context.configuration().genDirectory(), "messaging#", service.name$())).render();
 		if (!graph.cubeList().isEmpty())
-			new AnalyticBuilderRenderer(context, graph, new File(context.configuration().genDirectory(), "analytic#analytic" + File.separator + "src")).render();
+			new AnalyticBuilderRenderer(context, graph, new File(analyticBasePath(), "src"),new File(analyticBasePath(), "res")).render();
+	}
+
+	private File analyticBasePath() {
+		return new File(context.configuration().genDirectory(), "analytic#analytic");
 	}
 
 	private File genDirectory(File tempDirectory, String serviceType, String serviceName) {
 		return new File(tempDirectory, serviceType + serviceName + File.separator + "src");
 	}
 
-	private void schemas() {
+	private void schemas() throws KonosException {
 		new SchemaListRenderer(context, graph).execute();
 	}
 
-	private void exceptions() {
+	private void exceptions() throws KonosException {
 		new ExceptionRenderer(context, graph).execute();
 	}
 
-	private void rest() {
+	private void rest() throws KonosException {
 		new RESTResourceRenderer(context, graph).execute();
 		new RESTServiceRenderer(context, graph).execute();
 	}
 
-	private void soap() {
+	private void soap() throws KonosException {
 		new SoapOperationRenderer(context, graph).execute();
 		new SoapServiceRenderer(context, graph).execute();
 	}
 
-	private void jmx() {
+	private void jmx() throws KonosException {
 		new JMXOperationsServiceRenderer(context, graph).execute();
 		new JMXServerRenderer(context, graph).execute();
 	}
 
-	private void jms() {
+	private void jms() throws KonosException {
 		new MessagingRequestRenderer(context, graph).execute();
 		new MessagingServiceRenderer(context, graph).execute();
 	}
 
-	private void tasks() {
+	private void tasks() throws KonosException {
 		new ListenerRenderer(context, graph).execute();
 		new SentinelsRenderer(context, graph).execute();
 	}
 
-	private void datalake() {
+	private void datalake() throws KonosException {
 		new DatalakeRenderer(context, graph).execute();
 	}
 
@@ -147,7 +156,7 @@ public class FullRenderer {
 		new AdapterRenderer(context, graph).execute();
 	}
 
-	private void processes() {
+	private void processes() throws KonosException {
 		new BpmRenderer(context, graph).execute();
 	}
 
@@ -155,25 +164,25 @@ public class FullRenderer {
 		new FeederRenderer(context, graph).execute();
 	}
 
-	private void slack() {
+	private void slack() throws KonosException {
 		new SlackRenderer(context, graph).execute();
 	}
 
-	private void ui() {
+	private void ui() throws KonosException {
 		ComponentRenderer.clearCache();
 		if (context.mode() == Mode.Normal) uiServer();
 		uiClient();
 	}
 
-	private void uiServer() {
+	private void uiServer() throws KonosException {
 		new io.intino.konos.builder.codegeneration.services.ui.ServiceListRenderer(context, graph).execute();
 	}
 
-	private void uiClient() {
+	private void uiClient() throws KonosException {
 		new io.intino.konos.builder.codegeneration.accessor.ui.ServiceListRenderer(context, graph).execute();
 	}
 
-	private void box() {
+	private void box() throws KonosException {
 		AbstractBoxRenderer renderer = new AbstractBoxRenderer(context, graph);
 		renderer.execute();
 		new BoxRenderer(context, hasModel).execute();
