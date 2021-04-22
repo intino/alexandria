@@ -6,8 +6,6 @@ import io.intino.konos.model.graph.Axis;
 import io.intino.konos.model.graph.Cube;
 import io.intino.konos.model.graph.Cube.Fact.Column;
 import io.intino.konos.model.graph.SizedData;
-import io.intino.magritte.framework.Concept;
-import io.intino.magritte.framework.Predicate;
 
 import java.io.*;
 import java.util.*;
@@ -18,7 +16,7 @@ import static java.util.stream.Collectors.toList;
 
 public class FactRenderer {
 
-    private static final Comparator<Column> COMPARATOR = (col1, col2) -> {
+    private static final Comparator<Column> SORT_COLUMNS_BY_SIZE = (col1, col2) -> {
         if(col1.isVirtual() || col1.isId()) return Integer.MIN_VALUE;
         if(col2.isVirtual() || col2.isId()) return Integer.MAX_VALUE;
         return -Integer.compare(col1.asType().size(), col2.asType().size());
@@ -33,8 +31,8 @@ public class FactRenderer {
     public void render(Cube.Virtual virtualCube, FrameBuilder fb) {
         SchemaSerialBuilder serialBuilder = new SchemaSerialBuilder();
         fb.add("id", idOf(virtualCube.main().fact()).name$());
-        final int lastOffset = addAllColumns(virtualCube, fb, serialBuilder);
-        fb.add("size", calculateFactSize(lastOffset));
+        Offset offset = addAllColumns(virtualCube, fb, serialBuilder);
+        fb.add("size", calculateFactSize(offset));
         fb.add("serialUUID", serialBuilder.buildSerialId().toString());
     }
 
@@ -46,32 +44,32 @@ public class FactRenderer {
         SchemaSerialBuilder serialBuilder = new SchemaSerialBuilder();
         fb.add("id", idOf(cube.fact()).name$());
         calculateColumnSizes(cube.fact().columnList());
-        final int lastOffset = addAllColumns(name, cube, fb, serialBuilder);
-        fb.add("size", calculateFactSize(lastOffset));
+        Offset offset = addAllColumns(name, cube, fb, serialBuilder);
+        fb.add("size", calculateFactSize(offset));
         fb.add("serialUUID", serialBuilder.buildSerialId().toString());
     }
 
-    private int addAllColumns(String name, Cube cube, FrameBuilder fb, SchemaSerialBuilder serialBuilder) {
-        List<Column> columns = cube.fact().columnList().stream().sorted(COMPARATOR).collect(toList());
+    private Offset addAllColumns(String name, Cube cube, FrameBuilder fb, SchemaSerialBuilder serialBuilder) {
+        List<Column> columns = cube.fact().columnList().stream().sorted(SORT_COLUMNS_BY_SIZE).collect(toList());
         return addAllColumns(name, columns, fb, serialBuilder);
     }
 
-    private int addAllColumns(Cube.Virtual virtualCube, FrameBuilder fb, SchemaSerialBuilder serialBuilder) {
-        List<Column> mainColumns = virtualCube.main().fact().columnList().stream().sorted(COMPARATOR).collect(toList());
+    private Offset addAllColumns(Cube.Virtual virtualCube, FrameBuilder fb, SchemaSerialBuilder serialBuilder) {
+        List<Column> mainColumns = virtualCube.main().fact().columnList().stream().sorted(SORT_COLUMNS_BY_SIZE).collect(toList());
         Set<String> mainColumnNames = mainColumns.stream().map(Column::name$).collect(Collectors.toSet());
         addAllColumns(virtualCube.main().name$(), mainColumns, fb, serialBuilder);
-        List<Column> joinColumns = virtualCube.join().fact().columnList(c -> !mainColumnNames.contains(c.name$())).stream().sorted(COMPARATOR).collect(toList());
+        List<Column> joinColumns = virtualCube.join().fact().columnList(c -> !mainColumnNames.contains(c.name$())).stream().sorted(SORT_COLUMNS_BY_SIZE).collect(toList());
         addAllColumns(virtualCube.join().name$(), joinColumns, fb, serialBuilder);
-        return 0;
+        return new Offset();
     }
 
-    private int addAllColumns(String cube, List<Column> columns, FrameBuilder fb, SchemaSerialBuilder serialBuilder) {
-        int offset = 0;
+    private Offset addAllColumns(String cube, List<Column> columns, FrameBuilder fb, SchemaSerialBuilder serialBuilder) {
+        Offset offset = new Offset();
         for (Column column : columns) {
             if(column.isVirtual())
                 addVirtualAttribute(cube, fb, column);
             else
-                offset = addFactAttribute(cube, fb, serialBuilder, offset, column);
+                addFactAttribute(cube, fb, serialBuilder, offset, column);
         }
         return offset;
     }
@@ -107,17 +105,25 @@ public class FactRenderer {
         }
     }
 
-    private int addFactAttribute(String cube, FrameBuilder fb, SchemaSerialBuilder serialBuilder, int offset, Column column) {
+    private void addFactAttribute(String cube, FrameBuilder fb, SchemaSerialBuilder serialBuilder, Offset offset, Column column) {
+        final String type = type(column.asType());
         final int columnSize = column.asType().size();
-        if(getMinimumBytesFor(offset, columnSize) > Long.BYTES)
-            offset = roundUp2(offset, Long.SIZE);
-        fb.add("column", columnFrame(column, offset, cube));
-        serialBuilder.add(column.name$(), type(column.asType()), offset, column.asType().size());
-        return offset + columnSize;
+        int position = offset.position;
+        final int minimumBytesNeeded = getMinimumBytesFor(position, columnSize);
+
+        if(minimumBytesNeeded > Long.BYTES) position = roundUp2(position, Long.SIZE);
+
+        fb.add("column", columnFrame(column, position, cube));
+        serialBuilder.add(column.name$(), type, position, column.asType().size());
+
+        offset.position = position + columnSize;
+        offset.maxPosition = Math.max(offset.maxPosition, position + minimumBytesNeeded * Byte.SIZE);
     }
 
-    private int calculateFactSize(int offset) {
-        return (int) Math.ceil(offset / (float)Byte.SIZE);
+    private int calculateFactSize(Offset offset) {
+        final int minSize = (int) Math.ceil(offset.maxPosition / (float)Byte.SIZE);
+        final int size = (int) Math.ceil(offset.position / (float)Byte.SIZE);
+        return Math.max(minSize, size);
     }
 
     private FrameBuilder columnFrame(Column column, int offset, String cube) {
@@ -210,6 +216,7 @@ public class FactRenderer {
         if(offset % size != 0) return false;
         return     javaType.equals("int") && size == Integer.SIZE
                 || javaType.equals("short") && size == Short.SIZE
+                || javaType.equals("char") && size == Character.SIZE
                 || javaType.equals("byte") && size == Byte.SIZE
                 || javaType.equals("boolean") && size == Byte.SIZE
                 || javaType.equals("long") && size == Long.SIZE
@@ -225,8 +232,9 @@ public class FactRenderer {
     private void calculateColumnSizes(List<Column> columns) {
         for (Column column : columns) {
             if(column.isVirtual()) continue;
-            if (column.isCategory())
+            if (column.isCategory()) {
                 column.asType().size(sizeOf(column.asCategory().axis().asCategorical()));
+            }
         }
     }
 
@@ -264,5 +272,15 @@ public class FactRenderer {
 
     public Column idOf(Cube.Fact fact) {
         return fact.columnList().stream().filter(SizedData::isId).findFirst().orElse(null);
+    }
+
+    private static class Offset {
+
+        public int position;
+        public int maxPosition;
+
+        public int bytesNeeded() {
+            return maxPosition / Byte.SIZE;
+        }
     }
 }

@@ -92,6 +92,7 @@ public class CategoricalAxisRenderer {
     private void addLabel(FrameBuilder fb, Axis.Categorical axis) {
         if (axis.includeLabel() != null)
             fb.add("include", new FrameBuilder("include")
+                    .add("axis", axis.name$())
                     .add("name", "label")
                     .add("label", "label")
                     .add("index", LABEL_INDEX));

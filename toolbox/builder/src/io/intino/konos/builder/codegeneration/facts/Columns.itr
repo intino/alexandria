@@ -88,7 +88,7 @@ end
 
 def type(column & categorical) trigger(getter)
 	public $type+firstUpperCase.Component $name+firstLowerCase() {
-		return $type+firstUpperCase.component(bitBuffer.getIntegerNBits($offset, $bits));
+		return $type+firstUpperCase.component((int)bitBuffer.getUIntegerNBits($offset, $bits));
 	}
 end
 
@@ -212,18 +212,6 @@ def type(column & date) trigger(setter)
 	}
 end
 
-def type(column & categorical) trigger(setter)
-	public $owner+firstUpperCase $name+firstLowerCase(String $name+firstLowerCase) {
-		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $type+firstUpperCase.component($name+firstLowerCase).index());
-		return this;
-	}
-
-	public $owner+firstUpperCase $name+firstLowerCase($type+firstUpperCase.Component $name+firstLowerCase) {
-		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $name+firstLowerCase.index());
-		return this;
-	}
-end
-
 def type(column & integer) type(unsigned) trigger(setter)
 	public $owner+firstUpperCase~Builder $name+firstLowerCase(int $name+firstLowerCase) {
 		bitBuffer.set$aligned~UInteger[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
@@ -302,13 +290,13 @@ def type(column & id) trigger(getter)
 end
 
 def type(column & categorical) trigger(setter)
-	public $owner+firstUpperCase~Builder $name+firstLowerCase(String $name+firstLowerCase) {
-		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $type+firstUpperCase.component($name+firstLowerCase).index());
+	public $owner+firstUpperCase $name+firstLowerCase(String $name+firstLowerCase) {
+		bitBuffer.setUIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $type+firstUpperCase.component($name+firstLowerCase).index());
 		return this;
 	}
 
-	public $owner+firstUpperCase~Builder $name+firstLowerCase($type+firstUpperCase.Component $name+firstLowerCase) {
-		bitBuffer.setIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $name+firstLowerCase.index());
+	public $owner+firstUpperCase $name+firstLowerCase($type+firstUpperCase.Component $name+firstLowerCase) {
+		bitBuffer.setUIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $name+firstLowerCase.index());
 		return this;
 	}
 end

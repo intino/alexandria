@@ -72,9 +72,12 @@ def type(axis)
 
         @Override
 		public int getSize() {
-			return components.length - 1;
+			return components.length;
 		}
 
+        /**
+        * Get all components of this axis as a list, without the NA component (Starts with the component of index 1).
+        */
         @Override
 	    public List<Component> getComponents() {
 	    	return new AbstractList<>() {
@@ -84,11 +87,14 @@ def type(axis)
 	    		}
 	    		@Override
 	    		public int size() {
-	    			return $name+snakeCaseToCamelCase+FirstUpperCase~.size();
+	    			return $name+snakeCaseToCamelCase+FirstUpperCase~.size() - 1;
 	    		}
 	    	};
 	    }
 
+        /**
+        * Get all components of this axis as a stream, without the NA component (Starts with the component of index 1).
+        */
         @Override
 	    public Stream<Component> toStream() {
 	    	return Arrays.stream(components).skip(1);
@@ -155,12 +161,7 @@ def type(axis)
 
 		    @Override
 		    public String toString() {
-		        StringBuilder sb = new StringBuilder(axis().getClass().getSimpleName());
-		        sb.append('{');
-		        sb.append("index=").append(index);
-		        sb.append(", id=").append(id);
-		        [$include+toString...[$NL]]
-		        return sb.append('}').toString();
+		        return id;
 		    }
 		}
 	}
@@ -172,6 +173,12 @@ end
 
 def attribute(name:label) trigger(declaration)
 	private final String $name+firstLowerCase;
+end
+
+def type(include) attribute(name:label) trigger(staticGetter)
+	public static $axis+snakeCaseToCamelCase+firstUpperCase.Component componentByLabel(String label) {
+	    return stream().filter(c -> c.label().equals(label)).findFirst().orElse(NA);
+	}
 end
 
 def type(include) attribute(type:continuous) trigger(staticGetter)
