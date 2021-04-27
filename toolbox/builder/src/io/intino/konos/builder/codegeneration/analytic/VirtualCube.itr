@@ -739,19 +739,19 @@ def type(indicator) trigger(sumAggregation)
 end
 
 def type(customIndicator & average) trigger(field)
-	private double $name+firstLowerCase = Double.NaN;
+	protected double $name+firstLowerCase = Double.NaN;
 end
 
 def type(indicator & average) trigger(field)
-	double $name+firstLowerCase;
+	protected double $name+firstLowerCase;
 end
 
 def type(indicator & sum) trigger(field)
-	long $name+firstLowerCase;
+	protected long $name+firstLowerCase;
 end
 
 def type(customIndicator & sum) trigger(field)
-	private long $name+firstLowerCase = Long_NaN;
+	protected long $name+firstLowerCase = Long_NaN;
 end
 
 def type(indicator & average) trigger(getter)
@@ -803,7 +803,7 @@ def type(indicator & sum) trigger(staticMethod)
 end
 
 def type(split) trigger(parameter)
-	String $name+firstLowerCase
+	private String $name+firstLowerCase
 end
 
 def type(split) trigger(setParameter)

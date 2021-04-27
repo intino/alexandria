@@ -11,6 +11,7 @@ import java.io.*;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
@@ -21,6 +22,7 @@ public class CategoricalAxisRenderer {
 
     public static final int LABEL_INDEX = 2;
     public static final int MAX_EMBEDDED_COMPONENTS = 100;
+    private static final String VARIABLE_PATTERN = "[a-zA-Z][a-zA-Z0-9_]*";
 
     private final CompilationContext context;
     private final File gen;
@@ -125,20 +127,27 @@ public class CategoricalAxisRenderer {
     }
 
     private void addEmbeddedComponentsToArray(FrameBuilder fb, Axis.Categorical axis, List<ComponentInfo> components) {
-        final boolean hasLabel = axis.includeLabel() != null;
+        final boolean useLabel = axis.includeLabel() != null && checkLabelNames(components);
         for(ComponentInfo component : components) {
-            final String name = hasLabel ? component.label() : component.id();
+            final String name = useLabel ? component.label() : component.id();
             fb.add("component", asFieldName(name));
         }
     }
 
+    private boolean checkLabelNames(List<ComponentInfo> components) {
+        for(ComponentInfo component : components) {
+            if(!asFieldName(component.label()).matches(VARIABLE_PATTERN)) return false;
+        }
+        return true;
+    }
+
     private void createEmbeddedComponents(FrameBuilder fb, Axis.Categorical axis, List<Axis> includes, List<ComponentInfo> components) {
+        final boolean useLabel = axis.includeLabel() != null && checkLabelNames(components);
         for(ComponentInfo component : components) {
             FrameBuilder compFB = new FrameBuilder("component");
-            final boolean hasLabel = axis.includeLabel() != null;
-            final String name = hasLabel ? component.label() : component.id();
+            final String name = useLabel ? component.label() : component.id();
             compFB.add("name", asFieldName(name));
-            if(hasLabel) compFB.add("label", component.label());
+            if(axis.includeLabel() != null) compFB.add("label", component.label());
             compFB.add("index", component.index());
             compFB.add("id", component.id());
             addIncludes(component, compFB, axis, includes);
