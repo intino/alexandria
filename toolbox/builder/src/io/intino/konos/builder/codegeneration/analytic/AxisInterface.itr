@@ -51,9 +51,31 @@ def type(interface)
 		    }
 		    throw new IllegalArgumentException("Unknown axis " + name);
 		}
+
+		static Axis byLabel(String label) {
+            if(label == null) throw new NullPointerException("Label cannot be null");
+            switch(label) {
+                [$axisLabelCase...[$NL]]
+            }
+            throw new IllegalArgumentException("Unknown axis " + label);
+        }
+
+        static List<Axis> getAll() {
+            return List.of(
+                [$axisListElement...[,$NL]]
+            );
+        }
     }
 end
 
 def type(axisNameCase)
     case "$axis+snakeCaseToCamelCase+firstUpperCase": return $axis+snakeCaseToCamelCase+firstUpperCase.get();
+end
+
+def type(axisLabelCase)
+    case $axis+snakeCaseToCamelCase+firstUpperCase.AXIS_LABEL: return $axis+snakeCaseToCamelCase+firstUpperCase.AXIS_LABEL;
+end
+
+def type(axisListElement)
+    $axis+snakeCaseToCamelCase+firstUpperCase.get(),
 end
