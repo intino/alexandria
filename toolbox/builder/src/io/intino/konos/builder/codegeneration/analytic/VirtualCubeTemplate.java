@@ -47,7 +47,7 @@ public class VirtualCubeTemplate extends Template {
 			rule().condition((type("index")), (trigger("index"))).output(literal("ids.size()")),
 			rule().condition((allTypes("indicator","average")), (trigger("staticmethod"))).output(literal("public static double ")).output(mark("name")).output(literal("(Fact fact) {\n\treturn 0.0;\n}")),
 			rule().condition((allTypes("indicator","sum")), (trigger("staticmethod"))).output(literal("public static long ")).output(mark("name")).output(literal("(Fact fact) {\n\treturn 0;\n}")),
-			rule().condition((type("split")), (trigger("parameter"))).output(literal("private String ")).output(mark("name", "firstLowerCase")),
+			rule().condition((type("split")), (trigger("parameter"))).output(literal("String ")).output(mark("name", "firstLowerCase")),
 			rule().condition((type("split")), (trigger("setparameter"))).output(literal("java.util.Set<String> ")).output(mark("name", "firstLowerCase")),
 			rule().condition((type("split")), (trigger("assign"))).output(literal("this.")).output(mark("name", "firstLowerCase")).output(literal(" = ")).output(mark("name", "firstLowerCase")).output(literal(";")),
 			rule().condition((type("split")), (trigger("name"))).output(mark("name", "firstLowerCase")),

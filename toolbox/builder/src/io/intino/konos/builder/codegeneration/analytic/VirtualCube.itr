@@ -803,7 +803,7 @@ def type(indicator & sum) trigger(staticMethod)
 end
 
 def type(split) trigger(parameter)
-	private String $name+firstLowerCase
+	String $name+firstLowerCase
 end
 
 def type(split) trigger(setParameter)
