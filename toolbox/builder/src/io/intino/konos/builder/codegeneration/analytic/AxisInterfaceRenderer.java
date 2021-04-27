@@ -21,7 +21,7 @@ public class AxisInterfaceRenderer {
 
     private static void setAxes(FrameBuilder fb, Collection<Axis> axes) {
         for(Axis axis : axes) {
-            fb.add("axisNameCase", new FrameBuilder("axisNameCase")
+            fb.add("axis", new FrameBuilder("axis")
                     .add("axis", axis.name$()));
         }
     }
