@@ -396,6 +396,7 @@ def type(cube)
 
 			public void append(AbstractAggregation aggregation) {
 				[$indicator+sumAggregation...[$NL]]
+				[$customIndicator+sumAggregation...[$NL]]
 				[$index+append2]
 				aggregationDistincts = Math.max(aggregationDistincts, aggregation.aggregationDistincts);
 				aggregationTotal += aggregation.aggregationTotal();
@@ -736,6 +737,16 @@ end
 
 def type(indicator) trigger(sumAggregation)
 	$name+firstLowerCase += aggregation.$name+firstLowerCase;
+end
+
+def type(customIndicator & sum) trigger(sumAggregation)
+	if($name+firstLowerCase != Long_NaN && aggregation.$name+firstLowerCase != Long_NaN)
+	    $name+firstLowerCase += aggregation.$name+firstLowerCase;
+end
+
+def type(customIndicator & average) trigger(sumAggregation)
+	if(!Double.isNaN($name+firstLowerCase) && !Double.isNaN(aggregation.$name+firstLowerCase))
+	    $name+firstLowerCase += aggregation.$name+firstLowerCase;
 end
 
 def type(customIndicator & average) trigger(field)
