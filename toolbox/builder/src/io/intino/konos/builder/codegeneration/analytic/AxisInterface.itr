@@ -75,5 +75,5 @@ def type(axis) trigger(LabelCase)
 end
 
 def type(axis) trigger(ListElement)
-    $axis+snakeCaseToCamelCase+firstUpperCase.get(),
+    $axis+snakeCaseToCamelCase+firstUpperCase.get()
 end
