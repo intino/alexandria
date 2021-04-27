@@ -767,7 +767,9 @@ def type(customIndicator & average) trigger(getter)
 		return $name+firstLowerCase;
 	}
 
-	protected abstract double calculate$name+firstUpperCase();
+	protected double calculate$name+firstUpperCase() {
+	    return 0.0;
+	}
 end
 
 def type(indicator & sum) trigger(getter)
@@ -783,7 +785,9 @@ def type(customIndicator & sum) trigger(getter)
 		return $name+firstLowerCase;
 	}
 
-	protected abstract long calculate$name+firstUpperCase();
+	protected long calculate$name+firstUpperCase() {
+	    return 0L;
+	}
 end
 
 def type(index) trigger(index)
