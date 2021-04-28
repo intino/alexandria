@@ -553,7 +553,8 @@ def type(cube)
 			}
 
 			public long$[] totals() {
-				return totals;
+				if(totals == null) totals = new long[totalsSize()];
+            	return totals;
 			}
 
 			public static class Datasource {
