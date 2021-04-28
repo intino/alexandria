@@ -11,7 +11,6 @@ import java.io.*;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
@@ -127,22 +126,15 @@ public class CategoricalAxisRenderer {
     }
 
     private void addEmbeddedComponentsToArray(FrameBuilder fb, Axis.Categorical axis, List<ComponentInfo> components) {
-        final boolean useLabel = axis.includeLabel() != null && checkLabelNames(components);
+        final boolean useLabel = shouldUseLabel(axis, components);
         for(ComponentInfo component : components) {
             final String name = useLabel ? component.label() : component.id();
             fb.add("component", asFieldName(name));
         }
     }
 
-    private boolean checkLabelNames(List<ComponentInfo> components) {
-        for(ComponentInfo component : components) {
-            if(!asFieldName(component.label()).matches(VARIABLE_PATTERN)) return false;
-        }
-        return true;
-    }
-
     private void createEmbeddedComponents(FrameBuilder fb, Axis.Categorical axis, List<Axis> includes, List<ComponentInfo> components) {
-        final boolean useLabel = axis.includeLabel() != null && checkLabelNames(components);
+        final boolean useLabel = shouldUseLabel(axis, components);
         for(ComponentInfo component : components) {
             FrameBuilder compFB = new FrameBuilder("component");
             final String name = useLabel ? component.label() : component.id();
@@ -153,6 +145,17 @@ public class CategoricalAxisRenderer {
             addIncludes(component, compFB, axis, includes);
             fb.add("component", compFB);
         }
+    }
+
+    private boolean shouldUseLabel(Axis.Categorical axis, List<ComponentInfo> components) {
+        return axis.includeLabel() != null && axis.includeLabel().isName() && checkLabelNames(components);
+    }
+
+    private boolean checkLabelNames(List<ComponentInfo> components) {
+        for(ComponentInfo component : components) {
+            if(!asFieldName(component.label()).matches(VARIABLE_PATTERN)) return false;
+        }
+        return true;
     }
 
     private String asFieldName(String name) {
