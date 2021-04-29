@@ -20,6 +20,7 @@ Concept:RequiresAspect Axis
 	Aspect Categorical
 		var resource tsv
 		Concept:{0..1} IncludeLabel
+			Aspect Name
 		Concept:{0..1} Include
 			var Axis[]:Categorical axes
 	Aspect Dynamic with Categorical

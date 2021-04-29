@@ -45,15 +45,35 @@ def type(interface)
 		}
 
 		static Axis byName(String name) {
-		    if(name == null) throw new NullPointerException("Name cannot be null");
 		    switch(name) {
-		        [$axisNameCase...[$NL]]
+		        [$axis+NameCase...[$NL]]
 		    }
-		    throw new IllegalArgumentException("Unknown axis " + name);
+		    return null;
 		}
+
+		static Axis byLabel(String label) {
+            switch(label) {
+                [$axis+LabelCase...[$NL]]
+            }
+            return null;
+        }
+
+        static List<Axis> all() {
+            return List.of(
+                [$axis+ListElement...[,$NL]]
+            );
+        }
     }
 end
 
-def type(axisNameCase)
+def type(axis) trigger(NameCase)
     case "$axis+snakeCaseToCamelCase+firstUpperCase": return $axis+snakeCaseToCamelCase+firstUpperCase.get();
+end
+
+def type(axis) trigger(LabelCase)
+    case $axis+snakeCaseToCamelCase+firstUpperCase.AXIS_LABEL: return $axis+snakeCaseToCamelCase+firstUpperCase.get();
+end
+
+def type(axis) trigger(ListElement)
+    $axis+snakeCaseToCamelCase+firstUpperCase.get()
 end

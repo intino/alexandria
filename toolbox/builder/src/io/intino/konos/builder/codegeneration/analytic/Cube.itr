@@ -407,6 +407,7 @@ def type(cube)
 
 			public void append(AbstractAggregation aggregation) {
 				[$indicator+sumAggregation...[$NL]]
+				[$customIndicator+sumAggregation...[$NL]]
 				[$index+append2]
 				aggregationDistincts = Math.max(aggregationDistincts(), aggregation.aggregationDistincts());
 				aggregationTotal += aggregation.aggregationTotal();
@@ -667,20 +668,30 @@ def type(indicator) trigger(sumAggregation)
 	$name+firstLowerCase += aggregation.$name+firstLowerCase;
 end
 
+def type(customIndicator & sum) trigger(sumAggregation)
+	if($name+firstLowerCase != Long_NaN && aggregation.$name+firstLowerCase != Long_NaN)
+	    $name+firstLowerCase += aggregation.$name+firstLowerCase;
+end
+
+def type(customIndicator & average) trigger(sumAggregation)
+	if(!Double.isNaN($name+firstLowerCase) && !Double.isNaN(aggregation.$name+firstLowerCase))
+	    $name+firstLowerCase += aggregation.$name+firstLowerCase;
+end
+
 def type(indicator & average) trigger(field)
-	private double $name+firstLowerCase;
+	protected double $name+firstLowerCase;
 end
 
 def type(customIndicator & average) trigger(field)
-	private double $name+firstLowerCase = Double.NaN;
+	protected double $name+firstLowerCase = Double.NaN;
 end
 
 def type(indicator & sum) trigger(field)
-	private long $name+firstLowerCase;
+	protected long $name+firstLowerCase;
 end
 
 def type(customIndicator & sum) trigger(field)
-	private long $name+firstLowerCase = Long_NaN;
+	protected long $name+firstLowerCase = Long_NaN;
 end
 
 def type(indicator & average) trigger(getter)
@@ -696,7 +707,9 @@ def type(customIndicator & average) trigger(getter)
 		return $name+firstLowerCase;
 	}
 
-	protected abstract double calculate$name+firstUpperCase();
+	protected double calculate$name+firstUpperCase() {
+	    return 0.0;
+	}
 end
 
 def type(indicator & sum) trigger(getter)
@@ -712,7 +725,9 @@ def type(customIndicator & sum) trigger(getter)
 		return $name+firstLowerCase;
 	}
 
-	protected abstract long calculate$name+firstUpperCase();
+	protected long calculate$name+firstUpperCase() {
+	    return 0L;
+	}
 end
 
 def type(index) trigger(index)
