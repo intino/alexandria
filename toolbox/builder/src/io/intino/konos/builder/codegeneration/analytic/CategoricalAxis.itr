@@ -116,6 +116,11 @@ def type(axis)
 	    	return componentsByName.getOrDefault(name, NA);
 	    }
 
+	    @Override
+	    public String toString() {
+	        return "$name+snakeCaseToCamelCase+FirstUpperCase";
+	    }
+
 
 		public static class Component implements Axis.Component {
 
