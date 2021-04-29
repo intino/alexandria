@@ -39,6 +39,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     @Override
     public void didMount() {
         notifier.setup(new CollectionSetup().itemCount(behavior.itemCount()));
+        if (selection != null) notifier.refreshSelection(selection);
         notifyReady();
     }
 

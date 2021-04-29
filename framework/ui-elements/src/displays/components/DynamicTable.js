@@ -126,6 +126,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 		this.requester = new DynamicTableRequester(this);
 		this.header = React.createRef();
 		this.container = React.createRef();
+		this.dialogContainer = React.createRef();
 		this.tableContainer = React.createRef();
 		this.state = {
 		    sections: null,
@@ -663,7 +664,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const multiple = this.allowMultiSelection();
         const headerHeight = this.header.current != null ? this.header.current.offsetHeight : 0;
         const minHeight = this.props.itemHeight * this.state.itemCount;
-        const height = this.container.current != null ? this.container.current.offsetHeight : 0;
+        const height = this.dialogContainer.current != null ? this.dialogContainer.current.offsetHeight : 0;
         const headerClass = height <= minHeight ? classes.withScroller : classes.withoutScroller;
         const sectionLabel = this.state.section != null ? this.state.section.label : "";
 
@@ -676,7 +677,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                     </div>
                 </DialogTitle>
                 <DialogContent style={{height:'100%',width:'100%'}}>
-                    <div ref={this.container} style={{height:"100%",width:"100%"}} className="layout vertical flex">
+                    <div ref={this.dialogContainer} style={{height:"100%",width:"100%"}} className="layout vertical flex">
                         { ComponentBehavior.labelBlock(this.props) }
                         <div ref={this.header} className={classNames(classes.headerView, headerClass, "layout horizontal center", selectable && multiple ? classes.selectable : {})} style={{position:"relative"}}>
                             <div className={classNames(classes.selectAll, selectable ? classes.selectable : {})}><Checkbox className={classes.selector} onChange={this.handleCheck.bind(this)} /></div>
