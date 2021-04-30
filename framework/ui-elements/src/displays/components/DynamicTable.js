@@ -228,7 +228,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     };
 
     _lastPage = () => {
-        return this._pageOf(this.state.sections.length-1);
+        return this._pageOf(this.state.sections.length);
     };
 
     renderDetailView = () => {
