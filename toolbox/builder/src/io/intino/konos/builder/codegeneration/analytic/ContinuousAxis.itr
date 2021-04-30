@@ -8,7 +8,7 @@ def type(continuous)
 
     public class $name+snakeCaseToCamelCase+FirstUpperCase implements Axis {
 
-        public static final String AXIS_LABEL = "$label";
+        public static final String TITLE = "$label";
 
         private static final class Singleton {
             private static final $name+snakeCaseToCamelCase+FirstUpperCase INSTANCE = new $name+snakeCaseToCamelCase+FirstUpperCase();
@@ -20,8 +20,8 @@ def type(continuous)
         	return Singleton.INSTANCE;
         }
 
-        public static String label() {
-        	return AXIS_LABEL;
+        public static String title() {
+        	return TITLE;
         }
 
         public static int size() {
@@ -75,8 +75,8 @@ def type(continuous)
     	}
 
         @Override
-    	public String getLabel() {
-    		return AXIS_LABEL;
+    	public String getTitle() {
+    		return TITLE;
     	}
 
         @Override
