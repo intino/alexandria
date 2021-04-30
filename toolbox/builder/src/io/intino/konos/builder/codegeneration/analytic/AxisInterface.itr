@@ -8,7 +8,7 @@ def type(interface)
 
     public interface Axis {
 
-		String getLabel();
+		String getTitle();
 
 		int getSize();
 
@@ -38,7 +38,7 @@ def type(interface)
 			String id();
 
 			default String label() {
-				return "";
+				return id();
 			}
 
 			Axis axis();
@@ -71,7 +71,7 @@ def type(axis) trigger(NameCase)
 end
 
 def type(axis) trigger(LabelCase)
-    case $axis+snakeCaseToCamelCase+firstUpperCase.AXIS_LABEL: return $axis+snakeCaseToCamelCase+firstUpperCase.get();
+    case $axis+snakeCaseToCamelCase+firstUpperCase.TITLE: return $axis+snakeCaseToCamelCase+firstUpperCase.get();
 end
 
 def type(axis) trigger(ListElement)
