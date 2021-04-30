@@ -553,7 +553,7 @@ def type(cube)
 			}
 
 			public long$[] totals() {
-				if(totals == null) totals = new long[totalsSize()];
+				if(totals == null) totals = new long$[totalsSize()];
             	return totals;
 			}
 

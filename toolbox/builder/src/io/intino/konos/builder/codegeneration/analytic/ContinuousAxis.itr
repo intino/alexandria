@@ -118,6 +118,11 @@ def type(continuous)
 		    return Arrays.stream(ranges);
 		}
 
+		@Override
+        public String toString() {
+            return "$name+snakeCaseToCamelCase+FirstUpperCase";
+        }
+
     	public class Range implements Component {
 
     		private final int index;
