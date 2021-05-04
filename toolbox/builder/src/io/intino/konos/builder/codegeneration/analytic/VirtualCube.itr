@@ -111,6 +111,8 @@ def type(cube)
 
     	[$dimension+method...[$NL$NL]]
 
+        [$customDimension+method...[$NL$NL]]
+
     	[$customFilter+method...[$NL$NL]]
 
     	public Abstract$name+FirstUpperCase groupBy(Axis axis) {
@@ -662,13 +664,17 @@ def type(dimension & continuous) trigger(switchCaseFilter)
     case $axis+snakeCaseToCamelCase+firstUpperCase.TITLE: return filter$name+snakeCaseToCamelCase+firstUpperCase((Set<$axis+snakeCaseToCamelCase+firstUpperCase.Range>) components);
 end
 
-def type(dimension) trigger(staticMethod)
-	public static Predicate<Fact> $name+snakeCaseToCamelCase+firstLowerCase~Predicate(Set<$name+snakeCaseToCamelCase+FirstUpperCase.Component> $name+snakeCaseToCamelCase+firstLowerCase) {
-		return v -> false; //TODO
+def type(customDimension & categorical) trigger(staticMethod)
+	public static $axis+snakeCaseToCamelCase+firstUpperCase.Component $name+snakeCaseToCamelCase+firstLowerCase~Function(Fact fact) {
+	    // TODO
+		return $name+snakeCaseToCamelCase+firstUpperCase.NA;
 	}
+end
 
-	public static Function<Fact, Axis.Component> $name+snakeCaseToCamelCase+firstLowerCase~Function() {
-		return v -> null; //TODO
+def type(customDimension & continuous) trigger(staticMethod)
+	public static $axis+snakeCaseToCamelCase+firstUpperCase.Range $name+snakeCaseToCamelCase+firstLowerCase~Function(Fact fact) {
+	    // TODO
+		return $name+snakeCaseToCamelCase+firstUpperCase.component(0);
 	}
 end
 
@@ -697,6 +703,27 @@ def type(dimension & categorical) trigger(method)
 	}
 end
 
+def type(customDimension & categorical) trigger(method)
+	public Abstract$cube+firstUpperCase filter$name+snakeCaseToCamelCase+firstUpperCase(Set<$axis+snakeCaseToCamelCase+firstUpperCase.Component> $axis+snakeCaseToCamelCase+firstLowerCase) {
+		if(filters.containsKey($axis+snakeCaseToCamelCase+firstUpperCase.get())) return this;
+		Predicate<Fact> f = v -> $name+snakeCaseToCamelCase+firstLowerCase~Filter(v, $axis+snakeCaseToCamelCase+firstLowerCase);
+		filters.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), f);
+		filter = filter.and(f);
+		return this;
+	}
+
+	public Abstract$cube+FirstUpperCase groupBy$name+snakeCaseToCamelCase+firstUpperCase() {
+		axes.add($axis+snakeCaseToCamelCase+firstUpperCase.get());
+		components.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), new HashSet<>());
+		groupByList.add(v -> $cube+firstUpperCase.$name+snakeCaseToCamelCase+firstLowerCase~Function(v));
+		return this;
+	}
+
+	public static boolean $name+snakeCaseToCamelCase+firstLowerCase~Filter(Fact fact, Set<$axis+snakeCaseToCamelCase+firstUpperCase.Component> $axis+snakeCaseToCamelCase+firstLowerCase) {
+		return $axis+snakeCaseToCamelCase+firstLowerCase.contains($cube+firstUpperCase.$name+snakeCaseToCamelCase+firstLowerCase~Function(fact));
+	}
+end
+
 def type(dimension & continuous) trigger(method)
 	public Abstract$cube+firstUpperCase filter$name+snakeCaseToCamelCase+firstUpperCase(Set<$axis+snakeCaseToCamelCase+firstUpperCase.Range> $axis+snakeCaseToCamelCase+firstLowerCase) {
 		if(filters.containsKey($axis+snakeCaseToCamelCase+firstUpperCase.get())) return this;
@@ -709,7 +736,7 @@ def type(dimension & continuous) trigger(method)
 	public Abstract$cube+FirstUpperCase groupBy$name+snakeCaseToCamelCase+firstUpperCase() {
 		axes.add($axis+snakeCaseToCamelCase+firstUpperCase.get());
 		components.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), new HashSet<>());
-		groupByList.add(Abstract$cube+FirstUpperCase::$name+snakeCaseToCamelCase+firstLowerCase~Function);
+		groupByList.add($cube+FirstUpperCase::$name+snakeCaseToCamelCase+firstLowerCase~Function);
 		return this;
 	}
 
@@ -721,6 +748,28 @@ def type(dimension & continuous) trigger(method)
 		return $axis+snakeCaseToCamelCase+firstUpperCase.rangeOf(fact.$source+firstLowerCase());
 	}
 end
+
+def type(customDimension & continuous) trigger(method)
+	public Abstract$cube+firstUpperCase filter$name+snakeCaseToCamelCase+firstUpperCase(Set<$axis+snakeCaseToCamelCase+firstUpperCase.Range> $axis+snakeCaseToCamelCase+firstLowerCase) {
+		if(filters.containsKey($axis+snakeCaseToCamelCase+firstUpperCase.get())) return this;
+        Predicate<Fact> f = v -> $name+snakeCaseToCamelCase+firstLowerCase~Filter(v, $axis+snakeCaseToCamelCase+firstLowerCase);
+        filters.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), f);
+        filter = filter.and(f);
+        return this;
+	}
+
+	public Abstract$cube+FirstUpperCase groupBy$name+snakeCaseToCamelCase+firstUpperCase() {
+		axes.add($axis+snakeCaseToCamelCase+firstUpperCase.get());
+		components.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), new HashSet<>());
+		groupByList.add($cube+FirstUpperCase::$name+snakeCaseToCamelCase+firstLowerCase~Function);
+		return this;
+	}
+
+	public static boolean $name+snakeCaseToCamelCase+firstLowerCase~Filter(Fact fact, Set<$axis+snakeCaseToCamelCase+firstUpperCase.Range> $axis+snakeCaseToCamelCase+firstLowerCase) {
+		return $axis+snakeCaseToCamelCase+firstLowerCase.contains($cube+firstUpperCase.$name+snakeCaseToCamelCase+firstLowerCase~Function(fact));
+	}
+end
+
 
 def type(dimension) trigger(ifGroupBy)
     if(axis.equals($axis+snakeCaseToCamelCase+firstUpperCase.get())) return groupBy$name+snakeCaseToCamelCase+firstUpperCase();
