@@ -78,7 +78,7 @@ public class CubeRenderer {
 
     private void addDimensionsAndIndicators(Cube cube, Cube sourceCube, FrameBuilder fb) {
         cube.dimensionList().forEach(selector -> fb.add("dimension", dimensionFrame(cube, sourceCube, selector)));
-        cube.customDimensionList().forEach(selector -> fb.add("customDimension", customDimensionFrame(cube, selector)));
+        cube.customDimensionList().forEach(selector -> fb.add("customDimension", customDimensionFrame(cube, sourceCube, selector)));
         cube.indicatorList().forEach(indicator -> fb.add("indicator", indicatorFrame(cube, sourceCube, indicator)));
         cube.customIndicatorList().forEach(indicator -> fb.add("customIndicator", customIndicatorFrame(cube, sourceCube, indicator)));
         addCustomFilters(cube, sourceCube, fb);
@@ -93,7 +93,7 @@ public class CubeRenderer {
         cube.customDimensionList().stream()
                 .filter(s -> !filter.contains(s.name$()))
                 .peek(s -> filter.add(s.name$()))
-                .forEach(s -> fb.add("customDimension", customDimensionFrame(cube, s)));
+                .forEach(s -> fb.add("customDimension", customDimensionFrame(cube, sourceCube, s)));
 
         cube.indicatorList().stream()
                 .filter(i -> !filter.contains(i.name$()))
@@ -141,16 +141,14 @@ public class CubeRenderer {
     }
 
 
-    private FrameBuilder customDimensionFrame(Cube cube, Cube.CustomDimension dimension) {
+    private FrameBuilder customDimensionFrame(Cube cube, Cube sourceCube, Cube.CustomDimension dimension) {
         final String name = dimension.name$();
         final String axisName = dimension.axis().name$();
 
-        FrameBuilder fb = new FrameBuilder("customDimension", dimension.axis().i$(Axis.Categorical.class) ? "categorical" : "continuous").
-                add("cube", cube.name$()).
-                add("name", name).
-                add("axis", axisName);
-
-        return fb;
+        return new FrameBuilder("customDimension", dimension.axis().i$(Axis.Categorical.class) ? "categorical" : "continuous")
+                .add("cube", sourceCube != null ? sourceCube.name$() : cube.name$())
+                .add("name", name)
+                .add("axis", axisName);
     }
 
     private FrameBuilder indicatorFrame(Cube cube, Cube sourceCube, Cube.Indicator indicator) {

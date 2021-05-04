@@ -667,14 +667,14 @@ end
 def type(customDimension & categorical) trigger(staticMethod)
 	public static $axis+snakeCaseToCamelCase+firstUpperCase.Component $name+snakeCaseToCamelCase+firstLowerCase~Function(Fact fact) {
 	    // TODO
-		return $name+snakeCaseToCamelCase+firstUpperCase.NA;
+		return $axis+snakeCaseToCamelCase+firstUpperCase.NA;
 	}
 end
 
 def type(customDimension & continuous) trigger(staticMethod)
 	public static $axis+snakeCaseToCamelCase+firstUpperCase.Range $name+snakeCaseToCamelCase+firstLowerCase~Function(Fact fact) {
 	    // TODO
-		return $name+snakeCaseToCamelCase+firstUpperCase.component(0);
+		return $axis+snakeCaseToCamelCase+firstUpperCase.component(0);
 	}
 end
 
