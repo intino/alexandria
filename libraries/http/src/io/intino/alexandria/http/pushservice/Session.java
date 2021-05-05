@@ -3,15 +3,19 @@ package io.intino.alexandria.http.pushservice;
 import java.util.List;
 
 public interface Session<C extends Client> {
-    String id();
+	String id();
 
-    List<C> clients();
-    C client(String id);
-    C client();
-    void clientProvider(ClientProvider<C> clientProvider);
+	List<C> clients();
 
-    void send(String message);
+	C client(String id);
 
-    String login(String baseUrl);
-    void logout();
+	C client();
+
+	void clientProvider(ClientProvider<C> clientProvider);
+
+	void send(String message);
+
+	String login(String baseUrl);
+
+	void logout();
 }

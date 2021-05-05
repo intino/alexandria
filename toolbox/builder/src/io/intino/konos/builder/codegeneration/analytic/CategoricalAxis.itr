@@ -106,7 +106,8 @@ def type(axis)
 
         @Override
 	    public Component getComponent(int index) {
-	    	return (index <= 0 || index > size()) ? NA : components$[index];
+	        if(index < 0 || index >= components.length) return NA;
+	    	return components$[index];
 	    }
 
         @Override

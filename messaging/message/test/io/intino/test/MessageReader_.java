@@ -2,9 +2,12 @@ package io.intino.test;
 
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageReader;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -12,6 +15,18 @@ import java.time.ZoneId;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class MessageReader_ {
+
+
+	@Test
+	@Ignore
+	public void checkMessage() {
+		String message = "[SEVERE]\n" +
+				"\tts: 2021-04-23T08:20:15.056773Z\n" +
+				"\tsource: io.intino.magritte.framework.LayerFactory:create\n" +
+				"\tmessage: Concept AbstractAcquisition$Device hasn't layer registered. Node Assets#Assets_3962_0_0696810257 won't have it\n";
+		Message next = new MessageReader(message).next();
+		Assert.assertNotNull(next);
+	}
 
 	@Test
 	public void should_read_empty_content() {

@@ -9,6 +9,7 @@ import io.intino.alexandria.http.spark.SparkRouter;
 import io.intino.alexandria.logger.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.thread.ThreadPool;
+import spark.ExceptionHandler;
 import spark.ExceptionMapper;
 import spark.Service;
 import spark.Spark;
@@ -48,6 +49,7 @@ public class AlexandriaSpark<R extends SparkRouter> {
 		this.service = Service.ignite();
 		setup();
 		service.port(this.port);
+		service.exception(Exception.class, (exception, request, response) -> Logger.error(exception));
 	}
 
 	public AlexandriaSpark start() {
@@ -82,6 +84,11 @@ public class AlexandriaSpark<R extends SparkRouter> {
 		router.whenRegisterPushService(pushServiceConsumer());
 		router.whenValidate((Function<SparkManager<?>, Boolean>) manager -> securityManager.check(manager.fromQuery("hash"), manager.fromQuery("signature")));
 		return router;
+	}
+
+
+	public <T extends Exception> void handle(Class<T> exceptionClass, ExceptionHandler<? super T> handler) {
+		service.exception(exceptionClass, handler);
 	}
 
 	private Consumer<PushService> pushServiceConsumer() {
