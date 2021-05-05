@@ -35,7 +35,7 @@ public class AlexandriaSparkBuilder {
 
 
 	public static void addParameters(Object... objs) {
-		for (int i=0; i<objs.length; i++)
+		for (int i = 0; i < objs.length; i++)
 			if (objs[i] != null) objects.add(objs[i]);
 	}
 
