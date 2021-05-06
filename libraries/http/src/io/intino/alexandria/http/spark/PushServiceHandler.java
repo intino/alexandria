@@ -7,7 +7,6 @@ import org.eclipse.jetty.websocket.api.annotations.*;
 import org.eclipse.jetty.websocket.common.WebSocketSession;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.*;
 
 @WebSocket(maxTextMessageSize = 5 * 1024 * 1024)
@@ -42,8 +41,7 @@ public class PushServiceHandler {
 				closeTimersMap.get(sessionId).cancel();
 				closeTimersMap.remove(sessionId);
 			}
-		}
-		catch (Throwable ex) {
+		} catch (Throwable ex) {
 			Logger.error(ex);
 		}
 		if (error.getMessage() != null) Logger.debug(error.getMessage());

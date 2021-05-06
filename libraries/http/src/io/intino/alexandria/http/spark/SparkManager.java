@@ -177,7 +177,7 @@ public class SparkManager<P extends PushService> {
 	}
 
 	private void setUpSessionCookiePath() {
- 		HttpServletRequest request = this.request.raw();
+		HttpServletRequest request = this.request.raw();
 		HttpSession session = request.getSession();
 		String sessionCookieName = sessionCookieName();
 
