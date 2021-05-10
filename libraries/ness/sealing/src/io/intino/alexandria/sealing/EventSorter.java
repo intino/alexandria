@@ -16,7 +16,7 @@ import static java.time.Instant.parse;
 public class EventSorter {
 	private final File file;
 	private final File temp;
-	private final List<long[]> tuples;
+	private final List<Tuple> tuples;
 
 	public EventSorter(File file, File tempFolder) throws IOException {
 		this.file = file;
@@ -31,7 +31,7 @@ public class EventSorter {
 	void sort(File destination) throws IOException {
 		try {
 			read();
-			tuples.sort(Comparator.comparing(t -> t[0]));
+			tuples.sort(Comparator.comparing(t -> t.ts));
 			write(outputStream(destination));
 			Files.delete(temp.toPath());
 		} catch (IOException io) {
@@ -66,7 +66,7 @@ public class EventSorter {
 
 	private void write(OutputStream output) throws IOException {
 		try (RandomAccessFile input = new RandomAccessFile(temp, "r")) {
-			for (long[] t : tuples) write(output, bytesOf(input, t));
+			for (Tuple t : tuples) write(output, bytesOf(input, t));
 			output.flush();
 			output.close();
 		}
@@ -80,17 +80,13 @@ public class EventSorter {
 		}
 	}
 
-	private OutputStream outputStream() throws IOException {
-		return new SnappyOutputStream(new FileOutputStream(file));
-	}
-
 	private OutputStream outputStream(File file) throws IOException {
 		return new SnappyOutputStream(new FileOutputStream(file));
 	}
 
-	private byte[] bytesOf(RandomAccessFile accessFile, long[] tuple) {
+	private byte[] bytesOf(RandomAccessFile accessFile, Tuple tuple) {
 		try {
-			return read(accessFile, (int) (tuple[1] >> 32), new byte[(int) tuple[1]]);
+			return read(accessFile, (int) (tuple.next >> 32), new byte[(int) tuple.next]);
 		} catch (IOException e) {
 			Logger.error(e);
 			return new byte[0];
@@ -105,7 +101,7 @@ public class EventSorter {
 
 	private void addTuple(Instant instant, int offset, int size) {
 		if (instant == null) return;
-		tuples.add(new long[]{instant.toEpochMilli(), (((long) offset) << 32) + ((long) size)});
+		tuples.add(new Tuple(instant, (((long) offset) << 32) + ((long) size)));
 	}
 
 	private boolean isTS(String line) {
@@ -118,6 +114,15 @@ public class EventSorter {
 
 	private InputStream inputStream() throws IOException {
 		return new SnappyInputStream(new FileInputStream(file));
+	}
 
+	private static class Tuple {
+		Instant ts;
+		long next;
+
+		public Tuple(Instant ts, long next) {
+			this.ts = ts;
+			this.next = next;
+		}
 	}
 }
