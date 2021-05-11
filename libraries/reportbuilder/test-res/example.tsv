@@ -1,0 +1,4 @@
+división[type=Dimension]	zona[type=Text]	cv[type=Money]	rcc[type=Percentage]	icc	ive	ioc
+DA	DA01	1	11	12	13[style=Bold]	14
+DB	DB01	2	21	22	23	24
+DC	DC01	3	31	32	33[color=#ff0000,style=Normal]	34
