@@ -41,7 +41,9 @@ public class SparkSession<C extends Client> implements Session<C> {
 		this.clientProvider = clientProvider;
 	}
 
-	public void send(String message) { clients().forEach(client -> client.send(message)); }
+	public void send(String message) {
+		clients().forEach(client -> client.send(message));
+	}
 
 	public void whenLogin(Function<String, String> listener) {
 		this.loginListener = listener;

@@ -34,10 +34,6 @@ def type(cube & src)
             return this;
         }
 
-		public static List<Axis> dimensions() {
-            return List.of([$dimension+getInstance...[, ]]);
-        }
-
 		public static long idOf($mainCube+idOf) {
 			return $mainCube.id(); //TODO
 		}
@@ -115,11 +111,13 @@ def type(cube)
 
     	[$dimension+method...[$NL$NL]]
 
+        [$customDimension+method...[$NL$NL]]
+
     	[$customFilter+method...[$NL$NL]]
 
     	public Abstract$name+FirstUpperCase groupBy(Axis axis) {
             if(axis == null) throw new NullPointerException("Axis cannot be null");
-            switch(axis.getLabel()) {
+            switch(axis.getTitle()) {
                 [$dimension+switchCaseGroupBy...[$NL]]
             }
             return this;
@@ -128,7 +126,7 @@ def type(cube)
         @SuppressWarnings("unchecked")
         public Abstract$name+FirstUpperCase filter(Axis axis, Set<? extends Axis.Component> components) {
             if(axis == null) throw new NullPointerException("Axis cannot be null");
-            switch(axis.getLabel()) {
+            switch(axis.getTitle()) {
                 [$dimension+switchCaseFilterBy...[$NL]]
             }
             return this;
@@ -170,11 +168,13 @@ def type(cube)
 		}
 
 		public Aggregation aggregation(List<Axis.Component> components) {
+	        if(result == null || result.length == 0) return null;
 		    final int index = indexOf(components);
 			return result$[index];
 		}
 
 	    public Aggregation aggregation(Axis.Component... components) {
+	        if(result == null || result.length == 0) return null;
             final int index = indexOf(components);
         	return result$[index];
         }
@@ -337,7 +337,7 @@ def type(cube)
 		public enum Indicator {
 
 		    Total("Total", "", Mode.Sum, false),
-		    Distincts("Distincts", "", Mode.Sum, false),
+		    Distinct("Distinct", "", Mode.Sum, false),
 		    [$indicator+enum...[,$NL]]
 		    [,$customIndicator+enum...[,$NL]];
 
@@ -371,7 +371,7 @@ def type(cube)
 			private final List<Axis.Component> components;
 			private final Map<Axis, Predicate<Fact>> filters;
 			private long aggregationTotal = 0L;
-			private long aggregationDistincts = 0L;
+			private long aggregationDistinct = 0L;
 			private long lastID = Long.MIN_VALUE;
 			[$index+field]
 			[$indicator+field...[$NL]]
@@ -388,7 +388,7 @@ def type(cube)
 				[$indicator+sum...[$NL]]
 				if(lastID != fact.id()) {
 				    [$index+append]
-				    ++aggregationDistincts;
+				    ++aggregationDistinct;
 				    lastID = fact.id();
 				}
 				++aggregationTotal;
@@ -398,7 +398,7 @@ def type(cube)
 				[$indicator+sumAggregation...[$NL]]
 				[$customIndicator+sumAggregation...[$NL]]
 				[$index+append2]
-				aggregationDistincts = Math.max(aggregationDistincts, aggregation.aggregationDistincts);
+				aggregationDistinct = Math.max(aggregationDistinct, aggregation.aggregationDistinct);
 				aggregationTotal += aggregation.aggregationTotal();
 			}
 
@@ -411,8 +411,8 @@ def type(cube)
 			    return aggregationTotal;
 			}
 
-			public long aggregationDistincts() {
-			    return aggregationDistincts;
+			public long aggregationDistinct() {
+			    return aggregationDistinct;
 			}
 
 			public long total$name+FirstUpperCase() {
@@ -438,7 +438,7 @@ def type(cube)
                     [$indicator+switchCase...[$NL]]
                     [$customIndicator+switchCase...[$NL]]
                     case Total: return aggregationTotal;
-                    case Distincts: return aggregationDistincts;
+                    case Distinct: return aggregationDistinct;
                 }
                 return 0L;
             }
@@ -447,7 +447,7 @@ def type(cube)
             public String toString() {
                 return "$name+FirstUpperCase.Aggregation{"
                     + "total=" + aggregationTotal
-                    + ", distincts=" + aggregationDistincts
+                    + ", distincts=" + aggregationDistinct
                     [$index+toString...[$NL]]
                     [$indicator+toString...[$NL]]
                     [$customIndicator+toString...[$NL]]
@@ -652,21 +652,29 @@ def type(customFilter) trigger(staticMethod)
 	}
 end
 
-def type(dimension & categorical) trigger(switchCaseGroupBy)
-    case $axis+snakeCaseToCamelCase+firstUpperCase.AXIS_LABEL: return groupBy$name+snakeCaseToCamelCase+firstUpperCase();
+def type(dimension) trigger(switchCaseGroupBy)
+    case $axis+snakeCaseToCamelCase+firstUpperCase.TITLE: return groupBy$name+snakeCaseToCamelCase+firstUpperCase();
 end
 
 def type(dimension & categorical) trigger(switchCaseFilter)
-    case $axis+snakeCaseToCamelCase+firstUpperCase.AXIS_LABEL: return filter$name+snakeCaseToCamelCase+firstUpperCase((Set<$axis+snakeCaseToCamelCase+firstUpperCase.Component>) components);
+    case $axis+snakeCaseToCamelCase+firstUpperCase.TITLE: return filter$name+snakeCaseToCamelCase+firstUpperCase((Set<$axis+snakeCaseToCamelCase+firstUpperCase.Component>) components);
 end
 
-def type(dimension) trigger(staticMethod)
-	public static Predicate<Fact> $name+snakeCaseToCamelCase+firstLowerCase~Predicate(Set<$name+snakeCaseToCamelCase+FirstUpperCase.Component> $name+snakeCaseToCamelCase+firstLowerCase) {
-		return v -> false; //TODO
-	}
+def type(dimension & continuous) trigger(switchCaseFilter)
+    case $axis+snakeCaseToCamelCase+firstUpperCase.TITLE: return filter$name+snakeCaseToCamelCase+firstUpperCase((Set<$axis+snakeCaseToCamelCase+firstUpperCase.Range>) components);
+end
 
-	public static Function<Fact, Axis.Component> $name+snakeCaseToCamelCase+firstLowerCase~Function() {
-		return v -> null; //TODO
+def type(customDimension & categorical) trigger(staticMethod)
+	public static $axis+snakeCaseToCamelCase+firstUpperCase.Component $name+snakeCaseToCamelCase+firstLowerCase~Function(Fact fact) {
+	    // TODO
+		return $axis+snakeCaseToCamelCase+firstUpperCase.NA;
+	}
+end
+
+def type(customDimension & continuous) trigger(staticMethod)
+	public static $axis+snakeCaseToCamelCase+firstUpperCase.Range $name+snakeCaseToCamelCase+firstLowerCase~Function(Fact fact) {
+	    // TODO
+		return $axis+snakeCaseToCamelCase+firstUpperCase.component(0);
 	}
 end
 
@@ -695,6 +703,27 @@ def type(dimension & categorical) trigger(method)
 	}
 end
 
+def type(customDimension & categorical) trigger(method)
+	public Abstract$cube+firstUpperCase filter$name+snakeCaseToCamelCase+firstUpperCase(Set<$axis+snakeCaseToCamelCase+firstUpperCase.Component> $axis+snakeCaseToCamelCase+firstLowerCase) {
+		if(filters.containsKey($axis+snakeCaseToCamelCase+firstUpperCase.get())) return this;
+		Predicate<Fact> f = v -> $name+snakeCaseToCamelCase+firstLowerCase~Filter(v, $axis+snakeCaseToCamelCase+firstLowerCase);
+		filters.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), f);
+		filter = filter.and(f);
+		return this;
+	}
+
+	public Abstract$cube+FirstUpperCase groupBy$name+snakeCaseToCamelCase+firstUpperCase() {
+		axes.add($axis+snakeCaseToCamelCase+firstUpperCase.get());
+		components.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), new HashSet<>());
+		groupByList.add(v -> $cube+firstUpperCase.$name+snakeCaseToCamelCase+firstLowerCase~Function(v));
+		return this;
+	}
+
+	public static boolean $name+snakeCaseToCamelCase+firstLowerCase~Filter(Fact fact, Set<$axis+snakeCaseToCamelCase+firstUpperCase.Component> $axis+snakeCaseToCamelCase+firstLowerCase) {
+		return $axis+snakeCaseToCamelCase+firstLowerCase.contains($cube+firstUpperCase.$name+snakeCaseToCamelCase+firstLowerCase~Function(fact));
+	}
+end
+
 def type(dimension & continuous) trigger(method)
 	public Abstract$cube+firstUpperCase filter$name+snakeCaseToCamelCase+firstUpperCase(Set<$axis+snakeCaseToCamelCase+firstUpperCase.Range> $axis+snakeCaseToCamelCase+firstLowerCase) {
 		if(filters.containsKey($axis+snakeCaseToCamelCase+firstUpperCase.get())) return this;
@@ -707,7 +736,7 @@ def type(dimension & continuous) trigger(method)
 	public Abstract$cube+FirstUpperCase groupBy$name+snakeCaseToCamelCase+firstUpperCase() {
 		axes.add($axis+snakeCaseToCamelCase+firstUpperCase.get());
 		components.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), new HashSet<>());
-		groupByList.add(Abstract$cube+FirstUpperCase::$name+snakeCaseToCamelCase+firstLowerCase~Function);
+		groupByList.add($cube+FirstUpperCase::$name+snakeCaseToCamelCase+firstLowerCase~Function);
 		return this;
 	}
 
@@ -719,6 +748,28 @@ def type(dimension & continuous) trigger(method)
 		return $axis+snakeCaseToCamelCase+firstUpperCase.rangeOf(fact.$source+firstLowerCase());
 	}
 end
+
+def type(customDimension & continuous) trigger(method)
+	public Abstract$cube+firstUpperCase filter$name+snakeCaseToCamelCase+firstUpperCase(Set<$axis+snakeCaseToCamelCase+firstUpperCase.Range> $axis+snakeCaseToCamelCase+firstLowerCase) {
+		if(filters.containsKey($axis+snakeCaseToCamelCase+firstUpperCase.get())) return this;
+        Predicate<Fact> f = v -> $name+snakeCaseToCamelCase+firstLowerCase~Filter(v, $axis+snakeCaseToCamelCase+firstLowerCase);
+        filters.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), f);
+        filter = filter.and(f);
+        return this;
+	}
+
+	public Abstract$cube+FirstUpperCase groupBy$name+snakeCaseToCamelCase+firstUpperCase() {
+		axes.add($axis+snakeCaseToCamelCase+firstUpperCase.get());
+		components.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), new HashSet<>());
+		groupByList.add($cube+FirstUpperCase::$name+snakeCaseToCamelCase+firstLowerCase~Function);
+		return this;
+	}
+
+	public static boolean $name+snakeCaseToCamelCase+firstLowerCase~Filter(Fact fact, Set<$axis+snakeCaseToCamelCase+firstUpperCase.Range> $axis+snakeCaseToCamelCase+firstLowerCase) {
+		return $axis+snakeCaseToCamelCase+firstLowerCase.contains($cube+firstUpperCase.$name+snakeCaseToCamelCase+firstLowerCase~Function(fact));
+	}
+end
+
 
 def type(dimension) trigger(ifGroupBy)
     if(axis.equals($axis+snakeCaseToCamelCase+firstUpperCase.get())) return groupBy$name+snakeCaseToCamelCase+firstUpperCase();
@@ -768,7 +819,7 @@ end
 
 def type(indicator & average) trigger(getter)
 	public double $name+firstLowerCase() {
-		return $name+firstLowerCase / (double) aggregationDistincts;
+		return $name+firstLowerCase / (double) aggregationDistinct;
 	}
 end
 

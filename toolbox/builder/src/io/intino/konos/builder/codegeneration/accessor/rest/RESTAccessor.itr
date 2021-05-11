@@ -77,11 +77,11 @@ def type(parameter & header) trigger(parameter)
 	headerParameter("$name", $name)
 end
 
-def !type(file) type(parameter & body) trigger(parameter)
+def !type(file) type(parameter) trigger(parameter)
 	entityPart("$name", $name)
 end
 
-def type(file) type(parameter & body) trigger(parameter)
+def type(file) type(parameter) trigger(parameter)
 	entityPart($name)
 end
 

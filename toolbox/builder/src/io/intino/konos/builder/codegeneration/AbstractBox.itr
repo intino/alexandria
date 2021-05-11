@@ -299,7 +299,7 @@ def type(terminal) trigger(init)
 end
 
 def type(terminal) trigger(subscriber)
-	this.terminal.subscribe(($terminal.$eventQn+FirstUpperCase~Consumer) e -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e)[, "$subscriberId"][, $split...[, ]]);
+	this.terminal.subscribe(($terminal.$eventQn+FirstUpperCase~Consumer) (e, t) -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e, t)[, "$subscriberId"][, $split...[, ]]);
 end
 
 def trigger(split)

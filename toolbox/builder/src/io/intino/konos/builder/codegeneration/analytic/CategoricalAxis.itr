@@ -10,7 +10,7 @@ def type(axis)
 
 	public class $name+snakeCaseToCamelCase+FirstUpperCase implements Axis {
 
-	    public static final String AXIS_LABEL = "$label";
+	    public static final String TITLE = "$label";
 
         public static final Component NA = new Component(0, "NA"[, $include+defaultValue...[, ]]);
         [$component...[$NL]]
@@ -25,8 +25,8 @@ def type(axis)
         	return Singleton.INSTANCE;
         }
 
-		public static String label() {
-			return AXIS_LABEL;
+		public static String title() {
+			return TITLE;
 		}
 
 		public static int size() {
@@ -66,8 +66,8 @@ def type(axis)
 		}
 
         @Override
-		public String getLabel() {
-			return AXIS_LABEL;
+		public String getTitle() {
+			return TITLE;
 		}
 
         @Override
@@ -106,7 +106,8 @@ def type(axis)
 
         @Override
 	    public Component getComponent(int index) {
-	    	return (index <= 0 || index > size()) ? NA : components$[index];
+	        if(index < 0 || index >= components.length) return NA;
+	    	return components$[index];
 	    }
 
         @Override
@@ -229,7 +230,7 @@ def trigger(toString)
 end
 
 def attribute(name:label) trigger(defaultValue)
-	""
+	"$id"
 end
 
 def trigger(defaultValue) attribute(type:categorical)
