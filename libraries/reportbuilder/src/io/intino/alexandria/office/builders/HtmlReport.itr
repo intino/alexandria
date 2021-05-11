@@ -1,0 +1,115 @@
+def type(html)
+	<html>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+        <head>
+            <style>
+                body {margin:0;padding:0}
+                a, div, td, th {font-weight:lighter;font-size: 11pt;font-family: 'Roboto','Helvetica Neue','Arial','sans-serif','Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';}
+                a { line-height: 1.5;color: #005b9f;cursor: pointer;text-decoration: none; }
+                th {width: 150px;}
+                th.hidden{display:none;}
+                input$[type='checkbox'$]{margin:5px;}
+                table, th, td {border: 1px solid #e0e0e0;border-collapse: collapse; padding: 6px 10px}
+                tr.header {font-weight: bold;text-align:right;}
+                th.subheader {font-weight:lighter;text-align: left;}
+                th.value {text-align: right;font-weight: lighter;font-size: 11pt;}
+                th.valueRed {color: red;text-align: right;font-weight: lighter;font-size: 11pt;}
+                .highlighted {text-align:left;}
+                .dimensionSelector { width:100%;text-align:right; }
+                .dimensionSelector.alone { float:none; text-align:right; }
+                .dimensionSelector.hidden { display:none; }
+                .dimensionToolbar { float:left; width:calc(10% - 20px); margin:10px; display:block; }
+                .dimensionToolbar.hidden { display:none; }
+                .dimensionContent { float:right; width:90%; margin-top:10px; }
+                .dimensionContent.full { width:100%; }
+                .right { text-align:right !important; }
+                .left { text-align:left !important; }
+                .center { text-align:center !important; }
+            </style>
+            <script type="text/javascript">
+                function toggleColumn(columnId, dimension) {
+                    ths = document.getElementsByTagName("th");
+                    for (var i = ths.length - 1; i >= 0; i--) {
+                        if(!ths$[i$].classList.contains(dimension)) continue;
+                        if(ths$[i$].classList.contains(columnId)){
+                            if(ths$[i$].classList.contains('hidden'))
+                                ths$[i$].className = ths$[i$].className.replace(' hidden', '');
+                            else ths$[i$].className = ths$[i$].className + ' hidden';
+                        }
+                    }
+                }
+                function showDimension(dimension) {
+                    divs = document.getElementsByTagName("div");
+                    for (var i = divs.length - 1; i >= 0; i--) {
+                        if(!divs$[i$].classList.contains('dimension')) continue;
+                        if(divs$[i$].id === dimension) divs$[i$].style.display = 'block';
+                        else divs$[i$].style.display = 'none';
+                    }
+                    as = document.getElementsByTagName("a");
+                    for (var i = as.length - 1; i >= 0; i--) {
+                        if(as$[i$].id === dimension) as$[i$].style.color='black';
+                        else as$[i$].style.color='#005b9f';
+                    }
+                }
+            </script>
+        </head>
+
+        <body>
+            <div class="dimensionSelector $dimensionSelectorAlone $dimensionSelectorHidden">[$dimension+option...[]]</div>
+            [$dimension...[$NL]]
+        </body>
+
+    </html>
+end
+
+def type(dimension) trigger(option)
+    <a style="$style+option" id="$name" href="javascript:showDimension('$name');">$name</a><span style='display:inline-block;width:10px'></span>
+end
+
+def type(dimension)
+    <div style='$display' class='dimension' id="$name">
+        <div class='dimensionToolbar $toolbarHidden'>
+            [$column+checkbox...[$NL]]<br>
+        </div>
+        <div class='dimensionContent $contentFull'>
+            <table>
+                <tr class='header'>$column...[]</tr>
+                $row...[$NL]
+            </table>
+        </div>
+    </div>
+end
+
+def type(style & first) trigger(option)
+    color: black
+end
+
+def type(style) trigger(option)
+end
+
+def type(display & first)
+    display:block
+end
+
+def type(display)
+    display:none
+end
+
+def type(column) trigger(checkbox)
+    <input id='$name' type='checkbox' $checked onchange="javascript:toggleColumn('$name', '$dimension');"/>
+    <label for='$name'>$label</label>
+    <br>
+end
+
+def type(column)
+    <th class='$dimension $name $hidden $alignment'[ style='border-bottom:4px solid $borderColor']>$label</th>
+end
+
+def type(row)
+    <tr>$cell...[]</tr>
+end
+
+def type(cell)
+    <th class='$dimension subheader $name $hidden $alignment' style="[color:$color;][font-weight:$bold;]">$value</th>
+end
