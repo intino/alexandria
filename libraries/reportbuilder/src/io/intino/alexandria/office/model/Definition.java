@@ -1,5 +1,7 @@
 package io.intino.alexandria.office.model;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Locale;
@@ -13,8 +15,10 @@ public class Definition {
 		return Arrays.stream(properties.split(",")).collect(toMap(v -> v.trim().split("=")[0], v -> v.trim().split("=")[1]));
 	}
 
-	String formattedNumber(double value, int countDecimals) {
-		return NumberFormat.getNumberInstance(Locale.ENGLISH).format(round(value, countDecimals));
+	String formattedNumber(double value, int countDecimals, Locale locale) {
+		NumberFormat numberInstance = NumberFormat.getNumberInstance(locale);
+		numberInstance.setMinimumFractionDigits(countDecimals);
+		return numberInstance.format(round(value, countDecimals));
 	}
 
 	double round(double value, int countDecimals) {
@@ -24,8 +28,8 @@ public class Definition {
 		return (double) tmp / factor;
 	}
 
-	double amountValue(double value) {
-		return value / 100.0;
+	double amountValue(double value, long factor) {
+		return value / factor;
 	}
 
 	String firstUpperCase(String content) {
