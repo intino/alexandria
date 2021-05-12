@@ -1,5 +1,7 @@
 package io.intino.alexandria.office.model;
 
+import java.util.Locale;
+
 import static java.lang.Double.parseDouble;
 
 public class Column extends Definition {
@@ -7,7 +9,9 @@ public class Column extends Definition {
 	private Type type = Type.Amount;
 	private String color = DefaultColor;
 	private String border;
-	private int decimalsCount = 2;
+	private int divideBy = 1;
+	private int decimalsCount = 0;
+	private Locale locale = Locale.ENGLISH;
 	private boolean optional = false;
 
 	public Column(String label) {
@@ -51,8 +55,8 @@ public class Column extends Definition {
 	}
 
 	public String valueOf(Object data) {
-		if (type == Type.Money) return formattedNumber(amountValue(parseDouble((String)data)), decimalsCount) + " $";
-		else if (type == Type.Ratio || type == Type.Amount) return formattedNumber(amountValue(parseDouble((String)data)), decimalsCount);
+		if (type == Type.Money) return formattedNumber(amountValue(parseDouble((String)data), divideBy), decimalsCount, locale) + " $";
+		else if (type == Type.Ratio || type == Type.Amount) return formattedNumber(amountValue(parseDouble((String)data), divideBy), decimalsCount, locale);
 		else if (type == Type.Percentage) return data + " %";
 		return String.valueOf(data);
 	}
@@ -62,7 +66,9 @@ public class Column extends Definition {
 		else if (key.equalsIgnoreCase("color")) color = value;
 		else if (key.equalsIgnoreCase("border")) border = value;
 		else if (key.equalsIgnoreCase("optional")) optional = Boolean.parseBoolean(value);
+		else if (key.equalsIgnoreCase("divideBy")) divideBy = Integer.parseInt(value);
 		else if (key.equalsIgnoreCase("decimals")) decimalsCount = Integer.parseInt(value);
+		else if (key.equalsIgnoreCase("locale")) locale = Locale.forLanguageTag(value);
 	}
 
 }

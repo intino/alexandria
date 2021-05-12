@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.1") report-builder
+Artifact("io.intino.alexandria", "1.0.2") report-builder
 	Imports
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Compile("io.intino.itrules", "engine", "1.0.0")
