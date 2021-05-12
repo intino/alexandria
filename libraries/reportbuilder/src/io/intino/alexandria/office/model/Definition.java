@@ -13,12 +13,12 @@ public class Definition {
 		return Arrays.stream(properties.split(",")).collect(toMap(v -> v.trim().split("=")[0], v -> v.trim().split("=")[1]));
 	}
 
-	String formattedNumber(double value) {
-		return NumberFormat.getNumberInstance(Locale.ENGLISH).format(round(value));
+	String formattedNumber(double value, int countDecimals) {
+		return NumberFormat.getNumberInstance(Locale.ENGLISH).format(round(value, countDecimals));
 	}
 
-	double round(double value) {
-		long factor = (long) Math.pow(10, 2);
+	double round(double value, int countDecimals) {
+		long factor = (long) Math.pow(10, countDecimals);
 		value = value * factor;
 		long tmp = Math.round(value);
 		return (double) tmp / factor;
