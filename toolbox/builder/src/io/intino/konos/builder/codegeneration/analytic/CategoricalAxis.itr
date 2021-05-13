@@ -6,6 +6,7 @@ def type(axis)
 	import java.util.*;
     import java.util.stream.Stream;
     import java.util.function.Predicate;
+    import java.util.function.Function;
     import java.util.stream.Collectors;
 
 	public class $name+snakeCaseToCamelCase+FirstUpperCase implements Axis {
@@ -61,8 +62,8 @@ def type(axis)
 		private final Map<String, Component> componentsByName;
 
 		private $name+snakeCaseToCamelCase+FirstUpperCase() {
-			this.componentsByName = new HashMap<>();
 		    [$components+load]
+			this.componentsByName = toStream().collect(Collectors.toMap(Component::id, Function.identity()));
 		}
 
         @Override
@@ -112,8 +113,6 @@ def type(axis)
 
         @Override
 	    public Component getComponent(String name) {
-	    	if(!componentsByName.containsKey(name))
-	    		componentsByName.put(name, stream().filter(c -> c.id().equals(name)).findAny().orElse(NA));
 	    	return componentsByName.getOrDefault(name, NA);
 	    }
 
