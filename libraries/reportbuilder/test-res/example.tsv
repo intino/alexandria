@@ -1,4 +1,4 @@
-area[type=Text]	nombre[type=Text]	cv[type=Money]	rcc[type=Ratio, divideBy=10000, decimals=4]	icc[type=Ratio, divideBy=10000, decimals=4]	ive[type=Money]	ioc[type=Ratio, divideBy=10000, decimals=4]
+area[type=Text]	nombre[type=Text]	cv[type=Money]	rcc[type=Ratio, divideBy=10000, decimals=4]	icc[type=Percentage, divideBy=100, decimals=2]	ive[type=Money]	ioc[type=Ratio, divideBy=10000, decimals=4]
 DA	BAJA CALIFORNIA	16953014483	106339	1822989394540000	4669789	39
 DA01	TIJUANA	9407524560	73366	652456427100000	578934653	375
 DA01A	RIO	1744202244	124050	142230017490000	0	194
