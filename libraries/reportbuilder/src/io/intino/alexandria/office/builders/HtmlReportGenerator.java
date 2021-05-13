@@ -94,7 +94,7 @@ public class HtmlReportGenerator extends ReportGenerator {
 		FrameBuilder cell = new FrameBuilder("cell");
 		cell.add("name", clean(column.label()));
 		cell.add("dimension", clean(dimension));
-		cell.add("value", column.valueOf(cellValue.data()));
+		cell.add("value", column.valueWithUnitOf(cellValue.data()));
 		cell.add("hidden", column.optional() ? "hidden" : "");
 		cell.add("alignment", column.alignment().name());
 		if (cellValue.color() != null) cell.add("color", cellValue.color());
