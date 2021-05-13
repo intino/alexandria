@@ -100,7 +100,7 @@ public class ExcelReportGenerator extends ReportGenerator {
 	}
 
 	private void fillRow(Workbook book, Row row, List<CellValue> cells, int index) {
-		List<Column> column = skipColumnDimension(columns);
+		List<Column> columns = skipColumnDimension(this.columns);
 		cell(row, 0).setCellValue(index+1);
 		for (int i=0; i<cells.size(); i++) fillCell(book, cell(row, i+1), columns.get(i), cells.get(i));
 	}
