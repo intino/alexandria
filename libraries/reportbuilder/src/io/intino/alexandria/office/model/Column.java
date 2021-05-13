@@ -1,7 +1,5 @@
 package io.intino.alexandria.office.model;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Locale;
 
 import static java.lang.Double.parseDouble;
@@ -57,9 +55,15 @@ public class Column extends Definition {
 	}
 
 	public String valueOf(Object data) {
-		if (type == Type.Money || type == Type.Ratio || type == Type.Amount)
-			return formattedNumber(amountValue(parseDouble((String) data), divideBy), decimalsCount, locale);
-		return String.valueOf(data);
+		return isNumber() ? formatNumber((String) data) : String.valueOf(data);
+	}
+
+	private boolean isNumber() {
+		return type == Type.Money || type == Type.Ratio || type == Type.Amount || type == Type.Percentage;
+	}
+
+	private String formatNumber(String data) {
+		return formattedNumber(amountValue(parseDouble(data), divideBy), decimalsCount, locale);
 	}
 
 	public String valueWithUnitOf(Object data) {

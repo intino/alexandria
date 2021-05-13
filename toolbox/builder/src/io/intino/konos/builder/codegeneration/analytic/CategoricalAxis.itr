@@ -61,7 +61,7 @@ def type(axis)
 		private final Map<String, Component> componentsByName;
 
 		private $name+snakeCaseToCamelCase+FirstUpperCase() {
-			this.componentsByName = new WeakHashMap<>();
+			this.componentsByName = new HashMap<>();
 		    [$components+load]
 		}
 
