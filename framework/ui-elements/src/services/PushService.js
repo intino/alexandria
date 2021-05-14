@@ -22,6 +22,7 @@ const PushService = (function () {
         };
 
         socket.onmessage = function (event) {
+            if (event.data instanceof Blob) return;
             var data = JSON.parse(event.data);
             var callbacks = callback(data.n).slice(0);
             callbacks.forEach(function (callback) {
