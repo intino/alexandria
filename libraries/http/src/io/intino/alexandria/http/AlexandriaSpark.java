@@ -119,7 +119,7 @@ public class AlexandriaSpark<R extends SparkRouter> {
 
 	private void setupService() {
 		EmbeddedServers.add(EmbeddedServers.Identifiers.JETTY, (Routes routeMatcher, StaticFilesConfiguration staticFilesConfiguration, ExceptionMapper exceptionMapper, boolean hasMultipleHandler) -> {
-			JettyHandler handler = setupRequestHandler(routeMatcher, staticFilesConfiguration, hasMultipleHandler);
+			JettyHandler handler = setupRequestHandler(routeMatcher, staticFilesConfiguration, exceptionMapper, hasMultipleHandler);
 			return new EmbeddedJettyServer(new JettyServerFactory() {
 				@Override
 				public Server create(int maxThreads, int minThreads, int threadTimeoutMillis) {
@@ -142,8 +142,8 @@ public class AlexandriaSpark<R extends SparkRouter> {
 		});
 	}
 
-	private static JettyHandler setupRequestHandler(Routes routeMatcher, StaticFilesConfiguration staticFilesConfiguration, boolean hasMultipleHandler) {
-		MatcherFilter matcherFilter = new MatcherFilter(routeMatcher, staticFilesConfiguration, new ExceptionMapper(), false, hasMultipleHandler);
+	private static JettyHandler setupRequestHandler(Routes routeMatcher, StaticFilesConfiguration staticFilesConfiguration, ExceptionMapper exceptionMapper, boolean hasMultipleHandler) {
+		MatcherFilter matcherFilter = new MatcherFilter(routeMatcher, staticFilesConfiguration, exceptionMapper, false, hasMultipleHandler);
 		matcherFilter.init(null);
 		return new JettyHandler(matcherFilter);
 	}
