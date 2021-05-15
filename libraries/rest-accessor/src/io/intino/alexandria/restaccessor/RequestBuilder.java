@@ -11,6 +11,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
@@ -60,6 +61,7 @@ public class RequestBuilder {
 	private final HttpClient client;
 	private final Map<String, String> headerParameters;
 	private final Map<String, String> entityParts;
+	private UrlEncodedFormEntity urlEncodedFormEntity;
 	private final List<Resource> resources;
 	private int timeOutMillis;
 	private Auth auth;
@@ -116,6 +118,11 @@ public class RequestBuilder {
 		return this;
 	}
 
+	public RequestBuilder entityPart(UrlEncodedFormEntity urlEncodedFormEntity) {
+		if (urlEncodedFormEntity != null) this.urlEncodedFormEntity = urlEncodedFormEntity;
+		return this;
+	}
+
 
 	public Request build(Method method, String path) {
 		this.method = method;
@@ -134,6 +141,8 @@ public class RequestBuilder {
 					headerParameters.forEach(request::setHeader);
 					if (!entityParts.isEmpty() && request instanceof HttpEntityEnclosingRequestBase)
 						((HttpEntityEnclosingRequestBase) request).setEntity(buildEntity());
+					else if (urlEncodedFormEntity != null && request instanceof HttpEntityEnclosingRequestBase)
+						((HttpEntityEnclosingRequestBase) request).setEntity(urlEncodedFormEntity);
 					request.setURI(buildUrl());
 					return RequestBuilder.this.responseFrom(client.execute(request));
 				} catch (IOException | URISyntaxException e) {
