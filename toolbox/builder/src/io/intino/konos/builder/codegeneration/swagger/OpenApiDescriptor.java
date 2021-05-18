@@ -160,9 +160,14 @@ public class OpenApiDescriptor {
 			return "number";
 		if (typeData.i$(Data.File.class) || type.endsWith("Resource")) return "file";
 		if (type.equalsIgnoreCase("java.lang.enum")) return "string";
+		if (type.equalsIgnoreCase("java.util.Date")) return "integer";
 		if (typeData.i$(Data.Object.class)) {
 			if (in == In.body) return null;
-			return "string";
+			return "object";
+		}
+		if (type.equalsIgnoreCase("java.util.Map")) {
+			if (in == In.body) return null;
+			return "object";
 		}
 		return type.toLowerCase();
 	}

@@ -6,6 +6,7 @@ import io.intino.konos.model.graph.Service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class SwaggerProfileGenerator {
 
 	private void writeFile(Service.REST service, String json) {
 		try {
-			Files.write(new File(directory, service.name$() + ".json").toPath(), json.getBytes(Charset.forName("UTF-8"))).toFile().getPath();
+			Files.write(new File(directory, service.name$() + ".json").toPath(), json.getBytes(StandardCharsets.UTF_8)).toFile().getPath();
 		} catch (IOException e) {
 			Logger.error(e);
 		}
