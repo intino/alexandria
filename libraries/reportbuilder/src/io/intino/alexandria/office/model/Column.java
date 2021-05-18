@@ -23,6 +23,7 @@ public class Column extends Definition {
 	public enum Alignment { Left, Center, Right }
 
 	public static Column from(String definition) {
+		definition = definition.trim();
 		if (!definition.contains("[")) return new Column(definition);
 		Column result = new Column(definition.substring(0, definition.indexOf("[")));
 		propertiesToMap(definition.substring(definition.indexOf("[")+1, definition.length() - 1)).forEach(result::add);
