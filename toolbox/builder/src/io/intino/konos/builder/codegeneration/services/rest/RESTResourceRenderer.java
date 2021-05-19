@@ -87,6 +87,7 @@ public class RESTResourceRenderer extends Renderer {
 		builder.add("throws", throwCodes(operation));
 		authenticated(resource.core$().ownerAs(Service.REST.class), builder);
 		builder.add("parameter", parameters(operation.parameterList()));
+		builder.add("parameter", parameters(resource.parameterList()));
 		if (hasResponse(operation)) builder.add("returnType", frameOf(operation.response()));
 		if (!resource.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
