@@ -21,5 +21,6 @@
     <orderEntry type="module" module-name="event" />
     <orderEntry type="module" module-name="message" />
     <orderEntry type="module" module-name="zet" />
+    <orderEntry type="library" name="Intino: org.xerial.snappy:snappy-java:1.1.8.2" level="project" />
   </component>
 </module>
