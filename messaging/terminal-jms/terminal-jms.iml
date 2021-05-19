@@ -19,7 +19,6 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger4j:1.0.1" level="project" />
     <orderEntry type="module" module-name="jms" />
     <orderEntry type="module" module-name="exceptions" />
-    <orderEntry type="library" name="Intino: org.xerial.snappy:snappy-java:1.1.8.2" level="project" />
     <orderEntry type="library" name="Intino: org.slf4j:slf4j-api:1.7.25" level="project" />
     <orderEntry type="library" name="Intino: org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1" level="project" />
     <orderEntry type="library" name="Intino: org.fusesource.hawtbuf:hawtbuf:1.11" level="project" />
