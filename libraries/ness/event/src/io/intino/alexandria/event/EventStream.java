@@ -1,5 +1,6 @@
 package io.intino.alexandria.event;
 
+import java.time.Instant;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -68,7 +69,11 @@ public interface EventStream {
 		}
 
 		private int comparingTimestamp(int a, int b) {
-			return current[a].ts().compareTo(current[b].ts());
+			return tsOf(current[a]).compareTo(tsOf(current[b]));
+		}
+
+		private Instant tsOf(Event event) {
+			return event != null ? event.ts() : Instant.MAX;
 		}
 	}
 
