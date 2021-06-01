@@ -14,11 +14,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -45,6 +43,8 @@ public class JmsConnector implements Connector {
 	private Connection connection;
 	private Session session;
 	private ScheduledExecutorService scheduler;
+	private final ExecutorService eventDispatcher;
+
 
 	public JmsConnector(String brokerUrl, String user, String password, String clientId, File messageCacheDirectory) {
 		this(brokerUrl, user, password, clientId, false, messageCacheDirectory);
@@ -66,6 +66,7 @@ public class JmsConnector implements Connector {
 			this.eventOutBox = new EventOutBox(new File(outBoxDirectory, "events"));
 			this.messageOutBox = new MessageOutBox(new File(outBoxDirectory, "requests"));
 		}
+		eventDispatcher = Executors.newSingleThreadExecutor(new NamedThreadFactory("jms-connector"));
 	}
 
 	public void start() {
@@ -104,8 +105,10 @@ public class JmsConnector implements Connector {
 	@Override
 	public synchronized void sendEvent(String path, Event event) {
 		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
-		for (Consumer<Event> eventConsumer : consumers) eventConsumer.accept(event);
-		if (!doSendEvent(path, event) && eventOutBox != null) eventOutBox.push(path, event);
+		eventDispatcher.execute(() -> {
+			for (Consumer<Event> eventConsumer : consumers) eventConsumer.accept(event);
+			if (!doSendEvent(path, event) && eventOutBox != null) eventOutBox.push(path, event);
+		});
 	}
 
 	@Override
@@ -469,6 +472,25 @@ public class JmsConnector implements Connector {
 	private static class MessageDeserializer {
 		static Message deserialize(javax.jms.Message message) {
 			return new io.intino.alexandria.message.MessageReader(textFrom(message)).next();
+		}
+	}
+
+	public static class NamedThreadFactory implements ThreadFactory {
+		private final AtomicInteger sequence = new AtomicInteger(1);
+		private final String prefix;
+
+		public NamedThreadFactory(String prefix) {
+			this.prefix = prefix;
+		}
+
+		public Thread newThread(Runnable r) {
+			Thread thread = new Thread(r);
+			int seq = this.sequence.getAndIncrement();
+			thread.setName(this.prefix + (seq > 1 ? "-" + seq : ""));
+			if (!thread.isDaemon()) {
+				thread.setDaemon(true);
+			}
+			return thread;
 		}
 	}
 }
