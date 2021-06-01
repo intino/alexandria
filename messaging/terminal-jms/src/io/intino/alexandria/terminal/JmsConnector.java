@@ -105,8 +105,8 @@ public class JmsConnector implements Connector {
 	@Override
 	public synchronized void sendEvent(String path, Event event) {
 		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
+		for (Consumer<Event> eventConsumer : consumers) eventConsumer.accept(event);
 		eventDispatcher.execute(() -> {
-			for (Consumer<Event> eventConsumer : consumers) eventConsumer.accept(event);
 			if (!doSendEvent(path, event) && eventOutBox != null) eventOutBox.push(path, event);
 		});
 	}
