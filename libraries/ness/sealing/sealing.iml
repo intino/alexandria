@@ -32,5 +32,6 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:tris:1.0.0" level="project" />
     <orderEntry type="module" module-name="datalake" />
     <orderEntry type="module" module-name="event" />
+    <orderEntry type="library" scope="TEST" name="Intino: org.antlr:antlr4-runtime:4.8" level="project" />
   </component>
 </module>
