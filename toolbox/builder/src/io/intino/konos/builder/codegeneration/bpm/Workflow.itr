@@ -14,7 +14,7 @@ def type(workflow)
 		public Workflow($box+FirstUpperCase~Box box) {
 			super(factory(box), new PersistenceManager.FilePersistenceManager($directory+customizeDirectory));
 			this.box = box;
-			box.terminal().subscribe((($terminal.ProcessStatusConsumer) status, String topic) -> receive(status));
+			box.terminal().subscribe(($terminal.ProcessStatusConsumer) (status, topic) -> receive(status));
 		}
 
 		$process+publicMethod...[$NL$NL]
