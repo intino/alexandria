@@ -26,6 +26,12 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
         super(box);
     }
 
+	@Override
+	public void didMount() {
+		super.didMount();
+		if (value != null) notifier.refresh(value);
+	}
+
 	public Instant value() {
 		return value;
 	}

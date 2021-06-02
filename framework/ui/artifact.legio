@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "4.9.7") ui-framework
+Artifact("io.intino.alexandria", "4.9.8") ui-framework
 	Box("Konos", "8.11.0") > targetPackage = "io.intino.alexandria"
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.1.0")
@@ -17,7 +17,7 @@ Artifact("io.intino.alexandria", "4.9.7") ui-framework
 		Compile("org.locationtech.jts", "jts-core", "1.16.1")
 		Compile("com.google.code.gson", "gson", "2.8.6")
 
-		Web("io.intino.alexandria", "ui-framework-elements", "4.9.7")
+		Web("io.intino.alexandria", "ui-framework-elements", "4.9.8")
 
 		Test("junit", "junit", "4.13")
 
