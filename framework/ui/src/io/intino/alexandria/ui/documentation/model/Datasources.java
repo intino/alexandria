@@ -76,6 +76,11 @@ public class Datasources {
 	public static DynamicTableDatasource<Person> dynamicTablePersonDatasource() {
 		return new DynamicTableDatasource<Person>() {
 			@Override
+			public String name() {
+				return "persons";
+			}
+
+			@Override
 			public List<Section> sections(String dimension, String drill, String condition, List<Filter> filters) {
 				if (dimension == null) return emptyList();
 				return Arrays.asList(residencial(), comercial());
@@ -101,7 +106,7 @@ public class Datasources {
 				Section cartera = residencial.add("Cartera", "white", "#115293", 11);
 				cartera.columns("clientes (%)", "adeudos", "kwh", "importe", "iva", "dap");
 				cartera.column("clientes (%)").operator(Column.Operator.Average);
-				cartera.add("DA", 1, 11, 12111, 12, 13, 1);
+				cartera.add("DA", "Soy una descripción", 1, 11, 12111, 12, 13, 1);
 				cartera.add("DB", 11, 1, 2, 4, 5, 2);
 				cartera.add("DC", 0, 0, 0, 0, 0, 0);
 				Section carteraVencida = residencial.add("Cartera Vencida", "white", "#720427", 11);

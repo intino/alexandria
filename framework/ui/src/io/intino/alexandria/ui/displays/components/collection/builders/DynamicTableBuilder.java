@@ -67,6 +67,7 @@ public class DynamicTableBuilder {
 	private static DynamicTableRow build(Row row, Map<String, Double> totalValues, String language) {
 		DynamicTableRow result = new DynamicTableRow();
 		result.label(row.label());
+		result.description(row.description());
 		result.cells(buildCellList(row.cells(), totalValues, language));
 		return result;
 	}

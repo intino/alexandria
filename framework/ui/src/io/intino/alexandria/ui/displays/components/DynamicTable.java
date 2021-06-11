@@ -4,6 +4,7 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.CollectionMoreItems;
 import io.intino.alexandria.schemas.DynamicTableRowParams;
 import io.intino.alexandria.schemas.DynamicTableSetup;
+import io.intino.alexandria.schemas.PageCollectionSetup;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.Collection;
 import io.intino.alexandria.ui.displays.components.collection.behaviors.DynamicTableCollectionBehavior;
@@ -151,12 +152,20 @@ public abstract class DynamicTable<B extends Box, ItemComponent extends io.intin
     }
 
     @Override
+    public void didMount() {
+        DynamicTableCollectionBehavior behavior = behavior();
+        DynamicTableDatasource source = source();
+        notifier.setup(new DynamicTableSetup().name(source != null ? source.name() : null).openRowExternal(selectRowListener != null).pageSize(pageSize()).itemCount(behavior.itemCount()));
+        notifyReady();
+    }
+
+    @Override
     void setup() {
         DynamicTableDatasource source = source();
         if (source == null) return;
         DynamicTableCollectionBehavior behavior = behavior();
         behavior.setup(source, pageSize());
-        notifier.setup(new DynamicTableSetup().openRowExternal(selectRowListener != null).pageSize(pageSize()).itemCount(behavior.itemCount()));
+        notifier.setup(new DynamicTableSetup().name(source.name()).openRowExternal(selectRowListener != null).pageSize(pageSize()).itemCount(behavior.itemCount()));
         notifyReady();
     }
 

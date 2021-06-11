@@ -114,6 +114,12 @@ export const DynamicTableStyles = theme => ({
         top: 20,
         width: 1,
     },
+    columnsAction : {
+        color: theme.palette.primary.main,
+        marginRight: '15px',
+        fontSize: '11pt',
+        cursor: 'pointer',
+    },
 });
 
 const DynamicTablePageSize = 10;
@@ -129,8 +135,13 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 		this.dialogContainer = React.createRef();
 		this.tableContainer = React.createRef();
 		this.state = {
+		    ...this.state,
+		    traceable : true,
+		    name: null,
+		    visibleColumns: [],
 		    sections: null,
 		    open: false,
+		    openColumnsDialog: false,
 		    openConfirm: false,
 		    section: null,
 		    row: null,
@@ -141,9 +152,14 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
             showRelativeValues: false,
             order: null,
             orderBy: null,
-		    ...this.state,
 		};
 	};
+
+    setup = (info) => {
+    console.log(info.name);
+        const visibleColumns = this.getCookie(info.name) ? this.getCookie(info.name) : this.state.visibleColumns;
+        this.setState({ itemCount : info.itemCount, pageSize: info.pageSize, name: info.name, visibleColumns: visibleColumns });
+    };
 
     render() {
         if (this.state.sections == null) return this.renderLoading();
@@ -156,7 +172,9 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                     {this.renderTable()}
                 </div>
                 {this.renderConfirmDialog()}
+                {this.renderColumnsDialog()}
                 {this.renderDialog()}
+                {this.renderCookieConsent()}
             </div>
         );
     };
@@ -185,6 +203,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                     {this.state.loading && <PulseLoader color={theme.palette.secondary.main} size={8} loading={true}/>}
                 </div>
                 <div className="layout horizontal end-justified center">
+                    <a className={classes.columnsAction} onClick={this.handleOpenColumnsDialog.bind(this)}>{this.translate("Show/hide columns")}</a>
                     <FormControlLabel control={<Checkbox checked={this.state.hideZeros} onChange={this.handleToggleHideZeros.bind(this)} name="toggleHideZeros" color="primary"/>} label={this.translate("Hide zeros")}/>
                     <FormControlLabel control={<Checkbox checked={this.state.showRelativeValues} onChange={this.handleToggleRelativeValues.bind(this)} name="toggleRelativeValues" color="primary"/>} label={this.translate("Show percentages")}/>
                 </div>
@@ -396,6 +415,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         if (!isMainView && selectable && index != this.state.column.index) return null;
         const style = {backgroundColor:section.backgroundColor,fontSize:section.fontSize + "pt",textAlign:textAlign,minWidth:'170px'};
         if (section.borderColor !== "transparent") style.borderBottom = "4px solid " + section.borderColor;
+        if (isMainView && selectable && !this.isColumnVisible(index)) return null;
         return (
             <TableCell className={className}
                        colSpan={colSpan}
@@ -516,6 +536,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     renderBodyRow = (mainSection, sections, rowIndex) => {
         const { classes } = this.props;
         const rowLabel = this.rowLabel(sections, rowIndex);
+        const rowDescription = this.rowDescription(sections, rowIndex);
         const totalRow = this.isTotalRow(sections, rowIndex);
         const style = totalRow ? { fontWeight: "bold"} : {};
         const isMainView = this._isMainView();
@@ -525,7 +546,9 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
             <TableRow key={rowIndex}>
                 {(isMainView || (!isMainView && mainSection == this.state.sections[0])) &&
                     <TableCell className={classes.rowLabel} style={style}>
-                        {(!totalRow && isMainView) && <a className={classes.rowAction} onClick={this.handleShowItems.bind(this, mainSection, rowLabel)}>{rowLabel}</a>}
+                        {(!totalRow && isMainView) &&
+                            <a className={classes.rowAction} onClick={this.handleShowItems.bind(this, mainSection, rowLabel)} title={rowDescription}>{rowLabel}</a>
+                        }
                         {(totalRow || !isMainView) && <div>{rowLabel}</div>}
                     </TableCell>
                 }
@@ -577,7 +600,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     renderBodyCells = (mainSection, section, rowIndex, idx, offset) => {
         const isMainView = this._isMainView();
         const row = section.rows[rowIndex];
-        return (<React.Fragment key={rowIndex}>{row.cells.map((c, index) => (isMainView || (!isMainView && offset+index == this.state.column.index)) ? this.renderBodyCell(mainSection, section, row, c, index) : null)}</React.Fragment>);
+        return (<React.Fragment key={rowIndex}>{row.cells.map((c, index) => this.isColumnVisible(offset+index) && (isMainView || (!isMainView && offset+index == this.state.column.index)) ? this.renderBodyCell(mainSection, section, row, c, index) : null)}</React.Fragment>);
     };
 
     renderBodyCell = (mainSection, section, row, cell, index) => {
@@ -690,6 +713,47 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         );
     };
 
+    renderColumnsDialog = () => {
+        const { classes } = this.props;
+
+        return (
+            <Dialog open={this.state.openColumnsDialog} onClose={this.handleCloseColumnsDialog.bind(this)}>
+                <DialogTitle id="alert-dialog-title">{this.translate("Show/hide columns")}</DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    {this.renderColumnsCheckboxes()}
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={this.handleCloseColumnsDialog.bind(this)} color="primary" autoFocus>{this.translate("Close")}</Button>
+                </DialogActions>
+            </Dialog>
+        );
+    };
+
+    renderColumnsCheckboxes = () => {
+        const result = [];
+        const columns = this._selectorColumns();
+        for (let i=0; i<columns.length; i++) result.push(this.renderColumnCheckbox(columns[i]));
+        return result;
+    };
+
+    renderColumnCheckbox = (column) => {
+//        return <FormControlLabel control={<Checkbox checked={this.state.hideZeros} onChange={this.handleToggleHideZeros.bind(this)} name="toggleHideZeros" color="primary"/>} label={this.translate("Hide zeros")}/>
+        return (<div><FormControlLabel control={<Checkbox checked={this.isColumnVisible(column.index)} onChange={this.handleToggleColumn.bind(this, column.index)} color="primary" name={column.index}/>} label={column.label}/></div>);
+    };
+
+    isColumnVisible = (index) => {
+        return this.state.visibleColumns[index] == null || this.state.visibleColumns[index] === true;
+    };
+
+    handleToggleColumn = (index) => {
+        if (this.state.visibleColumns[index] == null) this.state.visibleColumns[index] = true;
+        this.state.visibleColumns[index] = !this.state.visibleColumns[index];
+        this.updateCookie(this.state.visibleColumns, this.state.name);
+        this.setState({visibleColumns: this.state.visibleColumns});
+    };
+
     handleShowItems = (section, row) => {
         const selectRowProvided = this.state.selectRowProvided;
         const state = selectRowProvided ? {openConfirm:true, section: section, row: row} : {open:true, section: section, row: row};
@@ -702,6 +766,14 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 
 	handleClose = () => {
         this.setState({open:false});
+    };
+
+    handleOpenColumnsDialog = () => {
+        this.setState({openColumnsDialog:true});
+    };
+
+	handleCloseColumnsDialog = () => {
+        this.setState({openColumnsDialog:false});
     };
 
     handleOpenConfirm = () => {
@@ -782,7 +854,13 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         if (sections.length <= 0) return "";
         const section = sections[0];
         return rowIndex < section.rows.length ? section.rows[rowIndex].label : "";
-    }
+    };
+
+    rowDescription = (sections, rowIndex) => {
+        if (sections.length <= 0) return "";
+        const section = sections[0];
+        return rowIndex < section.rows.length ? section.rows[rowIndex].description : "";
+    };
 
     isTotalRow = (sections, rowIndex) => {
         if (sections.length <= 0) return false;

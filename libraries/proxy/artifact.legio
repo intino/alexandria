@@ -2,7 +2,7 @@ dsl Legio
 
 Artifact("io.intino.alexandria", "1.0.0") proxy
 	Imports
-		Compile("com.sparkjava", "spark-core", "2.7.2")
+		Compile("com.sparkjava", "spark-core", "2.9.3")
 		Compile("io.intino.alexandria", "logger", "2.0.0")
 		Compile("org.apache.httpcomponents", "httpclient", "4.5.7")
 		Compile("org.apache.httpcomponents", "httpmime", "4.5.7")
