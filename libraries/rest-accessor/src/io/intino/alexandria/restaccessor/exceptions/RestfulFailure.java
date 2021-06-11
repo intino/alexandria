@@ -37,6 +37,16 @@ public class RestfulFailure extends Exception implements AlexandriaError {
 	}
 
 	@Override
+	public String getMessage() {
+		return message;
+	}
+
+	@Override
+	public String getLocalizedMessage() {
+		return message;
+	}
+
+	@Override
 	public Map<String, String> parameters() {
 		return parameters;
 	}
