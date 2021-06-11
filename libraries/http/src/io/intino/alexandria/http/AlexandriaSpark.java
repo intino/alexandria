@@ -13,6 +13,8 @@ import spark.ExceptionHandler;
 import spark.ExceptionMapper;
 import spark.Service;
 import spark.Spark;
+import spark.embeddedserver.EmbeddedServer;
+import spark.embeddedserver.EmbeddedServerFactory;
 import spark.embeddedserver.EmbeddedServers;
 import spark.embeddedserver.jetty.EmbeddedJettyServer;
 import spark.embeddedserver.jetty.JettyHandler;
@@ -118,27 +120,35 @@ public class AlexandriaSpark<R extends SparkRouter> {
 	}
 
 	private void setupService() {
-		EmbeddedServers.add(EmbeddedServers.Identifiers.JETTY, (Routes routeMatcher, StaticFilesConfiguration staticFilesConfiguration, ExceptionMapper exceptionMapper, boolean hasMultipleHandler) -> {
-			JettyHandler handler = setupRequestHandler(routeMatcher, staticFilesConfiguration, exceptionMapper, hasMultipleHandler);
-			return new EmbeddedJettyServer(new JettyServerFactory() {
-				@Override
-				public Server create(int maxThreads, int minThreads, int threadTimeoutMillis) {
-					return server();
-				}
+		EmbeddedServers.add(EmbeddedServers.Identifiers.JETTY, new EmbeddedServerFactory() {
+			@Override
+			public EmbeddedServer create(Routes routes, StaticFilesConfiguration staticFilesConfiguration, boolean hasMultipleHandler) {
+				return create(routes, staticFilesConfiguration, new ExceptionMapper(), hasMultipleHandler);
+			}
 
-				@Override
-				public Server create(ThreadPool threadPool) {
-					return server();
-				}
+			@Override
+			public EmbeddedServer create(Routes routes, StaticFilesConfiguration staticFilesConfiguration, ExceptionMapper exceptionMapper, boolean hasMultipleHandler) {
+				JettyHandler handler = setupRequestHandler(routes, staticFilesConfiguration, exceptionMapper, hasMultipleHandler);
+				return new EmbeddedJettyServer(new JettyServerFactory() {
+					@Override
+					public Server create(int maxThreads, int minThreads, int threadTimeoutMillis) {
+						return server();
+					}
 
-				private Server server() {
-					Server newServer = new Server();
-					newServer.setAttribute("org.eclipse.jetty.server.Request.maxFormContentSize", 100 * 1024 * 1024); // bytes
-					connectionListener = new ConnectionListener(newServer);
-					return newServer;
-				}
+					@Override
+					public Server create(ThreadPool threadPool) {
+						return server();
+					}
 
-			}, handler);
+					private Server server() {
+						Server newServer = new Server();
+						newServer.setAttribute("org.eclipse.jetty.server.Request.maxFormContentSize", 100 * 1024 * 1024); // bytes
+						connectionListener = new ConnectionListener(newServer);
+						return newServer;
+					}
+
+				}, handler);
+			}
 		});
 	}
 

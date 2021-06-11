@@ -18,6 +18,7 @@ Schema DynamicTableColumn
 
 Schema DynamicTableRow
 	Attribute label as Text
+	Attribute description as Text
 	Attribute cells as Object(DynamicTableCell) List
 	Attribute(defaultValue=false) isTotalRow as Bool
 
@@ -58,6 +59,7 @@ Schema MapCollectionSetup as ExtensionOf(CollectionSetup)
 	Attribute icon as Text
 
 Schema DynamicTableSetup as ExtensionOf(CollectionSetup)
+	Attribute name as Text
 	Attribute pageSize as Integer
 	Attribute openRowExternal as Bool
 
