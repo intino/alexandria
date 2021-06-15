@@ -7,7 +7,6 @@ import io.intino.alexandria.exceptions.AlexandriaException;
 import io.intino.alexandria.exceptions.ExceptionFactory;
 import io.intino.alexandria.exceptions.InternalServerError;
 import io.intino.alexandria.restaccessor.adapters.RequestAdapter;
-import org.apache.commons.io.IOUtils;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
@@ -58,7 +57,6 @@ public class RequestBuilder {
 	private final URL url;
 	private final HttpHost proxy;
 	private final List<NameValuePair> queryParameters;
-	private final HttpClient client;
 	private final Map<String, String> headerParameters;
 	private final Map<String, String> entityParts;
 	private UrlEncodedFormEntity urlEncodedFormEntity;
@@ -80,7 +78,6 @@ public class RequestBuilder {
 		headerParameters = new LinkedHashMap<>();
 		entityParts = new LinkedHashMap<>();
 		resources = new ArrayList<>();
-		this.client = client();
 	}
 
 	public RequestBuilder timeOut(int timeOutMillis) {
@@ -136,15 +133,14 @@ public class RequestBuilder {
 			public Response execute() throws AlexandriaException {
 				try {
 					HttpRequestBase request = method(method.name());
-
+					request.setURI(buildUrl());
 					if (auth != null) request.setHeader(HttpHeaders.AUTHORIZATION, auth.name() + " " + auth.token);
 					headerParameters.forEach(request::setHeader);
 					if (!entityParts.isEmpty() && request instanceof HttpEntityEnclosingRequestBase)
 						((HttpEntityEnclosingRequestBase) request).setEntity(buildEntity());
 					else if (urlEncodedFormEntity != null && request instanceof HttpEntityEnclosingRequestBase)
 						((HttpEntityEnclosingRequestBase) request).setEntity(urlEncodedFormEntity);
-					request.setURI(buildUrl());
-					return RequestBuilder.this.responseFrom(client.execute(request));
+					return RequestBuilder.this.responseFrom(client().execute(request));
 				} catch (IOException | URISyntaxException e) {
 					throw new InternalServerError(e.getMessage());
 				}
@@ -220,7 +216,9 @@ public class RequestBuilder {
 	private String bodyContent(HttpResponse response) {
 		try {
 			InputStream content = response.getEntity().getContent();
-			return IOUtils.toString(content, UTF_8);
+			String value = new String(content.readAllBytes(), UTF_8);
+			content.close();
+			return value;
 		} catch (IOException e) {
 			return "";
 		}
@@ -258,7 +256,9 @@ public class RequestBuilder {
 		@Override
 		public String content() {
 			try {
-				return IOUtils.toString(content, UTF_8);
+				String value = new String(content.readAllBytes(), UTF_8);
+				content.close();
+				return value;
 			} catch (IOException e) {
 				return null;
 			}
