@@ -36,20 +36,6 @@ import static org.apache.http.entity.ContentType.MULTIPART_FORM_DATA;
 import static org.apache.http.entity.mime.HttpMultipartMode.BROWSER_COMPATIBLE;
 
 public class RequestBuilder {
-	private enum Auth {
-		Basic, Bearer;
-		private String token;
-
-		Auth with(String token) {
-			this.token = token;
-			return this;
-		}
-
-		public String token() {
-			return token;
-		}
-	}
-
 	public enum Method {
 		GET, POST, PUT, PATCH, DELETE
 	}
@@ -86,12 +72,12 @@ public class RequestBuilder {
 	}
 
 	public RequestBuilder basicAuth(String user, String password) {
-		auth = Auth.Basic.with(Base64.encode((user + ":" + password).getBytes()));
+		auth = new Auth(Auth.Type.Basic, Base64.encode((user + ":" + password).getBytes()));
 		return this;
 	}
 
 	public RequestBuilder bearerAuth(String token) {
-		auth = Auth.Bearer.with(token);
+		auth = new Auth(Auth.Type.Bearer, token);
 		return this;
 	}
 
@@ -128,27 +114,19 @@ public class RequestBuilder {
 	}
 
 	Request build() {
-		return new Request() {
-			@Override
-			public Response execute() throws AlexandriaException {
-				try {
-					HttpRequestBase request = method(method.name());
-					request.setURI(buildUrl());
-					if (auth != null) request.setHeader(HttpHeaders.AUTHORIZATION, auth.name() + " " + auth.token);
-					headerParameters.forEach(request::setHeader);
-					if (!entityParts.isEmpty() && request instanceof HttpEntityEnclosingRequestBase)
-						((HttpEntityEnclosingRequestBase) request).setEntity(buildEntity());
-					else if (urlEncodedFormEntity != null && request instanceof HttpEntityEnclosingRequestBase)
-						((HttpEntityEnclosingRequestBase) request).setEntity(urlEncodedFormEntity);
-					return RequestBuilder.this.responseFrom(client().execute(request));
-				} catch (IOException | URISyntaxException e) {
-					throw new InternalServerError(e.getMessage());
-				}
-			}
-
-			@Override
-			public String toString() {
-				return Json.toString(RequestBuilder.this);
+		return () -> {
+			try {
+				HttpRequestBase request = method(method.name());
+				request.setURI(buildUrl());
+				if (auth != null) request.setHeader(HttpHeaders.AUTHORIZATION, auth.type() + " " + auth.token);
+				headerParameters.forEach(request::setHeader);
+				if (!entityParts.isEmpty() && request instanceof HttpEntityEnclosingRequestBase)
+					((HttpEntityEnclosingRequestBase) request).setEntity(buildEntity());
+				else if (urlEncodedFormEntity != null && request instanceof HttpEntityEnclosingRequestBase)
+					((HttpEntityEnclosingRequestBase) request).setEntity(urlEncodedFormEntity);
+				return parseResponse(client().execute(request));
+			} catch (IOException | URISyntaxException e) {
+				throw new InternalServerError(e.getMessage());
 			}
 		};
 	}
@@ -195,12 +173,10 @@ public class RequestBuilder {
 		return path.isEmpty() ? baseUrl : baseUrl + (path.startsWith("/") ? path : "/" + path);
 	}
 
-	private Response responseFrom(HttpResponse response) throws AlexandriaException {
+	private Response parseResponse(HttpResponse response) throws AlexandriaException {
 		try {
 			int statusCode = response.getStatusLine().getStatusCode();
-			if (statusCode < 200 || statusCode >= 300) {
-				throw exception(statusCode, bodyContent(response));
-			}
+			if (statusCode < 200 || statusCode >= 300) throw exception(statusCode, bodyContent(response));
 			return new RestResponse(statusCode, response.getAllHeaders(), response.getEntity().getContent());
 		} catch (IOException e) {
 			return new RestResponse(response.getStatusLine().getStatusCode(), response.getAllHeaders(), null);
@@ -226,6 +202,28 @@ public class RequestBuilder {
 
 	public interface Request {
 		Response execute() throws AlexandriaException;
+	}
+
+	private static class Auth {
+		public enum Type {
+			Basic, Bearer;
+		}
+
+		private final Type type;
+		private final String token;
+
+		public Auth(Type type, String token) {
+			this.type = type;
+			this.token = token;
+		}
+
+		public String token() {
+			return token;
+		}
+
+		public Type type() {
+			return type;
+		}
 	}
 
 	public static class RestResponse implements Response {
