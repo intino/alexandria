@@ -112,6 +112,15 @@ public class JmsConnector implements Connector {
 	}
 
 	@Override
+	public synchronized void sendEvent(String path, Event event, int expirationInSeconds) {
+		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
+		for (Consumer<Event> eventConsumer : consumers) eventConsumer.accept(event);
+		eventDispatcher.execute(() -> {
+			if (!doSendEvent(path, event, expirationInSeconds) && eventOutBox != null) eventOutBox.push(path, event);
+		});
+	}
+
+	@Override
 	public void attachListener(String path, Consumer<Event> onEventReceived) {
 		registerEventConsumer(path, onEventReceived);
 		JmsConsumer consumer = this.consumers.get(path);
@@ -194,7 +203,7 @@ public class JmsConnector implements Connector {
 			txtMessage.setText(message);
 			txtMessage.setJMSReplyTo(temporaryQueue);
 			txtMessage.setJMSCorrelationID(createRandomString());
-			sendMessage(producer, txtMessage);
+			sendMessage(producer, txtMessage, 100);
 			producer.close();
 		} catch (JMSException e) {
 			Logger.error(e);
@@ -246,11 +255,15 @@ public class JmsConnector implements Connector {
 	}
 
 	private boolean doSendEvent(String path, Event event) {
+		return doSendEvent(path, event, 0);
+	}
+
+	private boolean doSendEvent(String path, Event event, int expirationTimeInSeconds) {
 		if (cannotSendMessage()) return false;
 		try {
 			topicProducer(path);
 			JmsProducer producer = producers.get(path);
-			return sendMessage(producer, serialize(event));
+			return sendMessage(producer, serialize(event), expirationTimeInSeconds);
 		} catch (JMSException | IOException e) {
 			Logger.error(e);
 			return false;
@@ -294,9 +307,13 @@ public class JmsConnector implements Connector {
 	}
 
 	private boolean sendMessage(JmsProducer producer, javax.jms.Message message) {
+		return sendMessage(producer, message, 0);
+	}
+
+	private boolean sendMessage(JmsProducer producer, javax.jms.Message message, int expirationTimeInSeconds) {
 		final boolean[] result = {false};
 		try {
-			Thread thread = new Thread(() -> result[0] = producer.produce(message));
+			Thread thread = new Thread(() -> result[0] = producer.produce(message, expirationTimeInSeconds));
 			thread.start();
 			thread.join(1000);
 			thread.interrupt();
