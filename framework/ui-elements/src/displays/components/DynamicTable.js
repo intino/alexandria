@@ -156,8 +156,8 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 	};
 
     setup = (info) => {
-    console.log(info.name);
-        const visibleColumns = this.getCookie(info.name) ? this.getCookie(info.name) : this.state.visibleColumns;
+        let visibleColumns = info.visibleColumns != null && info.visibleColumns.length > 0 ? this.visibleColumnsArrayOf(info.visibleColumns) : null;
+        if (visibleColumns == null) visibleColumns = this.getCookie(info.name) ? this.getCookie(info.name) : this.state.visibleColumns;
         this.setState({ itemCount : info.itemCount, pageSize: info.pageSize, name: info.name, visibleColumns: visibleColumns });
     };
 
@@ -743,6 +743,32 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         return (<div><FormControlLabel control={<Checkbox checked={this.isColumnVisible(column.index)} onChange={this.handleToggleColumn.bind(this, column.index)} color="primary" name={column.index}/>} label={column.label}/></div>);
     };
 
+    refreshVisibleColumns = (value) => {
+        this.setState({visibleColumns: this.visibleColumnsArrayOf(value)});
+    };
+
+    visibleColumnsArrayOf = (value) => {
+        const result = [];
+        for (let i=0; i<value.length; i++) result[this.findColumn(value[i].name)] = value[i].visible;
+        return result;
+    };
+
+    findColumn = (name) => {
+        const columns = this._selectorColumns();
+        for (let i=0; i<columns.length; i++) {
+            if (columns[i].label === name) return columns[i].index;
+        }
+        return -1;
+    };
+
+    refreshZeros = (value) => {
+        this.setState({hideZeros:!value});
+    };
+
+    refreshPercentages = (value) => {
+        this.setState({showRelativeValues:value});
+    };
+
     isColumnVisible = (index) => {
         return this.state.visibleColumns[index] == null || this.state.visibleColumns[index] === true;
     };
@@ -752,6 +778,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         this.state.visibleColumns[index] = !this.state.visibleColumns[index];
         this.updateCookie(this.state.visibleColumns, this.state.name);
         this.setState({visibleColumns: this.state.visibleColumns});
+        this.requester.visibleColumns(this._visibleColumns(this.state.visibleColumns));
     };
 
     handleShowItems = (section, row) => {
@@ -887,11 +914,15 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     };
 
     handleToggleRelativeValues = () => {
-        this.setState({showRelativeValues: !this.state.showRelativeValues});
+        const value = !this.state.showRelativeValues;
+        this.setState({showRelativeValues: value});
+        this.requester.showPercentages(value);
     };
 
     handleToggleHideZeros = () => {
-        this.setState({hideZeros: !this.state.hideZeros});
+        const value = !this.state.hideZeros;
+        this.setState({hideZeros: value});
+        this.requester.showZeros(!value);
     };
 
     handleFilterFirstColumn = () => {
@@ -928,6 +959,16 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     _selectorColumn = (label, index) => {
         return { value: label, label: label, index: index };
     };
+
+    _visibleColumns = (visibleList) => {
+        const columns = this._selectorColumns();
+        const result = [];
+        for (let i=0; i<columns.length; i++) {
+            const visible = visibleList[columns[i].index];
+            result.push({name: columns[i].label, visible: visible != null ? visible : true});
+        }
+        return result;
+    }
 }
 
 class DynamicTable extends EmbeddedDynamicTable {

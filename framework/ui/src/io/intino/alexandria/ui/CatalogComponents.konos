@@ -24,8 +24,14 @@ Component dynamicTable as ExtensionOf(pageCollection)
 	Notification sections as Object(DynamicTableSection) List
 	Notification selectRowProvided as Bool
 	Notification openRow as Text
+	Notification refreshZeros as Bool
+	Notification refreshPercentages as Bool
+	Notification refreshVisibleColumns as Object(DynamicTableVisibleColumn) List
 	Request selectRow as Object(DynamicTableRowParams)
 	Request showItems as Object(DynamicTableRowParams)
+	Request visibleColumns as Object(DynamicTableVisibleColumn) List
+	Request showZeros as Bool
+	Request showPercentages as Bool
 
 Component map as ExtensionOf(collection)
 	Notification setup as Object(MapCollectionSetup)
