@@ -32,6 +32,10 @@ Schema DynamicTableRowParams
 	Attribute section as Text
 	Attribute row as Text
 
+Schema DynamicTableVisibleColumn
+	Attribute name as Text
+	Attribute visible as Bool
+
 Schema PlaceMark
 	Attribute location as Object(Geometry)
 	Attribute label as Text
@@ -62,6 +66,7 @@ Schema DynamicTableSetup as ExtensionOf(CollectionSetup)
 	Attribute name as Text
 	Attribute pageSize as Integer
 	Attribute openRowExternal as Bool
+	Attribute visibleColumns as Object(DynamicTableVisibleColumn) List
 
 Schema PageCollectionSetup as ExtensionOf(CollectionSetup)
 	Attribute pageSize as Integer
