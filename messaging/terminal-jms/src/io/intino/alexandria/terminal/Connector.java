@@ -7,6 +7,8 @@ import java.util.function.Consumer;
 public interface Connector {
 	void sendEvent(String path, Event event);
 
+	void sendEvent(String path, Event event, int expirationInSeconds);
+
 	void sendMessage(String path, String message);
 
 	void attachListener(String path, Consumer<Event> onEventReceived);
