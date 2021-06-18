@@ -36,14 +36,6 @@ public class Parser_ {
 		messagesFrom(inl1);
 	}
 
-
-	@Test
-	public void should_read_big_message() throws IOException {
-		String inl = new String(this.getClass().getResourceAsStream("/gestionComercialSolicitada.inl").readAllBytes());
-//		showLexicon(inl);
-		messagesFrom(inl);
-	}
-
 	@Test
 	public void should_read_message_with_components() throws IOException {
 		showLexicon(inl2);
