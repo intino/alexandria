@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -18,8 +19,19 @@ public class MessageReader_ {
 
 
 	@Test
-	@Ignore
-	public void checkMessage() {
+	public void should_read_message_multiline() {
+		String message = "[WARNING]\n" +
+				"\tts: 2021-06-18T08:38:58.001685Z\n" +
+				"\tsource: io.intino.magritte.framework.loaders.ListProcessor:process\n" +
+				"\tmessage:\n" +
+				"\t\tG@R@34";
+		Message next = new MessageReader(message).next();
+		Assert.assertNotNull(next);
+	}
+
+
+	@Test
+	public void should_read_message() {
 		String message = "[SEVERE]\n" +
 				"\tts: 2021-04-23T08:20:15.056773Z\n" +
 				"\tsource: io.intino.magritte.framework.LayerFactory:create\n" +

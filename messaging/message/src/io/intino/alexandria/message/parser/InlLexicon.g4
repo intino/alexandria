@@ -17,7 +17,8 @@ NEWLINE             : ('\n');
 UNKNOWN_TOKEN: . ;
 
 mode ATTR_MODE;
-	A_NEWLINE_INDENT:'\n\t'             {   setType(NEWLINE_INDENT); };
+	A_NEWLINE_DOUBLE_INDENT:'\n\t\t'    {   setType(NEWLINE_INDENT);};
+	A_NEWLINE_INDENT:'\n\t'             {   setType(NEWLINE); } -> mode(DEFAULT_MODE);
 	A_NEWLINE:'\n'                      {   setType(NEWLINE); } -> mode(DEFAULT_MODE);
 	VALUE:~'\n'+                  		{   setType(VALUE); };
 

@@ -35,6 +35,8 @@ public class MessageReader implements Iterator<Message>, Iterable<Message> {
 			if (current == null || current.isEmpty() || current.isBlank()) return null;
 			return nextMessage();
 		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage() + ":" + current);
 			Logger.getGlobal().severe(e.getMessage() + ":" + current);
 			current = null;
 			return null;
@@ -127,7 +129,7 @@ public class MessageReader implements Iterator<Message>, Iterable<Message> {
 			current = iterator.next();
 			if (current.getType() == VALUE) builder.append("\n").append(current.getText());
 		}
-		return builder.length() == 0 ? "" : builder.toString().substring(1);
+		return builder.length() == 0 ? "" : builder.substring(1);
 	}
 
 	private List<Token> lexicon(String text) {
