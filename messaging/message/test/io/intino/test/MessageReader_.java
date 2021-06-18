@@ -21,10 +21,10 @@ public class MessageReader_ {
 	@Test
 	public void should_read_message_multiline() {
 		String message = "[WARNING]\n" +
-				"\tts: 2021-06-18T08:38:58.001685Z\n" +
-				"\tsource: io.intino.magritte.framework.loaders.ListProcessor:process\n" +
-				"\tmessage:\n" +
-				"\t\tG@R@34";
+				"ts: 2021-06-18T08:38:58.001685Z\n" +
+				"source: io.intino.magritte.framework.loaders.ListProcessor:process\n" +
+				"message:\n" +
+				"\tG@R@34";
 		Message next = new MessageReader(message).next();
 		Assert.assertNotNull(next);
 	}
@@ -33,9 +33,9 @@ public class MessageReader_ {
 	@Test
 	public void should_read_message() {
 		String message = "[SEVERE]\n" +
-				"\tts: 2021-04-23T08:20:15.056773Z\n" +
-				"\tsource: io.intino.magritte.framework.LayerFactory:create\n" +
-				"\tmessage: Concept AbstractAcquisition$Device hasn't layer registered. Node Assets#Assets_3962_0_0696810257 won't have it\n";
+				"ts: 2021-04-23T08:20:15.056773Z\n" +
+				"source: io.intino.magritte.framework.LayerFactory:create\n" +
+				"message: Concept AbstractAcquisition$Device hasn't layer registered. Node Assets#Assets_3962_0_0696810257 won't have it\n";
 		Message next = new MessageReader(message).next();
 		Assert.assertNotNull(next);
 	}
@@ -47,24 +47,6 @@ public class MessageReader_ {
 		assertThat(messages.next()).isNull();
 	}
 
-	@Test
-	public void should_read_content_with_complex_message() {
-		MessageReader messages = new MessageReader(this.getClass().getResourceAsStream("/test1.inl"));
-		Message next = messages.next();
-		assertThat(next).isNotNull();
-		assertThat(messages.hasNext()).isFalse();
-	}
-
-	@Test
-	public void should_read_content_with_embed_message() {
-		MessageReader messages = new MessageReader(this.getClass().getResourceAsStream("/test2.inl"));
-		Message next = messages.next();
-		assertThat(next).isNotNull();
-		assertThat(messages.hasNext()).isFalse();
-		String value = next.get("value").asString();
-		messages = new MessageReader(value);
-		messages.iterator().forEachRemaining(System.out::println);
-	}
 
 	@Test
 	public void should_read_messages_in_a_class_with_parent() {

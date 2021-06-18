@@ -4,6 +4,7 @@ import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageBuilder;
 import io.intino.alexandria.message.MessageReader;
 import io.intino.test.schemas.*;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.time.Instant;
@@ -13,6 +14,7 @@ import java.time.ZoneId;
 import static io.intino.alexandria.message.MessageCast.cast;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+@Ignore
 public class MessageCast_ {
 
 	@Test
