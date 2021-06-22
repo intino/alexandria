@@ -57,7 +57,9 @@ public class EventSession {
 	}
 
 	private void put(MessageWriter writer, Stream<Event> events) {
-		events.forEach(e -> write(writer, e));
+		synchronized (writer) {
+			events.forEach(e -> write(writer, e));
+		}
 	}
 
 	private void write(MessageWriter writer, Event event) {
