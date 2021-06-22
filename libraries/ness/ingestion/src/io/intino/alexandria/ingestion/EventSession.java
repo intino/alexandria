@@ -42,7 +42,10 @@ public class EventSession {
 
 	public void flush() {
 		try {
-			for (MessageWriter w : writers.values()) w.flush();
+			for (MessageWriter w : writers.values())
+				synchronized (w) {
+					w.flush();
+				}
 		} catch (IOException e) {
 			Logger.error(e);
 		}
