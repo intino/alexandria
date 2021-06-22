@@ -11,13 +11,13 @@ import org.xerial.snappy.SnappyOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 public class EventSession {
-	private final Map<Fingerprint, MessageWriter> writers = new HashMap<>();
+	private final Map<Fingerprint, MessageWriter> writers = new ConcurrentHashMap<>();
 	private final SessionHandler.Provider provider;
 	private final int autoFlush;
 	private final AtomicInteger count = new AtomicInteger();
@@ -83,8 +83,10 @@ public class EventSession {
 	}
 
 	private MessageWriter writerOf(Fingerprint fingerprint) {
-		if (!writers.containsKey(fingerprint)) writers.put(fingerprint, createWriter(fingerprint));
-		return writers.get(fingerprint);
+		synchronized (writers) {
+			if (!writers.containsKey(fingerprint)) writers.put(fingerprint, createWriter(fingerprint));
+			return writers.get(fingerprint);
+		}
 	}
 
 	private MessageWriter createWriter(Fingerprint fingerprint) {
