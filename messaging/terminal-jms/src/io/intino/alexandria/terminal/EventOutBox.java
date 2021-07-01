@@ -11,10 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.AbstractMap;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 class EventOutBox extends OutBox {
 	private static final String INL = ".inl";
@@ -23,35 +20,42 @@ class EventOutBox extends OutBox {
 		super(directory);
 	}
 
-	Map.Entry<String, Event> get() {
-		files.sort(Comparator.comparingLong(File::lastModified));
-		if (files.isEmpty()) return null;
-		try {
-			File file = files.get(0);
-			if (!file.exists()) {
-				files.remove(file);
-				return null;
+	List<Map.Entry<String, Event>> get() {
+		List<Map.Entry<String, Event>> events = new ArrayList<>();
+		synchronized (files) {
+			files.sort(Comparator.comparingLong(File::lastModified));
+			if (files.isEmpty()) return Collections.emptyList();
+			for (File file : files) {
+				try {
+					if (!file.exists()) {
+						files.remove(file);
+						continue;
+					}
+					String content = Files.readString(file.toPath());
+					if (content.isEmpty() || content.isBlank()) {
+						file.delete();
+						files.remove(file);
+						continue;
+					}
+					events.add(new AbstractMap.SimpleEntry<>(destination(file), new Event(new MessageReader(content).next())));
+				} catch (IOException e) {
+					Logger.error(e);
+				}
+
 			}
-			String content = Files.readString(file.toPath());
-			if (content.isEmpty() || content.isBlank()) {
-				file.delete();
-				files.remove(file);
-				return null;
-			}
-			return new AbstractMap.SimpleEntry<>(destination(file), new Event(new MessageReader(content).next()));
-		} catch (IOException e) {
-			Logger.error(e);
-			return null;
 		}
+		return events;
 	}
 
 	void push(String channel, Event event) {
+		File file = new File(directory, channel + "#" + timetag(event) + "#" + UUID.randomUUID() + INL);
 		try {
-			File file = new File(directory, channel + "#" + timetag(event) + "#" + UUID.randomUUID().toString() + INL);
 			Files.write(file.toPath(), event.toString().getBytes());
-			files.add(file);
 		} catch (IOException e) {
 			Logger.error(e);
+		}
+		synchronized (files) {
+			files.add(file);
 		}
 	}
 

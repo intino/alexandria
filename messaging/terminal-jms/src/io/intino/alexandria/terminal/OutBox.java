@@ -1,12 +1,15 @@
 package io.intino.alexandria.terminal;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class OutBox {
 	protected final File directory;
-	protected List<File> files;
+	protected final List<File> files;
 
 	public OutBox(File directory) {
 		this.directory = directory.getAbsoluteFile();
@@ -18,7 +21,8 @@ public abstract class OutBox {
 	void pop() {
 		reloadOutBox();
 		if (files.isEmpty()) return;
-		files.get(0).delete();
+		File file = files.get(0);
+		file.delete();
 		files.remove(0);
 	}
 
@@ -30,7 +34,7 @@ public abstract class OutBox {
 
 	protected synchronized List<File> reloadOutBox() {
 		if (files.isEmpty()) {
-			files = new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(extension())))));
+			Collections.addAll(files, Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(extension()))));
 			files.sort(Comparator.comparingLong(File::lastModified));
 		}
 		return this.files;
