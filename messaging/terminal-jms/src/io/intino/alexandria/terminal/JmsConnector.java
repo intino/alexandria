@@ -399,13 +399,11 @@ public class JmsConnector implements Connector {
 	private void recoverEvents() {
 		if (eventOutBox == null) return;
 		synchronized (eventOutBox) {
-			if (!eventOutBox.isEmpty())
-				while (!eventOutBox.isEmpty()) {
-					Map.Entry<String, Event> event = eventOutBox.get();
-					if (event == null) continue;
+			if (eventOutBox.isEmpty()) return;
+			while (!eventOutBox.isEmpty())
+				for (Map.Entry<String, Event> event : eventOutBox.get())
 					if (doSendEvent(event.getKey(), event.getValue())) eventOutBox.pop();
-					else break;
-				}
+					else return;
 		}
 	}
 
