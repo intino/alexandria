@@ -13,6 +13,7 @@ import javax.jms.*;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -400,11 +401,13 @@ public class JmsConnector implements Connector {
 		if (eventOutBox == null) return;
 		synchronized (eventOutBox) {
 			if (eventOutBox.isEmpty()) return;
+			Logger.info("Recovering events...");
 			while (!eventOutBox.isEmpty())
 				for (Map.Entry<String, Event> event : eventOutBox.get())
 					if (doSendEvent(event.getKey(), event.getValue())) eventOutBox.pop();
 					else return;
 		}
+		Logger.info("All events recovered!");
 	}
 
 	private void recoverMessages() {
