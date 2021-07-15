@@ -79,7 +79,7 @@ def type(properties & materialicon) trigger(specific)
 end
 
 def type(properties & selector) trigger(specific)
-	[ multipleSelection={$multipleSelection}][ readonly={$readonly}][ focused={$focused}][ placeholder="$placeholder"][ selected="$selected"][ layout="$layout"][ size="$size"][ maxMenuHeight={$maxMenuHeight}][ allowOther="$allowOther"]
+	[ multipleSelection={$multipleSelection}][ readonly={$readonly}][ focused={$focused}][ placeholder="$placeholder"][ selected="$selected"][ layout="$layout"][ size="$size"][ maxMenuHeight={$maxMenuHeight}][ allowOther="$allowOther"][ scrollButtons="$scrollButtons"]
 end
 
 def type(properties & image) trigger(specific)

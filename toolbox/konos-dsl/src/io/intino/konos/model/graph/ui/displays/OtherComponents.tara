@@ -68,6 +68,7 @@ Concept OtherComponents
 		has Component
 		Aspect Addressable
 		Aspect Tabs
+			var word:{Off On Auto} scrollButtons = Off
         Aspect Menu
 			var word:{Horizontal Vertical} layout = Vertical
         Aspect ListBox
