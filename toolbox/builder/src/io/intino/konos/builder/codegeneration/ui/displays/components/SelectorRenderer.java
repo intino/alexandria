@@ -26,6 +26,7 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 		result.add("multipleSelection", element.multipleSelection() ? "true" : "false");
 		if (element.isReadonly()) result.add("readonly", element.isReadonly());
 		if (element.isFocused()) result.add("readonly", element.isFocused());
+		addTabsProperties(result);
 		addMenuProperties(result);
 		addComboBoxProperties(result);
 		addCollectionBoxProperties(result);
@@ -34,6 +35,13 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 		addAddressableProperties(result);
 		addToggleBoxProperties(result);
 		return result;
+	}
+
+	private void addTabsProperties(FrameBuilder builder) {
+		if (!element.isTabs()) return;
+		Selector.Tabs.ScrollButtons scrollButtons = element.asTabs().scrollButtons();
+		if (scrollButtons == Selector.Tabs.ScrollButtons.Off) return;
+		builder.add("scrollButtons", scrollButtons);
 	}
 
 	private void addMenuProperties(FrameBuilder builder) {

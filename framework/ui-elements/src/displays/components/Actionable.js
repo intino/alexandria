@@ -45,6 +45,7 @@ export default class Actionable extends AbstractActionable {
 			openAffirm : false,
 			openSign : false,
 			affirmed : this.props.affirmed != null ? this.props.affirmed : null,
+			affirmedRequired : true,
 			signInfo : {
 			    sign: "",
 			    reason: ""
@@ -66,7 +67,7 @@ export default class Actionable extends AbstractActionable {
 		return (
 			<React.Fragment>
                 {this.renderTraceConsent()}
-				{this.renderAffirm()}
+				{this.renderAffirmed()}
 				{this.renderSign()}
 				{this.renderTrigger()}
 			</React.Fragment>
@@ -164,8 +165,8 @@ export default class Actionable extends AbstractActionable {
 		else if (mode === "materialiconbutton" || mode === "materialicontoggle") return (<ActionableMui titleAccess={this._title()} icon={this._icon()} style={this._addDimensions({})}/>);
 	};
 
-	renderAffirm = () => {
-		if (!this.requireAffirm()) return;
+	renderAffirmed = () => {
+		if (!this.requireAffirmed()) return;
 		const openAffirm = this.state.openAffirm != null ? this.state.openAffirm : false;
 		return (
 		    <Dialog onClose={this.handleAffirmClose} open={openAffirm}>
@@ -214,7 +215,18 @@ export default class Actionable extends AbstractActionable {
 	    Delayer.execute(this, () => this.execute(), Actionable.Delay);
 	};
 
-	execute = () => {
+    execute = () => {
+	    if (this._readonly()) return false;
+        if (this.requireAffirmed()) this.requester.checkAffirmed();
+        else this.doExecute();
+    };
+
+    refreshAffirmedRequired = (value) => {
+        this.setState({affirmedRequired:value});
+        this.doExecute();
+    };
+
+	doExecute = () => {
 	    if (!this.canExecute()) return;
 		this.requester.execute();
 	};
@@ -222,10 +234,11 @@ export default class Actionable extends AbstractActionable {
 	canExecute = () => {
 	    if (this._readonly()) return false;
 
-		if (this.requireAffirm()) {
+		if (this.requireAffirmed() && this.state.affirmedRequired) {
 			this.setState({ openAffirm : true });
 			return false;
 		}
+
 		if (this.requireSign()) {
 			this.setState({ openSign : true });
 			return false;
@@ -242,7 +255,10 @@ export default class Actionable extends AbstractActionable {
 	};
 
 	handleAffirmClose = () => {
-		this.setState({ openAffirm : false });
+	    Delayer.execute(this, () => {
+            this.setState({ openAffirm : false });
+            this.requester.cancelAffirm();
+	    }, Actionable.Delay);
 	};
 
     handleSignTextChange = (e) => {
@@ -299,7 +315,7 @@ export default class Actionable extends AbstractActionable {
 		this.setState({ affirmed: value });
 	};
 
-	requireAffirm = () => {
+	requireAffirmed = () => {
 		return this.state.affirmed != null && this.state.affirmed !== "";
 	};
 
