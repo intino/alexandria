@@ -7,6 +7,32 @@ import SelectorComboBoxRequester from "../../../gen/displays/requesters/Selector
 import Select, { components } from "react-select";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
+const selectTextViewStyles = {
+    control: (provided, state) => ({
+        ...provided,
+        background: 'transparent',
+        border: '0',
+        height: '20px',
+        minHeight: '20px'
+    }),
+    valueContainer: (provided, state) => ({
+        ...provided,
+        height: '20px',
+        padding: '0 6px'
+    }),
+    input: (provided, state) => ({
+        ...provided,
+        margin: '0px',
+    }),
+    indicatorSeparator: () => ({
+        display: 'none',
+    }),
+    indicatorsContainer: (provided, state) => ({
+        ...provided,
+        height: '20px',
+    }),
+}
+
 const styles = theme => ({
 	container : {
 		position: "relative",
@@ -49,9 +75,12 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		const label = this.props.label;
 		const value = this.selection(items);
 		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
+		const styles = this.props.view === "TextView" ? selectTextViewStyles : undefined;
+		const width = this.props.view === "TextView" ? 'auto' : '100%';
+		const minWidth = this.props.view === "TextView" ? '250px' : undefined;
 
 		return (
-			<div className={classes.container} style={this.style()}>
+			<div className={classes.container} style={{...this.style(),width:width,minWidth:minWidth}}>
                 {this.renderTraceConsent()}
 				{label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{label}</div> : undefined }
 				<Select isMulti={multiple} isDisabled={this.state.readonly} isSearchable
@@ -62,7 +91,9 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 						menuPlacement="auto" maxMenuHeight={this.props.maxMenuHeight} value={value}
 						onChange={this.handleChange.bind(this)}
 						onMenuOpen={this.handleOpen.bind(this)}
-						noOptionsMessage={() => this.translate("No options")}/>
+						noOptionsMessage={() => this.translate("No options")}
+						styles={styles}
+						/>
 			</div>
 		);
 	};

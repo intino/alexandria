@@ -122,7 +122,7 @@ public class DisplayNotifier {
     }
 
     private Map<String, Object> addMetadata(Map<String, Object> parameters) {
-        HashMap parametersWithId = new HashMap(parameters);
+        Map<String, Object> parametersWithId = new HashMap<>(parameters);
         parametersWithId.put("i", display.id());
         parametersWithId.put("n", display.name());
         if (display.owner() != null) parametersWithId.put("o", display.owner().path());

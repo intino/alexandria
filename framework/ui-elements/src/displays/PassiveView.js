@@ -16,6 +16,11 @@ export default class PassiveView extends I18nComponent {
         return this.constructor.name;
     };
 
+    shortId() {
+        if (this.props.id == null) return null;
+        return this.props.id.substring(this.props.id.lastIndexOf(".")+1);
+    };
+
     ownerUnit = () => {
         return this.context !== "" ? this.context : null;
     };

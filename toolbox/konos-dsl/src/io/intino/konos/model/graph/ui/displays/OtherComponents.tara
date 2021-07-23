@@ -88,6 +88,7 @@ Concept OtherComponents
         Aspect ComboBox
         	var string placeholder = ""
         	var integer:{px} maxMenuHeight = 300px
+        	var word:{FieldView TextView} view = FieldView
         Aspect ToggleBox
         	var word:{Small Medium Large} size = Medium
         	var string selected = empty

@@ -81,6 +81,16 @@ public class AcceptedKonosRunner {
 	}
 
 	@Test
+	public void serviciosSociales() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/servicios-sociales.txt")});
+	}
+
+	@Test
+	public void limpiezaPlayas() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/limpieza-playas.txt")});
+	}
+
+	@Test
 	public void tables() {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/tables/ideaKonosToCompile.txt")});
 	}
