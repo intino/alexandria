@@ -14,6 +14,7 @@ import io.intino.konos.model.graph.DataComponents.Image;
 import io.intino.konos.model.graph.DataComponents.Text;
 import io.intino.konos.model.graph.OtherComponents.*;
 import io.intino.magritte.framework.Layer;
+import joptsimple.internal.Strings;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,6 +45,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (buildChildren) builder.add("child");
 		builder.add("methodName", element.i$(Block.Conditional.class) && !element.i$(Block.Multiple.class) ? "initConditional" : "init");
 		addSpecificTypes(builder);
+		addParentPath(element, builder);
 		addComponents(element, builder);
 		addReferences(element, builder);
 		addFacets(element, builder);
@@ -72,6 +74,17 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	public void owner(Display owner) {
 		this.owner = owner;
+	}
+
+	protected void addParentPath(Component component, FrameBuilder builder) {
+		Component parentComponent = component.core$().ownerAs(Component.class);
+		List<String> parentPath = new ArrayList<>();
+		while (parentComponent != null && !ElementHelper.isRoot(parentComponent)
+				&& !parentComponent.i$(Mold.Item.class) && !parentComponent.i$(HelperComponents.Row.class)) {
+			parentPath.add(0, shortId(parentComponent));
+			parentComponent = parentComponent.core$().ownerAs(Component.class);
+		}
+		if (!parentPath.isEmpty()) builder.add("parentPath", Strings.join(parentPath, "."));
 	}
 
 	protected FrameBuilder addOwner(FrameBuilder builder) {

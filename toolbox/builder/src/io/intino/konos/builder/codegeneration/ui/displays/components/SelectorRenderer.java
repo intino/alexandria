@@ -53,10 +53,14 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 
 	private void addComboBoxProperties(FrameBuilder builder) {
 		if (!element.isComboBox()) return;
-		builder.add("maxMenuHeight", element.asComboBox().maxMenuHeight());
-		String placeholder = element.asComboBox().placeholder();
+		Selector.ComboBox comboBox = element.asComboBox();
+		builder.add("maxMenuHeight", comboBox.maxMenuHeight());
+		String placeholder = comboBox.placeholder();
 		if (placeholder == null || placeholder.isEmpty()) return;
 		builder.add("placeholder", placeholder);
+		Selector.ComboBox.View view = comboBox.view();
+		if (view == null || view == Selector.ComboBox.View.FieldView) return;
+		builder.add("view", view.name());
 	}
 
 	private void addCollectionBoxProperties(FrameBuilder builder) {
