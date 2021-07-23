@@ -1,5 +1,6 @@
 package io.intino.konos.builder.codegeneration.ui.displays;
 
+import io.intino.alexandria.logger.Logger;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
@@ -8,6 +9,8 @@ import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.Service;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 
 @SuppressWarnings("Duplicates")
@@ -24,7 +27,15 @@ public class DisplayListRenderer extends UIRenderer {
 	@Override
 	public void render() throws KonosException {
 		DisplayRendererFactory factory = new DisplayRendererFactory();
-		for (Display d : displays) factory.renderer(context, d, templateProvider, target).execute();
+		displays.stream().parallel().forEach(d -> render(d, factory));
+	}
+
+	private void render(Display display, DisplayRendererFactory factory) {
+		try {
+			factory.renderer(context, display, templateProvider, target).execute();
+		} catch (KonosException e) {
+			Logger.error(e);
+		}
 	}
 
 }
