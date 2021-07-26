@@ -23,20 +23,26 @@ class BlockBadge extends AbstractBlockBadge {
 
 	render() {
 		if (!this.state.visible) return (<React.Fragment/>);
+		if (this.state.value == 0) return this.renderBlock();
 
 		const { showZero, max, mode } = this.props;
 		return (
 			<Badge color="primary" style={this.style()} badgeContent={this.state.value}
 				   showZero={showZero} max={max} variant={mode === "Dot" ? "dot" : undefined}>
-				<Block style={this.style()}
-					   layout={this.props.layout}
-					   width={this.props.width}
-					   height={this.props.height}
-					   spacing={this.props.spacing}>
-					{this.props.children}
-				</Block>
+				{this.renderBlock()}
 			</Badge>
 		);
+	};
+
+	renderBlock = () => {
+	    return (
+            <Block layout={this.props.layout}
+                   width={this.props.width}
+                   height={this.props.height}
+                   spacing={this.props.spacing}>
+                {this.props.children}
+            </Block>
+        );
 	};
 
 	refresh = (value) => {
