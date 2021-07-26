@@ -76,11 +76,9 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		const value = this.selection(items);
 		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
 		const styles = this.props.view === "TextView" ? selectTextViewStyles : undefined;
-		const width = this.props.view === "TextView" ? 'auto' : '100%';
-		const minWidth = this.props.view === "TextView" ? '250px' : undefined;
 
 		return (
-			<div className={classes.container} style={{...this.style(),width:width,minWidth:minWidth}}>
+			<div className={classes.container} style={{...this.style()}}>
                 {this.renderTraceConsent()}
 				{label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{label}</div> : undefined }
 				<Select isMulti={multiple} isDisabled={this.state.readonly} isSearchable
