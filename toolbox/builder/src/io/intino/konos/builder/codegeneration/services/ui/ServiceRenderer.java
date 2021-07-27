@@ -58,7 +58,7 @@ public class ServiceRenderer extends UIRenderer {
 	}
 
 	private Frame[] displaysFrame(List<Display> displays) {
-		return displays.stream().map(this::frameOf).toArray(Frame[]::new);
+		return displays.stream().distinct().map(this::frameOf).toArray(Frame[]::new);
 	}
 
 	public Service.UI.Resource userHome(Service.UI service) {
