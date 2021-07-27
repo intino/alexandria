@@ -19,12 +19,51 @@ public class MessageReader_ {
 
 
 	@Test
-	public void should_read_message_multiline() {
+	public void should_read_message_multiline2() {
 		String message = "[WARNING]\n" +
-				"ts: 2021-06-18T08:38:58.001685Z\n" +
+				"ts: 2021-07-27T14:28:31.494323Z\n" +
 				"source: io.intino.magritte.framework.loaders.ListProcessor:process\n" +
 				"message:\n" +
 				"\tG@R@34";
+		Message next = new MessageReader(message).next();
+		Assert.assertNotNull(next);
+		message = "[WARNING]\n" +
+				"ts: 2021-07-27T14:28:31.494323Z\n" +
+				"source: io.intino.magritte.framework.loaders.ListProcessor:process\n" +
+				"message:G@R@34";
+		next = new MessageReader(message).next();
+		Assert.assertNotNull(next);
+	}
+
+	@Test
+	public void should_read_message_multiline() {
+		String message = "[ERROR]\n" +
+				"ts: 2021-07-27T12:50:03.232980Z\n" +
+				"source: mx.mediagram.banman.accessor.api.BanmanService$2:onMessage:263\n" +
+				"message:\n" +
+				"\tjava.util.ConcurrentModificationException\n" +
+				"\t\tat java.base/java.util.LinkedHashMap$LinkedHashIterator.nextNode(LinkedHashMap.java:719)\n" +
+				"\t\tat java.base/java.util.LinkedHashMap$LinkedEntryIterator.next(LinkedHashMap.java:751)\n" +
+				"\t\tat java.base/java.util.LinkedHashMap$LinkedEntryIterator.next(LinkedHashMap.java:749)\n" +
+				"\t\tat java.base/java.util.Iterator.forEachRemaining(Iterator.java:133)\n" +
+				"\t\tat java.base/java.util.Spliterators$IteratorSpliterator.forEachRemaining(Spliterators.java:1801)\n" +
+				"\t\tat java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:484)\n" +
+				"\t\tat java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)\n" +
+				"\t\tat java.base/java.util.stream.ReduceOps$ReduceOp.evaluateSequential(ReduceOps.java:913)\n" +
+				"\t\tat java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)\n" +
+				"\t\tat java.base/java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:578)\n" +
+				"\t\tat mx.mediagram.banman.accessor.model.Queue.save(Queue.java:101)\n" +
+				"\t\tat mx.mediagram.banman.accessor.model.Queue.save(Queue.java:96)\n" +
+				"\t\tat mx.mediagram.banman.accessor.model.Queue.removeMessage(Queue.java:119)\n" +
+				"\t\tat mx.mediagram.banman.accessor.model.Queue.removeOutputMessage(Queue.java:47)\n" +
+				"\t\tat mx.mediagram.banman.accessor.api.BanmanService$2.onMessage(BanmanService.java:254)\n" +
+				"\t\tat org.java_websocket.client.WebSocketClient.onWebsocketMessage(WebSocketClient.java:593)\n" +
+				"\t\tat org.java_websocket.drafts.Draft_6455.processFrameText(Draft_6455.java:885)\n" +
+				"\t\tat org.java_websocket.drafts.Draft_6455.processFrame(Draft_6455.java:819)\n" +
+				"\t\tat org.java_websocket.WebSocketImpl.decodeFrames(WebSocketImpl.java:379)\n" +
+				"\t\tat org.java_websocket.WebSocketImpl.decode(WebSocketImpl.java:216)\n" +
+				"\t\tat org.java_websocket.client.WebSocketClient.run(WebSocketClient.java:506)\n" +
+				"\t\tat java.base/java.lang.Thread.run(Thread.java:834)";
 		Message next = new MessageReader(message).next();
 		Assert.assertNotNull(next);
 	}
