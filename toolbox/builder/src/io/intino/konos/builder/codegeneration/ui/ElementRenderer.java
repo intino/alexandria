@@ -34,16 +34,17 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 
 	@Override
 	public void execute() throws KonosException {
-		String type = typeOf(element);
-		File displayFile = javaFile(displayFolder(gen(), type, target), displayName(false));
-		File accessibleFile = javaFile(displayFolder(gen(), type, target), displayName(true));
-		registerOutputs(displayFile, accessibleFile);
+		File displayFile = javaFile(displayFolder(gen(), typeOf(element), target), displayName(false));
 		if (isRendered(element) && displayFile.exists()) return;
+		registerOutputs();
 		super.execute();
 	}
 
-	private void registerOutputs(File displayFile, File accessibleFile) {
+	protected void registerOutputs() {
 		if (!target.equals(Target.Owner)) return;
+		String type = typeOf(element);
+		File displayFile = javaFile(displayFolder(gen(), type, target), displayName(false));
+		File accessibleFile = javaFile(displayFolder(gen(), type, target), displayName(true));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), displayFile.getAbsolutePath()));
 		if (element.i$(Display.Accessible.class))
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), accessibleFile.getAbsolutePath()));

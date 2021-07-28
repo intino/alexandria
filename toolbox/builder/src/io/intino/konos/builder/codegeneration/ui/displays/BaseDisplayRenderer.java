@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.ui.displays;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
@@ -15,6 +16,9 @@ import io.intino.konos.model.graph.OtherComponents.*;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayNotifierFolder;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayRequesterFolder;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.model.graph.CatalogComponents.Collection;
 import static io.intino.konos.model.graph.Component.DynamicLoaded;
 import static io.intino.konos.model.graph.OtherComponents.Selector;
