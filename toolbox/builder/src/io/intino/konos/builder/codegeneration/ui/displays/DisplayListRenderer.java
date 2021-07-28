@@ -28,6 +28,10 @@ public class DisplayListRenderer extends UIRenderer {
 	public void render() throws KonosException {
 		DisplayRendererFactory factory = new DisplayRendererFactory();
 		displays.stream().parallel().forEach(d -> render(d, factory));
+		if (target == Target.Owner) delay();
+	}
+
+	private void delay() { // Required to avoid compilation problems
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
