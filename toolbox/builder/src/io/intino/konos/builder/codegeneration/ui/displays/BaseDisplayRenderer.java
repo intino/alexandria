@@ -11,7 +11,10 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.InteractionComponents.Actionable;
-import io.intino.konos.model.graph.OtherComponents.*;
+import io.intino.konos.model.graph.OtherComponents.Dialog;
+import io.intino.konos.model.graph.OtherComponents.OwnerTemplateStamp;
+import io.intino.konos.model.graph.OtherComponents.ProxyStamp;
+import io.intino.konos.model.graph.OtherComponents.TemplateStamp;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;

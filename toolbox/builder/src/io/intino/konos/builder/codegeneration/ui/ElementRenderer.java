@@ -34,19 +34,9 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 
 	@Override
 	public void execute() throws KonosException {
-		String type = typeOf(element);
-		File displayFile = javaFile(displayFolder(gen(), type, target), displayName(false));
-		File accessibleFile = javaFile(displayFolder(gen(), type, target), displayName(true));
-		registerOutputs(displayFile, accessibleFile);
+		File displayFile = javaFile(displayFolder(gen(), typeOf(element), target), displayName(false));
 		if (isRendered(element) && displayFile.exists()) return;
 		super.execute();
-	}
-
-	private void registerOutputs(File displayFile, File accessibleFile) {
-		if (!target.equals(Target.Owner)) return;
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), displayFile.getAbsolutePath()));
-		if (element.i$(Display.Accessible.class))
-			context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), accessibleFile.getAbsolutePath()));
 	}
 
 	protected final void write(FrameBuilder builder) {
@@ -87,6 +77,8 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 			packageFolder.mkdirs();
 			File file = fileOf(packageFolder, name, target);
 			Files.write(file.toPath(), text.getBytes(StandardCharsets.UTF_8));
+			if (!target.equals(Target.Owner)) return;
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), javaFile(packageFolder, name).getAbsolutePath()));
 		} catch (IOException e) {
 			Logger.getGlobal().severe(e.getMessage());
 		}

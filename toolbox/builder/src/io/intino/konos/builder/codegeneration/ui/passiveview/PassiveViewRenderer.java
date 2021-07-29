@@ -83,12 +83,16 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	protected void createPassiveViewFiles(FrameBuilder elementBuilder) {
+		boolean modified = context.cache().isModified(element);
+
 		File requesterFile = javaFile(displayRequesterFolder(gen(), target), nameOfPassiveViewFile(element, elementBuilder.toFrame(), "Requester"));
-		if (context.cache().isModified(element) || !requesterFile.exists()) {
-			writeNotifier(elementBuilder);
-			writeRequester(elementBuilder);
-			writePushRequester(elementBuilder);
-		}
+		if (modified || !requesterFile.exists()) writeRequester(elementBuilder);
+
+		File pushRequesterFile = javaFile(displayRequesterFolder(gen(), target), nameOfPassiveViewFile(element, elementBuilder.toFrame(), "PushRequester"));
+		if (modified || !pushRequesterFile.exists()) writePushRequester(elementBuilder);
+
+		File notifierFile = javaFile(displayNotifierFolder(gen(), target), nameOfPassiveViewFile(element, elementBuilder.toFrame(), "Notifier"));
+		if (modified || !notifierFile.exists()) writeNotifier(elementBuilder);
 	}
 
 	protected String type() {
@@ -100,7 +104,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		String name = nameOfPassiveViewFile(element, frame, "Requester");
 		if (hasConcreteRequester(element)) {
 			writeFrame(displayRequesterFolder(gen(), target), name, displayRequesterTemplate(builder).render(frame));
-			registerClass(builder, "Requester");
+			registerClass(builder, displayRequesterFolder(gen(), target), "Requester");
 		}
 	}
 
@@ -112,7 +116,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		String name = nameOfPassiveViewFile(element, frame, "PushRequester");
 		if (hasConcreteRequester(element)) {
 			writeFrame(displayRequesterFolder(gen(), target), name, template.render(frame));
-			registerClass(builder, "PushRequester");
+			registerClass(builder, displayRequesterFolder(gen(), target), "PushRequester");
 		}
 	}
 
@@ -121,17 +125,21 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		String name = nameOfPassiveViewFile(element, frame, "Notifier");
 		if (hasConcreteNotifier(element)) {
 			writeFrame(displayNotifierFolder(gen(), target), name, displayNotifierTemplate(builder).render(frame));
-			registerClass(builder, "Notifier");
+			registerClass(builder, displayNotifierFolder(gen(), target), "Notifier");
 		}
 	}
 
-	protected void registerClass(FrameBuilder builder, String suffix) {
+	protected void registerClass(FrameBuilder builder, File folder, String suffix) {
 		if (!target.equals(Target.Owner)) return;
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), javaFile(displayNotifierFolder(gen(), target), nameOfPassiveViewFile(element, builder.toFrame(), suffix)).getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), javaFile(folder, nameOfPassiveViewFile(element, builder.toFrame(), suffix)).getAbsolutePath()));
 	}
 
-	private String nameOfPassiveViewFile(PassiveView element, Frame frame, String suffix) {
-		return snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + suffix);
+	protected String nameOfPassiveViewFile(PassiveView element, Frame frame, String suffix) {
+		return nameOfPassiveViewFile(element, isAccessible(frame), suffix);
+	}
+
+	protected String nameOfPassiveViewFile(PassiveView element, boolean accessible, String suffix) {
+		return snakeCaseToCamelCase(element.name$() + (accessible ? "Proxy" : "") + suffix);
 	}
 
 	protected void addGeneric(PassiveView element, FrameBuilder builder) {

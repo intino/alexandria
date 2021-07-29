@@ -21,7 +21,7 @@ public class Logger {
 	private static final List<LogHandler> err = new ArrayList<>(singletonList(new PrintStreamLogHandler(System.err)));
 	private static final List<String> excludedPackages = new ArrayList<>();
 	private static final Set<Level> excludedLevels = new HashSet<>();
-	private static final String pattern = "[%level]\nts: %date\nsource: %C\nmessage: %m\n";
+	private static final String pattern = "[%level]\nts: %date\nsource: %C\nmessage:%m\n";
 
 	static {
 		excludedLevels.add(Level.TRACE);
@@ -112,7 +112,7 @@ public class Logger {
 	}
 
 	private static String formatMessage(String message) {
-		return !message.contains("\n") ? message : "\n\t" + message.replace("\n", "\n\t");
+		return !message.contains("\n") ? " " + message : "\n\t" + message.replace("\n", "\n\t");
 	}
 
 	private static String formatMessage(Throwable e) {

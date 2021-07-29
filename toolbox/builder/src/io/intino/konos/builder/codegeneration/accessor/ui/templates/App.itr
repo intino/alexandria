@@ -53,6 +53,7 @@ def type(app)
         let url = window.location.pathname !== "/" ? window.location.pathname : "";
         [url = url.replace(new RegExp("$pattern", 'g'), "");]
         if (url.lastIndexOf("/") > 0) url = url.substr(0, window.location.pathname.lastIndexOf('/'));
+        if (url === "/") url = "";
         return url + "/$webModuleName/";
 	}
 

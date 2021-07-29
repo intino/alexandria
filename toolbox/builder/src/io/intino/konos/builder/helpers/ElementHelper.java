@@ -43,7 +43,8 @@ public class ElementHelper {
 	}
 
 	private String shortName(String snakeName) {
-		return Arrays.stream(snakeName.split("-")).map(this::initials).collect(Collectors.joining(""));
+		String result = Arrays.stream(snakeName.split("-")).map(this::initials).collect(Collectors.joining(""));
+		return "";//result.length() > 10 ? result.substring(0, 10) : result;
 	}
 
 	private String initials(String name) {

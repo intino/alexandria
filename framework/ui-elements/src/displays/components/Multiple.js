@@ -30,7 +30,7 @@ export default class Multiple extends AbstractMultiple {
 		return (
 		    <div style={{height:height,...this.style()}}>
                 { ComponentBehavior.labelBlock(this.props, "body1", { fontSize:"10pt",color:"#0000008a",marginBottom: "5px" }) }
-                <div className={"layout flex " + (wrap ? "wrap " : "") + layout} style={{height:height,...this.style()}}>
+                <div className={"layout flex " + (wrap ? "wrap " : "") + layout} style={{height:height,...this.style(),marginBottom:'0'}}>
                     {this.renderInstances(multiple.instances, this._instanceProps(), style)}
                 </div>
                 { multiple.editable && this._renderAdd() }
@@ -40,11 +40,11 @@ export default class Multiple extends AbstractMultiple {
 
     renderInstance = (instance, props, style, index) => {
 		const multiple = this.props.multiple;
-		const fixedStyle = {...this.style(),...style};
+		const fixedStyle = {...this.style(),...style,marginBottom:'0'};
 		if (fixedStyle.width == null) fixedStyle.width = 'auto';
         return (
             <div key={index} className="layout horizontal center" style={fixedStyle}>
-                <div className="layout flex" style={{...style,...this.style(),height:'100%'}}>{React.createElement(DisplayFactory.get(instance.tp), instance.pl)}</div>
+                <div className="layout flex" style={{...style,...this.style(),height:'100%',marginBottom:'0'}}>{React.createElement(DisplayFactory.get(instance.tp), instance.pl)}</div>
                 { multiple.editable && this._removeAllowed(index) && this._renderRemove(index) }
             </div>
         );
