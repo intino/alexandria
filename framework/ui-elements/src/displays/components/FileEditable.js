@@ -69,7 +69,7 @@ export default class FileEditable extends AbstractFile {
 	};
 
 	_renderPreview = () => {
-	    if (!this.props.preview) return (<React.Fragment/>);
+	    if (!this.props.preview || this.state.value == null) return (<React.Fragment/>);
 	    return (<div style={{...this.style(),marginBottom:'10px'}}>{this.renderInstances()}</div>);
 	};
 
