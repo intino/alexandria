@@ -1,5 +1,6 @@
 dsl Konos
 
+use Multiple
 use MicroSite
 use DynamicTable
 use Frame
@@ -45,6 +46,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block fileExamples as Conditional > TemplateStamp(template=fileExamplesMold)
 			Block imageExamples as Conditional > TemplateStamp(template=imageExamplesMold)
 			Block dateExamples as Conditional > TemplateStamp(template=dateExamplesMold)
+			Block multipleExamples as Conditional > TemplateStamp(template=multipleExamplesMold)
 			Block chartExamples as Conditional > TemplateStamp(template=chartExamplesMold)
 			Block blockExamples as Conditional > TemplateStamp(template=blockExamplesMold)
 			Block listExamples as Conditional > TemplateStamp(template=listExamplesMold)
@@ -87,12 +89,12 @@ Template(modelClass="io.intino.alexandria.schemas.Property", format=airBottom) p
 	Text(format=body2 facetsAbsolute, value="", mode=Uppercase) facets
 	Block(layout=Horizontal StartJustified)
 		Text(format=h6) name
-		Text(format=h6, value=":&nbsp;&nbsp;")
+		Text(format=h6, value=":  ")
 		Text(format=h6 widgetType, mode = Lowercase) type
 	Text(format=body2, value="") description
 	Block(layout=Horizontal)
 		Text(format=body2 valuesLabelFormat) valuesLabel
-		Text(format=body2 widgetType, value=":&nbsp;&nbsp;") valuesSeparator
+		Text(format=body2 widgetType, value=":  ") valuesSeparator
 		Text(format=body2) values
 
 Template(modelClass="io.intino.alexandria.schemas.Method", format=airBottom) methodMold
@@ -102,13 +104,13 @@ Template(modelClass="io.intino.alexandria.schemas.Method", format=airBottom) met
 		Text(format=h6, value="(")
 		TemplateStamp(template=methodParamMold) params as Multiple
 		Text(format=h6, value=")")
-		Text(format=h6, value=":&nbsp;&nbsp;")
+		Text(format=h6, value=":  ")
 		Text(format=h6 widgetType, mode = Lowercase) returnType
 	Text(format=body2, value="") description
 
 Template(layout=Horizontal, modelClass="io.intino.alexandria.schemas.Parameter") methodParamMold
 	Text(format=h6) name
-	Text(format=h6, value=":&nbsp;")
+	Text(format=h6, value=": ")
 	Text(format=h6) type
 	Text(format=h6) comma
 

@@ -9,11 +9,7 @@ import spark.Request;
 import spark.Response;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class UISparkManager extends SparkManager<PushService> {
 	private final AuthService authService;

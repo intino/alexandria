@@ -7,6 +7,13 @@ import MultipleRequester from "../../../gen/displays/requesters/MultipleRequeste
 import 'alexandria-ui-elements/res/styles/layout.css';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
+import { enrichDisplayProperties } from "../Display";
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Theme from "app-elements/gen/Theme";
+import Spinner from "./Spinner"
 
 export default class Multiple extends AbstractMultiple {
 
@@ -16,7 +23,8 @@ export default class Multiple extends AbstractMultiple {
 		this.requester = new MultipleRequester(this);
 		this.state = {
 		    ...this.state,
-		    readonly: false
+		    readonly: false,
+		    expandedItem : false,
 		};
 	};
 
@@ -31,22 +39,68 @@ export default class Multiple extends AbstractMultiple {
 		    <div style={{height:height,...this.style()}}>
                 { ComponentBehavior.labelBlock(this.props, "body1", { fontSize:"10pt",color:"#0000008a",marginBottom: "5px" }) }
                 <div className={"layout flex " + (wrap ? "wrap " : "") + layout} style={{height:height,...this.style(),marginBottom:'0'}}>
-                    {this.renderInstances(multiple.instances, this._instanceProps(), style)}
+                    {this.renderItems(multiple.instances, this._instanceProps(), style)}
                 </div>
                 { multiple.editable && this._renderAdd() }
             </div>
         );
 	};
 
+	renderItems = (container, props, style) => {
+		const collapsed = this.props.multiple.collapsed != null && this.props.multiple.collapsed;
+	    return collapsed ? this.renderCollapsed(container, props, style) : this.renderExpanded(container, props, style);
+	};
+
+	renderExpanded = (container, props, style) => {
+	    return this.renderInstances(container, props, style);
+	};
+
+	renderCollapsed = (container, props, style) => {
+        let instances = this.instances(container);
+        return instances.map((instance, index) => {
+            return this.renderAccordion(instance, props, style, index);
+        });
+	};
+
+	renderAccordion = (instance, props, style, index) => {
+	    const theme = Theme.get();
+	    const expandedItem = this.state.expandedItem;
+	    const id = instance.pl.id;
+        enrichDisplayProperties(instance);
+        this.copyProps(props, instance.pl);
+	    return (
+	        <Accordion expanded={expandedItem === id} onChange={this.handleSelect.bind(this, id)}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
+                    <Typography style={{fontSize:theme.typography.pxToRem(15),flexBasis:'33.33%',flexShrink:0}}>{instance.pl.label}</Typography>
+                    <Typography style={{fontSize:theme.typography.pxToRem(15),color:theme.palette.text.secondary}}>{instance.pl.description}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <div className={"layout flex"}>
+                        {expandedItem === id && this.renderInstance(instance, props, style, index)}
+                        {expandedItem !== id && this.renderLoading()}
+                    </div>
+                </AccordionDetails>
+            </Accordion>
+	    );
+	};
+
     renderInstance = (instance, props, style, index) => {
 		const multiple = this.props.multiple;
-		const fixedStyle = {...this.style(),...style,marginBottom:'0'};
+		const fixedStyle = {...this.style(),...style};
 		if (fixedStyle.width == null) fixedStyle.width = 'auto';
         return (
             <div key={index} className="layout horizontal center" style={fixedStyle}>
                 <div className="layout flex" style={{...style,...this.style(),height:'100%',marginBottom:'0'}}>{React.createElement(DisplayFactory.get(instance.tp), instance.pl)}</div>
                 { multiple.editable && this._removeAllowed(index) && this._renderRemove(index) }
             </div>
+        );
+    };
+
+    renderLoading = () => {
+		return (
+		    <div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }>
+				<Spinner/>
+			</div>
         );
     };
 
@@ -93,6 +147,11 @@ export default class Multiple extends AbstractMultiple {
 	handleRemove = (index) => {
 	    this.requester.remove(index);
 	};
+
+	handleSelect = (panel, event, isExpanded) => {
+        this.setState({expandedItem : isExpanded ? panel : false});
+        this.requester.select(panel);
+    };
 
     _instanceProps = () => {
 		var result = {};

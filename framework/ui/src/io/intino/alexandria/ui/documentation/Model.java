@@ -18,7 +18,7 @@ public class Model {
 	private static Map<WidgetType, Widget> map = new HashMap<>();
 
 	public enum WidgetType {
-		Text, Number, Image, File, Date, Location,
+		Text, Number, Image, File, Date, Location, Multiple,
 		Chart, Block, List, Table, DynamicTable, Task, OpenPage, OpenBlock, Export,
 		Download, DownloadSelection,
 		Grouping, GroupingToolbar, Sorting, SearchBox, Map, Slider, Selector,
@@ -43,6 +43,7 @@ public class Model {
 		map.put(WidgetType.Image, new ImageWidget());
 		map.put(WidgetType.File, new FileWidget());
 		map.put(WidgetType.Date, new DateWidget());
+		map.put(WidgetType.Multiple, new MultipleWidget());
 		map.put(WidgetType.Location, new LocationWidget());
 		map.put(WidgetType.Chart, new ChartWidget());
 		map.put(WidgetType.Dashboard, new DashboardWidget());

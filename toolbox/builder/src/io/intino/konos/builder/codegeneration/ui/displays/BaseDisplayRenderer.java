@@ -15,6 +15,7 @@ import io.intino.konos.model.graph.OtherComponents.Dialog;
 import io.intino.konos.model.graph.OtherComponents.OwnerTemplateStamp;
 import io.intino.konos.model.graph.OtherComponents.ProxyStamp;
 import io.intino.konos.model.graph.OtherComponents.TemplateStamp;
+import io.intino.magritte.framework.Layer;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
@@ -145,10 +146,75 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 			frame.add("implements", new FrameBuilder("implements", DynamicLoaded.class.getSimpleName()));
 		if (element.i$(Collection.Selectable.class))
 			frame.add("implements", new FrameBuilder("implements", Collection.Selectable.class.getSimpleName()));
+		if (element.i$(Multiple.class)) {
+			FrameBuilder result = multipleImplements();
+			if (element.a$(Multiple.class).collapsed()) result.add("collapsable");
+			frame.add("implements", result);
+		}
 		if (element.i$(Actionable.Action.class) && element.i$(Actionable.Addressable.class))
 			frame.add("implements", new FrameBuilder("implements", Actionable.Action.class.getSimpleName(), Actionable.Addressable.class.getSimpleName()).add("name", nameOf(element)));
 		if (element.i$(Selector.Addressable.class))
 			frame.add("implements", new FrameBuilder("implements", Selector.class.getSimpleName(), Selector.Addressable.class.getSimpleName()).add("name", nameOf(element)));
+	}
+
+	private FrameBuilder multipleImplements() {
+		FrameBuilder result = new FrameBuilder("implements", Multiple.class.getSimpleName());
+		addDecoratedFrames(result);
+		String objectType = multipleObjectType(element);
+		result.add("componentType", multipleComponentType(element));
+		result.add("componentName", multipleComponentName(element));
+		if (!isMultipleSpecificComponent(element) && element.i$(Editable.class)) result.add("componentPrefix", nameOf(element));
+		if (objectType != null) result.add("objectType", objectType);
+		return result;
+	}
+
+	protected String multipleObjectType(Layer element) {
+		if (element.i$(DataComponents.Text.Multiple.class)) return "java.lang.String";
+		if (element.i$(DataComponents.File.Multiple.class)) return "io.intino.alexandria.ui.File";
+		if (element.i$(DataComponents.Image.Multiple.class)) return "io.intino.alexandria.ui.File";
+		if (element.i$(OtherComponents.Icon.Multiple.class)) return "java.net.URL";
+		if (element.i$(DataComponents.Number.Multiple.class)) return "java.lang.Double";
+		if (element.i$(DataComponents.Date.Multiple.class)) return "java.time.Instant";
+		if (element.i$(OtherComponents.BaseStamp.Multiple.class)) {
+			String modelClass = element.i$(OwnerTemplateStamp.class) ? "java.lang.Void" : element.a$(TemplateStamp.class).template().modelClass();
+			return modelClass != null ? modelClass : "java.lang.Void";
+		}
+		if (element.i$(Block.Multiple.class)) return "java.lang.Void";
+		return null;
+	}
+
+	protected String multipleComponentType(Layer element) {
+		String prefix = "io.intino.alexandria.ui.displays.components.";
+		String name = multipleComponentName(element);
+		if (name == null) return null;
+		return element.i$(OtherComponents.BaseStamp.Multiple.class) || element.i$(Block.Multiple.class) ? name : prefix + name;
+	}
+
+	protected String multipleComponentName(Layer element) {
+		String editable = element.i$(Editable.class) ? "Editable" : "";
+		if (element.i$(DataComponents.Text.Multiple.class)) return "Text" + editable;
+		if (element.i$(DataComponents.File.Multiple.class)) return "File" + editable;
+		if (element.i$(DataComponents.Image.Multiple.class)) return "Image" + editable;
+		if (element.i$(OtherComponents.Icon.Multiple.class)) return "Icon" + editable;
+		if (element.i$(DataComponents.Number.Multiple.class)) return "Number" + editable;
+		if (element.i$(DataComponents.Date.Multiple.class)) return "Date" + editable;
+		if (element.i$(OtherComponents.BaseStamp.Multiple.class)) {
+			if (element.i$(OtherComponents.OwnerTemplateStamp.class)) {
+				OwnerTemplateStamp stamp = element.a$(OwnerTemplateStamp.class);
+				return ownerTemplateStampPackage(stamp.owner()) + "." + firstUpperCase(stamp.template());
+			}
+			return firstUpperCase(element.a$(TemplateStamp.class).template().name$());
+		}
+		if (element.i$(Block.Multiple.class)) return firstUpperCase(nameOf(element));
+		return null;
+	}
+
+	protected boolean isMultipleSpecificComponent(Layer element) {
+		return element.i$(OtherComponents.BaseStamp.Multiple.class) || element.i$(Block.Multiple.class);
+	}
+
+	protected String ownerTemplateStampPackage(Service.UI.Use use) {
+		return use.package$() + ".box.ui.displays.templates";
 	}
 
 	protected void addMethods(FrameBuilder frame) {

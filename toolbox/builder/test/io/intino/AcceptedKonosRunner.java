@@ -91,6 +91,11 @@ public class AcceptedKonosRunner {
 	}
 
 	@Test
+	public void cinepolis() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/cinepolis.txt")});
+	}
+
+	@Test
 	public void tables() {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/tables/ideaKonosToCompile.txt")});
 	}

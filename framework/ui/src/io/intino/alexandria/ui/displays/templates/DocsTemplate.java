@@ -25,6 +25,7 @@ public class DocsTemplate extends AbstractDocsTemplate<AlexandriaUiBox> {
         body.dataBlock.dataWidgets.add(Model.widget(Model.WidgetType.File));
         body.dataBlock.dataWidgets.add(Model.widget(Model.WidgetType.Date));
         body.dataBlock.dataWidgets.add(Model.widget(Model.WidgetType.Location));
+        body.dataBlock.dataWidgets.add(Model.widget(Model.WidgetType.Multiple));
     }
 
     private void addCatalogWidgets() {
