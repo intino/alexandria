@@ -164,6 +164,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			result.add("multipleNoItemsMessage", abstractMultiple.noItemsMessage() != null ? abstractMultiple.noItemsMessage() : "");
 			result.add("multipleWrapItems", abstractMultiple.wrapItems());
 			result.add("multipleEditable", element.i$(Editable.class));
+			result.add("multipleCollapsed", element.a$(Multiple.class).collapsed());
 			result.add("multipleMin", abstractMultiple.count() != null ? abstractMultiple.count().min() : 0);
 			result.add("multipleMax", abstractMultiple.count() != null ? abstractMultiple.count().max() : -1);
 		}
@@ -225,9 +226,11 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	protected boolean addSpecificTypes(FrameBuilder builder) {
 
 		if (element.i$(Multiple.class)) {
-			String message = element.a$(Multiple.class).noItemsMessage();
+			Multiple multiple = element.a$(Multiple.class);
+			String message = multiple.noItemsMessage();
 			if (message != null) builder.add("noItemsMessage", message);
 			FrameBuilder methodsFrame = addOwner(buildBaseFrame()).add("method").add("multiple");
+			if (multiple.collapsed()) methodsFrame.add("collapsable");
 			methodsFrame.add("componentType", multipleComponentType(element));
 			methodsFrame.add("componentName", multipleComponentName(element));
 			if (element.i$(OwnerTemplateStamp.class)) methodsFrame.add("componentOwnerBox", element.a$(OwnerTemplateStamp.class).owner().name());
@@ -284,10 +287,6 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return false;
 	}
 
-	private String ownerTemplateStampPackage(Service.UI.Use use) {
-		return use.package$() + ".box.ui.displays.templates";
-	}
-
 	private String ownerTemplateStampBox(Service.UI.Use use) {
 		return use.package$() + ".box." + use.name();
 	}
@@ -322,51 +321,6 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		FrameBuilder properties = properties();
 		if (properties.slots() <= 0) return;
 		builder.add("properties", properties());
-	}
-
-	private String multipleComponentType(C element) {
-		String prefix = "io.intino.alexandria.ui.displays.components.";
-		String name = multipleComponentName(element);
-		if (name == null) return null;
-		return element.i$(BaseStamp.Multiple.class) || element.i$(Block.Multiple.class) ? name : prefix + name;
-	}
-
-	private boolean isMultipleSpecificComponent(C element) {
-		return element.i$(BaseStamp.Multiple.class) || element.i$(Block.Multiple.class);
-	}
-
-	private String multipleComponentName(C element) {
-		String editable = element.i$(Editable.class) ? "Editable" : "";
-		if (element.i$(Text.Multiple.class)) return "Text" + editable;
-		if (element.i$(File.Multiple.class)) return "File" + editable;
-		if (element.i$(Image.Multiple.class)) return "Image" + editable;
-		if (element.i$(Icon.Multiple.class)) return "Icon" + editable;
-		if (element.i$(DataComponents.Number.Multiple.class)) return "Number" + editable;
-		if (element.i$(DataComponents.Date.Multiple.class)) return "Date" + editable;
-		if (element.i$(BaseStamp.Multiple.class)) {
-			if (element.i$(OtherComponents.OwnerTemplateStamp.class)) {
-				OwnerTemplateStamp stamp = element.a$(OwnerTemplateStamp.class);
-				return ownerTemplateStampPackage(stamp.owner()) + "." + firstUpperCase(stamp.template());
-			}
-			return firstUpperCase(element.a$(TemplateStamp.class).template().name$());
-		}
-		if (element.i$(Block.Multiple.class)) return firstUpperCase(nameOf(element));
-		return null;
-	}
-
-	private String multipleObjectType(C element) {
-		if (element.i$(Text.Multiple.class)) return "java.lang.String";
-		if (element.i$(File.Multiple.class)) return "io.intino.alexandria.ui.File";
-		if (element.i$(Image.Multiple.class)) return "io.intino.alexandria.ui.File";
-		if (element.i$(Icon.Multiple.class)) return "java.net.URL";
-		if (element.i$(DataComponents.Number.Multiple.class)) return "java.lang.Double";
-		if (element.i$(DataComponents.Date.Multiple.class)) return "java.time.Instant";
-		if (element.i$(BaseStamp.Multiple.class)) {
-			String modelClass = element.i$(OwnerTemplateStamp.class) ? "java.lang.Void" : element.a$(TemplateStamp.class).template().modelClass();
-			return modelClass != null ? modelClass : "java.lang.Void";
-		}
-		if (element.i$(Block.Multiple.class)) return "java.lang.Void";
-		return null;
 	}
 
 	protected FrameBuilder resourceMethodFrame(String method, String value) {

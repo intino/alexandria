@@ -12,6 +12,7 @@ import io.intino.alexandria.ui.displays.events.editable.AddItemListener;
 import io.intino.alexandria.ui.displays.events.editable.ChangeItemListener;
 import io.intino.alexandria.ui.displays.events.editable.RemoveItemListener;
 
+import java.util.HashMap;
 import java.util.List;
 
 public abstract class Multiple<B extends Box, C extends Component, V extends Object> extends AbstractMultiple<B> {
@@ -19,6 +20,8 @@ public abstract class Multiple<B extends Box, C extends Component, V extends Obj
     private AddItemListener addItemListener;
     private ChangeItemListener changeItemListener;
     private RemoveItemListener removeItemListener;
+    private java.util.Map<C, String> labelsMap = new HashMap<>();
+    private java.util.Map<C, String> descriptionsMap = new HashMap<>();
 
     public Multiple(B box) {
         super(box);
@@ -28,10 +31,6 @@ public abstract class Multiple<B extends Box, C extends Component, V extends Obj
     public void didMount() {
         super.didMount();
         notifier.refreshVisibility(visible());
-    }
-
-    public void addAll(List<V> values) {
-        values.forEach(this::add);
     }
 
     public boolean readonly() {
@@ -45,10 +44,10 @@ public abstract class Multiple<B extends Box, C extends Component, V extends Obj
     }
 
     public C add() {
-        return add((V)null);
+        return add((V) null);
     }
 
-    public abstract C add(V value);
+    protected abstract C add(V value);
     public abstract void remove(C component);
 
     public void remove(int index) {
@@ -57,6 +56,10 @@ public abstract class Multiple<B extends Box, C extends Component, V extends Obj
         notifyRemove(index);
         remove((C) children.get(index));
         children().stream().filter(d -> d instanceof Editable).forEach(d -> ((Editable<?,?>)d).reload());
+    }
+
+    public void select(String id) {
+        children().stream().filter(d -> d.id().equals(id)).findFirst().ifPresent(Display::refresh);
     }
 
     protected Multiple<B, C, V> notifyAdd(C child) {

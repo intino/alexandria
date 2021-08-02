@@ -52,6 +52,33 @@ def type(component & child) trigger(declaration)
 	public [$ancestors+firstUpperCase...[.].] $name+firstUpperCase $name;
 end
 
+def type(method & multiple & collapsable)
+	[$editableMethods]
+	[$editableClass]
+    @Override
+    public $componentName add([$objectType value, ]String label, String description) {
+		$componentName child = new $componentName(box()[.$componentOwnerBox+lowerCase()]);
+		child.id(java.util.UUID.randomUUID().toString());
+        child.properties().put("label", label);
+        child.properties().put("description", description);
+		add(child, "$name");
+		[child.value($objectTypeValue);]
+        notifyAdd(child[, $objectTypeValue]);
+		return child;
+    }
+	@Override
+	public void remove($componentName child) {
+		removeChild(child, "$name");
+	}
+	public void clear() {
+	    super.clear("$name");
+	}
+    @Override
+    protected $componentName add([$objectType value]) {
+        return add(value, null, null);
+    }
+end
+
 def type(method & multiple)
 	[$editableMethods]
 	[$editableClass]
@@ -502,6 +529,14 @@ end
 
 def type(implements & selectable)
 	implements io.intino.alexandria.ui.displays.components.collection.Selectable
+end
+
+def type(implements & multiple & collapsable)
+	implements io.intino.alexandria.ui.displays.components.multiple.Collapsable<$abstractBox+type, [$componentPrefix+firstUpperCase~.]$componentName, $objectType>
+end
+
+def type(implements & multiple)
+	implements io.intino.alexandria.ui.displays.components.multiple.NonCollapsable<$abstractBox+type, [$componentPrefix+firstUpperCase~.]$componentName, $objectType>
 end
 
 def type(implements & option)

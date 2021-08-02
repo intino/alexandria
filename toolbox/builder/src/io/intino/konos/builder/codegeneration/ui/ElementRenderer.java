@@ -77,8 +77,8 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 			packageFolder.mkdirs();
 			File file = fileOf(packageFolder, name, target);
 			Files.write(file.toPath(), text.getBytes(StandardCharsets.UTF_8));
-			if (!target.equals(Target.Owner)) return;
-			context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), javaFile(packageFolder, name).getAbsolutePath()));
+			//if (!target.equals(Target.Owner)) return;
+			//context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), javaFile(packageFolder, name).getAbsolutePath()));
 		} catch (IOException e) {
 			Logger.getGlobal().severe(e.getMessage());
 		}
