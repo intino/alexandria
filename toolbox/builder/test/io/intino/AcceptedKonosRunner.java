@@ -91,6 +91,11 @@ public class AcceptedKonosRunner {
 	}
 
 	@Test
+	public void fuentesOrnamentales() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/fuentes-ornamentales.txt")});
+	}
+
+	@Test
 	public void cinepolis() {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/cinepolis.txt")});
 	}

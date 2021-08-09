@@ -59,7 +59,6 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:rest-accessor:2.2.0" level="project" />
     <orderEntry type="library" name="Intino: commons-codec:commons-codec:1.11" level="project" />
     <orderEntry type="module" module-name="proxy" />
-    <orderEntry type="library" name="Intino: javax.servlet:javax.servlet-api:3.1.0" level="project" />
     <orderEntry type="library" name="Intino: commons-codec:commons-codec:1.10" level="project" />
     <orderEntry type="library" name="Intino: eu.medsea.mimeutil:mime-util:2.1.1" level="project" />
     <orderEntry type="library" name="Intino: org.slf4j:slf4j-api:1.7.25" level="project" />
@@ -90,5 +89,6 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
     <orderEntry type="library" name="Intino: net.rforge:Rserve:0.6-8.1" level="project" />
     <orderEntry type="library" name="Intino: net.rforge:REngine:0.6-8.1" level="project" />
+    <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>
