@@ -20,13 +20,11 @@ const styles = theme => ({
 	},
 	prefix : {
 		color: theme.palette.grey.A700,
-		fontSize: "10pt",
 		marginTop: "2px",
 		marginRight: "3px"
 	},
 	suffix : {
 		color: theme.palette.grey.A700,
-		fontSize: "10pt",
 		marginTop: "2px",
 		marginLeft: "3px"
 	}
@@ -62,7 +60,7 @@ class Text extends AbstractText {
                     </Tooltip> :
                     <Typography variant={variant} className={classes.value} style={this.style()}>{value}</Typography>
                 }
-				{this.props.suffix !== undefined ? <Typography variant={variant} className={classes.suffix}>{this.props.suffix}</Typography> : undefined}
+				{this.props.suffix !== undefined ? <Typography variant="caption" className={classes.suffix}>{this.props.suffix}</Typography> : undefined}
 			</Block>
 		);
 	};
