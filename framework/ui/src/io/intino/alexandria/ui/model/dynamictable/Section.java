@@ -13,6 +13,7 @@ public class Section {
 	private List<Column> columns = new ArrayList<>();
 	private List<Row> rowList = new ArrayList<>();
 	private List<Section> sectionList = new ArrayList<>();
+	private boolean showTotals = true;
 
 	public Section(String label) {
 		this(label, "black", "#efefef", 12);
@@ -58,6 +59,15 @@ public class Section {
 
 	public Section fontSize(int fontSize) {
 		this.fontSize = fontSize;
+		return this;
+	}
+
+	public boolean showTotals() {
+		return showTotals;
+	}
+
+	public Section showTotals(boolean showTotals) {
+		this.showTotals = showTotals;
 		return this;
 	}
 
