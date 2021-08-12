@@ -1,11 +1,16 @@
 package io.intino.alexandria.ui.model.dynamictable;
 
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
 public class Column {
 	private String label;
 	private Operator operator;
 	private String metric = "";
 	private int countDecimals = 0;
 	private String color = "transparent";
+	private BiFunction<Double, Integer, Double> calculator;
 
 	public enum Operator { Sum, Average }
 
@@ -56,6 +61,15 @@ public class Column {
 
 	public Column color(String color) {
 		this.color = color;
+		return this;
+	}
+
+	public BiFunction<Double, Integer, Double> totalCalculator() {
+		return calculator;
+	}
+
+	public Column totalCalculator(BiFunction<Double, Integer, Double> calculator) {
+		this.calculator = calculator;
 		return this;
 	}
 }
