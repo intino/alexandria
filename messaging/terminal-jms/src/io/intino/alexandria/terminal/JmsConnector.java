@@ -4,16 +4,13 @@ import io.intino.alexandria.event.Event;
 import io.intino.alexandria.jms.*;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
-import io.intino.alexandria.message.MessageWriter;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQSession;
 import org.apache.activemq.command.ActiveMQDestination;
 
 import javax.jms.*;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -106,11 +103,21 @@ public class JmsConnector implements Connector {
 	@Override
 	public synchronized void sendEvent(String path, Event event) {
 		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
-		for (Consumer<Event> eventConsumer : consumers) eventConsumer.accept(event);
+		for (Consumer<Event> c : consumers) c.accept(event);
 		eventDispatcher.execute(() -> {
 			if (!doSendEvent(path, event) && eventOutBox != null) eventOutBox.push(path, event);
 		});
 	}
+
+
+	public synchronized void sendEvents(String path, List<Event> events) {
+		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
+		consumers.forEach(events::forEach);
+		eventDispatcher.execute(() -> {
+			if (!doSendEvents(path, events) && eventOutBox != null) events.forEach(e -> eventOutBox.push(path, e));
+		});
+	}
+
 
 	@Override
 	public synchronized void sendEvent(String path, Event event, int expirationInSeconds) {
@@ -197,7 +204,7 @@ public class JmsConnector implements Connector {
 		}
 		try {
 			QueueProducer producer = new QueueProducer(session, path);
-			Destination temporaryQueue = session.createTemporaryQueue();
+			TemporaryQueue temporaryQueue = session.createTemporaryQueue();
 			javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue);
 			consumer.setMessageListener(m -> acceptMessage(onResponse, consumer, (TextMessage) m));
 			final TextMessage txtMessage = session.createTextMessage();
@@ -259,12 +266,28 @@ public class JmsConnector implements Connector {
 		return doSendEvent(path, event, 0);
 	}
 
+	private boolean doSendEvents(String path, List<Event> event) {
+		return doSendEvents(path, event, 0);
+	}
+
 	private boolean doSendEvent(String path, Event event, int expirationTimeInSeconds) {
 		if (cannotSendMessage()) return false;
 		try {
 			topicProducer(path);
 			JmsProducer producer = producers.get(path);
 			return sendMessage(producer, serialize(event), expirationTimeInSeconds);
+		} catch (JMSException | IOException e) {
+			Logger.error(e);
+			return false;
+		}
+	}
+
+	private boolean doSendEvents(String path, List<Event> events, int expirationTimeInSeconds) {
+		if (cannotSendMessage()) return false;
+		try {
+			topicProducer(path);
+			JmsProducer producer = producers.get(path);
+			return sendMessage(producer, serialize(events), expirationTimeInSeconds);
 		} catch (JMSException | IOException e) {
 			Logger.error(e);
 			return false;
@@ -480,11 +503,11 @@ public class JmsConnector implements Connector {
 	}
 
 	private static javax.jms.Message serialize(Event event) throws IOException, JMSException {
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		MessageWriter messageWriter = new MessageWriter(os);
-		messageWriter.write(event.toMessage());
-		messageWriter.close();
-		return serialize(os.toString());
+		return serialize(event.toString());
+	}
+
+	private static javax.jms.Message serialize(List<Event> event) throws IOException, JMSException {
+		return serialize(event.stream().map(Event::toString).collect(Collectors.joining("\n\n")));
 	}
 
 	private static class MessageDeserializer {
