@@ -133,7 +133,7 @@ public class JmsConnector implements Connector {
 		registerEventConsumer(path, onEventReceived);
 		JmsConsumer consumer = this.consumers.get(path);
 		if (consumer == null) return;
-		Consumer<javax.jms.Message> eventConsumer = e -> onEventReceived.accept(new Event(MessageDeserializer.deserialize(e)));
+		Consumer<javax.jms.Message> eventConsumer = m -> MessageDeserializer.deserialize(m).forEachRemaining(ev -> onEventReceived.accept(new Event(ev)));
 		jmsEventConsumers.put(onEventReceived, eventConsumer.hashCode());
 		consumer.listen(eventConsumer);
 	}
@@ -149,7 +149,7 @@ public class JmsConnector implements Connector {
 		registerEventConsumer(path, onEventReceived);
 		TopicConsumer consumer = (TopicConsumer) this.consumers.get(path);
 		if (consumer == null) return;
-		Consumer<javax.jms.Message> eventConsumer = m -> onEventReceived.accept(new Event(MessageDeserializer.deserialize(m)));
+		Consumer<javax.jms.Message> eventConsumer = m -> MessageDeserializer.deserialize(m).forEachRemaining(ev -> onEventReceived.accept(new Event(ev)));
 		jmsEventConsumers.put(onEventReceived, eventConsumer.hashCode());
 		consumer.listen(eventConsumer, subscriberId);
 	}
@@ -511,8 +511,8 @@ public class JmsConnector implements Connector {
 	}
 
 	private static class MessageDeserializer {
-		static Message deserialize(javax.jms.Message message) {
-			return new io.intino.alexandria.message.MessageReader(textFrom(message)).next();
+		static Iterator<Message> deserialize(javax.jms.Message message) {
+			return new io.intino.alexandria.message.MessageReader(textFrom(message)).iterator();
 		}
 	}
 
