@@ -118,6 +118,15 @@ public class JmsConnector implements Connector {
 		});
 	}
 
+	public synchronized void sendEvents(String path, List<Event> events, int expirationInSeconds) {
+		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
+		consumers.forEach(events::forEach);
+		eventDispatcher.execute(() -> {
+			if (!doSendEvents(path, events, expirationInSeconds) && eventOutBox != null)
+				events.forEach(e -> eventOutBox.push(path, e));
+		});
+	}
+
 
 	@Override
 	public synchronized void sendEvent(String path, Event event, int expirationInSeconds) {
