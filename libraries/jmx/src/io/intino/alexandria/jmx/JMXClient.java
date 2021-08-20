@@ -38,7 +38,7 @@ public class JMXClient {
 		}
 	}
 
-	public static Map<String, String> allJMXLocalURLs() throws IOException, AgentLoadException, AgentInitializationException {
+	public static Map<String, String> allJMXLocalURLs() throws IOException, AgentInitializationException {
 		Map<String, String> set = new LinkedHashMap<>();
 		List<VirtualMachineDescriptor> vms = VirtualMachine.list();
 		for (VirtualMachineDescriptor desc : vms) {
@@ -53,7 +53,11 @@ public class JMXClient {
 			if (connectorAddress == null) {
 				String agent = vm.getSystemProperties().getProperty("java.home") +
 						File.separator + "lib" + File.separator + "management-agent.jar";
-				vm.loadAgent(agent);
+				try {
+					vm.loadAgent(agent);
+				} catch (AgentLoadException e) {
+					continue;
+				}
 				connectorAddress = vm.getAgentProperties().getProperty(CONNECTOR_ADDRESS);
 			}
 			if (connectorAddress != null) set.put(desc.displayName(), connectorAddress);
