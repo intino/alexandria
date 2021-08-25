@@ -59,6 +59,10 @@ public class AlexandriaSpark<R extends SparkRouter> {
 		return this;
 	}
 
+	public Service service() {
+		return service;
+	}
+
 	public int activeThreadCount() {
 		return service.activeThreadCount();
 	}
