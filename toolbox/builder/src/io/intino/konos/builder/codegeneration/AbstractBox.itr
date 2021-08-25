@@ -175,6 +175,7 @@ def type(box)
 			handler.setFormatter(new io.intino.alexandria.logger.Formatter());
 			Logger.setUseParentHandlers(false);
 			Logger.addHandler(handler);
+			$logger
 		}
 
 		protected java.net.URL url(String url) {
@@ -185,6 +186,10 @@ def type(box)
 			}
 		}
 	}
+end
+
+def type(logger) trigger(logger)
+	io.intino.alexandria.logger4j.Logger.init();
 end
 
 def type(datalake) trigger(import)

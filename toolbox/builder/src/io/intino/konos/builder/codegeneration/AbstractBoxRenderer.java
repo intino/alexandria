@@ -160,6 +160,8 @@ public class AbstractBoxRenderer extends Renderer {
 
 	private void services(FrameBuilder builder) {
 		if (!graph.messagingServiceList().isEmpty()) builder.add("jms", "");
+		if (!graph.subscriberList().isEmpty() || !graph.uiServiceList().isEmpty() || !graph.restServiceList().isEmpty())
+			builder.add("logger", new FrameBuilder("logger"));
 		soap(builder);
 		messaging(builder);
 		jmx(builder);
