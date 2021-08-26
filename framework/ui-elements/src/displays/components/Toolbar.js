@@ -23,6 +23,7 @@ class Toolbar extends AbstractToolbar {
 	};
 
 	render() {
+	    if (!this.state.visible) return (<React.Fragment/>);
 		const { classes } = this.props;
 		return (<div className={classNames("layout horizontal center", classes.toolbar)} style={this.style()}>{React.Children.map(this.props.children, (child, i) => { return this.renderItem(child); })}</div>);
 	};
