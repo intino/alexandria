@@ -13,6 +13,7 @@ import java.net.URL;
 
 public class BaseFile<DN extends BaseFileNotifier, B extends Box> extends AbstractBaseFile<DN, B> {
     private URL value;
+    private String filename;
     private String mimeType;
 
     public BaseFile(B box) {
@@ -28,7 +29,12 @@ public class BaseFile<DN extends BaseFileNotifier, B extends Box> extends Abstra
     }
 
     public void value(URL value, String mimeType) {
-        _value(value, mimeType != null ? mimeType : typeOf(value));
+        _value(value, mimeType != null ? mimeType : typeOf(value), null);
+        refresh();
+    }
+
+    public void value(URL value, String mimeType, String filename) {
+        _value(value, mimeType != null ? mimeType : typeOf(value), filename);
         refresh();
     }
 
@@ -56,22 +62,24 @@ public class BaseFile<DN extends BaseFileNotifier, B extends Box> extends Abstra
     }
 
     protected BaseFile<DN, B> _value(File file) {
-        return file != null ? _value(file.value(), file.mimeType()) : _value(null, null);
+        return file != null ? _value(file.value(), file.mimeType(), file.filename()) : _value(null, null, null);
     }
 
     protected BaseFile<DN, B> _value(URL value) {
-        return _value(value, typeOf(value));
+        return _value(value, typeOf(value), null);
     }
 
-    protected BaseFile<DN, B> _value(URL value, String mimeType) {
+    protected BaseFile<DN, B> _value(URL value, String mimeType, String filename) {
         this.value = value;
         this.mimeType = mimeType;
+        this.filename = filename;
         return this;
     }
 
     protected FileInfo info() {
         FileInfo info = new FileInfo().value(serializedValue()).mimeType(mimeType);
-        if (value != null) info.filename(value.toString());
+        if (filename != null) info.filename(filename);
+        else if (value != null) info.filename(value.toString());
         return info;
     }
 

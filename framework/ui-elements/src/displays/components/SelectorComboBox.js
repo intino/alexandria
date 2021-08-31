@@ -87,6 +87,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 						className="basic-multi-select" classNamePrefix="select"
 						components={{ Option: this.renderOption.bind(this)}}
 						menuPlacement="auto" maxMenuHeight={this.props.maxMenuHeight} value={value}
+						filterOption={this.handleFilter.bind(this)}
 						onChange={this.handleChange.bind(this)}
 						onMenuOpen={this.handleOpen.bind(this)}
 						noOptionsMessage={() => this.translate("No options")}
@@ -108,6 +109,16 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		return !isDisabled ? (
 			<components.Option {...props} className={classes.container}>{item}</components.Option>
 		) : null;
+	};
+
+	handleFilter = (candidate, condition) => {
+	    const split = condition.toLowerCase().split(" ");
+	    const label = candidate.label != null ? candidate.label.toLowerCase() : "";
+	    const value = candidate.value != null ? candidate.value.toLowerCase() : "";
+	    for (var i=0; i<split.length; i++) {
+	        if (label.indexOf(split[i]) == -1 && value.indexOf(split[i]) == -1) return false;
+	    }
+		return true;
 	};
 
 	handleChange = (selectedOptions) => {

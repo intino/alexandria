@@ -71,6 +71,7 @@ class File extends AbstractFile {
 				}
 				{this._isPdf() &&
 					<object className={classes.value} style={this.style()} data={file} type="application/pdf" download={this.state.filename}>
+					    <a href={this.state.filename}>{this.state.filename}</a>
 						<div className="layout horizontal center-center">
 							<p>{notSupportedMessage}</p>&nbsp;<a href={file} target="_blank">{notSupportedLinkMessage}</a>
 						</div>
@@ -110,7 +111,11 @@ class File extends AbstractFile {
 	};
 
 	_fileUrl = () => {
-	    return this.state.value != null ? this.state.value + (this.state.value.indexOf("?") != -1 ? "&" : "?") + "embedded=true" : undefined;
+	    var url = this.state.value != null ? this.state.value : undefined;
+	    if (url == undefined) return url;
+	    url += (url.indexOf("?") != -1 ? "&" : "?") + "embedded=true";
+	    if (this.state.filename != null) url += "&label=" + this.state.filename;
+	    return url;
 	};
 
 	_extension = () => {

@@ -1,6 +1,7 @@
 import React from "react";
 import { Paper, InputBase } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
+import ClearIcon from '@material-ui/icons/Clear';
 import { withStyles } from '@material-ui/core/styles';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import AbstractSearchBox from "../../../gen/displays/components/AbstractSearchBox";
@@ -38,6 +39,15 @@ const styles = theme => ({
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
+	clearIcon: {
+		top: '0',
+        right: '0',
+        cursor: 'pointer',
+        height: '100%',
+        position: 'absolute',
+        marginRight: '10px',
+        marginTop: '6px',
+	},
 	inputRoot: {
 		color: 'inherit',
 		width: '100%',
@@ -49,6 +59,7 @@ const styles = theme => ({
 		paddingLeft: theme.spacing(10),
 		transition: theme.transitions.create('width'),
 		width: '100%',
+		paddingRight: '30px',
 		[theme.breakpoints.up('sm')]: {
 			width: 120,
 			'&:focus': {
@@ -66,22 +77,24 @@ const styles = theme => ({
 });
 
 class SearchBox extends AbstractSearchBox {
-	state = {
-		count: null
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new SearchBoxNotifier(this);
 		this.requester = new SearchBoxRequester(this);
 		this.input = React.createRef();
+		this.state = {
+		    count: null,
+		    value: '',
+		    ...this.state,
+		}
 	};
 
 	render() {
 		const {classes} = this.props;
 		const placeholder = this.translate(this.props.placeholder != null && this.props.placeholder !== "" ? this.props.placeholder : "Search...");
 		return (
-			<div className={classNames(classes.root, "layout horizontal")} style={this.style()}>
+			<div className={classNames(classes.root, "layout horizontal")} style={{...this.style(),position:'relative'}}>
 				<div className={classes.grow}/>
 				<div style={{position:'relative'}}>
 					<Paper className={classes.search} elevation={1}>
@@ -90,6 +103,7 @@ class SearchBox extends AbstractSearchBox {
 						</div>
                         <InputBase
                             placeholder={placeholder}
+                            value={this.state.value}
                             onChange={this.handleSearch.bind(this)}
                             ref={this.input}
                             classes={{
@@ -97,6 +111,7 @@ class SearchBox extends AbstractSearchBox {
                                 input: classes.inputInput,
                             }}
                         />
+                        {this.state.value !== "" && <a onClick={this.handleClear.bind(this)} className={classes.clearIcon}><ClearIcon/></a>}
 					</Paper>
 					<div className={classNames(classes.count, "layout horizontal end-justified")}><div title={this.countHint()}>{this.countMessage()}</div></div>
 				</div>
@@ -108,7 +123,13 @@ class SearchBox extends AbstractSearchBox {
 		this.setState({count: count});
 	};
 
+	handleClear = (e) => {
+		this.setState({value: ''});
+		this.requester.search('');
+	};
+
 	handleSearch = (e) => {
+		this.setState({value: e.target.value});
 		this.search(e.target.value);
 	};
 

@@ -4,6 +4,7 @@ import java.net.URL;
 
 public class File {
     private URL value;
+    private String filename;
     private String mimeType;
 
     public URL value() {
@@ -12,6 +13,15 @@ public class File {
 
     public File value(URL value) {
         this.value = value;
+        return this;
+    }
+
+    public String filename() {
+        return filename;
+    }
+
+    public File filename(String filename) {
+        this.filename = filename;
         return this;
     }
 
