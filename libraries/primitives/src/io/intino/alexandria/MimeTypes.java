@@ -50,6 +50,7 @@ public class MimeTypes {
 		contentTypes.put(".css", "text/css");
 		contentTypes.put(".csv", "text/csv");
 		contentTypes.put(".doc", "application/msword");
+		contentTypes.put(".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
 		contentTypes.put(".epub", "application/epub+zip");
 		contentTypes.put(".gif", "image/gif");
 		contentTypes.put(".htm", "text/html");
