@@ -33,7 +33,6 @@ const CollectionBehavior = (collection) => {
         if (items.length <= 0) return self.renderEmpty(height, width);
         if (self.allowMultiSelection()) self.selection = [];
 
-        self.collection.itemsRenderedCalled = false;
         if (navigable == null) return self.renderInfiniteList(items, height, width);
         return (
             <div>
@@ -47,13 +46,17 @@ const CollectionBehavior = (collection) => {
     self.renderInfiniteList = (items, height, width) => {
         let itemHeight = self.collection.props.itemHeight;
         const hasMore = items.length < self.collection.state.itemCount;
+        const scrollableTarget = self.collection.props.id + "_infinite";
         if (width <= 800) itemHeight += (itemHeight/2);
         self.notifyItemsRenderedDelayed(items);
         return (
-            <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}
-                    scrollThreshold={1} hasMore={hasMore} loader={self.renderLoadingMore()} height={height} style={{height:height+"px",width:width+'px'}}>
-                {items.map((i, index) => <div style={{height:itemHeight,position:'relative'}}>{self.renderItem(items, { index: index, isScrolling: false })}</div>)}
-            </InfiniteScroll>
+            <div id={scrollableTarget} style={{ height: height, width: width, overflow: "auto" }}>
+                <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}
+                        scrollThreshold={0.9} hasMore={hasMore} loader={self.renderLoadingMore()}
+                        height={height} style={{height:height+"px",width:width+'px'}} scrollableTarget={scrollableTarget}>
+                    {items.map((i, index) => <div style={{height:itemHeight,position:'relative'}}>{self.renderItem(items, { index: index, isScrolling: false })}</div>)}
+                </InfiniteScroll>
+            </div>
         );
     };
 
