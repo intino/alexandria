@@ -39,6 +39,11 @@ public abstract class PageCollection<DN extends PageCollectionNotifier, B extend
         notifyRefresh();
     }
 
+    public void loadNextPage() {
+        PageCollectionBehavior behavior = behavior();
+        behavior.nextPage();
+    }
+
     public void loadMoreItems(CollectionMoreItems info) {
         PageCollectionBehavior behavior = behavior();
         behavior.moreItems(info);

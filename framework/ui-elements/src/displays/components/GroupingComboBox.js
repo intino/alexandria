@@ -42,6 +42,7 @@ class GroupingComboBox extends AbstractGroupingComboBox {
                         options={this.state.groups.map(group => { return { value: group.label, label: group.label, group: group } })}
                         className="basic-multi-select" classNamePrefix="select"
                         components={{ Option: this.renderGroup.bind(this)}}
+                        filterOption={this.handleFilter.bind(this)}
                         onChange={this.handleChange}
                         value={selectedOptions}
                 />
@@ -68,6 +69,16 @@ class GroupingComboBox extends AbstractGroupingComboBox {
             </components.Option>
         ) : null;
     };
+
+	handleFilter = (candidate, condition) => {
+	    const split = condition.toLowerCase().split(" ");
+	    const label = candidate.label != null ? candidate.label.toLowerCase() : "";
+	    const value = candidate.value != null ? candidate.value.toLowerCase() : "";
+	    for (var i=0; i<split.length; i++) {
+	        if (label.indexOf(split[i]) == -1 && value.indexOf(split[i]) == -1) return false;
+	    }
+		return true;
+	};
 
     handleChange = (selection) => {
         this.updateSelection(selection.map(s => s.value));
