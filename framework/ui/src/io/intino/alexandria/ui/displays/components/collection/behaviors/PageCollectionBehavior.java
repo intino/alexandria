@@ -40,6 +40,16 @@ public class PageCollectionBehavior<DS extends PageDatasource<Item>, Item> exten
 		});
 	}
 
+	public synchronized void nextPage() {
+		page++;
+		if (page > itemLoader.pageCount()) {
+			page = itemLoader.pageCount()-1;
+			return;
+		}
+		List<Item> items = itemLoader.page(this.page);
+		collection().insert(items, itemLoader.start(this.page));
+	}
+
 	public synchronized void moreItems(CollectionMoreItems info) {
 		List<Item> items = itemLoader.moreItems(info.start(), info.stop());
 		collection().insert(items, info.start());

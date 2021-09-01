@@ -17,6 +17,7 @@ Component pageCollection as ExtensionOf(collection)
 	Request changePage as Integer
 	Request changePageSize as Integer
 	Request notifyItemsRendered as Object(CollectionItemsRenderedInfo)
+	Request loadNextPage
 	Request loadMoreItems as Object(CollectionMoreItems)
 
 Component dynamicTable as ExtensionOf(pageCollection)
