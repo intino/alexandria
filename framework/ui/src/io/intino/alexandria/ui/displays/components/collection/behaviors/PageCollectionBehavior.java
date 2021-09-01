@@ -61,6 +61,12 @@ public class PageCollectionBehavior<DS extends PageDatasource<Item>, Item> exten
 	}
 
 	@Override
+	public void reload() {
+		page = 0;
+		super.reload();
+	}
+
+	@Override
 	protected void update() {
 		PageItemLoader<DS, Item> itemLoader = itemLoader();
 		int count = itemLoader.pageCount();
