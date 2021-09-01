@@ -110,6 +110,7 @@ public class AlexandriaSpark<R extends SparkRouter> {
 	}
 
 	protected void setupStaticFiles() {
+		if (webDirectory == null) return;
 		if (isInClasspath(webDirectory)) service.staticFileLocation(webDirectory);
 		else service.externalStaticFileLocation(webDirectory);
 	}
