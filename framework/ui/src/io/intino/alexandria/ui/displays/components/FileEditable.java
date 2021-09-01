@@ -86,6 +86,7 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 		return new UIFile() {
 			@Override
 			public String label() {
+				if (filename() != null) return filename();
 				String path = value.getPath();
 				return path.contains("/") ? path.substring(path.lastIndexOf("/")+1) : path;
 			}

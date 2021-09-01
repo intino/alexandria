@@ -48,6 +48,10 @@ public class BaseFile<DN extends BaseFileNotifier, B extends Box> extends Abstra
         refresh();
     }
 
+    public String filename() {
+        return filename;
+    }
+
     public String mimeType() {
         return mimeType;
     }
