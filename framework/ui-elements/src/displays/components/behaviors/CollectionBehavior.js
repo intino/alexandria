@@ -201,7 +201,7 @@ const CollectionBehavior = (collection) => {
         var selection = self.selection;
         var index = self.selection.indexOf(item);
         if (index !== -1) {
-            self.removeSelectedStyle(selection[index]);
+            self.removeSelectedStyle(self.element(selection[index]));
             selection.splice(index, 1);
         }
         else {
@@ -267,12 +267,17 @@ const CollectionBehavior = (collection) => {
     };
 
     self.refreshSelection = (selection) => {
-        if (self.selection != null && self.selection.length > 0) self.removeSelectedStyle(self.selection[0]);
+        if (self.selection != null && self.selection.length > 0) self.removeSelectedStyle(self.element(self.selection[0]));
         self.selection = selection;
         var selectable = self.collection.props.selection != null;
         var multiple = self.allowMultiSelection();
         if (!selectable || multiple) return;
-        if (self.selection != null && self.selection.length > 0) self.addSelectedStyle(self.selection[0]);
+        if (self.selection != null && self.selection.length > 0) {
+            const element = self.element(self.selection[0]);
+            if (element == null) return;
+            self.addSelectedStyle(element);
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
     };
 
     self.getSelectedStyleRules = () => {
@@ -283,6 +288,15 @@ const CollectionBehavior = (collection) => {
         };
     };
 
+    self.element = (id) => {
+        return $(self.collection.container.current).find("#" + self.elementId(id)).get(0);
+    };
+
+    self.addSelectedStyle = (element) => {
+        if (element == null) return;
+        self.addSelectedStyleRules(element.style);
+    };
+
     self.addSelectedStyleRules = (style) => {
         if (style == null) return;
         style.border = "1px solid #3f50b5";
@@ -291,13 +305,7 @@ const CollectionBehavior = (collection) => {
         return style;
     };
 
-    self.addSelectedStyle = (id) => {
-        const element = $(self.collection.container.current).find("#" + self.elementId(id)).get(0);
-        if (element != null) self.addSelectedStyleRules(element.style);
-    };
-
-    self.removeSelectedStyle = (id) => {
-        const element = $(self.collection.container.current).find("#" + self.elementId(id)).get(0);
+    self.removeSelectedStyle = (element) => {
         if (element == null || element.style == null) return;
         element.style.border = "0";
         element.style.borderRadius = "0";

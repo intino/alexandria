@@ -61,9 +61,9 @@ public class PageCollectionBehavior<DS extends PageDatasource<Item>, Item> exten
 	}
 
 	@Override
-	public void reload() {
+	void reset() {
 		page = 0;
-		super.reload();
+		super.reset();
 	}
 
 	@Override

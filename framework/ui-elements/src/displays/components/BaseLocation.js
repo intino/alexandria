@@ -48,6 +48,7 @@ export default class BaseLocation extends AbstractBaseLocation {
 	};
 
 	resize = function() {
+		if (this.googleMapLayer.current == null) return;
 		const container = this.container.current;
 		const height = $(container).height();
 		if (height == 0) {
