@@ -212,6 +212,7 @@ export default class Actionable extends AbstractActionable {
 
 	handleClick(e) {
 		if (this._readonly()) return;
+	    e.stopPropagation();
 	    Delayer.execute(this, () => this.execute(), Actionable.Delay);
 	};
 
