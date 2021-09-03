@@ -114,6 +114,8 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 	refreshSelection = (selection) => {
 		this.setState({ selection: selection });
 		if (this.searchComponent.current == null) return;
+		var isFocused = (document.activeElement === this.searchComponent.current);
+		if (!isFocused) return;
 		this.searchComponent.current.blur();
 		this.searchComponent.current.focus();
 	};
