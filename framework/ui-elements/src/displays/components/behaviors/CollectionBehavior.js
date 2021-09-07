@@ -48,7 +48,7 @@ const CollectionBehavior = (collection) => {
         const hasMore = items.length < self.collection.state.itemCount;
         const scrollableTarget = self.collection.props.id + "_infinite";
         if (width <= 800) itemHeight += (itemHeight/2);
-        self.notifyItemsRenderedDelayed(items);
+        self.notifyItemsRendered(items);
         return (
             <div id={scrollableTarget} style={{ height: height, width: width, overflow: "auto" }}>
                 <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}
@@ -66,7 +66,7 @@ const CollectionBehavior = (collection) => {
         const hasMore = items.length < itemCount;
         const scrollableTarget = self.collection.props.id + "_infinite";
         if (width <= 800) itemHeight += (itemHeight/2);
-        self.notifyItemsRenderedDelayed(items);
+        self.notifyItemsRendered(items);
         return (
             <div id={scrollableTarget} style={{ height: height, width: width, overflow: "auto" }}>
                 <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}

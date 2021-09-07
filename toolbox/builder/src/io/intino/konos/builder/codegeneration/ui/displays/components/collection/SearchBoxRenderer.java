@@ -23,6 +23,7 @@ public class SearchBoxRenderer extends BindingCollectionRenderer<SearchBox> {
 		String placeholder = element.placeholder();
 		if (placeholder == null || placeholder.isEmpty()) return result;
 		result.add("placeholder", placeholder);
+		if (element.showCountMessage()) result.add("showCountMessage", true);
 		return result;
 	}
 

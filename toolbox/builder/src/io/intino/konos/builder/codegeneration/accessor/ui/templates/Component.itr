@@ -179,7 +179,7 @@ def type(properties & download & selection) trigger(specific)
 end
 
 def type(properties & searchbox) trigger(specific)
-	[ placeholder="$placeholder"]
+	[ placeholder="$placeholder"][ showCountMessage="$showCountMessage"]
 end
 
 def type(properties & slider) trigger(specific)

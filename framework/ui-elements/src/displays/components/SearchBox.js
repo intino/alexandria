@@ -113,7 +113,7 @@ class SearchBox extends AbstractSearchBox {
                         />
                         {this.state.value !== "" && <a onClick={this.handleClear.bind(this)} className={classes.clearIcon}><ClearIcon/></a>}
 					</Paper>
-					<div className={classNames(classes.count, "layout horizontal end-justified")}><div title={this.countHint()}>{this.countMessage()}</div></div>
+					{this.props.showCountMessasge && <div className={classNames(classes.count, "layout horizontal end-justified")}><div title={this.countHint()}>{this.countMessage()}</div></div>}
 				</div>
 			</div>
 		);

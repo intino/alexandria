@@ -62,3 +62,4 @@ Concept CatalogComponents
 	Concept:Named SearchBox extends Component
 		var Collection[] collections
 		var string placeholder = empty
+		var boolean showCountMessage = true
