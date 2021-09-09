@@ -58,9 +58,9 @@ class Number extends AbstractNumber {
 		return (
 			<Block layout="horizontal center" style={this.style()}>
 				{ ComponentBehavior.labelBlock(this.props, 'body1', {...this.style(),margin:'0 5px 0 0'}) }
-				{this.state.prefix !== undefined ? <Typography variant="caption" className={classes.prefix}>{this.state.prefix}</Typography> : undefined }
+				{this.state.prefix !== undefined ? <Typography variant="caption" className={classes.prefix}>{this.translate(this.state.prefix)}</Typography> : undefined }
 				<Typography className={classnames(expandedClass, classes.value)} onClick={this.handleToggleExpanded.bind(this)} variant={variant} style={this.style()}>{NumberUtil.format(value, this.translate(format))}</Typography>
-				{ this.state.suffix !== undefined ? <Typography variant="caption" className={classes.suffix}>{this.state.suffix}</Typography> : undefined }
+				{ this.state.suffix !== undefined ? <Typography variant="caption" className={classes.suffix}>{this.translate(this.state.suffix)}</Typography> : undefined }
 			</Block>
 		);
 	};

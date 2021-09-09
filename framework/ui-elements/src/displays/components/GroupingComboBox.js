@@ -86,7 +86,7 @@ class GroupingComboBox extends AbstractGroupingComboBox {
 
     selectMessage = () => {
         const placeholder = this.props.placeholder;
-        return this.translate(placeholder != null && placeholder !== "" ? placeholder : this.translate("Select") + " " + (this.props.label != null ? this.props.label : " an option"));
+        return placeholder != null && placeholder !== "" ? this.translate(placeholder) : (this.props.label != null ? this.translate("Select") + " " + this.props.label : this.translate("Select an option"));
     };
 
 }

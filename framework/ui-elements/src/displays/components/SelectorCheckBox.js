@@ -74,7 +74,7 @@ class SelectorCheckBox extends AbstractSelectorCheckBox {
 
 	_label = (item) => {
 		const label = item.props.label != null && item.props.label !== "" ? item.props.label : item.props.value;
-		return label != null ? label : this.translate("no label");
+		return this.translate(label != null ? label : "no label");
 	};
 
 	handleChange = (name) => {
