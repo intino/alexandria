@@ -1,12 +1,14 @@
 import Numeral from "numeral";
 import "numeral/locales/es.js";
 import "numeral/locales/de.js";
+import "numeral/locales/pt-pt.js";
 
 const NumberUtil = (function () {
     return {
         format : (number, format) => {
             let language = window.Application.configuration.language;
             if (language === "mx") language = "en"; // Mexican not defined, used compatible language
+            if (language === "pt") language = "pt-pt";
             Numeral.locale(language);
             return Numeral(number).format(format);
         }
