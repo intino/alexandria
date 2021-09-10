@@ -191,9 +191,6 @@ public class SparkManager<P extends PushService> {
 			userCookie.setHttpOnly(true);
 			response.raw().addCookie(userCookie);
 		}
-
-		if (this.request.cookie("JSESSIONID") == null)
-			response.raw().setHeader("SET-COOKIE", "JSESSIONID=" + session.getId() + "; HttpOnly; SameSite=Strict");
 	}
 
 	private String sessionCookieName() {

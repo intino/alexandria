@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class UISession extends SparkSession<UIClient> {
+    private String language;
     private User user;
     private Browser browser;
     private String device = null;
@@ -56,7 +57,14 @@ public class UISession extends SparkSession<UIClient> {
         return device != null;
     }
 
+    public UISession language(String language) {
+        this.language = language;
+        return this;
+    }
+
     public String discoverLanguage() {
+        if (language != null) return language;
+
         User user = user();
         if (user != null && user.language() != null && !user.language().isEmpty()) return user.language();
 
