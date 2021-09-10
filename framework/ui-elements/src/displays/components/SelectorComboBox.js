@@ -144,7 +144,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 
 	_label = (option) => {
 		const label = option.props.label != null && option.props.label !== "" ? option.props.label : option.props.value;
-		return label != null ? label : this.translate("no label");
+		return this.translate(label != null ? label : "no label");
 	};
 
 	refreshSelection = (selection) => {
