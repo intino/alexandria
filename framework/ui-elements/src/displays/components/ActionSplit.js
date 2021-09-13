@@ -18,6 +18,7 @@ class ActionSplit extends AbstractActionSplit {
 		this.requester = new ActionSplitRequester(this);
 		this.state = {
 			...this.state,
+			options: this.props.options != null ? this.props.options : [],
 			option : this.traceValue() != null ? this.traceValue() : this.props.option,
 			readonly : this.props.readonly,
 			selectedIndex : this.props.defaultOption != null ? this._indexOf(this.props.defaultOption) : 0,
@@ -32,7 +33,7 @@ class ActionSplit extends AbstractActionSplit {
 		    <React.Fragment>
                 <ButtonGroup variant={this._highlightVariant()} style={this.style()} size={this._size()}
                              color="primary" ref={this.anchorRef} aria-label={this.props.label}>
-                  <Button onClick={this.handleClick.bind(this)}>{this.props.options[this.state.selectedIndex]}</Button>
+                  <Button onClick={this.handleClick.bind(this)}>{this.state.options[this.state.selectedIndex]}</Button>
                   <Button color="primary" size="small" aria-controls={this.state.open ? 'split-button-menu' : undefined}
                           aria-expanded={this.state.open ? 'true' : undefined} aria-label="select merge strategy" aria-haspopup="menu"
                           onClick={this.handleToggle.bind(this)}>
@@ -52,7 +53,7 @@ class ActionSplit extends AbstractActionSplit {
                   <Paper>
                     <ClickAwayListener onClickAway={this.handleClose.bind(this)}>
                       <MenuList id="split-button-menu">
-                        {this.props.options.map((option, index) => (
+                        {this.state.options.map((option, index) => (
                           <MenuItem key={option} selected={index === this.state.selectedIndex}
                                     onClick={this.handleMenuItemClick.bind(this, index)}>
                             {option}
@@ -65,6 +66,10 @@ class ActionSplit extends AbstractActionSplit {
               )}
             </Popper>
         );
+	};
+
+	refreshOptions = (options) => {
+	    this.setState({options});
 	};
 
 	refreshOption = (value) => {
@@ -91,14 +96,15 @@ class ActionSplit extends AbstractActionSplit {
 
     executeOption = (index) => {
         if (!this.canExecute()) return;
-        const option = this.props.options[index];
+        const option = this.state.options[index];
         this.requester.execute(option);
         this.trace(option);
     };
 
     _indexOf = (option) => {
-        for (var i=0; i<this.props.options.length; i++) {
-            if (this.props.options[i] === option) return i;
+        const options = this.state.options != null ? this.state.options : this.props.options;
+        for (var i=0; i<options.length; i++) {
+            if (options[i] === option) return i;
         }
         return 0;
     };

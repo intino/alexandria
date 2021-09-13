@@ -73,6 +73,10 @@ public abstract class CollectionBehavior<DS extends Datasource<Item>, Item, IL e
 		computeUpdate(e -> itemLoader.timetag(timetag));
 	}
 
+	public List<String> sortings() {
+		return itemLoader.sortings();
+	}
+
 	public void sortings(List<String> sortings) {
 		computeUpdate(e -> itemLoader.sortings(sortings));
 	}

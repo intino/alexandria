@@ -8,6 +8,7 @@ import io.intino.alexandria.ui.model.datasource.filters.GroupFilter;
 import io.intino.alexandria.ui.model.datasource.temporal.TemporalDatasource;
 import io.intino.alexandria.ui.model.datasource.temporal.TemporalPageDatasource;
 
+import java.lang.reflect.Array;
 import java.time.Instant;
 import java.util.*;
 
@@ -82,6 +83,10 @@ public class ItemLoader<DS extends Datasource<Item>, Item> {
 		this.timetag = timetag;
 		this.itemCount = calculateItemCount(condition);
 		return this;
+	}
+
+	public List<String> sortings() {
+		return new ArrayList<>(this.sortings);
 	}
 
 	public void sortings(List<String> sortings) {
