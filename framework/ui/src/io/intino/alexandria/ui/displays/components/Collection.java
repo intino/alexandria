@@ -148,6 +148,10 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         notifyRefreshItemCount();
     }
 
+    public List<String> sortings() {
+        return behavior.sortings();
+    }
+
     public void sortings(List<String> sortings) {
         behavior.sortings(sortings);
     }

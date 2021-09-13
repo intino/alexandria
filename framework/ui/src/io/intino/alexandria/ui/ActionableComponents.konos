@@ -25,6 +25,7 @@ Component action as ExtensionOf(actionable)
 
 Component actionSplit as ExtensionOf(actionable)
 	Notification refreshOption as Text
+	Notification refreshOptions as Text List
 	Request execute as Text
 
 Component actionSwitch as ExtensionOf(actionable)
