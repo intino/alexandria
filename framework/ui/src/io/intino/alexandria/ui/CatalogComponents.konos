@@ -73,4 +73,5 @@ Component sortingOrderBy as ExtensionOf(baseSorting)
 
 Component searchBox
 	Notification refreshCount as LongInteger
+	Notification refreshCondition as Text
 	Request search as Text

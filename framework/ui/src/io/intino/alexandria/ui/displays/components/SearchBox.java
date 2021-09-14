@@ -20,6 +20,12 @@ public class SearchBox<DN extends SearchBoxNotifier, B extends Box> extends Abst
         super(box);
     }
 
+    @Override
+    public void didMount() {
+        super.didMount();
+        if (condition != null) notifier.refreshCondition(condition);
+    }
+
     public SearchBox<DN, B> onSearch(SearchListener listener) {
         this.searchListener = listener;
         return this;
