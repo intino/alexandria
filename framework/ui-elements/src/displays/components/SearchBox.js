@@ -123,6 +123,10 @@ class SearchBox extends AbstractSearchBox {
 		this.setState({count: count});
 	};
 
+	refreshCondition = (condition) => {
+		this.setState({value: condition});
+	};
+
 	handleClear = (e) => {
 		this.setState({value: ''});
 		this.requester.search('');
