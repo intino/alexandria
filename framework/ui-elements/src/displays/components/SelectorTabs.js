@@ -44,12 +44,23 @@ class SelectorTabs extends AbstractSelectorTabs {
     };
 
     refreshSelected = (tab) => {
-        this.setState({ selected: tab });
+        let realTab = tab - this._countInvisible(tab);
+        this.setState({ selected: realTab });
 	};
 
     refreshOptionsVisibility = (options) => {
         this.setState({ hiddenOptions: options });
 	};
+
+	_countInvisible = (pos) => {
+	    const hiddenOptions = this.state.hiddenOptions;
+	    let result = 0;
+	    for (var i=0; i<hiddenOptions.length; i++) {
+	        if (hiddenOptions[i] < pos) result++;
+	        else break;
+	    }
+	    return result;
+	}
 
 	_isVisible = (pos) => {
 	    const hiddenOptions = this.state.hiddenOptions;
@@ -60,6 +71,7 @@ class SelectorTabs extends AbstractSelectorTabs {
 	}
 
 	handleChange = (e, value) => {
+	    while (!this._isVisible(value)) value++;
         this.requester.select(value);
     };
 }
