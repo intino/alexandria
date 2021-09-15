@@ -40,7 +40,16 @@ const styles = theme => ({
 	},
 	icon: {
 		color: "#e8e8e8"
-	}
+	},
+	download : {
+	    position: 'absolute',
+        bottom: '0',
+        left: '0',
+        cursor: 'pointer',
+        fontSize: '8pt',
+        marginBottom: '3pt',
+        color: theme.palette.primary.main,
+	},
 });
 
 class ImageEditable extends AbstractImageEditable {
@@ -68,6 +77,10 @@ class ImageEditable extends AbstractImageEditable {
 		this.requester.notifyChange(null);
 	};
 
+	handleDownload(e) {
+	    this.requester.download();
+	};
+
 	render() {
 		const { classes } = this.props;
 		const inputId = this._inputId();
@@ -76,7 +89,7 @@ class ImageEditable extends AbstractImageEditable {
 		const borderDisplay = this.state.readonly ? "flex" : "none";
 		const removeButtonDisplay = this.state.readonly || this.state.value == null ? "none" : "flex";
 		return (
-			<div style={this.style()}>
+			<div style={{...this.style(),position:'relative'}}>
 			    { ComponentBehavior.labelBlock(this.props, "body1", { color: theme.palette.grey.A700, marginRight: '5px', fontSize: "9pt", color: "#777777" }) }
                 {this.state.value && <img className={classes.image} title={this.props.label} src={this.state.value} />}
                 <label htmlFor={inputId} className={classes.overlay} style={{display:labelDisplay}}>
@@ -90,6 +103,7 @@ class ImageEditable extends AbstractImageEditable {
                             style={{position:'absolute',right:"0",zIndex:"0",background:'white',marginTop:'-12px',marginRight:'-12px',border:'1px solid #efefef',display:removeButtonDisplay}}>
                     <Clear />
                 </IconButton>
+                {this.state.value && <a className={classes.download} onClick={this.handleDownload.bind(this)}>{this.translate("Download")}</a>}
 			</div>
 		);
 	};

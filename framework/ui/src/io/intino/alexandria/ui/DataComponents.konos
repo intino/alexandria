@@ -59,6 +59,7 @@ Component imageAvatar as ExtensionOf(baseImage)
 Component imageEditable as ExtensionOf(baseImage)
 	Notification refreshReadonly as Bool
 	Request notifyChange as File
+	Request(responseType=Asset) download
 
 Component baseLocation
 	Notification setup as Object(LocationSetup)
