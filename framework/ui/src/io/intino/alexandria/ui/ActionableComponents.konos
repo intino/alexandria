@@ -10,6 +10,7 @@ Component actionable
 	Notification refreshIcon as Text
 	Notification refreshAffirmed as Text
 	Notification refreshAffirmedRequired as Bool
+	Notification refreshHighlight as Text
 	Notification checkSignResult as Bool
 
 	Request checkSign as Object(ActionableSign)
