@@ -165,13 +165,13 @@ public class JmsConnector implements Connector {
 
 	@Override
 	public void detachListeners(Consumer<Event> consumer) {
+		eventConsumers.values().forEach(list -> list.remove(consumer));
 		Integer code = jmsEventConsumers.get(consumer);
 		if (code == null) return;
 		for (JmsConsumer jc : consumers.values()) {
 			List<Consumer<javax.jms.Message>> toRemove = jc.listeners().stream().filter(l -> l.hashCode() == code).collect(Collectors.toList());
 			toRemove.forEach(jc::removeListener);
 		}
-		eventConsumers.values().forEach(list -> list.remove(consumer));
 	}
 
 	@Override
