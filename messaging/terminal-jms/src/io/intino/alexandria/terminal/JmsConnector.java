@@ -142,7 +142,7 @@ public class JmsConnector implements Connector {
 		registerEventConsumer(path, onEventReceived);
 		JmsConsumer consumer = this.consumers.get(path);
 		if (consumer == null) return;
-		Consumer<javax.jms.Message> eventConsumer = m -> MessageDeserializer.deserialize(m).forEachRemaining(ev -> onEventReceived.accept(new Event(ev)));
+		Consumer<javax.jms.Message> eventConsumer = m -> MessageDeserializer.deserialize(m).forEachRemaining(ev -> onEventReceived.accept(newEvent(m, ev)));
 		jmsEventConsumers.put(onEventReceived, eventConsumer.hashCode());
 		consumer.listen(eventConsumer);
 	}
@@ -158,9 +158,18 @@ public class JmsConnector implements Connector {
 		registerEventConsumer(path, onEventReceived);
 		TopicConsumer consumer = (TopicConsumer) this.consumers.get(path);
 		if (consumer == null) return;
-		Consumer<javax.jms.Message> eventConsumer = m -> MessageDeserializer.deserialize(m).forEachRemaining(ev -> onEventReceived.accept(new Event(ev)));
+		Consumer<javax.jms.Message> eventConsumer = m -> MessageDeserializer.deserialize(m).forEachRemaining(ev -> onEventReceived.accept(newEvent(m, ev)));
 		jmsEventConsumers.put(onEventReceived, eventConsumer.hashCode());
 		consumer.listen(eventConsumer, subscriberId);
+	}
+
+	private Event newEvent(javax.jms.Message m, Message ev) {
+		try {
+			return new Event(ev);
+		} catch (Throwable e) {
+			Logger.error("Malformed message:\n" + textFrom(m));
+			return new Event(ev);
+		}
 	}
 
 	@Override
