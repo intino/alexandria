@@ -1,5 +1,6 @@
 dsl Konos
 
+use HtmlViewer
 use Multiple
 use MicroSite
 use DynamicTable
@@ -71,6 +72,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block stepperExamples as Conditional > TemplateStamp(template=stepperExamplesMold)
 			Block frameExamples as Conditional > TemplateStamp(template=frameExamplesMold)
 			Block microSiteExamples as Conditional > TemplateStamp(template=microSiteExamplesMold) microSiteExamplesMold
+			Block htmlViewerExamples as Conditional > TemplateStamp(template=htmlViewerExamplesMold) htmlViewerExamplesMold
 
 		Block facets
 			Text(value="Facets", format=h5 underline)

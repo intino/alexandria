@@ -151,6 +151,9 @@ Component microSite
 	Request(Asset) download
 	Request(Asset) downloadContent
 
+Component htmlViewer
+	Notification refresh as Text
+
 Component frame
 	Notification refresh as Text
 

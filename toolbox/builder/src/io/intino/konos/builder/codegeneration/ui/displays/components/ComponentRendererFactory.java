@@ -40,6 +40,7 @@ public class ComponentRendererFactory {
 		if (component.i$(OtherComponents.ProxyStamp.class)) return (T) new ProxyStampRenderer(context, component.a$(OtherComponents.ProxyStamp.class), provider, target);
 		if (component.i$(OtherComponents.Frame.class)) return (T) new FrameRenderer(context, component.a$(OtherComponents.Frame.class), provider, target);
 		if (component.i$(OtherComponents.MicroSite.class)) return (T) new MicroSiteRenderer(context, component.a$(OtherComponents.MicroSite.class), provider, target);
+		if (component.i$(OtherComponents.HtmlViewer.class)) return (T) new HtmlViewerRenderer(context, component.a$(OtherComponents.HtmlViewer.class), provider, target);
 		if (component.i$(VisualizationComponents.Stepper.class)) return (T) new StepperRenderer(context, component.a$(VisualizationComponents.Stepper.class), provider, target);
 		if (component.i$(VisualizationComponents.Stepper.Step.class)) return (T) new StepRenderer(context, component.a$(VisualizationComponents.Stepper.Step.class), provider, target);
 

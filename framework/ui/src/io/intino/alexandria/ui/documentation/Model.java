@@ -22,7 +22,7 @@ public class Model {
 		Chart, Block, List, Table, DynamicTable, Task, OpenPage, OpenBlock, Export,
 		Download, DownloadSelection,
 		Grouping, GroupingToolbar, Sorting, SearchBox, Map, Slider, Selector,
-		Dashboard, Dialog, Divider, User, Stepper, Frame, MicroSite;
+		Dashboard, Dialog, Divider, User, Stepper, Frame, MicroSite, HtmlViewer;
 
 		public static WidgetType from(String type) {
 			WidgetType[] values = values();
@@ -70,6 +70,7 @@ public class Model {
 		map.put(WidgetType.Stepper, new StepperWidget());
 		map.put(WidgetType.Frame, new FrameWidget());
 		map.put(WidgetType.MicroSite, new MicroSiteWidget());
+		map.put(WidgetType.HtmlViewer, new HtmlViewerWidget());
 	}
 
 	public static Widget widget(WidgetType type) {
