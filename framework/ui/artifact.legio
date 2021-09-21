@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "4.13.4") ui-framework
+Artifact("io.intino.alexandria", "4.13.6") ui-framework
 	Box("Konos", "8.14.6") > targetPackage = "io.intino.alexandria"
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.1.0")
@@ -19,7 +19,7 @@ Artifact("io.intino.alexandria", "4.13.4") ui-framework
 
 		Provided("com.sparkjava", "spark-core", "2.9.3")
 
-		Web("io.intino.alexandria", "ui-framework-elements", "4.13.4")
+		Web("io.intino.alexandria", "ui-framework-elements", "4.13.6")
 
 		Test("junit", "junit", "4.13")
 

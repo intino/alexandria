@@ -26,6 +26,7 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     private Listener cancelAffirmListener;
 
     public enum Mode { Link, Button, IconButton, MaterialIconButton, Toggle, IconToggle, MaterialIconToggle, SplitButton, AvatarIconButton }
+    public enum Highlight { None, Outline, Fill }
 
     public Actionable(B box) {
         super(box);
@@ -61,6 +62,11 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
 
     public boolean disabled() {
         return readonly;
+    }
+
+    public Actionable<DN, B> highlight(Highlight highlight) {
+        notifier.refreshHighlight(highlight.name());
+        return this;
     }
 
     public Actionable<DN, B> affirmed(String text) {

@@ -9,6 +9,10 @@ public class Block<DN extends BlockNotifier, B extends Box> extends AbstractBloc
         super(box);
     }
 
+    public void autoSize(boolean value) {
+        notifier.refreshAutoSize(value);
+    }
+
     public void spacing(String spacing) {
         notifier.refreshSpacing(spacing);
     }

@@ -18,10 +18,11 @@ export default class Actionable extends AbstractActionable {
 	static Styles = theme => ({
 		link : {
 			color: theme.palette.primary.main,
-			cursor: "pointer"
+			cursor: "pointer",
 		},
 		button : {
-			cursor: "pointer"
+			cursor: "pointer",
+            whiteSpace: "nowrap",
 		},
 		iconButton : {
 			cursor: "pointer"
@@ -46,6 +47,7 @@ export default class Actionable extends AbstractActionable {
 			openSign : false,
 			affirmed : this.props.affirmed != null ? this.props.affirmed : null,
 			affirmedRequired : true,
+			highlighted : this.props.highlighted != null ? this.props.highlighted : null,
 			signInfo : {
 			    sign: "",
 			    reason: ""
@@ -133,7 +135,7 @@ export default class Actionable extends AbstractActionable {
 
 	renderAvatarIconButton = () => {
 		const {classes} = this.props;
-		const highlighted = this.props.highlighted != null && this.props.highlighted.toLowerCase() === "fill";
+		const highlighted = this.state.highlighted != null && this.state.highlighted.toLowerCase() === "fill";
 		const style = this.style();
         const large = this._size() === "large";
         const width = style.width != null ? style.width : (large ? "48px" : "24px");
@@ -225,6 +227,10 @@ export default class Actionable extends AbstractActionable {
     refreshAffirmedRequired = (value) => {
         this.setState({affirmedRequired:value});
         this.doExecute();
+    };
+
+    refreshHighlight = (value) => {
+        this.setState({highlighted:value});
     };
 
 	doExecute = () => {
@@ -331,7 +337,7 @@ export default class Actionable extends AbstractActionable {
 	};
 
 	_highlightVariant = () => {
-		const highlighted = this.props.highlighted;
+		const highlighted = this.state.highlighted;
 		if (highlighted == null) return undefined;
 		else if (highlighted.toLowerCase() === "outline") return "outlined";
 		return "contained";

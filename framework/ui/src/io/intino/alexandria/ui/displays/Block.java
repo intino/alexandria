@@ -14,7 +14,7 @@ public abstract class Block<DN extends ComponentNotifier, B extends Box> extends
 		return isStamp;
 	}
 
-	public Block isStamp(boolean value) {
+	public Block<DN, B> isStamp(boolean value) {
 		this.isStamp = value;
 		return this;
 	}

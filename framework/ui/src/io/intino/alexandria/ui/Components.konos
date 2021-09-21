@@ -7,6 +7,7 @@ Component template
 Component block
 	Notification refreshSpacing as Text
 	Notification refreshLayout as Text
+	Notification refreshAutoSize as Bool
 
 Component blockConditional
 
