@@ -26,6 +26,9 @@ Concept OtherComponents
     Concept MicroSite extends Component
     	var string site
 
+	Concept HtmlViewer extends Component
+		var string content = empty
+
 	Concept BaseStamp extends Component
 		Aspect Multiple
 		Aspect Editable

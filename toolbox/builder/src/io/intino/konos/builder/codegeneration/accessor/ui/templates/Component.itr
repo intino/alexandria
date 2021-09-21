@@ -202,6 +202,10 @@ def type(properties & sorting) trigger(specific)
 	[ mode="$mode"]
 end
 
+def type(properties & htmlviewer) trigger(specific)
+	[ content="$content"]
+end
+
 def type(properties) trigger(specific)
 end
 
