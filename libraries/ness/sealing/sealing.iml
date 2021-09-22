@@ -26,12 +26,15 @@
     <orderEntry type="library" name="Intino: org.xerial.snappy:snappy-java:1.1.8.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: io.intino.alexandria:ingestion:4.0.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: io.intino.alexandria:event:3.0.0" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:message:3.0.2" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:zet:1.0.7" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:mapp:1.1.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:tris:1.0.0" level="project" />
     <orderEntry type="module" module-name="datalake" />
     <orderEntry type="module" module-name="event" />
     <orderEntry type="library" scope="TEST" name="Intino: org.antlr:antlr4-runtime:4.8" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: io.intino.alexandria:zim:4.0.0" level="project" />
+    <orderEntry type="library" name="Intino: org.antlr:antlr4-runtime:4.9.1" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: io.intino.alexandria:message:3.0.2" level="project" />
   </component>
 </module>
