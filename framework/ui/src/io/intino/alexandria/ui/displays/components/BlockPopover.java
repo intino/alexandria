@@ -40,4 +40,8 @@ public class BlockPopover<DN extends BlockPopoverNotifier, B extends Box> extend
         notifier.refresh(triggerId);
         openListeners.forEach(l -> l.accept(new Event(this)));
     }
+
+    public void interactionsEnabled(boolean value) {
+        notifier.refreshInteractionsEnabled(value);
+    }
 }

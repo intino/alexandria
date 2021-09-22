@@ -8,6 +8,7 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.graph.Block;
 import io.intino.konos.model.graph.InteractionComponents;
 import io.intino.konos.model.graph.OtherComponents;
+import io.intino.konos.model.graph.Service;
 
 public class OpenPopoverRenderer extends ActionableRenderer {
 
@@ -20,6 +21,13 @@ public class OpenPopoverRenderer extends ActionableRenderer {
 		addBinding(builder);
 	}
 
+	@Override
+	public FrameBuilder properties() {
+		FrameBuilder properties = super.properties();
+		properties.add("triggerEvent", element.asOpenPopover().triggerEvent().name());
+		return properties;
+	}
+
 	protected void addBinding(FrameBuilder builder) {
 		Block.Popover popover = element.asOpenPopover().popover();
 		if (popover == null) return;
@@ -28,4 +36,8 @@ public class OpenPopoverRenderer extends ActionableRenderer {
 		builder.add("binding", result);
 	}
 
+	@Override
+	protected String className(Class clazz) {
+		return super.className(clazz).replace("operation", "");
+	}
 }

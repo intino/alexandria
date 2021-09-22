@@ -9,6 +9,9 @@ import { withSnackbar } from 'notistack';
 import classNames from "classnames";
 
 const styles = theme => ({
+    noInteractions: {
+        pointerEvents: 'none',
+    },
 });
 
 class BlockPopover extends AbstractBlockPopover {
@@ -19,26 +22,37 @@ class BlockPopover extends AbstractBlockPopover {
 		this.requester = new BlockPopoverRequester(this);
 		this.state = {
 		    triggerId: null,
+		    interactionsEnabled: true,
 		    ...this.state,
 		}
 	};
 
 	render() {
+		const { classes } = this.props;
 		const opened = this.state.triggerId != null;
 		const trigger = this.state.triggerId != null ? document.getElementById(this.state.triggerId) : null;
 		const drawerClass = this.props.variant === "PersistentAndMini" ? (opened ? classes.drawerOpen : classes.drawerClose) : undefined;
+		const className = this.state.interactionsEnabled ? null : classes.noInteractions;
 		return (
-			<Popover open={opened} onClose={this.handleClose.bind(this)}
+			<Popover className={className} open={opened} onClose={this.handleClose.bind(this)}
 					anchorEl={trigger != null ? trigger : undefined}
 					anchorOrigin={{vertical: this._anchorOriginVertical(),horizontal: this._anchorOriginHorizontal()}}
                     transformOrigin={{vertical: this._transformOriginVertical(), horizontal: this._transformOriginHorizontal()}}
-					><div className="layout vertical flexible" style={{width:"100%",height:"100%",...this.style()}}>{this.props.children}</div></Popover>
+					disableRestoreFocus>
+                <div className="layout vertical flexible" style={{width:"100%",height:"100%",...this.style()}}>
+					{this.props.children}
+                </div>
+            </Popover>
 		);
 	};
 
 	refresh = (triggerId) => {
 		this.setState({triggerId});
 	};
+
+    refreshInteractionsEnabled = (value) => {
+        this.setState({interactionsEnabled:value});
+    };
 
 	handleClose = () => {
 	    this.requester.close();
