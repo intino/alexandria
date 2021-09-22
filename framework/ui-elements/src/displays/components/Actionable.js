@@ -89,7 +89,9 @@ export default class Actionable extends AbstractActionable {
 		const {classes} = this.props;
 		const className = this._readonly() ? classes.readonly : classes.link;
 		return (
-		    <a id={this.triggerId()} onClick={this.handleClick.bind(this)} disabled={this._readonly()}>
+		    <a id={this.triggerId()}
+		        onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
+		        disabled={this._readonly()}>
 				<Typography style={this.style()} variant={this.variant("body1")} className={className}>{this._title()}</Typography>
 			</a>
 		);
@@ -99,8 +101,8 @@ export default class Actionable extends AbstractActionable {
 		const {classes} = this.props;
 		return (
 		    <Button id={this.triggerId()} style={this.style()} size={this._size()} color="primary" variant={this._highlightVariant()}
-						disabled={this._readonly()} onClick={this.handleClick.bind(this)}
-						className={classes.button}>
+						onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
+						disabled={this._readonly()} className={classes.button}>
 				{this.renderContent()}
 			</Button>
 		);
@@ -111,8 +113,8 @@ export default class Actionable extends AbstractActionable {
 		const style = this._readonly() ? { filter: "grayscale(100%)", ...this.style() } : this.style();
 		const button = (
             <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()}
-                            onClick={this.handleClick.bind(this)} style={style}
-                            className={classes.iconButton} size={this._size()}>
+                            onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
+                            style={style} className={classes.iconButton} size={this._size()}>
                 {this.renderContent()}
             </IconButton>
         );
@@ -125,8 +127,8 @@ export default class Actionable extends AbstractActionable {
 		if (this.state.color != null) style.color = this.state.color;
 		const button = (
             <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()}
-                            onClick={this.handleClick.bind(this)} className={classes.materialIconButton}
-                            style={style} size={this._size()}>
+                            onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
+                            className={classes.materialIconButton} style={style} size={this._size()}>
                 {this.renderContent()}
             </IconButton>
 		);
@@ -150,8 +152,8 @@ export default class Actionable extends AbstractActionable {
 		if (this.state.color != null) style.color = this.state.color;
 		const button = (
             <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()}
-                            onClick={this.handleClick.bind(this)} className={classes.materialIconButton}
-                            style={style} size={this._size()}>
+                            onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
+                            className={classes.materialIconButton} style={style} size={this._size()}>
                 <div style={{width:width,height:height,background:background,border:border,
                              borderRadius:'40px',color:color,fontSize:fontSize,
                              paddingTop:paddingTop,paddingLeft:paddingLeft}}>{title}</div>
@@ -210,6 +212,18 @@ export default class Actionable extends AbstractActionable {
 
 	triggerId = () => {
 	    return this.props.id;
+	};
+
+	clickEvent = () => {
+	    return this.handleClick.bind(this);
+	};
+
+	mouseEnterEvent = () => {
+	    return null;
+	};
+
+	mouseLeaveEvent = () => {
+	    return null;
 	};
 
 	handleClick(e) {

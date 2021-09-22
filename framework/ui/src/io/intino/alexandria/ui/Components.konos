@@ -27,6 +27,7 @@ Component blockDrawer
 
 Component blockPopover
 	Notification refresh as Text
+	Notification refreshInteractionsEnabled as Bool
 	Request close
 
 Component option

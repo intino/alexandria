@@ -29,6 +29,27 @@ class OpenPopover extends AbstractOpenPopover {
         return this.props.id;
     };
 
+	clickEvent = () => {
+	    return this.props.triggerEvent === "MouseClick" ? this.handleClick.bind(this) : null;
+	};
+
+	mouseEnterEvent = () => {
+	    return this.props.triggerEvent === "MouseOver" ? this.openPopover.bind(this) : null;
+	};
+
+	mouseLeaveEvent = (e) => {
+	    return this.props.triggerEvent === "MouseOver" ? this.closePopover.bind(this) : null;
+	};
+
+	openPopover = (e) => {
+	    if (this.closeTimeout != null) window.clearTimeout(this.closeTimeout);
+        this.execute();
+	};
+
+	closePopover = (e) => {
+        this.requester.closePopover();
+	};
+
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(OpenPopover));
