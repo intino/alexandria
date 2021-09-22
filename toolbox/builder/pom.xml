@@ -6,7 +6,6 @@
 	<artifactId>builder</artifactId>
 	<name>Builder</name>
 	<version>8.14.7</version>
-
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
