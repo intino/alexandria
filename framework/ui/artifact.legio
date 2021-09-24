@@ -1,10 +1,10 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "4.13.8") ui-framework
+Artifact("io.intino.alexandria", "4.13.9") ui-framework
 	Box("Konos", "8.14.8") > targetPackage = "io.intino.alexandria"
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.1.0")
-		Compile("io.intino.alexandria", "http", "1.4.0")
+		Compile("io.intino.alexandria", "http", "1.4.1")
 		Compile("io.intino.alexandria", "json", "1.0.2")
 		Compile("io.intino.alexandria", "rest-accessor", "2.2.0")
 		Compile("io.intino.alexandria", "logger4j", "1.0.1")
@@ -19,7 +19,7 @@ Artifact("io.intino.alexandria", "4.13.8") ui-framework
 
 		Provided("com.sparkjava", "spark-core", "2.9.3")
 
-		Web("io.intino.alexandria", "ui-framework-elements", "4.13.8")
+		Web("io.intino.alexandria", "ui-framework-elements", "4.13.9")
 
 		Test("junit", "junit", "4.13")
 
