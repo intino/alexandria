@@ -8,9 +8,11 @@ import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Service;
+import io.intino.magritte.framework.Layer;
 
 import java.io.File;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
@@ -64,7 +66,9 @@ public class RouteDispatcherRenderer extends UIRenderer {
 
 	private List<String> paramsOf(Service.UI.Resource resource) {
 		Stream<String> split = Stream.of(resource.path().split("/"));
-		return split.filter(s -> s.startsWith(":")).map(s -> s.substring(1)).collect(toList());
+		List<String> result = split.filter(s -> s.startsWith(":")).map(s -> s.substring(1)).collect(toList());
+		result.addAll(resource.parameterList().stream().map(Layer::name$).collect(Collectors.toList()));
+		return result;
 	}
 
 }
