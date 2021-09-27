@@ -51,7 +51,7 @@ def type(app)
 
 	function loadAppUrl() {
         let url = window.location.pathname !== "/" ? window.location.pathname : "";
-        [url = url.replace(new RegExp("$pattern", 'g'), "");]
+        [$pattern...[$NL]]
         if (url.lastIndexOf("/") > 0) url = url.substr(0, window.location.pathname.lastIndexOf('/'));
         if (url === "/") url = "";
         return url + "/$webModuleName/";
@@ -60,14 +60,18 @@ def type(app)
 	launchApplication();
 end
 
+def type(pattern)
+    url = url.replace(new RegExp("$value", 'g'), "");
+end
+
 def type(page) trigger(import)
-    import $value+firstUpperCase from "../pages/$value+firstUpperCase";
+    import $templateName+firstUpperCase~Page from "../pages/$templateName+firstUpperCase~Page";
 end
 
 def type(page) trigger(render)
     const requireGoogleApi = Application.configuration.googleApiKey != null && Application.configuration.googleApiKey !== "";
-    const content = requireGoogleApi ? <GoogleApiLoader onLoad={openPushServices()}><$value+firstUpperCase/></GoogleApiLoader> : <$value+firstUpperCase/>;
-    const $value+firstLowerCase = document.getElementById("$value+firstUpperCase");
-    if ($value+firstLowerCase) ReactDOM.render(<DisplayRouter id="__router__" owner={()=>""} context={()=>""}>{content}</DisplayRouter>, $value+firstLowerCase);
+    const content = requireGoogleApi ? <GoogleApiLoader onLoad={openPushServices()}><$templateName+firstUpperCase~Page/></GoogleApiLoader> : <$templateName+firstUpperCase~Page/>;
+    const $templateName+firstLowerCase = document.getElementById("$templateName+firstUpperCase");
+    if ($templateName+firstLowerCase) ReactDOM.render(<DisplayRouter id="__router__" owner={()=>""} context={()=>""}>{content}</DisplayRouter>, $templateName+firstLowerCase);
     if (!requireGoogleApi) openPushServices();
 end

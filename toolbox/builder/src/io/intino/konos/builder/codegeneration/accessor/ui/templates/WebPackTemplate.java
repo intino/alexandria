@@ -11,8 +11,8 @@ public class WebPackTemplate extends Template {
 			rule().condition((allTypes("exclude","alexandriaProject"))).output(literal("exclude: /(node_modules)/,")),
 			rule().condition((type("exclude"))).output(literal("exclude: /node_modules\\/(?!(")).output(mark("use").multiple("|")).output(literal(")\\/).*/,")),
 			rule().condition((allTypes("alias","alexandriaProject"))).output(literal("\"alexandria-ui-elements\": path.resolve(__dirname, '.'),")),
-			rule().condition((type("page")), (trigger("gen"))).output(literal("'")).output(mark("value")).output(literal("' : './gen/apps/")).output(mark("value", "firstUppercase")).output(literal(".js'")),
-			rule().condition((type("page")), (trigger("plugin"))).output(literal("new HtmlWebPackPlugin({\n    hash: true,\n    title: \"Test UI\",\n    chunks: ['")).output(mark("value")).output(literal("'],\n    template: \"./src/")).output(mark("value")).output(literal(".html\",\n    filename: \"./")).output(mark("value")).output(literal(".html\"\n})"))
+			rule().condition((type("page")), (trigger("gen"))).output(literal("'")).output(mark("templateName")).output(literal("' : './gen/apps/")).output(mark("templateName", "firstUppercase")).output(literal(".js'")),
+			rule().condition((type("page")), (trigger("plugin"))).output(literal("new HtmlWebPackPlugin({\n    hash: true,\n    title: \"Test UI\",\n    chunks: ['")).output(mark("templateName")).output(literal("'],\n    template: \"./src/")).output(mark("templateName")).output(literal(".html\",\n    filename: \"./")).output(mark("templateName")).output(literal(".html\"\n})"))
 		);
 	}
 }

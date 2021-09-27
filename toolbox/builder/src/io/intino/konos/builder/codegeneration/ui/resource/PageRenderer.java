@@ -35,6 +35,7 @@ public class PageRenderer extends ActionRenderer {
 		FrameBuilder builder = new FrameBuilder().add("action").add("ui");
 		Service.UI uiService = resource.core$().ownerAs(Service.UI.class);
 		builder.add("name", resource.name$());
+		if (resource.isPage()) builder.add("templateName", resource.asPage().template().name$());
 		builder.add("uiService", uiService.name$());
 		builder.add("package", packageName());
 		builder.add("box", boxName());
