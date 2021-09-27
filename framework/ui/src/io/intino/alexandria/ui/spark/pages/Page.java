@@ -17,7 +17,6 @@ import static java.lang.String.format;
 
 public abstract class Page {
 	private final String uiServiceName;
-	private Function<String, Object> paramProvider;
 
 	public UISession session;
 	public String clientId;
@@ -38,15 +37,6 @@ public abstract class Page {
 
 	public String redirectUrl() {
 		return session.browser().baseUrl();
-	}
-
-	public <T> T param(String name) {
-		return (T) paramProvider.apply(name);
-	}
-
-	public Page paramProvider(Function<String, Object> provider) {
-		this.paramProvider = provider;
-		return this;
 	}
 
 	protected abstract String title();

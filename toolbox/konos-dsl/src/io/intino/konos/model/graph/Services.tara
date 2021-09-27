@@ -141,6 +141,7 @@ Concept:Named Service
 
     	Concept:Named Resource
     		var string path
+			has Parameter
     		Aspect Main
     		Aspect Confidential
     		Aspect Page

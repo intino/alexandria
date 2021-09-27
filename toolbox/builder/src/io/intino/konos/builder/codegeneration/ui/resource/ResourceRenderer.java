@@ -9,8 +9,10 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Service;
+import io.intino.magritte.framework.Layer;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.resourceFilename;
@@ -42,6 +44,7 @@ public class ResourceRenderer extends UIRenderer {
 
 	private FrameBuilder[] parameters(Service.UI.Resource resource) {
 		List<String> parameters = Commons.extractUrlPathParameters(resource.path());
+		parameters.addAll(resource.parameterList().stream().map(Layer::name$).collect(Collectors.toList()));
 		return parameters.stream().map(parameter -> new FrameBuilder().add("parameter")
 				.add("name", parameter)).toArray(FrameBuilder[]::new);
 	}
