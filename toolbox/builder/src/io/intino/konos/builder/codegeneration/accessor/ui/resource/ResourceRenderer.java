@@ -26,13 +26,14 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 
 	@Override
 	public void render() {
+		if (!resource.isPage()) return;
 		writeHtml(buildFrame());
 		writeJavascript(buildFrame());
 	}
 
 	private void writeHtml(FrameBuilder builder) {
 		builder.add("html");
-		File file = new File(src() + File.separator + resource.name$() + ".html");
+		File file = new File(src() + File.separator + resource.asPage().template().name$() + ".html");
 		if (file.exists()) return;
 		Commons.write(file.toPath(), setup(new PageTemplate()).render(builder.toFrame()));
 	}
@@ -40,7 +41,7 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 	private void writeJavascript(FrameBuilder builder) {
 		builder.add("js");
 		File destiny = createIfNotExists(new File(gen() + File.separator + "pages" + File.separator));
-		File file = new File(destiny + File.separator + firstUpperCase(resource.name$()) + ".js");
+		File file = new File(destiny + File.separator + firstUpperCase(resource.asPage().template().name$()) + "Page.js");
 		Commons.write(file.toPath(), setup(new PageTemplate()).render(builder.toFrame()));
 	}
 

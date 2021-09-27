@@ -14,17 +14,17 @@ $accessibleImport...[$NL]
 let theme = Theme.create();
 const styles = theme => ({});
 
-const $name+firstUpperCase~DismissAction = ({ id }) => {
+const $pageDisplay+firstUpperCase~PageDismissAction = ({ id }) => {
     const { closeSnackbar } = useSnackbar();
     return (<IconButton color="inherit" onClick={() => closeSnackbar(id)}><Close fontSize="small" /></IconButton>);
 }
 
-export default class $name+firstUpperCase extends Page {
+export default class $pageDisplay+firstUpperCase~Page extends Page {
     render() {
         const { classes } = this.props;
         return (
 			<MuiThemeProvider theme={theme}>
-	        	<SnackbarProvider maxSnack={3} action={key => <$name+firstUpperCase~DismissAction id={key}/>}>
+	        	<SnackbarProvider maxSnack={3} action={key => <$pageDisplay+firstUpperCase~PageDismissAction id={key}/>}>
             		<CssBaseline />
         			<$pageDisplay+firstUpperCase id="$pageDisplayId"></$pageDisplay+firstUpperCase>
         			<ConnectionChecker></ConnectionChecker>
@@ -64,7 +64,7 @@ def type(resource & html)
 		</head>
 
 		<body>
-			<div class="page" id="$name+firstUpperCase"></div>
+			<div class="page" id="$pageDisplay+firstUpperCase"></div>
 			<script>
 				document.configuration = {};
 				document.configuration.googleApiKey = "$$googleApiKey";

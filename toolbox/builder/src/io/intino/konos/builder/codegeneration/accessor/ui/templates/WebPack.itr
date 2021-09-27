@@ -70,15 +70,15 @@ def type(alias & alexandriaProject)
 end
 
 def type(page) trigger(gen)
-    '$value' : './gen/apps/$value+firstUppercase~.js'
+    '$templateName' : './gen/apps/$templateName+firstUppercase~.js'
 end
 
 def type(page) trigger(plugin)
     new HtmlWebPackPlugin({
         hash: true,
         title: "Test UI",
-        chunks: $['$value'],
-        template: "./src/$value.html",
-        filename: "./$value.html"
+        chunks: $['$templateName'],
+        template: "./src/$templateName.html",
+        filename: "./$templateName.html"
     })
 end
