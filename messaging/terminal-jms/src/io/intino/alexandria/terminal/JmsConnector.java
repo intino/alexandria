@@ -127,7 +127,6 @@ public class JmsConnector implements Connector {
 		});
 	}
 
-
 	@Override
 	public synchronized void sendEvent(String path, Event event, int expirationInSeconds) {
 		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
@@ -155,21 +154,12 @@ public class JmsConnector implements Connector {
 
 	@Override
 	public void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived) {
-		registerEventConsumer(path, onEventReceived);
-		TopicConsumer consumer = (TopicConsumer) this.consumers.get(path);
+		registerEventConsumer(path, onEventReceived, subscriberId);
+		JmsConsumer consumer = this.consumers.get(path);
 		if (consumer == null) return;
 		Consumer<javax.jms.Message> eventConsumer = m -> MessageDeserializer.deserialize(m).forEachRemaining(ev -> onEventReceived.accept(newEvent(m, ev)));
 		jmsEventConsumers.put(onEventReceived, eventConsumer.hashCode());
-		consumer.listen(eventConsumer, subscriberId);
-	}
-
-	private Event newEvent(javax.jms.Message m, Message ev) {
-		try {
-			return new Event(ev);
-		} catch (Throwable e) {
-			Logger.error("Malformed message:\n" + textFrom(m));
-			return new Event(ev);
-		}
+		consumer.listen(eventConsumer);
 	}
 
 	@Override
@@ -202,6 +192,20 @@ public class JmsConnector implements Connector {
 			toRemove.forEach(jc::removeListener);
 		}
 		messageConsumers.values().forEach(list -> list.remove(consumer));
+	}
+
+	@Override
+	public void createSubscription(String path, String subscriberId) {
+		if (session != null && !this.consumers.containsKey(path))
+			this.consumers.put(path, durableTopicConsumer(path, subscriberId));
+	}
+
+	public void destroySubscription(String subscriberId) {
+		try {
+			session.unsubscribe(subscriberId);
+		} catch (JMSException e) {
+			Logger.error(e);
+		}
 	}
 
 	@Override
@@ -241,6 +245,15 @@ public class JmsConnector implements Connector {
 		if (!doSendMessage(path, message, responsePath)) messageOutBox.push(path, message);
 	}
 
+	private Event newEvent(javax.jms.Message m, Message ev) {
+		try {
+			return new Event(ev);
+		} catch (Throwable e) {
+			Logger.error("Malformed message:\n" + textFrom(m));
+			return new Event(ev);
+		}
+	}
+
 	public Connection connection() {
 		return connection;
 	}
@@ -272,6 +285,13 @@ public class JmsConnector implements Connector {
 		this.eventConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
 		this.eventConsumers.get(path).add(onEventReceived);
 		if (session != null && !this.consumers.containsKey(path)) this.consumers.put(path, topicConsumer(path));
+	}
+
+	private void registerEventConsumer(String path, Consumer<Event> onEventReceived, String subscriberId) {
+		this.eventConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
+		this.eventConsumers.get(path).add(onEventReceived);
+		if (session != null && !this.consumers.containsKey(path))
+			this.consumers.put(path, durableTopicConsumer(path, subscriberId));
 	}
 
 	private void registerMessageConsumer(String path, MessageConsumer onMessageReceived) {
@@ -400,9 +420,18 @@ public class JmsConnector implements Connector {
 		consumers.clear();
 	}
 
-	private TopicConsumer topicConsumer(String path) {
+	private JmsConsumer topicConsumer(String path) {
 		try {
 			return new TopicConsumer(session, path);
+		} catch (JMSException e) {
+			Logger.error(e);
+			return null;
+		}
+	}
+
+	private JmsConsumer durableTopicConsumer(String path, String subscriberId) {
+		try {
+			return new DurableTopicConsumer(session, path, subscriberId);
 		} catch (JMSException e) {
 			Logger.error(e);
 			return null;

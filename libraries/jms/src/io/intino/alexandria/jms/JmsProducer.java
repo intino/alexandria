@@ -8,7 +8,6 @@ import javax.jms.*;
 import static javax.jms.DeliveryMode.NON_PERSISTENT;
 
 public abstract class JmsProducer {
-
 	protected final Session session;
 	private final Destination destination;
 	private final int messageExpirationSeconds;
