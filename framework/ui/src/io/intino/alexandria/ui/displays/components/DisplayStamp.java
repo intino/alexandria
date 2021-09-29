@@ -7,7 +7,7 @@ import io.intino.alexandria.ui.displays.notifiers.DisplayStampNotifier;
 import java.util.UUID;
 
 public class DisplayStamp<DN extends DisplayStampNotifier, B extends Box> extends AbstractDisplayStamp<B> {
-    private Display display;
+    private Display<?, ?> display;
 
     public DisplayStamp(B box) {
         super(box);
@@ -21,15 +21,16 @@ public class DisplayStamp<DN extends DisplayStampNotifier, B extends Box> extend
         refresh();
     }
 
-    public <D extends Display> D get() {
+    @SuppressWarnings("unchecked")
+    public <D extends Display<?, ?>> D get() {
         return (D) this.display;
     }
 
-    public <D extends Display> D display() {
+    public <D extends Display<?, ?>> D display() {
         return get();
     }
 
-    public void display(Display display) {
+    public void display(Display<?, ?> display) {
         this.display = display;
         this.display.id(UUID.randomUUID().toString());
         add(this.display);

@@ -63,6 +63,11 @@ Component openBlock as ExtensionOf(actionable)
 Component openDialog as ExtensionOf(actionable)
 	Request execute
 
+Component openLayer as ExtensionOf(actionable)
+	Notification openAddress
+	Request execute
+	Request openLayer
+
 Component openPopover as ExtensionOf(actionable)
 	Notification refreshTriggerId as Text
 	Request execute

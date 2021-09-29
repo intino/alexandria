@@ -106,7 +106,6 @@ Concept OtherComponents
 		sub Icon
 		sub MaterialIcon
 
-
 	Concept AbstractDialog extends Component is abstract
 		var string title
 		Aspect Absolute

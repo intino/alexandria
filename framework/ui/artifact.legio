@@ -1,7 +1,7 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "4.13.11") ui-framework
-	Box("Konos", "8.14.10") > targetPackage = "io.intino.alexandria"
+Artifact("io.intino.alexandria", "4.13.12") ui-framework
+	Box("Konos", "8.14.11") > targetPackage = "io.intino.alexandria"
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.1.0")
 		Compile("io.intino.alexandria", "http", "1.4.1")

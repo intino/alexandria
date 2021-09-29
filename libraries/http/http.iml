@@ -18,8 +18,6 @@
     <orderEntry type="module" module-name="primitives" />
     <orderEntry type="module" module-name="exceptions" />
     <orderEntry type="module" module-name="logger" />
-    <orderEntry type="library" name="Intino: org.slf4j:slf4j-api:1.7.25" level="project" />
-    <orderEntry type="library" name="Intino: com.sparkjava:spark-core:2.9.3" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-jmx:9.4.42.v20210604" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-util-ajax:9.4.42.v20210604" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-server:9.4.42.v20210604" level="project" />
@@ -50,5 +48,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Intino: org.eclipse.jetty:jetty-client:9.4.31.v20200723" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Intino: org.eclipse.jetty.websocket:websocket-servlet:9.4.31.v20200723" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Intino: org.eclipse.jetty.websocket:websocket-api:9.4.31.v20200723" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Intino: com.sparkjava:spark-core:2.9.3" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Intino: org.slf4j:slf4j-api:1.7.25" level="project" />
   </component>
 </module>

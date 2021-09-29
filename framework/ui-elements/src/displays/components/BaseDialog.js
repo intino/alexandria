@@ -1,7 +1,6 @@
 import React from "react";
-import {Typography, DialogTitle, AppBar, Slide, DialogContent, Paper} from "@material-ui/core"
+import {Typography, DialogTitle, AppBar, Slide, DialogContent, Paper, IconButton } from "@material-ui/core"
 import AbstractBaseDialog from "../../../gen/displays/components/AbstractBaseDialog";
-import { IconButton } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import Draggable from 'react-draggable';

@@ -1,5 +1,6 @@
 dsl Konos
 
+use Layer
 use HtmlViewer
 use Multiple
 use MicroSite
@@ -65,6 +66,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block sliderExamples as Conditional > TemplateStamp(template=sliderExamplesMold)
 			Block dashboardExamples as Conditional > TemplateStamp(template=dashboardExamplesMold)
 			Block dialogExamples as Conditional > TemplateStamp(template=dialogExamplesMold)
+			Block layerExamples as Conditional > TemplateStamp(template=layerExamplesMold)
 			Block dividerExamples as Conditional > TemplateStamp(template=dividerExamplesMold)
 			Block userExamples as Conditional > TemplateStamp(template=userExamplesMold)
 			Block locationExamples as Conditional > TemplateStamp(template=locationExamplesMold)

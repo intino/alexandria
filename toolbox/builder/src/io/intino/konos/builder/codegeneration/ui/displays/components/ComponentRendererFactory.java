@@ -60,6 +60,7 @@ public class ComponentRendererFactory {
 		if (component.i$(Actionable.OpenPage.class)) return (T) new OpenPageRenderer(context, component.a$(Actionable.class), provider, target);
 		if (component.i$(Actionable.OpenSite.class)) return (T) new OpenSiteRenderer(context, component.a$(Actionable.class), provider, target);
 		if (component.i$(Actionable.OpenDrawer.class)) return (T) new OpenDrawerRenderer(context, component.a$(Actionable.class), provider, target);
+		if (component.i$(Actionable.OpenLayer.class)) return (T) new OpenLayerRenderer(context, component.a$(Actionable.class), provider, target);
 		if (component.i$(Actionable.CloseDrawer.class)) return (T) new CloseDrawerRenderer(context, component.a$(Actionable.class), provider, target);
 		if (component.i$(Actionable.OpenBlock.class)) return (T) new OpenBlockRenderer(context, component.a$(Actionable.class), provider, target);
 		if (component.i$(Actionable.Download.class)) return (T) new DownloadRenderer(context, component.a$(Actionable.class), provider, target);
