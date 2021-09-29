@@ -19,7 +19,7 @@ Artifact("io.intino.alexandria", "4.13.12") ui-framework
 
 		Provided("com.sparkjava", "spark-core", "2.9.3")
 
-		Web("io.intino.alexandria", "ui-framework-elements", "4.13.11")
+		Web("io.intino.alexandria", "ui-framework-elements", "4.13.12")
 
 		Test("junit", "junit", "4.13")
 
