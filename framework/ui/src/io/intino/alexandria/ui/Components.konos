@@ -175,6 +175,16 @@ Component collectionDialog as ExtensionOf(baseDialog)
 	Notification refreshSelectionCount as Integer
 	Request accept
 
+Component layer
+	Notification open
+	Notification close
+	Notification refreshTitle as Text
+	Notification refreshHome as Bool
+
+	Request open
+	Request home
+	Request close
+
 Component divider
 Component user
 	Notification refresh as Object(UserInfo)

@@ -1,8 +1,12 @@
 package io.intino.alexandria.ui;
 
+import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.Desktop;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.DisplayRepository;
+import io.intino.alexandria.ui.displays.components.Layer;
+import io.intino.alexandria.ui.displays.notifiers.DisplayNotifier;
 import io.intino.alexandria.ui.services.push.UISession;
 import io.intino.alexandria.ui.services.push.User;
 
@@ -19,9 +23,11 @@ import static java.util.stream.Collectors.toList;
 public abstract class Soul implements DisplayRepository {
     private final Map<String, Display> displays = new ConcurrentHashMap<>();
     private final List<Consumer<Display>> registerListeners = new ArrayList<>();
+    private final List<Layer<?, ?>> layers = new ArrayList<>();
     private Consumer<String> redirectListener = null;
     protected final UISession session;
     protected User user;
+
     public Soul(UISession session) {
         this.session = session;
     }
@@ -58,7 +64,29 @@ public abstract class Soul implements DisplayRepository {
         }
     }
 
-    public <T extends Display> List<T> displays(Class<T> clazz) {
+    @SuppressWarnings("unchecked")
+    public <T extends Display<?, ?>> T currentLayer(Class<T> clazz) {
+        int i=layers.size();
+        while (i > 0) {
+            i--;
+            if (clazz.isAssignableFrom(layers.get(i).template().getClass())) return (T) layers.get(i).template();
+        }
+        return displays(clazz).stream().filter(d -> d.owner() == null || !Layer.class.isAssignableFrom(d.owner().getClass())).findFirst().orElse(null);
+    }
+
+    public void pushLayer(Layer<?, ?> layer) {
+        layers.add(layer);
+    }
+
+    public void popLayer() {
+        if (layers.size() <= 0) return;
+        int index = layers.size() - 1;
+        Component<?, ?> template = layers.get(index).template();
+        remove(template);
+        layers.remove(index);
+    }
+
+    public <T extends Display<?, ?>> List<T> displays(Class<T> clazz) {
         return new ArrayList<>(displays.values()).stream().filter(c -> clazz.isAssignableFrom(c.getClass())).map(clazz::cast).collect(toList());
     }
 
@@ -103,6 +131,15 @@ public abstract class Soul implements DisplayRepository {
     @Override
     public void addRegisterDisplayListener(Consumer<Display> consumer) {
         registerListeners.add(consumer);
+    }
+
+    public void remove(Display<?, ?> display) {
+        String ownerId = display.owner() != null ? display.owner().id() : "";
+        String context = display.owner() != null ? display.owner().path() : "";
+        this.displays.remove(ownerId + display.id());
+        this.displays.remove(context + display.id());
+        if (isUUID(display.id())) this.displays.remove(display.id());
+        display.remove();
     }
 
     @Override

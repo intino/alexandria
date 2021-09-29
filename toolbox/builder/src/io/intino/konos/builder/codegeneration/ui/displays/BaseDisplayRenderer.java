@@ -151,7 +151,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 			if (element.a$(Multiple.class).collapsed()) result.add("collapsable");
 			frame.add("implements", result);
 		}
-		if (element.i$(Actionable.Action.class) && element.i$(Actionable.Addressable.class))
+		if ((element.i$(Actionable.Action.class) || (element.i$(Actionable.OpenLayer.class))) && element.i$(Actionable.Addressable.class))
 			frame.add("implements", new FrameBuilder("implements", Actionable.Action.class.getSimpleName(), Actionable.Addressable.class.getSimpleName()).add("name", nameOf(element)));
 		if (element.i$(Selector.Addressable.class))
 			frame.add("implements", new FrameBuilder("implements", Selector.class.getSimpleName(), Selector.Addressable.class.getSimpleName()).add("name", nameOf(element)));

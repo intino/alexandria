@@ -551,6 +551,10 @@ def type(implements & addressable & action)
 	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
 end
 
+def type(implements & addressable & openlayer)
+	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
+end
+
 def type(implements & addressable & selector)
 	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
 end
@@ -642,6 +646,10 @@ def type(properties & file) trigger(specific)
 end
 
 def type(properties & openpage) trigger(specific)
+	[_path("$path");]
+end
+
+def type(properties & openlayer) trigger(specific)
 	[_path("$path");]
 end
 
