@@ -11,11 +11,13 @@ import org.apache.activemq.command.ActiveMQDestination;
 import javax.jms.*;
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static io.intino.alexandria.jms.MessageReader.textFrom;
@@ -160,6 +162,28 @@ public class JmsConnector implements Connector {
 		Consumer<javax.jms.Message> eventConsumer = m -> MessageDeserializer.deserialize(m).forEachRemaining(ev -> onEventReceived.accept(newEvent(m, ev)));
 		jmsEventConsumers.put(onEventReceived, eventConsumer.hashCode());
 		consumer.listen(eventConsumer);
+	}
+
+	@Override
+	public void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived, Predicate<Instant> filter) {
+		registerEventConsumer(path, onEventReceived, subscriberId);
+		JmsConsumer consumer = this.consumers.get(path);
+		if (consumer == null) return;
+		Consumer<javax.jms.Message> eventConsumer = m -> MessageDeserializer.deserialize(m).forEachRemaining(ev -> {
+			final Instant timestamp = timestamp(m);
+			if (timestamp != null && filter.test(timestamp)) onEventReceived.accept(newEvent(m, ev));
+		});
+		jmsEventConsumers.put(onEventReceived, eventConsumer.hashCode());
+		consumer.listen(eventConsumer);
+	}
+
+	private Instant timestamp(javax.jms.Message m) {
+		try {
+			return Instant.ofEpochMilli(m.getJMSTimestamp());
+		} catch (JMSException e) {
+			Logger.error(e);
+			return null;
+		}
 	}
 
 	@Override
