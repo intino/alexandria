@@ -13,10 +13,13 @@ const styles = theme => ({
         padding: "2px 15px",
     },
     content : {
-        marginTop: "61px"
+        marginTop: "61px",
+    },
+    link : {
+        cursor: "pointer",
     },
     icon : {
-        color: "white"
+        color: "white",
     },
 });
 
@@ -63,12 +66,7 @@ class Layer extends AbstractLayer {
 		return (
 			<AppBar style={style} className={classes.header}>
 				<div className="layout horizontal flex center">
-					{homeAvailable &&
-					    <React.Fragment>
-					        <IconButton onClick={this.handleShowHome.bind(this)} className={classes.icon} style={{marginRight:'10px'}}><Home fontSize="large"/></IconButton>
-					        <Typography variant="h5">{this.translate(this.state.title)}</Typography>
-					    </React.Fragment>
-                    }
+					{homeAvailable && <a onClick={this.handleShowHome.bind(this)} className={classes.link}><Typography variant="h5">{this.translate(this.state.title)}</Typography></a>}
 					{!homeAvailable && <Typography variant="h5">{this.translate(this.state.title)}</Typography>}
 					<div className="layout horizontal end-justified flex"><IconButton onClick={this.handleClose.bind(this)} className={classes.icon}><Close fontSize="large"/></IconButton></div>
 				</div>
