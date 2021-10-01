@@ -299,12 +299,22 @@ def type(connector) trigger(init)
 end
 def type(terminal) trigger(init)
 	if (this.terminal != null) {
+		java.time.Instant sealStamp = this.terminal.requestLastSeal();
+		java.util.function.Predicate<java.time.Instant> filter = i -> !i.isBefore(sealStamp);
 		$subscriber...[$NL]
 	}
 end
 
-def type(terminal) trigger(subscriber)
-	this.terminal.subscribe(($terminal.$eventQn+FirstUpperCase~Consumer) (e, t) -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e, t)[, "$subscriberId"][, $split...[, ]]);
+def type(subscriber & durable & filtered) trigger(subscriber)
+	this.terminal.subscribe(($terminal.$eventQn+FirstUpperCase~Consumer) (e, t) -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e, t), "$subscriberId", filter[, $split...[, ]]);
+end
+
+def type(subscriber & durable) trigger(durable)
+	this.terminal.subscribe(($terminal.$eventQn+FirstUpperCase~Consumer) (e, t) -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e, t), "$subscriberId"[, $split...[, ]]);
+end
+
+def type(subscriber) trigger(subscriber)
+	this.terminal.subscribe(($terminal.$eventQn+FirstUpperCase~Consumer) (e, t) -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e, t)[, $split...[, ]]);
 end
 
 def trigger(split)

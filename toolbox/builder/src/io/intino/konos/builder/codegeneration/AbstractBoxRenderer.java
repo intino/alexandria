@@ -15,6 +15,7 @@ import java.util.*;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
+import static io.intino.konos.model.graph.Subscriber.Durable.SubscriptionMode.ReceiveAfterLastSeal;
 
 public class AbstractBoxRenderer extends Renderer {
 	private final KonosGraph graph;
@@ -123,7 +124,10 @@ public class AbstractBoxRenderer extends Renderer {
 				add("terminal", manifest.qn).
 				add("eventQn", subscriber.event().replace(".", "")).
 				add("event", subscriber.event());
-		if (subscriber.subscriberId() != null) builder.add("subscriberId", subscriber.subscriberId());
+		if (subscriber.isDurable()) {
+			builder.add("durable").add("subscriberId", subscriber.asDurable().subscriberId());
+			if (subscriber.asDurable().subscriptionMode().equals(ReceiveAfterLastSeal)) builder.add("filtered");
+		}
 		return builder;
 	}
 
@@ -261,6 +265,4 @@ public class AbstractBoxRenderer extends Renderer {
 	private Template template() {
 		return Formatters.customize(new AbstractBoxTemplate());
 	}
-
-
 }
