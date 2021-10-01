@@ -299,8 +299,8 @@ def type(connector) trigger(init)
 end
 def type(terminal) trigger(init)
 	if (this.terminal != null) {
-		Instant sealStamp = this.terminal.requestLastSeal();
-		Predicate<Instant> filter = i -> !i.isBefore(sealStamp);
+		java.time.Instant sealStamp = this.terminal.requestLastSeal();
+		java.util.function.Predicate<Instant> filter = i -> !i.isBefore(sealStamp);
 		$subscriber...[$NL]
 	}
 end
