@@ -2,8 +2,10 @@ package io.intino.alexandria.terminal;
 
 import io.intino.alexandria.event.Event;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public interface Connector {
 	void sendEvent(String path, Event event);
@@ -21,6 +23,8 @@ public interface Connector {
 	void attachListener(String path, MessageConsumer consumer);
 
 	void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived);
+
+	void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived, Predicate<Instant> filter);
 
 	void detachListeners(Consumer<Event> consumer);
 
