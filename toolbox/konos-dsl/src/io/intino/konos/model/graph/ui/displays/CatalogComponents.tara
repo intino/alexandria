@@ -53,13 +53,16 @@ Concept CatalogComponents
         Aspect AttachedTo
         	var Grouping grouping
         	var string value = empty
+		Aspect Addressable
 
 	Concept:Named Sorting extends Component
 		var Collection[] collections
 		Aspect OrderBy
 			var word:{Ascending Descending} mode = Ascending
+		Aspect Addressable
 
 	Concept:Named SearchBox extends Component
 		var Collection[] collections
 		var string placeholder = empty
 		var boolean showCountMessage = true
+		Aspect Addressable

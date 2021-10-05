@@ -18,7 +18,8 @@ const selectTextViewStyles = {
     valueContainer: (provided, state) => ({
         ...provided,
         height: '20px',
-        padding: '0 6px'
+        padding: '0 6px',
+        fontSize: '10pt',
     }),
     input: (provided, state) => ({
         ...provided,

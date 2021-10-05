@@ -300,6 +300,7 @@ end
 def type(terminal) trigger(init)
 	if (this.terminal != null) {
 		java.time.Instant sealStamp = this.terminal.requestLastSeal();
+		Logger.info("Last seal on " + sealStamp.toString());
 		java.util.function.Predicate<java.time.Instant> filter = i -> !i.isBefore(sealStamp);
 		$subscriber...[$NL]
 	}
