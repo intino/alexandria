@@ -72,7 +72,12 @@ class SelectorTabs extends AbstractSelectorTabs {
 
 	handleChange = (e, value) => {
 	    while (!this._isVisible(value)) value++;
-        this.requester.select(value);
+	    const children = this.children();
+	    let selected = null;
+	    for (let i=0; i<children.length; i++) {
+	        if (i == value) selected = children[i].props.name;
+	    }
+        this.requester.select(selected != null ? selected : value);
     };
 }
 

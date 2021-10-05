@@ -51,6 +51,8 @@ Component row
 Component baseGrouping
 	Notification refreshGroups as Object(Group) List
 	Notification refreshSelection as Text List
+	Notification registerSelection as Text List
+	Request setupAddress as Text List
 	Request select as Text List
 
 Component grouping as ExtensionOf(baseGrouping)

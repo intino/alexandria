@@ -5,6 +5,7 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.graph.CatalogComponents.Sorting;
+import io.intino.konos.model.graph.OtherComponents;
 
 public class SortingRenderer extends BindingCollectionRenderer<Sorting> {
 
@@ -13,9 +14,16 @@ public class SortingRenderer extends BindingCollectionRenderer<Sorting> {
 	}
 
 	@Override
+	public void fill(FrameBuilder builder) {
+		addBinding(builder, element.collections());
+		addAddressableMethod(builder);
+	}
+
+	@Override
 	public FrameBuilder properties() {
 		FrameBuilder properties = super.properties();
 		addOrderByProperties(properties);
+		addAddressableMethod(properties);
 		return properties;
 	}
 
@@ -25,12 +33,24 @@ public class SortingRenderer extends BindingCollectionRenderer<Sorting> {
 	}
 
 	@Override
-	public void fill(FrameBuilder builder) {
-		addBinding(builder, element.collections());
-	}
-
-	@Override
 	protected String className(Class clazz) {
 		return super.className(clazz).replace("sorting", "");
+	}
+
+	private void addAddressableMethod(FrameBuilder builder) {
+		if (!element.isAddressable()) return;
+		builder.add("methods", addressedMethod());
+	}
+
+	private FrameBuilder addressedMethod() {
+		FrameBuilder result = addOwner(buildBaseFrame()).add("method").add(Sorting.class.getSimpleName()).add("addressable");
+		result.add("name", nameOf(element));
+		return result;
+	}
+
+	private void addAddressableProperties(FrameBuilder builder) {
+		if (!element.isAddressable()) return;
+		Sorting.Addressable addressable = element.asAddressable();
+		builder.add("path", addressable.addressableResource() != null ? addressable.addressableResource().path() : "");
 	}
 }

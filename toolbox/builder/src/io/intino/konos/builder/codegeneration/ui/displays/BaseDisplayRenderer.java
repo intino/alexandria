@@ -155,6 +155,12 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 			frame.add("implements", new FrameBuilder("implements", Actionable.Action.class.getSimpleName(), Actionable.Addressable.class.getSimpleName()).add("name", nameOf(element)));
 		if (element.i$(Selector.Addressable.class))
 			frame.add("implements", new FrameBuilder("implements", Selector.class.getSimpleName(), Selector.Addressable.class.getSimpleName()).add("name", nameOf(element)));
+		if (element.i$(CatalogComponents.SearchBox.Addressable.class))
+			frame.add("implements", new FrameBuilder("implements", CatalogComponents.SearchBox.class.getSimpleName(), CatalogComponents.SearchBox.Addressable.class.getSimpleName()).add("name", nameOf(element)));
+		if (element.i$(CatalogComponents.Grouping.Addressable.class))
+			frame.add("implements", new FrameBuilder("implements", CatalogComponents.Grouping.class.getSimpleName(), CatalogComponents.Grouping.Addressable.class.getSimpleName()).add("name", nameOf(element)));
+		if (element.i$(CatalogComponents.Sorting.Addressable.class))
+			frame.add("implements", new FrameBuilder("implements", CatalogComponents.Sorting.class.getSimpleName(), CatalogComponents.Sorting.Addressable.class.getSimpleName()).add("name", nameOf(element)));
 	}
 
 	private FrameBuilder multipleImplements() {

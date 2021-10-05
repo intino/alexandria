@@ -56,11 +56,9 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 		Selector.ComboBox comboBox = element.asComboBox();
 		builder.add("maxMenuHeight", comboBox.maxMenuHeight());
 		String placeholder = comboBox.placeholder();
-		if (placeholder == null || placeholder.isEmpty()) return;
-		builder.add("placeholder", placeholder);
+		if (placeholder != null && !placeholder.isEmpty()) builder.add("placeholder", placeholder);
 		Selector.ComboBox.View view = comboBox.view();
-		if (view == null || view == Selector.ComboBox.View.FieldView) return;
-		builder.add("view", view.name());
+		if (view != null && view != Selector.ComboBox.View.FieldView) builder.add("view", view.name());
 	}
 
 	private void addCollectionBoxProperties(FrameBuilder builder) {
@@ -68,8 +66,7 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 		Selector.CollectionBox collectionBox = element.asCollectionBox();
 		if (collectionBox.allowOther()) builder.add("allowOther", true);
 		String placeholder = collectionBox.placeholder();
-		if (placeholder == null || placeholder.isEmpty()) return;
-		builder.add("placeholder", placeholder);
+		if (placeholder != null && !placeholder.isEmpty()) builder.add("placeholder", placeholder);
 	}
 
 	private void addCheckBoxProperties(FrameBuilder builder) {

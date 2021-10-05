@@ -4,6 +4,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.model.graph.Addressable;
 import io.intino.konos.model.graph.CatalogComponents;
 import io.intino.konos.model.graph.CatalogComponents.Collection;
 import io.intino.konos.model.graph.Navigable;

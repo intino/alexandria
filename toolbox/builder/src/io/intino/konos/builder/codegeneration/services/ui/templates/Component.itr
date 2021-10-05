@@ -559,6 +559,18 @@ def type(implements & addressable & selector)
 	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
 end
 
+def type(implements & addressable & grouping)
+	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
+end
+
+def type(implements & addressable & searchbox)
+	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
+end
+
+def type(implements & addressable & sorting)
+	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
+end
+
 def type(implements)
 	implements --undefined--
 end
@@ -589,6 +601,18 @@ end
 def type(properties & selector) trigger(specific)
 	[_multipleSelection($multipleSelection);]
 	[_readonly($readonly);]
+	[_path("$path");]
+end
+
+def type(properties & grouping) trigger(specific)
+	[_path("$path");]
+end
+
+def type(properties & sorting) trigger(specific)
+	[_path("$path");]
+end
+
+def type(properties & searchbox) trigger(specific)
 	[_path("$path");]
 end
 

@@ -103,6 +103,10 @@ export default class BaseGrouping extends AbstractBaseGrouping {
     };
 
     updateSelection = selection => {
+        this.requester.setupAddress(selection);
+    };
+
+    registerSelection = selection => {
         this.requester.select(selection);
     };
 

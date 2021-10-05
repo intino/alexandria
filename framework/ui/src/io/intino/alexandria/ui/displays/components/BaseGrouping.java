@@ -1,6 +1,8 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.components.addressable.Addressable;
+import io.intino.alexandria.ui.displays.components.collection.CollectionAddressResolver;
 import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.notifiers.BaseGroupingNotifier;
 import io.intino.alexandria.ui.model.datasource.Group;
@@ -11,13 +13,15 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
-public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extends AbstractBaseGrouping<DN, B> {
+public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extends AbstractBaseGrouping<DN, B> implements Addressable {
 	private List<Collection> collections = new ArrayList<>();
 	private List<String> selection;
 	private SelectionListener selectionListener;
 	private SelectionListener attachedListener;
 	private List<Group> groups = new ArrayList<>();
 	private GroupingToolbar toolbar;
+	private String path;
+	private String address;
 
 	public BaseGrouping(B box) {
         super(box);
@@ -28,6 +32,10 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 		super.didMount();
 		if (selection != null) notifier.refreshSelection(selection);
 		notifier.refreshVisibility(isVisible());
+	}
+
+	public String path() {
+		return this.path;
 	}
 
 	public List<String> selection() {
@@ -50,10 +58,41 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 		return this;
 	}
 
+	protected BaseGrouping<DN, B> _path(String path) {
+		this.path = path;
+		this._address(path);
+		return this;
+	}
+
+	protected BaseGrouping<DN, B> _address(String address) {
+		this.address = address;
+		return this;
+	}
+
+	protected void address(String value) {
+		this._address(value);
+	}
+
+	public void setupAddress(List<String> groups) {
+		if (address == null || collections.size() <= 0) {
+			select(groups);
+			return;
+		}
+		String queryString = CollectionAddressResolver.queryString(collections.get(0), key(), groups);
+		if (queryString == null) {
+			select(groups);
+			return;
+		}
+		notifier.addressed(address + (address.contains("?") ? ":" : "?") + queryString);
+		notifier.registerSelection(groups);
+		select(groups);
+	}
+
 	public void select(List<String> groups) {
 		this.selection = new ArrayList<>(groups);
 		notifySelection();
 		notifyBindings();
+		notifier.addressed(null);
 	}
 
 	public BaseGrouping<DN, B> bindTo(GroupingToolbar toolbar) {
