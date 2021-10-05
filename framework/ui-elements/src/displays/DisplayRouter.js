@@ -12,6 +12,7 @@ class DisplayRouter extends AbstractDisplayRouter {
 		super(props);
 		this.notifier = new DisplayRouterNotifier(this);
 		this.requester = new DisplayRouterRequester(this);
+		this.stopListening = false;
 		this.listenHistory();
 	};
 
@@ -19,9 +20,20 @@ class DisplayRouter extends AbstractDisplayRouter {
 		if (DisplayRouter.Listening) return;
 		DisplayRouter.Listening = true;
 		history.listen(({ pathname }) => { this.route(pathname); });
+		history.onContinueListening = () => this.continueListening();
+		history.onStopListening = () => this.stopListeningHistory();
+	};
+
+	continueListening = () => {
+	    this.stopListening = false;
+	};
+
+	stopListeningHistory = () => {
+	    this.stopListening = true;
 	};
 
 	route = (address) => {
+	    if (this.stopListening) return;
 		this.requester.dispatch(address);
 	};
 

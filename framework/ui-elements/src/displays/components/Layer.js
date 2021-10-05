@@ -7,6 +7,7 @@ import LayerNotifier from "../../../gen/displays/notifiers/LayerNotifier";
 import LayerRequester from "../../../gen/displays/requesters/LayerRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
+import history from "alexandria-ui-elements/src/util/History";
 
 const styles = theme => ({
     header : {
@@ -34,6 +35,7 @@ class Layer extends AbstractLayer {
             title: this.props.title,
             homeAvailable: false,
             opened: false,
+            closeAddress: document.location.pathname,
         };
 	};
 
@@ -92,6 +94,9 @@ class Layer extends AbstractLayer {
 	};
 
 	handleClose = () => {
+        history.stopListening();
+	    if (this.state.closeAddress !== document.location.pathname) history.push(this.state.closeAddress, {});
+	    history.continueListening();
 		this.requester.close();
 	};
 
