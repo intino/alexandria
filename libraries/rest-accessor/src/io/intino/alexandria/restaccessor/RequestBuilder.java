@@ -1,11 +1,13 @@
 package io.intino.alexandria.restaccessor;
 
+import com.google.gson.JsonSyntaxException;
 import io.intino.alexandria.Base64;
 import io.intino.alexandria.Json;
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.exceptions.AlexandriaException;
 import io.intino.alexandria.exceptions.ExceptionFactory;
 import io.intino.alexandria.exceptions.InternalServerError;
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.restaccessor.adapters.RequestAdapter;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
@@ -184,9 +186,14 @@ public class RequestBuilder {
 	}
 
 	private AlexandriaException exception(int statusCode, String bodyContent) {
-		AlexandriaException e = bodyContent.startsWith("{") ? Json.fromString(bodyContent, AlexandriaException.class) : null;
-		if (e != null) return ExceptionFactory.from(statusCode, e.getMessage(), e.parameters());
-		return ExceptionFactory.from(statusCode, bodyContent, Map.of());
+		try {
+			AlexandriaException e = bodyContent.startsWith("{") ? Json.fromString(bodyContent, AlexandriaException.class) : null;
+			if (e != null) return ExceptionFactory.from(statusCode, e.getMessage(), e.parameters());
+			return ExceptionFactory.from(statusCode, bodyContent, Map.of());
+		} catch (JsonSyntaxException e) {
+			Logger.warn(e.getMessage() + ": " + bodyContent);
+			return ExceptionFactory.from(statusCode, bodyContent, Map.of());
+		}
 	}
 
 	private String bodyContent(HttpResponse response) {
