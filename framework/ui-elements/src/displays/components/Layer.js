@@ -94,8 +94,8 @@ class Layer extends AbstractLayer {
 	};
 
 	handleClose = () => {
-	    this.close();
-	    history.push(this.state.closeAddress, {});
+        this.close();
+	    if (this.state.closeAddress !== document.location.pathname) history.push(this.state.closeAddress, {});
 		this.requester.close();
 	};
 
