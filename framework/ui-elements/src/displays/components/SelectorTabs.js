@@ -77,7 +77,8 @@ class SelectorTabs extends AbstractSelectorTabs {
 	    for (let i=0; i<children.length; i++) {
 	        if (i == value) selected = children[i].props.name;
 	    }
-        this.requester.select(selected != null ? selected : value);
+	    if (selected != null) this.requester.selectByName(selected);
+	    else this.requester.select(value);
     };
 }
 
