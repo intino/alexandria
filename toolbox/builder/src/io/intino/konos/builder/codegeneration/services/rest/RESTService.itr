@@ -42,11 +42,11 @@ def type(resource)
 end
 
 def type(bearer) trigger(authenticate)
-	.before(manager -> { if (!authenticator.isAuthenticated( manager.fromHeader("Authorization").replace("Bearer ", ""))) throw new io.intino.alexandria.exceptions.Forbidden("Credential not found");})
+	.before(manager -> { if (!authenticator.isAuthenticated( manager.fromHeader("Authorization").replace("Bearer ", ""))) throw new io.intino.alexandria.exceptions.Unauthorized("Credential not found");})
 end
 
 def type(basic) trigger(authenticate)
-	.before(manager -> { if (!authenticator.isAuthenticated( manager.fromHeader("Authorization").replace("Basic ", ""))) throw new io.intino.alexandria.exceptions.Forbidden("Credential not found");})
+	.before(manager -> { if (!authenticator.isAuthenticated( manager.fromHeader("Authorization").replace("Basic ", ""))) throw new io.intino.alexandria.exceptions.Unauthorized("Credential not found");})
 end
 
 def type(path) trigger(format)
