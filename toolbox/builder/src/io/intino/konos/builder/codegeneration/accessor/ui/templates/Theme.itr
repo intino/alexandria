@@ -1,11 +1,11 @@
 def type(theme)
-	import { createMuiTheme } from '@material-ui/core/styles';
+	import { createTheme } from '@material-ui/core/styles';
 
 	const Theme = (function () {
 		var theme = null;
 		var provider = {
 			create: () => {
-				theme = createMuiTheme({
+				theme = createTheme({
 					palette : {
 					    $palette
 					},

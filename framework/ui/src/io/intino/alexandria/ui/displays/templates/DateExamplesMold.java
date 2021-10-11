@@ -14,6 +14,8 @@ public class DateExamplesMold extends AbstractDateExamplesMold<AlexandriaUiBox> 
     @Override
     public void init() {
         super.init();
+        date1.value(Instant.now());
+        date2.value(Instant.now());
         date3.range(Instant.now(), Instant.now().plus(2, ChronoUnit.DAYS));
     }
 }

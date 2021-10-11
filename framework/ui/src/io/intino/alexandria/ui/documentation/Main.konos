@@ -7,10 +7,14 @@ use Theme
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	googleApiKey = "AIzaSyA8FjeAX36umrYD8Jk2FbRFWqDEulInKIA"
 
-	Resource(path = "/") home as Page(homeTemplate) Main
-	Resource(path = "/docs") docs as Page(docsTemplate)
-	Resource(path = "/docs/data/:type/") widgetType as Page(widgetTypeTemplate)
-	Resource(path = "/docs/data/microsite/:page") microSite as Page(widgetTypeTemplate)
+//	Resource(path = "/") home as Page(homeTemplate) Main
+//	Resource(path = "/docs") docs as Page(docsTemplate) Main
+//	Resource(path = "/docs/data/:type/") widgetType as Page(widgetTypeTemplate)
+//	Resource(path = "/docs/data/microsite/:page") microSite as Page(widgetTypeTemplate)
+	Resource(path = "/") home as Page(docsTemplate) Main
+	Resource(path = "/widgets") widgets as Page(docsTemplate)
+	Resource(path = "/widgets/:type/") widgetType as Page(widgetTypeTemplate)
+	Resource(path = "/widgets/microsite/:page") microSite as Page(widgetTypeTemplate)
 
 Template homeTemplate
 	Header(color="white", format=air) as Absolute(height=100px)
@@ -19,7 +23,7 @@ Template homeTemplate
 			Text(value="intino", format=h3)
 			Block(layout=Horizontal Center, format=headerToolbar, spacing=DP24) links
 				Text(value="home")
-				Link(title = "docs") as OpenPage(page=UiElements.docs)
+				Link(title = "widgets") as OpenPage(page=UiElements.widgets)
 
 	Block(format=containerAirLarge) as Parallax("images/background1.jpg") Absolute(height=500px)
 		Block(layout=Vertical Center) as Relative(width=70%)
