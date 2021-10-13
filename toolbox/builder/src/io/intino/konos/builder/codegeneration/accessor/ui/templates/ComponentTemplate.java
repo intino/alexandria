@@ -14,6 +14,7 @@ public class ComponentTemplate extends Template {
 			rule().condition((type("child")), (trigger("add"))),
 			rule().condition((allTypes("component","child","item"))),
 			rule().condition((allTypes("component","child"))).output(literal("<")).output(mark("extends")).output(literal(" context={this._context.bind(this)} owner={this._owner.bind(this)} id=\"")).output(expression().output(mark("parentPath")).output(literal("."))).output(mark("id")).output(literal("\"")).output(mark("properties", "common")).output(mark("properties", "specific")).output(expression().output(literal(" ")).output(mark("code"))).output(literal(">\n\t")).output(expression().output(mark("reference").multiple("\n"))).output(literal("\n\t")).output(expression().output(mark("methods"))).output(literal("\n\t")).output(expression().output(mark("component", "child").multiple("\n"))).output(literal("\n")).output(expression().output(literal("</")).output(mark("extends")).output(literal(">"))),
+			rule().condition((allTypes("extends","multiple","image"))).output(literal("UiMultipleImage")),
 			rule().condition((allTypes("extends","multiple"))).output(literal("UiMultiple")),
 			rule().condition((allTypes("extends","displaystamp"))).output(literal("Ui")).output(mark("type", "firstUpperCase")).output(mark("facet").multiple("")),
 			rule().condition((allTypes("extends","basestamp"))).output(literal("Displays")).output(mark("type", "firstUpperCase")),

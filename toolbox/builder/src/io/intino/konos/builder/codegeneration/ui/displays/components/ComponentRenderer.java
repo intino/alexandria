@@ -211,6 +211,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	protected FrameBuilder extendsFrame(Component element, FrameBuilder builder) {
 		FrameBuilder result = new FrameBuilder("extends");
+		if (element.i$(DataComponents.Image.class)) result.add("image");
 		if (element.i$(CatalogComponents.Collection.class)) result.add("collection");
 		if (element.i$(CatalogComponents.Table.class)) result.add("table");
 		if (element.i$(CatalogComponents.DynamicTable.class)) result.add("dynamictable");

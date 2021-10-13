@@ -27,6 +27,10 @@ def type(component & child)
 	[</$extends>]
 end
 
+def type(extends & multiple & image)
+	UiMultipleImage
+end
+
 def type(extends & multiple)
 	UiMultiple
 end

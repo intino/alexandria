@@ -118,6 +118,14 @@ Component multiple
 	Request select as Text
 	Request remove as Integer
 
+Component multipleImage
+	Notification refreshReadonly as Bool
+	Notification refreshImages as Text List
+
+	Request add as File
+	Request select as Text
+	Request remove as Integer
+
 Component spinner
 	Notification refreshLoading as Bool
 
