@@ -57,6 +57,10 @@ def type(object) trigger(parameter)
 	encodeURIComponent(JSON.stringify(value))
 end
 
+def type(list & file) trigger(parameter)
+	value
+end
+
 def type(list) trigger(parameter)
 	encodeURIComponent(JSON.stringify(value))
 end

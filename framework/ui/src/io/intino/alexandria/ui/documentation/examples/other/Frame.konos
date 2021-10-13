@@ -8,9 +8,9 @@ Template(layout=Vertical, spacing=DP8) frameExamplesMold
 		Block as Relative(width=33%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(format=filledNoAirExtraLarge) as Absolute(height=670px)
-				Frame(url="http://intino.io") as Relative(height=100%)
+				Frame(url="https://intino.io") as Relative(height=100%)
 				Block > Text as Code(language=Html)
 						value
 							=========
-							Frame(url\="http://intino.io")
+							Frame(url\="https://intino.io")
 							=========

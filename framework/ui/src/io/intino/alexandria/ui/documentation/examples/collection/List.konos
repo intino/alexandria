@@ -24,24 +24,6 @@ Template(layout=Vertical, spacing=DP8) listExamplesMold
 						=========
 
 		Block as Relative(width=48%, height=100%)
-			Text(format=h6, value="No facets and no mark on scrolling")
-			Block(spacing=DP8, format=filledNoAir)
-				List(itemClass="io.intino.alexandria.ui.documentation.Item", scrollingMark=false) list2
-					Mold > Item(height=60px) list2Mold > TemplateStamp(template=itemMold) stamp
-			Block > Text as Code(language=Html)
-					value
-						=========
-						List(itemClass\="io.intino.alexandria.ui.documentation.Item", loadingMark\=false) list<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item listMold > TemplateStamp(template\=itemMold) stamp<br/><br/>
-
-						Template(modelClass\="io.intino.alexandria.ui.documentation.Item") itemMold<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal Center, spacing\=DP8)<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Image avatar as Avatar<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text label
-						=========
-
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Navigable facet with position Top")
 			Block(spacing=DP8, format=filledNoAir)
 				List(itemClass="io.intino.alexandria.ui.documentation.Person") list3 as Navigable(position=Top)
@@ -53,6 +35,7 @@ Template(layout=Vertical, spacing=DP8) listExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) listMold > Text firstName as Editable
 						=========
 
+	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Navigable facet with position Bottom")
 			Block(spacing=DP8, format=filledNoAir)
@@ -65,7 +48,6 @@ Template(layout=Vertical, spacing=DP8) listExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) listMold > Text firstName as Editable
 						=========
 
-	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Selectable facet with Toolbar")
 			Block(spacing=DP8, format=filledNoAir)

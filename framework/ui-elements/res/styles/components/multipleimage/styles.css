@@ -1,0 +1,11 @@
+.image-gallery {
+    border: 1px solid #ddd;
+}
+
+.image-gallery, .image-gallery-slide-wrapper {
+    min-height: 200px;
+}
+
+.image-gallery-svg {
+    height: 55px !important;
+}

@@ -1,7 +1,7 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "4.13.17") ui-framework
-	Box("Konos", "8.15.1") > targetPackage = "io.intino.alexandria"
+Artifact("io.intino.alexandria", "4.13.18") ui-framework
+	Box("Konos", "8.15.3") > targetPackage = "io.intino.alexandria"
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.1.0")
 		Compile("io.intino.alexandria", "http", "1.4.1")
@@ -16,14 +16,15 @@ Artifact("io.intino.alexandria", "4.13.17") ui-framework
 		Compile("com.auth0", "java-jwt", "3.10.3") // Json Web token (Metabase)
 		Compile("org.locationtech.jts", "jts-core", "1.16.1")
 		Compile("com.google.code.gson", "gson", "2.8.6")
+		Compile("com.sparkjava", "spark-core", "2.9.3")
 
-		Provided("com.sparkjava", "spark-core", "2.9.3")
-
-		Web("io.intino.alexandria", "ui-framework-elements", "4.13.17")
+		Web("io.intino.alexandria", "ui-framework-elements", "4.13.18")
 
 		Test("junit", "junit", "4.13")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true) as Runnable(mainClass = "io.intino.alexandria.Main")
+		finalName = "intino"
+
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 	Parameter(name = "home")
 

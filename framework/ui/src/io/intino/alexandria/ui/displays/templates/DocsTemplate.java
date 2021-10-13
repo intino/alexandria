@@ -41,8 +41,8 @@ public class DocsTemplate extends AbstractDocsTemplate<AlexandriaUiBox> {
 
     private void addOperationWidgets() {
         body.operationBlock.operationWidgets.add(Model.widget(Model.WidgetType.OpenPage));
-        body.operationBlock.operationWidgets.add(Model.widget(Model.WidgetType.OpenBlock));
-        body.operationBlock.operationWidgets.add(Model.widget(Model.WidgetType.Task));
+        //body.operationBlock.operationWidgets.add(Model.widget(Model.WidgetType.OpenBlock));
+        //body.operationBlock.operationWidgets.add(Model.widget(Model.WidgetType.Task));
         body.operationBlock.operationWidgets.add(Model.widget(Model.WidgetType.Export));
         body.operationBlock.operationWidgets.add(Model.widget(Model.WidgetType.Download));
         body.operationBlock.operationWidgets.add(Model.widget(Model.WidgetType.DownloadSelection));

@@ -11,11 +11,12 @@ import io.intino.alexandria.ui.displays.events.RemoveItemEvent;
 import io.intino.alexandria.ui.displays.events.editable.AddItemListener;
 import io.intino.alexandria.ui.displays.events.editable.ChangeItemListener;
 import io.intino.alexandria.ui.displays.events.editable.RemoveItemListener;
+import io.intino.alexandria.ui.displays.notifiers.MultipleNotifier;
 
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class Multiple<B extends Box, C extends Component, V extends Object> extends AbstractMultiple<B> {
+public abstract class Multiple<B extends Box, C extends Component, V> extends AbstractMultiple<B> {
     private boolean readonly;
     private AddItemListener addItemListener;
     private ChangeItemListener changeItemListener;

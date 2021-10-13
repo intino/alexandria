@@ -282,6 +282,10 @@ def type(component & child) trigger(class)
 	}
 end
 
+def type(extends & multiple & image)
+	io.intino.alexandria.ui.displays.components.MultipleImage<$abstractBox+type, [$componentPrefix+firstUpperCase~.]$componentName, $objectType>
+end
+
 def type(extends & multiple)
 	io.intino.alexandria.ui.displays.components.Multiple<$abstractBox+type, [$componentPrefix+firstUpperCase~.]$componentName, $objectType>
 end

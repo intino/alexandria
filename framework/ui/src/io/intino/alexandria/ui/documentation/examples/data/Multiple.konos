@@ -27,5 +27,16 @@ Template(layout=Vertical, spacing=DP8) multipleExamplesMold
 								Text field1 as Editable
 							=========
 
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with Image")
+			Block(spacing=DP8, format=filled)
+				Image multiple3 as Multiple(noItemsMessage="No elements found") Editable
+				Block > Text multiple3Code as Multiple
+						value
+							=========
+							Image as Multiple<br/>
+							=========
+
 Template multiple2Template
 	Text field1 as Editable

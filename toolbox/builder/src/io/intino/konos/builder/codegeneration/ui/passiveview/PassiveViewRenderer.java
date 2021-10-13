@@ -276,7 +276,8 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	protected Object importTypeOf(PassiveView passiveView, boolean multiple) {
-		if (multiple) return "multiple";
+		if (multiple)
+			return passiveView.i$(DataComponents.Image.class) ? "MultipleImage" : "multiple";
 		if (passiveView.i$(CatalogComponents.Collection.Mold.Item.class) || passiveView.i$(HelperComponents.Row.class))
 			return passiveView.name$();
 		return typeOf(passiveView);
@@ -413,7 +414,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		componentList.forEach(c -> {
 			boolean multiple = c.i$(Multiple.class);
 			String baseType = importTypeOf(c, multiple) + String.join("", facets(c));
-			String type = multiple ? "multiple" : baseType;
+			String type = multiple && !c.i$(DataComponents.Image.class) ? "multiple" : baseType;
 			boolean isProjectComponent = isProjectComponent(c);
 			String key = keyOf(c, type);
 			String importType = isProjectComponent(c) ? ProjectComponentImport : AlexandriaComponentImport;
