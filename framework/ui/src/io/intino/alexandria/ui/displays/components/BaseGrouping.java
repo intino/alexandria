@@ -110,7 +110,7 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 		return this;
 	}
 
-	public BaseGrouping<DN, B> attachTo(Grouping grouping) {
+	public BaseGrouping<DN, B> attachTo(BaseGrouping<?, ?> grouping) {
 		grouping.onSelect(e -> notifyAttachedChanges(e.selection()));
 		return this;
 	}
