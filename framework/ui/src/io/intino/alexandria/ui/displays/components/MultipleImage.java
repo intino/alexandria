@@ -33,6 +33,12 @@ public abstract class MultipleImage<B extends Box, C extends Component, V> exten
 		notifier.refreshVisibility(visible());
 	}
 
+	@Override
+	public void clear(String container) {
+		super.clear(container);
+		refreshImages();
+	}
+
 	public synchronized void add(Resource value) {
 		C display = add();
 		notifyChange(display, (V) value, children().size()-1);
