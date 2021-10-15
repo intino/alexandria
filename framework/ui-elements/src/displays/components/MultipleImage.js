@@ -132,7 +132,6 @@ class MultipleImage extends AbstractMultipleImage {
 	handleChange = (e) => {
 	    const files = e.target.files;
 	    for (let i=0; i<files.length; i++) this.requester.add(files[i]);
-	    e.target.value = "";
 	};
 
 	handleRemove = (e) => {
