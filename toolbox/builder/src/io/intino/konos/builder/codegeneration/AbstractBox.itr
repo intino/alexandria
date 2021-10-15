@@ -310,7 +310,7 @@ def type(subscriber & durable & filtered) trigger(subscriber)
 	this.terminal.subscribe(($terminal.$eventQn+FirstUpperCase~Consumer) (e, t) -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e, t), "$subscriberId", filter[, $split...[, ]]);
 end
 
-def type(subscriber & durable) trigger(durable)
+def type(subscriber & durable) trigger(subscriber)
 	this.terminal.subscribe(($terminal.$eventQn+FirstUpperCase~Consumer) (e, t) -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e, t), "$subscriberId"[, $split...[, ]]);
 end
 
