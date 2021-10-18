@@ -1,0 +1,36 @@
+def type(server)
+	package $package+ValidPackage;
+
+	import io.intino.alexandria.http.AlexandriaSpark;
+	import $package+ValidPackage.futures.*;
+	import io.intino.alexandria.core.Box;
+
+	public class Futures {
+
+		private static Map<String, >
+
+		public static AlexandriaSpark setup(AlexandriaSpark server, $box+FirstUpperCase~Box box) {
+			[$future...[$NL]]
+			return server;
+		}
+
+		public static Future loadFuture($box+snakecaseToCamelCase+firstUpperCase~Box box, String basePath, String id) {
+			if(
+		}
+
+
+		private
+	}
+end
+
+def type(resource)
+	server.route($path+format).$method+firstlowerCase(manager -> loadFuture(box, manager.basePath(), manager.fromPath("id")).execute());
+end
+
+def type(path) trigger(format)
+	"$name"[$custom...[]]
+end
+
+def trigger(custom)
+	.replace("{$value}", box.configuration().get("$value"))
+end
