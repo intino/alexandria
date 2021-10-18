@@ -171,7 +171,7 @@ def type(parameter & file) attribute(in:form) trigger(assign)
 end
 
 def type(parameter) attribute(in:form) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.fromPartsAsString("$name"), $parameterType);
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.fromPartAsString("$name"), $parameterType);
 end
 
 def type(parameter) attribute(in:form) trigger(assign)
