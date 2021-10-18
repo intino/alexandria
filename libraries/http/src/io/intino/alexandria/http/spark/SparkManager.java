@@ -13,7 +13,11 @@ import javax.servlet.http.Part;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
 public class SparkManager<P extends PushService> {
@@ -108,9 +112,40 @@ public class SparkManager<P extends PushService> {
 	}
 
 	public Resource fromForm(String name) {
+		return fromPartAsResource(name);
+	}
+
+
+	public List<Resource> fromPartsAsResource() {
+		try {
+			return request.raw().getParts().stream().filter(p -> !textContentType(p)).map(p -> fromPartAsResource(p.getName())).collect(Collectors.toList());
+		} catch (ServletException | IOException e) {
+			return Collections.emptyList();
+		}
+	}
+
+	public List<Resource> fromPartsAsString() {
+		try {
+			return request.raw().getParts().stream().filter(this::textContentType).map(p -> fromPartAsResource(p.getName())).collect(Collectors.toList());
+		} catch (ServletException | IOException e) {
+			return Collections.emptyList();
+		}
+	}
+
+
+	public Resource fromPartAsResource(String name) {
 		try {
 			Part part = request.raw().getPart(name);
 			return part != null ? new Resource(part.getSubmittedFileName() == null ? part.getName() : part.getSubmittedFileName(), part.getInputStream()).metadata().contentType(part.getContentType()) : null;
+		} catch (ServletException | IOException e) {
+			return null;
+		}
+	}
+
+	public String fromPartAsString(String name) {
+		try {
+			Part part = request.raw().getPart(name);
+			return part != null ? new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8) : null;
 		} catch (ServletException | IOException e) {
 			return null;
 		}
@@ -169,6 +204,10 @@ public class SparkManager<P extends PushService> {
 			else return ip.substring(0, indexComma);
 		}
 		return raw.getRemoteAddr();
+	}
+
+	private boolean textContentType(Part p) {
+		return p.getContentType().equals("application/json") || p.getContentType().equals("text/plain");
 	}
 
 	private void setUpMultipartConfiguration() {

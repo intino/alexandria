@@ -146,3 +146,12 @@ Concept:Named Service
     		Aspect Confidential
     		Aspect Page
             	var Template template
+
+    Aspect Agenda
+		var string filePath
+		var string linkBasePath = "triggers"
+		Concept:Named Future
+			var string timeout
+			var string action
+			Concept Option
+				var string action
