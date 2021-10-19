@@ -1,0 +1,86 @@
+def type(future)
+	package $package+validPackage.futures;
+
+	$schemaImport
+	import java.time.Instant;
+	import java.time.temporal.ChronoUnit;
+
+	public class $name+firstUpperCase~Schema {
+		$parameter+field...[$NL]
+		$option+field...[$NL]
+
+		$parameter+setter...[$NL]
+		$option+setter...[$NL]
+
+
+
+		public $name+fisrtUpperCase~Schema timeout(Timeout timeout) {
+			this.timeout = timeout;
+			return this;
+		}
+
+		$option+getter...[$NL$NL]
+
+		public Timeout timeout() {
+			return timeout == null ? timeout = new Timeout(null) : timeout;
+		}
+
+
+		public static class Timeout extends FuturesService.Option {
+			Instant timeout;
+
+			public Timeout(Instant timeout) {
+				this.timeout = timeout == null ? null : timeout.truncatedTo(ChronoUnit.SECONDS);
+			}
+		}
+	}
+end
+
+def type(option) trigger(class)
+	public static class $name+firstUpperCase extends FuturesService.Option {
+		$optionParameter+field...[$NL]
+
+		public $name+firstUpperCase($optionParameter+signature...[, ]) {
+			$optionParameter+assign...[$NL]
+		}
+	}
+
+end
+
+def type(option) trigger(getter)
+	public $name+firstUpperCase $name+firstLowerCase() {
+		return $name+firstLowerCase == null ? $name+firstLowerCase = new $name+firstUpperCase(null) : $name+firstLowerCase;
+	}
+end
+
+def type(option) trigger(setter)
+	public $future+firstUpperCase~Schema $name+firstLowerCase($parameter+signature...[, ]) {
+		$parameter+assign...[, ]
+		return this;
+	}
+end
+
+
+def trigger(assign)
+	this.$name = $name
+end
+
+def type(parameter) trigger(field)
+	$type $name;
+end
+
+def type(option) trigger(field)
+	private $type $name;
+end
+
+def trigger(signature)
+	$type $name
+end
+
+def trigger(name)
+	$name
+end
+
+def type(schemaImport)
+	import $package.schemas.*;
+end
