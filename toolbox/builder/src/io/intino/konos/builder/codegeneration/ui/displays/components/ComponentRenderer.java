@@ -179,7 +179,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return clazz.getSimpleName().toLowerCase();
 	}
 
-	private String[] ancestors(Component component) {
+	protected String[] ancestors(Component component) {
 		List<String> result = new ArrayList<>();
 		Component parent = component.core$().ownerAs(Component.class);
 		while (parent != null) {

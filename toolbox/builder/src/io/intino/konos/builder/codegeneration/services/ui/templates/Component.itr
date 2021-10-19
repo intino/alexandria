@@ -448,7 +448,7 @@ def type(facet)
 end
 
 def type(binding & toolbar)
-	if ($name != null) $name.bindTo($collection);
+	if ($name != null) $name.bindTo([$ancestorsNotMe...[.].]$collection);
 end
 
 def type(binding & grouping)
