@@ -25,7 +25,7 @@ def type(service)
 
 	@SuppressWarnings("unchecked")
 	public class FuturesService {
-		public static final String BasePath = "triggers/";
+		public static final String BasePath = "$basePath/";
 		private static final Map<String, File> sources = new HashMap<>();
 		private static final Map<String, Instant> timeouts = new HashMap<>();
 		private final TrooperBox box;
