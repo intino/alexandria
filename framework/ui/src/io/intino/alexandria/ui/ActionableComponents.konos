@@ -12,6 +12,7 @@ Component actionable
 	Notification refreshAffirmedRequired as Bool
 	Notification refreshHighlight as Text
 	Notification checkSignResult as Bool
+	Notification launch
 
 	Request checkSign as Object(ActionableSign)
 	Request checkAffirmed
