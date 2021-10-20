@@ -86,6 +86,10 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
         return this;
     }
 
+    public void launch() {
+        notifier.launch();
+    }
+
     public void refresh() {
         ActionableInfo info = new ActionableInfo().title(title()).disabled(disabled());
         notifier.refresh(info);

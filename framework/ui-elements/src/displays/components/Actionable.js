@@ -232,6 +232,10 @@ export default class Actionable extends AbstractActionable {
 	    Delayer.execute(this, () => this.execute(), Actionable.Delay);
 	};
 
+    launch = () => {
+        document.getElementById(this.triggerId()).click();
+    };
+
     execute = () => {
 	    if (this._readonly()) return false;
         if (this.requireAffirmed()) this.requester.checkAffirmed();
