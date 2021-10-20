@@ -151,7 +151,7 @@ Concept:Named Service
 		var string filePath
 		var string linkBasePath = "triggers"
 		Concept:Named Future
-			var string timeout
-			var string action
+			var boolean timeout
+			has Parameter
 			Concept Option
-				var string action
+				has Parameter

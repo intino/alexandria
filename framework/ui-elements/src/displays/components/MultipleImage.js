@@ -21,6 +21,7 @@ class MultipleImage extends AbstractMultipleImage {
 		this.notifier = new MultipleImageNotifier(this);
 		this.requester = new MultipleImageRequester(this);
 		this.selectedIndex = 0;
+		this.inputFiles = React.createRef();
 		this.state = {
 		    ...this.state,
 		    readonly: false,
@@ -65,7 +66,7 @@ class MultipleImage extends AbstractMultipleImage {
 
 	_renderAdd = () => {
 	    return (
-	        <input accept="image/*" type="file" multiple={true} style={{marginBottom:'5px'}}
+	        <input accept="image/*" type="file" ref={this.inputFiles} multiple={true} style={{marginBottom:'5px'}}
 	               onChange={this.handleChange.bind(this)}
 	               disabled={this.state.readonly} />
 	    );
@@ -80,6 +81,11 @@ class MultipleImage extends AbstractMultipleImage {
             </IconButton>
 	    );
 	};
+
+    reset = () => {
+        const input = this.inputFiles.current;
+        if (input != null) input.value = null;
+    };
 
     _addAllowed = () => {
 		const multiple = this.props.multiple;
