@@ -121,6 +121,7 @@ Component multiple
 Component multipleImage
 	Notification refreshReadonly as Bool
 	Notification refreshImages as Text List
+	Notification reset
 
 	Request add as File
 	Request select as Text

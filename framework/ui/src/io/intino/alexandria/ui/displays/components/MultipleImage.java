@@ -36,6 +36,7 @@ public abstract class MultipleImage<B extends Box, C extends Component, V> exten
 	@Override
 	public void clear(String container) {
 		super.clear(container);
+		notifier.reset();
 		refreshImages();
 	}
 
