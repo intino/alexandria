@@ -27,6 +27,7 @@ Concept CatalogComponents
 			Aspect Navigable
 		sub Map
 			var string icon = empty
+			var word[]:{ Zoom MapType Scale StreetView Rotate Fullscreen } controls = Zoom MapType Scale StreetView Rotate Fullscreen
 
 			Concept:{0..1} Center
 				var double latitude
