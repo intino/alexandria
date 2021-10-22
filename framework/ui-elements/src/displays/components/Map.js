@@ -53,7 +53,8 @@ export class EmbeddedMap extends AbstractMap {
 				    mapContainerStyle={{height:"100%"}}
 				    zoom={this.props.zoom.defaultZoom}
 				    center={GeoBehavior.center(this)}
-				    onLoad={this.registerMap.bind(this)}>
+				    onLoad={this.registerMap.bind(this)}
+				    options={this.mapOptions()}>
 					<div style={{height: height, width: '100%'}}/>
 					{this.renderLayer()}
 				</GoogleMap>
@@ -142,6 +143,20 @@ export class EmbeddedMap extends AbstractMap {
 		if (this.current == null) return;
 		this.current.hideInfo();
 	};
+
+    mapOptions = () => {
+        const options = this.props.options != null ? this.props.options : "";
+        const all = options.indexOf("all") != -1;
+		return {
+            zoomControl: options.indexOf("zoom") != -1 || all,
+            mapTypeControl: options.indexOf("maptype") != -1 || all,
+            scaleControl: options.indexOf("scale") != -1 || all,
+            streetViewControl: options.indexOf("streetview") != -1 || all,
+            rotateControl: options.indexOf("rotate") != -1 || all,
+            fullscreenControl: options.indexOf("fullscreen") != -1 || all
+        };
+    };
+
 }
 
 class Map extends EmbeddedMap {

@@ -8,6 +8,8 @@ import io.intino.konos.builder.codegeneration.ui.displays.components.GeoRenderer
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.graph.CatalogComponents.Map;
 
+import java.util.stream.Collectors;
+
 public class MapRenderer extends CollectionRenderer<Map> {
 
 	public MapRenderer(CompilationContext compilationContext, Map component, TemplateProvider provider, Target target) {
@@ -21,6 +23,7 @@ public class MapRenderer extends CollectionRenderer<Map> {
 		addFacets(result);
 		GeoRendererHelper.addCenter(element.center(), result);
 		GeoRendererHelper.addZoom(element.zoom(), result);
+		result.add("controls", element.controls() != null ? element.controls().stream().map(c -> c.name().toLowerCase()).collect(Collectors.joining(",")) : "");
 		return result;
 	}
 

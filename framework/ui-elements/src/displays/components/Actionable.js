@@ -233,7 +233,9 @@ export default class Actionable extends AbstractActionable {
 	};
 
     launch = () => {
-        document.getElementById(this.triggerId()).click();
+        const element = document.getElementById(this.triggerId());
+        if (element == null) return;
+        element.click();
     };
 
     execute = () => {
