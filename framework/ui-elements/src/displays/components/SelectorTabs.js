@@ -40,7 +40,7 @@ class SelectorTabs extends AbstractSelectorTabs {
     renderTab = (tab, i) => {
 	    const className = tab.props.className;
         if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
-        return this._isVisible(i) ? (<Tab label={tab}/>) : null;
+        return this._isVisible(i) ? (<Tab label={tab} index={i}/>) : null;
     };
 
     refreshSelected = (tab) => {
@@ -56,8 +56,19 @@ class SelectorTabs extends AbstractSelectorTabs {
 	    const hiddenOptions = this.state.hiddenOptions;
 	    let result = 0;
 	    for (var i=0; i<hiddenOptions.length; i++) {
-	        if (hiddenOptions[i] < pos) result++;
+	        if (hiddenOptions[i] <= pos) result++;
 	        else break;
+	    }
+	    return result;
+	};
+
+	_visibleOptions = () => {
+	    const hiddenOptions = this.state.hiddenOptions;
+	    const children = this.children();
+	    const result = [];
+	    for (var i=0; i<children.length; i++) {
+	        if (!this._isVisible(i)) continue;
+	        result.push(i);
 	    }
 	    return result;
 	}
@@ -71,12 +82,10 @@ class SelectorTabs extends AbstractSelectorTabs {
 	}
 
 	handleChange = (e, value) => {
-	    while (!this._isVisible(value)) value++;
 	    const children = this.children();
-	    let selected = null;
-	    for (let i=0; i<children.length; i++) {
-	        if (i == value) selected = children[i].props.name;
-	    }
+	    const options = this._visibleOptions();
+	    const index = options[value];
+	    const selected = children[index] != null ? children[index].props.name : null;
 	    if (selected != null) this.requester.selectByName(selected);
 	    else this.requester.select(value);
     };
