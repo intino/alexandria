@@ -20,6 +20,8 @@ public class SelectorExamplesMold extends AbstractSelectorExamplesMold<UiFramewo
     public void init() {
         super.init();
         selector1.onSelect(e -> notify(e.selection()));
+        selector1.hideOption("option 2");
+        //selector1.hideOption("option 3");
         selector2.onSelect(e -> notify(e.selection()));
         selector3.onSelect(e -> notify(e.selection()));
         selector4.onSelect(e -> notify(e.selection()));

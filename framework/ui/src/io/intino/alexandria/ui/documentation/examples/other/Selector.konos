@@ -8,10 +8,12 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 		Block as Relative(width=33%, height=100%)
 			Text(format=h6, value="Tabs facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				Selector selector1 as Tabs
+				Selector selector1 as Tabs(scrollButtons=On)
 					Text(value="option 1") tabOption1 as Option
 					Text(value="option 2") tabOption2 as Option
 					Text(value="option 3") tabOption3 as Option
+					Text(value="option 4") tabOption4 as Option
+					Text(value="option 5") tabOption5 as Option
 			Block > Text as Code(language=Html)
 					value
 						=========
