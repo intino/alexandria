@@ -20,10 +20,10 @@ import java.util.stream.IntStream;
 
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 
-public class FuturesServiceRenderer extends Renderer {
+public class AgendaServiceRenderer extends Renderer {
 	private final List<Agenda> agendas;
 
-	public FuturesServiceRenderer(CompilationContext context, KonosGraph graph) {
+	public AgendaServiceRenderer(CompilationContext context, KonosGraph graph) {
 		super(context, Target.Owner);
 		agendas = graph.agendaServiceList();
 	}
@@ -42,8 +42,8 @@ public class FuturesServiceRenderer extends Renderer {
 				.add("future", processFutures(agenda.futureList()));
 		if (!agenda.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
-		Commons.writeFrame(gen(), "FuturesService", template().render(builder.toFrame()));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(agenda), javaFile(gen(), "FuturesService").getAbsolutePath()));
+		Commons.writeFrame(gen(), "AgendaService", template().render(builder.toFrame()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(agenda), javaFile(gen(), "AgendaService").getAbsolutePath()));
 		for (Agenda.Future future : agenda.futureList()) new FutureRenderer(context, future).render();
 	}
 
@@ -82,6 +82,6 @@ public class FuturesServiceRenderer extends Renderer {
 	}
 
 	private Template template() {
-		return Formatters.customize(new FuturesServiceTemplate());
+		return Formatters.customize(new AgendaServiceTemplate());
 	}
 }

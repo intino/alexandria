@@ -2,7 +2,7 @@ def type(future)
 	package $package+validPackage.agenda;
 
 	$schemaImport
-	import $package+validPackage.FuturesService;
+	import $package+validPackage.AgendaService;
 	import java.time.Instant;
 	import java.time.temporal.ChronoUnit;
 
@@ -30,7 +30,7 @@ def type(future)
 
 		$option+class...[$NL$NL]
 
-		public static class Timeout extends FuturesService.Option {
+		public static class Timeout extends AgendaService.Option {
 			Instant timeout;
 
 			public Timeout(Instant timeout) {
@@ -45,7 +45,7 @@ def type(future)
 end
 
 def type(option) trigger(class)
-	public static class $name+firstUpperCase extends FuturesService.Option {
+	public static class $name+firstUpperCase extends AgendaService.Option {
 		[$optionParameter+field...[$NL]]
 
 		public $name+firstUpperCase($optionParameter+signature...[, ]) {

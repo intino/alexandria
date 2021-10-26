@@ -25,14 +25,14 @@ def type(service)
 	import static org.quartz.TriggerBuilder.newTrigger;
 
 	@SuppressWarnings("unchecked")
-	public class FuturesService {
+	public class AgendaService {
 		public static final String BaseUri = "$baseUri/";
 		private static final Map<String, File> sources = new HashMap<>();
 		private static final Map<String, Instant> timeouts = new HashMap<>();
 		private final $box+snakecaseToCamelCase+firstUpperCase~Box box;
 		private final File root;
 
-		public FuturesService($box+snakecaseToCamelCase+firstUpperCase~Box box) {
+		public AgendaService($box+snakecaseToCamelCase+firstUpperCase~Box box) {
 			this.box = box;
 			this.root = $rootPath+customizeDirectory;
 		}
@@ -54,9 +54,9 @@ def type(service)
 
 		private void startTimers(AlexandriaScheduler scheduler) {
 			try {
-				JobDetail job = newJob(FuturesServiceTrigger.class).withIdentity("FuturesServiceTrigger").build();
+				JobDetail job = newJob(AgendaServiceTrigger.class).withIdentity("AgendaServiceTrigger").build();
 				job.getJobDataMap().put("box", box);
-				scheduler.scheduleJob(job, Set.of(newTrigger().withIdentity("FutureServiceTrigger").withSchedule(cronSchedule("* * * 1/1 * ? *")).build()), true);
+				scheduler.scheduleJob(job, Set.of(newTrigger().withIdentity("AgendaServiceTrigger").withSchedule(cronSchedule("* * * 1/1 * ? *")).build()), true);
 			} catch (SchedulerException e) {
 				Logger.error(e);
 			}
@@ -93,7 +93,7 @@ def type(service)
 			public String id = UUID.randomUUID().toString();
 		}
 
-		private static class FuturesServiceTrigger implements Job {
+		private static class AgendaServiceTrigger implements Job {
 
 			public void execute(JobExecutionContext context) throws JobExecutionException {
 				$box+snakecaseToCamelCase+firstUpperCase~Box box = ($box+snakecaseToCamelCase+firstUpperCase~Box) context.getMergedJobDataMap().get("box");
@@ -183,7 +183,7 @@ def trigger(createMethod)
 end
 
 def trigger(timeout)
-	if (k.startsWith("$name+FirstUpperCase#")) box.futuresService().execute$name+FirstUpperCase(k.split("#")$[1]);
+	if (k.startsWith("$name+FirstUpperCase#")) box.agenda().execute$name+FirstUpperCase(k.split("#")$[1]);
 end
 
 def trigger(predicateSignature)

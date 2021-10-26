@@ -7,7 +7,7 @@ def type(future)
 	import java.util.List;
 	import java.util.Map;
 
-	import static  $package+validPackage.FuturesService.BaseUri;
+	import static  $package+validPackage.AgendaService.BaseUri;
 
 	public abstract class Abstract$name+FirstUpperCase {
 		protected $name+FirstUpperCase~Schema schema;
