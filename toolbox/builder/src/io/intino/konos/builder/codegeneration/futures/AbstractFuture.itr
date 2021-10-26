@@ -1,5 +1,5 @@
 def type(future)
-	package $package+validPackage.futures;
+	package $package+validPackage.agenda;
 
 	$schemaImport
 	import io.intino.alexandria.logger.Logger;
@@ -7,10 +7,14 @@ def type(future)
 	import java.util.List;
 	import java.util.Map;
 
-	import static com.cinepolis.trooper.box.futures.FuturesService.BasePath;
+	import static  $package+validPackage.FuturesService.BaseUri;
 
 	public abstract class Abstract$name+FirstUpperCase {
 		protected $name+FirstUpperCase~Schema schema;
+
+		public void schema($name+FirstUpperCase~Schema schema) {
+			this.schema = schema;
+		}
 
 		$option+methods...[$NL$NL]
 
@@ -18,10 +22,11 @@ def type(future)
 			onTimeout($parameter+call...[,]);
 		}
 
-		protected abstract void onTimeout($parameter+call...[,]);
+		protected abstract void onTimeout($parameter+signature...[,]);
 
 		$parameter+getter...[$NL$NL]
-		$optionParameter+optionGetter...[$NL$NL]
+
+		$option+optionGetter...[$NL$NL]
 
 		public URI uri() {
 			if (schema == null) Logger.error("Future is not loaded");
@@ -52,7 +57,7 @@ end
 
 def trigger(methods)
 	public void $name+firstLowerCase() {
-		onAccept($parameter+call...[, ]);
+		on$name+firstUpperCase($parameter+call...[, ][, $optionParameter+optionCall...[, ]]);
 	}
 
 	protected abstract void on$name+firstUpperCase($parameter+signature...[, ][, $optionParameter+signature...[, ]]);
@@ -60,30 +65,35 @@ end
 
 def trigger(getter)
 	protected String $name() {
-		return schema.$name;
+		return schema.$name();
 	}
 end
 
 def trigger(optionGetter)
-	protected TaskSchedule $option+firstLowerCase~$name+FirstUpperCase() {
-		return schema.$option+firstLowerCase().$name+FirstLowerCase;
+	$optionParameter+optionParameterGetter...[$NL$NL]
+end
+
+def trigger(optionParameterGetter)
+	protected $type $owner+firstLowerCase~$name+FirstUpperCase() {
+		return schema.$owner+firstLowerCase().$name+FirstLowerCase();
 	}
 end
 
 def trigger(call)
-	$name()
+	$name+firstLowerCase()
+end
+
+def trigger(optionCall)
+	$owner+firstLowerCase$name+firstUpperCase()
 end
 
 def trigger(signature)
-	$type $name
+	$type $name+firstLowerCase
 end
 
-def trigger(name)
-	$name
-end
 
 def trigger(id)
-	schema.$name().id
+	schema.$name+firstLowerCase().id
 end
 
 def trigger(getterURI)
@@ -92,7 +102,7 @@ end
 
 def trigger(optionGetterURI)
 	public String $name+firstLowerCase() {
-		return BasePath + Path + schema.$name+firstLowerCase().id;
+		return BaseUri + Path + schema.$name+firstLowerCase().id;
 	}
 end
 

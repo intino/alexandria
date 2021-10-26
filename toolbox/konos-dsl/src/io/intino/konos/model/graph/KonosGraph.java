@@ -193,6 +193,10 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		return serviceList(Service::isUI).map(Service::asUI).collect(toList());
 	}
 
+	public List<Service.Agenda> agendaServiceList() {
+		return serviceList(Service::isAgenda).map(Service::asAgenda).collect(toList());
+	}
+
 	public List<Service.JMX> jmxServiceList() {
 		return serviceList(Service::isJMX).map(Service::asJMX).collect(toList());
 	}
