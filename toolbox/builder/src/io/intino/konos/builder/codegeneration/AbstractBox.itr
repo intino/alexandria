@@ -102,6 +102,7 @@ def type(box)
 			initSentinels();
 			initSlackBots();
 			initWorkflow();
+			initAgenda();
 		}
 
 		[$hasUi+pushService]
@@ -121,6 +122,7 @@ def type(box)
 		[$workflow+getter]
 
 		$service+setupMethod...[$NL$NL]
+
 
 		private void initRestServices() {
 			$service+rest...[$NL]
@@ -166,6 +168,10 @@ def type(box)
 
 		private void initWorkflow() {
 			[$workflow+init]
+		}
+
+		private void initAgenda() {
+			$service+agenda...[$NL]
 		}
 
 		private void initJavaLogger() {
@@ -282,6 +288,11 @@ def type(service & messaging) trigger(messaging)
 	Logger.info("Messaging service $name: started!");
 end
 
+def type(service & agenda) trigger(agenda)
+	this.agenda = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	Logger.info("Agenda service: started!");
+end
+
 def type(sentinel) trigger(init)
 	Sentinels.init(this.scheduler, this.configuration.home() [$hasWebhook io.intino.alexandria.http.AlexandriaSparkBuilder.instance()], ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
@@ -358,6 +369,10 @@ def type(workflow) trigger(field)
 	protected $package.bpm.Workflow workflow;
 end
 
+def type(agenda) trigger(field)
+	protected AgendaService agenda;
+end
+
 def type(service & messaging) trigger(getter)
 	public $name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase() {
 		return $name+SnakeCaseToCamelCase+firstlowerCase;
@@ -383,6 +398,13 @@ end
 def type(workflow) trigger(getter)
 	public $package.bpm.Workflow workflow() {
 		return this.workflow;
+	}
+end
+
+
+def type(agenda) trigger(getter)
+	public AgendaService agenda() {
+		return this.agenda;
 	}
 end
 

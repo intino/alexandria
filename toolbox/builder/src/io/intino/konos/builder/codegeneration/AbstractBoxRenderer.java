@@ -169,6 +169,7 @@ public class AbstractBoxRenderer extends Renderer {
 		soap(builder);
 		messaging(builder);
 		jmx(builder);
+		agenda(builder);
 		slackServices(builder);
 		ui(builder);
 		rest(builder);
@@ -204,6 +205,12 @@ public class AbstractBoxRenderer extends Renderer {
 	private void jmx(FrameBuilder frame) {
 		for (Service.JMX service : graph.jmxServiceList())
 			frame.add("service", new FrameBuilder("service", "jmx").add("name", service.name$()).add("configuration", boxName()).toFrame());
+	}
+
+	private void agenda(FrameBuilder frame) {
+		if (graph.agendaServiceList().isEmpty() || graph.agendaServiceList().get(0).futureList().isEmpty()) return;
+		final Service.Agenda service = graph.agendaServiceList().get(0);
+		frame.add("service", new FrameBuilder("service", "agenda").add("name", service.name$()).add("configuration", boxName()).toFrame());
 	}
 
 	private void slackServices(FrameBuilder frame) {

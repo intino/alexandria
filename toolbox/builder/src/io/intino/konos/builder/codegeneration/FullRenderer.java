@@ -14,6 +14,7 @@ import io.intino.konos.builder.codegeneration.datahub.mounter.MounterRenderer;
 import io.intino.konos.builder.codegeneration.datahub.subscriber.SubscriberRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
 import io.intino.konos.builder.codegeneration.feeder.FeederRenderer;
+import io.intino.konos.builder.codegeneration.futures.AgendaServiceRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.codegeneration.sentinel.ListenerRenderer;
@@ -53,6 +54,7 @@ public class FullRenderer {
 
 	private void render() throws KonosException {
 		if (context.mode().equals(Mode.Normal)) {
+			agendas();
 			schemas();
 			exceptions();
 			rest();
@@ -91,7 +93,7 @@ public class FullRenderer {
 		for (Service.Messaging service : graph.messagingServiceList())
 			new MessagingAccessorRenderer(context, service, genDirectory(context.configuration().genDirectory(), "messaging#", service.name$())).render();
 		if (!graph.cubeList().isEmpty())
-			new AnalyticBuilderRenderer(context, graph, new File(analyticBasePath(), "src"),new File(analyticBasePath(), "res")).render();
+			new AnalyticBuilderRenderer(context, graph, new File(analyticBasePath(), "src"), new File(analyticBasePath(), "res")).render();
 	}
 
 	private File analyticBasePath() {
@@ -133,6 +135,10 @@ public class FullRenderer {
 	private void tasks() throws KonosException {
 		new ListenerRenderer(context, graph).execute();
 		new SentinelsRenderer(context, graph).execute();
+	}
+
+	private void agendas() throws KonosException {
+		new AgendaServiceRenderer(context, graph).execute();
 	}
 
 	private void datalake() throws KonosException {
