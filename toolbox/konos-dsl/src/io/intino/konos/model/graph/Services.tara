@@ -149,9 +149,8 @@ Concept:Named Service
 
     Aspect Agenda
 		var string filePath
-		var string linkBasePath = "triggers"
+		var string baseUri = "triggers"
 		Concept:Named Future
-			var boolean timeout
 			has Parameter
 			Concept Option
 				has Parameter

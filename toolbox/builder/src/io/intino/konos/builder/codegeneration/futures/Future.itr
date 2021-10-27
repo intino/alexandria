@@ -1,5 +1,5 @@
 def type(future)
-	package $package+validPackage.actions;
+	package $package+validPackage.agenda;
 
 	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
 	$schemaImport
@@ -31,7 +31,7 @@ def trigger(signature)
 	$type $name
 end
 
-def trigger(name)
+def trigger(names)
 	$name
 end
 
