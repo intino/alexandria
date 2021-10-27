@@ -37,8 +37,8 @@ class DateEditable extends AbstractDateEditable {
 	};
 
 	handleChange(moment) {
-		if (moment == null || !moment.isValid()) return;
-		this._notifyChange(this.noZoneDate(moment));
+		if (moment != null && !moment.isValid()) return;
+		this._notifyChange(moment != null ? this.noZoneDate(moment) : null);
 	};
 
 	render() {
