@@ -50,8 +50,8 @@ class NumberEditable extends AbstractNumberEditable {
 					   }}
 					   InputProps={{
 					       readOnly: this.state.readonly,
-						   startAdornment: this.state.prefix !== undefined ? <InputAdornment position="start">{this.state.prefix}</InputAdornment> : undefined,
-						   endAdornment: this.state.suffix !== undefined ? <InputAdornment position="end">{this.state.suffix}</InputAdornment> : undefined
+						   startAdornment: this.state.prefix !== undefined ? <InputAdornment position="start">{this.translate(this.state.prefix)}</InputAdornment> : undefined,
+						   endAdornment: this.state.suffix !== undefined ? <InputAdornment position="end">{this.translate(this.state.suffix)}</InputAdornment> : undefined
 					   }}/>
 		);
 	};
