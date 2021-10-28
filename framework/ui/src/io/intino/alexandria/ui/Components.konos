@@ -67,6 +67,7 @@ Component optionList
 
 Component baseSelector
 	Notification refreshReadonly as Bool
+	Notification refreshOptions as Text List
 	Request optionsRendered
 
 Component selectorMenu as ExtensionOf(baseSelector)
