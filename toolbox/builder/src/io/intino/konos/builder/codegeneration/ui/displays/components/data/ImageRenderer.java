@@ -20,6 +20,7 @@ public class ImageRenderer extends SizedRenderer<Image> {
 		if (element.value() != null && !element.value().isEmpty()) result.add("value", resourceMethodFrame("value", element.value()));
 		if (element.defaultValue() != null && !element.defaultValue().isEmpty()) result.add("defaultValue", resourceMethodFrame("defaultValue", element.defaultValue()));
 		if (element.mobileReduceFactor() != 0) result.add("mobileReduceFactor", element.mobileReduceFactor());
+		if (element.allowFullscreen()) result.add("allowFullScreen", element.allowFullscreen());
 		return result;
 	}
 

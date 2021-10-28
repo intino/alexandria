@@ -13,7 +13,7 @@ import io.intino.alexandria.ui.displays.notifiers.TextNotifier;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Box> extends AbstractBaseSelector<DN, B> implements io.intino.alexandria.ui.displays.components.selector.Selector, Addressable {
     private boolean readonly;
@@ -21,6 +21,7 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
     private String path;
     private String address;
     private java.util.List<SelectionListener> selectionListeners = new ArrayList<>();
+    private List<String> options = new ArrayList<>();
     private List<Component> components = new ArrayList<>();
 
     public BaseSelector(B box) {
@@ -61,12 +62,19 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         return findOptions();
     }
 
+    public BaseSelector<DN, B> addAll(String... options) {
+        return addAll(List.of(options));
+    }
+
+    public BaseSelector<DN, B> addAll(List<String> options) {
+        this.options.addAll(options);
+        notifier.refreshOptions(this.options);
+        return this;
+    }
+
     public BaseSelector<DN, B> add(String option) {
-		Display display = new Text(box()).name(option);
-		display.id(UUID.randomUUID().toString());
-        display.properties().put("value", option);
-        display.properties().put("color", "black");
-        addOption((Component) display);
+        options.add(option);
+        notifier.refreshOptions(options);
         return this;
     }
 
@@ -83,6 +91,7 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
     @Override
     public void clear() {
         super.clear();
+        options.clear();
         components.clear();
     }
 
@@ -116,8 +125,10 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
     }
 
     protected void reloadComponents() {
+        List<String> options = new ArrayList<>(this.options);
         List<Component> components = new ArrayList<>(this.components.size() > 0 ? this.components : this.children(Component.class));
         clear();
+        this.options.addAll(options);
         this.components = new ArrayList<>();
         components.forEach(this::add);
     }
@@ -189,9 +200,38 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
 
     private java.util.List<SelectorOption> findOptions() {
         java.util.List<SelectorOption> result = new ArrayList<>();
+        if (options.size() > 0) return map(options);
         java.util.List<Component> children = children(Component.class);
         children.forEach(c -> result.addAll(findOptions(c)));
         return result;
+    }
+
+    protected List<SelectorOption> map(List<String> options) {
+        return options.stream().map(o -> new SelectorOption() {
+            @Override
+            public String name() {
+                return o;
+            }
+
+            @Override
+            public String id() {
+                return o;
+            }
+
+            @Override
+            public void update() {
+            }
+
+            @Override
+            public <T extends Component> T visible(boolean value) {
+                return null;
+            }
+
+            @Override
+            public <T extends Display> T parent(Class<T> type) {
+                return null;
+            }
+        }).collect(Collectors.toList());
     }
 
     private java.util.List<SelectorOption> findOptions(Component child) {
@@ -208,7 +248,7 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         properties.addClassName("option");
         properties.put("id", option.id());
         properties.put("name", option.name());
-        properties.put("label"  , option.label());
+        properties.put("label", option.label());
         return (D) super.add(option);
     }
 

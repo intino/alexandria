@@ -59,6 +59,7 @@ Concept DataComponents
 	Concept Image extends Component
 		var string value = empty
 		var string defaultValue = empty
+		var boolean allowFullscreen = false
 		var integer:{%} mobileReduceFactor = 0%
 		Aspect Avatar
 			var string text

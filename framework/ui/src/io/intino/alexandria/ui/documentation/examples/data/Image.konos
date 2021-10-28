@@ -34,3 +34,15 @@ Template(layout=Vertical, spacing=DP8) imageExamplesMold
 							=========
 							Image(defaultValue\="images/image.jpg") image3 as Editable(format\=widgetDemo) Absolute(width\=200px, height\=200px)
 							=========
+
+	Block(layout=Horizontal, spacing=DP24)
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets (allowFullscreen)")
+			Block(spacing=DP8, format=filled)
+				Image(defaultValue="images/image.jpg", format=widgetDemo, allowFullscreen=true) as Absolute(width=200px, height=150px)
+				Block > Text as Code(language=Html)
+						value
+							=========
+							Image(defaultValue\="images/image.jpg", allowFullscreen\=true) as Absolute(width\=300px, height\=150px)
+							=========

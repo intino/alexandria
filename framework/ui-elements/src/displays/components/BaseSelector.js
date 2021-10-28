@@ -11,6 +11,7 @@ export default class BaseSelector extends AbstractBaseSelector {
             readonly: this.props.readonly,
     		selection: this.traceValue() ? this.traceValue() : [],
     		hiddenOptions: [],
+    		options : null,
 		};
 	};
 
@@ -18,10 +19,19 @@ export default class BaseSelector extends AbstractBaseSelector {
 		this.setState({ readonly });
 	};
 
+	refreshOptions = (options) => {
+	    this.setState({ options });
+	};
+
 	children = () => {
 		var result = this.props.children;
 
-		if (result == null) {
+		if (this.state.options != null) {
+			result = [];
+			const ownerId = this.props.id;
+			this.state.options.forEach(option => result.push(React.createElement(DisplayFactory.get("Text"), { id: ownerId + option, mode: 'normal', name: option, value: option, color: 'black', className: 'option'})));
+		}
+        else if (result == null) {
 			const instances = this.instances();
 			result = [];
 			instances.forEach(instance => result.push(React.createElement(DisplayFactory.get(instance.tp), instance.pl)));

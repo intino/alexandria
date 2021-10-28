@@ -5,6 +5,7 @@ import ImageRequester from "../../../gen/displays/requesters/ImageRequester";
 import {withStyles} from "@material-ui/core";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import BrowserUtil from "alexandria-ui-elements/src/util/BrowserUtil";
+import ImageGallery from 'react-image-gallery';
 
 const styles = theme => ({
 });
@@ -35,13 +36,23 @@ class Image extends AbstractImage {
 		if (this.state.value == null) return (<React.Fragment/>);
 		return (
 			<React.Fragment>
-				<img style={this.style()} title={this.props.label} src={this.state.value}/>
+			    {this.props.allowFullscreen && <ImageGallery items={[this._galleryItems()]} showThumbnails={false} showBullets={false} showPlayButton={false} /> }
+                {!this.props.allowFullscreen && <img style={this.style()} title={this.props.label} src={this.state.value}/> }
 			</React.Fragment>
 		);
 	};
 
 	resize = () => {
 		this.setState({ width: this._width(), height: this._height() });
+	};
+
+	_galleryItems = () => {
+	    return {
+	        original: this.state.value,
+	        originalHeight: this._height(),
+            originalWidth: this._width(),
+	        thumbnail: this.state.value
+        };
 	};
 
 	_width = () => {
