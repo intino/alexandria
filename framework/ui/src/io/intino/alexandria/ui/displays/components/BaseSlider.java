@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.schemas.Mark;
 import io.intino.alexandria.schemas.Selected;
 import io.intino.alexandria.schemas.ToolbarState;
 import io.intino.alexandria.ui.displays.components.slider.Animation;
@@ -11,10 +12,8 @@ import io.intino.alexandria.ui.displays.events.ChangeListener;
 import io.intino.alexandria.ui.displays.events.SelectListener;
 import io.intino.alexandria.ui.displays.notifiers.BaseSliderNotifier;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static java.util.stream.Collectors.toList;
 
@@ -95,6 +94,23 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		return this;
 	}
 
+	public BaseSlider<DN, B> marks(Long... marks) {
+		return marks(Arrays.stream(marks).map(this::markOf).collect(toList()));
+	}
+
+	public BaseSlider<DN, B> marks(Mark... marks) {
+		return marks(Arrays.stream(marks).collect(toList()));
+	}
+
+	public BaseSlider<DN, B> marks(java.util.List<Mark> markList) {
+		notifier.refreshMarks(markList);
+		return this;
+	}
+
+	protected Mark markOf(long value) {
+		return new Mark().value(value).label(format(value));
+	}
+
 	public void previous() {
 		value(value-1);
 	}
@@ -163,6 +179,7 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 	}
 
 	public abstract String formattedValue();
+	abstract String format(long value);
 	abstract void updateRange();
 
 	protected BaseSlider _value(long value) {

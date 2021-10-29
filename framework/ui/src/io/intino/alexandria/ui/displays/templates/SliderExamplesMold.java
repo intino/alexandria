@@ -1,8 +1,12 @@
 package io.intino.alexandria.ui.displays.templates;
 
+import io.intino.alexandria.schemas.Mark;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.components.slider.Ordinal;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class SliderExamplesMold extends AbstractSliderExamplesMold<AlexandriaUiBox> {
 
@@ -31,6 +35,11 @@ public class SliderExamplesMold extends AbstractSliderExamplesMold<AlexandriaUiB
         slider5.add(ordinal());
         slider5.onChange(event -> slider5.notifyUser(String.format("Se ha seleccionado el valor %d", (Long)event.value()), UserMessage.Type.Info));
         slider5.refresh();
+
+        slider6.add(ordinal());
+        slider6.marks(0L, 10L, 100L);
+        slider6.onChange(event -> slider6.notifyUser(String.format("Se ha seleccionado el valor %d", (Long)event.value()), UserMessage.Type.Info));
+        slider6.refresh();
     }
 
     private Ordinal ordinal() {

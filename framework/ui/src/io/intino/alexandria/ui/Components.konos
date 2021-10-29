@@ -138,6 +138,7 @@ Component baseSlider
 	Notification refreshToolbar as Object(ToolbarState)
 	Notification refreshRange as Object(Range)
 	Notification refreshReadonly as Bool
+	Notification refreshMarks as Object(Mark) List
 
 	Request update as LongInteger
 	Request selectOrdinal as Text
