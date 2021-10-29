@@ -113,6 +113,9 @@ Schema Ordinal
 	Attribute name as Text
 	Attribute label as Text
 	Attribute step as Integer
+Schema Mark
+	Attribute value as LongInteger
+	Attribute label as Text
 Schema Range
 	Attribute min as LongInteger
 	Attribute max as LongInteger

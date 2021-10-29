@@ -92,6 +92,7 @@ export default class BaseSlider extends AbstractBaseSlider {
 			ordinals: [],
 			ordinal: null,
 			readonly: this.props.readonly,
+			marks: null,
 		};
 	};
 
@@ -118,9 +119,10 @@ export default class BaseSlider extends AbstractBaseSlider {
 
 		const range = this.state.range;
 		const ordinal = this.state.ordinals[0];
+		const marks = this.state.marks;
 
 		return (<StyledSlider disabled={this.state.readonly} valueLabelDisplay="auto" min={range.min} max={range.max}
-							  value={this.getValue()} step={ordinal.step}
+							  value={this.getValue()} step={ordinal.step} marks={marks}
 							  onChange={this.handleChange.bind(this)}
 							  valueLabelFormat={this.handleFormattedValue.bind(this)}
 							  ValueLabelComponent={ValueLabelComponent}
@@ -213,6 +215,10 @@ export default class BaseSlider extends AbstractBaseSlider {
 
 	refreshReadonly = (readonly) => {
 		this.setState({readonly});
+	};
+
+	refreshMarks = (marks) => {
+		this.setState({marks});
 	};
 
 	handleFormattedValue = (value, index) => {

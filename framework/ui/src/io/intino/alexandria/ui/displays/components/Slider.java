@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.schemas.Mark;
 import io.intino.alexandria.ui.displays.components.slider.Ordinal;
 import io.intino.alexandria.ui.displays.notifiers.SliderNotifier;
 
@@ -12,8 +13,12 @@ public class Slider<DN extends SliderNotifier, B extends Box> extends AbstractSl
 
     @Override
     public String formattedValue() {
+        return format(value());
+    }
+
+    @Override
+    String format(long value) {
         Ordinal ordinal = ordinal();
-        long value = value();
         return ordinal != null ? ordinal.formatter(language()).format(value) : String.valueOf(value);
     }
 
