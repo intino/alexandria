@@ -47,6 +47,5 @@ public class BlockDrawer<DN extends BlockDrawerNotifier, B extends Box> extends 
     private void notifyToggle() {
         notifier.refresh(opened);
         toggleListeners.forEach(l -> l.accept(new ToggleEvent(this, opened)));
-		updateVisibility(opened);
     }
 }

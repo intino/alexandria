@@ -3,6 +3,7 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.actionable.CloseListener;
+import io.intino.alexandria.ui.displays.events.actionable.ToggleEvent;
 import io.intino.alexandria.ui.displays.notifiers.CloseDrawerNotifier;
 
 public class CloseDrawer<DN extends CloseDrawerNotifier, B extends Box> extends AbstractCloseDrawer<DN, B> {
@@ -21,8 +22,10 @@ public class CloseDrawer<DN extends CloseDrawerNotifier, B extends Box> extends 
 	public CloseDrawer bindTo(BlockDrawer drawer) {
 		this.drawer = drawer;
 		updateVisibility(drawer.isOpened());
-		drawer.onShow(e -> show());
-		drawer.onHide(e -> hide());
+		drawer.onToggle(e -> {
+			if (e.state() == ToggleEvent.State.Off) hide();
+			else show();
+		});
 		return this;
 	}
 
