@@ -16,7 +16,8 @@ public class DisplayStamp<DN extends DisplayStampNotifier, B extends Box> extend
     @Override
     public void didMount() {
         super.didMount();
-        if (display != null) display.refresh();
+        clear();
+        if (display != null) mount(display);
         refresh();
     }
 

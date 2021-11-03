@@ -240,6 +240,15 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		return child;
 	}
 
+	public <D extends Display> D mount(D child) {
+		addPromise(child, container(child));
+		((Display)child).parent(this);
+		promisedChildren(child.container).remove(child);
+		repository.register(child);
+		addChild(child, container(child));
+		return child;
+	}
+
 	public <D extends Display> D addPromise(D child) {
 		return addPromise(child, container(child));
 	}
