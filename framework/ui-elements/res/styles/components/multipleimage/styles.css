@@ -8,6 +8,7 @@
 
 .image-gallery, .image-gallery-slide-wrapper {
     min-height: 200px;
+    overflow: hidden;
 }
 
 .image-gallery-swipe {
