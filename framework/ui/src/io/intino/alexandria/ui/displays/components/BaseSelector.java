@@ -129,6 +129,7 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         List<Component> components = new ArrayList<>(this.components.size() > 0 ? this.components : this.children(Component.class));
         clear();
         this.options.addAll(options);
+        if (this.options.size() > 0) notifier.refreshOptions(options);
         this.components = new ArrayList<>();
         components.forEach(this::add);
     }
