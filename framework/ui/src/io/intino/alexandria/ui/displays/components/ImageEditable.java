@@ -12,6 +12,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> extends AbstractImageEditable<DN, B> implements Editable<DN, B> {
 	private URL defaultValue;
@@ -43,7 +45,7 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
     	return new UIFile() {
 			@Override
 			public String label() {
-				if (filename() != null) return filename();
+				if (filename() != null) return URLEncoder.encode(filename(), StandardCharsets.UTF_8);
 				String path = value().getPath();
 				return path.contains("/") ? path.substring(path.lastIndexOf("/")+1) : path;
 			}

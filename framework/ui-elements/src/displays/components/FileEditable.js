@@ -28,6 +28,7 @@ export default class FileEditable extends AbstractFile {
 		this.state = {
 		    ...this.state,
             value : null,
+            filename : null,
             readonly : this.props.readonly,
             editable : false,
         };
@@ -123,6 +124,7 @@ export default class FileEditable extends AbstractFile {
 	};
 
 	filename = () => {
+	    if (this.state.filename != null) return this.state.filename;
 	    const id = this.state.value.substr(this.state.value.lastIndexOf("/")+1);
 	    let filename = id;
 	    try { filename = atob(id); }
@@ -161,7 +163,7 @@ export default class FileEditable extends AbstractFile {
 	}
 
 	refresh = (info) => {
-		this.setState({ value: info.value });
+		this.setState({ value: info.value, filename: info.filename });
 	};
 
 	refreshReadonly = (readonly) => {

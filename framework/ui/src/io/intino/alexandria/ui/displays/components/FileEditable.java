@@ -15,6 +15,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.UUID;
 
@@ -86,7 +88,7 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 		return new UIFile() {
 			@Override
 			public String label() {
-				if (filename() != null) return filename();
+				if (filename() != null) return URLEncoder.encode(filename(), StandardCharsets.UTF_8);
 				String path = value.getPath();
 				return path.contains("/") ? path.substring(path.lastIndexOf("/")+1) : path;
 			}
