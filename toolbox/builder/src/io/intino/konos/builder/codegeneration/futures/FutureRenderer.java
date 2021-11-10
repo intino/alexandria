@@ -47,7 +47,6 @@ public class FutureRenderer extends Renderer {
 		File file = javaFile(new File(src(), "agenda"), firstUpperCase(future.name$()));
 		if (file.exists()) return;
 		Commons.writeFrame(new File(src(), "agenda"), firstUpperCase(future.name$()), template().render(frame));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(future), javaFile(new File(src(), "agenda"), firstUpperCase(future.name$())).getAbsolutePath()));
 	}
 
 	private void renderAbstract(Frame frame) {
