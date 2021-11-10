@@ -100,7 +100,13 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 
 	items = () => {
 		var children = this.children();
-		return React.Children.map(children, (option, i) => { return { value: this._name(option), label: this._label(option), item: option }});
+		const result = React.Children.map(children, (option, i) => { return { value: this._name(option), label: this._label(option), item: option }});
+		const selection = this.state.selection;
+		for (let i=0; i<selection.length; i++) {
+		    if (this.option(result, selection[i]) == null)
+		        result.unshift({ value: selection[i], label: selection[i], item: selection[i], disabled: true });
+		}
+		return result;
 	};
 
 	renderOption = (options) => {
@@ -168,6 +174,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		}
 		return null;
 	};
+
 }
 
 export default withStyles(styles, { withTheme: true })(SelectorComboBox);
