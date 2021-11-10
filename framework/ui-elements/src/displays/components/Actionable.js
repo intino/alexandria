@@ -191,7 +191,7 @@ export default class Actionable extends AbstractActionable {
 		    <Dialog onClose={this.handleSignClose} open={openSign}>
 				<DialogTitle onClose={this.handleSignClose}>{this.translate("Sign")}</DialogTitle>
 				<DialogContent>
-				    <DialogContentText style={{marginBottom:'5px'}}>{this.props.signed.text}</DialogContentText>
+				    <DialogContentText style={{marginBottom:'5px'}}>{this.translate(this.props.signed.text)}</DialogContentText>
 				    <TextField autoFocus={true} style={{width:'100%'}} type="password" value={this.translate(this.state.signInfo.sign)}
 				               onChange={this.handleSignTextChange.bind(this)} onKeyPress={this.handleSignKeypress.bind(this)}/>
 				    {this.requireSignReason() &&

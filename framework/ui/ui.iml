@@ -76,7 +76,6 @@
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-servlet:9.4.31.v20200723" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-api:9.4.31.v20200723" level="project" />
     <orderEntry type="module" module-name="message" />
-    <orderEntry type="module" module-name="ui-elements" />
     <orderEntry type="library" name="Intino: org.antlr:antlr4-runtime:4.9.1" level="project" />
     <orderEntry type="library" name="Intino: commons-codec:commons-codec:1.10" level="project" />
     <orderEntry type="library" name="Intino: eu.medsea.mimeutil:mime-util:2.1.1" level="project" />
@@ -92,5 +91,6 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
     <orderEntry type="library" name="Intino: net.rforge:Rserve:0.6-8.1" level="project" />
     <orderEntry type="library" name="Intino: net.rforge:REngine:0.6-8.1" level="project" />
+    <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>
