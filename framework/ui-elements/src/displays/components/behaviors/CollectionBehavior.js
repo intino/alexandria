@@ -47,7 +47,7 @@ const CollectionBehavior = (collection) => {
         let itemHeight = self.collection.props.itemHeight;
         const hasMore = items.length < self.collection.state.itemCount;
         const scrollableTarget = self.collection.props.id + "_infinite";
-        if (width <= 800) itemHeight += (itemHeight/2);
+        if (width <= 800) itemHeight += (itemHeight/4.5);
         self.notifyItemsRendered(items);
         return (
             <div id={scrollableTarget} style={{ height: height, width: width, overflow: "auto" }}>
