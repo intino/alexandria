@@ -2,7 +2,7 @@ def type(jmxserver)
 	package $package+ValidPackage;
 
 	import io.intino.alexandria.jmx.JMXServer;
-
+	import io.intino.alexandria.logger.Logger;
 	import io.intino.alexandria.core.Box;
 	import java.util.HashMap;
 	import java.util.Map;
