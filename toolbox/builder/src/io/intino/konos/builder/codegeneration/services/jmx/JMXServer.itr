@@ -26,6 +26,7 @@ end
 def type(jmx) type(interface)
 	package $package+ValidPackage.jmx;
 
+	import io.intino.alexandria.logger.Logger;
 	import io.intino.alexandria.jmx.Description;
     import io.intino.alexandria.jmx.Parameters;
 
@@ -64,6 +65,7 @@ end
 def type(jmx) type(implementation)
 	package $package+ValidPackage.jmx;
 
+	import io.intino.alexandria.logger.Logger;
 	import $package.$box+validName+FirstUpperCase~Box;
 	import java.util.*;
 	import java.time.*;
