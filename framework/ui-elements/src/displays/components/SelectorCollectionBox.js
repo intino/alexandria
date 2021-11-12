@@ -10,6 +10,13 @@ import classNames from 'classnames';
 import { withSnackbar } from 'notistack';
 import 'alexandria-ui-elements/res/styles/layout.css';
 
+const SelectorCollectionBoxViewStyles = {
+    singleValue: (provided, state) => ({
+        ...provided,
+        color: '#333333',
+    }),
+};
+
 const styles = theme => ({
 	container : {
 		position: "relative",
@@ -79,7 +86,8 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 						onChange={this.handleChange.bind(this)}
 						onInputChange={this.handleSearch.bind(this)}
 						onMenuOpen={this.handleOpen.bind(this)}
-						onMenuClose={this.handleClose.bind(this)}/>
+						onMenuClose={this.handleClose.bind(this)}
+						styles={SelectorCollectionBoxViewStyles}/>
     			{this.props.allowOther && <div className="layout vertical end"><a className={classes.other} onClick={this.handleAllowOther.bind(this)}>{label != null ? this.translate("Add") + " " + this.translate(label).toLowerCase() : this.translate("Add other")}</a></div>}
 			</div>
         );

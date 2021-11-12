@@ -7,7 +7,7 @@ import SelectorComboBoxRequester from "../../../gen/displays/requesters/Selector
 import Select, { components } from "react-select";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
-const selectTextViewStyles = {
+const SelectorComboBoxTextViewStyles = {
     control: (provided, state) => ({
         ...provided,
         background: 'transparent',
@@ -32,7 +32,14 @@ const selectTextViewStyles = {
         ...provided,
         height: '20px',
     }),
-}
+};
+
+const SelectorComboBoxStyles = {
+    singleValue: (provided, state) => ({
+        ...provided,
+        color: '#333333',
+    }),
+};
 
 const styles = theme => ({
 	container : {
@@ -76,7 +83,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		const label = this.props.label;
 		const value = this.selection(items);
 		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
-		const styles = this.props.view === "TextView" ? selectTextViewStyles : undefined;
+		const styles = this.props.view === "TextView" ? { ...SelectorComboBoxStyles, ...SelectorComboBoxTextViewStyles } : { ...SelectorComboBoxStyles };
 
 		return (
 			<div className={classes.container} style={{...this.style()}}>
