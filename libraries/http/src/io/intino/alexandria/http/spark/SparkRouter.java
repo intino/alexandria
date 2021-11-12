@@ -47,6 +47,11 @@ public class SparkRouter<SM extends SparkManager> {
 		return this;
 	}
 
+	public SparkRouter<SM> patch(AlexandriaSpark.ResourceCaller<SM> caller) {
+		service.patch(path, (rq, rs) -> execute(caller, manager(rq, rs)));
+		return this;
+	}
+
 	public SparkRouter<SM> after(AlexandriaSpark.ResourceCaller<SM> caller) {
 		service.after(path, (rq, rs) -> after(caller, manager(rq, rs)));
 		return this;
@@ -94,23 +99,20 @@ public class SparkRouter<SM extends SparkManager> {
 
 	private Object execute(AlexandriaSpark.ResourceCaller<SM> caller, SparkManager manager) {
 		if (!validRequest(manager)) return "FAILURE";
-		try {
-			caller.call((SM) manager);
-		} catch (AlexandriaException e) {
-			manager.response.status(Integer.parseInt(e.code()));
-			manager.response.body(e.toString());
-			return e.toString();
-		}
-		return "OK";
+		return call(caller, manager);
 	}
 
 	private Object after(AlexandriaSpark.ResourceCaller<SM> caller, SparkManager manager) {
+		return call(caller, manager);
+	}
+
+	private Object call(AlexandriaSpark.ResourceCaller<SM> caller, SparkManager manager) {
 		try {
 			caller.call((SM) manager);
 		} catch (AlexandriaException e) {
 			manager.response.status(Integer.parseInt(e.code()));
 			manager.response.body(e.toString());
-			return e.toString();
+			service.halt(Integer.parseInt(e.code()), e.toString());
 		}
 		return "OK";
 	}
