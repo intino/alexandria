@@ -207,7 +207,7 @@ public class SparkManager<P extends PushService> {
 	}
 
 	private boolean textContentType(Part p) {
-		return p.getContentType().equals("application/json") || p.getContentType().equals("text/plain");
+		return "application/json".equals(p.getContentType()) || "text/plain".equals(p.getContentType());
 	}
 
 	private void setUpMultipartConfiguration() {
