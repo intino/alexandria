@@ -44,8 +44,8 @@ public class PageRenderer extends ActionRenderer {
 		builder.add("parameter", parameters());
 		builder.add("contextProperty", contextPropertyFrame());
 		service.useList().forEach(use -> builder.add("usedUnit", usedUnitFrame(use)));
+		if (service.title() != null) builder.add("title", service.title());
 		if (service.favicon() != null) builder.add("favicon", service.favicon());
-		else if (service.title() != null) builder.add("title", service.title());
 		compilationContext.classes().put(resource.getClass().getSimpleName() + "#" + firstUpperCase(resource.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(resource.name$())) + suffix());
 		if (!alreadyRendered(src(), resource.name$())) {
 			writeFrame(destinyPackage(src()), resource.name$() + suffix(), template().render(builder.toFrame()));
