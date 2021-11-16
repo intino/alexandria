@@ -32,7 +32,7 @@ class DateEditable extends AbstractDateEditable {
             value : this.props.value,
             readonly : this.props.readonly,
             views : this.props.views,
-            empty : false,
+            empty : this.props.value == null,
         };
 	};
 
@@ -49,19 +49,20 @@ class DateEditable extends AbstractDateEditable {
 		const dateLabel = this.translate(this.props.label != null ? this.props.label : undefined);
 		const timeLabel = this.translate(this.props.label != null ? this.props.label : undefined);
 		const pattern = this.state.pattern;
+		const value = this.state.value != null ? this.state.value : null;
 		return (
 			<div style={this.style()}>
 				{ !timePicker ? <MuiPickersUtilsProvider utils={MomentUtils}><KeyboardDatePicker variant="inline" placeholder={pattern} autoOk
 																								 disabled={this.state.readonly}
 																								 format={pattern} className={classes.date} mask={this.props.mask}
-																								 value={this.state.value} onChange={this.handleChange.bind(this)}
+																								 value={value} onChange={this.handleChange.bind(this)}
 																								 minDate={range.min} maxDate={range.max} label={dateLabel} views={this.views()}
 																								 minDateMessage={this.translate("Date should not be before minimal date")}
 																								 maxDateMessage={this.translate("Date should not be after maximal date")}/></MuiPickersUtilsProvider> : undefined }
 				{ timePicker ? <MuiPickersUtilsProvider utils={MomentUtils}><KeyboardDateTimePicker variant="inline" placeholder={pattern} autoOk
 																									disabled={this.state.readonly}
 																									format={pattern} className={classes.datetime}
-																									value={this.state.value} onChange={this.handleChange.bind(this)}
+																									value={value} onChange={this.handleChange.bind(this)}
 																									minDate={range.min} maxDate={range.max} label={timeLabel}
 																									minDateMessage={this.translate("Date should not be before minimal date")}
 																									maxDateMessage={this.translate("Date should not be after maximal date")}/></MuiPickersUtilsProvider> : undefined }
@@ -74,7 +75,7 @@ class DateEditable extends AbstractDateEditable {
 	    const _date = new Date(value);
 		const _utcDate = new Date(_date.getUTCFullYear(), _date.getUTCMonth(), _date.getUTCDate(), _date.getUTCHours(), _date.getUTCMinutes(), _date.getUTCSeconds(), _date.getUTCMilliseconds())
 		const date = value != null ? _utcDate : null;
-        this.setState({ value: date, empty: date == null });
+        this.setState({ value: date, empty: date === null });
 	};
 
 	refreshPattern = (pattern) => {
@@ -100,7 +101,7 @@ class DateEditable extends AbstractDateEditable {
 
 	_notifyChange = (date) => {
 		this.requester.notifyChange(date != null ? date.getTime() : null);
-		this.setState({ value: date != null ? date : null, empty: date == null || date === ""});
+		this.setState({ value: date != null ? date : null, empty: date === null || date === ""});
 	};
 
 	views = () => {
