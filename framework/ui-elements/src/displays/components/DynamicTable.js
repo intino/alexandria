@@ -692,7 +692,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const sectionLabel = this.state.section != null ? this.state.section.label : "";
 
         return (
-            <Dialog open={this.state.open} onEntered={this.handleOpen.bind(this)} onClose={this.handleClose.bind(this)} aria-labelledby="form-dialog-title" fullScreen TransitionComponent={BaseDialog.Transition}>
+            <Dialog open={this.state.open} onEntered={this.handleOpen.bind(this)} onClose={this.handleClose.bind(this)} aria-labelledby="form-dialog-title" fullScreen TransitionComponent={BaseDialog.SlideTransition}>
                 <DialogTitle id="form-dialog-title" className={classes.dialogHeader}>
                     <div className="layout horizontal center">
                         <div className="layout horizontal flex" style={{color:'white'}}><Typography variant="h4">{this.translate("Items of") + " " + sectionLabel + " " + this.translate("in") + " " + this.state.row}</Typography></div>

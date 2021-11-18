@@ -1,5 +1,5 @@
 import React from "react";
-import { Dialog as MuiDialog, DialogContent, Slide, Typography, AppBar, IconButton } from "@material-ui/core"
+import { Dialog as MuiDialog, DialogContent, Fade, Grow, Slide, Zoom, Typography, AppBar, IconButton } from "@material-ui/core"
 import { Home, Close } from "@material-ui/icons";
 import { withStyles } from '@material-ui/core/styles';
 import AbstractLayer from "../../../gen/displays/components/AbstractLayer";
@@ -39,9 +39,21 @@ class Layer extends AbstractLayer {
         };
 	};
 
-	static Transition = React.forwardRef(function Transition(props, ref) {
-		return <Slide direction="up" ref={ref} {...props} />;
-	});
+    static FadeTransition = React.forwardRef(function Transition(props, ref) {
+        return <Fade ref={ref} {...props} />;
+    });
+
+    static GrowTransition = React.forwardRef(function Transition(props, ref) {
+        return <Grow ref={ref} {...props} />;
+    });
+
+    static SlideTransition = React.forwardRef(function Transition(props, ref) {
+        return <Slide direction="up" ref={ref} {...props} />;
+    });
+
+    static ZoomTransition = React.forwardRef(function Transition(props, ref) {
+        return <Zoom ref={ref} {...props} />;
+    });
 
 	render() {
 		return this.renderLayer();
@@ -53,7 +65,7 @@ class Layer extends AbstractLayer {
 					   onClose={this.handleClose.bind(this)}
 					   disableBackdropClick={false}
 					   disableEscapeKeyDown={false}
-					   TransitionComponent={Layer.Transition}
+					   TransitionComponent={this._transition()}
                        aria-labelledby={this.props.id + "_draggable"}>
 				{this.renderTitle()}
 				{this.renderContent()}
@@ -112,6 +124,12 @@ class Layer extends AbstractLayer {
 		this.setState({homeAvailable:value});
 	};
 
+    _transition = () => {
+        if (this.props.transition === "Grow") return Layer.GrowTransition;
+        else if (this.props.transition === "Fade") return Layer.FadeTransition;
+        else if (this.props.transition === "Zoom") return Layer.ZoomTransition;
+        return Layer.SlideTransition;
+    };
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(Layer));

@@ -18,6 +18,7 @@ public class OpenLayerRenderer extends ActionableRenderer {
 	public FrameBuilder properties() {
 		FrameBuilder result = super.properties();
 		addAddressableProperties(result);
+		if (element.asOpenLayer().transition() != null) result.add("transition", element.asOpenLayer().transition().name());
 		return result;
 	}
 

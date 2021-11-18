@@ -1,12 +1,10 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.addressable.Addressable;
 import io.intino.alexandria.ui.displays.events.actionable.OpenLayerEvent;
 import io.intino.alexandria.ui.displays.events.actionable.OpenLayerListener;
 import io.intino.alexandria.ui.displays.notifiers.OpenLayerNotifier;
-import io.intino.alexandria.ui.utils.DelayerUtil;
 
 import java.util.UUID;
 
@@ -15,10 +13,13 @@ public class OpenLayer<DN extends OpenLayerNotifier, B extends Box> extends Abst
 	private OpenLayerListener openListener = null;
 	private String path;
 	private String address;
+	private Transition transition = Transition.Slide;
 
 	public OpenLayer(B box) {
 		super(box);
 	}
+
+	public enum Transition { Slide, Zoom, Fade, Grow }
 
 	public OpenLayer<DN, B> onOpen(OpenLayerListener listener) {
 		this.openListener = listener;
@@ -39,6 +40,11 @@ public class OpenLayer<DN extends OpenLayerNotifier, B extends Box> extends Abst
 	protected OpenLayer<DN, B> _path(String path) {
 		this.path = path;
 		this._address(path);
+		return this;
+	}
+
+	protected OpenLayer<DN, B> _transition(Transition transition) {
+		this.transition = transition;
 		return this;
 	}
 
@@ -73,6 +79,7 @@ public class OpenLayer<DN extends OpenLayerNotifier, B extends Box> extends Abst
 
 	private Layer<?, ?> createLayer() {
 		Layer<?, ?> result = new Layer<>(box()).id(UUID.randomUUID().toString());
+		result.properties().put("transition", transition.name());
 		result.bindTo(this);
 		return result;
 	}

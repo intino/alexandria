@@ -133,18 +133,17 @@ public abstract class Soul implements DisplayRepository {
         registerListeners.add(consumer);
     }
 
-    public void remove(Display<?, ?> display) {
+    public <T extends Display> void remove(T display) {
+        unregister(display);
+        display.remove();
+    }
+
+    public <T extends Display> void unregister(T display) {
         String ownerId = display.owner() != null ? display.owner().id() : "";
         String context = display.owner() != null ? display.owner().path() : "";
         this.displays.remove(ownerId + display.id());
         this.displays.remove(context + display.id());
         if (isUUID(display.id())) this.displays.remove(display.id());
-        display.remove();
-    }
-
-    @Override
-    public void remove(String id) {
-        this.displays.remove(id);
     }
 
     private Display findDisplay(String owner, String context, String id) {

@@ -166,11 +166,11 @@ export default class BaseSlider extends AbstractBaseSlider {
 	};
 
 	getValue = () => {
-		return this.state.selected != null && && this.state.selected.value !== undefined this.state.selected.value !== -1 ? this.state.selected.value : 0;
+		return this.state.selected != null && this.state.selected.value !== undefined && this.state.selected.value !== -1 ? this.state.selected.value : 0;
 	};
 
 	getFormattedValue = () => {
-		return this.state.selected != null && && this.state.selected.value !== undefined this.state.selected.value !== -1 ? this.state.selected.formattedValue : 0;
+		return this.state.selected != null && this.state.selected.value !== undefined && this.state.selected.value !== -1 ? this.state.selected.formattedValue : 0;
 	};
 
 	renderOrdinals = () => {

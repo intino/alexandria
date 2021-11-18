@@ -40,7 +40,7 @@ class CollectionDialog extends AbstractCollectionDialog {
 			        onClose={this.handleClose.bind(this)}
                     disableBackdropClick={this.state.modal}
                     disableEscapeKeyDown={this.state.modal}
-			        TransitionComponent={this.props.fullscreen ? BaseDialog.Transition : undefined}
+			        TransitionComponent={this.props.fullscreen ? this._transition() : undefined}
 			        PaperComponent={!this.props.fullscreen ? makeDraggable.bind(this, this.props.id, this.sizeStyle()) : undefined}
                     aria-labelledby={this.props.id + "_draggable"}>
 				{this.renderTitle()}

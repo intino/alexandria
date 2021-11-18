@@ -30,7 +30,10 @@ public class PageCollectionBehavior<DS extends PageDatasource<Item>, Item> exten
     }
 
 	public void page(int pos) {
-		computeUpdate(e -> page = pos);
+		collection().clear();
+		page = pos;
+		List<Item> items = itemLoader.page(this.page);
+		collection().insert(items, itemLoader.start(this.page));
 	}
 
 	public void pageSize(int size) {

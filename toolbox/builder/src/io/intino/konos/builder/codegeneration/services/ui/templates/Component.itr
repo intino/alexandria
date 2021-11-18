@@ -52,6 +52,10 @@ def type(component & child) trigger(declaration)
 	public [$ancestors+firstUpperCase...[.].] $name+firstUpperCase $name;
 end
 
+def type(component) trigger(unregister)
+	if ($name != null) $name.unregister();
+end
+
 def type(method & multiple & collapsable)
 	[$editableMethods]
 	[$editableClass]
@@ -186,6 +190,12 @@ def type(component & child & displaystamp) trigger(class)
 			[$reference...[$NL]]
 			[$component+child...[$NL]]
 		}
+
+		@Override
+		public void unregister() {
+		    super.unregister();
+			[$component+unregister...[$NL]]
+		}
 		$methods
 		[$component+class...[$NL$NL]]
 		[$component+method...[$NL$NL]]
@@ -225,6 +235,12 @@ def type(component & child & collection) trigger(class)
 			[$reference...[$NL]]
 			[$component+child...[$NL]]
 		}
+
+		@Override
+		public void unregister() {
+		    super.unregister();
+			[$component+unregister...[$NL]]
+		}
 		$methods
 		[$component+class...[$NL$NL]]
 		[$component+method...[$NL$NL]]
@@ -253,6 +269,12 @@ def type(component & child & block & conditional) trigger(class)
 			[$component+child...[$NL]]
 			[$component+conditionalReferences...[$NL]]
 		}
+
+		@Override
+		public void unregister() {
+		    super.unregister();
+			[$component+unregister...[$NL]]
+		}
 		$methods
 		[$component+class...[$NL$NL]]
 		[$component+method...[$NL$NL]]
@@ -275,6 +297,12 @@ def type(component & child) trigger(class)
 			super.init();
 			[$reference...[$NL]]
 			[$component+child...[$NL]]
+		}
+
+		@Override
+		public void unregister() {
+		    super.unregister();
+			[$component+unregister...[$NL]]
 		}
 		$methods
 		[$component+class...[$NL$NL]]
@@ -679,6 +707,7 @@ end
 
 def type(properties & openlayer) trigger(specific)
 	[_path("$path");]
+	[_transition(io.intino.alexandria.ui.displays.components.OpenLayer.Transition.valueOf("$transition"));]
 end
 
 def type(properties & openpopover) trigger(specific)

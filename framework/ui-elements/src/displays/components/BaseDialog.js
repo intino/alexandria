@@ -1,5 +1,5 @@
 import React from "react";
-import {Typography, DialogTitle, AppBar, Slide, DialogContent, Paper, IconButton } from "@material-ui/core"
+import {Typography, DialogTitle, AppBar, Fade, Grow, Slide, Zoom, DialogContent, Paper, IconButton } from "@material-ui/core"
 import AbstractBaseDialog from "../../../gen/displays/components/AbstractBaseDialog";
 import { Close } from "@material-ui/icons";
 import 'alexandria-ui-elements/res/styles/layout.css';
@@ -33,8 +33,20 @@ export default class BaseDialog extends AbstractBaseDialog {
 		},
 	});
 
-	static Transition = React.forwardRef(function Transition(props, ref) {
+	static FadeTransition = React.forwardRef(function Transition(props, ref) {
+		return <Fade ref={ref} {...props} />;
+	});
+
+	static GrowTransition = React.forwardRef(function Transition(props, ref) {
+		return <Grow ref={ref} {...props} />;
+	});
+
+	static SlideTransition = React.forwardRef(function Transition(props, ref) {
 		return <Slide direction="up" ref={ref} {...props} />;
+	});
+
+	static ZoomTransition = React.forwardRef(function Transition(props, ref) {
+		return <Zoom ref={ref} {...props} />;
 	});
 
 	constructor(props) {
@@ -97,4 +109,13 @@ export default class BaseDialog extends AbstractBaseDialog {
 	_heightDefined = () => {
 	    return this.state.size.height != null && this.state.size.height.indexOf("-1") === -1;
 	}
+
+    _transition = () => {
+        const animation = this.props.animation;
+        if (animation == null) return BaseDialog.SlideTransition;
+        else if (animation.mode === "Grow") return BaseDialog.GrowTransition;
+        else if (animation.mode === "Fade") return BaseDialog.FadeTransition;
+        else if (animation.mode === "Zoom") return BaseDialog.ZoomTransition;
+        return BaseDialog.SlideTransition;
+    };
 }
