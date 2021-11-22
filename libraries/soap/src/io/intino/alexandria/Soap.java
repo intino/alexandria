@@ -47,5 +47,5 @@ public class Soap {
 					"$parameter" +
 					"\t\t</$name>";
 
-	private static final String parameterTemplate = "\t\t\t<R:$name>$value</$name>\n";
+	private static final String parameterTemplate = "\t\t\t<R:$name>$value</R:$name>\n";
 }
