@@ -8,7 +8,7 @@ import java.util.Map;
 public class Soap {
 
 	public Envelope readEnvelope(String value) {
-		return new Envelope(new Xml(value).document().child("S:Envelope"));
+		return new Envelope(new Xml(value).document().getFirstChild());
 	}
 
 	public String writeEnvelope(Object schema, String xmlns) {
