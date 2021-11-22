@@ -14,8 +14,8 @@ public class Slider<DN extends SliderNotifier, B extends Box> extends AbstractSl
     }
 
     @Override
-    public String formattedValue() {
-        return format(value());
+    public String formattedValue(long value) {
+        return format(value);
     }
 
     @Override

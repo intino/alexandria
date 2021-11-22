@@ -40,6 +40,10 @@ public class SliderExamplesMold extends AbstractSliderExamplesMold<AlexandriaUiB
         slider6.marks(0L, 10L, 100L);
         slider6.onChange(event -> slider6.notifyUser(String.format("Se ha seleccionado el valor %d", (Long)event.value()), UserMessage.Type.Info));
         slider6.refresh();
+
+        slider7.add(ordinal());
+        slider7.onChange(event -> slider6.notifyUser(String.format("Se ha seleccionado el valor %d", (Long)event.value()), UserMessage.Type.Info));
+        slider7.refresh();
     }
 
     private Ordinal ordinal() {

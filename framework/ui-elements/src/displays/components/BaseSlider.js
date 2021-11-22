@@ -106,10 +106,12 @@ export default class BaseSlider extends AbstractBaseSlider {
 		if (range == null)
 			return (<div style={this.style()}>{this.translate("No range defined!")}</div>);
 
+		const position = this.props.position;
 		return (
 			<div style={this.style()} className="layout vertical flex">
-				{this.renderSlider()}
+				{(position == null || position === "SliderTop") && this.renderSlider()}
 				{this.renderToolbar()}
+				{position === "SliderBottom" && this.renderSlider()}
 			</div>
 		);
 	};
@@ -123,7 +125,8 @@ export default class BaseSlider extends AbstractBaseSlider {
 
 		return (<StyledSlider disabled={this.state.readonly} valueLabelDisplay="auto" min={range.min} max={range.max}
 							  value={this.getValue()} step={ordinal.step} marks={marks}
-							  onChange={this.handleChange.bind(this)}
+							  onChange={this.handleMoved.bind(this)}
+							  onChangeCommitted={this.handleChange.bind(this)}
 							  valueLabelFormat={this.handleFormattedValue.bind(this)}
 							  ValueLabelComponent={ValueLabelComponent}
 		/>);
@@ -181,6 +184,11 @@ export default class BaseSlider extends AbstractBaseSlider {
 				{this.state.ordinals.map((ordinal, i) => <MenuItem key={i} value={ordinal.name}>{this.translate(ordinal.label)}</MenuItem>)}
 			</Select>
 		);
+	};
+
+	handleMoved = (e, value) => {
+		this.requester.moved(value);
+		this.setState({value});
 	};
 
 	handleChange = (e, value) => {

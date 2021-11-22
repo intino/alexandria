@@ -59,7 +59,7 @@ def type(properties & actionable) trigger(common)
 end
 
 def type(properties & abstractslider) trigger(common)
-	[ label="$label"][ format="$format...[ ]"][ color="$color"][ traceable={$traceable}][ arrangement="$arrangement"][ animation={{interval:$interval,loop:$loop}}][ readonly={$readonly}][ visible={$visible}][ style="$style"]
+	[ label="$label"][ format="$format...[ ]"][ color="$color"][ traceable={$traceable}][ arrangement="$arrangement"][ animation={{interval:$interval,loop:$loop}}][ readonly={$readonly}][ visible={$visible}][ style="$style"][ position="$position"]
 end
 
 def type(properties & dashboard) trigger(common)

@@ -56,7 +56,7 @@ public class BaseImage<DN extends BaseImageNotifier, B extends Box> extends Abst
 
     protected BaseImage<DN, B> _value(java.io.File file) {
         try {
-            return _value(value != null ? file.toURI().toURL() : null);
+            return _value(file != null ? file.toURI().toURL() : null);
         } catch (MalformedURLException e) {
             Logger.error(e);
             return this;

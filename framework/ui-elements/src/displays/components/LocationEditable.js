@@ -34,6 +34,7 @@ class LocationEditable extends AbstractLocationEditable {
 	};
 
 	render() {
+	    if (!this.state.visible) return (<React.Fragment/>);
 		return this.renderLayer(() => this.renderEditor());
 	};
 

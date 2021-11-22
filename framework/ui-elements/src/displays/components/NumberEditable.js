@@ -34,6 +34,8 @@ class NumberEditable extends AbstractNumberEditable {
 	};
 
 	render() {
+	    if (!this.state.visible) return (<React.Fragment/>);
+
 		const { classes } = this.props;
 		const label = this.props.label !== "" ? this.translate(this.props.label) : undefined;
 		const error = this.state.error;

@@ -190,6 +190,7 @@ Concept:{0..1} VisualizationComponents
 	Concept AbstractSlider extends Component
 		var word:{Vertical Horizontal} arrangement = Horizontal
 		var word:{Full ToolbarOnly SliderOnly NavigationOnly OrdinalSelectorOnly} style = Full
+		var word:{SliderTop SliderBottom} position = SliderTop
 		var integer value = -1
 		Concept:{0..1} Animation
 			var integer:{Millis} interval

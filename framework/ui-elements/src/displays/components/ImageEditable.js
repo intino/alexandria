@@ -88,6 +88,8 @@ class ImageEditable extends AbstractImageEditable {
 	};
 
 	render() {
+	    if (!this.state.visible) return (<React.Fragment/>);
+
 		const { classes } = this.props;
 		const inputId = this._inputId();
 		const theme = Theme.get();
@@ -95,6 +97,7 @@ class ImageEditable extends AbstractImageEditable {
 		const borderDisplay = this.state.readonly ? "flex" : "none";
 		const removeButtonDisplay = this.state.readonly || this.state.value == null ? "none" : "flex";
 		const showImageGallery = this._showImageGallery();
+
 		return (
 			<div style={{...this.style(),position:'relative'}}>
 			    { ComponentBehavior.labelBlock(this.props, "body1", { color: theme.palette.grey.A700, marginRight: '5px', fontSize: "9pt", color: "#777777" }) }
