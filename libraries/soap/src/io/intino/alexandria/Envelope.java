@@ -6,6 +6,8 @@ import com.google.gson.JsonPrimitive;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.xml.Node;
 
+import java.util.Objects;
+
 public class Envelope {
 	private final Node envelopeNode;
 
@@ -28,12 +30,20 @@ public class Envelope {
 		public <T> T schema(Class<T> t) {
 			try {
 				JsonObject jsonObject = new JsonObject();
-				node.getChildren().get(0).getChildren().forEach(childNode -> jsonObject.add(childNode.getNodeName(), new JsonPrimitive(childNode.getTextContent())));
+				node.getChildren().get(0).getChildren().stream().filter(Objects::nonNull).forEach(childNode -> jsonObject.add(removeNameSpace(childNode.getNodeName()), new JsonPrimitive(childNode.getTextContent())));
 				return Json.gsonReader().fromJson(jsonObject, t);
 			} catch (Exception e) {
 				Logger.error(e);
 				return null;
 			}
+		}
+
+		private String removeNameSpace(String nodeName) {
+			if (nodeName.contains(":")) {
+				final String[] split = nodeName.split(":");
+				return split[split.length - 1];
+			}
+			return nodeName;
 		}
 	}
 }
