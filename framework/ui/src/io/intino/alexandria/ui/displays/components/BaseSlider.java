@@ -84,6 +84,11 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		this.observers.add(slider);
 	}
 
+	public void moved(long value) {
+		notifier.refreshSelected(valueOf(value));
+		notifier.refreshToolbar(toolbarState());
+	}
+
 	public void update(long value) {
 		value(value);
 	}
@@ -155,7 +160,11 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 	}
 
 	void notifyChange() {
-		notifier.refreshSelected(selectedValue());
+		notifyChange(value());
+	}
+
+	void notifyChange(long value) {
+		notifier.refreshSelected(valueOf(value));
 		notifier.refreshToolbar(toolbarState());
 		notifyObservers();
 		notifyListener();
@@ -178,7 +187,7 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		});
 	}
 
-	public abstract String formattedValue();
+	public abstract String formattedValue(long value);
 	abstract String format(long value);
 	abstract void updateRange();
 
@@ -271,9 +280,13 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		return true;
 	}
 
-	private Selected selectedValue() {
-		String formattedValue = formattedValue();
+	private Selected valueOf(long value) {
+		String formattedValue = formattedValue(value);
 		return new Selected().value(value).formattedValue(formattedValue);
+	}
+
+	private Selected selectedValue() {
+		return valueOf(value);
 	}
 
 }

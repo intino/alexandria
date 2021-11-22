@@ -140,6 +140,7 @@ Component baseSlider
 	Notification refreshReadonly as Bool
 	Notification refreshMarks as Object(Mark) List
 
+	Request moved as LongInteger
 	Request update as LongInteger
 	Request selectOrdinal as Text
 	Request previous

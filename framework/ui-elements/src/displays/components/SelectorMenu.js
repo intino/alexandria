@@ -19,15 +19,15 @@ const styles = theme => ({
 	item: {
 		padding: "6px 16px",
 		'&:focus': {
-			backgroundColor: theme.palette.primary.main,
+			backgroundColor: theme.palette.grey.secondary,
 			color: theme.palette.common.white
 		},
 	},
 	selected : {
-		backgroundColor: theme.palette.primary.main + " !important",
+		backgroundColor: theme.palette.grey.secondary + " !important",
 		color: theme.palette.common.white,
 		'&:hover': {
-			backgroundColor: theme.palette.primary.main
+			backgroundColor: theme.palette.grey.secondary
 		},
 	}
 });

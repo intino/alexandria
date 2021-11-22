@@ -31,6 +31,7 @@ public class SliderRenderer extends BindingCollectionRenderer<AbstractSlider> {
 		addRange(result);
 		addAnimation(result);
 		addOrdinals(result);
+		addPosition(result);
 		addStyle(result);
 		return result;
 	}
@@ -62,6 +63,12 @@ public class SliderRenderer extends BindingCollectionRenderer<AbstractSlider> {
 			FrameBuilder ordinal = new FrameBuilder("ordinalMethod").add("name", scale);
 			builder.add("ordinal", ordinal);
 		});
+	}
+
+	private void addPosition(FrameBuilder builder) {
+		AbstractSlider.Position position = element.position();
+		if (position == null) return;
+		builder.add("position", position.name());
 	}
 
 	private void addStyle(FrameBuilder builder) {
