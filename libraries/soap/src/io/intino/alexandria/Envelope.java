@@ -14,7 +14,8 @@ public class Envelope {
 	}
 
 	public Body body() {
-		return new Body(envelopeNode.child("S:Body"));
+		final Node node = envelopeNode.getChildNodes().stream().filter(n -> n.getNodeName().toLowerCase().contains("body")).findFirst().orElse(null);
+		return node == null ? null : new Body(node);
 	}
 
 	public static class Body {
