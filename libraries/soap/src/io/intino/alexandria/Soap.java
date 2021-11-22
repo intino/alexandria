@@ -43,9 +43,9 @@ public class Soap {
 					"</S:Envelope>";
 
 	private static final String schemaTemplate =
-			"<$name xmlns:R=\"$xmlns\">\n" +
+			"<R:$name xmlns:R=\"$xmlns\">\n" +
 					"$parameter" +
-					"\t\t</$name>";
+					"\t\t</R:$name>";
 
 	private static final String parameterTemplate = "\t\t\t<R:$name>$value</R:$name>\n";
 }
