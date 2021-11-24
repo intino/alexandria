@@ -614,9 +614,10 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const format = this.cellFormat(section, cell);
         const className = this._isMainView() || this.state.sections[0] == mainSection ? classNames(classes.rowCell) : classNames(classes.rowCell, classes.detailRowCell);
         const isMainView = this._isMainView();
+        const isTotalRow = cell.isTotalRow || row.label === "Total";
         return (
             <TableCell title={title} key={index} className={className} style={{whiteSpace:'nowrap',...style}}>
-                {!cell.isTotalRow && !isMainView ?
+                {!isTotalRow && !isMainView ?
                     <a className={classes.rowAction} onClick={this.handleShowItems.bind(this, mainSection, row.label)}>
                         {NumberUtil.format(cell.absolute, format)}
                         {metric !== "" && <span style={{fontSize:'9pt',marginLeft:'5px',color:'#777'}}>{metric}</span>}
@@ -692,7 +693,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const sectionLabel = this.state.section != null ? this.state.section.label : "";
 
         return (
-            <Dialog open={this.state.open} onEntered={this.handleOpen.bind(this)} onClose={this.handleClose.bind(this)} aria-labelledby="form-dialog-title" fullScreen TransitionComponent={BaseDialog.SlideTransition}>
+            <Dialog open={this.state.open} onEntered={this.handleOpen.bind(this)} onClose={this.handleClose.bind(this)} aria-labelledby="form-dialog-title" fullScreen TransitionComponent={BaseDialog.Transition}>
                 <DialogTitle id="form-dialog-title" className={classes.dialogHeader}>
                     <div className="layout horizontal center">
                         <div className="layout horizontal flex" style={{color:'white'}}><Typography variant="h4">{this.translate("Items of") + " " + sectionLabel + " " + this.translate("in") + " " + this.state.row}</Typography></div>
