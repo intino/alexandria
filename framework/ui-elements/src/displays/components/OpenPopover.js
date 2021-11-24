@@ -30,7 +30,7 @@ class OpenPopover extends AbstractOpenPopover {
     };
 
 	clickEvent = () => {
-	    return this.props.triggerEvent === "MouseClick" ? this.handleClick.bind(this) : null;
+	    return this.props.triggerEvent === "MouseClick" ? this.handleClick.bind(this) : this.handleVoidClick.bind(this);
 	};
 
 	mouseEnterEvent = () => {
@@ -48,6 +48,11 @@ class OpenPopover extends AbstractOpenPopover {
 
 	closePopover = (e) => {
         this.requester.closePopover();
+	};
+
+	handleVoidClick = (e) => {
+	    e.stopPropagation();
+	    return false;
 	};
 
 }
