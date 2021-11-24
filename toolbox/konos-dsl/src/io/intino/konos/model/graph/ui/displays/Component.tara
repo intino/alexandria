@@ -177,6 +177,7 @@ Concept:{0..1} VisualizationComponents
 
 	Concept Spinner extends Component
 		var word:{Bar Circle Hash Ring Rise} mode = Rise
+		var integer:{px} size = 0px
 
 	Concept Stepper extends Component
 		var word:{Horizontal Vertical} orientation = Horizontal

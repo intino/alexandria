@@ -159,7 +159,7 @@ def type(properties & item) trigger(specific)
 end
 
 def type(properties & spinner) trigger(specific)
-	[ mode="$mode"]
+	[ mode="$mode"][ size={$size}]
 end
 
 def type(properties & switch) trigger(specific)

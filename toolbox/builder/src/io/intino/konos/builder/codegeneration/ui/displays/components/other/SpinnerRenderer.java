@@ -17,6 +17,7 @@ public class SpinnerRenderer extends ComponentRenderer<Spinner> {
 	public FrameBuilder properties() {
 		FrameBuilder properties = super.properties();
 		properties.add("mode", element.mode().name());
+		if (element.size() != 0) properties.add("size", element.size());
 		return properties;
 	}
 
