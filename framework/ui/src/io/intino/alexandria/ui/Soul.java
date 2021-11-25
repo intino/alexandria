@@ -81,13 +81,9 @@ public abstract class Soul implements DisplayRepository {
     public void popLayer() {
         if (layers.size() <= 0) return;
         int index = layers.size() - 1;
-        try {
-            Component<?, ?> template = layers.get(index).template();
-            remove(template);
-        }
-        finally {
-            layers.remove(index);
-        }
+        Layer<?, ?> layer = layers.get(index);
+        layers.remove(index);
+        remove(layer.template());
     }
 
     public <T extends Display<?, ?>> List<T> displays(Class<T> clazz) {
