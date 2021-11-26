@@ -50,16 +50,17 @@ class DateEditable extends AbstractDateEditable {
 		const timeLabel = this.translate(this.props.label != null ? this.props.label : undefined);
 		const pattern = this.state.pattern;
 		const value = this.state.value != null ? this.state.value : null;
+		const variant = this._variant();
 		return (
 			<div style={this.style()}>
-				{ !timePicker ? <MuiPickersUtilsProvider utils={MomentUtils}><KeyboardDatePicker variant="inline" placeholder={pattern} autoOk
+				{ !timePicker ? <MuiPickersUtilsProvider utils={MomentUtils}><KeyboardDatePicker variant={variant} placeholder={pattern} autoOk
 																								 disabled={this.state.readonly}
 																								 format={pattern} className={classes.date} mask={this.props.mask}
 																								 value={value} onChange={this.handleChange.bind(this)}
 																								 minDate={range.min} maxDate={range.max} label={dateLabel} views={this.views()}
 																								 minDateMessage={this.translate("Date should not be before minimal date")}
 																								 maxDateMessage={this.translate("Date should not be after maximal date")}/></MuiPickersUtilsProvider> : undefined }
-				{ timePicker ? <MuiPickersUtilsProvider utils={MomentUtils}><KeyboardDateTimePicker variant="inline" placeholder={pattern} autoOk
+				{ timePicker ? <MuiPickersUtilsProvider utils={MomentUtils}><KeyboardDateTimePicker variant={variant} placeholder={pattern} autoOk
 																									disabled={this.state.readonly}
 																									format={pattern} className={classes.datetime}
 																									value={value} onChange={this.handleChange.bind(this)}
@@ -69,6 +70,11 @@ class DateEditable extends AbstractDateEditable {
 				{this.props.allowEmpty && <FormControlLabel control={<Checkbox disabled={this.state.readonly} checked={this.state.empty} onChange={this.handleAllowEmpty.bind(this)} />} label={this.translate("sin definir")} />}
 			</div>
 		);
+	};
+
+	_variant = () => {
+	    const embedded = this.props.embedded;
+	    return embedded != null && embedded ? "static" : "inline";
 	};
 
 	refresh = (value) => {

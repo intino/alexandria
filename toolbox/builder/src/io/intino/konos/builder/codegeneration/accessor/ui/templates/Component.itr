@@ -115,7 +115,7 @@ def type(properties & block) trigger(specific)
 end
 
 def type(properties & date) trigger(specific)
-	[ pattern="$pattern"][ mode="$mode"][ value={new Date($value)}][ timePicker={$timePicker}][ mask="$mask"][ allowEmpty={$allowEmpty}][ views={$["$view...[","]"$]}]
+	[ pattern="$pattern"][ mode="$mode"][ value={new Date($value)}][ timePicker={$timePicker}][ mask="$mask"][ embedded={$embedded}][ allowEmpty={$allowEmpty}][ views={$["$view...[","]"$]}]
 end
 
 def type(properties & user) trigger(specific)

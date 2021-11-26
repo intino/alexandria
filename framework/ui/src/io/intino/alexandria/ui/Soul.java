@@ -69,7 +69,8 @@ public abstract class Soul implements DisplayRepository {
         int i=layers.size();
         while (i > 0) {
             i--;
-            if (clazz.isAssignableFrom(layers.get(i).template().getClass())) return (T) layers.get(i).template();
+            Layer<?, ?> layer = layers.get(i);
+            if (layer != null && clazz.isAssignableFrom(layer.template().getClass())) return (T) layer.template();
         }
         return displays(clazz).stream().filter(d -> d.owner() == null || !Layer.class.isAssignableFrom(d.owner().getClass())).findFirst().orElse(null);
     }
@@ -79,11 +80,15 @@ public abstract class Soul implements DisplayRepository {
     }
 
     public void popLayer() {
-        if (layers.size() <= 0) return;
-        int index = layers.size() - 1;
-        Layer<?, ?> layer = layers.get(index);
-        layers.remove(index);
-        remove(layer.template());
+        try {
+            if (layers.size() <= 0) return;
+            int index = layers.size() - 1;
+            Layer<?, ?> layer = layers.get(index);
+            layers.remove(index);
+            remove(layer.template());
+        }
+        catch (Throwable ignored) {
+        }
     }
 
     public <T extends Display<?, ?>> List<T> displays(Class<T> clazz) {

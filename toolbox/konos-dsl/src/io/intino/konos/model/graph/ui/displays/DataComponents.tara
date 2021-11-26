@@ -104,6 +104,7 @@ Concept DataComponents
         	var string mask = empty
         	var boolean allowEmpty = false
         	var word[]:{Year Date Month} views = empty
+			var boolean embedded = false
 		Aspect Readonly with Editable
 		Aspect Required with Editable
 		Aspect Focused with Editable

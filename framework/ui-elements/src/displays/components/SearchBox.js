@@ -142,7 +142,7 @@ class SearchBox extends AbstractSearchBox {
 			window.clearTimeout(this.timeout);
 			this.timeout = null;
 		}
-		this.timeout = window.setTimeout(() => this.requester.search(condition), 300);
+		this.timeout = window.setTimeout(() => this.requester.search(condition), 1000);
 	};
 
 	countMessage = () => {
