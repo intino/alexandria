@@ -39,6 +39,7 @@ const SelectorComboBoxStyles = {
         ...provided,
         color: '#333333',
     }),
+    menu: provided => ({ ...provided, zIndex: 9999 }),
 };
 
 const styles = theme => ({
