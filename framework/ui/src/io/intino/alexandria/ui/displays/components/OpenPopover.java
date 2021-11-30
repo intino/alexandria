@@ -20,6 +20,12 @@ public class OpenPopover<DN extends OpenPopoverNotifier, B extends Box> extends 
 	}
 
 	@Override
+	public void didMount() {
+		super.didMount();
+		if (triggerId != null) notifier.refreshTriggerId(triggerId);
+	}
+
+	@Override
 	public void init() {
 		super.init();
 		notifier.refreshTriggerId(triggerId);
