@@ -9,8 +9,6 @@ import java.util.Date;
 import java.util.Map;
 
 public class ResponseAdapter {
-
-
 	public static String adapt(Object object) {
 		if (object instanceof AlexandriaError) return adaptError((AlexandriaError) object);
 		if (object instanceof Collection) return jsonArray((Collection<Object>) object);
@@ -44,5 +42,4 @@ public class ResponseAdapter {
 		for (Map.Entry<String, String> parameter : parameters.entrySet())
 			object.addProperty(parameter.getKey(), parameter.getValue());
 	}
-
 }
