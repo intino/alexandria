@@ -24,6 +24,7 @@ class SelectorToggleBox extends AbstractSelectorToggleBox {
 	};
 
 	render() {
+	    if (!this.state.visible) return (<React.Fragment/>);
 		const children = this.children();
 		const multi = this.props.multipleSelection;
 		if (children.length <= 0) return (<div></div>);
