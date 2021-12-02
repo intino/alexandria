@@ -91,10 +91,14 @@ def type(resource)
 			[$returnType+methodCall]fill(new $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action()).execute()[$returnType+ending];
 		}
 
-		private $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action fill($package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action action) {
+		private $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action fill($package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action action) throws AlexandriaException {
 			action.box = this.box;
 			action.context = context();
-			[$parameter+assign...[$NL]]
+			try {
+				[$parameter+assign...[$NL]]
+			} catch (Throwable e) {
+				action.onMalformedRequest(e);
+			}
 			return action;
 		}
 
