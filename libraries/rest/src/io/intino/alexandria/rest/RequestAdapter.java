@@ -16,6 +16,15 @@ import static java.time.Instant.ofEpochMilli;
 import static java.time.LocalDateTime.ofInstant;
 
 public class RequestAdapter {
+
+	private static final JsonDeserializer<Instant> instantJsonDeserializer;
+	private static final JsonDeserializer<Date> dateJsonDeserializer;
+
+	static {
+		instantJsonDeserializer = (json, type1, jsonDeserializationContext) -> Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong());
+		dateJsonDeserializer = (json, type1, jsonDeserializationContext) -> new Date(json.getAsJsonPrimitive().getAsLong());
+	}
+
 	public static <T> T adapt(String object, Class<T> type) {
 		if (object == null) return null;
 		T result = adaptPrimitive(object, type);
@@ -31,10 +40,9 @@ public class RequestAdapter {
 	}
 
 	private static GsonBuilder gsonBuilder() {
-		final GsonBuilder builder = new GsonBuilder();
-		builder.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, type1, jsonDeserializationContext) -> Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong())).
-				registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, type1, jsonDeserializationContext) -> new Date(json.getAsJsonPrimitive().getAsLong()));
-		return builder;
+		return new GsonBuilder()
+				.registerTypeAdapter(Instant.class, instantJsonDeserializer)
+				.registerTypeAdapter(Date.class, dateJsonDeserializer);
 	}
 
 	private static String decode(String object) {
