@@ -9,6 +9,7 @@ public enum ExceptionCodes implements Rule<Enum> {
 	Forbidden("403"),
 	NotFound("404"),
 	Conflict("409"),
+	Locked("423"),
 	NotImplemented("501"),
 	ServiceUnavailable("503");
 
