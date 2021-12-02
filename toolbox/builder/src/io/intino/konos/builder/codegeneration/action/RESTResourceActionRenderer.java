@@ -11,7 +11,7 @@ public class RESTResourceActionRenderer extends ActionRenderer {
 	private final Resource.Operation operation;
 
 	public RESTResourceActionRenderer(CompilationContext compilationContext, Resource.Operation operation) {
-		super(compilationContext, "resource");
+		super(compilationContext, "resource", "rest");
 		this.operation = operation;
 	}
 
