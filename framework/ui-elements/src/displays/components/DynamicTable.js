@@ -28,6 +28,7 @@ export const DynamicTableStyles = theme => ({
     rowLabel : {
         border:'0',
         textAlign:'right',
+        whiteSpace:'nowrap'
     },
     rowActions : {
         border:'0',
@@ -117,7 +118,7 @@ export const DynamicTableStyles = theme => ({
     columnsAction : {
         color: theme.palette.primary.main,
         marginRight: '15px',
-        fontSize: '11pt',
+        fontSize: '9pt',
         cursor: 'pointer',
     },
 });
@@ -361,7 +362,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const sectionsArray = this.treeToArray(section);
         const labelSize = this.maxLabelSize(section);
         const isMainView = this._isMainView();
-        if (this.state.sections.length == 1 && sectionsArray[0].length == 1 && sectionsArray[0][0].sections.length == 0)
+        if (this.state.sections.length == 1 && sectionsArray[0].length == 1 && sectionsArray[0][0].sections.length == 0 && sectionsArray[0][0].label === "")
             sectionsArray.shift();
         return (
             <React.Fragment>
@@ -407,7 +408,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const isMainView = this._isMainView();
         const colSpan = this._isMainView() ? columnCount : (this.isLeafSection(section) && index == this.state.column.index ? 1 : 0);
         const color = section.color;
-        const textAlign = section.textAlign != null ? section.textAlign : "center";
+        const textAlign = section.textAlign != null ? section.textAlign : "right";
         const selectable = section.selectable;
         const orderBy = this.state.orderBy != null ? this.state.orderBy.label : null;
         const order = this.state.order;
@@ -424,12 +425,12 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                        key={index}>
                 {(!selectable || (!isMainView && selectable)) &&
                     <a className="layout horizontal center-center" style={{color:color,whiteSpace:'nowrap',cursor:'pointer'}} onClick={this.handleFilterFirstColumn.bind(this)}>
-                        {section.label}{isMainView && <TouchApp style={{marginLeft:'5px'}}/>}
+                        {this.translate(section.label)}{isMainView && <TouchApp style={{marginLeft:'5px'}}/>}
                     </a>
                 }
                 {isMainView && selectable &&
                     <TableSortLabel active={orderBy === section.label} direction={orderBy === section.label ? order : 'asc'} onClick={this.handleSort.bind(this, section, index)}>
-                        <span>{section.label}</span>
+                        <span>{this.translate(section.label)}</span>
                         {orderBy === section.label ? (
                             <span className={classes.visuallyHidden}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</span>
                         ) : null}
@@ -609,7 +610,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const metric = this.cellMetric(section, cell);
         const style = cell.isTotalRow ? { fontWeight: "bold" } : {};
         const relative = cell.relative !== "-1" && this.state.showRelativeValues && metric !== "%" ? cell.relative : undefined;
-        const title = cell.label + " " + this.translate("in") + " " + row.label + " " + this.translate("in") + " " + section.label;
+        const title = this.translate(cell.label) + " " + this.translate("in") + " " + this.translate(row.label) + " " + this.translate("in") + " " + this.translate(section.label);
         const value = operator === "Average" ? cell.absolute : cell.absolute;
         const format = this.cellFormat(section, cell);
         const className = this._isMainView() || this.state.sections[0] == mainSection ? classNames(classes.rowCell) : classNames(classes.rowCell, classes.detailRowCell);
@@ -696,7 +697,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
             <Dialog open={this.state.open} onEntered={this.handleOpen.bind(this)} onClose={this.handleClose.bind(this)} aria-labelledby="form-dialog-title" fullScreen TransitionComponent={BaseDialog.Transition}>
                 <DialogTitle id="form-dialog-title" className={classes.dialogHeader}>
                     <div className="layout horizontal center">
-                        <div className="layout horizontal flex" style={{color:'white'}}><Typography variant="h4">{this.translate("Items of") + " " + sectionLabel + " " + this.translate("in") + " " + this.state.row}</Typography></div>
+                        <div className="layout horizontal flex" style={{color:'white'}}><Typography variant="h4">{this.translate("Items of") + " " + this.translate(sectionLabel) + " " + this.translate("in") + " " + this.state.row}</Typography></div>
                         <div className="layout horizontal end-justified"><IconButton onClick={this.handleClose.bind(this)}><Clear fontSize="large" style={{color:"white"}}/></IconButton></div>
                     </div>
                 </DialogTitle>
@@ -741,7 +742,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 
     renderColumnCheckbox = (column) => {
 //        return <FormControlLabel control={<Checkbox checked={this.state.hideZeros} onChange={this.handleToggleHideZeros.bind(this)} name="toggleHideZeros" color="primary"/>} label={this.translate("Hide zeros")}/>
-        return (<div><FormControlLabel control={<Checkbox checked={this.isColumnVisible(column.index)} onChange={this.handleToggleColumn.bind(this, column.index)} color="primary" name={column.index}/>} label={column.label}/></div>);
+        return (<div><FormControlLabel control={<Checkbox checked={this.isColumnVisible(column.index)} onChange={this.handleToggleColumn.bind(this, column.index)} color="primary" name={column.index}/>} label={this.translate(column.label)}/></div>);
     };
 
     refreshVisibleColumns = (value) => {
@@ -958,7 +959,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     };
 
     _selectorColumn = (label, index) => {
-        return { value: label, label: label, index: index };
+        return { value: label, label: this.translate(label), index: index };
     };
 
     _visibleColumns = (visibleList) => {

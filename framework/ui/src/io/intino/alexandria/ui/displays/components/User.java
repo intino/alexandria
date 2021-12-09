@@ -24,6 +24,10 @@ public class User<DN extends UserNotifier, B extends Box> extends AbstractUser<B
         refresh();
     }
 
+    @Override
+    public void unregister() {
+    }
+
     public User onRefresh(Listener listener) {
         refreshListener = listener;
         return this;
