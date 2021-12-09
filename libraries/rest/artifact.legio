@@ -1,10 +1,10 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "3.6.0") rest
+Artifact("io.intino.alexandria", "3.6.2") rest
 	Imports
-		Compile("io.intino.alexandria", "http", "1.5.2")
+		Compile("io.intino.alexandria", "http", "1.5.3")
 		Compile("io.intino.alexandria", "json", "1.0.2")
-	Package(mode = ModulesAndLibrariesLinkedByManifest)
+	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
 Repository("intino-maven") > Release("https://artifactory.intino.io/artifactory/releases")
