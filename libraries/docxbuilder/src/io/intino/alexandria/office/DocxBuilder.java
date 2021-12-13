@@ -1,5 +1,15 @@
 package io.intino.alexandria.office;
 
+import io.intino.alexandria.logger.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -34,6 +44,7 @@ public class DocxBuilder {
 
 	public interface TableEdition {
 		TableEdition addRow(Map<String, String> columns);
+
 		DocxBuilder end();
 	}
 
@@ -98,7 +109,7 @@ public class DocxBuilder {
 		}
 
 		void put(String field, String value) {
-			this.fields.put(field,value);
+			this.fields.put(field, value);
 		}
 
 		void put(String field, byte[] value) {
@@ -106,7 +117,7 @@ public class DocxBuilder {
 		}
 
 		void put(String[] data) {
-			this.fields.put(data[0],data[1]);
+			this.fields.put(data[0], data[1]);
 		}
 
 		void add(String table, Map<String, String> values) {
@@ -179,24 +190,52 @@ public class DocxBuilder {
 	}
 
 	private final class Zip {
-		private final ZipFile zin;
-		private final Enumeration<? extends ZipEntry> entries;
+		private final ZipFile zipFile;
+		private final ArrayList<? extends ZipEntry> entries;
+		private final Map<String, String> imagesRelationship;
 
 		Zip(File template) throws IOException {
-			this.zin = new ZipFile(template);
-			this.entries = zin.entries();
+			this.zipFile = new ZipFile(template);
+			this.entries = Collections.list(zipFile.entries());
+			imagesRelationship = findImageReferencesInDocument();
+//			imagesRelationship = new HashMap<>();
 		}
 
 		void to(File result) throws IOException {
 			try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(result))) {
-				while (entries.hasMoreElements())
-					create(zos, new ZipEntry(entries.nextElement().getName()));
+				for (ZipEntry entry : entries) create(zos, new ZipEntry(entry.getName()));
 			}
 			close();
 		}
 
+		private Map<String, String> findImageReferencesInDocument() {
+			if (content.images.isEmpty()) return Collections.emptyMap();
+			Map<String, String> rels = loadDocumentRels();
+			Map<String, String> imageEntries = new HashMap<>();
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			try {
+				DocumentBuilder db = dbf.newDocumentBuilder();
+				Document doc = db.parse(zipFile.getInputStream(entries.stream().filter(this::isDocument).findFirst().orElse(null)));
+				final NodeList graphicNodes = doc.getElementsByTagName("pic:cNvPr");
+				int bound = graphicNodes.getLength();
+				for (int i = 0; i < bound; i++) {
+					NamedNodeMap attributes = graphicNodes.item(i).getAttributes();
+					if (attributes.getNamedItem("descr") != null) {
+						String rel = attributes.getNamedItem("descr").getNodeValue();
+						String relId = findRelId(graphicNodes.item(i).getParentNode().getParentNode());
+						if (rels.containsKey(relId)) {
+							imageEntries.put(findImage(rels.get(relId)).getName(), rel);
+						}
+					}
+				}
+			} catch (ParserConfigurationException | IOException | SAXException e) {
+				Logger.error(e);
+			}
+			return imageEntries;
+		}
+
 		void close() throws IOException {
-			zin.close();
+			zipFile.close();
 		}
 
 		private void create(ZipOutputStream zos, ZipEntry entry) throws IOException {
@@ -206,22 +245,63 @@ public class DocxBuilder {
 		}
 
 		private void copy(ZipEntry entry, ZipOutputStream zos) throws IOException {
-			if (isDocument(entry)) replaceDocument(zin.getInputStream(entry), zos);
-			else if (isReplacedImage(entry)) zos.write(imageOf(entry));
-			else copyFile(zin.getInputStream(entry), zos);
+			if (isDocument(entry)) replaceDocument(zipFile.getInputStream(entry), zos);
+			else if (isImageToReplace(entry)) zos.write(imageOf(entry));
+			else copyFile(zipFile.getInputStream(entry), zos);
 		}
 
 		private byte[] imageOf(ZipEntry entry) {
-			return content.image(entry.getName().substring(11));
+			return content.image(imagesRelationship.get(entry.getName()));
 		}
 
-		private boolean isReplacedImage(ZipEntry entry) {
-			if (!entry.getName().startsWith("word/media/")) return false;
-			return content.hasImage(entry.getName().substring(11));
+		private boolean isImageToReplace(ZipEntry entry) {
+			final String imageId = imagesRelationship.get(entry.getName());
+			return imageId != null && content.hasImage(imageId);
 		}
 
 		private boolean isDocument(ZipEntry entry) {
 			return entry.getName().equalsIgnoreCase("word/document.xml");
+		}
+
+		private ZipEntry findImage(String imageReference) {
+			return entries.stream().filter(e -> e.getName().equals("word/" + imageReference)).findFirst().orElse(null);
+		}
+
+		private Map<String, String> loadDocumentRels() {
+			final ZipEntry docRelsEntry = entries.stream().filter(this::isDocumentRels).findFirst().orElse(null);
+			Map<String, String> rels = new HashMap<>();
+			try {
+				final InputStream is = zipFile.getInputStream(docRelsEntry);
+				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+				DocumentBuilder db = dbf.newDocumentBuilder();
+				Document doc = db.parse(is);
+				final NodeList relNodes = doc.getElementsByTagName("Relationship");
+				for (int i = 0; i < relNodes.getLength(); i++) {
+					final NamedNodeMap attributes = relNodes.item(i).getAttributes();
+					rels.put(attributes.getNamedItem("Id").getNodeValue(), attributes.getNamedItem("Target").getNodeValue());
+				}
+			} catch (ParserConfigurationException | IOException | SAXException e) {
+				Logger.error(e);
+			}
+			return rels;
+		}
+
+
+		private String findRelId(Node node) {
+			final NodeList childNodes = node.getChildNodes();
+			for (int i = 0; i < childNodes.getLength(); i++) {
+				if (childNodes.item(i).getNodeName().equals("pic:blipFill")) {
+					final Node firstChild = childNodes.item(i).getFirstChild();
+					if (firstChild.getNodeName().equals("a:blip")) {
+						return firstChild.getAttributes().getNamedItem("r:embed").getNodeValue();
+					}
+				}
+			}
+			return null;
+		}
+
+		private boolean isDocumentRels(ZipEntry entry) {
+			return entry.getName().equalsIgnoreCase("word/_rels/document.xml.rels");
 		}
 
 		private void copyFile(InputStream is, ZipOutputStream zos) throws IOException {
@@ -242,7 +322,7 @@ public class DocxBuilder {
 	}
 
 	private static class Buffer {
-		private byte[] buffer = new byte[32768];
+		private final byte[] buffer = new byte[32768];
 		private int length;
 
 		boolean read(InputStream is) throws IOException {
