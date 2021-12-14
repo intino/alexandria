@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.4") primitives
+Artifact("io.intino.alexandria", "1.0.5") primitives
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Imports
 		Test("junit", "junit", "4.12")

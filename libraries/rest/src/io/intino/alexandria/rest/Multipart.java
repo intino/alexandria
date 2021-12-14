@@ -2,10 +2,13 @@ package io.intino.alexandria.rest;
 
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.logger.Logger;
+import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.StringBody;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -13,7 +16,7 @@ public class Multipart {
 	private final MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
 	public void addPart(Resource resource) {
-		builder.addBinaryBody(resource.name(), resource.stream(), ContentType.create(resource.metadata().contentType()), resource.name() + "." + resource.type());
+		builder.addBinaryBody(resource.name(), resource.stream(), ContentType.create(resource.metadata().contentType()), resource.name());
 	}
 
 	public void addPart(Object object, String name) {
@@ -21,8 +24,11 @@ public class Multipart {
 	}
 
 	public InputStream content() {
+		final HttpEntity build = builder.build();
+		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		try {
-			return builder.build().getContent();
+			build.writeTo(outputStream);
+			return new ByteArrayInputStream(outputStream.toByteArray());
 		} catch (IOException e) {
 			Logger.error(e);
 			return InputStream.nullInputStream();
