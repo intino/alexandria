@@ -16,6 +16,7 @@ public class RestResourceTemplate extends Template {
 			rule().condition((trigger("ending"))).output(literal(")")),
 			rule().condition((attribute("void")), (trigger("write"))),
 			rule().condition((type("redirect")), (trigger("method"))).output(literal("private void redirect(String url) {\n\tmanager.redirect(url);\n}")),
+			rule().condition((allTypes("response","multipart")), (trigger("method"))).output(literal("private void write(")).output(mark("value", "firstUpperCase", "ReturnTypeFormatter")).output(literal(" object) {\n\tmanager.write(object.content());\n}")),
 			rule().condition((allTypes("response","file")), (trigger("method"))).output(literal("private void write(")).output(mark("value", "firstUpperCase", "ReturnTypeFormatter")).output(literal(" object) {\n\tmanager.write(object);\n}")),
 			rule().condition((type("response")), (trigger("method"))).output(literal("private void write(")).output(mark("value", "firstUpperCase", "ReturnTypeFormatter")).output(literal(" object) {\n\tmanager.write(io.intino.alexandria.rest.ResponseAdapter.adapt(object)")).output(expression().output(literal(", \"")).output(mark("format")).output(literal("\""))).output(literal(");\n}")),
 			rule().condition((type("parameter")), (trigger("type"))).output(mark("parameterType")),

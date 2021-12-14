@@ -142,6 +142,11 @@ def type(redirect) trigger(method)
 	}
 end
 
+def type(response & multipart) trigger(method)
+	private void write($value+firstUpperCase+ReturnTypeFormatter object) {
+		manager.write(object.content());
+	}
+end
 def type(response & file) trigger(method)
 	private void write($value+firstUpperCase+ReturnTypeFormatter object) {
 		manager.write(object);
