@@ -111,7 +111,7 @@ class ImageEditable extends AbstractImageEditable {
 			        <React.Fragment>
                         <input accept="image/*" id={inputId} type="file"
                            className={classes.input} onChange={this.handleChange.bind(this)}
-                           disabled={this.state.readonly} />
+                           disabled={this.state.readonly} value="" />
                     </React.Fragment>
                 }
                 <IconButton color="primary" aria-label="upload picture" size="small" component="span" onClick={this.handleRemove.bind(this)}
