@@ -54,6 +54,10 @@ def type(service)
 			return new Create();
 		}
 
+		public Remove remove() {
+			return new Remove();
+		}
+
 		private void startTimers(AlexandriaScheduler scheduler) {
 			try {
 				JobDetail job = newJob(AgendaServiceTrigger.class).withIdentity("AgendaServiceTrigger").build();
@@ -97,6 +101,10 @@ def type(service)
 			$future+createMethod...[$NL$NL]
 
 			$future+createClass...[$NL$NL]
+		}
+
+		public class Remove {
+			$future+removeMethod...[$NL$NL]
 		}
 
 		public static class Option {
@@ -186,6 +194,16 @@ def trigger(getter)
 
 	public $name+firstUpperCase $name+firstLowerCase~($parameter+signature...[, ]) {
 		return $name+firstLowerCase($name+firstLowerCase~File($parameter+names...[, ]));
+	}
+end
+
+def trigger(removeMethod)
+	public boolean $name+firstLowerCase($parameter+signature...[, ]) {
+		final File file = $name+firstLowerCase~File($parameter+names...[, ]);
+		for (String key : new ArrayList<>(sources.keySet()))
+			if (sources.get(key).equals(file)) sources.remove(key);
+		if (file.exists()) return file.delete();
+		return false;
 	}
 end
 
