@@ -103,8 +103,7 @@ def type(service)
 			public String id = UUID.randomUUID().toString();
 		}
 
-		private static class AgendaServiceTrigger implements Job {
-
+		public static class AgendaServiceTrigger implements Job {
 			public void execute(JobExecutionContext context) throws JobExecutionException {
 				$box+snakecaseToCamelCase+firstUpperCase~Box box = ($box+snakecaseToCamelCase+firstUpperCase~Box) context.getMergedJobDataMap().get("box");
 				final Instant instant = Instant.now().truncatedTo(ChronoUnit.SECONDS);
@@ -149,7 +148,9 @@ end
 
 def trigger(private)
 	private Collection<File> $name+firstLowerCase~Files() {
-		return FileUtils.listFiles(new File(root, "$name+camelCaseToSnakeCase/"), new String$[]{"json"}, true);
+		File directory = new File(root, "$name+camelCaseToSnakeCase/");
+		directory.mkdirs();
+		return FileUtils.listFiles(directory, new String$[]{"json"}, true);
 	}
 
 	private File $name+firstLowerCase~File($parameter+signature...[, ]) {
