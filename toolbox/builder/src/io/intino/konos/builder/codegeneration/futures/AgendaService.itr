@@ -85,7 +85,7 @@ def type(service)
 			}
 		}
 
-		private void write(RequestSchedulingSchema schema, File file) {
+		private void write(Object schema, File file) {
 			try {
 				Files.writeString(file.toPath(), Json.toString(schema));
 			} catch (IOException e) {
