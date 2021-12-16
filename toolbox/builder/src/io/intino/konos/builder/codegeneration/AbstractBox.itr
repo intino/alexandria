@@ -290,6 +290,7 @@ end
 
 def type(service & agenda) trigger(agenda)
 	this.agenda = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	this.agenda.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), scheduler);
 	Logger.info("Agenda service: started!");
 end
 
