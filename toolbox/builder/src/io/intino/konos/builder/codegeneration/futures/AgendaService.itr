@@ -7,6 +7,8 @@ def type(service)
 	import io.intino.alexandria.logger.Logger;
 	import io.intino.alexandria.scheduler.AlexandriaScheduler;
 	import org.apache.commons.io.FileUtils;
+	import io.intino.alexandria.Json;
+
 	$schemaImport
 	import org.quartz.*;
 
@@ -83,6 +85,14 @@ def type(service)
 			}
 		}
 
+		private void write(RequestSchedulingSchema schema, File file) {
+			try {
+				Files.writeString(file.toPath(), Json.toString(schema));
+			} catch (IOException e) {
+				Logger.error(e);
+			}
+		}
+
 		public class Create {
 			$future+createMethod...[$NL$NL]
 
@@ -110,7 +120,9 @@ end
 
 def trigger(register)
 	private void register$name+firstUpperCase($name+firstUpperCase~Schema schema) {
-		register(schema, $name+firstLowerCase~File($parameter+schemaParameter...[, ]));
+		File file = $name+firstLowerCase~File($parameter+schemaParameter...[, ]);
+		register(schema, file);
+		write(schema, file);
 	}
 
 	private static void register($name+firstUpperCase~Schema schema, File file) {
