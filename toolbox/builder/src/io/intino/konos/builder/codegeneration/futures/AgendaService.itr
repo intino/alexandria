@@ -116,7 +116,7 @@ def type(service)
 				$box+snakecaseToCamelCase+firstUpperCase~Box box = ($box+snakecaseToCamelCase+firstUpperCase~Box) context.getMergedJobDataMap().get("box");
 				final Instant instant = Instant.now().truncatedTo(ChronoUnit.SECONDS);
 				timeouts.forEach((k, v) -> {
-					if (v.equals(instant)) {
+					if (instant.equals(v)) {
 						$future+timeout...[$NL]
 					}
 				});
