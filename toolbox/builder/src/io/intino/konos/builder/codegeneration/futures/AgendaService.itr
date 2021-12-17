@@ -7,6 +7,8 @@ def type(service)
 	import io.intino.alexandria.logger.Logger;
 	import io.intino.alexandria.scheduler.AlexandriaScheduler;
 	import org.apache.commons.io.FileUtils;
+	import io.intino.alexandria.Json;
+
 	$schemaImport
 	import org.quartz.*;
 
@@ -52,6 +54,10 @@ def type(service)
 			return new Create();
 		}
 
+		public Remove remove() {
+			return new Remove();
+		}
+
 		private void startTimers(AlexandriaScheduler scheduler) {
 			try {
 				JobDetail job = newJob(AgendaServiceTrigger.class).withIdentity("AgendaServiceTrigger").build();
@@ -83,18 +89,29 @@ def type(service)
 			}
 		}
 
+		private void write(Object schema, File file) {
+			try {
+				Files.writeString(file.toPath(), Json.toString(schema));
+			} catch (IOException e) {
+				Logger.error(e);
+			}
+		}
+
 		public class Create {
 			$future+createMethod...[$NL$NL]
 
 			$future+createClass...[$NL$NL]
 		}
 
+		public class Remove {
+			$future+removeMethod...[$NL$NL]
+		}
+
 		public static class Option {
 			public String id = UUID.randomUUID().toString();
 		}
 
-		private static class AgendaServiceTrigger implements Job {
-
+		public static class AgendaServiceTrigger implements Job {
 			public void execute(JobExecutionContext context) throws JobExecutionException {
 				$box+snakecaseToCamelCase+firstUpperCase~Box box = ($box+snakecaseToCamelCase+firstUpperCase~Box) context.getMergedJobDataMap().get("box");
 				final Instant instant = Instant.now().truncatedTo(ChronoUnit.SECONDS);
@@ -110,7 +127,9 @@ end
 
 def trigger(register)
 	private void register$name+firstUpperCase($name+firstUpperCase~Schema schema) {
-		register(schema, $name+firstLowerCase~File($parameter+schemaParameter...[, ]));
+		File file = $name+firstLowerCase~File($parameter+schemaParameter...[, ]);
+		register(schema, file);
+		write(schema, file);
 	}
 
 	private static void register($name+firstUpperCase~Schema schema, File file) {
@@ -137,7 +156,9 @@ end
 
 def trigger(private)
 	private Collection<File> $name+firstLowerCase~Files() {
-		return FileUtils.listFiles(new File(root, "$name+camelCaseToSnakeCase/"), new String$[]{"json"}, true);
+		File directory = new File(root, "$name+camelCaseToSnakeCase/");
+		directory.mkdirs();
+		return FileUtils.listFiles(directory, new String$[]{"json"}, true);
 	}
 
 	private File $name+firstLowerCase~File($parameter+signature...[, ]) {
@@ -173,6 +194,16 @@ def trigger(getter)
 
 	public $name+firstUpperCase $name+firstLowerCase~($parameter+signature...[, ]) {
 		return $name+firstLowerCase($name+firstLowerCase~File($parameter+names...[, ]));
+	}
+end
+
+def trigger(removeMethod)
+	public boolean $name+firstLowerCase($parameter+signature...[, ]) {
+		final File file = $name+firstLowerCase~File($parameter+names...[, ]);
+		for (String key : new ArrayList<>(sources.keySet()))
+			if (sources.get(key).equals(file)) sources.remove(key);
+		if (file.exists()) return file.delete();
+		return false;
 	}
 end
 

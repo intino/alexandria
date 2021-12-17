@@ -16,6 +16,10 @@ def type(future)
 			this.schema = schema;
 		}
 
+		public $name+FirstUpperCase~Schema schema() {
+			return this.schema;
+		}
+
 		$option+methods...[$NL$NL]
 
 		public void timeout() {
