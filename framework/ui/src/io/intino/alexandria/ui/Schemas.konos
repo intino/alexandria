@@ -179,3 +179,12 @@ Schema StepInfo
 Schema DialogSize
 	Attribute width as Text
 	Attribute height as Text
+
+Schema LayerToolbar
+	Attribute homeButton as Object(LayerToolbarButton)
+	Attribute previousButton as Object(LayerToolbarButton)
+	Attribute nextButton as Object(LayerToolbarButton)
+
+Schema LayerToolbarButton
+	Attribute visible as Bool
+	Attribute enabled as Bool

@@ -1,6 +1,6 @@
 import React from "react";
 import { Dialog as MuiDialog, DialogContent, Fade, Grow, Slide, Zoom, Typography, AppBar, IconButton } from "@material-ui/core"
-import { Home, Close } from "@material-ui/icons";
+import { Home, Close, NavigateBefore, NavigateNext } from "@material-ui/icons";
 import { withStyles } from '@material-ui/core/styles';
 import AbstractLayer from "../../../gen/displays/components/AbstractLayer";
 import LayerNotifier from "../../../gen/displays/notifiers/LayerNotifier";
@@ -20,6 +20,7 @@ const styles = theme => ({
         cursor: "pointer",
     },
     icon : {
+        cursor: "pointer",
         color: "white",
     },
 });
@@ -33,7 +34,7 @@ class Layer extends AbstractLayer {
         this.state = {
             ...this.state,
             title: this.props.title,
-            homeAvailable: false,
+            toolbar: { homeButton: { visible: false, enabled: false}, previousButton : { visible: false, enabled: false }, nextButton : { visible: false, enabled: false }},
             opened: false,
             closeAddress: document.location.pathname,
         };
@@ -76,12 +77,18 @@ class Layer extends AbstractLayer {
 	renderTitle = () => {
 		const { classes } = this.props;
 		const style = this.props.color != null ? { backgroundColor: this.props.color } : undefined;
-		const homeAvailable = this.state.homeAvailable;
+		const showHome = this.state.toolbar.homeButton.visible;
+		const showPrevious = this.state.toolbar.previousButton.visible;
+		const previousDisabled = !this.state.toolbar.previousButton.enabled;
+		const showNext = this.state.toolbar.nextButton.visible;
+		const nextDisabled = !this.state.toolbar.nextButton.enabled;
 		return (
 			<AppBar style={style} className={classes.header}>
 				<div className="layout horizontal flex center">
-					{homeAvailable && <a onClick={this.handleShowHome.bind(this)} className={classes.link}><Typography variant="h5">{this.translate(this.state.title)}</Typography></a>}
-					{!homeAvailable && <Typography variant="h5">{this.translate(this.state.title)}</Typography>}
+					{showHome && <a onClick={this.handleShowHome.bind(this)} className={classes.link}><Typography variant="h5">{this.translate(this.state.title)}</Typography></a>}
+					{!showHome && <Typography variant="h5">{this.translate(this.state.title)}</Typography>}
+					{showPrevious && <IconButton onClick={this.handlePrevious.bind(this)} disabled={previousDisabled} className={classes.icon} style={{marginLeft:'10px'}}><NavigateBefore fontSize="large"/></IconButton>}
+					{showNext && <IconButton onClick={this.handleNext.bind(this)} disabled={nextDisabled} className={classes.icon}><NavigateNext fontSize="large"/></IconButton>}
 					<div className="layout horizontal end-justified flex"><IconButton onClick={this.handleClose.bind(this)} className={classes.icon}><Close fontSize="large"/></IconButton></div>
 				</div>
 			</AppBar>
@@ -116,12 +123,20 @@ class Layer extends AbstractLayer {
 		this.requester.home();
 	};
 
+	handlePrevious = () => {
+		this.requester.previous();
+	};
+
+	handleNext = () => {
+		this.requester.next();
+	};
+
 	refreshTitle = (title) => {
 		this.setState({title});
 	};
 
-	refreshHome = (value) => {
-		this.setState({homeAvailable:value});
+	refreshToolbar = (value) => {
+		this.setState({toolbar:value});
 	};
 
     _transition = () => {

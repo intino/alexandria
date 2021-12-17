@@ -1,6 +1,8 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.schemas.LayerToolbar;
+import io.intino.alexandria.schemas.LayerToolbarButton;
 import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.Listener;
@@ -8,6 +10,9 @@ import io.intino.alexandria.ui.displays.notifiers.LayerNotifier;
 
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class Layer<DN extends LayerNotifier, B extends Box> extends AbstractLayer<B> {
 	private Component<?, ?> template;
@@ -15,6 +20,10 @@ public class Layer<DN extends LayerNotifier, B extends Box> extends AbstractLaye
 	private java.util.List<Listener> openListeners = new ArrayList<>();
 	private java.util.List<Listener> closeListeners = new ArrayList<>();
 	private OpenLayer<?, ?> homeAction;
+	private Consumer<Layer> previousListener;
+	private Function<Layer, Boolean> canPreviousResolver;
+	private Consumer<Layer> nextListener;
+	private Function<Layer, Boolean> canNextResolver;
 
 	public Layer(B box) {
 		super(box);
@@ -31,10 +40,30 @@ public class Layer<DN extends LayerNotifier, B extends Box> extends AbstractLaye
 		return this;
 	}
 
+	public Layer<DN, B> onPrevious(Consumer<Layer> listener, Function<Layer, Boolean> canPreviousResolver) {
+		this.previousListener = listener;
+		this.canPreviousResolver = canPreviousResolver;
+		return this;
+	}
+
+	public Layer<DN, B> onNext(Consumer<Layer> listener, Function<Layer, Boolean> canNextResolver) {
+		this.nextListener = listener;
+		this.canNextResolver = canNextResolver;
+		return this;
+	}
+
 	@Override
 	public void refresh() {
 		super.refresh();
-		notifier.refreshHome(homeAction != null);
+		notifier.refreshToolbar(toolbar());
+	}
+
+	private LayerToolbar toolbar() {
+		LayerToolbar result = new LayerToolbar();
+		result.homeButton(new LayerToolbarButton().visible(homeAction != null).enabled(homeAction != null));
+		result.previousButton(new LayerToolbarButton().visible(previousListener != null).enabled(canPreviousResolver != null ? canPreviousResolver.apply(this) : false));
+		result.nextButton(new LayerToolbarButton().visible(nextListener != null).enabled(canNextResolver != null ? canNextResolver.apply(this) : false));
+		return result;
 	}
 
 	public Layer<DN, B> onOpen(Listener listener) {
@@ -62,6 +91,18 @@ public class Layer<DN extends LayerNotifier, B extends Box> extends AbstractLaye
 	public void home() {
 		if (homeAction == null) return;
 		homeAction.openAddress();
+	}
+
+	public void previous() {
+		if (previousListener == null) return;
+		previousListener.accept(this);
+		refresh();
+	}
+
+	public void next() {
+		if (nextListener == null) return;
+		nextListener.accept(this);
+		refresh();
 	}
 
 	public Layer<DN, B> title(String title) {
