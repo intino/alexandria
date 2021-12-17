@@ -16,10 +16,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class AlexandriaScheduler {
-
 	private Scheduler scheduler;
 	private final Map<String, DirectorySentinel> sentinels = new HashMap<>();
-
 
 	public AlexandriaScheduler() {
 		try {
