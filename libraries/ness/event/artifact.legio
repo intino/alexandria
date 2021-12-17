@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "3.0.3") event
+Artifact("io.intino.alexandria", "3.0.4") event
 	Imports
 		Compile("io.intino.alexandria", "zim", "4.0.1")
 		Compile("io.intino.alexandria", "logger", "2.1.0")
