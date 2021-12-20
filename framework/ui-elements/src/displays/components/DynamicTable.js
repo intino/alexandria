@@ -26,8 +26,8 @@ export const DynamicTableStyles = theme => ({
     headerCell : {
     },
     rowLabel : {
-        border:'0',
-        textAlign:'right',
+        border:'1px solid #e0e0e0',
+        textAlign:'left',
         whiteSpace:'nowrap'
     },
     rowActions : {
@@ -380,7 +380,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const visible = isMainView || (!isMainView && mainSection == this.state.sections[0]);
         return (
             <TableRow key={index}>
-                {visible && <TableCell className={classes.rowLabel} style={{minWidth:rowLabelWidth+"px",width:rowLabelWidth+"px"}}><div></div></TableCell>}
+                {visible && this.renderHeaderTitleCell(mainSection, sections.length > 0 ? sections[0] : null)}
                 {sections.map((section, index) => isMainView || (!isMainView && this.isSelectedColumnIn(section, sections)) ? this.renderHeaderCell(mainSection, section, index) : null)}
             </TableRow>
         );
@@ -402,11 +402,35 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         return false;
     };
 
+    renderHeaderTitleCell = (mainSection, section) => {
+        const isMainView = this._isMainView();
+        if (section == null || (isMainView && !section.selectable)) return;
+        const { classes } = this.props;
+        const style = {backgroundColor:section.backgroundColor,fontSize:section.fontSize + "pt",textAlign:'left'};
+        const orderBy = this.state.orderBy != null ? this.state.orderBy.label : null;
+        const order = this.state.order;
+        const className = isMainView || this.state.sections[0] == mainSection ? classNames(classes.rowCell, classes.rowLabel) : classNames(classes.rowCell, classes.rowLabel, classes.detailRowCell);
+        return (
+            <TableCell className={className}
+                       style={style}
+                       align='left'
+                       key={0}>
+                {!isMainView && <div style={{color:'white'}}>{this.translate("Title")}</div>}
+                {isMainView &&
+                    <TableSortLabel active={orderBy === 'title'} direction={orderBy === 'title' ? order : 'asc'} onClick={this.handleSortByTitle.bind(this)}>
+                        <span>{this.translate("Title")}</span>
+                        {orderBy === '' ? (<span className={classes.visuallyHidden}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</span>) : null}
+                    </TableSortLabel>
+                }
+            </TableCell>
+        );
+    };
+
     renderHeaderCell = (mainSection, section, index) => {
         const { classes } = this.props;
         const columnCount = this.childrenColumnsCount(section);
         const isMainView = this._isMainView();
-        const colSpan = this._isMainView() ? columnCount : (this.isLeafSection(section) && index == this.state.column.index ? 1 : 0);
+        const colSpan = this._isMainView() ? columnCount+1 : (this.isLeafSection(section) && index == this.state.column.index ? 1 : 0);
         const color = section.color;
         const textAlign = section.textAlign != null ? section.textAlign : "right";
         const selectable = section.selectable;
@@ -443,6 +467,11 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     handleSort = (section, index, e) => {
         const isAsc = this.state.orderBy != null && this.state.orderBy.label === section.label && this.state.orderBy.index === index && this.state.order === 'asc';
         this.setState({ order: isAsc ? 'desc' : 'asc', orderBy: { label: section.label, index: index } });
+    };
+
+    handleSortByTitle = (e) => {
+        const isAsc = this.state.orderBy != null && this.state.orderBy.label === 'title' && this.state.order === 'asc';
+        this.setState({ order: isAsc ? 'desc' : 'asc', orderBy: { label: 'title', index: 0 } });
     };
 
     sort = (s) => {
@@ -512,8 +541,9 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     descendingComparator = (a, b) => {
         if (a.label === "Total" || b.label === "Total") return 0;
         const indicator = this.state.orderBy.label;
-        const aValue = this.cellValue(a, indicator);
-        const bValue = this.cellValue(b, indicator);
+        const aValue = indicator === "title" ? a.label : this.cellValue(a, indicator);
+        const bValue = indicator === "title" ? b.label : this.cellValue(b, indicator);
+        if (typeof aValue === "string") return aValue.localeCompare(bValue);
         if (bValue < aValue) return -1;
         if (bValue > aValue) return 1;
         return 0;
