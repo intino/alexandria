@@ -168,7 +168,7 @@ def type(parameter & defaultvalue) attribute(in:body) trigger(assign)
 end
 
 def type(parameter & required) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrElseThrow("$name", new BadRequest("Parameters missed")), $parameterType);
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrElseThrow("$name", ()-> new BadRequest("Parameters missed")));
 end
 
 
