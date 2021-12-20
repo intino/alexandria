@@ -121,11 +121,6 @@ def type(service)
 					}
 				});
 			}
-
-			@Override
-			public void interrupt() throws UnableToInterruptJobException {
-
-			}
 		}
 	}
 end
