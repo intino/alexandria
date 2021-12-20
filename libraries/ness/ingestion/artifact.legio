@@ -1,9 +1,9 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "4.0.5") ingestion
+Artifact("io.intino.alexandria", "4.0.6") ingestion
 	Imports
 		Compile("io.intino.alexandria", "session", "1.1.0")
-		Compile("io.intino.alexandria", "event", "3.0.3")
+		Compile("io.intino.alexandria", "event", "3.0.4")
 		Compile("io.intino.alexandria", "zet", "1.0.7")
 		Compile("io.intino.alexandria", "tris", "1.0.0")
 

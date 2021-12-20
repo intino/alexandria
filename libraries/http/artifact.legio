@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.5.4") http
+Artifact("io.intino.alexandria", "1.5.5") http
 	Imports
 		Compile("io.intino.alexandria", "exceptions", "2.1.0")
 		Compile("io.intino.alexandria", "primitives", "1.0.5")

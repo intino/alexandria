@@ -180,7 +180,7 @@ public class Message {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(type, owner, attributes, components);
+		return Objects.hash(type, attributes, components);
 	}
 
 	private static String indent(String text) {
