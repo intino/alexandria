@@ -127,6 +127,12 @@ public class SparkManager<P extends PushService> {
 		return request.body();
 	}
 
+	public <X extends Throwable> String fromBodyOrElseThrow(String name, Supplier<? extends X> exceptionSupplier) throws X {
+		final String body = request.body();
+		if (body == null || body.isEmpty()) throw exceptionSupplier.get();
+		return body;
+	}
+
 	public Resource fromForm(String name) {
 		return fromPartAsResource(name);
 	}
