@@ -31,6 +31,7 @@ public class DisplayStamp<DN extends DisplayStampNotifier, B extends Box> extend
     }
 
     public void display(Display<?, ?> display) {
+        clear();
         this.display = display;
         this.display.id(UUID.randomUUID().toString());
         add(this.display);
