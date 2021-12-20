@@ -17,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
@@ -70,12 +71,22 @@ public class SparkManager<P extends PushService> {
 		return request.headers(name) == null ? defaultValue : request.headers(name);
 	}
 
+	public <X extends Throwable> String fromHeaderOrElseThrow(String name, Supplier<? extends X> exceptionSupplier) throws X {
+		if (request.headers(name) == null) throw exceptionSupplier.get();
+		return request.headers(name);
+	}
+
 	public String fromQuery(String name) {
 		return request.queryParams(name);
 	}
 
 	public String fromQueryOrDefault(String name, String defaultValue) {
 		return request.queryParams(name) == null ? defaultValue : request.queryParams(name);
+	}
+
+	public <X extends Throwable> String fromQueryOrElseThrow(String name, Supplier<? extends X> exceptionSupplier) throws X {
+		if (request.queryParams(name) == null) throw exceptionSupplier.get();
+		return request.queryParams(name);
 	}
 
 	public Map<String, String[]> formAndQueryParameters() {
@@ -92,6 +103,11 @@ public class SparkManager<P extends PushService> {
 
 	public String fromPathOrDefault(String name, String defaultValue) {
 		return request.params(name) == null ? defaultValue : request.params(name);
+	}
+
+	public <X extends Throwable> String fromPathOrElseThrow(String name, Supplier<? extends X> exceptionSupplier) throws X {
+		if (request.params(name) == null) throw exceptionSupplier.get();
+		return request.params(name);
 	}
 
 	@Deprecated
