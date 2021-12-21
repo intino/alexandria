@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
+import static io.intino.konos.model.graph.rules.ExceptionCodes.Unauthorized;
 
 public class RESTAccessorRenderer extends Renderer {
 	private final Service.REST service;
@@ -92,7 +93,7 @@ public class RESTAccessorRenderer extends Renderer {
 				.add("name", operation.core$().owner().name())
 				.add("parameter", parameters(operation.parameterList()))
 				.add("parameter", parameters(operation.core$().ownerAs(Resource.class).parameterList()))
-				.add("exceptionResponses", exceptionResponses(operation));
+				.add("exceptionResponses", exceptionResponses(operation, authentication));
 		if (authentication != null) builder.add("auth", new FrameBuilder("authentication", authentication()));
 		return builder.toFrame();
 	}
@@ -158,21 +159,34 @@ public class RESTAccessorRenderer extends Renderer {
 		return Character.toLowerCase(toCamelCase.charAt(0)) + toCamelCase.substring(1);
 	}
 
-	private FrameBuilder exceptionResponses(Operation operation) {
+	private FrameBuilder exceptionResponses(Operation operation, Authentication authentication) {
 		List<io.intino.konos.model.graph.Exception> exceptions = operation.exceptionList();
-		if (exceptions.isEmpty()) return new FrameBuilder("exceptionResponses", "none");
+		if (exceptions.isEmpty()) {
+			if (authentication == null) return new FrameBuilder("exceptionResponses", "none");
+			return new FrameBuilder("exceptionResponses").add("exceptionResponse", unauthorizedExceptionResponse());
+		}
 		return new FrameBuilder("exceptionResponses")
-				.add("exceptionResponse", exceptionResponses(exceptions));
+				.add("exceptionResponse", exceptionResponses(exceptions, authentication));
 	}
 
-	private Frame[] exceptionResponses(List<io.intino.konos.model.graph.Exception> responses) {
-		return responses.stream().map(this::exceptionResponse).toArray(Frame[]::new);
+	private Frame[] exceptionResponses(List<io.intino.konos.model.graph.Exception> exceptions, Authentication authentication) {
+		final List<Frame> collect = exceptions.stream().map(this::exceptionResponse).collect(Collectors.toList());
+		if (authentication != null && exceptions.stream().noneMatch(e -> e.code().equals(Unauthorized)))
+			collect.add(unauthorizedExceptionResponse());
+		return collect.toArray(new Frame[0]);
 	}
 
-	private Frame exceptionResponse(Exception response) {
+	private Frame exceptionResponse(Exception exception) {
 		return new FrameBuilder("exceptionResponse")
-				.add("code", response.code().value())
-				.add("exceptionName", response.code().toString()).toFrame();
+				.add("code", exception.code().value())
+				.add("exceptionName", exception.code().toString()).toFrame();
+	}
+
+
+	private Frame unauthorizedExceptionResponse() {
+		return new FrameBuilder("exceptionResponse")
+				.add("code", Unauthorized.value())
+				.add("exceptionName", Unauthorized.name()).toFrame();
 	}
 
 	private Template template() {
