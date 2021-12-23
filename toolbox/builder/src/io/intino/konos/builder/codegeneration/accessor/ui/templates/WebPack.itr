@@ -44,7 +44,7 @@ def type(webpack)
         },
         plugins: $[
             new CircularDependencyPlugin({
-                failOnError: true,
+                failOnError: false,
                 allowAsyncCycles: false,
                 cwd: process.cwd(),
             }),
