@@ -46,6 +46,8 @@ class DateEditable extends AbstractDateEditable {
 
 		const { timePicker, classes } = this.props;
 		const range = this.state.range;
+		const min = range.min != 0 ? range.min : undefined;
+		const max = range.max != 0 ? range.max : undefined;
 		const dateLabel = this.translate(this.props.label != null ? this.props.label : undefined);
 		const timeLabel = this.translate(this.props.label != null ? this.props.label : undefined);
 		const pattern = this.state.pattern;
@@ -57,14 +59,14 @@ class DateEditable extends AbstractDateEditable {
 																								 disabled={this.state.readonly}
 																								 format={pattern} className={classes.date} mask={this.props.mask}
 																								 value={value} onChange={this.handleChange.bind(this)}
-																								 minDate={range.min} maxDate={range.max} label={dateLabel} views={this.views()}
+																								 minDate={min} maxDate={max} label={dateLabel} views={this.views()}
 																								 minDateMessage={this.translate("Date should not be before minimal date")}
 																								 maxDateMessage={this.translate("Date should not be after maximal date")}/></MuiPickersUtilsProvider> : undefined }
 				{ timePicker ? <MuiPickersUtilsProvider utils={MomentUtils}><KeyboardDateTimePicker variant={variant} placeholder={pattern} autoOk
 																									disabled={this.state.readonly}
 																									format={pattern} className={classes.datetime}
 																									value={value} onChange={this.handleChange.bind(this)}
-																									minDate={range.min} maxDate={range.max} label={timeLabel}
+																									minDate={min} maxDate={max} label={timeLabel}
 																									minDateMessage={this.translate("Date should not be before minimal date")}
 																									maxDateMessage={this.translate("Date should not be after maximal date")}/></MuiPickersUtilsProvider> : undefined }
 				{this.props.allowEmpty && <FormControlLabel control={<Checkbox disabled={this.state.readonly} checked={this.state.empty} onChange={this.handleAllowEmpty.bind(this)} />} label={this.translate("sin definir")} />}

@@ -26,7 +26,7 @@ export const DynamicTableStyles = theme => ({
     headerCell : {
     },
     rowLabel : {
-        border:'1px solid #e0e0e0',
+        /*border:'1px solid #e0e0e0',*/
         textAlign:'left',
         whiteSpace:'nowrap'
     },
@@ -44,9 +44,9 @@ export const DynamicTableStyles = theme => ({
     },
     rowCell : {
         textAlign:'right',
-        borderTop: '1px solid #e0e0e0',
-        borderRight: '1px solid #e0e0e0',
-        borderLeft: '1px solid #e0e0e0',
+        //borderTop: '1px solid #e0e0e0',
+        //borderRight: '1px solid #e0e0e0',
+        //borderLeft: '1px solid #e0e0e0',
     },
     detailRowCell : {
         borderLeft: '0',

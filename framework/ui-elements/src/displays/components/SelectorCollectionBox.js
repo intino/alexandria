@@ -15,6 +15,10 @@ const SelectorCollectionBoxViewStyles = {
         ...provided,
         color: '#333333',
     }),
+    menu: provided => ({
+        ...provided,
+        zIndex: 9999
+    }),
 };
 
 const styles = theme => ({
@@ -76,7 +80,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 	    return (
 			<div className={classes.container} style={this.style()}>
                 {this.renderTraceConsent()}
-				{label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{label}</div> : undefined }
+				{label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{this.translate(label)}</div> : undefined }
 				<Select ref={this.searchComponent} isMulti={multiple} isDisabled={this.state.readonly} isSearchable
 						closeMenuOnSelect={!multiple} autoFocus={this.props.focused} menuIsOpen={this.state.opened}
 						placeholder={this.selectMessage()}
