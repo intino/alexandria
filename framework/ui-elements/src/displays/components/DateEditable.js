@@ -55,14 +55,14 @@ class DateEditable extends AbstractDateEditable {
 		const variant = this._variant();
 		return (
 			<div style={this.style()}>
-				{ !timePicker ? <MuiPickersUtilsProvider utils={MomentUtils}><KeyboardDatePicker variant={variant} placeholder={pattern} autoOk
+				{ !timePicker ? <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={Application.configuration.language}><KeyboardDatePicker variant={variant} placeholder={pattern} autoOk
 																								 disabled={this.state.readonly}
 																								 format={pattern} className={classes.date} mask={this.props.mask}
 																								 value={value} onChange={this.handleChange.bind(this)}
 																								 minDate={min} maxDate={max} label={dateLabel} views={this.views()}
 																								 minDateMessage={this.translate("Date should not be before minimal date")}
 																								 maxDateMessage={this.translate("Date should not be after maximal date")}/></MuiPickersUtilsProvider> : undefined }
-				{ timePicker ? <MuiPickersUtilsProvider utils={MomentUtils}><KeyboardDateTimePicker variant={variant} placeholder={pattern} autoOk
+				{ timePicker ? <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={Application.configuration.language}><KeyboardDateTimePicker variant={variant} placeholder={pattern} autoOk
 																									disabled={this.state.readonly}
 																									format={pattern} className={classes.datetime}
 																									value={value} onChange={this.handleChange.bind(this)}
