@@ -103,7 +103,7 @@ Concept DataComponents
         	var boolean timePicker = false
         	var string mask = empty
         	var boolean allowEmpty = false
-        	var word[]:{Year Date Month} views = empty
+        	var word[]:{Year Month Week Date} views = empty
 			var boolean embedded = false
 		Aspect Readonly with Editable
 		Aspect Required with Editable

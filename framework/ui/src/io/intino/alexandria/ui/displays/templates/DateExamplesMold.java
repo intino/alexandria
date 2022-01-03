@@ -2,6 +2,7 @@ package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.UserMessage;
+import io.intino.alexandria.ui.displays.components.DateEditable;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.Date;
 
 public class DateExamplesMold extends AbstractDateExamplesMold<AlexandriaUiBox> {

@@ -19,7 +19,7 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 	private ChangeListener changeListener = null;
 
 	public enum View {
-		Year, Date, Month;
+		Year, Month, Week, Date;
 	}
 
     public DateEditable(B box) {

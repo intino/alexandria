@@ -9,6 +9,7 @@ public interface Selector {
 	List<SelectorOption> options();
 	void reset();
 	void add(SelectorOption option);
+	void addSubHeader(String title);
 	void addDivider();
 	Selector onSelect(SelectionListener selectionListener);
 }

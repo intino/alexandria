@@ -13,6 +13,7 @@ import io.intino.alexandria.ui.displays.notifiers.TextNotifier;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Box> extends AbstractBaseSelector<DN, B> implements io.intino.alexandria.ui.displays.components.selector.Selector, Addressable {
@@ -73,12 +74,23 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
     }
 
     public BaseSelector<DN, B> add(String option) {
-        options.add(option);
-        notifier.refreshOptions(options);
+        if (components.size() > 0) addTextComponent(option);
+        else {
+            options.add(option);
+            notifier.refreshOptions(options);
+        }
         return this;
     }
 
-	@Override
+    protected void addTextComponent(String option) {
+        Text text = new Text(box());
+        text.id(UUID.randomUUID().toString());
+        text.name(option);
+        add((SelectorOption) text);
+        text.value(option);
+    }
+
+    @Override
 	public void add(SelectorOption option) {
 		addOption((Component) option);
 	}
@@ -93,6 +105,17 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         super.clear();
         options.clear();
         components.clear();
+    }
+
+    @Override
+    public void addSubHeader(String title) {
+        Text text = new Text(box());
+        PropertyList properties = text.properties();
+        properties.addClassName("sub-header");
+        text.id(UUID.randomUUID().toString());
+        text.name(title);
+        addOption(text);
+        text.value(title);
     }
 
     @Override
@@ -131,7 +154,10 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         this.options.addAll(options);
         if (this.options.size() > 0) notifier.refreshOptions(options);
         this.components = new ArrayList<>();
-        components.forEach(this::add);
+        components.forEach(c -> {
+            add(c);
+            c.update();
+        });
     }
 
     protected BaseSelector<DN, B> _readonly(boolean readonly) {

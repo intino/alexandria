@@ -80,6 +80,9 @@ export default class BaseSlider extends AbstractBaseSlider {
 		doubleSpacing: {
 			marginRight: theme.spacing(2),
 		},
+		leftSpacing: {
+			marginLeft: theme.spacing(2),
+		},
 	});
 
 	constructor(props) {
@@ -139,11 +142,11 @@ export default class BaseSlider extends AbstractBaseSlider {
 		const mainSpacing = !this.navigationOnly() ? classes.doubleSpacing : {};
 		return (
 			<div className={classNames("layout horizontal", mainSpacing)}>
-                <div className={classNames("layout horizontal center", classes.doubleSpacing)} style={{display:display}}>
+                <div className={classNames("layout horizontal center")} style={{display:display}}>
                     {this.allowNavigation() && this.renderNavigationControls()}
                     {(!this.navigationOnly() && !this.ordinalSelectorOnly()) && this.renderValue()}
                 </div>
-				{!this.navigationOnly() && <div className="layout horizontal">{this.renderOrdinals()}</div>}
+				{!this.navigationOnly() && <div className={classsNames("layout horizontal", classes.leftSpacing)}>{this.renderOrdinals()}</div>}
 			</div>
 		);
 	};
@@ -158,7 +161,7 @@ export default class BaseSlider extends AbstractBaseSlider {
 				{ <IconButton disabled={this.state.readonly || !canPrevious} color="primary" aria-label={this.translate("Before")} onClick={this.handlePrevious.bind(this)} size="small"><NavigateBefore/></IconButton>}
 				{ (this.props.animation && !this.state.toolbar.playing) && <IconButton disabled={this.state.readonly} color="primary" aria-label={this.translate("Play")} onClick={this.handlePlay.bind(this)} size="small"><PlayCircleFilled/></IconButton>}
 				{ (this.props.animation && this.state.toolbar.playing) && <IconButton disabled={this.state.readonly} color="primary" aria-label={this.translate("Pause")} onClick={this.handlePause.bind(this)} size="small"><PauseCircleFilled/></IconButton>}
-				{ <IconButton disabled={this.state.readonly || !canNext} className={classes.spacing} color="primary" aria-label={this.translate("Next")} onClick={this.handleNext.bind(this)} size="small"><NavigateNext/></IconButton>}
+				{ <IconButton disabled={this.state.readonly || !canNext} color="primary" aria-label={this.translate("Next")} onClick={this.handleNext.bind(this)} size="small"><NavigateNext/></IconButton>}
 			</div>
 		);
 	};
