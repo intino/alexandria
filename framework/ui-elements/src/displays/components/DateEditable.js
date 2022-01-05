@@ -101,7 +101,7 @@ class DateEditable extends AbstractDateEditable {
 																								 disabled={this.state.readonly}
 																								 format={pattern} className={classes.date} mask={this.props.mask}
 																								 value={value} onChange={this.handleChange.bind(this)}
-																								 minDate={min} maxDate={max} label={dateLabel} views={this.views()}
+																								 minDate={min} maxDate={this._max(max)} label={dateLabel} views={this.views()}
 																								 renderDay={this.isWeekView() ? this.renderWrappedWeekDay.bind(this) : undefined}
 																								 minDateMessage={this.translate("Date should not be before minimal date")}
 																								 maxDateMessage={this.translate("Date should not be after maximal date")}/></MuiPickersUtilsProvider> : undefined }
@@ -109,7 +109,7 @@ class DateEditable extends AbstractDateEditable {
 																									disabled={this.state.readonly}
 																									format={pattern} className={classes.datetime}
 																									value={value} onChange={this.handleChange.bind(this)}
-																									minDate={min} maxDate={max} label={timeLabel}
+																									minDate={min} maxDate={this._max(max)} label={timeLabel}
 																									renderDay={this.isWeekView() ? this.renderWrappedWeekDay.bind(this) : undefined}
 																									minDateMessage={this.translate("Date should not be before minimal date")}
 																									maxDateMessage={this.translate("Date should not be after maximal date")}/></MuiPickersUtilsProvider> : undefined }
@@ -198,18 +198,16 @@ class DateEditable extends AbstractDateEditable {
         const start = moment(selectedDate).startOf('week');
         const end = moment(selectedDate).endOf('week');
 
-        const dayIsBetween = dateClone.isBetween(start, end, 'days');
         const isFirstDay = dateClone.isSame(start, 'day');
         const isLastDay = dateClone.isSame(end, 'day');
+        const dayIsBetween = dateClone.isBetween(start, end, 'days') || isLastDay;
         const readonly = (min !== undefined && date.isBefore(min, 'day')) || (max !== undefined && date.isAfter(max, 'day'));
-
-        console.log(readonly + " - " + min + " : " + this.state.range.max);
 
         const wrapperClassName = classNames({
           [classes.highlight]: dayIsBetween,
           [classes.firstHighlight]: isFirstDay,
           [classes.endHighlight]: isLastDay,
-          [classes.readonly]: readonly,
+          [classes.readonly]: readonly && !dayIsBetween,
         });
 
         const dayClassName = classNames(classes.day, {
@@ -219,11 +217,18 @@ class DateEditable extends AbstractDateEditable {
 
         return (
           <div className={wrapperClassName}>
-            <IconButton className={dayClassName} disabled={readonly}>
+            <IconButton className={dayClassName} disabled={readonly && !dayIsBetween}>
               <span>{moment(dateClone).date()}</span>
             </IconButton>
           </div>
         );
+    };
+
+    _max = (value) => {
+        if (!this.isWeekView()) return value;
+        if (value == null) return null;
+        if (value == undefined) return undefined;
+        return moment(value).endOf('week').toDate();
     };
 }
 

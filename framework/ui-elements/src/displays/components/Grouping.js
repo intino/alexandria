@@ -28,7 +28,7 @@ class Grouping extends AbstractGrouping {
         const { classes } = this.props;
         return (
             <div className={classes.container} style={this.style()}>
-                {this.props.label != null ? <Typography className={classes.label} variant="subtitle1">{this.props.label}</Typography> : undefined}
+                {this.props.label != null ? <Typography className={classes.label} variant="subtitle1">{this.translate(this.props.label)}</Typography> : undefined}
                 {this.renderToolbar()}
                 <List>{this.state.visibleGroups.map((group, i) => this.renderGroup(group, i))}</List>
                 {this.renderEmpty()}
