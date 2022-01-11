@@ -95,6 +95,7 @@ class DateEditable extends AbstractDateEditable {
 		const pattern = this.state.pattern;
 		const value = this.state.value != null ? this.state.value : null;
 		const variant = this._variant();
+		const toolbar = this._isEmbedded() && this.props.mode === "fromnow" ? (props) => (<React.Fragment/>) : undefined;
 		return (
 			<div style={this.style()}>
 				{ !timePicker ? <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale(Application.configuration.language)}><KeyboardDatePicker variant={variant} placeholder={pattern} autoOk
@@ -102,6 +103,7 @@ class DateEditable extends AbstractDateEditable {
 																								 format={pattern} className={classes.date} mask={this.props.mask}
 																								 value={value} onChange={this.handleChange.bind(this)}
 																								 minDate={min} maxDate={this._max(max)} label={dateLabel} views={this.views()}
+																								 ToolbarComponent={toolbar}
 																								 renderDay={this.isWeekView() ? this.renderWrappedWeekDay.bind(this) : undefined}
 																								 minDateMessage={this.translate("Date should not be before minimal date")}
 																								 maxDateMessage={this.translate("Date should not be after maximal date")}/></MuiPickersUtilsProvider> : undefined }
@@ -110,6 +112,7 @@ class DateEditable extends AbstractDateEditable {
 																									format={pattern} className={classes.datetime}
 																									value={value} onChange={this.handleChange.bind(this)}
 																									minDate={min} maxDate={this._max(max)} label={timeLabel}
+																									ToolbarComponent={toolbar}
 																									renderDay={this.isWeekView() ? this.renderWrappedWeekDay.bind(this) : undefined}
 																									minDateMessage={this.translate("Date should not be before minimal date")}
 																									maxDateMessage={this.translate("Date should not be after maximal date")}/></MuiPickersUtilsProvider> : undefined }
@@ -119,8 +122,12 @@ class DateEditable extends AbstractDateEditable {
 	};
 
 	_variant = () => {
+	    return this._isEmbedded() ? "static" : "inline";
+	};
+
+	_isEmbedded = () => {
 	    const embedded = this.props.embedded;
-	    return embedded != null && embedded ? "static" : "inline";
+	    return embedded != null && embedded;
 	};
 
 	refresh = (value) => {
