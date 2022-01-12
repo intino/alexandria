@@ -5,6 +5,7 @@ public class Group {
 	private String label;
 	private int count;
 	private String color;
+	private String category;
 
 	public String name() {
 		return name;
@@ -40,6 +41,15 @@ public class Group {
 
 	public Group color(String color) {
 		this.color = color;
+		return this;
+	}
+
+	public String category() {
+		return category;
+	}
+
+	public Group category(String category) {
+		this.category = category;
 		return this;
 	}
 }

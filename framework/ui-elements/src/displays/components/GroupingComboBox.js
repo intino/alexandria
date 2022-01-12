@@ -18,6 +18,23 @@ const styles = theme => ({
     group : {
         padding: "0",
     },
+    groupStyles : {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    groupBadgeStyles : {
+        backgroundColor: '#EBECF0',
+        borderRadius: '2em',
+        color: '#172B4D',
+        display: 'inline-block',
+        fontSize: 12,
+        fontWeight: 'normal',
+        lineHeight: '1',
+        minWidth: 1,
+        padding: '0.16666666666667em 0.5em',
+        textAlign: 'center',
+    }
 });
 
 class GroupingComboBox extends AbstractGroupingComboBox {
@@ -35,13 +52,15 @@ class GroupingComboBox extends AbstractGroupingComboBox {
         if (!this.state.visible) return (<React.Fragment/>);
 
         const { classes } = this.props;
-        const selectedOptions = this.state.selection.map(s => this._groupOf(s));
+        const selectedOptions = this.state.selection.map(s => this._findGroup(s));
+        const options = this._options();
         return (
             <div className={classes.container} style={this.style()}>
                 <Select isMulti isSearchable closeMenuOnSelect={false} placeholder={this.selectMessage()}
-                        options={this.state.groups.map(group => { return { value: group.label, label: group.label, group: group } })}
+                        options={options}
                         className="basic-multi-select" classNamePrefix="select"
                         components={{ Option: this.renderGroup.bind(this)}}
+						formatGroupLabel={this._groupComponent.bind(this)}
                         filterOption={this.handleFilter.bind(this)}
                         onChange={this.handleChange}
                         value={selectedOptions}
@@ -50,9 +69,9 @@ class GroupingComboBox extends AbstractGroupingComboBox {
         );
     };
 
-    _groupOf = (option) => {
-        let group = this.state.groups.filter(g => g.label === option)[0];
-        return group != null ? { value: group.label, label: group.label, group: group } : null;
+    _findGroup = (option) => {
+        let group = this._flattenGroups().filter(g => g.label === option)[0];
+        return group != null ? this._groupOf(group) : null;
     };
 
     renderGroup = (options) => {
@@ -88,6 +107,43 @@ class GroupingComboBox extends AbstractGroupingComboBox {
         const placeholder = this.props.placeholder;
         return placeholder != null && placeholder !== "" ? this.translate(placeholder) : (this.props.label != null ? this.translate("Select") + " " + this.props.label : this.translate("Select an option"));
     };
+
+    _groupComponent = (data) => {
+        const { classes } = this.props;
+        return (
+            <div className={classes.groupStyles}>
+                <span>{data.label}</span>
+                <span className={classes.groupBadgeStyles}>{data.options.length}</span>
+            </div>
+        );
+    };
+
+    _options = () => {
+        const result = this.state.groups.map(entry => this._groupEntryOf(entry));
+        if (result.length == 1 && result[0].label === "default") return result[0].options;
+        return result;
+    };
+
+    _groupEntryOf = (entry) => {
+        const result = { label: entry.label };
+        result.options = entry.groups.map(g => this._groupOf(g));
+        return result;
+    };
+
+    _groupOf = (group) => {
+        return { value: group.label, label: group.label, group: group };
+    };
+
+    _flattenGroups = () => {
+        const result = [];
+        const entries = this.state.groups;
+        for (let i=0; i<entries.length; i++) {
+            for (let j=0; j<entries[i].groups.length; j++) {
+                result.push(entries[i].groups[j]);
+            }
+        }
+        return result;
+    }
 
 }
 

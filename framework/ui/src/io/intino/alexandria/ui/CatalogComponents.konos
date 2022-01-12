@@ -49,7 +49,7 @@ Component heading
 Component row
 
 Component baseGrouping
-	Notification refreshGroups as Object(Group) List
+	Notification refreshGroups as Object(GroupEntry) List
 	Notification refreshSelection as Text List
 	Notification registerSelection as Text List
 	Request setupAddress as Text List

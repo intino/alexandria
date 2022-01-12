@@ -83,6 +83,10 @@ Schema GroupingToolbarFilter
 	Attribute name as Text
 	Attribute options as Text List
 
+Schema GroupEntry
+	Attribute label as Text
+	Attribute groups as Object(Group) List
+
 Schema Group
 	Attribute label as Text
 	Attribute count as Integer
