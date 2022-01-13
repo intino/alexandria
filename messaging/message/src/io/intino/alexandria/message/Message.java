@@ -175,7 +175,7 @@ public class Message {
 	}
 
 	private boolean attributeEquals(Message message, String key) {
-		return message.contains(key) && message.get(key).data().equals(get(key).data());
+		return message.contains(key) && Objects.equals(message.get(key).data(), get(key).data());
 	}
 
 	@Override
