@@ -19,7 +19,11 @@ export default class Component extends AlexandriaDisplay {
     };
 
     style() {
-        let style = this._addFormats();
+        return this.styleOf(this);
+    };
+
+    styleOf(element) {
+        let style = this._addFormats(element);
         style = this._addSpacing(style);
         return style;
     };
@@ -61,7 +65,11 @@ export default class Component extends AlexandriaDisplay {
     };
 
     _addFormats() {
-        const { format } = this.props;
+        return this._addFormatsTo(this);
+    };
+
+    _addFormatsTo(element) {
+        const { format } = element.props;
         const formats = format != null ? format.split(" ") : [];
         if (formats.length <= 0) return undefined;
         const theme = Theme.get();

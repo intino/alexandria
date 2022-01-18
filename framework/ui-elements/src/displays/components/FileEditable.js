@@ -62,7 +62,7 @@ export default class FileEditable extends AbstractFile {
 		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
 		return (
 			<Block layout="vertical" style={{...this.style(),width:width,height:height}}>
-                {label != null && label !== "" ? <div style={{color:color,fontSize:"10pt",color:"#0000008a",marginBottom:"5px"}}>{label}</div> : undefined }
+                {label != null && label !== "" ? <div style={{color:color,fontSize:"10pt",color:"#0000008a",marginBottom:"5px"}}>{this.translate(label)}</div> : undefined }
 				{this._renderPreview()}
 				{this._renderComponent()}
 			</Block>

@@ -40,7 +40,7 @@ class SelectorTabs extends AbstractSelectorTabs {
     renderTab = (tab, i) => {
 	    const className = tab.props.className;
         if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
-        return this._isVisible(i) ? (<Tab label={tab} index={i}/>) : null;
+        return this._isVisible(i) ? (<Tab label={tab} index={i} style={this.styleOf(tab)}/>) : null;
     };
 
     refreshSelected = (tab) => {
