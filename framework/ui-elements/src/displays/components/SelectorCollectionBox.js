@@ -167,7 +167,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
     };
 
     handleClose = (e) => {
-		window.setTimeout(() => this.close(), 200);
+		window.setTimeout(() => this.close(), 500);
     };
 
 	handleAllowOther = () => {
