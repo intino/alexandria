@@ -11,6 +11,10 @@
     overflow: hidden;
 }
 
+.image-gallery-slide-wrapper {
+    background: white;
+}
+
 .image-gallery-swipe {
     top: 50%;
     transform: translateY(-50%);
