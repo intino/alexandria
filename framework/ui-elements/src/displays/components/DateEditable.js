@@ -202,13 +202,15 @@ class DateEditable extends AbstractDateEditable {
 		const max = range.max !== undefined && range.max != 0 ? moment(range.max) : undefined;
         const { classes } = this.props;
         let dateClone = moment(date);
+        const now = moment(new Date());
         const start = moment(selectedDate).startOf('week');
         const end = moment(selectedDate).endOf('week');
+        const maxEnd = max !== undefined ? moment(max).endOf('week') : null;
 
         const isFirstDay = dateClone.isSame(start, 'day');
         const isLastDay = dateClone.isSame(end, 'day');
         const dayIsBetween = dateClone.isBetween(start, end, 'days') || isLastDay;
-        const readonly = (min !== undefined && date.isBefore(min, 'day')) || (max !== undefined && date.isAfter(max, 'day'));
+        const readonly = (min !== undefined && date.isBefore(min, 'day')) || (max !== undefined && date.isAfter(maxEnd, 'day'));
 
         const wrapperClassName = classNames({
           [classes.highlight]: dayIsBetween,

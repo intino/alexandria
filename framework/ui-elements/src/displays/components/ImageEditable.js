@@ -20,7 +20,8 @@ const styles = theme => ({
 		display: "block",
 		position: "absolute",
 		height: "calc(100% - 20px)",
-		width: "100%"
+		width: "100%",
+		objectFit: 'contain',
 	},
 	overlay: {
 		position: "absolute",
