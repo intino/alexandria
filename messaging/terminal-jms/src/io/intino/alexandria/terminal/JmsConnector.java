@@ -537,7 +537,7 @@ public class JmsConnector implements Connector {
 
 	private void initConnection() {
 		try {
-			connection = BusConnector.createConnection(brokerUrl, user, password, connectionListener());
+			connection = BusConnector.createConnection(removeAlexandriaParameters(brokerUrl), user, password, connectionListener());
 			if (connection != null) {
 				if (clientId != null && !clientId.isEmpty()) connection.setClientID(clientId);
 				connection.start();
@@ -545,6 +545,11 @@ public class JmsConnector implements Connector {
 		} catch (JMSException e) {
 			Logger.error(e);
 		}
+	}
+
+	private String removeAlexandriaParameters(String brokerUrl) {
+		final String url = brokerUrl.replace("waitUntilConnect=true", "");
+		return url.endsWith("?") ? url.replace("?", "") : url;
 	}
 
 	private String callback(javax.jms.Message m) {

@@ -15,7 +15,7 @@
     <orderEntry type="module" module-name="event" />
     <orderEntry type="module" module-name="jms" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.4" level="project" />
+    <orderEntry type="module" module-name="primitives" />
     <orderEntry type="library" name="Intino: org.antlr:antlr4-runtime:4.9.1" level="project" />
     <orderEntry type="library" name="Intino: org.xerial.snappy:snappy-java:1.1.8.4" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:zim:4.0.1" level="project" />
@@ -29,6 +29,5 @@
     <orderEntry type="library" name="Intino: org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:1.0.1" level="project" />
     <orderEntry type="library" name="Intino: commons-net:commons-net:3.6" level="project" />
     <orderEntry type="library" name="Intino: javax.jmdns:jmdns:3.4.1" level="project" />
-    <orderEntry type="module" module-name="primitives" />
   </component>
 </module>
