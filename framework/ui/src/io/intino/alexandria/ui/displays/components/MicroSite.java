@@ -46,7 +46,6 @@ public class MicroSite<DN extends MicroSiteNotifier, B extends Box> extends Abst
 	public void refresh() {
 		super.refresh();
 		renderPage();
-		notifier.downloadContentVisibility(contentEntry() != null);
 	}
 
 	public UIFile download() {
