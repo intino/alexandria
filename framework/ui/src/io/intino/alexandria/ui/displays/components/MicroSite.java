@@ -11,11 +11,16 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.NoSuchFileException;
+import java.text.Format;
+import java.util.function.Function;
 
 public class MicroSite<DN extends MicroSiteNotifier, B extends Box> extends AbstractMicroSite<B> {
 	private java.io.File site;
 	private Zip siteReader;
 	private int page = 0;
+	private ContentAdapter contentAdapter;
+
+	public enum Format { Excel, Tsv }
 
     public MicroSite(B box) {
         super(box);
@@ -33,6 +38,11 @@ public class MicroSite<DN extends MicroSiteNotifier, B extends Box> extends Abst
 
 	public MicroSite<DN, B> page(int page) {
 		this.page = page;
+		return this;
+	}
+
+	public MicroSite<DN, B> contentAdapter(ContentAdapter adapter) {
+		this.contentAdapter = adapter;
 		return this;
 	}
 
@@ -71,13 +81,15 @@ public class MicroSite<DN extends MicroSiteNotifier, B extends Box> extends Abst
 		return new UIFile() {
 			@Override
 			public String label() {
-				return contentEntryFilename();
+				String filename = contentEntryFilename();
+				return contentAdapter != null ? contentAdapter.filename(filename) : filename;
 			}
 
 			@Override
 			public InputStream content() {
 				String content = contentEntry();
-				return new ByteArrayInputStream(content != null ? content.getBytes() : new byte[0]);
+				ByteArrayInputStream stream = new ByteArrayInputStream(content != null ? content.getBytes() : new byte[0]);
+				return contentAdapter != null ? contentAdapter.adapt(stream) : stream;
 			}
 		};
 	}
@@ -134,5 +146,10 @@ public class MicroSite<DN extends MicroSiteNotifier, B extends Box> extends Abst
 		catch (NumberFormatException ex) {
 			return -1;
 		}
+	}
+
+	public interface ContentAdapter {
+		String filename(String filename);
+		InputStream adapt(InputStream stream);
 	}
 }
