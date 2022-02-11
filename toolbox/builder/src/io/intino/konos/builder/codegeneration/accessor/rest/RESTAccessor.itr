@@ -12,7 +12,7 @@ def type(accessor)
 
 	$schemaImport
 
-	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Accessor {
+	public class $name+firstUpperCase+snakeCaseToCamelCase$~Accessor {
 		private final URL url;
 		private final RestAccessorNotifier notifier = new RestAccessorNotifier();
 		private int timeoutMillis = 120 * 1_000;
@@ -20,18 +20,18 @@ def type(accessor)
 		$authentication+field
 		$enumParameter...[$NL$NL]
 
-		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url[, $authentication+parameter]) {
+		public $name+firstUpperCase+snakeCaseToCamelCase~Accessor(URL url[, $authentication+parameter]) {
 			this.url = url;
 			$authentication+assign
 		}
 
-		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url, int timeoutMillis[, $authentication+parameter]) {
+		public $name+firstUpperCase+snakeCaseToCamelCase~Accessor(URL url, int timeoutMillis[, $authentication+parameter]) {
 			this.url = url;
 			this.timeoutMillis = timeoutMillis;
 			$authentication+assign
 		}
 
-		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url, int timeoutMillis, java.io.File outBoxDirectory, int intervalRetrySeconds[, $authentication+parameter]) {
+		public $name+firstUpperCase+snakeCaseToCamelCase~Accessor(URL url, int timeoutMillis, java.io.File outBoxDirectory, int intervalRetrySeconds[, $authentication+parameter]) {
 			this.url = url;
 			this.timeoutMillis = timeoutMillis;
 			this.outBox = new io.intino.alexandria.restaccessor.OutBox(outBoxDirectory, intervalRetrySeconds);
@@ -45,7 +45,7 @@ def type(accessor)
 end
 
 def type(resource)
-	public $response $method+firstLowerCase~$name+SnakeCaseToCamelCase+firstUpperCase($parameter+signature...[, ]) $exceptionResponses+declaration {
+	public $response $method+firstLowerCase~$name+snakeCaseToCamelCase+firstUpperCase($parameter+signature...[, ]) $exceptionResponses+declaration {
 		RequestBuilder.Request request = new RequestBuilder(this.url).timeOut(this.timeoutMillis)
 			[.$auth]
 			[.$parameter...[$NL.]]
@@ -62,35 +62,35 @@ def type(resource)
 end
 
 def type(parameter & query & word) trigger(parameter)
-	queryParameter("$name", $name.name())
+	queryParameter("$name", $name+snakeCaseToCamelCase+firstLowerCase.name())
 end
 
 def type(parameter & query) trigger(parameter)
-	queryParameter("$name", $name)
+	queryParameter("$name", $name+snakeCaseToCamelCase+firstLowerCase)
 end
 
 def type(parameter & header & word) trigger(parameter)
-	headerParameter("$name", $name.name())
+	headerParameter("$name", $name+snakeCaseToCamelCase+firstLowerCase.name())
 end
 
 def type(parameter & header) trigger(parameter)
-	headerParameter("$name", $name)
+	headerParameter("$name", $name+snakeCaseToCamelCase+firstLowerCase)
 end
 
 def !type(file) type(parameter & body) trigger(parameter)
-	entityPart("$name", $name)
+	entityPart("$name", $name+snakeCaseToCamelCase+firstLowerCase)
 end
 
 def !type(file) type(parameter & form) trigger(parameter)
-	entityPart("$name", $name)
+	entityPart("$name", $name+snakeCaseToCamelCase+firstLowerCase)
 end
 
 def type(file) type(parameter) trigger(parameter)
-	entityPart($name)
+	entityPart($name+snakeCaseToCamelCase+firstLowerCase)
 end
 
 def trigger(enumParameter)
-	public enum $class+FirstUpperCase {
+	public enum $class+snakeCaseToCamelCase+FirstUpperCase {
 		$value...[, ]
 	}
 end
@@ -117,7 +117,7 @@ def trigger(response)
 end
 
 def type(notification)
-	public void listen$name+SnakeCaseToCamelCase+firstUppercase([$parameter+signature...[, ], ]java.util.function.Consumer<String> listener) throws InternalServerError {
+	public void listen$name+snakeCaseToCamelCase+firstUppercase([$parameter+signature...[, ], ]java.util.function.Consumer<String> listener) throws InternalServerError {
 		RequestBuilder.Request request = new RequestBuilder(this.url).timeOut(this.timeoutMillis)
 			[.$auth]
 			[.$parameter...[.]]
@@ -129,7 +129,7 @@ def type(notification)
 		}
 	}
 
-	public void stopListen$name+SnakeCaseToCamelCase+firstUppercase() {
+	public void stopListen$name+snakeCaseToCamelCase+firstUppercase() {
 		this.notifier.close();
 	}
 end
@@ -185,7 +185,7 @@ def type(authentication & withCertificate) trigger(field)
 end
 
 def type(parameter) trigger(signature)
-	$parameterType $name+SnakeCaseToCamelCase+firstLowerCase
+	$parameterType+snakeCaseToCamelCase $name+snakeCaseToCamelCase+firstLowerCase
 end
 
 def type(exceptionResponses) trigger(throws)
