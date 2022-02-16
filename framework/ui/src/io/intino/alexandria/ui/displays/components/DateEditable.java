@@ -15,6 +15,7 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 	private Instant min;
 	private Instant max;
 	private Instant value;
+	private String pattern;
 	private boolean readonly;
 	private ChangeListener changeListener = null;
 
@@ -30,6 +31,7 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 	public void didMount() {
 		super.didMount();
 		notifier.refreshRange(range());
+		if (pattern != null) notifier.refreshPattern(pattern);
 		if (value != null) notifier.refresh(value);
 	}
 
@@ -65,6 +67,7 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 	}
 
 	public DateEditable<DN, B> pattern(String pattern) {
+		this.pattern = pattern;
 		notifier.refreshPattern(pattern);
 		return this;
 	}
