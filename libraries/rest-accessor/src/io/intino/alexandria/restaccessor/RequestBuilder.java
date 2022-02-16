@@ -103,6 +103,11 @@ public class RequestBuilder {
 		return this;
 	}
 
+	public RequestBuilder entityPart(List<Resource> resources) {
+		this.resources.addAll(resources);
+		return this;
+	}
+
 	public RequestBuilder entityPart(UrlEncodedFormEntity urlEncodedFormEntity) {
 		if (urlEncodedFormEntity != null) this.urlEncodedFormEntity = urlEncodedFormEntity;
 		return this;
