@@ -29,6 +29,7 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 	@Override
 	public void didMount() {
 		super.didMount();
+		notifier.refreshRange(range());
 		if (value != null) notifier.refresh(value);
 	}
 

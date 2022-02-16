@@ -235,7 +235,7 @@ class DateEditable extends AbstractDateEditable {
 
     _max = (value) => {
         if (!this.isWeekView()) return value;
-        if (value == null) return null;
+        if (value == null) return undefined;
         if (value == undefined) return undefined;
         return moment(value).endOf('week').toDate();
     };
