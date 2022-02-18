@@ -139,6 +139,7 @@ public class RESTServiceRenderer extends Renderer {
 	private void createAuthenticatorClass(Service.REST.Authentication authentication, String service) {
 		if (javaFile(src(), service + "Authenticator").exists()) return;
 		FrameBuilder builder = new FrameBuilder(authentication.isBasic() ? "basic" : "bearer").add("box", boxName()).add("service", service).add("package", packageName());
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(authentication), javaFile(src(), service + "Authenticator").getAbsolutePath()));
 		Commons.writeFrame(src(), service + "Authenticator", authenticatorTemplate().render(builder.toFrame()));
 	}
 

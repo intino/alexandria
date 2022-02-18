@@ -39,7 +39,6 @@ public class SentinelsRenderer extends Renderer {
 		if (sentinels.stream().anyMatch(Sentinel::isWebHook)) builder.add("hasWebhook", ",");
 		Commons.writeFrame(gen(), "Sentinels", template().render(
 				builder.toFrame()));
-
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(sentinels.get(0)), javaFile(gen(), "Sentinels").getAbsolutePath()));
 	}
 

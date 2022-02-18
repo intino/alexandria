@@ -4,9 +4,9 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.CompilerConfiguration;
+import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.KonosGraph;
 import io.intino.magritte.dsl.Meta;
 import io.intino.magritte.dsl.Proteo;
 
@@ -15,6 +15,7 @@ import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
 
 public class BoxRenderer extends Renderer {
 	private boolean isTara;
@@ -31,6 +32,7 @@ public class BoxRenderer extends Renderer {
 		if (Commons.javaFile(src(), snakeCaseToCamelCase(name) + "Box").exists()) return;
 		FrameBuilder builder = new FrameBuilder("Box").add("package", packageName()).add("name", name);
 		if (isTara) builder.add("tara", fillTara());
+		context.compiledFiles().add(new OutputItem(src().getAbsolutePath(), javaFile(src(), snakeCaseToCamelCase(name) + "Box").getAbsolutePath()));
 		Commons.writeFrame(src(), snakeCaseToCamelCase(name) + "Box", template().render(builder.toFrame()));
 	}
 

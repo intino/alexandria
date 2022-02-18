@@ -196,7 +196,7 @@ public class FullRenderer {
 	}
 
 	private void main() {
-		new MainRenderer(context, hasModel).execute();
+		new MainRenderer(context, hasModel, graph).execute();
 	}
 
 	private boolean hasModel() {
