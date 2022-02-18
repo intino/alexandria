@@ -18,11 +18,11 @@ import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 
 public class BoxRenderer extends Renderer {
-	private boolean isTara;
+	private final boolean hasModel;
 
-	BoxRenderer(CompilationContext context, boolean isTara) {
+	BoxRenderer(CompilationContext context, boolean hasModel) {
 		super(context, Target.Owner);
-		this.isTara = isTara;
+		this.hasModel = hasModel;
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class BoxRenderer extends Renderer {
 		final String name = context.boxName();
 		if (Commons.javaFile(src(), snakeCaseToCamelCase(name) + "Box").exists()) return;
 		FrameBuilder builder = new FrameBuilder("Box").add("package", packageName()).add("name", name);
-		if (isTara) builder.add("tara", fillTara());
+		if (hasModel) builder.add("tara", fillTara());
 		context.compiledFiles().add(new OutputItem(src().getAbsolutePath(), javaFile(src(), snakeCaseToCamelCase(name) + "Box").getAbsolutePath()));
 		Commons.writeFrame(src(), snakeCaseToCamelCase(name) + "Box", template().render(builder.toFrame()));
 	}
