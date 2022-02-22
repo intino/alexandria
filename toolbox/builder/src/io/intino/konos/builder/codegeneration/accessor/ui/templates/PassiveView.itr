@@ -36,7 +36,8 @@ def type(notifier)
 								let id = parameters.i;
 								let ownerPath = parameters.o;
 								let context = element.props.context != null ? element.props.context() : null;
-								if (id === element.props.id && (ownerPath == null || ownerPath === "" || ownerPath === context || _containsAll(ownerPath, context))) {
+								let elementId = element.shortId();
+								if (id === elementId && (ownerPath == null || ownerPath === "" || ownerPath === context || _containsAll(ownerPath, context))) {
 									action(parameters);
 								}
 							}));

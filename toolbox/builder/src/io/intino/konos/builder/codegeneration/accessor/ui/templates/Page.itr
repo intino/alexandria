@@ -1,7 +1,9 @@
 def type(resource & js)
 import React from "react";
 import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
-import { SnackbarProvider } from "notistack";
+import { IconButton } from "@material-ui/core";
+import { Close } from '@material-ui/icons';
+import { SnackbarProvider, useSnackbar } from "notistack";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Theme from '../../gen/Theme';
 import Page from "alexandria-ui-elements/src/displays/Page";
@@ -12,12 +14,17 @@ $accessibleImport...[$NL]
 let theme = Theme.create();
 const styles = theme => ({});
 
-export default class $name+firstUpperCase extends Page {
+const $pageDisplay+firstUpperCase~PageDismissAction = ({ id }) => {
+    const { closeSnackbar } = useSnackbar();
+    return (<IconButton color="inherit" onClick={() => closeSnackbar(id)}><Close fontSize="small" /></IconButton>);
+}
+
+export default class $pageDisplay+firstUpperCase~Page extends Page {
     render() {
         const { classes } = this.props;
         return (
 			<MuiThemeProvider theme={theme}>
-	        	<SnackbarProvider maxSnack={3}>
+	        	<SnackbarProvider maxSnack={3} action={key => <$pageDisplay+firstUpperCase~PageDismissAction id={key}/>}>
             		<CssBaseline />
         			<$pageDisplay+firstUpperCase id="$pageDisplayId"></$pageDisplay+firstUpperCase>
         			<ConnectionChecker></ConnectionChecker>
@@ -38,7 +45,7 @@ def type(resource & html)
             <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
             <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes"/>
 
-	        <link rel="icon" href-absolute="$$favicon">
+	        <link rel="icon" href="$$favicon">
 
 			<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
@@ -57,7 +64,7 @@ def type(resource & html)
 		</head>
 
 		<body>
-			<div class="page" id="$name+firstUpperCase"></div>
+			<div class="page" id="$pageDisplay+firstUpperCase"></div>
 			<script>
 				document.configuration = {};
 				document.configuration.googleApiKey = "$$googleApiKey";

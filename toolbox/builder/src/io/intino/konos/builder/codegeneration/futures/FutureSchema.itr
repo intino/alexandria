@@ -1,0 +1,107 @@
+def type(future)
+	package $package+validPackage.agenda;
+
+	$schemaImport
+	import $package+validPackage.AgendaService;
+	import java.time.Instant;
+	import java.time.temporal.ChronoUnit;
+
+	public class $name+firstUpperCase~Schema {
+		[$parameter+field...[$NL]]
+		[$option+field...[$NL]]
+		Timeout timeout;
+
+		[$parameter+getter...[$NL$NL]]
+
+		[$parameter+setter...[$NL$NL]]
+
+		[$option+getter...[$NL$NL]]
+
+		[$option+setter...[$NL$NL]]
+
+		public Timeout timeout() {
+			return timeout == null ? timeout = new Timeout(null) : timeout;
+		}
+
+		public $name+firstUpperCase~Schema timeout(Timeout timeout) {
+			this.timeout = timeout;
+			return this;
+		}
+
+		$option+class...[$NL$NL]
+
+		public static class Timeout extends AgendaService.Option {
+			Instant timeout;
+
+			public Timeout(Instant timeout) {
+				this.timeout = timeout == null ? null : timeout.truncatedTo(ChronoUnit.SECONDS);
+			}
+
+			public Instant on() {
+				return this.timeout;
+			}
+		}
+	}
+end
+
+def type(option) trigger(class)
+	public static class $name+firstUpperCase extends AgendaService.Option {
+		[$optionParameter+field...[$NL]]
+
+		public $name+firstUpperCase($optionParameter+signature...[, ]) {
+			[$optionParameter+assign...[$NL]]
+		}
+
+		[$optionParameter+getter...[$NL$NL]]
+	}
+end
+
+def type(option) trigger(getter)
+	public $future+firstUpperCase~Schema.$name+firstUpperCase $name+firstLowerCase() {
+		return $name+firstLowerCase == null ? $name+firstLowerCase = new $name+firstUpperCase($optionParameter+nullParameter...[, ]) : $name+firstLowerCase;
+	}
+end
+
+def trigger(getter)
+	public $type $name+firstLowerCase() {
+		return $name+firstLowerCase;
+	}
+end
+
+def type(option) trigger(setter)
+	public $future+firstUpperCase~Schema $name+firstLowerCase($name+firstUpperCase $name+firstLowerCase) {
+		this.$name+firstLowerCase = $name+firstLowerCase;
+		return this;
+	}
+end
+
+def trigger(setter)
+	public $owner+firstUpperCase~Schema $name+firstLowerCase($type+firstUpperCase $name+firstLowerCase) {
+		this.$name+firstLowerCase = $name+firstLowerCase;
+		return this;
+	}
+end
+
+def trigger(assign)
+	this.$name = $name;
+end
+
+def type(parameter) trigger(field)
+	private $type $name+firstLowerCase;
+end
+
+def type(option) trigger(field)
+	private $name+FirstUpperCase $name+firstLowerCase;
+end
+
+def trigger(signature)
+	$type $name
+end
+
+def type(schemaImport)
+	import $package.schemas.*;
+end
+
+def trigger(nullParameter)
+	null
+end

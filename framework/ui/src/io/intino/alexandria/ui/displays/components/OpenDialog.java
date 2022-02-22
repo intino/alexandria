@@ -6,19 +6,19 @@ import io.intino.alexandria.ui.displays.events.actionable.OpenListener;
 import io.intino.alexandria.ui.displays.notifiers.OpenDialogNotifier;
 
 public class OpenDialog<DN extends OpenDialogNotifier, B extends Box> extends AbstractOpenDialog<DN, B> {
-	private BaseDialog dialog;
+	private BaseDialog<?, ?> dialog;
 	private OpenListener openListener = null;
 
 	public OpenDialog(B box) {
         super(box);
     }
 
-	public OpenDialog onOpen(OpenListener listener) {
+	public OpenDialog<DN, B> onOpen(OpenListener listener) {
 		this.openListener = listener;
 		return this;
 	}
 
-	public OpenDialog bindTo(BaseDialog dialog) {
+	public OpenDialog<DN, B> bindTo(BaseDialog<?, ?> dialog) {
     	this.dialog = dialog;
     	return this;
 	}

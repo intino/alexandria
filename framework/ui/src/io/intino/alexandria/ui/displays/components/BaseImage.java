@@ -11,6 +11,7 @@ import java.net.URL;
 
 public class BaseImage<DN extends BaseImageNotifier, B extends Box> extends AbstractBaseImage<DN, B> {
     private URL value;
+    private String filename;
     private String mimeType;
 
     public BaseImage(B box) {
@@ -22,12 +23,16 @@ public class BaseImage<DN extends BaseImageNotifier, B extends Box> extends Abst
     }
 
     public void value(URL value) {
-        _value(value);
-        refresh();
+        value(value, null);
     }
 
     public void value(URL value, String mimeType) {
-        _value(value, mimeType != null ? mimeType : typeOf(value));
+        _value(value, mimeType != null ? mimeType : typeOf(value), null);
+        refresh();
+    }
+
+    public void value(URL value, String mimeType, String filename) {
+        _value(value, mimeType != null ? mimeType : typeOf(value), filename);
         refresh();
     }
 
@@ -36,14 +41,22 @@ public class BaseImage<DN extends BaseImageNotifier, B extends Box> extends Abst
         refresh();
     }
 
-    public void value(File file) {
+    public void value(io.intino.alexandria.ui.File file) {
         _value(file);
         refresh();
     }
 
+    public String filename() {
+        return filename;
+    }
+
+    public String mimeType() {
+        return mimeType;
+    }
+
     protected BaseImage<DN, B> _value(java.io.File file) {
         try {
-            return _value(value != null ? file.toURI().toURL() : null);
+            return _value(file != null ? file.toURI().toURL() : null);
         } catch (MalformedURLException e) {
             Logger.error(e);
             return this;
@@ -51,16 +64,17 @@ public class BaseImage<DN extends BaseImageNotifier, B extends Box> extends Abst
     }
 
     protected BaseImage<DN, B> _value(File file) {
-        return file != null ? _value(file.value(), file.mimeType()) : _value(null, null);
+        return file != null ? _value(file.value(), file.mimeType(), file.filename()) : _value(null, null, null);
     }
 
     protected BaseImage<DN, B> _value(URL value) {
-        return _value(value, typeOf(value));
+        return _value(value, typeOf(value), null);
     }
 
-    protected BaseImage<DN, B> _value(URL value, String mimeType) {
+    protected BaseImage<DN, B> _value(URL value, String mimeType, String filename) {
         this.value = value;
         this.mimeType = mimeType;
+        this.filename = filename;
         return this;
     }
 

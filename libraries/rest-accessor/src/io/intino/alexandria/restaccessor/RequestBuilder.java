@@ -1,16 +1,18 @@
 package io.intino.alexandria.restaccessor;
 
+import com.google.gson.JsonSyntaxException;
 import io.intino.alexandria.Base64;
 import io.intino.alexandria.Json;
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.exceptions.AlexandriaException;
 import io.intino.alexandria.exceptions.ExceptionFactory;
 import io.intino.alexandria.exceptions.InternalServerError;
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.restaccessor.adapters.RequestAdapter;
-import org.apache.commons.io.IOUtils;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
@@ -36,29 +38,16 @@ import static org.apache.http.entity.ContentType.MULTIPART_FORM_DATA;
 import static org.apache.http.entity.mime.HttpMultipartMode.BROWSER_COMPATIBLE;
 
 public class RequestBuilder {
-	private enum Auth {
-		Basic, Bearer;
-		private String token;
-
-		Auth with(String token) {
-			this.token = token;
-			return this;
-		}
-
-		public String token() {
-			return token;
-		}
-	}
-
 	public enum Method {
 		GET, POST, PUT, PATCH, DELETE
 	}
 
 	private final URL url;
+	private final HttpHost proxy;
 	private final List<NameValuePair> queryParameters;
-	private final HttpClient client;
 	private final Map<String, String> headerParameters;
 	private final Map<String, String> entityParts;
+	private UrlEncodedFormEntity urlEncodedFormEntity;
 	private final List<Resource> resources;
 	private int timeOutMillis;
 	private Auth auth;
@@ -66,13 +55,17 @@ public class RequestBuilder {
 	private String path;
 
 	public RequestBuilder(URL url) {
+		this(url, null);
+	}
+
+	public RequestBuilder(URL url, HttpHost proxy) {
 		this.url = url;
+		this.proxy = proxy;
 		timeOutMillis = 120 * 1000;
 		queryParameters = new ArrayList<>();
 		headerParameters = new LinkedHashMap<>();
 		entityParts = new LinkedHashMap<>();
 		resources = new ArrayList<>();
-		this.client = client();
 	}
 
 	public RequestBuilder timeOut(int timeOutMillis) {
@@ -81,12 +74,12 @@ public class RequestBuilder {
 	}
 
 	public RequestBuilder basicAuth(String user, String password) {
-		auth = Auth.Basic.with(Base64.encode((user + ":" + password).getBytes()));
+		auth = new Auth(Auth.Type.Basic, Base64.encode((user + ":" + password).getBytes()));
 		return this;
 	}
 
 	public RequestBuilder bearerAuth(String token) {
-		auth = Auth.Bearer.with(token);
+		auth = new Auth(Auth.Type.Bearer, token);
 		return this;
 	}
 
@@ -110,6 +103,16 @@ public class RequestBuilder {
 		return this;
 	}
 
+	public RequestBuilder entityPart(List<Resource> resources) {
+		this.resources.addAll(resources);
+		return this;
+	}
+
+	public RequestBuilder entityPart(UrlEncodedFormEntity urlEncodedFormEntity) {
+		if (urlEncodedFormEntity != null) this.urlEncodedFormEntity = urlEncodedFormEntity;
+		return this;
+	}
+
 
 	public Request build(Method method, String path) {
 		this.method = method;
@@ -118,25 +121,19 @@ public class RequestBuilder {
 	}
 
 	Request build() {
-		return new Request() {
-			@Override
-			public Response execute() throws AlexandriaException {
-				try {
-					HttpRequestBase request = method(method.name());
-					if (auth != null) request.setHeader(HttpHeaders.AUTHORIZATION, auth.name() + " " + auth.token);
-					headerParameters.forEach(request::setHeader);
-					if (!entityParts.isEmpty() && request instanceof HttpEntityEnclosingRequestBase)
-						((HttpEntityEnclosingRequestBase) request).setEntity(buildEntity());
-					request.setURI(buildUrl());
-					return RequestBuilder.this.responseFrom(client.execute(request));
-				} catch (IOException | URISyntaxException e) {
-					throw new InternalServerError(e.getMessage());
-				}
-			}
-
-			@Override
-			public String toString() {
-				return Json.toString(RequestBuilder.this);
+		return () -> {
+			try {
+				HttpRequestBase request = method(method.name());
+				request.setURI(buildUrl());
+				if (auth != null) request.setHeader(HttpHeaders.AUTHORIZATION, auth.type() + " " + auth.token);
+				headerParameters.forEach(request::setHeader);
+				if (!entityParts.isEmpty() && request instanceof HttpEntityEnclosingRequestBase)
+					((HttpEntityEnclosingRequestBase) request).setEntity(buildEntity());
+				else if (urlEncodedFormEntity != null && request instanceof HttpEntityEnclosingRequestBase)
+					((HttpEntityEnclosingRequestBase) request).setEntity(urlEncodedFormEntity);
+				return parseResponse(client().execute(request));
+			} catch (IOException | URISyntaxException e) {
+				throw new InternalServerError(e.getMessage());
 			}
 		};
 	}
@@ -165,7 +162,7 @@ public class RequestBuilder {
 	}
 
 	private HttpClient client() {
-		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(this.timeOutMillis).build();
+		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(this.timeOutMillis).setProxy(proxy).build();
 		return HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).setDefaultRequestConfig(requestConfig).build();
 	}
 
@@ -183,12 +180,10 @@ public class RequestBuilder {
 		return path.isEmpty() ? baseUrl : baseUrl + (path.startsWith("/") ? path : "/" + path);
 	}
 
-	private Response responseFrom(HttpResponse response) throws AlexandriaException {
+	private Response parseResponse(HttpResponse response) throws AlexandriaException {
 		try {
 			int statusCode = response.getStatusLine().getStatusCode();
-			if (statusCode < 200 || statusCode >= 300) {
-				throw exception(statusCode, bodyContent(response));
-			}
+			if (statusCode < 200 || statusCode >= 300) throw exception(statusCode, bodyContent(response));
 			return new RestResponse(statusCode, response.getAllHeaders(), response.getEntity().getContent());
 		} catch (IOException e) {
 			return new RestResponse(response.getStatusLine().getStatusCode(), response.getAllHeaders(), null);
@@ -196,15 +191,22 @@ public class RequestBuilder {
 	}
 
 	private AlexandriaException exception(int statusCode, String bodyContent) {
-		AlexandriaException e = bodyContent.startsWith("{") ? Json.fromString(bodyContent, AlexandriaException.class) : null;
-		if (e != null) return ExceptionFactory.from(statusCode, e.getMessage(), e.parameters());
-		return ExceptionFactory.from(statusCode, bodyContent, Map.of());
+		try {
+			AlexandriaException e = bodyContent.startsWith("{") ? Json.fromString(bodyContent, AlexandriaException.class) : null;
+			if (e != null) return ExceptionFactory.from(statusCode, e.getMessage(), e.parameters());
+			return ExceptionFactory.from(statusCode, bodyContent, Map.of());
+		} catch (JsonSyntaxException e) {
+			Logger.warn(e.getMessage() + ": " + bodyContent);
+			return ExceptionFactory.from(statusCode, bodyContent, Map.of());
+		}
 	}
 
 	private String bodyContent(HttpResponse response) {
 		try {
 			InputStream content = response.getEntity().getContent();
-			return IOUtils.toString(content, UTF_8);
+			String value = new String(content.readAllBytes(), UTF_8);
+			content.close();
+			return value;
 		} catch (IOException e) {
 			return "";
 		}
@@ -212,6 +214,28 @@ public class RequestBuilder {
 
 	public interface Request {
 		Response execute() throws AlexandriaException;
+	}
+
+	private static class Auth {
+		public enum Type {
+			Basic, Bearer;
+		}
+
+		private final Type type;
+		private final String token;
+
+		public Auth(Type type, String token) {
+			this.type = type;
+			this.token = token;
+		}
+
+		public String token() {
+			return token;
+		}
+
+		public Type type() {
+			return type;
+		}
 	}
 
 	public static class RestResponse implements Response {
@@ -242,7 +266,9 @@ public class RequestBuilder {
 		@Override
 		public String content() {
 			try {
-				return IOUtils.toString(content, UTF_8);
+				String value = new String(content.readAllBytes(), UTF_8);
+				content.close();
+				return value;
 			} catch (IOException e) {
 				return null;
 			}

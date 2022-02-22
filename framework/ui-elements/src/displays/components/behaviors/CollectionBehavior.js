@@ -2,13 +2,12 @@ import React from "react";
 import { Typography, Checkbox } from "@material-ui/core";
 import classNames from "classnames";
 import TablePagination from '@material-ui/core/TablePagination';
-import {FixedSizeList as ReactWindowList} from "react-window";
-import InfiniteLoader from 'react-window-infinite-loader';
 import 'alexandria-ui-elements/res/styles/layout.css';
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { enrichDisplayProperties } from 'alexandria-ui-elements/src/displays/Display';
-import {RiseLoader} from "react-spinners";
+import {RiseLoader,BeatLoader} from "react-spinners";
 import Theme from "app-elements/gen/Theme";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const CollectionBehaviorCheckbox = (props) => {
     let [checked, setChecked] = React.useState(props.checked ? true : false);
@@ -34,8 +33,6 @@ const CollectionBehavior = (collection) => {
         if (items.length <= 0) return self.renderEmpty(height, width);
         if (self.allowMultiSelection()) self.selection = [];
 
-        self.collection.itemsRenderedCalled = false;
-        window.setTimeout(() => self.forceNotifyItemsRendered(items), 50);
         if (navigable == null) return self.renderInfiniteList(items, height, width);
         return (
             <div>
@@ -47,26 +44,37 @@ const CollectionBehavior = (collection) => {
     };
 
     self.renderInfiniteList = (items, height, width) => {
-        const threshold = Math.round(self.collection.state.pageSize * 0.8);
-        const isItemLoaded = index => !!items[index];
-
-        return (<InfiniteLoader isItemLoaded={isItemLoaded} itemCount={self.collection.state.itemCount}
-                                loadMoreItems={self.loadMoreItems.bind(self, items)}
-                                threshold={threshold}>
-                {({ onItemsRendered, ref }) => (self.renderList(items, height, width, onItemsRendered, ref))}
-            </InfiniteLoader>
+        let itemHeight = self.collection.props.itemHeight;
+        const hasMore = items.length < self.collection.state.itemCount;
+        const scrollableTarget = self.collection.props.id + "_infinite";
+        if (width <= 800) itemHeight += (itemHeight/4.5);
+        self.notifyItemsRendered(items);
+        return (
+            <div id={scrollableTarget} style={{ height: height, width: width, overflow: "auto" }}>
+                <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}
+                        scrollThreshold={0.9} hasMore={hasMore} loader={self.renderLoadingMore()}
+                        height={height} style={{height:height+"px",width:width+'px'}} scrollableTarget={scrollableTarget}>
+                    {items.map((i, index) => <div style={{height:itemHeight,position:'relative'}}>{self.renderItem(items, { index: index, isScrolling: false })}</div>)}
+                </InfiniteScroll>
+            </div>
         );
     };
 
     self.renderList = (items, height, width, onItemsRendered, ref) => {
         let itemHeight = self.collection.props.itemHeight;
-        if (width <= 800) itemHeight += (itemHeight/2);
         const itemCount = self.collection.props.navigable == null ? self.collection.state.itemCount : self.collection.state.pageSize;
-        return (<ReactWindowList useIsScrolling={self.collection.props.scrollingMark} ref={ref} onScroll={self.scrolling.bind(self, items)}
-                                 onItemsRendered={self.refreshItemsRendered.bind(self, items, onItemsRendered)}
-                                 height={height} width={width} itemCount={itemCount} itemSize={itemHeight}>
-                {self.renderItem.bind(self, items)}
-            </ReactWindowList>
+        const hasMore = items.length < itemCount;
+        const scrollableTarget = self.collection.props.id + "_infinite";
+        if (width <= 800) itemHeight += (itemHeight/2);
+        self.notifyItemsRendered(items);
+        return (
+            <div id={scrollableTarget} style={{ height: height, width: width, overflow: "auto" }}>
+                <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}
+                        scrollThreshold={0.9} hasMore={hasMore} loader={self.renderLoadingMore()}
+                        height={height} style={{height:height+"px",width:width+'px'}} scrollableTarget={scrollableTarget}>
+                    {items.map((i, index) => <div style={{height:itemHeight,position:'relative'}}>{self.renderItem(items, { index: index, isScrolling: false })}</div>)}
+                </InfiniteScroll>
+            </div>
         );
     };
 
@@ -102,30 +110,27 @@ const CollectionBehavior = (collection) => {
         return (<div style={{position:'absolute',top:'50%',left:'43%'}}><RiseLoader color={theme.palette.secondary.main} loading={true}/></div>);
     };
 
+    self.renderLoadingMore = () => {
+        const theme = Theme.get();
+        return (<div style={{marginTop:'10px',marginLeft:'10px'}}><BeatLoader color={theme.palette.secondary.main} loading={true}/></div>);
+    };
+
     self.renderEmpty = (height, width) => {
         const noItemsMessage = self.collection.props.noItemsMessage != null ? self.collection.props.noItemsMessage : "No elements";
         return (<Typography style={{height, width, padding:"10px 0",fontSize:'13pt',paddingTop:'100px'}} className="layout horizontal center-justified">{self.collection.translate(noItemsMessage)}</Typography>);
     };
 
-    self.forceNotifyItemsRendered = (items) => {
-        if (self.collection.forceTimeout != null) window.clearTimeout(self.collection.forceTimeout);
-        self.collection.forceTimeout = window.setTimeout(() => {
-            if (self.collection.itemsWindow == null || self.collection.itemsRenderedCalled) return;
-            self.refreshItemsRendered(items, null, self.collection.itemsWindow);
-            self.collection.itemsRenderedCalled = true;
-        }, 50);
+    self.notifyItemsRenderedDelayed = (items) => {
+        if (self.collection.itemsRenderedTimeout != null) window.clearTimeout(self.collection.itemsRenderedTimeout);
+        self.collection.itemsRenderedTimeout = window.setTimeout(() => self.notifyItemsRendered(items), 50);
     };
 
-    self.notifyItemsRendered = (instances, itemsWindow) => {
-        self.collection.itemsRenderedCalled = true;
-        self.collection.rendering = true;
-        self.collection.timeout = window.setTimeout(() => {
-            self.collection.requester.notifyItemsRendered({
-                items: self.itemsIds(instances, itemsWindow.overscanStartIndex, itemsWindow.overscanStopIndex),
-                visible: self.itemsIds(instances, itemsWindow.visibleStartIndex, itemsWindow.visibleStopIndex)
-            });
-            self.collection.rendering = false;
-        }, 200);
+    self.notifyItemsRendered = (instances) => {
+        const pageSize = self.collection.state.pageSize;
+        const countInstances = instances.length;
+        const instancesToRefresh = countInstances < pageSize ? instances : instances.slice(instances.length-pageSize);
+        const ids = self.itemsIds(instancesToRefresh);
+        self.collection.requester.notifyItemsRendered({items: ids, visible: ids});
     };
 
     self.width = (index) => {
@@ -136,10 +141,10 @@ const CollectionBehavior = (collection) => {
         return self.collection._widths[index];
     };
 
-    self.itemsIds = (instances, start, end) => {
+    self.itemsIds = (instances) => {
         var result = [];
         for (var i=0; i<instances.length; i++) {
-            if (i < start || i > end || instances[i] == null) continue;
+            if (instances[i] == null) continue;
             result.push(instances[i].pl.id);
         }
         return result;
@@ -173,22 +178,6 @@ const CollectionBehavior = (collection) => {
         return self.collection.allowMultiSelection();
     };
 
-    self.refreshItemsRendered = (items, callback, { overscanStartIndex, overscanStopIndex, visibleStartIndex, visibleStopIndex }) => {
-        self.collection.itemsWindow = { overscanStartIndex, overscanStopIndex, visibleStartIndex, visibleStopIndex };
-        if (self.collection.timeout != null) window.clearTimeout(self.collection.timeout);
-        self.notifyItemsRendered(items, self.collection.itemsWindow);
-        if (callback != null) callback(self.collection.itemsWindow);
-    };
-
-    self.scrolling = (instances, { scrollDirection, scrollOffset, scrollUpdateWasRequested }) => {
-        if (self.collection.scrollingTimeout != null) window.clearTimeout(self.collection.scrollingTimeout);
-        // if (self.collection.rendering) return;
-        self.collection.scrollingTimeout = window.setTimeout(() => {
-            if (self.collection.itemsWindow == null) return;
-            self.refreshItemsRendered(instances, null, self.collection.itemsWindow);
-        }, 50);
-    };
-
     self.scrollingView = (width, classes) => {
         return (<div style={{width:width,margin:"0 10px"}} className={classes.scrolling}/>);
     };
@@ -198,11 +187,8 @@ const CollectionBehavior = (collection) => {
         return React.createElement(DisplayFactory.get(item.tp), item.pl);
     };
 
-    self.loadMoreItems = (items, startIndex, stopIndex) => {
-        if (self.collection.moreItemsTimeout != null) window.clearTimeout(self.collection.moreItemsTimeout);
-        self.collection.moreItemsTimeout = window.setTimeout(() => self.collection.requester.loadMoreItems({ start: startIndex, stop: stopIndex }), 150);
-        self.collection.moreItemsCallback = new Promise(resolve => resolve());
-        return self.collection.moreItemsCallback;
+    self.loadNextPage = () => {
+        self.collection.requester.loadNextPage();
     };
 
     self.isItemSelected = (item) => {
@@ -215,7 +201,7 @@ const CollectionBehavior = (collection) => {
         var selection = self.selection;
         var index = self.selection.indexOf(item);
         if (index !== -1) {
-            self.removeSelectedStyle(selection[index]);
+            self.removeSelectedStyle(self.element(selection[index]));
             selection.splice(index, 1);
         }
         else {
@@ -236,11 +222,7 @@ const CollectionBehavior = (collection) => {
 
         const prevSelectionCount = self.collection.selectionCount != null ? self.collection.selectionCount : 0;
         const selection = self.updateSelection(item);
-        if (multiple) {
-            //if (prevSelectionCount == 0 || (prevSelectionCount > 0 && selection.length <= 0)) self.collection.setState({selection: selection});
-            //self.refreshItemsRendered(self.items(), null, self.collection.itemsWindow);
-            self.collection.selectionCount = selection.length;
-        }
+        if (multiple) self.collection.selectionCount = selection.length;
 
         if (self.collection.selectTimeout != null) window.clearTimeout(self.collection.selectTimeout);
         self.collection.selectTimeout = window.setTimeout(() => self.collection.requester.selection(selection), 50);
@@ -281,18 +263,21 @@ const CollectionBehavior = (collection) => {
     };
 
     self.refresh = () => {
-        if (self.collection.itemsWindow == null) return;
-        const items = self.items();
-        return self.refreshItemsRendered(items, null, self.collection.itemsWindow);
+        self.notifyItemsRendered(self.items);
     };
 
     self.refreshSelection = (selection) => {
-        if (self.selection != null && self.selection.length > 0) self.removeSelectedStyle(self.selection[0]);
+        if (self.selection != null && self.selection.length > 0) self.removeSelectedStyle(self.element(self.selection[0]));
         self.selection = selection;
         var selectable = self.collection.props.selection != null;
         var multiple = self.allowMultiSelection();
         if (!selectable || multiple) return;
-        if (self.selection != null && self.selection.length > 0) self.addSelectedStyle(self.selection[0]);
+        if (self.selection != null && self.selection.length > 0) {
+            const element = self.element(self.selection[0]);
+            if (element == null) return;
+            self.addSelectedStyle(element);
+            if (element.scrollIntoView) element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
     };
 
     self.getSelectedStyleRules = () => {
@@ -303,6 +288,15 @@ const CollectionBehavior = (collection) => {
         };
     };
 
+    self.element = (id) => {
+        return $(self.collection.container.current).find("#" + self.elementId(id)).get(0);
+    };
+
+    self.addSelectedStyle = (element) => {
+        if (element == null) return;
+        self.addSelectedStyleRules(element.style);
+    };
+
     self.addSelectedStyleRules = (style) => {
         if (style == null) return;
         style.border = "1px solid #3f50b5";
@@ -311,13 +305,7 @@ const CollectionBehavior = (collection) => {
         return style;
     };
 
-    self.addSelectedStyle = (id) => {
-        const element = $(self.collection.container.current).find("#" + self.elementId(id)).get(0);
-        if (element != null) self.addSelectedStyleRules(element.style);
-    };
-
-    self.removeSelectedStyle = (id) => {
-        const element = $(self.collection.container.current).find("#" + self.elementId(id)).get(0);
+    self.removeSelectedStyle = (element) => {
         if (element == null || element.style == null) return;
         element.style.border = "0";
         element.style.borderRadius = "0";

@@ -12,6 +12,8 @@ import io.intino.alexandria.ui.model.dynamictable.Section;
 import java.text.DecimalFormat;
 import java.util.*;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toList;
 
 public class DynamicTableBuilder {
@@ -29,7 +31,7 @@ public class DynamicTableBuilder {
 		result.backgroundColor(section.backgroundColor());
 		result.fontSize(section.fontSize());
 		result.columns(buildColumnList(section));
-		result.rows(buildRowList(section.rows(), calculateTotal(section, section.rows()), language));
+		result.rows(buildRowList(section.rows(), section.showTotals() ? calculateTotal(section, section.rows()) : emptyMap(), language));
 		result.sections(buildList(section.sections(), language));
 		return result;
 	}
@@ -45,6 +47,7 @@ public class DynamicTableBuilder {
 	}
 
 	private static Double calculateTotal(Column column, Double value, int rowsCount) {
+		if (column.totalCalculator() != null) return column.totalCalculator().apply(value, rowsCount);
 		if (column.operator() == Column.Operator.Average) return rowsCount > 0 ? value / rowsCount : 0;
 		return value;
 	}
@@ -52,7 +55,7 @@ public class DynamicTableBuilder {
 	private static List<DynamicTableRow> buildRowList(List<Row> rows, Map<String, Double> totalValues, String language) {
 		List<DynamicTableRow> result = rows.stream().map(r -> build(r, totalValues, language)).collect(toList());
 		if (result.size() <= 0) return result;
-		result.add(totalRow(rows, totalValues, language));
+		if (!totalValues.isEmpty()) result.add(totalRow(rows, totalValues, language));
 		return result;
 	}
 
@@ -67,13 +70,14 @@ public class DynamicTableBuilder {
 	private static DynamicTableRow build(Row row, Map<String, Double> totalValues, String language) {
 		DynamicTableRow result = new DynamicTableRow();
 		result.label(row.label());
+		result.description(row.description());
 		result.cells(buildCellList(row.cells(), totalValues, language));
 		return result;
 	}
 
 	private static List<DynamicTableColumn> buildColumnList(Section section) {
 		List<Row> rows = section.rows();
-		if (rows.size() <= 0) return Collections.emptyList();
+		if (rows.size() <= 0) return emptyList();
 		return rows.get(0).cells().stream().map(c -> build(c, section.column(c.name()))).collect(toList());
 	}
 

@@ -26,6 +26,7 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 		result.add("multipleSelection", element.multipleSelection() ? "true" : "false");
 		if (element.isReadonly()) result.add("readonly", element.isReadonly());
 		if (element.isFocused()) result.add("readonly", element.isFocused());
+		addTabsProperties(result);
 		addMenuProperties(result);
 		addComboBoxProperties(result);
 		addCollectionBoxProperties(result);
@@ -34,6 +35,13 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 		addAddressableProperties(result);
 		addToggleBoxProperties(result);
 		return result;
+	}
+
+	private void addTabsProperties(FrameBuilder builder) {
+		if (!element.isTabs()) return;
+		Selector.Tabs.ScrollButtons scrollButtons = element.asTabs().scrollButtons();
+		if (scrollButtons == Selector.Tabs.ScrollButtons.Off) return;
+		builder.add("scrollButtons", scrollButtons);
 	}
 
 	private void addMenuProperties(FrameBuilder builder) {
@@ -45,10 +53,12 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 
 	private void addComboBoxProperties(FrameBuilder builder) {
 		if (!element.isComboBox()) return;
-		builder.add("maxMenuHeight", element.asComboBox().maxMenuHeight());
-		String placeholder = element.asComboBox().placeholder();
-		if (placeholder == null || placeholder.isEmpty()) return;
-		builder.add("placeholder", placeholder);
+		Selector.ComboBox comboBox = element.asComboBox();
+		builder.add("maxMenuHeight", comboBox.maxMenuHeight());
+		String placeholder = comboBox.placeholder();
+		if (placeholder != null && !placeholder.isEmpty()) builder.add("placeholder", placeholder);
+		Selector.ComboBox.View view = comboBox.view();
+		if (view != null && view != Selector.ComboBox.View.FieldView) builder.add("view", view.name());
 	}
 
 	private void addCollectionBoxProperties(FrameBuilder builder) {
@@ -56,8 +66,7 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 		Selector.CollectionBox collectionBox = element.asCollectionBox();
 		if (collectionBox.allowOther()) builder.add("allowOther", true);
 		String placeholder = collectionBox.placeholder();
-		if (placeholder == null || placeholder.isEmpty()) return;
-		builder.add("placeholder", placeholder);
+		if (placeholder != null && !placeholder.isEmpty()) builder.add("placeholder", placeholder);
 	}
 
 	private void addCheckBoxProperties(FrameBuilder builder) {

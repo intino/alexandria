@@ -10,6 +10,17 @@ import classNames from 'classnames';
 import { withSnackbar } from 'notistack';
 import 'alexandria-ui-elements/res/styles/layout.css';
 
+const SelectorCollectionBoxViewStyles = {
+    singleValue: (provided, state) => ({
+        ...provided,
+        color: '#333333',
+    }),
+    menu: provided => ({
+        ...provided,
+        zIndex: 9999
+    }),
+};
+
 const styles = theme => ({
 	container : {
 		position: "relative",
@@ -69,7 +80,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 	    return (
 			<div className={classes.container} style={this.style()}>
                 {this.renderTraceConsent()}
-				{label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{label}</div> : undefined }
+				{label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{this.translate(label)}</div> : undefined }
 				<Select ref={this.searchComponent} isMulti={multiple} isDisabled={this.state.readonly} isSearchable
 						closeMenuOnSelect={!multiple} autoFocus={this.props.focused} menuIsOpen={this.state.opened}
 						placeholder={this.selectMessage()}
@@ -79,7 +90,8 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 						onChange={this.handleChange.bind(this)}
 						onInputChange={this.handleSearch.bind(this)}
 						onMenuOpen={this.handleOpen.bind(this)}
-						onMenuClose={this.handleClose.bind(this)}/>
+						onMenuClose={this.handleClose.bind(this)}
+						styles={SelectorCollectionBoxViewStyles}/>
     			{this.props.allowOther && <div className="layout vertical end"><a className={classes.other} onClick={this.handleAllowOther.bind(this)}>{label != null ? this.translate("Add") + " " + this.translate(label).toLowerCase() : this.translate("Add other")}</a></div>}
 			</div>
         );
@@ -114,8 +126,11 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 	refreshSelection = (selection) => {
 		this.setState({ selection: selection });
 		if (this.searchComponent.current == null) return;
-		this.searchComponent.current.blur();
-		this.searchComponent.current.focus();
+		var isFocused = (document.activeElement === this.searchComponent.current);
+		if (isFocused || !this.state.multipleSelection) {
+            this.searchComponent.current.blur();
+            this.searchComponent.current.focus();
+		}
 	};
 
 	refreshMultipleSelection = (multipleSelection) => {
@@ -152,7 +167,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
     };
 
     handleClose = (e) => {
-        this.close();
+		window.setTimeout(() => this.close(), 500);
     };
 
 	handleAllowOther = () => {

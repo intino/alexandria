@@ -64,6 +64,12 @@ def type(display)
 			[$componentReferences]
 			[$component+initializations...[$NL]]
 		}
+
+        @Override
+        public void remove() {
+            super.remove();
+		    [$component+unregister...[$NL]]
+		}
 		$methods
 		[$component+class...[$NL$NL]]
 		[$component+method...[$NL$NL]]

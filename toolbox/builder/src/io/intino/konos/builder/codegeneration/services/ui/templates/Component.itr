@@ -52,6 +52,37 @@ def type(component & child) trigger(declaration)
 	public [$ancestors+firstUpperCase...[.].] $name+firstUpperCase $name;
 end
 
+def type(component) trigger(unregister)
+	if ($name != null) $name.unregister();
+end
+
+def type(method & multiple & collapsable)
+	[$editableMethods]
+	[$editableClass]
+    @Override
+    public $componentName add([$objectType value, ]String label, String description) {
+		$componentName child = new $componentName(box()[.$componentOwnerBox+lowerCase()]);
+		child.id(java.util.UUID.randomUUID().toString());
+        child.properties().put("label", label);
+        child.properties().put("description", description);
+		add(child, "$name");
+		[child.value($objectTypeValue);]
+        notifyAdd(child[, $objectTypeValue]);
+		return child;
+    }
+	@Override
+	public void remove($componentName child) {
+		removeChild(child, "$name");
+	}
+	public void clear() {
+	    super.clear("$name");
+	}
+    @Override
+    protected $componentName add([$objectType value]) {
+        return add(value, null, null);
+    }
+end
+
 def type(method & multiple)
 	[$editableMethods]
 	[$editableClass]
@@ -159,6 +190,12 @@ def type(component & child & displaystamp) trigger(class)
 			[$reference...[$NL]]
 			[$component+child...[$NL]]
 		}
+
+		@Override
+		public void unregister() {
+		    super.unregister();
+			[$component+unregister...[$NL]]
+		}
 		$methods
 		[$component+class...[$NL$NL]]
 		[$component+method...[$NL$NL]]
@@ -198,6 +235,12 @@ def type(component & child & collection) trigger(class)
 			[$reference...[$NL]]
 			[$component+child...[$NL]]
 		}
+
+		@Override
+		public void unregister() {
+		    super.unregister();
+			[$component+unregister...[$NL]]
+		}
 		$methods
 		[$component+class...[$NL$NL]]
 		[$component+method...[$NL$NL]]
@@ -226,6 +269,12 @@ def type(component & child & block & conditional) trigger(class)
 			[$component+child...[$NL]]
 			[$component+conditionalReferences...[$NL]]
 		}
+
+		@Override
+		public void unregister() {
+		    super.unregister();
+			[$component+unregister...[$NL]]
+		}
 		$methods
 		[$component+class...[$NL$NL]]
 		[$component+method...[$NL$NL]]
@@ -249,10 +298,20 @@ def type(component & child) trigger(class)
 			[$reference...[$NL]]
 			[$component+child...[$NL]]
 		}
+
+		@Override
+		public void unregister() {
+		    super.unregister();
+			[$component+unregister...[$NL]]
+		}
 		$methods
 		[$component+class...[$NL$NL]]
 		[$component+method...[$NL$NL]]
 	}
+end
+
+def type(extends & multiple & image)
+	io.intino.alexandria.ui.displays.components.MultipleImage<$abstractBox+type, [$componentPrefix+firstUpperCase~.]$componentName, $objectType>
 end
 
 def type(extends & multiple)
@@ -417,7 +476,7 @@ def type(facet)
 end
 
 def type(binding & toolbar)
-	if ($name != null) $name.bindTo($collection);
+	if ($name != null) $name.bindTo([$ancestorsNotMe...[.].]$collection);
 end
 
 def type(binding & grouping)
@@ -504,6 +563,14 @@ def type(implements & selectable)
 	implements io.intino.alexandria.ui.displays.components.collection.Selectable
 end
 
+def type(implements & multiple & collapsable)
+	implements io.intino.alexandria.ui.displays.components.multiple.Collapsable<$abstractBox+type, [$componentPrefix+firstUpperCase~.]$componentName, $objectType>
+end
+
+def type(implements & multiple)
+	implements io.intino.alexandria.ui.displays.components.multiple.NonCollapsable<$abstractBox+type, [$componentPrefix+firstUpperCase~.]$componentName, $objectType>
+end
+
 def type(implements & option)
 	implements io.intino.alexandria.ui.displays.components.selector.SelectorOption
 end
@@ -516,7 +583,23 @@ def type(implements & addressable & action)
 	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
 end
 
+def type(implements & addressable & openlayer)
+	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
+end
+
 def type(implements & addressable & selector)
+	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
+end
+
+def type(implements & addressable & grouping)
+	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
+end
+
+def type(implements & addressable & searchbox)
+	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
+end
+
+def type(implements & addressable & sorting)
 	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
 end
 
@@ -550,6 +633,18 @@ end
 def type(properties & selector) trigger(specific)
 	[_multipleSelection($multipleSelection);]
 	[_readonly($readonly);]
+	[_path("$path");]
+end
+
+def type(properties & grouping) trigger(specific)
+	[_path("$path");]
+end
+
+def type(properties & sorting) trigger(specific)
+	[_path("$path");]
+end
+
+def type(properties & searchbox) trigger(specific)
 	[_path("$path");]
 end
 
@@ -608,6 +703,15 @@ end
 
 def type(properties & openpage) trigger(specific)
 	[_path("$path");]
+end
+
+def type(properties & openlayer) trigger(specific)
+	[_path("$path");]
+	[_transition(io.intino.alexandria.ui.displays.components.OpenLayer.Transition.valueOf("$transition"));]
+end
+
+def type(properties & openpopover) trigger(specific)
+	[ _triggerEvent(io.intino.alexandria.ui.displays.components.OpenPopover.TriggerEvent.$triggerEvent);]
 end
 
 def type(properties & opensite) trigger(specific)

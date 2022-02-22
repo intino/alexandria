@@ -30,7 +30,10 @@ public class PageCollectionBehavior<DS extends PageDatasource<Item>, Item> exten
     }
 
 	public void page(int pos) {
-		computeUpdate(e -> page = pos);
+		collection().clear();
+		page = pos;
+		List<Item> items = itemLoader.page(this.page);
+		collection().insert(items, itemLoader.start(this.page));
 	}
 
 	public void pageSize(int size) {
@@ -38,6 +41,16 @@ public class PageCollectionBehavior<DS extends PageDatasource<Item>, Item> exten
 			PageItemLoader<DS, Item> itemLoader = itemLoader();
 			itemLoader.pageSize(size);
 		});
+	}
+
+	public synchronized void nextPage() {
+		page++;
+		if (page > itemLoader.pageCount()) {
+			page = itemLoader.pageCount()-1;
+			return;
+		}
+		List<Item> items = itemLoader.page(this.page);
+		collection().insert(items, itemLoader.start(this.page));
 	}
 
 	public synchronized void moreItems(CollectionMoreItems info) {
@@ -48,6 +61,12 @@ public class PageCollectionBehavior<DS extends PageDatasource<Item>, Item> exten
 	public long itemCount() {
 		if (itemLoader == null) return 0;
 		return itemLoader.itemCount();
+	}
+
+	@Override
+	void reset() {
+		page = 0;
+		super.reset();
 	}
 
 	@Override

@@ -179,6 +179,23 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 
 	public void remove() {
 		notifier.remove(id, DefaultInstanceContainer);
+		children().forEach(Display::removeAndNotify);
+	}
+
+	public void unregister() {
+		soul().unregister(this);
+	}
+
+	private void removeAndNotify() {
+		List<String> containers = new ArrayList<>(children.keySet());
+		containers.forEach(this::removeAndNotify);
+	}
+
+	private void removeAndNotify(String container) {
+		children(container).ifPresent(children -> children.forEach(d -> repository.remove(d)));
+		children.remove(container);
+		promisedChildren.remove(container);
+		notifier.clearContainer(container);
 	}
 
 	public List<Display> children() {
@@ -232,6 +249,15 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 
 	public <D extends Display> D add(D child) {
 		return add(child, container(child));
+	}
+
+	public <D extends Display> D mount(D child) {
+		addPromise(child, container(child));
+		((Display)child).parent(this);
+		promisedChildren(child.container).remove(child);
+		repository.register(child);
+		addChild(child, container(child));
+		return child;
 	}
 
 	public <D extends Display> D add(D child, String container) {
@@ -296,13 +322,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	}
 
 	public void clear(String container) {
-		children(container).ifPresent(children -> children.forEach(d -> {
-			d.remove();
-			repository.remove(d.id);
-		}));
-		children.remove(container);
-		promisedChildren.remove(container);
-		notifier.clearContainer(container);
+		removeAndNotify(container);
 	}
 
 	public void removeChild(Display display) {
@@ -313,7 +333,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		display.remove();
 		notifier.remove(display.id, container);
 		children.get(container).remove(display);
-		repository.remove(display.id);
+		repository.remove(display);
 	}
 
 	public String name() {

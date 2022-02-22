@@ -209,3 +209,17 @@ Template(layout=Vertical, spacing=DP8) blockExamplesMold
 						Block popoverBlock as Popover<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="popover content")
 						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Popover facet with trigger event")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Button(title="open popover", triggerEvent=MouseOver) as OpenPopover(popover=popoverBlock2)
+				Block(layout=Horizontal, format=air) popoverBlock2 as Popover(position=BottomCenter)
+					Text(value="popover content", format=body1)
+			Block > Text block9Code as Code(language=Html)
+					value
+						=========
+						Button as OpenPopover(popover\=popoverBlock, triggerEvent\=MouseOver)<br/>
+						Block popoverBlock as Popover<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="popover content")
+						=========

@@ -8,9 +8,12 @@ public enum ExceptionCodes implements Rule<Enum> {
 	Unauthorized("401"),
 	Forbidden("403"),
 	NotFound("404"),
-	Conflict("409");
+	Conflict("409"),
+	Locked("423"),
+	NotImplemented("501"),
+	ServiceUnavailable("503");
 
-	private String code;
+	private final String code;
 
 	ExceptionCodes(String code) {
 		this.code = code;

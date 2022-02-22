@@ -30,7 +30,7 @@ class Frame extends AbstractFrame {
 		if (!this.state.visible) return (<React.Fragment/>);
 		if (this.state.url == null) return (<React.Fragment/>);
 		const { classes } = this.props;
-		return (<div style={this.style()}><iframe src={this.state.url} className={classes.container}/></div>);
+		return (<div style={{height:'100%',width:'100%',...this.style()}}><iframe src={this.state.url} className={classes.container}/></div>);
 	};
 
     refresh = (url) => {

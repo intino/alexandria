@@ -535,8 +535,8 @@ class MimeTypes {
 		mimeTypes.put("flv", "video/x-flv");
 		mimeTypes.put("m3u8", "application/x-mpegURL");
 		mimeTypes.put("ts", "video/MP2T");
-		mimeTypes.entrySet().stream().forEach((e) -> {
-			String var10000 = (String) mimeTypesInverted.put(e.getValue(), e.getKey());
+		mimeTypes.entrySet().forEach((e) -> {
+			mimeTypesInverted.put(e.getValue(), e.getKey());
 		});
 		mimeTypesInverted.put("text/xml", "xml");
 		mimeTypesInverted.put("application/pdf", "pdf");
@@ -546,7 +546,7 @@ class MimeTypes {
 	}
 
 	static Optional<String> getExtensionFromFile(String filename) {
-		Integer position = filename.lastIndexOf(".");
+		int position = filename.lastIndexOf(".");
 		return position == -1 ? Optional.empty() : Optional.of(filename.substring(position + 1));
 	}
 }

@@ -81,6 +81,26 @@ public class AcceptedKonosRunner {
 	}
 
 	@Test
+	public void serviciosSociales() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/servicios-sociales.txt")});
+	}
+
+	@Test
+	public void limpiezaPlayas() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/limpieza-playas.txt")});
+	}
+
+	@Test
+	public void fuentesOrnamentales() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/fuentes-ornamentales.txt")});
+	}
+
+	@Test
+	public void cinepolis() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/cinepolis.txt")});
+	}
+
+	@Test
 	public void tables() {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/tables/ideaKonosToCompile.txt")});
 	}
@@ -91,8 +111,8 @@ public class AcceptedKonosRunner {
 	}
 
 	@Test
-	public void pacma() {
-		KonoscRunner.main(new String[]{temp(home + "confFiles/pacma.txt")});
+	public void workflow() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/workflow.txt")});
 	}
 
 	@Test
@@ -103,6 +123,11 @@ public class AcceptedKonosRunner {
 	@Test
 	public void temp() {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/temp/ideaKonosToCompile1.txt")});
+	}
+
+	@Test
+	public void goros() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/ideaKonosToCompile2.txt")});
 	}
 
 	private static String temp(String filepath) {

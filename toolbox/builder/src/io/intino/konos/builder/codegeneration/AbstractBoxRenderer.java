@@ -15,6 +15,7 @@ import java.util.*;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
+import static io.intino.konos.model.graph.Subscriber.Durable.SubscriptionMode.ReceiveAfterLastSeal;
 
 public class AbstractBoxRenderer extends Renderer {
 	private final KonosGraph graph;
@@ -123,7 +124,10 @@ public class AbstractBoxRenderer extends Renderer {
 				add("terminal", manifest.qn).
 				add("eventQn", subscriber.event().replace(".", "")).
 				add("event", subscriber.event());
-		if (subscriber.subscriberId() != null) builder.add("subscriberId", subscriber.subscriberId());
+		if (subscriber.isDurable()) {
+			builder.add("durable").add("subscriberId", subscriber.asDurable().subscriberId());
+			if (subscriber.asDurable().subscriptionMode().equals(ReceiveAfterLastSeal)) builder.add("filtered");
+		}
 		return builder;
 	}
 
@@ -160,9 +164,12 @@ public class AbstractBoxRenderer extends Renderer {
 
 	private void services(FrameBuilder builder) {
 		if (!graph.messagingServiceList().isEmpty()) builder.add("jms", "");
+		if (!graph.subscriberList().isEmpty() || !graph.uiServiceList().isEmpty() || !graph.restServiceList().isEmpty())
+			builder.add("logger", new FrameBuilder("logger"));
 		soap(builder);
 		messaging(builder);
 		jmx(builder);
+		agenda(builder);
 		slackServices(builder);
 		ui(builder);
 		rest(builder);
@@ -198,6 +205,12 @@ public class AbstractBoxRenderer extends Renderer {
 	private void jmx(FrameBuilder frame) {
 		for (Service.JMX service : graph.jmxServiceList())
 			frame.add("service", new FrameBuilder("service", "jmx").add("name", service.name$()).add("configuration", boxName()).toFrame());
+	}
+
+	private void agenda(FrameBuilder frame) {
+		if (graph.agendaServiceList().isEmpty() || graph.agendaServiceList().get(0).futureList().isEmpty()) return;
+		final Service.Agenda service = graph.agendaServiceList().get(0);
+		frame.add("service", new FrameBuilder("service", "agenda").add("name", service.name$()).add("configuration", boxName()).toFrame());
 	}
 
 	private void slackServices(FrameBuilder frame) {
@@ -259,6 +272,4 @@ public class AbstractBoxRenderer extends Renderer {
 	private Template template() {
 		return Formatters.customize(new AbstractBoxTemplate());
 	}
-
-
 }

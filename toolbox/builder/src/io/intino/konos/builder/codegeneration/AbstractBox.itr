@@ -60,18 +60,8 @@ def type(box)
 		public io.intino.alexandria.core.Box start() {
 			if (owner != null) owner.beforeStart();
 			beforeStart();
-			if (owner != null) owner.start();
-			initUI();
-			initConnector();
-			initRestServices();
-			initSoapServices();
-			initJmxServices();
-			initDatalake();
-			initTerminal();
-			initMessagingServices();
-			initSentinels();
-			initSlackBots();
-			initWorkflow();
+			if (owner != null) owner.startServices();
+			startServices();
 			if (owner != null) owner.afterStart();
 			afterStart();
 			return this;
@@ -84,15 +74,36 @@ def type(box)
 		public void stop() {
 			if (owner != null) owner.beforeStop();
 			beforeStop();
-			if (owner != null) owner.stop();
-			[$spark...[$NL]]
-			[$service+stop...[$NL]]
-			[$connector+stop]
+			if (owner != null) owner.stopServices();
+			stopServices();
 			if (owner != null) owner.afterStop();
 			afterStop();
 		}
 
+        @Override
+		public void stopServices() {
+			[$spark...[$NL]]
+			[$service+stop...[$NL]]
+			[$connector+stop]
+		}
+
 		public abstract void afterStop();
+
+        @Override
+		public void startServices() {
+			initUI();
+			initConnector();
+			initRestServices();
+			initSoapServices();
+			initJmxServices();
+			initDatalake();
+			initTerminal();
+			initMessagingServices();
+			initSentinels();
+			initSlackBots();
+			initWorkflow();
+			initAgenda();
+		}
 
 		[$hasUi+pushService]
 
@@ -111,6 +122,7 @@ def type(box)
 		[$workflow+getter]
 
 		$service+setupMethod...[$NL$NL]
+
 
 		private void initRestServices() {
 			$service+rest...[$NL]
@@ -158,6 +170,10 @@ def type(box)
 			[$workflow+init]
 		}
 
+		private void initAgenda() {
+			$service+agenda...[$NL]
+		}
+
 		private void initJavaLogger() {
 			final java.util.logging.Logger Logger = java.util.logging.Logger.getGlobal();
 			final ConsoleHandler handler = new ConsoleHandler();
@@ -165,6 +181,7 @@ def type(box)
 			handler.setFormatter(new io.intino.alexandria.logger.Formatter());
 			Logger.setUseParentHandlers(false);
 			Logger.addHandler(handler);
+			$logger
 		}
 
 		protected java.net.URL url(String url) {
@@ -175,6 +192,10 @@ def type(box)
 			}
 		}
 	}
+end
+
+def type(logger) trigger(logger)
+	io.intino.alexandria.logger4j.Logger.init();
 end
 
 def type(datalake) trigger(import)
@@ -267,6 +288,13 @@ def type(service & messaging) trigger(messaging)
 	Logger.info("Messaging service $name: started!");
 end
 
+def type(service & agenda) trigger(agenda)
+	this.agenda = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	this.agenda.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), scheduler);
+	io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();
+	Logger.info("Agenda service: started!");
+end
+
 def type(sentinel) trigger(init)
 	Sentinels.init(this.scheduler, this.configuration.home() [$hasWebhook io.intino.alexandria.http.AlexandriaSparkBuilder.instance()], ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
@@ -280,16 +308,36 @@ def type(datalake & mirror) trigger(init)
 end
 
 def type(connector) trigger(init)
-	if (connector instanceof io.intino.alexandria.terminal.JmsConnector) ((io.intino.alexandria.terminal.JmsConnector) connector).start();
+	if ((this.connector instanceof io.intino.alexandria.terminal.JmsConnector) && ((io.intino.alexandria.terminal.JmsConnector) this.connector).connection() != null) return;
+	final io.intino.alexandria.terminal.JmsConnector connector = (io.intino.alexandria.terminal.JmsConnector) this.connector;
+	if (connector.connection() == null) connector.start();
+	if (configuration().get("datahub_url").contains("waitUntilConnect=true"))
+		while (connector.connection() == null) try {
+			Thread.sleep(1000 * 30);
+			connector.start();
+		} catch (InterruptedException e) {
+			Logger.error(e);
+		}
 end
 def type(terminal) trigger(init)
 	if (this.terminal != null) {
+		java.time.Instant sealStamp = this.terminal.requestLastSeal();
+		Logger.info("Last seal on " + sealStamp.toString());
+		java.util.function.Predicate<java.time.Instant> filter = i -> !i.isBefore(sealStamp);
 		$subscriber...[$NL]
 	}
 end
 
-def type(terminal) trigger(subscriber)
-	this.terminal.subscribe(($terminal.$eventQn+FirstUpperCase~Consumer) e -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e)[, "$subscriberId"][, $split...[, ]]);
+def type(subscriber & durable & filtered) trigger(subscriber)
+	this.terminal.subscribe(($terminal.$eventQn+FirstUpperCase~Consumer) (e, t) -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e, t), "$subscriberId", filter[, $split...[, ]]);
+end
+
+def type(subscriber & durable) trigger(subscriber)
+	this.terminal.subscribe(($terminal.$eventQn+FirstUpperCase~Consumer) (e, t) -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e, t), "$subscriberId"[, $split...[, ]]);
+end
+
+def type(subscriber) trigger(subscriber)
+	this.terminal.subscribe(($terminal.$eventQn+FirstUpperCase~Consumer) (e, t) -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e, t)[, $split...[, ]]);
 end
 
 def trigger(split)
@@ -332,6 +380,10 @@ def type(workflow) trigger(field)
 	protected $package.bpm.Workflow workflow;
 end
 
+def type(agenda) trigger(field)
+	protected AgendaService agenda;
+end
+
 def type(service & messaging) trigger(getter)
 	public $name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase() {
 		return $name+SnakeCaseToCamelCase+firstlowerCase;
@@ -357,6 +409,13 @@ end
 def type(workflow) trigger(getter)
 	public $package.bpm.Workflow workflow() {
 		return this.workflow;
+	}
+end
+
+
+def type(agenda) trigger(getter)
+	public AgendaService agenda() {
+		return this.agenda;
 	}
 end
 

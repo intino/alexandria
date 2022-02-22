@@ -39,6 +39,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     @Override
     public void didMount() {
         notifier.setup(new CollectionSetup().itemCount(behavior.itemCount()));
+        if (selection != null) notifier.refreshSelection(selection);
         notifyReady();
     }
 
@@ -145,6 +146,10 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     public void removeFilter(String grouping) {
         behavior.removeFilter(grouping);
         notifyRefreshItemCount();
+    }
+
+    public List<String> sortings() {
+        return behavior.sortings();
     }
 
     public void sortings(List<String> sortings) {

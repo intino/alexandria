@@ -9,6 +9,9 @@ import { withSnackbar } from 'notistack';
 import classNames from "classnames";
 
 const styles = theme => ({
+    noInteractions: {
+        pointerEvents: 'none',
+    },
 });
 
 class BlockPopover extends AbstractBlockPopover {
@@ -17,27 +20,70 @@ class BlockPopover extends AbstractBlockPopover {
 		super(props);
 		this.notifier = new BlockPopoverNotifier(this);
 		this.requester = new BlockPopoverRequester(this);
+		this.popover = React.createRef();
 		this.state = {
 		    triggerId: null,
+		    interactionsEnabled: true,
 		    ...this.state,
 		}
 	};
 
+    componentDidMount() {
+        super.componentDidMount();
+        window.addEventListener('resize', this.relocate.bind(this));
+    };
+
 	render() {
+		const { classes } = this.props;
 		const opened = this.state.triggerId != null;
 		const trigger = this.state.triggerId != null ? document.getElementById(this.state.triggerId) : null;
 		const drawerClass = this.props.variant === "PersistentAndMini" ? (opened ? classes.drawerOpen : classes.drawerClose) : undefined;
+		const className = this.state.interactionsEnabled ? null : classes.noInteractions;
+		window.setTimeout(() => this.relocate(), 100);
 		return (
-			<Popover open={opened} onClose={this.handleClose.bind(this)}
+			<Popover className={className} open={opened}
+			        onClose={this.handleClose.bind(this)}
 					anchorEl={trigger != null ? trigger : undefined}
 					anchorOrigin={{vertical: this._anchorOriginVertical(),horizontal: this._anchorOriginHorizontal()}}
                     transformOrigin={{vertical: this._transformOriginVertical(), horizontal: this._transformOriginHorizontal()}}
-					><div className="layout vertical flexible" style={{width:"100%",height:"100%",...this.style()}}>{this.props.children}</div></Popover>
+					disableRestoreFocus>
+                <div ref={this.popover} className="layout vertical flexible" style={{width:"100%",height:"100%",...this.style()}}>
+					{this.props.children}
+                </div>
+            </Popover>
 		);
 	};
 
 	refresh = (triggerId) => {
 		this.setState({triggerId});
+	};
+
+    refreshInteractionsEnabled = (value) => {
+        this.setState({interactionsEnabled:value});
+    };
+
+	relocate = () => {
+	    if (this.popover.current == null) return;
+	    this.relocateWidth();
+	    this.relocateHeight();
+	};
+
+	relocateWidth = () => {
+	    if (this.popover.current.parentElement.style.marginLeft != "") this.popover.current.parentElement.style.marginLeft = "";
+	    const bounding = this.popover.current.parentElement.getBoundingClientRect();
+	    const popoverWidth = bounding.width;
+	    const bodyWidth = document.body.offsetWidth;
+	    if (bounding.right <= bodyWidth) return;
+        this.popover.current.parentElement.style.marginLeft = "-" + (popoverWidth+40) + "px";
+	};
+
+	relocateHeight = () => {
+	    if (this.popover.current.parentElement.style.marginBottom != "") this.popover.current.parentElement.style.marginBottom = "";
+	    const bounding = this.popover.current.parentElement.getBoundingClientRect();
+	    const popoverHeight = bounding.height;
+	    const bodyHeight = document.body.offsetHeight;
+	    if (bounding.bottom <= bodyHeight) return;
+        this.popover.current.parentElement.style.marginTop = "-" + (popoverHeight+40) + "px";
 	};
 
 	handleClose = () => {

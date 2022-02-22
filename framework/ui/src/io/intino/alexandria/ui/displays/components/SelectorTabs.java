@@ -46,6 +46,10 @@ public class SelectorTabs<DN extends SelectorTabsNotifier, B extends Box> extend
 		notifySelection();
 	}
 
+	public void selectByName(String option) {
+    	select(option);
+	}
+
 	public void select(int option) {
     	selection(option);
 		notifySelection();

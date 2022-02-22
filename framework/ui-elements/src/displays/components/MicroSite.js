@@ -32,8 +32,8 @@ class MicroSite extends AbstractMicroSite {
 		this.requester = new MicroSiteRequester(this);
 		this.state = {
 		    content: null,
-		    downloadVisible: false,
-		    downloadContentVisible: false,
+		    downloadVisible: this.props.downloadOperations.indexOf("DownloadMicrosite") !== -1,
+		    downloadContentVisible: this.props.downloadOperations.indexOf("DownloadContent") !== -1,
 		    ...this.state,
 		};
 	};
@@ -43,11 +43,12 @@ class MicroSite extends AbstractMicroSite {
         const { classes, theme } = this.props;
         const downloadStyle = this.state.downloadVisible ? { display: 'block' } : { display: 'none' };
         const downloadContentStyle = this.state.downloadContentVisible ? { display: 'block' } : { display: 'none' };
+        const downloadContentClassName = this.state.downloadVisible ? classes.downloadContent : classes.download;
         if (this.state.content == null) return (<div className="layout vertical flex center-center" style={{height:'100%',width:'100%'}}><RiseLoader color={theme.palette.secondary.main} loading={true}/></div>);
         return (
             <React.Fragment>
                 <Button className={classes.download} style={{marginRight:'10px',...downloadStyle}} size="small" color="primary" onClick={this.handleDownload.bind(this)}>{this.translate("Download")}</Button>
-                <Button className={classes.downloadContent} style={downloadContentStyle} size="small" color="primary" onClick={this.handleDownloadContent.bind(this)}>{this.translate("Download content")}</Button>
+                <Button className={downloadContentClassName} style={downloadContentStyle} size="small" color="primary" onClick={this.handleDownloadContent.bind(this)}>{this.translate("Download content")}</Button>
                 <div style={{height:'100%'}} dangerouslySetInnerHTML={{__html: style + this.state.content}}></div>
             </React.Fragment>
         );
@@ -62,15 +63,11 @@ class MicroSite extends AbstractMicroSite {
     };
 
     renderPage = (content) => {
-        this.setState({content: content, downloadVisible: true});
+        this.setState({content: content});
     };
 
     renderPageNotFound = () => {
         this.setState({content : "<h1 style='height:100%' class='layout vertical flex center-center'>" + this.translate("Page not found") + "</h1>", downloadVisible: false});
-    };
-
-    downloadContentVisibility = (value) => {
-        this.setState({ downloadContentVisible: value });
     };
 
 }

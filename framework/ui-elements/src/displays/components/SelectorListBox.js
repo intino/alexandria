@@ -1,6 +1,6 @@
 import React from "react";
 import { withStyles } from '@material-ui/core/styles';
-import { List, ListItem } from '@material-ui/core';
+import { List, ListItem, ListSubheader } from '@material-ui/core';
 import AbstractSelectorListBox from "../../../gen/displays/components/AbstractSelectorListBox";
 import SelectorListBoxNotifier from "../../../gen/displays/notifiers/SelectorListBoxNotifier";
 import SelectorListBoxRequester from "../../../gen/displays/requesters/SelectorListBoxRequester";
@@ -28,12 +28,13 @@ class SelectorListBox extends AbstractSelectorListBox {
 	};
 
 	render() {
+		if (!this.state.visible) return (<React.Fragment/>);
 		const { classes, theme } = this.props;
 		const label = this.props.label;
 		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
 		return (
 		    <div style={this.style()}>
-                {label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{label}</div> : undefined }
+                {label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{this.translate(label)}</div> : undefined }
                 {this.renderChildren()}
 		    </div>
 		);
@@ -54,6 +55,7 @@ class SelectorListBox extends AbstractSelectorListBox {
 		if (hidden) return (<React.Fragment/>);
 		const className = child.props.className;
 		if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
+		if (className != null && className.indexOf("sub-header") !== -1) return (<ListSubheader component="div" style={{margin:'0',padding:'0',height:'30px',lineHeight:'30px'}}>{child.props.name}</ListSubheader>);
 		const selected = this.isInSelection(child.props.name);
 		const style = selected ? {background:"#ddd"} : {};
 		style.display = hidden ? "none" : "block";

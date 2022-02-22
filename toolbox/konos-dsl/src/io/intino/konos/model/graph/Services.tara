@@ -141,7 +141,16 @@ Concept:Named Service
 
     	Concept:Named Resource
     		var string path
+			has Parameter
     		Aspect Main
     		Aspect Confidential
     		Aspect Page
             	var Template template
+
+    Aspect Agenda
+		var string filePath
+		var string baseUri = "triggers"
+		Concept:Named Future
+			has Parameter
+			Concept Option
+				has Parameter

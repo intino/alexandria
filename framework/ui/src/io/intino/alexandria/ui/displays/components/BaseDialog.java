@@ -20,17 +20,17 @@ public class BaseDialog<DN extends BaseDialogNotifier, B extends Box> extends Ab
         super(box);
     }
 
-    public BaseDialog onBeforeOpen(BeforeListener listener) {
+    public BaseDialog<DN, B> onBeforeOpen(BeforeListener listener) {
         beforeOpenListeners.add(listener);
         return this;
     }
 
-    public BaseDialog onOpen(Listener listener) {
+    public BaseDialog<DN, B> onOpen(Listener listener) {
         openListeners.add(listener);
         return this;
     }
 
-    public BaseDialog onClose(Listener listener) {
+    public BaseDialog<DN, B> onClose(Listener listener) {
         closeListeners.add(listener);
         return this;
     }

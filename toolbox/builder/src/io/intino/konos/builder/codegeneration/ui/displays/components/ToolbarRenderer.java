@@ -5,7 +5,10 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.graph.CatalogComponents;
+import io.intino.konos.model.graph.Component;
 import io.intino.konos.model.graph.InteractionComponents.Toolbar;
+
+import java.util.Arrays;
 
 public class ToolbarRenderer extends ComponentRenderer<Toolbar> {
 
@@ -23,10 +26,11 @@ public class ToolbarRenderer extends ComponentRenderer<Toolbar> {
 
 		CatalogComponents.Collection collection = element.asLinked().to();
 		if (collection == null) return;
-
+		String[] ancestors = ancestors(collection);
 		builder.add("binding", new FrameBuilder("binding", Toolbar.class.getSimpleName())
 			 	.add("name", nameOf(element))
-				.add("collection", nameOf(collection)));
+				.add("collection", nameOf(collection))
+				.add("ancestorsNotMe", ancestors.length > 0 ? Arrays.copyOfRange(ancestors, 1, ancestors.length) : new String[0]));
 	}
 
 	@Override

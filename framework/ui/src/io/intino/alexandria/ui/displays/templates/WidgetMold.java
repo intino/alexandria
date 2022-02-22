@@ -3,7 +3,6 @@ package io.intino.alexandria.ui.displays.templates;
 import io.intino.alexandria.schemas.Widget;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.EventsDisplay;
-import io.intino.alexandria.ui.displays.components.DynamicTable;
 import io.intino.alexandria.ui.documentation.model.ActionableWidget;
 import io.intino.alexandria.ui.documentation.model.collection.*;
 import io.intino.alexandria.ui.documentation.model.data.*;
@@ -47,6 +46,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         fileExamples.visible(widget instanceof FileWidget);
         imageExamples.visible(widget instanceof ImageWidget);
         dateExamples.visible(widget instanceof DateWidget);
+        multipleExamples.visible(widget instanceof MultipleWidget);
         chartExamples.visible(widget instanceof ChartWidget);
         dashboardExamples.visible(widget instanceof DashboardWidget);
         blockExamples.visible(widget instanceof BlockWidget);
@@ -64,6 +64,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         searchBoxExamples.visible(widget instanceof SearchBoxWidget);
         sliderExamples.visible(widget instanceof SliderWidget);
         dialogExamples.visible(widget instanceof DialogWidget);
+        layerExamples.visible(widget instanceof LayerWidget);
         dividerExamples.visible(widget instanceof DividerWidget);
         userExamples.visible(widget instanceof UserWidget);
         locationExamples.visible(widget instanceof LocationWidget);
@@ -71,6 +72,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         stepperExamples.visible(widget instanceof StepperWidget);
         frameExamples.visible(widget instanceof FrameWidget);
         microSiteExamples.visible(widget instanceof MicroSiteWidget);
+        htmlViewerExamples.visible(widget instanceof HtmlViewerWidget);
     }
 
     private void updateInfo() {

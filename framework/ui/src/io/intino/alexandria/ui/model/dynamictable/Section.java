@@ -13,6 +13,7 @@ public class Section {
 	private List<Column> columns = new ArrayList<>();
 	private List<Row> rowList = new ArrayList<>();
 	private List<Section> sectionList = new ArrayList<>();
+	private boolean showTotals = true;
 
 	public Section(String label) {
 		this(label, "black", "#efefef", 12);
@@ -61,6 +62,15 @@ public class Section {
 		return this;
 	}
 
+	public boolean showTotals() {
+		return showTotals;
+	}
+
+	public Section showTotals(boolean showTotals) {
+		this.showTotals = showTotals;
+		return this;
+	}
+
 	public List<Row> rows() {
 		return rowList;
 	}
@@ -84,11 +94,20 @@ public class Section {
 	}
 
 	public Section add(String rowLabel, List<Double> values) {
-		return add(rowLabel, values.stream().mapToDouble(v -> v).toArray());
+		return add(rowLabel, null, values);
 	}
 
 	public Section add(String rowLabel, double... values) {
-		Row row = new Row(rowLabel);
+		add(rowLabel, null, values);
+		return this;
+	}
+
+	public Section add(String rowLabel, String rowDescription, List<Double> values) {
+		return add(rowLabel, rowDescription, values.stream().mapToDouble(v -> v).toArray());
+	}
+
+	public Section add(String rowLabel, String rowDescription, double... values) {
+		Row row = new Row(rowLabel, rowDescription);
 		if (columns.size() != values.length) throw new NumberFormatException("Columns and value size must be equal");
 		for (int i = 0; i < values.length; i++) row.add(new Cell(columns.get(i).label(), values[i]));
 		rowList.add(row);

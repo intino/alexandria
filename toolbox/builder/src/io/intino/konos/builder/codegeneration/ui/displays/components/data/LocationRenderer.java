@@ -9,6 +9,7 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.graph.DataComponents.Location;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LocationRenderer extends ComponentRenderer<Location> {
 
@@ -24,6 +25,7 @@ public class LocationRenderer extends ComponentRenderer<Location> {
 		addModes(result);
 		GeoRendererHelper.addCenter(element.center(), result);
 		GeoRendererHelper.addZoom(element.zoom(), result);
+		result.add("controls", element.controls() != null ? element.controls().stream().map(c -> c.name().toLowerCase()).collect(Collectors.joining(",")) : "");
 		return result;
 	}
 

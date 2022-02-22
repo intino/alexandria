@@ -17,6 +17,7 @@ Component pageCollection as ExtensionOf(collection)
 	Request changePage as Integer
 	Request changePageSize as Integer
 	Request notifyItemsRendered as Object(CollectionItemsRenderedInfo)
+	Request loadNextPage
 	Request loadMoreItems as Object(CollectionMoreItems)
 
 Component dynamicTable as ExtensionOf(pageCollection)
@@ -24,8 +25,14 @@ Component dynamicTable as ExtensionOf(pageCollection)
 	Notification sections as Object(DynamicTableSection) List
 	Notification selectRowProvided as Bool
 	Notification openRow as Text
+	Notification refreshZeros as Bool
+	Notification refreshPercentages as Bool
+	Notification refreshVisibleColumns as Object(DynamicTableVisibleColumn) List
 	Request selectRow as Object(DynamicTableRowParams)
 	Request showItems as Object(DynamicTableRowParams)
+	Request visibleColumns as Object(DynamicTableVisibleColumn) List
+	Request showZeros as Bool
+	Request showPercentages as Bool
 
 Component map as ExtensionOf(collection)
 	Notification setup as Object(MapCollectionSetup)
@@ -42,8 +49,10 @@ Component heading
 Component row
 
 Component baseGrouping
-	Notification refreshGroups as Object(Group) List
+	Notification refreshGroups as Object(GroupEntry) List
 	Notification refreshSelection as Text List
+	Notification registerSelection as Text List
+	Request setupAddress as Text List
 	Request select as Text List
 
 Component grouping as ExtensionOf(baseGrouping)
@@ -66,4 +75,5 @@ Component sortingOrderBy as ExtensionOf(baseSorting)
 
 Component searchBox
 	Notification refreshCount as LongInteger
+	Notification refreshCondition as Text
 	Request search as Text

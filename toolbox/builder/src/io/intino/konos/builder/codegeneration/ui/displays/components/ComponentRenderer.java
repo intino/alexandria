@@ -14,6 +14,7 @@ import io.intino.konos.model.graph.DataComponents.Image;
 import io.intino.konos.model.graph.DataComponents.Text;
 import io.intino.konos.model.graph.OtherComponents.*;
 import io.intino.magritte.framework.Layer;
+import joptsimple.internal.Strings;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,6 +45,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (buildChildren) builder.add("child");
 		builder.add("methodName", element.i$(Block.Conditional.class) && !element.i$(Block.Multiple.class) ? "initConditional" : "init");
 		addSpecificTypes(builder);
+		addParentPath(element, builder);
 		addComponents(element, builder);
 		addReferences(element, builder);
 		addFacets(element, builder);
@@ -72,6 +74,17 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	public void owner(Display owner) {
 		this.owner = owner;
+	}
+
+	protected void addParentPath(Component component, FrameBuilder builder) {
+		Component parentComponent = component.core$().ownerAs(Component.class);
+		List<String> parentPath = new ArrayList<>();
+		while (parentComponent != null && !ElementHelper.isRoot(parentComponent)
+				&& !parentComponent.i$(Mold.Item.class) && !parentComponent.i$(HelperComponents.Row.class)) {
+			parentPath.add(0, shortId(parentComponent));
+			parentComponent = parentComponent.core$().ownerAs(Component.class);
+		}
+		if (!parentPath.isEmpty()) builder.add("parentPath", Strings.join(parentPath, "."));
 	}
 
 	protected FrameBuilder addOwner(FrameBuilder builder) {
@@ -151,6 +164,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			result.add("multipleNoItemsMessage", abstractMultiple.noItemsMessage() != null ? abstractMultiple.noItemsMessage() : "");
 			result.add("multipleWrapItems", abstractMultiple.wrapItems());
 			result.add("multipleEditable", element.i$(Editable.class));
+			result.add("multipleCollapsed", element.a$(Multiple.class).collapsed());
 			result.add("multipleMin", abstractMultiple.count() != null ? abstractMultiple.count().min() : 0);
 			result.add("multipleMax", abstractMultiple.count() != null ? abstractMultiple.count().max() : -1);
 		}
@@ -165,7 +179,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return clazz.getSimpleName().toLowerCase();
 	}
 
-	private String[] ancestors(Component component) {
+	protected String[] ancestors(Component component) {
 		List<String> result = new ArrayList<>();
 		Component parent = component.core$().ownerAs(Component.class);
 		while (parent != null) {
@@ -197,6 +211,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	protected FrameBuilder extendsFrame(Component element, FrameBuilder builder) {
 		FrameBuilder result = new FrameBuilder("extends");
+		if (element.i$(DataComponents.Image.class)) result.add("image");
 		if (element.i$(CatalogComponents.Collection.class)) result.add("collection");
 		if (element.i$(CatalogComponents.Table.class)) result.add("table");
 		if (element.i$(CatalogComponents.DynamicTable.class)) result.add("dynamictable");
@@ -212,9 +227,11 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	protected boolean addSpecificTypes(FrameBuilder builder) {
 
 		if (element.i$(Multiple.class)) {
-			String message = element.a$(Multiple.class).noItemsMessage();
+			Multiple multiple = element.a$(Multiple.class);
+			String message = multiple.noItemsMessage();
 			if (message != null) builder.add("noItemsMessage", message);
 			FrameBuilder methodsFrame = addOwner(buildBaseFrame()).add("method").add("multiple");
+			if (multiple.collapsed()) methodsFrame.add("collapsable");
 			methodsFrame.add("componentType", multipleComponentType(element));
 			methodsFrame.add("componentName", multipleComponentName(element));
 			if (element.i$(OwnerTemplateStamp.class)) methodsFrame.add("componentOwnerBox", element.a$(OwnerTemplateStamp.class).owner().name());
@@ -271,10 +288,6 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return false;
 	}
 
-	private String ownerTemplateStampPackage(Service.UI.Use use) {
-		return use.package$() + ".box.ui.displays.templates";
-	}
-
 	private String ownerTemplateStampBox(Service.UI.Use use) {
 		return use.package$() + ".box." + use.name();
 	}
@@ -309,51 +322,6 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		FrameBuilder properties = properties();
 		if (properties.slots() <= 0) return;
 		builder.add("properties", properties());
-	}
-
-	private String multipleComponentType(C element) {
-		String prefix = "io.intino.alexandria.ui.displays.components.";
-		String name = multipleComponentName(element);
-		if (name == null) return null;
-		return element.i$(BaseStamp.Multiple.class) || element.i$(Block.Multiple.class) ? name : prefix + name;
-	}
-
-	private boolean isMultipleSpecificComponent(C element) {
-		return element.i$(BaseStamp.Multiple.class) || element.i$(Block.Multiple.class);
-	}
-
-	private String multipleComponentName(C element) {
-		String editable = element.i$(Editable.class) ? "Editable" : "";
-		if (element.i$(Text.Multiple.class)) return "Text" + editable;
-		if (element.i$(File.Multiple.class)) return "File" + editable;
-		if (element.i$(Image.Multiple.class)) return "Image" + editable;
-		if (element.i$(Icon.Multiple.class)) return "Icon" + editable;
-		if (element.i$(DataComponents.Number.Multiple.class)) return "Number" + editable;
-		if (element.i$(DataComponents.Date.Multiple.class)) return "Date" + editable;
-		if (element.i$(BaseStamp.Multiple.class)) {
-			if (element.i$(OtherComponents.OwnerTemplateStamp.class)) {
-				OwnerTemplateStamp stamp = element.a$(OwnerTemplateStamp.class);
-				return ownerTemplateStampPackage(stamp.owner()) + "." + firstUpperCase(stamp.template());
-			}
-			return firstUpperCase(element.a$(TemplateStamp.class).template().name$());
-		}
-		if (element.i$(Block.Multiple.class)) return firstUpperCase(nameOf(element));
-		return null;
-	}
-
-	private String multipleObjectType(C element) {
-		if (element.i$(Text.Multiple.class)) return "java.lang.String";
-		if (element.i$(File.Multiple.class)) return "io.intino.alexandria.ui.File";
-		if (element.i$(Image.Multiple.class)) return "io.intino.alexandria.ui.File";
-		if (element.i$(Icon.Multiple.class)) return "java.net.URL";
-		if (element.i$(DataComponents.Number.Multiple.class)) return "java.lang.Double";
-		if (element.i$(DataComponents.Date.Multiple.class)) return "java.time.Instant";
-		if (element.i$(BaseStamp.Multiple.class)) {
-			String modelClass = element.i$(OwnerTemplateStamp.class) ? "java.lang.Void" : element.a$(TemplateStamp.class).template().modelClass();
-			return modelClass != null ? modelClass : "java.lang.Void";
-		}
-		if (element.i$(Block.Multiple.class)) return "java.lang.Void";
-		return null;
 	}
 
 	protected FrameBuilder resourceMethodFrame(String method, String value) {

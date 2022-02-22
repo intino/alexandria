@@ -62,7 +62,7 @@ class KonosCompilerRunner {
 
 	private void report(Map<File, Boolean> srcFiles, List<OutputItem> compiled) {
 		if (compiled.isEmpty()) reportNotCompiledItems(srcFiles);
-		else reportCompiledItems(compiled);
+		else reportCompiledItems(compiled, srcFiles);
 		out.println();
 	}
 
@@ -108,12 +108,12 @@ class KonosCompilerRunner {
 		out.println();
 	}
 
-	private void reportCompiledItems(List<OutputItem> compiledFiles) {
+	private void reportCompiledItems(List<OutputItem> compiledFiles, Map<File, Boolean> srcFiles) {
 		for (OutputItem compiledFile : compiledFiles) {
 			out.print(COMPILED_START);
 			out.print(compiledFile.getOutputPath());
 			out.print(SEPARATOR);
-			out.print(compiledFile.getSourcePath());
+			out.print(new File(compiledFile.getSourcePath()).isFile() ? compiledFile.getSourcePath() : srcFiles.keySet().iterator().next().getAbsolutePath());
 			out.print(COMPILED_END);
 			out.println();
 		}

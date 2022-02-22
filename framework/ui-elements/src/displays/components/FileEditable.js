@@ -28,6 +28,7 @@ export default class FileEditable extends AbstractFile {
 		this.state = {
 		    ...this.state,
             value : null,
+            filename : null,
             readonly : this.props.readonly,
             editable : false,
         };
@@ -61,7 +62,7 @@ export default class FileEditable extends AbstractFile {
 		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
 		return (
 			<Block layout="vertical" style={{...this.style(),width:width,height:height}}>
-                {label != null && label !== "" ? <div style={{color:color,fontSize:"10pt",color:"#0000008a",marginBottom:"5px"}}>{label}</div> : undefined }
+                {label != null && label !== "" ? <div style={{color:color,fontSize:"10pt",color:"#0000008a",marginBottom:"5px"}}>{this.translate(label)}</div> : undefined }
 				{this._renderPreview()}
 				{this._renderComponent()}
 			</Block>
@@ -69,7 +70,7 @@ export default class FileEditable extends AbstractFile {
 	};
 
 	_renderPreview = () => {
-	    if (!this.props.preview) return (<React.Fragment/>);
+	    if (!this.props.preview || this.state.value == null) return (<React.Fragment/>);
 	    return (<div style={{...this.style(),marginBottom:'10px'}}>{this.renderInstances()}</div>);
 	};
 
@@ -123,6 +124,7 @@ export default class FileEditable extends AbstractFile {
 	};
 
 	filename = () => {
+	    if (this.state.filename != null) return this.state.filename;
 	    const id = this.state.value.substr(this.state.value.lastIndexOf("/")+1);
 	    let filename = id;
 	    try { filename = atob(id); }
@@ -133,7 +135,7 @@ export default class FileEditable extends AbstractFile {
 
 	_renderInputField = () => {
 	    return (<input type="file" disabled={this.state.readonly ? true : undefined}
-	                   onChange={this.handleChange.bind(this)}></input>);
+	                   onChange={this.handleChange.bind(this)} value="" ></input>);
     };
 
 	_allowedTypes = () => {
@@ -161,7 +163,7 @@ export default class FileEditable extends AbstractFile {
 	}
 
 	refresh = (info) => {
-		this.setState({ value: info.value });
+		this.setState({ value: info.value, filename: info.filename });
 	};
 
 	refreshReadonly = (readonly) => {

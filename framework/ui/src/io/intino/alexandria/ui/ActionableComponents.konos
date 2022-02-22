@@ -9,9 +9,14 @@ Component actionable
 	Notification refreshReadonly as Bool
 	Notification refreshIcon as Text
 	Notification refreshAffirmed as Text
+	Notification refreshAffirmedRequired as Bool
+	Notification refreshHighlight as Text
 	Notification checkSignResult as Bool
+	Notification launch
 
 	Request checkSign as Object(ActionableSign)
+	Request checkAffirmed
+	Request cancelAffirm as Bool
 
 Schema ActionableSign
 	Attribute sign as Text
@@ -22,6 +27,7 @@ Component action as ExtensionOf(actionable)
 
 Component actionSplit as ExtensionOf(actionable)
 	Notification refreshOption as Text
+	Notification refreshOptions as Text List
 	Request execute as Text
 
 Component actionSwitch as ExtensionOf(actionable)
@@ -58,9 +64,15 @@ Component openBlock as ExtensionOf(actionable)
 Component openDialog as ExtensionOf(actionable)
 	Request execute
 
+Component openLayer as ExtensionOf(actionable)
+	Notification openAddress
+	Request execute
+	Request openLayer
+
 Component openPopover as ExtensionOf(actionable)
 	Notification refreshTriggerId as Text
 	Request execute
+	Request closePopover
 
 Component closeDialog as ExtensionOf(actionable)
 	Request execute

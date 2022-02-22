@@ -8,6 +8,7 @@ import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Exception;
 import io.intino.konos.model.graph.Response;
@@ -21,29 +22,29 @@ import io.intino.magritte.framework.Concept;
 import io.intino.magritte.framework.Predicate;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
+import static io.intino.konos.model.graph.rules.ExceptionCodes.Unauthorized;
 
 public class RESTAccessorRenderer extends Renderer {
 	private final Service.REST service;
 	private final File destination;
-	private final List<Parameter> enumParameters;
+	private final Map<String, List<Parameter>> enumParameters;
 
 	public RESTAccessorRenderer(CompilationContext compilationContext, Service.REST restService, File destination) {
 		super(compilationContext, Target.Owner);
 		this.service = restService;
 		this.destination = destination;
 		this.destination.mkdirs();
-		this.enumParameters = new ArrayList<>();
+		this.enumParameters = new HashMap<>();
 	}
 
 	@Override
-	public void render() {
+	public void render() throws KonosException {
 		new SchemaListRenderer(context, service.graph(), destination).execute();
 		processService(service);
 	}
@@ -57,8 +58,11 @@ public class RESTAccessorRenderer extends Renderer {
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()));
 		builder.add("resource", service.core$().findNode(Resource.class).stream().map(this::framesOf).flatMap(List::stream).toArray(Frame[]::new));
 		builder.add("notification", service.notificationList().stream().map(this::frameOf).toArray(Frame[]::new));
-		for (Parameter enumParameter : enumParameters)
-			builder.add("enumParameter", new FrameBuilder("enumParameter").add("name", enumParameter.name$()).add("class", enumParameter.core$().ownerAs(Resource.class).name$() + firstUpperCase(enumParameter.name$())).add("value", enumParameter.asWord().values().toArray(String[]::new)));
+		for (Parameter enumParameter : enumParameters.values().stream().flatMap(Collection::stream).collect(Collectors.toList()))
+			builder.add("enumParameter", new FrameBuilder("enumParameter")
+					.add("name", enumParameter.name$())
+					.add("class", enumParameter.core$().ownerAs(Resource.class).name$() + firstUpperCase(enumParameter.name$()))
+					.add("value", enumParameter.asWord().values().toArray(String[]::new)));
 		writeFrame(destination, snakeCaseToCamelCase(service.name$()) + "Accessor", template().render(builder));
 	}
 
@@ -91,7 +95,8 @@ public class RESTAccessorRenderer extends Renderer {
 				.add("method", operation.getClass().getSimpleName())
 				.add("name", operation.core$().owner().name())
 				.add("parameter", parameters(operation.parameterList()))
-				.add("exceptionResponses", exceptionResponses(operation));
+				.add("parameter", parameters(operation.core$().ownerAs(Resource.class).parameterList()))
+				.add("exceptionResponses", exceptionResponses(operation, authentication));
 		if (authentication != null) builder.add("auth", new FrameBuilder("authentication", authentication()));
 		return builder.toFrame();
 	}
@@ -126,8 +131,12 @@ public class RESTAccessorRenderer extends Renderer {
 	private String parameterType(Parameter parameter) {
 		String type;
 		if (parameter.isWord()) {
-			enumParameters.add(parameter);
-			type = firstUpperCase(parameter.core$().ownerAs(Resource.class).name$() + firstUpperCase(parameter.name$()));
+			String resource = parameter.core$().ownerAs(Resource.class).name$();
+			enumParameters.putIfAbsent(resource, new ArrayList<>());
+			List<Parameter> parameters = enumParameters.get(resource);
+			if (parameters.stream().noneMatch(p -> p.name$().equals(parameter.name$())))
+				enumParameters.get(resource).add(parameter);
+			type = firstUpperCase(resource + firstUpperCase(parameter.name$()));
 		} else type = (parameter.isObject() && parameter.asObject().isComponent() ?
 				String.join(".", packageName(), "schemas.") : "") + parameter.asType().type();
 		return parameter.isList() ? "List<" + type + ">" : type;
@@ -153,21 +162,34 @@ public class RESTAccessorRenderer extends Renderer {
 		return Character.toLowerCase(toCamelCase.charAt(0)) + toCamelCase.substring(1);
 	}
 
-	private FrameBuilder exceptionResponses(Operation operation) {
+	private FrameBuilder exceptionResponses(Operation operation, Authentication authentication) {
 		List<io.intino.konos.model.graph.Exception> exceptions = operation.exceptionList();
-		if (exceptions.isEmpty()) return new FrameBuilder("exceptionResponses", "none");
+		if (exceptions.isEmpty()) {
+			if (authentication == null) return new FrameBuilder("exceptionResponses", "none");
+			return new FrameBuilder("exceptionResponses").add("exceptionResponse", unauthorizedExceptionResponse());
+		}
 		return new FrameBuilder("exceptionResponses")
-				.add("exceptionResponse", exceptionResponses(exceptions));
+				.add("exceptionResponse", exceptionResponses(exceptions, authentication));
 	}
 
-	private Frame[] exceptionResponses(List<io.intino.konos.model.graph.Exception> responses) {
-		return responses.stream().map(this::exceptionResponse).toArray(Frame[]::new);
+	private Frame[] exceptionResponses(List<io.intino.konos.model.graph.Exception> exceptions, Authentication authentication) {
+		final List<Frame> collect = exceptions.stream().map(this::exceptionResponse).collect(Collectors.toList());
+		if (authentication != null && exceptions.stream().noneMatch(e -> e.code().equals(Unauthorized)))
+			collect.add(unauthorizedExceptionResponse());
+		return collect.toArray(new Frame[0]);
 	}
 
-	private Frame exceptionResponse(Exception response) {
+	private Frame exceptionResponse(Exception exception) {
 		return new FrameBuilder("exceptionResponse")
-				.add("code", response.code().value())
-				.add("exceptionName", response.code().toString()).toFrame();
+				.add("code", exception.code().value())
+				.add("exceptionName", exception.code().toString()).toFrame();
+	}
+
+
+	private Frame unauthorizedExceptionResponse() {
+		return new FrameBuilder("exceptionResponse")
+				.add("code", Unauthorized.value())
+				.add("exceptionName", Unauthorized.name()).toFrame();
 	}
 
 	private Template template() {

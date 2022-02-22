@@ -5,6 +5,7 @@ import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.graph.Axis;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -20,6 +21,7 @@ public class CategoricalAxisRenderer {
 
     public static final int LABEL_INDEX = 2;
     public static final int MAX_EMBEDDED_COMPONENTS = 100;
+    private static final String VARIABLE_PATTERN = "[a-zA-Z][a-zA-Z0-9_]*";
 
     private final CompilationContext context;
     private final File gen;
@@ -65,20 +67,6 @@ public class CategoricalAxisRenderer {
         addIncludes(fb, axis, includes);
     }
 
-    private void addLabel(FrameBuilder fb, Axis.Categorical axis) {
-        if (axis.includeLabel() != null)
-            fb.add("include", new FrameBuilder("include").add("name", "label").add("index", LABEL_INDEX));
-    }
-
-    private void addIncludes(FrameBuilder fb, Axis.Categorical axis, List<Axis> includes) {
-        final int offset = offset(axis);
-        for (int i = 0; i < includes.size(); i++) {
-            fb.add("include", new FrameBuilder("include")
-                    .add("name", includes.get(i).name$())
-                    .add("index", i + offset));
-        }
-    }
-
     private void loadComponents(FrameBuilder fb, Axis.Categorical axis, List<Axis> includes) {
         String resource = "/" + axisResource(axis.tsv().getPath());
         List<ComponentInfo> components = loadFromResource(resource);
@@ -89,43 +77,91 @@ public class CategoricalAxisRenderer {
         FrameBuilder componentsFB = new FrameBuilder("components");
         componentsFB.add("name", axis.name$());
 
-        componentsFB.add("embedded", embedded);
-        if(embedded)
-            addEmbeddedComponentsToArray(componentsFB, axis, components);
-        else
-            componentsFB.add("resource", resource);
-
         addLabel(componentsFB, axis);
-        addIncludes(componentsFB, axis, includes);
+
+        componentsFB.add("embedded", embedded);
+        if(embedded) {
+            addEmbeddedComponentsToArray(componentsFB, axis, components);
+        } else {
+            componentsFB.add("resource", resource);
+            addIncludes(componentsFB, axis, includes);
+        }
 
         fb.add("components", componentsFB);
     }
 
-    private void addEmbeddedComponentsToArray(FrameBuilder fb, Axis.Categorical axis, List<ComponentInfo> components) {
+    private void addLabel(FrameBuilder fb, Axis.Categorical axis) {
+        if (axis.includeLabel() != null)
+            fb.add("include", new FrameBuilder("include")
+                    .add("axis", axis.name$())
+                    .add("name", "label")
+                    .add("label", "label")
+                    .add("index", LABEL_INDEX));
+    }
+
+    private void addIncludes(FrameBuilder fb, Axis.Categorical axis, List<Axis> includes) {
+        final int offset = offset(axis);
+        for (int i = 0; i < includes.size(); i++) {
+            fb.add("include", new FrameBuilder("include")
+                    .add("axis", axis.name$())
+                    .add("name", includes.get(i).name$())
+                    .add("type", includes.get(i).isCategorical() ? "categorical" : "continuous")
+                    .add("label", asFieldName(includes.get(i).label()))
+                    .add("index", i + offset));
+        }
+    }
+
+    private void addIncludes(ComponentInfo component, FrameBuilder fb, Axis.Categorical axis, List<Axis> includes) {
         final boolean hasLabel = axis.includeLabel() != null;
+        final int offset = offset(axis);
+        for (int i = 0; i < includes.size(); i++) {
+            final String include = component.field(i + (hasLabel ? 3 : 2));
+            fb.add("include", new FrameBuilder("include")
+                    .add("name", includes.get(i).name$())
+                    .add("label", asFieldName(includes.get(i).label()))
+                    .add("id", include)
+                    .add("type", includes.get(i).isCategorical() ? "categorical" : "continuous")
+                    .add("index", i + offset));
+        }
+    }
+
+    private void addEmbeddedComponentsToArray(FrameBuilder fb, Axis.Categorical axis, List<ComponentInfo> components) {
+        final boolean useLabel = shouldUseLabel(axis, components);
         for(ComponentInfo component : components) {
-            final String name = hasLabel ? component.label() : component.id();
+            final String name = useLabel ? component.label() : component.id();
             fb.add("component", asFieldName(name));
         }
     }
 
     private void createEmbeddedComponents(FrameBuilder fb, Axis.Categorical axis, List<Axis> includes, List<ComponentInfo> components) {
+        final boolean useLabel = shouldUseLabel(axis, components);
         for(ComponentInfo component : components) {
             FrameBuilder compFB = new FrameBuilder("component");
-            final boolean hasLabel = axis.includeLabel() != null;
-            final String name = hasLabel ? component.label() : component.id();
+            final String name = useLabel ? component.label() : component.id();
             compFB.add("name", asFieldName(name));
-            if(hasLabel) compFB.add("label", component.label());
+            if(axis.includeLabel() != null) compFB.add("label", component.label());
             compFB.add("index", component.index());
             compFB.add("id", component.id());
-            addIncludes(compFB, axis, includes);
+            addIncludes(component, compFB, axis, includes);
             fb.add("component", compFB);
         }
     }
 
-    private String asFieldName(String id) {
-        id = id.replaceAll("\\s+", "_").replace('-', '_');
-        return Character.isDigit(id.charAt(0)) ? "_" + id : id;
+    private boolean shouldUseLabel(Axis.Categorical axis, List<ComponentInfo> components) {
+        return axis.includeLabel() != null && axis.includeLabel().isName() && checkLabelNames(components);
+    }
+
+    private boolean checkLabelNames(List<ComponentInfo> components) {
+        for(ComponentInfo component : components) {
+            if(!asFieldName(component.label()).matches(VARIABLE_PATTERN)) return false;
+        }
+        return true;
+    }
+
+    private String asFieldName(String name) {
+        name = name.replaceAll("\\s+", "_").replace('-', '_');
+        name = StringUtils.stripAccents(name);
+        return Character.isDigit(name.charAt(0)) ? "_" + name : name;
     }
 
     private boolean isSmallEnough(List<ComponentInfo> components) {

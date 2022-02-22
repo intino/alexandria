@@ -1,0 +1,284 @@
+def type(service)
+	package $package+ValidPackage;
+
+	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
+	import $package+validPackage.agenda.*;
+	import io.intino.alexandria.http.AlexandriaSpark;
+	import io.intino.alexandria.logger.Logger;
+	import io.intino.alexandria.scheduler.AlexandriaScheduler;
+	import org.apache.commons.io.FileUtils;
+	import io.intino.alexandria.Json;
+
+	$schemaImport
+	import org.quartz.*;
+
+	import java.io.File;
+	import java.io.IOException;
+	import java.nio.file.Files;
+	import java.time.Instant;
+	import java.time.temporal.ChronoUnit;
+	import java.util.*;
+	import java.util.function.Predicate;
+	import java.util.stream.Collectors;
+
+	import static io.intino.alexandria.Json.fromString;
+	import static org.quartz.CronScheduleBuilder.cronSchedule;
+	import static org.quartz.JobBuilder.newJob;
+	import static org.quartz.TriggerBuilder.newTrigger;
+
+	@SuppressWarnings("unchecked")
+	public class AgendaService {
+		public static final String BaseUri = "$baseUri/";
+		private static final Map<String, File> sources = new HashMap<>();
+		private static final Map<String, Instant> timeouts = new HashMap<>();
+		private final $box+snakecaseToCamelCase+firstUpperCase~Box box;
+		private final File root;
+
+		public AgendaService($box+snakecaseToCamelCase+firstUpperCase~Box box) {
+			this.box = box;
+			this.root = $rootPath+customizeDirectory;
+		}
+
+		$future+getter...[$NL$NL]
+
+		$future+execute...[$NL$NL]
+
+		public AlexandriaSpark<?> setup(AlexandriaSpark<?> server, AlexandriaScheduler scheduler) {
+			loadFutures();
+			startTimers(scheduler);
+			startService(server);
+			return server;
+		}
+
+		public Create create() {
+			return new Create();
+		}
+
+		public Remove remove() {
+			return new Remove();
+		}
+
+		private void startTimers(AlexandriaScheduler scheduler) {
+			try {
+				JobDetail job = newJob(AgendaServiceTrigger.class).withIdentity("AgendaServiceTrigger").build();
+				job.getJobDataMap().put("box", box);
+				scheduler.scheduleJob(job, Set.of(newTrigger().withIdentity("AgendaServiceTrigger").withSchedule(cronSchedule("* * * 1/1 * ? *")).build()), true);
+			} catch (SchedulerException e) {
+				Logger.error(e);
+			}
+		}
+
+		private void startService(AlexandriaSpark<?> server) {
+			$future+route...[$NL]
+		}
+
+		$future+register...[$NL]
+
+		private void loadFutures() {
+			$future+load...[$NL]
+		}
+
+		$future+private...[$NL]
+
+		private static String read(File file) {
+			try {
+				return Files.readString(file.toPath());
+			} catch (IOException e) {
+				Logger.error(e);
+				return "";
+			}
+		}
+
+		private void write(Object schema, File file) {
+			try {
+				Files.writeString(file.toPath(), Json.toString(schema));
+			} catch (IOException e) {
+				Logger.error(e);
+			}
+		}
+
+		public class Create {
+			$future+createMethod...[$NL$NL]
+
+			$future+createClass...[$NL$NL]
+		}
+
+		public class Remove {
+			$future+removeMethod...[$NL$NL]
+		}
+
+		public static class Option {
+			public String id = UUID.randomUUID().toString();
+		}
+
+		public static class AgendaServiceTrigger implements Job {
+			public void execute(JobExecutionContext context) throws JobExecutionException {
+				$box+snakecaseToCamelCase+firstUpperCase~Box box = ($box+snakecaseToCamelCase+firstUpperCase~Box) context.getMergedJobDataMap().get("box");
+				final Instant instant = Instant.now().truncatedTo(ChronoUnit.SECONDS);
+				timeouts.forEach((k, v) -> {
+					if (instant.equals(v)) {
+						$future+timeout...[$NL]
+					}
+				});
+			}
+		}
+	}
+end
+
+def trigger(register)
+	private void register$name+firstUpperCase($name+firstUpperCase~Schema schema) {
+		File file = $name+firstLowerCase~File($parameter+schemaParameter...[, ]);
+		register(schema, file);
+		write(schema, file);
+	}
+
+	private static void register($name+firstUpperCase~Schema schema, File file) {
+		$option+putOption...[$NL]
+		timeouts.put("$name+firstUpperCase#" + schema.timeout().id, schema.timeout().on());
+	}
+end
+
+def trigger(load)
+	$name+firstLowerCase~Files().forEach(file -> register(fromString(read(file), $name+firstUpperCase~Schema.class), file));
+end
+
+def trigger(route)
+	server.route(BaseUri + Abstract$name+firstUpperCase.URI.Path + ":id").post(manager -> execute$name+firstUpperCase(manager.fromPath("id")));
+end
+
+def trigger(ifOption)
+	if ("$name".equals(option)) schema.$name+firstLowerCase();
+end
+
+def trigger(putOption)
+	sources.put(schema.$name+firstLowerCase~().id, file);
+end
+
+def trigger(private)
+	private Collection<File> $name+firstLowerCase~Files() {
+		File directory = new File(root, "$name+camelCaseToSnakeCase/");
+		directory.mkdirs();
+		return FileUtils.listFiles(directory, new String$[]{"json"}, true);
+	}
+
+	private File $name+firstLowerCase~File($parameter+signature...[, ]) {
+		return new File(root, "$name+camelCaseToSnakeCase/" + $parameter+names...[ + "." + ] + ".json");
+	}
+
+	private $name+firstUpperCase $name+firstLowerCase(File file) {
+		final $name+firstUpperCase future = new $name+firstUpperCase(box);
+		future.schema(fromString(read(file), $name+firstUpperCase~Schema.class));
+		return future;
+	}
+end
+
+def trigger(execute)
+	public void execute$name+firstUpperCase(String id) {
+		final File file = sources.get(id);
+		if (file == null) return;
+		final $name+firstUpperCase schema = $name+firstLowerCase(file);
+		final String option = schema.uri().option(id);
+		if (option == null) return;
+		$option+ifOption...[$NL~else ]
+		schema.uri().ids().forEach(sources::remove);
+		file.delete();
+	}
+end
+
+def trigger(getter)
+	public List<$name+firstUpperCase> all$name+firstUpperCase($parameter+predicateSignature...[, ]) {
+		return $name+firstLowerCase~Files().stream()
+				.filter(f -> $parameter+test...[ && ])
+				.map(this::$name+firstLowerCase).collect(Collectors.toList());
+	}
+
+	public $name+firstUpperCase $name+firstLowerCase~($parameter+signature...[, ]) {
+		return $name+firstLowerCase($name+firstLowerCase~File($parameter+names...[, ]));
+	}
+end
+
+def trigger(removeMethod)
+	public boolean $name+firstLowerCase($parameter+signature...[, ]) {
+		final File file = $name+firstLowerCase~File($parameter+names...[, ]);
+		final $name+firstUpperCase $name+firstLowerCase = AgendaService.this.$name+firstLowerCase(file);
+		timeouts.remove("$name+firstUpperCase#" + $name+firstLowerCase.schema().timeout().id);
+		for (String key : new ArrayList<>(sources.keySet()))
+			if (sources.get(key).equals(file)) sources.remove(key);
+		if (file.exists()) return file.delete();
+		return false;
+	}
+end
+
+def trigger(createMethod)
+	public $name+firstUpperCase $name+firstLowerCase($parameter+signature...[, ]) {
+		return new $name+firstUpperCase($parameter+names...[, ]);
+	}
+end
+
+def trigger(timeout)
+	if (k.startsWith("$name+FirstUpperCase#")) box.agenda().execute$name+FirstUpperCase(k.split("#")$[1]);
+end
+
+def trigger(predicateSignature)
+	Predicate<$type> $name
+end
+
+def trigger(signature)
+	$type $name
+end
+
+def trigger(names)
+	$name
+end
+
+def trigger(test)
+	$name.test(f.getName().split("\\\\.")$[$index])
+end
+
+def trigger(schemaParameter)
+	schema.$name()
+end
+
+def trigger(fluid)
+	$name+firstLowerCase($name+firstLowerCase)
+end
+
+def trigger(optionCreate)
+	public $future+firstUpperCase $name+firstLowerCase($optionParameter+signature...[, ]) {
+		schema.$name+firstLowerCase(new $future+firstUpperCase~Schema.$name+firstUpperCase($optionParameter+names...[, ]));
+		return this;
+	}
+end
+
+def trigger(createClass)
+	public class $name+firstUpperCase {
+		private final $name+firstUpperCase~Schema schema;
+
+		public $name+firstUpperCase($parameter+signature...[, ]) {
+			schema = new $name+firstUpperCase~Schema()[.$parameter+fluid...[.]];
+		}
+
+		$option+optionCreate...[$NL]
+
+		public $name+firstUpperCase timeout(Instant timeout) {
+			schema.timeout(new $name+firstUpperCase~Schema.Timeout(timeout.truncatedTo(ChronoUnit.SECONDS)));
+			return this;
+		}
+
+		public void save() {
+			register$name+firstUpperCase~(schema);
+		}
+	}
+end
+
+def type(schemaImport)
+	import $package.schemas.*;
+end
+
+def type(archetype) trigger(customizeDirectory)
+	new $package.Archetype(box.configuration().home()).$path.root()
+end
+
+def trigger(customizeDirectory)
+	new java.io.File("$path")
+end

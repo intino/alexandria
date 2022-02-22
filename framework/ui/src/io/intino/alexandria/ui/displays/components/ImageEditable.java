@@ -1,15 +1,19 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.MimeTypes;
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.ui.File;
 import io.intino.alexandria.ui.displays.components.editable.Editable;
 import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
 import io.intino.alexandria.ui.displays.notifiers.ImageEditableNotifier;
 import io.intino.alexandria.ui.resources.Asset;
+import io.intino.alexandria.ui.spark.UIFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> extends AbstractImageEditable<DN, B> implements Editable<DN, B> {
 	private URL defaultValue;
@@ -35,6 +39,28 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
 		_readonly(readonly);
 		notifier.refreshReadonly(readonly);
 		return this;
+	}
+
+	public UIFile download() {
+    	return new UIFile() {
+			@Override
+			public String label() {
+				if (filename() != null) return URLEncoder.encode(filename(), StandardCharsets.UTF_8);
+				String path = value().getPath();
+				return path.contains("/") ? path.substring(path.lastIndexOf("/")+1) : path;
+			}
+
+			@Override
+			public InputStream content() {
+				try {
+					if (value() != null) return value().openStream();
+					else if (defaultValue != null) return defaultValue.openStream();
+					return new ByteArrayInputStream(new byte[0]);
+				} catch (IOException ignored) {
+					return new ByteArrayInputStream(new byte[0]);
+				}
+			}
+		};
 	}
 
 	@Override
@@ -64,4 +90,5 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
 		else if (defaultValue != null) result = Asset.toResource(baseAssetUrl(), defaultValue).toUrl().toString();
 		return result;
 	}
+
 }

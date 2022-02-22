@@ -7,6 +7,41 @@ import SelectorComboBoxRequester from "../../../gen/displays/requesters/Selector
 import Select, { components } from "react-select";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
+const SelectorComboBoxTextViewStyles = {
+    control: (provided, state) => ({
+        ...provided,
+        background: 'transparent',
+        border: '0',
+        height: '20px',
+        minHeight: '20px'
+    }),
+    valueContainer: (provided, state) => ({
+        ...provided,
+        height: '20px',
+        padding: '0 6px',
+        fontSize: '10pt',
+    }),
+    input: (provided, state) => ({
+        ...provided,
+        margin: '0px',
+    }),
+    indicatorSeparator: () => ({
+        display: 'none',
+    }),
+    indicatorsContainer: (provided, state) => ({
+        ...provided,
+        height: '20px',
+    }),
+};
+
+const SelectorComboBoxStyles = {
+    singleValue: (provided, state) => ({
+        ...provided,
+        color: '#333333',
+    }),
+    menu: provided => ({ ...provided, zIndex: 9999 }),
+};
+
 const styles = theme => ({
 	container : {
 		position: "relative",
@@ -49,27 +84,37 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		const label = this.props.label;
 		const value = this.selection(items);
 		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
+		const styles = this.props.view === "TextView" ? { ...SelectorComboBoxStyles, ...SelectorComboBoxTextViewStyles } : { ...SelectorComboBoxStyles };
 
 		return (
-			<div className={classes.container} style={this.style()}>
+			<div className={classes.container} style={{...this.style()}}>
                 {this.renderTraceConsent()}
-				{label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{label}</div> : undefined }
+				{label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{this.translate(label)}</div> : undefined }
 				<Select isMulti={multiple} isDisabled={this.state.readonly} isSearchable
 						closeMenuOnSelect={!multiple} autoFocus={this.props.focused}
 						placeholder={this.selectMessage()} options={items}
 						className="basic-multi-select" classNamePrefix="select"
 						components={{ Option: this.renderOption.bind(this)}}
 						menuPlacement="auto" maxMenuHeight={this.props.maxMenuHeight} value={value}
+						filterOption={this.handleFilter.bind(this)}
 						onChange={this.handleChange.bind(this)}
 						onMenuOpen={this.handleOpen.bind(this)}
-						noOptionsMessage={() => this.translate("No options")}/>
+						noOptionsMessage={() => this.translate("No options")}
+						styles={styles}
+						/>
 			</div>
 		);
 	};
 
 	items = () => {
 		var children = this.children();
-		return React.Children.map(children, (option, i) => { return { value: this._name(option), label: this._label(option), item: option }});
+		const result = React.Children.map(children, (option, i) => { return { value: this._name(option), label: this._label(option), item: option }});
+		const selection = this.state.selection;
+		for (let i=0; i<selection.length; i++) {
+		    if (this.option(result, selection[i]) == null)
+		        result.unshift({ value: selection[i], label: selection[i], item: selection[i], disabled: true });
+		}
+		return result;
 	};
 
 	renderOption = (options) => {
@@ -79,6 +124,16 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		return !isDisabled ? (
 			<components.Option {...props} className={classes.container}>{item}</components.Option>
 		) : null;
+	};
+
+	handleFilter = (candidate, condition) => {
+	    const split = condition.toLowerCase().split(" ");
+	    const label = candidate.label != null ? candidate.label.toLowerCase() : "";
+	    const value = candidate.value != null ? candidate.value.toLowerCase() : "";
+	    for (var i=0; i<split.length; i++) {
+	        if (label.indexOf(split[i]) == -1 && value.indexOf(split[i]) == -1) return false;
+	    }
+		return true;
 	};
 
 	handleChange = (selectedOptions) => {
@@ -104,7 +159,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 
 	_label = (option) => {
 		const label = option.props.label != null && option.props.label !== "" ? option.props.label : option.props.value;
-		return label != null ? label : this.translate("no label");
+		return this.translate(label != null ? label : "no label");
 	};
 
 	refreshSelection = (selection) => {
@@ -127,6 +182,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		}
 		return null;
 	};
+
 }
 
 export default withStyles(styles, { withTheme: true })(SelectorComboBox);

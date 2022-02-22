@@ -68,6 +68,7 @@ public class ListenerRenderer extends Renderer {
 
 	private void createCorrespondingAction(Sentinel sentinel) {
 		if (!alreadyRendered(src(), sentinel)) {
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(sentinel), javaFile(actionsPackage(src()), sentinel.name$() + "Action").getAbsolutePath()));
 			writeFrame(actionsPackage(src()), sentinel.name$() + "Action", actionTemplate().
 					render(new FrameBuilder("action")
 							.add("name", sentinel.name$())

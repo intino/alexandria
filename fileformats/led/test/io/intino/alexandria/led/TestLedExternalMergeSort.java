@@ -2,7 +2,6 @@ package io.intino.alexandria.led;
 
 import io.intino.alexandria.led.util.sorting.LedExternalMergeSort;
 import io.intino.alexandria.logger.Logger;
-import io.intino.test.schemas.TestSchema;
 import org.junit.*;
 
 import java.io.File;
@@ -39,88 +38,105 @@ public class TestLedExternalMergeSort {
     @Test
     public void testEmpty() {
         createLed(SRC, 0);
-        mergeSort();
+        mergeSort(0);
     }
 
     @Test
     public void testOne() {
         createLed(SRC, 1);
-        mergeSort();
+        mergeSort(1);
     }
 
     @Test
     public void testFew() {
-        createLed(SRC, 11);
-        mergeSort();
+        final int numTransactions = 11;
+        createLed(SRC, numTransactions);
+        mergeSort(numTransactions);
     }
 
     @Test
     public void testNormal() {
-        createLed(SRC, 2_501_017);
-        mergeSort();
+        final int numTransactions = 2_501_017;
+        createLed(SRC, numTransactions);
+        mergeSort(numTransactions);
     }
 
     @Ignore
     @Test
     public void testLarge() {
-        createLed(SRC, 10_486_926);
-        mergeSort();
+        final int numTransactions = 10_486_926;
+        createLed(SRC, numTransactions);
+        mergeSort(numTransactions);
     }
 
     @Ignore
     @Test
     public void testSuperLarge() {
-        createLed(SRC, 50_000_001);
-        mergeSort();
+        final int numTransactions = 50_000_001;
+        createLed(SRC, numTransactions);
+        mergeSort(numTransactions);
     }
 
     @Ignore
     @Test
     public void testMegaLarge() {
-        createLed(SRC, 100_000_001);
-        mergeSort();
+        final int numTransactions = 100_000_001;
+        createLed(SRC, numTransactions);
+        mergeSort(numTransactions);
     }
 
-    private void mergeSort() {
-        System.out.println(">> Testing " + SRC + "(" +
-                SRC.length() / 1024.0 / 1024.0 + " MB)...");
+    private void mergeSort(int numTransactions) {
+        System.out.println(">> Testing " + SRC + "(" + SRC.length() / 1024.0 / 1024.0 + " MB)...");
         LedHeader sourceHeader = LedHeader.from(SRC);
-        new LedExternalMergeSort(SRC, DST)
-                .numTransactionsInMemory(NUM_SCHEMAS_IN_MEMORY)
-                .checkChunkSorting(true)
-                .sort();
+
+        doSort();
+
         System.out.println("	>> Validating result led...");
         LedHeader destHeader = LedHeader.from(DST);
-        assertEquals("Sorting did not maintain of information: " + sourceHeader.elementCount() + " != " + destHeader.elementCount(),
-                sourceHeader.elementCount(), destHeader.elementCount());
+        assertEquals("Sorting did not maintain information: " + sourceHeader.elementCount() + " != " + destHeader.elementCount(),
+                sourceHeader.elementCount(),
+                destHeader.elementCount());
 
-        System.out.println(">> Checking sorting...");
+        checkData(numTransactions);
+    }
 
-        try(LedStream<TestSchema> ledStream = new LedReader(DST).read(TestSchema.class)) {
+    private void checkData(int numTransactions) {
+        System.out.println(">> Checking data...");
 
-            long lastId = Long.MIN_VALUE;
+        try(LedStream<Item> ledStream = new LedReader(DST).read(Item.class)) {
 
-            int count = 0;
+            long index = 0;
             while(ledStream.hasNext()) {
-                long id = ledStream.next().id();
-                assertTrue((count) + " => Not sorted: " + id  + " < " + lastId, id >= lastId);
-                lastId = id;
-                ++count;
+                Item item = ledStream.next();
+                assertEquals(index, item.id());
+                assertEquals((int)index, item.a());
+                assertEquals((float)index, item.b(), 0.001f);
+                assertEquals((short)index, item.c());
+                assertEquals((short)index, item.d());
+                ++index;
             }
 
         } catch (Exception e) {
             Logger.error(e);
         }
+        System.out.println(">> Data validation OK");
+    }
+
+    private void doSort() {
+        new LedExternalMergeSort(SRC, DST)
+                .numTransactionsInMemory(NUM_SCHEMAS_IN_MEMORY)
+                .checkChunkSorting(true)
+                .sort();
     }
 
     private void createLed(File file, int numTransactions) {
-        System.out.println("Creating unsorted led of " + numTransactions + ", each schema of " + TestSchema.SIZE + " bytes...");
-        LedStream.Builder<TestSchema> builder = new UnsortedLedStreamBuilder<>(TestSchema.class, file);
+        System.out.println("Creating unsorted led of " + numTransactions + ", each schema of " + Item.SIZE + " bytes...");
+        LedStream.Builder<Item> builder = new UnsortedLedStreamBuilder<>(Item.class, file);
         Random random = new Random();
         double start = System.currentTimeMillis();
-        for(int i = 0;i < numTransactions;i++) {
-            final long id = random.nextInt(100000000);
-            builder.append(t -> t.id(id));
+        for(int i = numTransactions - 1;i >= 0;i--) {
+            final long id = i;
+            builder.append(t -> t.id(id).a((int)id).b((float)id).c((short)id).d((short)id));
             if(i % 1_000_000 == 0) {
                 double time = (System.currentTimeMillis() - start) / 1000.0;
                 System.out.println(">> Created " + i + " elements (" + time + " seconds)");

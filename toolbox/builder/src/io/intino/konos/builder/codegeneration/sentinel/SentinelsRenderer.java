@@ -9,6 +9,7 @@ import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.WebHookActionRenderer;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Sentinel;
@@ -29,7 +30,7 @@ public class SentinelsRenderer extends Renderer {
 	}
 
 	@Override
-	public void render() {
+	public void render() throws KonosException {
 		if (sentinels.isEmpty()) return;
 		FrameBuilder builder = new FrameBuilder("Sentinels")
 				.add("package", packageName())
@@ -38,16 +39,15 @@ public class SentinelsRenderer extends Renderer {
 		if (sentinels.stream().anyMatch(Sentinel::isWebHook)) builder.add("hasWebhook", ",");
 		Commons.writeFrame(gen(), "Sentinels", template().render(
 				builder.toFrame()));
-
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(sentinels.get(0)), javaFile(gen(), "Sentinels").getAbsolutePath()));
 	}
 
-	private Frame[] processSentinels() {
+	private Frame[] processSentinels() throws KonosException {
 		List<Frame> list = new ArrayList<>();
 		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.SystemListener.class)).map(t -> t.a$(Sentinel.SystemListener.class)).map(this::processSentinel).collect(toList()));
 		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.FileListener.class)).map(t -> t.a$(Sentinel.FileListener.class)).map(this::processFileListenerSentinel).collect(toList()));
 		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.WebHook.class)).map(t -> t.a$(Sentinel.WebHook.class)).map(this::processWebHookSentinel).collect(toList()));
-		sentinels.stream().filter(t -> t.i$(Sentinel.WebHook.class)).forEach(s -> new WebHookActionRenderer(context, s.asWebHook()).execute());
+		for (Sentinel t : sentinels) if (t.i$(Sentinel.WebHook.class)) new WebHookActionRenderer(context, t.asWebHook()).execute();
 		return list.toArray(new Frame[0]);
 	}
 

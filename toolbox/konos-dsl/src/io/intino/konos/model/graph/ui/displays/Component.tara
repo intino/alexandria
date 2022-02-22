@@ -125,8 +125,9 @@ Concept InteractionComponents
 			sub OpenSite > var string site
 			sub OpenBlock > var Block.Conditional block
 			sub OpenDialog > var OtherComponents.AbstractDialog dialog
+			sub OpenLayer > var word:{Slide Grow Zoom Fade} transition = Slide
 			sub CloseDialog > var OtherComponents.AbstractDialog dialog
-			sub OpenPopover > var Block.Popover popover
+			sub OpenPopover > var Block.Popover popover; var word:{MouseClick MouseOver} triggerEvent = MouseClick
 			sub SelectPreviousItem > var CatalogComponents.Collection collection
 			sub SelectNextItem > var CatalogComponents.Collection collection
 			sub Export
@@ -176,6 +177,7 @@ Concept:{0..1} VisualizationComponents
 
 	Concept Spinner extends Component
 		var word:{Bar Circle Hash Ring Rise} mode = Rise
+		var integer:{px} size = 0px
 
 	Concept Stepper extends Component
 		var word:{Horizontal Vertical} orientation = Horizontal
@@ -189,6 +191,7 @@ Concept:{0..1} VisualizationComponents
 	Concept AbstractSlider extends Component
 		var word:{Vertical Horizontal} arrangement = Horizontal
 		var word:{Full ToolbarOnly SliderOnly NavigationOnly OrdinalSelectorOnly} style = Full
+		var word:{SliderTop SliderBottom} position = SliderTop
 		var integer value = -1
 		Concept:{0..1} Animation
 			var integer:{Millis} interval
@@ -247,6 +250,7 @@ Facet Multiple
 	var boolean wrapItems = true
 	var word:{Vertical Horizontal} arrangement = Vertical
 	var word:Spacing spacing = None
+	var boolean collapsed = false
 	Concept:{0..1} Count
 		var integer min = 0
 		var integer max = -1

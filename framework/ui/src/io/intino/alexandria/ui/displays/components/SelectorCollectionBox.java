@@ -129,11 +129,7 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
         collection.reload();
     }
 
-    protected void reloadComponents() {
-        List<Component> components = new ArrayList<>(this.components().size() > 0 ? this.components() : Collections.emptyList());
-        clear();
-        this.components(new ArrayList<>());
-        components.forEach(this::add);
+    protected void reloadComponents() { // Override base selector behavior
     }
 
     private void updateSelection(SelectionEvent event) {

@@ -9,6 +9,7 @@ Component baseNumber
 	Notification refreshExpanded as Bool
 	Notification refreshPrefix as Text
 	Notification refreshSuffix as Text
+	Notification refreshStyle as Text
 
 Component number as ExtensionOf(baseNumber)
 Component numberEditable as ExtensionOf(baseNumber)
@@ -58,6 +59,7 @@ Component imageAvatar as ExtensionOf(baseImage)
 Component imageEditable as ExtensionOf(baseImage)
 	Notification refreshReadonly as Bool
 	Request notifyChange as File
+	Request(responseType=Asset) download
 
 Component baseLocation
 	Notification setup as Object(LocationSetup)

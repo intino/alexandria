@@ -13,7 +13,7 @@ end
 
 def trigger(url)
 	{
-	  "url": "./data/$value.json",
-	  "name": "$value"
+	  "url": "./data/$this.json",
+	  "name": "$this"
 	}
 end

@@ -1,22 +1,16 @@
 package io.intino.konos.builder.codegeneration.analytic;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
-import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.facts.FactRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Axis;
 import io.intino.konos.model.graph.Cube;
 import io.intino.konos.model.graph.KonosGraph;
 
-import java.io.*;
-import java.util.*;
-
-import static io.intino.konos.builder.codegeneration.Formatters.customize;
-import static io.intino.konos.builder.helpers.Commons.*;
+import java.io.File;
+import java.util.List;
 
 public class AnalyticRenderer extends Renderer {
 
@@ -48,9 +42,9 @@ public class AnalyticRenderer extends Renderer {
 
 	private void renderAxes(List<Axis> axes) {
 		if (axes.isEmpty()) return;
-		AxisInterfaceRenderer.render(gen, context);
 		axes.stream().filter(Axis::isCategorical).map(Axis::asCategorical).forEach(categoricalAxisRenderer::render);
 		axes.stream().filter(Axis::isContinuous).map(Axis::asContinuous).forEach(continuousAxisRenderer::render);
+		AxisInterfaceRenderer.render(gen, context, axes);
 	}
 
 	private void renderCubes(List<Cube> cubeList) {

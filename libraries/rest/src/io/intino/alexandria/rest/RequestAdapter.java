@@ -1,5 +1,6 @@
 package io.intino.alexandria.rest;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 
@@ -17,23 +18,33 @@ import static java.time.LocalDateTime.ofInstant;
 
 public class RequestAdapter {
 
-	public static <T> T adapt(String object, Class<T> type) {
-		T result = adaptPrimitive(object, type);
-		return result != null ? result : adaptFromJSON(object, type);
+	private static final JsonDeserializer<Instant> instantJsonDeserializer;
+	private static final JsonDeserializer<Date> dateJsonDeserializer;
+
+	static {
+		instantJsonDeserializer = (json, type1, jsonDeserializationContext) -> Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong());
+		dateJsonDeserializer = (json, type1, jsonDeserializationContext) -> new Date(json.getAsJsonPrimitive().getAsLong());
 	}
 
-	public static <T> T adaptFromJSON(String object, Class<T> type) {
-		final GsonBuilder builder = new GsonBuilder();
-		builder.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, type1, jsonDeserializationContext) -> Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong())).
-				registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, type1, jsonDeserializationContext) -> new Date(json.getAsJsonPrimitive().getAsLong()));
-		return object == null || object.isEmpty() ? null : builder.create().fromJson(decode(object), type);
+	public static <T> T adapt(String object, Class<T> type) {
+		if (object == null) return null;
+		T result = adaptPrimitive(object, type);
+		return result != null ? result : adaptFromJson(object, type);
+	}
+
+	public static <T> T adaptFromJson(String object, Class<T> type) {
+		return object == null || object.isEmpty() ? null : gson().fromJson(decode(object), type);
 	}
 
 	public static <T> T adapt(String object, Type type) {
-		final GsonBuilder builder = new GsonBuilder();
-		builder.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, type1, jsonDeserializationContext) -> Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong())).
-				registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, type1, jsonDeserializationContext) -> new Date(json.getAsJsonPrimitive().getAsLong()));
-		return object == null || object.isEmpty() ? null : builder.create().fromJson(decode(object), type);
+		return object == null || object.isEmpty() ? null : gson().fromJson(decode(object), type);
+	}
+
+	private static Gson gson() {
+		return new GsonBuilder()
+				.registerTypeAdapter(Instant.class, instantJsonDeserializer)
+				.registerTypeAdapter(Date.class, dateJsonDeserializer)
+				.create();
 	}
 
 	private static String decode(String object) {

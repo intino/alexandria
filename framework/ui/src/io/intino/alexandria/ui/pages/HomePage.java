@@ -1,6 +1,9 @@
 package io.intino.alexandria.ui.pages;
 
-import io.intino.alexandria.ui.displays.templates.HomeTemplate;
+import io.intino.alexandria.exceptions.*;
+import java.time.*;
+import java.util.*;
+import io.intino.alexandria.ui.displays.templates.*;
 
 public class HomePage extends AbstractHomePage {
 
@@ -8,7 +11,7 @@ public class HomePage extends AbstractHomePage {
 	    return new io.intino.alexandria.ui.Soul(session) {
 			@Override
 			public void personify() {
-				HomeTemplate component = new HomeTemplate(box);
+				DocsTemplate component = new DocsTemplate(box);
 				register(component);
 				component.init();
 			}

@@ -1,12 +1,20 @@
 def type(cube & src)
 	package $package.analytic.cubes;
 
-	import $package.analytic.axes.*;
-	import $package.analytic.Axis;
+    import io.intino.alexandria.Timetag;
+    import io.intino.alexandria.led.buffers.store.ByteStore;
+
+    import $package.analytic.Axis;
+    import $package.analytic.axes.*;
+
+    import java.io.File;
+    import java.util.*;
+    import java.util.stream.Collectors;
+    import java.util.function.Predicate;
 
 	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
 
-		public $name+FirstUpperCase(java.util.List<Loader> loaders) {
+		public $name+FirstUpperCase(List<Loader> loaders) {
 			super(loaders);
 		}
 
@@ -20,11 +28,22 @@ def type(cube & src)
 
 		[$customIndicator+staticMethod...[$NL$NL]]
 
+		@Override
+        public $name+FirstUpperCase execute() {
+            super.execute();
+            return this;
+        }
+
 		public static long idOf($mainCube+idOf) {
 			return $mainCube.id(); //TODO
 		}
 
 		public static class Loader extends Abstract$name+FirstUpperCase.Loader {
+
+		    public static List<Loader> create(File root, Timetag from, Timetag to, Collection<String> divisions) {
+                return divisions.stream().map(d -> new Loader(new Loader.Datasource(root, from, to), d)).collect(Collectors.toList());
+            }
+
 
 			public Loader(Datasource datasource[, $split+parameter]) {
 				super(datasource[, $split+name]);
@@ -32,6 +51,15 @@ def type(cube & src)
 
 			// TODO write here a cache if necessary
 		}
+
+		public static class Aggregation extends Abstract$name+FirstUpperCase.AbstractAggregation {
+
+            public Aggregation(Timetag timetag, List<Axis.Component> components, Map<Axis, Predicate<Fact>> filters) {
+                super(timetag, components, filters);
+            }
+
+		    [$customIndicator+implementation...[$NL$NL]]
+        }
 	}
 end
 def trigger(idOf)
@@ -48,12 +76,14 @@ def type(cube)
     import io.intino.alexandria.led.buffers.store.ByteStore;
     import io.intino.alexandria.led.util.iterators.MergedIterator;
     import io.intino.alexandria.led.util.iterators.StatefulIterator;
+    import io.intino.alexandria.led.util.collections.SparseLongList;
 
     import $package.analytic.axes.*;
     import $package.analytic.Axis;
 
 	import java.io.File;
     import java.util.*;
+    import java.util.stream.Collectors;
     import java.util.function.Function;
     import java.util.function.Predicate;
     import java.util.stream.Stream;
@@ -61,8 +91,9 @@ def type(cube)
 
     import static java.util.Comparator.comparingLong;
     import static java.util.Spliterators.spliteratorUnknownSize;
+    import $package.analytic.cubes.$name+FirstUpperCase.Aggregation;
 
-    public abstract class Abstract$name+FirstUpperCase implements Iterable<Abstract$name+FirstUpperCase.Aggregation> {
+    public abstract class Abstract$name+FirstUpperCase implements Iterable<$name+FirstUpperCase.Aggregation> {
 
 		public static final Fact NULL_FACT = new NullFact();
 
@@ -70,7 +101,8 @@ def type(cube)
 		private Predicate<Fact> filter = fact -> true;
 		private final List<Axis> axes = new ArrayList<>();
 		private final Map<Axis, Set<Axis.Component>> components = new HashMap<>();
-		private final List<Function<Fact, Axis.Component>> groupByList = new ArrayList<>();
+		private final List<Function<Fact, ? extends Axis.Component>> groupByList = new ArrayList<>();
+		private final Map<Axis, Predicate<Fact>> filters = new LinkedHashMap<>();
 		private Aggregation$[] result;
 
     	public Abstract$name+FirstUpperCase(List<? extends Loader> loaders) {
@@ -79,7 +111,26 @@ def type(cube)
 
     	[$dimension+method...[$NL$NL]]
 
+        [$customDimension+method...[$NL$NL]]
+
     	[$customFilter+method...[$NL$NL]]
+
+    	public Abstract$name+FirstUpperCase groupBy(Axis axis) {
+            if(axis == null) throw new NullPointerException("Axis cannot be null");
+            switch(axis.getTitle()) {
+                [$dimension+switchCaseGroupBy...[$NL]]
+            }
+            return this;
+        }
+
+        @SuppressWarnings("unchecked")
+        public Abstract$name+FirstUpperCase filter(Axis axis, Set<? extends Axis.Component> components) {
+            if(axis == null) throw new NullPointerException("Axis cannot be null");
+            switch(axis.getTitle()) {
+                [$dimension+switchCaseFilterBy...[$NL]]
+            }
+            return this;
+        }
 
 		public Abstract$name+firstUpperCase execute() {
 			result = new Aggregation$[resultsSize()];
@@ -90,11 +141,25 @@ def type(cube)
 			return this;
 		}
 
+		public Aggregation$[] result() {
+            if(result == null) return new Aggregation$[0];
+            return Arrays.stream(result).filter(java.util.Objects::nonNull).toArray(Aggregation$[]::new);
+        }
+
 	    @Override
         public Iterator<Aggregation> iterator() {
             return result == null
                 ? Stream.<Aggregation>empty().iterator()
                 : Arrays.stream(result).filter(java.util.Objects::nonNull).iterator();
+        }
+
+        public static List<Axis> dimensions() {
+            return List.of([$dimension+getInstance...[, ]]);
+        }
+
+        public boolean contains(Axis axis, Axis.Component component) {
+            if(!components.containsKey(axis)) return false;
+            return components.get(axis).contains(component);
         }
 
     	public Iterator<Fact> detail() {
@@ -103,11 +168,13 @@ def type(cube)
 		}
 
 		public Aggregation aggregation(List<Axis.Component> components) {
+	        if(result == null || result.length == 0) return null;
 		    final int index = indexOf(components);
 			return result$[index];
 		}
 
 	    public Aggregation aggregation(Axis.Component... components) {
+	        if(result == null || result.length == 0) return null;
             final int index = indexOf(components);
         	return result$[index];
         }
@@ -115,8 +182,9 @@ def type(cube)
 		private void fillCategories() {
 			for (Aggregation aggregation : result) {
 				if (aggregation == null) continue;
-				for (int i = 0; i < aggregation.components.length; i++)
-					components.get(axes.get(i)).add(aggregation.components$[i]);
+				List<Axis.Component> components = aggregation.components();
+				for (int i = 0; i < components.size(); i++)
+					this.components.get(axes.get(i)).add(components.get(i));
 			}
 		}
 
@@ -147,7 +215,7 @@ def type(cube)
 				if (!check(fact)) continue;
 				Axis.Component$[] components = componentsOf(fact);
 				int index = indexOf(components);
-				if (result$[index] == null) result$[index] = new Aggregation(components);
+				if (result$[index] == null) result$[index] = new Aggregation(fact.timetag(), Arrays.asList(components), filters);
 				result$[index].append(fact);
 			}
 			return result;
@@ -221,6 +289,8 @@ def type(cube)
 
 			[$column+factGetter...[$NL$NL]]
 
+			[$virtualColumn+factGetter...[$NL$NL]]
+
 			void setCube(Abstract$name+firstUpperCase cube) {
 			    this.cube = cube;
 			}
@@ -264,45 +334,125 @@ def type(cube)
 			}
 		}
 
-		public static class Aggregation {
+		public enum Indicator {
 
-			private final Axis.Component$[] components;
-			private long aggregationCount = 0;
+		    Total("Total", "", Mode.Sum, false),
+		    Distinct("Distinct", "", Mode.Sum, false),
+		    [$indicator+enum...[,$NL]]
+		    [,$customIndicator+enum...[,$NL]];
+
+
+		    public static Indicator byName(String name) {
+		        return Arrays.stream(values()).filter(i -> i.name().equalsIgnoreCase(name)).findFirst().orElse(null);
+		    }
+
+		    public final String title;
+		    public final String unit;
+		    public final Mode mode;
+		    private final boolean virtual;
+
+		    Indicator(String title, String unit, Mode mode, boolean virtual) {
+		        this.title = title;
+		        this.unit = unit;
+		        this.mode = mode;
+		        this.virtual = virtual;
+		    }
+
+		    public enum Mode {
+		        Sum, Average
+		    }
+		}
+
+		public static abstract class AbstractAggregation {
+
+		    private static final long Long_NaN = Long.MIN_VALUE;
+
+            private final Timetag timetag;
+			private final List<Axis.Component> components;
+			private final Map<Axis, Predicate<Fact>> filters;
+			private long aggregationTotal = 0L;
+			private long aggregationDistinct = 0L;
+			private long lastID = Long.MIN_VALUE;
 			[$index+field]
 			[$indicator+field...[$NL]]
+			[$customIndicator+field...[$NL]]
 			private long total$name+FirstUpperCase;
 
-			public Aggregation(Axis.Component$[] components) {
+			public AbstractAggregation(Timetag timetag, List<Axis.Component> components, Map<Axis, Predicate<Fact>> filters) {
+				this.timetag = timetag;
 				this.components = components;
+				this.filters = filters;
 			}
 
 			public void append(Fact fact) {
 				[$indicator+sum...[$NL]]
-				[$index+append]
-				aggregationCount++;
+				if(lastID != fact.id()) {
+				    [$index+append]
+				    ++aggregationDistinct;
+				    lastID = fact.id();
+				}
+				++aggregationTotal;
 			}
 
-			public void append(Aggregation aggregation) {
+			public void append(AbstractAggregation aggregation) {
 				[$indicator+sumAggregation...[$NL]]
+				[$customIndicator+sumAggregation...[$NL]]
 				[$index+append2]
+				aggregationDistinct = Math.max(aggregationDistinct, aggregation.aggregationDistinct);
+				aggregationTotal += aggregation.aggregationTotal();
 			}
 
 			public Aggregation append(long ids) {
 				this.total$name+FirstUpperCase += ids;
-				return this;
+				return (Aggregation) this;
+			}
+
+			public long aggregationTotal() {
+			    return aggregationTotal;
+			}
+
+			public long aggregationDistinct() {
+			    return aggregationDistinct;
 			}
 
 			public long total$name+FirstUpperCase() {
 				return total$name+FirstUpperCase;
 			}
 
-			$index+getter
+			[$index+getter]
 
-			public Axis.Component$[] components() {
+			public Timetag timetag() {
+                return timetag;
+            }
+
+			public List<Axis.Component> components() {
 				return components;
 			}
 
 			[$indicator+getter...[$NL$NL]]
+
+			[$customIndicator+getter...[$NL$NL]]
+
+			public Number indicator(Indicator indicator) {
+                switch(indicator) {
+                    [$indicator+switchCase...[$NL]]
+                    [$customIndicator+switchCase...[$NL]]
+                    case Total: return aggregationTotal;
+                    case Distinct: return aggregationDistinct;
+                }
+                return 0L;
+            }
+
+            @Override
+            public String toString() {
+                return "$name+FirstUpperCase.Aggregation{"
+                    + "total=" + aggregationTotal
+                    + ", distincts=" + aggregationDistinct
+                    [$index+toString...[$NL]]
+                    [$indicator+toString...[$NL]]
+                    [$customIndicator+toString...[$NL]]
+                    + "}";
+            }
 		}
 
     	public static class Loader implements Iterable<Fact> {
@@ -323,18 +473,19 @@ def type(cube)
 
 			@Override
 			public Iterator<Fact> iterator() {
+			    if(!ids.hasNext()) return Stream.<Fact>empty().iterator();
 				StatefulIterator<$mainCube+FirstUpperCase.Fact> facts = StatefulIterator.of(new $mainCube+FirstUpperCase.Loader(new $mainCube+FirstUpperCase.Loader.Datasource(this.datasource.root, this.datasource.from, this.datasource.to)[, $split+name]).iterator());
-				process(ids.current());
 				ids.next();
+				process(ids.current());
 				return StreamSupport.stream(Spliterators.spliteratorUnknownSize(facts, Spliterator.SORTED), false)
 						.map(f -> {
-							long id = $name+FirstUpperCase.idOf(facts.current());
-							while (ids.current() != null && ids.current().id() < id) {
+							final long mainID = $name+FirstUpperCase.idOf(facts.current());
+							while (ids.current() != null && ids.current().id() < mainID) {
 								ids.next();
 								process(ids.current());
 							}
 							if (!facts.hasNext()) end();
-							return new Fact(f, ids.current() != null && ids.current().id() == id ?
+							return new Fact(f, ids.current() != null && ids.current().id() == mainID ?
 									ids.current() : Abstract$joinCube+FirstUpperCase.NULL_FACT);
 						})
 						.iterator();
@@ -345,6 +496,10 @@ def type(cube)
 					ids.next();
 					process(ids.current());
 				}
+			}
+
+			public Timetag from() {
+			    return datasource.from;
 			}
 
 			private int totalsSize() {
@@ -380,15 +535,17 @@ def type(cube)
 				return totals$[indexOf(categories.toArray(new Axis.Component$[0]))];
 			}
 
-			private void filter(Predicate<$joinCube+FirstUpperCase.Fact> filter) {
-				if (filter == null) return;
+			public Loader filter(Predicate<$joinCube+FirstUpperCase.Fact> filter) {
+				if (filter == null) return this;
 				filters.add(filter);
+				return this;
 			}
 
-			private void by(Axis axis, Function<$joinCube+FirstUpperCase.Fact, Axis.Component> dimension) {
+			public Loader groupBy(Axis axis, Function<$joinCube+FirstUpperCase.Fact, Axis.Component> dimension) {
+				if (dimension == null) return this;
 				axes.add(axis);
-				if (dimension == null) return;
 				groupsBy.add(dimension);
+				return this;
 			}
 
 			public List<Axis> axes() {
@@ -396,7 +553,8 @@ def type(cube)
 			}
 
 			public long$[] totals() {
-				return totals;
+				if(totals == null) totals = new long$[totalsSize()];
+            	return totals;
 			}
 
 			public static class Datasource {
@@ -423,35 +581,28 @@ def type(cube)
     }
 end
 
-
-def type(index & total) trigger(field)
-	private long aggregationTotal = 0;
-	private long last = 0;
+def type(indicator) trigger(enum)
+    $fieldName+CamelCase+FirstUpperCase~("$label", "$unit", Mode.$mode, false)
 end
 
-def type(index & total) trigger(append)
-	if (last != fact.id()) {
-		aggregationTotal++;
-		last = fact.id();
-	}
+def type(customIndicator) trigger(enum)
+    $fieldName+CamelCase+FirstUpperCase~("$label", "$unit", Mode.$mode, true)
 end
 
-def type(index & total) trigger(append2)
-	aggregationTotal += aggregation.aggregationTotal;
+def type(indicator) trigger(switchCase)
+    case $fieldName+CamelCase+FirstUpperCase: return $name+snakeCaseToCamelCase+FirstLowerCase;
 end
 
-def type(index & total) trigger(getter)
-	public long aggregationTotal() {
-		return aggregationTotal;
-	}
+def type(customIndicator) trigger(switchCase)
+    case $fieldName+CamelCase+FirstUpperCase: return $name+snakeCaseToCamelCase+FirstLowerCase;
 end
 
 def type(index) trigger(field)
-	private final List<Long> ids = new java.util.ArrayList<>();
+	private final SparseLongList ids = new SparseLongList();
 end
 
 def type(index) trigger(append)
-	if (ids.isEmpty() || ids.get(ids.size() - 1) != fact.id()) ids.add(fact.id());
+	ids.add(fact.id());
 end
 
 def type(index) trigger(append2)
@@ -460,7 +611,7 @@ end
 
 def type(index) trigger(getter)
 	public List<Long> ids() {
-		return ids;
+		return ids.asList();
 	}
 end
 
@@ -489,72 +640,148 @@ def trigger(nbits)
 end
 
 def type(customFilter) trigger(method)
-	public Abstract$cube+firstUpperCase filter$name+firstUpperCase() {
-		filter = filter.and(v -> $cube+firstUpperCase.$name+firstLowerCase~Filter(v));
+	public Abstract$cube+firstUpperCase filter$name+snakeCaseToCamelCase+firstUpperCase() {
+		filter = filter.and($cube+snakeCaseToCamelCase+firstUpperCase::$name+snakeCaseToCamelCase+firstLowerCase~Filter);
 		return this;
 	}
 end
 
 def type(customFilter) trigger(staticMethod)
-	public static boolean $name+firstLowerCase~Filter(Fact fact) {
+	public static boolean $name+snakeCaseToCamelCase+firstLowerCase~Filter(Fact fact) {
 		return true;
 	}
 end
 
-def type(dimension) trigger(staticMethod)
-	public static Predicate<Fact> $name+firstLowerCase~Predicate(Set<$name+FirstUpperCase.Component> $name+firstLowerCase) {
-		return v -> false; //TODO
-	}
+def type(dimension) trigger(switchCaseGroupBy)
+    case $axis+snakeCaseToCamelCase+firstUpperCase.TITLE: return groupBy$name+snakeCaseToCamelCase+firstUpperCase();
+end
 
-	public static Function<Fact, Axis.Component> $name+firstLowerCase~Function() {
-		return v -> null; //TODO
+def type(dimension & categorical) trigger(switchCaseFilter)
+    case $axis+snakeCaseToCamelCase+firstUpperCase.TITLE: return filter$name+snakeCaseToCamelCase+firstUpperCase((Set<$axis+snakeCaseToCamelCase+firstUpperCase.Component>) components);
+end
+
+def type(dimension & continuous) trigger(switchCaseFilter)
+    case $axis+snakeCaseToCamelCase+firstUpperCase.TITLE: return filter$name+snakeCaseToCamelCase+firstUpperCase((Set<$axis+snakeCaseToCamelCase+firstUpperCase.Range>) components);
+end
+
+def type(customDimension & categorical) trigger(staticMethod)
+	public static $axis+snakeCaseToCamelCase+firstUpperCase.Component $name+snakeCaseToCamelCase+firstLowerCase~Function(Fact fact) {
+	    // TODO
+		return $axis+snakeCaseToCamelCase+firstUpperCase.NA;
+	}
+end
+
+def type(customDimension & continuous) trigger(staticMethod)
+	public static $axis+snakeCaseToCamelCase+firstUpperCase.Range $name+snakeCaseToCamelCase+firstLowerCase~Function(Fact fact) {
+	    // TODO
+		return $axis+snakeCaseToCamelCase+firstUpperCase.component(0);
 	}
 end
 
 def type(dimension & categorical) trigger(method)
-	public Abstract$cube+firstUpperCase filter$name+firstUpperCase(Set<$axis+snakeCaseToCamelCase+firstUpperCase.Component> $axis+snakeCaseToCamelCase+firstLowerCase) {
-		filter = filter.and(v -> $name+firstLowerCase~Filter(v, $axis+snakeCaseToCamelCase+firstLowerCase));
+	public Abstract$cube+firstUpperCase filter$name+snakeCaseToCamelCase+firstUpperCase(Set<$axis+snakeCaseToCamelCase+firstUpperCase.Component> $axis+snakeCaseToCamelCase+firstLowerCase) {
+		if(filters.containsKey($axis+snakeCaseToCamelCase+firstUpperCase.get())) return this;
+		Predicate<Fact> f = v -> $name+snakeCaseToCamelCase+firstLowerCase~Filter(v, $axis+snakeCaseToCamelCase+firstLowerCase);
+		filters.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), f);
+		filter = filter.and(f);
 		return this;
 	}
 
-	public Abstract$cube+FirstUpperCase groupBy$name+firstUpperCase() {
+	public Abstract$cube+FirstUpperCase groupBy$name+snakeCaseToCamelCase+firstUpperCase() {
 		axes.add($axis+snakeCaseToCamelCase+firstUpperCase.get());
 		components.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), new HashSet<>());
-		groupByList.add(v -> $name+firstLowerCase~Function(v));
+		groupByList.add(v -> $name+snakeCaseToCamelCase+firstLowerCase~Function(v));
 		return this;
 	}
 
-	public static boolean $name+firstLowerCase~Filter(Fact fact, Set<$axis+snakeCaseToCamelCase+firstUpperCase.Component> $axis+snakeCaseToCamelCase+firstLowerCase) {
-		return $axis+snakeCaseToCamelCase+firstLowerCase.contains($name+firstLowerCase~Function(fact));
+	public static boolean $name+snakeCaseToCamelCase+firstLowerCase~Filter(Fact fact, Set<$axis+snakeCaseToCamelCase+firstUpperCase.Component> $axis+snakeCaseToCamelCase+firstLowerCase) {
+		return $axis+snakeCaseToCamelCase+firstLowerCase.contains($name+snakeCaseToCamelCase+firstLowerCase~Function(fact));
 	}
 
-	public static Axis.Component $name+firstLowerCase~Function(Fact fact) {
-		return fact.$source+snakeCaseToCamelCase+firstLowerCase()[.$child+snakeCaseToCamelCase+firstLowerCase];
+	public static $axis+snakeCaseToCamelCase+firstUpperCase.Component $name+snakeCaseToCamelCase+firstLowerCase~Function(Fact fact) {
+		return fact.$source+snakeCaseToCamelCase+firstLowerCase()[.$child+snakeCaseToCamelCase+firstLowerCase()];
+	}
+end
+
+def type(customDimension & categorical) trigger(method)
+	public Abstract$cube+firstUpperCase filter$name+snakeCaseToCamelCase+firstUpperCase(Set<$axis+snakeCaseToCamelCase+firstUpperCase.Component> $axis+snakeCaseToCamelCase+firstLowerCase) {
+		if(filters.containsKey($axis+snakeCaseToCamelCase+firstUpperCase.get())) return this;
+		Predicate<Fact> f = v -> $name+snakeCaseToCamelCase+firstLowerCase~Filter(v, $axis+snakeCaseToCamelCase+firstLowerCase);
+		filters.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), f);
+		filter = filter.and(f);
+		return this;
+	}
+
+	public Abstract$cube+FirstUpperCase groupBy$name+snakeCaseToCamelCase+firstUpperCase() {
+		axes.add($axis+snakeCaseToCamelCase+firstUpperCase.get());
+		components.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), new HashSet<>());
+		groupByList.add(v -> $cube+firstUpperCase.$name+snakeCaseToCamelCase+firstLowerCase~Function(v));
+		return this;
+	}
+
+	public static boolean $name+snakeCaseToCamelCase+firstLowerCase~Filter(Fact fact, Set<$axis+snakeCaseToCamelCase+firstUpperCase.Component> $axis+snakeCaseToCamelCase+firstLowerCase) {
+		return $axis+snakeCaseToCamelCase+firstLowerCase.contains($cube+firstUpperCase.$name+snakeCaseToCamelCase+firstLowerCase~Function(fact));
 	}
 end
 
 def type(dimension & continuous) trigger(method)
-	public Abstract$cube+firstUpperCase filter$name+firstUpperCase(Set<$axis+snakeCaseToCamelCase+firstUpperCase.Range> $axis+snakeCaseToCamelCase+firstLowerCase) {
-		filter = filter.and(v -> $name+firstLowerCase~Filter(v, $axis+snakeCaseToCamelCase+firstLowerCase));
-		return this;
+	public Abstract$cube+firstUpperCase filter$name+snakeCaseToCamelCase+firstUpperCase(Set<$axis+snakeCaseToCamelCase+firstUpperCase.Range> $axis+snakeCaseToCamelCase+firstLowerCase) {
+		if(filters.containsKey($axis+snakeCaseToCamelCase+firstUpperCase.get())) return this;
+        Predicate<Fact> f = v -> $name+snakeCaseToCamelCase+firstLowerCase~Filter(v, $axis+snakeCaseToCamelCase+firstLowerCase);
+        filters.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), f);
+        filter = filter.and(f);
+        return this;
 	}
 
-	public Abstract$cube+FirstUpperCase groupBy$name+firstUpperCase() {
+	public Abstract$cube+FirstUpperCase groupBy$name+snakeCaseToCamelCase+firstUpperCase() {
 		axes.add($axis+snakeCaseToCamelCase+firstUpperCase.get());
 		components.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), new HashSet<>());
-		groupByList.add(v -> $name+firstLowerCase~Function(v));
+		groupByList.add($cube+FirstUpperCase::$name+snakeCaseToCamelCase+firstLowerCase~Function);
 		return this;
 	}
 
-	public static boolean $name+firstLowerCase~Filter(Fact fact, Set<$axis+snakeCaseToCamelCase+firstUpperCase.Range> $axis+snakeCaseToCamelCase+firstLowerCase) {
-		return $axis+snakeCaseToCamelCase+firstLowerCase.contains($name+firstLowerCase~Function(fact));
+	public static boolean $name+snakeCaseToCamelCase+firstLowerCase~Filter(Fact fact, Set<$axis+snakeCaseToCamelCase+firstUpperCase.Range> $axis+snakeCaseToCamelCase+firstLowerCase) {
+		return $axis+snakeCaseToCamelCase+firstLowerCase.contains($name+snakeCaseToCamelCase+firstLowerCase~Function(fact));
 	}
 
-	private static Axis.Component $name+firstLowerCase~Function(Fact fact) {
+	public static $axis+snakeCaseToCamelCase+firstUpperCase.Range $name+snakeCaseToCamelCase+firstLowerCase~Function(Fact fact) {
 		return $axis+snakeCaseToCamelCase+firstUpperCase.rangeOf(fact.$source+firstLowerCase());
 	}
 end
 
+def type(customDimension & continuous) trigger(method)
+	public Abstract$cube+firstUpperCase filter$name+snakeCaseToCamelCase+firstUpperCase(Set<$axis+snakeCaseToCamelCase+firstUpperCase.Range> $axis+snakeCaseToCamelCase+firstLowerCase) {
+		if(filters.containsKey($axis+snakeCaseToCamelCase+firstUpperCase.get())) return this;
+        Predicate<Fact> f = v -> $name+snakeCaseToCamelCase+firstLowerCase~Filter(v, $axis+snakeCaseToCamelCase+firstLowerCase);
+        filters.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), f);
+        filter = filter.and(f);
+        return this;
+	}
+
+	public Abstract$cube+FirstUpperCase groupBy$name+snakeCaseToCamelCase+firstUpperCase() {
+		axes.add($axis+snakeCaseToCamelCase+firstUpperCase.get());
+		components.put($axis+snakeCaseToCamelCase+firstUpperCase.get(), new HashSet<>());
+		groupByList.add($cube+FirstUpperCase::$name+snakeCaseToCamelCase+firstLowerCase~Function);
+		return this;
+	}
+
+	public static boolean $name+snakeCaseToCamelCase+firstLowerCase~Filter(Fact fact, Set<$axis+snakeCaseToCamelCase+firstUpperCase.Range> $axis+snakeCaseToCamelCase+firstLowerCase) {
+		return $axis+snakeCaseToCamelCase+firstLowerCase.contains($cube+firstUpperCase.$name+snakeCaseToCamelCase+firstLowerCase~Function(fact));
+	}
+end
+
+
+def type(dimension) trigger(ifGroupBy)
+    if(axis.equals($axis+snakeCaseToCamelCase+firstUpperCase.get())) return groupBy$name+snakeCaseToCamelCase+firstUpperCase();
+end
+
+def type(dimension) trigger(ifFilterBy)
+    if(axis.equals($axis+snakeCaseToCamelCase+firstUpperCase.get())) return filter$name+snakeCaseToCamelCase+firstUpperCase();
+end
+
+def type(customIndicator) trigger(toString)
+	 + ", $name+firstLowerCase=" + $name+firstLowerCase~()
+end
 
 def type(indicator) trigger(sum)
 	$name+firstLowerCase += fact.$source+firstLowerCase();
@@ -564,26 +791,48 @@ def type(indicator) trigger(sumAggregation)
 	$name+firstLowerCase += aggregation.$name+firstLowerCase;
 end
 
+def type(customIndicator & sum) trigger(sumAggregation)
+	if($name+firstLowerCase != Long_NaN && aggregation.$name+firstLowerCase != Long_NaN)
+	    $name+firstLowerCase += aggregation.$name+firstLowerCase;
+end
+
+def type(customIndicator & average) trigger(sumAggregation)
+	if(!Double.isNaN($name+firstLowerCase) && !Double.isNaN(aggregation.$name+firstLowerCase))
+	    $name+firstLowerCase += aggregation.$name+firstLowerCase;
+end
+
+def type(customIndicator & average) trigger(field)
+	protected double $name+firstLowerCase = Double.NaN;
+end
+
 def type(indicator & average) trigger(field)
-	double $name+firstLowerCase;
+	protected double $name+firstLowerCase;
 end
 
 def type(indicator & sum) trigger(field)
-	long $name+firstLowerCase;
+	protected long $name+firstLowerCase;
+end
+
+def type(customIndicator & sum) trigger(field)
+	protected long $name+firstLowerCase = Long_NaN;
 end
 
 def type(indicator & average) trigger(getter)
 	public double $name+firstLowerCase() {
-		return $name+firstLowerCase / (double) $index;
+		return $name+firstLowerCase / (double) aggregationDistinct;
 	}
 end
 
-def type(total) trigger(index)
-	aggregationTotal
-end
+def type(customIndicator & average) trigger(getter)
+	public final double $name+firstLowerCase() {
+		if(Double.isNaN($name+firstLowerCase))
+		    $name+firstLowerCase = calculate$name+firstUpperCase();
+		return $name+firstLowerCase;
+	}
 
-def type(index) trigger(index)
-	ids.size()
+	protected double calculate$name+firstUpperCase() {
+	    return 0.0;
+	}
 end
 
 def type(indicator & sum) trigger(getter)
@@ -592,9 +841,25 @@ def type(indicator & sum) trigger(getter)
 	}
 end
 
+def type(customIndicator & sum) trigger(getter)
+	public final long $name+firstLowerCase() {
+		if($name+firstLowerCase == Long_NaN)
+		    $name+firstLowerCase = calculate$name+firstUpperCase();
+		return $name+firstLowerCase;
+	}
+
+	protected long calculate$name+firstUpperCase() {
+	    return 0L;
+	}
+end
+
+def type(index) trigger(index)
+	ids.size()
+end
+
 def type(indicator & average) trigger(staticMethod)
 	public static double $name(Fact fact) {
-		return 0.;
+		return 0.0;
 	}
 end
 
@@ -634,6 +899,9 @@ def type(split) trigger(method)
 	}
 end
 
+def type(dimension) trigger(getInstance)
+    $axis+snakeCaseToCamelCase+firstUpperCase.get()
+end
 
 def trigger(dimension)
 	public static Predicate<$cube+FirstUpperCase.Fact> $axis+snakeCaseToCamelCase+firstLowerCase(Set<$axis+snakeCaseToCamelCase+firstUpperCase.Component> $axis+snakeCaseToCamelCase+firstLowerCase~List) {
@@ -646,85 +914,85 @@ def trigger(dimension)
 end
 
 def type(column & int & unsigned) trigger(factGetter)
-	public long $name+firstLowerCase() {
+	public long $name+snakeCaseToCamelCase+firstLowerCase() {
 		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
 
 def type(column & int) trigger(factGetter)
-	public int $name+firstLowerCase() {
+	public int $name+snakeCaseToCamelCase+firstLowerCase() {
 		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
 
 def type(column & float) trigger(factGetter)
-	public float $name+firstLowerCase() {
+	public float $name+snakeCaseToCamelCase+firstLowerCase() {
 		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
 
 def type(column & double) trigger(factGetter)
-	public double $name+firstLowerCase() {
+	public double $name+snakeCaseToCamelCase+firstLowerCase() {
 		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
 
 def type(column) type(id | long) trigger(factGetter)
-	public long $name+firstLowerCase() {
+	public long $name+snakeCaseToCamelCase+firstLowerCase() {
 		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
 
 def type(column) type(byte & unsigned) trigger(factGetter)
-	public short $name+firstLowerCase() {
+	public short $name+snakeCaseToCamelCase+firstLowerCase() {
 		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
 
 def type(column) type(byte) trigger(factGetter)
-	public byte $name+firstLowerCase() {
+	public byte $name+snakeCaseToCamelCase+firstLowerCase() {
 		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
 
 def type(column) type(short & unsigned) trigger(factGetter)
-	public int $name+firstLowerCase() {
+	public int $name+snakeCaseToCamelCase+firstLowerCase() {
 		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
 
 def type(column) type(short) trigger(factGetter)
-	public short $name+firstLowerCase() {
+	public short $name+snakeCaseToCamelCase+firstLowerCase() {
 		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
 
 def type(column) type(boolean) trigger(factGetter)
-	public boolean $name+firstLowerCase() {
+	public boolean $name+snakeCaseToCamelCase+firstLowerCase() {
 		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
 
 def type(column & categorical) trigger(factGetter)
-	public $type+firstUpperCase.Component $name+firstLowerCase() {
+	public $type+firstUpperCase.Component $name+snakeCaseToCamelCase+firstLowerCase() {
 		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
 
 def type(column) trigger(factGetter)
-	public $type+firstUpperCase $name+firstLowerCase() {
+	public $type+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase() {
 		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
 
 def type(column & virtual) trigger(factGetter)
-	public $type $name+firstLowerCase() {
+	public $type $name+snakeCaseToCamelCase+firstLowerCase() {
 		return $cube+firstLowerCase.$name+firstLowerCase();
 	}
 end
 
 def type(column & categorical) trigger(nullGetter)
-	public $type+firstUpperCase.Component $name+firstLowerCase() {
+	public $type+firstUpperCase.Component $name+snakeCaseToCamelCase+firstLowerCase() {
 		return $type+firstUpperCase.NA;
 	}
 end
@@ -736,67 +1004,95 @@ def type(column & int & unsigned) trigger(nullGetter)
 end
 
 def type(column & int) trigger(nullGetter)
-	public int $name+firstLowerCase() {
+	public int $name+snakeCaseToCamelCase+firstLowerCase() {
 		return 0;
 	}
 end
 
 def type(column) type(id | long) trigger(nullGetter)
-	public long $name+firstLowerCase() {
+	public long $name+snakeCaseToCamelCase+firstLowerCase() {
 		return 0L;
 	}
 end
 
 def type(column & short & unsigned) trigger(nullGetter)
-	public int $name+firstLowerCase() {
+	public int $name+snakeCaseToCamelCase+firstLowerCase() {
 		return 0;
 	}
 end
 
 def type(column & short) trigger(nullGetter)
-	public short $name+firstLowerCase() {
+	public short $name+snakeCaseToCamelCase+firstLowerCase() {
 		return 0;
 	}
 end
 
 def type(column & byte & unsigned) trigger(nullGetter)
-	public short $name+firstLowerCase() {
+	public short $name+snakeCaseToCamelCase+firstLowerCase() {
 		return 0;
 	}
 end
 
 def type(column & byte) trigger(nullGetter)
-	public byte $name+firstLowerCase() {
+	public byte $name+snakeCaseToCamelCase+firstLowerCase() {
 		return 0;
 	}
 end
 
 def type(column & float) trigger(nullGetter)
-	public float $name+firstLowerCase() {
+	public float $name+snakeCaseToCamelCase+firstLowerCase() {
 		return 0.0f;
 	}
 end
 
 def type(column & double) trigger(nullGetter)
-	public double $name+firstLowerCase() {
+	public double $name+snakeCaseToCamelCase+firstLowerCase() {
 		return 0.0f;
 	}
 end
 
 def type(column & boolean) trigger(nullGetter)
-	public boolean $name+firstLowerCase() {
+	public boolean $name+snakeCaseToCamelCase+firstLowerCase() {
 		return false;
 	}
 end
 
 def type(column & boolean) trigger(nullGetter)
-	public boolean $name+firstLowerCase() {
+	public boolean $name+snakeCaseToCamelCase+firstLowerCase() {
 		return false;
 	}
 end
 
 def type(column & boolean) trigger(nullGetter)
-	public boolean $name+firstLowerCase() {
+	public boolean $name+snakeCaseToCamelCase+firstLowerCase() {
 		return false;
+	}
+end
+
+def type(virtualColumn & primitive) trigger(factGetter)
+    public $type+firstLowerCase $name+snakeCaseToCamelCase+firstLowerCase() {
+        return $cube.$name+firstLowerCase();
+    }
+end
+
+def type(virtualColumn) trigger(factGetter)
+    public $type+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase() {
+        return $cube.$name+firstLowerCase();
+    }
+end
+
+def type(customIndicator & sum) trigger(implementation)
+	@Override
+	protected long calculate$name+firstUpperCase() {
+	    // TODO: calculate and return $name+firstLowerCase
+		return 0;
+	}
+end
+
+def type(customIndicator & average) trigger(implementation)
+	@Override
+	protected double calculate$name+firstUpperCase() {
+	    // TODO: calculate and return $name+firstLowerCase
+		return 0.0;
 	}
 end

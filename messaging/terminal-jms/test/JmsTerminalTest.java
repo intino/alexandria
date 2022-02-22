@@ -1,4 +1,5 @@
 import io.intino.alexandria.event.Event;
+import io.intino.alexandria.terminal.Broker;
 import io.intino.alexandria.terminal.JmsConnector;
 import org.junit.After;
 import org.junit.Ignore;
@@ -49,5 +50,10 @@ public class JmsTerminalTest {
 			message.set("field1", value);
 			return this;
 		}
+	}
+
+	@Test
+	public void name() {
+		Broker.isRunning("failover:(tcp://localhost:62000)?waitUntilConnect=true");
 	}
 }

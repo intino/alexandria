@@ -18,10 +18,11 @@ export default class Actionable extends AbstractActionable {
 	static Styles = theme => ({
 		link : {
 			color: theme.palette.primary.main,
-			cursor: "pointer"
+			cursor: "pointer",
 		},
 		button : {
-			cursor: "pointer"
+			cursor: "pointer",
+            whiteSpace: "nowrap",
 		},
 		iconButton : {
 			cursor: "pointer"
@@ -45,6 +46,8 @@ export default class Actionable extends AbstractActionable {
 			openAffirm : false,
 			openSign : false,
 			affirmed : this.props.affirmed != null ? this.props.affirmed : null,
+			affirmedRequired : true,
+			highlighted : this.props.highlighted != null ? this.props.highlighted : null,
 			signInfo : {
 			    sign: "",
 			    reason: ""
@@ -66,7 +69,7 @@ export default class Actionable extends AbstractActionable {
 		return (
 			<React.Fragment>
                 {this.renderTraceConsent()}
-				{this.renderAffirm()}
+				{this.renderAffirmed()}
 				{this.renderSign()}
 				{this.renderTrigger()}
 			</React.Fragment>
@@ -86,7 +89,9 @@ export default class Actionable extends AbstractActionable {
 		const {classes} = this.props;
 		const className = this._readonly() ? classes.readonly : classes.link;
 		return (
-		    <a id={this.triggerId()} onClick={this.handleClick.bind(this)} disabled={this._readonly()}>
+		    <a id={this.triggerId()}
+		        onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
+		        disabled={this._readonly()}>
 				<Typography style={this.style()} variant={this.variant("body1")} className={className}>{this._title()}</Typography>
 			</a>
 		);
@@ -96,8 +101,8 @@ export default class Actionable extends AbstractActionable {
 		const {classes} = this.props;
 		return (
 		    <Button id={this.triggerId()} style={this.style()} size={this._size()} color="primary" variant={this._highlightVariant()}
-						disabled={this._readonly()} onClick={this.handleClick.bind(this)}
-						className={classes.button}>
+						onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
+						disabled={this._readonly()} className={classes.button}>
 				{this.renderContent()}
 			</Button>
 		);
@@ -108,8 +113,8 @@ export default class Actionable extends AbstractActionable {
 		const style = this._readonly() ? { filter: "grayscale(100%)", ...this.style() } : this.style();
 		const button = (
             <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()}
-                            onClick={this.handleClick.bind(this)} style={style}
-                            className={classes.iconButton} size={this._size()}>
+                            onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
+                            style={style} className={classes.iconButton} size={this._size()}>
                 {this.renderContent()}
             </IconButton>
         );
@@ -122,8 +127,8 @@ export default class Actionable extends AbstractActionable {
 		if (this.state.color != null) style.color = this.state.color;
 		const button = (
             <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()}
-                            onClick={this.handleClick.bind(this)} className={classes.materialIconButton}
-                            style={style} size={this._size()}>
+                            onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
+                            className={classes.materialIconButton} style={style} size={this._size()}>
                 {this.renderContent()}
             </IconButton>
 		);
@@ -132,7 +137,7 @@ export default class Actionable extends AbstractActionable {
 
 	renderAvatarIconButton = () => {
 		const {classes} = this.props;
-		const highlighted = this.props.highlighted != null && this.props.highlighted.toLowerCase() === "fill";
+		const highlighted = this.state.highlighted != null && this.state.highlighted.toLowerCase() === "fill";
 		const style = this.style();
         const large = this._size() === "large";
         const width = style.width != null ? style.width : (large ? "48px" : "24px");
@@ -147,8 +152,8 @@ export default class Actionable extends AbstractActionable {
 		if (this.state.color != null) style.color = this.state.color;
 		const button = (
             <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()}
-                            onClick={this.handleClick.bind(this)} className={classes.materialIconButton}
-                            style={style} size={this._size()}>
+                            onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
+                            className={classes.materialIconButton} style={style} size={this._size()}>
                 <div style={{width:width,height:height,background:background,border:border,
                              borderRadius:'40px',color:color,fontSize:fontSize,
                              paddingTop:paddingTop,paddingLeft:paddingLeft}}>{title}</div>
@@ -164,8 +169,8 @@ export default class Actionable extends AbstractActionable {
 		else if (mode === "materialiconbutton" || mode === "materialicontoggle") return (<ActionableMui titleAccess={this._title()} icon={this._icon()} style={this._addDimensions({})}/>);
 	};
 
-	renderAffirm = () => {
-		if (!this.requireAffirm()) return;
+	renderAffirmed = () => {
+		if (!this.requireAffirmed()) return;
 		const openAffirm = this.state.openAffirm != null ? this.state.openAffirm : false;
 		return (
 		    <Dialog onClose={this.handleAffirmClose} open={openAffirm}>
@@ -186,7 +191,7 @@ export default class Actionable extends AbstractActionable {
 		    <Dialog onClose={this.handleSignClose} open={openSign}>
 				<DialogTitle onClose={this.handleSignClose}>{this.translate("Sign")}</DialogTitle>
 				<DialogContent>
-				    <DialogContentText style={{marginBottom:'5px'}}>{this.props.signed.text}</DialogContentText>
+				    <DialogContentText style={{marginBottom:'5px'}}>{this.translate(this.props.signed.text)}</DialogContentText>
 				    <TextField autoFocus={true} style={{width:'100%'}} type="password" value={this.translate(this.state.signInfo.sign)}
 				               onChange={this.handleSignTextChange.bind(this)} onKeyPress={this.handleSignKeypress.bind(this)}/>
 				    {this.requireSignReason() &&
@@ -209,12 +214,46 @@ export default class Actionable extends AbstractActionable {
 	    return this.props.id;
 	};
 
+	clickEvent = () => {
+	    return this.handleClick.bind(this);
+	};
+
+	mouseEnterEvent = () => {
+	    return null;
+	};
+
+	mouseLeaveEvent = () => {
+	    return null;
+	};
+
 	handleClick(e) {
 		if (this._readonly()) return;
+	    e.stopPropagation();
 	    Delayer.execute(this, () => this.execute(), Actionable.Delay);
 	};
 
-	execute = () => {
+    launch = () => {
+        const element = document.getElementById(this.triggerId());
+        if (element == null) return;
+        element.click();
+    };
+
+    execute = () => {
+	    if (this._readonly()) return false;
+        if (this.requireAffirmed()) this.requester.checkAffirmed();
+        else this.doExecute();
+    };
+
+    refreshAffirmedRequired = (value) => {
+        this.setState({affirmedRequired:value});
+        this.doExecute();
+    };
+
+    refreshHighlight = (value) => {
+        this.setState({highlighted:value});
+    };
+
+	doExecute = () => {
 	    if (!this.canExecute()) return;
 		this.requester.execute();
 	};
@@ -222,10 +261,11 @@ export default class Actionable extends AbstractActionable {
 	canExecute = () => {
 	    if (this._readonly()) return false;
 
-		if (this.requireAffirm()) {
+		if (this.requireAffirmed() && this.state.affirmedRequired) {
 			this.setState({ openAffirm : true });
 			return false;
 		}
+
 		if (this.requireSign()) {
 			this.setState({ openSign : true });
 			return false;
@@ -242,7 +282,10 @@ export default class Actionable extends AbstractActionable {
 	};
 
 	handleAffirmClose = () => {
-		this.setState({ openAffirm : false });
+	    Delayer.execute(this, () => {
+            this.setState({ openAffirm : false });
+            this.requester.cancelAffirm();
+	    }, Actionable.Delay);
 	};
 
     handleSignTextChange = (e) => {
@@ -299,7 +342,7 @@ export default class Actionable extends AbstractActionable {
 		this.setState({ affirmed: value });
 	};
 
-	requireAffirm = () => {
+	requireAffirmed = () => {
 		return this.state.affirmed != null && this.state.affirmed !== "";
 	};
 
@@ -314,7 +357,7 @@ export default class Actionable extends AbstractActionable {
 	};
 
 	_highlightVariant = () => {
-		const highlighted = this.props.highlighted;
+		const highlighted = this.state.highlighted;
 		if (highlighted == null) return undefined;
 		else if (highlighted.toLowerCase() === "outline") return "outlined";
 		return "contained";

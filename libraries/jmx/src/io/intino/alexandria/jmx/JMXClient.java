@@ -10,6 +10,7 @@ import javax.management.openmbean.OpenType;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -38,25 +39,22 @@ public class JMXClient {
 		}
 	}
 
-	public static Map<String, String> allJMXLocalURLs() throws IOException, AgentLoadException, AgentInitializationException {
+	public static Map<String, String> allJMXLocalURLs() {
 		Map<String, String> set = new LinkedHashMap<>();
 		List<VirtualMachineDescriptor> vms = VirtualMachine.list();
 		for (VirtualMachineDescriptor desc : vms) {
-			VirtualMachine vm;
 			try {
-				vm = VirtualMachine.attach(desc);
-			} catch (AttachNotSupportedException e) {
-				continue;
+				VirtualMachine vm = VirtualMachine.attach(desc);
+				Properties props = vm.getAgentProperties();
+				String connectorAddress = props.getProperty(CONNECTOR_ADDRESS);
+				if (connectorAddress == null) {
+					String agent = vm.getSystemProperties().getProperty("java.home") + File.separator + "lib" + File.separator + "management-agent.jar";
+					vm.loadAgent(agent);
+					connectorAddress = vm.getAgentProperties().getProperty(CONNECTOR_ADDRESS);
+				}
+				if (connectorAddress != null) set.put(desc.displayName(), connectorAddress);
+			} catch (AttachNotSupportedException | IOException | AgentLoadException | AgentInitializationException ignored) {
 			}
-			Properties props = vm.getAgentProperties();
-			String connectorAddress = props.getProperty(CONNECTOR_ADDRESS);
-			if (connectorAddress == null) {
-				String agent = vm.getSystemProperties().getProperty("java.home") +
-						File.separator + "lib" + File.separator + "management-agent.jar";
-				vm.loadAgent(agent);
-				connectorAddress = vm.getAgentProperties().getProperty(CONNECTOR_ADDRESS);
-			}
-			if (connectorAddress != null) set.put(desc.displayName(), connectorAddress);
 		}
 		return set;
 	}
@@ -69,7 +67,7 @@ public class JMXClient {
 	}
 
 
-	public class JMXConnection {
+	public class JMXConnection implements Closeable {
 		private final MBeanServerConnection connection;
 		private final JMXConnector connector;
 		private List<ObjectName> beans;
@@ -99,6 +97,10 @@ public class JMXClient {
 					JMX.newMBeanProxy(connection, objectName, mbClass, true);
 		}
 
+		public List<ObjectName> beans() {
+			return beans;
+		}
+
 		public ObjectName findObjectName(String mbClass) {
 			for (ObjectName bean : beans)
 				if (bean.getCanonicalName().contains(mbClass)) return bean;
@@ -109,7 +111,7 @@ public class JMXClient {
 			try {
 				connection.addNotificationListener(findObjectName(mbClass), listener, null, null);
 			} catch (InstanceNotFoundException | IOException e) {
-				e.printStackTrace();
+				Logger.error(e);
 			}
 		}
 
@@ -117,7 +119,7 @@ public class JMXClient {
 			try {
 				connection.removeNotificationListener(findObjectName(mbClass), listener);
 			} catch (InstanceNotFoundException | ListenerNotFoundException e) {
-				e.printStackTrace();
+				Logger.error(e);
 			}
 		}
 
@@ -125,7 +127,7 @@ public class JMXClient {
 			try {
 				connector.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.error(e);
 			}
 		}
 

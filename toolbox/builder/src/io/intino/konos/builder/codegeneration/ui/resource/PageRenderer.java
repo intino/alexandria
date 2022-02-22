@@ -35,6 +35,7 @@ public class PageRenderer extends ActionRenderer {
 		FrameBuilder builder = new FrameBuilder().add("action").add("ui");
 		Service.UI uiService = resource.core$().ownerAs(Service.UI.class);
 		builder.add("name", resource.name$());
+		if (resource.isPage()) builder.add("templateName", resource.asPage().template().name$());
 		builder.add("uiService", uiService.name$());
 		builder.add("package", packageName());
 		builder.add("box", boxName());
@@ -43,14 +44,17 @@ public class PageRenderer extends ActionRenderer {
 		builder.add("parameter", parameters());
 		builder.add("contextProperty", contextPropertyFrame());
 		service.useList().forEach(use -> builder.add("usedUnit", usedUnitFrame(use)));
+		if (service.title() != null) builder.add("title", service.title());
 		if (service.favicon() != null) builder.add("favicon", service.favicon());
-		else if (service.title() != null) builder.add("title", service.title());
 		compilationContext.classes().put(resource.getClass().getSimpleName() + "#" + firstUpperCase(resource.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(resource.name$())) + suffix());
-		if (!alreadyRendered(src(), resource.name$()))
-			writeFrame(destinyPackage(src()), resource.name$() + suffix(), template().render(builder.toFrame()));
-		writeFrame(destinyPackage(gen()), "Abstract" + firstUpperCase(resource.name$()) + suffix(), template().render(builder.add("gen").toFrame()));
+		if (!alreadyRendered(src(), resource.name$())) {
+			writeFrame(destinationPackage(src()), resource.name$() + suffix(), template().render(builder.toFrame()));
+			if (target.equals(Target.Owner))
+				context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(destinationPackage(src()), resource.name$() + suffix()).getAbsolutePath()));
+		}
+		writeFrame(destinationPackage(gen()), "Abstract" + firstUpperCase(resource.name$()) + suffix(), template().render(builder.add("gen").toFrame()));
 		if (target.equals(Target.Owner))
-			context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(destinyPackage(gen()), "Abstract" + firstUpperCase(resource.name$()) + suffix()).getAbsolutePath()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(destinationPackage(gen()), "Abstract" + firstUpperCase(resource.name$()) + suffix()).getAbsolutePath()));
 	}
 
 	@Override
@@ -78,7 +82,7 @@ public class PageRenderer extends ActionRenderer {
 	}
 
 	@Override
-	protected File destinyPackage(File destiny) {
+	protected File destinationPackage(File destiny) {
 		return new File(destiny, format(CodeGenerationHelper.Pages, Target.Owner));
 	}
 

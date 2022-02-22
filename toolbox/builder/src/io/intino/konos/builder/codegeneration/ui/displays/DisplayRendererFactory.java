@@ -13,15 +13,16 @@ import io.intino.konos.model.graph.Template;
 
 public class DisplayRendererFactory {
 
+	@SuppressWarnings("unchecked")
 	public <T extends UIRenderer> T renderer(CompilationContext compilationContext, Display display, TemplateProvider provider, Target target) {
 		if (display.i$(Template.Desktop.class)) return (T) new DesktopRenderer(compilationContext, display.a$(Template.class), provider, target);
 		if (display.i$(Template.class)) {
-			ComponentRenderer renderer = new io.intino.konos.builder.codegeneration.ui.displays.components.TemplateRenderer(compilationContext, display.a$(Template.class), provider, target);
+			ComponentRenderer<?> renderer = new io.intino.konos.builder.codegeneration.ui.displays.components.TemplateRenderer(compilationContext, display.a$(Template.class), provider, target);
 			renderer.owner(display);
 			return (T) renderer;
 		}
 		if (display.i$(CatalogComponents.Collection.class)) {
-			ComponentRenderer renderer = new io.intino.konos.builder.codegeneration.ui.displays.components.CollectionRenderer(compilationContext, display.a$(CatalogComponents.Collection.class), provider, target);
+			ComponentRenderer<?> renderer = new io.intino.konos.builder.codegeneration.ui.displays.components.CollectionRenderer<>(compilationContext, display.a$(CatalogComponents.Collection.class), provider, target);
 			renderer.owner(display);
 			return (T) renderer;
 		}
@@ -31,11 +32,11 @@ public class DisplayRendererFactory {
 			return (T) renderer;
 		}
 		if (display.i$(Component.class)) {
-			ComponentRenderer renderer = new ComponentRenderer(compilationContext, display.a$(Component.class), provider, target);
+			ComponentRenderer<?> renderer = new ComponentRenderer<>(compilationContext, display.a$(Component.class), provider, target);
 			renderer.owner(display);
 			return (T) renderer;
 		}
-		return (T) new DisplayRenderer(compilationContext, display, provider, target);
+		return (T) new DisplayRenderer<>(compilationContext, display, provider, target);
 	}
 
 }

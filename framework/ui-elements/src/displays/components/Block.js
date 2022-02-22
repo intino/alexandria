@@ -11,6 +11,7 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import BrowserUtil from "../../util/BrowserUtil";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import 'alexandria-ui-elements/res/styles/mobile.css';
+import AutoSizer from 'react-virtualized-auto-sizer';
 
 export default class Block extends AbstractBlock {
 
@@ -22,19 +23,34 @@ export default class Block extends AbstractBlock {
 			hidden: false,
 			layout: this.props.layout,
 			spacing: this.props.spacing,
+			autoSize: this.props.autoSize != null ? this.props.autoSize : false,
 			...this.state
 		}
 	};
 
 	render() {
-		let animation = this.props.animation;
-		if (animation != null)
-			return BlockBehavior.renderAnimation(animation, !this.state.hidden, this.renderContent());
-		return this.renderContent();
+	    const content = this.renderContent();
+	    if (!this.state.autoSize) return content;
+	    return (
+	        <div style={{position:'relative',height:'100%'}}>
+	            <AutoSizer>
+	                {({ height, width }) => (
+	                    <div style={{height:height+"px",width:width+"px",overflow:'auto'}}>{content}</div>
+                    )}
+                </AutoSizer>
+	        </div>
+        );
 	};
 
-	renderContent = () => {
-		return (this.props.collapsible ? <Collapse>{this._renderLayout()}</Collapse> : this._renderLayout());
+    renderContent = () => {
+		let animation = this.props.animation;
+		if (animation != null)
+			return BlockBehavior.renderAnimation(animation, !this.state.hidden, this.renderBody());
+		return this.renderBody();
+    };
+
+	renderBody = () => {
+	    return this.props.collapsible ? (<Collapse>{this._renderLayout()}</Collapse>) : this._renderLayout();
 	};
 
 	refreshSpacing = (spacing) => {
@@ -43,6 +59,10 @@ export default class Block extends AbstractBlock {
 
 	refreshLayout = (layout) => {
 		this.setState({ layout });
+	};
+
+	refreshAutoSize = (autoSize) => {
+		this.setState({ autoSize });
 	};
 
 	_renderLayout = () => {

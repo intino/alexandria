@@ -3,26 +3,33 @@ package io.intino.konos.builder.codegeneration.main;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.CompilerConfiguration;
+import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.graph.KonosGraph;
+import io.intino.magritte.framework.Layer;
 
 import java.io.File;
+
+import static io.intino.konos.builder.helpers.Commons.javaFile;
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class MainRenderer extends Renderer {
 	private final CompilationContext context;
 	private final File destination;
 	private final boolean hasModel;
 	private final CompilerConfiguration configuration;
+	private final KonosGraph graph;
 
-	public MainRenderer(CompilationContext context, boolean hasModel) {
+	public MainRenderer(CompilationContext context, boolean hasModel, KonosGraph graph) {
 		super(context, Target.Owner);
 		this.context = context;
 		this.destination = context.src(Target.Owner);
 		this.hasModel = hasModel;
 		this.configuration = context.configuration();
+		this.graph = graph;
 	}
 
 	public void execute() {
@@ -30,8 +37,11 @@ public class MainRenderer extends Renderer {
 		final String name = context.boxName();
 		FrameBuilder builder = new FrameBuilder("main").add("package", context.packageName()).add("name", name);
 		if (hasModel) builder.add("model", new FrameBuilder("model").add("name", name).toFrame());
-		if (!Commons.javaFile(destination, "Main").exists())
-			Commons.writeFrame(destination, "Main", template().render(builder.toFrame()));
+		File mainFile = javaFile(destination, "Main");
+		if (!mainFile.exists()) {
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(graph.core$().rootList().get(0).as(Layer.class)), mainFile.getAbsolutePath()));
+			writeFrame(destination, "Main", template().render(builder.toFrame()));
+		}
 	}
 
 	@Override

@@ -34,6 +34,10 @@ public class SparkContext extends Context {
 		return (String) manager.fromHeader(name);
 	}
 
+	public void header(String name, String value) {
+		manager.response.raw().setHeader(name, value);
+	}
+
 	private void initialize() {
 		put("domain", domain());
 		put("baseUrl", baseUrl());

@@ -33,18 +33,21 @@ const styles = theme => ({
 });
 
 class User extends AbstractUser {
-    state = {
-        info: null,
-        trigger : null
-    };
 
     constructor(props) {
         super(props);
         this.notifier = new UserNotifier(this);
         this.requester = new UserRequester(this);
+        this.state = {
+            ...this.state,
+            info: null,
+            trigger : null
+        };
     };
 
     render() {
+        if (!this.state.visible) return (<React.Fragment/>);
+
         const info = this.state.info;
         if (info == null) return (<React.Fragment/>);
 

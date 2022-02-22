@@ -10,7 +10,7 @@ export const enrichDisplayProperties = (instance) => {
 };
 
 export default class Display extends PassiveView {
-    static TraceConsentRendered;
+    static CookieConsentRendered;
     address = null;
 
     constructor(props) {
@@ -71,12 +71,12 @@ export default class Display extends PassiveView {
 
     redirect = (params) => {
         let url = params.url;
-        if (url == null || url === "") url = Application.configuration.baseUrl;
+        if (url == null || url === "") window.location.reload();
         window.location.href = url;
     };
 
     addressed = (params) => {
-        this.address = Application.configuration.basePath + params.address;
+        this.address = params.address != null ? Application.configuration.basePath + params.address : null;
     };
 
     historyAddress = () => {
@@ -145,21 +145,33 @@ export default class Display extends PassiveView {
 
     trace = (value, name) => {
         if (!this.state.traceable) return;
-        if (!this._traceConsentAccepted()) return;
-        Cookies.set(name != null ? name : this.props.id, JSON.stringify(value));
+        this.updateCookie(value, name);
     };
 
     traceValue = (name) => {
         if (!this.state.traceable) return null;
-        if (!this._traceConsentAccepted()) return null;
+        return this.getCookie(name);
+    };
+
+    updateCookie = (value, name) => {
+        if (!this._cookieConsentAccepted()) return;
+        Cookies.set(name != null ? name : this.props.id, JSON.stringify(value));
+    };
+
+    getCookie = (name) => {
+        if (!this._cookieConsentAccepted()) return null;
         const value = Cookies.get(name != null ? name : this.props.id);
         return value != null ? JSON.parse(value) : null;
     };
 
     renderTraceConsent = () => {
         if (!this.state.traceable) return (<React.Fragment/>);
-        if (Display.TraceConsentRendered != undefined && Display.TraceConsentRendered != this.props.id) return (<React.Fragment/>);
-        Display.TraceConsentRendered = this.props.id;
+        this.renderCookieConsent();
+    };
+
+    renderCookieConsent = () => {
+        if (Display.CookieConsentRendered != undefined && Display.CookieConsentRendered != this.props.id) return (<React.Fragment/>);
+        Display.CookieConsentRendered = this.props.id;
         return (
             <CookieConsent cookieName={this._traceConsentVariable()} buttonText={this.translate("I understand")} buttonStyle={{fontSize:'11pt'}}>
                 <div style={{textAlign:'left',fontSize:'11pt'}}>{this.translate("This website uses cookies to enhance the user experience.")}</div>
@@ -183,7 +195,7 @@ export default class Display extends PassiveView {
         this.setState(object);
     };
 
-    _traceConsentAccepted = () => {
+    _cookieConsentAccepted = () => {
         return Cookies.get(this._traceConsentVariable()) != null;
     };
 

@@ -29,6 +29,12 @@ public class ActionSplit<DN extends ActionSplitNotifier, B extends Box> extends 
 		return this;
 	}
 
+	public ActionSplit<DN, B> options(java.util.List<String> options) {
+		_options(options);
+		notifier.refreshOptions(options);
+		return this;
+	}
+
 	protected ActionSplit<DN, B> _options(java.util.List<String> options) {
 		this.options = options;
 		return this;

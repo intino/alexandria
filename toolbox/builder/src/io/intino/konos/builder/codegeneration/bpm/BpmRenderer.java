@@ -9,6 +9,7 @@ import io.intino.konos.builder.codegeneration.bpm.parser.BpmnParser;
 import io.intino.konos.builder.codegeneration.bpm.parser.Link;
 import io.intino.konos.builder.codegeneration.bpm.parser.State;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Workflow;
@@ -38,7 +39,7 @@ public class BpmRenderer extends Renderer {
 	private final File gen;
 	private final KonosGraph graph;
 	private final Workflow workflow;
-	private List<String> stateServices = new ArrayList<>();
+	private final List<String> stateServices = new ArrayList<>();
 
 	public BpmRenderer(CompilationContext compilationContext, KonosGraph graph) {
 		super(compilationContext, Target.Owner);
@@ -51,13 +52,15 @@ public class BpmRenderer extends Renderer {
 	}
 
 	@Override
-	protected void render() {
+	protected void render() throws KonosException {
 		renderProcesses();
 		renderWorkflow();
 	}
 
-	private void renderWorkflow() {
+	private void renderWorkflow() throws KonosException {
 		if (processes.isEmpty()) return;
+		if (compilationContext.dataHubManifest() == null)
+			throw new KonosException("Is required the Data hub declaration in artifact to instance subscribers");
 		FrameBuilder builder = new FrameBuilder("workflow").
 				add("box", compilationContext.boxName()).
 				add("package", compilationContext.packageName()).
@@ -91,8 +94,10 @@ public class BpmRenderer extends Renderer {
 		compilationContext.classes().put(process.getClass().getSimpleName() + "#" + process.name$(), "bpm." + process.name$());
 		writeFrame(gen, "Abstract" + firstUpperCase(process.name$()), customize(new ProcessTemplate()).render(builder.toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(process), javaFile(gen, "Abstract" + firstUpperCase(process.name$())).getAbsolutePath()));
-		if (!alreadyRendered(src, process.name$()))
+		if (!alreadyRendered(src, process.name$())) {
 			writeFrame(src, process.name$(), customize(new ProcessTemplate()).render(builder.add("src").toFrame()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(process), javaFile(src(), process.name$()).getAbsolutePath()));
+		}
 	}
 
 	private FrameBuilder frameOf(Process process, File bpmn) {

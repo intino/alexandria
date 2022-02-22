@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.ui.resource;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Service;
@@ -21,8 +22,8 @@ public class ResourceListRenderer extends UIRenderer {
 	}
 
 	@Override
-	public void render() {
-		resourceList.forEach(r -> new ResourceRenderer(context, r, target).execute());
-		accessibleDisplays.forEach(d -> new AccessibleDisplayRenderer(context, d, target).execute());
+	public void render() throws KonosException {
+		for (Service.UI.Resource r : resourceList) new ResourceRenderer(context, r, target).execute();
+		for (Display.Accessible d : accessibleDisplays) new AccessibleDisplayRenderer(context, d, target).execute();
 	}
 }

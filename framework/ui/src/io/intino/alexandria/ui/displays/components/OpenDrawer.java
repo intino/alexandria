@@ -3,6 +3,7 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.actionable.OpenListener;
+import io.intino.alexandria.ui.displays.events.actionable.ToggleEvent;
 import io.intino.alexandria.ui.displays.notifiers.OpenDrawerNotifier;
 
 public class OpenDrawer<DN extends OpenDrawerNotifier, B extends Box> extends AbstractOpenDrawer<DN, B> {
@@ -20,8 +21,10 @@ public class OpenDrawer<DN extends OpenDrawerNotifier, B extends Box> extends Ab
 
 	public OpenDrawer bindTo(BlockDrawer drawer) {
 		this.drawer = drawer;
-		drawer.onShow(d -> hide());
-		drawer.onHide(d -> show());
+		drawer.onToggle(e -> {
+			if (e.state() == ToggleEvent.State.On) hide();
+			else show();
+		});
 		return this;
 	}
 

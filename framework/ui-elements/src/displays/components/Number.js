@@ -22,13 +22,10 @@ const styles = theme => ({
 	},
 	prefix : {
 		color: theme.palette.grey.A700,
-		fontSize: "10pt",
-//		marginTop: "2px",
 		marginRight: "3px"
 	},
 	suffix : {
 		color: theme.palette.grey.A700,
-		fontSize: "10pt",
 		marginLeft: "3px"
 	},
 	withExpanded : {
@@ -54,16 +51,16 @@ class Number extends AbstractNumber {
 		const variant = this.variant("body1");
 		const expanded = this.state.expanded;
 		const format = expanded ? this._defaultFormat() : this._format();
-		const expandedClass = this.props.style != null ? classes.withExpanded : undefined;
+		const expandedClass = this.state.style != null ? classes.withExpanded : undefined;
 
 		if (value == null || value === "" || !this.state.visible) return (<React.Fragment/>);
 
 		return (
 			<Block layout="horizontal center" style={this.style()}>
 				{ ComponentBehavior.labelBlock(this.props, 'body1', {...this.style(),margin:'0 5px 0 0'}) }
-				{this.state.prefix !== undefined ? <Typography variant={variant} className={classes.prefix}>{this.state.prefix}</Typography> : undefined }
+				{this.state.prefix !== undefined ? <Typography variant="caption" className={classes.prefix}>{this.translate(this.state.prefix)}</Typography> : undefined }
 				<Typography className={classnames(expandedClass, classes.value)} onClick={this.handleToggleExpanded.bind(this)} variant={variant} style={this.style()}>{NumberUtil.format(value, this.translate(format))}</Typography>
-				{ this.state.suffix !== undefined ? <Typography variant={variant} className={classes.suffix}>{this.state.suffix}</Typography> : undefined }
+				{ this.state.suffix !== undefined ? <Typography variant="caption" className={classes.suffix}>{this.translate(this.state.suffix)}</Typography> : undefined }
 			</Block>
 		);
 	};
@@ -73,7 +70,7 @@ class Number extends AbstractNumber {
 	};
 
 	_format = () => {
-		const style = this.props.style;
+		const style = this.state.style;
 		if (style == null) return this._defaultFormat();
 		const format = this._addDecimals("0");
 		if (style === "Currency") return format + "a";

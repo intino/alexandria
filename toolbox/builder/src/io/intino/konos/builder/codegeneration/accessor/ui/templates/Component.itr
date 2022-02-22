@@ -1,5 +1,5 @@
 def type(reference)
-	<Displays$name+firstUppercase context={this._context.bind(this)} owner={this._owner.bind(this)} id="$id"$properties+common$properties+specific></Displays$name+firstUppercase>
+	<Displays$name+firstUppercase context={this._context.bind(this)} owner={this._owner.bind(this)} id="[$parentPath~.]$id"$properties+common$properties+specific></Displays$name+firstUppercase>
 end
 
 def type(child) trigger(declaration)
@@ -20,11 +20,15 @@ def type(component & child & item)
 end
 
 def type(component & child)
-	<$extends context={this._context.bind(this)} owner={this._owner.bind(this)} id="$id"$properties+common$properties+specific[ $code]>
+	<$extends context={this._context.bind(this)} owner={this._owner.bind(this)} id="[$parentPath~.]$id"$properties+common$properties+specific[ $code]>
 		[$reference...[$NL]]
 		[$methods]
 		[$component+child...[$NL]]
 	[</$extends>]
+end
+
+def type(extends & multiple & image)
+	UiMultipleImage
 end
 
 def type(extends & multiple)
@@ -55,7 +59,7 @@ def type(properties & actionable) trigger(common)
 end
 
 def type(properties & abstractslider) trigger(common)
-	[ label="$label"][ format="$format...[ ]"][ color="$color"][ traceable={$traceable}][ arrangement="$arrangement"][ animation={{interval:$interval,loop:$loop}}][ readonly={$readonly}][ visible={$visible}][ style="$style"]
+	[ label="$label"][ format="$format...[ ]"][ color="$color"][ traceable={$traceable}][ arrangement="$arrangement"][ animation={{interval:$interval,loop:$loop}}][ readonly={$readonly}][ visible={$visible}][ style="$style"][ position="$position"]
 end
 
 def type(properties & dashboard) trigger(common)
@@ -63,7 +67,11 @@ def type(properties & dashboard) trigger(common)
 end
 
 def type(properties) trigger(common)
-	[ name="$name"][ label="$label"][ format="$format...[ ]"][ color="$color"][ visible={$visible}][ traceable={$traceable}][ multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing,editable:$multipleEditable,wrap:$multipleWrapItems,count:{min:$multipleMin,max:$multipleMax}}}][ style="$style"]
+	[ name="$name"][ label="$label"][ format="$format...[ ]"][ color="$color"][ visible={$visible}][ traceable={$traceable}][ multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing,editable:$multipleEditable,wrap:$multipleWrapItems,collapsed:$multipleCollapsed,count:{min:$multipleMin,max:$multipleMax}}}][ style="$style"]
+end
+
+def type(properties & openpopover) trigger(specific)
+	[ triggerEvent="$triggerEvent"]
 end
 
 def type(properties & template) trigger(specific)
@@ -79,11 +87,11 @@ def type(properties & materialicon) trigger(specific)
 end
 
 def type(properties & selector) trigger(specific)
-	[ multipleSelection={$multipleSelection}][ readonly={$readonly}][ focused={$focused}][ placeholder="$placeholder"][ selected="$selected"][ layout="$layout"][ size="$size"][ maxMenuHeight={$maxMenuHeight}][ allowOther="$allowOther"]
+	[ multipleSelection={$multipleSelection}][ readonly={$readonly}][ focused={$focused}][ placeholder="$placeholder"][ selected="$selected"][ layout="$layout"][ size="$size"][ maxMenuHeight={$maxMenuHeight}][ allowOther="$allowOther"][ scrollButtons="$scrollButtons"][ view="$view"]
 end
 
 def type(properties & image) trigger(specific)
-	[ width="$width"][ height="$height"][ mobileReduceFactor={$mobileReduceFactor}]
+	[ width="$width"][ height="$height"][ mobileReduceFactor={$mobileReduceFactor}][ allowFullscreen={$allowFullscreen}]
 end
 
 def type(properties & file) trigger(specific)
@@ -107,7 +115,7 @@ def type(properties & block) trigger(specific)
 end
 
 def type(properties & date) trigger(specific)
-	[ pattern="$pattern"][ mode="$mode"][ value={new Date($value)}][ timePicker={$timePicker}][ mask="$mask"][ allowEmpty={$allowEmpty}][ views={$["$view...[","]"$]}]
+	[ pattern="$pattern"][ mode="$mode"][ value={new Date($value)}][ timePicker={$timePicker}][ mask="$mask"][ embedded={$embedded}][ allowEmpty={$allowEmpty}][ views={$["$view...[","]"$]}]
 end
 
 def type(properties & user) trigger(specific)
@@ -131,11 +139,11 @@ def type(properties & text) trigger(specific)
 end
 
 def type(properties & location) trigger(specific)
-	[ center={{lat:$centerLat,lng:$centerLng}}][ zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}][ modes={$["$mode...[","]"$]}]
+	[ center={{lat:$centerLat,lng:$centerLng}}][ zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}][ modes={$["$mode...[","]"$]}][ controls="$controls"]
 end
 
 def type(properties & map) trigger(specific)
-	[ pageSize={$pageSize}][ type="$type"][ itemHeight={$itemHeight}][ center={{lat:$centerLat,lng:$centerLng}}][ zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}]
+    [ pageSize={$pageSize}][ type="$type"][ itemHeight={$itemHeight}][ center={{lat:$centerLat,lng:$centerLng}}][ zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}][ controls="$controls"]
 end
 
 def type(properties & collection) trigger(specific)
@@ -151,7 +159,7 @@ def type(properties & item) trigger(specific)
 end
 
 def type(properties & spinner) trigger(specific)
-	[ mode="$mode"]
+	[ mode="$mode"][ size={$size}]
 end
 
 def type(properties & switch) trigger(specific)
@@ -179,7 +187,7 @@ def type(properties & download & selection) trigger(specific)
 end
 
 def type(properties & searchbox) trigger(specific)
-	[ placeholder="$placeholder"]
+	[ placeholder="$placeholder"][ showCountMessage="$showCountMessage"]
 end
 
 def type(properties & slider) trigger(specific)
@@ -200,6 +208,14 @@ end
 
 def type(properties & sorting) trigger(specific)
 	[ mode="$mode"]
+end
+
+def type(properties & htmlviewer) trigger(specific)
+	[ content="$content"]
+end
+
+def type(properties & microsite) trigger(specific)
+    [ downloadOperations={$["$downloadOperation...[","]"$]}]
 end
 
 def type(properties) trigger(specific)

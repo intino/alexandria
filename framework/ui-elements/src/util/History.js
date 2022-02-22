@@ -1,3 +1,10 @@
 import { createBrowserHistory } from 'history';
 
-export default createBrowserHistory();
+const history = createBrowserHistory();
+history.continueListening = () => {
+    if (history.onContinueListening) history.onContinueListening();
+};
+history.stopListening = () => {
+    if (history.onStopListening) history.onStopListening();
+};
+export default history;

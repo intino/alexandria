@@ -33,6 +33,7 @@ public class DateRenderer extends ComponentRenderer<Date> {
 		if (editableDate.mask() != null) builder.add("mask", editableDate.mask());
 		if (editableDate.allowEmpty()) builder.add("allowEmpty", editableDate.allowEmpty());
 		if (editableDate.views() != null) editableDate.views().forEach(view -> builder.add("view", view.name()));
+		if (editableDate.embedded()) builder.add("embedded", "true");
 	}
 
 	@Override

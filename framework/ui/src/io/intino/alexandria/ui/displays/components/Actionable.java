@@ -5,24 +5,28 @@ import io.intino.alexandria.schemas.*;
 import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.components.actionable.SignChecker;
-import io.intino.alexandria.ui.displays.components.addressable.Addressed;
+import io.intino.alexandria.ui.displays.events.BeforeListener;
+import io.intino.alexandria.ui.displays.events.Event;
+import io.intino.alexandria.ui.displays.events.Listener;
 import io.intino.alexandria.ui.displays.notifiers.ActionableNotifier;
 import io.intino.alexandria.ui.resources.Asset;
 import io.intino.alexandria.ui.spark.UIFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.UUID;
 
-public class Actionable<DN extends ActionableNotifier, B extends Box> extends Component<DN, B> {
+public abstract class Actionable<DN extends ActionableNotifier, B extends Box> extends Component<DN, B> {
     private String title;
     private boolean readonly = false;
     private String icon;
     private Mode mode;
     private SignChecker signChecker;
     private String signReason;
+    private BeforeListener beforeAffirmListener;
+    private Listener cancelAffirmListener;
 
     public enum Mode { Link, Button, IconButton, MaterialIconButton, Toggle, IconToggle, MaterialIconToggle, SplitButton, AvatarIconButton }
+    public enum Highlight { None, Outline, Fill }
 
     public Actionable(B box) {
         super(box);
@@ -60,6 +64,11 @@ public class Actionable<DN extends ActionableNotifier, B extends Box> extends Co
         return readonly;
     }
 
+    public Actionable<DN, B> highlight(Highlight highlight) {
+        notifier.refreshHighlight(highlight.name());
+        return this;
+    }
+
     public Actionable<DN, B> affirmed(String text) {
         notifier.refreshAffirmed(text);
         return this;
@@ -77,6 +86,10 @@ public class Actionable<DN extends ActionableNotifier, B extends Box> extends Co
         return this;
     }
 
+    public void launch() {
+        notifier.launch();
+    }
+
     public void refresh() {
         ActionableInfo info = new ActionableInfo().title(title()).disabled(disabled());
         notifier.refresh(info);
@@ -92,6 +105,21 @@ public class Actionable<DN extends ActionableNotifier, B extends Box> extends Co
         this.signReason = info.reason();
     }
 
+    public void cancelAffirm(Boolean value) {
+        if (cancelAffirmListener == null) return;
+        cancelAffirmListener.accept(new Event(this));
+    }
+
+    public Actionable<DN, B> onBeforeAffirmed(BeforeListener listener) {
+        this.beforeAffirmListener = listener;
+        return this;
+    }
+
+    public Actionable<DN, B> onCancelAffirmed(Listener listener) {
+        this.cancelAffirmListener = listener;
+        return this;
+    }
+
     public String signReason() {
         return this.signReason;
     }
@@ -100,6 +128,10 @@ public class Actionable<DN extends ActionableNotifier, B extends Box> extends Co
     public void init() {
         super.init();
         if (isResourceIcon()) refreshIcon();
+    }
+
+    public final void checkAffirmed() {
+        notifier.refreshAffirmedRequired(beforeAffirmListener == null || beforeAffirmListener.accept(new Event(this)));
     }
 
     protected Actionable<DN, B> _title(String title) {

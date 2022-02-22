@@ -13,6 +13,12 @@ import javax.servlet.http.Part;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
 public class SparkManager<P extends PushService> {
@@ -65,6 +71,11 @@ public class SparkManager<P extends PushService> {
 		return request.headers(name) == null ? defaultValue : request.headers(name);
 	}
 
+	public <X extends Throwable> String fromHeaderOrElseThrow(String name, Supplier<? extends X> exceptionSupplier) throws X {
+		if (request.headers(name) == null) throw exceptionSupplier.get();
+		return request.headers(name);
+	}
+
 	public String fromQuery(String name) {
 		return request.queryParams(name);
 	}
@@ -73,12 +84,30 @@ public class SparkManager<P extends PushService> {
 		return request.queryParams(name) == null ? defaultValue : request.queryParams(name);
 	}
 
+	public <X extends Throwable> String fromQueryOrElseThrow(String name, Supplier<? extends X> exceptionSupplier) throws X {
+		if (request.queryParams(name) == null) throw exceptionSupplier.get();
+		return request.queryParams(name);
+	}
+
+	public Map<String, String[]> formAndQueryParameters() {
+		return request.raw().getParameterMap();
+	}
+
+	public String fromFormParameter(String name) {
+		return request.raw().getParameter(name);
+	}
+
 	public String fromPath(String name) {
 		return request.params(name);
 	}
 
 	public String fromPathOrDefault(String name, String defaultValue) {
 		return request.params(name) == null ? defaultValue : request.params(name);
+	}
+
+	public <X extends Throwable> String fromPathOrElseThrow(String name, Supplier<? extends X> exceptionSupplier) throws X {
+		if (request.params(name) == null) throw exceptionSupplier.get();
+		return request.params(name);
 	}
 
 	@Deprecated
@@ -98,10 +127,47 @@ public class SparkManager<P extends PushService> {
 		return request.body();
 	}
 
+	public <X extends Throwable> String fromBodyOrElseThrow(String name, Supplier<? extends X> exceptionSupplier) throws X {
+		final String body = request.body();
+		if (body == null || body.isEmpty()) throw exceptionSupplier.get();
+		return body;
+	}
+
 	public Resource fromForm(String name) {
+		return fromPartAsResource(name);
+	}
+
+
+	public List<Resource> fromPartsAsResource() {
+		try {
+			return request.raw().getParts().stream().filter(p -> !textContentType(p)).map(p -> fromPartAsResource(p.getName())).collect(Collectors.toList());
+		} catch (ServletException | IOException e) {
+			return Collections.emptyList();
+		}
+	}
+
+	public List<Resource> fromPartsAsString() {
+		try {
+			return request.raw().getParts().stream().filter(this::textContentType).map(p -> fromPartAsResource(p.getName())).collect(Collectors.toList());
+		} catch (ServletException | IOException e) {
+			return Collections.emptyList();
+		}
+	}
+
+
+	public Resource fromPartAsResource(String name) {
 		try {
 			Part part = request.raw().getPart(name);
-			return part != null ? new Resource(part.getSubmittedFileName(), part.getInputStream()).metadata().contentType(part.getContentType()) : null;
+			return part != null ? new Resource(part.getSubmittedFileName() == null ? part.getName() : part.getSubmittedFileName(), part.getInputStream()).metadata().contentType(part.getContentType()) : null;
+		} catch (ServletException | IOException e) {
+			return null;
+		}
+	}
+
+	public String fromPartAsString(String name) {
+		try {
+			Part part = request.raw().getPart(name);
+			return part != null ? new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8) : null;
 		} catch (ServletException | IOException e) {
 			return null;
 		}
@@ -162,33 +228,28 @@ public class SparkManager<P extends PushService> {
 		return raw.getRemoteAddr();
 	}
 
+	private boolean textContentType(Part p) {
+		return "application/json".equals(p.getContentType()) || "text/plain".equals(p.getContentType());
+	}
+
 	private void setUpMultipartConfiguration() {
 		MultipartConfigElement multipartConfigElement = new MultipartConfigElement(System.getProperty("java.io.tmpdir"));
 		request.raw().setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);
 	}
 
 	private void setUpSessionCookiePath() {
-//		HttpServletRequest request = this.request.raw();
-//		HttpSession session = request.getSession();
-//
-//		if (request.getParameter("JSESSIONID") != null) {
-//			Cookie userCookie = new Cookie("JSESSIONID", request.getParameter("JSESSIONID"));
-//			response.raw().addCookie(userCookie);
-//		} else {
-//			String sessionId = session.getId();
-//			Cookie userCookie = new Cookie("JSESSIONID", sessionId);
-//			response.raw().addCookie(userCookie);
-//		}
 		HttpServletRequest request = this.request.raw();
 		HttpSession session = request.getSession();
 		String sessionCookieName = sessionCookieName();
 
 		if (request.getParameter(sessionCookieName) != null) {
 			Cookie userCookie = new Cookie(sessionCookieName, request.getParameter(sessionCookieName));
+			userCookie.setHttpOnly(true);
 			response.raw().addCookie(userCookie);
 		} else if (this.request.cookie(sessionCookieName) == null) {
 			String sessionId = session.getId();
 			Cookie userCookie = new Cookie(sessionCookieName, sessionId);
+			userCookie.setHttpOnly(true);
 			response.raw().addCookie(userCookie);
 		}
 	}

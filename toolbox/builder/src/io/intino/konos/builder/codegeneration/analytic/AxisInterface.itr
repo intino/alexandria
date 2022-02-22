@@ -1,14 +1,14 @@
 def type(interface)
-	package $package.analytic;
+	package $package+ValidPackage.analytic;
+
+	import $package+ValidPackage.analytic.axes.*;
 
     import java.util.List;
     import java.util.stream.Stream;
-    import java.util.function.Predicate;
-    import java.util.stream.Collectors;
 
     public interface Axis {
 
-		String getLabel();
+		String getTitle();
 
 		int getSize();
 
@@ -38,10 +38,42 @@ def type(interface)
 			String id();
 
 			default String label() {
-				return "";
+				return id();
 			}
 
 			Axis axis();
 		}
+
+		static Axis byName(String name) {
+		    switch(name) {
+		        [$axis+NameCase...[$NL]]
+		    }
+		    return null;
+		}
+
+		static Axis byLabel(String label) {
+            switch(label) {
+                [$axis+LabelCase...[$NL]]
+            }
+            return null;
+        }
+
+        static List<Axis> all() {
+            return List.of(
+                [$axis+ListElement...[,$NL]]
+            );
+        }
     }
+end
+
+def type(axis) trigger(NameCase)
+    case "$axis+snakeCaseToCamelCase+firstUpperCase": return $axis+snakeCaseToCamelCase+firstUpperCase.get();
+end
+
+def type(axis) trigger(LabelCase)
+    case $axis+snakeCaseToCamelCase+firstUpperCase.TITLE: return $axis+snakeCaseToCamelCase+firstUpperCase.get();
+end
+
+def type(axis) trigger(ListElement)
+    $axis+snakeCaseToCamelCase+firstUpperCase.get()
 end

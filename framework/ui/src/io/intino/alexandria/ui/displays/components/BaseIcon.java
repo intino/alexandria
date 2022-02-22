@@ -27,7 +27,7 @@ public class BaseIcon<DN extends BaseIconNotifier, B extends Box> extends Abstra
         return this;
     }
 
-    private void refreshIcon() {
+    protected void refreshIcon() {
         notifier.refreshIcon(icon);
     }
 }

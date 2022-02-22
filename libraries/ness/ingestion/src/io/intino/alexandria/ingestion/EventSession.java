@@ -11,15 +11,16 @@ import org.xerial.snappy.SnappyOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 public class EventSession {
-	private final Map<Fingerprint, MessageWriter> writers = new HashMap<>();
+	private final Map<Fingerprint, MessageWriter> writers = new ConcurrentHashMap<>();
 	private final SessionHandler.Provider provider;
 	private final int autoFlush;
-	private int count = 0;
+	private final AtomicInteger count = new AtomicInteger();
 
 
 	public EventSession(SessionHandler.Provider provider) {
@@ -33,7 +34,7 @@ public class EventSession {
 
 	public void put(String tank, Timetag timetag, Event... events) {
 		put(tank, timetag, Arrays.stream(events));
-		if ((count += events.length) >= autoFlush) flush();
+		if (count.addAndGet(events.length) >= autoFlush) flush();
 	}
 
 	public void put(String tank, Timetag timetag, Stream<Event> eventStream) {
@@ -42,7 +43,11 @@ public class EventSession {
 
 	public void flush() {
 		try {
-			for (MessageWriter w : writers.values()) w.flush();
+			for (MessageWriter w : writers.values())
+				synchronized (w) {
+					w.flush();
+				}
+			count.set(0);
 		} catch (IOException e) {
 			Logger.error(e);
 		}
@@ -50,14 +55,19 @@ public class EventSession {
 
 	public void close() {
 		try {
-			for (MessageWriter w : writers.values()) w.close();
+			for (MessageWriter w : writers.values())
+				synchronized (w) {
+					w.close();
+				}
 		} catch (IOException e) {
 			Logger.error(e);
 		}
 	}
 
 	private void put(MessageWriter writer, Stream<Event> events) {
-		events.forEach(e -> write(writer, e));
+		synchronized (writer) {
+			events.forEach(e -> write(writer, e));
+		}
 	}
 
 	private void write(MessageWriter writer, Event event) {
@@ -73,8 +83,10 @@ public class EventSession {
 	}
 
 	private MessageWriter writerOf(Fingerprint fingerprint) {
-		if (!writers.containsKey(fingerprint)) writers.put(fingerprint, createWriter(fingerprint));
-		return writers.get(fingerprint);
+		synchronized (writers) {
+			if (!writers.containsKey(fingerprint)) writers.put(fingerprint, createWriter(fingerprint));
+			return writers.get(fingerprint);
+		}
 	}
 
 	private MessageWriter createWriter(Fingerprint fingerprint) {

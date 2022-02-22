@@ -18,6 +18,7 @@ Schema DynamicTableColumn
 
 Schema DynamicTableRow
 	Attribute label as Text
+	Attribute description as Text
 	Attribute cells as Object(DynamicTableCell) List
 	Attribute(defaultValue=false) isTotalRow as Bool
 
@@ -30,6 +31,10 @@ Schema DynamicTableCell
 Schema DynamicTableRowParams
 	Attribute section as Text
 	Attribute row as Text
+
+Schema DynamicTableVisibleColumn
+	Attribute name as Text
+	Attribute visible as Bool
 
 Schema PlaceMark
 	Attribute location as Object(Geometry)
@@ -58,8 +63,10 @@ Schema MapCollectionSetup as ExtensionOf(CollectionSetup)
 	Attribute icon as Text
 
 Schema DynamicTableSetup as ExtensionOf(CollectionSetup)
+	Attribute name as Text
 	Attribute pageSize as Integer
 	Attribute openRowExternal as Bool
+	Attribute visibleColumns as Object(DynamicTableVisibleColumn) List
 
 Schema PageCollectionSetup as ExtensionOf(CollectionSetup)
 	Attribute pageSize as Integer
@@ -75,6 +82,10 @@ Schema CollectionMoreItems
 Schema GroupingToolbarFilter
 	Attribute name as Text
 	Attribute options as Text List
+
+Schema GroupEntry
+	Attribute label as Text
+	Attribute groups as Object(Group) List
 
 Schema Group
 	Attribute label as Text
@@ -106,6 +117,9 @@ Schema Ordinal
 	Attribute name as Text
 	Attribute label as Text
 	Attribute step as Integer
+Schema Mark
+	Attribute value as LongInteger
+	Attribute label as Text
 Schema Range
 	Attribute min as LongInteger
 	Attribute max as LongInteger
@@ -169,3 +183,12 @@ Schema StepInfo
 Schema DialogSize
 	Attribute width as Text
 	Attribute height as Text
+
+Schema LayerToolbar
+	Attribute homeButton as Object(LayerToolbarButton)
+	Attribute previousButton as Object(LayerToolbarButton)
+	Attribute nextButton as Object(LayerToolbarButton)
+
+Schema LayerToolbarButton
+	Attribute visible as Bool
+	Attribute enabled as Bool

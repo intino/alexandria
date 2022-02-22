@@ -26,8 +26,9 @@ export const DynamicTableStyles = theme => ({
     headerCell : {
     },
     rowLabel : {
-        border:'0',
-        textAlign:'right',
+        /*border:'1px solid #e0e0e0',*/
+        textAlign:'left',
+        whiteSpace:'nowrap'
     },
     rowActions : {
         border:'0',
@@ -43,9 +44,9 @@ export const DynamicTableStyles = theme => ({
     },
     rowCell : {
         textAlign:'right',
-        borderTop: '1px solid #e0e0e0',
-        borderRight: '1px solid #e0e0e0',
-        borderLeft: '1px solid #e0e0e0',
+        //borderTop: '1px solid #e0e0e0',
+        //borderRight: '1px solid #e0e0e0',
+        //borderLeft: '1px solid #e0e0e0',
     },
     detailRowCell : {
         borderLeft: '0',
@@ -114,6 +115,12 @@ export const DynamicTableStyles = theme => ({
         top: 20,
         width: 1,
     },
+    columnsAction : {
+        color: theme.palette.primary.main,
+        marginRight: '15px',
+        fontSize: '9pt',
+        cursor: 'pointer',
+    },
 });
 
 const DynamicTablePageSize = 10;
@@ -126,10 +133,16 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 		this.requester = new DynamicTableRequester(this);
 		this.header = React.createRef();
 		this.container = React.createRef();
+		this.dialogContainer = React.createRef();
 		this.tableContainer = React.createRef();
 		this.state = {
+		    ...this.state,
+		    traceable : true,
+		    name: null,
+		    visibleColumns: [],
 		    sections: null,
 		    open: false,
+		    openColumnsDialog: false,
 		    openConfirm: false,
 		    section: null,
 		    row: null,
@@ -140,9 +153,14 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
             showRelativeValues: false,
             order: null,
             orderBy: null,
-		    ...this.state,
 		};
 	};
+
+    setup = (info) => {
+        let visibleColumns = info.visibleColumns != null && info.visibleColumns.length > 0 ? this.visibleColumnsArrayOf(info.visibleColumns) : null;
+        if (visibleColumns == null) visibleColumns = this.getCookie(info.name) ? this.getCookie(info.name) : this.state.visibleColumns;
+        this.setState({ itemCount : info.itemCount, pageSize: info.pageSize, name: info.name, visibleColumns: visibleColumns });
+    };
 
     render() {
         if (this.state.sections == null) return this.renderLoading();
@@ -155,7 +173,9 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                     {this.renderTable()}
                 </div>
                 {this.renderConfirmDialog()}
+                {this.renderColumnsDialog()}
                 {this.renderDialog()}
+                {this.renderCookieConsent()}
             </div>
         );
     };
@@ -184,6 +204,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                     {this.state.loading && <PulseLoader color={theme.palette.secondary.main} size={8} loading={true}/>}
                 </div>
                 <div className="layout horizontal end-justified center">
+                    <a className={classes.columnsAction} onClick={this.handleOpenColumnsDialog.bind(this)}>{this.translate("Show/hide columns")}</a>
                     <FormControlLabel control={<Checkbox checked={this.state.hideZeros} onChange={this.handleToggleHideZeros.bind(this)} name="toggleHideZeros" color="primary"/>} label={this.translate("Hide zeros")}/>
                     <FormControlLabel control={<Checkbox checked={this.state.showRelativeValues} onChange={this.handleToggleRelativeValues.bind(this)} name="toggleRelativeValues" color="primary"/>} label={this.translate("Show percentages")}/>
                 </div>
@@ -227,7 +248,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     };
 
     _lastPage = () => {
-        return this._pageOf(this.state.sections.length-1);
+        return this._pageOf(this.state.sections.length);
     };
 
     renderDetailView = () => {
@@ -341,7 +362,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const sectionsArray = this.treeToArray(section);
         const labelSize = this.maxLabelSize(section);
         const isMainView = this._isMainView();
-        if (this.state.sections.length == 1 && sectionsArray[0].length == 1 && sectionsArray[0][0].sections.length == 0)
+        if (this.state.sections.length == 1 && sectionsArray[0].length == 1 && sectionsArray[0][0].sections.length == 0 && sectionsArray[0][0].label === "")
             sectionsArray.shift();
         return (
             <React.Fragment>
@@ -359,7 +380,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const visible = isMainView || (!isMainView && mainSection == this.state.sections[0]);
         return (
             <TableRow key={index}>
-                {visible && <TableCell className={classes.rowLabel} style={{minWidth:rowLabelWidth+"px",width:rowLabelWidth+"px"}}><div></div></TableCell>}
+                {visible && this.renderHeaderTitleCell(mainSection, sections.length > 0 ? sections[0] : null)}
                 {sections.map((section, index) => isMainView || (!isMainView && this.isSelectedColumnIn(section, sections)) ? this.renderHeaderCell(mainSection, section, index) : null)}
             </TableRow>
         );
@@ -381,13 +402,37 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         return false;
     };
 
+    renderHeaderTitleCell = (mainSection, section) => {
+        const isMainView = this._isMainView();
+        if (section == null || (isMainView && !section.selectable)) return;
+        const { classes } = this.props;
+        const style = {backgroundColor:section.backgroundColor,fontSize:section.fontSize + "pt",textAlign:'left'};
+        const orderBy = this.state.orderBy != null ? this.state.orderBy.label : null;
+        const order = this.state.order;
+        const className = isMainView || this.state.sections[0] == mainSection ? classNames(classes.rowCell, classes.rowLabel) : classNames(classes.rowCell, classes.rowLabel, classes.detailRowCell);
+        return (
+            <TableCell className={className}
+                       style={style}
+                       align='left'
+                       key={0}>
+                {!isMainView && <div style={{color:'white'}}>{this.translate("Title")}</div>}
+                {isMainView &&
+                    <TableSortLabel active={orderBy === 'title'} direction={orderBy === 'title' ? order : 'asc'} onClick={this.handleSortByTitle.bind(this)}>
+                        <span>{this.translate("Title")}</span>
+                        {orderBy === '' ? (<span className={classes.visuallyHidden}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</span>) : null}
+                    </TableSortLabel>
+                }
+            </TableCell>
+        );
+    };
+
     renderHeaderCell = (mainSection, section, index) => {
         const { classes } = this.props;
         const columnCount = this.childrenColumnsCount(section);
         const isMainView = this._isMainView();
-        const colSpan = this._isMainView() ? columnCount : (this.isLeafSection(section) && index == this.state.column.index ? 1 : 0);
+        const colSpan = this._isMainView() ? columnCount+1 : (this.isLeafSection(section) && index == this.state.column.index ? 1 : 0);
         const color = section.color;
-        const textAlign = section.textAlign != null ? section.textAlign : "center";
+        const textAlign = section.textAlign != null ? section.textAlign : "right";
         const selectable = section.selectable;
         const orderBy = this.state.orderBy != null ? this.state.orderBy.label : null;
         const order = this.state.order;
@@ -395,6 +440,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         if (!isMainView && selectable && index != this.state.column.index) return null;
         const style = {backgroundColor:section.backgroundColor,fontSize:section.fontSize + "pt",textAlign:textAlign,minWidth:'170px'};
         if (section.borderColor !== "transparent") style.borderBottom = "4px solid " + section.borderColor;
+        if (isMainView && selectable && !this.isColumnVisible(index)) return null;
         return (
             <TableCell className={className}
                        colSpan={colSpan}
@@ -403,12 +449,12 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                        key={index}>
                 {(!selectable || (!isMainView && selectable)) &&
                     <a className="layout horizontal center-center" style={{color:color,whiteSpace:'nowrap',cursor:'pointer'}} onClick={this.handleFilterFirstColumn.bind(this)}>
-                        {section.label}{isMainView && <TouchApp style={{marginLeft:'5px'}}/>}
+                        {this.translate(section.label)}{isMainView && <TouchApp style={{marginLeft:'5px'}}/>}
                     </a>
                 }
                 {isMainView && selectable &&
                     <TableSortLabel active={orderBy === section.label} direction={orderBy === section.label ? order : 'asc'} onClick={this.handleSort.bind(this, section, index)}>
-                        <span>{section.label}</span>
+                        <span>{this.translate(section.label)}</span>
                         {orderBy === section.label ? (
                             <span className={classes.visuallyHidden}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</span>
                         ) : null}
@@ -421,6 +467,11 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     handleSort = (section, index, e) => {
         const isAsc = this.state.orderBy != null && this.state.orderBy.label === section.label && this.state.orderBy.index === index && this.state.order === 'asc';
         this.setState({ order: isAsc ? 'desc' : 'asc', orderBy: { label: section.label, index: index } });
+    };
+
+    handleSortByTitle = (e) => {
+        const isAsc = this.state.orderBy != null && this.state.orderBy.label === 'title' && this.state.order === 'asc';
+        this.setState({ order: isAsc ? 'desc' : 'asc', orderBy: { label: 'title', index: 0 } });
     };
 
     sort = (s) => {
@@ -490,8 +541,9 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     descendingComparator = (a, b) => {
         if (a.label === "Total" || b.label === "Total") return 0;
         const indicator = this.state.orderBy.label;
-        const aValue = this.cellValue(a, indicator);
-        const bValue = this.cellValue(b, indicator);
+        const aValue = indicator === "title" ? a.label : this.cellValue(a, indicator);
+        const bValue = indicator === "title" ? b.label : this.cellValue(b, indicator);
+        if (typeof aValue === "string") return aValue.localeCompare(bValue);
         if (bValue < aValue) return -1;
         if (bValue > aValue) return 1;
         return 0;
@@ -515,6 +567,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     renderBodyRow = (mainSection, sections, rowIndex) => {
         const { classes } = this.props;
         const rowLabel = this.rowLabel(sections, rowIndex);
+        const rowDescription = this.rowDescription(sections, rowIndex);
         const totalRow = this.isTotalRow(sections, rowIndex);
         const style = totalRow ? { fontWeight: "bold"} : {};
         const isMainView = this._isMainView();
@@ -524,7 +577,9 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
             <TableRow key={rowIndex}>
                 {(isMainView || (!isMainView && mainSection == this.state.sections[0])) &&
                     <TableCell className={classes.rowLabel} style={style}>
-                        {(!totalRow && isMainView) && <a className={classes.rowAction} onClick={this.handleShowItems.bind(this, mainSection, rowLabel)}>{rowLabel}</a>}
+                        {(!totalRow && isMainView) &&
+                            <a className={classes.rowAction} onClick={this.handleShowItems.bind(this, mainSection, rowLabel)} title={rowDescription}>{rowLabel}</a>
+                        }
                         {(totalRow || !isMainView) && <div>{rowLabel}</div>}
                     </TableCell>
                 }
@@ -576,7 +631,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     renderBodyCells = (mainSection, section, rowIndex, idx, offset) => {
         const isMainView = this._isMainView();
         const row = section.rows[rowIndex];
-        return (<React.Fragment key={rowIndex}>{row.cells.map((c, index) => (isMainView || (!isMainView && offset+index == this.state.column.index)) ? this.renderBodyCell(mainSection, section, row, c, index) : null)}</React.Fragment>);
+        return (<React.Fragment key={rowIndex}>{row.cells.map((c, index) => this.isColumnVisible(offset+index) && (isMainView || (!isMainView && offset+index == this.state.column.index)) ? this.renderBodyCell(mainSection, section, row, c, index) : null)}</React.Fragment>);
     };
 
     renderBodyCell = (mainSection, section, row, cell, index) => {
@@ -585,15 +640,27 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const metric = this.cellMetric(section, cell);
         const style = cell.isTotalRow ? { fontWeight: "bold" } : {};
         const relative = cell.relative !== "-1" && this.state.showRelativeValues && metric !== "%" ? cell.relative : undefined;
-        const title = cell.label + " " + this.translate("in") + " " + row.label + " " + this.translate("in") + " " + section.label;
+        const title = this.translate(cell.label) + " " + this.translate("in") + " " + this.translate(row.label) + " " + this.translate("in") + " " + this.translate(section.label);
         const value = operator === "Average" ? cell.absolute : cell.absolute;
         const format = this.cellFormat(section, cell);
         const className = this._isMainView() || this.state.sections[0] == mainSection ? classNames(classes.rowCell) : classNames(classes.rowCell, classes.detailRowCell);
+        const isMainView = this._isMainView();
+        const isTotalRow = cell.isTotalRow || row.label === "Total";
         return (
             <TableCell title={title} key={index} className={className} style={{whiteSpace:'nowrap',...style}}>
-                {NumberUtil.format(cell.absolute, format)}
-                {metric !== "" && <span style={{fontSize:'9pt',marginLeft:'5px',color:'#777'}}>{metric}</span>}
-                {relative !== undefined && <span className={classes.rowRelativeValue}>&nbsp;{relative}<span style={{fontSize:'9pt',marginLeft:'5px',color:'#777'}}>%</span></span>}
+                {!isTotalRow && !isMainView ?
+                    <a className={classes.rowAction} onClick={this.handleShowItems.bind(this, mainSection, row.label)}>
+                        {NumberUtil.format(cell.absolute, format)}
+                        {metric !== "" && <span style={{fontSize:'9pt',marginLeft:'5px',color:'#777'}}>{metric}</span>}
+                        {relative !== undefined && <span className={classes.rowRelativeValue}>&nbsp;{relative}<span style={{fontSize:'9pt',marginLeft:'5px',color:'#777'}}>%</span></span>}
+                    </a>
+                :
+                    <React.Fragment>
+                        {NumberUtil.format(cell.absolute, format)}
+                        {metric !== "" && <span style={{fontSize:'9pt',marginLeft:'5px',color:'#777'}}>{metric}</span>}
+                        {relative !== undefined && <span className={classes.rowRelativeValue}>&nbsp;{relative}<span style={{fontSize:'9pt',marginLeft:'5px',color:'#777'}}>%</span></span>}
+                    </React.Fragment>
+                }
             </TableCell>
         );
     };
@@ -652,7 +719,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const multiple = this.allowMultiSelection();
         const headerHeight = this.header.current != null ? this.header.current.offsetHeight : 0;
         const minHeight = this.props.itemHeight * this.state.itemCount;
-        const height = this.container.current != null ? this.container.current.offsetHeight : 0;
+        const height = this.dialogContainer.current != null ? this.dialogContainer.current.offsetHeight : 0;
         const headerClass = height <= minHeight ? classes.withScroller : classes.withoutScroller;
         const sectionLabel = this.state.section != null ? this.state.section.label : "";
 
@@ -660,12 +727,12 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
             <Dialog open={this.state.open} onEntered={this.handleOpen.bind(this)} onClose={this.handleClose.bind(this)} aria-labelledby="form-dialog-title" fullScreen TransitionComponent={BaseDialog.Transition}>
                 <DialogTitle id="form-dialog-title" className={classes.dialogHeader}>
                     <div className="layout horizontal center">
-                        <div className="layout horizontal flex" style={{color:'white'}}><Typography variant="h4">{this.translate("Items of") + " " + sectionLabel + " " + this.translate("in") + " " + this.state.row}</Typography></div>
+                        <div className="layout horizontal flex" style={{color:'white'}}><Typography variant="h4">{this.translate("Items of") + " " + this.translate(sectionLabel) + " " + this.translate("in") + " " + this.state.row}</Typography></div>
                         <div className="layout horizontal end-justified"><IconButton onClick={this.handleClose.bind(this)}><Clear fontSize="large" style={{color:"white"}}/></IconButton></div>
                     </div>
                 </DialogTitle>
                 <DialogContent style={{height:'100%',width:'100%'}}>
-                    <div ref={this.container} style={{height:"100%",width:"100%"}} className="layout vertical flex">
+                    <div ref={this.dialogContainer} style={{height:"100%",width:"100%"}} className="layout vertical flex">
                         { ComponentBehavior.labelBlock(this.props) }
                         <div ref={this.header} className={classNames(classes.headerView, headerClass, "layout horizontal center", selectable && multiple ? classes.selectable : {})} style={{position:"relative"}}>
                             <div className={classNames(classes.selectAll, selectable ? classes.selectable : {})}><Checkbox className={classes.selector} onChange={this.handleCheck.bind(this)} /></div>
@@ -676,6 +743,74 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                 </DialogContent>
             </Dialog>
         );
+    };
+
+    renderColumnsDialog = () => {
+        const { classes } = this.props;
+
+        return (
+            <Dialog open={this.state.openColumnsDialog} onClose={this.handleCloseColumnsDialog.bind(this)}>
+                <DialogTitle id="alert-dialog-title">{this.translate("Show/hide columns")}</DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    {this.renderColumnsCheckboxes()}
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={this.handleCloseColumnsDialog.bind(this)} color="primary" autoFocus>{this.translate("Close")}</Button>
+                </DialogActions>
+            </Dialog>
+        );
+    };
+
+    renderColumnsCheckboxes = () => {
+        const result = [];
+        const columns = this._selectorColumns();
+        for (let i=0; i<columns.length; i++) result.push(this.renderColumnCheckbox(columns[i]));
+        return result;
+    };
+
+    renderColumnCheckbox = (column) => {
+//        return <FormControlLabel control={<Checkbox checked={this.state.hideZeros} onChange={this.handleToggleHideZeros.bind(this)} name="toggleHideZeros" color="primary"/>} label={this.translate("Hide zeros")}/>
+        return (<div><FormControlLabel control={<Checkbox checked={this.isColumnVisible(column.index)} onChange={this.handleToggleColumn.bind(this, column.index)} color="primary" name={column.index}/>} label={this.translate(column.label)}/></div>);
+    };
+
+    refreshVisibleColumns = (value) => {
+        this.setState({visibleColumns: this.visibleColumnsArrayOf(value)});
+    };
+
+    visibleColumnsArrayOf = (value) => {
+        const result = [];
+        for (let i=0; i<value.length; i++) result[this.findColumn(value[i].name)] = value[i].visible;
+        return result;
+    };
+
+    findColumn = (name) => {
+        const columns = this._selectorColumns();
+        for (let i=0; i<columns.length; i++) {
+            if (columns[i].label === name) return columns[i].index;
+        }
+        return -1;
+    };
+
+    refreshZeros = (value) => {
+        this.setState({hideZeros:!value});
+    };
+
+    refreshPercentages = (value) => {
+        this.setState({showRelativeValues:value});
+    };
+
+    isColumnVisible = (index) => {
+        return this.state.visibleColumns[index] == null || this.state.visibleColumns[index] === true;
+    };
+
+    handleToggleColumn = (index) => {
+        if (this.state.visibleColumns[index] == null) this.state.visibleColumns[index] = true;
+        this.state.visibleColumns[index] = !this.state.visibleColumns[index];
+        this.updateCookie(this.state.visibleColumns, this.state.name);
+        this.setState({visibleColumns: this.state.visibleColumns});
+        this.requester.visibleColumns(this._visibleColumns(this.state.visibleColumns));
     };
 
     handleShowItems = (section, row) => {
@@ -690,6 +825,14 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 
 	handleClose = () => {
         this.setState({open:false});
+    };
+
+    handleOpenColumnsDialog = () => {
+        this.setState({openColumnsDialog:true});
+    };
+
+	handleCloseColumnsDialog = () => {
+        this.setState({openColumnsDialog:false});
     };
 
     handleOpenConfirm = () => {
@@ -770,7 +913,13 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         if (sections.length <= 0) return "";
         const section = sections[0];
         return rowIndex < section.rows.length ? section.rows[rowIndex].label : "";
-    }
+    };
+
+    rowDescription = (sections, rowIndex) => {
+        if (sections.length <= 0) return "";
+        const section = sections[0];
+        return rowIndex < section.rows.length ? section.rows[rowIndex].description : "";
+    };
 
     isTotalRow = (sections, rowIndex) => {
         if (sections.length <= 0) return false;
@@ -797,11 +946,15 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     };
 
     handleToggleRelativeValues = () => {
-        this.setState({showRelativeValues: !this.state.showRelativeValues});
+        const value = !this.state.showRelativeValues;
+        this.setState({showRelativeValues: value});
+        this.requester.showPercentages(value);
     };
 
     handleToggleHideZeros = () => {
-        this.setState({hideZeros: !this.state.hideZeros});
+        const value = !this.state.hideZeros;
+        this.setState({hideZeros: value});
+        this.requester.showZeros(!value);
     };
 
     handleFilterFirstColumn = () => {
@@ -836,8 +989,18 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     };
 
     _selectorColumn = (label, index) => {
-        return { value: label, label: label, index: index };
+        return { value: label, label: this.translate(label), index: index };
     };
+
+    _visibleColumns = (visibleList) => {
+        const columns = this._selectorColumns();
+        const result = [];
+        for (let i=0; i<columns.length; i++) {
+            const visible = visibleList[columns[i].index];
+            result.push({name: columns[i].label, visible: visible != null ? visible : true});
+        }
+        return result;
+    }
 }
 
 class DynamicTable extends EmbeddedDynamicTable {

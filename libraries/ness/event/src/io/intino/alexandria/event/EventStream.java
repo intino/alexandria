@@ -1,5 +1,6 @@
 package io.intino.alexandria.event;
 
+import java.time.Instant;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -26,8 +27,8 @@ public interface EventStream {
 	@SuppressWarnings("unused")
 	class Merge implements EventStream {
 		private Event currentEvent;
-		private EventStream[] inputs;
-		private Event[] current;
+		private final EventStream[] inputs;
+		private final Event[] current;
 
 		public Merge(EventStream... inputs) {
 			this.inputs = inputs;
@@ -68,16 +69,15 @@ public interface EventStream {
 		}
 
 		private int comparingTimestamp(int a, int b) {
-			return Long.compare(tsOf(a), tsOf(b));
+			return tsOf(current[a]).compareTo(tsOf(current[b]));
 		}
 
-		private long tsOf(int i) {
-			return current[i] != null ? current[i].ts().toEpochMilli() : Long.MAX_VALUE;
+		private Instant tsOf(Event event) {
+			return event != null ? event.ts() : Instant.MAX;
 		}
-
 	}
 
-	public class Sequence implements EventStream {
+	class Sequence implements EventStream {
 		private final Iterator<EventStream> iterator;
 		private Event currentEvent;
 		private EventStream current;
@@ -125,11 +125,9 @@ public interface EventStream {
 			}
 			return false;
 		}
-
 	}
 
 	class Empty implements EventStream {
-
 		@Override
 		public Event current() {
 			return null;
@@ -144,7 +142,5 @@ public interface EventStream {
 		public boolean hasNext() {
 			return false;
 		}
-
 	}
-
 }

@@ -20,6 +20,7 @@ Concept:RequiresAspect Axis
 	Aspect Categorical
 		var resource tsv
 		Concept:{0..1} IncludeLabel
+			Aspect Name
 		Concept:{0..1} Include
 			var Axis[]:Categorical axes
 	Aspect Dynamic with Categorical
@@ -43,8 +44,9 @@ Concept:CheckVirtual Cube
 		var Fact.Column attribute
 	Concept:Named Indicator
 		var string label
-		var string unit
+		var string unit = ""
 		var Fact.Column source
+		var integer countDecimals = 0
 		Aspect Average
 		Aspect Sum
 	Concept:Named CustomDimension
@@ -52,7 +54,8 @@ Concept:CheckVirtual Cube
 		var Axis axis
 	Concept:Named CustomIndicator
 		var string label
-		var string unit
+		var string unit = ""
+		var integer countDecimals = 0
 		Aspect Average
 		Aspect Sum
 	Concept:Named CustomFilter

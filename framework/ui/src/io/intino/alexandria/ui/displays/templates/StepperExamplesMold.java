@@ -18,22 +18,27 @@ public class StepperExamplesMold extends AbstractStepperExamplesMold<UiFramework
         stepper1.step1.canNext(nextChecker()).canBack(backChecker());
         stepper1.step2.canNext(nextChecker()).canBack(backChecker());
         stepper1.step3.canNext(nextChecker()).canBack(backChecker());
+        stepper1.reset();
 
         stepper2.onFinish(event -> stepper2.notifyUser("Stepper finalizado", UserMessage.Type.Info));
         stepper2.step4.canNext(nextChecker()).canBack(backChecker());
         stepper2.step5.canNext(nextChecker()).canBack(backChecker());
+        stepper2.reset();
 
         stepper3.onFinish(event -> stepper3.notifyUser("Stepper finalizado", UserMessage.Type.Info));
         stepper3.step6.canNext(nextChecker()).canBack(backChecker());
         stepper3.step7.canNext(nextChecker()).canBack(backChecker());
+        stepper3.reset();
 
         stepper4.onFinish(event -> stepper4.notifyUser("Stepper finalizado", UserMessage.Type.Info));
         stepper4.step8.canNext(nextChecker()).canBack(backChecker());
         stepper4.step9.canNext(nextChecker()).canBack(backChecker());
+        stepper4.reset();
 
         stepper5.onFinish(event -> stepper5.notifyUser("Stepper finalizado", UserMessage.Type.Info));
         stepper5.step10.canNext(nextChecker()).canBack(backChecker());
         stepper5.step11.canNext(nextChecker()).canBack(backChecker());
+        stepper5.reset();
     }
 
     private StepChecker nextChecker() {

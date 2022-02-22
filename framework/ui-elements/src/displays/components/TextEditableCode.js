@@ -40,8 +40,11 @@ class TextEditableCode extends AbstractTextEditableCode {
 	};
 
 	render() {
+	    if (!this.state.visible) return (<React.Fragment/>);
+
 		const { classes, theme } = this.props;
 		const value = CodeBehavior.clean(this.state.value);
+
 		return (
 			<Suspense fallback={<div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><Spinner/></div>}>
 				<div style={this.style()}><TextEditableCodeAce language={this.props.language} theme={theme} className={classes.editor}

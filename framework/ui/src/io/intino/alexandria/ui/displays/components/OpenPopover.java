@@ -11,9 +11,18 @@ public class OpenPopover<DN extends OpenPopoverNotifier, B extends Box> extends 
 	private BlockPopover popover;
 	private OpenListener openListener = null;
 	private String triggerId = "t-" + UUID.randomUUID().toString();
+	private TriggerEvent triggerEvent;
+
+	public enum TriggerEvent { MouseClick, MouseOver }
 
 	public OpenPopover(B box) {
 		super(box);
+	}
+
+	@Override
+	public void didMount() {
+		super.didMount();
+		if (triggerId != null) notifier.refreshTriggerId(triggerId);
 	}
 
 	@Override
@@ -32,10 +41,19 @@ public class OpenPopover<DN extends OpenPopoverNotifier, B extends Box> extends 
 		return this;
 	}
 
+	public void closePopover() {
+		if (this.popover == null) return;
+		this.popover.close();
+	}
+
+	protected void _triggerEvent(TriggerEvent triggerEvent) {
+		this.triggerEvent = triggerEvent;
+	}
+
 	public void execute() {
 		if (this.popover == null) return;
+		this.popover.interactionsEnabled(triggerEvent == TriggerEvent.MouseClick);
 		this.popover.open(triggerId);
 		if (openListener != null) openListener.accept(new Event(this));
 	}
-
 }

@@ -1,0 +1,119 @@
+def type(future)
+	package $package+validPackage.agenda;
+
+	$schemaImport
+	import io.intino.alexandria.logger.Logger;
+
+	import java.util.List;
+	import java.util.Map;
+
+	import static  $package+validPackage.AgendaService.BaseUri;
+
+	public abstract class Abstract$name+FirstUpperCase {
+		protected $name+FirstUpperCase~Schema schema;
+
+		public void schema($name+FirstUpperCase~Schema schema) {
+			this.schema = schema;
+		}
+
+		public $name+FirstUpperCase~Schema schema() {
+			return this.schema;
+		}
+
+		$option+methods...[$NL$NL]
+
+		public void timeout() {
+			onTimeout($parameter+call...[,]);
+		}
+
+		protected abstract void onTimeout($parameter+signature...[,]);
+
+		$parameter+getter...[$NL$NL]
+
+		$option+optionGetter...[$NL$NL]
+
+		public URI uri() {
+			if (schema == null) Logger.error("Future is not loaded");
+			return new URI();
+		}
+
+		public class URI {
+			public static final String Path = "$name+camelCaseToSnakeCase/";
+
+			public List<String> ids() {
+				return List.of($option+id...[, ]);
+			}
+
+			public String option(String id) {
+				$option+getterURI...[$NL]
+				return null;
+			}
+
+			public Map<String, String> options() {
+				return Map.of($option+map...[,]);
+			}
+
+			$option+optionGetterURI...[$NL]
+		}
+	}
+end
+
+
+def trigger(methods)
+	public void $name+firstLowerCase() {
+		on$name+firstUpperCase($parameter+call...[, ][, $optionParameter+optionCall...[, ]]);
+	}
+
+	protected abstract void on$name+firstUpperCase($parameter+signature...[, ][, $optionParameter+signature...[, ]]);
+end
+
+def trigger(getter)
+	protected String $name() {
+		return schema.$name();
+	}
+end
+
+def trigger(optionGetter)
+	$optionParameter+optionParameterGetter...[$NL$NL]
+end
+
+def trigger(optionParameterGetter)
+	protected $type $owner+firstLowerCase~$name+FirstUpperCase() {
+		return schema.$owner+firstLowerCase().$name+FirstLowerCase();
+	}
+end
+
+def trigger(call)
+	$name+firstLowerCase()
+end
+
+def trigger(optionCall)
+	$owner+firstLowerCase$name+firstUpperCase()
+end
+
+def trigger(signature)
+	$type $name+firstLowerCase
+end
+
+
+def trigger(id)
+	schema.$name+firstLowerCase().id
+end
+
+def trigger(getterURI)
+	if (schema.$name+firstLowerCase().id.equals(id)) return "$name+firstLowerCase";
+end
+
+def trigger(optionGetterURI)
+	public String $name+firstLowerCase() {
+		return BaseUri + Path + schema.$name+firstLowerCase().id;
+	}
+end
+
+def trigger(map)
+	"$name+firstLowerCase", schema.$name+firstLowerCase().id
+end
+
+def type(schemaImport)
+	import $package.schemas.*;
+end

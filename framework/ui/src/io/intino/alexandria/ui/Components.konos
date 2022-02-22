@@ -7,6 +7,7 @@ Component template
 Component block
 	Notification refreshSpacing as Text
 	Notification refreshLayout as Text
+	Notification refreshAutoSize as Bool
 
 Component blockConditional
 
@@ -26,6 +27,7 @@ Component blockDrawer
 
 Component blockPopover
 	Notification refresh as Text
+	Notification refreshInteractionsEnabled as Bool
 	Request close
 
 Component option
@@ -65,6 +67,7 @@ Component optionList
 
 Component baseSelector
 	Notification refreshReadonly as Bool
+	Notification refreshOptions as Text List
 	Request optionsRendered
 
 Component selectorMenu as ExtensionOf(baseSelector)
@@ -98,6 +101,7 @@ Component selectorTabs as ExtensionOf(baseSelector)
 	Notification refreshSelected as Integer
 	Notification refreshOptionsVisibility as Integer List
 	Request select as Integer
+	Request selectByName as Text
 
 Component selectorCollectionBox as ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
@@ -112,6 +116,16 @@ Component selectorCollectionBox as ExtensionOf(baseSelector)
 Component multiple
 	Notification refreshReadonly as Bool
 	Request add
+	Request select as Text
+	Request remove as Integer
+
+Component multipleImage
+	Notification refreshReadonly as Bool
+	Notification refreshImages as Text List
+	Notification reset
+
+	Request add as File
+	Request select as Text
 	Request remove as Integer
 
 Component spinner
@@ -124,7 +138,9 @@ Component baseSlider
 	Notification refreshToolbar as Object(ToolbarState)
 	Notification refreshRange as Object(Range)
 	Notification refreshReadonly as Bool
+	Notification refreshMarks as Object(Mark) List
 
+	Request moved as LongInteger
 	Request update as LongInteger
 	Request selectOrdinal as Text
 	Request previous
@@ -144,10 +160,12 @@ Component proxyStamp
 Component microSite
 	Notification renderPage as Text
 	Notification renderPageNotFound
-	Notification downloadContentVisibility as Bool
 
 	Request(Asset) download
 	Request(Asset) downloadContent
+
+Component htmlViewer
+	Notification refresh as Text
 
 Component frame
 	Notification refresh as Text
@@ -168,6 +186,18 @@ Component decisionDialog as ExtensionOf(baseDialog)
 Component collectionDialog as ExtensionOf(baseDialog)
 	Notification refreshSelectionCount as Integer
 	Request accept
+
+Component layer
+	Notification open
+	Notification close
+	Notification refreshTitle as Text
+	Notification refreshToolbar as Object(LayerToolbar)
+
+	Request open
+	Request home
+	Request previous
+	Request next
+	Request close
 
 Component divider
 Component user

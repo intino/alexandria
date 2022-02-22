@@ -70,3 +70,28 @@ Template(layout=Vertical, spacing=DP8) sliderExamplesMold
 						Slider(style\=SliderOnly)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Range(min\=1,max\=100)
 						=========
+
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="No facets with SliderOnly and Marks in Java")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Slider(format=containerAirLarge, style=SliderOnly) slider6
+					Range(min=1,max=100)
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Slider(style\=SliderOnly)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Range(min\=1,max\=100)
+						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="No facets with slider on bottom")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Slider(format=containerAirLarge, position=SliderBottom) slider7
+					Range(min=1,max=100)
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Slider(position\=SliderBottom)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Range(min\=1,max\=100)
+						=========

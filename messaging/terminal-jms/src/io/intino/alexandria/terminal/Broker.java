@@ -7,7 +7,8 @@ import java.net.Socket;
 public class Broker {
 	public static boolean isRunning(String brokerUrl) {
 		String[] values = brokerUrl.substring(brokerUrl.indexOf("//") + 2).replace(")", "").split(":");
-		return values.length == 2 && isRunning(values[0], Integer.parseInt(values[1]));
+		final int port = Integer.parseInt(values[1].contains("?") ? values[1].split("\\?")[0] : values[1]);
+		return values.length == 2 && isRunning(values[0], port);
 	}
 
 	private static boolean isRunning(String address, int port) {

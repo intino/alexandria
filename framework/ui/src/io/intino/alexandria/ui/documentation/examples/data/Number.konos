@@ -58,20 +58,20 @@ Template(layout=Vertical, spacing=DP8) numberExamplesMold
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="No facets, Bytes style")
 			Block(spacing=DP8, format=filled)
-				Number(format=body1 widgetDemo, value=23232323, style=Bytes, countDecimals=2)
+				Number(format=body1 widgetDemo, value=23232323, style=Bytes, countDecimals=2, expanded=false)
 				Block > Text as Code(language=Html)
 						value
 							=========
-							Number(value\=23232323, style\=Bytes, countDecimals\=2)
+							Number(value\=23232323, style\=Bytes, countDecimals\=2, expanded\=false)
 							=========
 
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="No facets, Exponential style")
 			Block(spacing=DP8, format=filled)
-				Number(format=body1 widgetDemo, value=12398734.202, style=Exponential, countDecimals=2)
+				Number(format=body1 widgetDemo, value=12398734.202, style=Exponential, countDecimals=2, expanded=false)
 				Block > Text as Code(language=Html)
 						value
 							=========
-							Number(value\=12398734.202, style\=Exponential, countDecimals\=2)
+							Number(value\=12398734.202, style\=Exponential, countDecimals\=2, expanded\=false)
 							=========

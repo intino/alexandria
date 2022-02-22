@@ -8,7 +8,7 @@ import java.util.Map;
 public class Soap {
 
 	public Envelope readEnvelope(String value) {
-		return new Envelope(new Xml(value).document().child("S:Envelope"));
+		return new Envelope(new Xml(value).document().getFirstChild());
 	}
 
 	public String writeEnvelope(Object schema, String xmlns) {
@@ -43,9 +43,9 @@ public class Soap {
 					"</S:Envelope>";
 
 	private static final String schemaTemplate =
-			"<$name xmlns=\"$xmlns\">\n" +
+			"<R:$name xmlns:R=\"$xmlns\">\n" +
 					"$parameter" +
-					"\t\t</$name>";
+					"\t\t</R:$name>";
 
-	private static final String parameterTemplate = "\t\t\t<$name>$value</$name>\n";
+	private static final String parameterTemplate = "\t\t\t<R:$name>$value</R:$name>\n";
 }

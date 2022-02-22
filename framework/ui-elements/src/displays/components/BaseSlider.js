@@ -80,6 +80,9 @@ export default class BaseSlider extends AbstractBaseSlider {
 		doubleSpacing: {
 			marginRight: theme.spacing(2),
 		},
+		leftSpacing: {
+			marginLeft: theme.spacing(2),
+		},
 	});
 
 	constructor(props) {
@@ -92,6 +95,7 @@ export default class BaseSlider extends AbstractBaseSlider {
 			ordinals: [],
 			ordinal: null,
 			readonly: this.props.readonly,
+			marks: null,
 		};
 	};
 
@@ -105,10 +109,12 @@ export default class BaseSlider extends AbstractBaseSlider {
 		if (range == null)
 			return (<div style={this.style()}>{this.translate("No range defined!")}</div>);
 
+		const position = this.props.position;
 		return (
 			<div style={this.style()} className="layout vertical flex">
-				{this.renderSlider()}
+				{(position == null || position === "SliderTop") && this.renderSlider()}
 				{this.renderToolbar()}
+				{position === "SliderBottom" && this.renderSlider()}
 			</div>
 		);
 	};
@@ -118,10 +124,12 @@ export default class BaseSlider extends AbstractBaseSlider {
 
 		const range = this.state.range;
 		const ordinal = this.state.ordinals[0];
+		const marks = this.state.marks;
 
 		return (<StyledSlider disabled={this.state.readonly} valueLabelDisplay="auto" min={range.min} max={range.max}
-							  value={this.getValue()} step={ordinal.step}
-							  onChange={this.handleChange.bind(this)}
+							  value={this.getValue()} step={ordinal.step} marks={marks}
+							  onChange={this.handleMoved.bind(this)}
+							  onChangeCommitted={this.handleChange.bind(this)}
 							  valueLabelFormat={this.handleFormattedValue.bind(this)}
 							  ValueLabelComponent={ValueLabelComponent}
 		/>);
@@ -134,11 +142,11 @@ export default class BaseSlider extends AbstractBaseSlider {
 		const mainSpacing = !this.navigationOnly() ? classes.doubleSpacing : {};
 		return (
 			<div className={classNames("layout horizontal", mainSpacing)}>
-                <div className={classNames("layout horizontal center", classes.doubleSpacing)} style={{display:display}}>
+                <div className={classNames("layout horizontal center")} style={{display:display}}>
                     {this.allowNavigation() && this.renderNavigationControls()}
                     {(!this.navigationOnly() && !this.ordinalSelectorOnly()) && this.renderValue()}
                 </div>
-				{!this.navigationOnly() && <div className="layout horizontal">{this.renderOrdinals()}</div>}
+				{!this.navigationOnly() && <div className={classsNames("layout horizontal", classes.leftSpacing)}>{this.renderOrdinals()}</div>}
 			</div>
 		);
 	};
@@ -153,7 +161,7 @@ export default class BaseSlider extends AbstractBaseSlider {
 				{ <IconButton disabled={this.state.readonly || !canPrevious} color="primary" aria-label={this.translate("Before")} onClick={this.handlePrevious.bind(this)} size="small"><NavigateBefore/></IconButton>}
 				{ (this.props.animation && !this.state.toolbar.playing) && <IconButton disabled={this.state.readonly} color="primary" aria-label={this.translate("Play")} onClick={this.handlePlay.bind(this)} size="small"><PlayCircleFilled/></IconButton>}
 				{ (this.props.animation && this.state.toolbar.playing) && <IconButton disabled={this.state.readonly} color="primary" aria-label={this.translate("Pause")} onClick={this.handlePause.bind(this)} size="small"><PauseCircleFilled/></IconButton>}
-				{ <IconButton disabled={this.state.readonly || !canNext} className={classes.spacing} color="primary" aria-label={this.translate("Next")} onClick={this.handleNext.bind(this)} size="small"><NavigateNext/></IconButton>}
+				{ <IconButton disabled={this.state.readonly || !canNext} color="primary" aria-label={this.translate("Next")} onClick={this.handleNext.bind(this)} size="small"><NavigateNext/></IconButton>}
 			</div>
 		);
 	};
@@ -164,11 +172,11 @@ export default class BaseSlider extends AbstractBaseSlider {
 	};
 
 	getValue = () => {
-		return this.state.selected != null && this.state.selected.value !== -1 ? this.state.selected.value : 0;
+		return this.state.selected != null && this.state.selected.value !== undefined && this.state.selected.value !== -1 ? this.state.selected.value : 0;
 	};
 
 	getFormattedValue = () => {
-		return this.state.selected != null && this.state.selected.value !== -1 ? this.state.selected.formattedValue : 0;
+		return this.state.selected != null && this.state.selected.value !== undefined && this.state.selected.value !== -1 ? this.state.selected.formattedValue : 0;
 	};
 
 	renderOrdinals = () => {
@@ -179,6 +187,11 @@ export default class BaseSlider extends AbstractBaseSlider {
 				{this.state.ordinals.map((ordinal, i) => <MenuItem key={i} value={ordinal.name}>{this.translate(ordinal.label)}</MenuItem>)}
 			</Select>
 		);
+	};
+
+	handleMoved = (e, value) => {
+		this.requester.moved(value);
+		this.setState({value});
 	};
 
 	handleChange = (e, value) => {
@@ -213,6 +226,10 @@ export default class BaseSlider extends AbstractBaseSlider {
 
 	refreshReadonly = (readonly) => {
 		this.setState({readonly});
+	};
+
+	refreshMarks = (marks) => {
+		this.setState({marks});
 	};
 
 	handleFormattedValue = (value, index) => {

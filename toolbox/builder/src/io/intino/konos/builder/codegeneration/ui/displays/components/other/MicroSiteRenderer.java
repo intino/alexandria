@@ -10,6 +10,8 @@ import io.intino.konos.model.graph.OtherComponents;
 import io.intino.konos.model.graph.OtherComponents.Frame;
 import io.intino.konos.model.graph.OtherComponents.MicroSite;
 
+import java.util.stream.Collectors;
+
 public class MicroSiteRenderer extends ComponentRenderer<MicroSite> {
 
 	public MicroSiteRenderer(CompilationContext compilationContext, MicroSite component, TemplateProvider provider, Target target) {
@@ -20,6 +22,7 @@ public class MicroSiteRenderer extends ComponentRenderer<MicroSite> {
 	public FrameBuilder properties() {
 		FrameBuilder properties = super.properties();
 		if (element.site() != null) properties.add("site", resourceMethodFrame("site", element.site()));
+		element.downloadOperations().forEach(o -> properties.add("downloadOperation", o.name()));
 		return properties;
 	}
 

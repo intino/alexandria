@@ -1,23 +1,32 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.schemas.GroupEntry;
+import io.intino.alexandria.ui.displays.components.addressable.Addressable;
+import io.intino.alexandria.ui.displays.components.collection.CollectionAddressResolver;
 import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.notifiers.BaseGroupingNotifier;
 import io.intino.alexandria.ui.model.datasource.Group;
 
 import java.util.*;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.singletonList;
+import static java.util.Collections.singletonMap;
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
-public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extends AbstractBaseGrouping<DN, B> {
+public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extends AbstractBaseGrouping<DN, B> implements Addressable {
 	private List<Collection> collections = new ArrayList<>();
 	private List<String> selection;
 	private SelectionListener selectionListener;
 	private SelectionListener attachedListener;
-	private List<Group> groups = new ArrayList<>();
+	private java.util.Map<String, java.util.List<Group>> groups = new HashMap<>();
 	private GroupingToolbar toolbar;
+	private String path;
+	private String address;
 
 	public BaseGrouping(B box) {
         super(box);
@@ -28,6 +37,10 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 		super.didMount();
 		if (selection != null) notifier.refreshSelection(selection);
 		notifier.refreshVisibility(isVisible());
+	}
+
+	public String path() {
+		return this.path;
 	}
 
 	public List<String> selection() {
@@ -50,10 +63,41 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 		return this;
 	}
 
+	protected BaseGrouping<DN, B> _path(String path) {
+		this.path = path;
+		this._address(path);
+		return this;
+	}
+
+	protected BaseGrouping<DN, B> _address(String address) {
+		this.address = address;
+		return this;
+	}
+
+	protected void address(String value) {
+		this._address(value);
+	}
+
+	public void setupAddress(List<String> groups) {
+		if (address == null || collections.size() <= 0) {
+			select(groups);
+			return;
+		}
+		String queryString = CollectionAddressResolver.queryString(collections.get(0), key(), groups);
+		if (queryString == null) {
+			select(groups);
+			return;
+		}
+		notifier.addressed(address + (address.contains("?") ? ":" : "?") + queryString);
+		notifier.registerSelection(groups);
+		select(groups);
+	}
+
 	public void select(List<String> groups) {
 		this.selection = new ArrayList<>(groups);
 		notifySelection();
 		notifyBindings();
+		notifier.addressed(null);
 	}
 
 	public BaseGrouping<DN, B> bindTo(GroupingToolbar toolbar) {
@@ -71,7 +115,7 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 		return this;
 	}
 
-	public BaseGrouping<DN, B> attachTo(Grouping grouping) {
+	public BaseGrouping<DN, B> attachTo(BaseGrouping<?, ?> grouping) {
 		grouping.onSelect(e -> notifyAttachedChanges(e.selection()));
 		return this;
 	}
@@ -91,11 +135,12 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	}
 
 	protected List<Group> groupsOf(List<String> names) {
-		return names.stream().map(this::groupOf).collect(Collectors.toList());
+		List<Group> groups = flattenGroups();
+		return names.stream().map(name -> findGroup(name, groups)).collect(Collectors.toList());
 	}
 
 	protected BaseGrouping _groups(List<Group> groups) {
-		this.groups = groups;
+		this.groups = groups.stream().collect(groupingBy(g -> g.category() != null ? g.category() : "default"));
 		return this;
 	}
 
@@ -106,11 +151,7 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	}
 
 	private void refreshGroups() {
-		notifier.refreshGroups(groups.stream().map(this::groupOf).collect(toList()));
-	}
-
-	private io.intino.alexandria.schemas.Group groupOf(Group group) {
-		return new io.intino.alexandria.schemas.Group().label(group.label()).count(group.count()).color(group.color());
+		notifier.refreshGroups(groups.entrySet().stream().map(this::groupOf).collect(toList()));
 	}
 
 	private void notifySelection() {
@@ -124,16 +165,29 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	}
 
 	private List<String> namesOf(List<String> selection) {
-		return selection != null ? selection.stream().map(v -> groupOf(v).name()).collect(Collectors.toList()) : null;
+		List<Group> groups = flattenGroups();
+		return selection != null ? selection.stream().map(v -> findGroup(v, groups).name()).collect(Collectors.toList()) : null;
 	}
 
-	private Group groupOf(String key) {
-		return groups.stream().filter(g -> g.name().equals(key) || g.label().equals(key)).findFirst().orElse(null);
+	private io.intino.alexandria.schemas.GroupEntry groupOf(Map.Entry<String, List<Group>> group) {
+		return new io.intino.alexandria.schemas.GroupEntry().label(group.getKey()).groups(group.getValue().stream().map(this::groupOf).collect(toList()));
+	}
+
+	private io.intino.alexandria.schemas.Group groupOf(Group group) {
+		return new io.intino.alexandria.schemas.Group().label(group.label()).count(group.count()).color(group.color());
+	}
+
+	private Group findGroup(String key, List<Group> in) {
+		return in.stream().filter(g -> g.name().equals(key) || g.label().equals(key)).findFirst().orElse(null);
 	}
 
 	private void notifyAttachedChanges(List<String> selection) {
 		if (attachedListener == null) return;
 		attachedListener.accept(new SelectionEvent(this, selection));
+	}
+
+	private List<Group> flattenGroups() {
+		return this.groups.values().stream().flatMap(java.util.Collection::stream).collect(toList());
 	}
 
 }

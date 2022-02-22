@@ -43,7 +43,8 @@ public class ElementHelper {
 	}
 
 	private String shortName(String snakeName) {
-		return Arrays.stream(snakeName.split("-")).map(this::initials).collect(Collectors.joining(""));
+		String result = Arrays.stream(snakeName.split("-")).map(this::initials).collect(Collectors.joining(""));
+		return "";//result.length() > 10 ? result.substring(0, 10) : result;
 	}
 
 	private String initials(String name) {
@@ -100,6 +101,7 @@ public class ElementHelper {
 		if (actionable.isOpenSite()) result = InteractionComponents.Actionable.OpenSite.class.getSimpleName();
 		if (actionable.isOpenBlock()) result = InteractionComponents.Actionable.OpenBlock.class.getSimpleName();
 		if (actionable.isOpenDialog()) result = InteractionComponents.Actionable.OpenDialog.class.getSimpleName();
+		if (actionable.isOpenLayer()) result = InteractionComponents.Actionable.OpenLayer.class.getSimpleName();
 		if (actionable.isOpenPopover()) result = InteractionComponents.Actionable.OpenPopover.class.getSimpleName();
 		if (actionable.isCloseDialog()) result = InteractionComponents.Actionable.CloseDialog.class.getSimpleName();
 		if (actionable.isSelectPreviousItem()) result = InteractionComponents.Actionable.SelectPreviousItem.class.getSimpleName();

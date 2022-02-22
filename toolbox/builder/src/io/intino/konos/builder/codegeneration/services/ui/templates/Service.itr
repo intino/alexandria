@@ -36,13 +36,15 @@ def type(ui)
 		}
 
 		public static void initDisplays(UISpark spark, PushService pushService) {
-			$display...[$NL]
+			$display+init...[$NL]
 			registerNotifiers();
 		}
 
 		private static void registerNotifiers() {
 			$display+notifier...[$NL]
 		}
+
+        $display+method...[$NL]
 	}
 end
 
@@ -94,13 +96,22 @@ def type(display & proxy) trigger(proxy)
 	spark.route("/$name+lowercase~proxy/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
 end
 
+def type(display) trigger(init)
+    init$name+firstUpperCase(spark, pushService);
+end
+
+def type(display) trigger(method)
+    private static void init$name+firstUpperCase(UISpark spark, PushService pushService) {
+        spark.route("/$name+lowercase/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
+        spark.route("/$name+lowercase/:displayId").post(manager -> new $requesterType~Requester(manager, notifierProvider()).execute());
+        [$asset]
+        spark.route("/$name+lowercase/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
+        pushService.register("$name+lowercase", new $requesterType~PushRequester());
+        $display+proxy
+    }
+end
+
 def type(display)
-	spark.route("/$name+lowercase/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
-	spark.route("/$name+lowercase/:displayId").post(manager -> new $requesterType~Requester(manager, notifierProvider()).execute());
-	[$asset]
-	spark.route("/$name+lowercase/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
-	pushService.register("$name+lowercase", new $requesterType~PushRequester());
-	$display+proxy
 end
 
 def trigger(asset)

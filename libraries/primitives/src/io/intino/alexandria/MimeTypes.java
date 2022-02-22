@@ -7,8 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MimeTypes {
-	private static Map<String, String> contentTypes = new LinkedHashMap<>();
-	private static Map<String, String> extensions = new LinkedHashMap<>();
+	private static final Map<String, String> contentTypes = new LinkedHashMap<>();
+	private static final Map<String, String> extensions = new LinkedHashMap<>();
 
 	public static String contentTypeOf(URL url) {
 		try {
@@ -50,6 +50,7 @@ public class MimeTypes {
 		contentTypes.put(".css", "text/css");
 		contentTypes.put(".csv", "text/csv");
 		contentTypes.put(".doc", "application/msword");
+		contentTypes.put(".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
 		contentTypes.put(".epub", "application/epub+zip");
 		contentTypes.put(".gif", "image/gif");
 		contentTypes.put(".htm", "text/html");
@@ -59,6 +60,7 @@ public class MimeTypes {
 		contentTypes.put(".jar", "application/java-archive");
 		contentTypes.put(".jpg", "image/jpeg");
 		contentTypes.put(".jpeg", "image/jpeg");
+		contentTypes.put(".png", "image/png");
 		contentTypes.put(".js", "application/javascript");
 		contentTypes.put(".json", "application/json");
 		contentTypes.put(".mid", "audio/midi");

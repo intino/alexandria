@@ -27,8 +27,10 @@ class SelectorTabs extends AbstractSelectorTabs {
 	    if (!this.state.visible) return (<React.Fragment/>);
 	    const selected = this.state.selected !== -1 ? this.state.selected : 0;
 	    const children = this.children();
+	    const scrollButtons = this.props.scrollButtons != undefined ? this.props.scrollButtons.toLowerCase() : "off";
+	    const variant = scrollButtons !== "off" ? "scrollable" : undefined;
         return (
-            <Tabs value={selected} variant="fullWidth"
+            <Tabs value={selected} variant="fullWidth" variant={variant} scrollButtons={scrollButtons}
                   onChange={this.handleChange.bind(this)} color={this.props.color} style={this.style()}>
                 {React.Children.map(children, (child, i) => { return this.renderTab(child, i); })}
             </Tabs>
@@ -38,16 +40,38 @@ class SelectorTabs extends AbstractSelectorTabs {
     renderTab = (tab, i) => {
 	    const className = tab.props.className;
         if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
-        return this._isVisible(i) ? (<Tab label={tab}/>) : null;
+        return this._isVisible(i) ? (<Tab label={tab} index={i} style={this.styleOf(tab)}/>) : null;
     };
 
     refreshSelected = (tab) => {
-        this.setState({ selected: tab });
+        let realTab = tab - this._countInvisible(tab);
+        this.setState({ selected: realTab });
 	};
 
     refreshOptionsVisibility = (options) => {
         this.setState({ hiddenOptions: options });
 	};
+
+	_countInvisible = (pos) => {
+	    const hiddenOptions = this.state.hiddenOptions;
+	    let result = 0;
+	    for (var i=0; i<hiddenOptions.length; i++) {
+	        if (hiddenOptions[i] <= pos) result++;
+	        else break;
+	    }
+	    return result;
+	};
+
+	_visibleOptions = () => {
+	    const hiddenOptions = this.state.hiddenOptions;
+	    const children = this.children();
+	    const result = [];
+	    for (var i=0; i<children.length; i++) {
+	        if (!this._isVisible(i)) continue;
+	        result.push(i);
+	    }
+	    return result;
+	}
 
 	_isVisible = (pos) => {
 	    const hiddenOptions = this.state.hiddenOptions;
@@ -58,7 +82,12 @@ class SelectorTabs extends AbstractSelectorTabs {
 	}
 
 	handleChange = (e, value) => {
-        this.requester.select(value);
+	    const children = this.children();
+	    const options = this._visibleOptions();
+	    const index = options[value];
+	    const selected = children[index] != null ? children[index].props.name : null;
+	    if (selected != null) this.requester.selectByName(selected);
+	    else this.requester.select(value);
     };
 }
 

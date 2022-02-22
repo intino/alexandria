@@ -4,22 +4,20 @@ import io.intino.alexandria.event.Event;
 import io.intino.alexandria.jms.*;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
-import io.intino.alexandria.message.MessageWriter;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQSession;
 import org.apache.activemq.command.ActiveMQDestination;
 
 import javax.jms.*;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static io.intino.alexandria.jms.MessageReader.textFrom;
@@ -45,6 +43,8 @@ public class JmsConnector implements Connector {
 	private Connection connection;
 	private Session session;
 	private ScheduledExecutorService scheduler;
+	private final ExecutorService eventDispatcher;
+
 
 	public JmsConnector(String brokerUrl, String user, String password, String clientId, File messageCacheDirectory) {
 		this(brokerUrl, user, password, clientId, false, messageCacheDirectory);
@@ -66,6 +66,7 @@ public class JmsConnector implements Connector {
 			this.eventOutBox = new EventOutBox(new File(outBoxDirectory, "events"));
 			this.messageOutBox = new MessageOutBox(new File(outBoxDirectory, "requests"));
 		}
+		eventDispatcher = Executors.newSingleThreadExecutor(new NamedThreadFactory("jms-connector"));
 	}
 
 	public void start() {
@@ -103,8 +104,38 @@ public class JmsConnector implements Connector {
 
 	@Override
 	public synchronized void sendEvent(String path, Event event) {
-		new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList())).forEach(eventConsumer -> eventConsumer.accept(event));
-		if (!doSendEvent(path, event) && eventOutBox != null) eventOutBox.push(path, event);
+		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
+		for (Consumer<Event> c : consumers) c.accept(event);
+		eventDispatcher.execute(() -> {
+			if (!doSendEvent(path, event) && eventOutBox != null) eventOutBox.push(path, event);
+		});
+	}
+
+
+	public synchronized void sendEvents(String path, List<Event> events) {
+		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
+		consumers.forEach(events::forEach);
+		eventDispatcher.execute(() -> {
+			if (!doSendEvents(path, events) && eventOutBox != null) events.forEach(e -> eventOutBox.push(path, e));
+		});
+	}
+
+	public synchronized void sendEvents(String path, List<Event> events, int expirationInSeconds) {
+		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
+		consumers.forEach(events::forEach);
+		eventDispatcher.execute(() -> {
+			if (!doSendEvents(path, events, expirationInSeconds) && eventOutBox != null)
+				events.forEach(e -> eventOutBox.push(path, e));
+		});
+	}
+
+	@Override
+	public synchronized void sendEvent(String path, Event event, int expirationInSeconds) {
+		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
+		for (Consumer<Event> eventConsumer : consumers) eventConsumer.accept(event);
+		eventDispatcher.execute(() -> {
+			if (!doSendEvent(path, event, expirationInSeconds) && eventOutBox != null) eventOutBox.push(path, event);
+		});
 	}
 
 	@Override
@@ -112,7 +143,7 @@ public class JmsConnector implements Connector {
 		registerEventConsumer(path, onEventReceived);
 		JmsConsumer consumer = this.consumers.get(path);
 		if (consumer == null) return;
-		Consumer<javax.jms.Message> eventConsumer = e -> onEventReceived.accept(new Event(MessageDeserializer.deserialize(e)));
+		Consumer<javax.jms.Message> eventConsumer = m -> MessageDeserializer.deserialize(m).forEachRemaining(ev -> onEventReceived.accept(newEvent(m, ev)));
 		jmsEventConsumers.put(onEventReceived, eventConsumer.hashCode());
 		consumer.listen(eventConsumer);
 	}
@@ -125,23 +156,45 @@ public class JmsConnector implements Connector {
 
 	@Override
 	public void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived) {
-		registerEventConsumer(path, onEventReceived);
-		TopicConsumer consumer = (TopicConsumer) this.consumers.get(path);
+		registerEventConsumer(path, onEventReceived, subscriberId);
+		JmsConsumer consumer = this.consumers.get(path);
 		if (consumer == null) return;
-		Consumer<javax.jms.Message> eventConsumer = m -> onEventReceived.accept(new Event(MessageDeserializer.deserialize(m)));
+		Consumer<javax.jms.Message> eventConsumer = m -> MessageDeserializer.deserialize(m).forEachRemaining(ev -> onEventReceived.accept(newEvent(m, ev)));
 		jmsEventConsumers.put(onEventReceived, eventConsumer.hashCode());
-		consumer.listen(eventConsumer, subscriberId);
+		consumer.listen(eventConsumer);
+	}
+
+	@Override
+	public void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived, Predicate<Instant> filter) {
+		registerEventConsumer(path, onEventReceived, subscriberId);
+		JmsConsumer consumer = this.consumers.get(path);
+		if (consumer == null) return;
+		Consumer<javax.jms.Message> eventConsumer = m -> MessageDeserializer.deserialize(m).forEachRemaining(ev -> {
+			final Instant timestamp = timestamp(m);
+			if (timestamp != null && filter.test(timestamp)) onEventReceived.accept(newEvent(m, ev));
+		});
+		jmsEventConsumers.put(onEventReceived, eventConsumer.hashCode());
+		consumer.listen(eventConsumer);
+	}
+
+	private Instant timestamp(javax.jms.Message m) {
+		try {
+			return Instant.ofEpochMilli(m.getJMSTimestamp());
+		} catch (JMSException e) {
+			Logger.error(e);
+			return null;
+		}
 	}
 
 	@Override
 	public void detachListeners(Consumer<Event> consumer) {
+		eventConsumers.values().forEach(list -> list.remove(consumer));
 		Integer code = jmsEventConsumers.get(consumer);
 		if (code == null) return;
 		for (JmsConsumer jc : consumers.values()) {
 			List<Consumer<javax.jms.Message>> toRemove = jc.listeners().stream().filter(l -> l.hashCode() == code).collect(Collectors.toList());
 			toRemove.forEach(jc::removeListener);
 		}
-		eventConsumers.values().forEach(list -> list.remove(consumer));
 	}
 
 	@Override
@@ -166,6 +219,20 @@ public class JmsConnector implements Connector {
 	}
 
 	@Override
+	public void createSubscription(String path, String subscriberId) {
+		if (session != null && !this.consumers.containsKey(path))
+			this.consumers.put(path, durableTopicConsumer(path, subscriberId));
+	}
+
+	public void destroySubscription(String subscriberId) {
+		try {
+			session.unsubscribe(subscriberId);
+		} catch (JMSException e) {
+			Logger.error(e);
+		}
+	}
+
+	@Override
 	public void detachListeners(String path) {
 		if (this.consumers.containsKey(path)) {
 			this.consumers.get(path).close();
@@ -183,14 +250,14 @@ public class JmsConnector implements Connector {
 		}
 		try {
 			QueueProducer producer = new QueueProducer(session, path);
-			Destination temporaryQueue = session.createTemporaryQueue();
+			TemporaryQueue temporaryQueue = session.createTemporaryQueue();
 			javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue);
 			consumer.setMessageListener(m -> acceptMessage(onResponse, consumer, (TextMessage) m));
 			final TextMessage txtMessage = session.createTextMessage();
 			txtMessage.setText(message);
 			txtMessage.setJMSReplyTo(temporaryQueue);
 			txtMessage.setJMSCorrelationID(createRandomString());
-			sendMessage(producer, txtMessage);
+			sendMessage(producer, txtMessage, 100);
 			producer.close();
 		} catch (JMSException e) {
 			Logger.error(e);
@@ -200,6 +267,15 @@ public class JmsConnector implements Connector {
 	@Override
 	public void requestResponse(String path, String message, String responsePath) {
 		if (!doSendMessage(path, message, responsePath)) messageOutBox.push(path, message);
+	}
+
+	private Event newEvent(javax.jms.Message m, Message ev) {
+		try {
+			return new Event(ev);
+		} catch (Throwable e) {
+			Logger.error("Malformed message:\n" + textFrom(m));
+			return new Event(ev);
+		}
 	}
 
 	public Connection connection() {
@@ -235,6 +311,13 @@ public class JmsConnector implements Connector {
 		if (session != null && !this.consumers.containsKey(path)) this.consumers.put(path, topicConsumer(path));
 	}
 
+	private void registerEventConsumer(String path, Consumer<Event> onEventReceived, String subscriberId) {
+		this.eventConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
+		this.eventConsumers.get(path).add(onEventReceived);
+		if (session != null && !this.consumers.containsKey(path))
+			this.consumers.put(path, durableTopicConsumer(path, subscriberId));
+	}
+
 	private void registerMessageConsumer(String path, MessageConsumer onMessageReceived) {
 		this.messageConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
 		this.messageConsumers.get(path).add(onMessageReceived);
@@ -242,11 +325,31 @@ public class JmsConnector implements Connector {
 	}
 
 	private boolean doSendEvent(String path, Event event) {
+		return doSendEvent(path, event, 0);
+	}
+
+	private boolean doSendEvents(String path, List<Event> event) {
+		return doSendEvents(path, event, 0);
+	}
+
+	private boolean doSendEvent(String path, Event event, int expirationTimeInSeconds) {
 		if (cannotSendMessage()) return false;
 		try {
 			topicProducer(path);
 			JmsProducer producer = producers.get(path);
-			return sendMessage(producer, serialize(event));
+			return sendMessage(producer, serialize(event), expirationTimeInSeconds);
+		} catch (JMSException | IOException e) {
+			Logger.error(e);
+			return false;
+		}
+	}
+
+	private boolean doSendEvents(String path, List<Event> events, int expirationTimeInSeconds) {
+		if (cannotSendMessage()) return false;
+		try {
+			topicProducer(path);
+			JmsProducer producer = producers.get(path);
+			return sendMessage(producer, serialize(events), expirationTimeInSeconds);
 		} catch (JMSException | IOException e) {
 			Logger.error(e);
 			return false;
@@ -290,9 +393,13 @@ public class JmsConnector implements Connector {
 	}
 
 	private boolean sendMessage(JmsProducer producer, javax.jms.Message message) {
+		return sendMessage(producer, message, 0);
+	}
+
+	private boolean sendMessage(JmsProducer producer, javax.jms.Message message, int expirationTimeInSeconds) {
 		final boolean[] result = {false};
 		try {
-			Thread thread = new Thread(() -> result[0] = producer.produce(message));
+			Thread thread = new Thread(() -> result[0] = producer.produce(message, expirationTimeInSeconds));
 			thread.start();
 			thread.join(1000);
 			thread.interrupt();
@@ -337,9 +444,18 @@ public class JmsConnector implements Connector {
 		consumers.clear();
 	}
 
-	private TopicConsumer topicConsumer(String path) {
+	private JmsConsumer topicConsumer(String path) {
 		try {
 			return new TopicConsumer(session, path);
+		} catch (JMSException e) {
+			Logger.error(e);
+			return null;
+		}
+	}
+
+	private JmsConsumer durableTopicConsumer(String path, String subscriberId) {
+		try {
+			return new DurableTopicConsumer(session, path, subscriberId);
 		} catch (JMSException e) {
 			Logger.error(e);
 			return null;
@@ -378,14 +494,14 @@ public class JmsConnector implements Connector {
 	private void recoverEvents() {
 		if (eventOutBox == null) return;
 		synchronized (eventOutBox) {
-			if (!eventOutBox.isEmpty())
-				while (!eventOutBox.isEmpty()) {
-					Map.Entry<String, Event> event = eventOutBox.get();
-					if (event == null) continue;
+			if (eventOutBox.isEmpty()) return;
+			Logger.info("Recovering events...");
+			while (!eventOutBox.isEmpty())
+				for (Map.Entry<String, Event> event : eventOutBox.get())
 					if (doSendEvent(event.getKey(), event.getValue())) eventOutBox.pop();
-					else break;
-				}
+					else return;
 		}
+		Logger.info("All events recovered!");
 	}
 
 	private void recoverMessages() {
@@ -421,7 +537,7 @@ public class JmsConnector implements Connector {
 
 	private void initConnection() {
 		try {
-			connection = BusConnector.createConnection(brokerUrl, user, password, connectionListener());
+			connection = BusConnector.createConnection(removeAlexandriaParameters(brokerUrl), user, password, connectionListener());
 			if (connection != null) {
 				if (clientId != null && !clientId.isEmpty()) connection.setClientID(clientId);
 				connection.start();
@@ -429,6 +545,11 @@ public class JmsConnector implements Connector {
 		} catch (JMSException e) {
 			Logger.error(e);
 		}
+	}
+
+	private String removeAlexandriaParameters(String brokerUrl) {
+		final String url = brokerUrl.replace("waitUntilConnect=true", "");
+		return url.endsWith("?") ? url.replace("?", "") : url;
 	}
 
 	private String callback(javax.jms.Message m) {
@@ -458,16 +579,35 @@ public class JmsConnector implements Connector {
 	}
 
 	private static javax.jms.Message serialize(Event event) throws IOException, JMSException {
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		MessageWriter messageWriter = new MessageWriter(os);
-		messageWriter.write(event.toMessage());
-		messageWriter.close();
-		return serialize(os.toString());
+		return serialize(event.toString());
+	}
+
+	private static javax.jms.Message serialize(List<Event> event) throws IOException, JMSException {
+		return serialize(event.stream().map(Event::toString).collect(Collectors.joining("\n\n")));
 	}
 
 	private static class MessageDeserializer {
-		static Message deserialize(javax.jms.Message message) {
-			return new io.intino.alexandria.message.MessageReader(textFrom(message)).next();
+		static Iterator<Message> deserialize(javax.jms.Message message) {
+			return new io.intino.alexandria.message.MessageReader(textFrom(message)).iterator();
+		}
+	}
+
+	public static class NamedThreadFactory implements ThreadFactory {
+		private final AtomicInteger sequence = new AtomicInteger(1);
+		private final String prefix;
+
+		public NamedThreadFactory(String prefix) {
+			this.prefix = prefix;
+		}
+
+		public Thread newThread(Runnable r) {
+			Thread thread = new Thread(r);
+			int seq = this.sequence.getAndIncrement();
+			thread.setName(this.prefix + (seq > 1 ? "-" + seq : ""));
+			if (!thread.isDaemon()) {
+				thread.setDaemon(true);
+			}
+			return thread;
 		}
 	}
 }

@@ -10,6 +10,7 @@ export default class BaseNumber extends AbstractBaseNumber {
 			value : this.props.value,
 		    decimals: this.props.decimals != null ? this.props.decimals : 0,
 			expanded : this.props.expanded,
+			style: this.props.style,
 			prefix : this.props.prefix,
 			suffix : this.props.suffix,
 			...this.state,
@@ -37,5 +38,9 @@ export default class BaseNumber extends AbstractBaseNumber {
 
 	refreshSuffix = (value) => {
 		this.setState({suffix : value});
+	};
+
+	refreshStyle = (value) => {
+		this.setState({style : value});
 	};
 }

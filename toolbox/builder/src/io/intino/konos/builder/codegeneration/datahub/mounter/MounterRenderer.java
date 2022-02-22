@@ -16,13 +16,14 @@ import java.util.List;
 import java.util.Objects;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
+import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class MounterRenderer {
 	private final CompilationContext context;
 	private final KonosGraph graph;
-	private File genMounters;
+	private final File genMounters;
 
 	public MounterRenderer(CompilationContext context, KonosGraph graph) {
 		this.context = context;
@@ -56,8 +57,10 @@ public class MounterRenderer {
 		context.classes().put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "mounters." + datamart + "." + mounterName);
 		File datamartFolder = new File(context.src(Target.Owner), datamart);
 		File mounters = new File(datamartFolder, "mounters");
-		if (!alreadyRendered(mounters, mounterName))
+		if (!alreadyRendered(mounters, mounterName)) {
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(mounter), javaFile(mounters, firstUpperCase(mounterName)).getAbsolutePath()));
 			writeFrame(mounters, mounterName, customize(new MounterTemplate()).render(builder.toFrame()));
+		}
 	}
 
 	private String[] types(Mounter mounter, CompilationContext.DataHubManifest manifest) {

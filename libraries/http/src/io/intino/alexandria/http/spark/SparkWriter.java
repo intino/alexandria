@@ -2,11 +2,9 @@ package io.intino.alexandria.http.spark;
 
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.exceptions.AlexandriaError;
-import io.intino.alexandria.logger.Logger;
 import spark.Response;
 import spark.utils.IOUtils;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
@@ -70,7 +68,8 @@ class SparkWriter {
 	}
 
 	private void writeResponse(String content, String contentType, HttpServletResponse response) throws IOException {
-		response.setHeader("Access-Control-Allow-Origin", "*");
+		//response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("X-Content-Type-Options", "nosniff");
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		response.setHeader("Pragma", "no-cache");
 		response.setHeader("Expires", "0");

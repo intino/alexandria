@@ -6,6 +6,7 @@ import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.graph.Display;
 import io.intino.magritte.framework.Layer;
@@ -32,20 +33,10 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 	}
 
 	@Override
-	public void execute() {
-		String type = typeOf(element);
-		File displayFile = javaFile(displayFolder(gen(), type, target), displayName(false));
-		File accessibleFile = javaFile(displayFolder(gen(), type, target), displayName(true));
-		registerOutputs(displayFile, accessibleFile);
+	public void execute() throws KonosException {
+		File displayFile = javaFile(displayFolder(gen(), typeOf(element), target), displayName(false));
 		if (isRendered(element) && displayFile.exists()) return;
 		super.execute();
-	}
-
-	private void registerOutputs(File displayFile, File accessibleFile) {
-		if (!target.equals(Target.Owner)) return;
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), displayFile.getAbsolutePath()));
-		if (element.i$(Display.Accessible.class))
-			context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), accessibleFile.getAbsolutePath()));
 	}
 
 	protected final void write(FrameBuilder builder) {
@@ -73,6 +64,8 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 		if (template == null) return;
 		final String newDisplay = displayName(builder.is("accessible"));
 		writeFrame(displayFolder(gen(), type, target), newDisplay, template.render(builder.add("gen").toFrame()));
+//		if (!target.equals(Target.Owner)) return;
+//		context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), javaFile(displayFolder(gen(), type, target), newDisplay).getAbsolutePath()));
 	}
 
 	private String displayName(boolean accessible) {
@@ -86,6 +79,8 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 			packageFolder.mkdirs();
 			File file = fileOf(packageFolder, name, target);
 			Files.write(file.toPath(), text.getBytes(StandardCharsets.UTF_8));
+			if (!target.equals(Target.Owner)) return;
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), javaFile(packageFolder, name).getAbsolutePath()));
 		} catch (IOException e) {
 			Logger.getGlobal().severe(e.getMessage());
 		}

@@ -91,10 +91,14 @@ def type(resource)
 			[$returnType+methodCall]fill(new $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action()).execute()[$returnType+ending];
 		}
 
-		private $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action fill($package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action action) {
+		private $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action fill($package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action action) throws AlexandriaException {
 			action.box = this.box;
 			action.context = context();
-			[$parameter+assign...[$NL]]
+			try {
+				[$parameter+assign...[$NL]]
+			} catch (Throwable e) {
+				action.onMalformedRequest(e);
+			}
 			return action;
 		}
 
@@ -138,6 +142,11 @@ def type(redirect) trigger(method)
 	}
 end
 
+def type(response & multipart) trigger(method)
+	private void write($value+firstUpperCase+ReturnTypeFormatter object) {
+		manager.write(object.content());
+	}
+end
 def type(response & file) trigger(method)
 	private void write($value+firstUpperCase+ReturnTypeFormatter object) {
 		manager.write(object);
@@ -158,8 +167,24 @@ def type(parameter & defaultvalue) attribute(in:body) trigger(assign)
 	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrDefault("$defaultvalue"), $parameterType);
 end
 
+def type(parameter & required) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrElseThrow("$name", () -> new BadRequest("Parameters missed")), $parameterType);
+end
+
 def type(parameter & defaultvalue) trigger(assign)
 	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrDefault("$name", "$defaultvalue"), $parameterType);
+end
+
+def type(parameter & file & list) attribute(in:form) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.fromPartsAsResource();
+end
+
+def type(parameter & file) attribute(in:form) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.fromPartAsResource("$name");
+end
+
+def type(parameter) attribute(in:form) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.fromPartAsString("$name"), $parameterType);
 end
 
 def type(parameter) attribute(in:form) trigger(assign)

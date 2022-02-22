@@ -1,0 +1,4 @@
+Banco[type=Text]	Porcentaje comision[type=Percentage]	Pagos[type=Amount]	Importe[type=Money]	Comisiones[type=Money]	Comisiones Iva[type=Money]	Total comisiones[type=Money]
+CI BANCO Ventanilla	3.5	137	84964600	2973761	475801	3449562
+BANSEFI Ventanilla	3.5	3711	201933000	7067655	1130824	8198479
+CI BANCO Internet	1.0	245	343686100	3436861	549897	3986758

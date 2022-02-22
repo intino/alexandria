@@ -22,7 +22,7 @@ def type(i18n)
         }
 
 		[static {
-			$translator...[,$NL]
+			$translator...[$NL]
 		}]
 	}
 end

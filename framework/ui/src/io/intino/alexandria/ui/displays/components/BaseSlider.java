@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.schemas.Mark;
 import io.intino.alexandria.schemas.Selected;
 import io.intino.alexandria.schemas.ToolbarState;
 import io.intino.alexandria.ui.displays.components.slider.Animation;
@@ -11,10 +12,8 @@ import io.intino.alexandria.ui.displays.events.ChangeListener;
 import io.intino.alexandria.ui.displays.events.SelectListener;
 import io.intino.alexandria.ui.displays.notifiers.BaseSliderNotifier;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static java.util.stream.Collectors.toList;
 
@@ -85,9 +84,13 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		this.observers.add(slider);
 	}
 
+	public void moved(long value) {
+		notifier.refreshSelected(valueOf(value));
+		notifier.refreshToolbar(toolbarState());
+	}
+
 	public void update(long value) {
 		value(value);
-		notifyListener();
 	}
 
 	public BaseSlider<DN, B> readonly(boolean value) {
@@ -96,14 +99,29 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		return this;
 	}
 
+	public BaseSlider<DN, B> marks(Long... marks) {
+		return marks(Arrays.stream(marks).map(this::markOf).collect(toList()));
+	}
+
+	public BaseSlider<DN, B> marks(Mark... marks) {
+		return marks(Arrays.stream(marks).collect(toList()));
+	}
+
+	public BaseSlider<DN, B> marks(java.util.List<Mark> markList) {
+		notifier.refreshMarks(markList);
+		return this;
+	}
+
+	protected Mark markOf(long value) {
+		return new Mark().value(value).label(format(value));
+	}
+
 	public void previous() {
 		value(value-1);
-		notifyListener();
 	}
 
 	public void next() {
 		value(value+1);
-		notifyListener();
 	}
 
 	public void play() {
@@ -142,9 +160,14 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 	}
 
 	void notifyChange() {
-		notifier.refreshSelected(selectedValue());
+		notifyChange(value());
+	}
+
+	void notifyChange(long value) {
+		notifier.refreshSelected(valueOf(value));
 		notifier.refreshToolbar(toolbarState());
 		notifyObservers();
+		notifyListener();
 	}
 
 	io.intino.alexandria.schemas.Range rangeSchema() {
@@ -164,7 +187,8 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		});
 	}
 
-	public abstract String formattedValue();
+	public abstract String formattedValue(long value);
+	abstract String format(long value);
 	abstract void updateRange();
 
 	protected BaseSlider _value(long value) {
@@ -199,7 +223,6 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		ordinal(ordinalList.stream().filter(o -> o.name().equals(name)).findFirst().orElse(null));
 		notifier.refreshSelectedOrdinal(name);
 		value(value);
-		notifyListener();
 	}
 
 	ToolbarState toolbarState() {
@@ -257,9 +280,13 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		return true;
 	}
 
-	private Selected selectedValue() {
-		String formattedValue = formattedValue();
+	private Selected valueOf(long value) {
+		String formattedValue = formattedValue(value);
 		return new Selected().value(value).formattedValue(formattedValue);
+	}
+
+	private Selected selectedValue() {
+		return valueOf(value);
 	}
 
 }

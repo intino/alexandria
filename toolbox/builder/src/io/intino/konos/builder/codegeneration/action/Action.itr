@@ -44,6 +44,31 @@ def type(action & notification) !type(ui)
 	}
 end
 
+def type(action & rest) !type(ui)
+	package $package+validPackage.actions;
+
+	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
+	import io.intino.alexandria.exceptions.*;
+	import java.time.*;
+	import java.util.*;
+	$schemaImport
+
+	public class $name+snakecaseToCamelCase+firstUpperCase~Action implements io.intino.alexandria.rest.RequestErrorHandler {
+		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
+		$contextProperty
+		[$parameter+type...[$NL]]
+
+		public [$returnType?void] execute() [throws $throws+FirstUpperCase...[, ]] {
+			$returnType+return
+		}
+
+		public void onMalformedRequest(Throwable e) throws AlexandriaException {
+			//TODO
+			throw new BadRequest("Malformed request");
+		}
+	}
+end
+
 def type(action) !type(ui)
 	package $package+validPackage.actions;
 
@@ -100,7 +125,7 @@ def type(ui & action & gen)
 		public Abstract$name+snakecaseToCamelCase+firstUpperCase~Page() { super("$uiService+camelCaseToSnakeCase+lowerCase"); }
 
 		public String execute() [throws $throws+FirstUpperCase...[, ]] {
-			return super.template("$name"[, Arrays.asList($usedUnit...[,])]);
+			return super.template("$templateName"[, Arrays.asList($usedUnit...[,])]);
 		}
 
 		@Override

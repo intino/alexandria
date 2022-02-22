@@ -31,18 +31,20 @@ const styles = theme => ({
 });
 
 class BlockDrawer extends AbstractBlockDrawer {
-	state = {
-		opened: false,
-		temporaryOpened: false
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new BlockDrawerNotifier(this);
 		this.requester = new BlockDrawerRequester(this);
+		this.state = {
+    		opened: false,
+	    	temporaryOpened: false,
+	    	...this.state
+		}
 	};
 
 	render() {
+	    if (!this.state.visible) return (<React.Fragment/>);
 		const {classes} = this.props;
 		const opened = this._isOpened();
 		const drawerClass = this.props.variant === "PersistentAndMini" ? (opened ? classes.drawerOpen : classes.drawerClose) : undefined;

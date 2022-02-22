@@ -20,6 +20,12 @@ public class SearchBox<DN extends SearchBoxNotifier, B extends Box> extends Abst
         super(box);
     }
 
+    @Override
+    public void didMount() {
+        super.didMount();
+        if (condition != null) notifier.refreshCondition(condition);
+    }
+
     public SearchBox<DN, B> onSearch(SearchListener listener) {
         this.searchListener = listener;
         return this;
@@ -27,6 +33,11 @@ public class SearchBox<DN extends SearchBoxNotifier, B extends Box> extends Abst
 
     public SearchBox<DN, B> bindTo(Collection... collections) {
         this.collections = Arrays.stream(collections).filter(Objects::nonNull).collect(toList());
+        return this;
+    }
+
+    public SearchBox<DN, B> condition(String condition) {
+        notifier.refreshCondition(condition);
         return this;
     }
 

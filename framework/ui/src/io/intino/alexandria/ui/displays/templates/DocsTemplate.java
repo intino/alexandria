@@ -25,6 +25,7 @@ public class DocsTemplate extends AbstractDocsTemplate<AlexandriaUiBox> {
         body.dataBlock.dataWidgets.add(Model.widget(Model.WidgetType.File));
         body.dataBlock.dataWidgets.add(Model.widget(Model.WidgetType.Date));
         body.dataBlock.dataWidgets.add(Model.widget(Model.WidgetType.Location));
+        body.dataBlock.dataWidgets.add(Model.widget(Model.WidgetType.Multiple));
     }
 
     private void addCatalogWidgets() {
@@ -40,8 +41,8 @@ public class DocsTemplate extends AbstractDocsTemplate<AlexandriaUiBox> {
 
     private void addOperationWidgets() {
         body.operationBlock.operationWidgets.add(Model.widget(Model.WidgetType.OpenPage));
-        body.operationBlock.operationWidgets.add(Model.widget(Model.WidgetType.OpenBlock));
-        body.operationBlock.operationWidgets.add(Model.widget(Model.WidgetType.Task));
+        //body.operationBlock.operationWidgets.add(Model.widget(Model.WidgetType.OpenBlock));
+        //body.operationBlock.operationWidgets.add(Model.widget(Model.WidgetType.Task));
         body.operationBlock.operationWidgets.add(Model.widget(Model.WidgetType.Export));
         body.operationBlock.operationWidgets.add(Model.widget(Model.WidgetType.Download));
         body.operationBlock.operationWidgets.add(Model.widget(Model.WidgetType.DownloadSelection));
@@ -53,12 +54,14 @@ public class DocsTemplate extends AbstractDocsTemplate<AlexandriaUiBox> {
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Dashboard));
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Slider));
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Dialog));
+        body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Layer));
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Divider));
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.User));
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Selector));
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Stepper));
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Frame));
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.MicroSite));
+        body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.HtmlViewer));
     }
 
     //    @Override

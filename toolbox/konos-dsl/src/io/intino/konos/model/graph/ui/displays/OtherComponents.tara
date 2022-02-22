@@ -25,6 +25,10 @@ Concept OtherComponents
 
     Concept MicroSite extends Component
     	var string site
+    	var word[]:{DownloadMicrosite DownloadContent} downloadOperations = DownloadMicrosite DownloadContent
+
+	Concept HtmlViewer extends Component
+		var string content = empty
 
 	Concept BaseStamp extends Component
 		Aspect Multiple
@@ -68,6 +72,7 @@ Concept OtherComponents
 		has Component
 		Aspect Addressable
 		Aspect Tabs
+			var word:{Off On Auto} scrollButtons = Off
         Aspect Menu
 			var word:{Horizontal Vertical} layout = Vertical
         Aspect ListBox
@@ -87,6 +92,7 @@ Concept OtherComponents
         Aspect ComboBox
         	var string placeholder = ""
         	var integer:{px} maxMenuHeight = 300px
+        	var word:{FieldView TextView} view = FieldView
         Aspect ToggleBox
         	var word:{Small Medium Large} size = Medium
         	var string selected = empty
@@ -100,7 +106,6 @@ Concept OtherComponents
 		Aspect Multiple
 		sub Icon
 		sub MaterialIcon
-
 
 	Concept AbstractDialog extends Component is abstract
 		var string title

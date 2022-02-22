@@ -21,6 +21,7 @@ class Header extends AbstractHeader {
 	};
 
 	render() {
+	    if (!this.state.visible) return (<React.Fragment/>);
 		const { classes } = this.props;
 		const position = this.props.position != null ? this.props.position : "relative";
 		return (

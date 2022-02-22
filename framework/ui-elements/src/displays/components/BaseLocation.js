@@ -38,7 +38,7 @@ export default class BaseLocation extends AbstractBaseLocation {
 		return (
 			<div ref={this.container} className="layout flex" style={{height:"100%"}}>
 				<GoogleMap className={classes.map} zoom={GeoBehavior.zoom(this).defaultZoom}
-						   center={GeoBehavior.center(this)}>
+						   center={GeoBehavior.center(this)} options={this.mapOptions()}>
 					<div ref={this.googleMapLayer} style={{width:'100%'}}/>
 					{this.renderPlaceMark()}
 					{content != null && content()}
@@ -48,6 +48,7 @@ export default class BaseLocation extends AbstractBaseLocation {
 	};
 
 	resize = function() {
+		if (this.googleMapLayer.current == null) return;
 		const container = this.container.current;
 		const height = $(container).height();
 		if (height == 0) {
@@ -86,5 +87,18 @@ export default class BaseLocation extends AbstractBaseLocation {
     refreshZoomRange = (range) => {
         const zoom = GeoBehavior.zoom(this);
         this.setState({ min: range.min, max: range.max, defaultZoom: zoom.defaultZoom });
+    };
+
+    mapOptions = () => {
+        const options = this.props.options != null ? this.props.options : "";
+        const all = options.indexOf("all") != -1;
+		return {
+            zoomControl: options.indexOf("zoom") != -1 || all,
+            mapTypeControl: options.indexOf("maptype") != -1 || all,
+            scaleControl: options.indexOf("scale") != -1 || all,
+            streetViewControl: options.indexOf("streetview") != -1 || all,
+            rotateControl: options.indexOf("rotate") != -1 || all,
+            fullscreenControl: options.indexOf("fullscreen") != -1 || all
+        };
     };
 }

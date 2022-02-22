@@ -4,6 +4,7 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.CollectionMoreItems;
 import io.intino.alexandria.schemas.DynamicTableRowParams;
 import io.intino.alexandria.schemas.DynamicTableSetup;
+import io.intino.alexandria.schemas.DynamicTableVisibleColumn;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.Collection;
 import io.intino.alexandria.ui.displays.components.collection.behaviors.DynamicTableCollectionBehavior;
@@ -18,12 +19,18 @@ import io.intino.alexandria.ui.model.Datasource;
 import io.intino.alexandria.ui.model.datasource.DynamicTableDatasource;
 import io.intino.alexandria.ui.model.dynamictable.Section;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toMap;
 
 public abstract class DynamicTable<B extends Box, ItemComponent extends io.intino.alexandria.ui.displays.components.Row, Item> extends AbstractDynamicTable<DynamicTableNotifier, B> implements Collection<ItemComponent, Item> {
     private Listener selectingRowListener;
     private SelectRowListener selectRowListener;
+    private List<DynamicTableVisibleColumn> visibleColumns = new ArrayList<>();
+    private boolean showZeros = true;
+    private boolean showPercentages = false;
 
     public DynamicTable(B box) {
         super(box);
@@ -95,6 +102,36 @@ public abstract class DynamicTable<B extends Box, ItemComponent extends io.intin
         notifier.refresh();
     }
 
+    public List<DynamicTableVisibleColumn> visibleColumns() {
+        return visibleColumns;
+    }
+
+    public DynamicTable<B, ItemComponent, Item> visibleColumns(List<DynamicTableVisibleColumn> visibleColumns) {
+        this.visibleColumns = visibleColumns;
+        notifier.refreshVisibleColumns(visibleColumns);
+        return this;
+    }
+
+    public boolean showZeros() {
+        return showZeros;
+    }
+
+    public DynamicTable<B, ItemComponent, Item> showZeros(Boolean value) {
+        this.showZeros = value;
+        notifier.refreshZeros(value);
+        return this;
+    }
+
+    public boolean showPercentages() {
+        return showPercentages;
+    }
+
+    public DynamicTable<B, ItemComponent, Item> showPercentages(Boolean value) {
+        this.showPercentages = value;
+        notifier.refreshPercentages(value);
+        return this;
+    }
+
     @Override
     public ItemComponent add(Item item) {
         ItemComponent component = create(item);
@@ -141,7 +178,7 @@ public abstract class DynamicTable<B extends Box, ItemComponent extends io.intin
         behavior.section(section);
         behavior.row(params.row());
         behavior.reload();
-        notifier.setup(new DynamicTableSetup().openRowExternal(selectRowListener != null).pageSize(pageSize()).itemCount(behavior.itemCount()));
+        notifier.setup(new DynamicTableSetup().visibleColumns(visibleColumns).openRowExternal(selectRowListener != null).pageSize(pageSize()).itemCount(behavior.itemCount()));
     }
 
     private Section sectionOf(String section) {
@@ -151,12 +188,20 @@ public abstract class DynamicTable<B extends Box, ItemComponent extends io.intin
     }
 
     @Override
+    public void didMount() {
+        DynamicTableCollectionBehavior behavior = behavior();
+        DynamicTableDatasource source = source();
+        notifier.setup(new DynamicTableSetup().visibleColumns(visibleColumns).name(source != null ? source.name() : null).openRowExternal(selectRowListener != null).pageSize(pageSize()).itemCount(behavior.itemCount()));
+        notifyReady();
+    }
+
+    @Override
     void setup() {
         DynamicTableDatasource source = source();
         if (source == null) return;
         DynamicTableCollectionBehavior behavior = behavior();
         behavior.setup(source, pageSize());
-        notifier.setup(new DynamicTableSetup().openRowExternal(selectRowListener != null).pageSize(pageSize()).itemCount(behavior.itemCount()));
+        notifier.setup(new DynamicTableSetup().visibleColumns(visibleColumns).name(source.name()).openRowExternal(selectRowListener != null).pageSize(pageSize()).itemCount(behavior.itemCount()));
         notifyReady();
     }
 

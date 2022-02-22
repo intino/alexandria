@@ -19,6 +19,12 @@ public class BaseText<DN extends BaseTextNotifier, B extends Box> extends Abstra
         notifier.refresh(value);
     }
 
+    @Override
+    public void update() {
+        super.update();
+        notifier.refresh(value);
+    }
+
     public String value() {
         return value;
     }
