@@ -14,24 +14,24 @@ public class Image {
 
     private static final int MIN_DPI = 72;
 
-    private final File file;
+    private final byte[] data;
     private final ImageInfo info;
 
     public Image(File file) throws IOException {
-        this.file = requireNonNull(file);
+        this(Files.readAllBytes(file.toPath()));
+    }
+
+    public Image(byte[] data) throws IOException {
+        this.data = requireNonNull(data);
         try {
-            this.info = Imaging.getImageInfo(file);
+            this.info = Imaging.getImageInfo(data);
         } catch (ImageReadException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public byte[] pixels() {
-        try {
-            return Files.readAllBytes(file.toPath());
-        } catch (IOException e) {
-            return new byte[0];
-        }
+    public byte[] data() {
+        return data;
     }
 
     public float aspect() {
@@ -52,13 +52,5 @@ public class Image {
 
     public int getWidth() {
         return info.getWidth();
-    }
-
-    public File file() {
-        return file;
-    }
-
-    public ImageInfo info() {
-        return info;
     }
 }
