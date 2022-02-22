@@ -59,7 +59,10 @@ public class RESTAccessorRenderer extends Renderer {
 		builder.add("resource", service.core$().findNode(Resource.class).stream().map(this::framesOf).flatMap(List::stream).toArray(Frame[]::new));
 		builder.add("notification", service.notificationList().stream().map(this::frameOf).toArray(Frame[]::new));
 		for (Parameter enumParameter : enumParameters.values().stream().flatMap(Collection::stream).collect(Collectors.toList()))
-			builder.add("enumParameter", new FrameBuilder("enumParameter").add("name", enumParameter.name$()).add("class", enumParameter.core$().ownerAs(Resource.class).name$() + firstUpperCase(enumParameter.name$())).add("value", enumParameter.asWord().values().toArray(String[]::new)));
+			builder.add("enumParameter", new FrameBuilder("enumParameter")
+					.add("name", enumParameter.name$())
+					.add("class", enumParameter.core$().ownerAs(Resource.class).name$() + firstUpperCase(enumParameter.name$()))
+					.add("value", enumParameter.asWord().values().toArray(String[]::new)));
 		writeFrame(destination, snakeCaseToCamelCase(service.name$()) + "Accessor", template().render(builder));
 	}
 

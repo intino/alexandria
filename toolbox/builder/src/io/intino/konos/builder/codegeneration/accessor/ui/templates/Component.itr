@@ -214,6 +214,10 @@ def type(properties & htmlviewer) trigger(specific)
 	[ content="$content"]
 end
 
+def type(properties & microsite) trigger(specific)
+    [ downloadOperations={$["$downloadOperation...[","]"$]}]
+end
+
 def type(properties) trigger(specific)
 end
 

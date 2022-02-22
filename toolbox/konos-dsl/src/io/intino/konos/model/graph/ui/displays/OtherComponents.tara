@@ -25,6 +25,7 @@ Concept OtherComponents
 
     Concept MicroSite extends Component
     	var string site
+    	var word[]:{DownloadMicrosite DownloadContent} downloadOperations = DownloadMicrosite DownloadContent
 
 	Concept HtmlViewer extends Component
 		var string content = empty

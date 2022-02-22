@@ -94,8 +94,10 @@ public class BpmRenderer extends Renderer {
 		compilationContext.classes().put(process.getClass().getSimpleName() + "#" + process.name$(), "bpm." + process.name$());
 		writeFrame(gen, "Abstract" + firstUpperCase(process.name$()), customize(new ProcessTemplate()).render(builder.toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(process), javaFile(gen, "Abstract" + firstUpperCase(process.name$())).getAbsolutePath()));
-		if (!alreadyRendered(src, process.name$()))
+		if (!alreadyRendered(src, process.name$())) {
 			writeFrame(src, process.name$(), customize(new ProcessTemplate()).render(builder.add("src").toFrame()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(process), javaFile(src(), process.name$()).getAbsolutePath()));
+		}
 	}
 
 	private FrameBuilder frameOf(Process process, File bpmn) {

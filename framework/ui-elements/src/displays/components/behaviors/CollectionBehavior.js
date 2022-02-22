@@ -276,7 +276,7 @@ const CollectionBehavior = (collection) => {
             const element = self.element(self.selection[0]);
             if (element == null) return;
             self.addSelectedStyle(element);
-            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (element.scrollIntoView) element.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     };
 

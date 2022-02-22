@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.action;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
+import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
@@ -36,10 +37,10 @@ public abstract class ActionRenderer extends Renderer {
 	}
 
 	protected boolean alreadyRendered(File destiny, String action) {
-		return javaFile(destinyPackage(destiny), firstUpperCase(snakeCaseToCamelCase(action)) + suffix()).exists();
+		return javaFile(destinationPackage(destiny), firstUpperCase(snakeCaseToCamelCase(action)) + suffix()).exists();
 	}
 
-	protected File destinyPackage(File destiny) {
+	protected File destinationPackage(File destiny) {
 		return new File(destiny, "actions");
 	}
 
@@ -48,17 +49,17 @@ public abstract class ActionRenderer extends Renderer {
 		if (!alreadyRendered(destiny, name)) {
 			createNewClass(name, serviceName, response, parameters, exceptions, schemas);
 		} else {
-			File newDestination = javaFile(destinyPackage(destiny), firstUpperCase(snakeCaseToCamelCase(name)) + suffix());
+			File newDestination = javaFile(destinationPackage(destiny), firstUpperCase(snakeCaseToCamelCase(name)) + suffix());
 			new ActionUpdater(context, newDestination, packageName(), parameters, exceptions, response).update();
 		}
 	}
 
 	protected void execute(String name, String serviceName, Response response, List<? extends Parameter> parameters, List<Exception> exceptions, List<Schema> schemas) {
 		File destiny = destination();
-		if (!alreadyRendered(destiny, name)) {
+		if (!alreadyRendered(destiny, name))
 			createNewClass(name, serviceName, response, toMap(parameters), exceptions, schemas);
-		} else {
-			File newDestination = javaFile(destinyPackage(destiny), firstUpperCase(snakeCaseToCamelCase(name)) + suffix());
+		else {
+			File newDestination = javaFile(destinationPackage(destiny), firstUpperCase(snakeCaseToCamelCase(name)) + suffix());
 			new ActionUpdater(context, newDestination, packageName(), toMap(parameters), exceptions, response).update();
 		}
 	}
@@ -88,7 +89,9 @@ public abstract class ActionRenderer extends Renderer {
 			builder.add("throws", exceptions.stream().map(e -> e.code().name()).toArray(String[]::new));
 		if (!schemas.isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName).toFrame());
-		Commons.writeFrame(destinyPackage(destination()), firstUpperCase(snakeCaseToCamelCase(name)) + suffix(), template().render(builder.toFrame()));
+		File packageFolder = destinationPackage(destination());
+		context.compiledFiles().add(new OutputItem(packageFolder.getAbsolutePath(), javaFile(packageFolder, firstUpperCase(snakeCaseToCamelCase(name)) + suffix()).getAbsolutePath()));
+		Commons.writeFrame(packageFolder, firstUpperCase(snakeCaseToCamelCase(name)) + suffix(), template().render(builder.toFrame()));
 	}
 
 	protected FrameBuilder contextPropertyFrame() {

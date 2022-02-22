@@ -64,8 +64,8 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 		if (template == null) return;
 		final String newDisplay = displayName(builder.is("accessible"));
 		writeFrame(displayFolder(gen(), type, target), newDisplay, template.render(builder.add("gen").toFrame()));
-		if (!target.equals(Target.Owner)) return;
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), javaFile(displayFolder(gen(), type, target), newDisplay).getAbsolutePath()));
+//		if (!target.equals(Target.Owner)) return;
+//		context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), javaFile(displayFolder(gen(), type, target), newDisplay).getAbsolutePath()));
 	}
 
 	private String displayName(boolean accessible) {
@@ -79,8 +79,8 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 			packageFolder.mkdirs();
 			File file = fileOf(packageFolder, name, target);
 			Files.write(file.toPath(), text.getBytes(StandardCharsets.UTF_8));
-//			if (!target.equals(Target.Owner)) return;
-//			context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), javaFile(packageFolder, name).getAbsolutePath()));
+			if (!target.equals(Target.Owner)) return;
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), javaFile(packageFolder, name).getAbsolutePath()));
 		} catch (IOException e) {
 			Logger.getGlobal().severe(e.getMessage());
 		}

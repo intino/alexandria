@@ -308,7 +308,16 @@ def type(datalake & mirror) trigger(init)
 end
 
 def type(connector) trigger(init)
-	if (connector instanceof io.intino.alexandria.terminal.JmsConnector && ((io.intino.alexandria.terminal.JmsConnector) connector).connection() == null) ((io.intino.alexandria.terminal.JmsConnector) connector).start();
+	if ((this.connector instanceof io.intino.alexandria.terminal.JmsConnector) && ((io.intino.alexandria.terminal.JmsConnector) this.connector).connection() != null) return;
+	final io.intino.alexandria.terminal.JmsConnector connector = (io.intino.alexandria.terminal.JmsConnector) this.connector;
+	if (connector.connection() == null) connector.start();
+	if (configuration().get("datahub_url").contains("waitUntilConnect=true"))
+		while (connector.connection() == null) try {
+			Thread.sleep(1000 * 30);
+			connector.start();
+		} catch (InterruptedException e) {
+			Logger.error(e);
+		}
 end
 def type(terminal) trigger(init)
 	if (this.terminal != null) {

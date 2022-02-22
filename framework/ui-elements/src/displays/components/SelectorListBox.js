@@ -34,7 +34,7 @@ class SelectorListBox extends AbstractSelectorListBox {
 		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
 		return (
 		    <div style={this.style()}>
-                {label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{label}</div> : undefined }
+                {label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{this.translate(label)}</div> : undefined }
                 {this.renderChildren()}
 		    </div>
 		);

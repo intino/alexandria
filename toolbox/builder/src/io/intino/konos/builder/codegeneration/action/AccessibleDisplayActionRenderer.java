@@ -37,7 +37,7 @@ public class AccessibleDisplayActionRenderer extends ActionRenderer {
 		builder.add("contextProperty", contextPropertyFrame());
 		configuration.classes().put(display.getClass().getSimpleName() + "#" + firstUpperCase(display.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(display.name$())) + suffix());
 		if (!alreadyRendered(src(), display.name$() + "ProxyPage"))
-			writeFrame(destinyPackage(src()), display.name$() + "ProxyPage", template().render(builder.toFrame()));
+			writeFrame(destinationPackage(src()), display.name$() + "ProxyPage", template().render(builder.toFrame()));
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class AccessibleDisplayActionRenderer extends ActionRenderer {
 	}
 
 	@Override
-	protected File destinyPackage(File destiny) {
+	protected File destinationPackage(File destiny) {
 		return new File(destiny, format(CodeGenerationHelper.Pages, Target.Owner));
 	}
 
