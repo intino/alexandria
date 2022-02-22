@@ -373,7 +373,7 @@ public class DocxBuilder {
 
 		private byte[] imageOf(ZipEntry entry) {
 			ImageView imageView = content.image(imageRelationships.get(entry.getName()));
-			return imageView.image().pixels();
+			return imageView.image().data();
 		}
 
 		private boolean isImageToReplace(ZipEntry entry) {
