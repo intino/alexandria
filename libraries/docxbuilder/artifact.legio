@@ -1,8 +1,9 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.1.0") docx-builder
+Artifact("io.intino.alexandria", "1.1.1") docx-builder
 	Imports
 		Compile("io.intino.alexandria", "logger", "2.1.0")
+		Compile("org.apache.commons", "commons-imaging", "1.0-alpha2")
 		Test("junit", "junit", "4.13")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
