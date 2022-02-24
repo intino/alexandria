@@ -26,6 +26,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import static io.intino.alexandria.office.ImageView.WrapOption.ClampToPage;
 import static io.intino.alexandria.office.ImageView.WrapOption.ClampToTemplate;
 
 public class DocxBuilder {
@@ -248,9 +249,9 @@ public class DocxBuilder {
 			long height = wrap(cy, image.getHeight(), image.getPhysicalHeightDpi(), view.heightWrapping());
 
 			if(view.keepAspectRatio()) {
-				if (width < height)
+				if (view.heightWrapping() == ClampToPage && width < height)
 					height = (long) Math.ceil(width * (1 / image.aspect()));
-				else if (height < width)
+				else if (view.widthWrapping() == ClampToPage && height < width)
 					width = (long) Math.ceil(height * image.aspect());
 			}
 
@@ -279,7 +280,7 @@ public class DocxBuilder {
 
 		// English metric units
 		private long getSizeInEMU(long value, int dpi) {
-			return (long)(value / (float)dpi) * EMU_PER_INCH;
+			return (long)((value / (float)dpi) * EMU_PER_INCH);
 		}
 
 		private Node getXfrmExtNodeOf(Node drawingNode) {

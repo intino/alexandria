@@ -16,11 +16,12 @@ public class Example3DocxBuilder {
 
     public static void main(String[] args) throws IOException, ImageReadException {
 
-        File imageFile = new File("temp/earth4k.jpg");
+        File imageFile = new File("C:/Users/naits/Downloads/mexico_c75c744c165d.jpg");
 
         ImageView imageView = new ImageView(new Image(imageFile));
         imageView.widthWrapping(ClampToPage);
         imageView.heightWrapping(ClampToTemplate);
+        imageView.keepAspectRatio(true);
 
         new File("temp").mkdirs();
         DocxBuilder db = DocxBuilder.create(new File("temp/template.docx"));
