@@ -26,6 +26,7 @@ public class Example3DocxBuilder {
         new File("temp").mkdirs();
         DocxBuilder db = DocxBuilder.create(new File("temp/template.docx"));
         db.replace("Image_A", imageView);
+        db.replace("Image_B", new ImageView(new Image(new File("temp/image2.jpg"))).widthWrapping(ClampToPage));
         db.save(new File("temp/result.docx"));
     }
 
