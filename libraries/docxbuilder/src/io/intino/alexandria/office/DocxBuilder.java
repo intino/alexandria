@@ -249,9 +249,9 @@ public class DocxBuilder {
 			long height = wrap(cy, image.getHeight(), image.getPhysicalHeightDpi(), view.heightWrapping());
 
 			if(view.keepAspectRatio()) {
-				if (view.heightWrapping() == ClampToPage && width < height)
+				if (view.heightWrapping() == ClampToPage)
 					height = (long) Math.ceil(width * (1 / image.aspect()));
-				else if (view.widthWrapping() == ClampToPage && height < width)
+				else if (view.widthWrapping() == ClampToPage)
 					width = (long) Math.ceil(height * image.aspect());
 			}
 
