@@ -10,7 +10,14 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,13 +26,24 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import static io.intino.alexandria.office.ImageView.WrapOption.ClampToPage;
+import static io.intino.alexandria.office.ImageView.WrapOption.ClampToTemplate;
+
 public class DocxBuilder {
+
 	private static final String CRLF = "</w:t></w:r><w:r><w:rPr><w:noProof/><w:sz w:val=\"16\"/><w:szCs w:val=\"16\"/></w:rPr><w:br/></w:r><w:r><w:rPr><w:noProof/><w:sz w:val=\"16\"/><w:szCs w:val=\"16\"/></w:rPr><w:t>";
 	private static final String TABLE = "<w:tbl>(.+?)</w:tbl>";
 	private static final String TABLE_CAPTION = "<w:tblCaption w:val=\"([^\"]*)\"/>";
 	private static final String TABLE_ROW = "(<w:tr.+?</w:tr>)";
 	private final File template;
 	private final Content content;
+
+	private static final long EMU_PER_INCH = 914400L;
+	public static final long EMUS_PER_CM = 360000;
+	private static final long MAX_EMU_WIDTH_PER_PAGE = EMUS_PER_CM * EMU_PER_INCH;
+
+	private static final long MAX_IMAGE_WIDTH_EMU = 6289040;
+	private static final long MAX_IMAGE_HEIGHT_EMU = 9281160;
 
 	public static DocxBuilder create(File template) {
 		return new DocxBuilder(template);
@@ -63,8 +81,8 @@ public class DocxBuilder {
 		};
 	}
 
-	public DocxBuilder replace(String field, byte[] value) {
-		this.content.put(field, value);
+	public DocxBuilder replace(String field, ImageView imageView) {
+		this.content.put(field, imageView);
 		return this;
 	}
 
@@ -78,9 +96,10 @@ public class DocxBuilder {
 	}
 
 	private static final class Content {
+
 		private final Map<String, String> fields;
 		private final Map<String, List<Map<String, String>>> tables;
-		private final Map<String, byte[]> images;
+		private final Map<String, ImageView> images;
 		private final Map<String, String> tablesTemplates;
 		private final Map<String, String> rowsTemplates;
 
@@ -112,8 +131,8 @@ public class DocxBuilder {
 			this.fields.put(field, value);
 		}
 
-		void put(String field, byte[] value) {
-			this.images.put(field, value);
+		void put(String field, ImageView imageView) {
+			this.images.put(field, imageView);
 		}
 
 		void put(String[] data) {
@@ -180,7 +199,7 @@ public class DocxBuilder {
 			return matcher.group(0);
 		}
 
-		byte[] image(String name) {
+		ImageView image(String name) {
 			return images.get(name);
 		}
 
@@ -190,15 +209,119 @@ public class DocxBuilder {
 	}
 
 	private final class Zip {
+
 		private final ZipFile zipFile;
 		private final ArrayList<? extends ZipEntry> entries;
-		private final Map<String, String> imagesRelationship;
+		private final Map<String, String> imageRelationships;
+		private final Document document; // word/document.xml
 
 		Zip(File template) throws IOException {
 			this.zipFile = new ZipFile(template);
 			this.entries = Collections.list(zipFile.entries());
-			imagesRelationship = findImageReferencesInDocument();
-//			imagesRelationship = new HashMap<>();
+			this.document = loadDocument();
+			this.imageRelationships = findImageReferencesInDocument();
+			setupImageExtents();
+		}
+
+		private void setupImageExtents() {
+			NodeList drawingNodes = document.getElementsByTagName("w:drawing");
+			int length = drawingNodes.getLength();
+			for(int i = 0; i < length; i++) {
+				Node drawingNode = drawingNodes.item(i);
+				String desc = getDescrOfDrawingNode(drawingNode);
+				ImageView view = content.image(desc);
+				if(view == null) continue;
+				if(doesNotNeedToModifyImageExtent(view)) continue;
+				setNewImageExtent(drawingNode, view);
+			}
+		}
+
+		private void setNewImageExtent(Node drawingNode, ImageView view) {
+			Node extent = getExtentNodeOf(drawingNode);
+			setImageExtents(view, extent.getAttributes().getNamedItem("cx"), extent.getAttributes().getNamedItem("cy"));
+			Node xfrmExt = getXfrmExtNodeOf(drawingNode);
+			setImageExtents(view, xfrmExt.getAttributes().getNamedItem("cx"), xfrmExt.getAttributes().getNamedItem("cy"));
+		}
+
+		private void setImageExtents(ImageView view, Node cx, Node cy) {
+			Image image = view.image();
+			long width = wrap(cx, image.getWidth(), image.getPhysicalWidthDpi(), view.widthWrapping());
+			long height = wrap(cy, image.getHeight(), image.getPhysicalHeightDpi(), view.heightWrapping());
+
+			if(view.keepAspectRatio()) {
+				if (view.heightWrapping() == ClampToPage)
+					height = (long) Math.ceil(width * (1 / image.aspect()));
+				else if (view.widthWrapping() == ClampToPage)
+					width = (long) Math.ceil(height * image.aspect());
+			}
+
+			width = getSizeInEMU(width, image.getPhysicalWidthDpi());
+			height = getSizeInEMU(height, image.getPhysicalHeightDpi());
+
+			width = Math.min(width, MAX_IMAGE_WIDTH_EMU);
+			height = Math.min(height, MAX_IMAGE_HEIGHT_EMU);
+
+			cx.setNodeValue(String.valueOf(width));
+			cy.setNodeValue(String.valueOf(height));
+		}
+
+		private int wrap(Node node, int value, int dpi, ImageView.WrapOption wrapping) {
+			return wrapping == ClampToTemplate ? imageSizeOf(node, dpi) : value;
+		}
+
+		private int imageSizeOf(Node node, int dpi) {
+			long emuSize = Long.parseLong(node.getNodeValue());
+			return (int) ((emuSize / (float)EMU_PER_INCH) * dpi);
+		}
+
+		private boolean doesNotNeedToModifyImageExtent(ImageView view) {
+			return view.widthWrapping() == ClampToTemplate && view.heightWrapping() == ClampToTemplate;
+		}
+
+		// English metric units
+		private long getSizeInEMU(long value, int dpi) {
+			return (long)((value / (float)dpi) * EMU_PER_INCH);
+		}
+
+		private Node getXfrmExtNodeOf(Node drawingNode) {
+			Node wpInline = findChild(drawingNode, "wp:inline");
+			Node aGraphic = findChild(wpInline, "a:graphic");
+			Node aGraphicData = findChild(aGraphic, "a:graphicData");
+			Node pic = findChild(aGraphicData, "pic:pic");
+			Node spPr = findChild(pic, "pic:spPr");
+			Node xfrm = findChild(spPr, "a:xfrm");
+			return xfrm.getLastChild();
+		}
+
+		private Node getExtentNodeOf(Node drawingNode) {
+			Node wpInline = findChild(drawingNode, "wp:inline");
+			return findChild(wpInline, "wp:extent");
+		}
+
+		private String getDescrOfDrawingNode(Node drawingNode) {
+			Node wpInline = findChild(drawingNode, "wp:inline");
+			Node wpDocPr = findChild(wpInline, "wp:docPr");
+			return wpDocPr.getAttributes().getNamedItem("descr").getNodeValue();
+		}
+
+		private Node findChild(Node parent, String name) {
+			NodeList children = parent.getChildNodes();
+			for(int i = 0;i < children.getLength();i++) {
+				Node child = children.item(i);
+				if(child.getNodeName().equals(name)) return child;
+			}
+			return null;
+		}
+
+		private Document loadDocument() throws IOException {
+			try {
+				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+				DocumentBuilder db = dbf.newDocumentBuilder();
+				ZipEntry docEntry = entries.stream().filter(this::isDocument).findFirst().orElse(null);
+				return db.parse(zipFile.getInputStream(docEntry));
+			} catch (Exception e) {
+				throw new IOException(e);
+			}
 		}
 
 		void to(File result) throws IOException {
@@ -212,23 +335,22 @@ public class DocxBuilder {
 			if (content.images.isEmpty()) return Collections.emptyMap();
 			Map<String, String> rels = loadDocumentRels();
 			Map<String, String> imageEntries = new HashMap<>();
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			try {
-				DocumentBuilder db = dbf.newDocumentBuilder();
-				Document doc = db.parse(zipFile.getInputStream(entries.stream().filter(this::isDocument).findFirst().orElse(null)));
-				final NodeList graphicNodes = doc.getElementsByTagName("pic:cNvPr");
+				final NodeList graphicNodes = document.getElementsByTagName("pic:cNvPr");
 				int bound = graphicNodes.getLength();
 				for (int i = 0; i < bound; i++) {
-					NamedNodeMap attributes = graphicNodes.item(i).getAttributes();
+					Node cNvPr = graphicNodes.item(i);
+					NamedNodeMap attributes = cNvPr.getAttributes();
 					if (attributes.getNamedItem("descr") != null) {
 						String rel = attributes.getNamedItem("descr").getNodeValue();
-						String relId = findRelId(graphicNodes.item(i).getParentNode().getParentNode());
+						String relId = findRelId(cNvPr.getParentNode().getParentNode());
 						if (rels.containsKey(relId)) {
-							imageEntries.put(findImage(rels.get(relId)).getName(), rel);
+							ZipEntry image = findImage(rels.get(relId));
+							imageEntries.put(image.getName(), rel);
 						}
 					}
 				}
-			} catch (ParserConfigurationException | IOException | SAXException e) {
+			} catch (Exception e) {
 				Logger.error(e);
 			}
 			return imageEntries;
@@ -245,17 +367,18 @@ public class DocxBuilder {
 		}
 
 		private void copy(ZipEntry entry, ZipOutputStream zos) throws IOException {
-			if (isDocument(entry)) replaceDocument(zipFile.getInputStream(entry), zos);
+			if (isDocument(entry)) replaceDocument(entry, zos);
 			else if (isImageToReplace(entry)) zos.write(imageOf(entry));
 			else copyFile(zipFile.getInputStream(entry), zos);
 		}
 
 		private byte[] imageOf(ZipEntry entry) {
-			return content.image(imagesRelationship.get(entry.getName()));
+			ImageView imageView = content.image(imageRelationships.get(entry.getName()));
+			return imageView.image().data();
 		}
 
 		private boolean isImageToReplace(ZipEntry entry) {
-			final String imageId = imagesRelationship.get(entry.getName());
+			final String imageId = imageRelationships.get(entry.getName());
 			return imageId != null && content.hasImage(imageId);
 		}
 
@@ -310,14 +433,47 @@ public class DocxBuilder {
 			is.close();
 		}
 
-		private void replaceDocument(InputStream is, ZipOutputStream zos) throws IOException {
-			try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-				while (true) {
-					String line = reader.readLine();
-					if (line == null) break;
+		private void replaceDocument(ZipEntry entry, ZipOutputStream zos) throws IOException {
+			File tmp = writeTmpDoc();
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(tmp.toPath())))) {
+				String line;
+				while ((line = reader.readLine()) != null) {
 					zos.write(content.replace(line).getBytes());
 				}
+			} finally {
+				tmp.delete();
 			}
+		}
+
+		private File writeTmpDoc() throws IOException {
+
+			File tmp = new File(template.getParentFile(), "document_" + System.nanoTime() + ".xml");
+			tmp.deleteOnExit();
+
+			try(OutputStream output = Files.newOutputStream(tmp.toPath())) {
+
+				TransformerFactory transformerFactory = TransformerFactory.newInstance();
+				// The default add many empty new line, not sure why?
+				// https://mkyong.com/java/pretty-print-xml-with-java-dom-and-xslt/
+				Transformer transformer = transformerFactory.newTransformer();
+
+				// add a xslt to remove the extra newlines
+				//Transformer transformer = transformerFactory.newTransformer(new StreamSource(new File(FORMAT_XSLT)));
+
+				// pretty print
+				transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+				transformer.setOutputProperty(OutputKeys.STANDALONE, "no");
+
+				DOMSource source = new DOMSource(document);
+				StreamResult result = new StreamResult(output);
+
+				transformer.transform(source, result);
+
+			} catch (TransformerException e) {
+				throw new RuntimeException(e);
+			}
+
+			return tmp;
 		}
 	}
 
@@ -334,6 +490,4 @@ public class DocxBuilder {
 			os.write(buffer, 0, length);
 		}
 	}
-
-
 }
