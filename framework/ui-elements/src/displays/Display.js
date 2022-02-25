@@ -72,7 +72,7 @@ export default class Display extends PassiveView {
     redirect = (params) => {
         let url = params.url;
         if (url == null || url === "") window.location.reload();
-        window.location.href = url;
+        else window.location.href = url;
     };
 
     addressed = (params) => {
