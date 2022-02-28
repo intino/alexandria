@@ -1,0 +1,13 @@
+attributes
+	id: label
+	lugar: category
+	superficie: number [0,500,2500,5000,12000,*] [0,5000,*]
+	balance: integer [-100,-50,0,50,100]
+
+language.es
+	_count(lugar): numero
+	_sum(superficie): superficie total
+	_sum(superficie)_units: km2
+	_avg(balance): balance medio
+	_avg(balance)_units: miles de €
+	_count(balance): numero de balances
