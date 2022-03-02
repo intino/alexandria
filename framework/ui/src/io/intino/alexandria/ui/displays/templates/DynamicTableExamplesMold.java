@@ -6,10 +6,14 @@ import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.rows.DynamicTable1Row;
 import io.intino.alexandria.ui.documentation.Person;
 import io.intino.alexandria.ui.documentation.model.Datasources;
+import io.intino.alexandria.ui.model.dynamictable.Row;
+import io.intino.alexandria.ui.model.dynamictable.Section;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DynamicTableExamplesMold extends AbstractDynamicTableExamplesMold<UiFrameworkBox> {
 
@@ -33,6 +37,11 @@ public class DynamicTableExamplesMold extends AbstractDynamicTableExamplesMold<U
         dynamicTable1.visibleColumns(visibleColumns());
         dynamicTable1.showZeros(true);
         dynamicTable1.showPercentages(true);
+        //dynamicTable1.onSelectRows(e -> notifyUser("Selection: " + serialize(e.selection()), UserMessage.Type.Info));
+    }
+
+    private String serialize(Map<Section, List<String>> selection) {
+        return selection.entrySet().stream().map(e -> e.getKey().label() + ": " + String.join(",", e.getValue())).collect(Collectors.joining(";"));
     }
 
     private List<DynamicTableVisibleColumn> visibleColumns() {
