@@ -121,6 +121,10 @@ export const DynamicTableStyles = theme => ({
         fontSize: '9pt',
         cursor: 'pointer',
     },
+    filterSelector : {
+        padding: '0',
+        margin: '0 10px 0 0'
+    },
 });
 
 const DynamicTablePageSize = 10;
@@ -148,7 +152,9 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 		    row: null,
 		    page: 0,
 		    column: null,
-		    selectRowProvided: false,
+		    selectRowsEnabled: false,
+		    selectedRows: [],
+		    openRowProvided: false,
             hideZeros: false,
             showRelativeValues: false,
             order: null,
@@ -159,7 +165,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     setup = (info) => {
         let visibleColumns = info.visibleColumns != null && info.visibleColumns.length > 0 ? this.visibleColumnsArrayOf(info.visibleColumns) : null;
         if (visibleColumns == null) visibleColumns = this.getCookie(info.name) ? this.getCookie(info.name) : this.state.visibleColumns;
-        this.setState({ itemCount : info.itemCount, pageSize: info.pageSize, name: info.name, visibleColumns: visibleColumns });
+        this.setState({ itemCount : info.itemCount, pageSize: info.pageSize, name: info.name, visibleColumns: visibleColumns, selectRowsEnabled: info.selectRowsEnabled });
     };
 
     render() {
@@ -578,7 +584,10 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                 {(isMainView || (!isMainView && mainSection == this.state.sections[0])) &&
                     <TableCell className={classes.rowLabel} style={style}>
                         {(!totalRow && isMainView) &&
-                            <a className={classes.rowAction} onClick={this.handleShowItems.bind(this, mainSection, rowLabel)} title={rowDescription}>{rowLabel}</a>
+                            <div className="layout horizontal">
+                                {this.state.selectRowsEnabled && <Checkbox className={classes.filterSelector} style={{marginRight:'10px'}} onChange={this.handleToggleSelectRow.bind(this, mainSection, rowLabel)}></Checkbox>}
+                                <a className={classes.rowAction} onClick={this.handleShowItems.bind(this, mainSection, rowLabel)} title={rowDescription}>{rowLabel}</a>
+                            </div>
                         }
                         {(totalRow || !isMainView) && <div>{rowLabel}</div>}
                     </TableCell>
@@ -813,9 +822,32 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         this.requester.visibleColumns(this._visibleColumns(this.state.visibleColumns));
     };
 
+    handleToggleSelectRow = (section, row, event) => {
+        var selectedRows = this.state.selectedRows;
+        var selectedSectionRows = this.state.selectedRows[section.label];
+        if (selectedSectionRows == null) selectedSectionRows = [];
+        const checked = event.target.checked;
+        const found = selectedSectionRows.indexOf(row) != -1;
+        if (checked && found) return;
+        if (!checked && !found) return;
+        if (checked) selectedSectionRows = [...selectedSectionRows, row];
+        else selectedSectionRows.splice(selectedSectionRows.indexOf(row), 1);
+        selectedRows[section.label] = selectedSectionRows;
+        this.setState({selectedRows});
+        this.requester.selectRows(this._rowsSelection());
+    };
+
+    _rowsSelection = () => {
+        const result = [];
+        for (var entry in this.state.selectedRows) {
+            result.push({ section: entry, rows: this.state.selectedRows[entry]});
+        }
+        return result;
+    };
+
     handleShowItems = (section, row) => {
-        const selectRowProvided = this.state.selectRowProvided;
-        const state = selectRowProvided ? {openConfirm:true, section: section, row: row} : {open:true, section: section, row: row};
+        const openRowProvided = this.state.openRowProvided;
+        const state = openRowProvided ? {openConfirm:true, section: section, row: row} : {open:true, section: section, row: row};
         this.setState(state);
     };
 
@@ -837,7 +869,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 
     handleOpenConfirm = () => {
         this.setState({openConfirm:false});
-        this.requester.selectRow({ section: this.state.section.label, row: this.state.row });
+        this.requester.openRow({ section: this.state.section.label, row: this.state.row });
     };
 
 	handleCloseConfirm = () => {
@@ -941,8 +973,8 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         this.setState({sections: sections, page: 0});
     };
 
-    selectRowProvided = (value) => {
-        this.setState({selectRowProvided: value});
+    openRowProvided = (value) => {
+        this.setState({openRowProvided: value});
     };
 
     handleToggleRelativeValues = () => {
