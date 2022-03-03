@@ -198,14 +198,14 @@ class DateEditable extends AbstractDateEditable {
 
     renderWrappedWeekDay = (date, selectedDate, dayInCurrentMonth) => {
 		const range = this.state.range;
-		const min = range.min !== undefined && range.min != 0 ? moment(range.min) : undefined;
-		const max = range.max !== undefined && range.max != 0 ? moment(range.max) : undefined;
+		const min = range.min !== undefined && range.min != 0 ? moment.utc(range.min) : undefined;
+		const max = range.max !== undefined && range.max != 0 ? moment.utc(range.max) : undefined;
         const { classes } = this.props;
-        let dateClone = moment(date);
+        let dateClone = moment.utc(date);
         const now = moment(new Date());
-        const start = moment(selectedDate).startOf('week');
-        const end = moment(selectedDate).endOf('week');
-        const maxEnd = max !== undefined ? moment(max).endOf('week') : null;
+        const start = moment.utc(selectedDate).startOf('week');
+        const end = moment.utc(selectedDate).endOf('week');
+        const maxEnd = max !== undefined ? moment.utc(max).endOf('week') : null;
 
         const isFirstDay = dateClone.isSame(start, 'day');
         const isLastDay = dateClone.isSame(end, 'day');
@@ -227,7 +227,7 @@ class DateEditable extends AbstractDateEditable {
         return (
           <div className={wrapperClassName}>
             <IconButton className={dayClassName} disabled={readonly && !dayIsBetween}>
-              <span>{moment(dateClone).date()}</span>
+              <span>{moment.utc(dateClone).date()}</span>
             </IconButton>
           </div>
         );
@@ -237,7 +237,7 @@ class DateEditable extends AbstractDateEditable {
         if (!this.isWeekView()) return value;
         if (value == null) return undefined;
         if (value == undefined) return undefined;
-        return moment(value).endOf('week').toDate();
+        return moment.utc(value).endOf('week').toDate();
     };
 }
 

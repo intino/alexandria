@@ -28,6 +28,7 @@ public class DynamicTableBuilder {
 		DynamicTableSection result = new DynamicTableSection();
 		result.label(section.label());
 		result.color(section.color());
+		result.isOrdinal(section.isOrdinal());
 		result.backgroundColor(section.backgroundColor());
 		result.fontSize(section.fontSize());
 		result.columns(buildColumnList(section));
