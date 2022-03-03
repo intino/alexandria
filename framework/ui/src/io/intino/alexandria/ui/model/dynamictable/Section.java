@@ -14,6 +14,7 @@ public class Section {
 	private List<Row> rowList = new ArrayList<>();
 	private List<Section> sectionList = new ArrayList<>();
 	private boolean showTotals = true;
+	private boolean isOrdinal = false;
 
 	public Section(String label) {
 		this(label, "black", "#efefef", 12);
@@ -136,4 +137,12 @@ public class Section {
 		return section;
 	}
 
+	public boolean isOrdinal() {
+		return isOrdinal;
+	}
+
+	public Section isOrdinal(boolean value) {
+		isOrdinal = value;
+		return this;
+	}
 }

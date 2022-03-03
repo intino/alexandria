@@ -1,10 +1,16 @@
 dsl Konos
 
+Schema DynamicTableData
+	Attribute dimension as Text
+	Attribute drill as Text
+	Attribute sections as Object(DynamicTableSection) List
+
 Schema DynamicTableSection
 	Attribute label as Text
 	Attribute color as Text
 	Attribute backgroundColor as Text
 	Attribute fontSize as Integer
+	Attribute isOrdinal as Bool
 	Attribute sections as Object(DynamicTableSection) List
 	Attribute columns as Object(DynamicTableColumn) List
 	Attribute rows as Object(DynamicTableRow) List

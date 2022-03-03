@@ -8,7 +8,7 @@ import { withSnackbar } from 'notistack';
 import { Table, TableHead, TableBody, TableRow, TableCell, TableSortLabel, Typography, Dialog,
          DialogActions, DialogContent, DialogContentText, DialogTitle, Checkbox, IconButton, Button, FormControlLabel } from '@material-ui/core';
 import {RiseLoader, PulseLoader} from "react-spinners";
-import { Clear, ArrowBack, TouchApp } from '@material-ui/icons';
+import { Clear, ArrowBack } from '@material-ui/icons';
 import classNames from "classnames";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -144,6 +144,8 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 		    traceable : true,
 		    name: null,
 		    visibleColumns: [],
+		    dimension: null,
+		    drill: null,
 		    sections: null,
 		    open: false,
 		    openColumnsDialog: false,
@@ -198,7 +200,6 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                 <div className="layout horizontal">
                     {this.state.column &&
                         <div className="layout horizontal center">
-                            <IconButton color='primary' onClick={this.handleBack.bind(this)}><ArrowBack/></IconButton>
                             <Select className={classes.columnSelector} isSearchable
                                     placeholder={this.translate("Select other column")} options={this._selectorColumns()}
                                     value={this._selectorColumn(this.state.column.label, this.state.column.index)}
@@ -210,7 +211,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                     {this.state.loading && <PulseLoader color={theme.palette.secondary.main} size={8} loading={true}/>}
                 </div>
                 <div className="layout horizontal end-justified center">
-                    <a className={classes.columnsAction} onClick={this.handleOpenColumnsDialog.bind(this)}>{this.translate("Show/hide columns")}</a>
+                    <a className={classes.columnsAction} onClick={this.handleOpenColumnsDialog.bind(this)}>{this.translate("Select indicators")}</a>
                     <FormControlLabel control={<Checkbox checked={this.state.hideZeros} onChange={this.handleToggleHideZeros.bind(this)} name="toggleHideZeros" color="primary"/>} label={this.translate("Hide zeros")}/>
                     <FormControlLabel control={<Checkbox checked={this.state.showRelativeValues} onChange={this.handleToggleRelativeValues.bind(this)} name="toggleRelativeValues" color="primary"/>} label={this.translate("Show percentages")}/>
                 </div>
@@ -278,6 +279,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 		result.borderColor = section.borderColor;
 		result.fontSize = section.fontSize;
 		result.columns = section.columns;
+		result.isOrdinal = section.isOrdinal;
 		result.rows = [];
 		result.sections = [];
 		this.copySections(section, result);
@@ -292,7 +294,8 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                                         backgroundColor: childSection.backgroundColor,
                                         borderColor: childSection.borderColor,
                                         fontSize: childSection.fontSize,
-                                        columns: childSection.columns, rows: [], sections: [] };
+                                        columns: childSection.columns,
+                                        isOrdinal: childSection.isOrdinal, rows: [], sections: [] };
             totalSection.sections.push(childTotalSection);
             this.copySections(childTotalSection, childSection);
         }
@@ -421,12 +424,19 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                        style={style}
                        align='left'
                        key={0}>
-                {!isMainView && <div style={{color:'white'}}>{this.translate("Title")}</div>}
+                {!isMainView && <div style={{color:'white'}}>{this.translate(this.state.drill != null ? this.state.drill : "Group")}</div>}
                 {isMainView &&
-                    <TableSortLabel active={orderBy === 'title'} direction={orderBy === 'title' ? order : 'asc'} onClick={this.handleSortByTitle.bind(this)}>
-                        <span>{this.translate("Title")}</span>
-                        {orderBy === '' ? (<span className={classes.visuallyHidden}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</span>) : null}
-                    </TableSortLabel>
+                    <React.Fragment>
+                        {!mainSection.isOrdinal &&
+                            <TableSortLabel active={orderBy === 'title'} direction={orderBy === 'title' ? order : 'asc'} onClick={this.handleSortByTitle.bind(this)}>
+                                <span>{this.translate(this.state.drill != null ? this.state.drill : "Group")}</span>
+                                {orderBy === '' ? (<span className={classes.visuallyHidden}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</span>) : null}
+                            </TableSortLabel>
+                        }
+                        {mainSection.isOrdinal &&
+                            <span>{this.translate(this.state.drill != null ? this.state.drill : "Group")}</span>
+                        }
+                    </React.Fragment>
                 }
             </TableCell>
         );
@@ -454,9 +464,18 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                        align='right'
                        key={index}>
                 {(!selectable || (!isMainView && selectable)) &&
-                    <a className="layout horizontal center-center" style={{color:color,whiteSpace:'nowrap',cursor:'pointer'}} onClick={this.handleFilterFirstColumn.bind(this)}>
-                        {this.translate(section.label)}{isMainView && <TouchApp style={{marginLeft:'5px'}}/>}
-                    </a>
+                    <React.Fragment>
+                        {isMainView &&
+                            <div className="layout horizontal center-center" style={{color:color,whiteSpace:'nowrap'}}>
+                                {this.translate(this.state.dimension != null ? this.state.dimension + ". " : "") + this.translate(section.label)}
+                            </div>
+                        }
+                        {!isMainView &&
+                            <div className="layout horizontal center end-justified" style={{color:color,whiteSpace:'nowrap'}}>
+                                {this.translate(section.label)}
+                            </div>
+                        }
+                    </React.Fragment>
                 }
                 {isMainView && selectable &&
                     <TableSortLabel active={orderBy === section.label} direction={orderBy === section.label ? order : 'asc'} onClick={this.handleSort.bind(this, section, index)}>
@@ -585,7 +604,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                     <TableCell className={classes.rowLabel} style={style}>
                         {(!totalRow && isMainView) &&
                             <div className="layout horizontal">
-                                {this.state.selectRowsEnabled && <Checkbox className={classes.filterSelector} style={{marginRight:'10px'}} onChange={this.handleToggleSelectRow.bind(this, mainSection, rowLabel)}></Checkbox>}
+                                {this.state.selectRowsEnabled && <Checkbox className={classes.filterSelector} style={{marginRight:'10px'}} checked={this._isRowSelected(mainSection, rowLabel)} onChange={this.handleToggleSelectRow.bind(this, mainSection, rowLabel)}></Checkbox>}
                                 <a className={classes.rowAction} onClick={this.handleShowItems.bind(this, mainSection, rowLabel)} title={rowDescription}>{rowLabel}</a>
                             </div>
                         }
@@ -759,7 +778,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 
         return (
             <Dialog open={this.state.openColumnsDialog} onClose={this.handleCloseColumnsDialog.bind(this)}>
-                <DialogTitle id="alert-dialog-title">{this.translate("Show/hide columns")}</DialogTitle>
+                <DialogTitle id="alert-dialog-title">{this.translate("Select indicators")}</DialogTitle>
                 <DialogContent>
                   <DialogContentText id="alert-dialog-description">
                     {this.renderColumnsCheckboxes()}
@@ -835,6 +854,13 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         selectedRows[section.label] = selectedSectionRows;
         this.setState({selectedRows});
         this.requester.selectRows(this._rowsSelection());
+    };
+
+    _isRowSelected = (section, row) => {
+        var selectedRows = this.state.selectedRows;
+        var selectedSectionRows = this.state.selectedRows[section.label];
+        if (selectedSectionRows == null) return false;
+        return selectedSectionRows.indexOf(row) != -1;
     };
 
     _rowsSelection = () => {
@@ -969,8 +995,8 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         return (<div style={{position:'absolute',top:'50%',left:'43%'}}><RiseLoader color={theme.palette.secondary.main} loading={true}/></div>);
     };
 
-    sections = (sections) => {
-        this.setState({sections: sections, page: 0});
+    refreshTable = (data) => {
+        this.setState({sections: data.sections, dimension: data.dimension, drill: data.drill, page: 0, selectedRows: []});
     };
 
     openRowProvided = (value) => {
@@ -989,22 +1015,27 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         this.requester.showZeros(!value);
     };
 
-    handleFilterFirstColumn = () => {
-        const columns = this._selectorColumns();
-        if (columns.length <= 0) return;
-        this.handleFilterColumn(columns[0], columns[0].index);
+    openView = (view) => {
+        if (view.toLowerCase() === "indicator") this.openIndicatorView();
+        else this.openNormalView();
     };
 
-    handleFilterColumn = (column, index) => {
+    openNormalView = () => {
+        this.setState({ column: null })
+    };
+
+    openIndicatorView = () => {
+        const columns = this._selectorColumns();
+        if (columns.length <= 0) return;
+        this.handleSelectIndicator(columns[0], columns[0].index);
+    };
+
+    handleSelectIndicator = (column, index) => {
         this.setState({ column: { index: index, label: column.label }, order: null, orderBy: null });
     };
 
     handleSelectColumn = (value) => {
         this.setState({ column : { index: value.index, label: value.label }});
-    };
-
-    handleBack = () => {
-        this.setState({ column: null })
     };
 
     _isMainView = () => {

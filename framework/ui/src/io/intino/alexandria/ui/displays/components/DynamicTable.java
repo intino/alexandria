@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
@@ -33,10 +34,14 @@ public abstract class DynamicTable<B extends Box, ItemComponent extends io.intin
     private List<DynamicTableVisibleColumn> visibleColumns = new ArrayList<>();
     private boolean showZeros = true;
     private boolean showPercentages = false;
+    private View view = View.Normal;
+    private Function<String, String> translator;
 
     public DynamicTable(B box) {
         super(box);
     }
+
+    public enum View { Normal, Indicator }
 
     @Override
     public void source(Datasource source) {
@@ -84,9 +89,24 @@ public abstract class DynamicTable<B extends Box, ItemComponent extends io.intin
         return this;
     }
 
+    public DynamicTable openView(View view) {
+        notifier.openView(view.name());
+        return this;
+    }
+
+    public DynamicTable translator(Function<String, String> translator) {
+        this.translator = translator;
+        return this;
+    }
+
     @Override
     protected AddItemEvent itemEvent(Display display, int index) {
         return new AddItemEvent(this, (ItemComponent)display, ((ItemComponent)display).item(), index);
+    }
+
+    @Override
+    public String translate(String word) {
+        return translator != null ? translator.apply(word) : super.translate(word);
     }
 
     @Override
@@ -168,8 +188,16 @@ public abstract class DynamicTable<B extends Box, ItemComponent extends io.intin
     }
 
     public void refreshSections(List<Section> sections) {
-        notifier.sections(DynamicTableBuilder.buildList(sections, language()));
+        notifier.refreshTable(table(sections));
         notifier.openRowProvided(openRowListener != null);
+    }
+
+    private DynamicTableData table(List<Section> sections) {
+        DynamicTableData result = new DynamicTableData();
+        result.dimension(translate(dimension()));
+        result.drill(translate(drill()));
+        result.sections(DynamicTableBuilder.buildList(sections, language()));
+        return result;
     }
 
     public void openRow(DynamicTableRowParams params) {
