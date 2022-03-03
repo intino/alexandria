@@ -1,11 +1,18 @@
 package io.intino.alexandria.led;
 
+import io.intino.alexandria.led.allocators.DefaultAllocator;
+import io.intino.alexandria.led.allocators.SchemaAllocator;
 import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.buffers.store.ByteStore;
 
 import java.util.UUID;
 
 public class Item extends Schema {
+
+    public static void main(String[] args) {
+        SchemaAllocator<Item> allocator = new DefaultAllocator<>(Item.SIZE, Item.class);
+        Item item = allocator.malloc();
+    }
 
     public static final int ID_OFFSET = 0;
     public static final int ID_SIZE = Long.SIZE;
