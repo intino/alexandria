@@ -32,6 +32,10 @@ Schema DynamicTableRowParams
 	Attribute section as Text
 	Attribute row as Text
 
+Schema DynamicTableRowsParams
+	Attribute section as Text
+	Attribute rows as Text List
+
 Schema DynamicTableVisibleColumn
 	Attribute name as Text
 	Attribute visible as Bool
@@ -66,6 +70,7 @@ Schema DynamicTableSetup as ExtensionOf(CollectionSetup)
 	Attribute name as Text
 	Attribute pageSize as Integer
 	Attribute openRowExternal as Bool
+	Attribute selectRowsEnabled as Bool
 	Attribute visibleColumns as Object(DynamicTableVisibleColumn) List
 
 Schema PageCollectionSetup as ExtensionOf(CollectionSetup)
