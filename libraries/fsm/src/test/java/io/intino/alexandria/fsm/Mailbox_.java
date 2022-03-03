@@ -1,4 +1,4 @@
-package io.intino.fsm;
+package io.intino.alexandria.fsm;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;

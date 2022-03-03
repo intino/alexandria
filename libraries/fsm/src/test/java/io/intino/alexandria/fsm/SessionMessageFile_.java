@@ -1,4 +1,4 @@
-package io.intino.fsm;
+package io.intino.alexandria.fsm;
 
 import io.intino.alexandria.logger.Logger;
 import org.apache.commons.io.FileUtils;
