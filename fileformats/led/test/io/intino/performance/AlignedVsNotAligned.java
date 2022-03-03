@@ -80,7 +80,6 @@ public class AlignedVsNotAligned {
 
     private static class Aligned extends Schema {
 
-
         private static final int OFFSET1 = 0;
         private static final int SIZE1 = Long.SIZE;
         private static final int OFFSET2 = OFFSET1 + SIZE1;
@@ -153,11 +152,10 @@ public class AlignedVsNotAligned {
 
     private static class NotAligned extends Schema {
 
-
         private static final int OFFSET1 = 0;
         private static final int SIZE1 = Long.SIZE;
         private static final int OFFSET2 = OFFSET1 + SIZE1;
-        private static final int SIZE2 = Integer.SIZE;
+        private static final int SIZE2 = 18;
         private static final int OFFSET3 = OFFSET2 + SIZE2;
         private static final int SIZE3 = 12;
         private static final int OFFSET4 = OFFSET3 + SIZE3;

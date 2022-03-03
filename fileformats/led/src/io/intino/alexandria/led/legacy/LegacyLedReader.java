@@ -101,7 +101,7 @@ public class LegacyLedReader {
 	}
 
 	private <T extends Schema> LedStream<T> readAsStream(InputStream inputStream, Class<T> schemaClass, int schemaSize) {
-		return new InputLedStream<>(inputStream, schemaClass, schemaSize);
+		return new InputLedStream<>(inputStream, Schema.factoryOf(schemaClass), schemaSize);
 	}
 
 	private static InputStream inputStreamOf(File file) {

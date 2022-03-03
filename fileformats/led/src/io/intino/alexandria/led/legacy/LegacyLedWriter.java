@@ -124,6 +124,8 @@ public class LegacyLedWriter {
 		final int numBatches = (int) Math.ceil(led.size() / (float) bufferSize);
 		try (OutputStream originalOutputStream = this.destOutputStream) {
 			LegacyLedHeader header = new LegacyLedHeader();
+			header.elementCount(size);
+			header.elementSize(schemaSize);
 			originalOutputStream.write(header.toByteArray());
 			writeLed(led, schemaSize, numBatches, originalOutputStream);
 		} catch (Exception e) {

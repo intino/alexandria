@@ -16,8 +16,11 @@ import java.util.stream.Collectors;
 
 public class Main {
 	public static void main(String[] args) throws IOException {
-		LedgerDefinition definition = LedgerDefinition.read(new File("ledgers/distritos.ledger"));
-		Ledger ledger = new ColumnarLedger(definition).read(new File("ledgers/distritos/202201.tsv"),"\t");
+
+		String root = "C:\\Users\\naits\\Desktop\\MonentiaDev\\alexandria\\libraries\\sumus\\res\\";
+
+		LedgerDefinition definition = LedgerDefinition.read(new File(root,"ledgers/distritos.ledger"));
+		Ledger ledger = new ColumnarLedger(definition).read(new File(root,"ledgers/distritos/202201.tsv"),"\t");
 		Dimension area = ledger.dimension("lugar");
 		System.out.println(area.levels());
 		List<Slice> slices = area.slices(2);

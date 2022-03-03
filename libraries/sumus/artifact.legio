@@ -2,6 +2,7 @@ dsl Legio
 
 Artifact("io.intino.alexandria", "1.0.0") sumus
 	Imports
+		Compile("io.intino.alexandria", "led", "2.2.2")
 		Test("junit", "junit", "4.13")
 		Test("org.assertj", "assertj-core", "3.8.0")
 

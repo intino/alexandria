@@ -108,6 +108,10 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema>, Seria
 		bitBuffer.clear();
 	}
 
+	public BitBuffer bitBuffer() {
+		return bitBuffer;
+	}
+
 	@Override
 	public long address() {
 		return bitBuffer.address();
