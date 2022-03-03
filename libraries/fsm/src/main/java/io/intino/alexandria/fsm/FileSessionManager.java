@@ -1,6 +1,6 @@
-package io.intino.fsm;
+package io.intino.alexandria.fsm;
 
-import io.intino.fsm.SessionMessagePipeline.Stage;
+import io.intino.alexandria.fsm.SessionMessagePipeline.Stage;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.intino.fsm.StatefulScheduledService.State.*;
+import static io.intino.alexandria.fsm.StatefulScheduledService.State.*;
 import static java.util.Objects.requireNonNull;
 
 public class FileSessionManager {

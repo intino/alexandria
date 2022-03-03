@@ -1,4 +1,4 @@
-package io.intino.fsm;
+package io.intino.alexandria.fsm;
 
 import java.io.File;
 import java.util.Random;

@@ -1,4 +1,4 @@
-package io.intino.fsm;
+package io.intino.alexandria.fsm;
 
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
