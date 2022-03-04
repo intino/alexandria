@@ -1,5 +1,7 @@
 package io.intino.alexandria.fsm;
 
+import io.intino.alexandria.logger.Logger;
+
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,7 +23,7 @@ public class SessionHelper {
             String ts = name.substring(0, name.indexOf('.'));
             return LocalDateTime.parse(ts, Formatter);
         } catch (Throwable e) {
-            e.printStackTrace();
+            Logger.error(e);
         }
         return null;
     }
