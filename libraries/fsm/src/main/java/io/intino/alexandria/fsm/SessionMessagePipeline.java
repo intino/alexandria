@@ -4,10 +4,7 @@ import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.nio.file.StandardOpenOption.APPEND;
@@ -83,18 +80,33 @@ public abstract class SessionMessagePipeline {
         return Operation.Continue;
     }
 
-    protected Operation onProcessing(SessionMessageFile messageFile, FileSessionManager fsm) {
+    protected Operation onProcessing(SessionMessageFile messageFile, FileSessionManager fsm) throws Exception {
         processSessionMessageFile(messageFile, fsm);
         return Operation.Continue;
     }
 
-    private void processSessionMessageFile(SessionMessageFile messageFile, FileSessionManager fsm) {
-        for(String message : messageFile) {
-            try {
-                processMessage(message, fsm);
-            } catch (Throwable e) {
-                onMessageError(message, fsm);
+    private void processSessionMessageFile(SessionMessageFile messageFile, FileSessionManager fsm) throws Exception {
+        Iterator<String> messageIterator = messageFile.iterator();
+
+        IndexFile indexFile = fsm.createIndexFile(messageFile);
+
+        try {
+            skipMessagesBeforeIndex(messageIterator, indexFile.index());
+
+            while(messageIterator.hasNext()) {
+                String message = messageIterator.next();
+                try {
+                    processMessage(message, fsm);
+                } catch (Throwable e) {
+                    onMessageError(message, fsm);
+                }
+                indexFile.increment();
             }
+
+            indexFile.close();
+
+        } finally {
+            if(indexFile != null) indexFile.save();
         }
     }
 
@@ -120,6 +132,11 @@ public abstract class SessionMessagePipeline {
 
     private boolean isNullOrEmpty(Stage[] stages) {
         return stages == null || stages.length == 0;
+    }
+
+    private void skipMessagesBeforeIndex(Iterator<String> messageIterator, long toExclusive) {
+        for(long index = 0;index < toExclusive && messageIterator.hasNext();index++)
+            messageIterator.next();
     }
 
     public enum Operation {

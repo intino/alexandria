@@ -1,5 +1,6 @@
 package io.intino.alexandria.fsm;
 
+import io.intino.alexandria.fsm.StatefulScheduledService.State;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
@@ -7,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.time.Instant;
 import java.util.Set;
+import java.util.concurrent.Future;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.nio.file.StandardOpenOption.APPEND;
@@ -16,8 +18,45 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class Examples {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        pauseFsmAndResume();
+    }
 
+    private static void pauseFsmAndResume() throws Exception {
+        FileSessionManager fsm = new FileSessionManager.Builder()
+                .readsFrom(new File("temp/mailbox_1"))
+                .writesTo(new File("temp/mailbox_2"))
+                .onMessageProcess(System.out::println)
+                .build();
+
+        fsm.start();
+        assert fsm.state() == State.Running;
+        Thread.sleep(1000);
+
+        // If this FSM is currently processing a file, it will not pause execution immediately until it finishes reading said file
+        // Due to that, we need a future object if we want to wait for this FSM to be fully paused
+        Future<Instant> pause = fsm.pause();
+        assert fsm.state() == State.Paused;
+
+        Instant pausedTs = pause.get();
+        if(pausedTs == null) {
+            System.out.println("FSM was resumed/cancelled/terminated before went completely paused. Current state is " + fsm.state());
+        } else {
+            System.out.println("FSM went paused at " + pausedTs);
+        }
+
+        fsm.resume();
+        assert fsm.state() == State.Running;
+    }
+
+    private static void useFsm() {
+        FileSessionManager fsm = new FileSessionManager.Builder()
+                .readsFrom(new File("temp/mailbox_1"))
+                .writesTo(new File("temp/mailbox_2"))
+                .onMessageProcess(System.out::println)
+                .build();
+
+        fsm.start();
     }
 
     private static void basicFsm() {

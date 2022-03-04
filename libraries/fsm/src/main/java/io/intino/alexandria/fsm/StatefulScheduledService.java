@@ -13,7 +13,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Represents a task that will be executed periodically, and provides full control over its execution flow.
  * */
-public class StatefulScheduledService {
+class StatefulScheduledService {
 
     private final TimePeriod period;
     private final ScheduledExecutorService executor;
@@ -26,7 +26,7 @@ public class StatefulScheduledService {
         this.state = new AtomicReference<>(State.Created);
     }
 
-    public synchronized boolean start(Runnable task) {
+    public synchronized boolean start(Task task) {
         if(task == null) throw new NullPointerException("Task cannot be null");
         if(!state.compareAndSet(State.Created, State.Running)) return false;
         // scheduleWithFixedDelay waits from the end of the previous execution to the start of the next
@@ -34,10 +34,14 @@ public class StatefulScheduledService {
         return true;
     }
 
-    private Runnable execute(Runnable task) {
+    private Runnable execute(Task task) {
         return () -> {
-            if(state.get().equals(State.Running))
-                task.run();
+            try {
+                if(state.get().equals(State.Running)) task.onUpdate();
+                task.onFinally();
+            } catch (Throwable e) {
+                Logger.error(e);
+            }
         };
     }
 
@@ -91,5 +95,23 @@ public class StatefulScheduledService {
         Paused,
         Cancelled,
         Terminated
+    }
+
+    static abstract class Task {
+
+        /**
+         * Called every update cycle of the executor if the service's state == Running
+         * */
+        abstract void onUpdate();
+
+        /**
+         * Called every update cycle of the executor if the service's state == Paused
+         * */
+        void onPaused() {}
+
+        /**
+         * Called every update cycle of the executor, even if the service is paused
+         * */
+        void onFinally() {}
     }
 }

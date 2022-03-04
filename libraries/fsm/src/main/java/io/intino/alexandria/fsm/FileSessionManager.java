@@ -7,23 +7,30 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.intino.alexandria.fsm.StatefulScheduledService.State.*;
 import static java.util.Objects.requireNonNull;
+import static java.util.concurrent.CompletableFuture.completedFuture;
 
-public class FileSessionManager {
+public class FileSessionManager extends StatefulScheduledService.Task {
 
     public static final String MESSAGE_EXTENSION = ".session";
     public static final String ERROR_EXTENSION = ".errors";
+    public static final String TEMP_EXTENSION = ".temp";
     private static final long DEFAULT_TIMEOUT = 10;
     private static final TimeUnit DEFAULT_TIMEOUT_UNIT = TimeUnit.MINUTES;
-    public static final String TEMP_EXTENSION = ".temp";
     public static final long MIN_BYTES_PER_SESSION = 1024 * 1024; // 1KB
+    public static final TimePeriod DEFAULT_MAX_PROCESSED_FILES_AGE = new TimePeriod(60, TimeUnit.DAYS);
 
     private final String id;
     private final Mailbox inputMailbox;
@@ -32,16 +39,22 @@ public class FileSessionManager {
     private final long maxBytesPerSession;
     private final TimePeriod sessionTimeout;
     private final TimePeriod lockTimeout;
+    private final TimePeriod processedFilesMaxAge;
     private final SessionMessagePipeline messagePipeline;
     private final LockFile lockFile;
     private volatile Session session;
+    private final AtomicBoolean executingMessagePipeline;
+    private CompletableFuture<Instant> pauseFuture;
+    private volatile IndexFile currentIndexFile;
 
-    public FileSessionManager(String id, Mailbox inputMailbox, Mailbox outputMailbox, TimePeriod readInputMailboxRate, long maxBytesPerSession,
-                              TimePeriod sessionTimeout, TimePeriod lockTimeout, SessionMessagePipeline messagePipeline) {
+    public FileSessionManager(String id, Mailbox inputMailbox, Mailbox outputMailbox, TimePeriod readInputMailboxRate,
+                              long maxBytesPerSession, TimePeriod sessionTimeout, TimePeriod lockTimeout,
+                              TimePeriod processedFilesMaxAge, SessionMessagePipeline messagePipeline) {
         this.id = id;
         this.inputMailbox = requireNonNull(inputMailbox);
         this.outputMailbox = requireNonNull(outputMailbox);
         this.lockTimeout = lockTimeout;
+        this.processedFilesMaxAge = processedFilesMaxAge;
         if(inputMailbox.equals(outputMailbox)) throw new IllegalArgumentException("Input and output mailbox cannot be the same");
         this.service = new StatefulScheduledService(readInputMailboxRate);
         if(maxBytesPerSession <= 0) throw new IllegalArgumentException("maxBytesPerSession must be > " + 0);
@@ -49,9 +62,11 @@ public class FileSessionManager {
         this.sessionTimeout = sessionTimeout;
         this.messagePipeline = requireNonNull(messagePipeline);
         this.lockFile = new LockFile(this);
+        this.executingMessagePipeline = new AtomicBoolean(false);
+        addShutdownHookToSaveCurrentIndexFile();
     }
 
-    public PublishResult publish(String message) {
+    public synchronized PublishResult publish(String message) {
         if(message == null) throw new NullPointerException("Message cannot be null");
 
         Session session = getCurrentSession();
@@ -70,21 +85,28 @@ public class FileSessionManager {
         }
 
         session.write(bytes);
+
         return PublishResult.Ok;
     }
 
     public boolean start() {
-        if(service.start(this::consume)) {
+        if(service.start(this)) {
             Logger.info("FileSessionManager " + id + " started");
             return true;
         }
         return false;
     }
 
-    private void consume() {
-        if(shouldCloseSession()) closeSession();
+    @Override
+    void onUpdate() {
         if(!validateMailboxOwnership()) return;
         consumeMessages();
+    }
+
+    @Override
+    void onFinally() {
+        if(shouldCloseSession()) closeSession();
+        MailboxCleaner.clean(inputMailbox, processedFilesMaxAge);
     }
 
     private void consumeMessages() {
@@ -108,7 +130,7 @@ public class FileSessionManager {
 
     private void consumeMessages(List<SessionMessageFile> files, Stage... stages) {
         for(SessionMessageFile messageFile : files) {
-            if(service.state() == Paused) return;
+            if(service.state() != Running) return;
             lockFile.write("Consuming " + messageFile);
             executeMessagePipeline(messageFile, stages);
         }
@@ -116,6 +138,7 @@ public class FileSessionManager {
 
     private void executeMessagePipeline(SessionMessageFile messageFile, Stage... stages) {
         try {
+            executingMessagePipeline.set(true);
             messagePipeline.execute(messageFile, this, stages);
         } catch (Throwable e) {
             try {
@@ -123,6 +146,9 @@ public class FileSessionManager {
             } catch (Throwable ex) {
                 Logger.error(e);
             }
+        } finally {
+            executingMessagePipeline.set(false);
+            if(pauseFuture != null) pauseFuture.complete(Instant.now());
         }
     }
 
@@ -152,14 +178,31 @@ public class FileSessionManager {
                 + ". If not released, this FSM will cancel execution.";
     }
 
-    public void pause() {
+    IndexFile createIndexFile(SessionMessageFile messageFile) {
+        return currentIndexFile = new IndexFile(inputMailbox, messageFile);
+    }
+
+    /**
+     * <p>Pauses this FSM. Please note that if the FSM is paused when processing a file it will not be effectively paused
+     * until the current message pipeline execution finishes.</p>
+     *
+     * <p>To check and/or wait for the exact moment this FSM will be completely paused, use the returned future object, that
+     * will provide the instant at which this FSM went fully paused. If the future returns null, it means that
+     * this FSM was resumed/cancelled/terminated before reaching the completely paused state.</p>
+     * */
+    public Future<Instant> pause() {
+        if(state() == Paused) return pauseFuture != null ? pauseFuture : completedFuture(Instant.now());
         Logger.info("Pausing FileSessionManager " + id);
         service.pause();
         lockFile.write("Paused");
         Logger.info("FileSessionManager " + id + " paused");
+        return !executingMessagePipeline.get()
+                ? completedFuture(Instant.now())
+                : (pauseFuture = new CompletableFuture<>());
     }
 
     public void resume() {
+        cancelPauseFuture();
         Logger.info("Resuming FileSessionManager " + id);
         service.resume();
         lockFile.write("Resumed");
@@ -167,6 +210,7 @@ public class FileSessionManager {
     }
 
     public void cancel() {
+        cancelPauseFuture();
         Logger.info("Cancelling FileSessionManager " + id);
         service.cancel();
         lockFile.delete();
@@ -178,10 +222,18 @@ public class FileSessionManager {
     }
 
     public void terminate(long timeout, TimeUnit timeUnit) {
+        cancelPauseFuture();
         Logger.info("Terminating FileSessionManager " + id);
         service.stop(timeout, timeUnit);
         lockFile.delete();
         Logger.info("FileSessionManager " + id + " terminated");
+    }
+
+    private void cancelPauseFuture() {
+        if(pauseFuture != null) {
+            pauseFuture.complete(null);
+            pauseFuture = null;
+        }
     }
 
     private boolean shouldCloseSession() {
@@ -210,7 +262,8 @@ public class FileSessionManager {
     private Session getCurrentSession() {
         if(session != null) return session;
         try {
-            session = new Session(getSessionTempFile());
+            LocalDateTime ts = randomTs();
+            session = new Session(SessionHelper.newTempSessionFile(outputMailbox.pending(), ts, id));
             return session;
         } catch (IOException e) {
             Logger.error(e);
@@ -218,12 +271,11 @@ public class FileSessionManager {
         }
     }
 
-    private File getSessionTempFile() {
-        return new File(outputMailbox.pending(), ts() + "." + id() + ".session" + TEMP_EXTENSION);
-    }
-
-    private String ts() {
-        return Instant.now().toString().replaceAll("[:-]", "");
+    @Deprecated
+    private LocalDateTime randomTs() {
+        Random r = new Random();
+        return LocalDateTime.of(2022, r.nextInt(3) + 1, 4,
+                r.nextInt(10), r.nextInt(60), r.nextInt(60), r.nextInt(100000000));
     }
 
     public String id() {
@@ -242,6 +294,15 @@ public class FileSessionManager {
         return outputMailbox;
     }
 
+    private void addShutdownHookToSaveCurrentIndexFile() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if(currentIndexFile != null) {
+                currentIndexFile.save();
+                Logger.info("IndexFile " + currentIndexFile.file() + " saved");
+            }
+        }, id + "_index_file_saver"));
+    }
+
     public enum PublishResult {
         Ok,
         MessageTooLong,
@@ -256,6 +317,7 @@ public class FileSessionManager {
         private TimePeriod readInputMailboxRate = new TimePeriod(10, TimeUnit.SECONDS);
         private long maxBytesPerSession = MIN_BYTES_PER_SESSION;
         private TimePeriod sessionTimeout = new TimePeriod(10, TimeUnit.SECONDS);
+        private TimePeriod processedFilesMaxAge = DEFAULT_MAX_PROCESSED_FILES_AGE;
         private TimePeriod lockTimeout = new TimePeriod(5, TimeUnit.MINUTES);
         private SessionMessagePipeline messagePipeline;
 
@@ -338,6 +400,15 @@ public class FileSessionManager {
         }
 
         /**
+         * Specifies the maximum amount of time a processed file can be present in the processed directory of the input
+         * mailbox until it gets deleted. If null is passed, then they will never be deleted
+         * */
+        public Builder processedFilesMaxAge(TimePeriod processedFilesMaxAge) {
+            this.processedFilesMaxAge = processedFilesMaxAge;
+            return this;
+        }
+
+        /**
          * Sets a custom SessionMessagePipeline for this FSM
          * */
         public Builder setMessagePipeline(SessionMessagePipeline pipeline) {
@@ -377,7 +448,9 @@ public class FileSessionManager {
          * Instantiates a new FileSessionManager
          * */
         public FileSessionManager build() {
-            return new FileSessionManager(id, input, output, readInputMailboxRate, maxBytesPerSession, sessionTimeout, lockTimeout, messagePipeline);
+            return new FileSessionManager(id, input, output, readInputMailboxRate,
+                    maxBytesPerSession, sessionTimeout, lockTimeout,
+                    processedFilesMaxAge, messagePipeline);
         }
     }
 
