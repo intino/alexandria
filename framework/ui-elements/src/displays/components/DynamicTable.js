@@ -157,7 +157,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 		    selectRowsEnabled: false,
 		    selectedRows: [],
 		    openRowProvided: false,
-            hideZeros: false,
+            showZeros: false,
             showRelativeValues: false,
             order: null,
             orderBy: null,
@@ -212,7 +212,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                 </div>
                 <div className="layout horizontal end-justified center">
                     <a className={classes.columnsAction} onClick={this.handleOpenColumnsDialog.bind(this)}>{this.translate("Select indicators")}</a>
-                    <FormControlLabel control={<Checkbox checked={this.state.hideZeros} onChange={this.handleToggleHideZeros.bind(this)} name="toggleHideZeros" color="primary"/>} label={this.translate("Hide zeros")}/>
+                    <FormControlLabel control={<Checkbox checked={this.state.showZeros} onChange={this.handleToggleShowZeros.bind(this)} name="toggleShowZeros" color="primary"/>} label={this.translate("Show zeros")}/>
                     <FormControlLabel control={<Checkbox checked={this.state.showRelativeValues} onChange={this.handleToggleRelativeValues.bind(this)} name="toggleRelativeValues" color="primary"/>} label={this.translate("Show percentages")}/>
                 </div>
             </div>
@@ -351,14 +351,14 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 
     renderDetailSection = (section, index) => {
         const classNames = "layout vertical" + (this.state.sections.length <= 1 ? "" : " flex");
-        if (index !== 0 && this.state.hideZeros && this._isZeroSection(section)) return (<React.Fragment/>);
+        if (index !== 0 && !this.state.showZeros && this._isZeroSection(section)) return (<React.Fragment/>);
         return (<div className={classNames}>{this.renderSection(section, index)}</div>);
     };
 
     renderSection = (section, index) => {
         const { classes } = this.props;
         const isMainView = this._isMainView();
-        if ((isMainView || (!isMainView && index != 0)) && this.state.hideZeros && this._isZeroSection(section)) return (<React.Fragment/>);
+        if ((isMainView || (!isMainView && index != 0)) && !this.state.showZeros && this._isZeroSection(section)) return (<React.Fragment/>);
         return (
             <Table size='small' className={classes.table} key={index}>
                 <TableHead>{this.renderHeader(section, index)}</TableHead>
@@ -466,7 +466,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                 {(!selectable || (!isMainView && selectable)) &&
                     <React.Fragment>
                         {isMainView &&
-                            <div className="layout horizontal center-center" style={{color:color,whiteSpace:'nowrap'}}>
+                            <div className="layout horizontal center start-justified" style={{color:color,whiteSpace:'nowrap'}}>
                                 {this.translate(this.state.dimension != null ? this.state.dimension + ". " : "") + this.translate(section.label)}
                             </div>
                         }
@@ -596,7 +596,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         const totalRow = this.isTotalRow(sections, rowIndex);
         const style = totalRow ? { fontWeight: "bold"} : {};
         const isMainView = this._isMainView();
-        const hideRow = this.state.hideZeros && ((isMainView && this._isZeroRow(sections, rowIndex)) || (!isMainView && this._isZeroRow(this.state.sections, rowIndex)));
+        const hideRow = !this.state.showZeros && ((isMainView && this._isZeroRow(sections, rowIndex)) || (!isMainView && this._isZeroRow(this.state.sections, rowIndex)));
         if (hideRow) return (<React.Fragment/>);
         return (
             <TableRow key={rowIndex}>
@@ -799,7 +799,6 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     };
 
     renderColumnCheckbox = (column) => {
-//        return <FormControlLabel control={<Checkbox checked={this.state.hideZeros} onChange={this.handleToggleHideZeros.bind(this)} name="toggleHideZeros" color="primary"/>} label={this.translate("Hide zeros")}/>
         return (<div><FormControlLabel control={<Checkbox checked={this.isColumnVisible(column.index)} onChange={this.handleToggleColumn.bind(this, column.index)} color="primary" name={column.index}/>} label={this.translate(column.label)}/></div>);
     };
 
@@ -822,7 +821,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     };
 
     refreshZeros = (value) => {
-        this.setState({hideZeros:!value});
+        this.setState({showZeros:value});
     };
 
     refreshPercentages = (value) => {
@@ -1009,10 +1008,10 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
         this.requester.showPercentages(value);
     };
 
-    handleToggleHideZeros = () => {
-        const value = !this.state.hideZeros;
-        this.setState({hideZeros: value});
-        this.requester.showZeros(!value);
+    handleToggleShowZeros = () => {
+        const value = !this.state.showZeros;
+        this.setState({showZeros: value});
+        this.requester.showZeros(value);
     };
 
     openView = (view) => {

@@ -18,6 +18,7 @@ class SelectorToggleBox extends AbstractSelectorToggleBox {
 		this.requester = new SelectorToggleBoxRequester(this);
         this.state = {
             selection: this.traceValue() ? this.traceValue() : (this.props.selected != null ? [ this.props.selected ] : []),
+            disabledOptions: [],
             readonly: this.props.readonly,
             ...this.state
         };
@@ -40,7 +41,9 @@ class SelectorToggleBox extends AbstractSelectorToggleBox {
 	renderChild = (child, key) => {
 		const className = child.props.className;
 		if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
-		return (<ToggleButton value={child.props.name} key={key}>{child}</ToggleButton>);
+		const disabled = this._isDisabled(child.props.name);
+		const style = disabled ? { opacity: '0.2' } : {};
+		return (<ToggleButton value={child.props.name} key={key} disabled={disabled}><div style={style}>{child}</div></ToggleButton>);
 	};
 
 	handleChange = (e, newSelection) => {
@@ -52,6 +55,14 @@ class SelectorToggleBox extends AbstractSelectorToggleBox {
 
 	refreshSelection = (value) => {
 		this.setState({ selection: value });
+	};
+
+	refreshDisabledOptions = (value) => {
+		this.setState({ disabledOptions: value });
+	};
+
+	_isDisabled = (option) => {
+	    return this.state.disabledOptions.indexOf(option) != -1;
 	};
 
 	_size = () => {
