@@ -13,12 +13,12 @@ import static java.util.Objects.requireNonNull;
 /**
  * Represents a task that will be executed periodically, and provides full control over its execution flow.
  * */
-public class StatefulScheduledService {
+class StatefulScheduledService {
 
     private final TimePeriod period;
     private final ScheduledExecutorService executor;
     private final AtomicReference<State> state;
-    private ScheduledFuture<?> future;
+    private ScheduledFuture<?> execution;
 
     public StatefulScheduledService(TimePeriod period) {
         this.period = requireNonNull(period);
@@ -26,27 +26,31 @@ public class StatefulScheduledService {
         this.state = new AtomicReference<>(State.Created);
     }
 
-    public synchronized boolean start(Runnable task) {
+    public synchronized boolean start(Task task) {
         if(task == null) throw new NullPointerException("Task cannot be null");
         if(!state.compareAndSet(State.Created, State.Running)) return false;
         // scheduleWithFixedDelay waits from the end of the previous execution to the start of the next
-        future = executor.scheduleWithFixedDelay(execute(task), 0, period.amount(), period.timeUnit());
+        execution = executor.scheduleWithFixedDelay(execute(task), 0, period.amount(), period.timeUnit());
         return true;
     }
 
-    private Runnable execute(Runnable task) {
+    private Runnable execute(Task task) {
         return () -> {
-            if(state.get().equals(State.Running))
-                task.run();
+            try {
+                if(state.get().equals(State.Running)) task.onUpdate();
+                task.onFinally();
+            } catch (Throwable e) {
+                Logger.error(e);
+            }
         };
     }
 
-    public void pause() {
-        state.compareAndSet(State.Running, State.Paused);
+    public boolean pause() {
+        return state.compareAndSet(State.Running, State.Paused);
     }
 
-    public void resume() {
-        state.compareAndSet(State.Paused, State.Running);
+    public boolean resume() {
+        return state.compareAndSet(State.Paused, State.Running);
     }
 
     public synchronized void stop(long timeout, TimeUnit timeUnit) {
@@ -56,11 +60,11 @@ public class StatefulScheduledService {
         waitFor(timeout, timeUnit);
     }
 
-    public void cancel() {
-        if(future == null) return;
+    public synchronized void cancel() {
+        if(execution == null) return;
         if(state.get() == State.Cancelled || state.get() == State.Terminated) return;
-        future.cancel(true);
         state.set(State.Cancelled);
+        execution.cancel(true);
         executor.shutdownNow();
         waitFor(1, TimeUnit.SECONDS);
     }
@@ -73,8 +77,8 @@ public class StatefulScheduledService {
         }
     }
 
-    public ScheduledFuture<?> future() {
-        return future;
+    public ScheduledFuture<?> execution() {
+        return execution;
     }
 
     public State state() {
@@ -91,5 +95,23 @@ public class StatefulScheduledService {
         Paused,
         Cancelled,
         Terminated
+    }
+
+    static abstract class Task {
+
+        /**
+         * Called every update cycle of the executor if the service's state == Running
+         * */
+        abstract void onUpdate();
+
+        /**
+         * Called every update cycle of the executor if the service's state == Paused
+         * */
+        void onPaused() {}
+
+        /**
+         * Called every update cycle of the executor, even if the service is paused
+         * */
+        void onFinally() {}
     }
 }

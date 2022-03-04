@@ -5,6 +5,7 @@ import io.intino.alexandria.logger.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -24,8 +25,16 @@ public class SessionMessageFile implements Iterable<String> {
         this.file = requireNonNull(file);
     }
 
+    public String getName() {
+        return file.getName();
+    }
+
     public File file() {
         return file;
+    }
+
+    public void delete() {
+        file.delete();
     }
 
     public Stream<String> messages() {
@@ -78,6 +87,10 @@ public class SessionMessageFile implements Iterable<String> {
 
     private String kbSize() {
         return String.format("%.2f KB", file.length() / 1024.0f);
+    }
+
+    public LocalDateTime dateTime() {
+        return SessionHelper.dateTimeOf(file);
     }
 
     private class SessionMessageFileIterator implements Iterator<String> {
