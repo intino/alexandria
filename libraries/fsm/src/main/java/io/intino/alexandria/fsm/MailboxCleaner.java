@@ -23,7 +23,7 @@ class MailboxCleaner {
         compressOldFiles(mailbox, mailbox.listProcessedMessages());
 
         long end = System.currentTimeMillis();
-        Logger.info("Mailbox " + mailbox.root().getName() + " cleaned in " + (end - start) / 1000.0 + " seconds");
+        Logger.trace("Mailbox " + mailbox.root().getName() + " cleaned in " + (end - start) / 1000.0 + " seconds");
     }
 
     private static void deleteFilesThatExceedTheMaxAge(Mailbox mailbox, TimePeriod maxFilesAge) {
