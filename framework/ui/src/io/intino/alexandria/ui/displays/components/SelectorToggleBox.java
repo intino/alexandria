@@ -1,12 +1,6 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
-import io.intino.alexandria.schemas.*;
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.components.AbstractSelectorToggleBox;
-import io.intino.alexandria.ui.displays.notifiers.SelectorListBoxNotifier;
 import io.intino.alexandria.ui.displays.notifiers.SelectorToggleBoxNotifier;
 
 import java.util.ArrayList;
@@ -15,6 +9,7 @@ import java.util.List;
 
 public class SelectorToggleBox<DN extends SelectorToggleBoxNotifier, B extends Box> extends AbstractSelectorToggleBox<DN, B> {
 	private java.util.List<String> selection = new ArrayList<>();
+	private java.util.List<String> disabledOptions = new ArrayList<>();
 
 	public SelectorToggleBox(B box) {
 		super(box);
@@ -24,6 +19,16 @@ public class SelectorToggleBox<DN extends SelectorToggleBoxNotifier, B extends B
 	public void didMount() {
 		super.didMount();
 		selection(selection);
+	}
+
+	public void enableOptions(String... options) {
+		disabledOptions.removeAll(List.of(options));
+		notifier.refreshDisabledOptions(disabledOptions);
+	}
+
+	public void disableOptions(String... options) {
+		disabledOptions.addAll(List.of(options));
+		notifier.refreshDisabledOptions(disabledOptions);
 	}
 
 	@SuppressWarnings("unchecked")
