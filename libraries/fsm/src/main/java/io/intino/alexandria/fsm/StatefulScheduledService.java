@@ -18,7 +18,7 @@ class StatefulScheduledService {
     private final TimePeriod period;
     private final ScheduledExecutorService executor;
     private final AtomicReference<State> state;
-    private ScheduledFuture<?> future;
+    private ScheduledFuture<?> execution;
 
     public StatefulScheduledService(TimePeriod period) {
         this.period = requireNonNull(period);
@@ -30,7 +30,7 @@ class StatefulScheduledService {
         if(task == null) throw new NullPointerException("Task cannot be null");
         if(!state.compareAndSet(State.Created, State.Running)) return false;
         // scheduleWithFixedDelay waits from the end of the previous execution to the start of the next
-        future = executor.scheduleWithFixedDelay(execute(task), 0, period.amount(), period.timeUnit());
+        execution = executor.scheduleWithFixedDelay(execute(task), 0, period.amount(), period.timeUnit());
         return true;
     }
 
@@ -45,12 +45,12 @@ class StatefulScheduledService {
         };
     }
 
-    public void pause() {
-        state.compareAndSet(State.Running, State.Paused);
+    public boolean pause() {
+        return state.compareAndSet(State.Running, State.Paused);
     }
 
-    public void resume() {
-        state.compareAndSet(State.Paused, State.Running);
+    public boolean resume() {
+        return state.compareAndSet(State.Paused, State.Running);
     }
 
     public synchronized void stop(long timeout, TimeUnit timeUnit) {
@@ -60,11 +60,11 @@ class StatefulScheduledService {
         waitFor(timeout, timeUnit);
     }
 
-    public void cancel() {
-        if(future == null) return;
+    public synchronized void cancel() {
+        if(execution == null) return;
         if(state.get() == State.Cancelled || state.get() == State.Terminated) return;
-        future.cancel(true);
         state.set(State.Cancelled);
+        execution.cancel(true);
         executor.shutdownNow();
         waitFor(1, TimeUnit.SECONDS);
     }
@@ -77,8 +77,8 @@ class StatefulScheduledService {
         }
     }
 
-    public ScheduledFuture<?> future() {
-        return future;
+    public ScheduledFuture<?> execution() {
+        return execution;
     }
 
     public State state() {

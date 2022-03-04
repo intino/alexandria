@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -22,14 +21,29 @@ import static io.intino.alexandria.fsm.StatefulScheduledService.State.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 
+/**
+ * <p>A FSM reads messages from an input mailbox and writes messages to an output mailbox.</p>
+ *
+ * <p>Use the inner Builder class to construct a FSM with the desired configuration. Once created, call start to begin
+ * the execution. Use the pause, resume, cancel and stop methods to control its state.</p>
+ *
+ * <p>Use the publish method to write messages to the output mailbox.</p>
+ *
+ * <p>You can have full control of the reading process by specifying a custom SessionMessagePipeline on construction.</p>
+ *
+ * <p>Please note that the FSM runs in its own thread.</p>
+ * */
 public class FileSessionManager extends StatefulScheduledService.Task {
+
+    private static final long KB = 1024L * 1024L;
+    private static final long MB = 1024L * 1024L * 1024L;
 
     public static final String MESSAGE_EXTENSION = ".session";
     public static final String ERROR_EXTENSION = ".errors";
     public static final String TEMP_EXTENSION = ".temp";
-    private static final long DEFAULT_TIMEOUT = 10;
-    private static final TimeUnit DEFAULT_TIMEOUT_UNIT = TimeUnit.MINUTES;
-    public static final long MIN_BYTES_PER_SESSION = 1024 * 1024; // 1KB
+    private static final long DEFAULT_TIMEOUT = 1;
+    private static final TimeUnit DEFAULT_TIMEOUT_UNIT = TimeUnit.DAYS;
+    public static final long MIN_BYTES_PER_SESSION = KB;
     public static final TimePeriod DEFAULT_MAX_PROCESSED_FILES_AGE = new TimePeriod(60, TimeUnit.DAYS);
 
     private final String id;
@@ -66,11 +80,21 @@ public class FileSessionManager extends StatefulScheduledService.Task {
         addShutdownHookToSaveCurrentIndexFile();
     }
 
+    /**
+     * <p>Tries to write a new message into the current session file.
+     * It will return a PublishResult enum indicating if the call was a success or not. </p>
+     *
+     * <p>This method ensures that the session file does not exceed the max size in bytes indicated when this FSM was created.</p>
+     *
+     * <p>If message.size > limit, it will NOT be able to write that message. </p>
+     * <p>If session.size + message.size > limit, it will close the current session and create a new one. </p>
+     *
+     * */
     public synchronized PublishResult publish(String message) {
         if(message == null) throw new NullPointerException("Message cannot be null");
 
         Session session = getCurrentSession();
-        if(session == null) return PublishResult.NullSession;
+        if(session == null) return PublishResult.SessionNotOpen;
 
         byte[] bytes = message.concat("\n").getBytes();
 
@@ -84,11 +108,13 @@ public class FileSessionManager extends StatefulScheduledService.Task {
             session = getCurrentSession();
         }
 
-        session.write(bytes);
-
-        return PublishResult.Ok;
+        return session.write(bytes) ? PublishResult.Ok : PublishResult.Error;
     }
 
+    /**
+     * <p>Starts this FSM. This will execute the background thread for reading operations and for the writing session management.</p>
+     * <p>If this FSM was already started, it simply returns false.</p>
+     * */
     public boolean start() {
         if(service.start(this)) {
             Logger.info("FileSessionManager " + id + " started");
@@ -188,27 +214,32 @@ public class FileSessionManager extends StatefulScheduledService.Task {
      *
      * <p>To check and/or wait for the exact moment this FSM will be completely paused, use the returned future object, that
      * will provide the instant at which this FSM went fully paused. If the future returns null, it means that
-     * this FSM was resumed/cancelled/terminated before reaching the completely paused state.</p>
+     * this FSM was resumed/cancelled/terminated before reaching the completely paused state, or that this FSM was not running.</p>
      * */
     public Future<Instant> pause() {
         if(state() == Paused) return pauseFuture != null ? pauseFuture : completedFuture(Instant.now());
-        Logger.info("Pausing FileSessionManager " + id);
-        service.pause();
+        if(!service.pause()) return completedFuture(null);
         lockFile.write("Paused");
-        Logger.info("FileSessionManager " + id + " paused");
         return !executingMessagePipeline.get()
                 ? completedFuture(Instant.now())
                 : (pauseFuture = new CompletableFuture<>());
     }
 
-    public void resume() {
+    /**
+     * <p>Resumes this FSM if it was paused.</p>
+     * <p>Returns true if this FSM transitioned from Paused to Running state, false otherwise.</p>
+     * */
+    public boolean resume() {
         cancelPauseFuture();
-        Logger.info("Resuming FileSessionManager " + id);
-        service.resume();
+        if(!service.resume()) return false;
         lockFile.write("Resumed");
-        Logger.info("FileSessionManager " + id + " resumed");
+        return true;
     }
 
+    /**
+     * <p>Cancels the execution of this FSM. It will try to stop operations immediately and will block the caller thread until
+     * the service is stopped. This is somewhat dangerous and terminate should be considered first.</p>
+     * */
     public void cancel() {
         cancelPauseFuture();
         Logger.info("Cancelling FileSessionManager " + id);
@@ -217,10 +248,18 @@ public class FileSessionManager extends StatefulScheduledService.Task {
         Logger.info("FileSessionManager " + id + " cancelled");
     }
 
+    /**
+     * <p>Stops the execution of this FSM. It will block the caller thread until all pending messages are fully processed or until
+     * it reaches the default timeout (1 day).</p>
+     * */
     public void terminate() {
         terminate(DEFAULT_TIMEOUT, DEFAULT_TIMEOUT_UNIT);
     }
 
+    /**
+     * <p>Stops the execution of this FSM. It will block the caller thread until all pending messages are fully processed or
+     * until it reaches the specified timeout.</p>
+     * */
     public void terminate(long timeout, TimeUnit timeUnit) {
         cancelPauseFuture();
         Logger.info("Terminating FileSessionManager " + id);
@@ -262,20 +301,12 @@ public class FileSessionManager extends StatefulScheduledService.Task {
     private Session getCurrentSession() {
         if(session != null) return session;
         try {
-            LocalDateTime ts = randomTs();
-            session = new Session(SessionHelper.newTempSessionFile(outputMailbox.pending(), ts, id));
+            session = new Session(SessionHelper.newTempSessionFile(outputMailbox.pending(), LocalDateTime.now(), id));
             return session;
         } catch (IOException e) {
             Logger.error(e);
             return null;
         }
-    }
-
-    @Deprecated
-    private LocalDateTime randomTs() {
-        Random r = new Random();
-        return LocalDateTime.of(2022, r.nextInt(3) + 1, 4,
-                r.nextInt(10), r.nextInt(60), r.nextInt(60), r.nextInt(100000000));
     }
 
     public String id() {
@@ -296,17 +327,19 @@ public class FileSessionManager extends StatefulScheduledService.Task {
 
     private void addShutdownHookToSaveCurrentIndexFile() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if(currentIndexFile != null) {
-                currentIndexFile.save();
-                Logger.info("IndexFile " + currentIndexFile.file() + " saved");
-            }
+            if(currentIndexFile != null) currentIndexFile.save();
         }, id + "_index_file_saver"));
     }
 
     public enum PublishResult {
+        /**Indicates that the message was successfully written into the session file.*/
         Ok,
+        /**Indicates that the message exceeds the FSM max bytes per session.*/
         MessageTooLong,
-        NullSession
+        /**Indicates that the session could not be opened. See log for more information.*/
+        SessionNotOpen,
+        /**Indicates that the session failed to write the message. See the log for more information.*/
+        Error
     }
 
     public static class Builder {
@@ -315,8 +348,8 @@ public class FileSessionManager extends StatefulScheduledService.Task {
         private Mailbox input;
         private Mailbox output;
         private TimePeriod readInputMailboxRate = new TimePeriod(10, TimeUnit.SECONDS);
-        private long maxBytesPerSession = MIN_BYTES_PER_SESSION;
-        private TimePeriod sessionTimeout = new TimePeriod(10, TimeUnit.SECONDS);
+        private long maxBytesPerSession = 3L * MB;
+        private TimePeriod sessionTimeout = new TimePeriod(30, TimeUnit.SECONDS);
         private TimePeriod processedFilesMaxAge = DEFAULT_MAX_PROCESSED_FILES_AGE;
         private TimePeriod lockTimeout = new TimePeriod(5, TimeUnit.MINUTES);
         private SessionMessagePipeline messagePipeline;

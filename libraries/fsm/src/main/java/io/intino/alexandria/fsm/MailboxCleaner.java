@@ -17,11 +17,10 @@ class MailboxCleaner {
 
     static void clean(Mailbox mailbox, TimePeriod maxFilesAge) {
         long start = System.currentTimeMillis();
-        List<SessionMessageFile> files = mailbox.listProcessedMessages();
-        if(files.isEmpty()) return;
+        if(isEmpty(mailbox.processed())) return;
 
         deleteFilesThatExceedTheMaxAge(mailbox, maxFilesAge);
-        compressOldFiles(mailbox, files);
+        compressOldFiles(mailbox, mailbox.listProcessedMessages());
 
         long end = System.currentTimeMillis();
         Logger.info("Mailbox " + mailbox.root().getName() + " cleaned in " + (end - start) / 1000.0 + " seconds");
@@ -99,5 +98,10 @@ class MailboxCleaner {
         LocalDateTime date = file.dateTime();
         date = LocalDateTime.of(date.getYear(), date.getMonth(), 1, 0, 0);
         return Formatter.format(date);
+    }
+
+    private static boolean isEmpty(File dir) {
+        File[] files = dir.listFiles(MailboxCleaner::isZipOrSession);
+        return files == null || files.length == 0;
     }
 }

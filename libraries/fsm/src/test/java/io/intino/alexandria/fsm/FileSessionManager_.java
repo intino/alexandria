@@ -5,12 +5,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.time.Instant;
 import java.util.Random;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import static java.util.concurrent.TimeUnit.*;
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class FileSessionManager_ {
 
@@ -74,8 +74,8 @@ public class FileSessionManager_ {
                 .readsFrom(new File("temp", input))
                 .writesTo(new File("temp", output))
                 .atFixedRate(5, SECONDS)
-                .maxBytesPerSession(1024 * 1024) // 1MB
-                .sessionTimeout(5, SECONDS)
+                //.maxBytesPerSession(1024 * 1024) // 1MB
+                .sessionTimeout(20, SECONDS)
                 .lockTimeout(2, MINUTES)
                 .onMessageProcess(FileSessionManager_::processMessage)
                 .build();
