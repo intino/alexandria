@@ -110,7 +110,7 @@ export default class Actionable extends AbstractActionable {
 
 	renderIconButton = () => {
 		const {classes} = this.props;
-		const style = this._readonly() ? { filter: "grayscale(100%)", ...this.style() } : this.style();
+		const style = this._readonly() ? { opacity: "0.3", ...this.style() } : this.style();
 		const button = (
             <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()}
                             onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}

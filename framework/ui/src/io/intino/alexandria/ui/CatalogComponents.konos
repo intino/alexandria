@@ -39,6 +39,8 @@ Component dynamicTable as ExtensionOf(pageCollection)
 Component map as ExtensionOf(collection)
 	Notification setup as Object(MapCollectionSetup)
 	Notification placeMarks as Object(PlaceMark) List
+	Notification updateCenter as Object(Point)
+	Notification updateZoom as Object(Zoom)
 
 	Request showPlaceMark as LongInteger
 
