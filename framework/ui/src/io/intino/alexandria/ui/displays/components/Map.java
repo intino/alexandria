@@ -2,6 +2,8 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.MapCollectionSetup;
+import io.intino.alexandria.schemas.Point;
+import io.intino.alexandria.schemas.Zoom;
 import io.intino.alexandria.ui.Asset;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.Collection;
@@ -33,6 +35,18 @@ public abstract class Map<B extends Box, ItemComponent extends io.intino.alexand
     public void didMount() {
         notifier.setup(setupSchema());
         notifyReady();
+    }
+
+    public void center(double latitude, double longitude) {
+        center(new io.intino.alexandria.ui.model.locations.Point(latitude, longitude));
+    }
+
+    public void center(io.intino.alexandria.ui.model.locations.Point center) {
+        notifier.updateCenter(new Point().lat(center.latitude()).lng(center.longitude()));
+    }
+
+    public void zoom(int zoom, int min, int max) {
+        notifier.updateZoom(new Zoom().min(min).max(max).defaultZoom(zoom));
     }
 
     @Override

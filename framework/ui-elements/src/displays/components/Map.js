@@ -29,18 +29,20 @@ export const MapStyles = theme => ({
 
 export class EmbeddedMap extends AbstractMap {
 
-	state = {
-		placeMarks: [],
-		placeMark: null,
-		kmlLayer: null,
-		closeAllInfoWindows: true
-	};
-
 	constructor(props) {
 		super(props);
 		this.notifier = new MapNotifier(this);
 		this.requester = new MapRequester(this);
 		this.container = React.createRef();
+        this.state = {
+            ...this.state,
+            placeMarks: [],
+            center: this.props.center,
+            zoom: this.props.zoom,
+            placeMark: null,
+            kmlLayer: null,
+            closeAllInfoWindows: true
+        };
 	};
 
 	render() {
@@ -51,7 +53,7 @@ export class EmbeddedMap extends AbstractMap {
 				<GoogleMap
 				    className="map"
 				    mapContainerStyle={{height:"100%"}}
-				    zoom={this.props.zoom.defaultZoom}
+				    zoom={GeoBehavior.zoom(this).defaultZoom}
 				    center={GeoBehavior.center(this)}
 				    onLoad={this.registerMap.bind(this)}
 				    options={this.mapOptions()}>
@@ -121,6 +123,14 @@ export class EmbeddedMap extends AbstractMap {
 
 	placeMarks = (placeMarks) => {
 		this.setState({ placeMarks: placeMarks });
+	};
+
+	updateCenter = (center) => {
+	    this.setState({center});
+	};
+
+	updateZoom = (zoom) => {
+	    this.setState({zoom});
 	};
 
 	isCluster = () => {

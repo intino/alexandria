@@ -2,8 +2,11 @@ package io.intino.alexandria.ui.model.locations;
 
 import io.intino.alexandria.ui.model.Geometry;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Polygon extends Geometry {
 	private List<List<Point>> paths = new ArrayList<>();
@@ -20,6 +23,21 @@ public class Polygon extends Geometry {
 	public Polygon add(List<Point> points) {
 		this.paths.add(points);
 		return this;
+	}
+
+	public Point centroid() {
+		double x = 0.;
+		double y = 0.;
+		List<Point> points = paths.stream().flatMap(Collection::stream).collect(Collectors.toList());
+		int pointCount = points.size();
+		for (int i = 0; i < pointCount - 1;i++){
+			final Point point = points.get(i);
+			x += point.latitude();
+			y += point.longitude();
+		}
+		x = x/pointCount;
+		y = y/pointCount;
+		return new Point(x, y);
 	}
 
 	@Override

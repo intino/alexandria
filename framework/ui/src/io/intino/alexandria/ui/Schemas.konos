@@ -62,6 +62,11 @@ Schema Point
 	Attribute lat as Real
 	Attribute lng as Real
 
+Schema Zoom
+	Attribute min as Integer
+	Attribute max as Integer
+	Attribute defaultZoom as Integer
+
 Schema Path
 	Attribute pointList as Object(Point) List
 

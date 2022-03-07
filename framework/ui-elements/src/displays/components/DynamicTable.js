@@ -424,17 +424,17 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                        style={style}
                        align='left'
                        key={0}>
-                {!isMainView && <div style={{color:'white'}}>{this.translate(this.state.drill != null ? this.state.drill : "Group")}</div>}
+                {!isMainView && <div>{this.translate(this.state.drill != null ? this.state.drill : "Group")}</div>}
                 {isMainView &&
                     <React.Fragment>
                         {!mainSection.isOrdinal &&
                             <TableSortLabel active={orderBy === 'title'} direction={orderBy === 'title' ? order : 'asc'} onClick={this.handleSortByTitle.bind(this)}>
-                                <span>{this.translate(this.state.drill != null ? this.state.drill : "Group")}</span>
+                                <span style={{fontSize:section.fontSize+"pt"}}>{this.translate(this.state.drill != null ? this.state.drill : "Group")}</span>
                                 {orderBy === '' ? (<span className={classes.visuallyHidden}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</span>) : null}
                             </TableSortLabel>
                         }
                         {mainSection.isOrdinal &&
-                            <span>{this.translate(this.state.drill != null ? this.state.drill : "Group")}</span>
+                            <span style={{fontSize:section.fontSize+"pt"}}>{this.translate(this.state.drill != null ? this.state.drill : "Group")}</span>
                         }
                     </React.Fragment>
                 }
@@ -479,7 +479,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                 }
                 {isMainView && selectable &&
                     <TableSortLabel active={orderBy === section.label} direction={orderBy === section.label ? order : 'asc'} onClick={this.handleSort.bind(this, section, index)}>
-                        <span>{this.translate(section.label)}</span>
+                        <span style={{fontSize:"9pt"}}>{this.translate(section.label)}</span>
                         {orderBy === section.label ? (
                             <span className={classes.visuallyHidden}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</span>
                         ) : null}
@@ -939,7 +939,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
             item.columns[i].borderColor = item.columns[i].color;
             item.columns[i].selectable = true;
             item.columns[i].backgroundColor = "transparent";
-            item.columns[i].fontSize = 11;
+            item.columns[i].fontSize = 9;
             item.columns[i].textAlign = "right !important";
             this.registerItemInArray(item.columns[i], itemsArray, level+1);
         }
