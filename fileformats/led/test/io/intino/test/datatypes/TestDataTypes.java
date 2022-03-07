@@ -8,6 +8,7 @@ import io.intino.alexandria.led.buffers.store.ByteStore;
 import io.intino.alexandria.led.util.memory.MemoryUtils;
 import io.intino.alexandria.led.util.memory.ModifiableMemoryAddress;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -22,6 +23,14 @@ import static java.nio.ByteOrder.BIG_ENDIAN;
 import static java.nio.ByteOrder.LITTLE_ENDIAN;
 import static org.junit.Assert.assertEquals;
 
+/**
+ * In signed fields, 1 bit must be reserved for its sign
+ *
+ * For example, if an int field of 7 bits is specified, then its possible values are 2^6 - 1, NOT 2^7 - 1, because 1 bit of those 7 is reserved
+ *
+ * This is important only in non-aligned fields
+ *
+ * */
 @RunWith(Parameterized.class)
 public class TestDataTypes {
 
@@ -39,6 +48,7 @@ public class TestDataTypes {
         buffer = byteOrder == LITTLE_ENDIAN ? new LittleEndianBitBuffer(store) : new BigEndianBitBuffer(store);
     }
 
+    @Ignore
     @Test
     public void test() {
         int x = 99;
