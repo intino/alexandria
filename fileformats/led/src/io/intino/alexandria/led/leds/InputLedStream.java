@@ -1,11 +1,11 @@
 package io.intino.alexandria.led.leds;
 
+import io.intino.alexandria.led.LedLibraryConfig;
 import io.intino.alexandria.led.LedStream;
 import io.intino.alexandria.led.Schema;
 import io.intino.alexandria.led.allocators.SchemaFactory;
 import io.intino.alexandria.led.allocators.stack.StackAllocator;
 import io.intino.alexandria.led.allocators.stack.StackAllocators;
-import io.intino.alexandria.led.LedLibraryConfig;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.IOException;
@@ -16,10 +16,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.led.Schema.factoryOf;
-import static io.intino.alexandria.led.Schema.sizeOf;
 import static io.intino.alexandria.led.LedLibraryConfig.INPUT_LEDSTREAM_CONCURRENCY_ENABLED;
 import static io.intino.alexandria.led.util.memory.MemoryUtils.allocBuffer;
+import static java.util.Objects.requireNonNull;
 
 public class InputLedStream<T extends Schema> implements LedStream<T> {
 
@@ -34,25 +33,18 @@ public class InputLedStream<T extends Schema> implements LedStream<T> {
     private final AtomicBoolean closed;
     private boolean concurrencyEnabled = INPUT_LEDSTREAM_CONCURRENCY_ENABLED.get();
 
-    public InputLedStream(InputStream inputStream, Class<T> schemaClass) {
-        this(inputStream, factoryOf(schemaClass), sizeOf(schemaClass), DEFAULT_BUFFER_SIZE);
-    }
-
-    public InputLedStream(InputStream inputStream, Class<T> schemaClass, int bufferSize) {
-        this(inputStream, factoryOf(schemaClass), sizeOf(schemaClass), bufferSize);
-    }
-
-    public InputLedStream(InputStream inputStream, SchemaFactory<T> factory, int schemaSize) {
-        this(inputStream, factory, schemaSize, DEFAULT_BUFFER_SIZE);
-    }
-
     public InputLedStream(InputStream inputStream, SchemaFactory<T> factory, int schemaSize, int bufferSize) {
-        this.inputStream = inputStream;
-        this.schemaSize = schemaSize;
+        this.inputStream = requireNonNull(inputStream);
+        this.schemaSize = assertIsPositive(schemaSize);
         this.factory = factory;
-        this.bufferSize = bufferSize;
-        closed = new AtomicBoolean();
+        this.bufferSize = assertIsPositive(bufferSize);
+        this.closed = new AtomicBoolean();
         this.iterator = stream().iterator();
+    }
+
+    private int assertIsPositive(int size) {
+        if(size <= 0) throw new IllegalArgumentException("Size must be >= 0");
+        return size;
     }
 
     public int bufferSize() {
@@ -150,5 +142,52 @@ public class InputLedStream<T extends Schema> implements LedStream<T> {
         }
         inputStream.close();
         closed.set(true);
+    }
+
+    public static class Builder<T extends Schema> {
+
+        private InputStream inputStream;
+        private int bufferSize = DEFAULT_BUFFER_SIZE;
+        private int schemaSize = -1;
+        private SchemaFactory<?> factory;
+        private Runnable onClose;
+        private boolean concurrencyEnabled = INPUT_LEDSTREAM_CONCURRENCY_ENABLED.get();
+
+        public Builder<T> inputStream(InputStream inputStream) {
+            this.inputStream = inputStream;
+            return this;
+        }
+
+        public Builder<T> bufferSize(int bufferSize) {
+            this.bufferSize = bufferSize;
+            return this;
+        }
+
+        public Builder<T> schemaSize(int schemaSize) {
+            this.schemaSize = schemaSize;
+            return this;
+        }
+
+        public Builder<T> factory(SchemaFactory<?> factory) {
+            this.factory = factory;
+            return this;
+        }
+
+        public Builder<T> onClose(Runnable onClose) {
+            this.onClose = onClose;
+            return this;
+        }
+
+        public Builder<T> concurrencyEnabled(boolean concurrencyEnabled) {
+            this.concurrencyEnabled = concurrencyEnabled;
+            return this;
+        }
+
+        @SuppressWarnings("unchecked")
+        public InputLedStream<T> build() {
+            return (InputLedStream<T>) new InputLedStream<>(inputStream, factory, schemaSize, bufferSize)
+                    .concurrencyEnabled(concurrencyEnabled)
+                    .onClose(onClose);
+        }
     }
 }
