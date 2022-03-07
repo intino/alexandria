@@ -128,7 +128,7 @@ public class LedWriter {
 		}
 	}
 
-	private void writeLed(Led<? extends Schema> led, int schemaSize, int numBatches, OutputStream fos) throws IOException, InterruptedException {
+	private void writeLed(Led<? extends Schema> led, int schemaSize, int numBatches, OutputStream fos) throws IOException {
 		try (SnappyOutputStream outputStream = new SnappyOutputStream(fos)) {
 			for (int i = 0; i < numBatches; i++) {
 				final int start = i * bufferSize;
@@ -187,7 +187,7 @@ public class LedWriter {
 	private void overrideHeader(long elementCount, int schemaSize, UUID uuid) {
 		try(RandomAccessFile raFile = new RandomAccessFile(destinationFile, "rw")) {
 			raFile.writeLong(elementCount);
-			raFile.writeInt(schemaSize);
+			raFile.writeLong(schemaSize);
 			raFile.writeLong(uuid.getMostSignificantBits());
 			raFile.writeLong(uuid.getLeastSignificantBits());
 		} catch (IOException e) {
