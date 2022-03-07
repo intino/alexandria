@@ -89,7 +89,7 @@ public class LedExternalMergeSort {
     }
 
     private int schemaSize() {
-        return ledHeader.elementSize();
+        return (int) ledHeader.elementSize();
     }
 
     private long schemasCount() {
@@ -144,7 +144,7 @@ public class LedExternalMergeSort {
     }
 
     private LedStream<?> emptyLedStream() {
-        final int schemaSize = ledHeader.elementSize();
+        final int schemaSize = (int) ledHeader.elementSize();
         return new CustomLedStream(LedStream.empty(GenericSchema.class, schemaSize), schemaSize, ledHeader.uuid());
     }
 
@@ -162,7 +162,7 @@ public class LedExternalMergeSort {
                     return;
                 }
             }
-            final int schemaSize = ledHeader.elementSize();
+            final int schemaSize = (int) ledHeader.elementSize();
             final int bufferSize = (numTransactionsInMemory * schemaSize) / 2;
             if(debug) {
                 Logger.info("Buffer Size = " + bufferSize / 1024.0 / 1024.0 + " MB");
@@ -324,18 +324,18 @@ public class LedExternalMergeSort {
     }
 
     private void doFinalMergeAndWriteToDestFile(File destFile, Path chunk1, Path chunk2, LedHeader ledHeader) {
-        final int elementSize = ledHeader.elementSize();
+        final int elementSize = (int) ledHeader.elementSize();
         merged(Stream.of(readChunk(chunk1, elementSize), readChunk(chunk2, elementSize))).serialize(destFile);
         deleteChunks(chunk1, chunk2);
         deleteDir(chunk1.getParent());
     }
 
     private LedStream<?> merged(Stream<LedStream<GenericSchema>> chunks) {
-        return new CustomLedStream(LedStream.merged(chunks), ledHeader.elementSize(), ledHeader.uuid());
+        return new CustomLedStream(LedStream.merged(chunks), (int) ledHeader.elementSize(), ledHeader.uuid());
     }
 
     private void writeFinalChunkToDestFile(File destFile, Path chunk, LedHeader ledHeader) {
-        final int elementSize = ledHeader.elementSize();
+        final int elementSize = (int) ledHeader.elementSize();
         readChunk(chunk, elementSize).serialize(destFile);
         deleteChunks(chunk);
     }

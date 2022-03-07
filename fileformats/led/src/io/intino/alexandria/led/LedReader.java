@@ -47,9 +47,7 @@ public class LedReader {
 
 	public <T extends Schema> Led<T> readAll(IndexedAllocatorFactory<T> allocatorFactory, Class<T> schemaClass) {
 		try {
-			if(srcInputStream.available() == 0) {
-				return Led.empty(schemaClass);
-			}
+			if(srcInputStream.available() == 0) return Led.empty(schemaClass);
 		} catch(Exception e) {
 			Logger.error(e);
 			return Led.empty(schemaClass);
@@ -61,7 +59,7 @@ public class LedReader {
 
 	private <T extends Schema> Led<T> readAllIntoMemory(IndexedAllocatorFactory<T> allocatorFactory, Class<T> schemaClass, LedHeader header) {
 		try(SnappyInputStream inputStream = new SnappyInputStream(this.srcInputStream)) {
-			IndexedAllocator<T> allocator = allocatorFactory.create(inputStream, header.elementCount(), header.elementSize(), schemaClass);
+			IndexedAllocator<T> allocator = allocatorFactory.create(inputStream, header.elementCount(), (int)header.elementSize(), schemaClass);
 			return new IndexedLed<>(allocator);
 		} catch (IOException e) {
 			Logger.error(e);
@@ -74,7 +72,7 @@ public class LedReader {
 			if(srcInputStream.available() == 0) return LedStream.empty(schemaClass);
 			LedHeader header = LedHeader.from(srcInputStream);
 			checkSerialUUID(header.uuid(), Schema.getSerialUUID(schemaClass));
-			return readAsStream(new SnappyInputStream(srcInputStream), schemaClass, header.elementSize());
+			return readAsStream(new SnappyInputStream(srcInputStream), schemaClass, (int)header.elementSize());
 		} catch (IOException e) {
 			Logger.error(e);
 		}
@@ -114,6 +112,7 @@ public class LedReader {
 	}
 
 	private void checkSerialUUID(UUID srcUUID, UUID dstUUID) {
+		if(srcUUID == null || dstUUID == null) return;
 		if(!Objects.equals(srcUUID, dstUUID)) {
 			throw new SchemaSerialUUIDMismatchException(srcUUID, dstUUID);
 		}

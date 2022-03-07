@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 
 public class LedWriter_ {
 
-	private static final int NUM_ELEMENTS = 10_000_000;
+	private static final int NUM_ELEMENTS = 100_000;
 	private static final File tempFile = new File("temp/snappy_test.led");
 	private static final Random RANDOM = new Random();
 	private static final AtomicLong RPU = new AtomicLong();

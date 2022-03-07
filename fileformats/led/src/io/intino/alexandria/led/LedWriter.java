@@ -7,9 +7,6 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import static io.intino.alexandria.led.util.memory.MemoryUtils.*;
 import static java.nio.file.StandardOpenOption.WRITE;
@@ -132,7 +129,6 @@ public class LedWriter {
 	}
 
 	private void writeLed(Led<? extends Schema> led, int schemaSize, int numBatches, OutputStream fos) throws IOException, InterruptedException {
-		ExecutorService executor = Executors.newSingleThreadExecutor();
 		try (SnappyOutputStream outputStream = new SnappyOutputStream(fos)) {
 			for (int i = 0; i < numBatches; i++) {
 				final int start = i * bufferSize;
@@ -143,10 +139,8 @@ public class LedWriter {
 					final long offset = (long) j * schemaSize;
 					memcpy(src.address(), src.baseOffset(), outputBuffer, offset, schemaSize);
 				}
-				executor.submit(() -> writeToOutputStream(outputStream, outputBuffer));
+				writeToOutputStream(outputStream, outputBuffer);
 			}
-			executor.shutdown();
-			executor.awaitTermination(Integer.MAX_VALUE, TimeUnit.MILLISECONDS);
 		}
 	}
 
