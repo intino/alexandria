@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.concurrent.Semaphore;
 
 /**
  * Represents an open session file for writing messages.
@@ -14,9 +15,10 @@ import java.time.Instant;
 public class Session implements AutoCloseable {
 
     private final File file;
-    private BufferedOutputStream writer;
-    private int byteCount;
-    private Instant lastWriting;
+    private volatile BufferedOutputStream writer;
+    private volatile int byteCount;
+    private volatile Instant lastWriting;
+    private final Semaphore semaphore = new Semaphore(1);
 
     public Session(File file) throws IOException {
         this(file, true);
@@ -27,17 +29,23 @@ public class Session implements AutoCloseable {
         this.writer = new BufferedOutputStream(new FileOutputStream(file, append));
     }
 
-    void write(String message) {
-        write(message.concat("\n").getBytes());
+    boolean write(String message) {
+        return write(message.concat("\n").getBytes());
     }
 
-    void write(byte[] bytes) {
+    synchronized boolean write(byte[] bytes) {
         try {
+            semaphore.acquire();
+            if(isClosed()) return false;
             writer.write(bytes);
             byteCount += bytes.length;
             lastWriting = Instant.now();
-        } catch (IOException e) {
-            e.printStackTrace();
+            return true;
+        } catch (Exception e) {
+            Logger.error(e);
+            return false;
+        } finally {
+            semaphore.release();
         }
     }
 
@@ -54,13 +62,16 @@ public class Session implements AutoCloseable {
     }
 
     @Override
-    public void close() {
+    public synchronized void close() {
         try {
+            semaphore.acquire();
             if(writer == null) return;
             writer.close();
             writer = null;
-        } catch (IOException e) {
+        } catch (Exception e) {
             Logger.error("Error while closing session: " + e.getMessage(), e);
+        } finally {
+            semaphore.release();
         }
     }
 

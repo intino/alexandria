@@ -1,13 +1,13 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.alexandria", version = "1.0.1") fsm
+Artifact(groupId = "io.intino.alexandria", version = "1.1.2") fsm
 	Imports
 		Compile("io.intino.alexandria", "logger", "2.1.0")
     	Compile("io.intino.alexandria", "core-framework", "2.1.1")
 		Compile("commons-io", "commons-io", "2.11.0")
 		Test(groupId = "junit", artifactId = "junit", version = "LATEST")
 
-	Package(mode = ModulesAndLibrariesLinkedByManifest)
+	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution
 		Artifactory("intino-maven")
 			Release("https://artifactory.intino.io/artifactory/release-libraries")

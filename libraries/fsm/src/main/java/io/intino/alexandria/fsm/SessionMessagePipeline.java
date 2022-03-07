@@ -4,48 +4,47 @@ import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
 
 /**
- * Represents the chain of actions performed upon a SessionMessageFile. It is supposed to be stateless.
+ * <p>Represents the chain of actions performed upon a SessionMessageFile. It is supposed to be stateless.</p>
  *
- * A pipeline works with a {@link SessionMessageFile} messageFile and the {@link FileSessionManager} fsm that invokes it.
+ * <p>A pipeline works with a {@link SessionMessageFile} messageFile and the {@link FileSessionManager} fsm that invokes it.</p>
  *
- * This is a partially complete class. The only method required to be implemented is processMessage(String, FileSessionManager),
- * which is called for each line read from the aforementioned messageFile.
+ * <p>This is a partially complete class. The only method required to be implemented is processMessage(String, FileSessionManager),
+ * which is called for each line read from the aforementioned messageFile.</p>
  *
- * A pipeline consists of 3 main stages, in order of execution:
+ * <p>A pipeline consists of 3 main stages, in order of execution:</p>
  *
- *  - onPending: called when the messageFile is pending to be processed (under the mailbox's pending directory).
- *               The default implementation moves the file to the processing directory and advances to the next stage.
+ * <ul>
  *
- *  - onProcessing: called when the messageFile is waiting to be processed at the moment. This is marked by moving the file from the
+ *  <il><p>onPending: called when the messageFile is pending to be processed (under the mailbox's pending directory).
+ *               The default implementation moves the file to the processing directory and advances to the next stage.</p></il>
+ *
+ *  <il><p>onProcessing: called when the messageFile is waiting to be processed at the moment. This is marked by moving the file from the
  *                  pending directory to the processing directory. This is the client's responsibility, though the default implementation
- *                  already does this in the previous stage.
+ *                  already does this in the previous stage.</p></il>
  *
- *  - onProcessed: called when the messageFile's processing has finished. The file should be moved from the processing directory
+ *  <il><p>onProcessed: called when the messageFile's processing has finished. The file should be moved from the processing directory
  *                  to avoid processing it again.
- *                  The default implementation already does this, moving the file to the processed directory.
+ *                  The default implementation already does this, moving the file to the processed directory.</p></il>
+ * </ul>
  *
- *
- *  The 2 first stages must return an {@link Operation} object, which values are:
+ *  <p>The 2 first stages must return an {@link Operation} object, which values are:
  *      - Continue: tells the pipeline to advance to the next stage.
- *      - Stop or null: tells the pipeline to stop execution and to NOT run the remaining stages.
+ *      - Stop or null: tells the pipeline to stop execution and to NOT run the remaining stages.</p>
  *
- * Additionally, the following methods might be called if an error occurred:
+ * <p>Additionally, the following methods might be called if an error occurred:</p>
  *
- *  - onMessageError: called when an individual message (line) causes an error. The rest of the lines will be processed normally.
- *                    The default implementation writes the message to the current error file in the input mailbox.
- *
- *  - onPipelineError: called when a general error causes the pipeline to stop.
- *
+ * <ul>
+ *  <il><p>onMessageError: called when an individual message (line) causes an error. The rest of the lines will be processed normally.
+ *                    The default implementation writes the message to the current error file in the input mailbox.</p></il>
+ *  <il><p>onPipelineError: called when a general error causes the pipeline to stop.</p></il>
+ * </ul>
  * */
 public abstract class SessionMessagePipeline {
 
@@ -83,18 +82,34 @@ public abstract class SessionMessagePipeline {
         return Operation.Continue;
     }
 
-    protected Operation onProcessing(SessionMessageFile messageFile, FileSessionManager fsm) {
+    protected Operation onProcessing(SessionMessageFile messageFile, FileSessionManager fsm) throws Exception {
         processSessionMessageFile(messageFile, fsm);
         return Operation.Continue;
     }
 
-    private void processSessionMessageFile(SessionMessageFile messageFile, FileSessionManager fsm) {
-        for(String message : messageFile) {
-            try {
-                processMessage(message, fsm);
-            } catch (Throwable e) {
-                onMessageError(message, fsm);
+    private void processSessionMessageFile(SessionMessageFile messageFile, FileSessionManager fsm) throws Exception {
+        Iterator<String> messageIterator = messageFile.iterator();
+
+        // Save the last message index that was read.
+        IndexFile indexFile = fsm.createIndexFile(messageFile);
+
+        try {
+            skipMessagesBeforeIndex(messageIterator, indexFile.index());
+
+            while(messageIterator.hasNext()) {
+                String message = messageIterator.next();
+                try {
+                    processMessage(message, fsm);
+                } catch (Throwable e) {
+                    onMessageError(message, fsm);
+                }
+                indexFile.increment();
             }
+
+            indexFile.close();
+
+        } finally {
+            if(indexFile != null) indexFile.save();
         }
     }
 
@@ -120,6 +135,11 @@ public abstract class SessionMessagePipeline {
 
     private boolean isNullOrEmpty(Stage[] stages) {
         return stages == null || stages.length == 0;
+    }
+
+    private void skipMessagesBeforeIndex(Iterator<String> messageIterator, long toExclusive) {
+        for(long index = 0;index < toExclusive && messageIterator.hasNext();index++)
+            messageIterator.next();
     }
 
     public enum Operation {
