@@ -173,7 +173,12 @@ public class UnsortedLedStreamBuilder<T extends Schema> implements LedStream.Bui
             return LedStream.empty(schemaClass);
         }
         close();
-        return new InputLedStream<>(getInputStream(), factory, schemaSize).onClose(this::deleteTempFile);
+        return new InputLedStream.Builder<T>()
+                .inputStream(getInputStream())
+                .factory(factory)
+                .schemaSize(schemaSize)
+                .onClose(this::deleteTempFile)
+                .build();
     }
 
     private void writeHeader() {

@@ -99,7 +99,11 @@ public class LedReader {
 	}
 
 	private <T extends Schema> LedStream<T> readAsStream(InputStream inputStream, Class<T> schemaClass, int schemaSize) {
-		return new InputLedStream<>(inputStream, schemaClass, schemaSize);
+		return new InputLedStream.Builder<T>()
+				.inputStream(inputStream)
+				.factory(Schema.factoryOf(schemaClass))
+				.schemaSize(schemaSize)
+				.build();
 	}
 
 	private static InputStream inputStreamOf(File file) {
