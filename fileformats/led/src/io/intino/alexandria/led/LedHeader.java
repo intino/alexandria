@@ -12,11 +12,21 @@ import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * LedHeader: 32 bytes
+ *
+ * elementCount: 8 bytes
+ * elementSize: 8 bytes
+ * UUID high: 8 bytes
+ * UUID low: 8 bytes
+ *
+ * UUID can be null, which means high and low bytes = 0
+ * */
 public class LedHeader {
 
     private static final int ELEMENT_COUNT_INDEX = 0;
     private static final int ELEMENT_SIZE_INDEX = ELEMENT_COUNT_INDEX + Long.BYTES;
-    private static final int UUID_HIGH_INDEX = ELEMENT_SIZE_INDEX + Integer.BYTES;
+    private static final int UUID_HIGH_INDEX = ELEMENT_SIZE_INDEX + Long.BYTES;
     private static final int UUID_LOW_INDEX = UUID_HIGH_INDEX + Long.BYTES;
 
     public static final int SIZE = UUID_LOW_INDEX + Long.BYTES;
@@ -81,22 +91,25 @@ public class LedHeader {
         return this;
     }
 
-    public int elementSize() {
-        return data.getInt(ELEMENT_SIZE_INDEX);
+    public long elementSize() {
+        return data.getLong(ELEMENT_SIZE_INDEX);
     }
 
-    public LedHeader elementSize(int elementSize) {
-        data.putInt(ELEMENT_SIZE_INDEX, elementSize);
+    public LedHeader elementSize(long elementSize) {
+        data.putLong(ELEMENT_SIZE_INDEX, elementSize);
         return this;
     }
 
     public UUID uuid() {
-        return new UUID(data.getLong(UUID_HIGH_INDEX), data.getLong(UUID_LOW_INDEX));
+        long high = data.getLong(UUID_HIGH_INDEX);
+        long low = data.getLong(UUID_LOW_INDEX);
+        if(high == 0 && low == 0) return null;
+        return new UUID(high, low);
     }
 
     public LedHeader uuid(UUID uuid) {
-        data.putLong(UUID_HIGH_INDEX, uuid.getMostSignificantBits());
-        data.putLong(UUID_LOW_INDEX, uuid.getLeastSignificantBits());
+        data.putLong(UUID_HIGH_INDEX, uuid == null ? 0 : uuid.getMostSignificantBits());
+        data.putLong(UUID_LOW_INDEX, uuid == null ? 0 : uuid.getLeastSignificantBits());
         return this;
     }
 

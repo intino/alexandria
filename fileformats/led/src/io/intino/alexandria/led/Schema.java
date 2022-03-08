@@ -45,7 +45,7 @@ public abstract class Schema implements OffHeapObject, Comparable<Schema>, Seria
 			serialUUID.setAccessible(true);
 			return (UUID) serialUUID.get(null);
 		} catch (IllegalAccessException | NoSuchFieldException e) {
-			throw new RuntimeException("SERIAL_UUID is not defined for this schema class: " + type.getSimpleName(), e);
+			return null;
 		}
 	}
 
