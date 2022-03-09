@@ -146,7 +146,7 @@ export default class BaseSlider extends AbstractBaseSlider {
                     {this.allowNavigation() && this.renderNavigationControls()}
                     {(!this.navigationOnly() && !this.ordinalSelectorOnly()) && this.renderValue()}
                 </div>
-				{!this.navigationOnly() && <div className={classsNames("layout horizontal", classes.leftSpacing)}>{this.renderOrdinals()}</div>}
+				{!this.navigationOnly() && <div className={classNames("layout horizontal", classes.leftSpacing)}>{this.renderOrdinals()}</div>}
 			</div>
 		);
 	};
