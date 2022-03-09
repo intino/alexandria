@@ -38,7 +38,7 @@ public class Examples {
         Future<Instant> pause = fsm.pause();
         assert fsm.state() == State.Paused;
 
-        Instant pausedTs = pause.get();
+        Instant pausedTs = pause.get(); // Block this thread until the FSM is completely paused
         if(pausedTs == null) {
             System.out.println("FSM was resumed/cancelled/terminated before went completely paused. Current state is " + fsm.state());
         } else {

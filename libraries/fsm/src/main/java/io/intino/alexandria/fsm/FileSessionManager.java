@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.intino.alexandria.fsm.StatefulScheduledService.State.*;
+import static java.lang.Math.abs;
 import static java.util.Objects.requireNonNull;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 
@@ -142,7 +143,7 @@ public class FileSessionManager extends StatefulScheduledService.Task {
         consumeMessages(processingMessages, Stage.OnProcessing, Stage.OnProcessed);
         consumeMessages(pendingMessages);
 
-        if(service.state() != Paused) {
+        if(service.state() == Running) {
             List<SessionMessageFile> messages = Stream.concat(processingMessages.stream(), pendingMessages.stream()).collect(Collectors.toList());
             logProgressInLockFile(messages);
         }
@@ -279,11 +280,11 @@ public class FileSessionManager extends StatefulScheduledService.Task {
         if(session == null) return false;
         if(state() == Cancelled || state() == Terminated) return true;
         if(session.byteCount() >= maxBytesPerSession) return true;
-        return session.lastWriting() != null && sessionTimeout != null && sessionTimeout();
+        return sessionTimeout != null && sessionTimeout();
     }
 
     private boolean sessionTimeout() {
-        return !session.lastWriting().plus(sessionTimeout.amount(), sessionTimeout.temporalUnit()).isBefore(Instant.now());
+        return abs(sessionTimeout.temporalUnit().between(session.creationTime(), Instant.now())) >= sessionTimeout.amount();
     }
 
     private synchronized void closeSession() {
