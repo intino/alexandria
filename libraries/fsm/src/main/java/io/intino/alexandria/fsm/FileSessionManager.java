@@ -365,6 +365,7 @@ public class FileSessionManager extends StatefulScheduledService.Task {
 
     private void addShutdownHookToSaveState() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            Logger.trace(id + ": Closing index file and error files in shutdown-hook...");
             if(currentIndexFile != null) currentIndexFile.save();
             if(currentErrorFile != null) currentErrorFile.close();
         }, id + "_state_saver"));
