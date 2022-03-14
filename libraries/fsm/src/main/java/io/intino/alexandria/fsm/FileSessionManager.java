@@ -156,7 +156,7 @@ public class FileSessionManager extends StatefulScheduledService.Task {
 
     private void doCleanMailbox() {
         try {
-            if(cleanerIsRunning.compareAndSet(false, true)) return;
+            if(!cleanerIsRunning.compareAndSet(false, true)) return;
             MailboxCleaner.clean(inputMailbox, processedFilesMaxAge);
         } finally {
             cleanerIsRunning.set(false);
