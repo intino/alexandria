@@ -11,7 +11,7 @@ import static io.intino.alexandria.fsm.FileSessionManager.TEMP_EXTENSION;
 
 public class SessionHelper {
 
-    private static final DateTimeFormatter Formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss_SS");
+    private static final DateTimeFormatter Formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss_SSSS");
 
     public static File newTempSessionFile(File pendingDir, LocalDateTime ts, String name) {
         return new File(pendingDir, format(ts) + "." + name + MESSAGE_EXTENSION + TEMP_EXTENSION);

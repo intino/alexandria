@@ -31,7 +31,7 @@ public class Session implements AutoCloseable {
     }
 
     boolean write(String message) {
-        return write(message.concat("\n").getBytes());
+        return write(message.getBytes());
     }
 
     synchronized boolean write(byte[] bytes) {
@@ -39,7 +39,8 @@ public class Session implements AutoCloseable {
             semaphore.acquire();
             if(isClosed()) return false;
             writer.write(bytes);
-            byteCount += bytes.length;
+            writer.write('\n');
+            byteCount += bytes.length + 1;
             return true;
         } catch (Exception e) {
             Logger.error(e);
