@@ -3,20 +3,29 @@ package io.intino.alexandria.fsm;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import static java.nio.file.StandardOpenOption.CREATE;
+
 public class IndexFile implements AutoCloseable {
 
-    private static final int SAVE_FREQUENCY = 500;
+    private static final int SAVE_TIME_MS = 5 * 1000;
 
     private final File file;
-    private volatile long index;
+    private long index;
     private volatile boolean closed;
+    private long lastTimeSaved;
 
     IndexFile(Mailbox mailbox, SessionMessageFile messageFile) {
         this.file = new File(mailbox.processing(), messageFile.getName() + ".last-index");
         this.index = getNextIndex();
+        this.lastTimeSaved = System.currentTimeMillis();
+    }
+
+    private FileWriter open(File file) throws IOException {
+        return new FileWriter(file);
     }
 
     public File file() {
@@ -28,8 +37,16 @@ public class IndexFile implements AutoCloseable {
     }
 
     public void increment() {
-        if(++index % SAVE_FREQUENCY == 0)
+        ++index;
+        trySave();
+    }
+
+    private void trySave() {
+        long now = System.currentTimeMillis();
+        if(now - lastTimeSaved >= SAVE_TIME_MS) {
             save();
+            lastTimeSaved = now;
+        }
     }
 
     private long getNextIndex() {
@@ -48,7 +65,7 @@ public class IndexFile implements AutoCloseable {
     public void save() {
         if(closed) return;
         try {
-            Files.writeString(file.toPath(), String.valueOf(index));
+            Files.writeString(file.toPath(), String.valueOf(index), CREATE);
         } catch (IOException e) {
             Logger.error(e);
         }

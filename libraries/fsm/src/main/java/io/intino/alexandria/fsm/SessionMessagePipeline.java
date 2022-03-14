@@ -2,13 +2,8 @@ package io.intino.alexandria.fsm;
 
 import io.intino.alexandria.logger.Logger;
 
-import java.io.File;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static java.nio.file.StandardOpenOption.APPEND;
-import static java.nio.file.StandardOpenOption.CREATE;
 
 /**
  * <p>Represents the chain of actions performed upon a SessionMessageFile. It is supposed to be stateless.</p>
@@ -92,6 +87,8 @@ public abstract class SessionMessagePipeline {
 
         // Save the last message index that was read.
         IndexFile indexFile = fsm.createIndexFile(messageFile);
+        // Save the messages that produced an error
+        ErrorFile errorFile = fsm.createErrorFile();
 
         try {
             skipMessagesBeforeIndex(messageIterator, indexFile.index());
@@ -101,28 +98,24 @@ public abstract class SessionMessagePipeline {
                 try {
                     processMessage(message, fsm);
                 } catch (Throwable e) {
-                    onMessageError(message, fsm);
+                    onMessageError(errorFile, message, fsm);
                 }
                 indexFile.increment();
             }
 
             indexFile.close();
+            errorFile.close();
 
         } finally {
             if(indexFile != null) indexFile.save();
+            if(errorFile != null) errorFile.close();
         }
     }
 
     protected abstract void processMessage(String message, FileSessionManager fsm) throws Throwable;
 
-    protected void onMessageError(String message, FileSessionManager fsm) {
-        try {
-            File file = fsm.inputMailbox().currentErrorFile();
-            file.getParentFile().mkdirs();
-            Files.writeString(file.toPath(), message + "\n", CREATE, APPEND);
-        } catch (Throwable e) {
-            Logger.error(e);
-        }
+    protected void onMessageError(ErrorFile errorFile, String message, FileSessionManager fsm) {
+        errorFile.add(message);
     }
 
     protected void onProcessed(SessionMessageFile messageFile, FileSessionManager fsm) {

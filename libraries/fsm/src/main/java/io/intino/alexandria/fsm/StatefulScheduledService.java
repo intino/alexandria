@@ -15,14 +15,16 @@ import static java.util.Objects.requireNonNull;
  * */
 class StatefulScheduledService {
 
+    private final String name;
     private final TimePeriod period;
     private final ScheduledExecutorService executor;
     private final AtomicReference<State> state;
     private ScheduledFuture<?> execution;
 
-    public StatefulScheduledService(TimePeriod period) {
+    public StatefulScheduledService(String name, TimePeriod period) {
+        this.name = name;
         this.period = requireNonNull(period);
-        this.executor = Executors.newSingleThreadScheduledExecutor();
+        this.executor = Executors.newSingleThreadScheduledExecutor(r -> new Thread(r, "FSM-" + name + "-Thread"));
         this.state = new AtomicReference<>(State.Created);
     }
 

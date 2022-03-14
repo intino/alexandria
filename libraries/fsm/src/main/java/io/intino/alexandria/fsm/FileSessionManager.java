@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static io.intino.alexandria.fsm.StatefulScheduledService.State.*;
 import static java.lang.Math.abs;
@@ -60,6 +58,7 @@ public class FileSessionManager extends StatefulScheduledService.Task {
     private final AtomicBoolean executingMessagePipeline;
     private CompletableFuture<Instant> pauseFuture;
     private volatile IndexFile currentIndexFile;
+    private volatile ErrorFile currentErrorFile;
     private Instant cleanMailboxLastTime;
     private final ExecutorService cleanerThread;
     private final AtomicBoolean cleanerIsRunning;
@@ -73,16 +72,20 @@ public class FileSessionManager extends StatefulScheduledService.Task {
         this.lockTimeout = lockTimeout;
         this.processedFilesMaxAge = processedFilesMaxAge;
         if(inputMailbox.equals(outputMailbox)) throw new IllegalArgumentException("Input and output mailbox cannot be the same");
-        this.service = new StatefulScheduledService(readInputMailboxRate);
+        this.service = new StatefulScheduledService(id, readInputMailboxRate);
         if(maxBytesPerSession <= 0) throw new IllegalArgumentException("maxBytesPerSession must be > " + 0);
         this.maxBytesPerSession = maxBytesPerSession;
         this.sessionTimeout = sessionTimeout;
         this.messagePipeline = requireNonNull(messagePipeline);
         this.lockFile = new LockFile(this);
         this.executingMessagePipeline = new AtomicBoolean(false);
-        this.cleanerThread = Executors.newSingleThreadScheduledExecutor();
+        this.cleanerThread = Executors.newSingleThreadScheduledExecutor(r -> new Thread(r, "FSM-" + id + "-Cleaner-Thread"));
         this.cleanerIsRunning = new AtomicBoolean();
-        addShutdownHookToSaveCurrentIndexFile();
+        addShutdownHookToSaveState();
+    }
+
+    public String id() {
+        return id;
     }
 
     /**
@@ -101,7 +104,7 @@ public class FileSessionManager extends StatefulScheduledService.Task {
         Session session = getCurrentSession();
         if(session == null) return PublishResult.SessionNotOpen;
 
-        byte[] bytes = message.concat("\n").getBytes();
+        byte[] bytes = message.getBytes();
 
         if(bytes.length > maxBytesPerSession) {
             Logger.warn("Message is too long for this session's size limit: size: " + bytes.length + " bytes vs max: " + maxBytesPerSession + " bytes");
@@ -161,6 +164,7 @@ public class FileSessionManager extends StatefulScheduledService.Task {
     }
 
     private void consumeMessages() {
+
         List<SessionMessageFile> processingMessages = inputMailbox.listProcessingMessages();
         List<SessionMessageFile> pendingMessages = inputMailbox.listPendingMessages();
 
@@ -168,15 +172,12 @@ public class FileSessionManager extends StatefulScheduledService.Task {
         consumeMessages(pendingMessages);
 
         if(service.state() == Running) {
-            List<SessionMessageFile> messages = Stream.concat(processingMessages.stream(), pendingMessages.stream()).collect(Collectors.toList());
-            logProgressInLockFile(messages);
+            logProgressInLockFile(processingMessages.size() + pendingMessages.size());
         }
     }
 
-    private void logProgressInLockFile(List<SessionMessageFile> messages) {
-        lockFile.write("Sleeping (next iteration begins in " + service.period()
-                + ")\nMessage Files Consumed (" + messages.size() + "):\n\t"
-                + messages.stream().map(SessionMessageFile::toString).collect(Collectors.joining("\n\t")));
+    private void logProgressInLockFile(int messageCount) {
+        lockFile.write("Sleeping (next iteration begins in " + service.period() + ")\nMessage Files Consumed = " + messageCount + "\n");
     }
 
     private void consumeMessages(List<SessionMessageFile> files, Stage... stages) {
@@ -231,6 +232,10 @@ public class FileSessionManager extends StatefulScheduledService.Task {
 
     IndexFile createIndexFile(SessionMessageFile messageFile) {
         return currentIndexFile = new IndexFile(inputMailbox, messageFile);
+    }
+
+    ErrorFile createErrorFile() {
+        return currentErrorFile = new ErrorFile(inputMailbox);
     }
 
     /**
@@ -298,6 +303,7 @@ public class FileSessionManager extends StatefulScheduledService.Task {
             pauseFuture.complete(null);
             pauseFuture = null;
         }
+        Logger.debug("Waiting for cleaner thread to finish (1 hour timeout)...");
         cleanerThread.shutdown();
         try {
             cleanerThread.awaitTermination(1, TimeUnit.HOURS);
@@ -345,10 +351,6 @@ public class FileSessionManager extends StatefulScheduledService.Task {
         }
     }
 
-    public String id() {
-        return id;
-    }
-
     public StatefulScheduledService.State state() {
         return service.state();
     }
@@ -361,10 +363,11 @@ public class FileSessionManager extends StatefulScheduledService.Task {
         return outputMailbox;
     }
 
-    private void addShutdownHookToSaveCurrentIndexFile() {
+    private void addShutdownHookToSaveState() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if(currentIndexFile != null) currentIndexFile.save();
-        }, id + "_index_file_saver"));
+            if(currentErrorFile != null) currentErrorFile.close();
+        }, id + "_state_saver"));
     }
 
     public enum PublishResult {

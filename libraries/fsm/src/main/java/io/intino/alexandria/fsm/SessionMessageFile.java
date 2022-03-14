@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.util.Objects.requireNonNull;
 
@@ -58,7 +57,7 @@ public class SessionMessageFile implements Iterable<String> {
         try {
             directory.mkdirs();
             File dst = new File(directory, prefix + file.getName());
-            Files.move(file.toPath(), dst.toPath(), REPLACE_EXISTING, ATOMIC_MOVE);
+            Files.move(file.toPath(), dst.toPath(), REPLACE_EXISTING);
             file = dst;
             return true;
         } catch (IOException e) {
