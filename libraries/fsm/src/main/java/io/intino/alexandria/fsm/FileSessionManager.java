@@ -10,9 +10,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -46,6 +44,7 @@ public class FileSessionManager extends StatefulScheduledService.Task {
     private static final TimeUnit DEFAULT_TIMEOUT_UNIT = TimeUnit.DAYS;
     public static final long MIN_BYTES_PER_SESSION = KB;
     public static final TimePeriod DEFAULT_MAX_PROCESSED_FILES_AGE = new TimePeriod(60, TimeUnit.DAYS);
+    private static final TimePeriod CLEAN_MAILBOX_MAX_TIME = new TimePeriod(2, TimeUnit.HOURS);
 
     private final String id;
     private final Mailbox inputMailbox;
@@ -61,6 +60,9 @@ public class FileSessionManager extends StatefulScheduledService.Task {
     private final AtomicBoolean executingMessagePipeline;
     private CompletableFuture<Instant> pauseFuture;
     private volatile IndexFile currentIndexFile;
+    private Instant cleanMailboxLastTime;
+    private final ExecutorService cleanerThread;
+    private final AtomicBoolean cleanerIsRunning;
 
     public FileSessionManager(String id, Mailbox inputMailbox, Mailbox outputMailbox, TimePeriod readInputMailboxRate,
                               long maxBytesPerSession, TimePeriod sessionTimeout, TimePeriod lockTimeout,
@@ -78,6 +80,8 @@ public class FileSessionManager extends StatefulScheduledService.Task {
         this.messagePipeline = requireNonNull(messagePipeline);
         this.lockFile = new LockFile(this);
         this.executingMessagePipeline = new AtomicBoolean(false);
+        this.cleanerThread = Executors.newSingleThreadScheduledExecutor();
+        this.cleanerIsRunning = new AtomicBoolean();
         addShutdownHookToSaveCurrentIndexFile();
     }
 
@@ -133,7 +137,27 @@ public class FileSessionManager extends StatefulScheduledService.Task {
     @Override
     void onFinally() {
         if(shouldCloseSession()) closeSession();
-        MailboxCleaner.clean(inputMailbox, processedFilesMaxAge);
+        if(shouldCleanMailbox()) cleanMailbox();
+    }
+
+    private void cleanMailbox() {
+        try {
+            cleanMailboxLastTime = Instant.now();
+            cleanerThread.submit(this::doCleanMailbox);
+        } catch (Exception ignored) {}
+    }
+
+    private boolean shouldCleanMailbox() {
+        return cleanMailboxLastTime == null || timeout(cleanMailboxLastTime, CLEAN_MAILBOX_MAX_TIME);
+    }
+
+    private void doCleanMailbox() {
+        try {
+            if(cleanerIsRunning.compareAndSet(false, true)) return;
+            MailboxCleaner.clean(inputMailbox, processedFilesMaxAge);
+        } finally {
+            cleanerIsRunning.set(false);
+        }
     }
 
     private void consumeMessages() {
@@ -231,7 +255,7 @@ public class FileSessionManager extends StatefulScheduledService.Task {
      * <p>Returns true if this FSM transitioned from Paused to Running state, false otherwise.</p>
      * */
     public boolean resume() {
-        cancelPauseFuture();
+        stopPendingTasks();
         if(!service.resume()) return false;
         lockFile.write("Resumed");
         return true;
@@ -242,7 +266,7 @@ public class FileSessionManager extends StatefulScheduledService.Task {
      * the service is stopped. This is somewhat dangerous and terminate should be considered first.</p>
      * */
     public void cancel() {
-        cancelPauseFuture();
+        stopPendingTasks();
         Logger.info("Cancelling FileSessionManager " + id);
         service.cancel();
         lockFile.delete();
@@ -262,18 +286,25 @@ public class FileSessionManager extends StatefulScheduledService.Task {
      * until it reaches the specified timeout.</p>
      * */
     public void terminate(long timeout, TimeUnit timeUnit) {
-        cancelPauseFuture();
+        stopPendingTasks();
         Logger.info("Terminating FileSessionManager " + id);
         service.stop(timeout, timeUnit);
         lockFile.delete();
         Logger.info("FileSessionManager " + id + " terminated");
     }
 
-    private void cancelPauseFuture() {
+    private void stopPendingTasks() {
         if(pauseFuture != null) {
             pauseFuture.complete(null);
             pauseFuture = null;
         }
+        cleanerThread.shutdown();
+        try {
+            cleanerThread.awaitTermination(1, TimeUnit.HOURS);
+        } catch (InterruptedException e) {
+            Logger.error(e);
+        }
+        cleanerIsRunning.set(false);
     }
 
     private boolean shouldCloseSession() {
@@ -284,7 +315,11 @@ public class FileSessionManager extends StatefulScheduledService.Task {
     }
 
     private boolean sessionTimeout() {
-        return abs(sessionTimeout.temporalUnit().between(session.creationTime(), Instant.now())) >= sessionTimeout.amount();
+        return timeout(session.creationTime(), sessionTimeout);
+    }
+
+    private boolean timeout(Instant ts, TimePeriod timePeriod) {
+        return abs(timePeriod.temporalUnit().between(ts, Instant.now())) >= timePeriod.amount();
     }
 
     private synchronized void closeSession() {
