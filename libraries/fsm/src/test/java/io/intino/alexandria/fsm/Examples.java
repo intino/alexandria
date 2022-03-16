@@ -38,7 +38,7 @@ public class Examples {
         Future<Instant> pause = fsm.pause();
         assert fsm.state() == State.Paused;
 
-        Instant pausedTs = pause.get();
+        Instant pausedTs = pause.get(); // Block this thread until the FSM is completely paused
         if(pausedTs == null) {
             System.out.println("FSM was resumed/cancelled/terminated before went completely paused. Current state is " + fsm.state());
         } else {
@@ -105,11 +105,14 @@ public class Examples {
 
         @Override
         protected Operation onProcessing(SessionMessageFile messageFile, FileSessionManager fsm) {
+
+            ErrorFile errorFile = fsm.createErrorFile();
+
             for(String message : messageFile) {
                 try {
                     processMessage(message, fsm);
                 } catch (Throwable e) {
-                    onMessageError(message, fsm);
+                    onMessageError(errorFile, message, fsm);
                     // Let's stop the pipeline and move the file to the error's directory
                     // (If file is not moved, it will be processed again in the next iteration)
                     messageFile.moveTo(fsm.inputMailbox().errors());
@@ -128,8 +131,8 @@ public class Examples {
         }
 
         @Override
-        protected void onMessageError(String message, FileSessionManager fsm) {
-            super.onMessageError(message, fsm);
+        protected void onMessageError(ErrorFile errorFile, String message, FileSessionManager fsm) {
+            super.onMessageError(errorFile, message, fsm);
             Logger.error("ERROR: " + message);
         }
 

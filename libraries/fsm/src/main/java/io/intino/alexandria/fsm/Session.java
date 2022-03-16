@@ -17,7 +17,7 @@ public class Session implements AutoCloseable {
     private final File file;
     private volatile BufferedOutputStream writer;
     private volatile int byteCount;
-    private volatile Instant lastWriting;
+    private final Instant creationTs;
     private final Semaphore semaphore = new Semaphore(1);
 
     public Session(File file) throws IOException {
@@ -27,10 +27,11 @@ public class Session implements AutoCloseable {
     public Session(File file, boolean append) throws IOException {
         this.file = file;
         this.writer = new BufferedOutputStream(new FileOutputStream(file, append));
+        this.creationTs = Instant.now();
     }
 
     boolean write(String message) {
-        return write(message.concat("\n").getBytes());
+        return write(message.getBytes());
     }
 
     synchronized boolean write(byte[] bytes) {
@@ -38,8 +39,8 @@ public class Session implements AutoCloseable {
             semaphore.acquire();
             if(isClosed()) return false;
             writer.write(bytes);
-            byteCount += bytes.length;
-            lastWriting = Instant.now();
+            writer.write('\n');
+            byteCount += bytes.length + 1;
             return true;
         } catch (Exception e) {
             Logger.error(e);
@@ -53,8 +54,8 @@ public class Session implements AutoCloseable {
         return byteCount;
     }
 
-    public Instant lastWriting() {
-        return lastWriting;
+    public Instant creationTime() {
+        return creationTs;
     }
 
     public boolean isClosed() {
