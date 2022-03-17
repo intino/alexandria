@@ -93,6 +93,7 @@ public abstract class UIRenderer extends Renderer {
 	}
 
 	protected boolean hasConcreteNotifier(PassiveView element) {
+		if (element.i$(Display.Accessible.class)) return true;
 		return !element.i$(CatalogComponents.Collection.Mold.Item.class) &&
 				!element.i$(CatalogComponents.Table.class) &&
 				!element.i$(CatalogComponents.DynamicTable.class) &&
@@ -101,6 +102,7 @@ public abstract class UIRenderer extends Renderer {
 	}
 
 	protected boolean hasConcreteRequester(PassiveView element) {
+		if (element.i$(Display.Accessible.class)) return true;
 		return !element.i$(CatalogComponents.Collection.Mold.Item.class) &&
 				!element.i$(CatalogComponents.Table.class) &&
 				!element.i$(CatalogComponents.DynamicTable.class) &&

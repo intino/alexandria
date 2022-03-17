@@ -17,6 +17,10 @@ def type(app)
 			var self = {};
 
 			self.configuration = configuration;
+			self.configuration.appUrls = loadUrls(configuration.baseUrls);
+			self.configuration.appUrl = (app) => {
+			    return self.configuration.appUrls$[app$] != null ? self.configuration.appUrls$[app$] : self.configuration.baseUrl;
+			};
 			self.services = {
 				pushService: PushService,
 				fileService: FileService.create(configuration),
@@ -30,6 +34,15 @@ def type(app)
 
 		function loadConfiguration() {
 			return document.configuration;
+		}
+
+		function loadUrls(urlList) {
+		    let result = {};
+            for (let i=0; i<urlList.length; i++) {
+                const urlInfo = urlList$[i$].split("_##_");
+                result$[urlInfo$[0$]$] = urlInfo$[1$];
+            }
+            return result;
 		}
 
 		function renderApplication() {

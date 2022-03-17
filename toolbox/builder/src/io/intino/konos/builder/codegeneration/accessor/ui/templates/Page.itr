@@ -73,6 +73,7 @@ def type(resource & html)
 				document.configuration.language = "$$language";
 				document.configuration.url = "$$url";
 				document.configuration.baseUrl = "$$baseUrl";
+				document.configuration.baseUrls = "$$baseUrls".split(",");
 				document.configuration.basePath = "$$basePath";
 			</script>
 		</body>

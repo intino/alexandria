@@ -66,6 +66,11 @@ public class AcceptedKonosRunner {
 	}
 
 	@Test
+	public void sumus() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/sumus.txt")});
+	}
+
+	@Test
 	public void cesarDh() {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/cesar/cesar-dh.txt")});
 	}

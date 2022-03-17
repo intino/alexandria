@@ -266,6 +266,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			if (!element.i$(Multiple.class)) builder.add("single");
 			if (element.i$(OwnerTemplateStamp.class)) builder.add("ownertemplatestamp");
 			if (element.i$(DisplayStamp.class)) builder.add("displaystamp");
+			if (element.i$(ProxyStamp.class)) builder.add("proxystamp");
 			String templateName = templateName(element.a$(BaseStamp.class));
 			builder.add("template", templateName);
 			builder.add("type", templateName);

@@ -66,6 +66,7 @@ public abstract class Page {
 		template = template.replaceAll("\\$language", language != null ? language : "");
 		template = template.replaceAll("\\$currentSession", sessionId);
 		template = template.replaceAll("\\$client", clientId);
+		template = template.replaceAll("\\$baseUrls", String.join(",", baseUrls(usedUnits, browser)));
 		template = template.replaceAll("\\$baseUrl", browser.baseUrl());
 		template = template.replaceAll("\\$basePath", browser.basePath());
 		template = template.replaceAll("\\$url", browser.baseUrl() + "/" + uiServiceName);
@@ -81,6 +82,14 @@ public abstract class Page {
 											.map(unit -> unit.name() + AppSeparator + browser.pushUrl(sessionId, clientId, language, unit.url()))
 											.collect(Collectors.toList());
 		pushList.add("Default" + AppSeparator + browser.pushUrl(sessionId, clientId, language));
+		return pushList;
+	}
+
+	private List<String> baseUrls(List<Unit> usedUnits, Browser browser) {
+		List<String> pushList = usedUnits.stream().filter(unit -> unit != null && !unit.url().isEmpty())
+				.map(unit -> unit.name() + AppSeparator + unit.url())
+				.collect(Collectors.toList());
+		pushList.add("Default" + AppSeparator + browser.baseUrl());
 		return pushList;
 	}
 
