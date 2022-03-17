@@ -56,7 +56,7 @@ class Download extends AbstractDownload {
 	handleDownloadAccept = (option) => {
 		this.requester.changeParams(option);
 		this.execute();
-		this.setState({ opened: false });
+		this.setState({ opened: false, option: this.props.options != null && this.props.options.length > 0 ? this.props.options[0] : "" });
 	};
 
 	_options = () => {

@@ -41,6 +41,10 @@ public abstract class CollectionBehavior<DS extends Datasource<Item>, Item, IL e
 		return itemLoader.filters();
 	}
 
+	public void filters(java.util.List<Filter> filters) {
+		itemLoader.filters(filters);
+	}
+
 	public void clearFilters() {
 		computeUpdate(e -> itemLoader.clearFilters());
 	}
