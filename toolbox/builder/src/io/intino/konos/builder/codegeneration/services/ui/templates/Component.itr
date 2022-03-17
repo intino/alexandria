@@ -27,6 +27,10 @@ def type(component & child & ownertemplatestamp & single) trigger(declarations)
 	public $ownerPackage.$template+firstUpperCase $name;
 end
 
+def type(component & child & proxystamp & single) trigger(declarations)
+	public [$ancestors+firstUpperCase...[.].] $name+firstUpperCase $name;
+end
+
 def type(component & child & basestamp & single) trigger(declarations)
 	public $template+firstUpperCase $name;
 end
@@ -42,6 +46,10 @@ end
 
 def type(component & child & ownertemplatestamp & single) trigger(declaration)
 	public $ownerPackage.$template+firstUpperCase $name;
+end
+
+def type(component & child & proxystamp & single) trigger(declaration)
+	public [$ancestors+firstUpperCase...[.].] $name+firstUpperCase $name;
 end
 
 def type(component & child & basestamp & single) trigger(declaration)
@@ -174,6 +182,35 @@ def type(component & child) trigger(method)
 end
 
 def type(component & child & displaystamp) trigger(class)
+	public class $name+firstUpperCase extends $extends $implements {
+		[$reference+declaration...[$NL]]
+		[$component+declaration...[$NL]]
+
+		public $name+firstUpperCase($abstractBox+type box) {
+			super(box);
+			[$properties+common]
+			[$properties+specific]
+		}
+
+		@Override
+		public void $methodName() {
+			super.init();
+			[$reference...[$NL]]
+			[$component+child...[$NL]]
+		}
+
+		@Override
+		public void unregister() {
+		    super.unregister();
+			[$component+unregister...[$NL]]
+		}
+		$methods
+		[$component+class...[$NL$NL]]
+		[$component+method...[$NL$NL]]
+	}
+end
+
+def type(component & child & proxystamp) trigger(class)
 	public class $name+firstUpperCase extends $extends $implements {
 		[$reference+declaration...[$NL]]
 		[$component+declaration...[$NL]]
@@ -338,6 +375,10 @@ def type(extends & displaystamp)
 	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<io.intino.alexandria.ui.displays.notifiers.$type+firstUpperCase$facet...[]~Notifier, $abstractBox+type>
 end
 
+def type(extends & proxystamp)
+	io.intino.alexandria.ui.displays.components.ProxyStamp<io.intino.alexandria.ui.displays.notifiers.ProxyStampNotifier, $abstractBox+type>
+end
+
 def type(extends & basestamp)
 	$type+firstUpperCase
 end
@@ -392,12 +433,20 @@ def type(component & child & ownertemplatestamp & multiple) trigger(rootReferenc
 	if ($name == null) $name = register(new $ownerPackage.$name+firstUpperCase([($ownerBox~Box)]box().owner()).<$ownerPackage.$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
+def type(component & child & proxystamp & multiple) trigger(rootReferences)
+	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+end
+
 def type(component & child & basestamp & multiple) trigger(rootReferences)
 	if ($name == null) $name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
 def type(component & child & ownertemplatestamp & single) trigger(rootReferences)
 	if ($name == null) $name = register(new $ownerPackage.$template+firstUpperCase$generic([($ownerBox~Box)]box().owner()).<$ownerPackage.$template+firstUpperCase$generic>id("$id").owner($owner.this));
+end
+
+def type(component & child & proxystamp & single) trigger(rootReferences)
+	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
 def type(component & child & basestamp & single) trigger(rootReferences)
@@ -461,6 +510,10 @@ end
 
 def type(component & child & ownertemplatestamp & single)
 	if ($name == null) $name = register(new $ownerPackage.$template+firstUpperCase$generic([($ownerBox~Box)]box().owner()).<$ownerPackage.$template+firstUpperCase$generic>id("$id").owner($owner.this));
+end
+
+def type(component & child & proxystamp & single)
+	if ($name == null) $name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
 def type(component & child & basestamp & single)

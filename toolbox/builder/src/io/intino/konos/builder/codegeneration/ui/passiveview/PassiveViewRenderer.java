@@ -437,6 +437,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	protected boolean isProjectComponent(Component component) {
+		if (component.i$(OtherComponents.ProxyStamp.class)) return false;
 		if (component.i$(OtherComponents.BaseStamp.class)) return true;
 		if (component.i$(HelperComponents.Row.class)) return true;
 		if (component.i$(CatalogComponents.Collection.Mold.Item.class)) return true;

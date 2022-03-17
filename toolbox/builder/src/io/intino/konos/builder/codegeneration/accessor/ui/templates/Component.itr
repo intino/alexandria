@@ -39,6 +39,10 @@ def type(extends & displaystamp)
 	Ui$type+firstUpperCase$facet...[]
 end
 
+def type(extends & proxystamp)
+	UiProxyStamp
+end
+
 def type(extends & basestamp)
 	Displays$type+firstUpperCase
 end
