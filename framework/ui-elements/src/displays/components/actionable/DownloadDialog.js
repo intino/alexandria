@@ -5,12 +5,11 @@ import I18nComponent from "../../I18nComponent";
 
 export default class DownloadDialog extends I18nComponent {
 
-	state = {
-		option: this.props.option
-	};
-
 	constructor(props) {
 		super(props);
+        this.state = {
+            option: this.props.option
+        };
 	};
 
 	render = () => {
@@ -26,12 +25,16 @@ export default class DownloadDialog extends I18nComponent {
 	};
 
 	renderOptions = () => {
-		return (<OptionSelector options={this.props.options} onSelect={this.handleOptionChange.bind(this)}/>);
+	    var translatedOptions = [];
+	    if (this.props.options == null) return (<React.Fragment/>);
+	    for (var i=0; i<this.props.options.length; i++) translatedOptions.push(this.translate(this.props.options[i]));
+		return (<OptionSelector options={translatedOptions} onSelect={this.handleOptionChange.bind(this)}/>);
 	};
 
 	handleAccept = () => {
 		if (!this.valid()) return;
-		if (this.props.onAccept != null) this.props.onAccept(this.state.option);
+		if (this.props.onAccept != null) this.props.onAccept(this.translate(this.state.option));
+		this.setState({ option : this.props.options.length > 0 ? this.translate(this.props.options[0]) : "" });
 	};
 
 	handleOptionChange(option) {

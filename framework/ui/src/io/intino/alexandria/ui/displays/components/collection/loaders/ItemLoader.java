@@ -45,6 +45,12 @@ public class ItemLoader<DS extends Datasource<Item>, Item> {
 		return filters;
 	}
 
+	public ItemLoader filters(java.util.List<Filter> filters) {
+		this.filters = filters;
+		this.itemCount = calculateItemCount(condition);
+		return this;
+	}
+
 	public ItemLoader filter(String grouping, List<String> groups) {
 		filterGrouping(grouping, groups);
 		this.itemCount = calculateItemCount(condition);
