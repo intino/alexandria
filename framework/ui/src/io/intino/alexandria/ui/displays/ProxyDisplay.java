@@ -108,6 +108,10 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
         processPendingRequests();
     }
 
+    private static final Map<String, String> errorMessages = new HashMap<>() {{
+        put("es", "No se pudo conectar con %s");
+        put("en", "Could not connect with %s");
+    }};
     protected String errorMessage(String application) {
         String language = session().browser().language();
         if (!errorMessages.containsKey(language)) language = "en";
@@ -128,11 +132,6 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
         }
     }
 
-    private static Map<String, String> errorMessages = new HashMap<String, String>() {{
-        put("es", "no se pudo conectar con %s");
-        put("en", "could not connect with %s");
-    }};
-
     private void processPendingRequests() {
         pendingRequestList.forEach(r -> request(r.operation, r.parameter));
         pendingRequestList.clear();
@@ -143,6 +142,7 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
         parameters.forEach(result::put);
         result.put("client", clientId);
         result.put("session", sessionId);
+        result.put("language", session().discoverLanguage());
         result.put("token", token);
         result.put("personifiedDisplay", id() + "_");
         return result;
