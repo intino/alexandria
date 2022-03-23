@@ -38,7 +38,7 @@ public class ProxyStamp<DN extends ProxyStampNotifier, B extends Box> extends Ab
     }
 
     private void addProxy() {
-        if (children().size() > 0) return;
+        clear();
         proxy.session(session());
         add(proxy);
     }

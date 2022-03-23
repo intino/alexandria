@@ -38,6 +38,7 @@ def type(app)
 
 		function loadUrls(urlList) {
 		    let result = {};
+		    if (urlList == null) return result;
             for (let i=0; i<urlList.length; i++) {
                 const urlInfo = urlList$[i$].split("_##_");
                 result$[urlInfo$[0$]$] = urlInfo$[1$];
