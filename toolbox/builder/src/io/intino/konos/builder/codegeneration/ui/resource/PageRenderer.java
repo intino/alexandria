@@ -44,7 +44,7 @@ public class PageRenderer extends ActionRenderer {
 		builder.add("parameter", parameters());
 		builder.add("contextProperty", contextPropertyFrame());
 		service.useList().forEach(use -> builder.add("usedUnit", usedUnitFrame(use)));
-		if (service.title() != null) builder.add("title", service.title());
+		if (service.title() != null) builder.add("title", titleFrame());
 		if (service.favicon() != null) builder.add("favicon", service.favicon());
 		compilationContext.classes().put(resource.getClass().getSimpleName() + "#" + firstUpperCase(resource.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(resource.name$())) + suffix());
 		if (!alreadyRendered(src(), resource.name$())) {
@@ -55,6 +55,17 @@ public class PageRenderer extends ActionRenderer {
 		writeFrame(destinationPackage(gen()), "Abstract" + firstUpperCase(resource.name$()) + suffix(), template().render(builder.add("gen").toFrame()));
 		if (target.equals(Target.Owner))
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(destinationPackage(gen()), "Abstract" + firstUpperCase(resource.name$()) + suffix()).getAbsolutePath()));
+	}
+
+	private FrameBuilder titleFrame() {
+		FrameBuilder result = new FrameBuilder("title");
+		String title = service.title();
+		if (title.startsWith("{") && title.endsWith("}")) {
+			title = title.substring(1, title.length()-1);
+			result.add("configuration");
+		}
+		result.add("title", title);
+		return result;
 	}
 
 	@Override
