@@ -18,6 +18,7 @@ const PushService = (function () {
             console.log("WebSocket connection opened.");
             service.retries[socket.name] = 0;
             socket.ready = true;
+            window.setInterval(() => ping(socket, service), 30000);
             sendPendingMessages(service);
         };
 
@@ -39,7 +40,6 @@ const PushService = (function () {
                 this.notifyClose(socket);
                 return;
             }
-
             this.reconnect(e);
         };
 
@@ -101,6 +101,11 @@ const PushService = (function () {
             const pendingMessage = service.pendingMessages[i];
             service.send(pendingMessage.message, pendingMessage.app);
         }
+    }
+
+    function ping(socket, service) {
+        if (!socket.ready) return;
+        service.send({op:'ping'}, socket.name);
     }
 
     return service;

@@ -56,6 +56,9 @@ public class PushService extends io.intino.alexandria.http.spark.PushService<UIS
 	public void onMessage(UIClient client, String content) {
 		UIMessage message = Json.fromString(decode(content), UIMessage.class);
 		String requester = message.sender();
+		String operation = message.operation();
+
+		if (operation != null && operation.equals("ping")) return;
 
 		if (requester == null) {
 			super.onMessage(client, content);
