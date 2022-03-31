@@ -61,6 +61,20 @@ class Grouping extends AbstractGrouping {
         this.setState({pageSize: size});
     };
 
+    refreshGroups = (groups) => {
+        const flattenGroups = this.flattenGroups(groups);
+        this.setState({ groups: flattenGroups, visibleGroups: this.visibleGroups(flattenGroups, this.state.pageSize, this.state.condition) });
+    };
+
+    flattenGroups = (groups) => {
+        const result = [];
+        for (let i=0; i<groups.length; i++) {
+            for (let j=0; j<groups[i].groups.length; j++)
+                result.push(groups[i].groups[j]);
+        }
+        return result;
+    };
+
 }
 
 export default withStyles(styles, { withTheme: true })(Grouping);
