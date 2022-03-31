@@ -118,6 +118,15 @@ export default class BaseGrouping extends AbstractBaseGrouping {
         this.setState({ groups: groups, visibleGroups: this.visibleGroups(groups, this.state.pageSize, this.state.condition) });
     };
 
+    flattenGroups = (groups) => {
+        const result = [];
+        for (let i=0; i<groups.length; i++) {
+            for (let j=0; j<groups[i].groups.length; j++)
+                result.push(groups[i].groups[j]);
+        }
+        return result;
+    };
+
     visibleGroups = (groups, pageSize, condition) => {
         const filteredGroups = this.filter(groups, condition);
         const count = filteredGroups.length < pageSize ? filteredGroups.length : pageSize;
