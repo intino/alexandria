@@ -82,7 +82,7 @@ public class AcceptedKonosRunner {
 
 	@Test
 	public void amidas() {
-		KonoscRunner.main(new String[]{temp(home + "confFiles/amidas/amidas-team.txt")});
+		KonoscRunner.main(new String[]{temp(home + "confFiles/amidas/amidas.txt")});
 	}
 
 	@Test
