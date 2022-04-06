@@ -59,7 +59,7 @@ const PushService = (function () {
             callbacks = {};
         };
 
-        if (this.connections.length <= 0) this.connections["Default"] = socket;
+        if (this.connections["Default"] == null) this.connections["Default"] = socket;
         this.connections[name] = socket;
     };
 
