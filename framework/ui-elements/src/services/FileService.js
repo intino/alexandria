@@ -44,7 +44,7 @@ const FileService = {
         };
 
         function buildUrl(message) {
-            return configuration.baseUrl + "/" + message.s.toLowerCase() + (message.d != null ? "/" + (message.o + ":" + message.c + ":" + message.d) : "");
+            return configuration.appUrl(message.app) + "/" + message.s.toLowerCase() + (message.d != null ? "/" + (message.o + ":" + message.c + ":" + message.d) : "");
         }
 
         function buildRequest(message) {

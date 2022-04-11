@@ -9,6 +9,7 @@ import io.intino.alexandria.restaccessor.core.RestAccessor;
 import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
 import io.intino.alexandria.schemas.ProxyDisplayInfo;
 import io.intino.alexandria.ui.displays.notifiers.ProxyDisplayNotifier;
+import io.intino.alexandria.ui.services.push.UIClient;
 import io.intino.alexandria.ui.services.push.UISession;
 import io.intino.alexandria.ui.spark.pages.Unit;
 
@@ -108,8 +109,12 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
         processPendingRequests();
     }
 
+    private static final Map<String, String> errorMessages = new HashMap<>() {{
+        put("es", "No se pudo conectar con %s");
+        put("en", "Could not connect with %s");
+    }};
     protected String errorMessage(String application) {
-        String language = session().browser().language();
+        String language = language();
         if (!errorMessages.containsKey(language)) language = "en";
         return String.format(errorMessages.get(language), application);
     }
@@ -128,11 +133,6 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
         }
     }
 
-    private static Map<String, String> errorMessages = new HashMap<String, String>() {{
-        put("es", "no se pudo conectar con %s");
-        put("en", "could not connect with %s");
-    }};
-
     private void processPendingRequests() {
         pendingRequestList.forEach(r -> request(r.operation, r.parameter));
         pendingRequestList.clear();
@@ -143,9 +143,16 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
         parameters.forEach(result::put);
         result.put("client", clientId);
         result.put("session", sessionId);
+        result.put("language", language());
         result.put("token", token);
         result.put("personifiedDisplay", id() + "_");
         return result;
+    }
+
+    private String language() {
+        UIClient client = session().client();
+        if (client != null) return client.language();
+        return session().discoverLanguage();
     }
 
     private class PendingRequest {

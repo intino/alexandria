@@ -98,11 +98,12 @@ class ImageEditable extends AbstractImageEditable {
 		const borderDisplay = this.state.readonly ? "flex" : "none";
 		const removeButtonDisplay = this.state.readonly || this.state.value == null ? "none" : "flex";
 		const showImageGallery = this._showImageGallery();
+		const url = this.state.value != null ? this.state.value + (this.state.value.indexOf("?") == -1 ? "?" : "&") + Math.random() : null;
 
 		return (
 			<div style={{...this.style(),position:'relative'}}>
 			    { ComponentBehavior.labelBlock(this.props, "body1", { color: theme.palette.grey.A700, marginRight: '5px', fontSize: "9pt", color: "#777777" }) }
-                {this.state.value && <img className={classes.image} title={this.props.label} src={this.state.value} />}
+                {this.state.value && <img className={classes.image} title={this.props.label} src={url} />}
                 <label htmlFor={inputId} className={classes.overlay} style={{display:labelDisplay}}>
                     <AddAPhoto className={classes.icon} />
                 </label>

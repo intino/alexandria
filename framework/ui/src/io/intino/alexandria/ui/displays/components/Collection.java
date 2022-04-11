@@ -108,9 +108,18 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         return behavior.condition();
     }
 
+    public void condition(String condition) {
+        if (behavior == null) return;
+        behavior.condition(condition);
+    }
+
     public java.util.List<Filter> filters() {
         if (behavior == null) return Collections.emptyList();
         return behavior.filters();
+    }
+
+    public void filters(java.util.List<Filter> filters) {
+        behavior.filters(filters);
     }
 
     public void filter(String grouping, List<String> groups) {

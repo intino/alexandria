@@ -23,6 +23,7 @@ class SelectorRadioBox extends AbstractSelectorRadioBox {
 	};
 
 	render() {
+	    if (!this.state.visible) return (<React.Fragment/>);
 		const children = this.children();
 		const label = this.props.label;
 		const selected = this.state.selected != null ? this.state.selected : this.props.selected;
@@ -30,7 +31,7 @@ class SelectorRadioBox extends AbstractSelectorRadioBox {
 		this._index = -1;
 		return (
             <FormControl component="fieldset">
-                {label != null && label !== "" ? <FormLabel component="legend"><Typography variant={this.variant("subtitle1")} style={{color:this.props.color}}>{label}</Typography></FormLabel> : undefined }
+                {label != null && label !== "" ? <FormLabel component="legend"><Typography variant={this.variant("subtitle1")} style={{color:this.props.color}}>{this.translate(label)}</Typography></FormLabel> : undefined }
                 <RadioGroup className={layout} value={selected} onChange={this.handleSelect.bind(this)}>
                     {React.Children.map(children, (child, i) => { return this.renderItem(child); })}
                 </RadioGroup>
