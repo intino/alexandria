@@ -14,6 +14,7 @@ Component baseNumber
 Component number as ExtensionOf(baseNumber)
 Component numberEditable as ExtensionOf(baseNumber)
 	Notification refreshReadonly as Bool
+	Notification refreshRange as Object(NumberEditableRange)
 	Request notifyChange as Real
 
 Component baseDate

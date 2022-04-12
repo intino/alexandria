@@ -18,7 +18,7 @@ Artifact("io.intino.alexandria", "4.17.5") ui-framework
 		Compile("com.google.code.gson", "gson", "2.8.6")
 		Compile("com.sparkjava", "spark-core", "2.9.3")
 
-		Web("io.intino.alexandria", "ui-framework-elements", "4.17.4")
+		Web("io.intino.alexandria", "ui-framework-elements", "4.17.5")
 
 		Test("junit", "junit", "4.13")
 
