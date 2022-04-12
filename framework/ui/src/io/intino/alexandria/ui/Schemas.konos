@@ -139,6 +139,9 @@ Schema Mark
 Schema Range
 	Attribute min as LongInteger
 	Attribute max as LongInteger
+Schema NumberEditableRange
+	Attribute min as Real
+	Attribute max as Real
 Schema ToolbarState
 	Attribute canPrevious as Bool
 	Attribute canNext as Bool

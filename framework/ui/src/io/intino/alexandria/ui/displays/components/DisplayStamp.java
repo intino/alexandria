@@ -21,6 +21,12 @@ public class DisplayStamp<DN extends DisplayStampNotifier, B extends Box> extend
         refresh();
     }
 
+    @Override
+    public void clear() {
+        super.clear();
+        display = null;
+    }
+
     @SuppressWarnings("unchecked")
     public <D extends Display<?, ?>> D get() {
         return (D) this.display;
