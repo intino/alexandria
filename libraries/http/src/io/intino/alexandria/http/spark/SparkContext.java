@@ -38,6 +38,10 @@ public class SparkContext extends Context {
 		manager.response.raw().setHeader(name, value);
 	}
 
+	public SparkManager manager() {
+		return manager;
+	}
+
 	private void initialize() {
 		put("domain", domain());
 		put("baseUrl", baseUrl());
