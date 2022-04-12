@@ -11,8 +11,21 @@ import Delayer from '../../util/Delayer';
 
 const styles = theme => ({
 	default : {
-		width: "100%"
-	}
+		width: "100%",
+	},
+	input: {
+        '&[type=number]': {
+            '-moz-appearance': 'textfield',
+        },
+        '&::-webkit-outer-spin-button': {
+            '-webkit-appearance': 'none',
+            margin: 0,
+        },
+        '&::-webkit-inner-spin-button': {
+            '-webkit-appearance': 'none',
+            margin: 0,
+        },
+    },
 });
 
 class NumberEditable extends AbstractNumberEditable {
@@ -50,7 +63,8 @@ class NumberEditable extends AbstractNumberEditable {
 					   inputProps={{
 						   min: this.state.min !== -1 ? this.state.min : undefined,
 						   max: this.state.max !== -1 ? this.state.max : undefined,
-						   step: this.props.step !== -1 ? this.props.step : undefined
+						   step: this.props.step !== -1 ? this.props.step : undefined,
+						   className: classes.input
 					   }}
 					   InputProps={{
 					       readOnly: this.state.readonly,

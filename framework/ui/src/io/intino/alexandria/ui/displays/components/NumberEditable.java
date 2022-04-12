@@ -98,9 +98,10 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
 
 	public void notifyChange(Double value) {
     	if (!checkRange(value)) {
-    		notifier.refresh(this.value);
+    		notifier.refreshError(String.format(this.translate("Value out of range: %.1f-%.1f"), min != -1 ? min : Integer.MIN_VALUE, max != -1 ? max : Integer.MAX_VALUE));
     		return;
 		}
+		notifier.refreshError(null);
 		if (beforeChangeListener != null) {
 			ChangeEvent event = new ChangeEvent(this, value);
 			beforeChangeListener.accept(event);
