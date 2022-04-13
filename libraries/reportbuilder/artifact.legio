@@ -1,11 +1,11 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.6") report-builder
+Artifact("io.intino.alexandria", "1.0.7") report-builder
 	Imports
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Compile("io.intino.itrules", "engine", "1.0.0")
-		Compile("org.apache.poi", "poi", "3.17")
-		Compile("org.apache.poi", "poi-ooxml", "3.17")
+		Compile("org.apache.poi", "poi", "4.0.1")
+		Compile("org.apache.poi", "poi-ooxml", "4.0.1")
 
 		Test("junit", "junit", "LATEST")
 
