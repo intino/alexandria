@@ -140,6 +140,7 @@ public abstract class Resource implements io.intino.alexandria.http.Resource {
 		browser.language(manager.languageFromUrl());
 		browser.metadataLanguage(manager.languageFromHeader());
 		browser.metadataIpAddress(manager.ipAddressFromHeader());
+		if (manager.languageFromUrl() != null) session.language(manager.languageFromUrl());
 	}
 
 	Optional<Authentication> authentication() {
