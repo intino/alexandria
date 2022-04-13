@@ -11,8 +11,21 @@ import Delayer from '../../util/Delayer';
 
 const styles = theme => ({
 	default : {
-		width: "100%"
-	}
+		width: "100%",
+	},
+	input: {
+        '&[type=number]': {
+            '-moz-appearance': 'textfield',
+        },
+        '&::-webkit-outer-spin-button': {
+            '-webkit-appearance': 'none',
+            margin: 0,
+        },
+        '&::-webkit-inner-spin-button': {
+            '-webkit-appearance': 'none',
+            margin: 0,
+        },
+    },
 });
 
 class NumberEditable extends AbstractNumberEditable {
@@ -24,6 +37,8 @@ class NumberEditable extends AbstractNumberEditable {
         this.state = {
             ...this.state,
             readonly: this.props.readonly,
+            min : this.props.min != -1 ? this.props.min : undefined,
+            max : this.props.max != -1 ? this.props.min : undefined,
         };
 	};
 
@@ -39,16 +54,17 @@ class NumberEditable extends AbstractNumberEditable {
 		const { classes } = this.props;
 		const label = this.props.label !== "" ? this.translate(this.props.label) : undefined;
 		const error = this.state.error;
-		const value = this.state.value != null ? this.state.value : (this.props.min !== -1 ? this.props.min : 0);
+		const value = this.state.value != null ? this.state.value : (this.state.min !== -1 ? this.state.min : 0);
 
 		return (
 			<TextField format={this.variant("body1")} style={this.style()} className={classes.default} label={label} type="number"
 					   value={value} onChange={this.handleChange.bind(this)} /*disabled={this.state.readonly}*/ autoFocus={this.props.focused}
 					   error={error != null} helperText={this.state.readonly ? undefined : (error != null ? error : this.translate(this.props.helperText))} autoComplete="off"
 					   inputProps={{
-						   min: this.props.min !== -1 ? this.props.min : undefined,
-						   max: this.props.max !== -1 ? this.props.max : undefined,
-						   step: this.props.step !== -1 ? this.props.step : undefined
+						   min: this.state.min !== -1 ? this.state.min : undefined,
+						   max: this.state.max !== -1 ? this.state.max : undefined,
+						   step: this.props.step !== -1 ? this.props.step : undefined,
+						   className: classes.input
 					   }}
 					   InputProps={{
 					       readOnly: this.state.readonly,
@@ -64,6 +80,10 @@ class NumberEditable extends AbstractNumberEditable {
 
 	refreshReadonly = (readonly) => {
 		this.setState({ readonly });
+	};
+
+	refreshRange = (range) => {
+		this.setState({ min: range.min, max: range.max });
 	};
 }
 

@@ -1,10 +1,14 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.schemas.NumberEditableRange;
+import io.intino.alexandria.schemas.Range;
 import io.intino.alexandria.ui.displays.components.editable.Editable;
 import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
 import io.intino.alexandria.ui.displays.notifiers.NumberEditableNotifier;
+
+import java.time.Instant;
 
 public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> extends AbstractNumberEditable<DN, B> implements Editable<DN, B> {
 	private Double value;
@@ -27,12 +31,31 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
 		return min;
 	}
 
+	public NumberEditable<DN, B> min(Double min) {
+		_min(min);
+		notifier.refreshRange(range());
+		return this;
+	}
+
 	public Double max() {
 		return max;
 	}
 
+	public NumberEditable<DN, B> max(Double max) {
+		_max(max);
+		notifier.refreshRange(range());
+		return this;
+	}
+
 	public Double step() {
 		return step;
+	}
+
+	public NumberEditable<DN, B> range(Double min, Double max) {
+		_min(min);
+		_max(max);
+		notifier.refreshRange(range());
+		return this;
 	}
 
 	@Override
@@ -75,9 +98,10 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
 
 	public void notifyChange(Double value) {
     	if (!checkRange(value)) {
-    		notifier.refresh(this.value);
+    		notifier.refreshError(String.format(this.translate("Value out of range: %.1f-%.1f"), min != -1 ? min : Integer.MIN_VALUE, max != -1 ? max : Integer.MAX_VALUE));
     		return;
 		}
+		notifier.refreshError(null);
 		if (beforeChangeListener != null) {
 			ChangeEvent event = new ChangeEvent(this, value);
 			beforeChangeListener.accept(event);
@@ -135,6 +159,13 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
 	protected NumberEditable<DN, B> _readonly(boolean readonly) {
 		this.readonly = readonly;
 		return this;
+	}
+
+	private NumberEditableRange range() {
+		NumberEditableRange range = new NumberEditableRange();
+		if (min != null) range.min(min);
+		if (max != null) range.max(max);
+		return range;
 	}
 
 }
