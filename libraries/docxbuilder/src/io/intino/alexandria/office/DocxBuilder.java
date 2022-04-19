@@ -285,7 +285,7 @@ public class DocxBuilder {
 		}
 
 		private Node getXfrmExtNodeOf(Node drawingNode) {
-			Node wpInline = findChild(drawingNode, "wp:inline");
+			Node wpInline = drawingNode.getFirstChild();
 			Node aGraphic = findChild(wpInline, "a:graphic");
 			Node aGraphicData = findChild(aGraphic, "a:graphicData");
 			Node pic = findChild(aGraphicData, "pic:pic");
@@ -295,15 +295,15 @@ public class DocxBuilder {
 		}
 
 		private Node getExtentNodeOf(Node drawingNode) {
-			Node wpInline = findChild(drawingNode, "wp:inline");
-			return findChild(wpInline, "wp:extent");
+			Node container = drawingNode.getFirstChild();
+			return findChild(container, "wp:extent");
 		}
 
 		private String getDescrOfDrawingNode(Node drawingNode) {
 			try {
-				Node wpInline = findChild(drawingNode, "wp:inline");
-				if(wpInline == null) return null;
-				Node wpDocPr = findChild(wpInline, "wp:docPr");
+				// wp:inline || wp:anchor
+				Node container = drawingNode.getFirstChild();
+				Node wpDocPr = findChild(container, "wp:docPr");
 				if(wpDocPr == null) return null;
 				return wpDocPr.getAttributes().getNamedItem("descr").getNodeValue();
 			} catch (Exception e) {
