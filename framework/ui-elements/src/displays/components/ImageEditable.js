@@ -5,8 +5,7 @@ import ImageEditableNotifier from "../../../gen/displays/notifiers/ImageEditable
 import ImageEditableRequester from "../../../gen/displays/requesters/ImageEditableRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
-import { IconButton } from '@material-ui/core';
-import { AddAPhoto, Clear } from '@material-ui/icons';
+import { AddAPhoto } from '@material-ui/icons';
 import ComponentBehavior from "./behaviors/ComponentBehavior";
 import Theme from "app-elements/gen/Theme";
 import ImageGallery from 'react-image-gallery';
@@ -25,7 +24,7 @@ const styles = theme => ({
 	},
 	overlay: {
 		position: "absolute",
-		background: "rgba(0, 0, 0, 0.4)",
+		background: "rgba(0, 0, 0, 0.1)",
 		border: "1px solid #efefef",
 		width: "100%",
 		height: "calc(100% - 20px)",
@@ -42,19 +41,34 @@ const styles = theme => ({
 		"align-items": "center",
 	},
 	icon: {
-		color: "#e8e8e8"
+		color: "#005ba4"
 	},
 	download : {
         background: 'white',
         padding: '2px 7px',
-        borderRadius: '0 3px 3px 0',
 	    position: 'absolute',
         bottom: '0',
         left: '0',
         cursor: 'pointer',
         fontSize: '8pt',
-        marginLeft: '1px',
-        marginBottom: '3pt',
+        width: '70px',
+        marginLeft: '4px',
+        marginBottom: '24px',
+        textAlign: 'center',
+        color: theme.palette.primary.main,
+	},
+	remove : {
+        background: 'white',
+        padding: '2px 7px',
+	    position: 'absolute',
+        bottom: '0',
+        left: '0',
+        cursor: 'pointer',
+        fontSize: '8pt',
+        width: '70px',
+        marginLeft: '80px',
+        marginBottom: '24px',
+        textAlign: 'center',
         color: theme.palette.primary.main,
 	},
 });
@@ -116,10 +130,7 @@ class ImageEditable extends AbstractImageEditable {
                            disabled={this.state.readonly} value="" />
                     </React.Fragment>
                 }
-                <IconButton color="primary" aria-label="upload picture" size="small" component="span" onClick={this.handleRemove.bind(this)}
-                            style={{position:'absolute',right:"0",zIndex:"0",background:'white',marginTop:'-12px',marginRight:'-12px',border:'1px solid #efefef',display:removeButtonDisplay}}>
-                    <Clear />
-                </IconButton>
+                {this.state.value && <a className={classes.remove} onClick={this.handleRemove.bind(this)}>{this.translate("Remove")}</a>}
                 {this.state.value && <a className={classes.download} onClick={this.handleDownload.bind(this)}>{this.translate("Download")}</a>}
 			</div>
 		);
