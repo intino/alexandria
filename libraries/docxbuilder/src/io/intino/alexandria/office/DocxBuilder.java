@@ -229,6 +229,7 @@ public class DocxBuilder {
 			for(int i = 0; i < length; i++) {
 				Node drawingNode = drawingNodes.item(i);
 				String desc = getDescrOfDrawingNode(drawingNode);
+				if(desc == null) continue;
 				ImageView view = content.image(desc);
 				if(view == null) continue;
 				if(doesNotNeedToModifyImageExtent(view)) continue;
@@ -284,7 +285,7 @@ public class DocxBuilder {
 		}
 
 		private Node getXfrmExtNodeOf(Node drawingNode) {
-			Node wpInline = findChild(drawingNode, "wp:inline");
+			Node wpInline = drawingNode.getFirstChild();
 			Node aGraphic = findChild(wpInline, "a:graphic");
 			Node aGraphicData = findChild(aGraphic, "a:graphicData");
 			Node pic = findChild(aGraphicData, "pic:pic");
@@ -294,14 +295,20 @@ public class DocxBuilder {
 		}
 
 		private Node getExtentNodeOf(Node drawingNode) {
-			Node wpInline = findChild(drawingNode, "wp:inline");
-			return findChild(wpInline, "wp:extent");
+			Node container = drawingNode.getFirstChild();
+			return findChild(container, "wp:extent");
 		}
 
 		private String getDescrOfDrawingNode(Node drawingNode) {
-			Node wpInline = findChild(drawingNode, "wp:inline");
-			Node wpDocPr = findChild(wpInline, "wp:docPr");
-			return wpDocPr.getAttributes().getNamedItem("descr").getNodeValue();
+			try {
+				// wp:inline || wp:anchor
+				Node container = drawingNode.getFirstChild();
+				Node wpDocPr = findChild(container, "wp:docPr");
+				if(wpDocPr == null) return null;
+				return wpDocPr.getAttributes().getNamedItem("descr").getNodeValue();
+			} catch (Exception e) {
+				return null;
+			}
 		}
 
 		private Node findChild(Node parent, String name) {

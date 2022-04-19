@@ -16,18 +16,45 @@ public class Example3DocxBuilder {
 
     public static void main(String[] args) throws IOException, ImageReadException {
 
-        File imageFile = new File("C:/Users/naits/Downloads/mexico_c75c744c165d.jpg");
-
-        ImageView imageView = new ImageView(new Image(imageFile));
-        imageView.widthWrapping(ClampToPage);
-        imageView.heightWrapping(ClampToTemplate);
-        imageView.keepAspectRatio(true);
+        ImageView img1 = createImageView(new File("temp/image1.png"));
+        ImageView img2 = createImageView(new File("temp/image2.jpg"));
+        ImageView img3 = createImageView(new File("temp/image3.jpg"));
+        ImageView img4 = createImageView(new File("temp/image4.jpg"));
 
         new File("temp").mkdirs();
-        DocxBuilder db = DocxBuilder.create(new File("temp/template.docx"));
-        db.replace("Image_A", imageView);
-        db.replace("Image_B", new ImageView(new Image(new File("temp/image2.jpg"))).widthWrapping(ClampToPage));
+        DocxBuilder db = DocxBuilder.create(new File("temp\\PMBC.docx"));
+
+        db.replace("00f44bf7194a", img1);
+        db.replace("51701946eba6", img2);
+        db.replace("db4490dc705a", img3);
+        db.replace("0d960fff6084", img4);
+        db.replace("4a92e2403cb3", img2);
+        db.replace("1e98781d6845", img1);
+        db.replace("d9187186e239", img4);
+        db.replace("74111d555837", img2);
+        db.replace("043470d5ce8e", img3);
+        db.replace("60dc96b1a50d", img1);
+
+        db.replace("6ff2596a6db22", img1);
+
+        db.replace("edfc5e774433", img1);
+        db.replace("c1cbd3688fc6", img4);
+
         db.save(new File("temp/result.docx"));
+    }
+
+    private static ImageView createImageView(File file) throws IOException {
+        return createImageView(file, ClampToPage, ClampToTemplate, true);
+    }
+
+    private static ImageView createImageView(File file,
+                                             ImageView.WrapOption widthWrap, ImageView.WrapOption heightWrap,
+                                             boolean keepAspectRatio) throws IOException {
+        ImageView imageView = new ImageView(new Image(file));
+        imageView.widthWrapping(widthWrap);
+        imageView.heightWrapping(heightWrap);
+        imageView.keepAspectRatio(keepAspectRatio);
+        return imageView;
     }
 
     // English metric units
