@@ -229,6 +229,7 @@ public class DocxBuilder {
 			for(int i = 0; i < length; i++) {
 				Node drawingNode = drawingNodes.item(i);
 				String desc = getDescrOfDrawingNode(drawingNode);
+				if(desc == null) continue;
 				ImageView view = content.image(desc);
 				if(view == null) continue;
 				if(doesNotNeedToModifyImageExtent(view)) continue;
@@ -299,9 +300,15 @@ public class DocxBuilder {
 		}
 
 		private String getDescrOfDrawingNode(Node drawingNode) {
-			Node wpInline = findChild(drawingNode, "wp:inline");
-			Node wpDocPr = findChild(wpInline, "wp:docPr");
-			return wpDocPr.getAttributes().getNamedItem("descr").getNodeValue();
+			try {
+				Node wpInline = findChild(drawingNode, "wp:inline");
+				if(wpInline == null) return null;
+				Node wpDocPr = findChild(wpInline, "wp:docPr");
+				if(wpDocPr == null) return null;
+				return wpDocPr.getAttributes().getNamedItem("descr").getNodeValue();
+			} catch (Exception e) {
+				return null;
+			}
 		}
 
 		private Node findChild(Node parent, String name) {
