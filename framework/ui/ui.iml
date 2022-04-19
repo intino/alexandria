@@ -59,7 +59,6 @@
     <orderEntry type="module" module-name="rest-accessor" />
     <orderEntry type="library" name="Intino: org.apache.commons:commons-lang3:3.10" level="project" />
     <orderEntry type="module" module-name="ui-elements" />
-    <orderEntry type="library" name="Intino: org.antlr:antlr4-runtime:4.9.1" level="project" />
     <orderEntry type="library" name="Intino: commons-codec:commons-codec:1.10" level="project" />
     <orderEntry type="library" name="Intino: org.bouncycastle:bcmail-jdk15:1.45" level="project" />
     <orderEntry type="library" name="Intino: org.bouncycastle:bcprov-jdk15:1.45" level="project" />

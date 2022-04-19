@@ -58,3 +58,14 @@ Template(layout=Vertical, spacing=DP8) dateExamplesMold
 							=========
 							Date date as Editable(allowEmpty\=true)
 							=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Editable facet and embedded")
+			Block(spacing=DP8, format=filled)
+				Date(format=body1 widgetDemo) date6 as Editable(embedded=true)
+					pattern = "DD/MM/YYYY HH:mm"
+				Block > Text date6Code as Code(language=Html)
+						value
+							=========
+							Date date as Editable(embedded\=true)
+							=========
