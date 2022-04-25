@@ -12,20 +12,20 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static io.intino.konos.builder.codegeneration.bpm.parser.State.Type.Initial;
+import static io.intino.konos.builder.codegeneration.bpm.parser.State.Type.Terminal;
+
 public class BpmnParser {
 
-	private InputStream source;
-	private Document document;
-	private Map<String, String> annotations;
-	private List<Node> tasks;
-
-	public BpmnParser(String xmlText) {
-		this(new ByteArrayInputStream(xmlText.getBytes()));
-	}
+	private final InputStream source;
+	private final Document document;
+	private final Map<String, String> annotations;
+	private final List<Node> tasks;
 
 	public BpmnParser(InputStream xmlStream) {
 		source = xmlStream;
@@ -63,7 +63,7 @@ public class BpmnParser {
 		streamOf(document.getElementsByTagName("bpmn:endEvent")).forEach(n -> {
 			Node incoming = child(n, "incoming");
 			if (incoming != null && incoming.getTextContent().equals(outgoing.getTextContent()))
-				state.type(State.Type.Terminal);
+				state.addType(Terminal);
 		});
 	}
 
@@ -71,7 +71,7 @@ public class BpmnParser {
 		Node outgoing = child(document.getElementsByTagName("bpmn:startEvent").item(0), "outgoing");
 		Node incoming = child(task, "incoming");
 		if (outgoing != null && incoming != null && outgoing.getTextContent().equals(incoming.getTextContent()))
-			state.type(State.Type.Initial);
+			state.addType(Initial);
 	}
 
 	private List<String> findDestinationStates(String outgoingId, boolean isDefault) {
@@ -123,17 +123,13 @@ public class BpmnParser {
 		State state = new State(id(item), name(item));
 		if (!item.getNodeName().equals("bpmn:task"))
 			state.taskType(State.TaskType.valueOf(firstUpperCase(cleanTaskType(item))));
-
 		return state;
 	}
 
 	private void addComments(State state) {
-		if (annotations.containsKey(state.id())) {
-			state.comment(annotations.get(state.id()));
-		}
-		if (state.type().equals(State.Type.Initial) && state.comment() == null) {
+		if (annotations.containsKey(state.id())) state.comment(annotations.get(state.id()));
+		if (state.isInitial() && state.comment() == null)
 			state.comment(annotations.get(id(document.getElementsByTagName("bpmn:startEvent").item(0))));
-		}
 	}
 
 	private Map<String, String> annotations() {
@@ -143,7 +139,7 @@ public class BpmnParser {
 
 	private String findState(String textAnnotationId) {
 		return streamOf(document.getElementsByTagName("bpmn:association")).
-				filter(node -> attribute(node, "targetRef").equals(textAnnotationId)).findFirst().
+				filter(node -> Objects.equals(attribute(node, "targetRef"), textAnnotationId)).findFirst().
 				map(n -> attribute(n, "sourceRef")).get();
 	}
 
