@@ -116,7 +116,7 @@ public class BpmRenderer extends Renderer {
 			builder.add("state", frameOf(state, states));
 			state.links().sort((o1, o2) -> Boolean.compare(o1.isDefault(), o2.isDefault()));
 			state.links().forEach(link -> builder.add("link", frameOf(state, link)));
-			if (state.type() == Initial && state.comment() != null)
+			if (state.isInitial() && state.comment() != null)
 				Arrays.stream(state.comment().split("\n|\t| ")).
 						filter(s -> !s.isEmpty() && !s.isBlank()).map(String::trim).
 						filter(l -> l.startsWith("*")).
@@ -145,8 +145,8 @@ public class BpmRenderer extends Renderer {
 
 	private List<Type> typesOf(State state) {
 		List<Type> types = new ArrayList<>();
-		if (state.type() == Initial) types.add(Initial);
-		if (state.links().isEmpty() || state.type() == Terminal) types.add(Terminal);
+		if (state.isInitial()) types.add(Initial);
+		if (state.links().isEmpty() || state.isTerminal()) types.add(Terminal);
 		else if (!types.contains(Initial)) types.add(Type.Intermediate);
 		return types;
 	}

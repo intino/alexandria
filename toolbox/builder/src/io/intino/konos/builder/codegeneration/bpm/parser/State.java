@@ -9,16 +9,16 @@ public class State {
 
 	private final String id;
 	private final String label;
-	private Type type;
 	private TaskType taskType;
-	private List<Link> links;
+	private final List<Type> types;
+	private final List<Link> links;
 	private String comment;
 
 	public State(String id, String label) {
 		this.id = id;
 		this.label = label;
 		this.links = new ArrayList<>();
-		this.type = Type.Intermediate;
+		this.types = new ArrayList<>();
 		this.taskType = TaskType.Default;
 	}
 
@@ -26,12 +26,20 @@ public class State {
 		return this.id;
 	}
 
-	public Type type() {
-		return type;
+	public void addType(Type type) {
+		this.types.add(type);
 	}
 
-	public void type(Type type) {
-		this.type = type;
+	public boolean isInitial() {
+		return types.contains(Type.Initial);
+	}
+
+	public boolean isTerminal() {
+		return types.contains(Type.Terminal);
+	}
+
+	public List<Type> types() {
+		return types;
 	}
 
 	public TaskType taskType() {
@@ -72,7 +80,7 @@ public class State {
 
 	@Override
 	public String toString() {
-		return label + ":" + type;
+		return label + ":" + types;
 	}
 
 	public String label() {
@@ -89,6 +97,7 @@ public class State {
 
 	public enum Type {
 		Initial, Intermediate, Terminal
+
 	}
 
 	public enum TaskType {
