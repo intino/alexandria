@@ -668,6 +668,10 @@ def type(properties & actionable) trigger(common)
 	[$actionableMode]
 end
 
+def type(properties & board) trigger(common)
+    [_icon("$icon");]
+end
+
 def type(properties & dashboard) trigger(common)
 	[$parameter...[$NL]]
 end
@@ -809,6 +813,22 @@ def type(properties & chart) trigger(specific)
 	[_output("$output");]
 end
 
+def type(properties & board & fromFile) trigger(specific)
+    [$source+fileMethod]
+end
+
+def type(properties & board & fromResource) trigger(specific)
+    [$source+resourceMethod]
+end
+
+def type(properties & board & inline) trigger(specific)
+    $application...[$NL]
+end
+
+def type(boardApplication)
+    [_add("$name", "$url");]
+end
+
 def type(properties & dashboard & shiny) trigger(specific)
     [$serverScript+resourceMethod]
     [$uiScript+resourceMethod]
@@ -939,8 +959,12 @@ def type(parameterMethod)
 	_add("$name", "$value");
 end
 
+def trigger(fileMethod)
+	_$name(new java.io.File("$value")[, "$extraParam"]);
+end
+
 def trigger(resourceMethod)
-	_$name($owner.class.getResource("$value"));
+	_$name($owner.class.getResource("$value")[, "$extraParam"]);
 end
 
 def trigger(ordinalMethod)

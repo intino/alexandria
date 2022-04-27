@@ -211,3 +211,11 @@ Schema LayerToolbar
 Schema LayerToolbarButton
 	Attribute visible as Bool
 	Attribute enabled as Bool
+
+Schema BoardInfo
+	Attribute icon as Text
+	Attribute applications as Object(BoardApplication) List
+
+Schema BoardApplication
+	Attribute name as Text
+	Attribute url as Text

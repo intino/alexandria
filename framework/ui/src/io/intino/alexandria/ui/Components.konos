@@ -63,6 +63,9 @@ Component baseIcon
 Component icon as ExtensionOf(baseIcon)
 Component materialIcon as ExtensionOf(baseIcon)
 
+Component board
+	Notification refresh as Object(BoardInfo)
+
 Component optionList
 
 Component baseSelector

@@ -175,6 +175,23 @@ Concept:{0..1} VisualizationComponents
 			var boolean titled = false
 			var word:{Dark Light} theme = Light
 
+	Concept Board extends Component
+		var string materialIcon = "Apps"
+
+		Concept:{1..1} Source
+			Aspect FromResource
+				var string path = empty
+				var string separator = "\\t"
+
+			Aspect FromFile
+				var string file = empty
+				var string separator = "\\t"
+
+			Aspect Inline
+				Concept:{1..*} Application
+					var string name
+					var string url
+
 	Concept Spinner extends Component
 		var word:{Bar Circle Hash Ring Rise} mode = Rise
 		var integer:{px} size = 0px

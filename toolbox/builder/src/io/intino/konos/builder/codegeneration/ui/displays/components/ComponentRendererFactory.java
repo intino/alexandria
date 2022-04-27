@@ -34,6 +34,7 @@ public class ComponentRendererFactory {
 		if (component.i$(Block.class)) return (T) new BlockRenderer(context, component.a$(Block.class), provider, target);
 		if (component.i$(VisualizationComponents.Chart.class)) return (T) new ChartRenderer(context, component.a$(VisualizationComponents.Chart.class), provider, target);
 		if (component.i$(VisualizationComponents.Dashboard.class)) return (T) new DashboardRenderer(context, component.a$(VisualizationComponents.Dashboard.class), provider, target);
+		if (component.i$(VisualizationComponents.Board.class)) return (T) new BoardRenderer(context, component.a$(VisualizationComponents.Board.class), provider, target);
 		if (component.i$(OtherComponents.AbstractDialog.class)) return (T) new DialogRenderer(context, component.a$(OtherComponents.AbstractDialog.class), provider, target);
 		if (component.i$(OtherComponents.BaseIcon.class)) return (T) new IconRenderer(context, component.a$(OtherComponents.BaseIcon.class), provider, target);
 		if (component.i$(OtherComponents.User.class)) return (T) new UserRenderer(context, component.a$(OtherComponents.User.class), provider, target);

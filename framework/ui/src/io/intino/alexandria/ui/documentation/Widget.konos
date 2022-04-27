@@ -1,5 +1,6 @@
 dsl Konos
 
+use Board
 use Layer
 use HtmlViewer
 use Multiple
@@ -65,6 +66,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block searchBoxExamples as Conditional > TemplateStamp(template=searchBoxExamplesMold)
 			Block sliderExamples as Conditional > TemplateStamp(template=sliderExamplesMold)
 			Block dashboardExamples as Conditional > TemplateStamp(template=dashboardExamplesMold)
+			Block boardExamples as Conditional > TemplateStamp(template=boardExamplesMold)
 			Block dialogExamples as Conditional > TemplateStamp(template=dialogExamplesMold)
 			Block layerExamples as Conditional > TemplateStamp(template=layerExamplesMold)
 			Block dividerExamples as Conditional > TemplateStamp(template=dividerExamplesMold)

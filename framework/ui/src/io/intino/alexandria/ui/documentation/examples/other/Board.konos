@@ -1,0 +1,49 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) boardExamplesMold
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="Board with source from file")
+			Block(format=filledNoAirExtraLarge)
+				Block as Absolute(height=600px)
+					Board board1
+						Source as FromFile(file=empty, separator="\\t")
+				Block > Text board1Code as Code(language=Html)
+						value
+							=========
+							Board board<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;Source as FromFile(file\="path/to/file.tsv", separator\="\\t")
+							=========
+
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="Board with source from resource")
+			Block(format=filledNoAirExtraLarge)
+				Block as Absolute(height=600px)
+					Board board2
+						Source as FromResource(path="data/boards/board2.tsv", separator="\\t")
+				Block > Text board2Code as Code(language=Html)
+						value
+							=========
+							Board board<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;Source as FromResource(path\="data/boards/board2.tsv", separator\="\\t")
+							=========
+
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="Board with source inline")
+			Block(format=filledNoAirExtraLarge)
+				Block as Absolute(height=600px)
+					Board board3
+						Source as Inline
+							Application("app1", "http://app1.html")
+							Application("app2", "http://app2.html")
+				Block > Text board3Code as Code(language=Html)
+						value
+							=========
+							Board board<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;Source as Inline<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Application("app1", "http://app1.html")<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Application("app2", "http://app2.html")<br/>
+							=========
