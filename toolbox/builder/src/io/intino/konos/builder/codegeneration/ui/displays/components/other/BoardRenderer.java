@@ -57,6 +57,14 @@ public class BoardRenderer extends ComponentRenderer<Board> {
 		FrameBuilder result = new FrameBuilder("boardApplication");
 		result.add("name", application.name());
 		result.add("url", application.url());
+		application.translationList().forEach(t -> result.add("translation", translationFrame(application, t)));
+		return result;
+	}
+
+	private Object translationFrame(Board.Source.Inline.Application application, Board.Source.Inline.Application.Translation translation) {
+		FrameBuilder result = new FrameBuilder("boardApplicationTranslation");
+		result.add("language", translation.language());
+		result.add("name", translation.name());
 		return result;
 	}
 
