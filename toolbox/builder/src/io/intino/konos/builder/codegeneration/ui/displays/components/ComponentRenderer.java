@@ -325,6 +325,12 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		builder.add("properties", properties());
 	}
 
+	protected FrameBuilder fileMethodFrame(String method, String value) {
+		FrameBuilder result = new FrameBuilder("fileMethod").add("name", method).add("value", value);
+		addOwner(result);
+		return result;
+	}
+
 	protected FrameBuilder resourceMethodFrame(String method, String value) {
 		FrameBuilder result = new FrameBuilder("resourceMethod").add("name", method).add("value", fixResourceValue(value));
 		addOwner(result);
