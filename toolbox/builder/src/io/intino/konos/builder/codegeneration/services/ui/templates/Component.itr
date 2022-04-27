@@ -826,7 +826,11 @@ def type(properties & board & inline) trigger(specific)
 end
 
 def type(boardApplication)
-    [_add("$name", "$url");]
+    _add("$name", "$url")[$translation...[]];
+end
+
+def type(boardApplicationTranslation)
+    .translation("$language", "$name")
 end
 
 def type(properties & dashboard & shiny) trigger(specific)

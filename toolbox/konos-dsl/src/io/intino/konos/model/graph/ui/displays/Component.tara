@@ -191,6 +191,9 @@ Concept:{0..1} VisualizationComponents
 				Concept:{1..*} Application
 					var string name
 					var string url
+					Concept Translation
+						var string language
+						var string name
 
 	Concept Spinner extends Component
 		var word:{Bar Circle Hash Ring Rise} mode = Rise

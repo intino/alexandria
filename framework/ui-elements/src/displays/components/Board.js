@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { withStyles } from '@material-ui/core/styles';
-import { IconButton, Popover, List, ListItem } from '@material-ui/core';
+import { Typography, IconButton, Popover, List, ListItem } from '@material-ui/core';
 import AbstractBoard from "../../../gen/displays/components/AbstractBoard";
 import BoardNotifier from "../../../gen/displays/notifiers/BoardNotifier";
 import BoardRequester from "../../../gen/displays/requesters/BoardRequester";
@@ -31,7 +31,7 @@ class Board extends AbstractBoard {
 		    applications: [],
 		    opened: false,
 		    button: null,
-		}
+		};
 	};
 
     render() {
@@ -39,10 +39,9 @@ class Board extends AbstractBoard {
 		const { classes, theme } = this.props;
 		return (
 			<Suspense fallback={<div style={{width: "24px", ...this.style()}}/>}>
-			    <div>
-                    <IconButton color="primary" style={this.style()}
-                                onClick={this.handleOpen.bind(this)}>
-                        <BoardMui titleAccess={this.translate("Open")} icon={this.state.icon}/>
+			    <div style={this.style()}>
+                    <IconButton color="primary" onClick={this.handleOpen.bind(this)}>
+                        <BoardMui titleAccess={this.translate("Open")} icon={this.state.icon} fontSize="large"/>
                     </IconButton>
                     {this.renderPopover()}
                 </div>
@@ -62,7 +61,7 @@ class Board extends AbstractBoard {
                     vertical: 'top',
                     horizontal: 'right',
                 }}>
-                <div className={classes.container} style={this.style()}>{this.renderApplications()}</div>
+                <div className={classes.container}>{this.renderApplications()}</div>
             </Popover>
         );
     };
@@ -76,14 +75,14 @@ class Board extends AbstractBoard {
 
 	renderApplication = (application) => {
 		return (
-		    <ListItem key={application.name} button onClick={this.handleSelect.bind(this, application)}>
-		        <div>{application.name}</div>
+		    <ListItem key={application.name} button disabled={application.selected} onClick={this.handleSelect.bind(this, application)}>
+		        <Typography variant="body1">{application.name}</Typography>
             </ListItem>
         );
 	};
 
     refresh = (info) => {
-        this.setState({icon: info.icon != null ? info.icon : "Apps", applications: info.applications});
+        this.setState({icon: info.icon != null ? info.icon : "Apps", applications: info.applications });
     };
 
     handleOpen = (e) => {

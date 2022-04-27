@@ -219,3 +219,4 @@ Schema BoardInfo
 Schema BoardApplication
 	Attribute name as Text
 	Attribute url as Text
+	Attribute selected as Bool
