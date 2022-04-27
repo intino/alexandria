@@ -10,6 +10,7 @@ import io.intino.konos.builder.context.CompilationContext.DataHubManifest;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.compiler.shared.PostCompileConfigurationParameterActionMessage;
 import io.intino.konos.model.graph.*;
+import io.intino.magritte.framework.Node;
 
 import java.util.*;
 
@@ -50,7 +51,8 @@ public class AbstractBoxRenderer extends Renderer {
 		if (graph.datalake() != null) return context.sourceFileOf(graph.datalake());
 		if (!graph.schemaList().isEmpty()) return context.sourceFileOf(graph.schemaList().get(0));
 		if (!graph.datamartList().isEmpty()) return context.sourceFileOf(graph.datamartList().get(0));
-		return null;
+		final List<Node> nodes = graph.core$().rootList();
+		return nodes.isEmpty() ? "" : context.sourceFileOf(nodes.get(0));
 	}
 
 	Set<String> customParameters() {
