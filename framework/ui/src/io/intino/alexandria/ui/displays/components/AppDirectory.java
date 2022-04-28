@@ -3,9 +3,9 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.Json;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.logger.Logger;
-import io.intino.alexandria.schemas.BoardApplication;
-import io.intino.alexandria.schemas.BoardInfo;
-import io.intino.alexandria.ui.displays.notifiers.BoardNotifier;
+import io.intino.alexandria.schemas.AppDirectoryApplication;
+import io.intino.alexandria.schemas.AppDirectoryInfo;
+import io.intino.alexandria.ui.displays.notifiers.AppDirectoryNotifier;
 import io.intino.alexandria.ui.utils.IOUtils;
 
 import java.io.IOException;
@@ -17,40 +17,40 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Board<DN extends BoardNotifier, B extends Box> extends AbstractBoard<B> {
+public class AppDirectory<DN extends AppDirectoryNotifier, B extends Box> extends AbstractAppDirectory<B> {
     private String icon;
     private java.util.List<Application> applicationList = new ArrayList<>();
     private String selectedApplication;
 
-    public Board(B box) {
+    public AppDirectory(B box) {
         super(box);
     }
 
-    public Board<DN, B> icon(String icon) {
+    public AppDirectory<DN, B> icon(String icon) {
         _icon(icon);
         refresh();
         return this;
     }
 
-    public Board<DN, B> source(java.io.File file, String separator) {
+    public AppDirectory<DN, B> source(java.io.File file, String separator) {
         _source(file, separator);
         refresh();
         return this;
     }
 
-    public Board<DN, B> source(URL url, String separator) {
+    public AppDirectory<DN, B> source(URL url, String separator) {
         _source(url, separator);
         refresh();
         return this;
     }
 
-    protected Board<DN, B> source(java.util.List<Application> applicationList) {
+    protected AppDirectory<DN, B> source(java.util.List<Application> applicationList) {
         _source(applicationList);
         refresh();
         return this;
     }
 
-    protected Board<DN, B> _source(java.io.File file, String separator) {
+    protected AppDirectory<DN, B> _source(java.io.File file, String separator) {
         try {
             _source(Files.readAllLines(file.toPath(), StandardCharsets.UTF_8), separator);
         } catch (IOException e) {
@@ -59,7 +59,7 @@ public class Board<DN extends BoardNotifier, B extends Box> extends AbstractBoar
         return this;
     }
 
-    protected Board<DN, B> _source(URL url, String separator) {
+    protected AppDirectory<DN, B> _source(URL url, String separator) {
         try {
             _source(IOUtils.readLines(url.openStream(), StandardCharsets.UTF_8), separator);
         } catch (IOException e) {
@@ -68,17 +68,17 @@ public class Board<DN extends BoardNotifier, B extends Box> extends AbstractBoar
         return this;
     }
 
-    public Board<DN, B> _source(List<String> lines, String separator) {
+    public AppDirectory<DN, B> _source(List<String> lines, String separator) {
         _source(applicationsOf(lines, separator));
         return this;
     }
 
-    public Board<DN, B> selected(String application) {
+    public AppDirectory<DN, B> selected(String application) {
         this.selectedApplication = application;
         return this;
     }
 
-    protected Board<DN, B> _source(java.util.List<Application> applicationList) {
+    protected AppDirectory<DN, B> _source(java.util.List<Application> applicationList) {
         this.applicationList = applicationList;
         return this;
     }
@@ -89,7 +89,7 @@ public class Board<DN extends BoardNotifier, B extends Box> extends AbstractBoar
         return application;
     }
 
-    protected Board<DN, B> _icon(String icon) {
+    protected AppDirectory<DN, B> _icon(String icon) {
         this.icon = icon;
         return this;
     }
@@ -103,15 +103,15 @@ public class Board<DN extends BoardNotifier, B extends Box> extends AbstractBoar
     @Override
     public void refresh() {
         super.refresh();
-        notifier.refresh(new BoardInfo().icon(icon).applications(applications()));
+        notifier.refresh(new AppDirectoryInfo().icon(icon).applications(applications()));
     }
 
-    private List<BoardApplication> applications() {
+    private List<AppDirectoryApplication> applications() {
         return applicationList.stream().map(this::schemaOf).collect(Collectors.toList());
     }
 
-    private BoardApplication schemaOf(Application application) {
-        return new BoardApplication().name(application.label()).url(application.url).selected(application.isSelected());
+    private AppDirectoryApplication schemaOf(Application application) {
+        return new AppDirectoryApplication().name(application.label()).url(application.url).selected(application.isSelected());
     }
 
     private List<Application> applicationsOf(List<String> lines, String separator) {
