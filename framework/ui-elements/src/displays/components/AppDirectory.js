@@ -10,7 +10,14 @@ import { withSnackbar } from 'notistack';
 const styles = theme => ({
     container : {
         minWidth: '300px',
-    }
+    },
+    listItem : {
+        opacity: '1 !important',
+    },
+    selected : {
+        fontWeight: 'bold',
+        color: 'black',
+    },
 });
 
 const AppDirectoryMui = React.lazy(() => {
@@ -74,9 +81,11 @@ class AppDirectory extends AbstractAppDirectory {
     };
 
 	renderApplication = (application) => {
+	    const { classes } = this.props;
+	    const className = application.selected ? classes.selected : undefined;
 		return (
-		    <ListItem key={application.name} button disabled={application.selected} onClick={this.handleSelect.bind(this, application)}>
-		        <Typography variant="body1">{application.name}</Typography>
+		    <ListItem className={classes.listItem} key={application.name} button disabled={application.selected} onClick={this.handleSelect.bind(this, application)}>
+		        <Typography className={className} variant="body1">{application.name}</Typography>
             </ListItem>
         );
 	};
