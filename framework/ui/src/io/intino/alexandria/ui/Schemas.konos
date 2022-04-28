@@ -212,11 +212,11 @@ Schema LayerToolbarButton
 	Attribute visible as Bool
 	Attribute enabled as Bool
 
-Schema BoardInfo
+Schema AppDirectoryInfo
 	Attribute icon as Text
-	Attribute applications as Object(BoardApplication) List
+	Attribute applications as Object(AppDirectoryApplication) List
 
-Schema BoardApplication
+Schema AppDirectoryApplication
 	Attribute name as Text
 	Attribute url as Text
 	Attribute selected as Bool

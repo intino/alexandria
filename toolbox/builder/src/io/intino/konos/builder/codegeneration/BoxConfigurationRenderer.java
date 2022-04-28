@@ -6,6 +6,7 @@ import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.magritte.framework.Layer;
 
 import java.util.Set;
 
@@ -30,7 +31,7 @@ public class BoxConfigurationRenderer extends Renderer {
 		FrameBuilder builder = new FrameBuilder("boxconfiguration");
 		final String boxName = fillFrame(builder);
 		Commons.writeFrame(gen(), snakeCaseToCamelCase(boxName) + "Configuration", template().render(builder.toFrame()));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(null), javaFile(gen(), snakeCaseToCamelCase(boxName) + "Configuration").getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf((Layer) null), javaFile(gen(), snakeCaseToCamelCase(boxName) + "Configuration").getAbsolutePath()));
 	}
 
 	private String fillFrame(FrameBuilder builder) {

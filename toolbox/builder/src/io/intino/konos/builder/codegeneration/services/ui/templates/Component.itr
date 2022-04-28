@@ -668,7 +668,7 @@ def type(properties & actionable) trigger(common)
 	[$actionableMode]
 end
 
-def type(properties & board) trigger(common)
+def type(properties & appDirectory) trigger(common)
     [_icon("$icon");]
 end
 
@@ -813,23 +813,23 @@ def type(properties & chart) trigger(specific)
 	[_output("$output");]
 end
 
-def type(properties & board & fromFile) trigger(specific)
+def type(properties & appDirectory & fromFile) trigger(specific)
     [$source+fileMethod]
 end
 
-def type(properties & board & fromResource) trigger(specific)
+def type(properties & appDirectory & fromResource) trigger(specific)
     [$source+resourceMethod]
 end
 
-def type(properties & board & inline) trigger(specific)
+def type(properties & appDirectory & inline) trigger(specific)
     $application...[$NL]
 end
 
-def type(boardApplication)
+def type(appDirectoryApplication)
     _add("$name", "$url")[$translation...[]];
 end
 
-def type(boardApplicationTranslation)
+def type(appDirectoryApplicationTranslation)
     .translation("$language", "$name")
 end
 

@@ -1,9 +1,9 @@
 import React, { Suspense } from "react";
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, IconButton, Popover, List, ListItem } from '@material-ui/core';
-import AbstractBoard from "../../../gen/displays/components/AbstractBoard";
-import BoardNotifier from "../../../gen/displays/notifiers/BoardNotifier";
-import BoardRequester from "../../../gen/displays/requesters/BoardRequester";
+import AbstractAppDirectory from "../../../gen/displays/components/AbstractAppDirectory";
+import AppDirectoryNotifier from "../../../gen/displays/notifiers/AppDirectoryNotifier";
+import AppDirectoryRequester from "../../../gen/displays/requesters/AppDirectoryRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
 
@@ -13,18 +13,18 @@ const styles = theme => ({
     }
 });
 
-const BoardMui = React.lazy(() => {
+const AppDirectoryMui = React.lazy(() => {
 	return new Promise(resolve => {
 		setTimeout(() => resolve(import("./icon/MuiIcon"), 300));
 	});
 });
 
-class Board extends AbstractBoard {
+class AppDirectory extends AbstractAppDirectory {
 
 	constructor(props) {
 		super(props);
-		this.notifier = new BoardNotifier(this);
-		this.requester = new BoardRequester(this);
+		this.notifier = new AppDirectoryNotifier(this);
+		this.requester = new AppDirectoryRequester(this);
 		this.state = {
 		    ...this.state,
 		    icon: this.props.icon,
@@ -41,7 +41,7 @@ class Board extends AbstractBoard {
 			<Suspense fallback={<div style={{width: "24px", ...this.style()}}/>}>
 			    <div style={this.style()}>
                     <IconButton color="primary" onClick={this.handleOpen.bind(this)}>
-                        <BoardMui titleAccess={this.translate("Open")} icon={this.state.icon} fontSize="large"/>
+                        <AppDirectoryMui titleAccess={this.translate("Open")} icon={this.state.icon} fontSize="large"/>
                     </IconButton>
                     {this.renderPopover()}
                 </div>
@@ -68,7 +68,7 @@ class Board extends AbstractBoard {
 
 	renderApplications = () => {
 		const applications = this.state.applications;
-        if (applications.length <= 0) return (<div></div>);
+        if (applications.length <= 0) return (<div style={{padding:'10px'}}>{this.translate("No applications")}</div>);
         const children = applications.map(a => { return this.renderApplication(a); });
         return (<List>{children}</List>);
     };
@@ -100,5 +100,5 @@ class Board extends AbstractBoard {
 
 }
 
-export default withStyles(styles, { withTheme: true })(withSnackbar(Board));
-DisplayFactory.register("Board", withStyles(styles, { withTheme: true })(withSnackbar(Board)));
+export default withStyles(styles, { withTheme: true })(withSnackbar(AppDirectory));
+DisplayFactory.register("AppDirectory", withStyles(styles, { withTheme: true })(withSnackbar(AppDirectory)));

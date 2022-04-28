@@ -12,6 +12,7 @@ import io.intino.konos.compiler.shared.KonosBuildConstants;
 import io.intino.konos.compiler.shared.PostCompileActionMessage;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.magritte.framework.Layer;
+import io.intino.magritte.framework.Node;
 import io.intino.magritte.io.Stash;
 
 import java.io.File;
@@ -200,11 +201,15 @@ public class CompilationContext {
 	}
 
 	public String sourceFileOf(Layer layer) {
-		String defaultFile = sources.get(0).getAbsolutePath();
-		if (layer == null) return defaultFile;
-		String stash = layer.core$().stash();
+		if (layer == null) return sources.get(0).getAbsolutePath();
+		final Node node = layer.core$();
+		return sourceFileOf(node);
+	}
+
+	public String sourceFileOf(Node node) {
+		String stash = node.stash();
 		File file = sources.stream().filter(f -> f.getName().replace(".konos", "").equals(stash)).findFirst().orElse(null);
-		return file == null ? defaultFile : file.getAbsolutePath();
+		return file == null ? sources.get(0).getAbsolutePath() : file.getAbsolutePath();
 	}
 
 	public static class DataHubManifest {

@@ -175,7 +175,7 @@ Concept:{0..1} VisualizationComponents
 			var boolean titled = false
 			var word:{Dark Light} theme = Light
 
-	Concept Board extends Component
+	Concept AppDirectory extends Component
 		var string materialIcon = "Apps"
 
 		Concept:{1..1} Source

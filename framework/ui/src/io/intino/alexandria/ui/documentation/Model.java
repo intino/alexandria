@@ -22,7 +22,7 @@ public class Model {
 		Chart, Block, List, Table, DynamicTable, Task, OpenPage, OpenBlock, Export,
 		Download, DownloadSelection,
 		Grouping, GroupingToolbar, Sorting, SearchBox, Map, Slider, Selector,
-		Dashboard, Board, Dialog, Layer, Divider, User, Stepper, Frame, MicroSite, HtmlViewer;
+		Dashboard, AppDirectory, Dialog, Layer, Divider, User, Stepper, Frame, MicroSite, HtmlViewer;
 
 		public static WidgetType from(String type) {
 			WidgetType[] values = values();
@@ -47,7 +47,7 @@ public class Model {
 		map.put(WidgetType.Location, new LocationWidget());
 		map.put(WidgetType.Chart, new ChartWidget());
 		map.put(WidgetType.Dashboard, new DashboardWidget());
-		map.put(WidgetType.Board, new BoardWidget());
+		map.put(WidgetType.AppDirectory, new AppDirectoryWidget());
 		map.put(WidgetType.Block, new BlockWidget());
 		map.put(WidgetType.List, new ListWidget());
 		map.put(WidgetType.Map, new MapWidget());
