@@ -6,7 +6,6 @@ import java.net.URL;
 public class Space {
     private final URL authServiceUrl;
     private String baseUrl;
-    private String authId;
     private String name = "space";
     private String title = "";
     private String secret = "1234";
@@ -17,11 +16,6 @@ public class Space {
 
     public Space setBaseUrl(String url) {
         baseUrl = url;
-        return this;
-    }
-
-    public Space setAuthId(String authId) {
-        this.authId = authId;
         return this;
     }
 
@@ -66,7 +60,7 @@ public class Space {
 
     public URL authCallbackUrl() {
         try {
-            return new URL(home().toString() + "/authenticate-callback?authId=" + authId);
+            return new URL(home().toString() + "/authenticate-callback");
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return null;
