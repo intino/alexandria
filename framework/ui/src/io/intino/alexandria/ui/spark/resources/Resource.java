@@ -76,7 +76,6 @@ public abstract class Resource implements io.intino.alexandria.http.Resource {
 	protected boolean isLogged(Token accessToken) {
 		try {
 			if (!isFederated()) return true;
-			if (accessToken == null) return false;
 			AuthService authService = authService();
 			if (!authService.valid(accessToken)) return false;
 			authenticate(manager.currentSession(), accessToken);
