@@ -17,6 +17,7 @@ const styles = theme => ({
         height: "50px",
         width: "50px",
         borderRadius: "25px",
+        object-fit: "cover",
     },
     trigger : {
         cursor: "pointer"
