@@ -14,7 +14,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: io.intino.alexandria:zip:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: io.intino.alexandria:logger:2.1.0" level="project" />
-    <orderEntry type="library" name="Maven: io.intino:configuration:1.0.0" level="project" />
+    <orderEntry type="library" name="Maven: io.intino:configuration:1.1.0" level="project" />
     <orderEntry type="module" module-name="builder-constants" />
     <orderEntry type="module" module-name="konos-dsl" />
     <orderEntry type="library" name="Maven: tara.dsl:konos:1.0.0" level="project" />
