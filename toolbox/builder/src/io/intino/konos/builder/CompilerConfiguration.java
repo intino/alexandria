@@ -36,7 +36,7 @@ public class CompilerConfiguration implements Cloneable {
 	private String module;
 	private String parentInterface;
 	private boolean debug;
-	private List<File> sources = new ArrayList<>();
+	private final List<File> sources = new ArrayList<>();
 	private File srcDirectory;
 	private File genDirectory;
 	private File resDirectory;
@@ -44,7 +44,7 @@ public class CompilerConfiguration implements Cloneable {
 	private String groupID;
 	private String artifactID;
 	private String version;
-	private ModelConfiguration model;
+	private final ModelConfiguration model;
 	private boolean verbose;
 	private File tempDirectory;
 	private File datahubLibrary;
