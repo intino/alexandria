@@ -220,3 +220,20 @@ Schema AppDirectoryApplication
 	Attribute name as Text
 	Attribute url as Text
 	Attribute selected as Bool
+
+Schema DigitalSignatureAutoFirmaSetup
+	Attribute downloadUrl as Text
+	Attribute storageUrl as Text
+	Attribute retrieveUrl as Text
+
+Schema DigitalSignatureSignParams
+	Attribute content as Text
+	Attribute format as Text
+
+Schema DigitalSignatureSuccess
+	Attribute signature as Text
+	Attribute certificate as Text
+
+Schema DigitalSignatureFailure
+	Attribute code as Text
+	Attribute message as Text

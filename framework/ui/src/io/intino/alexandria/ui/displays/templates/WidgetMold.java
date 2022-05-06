@@ -50,6 +50,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         chartExamples.visible(widget instanceof ChartWidget);
         dashboardExamples.visible(widget instanceof DashboardWidget);
         appDirectoryExamples.visible(widget instanceof AppDirectoryWidget);
+        digitalSignatureExamples.visible(widget instanceof DigitalSignatureWidget);
         blockExamples.visible(widget instanceof BlockWidget);
         listExamples.visible(widget instanceof ListWidget);
         tableExamples.visible(widget instanceof TableWidget);

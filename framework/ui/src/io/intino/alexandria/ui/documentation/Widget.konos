@@ -1,5 +1,6 @@
 dsl Konos
 
+use DigitalSignature
 use AppDirectory
 use Layer
 use HtmlViewer
@@ -67,6 +68,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block sliderExamples as Conditional > TemplateStamp(template=sliderExamplesMold)
 			Block dashboardExamples as Conditional > TemplateStamp(template=dashboardExamplesMold)
 			Block appDirectoryExamples as Conditional > TemplateStamp(template=appDirectoryExamplesMold)
+			Block digitalSignatureExamples as Conditional > TemplateStamp(template=digitalSignatureExamplesMold)
 			Block dialogExamples as Conditional > TemplateStamp(template=dialogExamplesMold)
 			Block layerExamples as Conditional > TemplateStamp(template=layerExamplesMold)
 			Block dividerExamples as Conditional > TemplateStamp(template=dividerExamplesMold)

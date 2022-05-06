@@ -672,6 +672,10 @@ def type(properties & appDirectory) trigger(common)
     [_icon("$icon");]
 end
 
+def type(properties & digitalsignature) trigger(common)
+    [_text("$text");]
+end
+
 def type(properties & dashboard) trigger(common)
 	[$parameter...[$NL]]
 end
@@ -881,6 +885,10 @@ def type(properties & date) trigger(specific)
 	[_min(java.time.Instant.ofEpochMilli($min~L));]
 	[_max(java.time.Instant.ofEpochMilli($max~L));]
 	[_readonly($readonly);]
+end
+
+def type(properties & digitalsignature & autofirma) trigger(specific)
+	[_signFormat(io.intino.alexandria.ui.displays.components.DigitalSignatureAutoFirma.SignFormat.valueOf("$signFormat"));]
 end
 
 def type(properties & text & multiple & componentClass) trigger(specific)
