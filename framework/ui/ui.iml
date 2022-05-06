@@ -79,5 +79,32 @@
     <orderEntry type="library" name="Intino: dnie:xmlsec:1.4.2-ADSI" level="project" />
     <orderEntry type="library" name="Intino: org.bouncycastle:bctsp-jdk15:1.45" level="project" />
     <orderEntry type="library" name="Intino: commons-lang:commons-lang:2.6" level="project" />
+    <orderEntry type="library" name="Intino: org.antlr:antlr4-runtime:4.9.1" level="project" />
+    <orderEntry type="library" name="Intino: eu.medsea.mimeutil:mime-util:2.1.1" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-jmx:9.4.42.v20210604" level="project" />
+    <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-util-ajax:9.4.42.v20210604" level="project" />
+    <orderEntry type="library" name="Intino: org.apache.httpcomponents:httpmime:4.5.7" level="project" />
+    <orderEntry type="library" name="Intino: org.apache.httpcomponents:httpclient:4.5.7" level="project" />
+    <orderEntry type="library" name="Intino: org.apache.httpcomponents:httpcore:4.4.11" level="project" />
+    <orderEntry type="library" name="Intino: javax.websocket:javax.websocket-api:1.1" level="project" />
+    <orderEntry type="library" name="Intino: commons-io:commons-io:2.6" level="project" />
+    <orderEntry type="library" name="Intino: org.apache.commons:commons-lang3:3.9" level="project" />
+    <orderEntry type="library" name="Intino: org.glassfish.tyrus:tyrus-client:1.16" level="project" />
+    <orderEntry type="library" name="Intino: org.glassfish.tyrus:tyrus-core:1.16" level="project" />
+    <orderEntry type="library" name="Intino: org.glassfish.tyrus:tyrus-spi:1.16" level="project" />
+    <orderEntry type="library" name="Intino: org.glassfish.tyrus:tyrus-container-grizzly-client:1.16" level="project" />
+    <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-framework:2.3.22" level="project" />
+    <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-http-server:2.3.22" level="project" />
+    <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-http:2.3.22" level="project" />
+    <orderEntry type="library" name="Intino: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
+    <orderEntry type="library" name="Intino: log4j:log4j:1.2.17" level="project" />
+    <orderEntry type="library" name="Intino: org.apache.httpcomponents:fluent-hc:4.5.7" level="project" />
+    <orderEntry type="library" name="Intino: com.jcraft:jsch:0.1.55" level="project" />
+    <orderEntry type="library" name="Intino: com.jcraft:jzlib:1.0.7" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.0.1" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:proxy:1.0.0" level="project" />
+    <orderEntry type="library" name="Intino: net.rforge:Rserve:0.6-8.1" level="project" />
+    <orderEntry type="library" name="Intino: net.rforge:REngine:0.6-8.1" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.0.0" level="project" />
   </component>
 </module>
