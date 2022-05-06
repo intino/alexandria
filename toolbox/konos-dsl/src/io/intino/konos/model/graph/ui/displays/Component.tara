@@ -1,6 +1,7 @@
 dsl Proteo
 
 use OtherComponents
+use OtherComponents
 use CatalogComponents
 use Services
 use Source
@@ -56,7 +57,7 @@ Concept:Named Template extends Component
 	var word:Spacing spacing = None
 	has Component
 	Aspect Desktop
-    	has:{1..1} OtherComponents.Header
+    	has:{1..1} VisualizationComponents.Header
 		//has:{1..1} ChildComponents.Tabs
 
 	Aspect DrawerNavigable with Desktop
@@ -146,6 +147,13 @@ Concept InteractionComponents
 Concept:{0..1} VisualizationComponents
 	Concept KPI extends Component
 
+	Concept Header extends Component
+		var word:{Fixed Absolute Sticky Static Relative} position = Relative
+		var integer elevation = 4
+		has Component
+		Aspect Absolute
+		Aspect Relative
+
 	Concept Chart extends Component
 		var Dataframe input
 		var string serverUrl = empty
@@ -231,8 +239,6 @@ Concept:{0..1} VisualizationComponents
 				var instant max
 		Aspect Readonly
 
-
-
 Concept HelperComponents
 	Concept HelperComponent extends Component
 
@@ -247,7 +253,6 @@ Facet Editable
 Facet Range with Editable, Multiple //TODO está correcto?
 	var integer min = -1
 	var integer max = -1
-
 
 Facet Absolute
 	var integer:{px} width = -1px

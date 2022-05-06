@@ -73,3 +73,13 @@ Component location as ExtensionOf(baseLocation)
 Component locationEditable as ExtensionOf(baseLocation)
 	Notification refreshReadonly as Bool
 	Request notifyChange as Object(Geometry)
+
+Component baseDigitalSignature
+	Notification text as Text
+	Notification document as Text
+	Request success as Object(DigitalSignatureSuccess)
+	Request failure as Object(DigitalSignatureFailure)
+
+Component digitalSignatureAutoFirma as ExtensionOf(baseDigitalSignature)
+	Notification setup as Object(DigitalSignatureAutoFirmaSetup)
+	Notification format as Text

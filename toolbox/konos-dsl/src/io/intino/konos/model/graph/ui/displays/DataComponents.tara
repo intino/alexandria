@@ -128,5 +128,9 @@ Concept DataComponents
 		Aspect Required with Editable
 		Aspect Focused with Editable
 
+	Concept DigitalSignature extends Component
+		var string text = empty
+		Aspect AutoFirma
 
-
+Facet AutoFirma
+	var word:{CAdES XAdES} signFormat = XAdES

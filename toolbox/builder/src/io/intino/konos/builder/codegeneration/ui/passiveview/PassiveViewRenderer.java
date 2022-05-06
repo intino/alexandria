@@ -186,8 +186,8 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			components.addAll(passiveView.a$(VisualizationComponents.Stepper.class).stepList());
 		if (passiveView.i$(VisualizationComponents.Stepper.Step.class))
 			components.addAll(passiveView.a$(VisualizationComponents.Stepper.Step.class).componentList());
-		if (passiveView.i$(OtherComponents.Header.class))
-			components.addAll(passiveView.a$(OtherComponents.Header.class).componentList());
+		if (passiveView.i$(VisualizationComponents.Header.class))
+			components.addAll(passiveView.a$(VisualizationComponents.Header.class).componentList());
 		if (passiveView.i$(Selector.class)) {
 			if (passiveView.i$(Selector.CollectionBox.class) && passiveView.a$(Selector.CollectionBox.class).source() != null)
 				components.add(passiveView.a$(Selector.CollectionBox.class).source());
@@ -245,6 +245,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (passiveView.i$(Block.Parallax.class)) result.add("Parallax");
 		if (passiveView.i$(Dashboard.Shiny.class)) result.add("Shiny");
 		if (passiveView.i$(Dashboard.Metabase.class)) result.add("Metabase");
+		if (passiveView.i$(DataComponents.DigitalSignature.AutoFirma.class)) result.add("AutoFirma");
 		return result;
 	}
 

@@ -60,13 +60,6 @@ Concept OtherComponents
 		Aspect Absolute
 		Aspect Relative
 
-	Concept Header extends Component
-		var word:{Fixed Absolute Sticky Static Relative} position = Relative
-		var integer elevation = 4
-		has Component
-		Aspect Absolute
-		Aspect Relative
-
 	Concept Selector extends Component
 		var boolean multipleSelection = false
 		has Component
