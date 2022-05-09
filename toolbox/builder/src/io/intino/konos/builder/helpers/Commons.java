@@ -39,10 +39,9 @@ public class Commons {
 		}
 	}
 
-	public static Frame fileFrame(String directory, String packageName) {
+	public static Frame fileFrame(String directory, String packageName, String archetypeQn) {
 		if (directory.startsWith(".archetype")) {
-			String boxPackage = packageName;
-			boxPackage = boxPackage.substring(0, boxPackage.lastIndexOf("."));
+			String boxPackage  = archetypeQn.replace(".Archetype", "");
 			String archetypePath = Commons.archetypePath(directory);
 			return new FrameBuilder("archetype").add("package", boxPackage).add("path", archetypePath).toFrame();
 		}

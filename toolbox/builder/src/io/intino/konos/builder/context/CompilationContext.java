@@ -32,6 +32,7 @@ public class CompilationContext {
 	private final List<PostCompileActionMessage> postCompileActionMessages;
 	private CompilerConfiguration configuration;
 	private DataHubManifest dataHubManifest;
+	private String archetypeQN;
 	private File webModuleDirectory;
 	private String parent;
 	private String boxName = null;
@@ -44,6 +45,7 @@ public class CompilationContext {
 		this.compiledFiles = compiledFiles;
 		configuration(configuration);
 		loadManifest();
+		findArchetypeQn();
 		sources.sort(Comparator.comparing(File::getName));
 		this.warningMessages = new ArrayList<>();
 	}
@@ -125,6 +127,10 @@ public class CompilationContext {
 		return dataHubManifest;
 	}
 
+	public String archetypeQN() {
+		return archetypeQN;
+	}
+
 	public Map<String, String> classes() {
 		return classes;
 	}
@@ -164,6 +170,26 @@ public class CompilationContext {
 
 	private void loadManifest() {
 		dataHubManifest = configuration() != null ? loadManifest(configuration().datahubLibrary()) : null;
+	}
+
+	private void findArchetypeQn() {
+		archetypeQN = configuration() != null ? findArchetypeQn(configuration().archetypeLibrary()) : null;
+	}
+
+	private String findArchetypeQn(File jar) {
+		if (jar == null || !jar.exists()) return null;
+		try {
+			ZipFile zipFile = new ZipFile(jar);
+			Enumeration<? extends ZipEntry> entries = zipFile.entries();
+			while (entries.hasMoreElements()) {
+				ZipEntry entry = entries.nextElement();
+				if (entry.getName().endsWith("Archetype.class"))
+					return entry.getName().replace("/", ".").replace(".class", "");
+			}
+		} catch (IOException e) {
+			Logger.error(e);
+		}
+		return null;
 	}
 
 	private DataHubManifest loadManifest(File jar) {

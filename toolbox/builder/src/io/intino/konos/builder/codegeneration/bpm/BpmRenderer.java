@@ -64,7 +64,7 @@ public class BpmRenderer extends Renderer {
 		FrameBuilder builder = new FrameBuilder("workflow").
 				add("box", compilationContext.boxName()).
 				add("package", compilationContext.packageName()).
-				add("directory", Commons.fileFrame(workflow.directory(), packageName())).
+				add("directory", Commons.fileFrame(workflow.directory(), packageName(), context.archetypeQN())).
 				add("terminal", compilationContext.dataHubManifest().qn).
 				add(compilationContext.boxName()).
 				add("process", processes.stream().filter(p -> file(p) != null).map(p -> frameOf(p, file(p))).toArray(FrameBuilder[]::new));

@@ -33,7 +33,7 @@ public class SubscriberRenderer {
 	public void execute() throws KonosException {
 		CompilationContext.DataHubManifest manifest = context.dataHubManifest();
 		if (!subscribers.isEmpty() && manifest == null)
-			throw new KonosException("Is required the Data hub declaration in artifact to instance subscribers");
+			throw new KonosException("Required Data hub declaration in artifact to instance subscribers");
 		if (manifest == null) return;
 		for (Subscriber subscriber : subscribers) {
 			final FrameBuilder builder = baseFrame(subscriber);

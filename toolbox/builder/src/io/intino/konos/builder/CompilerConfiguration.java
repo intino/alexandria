@@ -53,6 +53,7 @@ public class CompilerConfiguration implements Cloneable {
 	private PrintStream out = System.out;
 	private File projectDirectory;
 	private File webModuleDirectory;
+	private File archetypeLibrary;
 	private File moduleDirectory;
 	private File configurationDirectory;
 	private List<String> parameters = new ArrayList<>();
@@ -260,6 +261,14 @@ public class CompilerConfiguration implements Cloneable {
 
 	public void datahubLibrary(File datahubLibrary) {
 		this.datahubLibrary = datahubLibrary;
+	}
+
+	public File archetypeLibrary() {
+		return archetypeLibrary;
+	}
+
+	public void archetypeLibrary(File archetypeLibrary) {
+		this.archetypeLibrary = archetypeLibrary;
 	}
 
 	public void parameters(String[] parameters) {
