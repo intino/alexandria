@@ -38,7 +38,7 @@ def type(box)
 		public AbstractBox($name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration) {
 			[owner = new $parent~Box(configuration);]
 			this.configuration = configuration;
-			initJavaLogger();
+			[$parent+empty?initJavaLogger();]
 			[$connector+setup]
 			[$service+setup...[$NL]]
 			[$datalake+setup]
@@ -192,6 +192,10 @@ def type(box)
 			}
 		}
 	}
+end
+
+def trigger(empty)
+	;
 end
 
 def type(logger) trigger(logger)
