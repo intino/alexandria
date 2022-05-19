@@ -77,13 +77,15 @@ class Signer {
 		return CertStore.getInstance("Collection", new CollectionCertStoreParameters(list), "BC");
 	}
 
-	private byte[] signMessage(byte[] textBytes, KeyStore keyStore, String certificateAlias, char[] password) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+	private byte[] signMessage(byte[] textBytes, KeyStore keyStore, String certificateAlias, char[] password) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, InvalidKeyException, SignatureException, NoSuchProviderException {
 		PrivateKey privatekey = (PrivateKey) keyStore.getKey(certificateAlias, password);
 
 		if (privatekey == null) {
 			return null;
 		} else {
-			Signature signature = Signature.getInstance("SHA1withRSA", keyStore.getProvider());
+			Provider provider = Security.getProvider("SunRsaSign");
+			if (provider == null) provider = keyStore.getProvider();
+			Signature signature = Signature.getInstance("SHA1withRSA", provider.getName());
 			signature.initSign(privatekey);
 			signature.update(textBytes);
 			byte abyte1[] = signature.sign();

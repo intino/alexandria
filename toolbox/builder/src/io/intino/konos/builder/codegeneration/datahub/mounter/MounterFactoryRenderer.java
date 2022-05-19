@@ -34,7 +34,7 @@ public class MounterFactoryRenderer {
 		if (mounters.isEmpty()) return;
 		DataHubManifest manifest = context.dataHubManifest();
 		if (manifest == null)
-			throw new KonosException("Is required the Data hub declaration in artifact to instance subscribers");
+			throw new KonosException("Required Data hub declaration in artifact to instance subscribers");
 		FrameBuilder builder = baseFrame("factory");
 		Map<String, List<Mounter>> map = map(mounters, manifest);
 		for (String event : map.keySet())

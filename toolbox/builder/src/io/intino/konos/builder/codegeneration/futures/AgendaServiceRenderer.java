@@ -37,7 +37,7 @@ public class AgendaServiceRenderer extends Renderer {
 		FrameBuilder builder = new FrameBuilder("agenda", "service")
 				.add("package", packageName())
 				.add("box", boxName())
-				.add("rootPath", Commons.fileFrame(agenda.filePath(), packageName()))
+				.add("rootPath", Commons.fileFrame(agenda.filePath(), packageName(), context.archetypeQN()))
 				.add("baseUri", agenda.baseUri())
 				.add("future", processFutures(agenda.futureList()));
 		if (!agenda.graph().schemaList().isEmpty())

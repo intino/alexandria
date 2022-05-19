@@ -16,7 +16,7 @@ import static io.intino.konos.builder.helpers.Commons.javaFile;
 public class BoxConfigurationRenderer extends Renderer {
 	private final CompilerConfiguration configuration;
 	private final Set<String> params;
-	private boolean isTara;
+	private final boolean isTara;
 
 	BoxConfigurationRenderer(CompilationContext context, boolean isTara, Set<String> params) {
 		super(context, Target.Owner);

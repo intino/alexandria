@@ -1,0 +1,16 @@
+{
+    "url": "./data/cesar-rest.json",
+    "urls": [{
+    	"url": "./data/cesar-rest.json",
+    	"name": "Test"
+    },
+    {
+    	"url": "./data/cesar-rest.1.json",
+    	"name": "Test2"
+    }],
+    "primary": "Test2",
+    "title": "API Management",
+    "subtitle": "Test",
+    "background": "#FFF",
+    "color": "#000"
+}

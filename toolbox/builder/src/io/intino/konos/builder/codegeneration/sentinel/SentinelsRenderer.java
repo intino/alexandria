@@ -84,7 +84,7 @@ public class SentinelsRenderer extends Renderer {
 	private Frame processFileListenerSentinel(Sentinel.FileListener sentinel) {
 		final FrameBuilder builder = new FrameBuilder().add("sentinel").add(sentinel.getClass().getSimpleName())
 				.add("event", sentinel.events().stream().map(Enum::name).toArray(String[]::new))
-				.add("file", Commons.fileFrame(sentinel.file(), packageName()))
+				.add("file", Commons.fileFrame(sentinel.file(), packageName(), context.archetypeQN()))
 				.add("name", sentinel.name$())
 				.add("package", packageName());
 		return builder.toFrame();

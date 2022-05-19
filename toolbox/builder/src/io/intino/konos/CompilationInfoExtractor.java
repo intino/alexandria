@@ -85,6 +85,9 @@ class CompilationInfoExtractor {
 			case LIBRARY:
 				configuration.datahubLibrary(findLibraryInRepository(reader.readLine()));
 				break;
+			case ARCHETYPE:
+				configuration.archetypeLibrary(findLibraryInRepository(reader.readLine()));
+				break;
 			case PROJECT_PATH:
 				configuration.projectDirectory(new File(reader.readLine()));
 				break;
