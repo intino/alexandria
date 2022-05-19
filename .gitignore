@@ -30,3 +30,5 @@ framework/ui-elements/lib
 temporal
 workspace.txt
 temp
+toolbox/swagger-doc/node_modules
+toolbox/swagger-doc/build
