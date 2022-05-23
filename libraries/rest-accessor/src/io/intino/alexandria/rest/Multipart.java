@@ -1,9 +1,8 @@
-package io.intino.alexandria.restaccessor;
+package io.intino.alexandria.rest;
 
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.restaccessor.adapters.RequestAdapter;
-import io.intino.alexandria.restaccessor.adapters.ResponseAdapter;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
