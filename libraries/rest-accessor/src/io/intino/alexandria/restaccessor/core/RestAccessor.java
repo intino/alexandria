@@ -4,7 +4,6 @@ import io.intino.alexandria.Resource;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.restaccessor.Response;
 import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
-import org.apache.commons.io.IOUtils;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
@@ -658,6 +657,6 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 	}
 
 	private static String toString(InputStream content) throws IOException {
-		return IOUtils.toString(content, StandardCharsets.UTF_8);
+		return new String(content.readAllBytes(), Charset.defaultCharset());
 	}
 }
