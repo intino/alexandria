@@ -42,9 +42,15 @@ public class BoxConfigurationRenderer extends Renderer {
 		if (isTara) builder.add("tara", "");
 		for (String parameter : params) {
 			if (parameter.equalsIgnoreCase("home")) continue;
-			builder.add("parameter", new FrameBuilder().add("name", nameOf(parameter)).add("value", parameter));
+			builder.add("parameter", new FrameBuilder(isFile(parameter) ? "file" : "regular")
+					.add("name", nameOf(parameter))
+					.add("value", parameter));
 		}
 		return boxName;
+	}
+
+	private boolean isFile(String parameter) {
+		return parameter.endsWith("file") || parameter.endsWith("directory") || parameter.endsWith("folder");
 	}
 
 	private String nameOf(String parameter) {
