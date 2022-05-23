@@ -67,11 +67,11 @@ def type(properties & abstractslider) trigger(common)
 end
 
 def type(properties & appDirectory) trigger(common)
-	[ icon="$icon"]
+	[ icon="$icon"][ visible={$visible}][ style="$style"]
 end
 
 def type(properties & digitalsignature) trigger(common)
-	[ text="$text"]
+	[ text="$text"][ visible={$visible}][ style="$style"]
 end
 
 def type(properties & dashboard) trigger(common)

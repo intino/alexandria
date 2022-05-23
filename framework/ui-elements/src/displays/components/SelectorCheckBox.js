@@ -51,7 +51,7 @@ class SelectorCheckBox extends AbstractSelectorCheckBox {
 		const children = this.children();
 		const layout = this.props.layout != null ? "layout " + this.props.layout.toLowerCase() + " wrap" : "layout vertical";
 		const multi = this.props.multipleSelection;
-		if (children.length <= 0) return (<div></div>);
+		if (children.length <= 0) return (<div>{this.translate("No options")}</div>);
 		return (
             <FormControl className={classes.options} component="fieldset" disabled={this.state.readonly}>
                 <FormGroup className={layout} style={this.style()} value={this.state.selection}>
