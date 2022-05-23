@@ -19,6 +19,12 @@ def type(boxConfiguration)
 	}
 end
 
+def type(file) trigger(parameter)
+	public File $name+camelCase+firstLowerCase() {
+		return new File(get("$value"));
+	}
+end
+
 def trigger(parameter)
 	public String $name+camelCase+firstLowerCase() {
 		return get("$value");
