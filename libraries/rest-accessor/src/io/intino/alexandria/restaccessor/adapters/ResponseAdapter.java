@@ -18,8 +18,9 @@ import static java.time.Instant.ofEpochMilli;
 import static java.time.LocalDateTime.ofInstant;
 
 public class ResponseAdapter {
-	private static Gson gsonReader = Json.gsonReader();
-	private static Gson gsonWriter = Json.gsonWriter();
+	private static final Gson gsonReader = Json.gsonReader();
+	private static final Gson gsonWriter = Json.gsonWriter();
+
 
 	public static <T> T adapt(String object, Class<T> type) {
 		T result = adaptPrimitive(object, type);
