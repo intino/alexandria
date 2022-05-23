@@ -16,13 +16,25 @@ import java.nio.charset.StandardCharsets;
 public abstract class BaseDigitalSignature<DN extends BaseDigitalSignatureNotifier, B extends Box> extends AbstractBaseDigitalSignature<DN, B> {
     private SignListener signListener;
     private SignErrorListener errorListener;
+    private String text;
 
     public BaseDigitalSignature(B box) {
         super(box);
     }
 
+    @Override
+    public void refresh() {
+        super.refresh();
+        if (text != null) notifier.text(text);
+    }
+
     public void text(String content) {
-        notifier.text(Base64.encode(content.getBytes(StandardCharsets.UTF_8)));
+        text = Base64.encode(content.getBytes(StandardCharsets.UTF_8));
+        notifier.text(text);
+    }
+
+    public void sign() {
+        notifier.sign();
     }
 
     public void success(DigitalSignatureSuccess success) {

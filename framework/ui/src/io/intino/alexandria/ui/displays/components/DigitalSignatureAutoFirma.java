@@ -22,6 +22,12 @@ public class DigitalSignatureAutoFirma<DN extends DigitalSignatureAutoFirmaNotif
     public void init() {
         super.init();
         server = new AutoFirmaServer((AlexandriaUiBox)box(), session()).listen();
+        refresh();
+    }
+
+    @Override
+    public void refresh() {
+        super.refresh();
         notifier.setup(setup());
     }
 

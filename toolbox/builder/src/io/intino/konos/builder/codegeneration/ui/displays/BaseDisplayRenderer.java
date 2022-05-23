@@ -182,7 +182,9 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (element.i$(DataComponents.Number.Multiple.class)) return "java.lang.Double";
 		if (element.i$(DataComponents.Date.Multiple.class)) return "java.time.Instant";
 		if (element.i$(OtherComponents.BaseStamp.Multiple.class)) {
-			String modelClass = element.i$(OwnerTemplateStamp.class) ? "java.lang.Void" : element.a$(TemplateStamp.class).template().modelClass();
+			String modelClass = null;
+			if (element.i$(OwnerTemplateStamp.class)) modelClass = "java.lang.Void";
+			else if (element.i$(TemplateStamp.class)) modelClass = element.a$(TemplateStamp.class).template() != null ? element.a$(TemplateStamp.class).template().modelClass() : null;
 			return modelClass != null ? modelClass : "java.lang.Void";
 		}
 		if (element.i$(Block.Multiple.class)) return "java.lang.Void";
@@ -209,7 +211,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 				OwnerTemplateStamp stamp = element.a$(OwnerTemplateStamp.class);
 				return ownerTemplateStampPackage(stamp.owner()) + "." + firstUpperCase(stamp.template());
 			}
-			return firstUpperCase(element.a$(TemplateStamp.class).template().name$());
+			return element.i$(TemplateStamp.class) ? firstUpperCase(element.a$(TemplateStamp.class).template().name$()) : "io.intino.alexandria.ui.Display";
 		}
 		if (element.i$(Block.Multiple.class)) return firstUpperCase(nameOf(element));
 		return null;

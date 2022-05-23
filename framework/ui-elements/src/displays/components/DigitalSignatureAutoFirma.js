@@ -39,10 +39,11 @@ class DigitalSignatureAutoFirma extends AbstractDigitalSignatureAutoFirma {
     render() {
         const signing = this.state.signing;
         const disabled = this.state.data == null || this.state.signing;
+        const style = !this.state.visible ? {display:'none'} : {};
         return (
             <React.Fragment>
                 <div layout="horizontal" style={this.style()}>
-                    <Button disabled={disabled} variant="outlined" size="small" onClick={this.handleSign.bind(this)}>{this.translate(signing ? "Signing..." : "Sign")}</Button>
+                    <Button style={style} disabled={disabled} variant="outlined" size="small" onClick={this.handleSign.bind(this)}>{this.translate(signing ? "Signing..." : "Sign")}</Button>
                 </div>
                 <Snackbar
                   open={this.state.open}
@@ -53,6 +54,10 @@ class DigitalSignatureAutoFirma extends AbstractDigitalSignatureAutoFirma {
                 {this.renderDownloadDialog()}
             </React.Fragment>
         );
+    };
+
+    sign = () => {
+        this.handleSign();
     };
 
     setup = (data) => {
@@ -161,11 +166,13 @@ class DigitalSignatureAutoFirma extends AbstractDigitalSignatureAutoFirma {
     };
 
     _successCallback = (signature, certificate) => {
+        this.success = true;
         this.requester.success({signature: signature, certificate: certificate});
         this.setState({ signing: false });
     };
 
     _failureCallback = (errorCode, errorMessage) => {
+        if (errorCode == "java.util.concurrent.TimeoutException") return;
         this.requester.failure({ code: errorCode, message: errorMessage});
         this.setState({ signing: false });
     };

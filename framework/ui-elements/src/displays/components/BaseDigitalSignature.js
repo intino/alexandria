@@ -26,6 +26,9 @@ export default class BaseDigitalSignature extends AbstractBaseDigitalSignature {
         this.setState({ data: content, isDocument: false });
     };
 
+    sign = () => {
+    };
+
     document = (content) => {
         this.setState({ data: content, isDocument: true });
     };
