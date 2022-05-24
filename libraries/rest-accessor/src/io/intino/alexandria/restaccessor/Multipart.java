@@ -1,4 +1,4 @@
-package io.intino.alexandria.rest;
+package io.intino.alexandria.restaccessor;
 
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.logger.Logger;

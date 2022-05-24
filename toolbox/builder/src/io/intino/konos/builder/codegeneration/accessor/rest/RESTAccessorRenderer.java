@@ -91,7 +91,7 @@ public class RESTAccessorRenderer extends Renderer {
 		FrameBuilder builder = new FrameBuilder("resource")
 				.add("path", processPath(Commons.path(operation.core$().ownerAs(Resource.class))))
 				.add("response", new FrameBuilder(responseType(operation.response())).
-						add("value", Commons.returnType(operation.response(), packageName())))
+						add("value", customizeMultipart(operation.response(), Commons.returnType(operation.response(), packageName()))))
 				.add("method", operation.getClass().getSimpleName())
 				.add("name", operation.core$().owner().name())
 				.add("parameter", parameters(operation.parameterList()))
@@ -99,6 +99,10 @@ public class RESTAccessorRenderer extends Renderer {
 				.add("exceptionResponses", exceptionResponses(operation, authentication));
 		if (authentication != null) builder.add("auth", new FrameBuilder("authentication", authentication()));
 		return builder.toFrame();
+	}
+
+	private String customizeMultipart(Response response, String returnType) {
+		return response.isMultiPart() ? returnType.replace(".rest.", ".restaccessor.") : returnType;
 	}
 
 	private String[] responseType(Response response) {
