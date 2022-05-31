@@ -56,6 +56,10 @@ def type(archetype) trigger(customizeDirectory)
 	new $package.Archetype(home).$path
 end
 
+def type(custom) trigger(customizeDirectory)
+	new java.io.File("$path".replace("{$path}", configuration.get("$path")))
+end
+
 def trigger(customizeDirectory)
 	new java.io.File("$path")
 end

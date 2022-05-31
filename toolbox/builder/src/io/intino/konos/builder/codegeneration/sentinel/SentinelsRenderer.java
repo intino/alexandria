@@ -16,6 +16,7 @@ import io.intino.konos.model.graph.Sentinel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
@@ -47,7 +48,8 @@ public class SentinelsRenderer extends Renderer {
 		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.SystemListener.class)).map(t -> t.a$(Sentinel.SystemListener.class)).map(this::processSentinel).collect(toList()));
 		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.FileListener.class)).map(t -> t.a$(Sentinel.FileListener.class)).map(this::processFileListenerSentinel).collect(toList()));
 		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.WebHook.class)).map(t -> t.a$(Sentinel.WebHook.class)).map(this::processWebHookSentinel).collect(toList()));
-		for (Sentinel t : sentinels) if (t.i$(Sentinel.WebHook.class)) new WebHookActionRenderer(context, t.asWebHook()).execute();
+		for (Sentinel t : sentinels)
+			if (t.i$(Sentinel.WebHook.class)) new WebHookActionRenderer(context, t.asWebHook()).execute();
 		return list.toArray(new Frame[0]);
 	}
 
@@ -82,11 +84,15 @@ public class SentinelsRenderer extends Renderer {
 	}
 
 	private Frame processFileListenerSentinel(Sentinel.FileListener sentinel) {
+		Set<String> custom = Commons.extractParameters(sentinel.file());
+		Frame fileFrame = Commons.fileFrame(sentinel.file(), packageName(), context.archetypeQN());
 		final FrameBuilder builder = new FrameBuilder().add("sentinel").add(sentinel.getClass().getSimpleName())
 				.add("event", sentinel.events().stream().map(Enum::name).toArray(String[]::new))
-				.add("file", Commons.fileFrame(sentinel.file(), packageName(), context.archetypeQN()))
 				.add("name", sentinel.name$())
 				.add("package", packageName());
+		if (custom.isEmpty())
+			builder.add("file", Commons.fileFrame(sentinel.file(), packageName(), context.archetypeQN()));
+		else builder.add("file", new FrameBuilder("custom", "file").add("path", custom.iterator().next()));
 		return builder.toFrame();
 	}
 
