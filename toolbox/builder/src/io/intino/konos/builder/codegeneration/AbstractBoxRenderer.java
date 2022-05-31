@@ -13,6 +13,7 @@ import io.intino.konos.model.graph.*;
 import io.intino.magritte.framework.Node;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
@@ -69,6 +70,11 @@ public class AbstractBoxRenderer extends Renderer {
 			if (graph.sentinelList().stream().anyMatch(Sentinel::isWebHook)) frame.add("hasWebhook", ",");
 			builder.add("sentinel", frame);
 		}
+		konosParameters.addAll(graph.sentinelList().stream()
+				.filter(Sentinel::isFileListener)
+				.map(s -> s.asFileListener().file())
+				.map(Commons::extractParameters)
+				.flatMap(Collection::stream).collect(Collectors.toList()));
 	}
 
 	private void datalake(FrameBuilder root) {

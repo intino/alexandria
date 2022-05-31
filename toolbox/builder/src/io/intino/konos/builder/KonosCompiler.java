@@ -14,14 +14,12 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static io.intino.konos.compiler.shared.KonosBuildConstants.PRESENTABLE_MESSAGE;
 
 public class KonosCompiler {
-	private static Map<String, Boolean> firstTimeMap = new HashMap<>();
 	private final CompilerConfiguration configuration;
 	private final List<CompilerMessage> collector;
 
@@ -80,9 +78,8 @@ public class KonosCompiler {
 		if (graph.slackBotServiceList().isEmpty()) remove(dependencies, "slack");
 		if (graph.visualizationComponents() == null || graph.visualizationComponents().chartList(c -> c.isAbsolute() || c.isRelative()).isEmpty())
 			remove(dependencies, "driver-r");
-		if (graph.visualizationComponents() == null || graph.visualizationComponents().dashboardList(d -> d.isAbsolute() || d.isRelative()).isEmpty()) {
+		if (graph.visualizationComponents() == null || graph.visualizationComponents().dashboardList(d -> d.isAbsolute() || d.isRelative()).isEmpty())
 			remove(dependencies, "driver-shiny");
-		}
 		if (graph.sentinelList().stream().noneMatch(Sentinel::isWebHook) ||
 				!graph.restServiceList().isEmpty() ||
 				!graph.soapServiceList().isEmpty() ||
