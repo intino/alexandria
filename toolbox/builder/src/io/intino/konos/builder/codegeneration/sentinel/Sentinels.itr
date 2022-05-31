@@ -57,7 +57,7 @@ def type(archetype) trigger(customizeDirectory)
 end
 
 def type(custom) trigger(customizeDirectory)
-	new java.io.File("$path".replace("{$path}", configuration.get("$path")))
+	new java.io.File(box.configuration().get("$path")))
 end
 
 def trigger(customizeDirectory)
