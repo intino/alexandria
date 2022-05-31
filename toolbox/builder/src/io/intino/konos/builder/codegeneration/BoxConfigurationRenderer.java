@@ -40,12 +40,11 @@ public class BoxConfigurationRenderer extends Renderer {
 		if (parent() != null && configuration != null && configuration.model() != null && !configuration.model().level().isPlatform())
 			builder.add("parent", parent());
 		if (isTara) builder.add("tara", "");
-		for (String parameter : params) {
-			if (parameter.equalsIgnoreCase("home")) continue;
-			builder.add("parameter", new FrameBuilder(isFile(parameter) ? "file" : "regular")
-					.add("name", nameOf(parameter))
-					.add("value", parameter));
-		}
+		params.stream()
+				.filter(parameter -> !parameter.equalsIgnoreCase("home"))
+				.forEach(parameter -> builder.add("parameter", new FrameBuilder(isFile(parameter) ? "file" : "regular")
+						.add("name", nameOf(parameter))
+						.add("value", parameter)));
 		return boxName;
 	}
 
