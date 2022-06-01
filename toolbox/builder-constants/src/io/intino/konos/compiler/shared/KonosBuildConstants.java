@@ -34,8 +34,9 @@ public class KonosBuildConstants {
 	public static final String PROJECT_PATH = "project.path";
 	public static final String PARAMETERS = "module.parameters";
 	public static final String LANGUAGE = "language";
-	public static final String LIBRARY = "library";
+	public static final String DATAHUB = "datahub";
 	public static final String ARCHETYPE = "archetype";
+	public static final String CURRENT_DEPENDENCIES = "current.dependencies";
 	public static final String LANGUAGE_GENERATION_PACKAGE = "language.generation.package";
 	public static final String PARENT_INTERFACE = "parent.interface";
 	public static final String INTINO_PROJECT_PATH = "intino.project.path";

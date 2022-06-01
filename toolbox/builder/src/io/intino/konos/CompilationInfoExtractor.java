@@ -82,7 +82,7 @@ class CompilationInfoExtractor {
 			case PARENT_INTERFACE:
 				configuration.parentInterface(reader.readLine());
 				break;
-			case LIBRARY:
+			case DATAHUB:
 				configuration.datahubLibrary(findLibraryInRepository(reader.readLine()));
 				break;
 			case ARCHETYPE:

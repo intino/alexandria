@@ -24,5 +24,10 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:zim:4.0.1" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:message:3.0.3" level="project" />
     <orderEntry type="library" name="Intino: org.xerial.snappy:snappy-java:1.1.8.4" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:event:3.0.4" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:zet:1.0.7" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:mapp:1.1.0" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:tris:1.0.0" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.5" level="project" />
   </component>
 </module>
