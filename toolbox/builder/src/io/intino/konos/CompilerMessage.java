@@ -1,6 +1,7 @@
 package io.intino.konos;
 
 public class CompilerMessage {
+	public static final String REBUILD_NEED = "rebuild_needed";
 	public static final String ERROR = "error";
 	public static final String WARNING = "warning";
 	public static final String INFORMATION = "information";
@@ -20,6 +21,10 @@ public class CompilerMessage {
 
 	public String getCategory() {
 		return category;
+	}
+
+	public String getCategoryLabel() {
+		return category.equals(REBUILD_NEED) ? ERROR : category;
 	}
 
 	public String getMessage() {

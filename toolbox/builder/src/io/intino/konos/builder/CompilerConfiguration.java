@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.Logger;
@@ -48,6 +49,7 @@ public class CompilerConfiguration implements Cloneable {
 	private boolean verbose;
 	private File tempDirectory;
 	private File datahubLibrary;
+	private List<String> currentDependencies;
 	private File intinoProjectDirectory;
 	private String generationPackage;
 	private PrintStream out = System.out;
@@ -289,6 +291,15 @@ public class CompilerConfiguration implements Cloneable {
 
 	public Mode mode() {
 		return mode;
+	}
+
+	public List<String> currentDependencies() {
+		return this.currentDependencies == null ? Collections.emptyList() : currentDependencies;
+	}
+
+	public CompilerConfiguration currentDependencies(List<String> currentDependencies) {
+		this.currentDependencies = currentDependencies;
+		return this;
 	}
 
 	public static class ModelConfiguration {

@@ -16,6 +16,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static io.intino.konos.compiler.shared.KonosBuildConstants.PRESENTABLE_MESSAGE;
 
@@ -44,7 +45,9 @@ public class KonosCompiler {
 		try {
 			context.loadCache(graph, graphLoader.stashes());
 			render(graph, context);
-			updateDependencies(requiredDependencies(graph, context));
+			boolean needRebuild = updateDependencies(requiredDependencies(graph, context));
+			if (needRebuild)
+				addRebuildNeededMessage(new KonosException("The build has required an updated of dependencies. Please rebuild module for complete compilation"));
 			return compiledFiles;
 		} catch (Exception e) {
 			processCompilationException(e);
@@ -54,10 +57,18 @@ public class KonosCompiler {
 		return compiledFiles;
 	}
 
-	private void updateDependencies(Map<String, String> requiredDependencies) {
-		if (configuration.groupId().equals("io.intino.alexandria")) return;
-		for (Map.Entry<String, String> entry : requiredDependencies.entrySet())
-			postCompileActionMessages.add(new PostCompileConfigurationDependencyActionMessage(configuration.module(), entry.getKey() + ":" + entry.getValue()));
+	private boolean updateDependencies(Map<String, String> requiredDependencies) {
+		if (configuration.groupId().equals("io.intino.alexandria")) return false;
+		Map<String, String> currentDependencies = configuration.currentDependencies().stream().collect(Collectors.toMap(d -> d.split(":")[0] + ":" + d.split(":")[1], d -> d.split(":")[2]));
+		List<PostCompileConfigurationDependencyActionMessage> toAdd = requiredDependencies.entrySet().stream()
+				.filter(entry -> !contains(currentDependencies, entry))
+				.map(entry -> new PostCompileConfigurationDependencyActionMessage(configuration.module(), entry.getKey() + ":" + entry.getValue())).collect(Collectors.toList());
+		postCompileActionMessages.addAll(toAdd);
+		return !toAdd.isEmpty();
+	}
+
+	private boolean contains(Map<String, String> deps, Map.Entry<String, String> entry) {
+		return deps.containsKey(entry.getKey()) && deps.get(entry.getKey()).compareTo(entry.getValue()) >= 0;
 	}
 
 	private Map<String, String> requiredDependencies(KonosGraph graph, CompilationContext context) {
@@ -123,6 +134,10 @@ public class KonosCompiler {
 
 	private void addErrorMessage(KonosException exception) {
 		collector.add(new CompilerMessage(CompilerMessage.ERROR, exception.getMessage(), "null", -1, -1));
+	}
+
+	private void addRebuildNeededMessage(KonosException exception) {
+		collector.add(new CompilerMessage(CompilerMessage.REBUILD_NEED, exception.getMessage(), "null", -1, -1));
 	}
 
 	private void addWarnings(List<io.intino.konos.builder.context.WarningMessage> warningMessages) {

@@ -191,7 +191,7 @@ public class FullRenderer {
 	private void box() throws KonosException {
 		AbstractBoxRenderer renderer = new AbstractBoxRenderer(context, graph);
 		renderer.execute();
-		new BoxRenderer(context, hasModel).execute();
+		new BoxRenderer(context, graph, hasModel).execute();
 		new BoxConfigurationRenderer(context, hasModel, renderer.customParameters()).execute();
 	}
 

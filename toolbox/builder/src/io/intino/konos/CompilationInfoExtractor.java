@@ -4,6 +4,7 @@ import io.intino.Configuration;
 import io.intino.konos.builder.CompilerConfiguration;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -84,6 +85,9 @@ class CompilationInfoExtractor {
 				break;
 			case DATAHUB:
 				configuration.datahubLibrary(findLibraryInRepository(reader.readLine()));
+				break;
+			case CURRENT_DEPENDENCIES:
+				configuration.currentDependencies(Arrays.asList(reader.readLine().split(",")));
 				break;
 			case ARCHETYPE:
 				configuration.archetypeLibrary(findLibraryInRepository(reader.readLine()));

@@ -17,7 +17,6 @@ def type(box)
 			return this;
 		}
 
-
 		public void beforeStart() {
 
 		}
@@ -34,6 +33,7 @@ def type(box)
 
 		}
 
+		[$hasUi+authService]
 
 		[$rest]
 		[$authenticationValidator]
@@ -44,6 +44,12 @@ def trigger(hide)
 
 end
 
+def trigger(authservice)
+	protected io.intino.alexandria.ui.services.AuthService authService(java.net.URL authServiceUrl) {
+		//TODO add your authService
+		return null;
+	}
+end
 
 def trigger(rest)
 	protected io.intino.alexandria.ui.services.AuthService authService(java.net.URL authServiceUrl) {
