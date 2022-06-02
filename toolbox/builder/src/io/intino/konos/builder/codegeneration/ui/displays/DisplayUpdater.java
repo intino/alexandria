@@ -3,8 +3,8 @@ package io.intino.konos.builder.codegeneration.ui.displays;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.ui.passiveview.PassiveViewUpdater;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.Display;
-import io.intino.konos.model.graph.PassiveView.Request;
+import io.intino.konos.model.Display;
+import io.intino.konos.model.PassiveView.Request;
 
 import java.io.File;
 

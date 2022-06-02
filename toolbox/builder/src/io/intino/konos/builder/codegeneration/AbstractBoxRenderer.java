@@ -9,7 +9,7 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.CompilationContext.DataHubManifest;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.compiler.shared.PostCompileConfigurationParameterActionMessage;
-import io.intino.konos.model.graph.*;
+import io.intino.konos.model.*;
 import io.intino.magritte.framework.Node;
 
 import java.util.*;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
-import static io.intino.konos.model.graph.Subscriber.Durable.SubscriptionMode.ReceiveAfterLastSeal;
+import static io.intino.konos.model.Subscriber.Durable.SubscriptionMode.ReceiveAfterLastSeal;
 
 public class AbstractBoxRenderer extends Renderer {
 	private final KonosGraph graph;

@@ -5,9 +5,9 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.collection.BindingCollectionRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.VisualizationComponents.AbstractSlider;
-import io.intino.konos.model.graph.VisualizationComponents.Slider;
-import io.intino.konos.model.graph.VisualizationComponents.TemporalSlider;
+import io.intino.konos.model.VisualizationComponents.AbstractSlider;
+import io.intino.konos.model.VisualizationComponents.Slider;
+import io.intino.konos.model.VisualizationComponents.TemporalSlider;
 
 public class SliderRenderer extends BindingCollectionRenderer<AbstractSlider> {
 

@@ -11,10 +11,10 @@ import io.intino.konos.builder.codegeneration.action.SoapOperationActionRenderer
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.Schema;
-import io.intino.konos.model.graph.Service;
-import io.intino.konos.model.graph.Service.Soap.Operation;
+import io.intino.konos.model.KonosGraph;
+import io.intino.konos.model.Schema;
+import io.intino.konos.model.Service;
+import io.intino.konos.model.Service.Soap.Operation;
 
 import java.io.File;
 import java.util.List;

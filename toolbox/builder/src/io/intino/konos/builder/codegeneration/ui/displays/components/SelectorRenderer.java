@@ -4,8 +4,8 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.CatalogComponents;
-import io.intino.konos.model.graph.OtherComponents.Selector;
+import io.intino.konos.model.CatalogComponents;
+import io.intino.konos.model.OtherComponents.Selector;
 
 public class SelectorRenderer extends ComponentRenderer<Selector> {
 

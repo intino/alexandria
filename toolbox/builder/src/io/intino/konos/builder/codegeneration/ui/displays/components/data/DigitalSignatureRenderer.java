@@ -5,7 +5,7 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.DataComponents.DigitalSignature;
+import io.intino.konos.model.DataComponents.DigitalSignature;
 
 public class DigitalSignatureRenderer extends ComponentRenderer<DigitalSignature> {
 

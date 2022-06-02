@@ -12,17 +12,17 @@ import io.intino.konos.builder.codegeneration.ui.displays.RouteDispatcherRendere
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.CatalogComponents;
-import io.intino.konos.model.graph.Display;
-import io.intino.konos.model.graph.HelperComponents;
-import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.Display;
+import io.intino.konos.model.Service;
 
 import java.util.List;
 import java.util.Set;
 
-import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
-import static io.intino.konos.builder.helpers.Commons.*;
-import static io.intino.konos.model.graph.PassiveView.Request.ResponseType.Asset;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.serviceFilename;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.serviceFolder;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
+import static io.intino.konos.model.PassiveView.Request.ResponseType.Asset;
 
 public class ServiceRenderer extends UIRenderer {
 	private final Service.UI service;

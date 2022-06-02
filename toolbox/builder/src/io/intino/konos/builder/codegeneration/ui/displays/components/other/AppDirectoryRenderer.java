@@ -5,7 +5,7 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.VisualizationComponents.AppDirectory;
+import io.intino.konos.model.VisualizationComponents.AppDirectory;
 
 public class AppDirectoryRenderer extends ComponentRenderer<AppDirectory> {
 

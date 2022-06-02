@@ -2,14 +2,14 @@ package io.intino.konos.builder.helpers;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.model.graph.Data;
-import io.intino.konos.model.graph.Redirect;
-import io.intino.konos.model.graph.Response;
-import io.intino.konos.model.graph.Service;
-import io.intino.konos.model.graph.Service.REST.Notification;
-import io.intino.konos.model.graph.Service.REST.Resource;
-import io.intino.konos.model.graph.Service.REST.Resource.Operation;
-import io.intino.konos.model.graph.Service.REST.Resource.Parameter.In;
+import io.intino.konos.model.Data;
+import io.intino.konos.model.Redirect;
+import io.intino.konos.model.Response;
+import io.intino.konos.model.Service;
+import io.intino.konos.model.Service.REST.Notification;
+import io.intino.konos.model.Service.REST.Resource;
+import io.intino.konos.model.Service.REST.Resource.Operation;
+import io.intino.konos.model.Service.REST.Resource.Parameter.In;
 
 import java.io.File;
 import java.io.IOException;

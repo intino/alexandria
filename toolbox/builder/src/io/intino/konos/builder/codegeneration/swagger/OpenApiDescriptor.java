@@ -5,10 +5,10 @@ import com.google.gson.GsonBuilder;
 import io.intino.konos.builder.codegeneration.swagger.SwaggerSpec.Path.Operation;
 import io.intino.konos.builder.codegeneration.swagger.SwaggerSpec.SecurityDefinition;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.Exception;
-import io.intino.konos.model.graph.*;
-import io.intino.konos.model.graph.Service.REST.Resource;
-import io.intino.konos.model.graph.Service.REST.Resource.Parameter.In;
+import io.intino.konos.model.Exception;
+import io.intino.konos.model.*;
+import io.intino.konos.model.Service.REST.Resource;
+import io.intino.konos.model.Service.REST.Resource.Parameter.In;
 import io.intino.magritte.framework.Layer;
 
 import java.util.*;

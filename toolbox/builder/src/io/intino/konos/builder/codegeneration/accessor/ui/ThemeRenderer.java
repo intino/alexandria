@@ -7,13 +7,13 @@ import io.intino.konos.builder.codegeneration.accessor.ui.templates.ThemeTemplat
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.Format;
-import io.intino.konos.model.graph.Service;
-import io.intino.konos.model.graph.Theme;
+import io.intino.konos.model.Format;
+import io.intino.konos.model.Service;
+import io.intino.konos.model.Theme;
 
 import java.io.File;
 
-import static io.intino.konos.model.graph.Theme.Type.Normal;
+import static io.intino.konos.model.Theme.Type.Normal;
 
 public class ThemeRenderer extends UIRenderer {
 	private final Service.UI service;

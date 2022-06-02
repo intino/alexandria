@@ -5,8 +5,7 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.SizedRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.DataComponents;
-import io.intino.konos.model.graph.DataComponents.File;
+import io.intino.konos.model.DataComponents.File;
 
 import java.util.stream.Collectors;
 

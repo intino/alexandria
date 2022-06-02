@@ -1,8 +1,8 @@
 package io.intino.konos.builder.codegeneration.action;
 
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.Service;
-import io.intino.konos.model.graph.Service.JMX.Operation;
+import io.intino.konos.model.Service;
+import io.intino.konos.model.Service.JMX.Operation;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 

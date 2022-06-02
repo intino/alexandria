@@ -6,7 +6,7 @@ import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.KonosGraph;
 
 import java.io.File;
 import java.util.Arrays;
@@ -19,7 +19,7 @@ import static java.util.stream.Collectors.toList;
 
 public class ExceptionRenderer extends Renderer {
 	private static final String EXCEPTIONS = "exceptions";
-	private final List<io.intino.konos.model.graph.Exception> exceptions;
+	private final List<io.intino.konos.model.Exception> exceptions;
 
 	public ExceptionRenderer(CompilationContext compilationContext, KonosGraph graph) {
 		super(compilationContext, Target.Owner);
@@ -37,7 +37,7 @@ public class ExceptionRenderer extends Renderer {
 		exceptions.forEach(this::processException);
 	}
 
-	private void processException(io.intino.konos.model.graph.Exception exception) {
+	private void processException(io.intino.konos.model.Exception exception) {
 		writeFrame(destinyPackage(gen()), exception.name$(), template().render(
 				new FrameBuilder("exception")
 						.add("name", exception.name$())

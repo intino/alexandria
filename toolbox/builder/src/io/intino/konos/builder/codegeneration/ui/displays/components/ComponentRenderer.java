@@ -7,12 +7,9 @@ import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.ElementHelper;
-import io.intino.konos.model.graph.*;
-import io.intino.konos.model.graph.CatalogComponents.Collection.Mold;
-import io.intino.konos.model.graph.DataComponents.File;
-import io.intino.konos.model.graph.DataComponents.Image;
-import io.intino.konos.model.graph.DataComponents.Text;
-import io.intino.konos.model.graph.OtherComponents.*;
+import io.intino.konos.model.*;
+import io.intino.konos.model.CatalogComponents.Collection.Mold;
+import io.intino.konos.model.OtherComponents.*;
 import io.intino.magritte.framework.Layer;
 import joptsimple.internal.Strings;
 

@@ -4,8 +4,8 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
-import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.KonosGraph;
+import io.intino.konos.model.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;

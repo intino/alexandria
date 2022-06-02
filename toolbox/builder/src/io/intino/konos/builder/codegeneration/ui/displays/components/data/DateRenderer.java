@@ -6,7 +6,7 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 
-import static io.intino.konos.model.graph.DataComponents.Date;
+import static io.intino.konos.model.DataComponents.Date;
 
 public class DateRenderer extends ComponentRenderer<Date> {
 

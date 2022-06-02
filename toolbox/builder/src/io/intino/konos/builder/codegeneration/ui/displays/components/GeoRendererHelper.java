@@ -1,8 +1,8 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.model.graph.CatalogComponents;
-import io.intino.konos.model.graph.DataComponents;
+import io.intino.konos.model.CatalogComponents;
+import io.intino.konos.model.DataComponents;
 
 public class GeoRendererHelper {
 

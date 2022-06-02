@@ -5,7 +5,7 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ActionableRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.InteractionComponents;
+import io.intino.konos.model.InteractionComponents;
 
 public class OpenSiteRenderer extends ActionableRenderer {
 

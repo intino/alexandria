@@ -5,9 +5,9 @@ import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.Datamart;
-import io.intino.konos.model.graph.Datamart.Mounter;
-import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.Datamart;
+import io.intino.konos.model.Datamart.Mounter;
+import io.intino.konos.model.KonosGraph;
 
 import java.io.File;
 import java.util.ArrayList;

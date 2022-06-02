@@ -2,9 +2,8 @@ package io.intino.konos.builder.helpers;
 
 import cottons.utils.StringHelper;
 import io.intino.konos.builder.codegeneration.ElementReference;
-import io.intino.konos.model.graph.CatalogComponents;
-import io.intino.konos.model.graph.InteractionComponents;
-import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.InteractionComponents;
+import io.intino.konos.model.KonosGraph;
 import io.intino.magritte.framework.Layer;
 import io.intino.magritte.framework.Node;
 import io.intino.magritte.framework.Predicate;

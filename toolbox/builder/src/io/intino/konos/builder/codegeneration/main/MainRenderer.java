@@ -8,7 +8,7 @@ import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.KonosGraph;
 import io.intino.magritte.framework.Layer;
 
 import java.io.File;

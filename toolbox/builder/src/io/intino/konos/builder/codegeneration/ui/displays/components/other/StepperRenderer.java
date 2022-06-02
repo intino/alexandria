@@ -5,7 +5,7 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.VisualizationComponents.Stepper;
+import io.intino.konos.model.VisualizationComponents.Stepper;
 
 public class StepperRenderer extends ComponentRenderer<Stepper> {
 

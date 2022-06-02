@@ -5,9 +5,9 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.Block;
-import io.intino.konos.model.graph.Component;
-import io.intino.konos.model.graph.Template;
+import io.intino.konos.model.Block;
+import io.intino.konos.model.Component;
+import io.intino.konos.model.Template;
 
 import java.io.File;
 import java.util.List;
