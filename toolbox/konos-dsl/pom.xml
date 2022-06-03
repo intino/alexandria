@@ -14,6 +14,7 @@
 		<tara.language>Proteo</tara.language>
 		<tara.language.version>1.0.0</tara.language.version>
 		<tara.out.language>Konos</tara.out.language>
+		<generation.package>io.intino.konos</generation.package>
 		<tara.generation.package>io.intino.konos.model</tara.generation.package>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
