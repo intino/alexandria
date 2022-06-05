@@ -23,7 +23,6 @@ import static io.intino.konos.compiler.shared.KonosBuildConstants.PRESENTABLE_ME
 public class KonosCompiler {
 	private final CompilerConfiguration configuration;
 	private final List<CompilerMessage> collector;
-
 	private final List<PostCompileActionMessage> postCompileActionMessages;
 
 	public KonosCompiler(CompilerConfiguration configuration, List<CompilerMessage> collector, List<PostCompileActionMessage> postCompileActionMessages) {
