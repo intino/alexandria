@@ -9,9 +9,9 @@ import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.Parameter;
-import io.intino.konos.model.graph.Response;
-import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.Parameter;
+import io.intino.konos.model.Response;
+import io.intino.konos.model.Service;
 
 import java.io.File;
 import java.util.HashSet;

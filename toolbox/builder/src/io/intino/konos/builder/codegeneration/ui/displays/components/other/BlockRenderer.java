@@ -5,10 +5,10 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.SizedRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.Block;
-import io.intino.konos.model.graph.Component;
-import io.intino.konos.model.graph.OtherComponents.Selector;
-import io.intino.konos.model.graph.rules.Spacing;
+import io.intino.konos.model.Block;
+import io.intino.konos.model.Component;
+import io.intino.konos.model.OtherComponents.Selector;
+import io.intino.konos.model.rules.Spacing;
 
 public class BlockRenderer extends SizedRenderer<Block> {
 

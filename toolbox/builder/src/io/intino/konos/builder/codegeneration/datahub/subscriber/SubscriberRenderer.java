@@ -7,13 +7,11 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.context.WarningMessage;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.Subscriber;
+import io.intino.konos.model.KonosGraph;
+import io.intino.konos.model.Subscriber;
 
 import java.io.File;
-import java.time.Instant;
 import java.util.List;
-import java.util.function.Predicate;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.javaFile;

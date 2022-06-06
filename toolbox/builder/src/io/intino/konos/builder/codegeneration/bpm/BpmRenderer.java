@@ -11,9 +11,9 @@ import io.intino.konos.builder.codegeneration.bpm.parser.State;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.Workflow;
-import io.intino.konos.model.graph.Workflow.Process;
+import io.intino.konos.model.KonosGraph;
+import io.intino.konos.model.Workflow;
+import io.intino.konos.model.Workflow.Process;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -7,9 +7,9 @@ import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.Service;
-import io.intino.konos.model.graph.Service.JMX.Operation;
+import io.intino.konos.model.KonosGraph;
+import io.intino.konos.model.Service;
+import io.intino.konos.model.Service.JMX.Operation;
 
 import java.util.List;
 import java.util.stream.Collectors;

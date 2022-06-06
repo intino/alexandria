@@ -4,8 +4,8 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.Template;
-import io.intino.konos.model.graph.rules.Spacing;
+import io.intino.konos.model.Template;
+import io.intino.konos.model.rules.Spacing;
 
 public class TemplateRenderer extends SizedRenderer<Template> {
 

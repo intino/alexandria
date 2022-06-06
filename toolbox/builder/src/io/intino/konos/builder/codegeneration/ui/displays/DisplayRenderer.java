@@ -4,7 +4,7 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.Display;
+import io.intino.konos.model.Display;
 
 import java.io.File;
 

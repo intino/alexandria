@@ -9,9 +9,9 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.slack.SlackTemplate;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.Service;
-import io.intino.konos.model.graph.Service.SlackBot.Request;
+import io.intino.konos.model.KonosGraph;
+import io.intino.konos.model.Service;
+import io.intino.konos.model.Service.SlackBot.Request;
 
 import java.io.File;
 import java.util.LinkedHashMap;

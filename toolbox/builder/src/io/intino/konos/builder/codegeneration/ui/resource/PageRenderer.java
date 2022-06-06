@@ -7,7 +7,7 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.ActionRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.CodeGenerationHelper;
-import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.Service;
 
 import java.io.File;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.format;
 import static io.intino.konos.builder.helpers.Commons.*;
-import static io.intino.konos.model.graph.KonosGraph.templateFor;
+import static io.intino.konos.model.KonosGraph.templateFor;
 
 public class PageRenderer extends ActionRenderer {
 

@@ -5,7 +5,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.CodeGenerationHelper;
-import io.intino.konos.model.graph.Display;
+import io.intino.konos.model.Display;
 
 import java.io.File;
 import java.util.List;

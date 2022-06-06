@@ -10,18 +10,18 @@ import io.intino.konos.builder.codegeneration.ui.ElementRenderer;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.ElementHelper;
-import io.intino.konos.model.graph.*;
-import io.intino.konos.model.graph.InteractionComponents.IconToggle;
-import io.intino.konos.model.graph.InteractionComponents.MaterialIconToggle;
-import io.intino.konos.model.graph.InteractionComponents.Switch;
-import io.intino.konos.model.graph.InteractionComponents.Toggle;
-import io.intino.konos.model.graph.OtherComponents.DisplayStamp;
-import io.intino.konos.model.graph.OtherComponents.OwnerTemplateStamp;
-import io.intino.konos.model.graph.OtherComponents.Selector;
-import io.intino.konos.model.graph.OtherComponents.TemplateStamp;
-import io.intino.konos.model.graph.PassiveView.Notification;
-import io.intino.konos.model.graph.PassiveView.Request;
-import io.intino.konos.model.graph.VisualizationComponents.Dashboard;
+import io.intino.konos.model.*;
+import io.intino.konos.model.InteractionComponents.IconToggle;
+import io.intino.konos.model.InteractionComponents.MaterialIconToggle;
+import io.intino.konos.model.InteractionComponents.Switch;
+import io.intino.konos.model.InteractionComponents.Toggle;
+import io.intino.konos.model.OtherComponents.DisplayStamp;
+import io.intino.konos.model.OtherComponents.OwnerTemplateStamp;
+import io.intino.konos.model.OtherComponents.Selector;
+import io.intino.konos.model.OtherComponents.TemplateStamp;
+import io.intino.konos.model.PassiveView.Notification;
+import io.intino.konos.model.PassiveView.Request;
+import io.intino.konos.model.VisualizationComponents.Dashboard;
 import io.intino.magritte.framework.Layer;
 
 import java.io.File;
@@ -35,7 +35,7 @@ import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayNotifierFolder;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayRequesterFolder;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
-import static io.intino.konos.model.graph.PassiveView.Request.ResponseType.Asset;
+import static io.intino.konos.model.PassiveView.Request.ResponseType.Asset;
 import static java.util.stream.Collectors.toList;
 
 public abstract class PassiveViewRenderer<C extends PassiveView> extends ElementRenderer<C> {
@@ -171,15 +171,15 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	protected void addComponentsImports(List<Component> componentList, FrameBuilder builder) {
 		HashSet<String> imported = new HashSet<>();
 		addComponentsImports(imported, componentList, builder);
-		if (!imported.contains("Block") && element.i$(io.intino.konos.model.graph.Template.class))
+		if (!imported.contains("Block") && element.i$(io.intino.konos.model.Template.class))
 			builder.add("alexandriaBlockImport", new FrameBuilder("alexandriaImport").add("name", "Block"));
 	}
 
 	protected List<Component> components(PassiveView passiveView) {
 		List<Component> components = new ArrayList<>();
 		if (passiveView.i$(Block.class)) components.addAll(passiveView.a$(Block.class).componentList());
-		if (passiveView.i$(io.intino.konos.model.graph.Template.class))
-			components.addAll(passiveView.a$(io.intino.konos.model.graph.Template.class).componentList());
+		if (passiveView.i$(io.intino.konos.model.Template.class))
+			components.addAll(passiveView.a$(io.intino.konos.model.Template.class).componentList());
 		if (passiveView.i$(OtherComponents.Snackbar.class))
 			components.addAll(passiveView.a$(OtherComponents.Snackbar.class).componentList());
 		if (passiveView.i$(VisualizationComponents.Stepper.class))
@@ -303,14 +303,14 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	private String componentDirectoryOf(PassiveView passiveView, boolean multiple) {
 		if (multiple && passiveView.i$(Multiple.class)) return "components";
 		if (passiveView.i$(TemplateStamp.class)) {
-			io.intino.konos.model.graph.Template template = passiveView.a$(TemplateStamp.class).template();
+			io.intino.konos.model.Template template = passiveView.a$(TemplateStamp.class).template();
 			return template != null ? componentDirectoryOf(template, multiple) : null;
 		}
 		if (passiveView.i$(DisplayStamp.class)) {
 			Display display = passiveView.a$(DisplayStamp.class).display();
 			return display != null ? componentDirectoryOf(display, multiple) : null;
 		}
-		if (passiveView.i$(io.intino.konos.model.graph.Template.class)) return "templates";
+		if (passiveView.i$(io.intino.konos.model.Template.class)) return "templates";
 		if (passiveView.i$(CatalogComponents.Collection.Mold.Item.class)) return "items";
 		if (passiveView.i$(HelperComponents.Row.class)) return "rows";
 		if (passiveView.i$(Component.class)) return "components";
@@ -455,7 +455,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (component.i$(OwnerTemplateStamp.class))
 			return component.a$(OwnerTemplateStamp.class).template();
 		if (component.i$(TemplateStamp.class)) {
-			io.intino.konos.model.graph.Template template = component.a$(TemplateStamp.class).template();
+			io.intino.konos.model.Template template = component.a$(TemplateStamp.class).template();
 			return template != null ? template.name$() : null;
 		}
 		if (component.i$(DisplayStamp.class)) {

@@ -8,7 +8,7 @@ import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.compiler.shared.PostCompileDependantWebModuleActionMessage;
-import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.Service;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 

@@ -9,19 +9,19 @@ import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRe
 import io.intino.konos.builder.codegeneration.ui.passiveview.PassiveViewRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.ElementHelper;
-import io.intino.konos.model.graph.*;
-import io.intino.konos.model.graph.InteractionComponents.Actionable;
-import io.intino.konos.model.graph.OtherComponents.Dialog;
-import io.intino.konos.model.graph.OtherComponents.OwnerTemplateStamp;
-import io.intino.konos.model.graph.OtherComponents.ProxyStamp;
-import io.intino.konos.model.graph.OtherComponents.TemplateStamp;
+import io.intino.konos.model.*;
+import io.intino.konos.model.InteractionComponents.Actionable;
+import io.intino.konos.model.OtherComponents.Dialog;
+import io.intino.konos.model.OtherComponents.OwnerTemplateStamp;
+import io.intino.konos.model.OtherComponents.ProxyStamp;
+import io.intino.konos.model.OtherComponents.TemplateStamp;
 import io.intino.magritte.framework.Layer;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
-import static io.intino.konos.model.graph.CatalogComponents.Collection;
-import static io.intino.konos.model.graph.Component.DynamicLoaded;
-import static io.intino.konos.model.graph.OtherComponents.Selector;
+import static io.intino.konos.model.CatalogComponents.Collection;
+import static io.intino.konos.model.Component.DynamicLoaded;
+import static io.intino.konos.model.OtherComponents.Selector;
 
 public abstract class BaseDisplayRenderer<D extends Display> extends PassiveViewRenderer<D> {
 	private static final ComponentRendererFactory factory = new ComponentRendererFactory();

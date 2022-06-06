@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.cache;
 
 import io.intino.alexandria.logger.Logger;
-import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.KonosGraph;
 import io.intino.magritte.framework.stores.FileSystemStore;
 import io.intino.magritte.framework.utils.StoreAuditor;
 import io.intino.magritte.io.Stash;

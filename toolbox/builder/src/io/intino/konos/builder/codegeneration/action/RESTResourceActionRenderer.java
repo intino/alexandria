@@ -1,8 +1,8 @@
 package io.intino.konos.builder.codegeneration.action;
 
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.Service;
-import io.intino.konos.model.graph.Service.REST.Resource;
+import io.intino.konos.model.Service;
+import io.intino.konos.model.Service.REST.Resource;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

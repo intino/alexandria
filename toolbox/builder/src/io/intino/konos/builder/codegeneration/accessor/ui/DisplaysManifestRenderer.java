@@ -8,9 +8,9 @@ import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.builder.helpers.ElementHelper;
-import io.intino.konos.model.graph.Display;
-import io.intino.konos.model.graph.PassiveView;
-import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.Display;
+import io.intino.konos.model.PassiveView;
+import io.intino.konos.model.Service;
 
 import java.io.File;
 import java.util.Collection;

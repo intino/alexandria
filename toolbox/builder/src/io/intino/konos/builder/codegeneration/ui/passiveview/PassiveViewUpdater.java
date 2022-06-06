@@ -4,8 +4,8 @@ import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.builder.codegeneration.services.ui.templates.DisplayTemplate;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.PassiveView;
-import io.intino.konos.model.graph.PassiveView.Request;
+import io.intino.konos.model.PassiveView;
+import io.intino.konos.model.PassiveView.Request;
 
 import java.io.File;
 

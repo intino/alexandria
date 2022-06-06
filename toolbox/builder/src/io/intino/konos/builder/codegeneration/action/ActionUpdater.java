@@ -4,10 +4,10 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.compiler.shared.PostCompileFieldActionMessage;
 import io.intino.konos.compiler.shared.PostCompileMethodActionMessage;
-import io.intino.konos.model.graph.Data;
-import io.intino.konos.model.graph.Exception;
-import io.intino.konos.model.graph.Parameter;
-import io.intino.konos.model.graph.Response;
+import io.intino.konos.model.Data;
+import io.intino.konos.model.Exception;
+import io.intino.konos.model.Parameter;
+import io.intino.konos.model.Response;
 
 import java.io.File;
 import java.util.Collections;

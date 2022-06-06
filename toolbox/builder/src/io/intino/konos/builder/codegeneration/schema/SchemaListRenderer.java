@@ -4,9 +4,9 @@ import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
-import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.Schema;
-import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.KonosGraph;
+import io.intino.konos.model.Schema;
+import io.intino.konos.model.Service;
 
 import java.io.File;
 import java.util.Arrays;

@@ -5,8 +5,8 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.SizedRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.Dataframe;
-import io.intino.konos.model.graph.VisualizationComponents.Chart;
+import io.intino.konos.model.Dataframe;
+import io.intino.konos.model.VisualizationComponents.Chart;
 
 public class ChartRenderer extends SizedRenderer<Chart> {
 

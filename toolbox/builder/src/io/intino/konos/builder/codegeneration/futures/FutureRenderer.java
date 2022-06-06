@@ -10,8 +10,8 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.Data;
-import io.intino.konos.model.graph.Parameter;
+import io.intino.konos.model.Data;
+import io.intino.konos.model.Parameter;
 
 import java.io.File;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.stream.IntStream;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
-import static io.intino.konos.model.graph.Service.Agenda.Future;
+import static io.intino.konos.model.Service.Agenda.Future;
 
 public class FutureRenderer extends Renderer {
 

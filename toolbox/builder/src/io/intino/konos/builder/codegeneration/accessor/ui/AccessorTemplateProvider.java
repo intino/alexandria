@@ -6,7 +6,7 @@ import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.*;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.helpers.ElementHelper;
-import io.intino.konos.model.graph.PassiveView;
+import io.intino.konos.model.PassiveView;
 import io.intino.magritte.framework.Layer;
 
 public class AccessorTemplateProvider implements TemplateProvider {
@@ -18,7 +18,7 @@ public class AccessorTemplateProvider implements TemplateProvider {
 	}
 
 	public Template genTemplate(Layer layer, FrameBuilder builder) {
-		if (layer.i$(io.intino.konos.model.graph.Template.Desktop.class)) return setup(new AbstractDesktopTemplate());
+		if (layer.i$(io.intino.konos.model.Template.Desktop.class)) return setup(new AbstractDesktopTemplate());
 		return setup(new AbstractDisplayTemplate());
 	}
 

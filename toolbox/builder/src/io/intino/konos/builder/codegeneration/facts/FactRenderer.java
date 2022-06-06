@@ -2,10 +2,10 @@ package io.intino.konos.builder.codegeneration.facts;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.analytic.SchemaSerialBuilder;
-import io.intino.konos.model.graph.Axis;
-import io.intino.konos.model.graph.Cube;
-import io.intino.konos.model.graph.Cube.Fact.Column;
-import io.intino.konos.model.graph.SizedData;
+import io.intino.konos.model.Axis;
+import io.intino.konos.model.Cube;
+import io.intino.konos.model.Cube.Fact.Column;
+import io.intino.konos.model.SizedData;
 
 import java.io.*;
 import java.util.*;

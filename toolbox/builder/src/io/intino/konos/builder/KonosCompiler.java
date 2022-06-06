@@ -7,8 +7,8 @@ import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.compiler.shared.PostCompileActionMessage;
 import io.intino.konos.compiler.shared.PostCompileConfigurationDependencyActionMessage;
-import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.Sentinel;
+import io.intino.konos.model.KonosGraph;
+import io.intino.konos.model.Sentinel;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -23,7 +23,6 @@ import static io.intino.konos.compiler.shared.KonosBuildConstants.PRESENTABLE_ME
 public class KonosCompiler {
 	private final CompilerConfiguration configuration;
 	private final List<CompilerMessage> collector;
-
 	private final List<PostCompileActionMessage> postCompileActionMessages;
 
 	public KonosCompiler(CompilerConfiguration configuration, List<CompilerMessage> collector, List<PostCompileActionMessage> postCompileActionMessages) {

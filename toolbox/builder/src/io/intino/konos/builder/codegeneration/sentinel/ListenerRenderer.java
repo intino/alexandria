@@ -11,8 +11,8 @@ import io.intino.konos.builder.codegeneration.action.ActionTemplate;
 import io.intino.konos.builder.codegeneration.action.ActionUpdater;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.Sentinel;
+import io.intino.konos.model.KonosGraph;
+import io.intino.konos.model.Sentinel;
 
 import java.io.File;
 import java.util.ArrayList;

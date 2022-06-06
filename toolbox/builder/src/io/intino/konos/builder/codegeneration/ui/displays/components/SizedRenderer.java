@@ -4,9 +4,9 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.Absolute;
-import io.intino.konos.model.graph.Component;
-import io.intino.konos.model.graph.Relative;
+import io.intino.konos.model.Absolute;
+import io.intino.konos.model.Component;
+import io.intino.konos.model.Relative;
 
 public class SizedRenderer<C extends Component> extends ComponentRenderer<C> {
 

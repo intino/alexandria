@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.analytic;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.Axis;
+import io.intino.konos.model.Axis;
 
 import java.io.File;
 import java.util.Collection;

@@ -9,7 +9,7 @@ import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.Display;
+import io.intino.konos.model.Display;
 
 import java.util.List;
 import java.util.stream.Collectors;

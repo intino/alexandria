@@ -10,10 +10,10 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.Data;
-import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.Parameter;
-import io.intino.konos.model.graph.Service.Agenda;
+import io.intino.konos.model.Data;
+import io.intino.konos.model.KonosGraph;
+import io.intino.konos.model.Parameter;
+import io.intino.konos.model.Service.Agenda;
 
 import java.util.List;
 import java.util.stream.IntStream;

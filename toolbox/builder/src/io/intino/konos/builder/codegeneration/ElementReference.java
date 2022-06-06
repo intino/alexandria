@@ -11,9 +11,9 @@ public class ElementReference {
 		Display, Schema, Theme;
 
 		public static Context from(Layer element) {
-			if (element.i$(io.intino.konos.model.graph.Theme.class)) return ElementReference.Context.Theme;
-			if (element.i$(io.intino.konos.model.graph.Schema.class)) return ElementReference.Context.Schema;
-			if (element.i$(io.intino.konos.model.graph.Display.class)) return Context.Display;
+			if (element.i$(io.intino.konos.model.Theme.class)) return ElementReference.Context.Theme;
+			if (element.i$(io.intino.konos.model.Schema.class)) return ElementReference.Context.Schema;
+			if (element.i$(io.intino.konos.model.Display.class)) return Context.Display;
 			return null;
 		}
 	}

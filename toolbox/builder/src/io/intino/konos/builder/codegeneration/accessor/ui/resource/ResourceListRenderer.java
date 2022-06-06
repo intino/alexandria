@@ -3,8 +3,8 @@ package io.intino.konos.builder.codegeneration.accessor.ui.resource;
 import io.intino.konos.builder.codegeneration.ui.resource.AccessibleDisplayRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
-import io.intino.konos.model.graph.Display;
-import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.Display;
+import io.intino.konos.model.Service;
 
 import static io.intino.konos.builder.codegeneration.Target.Accessor;
 

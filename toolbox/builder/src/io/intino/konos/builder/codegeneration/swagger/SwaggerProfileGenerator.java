@@ -1,11 +1,10 @@
 package io.intino.konos.builder.codegeneration.swagger;
 
 import io.intino.alexandria.logger.Logger;
-import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
