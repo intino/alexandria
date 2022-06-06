@@ -7,7 +7,7 @@ import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.CodeGenerationHelper;
-import io.intino.konos.model.graph.*;
+import io.intino.konos.model.*;
 import io.intino.magritte.framework.Layer;
 
 import java.util.Map;
@@ -38,7 +38,7 @@ public abstract class UIRenderer extends Renderer {
 		return addFormats(template);
 	}
 
-	protected String path(io.intino.konos.model.graph.Display display) {
+	protected String path(io.intino.konos.model.Display display) {
 		return CodeGenerationHelper.displayPath(typeOf(display), target);
 	}
 
@@ -85,7 +85,7 @@ public abstract class UIRenderer extends Renderer {
 
 	protected boolean hasAbstractClass(Layer element) {
 		if (target == Target.Owner) return true;
-		return !element.i$(io.intino.konos.model.graph.Template.class) &&
+		return !element.i$(io.intino.konos.model.Template.class) &&
 				!element.i$(CatalogComponents.Table.class) &&
 				!element.i$(CatalogComponents.DynamicTable.class) &&
 				!element.i$(CatalogComponents.Collection.Mold.Item.class) &&
@@ -98,7 +98,7 @@ public abstract class UIRenderer extends Renderer {
 				!element.i$(CatalogComponents.Table.class) &&
 				!element.i$(CatalogComponents.DynamicTable.class) &&
 				!element.i$(HelperComponents.Row.class) &&
-				!element.i$(io.intino.konos.model.graph.Template.class);
+				!element.i$(io.intino.konos.model.Template.class);
 	}
 
 	protected boolean hasConcreteRequester(PassiveView element) {
@@ -107,7 +107,7 @@ public abstract class UIRenderer extends Renderer {
 				!element.i$(CatalogComponents.Table.class) &&
 				!element.i$(CatalogComponents.DynamicTable.class) &&
 				!element.i$(HelperComponents.Row.class) &&
-				!element.i$(io.intino.konos.model.graph.Template.class);
+				!element.i$(io.intino.konos.model.Template.class);
 	}
 
 	protected String notifierName(Layer element) {
@@ -119,7 +119,7 @@ public abstract class UIRenderer extends Renderer {
 	}
 
 	private String passiveViewName(Layer element) {
-		if (element.i$(io.intino.konos.model.graph.Template.class)) return "Template";
+		if (element.i$(io.intino.konos.model.Template.class)) return "Template";
 		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) return "Item";
 		if (element.i$(HelperComponents.Row.class)) return "Row";
 		if (element.i$(CatalogComponents.Table.class)) return "Table";
@@ -128,7 +128,7 @@ public abstract class UIRenderer extends Renderer {
 	}
 
 	protected String requesterTypeOf(Display display) {
-		if (display.i$(io.intino.konos.model.graph.Template.class)) return "io.intino.alexandria.ui.displays.requesters.Template";
+		if (display.i$(io.intino.konos.model.Template.class)) return "io.intino.alexandria.ui.displays.requesters.Template";
 		if (display.i$(CatalogComponents.Collection.Mold.Item.class)) return "io.intino.alexandria.ui.displays.requesters.Item";
 		if (display.i$(HelperComponents.Row.class)) return "io.intino.alexandria.ui.displays.requesters.Row";
 		if (display.i$(CatalogComponents.Table.class)) return "io.intino.alexandria.ui.displays.requesters.Table";
@@ -139,7 +139,7 @@ public abstract class UIRenderer extends Renderer {
 	protected FrameBuilder notifierImportFrame(Display element) {
 		FrameBuilder result = buildBaseFrame().add("notifierImport");
 		result.add("name", element.name$());
-		if (element.i$(io.intino.konos.model.graph.Template.class)) result.add("template");
+		if (element.i$(io.intino.konos.model.Template.class)) result.add("template");
 		if (element.i$(HelperComponents.Row.class)) result.add("row");
 		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) result.add("item");
 		if (element.i$(CatalogComponents.Table.class)) result.add("table");

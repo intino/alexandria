@@ -4,9 +4,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.InteractionComponents;
-
-import java.util.UUID;
+import io.intino.konos.model.InteractionComponents;
 
 public class ActionableRenderer extends ComponentRenderer<InteractionComponents.Actionable> {
 

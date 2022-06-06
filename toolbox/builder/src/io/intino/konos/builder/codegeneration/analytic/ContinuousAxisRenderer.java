@@ -3,7 +3,7 @@ package io.intino.konos.builder.codegeneration.analytic;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.Axis;
+import io.intino.konos.model.Axis;
 
 import java.io.File;
 import java.util.List;
@@ -11,7 +11,6 @@ import java.util.List;
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.*;
-import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 
 public class ContinuousAxisRenderer {
 

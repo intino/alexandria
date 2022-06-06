@@ -7,10 +7,10 @@ import io.intino.konos.builder.codegeneration.accessor.ui.templates.PageTemplate
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.builder.helpers.ElementHelper;
-import io.intino.konos.model.graph.Display;
-import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.Service;
-import io.intino.konos.model.graph.Template;
+import io.intino.konos.model.Display;
+import io.intino.konos.model.KonosGraph;
+import io.intino.konos.model.Service;
+import io.intino.konos.model.Template;
 
 import java.io.File;
 
@@ -71,6 +71,7 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 		result.add("name", use.name$());
 		result.add("url", use.url());
 		result.add("elements", camelCaseToSnakeCase(use.service()));
+		result.add("service", use.service());
 		return result.toFrame();
 	}
 

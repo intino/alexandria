@@ -7,24 +7,22 @@ import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.compiler.shared.PostCompileActionMessage;
 import io.intino.konos.compiler.shared.PostCompileConfigurationDependencyActionMessage;
-import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.Sentinel;
+import io.intino.konos.model.KonosGraph;
+import io.intino.konos.model.Sentinel;
 
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static io.intino.konos.compiler.shared.KonosBuildConstants.PRESENTABLE_MESSAGE;
 
 public class KonosCompiler {
-	private static Map<String, Boolean> firstTimeMap = new HashMap<>();
 	private final CompilerConfiguration configuration;
 	private final List<CompilerMessage> collector;
-
 	private final List<PostCompileActionMessage> postCompileActionMessages;
 
 	public KonosCompiler(CompilerConfiguration configuration, List<CompilerMessage> collector, List<PostCompileActionMessage> postCompileActionMessages) {
@@ -46,7 +44,9 @@ public class KonosCompiler {
 		try {
 			context.loadCache(graph, graphLoader.stashes());
 			render(graph, context);
-			updateDependencies(requiredDependencies(graph, context));
+			boolean needRebuild = updateDependencies(requiredDependencies(graph, context));
+			if (needRebuild)
+				addRebuildNeededMessage(new KonosException("The build has required an updated of dependencies. Please rebuild module for complete compilation"));
 			return compiledFiles;
 		} catch (Exception e) {
 			processCompilationException(e);
@@ -56,10 +56,18 @@ public class KonosCompiler {
 		return compiledFiles;
 	}
 
-	private void updateDependencies(Map<String, String> requiredDependencies) {
-		if (configuration.groupId().equals("io.intino.alexandria")) return;
-		for (Map.Entry<String, String> entry : requiredDependencies.entrySet())
-			postCompileActionMessages.add(new PostCompileConfigurationDependencyActionMessage(configuration.module(), entry.getKey() + ":" + entry.getValue()));
+	private boolean updateDependencies(Map<String, String> requiredDependencies) {
+		if (configuration.groupId().equals("io.intino.alexandria")) return false;
+		Map<String, String> currentDependencies = configuration.currentDependencies().stream().collect(Collectors.toMap(d -> d.split(":")[0] + ":" + d.split(":")[1], d -> d.split(":")[2]));
+		List<PostCompileConfigurationDependencyActionMessage> toAdd = requiredDependencies.entrySet().stream()
+				.filter(entry -> !contains(currentDependencies, entry))
+				.map(entry -> new PostCompileConfigurationDependencyActionMessage(configuration.module(), entry.getKey() + ":" + entry.getValue())).collect(Collectors.toList());
+		postCompileActionMessages.addAll(toAdd);
+		return !toAdd.isEmpty();
+	}
+
+	private boolean contains(Map<String, String> deps, Map.Entry<String, String> entry) {
+		return deps.containsKey(entry.getKey()) && deps.get(entry.getKey()).compareTo(entry.getValue()) >= 0;
 	}
 
 	private Map<String, String> requiredDependencies(KonosGraph graph, CompilationContext context) {
@@ -80,9 +88,8 @@ public class KonosCompiler {
 		if (graph.slackBotServiceList().isEmpty()) remove(dependencies, "slack");
 		if (graph.visualizationComponents() == null || graph.visualizationComponents().chartList(c -> c.isAbsolute() || c.isRelative()).isEmpty())
 			remove(dependencies, "driver-r");
-		if (graph.visualizationComponents() == null || graph.visualizationComponents().dashboardList(d -> d.isAbsolute() || d.isRelative()).isEmpty()) {
+		if (graph.visualizationComponents() == null || graph.visualizationComponents().dashboardList(d -> d.isAbsolute() || d.isRelative()).isEmpty())
 			remove(dependencies, "driver-shiny");
-		}
 		if (graph.sentinelList().stream().noneMatch(Sentinel::isWebHook) ||
 				!graph.restServiceList().isEmpty() ||
 				!graph.soapServiceList().isEmpty() ||
@@ -126,6 +133,10 @@ public class KonosCompiler {
 
 	private void addErrorMessage(KonosException exception) {
 		collector.add(new CompilerMessage(CompilerMessage.ERROR, exception.getMessage(), "null", -1, -1));
+	}
+
+	private void addRebuildNeededMessage(KonosException exception) {
+		collector.add(new CompilerMessage(CompilerMessage.REBUILD_NEED, exception.getMessage(), "null", -1, -1));
 	}
 
 	private void addWarnings(List<io.intino.konos.builder.context.WarningMessage> warningMessages) {

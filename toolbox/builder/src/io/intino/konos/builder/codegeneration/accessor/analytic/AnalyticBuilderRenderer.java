@@ -11,9 +11,9 @@ import io.intino.konos.builder.codegeneration.analytic.CategoricalAxisRenderer;
 import io.intino.konos.builder.codegeneration.analytic.ContinuousAxisRenderer;
 import io.intino.konos.builder.codegeneration.facts.FactRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.Axis;
-import io.intino.konos.model.graph.Cube;
-import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.Axis;
+import io.intino.konos.model.Cube;
+import io.intino.konos.model.KonosGraph;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 

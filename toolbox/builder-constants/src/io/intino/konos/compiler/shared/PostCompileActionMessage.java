@@ -11,7 +11,7 @@ public abstract class PostCompileActionMessage {
 	protected final String name;
 
 	public enum ObjectType {
-		FIELD, METHOD, CONFIGURATION_PARAMETER, CONFIGURATION_DEPENDENCY, MODULE
+		FIELD, METHOD, CONFIGURATION_PARAMETER, CONFIGURATION_DEPENDENCY, MODULE, MAIN_CLASS
 	}
 
 	public PostCompileActionMessage(String module, File file, ObjectType objectType, String name) {

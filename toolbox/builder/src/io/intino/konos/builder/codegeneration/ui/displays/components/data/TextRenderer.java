@@ -5,7 +5,7 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.DataComponents.Text;
+import io.intino.konos.model.DataComponents.Text;
 
 import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 

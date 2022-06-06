@@ -4,8 +4,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.CatalogComponents.SearchBox;
-import io.intino.konos.model.graph.OtherComponents;
+import io.intino.konos.model.CatalogComponents.SearchBox;
 
 public class SearchBoxRenderer extends BindingCollectionRenderer<SearchBox> {
 

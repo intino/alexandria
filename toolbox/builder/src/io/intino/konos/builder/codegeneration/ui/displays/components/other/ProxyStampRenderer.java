@@ -6,8 +6,8 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.OtherComponents.ProxyStamp;
-import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.OtherComponents.ProxyStamp;
+import io.intino.konos.model.Service;
 
 public class ProxyStampRenderer extends ComponentRenderer<ProxyStamp> {
 

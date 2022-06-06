@@ -8,7 +8,8 @@ import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.compiler.shared.PostCompileConfigurationMainActionMessage;
+import io.intino.konos.model.KonosGraph;
 import io.intino.magritte.framework.Layer;
 
 import java.io.File;
@@ -41,6 +42,7 @@ public class MainRenderer extends Renderer {
 		if (!mainFile.exists()) {
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(graph.core$().rootList().get(0).as(Layer.class)), mainFile.getAbsolutePath()));
 			writeFrame(destination, "Main", template().render(builder.toFrame()));
+			context.postCompileActionMessages().add(new PostCompileConfigurationMainActionMessage(configuration.module(), context.packageName() + ".Main"));
 		}
 	}
 

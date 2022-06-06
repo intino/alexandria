@@ -5,7 +5,7 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.VisualizationComponents.Spinner;
+import io.intino.konos.model.VisualizationComponents.Spinner;
 
 public class SpinnerRenderer extends ComponentRenderer<Spinner> {
 

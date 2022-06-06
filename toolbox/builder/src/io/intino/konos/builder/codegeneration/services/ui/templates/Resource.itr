@@ -11,6 +11,7 @@ def type(resource & accessibleDisplay)
 	import io.intino.alexandria.ui.services.push.UIClient;
 	import io.intino.alexandria.ui.services.push.UISession;
 
+	import java.util.function.Consumer;
 	import java.util.function.Function;
 
 	public class $name+firstUpperCase~ProxyResource extends io.intino.alexandria.ui.spark.resources.ProxyResource {
@@ -88,6 +89,15 @@ def type(resource & accessibleDisplay)
 			box.registerSoul(client.id(), soul);
 			soul.register(new io.intino.alexandria.ui.displays.DisplayRouter(box).id("__router__"));
 			//(($package+validPackage.ui.displays.RouteDispatcher)box.routeManager().routeDispatcher()).dispatch$name+firstUpperCase(soul[, $parameter+dispatch...[, ]]);
+
+            manager.pushService().onClose(page.clientId).execute(new Consumer<UIClient>() {
+                @Override
+                public void accept(io.intino.alexandria.ui.services.push.UIClient client) {
+                    box.soul(client.id()).ifPresent(s -> s.destroy());
+                    box.unRegisterSoul(client.id());
+                    manager.unRegister(client);
+                }
+            });
 
 			manager.write("OK");
 		}

@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.services.slack;
 
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.compiler.shared.PostCompileMethodActionMessage;
-import io.intino.konos.model.graph.Service.SlackBot.Request;
+import io.intino.konos.model.Service.SlackBot.Request;
 
 import java.io.File;
 import java.util.List;

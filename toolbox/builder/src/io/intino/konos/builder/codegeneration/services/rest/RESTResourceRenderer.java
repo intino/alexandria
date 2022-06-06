@@ -13,10 +13,10 @@ import io.intino.konos.builder.codegeneration.action.RESTResourceActionRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.*;
-import io.intino.konos.model.graph.Service.REST.Notification;
-import io.intino.konos.model.graph.Service.REST.Resource;
-import io.intino.konos.model.graph.Service.REST.Resource.Parameter;
+import io.intino.konos.model.*;
+import io.intino.konos.model.Service.REST.Notification;
+import io.intino.konos.model.Service.REST.Resource;
+import io.intino.konos.model.Service.REST.Resource.Parameter;
 
 import java.io.File;
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
-import static io.intino.konos.model.graph.Service.REST.Resource.Operation;
+import static io.intino.konos.model.Service.REST.Resource.Operation;
 
 public class RESTResourceRenderer extends Renderer {
 	private static final String RESOURCES_PACKAGE = "rest/resources";
@@ -166,7 +166,7 @@ public class RESTResourceRenderer extends Renderer {
 				.add("in", parameter.in().name()).toFrame();
 	}
 
-	private Frame parameterType(io.intino.konos.model.graph.Parameter parameter) {
+	private Frame parameterType(io.intino.konos.model.Parameter parameter) {
 		String innerPackage = parameter.isObject() && parameter.asObject().isComponent() ? String.join(".", packageName(), "schemas.") : "";
 		final FrameBuilder builder = new FrameBuilder();
 		if (parameter.isWord()) builder.add("value", "java.lang.String");

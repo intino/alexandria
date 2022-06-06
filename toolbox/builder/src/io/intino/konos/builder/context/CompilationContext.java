@@ -10,7 +10,7 @@ import io.intino.konos.builder.codegeneration.cache.CacheWriter;
 import io.intino.konos.builder.codegeneration.cache.LayerCache;
 import io.intino.konos.compiler.shared.KonosBuildConstants;
 import io.intino.konos.compiler.shared.PostCompileActionMessage;
-import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.KonosGraph;
 import io.intino.magritte.framework.Layer;
 import io.intino.magritte.framework.Node;
 import io.intino.magritte.io.Stash;

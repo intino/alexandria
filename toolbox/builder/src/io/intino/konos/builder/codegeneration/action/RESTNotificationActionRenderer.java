@@ -1,8 +1,8 @@
 package io.intino.konos.builder.codegeneration.action;
 
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.Service;
-import io.intino.konos.model.graph.Service.REST.Notification;
+import io.intino.konos.model.Service;
+import io.intino.konos.model.Service.REST.Notification;
 
 import java.util.Collections;
 

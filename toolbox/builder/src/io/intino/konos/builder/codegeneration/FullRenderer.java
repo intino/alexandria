@@ -32,8 +32,8 @@ import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRe
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.compiler.shared.KonosBuildConstants.Mode;
-import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.KonosGraph;
+import io.intino.konos.model.Service;
 
 import java.io.File;
 
@@ -191,7 +191,7 @@ public class FullRenderer {
 	private void box() throws KonosException {
 		AbstractBoxRenderer renderer = new AbstractBoxRenderer(context, graph);
 		renderer.execute();
-		new BoxRenderer(context, hasModel).execute();
+		new BoxRenderer(context, graph, hasModel).execute();
 		new BoxConfigurationRenderer(context, hasModel, renderer.customParameters()).execute();
 	}
 

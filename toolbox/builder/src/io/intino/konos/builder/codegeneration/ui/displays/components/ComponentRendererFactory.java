@@ -8,12 +8,12 @@ import io.intino.konos.builder.codegeneration.ui.displays.components.collection.
 import io.intino.konos.builder.codegeneration.ui.displays.components.data.*;
 import io.intino.konos.builder.codegeneration.ui.displays.components.other.*;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.*;
-import io.intino.konos.model.graph.DataComponents.*;
-import io.intino.konos.model.graph.InteractionComponents.Actionable;
-import io.intino.konos.model.graph.InteractionComponents.Toolbar;
+import io.intino.konos.model.*;
+import io.intino.konos.model.DataComponents.*;
+import io.intino.konos.model.InteractionComponents.Actionable;
+import io.intino.konos.model.InteractionComponents.Toolbar;
 
-import static io.intino.konos.model.graph.VisualizationComponents.*;
+import static io.intino.konos.model.VisualizationComponents.*;
 
 public class ComponentRendererFactory {
 

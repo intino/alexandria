@@ -93,5 +93,5 @@ def trigger(origin)
 end
 
 def type(accessibleImport)
-    import Displays from '$elements/gen/AccessibleDisplays';
+    import $service+firstUpperCase~AccessibleDisplays from '$elements/gen/AccessibleDisplays';
 end

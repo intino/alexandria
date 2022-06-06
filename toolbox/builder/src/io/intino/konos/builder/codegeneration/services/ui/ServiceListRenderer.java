@@ -8,8 +8,8 @@ import io.intino.konos.builder.codegeneration.ui.displays.DisplayListRenderer;
 import io.intino.konos.builder.codegeneration.ui.resource.ResourceListRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
-import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.KonosGraph;
+import io.intino.konos.model.Service;
 
 import java.io.File;
 

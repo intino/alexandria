@@ -6,10 +6,10 @@ import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.collection.ItemRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.CatalogComponents;
-import io.intino.konos.model.graph.Component;
-import io.intino.konos.model.graph.Display;
-import io.intino.konos.model.graph.Template;
+import io.intino.konos.model.CatalogComponents;
+import io.intino.konos.model.Component;
+import io.intino.konos.model.Display;
+import io.intino.konos.model.Template;
 
 public class DisplayRendererFactory {
 

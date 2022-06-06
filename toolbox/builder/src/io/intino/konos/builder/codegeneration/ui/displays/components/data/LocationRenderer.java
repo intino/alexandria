@@ -6,7 +6,7 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.GeoRendererHelper;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.DataComponents.Location;
+import io.intino.konos.model.DataComponents.Location;
 
 import java.util.List;
 import java.util.stream.Collectors;

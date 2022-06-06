@@ -5,9 +5,8 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.CatalogComponents;
-import io.intino.konos.model.graph.CatalogComponents.Grouping;
-import io.intino.konos.model.graph.CatalogComponents.GroupingToolbar;
+import io.intino.konos.model.CatalogComponents.Grouping;
+import io.intino.konos.model.CatalogComponents.GroupingToolbar;
 
 import java.util.List;
 

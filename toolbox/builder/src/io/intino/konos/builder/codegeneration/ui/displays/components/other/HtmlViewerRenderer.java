@@ -5,9 +5,7 @@ import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.graph.OtherComponents;
-import io.intino.konos.model.graph.OtherComponents.HtmlViewer;
-import io.intino.konos.model.graph.OtherComponents.MicroSite;
+import io.intino.konos.model.OtherComponents.HtmlViewer;
 
 public class HtmlViewerRenderer extends ComponentRenderer<HtmlViewer> {
 

@@ -5,8 +5,8 @@ import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.MessageHub;
+import io.intino.konos.model.KonosGraph;
+import io.intino.konos.model.MessageHub;
 
 import java.io.File;
 

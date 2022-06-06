@@ -50,12 +50,12 @@ def type(app)
 			$page+render...[$NL$NL]
 		}
 
-        function openPushServices() {
+        function openPushService() {
             window.setTimeout(() => {
-                const configuration = Application.configuration;
-                const pushConnections = configuration.pushConnections;
+                const pushConnections = Application.configuration.pushConnections;
                 for (let i=0; i<pushConnections.length; i++) {
                     const connection = pushConnections$[i$].split("_##_");
+                    if (connection$[0$].toLowerCase() !== "default") continue;
                     PushService.openConnection(connection$[0$], connection$[1$]);
                 }
             }, 100);
@@ -84,8 +84,8 @@ end
 
 def type(page) trigger(render)
     const requireGoogleApi = Application.configuration.googleApiKey != null && Application.configuration.googleApiKey !== "";
-    const content = requireGoogleApi ? <GoogleApiLoader onLoad={openPushServices()}><$templateName+firstUpperCase~Page/></GoogleApiLoader> : <$templateName+firstUpperCase~Page/>;
+    const content = requireGoogleApi ? <GoogleApiLoader onLoad={openPushService()}><$templateName+firstUpperCase~Page/></GoogleApiLoader> : <$templateName+firstUpperCase~Page/>;
     const $templateName+firstLowerCase = document.getElementById("$templateName+firstUpperCase");
     if ($templateName+firstLowerCase) ReactDOM.render(<DisplayRouter id="__router__" owner={()=>""} context={()=>""}>{content}</DisplayRouter>, $templateName+firstLowerCase);
-    if (!requireGoogleApi) openPushServices();
+    if (!requireGoogleApi) openPushService();
 end

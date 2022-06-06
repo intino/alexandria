@@ -8,8 +8,9 @@ def type(sentinels)
 	import java.util.LinkedHashSet;
 	import java.util.Map;
 	import java.util.Set;
-	import java.time.ZoneId;
 	import java.util.TimeZone;
+	import java.time.ZoneId;
+	import java.io.File;
 	import io.intino.alexandria.logger.Logger;
 
 	import static org.quartz.JobBuilder.newJob;
@@ -43,17 +44,23 @@ def type(sentinels)
 end
 
 def type(sentinel) type(FileListener) trigger(init)
-	scheduler.watchDirectory("$name", $file+customizeDirectory, (file, event) -> {
-			$package+ValidPackage.actions.$name+SnakeCaseToCamelCase~Action action = new $package+ValidPackage.actions.$name+SnakeCaseToCamelCase~Action();
-			action.box = box;
-			action.file = file;
-			action.event = event;
-			action.execute();
-		}, $event+fullEvent...[, ]);
+	File directory = $file+customizeDirectory;
+	if (directory != null && directory.exists()) scheduler.watchDirectory("$name", directory, (file, event) -> {
+				$package+ValidPackage.actions.$name+SnakeCaseToCamelCase~Action action = new $package+ValidPackage.actions.$name+SnakeCaseToCamelCase~Action();
+				action.box = box;
+				action.file = file;
+				action.event = event;
+				action.execute();
+			}, $event+fullEvent...[, ]);
+	else if (directory != null) Logger.warn("Directory " + directory + " not found");
 end
 
 def type(archetype) trigger(customizeDirectory)
 	new $package.Archetype(home).$path
+end
+
+def type(custom) trigger(customizeDirectory)
+	box.configuration().get("$path") == null ? null : new java.io.File(box.configuration().get("$path"))
 end
 
 def trigger(customizeDirectory)

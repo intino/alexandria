@@ -21,7 +21,7 @@ end
 
 def type(file) trigger(parameter)
 	public File $name+camelCase+firstLowerCase() {
-		return new File(get("$value"));
+		return get("$value") == null ? null : new File(get("$value"));
 	}
 end
 

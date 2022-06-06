@@ -18,7 +18,7 @@ class ProxyStamp extends AbstractProxyStamp {
 
     render() {
         return (<div className="layout vertical flex" style={{width:"100%",height:"100%"}}>{this.renderInstances(null, null, {width:"100%",height:"100%"})}</div>);
-    }
+    };
 
 }
 

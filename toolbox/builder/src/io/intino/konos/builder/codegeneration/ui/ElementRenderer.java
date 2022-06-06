@@ -8,7 +8,6 @@ import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.ElementHelper;
-import io.intino.konos.model.graph.Display;
 import io.intino.magritte.framework.Layer;
 
 import java.io.File;

@@ -10,10 +10,9 @@ import io.intino.konos.builder.codegeneration.accessor.ui.templates.WebPackTempl
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.Service;
 
 import java.io.File;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -48,7 +47,7 @@ public class AppRenderer extends UIRenderer {
 		});
 	}
 
-	private void addPatterns(io.intino.konos.model.graph.Template template, FrameBuilder builder) {
+	private void addPatterns(io.intino.konos.model.Template template, FrameBuilder builder) {
 		List<String> patterns = service.resourceList().stream().filter(r -> r.isPage() && r.asPage().template() == template).map(this::patternOf).filter(p -> !p.isEmpty()).collect(toList());
 		patterns.stream().sorted((o1, o2) -> Integer.compare(o2.length(), o1.length())).forEach(p -> builder.add("pattern", new FrameBuilder("pattern").add("value", p)));
 	}
@@ -90,7 +89,7 @@ public class AppRenderer extends UIRenderer {
 	}
 
 	public List<Service.UI.Resource> resourcesWithTemplate() {
-		Map<io.intino.konos.model.graph.Template, List<Service.UI.Resource>> result = service.resourceList().stream().filter(Service.UI.Resource::isPage).collect(Collectors.groupingBy(r -> r.asPage().template()));
+		Map<io.intino.konos.model.Template, List<Service.UI.Resource>> result = service.resourceList().stream().filter(Service.UI.Resource::isPage).collect(Collectors.groupingBy(r -> r.asPage().template()));
 		return result.values().stream().map(r -> r.get(0)).collect(toList());
 	}
 }

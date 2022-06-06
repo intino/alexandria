@@ -6,7 +6,7 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.SizedRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 
-import static io.intino.konos.model.graph.VisualizationComponents.Header;
+import static io.intino.konos.model.VisualizationComponents.Header;
 
 public class HeaderRenderer extends SizedRenderer<Header> {
 

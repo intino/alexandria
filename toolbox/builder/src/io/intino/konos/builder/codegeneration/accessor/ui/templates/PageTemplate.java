@@ -12,7 +12,7 @@ public class PageTemplate extends Template {
 			rule().condition((attribute("hasabstract")), (trigger("origin"))).output(literal("../../src")),
 			rule().condition((attribute("decorated")), (trigger("origin"))).output(literal("../../gen")),
 			rule().condition((trigger("origin"))).output(literal("..")),
-			rule().condition((type("accessibleImport"))).output(literal("import Displays from '")).output(mark("elements")).output(literal("/gen/AccessibleDisplays';"))
+			rule().condition((type("accessibleImport"))).output(literal("import ")).output(mark("service", "firstUpperCase")).output(literal("AccessibleDisplays from '")).output(mark("elements")).output(literal("/gen/AccessibleDisplays';"))
 		);
 	}
 }

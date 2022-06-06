@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import static io.intino.konos.CompilerMessage.ERROR;
 import static io.intino.konos.compiler.shared.KonosBuildConstants.*;
 
 
@@ -43,7 +44,7 @@ class KonosCompilerRunner {
 		List<OutputItem> compiled = compile(config, sources, messages, postCompileActionMessages);
 		if (verbose) report(sources, compiled);
 		processErrors(messages);
-		if (messages.stream().noneMatch(m -> m.getCategory().equalsIgnoreCase(KonosCompilerMessageCategories.ERROR)))
+		if (messages.stream().noneMatch(m -> m.getCategory().equalsIgnoreCase(ERROR)))
 			processActions(postCompileActionMessages);
 		out.println();
 		out.print(BUILD_END);
@@ -87,7 +88,7 @@ class KonosCompilerRunner {
 
 	private void printMessage(CompilerMessage message) {
 		out.print(MESSAGES_START);
-		out.print(message.getCategory());
+		out.print(message.getCategoryLabel());
 		out.print(SEPARATOR);
 		out.print(message.getMessage());
 		out.print(SEPARATOR);
