@@ -76,12 +76,7 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
     @Override
     public void init() {
         super.init();
-        try {
-            notifier.refresh(new ProxyDisplayInfo().unit(unit.name()).display(new ProxyDisplayInfo.Display().id(id() + "_").type(type)));
-            post("/personify", parameters());
-        } catch (RestfulFailure | MalformedURLException error) {
-            notifier.refreshError(errorMessage(unit.url()));
-        }
+        notifier.refresh(new ProxyDisplayInfo().unit(unit.name()).display(new ProxyDisplayInfo.Display().id(id() + "_").type(type)));
     }
 
     protected void request(String operation) {
@@ -99,6 +94,14 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
             Map<String, String> map = new HashMap<>();
             if (object != null) map.put("value", serializeParameter(object).toString());
             post("?operation=" + operation, map);
+        } catch (RestfulFailure | MalformedURLException error) {
+            notifier.refreshError(errorMessage(unit.url()));
+        }
+    }
+
+    public void connected() {
+        try {
+            post("/personify", parameters());
         } catch (RestfulFailure | MalformedURLException error) {
             notifier.refreshError(errorMessage(unit.url()));
         }

@@ -93,7 +93,20 @@ def type(requester)
 		};
 
         available = (unit) => {
-            return this.pushService.existsConnection(unit);
+            return this.pushService.isConnectionRegistered(unit);
+        };
+
+        connect = (unit, successCallback, errorCallback) => {
+            if (this.available(unit)) {
+                if (successCallback != null) successCallback();
+                return;
+            }
+            const pushConnections = Application.configuration.pushConnections;
+            for (let i=0; i<pushConnections.length; i++) {
+                const connection = pushConnections$[i$].split("_##_");
+                if (connection$[0$].toLowerCase() !== unit.toLowerCase()) continue;
+                this.pushService.openConnection(connection$[0$], connection$[1$], successCallback, errorCallback);
+            }
         };
 
         addToHistory = (param) => {

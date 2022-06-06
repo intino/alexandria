@@ -5,8 +5,15 @@ const PushService = (function () {
     service.pendingMessages = [];
     service.connections = [];
     service.retries = [];
+    service.pendingConnections = [];
+    service.successCallbacks = [];
+    service.errorCallbacks = [];
 
-    service.openConnection = function (name, url) {
+    service.openConnection = function (name, url, successCallback, errorCallback) {
+        registerCallbacks(this, successCallback, errorCallback);
+        if (isConnecting(this, name)) return;
+        this.pendingConnections.push(name);
+
         var socketUrl = url;
         var socket = new WebSocket(socketUrl);
         socket.name = name;
@@ -20,6 +27,7 @@ const PushService = (function () {
             socket.ready = true;
             window.setInterval(() => ping(socket, service), 30000);
             sendPendingMessages(service);
+            service.successCallbacks.forEach(c => c());
         };
 
         socket.onmessage = function (event) {
@@ -32,11 +40,12 @@ const PushService = (function () {
         };
 
         socket.onerror = function(e) {
+            service.errorCallbacks.forEach(c => c());
         };
 
         socket.onclose = function(e) {
+            socket.ready = false;
             if (service.retries[socket.name] >= 3) {
-                socket.ready = false;
                 this.notifyClose(socket);
                 return;
             }
@@ -61,6 +70,8 @@ const PushService = (function () {
 
         if (this.connections["Default"] == null) this.connections["Default"] = socket;
         this.connections[name] = socket;
+
+        this.pendingConnections = this.pendingConnections.filter(v => v !== name);
     };
 
     service.listen = function (name, callback) {
@@ -81,6 +92,10 @@ const PushService = (function () {
         const socket = this.connections[app];
         if (socket != null && socket.ready) socket.send(encodeURIComponent(JSON.stringify(message)));
         else service.pendingMessages.push({ message: message, app: app });
+    };
+
+    service.isConnectionRegistered = function(app) {
+        return this.connections[app] != null;
     };
 
     service.existsConnection = function(app) {
@@ -106,6 +121,15 @@ const PushService = (function () {
     function ping(socket, service) {
         if (!socket.ready) return;
         service.send({op:'ping'}, socket.name);
+    }
+
+    function registerCallbacks(service, successCallback, errorCallback) {
+        if (successCallback != null) service.successCallbacks.push(successCallback);
+        if (errorCallback != null) service.errorCallbacks.push(errorCallback);
+    }
+
+    function isConnecting(service, name) {
+        return (service.connections[name] != null && service.connections[name].ready) || service.pendingConnections.includes(name);
     }
 
     return service;

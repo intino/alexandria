@@ -9,25 +9,24 @@ import 'alexandria-ui-elements/res/styles/layout.css';
 import { OwnerUnitContext } from 'alexandria-ui-elements/src/displays/PassiveView'
 
 export default class ProxyDisplay extends AbstractProxyDisplay {
-	state = {
-		displayType: null,
-		error: null,
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new ProxyDisplayNotifier(this);
 		this.requester = new ProxyDisplayRequester(this);
+		this.state = {
+            displayType: null,
+            error: null,
+            connecting: true,
+		};
 	};
 
 	render() {
+		if (this.state.error != null) return this._renderError();
+		if (this.state.ownerUnit == null || this.state.connecting) return this._renderLoading();
+
 		const available = this.requester.available(this.state.ownerUnit);
-
-		if (this.state.error != null || (this.state.ownerUnit != null && !available))
-			return this._renderError();
-
-		if (this.state.ownerUnit == null)
-			return this._renderLoading();
+		if (!available) return this._renderError();
 
 		return (
 			<OwnerUnitContext.Provider value={this.state.ownerUnit}>
@@ -58,11 +57,22 @@ export default class ProxyDisplay extends AbstractProxyDisplay {
 	};
 
 	refresh = (info) => {
-		this.setState({ownerUnit: info.unit, display: info.display});
+	    if (this.unit != null && this.state.connecting) return;
+	    this.unit = info.unit;
+	    window.setTimeout(() => this.requester.connect(info.unit, this.onConnect.bind(this, info), this.onConnectError.bind(this, info)), 100);
 	};
 
 	refreshError = (error) => {
 		this.setState({error});
+	};
+
+	onConnect = (info) => {
+	    this.setState({ ownerUnit: info.unit, display: info.display, connecting: false, error: null });
+	    this.requester.connected();
+	};
+
+	onConnectError = (info) => {
+	    this.setState({ ownerUnit: info.unit, display: info.display, connecting: false, error: this.translate("no connection with") + " " + info.unit });
 	};
 
 }

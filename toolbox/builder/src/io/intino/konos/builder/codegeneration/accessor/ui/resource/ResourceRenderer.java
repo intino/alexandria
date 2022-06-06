@@ -71,6 +71,7 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 		result.add("name", use.name$());
 		result.add("url", use.url());
 		result.add("elements", camelCaseToSnakeCase(use.service()));
+		result.add("service", use.service());
 		return result.toFrame();
 	}
 
