@@ -31,7 +31,7 @@ export default class ProxyDisplay extends AbstractProxyDisplay {
 		return (
 			<OwnerUnitContext.Provider value={this.state.ownerUnit}>
 				<div id="component" style={{height:"100%",width:"100%"}}>
-					{React.createElement(DisplayFactory.get(this.state.display.type), { id: this.state.display.id })}
+					{React.createElement(DisplayFactory.get(this.state.display.type), { id: this.state.display.id, onProxyMessage: this.onProxyMessage.bind(this) })}
 					{this.requester.ready()}
 				</div>
 			</OwnerUnitContext.Provider>
@@ -73,6 +73,10 @@ export default class ProxyDisplay extends AbstractProxyDisplay {
 
 	onConnectError = (info) => {
 	    this.setState({ ownerUnit: info.unit, display: info.display, connecting: false, error: this.translate("no connection with") + " " + info.unit });
+	};
+
+	onProxyMessage = (name) => {
+	    this.requester.notifyMessage(name);
 	};
 
 }

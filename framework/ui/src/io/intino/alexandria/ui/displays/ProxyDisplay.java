@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Display<DN, Box> {
     private final String type;
@@ -31,6 +32,7 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
     private static final JsonParser Parser = new JsonParser();
     private Set<PendingRequest> pendingRequestList = new LinkedHashSet<>();
     private Map<String, String> parameters = new HashMap<>();
+    private Map<String, Consumer<Boolean>> messageListeners = new HashMap<>();
 
     public ProxyDisplay(String type, Unit unit, String path) {
         super(null);
@@ -44,6 +46,13 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
         this.clientId = session.client().id();
         this.token = session.token() != null ? session.token().id() : null;
         return this;
+    }
+
+    public ProxyMessageListener onMessage(String name) {
+        return listener -> {
+            ProxyDisplay.this.messageListeners.put(name, listener);
+            return ProxyDisplay.this;
+        };
     }
 
     @Override
@@ -158,6 +167,11 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
         return session().discoverLanguage();
     }
 
+    public void notifyMessage(String name) {
+        if (!messageListeners.containsKey(name)) return;
+        messageListeners.get(name).accept(true);
+    }
+
     private class PendingRequest {
         private String operation;
         private Object parameter;
@@ -172,4 +186,9 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
             return this;
         }
     }
+
+    public interface ProxyMessageListener {
+        ProxyDisplay<?> then(Consumer<Boolean> listener);
+    }
+
 }

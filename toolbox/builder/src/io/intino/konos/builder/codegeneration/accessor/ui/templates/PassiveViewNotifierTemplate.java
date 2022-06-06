@@ -7,7 +7,7 @@ public class PassiveViewNotifierTemplate extends Template {
 
 	public RuleSet ruleSet() {
 		return new RuleSet().add(
-			rule().condition((type("display"))).output(mark("import")).output(literal("\n\nexport default class ")).output(mark("name", "firstUpperCase")).output(mark("proxy")).output(literal("Notifier extends ")).output(mark("parentType")).output(literal(" {\n\tconstructor(element) {\n\t\tsuper(element);\n\t\tthis.setup();\n\t};\n\n\tsetup() {\n\t\tif (this.element == null || this.pushLinked) return;\n\t\tsuper.setup();\n\t\t")).output(expression().output(mark("notification").multiple("\n"))).output(literal("\n\t\tthis.pushLinked = true;\n\t};\n}")),
+			rule().condition((type("display"))).output(mark("import")).output(literal("\n\nexport default class ")).output(mark("name", "firstUpperCase")).output(mark("proxy")).output(literal("Notifier extends ")).output(mark("parentType")).output(literal(" {\n\tconstructor(element) {\n\t\tsuper(element);\n\t\tthis.setup();\n\t};\n\n\tsetup() {\n\t\tif (this.element == null || this.pushLinked) return;\n\t\tsuper.setup();\n\t\t")).output(expression().output(mark("notification").multiple("\n"))).output(literal("\n\t\t")).output(expression().output(mark("event").multiple("\n"))).output(literal("\n\t\tthis.pushLinked = true;\n\t};\n}")),
 			rule().condition((attribute("extensionof")), (trigger("import"))).output(literal("import ")).output(mark("parent", "firstUpperCase")).output(literal("Notifier from \"./")).output(mark("parent", "firstUpperCase")).output(literal("Notifier\"")),
 			rule().condition((attribute("component")), (trigger("import"))).output(literal("import Notifier from \"alexandria-ui-elements/src/displays/notifiers/ComponentNotifier\";")),
 			rule().condition((attribute("accessible")), (trigger("import"))).output(literal("import Notifier from \"alexandria-ui-elements/gen/displays/notifiers/ProxyDisplayNotifier\";")),
@@ -21,7 +21,8 @@ public class PassiveViewNotifierTemplate extends Template {
 			rule().condition((type("parameter")), (trigger("call"))).output(literal("parameters")),
 			rule().condition((type("parameter")), (trigger("value"))).output(literal("parameters.v")),
 			rule().condition((attribute("", "Display")), (trigger("target"))).output(literal(".toSelf()")),
-			rule().condition((trigger("target")))
+			rule().condition((trigger("target"))),
+			rule().condition((type("event"))).output(literal("this.when(\"")).output(mark("name", "firstLowerCase")).output(literal("\").toSelf().execute((parameters) => this.element.notifyProxyMessage(\"")).output(mark("name", "firstLowerCase")).output(literal("\"));"))
 		);
 	}
 }

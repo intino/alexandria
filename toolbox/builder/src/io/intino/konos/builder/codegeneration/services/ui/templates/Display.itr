@@ -6,8 +6,9 @@ def type(display)
 	$schemaImport
 	import $package+validPackage.$box+firstUpperCase~Box;
 	import $package+validPackage.ui.displays[.$packageType~s].Abstract$name+firstUpperCase;
+	[$accessibleNotifier+import]
 
-    public class $name+firstUpperCase extends Abstract$name+firstUpperCase<$box+firstUpperCase~Box> {
+    public class $name+firstUpperCase extends Abstract$name+firstUpperCase<[$accessibleNotifier, ]$box+firstUpperCase~Box> {
 
         public $name+firstUpperCase($box+firstUpperCase~Box box) {
             super(box);
@@ -16,6 +17,14 @@ def type(display)
 		[$request...[$NL$NL]]
 		[$parameter+setter...[$NL$NL]]
     }
+end
+
+def type(accessibleNotifier) trigger(import)
+    import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
+end
+
+def type(accessibleNotifier)
+    $name+firstUpperCase~Notifier
 end
 
 def type(templatesImport)

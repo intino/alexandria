@@ -22,10 +22,11 @@ Concept:Named PassiveView is abstract
 Concept:Named Display extends PassiveView
 	var Component[] components = empty
 	var string parentDisplay = empty
-	var string[] parameters = empty
 	has Block
 
 	Aspect Accessible
+		var string[] parameters = empty
+		var string[] events = empty
 
 Facet Addressable
 	var Service.UI.Resource addressableResource

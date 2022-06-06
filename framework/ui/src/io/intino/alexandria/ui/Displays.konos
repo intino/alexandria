@@ -12,6 +12,7 @@ Display proxyDisplay
 
 	Request connected
 	Request ready
+	Request notifyMessage as Text
 
 Schema ProxyDisplayInfo
 	Attribute unit as Text

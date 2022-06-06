@@ -53,34 +53,35 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		result.add(typeOf(element));
 		if (accessible) result.add("accessible");
 		if (!hasAbstractClass(element)) result.add("noAbstract");
-		addParametrized(result);
-		addExtends(result);
+		addParametrized(result, accessible);
+		addExtends(result, accessible);
 		addImports(result, accessible);
 		addImplements(result);
 		addMethods(result);
 		addRenderTagFrames(result);
 		addDecoratedFrames(result);
+		addAccessibleFrames(result, accessible);
 		result.add("notifier", notifierName(element));
 		result.add("requester", requesterName(element));
 		result.add("componentType", element.components().stream().map(this::typeOf).distinct().map(type -> new FrameBuilder().add("componentType", type).toFrame()).toArray(Frame[]::new));
 		if (element.parentDisplay() != null) addParent(element, result);
 		if (!element.graph().schemaList().isEmpty())
 			result.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()));
-		if (element.isAccessible())
-			result.add("parameter", element.asAccessible().parameters().stream().map(p -> new FrameBuilder("parameter", "accessible").add("value", p).toFrame()).toArray(Frame[]::new));
+		if (element.isAccessible()) result.add("parameter", element.asAccessible().parameters().stream().map(p -> new FrameBuilder("parameter", "accessible").add("value", p).toFrame()).toArray(Frame[]::new));
 		return result;
 	}
 
-	private void addParametrized(FrameBuilder frame) {
+	private void addParametrized(FrameBuilder frame, boolean accessible) {
 		FrameBuilder result = new FrameBuilder("parametrized");
 		result.add("name", element.name$());
 		result.add("notifier", element.i$(Template.class) ? "Template" : element.name$());
 		addGeneric(element, result);
+		if (!accessible && element.isAccessible()) result.add("accessible");
 		addDecoratedFrames(result);
 		frame.add("parametrized", result.toFrame());
 	}
 
-	private void addExtends(FrameBuilder frame) {
+	private void addExtends(FrameBuilder frame, boolean accessible) {
 		FrameBuilder result = new FrameBuilder("displayExtends");
 		if (element.i$(Dialog.class)) result.add(Dialog.class.getSimpleName());
 		if (element.i$(Template.class)) result.add(Template.class.getSimpleName());
@@ -92,6 +93,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (element.i$(CatalogComponents.DynamicTable.class)) result.add(CatalogComponents.DynamicTable.class.getSimpleName());
 		if (element.i$(Collection.Mold.Item.class)) result.add(Collection.Mold.Item.class.getSimpleName());
 		if (element.i$(HelperComponents.Row.class)) result.add(HelperComponents.Row.class.getSimpleName());
+		if (!accessible && element.isAccessible()) result.add("accessible");
 		addGeneric(element, result);
 		result.add("type", typeOf(element));
 		addDecoratedFrames(result);
@@ -128,7 +130,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (graph.magazinesDisplays(context.graphName()).size() > 0) frame.add("magazinesImport", buildBaseFrame().add("magazinesImport"));
 		if (graph.mapsDisplays(context.graphName()).size() > 0) frame.add("mapsImport", buildBaseFrame().add("mapsImport"));
 		if (graph.dynamicTablesDisplays(context.graphName()).size() > 0) frame.add("dynamicTablesImport", buildBaseFrame().add("dynamicTablesImport"));
-		frame.add("notifierImport", notifierImportFrame(element));
+		frame.add("notifierImport", notifierImportFrame(element, accessible));
 		if (!ElementHelper.isRoot(componentOf(element)) || (element.isAccessible() && accessible))
 			frame.add("displayRegistration", displayRegistrationFrame(accessible));
 		frame.add("requesterDirectory", typeOf(element).equalsIgnoreCase("Display") || typeOf(element).equalsIgnoreCase("Display") ? "." : "..");
@@ -269,6 +271,29 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		abstractBoxFrame.add("box", boxName());
 		if (belongsToAccessible(element)) abstractBoxFrame.add("accessible");
 		frame.add("abstractBox", abstractBoxFrame);
+	}
+
+	protected void addAccessibleFrames(FrameBuilder frame, boolean accessibleDisplay) {
+		FrameBuilder frameBuilder = accessibleNotifierImportFrame();
+		if (accessibleDisplay) {
+			frame.add("accessibleNotifierImport", frameBuilder);
+			return;
+		}
+		boolean accessible = element.isAccessible();
+		if (!accessible) {
+			frame.add("accessibleNotifierImport", frameBuilder);
+			return;
+		}
+		frame.add("accessibleNotifier", buildBaseFrame().add("name", nameOf(element)));
+		frame.add("accessibleNotifierImport", frameBuilder.add("accessible"));
+		frame.add("notifyProxyMethod", buildBaseFrame().add("notifyProxyMethod"));
+	}
+
+	private FrameBuilder accessibleNotifierImportFrame() {
+		FrameBuilder frameBuilder = buildBaseFrame().add("accessibleNotifierImport").add("name", nameOf(element));
+		frameBuilder.add("notifier", notifierName(element));
+		if (context.webModuleDirectory().exists()) frameBuilder.add("webModuleName", context.webModuleDirectory().getName());
+		return frameBuilder;
 	}
 
 	protected FrameBuilder componentFrame(Component component, Display virtualParent) {
