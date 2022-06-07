@@ -46,7 +46,7 @@ public class AbstractDisplaySkeletonTemplate extends Template {
 			rule().condition((trigger("parametervalue"))).output(literal("value")),
 			rule().condition((type("parameter")), (trigger("method"))).output(literal("public void ")).output(mark("value", "firstLowerCase")).output(literal("(String value) {\n    add(\"")).output(mark("value")).output(literal("\", value);\n}")),
 			rule().condition((type("parameter"))).output(mark("value")),
-			rule().condition((type("event")), (trigger("method"))).output(literal("public void on")).output(mark("value", "firstUpperCase")).output(literal("(Consumer<Boolean> listener) {\n    onMessage(\"")).output(mark("value", "firstLowerCase")).output(literal("\").then(listener);\n}"))
+			rule().condition((type("event")), (trigger("method"))).output(literal("public void on")).output(mark("name", "firstUpperCase")).output(literal("(java.util.function.Consumer<Boolean> listener) {\n    onMessage(\"")).output(mark("name", "firstLowerCase")).output(literal("\").then(listener);\n}"))
 		);
 	}
 }

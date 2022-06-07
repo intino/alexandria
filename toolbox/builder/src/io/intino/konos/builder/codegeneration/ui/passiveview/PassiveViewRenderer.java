@@ -80,7 +80,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		result.add("componentDirectory", componentDirectoryOf(element, false));
 		result.add("name", nameOf(element));
 		result.add("notification", framesOfNotifications(element.notificationList()));
-		if (!accessible) result.add("event", framesOfEvents(element));
+		result.add("event", framesOfEvents(element));
 		result.add("request", framesOfRequests(element.requestList()));
 		return result;
 	}

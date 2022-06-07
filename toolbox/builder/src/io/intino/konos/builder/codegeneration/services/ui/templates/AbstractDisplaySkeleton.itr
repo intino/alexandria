@@ -243,7 +243,7 @@ def type(parameter)
 end
 
 def type(event) trigger(method)
-    public void on~$value+firstUpperCase(Consumer<Boolean> listener) {
-        onMessage("$value+firstLowerCase").then(listener);
+    public void on~$name+firstUpperCase(java.util.function.Consumer<Boolean> listener) {
+        onMessage("$name+firstLowerCase").then(listener);
     }
 end
