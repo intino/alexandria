@@ -10,7 +10,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="core" />
     <orderEntry type="module" module-name="primitives" />
     <orderEntry type="module" module-name="http" />
     <orderEntry type="library" name="Intino: com.sparkjava:spark-core:2.9.3" level="project" />
@@ -19,12 +18,8 @@
     <orderEntry type="library" name="Intino: commons-logging:commons-logging:1.2" level="project" />
     <orderEntry type="module" module-name="exceptions" />
     <orderEntry type="module" module-name="logger" />
-    <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.8.6" level="project" />
     <orderEntry type="module" module-name="logger4j" />
     <orderEntry type="module" module-name="zip" />
-    <orderEntry type="module" module-name="shiny" />
-    <orderEntry type="module" module-name="driver" />
-    <orderEntry type="module" module-name="r" />
     <orderEntry type="library" name="Intino: com.opencsv:opencsv:5.2" level="project" />
     <orderEntry type="library" name="Intino: org.apache.commons:commons-text:1.8" level="project" />
     <orderEntry type="library" name="Intino: commons-beanutils:commons-beanutils:1.9.4" level="project" />
@@ -47,14 +42,6 @@
     <orderEntry type="library" name="Intino: org.apache.httpcomponents:httpmime:4.5.7" level="project" />
     <orderEntry type="library" name="Intino: org.apache.httpcomponents:httpclient:4.5.7" level="project" />
     <orderEntry type="library" name="Intino: org.apache.httpcomponents:httpcore:4.4.11" level="project" />
-    <orderEntry type="library" name="Intino: javax.websocket:javax.websocket-api:1.1" level="project" />
-    <orderEntry type="library" name="Intino: org.glassfish.tyrus:tyrus-client:1.16" level="project" />
-    <orderEntry type="library" name="Intino: org.glassfish.tyrus:tyrus-core:1.16" level="project" />
-    <orderEntry type="library" name="Intino: org.glassfish.tyrus:tyrus-spi:1.16" level="project" />
-    <orderEntry type="library" name="Intino: org.glassfish.tyrus:tyrus-container-grizzly-client:1.16" level="project" />
-    <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-framework:2.3.22" level="project" />
-    <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-http-server:2.3.22" level="project" />
-    <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-http:2.3.22" level="project" />
     <orderEntry type="library" name="Intino: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
     <orderEntry type="library" name="Intino: log4j:log4j:1.2.17" level="project" />
     <orderEntry type="library" name="Intino: org.apache.httpcomponents:fluent-hc:4.5.7" level="project" />
@@ -81,10 +68,6 @@
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-common:9.4.42.v20210604" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-client:9.4.42.v20210604" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-api:9.4.42.v20210604" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.0.2" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:rest-accessor:2.3.9" level="project" />
-    <orderEntry type="library" name="Intino: org.apache.commons:commons-lang3:3.12.0" level="project" />
-    <orderEntry type="library" name="Intino: commons-io:commons-io:2.11.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger4j:1.0.1" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:zip:1.0.4" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:driver-shiny:1.0.0" level="project" />
