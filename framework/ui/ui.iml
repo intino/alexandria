@@ -19,7 +19,6 @@
     <orderEntry type="library" name="Intino: commons-logging:commons-logging:1.2" level="project" />
     <orderEntry type="module" module-name="exceptions" />
     <orderEntry type="module" module-name="logger" />
-    <orderEntry type="module" module-name="json" />
     <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.8.6" level="project" />
     <orderEntry type="module" module-name="logger4j" />
     <orderEntry type="module" module-name="zip" />

@@ -9,7 +9,7 @@ Artifact("io.intino.alexandria", "1.0.0") rocketchat
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Compile("io.intino.alexandria", "logger4j", "1.0.1")
 
-		Test(groupId = "junit", artifactId = "junit", version = "LATEST")
+		Test("junit", "junit", "4.13.2")
 	Package(mode = ModulesAndLibrariesLinkedByManifest)
 
 Repository("intino-maven")
