@@ -14,5 +14,8 @@
     <orderEntry type="library" name="Intino: com.jcraft:jzlib:1.0.7" level="project" />
     <orderEntry type="module" module-name="logger" />
     <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.1.0" level="project" />
+    <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.9.0" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
   </component>
 </module>
