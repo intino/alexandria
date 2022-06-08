@@ -1,9 +1,9 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "2.1.1") core-framework
+Artifact("io.intino.alexandria", "2.1.2") core-framework
 	Imports
-		Provided("io.intino.alexandria", "message", "3.0.3")
-		Provided("io.intino.alexandria", "primitives", "1.0.4")
+		Provided("io.intino.alexandria", "message", "3.0.5")
+		Provided("io.intino.alexandria", "primitives", "1.0.5")
 		Test("junit", "junit", "4.12")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
