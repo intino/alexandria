@@ -11,6 +11,7 @@ def type(display)
 			if (this.element == null || this.pushLinked) return;
 			super.setup();
 			[$notification...[$NL]]
+			[$event...[$NL]]
 			this.pushLinked = true;
 		};
 	}
@@ -68,4 +69,8 @@ def attribute(this:Display) trigger(target)
 end
 
 def trigger(target)
+end
+
+def type(event)
+    this.when("$name+firstLowerCase").toSelf().execute((parameters) => this.element.notifyProxyMessage("$name+firstLowerCase"));
 end

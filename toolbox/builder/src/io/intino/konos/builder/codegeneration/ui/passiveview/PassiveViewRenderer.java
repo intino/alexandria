@@ -24,11 +24,13 @@ import io.intino.konos.model.PassiveView.Request;
 import io.intino.konos.model.VisualizationComponents.Dashboard;
 import io.intino.magritte.framework.Layer;
 
+import javax.lang.model.element.Element;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.IntFunction;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
@@ -78,6 +80,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		result.add("componentDirectory", componentDirectoryOf(element, false));
 		result.add("name", nameOf(element));
 		result.add("notification", framesOfNotifications(element.notificationList()));
+		result.add("event", framesOfEvents(element));
 		result.add("request", framesOfRequests(element.requestList()));
 		return result;
 	}
@@ -377,6 +380,12 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			result.add("parameter", parameterFrame);
 		}
 		return result.toFrame();
+	}
+
+	private Frame[] framesOfEvents(C element) {
+		if (!element.i$(Display.Accessible.class)) return new Frame[0];
+		List<String> events = element.a$(Display.Accessible.class).events();
+		return events.stream().map(e -> new FrameBuilder("event").add("name", e).toFrame()).toArray(Frame[]::new);
 	}
 
 	private Frame[] framesOfRequests(List<Request> requests) {

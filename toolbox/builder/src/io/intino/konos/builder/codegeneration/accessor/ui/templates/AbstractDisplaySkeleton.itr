@@ -34,7 +34,7 @@ def type(display & noAbstract)
 	[$alexandriaComponentImport...[$NL]]
 	[$projectComponentImport...[$NL]]
 	[$parent+import]
-	import $name+firstUpperCase~Notifier from "alexandria-ui-elements/gen/displays/notifiers/$notifier~Notifier";
+	$accessibleNotifierImport
 	import $name+firstUpperCase~Requester from "alexandria-ui-elements/gen/displays/requesters/$requester~Requester";
     import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
     import { withSnackbar } from 'notistack';
@@ -62,10 +62,26 @@ def type(display & noAbstract)
 		}
 
 		$notification...[$NL$NL]
+		[$notifyProxyMethod]
 	}
 
 	export default withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase));
     DisplayFactory.register("$name+firstUpperCase", withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase)));
+end
+
+def type(accessibleNotifierImport & accessible)
+	import $name+firstUpperCase~Notifier from "$webModuleName/gen/displays/notifiers/$name+firstUpperCase~Notifier";
+end
+
+def type(accessibleNotifierImport)
+	import $name+firstUpperCase~Notifier from "alexandria-ui-elements/gen/displays/notifiers/$notifier~Notifier";
+end
+
+def type(notifyProxyMethod)
+    notifyProxyMessage = (name) => {
+        if (!this.props.onProxyMessage) return;
+        this.props.onProxyMessage(name);
+    };
 end
 
 def type(display & collection)

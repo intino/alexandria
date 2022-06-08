@@ -26,7 +26,7 @@ def type(display)
         }
 
 		[$notification...[$NL$NL]]
-
+		[$event...[$NL$NL]]
     }
 end
 
@@ -42,6 +42,12 @@ def type(notification) trigger(notification)
 	public void $name+firstLowercase([$parameter value]) {
 		put[$target]("$name+firstLowercase"[, "v", $parameter+call]);
 	}
+end
+
+def type(event)
+    public void $name+firstLowerCase() {
+        putToDisplay("$name+firstLowerCase");
+    }
 end
 
 def type(parameter) trigger(call)
@@ -69,4 +75,10 @@ def attribute(this:Display) trigger(target)
 end
 
 def attribute(this:Client) trigger(target)
+end
+
+def type(proxyMessage)
+    public void notifyProxyMessage(String name) {
+        putToDisplay("notifyProxyMessage", "v", name);
+    }
 end

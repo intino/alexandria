@@ -3,6 +3,7 @@ def type(resource & accessibleDisplay)
 
 	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
 	import $package+validPackage.ui.pages.$name+firstUpperCase~ProxyPage;
+	import io.intino.alexandria.Json;
 	import io.intino.alexandria.exceptions.AlexandriaException;
 	import io.intino.alexandria.exceptions.Unauthorized;
 	import io.intino.alexandria.ui.Soul;

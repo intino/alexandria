@@ -136,7 +136,7 @@ public abstract class UIRenderer extends Renderer {
 		return firstUpperCase(nameOf(display));
 	}
 
-	protected FrameBuilder notifierImportFrame(Display element) {
+	protected FrameBuilder notifierImportFrame(Display element, boolean accessible) {
 		FrameBuilder result = buildBaseFrame().add("notifierImport");
 		result.add("name", element.name$());
 		if (element.i$(io.intino.konos.model.Template.class)) result.add("template");
@@ -144,6 +144,7 @@ public abstract class UIRenderer extends Renderer {
 		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) result.add("item");
 		if (element.i$(CatalogComponents.Table.class)) result.add("table");
 		if (element.i$(CatalogComponents.DynamicTable.class)) result.add("dynamictable");
+		if (!accessible && element.isAccessible()) result.add("accessible");
 		return result;
 	}
 

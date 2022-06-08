@@ -24,6 +24,7 @@ def type(display & accessible)
 
 		[$request+accessible...[$NL$NL]]
 		[$parameter+method...[$NL$NL]]
+		[$event+method...[$NL$NL]]
     }
 end
 
@@ -92,6 +93,10 @@ def type(notifierImport & row)
     import io.intino.alexandria.ui.displays.notifiers.RowNotifier;
 end
 
+def type(notifierImport & template & accessible)
+    import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
+end
+
 def type(notifierImport & template)
     import io.intino.alexandria.ui.displays.notifiers.TemplateNotifier;
 end
@@ -104,12 +109,20 @@ def type(parametrized & generic)
 	<DN extends $name+firstUpperCase~Notifier, $abstractBox+extension>
 end
 
+def type(parametrized & accessible)
+	<DN extends $name+firstUpperCase~Notifier, $abstractBox+extension>
+end
+
 def type(parametrized)
 	$abstractBox+extensionTagged
 end
 
 def type(displayExtends & generic)
 	extends $parent<DN, $abstractBox+type>
+end
+
+def type(displayExtends & template & accessible)
+	extends io.intino.alexandria.ui.displays.components.Template<DN, $modelClass, $abstractBox+type>
 end
 
 def type(displayExtends & template)
@@ -219,7 +232,7 @@ def trigger(parameterValue)
 	value
 end
 
-def trigger(method)
+def type(parameter) trigger(method)
     public void $value+firstLowerCase(String value) {
         add("$value", value);
     }
@@ -227,4 +240,10 @@ end
 
 def type(parameter)
 	$value
+end
+
+def type(event) trigger(method)
+    public void on~$name+firstUpperCase(java.util.function.Consumer<Boolean> listener) {
+        onMessage("$name+firstLowerCase").then(listener);
+    }
 end
