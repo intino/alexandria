@@ -27,7 +27,6 @@ libraries/ness/ingestion/temp
 ConfigurationTest.stash
 framework/ui-elements/lib
 .intino/artifacts
-temporal
 workspace.txt
 temp
 toolbox/swagger-doc/node_modules
