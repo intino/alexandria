@@ -1,7 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.schemas.*;
+import io.intino.alexandria.schemas.StepInfo;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.stepper.StepChecker;
 import io.intino.alexandria.ui.displays.notifiers.StepNotifier;

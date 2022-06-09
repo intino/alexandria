@@ -1,11 +1,6 @@
 package io.intino.alexandria.ui.displays.templates;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
-import io.intino.alexandria.schemas.*;
-import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.ui.AlexandriaUiBox;
-import io.intino.alexandria.ui.displays.templates.AbstractActionableExamplesMold;
 
 public class ActionableExamplesMold extends AbstractActionableExamplesMold<AlexandriaUiBox> {
 

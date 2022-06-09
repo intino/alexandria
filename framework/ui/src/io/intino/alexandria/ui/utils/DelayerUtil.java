@@ -2,7 +2,6 @@ package io.intino.alexandria.ui.utils;
 
 import io.intino.alexandria.ui.displays.Display;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;

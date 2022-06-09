@@ -1,11 +1,11 @@
 package io.intino.alexandria.ui.model.datasource.temporal;
 
 import io.intino.alexandria.Timetag;
+import io.intino.alexandria.ui.model.PlaceMark;
 import io.intino.alexandria.ui.model.TimeRange;
 import io.intino.alexandria.ui.model.datasource.BoundingBox;
 import io.intino.alexandria.ui.model.datasource.Filter;
 import io.intino.alexandria.ui.model.datasource.MapDatasource;
-import io.intino.alexandria.ui.model.PlaceMark;
 
 import java.util.List;
 

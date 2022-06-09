@@ -2,9 +2,8 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.components.addressable.Addressable;
-import io.intino.alexandria.ui.displays.components.addressable.Addressed;
-import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.ActionListener;
+import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.notifiers.ActionNotifier;
 
 public class Action<DN extends ActionNotifier, B extends Box> extends AbstractAction<DN, B> implements Addressable {

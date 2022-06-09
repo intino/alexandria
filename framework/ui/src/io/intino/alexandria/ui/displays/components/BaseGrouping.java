@@ -1,20 +1,18 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.schemas.GroupEntry;
 import io.intino.alexandria.ui.displays.components.addressable.Addressable;
 import io.intino.alexandria.ui.displays.components.collection.CollectionAddressResolver;
-import io.intino.alexandria.ui.displays.events.*;
+import io.intino.alexandria.ui.displays.events.SelectionEvent;
+import io.intino.alexandria.ui.displays.events.SelectionListener;
 import io.intino.alexandria.ui.displays.notifiers.BaseGroupingNotifier;
 import io.intino.alexandria.ui.model.datasource.Group;
 
-import java.util.*;
 import java.util.List;
 import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.Collections.singletonList;
-import static java.util.Collections.singletonMap;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 

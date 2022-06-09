@@ -2,21 +2,12 @@ package io.intino.alexandria.ui.displays.components;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
-import io.intino.alexandria.schemas.*;
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.components.AbstractDashboardMetabase;
+import io.intino.alexandria.schemas.DashboardMetabaseInfo;
 import io.intino.alexandria.ui.displays.notifiers.DashboardMetabaseNotifier;
 
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 public class DashboardMetabase<DN extends DashboardMetabaseNotifier, B extends Box> extends AbstractDashboardMetabase<DN, B> {

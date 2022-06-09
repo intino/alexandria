@@ -11,7 +11,6 @@ import io.intino.alexandria.ui.displays.events.RemoveItemEvent;
 import io.intino.alexandria.ui.displays.events.editable.AddItemListener;
 import io.intino.alexandria.ui.displays.events.editable.ChangeItemListener;
 import io.intino.alexandria.ui.displays.events.editable.RemoveItemListener;
-import io.intino.alexandria.ui.displays.notifiers.MultipleNotifier;
 
 import java.util.HashMap;
 import java.util.List;

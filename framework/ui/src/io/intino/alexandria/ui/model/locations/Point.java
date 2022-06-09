@@ -2,8 +2,6 @@ package io.intino.alexandria.ui.model.locations;
 
 import io.intino.alexandria.ui.model.Geometry;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 
 public class Point extends Geometry {

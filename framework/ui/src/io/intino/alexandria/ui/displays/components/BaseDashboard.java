@@ -1,13 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
-import io.intino.alexandria.schemas.*;
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.components.AbstractBaseDashboard;
 import io.intino.alexandria.ui.displays.notifiers.BaseDashboardNotifier;
-import io.intino.alexandria.ui.displays.notifiers.BaseTextNotifier;
 
 import java.util.HashMap;
 import java.util.Map;

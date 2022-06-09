@@ -1,12 +1,9 @@
 package io.intino.alexandria.ui;
 
-import io.intino.alexandria.core.Box;
-import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.Desktop;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.DisplayRepository;
 import io.intino.alexandria.ui.displays.components.Layer;
-import io.intino.alexandria.ui.displays.notifiers.DisplayNotifier;
 import io.intino.alexandria.ui.services.push.UISession;
 import io.intino.alexandria.ui.services.push.User;
 
@@ -15,7 +12,6 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 import static io.intino.alexandria.ui.utils.UUIDUtil.isUUID;
 import static java.util.stream.Collectors.toList;

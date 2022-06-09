@@ -4,7 +4,6 @@ import io.intino.alexandria.Timetag;
 import io.intino.alexandria.ui.model.TimeRange;
 import io.intino.alexandria.ui.model.datasource.DynamicTableDatasource;
 import io.intino.alexandria.ui.model.datasource.Filter;
-import io.intino.alexandria.ui.model.dynamictable.Row;
 import io.intino.alexandria.ui.model.dynamictable.Section;
 
 import java.util.List;

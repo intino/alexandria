@@ -2,8 +2,8 @@ package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.UserMessage;
-import io.intino.alexandria.ui.displays.events.SelectionEvent;
 import io.intino.alexandria.ui.displays.events.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.SelectionEvent;
 import io.intino.alexandria.ui.displays.rows.Table1Row;
 import io.intino.alexandria.ui.displays.rows.Table2Row;
 import io.intino.alexandria.ui.documentation.Person;
