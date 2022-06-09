@@ -20,7 +20,7 @@ Artifact("io.intino.alexandria", "4.19.0") ui-framework
 		Compile("com.sparkjava", "spark-core", "2.9.3")
 		Compile("io.intino.icod", "standalone", "1.0.1")
 
-		Web("io.intino.alexandria", "ui-framework-elements", "4.18.0")
+		Web("io.intino.alexandria", "ui-framework-elements", "4.19.0")
 		Test("junit", "junit", "4.13.2")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true, finalName = "intino") as Runnable("io.intino.alexandria.Main")
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
