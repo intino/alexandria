@@ -2,7 +2,6 @@ package io.intino.alexandria.ui.documentation.model.other;
 
 import io.intino.alexandria.ui.documentation.model.BaseWidget;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 public class MicroSiteWidget extends BaseWidget {

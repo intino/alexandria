@@ -22,7 +22,7 @@ import static io.intino.alexandria.ui.displays.components.Map.Type.Cluster;
 import static io.intino.alexandria.ui.displays.components.Map.Type.Heatmap;
 import static io.intino.alexandria.ui.documentation.Person.Gender.Female;
 import static io.intino.alexandria.ui.documentation.Person.Gender.Male;
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 public class Datasources {

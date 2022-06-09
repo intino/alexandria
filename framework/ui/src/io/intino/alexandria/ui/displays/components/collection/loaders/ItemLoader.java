@@ -1,18 +1,18 @@
 package io.intino.alexandria.ui.displays.components.collection.loaders;
 
 import io.intino.alexandria.Timetag;
-import io.intino.alexandria.ui.displays.components.slider.Range;
 import io.intino.alexandria.ui.model.Datasource;
-import io.intino.alexandria.ui.model.datasource.*;
-import io.intino.alexandria.ui.model.datasource.filters.RangeFilter;
+import io.intino.alexandria.ui.model.datasource.Filter;
+import io.intino.alexandria.ui.model.datasource.MapDatasource;
+import io.intino.alexandria.ui.model.datasource.MemoryDatasource;
+import io.intino.alexandria.ui.model.datasource.PageDatasource;
 import io.intino.alexandria.ui.model.datasource.filters.GroupFilter;
+import io.intino.alexandria.ui.model.datasource.filters.RangeFilter;
 import io.intino.alexandria.ui.model.datasource.temporal.TemporalDatasource;
 import io.intino.alexandria.ui.model.datasource.temporal.TemporalPageDatasource;
 
-import java.lang.reflect.Array;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 

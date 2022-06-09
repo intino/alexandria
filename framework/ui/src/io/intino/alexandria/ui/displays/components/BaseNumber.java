@@ -1,11 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.ui.displays.components.AbstractBaseNumber;
 import io.intino.alexandria.ui.displays.notifiers.BaseNumberNotifier;
-import jdk.jfr.Percentage;
-
-import java.util.Currency;
 
 public class BaseNumber<DN extends BaseNumberNotifier, B extends Box> extends AbstractBaseNumber<DN, B> {
     private boolean expanded;

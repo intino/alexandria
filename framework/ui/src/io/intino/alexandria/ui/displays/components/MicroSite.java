@@ -11,8 +11,6 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.NoSuchFileException;
-import java.text.Format;
-import java.util.function.Function;
 
 public class MicroSite<DN extends MicroSiteNotifier, B extends Box> extends AbstractMicroSite<B> {
 	private java.io.File site;

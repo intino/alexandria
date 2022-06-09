@@ -12,9 +12,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.*;
 import java.util.List;
 import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AppDirectory<DN extends AppDirectoryNotifier, B extends Box> extends AbstractAppDirectory<B> {

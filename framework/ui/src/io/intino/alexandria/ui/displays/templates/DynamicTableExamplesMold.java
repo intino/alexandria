@@ -2,15 +2,12 @@ package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.schemas.DynamicTableVisibleColumn;
-import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.rows.DynamicTable1Row;
 import io.intino.alexandria.ui.documentation.Person;
 import io.intino.alexandria.ui.documentation.model.Datasources;
-import io.intino.alexandria.ui.model.dynamictable.Row;
 import io.intino.alexandria.ui.model.dynamictable.Section;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

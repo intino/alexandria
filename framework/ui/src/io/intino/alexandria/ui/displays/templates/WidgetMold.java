@@ -4,11 +4,11 @@ import io.intino.alexandria.schemas.Widget;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.EventsDisplay;
 import io.intino.alexandria.ui.documentation.model.ActionableWidget;
-import io.intino.alexandria.ui.documentation.model.collection.*;
-import io.intino.alexandria.ui.documentation.model.data.*;
 import io.intino.alexandria.ui.documentation.model.actionable.DownloadSelectionWidget;
 import io.intino.alexandria.ui.documentation.model.actionable.DownloadWidget;
 import io.intino.alexandria.ui.documentation.model.actionable.ExportWidget;
+import io.intino.alexandria.ui.documentation.model.collection.*;
+import io.intino.alexandria.ui.documentation.model.data.*;
 import io.intino.alexandria.ui.documentation.model.other.*;
 
 public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {

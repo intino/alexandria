@@ -1,12 +1,6 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
-import io.intino.alexandria.schemas.*;
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.components.AbstractSelectorRadioBox;
-import io.intino.alexandria.ui.displays.notifiers.SelectorMenuNotifier;
 import io.intino.alexandria.ui.displays.notifiers.SelectorRadioBoxNotifier;
 
 import java.util.List;

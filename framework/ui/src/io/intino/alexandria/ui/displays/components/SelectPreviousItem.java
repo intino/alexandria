@@ -1,9 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.SelectionListener;
-import io.intino.alexandria.ui.displays.events.actionable.OpenListener;
 import io.intino.alexandria.ui.displays.events.actionable.SelectItemListener;
 import io.intino.alexandria.ui.displays.events.collection.RefreshListener;
 import io.intino.alexandria.ui.displays.events.collection.SelectItemEvent;

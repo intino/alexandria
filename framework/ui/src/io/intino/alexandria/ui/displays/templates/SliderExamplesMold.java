@@ -1,12 +1,8 @@
 package io.intino.alexandria.ui.displays.templates;
 
-import io.intino.alexandria.schemas.Mark;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.components.slider.Ordinal;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class SliderExamplesMold extends AbstractSliderExamplesMold<AlexandriaUiBox> {
 

@@ -2,7 +2,6 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.CollectionMoreItems;
-import io.intino.alexandria.schemas.CollectionSetup;
 import io.intino.alexandria.schemas.PageCollectionSetup;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.behaviors.PageCollectionBehavior;

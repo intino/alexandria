@@ -3,7 +3,10 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.KeyPressEventData;
 import io.intino.alexandria.ui.displays.components.editable.Editable;
-import io.intino.alexandria.ui.displays.events.*;
+import io.intino.alexandria.ui.displays.events.ChangeEvent;
+import io.intino.alexandria.ui.displays.events.ChangeListener;
+import io.intino.alexandria.ui.displays.events.KeyPressEvent;
+import io.intino.alexandria.ui.displays.events.KeyPressListener;
 import io.intino.alexandria.ui.displays.notifiers.TextEditableNotifier;
 
 public class TextEditable<DN extends TextEditableNotifier, B extends Box> extends AbstractTextEditable<DN, B> implements Editable<DN, B> {

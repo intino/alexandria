@@ -1,7 +1,6 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.ui.File;
 import io.intino.alexandria.ui.displays.notifiers.ImageNotifier;
 import io.intino.alexandria.ui.resources.Asset;
 

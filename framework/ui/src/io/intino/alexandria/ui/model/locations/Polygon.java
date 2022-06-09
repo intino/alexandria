@@ -2,7 +2,6 @@ package io.intino.alexandria.ui.model.locations;
 
 import io.intino.alexandria.ui.model.Geometry;
 
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

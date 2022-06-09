@@ -1,8 +1,6 @@
 package io.intino.alexandria.ui.model.dynamictable;
 
-import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public class Column {
 	private String label;

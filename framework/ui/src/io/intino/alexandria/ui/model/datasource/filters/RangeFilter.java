@@ -3,8 +3,6 @@ package io.intino.alexandria.ui.model.datasource.filters;
 import io.intino.alexandria.ui.model.datasource.Filter;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
 
 public class RangeFilter extends Filter {
 	private Instant from;
