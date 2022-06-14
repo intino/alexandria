@@ -138,7 +138,11 @@ public abstract class Workflow {
 			persistence.delete(dataPath(activePathOf(process.id())));
 			persistence.delete(definitionPath(activePathOf(process.id())));
 			write(finishedPathOf(process), process);
-		} else write(activePathOf(process.id()), process);
+		} else writeActiveProcess(process);
+	}
+
+	public void writeActiveProcess(Process process){
+		write(activePathOf(process.id()), process);
 	}
 
 	private void write(String path, Process process) {
