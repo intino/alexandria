@@ -25,14 +25,15 @@ const styles = theme => ({
 });
 
 class TextEditableCode extends AbstractTextEditableCode {
-	state = {
-		value : this.props.value
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new TextEditableCodeNotifier(this);
 		this.requester = new TextEditableCodeRequester(this);
+		this.state = {
+    		...this.state,
+    		value : this.props.value,
+		}
 	};
 
 	handleChange(value) {

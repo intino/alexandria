@@ -74,6 +74,19 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:driver:1.0.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:driver-r:1.0.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.icod:standalone:1.0.1" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.1.0" level="project" />
+    <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.9.0" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:rest-accessor:2.4.0" level="project" />
+    <orderEntry type="library" name="Intino: org.apache.commons:commons-lang3:3.12.0" level="project" />
+    <orderEntry type="library" name="Intino: commons-io:commons-io:2.11.0" level="project" />
+    <orderEntry type="library" name="Intino: org.glassfish.tyrus:tyrus-client:1.16" level="project" />
+    <orderEntry type="library" name="Intino: org.glassfish.tyrus:tyrus-core:1.16" level="project" />
+    <orderEntry type="library" name="Intino: org.glassfish.tyrus:tyrus-spi:1.16" level="project" />
+    <orderEntry type="library" name="Intino: javax.websocket:javax.websocket-api:1.1" level="project" />
+    <orderEntry type="library" name="Intino: org.glassfish.tyrus:tyrus-container-grizzly-client:1.16" level="project" />
+    <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-framework:2.3.22" level="project" />
+    <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-http-server:2.3.22" level="project" />
+    <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-http:2.3.22" level="project" />
     <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>
