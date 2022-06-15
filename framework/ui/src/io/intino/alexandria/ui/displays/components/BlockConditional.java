@@ -2,17 +2,12 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.Component;
-import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.selector.Selection;
 import io.intino.alexandria.ui.displays.components.selector.Selector;
-import io.intino.alexandria.ui.displays.components.selector.SelectorOption;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.Listener;
 import io.intino.alexandria.ui.displays.events.actionable.ToggleEvent;
-import io.intino.alexandria.ui.displays.notifiers.ActionSwitchNotifier;
 import io.intino.alexandria.ui.displays.notifiers.BlockConditionalNotifier;
-
-import java.util.Optional;
 
 public abstract class BlockConditional<DN extends BlockConditionalNotifier, B extends Box> extends AbstractBlockConditional<B> implements Selection {
     private boolean initialized = false;

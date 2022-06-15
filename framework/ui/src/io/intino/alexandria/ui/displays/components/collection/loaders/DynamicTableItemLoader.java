@@ -1,13 +1,7 @@
 package io.intino.alexandria.ui.displays.components.collection.loaders;
 
 import io.intino.alexandria.ui.model.datasource.DynamicTableDatasource;
-import io.intino.alexandria.ui.model.datasource.MapDatasource;
-import io.intino.alexandria.ui.model.datasource.MemoryDatasource;
-import io.intino.alexandria.ui.model.datasource.PageDatasource;
-import io.intino.alexandria.ui.model.datasource.temporal.TemporalDatasource;
 import io.intino.alexandria.ui.model.datasource.temporal.TemporalDynamicTableDatasource;
-import io.intino.alexandria.ui.model.datasource.temporal.TemporalPageDatasource;
-import io.intino.alexandria.ui.model.dynamictable.Row;
 import io.intino.alexandria.ui.model.dynamictable.Section;
 
 import java.util.ArrayList;

@@ -12,8 +12,8 @@ import io.intino.alexandria.ui.displays.components.collection.behaviors.MapColle
 import io.intino.alexandria.ui.displays.events.AddItemEvent;
 import io.intino.alexandria.ui.displays.notifiers.MapNotifier;
 import io.intino.alexandria.ui.model.Datasource;
-import io.intino.alexandria.ui.model.datasource.MapDatasource;
 import io.intino.alexandria.ui.model.PlaceMark;
+import io.intino.alexandria.ui.model.datasource.MapDatasource;
 
 import java.net.URL;
 import java.util.List;

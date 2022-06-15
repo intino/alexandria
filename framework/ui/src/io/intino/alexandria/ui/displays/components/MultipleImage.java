@@ -13,7 +13,6 @@ import io.intino.alexandria.ui.displays.events.editable.AddItemListener;
 import io.intino.alexandria.ui.displays.events.editable.ChangeItemListener;
 import io.intino.alexandria.ui.displays.events.editable.RemoveItemListener;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -25,8 +25,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toMap;
-
 public abstract class DynamicTable<B extends Box, ItemComponent extends io.intino.alexandria.ui.displays.components.Row, Item> extends AbstractDynamicTable<DynamicTableNotifier, B> implements Collection<ItemComponent, Item> {
     private Listener openingRowListener;
     private OpenRowListener openRowListener;

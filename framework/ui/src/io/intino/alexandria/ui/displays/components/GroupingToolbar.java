@@ -9,8 +9,8 @@ import io.intino.alexandria.ui.displays.events.collection.ApplyFiltersListener;
 import io.intino.alexandria.ui.displays.notifiers.GroupingToolbarNotifier;
 import io.intino.alexandria.ui.model.datasource.Group;
 
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 

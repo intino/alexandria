@@ -7,7 +7,6 @@ import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
 import io.intino.alexandria.ui.displays.notifiers.DateEditableNotifier;
 
-import javax.swing.text.View;
 import java.time.Instant;
 import java.util.stream.Collectors;
 

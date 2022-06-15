@@ -1,11 +1,6 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
-import io.intino.alexandria.schemas.*;
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.components.AbstractFrame;
 import io.intino.alexandria.ui.displays.notifiers.FrameNotifier;
 
 public class Frame<DN extends FrameNotifier, B extends Box> extends AbstractFrame<B> {

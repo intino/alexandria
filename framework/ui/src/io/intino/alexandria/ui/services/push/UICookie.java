@@ -1,8 +1,5 @@
 package io.intino.alexandria.ui.services.push;
 
-import io.intino.alexandria.http.spark.SparkClient;
-import io.intino.alexandria.ui.Soul;
-
 public class UICookie {
     private String name;
     private String value;

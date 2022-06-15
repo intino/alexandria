@@ -9,11 +9,10 @@ import io.intino.alexandria.ui.displays.components.slider.Ordinal;
 import io.intino.alexandria.ui.displays.components.slider.Range;
 import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
-import io.intino.alexandria.ui.displays.events.SelectListener;
 import io.intino.alexandria.ui.displays.notifiers.BaseSliderNotifier;
 
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 

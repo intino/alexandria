@@ -1,7 +1,8 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.schemas.*;
+import io.intino.alexandria.schemas.ActionableInfo;
+import io.intino.alexandria.schemas.ActionableSign;
 import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.components.actionable.SignChecker;
