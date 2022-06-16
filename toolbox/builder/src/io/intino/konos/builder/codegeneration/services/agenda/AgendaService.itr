@@ -39,7 +39,7 @@ def type(service)
 			this.root = $rootPath+customizeDirectory;
 		}
 
-		$future+getter...[$NL$NL]
+		$future+class...[$NL$NL]
 
 		$future+execute...[$NL$NL]
 
@@ -125,6 +125,22 @@ def type(service)
 	}
 end
 
+def type(future) trigger(class)
+	public class $name+firstUpperCase~Futures {
+		public List<$name+firstUpperCase> all($parameter+predicateSignature...[, ]) {
+			return $name+firstLowerCase~Files().stream()
+					.filter(f -> $parameter+test...[ && ])
+					.map(f -> load$name+firstUpperCase(f)).collect(Collectors.toList());
+		}
+
+		public $name+firstUpperCase $name+firstLowerCase($parameter+signature...[, ]) {
+			return load$name+firstUpperCase($name+firstLowerCase~File($parameter+names...[, ]));
+		}
+
+		[$option+execute...[$NL]]
+	}
+end
+
 def trigger(register)
 	private void register$name+firstUpperCase($name+firstUpperCase~Schema schema) {
 		File file = $name+firstLowerCase~File($parameter+schemaParameter...[, ]);
@@ -147,7 +163,10 @@ def trigger(route)
 end
 
 def trigger(ifOption)
-	if ("$name".equals(option)) schema.$name+firstLowerCase();
+	if ("$name".equals(option)) {
+		future.schema().$name+firstLowerCase(new $future+firstUpperCase~Schema.$name+firstUpperCase($optionParameter+argIndex...[, ]));
+		future.$name+firstLowerCase();
+	}
 end
 
 def trigger(putOption)
@@ -155,6 +174,13 @@ def trigger(putOption)
 end
 
 def trigger(private)
+	private void clean($name+firstUpperCase future) {
+		future.uri().ids().forEach(i -> {
+			final File file = sources.remove(i);
+			if (file.exists()) file.delete();
+		});
+	}
+
 	private Collection<File> $name+firstLowerCase~Files() {
 		File directory = new File(root, "$name+camelCaseToSnakeCase/");
 		directory.mkdirs();
@@ -165,42 +191,45 @@ def trigger(private)
 		return new File(root, "$name+camelCaseToSnakeCase/" + $parameter+names...[ + "." + ] + ".json");
 	}
 
-	private $name+firstUpperCase $name+firstLowerCase(File file) {
+	private $name+firstUpperCase load$name+firstUpperCase(File file) {
+		if (!file.exists()) return null;
 		final $name+firstUpperCase future = new $name+firstUpperCase(box);
 		future.schema(fromString(read(file), $name+firstUpperCase~Schema.class));
 		return future;
 	}
 end
 
-def trigger(execute)
-	public void execute$name+firstUpperCase(String id) {
+def type(option) trigger(execute)
+	public void $name+firstLowerCase($future+FirstUpperCase $future+FirstLowerCase[, $optionParameter+signature...[, ]]) {
+		execute($future+FirstLowerCase, "$name+firstLowerCase"[, $optionParameter+names...[, ]]);
+	}
+end
+
+def type(future) trigger(execute)
+	private void execute$name+firstUpperCase(String id) {
 		final File file = sources.get(id);
 		if (file == null) return;
-		final $name+firstUpperCase schema = $name+firstLowerCase(file);
-		final String option = schema.uri().option(id);
-		if (option == null) return;
+		final $name+firstUpperCase future = load$name+firstUpperCase(file);
+		final String option = future.uri().option(id);
+		if (option != null) execute(future, option);
+	}
+
+	private void execute($name+firstUpperCase future, String option, String... params) {
 		$option+ifOption...[$NL~else ]
-		schema.uri().ids().forEach(sources::remove);
-		file.delete();
+		clean(future);
 	}
 end
 
 def trigger(getter)
-	public List<$name+firstUpperCase> all$name+firstUpperCase($parameter+predicateSignature...[, ]) {
-		return $name+firstLowerCase~Files().stream()
-				.filter(f -> $parameter+test...[ && ])
-				.map(this::$name+firstLowerCase).collect(Collectors.toList());
-	}
-
-	public $name+firstUpperCase $name+firstLowerCase~($parameter+signature...[, ]) {
-		return $name+firstLowerCase($name+firstLowerCase~File($parameter+names...[, ]));
+	public $name+firstUpperCase $name+firstLowerCase() {
+		return new $name+firstUpperCase~Futures();
 	}
 end
 
 def trigger(removeMethod)
 	public boolean $name+firstLowerCase($parameter+signature...[, ]) {
 		final File file = $name+firstLowerCase~File($parameter+names...[, ]);
-		final $name+firstUpperCase $name+firstLowerCase = AgendaService.this.$name+firstLowerCase(file);
+		final $name+firstUpperCase $name+firstLowerCase = AgendaService.this.load$name+firstUpperCase(file);
 		timeouts.remove("$name+firstUpperCase#" + $name+firstLowerCase.schema().timeout().id);
 		for (String key : new ArrayList<>(sources.keySet()))
 			if (sources.get(key).equals(file)) sources.remove(key);
@@ -229,6 +258,10 @@ end
 
 def trigger(names)
 	$name
+end
+
+def trigger(argIndex)
+	params$[$index]
 end
 
 def trigger(test)
