@@ -14,7 +14,7 @@ import io.intino.konos.builder.codegeneration.datahub.mounter.MounterRenderer;
 import io.intino.konos.builder.codegeneration.datahub.subscriber.SubscriberRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
 import io.intino.konos.builder.codegeneration.feeder.FeederRenderer;
-import io.intino.konos.builder.codegeneration.futures.AgendaServiceRenderer;
+import io.intino.konos.builder.codegeneration.services.agenda.AgendaServiceRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.codegeneration.sentinel.ListenerRenderer;
