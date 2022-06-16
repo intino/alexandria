@@ -39,6 +39,8 @@ def type(service)
 			this.root = $rootPath+customizeDirectory;
 		}
 
+		$future+getter...[$NL$NL]
+
 		$future+class...[$NL$NL]
 
 		$future+execute...[$NL$NL]
@@ -221,7 +223,7 @@ def type(future) trigger(execute)
 end
 
 def trigger(getter)
-	public $name+firstUpperCase $name+firstLowerCase() {
+	public $name+firstUpperCase~Futures $name+firstLowerCase() {
 		return new $name+firstUpperCase~Futures();
 	}
 end
