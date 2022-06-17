@@ -1,4 +1,4 @@
-package io.intino.konos.builder.codegeneration.futures;
+package io.intino.konos.builder.codegeneration.services.agenda;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
