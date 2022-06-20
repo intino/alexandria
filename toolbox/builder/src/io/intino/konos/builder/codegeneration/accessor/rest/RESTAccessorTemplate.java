@@ -35,7 +35,7 @@ public class RESTAccessorTemplate extends Template {
 			rule().condition((type("authentication")), (type("basic")), (trigger("field"))).output(literal("private final String user;\nprivate final String password;")),
 			rule().condition((type("authentication")), (type("bearer")), (trigger("field"))).output(literal("private final String token;")),
 			rule().condition((allTypes("authentication","withCertificate")), (trigger("field"))).output(literal("private final URL certificate;")),
-			rule().condition((type("parameter")), (trigger("signature"))).output(mark("parameterType", "snakeCaseToCamelCase")).output(literal(" ")).output(mark("name", "snakeCaseToCamelCase", "firstLowerCase")),
+			rule().condition((type("parameter")), (trigger("signature"))).output(mark("parameterType")).output(literal(" ")).output(mark("name", "snakeCaseToCamelCase", "firstLowerCase")),
 			rule().condition((type("exceptionResponses")), (trigger("throws"))).output(mark("exceptionResponse", "throws").multiple("\nelse ")),
 			rule().condition((type("exceptionResponse")), (trigger("throws"))).output(literal("if (e instanceof ")).output(mark("exceptionName")).output(literal(") throw ((")).output(mark("exceptionName")).output(literal(") e);")),
 			rule().condition((type("exceptionResponses")), (trigger("declaration"))).output(literal("throws ")).output(expression().output(mark("exceptionResponse", "declaration").multiple(", ")).output(literal(","))).output(literal(" InternalServerError")),

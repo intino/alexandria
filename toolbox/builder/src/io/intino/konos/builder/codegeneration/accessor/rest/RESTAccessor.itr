@@ -185,7 +185,7 @@ def type(authentication & withCertificate) trigger(field)
 end
 
 def type(parameter) trigger(signature)
-	$parameterType+snakeCaseToCamelCase $name+snakeCaseToCamelCase+firstLowerCase
+	$parameterType $name+snakeCaseToCamelCase+firstLowerCase
 end
 
 def type(exceptionResponses) trigger(throws)

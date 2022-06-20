@@ -88,8 +88,8 @@ public class FullRenderer {
 		for (Service.REST rest : graph.restServiceList()) {
 			new RESTAccessorRenderer(context, rest, genDirectory(context.configuration().genDirectory(), "rest#", rest.name$())).render();
 		}
-		for (Service.JMX jmx : graph.jmxServiceList())
-			new JMXAccessorRenderer(context, jmx, genDirectory(context.configuration().genDirectory(), "jmx#", jmx.name$())).render();
+//		for (Service.JMX jmx : graph.jmxServiceList())
+//			new JMXAccessorRenderer(context, jmx, genDirectory(context.configuration().genDirectory(), "jmx#", jmx.name$())).render();
 		for (Service.Messaging service : graph.messagingServiceList())
 			new MessagingAccessorRenderer(context, service, genDirectory(context.configuration().genDirectory(), "messaging#", service.name$())).render();
 		if (!graph.cubeList().isEmpty())
