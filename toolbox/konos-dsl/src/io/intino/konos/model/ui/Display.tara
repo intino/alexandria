@@ -27,6 +27,7 @@ Concept:Named Display extends PassiveView
 	Aspect Accessible
 		var string[] parameters = empty
 		var string[] events = empty
+		var boolean confidential = true
 
 Facet Addressable
 	var Service.UI.Resource addressableResource
