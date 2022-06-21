@@ -64,6 +64,7 @@ public class Column extends Definition {
 	}
 
 	private String formatNumber(String data) {
+		if (data == null || data.isEmpty()) return "";
 		return formattedNumber(amountValue(parseDouble(data), divideBy), decimalsCount, locale);
 	}
 

@@ -102,7 +102,7 @@ public class RESTAccessorRenderer extends Renderer {
 	}
 
 	private String customizeMultipart(Response response, String returnType) {
-		return response.isMultiPart() ? returnType.replace(".rest.", ".restaccessor.") : returnType;
+		return response != null && response.isMultiPart() ? returnType.replace(".rest.", ".restaccessor.") : returnType;
 	}
 
 	private String[] responseType(Response response) {
