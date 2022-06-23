@@ -27,17 +27,7 @@ def type(resource & accessibleDisplay)
 		public void execute() throws AlexandriaException {
 			fillBrowser(manager, session());
 			fillDeviceParameter();
-			try {
-				if (!isLogged(accessToken()))
-					throw new Unauthorized("user is not logged");
-
-				authenticate(session(), accessToken());
-				render();
-			} catch (CouldNotObtainInfo couldNotObtainInfo) {
-				throw new Unauthorized("user is not logged");
-			} catch (Throwable error) {
-				throw new Unauthorized("could not render component");
-			}
+			$render
 		}
 
 		private void render() {
@@ -103,6 +93,24 @@ def type(resource & accessibleDisplay)
 			manager.write("OK");
 		}
 	}
+end
+
+def type(render & confidential)
+    try {
+        if (!isLogged(accessToken()))
+            throw new Unauthorized("user is not logged");
+
+        authenticate(session(), accessToken());
+        render();
+    } catch (CouldNotObtainInfo couldNotObtainInfo) {
+        throw new Unauthorized("user is not logged");
+    } catch (Throwable error) {
+        throw new Unauthorized("could not render component");
+    }
+end
+
+def type(render)
+    render();
 end
 
 def type(resource)

@@ -31,6 +31,7 @@ public class AccessibleDisplayRenderer extends UIRenderer {
 		FrameBuilder builder = buildFrame().add("accessibleDisplay").add("name", display.name$());
 		builder.add("resource");
 		builder.add(display.getClass().getSimpleName());
+		builder.add("render", renderFrame());
 
 		builder.add("parameter", parameters(display));
 		if (target == Target.Owner) {
@@ -39,6 +40,12 @@ public class AccessibleDisplayRenderer extends UIRenderer {
 		}
 
 		new AccessibleDisplayActionRenderer(context, display).execute();
+	}
+
+	private FrameBuilder renderFrame() {
+		FrameBuilder result = buildBaseFrame().add("render");
+		if (display.confidential()) result.add("confidential");
+		return result;
 	}
 
 	private FrameBuilder[] parameters(Display.Accessible display) {
