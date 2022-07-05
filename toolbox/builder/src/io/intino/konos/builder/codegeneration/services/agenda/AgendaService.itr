@@ -165,7 +165,7 @@ def trigger(route)
 end
 
 def trigger(ifOption)
-	if ("$name".equals(option)) {
+	if ("$name".equalsIgnoreCase(option)) {
 		future.schema().$name+firstLowerCase(new $future+firstUpperCase~Schema.$name+firstUpperCase($optionParameter+argIndex...[, ]));
 		future.$name+firstLowerCase();
 	}
