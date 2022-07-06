@@ -232,7 +232,7 @@ def trigger(removeMethod)
 	public boolean $name+firstLowerCase($parameter+signature...[, ]) {
 		final File file = $name+firstLowerCase~File($parameter+names...[, ]);
 		final $name+firstUpperCase $name+firstLowerCase = AgendaService.this.load$name+firstUpperCase(file);
-		timeouts.remove("$name+firstUpperCase#" + $name+firstLowerCase.schema().timeout().id);
+		if ($name+firstLowerCase != null) timeouts.remove("$name+firstUpperCase#" + $name+firstLowerCase.schema().timeout().id);
 		for (String key : new ArrayList<>(sources.keySet()))
 			if (sources.get(key).equals(file)) sources.remove(key);
 		if (file.exists()) return file.delete();
