@@ -52,10 +52,12 @@ public class AgendaServiceRenderer extends Renderer {
 	}
 
 	private FrameBuilder frameOf(Agenda.Future f) {
-		return new FrameBuilder("future")
+		FrameBuilder builder = new FrameBuilder("future")
 				.add("name", f.name$())
 				.add("parameter", framesOf(f.parameterList()))
 				.add("option", f.optionList().stream().map(option -> frameOf(option, framesOf(f.parameterList()))).toArray(Frame[]::new));
+		if (!f.optionList().isEmpty()) builder.add("hasOption", "true");
+		return builder;
 	}
 
 	private Frame frameOf(Agenda.Future.Option option, Frame[] parameters) {

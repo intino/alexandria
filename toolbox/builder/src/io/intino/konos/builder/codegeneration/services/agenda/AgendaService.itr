@@ -217,9 +217,14 @@ def type(future) trigger(execute)
 	}
 
 	private void execute($name+firstUpperCase future, String option, String... params) {
-		$option+ifOption...[$NL~else ]
+		[$option+ifOption...[$NL~else ]]
+		[$hasOption+else ]future.timeout();
 		clean(future);
 	}
+end
+
+def trigger(else)
+	else
 end
 
 def trigger(getter)
