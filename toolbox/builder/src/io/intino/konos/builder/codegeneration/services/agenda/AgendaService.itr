@@ -179,7 +179,7 @@ def trigger(private)
 	private void clean($name+firstUpperCase future) {
 		future.uri().ids().forEach(i -> {
 			final File file = sources.remove(i);
-			if (file.exists()) file.delete();
+			if (file != null && file.exists()) file.delete();
 		});
 	}
 
