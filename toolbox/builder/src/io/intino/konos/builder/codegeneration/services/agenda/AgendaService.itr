@@ -116,7 +116,7 @@ def type(service)
 		public static class AgendaServiceTrigger implements Job {
 			public void execute(JobExecutionContext context) throws JobExecutionException {
 				$box+snakecaseToCamelCase+firstUpperCase~Box box = ($box+snakecaseToCamelCase+firstUpperCase~Box) context.getMergedJobDataMap().get("box");
-				final Instant instant = Instant.now().truncatedTo(ChronoUnit.SECONDS);
+				final Instant instant = Instant.now().truncatedTo(ChronoUnit.MINUTES);
 				timeouts.forEach((k, v) -> {
 					if (instant.equals(v)) {
 						$future+timeout...[$NL]
@@ -296,7 +296,7 @@ def trigger(createClass)
 		$option+optionCreate...[$NL]
 
 		public $name+firstUpperCase timeout(Instant timeout) {
-			schema.timeout(new $name+firstUpperCase~Schema.Timeout(timeout.truncatedTo(ChronoUnit.SECONDS)));
+			schema.timeout(new $name+firstUpperCase~Schema.Timeout(timeout.truncatedTo(ChronoUnit.MINUTES)));
 			return this;
 		}
 
