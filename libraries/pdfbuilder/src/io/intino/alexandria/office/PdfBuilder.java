@@ -2,6 +2,8 @@ package io.intino.alexandria.office;
 
 import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import java.io.*;
