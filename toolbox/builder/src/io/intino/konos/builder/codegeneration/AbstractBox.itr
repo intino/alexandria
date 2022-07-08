@@ -284,7 +284,7 @@ def type(service & ui) trigger(ui)
 end
 
 def trigger(use)
-	$this.initDisplays(sparkInstance, pushService);
+	[$this.initDisplays(sparkInstance, pushService);]
 end
 
 def type(service & messaging) trigger(messaging)

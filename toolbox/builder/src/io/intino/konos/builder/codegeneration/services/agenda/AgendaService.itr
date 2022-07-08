@@ -165,7 +165,7 @@ def trigger(route)
 end
 
 def trigger(ifOption)
-	if ("$name".equals(option)) {
+	if ("$name".equalsIgnoreCase(option)) {
 		future.schema().$name+firstLowerCase(new $future+firstUpperCase~Schema.$name+firstUpperCase($optionParameter+argIndex...[, ]));
 		future.$name+firstLowerCase();
 	}
@@ -179,7 +179,7 @@ def trigger(private)
 	private void clean($name+firstUpperCase future) {
 		future.uri().ids().forEach(i -> {
 			final File file = sources.remove(i);
-			if (file.exists()) file.delete();
+			if (file != null && file.exists()) file.delete();
 		});
 	}
 
@@ -217,9 +217,14 @@ def type(future) trigger(execute)
 	}
 
 	private void execute($name+firstUpperCase future, String option, String... params) {
-		$option+ifOption...[$NL~else ]
+		[$option+ifOption...[$NL~else ]]
+		[$hasOption+else ]future.timeout();
 		clean(future);
 	}
+end
+
+def trigger(else)
+	else
 end
 
 def trigger(getter)
@@ -232,7 +237,7 @@ def trigger(removeMethod)
 	public boolean $name+firstLowerCase($parameter+signature...[, ]) {
 		final File file = $name+firstLowerCase~File($parameter+names...[, ]);
 		final $name+firstUpperCase $name+firstLowerCase = AgendaService.this.load$name+firstUpperCase(file);
-		timeouts.remove("$name+firstUpperCase#" + $name+firstLowerCase.schema().timeout().id);
+		if ($name+firstLowerCase != null) timeouts.remove("$name+firstUpperCase#" + $name+firstLowerCase.schema().timeout().id);
 		for (String key : new ArrayList<>(sources.keySet()))
 			if (sources.get(key).equals(file)) sources.remove(key);
 		if (file.exists()) return file.delete();
