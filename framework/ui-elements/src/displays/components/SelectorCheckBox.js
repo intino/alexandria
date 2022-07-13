@@ -11,7 +11,8 @@ import 'alexandria-ui-elements/res/styles/layout.css';
 
 const styles = theme => ({
     options : {
-        maxHeight: "200px",
+        height: "100%",
+        width: "100%",
         overflow: 'auto'
     },
 	label : {
