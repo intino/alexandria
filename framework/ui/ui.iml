@@ -77,7 +77,6 @@
     <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-framework:2.3.22" level="project" />
     <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-http-server:2.3.22" level="project" />
     <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-http:2.3.22" level="project" />
-    <orderEntry type="module" module-name="ui-elements" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.1.0" level="project" />
     <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.9.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:rest-accessor:2.4.0" level="project" />
@@ -102,5 +101,6 @@
     <orderEntry type="module" module-name="core" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:core-framework:2.1.2" level="project" />
     <orderEntry type="library" name="Intino: io.intino.icod:standalone:1.0.2" level="project" />
+    <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>
