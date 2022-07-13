@@ -13,6 +13,8 @@ import java.net.URL;
 
 public class User<DN extends UserNotifier, B extends Box> extends AbstractUser<B> {
     private Listener refreshListener;
+    private Listener beforeLogoutListener;
+    private Listener logoutListener;
 
     public User(B box) {
         super(box);
@@ -33,6 +35,16 @@ public class User<DN extends UserNotifier, B extends Box> extends AbstractUser<B
         return this;
     }
 
+    public User onBeforeLogout(Listener listener) {
+        beforeLogoutListener = listener;
+        return this;
+    }
+
+    public User onLogout(Listener listener) {
+        logoutListener = listener;
+        return this;
+    }
+
     @Override
     public void refresh() {
         super.refresh();
@@ -46,7 +58,9 @@ public class User<DN extends UserNotifier, B extends Box> extends AbstractUser<B
     }
 
     public void logout() {
+        if (beforeLogoutListener != null) beforeLogoutListener.accept(new Event(this));
         session().logout();
+        if (logoutListener != null) logoutListener.accept(new Event(this));
         notifier.redirect(session().browser().baseUrl());
     }
 

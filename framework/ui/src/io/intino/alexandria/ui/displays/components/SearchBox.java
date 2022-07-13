@@ -37,6 +37,7 @@ public class SearchBox<DN extends SearchBoxNotifier, B extends Box> extends Abst
     }
 
     public SearchBox<DN, B> condition(String condition) {
+        this.condition = condition;
         notifier.refreshCondition(condition);
         return this;
     }

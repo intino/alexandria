@@ -35,7 +35,7 @@ public class AuthenticateCallbackResource extends Resource {
             UserInfo info = userInfo();
             if (info != null) action.whenLoggedIn(userOf(info));
 
-            manager.writeHeader("authId", manager.fromHeader("authId"));
+            manager.writeHeader("authId", requestAuthId());
             manager.redirect(callbackUrl(action));
         } catch (CouldNotObtainAccessToken error) {
             manager.write(error);
@@ -49,13 +49,14 @@ public class AuthenticateCallbackResource extends Resource {
     }
 
     private void verifyAccessToken() throws CouldNotObtainAccessToken {
-        Optional<Authentication> authentication = authenticationOf(manager.currentSession(), manager.fromHeader("authId"));
+        Optional<Authentication> authentication = authenticationOf(manager.currentSession(), requestAuthId());
 
         if (!authentication.isPresent())
             return;
 
         String oauthVerifier = manager.fromQuery("oauth_verifier");
         if (oauthVerifier == null) oauthVerifier = manager.fromQuery("code");
+        if (oauthVerifier == null) oauthVerifier = manager.fromQuery("ticket");
         Token accessToken = authentication.get().accessToken(Verifier.build(oauthVerifier));
         manager.currentSession().token(accessToken);
     }

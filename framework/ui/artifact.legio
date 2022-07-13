@@ -18,7 +18,7 @@ Artifact("io.intino.alexandria", "4.19.1") ui-framework
 		Compile("org.locationtech.jts", "jts-core", "1.18.2")
 		Compile("com.google.code.gson", "gson", "2.8.6")
 		Compile("com.sparkjava", "spark-core", "2.9.3")
-		Compile("io.intino.icod", "standalone", "1.0.1")
+		Compile("io.intino.icod", "standalone", "1.0.2")
 
 		Web("io.intino.alexandria", "ui-framework-elements", "4.19.1")
 

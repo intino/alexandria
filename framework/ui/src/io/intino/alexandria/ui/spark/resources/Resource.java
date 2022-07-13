@@ -63,7 +63,7 @@ public abstract class Resource implements io.intino.alexandria.http.Resource {
 	protected boolean isLogged() {
 		if (!isFederated()) return true;
 
-		String authId = manager.fromHeader("authId");
+		String authId = requestAuthId();
 		Authentication authentication = authenticationOf(manager.currentSession(), authId).orElse(null);
 		if (authentication == null) {
 
@@ -143,7 +143,7 @@ public abstract class Resource implements io.intino.alexandria.http.Resource {
 	}
 
 	Optional<Authentication> authentication() {
-		return authenticationOf(manager.currentSession(), manager.fromHeader("authId"));
+		return authenticationOf(manager.currentSession(), requestAuthId());
 	}
 
 	Optional<Authentication> authentication(String sessionId) {
@@ -159,6 +159,14 @@ public abstract class Resource implements io.intino.alexandria.http.Resource {
 		String authenticationId = authenticationIdMap.get(sessionId);
 		authenticationIdMap.remove(sessionId);
 		authenticationMap.remove(authenticationId);
+	}
+
+	String requestAuthId() {
+		String result = manager.fromHeader("authId");
+		if (result != null && !result.isEmpty()) return result;
+		result = manager.fromQuery("authId");
+		if (result != null && !result.isEmpty()) return result;
+		return null;
 	}
 
 	String authenticationId() {
