@@ -16,7 +16,6 @@
     <orderEntry type="module" module-name="mapp" />
     <orderEntry type="module" module-name="zet" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
-    <orderEntry type="module" module-name="event" />
     <orderEntry type="module" module-name="primitives" />
     <orderEntry type="library" name="Intino: org.antlr:antlr4-runtime:4.9.1" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:zim:4.0.1" level="project" />
@@ -27,5 +26,8 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:mapp:1.1.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:tris:1.0.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.5" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13.2" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: org.assertj:assertj-core:3.23.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: net.bytebuddy:byte-buddy:1.12.10" level="project" />
   </component>
 </module>
