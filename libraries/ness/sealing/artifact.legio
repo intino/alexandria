@@ -7,8 +7,8 @@ Artifact("io.intino.alexandria", "4.0.7") sealing
 		Compile("io.intino.alexandria", "session", "1.1.0")
 		Compile("org.xerial.snappy", "snappy-java", "1.1.8.2")
 		Test("io.intino.alexandria", "ingestion", "4.0.7")
-		Test("junit", "junit", "4.13")
-		Test("org.assertj", "assertj-core", "3.17.2")
+		Test("junit", "junit", "4.13.2")
+		Test("org.assertj", "assertj-core", "3.23.1")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
