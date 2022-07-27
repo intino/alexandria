@@ -39,6 +39,8 @@ public class KonosBuildConstants {
 	public static final String CURRENT_DEPENDENCIES = "current.dependencies";
 	public static final String LANGUAGE_GENERATION_PACKAGE = "language.generation.package";
 	public static final String PARENT_INTERFACE = "parent.interface";
+	public static final String RELEASE_DISTRIBUTION = "release.distribution";
+	public static final String SNAPSHOT_DISTRIBUTION = "snapshot.distribution";
 	public static final String INTINO_PROJECT_PATH = "intino.project.path";
 	public static final String BOX_GENERATION_PACKAGE = "box.generation.package";
 	public static final String COMPILATION_MODE = "compilation.mode";
@@ -47,6 +49,7 @@ public class KonosBuildConstants {
 	public static final String GROUP_ID = "groupId";
 	public static final String ARTIFACT_ID = "artifactId";
 	public static final String VERSION = "version";
+
 	private KonosBuildConstants() {
 	}
 
