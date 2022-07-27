@@ -85,7 +85,8 @@ class SelectorTabs extends AbstractSelectorTabs {
 	    const children = this.children();
 	    const options = this._visibleOptions();
 	    const index = options[value];
-	    const selected = children[index] != null ? children[index].props.name : null;
+	    let selected = children[index] != null ? children[index].props.name : null;
+	    if (selected == null && !(children instanceof Array) && children.props != null) selected = children.props.name;
 	    if (selected != null) this.requester.selectByName(selected);
 	    else this.requester.select(value);
     };
