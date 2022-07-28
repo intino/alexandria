@@ -15,7 +15,7 @@ Concept:{0..1} Theme
 	Concept:{1..1} Primary extends Property
 	Concept:{1..1} Secondary extends Property
 	Concept:{1..1} Error extends Property
-	Concept:{1..1} Readonly > var string format
+	Concept:{1..1} Readonly > var Format format
 
 	Concept:{0..1} Typography
 		var integer:{px} fontSize = 13px
