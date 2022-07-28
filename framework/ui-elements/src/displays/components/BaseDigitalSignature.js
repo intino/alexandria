@@ -19,6 +19,7 @@ export default class BaseDigitalSignature extends AbstractBaseDigitalSignature {
 		    data: null,
 		    isDocument: false,
 		    signing: false,
+		    readonly: false,
 		};
 	};
 
@@ -31,6 +32,10 @@ export default class BaseDigitalSignature extends AbstractBaseDigitalSignature {
 
     document = (content) => {
         this.setState({ data: content, isDocument: true });
+    };
+
+    refreshReadonly = (value) => {
+        this.setState({readonly: value});
     };
 
 }

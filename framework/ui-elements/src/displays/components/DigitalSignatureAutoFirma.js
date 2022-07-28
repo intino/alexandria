@@ -38,7 +38,7 @@ class DigitalSignatureAutoFirma extends AbstractDigitalSignatureAutoFirma {
 
     render() {
         const signing = this.state.signing;
-        const disabled = this.state.data == null || this.state.signing;
+        const disabled = this.state.data == null || this.state.signing || this.state.readonly;
         const style = !this.state.visible ? {display:'none'} : {};
         return (
             <React.Fragment>

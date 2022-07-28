@@ -17,15 +17,28 @@ public abstract class BaseDigitalSignature<DN extends BaseDigitalSignatureNotifi
     private SignListener signListener;
     private SignErrorListener errorListener;
     private String text;
+    public boolean readonly = false;
 
     public BaseDigitalSignature(B box) {
         super(box);
     }
 
     @Override
+    public void didMount() {
+        super.didMount();
+        notifier.refreshReadonly(readonly);
+    }
+
+    @Override
     public void refresh() {
         super.refresh();
         if (text != null) notifier.text(text);
+    }
+
+    public BaseDigitalSignature<DN, B> readonly(boolean readonly) {
+        this.readonly = readonly;
+        notifier.refreshReadonly(readonly);
+        return this;
     }
 
     public void text(String content) {
