@@ -25,7 +25,7 @@ class ActionSwitch extends AbstractActionSwitch {
 	renderTrigger = () => {
 		if (!this.state.visible) return (<React.Fragment/>);
 		return (
-			<FormControlLabel style={this.style()}
+			<FormControlLabel style={{marginLeft:'0',marginRight:'0',...this.style()}}
 							  control={<Switch size={this._size()} disabled={this.state.readonly}
 							                   checked={this.state.checked} onChange={this.handleChange.bind(this)}/>}
 							  label={this._title()}

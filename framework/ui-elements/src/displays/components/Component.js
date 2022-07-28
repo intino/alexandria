@@ -71,6 +71,7 @@ export default class Component extends AlexandriaDisplay {
     _addFormatsTo(element) {
         const { format } = element.props;
         const formats = format != null ? format.split(" ") : [];
+        if (this.state.readonly) formats.push("readonly");
         if (formats.length <= 0) return undefined;
         const theme = Theme.get();
         const result = {};

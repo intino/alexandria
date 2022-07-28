@@ -30,6 +30,7 @@ public class ThemeRenderer extends UIRenderer {
 		if (theme != null) {
 			builder.add("palette", palette(theme));
 			builder.add("typography", typography(theme));
+			if (theme.readonly() != null) builder.add("format", frameOf("readonly", theme.readonly().format().content()));
 		}
 		service.graph().formatList().forEach(r -> builder.add("format", frameOf(r)));
 		Commons.write(new File(gen() + File.separator + "Theme.js").toPath(), setup(new ThemeTemplate()).render(builder.toFrame()));
@@ -56,9 +57,13 @@ public class ThemeRenderer extends UIRenderer {
 	}
 
 	private Frame frameOf(Format format) {
+		return frameOf(format.name$(), format.content());
+	}
+
+	private Frame frameOf(String formatName, String content) {
 		FrameBuilder result = new FrameBuilder("format");
-		result.add("name", format.name$());
-		result.add("content", format.content() != null ? format.content() : "");
+		result.add("name", formatName);
+		result.add("content", content != null ? content : "");
 		return result.toFrame();
 	}
 
