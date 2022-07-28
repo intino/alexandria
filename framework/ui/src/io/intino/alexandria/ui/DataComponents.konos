@@ -78,6 +78,7 @@ Component baseDigitalSignature
 	Notification text as Text
 	Notification document as Text
 	Notification sign
+	Notification refreshReadonly as Bool
 	Request success as Object(DigitalSignatureSuccess)
 	Request failure as Object(DigitalSignatureFailure)
 

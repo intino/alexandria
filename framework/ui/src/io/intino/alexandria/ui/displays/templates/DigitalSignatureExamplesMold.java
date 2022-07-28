@@ -12,6 +12,7 @@ public class DigitalSignatureExamplesMold extends AbstractDigitalSignatureExampl
     public void init() {
         super.init();
         autoFirma.text("hola mundo");
+        //autoFirma.readonly(true);
         autoFirma.onSign(e -> {
             signature.value(e.signature());
             signedBy.value(e.info().getUsername());
