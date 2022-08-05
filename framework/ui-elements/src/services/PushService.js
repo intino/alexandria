@@ -129,7 +129,14 @@ const PushService = (function () {
     }
 
     function isConnecting(service, name) {
-        return (service.connections[name] != null && service.connections[name].ready) || service.pendingConnections.includes(name);
+        return (service.connections[name] != null && service.connections[name].ready) || isPendingConnection(service, name);
+    }
+
+    function isPendingConnection(service, name) {
+        for (let i=0; i<service.pendingConnections.length; i++) {
+            if (service.pendingConnections[i] == name) return true;
+        }
+        return false;
     }
 
     return service;
