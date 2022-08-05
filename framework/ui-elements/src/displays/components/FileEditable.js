@@ -113,12 +113,13 @@ export default class FileEditable extends AbstractFile {
 	};
 
 	_renderInputValue = () => {
-	    const readonly = this.state.value == null || this.state.value === "";
+	    const empty = this.state.value == null || this.state.value === "";
+	    const readonly = this.state.readonly;
 	    return (
 	        <div className="layout horizontal center" style={{padding:'0 5px',border:'1px solid #ddd',marginBottom:'4px'}}>
 	            <div className="layout vertical flex" style={{marginRight:'10px'}}>{this.filename()}</div>
-	            <IconButton size="small" color="primary" readonly={readonly} onClick={this.handleDownload.bind(this)}><CloudDownload/></IconButton>
-	            <IconButton size="small" color="primary" onClick={this.handleClear.bind(this)}><Cancel/></IconButton>
+	            <IconButton size="small" color="primary" disabled={empty} onClick={this.handleDownload.bind(this)}><CloudDownload/></IconButton>
+	            <IconButton size="small" color="primary" disabled={readonly} onClick={this.handleClear.bind(this)}><Cancel/></IconButton>
             </div>
         );
 	};
