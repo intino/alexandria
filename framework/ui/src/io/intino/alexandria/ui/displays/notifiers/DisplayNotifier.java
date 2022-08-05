@@ -61,6 +61,11 @@ public class DisplayNotifier {
         put("redirect", addMetadata(params));
     }
 
+    public void closeClient() {
+        Map<String, Object> params = new HashMap<>();
+        put("closeClient", addMetadata(params));
+    }
+
     public void clearContainer(String container) {
         Map<String, Object> params = new HashMap<>();
         params.put("c", container);

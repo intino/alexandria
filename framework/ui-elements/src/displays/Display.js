@@ -79,6 +79,10 @@ export default class Display extends PassiveView {
         this.address = params.address != null ? Application.configuration.basePath + params.address : null;
     };
 
+    closeClient = (params) => {
+        window.close();
+    };
+
     historyAddress = () => {
         return this.address;
     };

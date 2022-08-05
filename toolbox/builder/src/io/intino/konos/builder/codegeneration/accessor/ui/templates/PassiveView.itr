@@ -22,6 +22,7 @@ def type(notifier)
 			this.when("clearContainer").toSelf().execute((parameters) => this.element.clearContainer(parameters));
 			this.when("redirect").toSelf().execute((parameters) => this.element.redirect(parameters));
 			this.when("addressed").toSelf().execute((parameters) => this.element.addressed(parameters));
+			this.when("closeClient").toSelf().execute((parameters) => this.element.closeClient(parameters));
 		};
 
 		when = (message) => {
