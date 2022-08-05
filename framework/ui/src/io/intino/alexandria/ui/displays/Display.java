@@ -24,8 +24,8 @@ import static java.util.stream.Collectors.toList;
 public class Display<N extends DisplayNotifier, B extends Box> {
 	private final B box;
 	private String id;
-	private final Map<String, List<Display>> children = new HashMap<>();
-	private Map<String, List<Display>> promisedChildren = new HashMap<>();
+	private final Map<String, List<Display>> children = Collections.synchronizedMap(new HashMap<>());
+	private final Map<String, List<Display>> promisedChildren = new HashMap<>();
 	protected DisplayRepository repository;
 	protected N notifier;
 	protected String container = null;

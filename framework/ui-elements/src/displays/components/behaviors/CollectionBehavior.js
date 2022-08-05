@@ -63,7 +63,7 @@ const CollectionBehavior = (collection) => {
     self.renderList = (items, height, width, onItemsRendered, ref) => {
         let itemHeight = self.collection.props.itemHeight;
         const itemCount = self.collection.props.navigable == null ? self.collection.state.itemCount : self.collection.state.pageSize;
-        const hasMore = items.length < itemCount;
+        const hasMore = self.collection.props.navigable == null ? items.length < itemCount : false;
         const scrollableTarget = self.collection.props.id + "_infinite";
         if (width <= 800) itemHeight += (itemHeight/2);
         self.notifyItemsRendered(items);

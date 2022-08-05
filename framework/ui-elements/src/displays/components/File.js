@@ -43,6 +43,8 @@ class File extends AbstractFile {
 	};
 
 	render() {
+		if (!this.state.visible) return (<React.Fragment/>);
+
 		const { classes } = this.props;
 		const file = this._fileUrl();
 
