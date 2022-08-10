@@ -28,21 +28,20 @@ public class SelectorTabs<DN extends SelectorTabsNotifier, B extends Box> extend
 		return Collections.singletonList(nameOf(selected));
 	}
 
-	public boolean selection(String option) {
+	public void selection(String option) {
 		int position = position(option);
-		if (position == -1) return false;
-		return selection(position);
+		if (position == -1) return;
+		selection(position);
 	}
 
-	public boolean selection(int option) {
+	public void selection(int option) {
 		notifier.refreshSelected(option);
-		if (this.selected == option) return false;
+		if (this.selected == option) return;
 		this.selected = option;
-		return true;
 	}
 
 	public void select(String option) {
-    	if (!selection(option)) return;
+    	selection(option);
 		notifySelection();
 	}
 
