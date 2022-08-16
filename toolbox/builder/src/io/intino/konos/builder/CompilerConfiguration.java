@@ -1,5 +1,6 @@
 package io.intino.konos.builder;
 
+import io.intino.Configuration;
 import io.intino.Configuration.Artifact.Model.Level;
 import io.intino.konos.compiler.shared.KonosBuildConstants.Mode;
 import tara.dsl.Konos;
@@ -60,6 +61,8 @@ public class CompilerConfiguration implements Cloneable {
 	private File configurationDirectory;
 	private List<String> parameters = new ArrayList<>();
 	private Mode mode = Mode.Normal;
+	private Configuration.Repository releaseDistributionRepository;
+	private Configuration.Repository snapshotDistributionRepository;
 
 	public CompilerConfiguration() {
 		setWarningLevel(1);
@@ -83,8 +86,7 @@ public class CompilerConfiguration implements Cloneable {
 	public void setWarningLevel(int level) {
 		if ((level < 0) || (level > 3)) {
 			this.warningLevel = 1;
-		} else
-			this.warningLevel = level;
+		} else this.warningLevel = level;
 	}
 
 	public String sourceEncoding() {
@@ -299,6 +301,25 @@ public class CompilerConfiguration implements Cloneable {
 
 	public CompilerConfiguration currentDependencies(List<String> currentDependencies) {
 		this.currentDependencies = currentDependencies;
+		return this;
+	}
+
+	public Configuration.Repository releaseDistributionRepository() {
+		return this.releaseDistributionRepository;
+	}
+
+	public CompilerConfiguration releaseDistributionRepository(Configuration.Repository repository) {
+		this.releaseDistributionRepository = repository;
+		return this;
+	}
+
+	public Configuration.Repository snapshotDistributionRepository() {
+		return this.snapshotDistributionRepository;
+	}
+
+
+	public CompilerConfiguration snapshotDistributionRepository(Configuration.Repository repository) {
+		this.snapshotDistributionRepository = repository;
 		return this;
 	}
 
