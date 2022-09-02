@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration;
 
+import io.intino.konos.builder.codegeneration.accessor.PomGenerator;
 import io.intino.konos.builder.codegeneration.accessor.analytic.AnalyticBuilderRenderer;
-import io.intino.konos.builder.codegeneration.accessor.jmx.JMXAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.messaging.MessagingAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer;
 import io.intino.konos.builder.codegeneration.analytic.AnalyticRenderer;
@@ -14,11 +14,11 @@ import io.intino.konos.builder.codegeneration.datahub.mounter.MounterRenderer;
 import io.intino.konos.builder.codegeneration.datahub.subscriber.SubscriberRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
 import io.intino.konos.builder.codegeneration.feeder.FeederRenderer;
-import io.intino.konos.builder.codegeneration.services.agenda.AgendaServiceRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.codegeneration.sentinel.ListenerRenderer;
 import io.intino.konos.builder.codegeneration.sentinel.SentinelsRenderer;
+import io.intino.konos.builder.codegeneration.services.agenda.AgendaServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.jmx.JMXOperationsServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.jmx.JMXServerRenderer;
 import io.intino.konos.builder.codegeneration.services.messaging.MessagingRequestRenderer;
@@ -85,15 +85,25 @@ public class FullRenderer {
 
 
 	private void accessors() throws KonosException {
+		final PomGenerator pomGenerator = new PomGenerator(context);
 		for (Service.REST rest : graph.restServiceList()) {
-			new RESTAccessorRenderer(context, rest, genDirectory(context.configuration().genDirectory(), "rest#", rest.name$())).render();
+			final File dir = genDirectory(context.configuration().genDirectory(), "rest#", rest.name$());
+			new RESTAccessorRenderer(context, rest, dir).render();
+			pomGenerator.generate("rest", dir);
 		}
 //		for (Service.JMX jmx : graph.jmxServiceList())
 //			new JMXAccessorRenderer(context, jmx, genDirectory(context.configuration().genDirectory(), "jmx#", jmx.name$())).render();
-		for (Service.Messaging service : graph.messagingServiceList())
-			new MessagingAccessorRenderer(context, service, genDirectory(context.configuration().genDirectory(), "messaging#", service.name$())).render();
-		if (!graph.cubeList().isEmpty())
-			new AnalyticBuilderRenderer(context, graph, new File(analyticBasePath(), "src"), new File(analyticBasePath(), "res")).render();
+		for (Service.Messaging service : graph.messagingServiceList()) {
+			final File dir = genDirectory(context.configuration().genDirectory(), "messaging#", service.name$());
+			new MessagingAccessorRenderer(context, service, dir).render();
+			pomGenerator.generate("messaging", dir);
+		}
+
+		if (!graph.cubeList().isEmpty()) {
+			final File dir = analyticBasePath();
+			new AnalyticBuilderRenderer(context, graph, new File(dir, "src"), new File(analyticBasePath(), "res")).render();
+			pomGenerator.generate("analytic", dir);
+		}
 	}
 
 	private File analyticBasePath() {
