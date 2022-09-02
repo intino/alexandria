@@ -9,6 +9,7 @@ import Delayer from '../../util/Delayer';
 import classNames from 'classnames';
 import { withSnackbar } from 'notistack';
 import 'alexandria-ui-elements/res/styles/layout.css';
+import BrowserUtil from 'alexandria-ui-elements/src/util/BrowserUtil';
 
 const SelectorCollectionBoxViewStyles = {
     singleValue: (provided, state) => ({
@@ -167,7 +168,8 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
     };
 
     handleClose = (e) => {
-		window.setTimeout(() => this.close(), 500);
+        if (BrowserUtil.isMobile()) window.setTimeout(() => this.close(), 500);
+        else this.close();
     };
 
 	handleAllowOther = () => {
