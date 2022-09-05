@@ -148,7 +148,7 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		super.refresh();
 		if (notifier == null) return;
 		notifier.refreshToolbar(toolbarState());
-		notifier.refreshOrdinals(ordinals());
+		notifier.refreshOrdinals(schemaOrdinals());
 		notifier.refreshSelected(selectedValue());
 		notifier.refreshRange(rangeSchema());
 		if (ordinal() != null) notifier.refreshSelectedOrdinal(ordinal().name());
@@ -204,7 +204,7 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 
 	public BaseSlider _add(Ordinal ordinal) {
 		this.ordinalList.add(ordinal);
-		if (this.ordinal == null && ordinalList.size() > 0) ordinal(ordinalList.get(0));
+		if (this.ordinal == null) ordinal(ordinalList.get(ordinalList.size()-1));
 		return this;
 	}
 
@@ -219,7 +219,7 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 	}
 
 	void selectOrdinal(String name, long value) {
-		ordinal(ordinalList.stream().filter(o -> o.name().equals(name)).findFirst().orElse(null));
+		ordinal(ordinals().stream().filter(o -> o.name().equals(name)).findFirst().orElse(null));
 		notifier.refreshSelectedOrdinal(name);
 		value(value);
 	}
@@ -228,8 +228,38 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 		return new ToolbarState().canPrevious(canPrevious()).canNext(canNext()).playing(this.playerStepTimer != null);
 	}
 
-	private List<io.intino.alexandria.schemas.Ordinal> ordinals() {
-		return ordinalList.stream().map(this::ordinalOf).collect(toList());
+	private List<io.intino.alexandria.schemas.Ordinal> schemaOrdinals() {
+		return ordinals().stream().map(this::ordinalOf).collect(toList());
+	}
+
+	private List<Ordinal> ordinals() {
+		return ordinalList.isEmpty() ? defaultOrdinals() : ordinalList;
+	}
+
+	private List<Ordinal> defaultOrdinals() {
+		return List.of(
+			new Ordinal() {
+				@Override
+				public String name() {
+					return "ordinal";
+				}
+
+				@Override
+				public String label() {
+					return "Ordinal";
+				}
+
+				@Override
+				public int step() {
+					return 1;
+				}
+
+				@Override
+				public Formatter formatter(String language) {
+					return value -> value + "";
+				}
+			}
+		);
 	}
 
 	private io.intino.alexandria.schemas.Ordinal ordinalOf(Ordinal ordinal) {
