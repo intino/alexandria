@@ -19,6 +19,7 @@ public class RouteDispatcherTemplate extends Template {
 			rule().condition((type("resource")), (trigger("patternregister"))).output(literal("patterns.put(\"")).output(mark("name")).output(literal("\", \"")).output(mark("pattern")).output(literal("\");")),
 			rule().condition((allTypes("resource","main")), (trigger("pattern"))).output(literal("if (address.matches(patterns.get(\"")).output(mark("name")).output(literal("\"))) return patterns.get(\"")).output(mark("name")).output(literal("\");")),
 			rule().condition((type("resource")), (trigger("pattern"))).output(literal("else if (address.matches(patterns.get(\"")).output(mark("name")).output(literal("\"))) return patterns.get(\"")).output(mark("name")).output(literal("\");")),
+			rule().condition((allTypes("param","optional")), (trigger("call"))).output(literal("params.size() > ")).output(mark("index")).output(literal(" ? params.get(")).output(mark("index")).output(literal(") : null")),
 			rule().condition((type("param")), (trigger("call"))).output(literal("params.get(")).output(mark("index")).output(literal(")")),
 			rule().condition((type("param"))).output(literal("String ")).output(mark("name"))
 		);
