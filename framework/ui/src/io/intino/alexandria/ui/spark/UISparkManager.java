@@ -47,7 +47,14 @@ public class UISparkManager extends SparkManager<PushService> {
 		String result = baseUrl();
 		if (!result.endsWith("/")) result += "/";
 		String requestUri = this.request.raw().getRequestURI();
-		return result + (requestUri != null && requestUri.startsWith("/") ? requestUri.substring(1) : requestUri);
+		result += (requestUri != null && requestUri.startsWith("/") ? requestUri.substring(1) : requestUri);
+		return withQueryString(result);
+	}
+
+	private String withQueryString(String result) {
+		String queryString = this.request.raw().getQueryString();
+		if (queryString == null || queryString.isEmpty()) return result;
+		return result + "?" + queryString;
 	}
 
 	public UISession currentSession() {
