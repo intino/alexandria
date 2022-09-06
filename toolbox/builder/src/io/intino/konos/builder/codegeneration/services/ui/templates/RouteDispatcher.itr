@@ -46,7 +46,16 @@ def type(dispatcher & gen)
             Matcher m = p.matcher(address);
             if (!m.find()) return Collections.emptyList();
             List<String> result = new ArrayList<>();
-            for (int i=1; i<=m.groupCount(); i++) result.add(m.group(i));
+            for (int i=1; i<=m.groupCount(); i++) result.add(m.group(i).split("\\\\?")$[0$]);
+            return addQueryStringParams(address, result);
+        }
+
+        private List<String> addQueryStringParams(String address, List<String> result) {
+            if (address.indexOf("?") == -1) return result;
+            String$[$] parameters = address.split("\\\\?")$[1$].split("&");
+            for (int i = 0; i < parameters.length; i++) {
+                result.add(parameters$[i$].split("=")$[1$]);
+            }
             return result;
         }
 

@@ -19,7 +19,7 @@ class DisplayRouter extends AbstractDisplayRouter {
 	listenHistory = () => {
 		if (DisplayRouter.Listening) return;
 		DisplayRouter.Listening = true;
-		history.listen(({ pathname }) => { this.route(pathname); });
+		history.listen(({ pathname, search }) => { this.route(pathname + search); });
 		history.onContinueListening = () => this.continueListening();
 		history.onStopListening = () => this.stopListeningHistory();
 	};
