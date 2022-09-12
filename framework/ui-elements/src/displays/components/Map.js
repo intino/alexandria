@@ -155,15 +155,15 @@ export class EmbeddedMap extends AbstractMap {
 	};
 
     mapOptions = () => {
-        const options = this.props.options != null ? this.props.options : "";
-        const all = options.indexOf("all") != -1;
+        const controls = this.props.controls != null ? this.props.controls : "";
+        const all = controls.indexOf("all") != -1;
 		return {
-            zoomControl: options.indexOf("zoom") != -1 || all,
-            mapTypeControl: options.indexOf("maptype") != -1 || all,
-            scaleControl: options.indexOf("scale") != -1 || all,
-            streetViewControl: options.indexOf("streetview") != -1 || all,
-            rotateControl: options.indexOf("rotate") != -1 || all,
-            fullscreenControl: options.indexOf("fullscreen") != -1 || all
+            zoomControl: controls.indexOf("zoom") != -1 || all,
+            mapTypeControl: controls.indexOf("maptype") != -1 || all,
+            scaleControl: controls.indexOf("scale") != -1 || all,
+            streetViewControl: controls.indexOf("streetview") != -1 || all,
+            rotateControl: controls.indexOf("rotate") != -1 || all,
+            fullscreenControl: controls.indexOf("fullscreen") != -1 || all
         };
     };
 
