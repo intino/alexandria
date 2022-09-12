@@ -7,6 +7,7 @@ import io.intino.alexandria.ui.displays.items.Selector8ListMold;
 import io.intino.alexandria.ui.documentation.Person;
 import io.intino.alexandria.ui.documentation.model.Datasources;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,10 @@ public class SelectorExamplesMold extends AbstractSelectorExamplesMold<UiFramewo
         selector8.selector8List.source(Datasources.personDatasource());
         selector8.selector8List.onAddItem(this::onAddItem);
         selector8.onSelect(e -> notifyPerson(e.selection()));
+//        selector8.onOpen(e -> notifyUser("Open " + e.value(), UserMessage.Type.Info));
         selector8.valueProvider(person -> ((Person)person).firstName());
+//        selector8.readonly(true);
+//        selector8.selection(Datasources.personDatasource().items(0, 10, null, Collections.emptyList(), Collections.emptyList()).get(0));
     }
 
     private void notify(List<String> selection) {
