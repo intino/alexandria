@@ -112,6 +112,10 @@ def type(resource) trigger(pattern)
     else if (address.matches(patterns.get("$name"))) return patterns.get("$name");
 end
 
+def type(param & optional) trigger(call)
+    params.size() > $index ? params.get($index) : null
+end
+
 def type(param) trigger(call)
     params.get($index)
 end

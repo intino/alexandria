@@ -59,16 +59,32 @@ public class RouteDispatcherRenderer extends UIRenderer {
 	}
 
 	private void addResourceParams(Service.UI.Resource resource, FrameBuilder result) {
-		List<String> params = paramsOf(resource);
-		for (int i = 0; i < params.size(); i++)
-			result.add("param", new FrameBuilder().add("param").add("name", params.get(i)).add("index", i));
+		List<String> params = pathParams(resource);
+		int index = 0;
+		for (String name : params) {
+			result.add("param", frameOf(index, name, false));
+			index++;
+		}
+		params = queryParams(resource);
+		for (String name : params) {
+			result.add("param", frameOf(index, name, true));
+			index++;
+		}
 	}
 
-	private List<String> paramsOf(Service.UI.Resource resource) {
-		Stream<String> split = Stream.of(resource.path().split("/"));
-		List<String> result = split.filter(s -> s.startsWith(":")).map(s -> s.substring(1)).collect(toList());
-		result.addAll(resource.parameterList().stream().map(Layer::name$).collect(Collectors.toList()));
+	private Object frameOf(int index, String name, boolean optional) {
+		FrameBuilder result = new FrameBuilder().add("param").add("name", name).add("index", index);
+		if (optional) result.add("optional");
 		return result;
+	}
+
+	private List<String> pathParams(Service.UI.Resource resource) {
+		Stream<String> split = Stream.of(resource.path().split("/"));
+		return split.filter(s -> s.startsWith(":")).map(s -> s.substring(1)).collect(toList());
+	}
+
+	private List<String> queryParams(Service.UI.Resource resource) {
+		return resource.parameterList().stream().map(Layer::name$).collect(Collectors.toList());
 	}
 
 }

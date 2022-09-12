@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import { withSnackbar } from 'notistack';
 import 'alexandria-ui-elements/res/styles/layout.css';
 import BrowserUtil from 'alexandria-ui-elements/src/util/BrowserUtil';
+import Theme from "app-elements/gen/Theme";
 
 const SelectorCollectionBoxViewStyles = {
     singleValue: (provided, state) => ({
@@ -43,6 +44,19 @@ const styles = theme => ({
         fontSize: "10pt",
         color: "#0000008a",
         marginBottom: "5px",
+    },
+    multiValueLabel : {
+        pointerEvents:'all',
+        cursor:'pointer',
+        color: theme.palette.primary.main,
+        padding:'3px',
+        paddingLeft:'6px',
+        fontSize:'85%',
+        textOverflow:'ellipsis',
+        whiteSpace:'nowrap',
+        boxSizing:'border-box',
+        overflow:'hidden',
+        borderRadius:'2px',
     },
 	other : {
 	    color: theme.palette.primary.main,
@@ -86,7 +100,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 						closeMenuOnSelect={!multiple} autoFocus={this.props.focused} menuIsOpen={this.state.opened}
 						placeholder={this.selectMessage()}
 						className="basic-multi-select" classNamePrefix="select"
-                        components={{ Option: this.renderOption.bind(this), MenuList: this.renderDialog.bind(this)}}
+                        components={{ Option: this.renderOption.bind(this), MenuList: this.renderDialog.bind(this), MultiValueLabel: this.renderMultiValueLabel.bind(this) }}
 						value={value} options={items}
 						onChange={this.handleChange.bind(this)}
 						onInputChange={this.handleSearch.bind(this)}
@@ -124,6 +138,13 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
         );
     }
 
+	renderMultiValueLabel = (props) => {
+	    const { classes } = this.props;
+	    const theme = Theme.get();
+	    const color = this.state.readonly ? theme.palette.primary.main : "inherit";
+        return (<a className={classes.multiValueLabel} style={{color:color}}onClick={this.handleOptionClick.bind(this, props)}>{props.data.value}</a>);
+    };
+
 	refreshSelection = (selection) => {
 		this.setState({ selection: selection });
 		if (this.searchComponent.current == null) return;
@@ -148,7 +169,14 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
         this.setState({ opened: false });
     };
 
+    handleOptionClick = (props, e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        this.requester.open(props.data.value);
+    };
+
     handleChange = (value, method) => {
+        if (this.state.readonly) return;
         switch (method.action) {
             case 'pop-value' : { this.requester.unSelect(method.removedValue.value); break; }
             case 'remove-value' : { this.requester.unSelect(method.removedValue.value); break; }

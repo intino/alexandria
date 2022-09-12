@@ -2,9 +2,8 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.components.collection.Selectable;
-import io.intino.alexandria.ui.displays.events.Event;
-import io.intino.alexandria.ui.displays.events.Listener;
-import io.intino.alexandria.ui.displays.events.SelectionEvent;
+import io.intino.alexandria.ui.displays.events.*;
+import io.intino.alexandria.ui.displays.events.actionable.OpenListener;
 import io.intino.alexandria.ui.displays.notifiers.SelectorCollectionBoxNotifier;
 import io.intino.alexandria.ui.model.Datasource;
 import io.intino.alexandria.ui.utils.DelayerUtil;
@@ -17,6 +16,7 @@ import static java.util.stream.Collectors.toList;
 
 public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNotifier, B extends Box> extends AbstractSelectorCollectionBox<DN, B> {
     private java.util.List<Object> selection = new ArrayList<>();
+    private java.util.List<OpenValueListener> openListeners = new ArrayList<>();
     private Collection collection;
     private ValueProvider valueProvider;
     private Listener selectOtherListener;
@@ -34,6 +34,11 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
 
     public SelectorCollectionBox<DN, B> onSelectOther(Listener listener) {
         this.selectOtherListener = listener;
+        return this;
+    }
+
+    public SelectorCollectionBox<DN, B> onOpen(OpenValueListener listener) {
+        this.openListeners.add(listener);
         return this;
     }
 
@@ -94,6 +99,10 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
     @Override
     public void reset() {
         select();
+    }
+
+    public void open(String option) {
+        openListeners.forEach(l -> l.accept(new ValueEvent(this, option)));
     }
 
     public void opened() {
@@ -160,4 +169,5 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
     public interface ValueProvider {
         String valueOf(Object element);
     }
+
 }

@@ -26,6 +26,7 @@ def type(ui)
 			box.routeManager(routeManager(spark));
 			spark.route("/push").push(new PushService());
 			spark.route("/authenticate-callback").get(manager -> new AuthenticateCallbackResource(manager, notifierProvider()).execute());
+			spark.route("/authenticate-callback/").get(manager -> new AuthenticateCallbackResource(manager, notifierProvider()).execute());
 			spark.route("/asset/:name").get(manager -> new AssetResource(name -> new AssetResourceLoader(box).load(name), manager, notifierProvider()).execute());
 			[$userHome]
 			[$resource+path...[$NL]]
