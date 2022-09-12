@@ -164,7 +164,7 @@ def type(parameter) trigger(type)
 end
 
 def type(parameter & defaultvalue) attribute(in:body) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrDefault("$defaultvalue"), $parameterType);
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrDefault(null), $parameterType);
 end
 
 def type(parameter & required) trigger(assign)
@@ -172,7 +172,7 @@ def type(parameter & required) trigger(assign)
 end
 
 def type(parameter & defaultvalue) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrDefault("$name", "$defaultvalue"), $parameterType);
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrDefault("$name", null), $parameterType);
 end
 
 def type(parameter & file & list) attribute(in:form) trigger(assign)
