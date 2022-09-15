@@ -106,6 +106,11 @@ public class AcceptedKonosRunner {
 	}
 
 	@Test
+	public void sinergia() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/sinergia.txt")});
+	}
+
+	@Test
 	public void tables() {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/tables/ideaKonosToCompile.txt")});
 	}
