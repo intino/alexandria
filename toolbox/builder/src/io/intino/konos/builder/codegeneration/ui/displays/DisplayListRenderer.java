@@ -25,16 +25,7 @@ public class DisplayListRenderer extends UIRenderer {
 	@Override
 	public void render() throws KonosException {
 		DisplayRendererFactory factory = new DisplayRendererFactory();
-		displays.forEach(d -> render(d, factory));
-		//if (target == Target.Owner) delay();
-	}
-
-	private void delay() { // Required to avoid compilation problems
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			Logger.error(e);
-		}
+		displays.parallelStream().forEach(d -> render(d, factory));
 	}
 
 	private void render(Display display, DisplayRendererFactory factory) {
@@ -44,5 +35,4 @@ public class DisplayListRenderer extends UIRenderer {
 			Logger.error(e);
 		}
 	}
-
 }

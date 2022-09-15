@@ -67,7 +67,8 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (element.parentDisplay() != null) addParent(element, result);
 		if (!element.graph().schemaList().isEmpty())
 			result.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()));
-		if (element.isAccessible()) result.add("parameter", element.asAccessible().parameters().stream().map(p -> new FrameBuilder("parameter", "accessible").add("value", p).toFrame()).toArray(Frame[]::new));
+		if (element.isAccessible())
+			result.add("parameter", element.asAccessible().parameters().stream().map(p -> new FrameBuilder("parameter", "accessible").add("value", p).toFrame()).toArray(Frame[]::new));
 		return result;
 	}
 
@@ -86,11 +87,12 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (element.i$(Dialog.class)) result.add(Dialog.class.getSimpleName());
 		if (element.i$(Template.class)) result.add(Template.class.getSimpleName());
 		if (element.i$(CatalogComponents.List.class) || element.i$(CatalogComponents.Magazine.class) ||
-			element.i$(CatalogComponents.Table.class) || element.i$(CatalogComponents.Map.class) ||
-			element.i$(CatalogComponents.DynamicTable.class))
+				element.i$(CatalogComponents.Table.class) || element.i$(CatalogComponents.Map.class) ||
+				element.i$(CatalogComponents.DynamicTable.class))
 			result.add("collection");
 		if (element.i$(CatalogComponents.Table.class)) result.add(CatalogComponents.Table.class.getSimpleName());
-		if (element.i$(CatalogComponents.DynamicTable.class)) result.add(CatalogComponents.DynamicTable.class.getSimpleName());
+		if (element.i$(CatalogComponents.DynamicTable.class))
+			result.add(CatalogComponents.DynamicTable.class.getSimpleName());
 		if (element.i$(Collection.Mold.Item.class)) result.add(Collection.Mold.Item.class.getSimpleName());
 		if (element.i$(HelperComponents.Row.class)) result.add(HelperComponents.Row.class.getSimpleName());
 		if (!accessible && element.isAccessible()) result.add("accessible");
@@ -123,13 +125,20 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		KonosGraph graph = element.graph();
 		if (graph.templateList().size() > 0) frame.add("templatesImport", buildBaseFrame().add("templatesImport"));
 		if (graph.blockList().size() > 0) frame.add("blocksImport", buildBaseFrame().add("blocksImport"));
-		if (graph.itemsDisplays(context.graphName()).size() > 0) frame.add("itemsImport", buildBaseFrame().add("itemsImport"));
-		if (graph.rowsDisplays(context.graphName()).size() > 0) frame.add("rowsImport", buildBaseFrame().add("rowsImport"));
-		if (graph.tablesDisplays(context.graphName()).size() > 0) frame.add("tablesImport", buildBaseFrame().add("tablesImport"));
-		if (graph.listsDisplays(context.graphName()).size() > 0) frame.add("listsImport", buildBaseFrame().add("listsImport"));
-		if (graph.magazinesDisplays(context.graphName()).size() > 0) frame.add("magazinesImport", buildBaseFrame().add("magazinesImport"));
-		if (graph.mapsDisplays(context.graphName()).size() > 0) frame.add("mapsImport", buildBaseFrame().add("mapsImport"));
-		if (graph.dynamicTablesDisplays(context.graphName()).size() > 0) frame.add("dynamicTablesImport", buildBaseFrame().add("dynamicTablesImport"));
+		if (graph.itemsDisplays(context.graphName()).size() > 0)
+			frame.add("itemsImport", buildBaseFrame().add("itemsImport"));
+		if (graph.rowsDisplays(context.graphName()).size() > 0)
+			frame.add("rowsImport", buildBaseFrame().add("rowsImport"));
+		if (graph.tablesDisplays(context.graphName()).size() > 0)
+			frame.add("tablesImport", buildBaseFrame().add("tablesImport"));
+		if (graph.listsDisplays(context.graphName()).size() > 0)
+			frame.add("listsImport", buildBaseFrame().add("listsImport"));
+		if (graph.magazinesDisplays(context.graphName()).size() > 0)
+			frame.add("magazinesImport", buildBaseFrame().add("magazinesImport"));
+		if (graph.mapsDisplays(context.graphName()).size() > 0)
+			frame.add("mapsImport", buildBaseFrame().add("mapsImport"));
+		if (graph.dynamicTablesDisplays(context.graphName()).size() > 0)
+			frame.add("dynamicTablesImport", buildBaseFrame().add("dynamicTablesImport"));
 		frame.add("notifierImport", notifierImportFrame(element, accessible));
 		if (!ElementHelper.isRoot(componentOf(element)) || (element.isAccessible() && accessible))
 			frame.add("displayRegistration", displayRegistrationFrame(accessible));
@@ -171,7 +180,8 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		String objectType = multipleObjectType(element);
 		result.add("componentType", multipleComponentType(element));
 		result.add("componentName", multipleComponentName(element));
-		if (!isMultipleSpecificComponent(element) && element.i$(Editable.class)) result.add("componentPrefix", nameOf(element));
+		if (!isMultipleSpecificComponent(element) && element.i$(Editable.class))
+			result.add("componentPrefix", nameOf(element));
 		if (objectType != null) result.add("objectType", objectType);
 		return result;
 	}
@@ -186,7 +196,8 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (element.i$(OtherComponents.BaseStamp.Multiple.class)) {
 			String modelClass = null;
 			if (element.i$(OwnerTemplateStamp.class)) modelClass = "java.lang.Void";
-			else if (element.i$(TemplateStamp.class)) modelClass = element.a$(TemplateStamp.class).template() != null ? element.a$(TemplateStamp.class).template().modelClass() : null;
+			else if (element.i$(TemplateStamp.class))
+				modelClass = element.a$(TemplateStamp.class).template() != null ? element.a$(TemplateStamp.class).template().modelClass() : null;
 			return modelClass != null ? modelClass : "java.lang.Void";
 		}
 		if (element.i$(Block.Multiple.class)) return "java.lang.Void";
@@ -292,7 +303,8 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	private FrameBuilder accessibleNotifierImportFrame() {
 		FrameBuilder frameBuilder = buildBaseFrame().add("accessibleNotifierImport").add("name", nameOf(element));
 		frameBuilder.add("notifier", notifierName(element));
-		if (context.webModuleDirectory().exists()) frameBuilder.add("webModuleName", context.webModuleDirectory().getName());
+		if (context.webModuleDirectory().exists())
+			frameBuilder.add("webModuleName", context.webModuleDirectory().getName());
 		return frameBuilder;
 	}
 

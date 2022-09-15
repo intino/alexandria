@@ -24,13 +24,11 @@ import io.intino.konos.model.PassiveView.Request;
 import io.intino.konos.model.VisualizationComponents.Dashboard;
 import io.intino.magritte.framework.Layer;
 
-import javax.lang.model.element.Element;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.IntFunction;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;

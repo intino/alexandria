@@ -185,9 +185,10 @@ public class FullRenderer {
 	}
 
 	private void ui() throws KonosException {
-		ComponentRenderer.clearCache();
 		if (context.mode() == Mode.Normal) uiServer();
+		ComponentRenderer.clearCache();
 		uiClient();
+		ComponentRenderer.clearCache();
 	}
 
 	private void uiServer() throws KonosException {

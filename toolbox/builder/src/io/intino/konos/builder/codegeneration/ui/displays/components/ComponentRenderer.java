@@ -7,6 +7,7 @@ import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.ElementHelper;
+import io.intino.konos.builder.utils.LRUCache;
 import io.intino.konos.model.*;
 import io.intino.konos.model.CatalogComponents.Collection.Mold;
 import io.intino.konos.model.OtherComponents.*;
@@ -23,7 +24,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private boolean decorated;
 	private Display owner;
 	private static final ComponentRendererFactory factory = new ComponentRendererFactory();
-	private static final Map<String, FrameBuilder> componentFrameMap = new HashMap<>();
+	public static final Map<String, FrameBuilder> componentFrameMap = Collections.synchronizedMap(new LRUCache<>(10000));
 
 	public ComponentRenderer(CompilationContext compilationContext, C component, TemplateProvider provider, Target target) {
 		super(compilationContext, component, provider, target);
@@ -85,9 +86,11 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	protected FrameBuilder addOwner(FrameBuilder builder) {
-		if (owner != null) builder.add("owner", (ElementHelper.isRoot(owner) ? "Abstract" : "") + firstUpperCase(owner.name$()));
+		if (owner != null)
+			builder.add("owner", (ElementHelper.isRoot(owner) ? "Abstract" : "") + firstUpperCase(owner.name$()));
 		Component parentComponent = element.core$().ownerAs(Component.class);
-		if (element.i$(BaseStamp.class) && parentComponent != null && !ElementHelper.isRoot(parentComponent)) builder.add("parentId", shortId(parentComponent));
+		if (element.i$(BaseStamp.class) && parentComponent != null && !ElementHelper.isRoot(parentComponent))
+			builder.add("parentId", shortId(parentComponent));
 		return builder;
 	}
 
@@ -104,18 +107,18 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		components(component).forEach(c -> {
 			Display virtualParent = virtualParent() != null ? virtualParent() : (c.i$(CatalogComponents.Collection.class) && component.i$(OtherComponents.Selector.CollectionBox.class) ? component : null);
 			FrameBuilder componentBuilder = buildChildren ? childFrame(c, virtualParent) : componentFrame(c, virtualParent);
-			builder.add( "component", componentBuilder);
+			builder.add("component", componentBuilder);
 		});
 	}
 
 	private void addReferences(Component component, FrameBuilder builder) {
 		Set<Component> components = new LinkedHashSet<>(references(component));
 		if (target == Target.Owner) builder.add("componentReferences", componentReferencesFrame());
-		components.forEach(c -> builder.add( "reference", referenceFrame(c)));
+		components.forEach(c -> builder.add("reference", referenceFrame(c)));
 	}
 
 	private FrameBuilder referenceFrame(Component component) {
-		ComponentRenderer renderer = factory.renderer(context, component, templateProvider, target);
+		ComponentRenderer<?> renderer = factory.renderer(context, component, templateProvider, target);
 		FrameBuilder builder = new FrameBuilder("reference").add(typeOf(component)).add("name", component.name$());
 		if (isEmbeddedComponent(component)) builder.add("embedded");
 		Component parentComponent = component.core$().ownerAs(Component.class);
@@ -129,20 +132,17 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return builder;
 	}
 
-	protected FrameBuilder componentFrame(Component component, Component virtualParent) {
-		return componentRenderer(component, virtualParent).buildFrame();
-	}
-
 	protected FrameBuilder childFrame(Component component, Display virtualParent) {
-		FrameBuilder result = componentRenderer(component, virtualParent).buildFrame();
+		FrameBuilder frameBuilder = componentRenderer(component, virtualParent).buildFrame();
 		String[] ancestors = ancestors(component);
 		Component parent = component.core$().ownerAs(Component.class);
-		if (parent != null) result.add("parent", nameOf(parent));
-		if (isEmbeddedComponent(component)) result.add("embedded");
-		if (!result.contains("ancestors")) result.add("ancestors", ancestors);
-		if (!result.contains("ancestorsNotMe")) result.add("ancestorsNotMe", ancestors.length > 0 ? Arrays.copyOfRange(ancestors, 1, ancestors.length) : new String[0]);
-		result.add("value", componentRenderer(component, virtualParent).buildFrame().add("addType", typeOf(component)));
-		return result;
+		if (parent != null) frameBuilder.add("parent", nameOf(parent));
+		if (isEmbeddedComponent(component)) frameBuilder.add("embedded");
+		if (!frameBuilder.contains("ancestors")) frameBuilder.add("ancestors", ancestors);
+		if (!frameBuilder.contains("ancestorsNotMe"))
+			frameBuilder.add("ancestorsNotMe", ancestors.length > 0 ? Arrays.copyOfRange(ancestors, 1, ancestors.length) : new String[0]);
+		frameBuilder.add("value", frameBuilder.add("addType", typeOf(component)));
+		return frameBuilder;
 	}
 
 	public FrameBuilder properties() {
@@ -197,8 +197,10 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private List<Component> references(Component component) {
-		if (element.i$(HelperComponents.Row.class)) return element.a$(HelperComponents.Row.class).items().stream().map(i -> i.a$(Component.class)).collect(Collectors.toList());
-		if (element.i$(OtherComponents.Selector.CollectionBox.class) && element.a$(OtherComponents.Selector.CollectionBox.class).source() != null) return Collections.emptyList();
+		if (element.i$(HelperComponents.Row.class))
+			return element.a$(HelperComponents.Row.class).items().stream().map(i -> i.a$(Component.class)).collect(Collectors.toList());
+		if (element.i$(OtherComponents.Selector.CollectionBox.class) && element.a$(OtherComponents.Selector.CollectionBox.class).source() != null)
+			return Collections.emptyList();
 		return component.components();
 	}
 
@@ -231,7 +233,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			if (multiple.collapsed()) methodsFrame.add("collapsable");
 			methodsFrame.add("componentType", multipleComponentType(element));
 			methodsFrame.add("componentName", multipleComponentName(element));
-			if (element.i$(OwnerTemplateStamp.class)) methodsFrame.add("componentOwnerBox", element.a$(OwnerTemplateStamp.class).owner().name());
+			if (element.i$(OwnerTemplateStamp.class))
+				methodsFrame.add("componentOwnerBox", element.a$(OwnerTemplateStamp.class).owner().name());
 			if (element.i$(Editable.class)) {
 				methodsFrame.add("editableMethods", new FrameBuilder("editableMethods"));
 				if (!isMultipleSpecificComponent(element)) methodsFrame.add("editableClass", editableClassFrame());
@@ -246,7 +249,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			builder.add("multiple");
 			builder.add("componentType", multipleComponentType(element));
 			builder.add("componentName", multipleComponentName(element));
-			if (!isMultipleSpecificComponent(element) && element.i$(Editable.class)) builder.add("componentPrefix", nameOf(element));
+			if (!isMultipleSpecificComponent(element) && element.i$(Editable.class))
+				builder.add("componentPrefix", nameOf(element));
 			if (objectType != null) builder.add("objectType", objectType);
 		}
 

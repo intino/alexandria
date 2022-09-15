@@ -27,11 +27,9 @@ public class DesktopRenderer extends BaseDisplayRenderer<Template> {
 	@Override
 	public FrameBuilder buildFrame() {
 		FrameBuilder result = super.buildFrame();
-		Template.Desktop template = element.asDesktop();
 		result.add("headerId", shortId(element, "headerId"));
 		result.add("tabBarId", shortId(element, "tabBarId"));
 		addComponents(result);
-//		template.tabs().tabList().forEach(t -> addTab(t, frame));
 		result.add("componentReferences", componentReferences());
 		return result;
 	}
@@ -49,9 +47,4 @@ public class DesktopRenderer extends BaseDisplayRenderer<Template> {
 		addComponentsImports(components, builder);
 		components.forEach(c -> addComponent(c, virtualParent(), builder));
 	}
-
-//	private void addTab(Tab tab, Frame frame) {
-//		frame.addSlot("tab", componentFrame(tab));
-//	}
-
 }
