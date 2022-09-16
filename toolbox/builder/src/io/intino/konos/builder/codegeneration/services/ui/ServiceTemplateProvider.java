@@ -39,8 +39,7 @@ public class ServiceTemplateProvider implements TemplateProvider {
 	}
 
 	private Template addFormats(Template template) {
-		Formatters.customize(template);
-		return template;
+		return Formatters.customize(template);
 	}
 
 }

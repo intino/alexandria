@@ -24,7 +24,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private boolean buildChildren = false;
 	private boolean decorated;
 	private Display owner;
-	public static final Map<String, FrameBuilder> componentFrameMap = Collections.synchronizedMap(new LRUCache<>(1000));
+	public static final Map<String, FrameBuilder> componentFrameMap = Collections.synchronizedMap(new LRUCache<>(10000));
 
 	public ComponentRenderer(CompilationContext compilationContext, C component, TemplateProvider provider, Target target) {
 		super(compilationContext, component, provider, target);
@@ -50,7 +50,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		addExtends(element, builder);
 		addImplements(element, builder);
 		fill(builder);
-		if (!element.core$().id().contains(element.core$().stash() + "_")) componentFrameMap.put(frameId, builder);
+		componentFrameMap.put(frameId, builder);
 		return builder;
 	}
 
@@ -304,7 +304,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private String templateName(BaseStamp stamp) {
-		if (stamp.i$(conceptOf(OtherComponents.OwnerTemplateStamp.class))) return stamp.a$(OwnerTemplateStamp.class).template();
+		if (stamp.i$(conceptOf(OtherComponents.OwnerTemplateStamp.class)))
+			return stamp.a$(OwnerTemplateStamp.class).template();
 		if (stamp.i$(conceptOf(OtherComponents.TemplateStamp.class))) {
 			Template template = stamp.a$(TemplateStamp.class).template();
 			return template != null ? template.name$() : null;

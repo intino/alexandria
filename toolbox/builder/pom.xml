@@ -126,7 +126,7 @@
 		<dependency>
 			<groupId>io.intino.magritte</groupId>
 			<artifactId>framework</artifactId>
-			<version>3.0.0</version>
+			<version>3.4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.xml.bind</groupId>

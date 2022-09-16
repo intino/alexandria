@@ -91,7 +91,8 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 				element.i$(conceptOf(CatalogComponents.Table.class)) || element.i$(conceptOf(CatalogComponents.Map.class)) ||
 				element.i$(conceptOf(CatalogComponents.DynamicTable.class)))
 			result.add("collection");
-		if (element.i$(conceptOf(CatalogComponents.Table.class))) result.add(CatalogComponents.Table.class.getSimpleName());
+		if (element.i$(conceptOf(CatalogComponents.Table.class)))
+			result.add(CatalogComponents.Table.class.getSimpleName());
 		if (element.i$(conceptOf(CatalogComponents.DynamicTable.class)))
 			result.add(CatalogComponents.DynamicTable.class.getSimpleName());
 		if (element.i$(conceptOf(Collection.Mold.Item.class))) result.add(Collection.Mold.Item.class.getSimpleName());
@@ -111,7 +112,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 			result.add("itemClass", itemClass != null ? itemClass : "java.lang.Void");
 		}
 		if (element.i$(conceptOf(Collection.Mold.Item.class))) {
-			String itemClass = element.core$().ownerAs(Collection.class).itemClass();
+			String itemClass = element.a$(Collection.Mold.Item.class).core$().ownerAs(Collection.class).itemClass();
 			result.add("itemClass", itemClass != null ? itemClass : "java.lang.Void");
 		}
 		if (element.i$(conceptOf(HelperComponents.Row.class))) {

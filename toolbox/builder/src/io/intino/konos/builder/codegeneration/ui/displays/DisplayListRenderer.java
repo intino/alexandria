@@ -29,14 +29,12 @@ public class DisplayListRenderer extends UIRenderer {
 	@Override
 	public void render() throws KonosException {
 		asyncRender();
-		//DisplayRendererFactory factory = new DisplayRendererFactory();
-		//displays.forEach(d -> render(d, factory));
 	}
 
 	private void asyncRender() {
 		DisplayRendererFactory factory = new DisplayRendererFactory();
-		ExecutorService service = Executors.newFixedThreadPool(displays.size() > 4 ? 4 : 2, new NamedThreadFactory("displays"));
-		for (Display d : displays) service.execute(() -> render(d, factory));
+		ExecutorService service = Executors.newFixedThreadPool(displays.size() > 4 ? Runtime.getRuntime().availableProcessors() : 2, new NamedThreadFactory("displays"));
+		displays.stream().<Runnable>map(d -> () -> render(d, factory)).forEach(service::execute);
 		try {
 			service.awaitTermination(1, TimeUnit.HOURS);
 		} catch (InterruptedException e) {

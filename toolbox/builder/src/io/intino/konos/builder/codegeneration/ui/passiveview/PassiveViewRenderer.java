@@ -486,9 +486,10 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	private void registerCollectionImports(Set<String> imported, Component component, FrameBuilder builder) {
-		if (component.i$(conceptOf(CatalogComponents.Table.class)) || component.i$(conceptOf(CatalogComponents.DynamicTable.class)))
-			addComponentsImports(imported, component.graph().rowsDisplays(context.graphName()).stream().filter(r -> r.core$().name().toLowerCase().startsWith(component.core$().name().toLowerCase())).map(r -> r.a$(Component.class)).collect(toList()), builder);
-		else
+		if (component.i$(conceptOf(CatalogComponents.Table.class)) || component.i$(conceptOf(CatalogComponents.DynamicTable.class))) {
+			String name = component.name$().toLowerCase();
+			addComponentsImports(imported, component.graph().rowsDisplays(context.graphName()).stream().filter(r -> r.name$().toLowerCase().startsWith(name)).map(r -> r.a$(Component.class)).collect(toList()), builder);
+		} else
 			addComponentsImports(imported, component.a$(CatalogComponents.Collection.class).moldList().stream().map(CatalogComponents.Collection.Mold::item).collect(toList()), builder);
 	}
 
