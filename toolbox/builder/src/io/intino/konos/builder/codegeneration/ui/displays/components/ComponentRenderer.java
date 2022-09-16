@@ -206,21 +206,19 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private void addExtends(Component element, FrameBuilder builder) {
-		builder.add("extends", extendsFrame(element, builder));
+		builder.add("extends", extendsFrame(element));
 	}
 
-	protected FrameBuilder extendsFrame(Component element, FrameBuilder builder) {
+	protected FrameBuilder extendsFrame(Component element) {
 		FrameBuilder result = new FrameBuilder("extends");
 		if (element.i$(conceptOf(DataComponents.Image.class))) result.add("image");
 		if (element.i$(conceptOf(CatalogComponents.Collection.class))) result.add("collection");
 		if (element.i$(conceptOf(CatalogComponents.Table.class))) result.add("table");
 		if (element.i$(conceptOf(CatalogComponents.DynamicTable.class))) result.add("dynamictable");
 		result.add("name", nameOf(element));
-
 		if (!addSpecificTypes(result)) result.add("type", type());
 		addFacets(element, result);
 		addDecoratedFrames(result, decorated);
-
 		return result;
 	}
 

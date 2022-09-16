@@ -36,6 +36,7 @@ public class DisplayListRenderer extends UIRenderer {
 		ExecutorService service = Executors.newFixedThreadPool(displays.size() > 4 ? Runtime.getRuntime().availableProcessors() : 2, new NamedThreadFactory("displays"));
 		displays.stream().<Runnable>map(d -> () -> render(d, factory)).forEach(service::execute);
 		try {
+			service.shutdown();
 			service.awaitTermination(1, TimeUnit.HOURS);
 		} catch (InterruptedException e) {
 			Logger.error(e);
