@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import static java.util.Collections.reverse;
 
 public class ElementHelper {
-	private static Map<Layer, String> typeMap = new HashMap<>();
+	private static final Map<Layer, String> typeMap = Collections.synchronizedMap(new HashMap<>());
 
 	public String shortId(Layer element) {
 		return shortId(element, "");

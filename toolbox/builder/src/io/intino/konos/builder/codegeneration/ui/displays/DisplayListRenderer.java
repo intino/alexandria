@@ -6,10 +6,14 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
+import io.intino.konos.builder.utils.NamedThreadFactory;
 import io.intino.konos.model.Display;
 import io.intino.konos.model.Service;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("Duplicates")
 public class DisplayListRenderer extends UIRenderer {
@@ -24,8 +28,20 @@ public class DisplayListRenderer extends UIRenderer {
 
 	@Override
 	public void render() throws KonosException {
+		asyncRender();
+		//DisplayRendererFactory factory = new DisplayRendererFactory();
+		//displays.forEach(d -> render(d, factory));
+	}
+
+	private void asyncRender() {
 		DisplayRendererFactory factory = new DisplayRendererFactory();
-		displays.parallelStream().forEach(d -> render(d, factory));
+		ExecutorService service = Executors.newFixedThreadPool(displays.size() > 4 ? 4 : 2, new NamedThreadFactory("displays"));
+		for (Display d : displays) service.execute(() -> render(d, factory));
+		try {
+			service.awaitTermination(1, TimeUnit.HOURS);
+		} catch (InterruptedException e) {
+			Logger.error(e);
+		}
 	}
 
 	private void render(Display display, DisplayRendererFactory factory) {

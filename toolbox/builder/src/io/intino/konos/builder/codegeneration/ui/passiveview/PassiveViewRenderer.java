@@ -432,7 +432,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			if (key != null) imported.add(key);
 			if (c.i$(CatalogComponents.Collection.class)) registerCollectionImports(imported, c, builder);
 			if (c.i$(HelperComponents.Row.class)) registerRowImports(imported, c, builder);
-			if (!c.i$(CatalogComponents.Collection.Mold.Item.class))
+			if (!c.i$(CatalogComponents.Collection.Mold.Item.class) && !c.i$(io.intino.konos.model.Template.class))
 				addComponentsImports(imported, components(c), builder);
 		});
 	}
@@ -484,7 +484,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	private void registerCollectionImports(Set<String> imported, Component component, FrameBuilder builder) {
 		if (component.i$(CatalogComponents.Table.class) || component.i$(CatalogComponents.DynamicTable.class))
-			addComponentsImports(imported, component.graph().rowsDisplays(context.graphName()).stream().map(r -> r.a$(Component.class)).collect(toList()), builder);
+			addComponentsImports(imported, component.graph().rowsDisplays(context.graphName()).stream().filter(r -> r.core$().name().toLowerCase().startsWith(component.core$().name().toLowerCase())).map(r -> r.a$(Component.class)).collect(toList()), builder);
 		else
 			addComponentsImports(imported, component.a$(CatalogComponents.Collection.class).moldList().stream().map(CatalogComponents.Collection.Mold::item).collect(toList()), builder);
 	}
