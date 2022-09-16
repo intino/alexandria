@@ -9,6 +9,7 @@ import io.intino.konos.model.CatalogComponents.Collection;
 import io.intino.konos.model.Navigable;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
+import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
 
 public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 
@@ -20,9 +21,9 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 	public FrameBuilder properties() {
 		FrameBuilder result = super.properties();
 		result.add("collection");
-		if (element.i$(Navigable.class)) result.add("navigable", element.a$(Navigable.class).position().name());
+		if (element.i$(conceptOf(Navigable.class))) result.add("navigable", element.a$(Navigable.class).position().name());
 		if (element.sourceClass() != null) result.add("sourceClass", element.sourceClass());
-		if (element.i$(CatalogComponents.List.class) || element.i$(CatalogComponents.Table.class)) result.add("pageSize", element.pageSize());
+		if (element.i$(conceptOf(CatalogComponents.List.class)) || element.i$(conceptOf(CatalogComponents.Table.class))) result.add("pageSize", element.pageSize());
 		result.add("itemHeight", itemHeight());
 		result.add("scrollingMark", element.scrollingMark());
 		if (element.isSelectable()) result.add("selection", element.asSelectable().multiple() ? "multiple" : "single");
@@ -60,12 +61,12 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 	private void addItemFrame(Collection.Mold.Item item, FrameBuilder builder) {
 		FrameBuilder result = buildBaseFrame().add("item");
 		if (!belongsToAccessible(item)) result.add("concreteBox", boxName());
-		result.add("methodAccessibility", element.i$(CatalogComponents.Table.class) || element.i$(CatalogComponents.DynamicTable.class) ? "private" : "public");
+		result.add("methodAccessibility", element.i$(conceptOf(CatalogComponents.Table.class)) || element.i$(conceptOf(CatalogComponents.DynamicTable.class)) ? "private" : "public");
 		result.add("name", nameOf(item));
-		result.add("methodName", element.i$(CatalogComponents.Table.class) || element.i$(CatalogComponents.DynamicTable.class) ? nameOf(item) : "");
+		result.add("methodName", element.i$(conceptOf(CatalogComponents.Table.class)) || element.i$(conceptOf(CatalogComponents.DynamicTable.class)) ? nameOf(item) : "");
 		String itemClass = element.itemClass();
-		result.add("itemClass", new FrameBuilder("itemClass", element.i$(CatalogComponents.Map.class) ? "map" : "").add("value", itemClass != null ? itemClass : "java.lang.Void"));
-		result.add("itemVariable", new FrameBuilder("itemVariable", element.i$(CatalogComponents.Map.class) ? "map" : "").add("value", "item"));
+		result.add("itemClass", new FrameBuilder("itemClass", element.i$(conceptOf(CatalogComponents.Map.class)) ? "map" : "").add("value", itemClass != null ? itemClass : "java.lang.Void"));
+		result.add("itemVariable", new FrameBuilder("itemVariable", element.i$(conceptOf(CatalogComponents.Map.class)) ? "map" : "").add("value", "item"));
 		builder.add("item", result);
 	}
 

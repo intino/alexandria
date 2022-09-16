@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
+import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
 
 public abstract class UIRenderer extends Renderer {
 
@@ -85,29 +86,29 @@ public abstract class UIRenderer extends Renderer {
 
 	protected boolean hasAbstractClass(Layer element) {
 		if (target == Target.Owner) return true;
-		return !element.i$(io.intino.konos.model.Template.class) &&
-				!element.i$(CatalogComponents.Table.class) &&
-				!element.i$(CatalogComponents.DynamicTable.class) &&
-				!element.i$(CatalogComponents.Collection.Mold.Item.class) &&
-				!element.i$(HelperComponents.Row.class);
+		return !element.i$(conceptOf(io.intino.konos.model.Template.class)) &&
+				!element.i$(conceptOf(CatalogComponents.Table.class)) &&
+				!element.i$(conceptOf(CatalogComponents.DynamicTable.class)) &&
+				!element.i$(conceptOf(CatalogComponents.Collection.Mold.Item.class)) &&
+				!element.i$(conceptOf(HelperComponents.Row.class));
 	}
 
 	protected boolean hasConcreteNotifier(PassiveView element) {
-		if (element.i$(Display.Accessible.class)) return true;
-		return !element.i$(CatalogComponents.Collection.Mold.Item.class) &&
-				!element.i$(CatalogComponents.Table.class) &&
-				!element.i$(CatalogComponents.DynamicTable.class) &&
-				!element.i$(HelperComponents.Row.class) &&
-				!element.i$(io.intino.konos.model.Template.class);
+		if (element.i$(conceptOf(Display.Accessible.class))) return true;
+		return !element.i$(conceptOf(CatalogComponents.Collection.Mold.Item.class)) &&
+				!element.i$(conceptOf(CatalogComponents.Table.class)) &&
+				!element.i$(conceptOf(CatalogComponents.DynamicTable.class)) &&
+				!element.i$(conceptOf(HelperComponents.Row.class)) &&
+				!element.i$(conceptOf(io.intino.konos.model.Template.class));
 	}
 
 	protected boolean hasConcreteRequester(PassiveView element) {
-		if (element.i$(Display.Accessible.class)) return true;
-		return !element.i$(CatalogComponents.Collection.Mold.Item.class) &&
-				!element.i$(CatalogComponents.Table.class) &&
-				!element.i$(CatalogComponents.DynamicTable.class) &&
-				!element.i$(HelperComponents.Row.class) &&
-				!element.i$(io.intino.konos.model.Template.class);
+		if (element.i$(conceptOf(Display.Accessible.class))) return true;
+		return !element.i$(conceptOf(CatalogComponents.Collection.Mold.Item.class)) &&
+				!element.i$(conceptOf(CatalogComponents.Table.class)) &&
+				!element.i$(conceptOf(CatalogComponents.DynamicTable.class)) &&
+				!element.i$(conceptOf(HelperComponents.Row.class)) &&
+				!element.i$(conceptOf(io.intino.konos.model.Template.class));
 	}
 
 	protected String notifierName(Layer element) {
@@ -119,31 +120,31 @@ public abstract class UIRenderer extends Renderer {
 	}
 
 	private String passiveViewName(Layer element) {
-		if (element.i$(io.intino.konos.model.Template.class)) return "Template";
-		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) return "Item";
-		if (element.i$(HelperComponents.Row.class)) return "Row";
-		if (element.i$(CatalogComponents.Table.class)) return "Table";
-		if (element.i$(CatalogComponents.DynamicTable.class)) return "DynamicTable";
+		if (element.i$(conceptOf(io.intino.konos.model.Template.class))) return "Template";
+		if (element.i$(conceptOf(CatalogComponents.Collection.Mold.Item.class))) return "Item";
+		if (element.i$(conceptOf(HelperComponents.Row.class))) return "Row";
+		if (element.i$(conceptOf(CatalogComponents.Table.class))) return "Table";
+		if (element.i$(conceptOf(CatalogComponents.DynamicTable.class))) return "DynamicTable";
 		return firstUpperCase(element.name$());
 	}
 
 	protected String requesterTypeOf(Display display) {
-		if (display.i$(io.intino.konos.model.Template.class)) return "io.intino.alexandria.ui.displays.requesters.Template";
-		if (display.i$(CatalogComponents.Collection.Mold.Item.class)) return "io.intino.alexandria.ui.displays.requesters.Item";
-		if (display.i$(HelperComponents.Row.class)) return "io.intino.alexandria.ui.displays.requesters.Row";
-		if (display.i$(CatalogComponents.Table.class)) return "io.intino.alexandria.ui.displays.requesters.Table";
-		if (display.i$(CatalogComponents.DynamicTable.class)) return "io.intino.alexandria.ui.displays.requesters.DynamicTable";
+		if (display.i$(conceptOf(io.intino.konos.model.Template.class))) return "io.intino.alexandria.ui.displays.requesters.Template";
+		if (display.i$(conceptOf(CatalogComponents.Collection.Mold.Item.class))) return "io.intino.alexandria.ui.displays.requesters.Item";
+		if (display.i$(conceptOf(HelperComponents.Row.class))) return "io.intino.alexandria.ui.displays.requesters.Row";
+		if (display.i$(conceptOf(CatalogComponents.Table.class))) return "io.intino.alexandria.ui.displays.requesters.Table";
+		if (display.i$(conceptOf(CatalogComponents.DynamicTable.class))) return "io.intino.alexandria.ui.displays.requesters.DynamicTable";
 		return firstUpperCase(nameOf(display));
 	}
 
 	protected FrameBuilder notifierImportFrame(Display element, boolean accessible) {
 		FrameBuilder result = buildBaseFrame().add("notifierImport");
 		result.add("name", element.name$());
-		if (element.i$(io.intino.konos.model.Template.class)) result.add("template");
-		if (element.i$(HelperComponents.Row.class)) result.add("row");
-		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) result.add("item");
-		if (element.i$(CatalogComponents.Table.class)) result.add("table");
-		if (element.i$(CatalogComponents.DynamicTable.class)) result.add("dynamictable");
+		if (element.i$(conceptOf(io.intino.konos.model.Template.class))) result.add("template");
+		if (element.i$(conceptOf(HelperComponents.Row.class))) result.add("row");
+		if (element.i$(conceptOf(CatalogComponents.Collection.Mold.Item.class))) result.add("item");
+		if (element.i$(conceptOf(CatalogComponents.Table.class))) result.add("table");
+		if (element.i$(conceptOf(CatalogComponents.DynamicTable.class))) result.add("dynamictable");
 		if (!accessible && element.isAccessible()) result.add("accessible");
 		return result;
 	}

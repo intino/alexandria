@@ -12,6 +12,8 @@ import io.intino.konos.model.Template;
 import java.io.File;
 import java.util.List;
 
+import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
+
 @SuppressWarnings("Duplicates")
 public class DesktopRenderer extends BaseDisplayRenderer<Template> {
 
@@ -36,7 +38,7 @@ public class DesktopRenderer extends BaseDisplayRenderer<Template> {
 
 	private FrameBuilder componentReferences() {
 		FrameBuilder result = new FrameBuilder("componentReferences");
-		if (element.i$(Block.class)) result.add("forBlock");
+		if (element.i$(conceptOf(Block.class))) result.add("forBlock");
 		addComponents(result);
 		return result;
 	}
