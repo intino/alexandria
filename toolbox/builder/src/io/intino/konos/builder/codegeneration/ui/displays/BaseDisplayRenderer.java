@@ -19,6 +19,7 @@ import io.intino.magritte.framework.Layer;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
+import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
 import static io.intino.konos.model.CatalogComponents.Collection;
 import static io.intino.konos.model.Component.DynamicLoaded;
 import static io.intino.konos.model.OtherComponents.Selector;
@@ -75,7 +76,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	private void addParametrized(FrameBuilder frame, boolean accessible) {
 		FrameBuilder result = new FrameBuilder("parametrized");
 		result.add("name", element.name$());
-		result.add("notifier", element.i$(Template.class) ? "Template" : element.name$());
+		result.add("notifier", element.i$(conceptOf(Template.class)) ? "Template" : element.name$());
 		addGeneric(element, result);
 		if (!accessible && element.isAccessible()) result.add("accessible");
 		addDecoratedFrames(result);
@@ -84,36 +85,36 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 
 	private void addExtends(FrameBuilder frame, boolean accessible) {
 		FrameBuilder result = new FrameBuilder("displayExtends");
-		if (element.i$(Dialog.class)) result.add(Dialog.class.getSimpleName());
-		if (element.i$(Template.class)) result.add(Template.class.getSimpleName());
-		if (element.i$(CatalogComponents.List.class) || element.i$(CatalogComponents.Magazine.class) ||
-				element.i$(CatalogComponents.Table.class) || element.i$(CatalogComponents.Map.class) ||
-				element.i$(CatalogComponents.DynamicTable.class))
+		if (element.i$(conceptOf(Dialog.class))) result.add(Dialog.class.getSimpleName());
+		if (element.i$(conceptOf(Template.class))) result.add(Template.class.getSimpleName());
+		if (element.i$(conceptOf(CatalogComponents.List.class)) || element.i$(conceptOf(CatalogComponents.Magazine.class)) ||
+				element.i$(conceptOf(CatalogComponents.Table.class)) || element.i$(conceptOf(CatalogComponents.Map.class)) ||
+				element.i$(conceptOf(CatalogComponents.DynamicTable.class)))
 			result.add("collection");
-		if (element.i$(CatalogComponents.Table.class)) result.add(CatalogComponents.Table.class.getSimpleName());
-		if (element.i$(CatalogComponents.DynamicTable.class))
+		if (element.i$(conceptOf(CatalogComponents.Table.class))) result.add(CatalogComponents.Table.class.getSimpleName());
+		if (element.i$(conceptOf(CatalogComponents.DynamicTable.class)))
 			result.add(CatalogComponents.DynamicTable.class.getSimpleName());
-		if (element.i$(Collection.Mold.Item.class)) result.add(Collection.Mold.Item.class.getSimpleName());
-		if (element.i$(HelperComponents.Row.class)) result.add(HelperComponents.Row.class.getSimpleName());
+		if (element.i$(conceptOf(Collection.Mold.Item.class))) result.add(Collection.Mold.Item.class.getSimpleName());
+		if (element.i$(conceptOf(HelperComponents.Row.class))) result.add(HelperComponents.Row.class.getSimpleName());
 		if (!accessible && element.isAccessible()) result.add("accessible");
 		addGeneric(element, result);
 		result.add("type", typeOf(element));
 		addDecoratedFrames(result);
-		if (element.i$(Template.class)) {
+		if (element.i$(conceptOf(Template.class))) {
 			String modelClass = element.a$(Template.class).modelClass();
 			result.add("modelClass", modelClass != null ? modelClass : "java.lang.Void");
 		}
-		if (element.i$(Collection.class)) {
+		if (element.i$(conceptOf(Collection.class))) {
 			Collection.Mold mold = element.a$(Collection.class).mold(0);
 			String itemClass = element.a$(Collection.class).itemClass();
 			result.add("componentType", firstUpperCase(nameOf(mold.item())));
 			result.add("itemClass", itemClass != null ? itemClass : "java.lang.Void");
 		}
-		if (element.i$(Collection.Mold.Item.class)) {
-			String itemClass = element.a$(Collection.Mold.Item.class).core$().ownerAs(Collection.class).itemClass();
+		if (element.i$(conceptOf(Collection.Mold.Item.class))) {
+			String itemClass = element.core$().ownerAs(Collection.class).itemClass();
 			result.add("itemClass", itemClass != null ? itemClass : "java.lang.Void");
 		}
-		if (element.i$(HelperComponents.Row.class)) {
+		if (element.i$(conceptOf(HelperComponents.Row.class))) {
 			String itemClass = element.a$(HelperComponents.Row.class).items(0).core$().ownerAs(Collection.class).itemClass();
 			result.add("itemClass", itemClass != null ? itemClass : "java.lang.Void");
 		}
@@ -153,24 +154,24 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	protected void addImplements(FrameBuilder frame) {
-		if (element.i$(DynamicLoaded.class))
+		if (element.i$(conceptOf(DynamicLoaded.class)))
 			frame.add("implements", new FrameBuilder("implements", DynamicLoaded.class.getSimpleName()));
-		if (element.i$(Collection.Selectable.class))
+		if (element.i$(conceptOf(Collection.Selectable.class)))
 			frame.add("implements", new FrameBuilder("implements", Collection.Selectable.class.getSimpleName()));
-		if (element.i$(Multiple.class)) {
+		if (element.i$(conceptOf(Multiple.class))) {
 			FrameBuilder result = multipleImplements();
 			if (element.a$(Multiple.class).collapsed()) result.add("collapsable");
 			frame.add("implements", result);
 		}
-		if ((element.i$(Actionable.Action.class) || (element.i$(Actionable.OpenLayer.class))) && element.i$(Actionable.Addressable.class))
+		if ((element.i$(conceptOf(Actionable.Action.class)) || (element.i$(conceptOf(Actionable.OpenLayer.class)))) && element.i$(conceptOf(Actionable.Addressable.class)))
 			frame.add("implements", new FrameBuilder("implements", Actionable.Action.class.getSimpleName(), Actionable.Addressable.class.getSimpleName()).add("name", nameOf(element)));
-		if (element.i$(Selector.Addressable.class))
+		if (element.i$(conceptOf(Selector.Addressable.class)))
 			frame.add("implements", new FrameBuilder("implements", Selector.class.getSimpleName(), Selector.Addressable.class.getSimpleName()).add("name", nameOf(element)));
-		if (element.i$(CatalogComponents.SearchBox.Addressable.class))
+		if (element.i$(conceptOf(CatalogComponents.SearchBox.Addressable.class)))
 			frame.add("implements", new FrameBuilder("implements", CatalogComponents.SearchBox.class.getSimpleName(), CatalogComponents.SearchBox.Addressable.class.getSimpleName()).add("name", nameOf(element)));
-		if (element.i$(CatalogComponents.Grouping.Addressable.class))
+		if (element.i$(conceptOf(CatalogComponents.Grouping.Addressable.class)))
 			frame.add("implements", new FrameBuilder("implements", CatalogComponents.Grouping.class.getSimpleName(), CatalogComponents.Grouping.Addressable.class.getSimpleName()).add("name", nameOf(element)));
-		if (element.i$(CatalogComponents.Sorting.Addressable.class))
+		if (element.i$(conceptOf(CatalogComponents.Sorting.Addressable.class)))
 			frame.add("implements", new FrameBuilder("implements", CatalogComponents.Sorting.class.getSimpleName(), CatalogComponents.Sorting.Addressable.class.getSimpleName()).add("name", nameOf(element)));
 	}
 
@@ -180,27 +181,27 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		String objectType = multipleObjectType(element);
 		result.add("componentType", multipleComponentType(element));
 		result.add("componentName", multipleComponentName(element));
-		if (!isMultipleSpecificComponent(element) && element.i$(Editable.class))
+		if (!isMultipleSpecificComponent(element) && element.i$(conceptOf(Editable.class)))
 			result.add("componentPrefix", nameOf(element));
 		if (objectType != null) result.add("objectType", objectType);
 		return result;
 	}
 
 	protected String multipleObjectType(Layer element) {
-		if (element.i$(DataComponents.Text.Multiple.class)) return "java.lang.String";
-		if (element.i$(DataComponents.File.Multiple.class)) return "io.intino.alexandria.ui.File";
-		if (element.i$(DataComponents.Image.Multiple.class)) return "io.intino.alexandria.ui.File";
-		if (element.i$(OtherComponents.Icon.Multiple.class)) return "java.net.URL";
-		if (element.i$(DataComponents.Number.Multiple.class)) return "java.lang.Double";
-		if (element.i$(DataComponents.Date.Multiple.class)) return "java.time.Instant";
-		if (element.i$(OtherComponents.BaseStamp.Multiple.class)) {
+		if (element.i$(conceptOf(DataComponents.Text.Multiple.class))) return "java.lang.String";
+		if (element.i$(conceptOf(DataComponents.File.Multiple.class))) return "io.intino.alexandria.ui.File";
+		if (element.i$(conceptOf(DataComponents.Image.Multiple.class))) return "io.intino.alexandria.ui.File";
+		if (element.i$(conceptOf(OtherComponents.Icon.Multiple.class))) return "java.net.URL";
+		if (element.i$(conceptOf(DataComponents.Number.Multiple.class))) return "java.lang.Double";
+		if (element.i$(conceptOf(DataComponents.Date.Multiple.class))) return "java.time.Instant";
+		if (element.i$(conceptOf(OtherComponents.BaseStamp.Multiple.class))) {
 			String modelClass = null;
-			if (element.i$(OwnerTemplateStamp.class)) modelClass = "java.lang.Void";
-			else if (element.i$(TemplateStamp.class))
+			if (element.i$(conceptOf(OwnerTemplateStamp.class))) modelClass = "java.lang.Void";
+			else if (element.i$(conceptOf(TemplateStamp.class)))
 				modelClass = element.a$(TemplateStamp.class).template() != null ? element.a$(TemplateStamp.class).template().modelClass() : null;
 			return modelClass != null ? modelClass : "java.lang.Void";
 		}
-		if (element.i$(Block.Multiple.class)) return "java.lang.Void";
+		if (element.i$(conceptOf(Block.Multiple.class))) return "java.lang.Void";
 		return null;
 	}
 
@@ -208,30 +209,30 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		String prefix = "io.intino.alexandria.ui.displays.components.";
 		String name = multipleComponentName(element);
 		if (name == null) return null;
-		return element.i$(OtherComponents.BaseStamp.Multiple.class) || element.i$(Block.Multiple.class) ? name : prefix + name;
+		return element.i$(conceptOf(OtherComponents.BaseStamp.Multiple.class)) || element.i$(conceptOf(Block.Multiple.class)) ? name : prefix + name;
 	}
 
 	protected String multipleComponentName(Layer element) {
-		String editable = element.i$(Editable.class) ? "Editable" : "";
-		if (element.i$(DataComponents.Text.Multiple.class)) return "Text" + editable;
-		if (element.i$(DataComponents.File.Multiple.class)) return "File" + editable;
-		if (element.i$(DataComponents.Image.Multiple.class)) return "Image" + editable;
-		if (element.i$(OtherComponents.Icon.Multiple.class)) return "Icon" + editable;
-		if (element.i$(DataComponents.Number.Multiple.class)) return "Number" + editable;
-		if (element.i$(DataComponents.Date.Multiple.class)) return "Date" + editable;
-		if (element.i$(OtherComponents.BaseStamp.Multiple.class)) {
-			if (element.i$(OtherComponents.OwnerTemplateStamp.class)) {
+		String editable = element.i$(conceptOf(Editable.class)) ? "Editable" : "";
+		if (element.i$(conceptOf(DataComponents.Text.Multiple.class))) return "Text" + editable;
+		if (element.i$(conceptOf(DataComponents.File.Multiple.class))) return "File" + editable;
+		if (element.i$(conceptOf(DataComponents.Image.Multiple.class))) return "Image" + editable;
+		if (element.i$(conceptOf(OtherComponents.Icon.Multiple.class))) return "Icon" + editable;
+		if (element.i$(conceptOf(DataComponents.Number.Multiple.class))) return "Number" + editable;
+		if (element.i$(conceptOf(DataComponents.Date.Multiple.class))) return "Date" + editable;
+		if (element.i$(conceptOf(OtherComponents.BaseStamp.Multiple.class))) {
+			if (element.i$(conceptOf(OtherComponents.OwnerTemplateStamp.class))) {
 				OwnerTemplateStamp stamp = element.a$(OwnerTemplateStamp.class);
 				return ownerTemplateStampPackage(stamp.owner()) + "." + firstUpperCase(stamp.template());
 			}
-			return element.i$(TemplateStamp.class) ? firstUpperCase(element.a$(TemplateStamp.class).template().name$()) : "io.intino.alexandria.ui.Display";
+			return element.i$(conceptOf(TemplateStamp.class)) ? firstUpperCase(element.a$(TemplateStamp.class).template().name$()) : "io.intino.alexandria.ui.Display";
 		}
-		if (element.i$(Block.Multiple.class)) return firstUpperCase(nameOf(element));
+		if (element.i$(conceptOf(Block.Multiple.class))) return firstUpperCase(nameOf(element));
 		return null;
 	}
 
 	protected boolean isMultipleSpecificComponent(Layer element) {
-		return element.i$(OtherComponents.BaseStamp.Multiple.class) || element.i$(Block.Multiple.class);
+		return element.i$(conceptOf(OtherComponents.BaseStamp.Multiple.class)) || element.i$(conceptOf(Block.Multiple.class));
 	}
 
 	protected String ownerTemplateStampPackage(Service.UI.Use use) {
@@ -239,31 +240,31 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	protected void addMethods(FrameBuilder frame) {
-		if (element.i$(Component.DynamicLoaded.class)) {
+		if (element.i$(conceptOf(Component.DynamicLoaded.class))) {
 			frame.add("baseMethod", "renderDynamicLoaded");
 			frame.add("methods", new FrameBuilder("methods", Component.DynamicLoaded.class.getSimpleName()).add("loadTime", element.a$(Component.DynamicLoaded.class).loadTime().name()));
-		} else if (element.i$(Dialog.class)) {
+		} else if (element.i$(conceptOf(Dialog.class))) {
 			frame.add("baseMethod", "renderDialog");
-		} else if (element.i$(HelperComponents.Row.class)) {
+		} else if (element.i$(conceptOf(HelperComponents.Row.class))) {
 			frame.add("baseMethod", "renderRow");
 		}
 	}
 
 	protected void addRenderTagFrames(FrameBuilder frame) {
 		FrameBuilder renderTag = new FrameBuilder("renderTag");
-		if (element.i$(Block.class)) {
+		if (element.i$(conceptOf(Block.class))) {
 			ComponentRenderer renderer = factory.renderer(context, element.a$(Block.class), templateProvider, target);
 			renderTag.add(Block.class.getSimpleName());
 			renderTag.add("properties", renderer.properties());
-		} else if (element.i$(Template.class)) {
+		} else if (element.i$(conceptOf(Template.class))) {
 			ComponentRenderer renderer = factory.renderer(context, element.a$(Template.class), templateProvider, target);
 			renderTag.add(Template.class.getSimpleName());
 			renderTag.add("properties", renderer.properties());
-		} else if (element.i$(HelperComponents.Row.class)) {
+		} else if (element.i$(conceptOf(HelperComponents.Row.class))) {
 			ComponentRenderer renderer = factory.renderer(context, element.a$(HelperComponents.Row.class), templateProvider, target);
 			renderTag.add(HelperComponents.Row.class.getSimpleName());
 			renderTag.add("properties", renderer.properties());
-		} else if (element.i$(Collection.Mold.Item.class)) {
+		} else if (element.i$(conceptOf(Collection.Mold.Item.class))) {
 			renderTag.add(Collection.Mold.Item.class.getSimpleName());
 		}
 		frame.add("renderTag", renderTag);
@@ -274,7 +275,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	protected void addDecoratedFrames(FrameBuilder frame, boolean decorated) {
-		boolean isAbstract = decorated && !(element.i$(TemplateStamp.class) || element.i$(OwnerTemplateStamp.class) || element.i$(ProxyStamp.class));
+		boolean isAbstract = decorated && !(element.i$(conceptOf(TemplateStamp.class)) || element.i$(conceptOf(OwnerTemplateStamp.class)) || element.i$(conceptOf(ProxyStamp.class)));
 		if (isAbstract) frame.add("abstract", "Abstract");
 		else frame.add("notDecorated", element.name$());
 		FrameBuilder abstractBoxFrame = new FrameBuilder().add("box");

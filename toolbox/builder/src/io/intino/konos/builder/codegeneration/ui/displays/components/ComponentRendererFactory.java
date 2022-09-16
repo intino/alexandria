@@ -18,7 +18,7 @@ import static io.intino.konos.model.VisualizationComponents.*;
 public class ComponentRendererFactory {
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public <T extends UIRenderer> T renderer(CompilationContext context, Component component, TemplateProvider provider, Target target) {
+	public static <T extends UIRenderer> T renderer(CompilationContext context, Component component, TemplateProvider provider, Target target) {
 		if (component.i$(Text.class)) return (T) new TextRenderer(context, component.a$(Text.class), provider, target);
 		if (component.i$(Date.class)) return (T) new DateRenderer(context, component.a$(Date.class), provider, target);
 		if (component.i$(File.class)) return (T) new FileRenderer(context, component.a$(File.class), provider, target);

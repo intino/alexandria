@@ -2,7 +2,7 @@ package io.intino.konos.builder.utils;
 
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.model.KonosGraph;
-import io.intino.magritte.StashBuilder;
+import io.intino.magritte.builder.StashBuilder;
 import io.intino.magritte.framework.Graph;
 import io.intino.magritte.framework.loaders.ClassFinder;
 import io.intino.magritte.framework.stores.ResourcesStore;

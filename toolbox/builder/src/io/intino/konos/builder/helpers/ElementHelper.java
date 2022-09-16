@@ -28,6 +28,10 @@ public class ElementHelper {
 		return name + suffix;
 	}
 
+	public static String conceptOf(Class aClass) {
+		return aClass.getName().substring(aClass.getPackageName().length());
+	}
+
 	private String generatedName(Layer element, String name) {
 		return ("a" + (anonymousOwner(element) + "_" + name).hashCode()).replace("-", "_");
 	}
@@ -103,8 +107,10 @@ public class ElementHelper {
 		if (actionable.isOpenLayer()) result = InteractionComponents.Actionable.OpenLayer.class.getSimpleName();
 		if (actionable.isOpenPopover()) result = InteractionComponents.Actionable.OpenPopover.class.getSimpleName();
 		if (actionable.isCloseDialog()) result = InteractionComponents.Actionable.CloseDialog.class.getSimpleName();
-		if (actionable.isSelectPreviousItem()) result = InteractionComponents.Actionable.SelectPreviousItem.class.getSimpleName();
-		if (actionable.isSelectNextItem()) result = InteractionComponents.Actionable.SelectNextItem.class.getSimpleName();
+		if (actionable.isSelectPreviousItem())
+			result = InteractionComponents.Actionable.SelectPreviousItem.class.getSimpleName();
+		if (actionable.isSelectNextItem())
+			result = InteractionComponents.Actionable.SelectNextItem.class.getSimpleName();
 		if (actionable.isExport()) result = InteractionComponents.Actionable.Export.class.getSimpleName();
 		if (actionable.isDownload()) {
 			String context = actionable.asDownload().context() == InteractionComponents.Actionable.Download.Context.Selection ? "Selection" : "";

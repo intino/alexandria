@@ -128,7 +128,7 @@ public class KonosCompiler {
 	}
 
 	private void addMessageWithoutLocation(String message, boolean error) {
-		collector.add(new CompilerMessage(error ? io.intino.magritte.compiler.core.CompilerMessage.ERROR : io.intino.magritte.compiler.core.CompilerMessage.WARNING, message, null, -1, -1));
+		collector.add(new CompilerMessage(error ? io.intino.magritte.builder.core.CompilerMessage.ERROR : io.intino.magritte.builder.core.CompilerMessage.WARNING, message, null, -1, -1));
 	}
 
 	private void addErrorMessage(KonosException exception) {

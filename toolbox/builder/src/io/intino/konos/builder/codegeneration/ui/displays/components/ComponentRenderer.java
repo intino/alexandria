@@ -23,8 +23,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private boolean buildChildren = false;
 	private boolean decorated;
 	private Display owner;
-	private static final ComponentRendererFactory factory = new ComponentRendererFactory();
-	public static final Map<String, FrameBuilder> componentFrameMap = Collections.synchronizedMap(new LRUCache<>(10000));
+	public static final Map<String, FrameBuilder> componentFrameMap = Collections.synchronizedMap(new LRUCache<>(1000));
 
 	public ComponentRenderer(CompilationContext compilationContext, C component, TemplateProvider provider, Target target) {
 		super(compilationContext, component, provider, target);
@@ -50,7 +49,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		addExtends(element, builder);
 		addImplements(element, builder);
 		fill(builder);
-		componentFrameMap.put(frameId, builder);
+		if (!element.core$().id().contains(element.core$().stash() + "_")) componentFrameMap.put(frameId, builder);
 		return builder;
 	}
 
@@ -118,7 +117,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private FrameBuilder referenceFrame(Component component) {
-		ComponentRenderer<?> renderer = factory.renderer(context, component, templateProvider, target);
+		ComponentRenderer<?> renderer = ComponentRendererFactory.renderer(context, component, templateProvider, target);
 		FrameBuilder builder = new FrameBuilder("reference").add(typeOf(component)).add("name", component.name$());
 		if (isEmbeddedComponent(component)) builder.add("embedded");
 		Component parentComponent = component.core$().ownerAs(Component.class);
@@ -133,7 +132,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	protected FrameBuilder childFrame(Component component, Display virtualParent) {
-		FrameBuilder frameBuilder = componentRenderer(component, virtualParent).buildFrame();
+		UIRenderer uiRenderer = componentRenderer(component, virtualParent);
+		FrameBuilder frameBuilder = uiRenderer.buildFrame();
 		String[] ancestors = ancestors(component);
 		Component parent = component.core$().ownerAs(Component.class);
 		if (parent != null) frameBuilder.add("parent", nameOf(parent));
@@ -141,7 +141,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (!frameBuilder.contains("ancestors")) frameBuilder.add("ancestors", ancestors);
 		if (!frameBuilder.contains("ancestorsNotMe"))
 			frameBuilder.add("ancestorsNotMe", ancestors.length > 0 ? Arrays.copyOfRange(ancestors, 1, ancestors.length) : new String[0]);
-		frameBuilder.add("value", frameBuilder.add("addType", typeOf(component)));
+		frameBuilder.add("value", uiRenderer.buildFrame().add("addType", typeOf(component)));
 		return frameBuilder;
 	}
 
@@ -188,7 +188,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private UIRenderer componentRenderer(Component component, Display virtualParent) {
-		ComponentRenderer renderer = factory.renderer(context, component, templateProvider, target);
+		ComponentRenderer<? extends Component> renderer = ComponentRendererFactory.renderer(context, component, templateProvider, target);
 		renderer.buildChildren(true);
 		renderer.decorated(decorated);
 		renderer.owner(owner);

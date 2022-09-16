@@ -224,7 +224,8 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		List<String> result = new ArrayList<>();
 		if (passiveView.i$(Switch.class)) result.add("Switch");
 		if (passiveView.i$(InteractionComponents.SplitButton.class)) result.add("Split");
-		if (passiveView.i$(Toggle.class) || passiveView.i$(IconToggle.class) || passiveView.i$(MaterialIconToggle.class)) result.add("Toggle");
+		if (passiveView.i$(Toggle.class) || passiveView.i$(IconToggle.class) || passiveView.i$(MaterialIconToggle.class))
+			result.add("Toggle");
 		if (passiveView.i$(Editable.class)) result.add("Editable");
 		if (passiveView.i$(DataComponents.Text.Code.class)) result.add("Code");
 		if (passiveView.i$(Block.Drawer.class)) result.add("Drawer");
@@ -259,7 +260,8 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		String componentDirectory = componentDirectoryOf(passiveView, multiple);
 		result.add("componentTarget", (componentDirectory != null && componentDirectory.equals("components")) || hasAbstractClass(passiveView) ? "src" : "gen");
 		result.add("componentDirectory", componentDirectory);
-		if (passiveView.i$(OwnerTemplateStamp.class)) result.add("ownerModuleName", StringHelper.camelCaseToSnakeCase(passiveView.a$(OwnerTemplateStamp.class).owner().service()));
+		if (passiveView.i$(OwnerTemplateStamp.class))
+			result.add("ownerModuleName", StringHelper.camelCaseToSnakeCase(passiveView.a$(OwnerTemplateStamp.class).owner().service()));
 		if (context.webModuleDirectory().exists()) result.add("webModuleName", context.webModuleDirectory().getName());
 		if (!multiple) addFacets(passiveView, result);
 		return result;
@@ -413,8 +415,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		else if (element.i$(Component.class)) {
 			if (isEmbeddedComponent(element.a$(Component.class))) result.add("embeddedComponent", "");
 			else result.add("component", "");
-		}
-		else if (ElementHelper.isRoot(element)) result.add("abstract", "");
+		} else if (ElementHelper.isRoot(element)) result.add("abstract", "");
 		builder.add("parent", result);
 	}
 
@@ -428,7 +429,8 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			String importType = isProjectComponent(c) ? ProjectComponentImport : AlexandriaComponentImport;
 			registerConcreteImports(c, builder);
 			registerMultipleImport(imported, multiple, type, c, builder);
-			if (key != null && !imported.contains(key)) builder.add(importType, importOf(c, importType, isProjectComponent ? false : multiple));
+			if (key != null && !imported.contains(key))
+				builder.add(importType, importOf(c, importType, isProjectComponent ? false : multiple));
 			if (key != null) imported.add(key);
 			if (c.i$(CatalogComponents.Collection.class)) registerCollectionImports(imported, c, builder);
 			if (c.i$(HelperComponents.Row.class)) registerRowImports(imported, c, builder);
