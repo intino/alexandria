@@ -28,8 +28,8 @@ public class ElementHelper {
 		return name + suffix;
 	}
 
-	public static String conceptOf(Class aClass) {
-		return aClass.getName().substring(aClass.getPackageName().length());
+	public static String conceptOf(Class<?> aClass) {
+		return aClass.getName().substring(aClass.getPackageName().length()+1);
 	}
 
 	private String generatedName(Layer element, String name) {
