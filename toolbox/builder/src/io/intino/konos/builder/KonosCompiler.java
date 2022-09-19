@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,7 +33,7 @@ public class KonosCompiler {
 	}
 
 	public List<OutputItem> compile(List<File> sources) {
-		List<OutputItem> compiledFiles = new ArrayList<>();
+		List<OutputItem> compiledFiles = Collections.synchronizedList(new ArrayList<>());
 		if (configuration.isVerbose())
 			configuration.out().println(PRESENTABLE_MESSAGE + "Konosc: Compiling model...");
 		GraphLoader graphLoader = new GraphLoader();
