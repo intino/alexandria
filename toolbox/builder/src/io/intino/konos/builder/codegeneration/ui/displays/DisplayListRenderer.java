@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays;
 
 import io.intino.alexandria.logger.Logger;
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
@@ -32,6 +33,7 @@ public class DisplayListRenderer extends UIRenderer {
 	}
 
 	private void asyncRender() {
+		FrameBuilder.startCache();
 		DisplayRendererFactory factory = new DisplayRendererFactory();
 		ExecutorService service = Executors.newFixedThreadPool(displays.size() > 4 ? Runtime.getRuntime().availableProcessors() : 2, new NamedThreadFactory("displays"));
 		displays.stream().<Runnable>map(d -> () -> render(d, factory)).forEach(service::execute);
@@ -41,11 +43,13 @@ public class DisplayListRenderer extends UIRenderer {
 		} catch (InterruptedException e) {
 			Logger.error(e);
 		}
+		FrameBuilder.stopCache();
 	}
 
 	private void render(Display display, DisplayRendererFactory factory) {
 		try {
 			factory.renderer(context, display, templateProvider, target).execute();
+			FrameBuilder.clearCache();
 		} catch (KonosException e) {
 			Logger.error(e);
 		}
