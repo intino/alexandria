@@ -9,6 +9,8 @@ import io.intino.konos.model.VisualizationComponents.AbstractSlider;
 import io.intino.konos.model.VisualizationComponents.Slider;
 import io.intino.konos.model.VisualizationComponents.TemporalSlider;
 
+import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
+
 public class SliderRenderer extends BindingCollectionRenderer<AbstractSlider> {
 
 	public SliderRenderer(CompilationContext context, AbstractSlider component, TemplateProvider provider, Target target) {
@@ -18,7 +20,7 @@ public class SliderRenderer extends BindingCollectionRenderer<AbstractSlider> {
 	@Override
 	public void fill(FrameBuilder builder) {
 		builder.add("abstractslider");
-		if (element.i$(TemporalSlider.class)) addBinding(builder, element.a$(TemporalSlider.class).collections());
+		if (element.i$(conceptOf(TemporalSlider.class))) addBinding(builder, element.a$(TemporalSlider.class).collections());
 	}
 
 	@Override
@@ -37,12 +39,12 @@ public class SliderRenderer extends BindingCollectionRenderer<AbstractSlider> {
 	}
 
 	private void addRange(FrameBuilder builder) {
-		if (element.i$(Slider.class)) {
+		if (element.i$(conceptOf(Slider.class))) {
 			Slider.Range range = element.a$(Slider.class).range();
 			builder.add("min", range.min());
 			builder.add("max", range.max());
 		}
-		else if (element.i$(TemporalSlider.class)) {
+		else if (element.i$(conceptOf(TemporalSlider.class))) {
 			TemporalSlider.Range range = element.a$(TemporalSlider.class).range();
 			builder.add("min", range.min() != null ? range.min().toEpochMilli() : 0);
 			builder.add("max", range.max() != null ? range.max().toEpochMilli() : 0);
@@ -57,7 +59,7 @@ public class SliderRenderer extends BindingCollectionRenderer<AbstractSlider> {
 	}
 
 	private void addOrdinals(FrameBuilder builder) {
-		if (!element.i$(TemporalSlider.class)) return;
+		if (!element.i$(conceptOf(TemporalSlider.class))) return;
 		TemporalSlider temporalSlider = element.a$(TemporalSlider.class);
 		temporalSlider.scales().forEach(scale -> {
 			FrameBuilder ordinal = new FrameBuilder("ordinalMethod").add("name", scale);

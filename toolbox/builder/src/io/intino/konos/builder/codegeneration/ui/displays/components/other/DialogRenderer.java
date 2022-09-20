@@ -11,6 +11,8 @@ import io.intino.konos.model.OtherComponents.AbstractDialog;
 import io.intino.konos.model.OtherComponents.Dialog;
 import io.intino.konos.model.OtherComponents.Selector;
 
+import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
+
 public class DialogRenderer extends SizedRenderer<AbstractDialog> {
 
 	public DialogRenderer(CompilationContext compilationContext, AbstractDialog component, TemplateProvider provider, Target target) {
@@ -37,7 +39,7 @@ public class DialogRenderer extends SizedRenderer<AbstractDialog> {
 	}
 
 	private void addTransition(FrameBuilder builder) {
-		if (!element.i$(Dialog.Animated.class)) return;
+		if (!element.i$(conceptOf(Dialog.Animated.class))) return;
 		Dialog.Animated block = element.a$(Dialog.Animated.class);
 		Dialog.Animated.Transition transition = block.transition();
 		builder.add("mode", block.mode().name());
@@ -46,7 +48,7 @@ public class DialogRenderer extends SizedRenderer<AbstractDialog> {
 	}
 
 	private void addAlertDialogProperties(FrameBuilder builder) {
-		if (!element.i$(OtherComponents.AlertDialog.class)) return;
+		if (!element.i$(conceptOf(OtherComponents.AlertDialog.class))) return;
 		OtherComponents.AlertDialog dialog = element.a$(OtherComponents.AlertDialog.class);
 		builder.add("message", dialog.message());
 		builder.add("closeLabel", dialog.closeLabel());
@@ -54,7 +56,7 @@ public class DialogRenderer extends SizedRenderer<AbstractDialog> {
 	}
 
 	private void addCollectionDialogProperties(FrameBuilder builder) {
-		if (!element.i$(OtherComponents.CollectionDialog.class)) return;
+		if (!element.i$(conceptOf(OtherComponents.CollectionDialog.class))) return;
 		OtherComponents.CollectionDialog dialog = element.a$(OtherComponents.CollectionDialog.class);
 		builder.add("allowSearch", dialog.allowSearch());
 	}
@@ -65,7 +67,7 @@ public class DialogRenderer extends SizedRenderer<AbstractDialog> {
 	}
 
 	private void addDecisionDialogBinding(FrameBuilder builder) {
-		if (!element.i$(OtherComponents.DecisionDialog.class)) return;
+		if (!element.i$(conceptOf(OtherComponents.DecisionDialog.class))) return;
 		OtherComponents.DecisionDialog dialog = element.a$(OtherComponents.DecisionDialog.class);
 
 		Selector selector = dialog.selector();
@@ -75,7 +77,7 @@ public class DialogRenderer extends SizedRenderer<AbstractDialog> {
 	}
 
 	private void addCollectionDialogBinding(FrameBuilder builder) {
-		if (!element.i$(OtherComponents.CollectionDialog.class)) return;
+		if (!element.i$(conceptOf(OtherComponents.CollectionDialog.class))) return;
 		OtherComponents.CollectionDialog dialog = element.a$(OtherComponents.CollectionDialog.class);
 
 		CatalogComponents.Collection collection = dialog.collection();

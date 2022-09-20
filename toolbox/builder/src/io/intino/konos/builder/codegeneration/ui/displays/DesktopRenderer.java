@@ -12,6 +12,8 @@ import io.intino.konos.model.Template;
 import java.io.File;
 import java.util.List;
 
+import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
+
 @SuppressWarnings("Duplicates")
 public class DesktopRenderer extends BaseDisplayRenderer<Template> {
 
@@ -27,18 +29,16 @@ public class DesktopRenderer extends BaseDisplayRenderer<Template> {
 	@Override
 	public FrameBuilder buildFrame() {
 		FrameBuilder result = super.buildFrame();
-		Template.Desktop template = element.asDesktop();
 		result.add("headerId", shortId(element, "headerId"));
 		result.add("tabBarId", shortId(element, "tabBarId"));
 		addComponents(result);
-//		template.tabs().tabList().forEach(t -> addTab(t, frame));
 		result.add("componentReferences", componentReferences());
 		return result;
 	}
 
 	private FrameBuilder componentReferences() {
 		FrameBuilder result = new FrameBuilder("componentReferences");
-		if (element.i$(Block.class)) result.add("forBlock");
+		if (element.i$(conceptOf(Block.class))) result.add("forBlock");
 		addComponents(result);
 		return result;
 	}
@@ -49,9 +49,4 @@ public class DesktopRenderer extends BaseDisplayRenderer<Template> {
 		addComponentsImports(components, builder);
 		components.forEach(c -> addComponent(c, virtualParent(), builder));
 	}
-
-//	private void addTab(Tab tab, Frame frame) {
-//		frame.addSlot("tab", componentFrame(tab));
-//	}
-
 }

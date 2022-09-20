@@ -8,7 +8,6 @@ import io.intino.konos.model.PassiveView.Request;
 
 import java.io.File;
 
-
 public class DisplayUpdater<D extends Display> extends PassiveViewUpdater<D> {
 	private Display display;
 	private String packageName;

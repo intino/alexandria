@@ -12,6 +12,8 @@ import io.intino.konos.model.Template;
 import java.io.File;
 import java.util.List;
 
+import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
+
 public class TemplateRenderer extends BaseDisplayRenderer<Template> {
 
 	public TemplateRenderer(CompilationContext compilationContext, Template display, TemplateProvider provider, Target target) {
@@ -35,7 +37,7 @@ public class TemplateRenderer extends BaseDisplayRenderer<Template> {
 
 	private FrameBuilder componentReferencesFrame() {
 		FrameBuilder result = new FrameBuilder("componentReferences");
-		if (element.i$(Block.class)) result.add("forBlock");
+		if (element.i$(conceptOf(Block.class))) result.add("forBlock");
 		addComponents(result);
 		return result;
 	}

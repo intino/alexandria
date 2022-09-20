@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,7 +33,7 @@ public class KonosCompiler {
 	}
 
 	public List<OutputItem> compile(List<File> sources) {
-		List<OutputItem> compiledFiles = new ArrayList<>();
+		List<OutputItem> compiledFiles = Collections.synchronizedList(new ArrayList<>());
 		if (configuration.isVerbose())
 			configuration.out().println(PRESENTABLE_MESSAGE + "Konosc: Compiling model...");
 		GraphLoader graphLoader = new GraphLoader();
@@ -128,7 +129,7 @@ public class KonosCompiler {
 	}
 
 	private void addMessageWithoutLocation(String message, boolean error) {
-		collector.add(new CompilerMessage(error ? io.intino.magritte.compiler.core.CompilerMessage.ERROR : io.intino.magritte.compiler.core.CompilerMessage.WARNING, message, null, -1, -1));
+		collector.add(new CompilerMessage(error ? io.intino.magritte.builder.core.CompilerMessage.ERROR : io.intino.magritte.builder.core.CompilerMessage.WARNING, message, null, -1, -1));
 	}
 
 	private void addErrorMessage(KonosException exception) {

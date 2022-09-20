@@ -5,7 +5,7 @@
 	<groupId>io.intino.konos</groupId>
 	<artifactId>builder</artifactId>
 	<name>Builder</name>
-	<version>9.4.4</version>
+	<version>9.4.5</version>
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
@@ -121,12 +121,12 @@
 		<dependency>
 			<groupId>io.intino.magritte</groupId>
 			<artifactId>builder</artifactId>
-			<version>4.1.1</version>
+			<version>4.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.intino.magritte</groupId>
 			<artifactId>framework</artifactId>
-			<version>3.0.0</version>
+			<version>3.4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
@@ -136,7 +136,7 @@
 		<dependency>
 			<groupId>io.intino.itrules</groupId>
 			<artifactId>engine</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hashids</groupId>

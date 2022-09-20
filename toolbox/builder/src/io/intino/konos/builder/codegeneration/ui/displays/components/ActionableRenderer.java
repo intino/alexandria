@@ -6,6 +6,8 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.InteractionComponents;
 
+import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
+
 public class ActionableRenderer extends ComponentRenderer<InteractionComponents.Actionable> {
 
 	public ActionableRenderer(CompilationContext context, InteractionComponents.Actionable component, TemplateProvider provider, Target target) {
@@ -35,13 +37,13 @@ public class ActionableRenderer extends ComponentRenderer<InteractionComponents.
 			properties.add("signText", signed.signText());
 			if (signed.reasonText() != null) properties.add("reasonText", signed.reasonText());
 		}
-		if (element.i$(InteractionComponents.MaterialIconButton.class)) properties.add("icon", element.a$(InteractionComponents.MaterialIconButton.class).icon());
-		else if (element.i$(InteractionComponents.MaterialIconToggle.class)) properties.add("icon", element.a$(InteractionComponents.MaterialIconToggle.class).icon());
+		if (element.i$(conceptOf(InteractionComponents.MaterialIconButton.class))) properties.add("icon", element.a$(InteractionComponents.MaterialIconButton.class).icon());
+		else if (element.i$(conceptOf(InteractionComponents.MaterialIconToggle.class))) properties.add("icon", element.a$(InteractionComponents.MaterialIconToggle.class).icon());
 		return properties;
 	}
 
 	private void addHighlight(FrameBuilder properties) {
-		if (!element.i$(InteractionComponents.AbstractButton.class)) return;
+		if (!element.i$(conceptOf(InteractionComponents.AbstractButton.class))) return;
 		InteractionComponents.AbstractButton button = element.a$(InteractionComponents.AbstractButton.class);
 		if (button.highlight() == InteractionComponents.AbstractButton.Highlight.None) return;
 		properties.add("highlighted", button.highlight().name());
@@ -55,11 +57,11 @@ public class ActionableRenderer extends ComponentRenderer<InteractionComponents.
 	private FrameBuilder modeFrame() {
 		FrameBuilder result = new FrameBuilder("actionableMode", mode());
 		result.add("mode", mode());
-		if (element.i$(InteractionComponents.IconButton.class)) result.add("icon", element.a$(InteractionComponents.IconButton.class).icon());
-		else if (element.i$(InteractionComponents.MaterialIconButton.class)) result.add("icon", element.a$(InteractionComponents.MaterialIconButton.class).icon());
-		else if (element.i$(InteractionComponents.IconToggle.class)) result.add("icon", element.a$(InteractionComponents.IconToggle.class).icon());
-		else if (element.i$(InteractionComponents.MaterialIconToggle.class)) result.add("icon", element.a$(InteractionComponents.MaterialIconToggle.class).icon());
-		else if (element.i$(InteractionComponents.SplitButton.class)) {
+		if (element.i$(conceptOf(InteractionComponents.IconButton.class))) result.add("icon", element.a$(InteractionComponents.IconButton.class).icon());
+		else if (element.i$(conceptOf(InteractionComponents.MaterialIconButton.class))) result.add("icon", element.a$(InteractionComponents.MaterialIconButton.class).icon());
+		else if (element.i$(conceptOf(InteractionComponents.IconToggle.class))) result.add("icon", element.a$(InteractionComponents.IconToggle.class).icon());
+		else if (element.i$(conceptOf(InteractionComponents.MaterialIconToggle.class))) result.add("icon", element.a$(InteractionComponents.MaterialIconToggle.class).icon());
+		else if (element.i$(conceptOf(InteractionComponents.SplitButton.class))) {
 			result.add("option", element.a$(InteractionComponents.SplitButton.class).options().toArray());
 			result.add("default", element.a$(InteractionComponents.SplitButton.class).defaultOption());
 		}
@@ -67,14 +69,14 @@ public class ActionableRenderer extends ComponentRenderer<InteractionComponents.
 	}
 
 	private String mode() {
-		if (element.i$(InteractionComponents.IconButton.class)) return InteractionComponents.IconButton.class.getSimpleName();
-		else if (element.i$(InteractionComponents.MaterialIconButton.class)) return InteractionComponents.MaterialIconButton.class.getSimpleName();
-		else if (element.i$(InteractionComponents.Button.class)) return InteractionComponents.Button.class.getSimpleName();
-		else if (element.i$(InteractionComponents.IconToggle.class)) return InteractionComponents.IconToggle.class.getSimpleName();
-		else if (element.i$(InteractionComponents.MaterialIconToggle.class)) return InteractionComponents.MaterialIconToggle.class.getSimpleName();
-		else if (element.i$(InteractionComponents.Toggle.class)) return InteractionComponents.Toggle.class.getSimpleName();
-		else if (element.i$(InteractionComponents.SplitButton.class)) return InteractionComponents.SplitButton.class.getSimpleName();
-		else if (element.i$(InteractionComponents.AvatarIconButton.class)) return InteractionComponents.AvatarIconButton.class.getSimpleName();
+		if (element.i$(conceptOf(InteractionComponents.IconButton.class))) return InteractionComponents.IconButton.class.getSimpleName();
+		else if (element.i$(conceptOf(InteractionComponents.MaterialIconButton.class))) return InteractionComponents.MaterialIconButton.class.getSimpleName();
+		else if (element.i$(conceptOf(InteractionComponents.Button.class))) return InteractionComponents.Button.class.getSimpleName();
+		else if (element.i$(conceptOf(InteractionComponents.IconToggle.class))) return InteractionComponents.IconToggle.class.getSimpleName();
+		else if (element.i$(conceptOf(InteractionComponents.MaterialIconToggle.class))) return InteractionComponents.MaterialIconToggle.class.getSimpleName();
+		else if (element.i$(conceptOf(InteractionComponents.Toggle.class))) return InteractionComponents.Toggle.class.getSimpleName();
+		else if (element.i$(conceptOf(InteractionComponents.SplitButton.class))) return InteractionComponents.SplitButton.class.getSimpleName();
+		else if (element.i$(conceptOf(InteractionComponents.AvatarIconButton.class))) return InteractionComponents.AvatarIconButton.class.getSimpleName();
 		return InteractionComponents.Link.class.getSimpleName();
 	}
 

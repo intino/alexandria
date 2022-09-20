@@ -8,6 +8,8 @@ import io.intino.konos.model.Absolute;
 import io.intino.konos.model.Component;
 import io.intino.konos.model.Relative;
 
+import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
+
 public class SizedRenderer<C extends Component> extends ComponentRenderer<C> {
 
 	private static final String OffsetSize = "calc(%.0f%% - %dpx)";
@@ -24,11 +26,11 @@ public class SizedRenderer<C extends Component> extends ComponentRenderer<C> {
 	}
 
 	private void addSize(FrameBuilder result) {
-		if (element.i$(Relative.class)) {
+		if (element.i$(conceptOf(Relative.class))) {
 			Relative abstractRelative = element.a$(Relative.class);
 			result.add("width", relativeSizeOf(abstractRelative.width(), abstractRelative.offsetWidth()));
 			result.add("height", relativeSizeOf(abstractRelative.height(), abstractRelative.offsetHeight()));
-		} else if (element.i$(Absolute.class)) {
+		} else if (element.i$(conceptOf(Absolute.class))) {
 			Absolute abstractAbsolute = element.a$(Absolute.class);
 			result.add("width", abstractAbsolute.width() + "px");
 			result.add("height", abstractAbsolute.height() + "px");

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import static java.util.Collections.reverse;
 
 public class ElementHelper {
-	private static Map<Layer, String> typeMap = new HashMap<>();
+	private static final Map<Layer, String> typeMap = Collections.synchronizedMap(new HashMap<>());
 
 	public String shortId(Layer element) {
 		return shortId(element, "");
@@ -26,6 +26,10 @@ public class ElementHelper {
 			if (!isRoot(element.core$()) || isEmbedded(element.core$())) name = generatedName(element, name);
 		} else name = generatedName(element, name);
 		return name + suffix;
+	}
+
+	public static String conceptOf(Class<?> aClass) {
+		return aClass.getName().substring(aClass.getPackageName().length()+1);
 	}
 
 	private String generatedName(Layer element, String name) {
@@ -103,8 +107,10 @@ public class ElementHelper {
 		if (actionable.isOpenLayer()) result = InteractionComponents.Actionable.OpenLayer.class.getSimpleName();
 		if (actionable.isOpenPopover()) result = InteractionComponents.Actionable.OpenPopover.class.getSimpleName();
 		if (actionable.isCloseDialog()) result = InteractionComponents.Actionable.CloseDialog.class.getSimpleName();
-		if (actionable.isSelectPreviousItem()) result = InteractionComponents.Actionable.SelectPreviousItem.class.getSimpleName();
-		if (actionable.isSelectNextItem()) result = InteractionComponents.Actionable.SelectNextItem.class.getSimpleName();
+		if (actionable.isSelectPreviousItem())
+			result = InteractionComponents.Actionable.SelectPreviousItem.class.getSimpleName();
+		if (actionable.isSelectNextItem())
+			result = InteractionComponents.Actionable.SelectNextItem.class.getSimpleName();
 		if (actionable.isExport()) result = InteractionComponents.Actionable.Export.class.getSimpleName();
 		if (actionable.isDownload()) {
 			String context = actionable.asDownload().context() == InteractionComponents.Actionable.Download.Context.Selection ? "Selection" : "";

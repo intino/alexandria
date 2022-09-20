@@ -8,6 +8,8 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.Addressable;
 import io.intino.konos.model.InteractionComponents;
 
+import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
+
 public class ActionRenderer extends ActionableRenderer {
 
 	public ActionRenderer(CompilationContext context, InteractionComponents.Actionable component, TemplateProvider provider, Target target) {
@@ -24,15 +26,15 @@ public class ActionRenderer extends ActionableRenderer {
 	@Override
 	public FrameBuilder properties() {
 		FrameBuilder result = super.properties();
-		if (element.i$(InteractionComponents.Switch.class)) {
+		if (element.i$(conceptOf(InteractionComponents.Switch.class))) {
 			result.add("switch");
 			result.add("state", element.a$(InteractionComponents.Switch.class).state().name());
 		}
-		else if (element.i$(InteractionComponents.AbstractToggle.class)) {
+		else if (element.i$(conceptOf(InteractionComponents.AbstractToggle.class))) {
 			result.add("toggle");
 			result.add("state", element.a$(InteractionComponents.AbstractToggle.class).state().name());
 		}
-		else if (element.i$(InteractionComponents.SplitButton.class)) {
+		else if (element.i$(conceptOf(InteractionComponents.SplitButton.class))) {
 			result.add("splitbutton");
 			result.add("option", element.a$(InteractionComponents.SplitButton.class).options().toArray());
 			result.add("default", element.a$(InteractionComponents.SplitButton.class).defaultOption());
