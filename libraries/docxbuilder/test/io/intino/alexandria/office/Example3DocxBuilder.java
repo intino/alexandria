@@ -1,13 +1,15 @@
 package io.intino.alexandria.office;
 
+import io.intino.alexandria.office.components.Image;
+import io.intino.alexandria.office.components.ImageView;
 import org.apache.commons.imaging.ImageReadException;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-import static io.intino.alexandria.office.ImageView.WrapOption.ClampToPage;
-import static io.intino.alexandria.office.ImageView.WrapOption.ClampToTemplate;
+import static io.intino.alexandria.office.components.ImageView.WrapOption.ClampToPage;
+import static io.intino.alexandria.office.components.ImageView.WrapOption.ClampToTemplate;
 
 public class Example3DocxBuilder {
 
