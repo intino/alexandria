@@ -587,8 +587,10 @@ public class DocxBuilder {
 				if(paragraph.alignment() == null && originalAlignment != null)
 					paragraph.alignment(originalAlignment);
 
-				if(paragraph.styles() == null)
-					paragraph.styles(styles);
+				for(Run run : paragraph.runs()) {
+					if(!(run instanceof Br) && run.styles() == null)
+						run.styles(styles);
+				}
 
 				zos.write(paragraph.xml().getBytes());
 			}

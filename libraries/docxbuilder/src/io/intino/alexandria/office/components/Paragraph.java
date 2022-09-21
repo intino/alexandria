@@ -1,19 +1,21 @@
 package io.intino.alexandria.office.components;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static java.util.Objects.requireNonNull;
+
 /**
  * <p>
  *     Represents a docx paragraph. A paragraph contains:
  * </p>
  * <ul>
  *     <li>Alignment: Left, Center or Right</li>
- *     <li>Styles: list of styles, subclasses of the Style interface</li>
- *     <li>Text: if multiline, each line will have the same alignment and styles than the paragraph</li>
+ *     <li>Runs: if multiline, each line will have the same alignment and styles than the paragraph</li>
  * </ul>
  * <p>
  *     If the alignment is not set, it will copy the template's alignment of the merge field.
- * </p>
- * <p>
- *     If the styles are not set, it will copy the template's styles of the merge field.
  * </p>
  * <p>
  *		Reusing the same Paragraph object to replace different merge fields is NOT recommended.
@@ -22,58 +24,38 @@ package io.intino.alexandria.office.components;
  * **/
 public class Paragraph {
 
-	private static final String BREAK_LINE = "<w:br/>";
-
-	private StyleGroup styles = null; // Copy the template's field styles
 	private Alignment alignment = null; // Copy the template's field alignment
-	private String text = "";
+	private final List<Run> runs = new ArrayList<>();
 	private String lineSeparator = "\n";
 
 	public Paragraph() {
 	}
 
-	public Paragraph(String text) {
-		this.text = text;
-	}
-
-	public StyleGroup styles() {
-		return styles;
-	}
-
-	public Paragraph styles(StyleGroup styles) {
-		this.styles = styles;
+	public Paragraph text(String text, Style... styles) {
+		String[] lines = text.split(lineSeparator, -1);
+		if(lines.length == 1) return addRun(new Text(text).styles(new StyleGroup(styles)));
+		for(String line : lines) {
+			addRun(new Text(line).styles(new StyleGroup(styles)));
+			br();
+		}
 		return this;
 	}
 
-	public Paragraph styles(Style... styles) {
-		if(this.styles == null) this.styles = new StyleGroup();
-		for(Style s : styles) this.styles.add(s);
+	public Paragraph text(Text text) {
+		return addRun(text);
+	}
+
+	public Paragraph br() {
+		return addRun(new Br());
+	}
+
+	public Paragraph addRun(Run run) {
+		this.runs.add(requireNonNull(run));
 		return this;
 	}
 
-	/**
-	 * Set no styles (default docx styles for paragraph will be applied)
-	 * */
-	public Paragraph withNoStyles() {
-		styles = new StyleGroup();
-		return this;
-	}
-
-	/**
-	 * Set the styles to null to copy styles from template
-	 * */
-	public Paragraph withDefaultStyles() {
-		styles = null;
-		return this;
-	}
-
-	public String text() {
-		return text;
-	}
-
-	public Paragraph text(String text) {
-		this.text = text;
-		return this;
+	public List<Run> runs() {
+		return Collections.unmodifiableList(runs);
 	}
 
 	public String lineSeparator() {
@@ -101,36 +83,12 @@ public class Paragraph {
 		// Properties block
 		sb.append("<w:pPr>");
 		if(alignment != null) sb.append(alignment.xml());
-		if(styles != null) sb.append(styles.xml());
 		sb.append("</w:pPr>");
 
-		setText(sb, text.split(lineSeparator, -1));
+		runs.forEach(r -> sb.append(r.xml()));
 
 		sb.append("</w:p>");
 		return sb.toString();
-	}
-
-	private void setText(StringBuilder sb, String[] lines) {
-		StyleGroup brStyles = new StyleGroup();
-		for(String line : lines) {
-			setRunBlock(sb, textBlock(line), this.styles);
-			setRunBlock(sb, BREAK_LINE, brStyles);
-		}
-	}
-
-	private void setRunBlock(StringBuilder sb, String node, StyleGroup styles) {
-		// Run block
-		sb.append("<w:r>");
-		// Styles
-		if(styles != null) sb.append(styles.xml());
-		// Node
-		sb.append(node);
-		// Close run block
-		sb.append("</w:r>");
-	}
-
-	private String textBlock(String text) {
-		return "<w:t>" + text + "</w:t>";
 	}
 
 	@Override
