@@ -50,8 +50,8 @@ public interface Style {
 		public static final Color DarkBlue = new Color("0070C0");
 
 		private final String value;
-		private String themeColor;
-		private String themeShade;
+		private final String themeColor;
+		private final String themeShade;
 
 		public Color(int color) {
 			this(Integer.toHexString(color));
