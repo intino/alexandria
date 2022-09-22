@@ -1,4 +1,4 @@
-package io.intino.alexandria.office;
+package io.intino.alexandria.office.components;
 
 import org.apache.commons.imaging.ImageInfo;
 import org.apache.commons.imaging.ImageReadException;

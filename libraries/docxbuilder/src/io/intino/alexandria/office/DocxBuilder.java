@@ -1,6 +1,7 @@
 package io.intino.alexandria.office;
 
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.office.components.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -26,8 +27,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-import static io.intino.alexandria.office.ImageView.WrapOption.ClampToPage;
-import static io.intino.alexandria.office.ImageView.WrapOption.ClampToTemplate;
+import static io.intino.alexandria.office.components.ImageView.WrapOption.ClampToPage;
+import static io.intino.alexandria.office.components.ImageView.WrapOption.ClampToTemplate;
 
 public class DocxBuilder {
 
@@ -57,6 +58,21 @@ public class DocxBuilder {
 
 	public DocxBuilder replace(String field, String value) {
 		this.content.put(field, value);
+		return this;
+	}
+
+	public DocxBuilder replace(String field, Paragraph paragraph) {
+		this.content.put(field, paragraph);
+		return this;
+	}
+
+	public DocxBuilder replace(String field, Paragraph... paragraphs) {
+		this.content.put(field, paragraphs);
+		return this;
+	}
+
+	public DocxBuilder replace(String field, List<Paragraph> paragraphs) {
+		this.content.put(field, paragraphs);
 		return this;
 	}
 
@@ -97,7 +113,10 @@ public class DocxBuilder {
 
 	private static final class Content {
 
+		public static final String FIELD_START = "«";
+		public static final String FIELD_END = "»";
 		private final Map<String, String> fields;
+		private final Map<String, List<Paragraph>> paragraphs;
 		private final Map<String, List<Map<String, String>>> tables;
 		private final Map<String, ImageView> images;
 		private final Map<String, String> tablesTemplates;
@@ -105,6 +124,7 @@ public class DocxBuilder {
 
 		Content() {
 			this.fields = new HashMap<>();
+			this.paragraphs = new HashMap<>();
 			this.images = new HashMap<>();
 			this.tables = new HashMap<>();
 			this.tablesTemplates = new HashMap<>();
@@ -112,7 +132,7 @@ public class DocxBuilder {
 		}
 
 		private String fieldOf(String key) {
-			return tagOf("«" + key + "»");
+			return tagOf(FIELD_START + key + FIELD_END);
 		}
 
 		private String valueOf(String key) {
@@ -129,6 +149,18 @@ public class DocxBuilder {
 
 		void put(String field, String value) {
 			this.fields.put(field, value);
+		}
+
+		void put(String field, Paragraph paragraphs) {
+			this.put(field, List.of(paragraphs));
+		}
+
+		void put(String field, Paragraph... paragraphs) {
+			this.put(field, Arrays.asList(paragraphs));
+		}
+
+		void put(String field, List<Paragraph> paragraphs) {
+			this.paragraphs.put(field, paragraphs);
 		}
 
 		void put(String field, ImageView imageView) {
@@ -445,10 +477,122 @@ public class DocxBuilder {
 			try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(tmp.toPath())))) {
 				String line;
 				while ((line = reader.readLine()) != null) {
-					zos.write(content.replace(line).getBytes());
+					if(isParagraphBegin(line))
+						replaceParagraph(reader, zos, line);
+					else
+						zos.write(content.replace(line).getBytes());
 				}
 			} finally {
 				tmp.delete();
+			}
+		}
+
+		private void replaceParagraph(BufferedReader reader, ZipOutputStream zos, String line) throws IOException {
+			List<String> paragraph = new ArrayList<>();
+			paragraph.add(line);
+
+			String mergeField = null;
+			String alignment = null;
+			StyleGroup styles = new StyleGroup();
+			boolean pPr = false;
+
+			while ((line = reader.readLine()) != null) {
+				paragraph.add(line);
+				if(isParagraphEnd(line)) break;
+				if (isMergeFieldDeclaration(line)) {
+					mergeField = line.substring(line.indexOf(Content.FIELD_START) + 1, line.indexOf(Content.FIELD_END));
+				} else if(isAlignmentDeclaration(line)) {
+					alignment = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
+				} else if(isParagraphPropertiesBegin(line)) {
+					pPr = true;
+				} else if(isParagraphPropertiesEnd(line)) {
+					pPr = false;
+				} else if(pPr && isRunPropertiesBegin(line)) {
+					getDeclaredStyles(paragraph, styles, reader);
+				}
+			}
+
+			if (content.paragraphs.containsKey(mergeField)) {
+				replaceWithCustomParagraphs(content.paragraphs.get(mergeField), alignment, styles, zos);
+			} else {
+				for(String l : paragraph) {
+					zos.write(content.replace(l).getBytes());
+				}
+			}
+		}
+
+		private void getDeclaredStyles(List<String> paragraph, StyleGroup styles, BufferedReader reader) throws IOException {
+			String line;
+			while((line = reader.readLine()) != null) {
+				paragraph.add(line);
+				line = line.trim();
+
+				if(isRunPropertiesEnd(line)) break;
+				if(line.contains("noProof")) continue;
+
+				if(line.startsWith("<w:sz")) styles.add(new Style.FontSize(Integer.parseInt(getVal(line)) / 2));
+				else if(line.startsWith("<w:color")) styles.add(new Style.Color(getVal(line), get("themeColor", line), get("themeShade", line)));
+				else if(line.startsWith("<w:b")) styles.add(new Style.Bold());
+				else if(line.startsWith("<w:i")) styles.add(new Style.Italic());
+				else if(line.startsWith("<w:u")) styles.add(new Style.Underlined());
+			}
+		}
+
+		private String get(String property, String line) {
+			if(!line.contains("w:" + property)) return null;
+			String propertyTag = "w:" + property + "=\"";
+			int start = line.indexOf(propertyTag) + propertyTag.length();
+			return line.substring(start, line.indexOf('"', start));
+		}
+
+		private String getVal(String line) {
+			return get("val", line);
+		}
+
+		private boolean isParagraphPropertiesEnd(String line) {
+			return line.trim().equals("</w:pPr>");
+		}
+
+		private boolean isParagraphPropertiesBegin(String line) {
+			return line.trim().equals("<w:pPr>");
+		}
+
+		private boolean isRunPropertiesEnd(String line) {
+			return line.trim().equals("</w:rPr>");
+		}
+
+		private boolean isRunPropertiesBegin(String line) {
+			return line.trim().equals("<w:rPr>");
+		}
+
+		private boolean isAlignmentDeclaration(String line) {
+			return line.trim().startsWith("<w:jc") && line.contains("\"");
+		}
+
+		private boolean isMergeFieldDeclaration(String line) {
+			return line.contains(Content.FIELD_START) && line.contains(Content.FIELD_END);
+		}
+
+		private boolean isParagraphEnd(String line) {
+			return line.trim().startsWith("</w:p>");
+		}
+
+		private boolean isParagraphBegin(String line) {
+			return line.trim().startsWith("<w:p ") || line.trim().startsWith("<w:p>");
+		}
+
+		private void replaceWithCustomParagraphs(List<Paragraph> paragraphs, String alignment, StyleGroup styles, ZipOutputStream zos) throws IOException {
+			Alignment originalAlignment = Alignment.byName(alignment);
+			for(Paragraph paragraph : paragraphs) {
+				if(paragraph.alignment() == null && originalAlignment != null)
+					paragraph.alignment(originalAlignment);
+
+				for(Run run : paragraph.runs()) {
+					if(!(run instanceof Br) && run.styles() == null)
+						run.styles(styles);
+				}
+
+				zos.write(paragraph.xml().getBytes());
 			}
 		}
 

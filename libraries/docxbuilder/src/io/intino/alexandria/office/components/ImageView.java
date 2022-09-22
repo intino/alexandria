@@ -1,4 +1,4 @@
-package io.intino.alexandria.office;
+package io.intino.alexandria.office.components;
 
 import static java.util.Objects.requireNonNull;
 
