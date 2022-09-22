@@ -113,6 +113,7 @@ class ImageEditable extends AbstractImageEditable {
 		const removeButtonDisplay = this.state.readonly || this.state.value == null ? "none" : "flex";
 		const showImageGallery = this._showImageGallery();
 		const url = this.state.value != null ? this.state.value + (this.state.value.indexOf("?") == -1 ? "?" : "&") + Math.random() : null;
+        const removeStyle = this.state.readonly ? { display: 'none', pointerEvents: 'none' } : {};
 
 		return (
 			<div style={{...this.style(),position:'relative'}}>
@@ -130,7 +131,7 @@ class ImageEditable extends AbstractImageEditable {
                            disabled={this.state.readonly} value="" />
                     </React.Fragment>
                 }
-                {this.state.value && <a className={classes.remove} onClick={this.handleRemove.bind(this)}>{this.translate("Remove")}</a>}
+                {this.state.value && <a className={classes.remove} onClick={this.handleRemove.bind(this)} style={removeStyle}>{this.translate("Remove")}</a>}
                 {this.state.value && <a className={classes.download} onClick={this.handleDownload.bind(this)}>{this.translate("Download")}</a>}
 			</div>
 		);
