@@ -15,6 +15,7 @@ public class User<DN extends UserNotifier, B extends Box> extends AbstractUser<B
     private Listener refreshListener;
     private Listener beforeLogoutListener;
     private Listener logoutListener;
+    private String logoutUrl;
 
     public User(B box) {
         super(box);
@@ -45,6 +46,11 @@ public class User<DN extends UserNotifier, B extends Box> extends AbstractUser<B
         return this;
     }
 
+    public User logoutUrl(String url) {
+        this.logoutUrl = url;
+        return this;
+    }
+
     @Override
     public void refresh() {
         super.refresh();
@@ -61,7 +67,7 @@ public class User<DN extends UserNotifier, B extends Box> extends AbstractUser<B
         if (beforeLogoutListener != null) beforeLogoutListener.accept(new Event(this));
         session().logout();
         if (logoutListener != null) logoutListener.accept(new Event(this));
-        notifier.redirect(session().browser().baseUrl());
+        notifier.redirect(logoutUrl != null ? logoutUrl : session().browser().baseUrl());
     }
 
     private UserInfo info(io.intino.alexandria.ui.services.push.User user) {
