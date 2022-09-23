@@ -8,9 +8,11 @@ import io.intino.konos.builder.codegeneration.action.ActionRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.CodeGenerationHelper;
 import io.intino.konos.model.Service;
+import io.intino.magritte.framework.Layer;
 
 import java.io.File;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.format;
@@ -87,6 +89,7 @@ public class PageRenderer extends ActionRenderer {
 
 	private FrameBuilder[] parameters() {
 		List<String> parameters = extractUrlPathParameters(resource.path());
+		parameters.addAll(resource.parameterList().stream().map(Layer::name$).collect(Collectors.toList()));
 		return parameters.stream().map(parameter -> new FrameBuilder().add("parameter")
 				.add("type", "String")
 				.add("name", parameter)).toArray(FrameBuilder[]::new);
