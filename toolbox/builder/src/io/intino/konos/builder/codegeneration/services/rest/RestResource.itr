@@ -19,7 +19,7 @@ def type(notification)
 	public class $name+firstUpperCase~Notification implements Resource {
 
 		private $box+FirstUpperCase~Box box;
-		private SparkManager<SparkPushService> manager;
+		private SparkManager<?> manager;
 
 		public $name+firstUpperCase~Notification($box+FirstUpperCase~Box box, SparkManager manager) {
 			this.box = box;
@@ -31,7 +31,7 @@ def type(notification)
 			String clientId = java.util.UUID.randomUUID().toString();
 			$package+validPackage.actions.$name+firstUpperCase~Action action = fill(new $package+validPackage.actions.$name+firstUpperCase~Action());
 			manager.pushService().onOpen(client -> {
-				action.onOpen(client, notifier(session, client));
+				action.onOpen((Client)client, notifier(session, (Client)client));
 				return true;
 			});
 			manager.pushService().onClose(clientId).execute((java.util.function.Consumer<Client>) action::onClose);
