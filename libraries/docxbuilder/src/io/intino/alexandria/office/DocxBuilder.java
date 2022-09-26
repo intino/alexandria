@@ -148,7 +148,8 @@ public class DocxBuilder {
 		}
 
 		void put(String field, String value) {
-			this.fields.put(field, value);
+			if(value.contains("\n")) put(field, new Paragraph().text(value));
+			else this.fields.put(field, value);
 		}
 
 		void put(String field, Paragraph paragraphs) {

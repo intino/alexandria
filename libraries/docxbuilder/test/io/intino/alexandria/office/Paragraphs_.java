@@ -15,7 +15,7 @@ public class Paragraphs_ {
 
 	public static void main(String[] args) throws IOException {
 		simpleTest();
-		complexTest();
+		//complexTest();
 	}
 
 	private static void complexTest() throws IOException {
@@ -47,16 +47,19 @@ public class Paragraphs_ {
 	}
 
 	private static void simpleTest() throws IOException {
-		DocxBuilder db = DocxBuilder.create(new File("temp\\Doc2.docx"));
+		DocxBuilder db = DocxBuilder.create(new File("temp\\AWEB.docx"));
 
-		List<Paragraph> paragraphs = List.of(
-				new Paragraph().text("Cine:", Color.Red),
-				new Paragraph().text("Los Alisios", Color.Blue, new Bold(), new Underlined(), new FontSize(24)).alignment(Alignment.Center)
-		);
+//		List<Paragraph> paragraphs = List.of(
+//				new Paragraph().text("Cine:", Color.Red),
+//				new Paragraph().text("Los Alisios", Color.Blue, new Bold(), new Underlined(), new FontSize(24)).alignment(Alignment.Center)
+//		);
 
-		db.replace("theater", paragraphs);
-		db.replace("screen", new Paragraph().text("Sala 2"));
+//		db.replace("theater", paragraphs);
+//		db.replace("screen", new Paragraph().text("Sala 2"));
 
-		db.save(new File("temp/Doc2-output.docx"));
+		db.replace("81067a4a1f87", "<![CDATA[hello world]]>");
+
+		File output = new File("temp/AWEB-output.docx");
+		db.save(output);
 	}
 }

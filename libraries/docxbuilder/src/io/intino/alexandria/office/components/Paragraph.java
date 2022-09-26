@@ -24,6 +24,9 @@ import static java.util.Objects.requireNonNull;
  * **/
 public class Paragraph {
 
+	private static final String CDATA_BEGIN = "<![CDATA[";
+	private static final String CDATA_END = "]]>";
+
 	private Alignment alignment = null; // Copy the template's field alignment
 	private final List<Run> runs = new ArrayList<>();
 	private String lineSeparator = "\n";
@@ -32,9 +35,11 @@ public class Paragraph {
 	}
 
 	public Paragraph text(String text, Style... styles) {
+		boolean cdata = text.startsWith(CDATA_BEGIN) && text.endsWith(CDATA_END);
 		String[] lines = text.split(lineSeparator, -1);
 		if(lines.length == 1) return addRun(new Text(text).styles(new StyleGroup(styles)));
 		for(String line : lines) {
+			if(cdata) line = withCDATA(line);
 			addRun(new Text(line).styles(new StyleGroup(styles)));
 			br();
 		}
@@ -42,7 +47,7 @@ public class Paragraph {
 	}
 
 	public Paragraph text(Text text) {
-		return addRun(text);
+		return text(text.text(), text.styles() == null ? new Style[0] : text.styles().styles().toArray(new Style[0]));
 	}
 
 	public Paragraph br() {
@@ -94,5 +99,11 @@ public class Paragraph {
 	@Override
 	public String toString() {
 		return xml();
+	}
+
+	private String withCDATA(String value) {
+		if(value.startsWith(CDATA_BEGIN)) return value + CDATA_END;
+		if(value.endsWith(CDATA_END)) return CDATA_BEGIN + value;
+		return CDATA_BEGIN + value + CDATA_END;
 	}
 }
