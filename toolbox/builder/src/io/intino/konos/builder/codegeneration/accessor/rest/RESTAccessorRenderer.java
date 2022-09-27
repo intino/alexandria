@@ -94,8 +94,8 @@ public class RESTAccessorRenderer extends Renderer {
 						add("value", customizeMultipart(operation.response(), Commons.returnType(operation.response(), packageName()))))
 				.add("method", operation.getClass().getSimpleName())
 				.add("name", operation.core$().owner().name())
-				.add("parameter", parameters(operation.parameterList()))
 				.add("parameter", parameters(operation.core$().ownerAs(Resource.class).parameterList()))
+				.add("parameter", parameters(operation.parameterList()))
 				.add("exceptionResponses", exceptionResponses(operation, authentication));
 		if (authentication != null) builder.add("auth", new FrameBuilder("authentication", authentication()));
 		return builder.toFrame();
