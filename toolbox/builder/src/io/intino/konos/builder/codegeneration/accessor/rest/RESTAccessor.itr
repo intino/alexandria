@@ -45,6 +45,14 @@ def type(accessor)
 			additionalHeaders.put(name, value);
 		}
 
+		public void addRequestSerializer(Type type, JsonSerializer<?> adapter) {
+			io.intino.alexandria.restaccessor.adapters.RequestAdapter.addCustomAdapter(type, adapter);
+		}
+
+		public void addResponseDeserializer(Type type, JsonDeserializer<?> adapter) {
+			io.intino.alexandria.restaccessor.adapters.ResponseAdapter.addCustomAdapter(type, adapter);
+		}
+
 		$resource...[$NL$NL]
 
 		$notification...[$NL$NL]

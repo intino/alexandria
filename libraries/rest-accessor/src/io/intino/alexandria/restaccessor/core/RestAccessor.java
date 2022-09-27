@@ -26,9 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.toMap;
@@ -566,27 +564,6 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 	private void addParameter(MultipartEntityBuilder builder, String key, String value) {
 		builder.addPart(key, new StringBody(value, ContentType.APPLICATION_JSON));
 	}
-
-//	private void addSecureParameters(URL certificate, String password, MultipartEntityBuilder entityBuilder, Resource resource) throws RestfulFailure {
-//		if (certificate == null)
-//			return;
-//
-//		try {
-//			Map<String, String> secureParameters = secureParameters(parametersOf(resource), certificate, password);
-//			secureParameters.forEach((name, value) -> {
-//				entityBuilder.addTextBody(name, value, ContentType.TEXT_PLAIN);
-//			});
-//		} catch (Exception exception) {
-//			throw new RestfulFailure(String.format("Could not sign with certificate: %s", certificate.toString()));
-//		}
-//	}
-//
-//	private Map<String, String> parametersOf(Resource resource) {
-//		return new HashMap<String, String>() {{
-//			put("contentType", resource.contentType());
-//			resource.parameters().forEach(this::put);
-//		}};
-//	}
 
 	private Map<String, String> secureParameters(Map<String, String> parameters, URL certificate, String password) throws RestfulFailure {
 		if (certificate == null)
