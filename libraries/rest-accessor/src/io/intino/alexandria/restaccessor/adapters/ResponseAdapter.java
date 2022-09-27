@@ -1,9 +1,7 @@
 package io.intino.alexandria.restaccessor.adapters;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
-import io.intino.alexandria.Json;
 
 import java.lang.reflect.Type;
 import java.net.URLDecoder;
@@ -13,14 +11,19 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.time.Instant.ofEpochMilli;
 import static java.time.LocalDateTime.ofInstant;
 
 public class ResponseAdapter {
-	private static final Gson gsonReader = Json.gsonReader();
-	private static final Gson gsonWriter = Json.gsonWriter();
 
+	private static final Map<Type, JsonDeserializer<?>> customAdapters = new HashMap<>();
+
+	public static void addCustomAdapter(Type type, JsonDeserializer<?> adapter) {
+		customAdapters.put(type, adapter);
+	}
 
 	public static <T> T adapt(String object, Class<T> type) {
 		T result = adaptPrimitive(object, type);
@@ -31,6 +34,7 @@ public class ResponseAdapter {
 		final GsonBuilder builder = new GsonBuilder();
 		builder.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, type1, jsonDeserializationContext) -> Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong())).
 				registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, type1, jsonDeserializationContext) -> new Date(json.getAsJsonPrimitive().getAsLong()));
+		customAdapters.forEach(builder::registerTypeAdapter);
 		return object == null || object.isEmpty() ? null : builder.create().fromJson(decode(object), type);
 	}
 
