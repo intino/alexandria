@@ -36,9 +36,14 @@ public class AlexandriaException extends Throwable implements AlexandriaError {
 		return "{\n" +
 				"\t\"code\": \"" + code() + "\",\n" +
 				"\t\"detailMessage\": \"" + message() + "\",\n" +
-				"\t\"parameters\": {\n\t\t" +
-				parameters().entrySet().stream().map(e -> "\"" + e.getKey() + "\":\"" + e.getValue() + "\"").collect(joining(",\n\t\t")) +
-				"\n\t}\n" +
+				parametersString() +
 				"}";
+	}
+
+	private String parametersString() {
+		return parameters == null ? "" :
+				"\t\"parameters\": {\n\t\t" +
+						parameters().entrySet().stream().map(e -> "\"" + e.getKey() + "\":\"" + e.getValue() + "\"").collect(joining(",\n\t\t")) +
+						"\n\t}\n";
 	}
 }
