@@ -14,10 +14,7 @@ import io.intino.konos.model.Schema;
 import io.intino.konos.model.Service;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static java.util.Collections.addAll;
@@ -25,12 +22,14 @@ import static java.util.Collections.addAll;
 public class SchemaRenderer extends Renderer {
 	private final Schema schema;
 	private final File destination;
+	private final boolean serializationAnnotations;
 	private final String packageName;
 
-	public SchemaRenderer(CompilationContext compilationContext, Schema schema, File destination, String packageName) {
+	public SchemaRenderer(CompilationContext compilationContext, Schema schema, File destination, String packageName, boolean serializationAnnotations) {
 		super(compilationContext, Target.Owner);
 		this.schema = schema;
 		this.destination = destination != null ? destination : gen();
+		this.serializationAnnotations = serializationAnnotations;
 		this.packageName = packageName != null ? packageName : compilationContext.packageName();
 	}
 
@@ -86,11 +85,11 @@ public class SchemaRenderer extends Renderer {
 	}
 
 	private FrameBuilder[] processAttributes(List<Schema.Attribute> attributes) {
-		return attributes.stream().map(this::process).toArray(FrameBuilder[]::new);
+		return attributes.stream().map(this::process).filter(Objects::nonNull).map(fb -> serializationAnnotations ? fb.add("annotated") : fb).toArray(FrameBuilder[]::new);
 	}
 
 	private FrameBuilder[] processSchemasAsAttribute(List<Schema> schemas) {
-		return schemas.stream().map(schema -> processSchema(schema, schema.name$(), schema.multiple())).toArray(FrameBuilder[]::new);
+		return schemas.stream().map(s -> processSchema(s, s.name$(), s.multiple())).toArray(FrameBuilder[]::new);
 	}
 
 	private FrameBuilder process(Schema.Attribute attribute) {
