@@ -12,7 +12,7 @@ import static java.util.stream.Collectors.toSet;
 
 public class KonosGraph extends io.intino.konos.model.AbstractGraph {
 	private static final Map<String, Set<String>> hierarchyDisplays = new HashMap<>();
-	private static Map<String, List<CatalogComponents.Collection.Mold.Item>> items = new HashMap<>();
+	private static Map<String, List<CatalogComponents.Moldable.Mold.Item>> items = new HashMap<>();
 	private static Map<String, List<HelperComponents.Row>> rows = new HashMap<>();
 	private static Map<String, List<CatalogComponents.Table>> tables = new HashMap<>();
 	private static Map<String, List<CatalogComponents.DynamicTable>> dynamicTables = new HashMap<>();
@@ -52,9 +52,9 @@ public class KonosGraph extends io.intino.konos.model.AbstractGraph {
 		return rootDisplays;
 	}
 
-	public List<CatalogComponents.Collection.Mold.Item> itemsDisplays(String group) {
+	public List<CatalogComponents.Moldable.Mold.Item> itemsDisplays(String group) {
 		if (!items.containsKey(group))
-			items.put(group, core$().find(CatalogComponents.Collection.Mold.Item.class));
+			items.put(group, core$().find(CatalogComponents.Moldable.Mold.Item.class));
 		return items.get(group);
 	}
 
@@ -163,8 +163,8 @@ public class KonosGraph extends io.intino.konos.model.AbstractGraph {
 		dynamicTablesDisplays(this, group).forEach(this::createUiTableRow);
 	}
 
-	private void createUiTableRow(CatalogComponents.Collection element) {
-		List<CatalogComponents.Collection.Mold.Item> itemList = element.moldList().stream().map(CatalogComponents.Collection.Mold::item).collect(toList());
+	private void createUiTableRow(CatalogComponents.Moldable element) {
+		List<CatalogComponents.Moldable.Mold.Item> itemList = element.moldList().stream().map(CatalogComponents.Moldable.Mold::item).collect(toList());
 		String name = firstUpperCase(element.name$()) + "Row";
 		HelperComponents privateComponents = helperComponentsList().size() <= 0 ? create(element.core$().stash()).helperComponents() : helperComponents(0);
 		HelperComponents.Row row = privateComponents.rowList().stream().filter(c -> c.name$().equals(name)).findFirst().orElse(null);

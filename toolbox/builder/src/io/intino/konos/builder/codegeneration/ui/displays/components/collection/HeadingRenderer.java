@@ -5,9 +5,9 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.CatalogComponents;
 
-public class HeadingRenderer extends CollectionComponentRenderer<CatalogComponents.Collection.Mold.Heading> {
+public class HeadingRenderer extends CollectionComponentRenderer<CatalogComponents.Moldable.Mold.Heading> {
 
-	public HeadingRenderer(CompilationContext compilationContext, CatalogComponents.Collection.Mold.Heading component, TemplateProvider provider, Target target) {
+	public HeadingRenderer(CompilationContext compilationContext, CatalogComponents.Moldable.Mold.Heading component, TemplateProvider provider, Target target) {
 		super(compilationContext, component, provider, target);
 	}
 

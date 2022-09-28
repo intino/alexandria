@@ -9,7 +9,7 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.builder.utils.LRUCache;
 import io.intino.konos.model.*;
-import io.intino.konos.model.CatalogComponents.Collection.Mold;
+import io.intino.konos.model.CatalogComponents.Moldable.Mold;
 import io.intino.konos.model.OtherComponents.*;
 import io.intino.magritte.framework.Layer;
 import joptsimple.internal.Strings;
@@ -215,6 +215,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (element.i$(conceptOf(CatalogComponents.Collection.class))) result.add("collection");
 		if (element.i$(conceptOf(CatalogComponents.Table.class))) result.add("table");
 		if (element.i$(conceptOf(CatalogComponents.DynamicTable.class))) result.add("dynamictable");
+		if (element.i$(conceptOf(CatalogComponents.Grid.class))) result.add("grid");
 		result.add("name", nameOf(element));
 		if (!addSpecificTypes(result)) result.add("type", type());
 		addFacets(element, result);

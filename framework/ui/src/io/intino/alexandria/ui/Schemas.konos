@@ -237,3 +237,38 @@ Schema DigitalSignatureSuccess
 Schema DigitalSignatureFailure
 	Attribute code as Text
 	Attribute message as Text
+
+Schema GridInfo
+	Attribute name as Text
+	Attribute columns as Object(GridColumn) List
+
+Schema GridColumn
+	Attribute name as Text
+	Attribute label as Text
+	Attribute sortable as Bool
+	Attribute fixed as Bool
+	Attribute address as Text
+	Attribute visible as Bool
+	Attribute width as Integer
+	Attribute type as Word("Link" "Text" "Number" "Date")
+
+Schema GridRow
+	Attribute cells as Object(GridCell) List
+
+Schema GridCell
+	Attribute value as Text
+	Attribute address as Text
+
+Schema GridSortInfo
+	Attribute column as Text
+	Attribute mode as Text
+
+Schema GridGroupByInfo
+	Attribute column as Text
+	Attribute group as Text
+
+Schema GridCellInfo
+	Attribute column as Text
+	Attribute columnIndex as Integer
+	Attribute row as Text
+	Attribute rowIndex as Integer

@@ -55,7 +55,7 @@ public class PageItemLoader<DS extends Datasource<Item>, Item> extends ItemLoade
 		return page;
 	}
 
-	private List<Item> items(int start, int pageSize) {
+	protected List<Item> items(int start, int pageSize) {
 		ArrayList<String> sortings = new ArrayList<>(this.sortings);
 		if (source instanceof TemporalPageDatasource)
 			return timetag != null ? ((TemporalPageDatasource<Item>) source).items(timetag, start, pageSize, condition, filters, sortings) : Collections.emptyList();

@@ -19,7 +19,7 @@ public class Model {
 
 	public enum WidgetType {
 		Text, Number, Image, File, Date, Location, Multiple,
-		Chart, Block, List, Table, DynamicTable, Task, OpenPage, OpenBlock, Export,
+		Chart, Block, List, Table, DynamicTable, Grid, Task, OpenPage, OpenBlock, Export,
 		Download, DownloadSelection,
 		Grouping, GroupingToolbar, Sorting, SearchBox, Map, Slider, Selector,
 		Dashboard, AppDirectory, DigitalSignature, Dialog, Layer, Divider, User, Stepper,
@@ -57,6 +57,7 @@ public class Model {
 		map.put(WidgetType.Selector, new SelectorWidget());
 		map.put(WidgetType.Table, new TableWidget());
 		map.put(WidgetType.DynamicTable, new DynamicTableWidget());
+		map.put(WidgetType.Grid, new GridWidget());
 		map.put(WidgetType.Task, new ActionWidget());
 		map.put(WidgetType.OpenPage, new OpenPageWidget());
 		map.put(WidgetType.OpenBlock, new OpenBlockWidget());

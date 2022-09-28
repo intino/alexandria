@@ -95,7 +95,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 			result.add(CatalogComponents.Table.class.getSimpleName());
 		if (element.i$(conceptOf(CatalogComponents.DynamicTable.class)))
 			result.add(CatalogComponents.DynamicTable.class.getSimpleName());
-		if (element.i$(conceptOf(Collection.Mold.Item.class))) result.add(Collection.Mold.Item.class.getSimpleName());
+		if (element.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class))) result.add(CatalogComponents.Moldable.Mold.Item.class.getSimpleName());
 		if (element.i$(conceptOf(HelperComponents.Row.class))) result.add(HelperComponents.Row.class.getSimpleName());
 		if (!accessible && element.isAccessible()) result.add("accessible");
 		addGeneric(element, result);
@@ -105,14 +105,14 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 			String modelClass = element.a$(Template.class).modelClass();
 			result.add("modelClass", modelClass != null ? modelClass : "java.lang.Void");
 		}
-		if (element.i$(conceptOf(Collection.class))) {
-			Collection.Mold mold = element.a$(Collection.class).mold(0);
+		if (element.i$(conceptOf(CatalogComponents.Moldable.class))) {
+			CatalogComponents.Moldable.Mold mold = element.a$(CatalogComponents.Moldable.class).mold(0);
 			String itemClass = element.a$(Collection.class).itemClass();
 			result.add("componentType", firstUpperCase(nameOf(mold.item())));
 			result.add("itemClass", itemClass != null ? itemClass : "java.lang.Void");
 		}
-		if (element.i$(conceptOf(Collection.Mold.Item.class))) {
-			String itemClass = element.a$(Collection.Mold.Item.class).core$().ownerAs(Collection.class).itemClass();
+		if (element.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class))) {
+			String itemClass = element.a$(CatalogComponents.Moldable.Mold.Item.class).core$().ownerAs(Collection.class).itemClass();
 			result.add("itemClass", itemClass != null ? itemClass : "java.lang.Void");
 		}
 		if (element.i$(conceptOf(HelperComponents.Row.class))) {
@@ -265,8 +265,8 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 			ComponentRenderer renderer = factory.renderer(context, element.a$(HelperComponents.Row.class), templateProvider, target);
 			renderTag.add(HelperComponents.Row.class.getSimpleName());
 			renderTag.add("properties", renderer.properties());
-		} else if (element.i$(conceptOf(Collection.Mold.Item.class))) {
-			renderTag.add(Collection.Mold.Item.class.getSimpleName());
+		} else if (element.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class))) {
+			renderTag.add(CatalogComponents.Moldable.Mold.Item.class.getSimpleName());
 		}
 		frame.add("renderTag", renderTag);
 	}

@@ -263,7 +263,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         return itemOf(children.get(index));
     }
 
-    private List<Object> itemsOf(List<String> selection) {
+    protected List<Object> itemsOf(List<String> selection) {
         return children().stream().filter(d -> selection.contains(d.id())).map(this::itemOf).collect(toList());
     }
 

@@ -28,8 +28,8 @@ public class DisplayRendererFactory {
 			renderer.owner(display);
 			return (T) renderer;
 		}
-		if (display.i$(conceptOf(CatalogComponents.Collection.Mold.Item.class))) {
-			ItemRenderer renderer = new ItemRenderer(compilationContext, display.a$(CatalogComponents.Collection.Mold.Item.class), provider, target);
+		if (display.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class))) {
+			ItemRenderer renderer = new ItemRenderer(compilationContext, display.a$(CatalogComponents.Moldable.Mold.Item.class), provider, target);
 			renderer.owner(display);
 			return (T) renderer;
 		}

@@ -198,13 +198,13 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (passiveView.i$(conceptOf(OtherComponents.User.class)))
 			components.addAll(passiveView.a$(OtherComponents.User.class).componentList());
 		if (passiveView.i$(conceptOf(CatalogComponents.Table.class)))
-			components.addAll(passiveView.a$(CatalogComponents.Table.class).moldList().stream().filter(m -> m.heading() != null).map(CatalogComponents.Collection.Mold::heading).collect(toList()));
+			components.addAll(passiveView.a$(CatalogComponents.Table.class).moldList().stream().filter(m -> m.heading() != null).map(CatalogComponents.Moldable.Mold::heading).collect(toList()));
 		if (passiveView.i$(conceptOf(CatalogComponents.DynamicTable.class)))
-			components.addAll(passiveView.a$(CatalogComponents.DynamicTable.class).moldList().stream().filter(m -> m.heading() != null).map(CatalogComponents.Collection.Mold::heading).collect(toList()));
-		if (passiveView.i$(conceptOf(CatalogComponents.Collection.Mold.Heading.class)))
-			components.addAll(passiveView.a$(CatalogComponents.Collection.Mold.Heading.class).componentList());
-		if (passiveView.i$(conceptOf(CatalogComponents.Collection.Mold.Item.class)))
-			components.addAll(passiveView.a$(CatalogComponents.Collection.Mold.Item.class).componentList());
+			components.addAll(passiveView.a$(CatalogComponents.DynamicTable.class).moldList().stream().filter(m -> m.heading() != null).map(CatalogComponents.Moldable.Mold::heading).collect(toList()));
+		if (passiveView.i$(conceptOf(CatalogComponents.Moldable.Mold.Heading.class)))
+			components.addAll(passiveView.a$(CatalogComponents.Moldable.Mold.Heading.class).componentList());
+		if (passiveView.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class)))
+			components.addAll(passiveView.a$(CatalogComponents.Moldable.Mold.Item.class).componentList());
 		if (passiveView.i$(conceptOf(InteractionComponents.Toolbar.class)))
 			components.addAll(passiveView.a$(InteractionComponents.Toolbar.class).componentList());
 		if (passiveView.i$(conceptOf(OtherComponents.Dialog.class)))
@@ -283,7 +283,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	protected Object importTypeOf(PassiveView passiveView, boolean multiple) {
 		if (multiple)
 			return passiveView.i$(conceptOf(DataComponents.Image.class)) ? "MultipleImage" : "multiple";
-		if (passiveView.i$(conceptOf(CatalogComponents.Collection.Mold.Item.class)) || passiveView.i$(conceptOf(HelperComponents.Row.class)))
+		if (passiveView.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class)) || passiveView.i$(conceptOf(HelperComponents.Row.class)))
 			return passiveView.name$();
 		return typeOf(passiveView);
 	}
@@ -315,7 +315,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			return display != null ? componentDirectoryOf(display, multiple) : null;
 		}
 		if (passiveView.i$(conceptOf(io.intino.konos.model.Template.class))) return "templates";
-		if (passiveView.i$(conceptOf(CatalogComponents.Collection.Mold.Item.class))) return "items";
+		if (passiveView.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class))) return "items";
 		if (passiveView.i$(conceptOf(HelperComponents.Row.class))) return "rows";
 		if (passiveView.i$(conceptOf(Component.class))) return "components";
 		return null;
@@ -433,9 +433,9 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			if (key != null && !imported.contains(key))
 				builder.add(importType, importOf(c, importType, isProjectComponent ? false : multiple));
 			if (key != null) imported.add(key);
-			if (c.i$(conceptOf(CatalogComponents.Collection.class))) registerCollectionImports(imported, c, builder);
+			if (c.i$(conceptOf(CatalogComponents.Moldable.class))) registerMoldableImports(imported, c, builder);
 			if (c.i$(conceptOf(HelperComponents.Row.class))) registerRowImports(imported, c, builder);
-			if (!c.i$(conceptOf(CatalogComponents.Collection.Mold.Item.class)) && !c.i$(conceptOf(io.intino.konos.model.Template.class)))
+			if (!c.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class)) && !c.i$(conceptOf(io.intino.konos.model.Template.class)))
 				addComponentsImports(imported, components(c), builder);
 		});
 	}
@@ -451,7 +451,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (component.i$(conceptOf(OtherComponents.ProxyStamp.class))) return false;
 		if (component.i$(conceptOf(OtherComponents.BaseStamp.class))) return true;
 		if (component.i$(conceptOf(HelperComponents.Row.class))) return true;
-		if (component.i$(conceptOf(CatalogComponents.Collection.Mold.Item.class))) return true;
+		if (component.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class))) return true;
 		return false;
 	}
 
@@ -485,12 +485,12 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		addComponentsImports(imported, component.a$(HelperComponents.Row.class).items().stream().map(i -> i.a$(Component.class)).collect(toList()), builder);
 	}
 
-	private void registerCollectionImports(Set<String> imported, Component component, FrameBuilder builder) {
+	private void registerMoldableImports(Set<String> imported, Component component, FrameBuilder builder) {
 		if (component.i$(conceptOf(CatalogComponents.Table.class)) || component.i$(conceptOf(CatalogComponents.DynamicTable.class))) {
 			String name = component.name$().toLowerCase();
 			addComponentsImports(imported, component.graph().rowsDisplays(context.graphName()).stream().filter(r -> r.name$().toLowerCase().startsWith(name)).map(r -> r.a$(Component.class)).collect(toList()), builder);
 		} else
-			addComponentsImports(imported, component.a$(CatalogComponents.Collection.class).moldList().stream().map(CatalogComponents.Collection.Mold::item).collect(toList()), builder);
+			addComponentsImports(imported, component.a$(CatalogComponents.Moldable.class).moldList().stream().map(CatalogComponents.Moldable.Mold::item).collect(toList()), builder);
 	}
 
 	public static Frame frameOf(Layer element, Request request, String packageName) {

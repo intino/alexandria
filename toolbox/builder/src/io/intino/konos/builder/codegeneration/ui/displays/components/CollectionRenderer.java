@@ -1,5 +1,6 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
+import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
@@ -7,6 +8,7 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.CatalogComponents;
 import io.intino.konos.model.CatalogComponents.Collection;
 import io.intino.konos.model.Navigable;
+import io.intino.konos.model.OtherComponents;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
@@ -29,6 +31,7 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 		if (element.isSelectable()) result.add("selection", element.asSelectable().multiple() ? "multiple" : "single");
 		if (element.noItemsMessage() != null) result.add("noItemsMessage", element.noItemsMessage());
 		if (element.noItemsFoundMessage() != null) result.add("noItemsFoundMessage", element.noItemsFoundMessage());
+		addColumns(result);
 		return result;
 	}
 
@@ -38,7 +41,7 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 
 		builder.add(Collection.class.getSimpleName(), typeOf(element));
 		if (element.sourceClass() != null) builder.add("sourceClass", element.sourceClass());
-		builder.add("componentType", firstUpperCase(nameOf(element.mold(0).item())));
+		if (element.i$(conceptOf(CatalogComponents.Moldable.class))) builder.add("componentType", firstUpperCase(nameOf(element.a$(CatalogComponents.Moldable.class).mold(0).item())));
 		builder.add("itemClass", element.itemClass() != null ? element.itemClass() : "java.lang.Void");
 
 		addMethodsFrame(builder);
@@ -54,11 +57,11 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 		result.add("itemClass", element.itemClass() != null ? element.itemClass() : "java.lang.Void");
 		result.add("itemVariable", "item");
 		addSelectionMethod(result);
-		element.moldList().forEach(m -> addItemFrame(m.item(), result));
+		if (element.i$(CatalogComponents.Moldable.class)) element.a$(CatalogComponents.Moldable.class).moldList().forEach(m -> addItemFrame(m.item(), result));
 		builder.add("methods", result);
 	}
 
-	private void addItemFrame(Collection.Mold.Item item, FrameBuilder builder) {
+	private void addItemFrame(CatalogComponents.Moldable.Mold.Item item, FrameBuilder builder) {
 		FrameBuilder result = buildBaseFrame().add("item");
 		if (!belongsToAccessible(item)) result.add("concreteBox", boxName());
 		result.add("methodAccessibility", element.i$(conceptOf(CatalogComponents.Table.class)) || element.i$(conceptOf(CatalogComponents.DynamicTable.class)) ? "private" : "public");
@@ -76,7 +79,30 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 	}
 
 	private int itemHeight() {
-		return element.moldList().stream().mapToInt(m -> m.item().height()).max().orElse(100);
+		if (!element.i$(conceptOf(CatalogComponents.Moldable.class))) return 100;
+		return element.a$(CatalogComponents.Moldable.class).moldList().stream().mapToInt(m -> m.item().height()).max().orElse(100);
+	}
+
+	private void addColumns(FrameBuilder result) {
+		if (!element.i$(conceptOf(CatalogComponents.Grid.class))) return;
+		CatalogComponents.Grid grid = element.a$(CatalogComponents.Grid.class);
+		grid.columnList().forEach(c -> result.add("column", frameOf(c)));
+	}
+
+	private FrameBuilder frameOf(CatalogComponents.Grid.Column column) {
+		FrameBuilder result = new FrameBuilder("column");
+		result.add("name", column.name$());
+		result.add("label", column.label());
+		if (column.width() != -1) result.add("width", column.width());
+		if (column.sortable()) result.add("sortable", column.sortable());
+		if (column.fixed()) result.add("fixed", column.fixed());
+		if (column.pattern() != null) result.add("pattern", column.pattern());
+		result.add("itemClass", element.itemClass() != null ? element.itemClass() : "java.lang.Void");
+		result.add("type", column.isClickable() ? "Link" : column.type().name());
+		if (!column.isAddressable()) return result;
+		CatalogComponents.Grid.Column.Addressable addressable = column.asAddressable();
+		result.add("address", addressable.addressableResource() != null ? addressable.addressableResource().path() : "");
+		return result;
 	}
 
 	@SuppressWarnings("rawtypes")

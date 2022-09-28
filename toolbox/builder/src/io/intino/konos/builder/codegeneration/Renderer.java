@@ -12,6 +12,8 @@ import io.intino.magritte.framework.Layer;
 import java.io.File;
 import java.util.Map;
 
+import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
+
 public abstract class Renderer {
 	protected final CompilationContext context;
 	protected final ElementHelper elementHelper;
@@ -79,8 +81,8 @@ public abstract class Renderer {
 
 	protected boolean isRendered(Layer element) {
 		if (element == null) return false;
-		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) return false;
-		if (element.i$(HelperComponents.Row.class)) return false;
+		if (element.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class))) return false;
+		if (element.i$(conceptOf(HelperComponents.Row.class))) return false;
 		return !context.cache().isModified(element);
 	}
 

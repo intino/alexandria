@@ -5,9 +5,9 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.CatalogComponents;
 
-public class ItemRenderer extends CollectionComponentRenderer<CatalogComponents.Collection.Mold.Item> {
+public class ItemRenderer extends CollectionComponentRenderer<CatalogComponents.Moldable.Mold.Item> {
 
-	public ItemRenderer(CompilationContext compilationContext, CatalogComponents.Collection.Mold.Item component, TemplateProvider provider, Target target) {
+	public ItemRenderer(CompilationContext compilationContext, CatalogComponents.Moldable.Mold.Item component, TemplateProvider provider, Target target) {
 		super(compilationContext, component, provider, target);
 	}
 

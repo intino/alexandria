@@ -7,7 +7,7 @@ import SelectorComboBoxRequester from "../../../gen/displays/requesters/Selector
 import Select, { components } from "react-select";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
-const SelectorComboBoxTextViewStyles = {
+export const SelectorComboBoxTextViewStyles = {
     control: (provided, state) => ({
         ...provided,
         background: 'transparent',
@@ -34,7 +34,7 @@ const SelectorComboBoxTextViewStyles = {
     }),
 };
 
-const SelectorComboBoxStyles = {
+export const SelectorComboBoxStyles = {
     singleValue: (provided, state) => ({
         ...provided,
         color: '#333333',

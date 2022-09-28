@@ -1,5 +1,6 @@
 dsl Konos
 
+use Grid
 use DigitalSignature
 use AppDirectory
 use Layer
@@ -56,6 +57,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block listExamples as Conditional > TemplateStamp(template=listExamplesMold)
 			Block tableExamples as Conditional > TemplateStamp(template=tableExamplesMold)
 			Block dynamicTableExamples as Conditional > TemplateStamp(template=dynamicTableExamplesMold)
+			Block gridExamples as Conditional > TemplateStamp(template=gridExamplesMold)
 			Block mapExamples as Conditional > TemplateStamp(template=mapExamplesMold)
 			Block downloadExamples as Conditional > TemplateStamp(template=downloadExamplesMold)
 			Block downloadSelectionExamples as Conditional > TemplateStamp(template=downloadSelectionExamplesMold)
