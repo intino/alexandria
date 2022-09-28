@@ -16,12 +16,12 @@ def type(notification)
 
 	$schemaImport
 
-	public class $name+firstUpperCase~Notification implements Resource {
+	public class $name+snakeCaseToCamelCase+firstUpperCase~Notification implements Resource {
 
 		private $box+FirstUpperCase~Box box;
-		private SparkManager<SparkPushService> manager;
+		private SparkManager<?> manager;
 
-		public $name+firstUpperCase~Notification($box+FirstUpperCase~Box box, SparkManager manager) {
+		public $name+snakeCaseToCamelCase+firstUpperCase~Notification($box+FirstUpperCase~Box box, SparkManager manager) {
 			this.box = box;
 			this.manager = manager;
 		}
@@ -29,16 +29,16 @@ def type(notification)
 		public void execute() [throws $throws...[, ]] {
 			Session session = manager.currentSession();
 			String clientId = java.util.UUID.randomUUID().toString();
-			$package+validPackage.actions.$name+firstUpperCase~Action action = fill(new $package+validPackage.actions.$name+firstUpperCase~Action());
+			$package+validPackage.actions.$name+snakeCaseToCamelCase+firstUpperCase~Action action = fill(new $package+validPackage.actions.$name+firstUpperCase~Action());
 			manager.pushService().onOpen(client -> {
-				action.onOpen(client, notifier(session, client));
+				action.onOpen((Client)client, notifier(session, (Client)client));
 				return true;
 			});
 			manager.pushService().onClose(clientId).execute((java.util.function.Consumer<Client>) action::onClose);
 			[$returnType+methodCall]manager.baseUrl().replace("http", "ws") + "/push?id=" + clientId[$returnType+ending];
 		}
 
-		private $package+validPackage.actions.$name+firstUpperCase~Action fill($package+validPackage.actions.$name+firstUpperCase~Action action) {
+		private $package+validPackage.actions.$name+snakeCaseToCamelCase+firstUpperCase~Action fill($package+validPackage.actions.$name+snakeCaseToCamelCase+firstUpperCase~Action action) {
 			action.box = this.box;
 			action.context = context();
 			[$parameter+assign...[$NL]]
@@ -77,21 +77,21 @@ def type(resource)
 
 	$schemaImport
 
-	public class $operation+firstUpperCase$name+firstUpperCase~Resource implements Resource {
+	public class $operation+firstUpperCase$name+snakeCaseToCamelCase+firstUpperCase~Resource implements Resource {
 
 		private $box+FirstUpperCase~Box box;
 		private SparkManager<SparkPushService> manager;
 
-		public $operation+firstUpperCase$name+firstUpperCase~Resource($box+FirstUpperCase~Box box, SparkManager manager) {
+		public $operation+firstUpperCase$name+snakeCaseToCamelCase+firstUpperCase~Resource($box+FirstUpperCase~Box box, SparkManager manager) {
 			this.box = box;
 			this.manager = manager;
 		}
 
 		public void execute() throws AlexandriaException {
-			[$returnType+methodCall]fill(new $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action()).execute()[$returnType+ending];
+			[$returnType+methodCall]fill(new $package+validPackage.actions.$operation+firstUpperCase$name+snakeCaseToCamelCase+firstUpperCase~Action()).execute()[$returnType+ending];
 		}
 
-		private $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action fill($package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action action) throws AlexandriaException {
+		private $package+validPackage.actions.$operation+firstUpperCase$name+snakeCaseToCamelCase+firstUpperCase~Action fill($package+validPackage.actions.$operation+firstUpperCase$name+snakeCaseToCamelCase+firstUpperCase~Action action) throws AlexandriaException {
 			action.box = this.box;
 			action.context = context();
 			try {

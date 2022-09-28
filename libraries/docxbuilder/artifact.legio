@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.2.1") docx-builder
+Artifact("io.intino.alexandria", "1.2.2") docx-builder
 	Imports
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Compile("org.apache.commons", "commons-imaging", "1.0-alpha2")

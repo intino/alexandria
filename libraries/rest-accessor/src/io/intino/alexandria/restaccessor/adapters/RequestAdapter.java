@@ -3,12 +3,21 @@ package io.intino.alexandria.restaccessor.adapters;
 import com.google.gson.*;
 import io.intino.alexandria.exceptions.AlexandriaError;
 
+import java.lang.reflect.Type;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class RequestAdapter {
+
+	private static final Map<Type, JsonSerializer<?>> customAdapters = new HashMap<>();
+
+	public static void addCustomAdapter(Type type, JsonSerializer<?> adapter) {
+		customAdapters.put(type, adapter);
+	}
+
 	public static String adapt(Object object) {
 		if (object instanceof AlexandriaError) return adaptError((AlexandriaError) object);
 		if (object instanceof Collection) return jsonArray((Collection<Object>) object);
@@ -24,10 +33,11 @@ public class RequestAdapter {
 	}
 
 	private static JsonElement toJson(Object value) {
-		final GsonBuilder gsonBuilder = new GsonBuilder().
+		final GsonBuilder builder = new GsonBuilder().
 				registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (instant, type, context) -> new JsonPrimitive(instant.toEpochMilli())).
 				registerTypeAdapter(Date.class, (JsonSerializer<Date>) (date, type, context) -> new JsonPrimitive(date.getTime()));
-		return gsonBuilder.create().toJsonTree(value);
+		customAdapters.forEach(builder::registerTypeAdapter);
+		return builder.create().toJsonTree(value);
 	}
 
 	private static String adaptError(AlexandriaError error) {

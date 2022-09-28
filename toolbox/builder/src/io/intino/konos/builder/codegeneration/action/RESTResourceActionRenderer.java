@@ -3,7 +3,9 @@ package io.intino.konos.builder.codegeneration.action;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.Service;
 import io.intino.konos.model.Service.REST.Resource;
+import io.intino.magritte.framework.Node;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -17,10 +19,15 @@ public class RESTResourceActionRenderer extends ActionRenderer {
 
 	@Override
 	public void render() {
-		final String name = firstUpperCase(operation.getClass().getSimpleName()) + firstUpperCase(operation.core$().owner().name());
-		classes().put(operation.getClass().getSimpleName() + "#" + firstUpperCase(operation.core$().owner().name()), "actions" + "." + name + "Action");
-		execute(name, operation.core$().ownerAs(Service.class).name$(), operation.response(), operation.parameterList(),
+		Node resource = operation.core$().owner();
+		final String name = firstUpperCase(operation.getClass().getSimpleName()) + firstUpperCase(resource.name());
+		classes().put(operation.getClass().getSimpleName() + "#" + firstUpperCase(resource.name()), "actions" + "." + name + "Action");
+		execute(name, operation.core$().ownerAs(Service.class).name$(), operation.response(), parameters(resource),
 				Stream.concat(operation.exceptionList().stream(), operation.exceptionRefs().stream()).collect(Collectors.toList()), operation.graph().schemaList());
+	}
+
+	private List<Resource.Parameter> parameters(Node resource) {
+		return Stream.concat(resource.as(Resource.class).parameterList().stream(), operation.parameterList().stream()).collect(Collectors.toList());
 	}
 
 	@Override

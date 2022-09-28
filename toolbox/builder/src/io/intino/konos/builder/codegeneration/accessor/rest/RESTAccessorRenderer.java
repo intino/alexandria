@@ -45,7 +45,7 @@ public class RESTAccessorRenderer extends Renderer {
 
 	@Override
 	public void render() throws KonosException {
-		new SchemaListRenderer(context, service.graph(), destination).execute();
+		new SchemaListRenderer(context, service.graph(), destination, true).execute();
 		processService(service);
 	}
 
@@ -94,8 +94,8 @@ public class RESTAccessorRenderer extends Renderer {
 						add("value", customizeMultipart(operation.response(), Commons.returnType(operation.response(), packageName()))))
 				.add("method", operation.getClass().getSimpleName())
 				.add("name", operation.core$().owner().name())
-				.add("parameter", parameters(operation.parameterList()))
 				.add("parameter", parameters(operation.core$().ownerAs(Resource.class).parameterList()))
+				.add("parameter", parameters(operation.parameterList()))
 				.add("exceptionResponses", exceptionResponses(operation, authentication));
 		if (authentication != null) builder.add("auth", new FrameBuilder("authentication", authentication()));
 		return builder.toFrame();
@@ -140,7 +140,7 @@ public class RESTAccessorRenderer extends Renderer {
 			List<Parameter> parameters = enumParameters.get(resource);
 			if (parameters.stream().noneMatch(p -> p.name$().equals(parameter.name$())))
 				enumParameters.get(resource).add(parameter);
-			type = firstUpperCase(resource + firstUpperCase(parameter.name$()));
+			type = firstUpperCase(snakeCaseToCamelCase(resource) + firstUpperCase(parameter.name$()));
 		} else type = (parameter.isObject() && parameter.asObject().isComponent() ?
 				String.join(".", packageName(), "schemas.") : "") + parameter.asType().type();
 		return parameter.isList() ? "List<" + type + ">" : type;
