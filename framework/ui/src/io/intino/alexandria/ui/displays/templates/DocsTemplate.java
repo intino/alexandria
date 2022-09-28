@@ -33,6 +33,7 @@ public class DocsTemplate extends AbstractDocsTemplate<AlexandriaUiBox> {
         body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.List));
         body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.Table));
         body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.DynamicTable));
+        body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.Grid));
         body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.Map));
         body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.Grouping));
         body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.GroupingToolbar));

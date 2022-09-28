@@ -54,8 +54,8 @@ public class ComponentRendererFactory {
 		map.put(conceptOf(CatalogComponents.Sorting.class), config -> new SortingRenderer(config.context(), config.component().a$(CatalogComponents.Sorting.class), config.provider(), config.target()));
 		map.put(conceptOf(CatalogComponents.Map.class), config -> new MapRenderer(config.context(), config.component().a$(CatalogComponents.Map.class), config.provider(), config.target()));
 		map.put(conceptOf(CatalogComponents.Collection.class), config -> new CollectionRenderer<>(config.context(), config.component().a$(CatalogComponents.Collection.class), config.provider(), config.target()));
-		map.put(conceptOf(CatalogComponents.Collection.Mold.Heading.class), config -> new HeadingRenderer(config.context(), config.component().a$(CatalogComponents.Collection.Mold.Heading.class), config.provider(), config.target()));
-		map.put(conceptOf(CatalogComponents.Collection.Mold.Item.class), config -> new ItemRenderer(config.context(), config.component().a$(CatalogComponents.Collection.Mold.Item.class), config.provider(), config.target()));
+		map.put(conceptOf(CatalogComponents.Moldable.Mold.Heading.class), config -> new HeadingRenderer(config.context(), config.component().a$(CatalogComponents.Moldable.Mold.Heading.class), config.provider(), config.target()));
+		map.put(conceptOf(CatalogComponents.Moldable.Mold.Item.class), config -> new ItemRenderer(config.context(), config.component().a$(CatalogComponents.Moldable.Mold.Item.class), config.provider(), config.target()));
 		map.put(conceptOf(CatalogComponents.SearchBox.class), config -> new SearchBoxRenderer(config.context(), config.component().a$(CatalogComponents.SearchBox.class), config.provider(), config.target()));
 		map.put(conceptOf(Toolbar.class), config -> new ToolbarRenderer(config.context(), config.component().a$(Toolbar.class), config.provider(), config.target()));
 		map.put(conceptOf(Actionable.OpenPage.class), config -> new OpenPageRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));

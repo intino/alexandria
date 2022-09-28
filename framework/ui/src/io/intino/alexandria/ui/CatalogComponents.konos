@@ -47,6 +47,17 @@ Component map as ExtensionOf(collection)
 Component list as ExtensionOf(pageCollection)
 Component table as ExtensionOf(pageCollection)
 Component magazine as ExtensionOf(pageCollection)
+Component grid as ExtensionOf(pageCollection)
+	Notification refreshInfo as Object(GridInfo)
+	Notification refreshVisibleColumns as Object(GridColumn) List
+	Notification refreshGroupByOptions as Text List
+	Notification addRow as Object(GridRow)
+	Notification addRows as Object(GridRow) List
+	Request sort as Object(GridSortInfo)
+	Request updateGroupByOptions as Text
+	Request groupBy as Object(GridGroupByInfo)
+	Request cellClick as Object(GridCellInfo)
+	Request updateVisibleColumns as Object(GridColumn) List
 
 Component item
 Component heading

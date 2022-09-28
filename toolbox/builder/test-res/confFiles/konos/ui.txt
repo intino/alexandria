@@ -4,6 +4,7 @@ def.file
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/Widget.konos#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/Theme.konos#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/Main.konos#true
+/Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/collection/Grid.konos#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/collection/Grouping.konos#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/collection/List.konos#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/collection/SearchBox.konos#true
@@ -72,9 +73,11 @@ io.intino.alexandria
 artifactId
 ui-framework
 version
-4.17.16
+4.19.16
 module.parameters
 home
+current.dependencies
+io.intino.alexandria:core-framework:2.1.2,io.intino.alexandria:http:1.5.6,io.intino.alexandria:json:1.1.0,io.intino.alexandria:rest-accessor:2.4.0,io.intino.alexandria:logger4j:1.0.1,io.intino.alexandria:zip:1.0.4,io.intino.alexandria:driver-shiny:1.0.1,io.intino.alexandria:driver-r:1.0.1,io.intino.alexandria:proxy:1.1.0,io.intino.icod:standalone:1.0.2
 box.generation.package
 io.intino.alexandria
 encoding

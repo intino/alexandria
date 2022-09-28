@@ -355,6 +355,10 @@ def type(extends & multiple)
 	io.intino.alexandria.ui.displays.components.Multiple<$abstractBox+type, [$componentPrefix+firstUpperCase~.]$componentName, $objectType>
 end
 
+def type(extends & collection & grid)
+	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<io.intino.alexandria.ui.displays.notifiers.$type+firstUpperCase$facet...[]~Notifier, $abstractBox+type, $itemClass>
+end
+
 def type(extends & collection & table)
 	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<$abstractBox+type, io.intino.alexandria.ui.displays.components.Row, $itemClass>
 end
@@ -929,6 +933,7 @@ end
 
 def type(properties & collection) trigger(specific)
 	[_source(new io.intino.alexandria.ui.sources.$sourceClass+firstUpperCase());]
+	[$column...[$NL]]
 	[_pageSize($pageSize);]
 end
 
@@ -1085,6 +1090,10 @@ end
 
 def type(useUrl & custom)
     box().configuration().get("$value")
+end
+
+def type(column)
+    _add(new io.intino.alexandria.ui.model.datasource.grid.GridColumn<$itemClass>().name("$name").label("$label").type(io.intino.alexandria.ui.model.datasource.grid.GridColumn.Type.$type)[.width($width)][.sortable($sortable)][.address("$address")][.fixed($fixed)][.pattern("$pattern")]);
 end
 
 def type(useUrl)

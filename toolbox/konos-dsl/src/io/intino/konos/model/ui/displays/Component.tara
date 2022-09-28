@@ -243,7 +243,7 @@ Concept HelperComponents
 	Concept HelperComponent extends Component
 
 	Concept Row extends HelperComponent
-		var CatalogComponents.Collection.Mold.Item[] items
+		var CatalogComponents.Moldable.Mold.Item[] items
 
 Facet Editable
 	var string placeholder = ""

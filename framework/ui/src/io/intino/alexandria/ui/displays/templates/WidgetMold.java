@@ -55,6 +55,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         listExamples.visible(widget instanceof ListWidget);
         tableExamples.visible(widget instanceof TableWidget);
         dynamicTableExamples.visible(widget instanceof DynamicTableWidget);
+        gridExamples.visible(widget instanceof GridWidget);
         mapExamples.visible(widget instanceof MapWidget);
         exportExamples.visible(widget instanceof ExportWidget);
         downloadExamples.visible(widget instanceof DownloadWidget);

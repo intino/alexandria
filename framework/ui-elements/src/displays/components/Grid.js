@@ -1,0 +1,381 @@
+import React from "react";
+import { Link, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Checkbox, Button, FormControlLabel } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import AbstractGrid from "../../../gen/displays/components/AbstractGrid";
+import GridNotifier from "../../../gen/displays/notifiers/GridNotifier";
+import GridRequester from "../../../gen/displays/requesters/GridRequester";
+import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
+import { withSnackbar } from 'notistack';
+import DataGrid from "react-data-grid";
+import { ToolsPanel } from "react-data-grid-addons";
+import 'alexandria-ui-elements/res/styles/grid.css';
+import 'alexandria-ui-elements/res/styles/layout.css';
+import history from "alexandria-ui-elements/src/util/History";
+import Select from "react-select";
+import {RiseLoader} from "react-spinners";
+import Theme from "app-elements/gen/Theme";
+import { SelectorComboBoxStyles, SelectorComboBoxTextViewStyles } from "./SelectorComboBox";
+
+const GridSelectorStyles = {
+    valueContainer: (provided, state) => ({
+        ...provided,
+        fontSize: '9pt',
+    }),
+};
+
+const styles = theme => ({
+    link : {
+        color: theme.palette.primary.main,
+        '&:hover' : { textDecoration: 'none' },
+    },
+    columnSelector : {
+        width: '300px',
+        marginLeft: '5px',
+    },
+    columnsAction : {
+        color: theme.palette.primary.main,
+        marginRight: '15px',
+        marginTop: '3px',
+        fontSize: '9pt',
+        cursor: 'pointer',
+        display: 'inline-block',
+    },
+    groupByOptions : {
+    },
+});
+
+class Grid extends AbstractGrid {
+
+	constructor(props) {
+		super(props);
+		this.notifier = new GridNotifier(this);
+		this.requester = new GridRequester(this);
+        this.lastLoadedPage = [];
+        this.lastRow = 0;
+        this.grid = null;
+		this.state = {
+		    ...this.state,
+		    name: this.props.id,
+		    columns: [],
+		    selectedIndexes: [],
+		    rows: [],
+		    addressList: [],
+		    rowIndexList: [],
+		    groupBy: null,
+		    groupByOptions: [],
+		    groupByOption: null,
+		    openColumnsDialog: false,
+		    visibleColumns: [],
+		};
+	};
+
+    render() {
+        if (!this.state.visible) return (<React.Fragment/>);
+        return (
+            <div style={{height:'100%',width:'100%',position:'relative'}}>
+                {this.state.loading && this.renderLoading()}
+                {this.renderGrid()}
+            </div>
+        );
+    };
+
+    renderLoading = () => {
+        const theme = Theme.get();
+        return (<div style={{position:'absolute',height:'100%',width:'100%',zIndex:'1'}} className="layout vertical flex center-center"><RiseLoader color={theme.palette.secondary.main} loading={true}/></div>);
+    };
+
+    scrollToRow(idx) {
+    	var top = this.grid.getRowOffsetHeight() * idx;
+    	var gridCanvas = this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas');
+    	if (gridCanvas != null) gridCanvas.scrollTop = top;
+    };
+
+    renderGrid = () => {
+        const showCheckbox = this.props.selection != null && this.allowMultiSelection();
+        const { classes } = this.props;
+        return (
+            <DataGrid
+                ref={(g) => {this.grid = g;}}
+                columns={this.columns()}
+                rowGetter={this.handleRowGetter.bind(this)}
+                rowsCount={this.state.rows.length}
+                emptyRowsView={this.emptyRowsView.bind(this)}
+                enableCellSelect={true}
+                minColumnWidth={200}
+                rowSelection={{
+                    showCheckbox: showCheckbox,
+                    enableShiftSelect: null,
+                    onRowsSelected: this.handleRowsSelected.bind(this),
+                    onRowsDeselected: this.handleRowsDeselected.bind(this),
+                    selectBy: { indexes: this.state.selectedIndexes }
+                }}
+                onGridSort={(sortColumn, sortDirection) => { this.requester.sort({column: sortColumn, mode: sortDirection}) }}
+                toolbar={
+                    <ToolsPanel.AdvancedToolbar>
+                        <div className="layout horizontal flex center">
+                            <div><a className={classes.columnsAction} onClick={this.handleOpenColumnsDialog.bind(this)}>{this.translate("Select columns...")}</a></div>
+                            {this.renderGroupBySelector()}
+                            {this.renderGroupByOptions()}
+                            {this.renderColumnsDialog()}
+                        </div>
+                    </ToolsPanel.AdvancedToolbar>
+                }
+            />
+        );
+    };
+
+    refreshAllowMultiSelection = (value) => {
+        const index = this.lastRow > 0 ? this.lastRow - 1 : 0;
+        this.setState({ multiSelection: value });
+        window.dispatchEvent(new Event('resize'));
+        this.scrollToRow(index);
+    };
+
+    emptyRowsView = () => {
+        if (this.state.loading) return (<React.Fragment/>);
+        return (<div className="layout vertical flex center-center" style={{marginTop:'20px',fontSize:'12pt'}}>{this.translate(this.props.noItemsMessage)}</div>);
+    };
+
+    renderGroupBySelector = () => {
+        const { classes } = this.props;
+        const styles = { ...SelectorComboBoxStyles, ...SelectorComboBoxTextViewStyles, ...GridSelectorStyles };
+        return (
+            <Select className={classes.columnSelector} isClearable={true}
+                placeholder={this.translate("Select group by column")} options={this.selectorColumns()}
+                value={this.state.groupBy} onChange={this.handleSelectGroupBy.bind(this)} styles={styles}/>
+        );
+    };
+
+    renderGroupByOptions = () => {
+        if (this.state.groupBy == null) return (<React.Fragment/>);
+        const options = this.state.groupByOptions.map((option, idx) => { return { value: option, label: option, index: idx }});
+        const styles = { ...SelectorComboBoxStyles, ...SelectorComboBoxTextViewStyles, ...GridSelectorStyles };
+        const { classes } = this.props;
+        return (
+            <div className={classes.groupByOptions}>
+                {options.length == 0 && <div style={{marginLeft:'10px'}}>{this.translate("No groups available")}</div>}
+                {options.length > 0 &&
+                    <Select className={classes.columnSelector} isClearable={true}
+                        placeholder={this.translate("Select group by option")} options={options}
+                        value={this.state.groupByOption} onChange={this.handleSelectGroupByOption.bind(this)}
+                        styles={styles}/>
+                }
+            </div>
+        );
+    };
+
+    renderColumnsDialog = () => {
+        const { classes } = this.props;
+        return (
+            <Dialog open={this.state.openColumnsDialog} onClose={this.handleCloseColumnsDialog.bind(this)}>
+                <DialogTitle id="alert-dialog-title">{this.translate("Select columns")}</DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    {this.renderColumnsCheckboxes()}
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={this.handleCloseColumnsDialog.bind(this)} color="primary" autoFocus>{this.translate("Close")}</Button>
+                </DialogActions>
+            </Dialog>
+        );
+    };
+
+    renderColumnsCheckboxes = () => {
+        const result = [];
+        const columns = this.selectorColumns();
+        for (let i=1; i<columns.length; i++) result.push(this.renderColumnCheckbox(columns[i]));
+        return result;
+    };
+
+    renderColumnCheckbox = (column) => {
+        return (<div><FormControlLabel control={<Checkbox checked={this.isColumnVisible(column.index)} onChange={this.handleToggleColumn.bind(this, column.index)} color="primary" name={column.index}/>} label={column.label}/></div>);
+    };
+
+    isColumnVisible = (index) => {
+        return this.state.visibleColumns[index] == null || this.state.visibleColumns[index] === true;
+    };
+
+    handleToggleColumn = (index) => {
+        if (this.state.visibleColumns[index] == null) this.state.visibleColumns[index] = true;
+        this.state.visibleColumns[index] = !this.state.visibleColumns[index];
+        this.updateCookie(this.state.visibleColumns, this.state.name);
+        this.requester.updateVisibleColumns(this._visibleColumns(this.state.visibleColumns));
+    };
+
+    handleSelectGroupBy = (groupBy) => {
+        this.setState({ groupBy : groupBy != null ? { name: groupBy.value, label: groupBy.label } : null, groupByOption: null });
+        this.requester.updateGroupByOptions(groupBy != null ? groupBy.value : null);
+    };
+
+    handleSelectGroupByOption = (option) => {
+        this.setState({groupByOption: option != null ? { name: option.value, label: option.label } : null});
+        this.requester.groupBy({ column: this.state.groupBy.name, group: option != null ? option.value : null });
+    };
+
+    columns = () => {
+        return this.state.columns.filter((column, idx) => this.isColumnVisible(idx)).map((column, idx) => ({
+            key: column.name,
+            name: column.label,
+            filterable: true, editable: false,
+            sortable: column.sortable, draggable: false,
+            resizable: true, frozen: column.fixed, width: column.width != -1 ? column.width : undefined,
+            headerRenderer : this.columnRenderer(column, idx),
+            formatter : this.rowFormatter.bind(this, column, idx)
+        }));
+    };
+
+    selectorColumns = () => {
+        return this.state.columns.map((column, idx) => ({
+            value: column.name,
+            label: column.label,
+            index: idx
+        }));
+    };
+
+    columnRenderer = (column, idx) => {
+        const type = column.type;
+        const style = { display: 'inline-block' };
+        if (type === "Number" || type === "Date") style.float = 'right';
+        return (<div style={style}>{column.label}</div>);
+    };
+
+    rowFormatter = (column, idx, data, i) => {
+        const { classes } = this.props;
+        const type = column.type;
+        if (type === "Link") return (<Link className={classes.link} component="button" onClick={this.handleCellClick.bind(this, column, idx, data)}>{data.value}</Link>);
+        else if (type === "Number" || type === "Date") return (<div style={{textAlign:'right'}}>{data.value}</div>);
+        return (<div>{data.value}</div>);
+    };
+
+    handleCellClick = (column, idx, data) => {
+        const address = this.state.addressList[column.name + "-" + data.value];
+        const columnIndex = this.columnIndex(column.name);
+        const rowIndex = this.state.rowIndexList[column.name + "-" + data.value];
+        if (address != null) history.push(address, {});
+        this.requester.cellClick({ column: column.name, columnIndex: columnIndex, row: data.value, rowIndex: rowIndex });
+    };
+
+    columnIndex = (columnName) => {
+        const columns = this.columns();
+        for (let i=0; i<columns.length; i++) {
+            if (columns[i].key == columnName) return i;
+        }
+        return -1;
+    };
+
+    handleRowGetter = (i) => {
+        const rows = this.state.rows;
+        const page = this.pageOf(i+this.state.pageSize);
+        if (!this.lastLoadedPage[page]) {
+            this.lastLoadedPage[page] = true;
+            this.requester.loadNextPage();
+        }
+        this.lastRow = i;
+        return rows[i] || {};
+    };
+
+    addRow = (row) => {
+        this.addRows([row]);
+    };
+
+    refreshGroupByOptions = (options) => {
+        this.setState({groupByOptions: options});
+    };
+
+    addRows = (newRows) => {
+        const columns = this.state.columns;
+        let rows = this.state.rows;
+        let addressList = this.state.addressList;
+        let rowIndexList = this.state.rowIndexList;
+        for (let i=0; i<newRows.length; i++) {
+            let row = {};
+            for (let j=0; j<columns.length; j++) {
+                row[columns[j].name] = newRows[i].cells[j].value;
+                if (newRows[i].cells[j].address != null) addressList[columns[j].name + "-" + row[columns[j].name]] = newRows[i].cells[j].address;
+                rowIndexList[columns[j].name + "-" + row[columns[j].name]] = rows.length;
+            }
+            rows.push(row);
+        }
+        this.setState({ rows: rows, addressList: addressList, rowIndexList: rowIndexList });
+    };
+
+	pageOf = (index) => {
+		return Math.floor(index / this.state.pageSize) + (index % this.state.pageSize > 0 ? 1 : 0);
+	};
+
+    renderColumn(column, index) {
+        return (<div>{column.label}</div>);
+    };
+
+    handleRowsSelected = rows => {
+        const indexes = this.state.selectedIndexes.concat(rows.map(r => r.rowIdx));
+        this.setState({selectedIndexes: indexes});
+        this.requester.selection(indexes);
+    };
+
+    handleRowsDeselected = rows => {
+        let rowIndexes = rows.map(r => r.rowIdx);
+        const indexes = this.state.selectedIndexes.filter(i => rowIndexes.indexOf(i) === -1);
+        this.setState({selectedIndexes: indexes});
+        this.requester.selection(indexes);
+    };
+
+	refreshInfo = (info) => {
+	    this.setState({columns: info.columns, name: info.name, visibleColumns: this.getCookie(info.name) ? this.getCookie(info.name) : this.state.visibleColumns});
+	};
+
+	refreshItemCount = (itemCount) => {
+		this.setState({ itemCount: itemCount });
+	};
+
+    handleOpenColumnsDialog = () => {
+        this.setState({openColumnsDialog:true});
+    };
+
+	handleCloseColumnsDialog = () => {
+        this.setState({openColumnsDialog:false});
+    };
+
+    refreshVisibleColumns = (value) => {
+        const index = this.lastRow > 0 ? this.lastRow - 1 : 0;
+        this.setState({visibleColumns: this.visibleColumnsArrayOf(value)});
+        window.dispatchEvent(new Event('resize'));
+        this.scrollToRow(index);
+    };
+
+    visibleColumnsArrayOf = (value) => {
+        const result = [];
+        for (let i=0; i<value.length; i++) result[this.findColumn(value[i].name)] = value[i].visible;
+        return result;
+    };
+
+    findColumn = (name) => {
+        const columns = this.selectorColumns();
+        for (let i=0; i<columns.length; i++) {
+            if (columns[i].value === name) return columns[i].index;
+        }
+        return -1;
+    };
+
+    _visibleColumns = (visibleList) => {
+        const columns = this.selectorColumns();
+        const result = [];
+        for (let i=0; i<columns.length; i++) {
+            const visible = visibleList[columns[i].index];
+            result.push({name: columns[i].value, visible: visible != null ? visible : true});
+        }
+        return result;
+    };
+
+    clearContainer = (params) => {
+        if (super.clearContainer) super.clearContainer(params);
+        this.lastLoadedPage = [];
+        this.lastRow = 0;
+        this.setState({rows:[], addressList: [], rowIndexList: []});
+    };
+
+}
+
+export default withStyles(styles, { withTheme: true })(withSnackbar(Grid));
+DisplayFactory.register("Grid", withStyles(styles, { withTheme: true })(withSnackbar(Grid)));

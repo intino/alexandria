@@ -89,13 +89,13 @@ public abstract class UIRenderer extends Renderer {
 		return !element.i$(conceptOf(io.intino.konos.model.Template.class)) &&
 				!element.i$(conceptOf(CatalogComponents.Table.class)) &&
 				!element.i$(conceptOf(CatalogComponents.DynamicTable.class)) &&
-				!element.i$(conceptOf(CatalogComponents.Collection.Mold.Item.class)) &&
+				!element.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class)) &&
 				!element.i$(conceptOf(HelperComponents.Row.class));
 	}
 
 	protected boolean hasConcreteNotifier(PassiveView element) {
 		if (element.i$(conceptOf(Display.Accessible.class))) return true;
-		return !element.i$(conceptOf(CatalogComponents.Collection.Mold.Item.class)) &&
+		return !element.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class)) &&
 				!element.i$(conceptOf(CatalogComponents.Table.class)) &&
 				!element.i$(conceptOf(CatalogComponents.DynamicTable.class)) &&
 				!element.i$(conceptOf(HelperComponents.Row.class)) &&
@@ -104,7 +104,7 @@ public abstract class UIRenderer extends Renderer {
 
 	protected boolean hasConcreteRequester(PassiveView element) {
 		if (element.i$(conceptOf(Display.Accessible.class))) return true;
-		return !element.i$(conceptOf(CatalogComponents.Collection.Mold.Item.class)) &&
+		return !element.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class)) &&
 				!element.i$(conceptOf(CatalogComponents.Table.class)) &&
 				!element.i$(conceptOf(CatalogComponents.DynamicTable.class)) &&
 				!element.i$(conceptOf(HelperComponents.Row.class)) &&
@@ -121,7 +121,7 @@ public abstract class UIRenderer extends Renderer {
 
 	private String passiveViewName(Layer element) {
 		if (element.i$(conceptOf(io.intino.konos.model.Template.class))) return "Template";
-		if (element.i$(conceptOf(CatalogComponents.Collection.Mold.Item.class))) return "Item";
+		if (element.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class))) return "Item";
 		if (element.i$(conceptOf(HelperComponents.Row.class))) return "Row";
 		if (element.i$(conceptOf(CatalogComponents.Table.class))) return "Table";
 		if (element.i$(conceptOf(CatalogComponents.DynamicTable.class))) return "DynamicTable";
@@ -130,7 +130,7 @@ public abstract class UIRenderer extends Renderer {
 
 	protected String requesterTypeOf(Display display) {
 		if (display.i$(conceptOf(io.intino.konos.model.Template.class))) return "io.intino.alexandria.ui.displays.requesters.Template";
-		if (display.i$(conceptOf(CatalogComponents.Collection.Mold.Item.class))) return "io.intino.alexandria.ui.displays.requesters.Item";
+		if (display.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class))) return "io.intino.alexandria.ui.displays.requesters.Item";
 		if (display.i$(conceptOf(HelperComponents.Row.class))) return "io.intino.alexandria.ui.displays.requesters.Row";
 		if (display.i$(conceptOf(CatalogComponents.Table.class))) return "io.intino.alexandria.ui.displays.requesters.Table";
 		if (display.i$(conceptOf(CatalogComponents.DynamicTable.class))) return "io.intino.alexandria.ui.displays.requesters.DynamicTable";
@@ -142,7 +142,7 @@ public abstract class UIRenderer extends Renderer {
 		result.add("name", element.name$());
 		if (element.i$(conceptOf(io.intino.konos.model.Template.class))) result.add("template");
 		if (element.i$(conceptOf(HelperComponents.Row.class))) result.add("row");
-		if (element.i$(conceptOf(CatalogComponents.Collection.Mold.Item.class))) result.add("item");
+		if (element.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class))) result.add("item");
 		if (element.i$(conceptOf(CatalogComponents.Table.class))) result.add("table");
 		if (element.i$(conceptOf(CatalogComponents.DynamicTable.class))) result.add("dynamictable");
 		if (!accessible && element.isAccessible()) result.add("accessible");

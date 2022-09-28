@@ -11,37 +11,52 @@ Concept CatalogComponents
 		var integer pageSize = 20
 		var boolean scrollingMark = true
 
-		Concept:{1..*} Mold
-			var word:{Never Always IfMobile IfNotMobile} hidden = Never
-			Concept:{0..1} Heading extends Component
-				has Component
-			Concept:{1..1} Item extends Component > has Component
-				var integer:{px} height
-				var integer:{%} width = -1%
 		Aspect Selectable
         	var boolean multiple = false
-		sub Magazine
-		sub List
-			Aspect Navigable
-		sub Table
-			Aspect Navigable
-		sub Map
-			var string icon = empty
-			var word[]:{ Zoom MapType Scale StreetView Rotate Fullscreen } controls = Zoom MapType Scale StreetView Rotate Fullscreen
 
-			Concept:{0..1} Center
-				var double latitude
-				var double longitude
+		sub Moldable
 
-			Concept:{1..1} Zoom
-				var integer defaultZoom
-				var integer min
-				var integer max
-			Aspect Cluster
-            Aspect Kml
-            	var string layer
-            Aspect Heatmap
-		sub DynamicTable
+			Concept:{1..*} Mold
+				var word:{Never Always IfMobile IfNotMobile} hidden = Never
+				Concept:{0..1} Heading extends Component
+					has Component
+				Concept:{1..1} Item extends Component > has Component
+					var integer:{px} height
+					var integer:{%} width = -1%
+
+			sub Magazine
+			sub List
+				Aspect Navigable
+			sub Table
+				Aspect Navigable
+			sub Map
+				var string icon = empty
+				var word[]:{ Zoom MapType Scale StreetView Rotate Fullscreen } controls = Zoom MapType Scale StreetView Rotate Fullscreen
+
+				Concept:{0..1} Center
+					var double latitude
+					var double longitude
+
+				Concept:{1..1} Zoom
+					var integer defaultZoom
+					var integer min
+					var integer max
+				Aspect Cluster
+				Aspect Kml
+					var string layer
+				Aspect Heatmap
+			sub DynamicTable
+
+		sub Grid
+			Concept:Named:{1..*} Column extends Component
+				var string label
+				var word:{Text Number Date} type
+				var boolean sortable = false
+				var integer:{px} width = -1px
+				var boolean fixed = false
+				var string pattern = empty
+				Aspect Clickable
+				Aspect Addressable
 
 	Concept:Named GroupingToolbar extends Component
 		var Grouping[] groupings
