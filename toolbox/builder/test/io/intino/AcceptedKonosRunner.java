@@ -111,6 +111,11 @@ public class AcceptedKonosRunner {
 	}
 
 	@Test
+	public void accuee() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/accuee.txt")});
+	}
+
+	@Test
 	public void tables() {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/tables/ideaKonosToCompile.txt")});
 	}
