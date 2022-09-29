@@ -33,7 +33,8 @@ public class AgendaServiceTemplate extends Template {
 			rule().condition((trigger("createclass"))).output(literal("public class ")).output(mark("name", "firstUpperCase")).output(literal(" {\n\tprivate final ")).output(mark("name", "firstUpperCase")).output(literal("Schema schema;\n\n\tpublic ")).output(mark("name", "firstUpperCase")).output(literal("(")).output(mark("parameter", "signature").multiple(", ")).output(literal(") {\n\t\tschema = new ")).output(mark("name", "firstUpperCase")).output(literal("Schema()")).output(expression().output(literal(".")).output(mark("parameter", "fluid").multiple("."))).output(literal(";\n\t}\n\n\t")).output(mark("option", "optionCreate").multiple("\n")).output(literal("\n\n\tpublic ")).output(mark("name", "firstUpperCase")).output(literal(" timeout(Instant timeout) {\n\t\tschema.timeout(new ")).output(mark("name", "firstUpperCase")).output(literal("Schema.Timeout(timeout.truncatedTo(ChronoUnit.MINUTES)));\n\t\treturn this;\n\t}\n\n\tpublic void save() {\n\t\tregister")).output(mark("name", "firstUpperCase")).output(literal("(schema);\n\t}\n}")),
 			rule().condition((type("schemaImport"))).output(literal("import ")).output(mark("package")).output(literal(".schemas.*;")),
 			rule().condition((type("archetype")), (trigger("customizedirectory"))).output(literal("new ")).output(mark("package")).output(literal(".Archetype(box.configuration().home()).")).output(mark("path")).output(literal(".root()")),
-			rule().condition((trigger("customizedirectory"))).output(literal("new java.io.File(\"")).output(mark("path")).output(literal("\")"))
+			rule().condition((type("custom")), (trigger("customizedirectory"))).output(literal("new File(box.configuration().get(\"")).output(mark("path", "customParameter")).output(literal("\"))")),
+			rule().condition((trigger("customizedirectory"))).output(literal("new java.io.File(\"")).output(mark("path", "customParameter")).output(literal("\")"))
 		);
 	}
 }

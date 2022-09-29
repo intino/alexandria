@@ -321,6 +321,10 @@ def type(archetype) trigger(customizeDirectory)
 	new $package.Archetype(box.configuration().home()).$path.root()
 end
 
+def type(custom) trigger(customizeDirectory)
+	new File(box.configuration().get("$path+customParameter"))
+end
+
 def trigger(customizeDirectory)
-	new java.io.File("$path")
+	new java.io.File("$path+customParameter")
 end
