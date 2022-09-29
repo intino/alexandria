@@ -152,6 +152,7 @@ def trigger(register)
 
 	private static void register($name+firstUpperCase~Schema schema, File file) {
 		$option+putOption...[$NL]
+		sources.put(schema.timeout().id, file);
 		timeouts.put("$name+firstUpperCase#" + schema.timeout().id, schema.timeout().on());
 	}
 end
