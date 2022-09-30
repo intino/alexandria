@@ -6,11 +6,9 @@ import io.intino.alexandria.ui.displays.components.Grid;
 import io.intino.alexandria.ui.model.datasource.Filter;
 import io.intino.alexandria.ui.model.datasource.GridDatasource;
 import io.intino.alexandria.ui.model.datasource.Group;
-import io.intino.alexandria.ui.model.datasource.grid.GridColumn;
-import io.intino.alexandria.ui.model.datasource.grid.GridGroupBy;
-import io.intino.alexandria.ui.model.datasource.grid.GridItem;
-import io.intino.alexandria.ui.model.datasource.grid.GridValue;
+import io.intino.alexandria.ui.model.datasource.grid.*;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -65,18 +63,29 @@ public class GridExamplesMold extends AbstractGridExamplesMold<UiFrameworkBox> {
         }
 
         @Override
+        public List<String> columnGroups(GridColumn<GridItem> column, String mode, String condition, List<Filter> filters) {
+            if (mode == null || mode.equals("Distinct values")) return List.of("Lorem ipsum dolor sit amet lorem ipsum", "ipsum dolor sit amet lorem ipsum", "dolor sit amet lorem ipsum", "sit amet lorem ipsum");
+            return List.of("lorem", "ipsum", "dolor", "sit");
+        }
+
+        @Override
+        public List<GridColumnMode> columnModes() {
+            return List.of(
+                new GridColumnMode("Distinct values"),
+                new GridColumnMode("First letter", GridColumn.Type.Link, GridColumn.Type.Text),
+                new GridColumnMode("Year", GridColumn.Type.Date),
+                new GridColumnMode("Year and month", GridColumn.Type.Date)
+            );
+        }
+
+        @Override
         public long itemCount(String condition, List<Filter> filters) {
             return load(condition, filters).size();
         }
 
         @Override
         public List<Group> groups(String key) {
-            return new ArrayList<>() {{
-                add(new Group().name("Lorem ipsum dolor sit amet lorem ipsum").label("Lorem ipsum dolor sit amet lorem ipsum"));
-                add(new Group().name("ipsum dolor sit amet lorem ipsum").label("Lorem ipsum dolor sit amet lorem ipsum"));
-                add(new Group().name("dolor sit amet lorem ipsum").label("Lorem ipsum dolor sit amet lorem ipsum"));
-                add(new Group().name("sit amet lorem ipsum").label("Lorem ipsum dolor sit amet lorem ipsum"));
-            }};
+            return Collections.emptyList();
         }
 
         private List<GridItem> load(String condition, List<Filter> filters) {
@@ -84,7 +93,7 @@ public class GridExamplesMold extends AbstractGridExamplesMold<UiFrameworkBox> {
             for (int i=0; i<RowCount; i++) {
                 GridItem item = new GridItem();
                 for (int j=0; j<ColumnCount; j++) {
-                    item.add(i + "." + j);
+                    item.add(j == 2 ? Instant.now() : i + "." + j);
                 }
                 result.add(item);
             }

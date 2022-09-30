@@ -241,6 +241,13 @@ Schema DigitalSignatureFailure
 Schema GridInfo
 	Attribute name as Text
 	Attribute columns as Object(GridColumn) List
+	Attribute modes as Object(GridColumnMode) List
+
+Schema GridState
+	Attribute sort as Object(GridSortInfo)
+	Attribute groupBy as Object(GridGroupByInfo)
+	Attribute visibleColumns as Object(GridColumn) List
+
 
 Schema GridColumn
 	Attribute name as Text
@@ -251,6 +258,10 @@ Schema GridColumn
 	Attribute visible as Bool
 	Attribute width as Integer
 	Attribute type as Word("Link" "Text" "Number" "Date")
+
+Schema GridColumnMode
+	Attribute name as Text
+	Attribute acceptedTypes as Word("Link" "Text" "Number" "Date") List
 
 Schema GridRow
 	Attribute cells as Object(GridCell) List
@@ -263,9 +274,15 @@ Schema GridSortInfo
 	Attribute column as Text
 	Attribute mode as Text
 
+Schema GridGroupByOptionsInfo
+	Attribute column as Text
+	Attribute mode as Text
+
 Schema GridGroupByInfo
 	Attribute column as Text
 	Attribute group as Text
+	Attribute groupIndex as Integer
+	Attribute mode as Text
 
 Schema GridCellInfo
 	Attribute column as Text

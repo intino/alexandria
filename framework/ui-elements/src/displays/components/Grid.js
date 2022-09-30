@@ -29,7 +29,7 @@ const styles = theme => ({
         '&:hover' : { textDecoration: 'none' },
     },
     columnSelector : {
-        width: '300px',
+        width: '275px',
         marginLeft: '5px',
     },
     columnsAction : {
@@ -39,8 +39,6 @@ const styles = theme => ({
         fontSize: '9pt',
         cursor: 'pointer',
         display: 'inline-block',
-    },
-    groupByOptions : {
     },
 });
 
@@ -57,6 +55,7 @@ class Grid extends AbstractGrid {
 		    ...this.state,
 		    name: this.props.id,
 		    columns: [],
+		    modes: [],
 		    selectedIndexes: [],
 		    rows: [],
 		    addressList: [],
@@ -64,6 +63,7 @@ class Grid extends AbstractGrid {
 		    groupBy: null,
 		    groupByOptions: [],
 		    groupByOption: null,
+		    groupByMode: null,
 		    openColumnsDialog: false,
 		    visibleColumns: [],
 		};
@@ -115,6 +115,7 @@ class Grid extends AbstractGrid {
                         <div className="layout horizontal flex center">
                             <div><a className={classes.columnsAction} onClick={this.handleOpenColumnsDialog.bind(this)}>{this.translate("Select columns...")}</a></div>
                             {this.renderGroupBySelector()}
+                            {this.renderGroupByModes()}
                             {this.renderGroupByOptions()}
                             {this.renderColumnsDialog()}
                         </div>
@@ -146,13 +147,27 @@ class Grid extends AbstractGrid {
         );
     };
 
+    renderGroupByModes = () => {
+        if (this.state.groupBy == null || this.state.groupByOptions.length == 0 || this.state.modes.length == 0) return (<React.Fragment/>);
+        const acceptedType = this.selectorColumns()[this.findColumn(this.state.groupBy.name)].type;
+        const modes = this.state.modes.filter(m => m.acceptedTypes.indexOf(acceptedType) != -1).map((mode, idx) => { return { value: mode.name, label: mode.name, index: idx }});
+        const styles = { ...SelectorComboBoxStyles, ...SelectorComboBoxTextViewStyles, ...GridSelectorStyles };
+        const { classes } = this.props;
+        return (
+            <Select className={classes.columnSelector} isClearable={false}
+                placeholder={this.translate("Select group by mode")} options={modes}
+                value={this.state.groupByMode} onChange={this.handleSelectGroupByMode.bind(this)}
+                styles={styles}/>
+        );
+    };
+
     renderGroupByOptions = () => {
         if (this.state.groupBy == null) return (<React.Fragment/>);
         const options = this.state.groupByOptions.map((option, idx) => { return { value: option, label: option, index: idx }});
         const styles = { ...SelectorComboBoxStyles, ...SelectorComboBoxTextViewStyles, ...GridSelectorStyles };
         const { classes } = this.props;
         return (
-            <div className={classes.groupByOptions}>
+            <div>
                 {options.length == 0 && <div style={{marginLeft:'10px'}}>{this.translate("No groups available")}</div>}
                 {options.length > 0 &&
                     <Select className={classes.columnSelector} isClearable={true}
@@ -199,18 +214,33 @@ class Grid extends AbstractGrid {
     handleToggleColumn = (index) => {
         if (this.state.visibleColumns[index] == null) this.state.visibleColumns[index] = true;
         this.state.visibleColumns[index] = !this.state.visibleColumns[index];
+        console.log(this.state.name);
         this.updateCookie(this.state.visibleColumns, this.state.name);
         this.requester.updateVisibleColumns(this._visibleColumns(this.state.visibleColumns));
     };
 
     handleSelectGroupBy = (groupBy) => {
-        this.setState({ groupBy : groupBy != null ? { name: groupBy.value, label: groupBy.label } : null, groupByOption: null });
-        this.requester.updateGroupByOptions(groupBy != null ? groupBy.value : null);
+        const acceptedType = groupBy != null ? this.selectorColumns()[this.findColumn(groupBy.value)].type : null;
+        const modes = this.state.modes.filter(m => m.acceptedTypes.indexOf(acceptedType) != -1).map((mode, idx) => { return { value: mode.name, label: mode.name, index: idx }});
+        const modeNames = [];
+        modes.forEach((mode, idx) => modeNames[mode.value] = mode.value);
+        const mode = this.state.groupByMode != null && modeNames[this.state.groupByMode.name] != null ? this.state.groupByMode : (modes.length > 0 ? { name: modes[0].value, label: modes[0].label } : null);
+        this.setState({ groupBy : groupBy != null ? { name: groupBy.value, label: groupBy.label } : null, groupByMode: mode, groupByOption: null });
+        this.requester.updateGroupByOptions({ column: groupBy != null ? groupBy.value : null, mode: mode != null ? mode.name : null });
+    };
+
+    handleSelectGroupByMode = (mode) => {
+        this.setState({groupByMode: mode != null ? { name: mode.value, label: mode.label } : null, groupByOption: null});
+        let modeName = mode != null ? mode.value : null;
+        this.requester.updateGroupByOptions({ column: this.state.groupBy != null ? this.state.groupBy.name : null, mode: modeName });
     };
 
     handleSelectGroupByOption = (option) => {
-        this.setState({groupByOption: option != null ? { name: option.value, label: option.label } : null});
-        this.requester.groupBy({ column: this.state.groupBy.name, group: option != null ? option.value : null });
+        this.setState({groupByOption: option != null ? { name: option.value, label: option.label, index: option.index } : null});
+        let group = option != null ? option.value : null;
+        let groupIndex = option != null ? option.index : null;
+        let mode = this.state.groupByMode != null ? this.state.groupByMode.name : null;
+        this.requester.groupBy({ column: this.state.groupBy.name, group: group, groupIndex: groupIndex, mode: mode });
     };
 
     columns = () => {
@@ -229,6 +259,7 @@ class Grid extends AbstractGrid {
         return this.state.columns.map((column, idx) => ({
             value: column.name,
             label: column.label,
+            type: column.type,
             index: idx
         }));
     };
@@ -322,7 +353,12 @@ class Grid extends AbstractGrid {
     };
 
 	refreshInfo = (info) => {
-	    this.setState({columns: info.columns, name: info.name, visibleColumns: this.getCookie(info.name) ? this.getCookie(info.name) : this.state.visibleColumns});
+	    this.setState({
+	        columns: info.columns,
+	        modes: info.modes,
+	        name: info.name,
+	        visibleColumns: this.getCookie(info.name) ? this.getCookie(info.name) : this.state.visibleColumns
+        });
 	};
 
 	refreshItemCount = (itemCount) => {

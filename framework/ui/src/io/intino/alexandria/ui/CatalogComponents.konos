@@ -54,7 +54,7 @@ Component grid as ExtensionOf(pageCollection)
 	Notification addRow as Object(GridRow)
 	Notification addRows as Object(GridRow) List
 	Request sort as Object(GridSortInfo)
-	Request updateGroupByOptions as Text
+	Request updateGroupByOptions as Object(GridGroupByOptionsInfo)
 	Request groupBy as Object(GridGroupByInfo)
 	Request cellClick as Object(GridCellInfo)
 	Request updateVisibleColumns as Object(GridColumn) List
