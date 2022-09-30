@@ -1,14 +1,16 @@
 package io.intino.alexandria.ui.model.datasource.grid;
 
 public class GridGroupBy {
-	private String column;
+	private GridColumn column;
 	private String group;
+	private int groupIndex;
+	private String mode;
 
-	public String column() {
+	public GridColumn column() {
 		return column;
 	}
 
-	public GridGroupBy column(String column) {
+	public GridGroupBy column(GridColumn column) {
 		this.column = column;
 		return this;
 	}
@@ -19,6 +21,24 @@ public class GridGroupBy {
 
 	public GridGroupBy group(String group) {
 		this.group = group;
+		return this;
+	}
+
+	public int groupIndex() {
+		return groupIndex;
+	}
+
+	public GridGroupBy groupIndex(int groupIndex) {
+		this.groupIndex = groupIndex;
+		return this;
+	}
+
+	public String mode() {
+		return mode;
+	}
+
+	public GridGroupBy mode(String mode) {
+		this.mode = mode;
 		return this;
 	}
 }

@@ -13,7 +13,7 @@ Template(layout=Vertical, spacing=DP8) gridExamplesMold
 				Grid(itemClass="io.intino.alexandria.ui.model.datasource.grid.GridItem", noItemsMessage="No elements") grid as Selectable
 					Column(label="Columna 1", type=Text, sortable=true) columna1 as Clickable Addressable(UiElements.widgets)
 					Column(label="Columna 2", type=Text, sortable=true) columna2
-					Column(label="Columna 3", type=Text) columna3
+					Column(label="Columna 3", type=Date) columna3
 					Column(label="Columna 4", type=Text) columna4
 					Column(label="Columna 5", type=Text) columna5
 					Column(label="Columna 6", type=Text) columna6

@@ -151,7 +151,8 @@ def trigger(register)
 	}
 
 	private static void register($name+firstUpperCase~Schema schema, File file) {
-		$option+putOption...[$NL]
+		[$option+putOption...[$NL]]
+		sources.put(schema.timeout().id, file);
 		timeouts.put("$name+firstUpperCase#" + schema.timeout().id, schema.timeout().on());
 	}
 end
@@ -181,6 +182,9 @@ def trigger(private)
 			final File file = sources.remove(i);
 			if (file != null && file.exists()) file.delete();
 		});
+		String id = future.schema().timeout().id;
+		final File file = sources.remove(id);
+		if (file != null && file.exists()) file.delete();
 	}
 
 	private Collection<File> $name+firstLowerCase~Files() {
@@ -215,12 +219,13 @@ def type(future) trigger(execute)
 		if (file == null) return;
 		final $name+firstUpperCase future = load$name+firstUpperCase(file);
 		final String option = future.uri().option(id);
-		if (option != null) execute(future, option);
+		execute(future, option);
 	}
 
 	private void execute($name+firstUpperCase future, String option, String... params) {
 		[$option+ifOption...[$NL~else ]]
-		[$hasOption+else ]future.timeout();
+		[$hasOption+else ]
+		future.timeout();
 		clean(future);
 	}
 end
@@ -321,6 +326,10 @@ def type(archetype) trigger(customizeDirectory)
 	new $package.Archetype(box.configuration().home()).$path.root()
 end
 
+def type(custom) trigger(customizeDirectory)
+	new File(box.configuration().get("$path+customParameter"))
+end
+
 def trigger(customizeDirectory)
-	new java.io.File("$path")
+	new java.io.File("$path+customParameter")
 end

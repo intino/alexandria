@@ -13,7 +13,6 @@ import io.intino.alexandria.ui.displays.events.collection.SortColumnListener;
 import io.intino.alexandria.ui.displays.notifiers.GridNotifier;
 import io.intino.alexandria.ui.model.Datasource;
 import io.intino.alexandria.ui.model.datasource.GridDatasource;
-import io.intino.alexandria.ui.model.datasource.Group;
 import io.intino.alexandria.ui.model.datasource.grid.GridGroupBy;
 import io.intino.alexandria.ui.model.datasource.grid.GridItem;
 import io.intino.alexandria.ui.model.datasource.grid.GridValue;
@@ -43,14 +42,20 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <D extends Datasource> void source(D source) {
-        notifier.refreshInfo(new GridInfo().name(((GridDatasource<?>)source).name()).columns(schemaOf(columns)));
-        source(source, new GridCollectionBehavior(this));
+        GridDatasource<Item> gridDatasource = (GridDatasource<Item>) source;
+        notifier.refreshInfo(new GridInfo().name(((GridDatasource<?>)source).name()).columns(schemaOf(columns)).modes(schemaModesOf(gridDatasource.columnModes())));
+        source(source, new GridCollectionBehavior<Item>(this));
     }
 
     public void itemResolver(ItemResolver<Item> resolver) {
         this.itemResolver = resolver;
+    }
+
+    public io.intino.alexandria.ui.model.datasource.grid.GridColumn<Item> column(String name) {
+        return columns().stream().filter(c -> c.name().equals(name)).findFirst().orElse(null);
     }
 
     public List<io.intino.alexandria.ui.model.datasource.grid.GridColumn<Item>> columns() {
@@ -80,19 +85,30 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
     public void sort(GridSortInfo info) {
         if (sortColumnListener == null) return;
         SortColumnEvent.Mode mode = info.mode() != null ? SortColumnEvent.Mode.from(info.mode()) : SortColumnEvent.Mode.None;
-        sortColumnListener.accept(new SortColumnEvent(this, info.column(), mode));
+        sortColumnListener.accept(new SortColumnEvent(this, column(info.column()), mode));
     }
 
     @SuppressWarnings("unchecked")
-    public void updateGroupByOptions(String column) {
-        GridCollectionBehavior behavior = behavior();
-        List<Group> groupByOptions = column != null ? source().groups(column) : Collections.emptyList();
-        notifier.refreshGroupByOptions(groupByOptions.stream().map(Group::name).collect(Collectors.toList()));
+    public void updateGroupByOptions(GridGroupByOptionsInfo info) {
+        GridCollectionBehavior<Item> behavior = behavior();
+        refreshGroupByOptions(info);
         if (behavior.groupBy() != null) behavior.groupBy(null);
     }
 
     public void groupBy(GridGroupByInfo info) {
-        ((GridCollectionBehavior)behavior()).groupBy(info.group() != null ? new GridGroupBy().column(info.column()).group(info.group()) : null);
+        GridCollectionBehavior<Item> behavior = behavior();
+        behavior.groupBy(info.group() != null ? groupByOf(info) : null);
+    }
+
+    private void refreshGroupByOptions(GridGroupByOptionsInfo info) {
+        GridCollectionBehavior<Item> behavior = behavior();
+        GridDatasource<Item> source = source();
+        List<String> groupByOptions = info.column() != null ? source.columnGroups(column(info.column()), info.mode(), behavior.condition(), behavior.filters()) : Collections.emptyList();
+        notifier.refreshGroupByOptions(groupByOptions);
+    }
+
+    private GridGroupBy groupByOf(GridGroupByInfo info) {
+        return new GridGroupBy().column(column(info.column())).group(info.group()).groupIndex(info.groupIndex()).mode(info.mode());
     }
 
     public void cellClick(GridCellInfo info) {
@@ -120,6 +136,15 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
         result.width(column.width());
         result.visible(column.visible());
         return result;
+    }
+
+    private List<GridColumnMode> schemaModesOf(List<io.intino.alexandria.ui.model.datasource.grid.GridColumnMode> columnModes) {
+        return columnModes.stream().map(this::schemaOf).collect(toList());
+    }
+
+    private GridColumnMode schemaOf(io.intino.alexandria.ui.model.datasource.grid.GridColumnMode columnMode) {
+        List<GridColumnMode.AcceptedTypes> acceptedTypes = columnMode.acceptedTypes().stream().map(a -> GridColumnMode.AcceptedTypes.valueOf(a.name())).collect(toList());
+        return new GridColumnMode().name(columnMode.name()).acceptedTypes(acceptedTypes);
     }
 
     @Override
@@ -195,4 +220,5 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
         GridItem build(Item item);
         String address(io.intino.alexandria.ui.model.datasource.grid.GridColumn<Item> column, Item item);
     }
+
 }

@@ -41,11 +41,15 @@ public class Commons {
 
 	public static Frame fileFrame(String directory, String packageName, String archetypeQn) {
 		if (directory.startsWith(".archetype")) {
-			String boxPackage  = archetypeQn.replace(".Archetype", "");
+			String boxPackage = archetypeQn.replace(".Archetype", "");
 			String archetypePath = Commons.archetypePath(directory);
 			return new FrameBuilder("archetype").add("package", boxPackage).add("path", archetypePath).toFrame();
 		}
-		return new FrameBuilder("file").add("path", directory).toFrame();
+		return new FrameBuilder("file").add(isCustom(directory) ? "custom" : "standard").add("path", directory).toFrame();
+	}
+
+	private static boolean isCustom(String value) {
+		return value != null && value.startsWith("{");
 	}
 
 	public static void write(File file, String text) {
