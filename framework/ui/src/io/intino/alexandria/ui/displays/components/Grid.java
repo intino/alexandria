@@ -48,6 +48,7 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
         GridDatasource<Item> gridDatasource = (GridDatasource<Item>) source;
         notifier.refreshInfo(new GridInfo().name(((GridDatasource<?>)source).name()).columns(schemaOf(columns)).modes(schemaModesOf(gridDatasource.columnModes())));
         source(source, new GridCollectionBehavior<Item>(this));
+        notifier.loadState(((GridDatasource<?>) source).name());
     }
 
     public void itemResolver(ItemResolver<Item> resolver) {
@@ -85,7 +86,18 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
     public void sort(GridSortInfo info) {
         if (sortColumnListener == null) return;
         SortColumnEvent.Mode mode = info.mode() != null ? SortColumnEvent.Mode.from(info.mode()) : SortColumnEvent.Mode.None;
+        notifier.refreshSort(info);
         sortColumnListener.accept(new SortColumnEvent(this, column(info.column()), mode));
+    }
+
+    public void updateState(GridState state) {
+        if (state == null) return;
+        if (!state.visibleColumns().isEmpty()) updateVisibleColumns(state.visibleColumns());
+        if (state.sort() != null && SortColumnEvent.Mode.from(state.sort().mode()) != SortColumnEvent.Mode.None) sort(state.sort());
+        if (state.groupBy() != null) {
+            updateGroupByOptions(new GridGroupByOptionsInfo().column(state.groupBy().column()).mode(state.groupBy().mode()));
+            groupBy(state.groupBy());
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -97,6 +109,7 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
 
     public void groupBy(GridGroupByInfo info) {
         GridCollectionBehavior<Item> behavior = behavior();
+        notifier.refreshGroupBy(info);
         behavior.groupBy(info.group() != null ? groupByOf(info) : null);
     }
 

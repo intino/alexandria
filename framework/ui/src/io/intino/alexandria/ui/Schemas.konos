@@ -248,7 +248,6 @@ Schema GridState
 	Attribute groupBy as Object(GridGroupByInfo)
 	Attribute visibleColumns as Object(GridColumn) List
 
-
 Schema GridColumn
 	Attribute name as Text
 	Attribute label as Text

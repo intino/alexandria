@@ -60,6 +60,8 @@ class Grid extends AbstractGrid {
 		    rows: [],
 		    addressList: [],
 		    rowIndexList: [],
+		    sortColumn: null,
+		    sortDirection: null,
 		    groupBy: null,
 		    groupByOptions: [],
 		    groupByOption: null,
@@ -75,6 +77,7 @@ class Grid extends AbstractGrid {
             <div style={{height:'100%',width:'100%',position:'relative'}}>
                 {this.state.loading && this.renderLoading()}
                 {this.renderGrid()}
+                {this.renderCookieConsent()}
             </div>
         );
     };
@@ -93,6 +96,7 @@ class Grid extends AbstractGrid {
     renderGrid = () => {
         const showCheckbox = this.props.selection != null && this.allowMultiSelection();
         const { classes } = this.props;
+        const selectorColumnsDisabled = this.selectorColumns().length <= 0;
         return (
             <DataGrid
                 ref={(g) => {this.grid = g;}}
@@ -109,11 +113,13 @@ class Grid extends AbstractGrid {
                     onRowsDeselected: this.handleRowsDeselected.bind(this),
                     selectBy: { indexes: this.state.selectedIndexes }
                 }}
-                onGridSort={(sortColumn, sortDirection) => { this.requester.sort({column: sortColumn, mode: sortDirection}) }}
+                sortColumn={this.state.sortColumn}
+                sortDirection={this.state.sortDirection}
+                onGridSort={this.sortColumns.bind(this)}
                 toolbar={
                     <ToolsPanel.AdvancedToolbar>
                         <div className="layout horizontal flex center">
-                            <div><a className={classes.columnsAction} onClick={this.handleOpenColumnsDialog.bind(this)}>{this.translate("Select columns...")}</a></div>
+                            <div><a className={classes.columnsAction} onClick={this.handleOpenColumnsDialog.bind(this)} disabled={selectorColumnsDisabled}>{this.translate("Select columns...")}</a></div>
                             {this.renderGroupBySelector()}
                             {this.renderGroupByModes()}
                             {this.renderGroupByOptions()}
@@ -123,6 +129,13 @@ class Grid extends AbstractGrid {
                 }
             />
         );
+    };
+
+    sortColumns = (sortColumn, sortDirection) => {
+        const sort = {column: sortColumn, mode: sortDirection};
+        this.setState({ sortColumn : sortColumn, sortDirection: sortDirection });
+        this.saveState("sort", sort);
+        this.requester.sort(sort);
     };
 
     refreshAllowMultiSelection = (value) => {
@@ -214,9 +227,9 @@ class Grid extends AbstractGrid {
     handleToggleColumn = (index) => {
         if (this.state.visibleColumns[index] == null) this.state.visibleColumns[index] = true;
         this.state.visibleColumns[index] = !this.state.visibleColumns[index];
-        console.log(this.state.name);
-        this.updateCookie(this.state.visibleColumns, this.state.name);
-        this.requester.updateVisibleColumns(this._visibleColumns(this.state.visibleColumns));
+        const visibleColumns = this._visibleColumns(this.state.visibleColumns);
+        this.saveState("visibleColumns", visibleColumns);
+        this.requester.updateVisibleColumns(visibleColumns);
     };
 
     handleSelectGroupBy = (groupBy) => {
@@ -225,6 +238,7 @@ class Grid extends AbstractGrid {
         const modeNames = [];
         modes.forEach((mode, idx) => modeNames[mode.value] = mode.value);
         const mode = this.state.groupByMode != null && modeNames[this.state.groupByMode.name] != null ? this.state.groupByMode : (modes.length > 0 ? { name: modes[0].value, label: modes[0].label } : null);
+        this.saveState("groupBy", null);
         this.setState({ groupBy : groupBy != null ? { name: groupBy.value, label: groupBy.label } : null, groupByMode: mode, groupByOption: null });
         this.requester.updateGroupByOptions({ column: groupBy != null ? groupBy.value : null, mode: mode != null ? mode.name : null });
     };
@@ -232,6 +246,7 @@ class Grid extends AbstractGrid {
     handleSelectGroupByMode = (mode) => {
         this.setState({groupByMode: mode != null ? { name: mode.value, label: mode.label } : null, groupByOption: null});
         let modeName = mode != null ? mode.value : null;
+        this.saveState("groupBy", { column: this.state.groupBy.name, group: null, mode: modeName, group: null, groupIndex: null });
         this.requester.updateGroupByOptions({ column: this.state.groupBy != null ? this.state.groupBy.name : null, mode: modeName });
     };
 
@@ -240,7 +255,9 @@ class Grid extends AbstractGrid {
         let group = option != null ? option.value : null;
         let groupIndex = option != null ? option.index : null;
         let mode = this.state.groupByMode != null ? this.state.groupByMode.name : null;
-        this.requester.groupBy({ column: this.state.groupBy.name, group: group, groupIndex: groupIndex, mode: mode });
+        const groupBy = { column: this.state.groupBy.name, group: group, groupIndex: groupIndex, mode: mode };
+        this.saveState("groupBy", groupBy);
+        this.requester.groupBy(groupBy);
     };
 
     columns = () => {
@@ -310,10 +327,6 @@ class Grid extends AbstractGrid {
         this.addRows([row]);
     };
 
-    refreshGroupByOptions = (options) => {
-        this.setState({groupByOptions: options});
-    };
-
     addRows = (newRows) => {
         const columns = this.state.columns;
         let rows = this.state.rows;
@@ -357,8 +370,25 @@ class Grid extends AbstractGrid {
 	        columns: info.columns,
 	        modes: info.modes,
 	        name: info.name,
-	        visibleColumns: this.getCookie(info.name) ? this.getCookie(info.name) : this.state.visibleColumns
         });
+	};
+
+	loadState = (stateName) => {
+	    const state = this.getCookie(this.cookieName(stateName));
+	    if (state == null) return;
+	    this.requester.updateState(state);
+	};
+
+	saveState = (property, value) => {
+	    const cookieName = this.cookieName(this.state.name);
+	    let state = this.getCookie(cookieName);
+	    if (state == null) state = {};
+	    state[property] = value;
+        this.updateCookie(state, cookieName);
+	};
+
+	cookieName = (key) => {
+	    return key + "_grid";
 	};
 
 	refreshItemCount = (itemCount) => {
@@ -371,6 +401,24 @@ class Grid extends AbstractGrid {
 
 	handleCloseColumnsDialog = () => {
         this.setState({openColumnsDialog:false});
+    };
+
+    refreshSort = (value) => {
+        if (value != null && this.state.sortColumn != null && this.state.sortColumn == value.column) return;
+        this.grid.handleSort(value.column, value.mode);
+        this.setState({ sortColumn: value.column, sortDirection: value.mode });
+    };
+
+    refreshGroupBy = (value) => {
+        const groupBy = this.selectorColumns()[this.findColumn(value.column)];
+        if (groupBy != null && this.state.groupBy != null && this.state.groupBy.name == groupBy.name) return;
+        const groupByMode = value.mode != null && value.mode !== "" ? { name: value.mode, label: value.mode } : null;
+        const groupByOption = value.group != null && value.group !== "" ? { name: value.group, label: value.group } : null;
+        this.setState({ groupBy: { name: groupBy.value, label: groupBy.label }, groupByMode: groupByMode, groupByOption: groupByOption });
+    };
+
+    refreshGroupByOptions = (options) => {
+        this.setState({groupByOptions: options});
     };
 
     refreshVisibleColumns = (value) => {
