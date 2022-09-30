@@ -50,7 +50,10 @@ Component magazine as ExtensionOf(pageCollection)
 Component grid as ExtensionOf(pageCollection)
 	Notification refreshInfo as Object(GridInfo)
 	Notification refreshVisibleColumns as Object(GridColumn) List
+	Notification refreshSort as Object(GridSortInfo)
+	Notification refreshGroupBy as Object(GridGroupByInfo)
 	Notification refreshGroupByOptions as Text List
+	Notification loadState as Text
 	Notification addRow as Object(GridRow)
 	Notification addRows as Object(GridRow) List
 	Request sort as Object(GridSortInfo)
@@ -58,6 +61,7 @@ Component grid as ExtensionOf(pageCollection)
 	Request groupBy as Object(GridGroupByInfo)
 	Request cellClick as Object(GridCellInfo)
 	Request updateVisibleColumns as Object(GridColumn) List
+	Request updateState as Object(GridState)
 
 Component item
 Component heading

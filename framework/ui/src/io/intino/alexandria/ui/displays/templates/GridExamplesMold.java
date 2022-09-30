@@ -40,7 +40,7 @@ public class GridExamplesMold extends AbstractGridExamplesMold<UiFrameworkBox> {
             String message = "Selected rows: " + selection.stream().map(e1 -> e1.values().get(0).asText()).collect(Collectors.joining(", "));
             notifyUser(message, UserMessage.Type.Info);
         });
-        grid.onSortColumn(e -> notifyUser("Sort by " + e.column() + " with mode " + e.mode().name(), UserMessage.Type.Info));
+        grid.onSortColumn(e -> notifyUser("Sort by " + e.column().label() + " with mode " + e.mode().name(), UserMessage.Type.Info));
         grid.source(new ExampleDatasource());
     }
 
