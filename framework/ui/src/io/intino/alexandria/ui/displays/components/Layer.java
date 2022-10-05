@@ -4,6 +4,7 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.LayerToolbar;
 import io.intino.alexandria.schemas.LayerToolbarButton;
 import io.intino.alexandria.ui.displays.Component;
+import io.intino.alexandria.ui.displays.events.BeforeListener;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.Listener;
 import io.intino.alexandria.ui.displays.notifiers.LayerNotifier;
@@ -17,6 +18,7 @@ public class Layer<DN extends LayerNotifier, B extends Box> extends AbstractLaye
 	private Component<?, ?> template;
 	private String title;
 	private java.util.List<Listener> openListeners = new ArrayList<>();
+	private BeforeListener beforeCloseListener;
 	private java.util.List<Listener> closeListeners = new ArrayList<>();
 	private OpenLayer<?, ?> homeAction;
 	private Consumer<Layer> previousListener;
@@ -70,6 +72,11 @@ public class Layer<DN extends LayerNotifier, B extends Box> extends AbstractLaye
 		return this;
 	}
 
+	public Layer<DN, B> onBeforeClose(BeforeListener listener) {
+		beforeCloseListener = listener;
+		return this;
+	}
+
 	public Layer<DN, B> onClose(Listener listener) {
 		closeListeners.add(listener);
 		return this;
@@ -82,9 +89,15 @@ public class Layer<DN extends LayerNotifier, B extends Box> extends AbstractLaye
 	}
 
 	public void close() {
+		if (!beforeClose()) return;
 		notifier.close();
 		soul().popLayer();
 		notifyClose();
+	}
+
+	private boolean beforeClose() {
+		if (beforeCloseListener == null) return true;
+		return beforeCloseListener.accept( new Event(this));
 	}
 
 	public void home() {
