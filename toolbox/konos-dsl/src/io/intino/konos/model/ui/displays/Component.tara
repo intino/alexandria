@@ -35,6 +35,7 @@ Concept Block extends Component
     	var string splitMobileLabel = "Back"
 	Aspect Absolute
 	Aspect Relative
+	Aspect AutoSize
 	Aspect Paper
     Aspect Badge
     	var integer value = -1
@@ -263,6 +264,8 @@ Facet Relative
 	var double:{%} height = 100%
 	var integer:{px} offsetWidth = -1px
 	var integer:{px} offsetHeight = -1px
+
+Facet AutoSize
 
 Facet Animated
 	var word:{Slide Fade Grow Zoom} mode = Slide
