@@ -223,3 +223,26 @@ Template(layout=Vertical, spacing=DP8) blockExamplesMold
 						Block popoverBlock as Popover<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="popover content")
 						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Badge facet")
+			Block(format=filledNoAir, layout=Vertical CenterCenter)
+				Block as Relative(width=80%)
+					Block(layout=Horizontal Center)
+						Text(value="Section title", format=bold airRight)
+						MaterialIconButton(title="Open", size=Small, icon="ExpandMore") as OpenBlock(conditionalBlock)
+						MaterialIconButton(title="Close", size=Small, icon="ExpandLess") as CloseBlock(conditionalBlock)
+					Block(format=topBordered) conditionalBlock as Conditional
+						Text(value="Section content", format=body1)
+			Block > Text block10Code as Code(language=Html)
+					value
+						=========
+						Block as Relative(width\=80%)
+						&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal Center)
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="Section title", format\=bold airRight)
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MaterialIconButton(title\="Open", size\=Small, icon\="ExpandMore") as OpenBlock(conditionalBlock)
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MaterialIconButton(title\="Close", size\=Small, icon\="ExpandLess") as CloseBlock(conditionalBlock)
+						&nbsp;&nbsp;&nbsp;&nbsp;Block(format\=topBordered) conditionalBlock as Conditional
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="Section content", format\=body1)
+						=========

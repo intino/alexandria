@@ -61,6 +61,9 @@ Component openSite as ExtensionOf(actionable)
 Component openBlock as ExtensionOf(actionable)
 	Request execute
 
+Component closeBlock as ExtensionOf(actionable)
+	Request execute
+
 Component openDialog as ExtensionOf(actionable)
 	Request execute
 

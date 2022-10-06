@@ -1,5 +1,4 @@
 import React from "react";
-import Collapse from '@material-ui/core/Collapse';
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import AbstractBlock from "../../../gen/displays/components/AbstractBlock";
@@ -50,7 +49,7 @@ export default class Block extends AbstractBlock {
     };
 
 	renderBody = () => {
-	    return this.props.collapsible ? (<Collapse>{this._renderLayout()}</Collapse>) : this._renderLayout();
+	    return this._renderLayout();
 	};
 
 	refreshSpacing = (spacing) => {

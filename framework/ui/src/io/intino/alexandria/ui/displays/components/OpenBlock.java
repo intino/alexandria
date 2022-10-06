@@ -9,17 +9,24 @@ public class OpenBlock<DN extends OpenBlockNotifier, B extends Box> extends Abst
 	private BlockConditional block;
 	private OpenListener openListener = null;
 
+	@Override
+	public void didMount() {
+		super.didMount();
+		notifier.refreshVisibility(visible());
+	}
+
 	public OpenBlock(B box) {
         super(box);
     }
 
-    public OpenBlock onOpen(OpenListener listener) {
+    public OpenBlock<DN, B> onOpen(OpenListener listener) {
 		this.openListener = listener;
 		return this;
 	}
 
-	public OpenBlock bindTo(BlockConditional block) {
+	public OpenBlock<DN, B> bindTo(BlockConditional<?, ?> block) {
 		this.block = block;
+		updateState();
 		return this;
 	}
 
@@ -27,4 +34,12 @@ public class OpenBlock<DN extends OpenBlockNotifier, B extends Box> extends Abst
 		if (this.block != null) this.block.show();
 		if (openListener != null) openListener.accept(new Event(this));
 	}
+
+	private void updateState() {
+		if (block == null) return;
+		block.onShow(e -> hide());
+		block.onHide(e -> show());
+		visible(!block.isVisible());
+	}
+
 }

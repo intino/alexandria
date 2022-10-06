@@ -64,6 +64,7 @@ public class ComponentRendererFactory {
 		map.put(conceptOf(Actionable.OpenLayer.class), config -> new OpenLayerRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
 		map.put(conceptOf(Actionable.CloseDrawer.class), config -> new CloseDrawerRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
 		map.put(conceptOf(Actionable.OpenBlock.class), config -> new OpenBlockRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
+		map.put(conceptOf(Actionable.CloseBlock.class), config -> new CloseBlockRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
 		map.put(conceptOf(Actionable.Download.class), config -> new DownloadRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
 		map.put(conceptOf(Actionable.Export.class), config -> new ExportRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
 		map.put(conceptOf(Actionable.OpenDialog.class), config -> new OpenDialogRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));

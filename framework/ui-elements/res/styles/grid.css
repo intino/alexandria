@@ -26,3 +26,7 @@
 .rdg-selected {
     display: none !important;
 }
+
+.react-grid-Cell--frozen, .react-grid-Cell--frozen:focus {
+    z-index: 0;
+}
