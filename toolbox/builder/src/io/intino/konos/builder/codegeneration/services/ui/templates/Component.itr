@@ -475,12 +475,15 @@ def type(component & child) trigger(references)
 	[$component+childReferences...[$NL]]
 end
 
+def type(component & child & block & conditional) trigger(conditionalReferences)
+end
+
 def type(component & child & block) trigger(conditionalReferences)
 	[$component+conditionalReferences...[$NL]]
 end
 
 def type(component & child) trigger(conditionalReferences)
-	if ($name == null) $name = [$ancestorsNotMe...[.].]$name;
+	if ($owner.this.$name == null) $owner.this.$name = [$ancestorsNotMe...[.].]$name;
 	[$binding]
 	[$attachedTo]
 end
@@ -501,27 +504,27 @@ def type(component & child) trigger(initializations)
 end
 
 def type(component & child & displaystamp)
-	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+	if ($name == null) $name = $owner.this.$name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
 def type(component & child & ownertemplatestamp & multiple)
-	if ($name == null) $name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+	if ($name == null) $name = $owner.this.$name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
 def type(component & child & basestamp & multiple)
-	if ($name == null) $name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+	if ($name == null) $name = $owner.this.$name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
 def type(component & child & ownertemplatestamp & single)
-	if ($name == null) $name = register(new $ownerPackage.$template+firstUpperCase$generic([($ownerBox~Box)]box().owner()).<$ownerPackage.$template+firstUpperCase$generic>id("$id").owner($owner.this));
+	if ($name == null) $name = $owner.this.$name = register(new $ownerPackage.$template+firstUpperCase$generic([($ownerBox~Box)]box().owner()).<$ownerPackage.$template+firstUpperCase$generic>id("$id").owner($owner.this));
 end
 
 def type(component & child & proxystamp & single)
-	if ($name == null) $name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+	if ($name == null) $name = $owner.this.$name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
 def type(component & child & basestamp & single)
-	if ($name == null) $name = register(new $template+firstUpperCase$generic([($concreteBox+firstUpperCase~Box)]box()).id("$id"));
+	if ($name == null) $name = $owner.this.$name = register(new $template+firstUpperCase$generic([($concreteBox+firstUpperCase~Box)]box()).id("$id"));
 end
 
 def type(component & child)
@@ -561,6 +564,10 @@ def type(binding & temporalslider)
 end
 
 def type(binding & openblock)
+	if ($name != null) $name.bindTo($block);
+end
+
+def type(binding & closeblock)
 	if ($name != null) $name.bindTo($block);
 end
 
