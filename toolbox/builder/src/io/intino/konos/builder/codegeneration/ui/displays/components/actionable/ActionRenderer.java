@@ -34,10 +34,12 @@ public class ActionRenderer extends ActionableRenderer {
 			result.add("toggle");
 			result.add("state", element.a$(InteractionComponents.AbstractToggle.class).state().name());
 		}
-		else if (element.i$(conceptOf(InteractionComponents.SplitButton.class))) {
+		else if (element.i$(conceptOf(InteractionComponents.AbstractSplitButton.class))) {
 			result.add("splitbutton");
-			result.add("option", element.a$(InteractionComponents.SplitButton.class).options().toArray());
-			result.add("default", element.a$(InteractionComponents.SplitButton.class).defaultOption());
+			result.add("option", element.a$(InteractionComponents.AbstractSplitButton.class).options().toArray());
+			result.add("default", element.a$(InteractionComponents.AbstractSplitButton.class).defaultOption());
+			if (element.i$(conceptOf(InteractionComponents.IconSplitButton.class))) result.add("icon", element.a$(InteractionComponents.IconSplitButton.class).icon());
+			else if (element.i$(conceptOf(InteractionComponents.MaterialIconSplitButton.class))) result.add("icon", element.a$(InteractionComponents.MaterialIconSplitButton.class).icon());
 		}
 		addAddressableProperties(result);
 		return result;

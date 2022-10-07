@@ -1000,6 +1000,18 @@ def type(actionableMode & splitbutton)
     [_option("$default");]
 end
 
+def type(actionableMode & iconsplitbutton)
+    [_options(java.util.Arrays.asList("$option...[","]"));]
+    [_option("$default");]
+    [_icon("$icon");]
+end
+
+def type(actionableMode & materialiconsplitbutton)
+    [_options(java.util.Arrays.asList("$option...[","]"));]
+    [_option("$default");]
+    [_icon("$icon");]
+end
+
 def type(actionableMode & iconbutton)
 	_icon("$icon");
 end

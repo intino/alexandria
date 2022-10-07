@@ -73,7 +73,7 @@ io.intino.alexandria
 artifactId
 ui-framework
 version
-4.19.16
+4.21.1
 module.parameters
 home
 current.dependencies

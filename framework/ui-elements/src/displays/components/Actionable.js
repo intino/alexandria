@@ -108,11 +108,11 @@ export default class Actionable extends AbstractActionable {
 		);
 	};
 
-	renderIconButton = () => {
+	renderIconButton = (ref) => {
 		const {classes} = this.props;
 		const style = this._readonly() ? { opacity: "0.3", ...this.style() } : this.style();
 		const button = (
-            <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()}
+            <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()} ref={ref != null ? ref : undefined}
                             onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
                             style={style} className={classes.iconButton} size={this._size()}>
                 {this.renderContent()}
@@ -121,12 +121,12 @@ export default class Actionable extends AbstractActionable {
 		return button;
 	};
 
-	renderMaterialIconButton = () => {
+	renderMaterialIconButton = (ref) => {
 		const {classes} = this.props;
 		const style = this.style();
 		if (this.state.color != null) style.color = this.state.color;
 		const button = (
-            <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()}
+            <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()} ref={ref != null ? ref : undefined}
                             onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
                             className={classes.materialIconButton} style={style} size={this._size()}>
                 {this.renderContent()}
@@ -165,8 +165,8 @@ export default class Actionable extends AbstractActionable {
 	renderContent = () => {
 		const mode = this.props.mode.toLowerCase();
 		if (mode === "button" || mode === "toggle") return (<div>{this._title()}</div>);
-		else if (mode === "iconbutton" || mode === "icontoggle") return (<img title={this._title()} src={this._icon()} style={this._addDimensions({})}/>);
-		else if (mode === "materialiconbutton" || mode === "materialicontoggle") return (<ActionableMui titleAccess={this._title()} icon={this._icon()} style={this._addDimensions({})}/>);
+		else if (mode === "iconbutton" || mode === "icontoggle" || mode === "iconsplitbutton") return (<img title={this._title()} src={this._icon()} style={this._addDimensions({})}/>);
+		else if (mode === "materialiconbutton" || mode === "materialicontoggle" || mode === "materialiconsplitbutton") return (<ActionableMui titleAccess={this._title()} icon={this._icon()} style={this._addDimensions({})}/>);
 	};
 
 	renderAffirmed = () => {
