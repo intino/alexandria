@@ -26,7 +26,7 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     private BeforeListener beforeAffirmListener;
     private Listener cancelAffirmListener;
 
-    public enum Mode { Link, Button, IconButton, MaterialIconButton, Toggle, IconToggle, MaterialIconToggle, SplitButton, AvatarIconButton }
+    public enum Mode { Link, Button, IconButton, MaterialIconButton, Toggle, IconToggle, MaterialIconToggle, SplitButton, IconSplitButton, MaterialIconSplitButton, AvatarIconButton }
     public enum Highlight { None, Outline, Fill }
 
     public Actionable(B box) {
@@ -180,7 +180,7 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     }
 
     private boolean isResourceIcon() {
-        return (mode == Mode.IconButton || mode == Mode.IconToggle) && icon != null && Actionable.class.getResource(this.icon) != null;
+        return (mode == Mode.IconButton || mode == Mode.IconToggle || mode == Mode.IconSplitButton) && icon != null && Actionable.class.getResource(this.icon) != null;
     }
 
 }

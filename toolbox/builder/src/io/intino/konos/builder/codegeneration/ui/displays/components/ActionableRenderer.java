@@ -61,9 +61,11 @@ public class ActionableRenderer extends ComponentRenderer<InteractionComponents.
 		else if (element.i$(conceptOf(InteractionComponents.MaterialIconButton.class))) result.add("icon", element.a$(InteractionComponents.MaterialIconButton.class).icon());
 		else if (element.i$(conceptOf(InteractionComponents.IconToggle.class))) result.add("icon", element.a$(InteractionComponents.IconToggle.class).icon());
 		else if (element.i$(conceptOf(InteractionComponents.MaterialIconToggle.class))) result.add("icon", element.a$(InteractionComponents.MaterialIconToggle.class).icon());
-		else if (element.i$(conceptOf(InteractionComponents.SplitButton.class))) {
-			result.add("option", element.a$(InteractionComponents.SplitButton.class).options().toArray());
-			result.add("default", element.a$(InteractionComponents.SplitButton.class).defaultOption());
+		else if (element.i$(conceptOf(InteractionComponents.AbstractSplitButton.class))) {
+			result.add("option", element.a$(InteractionComponents.AbstractSplitButton.class).options().toArray());
+			result.add("default", element.a$(InteractionComponents.AbstractSplitButton.class).defaultOption());
+			if (element.i$(conceptOf(InteractionComponents.IconSplitButton.class))) result.add("icon", element.a$(InteractionComponents.IconSplitButton.class).icon());
+			else if (element.i$(conceptOf(InteractionComponents.MaterialIconSplitButton.class))) result.add("icon", element.a$(InteractionComponents.MaterialIconSplitButton.class).icon());
 		}
 		return result;
 	}
@@ -76,6 +78,8 @@ public class ActionableRenderer extends ComponentRenderer<InteractionComponents.
 		else if (element.i$(conceptOf(InteractionComponents.MaterialIconToggle.class))) return InteractionComponents.MaterialIconToggle.class.getSimpleName();
 		else if (element.i$(conceptOf(InteractionComponents.Toggle.class))) return InteractionComponents.Toggle.class.getSimpleName();
 		else if (element.i$(conceptOf(InteractionComponents.SplitButton.class))) return InteractionComponents.SplitButton.class.getSimpleName();
+		else if (element.i$(conceptOf(InteractionComponents.IconSplitButton.class))) return InteractionComponents.IconSplitButton.class.getSimpleName();
+		else if (element.i$(conceptOf(InteractionComponents.MaterialIconSplitButton.class))) return InteractionComponents.MaterialIconSplitButton.class.getSimpleName();
 		else if (element.i$(conceptOf(InteractionComponents.AvatarIconButton.class))) return InteractionComponents.AvatarIconButton.class.getSimpleName();
 		return InteractionComponents.Link.class.getSimpleName();
 	}

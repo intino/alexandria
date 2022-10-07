@@ -87,9 +87,14 @@ Concept InteractionComponents
 		sub AbstractButton
 			var word:{None Outline Fill} highlight = None
 			sub Button
-			sub SplitButton
+			sub AbstractSplitButton
 				var string[] options
 				var string defaultOption
+				sub SplitButton
+				sub IconSplitButton
+					var string icon
+				sub MaterialIconSplitButton
+					var string icon
 			sub IconButton
 				var string icon
 			sub MaterialIconButton

@@ -29,20 +29,35 @@ class ActionSplit extends AbstractActionSplit {
 
 	renderTrigger = () => {
 		if (!this.state.visible) return (<React.Fragment/>);
+		const mode = this.props.mode.toLowerCase();
+		let trigger = (<React.Fragment/>);
+		if (mode === "splitbutton") trigger = this.renderSplitButton();
+		else if (mode === "iconsplitbutton") trigger = this.renderIconButton(this.anchorRef);
+		else if (mode === "materialiconsplitbutton") trigger = this.renderMaterialIconButton(this.anchorRef);
 		return (
 		    <React.Fragment>
-                <ButtonGroup variant={this._highlightVariant()} style={this.style()} size={this._size()}
-                             color="primary" ref={this.anchorRef} aria-label={this.props.label}>
-                  <Button onClick={this.handleClick.bind(this)}><div style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{this.state.options[this.state.selectedIndex]}</div></Button>
-                  <Button color="primary" size="small" aria-controls={this.state.open ? 'split-button-menu' : undefined}
-                          aria-expanded={this.state.open ? 'true' : undefined} aria-label="select merge strategy" aria-haspopup="menu"
-                          onClick={this.handleToggle.bind(this)}>
-                    <ArrowDropDownIcon />
-                  </Button>
-                </ButtonGroup>
+		        {trigger}
                 {this.renderDialog()}
             </React.Fragment>
 		);
+	};
+
+	renderSplitButton = () => {
+	    return (
+            <ButtonGroup variant={this._highlightVariant()} style={this.style()} size={this._size()}
+                         color="primary" ref={this.anchorRef} aria-label={this.props.label}>
+              <Button onClick={this.handleClick.bind(this)}><div style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{this.state.options[this.state.selectedIndex]}</div></Button>
+              <Button color="primary" size="small" aria-controls={this.state.open ? 'split-button-menu' : undefined}
+                      aria-expanded={this.state.open ? 'true' : undefined} aria-label="select merge strategy" aria-haspopup="menu"
+                      onClick={this.handleToggle.bind(this)}>
+                <ArrowDropDownIcon />
+              </Button>
+            </ButtonGroup>
+        );
+	};
+
+	clickEvent = () => {
+	    return this.handleOpen.bind(this);
 	};
 
 	renderDialog = () => {
@@ -87,6 +102,10 @@ class ActionSplit extends AbstractActionSplit {
 
     handleToggle = () => {
         this.setState({ open: !this.state.open});
+    };
+
+    handleOpen = (event) => {
+        this.setState({open: true});
     };
 
     handleClose = (event) => {

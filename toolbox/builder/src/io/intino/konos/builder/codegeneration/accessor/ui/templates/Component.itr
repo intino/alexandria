@@ -187,7 +187,7 @@ def type(properties & toggle) trigger(specific)
 end
 
 def type(properties & splitbutton) trigger(specific)
-	[ options={$["$option...[","]"$]}][ defaultOption="$default"]
+	[ options={$["$option...[","]"$]}][ defaultOption="$default"][ icon="$icon"]
 end
 
 def type(properties & export) trigger(specific)
