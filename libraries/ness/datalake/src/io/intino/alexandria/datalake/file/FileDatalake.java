@@ -13,7 +13,7 @@ public class FileDatalake implements Datalake {
 	}
 
 	private void checkStore() {
-		setStoreFolder().mkdirs();
+		tripletStoreFolder().mkdirs();
 		eventStoreFolder().mkdirs();
 	}
 
@@ -23,8 +23,8 @@ public class FileDatalake implements Datalake {
 	}
 
 	@Override
-	public FileSetStore setStore() {
-		return new FileSetStore(setStoreFolder());
+	public FileTripletStore tripletsStore() {
+		return new FileTripletStore(tripletStoreFolder());
 	}
 
 	public File root() {
@@ -35,8 +35,8 @@ public class FileDatalake implements Datalake {
 		return new File(root, EventStoreFolder);
 	}
 
-	public File setStoreFolder() {
-		return new File(root, SetStoreFolder);
+	public File tripletStoreFolder() {
+		return new File(root, TripletStoreFolder);
 	}
 
 }

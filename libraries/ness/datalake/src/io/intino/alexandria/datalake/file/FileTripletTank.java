@@ -2,16 +2,16 @@ package io.intino.alexandria.datalake.file;
 
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
-import io.intino.alexandria.datalake.Datalake.SetStore.Tub;
+import io.intino.alexandria.datalake.Datalake.TripletStore.Tub;
 
 import java.io.File;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public class FileSetTank implements Datalake.SetStore.Tank {
+public class FileTripletTank implements Datalake.TripletStore.Tank {
 	private final File root;
 
-	public FileSetTank(File root) {
+	public FileTripletTank(File root) {
 		this.root = root;
 	}
 
@@ -27,17 +27,17 @@ public class FileSetTank implements Datalake.SetStore.Tank {
 
 	@Override
 	public Tub last() {
-		return FS.foldersIn(root, FS.Sort.Reversed).map(FileSetTub::new).findFirst().orElse(null);
+		return FS.foldersIn(root, FS.Sort.Reversed).map(FileTripletTub::new).findFirst().orElse(null);
 	}
 
 	@Override
 	public Stream<Tub> tubs() {
-		return FS.foldersIn(root).map(FileSetTub::new);
+		return FS.foldersIn(root).map(FileTripletTub::new);
 	}
 
 	@Override
 	public Stream<Tub> tubs(int count) {
-		return FS.foldersIn(root, FS.Sort.Reversed).map(f -> (Tub) new FileSetTub(f)).limit(count);
+		return FS.foldersIn(root, FS.Sort.Reversed).map(f -> (Tub) new FileTripletTub(f)).limit(count);
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class FileSetTank implements Datalake.SetStore.Tank {
 	}
 
 	public Tub on(Timetag tag) {
-		return new FileSetTub(new File(root, tag.value()));
+		return new FileTripletTub(new File(root, tag.value()));
 	}
 
 	public File root() {

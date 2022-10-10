@@ -3,19 +3,17 @@ package io.intino.alexandria.datalake;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.event.EventStream;
-import io.intino.alexandria.mapp.MappReader;
-import io.intino.alexandria.zet.ZetStream;
 
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public interface Datalake {
 	String EventStoreFolder = "events";
-	String SetStoreFolder = "sets";
+	String TripletStoreFolder = "triplets";
 
 	EventStore eventStore();
 
-	SetStore setStore();
+	TripletStore tripletsStore();
 
 	interface EventStore {
 
@@ -48,7 +46,7 @@ public interface Datalake {
 		}
 	}
 
-	interface SetStore {
+	interface TripletStore {
 
 		Stream<Tank> tanks();
 
@@ -75,36 +73,39 @@ public interface Datalake {
 
 			Scale scale();
 
-			MappReader index();
+			Stream<Triplet> triplets();
 
-			Set set(String set);
-
-			Stream<Set> sets();
-
-			Stream<Set> sets(Predicate<Set> filter);
+			Stream<Triplet> triplets(Predicate<Triplet> filter);
 		}
 
-		interface Set {
-			String name();
 
-			Timetag timetag();
+		class Triplet {
+			String[] fields;
 
-			int size();
+			public Triplet(String[] fields) {
+				this.fields = fields;
+			}
 
-			ZetStream content();
+			public String subject() {
+				return fields[0];
+			}
 
-			Stream<Variable> variables();
+			public String verb() {
+				return fields[1];
+			}
 
-			Variable variable(String name);
-		}
 
-		class Variable {
-			public final String name;
-			public final String value;
+			public String object() {
+				return fields[2];
+			}
 
-			public Variable(String name, String value) {
-				this.name = name;
-				this.value = value;
+			public String get(int index) {
+				return fields[index];
+			}
+
+			@Override
+			public String toString() {
+				return String.join("\t", fields);
 			}
 		}
 	}
