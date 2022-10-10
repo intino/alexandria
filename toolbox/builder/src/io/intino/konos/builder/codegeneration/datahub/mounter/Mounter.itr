@@ -89,7 +89,7 @@ def type(tank) trigger(constructor)
 end
 
 def trigger(column)
-	new MappColumnStreamer(box.datalake().entityStore().tank("$fullName").on(timetag).index()).add(new SimpleSelector("$name", ColumnStream.Type.$type+FirstUpperCase, $mounter+snakeCaseToCamelCase+FirstUpperCase~MounterFunctions.$name+firstLowerCase$facet()));
+	new MappColumnStreamer(box.datalake().setStore().tank("$fullName").on(timetag).index()).add(new SimpleSelector("$name", ColumnStream.Type.$type+FirstUpperCase, $mounter+snakeCaseToCamelCase+FirstUpperCase~MounterFunctions.$name+firstLowerCase$facet()));
 end
 
 def type(column) attribute(type:Long) trigger(method)
