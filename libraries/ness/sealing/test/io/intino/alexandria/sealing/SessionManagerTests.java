@@ -8,24 +8,18 @@ import io.intino.alexandria.event.EventReader;
 import io.intino.alexandria.ingestion.EventSession;
 import io.intino.alexandria.ingestion.SessionHandler;
 import io.intino.alexandria.ingestion.SetSession;
-import io.intino.alexandria.mapp.Mapp;
-import io.intino.alexandria.mapp.MappReader;
-import io.intino.alexandria.mapp.MappStream;
-import io.intino.alexandria.zet.ZetReader;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertEquals;
+
 
 public class SessionManagerTests {
 
@@ -34,7 +28,7 @@ public class SessionManagerTests {
 	private static final File DATALAKE = new File("temp/datalake");
 
 	@Test
-	public void should_create_a_session() throws IOException {
+	public void should_create_a_session() {
 		SessionHandler handler = new SessionHandler(LOCAL_STAGE);
 		List<Event> messageList = createEvents(handler);
 		Timetag timetag = createSets(handler);
@@ -44,7 +38,6 @@ public class SessionManagerTests {
 		fileSessionManager.seal();
 
 		checkEvents(messageList);
-		checkSets(timetag);
 	}
 
 	private Timetag createSets(SessionHandler handler) {
@@ -77,20 +70,6 @@ public class SessionManagerTests {
 			assertEquals(next.ts(), eventList.get(i).ts());
 			assertEquals(next.entries(), new Tank1(eventList.get(i)).entries());
 		}
-	}
-
-	private void checkSets(Timetag timetag) throws IOException {
-		ZetReader reader = new ZetReader(new File("temp/datalake/sets/tank1/" + timetag.value() + "/0.zet"));
-		for (int i = 1; i < 31; i++)
-			Assert.assertEquals(reader.next(), i);
-		File indexFile = new File("temp/datalake/sets/tank1/" + timetag.value() + "/.mapp");
-		Mapp mapp = new Mapp(indexFile);
-		Assert.assertEquals(mapp.size(), 30);
-		MappStream.Item next = new MappReader(indexFile).next();
-		Assert.assertEquals(1, next.key());
-		Assert.assertEquals("0", next.value());
-		String line = Files.readAllLines(new File("temp/datalake/sets/tank1/" + timetag.value() + "/.metadata").toPath()).get(0);
-		assertEquals(line, "0;var;value");
 	}
 
 	//TODO: merge with existing event files

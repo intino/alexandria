@@ -143,7 +143,7 @@ end
 
 def type(method & collectionbox)
     @Override
-    public $name+firstUpperCase set(java.util.function.Function<String, String> addressFromPathResolver) {
+    public $name+firstUpperCase entity(java.util.function.Function<String, String> addressFromPathResolver) {
         address(addressFromPathResolver.apply(path()));
         return this;
     }

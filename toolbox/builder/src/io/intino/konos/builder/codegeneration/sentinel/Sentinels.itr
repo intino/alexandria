@@ -36,9 +36,9 @@ def type(sentinels)
 		$sentinel+actionCall...[$NL]
 
 		private static Set<Trigger> newSet(Trigger... triggers) {
-			LinkedHashSet<Trigger> set = new LinkedHashSet<>();
-			java.util.Collections.addAll(set, triggers);
-			return set;
+			LinkedHashSet<Trigger> entity = new LinkedHashSet<>();
+			java.util.Collections.addAll(entity, triggers);
+			return entity;
 		}
 	}
 end
