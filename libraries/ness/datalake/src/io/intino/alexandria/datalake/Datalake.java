@@ -99,7 +99,7 @@ public interface Datalake {
 			}
 
 			public String author() {
-				return fields.length > 3 ? fields[3] : fields[2];
+				return fields.length > 3 ? fields[3] : null;
 			}
 
 			public String get(int index) {
