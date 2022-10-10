@@ -294,7 +294,7 @@ public class ExternalSignatureSignerInfoGenerator {
 		AttributeTable attr = this.getSignedAttributes();
 
 		if (attr != null) {
-			DEREncodableVector v = new DEREncodableVector();
+			ASN1EncodableVector v = new ASN1EncodableVector();
 
 			if (attr.get(CMSAttributes.contentType) == null) {
 				v.add(new Attribute(CMSAttributes.contentType, new DERSet(
@@ -327,7 +327,7 @@ public class ExternalSignatureSignerInfoGenerator {
 
 			signedAttr = new DERSet(v);
 		} else {
-			DEREncodableVector v = new DEREncodableVector();
+			ASN1EncodableVector v = new ASN1EncodableVector();
 
 			v.add(new Attribute(CMSAttributes.contentType, new DERSet(
 					contentType)));
@@ -347,7 +347,7 @@ public class ExternalSignatureSignerInfoGenerator {
 		if (attr != null) {
 			Hashtable<?, ?> ats = attr.toHashtable();
 			Iterator<?> it = ats.values().iterator();
-			DEREncodableVector v = new DEREncodableVector();
+			ASN1EncodableVector v = new ASN1EncodableVector();
 
 			while (it.hasNext()) {
 				v.add(Attribute.getInstance(it.next()));

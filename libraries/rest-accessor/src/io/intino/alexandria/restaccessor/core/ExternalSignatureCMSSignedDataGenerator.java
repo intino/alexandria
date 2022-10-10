@@ -16,9 +16,6 @@ import org.bouncycastle.cms.CMSSignedDataGenerator;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.cert.*;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -249,16 +246,10 @@ public class ExternalSignatureCMSSignedDataGenerator {
 	 * included in the signature.
 	 */
 	@SuppressWarnings({"deprecation"})
-	public CMSSignedData generate(CMSProcessable content, boolean encapsulate)
-
-			throws NoSuchAlgorithmException, NoSuchProviderException, CMSException,
-			InvalidAlgorithmParameterException, CertStoreException {
-
-		DEREncodableVector signerInfos = new DEREncodableVector();
-		DEREncodableVector digestAlgs = new DEREncodableVector();
-
-		DERObjectIdentifier contentTypeOID = new DERObjectIdentifier(
-				CMSSignedDataGenerator.DATA);
+	public CMSSignedData generate(CMSProcessable content, boolean encapsulate) throws CMSException {
+		ASN1EncodableVector signerInfos = new ASN1EncodableVector();
+		ASN1EncodableVector digestAlgs = new ASN1EncodableVector();
+		ASN1ObjectIdentifier contentTypeOID = new ASN1ObjectIdentifier(CMSSignedDataGenerator.DATA);
 
 		ASN1Set certificates = null;
 
@@ -296,20 +287,18 @@ public class ExternalSignatureCMSSignedDataGenerator {
 		//		this.addCertificatesAndCRLs(store);
 
 		if (certs.size() != 0) {
-			DEREncodableVector v = new DEREncodableVector();
+			ASN1EncodableVector v = new ASN1EncodableVector();
 
 			it = certs.iterator();
-			while (it.hasNext()) {
-				v.add((DEREncodable) it.next());
-			}
+			while (it.hasNext()) v.add((DEREncodable) it.next());
 
-			certificates = new DERSet(v);
+			certificates = new DERSet();
 		}
 
 		ASN1Set certrevlist = null;
 
 		if (crls.size() != 0) {
-			DEREncodableVector v = new DEREncodableVector();
+			ASN1EncodableVector v = new ASN1EncodableVector();
 
 			it = crls.iterator();
 			while (it.hasNext()) {

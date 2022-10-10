@@ -34,8 +34,6 @@ public class FileSessionSealer implements SessionSealer {
 		lock();
 		try {
 			sealEvents(avoidSorting);
-			sealSets();
-			makeSetIndexes();
 		} catch (Throwable e) {
 			Logger.error(e);
 		}
@@ -48,14 +46,6 @@ public class FileSessionSealer implements SessionSealer {
 
 	private void sealEvents(List<Datalake.EventStore.Tank> avoidSorting) {
 		EventSessionManager.seal(stageFolder, datalake.eventStoreFolder(), avoidSorting, tempFolder);
-	}
-
-	private void sealSets() {
-		SetSessionManager.seal(stageFolder, datalake.setStoreFolder(), tempFolder);
-	}
-
-	private void makeSetIndexes() {
-		new SetIndexer(datalake.setStoreFolder()).make();
 	}
 
 	private void lock() {

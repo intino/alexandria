@@ -1,8 +1,8 @@
 package io.intino.alexandria.restaccessor.core;
 
 import io.intino.alexandria.logger.Logger;
+import jakarta.websocket.*;
 
-import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
 import java.util.function.Consumer;
