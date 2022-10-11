@@ -1,5 +1,6 @@
 package io.intino.konos.builder.codegeneration.action;
 
+import cottons.utils.StringHelper;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.compiler.shared.PostCompileFieldActionMessage;
@@ -38,10 +39,11 @@ public class ActionUpdater {
 	}
 
 	public void update() {
-		parameters.entrySet().forEach(p -> context.postCompileActionMessages().add(new PostCompileFieldActionMessage(context.module(), destination, "public",
-				false, formatType(p.getValue().asType(), p.getValue().isList()), nameOf(p.getKey()))));
+		String box = context.packageName() + "." + StringHelper.snakeCaseToCamelCase(context.boxName()) + "Box";
+		parameters.forEach((key, value) -> context.postCompileActionMessages().add(new PostCompileFieldActionMessage(context.module(), destination, "public",
+				false, formatType(value.asType(), value.isList()), nameOf(key))));
 		context.postCompileActionMessages().add(new PostCompileFieldActionMessage(context.module(), destination, "public",
-				false, "io.intino.konos.Box", "box"));
+				false, box, "box"));
 		context.postCompileActionMessages().add(new PostCompileMethodActionMessage(context.module(), destination, "execute",
 				false, Collections.emptyList(), response == null ? "void" : returnType(), exceptions()));
 	}
