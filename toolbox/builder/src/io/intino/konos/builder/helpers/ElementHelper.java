@@ -106,6 +106,7 @@ public class ElementHelper {
 		if (actionable.isCloseBlock()) result = InteractionComponents.Actionable.CloseBlock.class.getSimpleName();
 		if (actionable.isOpenDialog()) result = InteractionComponents.Actionable.OpenDialog.class.getSimpleName();
 		if (actionable.isOpenLayer()) result = InteractionComponents.Actionable.OpenLayer.class.getSimpleName();
+		if (actionable.isCloseLayer()) result = InteractionComponents.Actionable.CloseLayer.class.getSimpleName();
 		if (actionable.isOpenPopover()) result = InteractionComponents.Actionable.OpenPopover.class.getSimpleName();
 		if (actionable.isCloseDialog()) result = InteractionComponents.Actionable.CloseDialog.class.getSimpleName();
 		if (actionable.isSelectPreviousItem())

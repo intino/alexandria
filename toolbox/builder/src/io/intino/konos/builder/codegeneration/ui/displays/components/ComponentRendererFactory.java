@@ -62,6 +62,7 @@ public class ComponentRendererFactory {
 		map.put(conceptOf(Actionable.OpenSite.class), config -> new OpenSiteRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
 		map.put(conceptOf(Actionable.OpenDrawer.class), config -> new OpenDrawerRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
 		map.put(conceptOf(Actionable.OpenLayer.class), config -> new OpenLayerRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
+		map.put(conceptOf(Actionable.CloseLayer.class), config -> new CloseLayerRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
 		map.put(conceptOf(Actionable.CloseDrawer.class), config -> new CloseDrawerRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
 		map.put(conceptOf(Actionable.OpenBlock.class), config -> new OpenBlockRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
 		map.put(conceptOf(Actionable.CloseBlock.class), config -> new CloseBlockRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));

@@ -4,10 +4,10 @@ import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.Layer;
 import io.intino.alexandria.ui.displays.events.Event;
 
-public class OpenLayerEvent extends Event {
+public class CloseLayerEvent extends Event {
 	private final Layer<?, ?> layer;
 
-	public OpenLayerEvent(Display<?, ?> sender, Layer<?, ?> layer) {
+	public CloseLayerEvent(Display<?, ?> sender, Layer<?, ?> layer) {
 		super(sender);
 		this.layer = layer;
 	}

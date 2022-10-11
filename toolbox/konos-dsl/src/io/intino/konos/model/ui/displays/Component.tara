@@ -131,6 +131,7 @@ Concept InteractionComponents
 			sub CloseBlock > var Block.Conditional block
 			sub OpenDialog > var OtherComponents.AbstractDialog dialog
 			sub OpenLayer > var word:{Slide Grow Zoom Fade} transition = Slide
+			sub CloseLayer
 			sub CloseDialog > var OtherComponents.AbstractDialog dialog
 			sub OpenPopover > var Block.Popover popover; var word:{MouseClick MouseOver} triggerEvent = MouseClick
 			sub SelectPreviousItem > var CatalogComponents.Collection collection
