@@ -1,48 +1,3 @@
-def type(mounter & population & src)
-	package $package+validPackage.mounters;
-
-    import io.intino.alexandria.mapp.MappStream.Item;
-
-    import java.util.function.Function;
-
-    public class $name+FirstUpperCase~MounterFunctions {
-
-    	$column+method...[$NL$NL]
-	}
-end
-
-def type(mounter & population)
-	package $package+validPackage.mounters;
-
-	import io.intino.alexandria.Timetag;
-	import io.intino.alexandria.logger.Logger;
-	import io.intino.alexandria.tabb.ColumnStream;
-	import io.intino.alexandria.tabb.TabbBuilder;
-	import io.intino.alexandria.tabb.streamers.MappColumnStreamer;
-    import io.intino.alexandria.tabb.streamers.MappColumnStreamer.SimpleSelector;
-	import $package+validPackage.mounter.$name+snakeCaseToCamelCase+FirstUpperCase~MounterFunctions;
-	import $package+validPackage.$box+firstUpperCase~Box;
-
-	import java.util.function.Predicate;
-	import java.io.IOException;
-
-	public class $name+FirstUpperCase {
-		public final $box+validName+firstUpperCase~Box box;
-
-		public void pump(Timetag from, Timetag to, Predicate<Timetag> filter) {
-			from.iterateTo(to).forEach(timetag -> {
-				TabbBuilder tabbBuilder = new TabbBuilder();
-				$column...[$NL]
-				try {
-					tabbBuilder[$format].save(new java.io.File(box.$datamart+firstLowerCase~datamart(), "$name+lowercase~-" + timetag.value() + ".tabb"));
-				} catch (IOException e) {
-					Logger.error(e);
-				}
-			});
-		}
-	}
-end
-
 def type(mounter)
 	package $package+validPackage.$datamart+validPackage+lowercase.mounters;
 
@@ -67,7 +22,7 @@ def type(mounter)
 end
 
 def trigger(switch)
-	if	(event instanceof $this) handle(($this) event);
+	if	(event.toMessage().type().equals("$this")) handle(($this) event);
 end
 
 def trigger(method)

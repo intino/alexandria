@@ -33,23 +33,7 @@ Concept:Named Datamart
 	var word:{Table Graph} type
 	Concept:Named:RequiresAspect Mounter
 		Aspect MounterType
-			sub Population
-				var word:{Arff Tabb Csv} format
-				Concept Split > var string[] splits
-				Concept:{1..*} Source
-					var string tank
-					var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type
-					Aspect Id
-						var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type = Long
-					Aspect Constant
-						var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type = String
-						var string value
-				Concept:{0..1}:Named Filter
-				Concept:{0..1} Aggregation
-					Concept:{1..*} Column
-						var string name
-						var string tank
-						var word:{Boolean String Integer Double Nominal Datetime Instant Long Timetag} type
+			sub Triplet
 			sub Event
 				Concept:{1..*} Require
 					var string tank
@@ -59,9 +43,6 @@ Concept:Named Datamart
 
 
 Concept:Named Adapter
-
-
-
 
 Concept:Named Feeder
 	var string[] tanks

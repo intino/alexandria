@@ -94,9 +94,12 @@ public interface Datalake {
 				return fields[1];
 			}
 
-
 			public String object() {
 				return fields[2];
+			}
+
+			public String author() {
+				return fields.length > 3 ? fields[3] : null;
 			}
 
 			public String get(int index) {

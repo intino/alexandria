@@ -60,6 +60,10 @@ public abstract class Soul implements DisplayRepository {
         }
     }
 
+    public Layer<?, ?> currentLayer() {
+        return !layers.isEmpty() ? layers.get(layers.size()-1) : null;
+    }
+
     @SuppressWarnings("unchecked")
     public <T extends Display<?, ?>> T currentLayer(Class<T> clazz) {
         int i=layers.size();
@@ -75,15 +79,17 @@ public abstract class Soul implements DisplayRepository {
         layers.add(layer);
     }
 
-    public void popLayer() {
+    public Layer<?, ?> popLayer() {
         try {
-            if (layers.size() <= 0) return;
+            if (layers.size() == 0) return null;
             int index = layers.size() - 1;
             Layer<?, ?> layer = layers.get(index);
             layers.remove(index);
             remove(layer.template());
+            return layer;
         }
         catch (Throwable ignored) {
+            return null;
         }
     }
 

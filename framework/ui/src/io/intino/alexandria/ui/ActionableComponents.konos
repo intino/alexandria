@@ -72,6 +72,9 @@ Component openLayer as ExtensionOf(actionable)
 	Request execute
 	Request openLayer
 
+Component closeLayer as ExtensionOf(actionable)
+	Request execute
+
 Component openPopover as ExtensionOf(actionable)
 	Notification refreshTriggerId as Text
 	Request execute
