@@ -19,6 +19,11 @@ public class CopyToClipboard<DN extends CopyToClipboardNotifier, B extends Box> 
 		return this;
 	}
 
+	public CopyToClipboard<DN, B> text(String text) {
+		_text(text);
+		return this;
+	}
+
 	protected CopyToClipboard<DN, B> _text(String text) {
 		this.text = text;
 		return this;
