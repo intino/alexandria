@@ -800,6 +800,10 @@ def type(properties & toggle) trigger(specific)
     [_state(io.intino.alexandria.ui.displays.events.actionable.ToggleEvent.State.valueOf("$state"));]
 end
 
+def type(properties & copytoclipboard) trigger(specific)
+	[_text("$text");]
+end
+
 def type(properties & action) trigger(specific)
 	[_path("$path");]
 end

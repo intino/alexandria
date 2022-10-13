@@ -102,3 +102,8 @@ Component selectionAction as ExtensionOf(baseSelectionAction)
 Component downloadSelection as ExtensionOf(baseSelectionAction)
 	Request changeParams as Text
 	Request(Asset) execute
+
+Component copyToClipboard as ExtensionOf(actionable)
+	Notification copy as Text
+	Request execute
+	Request copied as Bool

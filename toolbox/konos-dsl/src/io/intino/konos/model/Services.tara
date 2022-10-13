@@ -146,6 +146,8 @@ Concept:Named Service
     		Aspect Confidential
     		Aspect Page
             	var Template template
+    		Aspect StaticPage
+            	var string content = empty
 
     Aspect Agenda
 		var string filePath

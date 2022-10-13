@@ -165,3 +165,15 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						=========
 						AvatarIconButton(title\="I am avatar") as Action
 						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="CopyToClipboard")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Link(title="Copy to clipboard") operation17 as CopyToClipboard(text="I am text")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Link(title\="Copy to clipboard", text\="I am text") as CopyToClipboard(text\="I am text")
+						=========

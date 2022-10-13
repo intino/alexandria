@@ -122,7 +122,7 @@ def type(ui & action & gen)
 		public Abstract$name+snakecaseToCamelCase+firstUpperCase~Page() { super("$uiService+camelCaseToSnakeCase+lowerCase"); }
 
 		public String execute() [throws $throws+FirstUpperCase...[, ]] {
-			return super.template("$templateName"[, Arrays.asList($usedUnit...[,])]);
+			$executeBody
 		}
 
 		@Override
@@ -135,6 +135,14 @@ def type(ui & action & gen)
 			return [$favicon?null;]
 		}
 	}
+end
+
+def type(executeBody & static)
+    return "$text";
+end
+
+def type(executeBody)
+    return super.template("$templateName"[, Arrays.asList($usedUnit...[,])]);
 end
 
 def type(title & configuration)
@@ -211,6 +219,12 @@ end
 
 def type(schemaImport) trigger(schemaImport)
 	import $package.schemas.*;
+end
+
+def type(component & static)
+	public String execute() {
+	    return super.execute();
+	}
 end
 
 def type(component)

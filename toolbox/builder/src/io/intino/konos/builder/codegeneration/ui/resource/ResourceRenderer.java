@@ -32,6 +32,7 @@ public class ResourceRenderer extends UIRenderer {
 		Service.UI uiService = resource.core$().ownerAs(Service.UI.class);
 
 		FrameBuilder builder = buildFrame().add("resource").add("name", resource.name$()).add("parameter", parameters(resource));
+		if (resource.isStaticPage()) builder.add("static");
 		if (uiService.googleApiKey() != null) builder.add("googleApiKey", customize("googleApiKey", uiService.googleApiKey()));
 		if (resource.isConfidential()) builder.add("confidential", "");
 

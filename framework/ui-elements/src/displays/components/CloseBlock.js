@@ -5,8 +5,7 @@ import CloseBlockNotifier from "../../../gen/displays/notifiers/CloseBlockNotifi
 import CloseBlockRequester from "../../../gen/displays/requesters/CloseBlockRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
-
-const styles = theme => ({});
+import Actionable from "./Actionable";
 
 class CloseBlock extends AbstractCloseBlock {
 
@@ -16,8 +15,7 @@ class CloseBlock extends AbstractCloseBlock {
 		this.requester = new CloseBlockRequester(this);
 	};
 
-
 }
 
-export default withStyles(styles, { withTheme: true })(withSnackbar(CloseBlock));
-DisplayFactory.register("CloseBlock", withStyles(styles, { withTheme: true })(withSnackbar(CloseBlock)));
+export default withStyles(Actionable.Styles, { withTheme: true })(withSnackbar(CloseBlock));
+DisplayFactory.register("CloseBlock", withStyles(Actionable.Styles, { withTheme: true })(withSnackbar(CloseBlock)));

@@ -73,6 +73,7 @@ public class ComponentRendererFactory {
 		map.put(conceptOf(Actionable.CloseDialog.class), config -> new CloseDialogRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
 		map.put(conceptOf(Actionable.SelectNextItem.class), config -> new SelectNextItemRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
 		map.put(conceptOf(Actionable.SelectPreviousItem.class), config -> new SelectPreviousItemRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
+		map.put(conceptOf(Actionable.CopyToClipboard.class), config -> new CopyToClipboardRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
 		map.put(conceptOf(Actionable.Action.class), config -> new ActionRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
 		map.put(conceptOf(Actionable.class), config -> new ActionableRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
 	}
