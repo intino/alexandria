@@ -79,6 +79,8 @@ def type(resource)
 
 	public class $operation+firstUpperCase$name+snakeCaseToCamelCase+firstUpperCase~Resource implements Resource {
 
+		$word+declaration...[$NL]
+
 		private $box+FirstUpperCase~Box box;
 		private SparkManager<SparkPushService> manager;
 
@@ -111,6 +113,13 @@ def type(resource)
 			return context;
 		}
 	}
+end
+
+def type(word) trigger(declaration)
+	public enum $name+FirstUpperCase {
+		$words...[, ]
+	}
+
 end
 
 def attribute(void) trigger(methodCall)
