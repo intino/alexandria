@@ -17,18 +17,20 @@ import io.intino.konos.model.*;
 import io.intino.konos.model.Service.REST.Notification;
 import io.intino.konos.model.Service.REST.Resource;
 import io.intino.konos.model.Service.REST.Resource.Parameter;
+import io.intino.magritte.framework.Node;
 
 import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.model.Service.REST.Resource.Operation;
 
 public class RESTResourceRenderer extends Renderer {
-	private static final String RESOURCES_PACKAGE = "rest/resources";
-	private static final String NOTIFICATIONS_PACKAGE = "rest/notifications";
+	public static final String RESOURCES_PACKAGE = "rest/resources";
+	public static final String NOTIFICATIONS_PACKAGE = "rest/notifications";
 	private final List<Service.REST> services;
 
 	public RESTResourceRenderer(CompilationContext compilationContext, KonosGraph graph) {
@@ -83,6 +85,8 @@ public class RESTResourceRenderer extends Renderer {
 	private Frame frameOf(Resource resource, Operation operation) {
 		FrameBuilder builder = new FrameBuilder("resource");
 		addCommons(resource.name$(), builder);
+		builder.add("word", resource.parameterList().stream().filter(Data::isWord).map(RESTResourceRenderer::wordFrame).toArray(Frame[]::new));
+		builder.add("word", operation.parameterList().stream().filter(Data::isWord).map(RESTResourceRenderer::wordFrame).toArray(Frame[]::new));
 		builder.add("operation", operation.getClass().getSimpleName());
 		builder.add("throws", throwCodes(operation));
 		authenticated(resource.core$().ownerAs(Service.REST.class), builder);
@@ -92,6 +96,12 @@ public class RESTResourceRenderer extends Renderer {
 		if (!resource.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
 		return builder.toFrame();
+	}
+
+	private static Frame wordFrame(Parameter p) {
+		return new FrameBuilder("word")
+				.add("words", p.asWord().values().toArray())
+				.add("name", p.name$()).toFrame();
 	}
 
 	private void authenticated(Service.REST service, FrameBuilder builder) {
@@ -169,10 +179,19 @@ public class RESTResourceRenderer extends Renderer {
 	private Frame parameterType(io.intino.konos.model.Parameter parameter) {
 		String innerPackage = parameter.isObject() && parameter.asObject().isComponent() ? String.join(".", packageName(), "schemas.") : "";
 		final FrameBuilder builder = new FrameBuilder();
-		if (parameter.isWord()) builder.add("value", "java.lang.String");
+		if (parameter.isWord()) builder.add("value", owner(parameter) + "." + firstUpperCase(parameter.name$()));
 		else builder.add("value", innerPackage + parameter.asType().type());
 		if (parameter.i$(Data.List.class)) builder.add("list");
 		return builder.toFrame();
+	}
+
+	private Object owner(io.intino.konos.model.Parameter parameter) {
+		Node owner = parameter.core$().owner();
+		if (owner.is(Notification.class)) {
+			return firstUpperCase(owner.name());
+		} else if (owner.is(Operation.class))
+			return snakeCaseToCamelCase(owner.as(Operation.class).getClass().getSimpleName() + "_" + owner.owner().name()) + "Resource";
+		return firstUpperCase(owner.owner().name());
 	}
 
 	private Template template() {

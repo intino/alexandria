@@ -4,6 +4,8 @@ Artifact("io.intino.alexandria", "3.7.2") rest
 	Imports
 		Compile("io.intino.alexandria", "http", "1.5.8")
 		Compile("io.intino.alexandria", "json", "1.1.0")
+		Test("junit", "junit", "4.13.2")
+
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
