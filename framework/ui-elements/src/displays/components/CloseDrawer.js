@@ -7,8 +7,6 @@ import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
 import Actionable from "./Actionable";
 
-const styles = theme => ({});
-
 class CloseDrawer extends AbstractCloseDrawer {
 
 	constructor(props) {

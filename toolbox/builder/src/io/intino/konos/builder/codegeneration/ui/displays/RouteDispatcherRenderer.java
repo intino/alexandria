@@ -43,7 +43,7 @@ public class RouteDispatcherRenderer extends UIRenderer {
 	public FrameBuilder buildFrame() {
 		FrameBuilder builder = super.buildFrame();
 		builder.add("dispatcher");
-		service.resourceList().forEach(r -> {
+		service.resourceList().stream().filter(Service.UI.Resource::isPage).forEach(r -> {
 			if (r.isMain()) builder.add("resource", resourceFrame(r).add("main"));
 			builder.add("resource", resourceFrame(r));
 		});

@@ -58,8 +58,6 @@ class Grid extends AbstractGrid {
 		    modes: [],
 		    selectedIndexes: [],
 		    rows: [],
-		    addressList: [],
-		    rowIndexList: [],
 		    sortColumn: null,
 		    sortDirection: null,
 		    groupBy: null,
@@ -268,7 +266,7 @@ class Grid extends AbstractGrid {
             sortable: column.sortable, draggable: false,
             resizable: true, frozen: column.fixed, width: column.width != -1 ? column.width : undefined,
             headerRenderer : this.columnRenderer(column, idx),
-            formatter : this.rowFormatter.bind(this, column, idx)
+            formatter : this.rowFormatter.bind(this, column)
         }));
     };
 
@@ -288,20 +286,40 @@ class Grid extends AbstractGrid {
         return (<div style={style}>{column.label}</div>);
     };
 
-    rowFormatter = (column, idx, data, i) => {
+    rowFormatter = (column, data) => {
         const { classes } = this.props;
         const type = column.type;
-        if (type === "Link") return (<Link className={classes.link} component="button" onClick={this.handleCellClick.bind(this, column, idx, data)}>{data.value}</Link>);
-        else if (type === "Number" || type === "Date") return (<div style={{textAlign:'right'}}>{data.value}</div>);
-        return (<div>{data.value}</div>);
+        const value = this.rowValue(data.value);
+        if (type === "Link") return (<Link className={classes.link} component="button" onClick={this.handleCellClick.bind(this, column, data)}>{value}</Link>);
+        else if (type === "Number" || type === "Date") return (<div style={{textAlign:'right'}}>{value}</div>);
+        return (<div>{value}</div>);
     };
 
-    handleCellClick = (column, idx, data) => {
-        const address = this.state.addressList[column.name + "-" + data.value];
+    handleCellClick = (column, data) => {
+        const index = this.rowIndex(data.value);
+        const value = this.rowValue(data.value);
+        const address = this.rowAddress(data.value);
         const columnIndex = this.columnIndex(column.name);
-        const rowIndex = this.state.rowIndexList[column.name + "-" + data.value];
         if (address != null) history.push(address, {});
-        this.requester.cellClick({ column: column.name, columnIndex: columnIndex, row: data.value, rowIndex: rowIndex });
+        this.requester.cellClick({ column: column.name, columnIndex: columnIndex, row: value, rowIndex: index });
+    };
+
+    rowInfo = (index, value, address) => {
+         return index + (value != null ? "_" + value : "") + (address != null ? "_" + address : "");
+    };
+
+    rowIndex = (value) => {
+        return value.split("_")[0];
+    };
+
+    rowValue = (value) => {
+        const info = value.split("_");
+        return info.length > 1 ? info[1] : undefined;
+    };
+
+    rowAddress = (value) => {
+        const info = value.split("_");
+        return info.length > 2 ? info[2] : undefined;
     };
 
     columnIndex = (columnName) => {
@@ -330,18 +348,15 @@ class Grid extends AbstractGrid {
     addRows = (newRows) => {
         const columns = this.state.columns;
         let rows = this.state.rows;
-        let addressList = this.state.addressList;
-        let rowIndexList = this.state.rowIndexList;
         for (let i=0; i<newRows.length; i++) {
             let row = {};
             for (let j=0; j<columns.length; j++) {
-                row[columns[j].name] = newRows[i].cells[j].value;
-                if (newRows[i].cells[j].address != null) addressList[columns[j].name + "-" + row[columns[j].name]] = newRows[i].cells[j].address;
-                rowIndexList[columns[j].name + "-" + row[columns[j].name]] = rows.length;
+                const address = newRows[i].cells[j].address != null ? newRows[i].cells[j].address : null;
+                row[columns[j].name] = this.rowInfo(i, newRows[i].cells[j].value, address);
             }
             rows.push(row);
         }
-        this.setState({ rows: rows, addressList: addressList, rowIndexList: rowIndexList });
+        this.setState({ rows: rows });
     };
 
 	pageOf = (index) => {
@@ -456,7 +471,7 @@ class Grid extends AbstractGrid {
         if (super.clearContainer) super.clearContainer(params);
         this.lastLoadedPage = [];
         this.lastRow = 0;
-        this.setState({rows:[], addressList: [], rowIndexList: []});
+        this.setState({rows:[]});
     };
 
 }

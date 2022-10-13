@@ -15,6 +15,7 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/widgets") widgets as Page(docsTemplate)
 	Resource(path = "/widgets/:type/") widgetType as Page(widgetTypeTemplate)
 	Resource(path = "/widgets/microsite/:page") microSite as Page(widgetTypeTemplate)
+	Resource(path = "/static/example.html") exampleContent as StaticPage(content="<div>This is a static page</div>")
 
 Template homeTemplate
 	Header(color="white", format=air) as Absolute(height=100px)

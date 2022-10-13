@@ -38,6 +38,7 @@ public class PageRenderer extends ActionRenderer {
 		Service.UI uiService = resource.core$().ownerAs(Service.UI.class);
 		builder.add("name", resource.name$());
 		if (resource.isPage()) builder.add("templateName", resource.asPage().template().name$());
+		builder.add("executeBody", executeBodyFrame());
 		builder.add("uiService", uiService.name$());
 		builder.add("package", packageName());
 		builder.add("box", boxName());
@@ -57,6 +58,17 @@ public class PageRenderer extends ActionRenderer {
 		writeFrame(destinationPackage(gen()), "Abstract" + firstUpperCase(resource.name$()) + suffix(), template().render(builder.add("gen").toFrame()));
 		if (target.equals(Target.Owner))
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(destinationPackage(gen()), "Abstract" + firstUpperCase(resource.name$()) + suffix()).getAbsolutePath()));
+	}
+
+	private FrameBuilder executeBodyFrame() {
+		FrameBuilder result = new FrameBuilder("executeBody");
+		service.useList().forEach(use -> result.add("usedUnit", usedUnitFrame(use)));
+		if (resource.isPage()) result.add("templateName", resource.asPage().template().name$());
+		if (resource.isStaticPage()) {
+			result.add("static");
+			result.add("text", resource.asStaticPage().content());
+		}
+		return result;
 	}
 
 	private FrameBuilder titleFrame() {
@@ -84,7 +96,13 @@ public class PageRenderer extends ActionRenderer {
 	}
 
 	private FrameBuilder componentFrame() {
-		return new FrameBuilder("component").add("value", templateFor(resource).name$());
+		FrameBuilder result = new FrameBuilder("component");
+		if (resource.isPage()) result.add("value", templateFor(resource).name$());
+		if (resource.isStaticPage()) {
+			result.add("static");
+			result.add("text", resource.asStaticPage().content());
+		}
+		return result;
 	}
 
 	private FrameBuilder[] parameters() {

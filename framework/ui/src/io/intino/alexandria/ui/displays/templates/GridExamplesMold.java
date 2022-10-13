@@ -31,7 +31,7 @@ public class GridExamplesMold extends AbstractGridExamplesMold<UiFrameworkBox> {
 
             @Override
             public String address(GridColumn<GridItem> column, GridItem gridItem) {
-                return column.address().replace(":id", gridItem.values().get(0).asText());
+                return column.address() + "/" + gridItem.values().get(0).asText();
             }
         });
         grid.allowMultiSelection(true);
