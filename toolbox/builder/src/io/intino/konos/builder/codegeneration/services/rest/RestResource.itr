@@ -78,8 +78,7 @@ def type(resource)
 	$schemaImport
 
 	public class $operation+firstUpperCase$name+snakeCaseToCamelCase+firstUpperCase~Resource implements Resource {
-
-		$word+declaration...[$NL]
+		[$word+declaration...[$NL]]
 
 		private $box+FirstUpperCase~Box box;
 		private SparkManager<SparkPushService> manager;
@@ -116,10 +115,9 @@ def type(resource)
 end
 
 def type(word) trigger(declaration)
-	public enum $name+FirstUpperCase {
-		$words...[, ]
+	public enum $name+SnakeCaseToCamelCase+FirstUpperCase {
+		$words...[, ];
 	}
-
 end
 
 def attribute(void) trigger(methodCall)

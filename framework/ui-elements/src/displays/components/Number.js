@@ -51,7 +51,7 @@ class Number extends AbstractNumber {
 		const variant = this.variant("body1");
 		const expanded = this.state.expanded;
 		const format = expanded ? this._defaultFormat() : this._format();
-		const expandedClass = this.state.style != null ? classes.withExpanded : undefined;
+		const expandedClass = this.state.style != null && !this.props.expanded ? classes.withExpanded : undefined;
 
 		if (value == null || value === "" || !this.state.visible) return (<React.Fragment/>);
 

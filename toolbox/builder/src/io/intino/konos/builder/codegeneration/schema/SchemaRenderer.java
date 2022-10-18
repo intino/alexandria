@@ -204,7 +204,7 @@ public class SchemaRenderer extends Renderer {
 
 
 	private Template template() {
-		return Formatters.customize(new SchemaTemplate()).add("typeFormat", (value) -> {
+		return Formatters.customize(serializationAnnotations ? new SchemaAnnotatedTemplate() : new SchemaTemplate()).add("typeFormat", (value) -> {
 			if (value.toString().contains(".")) return Formatters.firstLowerCase(value.toString());
 			else return value;
 		});

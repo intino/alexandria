@@ -27,6 +27,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     private AddItemListener addItemListener;
     private List<RefreshListener> refreshListeners = new ArrayList<>();
     private List<RefreshCountListener> refreshItemCountListeners = new ArrayList<>();
+    private List<LoadingListener> loadingListeners = new ArrayList<>();
     private List<Listener> readyListeners = new ArrayList<>();
     private boolean ready = false;
     private boolean allowMultiSelection = false;
@@ -74,6 +75,10 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
 
     public void onReady(Listener listener) {
         this.readyListeners.add(listener);
+    }
+
+    public void onLoading(LoadingListener listener) {
+        this.loadingListeners.add(listener);
     }
 
     @Override
@@ -291,7 +296,8 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     }
 
 	public void loading(boolean value) {
-		notifier.refreshLoading(value);
+		loadingListeners.forEach(l -> l.accept(new LoadingEvent(this, value)));
+        notifier.refreshLoading(value);
 	}
 
     protected void addSelectionListener(SelectionListener listener) {

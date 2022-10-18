@@ -70,7 +70,8 @@ public class ActionUpdater {
 		if (typeData == null || typeData.type() == null) return "void";
 		final String type;
 		if (typeData.i$(Data.Object.class)) type = packageName + ".schemas." + typeData.type();
-		else if (typeData.i$(Data.Word.class)) type = owner(typeData) + "." + firstUpperCase(typeData.name$());
+		else if (typeData.i$(Data.Word.class))
+			type = owner(typeData) + "." + firstUpperCase(snakeCaseToCamelCase(typeData.name$()));
 		else type = typeData.type();
 		return list ? "List<" + type + ">" : type;
 	}

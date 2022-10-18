@@ -179,7 +179,8 @@ public class RESTResourceRenderer extends Renderer {
 	private Frame parameterType(io.intino.konos.model.Parameter parameter) {
 		String innerPackage = parameter.isObject() && parameter.asObject().isComponent() ? String.join(".", packageName(), "schemas.") : "";
 		final FrameBuilder builder = new FrameBuilder();
-		if (parameter.isWord()) builder.add("value", owner(parameter) + "." + firstUpperCase(parameter.name$()));
+		if (parameter.isWord())
+			builder.add("value", owner(parameter) + "." + firstUpperCase(snakeCaseToCamelCase(parameter.name$())));
 		else builder.add("value", innerPackage + parameter.asType().type());
 		if (parameter.i$(Data.List.class)) builder.add("list");
 		return builder.toFrame();
