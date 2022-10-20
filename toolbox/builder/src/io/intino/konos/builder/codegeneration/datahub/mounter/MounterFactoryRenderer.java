@@ -38,7 +38,8 @@ public class MounterFactoryRenderer {
 		FrameBuilder builder = baseFrame("factory");
 		Map<String, List<Mounter>> map = map(mounters, manifest);
 		for (String event : map.keySet())
-			builder.add("event", baseFrame("event").
+			builder.add("event", baseFrame("event")
+					.add("eventType", event).
 					add("type", event.substring(event.lastIndexOf(".") + 1)).
 					add("mounter", map.get(event).stream().map(m -> baseFrame("mounter").add("datamart", m.core$().owner().name()).add("name", m.name$()).toFrame()).toArray(Frame[]::new)));
 		context.classes().put(Mounter.class.getSimpleName() + "#" + "MounterFactory", "mounters.mounterFactory");
