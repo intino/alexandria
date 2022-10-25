@@ -32,6 +32,7 @@ Component actionSplit as ExtensionOf(actionable)
 
 Component actionSwitch as ExtensionOf(actionable)
 	Notification refreshState as Text
+	Notification refreshFocused as Bool
 	Request toggle
 
 Component actionToggle as ExtensionOf(actionable)

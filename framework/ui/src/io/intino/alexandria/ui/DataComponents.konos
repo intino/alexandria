@@ -14,6 +14,7 @@ Component baseNumber
 Component number as ExtensionOf(baseNumber)
 Component numberEditable as ExtensionOf(baseNumber)
 	Notification refreshReadonly as Bool
+	Notification refreshFocused as Bool
 	Notification refreshRange as Object(NumberEditableRange)
 	Request notifyChange as Real
 
@@ -26,6 +27,7 @@ Component dateEditable as ExtensionOf(baseDate)
 	Notification refreshPattern as Text
 	Notification refreshRange as Object(Range)
 	Notification refreshViews as Text List
+	Notification refreshFocused as Bool
 	Request notifyChange as DateTime
 
 Component baseText
@@ -36,6 +38,7 @@ Component text as ExtensionOf(baseText)
 Component textCode as ExtensionOf(baseText)
 Component textEditable as ExtensionOf(baseText)
 	Notification refreshReadonly as Bool
+	Notification refreshFocused as Bool
 	Request notifyChange as Text
 	Request notifyKeyPress as Object(KeyPressEventData)
 Component textEditableCode as ExtensionOf(baseText)
@@ -47,6 +50,7 @@ Component baseFile
 Component file as ExtensionOf(baseFile)
 Component fileEditable as ExtensionOf(baseFile)
 	Notification refreshReadonly as Bool
+	Notification refreshFocused as Bool
 	Request notifyUploading
 	Request notifyChange as File
 	Request(Asset) downloadFile
@@ -59,6 +63,7 @@ Component imageAvatar as ExtensionOf(baseImage)
 	Request load
 Component imageEditable as ExtensionOf(baseImage)
 	Notification refreshReadonly as Bool
+	Notification refreshFocused as Bool
 	Request notifyChange as File
 	Request(responseType=Asset) download
 
@@ -72,6 +77,7 @@ Component baseLocation
 Component location as ExtensionOf(baseLocation)
 Component locationEditable as ExtensionOf(baseLocation)
 	Notification refreshReadonly as Bool
+	Notification refreshFocused as Bool
 	Request notifyChange as Object(Geometry)
 
 Component baseDigitalSignature

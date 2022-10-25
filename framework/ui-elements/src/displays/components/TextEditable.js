@@ -22,6 +22,7 @@ class TextEditable extends AbstractTextEditable {
 		super(props);
 		this.notifier = new TextEditableNotifier(this);
 		this.requester = new TextEditableRequester(this);
+		this.inputRef = React.createRef();
 		this.state = {
 			...this.state,
 			value: '',
@@ -54,6 +55,8 @@ class TextEditable extends AbstractTextEditable {
 					   onKeyPress={this.handleKeypress.bind(this)} type={type} autoFocus={this.props.focused}
 					   placeholder={placeholder} multiline={this._multiline()} rows={this._rowsCount()}
 					   error={error != null} helperText={this.state.readonly ? undefined : (error != null ? error : this.props.helperText) }
+					   inputRef={this.inputRef}
+					   inputProps={{ maxLength: this.props.maxLength != null ? this.props.maxLength : undefined }}
 					   InputProps={{
 					       readOnly: this.state.readonly,
 						   startAdornment: this.props.prefix !== undefined ? <InputAdornment position="start">{this.props.prefix}</InputAdornment> : undefined,
@@ -74,6 +77,11 @@ class TextEditable extends AbstractTextEditable {
 
 	refreshReadonly = (readonly) => {
 		this.setState({ readonly });
+	};
+
+	refreshFocused = (focused) => {
+	    if (this.inputRef == null || this.inputRef.current == null) return;
+	    window.setTimeout(() => this.inputRef.current.focus(), 100);
 	};
 }
 

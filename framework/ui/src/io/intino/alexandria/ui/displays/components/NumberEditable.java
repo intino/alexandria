@@ -66,6 +66,12 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
 	}
 
 	@Override
+	public NumberEditable<DN, B> focus() {
+		notifier.refreshFocused(true);
+		return this;
+	}
+
+	@Override
 	public NumberEditable<DN, B> readonly(boolean readonly) {
 		_readonly(readonly);
 		notifier.refreshReadonly(readonly);

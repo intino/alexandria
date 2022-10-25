@@ -30,6 +30,7 @@ class LocationEditable extends AbstractLocationEditable {
             drawingControl: true,
             drawingMode: null,
             readonly: this.props.readonly,
+            focused: this.props.focused,
         };
 	};
 
@@ -110,6 +111,10 @@ class LocationEditable extends AbstractLocationEditable {
 
 	refreshReadonly = (readonly) => {
 		this.setState({ readonly });
+	};
+
+	refreshFocused = (focused) => {
+		this.setState({ focused });
 	};
 
 }

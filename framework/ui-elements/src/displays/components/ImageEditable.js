@@ -83,6 +83,7 @@ class ImageEditable extends AbstractImageEditable {
             ...this.state,
             value: this.props.value,
             readonly: this.props.readonly,
+            focused: this.props.focused,
         }
 	};
 
@@ -171,6 +172,10 @@ class ImageEditable extends AbstractImageEditable {
 
 	refreshReadonly = (readonly) => {
 		this.setState({ readonly });
+	};
+
+	refreshFocused = (focused) => {
+		this.setState({ focused });
 	};
 
     _showImageGallery = () => {

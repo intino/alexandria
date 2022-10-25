@@ -45,6 +45,11 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         return this;
     }
 
+    public BaseSelector<DN, B> focus() {
+        notifier.refreshFocused(true);
+        return this;
+    }
+
     @Override
     public void init() {
         super.init();

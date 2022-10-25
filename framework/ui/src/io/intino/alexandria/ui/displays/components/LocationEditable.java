@@ -31,6 +31,12 @@ public class LocationEditable<DN extends LocationEditableNotifier, B extends Box
 		refresh();
 	}
 
+	@Override
+	public LocationEditable<DN, B> focus() {
+		notifier.refreshFocused(true);
+		return this;
+	}
+
 	public LocationEditable<DN, B> readonly(boolean readonly) {
 		_readonly(readonly);
 		notifier.refreshReadonly(readonly);

@@ -49,15 +49,7 @@ public class TextRenderer extends ComponentRenderer<Text> {
 			String value = element.isCode() ? element.value().replaceAll("\\n", "").replaceAll("\"", "\\\\\"") : element.value();
 			result.add("defaultValue", value);
 		}
-		if (element.isEditable()) {
-			Text.Editable editableText = element.asEditable();
-			if (element.isMemo()) {
-				result.add("editionMode", element.asMemo().editionMode().name());
-				result.add("rows", element.asMemo().height());
-			}
-			if (editableText.placeholder() != null) result.add("placeholder", editableText.placeholder());
-			if (editableText.helperText() != null) result.add("helperText", editableText.helperText());
-		}
+		addEditable(result);
 		return result;
 	}
 
@@ -74,6 +66,29 @@ public class TextRenderer extends ComponentRenderer<Text> {
 		FrameBuilder result = addOwner(buildBaseFrame()).add("method").add(Text.Highlighted.class.getSimpleName());
 		result.add("name", nameOf(element));
 		builder.add("methods", result);
+	}
+
+	private void addEditable(FrameBuilder builder) {
+		if (!element.isEditable()) return;
+		Text.Editable editableText = element.asEditable();
+		addMemoEditable(builder);
+		addValidation(builder);
+		if (editableText.placeholder() != null && !editableText.placeholder().isEmpty()) builder.add("placeholder", editableText.placeholder());
+		if (editableText.helperText() != null) builder.add("helperText", editableText.helperText());
+	}
+
+	private void addMemoEditable(FrameBuilder builder) {
+		if (!element.isMemo()) return;
+		builder.add("editionMode", element.asMemo().editionMode().name());
+		builder.add("rows", element.asMemo().height());
+	}
+
+	private void addValidation(FrameBuilder builder) {
+		Text.Editable.Validation validation = element.asEditable().validation();
+		if (validation == null) return;
+		Text.Editable.Validation.Length length = validation.length();
+		if (length == null) return;
+		builder.add("maxLength", length.max());
 	}
 
 	@Override

@@ -67,6 +67,7 @@ class DateEditable extends AbstractDateEditable {
 		super(props);
 		this.notifier = new DateEditableNotifier(this);
 		this.requester = new DateEditableRequester(this);
+		this.inputRef = React.createRef();
         this.state = {
             ...this.state,
             pattern : this.props.pattern !== "" ? this.props.pattern : undefined,
@@ -98,24 +99,34 @@ class DateEditable extends AbstractDateEditable {
 		const toolbar = this._isEmbedded() && this.props.mode === "fromnow" ? (props) => (<React.Fragment/>) : undefined;
 		return (
 			<div style={this.style()}>
-				{ !timePicker ? <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale(Application.configuration.language)}><KeyboardDatePicker variant={variant} placeholder={pattern} autoOk
-																								 disabled={this.state.readonly}
-																								 format={pattern} className={classes.date} mask={this.props.mask}
-																								 value={value} onChange={this.handleChange.bind(this)}
-																								 minDate={min} maxDate={this._max(max)} label={dateLabel} views={this.views()}
-																								 ToolbarComponent={toolbar}
-																								 renderDay={this.isWeekView() ? this.renderWrappedWeekDay.bind(this) : undefined}
-																								 minDateMessage={this.translate("Date should not be before minimal date")}
-																								 maxDateMessage={this.translate("Date should not be after maximal date")}/></MuiPickersUtilsProvider> : undefined }
-				{ timePicker ? <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale(Application.configuration.language)}><KeyboardDateTimePicker variant={variant} placeholder={pattern} autoOk
-																									disabled={this.state.readonly}
-																									format={pattern} className={classes.datetime}
-																									value={value} onChange={this.handleChange.bind(this)}
-																									minDate={min} maxDate={this._max(max)} label={timeLabel}
-																									ToolbarComponent={toolbar}
-																									renderDay={this.isWeekView() ? this.renderWrappedWeekDay.bind(this) : undefined}
-																									minDateMessage={this.translate("Date should not be before minimal date")}
-																									maxDateMessage={this.translate("Date should not be after maximal date")}/></MuiPickersUtilsProvider> : undefined }
+				{ !timePicker ? <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale(Application.configuration.language)}>
+                                    <KeyboardDatePicker variant={variant} placeholder={pattern} autoOk
+                                            inputProps={{ref:this.inputRef}}
+                                            disabled={this.state.readonly}
+                                            format={pattern} className={classes.date} mask={this.props.mask}
+                                            value={value} onChange={this.handleChange.bind(this)}
+                                            minDate={min} maxDate={this._max(max)} label={dateLabel} views={this.views()}
+                                            ToolbarComponent={toolbar}
+                                            renderDay={this.isWeekView() ? this.renderWrappedWeekDay.bind(this) : undefined}
+                                            minDateMessage={this.translate("Date should not be before minimal date")}
+                                            maxDateMessage={this.translate("Date should not be after maximal date")}/>
+                                </MuiPickersUtilsProvider>
+                             : undefined
+                }
+				{ timePicker ? <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale(Application.configuration.language)}>
+				                    <KeyboardDateTimePicker variant={variant} placeholder={pattern} autoOk
+                                            inputProps={{ref:this.inputRef}}
+                                            disabled={this.state.readonly}
+                                            format={pattern} className={classes.datetime}
+                                            value={value} onChange={this.handleChange.bind(this)}
+                                            minDate={min} maxDate={this._max(max)} label={timeLabel}
+                                            ToolbarComponent={toolbar}
+                                            renderDay={this.isWeekView() ? this.renderWrappedWeekDay.bind(this) : undefined}
+                                            minDateMessage={this.translate("Date should not be before minimal date")}
+                                            maxDateMessage={this.translate("Date should not be after maximal date")}/>
+                                </MuiPickersUtilsProvider>
+                             : undefined
+                }
 				{this.props.allowEmpty && <FormControlLabel control={<Checkbox disabled={this.state.readonly} checked={this.state.empty} onChange={this.handleAllowEmpty.bind(this)} />} label={this.translate("sin definir")} />}
 			</div>
 		);
@@ -143,6 +154,11 @@ class DateEditable extends AbstractDateEditable {
 
 	refreshReadonly = (readonly) => {
 		this.setState({ readonly });
+	};
+
+	refreshFocused = (focused) => {
+        if (this.inputRef == null || this.inputRef.current == null) return;
+        window.setTimeout(() => this.inputRef.current.focus(), 100);
 	};
 
 	refreshRange = (range) => {
