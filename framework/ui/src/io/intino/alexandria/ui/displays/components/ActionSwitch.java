@@ -34,6 +34,11 @@ public class ActionSwitch<DN extends ActionSwitchNotifier, B extends Box> extend
         return this;
     }
 
+    public ActionSwitch<DN, B> focus() {
+        notifier.refreshFocused(true);
+        return this;
+    }
+
     public ActionSwitch<DN, B> toggle(ToggleEvent.State state) {
         state(state);
         notifyToggle();

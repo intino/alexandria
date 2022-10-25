@@ -15,6 +15,7 @@ class ActionSwitch extends AbstractActionSwitch {
 		super(props);
 		this.notifier = new ActionSwitchNotifier(this);
 		this.requester = new ActionSwitchRequester(this);
+		this.inputRef = React.createRef();
 		this.state = {
 			...this.state,
 			checked : this.traceValue() != null ? this.traceValue() : this.props.state === "On",
@@ -25,7 +26,7 @@ class ActionSwitch extends AbstractActionSwitch {
 	renderTrigger = () => {
 		if (!this.state.visible) return (<React.Fragment/>);
 		return (
-			<FormControlLabel style={{marginLeft:'0',marginRight:'0',...this.style()}}
+			<FormControlLabel ref={this.inputRef} style={{marginLeft:'0',marginRight:'0',...this.style()}}
 							  control={<Switch size={this._size()} disabled={this.state.readonly}
 							                   checked={this.state.checked} onChange={this.handleChange.bind(this)}/>}
 							  label={this._title()}
@@ -35,6 +36,11 @@ class ActionSwitch extends AbstractActionSwitch {
 
 	refreshState = (value) => {
 		this.setState({ checked: value === "On"});
+	};
+
+	refreshFocused = (value) => {
+	    if (this.inputRef == null || this.inputRef.current == null) return;
+	    window.setTimeout(() => this.inputRef.current.focus(), 100);
 	};
 
 	handleChange = () => {

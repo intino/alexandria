@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayRequesterFolder;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.format;
 import static io.intino.konos.builder.helpers.Commons.*;
 import static io.intino.konos.model.KonosGraph.templateFor;

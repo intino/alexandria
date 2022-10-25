@@ -31,6 +31,11 @@ public class TemplateStampEditable<DN extends TemplateStampEditableNotifier, B e
     }
 
     @Override
+    public TemplateStampEditable<DN, B> focus() {
+        return this;
+    }
+
+    @Override
     public TemplateStampEditable<DN, B> readonly(boolean readonly) {
         this.readonly = readonly;
         children().stream().filter(c -> c instanceof Editable).forEach(c -> ((Editable<?,?>)c).readonly(readonly));

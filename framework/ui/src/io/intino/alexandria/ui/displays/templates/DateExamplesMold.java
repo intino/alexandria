@@ -22,6 +22,7 @@ public class DateExamplesMold extends AbstractDateExamplesMold<AlexandriaUiBox> 
         date1.value(Instant.now());
         date2.value(Instant.now());
         date3.range(Instant.now(), Instant.now().plus(2, ChronoUnit.DAYS));
+        date3.focus();
         date3.onChange(e -> {
             Instant value = e.value();
             notifyUser(value != null ? Formatter.format(Date.from(value)) : "Not defined", UserMessage.Type.Info);

@@ -34,6 +34,7 @@ class NumberEditable extends AbstractNumberEditable {
 		super(props);
 		this.notifier = new NumberEditableNotifier(this);
 		this.requester = new NumberEditableRequester(this);
+		this.inputRef = React.createRef();
         this.state = {
             ...this.state,
             readonly: this.props.readonly,
@@ -60,6 +61,7 @@ class NumberEditable extends AbstractNumberEditable {
 			<TextField format={this.variant("body1")} style={this.style()} className={classes.default} label={label} type="number"
 					   value={value} onChange={this.handleChange.bind(this)} /*disabled={this.state.readonly}*/ autoFocus={this.props.focused}
 					   error={error != null} helperText={this.state.readonly ? undefined : (error != null ? error : this.translate(this.props.helperText))} autoComplete="off"
+					   inputRef={this.inputRef}
 					   inputProps={{
 						   min: this.state.min !== -1 ? this.state.min : undefined,
 						   max: this.state.max !== -1 ? this.state.max : undefined,
@@ -80,6 +82,11 @@ class NumberEditable extends AbstractNumberEditable {
 
 	refreshReadonly = (readonly) => {
 		this.setState({ readonly });
+	};
+
+	refreshFocused = (focused) => {
+	    if (this.inputRef == null || this.inputRef.current == null) return;
+	    window.setTimeout(() => this.inputRef.current.focus(), 100);
 	};
 
 	refreshRange = (range) => {

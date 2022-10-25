@@ -87,6 +87,12 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 	}
 
 	@Override
+	public DateEditable<DN, B> focus() {
+		notifier.refreshFocused(true);
+		return this;
+	}
+
+	@Override
 	public DateEditable<DN, B> readonly(boolean readonly) {
 		_readonly(readonly);
 		notifier.refreshReadonly(readonly);

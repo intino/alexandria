@@ -25,6 +25,7 @@ export default class FileEditable extends AbstractFile {
 		super(props);
 		this.notifier = new FileEditableNotifier(this);
 		this.requester = new FileEditableRequester(this);
+		this.inputRef = React.createRef();
 		this.state = {
 		    ...this.state,
             value : null,
@@ -135,7 +136,7 @@ export default class FileEditable extends AbstractFile {
 	};
 
 	_renderInputField = () => {
-	    return (<input type="file" disabled={this.state.readonly ? true : undefined}
+	    return (<input ref={this.inputRef} type="file" disabled={this.state.readonly ? true : undefined}
 	                   onChange={this.handleChange.bind(this)} value="" ></input>);
     };
 
@@ -169,6 +170,11 @@ export default class FileEditable extends AbstractFile {
 
 	refreshReadonly = (readonly) => {
 		this.setState({ readonly });
+	};
+
+	refreshFocused = (focused) => {
+        if (this.inputRef == null || this.inputRef.current == null) return;
+        window.setTimeout(() => this.inputRef.current.focus(), 100);
 	};
 }
 

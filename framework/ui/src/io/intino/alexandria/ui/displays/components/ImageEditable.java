@@ -35,6 +35,12 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
 	}
 
 	@Override
+	public ImageEditable<DN, B> focus() {
+		notifier.refreshFocused(true);
+		return this;
+	}
+
+	@Override
 	public ImageEditable<DN, B> readonly(boolean readonly) {
 		_readonly(readonly);
 		notifier.refreshReadonly(readonly);

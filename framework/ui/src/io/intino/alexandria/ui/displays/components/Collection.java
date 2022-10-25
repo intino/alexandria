@@ -81,6 +81,10 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         this.loadingListeners.add(listener);
     }
 
+    public List<Object> selectedItems() {
+        return itemsOf(selection());
+    }
+
     @Override
     public void init() {
         super.init();

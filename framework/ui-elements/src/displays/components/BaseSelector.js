@@ -6,6 +6,7 @@ export default class BaseSelector extends AbstractBaseSelector {
 
 	constructor(props) {
 		super(props);
+		this.selectorRef = React.createRef();
 		this.state = {
             ...this.state,
             readonly: this.props.readonly,
@@ -17,6 +18,11 @@ export default class BaseSelector extends AbstractBaseSelector {
 
 	refreshReadonly = (readonly) => {
 		this.setState({ readonly });
+	};
+
+	refreshFocused = (focused) => {
+	    if (this.selectorRef == null || this.selectorRef.current == null) return;
+	    window.setTimeout(() => this.selectorRef.current.focus(), 100);
 	};
 
 	refreshOptions = (options) => {

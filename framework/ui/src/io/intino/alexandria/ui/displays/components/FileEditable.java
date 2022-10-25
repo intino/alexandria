@@ -52,6 +52,12 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	}
 
 	@Override
+	public FileEditable<DN, B> focus() {
+		notifier.refreshFocused(true);
+		return this;
+	}
+
+	@Override
 	public FileEditable<DN, B> readonly(boolean readonly) {
 		_readonly(readonly);
 		notifier.refreshReadonly(readonly);
