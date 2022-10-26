@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.PropertyList;
 import io.intino.alexandria.ui.displays.components.addressable.Addressable;
 import io.intino.alexandria.ui.displays.events.actionable.OpenLayerEvent;
 import io.intino.alexandria.ui.displays.events.actionable.OpenLayerListener;
@@ -79,7 +80,9 @@ public class OpenLayer<DN extends OpenLayerNotifier, B extends Box> extends Abst
 
 	private Layer<?, ?> createLayer() {
 		Layer<?, ?> result = new Layer<>(box()).id(UUID.randomUUID().toString());
-		result.properties().put("transition", transition.name());
+		PropertyList properties = result.properties();
+		properties.put("transition", transition.name());
+		if (color() != null) properties.put("color", color());
 		result.bindTo(this);
 		return result;
 	}

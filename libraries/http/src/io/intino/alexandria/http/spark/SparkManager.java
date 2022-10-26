@@ -245,11 +245,13 @@ public class SparkManager<P extends PushService> {
 		if (request.getParameter(sessionCookieName) != null) {
 			Cookie userCookie = new Cookie(sessionCookieName, request.getParameter(sessionCookieName));
 			userCookie.setHttpOnly(true);
+			userCookie.setSecure(true);
 			response.raw().addCookie(userCookie);
 		} else if (this.request.cookie(sessionCookieName) == null) {
 			String sessionId = session.getId();
 			Cookie userCookie = new Cookie(sessionCookieName, sessionId);
 			userCookie.setHttpOnly(true);
+			userCookie.setSecure(true);
 			response.raw().addCookie(userCookie);
 		}
 	}
