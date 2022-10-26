@@ -47,8 +47,8 @@ def type(resource & html)
 
 	        <link rel="icon" href="$$favicon">
 
-            <script src="$$url/res/js/jquery-3.3.1.min.js"></script>
-    		<script src="$$url/res/js/materialize-0.98.0.min.js"></script>
+            <script src="$$url/res/js/jquery-3.6.1.min.js"></script>
+    		<script src="$$url/res/js/materialize-1.0.0.min.js"></script>
 
             <style>
                 html, body {
