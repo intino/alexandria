@@ -28,7 +28,9 @@ public class SortingRenderer extends BindingCollectionRenderer<Sorting> {
 
 	private void addOrderByProperties(FrameBuilder properties) {
 		if (!element.isOrderBy()) return;
-		properties.add("mode", element.asOrderBy().mode() == Sorting.OrderBy.Mode.Ascending ? "asc" : "desc");
+		Sorting.OrderBy orderBy = element.asOrderBy();
+		properties.add("mode", orderBy.mode() == Sorting.OrderBy.Mode.Ascending ? "asc" : "desc");
+		properties.add("align", orderBy.align().name());
 	}
 
 	@Override

@@ -223,7 +223,7 @@ def type(properties & frame) trigger(specific)
 end
 
 def type(properties & sorting) trigger(specific)
-	[ mode="$mode"]
+	[ mode="$mode"][ align="$align"]
 end
 
 def type(properties & htmlviewer) trigger(specific)

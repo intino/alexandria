@@ -41,8 +41,9 @@ class SortingOrderBy extends AbstractSortingOrderBy {
         const active = this.state.active;
         const activeMode = this.props.mode === "asc" ? "desc" : "asc";
         const inactiveMode = this.props.mode;
+        const align = this.props.align !== null ? this.props.align.toLowerCase() : 'left';
 		return (
-		    <TableCell align='left' style={{padding:'0',margin:'0',border:'0'}}>
+		    <TableCell align={this.props.align} style={{padding:'0',margin:'0',border:'0'}}>
                 <TableSortLabel active={active} direction={active ? activeMode : inactiveMode} onClick={this.handleToggle.bind(this)} style={this.style()}>
                     <Typography style={{whiteSpace:'nowrap'}} variant={this.variant("body1")} className={classes.link}><span style={this.style()}>{this.translate(label !== "" && label != null ? label : "no label")}</span></Typography>
                 </TableSortLabel>
