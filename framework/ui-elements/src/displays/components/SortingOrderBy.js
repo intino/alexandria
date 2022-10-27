@@ -44,7 +44,7 @@ class SortingOrderBy extends AbstractSortingOrderBy {
 		return (
 		    <TableCell align='left' style={{padding:'0',margin:'0',border:'0'}}>
                 <TableSortLabel active={active} direction={active ? activeMode : inactiveMode} onClick={this.handleToggle.bind(this)} style={this.style()}>
-                    <Typography style={{whiteSpace:'nowrap'}} variant={this.variant("body1")} className={classes.link}>{this.translate(label !== "" && label != null ? label : "no label")}</Typography>
+                    <Typography style={{whiteSpace:'nowrap'}} variant={this.variant("body1")} className={classes.link}><span style={this.style()}>{this.translate(label !== "" && label != null ? label : "no label")}</span></Typography>
                 </TableSortLabel>
             </TableCell>
 		);
@@ -53,6 +53,10 @@ class SortingOrderBy extends AbstractSortingOrderBy {
 	handleToggle = () => {
 	    this.setState({active: !this.state.active});
 		this.requester.toggle();
+	};
+
+	refreshSelection = (selection) => {
+	    this.setState({active: selection});
 	};
 }
 

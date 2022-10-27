@@ -35,6 +35,16 @@ public class BaseSorting<DN extends BaseSortingNotifier, B extends Box> extends 
 		notifySelected();
 	}
 
+	public boolean selected() {
+		return selected;
+	}
+
+	public BaseSorting<DN, B> selection(boolean value) {
+		this.selected = value;
+		notifier.refreshSelection(value);
+		return this;
+	}
+
 	private void notifySelected() {
 		notifyCollections();
 		notifyListener();

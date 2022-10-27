@@ -25,4 +25,7 @@ export default class BaseSorting extends AbstractBaseSorting {
 		this.requester.toggle();
 	};
 
+	refreshSelection = (selection) => {
+	};
+
 }
