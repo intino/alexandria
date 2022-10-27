@@ -87,6 +87,7 @@ Component groupingToolbar
 	Request removeFilter as Text
 
 Component baseSorting
+	Notification refreshSelection as Bool
 	Request toggle
 
 Component sorting as ExtensionOf(baseSorting)
