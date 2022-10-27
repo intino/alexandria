@@ -75,6 +75,7 @@ Concept CatalogComponents
 		var Collection[] collections
 		Aspect OrderBy
 			var word:{Ascending Descending} mode = Ascending
+			var word:{Left Right} align = Left
 		Aspect Addressable
 
 	Concept:Named SearchBox extends Component
