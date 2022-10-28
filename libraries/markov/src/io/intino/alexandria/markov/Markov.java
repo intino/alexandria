@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import static io.intino.alexandria.markov.Markov.Type.Directed;
-import static io.intino.alexandria.markov.Markov.Type.Undirected;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -28,7 +26,7 @@ public class Markov {
 		this.states = states;
 		this.map = asMap(states);
 		this.count = count;
-		this.type = Directed;
+		this.type = Type.Directed;
 	}
 
 	public Markov set(Type type) {
@@ -63,11 +61,34 @@ public class Markov {
 		return power(transitionProbabilities())[map.get(from)];
 	}
 
+	public double[] randomWalk() {
+		double[] stateProbabilities = stateProbabilities();
+		double[][] randomWalks = power(transitionProbabilities());
+		double[] result = new double[size];
+		for (int i = 0; i < size; i++)
+			for (int j = 0; j < size; j++)
+				result[j] += stateProbabilities[i] * randomWalks[i][j];
+		return result;
+	}
+
+
+	public double[] stateProbabilities() {
+		double[] result = new double[size];
+		double total = 0;
+		for (int i = 0; i < size; i++)
+			for (int j = 0; j < size; j++) {
+				result[i] += count[j][i];
+				total += count[j][i];
+			}
+		if (total == 0) return result;
+		for (int i = 0; i < size; i++) result[i] = result[i] / total;
+		return result;
+	}
+
 	private double[][] power(double[][] matrix) {
 		double[][] result = matrix;
-		for (int i = 1; i < 100; i++) {
+		for (int i = 1; i < 100; i++)
 			result = multiply(result, matrix);
-		}
 		return result;
 	}
 
@@ -80,11 +101,11 @@ public class Markov {
 		});
 		return c;
 	}
-
 	private static final int Threshold = 1 << 16;
+
 	public Markov add(String from, String to) {
 		increment(from, to);
-		if (type == Undirected) increment(to, from);
+		if (type == Type.Undirected) increment(to, from);
 		return this;
 	}
 
@@ -124,8 +145,8 @@ public class Markov {
 		return sb.substring(1);
 	}
 
-	public static Markov deserialize(String line) {
-		return deserialize(line.split("\\|"));
+	public static Markov deserialize(String content) {
+		return deserialize(content.split("\\|"));
 	}
 
 	private static Markov deserialize(String[] lines) {
