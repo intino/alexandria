@@ -103,7 +103,7 @@ public class DocxBuilder {
 	}
 
 	public void save(File file) throws IOException {
-		new Zip(template).to(file);
+		new Zip(template, content).to(file);
 	}
 
 	private DocxBuilder(File template) {
@@ -111,7 +111,7 @@ public class DocxBuilder {
 		this.content = new Content();
 	}
 
-	private static final class Content {
+	static final class Content {
 
 		public static final String FIELD_START = "«";
 		public static final String FIELD_END = "»";
@@ -241,23 +241,43 @@ public class DocxBuilder {
 		}
 	}
 
-	private final class Zip {
+	static final class Zip {
 
+		private final File template;
+		private final Content content;
 		private final ZipFile zipFile;
 		private final ArrayList<? extends ZipEntry> entries;
 		private final Map<String, String> imageRelationships;
-		private final Document document; // word/document.xml
+		private final Map<String, Document> documents; // word/document.xml, word/header1.xml, word/footer1.xml, etc
 
-		Zip(File template) throws IOException {
+		Zip(File template, Content content) throws IOException {
+			this.template = template;
+			this.content = content;
 			this.zipFile = new ZipFile(template);
 			this.entries = Collections.list(zipFile.entries());
-			this.document = loadDocument();
-			this.imageRelationships = findImageReferencesInDocument();
+			this.documents = loadDocuments();
+			this.imageRelationships = findImageReferencesInDocuments();
 			setupImageExtents();
 		}
 
+		private Document mainDocument() {
+			return documents.get("word/document.xml");
+		}
+
+		File template() {
+			return template;
+		}
+
+		Map<String, String> imageRelationships() {
+			return imageRelationships;
+		}
+
+		Map<String, Document> documents() {
+			return documents;
+		}
+
 		private void setupImageExtents() {
-			NodeList drawingNodes = document.getElementsByTagName("w:drawing");
+			NodeList drawingNodes = mainDocument().getElementsByTagName("w:drawing");
 			int length = drawingNodes.getLength();
 			for(int i = 0; i < length; i++) {
 				Node drawingNode = drawingNodes.item(i);
@@ -353,15 +373,25 @@ public class DocxBuilder {
 			return null;
 		}
 
-		private Document loadDocument() throws IOException {
+		private Map<String, Document> loadDocuments() throws IOException {
 			try {
+				Map<String, Document> documentMap = new HashMap<>();
 				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 				DocumentBuilder db = dbf.newDocumentBuilder();
-				ZipEntry docEntry = entries.stream().filter(this::isDocument).findFirst().orElse(null);
-				return db.parse(zipFile.getInputStream(docEntry));
+				List<ZipEntry> docEntries = entries.stream().filter(this::isDocumentOrHeaderOrFooter).collect(Collectors.toList());
+				for(ZipEntry docEntry : docEntries) {
+					Document doc = db.parse(zipFile.getInputStream(docEntry));
+					documentMap.put(docEntry.getName(), doc);
+				}
+				return documentMap;
 			} catch (Exception e) {
 				throw new IOException(e);
 			}
+		}
+
+		private boolean isDocumentOrHeaderOrFooter(ZipEntry zipEntry) {
+			String name = zipEntry.getName().toLowerCase();
+			return name.endsWith("word/document.xml") || name.startsWith("word/header") || name.startsWith("word/footer");
 		}
 
 		void to(File result) throws IOException {
@@ -371,12 +401,20 @@ public class DocxBuilder {
 			close();
 		}
 
-		private Map<String, String> findImageReferencesInDocument() {
-			if (content.images.isEmpty()) return Collections.emptyMap();
-			Map<String, String> rels = loadDocumentRels();
+		private Map<String, String> findImageReferencesInDocuments() {
 			Map<String, String> imageEntries = new HashMap<>();
+			for(Map.Entry<String, Document> entry : documents.entrySet()) {
+				findImageReferencesInDocument(entry.getKey(), entry.getValue(), imageEntries);
+			}
+			return imageEntries;
+		}
+
+		private void findImageReferencesInDocument(String docName, Document document, Map<String, String> imageEntries) {
 			try {
-				final NodeList graphicNodes = document.getElementsByTagName("pic:cNvPr");
+				Map<String, String> rels = loadDocumentRels(docName);
+				if(rels.isEmpty()) return;
+
+				NodeList graphicNodes = document.getElementsByTagName("pic:cNvPr");
 				int bound = graphicNodes.getLength();
 				for (int i = 0; i < bound; i++) {
 					Node cNvPr = graphicNodes.item(i);
@@ -386,6 +424,7 @@ public class DocxBuilder {
 						String relId = findRelId(cNvPr.getParentNode().getParentNode());
 						if (rels.containsKey(relId)) {
 							ZipEntry image = findImage(rels.get(relId));
+							if(image == null) continue;
 							imageEntries.put(image.getName(), rel);
 						}
 					}
@@ -393,7 +432,6 @@ public class DocxBuilder {
 			} catch (Exception e) {
 				Logger.error(e);
 			}
-			return imageEntries;
 		}
 
 		void close() throws IOException {
@@ -423,15 +461,17 @@ public class DocxBuilder {
 		}
 
 		private boolean isDocument(ZipEntry entry) {
-			return entry.getName().equalsIgnoreCase("word/document.xml");
+			return documents.containsKey(entry.getName());
+//			return entry.getName().equalsIgnoreCase("word/document.xml");
 		}
 
 		private ZipEntry findImage(String imageReference) {
 			return entries.stream().filter(e -> e.getName().equals("word/" + imageReference)).findFirst().orElse(null);
 		}
 
-		private Map<String, String> loadDocumentRels() {
-			final ZipEntry docRelsEntry = entries.stream().filter(this::isDocumentRels).findFirst().orElse(null);
+		private Map<String, String> loadDocumentRels(String docName) {
+			ZipEntry docRelsEntry = entries.stream().filter(e -> isDocumentRelsOf(e, docName)).findFirst().orElse(null);
+			if(docRelsEntry == null) return Collections.emptyMap();
 			Map<String, String> rels = new HashMap<>();
 			try {
 				final InputStream is = zipFile.getInputStream(docRelsEntry);
@@ -463,8 +503,11 @@ public class DocxBuilder {
 			return null;
 		}
 
-		private boolean isDocumentRels(ZipEntry entry) {
-			return entry.getName().equalsIgnoreCase("word/_rels/document.xml.rels");
+		private boolean isDocumentRelsOf(ZipEntry entry, String documentName) {
+			String name = entry.getName();
+			if(!name.startsWith("word/_rels") || !name.endsWith(".rels")) return false;
+			return name.contains(new File(documentName).getName());
+//			return name.equalsIgnoreCase("word/_rels/document.xml.rels");
 		}
 
 		private void copyFile(InputStream is, ZipOutputStream zos) throws IOException {
@@ -474,7 +517,7 @@ public class DocxBuilder {
 		}
 
 		private void replaceDocument(ZipEntry entry, ZipOutputStream zos) throws IOException {
-			File tmp = writeTmpDoc();
+			File tmp = DocumentHelper.createTmpDocument(template.getParentFile(), documents.get(entry.getName()));
 			try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(tmp.toPath())))) {
 				String line;
 				while ((line = reader.readLine()) != null) {
@@ -595,37 +638,6 @@ public class DocxBuilder {
 
 				zos.write(paragraph.xml().getBytes());
 			}
-		}
-
-		private File writeTmpDoc() throws IOException {
-
-			File tmp = new File(template.getParentFile(), "document_" + System.nanoTime() + ".xml");
-			tmp.deleteOnExit();
-
-			try(OutputStream output = Files.newOutputStream(tmp.toPath())) {
-
-				TransformerFactory transformerFactory = TransformerFactory.newInstance();
-				// The default add many empty new line, not sure why?
-				// https://mkyong.com/java/pretty-print-xml-with-java-dom-and-xslt/
-				Transformer transformer = transformerFactory.newTransformer();
-
-				// add a xslt to remove the extra newlines
-				//Transformer transformer = transformerFactory.newTransformer(new StreamSource(new File(FORMAT_XSLT)));
-
-				// pretty print
-				transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-				transformer.setOutputProperty(OutputKeys.STANDALONE, "no");
-
-				DOMSource source = new DOMSource(document);
-				StreamResult result = new StreamResult(output);
-
-				transformer.transform(source, result);
-
-			} catch (TransformerException e) {
-				throw new RuntimeException(e);
-			}
-
-			return tmp;
 		}
 	}
 
