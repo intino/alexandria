@@ -10,13 +10,13 @@ def type(display & collection)
 	import Abstract$name+firstUpperCase from "../../$packageTypeRelativeDirectory~gen/displays[/$packageType~s]/Abstract$name+firstUpperCase";
 	import $name+firstUpperCase~Notifier from "../../$packageTypeRelativeDirectory~gen/displays/notifiers/$name+firstUpperCase~Notifier";
 	import $name+firstUpperCase~Requester from "../../$packageTypeRelativeDirectory~gen/displays/requesters/$name+firstUpperCase~Requester";
-    import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-    import { withSnackbar } from 'notistack';
-    import { $type+firstUpperCase~Styles } from "alexandria-ui-elements/src/displays/components/$type+firstUpperCase";
+	import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
+	import { withSnackbar } from 'notistack';
+	import { $type+firstUpperCase~Styles } from "alexandria-ui-elements/src/displays/components/$type+firstUpperCase";
 
-    const styles = theme => ({
-        ...$type+firstUpperCase~Styles(theme),
-    });
+	const styles = theme => ({
+		...$type+firstUpperCase~Styles(theme),
+	});
 
 	class $name+firstUpperCase extends Abstract$name+firstUpperCase {
 
@@ -30,7 +30,7 @@ def type(display & collection)
 	}
 
 	export default withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase));
-    DisplayFactory.register("$name+firstUpperCase", withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase)));
+	DisplayFactory.register("$name+firstUpperCase", withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase)));
 end
 
 def type(display)
@@ -39,8 +39,8 @@ def type(display)
 	import Abstract$name+firstUpperCase from "../../$packageTypeRelativeDirectory~gen/displays[/$packageType~s]/Abstract$name+firstUpperCase";
 	import $name+firstUpperCase~Notifier from "../../$packageTypeRelativeDirectory~gen/displays/notifiers/$name+firstUpperCase~Notifier";
 	import $name+firstUpperCase~Requester from "../../$packageTypeRelativeDirectory~gen/displays/requesters/$name+firstUpperCase~Requester";
-    import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-    import { withSnackbar } from 'notistack';
+	import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
+	import { withSnackbar } from 'notistack';
 
 	const styles = theme => ({});
 
@@ -56,7 +56,7 @@ def type(display)
 	}
 
 	export default withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase));
-    DisplayFactory.register("$name+firstUpperCase", withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase)));
+	DisplayFactory.register("$name+firstUpperCase", withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase)));
 end
 
 def type(notification)

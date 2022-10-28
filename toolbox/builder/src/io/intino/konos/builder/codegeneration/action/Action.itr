@@ -27,7 +27,7 @@ def type(action & notification) !type(ui)
 	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
 	import io.intino.alexandria.exceptions.*;
 	import io.intino.alexandria.http.pushservice.Client;
-    import io.intino.alexandria.http.spark.SparkNotifier;
+	import io.intino.alexandria.http.spark.SparkNotifier;
 
 	public class $name+snakecaseToCamelCase+firstUpperCase~Action {
 		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
@@ -100,7 +100,7 @@ def type(ui & accessibleDisplay)
 
 		public void execute() {
 			$display+snakecaseToCamelCase+firstUpperCase display = new $display+snakecaseToCamelCase+firstUpperCase(box);
-    		display.id(personifiedDisplay);
+			display.id(personifiedDisplay);
 			$parameter+methodCall...[$NL]
 			soul.register(display);
 			display.init();
@@ -138,19 +138,19 @@ def type(ui & action & gen)
 end
 
 def type(executeBody & static)
-    return "$text";
+	return "$text";
 end
 
 def type(executeBody)
-    return super.template("$templateName"[, Arrays.asList($usedUnit...[,])]);
+	return super.template("$templateName"[, Arrays.asList($usedUnit...[,])]);
 end
 
 def type(title & configuration)
-    "{$title}".replace("{$title}", box.configuration().get("$title"))
+	"{$title}".replace("{$title}", box.configuration().get("$title"))
 end
 
 def type(title)
-    "$title"
+	"$title"
 end
 
 def trigger(favicon)
@@ -223,13 +223,13 @@ end
 
 def type(component & static)
 	public String execute() {
-	    return super.execute();
+		return super.execute();
 	}
 end
 
 def type(component)
 	public io.intino.alexandria.ui.Soul prepareSoul(io.intino.alexandria.ui.services.push.UIClient client) {
-	    return new io.intino.alexandria.ui.Soul(session) {
+		return new io.intino.alexandria.ui.Soul(session) {
 			@Override
 			public void personify() {
 				$value+snakecaseToCamelCase+firstUpperCase component = new $value+snakecaseToCamelCase+firstUpperCase(box);
@@ -256,9 +256,9 @@ def type(usedUnit & custom)
 end
 
 def type(contextProperty & spark)
-    public io.intino.alexandria.http.spark.SparkContext context;
+	public io.intino.alexandria.http.spark.SparkContext context;
 end
 
 def type(contextProperty)
-    public io.intino.alexandria.Context context = new io.intino.alexandria.Context();
+	public io.intino.alexandria.Context context = new io.intino.alexandria.Context();
 end

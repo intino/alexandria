@@ -1,14 +1,14 @@
 def type(api)
 	{
-      "urls": $[
-        $url...[,$NL]
-      $],
-      "title": "$title",
-      "subtitle": "$subtitle",
-      "background": "$background",
-      "color": "$color",
-      "selectorBorderColor": ""
-    }
+	  "urls": $[
+		$url...[,$NL]
+	  $],
+	  "title": "$title",
+	  "subtitle": "$subtitle",
+	  "background": "$background",
+	  "color": "$color",
+	  "selectorBorderColor": ""
+	}
 end
 
 def trigger(url)

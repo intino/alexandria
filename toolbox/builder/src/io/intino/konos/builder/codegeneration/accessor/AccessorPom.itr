@@ -40,16 +40,16 @@ def type(pom)
 	</build>
 
 	<repositories>
-        <repository>
-            <id>intino-maven</id>
-            <name>intino-maven-releases</name>
-            <url>https://artifactory.intino.io/artifactory/releases</url>
-        </repository>
-    </repositories>
+		<repository>
+			<id>intino-maven</id>
+			<name>intino-maven-releases</name>
+			<url>https://artifactory.intino.io/artifactory/releases</url>
+		</repository>
+	</repositories>
 
-    <distributionManagement>
-        $repository+distribution...[$NL]
-    </distributionManagement>
+	<distributionManagement>
+		$repository+distribution...[$NL]
+	</distributionManagement>
 
 	<dependencies>
 		$dependency...[$NL]
@@ -103,10 +103,10 @@ def type(jmx) trigger(dependency)
 		<version>1.0.2</version>
 	</dependency>
 	<dependency>
-        <groupId>io.intino.alexandria</groupId>
-        <artifactId>exceptions</artifactId>
-        <version>2.0.1</version>
-    </dependency>
+		<groupId>io.intino.alexandria</groupId>
+		<artifactId>exceptions</artifactId>
+		<version>2.0.1</version>
+	</dependency>
 end
 
 def type(messaging) trigger(dependency)

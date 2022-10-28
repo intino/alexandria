@@ -5,11 +5,11 @@ def type(display & accessible)
 	import $package+validPackage.*;
 	$schemaImport
 
-    public class $name+FirstUpperCase~ProxyNotifier extends io.intino.alexandria.ui.displays.notifiers.ProxyDisplayNotifier  {
-        public $name+FirstUpperCase~ProxyNotifier(io.intino.alexandria.ui.displays.Display display, io.intino.alexandria.http.pushservice.MessageCarrier carrier) {
-            super(display, carrier);
-        }
-    }
+	public class $name+FirstUpperCase~ProxyNotifier extends io.intino.alexandria.ui.displays.notifiers.ProxyDisplayNotifier  {
+		public $name+FirstUpperCase~ProxyNotifier(io.intino.alexandria.ui.displays.Display display, io.intino.alexandria.http.pushservice.MessageCarrier carrier) {
+			super(display, carrier);
+		}
+	}
 end
 
 def type(display)
@@ -19,15 +19,15 @@ def type(display)
 	import $package+validPackage.*;
 	$schemaImport
 
-    public class $name+FirstUpperCase~Notifier extends $parentType {
+	public class $name+FirstUpperCase~Notifier extends $parentType {
 
-        public $name+FirstUpperCase~Notifier(io.intino.alexandria.ui.displays.Display display, io.intino.alexandria.http.pushservice.MessageCarrier carrier) {
-            super(display, carrier);
-        }
+		public $name+FirstUpperCase~Notifier(io.intino.alexandria.ui.displays.Display display, io.intino.alexandria.http.pushservice.MessageCarrier carrier) {
+			super(display, carrier);
+		}
 
 		[$notification...[$NL$NL]]
 		[$event...[$NL$NL]]
-    }
+	}
 end
 
 def attribute(extensionOf) trigger(parentType)
@@ -45,21 +45,21 @@ def type(notification) trigger(notification)
 end
 
 def type(event)
-    public void $name+firstLowerCase() {
-        putToDisplay("$name+firstLowerCase");
-    }
+	public void $name+firstLowerCase() {
+		putToDisplay("$name+firstLowerCase");
+	}
 end
 
 def type(parameter) trigger(call)
-    value
+	value
 end
 
 def type(list) trigger(parameter)
-    java.util.List<$value>
+	java.util.List<$value>
 end
 
 def trigger(parameter)
-    $value
+	$value
 end
 
 def type(schemaImport)
@@ -78,7 +78,7 @@ def attribute(this:Client) trigger(target)
 end
 
 def type(proxyMessage)
-    public void notifyProxyMessage(String name) {
-        putToDisplay("notifyProxyMessage", "v", name);
-    }
+	public void notifyProxyMessage(String name) {
+		putToDisplay("notifyProxyMessage", "v", name);
+	}
 end

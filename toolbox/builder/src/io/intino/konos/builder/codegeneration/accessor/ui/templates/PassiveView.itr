@@ -2,12 +2,12 @@ def type(notifier)
 	export default class Notifier {
 		static subscriptions = $[$];
 
-    	constructor(element) {
-            this.element = element;
-            this.pushService = Application.services.pushService;
-            this.pushRegistrations = $[$];
-    		this.pushLinked = false;
-        };
+		constructor(element) {
+			this.element = element;
+			this.pushService = Application.services.pushService;
+			this.pushRegistrations = $[$];
+			this.pushLinked = false;
+		};
 
 		setup() {
 			var context = this.element.props.context != null ? this.element.props.context() : "";
@@ -54,19 +54,19 @@ def type(notifier)
 				}
 			};
 
-            function _containsAll(owner, context) {
-                if (context == null) return false;
-                let contextList = context.split(".");
-                let ownerList = owner.split(".");
-                return ownerList.length > contextList.length ? _containsInList(owner, contextList) : _containsInList(context, ownerList);
-            }
+			function _containsAll(owner, context) {
+				if (context == null) return false;
+				let contextList = context.split(".");
+				let ownerList = owner.split(".");
+				return ownerList.length > contextList.length ? _containsInList(owner, contextList) : _containsInList(context, ownerList);
+			}
 
-            function _containsInList(content, list) {
-                for (var i=0; i<list.length; i++) {
-                    if (content.indexOf(list$[i$]) === -1) return false;
-                }
-                return true;
-            }
+			function _containsInList(content, list) {
+				for (var i=0; i<list.length; i++) {
+					if (content.indexOf(list$[i$]) === -1) return false;
+				}
+				return true;
+			}
 
 			function _register(registration) {
 				this.pushRegistrations.push(registration);
@@ -74,13 +74,13 @@ def type(notifier)
 		};
 
 		detached = () => {
-            var context = this.element.props.context != null ? this.element.props.context() : "";
-            var key = this.element.props.id + context;
-            //Notifier.subscriptions$[key$] = null;
+			var context = this.element.props.context != null ? this.element.props.context() : "";
+			var key = this.element.props.id + context;
+			//Notifier.subscriptions$[key$] = null;
 			this.pushRegistrations.forEach((registrations) => registrations.deregister());
 			this.pushRegistrations.splice(0, this.pushRegistrations.length);
 		};
-    }
+	}
 end
 
 def type(requester)
@@ -93,29 +93,29 @@ def type(requester)
 			this.fileService = Application.services.fileService;
 		};
 
-        available = (unit) => {
-            return this.pushService.isConnectionRegistered(unit);
-        };
+		available = (unit) => {
+			return this.pushService.isConnectionRegistered(unit);
+		};
 
-        connect = (unit, successCallback, errorCallback) => {
-            if (this.available(unit)) {
-                if (successCallback != null) successCallback();
-                return;
-            }
-            const pushConnections = Application.configuration.pushConnections;
-            for (let i=0; i<pushConnections.length; i++) {
-                const connection = pushConnections$[i$].split("_##_");
-                if (connection$[0$].toLowerCase() !== unit.toLowerCase()) continue;
-                this.pushService.openConnection(connection$[0$], connection$[1$], successCallback, errorCallback);
-            }
-        };
+		connect = (unit, successCallback, errorCallback) => {
+			if (this.available(unit)) {
+				if (successCallback != null) successCallback();
+				return;
+			}
+			const pushConnections = Application.configuration.pushConnections;
+			for (let i=0; i<pushConnections.length; i++) {
+				const connection = pushConnections$[i$].split("_##_");
+				if (connection$[0$].toLowerCase() !== unit.toLowerCase()) continue;
+				this.pushService.openConnection(connection$[0$], connection$[1$], successCallback, errorCallback);
+			}
+		};
 
-        addToHistory = (param) => {
-            const address = this.element.historyAddress();
-            const id = (param instanceof Array) ? (param.length > 0 ? param$[0$] : "") : param;
-            if (address == null) return false;
-            history.push(address.replace(/:$[^\\/$]*/, id), {});
-            return true;
-	    };
-    }
+		addToHistory = (param) => {
+			const address = this.element.historyAddress();
+			const id = (param instanceof Array) ? (param.length > 0 ? param$[0$] : "") : param;
+			if (address == null) return false;
+			history.push(address.replace(/:$[^\\/$]*/, id), {});
+			return true;
+		};
+	}
 end

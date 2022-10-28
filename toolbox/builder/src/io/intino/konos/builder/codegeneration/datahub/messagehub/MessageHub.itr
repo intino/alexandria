@@ -1,7 +1,7 @@
 def type(messagehub & jms)
 	package $package+validPackage;
 
-    public class MessageHub extends io.intino.alexandria.event.JmsEventHub {
+	public class MessageHub extends io.intino.alexandria.event.JmsEventHub {
 		public MessageHub(String url, String user, String password, String clientId, File cacheDirectory) {
 			super(url, user, password, clientId, cacheDirectory);
 		}
@@ -21,43 +21,43 @@ def type(messagehub)
 
 	import static java.util.Collections.emptyList;
 
-    public class MessageHub implements io.intino.alexandria.message.MessageHub {
+	public class MessageHub implements io.intino.alexandria.message.MessageHub {
 		private Map<String, List<Consumer<Message>>> consumers = new HashMap<>();
 
-        @Override
-        public void sendMessage(String channel, Message message) {
-            new Thread(() -> consumers.getOrDefault(channel, emptyList()).forEach(l -> l.accept(message))).start();
-        }
+		@Override
+		public void sendMessage(String channel, Message message) {
+			new Thread(() -> consumers.getOrDefault(channel, emptyList()).forEach(l -> l.accept(message))).start();
+		}
 
-        @Override
-        public void attachListener(String channel, Consumer<Message> onMessageReceived) {
-            if(!consumers.containsKey(channel)) consumers.put(channel, new ArrayList<>());
-            consumers.get(channel).add(onMessageReceived);
-        }
+		@Override
+		public void attachListener(String channel, Consumer<Message> onMessageReceived) {
+			if(!consumers.containsKey(channel)) consumers.put(channel, new ArrayList<>());
+			consumers.get(channel).add(onMessageReceived);
+		}
 
-        @Override
-        public void attachListener(String channel, String subscriberId, Consumer<Message> onMessageReceived) {
-            attachListener(channel, onMessageReceived);
-        }
+		@Override
+		public void attachListener(String channel, String subscriberId, Consumer<Message> onMessageReceived) {
+			attachListener(channel, onMessageReceived);
+		}
 
-        @Override
-        public void detachListeners(String channel) {
-            consumers.remove(channel);
-        }
+		@Override
+		public void detachListeners(String channel) {
+			consumers.remove(channel);
+		}
 
-        @Override
-        public void detachListeners(Consumer<Message> consumer) {
-            consumers.values().forEach(l -> l.remove(consumer));
-        }
+		@Override
+		public void detachListeners(Consumer<Message> consumer) {
+			consumers.values().forEach(l -> l.remove(consumer));
+		}
 
 
-        @Override
-        public void attachRequestListener(String channel, RequestConsumer onMessageReceived) {
-        }
+		@Override
+		public void attachRequestListener(String channel, RequestConsumer onMessageReceived) {
+		}
 
-        @Override
-        public void requestResponse(String channel, String message, Consumer<String> onResponse) {
-        }
+		@Override
+		public void requestResponse(String channel, String message, Consumer<String> onResponse) {
+		}
 	}
 end
 

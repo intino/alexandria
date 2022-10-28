@@ -1,5 +1,5 @@
 def type(column) trigger(toString)
-    + ", $name=" + $name()
+	+ ", $name=" + $name()
 end
 
 def type(column) type(id) trigger(getter)
@@ -105,27 +105,27 @@ def type(column & real) trigger(getter)
 end
 
 def type(virtualColumn & primitive) trigger(abstract)
-    public abstract $type+firstLowerCase $name+firstLowerCase();
+	public abstract $type+firstLowerCase $name+firstLowerCase();
 end
 
 def type(virtualColumn) trigger(abstract)
-    public abstract $type+firstUpperCase $name+firstLowerCase();
+	public abstract $type+firstUpperCase $name+firstLowerCase();
 end
 
 def type(virtualColumn & primitive) trigger(implementation)
-    @Override
-    public $type+firstLowerCase $name+firstLowerCase() {
-        // TODO: compute and return $name+firstLowerCase.
-        return $defaultValue;
-    }
+	@Override
+	public $type+firstLowerCase $name+firstLowerCase() {
+		// TODO: compute and return $name+firstLowerCase.
+		return $defaultValue;
+	}
 end
 
 def type(virtualColumn) trigger(implementation)
-    @Override
-    public $type+firstUpperCase $name+firstLowerCase() {
-        // TODO: compute and return $name+firstLowerCase.
-        return $defaultValue;
-    }
+	@Override
+	public $type+firstUpperCase $name+firstLowerCase() {
+		// TODO: compute and return $name+firstLowerCase.
+		return $defaultValue;
+	}
 end
 
 def type(column & byte & unsigned) trigger(setter)

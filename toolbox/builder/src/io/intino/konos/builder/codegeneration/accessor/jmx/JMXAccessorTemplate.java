@@ -11,7 +11,7 @@ public class JMXAccessorTemplate extends Template {
 			rule().condition((type("operation"))).output(literal("public ")).output(mark("returnType", "firstUpperCase", "ReturnTypeFormatter")).output(literal(" ")).output(mark("name", "validName", "firstLowerCase")).output(literal("(")).output(mark("parameter", "signature").multiple(", ")).output(literal(") {\n\treturn bean != null ? bean.")).output(mark("name", "validName", "firstLowerCase")).output(literal("(")).output(mark("parameter", "name").multiple(", ")).output(literal(") : null;\n}")),
 			rule().condition((type("parameter")), (trigger("signature"))).output(mark("type")).output(literal(" ")).output(mark("name", "validName", "firstLowerCase")),
 			rule().condition((type("parameter")), (trigger("name"))).output(mark("name", "validName", "firstLowerCase")),
-			rule().condition((type("schemaimport")), (trigger("schemaimport"))).output(literal("import ")).output(mark("package")).output(literal(".schemas.*;"))
+			rule().condition((type("schemaImport")), (trigger("schemaimport"))).output(literal("import ")).output(mark("package")).output(literal(".schemas.*;"))
 		);
 	}
 }

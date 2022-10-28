@@ -4,20 +4,20 @@ def type(future)
 	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
 	$schemaImport
 
-    public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
-    	private final $box+snakecaseToCamelCase+firstUpperCase~Box box;
+	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
+		private final $box+snakecaseToCamelCase+firstUpperCase~Box box;
 
-    	public $name+FirstUpperCase($box+snakecaseToCamelCase+firstUpperCase~Box box) {
-    		this.box = box;
-    	}
+		public $name+FirstUpperCase($box+snakecaseToCamelCase+firstUpperCase~Box box) {
+			this.box = box;
+		}
 
-    	$option...[$NL$NL]
+		$option...[$NL$NL]
 
-    	@Override
-    	protected void onTimeout($parameter+signature...[, ]) {
+		@Override
+		protected void onTimeout($parameter+signature...[, ]) {
 
-    	}
-    }
+		}
+	}
 end
 
 def trigger(option)

@@ -6,9 +6,9 @@ def type(display)
 			super(element);
 		};
 		[$request...[$NL]]
-        didMount = () => {
-    	    this.pushService.send({ op: "didMount", s: "$name+lowerCase", d: this.element.shortId(), o: this.element.props.owner(), c: this.element.props.context()}, this.element.ownerUnit());
-        };
+		didMount = () => {
+			this.pushService.send({ op: "didMount", s: "$name+lowerCase", d: this.element.shortId(), o: this.element.props.owner(), c: this.element.props.context()}, this.element.ownerUnit());
+		};
 	}
 end
 
@@ -41,16 +41,16 @@ end
 
 def type(parameter) trigger(request)
 	$name = function(value) {
-        if (this.addToHistory(value)) return;
+		if (this.addToHistory(value)) return;
 		$method({ app: this.element.context, op: "$name", s: "$display+lowercase", d: this.element.shortId(), o: this.element.props.owner(), c: this.element.props.context(), v: $parameter}, this.element.ownerUnit());
 	}
 end
 
 def trigger(request)
-    $name = ([$parameterSignature]) => {
-        if (this.addToHistory([$parameterSignature])) return;
-        $method({ app: this.element.context, op: "$name", s: "$display+lowercase", d: this.element.shortId(), o: this.element.props.owner(), c: this.element.props.context()[, v: $parameter]}, this.element.ownerUnit());
-    };
+	$name = ([$parameterSignature]) => {
+		if (this.addToHistory([$parameterSignature])) return;
+		$method({ app: this.element.context, op: "$name", s: "$display+lowercase", d: this.element.shortId(), o: this.element.props.owner(), c: this.element.props.context()[, v: $parameter]}, this.element.ownerUnit());
+	};
 end
 
 def type(object) trigger(parameter)

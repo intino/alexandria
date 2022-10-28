@@ -4,7 +4,7 @@ def type(accessor)
 	import io.intino.alexandria.exceptions.*;
 
 	import java.util.function.Consumer;
-    import javax.jms.*;
+	import javax.jms.*;
 	$schemaImport
 
 	public class $name+snakeCaseToCamelCase+firstUpperCase~Accessor {

@@ -18,7 +18,7 @@ def type(builder)
 
 	public class $name+snakeCaseToCamelCase+firstUpperCase {
 
-	    private static final int DEFAULT_BUFFER_SIZE = 1_000_000;
+		private static final int DEFAULT_BUFFER_SIZE = 1_000_000;
 
 		private final File stage;
 		private Session session;
@@ -66,10 +66,10 @@ def type(builder)
 			}
 
 			public void flush() {
-			    this.builders.forEach((f, b) -> b.flush());
+				this.builders.forEach((f, b) -> b.flush());
 			}
 
-            @Override
+			@Override
 			public void close() {
 				this.builders.forEach((f, b) -> b.close());
 			}
@@ -77,7 +77,7 @@ def type(builder)
 			private <T extends Schema> LedStream.Builder<T> builder(Fingerprint fingerprint, Class<T> schemaClass) {
 				if (!this.builders.containsKey(fingerprint)) {
 					this.builders.put(fingerprint, new UnsortedLedStreamBuilder(schemaClass, Schema.factoryOf(schemaClass),
-					    this.ledBufferSize, fileOf(fingerprint)));
+						this.ledBufferSize, fileOf(fingerprint)));
 				}
 				return (io.intino.alexandria.led.LedStream.Builder) this.builders.get(fingerprint);
 			}
@@ -90,27 +90,27 @@ def type(builder)
 		public static class Sealer {
 
 			public static void seal(File destination, File stage) {
-			    File tempFolder = tempFolder(stage);
-        		File$[] files = FileUtils.listFiles(stage, new String$[]{"session"}, true).toArray(new File$[0]);
-        		LedSessionSorter.sort(files, (Function<File, File>) f -> datamartFile(destination, cleanedNameOf(f)), tempFolder);
-        	}
+				File tempFolder = tempFolder(stage);
+				File$[] files = FileUtils.listFiles(stage, new String$[]{"session"}, true).toArray(new File$[0]);
+				LedSessionSorter.sort(files, (Function<File, File>) f -> datamartFile(destination, cleanedNameOf(f)), tempFolder);
+			}
 
-        	private static File datamartFile(File destination, String name) {
-        		File ledFile = new File(destination, name + ".led");
-        		ledFile.getParentFile().mkdirs();
-        		return ledFile;
-        	}
+			private static File datamartFile(File destination, String name) {
+				File ledFile = new File(destination, name + ".led");
+				ledFile.getParentFile().mkdirs();
+				return ledFile;
+			}
 
-        	private static File tempFolder(File stage) {
-        		File temp = new File(stage, "temp");
-        		temp.mkdir();
-        		return temp;
-        	}
+			private static File tempFolder(File stage) {
+				File temp = new File(stage, "temp");
+				temp.mkdir();
+				return temp;
+			}
 
 			private static String cleanedNameOf(File file) {
-			    final String name = file.getName();
-			    int to = file.getName().indexOf("#");
-			    to = to < 0 ? name.length() : to;
+				final String name = file.getName();
+				int to = file.getName().indexOf("#");
+				to = to < 0 ? name.length() : to;
 				return name.substring(0, to).replace("-", "/").replace(".led.session", "");
 			}
 		}

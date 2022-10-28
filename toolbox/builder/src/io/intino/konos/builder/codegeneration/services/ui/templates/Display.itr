@@ -8,23 +8,23 @@ def type(display)
 	import $package+validPackage.ui.displays[.$packageType~s].Abstract$name+firstUpperCase;
 	[$accessibleNotifier+import]
 
-    public class $name+firstUpperCase extends Abstract$name+firstUpperCase<[$accessibleNotifier, ]$box+firstUpperCase~Box> {
+	public class $name+firstUpperCase extends Abstract$name+firstUpperCase<[$accessibleNotifier, ]$box+firstUpperCase~Box> {
 
-        public $name+firstUpperCase($box+firstUpperCase~Box box) {
-            super(box);
-        }
+		public $name+firstUpperCase($box+firstUpperCase~Box box) {
+			super(box);
+		}
 
 		[$request...[$NL$NL]]
 		[$parameter+setter...[$NL$NL]]
-    }
+	}
 end
 
 def type(accessibleNotifier) trigger(import)
-    import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
+	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 end
 
 def type(accessibleNotifier)
-    $name+firstUpperCase~Notifier
+	$name+firstUpperCase~Notifier
 end
 
 def type(templatesImport)
@@ -41,7 +41,7 @@ end
 
 def type(request & asset)
 	public io.intino.alexandria.ui.spark.UIFile $name([$parameter value]) {
-        return null;
+		return null;
 	}
 end
 
@@ -58,19 +58,19 @@ def trigger(setter)
 end
 
 def type(dateTime | date) type(list) trigger(parameter)
-    $value
+	$value
 end
 
 def type(dateTime | date) trigger(parameter)
-    $value
+	$value
 end
 
 def type(list) trigger(parameter)
-    $value$[]
+	$value$[]
 end
 
 def trigger(parameter)
-    $value
+	$value
 end
 
 def type(schemaImport)

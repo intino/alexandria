@@ -1,14 +1,14 @@
 def type(app)
-    __webpack_public_path__ = loadAppUrl();
+	__webpack_public_path__ = loadAppUrl();
 
 	import React from "react";
 	import ReactDOM from "react-dom";
-    $page+import...[$NL]
+	$page+import...[$NL]
 	import PushService from "alexandria-ui-elements/src/services/PushService";
 	import FileService from "alexandria-ui-elements/src/services/FileService";
 	import TranslatorService from "alexandria-ui-elements/src/services/TranslatorService";
-    import GoogleApiLoader from "alexandria-ui-elements/src/displays/components/geo/GoogleApiLoader";
-    import DisplayRouter from "alexandria-ui-elements/src/displays/DisplayRouter";
+	import GoogleApiLoader from "alexandria-ui-elements/src/displays/components/geo/GoogleApiLoader";
+	import DisplayRouter from "alexandria-ui-elements/src/displays/DisplayRouter";
 
 	var launchApplication = function () {
 		var configuration = loadConfiguration();
@@ -19,7 +19,7 @@ def type(app)
 			self.configuration = configuration;
 			self.configuration.appUrls = loadUrls(configuration.baseUrls);
 			self.configuration.appUrl = (app) => {
-			    return self.configuration.appUrls$[app$] != null ? self.configuration.appUrls$[app$] : self.configuration.baseUrl;
+				return self.configuration.appUrls$[app$] != null ? self.configuration.appUrls$[app$] : self.configuration.baseUrl;
 			};
 			self.services = {
 				pushService: PushService,
@@ -37,55 +37,55 @@ def type(app)
 		}
 
 		function loadUrls(urlList) {
-		    let result = {};
-		    if (urlList == null) return result;
-            for (let i=0; i<urlList.length; i++) {
-                const urlInfo = urlList$[i$].split("_##_");
-                result$[urlInfo$[0$]$] = urlInfo$[1$];
-            }
-            return result;
+			let result = {};
+			if (urlList == null) return result;
+			for (let i=0; i<urlList.length; i++) {
+				const urlInfo = urlList$[i$].split("_##_");
+				result$[urlInfo$[0$]$] = urlInfo$[1$];
+			}
+			return result;
 		}
 
 		function renderApplication() {
 			$page+render...[$NL$NL]
 		}
 
-        function openPushService() {
-            window.setTimeout(() => {
-                const pushConnections = Application.configuration.pushConnections;
-                for (let i=0; i<pushConnections.length; i++) {
-                    const connection = pushConnections$[i$].split("_##_");
-                    if (connection$[0$].toLowerCase() !== "default") continue;
-                    PushService.openConnection(connection$[0$], connection$[1$]);
-                }
-            }, 100);
-        }
+		function openPushService() {
+			window.setTimeout(() => {
+				const pushConnections = Application.configuration.pushConnections;
+				for (let i=0; i<pushConnections.length; i++) {
+					const connection = pushConnections$[i$].split("_##_");
+					if (connection$[0$].toLowerCase() !== "default") continue;
+					PushService.openConnection(connection$[0$], connection$[1$]);
+				}
+			}, 100);
+		}
 
 	};
 
 	function loadAppUrl() {
-        let url = window.location.pathname !== "/" ? window.location.pathname : "";
-        [$pattern...[$NL]]
-        if (url.lastIndexOf("/") > 0) url = url.substr(0, window.location.pathname.lastIndexOf('/'));
-        if (url === "/") url = "";
-        return url + "/$webModuleName/";
+		let url = window.location.pathname !== "/" ? window.location.pathname : "";
+		[$pattern...[$NL]]
+		if (url.lastIndexOf("/") > 0) url = url.substr(0, window.location.pathname.lastIndexOf('/'));
+		if (url === "/") url = "";
+		return url + "/$webModuleName/";
 	}
 
 	launchApplication();
 end
 
 def type(pattern)
-    url = url.replace(new RegExp("$value", 'g'), "");
+	url = url.replace(new RegExp("$value", 'g'), "");
 end
 
 def type(page) trigger(import)
-    import $templateName+firstUpperCase~Page from "../pages/$templateName+firstUpperCase~Page";
+	import $templateName+firstUpperCase~Page from "../pages/$templateName+firstUpperCase~Page";
 end
 
 def type(page) trigger(render)
-    const requireGoogleApi = Application.configuration.googleApiKey != null && Application.configuration.googleApiKey !== "";
-    const content = requireGoogleApi ? <GoogleApiLoader onLoad={openPushService()}><$templateName+firstUpperCase~Page/></GoogleApiLoader> : <$templateName+firstUpperCase~Page/>;
-    const $templateName+firstLowerCase = document.getElementById("$templateName+firstUpperCase");
-    if ($templateName+firstLowerCase) ReactDOM.render(<DisplayRouter id="__router__" owner={()=>""} context={()=>""}>{content}</DisplayRouter>, $templateName+firstLowerCase);
-    if (!requireGoogleApi) openPushService();
+	const requireGoogleApi = Application.configuration.googleApiKey != null && Application.configuration.googleApiKey !== "";
+	const content = requireGoogleApi ? <GoogleApiLoader onLoad={openPushService()}><$templateName+firstUpperCase~Page/></GoogleApiLoader> : <$templateName+firstUpperCase~Page/>;
+	const $templateName+firstLowerCase = document.getElementById("$templateName+firstUpperCase");
+	if ($templateName+firstLowerCase) ReactDOM.render(<DisplayRouter id="__router__" owner={()=>""} context={()=>""}>{content}</DisplayRouter>, $templateName+firstLowerCase);
+	if (!requireGoogleApi) openPushService();
 end

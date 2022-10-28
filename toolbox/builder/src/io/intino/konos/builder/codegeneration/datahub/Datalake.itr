@@ -108,20 +108,20 @@ def type(datalake & ssh)
 	package $package+validPackage;
 
 	import io.intino.alexandria.logger.Logger;
-    import net.schmizz.sshj.SSHClient;
-    import net.schmizz.sshj.sftp.RemoteResourceInfo;
-    import net.schmizz.sshj.sftp.SFTPClient;
-    import net.schmizz.sshj.sftp.SFTPFileTransfer;
+	import net.schmizz.sshj.SSHClient;
+	import net.schmizz.sshj.sftp.RemoteResourceInfo;
+	import net.schmizz.sshj.sftp.SFTPClient;
+	import net.schmizz.sshj.sftp.SFTPFileTransfer;
 
-    import java.io.File;
-    import java.io.IOException;
-    import java.util.Collection;
-    import java.util.Collections;
-    import java.util.Comparator;
-    import java.util.List;
-    import java.util.stream.Collectors;
+	import java.io.File;
+	import java.io.IOException;
+	import java.util.Collection;
+	import java.util.Collections;
+	import java.util.Comparator;
+	import java.util.List;
+	import java.util.stream.Collectors;
 
-    public class Datalake extends io.intino.alexandria.datalake.file.FileDatalake {
+	public class Datalake extends io.intino.alexandria.datalake.file.FileDatalake {
 
 		private DatalakeCloner cloner;
 

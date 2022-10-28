@@ -1,5 +1,5 @@
 def type(exception)
-    package $package.exceptions;
+	package $package.exceptions;
 
 	import io.intino.alexandria.exceptions.*;
 	import java.util.Map;
@@ -7,11 +7,11 @@ def type(exception)
 
 	public class $name+firstUpperCase extends  io.intino.alexandria.exceptions.$code {
 
-	    public $name+firstUpperCase(String message) {
-	        super(message);
-	    }
+		public $name+firstUpperCase(String message) {
+			super(message);
+		}
 
-	    public $name+firstUpperCase(String message, Map<String, String> parameters) {
+		public $name+firstUpperCase(String message, Map<String, String> parameters) {
 			super(message, parameters);
 		}
 	}

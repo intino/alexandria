@@ -1,32 +1,32 @@
 def type(display & accessible)
 	package $package+validPackage.ui.displays.requesters;
 
-    import $package+validPackage.ui.displays.[$packageType~s.]$name+FirstUppercase;
-    import $package+validPackage.ui.displays.[$packageType~s.]$name+FirstUpperCase~Proxy;
-    import io.intino.alexandria.exceptions.AlexandriaException;
-    import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
-    import io.intino.alexandria.ui.spark.UISparkManager;
+	import $package+validPackage.ui.displays.[$packageType~s.]$name+FirstUppercase;
+	import $package+validPackage.ui.displays.[$packageType~s.]$name+FirstUpperCase~Proxy;
+	import io.intino.alexandria.exceptions.AlexandriaException;
+	import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
+	import io.intino.alexandria.ui.spark.UISparkManager;
 
-    public class $name+FirstUpperCase~ProxyRequester extends io.intino.alexandria.ui.displays.requesters.DisplayProxyRequester {
+	public class $name+FirstUpperCase~ProxyRequester extends io.intino.alexandria.ui.displays.requesters.DisplayProxyRequester {
 
-    	public $name+FirstUpperCase~ProxyRequester(UISparkManager manager, DisplayNotifierProvider notifierProvider) {
-    		super(manager, notifierProvider);
-    	}
+		public $name+FirstUpperCase~ProxyRequester(UISparkManager manager, DisplayNotifierProvider notifierProvider) {
+			super(manager, notifierProvider);
+		}
 
-    	@Override
-    	public void execute() throws AlexandriaException {
-    		String operation = operation();
-            $name+FirstUppercase display = personifiedDisplay();
-            if (display == null) return;
-            if (operation.equals("refreshPersonifiedDisplay")) {
-                $parameter...[$NL]
-                display.refresh();
-                return;
-            }
-            [else $request...[$NL~else ]]
-            super.execute();
-    	}
-    }
+		@Override
+		public void execute() throws AlexandriaException {
+			String operation = operation();
+			$name+FirstUppercase display = personifiedDisplay();
+			if (display == null) return;
+			if (operation.equals("refreshPersonifiedDisplay")) {
+				$parameter...[$NL]
+				display.refresh();
+				return;
+			}
+			[else $request...[$NL~else ]]
+			super.execute();
+		}
+	}
 end
 
 def type(display)
@@ -89,15 +89,15 @@ def type(request) trigger(request)
 end
 
 def type(parameter & accessible) trigger(parameter)
-    display.$value+firstLowercase(manager.fromQuery("$value"));
+	display.$value+firstLowercase(manager.fromQuery("$value"));
 end
 
 def type(list) trigger(parameter)
-    java.util.List.of(io.intino.alexandria.Json.fromString(manager.fromQuery("v"), $value~$[].class))
+	java.util.List.of(io.intino.alexandria.Json.fromString(manager.fromQuery("v"), $value~$[].class))
 end
 
 def type(parameter & file) trigger(parameter)
-    manager.fromForm("v")
+	manager.fromForm("v")
 end
 
 def type(parameter & String) trigger(parameter)
@@ -121,7 +121,7 @@ def type(parameter & DateTime) trigger(parameter)
 end
 
 def type(parameter) trigger(parameter)
-    io.intino.alexandria.Json.fromString(manager.fromQuery("v"), $value.class)
+	io.intino.alexandria.Json.fromString(manager.fromQuery("v"), $value.class)
 end
 
 def	trigger(parameter)
