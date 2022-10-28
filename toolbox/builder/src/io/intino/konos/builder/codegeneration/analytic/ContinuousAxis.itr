@@ -2,106 +2,106 @@ def type(continuous)
 	package $package+ValidPackage.analytic.axes;
 
 	import $package+ValidPackage.analytic.Axis;
-    import java.util.*;
-    import java.util.stream.Collectors;
-    import java.util.stream.Stream;
+	import java.util.*;
+	import java.util.stream.Collectors;
+	import java.util.stream.Stream;
 
-    public class $name+snakeCaseToCamelCase+FirstUpperCase implements Axis {
+	public class $name+snakeCaseToCamelCase+FirstUpperCase implements Axis {
 
-        public static final String TITLE = "$label";
+		public static final String TITLE = "$label";
 
-        private static final class Singleton {
-            private static final $name+snakeCaseToCamelCase+FirstUpperCase INSTANCE = new $name+snakeCaseToCamelCase+FirstUpperCase();
-        }
+		private static final class Singleton {
+			private static final $name+snakeCaseToCamelCase+FirstUpperCase INSTANCE = new $name+snakeCaseToCamelCase+FirstUpperCase();
+		}
 
 		// === STATIC METHODS === //
 
-        public static $name+snakeCaseToCamelCase+FirstUpperCase get() {
-        	return Singleton.INSTANCE;
-        }
+		public static $name+snakeCaseToCamelCase+FirstUpperCase get() {
+			return Singleton.INSTANCE;
+		}
 
-        public static String title() {
-        	return TITLE;
-        }
+		public static String title() {
+			return TITLE;
+		}
 
-        public static int size() {
-        	return get().getSize();
-        }
+		public static int size() {
+			return get().getSize();
+		}
 
-        public static Range component(String id) {
-        	return get().getComponent(id);
-        }
+		public static Range component(String id) {
+			return get().getComponent(id);
+		}
 
-        public static Range component(int index) {
-        	return get().getComponent(index);
-        }
+		public static Range component(int index) {
+			return get().getComponent(index);
+		}
 
-        public static List<Range> ranges() {
-            return get().getRanges();
-        }
+		public static List<Range> ranges() {
+			return get().getRanges();
+		}
 
-        public static Range rangeOf(final double value) {
-            final Range$[] ranges = Singleton.INSTANCE.ranges;
-        	int index = binarySearch(ranges, value);
-        	index = index < 0 ? (index + 1) * -1 : index;
-        	return ranges$[index >= ranges.length ? ranges.length - 1 : index];
-        }
+		public static Range rangeOf(final double value) {
+			final Range$[] ranges = Singleton.INSTANCE.ranges;
+			int index = binarySearch(ranges, value);
+			index = index < 0 ? (index + 1) * -1 : index;
+			return ranges$[index >= ranges.length ? ranges.length - 1 : index];
+		}
 
-        private static int binarySearch(final Range$[] ranges, final double value) {
-        	int low = 0;
-        	int high = ranges.length - 1;
+		private static int binarySearch(final Range$[] ranges, final double value) {
+			int low = 0;
+			int high = ranges.length - 1;
 
-        	while (low <= high) {
-        		final int mid = (low + high) >>> 1;
-        		final double midVal = ranges$[mid].max;
-        		final int comparison = Double.compare(midVal, value);
+			while (low <= high) {
+				final int mid = (low + high) >>> 1;
+				final double midVal = ranges$[mid].max;
+				final int comparison = Double.compare(midVal, value);
 
-        		if (comparison < 0)
-        			low = mid + 1;
-        		else if (comparison > 0)
-        			high = mid - 1;
-        		else
-        			return mid;
-        	}
-        	return -(low + 1);
-        }
+				if (comparison < 0)
+					low = mid + 1;
+				else if (comparison > 0)
+					high = mid - 1;
+				else
+					return mid;
+			}
+			return -(low + 1);
+		}
 
-        // === === //
+		// === === //
 
-    	private final Range$[] ranges = new Range$[$rangeSize];
+		private final Range$[] ranges = new Range$[$rangeSize];
 
-    	private $name+snakeCaseToCamelCase+FirstUpperCase() {
-    		$range+init...[$NL]
-    	}
+		private $name+snakeCaseToCamelCase+FirstUpperCase() {
+			$range+init...[$NL]
+		}
 
-        @Override
-    	public String getTitle() {
-    		return TITLE;
-    	}
+		@Override
+		public String getTitle() {
+			return TITLE;
+		}
 
-        @Override
+		@Override
 		public Range getComponent(String id) {
 			return ranges$[Integer.parseInt(id)];
 		}
 
-    	@Override
+		@Override
 		public Range getComponent(int index) {
 			return ranges$[index];
 		}
 
 		public List<Range> getRanges() {
-        	return new AbstractList<>() {
-        		@Override
-        		public Range get(int index) {
-        			return ranges$[index];
-        		}
+			return new AbstractList<>() {
+				@Override
+				public Range get(int index) {
+					return ranges$[index];
+				}
 
-        		@Override
-        		public int size() {
-        			return ranges.length;
-        		}
-        	};
-        }
+				@Override
+				public int size() {
+					return ranges.length;
+				}
+			};
+		}
 
 		@Override
 		public int getSize() {
@@ -115,35 +115,35 @@ def type(continuous)
 
 		@Override
 		public Stream<Range> toStream() {
-		    return Arrays.stream(ranges);
+			return Arrays.stream(ranges);
 		}
 
 		@Override
-        public String toString() {
-            return "$name+snakeCaseToCamelCase+FirstUpperCase";
-        }
+		public String toString() {
+			return "$name+snakeCaseToCamelCase+FirstUpperCase";
+		}
 
-    	public class Range implements Component {
+		public class Range implements Component {
 
-    		private final int index;
-    		private final double min;
-    		private final double max;
-    		private final String label;
+			private final int index;
+			private final double min;
+			private final double max;
+			private final String label;
 
-    		public Range(int index, double min, double max, String label) {
-    			this.index = index;
-    			this.min = min;
-    			this.max = max;
-    			this.label = label;
-    		}
+			public Range(int index, double min, double max, String label) {
+				this.index = index;
+				this.min = min;
+				this.max = max;
+				this.label = label;
+			}
 
-    		public double min() {
-    			return min;
-    		}
+			public double min() {
+				return min;
+			}
 
-    		public double max() {
-    			return max;
-    		}
+			public double max() {
+				return max;
+			}
 
 			@Override
 			public int index() {
@@ -155,7 +155,7 @@ def type(continuous)
 				return label;
 			}
 
-            @Override
+			@Override
 			public String label() {
 				return label;
 			}
@@ -165,25 +165,25 @@ def type(continuous)
 				return $name+snakeCaseToCamelCase+FirstUpperCase.this;
 			}
 
-		    @Override
-		    public boolean equals(Object o) {
-		    	if (this == o) return true;
-		    	if (o == null || getClass() != o.getClass()) return false;
-		    	Range range = (Range) o;
-		    	return index == range.index;
-		    }
+			@Override
+			public boolean equals(Object o) {
+				if (this == o) return true;
+				if (o == null || getClass() != o.getClass()) return false;
+				Range range = (Range) o;
+				return index == range.index;
+			}
 
-		    @Override
-		    public int hashCode() {
-		    	return index;
-		    }
+			@Override
+			public int hashCode() {
+				return index;
+			}
 
-		    @Override
-		    public String toString() {
-		    	return label;
-		    }
-    	}
-    }
+			@Override
+			public String toString() {
+				return label;
+			}
+		}
+	}
 end
 
 def type(range & lower) attribute(label) trigger(init)

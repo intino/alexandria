@@ -18,7 +18,7 @@ def type(display & accessible)
 			[this.notifier = new $notDecorated+firstUpperCase~Notifier(this);]
 			[this.requester = new $notDecorated+firstUpperCase~Requester(this);]
 			[$properties+initialization]
-    	};
+		};
 
 	}
 
@@ -36,8 +36,8 @@ def type(display & noAbstract)
 	[$parent+import]
 	$accessibleNotifierImport
 	import $name+firstUpperCase~Requester from "alexandria-ui-elements/gen/displays/requesters/$requester~Requester";
-    import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-    import { withSnackbar } from 'notistack';
+	import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
+	import { withSnackbar } from 'notistack';
 
 	const styles = theme => ({});
 
@@ -51,8 +51,8 @@ def type(display & noAbstract)
 		};
 
 		render() {
-		    const display = !this.state.visible ? {display:'none'} : undefined;
-		    const className = "layout vertical center-justified" + (this.hiddenClass() !== "" ? " " + this.hiddenClass() : "");
+			const display = !this.state.visible ? {display:'none'} : undefined;
+			const className = "layout vertical center-justified" + (this.hiddenClass() !== "" ? " " + this.hiddenClass() : "");
 			return [this.$baseMethod](
 				[$renderTag]
 					[$reference...[$NL]]
@@ -66,7 +66,7 @@ def type(display & noAbstract)
 	}
 
 	export default withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase));
-    DisplayFactory.register("$name+firstUpperCase", withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase)));
+	DisplayFactory.register("$name+firstUpperCase", withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase)));
 end
 
 def type(accessibleNotifierImport & accessible)
@@ -78,10 +78,10 @@ def type(accessibleNotifierImport)
 end
 
 def type(notifyProxyMethod)
-    notifyProxyMessage = (name) => {
-        if (!this.props.onProxyMessage) return;
-        this.props.onProxyMessage(name);
-    };
+	notifyProxyMessage = (name) => {
+		if (!this.props.onProxyMessage) return;
+		this.props.onProxyMessage(name);
+	};
 end
 
 def type(display & collection)
@@ -103,7 +103,7 @@ def type(display & collection)
 			[this.notifier = new $notDecorated+firstUpperCase~Notifier(this);]
 			[this.requester = new $notDecorated+firstUpperCase~Requester(this);]
 			[$properties+initialization]
-    	};
+		};
 
 	}
 
@@ -129,11 +129,11 @@ def type(display)
 			[this.notifier = new $notDecorated+firstUpperCase~Notifier(this);]
 			[this.requester = new $notDecorated+firstUpperCase~Requester(this);]
 			[$properties+initialization]
-    	};
+		};
 
 		render() {
-		    const display = !this.state.visible ? {display:'none'} : undefined;
-		    const className = "layout vertical center-justified" + (this.hiddenClass() !== "" ? " " + this.hiddenClass() : "");
+			const display = !this.state.visible ? {display:'none'} : undefined;
+			const className = "layout vertical center-justified" + (this.hiddenClass() !== "" ? " " + this.hiddenClass() : "");
 			return [this.$baseMethod](
 				[$renderTag]
 					[$reference...[$NL]]
@@ -147,15 +147,15 @@ def type(display)
 end
 
 def type(displayRegistration) trigger(import)
-    import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
+	import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 end
 
 def type(displayRegistration & accessible) trigger(declaration)
-    DisplayFactory.register("$name+SnakeCaseToCamelCase+FirstUpperCase~Proxy", $name+SnakeCaseToCamelCase+FirstUpperCase~Proxy);
+	DisplayFactory.register("$name+SnakeCaseToCamelCase+FirstUpperCase~Proxy", $name+SnakeCaseToCamelCase+FirstUpperCase~Proxy);
 end
 
 def type(displayRegistration) trigger(declaration)
-    DisplayFactory.register("$name+firstUpperCase", $name+firstUpperCase);
+	DisplayFactory.register("$name+firstUpperCase", $name+firstUpperCase);
 end
 
 def type(alexandriaImport)

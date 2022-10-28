@@ -49,10 +49,10 @@ def type(resource & accessibleDisplay)
 			page.googleApiKey = "";
 			page.device = parameterValue("device");
 			$parameter...[$NL]
-            if (!page.hasPermissions()) {
-                manager.redirect(page.redirectUrl());
-                return;
-            }
+			if (!page.hasPermissions()) {
+				manager.redirect(page.redirectUrl());
+				return;
+			}
 
 			Soul soul = soul();
 			if (soul != null) {
@@ -81,14 +81,14 @@ def type(resource & accessibleDisplay)
 			soul.register(new io.intino.alexandria.ui.displays.DisplayRouter(box).id("__router__"));
 			//(($package+validPackage.ui.displays.RouteDispatcher)box.routeManager().routeDispatcher()).dispatch$name+firstUpperCase(soul[, $parameter+dispatch...[, ]]);
 
-            manager.pushService().onClose(page.clientId).execute(new Consumer<UIClient>() {
-                @Override
-                public void accept(io.intino.alexandria.ui.services.push.UIClient client) {
-                    box.soul(client.id()).ifPresent(s -> s.destroy());
-                    box.unRegisterSoul(client.id());
-                    manager.unRegister(client);
-                }
-            });
+			manager.pushService().onClose(page.clientId).execute(new Consumer<UIClient>() {
+				@Override
+				public void accept(io.intino.alexandria.ui.services.push.UIClient client) {
+					box.soul(client.id()).ifPresent(s -> s.destroy());
+					box.unRegisterSoul(client.id());
+					manager.unRegister(client);
+				}
+			});
 
 			manager.write("OK");
 		}
@@ -96,21 +96,21 @@ def type(resource & accessibleDisplay)
 end
 
 def type(render & confidential)
-    try {
-        if (!isLogged(accessToken()))
-            throw new Unauthorized("user is not logged");
+	try {
+		if (!isLogged(accessToken()))
+			throw new Unauthorized("user is not logged");
 
-        authenticate(session(), accessToken());
-        render();
-    } catch (CouldNotObtainInfo couldNotObtainInfo) {
-        throw new Unauthorized("user is not logged");
-    } catch (Throwable error) {
-        throw new Unauthorized("could not render component");
-    }
+		authenticate(session(), accessToken());
+		render();
+	} catch (CouldNotObtainInfo couldNotObtainInfo) {
+		throw new Unauthorized("user is not logged");
+	} catch (Throwable error) {
+		throw new Unauthorized("could not render component");
+	}
 end
 
 def type(render)
-    render();
+	render();
 end
 
 def type(resource & static)
@@ -163,10 +163,10 @@ def type(resource & static)
 			page.token = parameterValue("token");[
 			$editor+parameters]
 			$parameter...[$NL]
-            if (!page.hasPermissions()) {
-                manager.redirect(page.redirectUrl());
-                return;
-            }
+			if (!page.hasPermissions()) {
+				manager.redirect(page.redirectUrl());
+				return;
+			}
 
 			manager.write(page.execute());
 		}
@@ -224,17 +224,17 @@ def type(resource)
 			page.token = parameterValue("token");[
 			$editor+parameters]
 			$parameter...[$NL]
-            if (!page.hasPermissions()) {
-                manager.redirect(page.redirectUrl());
-                return;
-            }
+			if (!page.hasPermissions()) {
+				manager.redirect(page.redirectUrl());
+				return;
+			}
 
 			manager.pushService().onOpen(client -> {
 				if (!client.id().equals(page.clientId))
 					return false;
 
 				if (client.soul() != null) {
-    				(($package+validPackage.ui.displays.RouteDispatcher)box.routeManager().routeDispatcher()).dispatch$name+firstUpperCase(client.soul()[, $parameter+dispatch...[, ]]);
+					(($package+validPackage.ui.displays.RouteDispatcher)box.routeManager().routeDispatcher()).dispatch$name+firstUpperCase(client.soul()[, $parameter+dispatch...[, ]]);
 					return false;
 				}
 

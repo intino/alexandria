@@ -2,7 +2,7 @@ def type(listener)
 	package $package+ValidPackage.scheduling;
 
 	import org.quartz.JobExecutionContext;
-    import org.quartz.JobExecutionException;
+	import org.quartz.JobExecutionException;
 	import $package+ValidPackage.$box+FirstUpperCase~Box;
 	import io.intino.alexandria.scheduler.ScheduledTrigger;
 

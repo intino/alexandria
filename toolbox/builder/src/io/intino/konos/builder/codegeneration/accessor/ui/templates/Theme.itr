@@ -7,13 +7,13 @@ def type(theme)
 			create: () => {
 				theme = createMuiTheme({
 					palette : {
-					    $palette
+						$palette
 					},
 					typography : {
-					    $typography
+						$typography
 					},
 					formats: {
-					    $format...[,$NL]
+						$format...[,$NL]
 					}
 				});
 				return theme;

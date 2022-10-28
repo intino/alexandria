@@ -29,13 +29,13 @@ def type(process)
 
 	import static io.intino.alexandria.bpm.State.Type.*;
 	import io.intino.alexandria.bpm.Task;
-    import $package+validPackage.$box+FirstUpperCase~Box;
+	import $package+validPackage.$box+FirstUpperCase~Box;
 
-    import java.util.List;
+	import java.util.List;
 
-    import static io.intino.alexandria.bpm.Link.Type.*;
+	import static io.intino.alexandria.bpm.Link.Type.*;
 
-    public abstract class Abstract$name+firstUpperCase extends io.intino.alexandria.bpm.Process {
+	public abstract class Abstract$name+firstUpperCase extends io.intino.alexandria.bpm.Process {
 
 		protected $box+firstUpperCase~Box box;
 
