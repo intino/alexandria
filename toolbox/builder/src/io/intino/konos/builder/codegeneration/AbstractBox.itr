@@ -6,7 +6,7 @@ def type(box)
 	import java.util.UUID;
 	[
 	import java.util.HashMap;
-    import java.util.Map$hasUi+hideUi]
+	import java.util.Map$hasUi+hideUi]
 
 	import io.intino.alexandria.logger.Logger;
 	import java.util.logging.ConsoleHandler;
@@ -15,8 +15,8 @@ def type(box)
 	[$messagehub+import]
 	[$terminal+import]
 	[import io.intino.alexandria.http.AlexandriaSpark;$hasREST]
-    [import io.intino.alexandria.ui.services.push.PushService$hasUI+hideUi]
-    [import io.intino.alexandria.ui.Soul$hasUi+hideUi]
+	[import io.intino.alexandria.ui.services.push.PushService$hasUI+hideUi]
+	[import io.intino.alexandria.ui.Soul$hasUi+hideUi]
 
 	public abstract class AbstractBox extends [$hasUi+uiBox?io.intino.alexandria.core.Box] {
 		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;
@@ -26,8 +26,8 @@ def type(box)
 		[$datalake+field]
 		[$sentinel+field]
 		[$workflow+field]
-        [protected Map<String, Soul> uiSouls = new java.util.HashMap<>()$hasUi+hideUi]
-	    [private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>()$hasUi+hideUi]
+		[protected Map<String, Soul> uiSouls = new java.util.HashMap<>()$hasUi+hideUi]
+		[private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>()$hasUi+hideUi]
 		[private io.intino.alexandria.ui.services.AuthService authService$hasUi+hideUi]
 		[private PushService pushService$hasUi+hideUi]
 
@@ -80,7 +80,7 @@ def type(box)
 			afterStop();
 		}
 
-        @Override
+		@Override
 		public void stopServices() {
 			[$spark...[$NL]]
 			[$service+stop...[$NL]]
@@ -89,7 +89,7 @@ def type(box)
 
 		public abstract void afterStop();
 
-        @Override
+		@Override
 		public void startServices() {
 			initUI();
 			initConnector();
@@ -466,10 +466,10 @@ end
 
 def trigger(translatorServiceInitialization)
 	private void initTranslatorService() {
-	    translatorService = new io.intino.alexandria.ui.services.TranslatorService();
-    	$useDictionaries...[$NL]
-	    translatorService.addAll($package+validPackage.I18n.dictionaries());
-	    translatorService.addAll(io.intino.alexandria.I18n.dictionaries());
+		translatorService = new io.intino.alexandria.ui.services.TranslatorService();
+		$useDictionaries...[$NL]
+		translatorService.addAll($package+validPackage.I18n.dictionaries());
+		translatorService.addAll(io.intino.alexandria.I18n.dictionaries());
 	}
 end
 
@@ -478,9 +478,9 @@ def trigger(useDictionaries)
 end
 
 def trigger(pushService)
-    public PushService pushService() {
-        return pushService;
-    }
+	public PushService pushService() {
+		return pushService;
+	}
 end
 
 def trigger(registerSoul)
@@ -488,29 +488,29 @@ def trigger(registerSoul)
 		return new java.util.ArrayList<>(uiSouls.values());
 	}
 
-    public java.util.Optional<Soul> soul(String clientId) {
-        return java.util.Optional.ofNullable(uiSouls.get(clientId));
-    }
+	public java.util.Optional<Soul> soul(String clientId) {
+		return java.util.Optional.ofNullable(uiSouls.get(clientId));
+	}
 
-    public void registerSoul(String clientId, Soul soul) {
-        [if (owner != null) (($parent~Box) owner).registerSoul(clientId, soul);]
-        uiSouls.put(clientId, soul);
-    }
+	public void registerSoul(String clientId, Soul soul) {
+		[if (owner != null) (($parent~Box) owner).registerSoul(clientId, soul);]
+		uiSouls.put(clientId, soul);
+	}
 
-    public void unRegisterSoul(String clientId) {
-        [if (owner != null) (($parent~Box) owner).unRegisterSoul(clientId);]
-        uiSouls.remove(clientId);
-        if (uiSouls.size() <= 0) notifySoulsClosed();
-    }
+	public void unRegisterSoul(String clientId) {
+		[if (owner != null) (($parent~Box) owner).unRegisterSoul(clientId);]
+		uiSouls.remove(clientId);
+		if (uiSouls.size() <= 0) notifySoulsClosed();
+	}
 
-    public void onSoulsClosed(io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed listener) {
-        [if (owner != null) (($parent~Box) owner).onSoulsClosed(listener);]
-        this.soulsClosedListeners.add(listener);
-    }
+	public void onSoulsClosed(io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed listener) {
+		[if (owner != null) (($parent~Box) owner).onSoulsClosed(listener);]
+		this.soulsClosedListeners.add(listener);
+	}
 
-    private void notifySoulsClosed() {
-        soulsClosedListeners.forEach(l -> l.accept());
-    }
+	private void notifySoulsClosed() {
+		soulsClosedListeners.forEach(l -> l.accept());
+	}
 end
 
 def type(conf & file) trigger(parameter)
@@ -565,9 +565,9 @@ def trigger(hideUi)
 end
 
 def trigger(hideUi)
-    ;
+	;
 end
 
 def trigger(hideDatalake)
-    ;
+	;
 end

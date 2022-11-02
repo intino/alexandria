@@ -3,10 +3,10 @@ def type(interface)
 
 	import $package+ValidPackage.analytic.axes.*;
 
-    import java.util.List;
-    import java.util.stream.Stream;
+	import java.util.List;
+	import java.util.stream.Stream;
 
-    public interface Axis {
+	public interface Axis {
 
 		String getTitle();
 
@@ -23,11 +23,11 @@ def type(interface)
 		};
 
 		default Stream<? extends Component> toStream() {
-		    return getComponents().stream();
+			return getComponents().stream();
 		}
 
 		default Stream<? extends Component> toParallelStream() {
-		    return toStream().parallel();
+			return toStream().parallel();
 		}
 
 
@@ -45,35 +45,35 @@ def type(interface)
 		}
 
 		static Axis byName(String name) {
-		    switch(name) {
-		        [$axis+NameCase...[$NL]]
-		    }
-		    return null;
+			switch(name) {
+				[$axis+NameCase...[$NL]]
+			}
+			return null;
 		}
 
 		static Axis byLabel(String label) {
-            switch(label) {
-                [$axis+LabelCase...[$NL]]
-            }
-            return null;
-        }
+			switch(label) {
+				[$axis+LabelCase...[$NL]]
+			}
+			return null;
+		}
 
-        static List<Axis> all() {
-            return List.of(
-                [$axis+ListElement...[,$NL]]
-            );
-        }
-    }
+		static List<Axis> all() {
+			return List.of(
+				[$axis+ListElement...[,$NL]]
+			);
+		}
+	}
 end
 
 def type(axis) trigger(NameCase)
-    case "$axis+snakeCaseToCamelCase+firstUpperCase": return $axis+snakeCaseToCamelCase+firstUpperCase.get();
+	case "$axis+snakeCaseToCamelCase+firstUpperCase": return $axis+snakeCaseToCamelCase+firstUpperCase.get();
 end
 
 def type(axis) trigger(LabelCase)
-    case $axis+snakeCaseToCamelCase+firstUpperCase.TITLE: return $axis+snakeCaseToCamelCase+firstUpperCase.get();
+	case $axis+snakeCaseToCamelCase+firstUpperCase.TITLE: return $axis+snakeCaseToCamelCase+firstUpperCase.get();
 end
 
 def type(axis) trigger(ListElement)
-    $axis+snakeCaseToCamelCase+firstUpperCase.get()
+	$axis+snakeCaseToCamelCase+firstUpperCase.get()
 end

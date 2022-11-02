@@ -6,7 +6,7 @@ def type(child) trigger(declaration)
 end
 
 def type(block & child) trigger(child)
-    $value
+	$value
 end
 
 def type(child) trigger(child)
@@ -159,7 +159,7 @@ def type(properties & location) trigger(specific)
 end
 
 def type(properties & map) trigger(specific)
-    [ pageSize={$pageSize}][ type="$type"][ itemHeight={$itemHeight}][ center={{lat:$centerLat,lng:$centerLng}}][ zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}][ controls="$controls"]
+	[ pageSize={$pageSize}][ type="$type"][ itemHeight={$itemHeight}][ center={{lat:$centerLat,lng:$centerLng}}][ zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}][ controls="$controls"]
 end
 
 def type(properties & collection) trigger(specific)
@@ -179,11 +179,11 @@ def type(properties & spinner) trigger(specific)
 end
 
 def type(properties & switch) trigger(specific)
-    [ state="$state"]
+	[ state="$state"]
 end
 
 def type(properties & toggle) trigger(specific)
-    [ state="$state"]
+	[ state="$state"]
 end
 
 def type(properties & splitbutton) trigger(specific)
@@ -207,11 +207,11 @@ def type(properties & searchbox) trigger(specific)
 end
 
 def type(properties & slider) trigger(specific)
-    [ range={{min:$min,max:$max}}][ value={$value}]
+	[ range={{min:$min,max:$max}}][ value={$value}]
 end
 
 def type(properties & grouping) trigger(specific)
-    [ pageSize={$pageSize}][ placeholder="$placeholder"]
+	[ pageSize={$pageSize}][ placeholder="$placeholder"]
 end
 
 def type(properties & stepper) trigger(specific)
@@ -231,7 +231,7 @@ def type(properties & htmlviewer) trigger(specific)
 end
 
 def type(properties & microsite) trigger(specific)
-    [ downloadOperations={$["$downloadOperation...[","]"$]}]
+	[ downloadOperations={$["$downloadOperation...[","]"$]}]
 end
 
 def type(properties) trigger(specific)

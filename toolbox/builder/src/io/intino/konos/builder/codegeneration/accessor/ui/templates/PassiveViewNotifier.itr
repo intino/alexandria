@@ -72,5 +72,5 @@ def trigger(target)
 end
 
 def type(event)
-    this.when("$name+firstLowerCase").toSelf().execute((parameters) => this.element.notifyProxyMessage("$name+firstLowerCase"));
+	this.when("$name+firstLowerCase").toSelf().execute((parameters) => this.element.notifyProxyMessage("$name+firstLowerCase"));
 end

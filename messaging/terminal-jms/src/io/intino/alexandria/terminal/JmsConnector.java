@@ -71,7 +71,7 @@ public class JmsConnector implements Connector {
 
 	public void start() {
 		if (brokerUrl == null || brokerUrl.isEmpty()) {
-			Logger.warn("Invalid broker URL. Connection aborted");
+			Logger.warn("Invalid broker URL (" + brokerUrl + "). Connection aborted");
 			return;
 		}
 		try {
@@ -88,7 +88,7 @@ public class JmsConnector implements Connector {
 
 	private void connect() throws JMSException {
 		if (!Broker.isRunning(brokerUrl)) {
-			Logger.warn("Broker Unreachable. Connection aborted");
+			Logger.warn("Broker (" + brokerUrl + ") unreachable .Connection aborted");
 			return;
 		}
 		initConnection();
@@ -245,7 +245,7 @@ public class JmsConnector implements Connector {
 	@Override
 	public void requestResponse(String path, String message, Consumer<String> onResponse) {
 		if (session == null) {
-			Logger.error("Session is null");
+			Logger.error("Connection lost. Invalid session");
 			return;
 		}
 		try {
@@ -421,13 +421,13 @@ public class JmsConnector implements Connector {
 		return new ConnectionListener() {
 			@Override
 			public void transportInterupted() {
-				Logger.warn("Connection with Data Hub interrupted!");
+				Logger.warn("Connection with Data Hub (" + brokerUrl + ") interrupted!");
 				connected.set(false);
 			}
 
 			@Override
 			public void transportResumed() {
-				Logger.info("Connection with Data Hub established!");
+				Logger.info("Connection with Data Hub (" + brokerUrl + ") established!");
 				connected.set(true);
 				recoverConsumers();
 			}

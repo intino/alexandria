@@ -15,16 +15,16 @@ def type(desktop)
 	$rowsImport
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
-    public class [$abstract]$name+firstUpperCase$parametrized extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type> {
-    	public $name+firstUpperCase~Header header;
-    	public $name+firstUpperCase~Tabs tabs;
+	public class [$abstract]$name+firstUpperCase$parametrized extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type> {
+		public $name+firstUpperCase~Header header;
+		public $name+firstUpperCase~Tabs tabs;
 
-        public [$abstract]$name+firstUpperCase($abstractBox+type box) {
-            super(box);
-            id("$id");
-        }
+		public [$abstract]$name+firstUpperCase($abstractBox+type box) {
+			super(box);
+			id("$id");
+		}
 
-        @Override
+		@Override
 		public void init() {
 			super.init();
 			header = register(new $name+firstUpperCase~Header<>(box()).id("$headerId"));
@@ -46,22 +46,22 @@ def type(desktop)
 				[$component+initializations...[$NL]]
 			}
 
-            @Override
-            public void remove() {
-                super.remove();
-                [$component+unregister...[$NL]]
-            }
+			@Override
+			public void remove() {
+				super.remove();
+				[$component+unregister...[$NL]]
+			}
 			[$component+class...[$NL]]
 			[$component+method...[$NL]]
 		}
 
 		public class $name+firstUpperCase~Tabs[<$abstractBox+extension>] extends io.intino.alexandria.ui.displays.components.Tabs<$abstractBox+type> {
 			public $name+firstUpperCase~Tabs($abstractBox+type box) {
-        		super(box);
-        		$tabs...[$NL]
-        	}
+				super(box);
+				$tabs...[$NL]
+			}
 		}
-    }
+	}
 end
 
 def type(templatesImports)

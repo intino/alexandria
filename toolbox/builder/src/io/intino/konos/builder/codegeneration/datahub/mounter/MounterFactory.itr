@@ -1,32 +1,32 @@
 def type(factory)
 	package $package.mounters;
 
-    import io.intino.alexandria.event.Event;
-    import $package+validPackage.$box+firstUpperCase~Box;
+	import io.intino.alexandria.event.Event;
+	import $package+validPackage.$box+firstUpperCase~Box;
 
-    import java.util.HashMap;
-    import java.util.List;
-    import java.util.Map;
-    import java.util.stream.Stream;
+	import java.util.HashMap;
+	import java.util.List;
+	import java.util.Map;
+	import java.util.stream.Stream;
 
-    public class MounterFactory {
-    	private Map<Class<? extends Event>, List<Mounter>> mounters = new HashMap<>();
+	public class MounterFactory {
+		private Map<Class<? extends Event>, List<Mounter>> mounters = new HashMap<>();
 
-    	public MounterFactory($box+firstUpperCase~Box box) {
-    		$event+put...[$NL]
-    	}
+		public MounterFactory($box+firstUpperCase~Box box) {
+			$event+put...[$NL]
+		}
 
-    	public List<Mounter> mountersOf(Event event) {
+		public List<Mounter> mountersOf(Event event) {
 			return mounters.get(event.getClass());
 		}
 
-    	public void handle(Event... events) {
-    		Stream.of(events).forEach(event -> {
-    			List<Mounter> mounters = mountersOf(event);
-    			if (mounters != null) mounters.forEach(m -> m.handle(event));
-    		});
-    	}
-    }
+		public void handle(Event... events) {
+			Stream.of(events).forEach(event -> {
+				List<Mounter> mounters = mountersOf(event);
+				if (mounters != null) mounters.forEach(m -> m.handle(event));
+			});
+		}
+	}
 end
 
 def trigger(put)

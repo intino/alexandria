@@ -67,28 +67,28 @@ end
 def type(method & multiple & collapsable)
 	[$editableMethods]
 	[$editableClass]
-    @Override
-    public $componentName add([$objectType value, ]String label, String description) {
+	@Override
+	public $componentName add([$objectType value, ]String label, String description) {
 		$componentName child = new $componentName(box()[.$componentOwnerBox+lowerCase()]);
 		child.id(java.util.UUID.randomUUID().toString());
-        child.properties().put("label", label);
-        child.properties().put("description", description);
+		child.properties().put("label", label);
+		child.properties().put("description", description);
 		add(child, "$name");
 		[child.value($objectTypeValue);]
-        notifyAdd(child[, $objectTypeValue]);
+		notifyAdd(child[, $objectTypeValue]);
 		return child;
-    }
+	}
 	@Override
 	public void remove($componentName child) {
 		removeChild(child, "$name");
 	}
 	public void clear() {
-	    super.clear("$name");
+		super.clear("$name");
 	}
-    @Override
-    protected $componentName add([$objectType value]) {
-        return add(value, null, null);
-    }
+	@Override
+	protected $componentName add([$objectType value]) {
+		return add(value, null, null);
+	}
 end
 
 def type(method & multiple)
@@ -100,7 +100,7 @@ def type(method & multiple)
 		child.id(java.util.UUID.randomUUID().toString());
 		add(child, "$name");
 		[child.value($objectTypeValue);]
-        notifyAdd(child[, $objectTypeValue]);
+		notifyAdd(child[, $objectTypeValue]);
 		return child;
 	}
 	@Override
@@ -108,45 +108,45 @@ def type(method & multiple)
 		removeChild(child, "$name");
 	}
 	public void clear() {
-	    super.clear("$name");
+		super.clear("$name");
 	}
 end
 
 def type(method & highlighted)
 	public $name+firstUpperCase textColor(String color) {
-	    this._textColor(color);
-	    this._refreshHighlight();
-	    return this;
+		this._textColor(color);
+		this._refreshHighlight();
+		return this;
 	}
 
 	public $name+firstUpperCase backgroundColor(String color) {
-	    this._backgroundColor(color);
-	    this._refreshHighlight();
-	    return this;
+		this._backgroundColor(color);
+		this._refreshHighlight();
+		return this;
 	}
 end
 
 def type(method & signed)
-    public $name+firstUpperCase signChecker(io.intino.alexandria.ui.displays.components.actionable.SignChecker checker) {
-        this._signChecker(checker);
-        return this;
-    }
+	public $name+firstUpperCase signChecker(io.intino.alexandria.ui.displays.components.actionable.SignChecker checker) {
+		this._signChecker(checker);
+		return this;
+	}
 end
 
 def type(method & addressable)
-    @Override
-    public $name+firstUpperCase address(java.util.function.Function<String, String> addressFromPathResolver) {
-        address(addressFromPathResolver.apply(path()));
-        return this;
-    }
+	@Override
+	public $name+firstUpperCase address(java.util.function.Function<String, String> addressFromPathResolver) {
+		address(addressFromPathResolver.apply(path()));
+		return this;
+	}
 end
 
 def type(method & collectionbox)
-    @Override
-    public $name+firstUpperCase set(java.util.function.Function<String, String> addressFromPathResolver) {
-        address(addressFromPathResolver.apply(path()));
-        return this;
-    }
+	@Override
+	public $name+firstUpperCase set(java.util.function.Function<String, String> addressFromPathResolver) {
+		address(addressFromPathResolver.apply(path()));
+		return this;
+	}
 end
 
 def type(method & collection & table)
@@ -201,7 +201,7 @@ def type(component & child & displaystamp) trigger(class)
 
 		@Override
 		public void unregister() {
-		    super.unregister();
+			super.unregister();
 			[$component+unregister...[$NL]]
 		}
 		$methods
@@ -230,7 +230,7 @@ def type(component & child & proxystamp) trigger(class)
 
 		@Override
 		public void unregister() {
-		    super.unregister();
+			super.unregister();
 			[$component+unregister...[$NL]]
 		}
 		$methods
@@ -244,9 +244,9 @@ end
 
 def type(component & child & collection & embedded) trigger(class)
 	public class $name+firstUpperCase extends $package.ui.displays[.$packageType~s].$name+firstUpperCase {
-        public $name+firstUpperCase($abstractBox+type box) {
-            this(($concreteBox+firstUpperCase~Box)box);
-        }
+		public $name+firstUpperCase($abstractBox+type box) {
+			this(($concreteBox+firstUpperCase~Box)box);
+		}
 		public $name+firstUpperCase($concreteBox+firstUpperCase~Box box) {
 			super(box);
 			[$properties+common]
@@ -275,7 +275,7 @@ def type(component & child & collection) trigger(class)
 
 		@Override
 		public void unregister() {
-		    super.unregister();
+			super.unregister();
 			[$component+unregister...[$NL]]
 		}
 		$methods
@@ -285,7 +285,7 @@ def type(component & child & collection) trigger(class)
 end
 
 def attribute(notifyReady)
-    notifyReady();
+	notifyReady();
 end
 
 def type(component & child & block & conditional) trigger(class)
@@ -309,7 +309,7 @@ def type(component & child & block & conditional) trigger(class)
 
 		@Override
 		public void unregister() {
-		    super.unregister();
+			super.unregister();
 			[$component+unregister...[$NL]]
 		}
 		$methods
@@ -338,7 +338,7 @@ def type(component & child) trigger(class)
 
 		@Override
 		public void unregister() {
-		    super.unregister();
+			super.unregister();
 			[$component+unregister...[$NL]]
 		}
 		$methods
@@ -680,11 +680,11 @@ def type(properties & actionable) trigger(common)
 end
 
 def type(properties & appDirectory) trigger(common)
-    [_icon("$icon");]
+	[_icon("$icon");]
 end
 
 def type(properties & digitalsignature) trigger(common)
-    [_text("$text");]
+	[_text("$text");]
 end
 
 def type(properties & dashboard) trigger(common)
@@ -791,13 +791,13 @@ def type(properties & opensite) trigger(specific)
 end
 
 def type(properties & switch) trigger(specific)
-    [_path("$path");]
-    [_state(io.intino.alexandria.ui.displays.events.actionable.ToggleEvent.State.valueOf("$state"));]
+	[_path("$path");]
+	[_state(io.intino.alexandria.ui.displays.events.actionable.ToggleEvent.State.valueOf("$state"));]
 end
 
 def type(properties & toggle) trigger(specific)
-    [_path("$path");]
-    [_state(io.intino.alexandria.ui.displays.events.actionable.ToggleEvent.State.valueOf("$state"));]
+	[_path("$path");]
+	[_state(io.intino.alexandria.ui.displays.events.actionable.ToggleEvent.State.valueOf("$state"));]
 end
 
 def type(properties & copytoclipboard) trigger(specific)
@@ -833,37 +833,37 @@ def type(properties & chart) trigger(specific)
 end
 
 def type(properties & appDirectory & fromFile) trigger(specific)
-    [$source+fileMethod]
+	[$source+fileMethod]
 end
 
 def type(properties & appDirectory & fromResource) trigger(specific)
-    [$source+resourceMethod]
+	[$source+resourceMethod]
 end
 
 def type(properties & appDirectory & inline) trigger(specific)
-    $application...[$NL]
+	$application...[$NL]
 end
 
 def type(appDirectoryApplication)
-    _add("$name", "$url")[$translation...[]];
+	_add("$name", "$url")[$translation...[]];
 end
 
 def type(appDirectoryApplicationTranslation)
-    .translation("$language", "$name")
+	.translation("$language", "$name")
 end
 
 def type(properties & dashboard & shiny) trigger(specific)
-    [$serverScript+resourceMethod]
-    [$uiScript+resourceMethod]
+	[$serverScript+resourceMethod]
+	[$uiScript+resourceMethod]
 	[$resource+resourceMethod...[$NL]]
 end
 
 def type(properties & dashboard & metabase) trigger(specific)
-    [_url("$url");]
-    [_secretKey("$secretKey");]
-    [_bordered($bordered);]
-    [_titled($titled);]
-    [_theme(io.intino.alexandria.ui.displays.components.DashboardMetabase.Theme.$theme);]
+	[_url("$url");]
+	[_secretKey("$secretKey");]
+	[_bordered($bordered);]
+	[_titled($titled);]
+	[_theme(io.intino.alexandria.ui.displays.components.DashboardMetabase.Theme.$theme);]
 end
 
 def type(properties & number & multiple & componentClass) trigger(specific)
@@ -949,23 +949,23 @@ def type(properties & collection) trigger(specific)
 end
 
 def type(properties & slider) trigger(specific)
-    [_value($value);]
-    [_range($min,$max);]
-    [_animation($interval,$loop);]
-    [_readonly($readonly);]
-    [$ordinal+ordinalMethod...[$NL]]
+	[_value($value);]
+	[_range($min,$max);]
+	[_animation($interval,$loop);]
+	[_readonly($readonly);]
+	[$ordinal+ordinalMethod...[$NL]]
 end
 
 def type(properties & temporalslider) trigger(specific)
-    [_value($value);]
-    [_range(java.time.Instant.ofEpochMilli($min~L),java.time.Instant.ofEpochMilli($max~L));]
-    [_animation($interval,$loop);]
-    [_readonly($readonly);]
-    [$ordinal+ordinalMethod...[$NL]]
+	[_value($value);]
+	[_range(java.time.Instant.ofEpochMilli($min~L),java.time.Instant.ofEpochMilli($max~L));]
+	[_animation($interval,$loop);]
+	[_readonly($readonly);]
+	[$ordinal+ordinalMethod...[$NL]]
 end
 
 def type(properties & collectiondialog) trigger(specific)
-    [_allowSearch($allowSearch);]
+	[_allowSearch($allowSearch);]
 end
 
 def type(properties & frame) trigger(specific)
@@ -1000,20 +1000,20 @@ def trigger(ordinalMethod)
 end
 
 def type(actionableMode & splitbutton)
-    [_options(java.util.Arrays.asList("$option...[","]"));]
-    [_option("$default");]
+	[_options(java.util.Arrays.asList("$option...[","]"));]
+	[_option("$default");]
 end
 
 def type(actionableMode & iconsplitbutton)
-    [_options(java.util.Arrays.asList("$option...[","]"));]
-    [_option("$default");]
-    [_icon("$icon");]
+	[_options(java.util.Arrays.asList("$option...[","]"));]
+	[_option("$default");]
+	[_icon("$icon");]
 end
 
 def type(actionableMode & materialiconsplitbutton)
-    [_options(java.util.Arrays.asList("$option...[","]"));]
-    [_option("$default");]
-    [_icon("$icon");]
+	[_options(java.util.Arrays.asList("$option...[","]"));]
+	[_option("$default");]
+	[_icon("$icon");]
 end
 
 def type(actionableMode & iconbutton)
@@ -1061,13 +1061,13 @@ def type(editableMethods)
 end
 
 def type(editableClass)
-    public class $componentName extends $componentType {
-        public $componentName($abstractBox+type box) {
-            super(box);
-            [$componentProperties+common]
-            [$componentProperties+specific]
-        }
-    }
+	public class $componentName extends $componentType {
+		public $componentName($abstractBox+type box) {
+			super(box);
+			[$componentProperties+common]
+			[$componentProperties+specific]
+		}
+	}
 end
 
 def type(item) trigger(addDeclaration)
@@ -1096,29 +1096,29 @@ def type(item) trigger(addMethod)
 end
 
 def type(itemClass & map)
-    io.intino.alexandria.ui.model.PlaceMark<$value>
+	io.intino.alexandria.ui.model.PlaceMark<$value>
 end
 
 def type(itemClass)
-    $value
+	$value
 end
 
 def type(itemVariable & map)
-    element.item()
+	element.item()
 end
 
 def type(itemVariable)
-    element
+	element
 end
 
 def type(useUrl & custom)
-    box().configuration().get("$value")
+	box().configuration().get("$value")
 end
 
 def type(column)
-    _add(new io.intino.alexandria.ui.model.datasource.grid.GridColumn<$itemClass>().name("$name").label("$label").type(io.intino.alexandria.ui.model.datasource.grid.GridColumn.Type.$type)[.width($width)][.sortable($sortable)][.address("$address")][.fixed($fixed)][.pattern("$pattern")]);
+	_add(new io.intino.alexandria.ui.model.datasource.grid.GridColumn<$itemClass>().name("$name").label("$label").type(io.intino.alexandria.ui.model.datasource.grid.GridColumn.Type.$type)[.width($width)][.sortable($sortable)][.address("$address")][.fixed($fixed)][.pattern("$pattern")]);
 end
 
 def type(useUrl)
-    "$value"
+	"$value"
 end
