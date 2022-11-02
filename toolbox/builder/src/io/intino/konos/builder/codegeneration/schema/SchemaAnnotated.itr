@@ -53,7 +53,7 @@ def type(map) trigger(declaration)
 end
 
 def type(multiple) type(object | schema) trigger(declaration)
-	@com.google.gson.annotations.SerializedName("$name")
+	@com.google.gson.annotations.SerializedName("$name+firstLowerCase")
 	private java.util.List<$type+firstUpperCase> $name+snakeCaseToCamelCase+firstLowerCase = new java.util.ArrayList<>();
 end
 
