@@ -3,6 +3,7 @@ package io.intino.alexandria.http.spark;
 import io.intino.alexandria.exceptions.AlexandriaException;
 import io.intino.alexandria.http.AlexandriaSpark;
 import io.intino.alexandria.logger.Logger;
+import spark.HaltException;
 import spark.Request;
 import spark.Response;
 import spark.Service;
@@ -114,6 +115,8 @@ public class SparkRouter<SM extends SparkManager> {
 			manager.response.status(Integer.parseInt(e.code()));
 			manager.response.body(e.toString());
 			service.halt(Integer.parseInt(e.code()), e.toString());
+		} catch (HaltException e) {
+			service.halt(e.statusCode());
 		} catch (Throwable e) {
 			Logger.error(e);
 			manager.response.status(500);
