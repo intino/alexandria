@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.11") xls-builder
+Artifact("io.intino.alexandria", "1.0.12") xls-builder
 	Imports
 		Compile("org.apache.poi", "poi-ooxml", "4.0.1")
 		Compile("org.apache.poi", "ooxml-schemas", "1.4")

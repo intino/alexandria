@@ -106,7 +106,8 @@ public class ExcelReportGenerator extends ReportGenerator {
 	}
 
 	private void fillCell(Workbook book, Cell cell, Column column, CellValue value) {
-		cell.setCellValue(column.valueOf(value.data()));
+		if (column.type() == Column.Type.Amount || column.type() == Column.Type.Ratio) cell.setCellValue((double)value.data());
+		else cell.setCellValue(column.valueOf(value.data()));
 		fillCellStyle(book, cell, column, value);
 	}
 
