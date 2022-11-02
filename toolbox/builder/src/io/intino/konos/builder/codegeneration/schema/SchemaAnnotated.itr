@@ -42,6 +42,11 @@ def type(primitive & single) trigger(declaration)
 	private $type $name+snakeCaseToCamelCase+firstLowerCase[ = $defaultValue];
 end
 
+def type(schema) type(single) trigger(declaration)
+	@com.google.gson.annotations.SerializedName("$name+firstLowerCase")
+	private $type+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase[ = $defaultValue];
+end
+
 def !type(primitive) type(single) trigger(declaration)
 	@com.google.gson.annotations.SerializedName("$name")
 	private $type+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase[ = $defaultValue];
