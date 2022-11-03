@@ -71,6 +71,7 @@ class Grid extends AbstractGrid {
 
     render() {
         if (!this.state.visible) return (<React.Fragment/>);
+        window.setTimeout(() => this.restoreHorizontalScroll(), 10);
         return (
             <div style={{height:'100%',width:'100%',position:'relative'}}>
                 {this.state.loading && this.renderLoading()}
@@ -89,6 +90,18 @@ class Grid extends AbstractGrid {
     	var top = this.grid.getRowOffsetHeight() * idx;
     	var gridCanvas = this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas');
     	if (gridCanvas != null) gridCanvas.scrollTop = top;
+    };
+
+    saveHorizontalScroll = () => {
+    	var gridCanvas = this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas');
+    	this.horizontalScroll = gridCanvas != null ? gridCanvas.scrollLeft : 0;
+    };
+
+    restoreHorizontalScroll() {
+        var selectedColumn = this.state.sortColumn;
+        if (selectedColumn == null) return;
+    	var gridCanvas = this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas');
+    	if (gridCanvas != null) gridCanvas.scrollLeft = this.horizontalScroll;
     };
 
     renderGrid = () => {
@@ -131,6 +144,7 @@ class Grid extends AbstractGrid {
 
     sortColumns = (sortColumn, sortDirection) => {
         const sort = {column: sortColumn, mode: sortDirection};
+        this.saveHorizontalScroll();
         this.setState({ sortColumn : sortColumn, sortDirection: sortDirection });
         this.saveState("sort", sort);
         this.requester.sort(sort);
@@ -275,6 +289,7 @@ class Grid extends AbstractGrid {
             value: column.name,
             label: column.label,
             type: column.type,
+            width: column.width,
             index: idx
         }));
     };
