@@ -42,5 +42,6 @@
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-api:9.4.42.v20210604" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-client:9.4.42.v20210604" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-servlet:9.4.42.v20210604" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:exceptions:2.1.1" level="project" />
   </component>
 </module>
