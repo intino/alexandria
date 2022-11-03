@@ -59,7 +59,7 @@ public class Column extends Definition {
 		return isNumber() ? formatNumber((String) data) : String.valueOf(data);
 	}
 
-	private boolean isNumber() {
+	public boolean isNumber() {
 		return type == Type.Money || type == Type.Ratio || type == Type.Amount || type == Type.Percentage;
 	}
 
