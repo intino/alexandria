@@ -21,10 +21,10 @@ Template(layout=Vertical, spacing=DP8) gridExamplesMold
 					Column(label="Columna 8", type=Text) columna8
 					Column(label="Columna 9", type=Text) columna9
 					Column(label="Columna 10", type=Text) columna10
-					Column(label="Columna 11", type=Text) columna11
-					Column(label="Columna 12", type=Text) columna12
-					Column(label="Columna 13", type=Text) columna13
-					Column(label="Columna 14", type=Text) columna14
+					Column(label="Columna 11", type=Text, sortable=true) columna11
+					Column(label="Columna 12", type=Text, sortable=true) columna12
+					Column(label="Columna 13", type=Text, sortable=true) columna13
+					Column(label="Columna 14", type=Text, sortable=true) columna14
 					Column(label="Columna 15", type=Text) columna15
 					Column(label="Columna 16", type=Text) columna16
 					Column(label="Columna 17", type=Text) columna17
