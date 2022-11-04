@@ -20,6 +20,7 @@ Concept DataComponents
         Aspect Editable
         	var word:{Normal Email Url} edition = Normal
 			var string helperText = empty
+			var boolean shrink = false
 
         	Concept:{0..1} Validation
         		var string[] allowedValues = empty
@@ -85,6 +86,7 @@ Concept DataComponents
 		Aspect Multiple
 		Aspect Editable
 			var string helperText = empty
+			var boolean shrink = false
         	var double min = -1
         	var double max = -1
         	var double step = -1
@@ -103,6 +105,7 @@ Concept DataComponents
         	var boolean timePicker = false
         	var string mask = empty
         	var boolean allowEmpty = false
+        	var boolean shrink = false
         	var word[]:{Year Month Week Date} views = empty
 			var boolean embedded = false
 		Aspect Readonly with Editable

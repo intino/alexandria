@@ -34,6 +34,11 @@ public abstract class BlockConditional<DN extends BlockConditionalNotifier, B ex
         return this;
     }
 
+    public BlockConditional<DN, B> focus() {
+        notifier.refreshFocused(true);
+        return this;
+    }
+
     @Override
     public void bindTo(Selector selector, String option) {
         updateVisibility(selector, option);

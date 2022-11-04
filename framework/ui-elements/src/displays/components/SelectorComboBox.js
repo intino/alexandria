@@ -89,9 +89,9 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		return (
 			<div className={classes.container} style={{...this.style()}}>
                 {this.renderTraceConsent()}
-				{label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{this.translate(label)}</div> : undefined }
+				{label != null && label !== "" ? <div ref={this.state.readonly ? this.selectorRef : undefined} className={classes.label} style={{color:color}}>{this.translate(label)}</div> : undefined }
 				<Select isMulti={multiple} isDisabled={this.state.readonly} isSearchable
-				        ref={this.selectorRef}
+				        ref={!this.state.readonly ? this.selectorRef : undefined}
 						closeMenuOnSelect={!multiple} autoFocus={this.props.focused}
 						placeholder={this.selectMessage()} options={items}
 						className="basic-multi-select" classNamePrefix="select"

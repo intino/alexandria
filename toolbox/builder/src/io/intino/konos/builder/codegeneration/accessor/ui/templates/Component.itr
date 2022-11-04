@@ -131,7 +131,7 @@ def type(properties & block) trigger(specific)
 end
 
 def type(properties & date) trigger(specific)
-	[ pattern="$pattern"][ mode="$mode"][ value={new Date($value)}][ timePicker={$timePicker}][ mask="$mask"][ embedded={$embedded}][ allowEmpty={$allowEmpty}][ views={$["$view...[","]"$]}]
+	[ pattern="$pattern"][ mode="$mode"][ value={new Date($value)}][ timePicker={$timePicker}][ mask="$mask"][ embedded={$embedded}][ allowEmpty={$allowEmpty}][ views={$["$view...[","]"$]}][ shrink={$shrink}]
 end
 
 def type(properties & user) trigger(specific)
@@ -139,7 +139,7 @@ def type(properties & user) trigger(specific)
 end
 
 def type(properties & number) trigger(specific)
-	[ value={$value}][ prefix="$prefix"][ suffix="$suffix"][ min={$min}][ max={$max}][ step={$step}][ readonly={$readonly}][ focused={$focused}][ decimals={$decimals}][ expanded={$expanded}][ helperText="$helperText"]
+	[ value={$value}][ prefix="$prefix"][ suffix="$suffix"][ min={$min}][ max={$max}][ step={$step}][ readonly={$readonly}][ focused={$focused}][ decimals={$decimals}][ expanded={$expanded}][ helperText="$helperText"][ shrink={$shrink}]
 end
 
 def type(properties & header) trigger(specific)
@@ -151,7 +151,7 @@ def type(properties & code) trigger(specific)
 end
 
 def type(properties & text) trigger(specific)
-	[ mode="$mode"][ editionMode="$editionMode"][ maxLength={$maxLength}][ rows={$rows}][ prefix="$prefix"][ suffix="$suffix"][ translate={$translate}][ cropWithEllipsis={$cropWithEllipsis}][ value="$defaultValue"][ placeholder="$placeholder"][ readonly={$readonly}][ focused={$focused}][ highlighted={$highlighted}][ type="$type"][ helperText="$helperText"]
+	[ mode="$mode"][ editionMode="$editionMode"][ maxLength={$maxLength}][ rows={$rows}][ prefix="$prefix"][ suffix="$suffix"][ translate={$translate}][ cropWithEllipsis={$cropWithEllipsis}][ value="$defaultValue"][ placeholder="$placeholder"][ readonly={$readonly}][ focused={$focused}][ highlighted={$highlighted}][ type="$type"][ helperText="$helperText"][ shrink={$shrink}]
 end
 
 def type(properties & location) trigger(specific)

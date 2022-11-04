@@ -75,6 +75,7 @@ public class TextRenderer extends ComponentRenderer<Text> {
 		addValidation(builder);
 		if (editableText.placeholder() != null && !editableText.placeholder().isEmpty()) builder.add("placeholder", editableText.placeholder());
 		if (editableText.helperText() != null) builder.add("helperText", editableText.helperText());
+		if (editableText.shrink()) builder.add("shrink", true);
 	}
 
 	private void addMemoEditable(FrameBuilder builder) {

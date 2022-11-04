@@ -32,6 +32,7 @@ public class DateRenderer extends ComponentRenderer<Date> {
 		if (editableDate.timePicker()) builder.add("timePicker", editableDate.timePicker());
 		if (editableDate.mask() != null) builder.add("mask", editableDate.mask());
 		if (editableDate.allowEmpty()) builder.add("allowEmpty", editableDate.allowEmpty());
+		if (editableDate.shrink()) builder.add("shrink", true);
 		if (editableDate.views() != null) editableDate.views().forEach(view -> builder.add("view", view.name()));
 		if (editableDate.embedded()) builder.add("embedded", "true");
 	}

@@ -35,6 +35,7 @@ public class NumberRenderer extends ComponentRenderer<Number> {
 		builder.add("max", editableNumber.max());
 		builder.add("step", editableNumber.step());
 		if (editableNumber.helperText() != null) builder.add("helperText", editableNumber.helperText());
+		if (editableNumber.shrink()) builder.add("shrink", true);
 	}
 
 	@Override

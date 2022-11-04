@@ -40,7 +40,10 @@ class ActionSwitch extends AbstractActionSwitch {
 
 	refreshFocused = (value) => {
 	    if (this.inputRef == null || this.inputRef.current == null) return;
-	    window.setTimeout(() => this.inputRef.current.focus(), 100);
+	    window.setTimeout(() => {
+            if (this.state.readonly) this.inputRef.current.scrollIntoView();
+            else this.inputRef.current.focus();
+	    }, 100);
 	};
 
 	handleChange = () => {
