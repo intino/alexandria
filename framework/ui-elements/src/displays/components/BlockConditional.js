@@ -15,6 +15,7 @@ export default class BlockConditional extends AbstractBlockConditional {
 		super(props);
 		this.notifier = new BlockConditionalNotifier(this);
 		this.requester = new BlockConditionalRequester(this);
+		this.blockRef = React.createRef();
 		this.state = {
 			...this.state,
 			visible: false,
@@ -35,7 +36,7 @@ export default class BlockConditional extends AbstractBlockConditional {
 		const classNames = BlockBehavior.classNames(this);
 		return (
 			<div style={styles} className={classNames}>
-				<Block label={this.props.label}
+				<Block ref={this.blockRef} label={this.props.label}
 					   /*style={this.style()}*/
 					   layout={this.props.layout}
 					   /*width={this.props.width}
@@ -55,6 +56,11 @@ export default class BlockConditional extends AbstractBlockConditional {
 		if (this._heightDefined()) result.height = this.props.height;
 		if (result.height === "100.0%" && BrowserUtil.isFirefox()) result.height = "100vh";
 		return result;
+	};
+
+	refreshFocused = (focused) => {
+	    if (this.blockRef == null || this.blockRef.current == null) return;
+	    window.setTimeout(() => this.blockRef.current.scrollIntoView(), 100);
 	};
 
 }
