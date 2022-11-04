@@ -11,29 +11,47 @@ import java.util.Date;
 
 public class Json {
 
-
 	public static String toString(Object object) {
+		return toJson(object);
+	}
+
+	public static String toStringPretty(Object object) {
+		return toJsonPretty(object);
+	}
+
+	public static String toJson(Object object) {
 		return gsonWriter().toJson(object);
 	}
 
-	public static <T> T fromString(String text, Class<T> t) {
-		return gsonReader().fromJson(text, t);
+	public static String toJsonPretty(Object object) {
+		return gsonWriterPretty().toJson(object);
+	}
+
+	public static <T> T fromString(String text, Class<T> type) {
+		return gsonReader().fromJson(text, type);
+	}
+
+	public static <T> T fromJson(String text, Class<T> type) {
+		return gsonReader().fromJson(text, type);
 	}
 
 	public static Gson gsonReader() {
-		return new GsonBuilder().
-				registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, type1, context) -> Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong())).
-				registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, type1, context) -> new Date(json.getAsJsonPrimitive().getAsLong())).
-				registerTypeAdapter(InputStream.class, (JsonDeserializer<InputStream>) (json, type1, context) -> new ByteArrayInputStream(Base64.decode(json.getAsString()))).
-				create();
+		return gsonBuilder().create();
 	}
 
 	public static Gson gsonWriter() {
+		return gsonBuilder().create();
+	}
+
+	public static Gson gsonWriterPretty() {
+		return gsonBuilder().setPrettyPrinting().create();
+	}
+
+	private static GsonBuilder gsonBuilder() {
 		return new GsonBuilder().
 				registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (instant, type, context) -> new JsonPrimitive(instant.toEpochMilli())).
 				registerTypeAdapter(Date.class, (JsonSerializer<Date>) (date, type, context) -> new JsonPrimitive(date.getTime())).
-				registerTypeAdapter(InputStream.class, (JsonSerializer<InputStream>) (inputStream, type1, jsonDeserializationContext) -> new JsonPrimitive(Base64.encode(toByteArray(inputStream)))).
-				create();
+				registerTypeAdapter(InputStream.class, (JsonSerializer<InputStream>) (inputStream, type1, jsonDeserializationContext) -> new JsonPrimitive(Base64.encode(toByteArray(inputStream))));
 	}
 
 	private static byte[] toByteArray(InputStream is) {
