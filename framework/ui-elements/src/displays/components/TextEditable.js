@@ -55,6 +55,7 @@ class TextEditable extends AbstractTextEditable {
 					   onKeyPress={this.handleKeypress.bind(this)} type={type} autoFocus={this.props.focused}
 					   placeholder={placeholder} multiline={this._multiline()} rows={this._rowsCount()}
 					   error={error != null} helperText={this.state.readonly ? undefined : (error != null ? error : this.props.helperText) }
+					   InputLabelProps={{ shrink: this.props.shrink !== null ? this.props.shrink : undefined }}
 					   inputRef={this.inputRef}
 					   inputProps={{ maxLength: this.props.maxLength != null ? this.props.maxLength : undefined }}
 					   InputProps={{
@@ -81,7 +82,10 @@ class TextEditable extends AbstractTextEditable {
 
 	refreshFocused = (focused) => {
 	    if (this.inputRef == null || this.inputRef.current == null) return;
-	    window.setTimeout(() => this.inputRef.current.focus(), 100);
+	    window.setTimeout(() => {
+            if (this.state.readonly) this.inputRef.current.scrollIntoView();
+            else this.inputRef.current.focus();
+	    }, 100);
 	};
 }
 

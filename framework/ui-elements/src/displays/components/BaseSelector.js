@@ -22,7 +22,10 @@ export default class BaseSelector extends AbstractBaseSelector {
 
 	refreshFocused = (focused) => {
 	    if (this.selectorRef == null || this.selectorRef.current == null) return;
-	    window.setTimeout(() => this.selectorRef.current.focus(), 100);
+	    window.setTimeout(() => {
+            if (this.state.readonly) this.selectorRef.current.scrollIntoView();
+            else this.selectorRef.current.focus();
+	    }, 100);
 	};
 
 	refreshOptions = (options) => {

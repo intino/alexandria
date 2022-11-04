@@ -10,6 +10,7 @@ Component block
 	Notification refreshAutoSize as Bool
 
 Component blockConditional
+	Notification refreshFocused as Bool
 
 Component blockSplitter
 	Notification show as Integer

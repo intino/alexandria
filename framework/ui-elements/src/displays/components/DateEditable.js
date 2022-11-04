@@ -101,6 +101,7 @@ class DateEditable extends AbstractDateEditable {
 			<div style={this.style()}>
 				{ !timePicker ? <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale(Application.configuration.language)}>
                                     <KeyboardDatePicker variant={variant} placeholder={pattern} autoOk
+                                            InputLabelProps={{ shrink: this.props.shrink !== null ? this.props.shrink : undefined }}
                                             inputProps={{ref:this.inputRef}}
                                             disabled={this.state.readonly}
                                             format={pattern} className={classes.date} mask={this.props.mask}
@@ -115,6 +116,7 @@ class DateEditable extends AbstractDateEditable {
                 }
 				{ timePicker ? <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale(Application.configuration.language)}>
 				                    <KeyboardDateTimePicker variant={variant} placeholder={pattern} autoOk
+				                            InputLabelProps={{ shrink: this.props.shrink !== null ? this.props.shrink : undefined }}
                                             inputProps={{ref:this.inputRef}}
                                             disabled={this.state.readonly}
                                             format={pattern} className={classes.datetime}
@@ -158,7 +160,10 @@ class DateEditable extends AbstractDateEditable {
 
 	refreshFocused = (focused) => {
         if (this.inputRef == null || this.inputRef.current == null) return;
-        window.setTimeout(() => this.inputRef.current.focus(), 100);
+	    window.setTimeout(() => {
+            if (this.state.readonly) this.inputRef.current.scrollIntoView();
+            else this.inputRef.current.focus();
+	    }, 100);
 	};
 
 	refreshRange = (range) => {
