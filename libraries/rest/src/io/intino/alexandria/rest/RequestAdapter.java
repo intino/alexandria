@@ -33,11 +33,11 @@ public class RequestAdapter {
 	}
 
 	public static <T> T adaptFromJson(String object, Class<T> type) {
-		return object == null || object.isEmpty() ? null : gson().fromJson(decode(object), type);
+		return object == null || object.isEmpty() ? null : gson().fromJson(object, type);
 	}
 
 	public static <T> T adapt(String object, Type type) {
-		return object == null || object.isEmpty() ? null : gson().fromJson(decode(object), type);
+		return object == null || object.isEmpty() ? null : gson().fromJson(object, type);
 	}
 
 	private static Gson gson() {
