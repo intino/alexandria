@@ -123,6 +123,10 @@ public class JMXClient {
 			}
 		}
 
+		public MBeanInfo mBeanInfo(ObjectName objectName) throws InstanceNotFoundException, IntrospectionException, ReflectionException, IOException {
+			return connection.getMBeanInfo(objectName);
+		}
+
 		public void close() {
 			try {
 				connector.close();
@@ -134,7 +138,7 @@ public class JMXClient {
 		public List<String> attributes(ObjectName objectName) {
 			List<String> attributes = new ArrayList<>();
 			try {
-				for (MBeanAttributeInfo info : connection.getMBeanInfo(objectName).getAttributes()) {
+				for (MBeanAttributeInfo info : mBeanInfo(objectName).getAttributes()) {
 					final Object attribute = connection.getAttribute(objectName, info.getName());
 					attributes.add(info.getName() + ": " + resolveValue(attribute, (OpenType) info.getDescriptor().getFieldValue("openType")));
 				}
@@ -147,7 +151,7 @@ public class JMXClient {
 			Map<String, String> map = new LinkedHashMap<>();
 			try {
 
-				for (MBeanOperationInfo info : connection.getMBeanInfo(objectName).getOperations()) {
+				for (MBeanOperationInfo info : mBeanInfo(objectName).getOperations()) {
 					final Descriptor descriptor = info.getDescriptor();
 					final String parameters = descriptor.getFieldValue(Parameters.class.getSimpleName()).toString();
 					final String description = descriptor.getFieldValue(Description.class.getSimpleName()).toString();
@@ -161,7 +165,7 @@ public class JMXClient {
 
 		public Map<MBeanOperationInfo, String> operationInfos(ObjectName objectName) {
 			try {
-				final List<MBeanOperationInfo> operations = Arrays.asList(connection.getMBeanInfo(objectName).getOperations());
+				final List<MBeanOperationInfo> operations = Arrays.asList(mBeanInfo(objectName).getOperations());
 				Map<MBeanOperationInfo, String> map = new LinkedHashMap<>();
 				for (MBeanOperationInfo operation : operations)
 					map.put(operation, operation.getDescriptor().getFieldValue(Description.class.getSimpleName()).toString());

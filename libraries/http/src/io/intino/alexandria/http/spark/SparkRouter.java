@@ -116,7 +116,7 @@ public class SparkRouter<SM extends SparkManager> {
 			manager.response.body(e.toString());
 			service.halt(Integer.parseInt(e.code()), e.toString());
 		} catch (HaltException e) {
-			service.halt(e.statusCode());
+			throw e;
 		} catch (Throwable e) {
 			Logger.error(e);
 			manager.response.status(500);
