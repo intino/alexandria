@@ -6,7 +6,7 @@ import java.io.File;
 import java.util.stream.Stream;
 
 public class FileTripletStore implements Datalake.TripletStore {
-	public static final String Extension = ".tsv";
+	public static final String Extension = ".triplets";
 	private final File root;
 
 	public FileTripletStore(File root) {

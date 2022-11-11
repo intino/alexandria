@@ -27,17 +27,21 @@ public class FileTripletTank implements Datalake.TripletStore.Tank {
 
 	@Override
 	public Tub last() {
-		return FS.foldersIn(root, FS.Sort.Reversed).map(FileTripletTub::new).findFirst().orElse(null);
+		return tubFiles().map(FileTripletTub::new).findFirst().orElse(null);
 	}
 
 	@Override
 	public Stream<Tub> tubs() {
-		return FS.foldersIn(root).map(FileTripletTub::new);
+		return tubFiles().map(FileTripletTub::new);
 	}
 
 	@Override
 	public Stream<Tub> tubs(int count) {
-		return FS.foldersIn(root, FS.Sort.Reversed).map(f -> (Tub) new FileTripletTub(f)).limit(count);
+		return tubFiles().map(f -> (Tub) new FileTripletTub(f)).limit(count);
+	}
+
+	private Stream<File> tubFiles() {
+		return FS.filesIn(root, pathname -> pathname.getName().endsWith(FileTripletStore.Extension));
 	}
 
 	@Override
