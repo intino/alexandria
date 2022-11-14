@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.4") jmx
+Artifact("io.intino.alexandria", "1.0.5") jmx
 	Imports
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Test("junit", "junit", "4.12")
@@ -9,6 +9,3 @@ Artifact("io.intino.alexandria", "1.0.4") jmx
 
 Repository("intino-maven")
 	Release("https://artifactory.intino.io/artifactory/releases")
-
-Repository("maven2-repository.dev.java.net")
-	Release("https://download.java.net/maven/2/")
