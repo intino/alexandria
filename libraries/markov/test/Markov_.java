@@ -1,6 +1,8 @@
 import io.intino.alexandria.markov.Markov;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class Markov_ {
@@ -60,7 +62,7 @@ public class Markov_ {
 	@Test
 	public void should_deserialize() {
 		Markov markov = Markov.deserialize("A:1,4|B:3,1");
-		assertThat(markov.states()).isEqualTo(new String[]{"A", "B"});
+		assertThat(markov.states()).isEqualTo(List.of("A", "B"));
 		assertThat(markov.transitions()).isEqualTo(new int[][]{{1, 4}, {3, 1}});
 		assertThat(markov.transitionProbabilities()).isEqualTo(new double[][]{{0.2, 0.8}, {0.75, 0.25}});
 	}
