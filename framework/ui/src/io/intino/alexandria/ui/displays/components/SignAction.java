@@ -73,12 +73,12 @@ public abstract class SignAction<DN extends SignActionNotifier, B extends Box> e
 	}
 
 	public void success(SignActionSignatureSuccess success) {
-		notifyUser("Sign process finished", UserMessage.Type.Success);
+		notifyUser(translate("Sign process finished"), UserMessage.Type.Success);
 		signListener.accept(new SignEvent(this, success.signature(), success.certificate(), info(success.signature())));
 	}
 
 	public void failure(SignActionSignatureFailure failure) {
-		notifyUser("An error ocurred when signing", UserMessage.Type.Error);
+		notifyUser(translate("An error ocurred when signing"), UserMessage.Type.Error);
 		errorListener.accept(new SignErrorEvent(this, failure.code(), failure.message()));
 	}
 

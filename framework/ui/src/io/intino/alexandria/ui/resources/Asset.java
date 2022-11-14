@@ -3,6 +3,8 @@ package io.intino.alexandria.ui.resources;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 public class Asset {
@@ -77,7 +79,7 @@ public class Asset {
     }
 
     private static String encode(String content) {
-        return new String(Base64.getEncoder().encode(content.getBytes()));
+        return URLEncoder.encode(new String(Base64.getEncoder().encode(content.getBytes())), StandardCharsets.UTF_8);
     }
 
     public interface Resource {
