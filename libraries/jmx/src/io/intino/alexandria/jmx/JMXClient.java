@@ -1,6 +1,8 @@
 package io.intino.alexandria.jmx;
 
-import com.sun.tools.attach.*;
+import com.sun.tools.attach.AttachNotSupportedException;
+import com.sun.tools.attach.VirtualMachine;
+import com.sun.tools.attach.VirtualMachineDescriptor;
 import io.intino.alexandria.logger.Logger;
 
 import javax.management.*;
@@ -11,7 +13,6 @@ import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 import java.io.Closeable;
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.*;
@@ -45,15 +46,12 @@ public class JMXClient {
 		for (VirtualMachineDescriptor desc : vms) {
 			try {
 				VirtualMachine vm = VirtualMachine.attach(desc);
+				vm.startLocalManagementAgent();
 				Properties props = vm.getAgentProperties();
 				String connectorAddress = props.getProperty(CONNECTOR_ADDRESS);
-				if (connectorAddress == null) {
-					String agent = vm.getSystemProperties().getProperty("java.home") + File.separator + "lib" + File.separator + "management-agent.jar";
-					vm.loadAgent(agent);
-					connectorAddress = vm.getAgentProperties().getProperty(CONNECTOR_ADDRESS);
-				}
-				if (connectorAddress != null) set.put(desc.displayName(), connectorAddress);
-			} catch (AttachNotSupportedException | IOException | AgentLoadException | AgentInitializationException ignored) {
+				if (connectorAddress == null) continue;
+				set.put(desc.displayName(), connectorAddress);
+			} catch (AttachNotSupportedException | IOException ignored) {
 			}
 		}
 		return set;
@@ -142,7 +140,8 @@ public class JMXClient {
 					final Object attribute = connection.getAttribute(objectName, info.getName());
 					attributes.add(info.getName() + ": " + resolveValue(attribute, (OpenType) info.getDescriptor().getFieldValue("openType")));
 				}
-			} catch (RuntimeException | MBeanException | AttributeNotFoundException | ReflectionException | IntrospectionException | IOException | InstanceNotFoundException ignored) {
+			} catch (RuntimeException | MBeanException | AttributeNotFoundException | ReflectionException |
+					 IntrospectionException | IOException | InstanceNotFoundException ignored) {
 			}
 			return attributes;
 		}
@@ -158,7 +157,8 @@ public class JMXClient {
 					map.put(info.getReturnType() + " " + info.getName() + "(" + (parameters != null ? parameters : parameters(info)) + ")", description == null ? "" : description);
 					return map;
 				}
-			} catch (RuntimeException | ReflectionException | IntrospectionException | IOException | InstanceNotFoundException ignored) {
+			} catch (RuntimeException | ReflectionException | IntrospectionException | IOException |
+					 InstanceNotFoundException ignored) {
 			}
 			return Collections.emptyMap();
 		}
@@ -170,7 +170,8 @@ public class JMXClient {
 				for (MBeanOperationInfo operation : operations)
 					map.put(operation, operation.getDescriptor().getFieldValue(Description.class.getSimpleName()).toString());
 				return map;
-			} catch (RuntimeException | ReflectionException | IntrospectionException | IOException | InstanceNotFoundException ignored) {
+			} catch (RuntimeException | ReflectionException | IntrospectionException | IOException |
+					 InstanceNotFoundException ignored) {
 			}
 			return Collections.emptyMap();
 		}
