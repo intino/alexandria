@@ -5,6 +5,7 @@ import OpenPopoverNotifier from "../../../gen/displays/notifiers/OpenPopoverNoti
 import OpenPopoverRequester from "../../../gen/displays/requesters/OpenPopoverRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
+import Actionable from "./Actionable";
 
 const styles = theme => ({});
 
@@ -57,5 +58,5 @@ class OpenPopover extends AbstractOpenPopover {
 
 }
 
-export default withStyles(styles, { withTheme: true })(withSnackbar(OpenPopover));
-DisplayFactory.register("OpenPopover", withStyles(styles, { withTheme: true })(withSnackbar(OpenPopover)));
+export default withStyles(Actionable.Styles, { withTheme: true })(withSnackbar(OpenPopover));
+DisplayFactory.register("OpenPopover", withStyles(Actionable.Styles, { withTheme: true })(withSnackbar(OpenPopover)));

@@ -1,9 +1,6 @@
 package io.intino.alexandria.markov;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
@@ -37,8 +34,12 @@ public class Markov {
 				.collect(toMap(i -> states[i], i -> i));
 	}
 
-	public String[] states() {
-		return states.toArray(new String[0]);
+	public List<String> states() {
+		return Collections.unmodifiableList(states);
+	}
+
+	public int indexOf(String state) {
+		return index.get(state);
 	}
 
 	public Markov include(String from, String to) {

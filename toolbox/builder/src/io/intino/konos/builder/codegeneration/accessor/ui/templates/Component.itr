@@ -70,10 +70,6 @@ def type(properties & appDirectory) trigger(common)
 	[ icon="$icon"][ visible={$visible}][ style="$style"]
 end
 
-def type(properties & digitalsignature) trigger(common)
-	[ text="$text"][ visible={$visible}][ style="$style"]
-end
-
 def type(properties & dashboard) trigger(common)
 	[ width="$width"][ height="$height"][ style="$style"]
 end
@@ -86,8 +82,8 @@ def type(properties & openpopover) trigger(specific)
 	[ triggerEvent="$triggerEvent"]
 end
 
-def type(properties & digitalsignature & autofirma) trigger(specific)
-	[ signFormat="$signFormat"]
+def type(properties & signtext) trigger(specific)
+	[ text="$text"][ signFormat="$signFormat"]
 end
 
 def type(properties & template) trigger(specific)

@@ -1,4 +1,4 @@
-package io.intino.alexandria.ui.displays.components.digitalsignature;
+package io.intino.alexandria.ui.displays.components.sign;
 
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.DisplayRouteManager;

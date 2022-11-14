@@ -2,31 +2,32 @@ import React from "react";
 import { Snackbar, Dialog, DialogTitle, DialogContent, DialogActions, Button, IconButton, List, ListItem, ListItemText } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import { withStyles } from '@material-ui/core/styles';
-import AbstractDigitalSignatureAutoFirma from "../../../gen/displays/components/AbstractDigitalSignatureAutoFirma";
-import DigitalSignatureAutoFirmaNotifier from "../../../gen/displays/notifiers/DigitalSignatureAutoFirmaNotifier";
-import DigitalSignatureAutoFirmaRequester from "../../../gen/displays/requesters/DigitalSignatureAutoFirmaRequester";
+import AbstractSignAction from "../../../gen/displays/components/AbstractSignAction";
+import SignActionNotifier from "../../../gen/displays/notifiers/SignActionNotifier";
+import SignActionRequester from "../../../gen/displays/requesters/SignActionRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
 import AutoFirmaBehavior from "./autofirma/AutoFirmaBehavior";
-import StringUtil from 'alexandria-ui-elements/src/util/StringUtil';
 
 const styles = theme => ({});
 
-class DigitalSignatureAutoFirma extends AbstractDigitalSignatureAutoFirma {
+export default class SignAction extends AbstractSignAction {
 
 	constructor(props) {
 		super(props);
-		this.notifier = new DigitalSignatureAutoFirmaNotifier(this);
-		this.requester = new DigitalSignatureAutoFirmaRequester(this);
+		this.notifier = new SignActionNotifier(this);
+		this.requester = new SignActionRequester(this);
 		this.behavior = new AutoFirmaBehavior(this);
 		this.initialized = false;
         this.checkProtocol = false;
 		this.state = {
 		    ...this.state,
+		    data: null,
+		    isDocument: false,
+		    readonly: false,
 		    format: "XAdES",
 		    open: false,
 		    openDownload: false,
-		    signing: false,
 		};
 	};
 
@@ -36,31 +37,29 @@ class DigitalSignatureAutoFirma extends AbstractDigitalSignatureAutoFirma {
         this.checkProtocol = false;
 	};
 
-    render() {
+	renderActionable = () => {
 		if (!this.state.visible) return (<React.Fragment/>);
-
-        const signing = this.state.signing;
-        const disabled = this.state.data == null || this.state.signing || this.state.readonly;
-        const style = !this.state.visible ? {display:'none'} : {};
-
-        return (
-            <React.Fragment>
-                <div layout="horizontal" style={this.style()}>
-                    <Button style={style} disabled={disabled} variant="outlined" size="small" onClick={this.handleSign.bind(this)}>{this.translate(signing ? "Signing..." : "Sign")}</Button>
-                </div>
-                <Snackbar
-                  open={this.state.open}
-                  onClose={this.handleClose.bind(this)}
-                  message={this.translate("@firma application not found in your computer.")}
-                  action={this.renderToolbar()}
-                />
+		return (
+			<React.Fragment>
+                {this.renderTraceConsent()}
+				{this.renderAffirmed()}
+				{this.renderSign()}
+				{this.renderTrigger()}
+                {this.renderAfirmaNotFound()}
                 {this.renderDownloadDialog()}
-            </React.Fragment>
-        );
-    };
+			</React.Fragment>
+		);
+	};
 
-    sign = () => {
-        this.handleSign();
+    renderAfirmaNotFound = () => {
+        return (
+            <Snackbar
+              open={this.state.open}
+              onClose={this.handleClose.bind(this)}
+              message={this.translate("@firma application not found in your computer.")}
+              action={this.renderToolbar()}
+            />
+        );
     };
 
     setup = (data) => {
@@ -71,6 +70,10 @@ class DigitalSignatureAutoFirma extends AbstractDigitalSignatureAutoFirma {
 
     format = (format) => {
         this.setState({ format });
+    };
+
+    refreshReadonly = (value) => {
+        this.setState({readonly: value});
     };
 
     renderDownloadDialog = () => {
@@ -129,12 +132,6 @@ class DigitalSignatureAutoFirma extends AbstractDigitalSignatureAutoFirma {
         this.setState({openDownload:false});
     };
 
-    handleSign = () => {
-        this.setState({ signing: true });
-        if (this.state.isDocument) this._signDocument();
-        else this._sign();
-    };
-
     handleClose = () => {
         this.closeInstallDialog();
         this.intention = null;
@@ -160,27 +157,16 @@ class DigitalSignatureAutoFirma extends AbstractDigitalSignatureAutoFirma {
         this.closeDownloadDialog();
     };
 
-    _sign = () => {
-        this.behavior.sign(this.state.data, this.state.format, this._successCallback.bind(this), this._failureCallback.bind(this));
-    };
-
-    _signDocument = () => {
-        this.behavior.signDocument(this.state.data, this._successCallback.bind(this), this._failureCallback.bind(this));
-    };
-
     _successCallback = (signature, certificate) => {
         this.success = true;
         this.requester.success({signature: signature, certificate: certificate});
-        this.setState({ signing: false });
+        this.setState({ readonly: false });
     };
 
     _failureCallback = (errorCode, errorMessage) => {
         if (errorCode == "java.util.concurrent.TimeoutException") return;
         this.requester.failure({ code: errorCode, message: errorMessage});
-        this.setState({ signing: false });
+        this.setState({ readonly: false });
     };
 
 }
-
-export default withStyles(styles, { withTheme: true })(withSnackbar(DigitalSignatureAutoFirma));
-DisplayFactory.register("DigitalSignatureAutoFirma", withStyles(styles, { withTheme: true })(withSnackbar(DigitalSignatureAutoFirma)));

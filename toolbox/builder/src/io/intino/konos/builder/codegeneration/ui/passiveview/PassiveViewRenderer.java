@@ -248,7 +248,6 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (passiveView.i$(conceptOf(Block.Parallax.class))) result.add("Parallax");
 		if (passiveView.i$(conceptOf(Dashboard.Shiny.class))) result.add("Shiny");
 		if (passiveView.i$(conceptOf(Dashboard.Metabase.class))) result.add("Metabase");
-		if (passiveView.i$(conceptOf(DataComponents.DigitalSignature.AutoFirma.class))) result.add("AutoFirma");
 		return result;
 	}
 

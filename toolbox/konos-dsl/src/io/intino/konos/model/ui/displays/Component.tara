@@ -137,6 +137,8 @@ Concept InteractionComponents
 			sub OpenPopover > var Block.Popover popover; var word:{MouseClick MouseOver} triggerEvent = MouseClick
 			sub SelectPreviousItem > var CatalogComponents.Collection collection
 			sub SelectNextItem > var CatalogComponents.Collection collection
+			sub SignText > var string text = empty; var word:{CAdES XAdES} signFormat = XAdES
+			sub SignDocument > var string document = empty
 			sub Export
 				var string[] options = empty
 				var instant from = empty

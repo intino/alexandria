@@ -118,7 +118,9 @@ const AutoFirmaBehavior = (element) => {
                         "\nsignatureSubFilter=ETSI.CAdES.detached" +
                         "\nreferencesDigestMethod=http://www.w3.org/2001/04/xmlenc#sha256";
 
-                AutoScript.sign(dataB64, element.algorithm, format, params, successCallback, function(code, message, intention) { behavior.checkFailureCallback(code, message, intention, failureCallback); });
+                AutoScript.sign(dataB64, element.algorithm, format, params, successCallback, function(code, message, intention) {
+                    behavior.checkFailureCallback(code, message, intention, failureCallback);
+                });
             });
         },
 

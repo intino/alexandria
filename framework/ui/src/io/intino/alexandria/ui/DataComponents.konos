@@ -79,15 +79,3 @@ Component locationEditable as ExtensionOf(baseLocation)
 	Notification refreshReadonly as Bool
 	Notification refreshFocused as Bool
 	Request notifyChange as Object(Geometry)
-
-Component baseDigitalSignature
-	Notification text as Text
-	Notification document as Text
-	Notification sign
-	Notification refreshReadonly as Bool
-	Request success as Object(DigitalSignatureSuccess)
-	Request failure as Object(DigitalSignatureFailure)
-
-Component digitalSignatureAutoFirma as ExtensionOf(baseDigitalSignature)
-	Notification setup as Object(DigitalSignatureAutoFirmaSetup)
-	Notification format as Text
