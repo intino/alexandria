@@ -9,12 +9,15 @@ Template(layout=Vertical, spacing=DP8) digitalSignatureExamplesMold
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="Sign by using @firma")
 			Block(format=filledNoAir, layout=Vertical CenterCenter)
-				DigitalSignature autoFirma as AutoFirma
+				//DigitalSignature autoFirma as AutoFirma
+				Link(title="Sign text", format=airBottom) signText as SignText
+				Link(title="Sign document") signDocument as SignDocument
 				Block(format=airTop) > Text(cropWithEllipsis=40 Chars) signature as Labeled("Signature")
 				Block(format=airTop) > Text(cropWithEllipsis=40 Chars) signedBy as Labeled("Signed by")
 				Block(format=airTop) > Text(format=redColor) error as Labeled("Error")
 			Block > Text as Code(language=Html)
 					value
 						=========
-						DigitalSignature autoFirma as AutoFirma<br/>
+						Link(title\="Sign text") as SignText<br/>
+						Link(title\="Sign document") as SignDocument
 						=========

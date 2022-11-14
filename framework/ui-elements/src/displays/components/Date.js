@@ -38,6 +38,7 @@ class Date extends AbstractDate {
 		const { classes } = this.props;
 		const pattern = this.props.pattern !== "" ? this.props.pattern : undefined;
 		const hasMode = this.props.mode != null;
+		const language = window.Application.configuration.language;
 
 		return (
 			<Block layout="horizontal center">
@@ -47,7 +48,7 @@ class Date extends AbstractDate {
 					<Moment format={!hasMode ? pattern : undefined}
 							fromNow={this.props.mode === "fromnow"}
 							toNow={this.props.mode === "tonow"}
-							ago date={this.state.value}/>
+							ago date={this.state.value} locale={language}/>
 					}
 					{!this.state.value && <React.Fragment>-</React.Fragment>}
 				</Typography>

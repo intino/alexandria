@@ -460,9 +460,9 @@ export var AutoScript = ( function ( window, undefined ) {
 		 * @param url URL que se desea abrir.
 		 */
 		function openUrl (url) {
-			
+
 			// Usamos el modo de invocacion mas apropiado segun el entorno
-			
+
 			// Redireccion del navegador
 			if (Platform.isChrome() || Platform.isIOS()) {
 				// Usamos document.location porque tiene mejor soporte por los navegadores que
@@ -472,7 +472,7 @@ export var AutoScript = ( function ( window, undefined ) {
 			// Apertura de un IFrame
 			else {
 
-				// Si ya existe el iframe, lo eliminamos para despues volverlo a crear 
+				// Si ya existe el iframe, lo eliminamos para despues volverlo a crear
 				if (document.getElementById("iframeAfirma") != null) {
 					try {
 						var element = document.getElementById("iframeAfirma");
@@ -3146,7 +3146,7 @@ export var AutoScript = ( function ( window, undefined ) {
 					if (httpRequest.readyState == 4) {
 						 if (httpRequest.status == 200) {
 	
-							url = buildUrlWithoutData(op, fileId, retrieverServletAddress, cipherKey);
+							var url = buildUrlWithoutData(op, fileId, retrieverServletAddress, cipherKey);
 							if (isURLTooLong(url)) {
 								errorCallback("java.lang.IllegalArgumentException", "La URL de invocacion al servicio de firma es demasiado larga.");
 								return;
