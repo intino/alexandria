@@ -38,6 +38,10 @@ public class Markov {
 		return Collections.unmodifiableList(states);
 	}
 
+	public int indexOf(String state) {
+		return index.get(state);
+	}
+
 	public Markov include(String from, String to) {
 		increment(include(from), include(to));
 		return this;
