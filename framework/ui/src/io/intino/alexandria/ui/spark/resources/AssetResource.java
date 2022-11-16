@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
@@ -61,7 +62,7 @@ public class AssetResource extends Resource {
 	}
 
 	private String assetName() {
-		return new String(Base64.getDecoder().decode(manager.fromPath("name")));
+		return new String(Base64.getDecoder().decode(URLDecoder.decode(manager.fromPath("name"), StandardCharsets.UTF_8)));
 	}
 
 	private String assetContentTypeOf() {

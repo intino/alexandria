@@ -110,6 +110,8 @@ public class ElementHelper {
 		if (actionable.isOpenPopover()) result = InteractionComponents.Actionable.OpenPopover.class.getSimpleName();
 		if (actionable.isCloseDialog()) result = InteractionComponents.Actionable.CloseDialog.class.getSimpleName();
 		if (actionable.isCopyToClipboard()) result = InteractionComponents.Actionable.CopyToClipboard.class.getSimpleName();
+		if (actionable.isSignText()) result = InteractionComponents.Actionable.SignText.class.getSimpleName();
+		if (actionable.isSignDocument()) result = InteractionComponents.Actionable.SignDocument.class.getSimpleName();
 		if (actionable.isSelectPreviousItem())
 			result = InteractionComponents.Actionable.SelectPreviousItem.class.getSimpleName();
 		if (actionable.isSelectNextItem())

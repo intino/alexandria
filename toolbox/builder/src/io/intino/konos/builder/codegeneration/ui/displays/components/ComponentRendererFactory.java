@@ -28,7 +28,6 @@ public class ComponentRendererFactory {
 		map.put(conceptOf(Date.class), config -> new DateRenderer(config.context(), config.component().a$(Date.class), config.provider(), config.target()));
 		map.put(conceptOf(File.class), config -> new FileRenderer(config.context(), config.component().a$(File.class), config.provider(), config.target()));
 		map.put(conceptOf(Image.class), config -> new ImageRenderer(config.context(), config.component().a$(Image.class), config.provider(), config.target()));
-		map.put(conceptOf(DigitalSignature.class), config -> new DigitalSignatureRenderer(config.context(), config.component().a$(DigitalSignature.class), config.provider(), config.target()));
 		map.put(conceptOf(DataComponents.Number.class), config -> new NumberRenderer(config.context(), config.component().a$(DataComponents.Number.class), config.provider(), config.target()));
 		map.put(conceptOf(DataComponents.Location.class), config -> new LocationRenderer(config.context(), config.component().a$(DataComponents.Location.class), config.provider(), config.target()));
 		map.put(conceptOf(Spinner.class), config -> new SpinnerRenderer(config.context(), config.component().a$(Spinner.class), config.provider(), config.target()));
@@ -60,6 +59,8 @@ public class ComponentRendererFactory {
 		map.put(conceptOf(Toolbar.class), config -> new ToolbarRenderer(config.context(), config.component().a$(Toolbar.class), config.provider(), config.target()));
 		map.put(conceptOf(Actionable.OpenPage.class), config -> new OpenPageRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
 		map.put(conceptOf(Actionable.OpenSite.class), config -> new OpenSiteRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
+		map.put(conceptOf(Actionable.SignText.class), config -> new SignTextRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
+		map.put(conceptOf(Actionable.SignDocument.class), config -> new SignDocumentRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
 		map.put(conceptOf(Actionable.OpenDrawer.class), config -> new OpenDrawerRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
 		map.put(conceptOf(Actionable.OpenLayer.class), config -> new OpenLayerRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));
 		map.put(conceptOf(Actionable.CloseLayer.class), config -> new CloseLayerRenderer(config.context(), config.component().a$(Actionable.class), config.provider(), config.target()));

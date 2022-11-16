@@ -108,3 +108,19 @@ Component copyToClipboard as ExtensionOf(actionable)
 	Notification copy as Text
 	Request execute
 	Request copied as Bool
+
+Component signAction as ExtensionOf(actionable)
+	Notification setup as Object(SignActionSetup)
+	Notification format as Text
+	Notification sign as Text
+	Notification refreshReadonly as Bool
+
+	Request signing
+	Request success as Object(SignActionSignatureSuccess)
+	Request failure as Object(SignActionSignatureFailure)
+
+Component signText as ExtensionOf(signAction)
+	Request execute
+
+Component signDocument as ExtensionOf(signAction)
+	Request execute

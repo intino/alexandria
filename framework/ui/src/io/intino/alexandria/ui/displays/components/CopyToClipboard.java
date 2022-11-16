@@ -37,6 +37,5 @@ public class CopyToClipboard<DN extends CopyToClipboardNotifier, B extends Box> 
 
 	public void execute() {
 		notifier.copy(text);
-		Layer<?, ?> layer = soul().currentLayer();
 	}
 }

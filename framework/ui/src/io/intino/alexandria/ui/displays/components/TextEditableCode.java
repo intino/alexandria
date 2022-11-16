@@ -18,13 +18,13 @@ public class TextEditableCode<DN extends TextEditableCodeNotifier, B extends Box
 	}
 
 	public void notifyChange(String value) {
-		_value(value.replaceAll("&plus;", "+"));
+		_value(value != null ? value.replaceAll("&plus;", "+") : null);
 		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value()));
 	}
 
 	@Override
 	protected TextEditableCode<DN, B> _value(String value) {
-		super._value(value.replaceAll("&#13;", "\n"));
+		super._value(value != null ? value.replaceAll("&#13;", "\n") : null);
 		return this;
 	}
 }

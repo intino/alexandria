@@ -5,6 +5,7 @@ import OpenPreviousItemNotifier from "../../../gen/displays/notifiers/OpenPrevio
 import OpenPreviousItemRequester from "../../../gen/displays/requesters/OpenPreviousItemRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
+import Actionable from "./Actionable";
 
 const styles = theme => ({});
 
@@ -19,5 +20,5 @@ class OpenPreviousItem extends AbstractOpenPreviousItem {
 
 }
 
-export default withStyles(styles, { withTheme: true })(withSnackbar(OpenPreviousItem));
-DisplayFactory.register("OpenPreviousItem", withStyles(styles, { withTheme: true })(withSnackbar(OpenPreviousItem)));
+export default withStyles(Actionable.Styles, { withTheme: true })(withSnackbar(OpenPreviousItem));
+DisplayFactory.register("OpenPreviousItem", withStyles(Actionable.Styles, { withTheme: true })(withSnackbar(OpenPreviousItem)));
