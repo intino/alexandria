@@ -14,6 +14,7 @@ public interface AuthService {
     FederationInfo info(Token accessToken) throws CouldNotObtainInfo;
     UserInfo me(Token accessToken) throws CouldNotObtainInfo;
     void logout(Token accessToken) throws CouldNotLogout;
+    String logoutUrl();
 
     void addPushListener(Token accessToken, FederationNotificationListener listener) throws CouldNotObtainInfo;
 

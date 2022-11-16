@@ -81,6 +81,11 @@ public class SessionAuthService implements AuthService {
 	}
 
 	@Override
+	public String logoutUrl() {
+		return null;
+	}
+
+	@Override
 	public void addPushListener(Token token, FederationNotificationListener federationNotificationListener) throws CouldNotObtainInfo {
 	}
 
