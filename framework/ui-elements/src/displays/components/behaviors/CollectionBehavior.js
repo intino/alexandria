@@ -54,7 +54,7 @@ const CollectionBehavior = (collection) => {
                 <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}
                         scrollThreshold={0.9} hasMore={hasMore} loader={self.renderLoadingMore()}
                         height={height} style={{height:height+"px",width:width+'px'}} scrollableTarget={scrollableTarget}>
-                    {items.map((i, index) => <div style={{height:itemHeight,position:'relative'}}>{self.renderItem(items, { index: index, isScrolling: false })}</div>)}
+                    {items.map((i, index) => <div className="layout vertical flex" style={{minHeight:itemHeight,position:'relative'}}>{self.renderItem(items, { index: index, isScrolling: false })}</div>)}
                 </InfiniteScroll>
             </div>
         );
@@ -72,7 +72,7 @@ const CollectionBehavior = (collection) => {
                 <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}
                         scrollThreshold={0.9} hasMore={hasMore} loader={self.renderLoadingMore()}
                         height={height} style={{height:height+"px",width:width+'px'}} scrollableTarget={scrollableTarget}>
-                    {items.map((i, index) => <div style={{height:itemHeight,position:'relative'}}>{self.renderItem(items, { index: index, isScrolling: false })}</div>)}
+                    {items.map((i, index) => <div className="layout vertical flex" style={{minHeight:itemHeight,position:'relative'}}>{self.renderItem(items, { index: index, isScrolling: false })}</div>)}
                 </InfiniteScroll>
             </div>
         );
@@ -163,7 +163,7 @@ const CollectionBehavior = (collection) => {
         var multiple = self.allowMultiSelection();
         var selecting = self.selection.length > 0;
         const id = item != null ? item.pl.id : undefined;
-        const classNamesValue = classNames(classes.itemView, "layout horizontal center item", selectable && multiple ? classes.selectable : undefined, selecting ? classes.selecting : undefined);
+        const classNamesValue = classNames(classes.itemView, "layout horizontal flex center item", selectable && multiple ? classes.selectable : undefined, selecting ? classes.selecting : undefined);
         const finalStyle = selectable && !multiple && self.isItemSelected(item) ? { ...style, ...self.getSelectedStyleRules() } : style;
         return (
             <div id={self.elementId(id)} style={finalStyle} key={index} onClick={selectable && !multiple ? self.handleSelect.bind(self, id) : undefined} className={classNamesValue}>

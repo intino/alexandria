@@ -11,6 +11,7 @@ export default class Component extends AlexandriaDisplay {
         loading: true,
         visible: this.props.visible != null ? this.props.visible : true,
         color: this.props.color != null ? this.props.color : null,
+        format: this.props.format,
         ...this.state
     };
 
@@ -58,6 +59,10 @@ export default class Component extends AlexandriaDisplay {
         this.setState({ color: color });
     };
 
+    refreshFormat = (format) => {
+        this.setState({ format: format });
+    };
+
     hiddenClass = () => {
         const hidden = this.props.hidden;
         if (hidden == null || hidden === "Never") return "";
@@ -69,7 +74,7 @@ export default class Component extends AlexandriaDisplay {
     };
 
     _addFormatsTo(element) {
-        const { format } = element.props;
+        const { format } = element.state;
         const formats = format != null ? format.split(" ") : [];
         if (this.state.readonly) formats.push("readonly");
         if (formats.length <= 0) return undefined;

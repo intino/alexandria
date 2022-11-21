@@ -8,6 +8,7 @@ import io.intino.alexandria.ui.displays.notifiers.ComponentNotifier;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public abstract class Component<DN extends ComponentNotifier, B extends Box> extends AlexandriaDisplay<DN, B> {
 	private String color;
@@ -26,6 +27,11 @@ public abstract class Component<DN extends ComponentNotifier, B extends Box> ext
 	public Component<DN, B> color(String color) {
 		this._color(color);
 		notifier.refreshColor(color);
+		return this;
+	}
+
+	public Component<DN, B> formats(Set<String> formats) {
+		notifier.refreshFormat(String.join(" ", formats));
 		return this;
 	}
 
