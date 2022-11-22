@@ -15,12 +15,14 @@ public class JMXServer {
 	private final Map<String, Object[]> mbClasses;
 	private final List<ObjectName> registeredBeans = new ArrayList<>();
 	private MBeanServer server;
+	private String context;
 
 	public JMXServer(Map<String, Object[]> classWithParametersMap) {
 		this.mbClasses = classWithParametersMap;
 	}
 
-	public void init() {
+	public void init(String context) {
+		this.context = context;
 		server = allocateServer();
 		for (String mbClass : mbClasses.keySet())
 			registerMBean(server, mbClass, mbClasses.get(mbClass));
@@ -42,8 +44,8 @@ public class JMXServer {
 	private void registerMBean(MBeanServer server, String mbeanClassName, Object[] parameters) {
 		try {
 			final Class<?> mbeanClass = Class.forName(mbeanClassName);
-			String objectNameName = "Konos" + ":type=" + mbeanClass.getInterfaces()[0].getName() + ",name=" + mbeanClass.getSimpleName();
-			registeredBeans.add(createSimpleMBean(server, mbeanClassName, objectNameName, parameters));
+			String objectName = context + ":type=" + mbeanClass.getInterfaces()[0].getSimpleName() + ",name=" + mbeanClass.getSimpleName();
+			registeredBeans.add(createSimpleMBean(server, mbeanClassName, objectName, parameters));
 		} catch (ClassNotFoundException e) {
 			logger.severe("Error registering mBean: " + e.getMessage());
 		}
@@ -65,7 +67,8 @@ public class JMXServer {
 		try {
 			final Class<?> aClass = Class.forName(mbeanClassName);
 			return aClass.getDeclaredConstructors()[0].newInstance(parameters);
-		} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+		} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException |
+				 InstantiationException e) {
 			logger.severe(e.getMessage());
 			return null;
 		}

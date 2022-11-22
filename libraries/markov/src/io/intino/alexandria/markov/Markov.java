@@ -39,7 +39,7 @@ public class Markov {
 	}
 
 	public int indexOf(String state) {
-		return index.get(state);
+		return index.getOrDefault(state, -1);
 	}
 
 	public Markov include(String from, String to) {
