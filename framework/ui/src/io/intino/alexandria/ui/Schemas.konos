@@ -178,6 +178,11 @@ Schema ActionableInfo
 	Attribute title as Text
 	Attribute disabled as Bool
 
+Schema ActionableSignInfo
+	Attribute setupRequired as Bool
+	Attribute secret as Text
+	Attribute secretImage as Text
+
 Schema ExportParams
 	Attribute from as DateTime
 	Attribute to as DateTime

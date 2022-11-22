@@ -34,7 +34,9 @@ public class ActionableRenderer extends ComponentRenderer<InteractionComponents.
 		if (element.isAffirmed()) properties.add("affirmed", element.asAffirmed().affirmText());
 		if (element.isSigned()) {
 			InteractionComponents.Actionable.Signed signed = element.asSigned();
+			properties.add("signMode", signed.mode().name());
 			properties.add("signText", signed.signText());
+			if (signed.mode() == InteractionComponents.Actionable.Signed.Mode.OneTimePassword) properties.add("signChecker", "oneTimePassword");
 			if (signed.reasonText() != null) properties.add("reasonText", signed.reasonText());
 		}
 		if (element.i$(conceptOf(InteractionComponents.MaterialIconButton.class))) properties.add("icon", element.a$(InteractionComponents.MaterialIconButton.class).icon());

@@ -45,12 +45,16 @@ export default class Actionable extends AbstractActionable {
 			readonly: this.props.readonly,
 			openAffirm : false,
 			openSign : false,
+			openSignConfig : false,
 			affirmed : this.props.affirmed != null ? this.props.affirmed : null,
 			affirmedRequired : true,
 			highlighted : this.props.highlighted != null ? this.props.highlighted : null,
 			signInfo : {
 			    sign: "",
-			    reason: ""
+			    reason: "",
+			    secret: null,
+			    secretImage: null,
+			    setupRequired: false,
 			}
 		}
 	};
@@ -70,6 +74,7 @@ export default class Actionable extends AbstractActionable {
 			<React.Fragment>
                 {this.renderTraceConsent()}
 				{this.renderAffirmed()}
+				{this.renderSignConfiguration()}
 				{this.renderSign()}
 				{this.renderTrigger()}
 			</React.Fragment>
@@ -184,6 +189,34 @@ export default class Actionable extends AbstractActionable {
 		);
 	};
 
+	renderSignConfiguration = () => {
+		if (!this.requireSign()) return;
+		const openSignConfig = this.state.openSignConfig != null ? this.state.openSignConfig : false;
+		return (
+		    <Dialog onClose={this.handleSignConfigurationClose} open={openSignConfig}>
+				<DialogTitle onClose={this.handleSignConfigurationClose}>{this.translate("Sign configuration")}</DialogTitle>
+				<DialogContent>
+				    <DialogContentText style={{marginBottom:'5px'}}>{this.translate("This operation requires signing. Before signing, you must setup your account.")}</DialogContentText>
+				    <DialogContentText style={{marginBottom:'5px'}}>{this.translate("Download one time password app like Google Authenticator App in your device, then follow steps below.")}</DialogContentText>
+				    <br/>
+                    <DialogContentText style={{marginBottom:'5px'}}>{this.translate("Step 1. Scan QR code or enter the secret key in your one time password app")}</DialogContentText>
+                    <div className="layout vertical center-center">
+				        <img src={"data:image/png;base64, " + this.state.signInfo.secretImage} alt={this.translate("QR code")} />
+                        <DialogContentText style={{marginBottom:'5px'}}>{this.state.signInfo.secret}</DialogContentText>
+                    </div>
+				    <br/>
+				    <DialogContentText style={{marginBottom:'5px'}}>{this.translate("Step 2. Enter 6-digit passcode it gives you to finish configuration and execute operation")}</DialogContentText>
+				    <TextField autoFocus={true} style={{width:'100%'}} type="password" value={this.translate(this.state.signInfo.sign)}
+				               onChange={this.handleSignTextChange.bind(this)} onKeyPress={this.handleSignConfigurationKeypress.bind(this)}/>
+                </DialogContent>
+				<DialogActions>
+					<Button onClick={this.handleSignClose} color="primary">{this.translate("Cancel")}</Button>
+					<Button variant="contained" onClick={this.handleSignConfigurationAccept} color="primary">{this.translate("OK")}</Button>
+				</DialogActions>
+			</Dialog>
+		);
+	};
+
 	renderSign = () => {
 		if (!this.requireSign()) return;
 		const openSign = this.state.openSign != null ? this.state.openSign : false;
@@ -267,7 +300,8 @@ export default class Actionable extends AbstractActionable {
 		}
 
 		if (this.requireSign()) {
-			this.setState({ openSign : true });
+		    const openSign = this.props.signed.mode === "SimplePassword" || !this.state.signInfo.setupRequired;
+			this.setState({ openSignConfig: this.state.signInfo.setupRequired, openSign : openSign });
 			return false;
 		}
 
@@ -304,6 +338,10 @@ export default class Actionable extends AbstractActionable {
 	    if (e.key === "Enter") this.handleSignAccept();
 	};
 
+	handleSignConfigurationKeypress = (e) => {
+	    if (e.key === "Enter") this.handleSignConfigurationAccept();
+	};
+
 	handleSignAccept = (e) => {
 	    Delayer.execute(this, () => {
             if (this.requireSignReason() && this.state.signInfo.reason === "") {
@@ -311,6 +349,12 @@ export default class Actionable extends AbstractActionable {
                 return;
             }
             this.requester.checkSign(this.state.signInfo);
+	    }, Actionable.Delay);
+	};
+
+	handleSignConfigurationAccept = (e) => {
+	    Delayer.execute(this, () => {
+            this.requester.setupSign(this.state.signInfo);
 	    }, Actionable.Delay);
 	};
 
@@ -322,12 +366,34 @@ export default class Actionable extends AbstractActionable {
 	    else this.showError(this.translate("User not granted to execute operation"));
 	}
 
+	setupSignResult = (value) => {
+	    if (value) {
+            const signInfo = this.state.signInfo;
+            signInfo.setupRequired = false;
+	        this.setState({ signInfo: signInfo, openSignConfig: false, openSign: false });
+	        this.requester.execute();
+	    }
+	    else this.showError(this.translate("Could not validate 6-digit passcode against one time password app"));
+	}
+
 	handleSignClose = () => {
 		this.setState({ openSign : false });
 	};
 
+	handleSignConfigurationClose = () => {
+		this.setState({ openSignConfig : false });
+	};
+
 	refresh = ({ title, readonly }) => {
 		this.setState({ title, readonly });
+	};
+
+	refreshSignInfo = ({ setupRequired, secret, secretImage }) => {
+        const signInfo = this.state.signInfo;
+        signInfo.secret = secret;
+        signInfo.secretImage = secretImage;
+        signInfo.setupRequired = setupRequired;
+		this.setState({ signInfo });
 	};
 
 	refreshReadonly = (value) => {
