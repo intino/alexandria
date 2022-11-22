@@ -1,20 +1,32 @@
 package io.intino.alexandria.ui.displays.components;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import de.taimos.totp.TOTP;
+import io.intino.alexandria.Base64;
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.schemas.ActionableInfo;
 import io.intino.alexandria.schemas.ActionableSign;
+import io.intino.alexandria.schemas.ActionableSignInfo;
 import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.components.actionable.SignChecker;
+import io.intino.alexandria.ui.displays.components.actionable.SignInfo;
 import io.intino.alexandria.ui.displays.events.BeforeListener;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.Listener;
 import io.intino.alexandria.ui.displays.notifiers.ActionableNotifier;
 import io.intino.alexandria.ui.resources.Asset;
 import io.intino.alexandria.ui.spark.UIFile;
+import org.apache.commons.codec.binary.Base32;
+import org.apache.commons.codec.binary.Hex;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.*;
+import java.security.SecureRandom;
 
 public abstract class Actionable<DN extends ActionableNotifier, B extends Box> extends Component<DN, B> {
     private String title;
@@ -22,12 +34,15 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     private String icon;
     private Mode mode;
     private SignChecker signChecker;
+    private SignMode signMode;
     private String signReason;
+    private SignInfo signInfo;
     private BeforeListener beforeAffirmListener;
     private Listener cancelAffirmListener;
 
     public enum Mode { Link, Button, IconButton, MaterialIconButton, Toggle, IconToggle, MaterialIconToggle, SplitButton, IconSplitButton, MaterialIconSplitButton, AvatarIconButton }
     public enum Highlight { None, Outline, Fill }
+    public enum SignMode { SimplePassword, OneTimePassword }
 
     public Actionable(B box) {
         super(box);
@@ -100,6 +115,12 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
         notifyUser(message, UserMessage.Type.Info);
     }
 
+    public void setupSign(ActionableSign info) {
+        this.signInfo = new SignInfo().secret(info.secret());
+        if (signChecker == null) notifier.setupSignResult(true);
+        notifier.setupSignResult(signChecker.check(info.sign(), "Setting up sign configuration"));
+    }
+
     public void checkSign(ActionableSign info) {
         if (signChecker == null) notifier.checkSignResult(true);
         notifier.checkSignResult(signChecker.check(info.sign(), info.reason()));
@@ -129,6 +150,7 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     public void init() {
         super.init();
         if (isResourceIcon()) refreshIcon();
+        refreshSignInfo();
     }
 
     public final void checkAffirmed() {
@@ -155,9 +177,63 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
         return this;
     }
 
+    protected Actionable<DN, B> _signMode(SignMode mode) {
+        this.signMode = mode;
+        return this;
+    }
+
+    protected SignInfo _signInfo() {
+        return this.signInfo;
+    }
+
+    protected Actionable<DN, B> _signInfo(SignInfo info) {
+        this.signInfo = info;
+        return this;
+    }
+
+    protected String _signSecret() {
+        return this.signInfo != null ? this.signInfo.secret() : null;
+    }
+
     protected Actionable<DN, B> _signChecker(SignChecker checker) {
         this.signChecker = checker;
         return this;
+    }
+
+    protected SignChecker _oneTimePassword() {
+        return (sign, reason) -> {
+            Base32 base32 = new Base32();
+            byte[] bytes = base32.decode(signInfo.secret());
+            String hexKey = Hex.encodeHexString(bytes);
+            return TOTP.getOTP(hexKey).equals(sign);
+        };
+    }
+
+    protected void refreshSignInfo() {
+        if (signMode != SignMode.OneTimePassword) return;
+        String secret = signSecret();
+        notifier.refreshSignInfo(new ActionableSignInfo().setupRequired(signSetupRequired()).secret(secret).secretImage(signSecretImage(secret)));
+    }
+
+    private static final String OneTimePasswordBarCode = "otpauth://totp/$company$%3A$email$?secret=$secret$&issuer=$company$";
+    private String signSecretImage(String secret) {
+        try {
+            String barCodeData = OneTimePasswordBarCode.replace("$company$", signInfo != null ? signInfo.company() : "Company");
+            barCodeData = barCodeData.replace("$email$", signInfo != null ? signInfo.email() : "info@company.com");
+            barCodeData = barCodeData.replace("$secret$", secret);
+
+            BitMatrix matrix = new MultiFormatWriter().encode(barCodeData, BarcodeFormat.QR_CODE, 200, 200);
+            try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+                MatrixToImageWriter.writeToStream(matrix, "png", out);
+                return Base64.encode(out.toByteArray());
+            } catch (IOException e) {
+                Logger.error(e);
+                return null;
+            }
+        } catch (WriterException e) {
+            Logger.error(e);
+            return null;
+        }
     }
 
     UIFile defaultFile() {
@@ -181,6 +257,20 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
 
     private boolean isResourceIcon() {
         return (mode == Mode.IconButton || mode == Mode.IconToggle || mode == Mode.IconSplitButton) && icon != null && Actionable.class.getResource(this.icon) != null;
+    }
+
+    private boolean signSetupRequired() {
+        return this.signMode == SignMode.OneTimePassword && (signInfo == null || signInfo.secret() == null);
+    }
+
+    private String signSecret() {
+        if (signMode != SignMode.OneTimePassword) return null;
+        if (signInfo != null && signInfo.secret() != null) return signInfo.secret();
+        SecureRandom random = new SecureRandom();
+        byte[] bytes = new byte[20];
+        random.nextBytes(bytes);
+        Base32 base32 = new Base32();
+        return base32.encodeToString(bytes);
     }
 
 }

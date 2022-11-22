@@ -177,3 +177,13 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						=========
 						Link(title\="Copy to clipboard", text\="I am text") as CopyToClipboard(text\="I am text")
 						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="OneTimePassword")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Link(title="One time password") operation18 as Action Signed(signText="Password required", mode=OneTimePassword)
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Link(title\="One time password") as Action Signed(signText\="Password required", mode\=OneTimePassword)
+						=========

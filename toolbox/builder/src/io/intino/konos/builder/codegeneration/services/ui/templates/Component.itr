@@ -127,6 +127,17 @@ def type(method & highlighted)
 end
 
 def type(method & signed)
+	public String signSecret() {
+	    return this._signSecret();
+	}
+	public io.intino.alexandria.ui.displays.components.actionable.SignInfo signInfo() {
+	    return this._signInfo();
+	}
+	public $name+firstUpperCase signInfo(io.intino.alexandria.ui.displays.components.actionable.SignInfo info) {
+		this._signInfo(info);
+		this.refreshSignInfo();
+		return this;
+	}
 	public $name+firstUpperCase signChecker(io.intino.alexandria.ui.displays.components.actionable.SignChecker checker) {
 		this._signChecker(checker);
 		return this;
@@ -676,6 +687,8 @@ def type(properties & actionable) trigger(common)
 	[_color("$color");]
 	[_readonly($readonly);]
 	[_mode(io.intino.alexandria.ui.displays.components.Actionable.Mode.valueOf("$mode+firstUpperCase"));]
+	[_signMode(io.intino.alexandria.ui.displays.components.Actionable.SignMode.valueOf("$signMode+firstUpperCase"));]
+	[_signChecker(_$signChecker());]
 	[$actionableMode]
 end
 
