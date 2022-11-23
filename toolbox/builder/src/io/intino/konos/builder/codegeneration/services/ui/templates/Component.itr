@@ -130,12 +130,8 @@ def type(method & signed)
 	public String signSecret() {
 	    return this._signSecret();
 	}
-	public io.intino.alexandria.ui.displays.components.actionable.SignInfo signInfo() {
-	    return this._signInfo();
-	}
-	public $name+firstUpperCase signInfo(io.intino.alexandria.ui.displays.components.actionable.SignInfo info) {
-		this._signInfo(info);
-		this.refreshSignInfo();
+	public $name+firstUpperCase signInfoProvider(io.intino.alexandria.ui.displays.components.actionable.SignInfoProvider provider) {
+		this._signInfoProvider(provider);
 		return this;
 	}
 	public $name+firstUpperCase signChecker(io.intino.alexandria.ui.displays.components.actionable.SignChecker checker) {

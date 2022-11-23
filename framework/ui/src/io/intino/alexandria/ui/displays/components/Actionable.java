@@ -16,6 +16,7 @@ import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.components.actionable.SignChecker;
 import io.intino.alexandria.ui.displays.components.actionable.SignInfo;
+import io.intino.alexandria.ui.displays.components.actionable.SignInfoProvider;
 import io.intino.alexandria.ui.displays.events.BeforeListener;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.Listener;
@@ -36,6 +37,7 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     private SignChecker signChecker;
     private SignMode signMode;
     private String signReason;
+    private SignInfoProvider signInfoProvider;
     private SignInfo signInfo;
     private BeforeListener beforeAffirmListener;
     private Listener cancelAffirmListener;
@@ -52,6 +54,7 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     public void didMount() {
         super.didMount();
         if (isResourceIcon()) refreshIcon();
+        refreshSignInfo();
     }
 
     public String title() {
@@ -157,6 +160,12 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
         notifier.refreshAffirmedRequired(beforeAffirmListener == null || beforeAffirmListener.accept(new Event(this)));
     }
 
+    public final void beforeSigned() {
+        this.signInfo = signInfoProvider != null ? signInfoProvider.signInfo() : this.signInfo;
+        refreshSignInfo();
+        notifier.continueSigned();
+    }
+
     protected Actionable<DN, B> _title(String title) {
         this.title = title;
         return this;
@@ -182,12 +191,8 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
         return this;
     }
 
-    protected SignInfo _signInfo() {
-        return this.signInfo;
-    }
-
-    protected Actionable<DN, B> _signInfo(SignInfo info) {
-        this.signInfo = info;
+    protected Actionable<DN, B> _signInfoProvider(SignInfoProvider provider) {
+        this.signInfoProvider = provider;
         return this;
     }
 
@@ -218,8 +223,8 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     private static final String OneTimePasswordBarCode = "otpauth://totp/$company$%3A$email$?secret=$secret$&issuer=$company$";
     private String signSecretImage(String secret) {
         try {
-            String barCodeData = OneTimePasswordBarCode.replace("$company$", signInfo != null ? signInfo.company() : "Company");
-            barCodeData = barCodeData.replace("$email$", signInfo != null ? signInfo.email() : "info@company.com");
+            String barCodeData = OneTimePasswordBarCode.replace("$company$", signInfo != null && signInfo.company() != null ? signInfo.company() : "Company");
+            barCodeData = barCodeData.replace("$email$", signInfo != null && signInfo.email() != null ? signInfo.email() : "info@company.com");
             barCodeData = barCodeData.replace("$secret$", secret);
 
             BitMatrix matrix = new MultiFormatWriter().encode(barCodeData, BarcodeFormat.QR_CODE, 200, 200);
