@@ -16,7 +16,7 @@ import java.security.SecureRandom;
 
 public class Totp {
 
-	public static String secret() {
+	public static String createSecret() {
 		SecureRandom random = new SecureRandom();
 		byte[] bytes = new byte[20];
 		random.nextBytes(bytes);
