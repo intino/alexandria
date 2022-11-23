@@ -23,9 +23,9 @@ Artifact("io.intino.alexandria", "4.22.3") ui-framework
         Compile("commons-codec", "commons-codec", "1.10")
         Compile("com.google.zxing", "javase", "3.2.1")
 
-		Web("io.intino.alexandria", "ui-framework-elements", "4.22.3")
+		Web("io.intino.alexandria", "ui-framework-elements", "4.22.2")
 
-		Test("junit", "junit", "4.13.3")
+		Test("junit", "junit", "4.13.2")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true, finalName = "intino") as Runnable("io.intino.alexandria.Main")
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
