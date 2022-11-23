@@ -24,14 +24,17 @@ public class Totp {
 		return base32.encodeToString(bytes);
 	}
 
-	private static final String OneTimePasswordBarCode = "otpauth://totp/$company$%3A$email$?secret=$secret$&issuer=$company$";
-	public static byte[] image(String secret, String email, String company) {
-		try {
-			String barCodeData = OneTimePasswordBarCode.replace("$company$", company != null ? company : "Company");
-			barCodeData = barCodeData.replace("$email$", email != null ? email : "info@company.com");
-			barCodeData = barCodeData.replace("$secret$", secret);
+	private static final String QrTextPattern = "otpauth://totp/$company$%3A$email$?secret=$secret$&issuer=$company$";
+	public static String qrText(String secret, String email, String company) {
+		String result = QrTextPattern.replace("$company$", company != null ? company : "Company");
+		result = result.replace("$email$", email != null ? email : "info@company.com");
+		result = result.replace("$secret$", secret);
+		return result;
+	}
 
-			BitMatrix matrix = new MultiFormatWriter().encode(barCodeData, BarcodeFormat.QR_CODE, 200, 200);
+	public static byte[] qrImage(String secret, String email, String company) {
+		try {
+			BitMatrix matrix = new MultiFormatWriter().encode(qrText(secret, email, company), BarcodeFormat.QR_CODE, 200, 200);
 			try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 				MatrixToImageWriter.writeToStream(matrix, "png", out);
 				return out.toByteArray();
