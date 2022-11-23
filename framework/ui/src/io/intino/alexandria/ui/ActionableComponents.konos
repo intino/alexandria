@@ -14,12 +14,14 @@ Component actionable
 	Notification refreshHighlight as Text
 	Notification checkSignResult as Bool
 	Notification setupSignResult as Bool
+	Notification continueSigned
 	Notification launch
 
 	Request setupSign as Object(ActionableSign)
 	Request checkSign as Object(ActionableSign)
 	Request checkAffirmed
 	Request cancelAffirm as Bool
+	Request beforeSigned
 
 Schema ActionableSign
 	Attribute sign as Text

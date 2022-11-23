@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "4.22.2") ui-framework
+Artifact("io.intino.alexandria", "4.22.3") ui-framework
 	Box("Konos", "9.7.14", targetPackage = "io.intino.alexandria")
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.1.2")
@@ -25,7 +25,7 @@ Artifact("io.intino.alexandria", "4.22.2") ui-framework
 
 		Web("io.intino.alexandria", "ui-framework-elements", "4.22.2")
 
-		Test("junit", "junit", "4.13.2")
+		Test("junit", "junit", "4.13.3")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true, finalName = "intino") as Runnable("io.intino.alexandria.Main")
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")

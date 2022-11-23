@@ -5,6 +5,7 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import TextField from '@material-ui/core/TextField';
 import Delayer from 'alexandria-ui-elements/src/util/Delayer';
 import StringUtil from 'alexandria-ui-elements/src/util/StringUtil';
+import Theme from "app-elements/gen/Theme";
 
 const ActionableMui = React.lazy(() => {
 	return new Promise(resolve => {
@@ -182,7 +183,7 @@ export default class Actionable extends AbstractActionable {
 				<DialogTitle onClose={this.handleAffirmClose}>{this.translate("Affirm")}</DialogTitle>
 				<DialogContent><DialogContentText>{this.translate(this.state.affirmed)}</DialogContentText></DialogContent>
 				<DialogActions>
-					<Button onClick={this.handleAffirmClose} color="primary">{this.translate("Cancel")}</Button>
+					<Button onClick={this.handleAffirmClose} color="primary" style={{marginRight:'10px'}}>{this.translate("Cancel")}</Button>
 					<Button variant="contained" onClick={this.handleAffirmAccept} color="primary">{this.translate("OK")}</Button>
 				</DialogActions>
 			</Dialog>
@@ -194,9 +195,8 @@ export default class Actionable extends AbstractActionable {
 		const openSignConfig = this.state.openSignConfig != null ? this.state.openSignConfig : false;
 		return (
 		    <Dialog onClose={this.handleSignConfigurationClose} open={openSignConfig}>
-				<DialogTitle onClose={this.handleSignConfigurationClose}>{this.translate("Sign configuration")}</DialogTitle>
+				<DialogTitle onClose={this.handleSignConfigurationClose}>{this.translate("Enable two factor authentication")}</DialogTitle>
 				<DialogContent>
-				    <DialogContentText style={{marginBottom:'5px'}}>{this.translate("This operation requires signing. Before signing, you must setup your account.")}</DialogContentText>
 				    <DialogContentText style={{marginBottom:'5px'}}>{this.translate("Download one time password app like Google Authenticator App in your device, then follow steps below.")}</DialogContentText>
 				    <br/>
                     <DialogContentText style={{marginBottom:'5px'}}>{this.translate("Step 1. Scan QR code or enter the secret key in your one time password app")}</DialogContentText>
@@ -205,16 +205,43 @@ export default class Actionable extends AbstractActionable {
                         <DialogContentText style={{marginBottom:'5px'}}>{this.state.signInfo.secret}</DialogContentText>
                     </div>
 				    <br/>
-				    <DialogContentText style={{marginBottom:'5px'}}>{this.translate("Step 2. Enter 6-digit passcode it gives you to finish configuration and execute operation")}</DialogContentText>
-				    <TextField autoFocus={true} style={{width:'100%'}} type="password" value={this.translate(this.state.signInfo.sign)}
-				               onChange={this.handleSignTextChange.bind(this)} onKeyPress={this.handleSignConfigurationKeypress.bind(this)}/>
+				    <DialogContentText style={{marginBottom:'5px'}}>{this.translate("Step 2. Enter 6-digit passcode it gives you to finish configuration")}</DialogContentText>
+				    <div style={{marginTop:'20px'}}>{this.renderPasscode()}</div>
                 </DialogContent>
 				<DialogActions>
-					<Button onClick={this.handleSignClose} color="primary">{this.translate("Cancel")}</Button>
+					<Button onClick={this.handleSignConfigurationClose} color="primary" style={{marginRight:'10px'}}>{this.translate("Cancel")}</Button>
 					<Button variant="contained" onClick={this.handleSignConfigurationAccept} color="primary">{this.translate("OK")}</Button>
 				</DialogActions>
 			</Dialog>
 		);
+	};
+
+	renderPasscode = () => {
+	    const setupDialog = this.state.openSignConfig;
+	    const disabled = !setupDialog && this.state.signInfo.setupRequired;
+	    const theme = Theme.get();
+	    return (
+	        <div>
+                <div className="layout horizontal center-center">
+                    <TextField disabled={disabled} id={this._fieldKeycode(0)} style={{marginRight:'10px'}} autoFocus={true} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(0)} onClick={this.handleSignKeycodeClick.bind(this)} onChange={this.handleSignKeycodeChange.bind(this, 0)} />
+                    <TextField disabled={disabled} id={this._fieldKeycode(1)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(1)} onClick={this.handleSignKeycodeClick.bind(this)} onChange={this.handleSignKeycodeChange.bind(this, 1)} />
+                    <TextField disabled={disabled} id={this._fieldKeycode(2)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(2)} onClick={this.handleSignKeycodeClick.bind(this)} onChange={this.handleSignKeycodeChange.bind(this, 2)} />
+                    <TextField disabled={disabled} id={this._fieldKeycode(3)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(3)} onClick={this.handleSignKeycodeClick.bind(this)} onChange={this.handleSignKeycodeChange.bind(this, 3)} />
+                    <TextField disabled={disabled} id={this._fieldKeycode(4)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(4)} onClick={this.handleSignKeycodeClick.bind(this)} onChange={this.handleSignKeycodeChange.bind(this, 4)} />
+                    <TextField disabled={disabled} id={this._fieldKeycode(5)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(5)} onClick={this.handleSignKeycodeClick.bind(this)} onChange={this.handleSignKeycodeChange.bind(this, 5)} />
+                </div>
+                {disabled && <div style={{marginTop:'10px', color: theme.palette.secondary.main}}>{this.translate("Two factor authentication not enabled. Before signing, you must enable it by clicking in enable button.")}</div>}
+            </div>
+        );
+	};
+
+	_fieldKeycode = (pos) => {
+	    return this.props.id + "_keycodefield_" + pos + "_" + (this.state.openSignConfig ? 1 : 0);
+	};
+
+	_signDigit = (pos) => {
+	    const sign = this.state.signInfo.sign;
+	    return sign != null ? sign[pos] : null;
 	};
 
 	renderSign = () => {
@@ -225,22 +252,32 @@ export default class Actionable extends AbstractActionable {
 				<DialogTitle onClose={this.handleSignClose}>{this.translate("Sign")}</DialogTitle>
 				<DialogContent>
 				    <DialogContentText style={{marginBottom:'5px'}}>{this.translate(this.props.signed.text)}</DialogContentText>
-				    <TextField autoFocus={true} style={{width:'100%'}} type="password" value={this.translate(this.state.signInfo.sign)}
-				               onChange={this.handleSignTextChange.bind(this)} onKeyPress={this.handleSignKeypress.bind(this)}/>
+				    {this.renderSignField()}
 				    {this.requireSignReason() &&
 				        <div style={{marginTop:"25px"}}>
                             <DialogContentText style={{marginBottom:'5px'}}>{this.translate(this.props.signed.reason)}</DialogContentText>
-                            <TextField autoFocus={true} style={{width:'100%'}} multiline={true} rows={5} value={this.state.signInfo.reason}
+                            <TextField style={{width:'100%'}} multiline={true} rows={5} value={this.state.signInfo.reason}
                                        onChange={this.handleSignReasonChange.bind(this)} onKeyPress={this.handleSignKeypress.bind(this)}/>
                        </div>
                     }
                 </DialogContent>
 				<DialogActions>
-					<Button onClick={this.handleSignClose} color="primary">{this.translate("Cancel")}</Button>
-					<Button variant="contained" onClick={this.handleSignAccept} color="primary">{this.translate("OK")}</Button>
+				    <div className="layout horizontal flexible" style={{width:'100%'}} >
+				        <Button onClick={this.handleSignSetup} color="primary">{this.translate(this.state.signInfo.setupRequired ? "Enable" : "Setup")}</Button>
+				    </div>
+				    <div className="layout horizontal end-justified">
+					    <Button onClick={this.handleSignClose} color="primary" style={{marginRight:'10px'}}>{this.translate("Cancel")}</Button>
+					    <Button variant="contained" onClick={this.handleSignAccept} color="primary">{this.translate("OK")}</Button>
+                    </div>
 				</DialogActions>
 			</Dialog>
 		);
+	};
+
+	renderSignField = () => {
+	    if (this.props.signed.mode === "OneTimePassword") return this.renderPasscode();
+        return (<TextField autoFocus={true} style={{width:'100%'}} type="password" value={this.translate(this.state.signInfo.sign)}
+                           onChange={this.handleSignTextChange.bind(this)} onKeyPress={this.handleSignKeypress.bind(this)}/>);
 	};
 
 	triggerId = () => {
@@ -300,8 +337,7 @@ export default class Actionable extends AbstractActionable {
 		}
 
 		if (this.requireSign()) {
-		    const openSign = this.props.signed.mode === "SimplePassword" || !this.state.signInfo.setupRequired;
-			this.setState({ openSignConfig: this.state.signInfo.setupRequired, openSign : openSign });
+		    this.requester.beforeSigned();
 			return false;
 		}
 
@@ -313,6 +349,10 @@ export default class Actionable extends AbstractActionable {
             this.setState({ openAffirm : false });
             this.requester.execute();
 	    }, Actionable.Delay);
+	};
+
+	continueSigned = (e) => {
+        this.setState({ openSignConfig: false, openSign : true });
 	};
 
 	handleAffirmClose = () => {
@@ -328,6 +368,32 @@ export default class Actionable extends AbstractActionable {
         this.setState({signInfo});
     };
 
+	handleSignKeycodeClick = (e) => {
+	    e.target.setSelectionRange(0, e.target.value.length);
+	};
+
+	handleSignKeycodeChange = (pos, e) => {
+        const signInfo = this.state.signInfo;
+        signInfo.sign = this.signKeycode();
+	    if (pos < 5 && e.target.value !== "") {
+	        let nextPos = pos+1;
+	        const nextField = document.getElementById(this._fieldKeycode(nextPos));
+	        nextField.focus();
+	        nextField.setSelectionRange(0, 1);
+	    }
+        this.setState({signInfo});
+	};
+
+	signKeycode = () => {
+	    return this.signFieldKeycode(0) + this.signFieldKeycode(1) +
+	           this.signFieldKeycode(2) + this.signFieldKeycode(3) +
+	           this.signFieldKeycode(4) + this.signFieldKeycode(5);
+	};
+
+	signFieldKeycode = (pos) => {
+	    return document.getElementById(this._fieldKeycode(pos)).value;
+	}
+
     handleSignReasonChange = (e) => {
         const signInfo = this.state.signInfo;
         signInfo.reason = e.target.value;
@@ -340,6 +406,10 @@ export default class Actionable extends AbstractActionable {
 
 	handleSignConfigurationKeypress = (e) => {
 	    if (e.key === "Enter") this.handleSignConfigurationAccept();
+	};
+
+	handleSignSetup = (e) => {
+	    this.setState({ openSignConfig: true, openSign: false });
 	};
 
 	handleSignAccept = (e) => {
@@ -370,8 +440,7 @@ export default class Actionable extends AbstractActionable {
 	    if (value) {
             const signInfo = this.state.signInfo;
             signInfo.setupRequired = false;
-	        this.setState({ signInfo: signInfo, openSignConfig: false, openSign: false });
-	        this.requester.execute();
+	        this.setState({ signInfo: signInfo, openSignConfig: false, openSign: true });
 	    }
 	    else this.showError(this.translate("Could not validate 6-digit passcode against one time password app"));
 	}
@@ -381,7 +450,7 @@ export default class Actionable extends AbstractActionable {
 	};
 
 	handleSignConfigurationClose = () => {
-		this.setState({ openSignConfig : false });
+		this.setState({ openSignConfig : false, openSign: true });
 	};
 
 	refresh = ({ title, readonly }) => {

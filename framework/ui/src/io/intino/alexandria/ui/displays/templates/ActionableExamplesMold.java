@@ -4,6 +4,7 @@ import de.taimos.totp.TOTP;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.components.actionable.SignChecker;
 import io.intino.alexandria.ui.displays.components.actionable.SignInfo;
+import io.intino.alexandria.ui.displays.components.actionable.SignInfoProvider;
 import org.apache.commons.codec.binary.Base32;
 import org.apache.commons.codec.binary.Hex;
 
@@ -32,8 +33,27 @@ public class ActionableExamplesMold extends AbstractActionableExamplesMold<Alexa
         operation14.onExecute((event) -> operation14.notifyUser("User clicked operation " + event.option()));
         operation15.onExecute((event) -> operation15.notifyUser("User clicked operation " + event.option()));
         operation16.onExecute((event) -> operation16.notifyUser("User clicked operation"));
-        //operation18.signInfo(new SignInfo().secret("N2NHKZQ6N2GPVX7EAQYYFUAHT6MO2S7P").company("Company").email("info@company.com"));
+        //operation18.signInfoProvider(signInfoProvider());
         operation18.onExecute((event) -> operation18.notifyUser("User clicked operation"));
+    }
+
+    private SignInfoProvider signInfoProvider() {
+        return new SignInfoProvider() {
+            @Override
+            public String company() {
+                return "Company";
+            }
+
+            @Override
+            public String email() {
+                return "info@company.com";
+            }
+
+            @Override
+            public String secret() {
+                return "N2NHKZQ6N2GPVX7EAQYYFUAHT6MO2S7P";
+            }
+        };
     }
 
 }
