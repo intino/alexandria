@@ -12,6 +12,7 @@ import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.schemas.ActionableInfo;
 import io.intino.alexandria.schemas.ActionableSign;
 import io.intino.alexandria.schemas.ActionableSignInfo;
+import io.intino.alexandria.totp.Totp;
 import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.components.actionable.SignChecker;
@@ -206,12 +207,7 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     }
 
     protected SignChecker _oneTimePassword() {
-        return (sign, reason) -> {
-            Base32 base32 = new Base32();
-            byte[] bytes = base32.decode(signInfo.secret());
-            String hexKey = Hex.encodeHexString(bytes);
-            return TOTP.getOTP(hexKey).equals(sign);
-        };
+        return (sign, reason) -> Totp.check(signInfo.secret(), sign);
     }
 
     protected void refreshSignInfo() {
@@ -220,25 +216,10 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
         notifier.refreshSignInfo(new ActionableSignInfo().setupRequired(signSetupRequired()).secret(secret).secretImage(signSecretImage(secret)));
     }
 
-    private static final String OneTimePasswordBarCode = "otpauth://totp/$company$%3A$email$?secret=$secret$&issuer=$company$";
     private String signSecretImage(String secret) {
-        try {
-            String barCodeData = OneTimePasswordBarCode.replace("$company$", signInfo != null && signInfo.company() != null ? signInfo.company() : "Company");
-            barCodeData = barCodeData.replace("$email$", signInfo != null && signInfo.email() != null ? signInfo.email() : "info@company.com");
-            barCodeData = barCodeData.replace("$secret$", secret);
-
-            BitMatrix matrix = new MultiFormatWriter().encode(barCodeData, BarcodeFormat.QR_CODE, 200, 200);
-            try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-                MatrixToImageWriter.writeToStream(matrix, "png", out);
-                return Base64.encode(out.toByteArray());
-            } catch (IOException e) {
-                Logger.error(e);
-                return null;
-            }
-        } catch (WriterException e) {
-            Logger.error(e);
-            return null;
-        }
+        String company = signInfo != null && signInfo.company() != null ? signInfo.company() : "Company";
+        String email = signInfo != null && signInfo.email() != null ? signInfo.email() : "info@company.com";
+        return Base64.encode(Totp.qrImage(secret, email, company));
     }
 
     UIFile defaultFile() {
@@ -271,11 +252,7 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     private String signSecret() {
         if (signMode != SignMode.OneTimePassword) return null;
         if (signInfo != null && signInfo.secret() != null) return signInfo.secret();
-        SecureRandom random = new SecureRandom();
-        byte[] bytes = new byte[20];
-        random.nextBytes(bytes);
-        Base32 base32 = new Base32();
-        return base32.encodeToString(bytes);
+        return Totp.createSecret();
     }
 
 }
