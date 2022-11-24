@@ -206,7 +206,7 @@ export default class Actionable extends AbstractActionable {
                     </div>
 				    <br/>
 				    <DialogContentText style={{marginBottom:'5px'}}>{this.translate("Step 2. Enter 6-digit passcode it gives you to finish configuration")}</DialogContentText>
-				    <div style={{marginTop:'20px'}}>{this.renderPasscode()}</div>
+				    <div style={{marginTop:'10px'}}>{this.renderPasscode()}</div>
                 </DialogContent>
 				<DialogActions>
 					<Button onClick={this.handleSignConfigurationClose} color="primary" style={{marginRight:'10px'}}>{this.translate("Cancel")}</Button>
@@ -221,7 +221,7 @@ export default class Actionable extends AbstractActionable {
 	    const disabled = !setupDialog && this.state.signInfo.setupRequired;
 	    const theme = Theme.get();
 	    return (
-	        <div>
+	        <div style={{marginTop:'10px'}}>
                 <div className="layout horizontal center-center">
                     <TextField disabled={disabled} id={this._fieldKeycode(0)} style={{marginRight:'10px'}} autoFocus={true} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(0)} onClick={this.handleSignKeycodeClick.bind(this)} onChange={this.handleSignKeycodeChange.bind(this, 0)} />
                     <TextField disabled={disabled} id={this._fieldKeycode(1)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(1)} onClick={this.handleSignKeycodeClick.bind(this)} onChange={this.handleSignKeycodeChange.bind(this, 1)} />

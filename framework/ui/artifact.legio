@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "4.22.3") ui-framework
+Artifact("io.intino.alexandria", "4.22.4") ui-framework
 	Box("Konos", "9.7.14", targetPackage = "io.intino.alexandria")
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.1.2")
@@ -12,6 +12,7 @@ Artifact("io.intino.alexandria", "4.22.3") ui-framework
 		Compile("io.intino.alexandria", "driver-shiny", "1.0.1")
 		Compile("io.intino.alexandria", "driver-r", "1.0.1")
 		Compile("io.intino.alexandria", "proxy", "1.1.0")
+		Compile("io.intino.alexandria", "totp", "1.0.2")
 		Compile("com.opencsv", "opencsv", "5.6")
 		Compile("org.hashids", "hashids", "1.0.3")
 		Compile("com.auth0", "java-jwt", "3.10.3") // Json Web token (Metabase)
@@ -19,11 +20,8 @@ Artifact("io.intino.alexandria", "4.22.3") ui-framework
 		Compile("com.google.code.gson", "gson", "2.8.6")
 		Compile("com.sparkjava", "spark-core", "2.9.3")
 		Compile("io.intino.icod", "standalone", "1.0.2")
-		Compile("de.taimos", "totp", "1.0")
-        Compile("commons-codec", "commons-codec", "1.10")
-        Compile("com.google.zxing", "javase", "3.2.1")
 
-		Web("io.intino.alexandria", "ui-framework-elements", "4.22.3")
+		Web("io.intino.alexandria", "ui-framework-elements", "4.22.4")
 
 		Test("junit", "junit", "4.13.2")
 
