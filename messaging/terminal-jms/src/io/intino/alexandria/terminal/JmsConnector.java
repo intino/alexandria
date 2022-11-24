@@ -156,7 +156,7 @@ public class JmsConnector implements Connector {
 
 	@Override
 	public void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived) {
-		registerEventConsumer(path, onEventReceived, subscriberId);
+		registerEventConsumer(path, subscriberId, onEventReceived);
 		JmsConsumer consumer = this.consumers.get(path);
 		if (consumer == null) return;
 		Consumer<javax.jms.Message> eventConsumer = m -> MessageDeserializer.deserialize(m).forEachRemaining(ev -> onEventReceived.accept(newEvent(m, ev)));
@@ -166,7 +166,7 @@ public class JmsConnector implements Connector {
 
 	@Override
 	public void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived, Predicate<Instant> filter) {
-		registerEventConsumer(path, onEventReceived, subscriberId);
+		registerEventConsumer(path, subscriberId, onEventReceived);
 		JmsConsumer consumer = this.consumers.get(path);
 		if (consumer == null) return;
 		Consumer<javax.jms.Message> eventConsumer = m -> MessageDeserializer.deserialize(m).forEachRemaining(ev -> {
@@ -175,6 +175,26 @@ public class JmsConnector implements Connector {
 		});
 		jmsEventConsumers.put(onEventReceived, eventConsumer.hashCode());
 		consumer.listen(eventConsumer);
+	}
+
+	@Override
+	public void attachListener(String path, MessageConsumer onMessageReceived) {
+		registerMessageConsumer(path, onMessageReceived);
+		JmsConsumer consumer = this.consumers.get(path);
+		if (consumer == null) return;
+		Consumer<javax.jms.Message> messageConsumer = m -> onMessageReceived.accept(textFrom(m), callback(m));
+		jmsMessageConsumers.put(onMessageReceived, messageConsumer.hashCode());
+		consumer.listen(messageConsumer);
+	}
+
+	@Override
+	public void attachListener(String path, String subscriberId, MessageConsumer onMessageReceived) {
+		registerMessageConsumer(path, subscriberId, onMessageReceived);
+		JmsConsumer consumer = this.consumers.get(path);
+		if (consumer == null) return;
+		Consumer<javax.jms.Message> messageConsumer = m -> onMessageReceived.accept(textFrom(m), callback(m));
+		jmsMessageConsumers.put(onMessageReceived, messageConsumer.hashCode());
+		consumer.listen(messageConsumer);
 	}
 
 	private Instant timestamp(javax.jms.Message m) {
@@ -195,16 +215,6 @@ public class JmsConnector implements Connector {
 			List<Consumer<javax.jms.Message>> toRemove = jc.listeners().stream().filter(l -> l.hashCode() == code).collect(Collectors.toList());
 			toRemove.forEach(jc::removeListener);
 		}
-	}
-
-	@Override
-	public void attachListener(String path, MessageConsumer onMessageReceived) {
-		registerMessageConsumer(path, onMessageReceived);
-		JmsConsumer consumer = this.consumers.get(path);
-		if (consumer == null) return;
-		Consumer<javax.jms.Message> messageConsumer = m -> onMessageReceived.accept(textFrom(m), callback(m));
-		jmsMessageConsumers.put(onMessageReceived, messageConsumer.hashCode());
-		consumer.listen(messageConsumer);
 	}
 
 	@Override
@@ -311,7 +321,7 @@ public class JmsConnector implements Connector {
 		if (session != null && !this.consumers.containsKey(path)) this.consumers.put(path, topicConsumer(path));
 	}
 
-	private void registerEventConsumer(String path, Consumer<Event> onEventReceived, String subscriberId) {
+	private void registerEventConsumer(String path, String subscriberId, Consumer<Event> onEventReceived) {
 		this.eventConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
 		this.eventConsumers.get(path).add(onEventReceived);
 		if (session != null && !this.consumers.containsKey(path))
@@ -322,6 +332,12 @@ public class JmsConnector implements Connector {
 		this.messageConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
 		this.messageConsumers.get(path).add(onMessageReceived);
 		if (session != null && !this.consumers.containsKey(path)) this.consumers.put(path, queueConsumer(path));
+	}
+
+	private void registerMessageConsumer(String path, String subscriberId, MessageConsumer onMessageReceived) {
+		this.messageConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
+		this.messageConsumers.get(path).add(onMessageReceived);
+		if (session != null && !this.consumers.containsKey(path)) this.consumers.put(path, durableTopicConsumer(path, subscriberId));
 	}
 
 	private boolean doSendEvent(String path, Event event) {
