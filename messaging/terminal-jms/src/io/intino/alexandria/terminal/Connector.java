@@ -20,11 +20,13 @@ public interface Connector {
 
 	void attachListener(String path, Consumer<Event> onEventReceived);
 
-	void attachListener(String path, MessageConsumer consumer);
-
 	void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived);
 
 	void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived, Predicate<Instant> filter);
+
+	void attachListener(String path, MessageConsumer consumer);
+
+	void attachListener(String path, String subscriberId, MessageConsumer consumer);
 
 	void detachListeners(Consumer<Event> consumer);
 
