@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "4.22.4") ui-framework-elements
+Artifact("io.intino.alexandria", "4.22.5") ui-framework-elements
 	WebImports
 		WebComponent("@date-io/moment", "^1.3.7")
 		WebComponent("@material-ui/core", "^4.11.0")
@@ -13,22 +13,23 @@ Artifact("io.intino.alexandria", "4.22.4") ui-framework-elements
 		WebComponent("jquery", "^3.4.1")
 		WebComponent("moment", "^2.29.2")
 		WebComponent("moment-timezone", "^0.5.25")
-		WebComponent("notistack", "^0.8.6")
+		WebComponent("notistack", "^1.0.10")
 		WebComponent("numeral", "^2.0.6")
 		WebComponent("plotly.js", "^1.48.3")
-		WebComponent("react", "^16.8.6")
+		WebComponent("react", "^16.13.1")
+		WebComponent("react-dom", "^16.13.1")
+		WebComponent("react-is", "^16.13.1")
 		WebComponent("react-draggable", "^4.3.1")
 		WebComponent("react-ace", "^6.6.0")
-		WebComponent("react-dom", "^16.8.6")
-		WebComponent("react-materialize", "^2.6.0")
+		WebComponent("react-materialize", "^3.10.0")
 		WebComponent("react-moment", "^0.8.4")
-		WebComponent("react-plotly.js", "^2.3.0")
+		WebComponent("react-plotly.js", "^2.6.0")
 		WebComponent("react-select", "^2.4.4")
 		WebComponent("react-spinners", "^0.5.4")
 		WebComponent("react-virtualized-auto-sizer", "^1.0.2")
 		WebComponent("react-window", "^1.8.2")
 		WebComponent("react-window-infinite-loader", "^1.0.3")
-		WebComponent("react-cookie-consent", "^3.0.0")
+		WebComponent("react-cookie-consent", "^8.0.1")
 		WebComponent("history", "^4.10.1")
 		WebComponent("material-ui-dropzone", "^3.1.0")
 		WebComponent("react-image-gallery", "^1.2.7")
@@ -36,6 +37,10 @@ Artifact("io.intino.alexandria", "4.22.4") ui-framework-elements
 		WebComponent("react-data-grid", "^6.0.0")
 		WebComponent("react-data-grid-addons", "^5.0.4")
 		WebComponent("immutable", "^4.1.0")
+
+		Resolution("react", "^16.13.1")
+		Resolution("react-dom", "^16.13.1")
+		Resolution("react-is", "^16.13.1")
 
 	Package(LibrariesLinkedByManifest)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")

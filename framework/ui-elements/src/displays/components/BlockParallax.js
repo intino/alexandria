@@ -2,7 +2,7 @@ import React from "react";
 import AbstractBlockParallax from "../../../gen/displays/components/AbstractBlockParallax";
 import BlockParallaxNotifier from "../../../gen/displays/notifiers/BlockParallaxNotifier";
 import BlockParallaxRequester from "../../../gen/displays/requesters/BlockParallaxRequester";
-import { Parallax } from "react-materialize"
+import { Parallax } from "react-materialize";
 import {withStyles} from "@material-ui/core";
 import 'alexandria-ui-elements/res/styles/parallax.css';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
@@ -38,7 +38,7 @@ class BlockParallax extends AbstractBlockParallax {
 
 		return (
 			<div className={classes.container} style={{height:height}}>
-				{ hasBackground ? <Parallax imageSrc={this.state.background}></Parallax> : undefined}
+				{ hasBackground ? <Parallax image={<img alt="" src={this.state.background}/>}></Parallax> : undefined}
 				<div className={classes.children} style={this.style()}>{this.props.children}</div>
 			</div>
 		);
