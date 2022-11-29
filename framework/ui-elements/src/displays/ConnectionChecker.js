@@ -11,8 +11,8 @@ class ConnectionChecker extends React.Component {
 
     listenOnClose = () => {
         Application.services.pushService.onClose((unit) => {
-            const options = { persist: true, variant: "error", anchorOrigin: { vertical: 'top', horizontal: 'center' }, children: (key) => {
-                return <ConnectionLost id={key} unit={unit}></ConnectionLost>;
+            const options = { persist: true, variant: "error", anchorOrigin: { vertical: 'top', horizontal: 'center' }, content: (key) => {
+                return (<ConnectionLost id={key} unit={unit}></ConnectionLost>);
             }};
             this.props.enqueueSnackbar('', options);
         });

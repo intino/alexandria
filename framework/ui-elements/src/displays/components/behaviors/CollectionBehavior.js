@@ -83,7 +83,7 @@ const CollectionBehavior = (collection) => {
         const pageSize = self.collection.state.pageSize;
         const defaultPageSize = self.collection.defaultPageSize != null ? self.collection.defaultPageSize : self.collection.state.pageSize;
         const page = self.collection.state.page;
-        const pageSizes = [defaultPageSize, defaultPageSize*2, defaultPageSize*3];
+        const pageSizes = [defaultPageSize];//[defaultPageSize, defaultPageSize*2, defaultPageSize*3];
 
         self.collection.defaultPageSize = defaultPageSize;
 
