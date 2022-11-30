@@ -4,14 +4,10 @@ import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.Datalake.EventStore.Tub;
-import io.intino.alexandria.event.EventStream;
-import io.intino.alexandria.event.EventStream.Sequence;
 
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -53,16 +49,6 @@ public class FileEventTank implements Datalake.EventStore.Tank {
 	@Override
 	public Tub on(Timetag tag) {
 		return new FileEventTub(new File(root, tag.value() + EventExtension));
-	}
-
-	@Override
-	public EventStream content() {
-		return Sequence.of(tubs().map(Tub::events).toArray(EventStream[]::new));
-	}
-
-	@Override
-	public EventStream content(Predicate<Timetag> filter) {
-		return Sequence.of(tubs().filter(t -> filter.test(t.timetag())).map(Tub::events).toArray(EventStream[]::new));
 	}
 
 	public File root() {
