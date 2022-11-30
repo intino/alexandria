@@ -34,9 +34,13 @@ public interface Datalake {
 
 			EventStore.Tub on(Timetag tag);
 
-			EventStream content();
+			default EventStream content() {
+				return EventStream.Sequence.of(tubs().map(Tub::events).toArray(EventStream[]::new));
+			}
 
-			EventStream content(Predicate<Timetag> filter);
+			default EventStream content(Predicate<Timetag> filter) {
+				return EventStream.Sequence.of(tubs().filter(t -> filter.test(t.timetag())).map(Tub::events).toArray(EventStream[]::new));
+			}
 		}
 
 		interface Tub {
