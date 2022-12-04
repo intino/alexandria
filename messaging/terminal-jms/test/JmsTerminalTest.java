@@ -15,6 +15,7 @@ import java.time.Instant;
 public class JmsTerminalTest {
 
 	@Test
+	@Ignore
 	public void testRemoteDatalake() {
 		JmsConnector connector = new JmsConnector("tcp://localhost:62000?jms.blobTransferPolicy.uploadUrl=http://localhost:8081", "monitoring", "monitoring", "test", null);
 		connector.start();
