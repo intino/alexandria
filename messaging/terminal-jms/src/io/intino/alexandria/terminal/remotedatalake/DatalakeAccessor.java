@@ -1,37 +1,106 @@
 package io.intino.alexandria.terminal.remotedatalake;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import io.intino.alexandria.jms.JmsProducer;
+import io.intino.alexandria.jms.QueueProducer;
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.terminal.JmsConnector;
 
+import javax.jms.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class DatalakeAccessor {
+import static io.intino.alexandria.terminal.JmsConnector.createRandomString;
 
-	private static final Object monitor = new Object();
+class DatalakeAccessor {
+
+	public static final String PATH = "service.ness.datalake";
 	private final JmsConnector connector;
+	private final Session session;
 
-	public DatalakeAccessor(JmsConnector connector) {
+	DatalakeAccessor(JmsConnector connector) {
 		this.connector = connector;
+		session = connector.session();
 	}
 
-	String query(String query) {
-		AtomicReference<String> response = new AtomicReference<>(null);
-		synchronized (monitor) {
-			connector.requestResponse("service.ness.datalake", query, s -> {
+	public javax.jms.MessageConsumer queryWithConsumer(String query) {
+		Session session = connector.session();
+		try {
+			TemporaryQueue temporaryQueue = session.createTemporaryQueue();
+			javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue);
+			sendRequest(query, temporaryQueue);
+			return consumer;
+		} catch (JMSException e) {
+			Logger.error(e);
+			return null;
+		}
+	}
+
+	Message query(String query) {
+		AtomicReference<Message> response = new AtomicReference<>(null);
+		Session session = connector.session();
+		try {
+			TemporaryQueue temporaryQueue = session.createTemporaryQueue();
+			javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue);
+			final Object monitor = new Object();
+			consumer.setMessageListener(m -> {
+				response.set(m);
 				synchronized (monitor) {
 					monitor.notify();
 				}
 			});
-			waitForResponse();
+			sendRequest(query, temporaryQueue);
+			waitForResponse(monitor);
+			consumer.close();
 			return response.get();
+		} catch (JMSException e) {
+			Logger.error(e);
 		}
+		return null;
 	}
 
-	private static void waitForResponse() {
+	private static void waitForResponse(Object monitor) {
 		try {
-			monitor.wait(1000 * 30);
+			synchronized (monitor) {
+				monitor.wait(1000 * 30);
+			}
 		} catch (InterruptedException e) {
-			io.intino.alexandria.logger.Logger.error(e);
+			Logger.error(e);
 		}
 	}
 
+	private void sendMessage(JmsProducer producer, Message message, int expirationTimeInSeconds) {
+		try {
+			Thread thread = new Thread(() -> producer.produce(message, expirationTimeInSeconds));
+			thread.start();
+			thread.join(1000);
+			thread.interrupt();
+		} catch (InterruptedException ignored) {
+		}
+	}
+
+	private void sendRequest(String query, TemporaryQueue temporaryQueue) throws JMSException {
+		QueueProducer producer = new QueueProducer(session, PATH);
+		final TextMessage txtMessage = session.createTextMessage();
+		txtMessage.setText(query);
+		txtMessage.setJMSReplyTo(temporaryQueue);
+		txtMessage.setJMSCorrelationID(createRandomString());
+		sendMessage(producer, txtMessage, 100);
+		producer.close();
+	}
+
+	public static JsonObject reflowSchema(String tank, List<String> tubs) {
+		JsonArray tubsArray = new JsonArray();
+		tubs.forEach(tubsArray::add);
+		return reflowSchema(tank, tubsArray);
+	}
+
+	public static JsonObject reflowSchema(String tank, JsonArray tubs) {
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("operation", "reflow");
+		jsonObject.addProperty("tank", tank);
+		jsonObject.add("tubs", tubs);
+		return jsonObject;
+	}
 }

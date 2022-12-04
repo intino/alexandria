@@ -1,10 +1,12 @@
 package io.intino.alexandria.terminal.remotedatalake;
 
-import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 import io.intino.alexandria.Json;
 import io.intino.alexandria.datalake.Datalake;
+import io.intino.alexandria.jms.MessageReader;
 import io.intino.alexandria.terminal.JmsConnector;
 
+import javax.jms.Message;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -21,10 +23,10 @@ public class RemoteDatalake implements Datalake {
 		return new EventStore() {
 			@Override
 			public Stream<Tank> tanks() {
-				String query = accessor.query("eventstore/tanks");
-				if (query == null) return Stream.empty();
-				JsonObject content = Json.fromString(query, JsonObject.class);
-				return StreamSupport.stream(content.getAsJsonArray().spliterator(), false).map(o -> new RemoteTank(accessor, o.getAsJsonObject()));
+				Message response = accessor.query("eventStore/tanks");
+				if (response == null) return Stream.empty();
+				JsonArray content = Json.fromString(MessageReader.textFrom(response), JsonArray.class);
+				return StreamSupport.stream(content.spliterator(), false).map(o -> new RemoteTank(accessor, o.getAsJsonObject()));
 			}
 
 			@Override
