@@ -6,7 +6,6 @@ import io.intino.konos.builder.codegeneration.accessor.messaging.MessagingAccess
 import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer;
 import io.intino.konos.builder.codegeneration.analytic.AnalyticRenderer;
 import io.intino.konos.builder.codegeneration.bpm.BpmRenderer;
-import io.intino.konos.builder.codegeneration.datahub.DatalakeRenderer;
 import io.intino.konos.builder.codegeneration.datahub.adapter.AdapterRenderer;
 import io.intino.konos.builder.codegeneration.datahub.messagehub.MessageHubRenderer;
 import io.intino.konos.builder.codegeneration.datahub.mounter.MounterFactoryRenderer;
@@ -62,7 +61,6 @@ public class FullRenderer {
 			tasks();
 			jmx();
 			jms();
-			datalake();
 			messageHub();
 			subscribers();
 			mounters();
@@ -149,10 +147,6 @@ public class FullRenderer {
 
 	private void agendas() throws KonosException {
 		new AgendaServiceRenderer(context, graph).execute();
-	}
-
-	private void datalake() throws KonosException {
-		new DatalakeRenderer(context, graph).execute();
 	}
 
 	private void messageHub() {

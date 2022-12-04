@@ -9,7 +9,10 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.CompilationContext.DataHubManifest;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.compiler.shared.PostCompileConfigurationParameterActionMessage;
-import io.intino.konos.model.*;
+import io.intino.konos.model.KonosGraph;
+import io.intino.konos.model.Sentinel;
+import io.intino.konos.model.Service;
+import io.intino.konos.model.Subscriber;
 import io.intino.magritte.framework.Node;
 
 import java.util.*;
@@ -39,7 +42,6 @@ public class AbstractBoxRenderer extends Renderer {
 		connector(root);
 		services(root);
 		sentinels(root);
-		datalake(root);
 		terminal(root);
 		workflow(root);
 		Commons.writeFrame(context.gen(Target.Owner), "AbstractBox", template().render(root.toFrame()));
@@ -49,7 +51,6 @@ public class AbstractBoxRenderer extends Renderer {
 
 	private String sourceFileOf(KonosGraph graph) {
 		if (!graph.serviceList().isEmpty()) return context.sourceFileOf(graph.serviceList().get(0));
-		if (graph.datalake() != null) return context.sourceFileOf(graph.datalake());
 		if (!graph.schemaList().isEmpty()) return context.sourceFileOf(graph.schemaList().get(0));
 		if (!graph.datamartList().isEmpty()) return context.sourceFileOf(graph.datamartList().get(0));
 		final List<Node> nodes = graph.core$().rootList();
@@ -77,24 +78,6 @@ public class AbstractBoxRenderer extends Renderer {
 				.flatMap(Collection::stream).collect(Collectors.toList()));
 	}
 
-	private void datalake(FrameBuilder root) {
-		Datalake datalake = graph.datalake();
-		if (datalake == null) return;
-		FrameBuilder builder = new FrameBuilder("datalake", datalake.isLocal() ? "Local" : "Mirror");
-		builder.add("package", packageName());
-		builder.add("path", parameter(datalake.path()));
-		if (datalake.isSshMirrored()) {
-			Datalake.SshMirrored mirror = datalake.asSshMirrored();
-			builder.add("parameter", parameter(mirror.url())).
-					add("parameter", parameter(mirror.user())).
-					add("parameter", parameter(mirror.password())).
-					add("parameter", parameter(mirror.originDatalakePath())).
-					add("parameter", parameter(mirror.startingTimetag()));
-		} else if (datalake.isNfsMirrored())
-			builder.add("parameter", parameter(datalake.asNfsMirrored().originDatalakePath())).
-					add("parameter", parameter(datalake.asNfsMirrored().startingTimetag()));
-		root.add("datalake", builder);
-	}
 
 	private void terminal(FrameBuilder root) {
 		DataHubManifest manifest = context.dataHubManifest();
