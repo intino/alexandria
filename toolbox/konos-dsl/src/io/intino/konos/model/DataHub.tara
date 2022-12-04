@@ -17,18 +17,6 @@ Concept:Named Subscriber
 		var string subscriberId
 		var word:{ReceiveAll ReceiveAfterLastSeal} subscriptionMode
 
-Concept:{0..1} Datalake
-	var string path
-	Aspect DatalakeType
-		sub Mirrored
-			var string startingTimetag
-			var string originDatalakePath
-			sub NfsMirrored
-			sub SshMirrored
-				var string url
-				var string user
-				var string password = empty
-		sub Local
 Concept:Named Datamart
 	var word:{Table Graph} type
 	Concept:Named:RequiresAspect Mounter
