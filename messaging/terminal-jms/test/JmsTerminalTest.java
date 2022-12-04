@@ -1,7 +1,11 @@
+import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.event.Event;
+import io.intino.alexandria.event.EventStream;
 import io.intino.alexandria.terminal.Broker;
 import io.intino.alexandria.terminal.JmsConnector;
+import io.intino.alexandria.terminal.remotedatalake.RemoteDatalake;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -11,11 +15,21 @@ import java.time.Instant;
 public class JmsTerminalTest {
 
 	@Test
+	public void testRemoteDatalake() {
+		JmsConnector connector = new JmsConnector("tcp://localhost:62000?jms.blobTransferPolicy.uploadUrl=http://localhost:8081", "monitoring", "monitoring", "test", null);
+		connector.start();
+		Datalake.EventStore.Tank tank = new RemoteDatalake(connector).eventStore().tank("server.Status");
+		if (tank == null) Assert.fail();
+		EventStream content = tank.content();
+		content.forEachRemaining(e -> System.out.println(e.ts()));
+	}
+
+	@Test
 	@Ignore
 	public void testMessageOutBox() throws InterruptedException {
-		JmsConnector eventHub = new JmsConnector("tcp://localhost:63000", "user1", "1234", "", new File("outBox"));
+		JmsConnector connector = new JmsConnector("tcp://localhost:63000", "user1", "1234", "", new File("outBox"));
 		while (true) {
-			eventHub.sendEvent("lalala", new TestEvent("tt").field1("v1"));
+			connector.sendEvent("lalala", new TestEvent("tt").field1("v1"));
 			Thread.sleep(10000);
 		}
 	}
@@ -23,10 +37,10 @@ public class JmsTerminalTest {
 	@Test
 	@Ignore
 	public void testPutAndHandle() throws InterruptedException {
-		JmsConnector eventHub = new JmsConnector("failover:(tcp://localhost:63000)", "comercial.cuentamaestra", "comercial.cuentamaestra", "cobranza", new File("outBox"));
-//		new Thread(() -> eventHub.attachListener("lalala", m -> System.out.println(m.toString()))).start();
+		JmsConnector connector = new JmsConnector("failover:(tcp://localhost:63000)", "comercial.cuentamaestra", "comercial.cuentamaestra", "cobranza", new File("outBox"));
+//		new Thread(() -> connector.attachListener("lalala", m -> System.out.println(m.toString()))).start();
 		while (true) {
-			eventHub.sendEvent("comercial.cuentamaestra.GestionCobro", new TestEvent("GestionCobro").field1("v1").ts(Instant.now()));
+			connector.sendEvent("comercial.cuentamaestra.GestionCobro", new TestEvent("GestionCobro").field1("v1").ts(Instant.now()));
 			Thread.sleep(10000);
 		}
 	}

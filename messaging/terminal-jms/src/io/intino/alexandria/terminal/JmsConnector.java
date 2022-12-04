@@ -553,7 +553,7 @@ public class JmsConnector implements Connector {
 
 	private void initConnection() {
 		try {
-			connection = BusConnector.createConnection(removeAlexandriaParameters(brokerUrl), user, password, connectionListener());
+			connection = BrokerConnector.createConnection(removeAlexandriaParameters(brokerUrl), user, password, connectionListener());
 			if (connection != null) {
 				if (clientId != null && !clientId.isEmpty()) connection.setClientID(clientId);
 				connection.start();
@@ -588,7 +588,7 @@ public class JmsConnector implements Connector {
 		return io.intino.alexandria.jms.MessageWriter.write(payload);
 	}
 
-	private static String createRandomString() {
+	public static String createRandomString() {
 		Random random = new Random(System.currentTimeMillis());
 		long randomLong = random.nextLong();
 		return Long.toHexString(randomLong);
