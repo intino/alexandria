@@ -9,10 +9,14 @@ import io.intino.alexandria.logger.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Iterator;
+import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FileTripletTub implements Datalake.TripletStore.Tub {
+
 	private final File tsv;
 
 	public FileTripletTub(File tsv) {
@@ -35,8 +39,8 @@ public class FileTripletTub implements Datalake.TripletStore.Tub {
 
 	@Override
 	public Stream<Triplet> triplets() {
-		try {
-			return Files.lines(tsv.toPath()).map(l -> new Triplet(l.split("\t")));
+		try(Stream<String> lines = Files.lines(tsv.toPath())) {
+			return lines.filter(line -> !line.isEmpty()).map(l -> new Triplet(l.split("\t", -1))).collect(Collectors.toList()).stream();
 		} catch (IOException e) {
 			Logger.error(e);
 			return Stream.empty();
