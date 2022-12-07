@@ -45,7 +45,6 @@ public class JmsConnector implements Connector {
 	private ScheduledExecutorService scheduler;
 	private final ExecutorService eventDispatcher;
 
-
 	public JmsConnector(String brokerUrl, String user, String password, String clientId, File messageCacheDirectory) {
 		this(brokerUrl, user, password, clientId, false, messageCacheDirectory);
 	}
@@ -67,6 +66,11 @@ public class JmsConnector implements Connector {
 			this.messageOutBox = new MessageOutBox(new File(outBoxDirectory, "requests"));
 		}
 		eventDispatcher = Executors.newSingleThreadExecutor(new NamedThreadFactory("jms-connector"));
+	}
+
+	@Override
+	public String clientId() {
+		return clientId;
 	}
 
 	public void start() {

@@ -8,6 +8,9 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public interface Connector {
+
+	String clientId();
+
 	void sendEvent(String path, Event event);
 
 	void sendEvent(String path, Event event, int expirationInSeconds);
