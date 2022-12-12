@@ -6,6 +6,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.time.Instant;
 import java.util.Date;
 
@@ -31,6 +32,10 @@ public class Json {
 	}
 
 	public static <T> T fromString(String json, Class<T> type) {
+		return GsonInstance.fromJson(json, type);
+	}
+
+	public static <T> T fromString(String json, Type type) {
 		return GsonInstance.fromJson(json, type);
 	}
 
