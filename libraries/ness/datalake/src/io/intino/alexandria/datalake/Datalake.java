@@ -13,7 +13,7 @@ public interface Datalake {
 
 	EventStore eventStore();
 
-	EntityStore entitiesStore();
+	EntityStore entityStore();
 
 	interface EventStore {
 
