@@ -13,7 +13,7 @@ public interface Datalake {
 
 	EventStore eventStore();
 
-	TripletStore tripletsStore();
+	EntityStore entitiesStore();
 
 	interface EventStore {
 
@@ -50,7 +50,7 @@ public interface Datalake {
 		}
 	}
 
-	interface TripletStore {
+	interface EntityStore {
 
 		Stream<Tank> tanks();
 
