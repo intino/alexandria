@@ -7,6 +7,7 @@ import io.intino.alexandria.message.Message;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQSession;
 import org.apache.activemq.command.ActiveMQDestination;
+import org.apache.activemq.command.ActiveMQTextMessage;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;
@@ -24,6 +25,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static io.intino.alexandria.jms.MessageReader.textFrom;
+import static java.util.concurrent.TimeUnit.MINUTES;
 import static javax.jms.Session.AUTO_ACKNOWLEDGE;
 import static javax.jms.Session.SESSION_TRANSACTED;
 
@@ -89,7 +91,7 @@ public class JmsConnector implements Connector {
 		started.set(true);
 		if (scheduler == null) {
 			scheduler = Executors.newScheduledThreadPool(1);
-			scheduler.scheduleAtFixedRate(this::checkConnection, 15, 10, TimeUnit.MINUTES);
+			scheduler.scheduleAtFixedRate(this::checkConnection, 15, 10, MINUTES);
 		}
 	}
 
@@ -277,6 +279,31 @@ public class JmsConnector implements Connector {
 		} catch (JMSException e) {
 			Logger.error(e);
 		}
+	}
+
+	@Override
+	public javax.jms.Message requestResponse(String path, javax.jms.Message message) {
+		return requestResponse(path, message, -1, null);
+	}
+
+	@Override
+	public javax.jms.Message requestResponse(String path, javax.jms.Message message, long timeout, TimeUnit timeUnit) {
+		if (session == null) {
+			Logger.error("Connection lost. Invalid session");
+			return null;
+		}
+		try {
+			CompletableFuture<javax.jms.Message> future = new CompletableFuture<>();
+			requestResponse(path, message, future::complete);
+			return waitFor(future, timeout, timeUnit);
+		} catch (Exception e) {
+			Logger.error(e);
+			return null;
+		}
+	}
+
+	private static javax.jms.Message waitFor(Future<javax.jms.Message> future, long timeout, TimeUnit timeUnit) throws Exception {
+		return timeout <= 0 || timeUnit == null ? future.get() : future.get(timeout, timeUnit);
 	}
 
 	@Override

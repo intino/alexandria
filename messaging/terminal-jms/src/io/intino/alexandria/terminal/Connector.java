@@ -5,6 +5,8 @@ import io.intino.alexandria.event.Event;
 import javax.jms.Message;
 import java.time.Instant;
 import java.util.List;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -43,6 +45,10 @@ public interface Connector {
 	void destroySubscription(String subscriberId);
 
 	void requestResponse(String path, Message message, Consumer<Message> onResponse);
+
+	Message requestResponse(String path, Message message);
+
+	Message requestResponse(String path, Message message, long timeout, TimeUnit timeUnit);
 
 	void requestResponse(String path, Message message, String responsePath);
 
