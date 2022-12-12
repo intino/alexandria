@@ -8,7 +8,10 @@ import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQSession;
 import org.apache.activemq.command.ActiveMQDestination;
 
-import javax.jms.*;
+import javax.jms.Connection;
+import javax.jms.JMSException;
+import javax.jms.Session;
+import javax.jms.TemporaryQueue;
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
@@ -257,7 +260,7 @@ public class JmsConnector implements Connector {
 	}
 
 	@Override
-	public void requestResponse(String path, String message, Consumer<String> onResponse) {
+	public void requestResponse(String path, javax.jms.Message message, Consumer<javax.jms.Message> onResponse) {
 		if (session == null) {
 			Logger.error("Connection lost. Invalid session");
 			return;
@@ -266,12 +269,10 @@ public class JmsConnector implements Connector {
 			QueueProducer producer = new QueueProducer(session, path);
 			TemporaryQueue temporaryQueue = session.createTemporaryQueue();
 			javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue);
-			consumer.setMessageListener(m -> acceptMessage(onResponse, consumer, (TextMessage) m));
-			final TextMessage txtMessage = session.createTextMessage();
-			txtMessage.setText(message);
-			txtMessage.setJMSReplyTo(temporaryQueue);
-			txtMessage.setJMSCorrelationID(createRandomString());
-			sendMessage(producer, txtMessage, 100);
+			consumer.setMessageListener(m -> acceptMessage(onResponse, consumer, m));
+			message.setJMSReplyTo(temporaryQueue);
+			message.setJMSCorrelationID(createRandomString());
+			sendMessage(producer, message, 100);
 			producer.close();
 		} catch (JMSException e) {
 			Logger.error(e);
@@ -279,8 +280,14 @@ public class JmsConnector implements Connector {
 	}
 
 	@Override
-	public void requestResponse(String path, String message, String responsePath) {
-		if (!doSendMessage(path, message, responsePath)) messageOutBox.push(path, message);
+	public void requestResponse(String path, javax.jms.Message message, String responsePath) {
+		try {
+			message.setJMSReplyTo(this.session.createQueue(responsePath));
+			message.setJMSCorrelationID(createRandomString());
+			sendMessage(producers.get(path), message);
+		} catch (JMSException e) {
+			Logger.error(e);
+		}
 	}
 
 	private Event newEvent(javax.jms.Message m, Message ev) {
@@ -341,7 +348,8 @@ public class JmsConnector implements Connector {
 	private void registerMessageConsumer(String path, String subscriberId, MessageConsumer onMessageReceived) {
 		this.messageConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
 		this.messageConsumers.get(path).add(onMessageReceived);
-		if (session != null && !this.consumers.containsKey(path)) this.consumers.put(path, durableTopicConsumer(path, subscriberId));
+		if (session != null && !this.consumers.containsKey(path))
+			this.consumers.put(path, durableTopicConsumer(path, subscriberId));
 	}
 
 	private boolean doSendEvent(String path, Event event) {
@@ -388,18 +396,6 @@ public class JmsConnector implements Connector {
 		}
 	}
 
-	private boolean doSendMessage(String path, String message, String replyTo) {
-		if (cannotSendMessage()) return false;
-		try {
-			queueProducer(path);
-			JmsProducer producer = producers.get(path);
-			return sendMessage(producer, serialize(message, replyTo));
-		} catch (JMSException | IOException e) {
-			Logger.error(e);
-			return false;
-		}
-	}
-
 	private void topicProducer(String path) throws JMSException {
 		if (!producers.containsKey(path)) producers.put(path, new TopicProducer(session, path));
 	}
@@ -428,9 +424,9 @@ public class JmsConnector implements Connector {
 		return result[0];
 	}
 
-	private void acceptMessage(Consumer<String> onResponse, javax.jms.MessageConsumer consumer, TextMessage m) {
+	private void acceptMessage(Consumer<javax.jms.Message> onResponse, javax.jms.MessageConsumer consumer, javax.jms.Message m) {
 		try {
-			onResponse.accept(m.getText());
+			onResponse.accept(m);
 			consumer.close();
 		} catch (JMSException e) {
 			Logger.error(e);
@@ -579,13 +575,6 @@ public class JmsConnector implements Connector {
 		} catch (JMSException e) {
 			return null;
 		}
-	}
-
-	private javax.jms.Message serialize(String payload, String replyTo) throws IOException, JMSException {
-		javax.jms.Message message = io.intino.alexandria.jms.MessageWriter.write(payload);
-		message.setJMSReplyTo(this.session.createQueue(replyTo));
-		message.setJMSCorrelationID(createRandomString());
-		return message;
 	}
 
 	private static javax.jms.Message serialize(String payload) throws IOException, JMSException {
