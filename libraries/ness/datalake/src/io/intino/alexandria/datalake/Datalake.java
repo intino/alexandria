@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 public interface Datalake {
 	String EventStoreFolder = "events";
-	String TripletStoreFolder = "triplets";
+	String TripletStoreFolder = "entities";
 
 	EventStore eventStore();
 
