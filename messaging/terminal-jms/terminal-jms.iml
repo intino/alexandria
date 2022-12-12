@@ -31,5 +31,8 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:message:3.0.5" level="project" />
     <orderEntry type="library" name="Intino: org.antlr:antlr4-runtime:4.10.1" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:jms:1.4.1" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:datalake:5.0.3" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.2.0" level="project" />
+    <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.10" level="project" />
   </component>
 </module>
