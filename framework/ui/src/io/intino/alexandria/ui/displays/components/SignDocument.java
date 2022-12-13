@@ -28,6 +28,7 @@ public class SignDocument<DN extends SignDocumentNotifier, B extends Box> extend
 
     private String signData(URL document) {
         try {
+            if (document == null) return null;
             return Base64.encode(IOUtils.toByteArray(document));
         } catch (IOException e) {
             Logger.error(e);

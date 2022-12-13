@@ -54,7 +54,7 @@ const CollectionBehavior = (collection) => {
                 <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}
                         scrollThreshold={0.9} hasMore={hasMore} loader={self.renderLoadingMore()}
                         height={height} style={{height:height+"px",width:width+'px'}} scrollableTarget={scrollableTarget}>
-                    {items.map((i, index) => <div className="layout vertical flex" style={{minHeight:itemHeight,position:'relative'}}>{self.renderItem(items, { index: index, isScrolling: false })}</div>)}
+                    {items.map((i, index) => <div className="layout vertical flex" style={{minHeight:itemHeight,position:'relative'}}>{self.renderItem(items, { index: index, isScrolling: false, customClasses: "layout horizontal flex center item" })}</div>)}
                 </InfiniteScroll>
             </div>
         );
@@ -65,14 +65,13 @@ const CollectionBehavior = (collection) => {
         const itemCount = self.collection.props.navigable == null ? self.collection.state.itemCount : self.collection.state.pageSize;
         const hasMore = self.collection.props.navigable == null ? items.length < itemCount : false;
         const scrollableTarget = self.collection.props.id + "_infinite";
-        if (width <= 800) itemHeight += (itemHeight/2);
         self.notifyItemsRendered(items);
         return (
             <div id={scrollableTarget} style={{ height: height, width: width, overflow: "auto" }}>
                 <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}
                         scrollThreshold={0.9} hasMore={hasMore} loader={self.renderLoadingMore()}
                         height={height} style={{height:height+"px",width:width+'px'}} scrollableTarget={scrollableTarget}>
-                    {items.map((i, index) => <div className="layout vertical flex" style={{minHeight:itemHeight,position:'relative'}}>{self.renderItem(items, { index: index, isScrolling: false })}</div>)}
+                    {items.map((i, index) => <div className="layout vertical flex" style={{minHeight:itemHeight,position:'relative'}}>{self.renderItem(items, { index: index, isScrolling: false, customClasses: "" })}</div>)}
                 </InfiniteScroll>
             </div>
         );
@@ -150,7 +149,7 @@ const CollectionBehavior = (collection) => {
         return result;
     };
 
-    self.renderItem = (items, { index, isScrolling, style }) => {
+    self.renderItem = (items, { index, isScrolling, style, customClasses }) => {
         const item = items[index];
         const { classes } = self.collection.props;
         const width = self.width(index);
@@ -163,7 +162,7 @@ const CollectionBehavior = (collection) => {
         var multiple = self.allowMultiSelection();
         var selecting = self.selection.length > 0;
         const id = item != null ? item.pl.id : undefined;
-        const classNamesValue = classNames(classes.itemView, "layout horizontal flex center item", selectable && multiple ? classes.selectable : undefined, selecting ? classes.selecting : undefined);
+        const classNamesValue = classNames(classes.itemView, customClasses, selectable && multiple ? classes.selectable : undefined, selecting ? classes.selecting : undefined);
         const finalStyle = selectable && !multiple && self.isItemSelected(item) ? { ...style, ...self.getSelectedStyleRules() } : style;
         return (
             <div id={self.elementId(id)} style={finalStyle} key={index} onClick={selectable && !multiple ? self.handleSelect.bind(self, id) : undefined} className={classNamesValue}>
