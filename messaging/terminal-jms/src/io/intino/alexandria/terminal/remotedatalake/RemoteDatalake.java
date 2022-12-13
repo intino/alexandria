@@ -36,9 +36,8 @@ public class RemoteDatalake implements Datalake {
 		};
 	}
 
-
 	@Override
-	public TripletStore tripletsStore() {
+	public EntityStore entityStore() {
 		//TODO
 		throw new UnsupportedOperationException();
 	}
