@@ -9,11 +9,11 @@ import java.util.stream.Stream;
 
 public interface Datalake {
 	String EventStoreFolder = "events";
-	String TripletStoreFolder = "triplets";
+	String TripletStoreFolder = "entities";
 
 	EventStore eventStore();
 
-	TripletStore tripletsStore();
+	EntityStore entityStore();
 
 	interface EventStore {
 
@@ -34,9 +34,13 @@ public interface Datalake {
 
 			EventStore.Tub on(Timetag tag);
 
-			EventStream content();
+			default EventStream content() {
+				return EventStream.Sequence.of(tubs().map(Tub::events).toArray(EventStream[]::new));
+			}
 
-			EventStream content(Predicate<Timetag> filter);
+			default EventStream content(Predicate<Timetag> filter) {
+				return EventStream.Sequence.of(tubs().filter(t -> filter.test(t.timetag())).map(Tub::events).toArray(EventStream[]::new));
+			}
 		}
 
 		interface Tub {
@@ -46,7 +50,7 @@ public interface Datalake {
 		}
 	}
 
-	interface TripletStore {
+	interface EntityStore {
 
 		Stream<Tank> tanks();
 

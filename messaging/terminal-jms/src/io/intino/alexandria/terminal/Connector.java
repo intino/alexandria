@@ -2,21 +2,33 @@ package io.intino.alexandria.terminal;
 
 import io.intino.alexandria.event.Event;
 
+import javax.jms.Message;
 import java.time.Instant;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public interface Connector {
-	void sendEvent(String path, Event event);
 
-	void sendEvent(String path, Event event, int expirationInSeconds);
+	String clientId();
+
+	void sendEvent(String path, Event event);
 
 	void sendEvents(String path, List<Event> events);
 
+	void sendEvent(String path, Event event, int expirationInSeconds);
+
 	void sendEvents(String path, List<Event> events, int expirationInSeconds);
 
-	void sendMessage(String path, String message);
+	@Deprecated
+	default void sendMessage(String path, String message) {
+		sendQueueMessage(path, message);
+	}
+
+	void sendQueueMessage(String path, String message);
+
+	void sendTopicMessage(String path, String message);
 
 	void attachListener(String path, Consumer<Event> onEventReceived);
 
@@ -38,9 +50,13 @@ public interface Connector {
 
 	void destroySubscription(String subscriberId);
 
-	void requestResponse(String path, String message, Consumer<String> onResponse);
+	void requestResponse(String path, Message message, Consumer<Message> onResponse);
 
-	void requestResponse(String path, String message, String responsePath);
+	Message requestResponse(String path, Message message);
+
+	Message requestResponse(String path, Message message, long timeout, TimeUnit timeUnit);
+
+	void requestResponse(String path, Message message, String responsePath);
 
 	interface MessageConsumer {
 		void accept(String message, String callback);

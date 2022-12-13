@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.4.0") jms
+Artifact("io.intino.alexandria", "1.4.1") jms
 	Imports
 		Compile("io.intino.alexandria", "logger4j", "1.0.1")
 		Compile("io.intino.alexandria", "logger", "2.1.0")

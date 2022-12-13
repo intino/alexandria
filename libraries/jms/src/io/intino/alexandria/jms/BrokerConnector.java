@@ -7,7 +7,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import javax.jms.Connection;
 import javax.jms.JMSException;
 
-public class BusConnector {
+public class BrokerConnector {
 
 	public static Connection createConnection(String brokerURL, String user, String password, ConnectionListener listener) {
 		try {

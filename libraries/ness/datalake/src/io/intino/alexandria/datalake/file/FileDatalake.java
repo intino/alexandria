@@ -23,8 +23,8 @@ public class FileDatalake implements Datalake {
 	}
 
 	@Override
-	public FileTripletStore tripletsStore() {
-		return new FileTripletStore(tripletStoreFolder());
+	public FileEntityStore entityStore() {
+		return new FileEntityStore(tripletStoreFolder());
 	}
 
 	public File root() {

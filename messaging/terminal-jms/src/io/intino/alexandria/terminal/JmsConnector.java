@@ -8,7 +8,10 @@ import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQSession;
 import org.apache.activemq.command.ActiveMQDestination;
 
-import javax.jms.*;
+import javax.jms.Connection;
+import javax.jms.JMSException;
+import javax.jms.Session;
+import javax.jms.TemporaryQueue;
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
@@ -21,6 +24,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static io.intino.alexandria.jms.MessageReader.textFrom;
+import static java.util.concurrent.TimeUnit.MINUTES;
 import static javax.jms.Session.AUTO_ACKNOWLEDGE;
 import static javax.jms.Session.SESSION_TRANSACTED;
 
@@ -45,7 +49,6 @@ public class JmsConnector implements Connector {
 	private ScheduledExecutorService scheduler;
 	private final ExecutorService eventDispatcher;
 
-
 	public JmsConnector(String brokerUrl, String user, String password, String clientId, File messageCacheDirectory) {
 		this(brokerUrl, user, password, clientId, false, messageCacheDirectory);
 	}
@@ -69,6 +72,11 @@ public class JmsConnector implements Connector {
 		eventDispatcher = Executors.newSingleThreadExecutor(new NamedThreadFactory("jms-connector"));
 	}
 
+	@Override
+	public String clientId() {
+		return clientId;
+	}
+
 	public void start() {
 		if (brokerUrl == null || brokerUrl.isEmpty()) {
 			Logger.warn("Invalid broker URL (" + brokerUrl + "). Connection aborted");
@@ -82,7 +90,7 @@ public class JmsConnector implements Connector {
 		started.set(true);
 		if (scheduler == null) {
 			scheduler = Executors.newScheduledThreadPool(1);
-			scheduler.scheduleAtFixedRate(this::checkConnection, 15, 10, TimeUnit.MINUTES);
+			scheduler.scheduleAtFixedRate(this::checkConnection, 15, 10, MINUTES);
 		}
 	}
 
@@ -149,9 +157,15 @@ public class JmsConnector implements Connector {
 	}
 
 	@Override
-	public void sendMessage(String path, String message) {
+	public void sendQueueMessage(String path, String message) {
 		recoverEventsAndMessages();
-		if (!doSendMessage(path, message) && messageOutBox != null) messageOutBox.push(path, message);
+		if (!doSendMessageToQueue(path, message) && messageOutBox != null) messageOutBox.push(path, message);
+	}
+
+	@Override
+	public void sendTopicMessage(String path, String message) {
+		recoverEventsAndMessages();
+		if (!doSendMessageToTopic(path, message) && messageOutBox != null) messageOutBox.push(path, message);
 	}
 
 	@Override
@@ -253,7 +267,7 @@ public class JmsConnector implements Connector {
 	}
 
 	@Override
-	public void requestResponse(String path, String message, Consumer<String> onResponse) {
+	public void requestResponse(String path, javax.jms.Message message, Consumer<javax.jms.Message> onResponse) {
 		if (session == null) {
 			Logger.error("Connection lost. Invalid session");
 			return;
@@ -262,12 +276,10 @@ public class JmsConnector implements Connector {
 			QueueProducer producer = new QueueProducer(session, path);
 			TemporaryQueue temporaryQueue = session.createTemporaryQueue();
 			javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue);
-			consumer.setMessageListener(m -> acceptMessage(onResponse, consumer, (TextMessage) m));
-			final TextMessage txtMessage = session.createTextMessage();
-			txtMessage.setText(message);
-			txtMessage.setJMSReplyTo(temporaryQueue);
-			txtMessage.setJMSCorrelationID(createRandomString());
-			sendMessage(producer, txtMessage, 100);
+			consumer.setMessageListener(m -> acceptMessage(onResponse, consumer, m));
+			message.setJMSReplyTo(temporaryQueue);
+			message.setJMSCorrelationID(createRandomString());
+			sendMessage(producer, message, 100);
 			producer.close();
 		} catch (JMSException e) {
 			Logger.error(e);
@@ -275,8 +287,39 @@ public class JmsConnector implements Connector {
 	}
 
 	@Override
-	public void requestResponse(String path, String message, String responsePath) {
-		if (!doSendMessage(path, message, responsePath)) messageOutBox.push(path, message);
+	public javax.jms.Message requestResponse(String path, javax.jms.Message message) {
+		return requestResponse(path, message, -1, null);
+	}
+
+	@Override
+	public javax.jms.Message requestResponse(String path, javax.jms.Message message, long timeout, TimeUnit timeUnit) {
+		if (session == null) {
+			Logger.error("Connection lost. Invalid session");
+			return null;
+		}
+		try {
+			CompletableFuture<javax.jms.Message> future = new CompletableFuture<>();
+			requestResponse(path, message, future::complete);
+			return waitFor(future, timeout, timeUnit);
+		} catch (Exception e) {
+			Logger.error(e);
+			return null;
+		}
+	}
+
+	private static javax.jms.Message waitFor(Future<javax.jms.Message> future, long timeout, TimeUnit timeUnit) throws Exception {
+		return timeout <= 0 || timeUnit == null ? future.get() : future.get(timeout, timeUnit);
+	}
+
+	@Override
+	public void requestResponse(String path, javax.jms.Message message, String responsePath) {
+		try {
+			message.setJMSReplyTo(this.session.createQueue(responsePath));
+			message.setJMSCorrelationID(createRandomString());
+			sendMessage(producers.get(path), message);
+		} catch (JMSException e) {
+			Logger.error(e);
+		}
 	}
 
 	private Event newEvent(javax.jms.Message m, Message ev) {
@@ -337,7 +380,8 @@ public class JmsConnector implements Connector {
 	private void registerMessageConsumer(String path, String subscriberId, MessageConsumer onMessageReceived) {
 		this.messageConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
 		this.messageConsumers.get(path).add(onMessageReceived);
-		if (session != null && !this.consumers.containsKey(path)) this.consumers.put(path, durableTopicConsumer(path, subscriberId));
+		if (session != null && !this.consumers.containsKey(path))
+			this.consumers.put(path, durableTopicConsumer(path, subscriberId));
 	}
 
 	private boolean doSendEvent(String path, Event event) {
@@ -372,24 +416,22 @@ public class JmsConnector implements Connector {
 		}
 	}
 
-	private boolean doSendMessage(String path, String message) {
-		if (cannotSendMessage()) return false;
+	private boolean doSendMessageToQueue(String path, String message) {
 		try {
+			if (cannotSendMessage()) return false;
 			queueProducer(path);
-			JmsProducer producer = producers.get(path);
-			return sendMessage(producer, serialize(message));
+			return sendMessage(producers.get(path), serialize(message));
 		} catch (JMSException | IOException e) {
 			Logger.error(e);
 			return false;
 		}
 	}
 
-	private boolean doSendMessage(String path, String message, String replyTo) {
-		if (cannotSendMessage()) return false;
+	private boolean doSendMessageToTopic(String path, String message) {
 		try {
-			queueProducer(path);
-			JmsProducer producer = producers.get(path);
-			return sendMessage(producer, serialize(message, replyTo));
+			if (cannotSendMessage()) return false;
+			topicProducer(path);
+			return sendMessage(producers.get(path), serialize(message));
 		} catch (JMSException | IOException e) {
 			Logger.error(e);
 			return false;
@@ -424,9 +466,9 @@ public class JmsConnector implements Connector {
 		return result[0];
 	}
 
-	private void acceptMessage(Consumer<String> onResponse, javax.jms.MessageConsumer consumer, TextMessage m) {
+	private void acceptMessage(Consumer<javax.jms.Message> onResponse, javax.jms.MessageConsumer consumer, javax.jms.Message m) {
 		try {
-			onResponse.accept(m.getText());
+			onResponse.accept(m);
 			consumer.close();
 		} catch (JMSException e) {
 			Logger.error(e);
@@ -527,7 +569,7 @@ public class JmsConnector implements Connector {
 				while (!messageOutBox.isEmpty()) {
 					Map.Entry<String, String> message = messageOutBox.get();
 					if (message == null) continue;
-					if (doSendMessage(message.getKey(), message.getValue())) messageOutBox.pop();
+					if (doSendMessageToQueue(message.getKey(), message.getValue())) messageOutBox.pop();
 					else break;
 				}
 		}
@@ -553,7 +595,7 @@ public class JmsConnector implements Connector {
 
 	private void initConnection() {
 		try {
-			connection = BusConnector.createConnection(removeAlexandriaParameters(brokerUrl), user, password, connectionListener());
+			connection = BrokerConnector.createConnection(removeAlexandriaParameters(brokerUrl), user, password, connectionListener());
 			if (connection != null) {
 				if (clientId != null && !clientId.isEmpty()) connection.setClientID(clientId);
 				connection.start();
@@ -577,18 +619,11 @@ public class JmsConnector implements Connector {
 		}
 	}
 
-	private javax.jms.Message serialize(String payload, String replyTo) throws IOException, JMSException {
-		javax.jms.Message message = io.intino.alexandria.jms.MessageWriter.write(payload);
-		message.setJMSReplyTo(this.session.createQueue(replyTo));
-		message.setJMSCorrelationID(createRandomString());
-		return message;
-	}
-
 	private static javax.jms.Message serialize(String payload) throws IOException, JMSException {
 		return io.intino.alexandria.jms.MessageWriter.write(payload);
 	}
 
-	private static String createRandomString() {
+	public static String createRandomString() {
 		Random random = new Random(System.currentTimeMillis());
 		long randomLong = random.nextLong();
 		return Long.toHexString(randomLong);

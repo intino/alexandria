@@ -1,10 +1,11 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "4.6.0") terminal-jms
+Artifact("io.intino.alexandria", "4.9.0") terminal-jms
 	Imports
-		Compile("io.intino.alexandria", "event", "3.0.5")
-		Compile("io.intino.alexandria", "jms", "1.4.0")
-		Compile("io.intino.alexandria", "primitives", "1.0.5")
+		Compile("io.intino.alexandria", "datalake", "5.0.3")
+		Compile("io.intino.alexandria", "json", "1.2.0")
+		Compile("io.intino.alexandria", "jms", "1.4.1")
+		Compile("io.intino.alexandria", "logger4j", "1.0.1")
 		Test("junit", "junit", "4.13.2")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
