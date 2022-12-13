@@ -7,7 +7,6 @@ import io.intino.alexandria.message.Message;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQSession;
 import org.apache.activemq.command.ActiveMQDestination;
-import org.apache.activemq.command.ActiveMQTextMessage;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;
@@ -158,9 +157,15 @@ public class JmsConnector implements Connector {
 	}
 
 	@Override
-	public void sendMessage(String path, String message) {
+	public void sendQueueMessage(String path, String message) {
 		recoverEventsAndMessages();
-		if (!doSendMessage(path, message) && messageOutBox != null) messageOutBox.push(path, message);
+		if (!doSendMessageToQueue(path, message) && messageOutBox != null) messageOutBox.push(path, message);
+	}
+
+	@Override
+	public void sendTopicMessage(String path, String message) {
+		recoverEventsAndMessages();
+		if (!doSendMessageToTopic(path, message) && messageOutBox != null) messageOutBox.push(path, message);
 	}
 
 	@Override
@@ -411,12 +416,22 @@ public class JmsConnector implements Connector {
 		}
 	}
 
-	private boolean doSendMessage(String path, String message) {
-		if (cannotSendMessage()) return false;
+	private boolean doSendMessageToQueue(String path, String message) {
 		try {
+			if (cannotSendMessage()) return false;
 			queueProducer(path);
-			JmsProducer producer = producers.get(path);
-			return sendMessage(producer, serialize(message));
+			return sendMessage(producers.get(path), serialize(message));
+		} catch (JMSException | IOException e) {
+			Logger.error(e);
+			return false;
+		}
+	}
+
+	private boolean doSendMessageToTopic(String path, String message) {
+		try {
+			if (cannotSendMessage()) return false;
+			topicProducer(path);
+			return sendMessage(producers.get(path), serialize(message));
 		} catch (JMSException | IOException e) {
 			Logger.error(e);
 			return false;
@@ -554,7 +569,7 @@ public class JmsConnector implements Connector {
 				while (!messageOutBox.isEmpty()) {
 					Map.Entry<String, String> message = messageOutBox.get();
 					if (message == null) continue;
-					if (doSendMessage(message.getKey(), message.getValue())) messageOutBox.pop();
+					if (doSendMessageToQueue(message.getKey(), message.getValue())) messageOutBox.pop();
 					else break;
 				}
 		}

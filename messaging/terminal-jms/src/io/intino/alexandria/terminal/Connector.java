@@ -5,7 +5,6 @@ import io.intino.alexandria.event.Event;
 import javax.jms.Message;
 import java.time.Instant;
 import java.util.List;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -22,7 +21,14 @@ public interface Connector {
 
 	void sendEvents(String path, List<Event> events, int expirationInSeconds);
 
-	void sendMessage(String path, String message);
+	@Deprecated
+	default void sendMessage(String path, String message) {
+		sendQueueMessage(path, message);
+	}
+
+	void sendQueueMessage(String path, String message);
+
+	void sendTopicMessage(String path, String message);
 
 	void attachListener(String path, Consumer<Event> onEventReceived);
 
