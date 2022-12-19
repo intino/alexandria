@@ -54,6 +54,9 @@ public class AlexandriaScheduler {
 	}
 
 	public void stopSentinel(String name) {
-		sentinels.get(name).stop();
+		sentinels.computeIfPresent(name, (k, v) -> {
+			v.stop();
+			return null;
+		});
 	}
 }
