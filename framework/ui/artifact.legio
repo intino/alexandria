@@ -1,27 +1,27 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "4.22.9") ui-framework
-	Box("Konos", "9.7.16", targetPackage = "io.intino.alexandria")
+Artifact("io.intino.alexandria", "4.22.10") ui-framework
+	Box("Konos", "9.8.1", targetPackage = "io.intino.alexandria")
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.1.2")
 		Compile("io.intino.alexandria", "http", "1.5.9")
-		Compile("io.intino.alexandria", "json", "1.1.0")
-		Compile("io.intino.alexandria", "rest-accessor", "2.4.0")
+		Compile("io.intino.alexandria", "json", "1.2.0")
+		Compile("io.intino.alexandria", "rest-accessor", "2.4.2")
 		Compile("io.intino.alexandria", "logger4j", "1.0.1")
 		Compile("io.intino.alexandria", "zip", "1.0.4")
 		Compile("io.intino.alexandria", "driver-shiny", "1.0.1")
 		Compile("io.intino.alexandria", "driver-r", "1.0.1")
 		Compile("io.intino.alexandria", "proxy", "1.1.0")
 		Compile("io.intino.alexandria", "totp", "1.0.2")
-		Compile("com.opencsv", "opencsv", "5.6")
+		Compile("com.opencsv", "opencsv", "5.7.1")
 		Compile("org.hashids", "hashids", "1.0.3")
-		Compile("com.auth0", "java-jwt", "3.10.3") // Json Web token (Metabase)
-		Compile("org.locationtech.jts", "jts-core", "1.18.2")
+		Compile("com.auth0", "java-jwt", "4.2.1") // Json Web token (Metabase)
+		Compile("org.locationtech.jts", "jts-core", "1.19.0")
 		Compile("com.google.code.gson", "gson", "2.8.6")
-		Compile("com.sparkjava", "spark-core", "2.9.3")
+		Compile("com.sparkjava", "spark-core", "2.9.4")
 		Compile("io.intino.icod", "standalone", "1.0.2")
 
-		Web("io.intino.alexandria", "ui-framework-elements", "4.22.9")
+		Web("io.intino.alexandria", "ui-framework-elements", "4.22.10")
 
 		Test("junit", "junit", "4.13.2")
 
