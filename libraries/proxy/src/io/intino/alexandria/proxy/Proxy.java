@@ -56,7 +56,7 @@ public class Proxy {
 				textContent = textContent.replaceAll("url\\(\\.\\./", "url(" + localUrl + path + "/");
 			}
 
-			content = textContent.getBytes();
+			content = adaptContent(textContent).getBytes();
 		}
 		writeResponse(response, content);
 	}
@@ -144,6 +144,11 @@ public class Proxy {
 	private String adaptParameter(String key, String value) {
 		if (adapter == null) return value;
 		return adapter.adaptParameter(localUrl, remoteUrl, key, value);
+	}
+
+	private String adaptContent(String content) {
+		if (adapter == null) return content;
+		return adapter.adaptContent(content);
 	}
 
 	private void writeResponse(Response response, byte[] content) throws Network.NetworkException {
