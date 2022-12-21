@@ -4,4 +4,5 @@ import java.net.URL;
 
 public interface ProxyAdapter {
 	String adaptParameter(URL localUrl, URL remoteUrl, String param, String value);
+	String adaptContent(String content);
 }
