@@ -138,7 +138,9 @@ public class Proxy {
 	}
 
 	private String removeAddressPath(Request request, String path) {
-		return path.replace(request.raw().getHeader("X-Forwarded-Path"), "");
+		String header = request.raw().getHeader("X-Forwarded-Path");
+		if (header == null) return path;
+		return path.replace(header, "");
 	}
 
 	private String adaptParameter(String key, String value) {
