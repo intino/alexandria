@@ -19,7 +19,7 @@ class SignText extends AbstractSignText {
 
     sign = (content) => {
         this.requester.signing();
-        this.behavior.sign(content, this.state.format, this._successCallback.bind(this), this._failureCallback.bind(this));
+        this.behavior.sign(content, this.state.signFormat, this._successCallback.bind(this), this._failureCallback.bind(this));
     };
 
 }

@@ -37,6 +37,7 @@ public abstract class SignAction<DN extends SignActionNotifier, B extends Box> e
 	@Override
 	public void didMount() {
 		super.didMount();
+		notifier.setup(setup());
 		notifier.refreshReadonly(readonly);
 	}
 

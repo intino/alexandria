@@ -63,7 +63,6 @@ const AutoFirmaBehavior = (element) => {
         initSignatory: function () {
             AutoScript.setForceWSMode(true);
             AutoScript.cargarAppAfirma();
-            AutoScript.setServlets(this.storageUrl, this.retrieveUrl);
         },
 
         setDownloadUrl : function(downloadUrl) {
@@ -72,12 +71,10 @@ const AutoFirmaBehavior = (element) => {
 
         setStorageUrl : function(storageUrl) {
             this.storageUrl = storageUrl;
-            AutoScript.setServlets(this.storageUrl, this.retrieveUrl);
         },
 
         setRetrieveUrl : function(retrieveUrl) {
             this.retrieveUrl = retrieveUrl;
-            AutoScript.setServlets(this.storageUrl, this.retrieveUrl);
         },
 
         checkSignatoryAppInstalled: function (successCallback, failureCallback) {
@@ -103,6 +100,7 @@ const AutoFirmaBehavior = (element) => {
             var afirmaFormat = this._afirmaFormat(format);
             var afirmaParams = this._afirmaParams(format);
             this.execute(function(element) {
+                behavior._updateServlets();
                 AutoScript.sign(dataB64, element.algorithm, afirmaFormat, afirmaParams, successCallback, function(code, message, intention) {
                     behavior.checkFailureCallback(code, message, intention, failureCallback);
                 });
@@ -112,12 +110,13 @@ const AutoFirmaBehavior = (element) => {
         signDocument: function (dataB64, successCallback, failureCallback) {
             const behavior = this;
             this.execute(function(element) {
-                var format = "PAdES";
-                var params = "format=PAdES" +
+                var format = "CAdES";
+                var params = "format=CAdES" +
                         "\nmode=implicit" +
                         "\nsignatureSubFilter=ETSI.CAdES.detached" +
                         "\nreferencesDigestMethod=http://www.w3.org/2001/04/xmlenc#sha256";
 
+                behavior._updateServlets();
                 AutoScript.sign(dataB64, element.algorithm, format, params, successCallback, function(code, message, intention) {
                     behavior.checkFailureCallback(code, message, intention, failureCallback);
                 });
@@ -133,6 +132,7 @@ const AutoFirmaBehavior = (element) => {
                 if (certificateSerialNumber != null)
                     params += "\nheadless=true\nfilter=qualified:" + certificateSerialNumber;
 
+                behavior._updateServlets();
                 AutoScript.sign(dataB64, element.algorithm, format, params, successCallback, function(code, message, intention) { behavior.checkFailureCallback(code, message, intention, failureCallback); });
             });
         },
@@ -142,6 +142,7 @@ const AutoFirmaBehavior = (element) => {
             var afirmaFormat = this._afirmaFormat(format);
             var afirmaParams = this._afirmaParams(format);
             this.execute(function(element) {
+                behavior._updateServlets();
                 AutoScript.coSign(signB64, dataB64, element.algorithm, afirmaFormat, afirmaParams, successCallback, function(code, message, intention) {
                     behavior.checkFailureCallback(code, message, intention, failureCallback);
                 });
@@ -153,6 +154,7 @@ const AutoFirmaBehavior = (element) => {
             var afirmaFormat = this._afirmaFormat(format);
             var afirmaParams = this._afirmaParams(format);
             this.execute(function(element) {
+                behavior._updateServlets();
                 AutoScript.counterSign(signB64, element.algorithm, afirmaFormat, afirmaParams, successCallback, function(code, message, intention) {
                     behavior.checkFailureCallback(code, message, intention, failureCallback);
                 });
@@ -224,7 +226,12 @@ const AutoFirmaBehavior = (element) => {
             var detached = format.toLowerCase().indexOf("attached") == -1;
             return "format=" + afirmaFormat + (detached ? " Detached" : "") + "\nmode=implicit" +
                    "\nreferencesDigestMethod=http://www.w3.org/2001/04/xmlenc#sha256";
+        },
+
+        _updateServlets : function() {
+            AutoScript.setServlets(this.storageUrl, this.retrieveUrl);
         }
+
     };
 };
 
