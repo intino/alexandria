@@ -25,7 +25,7 @@ export default class SignAction extends AbstractSignAction {
 		    data: null,
 		    isDocument: false,
 		    readonly: false,
-		    format: "XAdES",
+		    signFormat: "XAdES",
 		    open: false,
 		    openDownload: false,
 		};
@@ -69,7 +69,7 @@ export default class SignAction extends AbstractSignAction {
     };
 
     format = (format) => {
-        this.setState({ format });
+        this.setState({ signFormat: format });
     };
 
     refreshReadonly = (value) => {
