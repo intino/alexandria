@@ -53,7 +53,7 @@ public class Proxy {
 			if (isCss(network)) {
 				String subUri = uri.length() > 1 ? uri.substring(1) : uri;
 				Path path = Paths.get(uri.substring(0, subUri.lastIndexOf("/") + 1)).getParent();
-				textContent = textContent.replaceAll("url\\(\\.\\./", "url(" + localUrl + path + "/");
+				textContent = textContent.replaceAll("url\\(\\.\\./", "url(" + localUrl + path.toString().replace("\\\\", "\\\\\\\\") + "/");
 			}
 
 			content = adaptContent(textContent).getBytes();
