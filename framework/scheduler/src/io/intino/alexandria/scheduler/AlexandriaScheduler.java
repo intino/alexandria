@@ -47,6 +47,10 @@ public class AlexandriaScheduler {
 		scheduler.scheduleJob(jobDetail, triggersForJob, replace);
 	}
 
+	public void unscheduleJob(Trigger trigger) throws SchedulerException {
+		scheduler.unscheduleJob(trigger.getKey());
+	}
+
 	public void watchDirectory(String name, File directory, DirectoryTask task, DirectorySentinel.Event... events) throws SchedulerException {
 		DirectorySentinel sentinel = new DirectorySentinel(directory, task, events);
 		sentinels.put(name, sentinel);
