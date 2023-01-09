@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.1.5") proxy
+Artifact("io.intino.alexandria", "1.1.6") proxy
 	Imports
 		Compile("com.sparkjava", "spark-core", "2.9.3")
 			Exclude("org.eclipse.jetty", "jetty-server")
@@ -41,7 +41,10 @@ Artifact("io.intino.alexandria", "1.1.5") proxy
 
 		Test("junit", "junit", "4.12")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources=true)
-	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
+	Distribution
+		Artifactory("intino-maven")
+			Release("https://artifactory.intino.io/artifactory/release-libraries")
+			Snapshot("https://artifactory.intino.io/artifactory/snapshots")
 
 Repository("intino-maven")
 	Release("https://artifactory.intino.io/artifactory/releases")

@@ -40,19 +40,18 @@ public class Proxy {
 		byte[] content = network.sendGetString(url);
 		fixHeaders(network, response);
 
-		content = adaptText(network, request, uri, content);
+		content = adaptText(network, request, remoteUrl, uri, content);
 		writeResponse(response, content);
 	}
 
-	private byte[] adaptText(Network network, Request request, String uri, byte[] content) {
+	private byte[] adaptText(Network network, Request request, URL remoteUrl, String uri, byte[] content) {
 		if (!isText(network)) return content;
 
 		String textContent = new String(content, StandardCharsets.UTF_8);
 
 		if (isHtml(network)) {
-			if (!request.uri().contains("iframe.html"))
-				textContent = textContent.replaceAll(" src=\"", " src=\"" + localUrl + "/");
-			textContent = textContent.replaceAll(" href=\"", " href=\"" + localUrl + "/");
+			if (!request.uri().contains("iframe.html")) textContent = adaptUrls(textContent, localUrl, remoteUrl, "src");
+			textContent = adaptUrls(textContent, localUrl, remoteUrl, "href");
 		}
 
 		if (isCss(network)) {
@@ -62,6 +61,32 @@ public class Proxy {
 		}
 
 		return adaptContent(textContent).getBytes();
+	}
+
+	private String adaptUrls(String content, URL localUrl, URL remoteUrl, String pattern) {
+		content = content.replaceAll(" " + pattern + "=\"\\/\\/", " " + pattern + "_keep=\"//");
+		content = content.replaceAll(" " + pattern + "=\"" + remoteUrl, " " + pattern + "_keep=\"" + localUrl);
+		content = content.replaceAll(" " + pattern + "=\"/", " " + pattern + "=\"" + localUrl + "/");
+		content = content.replaceAll(" " + pattern + "=\"./", " " + pattern + "=\"" + localUrl + "/./");
+		content = content.replaceAll(" " + pattern + "_keep=", " " + pattern + "=");
+		return content;
+	}
+
+	public static void main(String[] args) {
+		String localUrl = "http://localhost:9000";
+		String remoteUrl = "https://app.weathercloud.net";
+		String pattern = "src";
+		//String textContent = "<img src=\"//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js\"/>";
+		//String textContent = "<img src=\"https://cdn.weathercloud.net/images/stations/d8c6fe90ace7192857226c08460cfaef2/photo-stn-00655.png\"/>";
+		String textContent = "<img src=\"https://app.weathercloud.net/images/stations/d8c6fe90ace7192857226c08460cfaef2/photo-stn-00655.png\"/>";
+		//String textContent = "<img src=\"./images/stations/d8c6fe90ace7192857226c08460cfaef2/photo-stn-00655.png\"/>";
+		//String textContent = "<img src=\"/images/stations/d8c6fe90ace7192857226c08460cfaef2/photo-stn-00655.png\"/>";
+		textContent = textContent.replaceAll(" " + pattern + "=\"\\/\\/", " " + pattern + "_keep=\"//");
+		textContent = textContent.replaceAll(" " + pattern + "=\"" + remoteUrl, " " + pattern + "_keep=\"" + localUrl);
+		textContent = textContent.replaceAll(" " + pattern + "=\"/", " " + pattern + "=\"" + localUrl + "/");
+		textContent = textContent.replaceAll(" " + pattern + "=\"./", " " + pattern + "=\"" + localUrl + "/./");
+		textContent = textContent.replaceAll(" " + pattern + "_keep=", " " + pattern + "=");
+		System.out.println(textContent);
 	}
 
 	private boolean isText(Network network) {
@@ -102,7 +127,7 @@ public class Proxy {
 
 		fixHeaders(network, response);
 
-		content = adaptText(network, request, pathOf(request), content);
+		content = adaptText(network, request, remoteUrl, pathOf(request), content);
 		writeResponse(response, content);
 	}
 
