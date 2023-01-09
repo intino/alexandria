@@ -6,7 +6,6 @@ import spark.Response;
 
 import javax.servlet.ServletOutputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -41,24 +40,28 @@ public class Proxy {
 		byte[] content = network.sendGetString(url);
 		fixHeaders(network, response);
 
-		if (isText(network)) {
-			String textContent = new String(content, StandardCharsets.UTF_8);
-
-			if (isHtml(network)) {
-				if (!request.uri().contains("iframe.html"))
-					textContent = textContent.replaceAll(" src=\"", " src=\"" + localUrl + "/");
-				textContent = textContent.replaceAll(" href=\"", " href=\"" + localUrl + "/");
-			}
-
-			if (isCss(network)) {
-				String subUri = uri.length() > 1 ? uri.substring(1) : uri;
-				Path path = Paths.get(uri.substring(0, subUri.lastIndexOf("/") + 1)).getParent();
-				textContent = textContent.replaceAll("url\\(\\.\\./", "url(" + localUrl + path.toString().replaceAll("\\\\", "\\\\\\\\") + "/");
-			}
-
-			content = adaptContent(textContent).getBytes();
-		}
+		content = adaptText(network, request, uri, content);
 		writeResponse(response, content);
+	}
+
+	private byte[] adaptText(Network network, Request request, String uri, byte[] content) {
+		if (!isText(network)) return content;
+
+		String textContent = new String(content, StandardCharsets.UTF_8);
+
+		if (isHtml(network)) {
+			if (!request.uri().contains("iframe.html"))
+				textContent = textContent.replaceAll(" src=\"", " src=\"" + localUrl + "/");
+			textContent = textContent.replaceAll(" href=\"", " href=\"" + localUrl + "/");
+		}
+
+		if (isCss(network)) {
+			String subUri = uri.length() > 1 ? uri.substring(1) : uri;
+			Path path = Paths.get(uri.substring(0, subUri.lastIndexOf("/") + 1)).getParent();
+			textContent = textContent.replaceAll("url\\(\\.\\./", "url(" + localUrl + path.toString().replaceAll("\\\\", "\\\\\\\\") + "/");
+		}
+
+		return adaptContent(textContent).getBytes();
 	}
 
 	private boolean isText(Network network) {
@@ -98,6 +101,8 @@ public class Proxy {
 		byte[] content = network.sendPostString(url, params.toString());
 
 		fixHeaders(network, response);
+
+		content = adaptText(network, request, pathOf(request), content);
 		writeResponse(response, content);
 	}
 
