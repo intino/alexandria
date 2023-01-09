@@ -124,16 +124,6 @@ public class Proxy {
 		return new BasicNameValuePair(header, value);
 	}
 
-	/*public static void main(String[] args) throws Network.NetworkException {
-		Network network = new Network();
-		network.setAdditionalHeaders(new ArrayList<>() {{
-			add(new BasicNameValuePair("X-Requested-With", "XMLHttpRequest"));
-		}});
-		String params = "d=7470255965&WEATHERCLOUD_CSRF_TOKEN=e5b11f7eefbb0bd50dc1f6dfa0070dea03906ffbs:88:\\\"NGRmeF9WMExPNERBSG52Vm5saE9wRlBEfkw4SWhvazVf_gNZ1ybaNUXcekgVAg2eaQ5DXoTmtSU5f7LPtq9nyg==";
-		byte[] result = network.sendPostString("https://app.weathercloud.net/device/ajaxupdatedate", params);
-		System.out.println(new String(result));
-	}*/
-
 	private void fixHeaders(Network network, Response response) {
 		response.removeCookie("JSESSIONID");
 		Header[] headers = network.getLastHeaders();
