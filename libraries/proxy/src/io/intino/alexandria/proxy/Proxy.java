@@ -57,7 +57,7 @@ public class Proxy {
 		if (isCss(network)) {
 			String subUri = uri.length() > 1 ? uri.substring(1) : uri;
 			Path path = Paths.get(uri.substring(0, subUri.lastIndexOf("/") + 1)).getParent();
-			textContent = textContent.replaceAll("url\\(\\.\\./", "url(" + localUrl + path.toString().replaceAll("\\\\", "\\\\\\\\") + "/");
+			textContent = textContent.replaceAll("url\\(\\.\\./", "url(" + localUrl + path.toString().replaceAll("\\\\", "/") + "/");
 		}
 
 		return adaptContent(textContent).getBytes();
@@ -70,23 +70,6 @@ public class Proxy {
 		content = content.replaceAll(" " + pattern + "=\"./", " " + pattern + "=\"" + localUrl + "/./");
 		content = content.replaceAll(" " + pattern + "_keep=", " " + pattern + "=");
 		return content;
-	}
-
-	public static void main(String[] args) {
-		String localUrl = "http://localhost:9000";
-		String remoteUrl = "https://app.weathercloud.net";
-		String pattern = "src";
-		//String textContent = "<img src=\"//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js\"/>";
-		//String textContent = "<img src=\"https://cdn.weathercloud.net/images/stations/d8c6fe90ace7192857226c08460cfaef2/photo-stn-00655.png\"/>";
-		String textContent = "<img src=\"https://app.weathercloud.net/images/stations/d8c6fe90ace7192857226c08460cfaef2/photo-stn-00655.png\"/>";
-		//String textContent = "<img src=\"./images/stations/d8c6fe90ace7192857226c08460cfaef2/photo-stn-00655.png\"/>";
-		//String textContent = "<img src=\"/images/stations/d8c6fe90ace7192857226c08460cfaef2/photo-stn-00655.png\"/>";
-		textContent = textContent.replaceAll(" " + pattern + "=\"\\/\\/", " " + pattern + "_keep=\"//");
-		textContent = textContent.replaceAll(" " + pattern + "=\"" + remoteUrl, " " + pattern + "_keep=\"" + localUrl);
-		textContent = textContent.replaceAll(" " + pattern + "=\"/", " " + pattern + "=\"" + localUrl + "/");
-		textContent = textContent.replaceAll(" " + pattern + "=\"./", " " + pattern + "=\"" + localUrl + "/./");
-		textContent = textContent.replaceAll(" " + pattern + "_keep=", " " + pattern + "=");
-		System.out.println(textContent);
 	}
 
 	private boolean isText(Network network) {
