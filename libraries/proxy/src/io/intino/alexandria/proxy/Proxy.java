@@ -16,7 +16,6 @@ public class Proxy {
 	private URL localUrl;
 	private URL remoteUrl;
 	private ProxyAdapter adapter = null;
-	String url;
 
 	public Proxy(URL localUrl, URL remoteUrl) {
 		this.localUrl = localUrl;
@@ -35,7 +34,7 @@ public class Proxy {
 		if (query == null) query = ""; else query = "?" + query;
 
 		String uri = pathOf(request);
-		url = remoteUrl + uri + query;
+		String url = remoteUrl + uri + query;
 
 		byte[] content = network.sendGetString(url);
 		fixHeaders(network, response);
@@ -97,7 +96,7 @@ public class Proxy {
 		String query = request.queryString();
 		if (query == null) query = ""; else query = "?" + query;
 
-		url = remoteUrl + pathOf(request) + query;
+		String url = remoteUrl + pathOf(request) + query;
 
 		StringBuilder params = new StringBuilder();
 		for (String key : request.queryParams()) {
