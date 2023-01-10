@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Proxy {
 	private URL localUrl;
@@ -44,7 +45,7 @@ public class Proxy {
 		String uri = pathOf(request);
 		String url = remoteUrl + uri + query;
 
-		network.setAdditionalHeaders(new ArrayList<>(request.headers().stream().map(h -> headerOf(h, request.headers(h))).collect(Collectors.toList())));
+		network.setAdditionalHeaders(new ArrayList<>(validHeaders(request.headers()).map(h -> headerOf(h, request.headers(h))).collect(Collectors.toList())));
 		byte[] content = network.sendGetString(url);
 		fixHeaders(network, response);
 
@@ -114,7 +115,7 @@ public class Proxy {
 		}
 		if (params.length() > 0) params = new StringBuilder(params.substring(1));
 
-		network.setAdditionalHeaders(new ArrayList<>(validHeaders(request.headers()).stream().map(h -> headerOf(h, request.headers(h))).collect(Collectors.toList())));
+		network.setAdditionalHeaders(new ArrayList<>(validHeaders(request.headers()).map(h -> headerOf(h, request.headers(h))).collect(Collectors.toList())));
 		byte[] content = network.sendPostString(url, params.toString());
 
 		fixHeaders(network, response);
@@ -124,22 +125,12 @@ public class Proxy {
 	}
 
 	private static final Set<String> ValidHeaders = Set.of("X-Requested-With");
-	private List<String> validHeaders(Set<String> headers) {
-		return headers.stream().filter(ValidHeaders::contains).collect(Collectors.toList());
+	private Stream<String> validHeaders(Set<String> headers) {
+		return headers.stream().filter(ValidHeaders::contains);
 	}
 
 	private NameValuePair headerOf(String header, String value) {
 		return new BasicNameValuePair(header, value);
-	}
-
-	public static void main(String[] args) throws Network.NetworkException {
-		Network network = new Network();
-		network.setAdditionalHeaders(new ArrayList<>() {{
-			add(new BasicNameValuePair("X-Requested-With", "XMLHttpRequest"));
-		}});
-		String params = "d=7470255965&WEATHERCLOUD_CSRF_TOKEN=e5b11f7eefbb0bd50dc1f6dfa0070dea03906ffbs:88:\\\"NGRmeF9WMExPNERBSG52Vm5saE9wRlBEfkw4SWhvazVf_gNZ1ybaNUXcekgVAg2eaQ5DXoTmtSU5f7LPtq9nyg==";
-		byte[] result = network.sendPostString("https://app.weathercloud.net/device/ajaxupdatedate", params);
-		System.out.println(new String(result));
 	}
 
 	private void fixHeaders(Network network, Response response) {
