@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.1.10") proxy
+Artifact("io.intino.alexandria", "1.1.11") proxy
 	Imports
 		Compile("com.sparkjava", "spark-core", "2.9.3")
 			Exclude("org.eclipse.jetty", "jetty-server")
