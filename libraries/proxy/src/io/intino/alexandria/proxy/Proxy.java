@@ -8,15 +8,12 @@ import spark.Response;
 
 import javax.servlet.ServletOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -124,7 +121,7 @@ public class Proxy {
 		writeResponse(response, content);
 	}
 
-	private static final Set<String> ValidHeaders = Set.of("X-Requested-With");
+	private static final Set<String> ValidHeaders = Set.of("X-Requested-With", "Accept", "Accept-Encoding", "Accept-Language", "Cache-Control", "Connections", "User-Agent");
 	private Stream<String> validHeaders(Set<String> headers) {
 		return headers.stream().filter(ValidHeaders::contains);
 	}
