@@ -89,13 +89,7 @@ public class Network {
       CloseableHttpClient client = HttpClients.custom().setSSLSocketFactory(sslsf).build();
 
       HttpPost post = new HttpPost(url);
-
       addHeaders(post);
-
-      if (headers != null)
-        for (NameValuePair header : headers) {
-          post.addHeader(header.getName(), header.getValue());
-        }
 
       ArrayList<NameValuePair> parameters = convertQueryToArrayList(postParams);
       if (files == null)
@@ -156,7 +150,6 @@ public class Network {
 
       HttpGet get = new HttpGet(url);
       get.setConfig(localConfig);
-
       addHeaders(get);
 
       HttpResponse httpResp = executeSend(client, get);
@@ -327,6 +320,10 @@ public class Network {
     entity.addHeader("Connection", "keep-alive");
     entity.addHeader("Cookie", getCookiesAsString());
     entity.addHeader("referer", referer);
+    if (headers != null)
+      for (NameValuePair header : headers) {
+        entity.addHeader(header.getName(), header.getValue());
+      }
   }
 
   private Boolean isRedirect(Integer responseCode, String url) {
