@@ -29,3 +29,21 @@ def type(bearer)
 		}
 	}
 end
+
+def type(custom)
+	package $package+ValidPackage;
+
+    import java.util.Map;
+
+	public class $service+firstUpperCase+SnakeCaseToCamelCase~Authenticator {
+	 	private $box+FirstUpperCase~Box box;
+
+	 	public $service+firstUpperCase+SnakeCaseToCamelCase~Authenticator($box+FirstUpperCase~Box box) {
+			this.box = box;
+		}
+
+		public boolean isAuthenticated(Map<String, String> parameters) {
+			return false;
+		}
+	}
+end

@@ -30,6 +30,7 @@ Concept:Named Service
 					var string[] certificate
 			Aspect Basic
 			Aspect Bearer
+			Aspect Custom
 		Concept:{0..1} Info
 			var string title
 			var string version
