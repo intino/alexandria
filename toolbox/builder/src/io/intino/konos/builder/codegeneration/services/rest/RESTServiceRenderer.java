@@ -138,9 +138,16 @@ public class RESTServiceRenderer extends Renderer {
 
 	private void createAuthenticatorClass(Service.REST.Authentication authentication, String service) {
 		if (javaFile(src(), service + "Authenticator").exists()) return;
-		FrameBuilder builder = new FrameBuilder(authentication.isBasic() ? "basic" : "bearer").add("box", boxName()).add("service", service).add("package", packageName());
+		FrameBuilder builder = new FrameBuilder(typeOf(authentication)).add("box", boxName()).add("service", service).add("package", packageName());
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(authentication), javaFile(src(), service + "Authenticator").getAbsolutePath()));
 		Commons.writeFrame(src(), service + "Authenticator", authenticatorTemplate().render(builder.toFrame()));
+	}
+
+	private String typeOf(Service.REST.Authentication authentication) {
+		if (authentication.isBasic()) return "basic";
+		if (authentication.isBearer()) return "bearer";
+		if (authentication.isCustom()) return "custom";
+		return "withCertificate";
 	}
 
 	private Frame[] notificationsFrame(List<Service.REST.Notification> list) {

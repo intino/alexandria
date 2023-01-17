@@ -363,11 +363,12 @@ class Grid extends AbstractGrid {
     addRows = (newRows) => {
         const columns = this.state.columns;
         let rows = this.state.rows;
+        let offset = rows.length;
         for (let i=0; i<newRows.length; i++) {
             let row = {};
             for (let j=0; j<columns.length; j++) {
                 const address = newRows[i].cells[j].address != null ? newRows[i].cells[j].address : null;
-                row[columns[j].name] = this.rowInfo(i, newRows[i].cells[j].value, address);
+                row[columns[j].name] = this.rowInfo(i+offset, newRows[i].cells[j].value, address);
             }
             rows.push(row);
         }

@@ -49,6 +49,10 @@ def type(basic) trigger(authenticate)
 	.before(manager -> { if (manager.fromHeader("Authorization") == null || !authenticator.isAuthenticated(manager.fromHeader("Authorization").replace("Basic ", ""))) throw new io.intino.alexandria.exceptions.Unauthorized("Credential not found");})
 end
 
+def type(custom) trigger(authenticate)
+	.before(manager -> { if (!authenticator.isAuthenticated(manager.request().params())) throw new io.intino.alexandria.exceptions.Unauthorized("Credential not found");})
+end
+
 def type(path) trigger(format)
 	"$name"[$custom...[]]
 end
