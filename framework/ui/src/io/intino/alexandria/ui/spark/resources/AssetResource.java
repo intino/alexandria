@@ -2,6 +2,7 @@ package io.intino.alexandria.ui.spark.resources;
 
 import io.intino.alexandria.exceptions.AlexandriaException;
 import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
+import io.intino.alexandria.ui.resources.Asset;
 import io.intino.alexandria.ui.spark.AssetLoader;
 import io.intino.alexandria.ui.spark.UISparkManager;
 import io.intino.alexandria.ui.spark.resources.exceptions.AssetNotFoundException;
@@ -62,7 +63,7 @@ public class AssetResource extends Resource {
 	}
 
 	private String assetName() {
-		return new String(Base64.getDecoder().decode(URLDecoder.decode(manager.fromPath("name"), StandardCharsets.UTF_8)));
+		return Asset.decode(manager.fromPath("name"));
 	}
 
 	private String assetContentTypeOf() {
