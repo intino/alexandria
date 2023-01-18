@@ -19,6 +19,9 @@ const styles = theme => ({
         fontSize: "10pt",
         color: "#0000008a",
         marginBottom: "5px",
+    },
+    controlLabel : {
+        alignItems: 'flex-start',
     }
 });
 
@@ -63,10 +66,11 @@ class SelectorCheckBox extends AbstractSelectorCheckBox {
 	};
 
 	renderChild = (child, key) => {
+		const { classes } = this.props;
 		const className = child.props.className;
 		const selected = this.isInSelection(this._name(child));
 		if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
-		return (<FormControlLabel value={this._name(child)} control={<Checkbox checked={selected}>{child}</Checkbox>} label={this._label(child)} onChange={this.handleChange.bind(this, this._name(child))}/>);
+		return (<FormControlLabel className={classes.controlLabel} labelPlacement="end" value={this._name(child)} control={<Checkbox style={{padding:'0',margin:'0 10px 10px'}} checked={selected}>{child}</Checkbox>} label={this._label(child)} onChange={this.handleChange.bind(this, this._name(child))}/>);
 	};
 
 	_name = (item) => {
