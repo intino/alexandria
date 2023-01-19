@@ -50,7 +50,7 @@ def type(basic) trigger(authenticate)
 end
 
 def type(custom) trigger(authenticate)
-	.before(manager -> { if (!authenticator.isAuthenticated(manager.request().params())) throw new io.intino.alexandria.exceptions.Unauthorized("Credential not found");})
+	.before(manager -> { if (!authenticator.isAuthenticated(manager.request().queryParams().stream().collect(toMap(p -> p, p -> manager.request().queryParams(p))))) throw new io.intino.alexandria.exceptions.Unauthorized("Credential not found");})
 end
 
 def type(path) trigger(format)
