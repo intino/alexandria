@@ -11,16 +11,17 @@ const styles = theme => ({
 });
 
 class Image extends AbstractImage {
-	state = {
-		value : this.props.value,
-		width : this.props.width,
-		height : this.props.height
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new ImageNotifier(this);
 		this.requester = new ImageRequester(this);
+        this.state = {
+            ...this.state,
+            value : this.props.value,
+            width : this.props.width,
+            height : this.props.height
+        };
 	};
 
 	componentDidMount() {
