@@ -214,6 +214,9 @@ def type(list) trigger(parameterType)
 	com.google.gson.reflect.TypeToken.getParameterized(java.util.ArrayList.class, $value.class).getType()
 end
 
+def type(authenticationValidator & Custom) trigger(put)
+end
+
 def type(authenticationValidator) trigger(put)
 	context.put("Authorization", manager.fromHeader("Authorization").replace("$type ", ""));
 end
