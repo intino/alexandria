@@ -3,6 +3,8 @@ dsl Konos
 use Schemas
 
 Component template
+	Notification enableCloseManager
+	Notification canClose as Bool
 
 Component block
 	Notification refreshSpacing as Text

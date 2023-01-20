@@ -6,6 +6,7 @@ import io.intino.alexandria.ui.displays.notifiers.TemplateNotifier;
 
 public class Template<DN extends TemplateNotifier, Item, B extends Box> extends Component<DN, B> {
     private Item item;
+    private boolean closeManagerEnabled = false;
 
     public Template(B box) {
         super(box);
@@ -24,8 +25,20 @@ public class Template<DN extends TemplateNotifier, Item, B extends Box> extends 
         return item;
     }
 
+    public void canClose(boolean value) {
+        enableCloseManager();
+        notifier.canClose(value);
+    }
+
     protected Template<DN, Item, B> _item(Item item) {
         this.item = item;
         return this;
     }
+
+    private void enableCloseManager() {
+        if (closeManagerEnabled) return;
+        notifier.enableCloseManager();
+        closeManagerEnabled = true;
+    }
+
 }

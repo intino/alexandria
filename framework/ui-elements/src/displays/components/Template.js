@@ -8,8 +8,23 @@ export default class Template extends AbstractTemplate {
 
 	constructor(props) {
 		super(props);
-		// this.notifier = new TemplateNotifier(this);
-		// this.requester = new TemplateRequester(this);
+		this.state = {
+		    ...this.state,
+		    canClose : true
+		};
+	};
+
+	enableCloseManager = () => {
+	    const template = this;
+	    window.addEventListener("beforeunload", function(event) {
+	        if (template.state.canClose) return;
+            event.returnValue = true;
+            return true;
+        });
+	};
+
+	canClose = (value) => {
+	    this.setState({ canClose : value });
 	};
 
 }
