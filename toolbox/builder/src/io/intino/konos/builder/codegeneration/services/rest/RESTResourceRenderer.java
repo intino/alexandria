@@ -107,10 +107,18 @@ public class RESTResourceRenderer extends Renderer {
 	private void authenticated(Service.REST service, FrameBuilder builder) {
 		if (service.authentication() != null) {
 			FrameBuilder b = new FrameBuilder("authenticationValidator");
-			if (service.authentication().isBasic()) b.add("type", "Basic");
-			else b.add("type", "Bearer");
+			String type = typeOf(service.authentication());
+			b.add(type);
+			if (type.equals("Basic") || type.equals("Bearer")) b.add("type", type);
 			builder.add("authenticationValidator", b.toFrame());
 		}
+	}
+
+	private String typeOf(Service.REST.Authentication authentication) {
+		if (authentication.isBasic()) return "Basic";
+		if (authentication.isBearer()) return "Bearer";
+		if (authentication.isCustom()) return "Custom";
+		return "withCertificate";
 	}
 
 	private void addCommons(String name, FrameBuilder builder) {
