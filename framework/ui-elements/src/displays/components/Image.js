@@ -58,7 +58,7 @@ class Image extends AbstractImage {
 
 	_width = () => {
 		if (this.props.width == null) return null;
-		if (this.props.mobileReduceFactor === 0) return this.props.width;
+		if (this.props.mobileReduceFactor == null || this.props.mobileReduceFactor === 0) return this.props.width;
 		let width = this._number(this.props.width);
 		if (BrowserUtil.isMobile()) width = width*(this.props.mobileReduceFactor/100);
 		return width + (this._isAbsolute(this.props.width) ? "px" : "%");
@@ -66,7 +66,7 @@ class Image extends AbstractImage {
 
 	_height = () => {
 		if (this.props.height == null) return null;
-		if (this.props.mobileReduceFactor === 0) return this.props.height;
+		if (this.props.mobileReduceFactor == null || this.props.mobileReduceFactor === 0) return this.props.height;
 		let height = this._number(this.props.height);
 		if (BrowserUtil.isMobile()) height = height*(this.props.mobileReduceFactor/100);
 		return height + (this._isAbsolute(this.props.height) ? "px" : "%");
