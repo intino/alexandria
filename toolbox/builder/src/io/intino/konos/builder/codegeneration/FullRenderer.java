@@ -4,6 +4,8 @@ import io.intino.konos.builder.codegeneration.accessor.PomGenerator;
 import io.intino.konos.builder.codegeneration.accessor.analytic.AnalyticBuilderRenderer;
 import io.intino.konos.builder.codegeneration.accessor.messaging.MessagingAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer;
+import io.intino.konos.builder.codegeneration.accessor.ui.android.AndroidSchemaWriter;
+import io.intino.konos.builder.codegeneration.accessor.ui.web.ServiceListRenderer;
 import io.intino.konos.builder.codegeneration.analytic.AnalyticRenderer;
 import io.intino.konos.builder.codegeneration.bpm.BpmRenderer;
 import io.intino.konos.builder.codegeneration.datahub.adapter.AdapterRenderer;
@@ -27,6 +29,7 @@ import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
 import io.intino.konos.builder.codegeneration.services.soap.SoapOperationRenderer;
 import io.intino.konos.builder.codegeneration.services.soap.SoapServiceRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
@@ -102,6 +105,7 @@ public class FullRenderer {
 			new AnalyticBuilderRenderer(context, graph, new File(dir, "src"), new File(analyticBasePath(), "res")).render();
 			pomGenerator.generate("analytic", dir);
 		}
+		androidClient();
 	}
 
 	private File analyticBasePath() {
@@ -180,17 +184,25 @@ public class FullRenderer {
 
 	private void ui() throws KonosException {
 		if (context.mode() == Mode.Normal) uiServer();
-		ComponentRenderer.clearCache();
-		uiClient();
-		ComponentRenderer.clearCache();
+		webClient();
 	}
 
 	private void uiServer() throws KonosException {
 		new io.intino.konos.builder.codegeneration.services.ui.ServiceListRenderer(context, graph).execute();
 	}
 
-	private void uiClient() throws KonosException {
-		new io.intino.konos.builder.codegeneration.accessor.ui.ServiceListRenderer(context, graph).execute();
+	private void webClient() throws KonosException {
+		ComponentRenderer.clearCache();
+		new ServiceListRenderer(context, graph).execute();
+		ComponentRenderer.clearCache();
+	}
+
+	private void androidClient() throws KonosException {
+		ComponentRenderer.clearCache();
+		new io.intino.konos.builder.codegeneration.accessor.ui.android.ServiceListRenderer(context, graph, service -> context.configuration().genDirectory()).execute();
+		AndroidSchemaWriter schemaWriter = new AndroidSchemaWriter(context);
+		new SchemaListRenderer(context, graph, schemaWriter.destination(), schemaWriter.packageName(), schemaWriter).execute();
+		ComponentRenderer.clearCache();
 	}
 
 	private void box() throws KonosException {

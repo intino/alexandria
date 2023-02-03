@@ -5,7 +5,7 @@ import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Exception;
@@ -28,7 +28,7 @@ public abstract class ActionRenderer extends Renderer {
 	public enum ContextType {Default, Spark}
 
 	public ActionRenderer(CompilationContext context, String... types) {
-		super(context, Target.Owner);
+		super(context);
 		this.types = types;
 	}
 
@@ -37,7 +37,11 @@ public abstract class ActionRenderer extends Renderer {
 	}
 
 	protected boolean alreadyRendered(File destiny, String action) {
-		return javaFile(destinationPackage(destiny), firstUpperCase(snakeCaseToCamelCase(action)) + suffix()).exists();
+		return alreadyRendered(destiny, action, Target.Server);
+	}
+
+	protected boolean alreadyRendered(File destiny, String action, Target target) {
+		return javaFile(destinationPackage(destiny), firstUpperCase(snakeCaseToCamelCase(action)) + suffix(target)).exists();
 	}
 
 	protected File destinationPackage(File destiny) {
@@ -49,7 +53,7 @@ public abstract class ActionRenderer extends Renderer {
 		if (!alreadyRendered(destiny, name)) {
 			createNewClass(name, serviceName, response, parameters, exceptions, schemas);
 		} else {
-			File newDestination = javaFile(destinationPackage(destiny), firstUpperCase(snakeCaseToCamelCase(name)) + suffix());
+			File newDestination = javaFile(destinationPackage(destiny), firstUpperCase(snakeCaseToCamelCase(name)) + suffix(Target.Server));
 			new ActionUpdater(context, newDestination, packageName(), parameters, exceptions, response).update();
 		}
 	}
@@ -59,7 +63,7 @@ public abstract class ActionRenderer extends Renderer {
 		if (!alreadyRendered(destiny, name))
 			createNewClass(name, serviceName, response, toMap(parameters), exceptions, schemas);
 		else {
-			File newDestination = javaFile(destinationPackage(destiny), firstUpperCase(snakeCaseToCamelCase(name)) + suffix());
+			File newDestination = javaFile(destinationPackage(destiny), firstUpperCase(snakeCaseToCamelCase(name)) + suffix(Target.Server));
 			new ActionUpdater(context, newDestination, packageName(), toMap(parameters), exceptions, response).update();
 		}
 	}
@@ -68,7 +72,7 @@ public abstract class ActionRenderer extends Renderer {
 		return parameters.stream().collect(Collectors.toMap(Layer::name$, p -> p));
 	}
 
-	protected String suffix() {
+	protected String suffix(Target target) {
 		return "Action";
 	}
 
@@ -90,8 +94,8 @@ public abstract class ActionRenderer extends Renderer {
 		if (!schemas.isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName).toFrame());
 		File packageFolder = destinationPackage(destination());
-		context.compiledFiles().add(new OutputItem(packageFolder.getAbsolutePath(), javaFile(packageFolder, firstUpperCase(snakeCaseToCamelCase(name)) + suffix()).getAbsolutePath()));
-		Commons.writeFrame(packageFolder, firstUpperCase(snakeCaseToCamelCase(name)) + suffix(), template().render(builder.toFrame()));
+		context.compiledFiles().add(new OutputItem(packageFolder.getAbsolutePath(), javaFile(packageFolder, firstUpperCase(snakeCaseToCamelCase(name)) + suffix(Target.Server)).getAbsolutePath()));
+		Commons.writeFrame(packageFolder, firstUpperCase(snakeCaseToCamelCase(name)) + suffix(Target.Server), template().render(builder.toFrame()));
 	}
 
 	protected FrameBuilder contextPropertyFrame() {
@@ -121,6 +125,6 @@ public abstract class ActionRenderer extends Renderer {
 	}
 
 	private File destination() {
-		return src();
+		return src(Target.Server);
 	}
 }

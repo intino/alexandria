@@ -4,10 +4,10 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.bpm.parser.BpmnParser;
 import io.intino.konos.builder.codegeneration.bpm.parser.Link;
 import io.intino.konos.builder.codegeneration.bpm.parser.State;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
@@ -42,12 +42,12 @@ public class BpmRenderer extends Renderer {
 	private final List<String> stateServices = new ArrayList<>();
 
 	public BpmRenderer(CompilationContext compilationContext, KonosGraph graph) {
-		super(compilationContext, Target.Owner);
+		super(compilationContext);
 		this.compilationContext = compilationContext;
 		this.workflow = graph.workflow();
 		this.processes = workflow != null ? graph.workflow().processList() : Collections.emptyList();
-		this.src = new File(compilationContext.src(Target.Owner), "bpm");
-		this.gen = new File(compilationContext.gen(Target.Owner), "bpm");
+		this.src = new File(compilationContext.src(Target.Server), "bpm");
+		this.gen = new File(compilationContext.gen(Target.Server), "bpm");
 		this.graph = graph;
 	}
 
@@ -96,7 +96,7 @@ public class BpmRenderer extends Renderer {
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(process), javaFile(gen, "Abstract" + firstUpperCase(process.name$())).getAbsolutePath()));
 		if (!alreadyRendered(src, process.name$())) {
 			writeFrame(src, process.name$(), customize(new ProcessTemplate()).render(builder.add("src").toFrame()));
-			context.compiledFiles().add(new OutputItem(context.sourceFileOf(process), javaFile(src(), process.name$()).getAbsolutePath()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(process), javaFile(src(Target.Server), process.name$()).getAbsolutePath()));
 		}
 	}
 

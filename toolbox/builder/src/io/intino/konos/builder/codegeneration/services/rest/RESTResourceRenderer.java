@@ -7,9 +7,9 @@ import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.RESTNotificationActionRenderer;
 import io.intino.konos.builder.codegeneration.action.RESTResourceActionRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
@@ -34,7 +34,7 @@ public class RESTResourceRenderer extends Renderer {
 	private final List<Service.REST> services;
 
 	public RESTResourceRenderer(CompilationContext compilationContext, KonosGraph graph) {
-		super(compilationContext, Target.Owner);
+		super(compilationContext);
 		this.services = graph.serviceList(Service::isREST).map(Service::asREST).collect(Collectors.toList());
 	}
 
@@ -52,7 +52,7 @@ public class RESTResourceRenderer extends Renderer {
 		for (Operation operation : resource.operationList()) {
 			Frame frame = frameOf(resource, operation);
 			final String className = snakeCaseToCamelCase(operation.getClass().getSimpleName() + "_" + resource.name$()) + "Resource";
-			File resourcesPackage = new File(gen(), RESOURCES_PACKAGE);
+			File resourcesPackage = new File(gen(Target.Server), RESOURCES_PACKAGE);
 			Commons.writeFrame(resourcesPackage, className, template().render(frame));
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(resourcesPackage, className).getAbsolutePath()));
 			createCorrespondingAction(operation);
@@ -67,7 +67,7 @@ public class RESTResourceRenderer extends Renderer {
 		builder.add("parameter", notificationParameters(notification.parameterList()));
 		builder.add("returnType", notificationResponse());
 		if (service.authentication() != null) builder.add("throws", "Unauthorized");
-		File genNotifications = new File(gen(), NOTIFICATIONS_PACKAGE);
+		File genNotifications = new File(gen(Target.Server), NOTIFICATIONS_PACKAGE);
 		Commons.writeFrame(genNotifications, className, template().render(builder.toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(genNotifications, className).getAbsolutePath()));
 

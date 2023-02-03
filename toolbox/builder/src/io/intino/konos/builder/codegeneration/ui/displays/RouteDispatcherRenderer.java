@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.ui.displays;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.codegeneration.services.ui.templates.RouteDispatcherTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.context.CompilationContext;
@@ -20,23 +20,25 @@ import static java.util.stream.Collectors.toList;
 
 public class RouteDispatcherRenderer extends UIRenderer {
 	private final Service.UI service;
+	private final Target target;
 
 	public RouteDispatcherRenderer(CompilationContext compilationContext, Service.UI service, Target target) {
-		super(compilationContext, target);
+		super(compilationContext);
 		this.service = service;
+		this.target = target;
 	}
 
 	@Override
 	protected void render() {
 		FrameBuilder builder = buildFrame();
-		createIfNotExists(displaysFolder(src(), target));
-		createIfNotExists(displaysFolder(gen(), target));
-		File routeDispatcher = fileOf(displaysFolder(src(), target), "RouteDispatcher", target);
+		createIfNotExists(displaysFolder(src(target), target));
+		createIfNotExists(displaysFolder(gen(target), target));
+		File routeDispatcher = fileOf(displaysFolder(src(target), target), "RouteDispatcher", target);
 		if (!routeDispatcher.exists())
 			Commons.write(routeDispatcher.toPath(), setup(new RouteDispatcherTemplate()).render(builder.toFrame()));
-		Commons.write(fileOf(displaysFolder(gen(), target), "AbstractRouteDispatcher", target).toPath(), setup(new RouteDispatcherTemplate()).render(builder.add("gen").toFrame()));
-		if (target.equals(Target.Owner))
-			context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), fileOf(displaysFolder(gen(), target), "AbstractRouteDispatcher", target).getAbsolutePath()));
+		Commons.write(fileOf(displaysFolder(gen(target), target), "AbstractRouteDispatcher", target).toPath(), setup(new RouteDispatcherTemplate()).render(builder.add("gen").toFrame()));
+		if (target.equals(Target.Server))
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), fileOf(displaysFolder(gen(target), target), "AbstractRouteDispatcher", target).getAbsolutePath()));
 	}
 
 	@Override

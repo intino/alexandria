@@ -125,4 +125,4 @@ Template(layout=Horizontal, modelClass="io.intino.alexandria.schemas.Parameter")
 	Text(format=h6) comma
 
 Display eventsDisplay
-	Notification refresh as Object(Method) List
+	Notification refresh //as Object(Method) List

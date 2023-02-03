@@ -1,8 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.data;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 
@@ -10,8 +9,8 @@ import static io.intino.konos.model.DataComponents.Date;
 
 public class DateRenderer extends ComponentRenderer<Date> {
 
-	public DateRenderer(CompilationContext compilationContext, Date component, TemplateProvider provider, Target target) {
-		super(compilationContext, component, provider, target);
+	public DateRenderer(CompilationContext compilationContext, Date component, RendererWriter provider) {
+		super(compilationContext, component, provider);
 	}
 
 	@Override

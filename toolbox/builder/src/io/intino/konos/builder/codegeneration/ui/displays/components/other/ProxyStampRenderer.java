@@ -2,8 +2,7 @@ package io.intino.konos.builder.codegeneration.ui.displays.components.other;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.OtherComponents.ProxyStamp;
@@ -11,8 +10,8 @@ import io.intino.konos.model.Service;
 
 public class ProxyStampRenderer extends ComponentRenderer<ProxyStamp> {
 
-	public ProxyStampRenderer(CompilationContext compilationContext, ProxyStamp component, TemplateProvider provider, Target target) {
-		super(compilationContext, component, provider, target);
+	public ProxyStampRenderer(CompilationContext compilationContext, ProxyStamp component, RendererWriter provider) {
+		super(compilationContext, component, provider);
 	}
 
 	@Override

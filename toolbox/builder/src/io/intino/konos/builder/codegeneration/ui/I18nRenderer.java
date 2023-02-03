@@ -4,8 +4,8 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.accessor.ui.templates.I18nTemplate;
+import io.intino.konos.builder.codegeneration.accessor.ui.web.templates.I18nTemplate;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Service;
@@ -18,18 +18,20 @@ import static io.intino.konos.builder.helpers.CodeGenerationHelper.folder;
 
 public class I18nRenderer extends UIRenderer {
 	private final Service.UI service;
+	private final Target target;
 
 	public I18nRenderer(CompilationContext compilationContext, Service.UI service, Target target) {
-		super(compilationContext, target);
+		super(compilationContext);
 		this.service = service;
+		this.target = target;
 	}
 
 	@Override
 	public void render() {
 		FrameBuilder builder = buildFrame();
-		Commons.write(fileOf(folder(gen(), "/", target), "I18n", target).toPath(), setup(template()).render(builder.toFrame()));
-		if (target.equals(Target.Owner))
-			context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), fileOf(folder(gen(), "/", target), "I18n", target).getAbsolutePath()));
+		Commons.write(fileOf(folder(gen(target), "/", target), "I18n", target).toPath(), setup(template()).render(builder.toFrame()));
+		if (target.equals(Target.Server))
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), fileOf(folder(gen(target), "/", target), "I18n", target).getAbsolutePath()));
 	}
 
 	@Override
@@ -77,7 +79,7 @@ public class I18nRenderer extends UIRenderer {
 	}
 
 	private Template template() {
-		return target == Target.Accessor ? new I18nTemplate() : new io.intino.konos.builder.codegeneration.services.ui.templates.I18nTemplate();
+		return target == Target.Server ? new io.intino.konos.builder.codegeneration.services.ui.templates.I18nTemplate() : new I18nTemplate();
 	}
 
 }

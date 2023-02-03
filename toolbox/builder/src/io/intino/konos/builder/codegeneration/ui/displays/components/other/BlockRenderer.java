@@ -1,8 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.other;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.SizedRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.Block;
@@ -12,8 +11,8 @@ import io.intino.konos.model.rules.Spacing;
 
 public class BlockRenderer extends SizedRenderer<Block> {
 
-	public BlockRenderer(CompilationContext compilationContext, Block component, TemplateProvider provider, Target target) {
-		super(compilationContext, component, provider, target);
+	public BlockRenderer(CompilationContext compilationContext, Block component, RendererWriter provider) {
+		super(compilationContext, component, provider);
 	}
 
 	@Override

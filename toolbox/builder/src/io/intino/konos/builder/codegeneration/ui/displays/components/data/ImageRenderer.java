@@ -1,16 +1,15 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.data;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.SizedRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.DataComponents.Image;
 
 public class ImageRenderer extends SizedRenderer<Image> {
 
-	public ImageRenderer(CompilationContext compilationContext, Image component, TemplateProvider provider, Target target) {
-		super(compilationContext, component, provider, target);
+	public ImageRenderer(CompilationContext compilationContext, Image component, RendererWriter provider) {
+		super(compilationContext, component, provider);
 	}
 
 	@Override

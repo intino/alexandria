@@ -1,6 +1,6 @@
 package io.intino.konos.builder.codegeneration.ui.resource;
 
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
@@ -14,9 +14,11 @@ import java.util.stream.Collectors;
 public class ResourceListRenderer extends UIRenderer {
 	protected final List<Service.UI.Resource> resourceList;
 	protected final List<Display.Accessible> accessibleDisplays;
+	private final Target target;
 
 	public ResourceListRenderer(CompilationContext compilationContext, KonosGraph graph, Target target) {
-		super(compilationContext, target);
+		super(compilationContext);
+		this.target = target;
 		this.resourceList = graph.core$().find(Service.UI.Resource.class);
 		this.accessibleDisplays = graph.displayList(Display::isAccessible).map(Display::asAccessible).collect(Collectors.toList());
 	}

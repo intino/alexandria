@@ -1,16 +1,15 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.CatalogComponents;
 import io.intino.konos.model.OtherComponents.Selector;
 
 public class SelectorRenderer extends ComponentRenderer<Selector> {
 
-	public SelectorRenderer(CompilationContext compilationContext, Selector component, TemplateProvider provider, Target target) {
-		super(compilationContext, component, provider, target);
+	public SelectorRenderer(CompilationContext compilationContext, Selector component, RendererWriter provider) {
+		super(compilationContext, component, provider);
 	}
 
 	@Override

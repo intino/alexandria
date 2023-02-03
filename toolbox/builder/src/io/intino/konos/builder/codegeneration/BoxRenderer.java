@@ -5,6 +5,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.KonosGraph;
@@ -23,7 +24,7 @@ public class BoxRenderer extends Renderer {
 	private final boolean hasModel;
 
 	BoxRenderer(CompilationContext context, KonosGraph graph, boolean hasModel) {
-		super(context, Target.Owner);
+		super(context);
 		this.graph = graph;
 		this.hasModel = hasModel;
 	}
@@ -32,12 +33,12 @@ public class BoxRenderer extends Renderer {
 	public void render() {
 		if (configuration() == null) return;
 		final String name = context.boxName();
-		if (Commons.javaFile(src(), snakeCaseToCamelCase(name) + "Box").exists()) return;
+		if (Commons.javaFile(src(Target.Server), snakeCaseToCamelCase(name) + "Box").exists()) return;
 		FrameBuilder builder = new FrameBuilder("Box").add("package", packageName()).add("name", name);
 		if (hasModel) builder.add("tara", fillTara());
 		if (!graph.uiServiceList().isEmpty()) builder.add("hasUi", new FrameBuilder().add("package", packageName()));
-		context.compiledFiles().add(new OutputItem(src().getAbsolutePath(), javaFile(src(), snakeCaseToCamelCase(name) + "Box").getAbsolutePath()));
-		Commons.writeFrame(src(), snakeCaseToCamelCase(name) + "Box", template().render(builder.toFrame()));
+		context.compiledFiles().add(new OutputItem(src(Target.Server).getAbsolutePath(), javaFile(src(Target.Server), snakeCaseToCamelCase(name) + "Box").getAbsolutePath()));
+		Commons.writeFrame(src(Target.Server), snakeCaseToCamelCase(name) + "Box", template().render(builder.toFrame()));
 	}
 
 	private Frame fillTara() {

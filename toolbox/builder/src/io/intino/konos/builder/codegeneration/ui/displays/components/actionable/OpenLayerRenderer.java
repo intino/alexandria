@@ -1,8 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.actionable;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ActionableRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.Addressable;
@@ -10,8 +9,8 @@ import io.intino.konos.model.InteractionComponents;
 
 public class OpenLayerRenderer extends ActionableRenderer {
 
-	public OpenLayerRenderer(CompilationContext context, InteractionComponents.Actionable component, TemplateProvider provider, Target target) {
-		super(context, component, provider, target);
+	public OpenLayerRenderer(CompilationContext context, InteractionComponents.Actionable component, RendererWriter provider) {
+		super(context, component, provider);
 	}
 
 	@Override

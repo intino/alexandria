@@ -4,7 +4,6 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
@@ -25,7 +24,7 @@ public class MessagingAccessorRenderer extends Renderer {
 	private File destination;
 
 	public MessagingAccessorRenderer(CompilationContext compilationContext, Service.Messaging application, File destination) {
-		super(compilationContext, Target.Owner);
+		super(compilationContext);
 		this.service = application;
 		this.destination = destination;
 	}

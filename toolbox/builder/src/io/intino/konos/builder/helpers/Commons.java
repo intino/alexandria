@@ -1,7 +1,9 @@
 package io.intino.konos.builder.helpers;
 
+import cottons.utils.StringHelper;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.model.Data;
 import io.intino.konos.model.Redirect;
 import io.intino.konos.model.Response;
@@ -24,6 +26,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static io.intino.konos.builder.codegeneration.Formatters.firstLowerCase;
 import static java.util.stream.Collectors.toList;
 
 public class Commons {
@@ -64,8 +67,16 @@ public class Commons {
 		}
 	}
 
+	public static File xmlFile(File packageFolder, String name) {
+		return new File(packageFolder, StringHelper.camelCaseToSnakeCase(name).replace("-", "_") + ".xml");
+	}
+
 	public static File javaFile(File packageFolder, String name) {
 		return preparedFile(packageFolder, firstUpperCase(name), "java");
+	}
+
+	public static File kotlinFile(File packageFolder, String name) {
+		return preparedFile(packageFolder, firstUpperCase(name), "kt");
 	}
 
 	public static String javaFilename(String name) {

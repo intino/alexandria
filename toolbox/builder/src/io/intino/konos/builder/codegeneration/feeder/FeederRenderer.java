@@ -3,7 +3,7 @@ package io.intino.konos.builder.codegeneration.feeder;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Feeder;
@@ -39,9 +39,9 @@ public class FeederRenderer {
 			builder.add("eventType", feeder.tanks().toArray(new String[0]));
 			final String feederClassName = firstUpperCase(feeder.name$());
 			context.classes().put(feeder.getClass().getSimpleName() + "#" + feeder.name$(), "feeders." + feederClassName);
-			writeFrame(new File(context.gen(Target.Owner), "feeders"), "Abstract" + feederClassName, customize(new AbstractFeederTemplate()).render(builder.toFrame()));
-			if (!alreadyRendered(new File(context.src(Target.Owner), "feeders"), feederClassName)) {
-				File packageFolder = new File(context.src(Target.Owner), "feeders");
+			writeFrame(new File(context.gen(Target.Server), "feeders"), "Abstract" + feederClassName, customize(new AbstractFeederTemplate()).render(builder.toFrame()));
+			if (!alreadyRendered(new File(context.src(Target.Server), "feeders"), feederClassName)) {
+				File packageFolder = new File(context.src(Target.Server), "feeders");
 				context.compiledFiles().add(new OutputItem(context.sourceFileOf(feeder), javaFile(packageFolder, firstUpperCase(feederClassName)).getAbsolutePath()));
 				writeFrame(packageFolder, feederClassName, customize(new FeederTemplate()).render(builder.toFrame()));
 			}

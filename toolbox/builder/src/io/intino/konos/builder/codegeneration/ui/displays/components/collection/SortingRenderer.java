@@ -1,15 +1,14 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.collection;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.CatalogComponents.Sorting;
 
 public class SortingRenderer extends BindingCollectionRenderer<Sorting> {
 
-	public SortingRenderer(CompilationContext compilationContext, Sorting component, TemplateProvider provider, Target target) {
-		super(compilationContext, component, provider, target);
+	public SortingRenderer(CompilationContext compilationContext, Sorting component, RendererWriter provider) {
+		super(compilationContext, component, provider);
 	}
 
 	@Override

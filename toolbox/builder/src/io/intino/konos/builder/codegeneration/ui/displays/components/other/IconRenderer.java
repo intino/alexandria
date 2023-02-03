@@ -1,8 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.other;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.OtherComponents.BaseIcon;
@@ -12,8 +11,8 @@ import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
 
 public class IconRenderer extends ComponentRenderer<BaseIcon> {
 
-	public IconRenderer(CompilationContext compilationContext, BaseIcon component, TemplateProvider provider, Target target) {
-		super(compilationContext, component, provider, target);
+	public IconRenderer(CompilationContext compilationContext, BaseIcon component, RendererWriter provider) {
+		super(compilationContext, component, provider);
 	}
 
 	@Override

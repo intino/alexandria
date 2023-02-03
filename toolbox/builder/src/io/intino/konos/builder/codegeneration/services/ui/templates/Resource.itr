@@ -178,9 +178,11 @@ def type(resource)
 	package $package+validPackage.ui.resources;
 
 	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
+	$page+import
 	import $package+validPackage.ui.pages.$name+firstUpperCase~Page;
 	import io.intino.alexandria.exceptions.AlexandriaException;
 	import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
+	import io.intino.alexandria.ui.spark.pages.UiPage;
 
 	import java.util.Base64;
 	import java.util.UUID;
@@ -206,7 +208,7 @@ def type(resource)
 
 		private void render() {
 			String clientId = UUID.randomUUID().toString();
-			$name+firstUpperCase~Page page = new $name+firstUpperCase~Page();
+			UiPage page = $page+instance;
 			page.session = manager.currentSession();
 			page.session.browser().onRedirect(location -> manager.redirect(location));
 			page.session.browser().requestUrl(manager.requestUrl());
@@ -217,7 +219,7 @@ def type(resource)
 				}
 			});
 			page.session.whenLogout(b -> logout(page.session));
-			page.box = box;
+            $page+box
 			page.clientId = clientId;
 			[page.googleApiKey = $googleApiKey+format;]
 			page.device = parameterValue("device");
@@ -276,12 +278,21 @@ def trigger(parameters)
 	page.permission = loadPermission();
 end
 
-def type(parameter) trigger(dispatch)
-	page.$name+SnakeCaseToCamelCase+firstLowerCase
+def type(parameter & mobile) trigger(dispatch)
+    page instanceof $resource+firstUpperCase~MobilePage ? (($resource+firstUpperCase~MobilePage)page).$name+SnakeCaseToCamelCase+firstLowerCase : (($resource+firstUpperCase~Page)page).$name+SnakeCaseToCamelCase+firstLowerCase
 end
 
-def type(parameter)
-	page.$name+SnakeCaseToCamelCase+firstLowerCase = parameterValue("$name");
+def type(parameter) trigger(dispatch)
+    (($resource+firstUpperCase~Page)page).$name+SnakeCaseToCamelCase+firstLowerCase
+end
+
+def type(parameter & mobile)
+    if (page instanceof $resource+firstUpperCase~MobilePage) (($resource+firstUpperCase~MobilePage)page).$name+SnakeCaseToCamelCase+firstLowerCase = parameterValue("$name");
+    else (($resource+firstUpperCase~Page)page).$name+SnakeCaseToCamelCase+firstLowerCase = parameterValue("$name");
+end
+
+def type(parameter & mobile)
+	(($resource+firstUpperCase~Page)page).$name+SnakeCaseToCamelCase+firstLowerCase = parameterValue("$name");
 end
 
 def type(googleApiKey) trigger(format)
@@ -290,4 +301,28 @@ end
 
 def trigger(custom)
 	.replace("{$this}", box.configuration().get("$this"))
+end
+
+def type(page & mobile) trigger(import)
+	import $package+validPackage.ui.pages.$name+firstUpperCase~MobilePage;
+end
+
+def type(page) trigger(import)
+end
+
+def type(page & mobile) trigger(instance)
+    manager.fromQuery("device") != null ? new $name+firstUpperCase~MobilePage() : new $name+firstUpperCase~Page()
+end
+
+def type(page) trigger(instance)
+    new $name+firstUpperCase~Page()
+end
+
+def type(page & mobile) trigger(box)
+    if (page instanceof $name+firstUpperCase~MobilePage) (($name+firstUpperCase~MobilePage)page).box = box;
+    else (($name+firstUpperCase~Page)page).box = box;
+end
+
+def type(page) trigger(box)
+    (($name+firstUpperCase~Page)page).box = box;
 end

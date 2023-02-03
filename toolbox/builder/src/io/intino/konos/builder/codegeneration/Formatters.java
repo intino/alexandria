@@ -7,6 +7,7 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.helpers.Commons;
+import org.apache.commons.lang.StringEscapeUtils;
 
 public class Formatters {
 
@@ -20,6 +21,14 @@ public class Formatters {
 
 	public static Formatter camelCaseToSnakeCase() {
 		return value -> StringHelper.camelCaseToSnakeCase(value.toString());
+	}
+
+	public static Formatter camelCaseToUnderscoreCase() {
+		return value -> StringHelper.camelCaseToSnakeCase(value.toString()).replace("-", "_");
+	}
+
+	public static Formatter escapeHtml() {
+		return value -> StringEscapeUtils.escapeHtml((String) value);
 	}
 
 	public static Formatter returnType() {
@@ -77,6 +86,8 @@ public class Formatters {
 		template.add("validname", validName());
 		template.add("snakeCaseToCamelCase", snakeCaseToCamelCase());
 		template.add("camelCaseToSnakeCase", camelCaseToSnakeCase());
+		template.add("camelCaseToUnderscoreCase", camelCaseToUnderscoreCase());
+		template.add("escapeHtml", escapeHtml());
 		template.add("returnType", returnType());
 		template.add("returnTypeFormatter", returnTypeFormatter());
 		template.add("quoted", quoted());

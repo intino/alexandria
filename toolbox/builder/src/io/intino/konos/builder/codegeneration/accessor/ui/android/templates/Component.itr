@@ -1,0 +1,262 @@
+def type(reference)
+	<Displays$name+firstUppercase context={this._context.bind(this)} owner={this._owner.bind(this)} id="[$parentPath~.]$id"$properties+common$properties+specific></Displays$name+firstUppercase>
+end
+
+def type(child) trigger(declaration)
+end
+
+def type(block & child) trigger(child)
+	$value
+end
+
+def type(child) trigger(child)
+	$value
+end
+
+def type(child) trigger(add)
+end
+
+def type(component & child & item)
+end
+
+def type(component & child)
+	<$extends android:id="@+id/[$parentPath+~.]$id"[ android:layout_height="wrap_content" android:layout_width="wrap_content"]$properties+common$properties+specific[ $code]>
+		[$reference...[$NL]]
+		[$methods]
+		[$component+child...[$NL]]
+	[</$extends>]
+end
+
+def type(extends & multiple & image)
+	io.intino.alexandria.mobile.android.displays.components.MultipleImage
+end
+
+def type(extends & multiple)
+	io.intino.alexandria.mobile.android.displays.components.Multiple
+end
+
+def type(extends & displaystamp)
+	io.intino.alexandria.mobile.android.displays.components.$type+firstUpperCase$facet...[]
+end
+
+def type(extends & proxystamp)
+	io.intino.alexandria.mobile.android.displays.components.ProxyStamp
+end
+
+def type(extends & basestamp)
+	$package.mobile.android.displays.templates.$type+firstUpperCase
+end
+
+def type(extends)
+	io.intino.alexandria.mobile.android.displays.components.$type+firstUpperCase$facet...[]
+end
+
+def type(facet)
+	$name+firstUpperCase
+end
+
+def type(method)
+end
+
+def type(properties & actionable) trigger(common)
+	[ alexandria:actionable_title="$title"][ alexandria:alexandria_name="$name"][ alexandria:actionable_target="$target"][ alexandria:actionable_mode="$actionableMode"][ alexandria:actionable_icon="$icon"][ alexandria:actionable_affirmed="$affirmed"][ alexandria:actionable_traceable="$traceable"][ alexandria:actionable_signed="{mode:'$signMode',text:'$signText',reason:'$reasonText'}"][ alexandria:actionable_readonly="$readonly"][ alexandria:actionable_size="$size"][ style="@style/$format...[_]"][ alexandria:actionable_highlighted="$highlighted"][ alexandria:alexandria_visible="$visible"][ alexandria:alexandria_style="$style"][ alexandria:alexandria_color="$color"]
+end
+
+def type(properties & abstractslider) trigger(common)
+	[ alexandria:alexandria_label="$label"][ style="@style/$format...[_]"][ alexandria:alexandria_color="$color"][ alexandria:abstract_slider_traceable="$traceable"][ alexandria:abstract_slider_arrangement="$arrangement"][ alexandria:abstract_slider_animation="{interval:$interval,loop:$loop}"][ alexandria:abstract_slider_readonly="$readonly"][ alexandria:alexandria_visible="$visible"][ alexandria:abstract_slider_style="$style"][ alexandria:abstract_slider_position="$position"]
+end
+
+def type(properties & appDirectory) trigger(common)
+	[ alexandria:app_directory_icon="$icon"][ alexandria:alexandria_visible="$visible"][ alexandria:alexandria_style="$style"]
+end
+
+def type(properties & dashboard) trigger(common)
+	[ alexandria:dashboard_width="$width"][ alexandria:dashboard_height="$height"][ alexandria:alexandria_style="$style"]
+end
+
+def type(properties) trigger(common)
+	[ alexandria:alexandria_name="$name"][ alexandria:alexandria_label="$label"][ style="@style/$format...[_]"][ alexandria:alexandria_color="$color"][ alexandria:alexandria_visible="$visible"][ alexandria:alexandria_traceable="$traceable"][ alexandria:alexandria_multiple="{instances:'$instances',arrangement:'$multipleArrangement',noItemsMessage:'$multipleNoItemsMessage',spacing:$multipleSpacing,editable:$multipleEditable,wrap:$multipleWrapItems,collapsed:$multipleCollapsed,count:{min:$multipleMin,max:$multipleMax}}"][ alexandria:alexandria_style="$style"]
+end
+
+def type(properties & openpopover) trigger(specific)
+	[ alexandria:open_popover_trigger_event="$triggerEvent"]
+end
+
+def type(properties & signtext) trigger(specific)
+	[ alexandria:sign_text_content="$text"][ alexandria:sign_text_format="$signFormat"]
+end
+
+def type(properties & template) trigger(specific)
+	[ alexandria:template_layout="$layout...[ ]"][ alexandria:template_width="$width"][ alexandria:template_height="$height"][ alexandria:template_spacing="$spacing"]
+end
+
+def type(properties & basestamp) trigger(specific)
+	[ alexandria:base_stamp_spacing="$spacing"]
+end
+
+def type(properties & materialicon) trigger(specific)
+	[ alexandria:material_icon_icon="$icon"]
+end
+
+def type(properties & selector) trigger(specific)
+	[ alexandria:selector_multiple_selection="$multipleSelection"][ alexandria:selector_readonly="$readonly"][ alexandria:selector_focused="$focused"][ alexandria:selector_placeholder="$placeholder"][ alexandria:selector_selected="$selected"][ alexandria:selector_layout="$layout"][ alexandria:selector_size="$size"][ alexandria:selector_max_menu_height="$maxMenuHeight"][ alexandria:selector_allow_other="$allowOther"][ alexandria:selector_scroll_buttons="$scrollButtons"][ alexandria:selector_view="$view"]
+end
+
+def type(properties & image) trigger(specific)
+	[ alexandria:image_width="$width"][ alexandria:image_height="$height"][ alexandria:image_mobile_reduce_factor="$mobileReduceFactor"][ alexandria:image_allow_full_screen="$allowFullscreen"]
+end
+
+def type(properties & file) trigger(specific)
+	[ alexandria:file_width="$width"][ alexandria:file_height="$height"][ alexandria:file_preview="$preview"][ alexandria:file_drop_zone="$dropZone"][ alexandria:file_max_size="$maxSize"][ alexandria:file_allowed_types="$[$allowedTypes$]"]
+end
+
+def type(properties & chart) trigger(specific)
+	[ alexandria:chart_width="$width"][ alexandria:chart_height="$height"]
+end
+
+def type(properties & alertdialog) trigger(specific)
+	[ alexandria:alert_dialog_title="$title"][ alexandria:alert_dialog_modal="$modal"][ alexandria:alert_dialog_full_screen="$fullscreen"][ alexandria:alert_dialog_message="$message"][ alexandria:alert_dialog_close_label="$closeLabel"][ alexandria:alert_dialog_accept_label="$acceptLabel"][ alexandria:alert_dialog_width="$width"][ alexandria:alert_dialog_height="$height"][ alexandria:alert_dialog_animation="{mode:'$mode',direction:'$transitionDirection',duration:'$transitionDuration'}"]
+end
+
+def type(properties & abstractdialog) trigger(specific)
+	[ alexandria:abstract_dialog_title="$title"][ alexandria:abstract_dialog_modal="$modal"][ alexandria:abstract_dialog_full_screen="$fullscreen"][ alexandria:abstract_dialog_width="$width"][ alexandria:abstract_dialog_height="$height"][ alexandria:abstract_dialog_animation="{mode:'$mode',direction:'$transitionDirection',duration:'$transitionDuration'}"]
+end
+
+def type(properties & block) trigger(specific)
+	[ alexandria:block_layout="$layout...[ ]"][ alexandria:block_width="$width"][ alexandria:block_height="$height"][ android:showDividers="middle" android:divider="@drawable/spacing_$spacing"][ $paper="true"][ $badge][ $drawer][ $popover][ alexandria:block_animation="{mode:'$mode',direction:'$transitionDirection',duration:'$transitionDuration'}"][ alexandria:block_hidden="$hidden"][ alexandria:auto_size="$autoSize"]
+end
+
+def type(properties & date) trigger(specific)
+	[ alexandria:date_pattern="$pattern"][ alexandria:date_mode="$mode"][ alexandria:date_value="new Date($value)"][ alexandria:date_time_picker="$timePicker"][ alexandria:date_mask="$mask"][ alexandria:date_embedded="$embedded"][ alexandria:date_allow_empty="$allowEmpty"][ alexandria:date_views="$['$view...[',']'$]"][ alexandria:date_shrink="$shrink"]
+end
+
+def type(properties & user) trigger(specific)
+	[ alexandria:user_mode="$mode"]
+end
+
+def type(properties & number) trigger(specific)
+	[ alexandria:number_value="$value"][ alexandria:number_prefix="$prefix"][ alexandria:number_suffix="$suffix"][ alexandria:number_min="$min"][ alexandria:number_max="$max"][ alexandria:number_step="$step"][ alexandria:number_readonly="$readonly"][ alexandria:number_focused="$focused"][ alexandria:number_decimals="$decimals"][ alexandria:number_expanded="$expanded"][ alexandria:number_helper_text="$helperText"][ alexandria:number_shrink="$shrink"]
+end
+
+def type(properties & header) trigger(specific)
+	[ alexandria:header_position="$position"][ alexandria:header_width="$width"][ alexandria:header_height="$height"][ alexandria:header_elevation="$elevation"]
+end
+
+def type(properties & code) trigger(specific)
+	[ alexandria:code_mode="$mode"][ alexandria:code_language="$language"][ alexandria:code_highlighted=$highlighted]
+end
+
+def type(properties & text) trigger(specific)
+	[ alexandria:text_mode="$mode"][ alexandria:text_edition_mode="$editionMode"][ alexandria:text_max_length="$maxLength"][ alexandria:text_rows="$rows"][ alexandria:text_prefix="$prefix"][ alexandria:text_suffix="$suffix"][ alexandria:text_translate="$translate"][ alexandria:text_crop_with_ellipsis="$cropWithEllipsis"][ alexandria:text_value="$defaultValue+escapeHtml"][ alexandria:text_placeholder="$placeholder"][ alexandria:text_readonly="$readonly"][ alexandria:text_focused="$focused"][ alexandria:text_highlighted=$highlighted][ alexandria:text_type="$type"][ alexandria:text_helper_text="$helperText"][ alexandria:text_shrink="$shrink"]
+end
+
+def type(properties & location) trigger(specific)
+	[ alexandria:location_center="{lat:$centerLat,lng:$centerLng}"][ alexandria:location_zoom="{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}"][ alexandria:location_modes="$['$mode...[',']'$]"][ alexandria:location_controls="$controls"]
+end
+
+def type(properties & map) trigger(specific)
+	[ alexandria:map_page_size="$pageSize"][ alexandria:map_type="$type"][ alexandria:map_item_height="$itemHeight"][ alexandria:map_center="{lat:$centerLat,lng:$centerLng}"][ alexandria:map_zoom="{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}"][ alexandria:map_controls="$controls"]
+end
+
+def type(properties & collection) trigger(specific)
+	[ alexandria:collection_no_items_message="$noItemsMessage"][ alexandria:map_no_items_found_message="$noItemsFoundMessage"][ alexandria:collection_page_size="$pageSize"][ alexandria:collection_item_height="$itemHeight"][ alexandria:collection_scrolling_mark="$scrollingMark"][ alexandria:collection_navigable="$navigable"][ alexandria:collection_selection="$selection"]
+end
+
+def type(properties & heading) trigger(specific)
+	 alexandria:heading_style="{width:'$width~%',paddingRight:'10px'[,$paddingLeft:'10px']}"[ alexandria:heading_hidden="$hidden"]
+end
+
+def type(properties & item) trigger(specific)
+	 alexandria:item_style="{width:'$width~%',paddingRight:'10px'[,$paddingLeft:'10px']}"[ alexandria:item_hidden="$hidden"]
+end
+
+def type(properties & spinner) trigger(specific)
+	[ alexandria:spinner_mode="$mode"][ alexandria:spinner_size="$size"]
+end
+
+def type(properties & switch) trigger(specific)
+	[ alexandria:switch_state="$state"]
+end
+
+def type(properties & toggle) trigger(specific)
+	[ alexandria:toggle_state="$state"]
+end
+
+def type(properties & splitbutton) trigger(specific)
+	[ alexandria:split_button_options="$['$option...[',']'$]"][ alexandria:split_button_default_option="$default"]
+end
+
+def type(properties & export) trigger(specific)
+	[ alexandria:export_from="$from"][ alexandria:export_to="$to"][ alexandria:export_min="$min"][ alexandria:export_max="$max"][ alexandria:export_range="{min:$rangeMin,max:$rangeMax}"][ alexandria:export_options="$['$option...[',']'$]"]
+end
+
+def type(properties & download) trigger(specific)
+	[ alexandria:download_options="$['$option...[',']'$]"]
+end
+
+def type(properties & download & selection) trigger(specific)
+	[ alexandria:download_options="$['$option...[',']'$]"]
+end
+
+def type(properties & searchbox) trigger(specific)
+	[ alexandria:search_box_placeholder="$placeholder"][ alexandria:search_box_show_count_message="$showCountMessage"]
+end
+
+def type(properties & slider) trigger(specific)
+	[ alexandria:slider_range="{min:$min,max:$max}"][ alexandria:slider_value="$value"]
+end
+
+def type(properties & grouping) trigger(specific)
+	[ alexandria:grouping_page_size="$pageSize"][ alexandria:grouping_placeholder="$placeholder"]
+end
+
+def type(properties & stepper) trigger(specific)
+   [ alexandria:stepper_orientation="$orientation+lowercase"][ alexandria:stepper_position="$position+lowercase"]
+end
+
+def type(properties & frame) trigger(specific)
+   [ alexandria:frame_width="$width"][ alexandria:frame_height="$height"][ alexandria:frame_url="$url"]
+end
+
+def type(properties & sorting) trigger(specific)
+	[ alexandria:sorting_mode="$mode"][ alexandria:sorting_align="$align"]
+end
+
+def type(properties & htmlviewer) trigger(specific)
+	[ alexandria:html_viewer_content="$content+escapeHtml"]
+end
+
+def type(properties & microsite) trigger(specific)
+	[ alexandria:microsite_download_operations="$['$downloadOperation...[',']'$]"]
+end
+
+def type(properties) trigger(specific)
+end
+
+def type(badge)
+	mode="$mode"[ value="$value"][ max="$max"][ showZero="$showZero"]
+end
+
+def type(drawer)
+	position="$position" variant="$variant"
+end
+
+def type(popover)
+	position="$position"
+end
+
+def type(code)
+	value="$value+escapeHtml"
+end
+
+def type(highlighted)
+	"{text:'$text',background:'$background'}"
+end
+
+def type(actionableMode)
+	$mode
+end
+
+def type(histogram)
+	{alwaysVisible:$alwaysVisible,type:"$type"}
+end

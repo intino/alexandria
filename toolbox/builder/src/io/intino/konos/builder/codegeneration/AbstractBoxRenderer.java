@@ -5,6 +5,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.CompilationContext.DataHubManifest;
 import io.intino.konos.builder.helpers.Commons;
@@ -28,7 +29,7 @@ public class AbstractBoxRenderer extends Renderer {
 	private final Set<String> konosParameters;
 
 	AbstractBoxRenderer(CompilationContext compilationContext, KonosGraph graph) {
-		super(compilationContext, Target.Owner);
+		super(compilationContext);
 		this.graph = graph;
 		this.configuration = compilationContext.configuration();
 		this.konosParameters = new LinkedHashSet<>();
@@ -44,8 +45,8 @@ public class AbstractBoxRenderer extends Renderer {
 		sentinels(root);
 		terminal(root);
 		workflow(root);
-		Commons.writeFrame(context.gen(Target.Owner), "AbstractBox", template().render(root.toFrame()));
-		context.compiledFiles().add(new OutputItem(sourceFileOf(graph), javaFile(gen(), "AbstractBox").getAbsolutePath()));
+		Commons.writeFrame(context.gen(Target.Server), "AbstractBox", template().render(root.toFrame()));
+		context.compiledFiles().add(new OutputItem(sourceFileOf(graph), javaFile(gen(Target.Server), "AbstractBox").getAbsolutePath()));
 		notifyNewParameters();
 	}
 

@@ -57,7 +57,7 @@ public class CompilerConfiguration implements Cloneable {
 	private File projectDirectory;
 	private File webModuleDirectory;
 	private File archetypeLibrary;
-	private File moduleDirectory;
+	private File serviceDirectory;
 	private File configurationDirectory;
 	private List<String> parameters = new ArrayList<>();
 	private Mode mode = Mode.Normal;
@@ -203,24 +203,24 @@ public class CompilerConfiguration implements Cloneable {
 		return genDirectory;
 	}
 
-	public File webModuleDirectory() {
+	public File serviceDirectory() {
 		return webModuleDirectory;
 	}
 
 	public File moduleDirectory() {
-		return moduleDirectory;
+		return serviceDirectory;
 	}
 
 	public File projectDirectory() {
 		return projectDirectory;
 	}
 
-	public void webModuleDirectory(File webModuleDirectory) {
-		this.webModuleDirectory = webModuleDirectory;
+	public void serviceDirectory(File serviceDirectory) {
+		this.webModuleDirectory = serviceDirectory;
 	}
 
 	public void moduleDirectory(File moduleDirectory) {
-		this.moduleDirectory = moduleDirectory;
+		this.serviceDirectory = moduleDirectory;
 	}
 
 	public void projectDirectory(File projectDirectory) {

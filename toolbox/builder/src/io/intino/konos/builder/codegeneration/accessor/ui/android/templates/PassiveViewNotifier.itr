@@ -1,0 +1,96 @@
+def type(display)
+    package $package.mobile.displays.notifiers
+
+    import $package.mobile.displays.[$packageType~s.]$name+firstUpperCase~$proxy
+
+    open class $name+firstUpperCase~$proxy~Notifier(private var element: $name+firstUpperCase~$proxy) : $parentType(element) {
+
+        init {
+			[$notification...[$NL]]
+			[$event...[$NL]]
+        }
+
+    }
+end
+
+def attribute(extensionOf) trigger(import)
+	import $parent+firstUpperCase~Notifier from "./$parent+firstUpperCase~Notifier"
+end
+
+def attribute(component) trigger(import)
+	import Notifier from "alexandria-ui-elements/src/displays/notifiers/ComponentNotifier";
+end
+
+def attribute(accessible) trigger(import)
+	import Notifier from "alexandria-ui-elements/gen/displays/notifiers/ProxyDisplayNotifier";
+end
+
+def attribute(baseType) trigger(import)
+	import Notifier from "alexandria-ui-elements/gen/displays/notifiers/$type+firstUpperCase~Notifier";
+end
+
+def trigger(import)
+	import Notifier from "./Notifier";
+end
+
+def attribute(accessible) trigger(proxy)
+	Proxy
+end
+
+def trigger(proxy)
+end
+
+def attribute(extensionOf) trigger(parentType)
+	$parent+firstUpperCase~Notifier
+end
+
+def trigger(parentType)
+	Notifier
+end
+
+def trigger(notification)
+    onMessage("$name+firstLowerCase")[$target].execute { element.$name+firstLowerCase([$parameter+value]) }
+end
+
+def type(parameter & datetime)
+    kotlinx.datetime.Instant.fromEpochMilliseconds(it$["v"$]!!.toLong())
+end
+
+def type(parameter & date)
+    kotlinx.datetime.Instant.fromEpochMilliseconds(it$["v"$]!!.toLong())
+end
+
+def type(parameter & real)
+	it$["v"$]!!.toDouble()
+end
+
+def type(parameter & longinteger)
+	it$["v"$]!!.toLong()
+end
+
+def type(parameter & integer)
+	it$["v"$]!!.toInt()
+end
+
+def type(parameter & boolean)
+	it$["v"$]!!.toBoolean()
+end
+
+def type(parameter & object)
+	io.intino.alexandria.mobile.util.Json.parse(it$["v"$]!!) as $package.mobile.schemas.$value+firstUpperCase
+end
+
+def type(parameter)
+	it$["v"$]!!
+end
+
+def attribute(this:Display) trigger(target)
+	.toSelf()
+end
+
+def trigger(target)
+end
+
+def type(event)
+    onMessage("$name+firstLowerCase").toSelf().execute { element.$name+firstLowerCase(it["v"]!!) }
+end

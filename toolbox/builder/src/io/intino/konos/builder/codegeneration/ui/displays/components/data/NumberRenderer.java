@@ -1,16 +1,15 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.data;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.DataComponents.Number;
 
 public class NumberRenderer extends ComponentRenderer<Number> {
 
-	public NumberRenderer(CompilationContext compilationContext, Number component, TemplateProvider provider, Target target) {
-		super(compilationContext, component, provider, target);
+	public NumberRenderer(CompilationContext compilationContext, Number component, RendererWriter provider) {
+		super(compilationContext, component, provider);
 	}
 
 	@Override

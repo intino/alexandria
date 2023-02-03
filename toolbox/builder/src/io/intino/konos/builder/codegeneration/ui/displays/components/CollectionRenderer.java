@@ -1,22 +1,19 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
-import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.CatalogComponents;
 import io.intino.konos.model.CatalogComponents.Collection;
 import io.intino.konos.model.Navigable;
-import io.intino.konos.model.OtherComponents;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
 
 public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 
-	public CollectionRenderer(CompilationContext compilationContext, T component, TemplateProvider provider, Target target) {
-		super(compilationContext, component, provider, target);
+	public CollectionRenderer(CompilationContext compilationContext, T component, RendererWriter provider) {
+		super(compilationContext, component, provider);
 	}
 
 	@Override

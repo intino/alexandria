@@ -1,16 +1,15 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.other;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.OtherComponents.User;
 
 public class UserRenderer extends ComponentRenderer<User> {
 
-	public UserRenderer(CompilationContext compilationContext, User component, TemplateProvider provider, Target target) {
-		super(compilationContext, component, provider, target);
+	public UserRenderer(CompilationContext compilationContext, User component, RendererWriter provider) {
+		super(compilationContext, component, provider);
 	}
 
 	@Override

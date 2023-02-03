@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.analytic;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.Axis;
 import org.apache.commons.lang3.StringUtils;
@@ -182,7 +182,7 @@ public class CategoricalAxisRenderer {
     }
 
     private String axisResource(String resource) {
-        Path res = context.res(Target.Owner).toPath();
+        Path res = context.res(Target.Server).toPath();
         return res.relativize(new File(resource).toPath().toAbsolutePath()).toFile().getPath().replace("\\", "/");
     }
 

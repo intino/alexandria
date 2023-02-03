@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.datahub.adapter;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Adapter;
@@ -30,7 +30,7 @@ public class AdapterRenderer {
 					add("box", context.boxName()).
 					add("package", context.packageName()).
 					add("name", adapter.name$());
-			final File directory = new File(context.src(Target.Owner), "adapters");
+			final File directory = new File(context.src(Target.Server), "adapters");
 			final String adapterName = adapter.name$();
 			context.classes().put(adapter.getClass().getSimpleName() + "#" + adapter.name$(), "adapters." + adapterName);
 			if (!alreadyRendered(directory, adapterName)) {

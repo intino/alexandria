@@ -6,7 +6,7 @@ import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
@@ -24,7 +24,7 @@ public class AgendaServiceRenderer extends Renderer {
 	private final List<Agenda> agendas;
 
 	public AgendaServiceRenderer(CompilationContext context, KonosGraph graph) {
-		super(context, Target.Owner);
+		super(context);
 		agendas = graph.agendaServiceList();
 	}
 
@@ -42,8 +42,8 @@ public class AgendaServiceRenderer extends Renderer {
 				.add("future", processFutures(agenda.futureList()));
 		if (!agenda.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
-		Commons.writeFrame(gen(), "AgendaService", template().render(builder.toFrame()));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(agenda), javaFile(gen(), "AgendaService").getAbsolutePath()));
+		Commons.writeFrame(gen(Target.Server), "AgendaService", template().render(builder.toFrame()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(agenda), javaFile(gen(Target.Server), "AgendaService").getAbsolutePath()));
 		for (Agenda.Future future : agenda.futureList()) new FutureRenderer(context, future).render();
 	}
 

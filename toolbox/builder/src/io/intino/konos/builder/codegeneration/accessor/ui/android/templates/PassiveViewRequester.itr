@@ -1,0 +1,122 @@
+def type(display)
+    package $package.mobile.displays.requesters
+
+    import io.intino.alexandria.mobile.Application
+    import io.intino.alexandria.mobile.UiMessage
+    import io.intino.alexandria.mobile.util.Json
+    import io.intino.alexandria.mobile.util.Uri
+
+    import $package.mobile.displays.[$packageType~s.]$name+firstUpperCase$proxy
+    $schemaImport
+
+    open class $name+firstUpperCase$proxy~Requester(private var element: $name+firstUpperCase$proxy) : $parentType(element) {
+        [$request...[$NL]]
+    }
+end
+
+def attribute(accessible) trigger(proxy)
+	Proxy
+end
+
+def trigger(proxy)
+end
+
+def attribute(extensionOf) trigger(parentType)
+	$parent+firstUpperCase~Requester
+end
+
+def trigger(parentType)
+	io.intino.alexandria.mobile.displays.requesters.[$type+class+FirstUpperCase]~Requester
+end
+
+def type(parameter) trigger(request)
+    fun $name(value: String) {
+        $method(UiMessage("$name", "$display+lowercase", element.shortId(), $parameter$nullParameter, element.owner(), element.context()), element.ownerUnit());
+    }
+end
+
+def trigger(request)
+    fun $name([$parameterSignature: $customParameterType]) {
+        $method(UiMessage("$name", "$display+lowercase", element.shortId(), $parameter$nullParameter, element.owner(), element.context()), element.ownerUnit());
+    }
+end
+
+def type(object) trigger(parameter)
+    Uri.encode(Json.stringify(value, $type.serializer()))
+end
+
+def type(list & file) trigger(parameter)
+	Uri.encode(Json.stringify(arrayListOf(io.intino.alexandria.mobile.util.Base64.encoder.encode(value).toString())))
+end
+
+def type(list) trigger(parameter)
+    Uri.encode(Json.stringify(value))
+end
+
+def type(file) trigger(parameter)
+	io.intino.alexandria.mobile.util.Base64.encoder.encode(value).toString()
+end
+
+def type(boolean) trigger(parameter)
+	value.toString()
+end
+
+def type(LongInteger) trigger(parameter)
+	value.toString()
+end
+
+def type(Integer) trigger(parameter)
+	value.toString()
+end
+
+def type(Real) trigger(parameter)
+	value.toString()
+end
+
+def type(Date) trigger(parameter)
+	value.toEpochMilliseconds().toString()
+end
+
+def type(DateTime) trigger(parameter)
+	value.toEpochMilliseconds().toString()
+end
+
+def trigger(parameter)
+	Uri.encode(value)
+end
+
+def attribute(upload) trigger(method)
+	Application.fileService()!!.upload
+end
+
+def attribute(download) trigger(method)
+	Application.fileService()!!.download
+end
+
+def trigger(method)
+	Application.pushService()!!.send
+end
+
+def type(schemaImport)
+	import $package.mobile.schemas.*;
+end
+
+def type(parameterType & date)
+    kotlinx.datetime.Instant
+end
+
+def type(parameterType & datetime)
+    kotlinx.datetime.Instant
+end
+
+def type(parameterType & integer)
+    Int
+end
+
+def type(parameterType & file)
+    ByteArray
+end
+
+def type(parameterType)
+    $value
+end

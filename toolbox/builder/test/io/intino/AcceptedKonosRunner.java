@@ -36,6 +36,11 @@ public class AcceptedKonosRunner {
 	}
 
 	@Test
+	public void mobile() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/mobile.txt")});
+	}
+
+	@Test
 	public void analytics() {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/analytic.txt")});
 	}

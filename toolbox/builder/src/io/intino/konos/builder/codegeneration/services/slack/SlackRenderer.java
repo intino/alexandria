@@ -6,7 +6,7 @@ import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.KonosGraph;
@@ -27,7 +27,7 @@ public class SlackRenderer extends Renderer {
 	private final List<Service.SlackBot> services;
 
 	public SlackRenderer(CompilationContext compilationContext, KonosGraph graph) {
-		super(compilationContext, Target.Owner);
+		super(compilationContext);
 		this.services = graph.serviceList(Service::isSlackBot).map(Service::asSlackBot).collect(Collectors.toList());
 
 	}
@@ -43,19 +43,19 @@ public class SlackRenderer extends Renderer {
 		for (String level : collectLevels(service).keySet())
 			builder.add("level", new FrameBuilder("level").add("name", level).toFrame());
 		String className = snakeCaseToCamelCase(service.name$()) + "SlackBot";
-		writeFrame(gen(), className, template().render(builder));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(), className).getAbsolutePath()));
+		writeFrame(gen(Target.Server), className, template().render(builder));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), className).getAbsolutePath()));
 
-		if (alreadyRendered(new File(src(), "slack"), srcName)) updateBot(service, srcName);
+		if (alreadyRendered(new File(src(Target.Server), "slack"), srcName)) updateBot(service, srcName);
 		else newBotActions(service);
 	}
 
 	private void updateBot(Service.SlackBot service, String name) {
-		new BotActionsUpdater(context, Commons.javaFile(new File(src(), "slack"), name), service.requestList()).update();
+		new BotActionsUpdater(context, Commons.javaFile(new File(src(Target.Server), "slack"), name), service.requestList()).update();
 	}
 
 	private void newBotActions(Service.SlackBot service) {
-		final File directory = new File(src(), "slack");
+		final File directory = new File(src(Target.Server), "slack");
 		if (!alreadyRendered(directory, snakeCaseToCamelCase(service.name$()) + "Slack"))
 			writeFrame(directory, snakeCaseToCamelCase(service.name$()) + "Slack", template().render(createFrameBuilder(service.name$(), service.requestList(), false)));
 		Map<String, List<Request>> groups = collectLevels(service);

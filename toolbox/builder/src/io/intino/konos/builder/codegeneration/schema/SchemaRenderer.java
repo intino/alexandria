@@ -6,7 +6,7 @@ import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Data;
@@ -22,42 +22,30 @@ import static java.util.Collections.addAll;
 public class SchemaRenderer extends Renderer {
 	private final Schema schema;
 	private final File destination;
-	private final boolean serializationAnnotations;
 	private final String packageName;
+	private final boolean serializationAnnotations;
+	private final SchemaWriter writer;
 
-	public SchemaRenderer(CompilationContext compilationContext, Schema schema, File destination, String packageName, boolean serializationAnnotations) {
-		super(compilationContext, Target.Owner);
+	public SchemaRenderer(CompilationContext compilationContext, Schema schema, File destination, String packageName, boolean serializationAnnotations, SchemaWriter writer) {
+		super(compilationContext);
 		this.schema = schema;
-		this.destination = destination != null ? destination : gen();
+		this.destination = destination != null ? destination : gen(Target.Server);
+		this.writer = writer;
 		this.serializationAnnotations = serializationAnnotations;
 		this.packageName = packageName != null ? packageName : compilationContext.packageName();
 	}
 
 	public void render() {
 		String rootPackage = packageName;
-		String subPackage = subPackage(schema);
-		final File packageFolder = schemaFolder(schema);
+		String subPackage = SchemaHelper.subPackage(schema);
 		final String packageName = subPackage.isEmpty() ? rootPackage : rootPackage + "." + subPackage.replace(File.separator, ".");
 		final Frame frame = createSchemaFrame(schema, packageName);
 		classes().put(Schema.class.getSimpleName() + "#" + schema.name$(), subPackage.replace(File.separator, ".") + "." + schema.name$());
-		Commons.writeFrame(packageFolder, schema.name$(), template().render(new FrameBuilder("root").add("root", rootPackage).add("package", packageName).add("schema", frame)));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(schema), javaFile(packageFolder, schema.name$()).getAbsolutePath()));
+		writer.write(schema, frame);
 	}
 
 	public Frame createSchemaFrame(Schema schema, String packageName) {
 		return createSchemaFrame(schema, packageName, new HashSet<>());
-	}
-
-	private String subPackage(Schema schema) {
-		return subPackage(schema.core$().ownerAs(Service.class));
-	}
-
-	private String subPackage(Service service) {
-		return "schemas" + (service != null ? File.separator + service.name$().toLowerCase() : "");
-	}
-
-	private File schemaFolder(Schema schema) {
-		return new File(destination, subPackage(schema));
 	}
 
 	private Frame createSchemaFrame(Schema schema, String packageName, Set<Schema> processed) {
@@ -112,6 +100,7 @@ public class SchemaRenderer extends Renderer {
 		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", "double")
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
 				.add("type", !multiple(attribute) ? "double" : attribute.type())
+				.add("typeFrame", new FrameBuilder("typeFrame", "real").add("value", attribute.type()))
 				.add("defaultValue", attribute.defaultValue());
 	}
 
@@ -119,6 +108,7 @@ public class SchemaRenderer extends Renderer {
 		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
 				.add("type", !multiple(attribute) ? "int" : attribute.type())
+				.add("typeFrame", new FrameBuilder("typeFrame", "integer").add("value", attribute.type()))
 				.add("defaultValue", attribute.defaultValue());
 	}
 
@@ -126,26 +116,32 @@ public class SchemaRenderer extends Renderer {
 		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
 				.add("type", attribute.type())
+				.add("typeFrame", new FrameBuilder("typeFrame", "longinteger").add("value", attribute.type()))
 				.add("defaultValue", attribute.defaultValue() + "L");
 	}
 
 	private FrameBuilder process(Data.File attribute) {
 		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
-				.add("type", attribute.type());
+				.add("type", attribute.type())
+				.add("typeFrame", new FrameBuilder("typeFrame", "file").add("value", attribute.type()))
+				.add("lateInit", "");
 	}
 
 	private FrameBuilder process(Data.Bool attribute) {
 		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
 				.add("type", attribute.type())
+				.add("typeFrame", new FrameBuilder("typeFrame", "boolean").add("value", attribute.type()))
 				.add("defaultValue", attribute.defaultValue());
 	}
 
 	private FrameBuilder process(Data.Text attribute) {
 		FrameBuilder builder = new FrameBuilder(multiple(attribute) ? "multiple" : "single", attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
-				.add("type", attribute.type());
+				.add("type", attribute.type())
+				.add("typeFrame", new FrameBuilder("typeFrame", "text").add("value", attribute.type()))
+				.add("lateInit", "");
 		if (attribute.defaultValue() != null) builder.add("defaultValue", "\"" + attribute.defaultValue() + "\"");
 		return builder;
 	}
@@ -153,13 +149,17 @@ public class SchemaRenderer extends Renderer {
 	private FrameBuilder process(Data.DateTime attribute) {
 		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
-				.add("type", attribute.type());
+				.add("type", attribute.type())
+				.add("typeFrame", new FrameBuilder("typeFrame", "datetime").add("value", attribute.type()))
+				.add("lateInit", "");
 	}
 
 	private FrameBuilder process(Data.Date attribute) {
 		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
-				.add("type", attribute.type());
+				.add("type", attribute.type())
+				.add("typeFrame", new FrameBuilder("typeFrame", "date").add(attribute.type()).add("value", attribute.type()))
+				.add("lateInit", "");
 	}
 
 	private FrameBuilder process(Data.Word attribute) {
@@ -167,20 +167,24 @@ public class SchemaRenderer extends Renderer {
 		return new FrameBuilder("word", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.add("name", a.name$())
 				.add("words", attribute.values().toArray(new String[0]))
-				.add("type", a.name$());
+				.add("type", a.name$())
+				.add("typeFrame", new FrameBuilder("typeFrame", "word").add(attribute.type()).add("value", attribute.type()))
+				.add("lateInit", "");
 	}
 
 	private FrameBuilder process(Data.Map attribute) {
 		return new FrameBuilder("map", attribute.value().isList() ? "valueList" : "valueSingle", attribute.key().isList() ? "keyList" : "keySingle")
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
 				.add("key", new FrameBuilder(attribute.key().isList() ? "list" : "single").add("type", attribute.key().asType().type()))
-				.add("value", new FrameBuilder(attribute.value().isList() ? "list" : "single").add("type", attribute.value().asType().type()));
+				.add("value", new FrameBuilder(attribute.value().isList() ? "list" : "single").add("type", attribute.value().asType().type()))
+				.add("lateInit", "");
 	}
 
 	private FrameBuilder processObjectAttribute(Schema schema, String name, boolean multiple) {
 		return new FrameBuilder(multiple ? "multiple" : "single", "object", schema.name$())
 				.add("name", name)
 				.add("type", schema.name$())
+				.add("lateInit", "")
 				.add("package", packageOf(schema));
 	}
 
@@ -188,26 +192,18 @@ public class SchemaRenderer extends Renderer {
 		return new FrameBuilder(multiple ? "multiple" : "single", "schema", schema.name$())
 				.add("name", name)
 				.add("type", schema.name$())
+				.add("lateInit", "")
 				.add("package", packageOf(schema));
 	}
 
 	private String packageOf(Schema schema) {
 		final Service service = schema.core$().ownerAs(Service.class);
-		String rootPackage = packageName;
 		String subPackage = "schemas" + (service != null ? File.separator + service.name$().toLowerCase() : "");
-		return subPackage.isEmpty() ? rootPackage : rootPackage + "." + subPackage.replace(File.separator, ".");
+		return packageName + "." + subPackage.replace(File.separator, ".");
 	}
 
 	private boolean multiple(Data.Type attribute) {
 		return attribute.asData().isList();
-	}
-
-
-	private Template template() {
-		return Formatters.customize(serializationAnnotations ? new SchemaAnnotatedTemplate() : new SchemaTemplate()).add("typeFormat", (value) -> {
-			if (value.toString().contains(".")) return Formatters.firstLowerCase(value.toString());
-			else return value;
-		});
 	}
 
 }

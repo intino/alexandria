@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.datahub.mounter;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Datamart;
@@ -25,7 +25,7 @@ public class MounterRenderer {
 	public MounterRenderer(CompilationContext context, KonosGraph graph) {
 		this.context = context;
 		this.graph = graph;
-		this.genMounters = new File(context.gen(Target.Owner), "mounters");
+		this.genMounters = new File(context.gen(Target.Server), "mounters");
 	}
 
 	public void execute() {
@@ -34,7 +34,7 @@ public class MounterRenderer {
 			for (Mounter mounter : datamart.mounterList()) {
 				final String mounterName = mounter.name$();
 				final FrameBuilder builder = baseFrame(mounter);
-				if (mounter.isEvent() && manifest != null && !alreadyRendered(context.src(Target.Owner), mounterName))
+				if (mounter.isEvent() && manifest != null && !alreadyRendered(context.src(Target.Server), mounterName))
 					eventMounter(mounter, mounterName, manifest, builder);
 			}
 	}
@@ -50,7 +50,7 @@ public class MounterRenderer {
 		String datamart = mounter.core$().ownerAs(Datamart.class).name$();
 		builder.add("event").add("datamart", datamart).add("type", types(mounter, manifest));
 		context.classes().put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "mounters." + datamart + "." + mounterName);
-		File datamartFolder = new File(context.src(Target.Owner), datamart);
+		File datamartFolder = new File(context.src(Target.Server), datamart);
 		File mounters = new File(datamartFolder, "mounters");
 		if (!alreadyRendered(mounters, mounterName)) {
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(mounter), javaFile(mounters, firstUpperCase(mounterName)).getAbsolutePath()));

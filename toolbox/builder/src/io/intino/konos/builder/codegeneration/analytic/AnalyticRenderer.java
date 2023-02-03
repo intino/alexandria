@@ -2,8 +2,8 @@ package io.intino.konos.builder.codegeneration.analytic;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.facts.FactRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.Axis;
 import io.intino.konos.model.Cube;
@@ -23,10 +23,10 @@ public class AnalyticRenderer extends Renderer {
 	private final CubeRenderer cubeRenderer;
 
 	public AnalyticRenderer(CompilationContext context, KonosGraph graph) {
-		super(context, Target.Owner);
-		this.src = new File(context.src(Target.Owner), "analytic");
-		this.gen = new File(context.gen(Target.Owner), "analytic");
-		final File res = context.res(Target.Owner).getAbsoluteFile();
+		super(context);
+		this.src = new File(context.src(Target.Server), "analytic");
+		this.gen = new File(context.gen(Target.Server), "analytic");
+		final File res = context.res(Target.Server).getAbsoluteFile();
 		this.graph = graph;
 		this.factRenderer = new FactRenderer();
 		this.categoricalAxisRenderer = new CategoricalAxisRenderer(context, gen, res);

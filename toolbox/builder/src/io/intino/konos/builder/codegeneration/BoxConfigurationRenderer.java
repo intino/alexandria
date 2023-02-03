@@ -4,6 +4,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.magritte.framework.Layer;
@@ -19,7 +20,7 @@ public class BoxConfigurationRenderer extends Renderer {
 	private final boolean isTara;
 
 	BoxConfigurationRenderer(CompilationContext context, boolean isTara, Set<String> params) {
-		super(context, Target.Owner);
+		super(context);
 		this.isTara = isTara;
 		this.params = params;
 		this.configuration = context.configuration();
@@ -30,8 +31,8 @@ public class BoxConfigurationRenderer extends Renderer {
 	public void render() {
 		FrameBuilder builder = new FrameBuilder("boxconfiguration");
 		final String boxName = fillFrame(builder);
-		Commons.writeFrame(gen(), snakeCaseToCamelCase(boxName) + "Configuration", template().render(builder.toFrame()));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf((Layer) null), javaFile(gen(), snakeCaseToCamelCase(boxName) + "Configuration").getAbsolutePath()));
+		Commons.writeFrame(gen(Target.Server), snakeCaseToCamelCase(boxName) + "Configuration", template().render(builder.toFrame()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf((Layer) null), javaFile(gen(Target.Server), snakeCaseToCamelCase(boxName) + "Configuration").getAbsolutePath()));
 	}
 
 	private String fillFrame(FrameBuilder builder) {

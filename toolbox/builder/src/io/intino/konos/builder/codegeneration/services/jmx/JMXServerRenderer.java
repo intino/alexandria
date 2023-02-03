@@ -5,7 +5,7 @@ import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.KonosGraph;
 import io.intino.konos.model.Service;
@@ -22,7 +22,7 @@ public class JMXServerRenderer extends Renderer {
 	private final List<Service.JMX> services;
 
 	public JMXServerRenderer(CompilationContext compilationContext, KonosGraph graph) {
-		super(compilationContext, Target.Owner);
+		super(compilationContext);
 		this.services = graph.serviceList(Service::isJMX).map(Service::asJMX).collect(Collectors.toList());
 	}
 
@@ -34,11 +34,11 @@ public class JMXServerRenderer extends Renderer {
 	private void processService(Service.JMX service) {
 		final List<Operation> operations = service.operationList();
 		if (operations.isEmpty()) return;
-		writeFrame(gen(), "JMX" + snakeCaseToCamelCase(service.name$()), template().render(new FrameBuilder("jmxserver")
+		writeFrame(gen(Target.Server), "JMX" + snakeCaseToCamelCase(service.name$()), template().render(new FrameBuilder("jmxserver")
 				.add("name", service.name$())
 				.add("box", boxName())
 				.add("package", packageName()).toFrame()));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(), "JMX" + snakeCaseToCamelCase(service.name$())).getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), "JMX" + snakeCaseToCamelCase(service.name$())).getAbsolutePath()));
 	}
 
 	private Template template() {

@@ -6,8 +6,8 @@ import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.SoapOperationActionRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
@@ -29,7 +29,7 @@ public class SoapOperationRenderer extends Renderer {
 	private final List<Service.Soap> services;
 
 	public SoapOperationRenderer(CompilationContext compilationContext, KonosGraph graph) {
-		super(compilationContext, Target.Owner);
+		super(compilationContext);
 		this.services = graph.serviceList(Service::isSoap).map(Service::asSoap).collect(Collectors.toList());
 	}
 
@@ -44,7 +44,7 @@ public class SoapOperationRenderer extends Renderer {
 	private void processOperation(Operation operation) throws KonosException {
 		Frame frame = frameOf(operation);
 		final String className = snakeCaseToCamelCase(operation.name$()) + "Operation";
-		File operationsPackage = new File(gen(), OPERATIONS_PACKAGE);
+		File operationsPackage = new File(gen(Target.Server), OPERATIONS_PACKAGE);
 		Commons.writeFrame(operationsPackage, className, template().render(frame));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(operation), javaFile(operationsPackage, className).getAbsolutePath()));
 		createCorrespondingAction(operation);
