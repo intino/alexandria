@@ -3,7 +3,7 @@ package io.intino.konos.builder.codegeneration.datahub.mounter;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.CompilationContext.DataHubManifest;
 import io.intino.konos.builder.context.KonosException;
@@ -27,7 +27,7 @@ public class MounterFactoryRenderer {
 	public MounterFactoryRenderer(CompilationContext context, KonosGraph graph) {
 		this.context = context;
 		this.mounters = graph.datamartList().stream().map(Datamart::mounterList).flatMap(Collection::stream).collect(Collectors.toList());
-		this.genMounters = new File(context.gen(Target.Owner), "mounters");
+		this.genMounters = new File(context.gen(Target.Server), "mounters");
 	}
 
 	public void execute() throws KonosException {

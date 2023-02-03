@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.action;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.CodeGenerationHelper;
 import io.intino.konos.model.Display;
@@ -17,11 +17,13 @@ import static io.intino.konos.builder.helpers.Commons.writeFrame;
 public class AccessibleDisplayActionRenderer extends ActionRenderer {
 	private final Display.Accessible display;
 	private final CompilationContext configuration;
+	private final Target target;
 
-	public AccessibleDisplayActionRenderer(CompilationContext compilationContext, Display.Accessible display) {
+	public AccessibleDisplayActionRenderer(CompilationContext compilationContext, Display.Accessible display, Target target) {
 		super(compilationContext,"accessibleDisplay");
 		this.configuration = compilationContext;
 		this.display = display;
+		this.target = target;
 	}
 
 	@Override
@@ -35,9 +37,9 @@ public class AccessibleDisplayActionRenderer extends ActionRenderer {
 		builder.add("box", boxName());
 		builder.add("parameter", parameters());
 		builder.add("contextProperty", contextPropertyFrame());
-		configuration.classes().put(display.getClass().getSimpleName() + "#" + firstUpperCase(display.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(display.name$())) + suffix());
-		if (!alreadyRendered(src(), display.name$() + "ProxyPage"))
-			writeFrame(destinationPackage(src()), display.name$() + "ProxyPage", template().render(builder.toFrame()));
+		configuration.classes().put(display.getClass().getSimpleName() + "#" + firstUpperCase(display.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(display.name$())) + suffix(target));
+		if (!alreadyRendered(src(target), display.name$() + "ProxyPage"))
+			writeFrame(destinationPackage(src(target)), display.name$() + "ProxyPage", template().render(builder.toFrame()));
 	}
 
 	@Override
@@ -54,11 +56,11 @@ public class AccessibleDisplayActionRenderer extends ActionRenderer {
 
 	@Override
 	protected File destinationPackage(File destiny) {
-		return new File(destiny, format(CodeGenerationHelper.Pages, Target.Owner));
+		return new File(destiny, format(CodeGenerationHelper.Pages, target));
 	}
 
 	@Override
-	protected String suffix() {
+	protected String suffix(Target target) {
 		return "Page";
 	}
 }

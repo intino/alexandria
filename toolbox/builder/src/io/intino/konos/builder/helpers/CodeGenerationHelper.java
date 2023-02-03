@@ -1,12 +1,15 @@
 package io.intino.konos.builder.helpers;
 
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
+import io.intino.konos.model.CatalogComponents;
+import io.intino.konos.model.HelperComponents;
+import io.intino.magritte.framework.Layer;
 
 import java.io.File;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.konos.builder.helpers.Commons.javaFile;
-import static io.intino.konos.builder.helpers.Commons.javascriptFile;
+import static io.intino.konos.builder.helpers.Commons.*;
+import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
 
 public class CodeGenerationHelper {
 	public static final String UI = "ui";
@@ -17,6 +20,15 @@ public class CodeGenerationHelper {
 	public static final String Resources = "%sresources";
 	public static final String Pages = "%spages";
 
+	public static boolean hasAbstractClass(Layer element, Target target) {
+		if (target == Target.Server) return true;
+		return !element.i$(conceptOf(io.intino.konos.model.Template.class)) &&
+				!element.i$(conceptOf(CatalogComponents.Table.class)) &&
+				!element.i$(conceptOf(CatalogComponents.DynamicTable.class)) &&
+				!element.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class)) &&
+				!element.i$(conceptOf(HelperComponents.Row.class));
+	}
+
 	public static File folder(File root, String path, Target target) {
 		return new File(root.getAbsolutePath() + format(path, target));
 	}
@@ -26,11 +38,11 @@ public class CodeGenerationHelper {
 	}
 
 	public static File displayFolder(File folder, String type, Target target) {
-		return new File(folder, displayPath(type, target));
+		return new File(folder, displayPath(folder, type, target));
 	}
 
 	public static File displayFile(File folder, String name, String type, Target target) {
-		return fileOf(new File(folder, displayPath(type, target)), name, target);
+		return fileOf(new File(folder, displayPath(folder, type, target)), name, target);
 	}
 
 	public static String displayFilename(String name) {
@@ -45,7 +57,8 @@ public class CodeGenerationHelper {
 		return format(Displays, target);
 	}
 
-	public static String displayPath(String type, Target target) {
+	public static String displayPath(File folder, String type, Target target) {
+		if (target == Target.AndroidResource) return File.separator + "layout";
 		return type.equalsIgnoreCase("display") || type.equalsIgnoreCase("AccessibleDisplay") ? format(Displays, target) : String.format(DisplaysType, uiSubPath(target), type).toLowerCase();
 	}
 
@@ -82,11 +95,13 @@ public class CodeGenerationHelper {
 	}
 
 	public static String uiSubPath(Target target) {
-		return target == Target.Owner ? UI + "/" : "";
+		return target == Target.Server ? UI + "/" : "";
 	}
 
 	public static File fileOf(File file, String name, Target target) {
-		if (target == Target.Owner) return javaFile(file, name);
+		if (target == Target.Server) return javaFile(file, name);
+		if (target == Target.Android || target == Target.MobileShared) return kotlinFile(file, name);
+		if (target == Target.AndroidResource) return xmlFile(file, name);
 		return javascriptFile(file, name);
 	}
 

@@ -1,0 +1,91 @@
+def type(resource & template)
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:alexandria="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".pages.$name+snakecaseToCamelCase+firstUpperCase~Activity">
+
+	<$package+validPackage.mobile.android.displays.templates.$pageDisplay+firstUpperCase
+		android:id="@+id/$pageDisplayId+firstLowerCase"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+	</$package+validPackage.mobile.android.displays.templates.$pageDisplay+firstUpperCase>
+</androidx.constraintlayout.widget.ConstraintLayout>
+end
+
+def type(resource & main)
+    package $package+validPackage.mobile.android.pages
+
+    import android.os.Bundle
+    import androidx.activity.ComponentActivity
+    import io.intino.alexandria.mobile.Application
+    import io.intino.alexandria.mobile.services.PushService
+    import io.intino.alexandria.mobile.services.RestService
+    import io.intino.alexandria.mobile.util.Uuid
+    import $package+validPackage.mobile.android.R
+
+    class $name+snakecaseToCamelCase+firstUpperCase~Activity : ComponentActivity() {
+
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            Application.start(pushService("http://10.0.2.2:9000$path"))
+            setContentView(R.layout.$name+camelCaseToUnderscoreCase+lowerCase~_activity)
+        }
+
+        private fun pushService(url: String) : PushService {
+            val pushService = PushService();
+            appConnectionChains(url) { chains ->
+                chains.forEach { chain ->
+                    pushService.connect(
+                        chain.app(),
+                        chain.socketUrl()
+                    )
+                }
+            };
+            return pushService
+        }
+
+        private val appConnectionChains = fun(url: String, callback: ((List<RestService.ConnectionChain>) -> Unit)) {
+            val restService = RestService(url);
+            restService.context(this)
+            restService.appConnectionChains(Uuid.randomUuid(), callback)
+        }
+
+    }
+end
+
+def type(resource)
+    package $package+validPackage.mobile.android.pages
+
+    import android.os.Bundle
+    import androidx.activity.ComponentActivity
+    import $package+validPackage.mobile.android.R
+
+    class $name+snakecaseToCamelCase+firstUpperCase~Activity : ComponentActivity() {
+
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            setContentView(R.layout.$name+camelCaseToUnderscoreCase+lowerCase~_activity)
+        }
+
+    }
+end
+
+def attribute(hasAbstract) trigger(origin)
+	../../src
+end
+
+def attribute(decorated) trigger(origin)
+	../../gen
+end
+
+def trigger(origin)
+	..
+end
+
+def type(accessibleImport)
+	import $service+firstUpperCase~AccessibleDisplays from '$elements/gen/AccessibleDisplays';
+end

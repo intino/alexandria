@@ -119,7 +119,6 @@ Component signAction as ExtensionOf(actionable)
 	Notification setup as Object(SignActionSetup)
 	Notification format as Text
 	Notification sign as Text
-	Notification refreshReadonly as Bool
 
 	Request signing
 	Request success as Object(SignActionSignatureSuccess)

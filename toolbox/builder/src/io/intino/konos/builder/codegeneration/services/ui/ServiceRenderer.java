@@ -4,7 +4,6 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.templates.ServiceTemplate;
 import io.intino.konos.builder.codegeneration.ui.I18nRenderer;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
@@ -28,15 +27,15 @@ public class ServiceRenderer extends UIRenderer {
 	private final Service.UI service;
 
 	public ServiceRenderer(CompilationContext compilationContext, Service.UI service) {
-		super(compilationContext, Target.Owner);
+		super(compilationContext);
 		this.service = service;
 	}
 
 	@Override
 	public void render() throws KonosException {
 		createUi();
-		new I18nRenderer(context, service, target).execute();
-		new RouteDispatcherRenderer(context, service, target).execute();
+		new I18nRenderer(context, service, Target.Server).execute();
+		new RouteDispatcherRenderer(context, service, Target.Server).execute();
 	}
 
 	private void createUi() {
@@ -49,8 +48,8 @@ public class ServiceRenderer extends UIRenderer {
 			if (hasNotifiers) builder.add("notifiersImport", packageName()).add("requestersImport", packageName());
 		}
 		if (service.authentication() != null) builder.add("auth", service.authentication().by());
-		writeFrame(serviceFolder(gen()), serviceFilename(service.name$()), template().render(builder.toFrame()));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(serviceFolder(gen()), serviceFilename(service.name$())).getAbsolutePath()));
+		writeFrame(serviceFolder(gen(Target.Server)), serviceFilename(service.name$()), template().render(builder.toFrame()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(serviceFolder(gen(Target.Server)), serviceFilename(service.name$())).getAbsolutePath()));
 	}
 
 	private Frame[] resourcesFrame(List<Service.UI.Resource> resourceList) {

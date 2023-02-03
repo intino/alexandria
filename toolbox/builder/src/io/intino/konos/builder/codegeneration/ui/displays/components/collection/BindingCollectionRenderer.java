@@ -1,8 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.collection;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.CatalogComponents;
@@ -12,8 +11,8 @@ import java.util.List;
 
 public class BindingCollectionRenderer<C extends Component> extends ComponentRenderer<C> {
 
-	public BindingCollectionRenderer(CompilationContext compilationContext, C component, TemplateProvider provider, Target target) {
-		super(compilationContext, component, provider, target);
+	public BindingCollectionRenderer(CompilationContext compilationContext, C component, RendererWriter provider) {
+		super(compilationContext, component, provider);
 	}
 
 	protected void addBinding(FrameBuilder builder, List<CatalogComponents.Collection> collections) {

@@ -23,7 +23,6 @@ public class PassiveViewUpdater<C extends PassiveView> extends Updater {
 	}
 
 	private void addMethod(Request request) {
-		final String methodText = Formatters.customize(new DisplayTemplate()).render(PassiveViewRenderer.frameOf(element, request, compilationContext.packageName()));
 		//TODO
 	}
 

@@ -1,8 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.other;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.collection.BindingCollectionRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.VisualizationComponents.AbstractSlider;
@@ -13,8 +12,8 @@ import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
 
 public class SliderRenderer extends BindingCollectionRenderer<AbstractSlider> {
 
-	public SliderRenderer(CompilationContext context, AbstractSlider component, TemplateProvider provider, Target target) {
-		super(context, component, provider, target);
+	public SliderRenderer(CompilationContext context, AbstractSlider component, RendererWriter provider) {
+		super(context, component, provider);
 	}
 
 	@Override

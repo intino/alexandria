@@ -1,8 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.Absolute;
 import io.intino.konos.model.Component;
@@ -14,8 +13,8 @@ public class SizedRenderer<C extends Component> extends ComponentRenderer<C> {
 
 	private static final String OffsetSize = "calc(%.0f%% - %dpx)";
 
-	public SizedRenderer(CompilationContext compilationContext, C component, TemplateProvider provider, Target target) {
-		super(compilationContext, component, provider, target);
+	public SizedRenderer(CompilationContext compilationContext, C component, RendererWriter provider) {
+		super(compilationContext, component, provider);
 	}
 
 	@Override

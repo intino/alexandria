@@ -4,7 +4,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.CodeGenerationHelper;
 import io.intino.konos.model.*;
@@ -19,8 +19,8 @@ import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
 
 public abstract class UIRenderer extends Renderer {
 
-	protected UIRenderer(CompilationContext compilationContext, Target target) {
-		super(compilationContext, target);
+	protected UIRenderer(CompilationContext compilationContext) {
+		super(compilationContext);
 	}
 
 	public FrameBuilder buildFrame() {
@@ -39,8 +39,8 @@ public abstract class UIRenderer extends Renderer {
 		return addFormats(template);
 	}
 
-	protected String path(io.intino.konos.model.Display display) {
-		return CodeGenerationHelper.displayPath(typeOf(display), target);
+	protected String path(Display display, Target target) {
+		return CodeGenerationHelper.displayPath(null, typeOf(display), target);
 	}
 
 	protected Template addFormats(Template template) {
@@ -82,15 +82,6 @@ public abstract class UIRenderer extends Renderer {
 		if (resource.path().isEmpty()) return "\\\\/";
 		Stream<String> split = Stream.of(resource.path().split("/"));
 		return split.map(s -> s.startsWith(":") ? "([^\\\\/]*)" : s).collect(Collectors.joining("\\\\/"));
-	}
-
-	protected boolean hasAbstractClass(Layer element) {
-		if (target == Target.Owner) return true;
-		return !element.i$(conceptOf(io.intino.konos.model.Template.class)) &&
-				!element.i$(conceptOf(CatalogComponents.Table.class)) &&
-				!element.i$(conceptOf(CatalogComponents.DynamicTable.class)) &&
-				!element.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class)) &&
-				!element.i$(conceptOf(HelperComponents.Row.class));
 	}
 
 	protected boolean hasConcreteNotifier(PassiveView element) {

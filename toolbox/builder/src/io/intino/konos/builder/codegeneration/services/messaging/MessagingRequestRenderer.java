@@ -6,8 +6,8 @@ import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.MessagingRequestActionRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
@@ -30,7 +30,7 @@ public class MessagingRequestRenderer extends Renderer {
 	private final List<Service.Messaging> services;
 
 	public MessagingRequestRenderer(CompilationContext compilationContext, KonosGraph graph) {
-		super(compilationContext, Target.Owner);
+		super(compilationContext);
 		this.services = graph.serviceList(Service::isMessaging).map(Service::asMessaging).collect(Collectors.toList());
 	}
 
@@ -44,7 +44,7 @@ public class MessagingRequestRenderer extends Renderer {
 	}
 
 	private void processRequest(Request request) throws KonosException {
-		File packageFolder = new File(gen(), REQUESTS);
+		File packageFolder = new File(gen(Target.Server), REQUESTS);
 		writeFrame(packageFolder, snakeCaseToCamelCase(request.name$()) + "Request", template().render(fillRequestFrame(request)));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(request), javaFile(packageFolder, snakeCaseToCamelCase(request.name$()) + "Request").getAbsolutePath()));
 		createCorrespondingAction(request);

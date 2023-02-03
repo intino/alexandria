@@ -1,8 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.data;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.GeoRendererHelper;
 import io.intino.konos.builder.context.CompilationContext;
@@ -13,8 +12,8 @@ import java.util.stream.Collectors;
 
 public class LocationRenderer extends ComponentRenderer<Location> {
 
-	public LocationRenderer(CompilationContext compilationContext, Location component, TemplateProvider provider, Target target) {
-		super(compilationContext, component, provider, target);
+	public LocationRenderer(CompilationContext compilationContext, Location component, RendererWriter provider) {
+		super(compilationContext, component, provider);
 	}
 
 	@Override

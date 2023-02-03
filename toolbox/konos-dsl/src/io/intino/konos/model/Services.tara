@@ -122,6 +122,7 @@ Concept:Named Service
 	Aspect RocketChatBot extends SlackBot
 
 	Aspect UI
+		var word[]:{Web Android IOS} targets = Web
 		var function:HomesProvider homeList = 'return self.resourceList().stream().filter(Service.UI.Resource::isMain).collect(toList());';
 		var function:TemplatesProvider templates = 'return self.resourceList().stream().map(r -> r.asPage().template()).collect(Collectors.toList());';
     	Concept Use
@@ -131,7 +132,7 @@ Concept:Named Service
     		var string url = empty
     	var string port
     	var string title
-    	var string favicon
+    	var string favicon // TODO. Llamarlo launch -> un zip con la configuración de lanzamiento de la app
     	var string googleApiKey = empty
 
     	Concept:{0..1} Authentication

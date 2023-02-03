@@ -2,8 +2,8 @@ package io.intino.konos.builder.codegeneration.ui.displays;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRendererFactory;
 import io.intino.konos.builder.codegeneration.ui.passiveview.PassiveViewRenderer;
@@ -19,6 +19,7 @@ import io.intino.magritte.framework.Layer;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.hasAbstractClass;
 import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
 import static io.intino.konos.model.CatalogComponents.Collection;
 import static io.intino.konos.model.Component.DynamicLoaded;
@@ -27,14 +28,14 @@ import static io.intino.konos.model.OtherComponents.Selector;
 public abstract class BaseDisplayRenderer<D extends Display> extends PassiveViewRenderer<D> {
 	private static final ComponentRendererFactory factory = new ComponentRendererFactory();
 
-	protected BaseDisplayRenderer(CompilationContext context, D display, TemplateProvider templateProvider, Target target) {
-		super(context, display, templateProvider, target);
+	protected BaseDisplayRenderer(CompilationContext context, D display, RendererWriter rendererWriter) {
+		super(context, display, rendererWriter);
 	}
 
 	@Override
 	public void render() {
 		if (element == null) return;
-		String path = path(element);
+		String path = path(element, writer.target());
 		final String newDisplay = snakeCaseToCamelCase(element.name$());
 		classes().put("Display#" + element.name$(), path + "." + newDisplay);
 		FrameBuilder result = buildFrame();
@@ -53,7 +54,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		result.add("display");
 		result.add(typeOf(element));
 		if (accessible) result.add("accessible");
-		if (!hasAbstractClass(element)) result.add("noAbstract");
+		if (!hasAbstractClass(element, writer.target())) result.add("noAbstract");
 		addParametrized(result, accessible);
 		addExtends(result, accessible);
 		addImports(result, accessible);
@@ -84,7 +85,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	private void addExtends(FrameBuilder frame, boolean accessible) {
-		FrameBuilder result = new FrameBuilder("displayExtends");
+		FrameBuilder result = buildBaseFrame().add("displayExtends");
 		if (element.i$(conceptOf(Dialog.class))) result.add(Dialog.class.getSimpleName());
 		if (element.i$(conceptOf(Template.class))) result.add(Template.class.getSimpleName());
 		if (element.i$(conceptOf(CatalogComponents.List.class)) || element.i$(conceptOf(CatalogComponents.Magazine.class)) ||
@@ -194,7 +195,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (element.i$(conceptOf(DataComponents.Image.Multiple.class))) return "io.intino.alexandria.ui.File";
 		if (element.i$(conceptOf(OtherComponents.Icon.Multiple.class))) return "java.net.URL";
 		if (element.i$(conceptOf(DataComponents.Number.Multiple.class))) return "java.lang.Double";
-		if (element.i$(conceptOf(DataComponents.Date.Multiple.class))) return "java.time.Instant";
+		if (element.i$(conceptOf(DataComponents.Date.Multiple.class))) return writer.target() == Target.Android ? "kotlinx.datetime.Instant" : "java.time.Instant";
 		if (element.i$(conceptOf(OtherComponents.BaseStamp.Multiple.class))) {
 			String modelClass = null;
 			if (element.i$(conceptOf(OwnerTemplateStamp.class))) modelClass = "java.lang.Void";
@@ -207,7 +208,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	protected String multipleComponentType(Layer element) {
-		String prefix = "io.intino.alexandria.ui.displays.components.";
+		String prefix = "io.intino.alexandria." + targetPackageName() + ".displays.components.";
 		String name = multipleComponentName(element);
 		if (name == null) return null;
 		return element.i$(conceptOf(OtherComponents.BaseStamp.Multiple.class)) || element.i$(conceptOf(Block.Multiple.class)) ? name : prefix + name;
@@ -226,7 +227,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 				OwnerTemplateStamp stamp = element.a$(OwnerTemplateStamp.class);
 				return ownerTemplateStampPackage(stamp.owner()) + "." + firstUpperCase(stamp.template());
 			}
-			return element.i$(conceptOf(TemplateStamp.class)) ? firstUpperCase(element.a$(TemplateStamp.class).template().name$()) : "io.intino.alexandria.ui.Display";
+			return element.i$(conceptOf(TemplateStamp.class)) ? firstUpperCase(element.a$(TemplateStamp.class).template().name$()) : "io.intino.alexandria." + targetPackageName() + ".Display";
 		}
 		if (element.i$(conceptOf(Block.Multiple.class))) return firstUpperCase(nameOf(element));
 		return null;
@@ -254,15 +255,15 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	protected void addRenderTagFrames(FrameBuilder frame) {
 		FrameBuilder renderTag = new FrameBuilder("renderTag");
 		if (element.i$(conceptOf(Block.class))) {
-			ComponentRenderer renderer = factory.renderer(context, element.a$(Block.class), templateProvider, target);
+			ComponentRenderer renderer = factory.renderer(context, element.a$(Block.class), writer);
 			renderTag.add(Block.class.getSimpleName());
 			renderTag.add("properties", renderer.properties());
 		} else if (element.i$(conceptOf(Template.class))) {
-			ComponentRenderer renderer = factory.renderer(context, element.a$(Template.class), templateProvider, target);
+			ComponentRenderer renderer = factory.renderer(context, element.a$(Template.class), writer);
 			renderTag.add(Template.class.getSimpleName());
 			renderTag.add("properties", renderer.properties());
 		} else if (element.i$(conceptOf(HelperComponents.Row.class))) {
-			ComponentRenderer renderer = factory.renderer(context, element.a$(HelperComponents.Row.class), templateProvider, target);
+			ComponentRenderer renderer = factory.renderer(context, element.a$(HelperComponents.Row.class), writer);
 			renderTag.add(HelperComponents.Row.class.getSimpleName());
 			renderTag.add("properties", renderer.properties());
 		} else if (element.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class))) {
@@ -305,13 +306,13 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	private FrameBuilder accessibleNotifierImportFrame() {
 		FrameBuilder frameBuilder = buildBaseFrame().add("accessibleNotifierImport").add("name", nameOf(element));
 		frameBuilder.add("notifier", notifierName(element));
-		if (context.webModuleDirectory().exists())
-			frameBuilder.add("webModuleName", context.webModuleDirectory().getName());
+		if (context.serviceDirectory() != null && context.serviceDirectory().exists())
+			frameBuilder.add("serviceName", context.serviceDirectory().getName());
 		return frameBuilder;
 	}
 
 	protected FrameBuilder componentFrame(Component component, Display virtualParent) {
-		ComponentRenderer renderer = factory.renderer(context, component, templateProvider, target);
+		ComponentRenderer renderer = factory.renderer(context, component, writer);
 		renderer.buildChildren(true);
 		renderer.decorated(ElementHelper.isRoot(element));
 		renderer.owner(element);
@@ -335,8 +336,8 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 
 	private void writeDisplaysFor(Display.Accessible display, FrameBuilder builder) {
 		write(builder);
-		writeNotifier(display.a$(PassiveView.class), builder);
-		writeRequester(display.a$(PassiveView.class), builder);
+		writer.writeNotifier(display.a$(PassiveView.class), builder);
+		writer.writeRequester(display.a$(PassiveView.class), builder);
 	}
 
 	private void addParent(Display display, FrameBuilder builder) {

@@ -1,22 +1,18 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.collection;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.CatalogComponents;
 import io.intino.konos.model.Component;
 
 import java.util.List;
 
-import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
-
 public abstract class CollectionComponentRenderer<C extends Component> extends ComponentRenderer<C> {
 
-	public CollectionComponentRenderer(CompilationContext compilationContext, C component, TemplateProvider provider, Target target) {
-		super(compilationContext, component, provider, target);
+	public CollectionComponentRenderer(CompilationContext compilationContext, C component, RendererWriter provider) {
+		super(compilationContext, component, provider);
 	}
 
 	@Override

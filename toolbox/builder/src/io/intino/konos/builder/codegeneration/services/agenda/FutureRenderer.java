@@ -6,7 +6,7 @@ import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
@@ -26,7 +26,7 @@ public class FutureRenderer extends Renderer {
 	private final Future future;
 
 	public FutureRenderer(CompilationContext context, Future future) {
-		super(context, Target.Owner);
+		super(context);
 		this.future = future;
 	}
 
@@ -44,7 +44,7 @@ public class FutureRenderer extends Renderer {
 	}
 
 	private void renderSrc(Frame frame) {
-		File agendaPackage = new File(src(), "agenda");
+		File agendaPackage = new File(src(Target.Server), "agenda");
 		File file = javaFile(agendaPackage, firstUpperCase(future.name$()));
 		if (file.exists()) return;
 		Commons.writeFrame(agendaPackage, firstUpperCase(future.name$()), template().render(frame));
@@ -52,13 +52,13 @@ public class FutureRenderer extends Renderer {
 	}
 
 	private void renderAbstract(Frame frame) {
-		Commons.writeFrame(new File(gen(), "agenda"), "Abstract" + firstUpperCase(future.name$()), abstractTemplate().render(frame));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(future), javaFile(new File(gen(), "agenda"), "Abstract" + firstUpperCase(future.name$())).getAbsolutePath()));
+		Commons.writeFrame(new File(gen(Target.Server), "agenda"), "Abstract" + firstUpperCase(future.name$()), abstractTemplate().render(frame));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(future), javaFile(new File(gen(Target.Server), "agenda"), "Abstract" + firstUpperCase(future.name$())).getAbsolutePath()));
 	}
 
 	private void renderSchema(Frame frame) {
-		Commons.writeFrame(new File(gen(), "agenda"), firstUpperCase(future.name$()) + "Schema", schemaTemplate().render(frame));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(future), javaFile(new File(gen(), "agenda"), firstUpperCase(future.name$()) + "Schema").getAbsolutePath()));
+		Commons.writeFrame(new File(gen(Target.Server), "agenda"), firstUpperCase(future.name$()) + "Schema", schemaTemplate().render(frame));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(future), javaFile(new File(gen(Target.Server), "agenda"), firstUpperCase(future.name$()) + "Schema").getAbsolutePath()));
 	}
 
 	private FrameBuilder futureFrame() {

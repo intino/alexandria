@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.datahub.subscriber;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.context.WarningMessage;
@@ -25,7 +25,7 @@ public class SubscriberRenderer {
 	public SubscriberRenderer(CompilationContext context, KonosGraph graph) {
 		this.context = context;
 		this.subscribers = graph.subscriberList();
-		this.srcSubscribers = new File(context.src(Target.Owner), "subscribers");
+		this.srcSubscribers = new File(context.src(Target.Server), "subscribers");
 	}
 
 	public void execute() throws KonosException {

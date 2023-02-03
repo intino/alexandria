@@ -2,8 +2,8 @@ package io.intino.konos.builder.codegeneration.ui.resource;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.AccessibleDisplayActionRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.codegeneration.services.ui.templates.ResourceTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.context.CompilationContext;
@@ -20,10 +20,12 @@ import static io.intino.konos.builder.helpers.Commons.javaFile;
 
 public class AccessibleDisplayRenderer extends UIRenderer {
 	private final Display.Accessible display;
+	private final Target target;
 
 	public AccessibleDisplayRenderer(CompilationContext compilationContext, Display.Accessible display, Target target) {
-		super(compilationContext, target);
+		super(compilationContext);
 		this.display = display;
+		this.target = target;
 	}
 
 	@Override
@@ -34,12 +36,12 @@ public class AccessibleDisplayRenderer extends UIRenderer {
 		builder.add("render", renderFrame());
 
 		builder.add("parameter", parameters(display));
-		if (target == Target.Owner) {
-			Commons.writeFrame(resourceFolder(gen(), target), resourceFilename(display.name$(), "ProxyResource"), setup(new ResourceTemplate()).render(builder.toFrame()));
-			context.compiledFiles().add(new OutputItem(context.sourceFileOf(display), javaFile(resourceFolder(gen(), target), resourceFilename(display.name$(), "ProxyResource")).getAbsolutePath()));
+		if (target == Target.Server) {
+			Commons.writeFrame(resourceFolder(gen(target), target), resourceFilename(display.name$(), "ProxyResource"), setup(new ResourceTemplate()).render(builder.toFrame()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(display), javaFile(resourceFolder(gen(target), target), resourceFilename(display.name$(), "ProxyResource")).getAbsolutePath()));
 		}
 
-		new AccessibleDisplayActionRenderer(context, display).execute();
+		new AccessibleDisplayActionRenderer(context, display, target).execute();
 	}
 
 	private FrameBuilder renderFrame() {

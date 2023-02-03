@@ -1,8 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.CatalogComponents;
 import io.intino.konos.model.InteractionComponents.Toolbar;
@@ -11,8 +10,8 @@ import java.util.Arrays;
 
 public class ToolbarRenderer extends ComponentRenderer<Toolbar> {
 
-	public ToolbarRenderer(CompilationContext compilationContext, Toolbar component, TemplateProvider provider, Target target) {
-		super(compilationContext, component, provider, target);
+	public ToolbarRenderer(CompilationContext compilationContext, Toolbar component, RendererWriter provider) {
+		super(compilationContext, component, provider);
 	}
 
 	@Override

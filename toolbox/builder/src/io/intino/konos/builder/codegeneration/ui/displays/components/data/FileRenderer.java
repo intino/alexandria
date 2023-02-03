@@ -1,8 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.data;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.SizedRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.DataComponents.File;
@@ -11,8 +10,8 @@ import java.util.stream.Collectors;
 
 public class FileRenderer extends SizedRenderer<File> {
 
-	public FileRenderer(CompilationContext compilationContext, File component, TemplateProvider provider, Target target) {
-		super(compilationContext, component, provider, target);
+	public FileRenderer(CompilationContext compilationContext, File component, RendererWriter provider) {
+		super(compilationContext, component, provider);
 	}
 
 	@Override

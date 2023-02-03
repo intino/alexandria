@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.datahub.messagehub;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.KonosGraph;
@@ -23,8 +23,8 @@ public class MessageHubRenderer {
 	public MessageHubRenderer(CompilationContext context, KonosGraph graph) {
 		this.graph = graph;
 		this.context = context;
-		this.sourceDirectory = context.src(Target.Owner);
-		this.genDirectory = context.gen(Target.Owner);
+		this.sourceDirectory = context.src(Target.Server);
+		this.genDirectory = context.gen(Target.Server);
 	}
 
 	public void execute() {

@@ -1,8 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.other;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.SizedRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 
@@ -10,8 +9,8 @@ import static io.intino.konos.model.VisualizationComponents.Header;
 
 public class HeaderRenderer extends SizedRenderer<Header> {
 
-	public HeaderRenderer(CompilationContext compilationContext, Header component, TemplateProvider provider, Target target) {
-		super(compilationContext, component, provider, target);
+	public HeaderRenderer(CompilationContext compilationContext, Header component, RendererWriter provider) {
+		super(compilationContext, component, provider);
 	}
 
 	@Override

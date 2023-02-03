@@ -5,11 +5,11 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.analytic.AxisInterfaceRenderer;
 import io.intino.konos.builder.codegeneration.analytic.CategoricalAxisRenderer;
 import io.intino.konos.builder.codegeneration.analytic.ContinuousAxisRenderer;
 import io.intino.konos.builder.codegeneration.facts.FactRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.Axis;
 import io.intino.konos.model.Cube;
@@ -34,14 +34,14 @@ public class AnalyticBuilderRenderer extends Renderer {
 	private final ContinuousAxisRenderer continuousAxisRenderer;
 
 	public AnalyticBuilderRenderer(CompilationContext compilationContext, KonosGraph graph, File srcDestination, File resDestination) {
-		super(compilationContext, Target.Owner);
+		super(compilationContext);
 		this.graph = graph;
 		this.srcDestination = srcDestination;
 		this.resDestination = resDestination;
 		this.srcDestination.mkdirs();
 		this.packageName = compilationContext.packageName();
 		this.factRenderer = new FactRenderer();
-		final File res = context.res(Target.Owner).getAbsoluteFile();
+		final File res = context.res(Target.Server).getAbsoluteFile();
 		this.categoricalAxisRenderer = new CategoricalAxisRenderer(context, srcDestination, res);
 		this.continuousAxisRenderer = new ContinuousAxisRenderer(context, srcDestination);
 	}
@@ -55,7 +55,7 @@ public class AnalyticBuilderRenderer extends Renderer {
 	}
 
 	private void copyResourcesToDestination() {
-		final File resources = new File(context.res(Target.Owner).getAbsoluteFile(), "analytic");
+		final File resources = new File(context.res(Target.Server).getAbsoluteFile(), "analytic");
 		try {
 			FileUtils.copyDirectory(resources, new File(resDestination, resources.getName()));
 		} catch (IOException e) {

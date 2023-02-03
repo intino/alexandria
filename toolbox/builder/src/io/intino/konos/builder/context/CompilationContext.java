@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 import io.intino.alexandria.logger.Logger;
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.cache.CacheReader;
 import io.intino.konos.builder.codegeneration.cache.CacheWriter;
 import io.intino.konos.builder.codegeneration.cache.LayerCache;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.compiler.shared.KonosBuildConstants;
 import io.intino.konos.compiler.shared.PostCompileActionMessage;
 import io.intino.konos.model.KonosGraph;
@@ -62,12 +62,12 @@ public class CompilationContext {
 		return this.configuration.module();
 	}
 
-	public File webModuleDirectory() {
-		return configuration.webModuleDirectory();
+	public File serviceDirectory() {
+		return configuration.serviceDirectory();
 	}
 
-	public void webModuleDirectory(File file) {
-		configuration.webModuleDirectory(file);
+	public void serviceDirectory(File file) {
+		configuration.serviceDirectory(file);
 	}
 
 	public String parent() {
@@ -92,22 +92,39 @@ public class CompilationContext {
 	}
 
 	public File root(Target target) {
-		String rootDir = target == Target.Owner ? configuration.moduleDirectory().getAbsolutePath() : configuration.webModuleDirectory().getAbsolutePath();
+		String rootDir;
+		if (target == Target.Server) rootDir = configuration.moduleDirectory().getAbsolutePath();
+		else if (target == Target.Accessor) rootDir = configuration.serviceDirectory().getAbsolutePath();
+		else if (target == Target.Android || target == Target.AndroidResource || target == Target.MobileShared) rootDir = configuration.serviceDirectory().getAbsolutePath();
+		else rootDir = configuration.moduleDirectory().getAbsolutePath();
 		return createIfNotExists(new File(rootDir));
 	}
 
 	public File res(Target target) {
-		return createIfNotExists(target == Target.Owner ? configuration.resDirectory() : accessorRes());
+		File resDir;
+		if (target == Target.Server) resDir = configuration.resDirectory();
+		else if (target == Target.Android || target == Target.AndroidResource) resDir = new File(root(target) + androidRelativePath() + File.separator + "res");
+		else resDir = accessorRes();
+		return createIfNotExists(resDir);
 	}
 
 	public File src(Target target) {
-		return createIfNotExists(target == Target.Owner ? new File(configuration.srcDirectory(), packageName().replace(".", File.separator)) : accessorSrc());
+		File srcDir;
+		if (target == Target.Server) srcDir = new File(configuration.srcDirectory(), packageName().replace(".", File.separator));
+		else if (target == Target.Android) srcDir = new File(root(target) + androidRelativePath() + File.separator + "java", packageName().replace(".", File.separator) + File.separator + "mobile" + File.separator + "android");
+		else if (target == Target.MobileShared) srcDir = new File(root(target) + androidSharedRelativePath(), packageName().replace(".", File.separator) + File.separator + "mobile");
+		else srcDir = accessorSrc();
+		return createIfNotExists(srcDir);
 	}
 
 	public File gen(Target target) {
-		return createIfNotExists(target == Target.Owner ? new File(configuration.genDirectory(), packageName().replace(".", File.separator)) : accessorGen());
+		File genDir;
+		if (target == Target.Server) genDir = new File(configuration.genDirectory(), packageName().replace(".", File.separator));
+		else if (target == Target.Android) genDir = new File(root(target) + androidRelativePath() + File.separator + "java", packageName().replace(".", File.separator) + File.separator + "mobile" + File.separator + "android");
+		else if (target == Target.MobileShared) genDir = new File(root(target) + androidSharedRelativePath(), packageName().replace(".", File.separator) + File.separator + "mobile");
+		else genDir = accessorGen();
+		return createIfNotExists(genDir);
 	}
-
 
 	public String packageName() {
 		return configuration.generationPackage();
@@ -154,6 +171,14 @@ public class CompilationContext {
 
 	private File accessorGen() {
 		return createIfNotExists(new File(root(Target.Accessor) + File.separator + "gen"));
+	}
+
+	public String androidRelativePath() {
+		return File.separator + "android" + File.separator + "src" + File.separator + "main";
+	}
+
+	public String androidSharedRelativePath() {
+		return File.separator + "shared" + File.separator + "src" + File.separator + "commonMain" + File.separator + "kotlin";
 	}
 
 	public LayerCache cache() {

@@ -1,9 +1,8 @@
 package io.intino.konos.builder.codegeneration.ui.displays;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.Block;
 import io.intino.konos.model.Component;
@@ -16,8 +15,8 @@ import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
 
 public class TemplateRenderer extends BaseDisplayRenderer<Template> {
 
-	public TemplateRenderer(CompilationContext compilationContext, Template display, TemplateProvider provider, Target target) {
-		super(compilationContext, display, provider, target);
+	public TemplateRenderer(CompilationContext compilationContext, Template display, RendererWriter writer) {
+		super(compilationContext, display, writer);
 	}
 
 	@Override

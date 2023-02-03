@@ -6,8 +6,8 @@ import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.action.WebHookActionRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
@@ -26,7 +26,7 @@ public class SentinelsRenderer extends Renderer {
 	private final List<Sentinel> sentinels;
 
 	public SentinelsRenderer(CompilationContext compilationContext, KonosGraph graph) {
-		super(compilationContext, Target.Owner);
+		super(compilationContext);
 		this.sentinels = graph.sentinelList();
 	}
 
@@ -38,9 +38,9 @@ public class SentinelsRenderer extends Renderer {
 				.add("box", boxName())
 				.add("sentinel", processSentinels());
 		if (sentinels.stream().anyMatch(Sentinel::isWebHook)) builder.add("hasWebhook", ",");
-		Commons.writeFrame(gen(), "Sentinels", template().render(
+		Commons.writeFrame(gen(Target.Server), "Sentinels", template().render(
 				builder.toFrame()));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(sentinels.get(0)), javaFile(gen(), "Sentinels").getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(sentinels.get(0)), javaFile(gen(Target.Server), "Sentinels").getAbsolutePath()));
 	}
 
 	private Frame[] processSentinels() throws KonosException {

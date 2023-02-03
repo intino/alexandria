@@ -1,0 +1,207 @@
+def type(root)
+	package $package+ValidPackage;
+
+	import $root.*;
+    import kotlinx.serialization.Serializable
+
+    @Serializable
+	$schema
+end
+
+def trigger(schema)
+    [$inner]
+	open class $name+firstUpperCase [: $parent()] {
+
+		$attribute+declaration...[$NL]
+
+		$attribute+getter...[$NL$NL]
+
+		$attribute+setter...[$NL$NL]
+
+		[$schema...[$NL$NL]]
+	}
+end
+
+def type(word & single) trigger(declaration)
+    private lateinit var $name+FirstLowerCase : $type+FirstUpperCase
+
+	enum class $name+FirstUpperCase {
+		$words...[, ]
+	}
+
+end
+
+def type(word & multiple) trigger(declaration)
+	private var $name+FirstLowerCase : List<$type+FirstUpperCase> = arrayListOf()
+
+	enum class $name+FirstUpperCase {
+		$words...[, ]
+	}
+
+end
+
+def type(primitive & single) trigger(declaration)
+	private[ $lateInit~lateinit] var $name+firstLowerCase : $typeFrame[ = $defaultValue]
+end
+
+def !type(primitive) type(single) trigger(declaration)
+	private[ $lateInit~lateinit] var $name+firstLowerCase : $type+firstUpperCase[ = $defaultValue]
+end
+
+def type(map) trigger(declaration)
+	private var $name+firstLowerCase : Map<$key+renderMapType, $value+renderMapType> = mapOf()
+end
+
+def type(multiple) type(object | schema) trigger(declaration)
+	private var $name+firstLowerCase : List<$type+firstUpperCase> = arrayListOf()
+end
+
+def type(multiple) trigger(declaration)
+	private var $name+firstLowerCase : List<$type> = arrayListOf()
+end
+
+def type(word & single) trigger(getter)
+	fun $name+snakeCaseToCamelCase+FirstLowerCase() : $type+FirstUpperCase {
+		return $name+FirstLowerCase
+	}
+end
+
+def type(word & multiple) trigger(getter)
+	fun $name+snakeCaseToCamelCase+FirstLowerCase() : List<$type+FirstUpperCase> {
+		return $name+FirstLowerCase
+	}
+end
+
+def type(primitive & single) trigger(getter)
+	fun $name+snakeCaseToCamelCase+firstLowerCase() : $typeFrame {
+		return this.$name+firstLowerCase
+	}
+end
+
+def !type(primitive) type(single) trigger(getter)
+	fun $name+snakeCaseToCamelCase+firstLowerCase() : $type+firstUpperCase {
+		return this.$name+firstLowerCase
+	}
+end
+
+def type(multiple & schema) trigger(getter)
+	fun $name+snakeCaseToCamelCase+firstLowerCase~List() : List<$type+firstUpperCase> {
+		return this.$name+firstLowerCase
+	}
+
+	fun $name+firstLowerCase~List(predicate : java.util.function.Predicate<$type+firstUpperCase>) : List<$type+firstUpperCase> {
+		return this.$name+firstLowerCase.stream().filter(predicate).toList()
+	}
+
+	fun $name+firstLowerCase(predicate : java.util.function.Predicate<$type+firstUpperCase>) : $type+firstUpperCase {
+		return this.$name+firstLowerCase.stream().filter(predicate).findFirst().orElse(null)
+	}
+end
+
+def type(multiple & object) trigger(getter)
+	fun $name+snakeCaseToCamelCase+firstLowerCase() : List<$type+firstUpperCase> {
+		return this.$name+firstLowerCase
+	}
+end
+
+def type(multiple) trigger(getter)
+	fun $name+snakeCaseToCamelCase+firstLowerCase() : List<$type> {
+		return this.$name+firstLowerCase
+	}
+end
+
+def type(map) trigger(getter)
+	fun $name+firstLowerCase() : Map<$key+renderMapType, $value+renderMapType> {
+		return this.$name+firstLowerCase
+	}
+end
+
+def type(map) trigger(setter)
+	fun $name+firstLowerCase($name+firstLowerCase : Map<$key+renderMapType, $value+renderMapType>) : $element+firstUpperCase {
+		this.$name+firstLowerCase = $name+firstLowerCase
+		return this
+	}
+end
+
+def type(list) trigger(renderMapType)
+	List<$type+firstUpperCase>
+end
+def trigger(renderMapType)
+	$type+firstUpperCase
+end
+
+def type(word & single) trigger(setter)
+	fun $name+snakeCaseToCamelCase+firstLowerCase($name+snakeCaseToCamelCase+firstLowerCase : $type+FirstUpperCase) : $element+firstUpperCase {
+		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase
+		return this
+	}
+end
+def type(word & multiple) trigger(setter)
+	fun $name+snakeCaseToCamelCase+firstLowerCase($name+snakeCaseToCamelCase+firstLowerCase : List<$type+FirstUpperCase>) : $element+firstUpperCase {
+		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase
+		return this
+	}
+end
+
+def type(primitive & single) trigger(setter)
+	fun $name+snakeCaseToCamelCase+firstLowerCase($name+snakeCaseToCamelCase+firstLowerCase : $typeFrame) : $element+firstUpperCase {
+		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase
+		return this
+	}
+end
+
+def !type(primitive) type(single) trigger(setter)
+	fun $name+snakeCaseToCamelCase+firstLowerCase($name+snakeCaseToCamelCase+firstLowerCase : $type+firstUpperCase) : $element+firstUpperCase {
+		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase;
+		return this
+	}
+end
+
+def type(multiple & object) trigger(setter)
+	fun $name+firstLowerCase($name+snakeCaseToCamelCase+firstLowerCase : List<$type+firstUpperCase>) : $element+firstUpperCase {
+		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase
+		return this
+	}
+end
+
+def type(multiple & schema) trigger(setter)
+	fun $name+snakeCaseToCamelCase+firstLowerCase~List($name+snakeCaseToCamelCase+firstLowerCase : List<$type+firstUpperCase>) : $element+firstUpperCase {
+		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase
+		return this
+	}
+end
+
+def type(multiple) trigger(setter)
+	fun $name+snakeCaseToCamelCase+firstLowerCase($name+snakeCaseToCamelCase+firstLowerCase : List<$type>) : $element+firstUpperCase {
+		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase
+		return this
+	}
+end
+
+def type(typeFrame & datetime)
+    kotlinx.datetime.Instant
+end
+
+def type(typeFrame & date)
+    kotlinx.datetime.Instant
+end
+
+def type(typeFrame & real)
+    Double
+end
+
+def type(typeFrame & integer)
+    Int
+end
+
+def type(typeFrame & longinteger)
+    Long
+end
+
+def type(typeFrame)
+    $value
+end
+
+def trigger(inner)
+    @kotlinx.serialization.Serializable
+end

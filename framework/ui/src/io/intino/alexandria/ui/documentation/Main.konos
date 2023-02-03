@@ -4,13 +4,9 @@ use Docs
 use WidgetType
 use Theme
 
-Service(title = "", favicon = "") UiElements as UI(port = "9000")
+Service(title = "", favicon = "") UiElements as UI(targets=Web Android, port = "9000")
 	googleApiKey = "AIzaSyA8FjeAX36umrYD8Jk2FbRFWqDEulInKIA"
 
-//	Resource(path = "/") home as Page(homeTemplate) Main
-//	Resource(path = "/docs") docs as Page(docsTemplate) Main
-//	Resource(path = "/docs/data/:type/") widgetType as Page(widgetTypeTemplate)
-//	Resource(path = "/docs/data/microsite/:page") microSite as Page(widgetTypeTemplate)
 	Resource(path = "/") home as Page(docsTemplate) Main
 	Resource(path = "/widgets") widgets as Page(docsTemplate)
 	Resource(path = "/widgets/:type/") widgetType as Page(widgetTypeTemplate)

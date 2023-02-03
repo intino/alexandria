@@ -5,7 +5,6 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.codegeneration.services.jmx.JMXServerTemplate;
 import io.intino.konos.builder.context.CompilationContext;
@@ -26,7 +25,7 @@ public class JMXAccessorRenderer extends Renderer {
 	private final String packageName;
 
 	public JMXAccessorRenderer(CompilationContext compilationContext, Service.JMX restService, File destination) {
-		super(compilationContext, Target.Owner);
+		super(compilationContext);
 		this.service = restService;
 		this.destination = destination;
 		this.destination.mkdirs();

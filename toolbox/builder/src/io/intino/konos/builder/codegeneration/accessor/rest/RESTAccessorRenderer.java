@@ -5,7 +5,6 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
@@ -36,7 +35,7 @@ public class RESTAccessorRenderer extends Renderer {
 	private final Map<String, List<Parameter>> enumParameters;
 
 	public RESTAccessorRenderer(CompilationContext compilationContext, Service.REST restService, File destination) {
-		super(compilationContext, Target.Owner);
+		super(compilationContext);
 		this.service = restService;
 		this.destination = destination;
 		this.destination.mkdirs();

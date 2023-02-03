@@ -4,7 +4,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.KonosGraph;
 
@@ -22,12 +22,12 @@ public class ExceptionRenderer extends Renderer {
 	private final List<io.intino.konos.model.Exception> exceptions;
 
 	public ExceptionRenderer(CompilationContext compilationContext, KonosGraph graph) {
-		super(compilationContext, Target.Owner);
+		super(compilationContext);
 		this.exceptions = graph.exceptionList();
 	}
 
 	public void clean() {
-		File folder = destinyPackage(gen());
+		File folder = destinyPackage(gen(Target.Server));
 		if (!folder.exists()) return;
 		List<String> filenames = exceptions.stream().map(e -> javaFile(folder, e.name$()).getAbsolutePath()).collect(toList());
 		Arrays.stream(Objects.requireNonNull(folder.listFiles((file, name) -> !filenames.contains(name)))).forEach(File::delete);
@@ -38,12 +38,12 @@ public class ExceptionRenderer extends Renderer {
 	}
 
 	private void processException(io.intino.konos.model.Exception exception) {
-		writeFrame(destinyPackage(gen()), exception.name$(), template().render(
+		writeFrame(destinyPackage(gen(Target.Server)), exception.name$(), template().render(
 				new FrameBuilder("exception")
 						.add("name", exception.name$())
 						.add("code", exception.code())
 						.add("package", packageName()).toFrame()));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(exception), javaFile(destinyPackage(gen()), exception.name$()).getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(exception), javaFile(destinyPackage(gen(Target.Server)), exception.name$()).getAbsolutePath()));
 	}
 
 	private File destinyPackage(File destiny) {

@@ -6,7 +6,6 @@ import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.compiler.shared.PostCompileConfigurationMainActionMessage;
 import io.intino.konos.model.KonosGraph;
@@ -25,9 +24,9 @@ public class MainRenderer extends Renderer {
 	private final KonosGraph graph;
 
 	public MainRenderer(CompilationContext context, boolean hasModel, KonosGraph graph) {
-		super(context, Target.Owner);
+		super(context);
 		this.context = context;
-		this.destination = context.src(Target.Owner);
+		this.destination = new File(context.configuration().srcDirectory(), packageName().replace(".", File.separator));
 		this.hasModel = hasModel;
 		this.configuration = context.configuration();
 		this.graph = graph;

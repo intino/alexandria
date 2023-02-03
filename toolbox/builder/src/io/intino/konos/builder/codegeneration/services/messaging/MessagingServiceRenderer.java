@@ -6,7 +6,7 @@ import io.intino.itrules.Template;
 import io.intino.itrules.formatters.StringFormatters;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.KonosGraph;
 import io.intino.konos.model.Service;
@@ -23,7 +23,7 @@ public class MessagingServiceRenderer extends Renderer {
 	private final List<Service.Messaging> services;
 
 	public MessagingServiceRenderer(CompilationContext compilationContext, KonosGraph graph) {
-		super(compilationContext, Target.Owner);
+		super(compilationContext);
 		this.services = graph.serviceList(Service::isMessaging).map(Service::asMessaging).collect(Collectors.toList());
 	}
 
@@ -41,8 +41,8 @@ public class MessagingServiceRenderer extends Renderer {
 				add("request", processRequests(service.requestList(), service.context(), service.subscriptionModel().name()));
 		if (!service.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
-		writeFrame(gen(), nameOf(service), template().render(builder.toFrame()));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(), nameOf(service)).getAbsolutePath()));
+		writeFrame(gen(Target.Server), nameOf(service), template().render(builder.toFrame()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), nameOf(service)).getAbsolutePath()));
 	}
 
 	private String nameOf(Service.Messaging service) {

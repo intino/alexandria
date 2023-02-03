@@ -1,8 +1,8 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;
 import io.intino.konos.builder.context.CompilationContext;
@@ -25,9 +25,10 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private boolean decorated;
 	private Display owner;
 	public static final Map<String, FrameBuilder> componentFrameMap = Collections.synchronizedMap(new LRUCache<>(10000));
+	public static final Set<String> formatSet = Collections.synchronizedSet(new HashSet<>());
 
-	public ComponentRenderer(CompilationContext compilationContext, C component, TemplateProvider provider, Target target) {
-		super(compilationContext, component, provider, target);
+	public ComponentRenderer(CompilationContext compilationContext, C component, RendererWriter provider) {
+		super(compilationContext, component, provider);
 		this.decorated = ElementHelper.isRoot(component);
 	}
 
@@ -113,12 +114,12 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	private void addReferences(Component component, FrameBuilder builder) {
 		Set<Component> components = new LinkedHashSet<>(references(component));
-		if (target == Target.Owner) builder.add("componentReferences", componentReferencesFrame());
+		if (writer.target() == Target.Server) builder.add("componentReferences", componentReferencesFrame());
 		components.forEach(c -> builder.add("reference", referenceFrame(c)));
 	}
 
 	private FrameBuilder referenceFrame(Component component) {
-		ComponentRenderer<?> renderer = ComponentRendererFactory.renderer(context, component, templateProvider, target);
+		ComponentRenderer<?> renderer = ComponentRendererFactory.renderer(context, component, writer);
 		FrameBuilder builder = new FrameBuilder("reference").add(typeOf(component)).add("name", component.name$());
 		if (isEmbeddedComponent(component)) builder.add("embedded");
 		Component parentComponent = component.core$().ownerAs(Component.class);
@@ -167,7 +168,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			result.add("multipleMax", abstractMultiple.count() != null ? abstractMultiple.count().max() : -1);
 		}
 		if (element.format() != null) {
-			String[] format = element.format().stream().map(Layer::name$).toArray(String[]::new);
+			String[] format = element.format().stream().map(Layer::name$).sorted().toArray(String[]::new);
+			formatSet.add(String.join("-", format));
 			result.add("format", format);
 		}
 		return result;
@@ -189,7 +191,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private UIRenderer componentRenderer(Component component, Display virtualParent) {
-		ComponentRenderer<? extends Component> renderer = ComponentRendererFactory.renderer(context, component, templateProvider, target);
+		ComponentRenderer<? extends Component> renderer = ComponentRendererFactory.renderer(context, component, writer);
 		renderer.buildChildren(true);
 		renderer.decorated(decorated);
 		renderer.owner(owner);
@@ -210,7 +212,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	protected FrameBuilder extendsFrame(Component element) {
-		FrameBuilder result = new FrameBuilder("extends");
+		FrameBuilder result = buildBaseFrame().add("extends");
 		if (element.i$(conceptOf(DataComponents.Image.class))) result.add("image");
 		if (element.i$(conceptOf(CatalogComponents.Collection.class))) result.add("collection");
 		if (element.i$(conceptOf(CatalogComponents.Table.class))) result.add("table");
@@ -374,7 +376,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private String frameId() {
-		return nameOf(element) + (buildChildren && virtualParent() != null ? virtualParent().name$() : "") + (owner != null ? owner.name$() : "") + target.name() + buildChildren + decorated;
+		return nameOf(element) + (buildChildren && virtualParent() != null ? virtualParent().name$() : "") + (owner != null ? owner.name$() : "") + writer.target().name() + buildChildren + decorated;
 	}
 
 }

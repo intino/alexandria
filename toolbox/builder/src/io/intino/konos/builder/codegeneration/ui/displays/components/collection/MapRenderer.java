@@ -1,8 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components.collection;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Target;
-import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.CollectionRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.GeoRendererHelper;
 import io.intino.konos.builder.context.CompilationContext;
@@ -12,8 +11,8 @@ import java.util.stream.Collectors;
 
 public class MapRenderer extends CollectionRenderer<Map> {
 
-	public MapRenderer(CompilationContext compilationContext, Map component, TemplateProvider provider, Target target) {
-		super(compilationContext, component, provider, target);
+	public MapRenderer(CompilationContext compilationContext, Map component, RendererWriter provider) {
+		super(compilationContext, component, provider);
 	}
 
 	@Override

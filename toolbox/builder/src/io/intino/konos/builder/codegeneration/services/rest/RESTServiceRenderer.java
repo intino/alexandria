@@ -7,7 +7,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.Target;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.codegeneration.swagger.SwaggerProfileGenerator;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
@@ -37,18 +37,18 @@ public class RESTServiceRenderer extends Renderer {
 	private final KonosGraph graph;
 
 	public RESTServiceRenderer(CompilationContext compilationContext, KonosGraph graph) {
-		super(compilationContext, Target.Owner);
+		super(compilationContext);
 		this.services = graph.serviceList(Service::isREST).map(Service::asREST).collect(toList());
 		this.graph = graph;
 	}
 
 	public void render() {
-		services.forEach((service) -> processService(service.a$(Service.REST.class), gen()));
+		services.forEach((service) -> processService(service.a$(Service.REST.class), gen(Target.Server)));
 		if (services.stream().anyMatch(Service.REST::generateDocs)) generateApiPortal();
 	}
 
 	private void generateApiPortal() {
-		final File api = new File(res(), "www" + File.separator + "api");
+		final File api = new File(res(Target.Server), "www" + File.separator + "api");
 		copyAssets(api);
 		File data = new File(api, "data");
 		data.mkdirs();
@@ -133,14 +133,14 @@ public class RESTServiceRenderer extends Renderer {
 		}
 		classes().put(service.getClass().getSimpleName() + "#" + service.name$(), className);
 		Commons.writeFrame(gen, className, template().render(builder.toFrame()));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(), className).getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), className).getAbsolutePath()));
 	}
 
 	private void createAuthenticatorClass(Service.REST.Authentication authentication, String service) {
-		if (javaFile(src(), service + "Authenticator").exists()) return;
+		if (javaFile(src(Target.Server), service + "Authenticator").exists()) return;
 		FrameBuilder builder = new FrameBuilder(typeOf(authentication)).add("box", boxName()).add("service", service).add("package", packageName());
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(authentication), javaFile(src(), service + "Authenticator").getAbsolutePath()));
-		Commons.writeFrame(src(), service + "Authenticator", authenticatorTemplate().render(builder.toFrame()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(authentication), javaFile(src(Target.Server), service + "Authenticator").getAbsolutePath()));
+		Commons.writeFrame(src(Target.Server), service + "Authenticator", authenticatorTemplate().render(builder.toFrame()));
 	}
 
 	private String typeOf(Service.REST.Authentication authentication) {

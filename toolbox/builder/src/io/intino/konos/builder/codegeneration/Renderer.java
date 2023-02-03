@@ -2,11 +2,13 @@ package io.intino.konos.builder.codegeneration;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.CompilerConfiguration;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.CatalogComponents;
 import io.intino.konos.model.HelperComponents;
+import io.intino.konos.model.Service;
 import io.intino.magritte.framework.Layer;
 
 import java.io.File;
@@ -17,12 +19,10 @@ import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
 public abstract class Renderer {
 	protected final CompilationContext context;
 	protected final ElementHelper elementHelper;
-	protected final Target target;
 
-	protected Renderer(CompilationContext context, Target target) {
+	protected Renderer(CompilationContext context) {
 		this.context = context;
 		this.elementHelper = new ElementHelper();
-		this.target = target;
 	}
 
 	public void execute() throws KonosException {
@@ -55,19 +55,19 @@ public abstract class Renderer {
 		return context.parent();
 	}
 
-	protected File root() {
+	protected File root(Target target) {
 		return context.root(target);
 	}
 
-	protected File res() {
+	protected File res(Target target) {
 		return context.res(target);
 	}
 
-	protected File src() {
+	protected File src(Target target) {
 		return context.src(target);
 	}
 
-	protected File gen() {
+	protected File gen(Target target) {
 		return context.gen(target);
 	}
 
@@ -98,4 +98,7 @@ public abstract class Renderer {
 		return value != null ? value.substring(1, value.length() - 1) : "";
 	}
 
+	protected boolean isMobile(Service.UI service) {
+		return service.targets().contains(Service.UI.Targets.Android) || service.targets().contains(Service.UI.Targets.IOS);
+	}
 }
