@@ -291,7 +291,7 @@ def type(parameter & mobile)
     else (($resource+firstUpperCase~Page)page).$name+SnakeCaseToCamelCase+firstLowerCase = parameterValue("$name");
 end
 
-def type(parameter & mobile)
+def type(parameter)
 	(($resource+firstUpperCase~Page)page).$name+SnakeCaseToCamelCase+firstLowerCase = parameterValue("$name");
 end
 
