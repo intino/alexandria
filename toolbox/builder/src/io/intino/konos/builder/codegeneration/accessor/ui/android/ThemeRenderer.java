@@ -113,6 +113,6 @@ public class ThemeRenderer extends UIRenderer {
 		if (attribute.equals("fontWeight") && value.equals("bold")) return "700";
 		if (attribute.equals("color") && !value.startsWith("#")) return "@color/" + value;
 		if (attribute.equals("background") && !value.startsWith("#")) return "@color/" + value;
-		return value;
+		return value.replace("px", "dp");
 	}
 }

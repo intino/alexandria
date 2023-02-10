@@ -103,6 +103,7 @@ def type(box)
 			initSlackBots();
 			initWorkflow();
 			initAgenda();
+			initCli();
 		}
 
 		[$hasUi+pushService]
@@ -174,6 +175,10 @@ def type(box)
 			$service+agenda...[$NL]
 		}
 
+		private void initCli() {
+			$service+cli...[$NL]
+		}
+
 		protected void initJavaLogger() {
 			final java.util.logging.Logger Logger = java.util.logging.Logger.getGlobal();
 			final ConsoleHandler handler = new ConsoleHandler();
@@ -226,6 +231,13 @@ def type(service & ui) trigger(setupMethod)
 		$package+validPackage.ui.$name+SnakeCaseToCamelCase+FirstUpperCase~Service.init(sparkInstance, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this, pushService, new $package+validPackage.ui.displays.RouteDispatcher());
 		$use...[$NL]
 		io.intino.alexandria.ui.UiElementsService.initDisplays(sparkInstance, pushService);
+	}
+end
+
+def type(service & cli) trigger(setupMethod)
+	public void setupCli() {
+		[if($parameter == null || $parameter.isEmpty())] return;
+		[io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/")];
 	}
 end
 
@@ -297,6 +309,14 @@ def type(service & agenda) trigger(agenda)
 	this.agenda.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), scheduler);
 	io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();
 	Logger.info("Agenda service: started!");
+end
+
+def type(service & cli) trigger(cli)
+    setupCli();
+    $name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstLowerCase~Service = new $name+SnakeCaseToCamelCase+firstUpperCase~Service();
+    $name+SnakeCaseToCamelCase+firstLowerCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this, new $name+SnakeCaseToCamelCase+firstUpperCase(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box)this));
+    io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();
+    Logger.info("$name+firstUpperCase service: started!");
 end
 
 def type(sentinel) trigger(init)
