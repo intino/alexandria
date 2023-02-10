@@ -20,6 +20,7 @@ import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.codegeneration.sentinel.ListenerRenderer;
 import io.intino.konos.builder.codegeneration.sentinel.SentinelsRenderer;
 import io.intino.konos.builder.codegeneration.services.agenda.AgendaServiceRenderer;
+import io.intino.konos.builder.codegeneration.services.cli.CliRenderer;
 import io.intino.konos.builder.codegeneration.services.jmx.JMXOperationsServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.jmx.JMXServerRenderer;
 import io.intino.konos.builder.codegeneration.services.messaging.MessagingRequestRenderer;
@@ -72,6 +73,7 @@ public class FullRenderer {
 			processes();
 			analytic();
 			slack();
+			cli();
 			box();
 			main();
 			ui();
@@ -180,6 +182,10 @@ public class FullRenderer {
 
 	private void slack() throws KonosException {
 		new SlackRenderer(context, graph).execute();
+	}
+
+	private void cli() throws KonosException {
+		new CliRenderer(context, graph).execute();
 	}
 
 	private void ui() throws KonosException {

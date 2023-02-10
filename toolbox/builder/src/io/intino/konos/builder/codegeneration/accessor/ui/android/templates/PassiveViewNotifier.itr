@@ -2,6 +2,7 @@ def type(display)
     package $package.mobile.displays.notifiers
 
     import $package.mobile.displays.[$packageType~s.]$name+firstUpperCase~$proxy
+    import kotlinx.serialization.json.JsonPrimitive
 
     open class $name+firstUpperCase~$proxy~Notifier(private var element: $name+firstUpperCase~$proxy) : $parentType(element) {
 
@@ -53,35 +54,35 @@ def trigger(notification)
 end
 
 def type(parameter & datetime)
-    kotlinx.datetime.Instant.fromEpochMilliseconds(it$["v"$]!!.toLong())
+    kotlinx.datetime.Instant.fromEpochMilliseconds(((it$["v"$]!! as JsonPrimitive).content).toLong())
 end
 
 def type(parameter & date)
-    kotlinx.datetime.Instant.fromEpochMilliseconds(it$["v"$]!!.toLong())
+    kotlinx.datetime.Instant.fromEpochMilliseconds(((it$["v"$]!! as JsonPrimitive).content).toLong())
 end
 
 def type(parameter & real)
-	it$["v"$]!!.toDouble()
+	((it$["v"$]!! as JsonPrimitive).content).toDouble()
 end
 
 def type(parameter & longinteger)
-	it$["v"$]!!.toLong()
+	((it$["v"$]!! as JsonPrimitive).content).toLong()
 end
 
 def type(parameter & integer)
-	it$["v"$]!!.toInt()
+	((it$["v"$]!! as JsonPrimitive).content).toInt()
 end
 
 def type(parameter & boolean)
-	it$["v"$]!!.toBoolean()
+	((it$["v"$]!! as JsonPrimitive).content).toBoolean()
 end
 
 def type(parameter & object)
-	io.intino.alexandria.mobile.util.Json.parse(it$["v"$]!!) as $package.mobile.schemas.$value+firstUpperCase
+	io.intino.alexandria.mobile.util.Json.parse((it$["v"$]!! as JsonPrimitive).content) as $package.mobile.schemas.$value+firstUpperCase
 end
 
 def type(parameter)
-	it$["v"$]!!
+	(it$["v"$]!! as JsonPrimitive).content
 end
 
 def attribute(this:Display) trigger(target)
@@ -92,5 +93,5 @@ def trigger(target)
 end
 
 def type(event)
-    onMessage("$name+firstLowerCase").toSelf().execute { element.$name+firstLowerCase(it["v"]!!) }
+    onMessage("$name+firstLowerCase").toSelf().execute { element.$name+firstLowerCase((it$["v"$]!! as JsonPrimitive).content) }
 end

@@ -121,6 +121,30 @@ Concept:Named Service
 
 	Aspect RocketChatBot extends SlackBot
 
+	Aspect CLI
+		var string port
+
+		Concept:Named State
+			Aspect Initial
+		Concept:Named Command
+			var string name
+			var string abbreviation
+			var string description
+			Concept:{0..1} Precondition > var State[] states
+			Concept:{0..1} Postcondition > var State state
+			has Parameter
+			Concept:{1..1} Response
+				Aspect Confirmation
+					var string question
+					var string[] options
+				Aspect Text
+				Aspect MultiLine
+					Concept Line
+						var string content
+						var Line visibleWith = empty
+						Aspect Multiple
+			has Exception
+
 	Aspect UI
 		var word[]:{Web Android IOS} targets = Web
 		var function:HomesProvider homeList = 'return self.resourceList().stream().filter(Service.UI.Resource::isMain).collect(toList());';
