@@ -178,7 +178,7 @@ public abstract class Bot {
 		private final List<String> parameters;
 		private final String description;
 		private final String context;
-		private List<String> components;
+		private final List<String> components;
 
 		CommandInfo(List<String> parameters, String context, List<String> components, String description) {
 			this.parameters = parameters;
