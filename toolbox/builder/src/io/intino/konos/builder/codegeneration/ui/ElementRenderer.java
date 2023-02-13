@@ -3,17 +3,22 @@ package io.intino.konos.builder.codegeneration.ui;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
+import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
+import io.intino.konos.builder.helpers.CodeGenerationHelper;
 import io.intino.konos.builder.helpers.ElementHelper;
+import io.intino.konos.model.Component;
 import io.intino.magritte.framework.Layer;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
-import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
-import static io.intino.konos.builder.helpers.Commons.javaFile;
+import static io.intino.konos.builder.helpers.Commons.*;
 
 public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 	protected final C element;
@@ -27,7 +32,7 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 
 	@Override
 	public void execute() throws KonosException {
-		File displayFile = javaFile(displayFolder(gen(writer.target()), typeOf(element), writer.target()), displayName(false));
+		File displayFile = CodeGenerationHelper.fileOf(displayFolder(gen(writer.target()), typeOf(element), writer.target()), displayName(false), writer.target());
 		if (isRendered(element) && displayFile.exists()) return;
 		super.execute();
 	}

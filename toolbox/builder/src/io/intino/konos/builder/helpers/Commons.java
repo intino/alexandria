@@ -4,6 +4,7 @@ import cottons.utils.StringHelper;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.model.Data;
 import io.intino.konos.model.Redirect;
 import io.intino.konos.model.Response;

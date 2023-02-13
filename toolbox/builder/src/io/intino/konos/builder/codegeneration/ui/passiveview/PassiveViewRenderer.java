@@ -135,45 +135,6 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			builder.add("alexandriaBlockImport", new FrameBuilder("alexandriaImport").add("name", "Block"));
 	}
 
-	protected List<Component> components(PassiveView passiveView) {
-		List<Component> components = new ArrayList<>();
-		if (passiveView.i$(conceptOf(Block.class))) components.addAll(passiveView.a$(Block.class).componentList());
-		if (passiveView.i$(conceptOf(io.intino.konos.model.Template.class)))
-			components.addAll(passiveView.a$(io.intino.konos.model.Template.class).componentList());
-		if (passiveView.i$(conceptOf(OtherComponents.Snackbar.class)))
-			components.addAll(passiveView.a$(OtherComponents.Snackbar.class).componentList());
-		if (passiveView.i$(conceptOf(VisualizationComponents.Stepper.class)))
-			components.addAll(passiveView.a$(VisualizationComponents.Stepper.class).stepList());
-		if (passiveView.i$(conceptOf(VisualizationComponents.Stepper.Step.class)))
-			components.addAll(passiveView.a$(VisualizationComponents.Stepper.Step.class).componentList());
-		if (passiveView.i$(conceptOf(VisualizationComponents.Header.class)))
-			components.addAll(passiveView.a$(VisualizationComponents.Header.class).componentList());
-		if (passiveView.i$(conceptOf(Selector.class))) {
-			if (passiveView.i$(conceptOf(Selector.CollectionBox.class)) && passiveView.a$(Selector.CollectionBox.class).source() != null)
-				components.add(passiveView.a$(Selector.CollectionBox.class).source());
-			else components.addAll(passiveView.a$(Selector.class).componentList());
-		}
-		if (passiveView.i$(conceptOf(OtherComponents.User.class)))
-			components.addAll(passiveView.a$(OtherComponents.User.class).componentList());
-		if (passiveView.i$(conceptOf(CatalogComponents.Table.class)))
-			components.addAll(passiveView.a$(CatalogComponents.Table.class).moldList().stream().filter(m -> m.heading() != null).map(CatalogComponents.Moldable.Mold::heading).collect(toList()));
-		if (passiveView.i$(conceptOf(CatalogComponents.DynamicTable.class)))
-			components.addAll(passiveView.a$(CatalogComponents.DynamicTable.class).moldList().stream().filter(m -> m.heading() != null).map(CatalogComponents.Moldable.Mold::heading).collect(toList()));
-		if (passiveView.i$(conceptOf(CatalogComponents.Moldable.Mold.Heading.class)))
-			components.addAll(passiveView.a$(CatalogComponents.Moldable.Mold.Heading.class).componentList());
-		if (passiveView.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class)))
-			components.addAll(passiveView.a$(CatalogComponents.Moldable.Mold.Item.class).componentList());
-		if (passiveView.i$(conceptOf(InteractionComponents.Toolbar.class)))
-			components.addAll(passiveView.a$(InteractionComponents.Toolbar.class).componentList());
-		if (passiveView.i$(conceptOf(OtherComponents.Dialog.class)))
-			components.addAll(passiveView.a$(OtherComponents.Dialog.class).componentList());
-		if (passiveView.i$(conceptOf(OtherComponents.DecisionDialog.class)))
-			components.add(passiveView.a$(OtherComponents.DecisionDialog.class).selector());
-		if (passiveView.i$(conceptOf(OtherComponents.CollectionDialog.class)))
-			components.add(passiveView.a$(OtherComponents.CollectionDialog.class).collection());
-		return components;
-	}
-
 	protected void addFacets(PassiveView passiveView, FrameBuilder builder) {
 		List<String> facets = facets(passiveView);
 		facets.forEach(facet -> builder.add("facet", facet));
