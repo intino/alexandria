@@ -3,6 +3,7 @@ package io.intino.alexandria.cli;
 import io.intino.alexandria.Base64;
 import io.intino.alexandria.cli.command.MessageProperties;
 import io.intino.alexandria.cli.response.Attachment;
+import io.intino.alexandria.cli.response.MultiLine;
 import io.intino.alexandria.cli.response.Question;
 import io.intino.alexandria.cli.response.Text;
 import io.intino.alexandria.cli.schemas.BotResponse;
@@ -42,6 +43,12 @@ public class CliManager {
 					.type(BotResponse.Type.question)
 					.title(r.question)
 					.options(r.options);
+		}
+		if (response instanceof MultiLine) {
+			MultiLine r = (MultiLine) response;
+			return new BotResponse()
+					.type(BotResponse.Type.multiline)
+					.raw(r.toString());
 		}
 		return new BotResponse().type(BotResponse.Type.text).raw("Impossible to send file to this environment");
 	}

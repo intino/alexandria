@@ -20,19 +20,21 @@ public class MultiLine extends Response {
 
 	@Override
 	public String toString() {
-		return lines.stream().filter(this::isVisible).map(this::line).collect(Collectors.joining(""));
+		return lines.stream().filter(this::isVisible).map(this::line).filter(l -> !l.isEmpty()).collect(Collectors.joining("\n"));
 	}
 
 	private boolean isVisible(Line line) {
 		if (line.dependantLine() == null) return true;
 		Line dependant = findLine(line.dependantLine());
-		if (dependant.multiple()) return !provider.data(dependant.name()).isEmpty();
-		return provider.data(dependant.name()) != null;
+		if (dependant == null) return false;
+		MessageData data = provider.data(dependant.name());
+		if (dependant.multiple()) return data != null && !data.isEmpty();
+		return data != null;
 	}
 
 	private String line(Line line) {
 		String template = line.template();
-		List<MessageData> data = line.multiple() ? singletonList(provider.data(line.name())) : provider.dataList(line.name());
+		List<MessageData> data = line.multiple() ? provider.dataList(line.name()) : singletonList(provider.data(line.name()));
 		List<String> result = data.stream().map(d -> lineOf(d, template)).filter(Objects::nonNull).collect(Collectors.toList());
 		return String.join("\n", result);
 	}
