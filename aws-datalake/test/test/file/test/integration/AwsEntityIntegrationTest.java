@@ -1,4 +1,4 @@
-package file.test.integration;
+package test.file.test.integration;
 
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.aws.file.AwsEntityStore;
@@ -20,7 +20,7 @@ public class AwsEntityIntegrationTest {
 
     @Test
     public void AwsEntityStore_tanks_count_test() {
-        new AwsEntityStore(s3Mock).tanks();
+        new AwsEntityStore(s3Mock, "", "").tanks();
         verify(s3Mock, times(1)).prefixesIn(BucketName, "datalake/entities/");
     }
 

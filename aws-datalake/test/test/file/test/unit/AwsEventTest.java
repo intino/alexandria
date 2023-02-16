@@ -1,4 +1,4 @@
-package file.test.unit;
+package test.file.test.unit;
 
 import com.amazonaws.services.s3.model.S3Object;
 import io.intino.alexandria.datalake.aws.*;
@@ -51,7 +51,7 @@ public class AwsEventTest {
 
     @Test
     public void should_check_event_tank() {
-        assertEquals(new AwsEventStore(s3Mock).tanks().findFirst().get(),
+        assertEquals(new AwsEventStore(s3Mock, "", "").tanks().findFirst().get(),
                 new AwsEventTank(s3Mock, BucketName, "datalake/events/ps.Anomaly"));
         verify(s3Mock).prefixesIn(BucketName, "datalake/events/");
     }

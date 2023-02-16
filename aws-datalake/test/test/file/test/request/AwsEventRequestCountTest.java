@@ -1,4 +1,4 @@
-package file.test.request;
+package test.file.test.request;
 
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.aws.file.AwsEventStore;
@@ -27,7 +27,7 @@ public class AwsEventRequestCountTest {
 
     @Test
     public void AwsEventTank_tanks_count_test() {
-        new AwsEventStore(s3Mock).tanks();
+        new AwsEventStore(s3Mock, "", "").tanks();
         System.out.println("Request nedeed: " + numberOfRequest());
     }
 

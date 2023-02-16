@@ -50,7 +50,7 @@ public class AwsEntityTest {
 
     @Test
     public void should_check_entity_tank() {
-        AwsEntityStore store = new AwsEntityStore(s3Mock);
+        AwsEntityStore store = new AwsEntityStore(s3Mock, "", "");
         AwsEntityTank tank = (AwsEntityTank) store.tanks().findFirst().get();
         assertEquals(tank, new AwsEntityTank(s3Mock, BucketName, "datalake/entities/User/"));
         verify(s3Mock, times(1)).prefixesIn(BucketName, "datalake/entities/");
