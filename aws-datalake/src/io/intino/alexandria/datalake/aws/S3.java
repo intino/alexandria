@@ -8,7 +8,7 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.datalake.aws.AwsDatalake.AwsDelimiter;
+import static io.intino.alexandria.datalake.aws.file.AwsDatalake.AwsDelimiter;
 
 public class S3 {
     private final AmazonS3 client;

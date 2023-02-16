@@ -1,9 +1,11 @@
-package io.intino.alexandria.datalake.aws;
+package io.intino.alexandria.datalake.aws.file;
+
+import io.intino.alexandria.datalake.aws.S3;
 
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.datalake.aws.AwsDatalake.AwsDelimiter;
-import static io.intino.alexandria.datalake.aws.AwsDatalake.EventStore;
+import static io.intino.alexandria.datalake.aws.file.AwsDatalake.AwsDelimiter;
+import static io.intino.alexandria.datalake.aws.file.AwsDatalake.EventStore;
 
 public class AwsEventStore implements EventStore {
     private final S3 s3;

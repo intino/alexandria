@@ -1,4 +1,4 @@
-package test;
+package file.test;
 
 import com.amazonaws.services.s3.AmazonS3;
 import io.intino.alexandria.datalake.aws.S3Client;
@@ -26,7 +26,7 @@ public class MyClient {
     }
 
     private static BufferedReader getReader() {
-        InputStream stream = MyClient.class.getResourceAsStream("/resource/credentials.txt");
+        InputStream stream = MyClient.class.getResourceAsStream("/test/resource/credentials.txt");
         assert stream != null;
         return new BufferedReader(new InputStreamReader(stream));
     }

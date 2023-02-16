@@ -1,8 +1,8 @@
-package test.request;
+package file.test.request;
 
 import io.intino.alexandria.Timetag;
-import io.intino.alexandria.datalake.aws.AwsEntityStore;
-import io.intino.alexandria.datalake.aws.AwsEntityTank;
+import io.intino.alexandria.datalake.aws.file.AwsEntityStore;
+import io.intino.alexandria.datalake.aws.file.AwsEntityTank;
 import io.intino.alexandria.datalake.aws.S3;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +31,7 @@ public class AwsEntityRequestCountTest {
 
     @Test
     public void AwsEntityStore_tanks_count_test() {
-        new AwsEntityStore(s3Mock, BucketName, "datalake/entities/").tanks();
+        new AwsEntityStore(s3Mock).tanks();
         System.out.println("Request nedeed: " + numberOfRequest());
     }
 

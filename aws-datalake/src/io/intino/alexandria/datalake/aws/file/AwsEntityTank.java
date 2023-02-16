@@ -1,13 +1,14 @@
-package io.intino.alexandria.datalake.aws;
+package io.intino.alexandria.datalake.aws.file;
 
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake.EntityStore.Tank;
 import io.intino.alexandria.datalake.Datalake.EntityStore.Tub;
+import io.intino.alexandria.datalake.aws.S3;
 
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static io.intino.alexandria.datalake.aws.AwsDatalake.AwsDelimiter;
+import static io.intino.alexandria.datalake.aws.file.AwsDatalake.AwsDelimiter;
 
 public class AwsEntityTank implements Tank{
     private final S3 s3;

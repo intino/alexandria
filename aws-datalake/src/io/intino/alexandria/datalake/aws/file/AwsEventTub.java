@@ -1,4 +1,4 @@
-package io.intino.alexandria.datalake.aws;
+package io.intino.alexandria.datalake.aws.file;
 
 import com.amazonaws.services.s3.model.S3Object;
 import io.intino.alexandria.Timetag;

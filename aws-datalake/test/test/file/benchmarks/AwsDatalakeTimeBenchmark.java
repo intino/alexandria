@@ -1,10 +1,13 @@
-package benchmarks;
+package file.benchmarks;
 
 import io.intino.alexandria.Timetag;
-import io.intino.alexandria.datalake.aws.AwsDatalake;
+import io.intino.alexandria.datalake.Datalake;
+import io.intino.alexandria.datalake.aws.file.AwsDatalake;
 import io.intino.alexandria.datalake.aws.S3;
+import io.intino.alexandria.event.EventStream;
+import org.junit.Test;
 import org.openjdk.jmh.annotations.*;
-import test.MyClient;
+import file.test.MyClient;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -33,9 +36,14 @@ public class AwsDatalakeTimeBenchmark {
         datalake.eventStore().tank("ps.Anomaly").tubs();
     }
 
-    @Benchmark
+    @Test
     public void get_tubs_from_entities_tank() {
-        datalake.eventStore().tank("User").tubs();
+        AtomicInteger count = new AtomicInteger();
+        EventStream stream = datalake.eventStore().tank("ps.Anomaly").tubs().parallel()
+                .map(Datalake.EventStore.Tub::events)
+                .reduce((inputs, inputs2) -> new EventStream.Merge(inputs, inputs2))
+                .orElse(new EventStream.Empty());
+        stream.forEachRemaining(e -> count.get());
     }
 
     @Benchmark

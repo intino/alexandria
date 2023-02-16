@@ -1,6 +1,7 @@
-package io.intino.alexandria.datalake.aws;
+package io.intino.alexandria.datalake.aws.file;
 
 import io.intino.alexandria.datalake.Datalake;
+import io.intino.alexandria.datalake.aws.S3;
 
 public class AwsDatalake implements Datalake {
     public static final String AwsDelimiter = "/";
@@ -20,7 +21,7 @@ public class AwsDatalake implements Datalake {
 
     @Override
     public EntityStore entityStore() {
-        return new AwsEntityStore(s3, bucketName, entityFolder());
+        return new AwsEntityStore(s3,bucketName, entityFolder());
     }
 
     private String eventFolder() {

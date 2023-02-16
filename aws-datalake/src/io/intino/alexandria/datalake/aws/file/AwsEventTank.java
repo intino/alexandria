@@ -1,16 +1,17 @@
-package io.intino.alexandria.datalake.aws;
+package io.intino.alexandria.datalake.aws.file;
 
 import com.amazonaws.services.s3.model.S3Object;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake.EventStore.Tank;
 import io.intino.alexandria.datalake.Datalake.EventStore.Tub;
+import io.intino.alexandria.datalake.aws.S3;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.datalake.aws.AwsDatalake.AwsDelimiter;
+import static io.intino.alexandria.datalake.aws.file.AwsDatalake.AwsDelimiter;
 import static io.intino.alexandria.zim.ZimReader.ZimExtension;
 
 public class AwsEventTank implements Tank {

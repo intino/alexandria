@@ -1,4 +1,4 @@
-package io.intino.alexandria.datalake.aws;
+package io.intino.alexandria.datalake.aws.file;
 
 import com.amazonaws.services.s3.model.S3Object;
 import io.intino.alexandria.Scale;
@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.datalake.aws.AwsDatalake.*;
+import static io.intino.alexandria.datalake.aws.file.AwsDatalake.*;
 
 
 public class AwsEntityTub implements Tub{

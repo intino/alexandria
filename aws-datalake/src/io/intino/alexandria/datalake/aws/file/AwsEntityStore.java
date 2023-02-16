@@ -1,10 +1,11 @@
-package io.intino.alexandria.datalake.aws;
+package io.intino.alexandria.datalake.aws.file;
 
 import io.intino.alexandria.datalake.Datalake.EntityStore;
+import io.intino.alexandria.datalake.aws.S3;
 
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.datalake.aws.AwsDatalake.AwsDelimiter;
+import static io.intino.alexandria.datalake.aws.file.AwsDatalake.AwsDelimiter;
 
 public class AwsEntityStore implements EntityStore {
     public static final String Extension = ".triples";

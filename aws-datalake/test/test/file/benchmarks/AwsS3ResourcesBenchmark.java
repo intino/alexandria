@@ -1,8 +1,8 @@
-package benchmarks;
+package file.benchmarks;
 
+import file.test.MyClient;
 import io.intino.alexandria.datalake.aws.S3;
 import org.junit.jupiter.api.Test;
-import test.MyClient;
 
 import java.util.stream.Collectors;
 

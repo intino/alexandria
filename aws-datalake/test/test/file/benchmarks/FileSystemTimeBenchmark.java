@@ -1,4 +1,4 @@
-package benchmarks;
+package file.benchmarks;
 
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.file.FileDatalake;

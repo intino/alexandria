@@ -1,11 +1,15 @@
-package benchmarks;
+package file.benchmarks;
 
+import com.amazonaws.services.s3.model.S3Object;
+import file.test.MyClient;
 import io.intino.alexandria.datalake.aws.S3;
+import io.intino.alexandria.zim.ZimReader;
 import org.openjdk.jmh.annotations.*;
-import test.MyClient;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.AverageTime)
@@ -31,8 +35,11 @@ public class AwsS3TimeBenchmark {
         s3.prefixesIn("datalakejosejuan", "datalake/events/").collect(Collectors.toList());
     }
 
-    @Benchmark
-    public void get_multiple_objects_from_bucket() {
-        s3.getObjectsFrom("datalakejosejuan", "datalake/events/ps.Anomaly/");
+    public static void main(String[] args) {
+        S3 s3 = S3.with(MyClient.s3Client);
+        AtomicInteger count = new AtomicInteger();
+        Stream<S3Object> stream = s3.getObjectsFrom("datalakejosejuan", "datalake/events/ps.Anomaly/");
+        stream.parallel().map(o-> new ZimReader(o.getObjectContent())).forEach(e-> e.forEachRemaining(ev-> count.incrementAndGet()));
+        System.out.println(count.get());
     }
 }

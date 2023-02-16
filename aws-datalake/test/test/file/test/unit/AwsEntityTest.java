@@ -1,8 +1,12 @@
-package test.unit;
+package file.test.unit;
 
 import com.amazonaws.services.s3.model.S3Object;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.aws.*;
+import io.intino.alexandria.datalake.aws.file.AwsDatalake;
+import io.intino.alexandria.datalake.aws.file.AwsEntityStore;
+import io.intino.alexandria.datalake.aws.file.AwsEntityTank;
+import io.intino.alexandria.datalake.aws.file.AwsEntityTub;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,7 +50,7 @@ public class AwsEntityTest {
 
     @Test
     public void should_check_entity_tank() {
-        AwsEntityStore store = new AwsEntityStore(s3Mock, BucketName, "datalake/entities/");
+        AwsEntityStore store = new AwsEntityStore(s3Mock);
         AwsEntityTank tank = (AwsEntityTank) store.tanks().findFirst().get();
         assertEquals(tank, new AwsEntityTank(s3Mock, BucketName, "datalake/entities/User/"));
         verify(s3Mock, times(1)).prefixesIn(BucketName, "datalake/entities/");
@@ -102,6 +106,6 @@ public class AwsEntityTest {
     }
 
     private InputStream readFile() {
-        return AwsEntityTest.class.getResourceAsStream("/resource/" + FileName);
+        return AwsEntityTest.class.getResourceAsStream("/test/resource/" + FileName);
     }
 }

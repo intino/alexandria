@@ -1,8 +1,8 @@
-package test.request;
+package file.test.request;
 
 import io.intino.alexandria.Timetag;
-import io.intino.alexandria.datalake.aws.AwsEventStore;
-import io.intino.alexandria.datalake.aws.AwsEventTank;
+import io.intino.alexandria.datalake.aws.file.AwsEventStore;
+import io.intino.alexandria.datalake.aws.file.AwsEventTank;
 import io.intino.alexandria.datalake.aws.S3;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class AwsEventRequestCountTest {
 
     @Test
     public void AwsEventTank_tanks_count_test() {
-        new AwsEventStore(s3Mock, BucketName, "datalake/events/").tanks();
+        new AwsEventStore(s3Mock).tanks();
         System.out.println("Request nedeed: " + numberOfRequest());
     }
 
