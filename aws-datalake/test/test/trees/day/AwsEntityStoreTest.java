@@ -27,6 +27,6 @@ public class AwsEntityStoreTest {
     @Test
     public void should_return_specific_entity_tank() {
         AwsDayDatalake datalake = new AwsDayDatalake(S3.with(client));
-        assertEquals(new AwsDayEntityTank("User").name(), datalake.entityStore().tank("User").name());
+        assertEquals(new AwsDayEntityTank("User", S3.with(client)).name(), datalake.entityStore().tank("User").name());
     }
 }

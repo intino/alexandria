@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertEquals;
 
 public class AwsEventStoreTest {
-     static AmazonS3 client = MyClient.s3Client;
+    static AmazonS3 client = MyClient.s3Client;
 
     @Test
     public void should_return_all_events_tanks() {
@@ -27,10 +27,6 @@ public class AwsEventStoreTest {
     @Test
     public void should_return_specific_entity_tank() {
         AwsDayDatalake datalake = new AwsDayDatalake(S3.with(client));
-        assertEquals(new AwsDayEntityTank("ps.Anomaly").name(), datalake.entityStore().tank("ps.Anomaly").name());
+        assertEquals(new AwsDayEntityTank("ps.Anomaly", S3.with(MyClient.s3Client)).name(), datalake.entityStore().tank("ps.Anomaly").name());
     }
-
-
-
-
 }
