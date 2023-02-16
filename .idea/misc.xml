@@ -25,6 +25,7 @@
       </list>
     </option>
   </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="JSX" />
   </component>
@@ -38,6 +39,7 @@
         <option value="$PROJECT_DIR$/toolbox/dsl/pom.xml" />
         <option value="$PROJECT_DIR$/toolbox/konos-dsl/pom.xml" />
         <option value="$PROJECT_DIR$/toolbox/builder-constants/pom.xml" />
+        <option value="$PROJECT_DIR$/../aws-datalake/pom.xml" />
       </list>
     </option>
   </component>

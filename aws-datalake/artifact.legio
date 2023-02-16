@@ -1,0 +1,23 @@
+dsl Legio
+
+Artifact("io.intino.alexandria", "1.0.0") aws-datalake
+	Imports
+		Compile("io.intino.alexandria", "primitives", "1.0.5")
+		Compile("io.intino.alexandria", "datalake", "5.0.3")
+		Compile("javax.xml.bind", "jaxb-api", "2.3.1")
+		Compile("com.amazonaws", "aws-java-sdk-s3", "1.12.398")
+		Compile ("software.amazon.awssdk", "s3-transfer-manager", "2.20.4")
+		Compile("software.amazon.awssdk.crt", "aws-crt", "0.13.1")
+		Test("junit", "junit", "4.13")
+		Test("org.assertj", "assertj-core", "3.23.1")
+		Test("org.mockito", "mockito-core", "5.1.1")
+		Test("org.mockito", "mockito-junit-jupiter", "5.1.1")
+		Test("org.openjdk.jmh", "jmh-core", "1.36")
+        Test("org.openjdk.jmh", "jmh-generator-annprocess", "1.36")
+	Package(mode = ModulesAndLibrariesLinkedByManifest)
+	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
+
+Repository(identifier = "intino-maven")
+	Release("https://artifactory.intino.io/artifactory/releases")
+
+RunConfiguration local

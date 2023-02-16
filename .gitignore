@@ -31,3 +31,4 @@ workspace.txt
 temp
 toolbox/swagger-doc/node_modules
 toolbox/swagger-doc/build
+**/credentials.txt
