@@ -1,0 +1,4 @@
+events,ps.Anomaly
+events,ps.Diagnostic
+events,ps.EnergyConsumption
+entities,User

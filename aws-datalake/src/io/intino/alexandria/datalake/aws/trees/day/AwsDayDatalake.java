@@ -14,7 +14,7 @@ public class AwsDayDatalake implements Datalake {
     public static final String AwsDelimiter = "/";
     private final S3 s3;
 
-    private AwsDayDatalake(S3 s3) {
+    public AwsDayDatalake(S3 s3) {
         this.s3 = s3;
     }
 

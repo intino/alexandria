@@ -1,4 +1,4 @@
-package file.test.unit;
+package test.file.test.unit;
 
 import com.amazonaws.services.s3.model.S3Object;
 import io.intino.alexandria.Timetag;
@@ -106,6 +106,6 @@ public class AwsEntityTest {
     }
 
     private InputStream readFile() {
-        return AwsEntityTest.class.getResourceAsStream("/test/resource/" + FileName);
+        return AwsEntityTest.class.getResourceAsStream("/resource/" + FileName);
     }
 }

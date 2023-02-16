@@ -1,7 +1,7 @@
-package file.benchmarks;
+package test.file.benchmarks;
 
 import com.amazonaws.services.s3.model.S3Object;
-import file.test.MyClient;
+import test.MyClient;
 import io.intino.alexandria.datalake.aws.S3;
 import io.intino.alexandria.zim.ZimReader;
 import org.openjdk.jmh.annotations.*;

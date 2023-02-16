@@ -1,6 +1,6 @@
-package file.benchmarks;
+package test.file.benchmarks;
 
-import file.test.MyClient;
+import test.MyClient;
 import io.intino.alexandria.datalake.aws.S3;
 import org.junit.jupiter.api.Test;
 
