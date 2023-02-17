@@ -5,7 +5,7 @@ import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.Datalake.Store.Source;
 import io.intino.alexandria.datalake.file.FS;
-import io.intino.alexandria.event.triplet.TripletEvent;
+import io.intino.alexandria.event.tuple.TripletEvent;
 
 import java.io.File;
 import java.util.stream.Stream;

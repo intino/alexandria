@@ -1,4 +1,4 @@
-package io.intino.alexandria.event.triplet;
+package io.intino.alexandria.event.tuple;
 
 import io.intino.alexandria.event.Event;
 

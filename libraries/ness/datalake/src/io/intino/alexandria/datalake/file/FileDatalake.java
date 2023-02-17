@@ -6,7 +6,7 @@ import io.intino.alexandria.datalake.file.message.MessageEventStore;
 import io.intino.alexandria.datalake.file.tuple.TupleEventStore;
 import io.intino.alexandria.event.measurement.MeasurementEvent;
 import io.intino.alexandria.event.message.MessageEvent;
-import io.intino.alexandria.event.triplet.TripletEvent;
+import io.intino.alexandria.event.tuple.TripletEvent;
 
 import java.io.File;
 

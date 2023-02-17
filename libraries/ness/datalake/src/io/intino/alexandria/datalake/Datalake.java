@@ -5,7 +5,7 @@ import io.intino.alexandria.Timetag;
 import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.measurement.MeasurementEvent;
 import io.intino.alexandria.event.message.MessageEvent;
-import io.intino.alexandria.event.triplet.TripletEvent;
+import io.intino.alexandria.event.tuple.TripletEvent;
 
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;

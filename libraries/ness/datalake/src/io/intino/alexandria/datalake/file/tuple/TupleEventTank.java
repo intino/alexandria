@@ -2,7 +2,7 @@ package io.intino.alexandria.datalake.file.tuple;
 
 import io.intino.alexandria.datalake.Datalake.Store.Source;
 import io.intino.alexandria.datalake.Datalake.Store.Tank;
-import io.intino.alexandria.event.triplet.TripletEvent;
+import io.intino.alexandria.event.tuple.TripletEvent;
 
 import java.io.File;
 
