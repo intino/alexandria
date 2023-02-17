@@ -81,21 +81,21 @@ public class EventSessionSealer {
 			this.stores = Map.of(Type.event, datalake.messageStore(), Type.tuple, datalake.tupleStore(), Type.measurement, datalake.measurementStore());
 			this.sortingPolicy = sortingPolicy;
 			this.tempFolder = tempFolder;
-
 		}
 
-		public void seal(Fingerprint fingerprint, List<File> files) throws IOException {
-			seal(datalakeFile(fingerprint), sort(fingerprint, files));
+		public void seal(Fingerprint fingerprint, List<File> sessions) throws IOException {
+			seal(datalakeFile(fingerprint), sort(fingerprint, sessions));
 		}
 
-		private void seal(File datalakeFile, List<File> files) throws IOException {
-			EventWriter.of(datalakeFile).put(streamOf(files));
+		private void seal(File datalakeFile, List<File> sessions) throws IOException {
+			EventWriter.of(datalakeFile).put(streamOf(sessions));
 		}
 
 		private List<File> sort(Fingerprint fingerprint, List<File> files) {
 			try {
 				for (File file : files)
-					if (sortingPolicy.test(fingerprint.tank())) new MessageEventSorter(file, tempFolder).sort();
+					if (fingerprint.type().equals(Type.event) && sortingPolicy.test(fingerprint.tank()))
+						new MessageEventSorter(file, tempFolder).sort();
 				return files;
 			} catch (IOException e) {
 				Logger.error(e);

@@ -1,5 +1,6 @@
 package io.intino.alexandria.event;
 
+import io.intino.alexandria.event.util.EventFormats;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
@@ -11,7 +12,6 @@ import java.util.stream.Stream;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public abstract class AbstractEventWriter<T extends Event> implements EventWriter<T> {
-
 	protected final File file;
 
 	public AbstractEventWriter(File file) {
@@ -26,7 +26,7 @@ public abstract class AbstractEventWriter<T extends Event> implements EventWrite
 			temp = merge(eventStream);
 			Files.move(temp.toPath(), file.toPath(), REPLACE_EXISTING);
 		} finally {
-			if(temp != null) temp.delete();
+			if (temp != null) temp.delete();
 		}
 	}
 
@@ -39,10 +39,10 @@ public abstract class AbstractEventWriter<T extends Event> implements EventWrite
 	protected File tempFile() {
 		String prefix = getClass().getSimpleName().toLowerCase() + "#";
 		try {
-			return File.createTempFile(prefix, ".zim");
+			return File.createTempFile(prefix, EventFormats.formatOf(file).extension());
 		} catch (IOException e) {
 			Logger.error(e);
-			return new File(prefix + UUID.randomUUID() + ".zim");
+			return new File(prefix + UUID.randomUUID() + EventFormats.formatOf(file).extension());
 		}
 	}
 }

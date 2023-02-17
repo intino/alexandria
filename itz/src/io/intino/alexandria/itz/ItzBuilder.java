@@ -1,4 +1,4 @@
-package io.intino.alexandria.zim;
+package io.intino.alexandria.itz;
 
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
@@ -18,20 +18,21 @@ import java.util.stream.Stream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
-public class ZimBuilder {
+public class ItzBuilder {
+
 	private final File source;
 
-	public ZimBuilder(File file) {
+	public ItzBuilder(File file) {
 		this.source = file;
 		file.getParentFile().mkdirs();
 	}
 
 	public void put(Message... messages) {
-		put(ZimStream.of(messages));
+		put(ItzStream.of(messages));
 	}
 
 	public void put(List<Message> messages) {
-		put(ZimStream.of(messages));
+		put(ItzStream.of(messages));
 	}
 
 	public void put(Stream<Message> zimStream) {
@@ -70,7 +71,7 @@ public class ZimBuilder {
 
 	private Stream<Message> mergeFileWith(Stream<Message> data) {
 		try {
-			return Stream.of(ZimStream.of(source), data).flatMap(Function.identity());
+			return Stream.of(ItzStream.of(source), data).flatMap(Function.identity());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
