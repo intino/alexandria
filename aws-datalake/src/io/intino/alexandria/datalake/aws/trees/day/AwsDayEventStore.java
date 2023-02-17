@@ -47,16 +47,20 @@ public class AwsDayEventStore implements EventStore {
         return new AwsDayEventTank(s, s3);
     }
 
-    private List<String> iterateOver(String bucket) {
+    private List<String> iterateOver(String bucket) throws InterruptedException {
         ArrayList<String> result = new ArrayList<>();
         process(bucket, result);
         return result;
     }
 
-    private void process(String bucket, ArrayList<String> result) {
+    private void process(String bucket, ArrayList<String> result) throws InterruptedException {
+        ExecutorService service = newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         for (int i = 1; i <= months; i++) {
-            result.addAll(s3.prefixesIn(bucket, key(i)).collect(Collectors.toList()));
+            int finalI = i;
+            service.submit(() -> result.addAll(s3.prefixesIn(bucket, key(finalI)).collect(Collectors.toList())));
         }
+        service.shutdown();
+        service.awaitTermination(1, TimeUnit.MINUTES);
     }
 
     private static String key(int i) {
