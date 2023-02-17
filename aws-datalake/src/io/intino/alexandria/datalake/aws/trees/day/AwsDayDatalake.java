@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 
 public class AwsDayDatalake implements Datalake {
     public static final String AwsDelimiter = "/";
+    public static final int months = 12;
+    public static final String AwsBucketDelimiter = "-";
     private final S3 s3;
 
     public AwsDayDatalake(S3 s3) {

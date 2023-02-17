@@ -8,8 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.intino.alexandria.datalake.Datalake.EventStore;
-import static io.intino.alexandria.datalake.aws.trees.day.AwsDayDatalake.AwsDelimiter;
-import static io.intino.alexandria.datalake.aws.trees.day.AwsDayDatalake.buckets;
+import static io.intino.alexandria.datalake.aws.trees.day.AwsDayDatalake.*;
 
 
 public class AwsDayEventStore implements EventStore {
@@ -28,12 +27,12 @@ public class AwsDayEventStore implements EventStore {
         List<String> result = new ArrayList<>();
         for (String bucket : buckets())
             result.addAll(iterateOver(bucket));
-        return result.stream().distinct().map(str -> new AwsEventDayTank(str.split(AwsDelimiter)[2], s3));
+        return result.stream().distinct().map(str -> new AwsDayEventTank(str.split(AwsDelimiter)[2], s3));
     }
 
     private List<String> iterateOver(String bucket) {
         ArrayList<String> result = new ArrayList<>();
-        for (int i = 1; i <= 12; i++)
+        for (int i = 1; i <= months; i++)
             result.addAll(s3.prefixesIn(bucket, i + AwsDelimiter + "events" + AwsDelimiter)
                     .collect(Collectors.toList()));
         return result;
@@ -41,6 +40,6 @@ public class AwsDayEventStore implements EventStore {
 
     @Override
     public Tank tank(String s) {
-        return new AwsEventDayTank(s, s3);
+        return new AwsDayEventTank(s, s3);
     }
 }

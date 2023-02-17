@@ -29,16 +29,16 @@ public class AwsDayEntityStore implements EntityStore {
         return result.stream().distinct().map(str -> new AwsDayEntityTank(str.split(AwsDelimiter)[2], s3));
     }
 
-    private List<String> iterateOver(String bucket) {
-        ArrayList<String> result = new ArrayList<>();
-        for (int i = 1; i <= 12; i++)
-            result.addAll(s3.prefixesIn(bucket, i + AwsDelimiter + "entities" + AwsDelimiter)
-                    .collect(Collectors.toList()));
-        return result;
-    }
-
     @Override
     public Tank tank(String s) {
         return new AwsDayEntityTank(s, s3);
+    }
+
+    private List<String> iterateOver(String bucket) {
+        ArrayList<String> result = new ArrayList<>();
+        for (int i = 1; i <= months; i++)
+            result.addAll(s3.prefixesIn(bucket, i + AwsDelimiter + "entities" + AwsDelimiter)
+                    .collect(Collectors.toList()));
+        return result;
     }
 }
