@@ -1,6 +1,7 @@
 package io.intino.alexandria.event;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.Instant;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -23,8 +24,8 @@ public class EventStream<T extends Event> extends AbstractEventStream<T> impleme
 		return new EventStream<>(new MergeIterator<>(streams));
 	}
 
-	public static <T extends Event> Stream<T> of(File file) {
-		return new EventStream<>(FileEventReader.events(file).iterator());
+	public static <T extends Event> Stream<T> of(File file) throws IOException {
+		return new EventStream<>(EventReader.of(file));
 	}
 
 	private final Iterator<T> iterator;

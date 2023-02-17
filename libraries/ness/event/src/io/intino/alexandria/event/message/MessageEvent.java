@@ -8,6 +8,7 @@ import java.time.Instant;
 public class MessageEvent implements Event {
 	private static final String TS = "ts";
 	private static final String SS = "ss";
+
 	protected Message message;
 	protected Instant ts;
 	protected String ss;
@@ -29,6 +30,11 @@ public class MessageEvent implements Event {
 
 	public String ss() {
 		return ss;
+	}
+
+	@Override
+	public Format format() {
+		return Format.Message;
 	}
 
 	public MessageEvent ts(Instant ts) {
