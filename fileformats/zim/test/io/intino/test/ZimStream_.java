@@ -12,11 +12,9 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.TimeZone;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.InstanceOfAssertFactories.stream;
 
 public class ZimStream_ {
 
@@ -44,24 +42,25 @@ public class ZimStream_ {
 						"temperature: 10.0\n" +
 						"created: 2017-03-22T12:56:18Z\n";
 
-		ZimStream.of(inl)
-				.filter(Objects::nonNull)
-				.mapToDouble(m -> m.get("temperature").asDouble())
-				.reduce(Double::sum)
-				.ifPresent(System.out::println);
+		try (Stream<Message> of = ZimStream.of(inl).filter(Objects::nonNull)) {
+					of.mapToDouble(m -> m.get("temperature").asDouble())
+					.reduce(Double::sum)
+					.ifPresent(System.out::println);
+		}
 	}
 
 	@Test
 	public void should_read_files() throws IOException {
-		try(Stream<Message> messages = ZimStream.sequence(new File("test-res/20220727.zim"), new File("test-res/20220726.zim"), new File("test-res/20220728.zim"))) {
+		try (Stream<Message> messages = ZimStream.sequence(new File("test-res/20220727.zim"), new File("test-res/20220726.zim"), new File("test-res/20220728.zim"))) {
 
 			Iterator<Message> iterator = messages.sorted(Comparator.comparing(m -> m.get("ts").asInstant())).iterator();
 			Instant lastTs = null;
 
-			while(iterator.hasNext()) {
+			while (iterator.hasNext()) {
 				Message msg = iterator.next();
 				Instant ts = msg.get("ts").asInstant();
-				if(lastTs != null && ts.isBefore(lastTs)) throw new IllegalStateException("Stream is not sorted: " + lastTs + " > " + ts);
+				if (lastTs != null && ts.isBefore(lastTs))
+					throw new IllegalStateException("Stream is not sorted: " + lastTs + " > " + ts);
 				lastTs = ts;
 			}
 		}

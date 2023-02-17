@@ -2,7 +2,10 @@ package io.intino.alexandria.event;
 
 import java.io.File;
 import java.time.Instant;
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -12,11 +15,11 @@ import static java.util.stream.IntStream.range;
 
 public class EventStream<T extends Event> extends AbstractEventStream<T> implements Iterator<T>, AutoCloseable {
 
-	public static <T extends Event> Stream<T> sequence(Stream<T>... streams) {
-		return Arrays.stream(streams).flatMap(Function.identity());
+	public static <T extends Event> Stream<T> sequence(Stream<Stream<T>> streams) {
+		return streams.flatMap(Function.identity());
 	}
 
-	public static <T extends Event> Stream<T> merge(Stream<T>... streams) {
+	public static <T extends Event> Stream<T> merge(Stream<Stream<T>> streams) {
 		return new EventStream<>(new MergeIterator<>(streams));
 	}
 
@@ -50,7 +53,7 @@ public class EventStream<T extends Event> extends AbstractEventStream<T> impleme
 	@Override
 	public void forEach(Consumer<? super T> action) {
 		try {
-			while(hasNext()) {
+			while (hasNext()) {
 				action.accept(next());
 			}
 		} finally {
@@ -60,7 +63,7 @@ public class EventStream<T extends Event> extends AbstractEventStream<T> impleme
 
 	@Override
 	public Stream<T> onClose(Runnable closeHandler) {
-		if(closeHandler != null) this.closeHandlers.add(closeHandler);
+		if (closeHandler != null) this.closeHandlers.add(closeHandler);
 		return this;
 	}
 
@@ -71,7 +74,7 @@ public class EventStream<T extends Event> extends AbstractEventStream<T> impleme
 	}
 
 	private static void closeIterator(Iterator<?> iterator) {
-		if(iterator instanceof AutoCloseable) {
+		if (iterator instanceof AutoCloseable) {
 			try {
 				((AutoCloseable) iterator).close();
 			} catch (Exception e) {
@@ -82,12 +85,11 @@ public class EventStream<T extends Event> extends AbstractEventStream<T> impleme
 
 	@SuppressWarnings({"unchecked", "unused"})
 	private static class MergeIterator<T extends Event> implements Iterator<T>, AutoCloseable {
-
 		private final Iterator<T>[] inputs;
 		private final Event[] current;
 
-		public MergeIterator(Stream<T>... streams) {
-			this.inputs = Arrays.stream(streams).map(Stream::iterator).toArray(Iterator[]::new);
+		public MergeIterator(Stream<Stream<T>> streams) {
+			this.inputs = streams.map(Stream::iterator).toArray(Iterator[]::new);
 			this.current = stream(inputs).map(this::next).toArray(Event[]::new);
 		}
 
@@ -126,14 +128,14 @@ public class EventStream<T extends Event> extends AbstractEventStream<T> impleme
 		@Override
 		public void close() throws Exception {
 			Exception e = null;
-			for(Iterator<T> iterator : inputs) {
+			for (Iterator<T> iterator : inputs) {
 				e = tryClose(iterator);
 			}
-			if(e != null) throw e;
+			if (e != null) throw e;
 		}
 
 		private Exception tryClose(Iterator<T> iterator) {
-			if(iterator instanceof AutoCloseable) {
+			if (iterator instanceof AutoCloseable) {
 				try {
 					((AutoCloseable) iterator).close();
 				} catch (Exception e) {

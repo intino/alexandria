@@ -1,4 +1,4 @@
-package io.intino.alexandria.datalake.file.triplet;
+package io.intino.alexandria.datalake.file.tuple;
 
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
@@ -11,15 +11,15 @@ import java.nio.file.Files;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class TripletEventTub implements Datalake.Store.Tub<TripletEvent> {
+public class TupleEventTub implements Datalake.Store.Tub<TripletEvent> {
 	private final File tsv;
 
-	public TripletEventTub(File tsv) {
+	public TupleEventTub(File tsv) {
 		this.tsv = tsv;
 	}
 
 	public String name() {
-		return tsv.getName().replace(TripletEventStore.Extension, "");
+		return tsv.getName().replace(TupleEventStore.Extension, "");
 	}
 
 	@Override

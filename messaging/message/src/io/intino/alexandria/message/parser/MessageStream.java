@@ -1,5 +1,7 @@
 package io.intino.alexandria.message.parser;
 
+import io.intino.alexandria.message.MessageException;
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Iterator;
@@ -30,9 +32,9 @@ public class MessageStream implements Iterator<String>, AutoCloseable {
 	@Override
 	public String next() {
 		if (last == -1) return null;
-		StringBuilder builder = new StringBuilder();
+		StringBuilder builder = new StringBuilder("[");
 		try {
-			char current = 0;
+			char current;
 			int r;
 			while ((r = reader.read()) != -1 && (last != '\n' || r != '[')) {
 				current = (char) r;
@@ -41,16 +43,15 @@ public class MessageStream implements Iterator<String>, AutoCloseable {
 			}
 			last = r;
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new MessageException(e.getMessage(), e);
 		}
-		if (builder.length() > 0) builder.insert(0, '[');
-		return builder.toString().replace("\r\n", "\n");
+		return builder.length() == 1 ? "" : builder.toString().replace("\r\n", "\n");
 	}
 
 	private void init() {
 		try {
 			reader.read();
-		} catch (IOException e) {
+		} catch (IOException ignored) {
 		}
 	}
 }

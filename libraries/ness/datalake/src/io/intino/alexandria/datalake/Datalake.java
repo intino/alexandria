@@ -3,7 +3,6 @@ package io.intino.alexandria.datalake;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.event.Event;
-import io.intino.alexandria.event.EventStream;
 import io.intino.alexandria.event.measurement.MeasurementEvent;
 import io.intino.alexandria.event.message.MessageEvent;
 import io.intino.alexandria.event.triplet.TripletEvent;
@@ -13,9 +12,12 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import static io.intino.alexandria.event.EventStream.merge;
+import static io.intino.alexandria.event.EventStream.sequence;
+
 public interface Datalake {
 	String EventStoreFolder = "events";
-	String TripletStoreFolder = "triplets";
+	String TupleStoreFolder = "tuples";
 	String MeasurementStoreFolder = "measurements";
 
 	Store<MessageEvent> messageStore();
@@ -32,16 +34,16 @@ public interface Datalake {
 		interface Tank<T extends Event> {
 			String name();
 
-			public Source<T> source(String name);
+			Source<T> source(String name);
+
+			Stream<Source<T>> sources();
 
 			default Stream<T> content() {
-				//TODO CH merge and sequence
-				return EventStream.Sequence.of(tubs().map(Tub::events).toArray(EventStream<T>[]::new));
+				return merge(sources().map(s -> sequence(s.tubs().map(Tub::events))));
 			}
 
 			default Stream<T> content(BiPredicate<Source<T>, Timetag> filter) {
-				//TODO CH merge and sequence
-				return EventStream.Sequence.of(tubs().filter(t -> filter.test(t.timetag())).map(Tub::events).toArray(EventStream<T>[]::new));
+				return merge(sources().map(s -> sequence(s.tubs().filter(t -> filter.test(s, t.timetag())).map(Tub::events))));
 			}
 		}
 
@@ -75,7 +77,6 @@ public interface Datalake {
 			default Stream<T> events(Predicate<T> filter) {
 				return events().filter(filter);
 			}
-
 		}
 	}
 }

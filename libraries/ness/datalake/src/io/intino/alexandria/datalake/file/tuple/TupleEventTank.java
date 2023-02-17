@@ -1,4 +1,4 @@
-package io.intino.alexandria.datalake.file.triplet;
+package io.intino.alexandria.datalake.file.tuple;
 
 import io.intino.alexandria.datalake.Datalake.Store.Source;
 import io.intino.alexandria.datalake.Datalake.Store.Tank;
@@ -6,10 +6,10 @@ import io.intino.alexandria.event.triplet.TripletEvent;
 
 import java.io.File;
 
-public class TripletEventTank implements Tank<TripletEvent> {
+public class TupleEventTank implements Tank<TripletEvent> {
 	private final File root;
 
-	public TripletEventTank(File root) {
+	public TupleEventTank(File root) {
 		this.root = root;
 	}
 
@@ -20,7 +20,7 @@ public class TripletEventTank implements Tank<TripletEvent> {
 
 	@Override
 	public Source<TripletEvent> source(String name) {
-		return new TripletEventSource(new File(root, name));
+		return new TupleEventSource(new File(root, name));
 	}
 
 	public File root() {

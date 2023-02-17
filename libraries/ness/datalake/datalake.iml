@@ -19,8 +19,8 @@
     <orderEntry type="module" module-name="event" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
     <orderEntry type="library" name="Intino: org.xerial.snappy:snappy-java:1.1.8.4" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:zim:4.0.3" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:message:3.0.5" level="project" />
-    <orderEntry type="library" name="Intino: org.antlr:antlr4-runtime:4.10.1" level="project" />
+    <orderEntry type="module" module-name="zim" />
+    <orderEntry type="module" module-name="logger" />
+    <orderEntry type="module" module-name="message" />
   </component>
 </module>

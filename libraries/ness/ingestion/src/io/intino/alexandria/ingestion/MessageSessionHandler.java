@@ -12,36 +12,26 @@ import java.util.stream.Stream;
 
 import static java.util.UUID.randomUUID;
 
-public class SessionHandler {
+public class MessageSessionHandler {
 	private final File root;
 	private final List<PrivateSession> sessions = new ArrayList<>();
 
-	public SessionHandler() {
+	public MessageSessionHandler() {
 		this.root = null;
 	}
 
-	public SessionHandler(File root) {
+	public MessageSessionHandler(File root) {
 		this.root = root;
 		this.root.mkdirs();
 		this.sessions.addAll(loadFileSessions());
 	}
 
-	public SetSession createSetSession() {
-		PrivateProvider provider = new PrivateProvider();
-		return new SetSession(provider);
+	public MessageEventSession createEventSession() {
+		return new MessageEventSession(new PrivateProvider());
 	}
 
-	public SetSession createSetSession(int autoFlushSize) {
-		PrivateProvider provider = new PrivateProvider();
-		return new SetSession(provider, autoFlushSize);
-	}
-
-	public EventSession createEventSession() {
-		return new EventSession(new PrivateProvider());
-	}
-
-	public EventSession createEventSession(int autoFlushSize) {
-		return new EventSession(new PrivateProvider(), autoFlushSize);
+	public MessageEventSession createEventSession(int autoFlushSize) {
+		return new MessageEventSession(new PrivateProvider(), autoFlushSize);
 	}
 
 	public void pushTo(URI uri) {

@@ -15,7 +15,6 @@ import static java.util.Objects.requireNonNull;
 
 @SuppressWarnings({"all"})
 public class ZimStream extends AbstractZimStream implements Iterator<Message>, AutoCloseable {
-
 	public static final String ZimExtension = ".zim";
 
 	public static ZimStream sequence(File first, File... rest) throws IOException {
@@ -52,7 +51,6 @@ public class ZimStream extends AbstractZimStream implements Iterator<Message>, A
 	public static ZimStream of(MessageReader reader) {
 		return new ZimStream(reader.iterator());
 	}
-
 
 	private final Iterator<Message> iterator;
 	private final List<Runnable> closeHandlers;

@@ -16,18 +16,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-public class EventSession {
+public class MessageEventSession {
 	private final Map<Fingerprint, MessageWriter> writers = new ConcurrentHashMap<>();
-	private final SessionHandler.Provider provider;
+	private final MessageSessionHandler.Provider provider;
 	private final int autoFlush;
 	private final AtomicInteger count = new AtomicInteger();
 
 
-	public EventSession(SessionHandler.Provider provider) {
+	public MessageEventSession(MessageSessionHandler.Provider provider) {
 		this(provider, 1_000_000);
 	}
 
-	public EventSession(SessionHandler.Provider provider, int autoFlush) {
+	public MessageEventSession(MessageSessionHandler.Provider provider, int autoFlush) {
 		this.provider = provider;
 		this.autoFlush = autoFlush;
 	}

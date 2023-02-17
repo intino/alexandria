@@ -1,4 +1,4 @@
-package io.intino.alexandria.datalake.file.triplet;
+package io.intino.alexandria.datalake.file.tuple;
 
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
@@ -10,10 +10,10 @@ import io.intino.alexandria.event.triplet.TripletEvent;
 import java.io.File;
 import java.util.stream.Stream;
 
-public class TripletEventSource implements Source<TripletEvent> {
+public class TupleEventSource implements Source<TripletEvent> {
 	private final File root;
 
-	public TripletEventSource(File root) {
+	public TupleEventSource(File root) {
 		this.root = root;
 	}
 
@@ -29,21 +29,21 @@ public class TripletEventSource implements Source<TripletEvent> {
 
 	@Override
 	public Datalake.Store.Tub<TripletEvent> last() {
-		return tubFiles().map(TripletEventTub::new).findFirst().orElse(null);
+		return tubFiles().map(TupleEventTub::new).findFirst().orElse(null);
 	}
 
 	@Override
 	public Stream<Datalake.Store.Tub<TripletEvent>> tubs() {
-		return tubFiles().map(TripletEventTub::new);
+		return tubFiles().map(TupleEventTub::new);
 	}
 
 
 	public Datalake.Store.Tub<TripletEvent> on(Timetag tag) {
-		return new TripletEventTub(new File(root, tag.value()));
+		return new TupleEventTub(new File(root, tag.value()));
 	}
 
 	private Stream<File> tubFiles() {
-		return FS.filesIn(root, pathname -> pathname.getName().endsWith(TripletEventStore.Extension));
+		return FS.filesIn(root, pathname -> pathname.getName().endsWith(TupleEventStore.Extension));
 	}
 
 }
