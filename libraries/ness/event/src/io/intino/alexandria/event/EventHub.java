@@ -1,17 +1,19 @@
 package io.intino.alexandria.event;
 
+import io.intino.alexandria.event.message.MessageEvent;
+
 import java.util.function.Consumer;
 
 public interface EventHub {
-	void sendEvent(String channel, Event event);
+	void sendEvent(String channel, MessageEvent event);
 
-	void attachListener(String channel, Consumer<Event> onEventReceived);
+	void attachListener(String channel, Consumer<MessageEvent> onEventReceived);
 
-	void attachListener(String channel, String subscriberId, Consumer<Event> onEventReceived);
+	void attachListener(String channel, String subscriberId, Consumer<MessageEvent> onEventReceived);
 
 	void detachListeners(String channel);
 
-	void detachListeners(Consumer<Event> consumer);
+	void detachListeners(Consumer<MessageEvent> consumer);
 
 	void attachRequestListener(String channel, RequestConsumer onEventReceived);
 

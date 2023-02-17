@@ -1,5 +1,6 @@
 package io.intino.alexandria.event;
 
+import io.intino.alexandria.event.message.MessageEvent;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
 
@@ -9,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
-public class SessionEvent extends Event {
+public class SessionEvent extends MessageEvent {
 	public static final String PATH = "Session";
 	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssn").withZone(ZoneId.of("UTC"));
 

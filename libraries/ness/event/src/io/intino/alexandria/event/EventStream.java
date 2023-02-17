@@ -1,5 +1,7 @@
 package io.intino.alexandria.event;
 
+import io.intino.alexandria.event.message.MessageEvent;
+
 import java.time.Instant;
 import java.util.Iterator;
 import java.util.Objects;
@@ -12,13 +14,13 @@ import static java.util.stream.IntStream.range;
 public interface EventStream {
 
 	@SuppressWarnings("unused")
-	Event current();
+	MessageEvent current();
 
-	Event next();
+	MessageEvent next();
 
 	boolean hasNext();
 
-	default void forEachRemaining(Consumer<Event> action) {
+	default void forEachRemaining(Consumer<MessageEvent> action) {
 		Objects.requireNonNull(action);
 		while (hasNext())
 			action.accept(next());
@@ -26,13 +28,13 @@ public interface EventStream {
 
 	@SuppressWarnings("unused")
 	class Merge implements EventStream {
-		private Event currentEvent;
+		private MessageEvent currentEvent;
 		private final EventStream[] inputs;
-		private final Event[] current;
+		private final MessageEvent[] current;
 
 		public Merge(EventStream... inputs) {
 			this.inputs = inputs;
-			this.current = stream(inputs).map(this::next).toArray(Event[]::new);
+			this.current = stream(inputs).map(this::next).toArray(MessageEvent[]::new);
 		}
 
 		public static Merge of(EventStream... inputs) {
@@ -40,17 +42,17 @@ public interface EventStream {
 		}
 
 		@Override
-		public Event current() {
+		public MessageEvent current() {
 			return currentEvent;
 		}
 
 		@Override
-		public Event next() {
+		public MessageEvent next() {
 			return currentEvent = next(minIndex());
 		}
 
-		private Event next(int index) {
-			Event message = current[index];
+		private MessageEvent next(int index) {
+			MessageEvent message = current[index];
 			current[index] = next(inputs[index]);
 			return message;
 		}
@@ -60,7 +62,7 @@ public interface EventStream {
 			return !stream(current).allMatch(Objects::isNull);
 		}
 
-		private Event next(EventStream input) {
+		private MessageEvent next(EventStream input) {
 			return input.hasNext() ? input.next() : null;
 		}
 
@@ -72,14 +74,14 @@ public interface EventStream {
 			return tsOf(current[a]).compareTo(tsOf(current[b]));
 		}
 
-		private Instant tsOf(Event event) {
+		private Instant tsOf(MessageEvent event) {
 			return event != null ? event.ts() : Instant.MAX;
 		}
 	}
 
 	class Sequence implements EventStream {
 		private final Iterator<EventStream> iterator;
-		private Event currentEvent;
+		private MessageEvent currentEvent;
 		private EventStream current;
 
 		public Sequence(EventStream... inputs) {
@@ -104,12 +106,12 @@ public interface EventStream {
 		}
 
 		@Override
-		public Event current() {
+		public MessageEvent current() {
 			return currentEvent;
 		}
 
 		@Override
-		public Event next() {
+		public MessageEvent next() {
 			return currentEvent = current.next();
 		}
 
@@ -129,12 +131,12 @@ public interface EventStream {
 
 	class Empty implements EventStream {
 		@Override
-		public Event current() {
+		public MessageEvent current() {
 			return null;
 		}
 
 		@Override
-		public Event next() {
+		public MessageEvent next() {
 			return null;
 		}
 

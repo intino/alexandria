@@ -1,5 +1,6 @@
-package io.intino.alexandria.event;
+package io.intino.alexandria.event.message;
 
+import io.intino.alexandria.event.EventStream;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.zim.ZimReader;
 
@@ -13,8 +14,8 @@ import static java.util.Arrays.stream;
 import static java.util.Comparator.comparing;
 
 public class EventReader implements EventStream {
-	private final Iterator<Event> iterator;
-	private Event current;
+	private final Iterator<MessageEvent> iterator;
+	private MessageEvent current;
 
 
 	public EventReader(File file) {
@@ -29,29 +30,29 @@ public class EventReader implements EventStream {
 		this(iteratorOf(new ZimReader(text).iterator()));
 	}
 
-	public EventReader(Event... events) {
+	public EventReader(MessageEvent... events) {
 		this(stream(events));
 	}
 
-	public EventReader(List<Event> events) {
+	public EventReader(List<MessageEvent> events) {
 		this(events.stream());
 	}
 
-	public EventReader(Stream<Event> stream) {
-		this(stream.sorted(comparing(Event::ts)).iterator());
+	public EventReader(Stream<MessageEvent> stream) {
+		this(stream.sorted(comparing(MessageEvent::ts)).iterator());
 	}
 
-	public EventReader(Iterator<Event> iterator) {
+	public EventReader(Iterator<MessageEvent> iterator) {
 		this.iterator = iterator;
 	}
 
 	@Override
-	public Event current() {
+	public MessageEvent current() {
 		return current;
 	}
 
 	@Override
-	public Event next() {
+	public MessageEvent next() {
 		return current = iterator.hasNext() ? iterator.next() : null;
 	}
 
@@ -60,7 +61,7 @@ public class EventReader implements EventStream {
 		return iterator.hasNext();
 	}
 
-	private static Iterator<Event> iteratorOf(Iterator<Message> iterator) {
+	private static Iterator<MessageEvent> iteratorOf(Iterator<Message> iterator) {
 		return new Iterator<>() {
 			@Override
 			public boolean hasNext() {
@@ -68,8 +69,8 @@ public class EventReader implements EventStream {
 			}
 
 			@Override
-			public Event next() {
-				return new Event(iterator.next());
+			public MessageEvent next() {
+				return new MessageEvent(iterator.next());
 			}
 		};
 	}

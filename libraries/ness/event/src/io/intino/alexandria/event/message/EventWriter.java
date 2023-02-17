@@ -1,5 +1,6 @@
-package io.intino.alexandria.event;
+package io.intino.alexandria.event.message;
 
+import io.intino.alexandria.event.EventStream;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.MessageWriter;
 import org.xerial.snappy.SnappyOutputStream;
@@ -23,15 +24,15 @@ public class EventWriter {
 		file.getParentFile().mkdirs();
 	}
 
-	public void put(Event... messages) {
+	public void put(MessageEvent... messages) {
 		put(new EventReader(messages));
 	}
 
-	public void put(List<Event> messages) {
+	public void put(List<MessageEvent> messages) {
 		put(new EventReader(messages));
 	}
 
-	public void put(Stream<Event> stream) {
+	public void put(Stream<MessageEvent> stream) {
 		put(new EventReader(stream));
 	}
 
