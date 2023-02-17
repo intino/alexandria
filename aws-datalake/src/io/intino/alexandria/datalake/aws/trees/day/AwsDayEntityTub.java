@@ -27,7 +27,6 @@ public class AwsDayEntityTub implements Tub {
         this.s3 = s3;
     }
 
-
     public S3Object object() {
         return s3.getObjectFrom(bucketName, key);
     }

@@ -3,6 +3,7 @@ package io.intino.alexandria.datalake.aws.trees.day;
 import io.intino.alexandria.datalake.aws.S3;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -28,7 +29,7 @@ public class AwsDayEventStore implements EventStore {
     @Override
     public Stream<Tank> tanks() {
         try {
-            List<String> result = new ArrayList<>();
+            List<String> result = Collections.synchronizedList(new ArrayList<>());
             processTank(result);
             return result.stream().distinct().map(str -> new AwsDayEventTank(name(str), s3));
         } catch (InterruptedException e) { throw new RuntimeException(e); }
@@ -48,12 +49,12 @@ public class AwsDayEventStore implements EventStore {
     }
 
     private List<String> iterateOver(String bucket) throws InterruptedException {
-        ArrayList<String> result = new ArrayList<>();
+        List<String> result = Collections.synchronizedList(new ArrayList<>());
         process(bucket, result);
         return result;
     }
 
-    private void process(String bucket, ArrayList<String> result) throws InterruptedException {
+    private void process(String bucket, List<String> result) throws InterruptedException {
         ExecutorService service = newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         for (int i = 1; i <= months; i++) {
             int finalI = i;

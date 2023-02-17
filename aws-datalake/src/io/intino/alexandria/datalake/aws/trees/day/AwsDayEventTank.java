@@ -9,6 +9,7 @@ import io.intino.alexandria.datalake.aws.S3;
 import io.intino.alexandria.datalake.aws.file.AwsEventTub;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -36,7 +37,7 @@ public class AwsDayEventTank implements Tank {
     @Override
     public Stream<Tub> tubs() {
         try {
-            List<Tub> tubs = new ArrayList<>();
+            List<Tub> tubs = Collections.synchronizedList(new ArrayList<>());
             process(tubs);
             return tubs.stream();
         } catch (InterruptedException e) { throw new RuntimeException(e); }
@@ -72,7 +73,7 @@ public class AwsDayEventTank implements Tank {
     }
 
     private List<Tub> getKeysIn(String bucketName) {
-        List<Tub> result = new ArrayList<>();
+        List<Tub> result = Collections.synchronizedList(new ArrayList<>());
         for (int i = 1; i < months; i++)
             result.addAll(s3.keysIn(bucketName, i + AwsDelimiter + "events" + AwsDelimiter + name + AwsDelimiter)
                     .map(key -> new AwsDayEventTub(bucketName, key, s3)).collect(Collectors.toList()));
