@@ -22,7 +22,7 @@ public interface Datalake {
 
 	Store<MessageEvent> messageStore();
 
-	Store<TupleEvent> tripletStore();
+	Store<TupleEvent> tupleStore();
 
 	Store<MeasurementEvent> measurementStore();
 

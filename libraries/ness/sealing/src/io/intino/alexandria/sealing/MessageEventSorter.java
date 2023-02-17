@@ -13,12 +13,12 @@ import java.util.List;
 
 import static java.time.Instant.parse;
 
-public class EventSorter {
+public class MessageEventSorter {
 	private final File file;
 	private final File temp;
 	private final List<Tuple> tuples;
 
-	public EventSorter(File file, File tempFolder) throws IOException {
+	public MessageEventSorter(File file, File tempFolder) throws IOException {
 		this.file = file;
 		this.temp = File.createTempFile("event", ".inl", tempFolder);
 		this.tuples = new ArrayList<>();

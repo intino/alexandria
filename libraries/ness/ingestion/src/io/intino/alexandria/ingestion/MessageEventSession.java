@@ -22,7 +22,6 @@ public class MessageEventSession {
 	private final int autoFlush;
 	private final AtomicInteger count = new AtomicInteger();
 
-
 	public MessageEventSession(MessageSessionHandler.Provider provider) {
 		this(provider, 1_000_000);
 	}
@@ -32,13 +31,13 @@ public class MessageEventSession {
 		this.autoFlush = autoFlush;
 	}
 
-	public void put(String tank, Timetag timetag, MessageEvent... events) {
-		put(tank, timetag, Arrays.stream(events));
+	public void put(String tank, String source, Timetag timetag, MessageEvent... events) {
+		put(tank, source, timetag, Arrays.stream(events));
 		if (count.addAndGet(events.length) >= autoFlush) flush();
 	}
 
-	public void put(String tank, Timetag timetag, Stream<MessageEvent> eventStream) {
-		put(writerOf(tank, timetag), eventStream);
+	public void put(String tank, String source, Timetag timetag, Stream<MessageEvent> eventStream) {
+		put(writerOf(tank, source, timetag), eventStream);
 	}
 
 	public void flush() {
@@ -78,8 +77,8 @@ public class MessageEventSession {
 		}
 	}
 
-	private MessageWriter writerOf(String tank, Timetag timetag) {
-		return writerOf(Fingerprint.of(tank, timetag));
+	private MessageWriter writerOf(String tank, String source, Timetag timetag) {
+		return writerOf(Fingerprint.of(tank, source, Session.Type.event, timetag));
 	}
 
 	private MessageWriter writerOf(Fingerprint fingerprint) {

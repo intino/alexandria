@@ -4,9 +4,13 @@ import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.event.EventStream;
 import io.intino.alexandria.event.message.MessageEvent;
+import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.stream.Stream;
+
+import static io.intino.alexandria.event.Event.Format.Message;
 
 public class MessageEventTub implements Datalake.Store.Tub<MessageEvent> {
 	private final File zim;
@@ -16,7 +20,7 @@ public class MessageEventTub implements Datalake.Store.Tub<MessageEvent> {
 	}
 
 	public String name() {
-		return zim.getName().replace(MessageEventStore.Extension, "");
+		return zim.getName().replace(Message.extension(), "");
 	}
 
 	@Override
@@ -26,7 +30,12 @@ public class MessageEventTub implements Datalake.Store.Tub<MessageEvent> {
 
 	@Override
 	public Stream<MessageEvent> events() {
-		return EventStream.of(zim);
+		try {
+			return EventStream.of(zim);
+		} catch (IOException e) {
+			Logger.error(e);
+			return Stream.empty();
+		}
 	}
 
 	public File file() {

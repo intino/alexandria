@@ -2,6 +2,7 @@ package io.intino.alexandria.datalake.file.tuple;
 
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
+import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.tuple.TupleEvent;
 import io.intino.alexandria.logger.Logger;
 
@@ -19,7 +20,7 @@ public class TupleEventTub implements Datalake.Store.Tub<TupleEvent> {
 	}
 
 	public String name() {
-		return tsv.getName().replace(TupleEventStore.Extension, "");
+		return tsv.getName().replace(Event.Format.Tuple.extension(), "");
 	}
 
 	@Override
@@ -29,7 +30,7 @@ public class TupleEventTub implements Datalake.Store.Tub<TupleEvent> {
 
 	@Override
 	public Stream<TupleEvent> events() {
-		try(Stream<String> lines = Files.lines(tsv.toPath())) {
+		try (Stream<String> lines = Files.lines(tsv.toPath())) {
 			return lines.filter(line -> !line.isEmpty()).map(l -> new TupleEvent(l.split("\t", -1))).collect(Collectors.toList()).stream();
 		} catch (IOException e) {
 			Logger.error(e);

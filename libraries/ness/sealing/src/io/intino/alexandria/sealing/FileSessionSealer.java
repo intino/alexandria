@@ -1,11 +1,11 @@
 package io.intino.alexandria.sealing;
 
-import io.intino.alexandria.datalake.Datalake;
+import io.intino.alexandria.datalake.Datalake.Store.Tank;
 import io.intino.alexandria.datalake.file.FileDatalake;
+import io.intino.alexandria.event.Event;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 public class FileSessionSealer implements SessionSealer {
@@ -24,45 +24,16 @@ public class FileSessionSealer implements SessionSealer {
 	}
 
 	@Override
-	public synchronized void seal(List<Datalake.EventStore.Tank> avoidSorting) {
-		if (isSealing()) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-			}
-		}
-		lock();
+	public synchronized void seal(List<Tank<? extends Event>> avoidSorting) {
 		try {
 			sealEvents(avoidSorting);
 		} catch (Throwable e) {
 			Logger.error(e);
 		}
-		unlock();
 	}
 
-	private boolean isSealing() {
-		return lockFile().exists();
-	}
-
-	private void sealEvents(List<Datalake.EventStore.Tank> avoidSorting) {
-		EventSessionManager.seal(stageFolder, datalake.eventStoreFolder(), avoidSorting, tempFolder);
-	}
-
-	private void lock() {
-		try {
-			lockFile().createNewFile();
-		} catch (IOException e) {
-			Logger.error(e);
-		}
-	}
-
-	private void unlock() {
-		lockFile().delete();
-		notify();
-	}
-
-	private File lockFile() {
-		return new File(datalake.root(), ".lock");
+	private void sealEvents(List<Tank<? extends Event>> avoidSorting) {
+		EventSessionSealer.seal(stageFolder, datalake.eventStoreFolder(), avoidSorting, tempFolder);
 	}
 
 	private static File tempFolder(File stageFolder) {

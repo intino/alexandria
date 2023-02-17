@@ -5,6 +5,7 @@ import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.Datalake.Store.Source;
 import io.intino.alexandria.datalake.file.FS;
+import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.tuple.TupleEvent;
 
 import java.io.File;
@@ -43,7 +44,7 @@ public class TupleEventSource implements Source<TupleEvent> {
 	}
 
 	private Stream<File> tubFiles() {
-		return FS.filesIn(root, pathname -> pathname.getName().endsWith(TupleEventStore.Extension));
+		return FS.filesIn(root, pathname -> pathname.getName().endsWith(Event.Format.Tuple.extension()));
 	}
 
 }

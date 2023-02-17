@@ -18,7 +18,7 @@ public interface Event extends Comparable<Event> {
 		Unknown(""),
 		Message(".zim"),
 		Tuple(".tuple"),
-		Measurement(".its");
+		Measurement(".itz");
 
 		private final String extension;
 

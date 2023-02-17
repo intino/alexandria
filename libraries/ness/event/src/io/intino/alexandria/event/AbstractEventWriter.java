@@ -1,6 +1,5 @@
 package io.intino.alexandria.event;
 
-import io.intino.alexandria.event.message.MessageEvent;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.File;

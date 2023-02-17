@@ -2,6 +2,7 @@ package io.intino.alexandria.datalake.file.tuple;
 
 import io.intino.alexandria.datalake.Datalake.Store.Source;
 import io.intino.alexandria.datalake.Datalake.Store.Tank;
+import io.intino.alexandria.datalake.file.FS;
 import io.intino.alexandria.event.tuple.TupleEvent;
 
 import java.io.File;
@@ -26,7 +27,7 @@ public class TupleEventTank implements Tank<TupleEvent> {
 
 	@Override
 	public Stream<Source<TupleEvent>> sources() {
-		return null; // TODO
+		return FS.foldersIn(root).map(TupleEventSource::new);
 	}
 
 	public File root() {

@@ -29,7 +29,7 @@ public class FileDatalake implements Datalake {
 	}
 
 	@Override
-	public Store<TupleEvent> tripletStore() {
+	public Store<TupleEvent> tupleStore() {
 		return new TupleEventStore(tripletStoreFolder());
 	}
 
