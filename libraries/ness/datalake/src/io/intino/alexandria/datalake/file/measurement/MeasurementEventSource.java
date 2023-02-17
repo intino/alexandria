@@ -5,15 +5,13 @@ import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.Datalake.Store.Tub;
 import io.intino.alexandria.datalake.file.FS;
+import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.measurement.MeasurementEvent;
 
 import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static io.intino.alexandria.datalake.file.measurement.MeasurementEventStore.Extension;
-
 
 public class MeasurementEventSource implements Datalake.Store.Source<MeasurementEvent> {
 	private final File root;
@@ -45,10 +43,10 @@ public class MeasurementEventSource implements Datalake.Store.Source<Measurement
 
 	@Override
 	public Tub<MeasurementEvent> on(Timetag tag) {
-		return new MeasurementEventTub(new File(root, tag.value() + Extension));
+		return new MeasurementEventTub(new File(root, tag.value() + Event.Format.Measurement.extension()));
 	}
 
 	private Stream<File> tubFiles() {
-		return FS.filesIn(root, pathname -> pathname.getName().endsWith(Extension));
+		return FS.filesIn(root, pathname -> pathname.getName().endsWith(Event.Format.Measurement.extension()));
 	}
 }

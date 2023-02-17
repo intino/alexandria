@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 import static io.intino.alexandria.message.parser.InlLexicon.*;
 
 public class MessageReader implements Iterator<Message>, Iterable<Message>, AutoCloseable {
-
 	private final MessageStream messageStream;
 	private String current;
 
@@ -36,11 +35,7 @@ public class MessageReader implements Iterator<Message>, Iterable<Message>, Auto
 			if (current == null || current.isEmpty() || current.isBlank()) return null;
 			return nextMessage();
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(e.getMessage() + ":" + current);
-			Logger.getGlobal().severe(e.getMessage() + ":" + current);
-			current = null;
-			return null;
+			throw new MessageException(e.getMessage(),e);
 		}
 	}
 

@@ -3,9 +3,10 @@ package io.intino.alexandria.event.message;
 import io.intino.alexandria.event.EventReader;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageReader;
-import io.intino.alexandria.zim.ZimReader;
+import io.intino.alexandria.zim.ZimStream;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
@@ -13,16 +14,17 @@ import java.util.stream.Stream;
 
 import static java.util.Arrays.stream;
 
+@SuppressWarnings("all")
 public class MessageEventReader implements EventReader<MessageEvent> {
 
 	private final Iterator<MessageEvent> iterator;
 
-	public MessageEventReader(File file) {
-		this(new MessageToEventIterator(new ZimReader(file).iterator()));
+	public MessageEventReader(File file) throws IOException {
+		this(new MessageToEventIterator(ZimStream.of(file).iterator()));
 	}
 
 	public MessageEventReader(InputStream is) {
-		this(new MessageToEventIterator(new ZimReader(is).iterator()));
+		this(new MessageToEventIterator(ZimStream.of(is).iterator()));
 	}
 
 	public MessageEventReader(String text) {

@@ -1,9 +1,11 @@
 package io.intino.alexandria.datalake.file.message;
 
 import io.intino.alexandria.datalake.Datalake;
+import io.intino.alexandria.datalake.file.FS;
 import io.intino.alexandria.event.message.MessageEvent;
 
 import java.io.File;
+import java.util.stream.Stream;
 
 public class MessageEventTank implements Datalake.Store.Tank<MessageEvent> {
 	private final File root;
@@ -19,6 +21,11 @@ public class MessageEventTank implements Datalake.Store.Tank<MessageEvent> {
 
 	public Datalake.Store.Source<MessageEvent> source(String name) {
 		return new MessageEventSource(new File(root, name));
+	}
+
+	@Override
+	public Stream<Datalake.Store.Source<MessageEvent>> sources() {
+		return FS.foldersIn(root).map(MessageEventSource::new);
 	}
 
 	public File root() {

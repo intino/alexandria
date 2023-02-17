@@ -2,15 +2,14 @@ package io.intino.alexandria.datalake.file.message;
 
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.file.FS;
+import io.intino.alexandria.datalake.file.FileStore;
+import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.message.MessageEvent;
 
 import java.io.File;
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.zim.ZimReader.ZimExtension;
-
-public class MessageEventStore implements Datalake.Store<MessageEvent>{
-	public static final String EventExtension = ZimExtension;
+public class MessageEventStore implements Datalake.Store<MessageEvent>, FileStore {
 	private final File root;
 
 	public MessageEventStore(File root) {
@@ -22,7 +21,7 @@ public class MessageEventStore implements Datalake.Store<MessageEvent>{
 		return FS.foldersIn(root).map(MessageEventTank::new);
 	}
 
-	public File root() {
+	public File directory() {
 		return root;
 	}
 
@@ -31,4 +30,8 @@ public class MessageEventStore implements Datalake.Store<MessageEvent>{
 		return new MessageEventTank(new File(root, name));
 	}
 
+	@Override
+	public String fileExtension() {
+		return Event.Format.Message.extension();
+	}
 }

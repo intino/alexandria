@@ -4,8 +4,6 @@ import java.io.InputStream;
 
 public interface Session {
 	String SessionExtension = ".session";
-	String EventSessionExtension = ".event.session";
-	String LedSessionExtension = ".led.session";
 
 	String name();
 
@@ -15,8 +13,7 @@ public interface Session {
 
 	enum Type {
 		event,
-		set,
-		setMetadata,
-		led
+		tuple,
+		measurement
 	}
 }

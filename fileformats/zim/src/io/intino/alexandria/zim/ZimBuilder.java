@@ -19,7 +19,6 @@ import java.util.stream.Stream;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class ZimBuilder {
-
 	private final File source;
 
 	public ZimBuilder(File file) {

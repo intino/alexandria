@@ -15,5 +15,8 @@
     <orderEntry type="module" module-name="zim" />
     <orderEntry type="module" module-name="logger" />
     <orderEntry type="module" module-name="message" />
+    <orderEntry type="library" name="Intino: org.xerial.snappy:snappy-java:1.1.8.4" level="project" />
+    <orderEntry type="library" name="Intino: org.antlr:antlr4-runtime:4.10.1" level="project" />
+    <orderEntry type="module" module-name="itz" />
   </component>
 </module>

@@ -3,10 +3,10 @@ package io.intino.alexandria.datalake.file;
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.file.measurement.MeasurementEventStore;
 import io.intino.alexandria.datalake.file.message.MessageEventStore;
-import io.intino.alexandria.datalake.file.triplet.TripletEventStore;
+import io.intino.alexandria.datalake.file.tuple.TupleEventStore;
 import io.intino.alexandria.event.measurement.MeasurementEvent;
 import io.intino.alexandria.event.message.MessageEvent;
-import io.intino.alexandria.event.triplet.TripletEvent;
+import io.intino.alexandria.event.tuple.TupleEvent;
 
 import java.io.File;
 
@@ -29,8 +29,8 @@ public class FileDatalake implements Datalake {
 	}
 
 	@Override
-	public Store<TripletEvent> tripletStore() {
-		return new TripletEventStore(tripletStoreFolder());
+	public Store<TupleEvent> tupleStore() {
+		return new TupleEventStore(tripletStoreFolder());
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class FileDatalake implements Datalake {
 	}
 
 	public File tripletStoreFolder() {
-		return new File(root, TripletStoreFolder);
+		return new File(root, TupleStoreFolder);
 	}
 
 	public File measurementStoreFolder() {
