@@ -1,5 +1,6 @@
 dsl Konos
 
+use Timeline
 use Grid
 use DigitalSignature
 use AppDirectory
@@ -81,6 +82,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block frameExamples as Conditional > TemplateStamp(template=frameExamplesMold)
 			Block microSiteExamples as Conditional > TemplateStamp(template=microSiteExamplesMold) microSiteExamplesMold
 			Block htmlViewerExamples as Conditional > TemplateStamp(template=htmlViewerExamplesMold) htmlViewerExamplesMold
+			Block timelineExamples as Conditional > TemplateStamp(template=timelineExamplesMold) timelineExamplesMold
 
 		Block facets
 			Text(value="Facets", format=h5 underline)

@@ -76,6 +76,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         frameExamples.visible(widget instanceof FrameWidget);
         microSiteExamples.visible(widget instanceof MicroSiteWidget);
         htmlViewerExamples.visible(widget instanceof HtmlViewerWidget);
+        timelineExamples.visible(widget instanceof TimelineWidget);
     }
 
     private void updateInfo() {

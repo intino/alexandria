@@ -37,6 +37,8 @@ Artifact("io.intino.alexandria", "4.23.0") ui-framework-elements
 		WebComponent("react-data-grid", "^6.0.0")
 		WebComponent("react-data-grid-addons", "^5.0.4")
 		WebComponent("immutable", "^4.1.0")
+		WebComponent("highcharts", "^8.1.2")
+		WebComponent("highcharts-react-official", "^3.0.0")
 
 		Resolution("react", "^16.13.1")
 		Resolution("react-dom", "^16.13.1")
