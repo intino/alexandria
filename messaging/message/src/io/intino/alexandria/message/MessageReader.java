@@ -13,7 +13,8 @@ import java.util.logging.Logger;
 
 import static io.intino.alexandria.message.parser.InlLexicon.*;
 
-public class MessageReader implements Iterator<Message>, Iterable<Message> {
+public class MessageReader implements Iterator<Message>, Iterable<Message>, AutoCloseable {
+
 	private final MessageStream messageStream;
 	private String current;
 
@@ -43,7 +44,8 @@ public class MessageReader implements Iterator<Message>, Iterable<Message> {
 		}
 	}
 
-	public void close() {
+	@Override
+	public void close() throws Exception {
 		try {
 			messageStream.close();
 		} catch (IOException e) {

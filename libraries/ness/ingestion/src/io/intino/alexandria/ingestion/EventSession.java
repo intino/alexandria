@@ -3,7 +3,7 @@ package io.intino.alexandria.ingestion;
 import io.intino.alexandria.Fingerprint;
 import io.intino.alexandria.Session;
 import io.intino.alexandria.Timetag;
-import io.intino.alexandria.event.Event;
+import io.intino.alexandria.event.message.MessageEvent;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.MessageWriter;
 import org.xerial.snappy.SnappyOutputStream;
@@ -32,12 +32,12 @@ public class EventSession {
 		this.autoFlush = autoFlush;
 	}
 
-	public void put(String tank, Timetag timetag, Event... events) {
+	public void put(String tank, Timetag timetag, MessageEvent... events) {
 		put(tank, timetag, Arrays.stream(events));
 		if (count.addAndGet(events.length) >= autoFlush) flush();
 	}
 
-	public void put(String tank, Timetag timetag, Stream<Event> eventStream) {
+	public void put(String tank, Timetag timetag, Stream<MessageEvent> eventStream) {
 		put(writerOf(tank, timetag), eventStream);
 	}
 
@@ -64,13 +64,13 @@ public class EventSession {
 		}
 	}
 
-	private void put(MessageWriter writer, Stream<Event> events) {
+	private void put(MessageWriter writer, Stream<MessageEvent> events) {
 		synchronized (writer) {
 			events.forEach(e -> write(writer, e));
 		}
 	}
 
-	private void write(MessageWriter writer, Event event) {
+	private void write(MessageWriter writer, MessageEvent event) {
 		try {
 			writer.write(event.toMessage());
 		} catch (IOException e) {

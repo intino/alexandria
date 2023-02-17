@@ -2,118 +2,80 @@ package io.intino.alexandria.datalake;
 
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
+import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.EventStream;
+import io.intino.alexandria.event.measurement.MeasurementEvent;
+import io.intino.alexandria.event.message.MessageEvent;
+import io.intino.alexandria.event.triplet.TripletEvent;
 
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public interface Datalake {
 	String EventStoreFolder = "events";
-	String TripletStoreFolder = "entities";
+	String TripletStoreFolder = "triplets";
+	String MeasurementStoreFolder = "measurements";
 
-	EventStore eventStore();
+	Store<MessageEvent> messageStore();
 
-	EntityStore entityStore();
+	Store<TripletEvent> tripletStore();
 
-	interface EventStore {
+	Store<MeasurementEvent> measurementStore();
 
-		Stream<Tank> tanks();
+	interface Store<T extends Event> {
+		Stream<Tank<T>> tanks();
 
-		Tank tank(String name);
+		Tank<T> tank(String name);
 
-		interface Tank {
+		interface Tank<T extends Event> {
 			String name();
 
-			Scale scale();
+			public Source<T> source(String name);
 
-			Stream<EventStore.Tub> tubs();
-
-			EventStore.Tub first();
-
-			EventStore.Tub last();
-
-			EventStore.Tub on(Timetag tag);
-
-			default EventStream content() {
-				return EventStream.Sequence.of(tubs().map(Tub::events).toArray(EventStream[]::new));
+			default Stream<T> content() {
+				//TODO CH merge and sequence
+				return EventStream.Sequence.of(tubs().map(Tub::events).toArray(EventStream<T>[]::new));
 			}
 
-			default EventStream content(Predicate<Timetag> filter) {
-				return EventStream.Sequence.of(tubs().filter(t -> filter.test(t.timetag())).map(Tub::events).toArray(EventStream[]::new));
+			default Stream<T> content(BiPredicate<Source<T>, Timetag> filter) {
+				//TODO CH merge and sequence
+				return EventStream.Sequence.of(tubs().filter(t -> filter.test(t.timetag())).map(Tub::events).toArray(EventStream<T>[]::new));
 			}
 		}
 
-		interface Tub {
+		interface Source<T extends Event> {
+			default Scale scale() {
+				return first().timetag().scale();
+			}
+
+			Stream<Store.Tub<T>> tubs();
+
+			Store.Tub<T> first();
+
+			Store.Tub<T> last();
+
+			Store.Tub<T> on(Timetag tag);
+
+			default Stream<Tub> tubs(Timetag from, Timetag to) {
+				return StreamSupport.stream(from.iterateTo(to).spliterator(), false).map(this::on);
+			}
+		}
+
+		interface Tub<T extends Event> {
 			Timetag timetag();
 
-			EventStream events();
-		}
-	}
+			Stream<T> events();
 
-	interface EntityStore {
-
-		Stream<Tank> tanks();
-
-		Tank tank(String name);
-
-		interface Tank {
-			String name();
-
-			Stream<Tub> tubs();
-
-			Tub first();
-
-			Tub last();
-
-			Tub on(Timetag tag);
-
-			Stream<Tub> tubs(int count);
-
-			Stream<Tub> tubs(Timetag from, Timetag to);
-		}
-
-		interface Tub {
-			Timetag timetag();
-
-			Scale scale();
-
-			Stream<Triplet> triplets();
-
-			Stream<Triplet> triplets(Predicate<Triplet> filter);
-		}
-
-
-		class Triplet {
-			String[] fields;
-
-			public Triplet(String[] fields) {
-				this.fields = fields;
+			default Scale scale() {
+				return timetag().scale();
 			}
 
-			public String subject() {
-				return fields[0];
+			default Stream<T> events(Predicate<T> filter) {
+				return events().filter(filter);
 			}
 
-			public String verb() {
-				return fields[1];
-			}
-
-			public String object() {
-				return fields[2];
-			}
-
-			public String author() {
-				return fields.length > 3 ? fields[3] : null;
-			}
-
-			public String get(int index) {
-				return fields[index];
-			}
-
-			@Override
-			public String toString() {
-				return String.join("\t", fields);
-			}
 		}
 	}
 }
