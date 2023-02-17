@@ -1,23 +1,70 @@
 package io.intino.test;
 
 import io.intino.alexandria.message.Message;
-import io.intino.alexandria.zim.ZimReader;
 import io.intino.alexandria.zim.ZimStream;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.File;
+import java.io.IOException;
 import java.time.Instant;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Objects;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.stream;
 
-public class ZimReader_ {
+public class ZimStream_ {
 
 	@Before
 	public void setUp() {
 		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+	}
+
+	@Test
+	public void misc() throws InterruptedException {
+		String inl =
+				"[Status]\n" +
+						"battery: 78.0\n" +
+						"cpuUsage: 11.95\n" +
+						"isPlugged: true\n" +
+						"isScreenOn: false\n" +
+						"temperature: 29.0\n" +
+						"created: 2017-03-22T12:56:18Z\n" +
+						"\n" +
+						"[Status]\n" +
+						"battery: 78.0\n" +
+						"cpuUsage: 11.95\n" +
+						"isPlugged: true\n" +
+						"isScreenOn: true\n" +
+						"temperature: 10.0\n" +
+						"created: 2017-03-22T12:56:18Z\n";
+
+		ZimStream.of(inl)
+				.filter(Objects::nonNull)
+				.mapToDouble(m -> m.get("temperature").asDouble())
+				.reduce(Double::sum)
+				.ifPresent(System.out::println);
+	}
+
+	@Test
+	public void should_read_files() throws IOException {
+		try(Stream<Message> messages = ZimStream.sequence(new File("test-res/20220727.zim"), new File("test-res/20220726.zim"), new File("test-res/20220728.zim"))) {
+
+			Iterator<Message> iterator = messages.sorted(Comparator.comparing(m -> m.get("ts").asInstant())).iterator();
+			Instant lastTs = null;
+
+			while(iterator.hasNext()) {
+				Message msg = iterator.next();
+				Instant ts = msg.get("ts").asInstant();
+				if(lastTs != null && ts.isBefore(lastTs)) throw new IllegalStateException("Stream is not sorted: " + lastTs + " > " + ts);
+				lastTs = ts;
+			}
+		}
 	}
 
 	@Test
@@ -39,7 +86,7 @@ public class ZimReader_ {
 						"temperature: 29.0\n" +
 						"created: 2017-03-22T12:56:18Z\n";
 
-		ZimStream zimStream = new ZimReader(inl);
+		ZimStream zimStream = ZimStream.of(inl);
 		Message[] messages = new Message[3];
 		messages[0] = zimStream.next();
 		messages[1] = zimStream.next();
@@ -68,7 +115,7 @@ public class ZimReader_ {
 						"name: Spain\n" +
 						"continent:\n";
 
-		Message message = new ZimReader(inl).next();
+		Message message = ZimStream.of(inl).next();
 		assertThat(message.is("teacher")).isTrue();
 		assertThat(message.contains("name")).isTrue();
 		assertThat(message.contains("money")).isTrue();
@@ -102,7 +149,7 @@ public class ZimReader_ {
 						"deviceId: b367172b0c6fe726\n" +
 						"stack:\n" + indent(stack) + "\n";
 
-		Message message = new ZimReader(inl).next();
+		Message message = ZimStream.of(inl).next();
 		assertThat(message.type()).isEqualTo("Crash");
 		assertThat(message.contains("instant")).isTrue();
 		assertThat(message.contains("app")).isTrue();
@@ -138,7 +185,7 @@ public class ZimReader_ {
 						"[Teacher.Phone.Country]\n" +
 						"name: Mexico\n";
 
-		Message message = new ZimReader(inl).next();
+		Message message = ZimStream.of(inl).next();
 		assertThat(message.type()).isEqualTo("Teacher");
 		assertThat(message.components("country").size()).isEqualTo(1);
 		assertThat(message.components("country").get(0).type()).isEqualTo("Country");

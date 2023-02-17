@@ -1,60 +1,94 @@
 package io.intino.alexandria.event;
 
-import io.intino.alexandria.event.message.MessageEvent;
-
+import java.io.File;
 import java.time.Instant;
-import java.util.Iterator;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.IntStream.range;
 
-public interface EventStream {
+public class EventStream<T extends Event> extends AbstractEventStream<T> implements Iterator<T>, AutoCloseable {
 
-	@SuppressWarnings("unused")
-	MessageEvent current();
-
-	MessageEvent next();
-
-	boolean hasNext();
-
-	default void forEachRemaining(Consumer<MessageEvent> action) {
-		Objects.requireNonNull(action);
-		while (hasNext())
-			action.accept(next());
+	public static <T extends Event> Stream<T> sequence(Stream<T>... streams) {
+		return Arrays.stream(streams).flatMap(Function.identity());
 	}
 
-	@SuppressWarnings("unused")
-	class Merge implements EventStream {
-		private MessageEvent currentEvent;
-		private final EventStream[] inputs;
-		private final MessageEvent[] current;
+	public static <T extends Event> Stream<T> merge(Stream<T>... streams) {
+		return new EventStream<>(new MergeIterator<>(streams));
+	}
 
-		public Merge(EventStream... inputs) {
-			this.inputs = inputs;
-			this.current = stream(inputs).map(this::next).toArray(MessageEvent[]::new);
+	public static <T extends Event> Stream<T> of(File file) {
+		return new EventStream<>(FileEventReader.events(file).iterator());
+	}
+
+	private final Iterator<T> iterator;
+	private final List<Runnable> closeHandlers;
+
+	public EventStream(Iterator<T> iterator) {
+		this.iterator = iterator;
+		this.closeHandlers = new LinkedList<>();
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return this;
+	}
+
+	@Override
+	public boolean hasNext() {
+		return iterator.hasNext();
+	}
+
+	@Override
+	public T next() {
+		return iterator.next();
+	}
+
+	@Override
+	public void forEach(Consumer<? super T> action) {
+		try {
+			while(hasNext()) {
+				action.accept(next());
+			}
+		} finally {
+			close();
 		}
+	}
 
-		public static Merge of(EventStream... inputs) {
-			return new Merge(inputs);
+	@Override
+	public Stream<T> onClose(Runnable closeHandler) {
+		if(closeHandler != null) this.closeHandlers.add(closeHandler);
+		return this;
+	}
+
+	@Override
+	public void close() {
+		closeIterator(iterator);
+		closeHandlers.forEach(Runnable::run);
+	}
+
+	private static void closeIterator(Iterator<?> iterator) {
+		if(iterator instanceof AutoCloseable) {
+			try {
+				((AutoCloseable) iterator).close();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 		}
+	}
 
-		@Override
-		public MessageEvent current() {
-			return currentEvent;
-		}
+	@SuppressWarnings({"unchecked", "unused"})
+	private static class MergeIterator<T extends Event> implements Iterator<T>, AutoCloseable {
 
-		@Override
-		public MessageEvent next() {
-			return currentEvent = next(minIndex());
-		}
+		private final Iterator<T>[] inputs;
+		private final Event[] current;
 
-		private MessageEvent next(int index) {
-			MessageEvent message = current[index];
-			current[index] = next(inputs[index]);
-			return message;
+		public MergeIterator(Stream<T>... streams) {
+			this.inputs = Arrays.stream(streams).map(Stream::iterator).toArray(Iterator[]::new);
+			this.current = stream(inputs).map(this::next).toArray(Event[]::new);
 		}
 
 		@Override
@@ -62,7 +96,18 @@ public interface EventStream {
 			return !stream(current).allMatch(Objects::isNull);
 		}
 
-		private MessageEvent next(EventStream input) {
+		@Override
+		public T next() {
+			return next(minIndex());
+		}
+
+		private T next(int index) {
+			T message = (T) current[index];
+			current[index] = next(inputs[index]);
+			return message;
+		}
+
+		private T next(Iterator<T> input) {
 			return input.hasNext() ? input.next() : null;
 		}
 
@@ -74,75 +119,28 @@ public interface EventStream {
 			return tsOf(current[a]).compareTo(tsOf(current[b]));
 		}
 
-		private Instant tsOf(MessageEvent event) {
+		private Instant tsOf(Event event) {
 			return event != null ? event.ts() : Instant.MAX;
 		}
-	}
-
-	class Sequence implements EventStream {
-		private final Iterator<EventStream> iterator;
-		private MessageEvent currentEvent;
-		private EventStream current;
-
-		public Sequence(EventStream... inputs) {
-			this.iterator = streamOf(inputs).iterator();
-			this.current = this.iterator.next();
-		}
-
-		public static Sequence of(EventStream... inputs) {
-			return new Sequence(inputs);
-		}
-
-		private Stream<EventStream> streamOf(EventStream[] inputs) {
-			return stream(isEmpty(inputs) ? inputs : emptyInput());
-		}
-
-		private boolean isEmpty(EventStream[] inputs) {
-			return inputs.length > 0;
-		}
-
-		private EventStream[] emptyInput() {
-			return new EventStream[]{new Empty()};
-		}
 
 		@Override
-		public MessageEvent current() {
-			return currentEvent;
-		}
-
-		@Override
-		public MessageEvent next() {
-			return currentEvent = current.next();
-		}
-
-		@Override
-		public boolean hasNext() {
-			return current.hasNext() || restHasNext();
-		}
-
-		private boolean restHasNext() {
-			while (iterator.hasNext()) {
-				current = iterator.next();
-				if (current.hasNext()) return true;
+		public void close() throws Exception {
+			Exception e = null;
+			for(Iterator<T> iterator : inputs) {
+				e = tryClose(iterator);
 			}
-			return false;
+			if(e != null) throw e;
 		}
-	}
 
-	class Empty implements EventStream {
-		@Override
-		public MessageEvent current() {
+		private Exception tryClose(Iterator<T> iterator) {
+			if(iterator instanceof AutoCloseable) {
+				try {
+					((AutoCloseable) iterator).close();
+				} catch (Exception e) {
+					return e;
+				}
+			}
 			return null;
-		}
-
-		@Override
-		public MessageEvent next() {
-			return null;
-		}
-
-		@Override
-		public boolean hasNext() {
-			return false;
 		}
 	}
 }

@@ -25,15 +25,15 @@ public class EventWriter {
 	}
 
 	public void put(MessageEvent... messages) {
-		put(new EventReader(messages));
+		put(new MessageEventReader(messages));
 	}
 
 	public void put(List<MessageEvent> messages) {
-		put(new EventReader(messages));
+		put(new MessageEventReader(messages));
 	}
 
 	public void put(Stream<MessageEvent> stream) {
-		put(new EventReader(stream));
+		put(new MessageEventReader(stream));
 	}
 
 	public void put(EventStream eventStream) {
@@ -70,7 +70,7 @@ public class EventWriter {
 	}
 
 	private EventStream mergeFileWith(EventStream data) {
-		return new EventStream.Merge(new EventReader(source), data);
+		return new EventStream.Merge(new MessageEventReader(source), data);
 	}
 
 }

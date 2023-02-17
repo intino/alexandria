@@ -2,7 +2,7 @@ package io.intino.alexandria.datalake.file.message;
 
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
-import io.intino.alexandria.event.message.EventReader;
+import io.intino.alexandria.event.message.MessageEventReader;
 import io.intino.alexandria.event.message.MessageEvent;
 
 import java.io.File;
@@ -26,7 +26,7 @@ public class MessageEventTub implements Datalake.Store.Tub<MessageEvent> {
 
 	@Override
 	public Stream<MessageEvent> events() {
-		return new EventReader(zim); //TODO
+		return new MessageEventReader(zim); //TODO
 	}
 
 	public File file() {

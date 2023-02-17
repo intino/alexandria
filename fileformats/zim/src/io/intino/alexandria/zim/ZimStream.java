@@ -1,93 +1,141 @@
 package io.intino.alexandria.zim;
 
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
+import io.intino.alexandria.message.MessageReader;
+import org.xerial.snappy.SnappyInputStream;
 
-import java.util.Iterator;
-import java.util.Objects;
+import java.io.*;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static java.util.Arrays.stream;
+import static java.util.Objects.requireNonNull;
 
-public interface ZimStream {
-	@SuppressWarnings("unused")
-	Message current();
+@SuppressWarnings({"all"})
+public class ZimStream extends AbstractZimStream implements Iterator<Message>, AutoCloseable {
 
-	Message next();
+	public static final String ZimExtension = ".zim";
 
-	boolean hasNext();
-
-	default void forEachRemaining(Consumer<Message> action) {
-		Objects.requireNonNull(action);
-		while (hasNext())
-			action.accept(next());
+	public static ZimStream sequence(File first, File... rest) throws IOException {
+		ZimStream[] streams = new ZimStream[1 + rest.length];
+		streams[0] = ZimStream.of(first);
+		for(int i = 0;i < rest.length;i++) streams[i + 1] = ZimStream.of(rest[i]);
+		return new ZimStream(Arrays.stream(streams).flatMap(Function.identity()).iterator());
 	}
 
-	class Sequence implements ZimStream {
-		private final Iterator<ZimStream> iterator;
-		private Message currentMessage;
-		private ZimStream current;
+	public static ZimStream sequence(Stream<Message>... streams) {
+		return new ZimStream(Arrays.stream(streams).flatMap(Function.identity()).iterator());
+	}
 
-		Sequence(ZimStream... inputs) {
-			this.iterator = streamOf(inputs).iterator();
-			this.current = this.iterator.next();
-		}
+	public static ZimStream of(InputStream is) {
+		return new ZimStream(readerOf(is instanceof SnappyInputStream ? is : ZimStream.snZipStreamOf(is)));
+	}
 
-		private Stream<ZimStream> streamOf(ZimStream[] inputs) {
-			return stream(isEmpty(inputs) ? inputs : emptyInput());
-		}
+	public static ZimStream of(String text) {
+		return ZimStream.of(new MessageReader(text));
+	}
 
-		private boolean isEmpty(ZimStream[] inputs) {
-			return inputs.length > 0;
-		}
+	public static ZimStream of(Message... messages) {
+		return new ZimStream(Arrays.stream(messages).iterator());
+	}
 
-		private ZimStream[] emptyInput() {
-			return new ZimStream[]{new Empty()};
-		}
+	public static ZimStream of(Collection<Message> messages) {
+		return new ZimStream(messages.iterator());
+	}
 
-		@Override
-		public Message current() {
-			return currentMessage;
-		}
+	public static ZimStream of(Stream<Message> messages) {
+		return new ZimStream(messages.iterator());
+	}
 
-		@Override
-		public Message next() {
-			return currentMessage = current.next();
-		}
+	public static ZimStream of(MessageReader reader) {
+		return new ZimStream(reader.iterator());
+	}
 
-		@Override
-		public boolean hasNext() {
-			return current.hasNext() || restHasNext();
-		}
 
-		private boolean restHasNext() {
-			while (iterator.hasNext()) {
-				current = iterator.next();
-				if (current.hasNext()) return true;
+	private final Iterator<Message> iterator;
+	private final List<Runnable> closeHandlers;
+
+	public static ZimStream of(File file) throws IOException {
+		return new ZimStream(readerOf(inputStream(file)));
+	}
+
+	public ZimStream(Iterator<Message> iterator) {
+		this.iterator = requireNonNull(iterator);
+		this.closeHandlers = new LinkedList<>();
+	}
+
+	@Override
+	public Iterator<Message> iterator() {
+		return this;
+	}
+
+	@Override
+	public boolean hasNext() {
+		return iterator.hasNext();
+	}
+
+	@Override
+	public Message next() {
+		return iterator.next();
+	}
+
+	@Override
+	public void forEach(Consumer<? super Message> action) {
+		try {
+			while(hasNext()) {
+				action.accept(next());
 			}
-			return false;
-		}
-
-		public static Sequence of(ZimStream... inputs) {
-			return new Sequence(inputs);
+		} finally {
+			close();
 		}
 	}
 
-	class Empty implements ZimStream {
+	@Override
+	public Stream<Message> onClose(Runnable closeHandler) {
+		if(closeHandler != null) this.closeHandlers.add(closeHandler);
+		return this;
+	}
 
-		@Override
-		public Message current() {
-			return null;
-		}
+	@Override
+	public void close() {
+		closeIterator(iterator);
+		closeHandlers.forEach(Runnable::run);
+	}
 
-		@Override
-		public Message next() {
-			return null;
+	private static void closeIterator(Iterator<Message> iterator) {
+		if(iterator instanceof AutoCloseable) {
+			try {
+				((AutoCloseable) iterator).close();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 		}
+	}
 
-		@Override
-		public boolean hasNext() {
-			return false;
+	private static MessageReader readerOf(InputStream is) {
+		return new MessageReader(is);
+	}
+
+	private static InputStream inputStream(File file) throws IOException {
+		return snZipStreamOf(file);
+	}
+
+	private static InputStream snZipStreamOf(File file) throws IOException {
+		return new SnappyInputStream(fileInputStream(file));
+	}
+
+	private static InputStream snZipStreamOf(InputStream stream) {
+		try {
+			return new SnappyInputStream(stream);
+		} catch (IOException e) {
+			Logger.error(e);
+			return stream;
 		}
+	}
+
+	private static BufferedInputStream fileInputStream(File file) throws FileNotFoundException {
+		return new BufferedInputStream(new FileInputStream(file));
 	}
 }

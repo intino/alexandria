@@ -6,7 +6,7 @@ import java.time.Instant;
 
 public class TripletEvent implements Event {
 
-	String[] fields;
+	private final String[] fields;
 
 	public TripletEvent(String[] fields) {
 		this.fields = fields;
@@ -16,16 +16,22 @@ public class TripletEvent implements Event {
 		return fields[0];
 	}
 
-	public String verb() {
+	public String predicate() {
 		return fields[1];
 	}
 
-	public String object() {
+	public String value() {
 		return fields[2];
 	}
 
-	public String author() {
-		return fields.length > 3 ? fields[3] : null;
+	@Override
+	public Instant ts() {
+		return Instant.parse(fields[3]); // TODO
+	}
+
+	@Override
+	public String ss() {
+		return fields[4]; // TODO
 	}
 
 	public String get(int index) {
@@ -35,15 +41,5 @@ public class TripletEvent implements Event {
 	@Override
 	public String toString() {
 		return String.join("\t", fields);
-	}
-
-	@Override
-	public Instant ts() {
-		return null;
-	}
-
-	@Override
-	public String ss() {
-		return null;
 	}
 }
