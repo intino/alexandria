@@ -7,7 +7,7 @@ import io.intino.alexandria.event.EventStream;
 
 import java.io.File;
 
-public class FileEventTub implements Datalake.EventStore.Tub {
+public class FileEventTub implements Datalake.Store.Tub {
 	private final File zim;
 
 	public FileEventTub(File zim) {

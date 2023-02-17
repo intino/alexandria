@@ -3,7 +3,7 @@ package io.intino.alexandria.datalake.file;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
-import io.intino.alexandria.datalake.Datalake.EventStore.Tub;
+import io.intino.alexandria.datalake.Datalake.Store.Tub;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 import static io.intino.alexandria.datalake.file.FileEventStore.EventExtension;
 
-public class FileEventTank implements Datalake.EventStore.Tank {
+public class FileEventTank implements Datalake.Store.Tank {
 	private final File root;
 
 	FileEventTank(File root) {

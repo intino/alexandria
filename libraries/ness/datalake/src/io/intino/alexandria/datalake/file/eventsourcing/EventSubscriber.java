@@ -6,9 +6,9 @@ public interface EventSubscriber {
 
 	Connection connection();
 
-	Subscription subscribe(Datalake.EventStore.Tank tank);
+	Subscription subscribe(Datalake.Store.Tank tank);
 
-	void unsubscribe(Datalake.EventStore.Tank tank);
+	void unsubscribe(Datalake.Store.Tank tank);
 
 	interface Connection {
 		void connect(String... args);

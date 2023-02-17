@@ -12,9 +12,9 @@ public interface EventPump {
 		boolean hasNext();
 
 		interface Filter {
-			boolean allow(Datalake.EventStore.Tank tank);
+			boolean allow(Datalake.Store.Tank tank);
 
-			boolean allow(Datalake.EventStore.Tank tank, Timetag timetag);
+			boolean allow(Datalake.Store.Tank tank, Timetag timetag);
 		}
 	}
 

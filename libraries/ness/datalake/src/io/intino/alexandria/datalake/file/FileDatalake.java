@@ -18,12 +18,12 @@ public class FileDatalake implements Datalake {
 	}
 
 	@Override
-	public FileEventStore eventStore() {
+	public FileEventStore messageStore() {
 		return new FileEventStore(eventStoreFolder());
 	}
 
 	@Override
-	public FileEntityStore entityStore() {
+	public FileEntityStore tripletStore() {
 		return new FileEntityStore(tripletStoreFolder());
 	}
 

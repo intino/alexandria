@@ -5,7 +5,7 @@ import io.intino.alexandria.datalake.Datalake;
 import java.io.File;
 import java.util.stream.Stream;
 
-public class FileEntityStore implements Datalake.EntityStore {
+public class FileEntityStore implements Datalake.TripletStore {
 	public static final String Extension = ".triplets";
 	private final File root;
 

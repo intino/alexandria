@@ -2,13 +2,13 @@ package io.intino.alexandria.datalake.file;
 
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
-import io.intino.alexandria.datalake.Datalake.EntityStore.Tub;
+import io.intino.alexandria.datalake.Datalake.TripletStore.Tub;
 
 import java.io.File;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public class FileEntityTank implements Datalake.EntityStore.Tank {
+public class FileEntityTank implements Datalake.TripletStore.Tank {
 	private final File root;
 
 	public FileEntityTank(File root) {

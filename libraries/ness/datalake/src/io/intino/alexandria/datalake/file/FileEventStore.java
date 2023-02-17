@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 import static io.intino.alexandria.zim.ZimReader.ZimExtension;
 
-public class FileEventStore implements Datalake.EventStore {
+public class FileEventStore implements Datalake.Store {
 	public static final String EventExtension = ZimExtension;
 	private final File root;
 

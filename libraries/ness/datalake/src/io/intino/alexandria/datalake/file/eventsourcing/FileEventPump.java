@@ -7,9 +7,9 @@ import io.intino.alexandria.event.EventStream;
 import java.util.Arrays;
 
 public class FileEventPump implements EventPump {
-	private final Datalake.EventStore store;
+	private final Datalake.Store store;
 
-	public FileEventPump(Datalake.EventStore store) {
+	public FileEventPump(Datalake.Store store) {
 		this.store = store;
 	}
 
@@ -18,7 +18,7 @@ public class FileEventPump implements EventPump {
 		return new Reflow() {
 			private EventStream is = new EventStream.Merge(tankInputStreams());
 
-			EventStream tankInputStream(Datalake.EventStore.Tank tank) {
+			EventStream tankInputStream(Datalake.Store.Tank tank) {
 				return tank.content(ts -> filter.allow(tank, ts));
 			}
 
