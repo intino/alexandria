@@ -1,6 +1,7 @@
 package io.intino.alexandria.datalake.file;
 
 import io.intino.alexandria.datalake.Datalake;
+import io.intino.alexandria.datalake.file.measurement.MeasurementEventStore;
 import io.intino.alexandria.datalake.file.message.MessageEventStore;
 import io.intino.alexandria.datalake.file.triplet.TripletEventStore;
 import io.intino.alexandria.event.measurement.MeasurementEvent;
@@ -34,7 +35,7 @@ public class FileDatalake implements Datalake {
 
 	@Override
 	public Store<MeasurementEvent> measurementStore() {
-		return null;
+		return new MeasurementEventStore(measurementStoreFolder());
 	}
 
 	public File root() {
@@ -47,6 +48,10 @@ public class FileDatalake implements Datalake {
 
 	public File tripletStoreFolder() {
 		return new File(root, TripletStoreFolder);
+	}
+
+	public File measurementStoreFolder() {
+		return new File(root, MeasurementStoreFolder);
 	}
 
 }
