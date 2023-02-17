@@ -10,14 +10,14 @@ import java.util.stream.Stream;
 import static io.intino.alexandria.datalake.file.measurement.MeasurementEventStore.Extension;
 
 public class MeasurementEventTub implements Datalake.Store.Tub<MeasurementEvent> {
-	private final File zim;
+	private final File itz;
 
-	public MeasurementEventTub(File zim) {
-		this.zim = zim;
+	public MeasurementEventTub(File itz) {
+		this.itz = itz;
 	}
 
 	public String name() {
-		return zim.getName().replace(Extension, "");
+		return itz.getName().replace(Extension, "");
 	}
 
 	@Override
@@ -31,6 +31,6 @@ public class MeasurementEventTub implements Datalake.Store.Tub<MeasurementEvent>
 	}
 
 	public File file() {
-		return zim;
+		return itz;
 	}
 }

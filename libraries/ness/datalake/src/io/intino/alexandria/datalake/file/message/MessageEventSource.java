@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.datalake.file.message.MessageEventStore.EventExtension;
+import static io.intino.alexandria.datalake.file.message.MessageEventStore.Extension;
 
 public class MessageEventSource implements Datalake.Store.Source<MessageEvent> {
 	private final File root;
@@ -44,10 +44,10 @@ public class MessageEventSource implements Datalake.Store.Source<MessageEvent> {
 
 	@Override
 	public Tub<MessageEvent> on(Timetag tag) {
-		return new MessageEventTub(new File(root, tag.value() + EventExtension));
+		return new MessageEventTub(new File(root, tag.value() + Extension));
 	}
 
 	private Stream<File> tubFiles() {
-		return FS.filesIn(root, pathname -> pathname.getName().endsWith(EventExtension));
+		return FS.filesIn(root, pathname -> pathname.getName().endsWith(Extension));
 	}
 }

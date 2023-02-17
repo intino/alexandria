@@ -16,7 +16,7 @@ public class MessageEventTub implements Datalake.Store.Tub<MessageEvent> {
 	}
 
 	public String name() {
-		return zim.getName().replace(MessageEventStore.EventExtension, "");
+		return zim.getName().replace(MessageEventStore.Extension, "");
 	}
 
 	@Override

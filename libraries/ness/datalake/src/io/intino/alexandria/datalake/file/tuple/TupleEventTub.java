@@ -37,4 +37,7 @@ public class TupleEventTub implements Datalake.Store.Tub<TupleEvent> {
 		}
 	}
 
+	public File file() {
+		return tsv;
+	}
 }

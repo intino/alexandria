@@ -25,4 +25,8 @@ public class TupleEventStore implements Datalake.Store<TupleEvent> {
 	public TupleEventTank tank(String name) {
 		return new TupleEventTank(new File(root, name));
 	}
+
+	public String extension() {
+		return Extension;
+	}
 }
