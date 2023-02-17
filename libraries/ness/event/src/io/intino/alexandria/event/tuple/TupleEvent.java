@@ -4,11 +4,11 @@ import io.intino.alexandria.event.Event;
 
 import java.time.Instant;
 
-public class TripletEvent implements Event {
+public class TupleEvent implements Event {
 
 	private final String[] fields;
 
-	public TripletEvent(String[] fields) {
+	public TupleEvent(String[] fields) {
 		this.fields = fields;
 	}
 

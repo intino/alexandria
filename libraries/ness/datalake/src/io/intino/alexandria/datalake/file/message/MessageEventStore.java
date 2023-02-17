@@ -7,10 +7,10 @@ import io.intino.alexandria.event.message.MessageEvent;
 import java.io.File;
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.zim.ZimReader.ZimExtension;
+import static io.intino.alexandria.zim.ZimStream.ZimExtension;
 
-public class MessageEventStore implements Datalake.Store<MessageEvent>{
-	public static final String EventExtension = ZimExtension;
+public class MessageEventStore implements Datalake.Store<MessageEvent> {
+	public static final String Extension = ZimExtension;
 	private final File root;
 
 	public MessageEventStore(File root) {
@@ -29,6 +29,10 @@ public class MessageEventStore implements Datalake.Store<MessageEvent>{
 	@Override
 	public MessageEventTank tank(String name) {
 		return new MessageEventTank(new File(root, name));
+	}
+
+	public String extension() {
+		return Extension;
 	}
 
 }

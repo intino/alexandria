@@ -7,7 +7,7 @@ import io.intino.alexandria.event.measurement.MeasurementEvent;
 import java.io.File;
 import java.util.stream.Stream;
 
-public class MeasurementEventStore implements Datalake.Store<MeasurementEvent>{
+public class MeasurementEventStore implements Datalake.Store<MeasurementEvent> {
 	public static final String Extension = ".itz";
 
 	private final File root;
@@ -28,6 +28,10 @@ public class MeasurementEventStore implements Datalake.Store<MeasurementEvent>{
 	@Override
 	public MeasurementEventTank tank(String name) {
 		return new MeasurementEventTank(new File(root, name));
+	}
+
+	public String extension() {
+		return Extension;
 	}
 
 }
