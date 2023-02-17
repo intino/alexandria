@@ -1,6 +1,5 @@
 package io.intino.alexandria.datalake.aws.trees.day;
 
-import com.amazonaws.services.s3.model.S3Object;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake.EntityStore.Tank;
 import io.intino.alexandria.datalake.Datalake.EntityStore.Tub;
@@ -9,12 +8,15 @@ import io.intino.alexandria.datalake.aws.file.AwsEntityTub;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static io.intino.alexandria.datalake.aws.file.AwsEntityStore.Extension;
 import static io.intino.alexandria.datalake.aws.trees.day.AwsDayDatalake.*;
+import static java.util.concurrent.Executors.newFixedThreadPool;
 
 public class AwsDayEntityTank implements Tank {
     private final String name;
@@ -32,10 +34,21 @@ public class AwsDayEntityTank implements Tank {
 
     @Override
     public Stream<Tub> tubs() {
-        List<Tub> tubs = new ArrayList<>();
+        try {
+            List<Tub> tubs = new ArrayList<>();
+            process(tubs);
+            return tubs.stream();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void process(List<Tub> tubs) throws InterruptedException {
+        ExecutorService service = newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         for (String bucket : buckets())
-            tubs.addAll(getKeysIn(bucket));
-        return tubs.stream();
+            service.submit(() -> tubs.addAll(getKeysIn(bucket)));
+        service.shutdown();
+        service.awaitTermination(1, TimeUnit.MINUTES);
     }
 
     @Override
@@ -68,12 +81,12 @@ public class AwsDayEntityTank implements Tank {
         List<Tub> result = new ArrayList<>();
         for (int i = 1; i < months; i++)
             result.addAll(s3.keysIn(bucket, i + AwsDelimiter + "entities" + AwsDelimiter + name + AwsDelimiter)
-                    .map(key -> new AwsDayEntityTub(s3.getObjectFrom(bucket, key))).collect(Collectors.toList()));
+                    .map(key -> new AwsDayEntityTub(bucket, key, s3)).collect(Collectors.toList()));
         return result;
     }
 
     private Tub currentTub() {
-        return new AwsDayEntityTub(new S3Object());
+        return new AwsDayEntityTub("", "", s3);
     }
 
     private String getBucketOf(int day) {

@@ -8,6 +8,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/io/intino/alexandria/datalake/aws/trees/day/resource" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/test/resource" type="java-test-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

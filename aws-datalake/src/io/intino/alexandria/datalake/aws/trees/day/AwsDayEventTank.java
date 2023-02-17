@@ -10,11 +10,14 @@ import io.intino.alexandria.datalake.aws.file.AwsEventTub;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.intino.alexandria.datalake.aws.file.AwsEntityStore.Extension;
 import static io.intino.alexandria.datalake.aws.trees.day.AwsDayDatalake.*;
+import static java.util.concurrent.Executors.newFixedThreadPool;
 
 public class AwsDayEventTank implements Tank {
     private final String name;
@@ -32,10 +35,19 @@ public class AwsDayEventTank implements Tank {
 
     @Override
     public Stream<Tub> tubs() {
-        List<Tub> tubs = new ArrayList<>();
-        for (String bucket : buckets())
-            tubs.addAll(getKeysIn(bucket));
-        return tubs.stream();
+        try {
+            List<Tub> tubs = new ArrayList<>();
+            process(tubs);
+            return tubs.stream();
+        } catch (InterruptedException e) { throw new RuntimeException(e); }
+    }
+
+    private void process(List<Tub> tubs) throws InterruptedException {
+        ExecutorService service = newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        for (String bucketName : buckets())
+            service.submit(() -> tubs.addAll(getKeysIn(bucketName)));
+        service.shutdown();
+        service.awaitTermination(2, TimeUnit.MINUTES);
     }
 
     @Override
@@ -56,14 +68,14 @@ public class AwsDayEventTank implements Tank {
 
     @Override
     public Tub on(Timetag tag) {
-        return new AwsEventTub(s3.getObjectFrom(getBucketOf(tag.day()), tubNameOf(tag)));
+        return new AwsEventTub(s3.getObjectFrom(bucketOf(tag.day()), tubNameOf(tag)));
     }
 
-    private List<Tub> getKeysIn(String bucket) {
+    private List<Tub> getKeysIn(String bucketName) {
         List<Tub> result = new ArrayList<>();
         for (int i = 1; i < months; i++)
-            result.addAll(s3.keysIn(bucket, i + AwsDelimiter + "events" + AwsDelimiter + name + AwsDelimiter)
-                    .map(key -> new AwsDayEventTub(s3.getObjectFrom(bucket, key))).collect(Collectors.toList()));
+            result.addAll(s3.keysIn(bucketName, i + AwsDelimiter + "events" + AwsDelimiter + name + AwsDelimiter)
+                    .map(key -> new AwsDayEventTub(bucketName, key, s3)).collect(Collectors.toList()));
         return result;
     }
 
@@ -72,7 +84,7 @@ public class AwsDayEventTank implements Tank {
     }
 
 
-    private String getBucketOf(int day) {
+    private String bucketOf(int day) {
         for (String bucket : buckets())
             for (String s : bucket.split(AwsBucketDelimiter))
                 if (s.equals(String.format("%02d", day))) return bucket;

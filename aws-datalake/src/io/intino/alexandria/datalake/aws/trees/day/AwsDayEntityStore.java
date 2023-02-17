@@ -48,11 +48,11 @@ public class AwsDayEntityStore implements EntityStore {
 
     private List<String> iterateOver(String bucket) throws InterruptedException {
         ArrayList<String> result = new ArrayList<>();
-        processTank(bucket, result);
+        process(bucket, result);
         return result;
     }
 
-    private void processTank(String bucket, ArrayList<String> result) throws InterruptedException {
+    private void process(String bucket, ArrayList<String> result) throws InterruptedException {
         ExecutorService service = newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         for (int i = 1; i <= months; i++) {
             int finalI = i;
