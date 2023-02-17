@@ -2,9 +2,14 @@ package io.intino.alexandria.datalake.aws.trees.day;
 
 import io.intino.alexandria.datalake.aws.S3;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.intino.alexandria.datalake.Datalake.EventStore;
+import static io.intino.alexandria.datalake.aws.trees.day.AwsDayDatalake.AwsDelimiter;
+import static io.intino.alexandria.datalake.aws.trees.day.AwsDayDatalake.buckets;
 
 
 public class AwsDayEventStore implements EventStore {
@@ -20,7 +25,18 @@ public class AwsDayEventStore implements EventStore {
 
     @Override
     public Stream<Tank> tanks() {
-        return null; //TODO
+        List<String> result = new ArrayList<>();
+        for (String bucket : buckets())
+            result.addAll(iterateOver(bucket));
+        return result.stream().distinct().map(str -> new AwsEventDayTank(str.split(AwsDelimiter)[2], s3));
+    }
+
+    private List<String> iterateOver(String bucket) {
+        ArrayList<String> result = new ArrayList<>();
+        for (int i = 1; i <= 12; i++)
+            result.addAll(s3.prefixesIn(bucket, i + AwsDelimiter + "events" + AwsDelimiter)
+                    .collect(Collectors.toList()));
+        return result;
     }
 
     @Override

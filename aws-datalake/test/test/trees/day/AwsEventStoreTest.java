@@ -17,7 +17,7 @@ public class AwsEventStoreTest {
     static AmazonS3 client = MyClient.s3Client;
 
     @Test
-    public void should_return_all_events_tanks() {
+    public void should_return_all_event_tanks() {
         AwsDayDatalake datalake = new AwsDayDatalake(S3.with(client));
         List<String> tanks = datalake.eventStore().tanks().map(Tank::name).collect(Collectors.toList());
         List<String> list = List.of("ps.Anomaly", "ps.Diagnostic", "ps.EnergyConsumption");
