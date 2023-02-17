@@ -4,11 +4,13 @@ import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.EventStream;
+import io.intino.alexandria.event.measurement.MeasurementEvent;
 import io.intino.alexandria.event.message.MessageEvent;
 import io.intino.alexandria.event.triplet.TripletEvent;
 
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public interface Datalake {
 	String EventStoreFolder = "events";
@@ -30,7 +32,9 @@ public interface Datalake {
 		interface Tank<T extends Event> {
 			String name();
 
-			Scale scale();
+			default Scale scale() {
+				return first().timetag().scale();
+			}
 
 			Stream<Store.Tub<T>> tubs();
 
@@ -39,6 +43,10 @@ public interface Datalake {
 			Store.Tub<T> last();
 
 			Store.Tub<T> on(Timetag tag);
+
+			default Stream<Tub> tubs(Timetag from, Timetag to) {
+				return StreamSupport.stream(from.iterateTo(to).spliterator(), false).map(this::on);
+			}
 
 			default Stream<T> content() {
 				return EventStream.Sequence.of(tubs().map(Tub::events).toArray(EventStream<T>[]::new));
@@ -53,6 +61,15 @@ public interface Datalake {
 			Timetag timetag();
 
 			Stream<T> events();
+
+			default Scale scale() {
+				return timetag().scale();
+			}
+
+			default Stream<T> events(Predicate<T> filter) {
+				return events().filter(filter);
+			}
+
 		}
 	}
 }
