@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
+import io.intino.konos.builder.codegeneration.ui.ElementRenderer;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;
@@ -25,7 +26,6 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private boolean decorated;
 	private Display owner;
 	public static final Map<String, FrameBuilder> componentFrameMap = Collections.synchronizedMap(new LRUCache<>(10000));
-	public static final Set<String> formatSet = Collections.synchronizedSet(new HashSet<>());
 
 	public ComponentRenderer(CompilationContext compilationContext, C component, RendererWriter provider) {
 		super(compilationContext, component, provider);
@@ -169,7 +169,6 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		}
 		if (element.format() != null) {
 			String[] format = element.format().stream().map(Layer::name$).sorted().toArray(String[]::new);
-			formatSet.add(String.join("-", format));
 			result.add("format", format);
 		}
 		return result;

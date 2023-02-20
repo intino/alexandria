@@ -36,6 +36,11 @@ public class AcceptedKonosRunner {
 	}
 
 	@Test
+	public void uiWeb() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/ui-web.txt")});
+	}
+
+	@Test
 	public void cli() {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/cli.txt")});
 	}

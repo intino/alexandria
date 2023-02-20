@@ -65,6 +65,7 @@ public class DocsTemplate extends AbstractDocsTemplate<AlexandriaUiBox> {
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Frame));
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.MicroSite));
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.HtmlViewer));
+        body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Timeline));
     }
 
     //    @Override

@@ -293,3 +293,33 @@ Schema GridCellInfo
 	Attribute columnIndex as Integer
 	Attribute row as Text
 	Attribute rowIndex as Integer
+
+Schema TimelineHistory
+	Attribute from as DateTime
+	Attribute to as DateTime
+
+Schema TimelineHistoryEntry
+	Attribute date as DateTime
+	Attribute value as Real
+
+Schema TimelineHistoryFetch
+	Attribute measurement as Text
+	Attribute start as DateTime
+	Attribute end as DateTime
+
+Schema TimelineMeasurement
+	Attribute name as Text
+	Attribute label as Text
+	Attribute value as Real
+	Attribute unit as Text
+	Attribute decimalCount as Integer
+	Attribute trend as Word("Increased" "Decreased" "None")
+	Attribute evolution as Object(TimelineEvolution)
+
+Schema TimelineEvolution
+	Attribute categories as Text List
+	Attribute serie as Object(TimelineSerie)
+
+Schema TimelineSerie
+	Attribute name as Text
+	Attribute values as Real List

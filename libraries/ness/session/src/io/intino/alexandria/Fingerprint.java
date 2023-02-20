@@ -1,6 +1,8 @@
 package io.intino.alexandria;
 
 
+import io.intino.alexandria.Session.Type;
+
 public class Fingerprint {
 
 	private static final String SEPARATOR = "/";
@@ -10,25 +12,25 @@ public class Fingerprint {
 		this.fingerprint = fingerprint;
 	}
 
-	public static Fingerprint of(String tank, Timetag timetag) {
-		return new Fingerprint(tank + SEPARATOR + timetag);
-	}
-
-	public static Fingerprint of(String tank, Timetag timetag, String set) {
-		return new Fingerprint(tank + SEPARATOR + timetag + SEPARATOR + set);
+	public static Fingerprint of(String tank, String source, Type type, Timetag timetag) {
+		return new Fingerprint(tank + SEPARATOR + source + SEPARATOR + timetag + SEPARATOR + type);
 	}
 
 	public String tank() {
 		return fingerprint.split(SEPARATOR)[0];
 	}
 
-	public Timetag timetag() {
-		return new Timetag(fingerprint.split(SEPARATOR)[1]);
+	public String source() {
+		return fingerprint.split(SEPARATOR)[1];
 	}
 
-	public String set() {
+	public Timetag timetag() {
+		return new Timetag(fingerprint.split(SEPARATOR)[2]);
+	}
+
+	public Type type() {
 		try {
-			return fingerprint.split(SEPARATOR)[2];
+			return Type.valueOf(fingerprint.split(SEPARATOR)[3]);
 		} catch (IndexOutOfBoundsException e) {
 			return null;
 		}

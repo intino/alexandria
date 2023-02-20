@@ -10,13 +10,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static io.intino.alexandria.zim.AbstractZimStream.ZIM_EXTENSION;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
-@SuppressWarnings({"WeakerAccess"})
 public class ZimBuilder {
 	private final File source;
 
@@ -26,18 +28,14 @@ public class ZimBuilder {
 	}
 
 	public void put(Message... messages) {
-		put(new ZimReader(messages));
+		put(ZimStream.of(messages));
 	}
 
 	public void put(List<Message> messages) {
-		put(new ZimReader(messages));
+		put(ZimStream.of(messages));
 	}
 
-	public void put(Stream<Message> stream) {
-		put(new ZimReader(stream));
-	}
-
-	public void put(ZimStream zimStream) {
+	public void put(Stream<Message> zimStream) {
 		try {
 			Files.move(merge(zimStream).toPath(), source.toPath(), REPLACE_EXISTING);
 		} catch (IOException e) {
@@ -45,11 +43,13 @@ public class ZimBuilder {
 		}
 	}
 
-	private File merge(ZimStream data) {
+	private File merge(Stream<Message> data) {
 		File file = tempFile();
 		try (MessageWriter writer = new MessageWriter(zipStream(file))) {
-			ZimStream stream = mergeFileWith(data);
-			while (stream.hasNext()) writer.write(stream.next());
+			try(Stream<Message> stream = mergeFileWith(data)) {
+				Iterator<Message> iterator = stream.iterator();
+				while(iterator.hasNext()) writer.write(iterator.next());
+			}
 		} catch (IOException e) {
 			Logger.error(e);
 		}
@@ -60,18 +60,20 @@ public class ZimBuilder {
 		return new SnappyOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 	}
 
-
 	private File tempFile() {
 		try {
-			return File.createTempFile("builder#", ".zim");
+			return File.createTempFile("builder#", ZIM_EXTENSION);
 		} catch (IOException e) {
 			Logger.error(e);
-			return new File("builder#" + UUID.randomUUID().toString() + ".zim");
+			return new File("builder#" + UUID.randomUUID() + ZIM_EXTENSION);
 		}
 	}
 
-	private ZimStream mergeFileWith(ZimStream data) {
-		return new ZimStream.Sequence(new ZimReader(source), data);
+	private Stream<Message> mergeFileWith(Stream<Message> data) {
+		try {
+			return Stream.of(ZimStream.of(source), data).flatMap(Function.identity());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
-
 }

@@ -1,8 +1,9 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "4.0.3") zim
+Artifact("io.intino.alexandria", "5.0.0") zim
 	Imports
-		Compile("io.intino.alexandria", "message", "3.0.5")
+		Compile("io.intino.alexandria", "resource-cleaner", "1.0.0")
+		Compile("io.intino.alexandria", "message", "3.0.6")
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Compile("org.xerial.snappy", "snappy-java", "1.1.8.4")
 		Test("junit", "junit", "4.13.2")

@@ -146,6 +146,16 @@ def type(ui & mobile & action)
 	}
 end
 
+def type(ui & action & gen & asset)
+	package $package+validPackage.ui.pages;
+
+	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
+
+	public abstract class Abstract$name+snakecaseToCamelCase+firstUpperCase~Page extends io.intino.alexandria.ui.spark.pages.Page {
+		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
+	}
+end
+
 def type(ui & action & gen)
 	package $package+validPackage.ui.pages;
 
@@ -158,7 +168,7 @@ def type(ui & action & gen)
 
 		public Abstract$name+snakecaseToCamelCase+firstUpperCase~Page() { super("$uiService+camelCaseToSnakeCase+lowerCase"); }
 
-		public String execute() [throws $throws+FirstUpperCase...[, ]] {
+		public $returnType execute() [throws $throws+FirstUpperCase...[, ]] {
 			$executeBody
 		}
 
@@ -174,8 +184,20 @@ def type(ui & action & gen)
 	}
 end
 
+def type(returnType & asset)
+	io.intino.alexandria.Resource
+end
+
+def type(returnType)
+    String
+end
+
 def type(executeBody & static)
 	return "$text";
+end
+
+def type(executeBody & asset)
+	return null;
 end
 
 def type(executeBody)
@@ -261,6 +283,12 @@ end
 def type(component & static)
 	public String execute() {
 		return super.execute();
+	}
+end
+
+def type(component & asset)
+	public io.intino.alexandria.Resource execute() {
+		return null;
 	}
 end
 

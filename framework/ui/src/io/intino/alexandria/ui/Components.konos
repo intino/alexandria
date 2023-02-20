@@ -176,6 +176,13 @@ Component microSite
 Component htmlViewer
 	Notification refresh as Text
 
+Component timeline
+	Notification refresh as Object(TimelineMeasurement) List
+	Notification showHistoryDialog as Object(TimelineHistory)
+	Notification refreshHistory as Object(TimelineHistoryEntry) List
+	Request openHistory as Text
+	Request fetch as Object(TimelineHistoryFetch)
+
 Component frame
 	Notification refresh as Text
 

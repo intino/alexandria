@@ -1,19 +1,25 @@
 package io.intino.alexandria.message.parser;
 
+import io.intino.alexandria.message.MessageException;
+
 import java.io.*;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class MessageStream implements Iterator<String>, AutoCloseable {
-	private final BufferedReader reader;
-	private int last = 0;
+	private final Reader reader;
+	private char[] buffer;
+	private int index;
+	private int last;
 
 	public MessageStream(InputStream stream) {
 		this(stream, Charset.defaultCharset());
 	}
 
 	public MessageStream(InputStream stream, Charset charset) {
-		reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(stream), charset));
+		this.reader = new BufferedReader(new InputStreamReader(stream, charset));
+		this.buffer = new char[1024];
 		init();
 	}
 
@@ -30,27 +36,40 @@ public class MessageStream implements Iterator<String>, AutoCloseable {
 	@Override
 	public String next() {
 		if (last == -1) return null;
-		StringBuilder builder = new StringBuilder();
+		buffer[0] = '[';
+		index = 1;
 		try {
 			char current = 0;
 			int r;
 			while ((r = reader.read()) != -1 && (last != '\n' || r != '[')) {
+				if((char)r == '\n' && current == '\r') {
+					last = buffer[index - 1] = current = '\n';
+					continue;
+				}
 				current = (char) r;
-				builder.append(current);
+				append(current);
 				last = current;
 			}
 			last = r;
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new MessageException(e.getMessage(), e);
 		}
-		if (builder.length() > 0) builder.insert(0, '[');
-		return builder.toString().replace("\r\n", "\n");
+		return index == 1 ? "" : new String(buffer, 0, index);
 	}
 
 	private void init() {
 		try {
 			reader.read();
-		} catch (IOException e) {
+		} catch (IOException ignored) {
 		}
+	}
+
+	private void append(char c) {
+		if(index == buffer.length) grow();
+		buffer[index++] = c;
+	}
+
+	private void grow() {
+		buffer = Arrays.copyOf(buffer, buffer.length * 2);
 	}
 }

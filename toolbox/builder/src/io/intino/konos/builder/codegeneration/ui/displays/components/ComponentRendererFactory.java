@@ -46,6 +46,7 @@ public class ComponentRendererFactory {
 		map.put(conceptOf(OtherComponents.Frame.class), config -> new FrameRenderer(config.context(), config.component().a$(OtherComponents.Frame.class), config.provider()));
 		map.put(conceptOf(OtherComponents.MicroSite.class), config -> new MicroSiteRenderer(config.context(), config.component().a$(OtherComponents.MicroSite.class), config.provider()));
 		map.put(conceptOf(OtherComponents.HtmlViewer.class), config -> new HtmlViewerRenderer(config.context(), config.component().a$(OtherComponents.HtmlViewer.class), config.provider()));
+		map.put(conceptOf(OtherComponents.Timeline.class), config -> new TimelineRenderer(config.context(), config.component().a$(OtherComponents.Timeline.class), config.provider()));
 		map.put(conceptOf(Stepper.class), config -> new StepperRenderer(config.context(), config.component().a$(Stepper.class), config.provider()));
 		map.put(conceptOf(Stepper.Step.class), config -> new StepRenderer(config.context(), config.component().a$(Stepper.Step.class), config.provider()));
 		map.put(conceptOf(Template.class), config -> new TemplateRenderer(config.context(), config.component().a$(Template.class), config.provider()));

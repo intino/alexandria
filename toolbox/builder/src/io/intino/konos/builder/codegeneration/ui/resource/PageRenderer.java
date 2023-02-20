@@ -46,6 +46,8 @@ public class PageRenderer extends ActionRenderer {
 		Service.UI uiService = resource.core$().ownerAs(Service.UI.class);
 		builder.add("name", resource.name$());
 		if (resource.isPage()) builder.add("templateName", resource.asPage().template().name$());
+		if (resource.isAssetPage()) builder.add("asset");
+		builder.add("returnType", returnTypeFrame());
 		builder.add("executeBody", executeBodyFrame());
 		builder.add("uiService", uiService.name$());
 		builder.add("package", packageName());
@@ -91,6 +93,13 @@ public class PageRenderer extends ActionRenderer {
 			result.add("static");
 			result.add("text", resource.asStaticPage().content());
 		}
+		if (resource.isAssetPage()) result.add("asset");
+		return result;
+	}
+
+	private FrameBuilder returnTypeFrame() {
+		FrameBuilder result = new FrameBuilder("returnType");
+		if (resource.isAssetPage()) result.add("asset");
 		return result;
 	}
 
@@ -125,6 +134,7 @@ public class PageRenderer extends ActionRenderer {
 			result.add("static");
 			result.add("text", resource.asStaticPage().content());
 		}
+		if (resource.isAssetPage()) result.add("asset");
 		return result;
 	}
 
