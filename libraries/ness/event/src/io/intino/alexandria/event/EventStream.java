@@ -1,16 +1,17 @@
 package io.intino.alexandria.event;
 
+import io.intino.alexandria.resourcecleaner.DisposableResource;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static io.intino.alexandria.resourcecleaner.DisposableResource.whenDestroyed;
 import static java.util.Arrays.stream;
 import static java.util.stream.IntStream.range;
 
@@ -29,11 +30,11 @@ public class EventStream<T extends Event> extends AbstractEventStream<T> impleme
 	}
 
 	private final Iterator<T> iterator;
-	private final List<Runnable> closeHandlers;
+	private final DisposableResource resource;
 
 	public EventStream(Iterator<T> iterator) {
 		this.iterator = iterator;
-		this.closeHandlers = new LinkedList<>();
+		this.resource = whenDestroyed(this).thenClose(iterator);
 	}
 
 	@Override
@@ -64,24 +65,13 @@ public class EventStream<T extends Event> extends AbstractEventStream<T> impleme
 
 	@Override
 	public Stream<T> onClose(Runnable closeHandler) {
-		if (closeHandler != null) this.closeHandlers.add(closeHandler);
+		if (closeHandler != null) resource.addCloseHandler(closeHandler);
 		return this;
 	}
 
 	@Override
 	public void close() {
-		closeIterator(iterator);
-		closeHandlers.forEach(Runnable::run);
-	}
-
-	private static void closeIterator(Iterator<?> iterator) {
-		if (iterator instanceof AutoCloseable) {
-			try {
-				((AutoCloseable) iterator).close();
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
+		resource.close();
 	}
 
 	@SuppressWarnings({"unchecked", "unused"})

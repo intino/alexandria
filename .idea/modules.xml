@@ -35,6 +35,7 @@
       <module fileurl="file://$PROJECT_DIR$/libraries/proxy/proxy.iml" filepath="$PROJECT_DIR$/libraries/proxy/proxy.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/drivers/r/r.iml" filepath="$PROJECT_DIR$/drivers/r/r.iml" group="drivers" />
       <module fileurl="file://$PROJECT_DIR$/libraries/reportbuilder/reportbuilder.iml" filepath="$PROJECT_DIR$/libraries/reportbuilder/reportbuilder.iml" group="office" />
+      <module fileurl="file://$PROJECT_DIR$/resource-cleaner/resource-cleaner.iml" filepath="$PROJECT_DIR$/resource-cleaner/resource-cleaner.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/rest/rest.iml" filepath="$PROJECT_DIR$/libraries/rest/rest.iml" group="services" />
       <module fileurl="file://$PROJECT_DIR$/libraries/rest-accessor/rest-accessor.iml" filepath="$PROJECT_DIR$/libraries/rest-accessor/rest-accessor.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/framework/scheduler/scheduler.iml" filepath="$PROJECT_DIR$/framework/scheduler/scheduler.iml" group="framework" />

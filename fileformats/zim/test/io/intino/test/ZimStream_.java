@@ -43,7 +43,7 @@ public class ZimStream_ {
 						"created: 2017-03-22T12:56:18Z\n";
 
 		try (Stream<Message> of = ZimStream.of(inl).filter(Objects::nonNull)) {
-					of.mapToDouble(m -> m.get("temperature").asDouble())
+			of.mapToDouble(m -> m.get("temperature").asDouble())
 					.reduce(Double::sum)
 					.ifPresent(System.out::println);
 		}
@@ -63,6 +63,22 @@ public class ZimStream_ {
 					throw new IllegalStateException("Stream is not sorted: " + lastTs + " > " + ts);
 				lastTs = ts;
 			}
+		}
+	}
+
+	@Test
+	public void should_read_files_no_try_with_resources() throws IOException {
+		Stream<Message> messages = ZimStream.sequence(new File("test-res/20220727.zim"), new File("test-res/20220726.zim"), new File("test-res/20220728.zim"));
+
+		Iterator<Message> iterator = messages.sorted(Comparator.comparing(m -> m.get("ts").asInstant())).iterator();
+		Instant lastTs = null;
+
+		while (iterator.hasNext()) {
+			Message msg = iterator.next();
+			Instant ts = msg.get("ts").asInstant();
+			if (lastTs != null && ts.isBefore(lastTs))
+				throw new IllegalStateException("Stream is not sorted: " + lastTs + " > " + ts);
+			lastTs = ts;
 		}
 	}
 

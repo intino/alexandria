@@ -13,6 +13,8 @@ import static java.util.Spliterator.*;
 
 abstract class AbstractZimStream implements Stream<Message> {
 
+	public static final String ZIM_EXTENSION = ".zim";
+
 	protected Stream<Message> asJavaStream() {
 		return StreamSupport.stream(spliterator(), false);
 	}

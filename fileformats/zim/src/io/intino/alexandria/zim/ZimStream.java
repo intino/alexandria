@@ -3,10 +3,13 @@ package io.intino.alexandria.zim;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageReader;
+import io.intino.alexandria.resourcecleaner.DisposableResource;
 import org.xerial.snappy.SnappyInputStream;
 
 import java.io.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -15,6 +18,7 @@ import static java.util.Objects.requireNonNull;
 
 @SuppressWarnings({"all"})
 public class ZimStream extends AbstractZimStream implements Iterator<Message>, AutoCloseable {
+
 	public static ZimStream sequence(File first, File... rest) throws IOException {
 		ZimStream[] streams = new ZimStream[1 + rest.length];
 		streams[0] = ZimStream.of(first);
@@ -27,7 +31,7 @@ public class ZimStream extends AbstractZimStream implements Iterator<Message>, A
 	}
 
 	public static ZimStream of(InputStream is) {
-		return new ZimStream(readerOf(is instanceof SnappyInputStream ? is : ZimStream.snZipStreamOf(is)));
+		return new ZimStream(readerOf(ZimStream.snZipStreamOf(is)));
 	}
 
 	public static ZimStream of(String text) {
@@ -51,7 +55,7 @@ public class ZimStream extends AbstractZimStream implements Iterator<Message>, A
 	}
 
 	private final Iterator<Message> iterator;
-	private final List<Runnable> closeHandlers;
+	private final DisposableResource resource;
 
 	public static ZimStream of(File file) throws IOException {
 		return new ZimStream(readerOf(inputStream(file)));
@@ -59,7 +63,7 @@ public class ZimStream extends AbstractZimStream implements Iterator<Message>, A
 
 	public ZimStream(Iterator<Message> iterator) {
 		this.iterator = requireNonNull(iterator);
-		this.closeHandlers = new LinkedList<>();
+		this.resource = DisposableResource.whenDestroyed(this).thenClose(iterator);
 	}
 
 	@Override
@@ -90,24 +94,13 @@ public class ZimStream extends AbstractZimStream implements Iterator<Message>, A
 
 	@Override
 	public Stream<Message> onClose(Runnable closeHandler) {
-		if(closeHandler != null) this.closeHandlers.add(closeHandler);
+		if(closeHandler != null) resource.addCloseHandler(closeHandler);
 		return this;
 	}
 
 	@Override
 	public void close() {
-		closeIterator(iterator);
-		closeHandlers.forEach(Runnable::run);
-	}
-
-	private static void closeIterator(Iterator<Message> iterator) {
-		if(iterator instanceof AutoCloseable) {
-			try {
-				((AutoCloseable) iterator).close();
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
+		resource.close();
 	}
 
 	private static MessageReader readerOf(InputStream is) {
@@ -124,7 +117,7 @@ public class ZimStream extends AbstractZimStream implements Iterator<Message>, A
 
 	private static InputStream snZipStreamOf(InputStream stream) {
 		try {
-			return new SnappyInputStream(stream);
+			return stream instanceof SnappyInputStream ? stream : new SnappyInputStream(stream);
 		} catch (IOException e) {
 			Logger.error(e);
 			return stream;

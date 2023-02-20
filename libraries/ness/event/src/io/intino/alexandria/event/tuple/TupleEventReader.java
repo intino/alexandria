@@ -35,8 +35,9 @@ public class TupleEventReader implements EventReader<TupleEvent> {
 	private void advance() {
 		try {
 			String line;
-			while((line = reader.readLine()) != null)
+			while((line = reader.readLine()) != null) {
 				if(!line.isEmpty()) break;
+			}
 			currentLine = line;
 		} catch (IOException e) {
 			throw new RuntimeException(e); // TODO
