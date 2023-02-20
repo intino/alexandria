@@ -307,6 +307,19 @@ Schema TimelineHistoryFetch
 	Attribute start as DateTime
 	Attribute end as DateTime
 
+Schema TimelineSetup
+	Attribute name as Text
+	Attribute mode as Text
+	Attribute measurements as Object(TimelineMeasurement) List
+
+Schema TimelineMeasurementVisibility
+	Attribute name as Text
+	Attribute visible as Bool
+
+Schema TimelineMeasurementSorting
+	Attribute name as Text
+	Attribute position as Integer
+
 Schema TimelineMeasurement
 	Attribute name as Text
 	Attribute label as Text
