@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 
 public class Timeline<DN extends TimelineNotifier, B extends Box> extends AbstractTimeline<B> {
 	private TimelineDatasource source;
+	private List<TimelineMeasurementVisibility> measurementsVisibility;
+	private List<TimelineMeasurementSorting> measurementsSorting;
 	private int summaryPointsCount = DefaultSummaryPointsCount;
 
 	private static final int DefaultSummaryPointsCount = 24;
@@ -35,6 +37,26 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return this;
 	}
 
+	public List<TimelineMeasurementVisibility> measurementsVisibility() {
+		return measurementsVisibility;
+	}
+
+	public Timeline<DN, B> measurementsVisibility(List<TimelineMeasurementVisibility> measurementsVisibility) {
+		this.measurementsVisibility = measurementsVisibility;
+		notifier.refreshMeasurementsVisibility(measurementsVisibility);
+		return this;
+	}
+
+	public List<TimelineMeasurementSorting> measurementsSorting() {
+		return measurementsSorting;
+	}
+
+	public Timeline<DN, B> measurementsSorting(List<TimelineMeasurementSorting> measurementsSorting) {
+		this.measurementsSorting = measurementsSorting;
+		notifier.refreshMeasurementsSorting(measurementsSorting);
+		return this;
+	}
+
 	public Timeline<DN, B> summaryPointsCount(int count) {
 		this.summaryPointsCount = count;
 		return this;
@@ -44,7 +66,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	public void refresh() {
 		super.refresh();
 		if (source == null) throw new RuntimeException("Timeline source not defined");
-		notifier.refresh(source.measurements().stream().map(this::schemaOf).collect(Collectors.toList()));
+		notifier.setup(new TimelineSetup().name(source.name()).measurements(source.measurements().stream().map(this::schemaOf).collect(Collectors.toList())));
 	}
 
 	public void openHistory(String measurementName) {

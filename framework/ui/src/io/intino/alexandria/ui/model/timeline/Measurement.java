@@ -6,7 +6,7 @@ import java.util.Map;
 public class Measurement {
 	private String name;
 	private String unit;
-	private Integer decimalCount = 2;
+	private Integer decimalCount = 8;
 	private final Map<String, String> labelMap = new HashMap<>();
 
 	public String name() {

@@ -1,12 +1,11 @@
 package io.intino.alexandria.ui.model.timeline;
 
-import io.intino.alexandria.Timetag;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
 public interface TimelineDatasource {
+	String name();
 	List<Measurement> measurements();
 	Timeline timeline(Measurement measurement);
 

@@ -7,6 +7,7 @@ import io.intino.alexandria.ui.model.timeline.TimelineDatasource;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,11 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 	public void init() {
 		super.init();
 		timeline.source(new TimelineDatasource() {
+			@Override
+			public String name() {
+				return "tds1";
+			}
+
 			@Override
 			public List<Measurement> measurements() {
 				return List.of(measurementOf("m1", "%", "Medida 1"), measurementOf("m2", "€", "Medida 2"));
@@ -69,7 +75,17 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 
 			@Override
 			public Map<Instant, Double> stats() {
-				return Collections.emptyMap();
+				return new HashMap<>() {{
+					put(Instant.now().minus(8, ChronoUnit.DAYS), 120.0);
+					put(Instant.now().minus(7, ChronoUnit.DAYS), 100.0);
+					put(Instant.now().minus(6, ChronoUnit.DAYS), 10.0);
+					put(Instant.now().minus(5, ChronoUnit.DAYS), 20.0);
+					put(Instant.now().minus(4, ChronoUnit.DAYS), 1220.0);
+					put(Instant.now().minus(3, ChronoUnit.DAYS), 192.0);
+					put(Instant.now().minus(2, ChronoUnit.DAYS), 1232.0);
+					put(Instant.now().minus(1, ChronoUnit.DAYS), 12.0);
+					put(Instant.now(), 12.0);
+				}};
 			}
 
 			@Override

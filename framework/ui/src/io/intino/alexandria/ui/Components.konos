@@ -177,11 +177,15 @@ Component htmlViewer
 	Notification refresh as Text
 
 Component timeline
-	Notification refresh as Object(TimelineMeasurement) List
-	Notification showHistoryDialog as Object(TimelineHistory)
+	Notification setup as Object(TimelineSetup)
 	Notification refreshHistory as Object(TimelineHistoryEntry) List
+	Notification refreshMeasurementsVisibility as Object(TimelineMeasurementVisibility) List
+	Notification refreshMeasurementsSorting as Object(TimelineMeasurementSorting) List
+	Notification showHistoryDialog as Object(TimelineHistory)
 	Request openHistory as Text
 	Request fetch as Object(TimelineHistoryFetch)
+	Request measurementsVisibility as Object(TimelineMeasurementVisibility) List
+	Request measurementsSorting as Object(TimelineMeasurementSorting) List
 
 Component frame
 	Notification refresh as Text

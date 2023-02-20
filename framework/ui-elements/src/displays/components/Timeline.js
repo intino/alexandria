@@ -4,19 +4,23 @@ import AbstractTimeline from "../../../gen/displays/components/AbstractTimeline"
 import TimelineNotifier from "../../../gen/displays/notifiers/TimelineNotifier";
 import TimelineRequester from "../../../gen/displays/requesters/TimelineRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { ArrowDropDown, ArrowDropUp, Close } from "@material-ui/icons";
-import { Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Slide, IconButton, AppBar } from '@material-ui/core';
+import { ArrowDropDown, ArrowDropUp, Close, Settings } from "@material-ui/icons";
+import { Typography, Dialog, DialogActions, DialogContent, DialogContentText,
+         DialogTitle, Button, Slide, IconButton, AppBar, FormControlLabel, Checkbox } from '@material-ui/core';
 import { withSnackbar } from 'notistack';
 import classnames from "classnames";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
 import Delayer from 'alexandria-ui-elements/src/util/Delayer';
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import TimelineMeasurement from './timeline/measurement'
 
 const styles = theme => ({
     measurement : { position:'relative', borderRadius:'3px', minWidth:'150px', padding:'5px', background:'white', margin: '5px 5px' },
-    value : { marginRight: '2px', fontSize: '35pt' },
-    unit : { marginTop: '15px', fontSize: '14pt', color: theme.palette.grey.A700, paddingLeft: '5px' },
+    value : { marginRight: '2px', fontSize: '35pt', lineHeight: 1},
+    unit : { marginTop: '3px', fontSize: '14pt', color: theme.palette.grey.A700, paddingLeft: '5px' },
     trend : { position: 'absolute', left: '0', top:'0px', marginLeft: '-16px', marginTop: '-15px', width:'40px', height:'40px' },
     increased : { color: '#F44335' },
     decreased : { color: '#4D9A51' },
@@ -33,9 +37,12 @@ class Timeline extends AbstractTimeline {
 		this.historyContainer = React.createRef();
 		this.state = {
 		    ...this.state,
+		    openConfiguration : false,
 		    history : { visible: true, from: null, to: null, data: [] },
 		    measurement : null,
-		    measurements: []
+		    measurements: [],
+		    measurementsVisibility : {},
+		    measurementsSorting : {},
 		}
 	};
 
@@ -43,8 +50,22 @@ class Timeline extends AbstractTimeline {
         return <Slide direction="up" ref={ref} {...props} />;
     });
 
-    refresh = (measurements) => {
-        this.setState({measurements: measurements});
+    setup = (info) => {
+        const measurementsVisibility = this.getCookie(info.name + "_visibility") != null ? this.getCookie(info.name + "_visibility") : this.state.measurementsVisibility;
+        const measurementsSorting = this.getCookie(info.name + "_sorting") != null ? this.getCookie(info.name + "_sorting") : this.state.measurementsSorting;
+        this.setState({ measurements: info.measurements, measurementsVisibility: measurementsVisibility, measurementsSorting: measurementsSorting, sourceName: info.name });
+    };
+
+    refreshMeasurementsVisibility = (visibility) => {
+        this.setState({measurementsVisibility: visibility});
+    };
+
+    refreshMeasurementsSorting = (sorting) => {
+        this.setState({measurementsSorting: sorting});
+    };
+
+    refreshMeasurementsSorting = (sorting) => {
+        this.setState({measurementsSorting: sorting});
     };
 
     showHistoryDialog = (history) => {
@@ -53,17 +74,35 @@ class Timeline extends AbstractTimeline {
 
     render() {
         return (
-            <div className="layout horizontal">
-                {this.renderMeasurements()}
-                {this.renderHistoryDialog()}
-            </div>
+            <DndProvider backend={HTML5Backend}>
+                <div className="layout horizontal">
+                    {this.renderMeasurements()}
+                    {this.renderHistoryDialog()}
+                    {this.renderConfigurationDialog()}
+                    {this.renderCookieConsent()}
+                </div>
+            </DndProvider>
         );
     };
 
     renderMeasurements = () => {
-        const measurements = this.state.measurements;
-        return measurements.map(m => this.renderMeasurement(m));
+        return this.sortedAndVisibleMeasurements().map((m, idx) => this.renderMeasurement(m, idx));
     };
+
+    sortedAndVisibleMeasurements = () => {
+        const measurements = this.state.measurements;
+        const sorting = this.state.measurementsSorting;
+        if (sorting != null) measurements.sort(this.sortingComparator);
+        return measurements.filter(m => this.isMeasurementVisible(m));
+    };
+
+    sortingComparator = (m1, m2) => {
+        const m1Position = this.state.measurementsSorting[m1.name] != null ? this.state.measurementsSorting[m1.name].position : 0;
+        const m2Position = this.state.measurementsSorting[m2.name] != null ? this.state.measurementsSorting[m2.name].position : 0;
+        if (m1Position < m2Position ) return -1;
+        if (m1Position > m2Position ) return 1;
+        return 0;
+    }
 
     renderHistoryDialog = () => {
         if (this.state.measurement == null) return (<React.Fragment/>);
@@ -87,34 +126,24 @@ class Timeline extends AbstractTimeline {
         this.setState({history});
     };
 
-    renderMeasurement = (measurement) => {
-        const increased = measurement.trend === "Increased";
-        const decreased = measurement.trend === "Decreased";
-        const { classes } = this.props;
-        return (
-            <div className={classnames("layout vertical center", classes.measurement)}>
-                <div className="layout horizontal" >
-                    <Typography className={classes.value}>{measurement.value}</Typography>
-                    <div className="layout vertical center" style={{position:'relative'}} >
-                        <Typography className={classes.unit}>{measurement.unit}</Typography>
-                        <div style={{position:'relative'}}>
-                            {increased && <ArrowDropUp className={classnames(classes.trend, classes.increased)}/>}
-                            {decreased && <ArrowDropDown className={classnames(classes.trend, classes.decreased)}/>}
-                        </div>
-                    </div>
-                </div>
-                <Typography variant="body1">{measurement.label}</Typography>
-                {this.renderEvolution(measurement, "Summary")}
-            </div>
-        );
+    openConfigurationDialog = () => {
+        this.setState({openConfiguration: true});
     };
 
-    renderEvolution = (measurement) => {
-        return (
-            <div style={{width:'100%',height:'100%'}}>
-                <HighchartsReact highcharts={Highcharts} options={this.evolutionOptions(measurement)} />
-            </div>
-        );
+    handleCloseConfigurationDialog = () => {
+        this.setState({openConfiguration: false});
+    };
+
+    renderMeasurement = (measurement, idx) => {
+        return (<TimelineMeasurement style={{margin:'5px'}}
+                                     measurement={measurement}
+                                     key={measurement.name}
+                                     index={idx}
+                                     id={measurement.name}
+                                     classes={this.props.classes}
+                                     openHistory={this.openHistory.bind(this, measurement)}
+                                     moveMeasurement={this.moveMeasurement.bind(this)}
+        />);
     };
 
     renderHistory = (history, measurement) => {
@@ -123,39 +152,6 @@ class Timeline extends AbstractTimeline {
                 <HighchartsReact highcharts={Highcharts} constructorType={'stockChart'} options={this.historyOptions(history, measurement)} />
             </div>
         );
-    };
-
-    evolutionOptions = (measurement) => {
-        const decimalCount = measurement.decimalCount;
-        const evolution = measurement.evolution;
-        const height = 50;
-        const width = 150;
-        const unit = measurement.unit;
-        const positioner = timelineEvolutionDisplaySummaryPositioner;
-        const openHistory = this.openHistory.bind(this, measurement);
-        return {
-            chart: { type: 'spline', height: height, width: width, backgroundColor: 'transparent' },
-            title: { text: '' },
-            legend: { enabled: false },
-            credits: { enabled: false },
-            xAxis: { visible: false, type: 'datetime', labels: { overflow: 'justify' }, categories: evolution.categories, },
-            yAxis: { visible: false, title: { text: '' }, minorGridLineWidth: 0, gridLineWidth: 0, alternateGridColor: null, },
-            tooltip: {
-                enabled: true,
-                positioner: positioner,
-                formatter: function() {
-                    return '<div style="font-size:6pt;">' + Highcharts.numberFormat(this.y,decimalCount) + (unit != null ? unit : "") + '  ' + this.x + "</div>";
-                }
-            },
-            plotOptions: { spline: { lineWidth: 1, states: { hover: { lineWidth: 2 } }, marker: { enabled: false } } },
-            series: [{
-                name: '',
-                data: evolution.serie.values,
-                cursor: 'pointer',
-                point: { events: { click: function(e) { openHistory(); } } },
-            }],
-            navigation: { menuItemStyle: { fontSize: '10px' } }
-        };
     };
 
     historyOptions = (history, measurement) => {
@@ -242,23 +238,81 @@ class Timeline extends AbstractTimeline {
 	    const result = this.historyContainer.current != null ? this.historyContainer.current.offsetHeight : "400";
 	    if (this.historyContainer.current != null) this.containerHeight = result;
 	    return result;
-	}
+	};
 
 	historyWidth = () => {
 	    if (this.containerWidth != null) return this.containerWidth;
 	    const result = this.historyContainer.current != null ? this.historyContainer.current.offsetWidth : "600";
 	    if (this.historyContainer.current != null) this.containerWidth = result;
 	    return result;
-	}
+	};
 
-}
-
-function timelineEvolutionDisplaySummaryPositioner(labelWidth, labelHeight, point) {
-    var chart = this.chart;
-    return {
-        x: chart.plotLeft + chart.plotSizeX/2 - labelWidth/2,
-        y: chart.plotTop + chart.plotSizeY - 4
+	moveMeasurement = (dragIndex, hoverIndex) => {
+        const measurements = this.state.measurements;
+        var measurement = measurements[dragIndex];
+        measurements.splice(dragIndex, 1);
+        measurements.splice(hoverIndex, 0, measurement);
+        this.setState({measurements: measurements, measurementsSorting: this.saveMeasurementsSorting()});
     };
+
+    renderConfigurationDialog = () => {
+        const { classes } = this.props;
+        return (
+            <React.Fragment>
+                <div className="layout horizontal start"><IconButton onClick={this.openConfigurationDialog.bind(this)}><Settings/></IconButton></div>
+                <Dialog open={this.state.openConfiguration} onClose={this.handleCloseConfigurationDialog.bind(this)}>
+                    <DialogTitle id="alert-dialog-title">{this.translate("Measurements")}</DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-description">
+                        {this.renderMeasurementsVisibility()}
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={this.handleCloseConfigurationDialog.bind(this)} color="primary" autoFocus>{this.translate("Close")}</Button>
+                    </DialogActions>
+                </Dialog>
+            </React.Fragment>
+        );
+    };
+
+    renderMeasurementsVisibility = () => {
+        return this.state.measurements.map((m, index) => this.renderMeasurementVisibility(m, index));
+    };
+
+    renderMeasurementVisibility = (measurement, index) => {
+        return (
+            <div>
+                <FormControlLabel control={<Checkbox checked={this.isMeasurementVisible(measurement)}
+                                  onChange={this.handleToggleMeasurementVisibility.bind(this, measurement)}
+                                  color="primary" name={measurement.name}/>} label={measurement.label}/>
+            </div>
+        );
+    };
+
+    isMeasurementVisible = (measurement) => {
+        const name = measurement.name;
+        const visibility = this.state.measurementsVisibility;
+        return visibility[name] == null || visibility[name] === true;
+    };
+
+    handleToggleMeasurementVisibility = (measurement) => {
+        const name = measurement.name;
+        if (this.state.measurementsVisibility[name] == null) this.state.measurementsVisibility[name] = true;
+        this.state.measurementsVisibility[name] = !this.state.measurementsVisibility[name];
+        this.updateCookie(this.state.measurementsVisibility, this.state.sourceName + "_visibility");
+        this.setState({measurementsVisibility: this.state.measurementsVisibility});
+        this.requester.measurementsVisibility(this.state.measurementsVisibility);
+    };
+
+    saveMeasurementsSorting = () => {
+        const measurements = this.state.measurements;
+        const measurementsSorting = {};
+        for (var i=0; i<measurements.length; i++) measurementsSorting[measurements[i].name] = { name: measurements[i].name, position: i };
+        this.updateCookie(measurementsSorting, this.state.sourceName + "_sorting");
+        this.requester.measurementsSorting(measurementsSorting);
+        return measurementsSorting;
+    };
+
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(Timeline));
