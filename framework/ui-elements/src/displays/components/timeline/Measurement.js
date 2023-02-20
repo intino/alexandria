@@ -9,11 +9,10 @@ import HighchartsReact from 'highcharts-react-official';
 
 const style = {
   margin: "5px",
-  backgroundColor: "white",
   cursor: "move"
 };
 
-const TimelineMeasurement = ({ measurement, index, id, moveMeasurement, classes, openHistory }) => {
+const TimelineMeasurement = ({ measurement, index, id, moveMeasurement, classes, openHistory, mode }) => {
     const ref = useRef(null);
     const chart = createRef();
     const [{ handlerId }, drop] = useDrop({
@@ -100,23 +99,24 @@ const TimelineMeasurement = ({ measurement, index, id, moveMeasurement, classes,
     const opacity = isDragging ? 0 : 1;
     const increased = measurement.trend === "Increased";
     const decreased = measurement.trend === "Decreased";
+    const trendClass = mode === "Summary" ? classes.summaryTrend : classes.normalTrend;
     drag(drop(ref));
     return (
         <div ref={ref} style={{ ...style, opacity, position: 'relative' }} data-handler-id={handlerId}>
-            <Icon style={{position:'absolute',zIndex:1}}><DragIndicator/></Icon>
-            <div className={classnames("layout vertical center", classes.measurement)}>
+            {mode === "Normal" && <Icon style={{position:'absolute',zIndex:1}}><DragIndicator/></Icon>}
+            <div className={classnames("layout vertical center", classes.measurement, mode === "Summary" ? classes.summaryMeasurement : classes.normalMeasurement)}>
                 <div className="layout horizontal" >
-                    <Typography className={classes.value}>{measurement.value}</Typography>
-                    <div className="layout vertical center" style={{position:'relative'}} >
-                        <Typography className={classes.unit}>{measurement.unit}</Typography>
-                        <div style={{position:'relative'}}>
-                            {increased && <ArrowDropUp className={classnames(classes.trend, classes.increased)}/>}
-                            {decreased && <ArrowDropDown className={classnames(classes.trend, classes.decreased)}/>}
+                    <Typography className={classnames(classes.value, mode === "Summary" ? classes.summaryValue : classes.normalValue)}>{measurement.value}</Typography>
+                    <div className="layout vertical center" style={{position:'relative', height:'24px', marginLeft: '8px'}} >
+                        <Typography className={classnames(classes.unit, mode === "Summary" ? classes.summaryUnit : classes.normalUnit)}>{measurement.unit}</Typography>
+                        <div>
+                            {increased && <ArrowDropUp className={classnames(trendClass, classes.increased)}/>}
+                            {decreased && <ArrowDropDown className={classnames(trendClass, classes.decreased)}/>}
                         </div>
                     </div>
                 </div>
                 <Typography variant="body2">{measurement.label}</Typography>
-                {renderEvolution(measurement)}
+                {mode === "Normal" && renderEvolution(measurement)}
             </div>
         </div>
     );

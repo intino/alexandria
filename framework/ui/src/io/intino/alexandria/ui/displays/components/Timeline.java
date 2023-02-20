@@ -40,7 +40,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return mode;
 	}
 
-	public Timeline<DN, B> mode(Mode mode) {
+	protected Timeline<DN, B> _mode(Mode mode) {
 		this.mode = mode;
 		return this;
 	}
@@ -101,7 +101,11 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 				.unit(measurement.unit())
 				.decimalCount(measurement.decimalCount())
 				.trend(TimelineMeasurement.Trend.valueOf(timeline.trend().name()))
-				.evolution(evolutionOf(timeline));
+				.evolution(mode == Mode.Summary ? emptyEvolution() : evolutionOf(timeline));
+	}
+
+	private TimelineEvolution emptyEvolution() {
+		return new TimelineEvolution().categories(Collections.emptyList()).serie(new TimelineSerie().values(Collections.emptyList()));
 	}
 
 	private TimelineEvolution evolutionOf(TimelineDatasource.Timeline timeline) {
