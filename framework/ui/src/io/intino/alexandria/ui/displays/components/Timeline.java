@@ -9,17 +9,16 @@ import io.intino.alexandria.ui.model.timeline.TimelineDatasource;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Timeline<DN extends TimelineNotifier, B extends Box> extends AbstractTimeline<B> {
 	private TimelineDatasource source;
+	private Mode mode;
 	private List<TimelineMeasurementVisibility> measurementsVisibility;
 	private List<TimelineMeasurementSorting> measurementsSorting;
 	private int summaryPointsCount = DefaultSummaryPointsCount;
@@ -30,10 +29,19 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		super(box);
 	}
 
-	private enum Mode { Summary, Normal }
+	public enum Mode { Summary, Normal }
 
 	public <DS extends TimelineDatasource> Timeline<DN, B> source(DS source) {
 		this.source = source;
+		return this;
+	}
+
+	public Mode mode() {
+		return mode;
+	}
+
+	public Timeline<DN, B> mode(Mode mode) {
+		this.mode = mode;
 		return this;
 	}
 
@@ -66,7 +74,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	public void refresh() {
 		super.refresh();
 		if (source == null) throw new RuntimeException("Timeline source not defined");
-		notifier.setup(new TimelineSetup().name(source.name()).measurements(source.measurements().stream().map(this::schemaOf).collect(Collectors.toList())));
+		notifier.setup(new TimelineSetup().mode(mode.name()).name(source.name()).measurements(source.measurements().stream().map(this::schemaOf).collect(Collectors.toList())));
 	}
 
 	public void openHistory(String measurementName) {
@@ -93,32 +101,32 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 				.unit(measurement.unit())
 				.decimalCount(measurement.decimalCount())
 				.trend(TimelineMeasurement.Trend.valueOf(timeline.trend().name()))
-				.evolution(evolutionOf(timeline, Mode.Summary));
+				.evolution(evolutionOf(timeline));
 	}
 
-	private TimelineEvolution evolutionOf(TimelineDatasource.Timeline timeline, Mode mode) {
+	private TimelineEvolution evolutionOf(TimelineDatasource.Timeline timeline) {
 		TimelineEvolution result = new TimelineEvolution();
-		result.categories(categoriesOf(timeline, mode));
-		result.serie(serieOf(timeline, mode));
+		result.categories(categoriesOf(timeline));
+		result.serie(serieOf(timeline));
 		return result;
 	}
 
-	private List<String> categoriesOf(TimelineDatasource.Timeline timeline, Mode mode) {
-		return loadCategories(timeline, mode).stream().map(t -> date(t, mode)).collect(Collectors.toList());
+	private List<String> categoriesOf(TimelineDatasource.Timeline timeline) {
+		return loadCategories(timeline).stream().map(this::date).collect(Collectors.toList());
 	}
 
-	private TimelineSerie serieOf(TimelineDatasource.Timeline timeline, Mode mode) {
-		List<Double> values = loadValues(timeline, mode);
+	private TimelineSerie serieOf(TimelineDatasource.Timeline timeline) {
+		List<Double> values = loadValues(timeline);
 		return new TimelineSerie().values(values);
 	}
 
-	private List<Instant> loadCategories(TimelineDatasource.Timeline timeline, Mode mode) {
+	private List<Instant> loadCategories(TimelineDatasource.Timeline timeline) {
 		List<Instant> result = new ArrayList<>(timeline.stats().keySet());
 		if (mode == Mode.Normal) return reverse(result);
 		return reverse(fill(result.subList(0, Math.min(result.size(), summaryPointsCount)), timeline.to()));
 	}
 
-	private List<Double> loadValues(TimelineDatasource.Timeline timeline, Mode mode) {
+	private List<Double> loadValues(TimelineDatasource.Timeline timeline) {
 		List<Double> values = new ArrayList<>(timeline.stats().values());
 		if (mode == Mode.Normal) return reverse(values);
 		return reverse(fillWithZeros(values.subList(0, Math.min(values.size(), summaryPointsCount))));
@@ -149,7 +157,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return result;
 	}
 
-	private String date(Instant t, Mode mode) {
+	private String date(Instant t) {
 		return mode == Mode.Normal ? dayAndHour(t) : hour(t);
 	}
 

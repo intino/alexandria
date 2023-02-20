@@ -309,6 +309,7 @@ Schema TimelineHistoryFetch
 
 Schema TimelineSetup
 	Attribute name as Text
+	Attribute mode as Text
 	Attribute measurements as Object(TimelineMeasurement) List
 
 Schema TimelineMeasurementVisibility
