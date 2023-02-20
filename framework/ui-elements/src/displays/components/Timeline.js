@@ -18,10 +18,17 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import TimelineMeasurement from './timeline/measurement'
 
 const styles = theme => ({
-    measurement : { position:'relative', borderRadius:'3px', minWidth:'150px', padding:'5px', background:'white', margin: '5px 5px' },
+    measurement : { position:'relative', borderRadius:'3px', padding:'5px', margin: '5px 5px' },
+    summaryMeasurement : { minWidth:'60px' },
+    normalMeasurement : { minWidth:'150px' },
     value : { marginRight: '2px', fontSize: '35pt', lineHeight: 1},
+    normalValue : { fontSize: '35pt' },
+    summaryValue : { fontSize: '18pt' },
     unit : { marginTop: '3px', fontSize: '14pt', color: theme.palette.grey.A700, paddingLeft: '5px' },
-    trend : { position: 'absolute', left: '0', top:'0px', marginLeft: '-16px', marginTop: '-15px', width:'40px', height:'40px' },
+    normalUnit : { fontSize: '14pt' },
+    summaryUnit : { position: 'absolute', fontSize: '9pt', marginLeft: '10px', marginTop: '-1px' },
+    normalTrend : { position: 'absolute', left: '0', top:'0px', marginLeft: '-16px', marginTop: '-15px', width:'40px', height:'40px' },
+    summaryTrend : { position: 'absolute', left: '0', bottom:'0px', marginLeft: '-4px', marginBottom: '-6px', width:'24px', height:'24px' },
     increased : { color: '#F44335' },
     decreased : { color: '#4D9A51' },
     dialogHeader : { padding: "2px 15px", },
@@ -73,9 +80,10 @@ class Timeline extends AbstractTimeline {
     };
 
     render() {
+        if (!this.state.visible) return (<React.Fragment/>);
         return (
             <DndProvider backend={HTML5Backend}>
-                <div className="layout horizontal">
+                <div className="layout horizontal wrap">
                     {this.renderMeasurements()}
                     {this.renderHistoryDialog()}
                     {this.renderConfigurationDialog()}
@@ -140,6 +148,7 @@ class Timeline extends AbstractTimeline {
                                      key={measurement.name}
                                      index={idx}
                                      id={measurement.name}
+                                     mode={this.props.mode}
                                      classes={this.props.classes}
                                      openHistory={this.openHistory.bind(this, measurement)}
                                      moveMeasurement={this.moveMeasurement.bind(this)}
@@ -259,7 +268,7 @@ class Timeline extends AbstractTimeline {
         const { classes } = this.props;
         return (
             <React.Fragment>
-                <div className="layout horizontal start"><IconButton onClick={this.openConfigurationDialog.bind(this)}><Settings/></IconButton></div>
+                {this.props.mode === "Normal" && <div className="layout horizontal start"><IconButton onClick={this.openConfigurationDialog.bind(this)}><Settings/></IconButton></div>}
                 <Dialog open={this.state.openConfiguration} onClose={this.handleCloseConfigurationDialog.bind(this)}>
                     <DialogTitle id="alert-dialog-title">{this.translate("Measurements")}</DialogTitle>
                     <DialogContent>

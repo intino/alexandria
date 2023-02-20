@@ -8,7 +8,7 @@ Template(layout=Vertical, spacing=DP8) timelineExamplesMold
 		Block as Relative(width=100%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(format=filledNoAirExtraLarge)
-				Timeline timeline
+				Timeline(mode=Summary) timeline
 				Block > Text as Code(language=Html)
 						value
 							=========

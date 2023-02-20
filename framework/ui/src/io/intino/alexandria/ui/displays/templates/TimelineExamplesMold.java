@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
+import io.intino.alexandria.ui.displays.components.Timeline;
 import io.intino.alexandria.ui.model.timeline.Measurement;
 import io.intino.alexandria.ui.model.timeline.TimelineDatasource;
 
