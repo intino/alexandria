@@ -2,6 +2,7 @@ dsl Legio
 
 Artifact("io.intino.alexandria", "4.0.0") event
 	Imports
+		Compile("io.intino.alexandria", "resource-cleaner", "1.0.0")
 		Compile("io.intino.alexandria", "zim", "5.0.0")
 		Compile("io.intino.alexandria", "itz", "1.0.0")
 		Compile("io.intino.alexandria", "logger", "2.1.0")

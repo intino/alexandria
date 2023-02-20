@@ -18,7 +18,6 @@
       <module fileurl="file://$PROJECT_DIR$/libraries/fsm/fsm.iml" filepath="$PROJECT_DIR$/libraries/fsm/fsm.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/http/http.iml" filepath="$PROJECT_DIR$/libraries/http/http.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/ness/ingestion/ingestion.iml" filepath="$PROJECT_DIR$/libraries/ness/ingestion/ingestion.iml" group="eventsourcing" />
-      <module fileurl="file://$PROJECT_DIR$/itz/itz.iml" filepath="$PROJECT_DIR$/itz/itz.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/libraries/jms/jms.iml" filepath="$PROJECT_DIR$/libraries/jms/jms.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/jmx/jmx.iml" filepath="$PROJECT_DIR$/libraries/jmx/jmx.iml" group="services" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/json/json.iml" filepath="$PROJECT_DIR$/fileformats/json/json.iml" group="fileformats" />
@@ -35,6 +34,7 @@
       <module fileurl="file://$PROJECT_DIR$/libraries/proxy/proxy.iml" filepath="$PROJECT_DIR$/libraries/proxy/proxy.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/drivers/r/r.iml" filepath="$PROJECT_DIR$/drivers/r/r.iml" group="drivers" />
       <module fileurl="file://$PROJECT_DIR$/libraries/reportbuilder/reportbuilder.iml" filepath="$PROJECT_DIR$/libraries/reportbuilder/reportbuilder.iml" group="office" />
+      <module fileurl="file://$PROJECT_DIR$/resource-cleaner/resource-cleaner.iml" filepath="$PROJECT_DIR$/resource-cleaner/resource-cleaner.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/rest/rest.iml" filepath="$PROJECT_DIR$/libraries/rest/rest.iml" group="services" />
       <module fileurl="file://$PROJECT_DIR$/libraries/rest-accessor/rest-accessor.iml" filepath="$PROJECT_DIR$/libraries/rest-accessor/rest-accessor.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/framework/scheduler/scheduler.iml" filepath="$PROJECT_DIR$/framework/scheduler/scheduler.iml" group="framework" />

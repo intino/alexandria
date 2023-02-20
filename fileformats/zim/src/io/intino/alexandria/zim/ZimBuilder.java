@@ -16,6 +16,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static io.intino.alexandria.zim.AbstractZimStream.ZIM_EXTENSION;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class ZimBuilder {
@@ -61,10 +62,10 @@ public class ZimBuilder {
 
 	private File tempFile() {
 		try {
-			return File.createTempFile("builder#", ".zim");
+			return File.createTempFile("builder#", ZIM_EXTENSION);
 		} catch (IOException e) {
 			Logger.error(e);
-			return new File("builder#" + UUID.randomUUID().toString() + ".zim");
+			return new File("builder#" + UUID.randomUUID() + ZIM_EXTENSION);
 		}
 	}
 
