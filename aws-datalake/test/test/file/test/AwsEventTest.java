@@ -1,4 +1,4 @@
-package test.file.test.unit;
+package test.file.test;
 
 import com.amazonaws.services.s3.model.S3Object;
 import io.intino.alexandria.datalake.aws.*;

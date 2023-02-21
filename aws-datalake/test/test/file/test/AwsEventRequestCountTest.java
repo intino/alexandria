@@ -1,4 +1,4 @@
-package test.file.test.request;
+package test.file.test;
 
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.aws.file.AwsEventStore;

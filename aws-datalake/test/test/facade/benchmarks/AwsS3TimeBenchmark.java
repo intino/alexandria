@@ -1,4 +1,4 @@
-package test.file.benchmarks;
+package test.facade.benchmarks;
 
 import com.amazonaws.services.s3.model.S3Object;
 import test.MyClient;

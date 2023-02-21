@@ -1,4 +1,4 @@
-package test.file.benchmarks;
+package test.facade.benchmarks;
 
 import test.MyClient;
 import io.intino.alexandria.datalake.aws.S3;
