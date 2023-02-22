@@ -3,12 +3,8 @@ package io.intino.alexandria.zim;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageWriter;
-import org.xerial.snappy.SnappyOutputStream;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.List;
@@ -45,7 +41,7 @@ public class ZimBuilder {
 
 	private File merge(Stream<Message> data) {
 		File file = tempFile();
-		try (MessageWriter writer = new MessageWriter(zipStream(file))) {
+		try (MessageWriter writer = new MessageWriter(open(file))) {
 			try(Stream<Message> stream = mergeFileWith(data)) {
 				Iterator<Message> iterator = stream.iterator();
 				while(iterator.hasNext()) writer.write(iterator.next());
@@ -56,8 +52,8 @@ public class ZimBuilder {
 		return file;
 	}
 
-	private SnappyOutputStream zipStream(File file) throws IOException {
-		return new SnappyOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
+	private OutputStream open(File file) throws IOException {
+		return Zim.compressing(new BufferedOutputStream(new FileOutputStream(file)));
 	}
 
 	private File tempFile() {
