@@ -1,4 +1,4 @@
-package io.intino.alexandria.itz;
+package io.intino.alexandria.zit;
 
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;

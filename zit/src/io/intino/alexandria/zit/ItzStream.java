@@ -1,7 +1,8 @@
-package io.intino.alexandria.itz;
+package io.intino.alexandria.zit;
 
+import com.github.luben.zstd.ZstdInputStream;
 import io.intino.alexandria.logger.Logger;
-import org.xerial.snappy.SnappyInputStream;
+import io.intino.alexandria.zit.model.Data;
 
 import java.io.*;
 import java.util.Iterator;
@@ -15,17 +16,11 @@ import static java.util.Objects.requireNonNull;
 @SuppressWarnings({"all"})
 public class ItzStream extends AbstractItzStream implements Iterator<Data>, AutoCloseable {
 
-	private final Iterator<Data> data;
-
 	public static ItzStream of(InputStream is) {
-		return new ItzStream(readerOf(is instanceof SnappyInputStream ? is : ItzStream.snZipStreamOf(is)));
+		return new ItzStream(readerOf(is instanceof ZstdInputStream ? is : ItzStream.zstdStreamOf(is)));
 	}
 
-	public static ItzStream of(String text) {
-		return ItzStream.of(new ItzReader(new ByteArrayInputStream(text.getBytes())));
-	}
-
-	public static ItzStream of(ItzReader reader) {
+	public static ItzStream of(ItsReader reader) {
 		return new ItzStream(reader);
 	}
 
@@ -33,10 +28,10 @@ public class ItzStream extends AbstractItzStream implements Iterator<Data>, Auto
 		return new ItzStream(readerOf(inputStream(file)));
 	}
 
-	private final ItzReader reader;
+	private final ItsReader reader;
 	private final List<Runnable> closeHandlers;
 
-	public ItzStream(ItzReader reader) {
+	public ItzStream(ItsReader reader) {
 		this.reader = requireNonNull(reader);
 		this.data = reader.data();
 		this.closeHandlers = new LinkedList<>();
@@ -84,7 +79,7 @@ public class ItzStream extends AbstractItzStream implements Iterator<Data>, Auto
 		closeHandlers.forEach(Runnable::run);
 	}
 
-	private static void closeIterator(ItzReader iterator) {
+	private static void closeIterator(ItsReader iterator) {
 		if (iterator instanceof AutoCloseable) {
 			try {
 				((AutoCloseable) iterator).close();
@@ -94,19 +89,19 @@ public class ItzStream extends AbstractItzStream implements Iterator<Data>, Auto
 		}
 	}
 
-	private static ItzReader readerOf(InputStream is) {
-		return new ItzReader(is);
+	private static ItsReader readerOf(InputStream is) {
+		return new ItsReader(is);
 	}
 
 	private static InputStream inputStream(File file) throws IOException {
-		return snZipStreamOf(file);
+		return zstdStreamOf(file);
 	}
 
-	private static InputStream snZipStreamOf(File file) throws IOException {
+	private static InputStream zstdStreamOf(File file) throws IOException {
 		return new SnappyInputStream(fileInputStream(file));
 	}
 
-	private static InputStream snZipStreamOf(InputStream stream) {
+	private static InputStream zstdStreamOf(InputStream stream) {
 		try {
 			return new SnappyInputStream(stream);
 		} catch (IOException e) {

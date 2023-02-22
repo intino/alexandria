@@ -1,8 +1,8 @@
 package io.intino.alexandria.event.measurement;
 
 import io.intino.alexandria.event.EventReader;
-import io.intino.alexandria.itz.Data;
-import io.intino.alexandria.itz.ItzStream;
+import io.intino.alexandria.zit.ItzStream;
+import io.intino.alexandria.zit.model.Data;
 
 import java.io.File;
 import java.io.IOException;
