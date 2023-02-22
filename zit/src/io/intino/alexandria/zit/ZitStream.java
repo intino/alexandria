@@ -1,7 +1,8 @@
-package io.intino.alexandria.itz;
+package io.intino.alexandria.zit;
 
+import com.github.luben.zstd.ZstdInputStream;
 import io.intino.alexandria.logger.Logger;
-import org.xerial.snappy.SnappyInputStream;
+import io.intino.alexandria.zit.model.Data;
 
 import java.io.*;
 import java.util.Iterator;
@@ -13,33 +14,27 @@ import java.util.stream.Stream;
 import static java.util.Objects.requireNonNull;
 
 @SuppressWarnings({"all"})
-public class ItzStream extends AbstractItzStream implements Iterator<Data>, AutoCloseable {
+public class ZitStream extends AbstractItzStream implements Iterator<Data>, AutoCloseable {
+	public static ZitStream of(InputStream is) {
+		return new ZitStream(readerOf(is instanceof ZstdInputStream ? is : ZitStream.zstdStreamOf(is)));
+	}
+
+	public static ZitStream of(ItsReader reader) {
+		return new ZitStream(reader);
+	}
+
+	public static ZitStream of(File file) throws IOException {
+		return new ZitStream(readerOf(inputStream(file)));
+	}
 
 	private final Iterator<Data> data;
-
-	public static ItzStream of(InputStream is) {
-		return new ItzStream(readerOf(is instanceof SnappyInputStream ? is : ItzStream.snZipStreamOf(is)));
-	}
-
-	public static ItzStream of(String text) {
-		return ItzStream.of(new ItzReader(new ByteArrayInputStream(text.getBytes())));
-	}
-
-	public static ItzStream of(ItzReader reader) {
-		return new ItzStream(reader);
-	}
-
-	public static ItzStream of(File file) throws IOException {
-		return new ItzStream(readerOf(inputStream(file)));
-	}
-
-	private final ItzReader reader;
+	private final ItsReader reader;
 	private final List<Runnable> closeHandlers;
 
-	public ItzStream(ItzReader reader) {
+	public ZitStream(ItsReader reader) {
 		this.reader = requireNonNull(reader);
-		this.data = reader.data();
 		this.closeHandlers = new LinkedList<>();
+		this.data = reader.data().iterator();
 	}
 
 	@Override
@@ -64,9 +59,7 @@ public class ItzStream extends AbstractItzStream implements Iterator<Data>, Auto
 	@Override
 	public void forEach(Consumer<? super Data> action) {
 		try {
-			while (hasNext()) {
-				action.accept(next());
-			}
+			while (hasNext()) action.accept(next());
 		} finally {
 			close();
 		}
@@ -84,31 +77,30 @@ public class ItzStream extends AbstractItzStream implements Iterator<Data>, Auto
 		closeHandlers.forEach(Runnable::run);
 	}
 
-	private static void closeIterator(ItzReader iterator) {
-		if (iterator instanceof AutoCloseable) {
+	private static void closeIterator(ItsReader iterator) {
+		if (iterator instanceof AutoCloseable)
 			try {
 				((AutoCloseable) iterator).close();
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
-		}
 	}
 
-	private static ItzReader readerOf(InputStream is) {
-		return new ItzReader(is);
+	private static ItsReader readerOf(InputStream is) {
+		return new ItsReader(is);
 	}
 
 	private static InputStream inputStream(File file) throws IOException {
-		return snZipStreamOf(file);
+		return zstdStreamOf(file);
 	}
 
-	private static InputStream snZipStreamOf(File file) throws IOException {
-		return new SnappyInputStream(fileInputStream(file));
+	private static InputStream zstdStreamOf(File file) throws IOException {
+		return new ZstdInputStream(fileInputStream(file));
 	}
 
-	private static InputStream snZipStreamOf(InputStream stream) {
+	private static InputStream zstdStreamOf(InputStream stream) {
 		try {
-			return new SnappyInputStream(stream);
+			return new ZstdInputStream(stream);
 		} catch (IOException e) {
 			Logger.error(e);
 			return stream;
@@ -117,9 +109,5 @@ public class ItzStream extends AbstractItzStream implements Iterator<Data>, Auto
 
 	private static BufferedInputStream fileInputStream(File file) throws FileNotFoundException {
 		return new BufferedInputStream(new FileInputStream(file));
-	}
-
-	public String[] measuements() {
-		return reader.measurements();
 	}
 }

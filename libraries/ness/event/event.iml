@@ -16,10 +16,8 @@
     <orderEntry type="module" module-name="zim" />
     <orderEntry type="module" module-name="logger" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:resource-cleaner:1.0.0" level="project" />
-    <orderEntry type="library" name="Intino: org.xerial.snappy:snappy-java:1.1.8.4" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:message:3.0.7" level="project" />
-    <orderEntry type="library" name="Intino: org.antlr:antlr4-runtime:4.10.1" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:zim:5.0.0" level="project" />
-    <orderEntry type="module" module-name="itz" />
+    <orderEntry type="module" module-name="message" />
+    <orderEntry type="library" name="Intino: com.github.luben:zstd-jni:1.5.4-1" level="project" />
+    <orderEntry type="module" module-name="zit" />
   </component>
 </module>

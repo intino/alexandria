@@ -70,6 +70,7 @@ Concept:Named Service
 				has:{0..1} Response
 				var Exception[] exceptionRefs = empty
 				has Exception
+			Aspect Public
 		Concept:Named Notification
 			var string path
 			Concept:Named Parameter extends Parameter is component
