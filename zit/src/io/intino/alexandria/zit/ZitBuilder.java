@@ -27,7 +27,7 @@ public class ZitBuilder {
 		file.getParentFile().mkdirs();
 	}
 
-	public void put(Message... messages) {
+	public void put(double[] messages) {
 		put(ZitStream.of(messages));
 	}
 

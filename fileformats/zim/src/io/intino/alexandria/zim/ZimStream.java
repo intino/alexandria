@@ -20,7 +20,7 @@ public class ZimStream extends AbstractZimStream implements Iterator<Message>, A
 	public static ZimStream sequence(File first, File... rest) throws IOException {
 		ZimStream[] streams = new ZimStream[1 + rest.length];
 		streams[0] = ZimStream.of(first);
-		for(int i = 0;i < rest.length;i++) streams[i + 1] = ZimStream.of(rest[i]);
+		for (int i = 0; i < rest.length; i++) streams[i + 1] = ZimStream.of(rest[i]);
 		return new ZimStream(Arrays.stream(streams).flatMap(Function.identity()).iterator());
 	}
 
@@ -82,7 +82,7 @@ public class ZimStream extends AbstractZimStream implements Iterator<Message>, A
 	@Override
 	public void forEach(Consumer<? super Message> action) {
 		try {
-			while(hasNext()) {
+			while (hasNext()) {
 				action.accept(next());
 			}
 		} finally {
@@ -92,7 +92,7 @@ public class ZimStream extends AbstractZimStream implements Iterator<Message>, A
 
 	@Override
 	public Stream<Message> onClose(Runnable closeHandler) {
-		if(closeHandler != null) resource.addCloseHandler(closeHandler);
+		if (closeHandler != null) resource.addCloseHandler(closeHandler);
 		return this;
 	}
 

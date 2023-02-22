@@ -4,6 +4,7 @@ Artifact("io.intino.alexandria", "1.0.0") zit
 	Imports
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Compile("com.github.luben", "zstd-jni", "1.5.4-1")
+		Compile("io.intino.alexandria", "resource-cleaner", "1.0.0")
 		Test("junit", "junit", "4.13")
 	Package(mode = ModulesAndLibrariesLinkedByManifest)
 

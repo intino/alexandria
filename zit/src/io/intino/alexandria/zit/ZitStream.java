@@ -15,7 +15,6 @@ import static java.util.Objects.requireNonNull;
 
 @SuppressWarnings({"all"})
 public class ZitStream extends AbstractItzStream implements Iterator<Data>, AutoCloseable {
-
 	public static ZitStream of(InputStream is) {
 		return new ZitStream(readerOf(is instanceof ZstdInputStream ? is : ZitStream.zstdStreamOf(is)));
 	}
@@ -28,13 +27,14 @@ public class ZitStream extends AbstractItzStream implements Iterator<Data>, Auto
 		return new ZitStream(readerOf(inputStream(file)));
 	}
 
+	private final Iterator<Data> data;
 	private final ItsReader reader;
 	private final List<Runnable> closeHandlers;
 
 	public ZitStream(ItsReader reader) {
 		this.reader = requireNonNull(reader);
-		this.data = reader.data();
 		this.closeHandlers = new LinkedList<>();
+		this.data = reader.data().iterator();
 	}
 
 	@Override
@@ -59,9 +59,7 @@ public class ZitStream extends AbstractItzStream implements Iterator<Data>, Auto
 	@Override
 	public void forEach(Consumer<? super Data> action) {
 		try {
-			while (hasNext()) {
-				action.accept(next());
-			}
+			while (hasNext()) action.accept(next());
 		} finally {
 			close();
 		}
@@ -80,13 +78,12 @@ public class ZitStream extends AbstractItzStream implements Iterator<Data>, Auto
 	}
 
 	private static void closeIterator(ItsReader iterator) {
-		if (iterator instanceof AutoCloseable) {
+		if (iterator instanceof AutoCloseable)
 			try {
 				((AutoCloseable) iterator).close();
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
-		}
 	}
 
 	private static ItsReader readerOf(InputStream is) {
@@ -98,12 +95,12 @@ public class ZitStream extends AbstractItzStream implements Iterator<Data>, Auto
 	}
 
 	private static InputStream zstdStreamOf(File file) throws IOException {
-		return new SnappyInputStream(fileInputStream(file));
+		return new ZstdInputStream(fileInputStream(file));
 	}
 
 	private static InputStream zstdStreamOf(InputStream stream) {
 		try {
-			return new SnappyInputStream(stream);
+			return new ZstdInputStream(stream);
 		} catch (IOException e) {
 			Logger.error(e);
 			return stream;
@@ -112,9 +109,5 @@ public class ZitStream extends AbstractItzStream implements Iterator<Data>, Auto
 
 	private static BufferedInputStream fileInputStream(File file) throws FileNotFoundException {
 		return new BufferedInputStream(new FileInputStream(file));
-	}
-
-	public String[] measuements() {
-		return reader.measurements();
 	}
 }

@@ -1,5 +1,6 @@
 package io.intino.alexandria.zit;
 
+import io.intino.alexandria.resourcecleaner.DisposableResource;
 import io.intino.alexandria.zit.model.Data;
 import io.intino.alexandria.zit.model.Period;
 
@@ -14,13 +15,17 @@ import static java.lang.Double.NaN;
 
 public class ItsReader implements AutoCloseable {
 	private final Stream<String> lines;
+	private final DisposableResource resource;
 	private String sensor;
 	private Instant instant = null;
 	private Period period = null;
 	private String[] measurements;
 
 	public ItsReader(InputStream is) {
-		this.lines = new BufferedReader(new InputStreamReader(is)).lines();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		this.resource = DisposableResource.whenDestroyed(this).thenClose(reader);
+		this.lines = reader.lines();
+
 	}
 
 	public String sensor() {
@@ -89,6 +94,6 @@ public class ItsReader implements AutoCloseable {
 
 	@Override
 	public void close() {
-		lines.close();
+		resource.close();
 	}
 }

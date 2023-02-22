@@ -6,12 +6,12 @@ public class Data {
 
 	private final Instant ts;
 	private final double[] values;
-	private String[] model;
+	private String[] measurements;
 
-	public Data(Instant ts, double[] values, String[] model) {
+	public Data(Instant ts, double[] values, String[] measurements) {
 		this.ts = ts;
 		this.values = values;
-		this.model = model;
+		this.measurements = measurements;
 	}
 
 	public Instant ts() {
@@ -22,7 +22,7 @@ public class Data {
 		return values;
 	}
 
-	public String[] model() {
-		return model;
+	public String[] measurements() {
+		return measurements;
 	}
 }
