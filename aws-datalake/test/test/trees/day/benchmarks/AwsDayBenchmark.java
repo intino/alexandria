@@ -1,10 +1,8 @@
 package test.trees.day.benchmarks;
 
 import io.intino.alexandria.Timetag;
-import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.aws.S3;
 import io.intino.alexandria.datalake.aws.trees.day.AwsDayDatalake;
-import io.intino.alexandria.event.EventStream;
 import org.openjdk.jmh.annotations.*;
 import test.MyClient;
 
@@ -18,46 +16,60 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Warmup(iterations = 2, time = 1)
 @Measurement(iterations = 5, time = 1)
 public class AwsDayBenchmark {
-    Datalake datalake = new AwsDayDatalake(S3.with(MyClient.s3Client));
+
+    private final AwsDayDatalake datalake = new AwsDayDatalake(S3.with(MyClient.s3Client));
 
     @Benchmark
-    public void get_tanks_from_event_store() {
+    public void should_get_time_needed_to_get_a_event_tub() {
+        String tank = "ps.Anomaly";
+        Timetag timeTag = new Timetag("20220201");
+        datalake.eventStore().tank(tank).on(timeTag);
+    }
+
+    @Benchmark
+    public void should_get_time_needed_to_get_a_entity_tub() {
+        String tank = "User";
+        Timetag timeTag = new Timetag("20230201");
+        datalake.entityStore().tank(tank).on(timeTag);
+    }
+
+    @Benchmark //Este
+    public void should_get_time_needed_to_get_all_tanks_on_events() {
         datalake.eventStore().tanks();
     }
 
-    @Benchmark
-    public void get_tanks_from_entity_store() {
+    @Benchmark //Este
+    public void should_get_time_needed_to_get_all_tanks_on_entity() {
         datalake.entityStore().tanks();
     }
 
-    @Benchmark
-    public void get_tubs_from_event_tank() {
-        datalake.eventStore().tank("ps.Anomaly").tubs();
-    }
-
-    @Benchmark
-    public void get_tubs_from_entities_tank() {
-        AtomicInteger count = new AtomicInteger();
-        EventStream stream = datalake.eventStore().tank("ps.Anomaly").tubs().parallel()
-                .map(Datalake.EventStore.Tub::events)
-                .reduce(EventStream.Merge::new)
-                .orElse(new EventStream.Empty());
-        stream.forEachRemaining(e -> count.get());
-    }
-
-    @Benchmark
-    public void get_event_from_tub() {
+    @Benchmark //Este
+    public void should_get_time_needed_to_get_all_events_on_date() {
         AtomicInteger hash = new AtomicInteger(0);
-        datalake.eventStore().tank("ps.Anomaly").on(new Timetag("20221223")).events()
+        String tank = "ps.Anomaly";
+        Timetag timeTag = new Timetag("20220201");
+        datalake.eventStore().tank(tank).on(timeTag).events()
                 .forEachRemaining(t -> hash.addAndGet(t.hashCode()));
     }
 
-    @Benchmark
-    public void get_entity_from_tub() {
+    @Benchmark //Este
+    public void should_get_time_needed_to_get_all_triplets_on_date() {
         AtomicInteger hash = new AtomicInteger(0);
-        datalake.entityStore().tank("User").on(new Timetag("20230101")).triplets()
+        String tank = "User";
+        Timetag timeTag = new Timetag("20230201");
+        datalake.entityStore().tank(tank).on(timeTag).triplets()
                 .forEach(t -> hash.addAndGet(t.hashCode()));
     }
 
+    @Benchmark
+    public void should_get_time_needed_to_get_all_tubs_in_one_tank_on_events() {
+        String tank = "ps.Anomaly"; //Este
+        datalake.eventStore().tank(tank).tubs();
+    }
 
+    @Benchmark
+    public void should_get_time_needed_to_get_all_tubs_in_one_tank_on_entity() {
+        String tank = "User"; //Este
+        datalake.entityStore().tank(tank).tubs();
+    }
 }

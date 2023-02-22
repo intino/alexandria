@@ -6,6 +6,7 @@ import io.intino.alexandria.datalake.Datalake.EventStore.Tank;
 import io.intino.alexandria.datalake.aws.S3;
 import io.intino.alexandria.datalake.aws.trees.day.AwsDayDatalake;
 import io.intino.alexandria.datalake.aws.trees.day.AwsDayEntityTank;
+import io.intino.alexandria.datalake.aws.trees.day.AwsDayEventTank;
 import org.junit.Test;
 import test.MyClient;
 
@@ -27,6 +28,6 @@ public class AwsEventStoreTest {
 
     @Test
     public void should_return_specific_entity_tank() {
-        assertEquals(new AwsDayEntityTank("ps.Anomaly", S3.with(MyClient.s3Client)).name(), datalake.entityStore().tank("ps.Anomaly").name());
+        assertEquals(new AwsDayEventTank("ps.Anomaly", S3.with(MyClient.s3Client)).name(), datalake.entityStore().tank("ps.Anomaly").name());
     }
 }
