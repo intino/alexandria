@@ -56,12 +56,4 @@ public class AwsEntityTub implements Tub{
         String[] route = object.getKey().split(AwsDelimiter);
         return route[route.length - 1].replaceAll(AwsEntityStore.Extension, "");
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!obj.getClass().equals(AwsEntityTub.class)) return false;
-        AwsEntityTub tub = (AwsEntityTub) obj;
-        return this.object.getKey().equals(tub.object.getKey()) &&
-                this.object.getBucketName().equals(tub.object.getBucketName());
-    }
 }

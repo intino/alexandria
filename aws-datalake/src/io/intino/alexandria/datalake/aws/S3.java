@@ -1,10 +1,7 @@
 package io.intino.alexandria.datalake.aws;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.ListObjectsRequest;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.model.*;
 
 import java.util.stream.Stream;
 
@@ -19,6 +16,10 @@ public class S3 {
 
     public static S3 with(AmazonS3 s3) {
         return new S3(s3);
+    }
+
+    public Stream<String> buckets() {
+        return client.listBuckets().stream().map(Bucket::getName);
     }
 
     public Stream<String> prefixesIn(String bucketName, String prefix) {
@@ -38,5 +39,4 @@ public class S3 {
     public Stream<S3Object> getObjectsFrom(String bucketName, String prefix) {
         return keysIn(bucketName, prefix).map(key -> getObjectFrom(bucketName, key));
     }
-
 }
