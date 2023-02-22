@@ -10,13 +10,9 @@ import java.util.Arrays;
 import static java.util.stream.Collectors.joining;
 
 public class ZitBuilder implements AutoCloseable {
-	private final File source;
-	private final String sensor;
 	private final BufferedWriter writer;
 
 	public ZitBuilder(File file, String sensor) throws IOException {
-		this.source = file;
-		this.sensor = sensor;
 		boolean exists = file.exists();
 		file.getParentFile().mkdirs();
 		this.writer = writer(file);
