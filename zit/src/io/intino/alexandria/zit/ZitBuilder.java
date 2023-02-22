@@ -1,79 +1,70 @@
 package io.intino.alexandria.zit;
 
+import com.github.luben.zstd.ZstdOutputStream;
 import io.intino.alexandria.logger.Logger;
-import io.intino.alexandria.message.Message;
-import io.intino.alexandria.message.MessageWriter;
-import org.xerial.snappy.SnappyOutputStream;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Stream;
+import java.io.*;
+import java.time.Instant;
+import java.util.Arrays;
 
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static java.util.stream.Collectors.joining;
 
-public class ZitBuilder {
-
+public class ZitBuilder implements AutoCloseable {
 	private final File source;
+	private final String sensor;
+	private final BufferedWriter writer;
 
-	public ZitBuilder(File file) {
+	public ZitBuilder(File file, String sensor) throws IOException {
 		this.source = file;
+		this.sensor = sensor;
+		boolean exists = file.exists();
 		file.getParentFile().mkdirs();
+		this.writer = writer(file);
+		if (!exists) writeLine("@id " + sensor);
 	}
 
-	public void put(double[] messages) {
-		put(ZitStream.of(messages));
+	public ZitBuilder put(String[] sensorModel) {
+		writeLine("@measurements " + String.join("\t", sensorModel).stripTrailing());
+		return this;
 	}
 
-	public void put(List<Message> messages) {
-		put(ZitStream.of(messages));
+	public ZitBuilder put(Instant timeModel) {
+		writeLine("@instant " + timeModel.toString() + "\n");
+		return this;
 	}
 
-	public void put(Stream<Message> zimStream) {
+	public ZitBuilder put(double[] data) {
+		writeLine(toString(data));
+		return this;
+	}
+
+	private void writeLine(String line) {
 		try {
-			Files.move(merge(zimStream).toPath(), source.toPath(), REPLACE_EXISTING);
+			writer.write(line + "\n");
 		} catch (IOException e) {
 			Logger.error(e);
 		}
 	}
 
-	private File merge(Stream<Message> data) {
-		File file = tempFile();
-		try (MessageWriter writer = new MessageWriter(zipStream(file))) {
-			try(Stream<Message> stream = mergeFileWith(data)) {
-				Iterator<Message> iterator = stream.iterator();
-				while(iterator.hasNext()) writer.write(iterator.next());
-			}
-		} catch (IOException e) {
-			Logger.error(e);
-		}
-		return file;
+	private String toString(double[] values) {
+		return Arrays.stream(values).mapToObj(this::toString).collect(joining("\t")).stripTrailing();
 	}
 
-	private SnappyOutputStream zipStream(File file) throws IOException {
-		return new SnappyOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
+	private String toString(double value) {
+		return Double.isNaN(value) ? "" : format(value);
 	}
 
-	private File tempFile() {
-		try {
-			return File.createTempFile("builder#", ".zim");
-		} catch (IOException e) {
-			Logger.error(e);
-			return new File("builder#" + UUID.randomUUID().toString() + ".zim");
-		}
+	private String format(double value) {
+		long v = (long) value;
+		return value == v ? String.valueOf(v) : String.valueOf(value);
 	}
 
-	private Stream<Message> mergeFileWith(Stream<Message> data) {
-		try {
-			return Stream.of(ZitStream.of(source), data).flatMap(Function.identity());
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+	private BufferedWriter writer(File file) throws IOException {
+		return new BufferedWriter(new OutputStreamWriter(new ZstdOutputStream(new FileOutputStream(file))));
+	}
+
+	@Override
+	public void close() throws Exception {
+		writer.close();
 	}
 }
