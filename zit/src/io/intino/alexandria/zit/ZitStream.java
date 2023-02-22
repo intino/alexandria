@@ -14,24 +14,24 @@ import java.util.stream.Stream;
 import static java.util.Objects.requireNonNull;
 
 @SuppressWarnings({"all"})
-public class ItzStream extends AbstractItzStream implements Iterator<Data>, AutoCloseable {
+public class ZitStream extends AbstractItzStream implements Iterator<Data>, AutoCloseable {
 
-	public static ItzStream of(InputStream is) {
-		return new ItzStream(readerOf(is instanceof ZstdInputStream ? is : ItzStream.zstdStreamOf(is)));
+	public static ZitStream of(InputStream is) {
+		return new ZitStream(readerOf(is instanceof ZstdInputStream ? is : ZitStream.zstdStreamOf(is)));
 	}
 
-	public static ItzStream of(ItsReader reader) {
-		return new ItzStream(reader);
+	public static ZitStream of(ItsReader reader) {
+		return new ZitStream(reader);
 	}
 
-	public static ItzStream of(File file) throws IOException {
-		return new ItzStream(readerOf(inputStream(file)));
+	public static ZitStream of(File file) throws IOException {
+		return new ZitStream(readerOf(inputStream(file)));
 	}
 
 	private final ItsReader reader;
 	private final List<Runnable> closeHandlers;
 
-	public ItzStream(ItsReader reader) {
+	public ZitStream(ItsReader reader) {
 		this.reader = requireNonNull(reader);
 		this.data = reader.data();
 		this.closeHandlers = new LinkedList<>();

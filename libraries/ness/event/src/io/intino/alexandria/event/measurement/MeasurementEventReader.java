@@ -1,7 +1,7 @@
 package io.intino.alexandria.event.measurement;
 
 import io.intino.alexandria.event.EventReader;
-import io.intino.alexandria.zit.ItzStream;
+import io.intino.alexandria.zit.ZitStream;
 import io.intino.alexandria.zit.model.Data;
 
 import java.io.File;
@@ -17,11 +17,11 @@ public class MeasurementEventReader implements EventReader<MeasurementEvent> {
 	private final Iterator<MeasurementEvent> iterator;
 
 	public MeasurementEventReader(File file) throws IOException {
-		this(new ItzToEventIterator(ItzStream.of(file)));
+		this(new ItzToEventIterator(ZitStream.of(file)));
 	}
 
 	public MeasurementEventReader(InputStream is) {
-		this(new ItzToEventIterator(ItzStream.of(is)));
+		this(new ItzToEventIterator(ZitStream.of(is)));
 	}
 
 	public MeasurementEventReader(MeasurementEvent... events) {
@@ -57,9 +57,9 @@ public class MeasurementEventReader implements EventReader<MeasurementEvent> {
 
 	private static class ItzToEventIterator implements Iterator<MeasurementEvent>, AutoCloseable {
 
-		private final ItzStream source;
+		private final ZitStream source;
 
-		public ItzToEventIterator(ItzStream source) {
+		public ItzToEventIterator(ZitStream source) {
 			this.source = source;
 		}
 

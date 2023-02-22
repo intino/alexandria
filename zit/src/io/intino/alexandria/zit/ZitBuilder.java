@@ -18,21 +18,21 @@ import java.util.stream.Stream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
-public class ItzBuilder {
+public class ZitBuilder {
 
 	private final File source;
 
-	public ItzBuilder(File file) {
+	public ZitBuilder(File file) {
 		this.source = file;
 		file.getParentFile().mkdirs();
 	}
 
 	public void put(Message... messages) {
-		put(ItzStream.of(messages));
+		put(ZitStream.of(messages));
 	}
 
 	public void put(List<Message> messages) {
-		put(ItzStream.of(messages));
+		put(ZitStream.of(messages));
 	}
 
 	public void put(Stream<Message> zimStream) {
@@ -71,7 +71,7 @@ public class ItzBuilder {
 
 	private Stream<Message> mergeFileWith(Stream<Message> data) {
 		try {
-			return Stream.of(ItzStream.of(source), data).flatMap(Function.identity());
+			return Stream.of(ZitStream.of(source), data).flatMap(Function.identity());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
