@@ -45,7 +45,6 @@ public class AwsDayBenchmark {
         stream.forEachRemaining(e -> count.get());
     }
 
-
     @Benchmark
     public void get_event_from_tub() {
         AtomicInteger hash = new AtomicInteger(0);

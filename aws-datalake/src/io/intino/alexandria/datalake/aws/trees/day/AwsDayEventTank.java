@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.datalake.aws.file.AwsEntityStore.Extension;
 import static io.intino.alexandria.datalake.aws.trees.day.AwsDayDatalake.*;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 
@@ -93,6 +92,6 @@ public class AwsDayEventTank implements Tank {
     }
 
     private String tubNameOf(Timetag tag) {
-        return tag.month() + AwsDelimiter + "entities" + AwsDelimiter + name + AwsDelimiter + tag.value() + Extension;
+        return tag.month() + AwsDelimiter + "events" + AwsDelimiter + name + AwsDelimiter + tag.year() + ".zim";
     }
 }

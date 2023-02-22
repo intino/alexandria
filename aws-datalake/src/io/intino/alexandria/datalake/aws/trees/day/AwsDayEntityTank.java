@@ -96,7 +96,7 @@ public class AwsDayEntityTank implements Tank {
     }
 
     private String tubNameOf(Timetag tag) {
-        return tag.month() + AwsDelimiter + "entities" + AwsDelimiter + name + AwsDelimiter + tag.value() + Extension;
+        return tag.month() + AwsDelimiter + "entities" + AwsDelimiter + name + AwsDelimiter + tag.year() + Extension;
     }
 
 
