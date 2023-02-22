@@ -174,7 +174,7 @@ public class RESTServiceRenderer extends Renderer {
 				.add("operation", operation.getClass().getSimpleName())
 				.add("path", customize("path", Commons.path(resource)))
 				.add("method", operation.getClass().getSimpleName());
-		if (authentication != null)
+		if (authentication != null && !resource.isPublic())
 			builder.add("authenticate", new FrameBuilder(authentication.core$().conceptList().stream().filter(Concept::isAspect).map(Predicate::name).toArray(String[]::new)));
 		return builder.toFrame();
 	}

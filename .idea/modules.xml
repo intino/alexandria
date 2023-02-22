@@ -18,7 +18,6 @@
       <module fileurl="file://$PROJECT_DIR$/libraries/fsm/fsm.iml" filepath="$PROJECT_DIR$/libraries/fsm/fsm.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/http/http.iml" filepath="$PROJECT_DIR$/libraries/http/http.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/ness/ingestion/ingestion.iml" filepath="$PROJECT_DIR$/libraries/ness/ingestion/ingestion.iml" group="eventsourcing" />
-      <module fileurl="file://$PROJECT_DIR$/itz/itz.iml" filepath="$PROJECT_DIR$/itz/itz.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/libraries/jms/jms.iml" filepath="$PROJECT_DIR$/libraries/jms/jms.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/jmx/jmx.iml" filepath="$PROJECT_DIR$/libraries/jmx/jmx.iml" group="services" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/json/json.iml" filepath="$PROJECT_DIR$/fileformats/json/json.iml" group="fileformats" />
@@ -59,6 +58,7 @@
       <module fileurl="file://$PROJECT_DIR$/fileformats/zif/zif.iml" filepath="$PROJECT_DIR$/fileformats/zif/zif.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/zim/zim.iml" filepath="$PROJECT_DIR$/fileformats/zim/zim.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/zip/zip.iml" filepath="$PROJECT_DIR$/fileformats/zip/zip.iml" group="fileformats" />
+      <module fileurl="file://$PROJECT_DIR$/zit/zit.iml" filepath="$PROJECT_DIR$/zit/zit.iml" group="fileformats" />
     </modules>
   </component>
 </project>

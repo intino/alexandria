@@ -1,10 +1,8 @@
 package io.intino.alexandria.zim;
 
-import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageReader;
 import io.intino.alexandria.resourcecleaner.DisposableResource;
-import org.xerial.snappy.SnappyInputStream;
 
 import java.io.*;
 import java.util.Arrays;
@@ -22,7 +20,7 @@ public class ZimStream extends AbstractZimStream implements Iterator<Message>, A
 	public static ZimStream sequence(File first, File... rest) throws IOException {
 		ZimStream[] streams = new ZimStream[1 + rest.length];
 		streams[0] = ZimStream.of(first);
-		for(int i = 0;i < rest.length;i++) streams[i + 1] = ZimStream.of(rest[i]);
+		for (int i = 0; i < rest.length; i++) streams[i + 1] = ZimStream.of(rest[i]);
 		return new ZimStream(Arrays.stream(streams).flatMap(Function.identity()).iterator());
 	}
 
@@ -30,8 +28,12 @@ public class ZimStream extends AbstractZimStream implements Iterator<Message>, A
 		return new ZimStream(Arrays.stream(streams).flatMap(Function.identity()).iterator());
 	}
 
-	public static ZimStream of(InputStream is) {
-		return new ZimStream(readerOf(ZimStream.snZipStreamOf(is)));
+	public static ZimStream of(File file) throws IOException {
+		return new ZimStream(readerOf(Zim.decompressing(fileInputStream(file))));
+	}
+
+	public static ZimStream of(InputStream is) throws IOException {
+		return new ZimStream(readerOf(Zim.decompressing(is)));
 	}
 
 	public static ZimStream of(String text) {
@@ -57,10 +59,6 @@ public class ZimStream extends AbstractZimStream implements Iterator<Message>, A
 	private final Iterator<Message> iterator;
 	private final DisposableResource resource;
 
-	public static ZimStream of(File file) throws IOException {
-		return new ZimStream(readerOf(inputStream(file)));
-	}
-
 	public ZimStream(Iterator<Message> iterator) {
 		this.iterator = requireNonNull(iterator);
 		this.resource = DisposableResource.whenDestroyed(this).thenClose(iterator);
@@ -84,7 +82,7 @@ public class ZimStream extends AbstractZimStream implements Iterator<Message>, A
 	@Override
 	public void forEach(Consumer<? super Message> action) {
 		try {
-			while(hasNext()) {
+			while (hasNext()) {
 				action.accept(next());
 			}
 		} finally {
@@ -94,7 +92,7 @@ public class ZimStream extends AbstractZimStream implements Iterator<Message>, A
 
 	@Override
 	public Stream<Message> onClose(Runnable closeHandler) {
-		if(closeHandler != null) resource.addCloseHandler(closeHandler);
+		if (closeHandler != null) resource.addCloseHandler(closeHandler);
 		return this;
 	}
 
@@ -107,24 +105,7 @@ public class ZimStream extends AbstractZimStream implements Iterator<Message>, A
 		return new MessageReader(is);
 	}
 
-	private static InputStream inputStream(File file) throws IOException {
-		return snZipStreamOf(file);
-	}
-
-	private static InputStream snZipStreamOf(File file) throws IOException {
-		return new SnappyInputStream(fileInputStream(file));
-	}
-
-	private static InputStream snZipStreamOf(InputStream stream) {
-		try {
-			return stream instanceof SnappyInputStream ? stream : new SnappyInputStream(stream);
-		} catch (IOException e) {
-			Logger.error(e);
-			return stream;
-		}
-	}
-
-	private static BufferedInputStream fileInputStream(File file) throws FileNotFoundException {
+	private static BufferedInputStream fileInputStream(File file) throws IOException {
 		return new BufferedInputStream(new FileInputStream(file));
 	}
 }
