@@ -55,7 +55,7 @@ public class AwsEntityTank implements Tank{
 
     @Override
     public Stream<Tub> tubs(Timetag from, Timetag to) {
-        return StreamSupport.stream(from.iterateTo(to).spliterator(), true).map(this::on);
+        return StreamSupport.stream(from.iterateTo(to).spliterator(), false).map(this::on);
     }
 
     private String tubNameOf(Timetag tag) {

@@ -1,10 +1,10 @@
 package test.facade.benchmarks;
 
 import com.amazonaws.services.s3.model.S3Object;
-import test.MyClient;
 import io.intino.alexandria.datalake.aws.S3;
 import io.intino.alexandria.zim.ZimReader;
 import org.openjdk.jmh.annotations.*;
+import test.MyClient;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
