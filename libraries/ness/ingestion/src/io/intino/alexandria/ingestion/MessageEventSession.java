@@ -1,12 +1,12 @@
 package io.intino.alexandria.ingestion;
 
+import com.github.luben.zstd.ZstdOutputStream;
 import io.intino.alexandria.Fingerprint;
 import io.intino.alexandria.Session;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.event.message.MessageEvent;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.MessageWriter;
-import org.xerial.snappy.SnappyOutputStream;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -31,12 +31,12 @@ public class MessageEventSession {
 		this.autoFlush = autoFlush;
 	}
 
-	public void put(String tank, String source, Timetag timetag, MessageEvent... events) {
+	public void put(String tank, String source, Timetag timetag, MessageEvent... events) throws IOException {
 		put(tank, source, timetag, Arrays.stream(events));
 		if (count.addAndGet(events.length) >= autoFlush) flush();
 	}
 
-	public void put(String tank, String source, Timetag timetag, Stream<MessageEvent> eventStream) {
+	public void put(String tank, String source, Timetag timetag, Stream<MessageEvent> eventStream) throws IOException {
 		put(writerOf(tank, source, timetag), eventStream);
 	}
 
@@ -77,22 +77,22 @@ public class MessageEventSession {
 		}
 	}
 
-	private MessageWriter writerOf(String tank, String source, Timetag timetag) {
+	private MessageWriter writerOf(String tank, String source, Timetag timetag) throws IOException {
 		return writerOf(Fingerprint.of(tank, source, Session.Type.event, timetag));
 	}
 
-	private MessageWriter writerOf(Fingerprint fingerprint) {
+	private MessageWriter writerOf(Fingerprint fingerprint) throws IOException {
 		synchronized (writers) {
 			if (!writers.containsKey(fingerprint)) writers.put(fingerprint, createWriter(fingerprint));
 			return writers.get(fingerprint);
 		}
 	}
 
-	private MessageWriter createWriter(Fingerprint fingerprint) {
-		return new MessageWriter(snappyStream(provider.outputStream(fingerprint.name(), Session.Type.event)));
+	private MessageWriter createWriter(Fingerprint fingerprint) throws IOException {
+		return new MessageWriter(zStream(provider.outputStream(fingerprint.name(), Session.Type.event)));
 	}
 
-	private SnappyOutputStream snappyStream(OutputStream outputStream) {
-		return new SnappyOutputStream(outputStream, autoFlush * 100);
+	private ZstdOutputStream zStream(OutputStream outputStream) throws IOException {
+		return new ZstdOutputStream(outputStream, autoFlush * 100);
 	}
 }
