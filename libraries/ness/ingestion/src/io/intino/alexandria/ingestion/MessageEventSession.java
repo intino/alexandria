@@ -78,7 +78,7 @@ public class MessageEventSession {
 	}
 
 	private MessageWriter writerOf(String tank, String source, Timetag timetag) throws IOException {
-		return writerOf(Fingerprint.of(tank, source, Session.Type.event, timetag));
+		return writerOf(Fingerprint.of(tank, source, Session.Type.message, timetag));
 	}
 
 	private MessageWriter writerOf(Fingerprint fingerprint) throws IOException {
@@ -89,7 +89,7 @@ public class MessageEventSession {
 	}
 
 	private MessageWriter createWriter(Fingerprint fingerprint) throws IOException {
-		return new MessageWriter(zStream(provider.outputStream(fingerprint.name(), Session.Type.event)));
+		return new MessageWriter(zStream(provider.outputStream(fingerprint.name(), Session.Type.message)));
 	}
 
 	private ZstdOutputStream zStream(OutputStream outputStream) throws IOException {

@@ -1,7 +1,6 @@
 package io.intino.alexandria.sealing;
 
 import io.intino.alexandria.Fingerprint;
-import io.intino.alexandria.Session;
 import io.intino.alexandria.Session.Type;
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.file.FS;
@@ -19,6 +18,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import static io.intino.alexandria.Session.SessionExtension;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
 
@@ -61,7 +61,7 @@ public class EventSessionSealer {
 	}
 
 	private static Stream<File> sessions(File stage) {
-		return FS.allFilesIn(stage, f -> f.getName().endsWith(Session.SessionExtension) && f.length() > 0f);
+		return FS.allFilesIn(stage, f -> f.getName().endsWith(SessionExtension) && f.length() > 0f);
 	}
 
 	private static Fingerprint fingerprintOf(File file) {
@@ -69,7 +69,10 @@ public class EventSessionSealer {
 	}
 
 	private static String cleanedNameOf(File file) {
-		return file.getName().substring(0, file.getName().indexOf("#")).replace("-", "/").replace(Session.SessionExtension, "");
+		return file.getName().substring(0, file.getName().indexOf("#")).replace("-", "/")
+				.replaceFirst(Type.message + "." + SessionExtension, "")
+				.replace(Type.tuple + "." + SessionExtension, "")
+				.replace(Type.measurement + "." + SessionExtension, "");
 	}
 
 	private static class EventSealer {
@@ -78,7 +81,7 @@ public class EventSessionSealer {
 		private final File tempFolder;
 
 		EventSealer(Datalake datalake, Predicate<String> sortingPolicy, File tempFolder) {
-			this.stores = Map.of(Type.event, datalake.messageStore(), Type.tuple, datalake.tupleStore(), Type.measurement, datalake.measurementStore());
+			this.stores = Map.of(Type.message, datalake.messageStore(), Type.tuple, datalake.tupleStore(), Type.measurement, datalake.measurementStore());
 			this.sortingPolicy = sortingPolicy;
 			this.tempFolder = tempFolder;
 		}
@@ -94,7 +97,7 @@ public class EventSessionSealer {
 		private List<File> sort(Fingerprint fingerprint, List<File> files) {
 			try {
 				for (File file : files)
-					if (fingerprint.type().equals(Type.event) && sortingPolicy.test(fingerprint.tank()))
+					if (fingerprint.type().equals(Type.message) && sortingPolicy.test(fingerprint.tank()))
 						new MessageEventSorter(file, tempFolder).sort();
 				return files;
 			} catch (IOException e) {
@@ -116,7 +119,7 @@ public class EventSessionSealer {
 
 		private File datalakeFile(Fingerprint fingerprint) {
 			FileStore store = (FileStore) stores.get(fingerprint.type());
-			File zimFile = new File(store.directory(), fingerprint + store.fileExtension());
+			File zimFile = new File(store.directory(), fingerprint.tank() + File.separator + fingerprint.source() + File.separator + fingerprint.timetag() + store.fileExtension());
 			zimFile.getParentFile().mkdirs();
 			return zimFile;
 		}

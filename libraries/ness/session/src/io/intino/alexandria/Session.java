@@ -12,7 +12,7 @@ public interface Session {
 	InputStream inputStream();
 
 	enum Type {
-		event,
+		message,
 		tuple,
 		measurement
 	}

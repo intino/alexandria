@@ -16,7 +16,7 @@ import static io.intino.alexandria.event.EventStream.merge;
 import static io.intino.alexandria.event.EventStream.sequence;
 
 public interface Datalake {
-	String EventStoreFolder = "events";
+	String MessageStoreFolder = "messages";
 	String TupleStoreFolder = "tuples";
 	String MeasurementStoreFolder = "measurements";
 
