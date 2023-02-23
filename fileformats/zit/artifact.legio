@@ -8,7 +8,6 @@ Artifact("io.intino.alexandria", "1.0.0") zit
 		Test("junit", "junit", "4.13")
 	Package(mode = ModulesAndLibrariesLinkedByManifest)
 
-Repository(identifier = "intino-maven")
-	Release("https://artifactory.intino.io/artifactory/releases")
+Repository("intino-maven") > Release("https://artifactory.intino.io/artifactory/releases")
 
 RunConfiguration local
