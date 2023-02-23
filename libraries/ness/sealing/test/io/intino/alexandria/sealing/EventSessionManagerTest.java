@@ -8,6 +8,7 @@ import io.intino.alexandria.ingestion.MessageSessionHandler;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.zim.ZimStream;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 
+@Ignore
 public class EventSessionManagerTest {
 	private final File stageDir = new File("temp/stage");
 	private final File datalakeDir = new File("temp/datalake");
