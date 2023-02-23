@@ -3,7 +3,9 @@ package io.intino.alexandria.ztp.tests;
 import io.intino.alexandria.ztp.*;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Iterator;
 
 import static org.junit.Assert.assertEquals;

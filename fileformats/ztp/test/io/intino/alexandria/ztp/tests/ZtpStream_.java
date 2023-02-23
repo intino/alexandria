@@ -5,7 +5,6 @@ import io.intino.alexandria.ztp.ZtpStream;
 import org.junit.Test;
 
 import java.time.Instant;
-import java.util.stream.Collectors;
 
 import static io.intino.alexandria.ztp.Tuple.TUPLE_SEPARATOR;
 import static org.junit.Assert.assertEquals;
