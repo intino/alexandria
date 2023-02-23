@@ -22,6 +22,11 @@ public class MessageEventSource implements Datalake.Store.Source<MessageEvent> {
 	}
 
 	@Override
+	public String name() {
+		return root.getName();
+	}
+
+	@Override
 	public Scale scale() {
 		return first().scale();
 	}

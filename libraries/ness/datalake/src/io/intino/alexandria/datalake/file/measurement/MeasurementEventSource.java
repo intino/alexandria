@@ -21,6 +21,11 @@ public class MeasurementEventSource implements Datalake.Store.Source<Measurement
 	}
 
 	@Override
+	public String name() {
+		return root.getName();
+	}
+
+	@Override
 	public Scale scale() {
 		return first().scale();
 	}

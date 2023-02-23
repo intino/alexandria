@@ -48,9 +48,7 @@ public interface Datalake {
 		}
 
 		interface Source<T extends Event> {
-			default Scale scale() {
-				return first().timetag().scale();
-			}
+			String name();
 
 			Stream<Store.Tub<T>> tubs();
 
@@ -59,6 +57,10 @@ public interface Datalake {
 			Store.Tub<T> last();
 
 			Store.Tub<T> on(Timetag tag);
+
+			default Scale scale() {
+				return first().timetag().scale();
+			}
 
 			default Stream<Tub> tubs(Timetag from, Timetag to) {
 				return StreamSupport.stream(from.iterateTo(to).spliterator(), false).map(this::on);

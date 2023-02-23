@@ -19,6 +19,11 @@ public class TupleEventSource implements Source<TupleEvent> {
 	}
 
 	@Override
+	public String name() {
+		return root.getName();
+	}
+
+	@Override
 	public Scale scale() {
 		return first().scale();
 	}
