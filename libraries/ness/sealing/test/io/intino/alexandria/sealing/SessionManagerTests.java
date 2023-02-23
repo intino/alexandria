@@ -3,11 +3,11 @@ package io.intino.alexandria.sealing;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.file.FileDatalake;
-import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.EventReader;
+import io.intino.alexandria.event.message.MessageEvent;
 import io.intino.alexandria.ingestion.EventSession;
 import io.intino.alexandria.ingestion.SessionHandler;
-import io.intino.alexandria.ingestion.SetSession;
+import io.intino.alexandria.logger.Logger;
 import org.junit.After;
 import org.junit.Test;
 
@@ -23,39 +23,28 @@ import static org.junit.Assert.assertEquals;
 
 public class SessionManagerTests {
 
-	private static final File STAGE_FOLDER = new File("temp/stage");
-	private static final File LOCAL_STAGE = new File("temp/localstage");
-	private static final File DATALAKE = new File("temp/datalake");
+	private final File stageDir = new File("temp/stage");
+	private final File datalakeDir = new File("temp/datalake");
+	private final File treatedDir = new File("temp/treated");
+	private static final File localStageDir = new File("temp/localstage");
 
 	@Test
 	public void should_create_a_session() {
-		SessionHandler handler = new SessionHandler(LOCAL_STAGE);
-		List<Event> messageList = createEvents(handler);
-		Timetag timetag = createSets(handler);
-
-		handler.pushTo(STAGE_FOLDER);
-		FileSessionSealer fileSessionManager = new FileSessionSealer(new FileDatalake(DATALAKE), STAGE_FOLDER);
+		SessionHandler handler = new SessionHandler(localStageDir);
+		List<MessageEvent> events = createMessageEvents(handler);
+		handler.pushTo(stageDir);
+		FileSessionSealer fileSessionManager = new FileSessionSealer(new FileDatalake(datalakeDir), stageDir, treatedDir);
 		fileSessionManager.seal();
 
-		checkEvents(messageList);
+		checkEvents(events);
 	}
 
-	private Timetag createSets(SessionHandler handler) {
-		LocalDateTime dateTime = LocalDateTime.of(2019, 2, 28, 16, 15);
-		Timetag timetag = new Timetag(dateTime, Scale.Hour);
-		SetSession setSession = handler.createSetSession();
-		for (int i = 1; i < 31; i++) setSession.put("tank1", timetag, "0", i);
-		setSession.define("tank1", timetag, "0", "var", "value");
-		setSession.close();
-		return timetag;
-	}
-
-	private List<Event> createEvents(SessionHandler handler) {
+	private List<MessageEvent> createMessageEvents(SessionHandler handler) {
 		EventSession eventSession = handler.createEventSession();
-		List<Event> eventList = new ArrayList<>();
+		List<MessageEvent> eventList = new ArrayList<>();
 		for (int i = 0; i < 30; i++) {
-			LocalDateTime now = LocalDateTime.of(2019, 02, 28, 04, 15 + i);
-			Event event = event(now.toInstant(ZoneOffset.UTC), i);
+			LocalDateTime now = LocalDateTime.of(2019, 2, 28, 4, 15 + i);
+			MessageEvent event = event(now.toInstant(ZoneOffset.UTC), i);
 			eventList.add(event);
 			eventSession.put("tank1", new Timetag(now, Scale.Hour), new Tank1(event));
 		}
@@ -63,18 +52,21 @@ public class SessionManagerTests {
 		return eventList;
 	}
 
-	private void checkEvents(List<Event> eventList) {
-		EventReader reader = new EventReader(new File("temp/datalake/events/tank1/2019022804.zim"));
-		for (int i = 0; i < 30; i++) {
-			Tank1 next = new Tank1(reader.next());
-			assertEquals(next.ts(), eventList.get(i).ts());
-			assertEquals(next.entries(), new Tank1(eventList.get(i)).entries());
+	private void checkEvents(List<MessageEvent> eventList) {
+		try (EventReader<MessageEvent> reader = EventReader.of(new File("temp/datalake/events/tank1/2019022804.zim"))) {
+			for (int i = 0; i < 30; i++) {
+				Tank1 next = new Tank1(reader.next());
+				assertEquals(next.ts(), eventList.get(i).ts());
+				assertEquals(next.entries(), new Tank1(eventList.get(i)).entries());
+			}
+		} catch (Exception e) {
+			Logger.error(e);
 		}
 	}
 
 	//TODO: merge with existing event files
-	private Event event(Instant instant, int index) {
-		return new Tank1().entries(index).ts(instant);
+	private MessageEvent event(Instant instant, int index) {
+		return new Tank1("test").entries(index).ts(instant);
 	}
 
 	@After

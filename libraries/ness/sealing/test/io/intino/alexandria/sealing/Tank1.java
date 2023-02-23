@@ -1,28 +1,28 @@
 package io.intino.alexandria.sealing;
 
-import io.intino.alexandria.event.Event;
+import io.intino.alexandria.event.message.MessageEvent;
 import io.intino.alexandria.message.Message;
 
-public class Tank1 extends Event {
-
-	Tank1(Event event) {
-		this(event.toMessage());
-	}
+public class Tank1 extends MessageEvent {
 
 	public Tank1(Message message) {
 		super(message);
 	}
 
-	Tank1() {
-		super(Tank1.class.getSimpleName());
+	Tank1(MessageEvent event) {
+		super(event.toMessage());
+	}
+
+	Tank1(String ss) {
+		super(Tank1.class.getSimpleName(), ss);
 	}
 
 	int entries() {
-		return message.get("entries").asInteger();
+		return toMessage().get("entries").asInteger();
 	}
 
 	Tank1 entries(int v) {
-		message.set("entries", v);
+		toMessage().set("entries", v);
 		return this;
 	}
 }

@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 
-public class MessageEventSorter_ {
+public class MessageEventSorterTest {
 	@Test
 	@Ignore //FIXME
 	public void should_sort_blob_of_1000_messages() throws IOException {
