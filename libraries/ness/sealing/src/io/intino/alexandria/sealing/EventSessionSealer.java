@@ -88,7 +88,7 @@ public class EventSessionSealer {
 		}
 
 		private void seal(File datalakeFile, List<File> sessions) throws IOException {
-			EventWriter.of(datalakeFile).put(streamOf(sessions));
+			EventWriter.of(datalakeFile).write(streamOf(sessions));
 		}
 
 		private List<File> sort(Fingerprint fingerprint, List<File> files) {

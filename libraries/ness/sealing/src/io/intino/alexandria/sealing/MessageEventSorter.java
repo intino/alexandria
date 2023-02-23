@@ -1,8 +1,8 @@
 package io.intino.alexandria.sealing;
 
+import com.github.luben.zstd.ZstdInputStream;
+import com.github.luben.zstd.ZstdOutputStream;
 import io.intino.alexandria.logger.Logger;
-import org.xerial.snappy.SnappyInputStream;
-import org.xerial.snappy.SnappyOutputStream;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -81,7 +81,7 @@ public class MessageEventSorter {
 	}
 
 	private OutputStream outputStream(File file) throws IOException {
-		return new SnappyOutputStream(new FileOutputStream(file));
+		return new ZstdOutputStream(new FileOutputStream(file));
 	}
 
 	private byte[] bytesOf(RandomAccessFile accessFile, Tuple tuple) {
@@ -113,7 +113,7 @@ public class MessageEventSorter {
 	}
 
 	private InputStream inputStream() throws IOException {
-		return new SnappyInputStream(new FileInputStream(file));
+		return new ZstdInputStream(new FileInputStream(file));
 	}
 
 	private static class Tuple {
