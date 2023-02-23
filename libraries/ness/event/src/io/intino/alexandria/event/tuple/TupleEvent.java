@@ -53,6 +53,10 @@ public class TupleEvent implements Event {
 		return tuple.fields();
 	}
 
+	public Tuple toTuple() {
+		return tuple;
+	}
+
 	@Override
 	public String toString() {
 		return tuple.toString();
