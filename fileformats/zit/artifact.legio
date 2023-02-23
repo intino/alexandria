@@ -6,8 +6,7 @@ Artifact("io.intino.alexandria", "1.0.0") zit
 		Compile("com.github.luben", "zstd-jni", "1.5.4-1")
 		Compile("io.intino.alexandria", "iterator-stream", "1.0.0")
 		Test("junit", "junit", "4.13")
-	Package(mode = ModulesAndLibrariesLinkedByManifest)
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
 Repository("intino-maven") > Release("https://artifactory.intino.io/artifactory/releases")
-
-RunConfiguration local

@@ -9,7 +9,4 @@ Artifact(groupId = "io.intino.alexandria", version = "1.0.0") ztp
 	Package(mode = ModulesAndLibrariesLinkedByManifest)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
-Repository("intino-maven")
-	Release("https://artifactory.intino.io/artifactory/releases")
-
-RunConfiguration local
+Repository("intino-maven") > Release("https://artifactory.intino.io/artifactory/releases")
