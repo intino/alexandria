@@ -8,7 +8,6 @@ import io.intino.alexandria.ingestion.MessageSessionHandler;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.zim.ZimStream;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -26,11 +25,6 @@ public class EventSessionManagerTest {
 	private final File datalakeDir = new File("temp/datalake");
 	private final File treatedDir = new File("temp/treated");
 	private final File sessionDir = new File("temp/session");
-
-	@Before
-	public void setUp() {
-		deleteDirectory(new File("temp"));
-	}
 
 	@Test
 	public void should_create_an_event_session() throws IOException {
