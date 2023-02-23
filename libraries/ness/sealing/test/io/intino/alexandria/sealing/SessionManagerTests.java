@@ -5,13 +5,14 @@ import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.file.FileDatalake;
 import io.intino.alexandria.event.EventReader;
 import io.intino.alexandria.event.message.MessageEvent;
-import io.intino.alexandria.ingestion.EventSession;
-import io.intino.alexandria.ingestion.SessionHandler;
+import io.intino.alexandria.ingestion.MessageEventSession;
+import io.intino.alexandria.ingestion.MessageSessionHandler;
 import io.intino.alexandria.logger.Logger;
 import org.junit.After;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -29,31 +30,30 @@ public class SessionManagerTests {
 	private static final File localStageDir = new File("temp/localstage");
 
 	@Test
-	public void should_create_a_session() {
-		SessionHandler handler = new SessionHandler(localStageDir);
+	public void should_create_a_session() throws IOException {
+		MessageSessionHandler handler = new MessageSessionHandler(localStageDir);
 		List<MessageEvent> events = createMessageEvents(handler);
 		handler.pushTo(stageDir);
 		FileSessionSealer fileSessionManager = new FileSessionSealer(new FileDatalake(datalakeDir), stageDir, treatedDir);
 		fileSessionManager.seal();
-
 		checkEvents(events);
 	}
 
-	private List<MessageEvent> createMessageEvents(SessionHandler handler) {
-		EventSession eventSession = handler.createEventSession();
+	private List<MessageEvent> createMessageEvents(MessageSessionHandler handler) throws IOException {
+		MessageEventSession eventSession = handler.createEventSession();
 		List<MessageEvent> eventList = new ArrayList<>();
 		for (int i = 0; i < 30; i++) {
 			LocalDateTime now = LocalDateTime.of(2019, 2, 28, 4, 15 + i);
 			MessageEvent event = event(now.toInstant(ZoneOffset.UTC), i);
 			eventList.add(event);
-			eventSession.put("tank1", new Timetag(now, Scale.Hour), new Tank1(event));
+			eventSession.put("tank1","test", new Timetag(now, Scale.Hour), new Tank1(event));
 		}
 		eventSession.close();
 		return eventList;
 	}
 
 	private void checkEvents(List<MessageEvent> eventList) {
-		try (EventReader<MessageEvent> reader = EventReader.of(new File("temp/datalake/events/tank1/2019022804.zim"))) {
+		try (EventReader<MessageEvent> reader = EventReader.of(new File("temp/datalake/messages/tank1/test/2019022804.zim"))) {
 			for (int i = 0; i < 30; i++) {
 				Tank1 next = new Tank1(reader.next());
 				assertEquals(next.ts(), eventList.get(i).ts());

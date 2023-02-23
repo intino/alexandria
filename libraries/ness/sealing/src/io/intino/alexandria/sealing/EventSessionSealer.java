@@ -6,8 +6,12 @@ import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.file.FS;
 import io.intino.alexandria.datalake.file.FileStore;
 import io.intino.alexandria.event.Event;
+import io.intino.alexandria.event.EventReader;
 import io.intino.alexandria.event.EventStream;
 import io.intino.alexandria.event.EventWriter;
+import io.intino.alexandria.event.measurement.MeasurementEventReader;
+import io.intino.alexandria.event.message.MessageEventReader;
+import io.intino.alexandria.event.tuple.TupleEventReader;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
@@ -69,10 +73,10 @@ public class EventSessionSealer {
 	}
 
 	private static String cleanedNameOf(File file) {
-		return file.getName().substring(0, file.getName().indexOf("#")).replace("-", "/")
-				.replaceFirst(Type.message + "." + SessionExtension, "")
-				.replace(Type.tuple + "." + SessionExtension, "")
-				.replace(Type.measurement + "." + SessionExtension, "");
+		return file.getName()
+				.substring(0, file.getName().indexOf("#"))
+				.replace("-", "/")
+				.replace(SessionExtension, "");
 	}
 
 	private static class EventSealer {
@@ -87,11 +91,11 @@ public class EventSessionSealer {
 		}
 
 		public void seal(Fingerprint fingerprint, List<File> sessions) throws IOException {
-			seal(datalakeFile(fingerprint), sort(fingerprint, sessions));
+			seal(datalakeFile(fingerprint), fingerprint.type(), sort(fingerprint, sessions));
 		}
 
-		private void seal(File datalakeFile, List<File> sessions) throws IOException {
-			EventWriter.of(datalakeFile).write(streamOf(sessions));
+		private void seal(File datalakeFile, Type type, List<File> sessions) throws IOException {
+			EventWriter.of(datalakeFile).write((Stream<Event>) streamOf(type, sessions));
 		}
 
 		private List<File> sort(Fingerprint fingerprint, List<File> files) {
@@ -106,15 +110,29 @@ public class EventSessionSealer {
 			}
 		}
 
-		private Stream<Event> streamOf(List<File> files) {
+		private Stream<? extends Event> streamOf(Type type, List<File> files) throws IOException {
+			if (files.size() == 1) return new EventStream<>(readerOf(type, files.get(0)));
 			return EventStream.merge(files.stream().map(file -> {
 				try {
-					return EventStream.of(file);
+					return new EventStream<>(readerOf(type, files.get(0)));
 				} catch (IOException e) {
 					Logger.error(e);
 					return Stream.empty();
 				}
 			}));
+		}
+
+		private EventReader<? extends Event> readerOf(Type type, File file) throws IOException {
+			if (!file.exists()) return new EventReader.Empty<>();
+			switch (type) {
+				case message:
+					return new MessageEventReader(file);
+				case tuple:
+					return new TupleEventReader(file);
+				case measurement:
+					return new MeasurementEventReader(file);
+			}
+			return new EventReader.Empty<>();
 		}
 
 		private File datalakeFile(Fingerprint fingerprint) {

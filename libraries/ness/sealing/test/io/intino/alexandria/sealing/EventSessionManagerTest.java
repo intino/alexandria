@@ -8,6 +8,7 @@ import io.intino.alexandria.ingestion.MessageSessionHandler;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.zim.ZimStream;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -26,6 +27,11 @@ public class EventSessionManagerTest {
 	private final File treatedDir = new File("temp/treated");
 	private final File sessionDir = new File("temp/session");
 
+	@Before
+	public void setUp() {
+		deleteDirectory(new File("temp"));
+	}
+
 	@Test
 	public void should_create_an_event_session() throws IOException {
 		MessageSessionHandler handler = new MessageSessionHandler(sessionDir);
@@ -40,9 +46,9 @@ public class EventSessionManagerTest {
 		session.close();
 		handler.pushTo(stageDir);
 		new FileSessionSealer(new FileDatalake(datalakeDir), stageDir, treatedDir).seal();
-		ZimStream reader = ZimStream.of(new File("temp/datalake/messages/test/tank1/2019022816.zim"));
+		ZimStream stream = ZimStream.of(new File("temp/datalake/messages/tank1/test/2019022816.zim"));
 		for (int i = 0; i < 30; i++) {
-			Message next = reader.next();
+			Message next = stream.next();
 			assertEquals(next.get("ts").data(), messageList.get(i).get("ts").data());
 			assertEquals(next.get("entries").data(), messageList.get(i).get("entries").data());
 		}
@@ -61,8 +67,8 @@ public class EventSessionManagerTest {
 		}
 		session.close();
 		handler.pushTo(stageDir);
-		new FileSessionSealer(new FileDatalake(datalakeDir), stageDir, treatedDir).seal(t -> t.name().equals("tank1"));
-		ZimStream reader = ZimStream.of(new File("temp/datalake/messages/tank1/2019022816.zim"));
+		new FileSessionSealer(new FileDatalake(datalakeDir), stageDir, treatedDir).seal();
+		ZimStream reader = ZimStream.of(new File("temp/datalake/messages/tank1/test/2019022816.zim"));
 		for (int i = 0; i < 30; i++) {
 			Message next = reader.next();
 			assertEquals(next.get("ts").data(), messageList.get(i).get("ts").data());
@@ -77,7 +83,7 @@ public class EventSessionManagerTest {
 
 	@After
 	public void tearDown() {
-//		deleteDirectory(new File("temp"));
+		deleteDirectory(new File("temp"));
 	}
 
 	private void deleteDirectory(File directoryToBeDeleted) {
