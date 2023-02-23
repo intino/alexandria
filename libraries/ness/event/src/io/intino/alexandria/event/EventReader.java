@@ -14,6 +14,7 @@ public interface EventReader<T extends Event> extends Iterator<T>, AutoCloseable
 
 	@SuppressWarnings("unchecked")
 	static <T extends Event> EventReader<T> of(File file) throws IOException {
+		if(!file.exists()) return new Empty<>();
 		switch(formatOf(file)) {
 			case Message: return (EventReader<T>) new MessageEventReader(file);
 			case Tuple: return (EventReader<T>) new TupleEventReader(file);

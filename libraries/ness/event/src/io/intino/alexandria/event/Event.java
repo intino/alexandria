@@ -17,7 +17,7 @@ public interface Event extends Comparable<Event> {
 	enum Format {
 		Unknown(""),
 		Message(".zim"),
-		Tuple(".tuple"),
+		Tuple(".ztp"),
 		Measurement(".zit");
 
 		private final String extension;
