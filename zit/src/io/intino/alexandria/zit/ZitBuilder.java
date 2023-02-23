@@ -28,6 +28,11 @@ public class ZitBuilder implements AutoCloseable {
 		return this;
 	}
 
+	public ZitBuilder put(Instant instant, double[] data) {
+		writeLine(toString(data));
+		return this;
+	}
+
 	public ZitBuilder put(double[] data) {
 		writeLine(toString(data));
 		return this;
