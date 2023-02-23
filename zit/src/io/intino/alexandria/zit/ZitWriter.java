@@ -1,6 +1,7 @@
 package io.intino.alexandria.zit;
 
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.zit.model.Period;
 
 import java.io.*;
 import java.time.Instant;
@@ -8,33 +9,47 @@ import java.util.Arrays;
 
 import static java.util.stream.Collectors.joining;
 
-public class ZitBuilder implements AutoCloseable {
+public class ZitWriter implements AutoCloseable {
 	private final BufferedWriter writer;
+	private Period period;
+	private Instant nextTs;
 
-	public ZitBuilder(File file, String sensor) throws IOException {
+	public ZitWriter(File file) throws IOException {
+		file.getParentFile().mkdirs();
+		this.writer = writer(file);
+	}
+
+	public ZitWriter(File file, String sensor, Period period, String[] sensorModel) throws IOException {
+		this.period = period;
 		boolean exists = file.exists();
 		file.getParentFile().mkdirs();
 		this.writer = writer(file);
-		if (!exists) writeLine("@id " + sensor);
+		if (!exists || file.length() == 0) {
+			writeLine("@id " + sensor);
+			writeLine("@period " + period.toString());
+			put(sensorModel);
+		}
 	}
 
-	public ZitBuilder put(String[] sensorModel) {
-		writeLine("@measurements " + String.join("\t", sensorModel).stripTrailing());
+	public ZitWriter put(String[] sensorModel) {
+		writeLine("@measurements " + String.join(",", sensorModel).stripTrailing());
 		return this;
 	}
 
-	public ZitBuilder put(Instant timeModel) {
-		writeLine("@instant " + timeModel.toString() + "\n");
+	public ZitWriter put(Instant instant) {
+		writeLine("@instant " + instant.toString());
+		this.nextTs = instant;
 		return this;
 	}
 
-	public ZitBuilder put(Instant instant, double[] data) {
+	public ZitWriter put(Instant instant, double[] data) {
+		if (!instant.equals(this.nextTs)) put(instant);
+		return put(data);
+	}
+
+	public ZitWriter put(double[] data) {
 		writeLine(toString(data));
-		return this;
-	}
-
-	public ZitBuilder put(double[] data) {
-		writeLine(toString(data));
+		this.nextTs = period.next(nextTs);
 		return this;
 	}
 
