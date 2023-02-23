@@ -1,21 +1,19 @@
 package io.intino.alexandria.event;
 
-import io.intino.alexandria.resourcecleaner.DisposableResource;
+import io.intino.alexandria.iteratorstream.ResourceIteratorStream;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Iterator;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.resourcecleaner.DisposableResource.whenDestroyed;
 import static java.util.Arrays.stream;
 import static java.util.stream.IntStream.range;
 
-public class EventStream<T extends Event> extends AbstractEventStream<T> implements Iterator<T>, AutoCloseable {
+public class EventStream<T extends Event> extends ResourceIteratorStream<T> {
 
 	public static <T extends Event> Stream<T> sequence(Stream<Stream<T>> streams) {
 		return streams.flatMap(Function.identity());
@@ -29,49 +27,8 @@ public class EventStream<T extends Event> extends AbstractEventStream<T> impleme
 		return new EventStream<>(EventReader.of(file));
 	}
 
-	private final Iterator<T> iterator;
-	private final DisposableResource resource;
-
 	public EventStream(Iterator<T> iterator) {
-		this.iterator = iterator;
-		this.resource = whenDestroyed(this).thenClose(iterator);
-	}
-
-	@Override
-	public Iterator<T> iterator() {
-		return this;
-	}
-
-	@Override
-	public boolean hasNext() {
-		return iterator.hasNext();
-	}
-
-	@Override
-	public T next() {
-		return iterator.next();
-	}
-
-	@Override
-	public void forEach(Consumer<? super T> action) {
-		try {
-			while (hasNext()) {
-				action.accept(next());
-			}
-		} finally {
-			close();
-		}
-	}
-
-	@Override
-	public Stream<T> onClose(Runnable closeHandler) {
-		if (closeHandler != null) resource.addCloseHandler(closeHandler);
-		return this;
-	}
-
-	@Override
-	public void close() {
-		resource.close();
+		super(iterator);
 	}
 
 	@SuppressWarnings({"unchecked", "unused"})

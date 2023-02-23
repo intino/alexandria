@@ -1,22 +1,19 @@
 package io.intino.alexandria.zim;
 
+import io.intino.alexandria.iteratorstream.ResourceIteratorStream;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageReader;
-import io.intino.alexandria.resourcecleaner.DisposableResource;
 
 import java.io.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static java.util.Objects.requireNonNull;
-
 @SuppressWarnings({"all"})
-public class ZimStream extends AbstractZimStream implements Iterator<Message>, AutoCloseable {
+public class ZimStream extends ResourceIteratorStream<Message> {
 
 	public static ZimStream sequence(File first, File... rest) throws IOException {
 		ZimStream[] streams = new ZimStream[1 + rest.length];
@@ -57,49 +54,8 @@ public class ZimStream extends AbstractZimStream implements Iterator<Message>, A
 		return new ZimStream(reader.iterator());
 	}
 
-	private final Iterator<Message> iterator;
-	private final DisposableResource resource;
-
 	public ZimStream(Iterator<Message> iterator) {
-		this.iterator = requireNonNull(iterator);
-		this.resource = DisposableResource.whenDestroyed(this).thenClose(iterator);
-	}
-
-	@Override
-	public Iterator<Message> iterator() {
-		return this;
-	}
-
-	@Override
-	public boolean hasNext() {
-		return iterator.hasNext();
-	}
-
-	@Override
-	public Message next() {
-		return iterator.next();
-	}
-
-	@Override
-	public void forEach(Consumer<? super Message> action) {
-		try {
-			while (hasNext()) {
-				action.accept(next());
-			}
-		} finally {
-			close();
-		}
-	}
-
-	@Override
-	public Stream<Message> onClose(Runnable closeHandler) {
-		if (closeHandler != null) resource.addCloseHandler(closeHandler);
-		return this;
-	}
-
-	@Override
-	public void close() {
-		resource.close();
+		super(iterator);
 	}
 
 	private static MessageReader readerOf(InputStream is) {

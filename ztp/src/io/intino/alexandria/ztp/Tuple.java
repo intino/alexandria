@@ -1,19 +1,21 @@
-package io.intino.alexandria.event.tuple;
+package io.intino.alexandria.ztp;
 
-import io.intino.alexandria.event.Event;
-
-import java.time.Instant;
 import java.util.AbstractList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TupleEvent implements Event {
+public class Tuple {
 
+	public static final String TUPLE_SEPARATOR = "\t";
 	public static final int MIN_SIZE = 5;
 
 	private final String[] fields;
 
-	public TupleEvent(String[] fields) {
+	public Tuple(String text) {
+		this(text.split(TUPLE_SEPARATOR, -1));
+	}
+
+	public Tuple(String[] fields) {
 		if(fields.length < MIN_SIZE) throw new IllegalArgumentException("A tuple must have at least " + MIN_SIZE + " fields");
 		this.fields = fields;
 	}
@@ -28,21 +30,6 @@ public class TupleEvent implements Event {
 
 	public String value() {
 		return fields[2];
-	}
-
-	@Override
-	public Instant ts() {
-		return Instant.parse(fields[3]); // TODO
-	}
-
-	@Override
-	public String ss() {
-		return fields[4]; // TODO
-	}
-
-	@Override
-	public Format format() {
-		return Format.Tuple;
 	}
 
 	public String get(int index) {
@@ -66,5 +53,18 @@ public class TupleEvent implements Event {
 	@Override
 	public String toString() {
 		return String.join("\t", fields);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Tuple tuple = (Tuple) o;
+		return Arrays.equals(fields, tuple.fields);
+	}
+
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(fields);
 	}
 }

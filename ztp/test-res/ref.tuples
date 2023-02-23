@@ -1,0 +1,20 @@
+VID_PLA_CRI:videometry	name	Videometría Playa Los Cristianos	dashboard	2023-02-23T09:48:03.447325100Z
+VID_PLA_CRI:videometry	place	28.0507,-16.71945	dashboard	2023-02-23T09:48:03.447325100Z
+VID_PLA_CRI:videometry	zones	ZON_LC_O2,ZON_LC_O1,ZON_LC_P1	dashboard	2023-02-23T09:48:03.447325100Z
+VID_PLA_CRI:videometry	enabled	true	dashboard	2023-02-23T09:48:03.447325100Z
+
+VID_PLA_VIS:videometry	name	Videometría Playa Las Vistas	dashboard	2023-02-23T09:48:03.447325100Z
+VID_PLA_VIS:videometry	place	28.05056,-16.72095	dashboard	2023-02-23T09:48:03.447325100Z
+VID_PLA_VIS:videometry	zones	ZON_LV_O4,ZON_LV_O1,ZON_LV_P2,ZON_LV_P1,ZON_LV_O3,ZON_LV_O2	dashboard	2023-02-23T09:48:03.447325100Z
+VID_PLA_VIS:videometry	enabled	true	dashboard	2023-02-23T09:48:03.447325100Z
+
+MET_PLA_VIS:weatherStation	name	Playa de las Vistas	dashboard	2023-02-23T09:48:03.447325100Z
+MET_PLA_VIS:weatherStation	place	28.05209,-16.72291	dashboard	2023-02-23T09:48:03.447325100Z
+MET_PLA_VIS:weatherStation	url	https://app.weathercloud.net/d6775102649#current	dashboard	2023-02-23T09:48:03.447325100Z
+MET_PLA_VIS:weatherStation	enabled	true	dashboard	2023-02-23T09:48:03.447325100Z
+
+MET_PLA_HON:weatherStation	name	Playa Honda	dashboard	2023-02-23T09:48:03.447325100Z
+MET_PLA_HON:weatherStation	place	28.06111,-16.73444	dashboard	2023-02-23T09:48:03.447325100Z
+MET_PLA_HON:weatherStation	url	https://app.weathercloud.net/d7470255965#current	dashboard	2023-02-23T09:48:03.447325100Z
+MET_PLA_HON:weatherStation	enabled	true	dashboard	2023-02-23T09:48:03.447325100Z
+

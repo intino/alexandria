@@ -1,15 +1,66 @@
-package io.intino.alexandria.event;
+package io.intino.alexandria.iteratorstream;
+
+import io.intino.alexandria.resourcecleaner.DisposableResource;
 
 import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
 
+import static io.intino.alexandria.resourcecleaner.DisposableResource.whenDestroyed;
+import static java.util.Objects.requireNonNull;
 import static java.util.Spliterator.*;
 
-public abstract class AbstractEventStream<T extends Event> implements Stream<T> {
+public class ResourceIteratorStream<T> implements Stream<T>, Iterator<T>, Iterable<T>, AutoCloseable {
+
+	protected final Iterator<T> iterator;
+	protected final DisposableResource resource;
+
+	public ResourceIteratorStream(Iterator<T> iterator) {
+		this.iterator = requireNonNull(iterator);
+		this.resource = createAutoDisposableResource(iterator);
+	}
+
+	protected DisposableResource createAutoDisposableResource(Iterator<T> iterator) {
+		return whenDestroyed(this).thenClose(iterator);
+	}
 
 	protected Stream<T> asJavaStream() {
 		return StreamSupport.stream(spliterator(), false);
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return this;
+	}
+
+	@Override
+	public boolean hasNext() {
+		return iterator.hasNext();
+	}
+
+	@Override
+	public T next() {
+		return iterator.next();
+	}
+
+	@Override
+	public void forEach(Consumer<? super T> action) {
+		try {
+			while(hasNext()) action.accept(next());
+		} finally {
+			close();
+		}
+	}
+
+	@Override
+	public Stream<T> onClose(Runnable closeHandler) {
+		if(closeHandler != null) resource.addCloseHandler(closeHandler);
+		return this;
+	}
+
+	@Override
+	public void close() {
+		resource.close();
 	}
 
 	@Override

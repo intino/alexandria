@@ -1,4 +1,4 @@
-package io.intino.alexandria.zim;
+package io.intino.alexandria.ztp;
 
 import com.github.luben.zstd.ZstdInputStream;
 import com.github.luben.zstd.ZstdOutputStream;
@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class Zim {
+public class Ztp {
 
-	public static final String ZIM_EXTENSION = ".zim";
+	public static final String ZTP_EXTENSION = ".ztp";
 
 	public static InputStream decompressing(InputStream in) throws IOException {
 		return in instanceof ZstdInputStream ? in : new ZstdInputStream(in);

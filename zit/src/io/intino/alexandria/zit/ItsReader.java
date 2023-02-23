@@ -25,7 +25,6 @@ public class ItsReader implements AutoCloseable {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 		this.resource = DisposableResource.whenDestroyed(this).thenClose(reader);
 		this.lines = reader.lines();
-
 	}
 
 	public String sensor() {
