@@ -24,7 +24,7 @@ public class ZimStream_ {
 	}
 
 	@Test
-	public void misc() throws InterruptedException {
+	public void misc() {
 		String inl =
 				"[Status]\n" +
 						"battery: 78.0\n" +
@@ -48,6 +48,7 @@ public class ZimStream_ {
 					.ifPresent(System.out::println);
 		}
 	}
+
 
 	@Test
 	public void should_read_files() throws IOException {

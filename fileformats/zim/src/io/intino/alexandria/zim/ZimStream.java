@@ -7,6 +7,7 @@ import io.intino.alexandria.resourcecleaner.DisposableResource;
 import java.io.*;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -29,7 +30,7 @@ public class ZimStream extends AbstractZimStream implements Iterator<Message>, A
 	}
 
 	public static ZimStream of(File file) throws IOException {
-		return new ZimStream(readerOf(Zim.decompressing(fileInputStream(file))));
+		return new ZimStream(!file.exists() ? Collections.emptyIterator() : readerOf(Zim.decompressing(fileInputStream(file))));
 	}
 
 	public static ZimStream of(InputStream is) throws IOException {
