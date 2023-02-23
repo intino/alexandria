@@ -26,6 +26,6 @@ public class ZtpStream_ {
 
 		assertEquals(
 				new Tuple(("VID_PLA_VIS:videometry\tplace\t28.05056,-16.72095\tdashboard\t" + NOW).split(TUPLE_SEPARATOR, -1)),
-				ZtpStream.of(tuples).filter(t -> t.predicate().equals("place")).findFirst().get());
+				ZtpStream.of(tuples).filter(t -> t.get(1).equals("place")).findFirst().get());
 	}
 }

@@ -23,14 +23,14 @@ public interface EventWriter<T extends Event> {
 		return new Empty<>(); // TODO: throw exception instead?
 	}
 
-	void put(Stream<T> stream) throws IOException;
+	void write(Stream<T> stream) throws IOException;
 
-	default void put(Collection<T> messages) throws IOException {
-		put(messages.stream());
+	default void write(Collection<T> messages) throws IOException {
+		write(messages.stream());
 	}
 
 	class Empty<T extends Event> implements EventWriter<T> {
 		@Override
-		public void put(Stream<T> stream) {}
+		public void write(Stream<T> stream) {}
 	}
 }

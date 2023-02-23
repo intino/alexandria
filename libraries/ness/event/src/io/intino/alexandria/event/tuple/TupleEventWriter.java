@@ -1,6 +1,8 @@
 package io.intino.alexandria.event.tuple;
 
 import io.intino.alexandria.event.AbstractEventWriter;
+import io.intino.alexandria.ztp.ZtpStream;
+import io.intino.alexandria.ztp.ZtpWriter;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,11 +20,12 @@ public class TupleEventWriter extends AbstractEventWriter<TupleEvent> {
 	@Override
 	protected File merge(Stream<TupleEvent> data) throws IOException {
 		File temp = tempFile();
-		try(BufferedWriter writer = new BufferedWriter(new FileWriter(temp))) {
-			Iterator<TupleEvent> events = mergeFileWith(data).iterator();
-			while (events.hasNext()) {
-				writer.write(events.next().toString());
-				writer.newLine();
+		try(ZtpWriter writer = new ZtpWriter(temp)) {
+			try(Stream<TupleEvent> merged = mergeFileWith(data)) {
+				Iterator<TupleEvent> events = merged.iterator();
+				while (events.hasNext()) {
+					writer.write(events.next().toString());
+				}
 			}
 		}
 		return temp;

@@ -17,20 +17,6 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="\ztp\test-res\20230120.tuples">
-          <value>
-            <Attribute>
-              <option name="separator" value="&#9;" />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="\ztp\test-res\ref_append.tuples">
-          <value>
-            <Attribute>
-              <option name="separator" value="&#9;" />
-            </Attribute>
-          </value>
-        </entry>
       </map>
     </option>
   </component>

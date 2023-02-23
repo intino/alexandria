@@ -7,7 +7,6 @@ import java.util.List;
 public class Tuple {
 
 	public static final String TUPLE_SEPARATOR = "\t";
-	public static final int MIN_SIZE = 5;
 
 	private final String[] fields;
 
@@ -16,24 +15,15 @@ public class Tuple {
 	}
 
 	public Tuple(String[] fields) {
-		if(fields.length < MIN_SIZE) throw new IllegalArgumentException("A tuple must have at least " + MIN_SIZE + " fields");
 		this.fields = fields;
-	}
-
-	public String subject() {
-		return fields[0];
-	}
-
-	public String predicate() {
-		return fields[1];
-	}
-
-	public String value() {
-		return fields[2];
 	}
 
 	public String get(int index) {
 		return fields[index];
+	}
+
+	public int size() {
+		return fields.length;
 	}
 
 	public List<String> fields() {

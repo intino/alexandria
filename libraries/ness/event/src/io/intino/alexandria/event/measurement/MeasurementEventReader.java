@@ -17,11 +17,11 @@ public class MeasurementEventReader implements EventReader<MeasurementEvent> {
 	private final Iterator<MeasurementEvent> iterator;
 
 	public MeasurementEventReader(File file) throws IOException {
-		this(new ItzToEventIterator(ZitStream.of(file)));
+		this(new ZitToEventIterator(ZitStream.of(file)));
 	}
 
-	public MeasurementEventReader(InputStream is) {
-		this(new ItzToEventIterator(ZitStream.of(is)));
+	public MeasurementEventReader(InputStream is) throws IOException {
+		this(new ZitToEventIterator(ZitStream.of(is)));
 	}
 
 	public MeasurementEventReader(MeasurementEvent... events) {
@@ -55,11 +55,11 @@ public class MeasurementEventReader implements EventReader<MeasurementEvent> {
 		if (iterator instanceof AutoCloseable) ((AutoCloseable) iterator).close();
 	}
 
-	private static class ItzToEventIterator implements Iterator<MeasurementEvent>, AutoCloseable {
+	private static class ZitToEventIterator implements Iterator<MeasurementEvent>, AutoCloseable {
 
 		private final ZitStream source;
 
-		public ItzToEventIterator(ZitStream source) {
+		public ZitToEventIterator(ZitStream source) {
 			this.source = source;
 		}
 
