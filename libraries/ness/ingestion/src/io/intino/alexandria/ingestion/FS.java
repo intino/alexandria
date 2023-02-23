@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class FS {
-	private File root;
+	private final File root;
 
 	private FS(File root) {
 		this.root = root;
