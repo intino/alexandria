@@ -43,7 +43,7 @@ public class FileDatalake implements Datalake {
 	}
 
 	public File eventStoreFolder() {
-		return new File(root, EventStoreFolder);
+		return new File(root, MessageStoreFolder);
 	}
 
 	public File tripletStoreFolder() {

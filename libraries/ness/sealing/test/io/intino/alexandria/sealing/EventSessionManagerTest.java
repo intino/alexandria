@@ -3,11 +3,12 @@ package io.intino.alexandria.sealing;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.file.FileDatalake;
-import io.intino.alexandria.ingestion.EventSession;
-import io.intino.alexandria.ingestion.SessionHandler;
+import io.intino.alexandria.ingestion.MessageEventSession;
+import io.intino.alexandria.ingestion.MessageSessionHandler;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.zim.ZimStream;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -24,24 +25,30 @@ public class EventSessionManagerTest {
 	private final File stageDir = new File("temp/stage");
 	private final File datalakeDir = new File("temp/datalake");
 	private final File treatedDir = new File("temp/treated");
+	private final File sessionDir = new File("temp/session");
+
+	@Before
+	public void setUp() {
+		deleteDirectory(new File("temp"));
+	}
 
 	@Test
 	public void should_create_an_event_session() throws IOException {
-		SessionHandler handler = new SessionHandler(new File("temp/events"));
-		EventSession session = handler.createEventSession();
+		MessageSessionHandler handler = new MessageSessionHandler(sessionDir);
+		MessageEventSession session = handler.createEventSession();
 		List<Message> messageList = new ArrayList<>();
 		for (int i = 0; i < 30; i++) {
 			LocalDateTime now = LocalDateTime.of(2019, 2, 28, 16, 15 + i);
 			Message message = message(now.toInstant(ZoneOffset.UTC), i);
 			messageList.add(message);
-			session.put("tank1", new Timetag(now, Scale.Hour), new Tank1(message));
+			session.put("tank1", "test", new Timetag(now, Scale.Hour), new Tank1(message));
 		}
 		session.close();
 		handler.pushTo(stageDir);
 		new FileSessionSealer(new FileDatalake(datalakeDir), stageDir, treatedDir).seal();
-		ZimStream reader = ZimStream.of(new File("temp/datalake/events/tank1/2019022816.zim"));
+		ZimStream stream = ZimStream.of(new File("temp/datalake/messages/tank1/test/2019022816.zim"));
 		for (int i = 0; i < 30; i++) {
-			Message next = reader.next();
+			Message next = stream.next();
 			assertEquals(next.get("ts").data(), messageList.get(i).get("ts").data());
 			assertEquals(next.get("entries").data(), messageList.get(i).get("entries").data());
 		}
@@ -49,19 +56,19 @@ public class EventSessionManagerTest {
 
 	@Test
 	public void should_create_an_event_session_without_sorting() throws IOException {
-		SessionHandler handler = new SessionHandler(new File("temp/events"));
-		EventSession session = handler.createEventSession();
+		MessageSessionHandler handler = new MessageSessionHandler(sessionDir);
+		MessageEventSession session = handler.createEventSession();
 		List<Message> messageList = new ArrayList<>();
 		for (int i = 0; i < 30; i++) {
 			LocalDateTime now = LocalDateTime.of(2019, 2, 28, 16, 15 + i);
 			Message message = message(now.toInstant(ZoneOffset.UTC), i);
 			messageList.add(message);
-			session.put("tank1", new Timetag(now, Scale.Hour), new Tank1(message));
+			session.put("tank1", "test", new Timetag(now, Scale.Hour), new Tank1(message));
 		}
 		session.close();
 		handler.pushTo(stageDir);
-		new FileSessionSealer(new FileDatalake(datalakeDir), stageDir, treatedDir).seal(t -> t.name().equals("tank1"));
-		ZimStream reader = ZimStream.of(new File("temp/datalake/events/tank1/2019022816.zim"));
+		new FileSessionSealer(new FileDatalake(datalakeDir), stageDir, treatedDir).seal();
+		ZimStream reader = ZimStream.of(new File("temp/datalake/messages/tank1/test/2019022816.zim"));
 		for (int i = 0; i < 30; i++) {
 			Message next = reader.next();
 			assertEquals(next.get("ts").data(), messageList.get(i).get("ts").data());
@@ -71,7 +78,7 @@ public class EventSessionManagerTest {
 
 	//TODO: merge with existing event files
 	private Message message(Instant instant, int index) {
-		return new Message("tank1").set("ts", instant.toString()).set("entries", index);
+		return new Message("tank1").set("ss", "test").set("ts", instant.toString()).set("entries", index);
 	}
 
 	@After

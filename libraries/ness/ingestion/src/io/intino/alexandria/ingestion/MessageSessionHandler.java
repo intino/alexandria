@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.intino.alexandria.Session.SessionExtension;
 import static java.util.UUID.randomUUID;
 
 public class MessageSessionHandler {
@@ -75,7 +76,7 @@ public class MessageSessionHandler {
 	}
 
 	private Stream<File> sessionFiles() {
-		return this.root == null ? Stream.empty() : FS.allFilesIn(root, path -> path.getName().endsWith(Session.SessionExtension));
+		return this.root == null ? Stream.empty() : FS.allFilesIn(root, path -> path.getName().endsWith(SessionExtension));
 	}
 
 	private String name(File f) {
@@ -96,7 +97,7 @@ public class MessageSessionHandler {
 	}
 
 	private String filename(Session session) {
-		return session.name() + "." + session.type() + Session.SessionExtension;
+		return session.name() + SessionExtension;
 	}
 
 	private interface SessionData {
@@ -234,23 +235,20 @@ public class MessageSessionHandler {
 		}
 
 		private PrivateSession session(String name, Session.Type type) {
-			return new PrivateSession(name, type, root == null ? new MemorySessionData() : new FileSessionData(fileOf(name, type)));
+			return new PrivateSession(name, type, root == null ? new MemorySessionData() : new FileSessionData(fileOf(name)));
 		}
 
-		private File fileOf(String name, Session.Type type) {
-			return new File(root, filename(name, type));
+		private File fileOf(String name) {
+			return new File(root, filename(name));
 		}
 
-		private String filename(String name, Session.Type type) {
-			return name + extensionOf(type);
+		private String filename(String name) {
+			return name + SessionExtension;
 		}
 
 		private String suffix() {
 			return "#" + randomUUID().toString();
 		}
 
-		private String extensionOf(Session.Type type) {
-			return "." + type.name() + Session.SessionExtension;
-		}
 	}
 }

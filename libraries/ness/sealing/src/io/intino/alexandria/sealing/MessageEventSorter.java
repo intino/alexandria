@@ -67,7 +67,6 @@ public class MessageEventSorter {
 	private void write(OutputStream output) throws IOException {
 		try (RandomAccessFile input = new RandomAccessFile(temp, "r")) {
 			for (Tuple t : tuples) write(output, bytesOf(input, t));
-			output.flush();
 			output.close();
 		}
 	}
@@ -81,7 +80,7 @@ public class MessageEventSorter {
 	}
 
 	private OutputStream outputStream(File file) throws IOException {
-		return new ZstdOutputStream(new FileOutputStream(file));
+		return new BufferedOutputStream(new ZstdOutputStream(new FileOutputStream(file)));
 	}
 
 	private byte[] bytesOf(RandomAccessFile accessFile, Tuple tuple) {
