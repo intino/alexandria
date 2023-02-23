@@ -12,7 +12,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.TimeZone;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,7 +24,7 @@ public class ZimStream_ {
 	}
 
 	@Test
-	public void misc() throws InterruptedException {
+	public void misc() {
 		String inl =
 				"[Status]\n" +
 						"battery: 78.0\n" +
@@ -49,6 +48,7 @@ public class ZimStream_ {
 					.ifPresent(System.out::println);
 		}
 	}
+
 
 	@Test
 	public void should_read_files() throws IOException {

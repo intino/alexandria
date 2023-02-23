@@ -3,12 +3,18 @@ package io.intino.alexandria.event.tuple;
 import io.intino.alexandria.event.Event;
 
 import java.time.Instant;
+import java.util.AbstractList;
+import java.util.Arrays;
+import java.util.List;
 
 public class TupleEvent implements Event {
+
+	public static final int MIN_SIZE = 5;
 
 	private final String[] fields;
 
 	public TupleEvent(String[] fields) {
+		if(fields.length < MIN_SIZE) throw new IllegalArgumentException("A tuple must have at least " + MIN_SIZE + " fields");
 		this.fields = fields;
 	}
 
@@ -41,6 +47,20 @@ public class TupleEvent implements Event {
 
 	public String get(int index) {
 		return fields[index];
+	}
+
+	public List<String> fields() {
+		return new AbstractList<>() {
+			@Override
+			public String get(int index) {
+				return fields[index];
+			}
+
+			@Override
+			public int size() {
+				return fields.length;
+			}
+		};
 	}
 
 	@Override

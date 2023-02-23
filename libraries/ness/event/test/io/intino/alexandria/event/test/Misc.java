@@ -14,7 +14,7 @@ public class Misc {
 
 	public static void main(String[] args) throws IOException {
 		while(true) {
-			h += EventStream.of(new File("C:\\Users\\naits\\Desktop\\MonentiaDev\\cinepolis\\temp\\datalake\\events\\ps.Push\\20221030.zim"))
+			EventStream.of(new File("C:\\Users\\naits\\Desktop\\MonentiaDev\\cinepolis\\temp\\datalake\\events\\ps.Push\\20221030.zim"))
 					.peek(k -> i.incrementAndGet())
 					.map(Event::ts)
 					.reduce((t1, t2) -> t1.plusSeconds(t2.getEpochSecond()))

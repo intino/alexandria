@@ -1,0 +1,15 @@
+dsl Legio
+
+Artifact(groupId = "io.intino.alexandria", version = "1.0.0") ztp
+	Imports
+		Compile("io.intino.alexandria", "logger", "2.1.0")
+		Compile("com.github.luben", "zstd-jni", "1.5.4-1")
+		Compile("io.intino.alexandria", "iterator-stream", "1.0.0")
+		Test(groupId = "junit", artifactId = "junit", version = "4.13")
+	Package(mode = ModulesAndLibrariesLinkedByManifest)
+	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
+
+Repository("intino-maven")
+	Release("https://artifactory.intino.io/artifactory/releases")
+
+RunConfiguration local

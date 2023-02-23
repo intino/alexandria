@@ -7,13 +7,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-class Zim {
+public class Zim {
+
+	public static final String ZIM_EXTENSION = ".zim";
 
 	public static InputStream decompressing(InputStream in) throws IOException {
-		return new ZstdInputStream(in);
+		return in instanceof ZstdInputStream ? in : new ZstdInputStream(in);
 	}
 
 	public static OutputStream compressing(OutputStream out) throws IOException {
-		return new ZstdOutputStream(out);
+		return out instanceof ZstdOutputStream ? out : new ZstdOutputStream(out);
 	}
 }

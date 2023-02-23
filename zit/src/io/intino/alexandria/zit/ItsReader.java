@@ -1,10 +1,12 @@
 package io.intino.alexandria.zit;
 
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.resourcecleaner.DisposableResource;
 import io.intino.alexandria.zit.model.Data;
 import io.intino.alexandria.zit.model.Period;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.Instant;
@@ -24,8 +26,8 @@ public class ItsReader implements AutoCloseable {
 	public ItsReader(InputStream is) {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 		this.resource = DisposableResource.whenDestroyed(this).thenClose(reader);
+		readId(reader);
 		this.lines = reader.lines();
-
 	}
 
 	public String sensor() {
@@ -43,7 +45,7 @@ public class ItsReader implements AutoCloseable {
 			loadAnnotation(l);
 			return null;
 		} else {
-			final Data data = new Data(instant, loadMeasurement(l.split(",")), measurements);
+			final Data data = new Data(instant, loadMeasurement(l.split("\t")), measurements);
 			instant = period.next(instant);
 			return data;
 		}
@@ -80,6 +82,7 @@ public class ItsReader implements AutoCloseable {
 		switch (metadata) {
 			case "id":
 				sensor = data;
+				break;
 			case "instant":
 				instant = Instant.parse(data);
 				break;
@@ -89,6 +92,14 @@ public class ItsReader implements AutoCloseable {
 			case "measurements":
 				measurements = data.split(",");
 				break;
+		}
+	}
+
+	private void readId(BufferedReader reader) {
+		try {
+			parse(reader.readLine());
+		} catch (IOException e) {
+			Logger.error(e);
 		}
 	}
 

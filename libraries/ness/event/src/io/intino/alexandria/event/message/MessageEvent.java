@@ -5,6 +5,8 @@ import io.intino.alexandria.message.Message;
 
 import java.time.Instant;
 
+import static java.util.Objects.requireNonNull;
+
 public class MessageEvent implements Event {
 	private static final String TS = "ts";
 	private static final String SS = "ss";
@@ -13,15 +15,16 @@ public class MessageEvent implements Event {
 	protected Instant ts;
 	protected String ss;
 
-	public MessageEvent(String type) {
+	public MessageEvent(String type, String ss) {
 		this.message = new Message(type);
 		message.set(TS, this.ts = Instant.now());
+		message.set(SS, this.ss = requireNonNull(ss));
 	}
 
 	public MessageEvent(Message message) {
 		this.message = message;
-		this.ts = message.get(TS).asInstant();
-		this.ss = message.get(SS).asString();
+		this.ts = requireNonNull(message.get(TS).asInstant());
+		this.ss = requireNonNull(message.get(SS).asString());
 	}
 
 	public Instant ts() {
@@ -38,12 +41,12 @@ public class MessageEvent implements Event {
 	}
 
 	public MessageEvent ts(Instant ts) {
-		this.message.set(TS, this.ts = ts);
+		this.message.set(TS, this.ts = requireNonNull(ts));
 		return this;
 	}
 
 	public MessageEvent ss(String ss) {
-		this.message.set(SS, this.ss = ss);
+		this.message.set(SS, this.ss = requireNonNull(ss));
 		return this;
 	}
 

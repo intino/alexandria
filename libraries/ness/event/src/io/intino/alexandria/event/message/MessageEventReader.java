@@ -23,7 +23,7 @@ public class MessageEventReader implements EventReader<MessageEvent> {
 		this(new MessageToEventIterator(ZimStream.of(file).iterator()));
 	}
 
-	public MessageEventReader(InputStream is) {
+	public MessageEventReader(InputStream is) throws IOException {
 		this(new MessageToEventIterator(ZimStream.of(is).iterator()));
 	}
 

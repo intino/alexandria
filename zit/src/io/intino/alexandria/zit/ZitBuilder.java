@@ -1,6 +1,5 @@
 package io.intino.alexandria.zit;
 
-import com.github.luben.zstd.ZstdOutputStream;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.*;
@@ -26,6 +25,11 @@ public class ZitBuilder implements AutoCloseable {
 
 	public ZitBuilder put(Instant timeModel) {
 		writeLine("@instant " + timeModel.toString() + "\n");
+		return this;
+	}
+
+	public ZitBuilder put(Instant instant, double[] data) {
+		writeLine(toString(data));
 		return this;
 	}
 
@@ -56,7 +60,7 @@ public class ZitBuilder implements AutoCloseable {
 	}
 
 	private BufferedWriter writer(File file) throws IOException {
-		return new BufferedWriter(new OutputStreamWriter(new ZstdOutputStream(new FileOutputStream(file))));
+		return new BufferedWriter(new OutputStreamWriter(Zit.compressing(new FileOutputStream(file))));
 	}
 
 	@Override

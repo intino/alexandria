@@ -12,7 +12,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.zim.AbstractZimStream.ZIM_EXTENSION;
+import static io.intino.alexandria.zim.Zim.ZIM_EXTENSION;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class ZimBuilder {
