@@ -1,43 +1,43 @@
 package io.intino.alexandria.event.tuple;
 
 import io.intino.alexandria.event.Event;
+import io.intino.alexandria.ztp.Tuple;
 
 import java.time.Instant;
-import java.util.AbstractList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class TupleEvent implements Event {
 
 	public static final int MIN_SIZE = 5;
 
-	private final String[] fields;
+	private final Tuple tuple;
 
-	public TupleEvent(String[] fields) {
-		if(fields.length < MIN_SIZE) throw new IllegalArgumentException("A tuple must have at least " + MIN_SIZE + " fields");
-		this.fields = fields;
+	public TupleEvent(Tuple tuple) {
+		if(tuple.size() < MIN_SIZE) throw new IllegalArgumentException("A tuple event must have at least " + MIN_SIZE + " fields");
+		this.tuple = tuple;
 	}
 
 	public String subject() {
-		return fields[0];
+		return tuple.get(0);
 	}
 
 	public String predicate() {
-		return fields[1];
+		return tuple.get(1);
 	}
 
 	public String value() {
-		return fields[2];
+		return tuple.get(2);
 	}
 
 	@Override
 	public Instant ts() {
-		return Instant.parse(fields[3]); // TODO
+		return Instant.parse(tuple.get(3));
 	}
 
 	@Override
 	public String ss() {
-		return fields[4]; // TODO
+		return tuple.get(4);
 	}
 
 	@Override
@@ -46,25 +46,28 @@ public class TupleEvent implements Event {
 	}
 
 	public String get(int index) {
-		return fields[index];
+		return tuple.get(index);
 	}
 
 	public List<String> fields() {
-		return new AbstractList<>() {
-			@Override
-			public String get(int index) {
-				return fields[index];
-			}
-
-			@Override
-			public int size() {
-				return fields.length;
-			}
-		};
+		return tuple.fields();
 	}
 
 	@Override
 	public String toString() {
-		return String.join("\t", fields);
+		return tuple.toString();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		TupleEvent that = (TupleEvent) o;
+		return Objects.equals(tuple, that.tuple);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(tuple);
 	}
 }

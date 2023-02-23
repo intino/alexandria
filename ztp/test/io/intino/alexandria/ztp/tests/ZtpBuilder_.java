@@ -4,7 +4,6 @@ import io.intino.alexandria.ztp.*;
 import org.junit.Test;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.util.Iterator;
 
 import static org.junit.Assert.assertEquals;
@@ -15,7 +14,7 @@ public class ZtpBuilder_ {
 
 	@Test
 	public void should_build_file_from_scratch() throws IOException {
-		File file = new File("temp/ztp_from_scratch.ztp");
+		File file = new File("../temp/ztp_from_scratch.ztp");
 		file.delete();
 		file.getParentFile().mkdirs();
 		try(ZtpBuilder builder = new ZtpBuilder(file)) {
@@ -28,7 +27,7 @@ public class ZtpBuilder_ {
 
 	@Test
 	public void should_append_to_existing_file() throws IOException {
-		File file = new File("temp/ztp_append.ztp");
+		File file = new File("../temp/ztp_append.ztp");
 		file.delete();
 		file.getParentFile().mkdirs();
 		createFileWithSomeTuplesAlreadyWritten(file);
@@ -41,7 +40,7 @@ public class ZtpBuilder_ {
 	}
 
 	private void createFileWithSomeTuplesAlreadyWritten(File file) throws IOException {
-		try(TupleWriter writer = new TupleWriter(Ztp.compressing(new FileOutputStream(file)))) {
+		try(ZtpWriter writer = new ZtpWriter(Ztp.compressing(new FileOutputStream(file)))) {
 			for(String line : tuplesAlreadyPresent()) {
 				writer.write(line);
 			}

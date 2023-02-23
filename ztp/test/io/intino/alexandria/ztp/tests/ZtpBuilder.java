@@ -1,6 +1,9 @@
-package io.intino.alexandria.ztp;
+package io.intino.alexandria.ztp.tests;
 
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.ztp.Tuple;
+import io.intino.alexandria.ztp.Ztp;
+import io.intino.alexandria.ztp.ZtpWriter;
 
 import java.io.*;
 import java.util.Collection;
@@ -13,12 +16,12 @@ public class ZtpBuilder implements AutoCloseable {
 
 	private final File destination;
 	private final File tempFile;
-	private final TupleWriter writer;
+	private final ZtpWriter writer;
 
 	public ZtpBuilder(File destination) throws IOException {
 		this.destination = destination;
 		this.tempFile = tempFile();
-		this.writer = new TupleWriter(open(tempFile));
+		this.writer = new ZtpWriter(open(tempFile));
 	}
 
 	public void put(Tuple... tuples) throws IOException {

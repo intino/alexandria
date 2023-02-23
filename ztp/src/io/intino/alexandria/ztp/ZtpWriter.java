@@ -2,21 +2,22 @@ package io.intino.alexandria.ztp;
 
 import io.intino.alexandria.resourcecleaner.DisposableResource;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-public class TupleWriter implements AutoCloseable {
+public class ZtpWriter implements AutoCloseable {
 
 	private final BufferedWriter writer;
 	private final DisposableResource resource;
 
-	public TupleWriter(OutputStream out) {
+	public ZtpWriter(File file) throws IOException {
+		this(Ztp.compressing(new BufferedOutputStream(new FileOutputStream(file))));
+	}
+
+	public ZtpWriter(OutputStream out) {
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
 		this.writer = writer;
 		this.resource = DisposableResource.whenDestroyed(this).thenClose(writer);

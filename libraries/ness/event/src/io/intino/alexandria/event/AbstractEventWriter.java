@@ -19,7 +19,7 @@ public abstract class AbstractEventWriter<T extends Event> implements EventWrite
 	}
 
 	@Override
-	public void put(Stream<T> eventStream) throws IOException {
+	public void write(Stream<T> eventStream) throws IOException {
 		File temp = null;
 		try {
 			file.getParentFile().mkdirs();
@@ -32,6 +32,9 @@ public abstract class AbstractEventWriter<T extends Event> implements EventWrite
 
 	protected abstract File merge(Stream<T> data) throws IOException;
 
+	/**
+	 * <p>IMPORTANT: this stream must be explicitly closed</p>
+	 * */
 	protected Stream<T> mergeFileWith(Stream<T> data) throws IOException {
 		return EventStream.merge(Stream.of(EventStream.of(file), data));
 	}
