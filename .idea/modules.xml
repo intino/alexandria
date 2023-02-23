@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/framework/allotropy/allotropy.iml" filepath="$PROJECT_DIR$/framework/allotropy/allotropy.iml" group="framework" />
-      <module fileurl="file://$PROJECT_DIR$/aws-datalake/aws-datalake.iml" filepath="$PROJECT_DIR$/aws-datalake/aws-datalake.iml" group="eventsourcing" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/ness/aws-datalake/aws-datalake.iml" filepath="$PROJECT_DIR$/libraries/ness/aws-datalake/aws-datalake.iml" group="eventsourcing" />
       <module fileurl="file://$PROJECT_DIR$/framework/bot/bot.iml" filepath="$PROJECT_DIR$/framework/bot/bot.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/framework/bpm/bpm.iml" filepath="$PROJECT_DIR$/framework/bpm/bpm.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/framework/core/core.iml" filepath="$PROJECT_DIR$/framework/core/core.iml" group="framework" />

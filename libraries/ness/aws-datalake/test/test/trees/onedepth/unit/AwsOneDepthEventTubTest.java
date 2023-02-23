@@ -37,7 +37,7 @@ public class AwsOneDepthEventTubTest {
 
     @Test
     public void should_test_event() {
-        //TODO hacer
+
     }
 
     private S3Object getS3Object(String prefix) {
