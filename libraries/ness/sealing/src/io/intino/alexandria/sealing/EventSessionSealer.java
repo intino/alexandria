@@ -65,6 +65,7 @@ public class EventSessionSealer {
 	}
 
 	private static Stream<File> sessions(File stage) {
+		if (!stage.exists()) return Stream.empty();
 		return FS.allFilesIn(stage, f -> f.getName().endsWith(SessionExtension) && f.length() > 0f);
 	}
 
