@@ -27,6 +27,11 @@ public class MeasurementEventWriter implements EventWriter<MeasurementEvent> {
 	}
 
 	@Override
+	public void flush() throws IOException {
+
+	}
+
+	@Override
 	public void close() throws IOException {
 
 	}

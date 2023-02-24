@@ -46,6 +46,10 @@ public class ZtpWriter implements AutoCloseable {
 		writer.newLine();
 	}
 
+	public void flush() throws IOException {
+		writer.flush();
+	}
+
 	@Override
 	public void close() {
 		resource.close();
