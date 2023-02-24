@@ -30,7 +30,6 @@ public class MeasurementEventWriter implements EventWriter<MeasurementEvent> {
 
 	@Override
 	public void flush() {
-//		writer.flush();
 	}
 
 	@Override

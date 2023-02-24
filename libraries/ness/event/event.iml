@@ -22,8 +22,7 @@
     <orderEntry type="library" name="Intino: com.github.luben:zstd-jni:1.5.4-1" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:ztp:1.0.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:zim:5.0.0" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:message:3.1.0" level="project" />
-    <orderEntry type="library" name="Intino: org.antlr:antlr4-runtime:4.11.1" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:zit:1.0.0" level="project" />
+    <orderEntry type="module" module-name="message" />
   </component>
 </module>
