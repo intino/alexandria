@@ -22,7 +22,6 @@ import static java.lang.String.join;
 import static java.util.stream.Collectors.joining;
 
 public class ItsReaderTest {
-
 	private ByteArrayInputStream inputStream;
 
 	@Before
@@ -31,7 +30,7 @@ public class ItsReaderTest {
 	}
 
 	@Test
-	public void should_read_its() throws IOException {
+	public void should_read_its() {
 		System.out.println(read(inputStream));
 	}
 

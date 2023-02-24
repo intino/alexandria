@@ -69,14 +69,7 @@ public class EventSessionSealer {
 	}
 
 	private static Fingerprint fingerprintOf(File file) {
-		return new Fingerprint(cleanedNameOf(file));
-	}
-
-	private static String cleanedNameOf(File file) {
-		return file.getName()
-				.substring(0, file.getName().indexOf("#"))
-				.replace("-", "/")
-				.replace(SessionExtension, "");
+		return Fingerprint.of(file);
 	}
 
 	private static class EventSealer {
