@@ -1,11 +1,11 @@
 package io.intino.alexandria.sealing;
 
 import io.intino.alexandria.Fingerprint;
-import io.intino.alexandria.Session.Type;
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.file.FS;
 import io.intino.alexandria.datalake.file.FileStore;
 import io.intino.alexandria.event.Event;
+import io.intino.alexandria.event.Event.Format;
 import io.intino.alexandria.event.EventReader;
 import io.intino.alexandria.event.EventStream;
 import io.intino.alexandria.event.EventWriter;
@@ -27,7 +27,6 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
 
 public class EventSessionSealer {
-
 	private final Datalake datalake;
 	private final File stageDir;
 	private final File tmpDir;
@@ -81,12 +80,12 @@ public class EventSessionSealer {
 	}
 
 	private static class EventSealer {
-		private final Map<Type, Datalake.Store<? extends Event>> stores;
+		private final Map<Format, Datalake.Store<? extends Event>> stores;
 		private final Predicate<String> sortingPolicy;
 		private final File tempFolder;
 
 		EventSealer(Datalake datalake, Predicate<String> sortingPolicy, File tempFolder) {
-			this.stores = Map.of(Type.message, datalake.messageStore(), Type.tuple, datalake.tupleStore(), Type.measurement, datalake.measurementStore());
+			this.stores = Map.of(Format.Message, datalake.messageStore(), Format.Tuple, datalake.tupleStore(), Format.Measurement, datalake.measurementStore());
 			this.sortingPolicy = sortingPolicy;
 			this.tempFolder = tempFolder;
 		}
@@ -95,14 +94,16 @@ public class EventSessionSealer {
 			seal(datalakeFile(fingerprint), fingerprint.format(), sort(fingerprint, sessions));
 		}
 
-		private void seal(File datalakeFile, Type type, List<File> sessions) throws IOException {
-			EventWriter.of(datalakeFile).write((Stream<Event>) streamOf(type, sessions));
+		private void seal(File datalakeFile, Format type, List<File> sessions) throws IOException {
+			try (final EventWriter<Event> writer = EventWriter.of(datalakeFile)) {
+				writer.write((Stream<Event>) streamOf(type, sessions));
+			}
 		}
 
 		private List<File> sort(Fingerprint fingerprint, List<File> files) {
 			try {
 				for (File file : files)
-					if (fingerprint.format().equals(Type.message) && sortingPolicy.test(fingerprint.tank()))
+					if (fingerprint.format().equals(Format.Message) && sortingPolicy.test(fingerprint.tank()))
 						new MessageEventSorter(file, tempFolder).sort();
 				return files;
 			} catch (IOException e) {
@@ -111,7 +112,7 @@ public class EventSessionSealer {
 			}
 		}
 
-		private Stream<? extends Event> streamOf(Type type, List<File> files) throws IOException {
+		private Stream<? extends Event> streamOf(Format type, List<File> files) throws IOException {
 			if (files.size() == 1) return new EventStream<>(readerOf(type, files.get(0)));
 			return EventStream.merge(files.stream().map(file -> {
 				try {
@@ -123,14 +124,14 @@ public class EventSessionSealer {
 			}));
 		}
 
-		private EventReader<? extends Event> readerOf(Type type, File file) throws IOException {
+		private EventReader<? extends Event> readerOf(Format type, File file) throws IOException {
 			if (!file.exists()) return new EventReader.Empty<>();
 			switch (type) {
-				case message:
+				case Message:
 					return new MessageEventReader(file);
-				case tuple:
+				case Tuple:
 					return new TupleEventReader(file);
-				case measurement:
+				case Measurement:
 					return new MeasurementEventReader(file);
 			}
 			return new EventReader.Empty<>();

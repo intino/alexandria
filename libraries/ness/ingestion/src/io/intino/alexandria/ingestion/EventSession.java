@@ -41,7 +41,11 @@ public class EventSession {
 	public void flush() {
 		for (EventWriter<? extends Event> w : writers.values())
 			synchronized (w) {
-//					w.flush();TODO
+				try {
+					w.flush();
+				} catch (IOException e) {
+					Logger.error(e);
+				}
 			}
 		count.set(0);
 	}

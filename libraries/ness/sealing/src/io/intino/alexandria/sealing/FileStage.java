@@ -2,9 +2,11 @@ package io.intino.alexandria.sealing;
 
 import io.intino.alexandria.Session;
 import io.intino.alexandria.datalake.file.FS;
+import io.intino.alexandria.event.Event.Format;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 class FileStage implements Stage {
@@ -56,11 +58,11 @@ class FileStage implements Stage {
 	private static class FileSession implements Session {
 
 		private final File file;
-		private final Type type;
+		private final Format format;
 
 		FileSession(File file) {
 			this.file = file;
-			this.type = typeOf(file.getName());
+			this.format = formatOf(file.getName());
 		}
 
 		@Override
@@ -69,20 +71,20 @@ class FileStage implements Stage {
 			return name.substring(0, name.lastIndexOf("."));
 		}
 
-		private Type typeOf(String filename) {
-			return stream(Type.values())
-					.filter(type -> filename.endsWith(extensionOf(type)))
+		private Format formatOf(String filename) {
+			return Arrays.stream(Format.values())
+					.filter(format -> filename.endsWith(extensionOf(format)))
 					.findFirst()
 					.orElse(null);
 		}
 
-		private String extensionOf(Type type) {
-			return "." + type.name() + SessionExtension;
+		private String extensionOf(Format type) {
+			return "." + type.name().toLowerCase() + SessionExtension;
 		}
 
 		@Override
-		public Type format() {
-			return type;
+		public Format format() {
+			return format;
 		}
 
 		@Override
