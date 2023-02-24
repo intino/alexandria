@@ -69,7 +69,7 @@ public class SessionHandler {
 
 	private List<PrivateSession> loadFileSessions() {
 		return sessionFiles()
-				.map(f -> new PrivateSession(name(f), typeOf(f), new FileSessionData(f))).collect(Collectors.toList());
+				.map(f -> new PrivateSession(name(f), format(f), new FileSessionData(f))).collect(Collectors.toList());
 	}
 
 	private Stream<File> sessionFiles() {
@@ -77,10 +77,10 @@ public class SessionHandler {
 	}
 
 	private String name(File f) {
-		return f.getName().substring(0, f.getName().indexOf(typeOf(f).name()) - 1);
+		return f.getName().substring(0, f.getName().indexOf(format(f).name()) - 1);
 	}
 
-	private Format typeOf(File f) {
+	private Format format(File f) {
 		String[] split = f.getName().split("\\.");
 		return Format.valueOf(firstUpperCase(split[split.length - 2]));
 	}
