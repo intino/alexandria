@@ -7,8 +7,10 @@ import io.intino.alexandria.event.measurement.MeasurementEvent;
 import io.intino.alexandria.event.message.MessageEvent;
 import io.intino.alexandria.event.tuple.TupleEvent;
 
+import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -33,6 +35,11 @@ public interface Datalake {
 
 		interface Tank<T extends Event> {
 			String name();
+
+			default Scale scale() {
+				List<Source<T>> sources = sources().collect(Collectors.toList());
+				return sources.isEmpty() ? null : sources.get(0).scale();
+			}
 
 			Source<T> source(String name);
 
@@ -62,7 +69,7 @@ public interface Datalake {
 				return first().timetag().scale();
 			}
 
-			default Stream<Tub> tubs(Timetag from, Timetag to) {
+			default Stream<Tub<T>> tubs(Timetag from, Timetag to) {
 				return StreamSupport.stream(from.iterateTo(to).spliterator(), false).map(this::on);
 			}
 		}

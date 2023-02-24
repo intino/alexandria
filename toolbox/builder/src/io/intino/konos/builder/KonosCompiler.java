@@ -83,6 +83,7 @@ public class KonosCompiler {
 		if (graph.soapServiceList().isEmpty()) remove(dependencies, "soap");
 		if (graph.workflow() == null) remove(dependencies, "bpm");
 		if (graph.slackBotServiceList().isEmpty()) remove(dependencies, "slack");
+		if (graph.cliServiceList().isEmpty()) remove(dependencies, "cli");
 		if (graph.visualizationComponents() == null || graph.visualizationComponents().chartList(c -> c.isAbsolute() || c.isRelative()).isEmpty())
 			remove(dependencies, "driver-r");
 		if (graph.visualizationComponents() == null || graph.visualizationComponents().dashboardList(d -> d.isAbsolute() || d.isRelative()).isEmpty())

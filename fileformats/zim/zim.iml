@@ -25,5 +25,7 @@
     <orderEntry type="library" scope="TEST" name="Intino: org.openjdk.jmh:jmh-core:1.36" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: org.openjdk.jmh:jmh-generator-annprocess:1.36" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:iterator-stream:1.0.0" level="project" />
+    <orderEntry type="library" name="Intino: org.xerial.snappy:snappy-java:1.1.8.4" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: org.lz4:lz4-java:1.8.0" level="project" />
   </component>
 </module>
