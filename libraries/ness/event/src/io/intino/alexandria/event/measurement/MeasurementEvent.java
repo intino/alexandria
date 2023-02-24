@@ -10,7 +10,6 @@ public class MeasurementEvent implements Event {
 	private final String[] measurements;
 	private final double[] values;
 
-
 	public MeasurementEvent(Instant ts, String sensor, String[] measurements, double[] values) {
 		this.ts = ts;
 		this.sensor = sensor;
