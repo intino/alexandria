@@ -1,5 +1,6 @@
 package io.intino.alexandria.ingestion;
 
+import io.intino.alexandria.Fingerprint;
 import io.intino.alexandria.Session;
 import io.intino.alexandria.event.Event.Format;
 import io.intino.alexandria.logger.Logger;
@@ -10,7 +11,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.Fingerprint.firstUpperCase;
 import static io.intino.alexandria.Session.SessionExtension;
 import static java.util.UUID.randomUUID;
 
@@ -81,8 +81,7 @@ public class SessionHandler {
 	}
 
 	private Format format(File f) {
-		String[] split = f.getName().split("\\.");
-		return Format.valueOf(firstUpperCase(split[split.length - 2]));
+		return Fingerprint.of(f).format();
 	}
 
 	private void push(Session session, File stageFolder) {

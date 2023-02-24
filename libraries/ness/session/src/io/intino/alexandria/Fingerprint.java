@@ -65,9 +65,9 @@ public class Fingerprint {
 
 
 	private static String cleanedNameOf(File file) {
-		return file.getName()
-				.substring(0, file.getName().indexOf("#"))
-				.replace("-", "/")
+		String name = file.getName();
+		if (name.contains("#")) name = name.substring(0, name.indexOf("#"));
+		return name.replace("-", "/")
 				.replace(SessionExtension, "");
 	}
 
