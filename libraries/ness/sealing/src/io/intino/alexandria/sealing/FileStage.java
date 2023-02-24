@@ -7,8 +7,6 @@ import io.intino.alexandria.logger.Logger;
 import java.io.*;
 import java.util.stream.Stream;
 
-import static java.util.Arrays.stream;
-
 class FileStage implements Stage {
 	private final File stageFolder;
 
@@ -40,7 +38,7 @@ class FileStage implements Stage {
 	}
 
 	private String filename(Session session) {
-		return session.name() + "." + session.type() + Session.SessionExtension;
+		return session.name() + "." + session.format() + Session.SessionExtension;
 	}
 
 	public Stream<Session> sessions() {
@@ -83,7 +81,7 @@ class FileStage implements Stage {
 		}
 
 		@Override
-		public Type type() {
+		public Type format() {
 			return type;
 		}
 

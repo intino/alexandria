@@ -1,7 +1,7 @@
 package io.intino.alexandria;
 
 
-import io.intino.alexandria.Session.Type;
+import io.intino.alexandria.event.Event.Format;
 
 public class Fingerprint {
 
@@ -12,8 +12,8 @@ public class Fingerprint {
 		this.fingerprint = fingerprint;
 	}
 
-	public static Fingerprint of(String tank, String source, Type type, Timetag timetag) {
-		return new Fingerprint(tank + SEPARATOR + source + SEPARATOR + timetag + SEPARATOR + type);
+	public static Fingerprint of(String tank, String source, Timetag timetag, Format format) {
+		return new Fingerprint(tank + SEPARATOR + source + SEPARATOR + timetag + SEPARATOR + format);
 	}
 
 	public String tank() {
@@ -28,16 +28,12 @@ public class Fingerprint {
 		return new Timetag(fingerprint.split(SEPARATOR)[2]);
 	}
 
-	public Type type() {
+	public Format format() {
 		try {
-			return Type.valueOf(fingerprint.split(SEPARATOR)[3]);
+			return Format.valueOf(firstUpperCase(fingerprint.split(SEPARATOR)[3]));
 		} catch (IndexOutOfBoundsException e) {
 			return null;
 		}
-	}
-
-	public int size() {
-		return fingerprint.length();
 	}
 
 	@Override
@@ -57,5 +53,10 @@ public class Fingerprint {
 
 	public String name() {
 		return fingerprint.replace("/", "-");
+	}
+
+
+	public static String firstUpperCase(String value) {
+		return value.isEmpty() ? "" : value.substring(0, 1).toUpperCase() + value.substring(1);
 	}
 }

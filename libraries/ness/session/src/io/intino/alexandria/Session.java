@@ -1,5 +1,7 @@
 package io.intino.alexandria;
 
+import io.intino.alexandria.event.Event.Format;
+
 import java.io.InputStream;
 
 public interface Session {
@@ -7,13 +9,7 @@ public interface Session {
 
 	String name();
 
-	Type type();
+	Format format();
 
 	InputStream inputStream();
-
-	enum Type {
-		message,
-		tuple,
-		measurement
-	}
 }

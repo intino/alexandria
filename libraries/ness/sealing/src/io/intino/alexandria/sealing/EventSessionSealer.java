@@ -92,7 +92,7 @@ public class EventSessionSealer {
 		}
 
 		public void seal(Fingerprint fingerprint, List<File> sessions) throws IOException {
-			seal(datalakeFile(fingerprint), fingerprint.type(), sort(fingerprint, sessions));
+			seal(datalakeFile(fingerprint), fingerprint.format(), sort(fingerprint, sessions));
 		}
 
 		private void seal(File datalakeFile, Type type, List<File> sessions) throws IOException {
@@ -102,7 +102,7 @@ public class EventSessionSealer {
 		private List<File> sort(Fingerprint fingerprint, List<File> files) {
 			try {
 				for (File file : files)
-					if (fingerprint.type().equals(Type.message) && sortingPolicy.test(fingerprint.tank()))
+					if (fingerprint.format().equals(Type.message) && sortingPolicy.test(fingerprint.tank()))
 						new MessageEventSorter(file, tempFolder).sort();
 				return files;
 			} catch (IOException e) {
@@ -137,7 +137,7 @@ public class EventSessionSealer {
 		}
 
 		private File datalakeFile(Fingerprint fingerprint) {
-			FileStore store = (FileStore) stores.get(fingerprint.type());
+			FileStore store = (FileStore) stores.get(fingerprint.format());
 			File zimFile = new File(store.directory(), fingerprint.tank() + File.separator + fingerprint.source() + File.separator + fingerprint.timetag() + store.fileExtension());
 			zimFile.getParentFile().mkdirs();
 			return zimFile;
