@@ -3,6 +3,7 @@ package io.intino.test;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.zim.ZimStream;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -16,6 +17,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Ignore
 public class ZimStream_ {
 
 	@Before

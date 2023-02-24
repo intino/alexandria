@@ -42,6 +42,10 @@ public class ZimWriter implements AutoCloseable {
 		writer.write(message);
 	}
 
+	public void flush() throws IOException {
+		writer.flush();
+	}
+
 	@Override
 	public void close() {
 		resource.close();

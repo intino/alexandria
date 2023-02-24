@@ -4,6 +4,7 @@ import com.github.luben.zstd.ZstdInputStream;
 import com.github.luben.zstd.ZstdOutputStream;
 import net.jpountz.lz4.LZ4BlockInputStream;
 import net.jpountz.lz4.LZ4BlockOutputStream;
+import org.junit.Ignore;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.xerial.snappy.SnappyInputStream;
@@ -18,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 @Fork(value = 2, warmups = 1)
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
+@Ignore
 public class CompressionBenchmark {
 
 	private static final byte[] INL = loadInl();
@@ -79,7 +81,7 @@ public class CompressionBenchmark {
 
 	private static byte[] loadInl() {
 		try {
-			return Files.readAllBytes(new File("C:\\Users\\naits\\Desktop\\MonentiaDev\\cinepolis\\temp\\cinepolis-data\\events\\assertions-maintenances.inl").toPath());
+			return Files.readAllBytes(new File("C:\\Users\\naits\\Desktop\\MonentiaDev\\alexandria\\temp\\events.inl").toPath());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

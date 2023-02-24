@@ -72,6 +72,8 @@ public interface EventWriter<T extends Event> extends AutoCloseable {
 		write(messages.stream());
 	}
 
+	void flush() throws IOException;
+
 	@Override
 	void close() throws IOException;
 
@@ -86,6 +88,10 @@ public interface EventWriter<T extends Event> extends AutoCloseable {
 		public void write(T event) {}
 		@Override
 		public void write(Stream<T> stream) {}
+
+		@Override
+		public void flush() {}
+
 		@Override
 		public void close() {}
 	}
