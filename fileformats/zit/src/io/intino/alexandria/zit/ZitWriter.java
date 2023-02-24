@@ -1,6 +1,7 @@
 package io.intino.alexandria.zit;
 
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.resourcecleaner.DisposableResource;
 import io.intino.alexandria.zit.model.Period;
 
 import java.io.*;
@@ -10,47 +11,52 @@ import java.util.Arrays;
 import static java.util.stream.Collectors.joining;
 
 public class ZitWriter implements AutoCloseable {
-	private final BufferedWriter writer;
+	private final Writer writer;
+	private final DisposableResource resource;
 	private Period period;
 	private Instant nextTs;
 
 	public ZitWriter(File file) throws IOException {
 		file.getParentFile().mkdirs();
-		this.writer = writer(file);
+		this.writer = new OutputStreamWriter(Zit.compressing(new BufferedOutputStream(new FileOutputStream(file))));
+		this.resource = DisposableResource.whenDestroyed(this).thenClose(writer);
+	}
+
+	public ZitWriter(OutputStream stream) throws IOException {
+		this.writer = new BufferedWriter(new OutputStreamWriter(Zit.compressing(stream)));
+		this.resource = DisposableResource.whenDestroyed(this).thenClose(writer);
 	}
 
 	public ZitWriter(File file, String sensor, Period period, String[] sensorModel) throws IOException {
 		this.period = period;
 		boolean exists = file.exists();
 		file.getParentFile().mkdirs();
-		this.writer = writer(file);
+		this.writer = new OutputStreamWriter(Zit.compressing(new BufferedOutputStream(new FileOutputStream(file))));
 		if (!exists || file.length() == 0) {
 			writeLine("@id " + sensor);
 			writeLine("@period " + period.toString());
 			put(sensorModel);
 		}
+		this.resource = DisposableResource.whenDestroyed(this).thenClose(writer);
 	}
 
-	public ZitWriter put(String[] sensorModel) {
+	public void put(String[] sensorModel) {
 		writeLine("@measurements " + String.join(",", sensorModel).stripTrailing());
-		return this;
 	}
 
-	public ZitWriter put(Instant instant) {
+	public void put(Instant instant) {
 		writeLine("@instant " + instant.toString());
 		this.nextTs = instant;
-		return this;
 	}
 
-	public ZitWriter put(Instant instant, double[] data) {
+	public void put(Instant instant, double[] data) {
 		if (!instant.equals(this.nextTs)) put(instant);
-		return put(data);
+		put(data);
 	}
 
-	public ZitWriter put(double[] data) {
+	public void put(double[] data) {
 		writeLine(toString(data));
 		this.nextTs = period.next(nextTs);
-		return this;
 	}
 
 	private void writeLine(String line) {
@@ -74,12 +80,8 @@ public class ZitWriter implements AutoCloseable {
 		return value == v ? String.valueOf(v) : String.valueOf(value);
 	}
 
-	private BufferedWriter writer(File file) throws IOException {
-		return new BufferedWriter(new OutputStreamWriter(Zit.compressing(new FileOutputStream(file))));
-	}
-
 	@Override
-	public void close() throws Exception {
-		writer.close();
+	public void close() {
+		resource.close();
 	}
 }
