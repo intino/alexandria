@@ -1,42 +1,39 @@
 package io.intino.alexandria.ingestion;
 
 import io.intino.alexandria.Session;
+import io.intino.alexandria.event.Event.Format;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.*;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.intino.alexandria.Fingerprint.firstUpperCase;
 import static io.intino.alexandria.Session.SessionExtension;
 import static java.util.UUID.randomUUID;
 
-public class MessageSessionHandler {
+public class SessionHandler {
 	private final File root;
 	private final List<PrivateSession> sessions = new ArrayList<>();
 
-	public MessageSessionHandler() {
+	public SessionHandler() {
 		this.root = null;
 	}
 
-	public MessageSessionHandler(File root) {
+	public SessionHandler(File root) {
 		this.root = root;
 		this.root.mkdirs();
 		this.sessions.addAll(loadFileSessions());
 	}
 
-	public MessageEventSession createEventSession() {
-		return new MessageEventSession(new PrivateProvider());
+	public EventSession createEventSession() {
+		return new EventSession(new PrivateProvider());
 	}
 
-	public MessageEventSession createEventSession(int autoFlushSize) {
-		return new MessageEventSession(new PrivateProvider(), autoFlushSize);
-	}
-
-	public void pushTo(URI uri) {
-		//TODO
+	public EventSession createEventSession(int autoFlushSize) {
+		return new EventSession(new PrivateProvider(), autoFlushSize);
 	}
 
 	public void pushTo(File stageFolder) {
@@ -59,8 +56,8 @@ public class MessageSessionHandler {
 					}
 
 					@Override
-					public Type type() {
-						return s.type();
+					public Format format() {
+						return s.format();
 					}
 
 					@Override
@@ -83,9 +80,9 @@ public class MessageSessionHandler {
 		return f.getName().substring(0, f.getName().indexOf(typeOf(f).name()) - 1);
 	}
 
-	private Session.Type typeOf(File f) {
+	private Format typeOf(File f) {
 		String[] split = f.getName().split("\\.");
-		return Session.Type.valueOf(split[split.length - 2]);
+		return Format.valueOf(firstUpperCase(split[split.length - 2]));
 	}
 
 	private void push(Session session, File stageFolder) {
@@ -109,11 +106,11 @@ public class MessageSessionHandler {
 	}
 
 	public interface Provider {
-		OutputStream outputStream(Session.Type type);
+		OutputStream outputStream(Format format);
 
-		OutputStream outputStream(String name, Session.Type type);
+		OutputStream outputStream(String name, Format format);
 
-		File file(String name, Session.Type type);
+		File file(String name, Format format);
 	}
 
 	private static class FileSessionData implements SessionData {
@@ -180,13 +177,12 @@ public class MessageSessionHandler {
 
 	private static class PrivateSession {
 		private final String name;
-		private final Session.Type type;
+		private final Format format;
 		private final SessionData sessionData;
 
-
-		PrivateSession(String name, Session.Type type, SessionData sessionData) {
+		PrivateSession(String name, Format format, SessionData sessionData) {
 			this.name = name;
-			this.type = type;
+			this.format = format;
 			this.sessionData = sessionData;
 		}
 
@@ -194,8 +190,8 @@ public class MessageSessionHandler {
 			return name;
 		}
 
-		public Session.Type type() {
-			return type;
+		public Format format() {
+			return format;
 		}
 
 		SessionData data() {
@@ -217,24 +213,24 @@ public class MessageSessionHandler {
 
 	private class PrivateProvider implements Provider {
 
-		public OutputStream outputStream(Session.Type type) {
-			return outputStream("", type);
+		public OutputStream outputStream(Format format) {
+			return outputStream("", format);
 		}
 
-		public OutputStream outputStream(String name, Session.Type type) {
-			PrivateSession session = session(name + suffix(), type);
+		public OutputStream outputStream(String name, Format format) {
+			PrivateSession session = session(name + suffix(), format);
 			sessions.add(session);
 			return session.outputStream();
 		}
 
 		@Override
-		public File file(String name, Session.Type type) {
-			PrivateSession session = session(name + suffix(), type);
+		public File file(String name, Format format) {
+			PrivateSession session = session(name + suffix(), format);
 			sessions.add(session);
 			return session.file();
 		}
 
-		private PrivateSession session(String name, Session.Type type) {
+		private PrivateSession session(String name, Format type) {
 			return new PrivateSession(name, type, root == null ? new MemorySessionData() : new FileSessionData(fileOf(name)));
 		}
 
@@ -247,8 +243,7 @@ public class MessageSessionHandler {
 		}
 
 		private String suffix() {
-			return "#" + randomUUID().toString();
+			return "#" + randomUUID();
 		}
-
 	}
 }

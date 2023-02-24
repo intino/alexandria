@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class TupleEvent implements Event {
-
 	public static final int MIN_SIZE = 5;
 
 	private final Tuple tuple;

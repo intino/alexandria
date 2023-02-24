@@ -27,6 +27,11 @@ public class MessageEventWriter implements io.intino.alexandria.event.EventWrite
 	}
 
 	@Override
+	public void flush() throws IOException {
+		writer.flush();
+	}
+
+	@Override
 	public void close() throws IOException {
 		writer.close();
 	}

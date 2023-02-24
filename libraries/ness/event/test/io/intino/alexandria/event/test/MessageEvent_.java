@@ -1,5 +1,6 @@
 package io.intino.alexandria.event.test;
 
+import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.EventStream;
 import io.intino.alexandria.event.EventWriter;
 import io.intino.alexandria.event.message.MessageEvent;
