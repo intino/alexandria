@@ -2,13 +2,21 @@ def type(display)
     package $package.mobile.displays.notifiers
 
     import $package.mobile.displays.[$packageType~s.]$name+firstUpperCase~$proxy
+    import kotlinx.serialization.json.JsonObject
     import kotlinx.serialization.json.JsonPrimitive
 
     open class $name+firstUpperCase~$proxy~Notifier(private var element: $name+firstUpperCase~$proxy) : $parentType(element) {
 
         init {
-			[$notification...[$NL]]
-			[$event...[$NL]]
+            setup();
+        }
+
+        override fun setup() {
+            if (this.element == null || this.element.name() == null || this.pushLinked) return;
+            super.setup();
+            [$notification...[$NL]]
+            [$event...[$NL]]
+    		this.pushLinked = true;
         }
 
     }
@@ -50,7 +58,7 @@ def trigger(parentType)
 end
 
 def trigger(notification)
-    onMessage("$name+firstLowerCase")[$target].execute { element.$name+firstLowerCase([$parameter+value]) }
+    onMessage("$name+firstLowerCase")[$target].execute { whenReady { element.$name+firstLowerCase([$parameter+value]) } }
 end
 
 def type(parameter & datetime)
@@ -78,7 +86,7 @@ def type(parameter & boolean)
 end
 
 def type(parameter & object)
-	io.intino.alexandria.mobile.util.Json.parse((it$["v"$]!! as JsonPrimitive).content) as $package.mobile.schemas.$value+firstUpperCase
+	io.intino.alexandria.mobile.util.Json.parse((it$["v"$]!! as JsonObject).toString()) as $package.mobile.schemas.$value+firstUpperCase
 end
 
 def type(parameter)
@@ -93,5 +101,5 @@ def trigger(target)
 end
 
 def type(event)
-    onMessage("$name+firstLowerCase").toSelf().execute { element.$name+firstLowerCase((it$["v"$]!! as JsonPrimitive).content) }
+    onMessage("$name+firstLowerCase").toSelf().execute { whenReady { element.$name+firstLowerCase((it$["v"$]!! as JsonPrimitive).content) } }
 end

@@ -16,6 +16,6 @@ public class MessageData {
 	}
 
 	public boolean isEmpty() {
-		return info.isEmpty();
+		return info.isEmpty() || info.values().stream().allMatch(v -> v == null);
 	}
 }

@@ -5,7 +5,7 @@ public class BotResponse implements java.io.Serializable {
 	private Type type;
 
 	public enum Type {
-		text, file, image, question
+		text, file, image, question, multiline
 	}
 
 	private String raw;
