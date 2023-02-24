@@ -1,8 +1,8 @@
 package io.intino.alexandria.event.test;
 
 import io.intino.alexandria.event.EventStream;
+import io.intino.alexandria.event.EventWriter;
 import io.intino.alexandria.event.tuple.TupleEvent;
-import io.intino.alexandria.event.tuple.TupleEventWriter;
 import io.intino.alexandria.ztp.Tuple;
 import io.intino.alexandria.ztp.TupleReader;
 import org.junit.Test;
@@ -24,7 +24,7 @@ public class TupleEvent_ {
 		File file = new File("../temp/ztp_from_scratch.ztp");
 		file.delete();
 		file.getParentFile().mkdirs();
-		new TupleEventWriter(file).write(Ref.stream().map(TupleEvent::new));
+		EventWriter.write(file, Ref.stream().map(TupleEvent::new));
 		compareWithRef(file);
 	}
 
@@ -35,12 +35,12 @@ public class TupleEvent_ {
 		file.delete();
 		file.getParentFile().mkdirs();
 		setupZtpWithSomeTuplesInIt(file, tuplesAlreadyWritten);
-		new TupleEventWriter(file).write(Ref.stream().skip(tuplesAlreadyWritten.size()).map(TupleEvent::new));
+		EventWriter.append(file, Ref.stream().skip(tuplesAlreadyWritten.size()).map(TupleEvent::new));
 		compareWithRef(file);
 	}
 
 	private void setupZtpWithSomeTuplesInIt(File file, List<Tuple> tuples) throws IOException {
-		new TupleEventWriter(file).write(tuples.stream().map(TupleEvent::new));
+		EventWriter.write(file, tuples.stream().map(TupleEvent::new));
 	}
 
 	private void compareWithRef(File file) throws IOException {

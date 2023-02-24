@@ -1,6 +1,7 @@
 package io.intino.alexandria.event.test;
 
 import io.intino.alexandria.event.EventStream;
+import io.intino.alexandria.event.EventWriter;
 import io.intino.alexandria.event.message.MessageEvent;
 import io.intino.alexandria.event.message.MessageEventWriter;
 import io.intino.alexandria.message.Message;
@@ -24,7 +25,9 @@ public class MessageEvent_ {
 		File file = new File("../temp/zim_from_scratch.zim");
 		file.delete();
 		file.getParentFile().mkdirs();
-		new MessageEventWriter(file).write(Ref.stream().map(MessageEvent::new));
+		try(EventWriter<MessageEvent> writer = new MessageEventWriter(file)) {
+			writer.write(Ref.stream().map(MessageEvent::new));
+		}
 		compareWithRef(file);
 	}
 
@@ -35,12 +38,14 @@ public class MessageEvent_ {
 		file.delete();
 		file.getParentFile().mkdirs();
 		setupZimWithSomeEventsInIt(file, messagesAlreadyWritten);
-		new MessageEventWriter(file).write(Ref.stream().skip(messagesAlreadyWritten.size()).map(MessageEvent::new));
+		try(EventWriter<MessageEvent> writer = new MessageEventWriter(file)) {
+			writer.write(Ref.stream().skip(messagesAlreadyWritten.size()).map(MessageEvent::new));
+		}
 		compareWithRef(file);
 	}
 
 	private void setupZimWithSomeEventsInIt(File file, List<Message> messages) throws IOException {
-		new MessageEventWriter(file).write(messages.stream().map(MessageEvent::new));
+		EventWriter.write(file, messages.stream().map(MessageEvent::new));
 	}
 
 	private void compareWithRef(File file) throws IOException {

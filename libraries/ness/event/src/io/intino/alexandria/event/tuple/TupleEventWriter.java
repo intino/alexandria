@@ -1,33 +1,35 @@
 package io.intino.alexandria.event.tuple;
 
-import io.intino.alexandria.event.AbstractEventWriter;
-import io.intino.alexandria.ztp.ZtpStream;
+import io.intino.alexandria.ztp.Ztp;
 import io.intino.alexandria.ztp.ZtpWriter;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.stream.Stream;
+import java.io.OutputStream;
 
-public class TupleEventWriter extends AbstractEventWriter<TupleEvent> {
+public class TupleEventWriter implements io.intino.alexandria.event.EventWriter<TupleEvent> {
 
-	public TupleEventWriter(File file) {
-		super(file);
+	private final ZtpWriter writer;
+
+	public TupleEventWriter(File file) throws IOException {
+		this(file, false);
+	}
+
+	public TupleEventWriter(File file, boolean append) throws IOException {
+		this(IO.open(file, append));
+	}
+
+	public TupleEventWriter(OutputStream destination) throws IOException {
+		this.writer = new ZtpWriter(Ztp.compressing(destination));
 	}
 
 	@Override
-	protected File merge(Stream<TupleEvent> data) throws IOException {
-		File temp = tempFile();
-		try(ZtpWriter writer = new ZtpWriter(temp)) {
-			try(Stream<TupleEvent> merged = mergeFileWith(data)) {
-				Iterator<TupleEvent> events = merged.iterator();
-				while (events.hasNext()) {
-					writer.write(events.next().toString());
-				}
-			}
-		}
-		return temp;
+	public void write(TupleEvent event) throws IOException {
+		writer.write(event.toTuple());
+	}
+
+	@Override
+	public void close() throws IOException {
+		writer.close();
 	}
 }
