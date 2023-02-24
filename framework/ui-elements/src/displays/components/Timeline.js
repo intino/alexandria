@@ -64,15 +64,15 @@ class Timeline extends AbstractTimeline {
     };
 
     refreshMeasurementsVisibility = (visibility) => {
-        this.setState({measurementsVisibility: visibility});
+        const newVisibility = {};
+        for (let i=0; i<visibility.length; i++) newVisibility[visibility[i].name] = visibility[i].visible;
+        this.setState({measurementsVisibility: newVisibility});
     };
 
     refreshMeasurementsSorting = (sorting) => {
-        this.setState({measurementsSorting: sorting});
-    };
-
-    refreshMeasurementsSorting = (sorting) => {
-        this.setState({measurementsSorting: sorting});
+        const newSorting = {};
+        for (let i=0; i<sorting.length; i++) newSorting[sorting[i].name] = sorting[i].position;
+        this.setState({measurementsSorting: newSorting});
     };
 
     showHistoryDialog = (history) => {
@@ -105,8 +105,8 @@ class Timeline extends AbstractTimeline {
     };
 
     sortingComparator = (m1, m2) => {
-        const m1Position = this.state.measurementsSorting[m1.name] != null ? this.state.measurementsSorting[m1.name].position : 0;
-        const m2Position = this.state.measurementsSorting[m2.name] != null ? this.state.measurementsSorting[m2.name].position : 0;
+        const m1Position = this.state.measurementsSorting[m1.name] != null ? this.state.measurementsSorting[m1.name] : 0;
+        const m2Position = this.state.measurementsSorting[m2.name] != null ? this.state.measurementsSorting[m2.name] : 0;
         if (m1Position < m2Position ) return -1;
         if (m1Position > m2Position ) return 1;
         return 0;
@@ -305,20 +305,25 @@ class Timeline extends AbstractTimeline {
     };
 
     handleToggleMeasurementVisibility = (measurement) => {
+        const measurements = this.state.measurements;
         const name = measurement.name;
         if (this.state.measurementsVisibility[name] == null) this.state.measurementsVisibility[name] = true;
         this.state.measurementsVisibility[name] = !this.state.measurementsVisibility[name];
         this.updateCookie(this.state.measurementsVisibility, this.state.sourceName + "_visibility");
         this.setState({measurementsVisibility: this.state.measurementsVisibility});
-        this.requester.measurementsVisibility(this.state.measurementsVisibility);
+        const list = [];
+        for (var i=0; i<measurements.length; i++) list.push({ name: measurements[i].name, visible: this.state.measurementsVisibility[measurements[i].name] != null ? this.state.measurementsVisibility[measurements[i].name] : true });
+        this.requester.measurementsVisibility(list);
     };
 
     saveMeasurementsSorting = () => {
         const measurements = this.state.measurements;
         const measurementsSorting = {};
-        for (var i=0; i<measurements.length; i++) measurementsSorting[measurements[i].name] = { name: measurements[i].name, position: i };
+        for (var i=0; i<measurements.length; i++) measurementsSorting[measurements[i].name] = i;
         this.updateCookie(measurementsSorting, this.state.sourceName + "_sorting");
-        this.requester.measurementsSorting(measurementsSorting);
+        const list = [];
+        for (var i=0; i<measurements.length; i++) list.push({ name: measurements[i].name, position: i });
+        this.requester.measurementsSorting(list);
         return measurementsSorting;
     };
 
