@@ -43,7 +43,7 @@ public class Json {
 		return GsonInstance.fromJson(json, type);
 	}
 
-	private static GsonBuilder gsonBuilder() {
+	public static GsonBuilder gsonBuilder() {
 		return new GsonBuilder()
 				.registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (instant, type, context) -> new JsonPrimitive(instant.toEpochMilli()))
 				.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, type1, context) -> Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong()))
