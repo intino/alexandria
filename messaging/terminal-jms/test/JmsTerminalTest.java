@@ -1,6 +1,5 @@
 import io.intino.alexandria.datalake.Datalake;
-import io.intino.alexandria.event.Event;
-import io.intino.alexandria.event.EventStream;
+import io.intino.alexandria.event.message.MessageEvent;
 import io.intino.alexandria.terminal.Broker;
 import io.intino.alexandria.terminal.JmsConnector;
 import io.intino.alexandria.terminal.remotedatalake.RemoteDatalake;
@@ -11,6 +10,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.time.Instant;
+import java.util.stream.Stream;
 
 public class JmsTerminalTest {
 
@@ -19,10 +19,10 @@ public class JmsTerminalTest {
 	public void testRemoteDatalake() {
 		JmsConnector connector = new JmsConnector("tcp://localhost:62000?jms.blobTransferPolicy.uploadUrl=http://localhost:8081", "monitoring", "monitoring", "test", null);
 		connector.start();
-		Datalake.EventStore.Tank tank = new RemoteDatalake(connector).eventStore().tank("server.Status");
+		Datalake.Store.Tank<MessageEvent> tank = new RemoteDatalake(connector).messageStore().tank("server.Status");
 		if (tank == null) Assert.fail();
-		EventStream content = tank.content();
-		content.forEachRemaining(e -> System.out.println(e.ts()));
+		Stream<MessageEvent> content = tank.content();
+		content.forEach(e -> System.out.println(e.ts()));
 	}
 
 	@Test
@@ -51,19 +51,34 @@ public class JmsTerminalTest {
 //		for (File outBox : Objects.requireNonNull(new File("outBox").listFiles())) Files.delete(outBox.toPath());
 	}
 
-	public static class TestEvent extends Event {
+	public static class TestEvent extends MessageEvent {
 
 		public TestEvent(String type) {
-			super(type);
+			super(type, "test");
 		}
 
 		public String field1() {
-			return message.get("field1").asString();
+			return toMessage().get("field1").asString();
 		}
 
 		public TestEvent field1(String value) {
-			message.set("field1", value);
+			super.toMessage().set("field1", value);
 			return this;
+		}
+
+		@Override
+		public Instant ts() {
+			return Instant.now();
+		}
+
+		@Override
+		public String ss() {
+			return "test";
+		}
+
+		@Override
+		public Format format() {
+			return Format.Message;
 		}
 	}
 

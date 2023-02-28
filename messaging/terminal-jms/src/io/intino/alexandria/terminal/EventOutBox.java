@@ -3,6 +3,7 @@ package io.intino.alexandria.terminal;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.event.Event;
+import io.intino.alexandria.event.message.MessageEvent;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.MessageReader;
 
@@ -37,11 +38,12 @@ class EventOutBox extends OutBox {
 						files.remove(file);
 						continue;
 					}
-					events.add(new AbstractMap.SimpleEntry<>(destination(file), new Event(new MessageReader(content).next())));
-				} catch (IOException e) {
+					MessageReader messages = new MessageReader(content);
+					events.add(new AbstractMap.SimpleEntry<>(destination(file), new MessageEvent(messages.next())));
+					messages.close();
+				} catch (Exception e) {
 					Logger.error(e);
 				}
-
 			}
 		}
 		return events;
