@@ -1,6 +1,7 @@
 package io.intino.alexandria.terminal;
 
 import io.intino.alexandria.event.Event;
+import io.intino.alexandria.event.message.MessageEvent;
 import io.intino.alexandria.jms.*;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
@@ -322,12 +323,12 @@ public class JmsConnector implements Connector {
 		}
 	}
 
-	private Event newEvent(javax.jms.Message m, Message ev) {
+	private MessageEvent newEvent(javax.jms.Message m, Message ev) {
 		try {
-			return new Event(ev);
+			return new MessageEvent(ev);
 		} catch (Throwable e) {
 			Logger.error("Malformed message:\n" + textFrom(m));
-			return new Event(ev);
+			return new MessageEvent(ev);
 		}
 	}
 

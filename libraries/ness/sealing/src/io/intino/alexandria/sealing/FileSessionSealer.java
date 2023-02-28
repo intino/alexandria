@@ -40,7 +40,6 @@ public class FileSessionSealer implements SessionSealer {
 
 	private boolean check(String tank, Predicate<Tank<? extends Event>> sortingPolicy) {
 		return sortingPolicy.test(datalake.messageStore().tank(tank))
-				|| sortingPolicy.test(datalake.tupleStore().tank(tank))
 				|| sortingPolicy.test(datalake.measurementStore().tank(tank));
 	}
 

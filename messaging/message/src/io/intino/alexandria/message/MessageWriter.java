@@ -27,6 +27,4 @@ public class MessageWriter implements AutoCloseable {
 	public void close() throws IOException {
 		os.close();
 	}
-
-
 }

@@ -60,7 +60,6 @@
       <module fileurl="file://$PROJECT_DIR$/fileformats/zim/zim.iml" filepath="$PROJECT_DIR$/fileformats/zim/zim.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/zip/zip.iml" filepath="$PROJECT_DIR$/fileformats/zip/zip.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/zit/zit.iml" filepath="$PROJECT_DIR$/fileformats/zit/zit.iml" group="fileformats" />
-      <module fileurl="file://$PROJECT_DIR$/fileformats/ztp/ztp.iml" filepath="$PROJECT_DIR$/fileformats/ztp/ztp.iml" group="fileformats" />
     </modules>
   </component>
 </project>

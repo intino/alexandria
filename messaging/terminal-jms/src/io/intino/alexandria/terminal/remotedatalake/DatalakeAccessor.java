@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static io.intino.alexandria.terminal.JmsConnector.createRandomString;
 
-class DatalakeAccessor {
+public class DatalakeAccessor {
 
 	public static final String PATH = "service.ness.datalake";
 	private final JmsConnector connector;
@@ -37,7 +37,7 @@ class DatalakeAccessor {
 		}
 	}
 
-	Message query(String query) {
+	public Message query(String query) {
 		AtomicReference<Message> response = new AtomicReference<>(null);
 		Session session = connector.session();
 		try {
@@ -90,16 +90,17 @@ class DatalakeAccessor {
 		producer.close();
 	}
 
-	public static JsonObject reflowSchema(String tank, List<String> tubs) {
+	public static JsonObject reflowSchema(String tank, String source, List<String> tubs) {
 		JsonArray tubsArray = new JsonArray();
 		tubs.forEach(tubsArray::add);
-		return reflowSchema(tank, tubsArray);
+		return reflowSchema(tank, source, tubsArray);
 	}
 
-	public static JsonObject reflowSchema(String tank, JsonArray tubs) {
+	public static JsonObject reflowSchema(String tank, String source, JsonArray tubs) {
 		JsonObject jsonObject = new JsonObject();
 		jsonObject.addProperty("operation", "reflow");
 		jsonObject.addProperty("tank", tank);
+		jsonObject.addProperty("source", source);
 		jsonObject.add("tubs", tubs);
 		return jsonObject;
 	}

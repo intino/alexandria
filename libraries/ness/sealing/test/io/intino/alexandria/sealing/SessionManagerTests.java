@@ -3,10 +3,11 @@ package io.intino.alexandria.sealing;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.file.FileDatalake;
+import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.EventReader;
 import io.intino.alexandria.event.message.MessageEvent;
-import io.intino.alexandria.ingestion.MessageEventSession;
-import io.intino.alexandria.ingestion.MessageSessionHandler;
+import io.intino.alexandria.ingestion.EventSession;
+import io.intino.alexandria.ingestion.SessionHandler;
 import io.intino.alexandria.logger.Logger;
 import org.junit.After;
 import org.junit.Test;
@@ -31,7 +32,7 @@ public class SessionManagerTests {
 
 	@Test
 	public void should_create_a_session() throws IOException {
-		MessageSessionHandler handler = new MessageSessionHandler(localStageDir);
+		SessionHandler handler = new SessionHandler(localStageDir);
 		List<MessageEvent> events = createMessageEvents(handler);
 		handler.pushTo(stageDir);
 		FileSessionSealer fileSessionManager = new FileSessionSealer(new FileDatalake(datalakeDir), stageDir, treatedDir);
@@ -39,14 +40,14 @@ public class SessionManagerTests {
 		checkEvents(events);
 	}
 
-	private List<MessageEvent> createMessageEvents(MessageSessionHandler handler) throws IOException {
-		MessageEventSession eventSession = handler.createEventSession();
+	private List<MessageEvent> createMessageEvents(SessionHandler handler) throws IOException {
+		EventSession eventSession = handler.createEventSession();
 		List<MessageEvent> eventList = new ArrayList<>();
 		for (int i = 0; i < 30; i++) {
 			LocalDateTime now = LocalDateTime.of(2019, 2, 28, 4, 15 + i);
 			MessageEvent event = event(now.toInstant(ZoneOffset.UTC), i);
 			eventList.add(event);
-			eventSession.put("tank1","test", new Timetag(now, Scale.Hour), new Tank1(event));
+			eventSession.put("tank1", "test", new Timetag(now, Scale.Hour), Event.Format.Message, new Tank1(event));
 		}
 		eventSession.close();
 		return eventList;

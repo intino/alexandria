@@ -1,7 +1,9 @@
 dsl Legio
 
 Artifact("io.intino.alexandria", "2.0.0") session
-	Imports > Compile("io.intino.alexandria", "primitives", "1.0.5")
+	Imports
+		Compile("io.intino.alexandria", "primitives", "1.0.5")
+		Compile("io.intino.alexandria", "event", "4.0.0")
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
