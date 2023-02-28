@@ -9,7 +9,6 @@ import io.intino.alexandria.event.EventStream;
 import io.intino.alexandria.event.EventWriter;
 import io.intino.alexandria.event.measurement.MeasurementEventReader;
 import io.intino.alexandria.event.message.MessageEventReader;
-import io.intino.alexandria.event.tuple.TupleEventReader;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
@@ -26,7 +25,7 @@ public class EventSealer {
 	private final File tempFolder;
 
 	public EventSealer(Datalake datalake, Predicate<String> sortingPolicy, File tempFolder) {
-		this.stores = Map.of(Event.Format.Message, datalake.messageStore(), Event.Format.Tuple, datalake.tupleStore(), Event.Format.Measurement, datalake.measurementStore());
+		this.stores = Map.of(Event.Format.Message, datalake.messageStore(), Event.Format.Measurement, datalake.measurementStore());
 		this.sortingPolicy = sortingPolicy;
 		this.tempFolder = tempFolder;
 	}
@@ -70,8 +69,6 @@ public class EventSealer {
 		switch (type) {
 			case Message:
 				return new MessageEventReader(file);
-			case Tuple:
-				return new TupleEventReader(file);
 			case Measurement:
 				return new MeasurementEventReader(file);
 		}
