@@ -2,7 +2,6 @@ package io.intino.alexandria.event;
 
 import io.intino.alexandria.event.measurement.MeasurementEventWriter;
 import io.intino.alexandria.event.message.MessageEventWriter;
-import io.intino.alexandria.event.tuple.TupleEventWriter;
 
 import java.io.*;
 import java.util.Collection;
@@ -25,7 +24,6 @@ public interface EventWriter<T extends Event> extends AutoCloseable {
 	static <T extends Event> EventWriter<T> of(Event.Format format, OutputStream outputStream) throws IOException {
 		switch(format) {
 			case Message: return (EventWriter<T>) new MessageEventWriter(outputStream);
-			case Tuple: return (EventWriter<T>) new TupleEventWriter(outputStream);
 			case Measurement: return (EventWriter<T>) new MeasurementEventWriter(outputStream);
 		}
 		return new Empty<>(); // TODO: throw exception instead?

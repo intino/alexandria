@@ -2,7 +2,6 @@ package io.intino.alexandria.event;
 
 import io.intino.alexandria.event.measurement.MeasurementEventReader;
 import io.intino.alexandria.event.message.MessageEventReader;
-import io.intino.alexandria.event.tuple.TupleEventReader;
 
 import java.io.*;
 import java.util.Iterator;
@@ -20,7 +19,6 @@ public interface EventReader<T extends Event> extends Iterator<T>, AutoCloseable
 	static <T extends Event> EventReader<T> of(Event.Format format, InputStream inputStream) throws IOException {
 		switch(format) {
 			case Message: return (EventReader<T>) new MessageEventReader(inputStream);
-			case Tuple: return (EventReader<T>) new TupleEventReader(inputStream);
 			case Measurement: return (EventReader<T>) new MeasurementEventReader(inputStream);
 		}
 		return new Empty<>(); // TODO: throw exception instead?
