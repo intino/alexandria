@@ -2,10 +2,12 @@ package io.intino.alexandria.bpm;
 
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageReader;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -71,18 +73,24 @@ public class BpmViewer {
 		}
 
 		public List<ProcessStatus> processStatuses() {
-			if(processStatusList != null) return processStatusList;
-			MessageReader messageReader = new MessageReader(persistenceManager.read(processPath));
-			processStatusList = stream(messageReader.spliterator(), false).map(ProcessStatus::new).collect(toList());
-			messageReader.close();
+			if (processStatusList != null) return processStatusList;
+			try (MessageReader messageReader = new MessageReader(persistenceManager.read(processPath))) {
+				processStatusList = stream(messageReader.spliterator(), false).map(ProcessStatus::new).collect(toList());
+			} catch (Exception e) {
+				Logger.error(e);
+			}
 			return processStatusList;
 		}
 
-		public Definition definition(){
-			if(definition != null) return definition;
-			if(!persistenceManager.exists(definitionPath)) return null;
-			MessageReader reader = new MessageReader(persistenceManager.read(definitionPath));
-			List<Message> messages = stream(reader.spliterator(), false).collect(toList());
+		public Definition definition() {
+			if (definition != null) return definition;
+			if (!persistenceManager.exists(definitionPath)) return null;
+			List<Message> messages = Collections.emptyList();
+			try (MessageReader reader = new MessageReader(persistenceManager.read(definitionPath))) {
+				messages = stream(reader.spliterator(), false).collect(toList());
+			} catch (Exception e) {
+				Logger.error(e);
+			}
 			List<Definition.State> states = messages.stream().filter(m -> m.type().equals("State"))
 					.map(m -> new Definition.State() {
 						@Override
@@ -129,16 +137,19 @@ public class BpmViewer {
 					return links;
 				}
 			};
-			reader.close();
 			return definition;
-		};
+		}
+
 
 		public Map<String, String> data() {
-			if(data != null) return data;
-			MessageReader reader = new MessageReader(persistenceManager.read(dataPath));
-			Message message = reader.next();
-			data = message.attributes().stream().collect(toMap(a -> a, a -> message.get(a).asString()));
-			reader.close();
+			if (data != null) return data;
+			try (MessageReader reader = new MessageReader(persistenceManager.read(dataPath))) {
+				Message message = reader.next();
+				data = message.attributes().stream().collect(toMap(a -> a, a -> message.get(a).asString()));
+			} catch (Exception e) {
+				Logger.error(e);
+			}
+
 			return data;
 		}
 
@@ -159,19 +170,24 @@ public class BpmViewer {
 		}
 	}
 
-	public interface Definition{
+	public interface Definition {
 		List<State> states();
+
 		List<Link> links();
 
-		interface State{
+		interface State {
 			String name();
+
 			List<String> types();
+
 			String taskType();
 		}
 
-		interface Link{
+		interface Link {
 			String from();
+
 			String to();
+
 			String type();
 		}
 	}
