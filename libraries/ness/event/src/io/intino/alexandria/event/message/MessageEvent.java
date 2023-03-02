@@ -12,9 +12,9 @@ public class MessageEvent implements Event {
 	private static final String TS = "ts";
 	private static final String SS = "ss";
 
-	private final Message message;
-	private Instant ts;
-	private String ss;
+	protected final Message message;
+	protected Instant ts;
+	protected String ss;
 
 	public MessageEvent(String type, String ss) {
 		this.message = new Message(type);
