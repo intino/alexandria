@@ -28,6 +28,11 @@ public class MessageEvent implements Event {
 		this.ss = requireNonNull(message.get(SS).asString());
 	}
 
+	@Override
+	public String type() {
+		return message.type();
+	}
+
 	public Instant ts() {
 		return ts;
 	}

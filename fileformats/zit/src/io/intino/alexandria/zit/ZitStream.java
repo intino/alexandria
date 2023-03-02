@@ -29,8 +29,8 @@ public class ZitStream extends ResourceIteratorStream<Data> {
 		this.reader = requireNonNull(reader);
 	}
 
-	public String sensor() {
-		return reader.sensor();
+	public String id() {
+		return reader.id();
 	}
 
 	private static ItsReader readerOf(InputStream is) {
