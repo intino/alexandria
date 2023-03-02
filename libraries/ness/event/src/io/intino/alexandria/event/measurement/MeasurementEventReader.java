@@ -57,26 +57,26 @@ public class MeasurementEventReader implements EventReader<MeasurementEvent> {
 
 	private static class ZitToEventIterator implements Iterator<MeasurementEvent>, AutoCloseable {
 
-		private final ZitStream source;
+		private final ZitStream stream;
 
-		public ZitToEventIterator(ZitStream source) {
-			this.source = source;
+		public ZitToEventIterator(ZitStream stream) {
+			this.stream = stream;
 		}
 
 		@Override
 		public void close() throws Exception {
-			if (source != null) ((AutoCloseable) source).close();
+			if (stream != null) ((AutoCloseable) stream).close();
 		}
 
 		@Override
 		public boolean hasNext() {
-			return source.hasNext();
+			return stream.hasNext();
 		}
 
 		@Override
 		public MeasurementEvent next() {
-			Data next = source.next();
-			return new MeasurementEvent(next.ts(), source.sensor(), next.measurements(), next.values());
+			Data next = stream.next();
+			return new MeasurementEvent(stream.id(), stream.id(), next.ts(), next.measurements(), next.values());
 		}
 	}
 }

@@ -5,16 +5,23 @@ import io.intino.alexandria.event.Event;
 import java.time.Instant;
 
 public class MeasurementEvent implements Event {
+	private String type;
 	private final Instant ts;
-	private final String sensor;
+	private final String source;
 	private final String[] measurements;
 	private final double[] values;
 
-	public MeasurementEvent(Instant ts, String sensor, String[] measurements, double[] values) {
+	public MeasurementEvent(String type, String source, Instant ts, String[] measurements, double[] values) {
+		this.type = type;
 		this.ts = ts;
-		this.sensor = sensor;
+		this.source = source;
 		this.measurements = measurements;
 		this.values = values;
+	}
+
+	@Override
+	public String type() {
+		return type;
 	}
 
 	@Override
@@ -24,7 +31,7 @@ public class MeasurementEvent implements Event {
 
 	@Override
 	public String ss() {
-		return sensor;
+		return source;
 	}
 
 	public String[] measurements() {
