@@ -143,7 +143,9 @@ Concept:Named Service
 					Concept Line
 						var string content
 						var Line visibleWith = empty
+						var boolean addBreak = true
 						Aspect Multiple
+							var word:{Horizontal Vertical} arrangement = Vertical
 			has Exception
 
 	Aspect UI
