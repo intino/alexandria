@@ -4,20 +4,15 @@ def.file
 /Users/mcaballero/Proyectos/intino-cesar/trooper/src/io/intino/cesar/trooper/box/ui/definitions/System.konos#true
 /Users/mcaballero/Proyectos/intino-cesar/trooper/src/io/intino/cesar/trooper/box/ui/definitions/Systems.konos#true
 /Users/mcaballero/Proyectos/intino-cesar/trooper/src/io/intino/cesar/trooper/box/ui/definitions/Episodes.konos#true
-/Users/mcaballero/Proyectos/intino-cesar/trooper/src/io/intino/cesar/trooper/box/ui/definitions/Business.konos#true
-/Users/mcaballero/Proyectos/intino-cesar/trooper/src/io/intino/cesar/trooper/box/ui/definitions/Application.konos#true
 /Users/mcaballero/Proyectos/intino-cesar/trooper/src/io/intino/cesar/trooper/box/ui/definitions/Theme.konos#true
-/Users/mcaballero/Proyectos/intino-cesar/trooper/src/io/intino/cesar/trooper/box/ui/definitions/Mission.konos#true
-/Users/mcaballero/Proyectos/intino-cesar/trooper/src/io/intino/cesar/trooper/box/ui/definitions/Service.konos#true
+/Users/mcaballero/Proyectos/intino-cesar/trooper/src/io/intino/cesar/trooper/box/ui/definitions/Main.konos#true
 /Users/mcaballero/Proyectos/intino-cesar/trooper/src/io/intino/cesar/trooper/box/ui/definitions/Analytic.konos#true
 /Users/mcaballero/Proyectos/intino-cesar/trooper/src/io/intino/cesar/trooper/box/ui/definitions/Editors.konos#true
-/Users/mcaballero/Proyectos/intino-cesar/trooper/src/io/intino/cesar/trooper/box/ui/definitions/Missions.konos#true
 /Users/mcaballero/Proyectos/intino-cesar/trooper/src/io/intino/cesar/trooper/box/ui/definitions/translations/Spanish.konos#true
 /Users/mcaballero/Proyectos/intino-cesar/trooper/src/io/intino/cesar/trooper/box/ui/definitions/translations/Portuguese.konos#true
 /Users/mcaballero/Proyectos/intino-cesar/trooper/src/io/intino/cesar/trooper/box/CLI.konos#true
 /Users/mcaballero/Proyectos/intino-cesar/trooper/src/io/intino/cesar/trooper/box/UI.konos#true
 /Users/mcaballero/Proyectos/intino-cesar/trooper/src/io/intino/cesar/trooper/box/Misc.konos#true
-/Users/mcaballero/Proyectos/intino-cesar/trooper/src/io/intino/cesar/trooper/box/Bot.konos#true
 
 project
 intino-cesar

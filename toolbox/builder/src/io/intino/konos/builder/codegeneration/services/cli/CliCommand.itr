@@ -191,7 +191,7 @@ def type(line) trigger(dataList)
 end
 
 def type(line) trigger(definition)
-    private static final Line $name+firstUpperCase~Line = new Line("$name", "$content", $multiple[, "$dependant"]);
+    private static final Line $name+firstUpperCase~Line = new Line("$name", "$content", $addBreak, $multiple[, "$dependant"]);
 end
 
 def type(line) trigger(definitionDeclaration)
@@ -206,4 +206,8 @@ def type(option)
     public io.intino.alexandria.cli.response.Text when$value+firstUppercase(MessageProperties properties, String command, String... args) {
         return fill(new $commandName+firstUppercase~Action(), properties, args).when$value+firstUppercase();
     }
+end
+
+def type(multiple)
+    new Line.Multiple($value, Line.Multiple.Arrangement.valueOf("$arrangement"))
 end

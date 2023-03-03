@@ -175,9 +175,17 @@ public class CliRenderer extends Renderer {
 		FrameBuilder result = new FrameBuilder("line");
 		if (line.isMultiple()) result.add("multiple");
 		result.add("name", line.name$());
-		result.add("multiple", line.isMultiple());
+		result.add("addBreak", line.addBreak());
+		result.add("multiple", multipleFrame(line));
 		result.add("content", line.content());
 		if (line.visibleWith() != null) result.add("dependant", line.visibleWith().name$());
+		return result;
+	}
+
+	private FrameBuilder multipleFrame(Service.CLI.Command.Response.MultiLine.Line line) {
+		FrameBuilder result = new FrameBuilder("multiple");
+		result.add("value", line.isMultiple());
+		result.add("arrangement", line.isMultiple() ? line.asMultiple().arrangement().name() : Service.CLI.Command.Response.MultiLine.Line.Multiple.Arrangement.Vertical.name());
 		return result;
 	}
 
