@@ -100,5 +100,6 @@
     <orderEntry type="library" scope="RUNTIME" name="Intino: com.fasterxml.jackson.core:jackson-core:2.13.4" level="project" />
     <orderEntry type="library" name="Intino: org.locationtech.jts:jts-core:1.19.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:http:1.5.11" level="project" />
+    <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>

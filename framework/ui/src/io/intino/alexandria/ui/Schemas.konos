@@ -327,12 +327,27 @@ Schema TimelineMeasurement
 	Attribute unit as Text
 	Attribute decimalCount as Integer
 	Attribute trend as Word("Increased" "Decreased" "None")
-	Attribute evolution as Object(TimelineEvolution)
-
-Schema TimelineEvolution
-	Attribute categories as Text List
+	Attribute summaries as Object(TimelineSummary) List
 	Attribute serie as Object(TimelineSerie)
+
+Schema TimelineSummaryInfo
+	Attribute measurement as Text
+	Attribute scale as Text
+
+Schema TimelineSummary
+	Attribute label as Text
+	Attribute scale as Text
+	Attribute average as Object(TimelineSummaryValue)
+	Attribute max as Object(TimelineSummaryValue)
+	Attribute min as Object(TimelineSummaryValue)
+	Attribute canBefore as Bool
+	Attribute canNext as Bool
+
+Schema TimelineSummaryValue
+	Attribute value as Real
+	Attribute date as DateTime
 
 Schema TimelineSerie
 	Attribute name as Text
+	Attribute categories as Text List
 	Attribute values as Real List
