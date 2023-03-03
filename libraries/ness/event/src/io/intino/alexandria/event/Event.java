@@ -5,8 +5,12 @@ import java.util.Arrays;
 
 public interface Event extends Comparable<Event> {
 
+	String type();
+
 	Instant ts();
+
 	String ss();
+
 	Format format();
 
 	@Override

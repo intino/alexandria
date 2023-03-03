@@ -18,6 +18,7 @@ import static java.lang.Double.NaN;
 public class ItsReader implements AutoCloseable {
 	private final Stream<String> lines;
 	private final DisposableResource resource;
+	private String id;
 	private String sensor;
 	private Instant instant = null;
 	private Period period = null;
@@ -26,8 +27,12 @@ public class ItsReader implements AutoCloseable {
 	public ItsReader(InputStream is) {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 		this.resource = DisposableResource.whenDestroyed(this).thenClose(reader);
-		readId(reader);
+		readHeader(reader);
 		this.lines = reader.lines();
+	}
+
+	public String id() {
+		return id;
 	}
 
 	public String sensor() {
@@ -81,6 +86,9 @@ public class ItsReader implements AutoCloseable {
 		String data = line.substring(index + 1);
 		switch (metadata) {
 			case "id":
+				id = data;
+				break;
+			case "sensor":
 				sensor = data;
 				break;
 			case "instant":
@@ -95,8 +103,9 @@ public class ItsReader implements AutoCloseable {
 		}
 	}
 
-	private void readId(BufferedReader reader) {
+	private void readHeader(BufferedReader reader) {
 		try {
+			parse(reader.readLine());
 			parse(reader.readLine());
 		} catch (IOException e) {
 			Logger.error(e);

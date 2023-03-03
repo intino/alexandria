@@ -31,13 +31,13 @@ public class ItsReaderTest {
 
 	@Test
 	public void should_read_its() {
-		System.out.println(read(inputStream));
+		read(inputStream);
 	}
 
 	private String read(InputStream inputStream) {
 		final ItsReader reader = new ItsReader(inputStream);
 		StringBuilder builder = new StringBuilder();
-		builder.append(reader.sensor()).append("\n");
+		builder.append(reader.id()).append("\n");
 		reader.data().limit(50)
 				.forEach(d -> print(builder, d));
 		return builder.toString();
@@ -54,13 +54,13 @@ public class ItsReaderTest {
 		final ItsReader reader = new ItsReader(inputStream);
 		final File tempFile = Files.createTempFile("test", ".zit").toFile();
 		tempFile.deleteOnExit();
-		try (ZitWriter writer = new ZitWriter(tempFile, reader.sensor(), Period.of(5, ChronoUnit.MINUTES), new String[]{"price", "volume"})) {
+		try (ZitWriter writer = new ZitWriter(tempFile, reader.id(), Period.of(5, ChronoUnit.MINUTES), new String[]{"price", "volume"})) {
 			reader.data().forEach(d -> writer.put(d.ts(), d.values()));
 		} catch (Exception e) {
 			Logger.error(e);
 		}
 		ZitStream zitStream = ZitStream.of(tempFile);
-		strBuilder.append(zitStream.sensor()).append("\n");
+		strBuilder.append(zitStream.id()).append("\n");
 		zitStream.limit(50)
 				.forEach(d -> print(strBuilder, d));
 		inputStream.reset();

@@ -1,13 +1,13 @@
 package io.intino.alexandria.bpm;
 
-import io.intino.alexandria.event.Event;
+import io.intino.alexandria.event.message.MessageEvent;
 import io.intino.alexandria.message.Message;
 
 import java.time.Instant;
 
 import static io.intino.alexandria.bpm.Workflow.EventType;
 
-public class ProcessStatus extends Event implements Comparable<ProcessStatus> {
+public class ProcessStatus extends MessageEvent {
 
 	private static final String Owner = "owner";
 	private static final String Task = "Task";
@@ -40,7 +40,7 @@ public class ProcessStatus extends Event implements Comparable<ProcessStatus> {
 				.set(CallbackState, callbackState));
 	}
 
-	public ProcessStatus(Event event) {
+	public ProcessStatus(MessageEvent event) {
 		super(event.toMessage());
 	}
 
@@ -49,63 +49,62 @@ public class ProcessStatus extends Event implements Comparable<ProcessStatus> {
 	}
 
 	public Instant ts() {
-		return Instant.parse(message.get("ts").data());
+		return Instant.parse(super.toMessage().get("ts").data());
 	}
 
 	public String processId() {
-		return message.get(Id).data();
+		return toMessage().get(Id).data();
 	}
 
 	public String owner() {
-		return message.contains(Owner) ? message.get(Owner).data() : null;
+		return toMessage().contains(Owner) ? toMessage().get(Owner).data() : null;
 	}
 
 	public String processName() {
-		return message.get(Name).data();
+		return toMessage().get(Name).data();
 	}
 
 	public String processStatus() {
-		return message.get(Status).data();
+		return toMessage().get(Status).data();
 	}
 
 	public boolean hasCallback() {
-		return message.contains(CallbackProcess);
+		return toMessage().contains(CallbackProcess);
 	}
 
 	public String callbackProcess() {
-		return message.get(CallbackProcess).data();
+		return toMessage().get(CallbackProcess).data();
 	}
 
 	public String callbackState() {
-		return message.get(CallbackState).data();
+		return toMessage().get(CallbackState).data();
 	}
 
 	public boolean hasStateInfo() {
-		return !message.components(State).isEmpty();
+		return !toMessage().components(State).isEmpty();
 	}
 
 	public ProcessStatus addStateInfo(String name, State.Status status) {
-		message.add(new Message(State).set(Name, name).set(Status, status.name()));
+		toMessage().add(new Message(State).set(Name, name).set(Status, status.name()));
 		return this;
 	}
 
 	public StateInfo stateInfo() {
-		return hasStateInfo() ? new StateInfo(message.components(State).get(0)) : null;
+		return hasStateInfo() ? new StateInfo(toMessage().components(State).get(0)) : null;
 	}
 
 	public boolean hasTaskInfo() {
-		return !message.components(Task).isEmpty();
+		return !toMessage().components(Task).isEmpty();
 	}
 
 	public void addTaskInfo(String user, String duration) {
-		message.add(new Message(Task).set(User, user).set(Duration, duration));
+		toMessage().add(new Message(Task).set(User, user).set(Duration, duration));
 	}
 
 	public Message get() {
-		return this.message;
+		return toMessage();
 	}
 
-	@Override
 	public int compareTo(ProcessStatus o) {
 		return !ts().equals(o.ts()) ? ts().compareTo(o.ts()) : -1;
 	}
