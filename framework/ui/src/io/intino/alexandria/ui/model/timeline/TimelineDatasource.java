@@ -25,11 +25,26 @@ public interface TimelineDatasource {
 		enum Trend { None, Increased, Decreased } Trend trend();
 		Instant from();
 		Instant to();
-		Map<Instant, Double> stats();
-		Map<Instant, Double> stats(Instant start, Instant end);
-		Map<Instant, Double> speedStats();
-		Map<Instant, Double> speedStats(Instant start, Instant end);
-		Map<Instant, Double> accelerationStats();
-		Map<Instant, Double> accelerationStats(Instant start, Instant end);
+
+		enum Scale { Day, Week, Month, Year }
+		Summary summary(Instant date, Scale scale);
+
+		Serie serie();
+		Serie serie(Instant start, Instant end);
+	}
+
+	interface Summary {
+		String label();
+		double average();
+		Instant averageDate();
+		double max();
+		Instant maxDate();
+		double min();
+		Instant minDate();
+	}
+
+	interface Serie {
+		String name();
+		Map<Instant, Double> values();
 	}
 }
