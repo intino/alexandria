@@ -22,8 +22,12 @@ public class MessageReader implements Iterator<Message>, Iterable<Message>, Auto
 	}
 
 	public MessageReader(InputStream inputStream) {
-		messageStream = new MessageStream(inputStream);
-		if (messageStream.hasNext()) current = messageStream.next();
+		this(new MessageStream(inputStream));
+	}
+
+	public MessageReader(MessageStream messageStream) {
+		this.messageStream = messageStream;
+		if (this.messageStream.hasNext()) current = this.messageStream.next();
 	}
 
 	public boolean hasNext() {
@@ -61,13 +65,13 @@ public class MessageReader implements Iterator<Message>, Iterable<Message>, Auto
 		return messageContexts.get(0);
 	}
 
-	private void add(List<Message> messageContexts, Integer level, Message value) {
+	private void add(List<Message> messageContexts, int level, Message value) {
 		if (messageContexts.size() <= level) messageContexts.add(level, value);
 		else messageContexts.set(level, value);
 	}
 
 	private boolean isComponent(String next) {
-		return next.substring(0, next.indexOf('\n')).contains(".");
+		return next.indexOf('.') < next.indexOf('\n');
 	}
 
 	private Map.Entry<Integer, Message> nextMessage(String next) {
@@ -129,6 +133,7 @@ public class MessageReader implements Iterator<Message>, Iterable<Message>, Auto
 		return builder.length() == 0 ? "" : builder.substring(1);
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<Token> lexicon(String text) {
 		InlLexicon lexer = new InlLexicon(CharStreams.fromString(text));
 		return (List<Token>) lexer.getAllTokens();

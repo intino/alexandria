@@ -2,7 +2,7 @@ package io.intino.test;
 
 import io.intino.alexandria.message.MessageReader;
 import io.intino.alexandria.message.parser.InlLexicon;
-import io.intino.alexandria.message.parser.MessageStream;
+import io.intino.performance.MessageStreamOld;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.Token;
@@ -16,13 +16,13 @@ import java.nio.charset.StandardCharsets;
 public class Parser_ {
 	@Test
 	public void should_split_messages() {
-		MessageStream stream = new MessageStream(new ByteArrayInputStream(inl1.getBytes()), StandardCharsets.UTF_8);
+		MessageStreamOld stream = new MessageStreamOld(new ByteArrayInputStream(inl1.getBytes()), StandardCharsets.UTF_8);
 		while (stream.hasNext()) {
 			System.out.println(stream.next());
 			System.out.println();
 			System.out.println();
 		}
-		stream = new MessageStream(new ByteArrayInputStream(inl2.getBytes()), StandardCharsets.UTF_8);
+		stream = new MessageStreamOld(new ByteArrayInputStream(inl2.getBytes()), StandardCharsets.UTF_8);
 		while (stream.hasNext()) {
 			System.out.println(stream.next());
 			System.out.println();

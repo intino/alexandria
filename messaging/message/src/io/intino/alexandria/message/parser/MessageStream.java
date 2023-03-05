@@ -4,14 +4,12 @@ import io.intino.alexandria.message.MessageException;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.Iterator;
 
 public class MessageStream implements Iterator<String>, AutoCloseable {
-	private final Reader reader;
-	private char[] buffer;
-	private int index;
-	private int last;
+
+	private final BufferedReader reader;
+	private final StringBuilder buffer;
 
 	public MessageStream(InputStream stream) {
 		this(stream, Charset.defaultCharset());
@@ -19,13 +17,36 @@ public class MessageStream implements Iterator<String>, AutoCloseable {
 
 	public MessageStream(InputStream stream, Charset charset) {
 		this.reader = new BufferedReader(new InputStreamReader(stream, charset));
-		this.buffer = new char[1024];
+		this.buffer = new StringBuilder(256);
 		init();
 	}
 
 	@Override
 	public boolean hasNext() {
-		return last != -1;
+		return buffer.length() != 0;
+	}
+
+	@Override
+	public String next() {
+		try {
+			if(buffer.length() == 0) return null;
+			final BufferedReader reader = this.reader;
+			final StringBuilder buffer = this.buffer;
+			String next;
+			while((next = reader.readLine()) != null && isNotANewMessage(next)) {
+				buffer.append(next).append('\n');
+			}
+			final String message = buffer.toString();
+			buffer.setLength(0);
+			if(next != null) {
+				buffer.append(next).append('\n');
+			} else {
+				reader.close();
+			}
+			return message;
+		} catch (Exception e) {
+			throw new MessageException(e.getMessage(), e);
+		}
 	}
 
 	@Override
@@ -33,43 +54,15 @@ public class MessageStream implements Iterator<String>, AutoCloseable {
 		reader.close();
 	}
 
-	@Override
-	public String next() {
-		if (last == -1) return null;
-		buffer[0] = '[';
-		index = 1;
-		try {
-			char current = 0;
-			int r;
-			while ((r = reader.read()) != -1 && (last != '\n' || r != '[')) {
-				if((char)r == '\n' && current == '\r') {
-					last = buffer[index - 1] = current = '\n';
-					continue;
-				}
-				current = (char) r;
-				append(current);
-				last = current;
-			}
-			last = r;
-		} catch (IOException e) {
-			throw new MessageException(e.getMessage(), e);
-		}
-		return index == 1 ? "" : new String(buffer, 0, index);
+	private static boolean isNotANewMessage(String next) {
+		return next.isEmpty() || next.charAt(0) != '[';
 	}
 
 	private void init() {
 		try {
-			reader.read();
-		} catch (IOException ignored) {
-		}
-	}
-
-	private void append(char c) {
-		if(index == buffer.length) grow();
-		buffer[index++] = c;
-	}
-
-	private void grow() {
-		buffer = Arrays.copyOf(buffer, buffer.length * 2);
+			String line = reader.readLine();
+			if(line != null) buffer.append(line).append('\n');
+			else reader.close();
+		} catch (IOException ignored) {}
 	}
 }
