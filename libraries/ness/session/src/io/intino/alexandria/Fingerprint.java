@@ -10,6 +10,7 @@ import static io.intino.alexandria.Session.SessionExtension;
 public class Fingerprint {
 
 	private static final String SEPARATOR = "/";
+	private static final String NAME_SEPARATOR = "~";
 	private final String fingerprint;
 
 	public Fingerprint(String fingerprint) {
@@ -45,7 +46,7 @@ public class Fingerprint {
 	}
 
 	public String name() {
-		return fingerprint.replace("/", "-");
+		return fingerprint.replace("/", NAME_SEPARATOR);
 	}
 
 	@Override
@@ -66,8 +67,8 @@ public class Fingerprint {
 
 	private static String cleanedNameOf(File file) {
 		String name = file.getName();
-		if (name.contains("#")) name = name.substring(0, name.indexOf("#"));
-		return name.replace("-", "/")
+		if (name.contains("#")) name = name.substring(0, name.lastIndexOf("#"));
+		return name.replace(NAME_SEPARATOR, "/")
 				.replace(SessionExtension, "");
 	}
 
