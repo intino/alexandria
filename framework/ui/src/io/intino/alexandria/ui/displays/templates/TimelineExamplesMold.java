@@ -1,8 +1,10 @@
 package io.intino.alexandria.ui.displays.templates;
 
+import io.intino.alexandria.Scale;
 import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.model.timeline.Measurement;
+import io.intino.alexandria.ui.model.timeline.MeasurementDefinition;
 import io.intino.alexandria.ui.model.timeline.TimelineDatasource;
+import io.intino.alexandria.ui.model.timeline.TimelineDatasource.TimelineScale;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -27,25 +29,40 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
-			public List<Measurement> measurements() {
+			public List<MeasurementDefinition> measurements() {
 				return List.of(measurementOf("m1", "%", "Medida 1"), measurementOf("m2", "€", "Medida 2"));
 			}
 
 			@Override
-			public Timeline timeline(Measurement measurement) {
-				if (measurement.name().equalsIgnoreCase("m1")) return m1();
-				return m2();
+			public Measurement measurement(MeasurementDefinition definition) {
+				if (definition.name().equalsIgnoreCase("m1")) return m1(definition);
+				return m2(definition);
+			}
+
+			@Override
+			public List<TimelineScale> scales() {
+				return List.of(TimelineScale.Hour, TimelineScale.Day, TimelineScale.Week, TimelineScale.Month, TimelineScale.Year);
 			}
 		});
 		timeline.refresh();
 	}
 
-	private TimelineDatasource.Timeline m1() {
-		return new TimelineDatasource.Timeline() {
+	private TimelineDatasource.Measurement m1(MeasurementDefinition definition) {
+		return new TimelineDatasource.Measurement() {
 			@Override
 			public Trend trend() {
 				if (speed() == 0) return Trend.None;
 				return speed() > 0 ? Trend.Increased : Trend.Decreased;
+			}
+
+			@Override
+			public double distribution() {
+				return 5;
+			}
+
+			@Override
+			public DistributionTrend distributionTrend() {
+				return DistributionTrend.Lower;
 			}
 
 			@Override
@@ -59,7 +76,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
-			public TimelineDatasource.Summary summary(Instant date, Scale scale) {
+			public TimelineDatasource.Summary summary(Instant date, TimelineScale scale) {
 				return new TimelineDatasource.Summary() {
 					@Override
 					public String label() {
@@ -96,6 +113,11 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 						return Instant.now();
 					}
 				};
+			}
+
+			@Override
+			public MeasurementDefinition definition() {
+				return definition;
 			}
 
 			@Override
@@ -146,12 +168,22 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 		};
 	}
 
-	private TimelineDatasource.Timeline m2() {
-		return new TimelineDatasource.Timeline() {
+	private TimelineDatasource.Measurement m2(MeasurementDefinition definition) {
+		return new TimelineDatasource.Measurement() {
 			@Override
 			public Trend trend() {
 				if (acceleration() == 0) return Trend.None;
 				return acceleration() > 0 ? Trend.Increased : Trend.Decreased;
+			}
+
+			@Override
+			public double distribution() {
+				return 10;
+			}
+
+			@Override
+			public DistributionTrend distributionTrend() {
+				return DistributionTrend.Upper;
 			}
 
 			@Override
@@ -165,7 +197,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
-			public TimelineDatasource.Summary summary(Instant date, Scale scale) {
+			public TimelineDatasource.Summary summary(Instant date, TimelineScale scale) {
 				return new TimelineDatasource.Summary() {
 					@Override
 					public String label() {
@@ -202,6 +234,11 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 						return Instant.now();
 					}
 				};
+			}
+
+			@Override
+			public MeasurementDefinition definition() {
+				return definition;
 			}
 
 			@Override
@@ -252,7 +289,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 		};
 	}
 
-	private Measurement measurementOf(String name, String unit, String label) {
-		return new Measurement().name(name).unit(unit).add("es", label).decimalCount(0);
+	private MeasurementDefinition measurementOf(String name, String unit, String label) {
+		return new MeasurementDefinition().name(name).unit(unit).add("es", label).decimalCount(0);
 	}
 }

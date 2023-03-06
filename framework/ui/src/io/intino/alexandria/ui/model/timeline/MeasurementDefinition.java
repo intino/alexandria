@@ -3,7 +3,7 @@ package io.intino.alexandria.ui.model.timeline;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Measurement {
+public class MeasurementDefinition {
 	private String name;
 	private String unit;
 	private Integer decimalCount = 8;
@@ -13,7 +13,7 @@ public class Measurement {
 		return name;
 	}
 
-	public Measurement name(String name) {
+	public MeasurementDefinition name(String name) {
 		this.name = name;
 		return this;
 	}
@@ -22,7 +22,7 @@ public class Measurement {
 		return unit;
 	}
 
-	public Measurement unit(String unit) {
+	public MeasurementDefinition unit(String unit) {
 		this.unit = unit;
 		return this;
 	}
@@ -31,7 +31,7 @@ public class Measurement {
 		return decimalCount;
 	}
 
-	public Measurement decimalCount(Integer decimalCount) {
+	public MeasurementDefinition decimalCount(Integer decimalCount) {
 		this.decimalCount = decimalCount;
 		return this;
 	}
@@ -40,7 +40,7 @@ public class Measurement {
 		return labelMap.getOrDefault(language, name);
 	}
 
-	public Measurement add(String language, String label) {
+	public MeasurementDefinition add(String language, String label) {
 		labelMap.put(language, label);
 		return this;
 	}

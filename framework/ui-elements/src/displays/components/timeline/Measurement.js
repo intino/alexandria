@@ -13,7 +13,7 @@ const style = {
   cursor: "move"
 };
 
-const TimelineMeasurement = ({ measurement, index, id, moveMeasurement, classes, openHistory, mode, translate, beforeSummary, nextSummary }) => {
+const TimelineMeasurement = ({ scales, measurement, index, id, moveMeasurement, classes, openHistory, mode, translate, beforeSummary, nextSummary, changeScale }) => {
     const ref = useRef(null);
     const [fullView, setFullView] = useState(false);
     const chart = createRef();
@@ -52,6 +52,42 @@ const TimelineMeasurement = ({ measurement, index, id, moveMeasurement, classes,
           isDragging: monitor.isDragging()
         })
     });
+    const renderDistribution = (measurement) => {
+        const style = measurement.distribution.trend === "Lower" ? { color: '#F44335' } : { color: '#4D9A51' };
+        return (
+            <div style={{width:'150px',height:'100%',margin:'5px'}}>
+                <div style={{fontSize:'12pt',marginBottom:'3px'}}>{translate(measurement.distribution.trend)}</div>
+                <div className="layout horizontal" style={{marginBottom:'3px'}}>
+                    <Typography style={style} className={classnames(classes.value, mode === "Summary" ? classes.summaryValue : classes.detailValue)}>{measurement.distribution.value}</Typography>
+                    <Typography style={{fontSize:'9pt'}} className={classes.unit}>%</Typography>
+                </div>
+                <div style={{fontSize:'10pt'}}>{translate("of the time")}</div>
+            </div>
+        );
+    };
+    const renderSummaries = (measurement) => {
+        return (
+            <div style={{position:"relative"}}>
+                {renderScales()}
+                {renderSummary(measurement.summary)}
+            </div>
+        );
+    };
+    const renderScales = () => {
+        return (<div style={{position:'absolute',right:0,marginTop:'10px',marginRight:'20px'}}>{scales.map((s, idx) => renderScale(s, idx==scales.length-1))}</div>);
+    };
+    const renderScale = (scale, lastScale) => {
+        const style = lastScale ? { border:'1px solid #888' } : { border:'1px solid #888',borderRight:'0' };
+        const classNames = scale === measurement.summary.scale ? classnames(classes.scale, classes.selectedScale) : classes.scale;
+        return (<a onClick={(e) => { e.stopPropagation(); changeScale(scale)} } style={style} className={classNames}>{scale.substring(0,1)}</a>);
+    };
+    const renderSummary = (summary) => {
+        return (<TimelineSummary
+            summary={summary} width={300} translate={translate}
+            unit={measurement.unit} decimalCount={measurement.decimalCount}
+            beforeSummary={beforeSummary} nextSummary={nextSummary}
+        />);
+    };
     const renderSerie = (measurement) => {
         return (
             <div style={{width:'150px',height:'100%',margin:'5px'}}>
@@ -61,16 +97,6 @@ const TimelineMeasurement = ({ measurement, index, id, moveMeasurement, classes,
             </div>
         );
     };
-    const renderSummaries = (measurement) => {
-        return (<React.Fragment>{measurement.summaries.map(m => renderSummary(m))}</React.Fragment>);
-    };
-    const renderSummary = (summary) => {
-        return (<TimelineSummary
-            summary={summary} width={150} translate={translate}
-            unit={measurement.unit} decimalCount={measurement.decimalCount}
-            beforeSummary={beforeSummary} nextSummary={nextSummary}
-        />);
-    };
     const renderDialog = (measurement, anchorRef) => {
         return (
             <Popover
@@ -78,6 +104,7 @@ const TimelineMeasurement = ({ measurement, index, id, moveMeasurement, classes,
                 anchorEl={anchorRef.current} open={fullView} onClose={() => setFullView(false)}
                 anchorOrigin={{vertical: 'bottom',horizontal: 'left'}}>
                 <div className="layout horizontal flexible wrap" style={{padding:'5px'}}>
+                    {renderDistribution(measurement)}
                     {renderSummaries(measurement)}
                     {renderSerie(measurement)}
                 </div>

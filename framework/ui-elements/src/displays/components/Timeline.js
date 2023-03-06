@@ -20,6 +20,8 @@ import Theme from "app-elements/gen/Theme";
 
 const styles = theme => ({
     measurement : { position:'relative', padding:'5px', marginBottom: '1px' },
+    scale : { cursor:'pointer',padding:'0 4px' },
+    selectedScale : { backgroundColor: theme.palette.primary.main, color: 'white' },
     summaryMeasurement : { minWidth:'60px', paddingRight: '15px' },
     detailMeasurement : { minWidth:'150px' },
     value : { marginRight: '2px', fontSize: '35pt', lineHeight: 1},
@@ -48,6 +50,7 @@ class Timeline extends AbstractTimeline {
 		    openConfiguration : false,
 		    history : { visible: true, from: null, to: null, data: [] },
 		    measurement : null,
+		    scales: [],
 		    measurements: [],
 		    measurementsVisibility : {},
 		    measurementsSorting : {},
@@ -61,7 +64,7 @@ class Timeline extends AbstractTimeline {
     setup = (info) => {
         const measurementsVisibility = this.getCookie(info.name + "_visibility") != null ? this.getCookie(info.name + "_visibility") : this.state.measurementsVisibility;
         const measurementsSorting = this.getCookie(info.name + "_sorting") != null ? this.getCookie(info.name + "_sorting") : this.state.measurementsSorting;
-        this.setState({ measurements: info.measurements, measurementsVisibility: measurementsVisibility, measurementsSorting: measurementsSorting, sourceName: info.name });
+        this.setState({ scales: info.scales, measurements: info.measurements, measurementsVisibility: measurementsVisibility, measurementsSorting: measurementsSorting, sourceName: info.name });
     };
 
     refreshMeasurementsVisibility = (visibility) => {
@@ -76,8 +79,8 @@ class Timeline extends AbstractTimeline {
         this.setState({measurementsSorting: newSorting});
     };
 
-    refreshSummaries = (summaries) => {
-        this.selectedMeasurement.summaries = summaries;
+    refreshSummary = (summary) => {
+        this.selectedMeasurement.summary = summary;
         this.setState({measurements: this.state.measurements})
     };
 
@@ -150,6 +153,7 @@ class Timeline extends AbstractTimeline {
 
     renderMeasurement = (measurement, idx) => {
         return (<TimelineMeasurement style={{margin:'5px'}}
+                                     scales={this.state.scales}
                                      measurement={measurement}
                                      key={this.props.id + measurement.name}
                                      index={idx}
@@ -159,6 +163,7 @@ class Timeline extends AbstractTimeline {
                                      openHistory={this.openHistory.bind(this, measurement)}
                                      translate={this.translate.bind(this)}
                                      moveMeasurement={this.moveMeasurement.bind(this)}
+                                     changeScale={this.changeScale.bind(this, measurement)}
                                      beforeSummary={this.beforeSummary.bind(this, measurement)}
                                      nextSummary={this.nextSummary.bind(this, measurement)}
         />);
@@ -271,6 +276,11 @@ class Timeline extends AbstractTimeline {
         measurements.splice(dragIndex, 1);
         measurements.splice(hoverIndex, 0, measurement);
         this.setState({measurements: measurements, measurementsSorting: this.saveMeasurementsSorting()});
+    };
+
+	changeScale = (measurement, scale) => {
+	    this.selectedMeasurement = measurement;
+        this.requester.changeScale({measurement: measurement.name, scale: scale});
     };
 
 	beforeSummary = (measurement, summary) => {

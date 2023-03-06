@@ -9,8 +9,8 @@ import java.util.Map;
 
 public class TimelineFormatter {
 
-	public static String summaryLabel(Instant date, TimelineDatasource.Timeline.Scale scale, String language) {
-		String format = Formatters.getOrDefault(scale, Formatters.get(TimelineDatasource.Timeline.Scale.Day)).getOrDefault(language, "en");
+	public static String summaryLabel(Instant date, TimelineDatasource.TimelineScale scale, String language) {
+		String format = Formatters.getOrDefault(scale, Formatters.get(TimelineDatasource.TimelineScale.Day)).getOrDefault(language, "en");
 		return date(date, format, language);
 	}
 
@@ -30,11 +30,11 @@ public class TimelineFormatter {
 		return new Locale("en", "EN");
 	}
 
-	private static final Map<TimelineDatasource.Timeline.Scale, Map<String, String>> Formatters = new HashMap<>() {{
-		put(TimelineDatasource.Timeline.Scale.Day, Map.of("es", "YYYY-MM-dd", "en", "dd-MM-YYYY"));
-		put(TimelineDatasource.Timeline.Scale.Week, Map.of("es", "YYYY-Www", "en", "Www-YYYY"));
-		put(TimelineDatasource.Timeline.Scale.Month, Map.of("es", "YYYY-MM", "en", "MM-YYYY"));
-		put(TimelineDatasource.Timeline.Scale.Year, Map.of("es", "YYYY", "en", "YYYY"));
+	private static final Map<TimelineDatasource.TimelineScale, Map<String, String>> Formatters = new HashMap<>() {{
+		put(TimelineDatasource.TimelineScale.Day, Map.of("es", "YYYY-MM-dd", "en", "dd-MM-YYYY"));
+		put(TimelineDatasource.TimelineScale.Week, Map.of("es", "YYYY-Www", "en", "Www-YYYY"));
+		put(TimelineDatasource.TimelineScale.Month, Map.of("es", "YYYY-MM", "en", "MM-YYYY"));
+		put(TimelineDatasource.TimelineScale.Year, Map.of("es", "YYYY", "en", "YYYY"));
 	}};
 
 }

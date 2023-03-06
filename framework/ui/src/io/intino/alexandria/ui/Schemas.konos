@@ -310,6 +310,7 @@ Schema TimelineHistoryFetch
 Schema TimelineSetup
 	Attribute name as Text
 	Attribute mode as Text
+	Attribute scales as Text List
 	Attribute measurements as Object(TimelineMeasurement) List
 
 Schema TimelineMeasurementVisibility
@@ -327,12 +328,17 @@ Schema TimelineMeasurement
 	Attribute unit as Text
 	Attribute decimalCount as Integer
 	Attribute trend as Word("Increased" "Decreased" "None")
-	Attribute summaries as Object(TimelineSummary) List
+	Attribute distribution as Object(TimelineDistribution)
+	Attribute summary as Object(TimelineSummary)
 	Attribute serie as Object(TimelineSerie)
 
-Schema TimelineSummaryInfo
+Schema TimelineParameterInfo
 	Attribute measurement as Text
 	Attribute scale as Text
+
+Schema TimelineDistribution
+	Attribute value as Real
+	Attribute trend as Word("Upper" "Lower" "None")
 
 Schema TimelineSummary
 	Attribute label as Text

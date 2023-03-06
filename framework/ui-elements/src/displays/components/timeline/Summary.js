@@ -68,8 +68,8 @@ const TimelineSummary = ({ summary, width, unit, decimalCount, translate, before
     return (
         <div style={{width:width + "px",...TimelineSummaryStyles.container}}>
             <div className="layout horizontal">
-                <div className="layout vertical flex"><Typography style={TimelineSummaryStyles.label}>{summary.label}</Typography></div>
-                <div className="layout horizontal end-justified">
+                <div className="layout vertical"><Typography style={TimelineSummaryStyles.label}>{summary.label}</Typography></div>
+                <div className="layout horizontal">
                     <IconButton disabled={!summary.canBefore} onClick={handleBefore} size="small" style={{color:beforeColor}}><NavigateBefore style={TimelineSummaryStyles.icon}/></IconButton>
                     <IconButton disabled={!summary.canNext} onClick={handleNext} size="small" style={{color:nextColor}}><NavigateNext style={TimelineSummaryStyles.icon}/></IconButton>
                 </div>
