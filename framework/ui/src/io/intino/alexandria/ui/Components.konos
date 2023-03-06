@@ -181,14 +181,15 @@ Component timeline
 	Notification refreshHistory as Object(TimelineHistoryEntry) List
 	Notification refreshMeasurementsVisibility as Object(TimelineMeasurementVisibility) List
 	Notification refreshMeasurementsSorting as Object(TimelineMeasurementSorting) List
-	Notification refreshSummaries as Object(TimelineSummary) List
+	Notification refreshSummary as Object(TimelineSummary)
 	Notification showHistoryDialog as Object(TimelineHistory)
 	Request openHistory as Text
 	Request fetch as Object(TimelineHistoryFetch)
 	Request measurementsVisibility as Object(TimelineMeasurementVisibility) List
 	Request measurementsSorting as Object(TimelineMeasurementSorting) List
-	Request beforeSummary as Object(TimelineSummaryInfo)
-	Request nextSummary as Object(TimelineSummaryInfo)
+	Request beforeSummary as Object(TimelineParameterInfo)
+	Request nextSummary as Object(TimelineParameterInfo)
+	Request changeScale as Object(TimelineParameterInfo)
 
 Component frame
 	Notification refresh as Text

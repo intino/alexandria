@@ -39,6 +39,14 @@ public class ItsReader implements AutoCloseable {
 		return sensor;
 	}
 
+	public Period period() {
+		return period;
+	}
+
+	public String[] measurements() {
+		return measurements;
+	}
+
 	public Stream<Data> data() {
 		return lines
 				.map(this::parse)

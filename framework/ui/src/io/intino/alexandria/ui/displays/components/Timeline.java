@@ -3,7 +3,7 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.*;
 import io.intino.alexandria.ui.displays.notifiers.TimelineNotifier;
-import io.intino.alexandria.ui.model.timeline.Measurement;
+import io.intino.alexandria.ui.model.timeline.MeasurementDefinition;
 import io.intino.alexandria.ui.model.timeline.TimelineDatasource;
 
 import java.text.SimpleDateFormat;
@@ -25,7 +25,8 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	private List<TimelineMeasurementVisibility> measurementsVisibility;
 	private List<TimelineMeasurementSorting> measurementsSorting;
 	private int summaryPointsCount = DefaultSummaryPointsCount;
-	private Map<String, Map<TimelineDatasource.Timeline.Scale, LocalDateTime>> summaryDates = new HashMap<>();
+	private final Map<String, TimelineDatasource.TimelineScale> measurementScales = new HashMap<>();
+	private final Map<String, Map<TimelineDatasource.TimelineScale, LocalDateTime>> summaryDates = new HashMap<>();
 
 	private static final int DefaultSummaryPointsCount = 24;
 
@@ -74,37 +75,47 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return this;
 	}
 
-	public void beforeSummary(TimelineSummaryInfo info) {
-		TimelineDatasource.Timeline timeline = source.timeline(info.measurement());
-		LocalDateTime current = summaryDate(timeline, info);
+	public void beforeSummary(TimelineParameterInfo info) {
+		TimelineDatasource.Measurement measurement = source.measurement(info.measurement());
+		LocalDateTime current = summaryDate(measurement, info);
 		current = current.minus(1, unitOf(info.scale()));
-		saveSummaryDate(timeline, info, current);
-		notifier.refreshSummaries(summariesOf(info.measurement(), timeline));
+		saveSummaryDate(measurement, info, current);
+		notifier.refreshSummary(summaryOf(measurement));
 	}
 
-	public void nextSummary(TimelineSummaryInfo info) {
-		TimelineDatasource.Timeline timeline = source.timeline(info.measurement());
-		LocalDateTime current = summaryDate(timeline, info);
+	public void nextSummary(TimelineParameterInfo info) {
+		TimelineDatasource.Measurement measurement = source.measurement(info.measurement());
+		LocalDateTime current = summaryDate(measurement, info);
 		current = current.plus(1, unitOf(info.scale()));
-		saveSummaryDate(timeline, info, current);
-		notifier.refreshSummaries(summariesOf(info.measurement(), timeline));
+		saveSummaryDate(measurement, info, current);
+		notifier.refreshSummary(summaryOf(measurement));
+	}
+
+	public void changeScale(TimelineParameterInfo info) {
+		measurementScales.put(info.measurement(), TimelineDatasource.TimelineScale.valueOf(info.scale()));
+		notifier.refreshSummary(summaryOf(source.measurement(info.measurement())));
 	}
 
 	@Override
 	public void refresh() {
 		super.refresh();
 		if (source == null) throw new RuntimeException("Timeline source not defined");
-		notifier.setup(new TimelineSetup().mode(mode.name()).name(source.name()).measurements(source.measurements().stream().map(this::schemaOf).collect(Collectors.toList())));
+		notifier.setup(new TimelineSetup()
+							.mode(mode.name())
+							.name(source.name())
+							.scales(source.scales().stream().map(Enum::name).collect(Collectors.toList()))
+							.measurements(source.measurements().stream().map(this::schemaOf).collect(Collectors.toList()))
+		);
 	}
 
 	public void openHistory(String measurementName) {
-		TimelineDatasource.Timeline timeline = source.timeline(measurementName);
-		notifier.showHistoryDialog(new TimelineHistory().from(timeline.from()).to(timeline.to()));
+		TimelineDatasource.Measurement measurement = source.measurement(measurementName);
+		notifier.showHistoryDialog(new TimelineHistory().from(measurement.from()).to(measurement.to()));
 	}
 
 	public void fetch(TimelineHistoryFetch fetch) {
-		TimelineDatasource.Timeline timeline = source.timeline(fetch.measurement());
-		Map<Instant, Double> values = timeline.serie(fetch.start(), fetch.end()).values();
+		TimelineDatasource.Measurement measurement = source.measurement(fetch.measurement());
+		Map<Instant, Double> values = measurement.serie(fetch.start(), fetch.end()).values();
 		notifier.refreshHistory(reverse(values.entrySet().stream().map(this::historyEntryOf).collect(Collectors.toList())));
 	}
 
@@ -112,36 +123,34 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return new TimelineHistoryEntry().date(entry.getKey()).value(entry.getValue());
 	}
 
-	private TimelineMeasurement schemaOf(Measurement measurement) {
-		TimelineDatasource.Timeline timeline = timeline(measurement);
+	private TimelineMeasurement schemaOf(MeasurementDefinition definition) {
+		TimelineDatasource.Measurement measurement = measurement(definition);
 		return new TimelineMeasurement()
-				.name(measurement.name())
-				.value(timeline.value())
-				.label(measurement.label(language()))
-				.unit(measurement.unit())
-				.decimalCount(measurement.decimalCount())
-				.trend(TimelineMeasurement.Trend.valueOf(timeline.trend().name()))
-				.summaries(summariesOf(measurement.name(), timeline))
-				.serie(serieOf(timeline));
+				.name(definition.name())
+				.value(measurement.value())
+				.label(definition.label(language()))
+				.unit(definition.unit())
+				.decimalCount(definition.decimalCount())
+				.trend(TimelineMeasurement.Trend.valueOf(measurement.trend().name()))
+				.distribution(distributionOf(measurement))
+				.summary(summaryOf(measurement))
+				.serie(serieOf(measurement));
 	}
 
-	private List<TimelineSummary> summariesOf(String measurement, TimelineDatasource.Timeline timeline) {
-		List<TimelineSummary> result = new ArrayList<>();
-		result.add(summaryOf(measurement, timeline, TimelineDatasource.Timeline.Scale.Day));
-		result.add(summaryOf(measurement, timeline, TimelineDatasource.Timeline.Scale.Week));
-		result.add(summaryOf(measurement, timeline, TimelineDatasource.Timeline.Scale.Month));
-		return result;
+	private TimelineDistribution distributionOf(TimelineDatasource.Measurement measurement) {
+		return new TimelineDistribution().value(measurement.distribution()).trend(TimelineDistribution.Trend.valueOf(measurement.distributionTrend().name()));
 	}
 
-	private TimelineSummary summaryOf(String measurement, TimelineDatasource.Timeline timeline, TimelineDatasource.Timeline.Scale scale) {
-		Instant date = summaryDate(measurement, timeline, scale).toInstant(ZoneOffset.UTC);
-		TimelineDatasource.Summary summary = timeline.summary(date, scale);
+	private TimelineSummary summaryOf(TimelineDatasource.Measurement measurement) {
+		TimelineDatasource.TimelineScale scale = scale(measurement);
+		Instant date = summaryDate(measurement, scale).toInstant(ZoneOffset.UTC);
+		TimelineDatasource.Summary summary = measurement.summary(date, scale);
 		return new TimelineSummary().label(summary.label())
 									.average(summaryValueOf(summary.average(), date))
 									.max(summaryValueOf(summary.max(), date))
 									.min(summaryValueOf(summary.min(), date))
-									.canBefore(!date.isBefore(timeline.from()))
-									.canNext(!date.isAfter(timeline.to()))
+									.canBefore(!date.isBefore(measurement.from()))
+									.canNext(!date.isAfter(measurement.to()))
 									.scale(scale.name());
 	}
 
@@ -149,11 +158,11 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return new TimelineSummaryValue().value(value).date(date);
 	}
 
-	private TimelineSerie serieOf(TimelineDatasource.Timeline timeline) {
+	private TimelineSerie serieOf(TimelineDatasource.Measurement measurement) {
 		TimelineSerie result = new TimelineSerie();
-		TimelineDatasource.Serie serie = timeline.serie();
+		TimelineDatasource.Serie serie = measurement.serie();
 		result.name(serie.name());
-		result.categories(categoriesOf(serie, timeline.to()));
+		result.categories(categoriesOf(serie, measurement.to()));
 		result.values(loadValues(serie));
 		return result;
 	}
@@ -174,8 +183,8 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return reverse(fillWithZeros(values.subList(0, Math.min(values.size(), summaryPointsCount))));
 	}
 
-	private TimelineDatasource.Timeline timeline(Measurement measurement) {
-		return source.timeline(measurement);
+	private TimelineDatasource.Measurement measurement(MeasurementDefinition definition) {
+		return source.measurement(definition);
 	}
 
 	private List<Instant> fill(List<Instant> result, Instant to) {
@@ -229,29 +238,33 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return new Locale("en", "EN");
 	}
 
-	private static final Map<TimelineDatasource.Timeline.Scale, TemporalUnit> TemporalUnits = Map.of(
-			TimelineDatasource.Timeline.Scale.Day, ChronoUnit.DAYS,
-			TimelineDatasource.Timeline.Scale.Week, ChronoUnit.WEEKS,
-			TimelineDatasource.Timeline.Scale.Month, ChronoUnit.MONTHS,
-			TimelineDatasource.Timeline.Scale.Year, ChronoUnit.YEARS
+	private static final Map<TimelineDatasource.TimelineScale, TemporalUnit> TemporalUnits = Map.of(
+			TimelineDatasource.TimelineScale.Day, ChronoUnit.DAYS,
+			TimelineDatasource.TimelineScale.Week, ChronoUnit.WEEKS,
+			TimelineDatasource.TimelineScale.Month, ChronoUnit.MONTHS,
+			TimelineDatasource.TimelineScale.Year, ChronoUnit.YEARS
 	);
 
 	private TemporalUnit unitOf(String scaleName) {
-		return TemporalUnits.getOrDefault(TimelineDatasource.Timeline.Scale.valueOf(scaleName), ChronoUnit.DAYS);
+		return TemporalUnits.getOrDefault(TimelineDatasource.TimelineScale.valueOf(scaleName), ChronoUnit.DAYS);
 	}
 
-	private LocalDateTime summaryDate(TimelineDatasource.Timeline timeline, TimelineSummaryInfo info) {
-		return summaryDate(info.measurement(), timeline, TimelineDatasource.Timeline.Scale.valueOf(info.scale()));
+	private LocalDateTime summaryDate(TimelineDatasource.Measurement measurement, TimelineParameterInfo info) {
+		return summaryDate(measurement, TimelineDatasource.TimelineScale.valueOf(info.scale()));
 	}
 
-	private LocalDateTime summaryDate(String measurement, TimelineDatasource.Timeline timeline, TimelineDatasource.Timeline.Scale scale) {
-		if (!summaryDates.containsKey(measurement)) return LocalDateTime.ofInstant(timeline.to(), ZoneOffset.UTC);
-		return summaryDates.get(measurement).getOrDefault(scale, LocalDateTime.ofInstant(timeline.to(), ZoneOffset.UTC));
+	private LocalDateTime summaryDate(TimelineDatasource.Measurement measurement, TimelineDatasource.TimelineScale scale) {
+		if (!summaryDates.containsKey(measurement.definition().name())) return LocalDateTime.ofInstant(measurement.to(), ZoneOffset.UTC);
+		return summaryDates.get(measurement.definition().name()).getOrDefault(scale, LocalDateTime.ofInstant(measurement.to(), ZoneOffset.UTC));
 	}
 
-	private void saveSummaryDate(TimelineDatasource.Timeline timeline, TimelineSummaryInfo info, LocalDateTime current) {
+	private TimelineDatasource.TimelineScale scale(TimelineDatasource.Measurement measurement) {
+		return measurementScales.getOrDefault(measurement.definition().name(), source.scales().get(0));
+	}
+
+	private void saveSummaryDate(TimelineDatasource.Measurement measurement, TimelineParameterInfo info, LocalDateTime current) {
 		if (!summaryDates.containsKey(info.measurement())) summaryDates.put(info.measurement(), new HashMap<>());
-		summaryDates.get(info.measurement()).put(TimelineDatasource.Timeline.Scale.valueOf(info.scale()), current);
+		summaryDates.get(info.measurement()).put(TimelineDatasource.TimelineScale.valueOf(info.scale()), current);
 	}
 
 }

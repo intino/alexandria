@@ -2,9 +2,11 @@ package io.intino.alexandria.zit;
 
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.resourcecleaner.DisposableResource;
+import io.intino.alexandria.zit.model.Data;
 import io.intino.alexandria.zit.model.Period;
 
 import java.io.*;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 
@@ -20,6 +22,14 @@ public class ZitWriter implements AutoCloseable {
 		file.getParentFile().mkdirs();
 		this.writer = new OutputStreamWriter(Zit.compressing(new BufferedOutputStream(new FileOutputStream(file))));
 		this.resource = DisposableResource.whenDestroyed(this).thenClose(writer);
+		if (file.exists() && file.length() > 0) {
+			try (ZitStream stream = ZitStream.of(file)) {
+				Data data = stream.reduce((first, second) -> second).orElse(null);
+				if (data == null) return;
+				period = stream.period();
+				nextTs = period.next(data.ts());
+			}
+		}
 	}
 
 	public ZitWriter(OutputStream stream) throws IOException {
@@ -50,8 +60,14 @@ public class ZitWriter implements AutoCloseable {
 	}
 
 	public void put(Instant instant, double[] data) {
-		if (!instant.equals(this.nextTs)) put(instant);
+		if (!areClose(instant, this.nextTs)) put(instant);
 		put(data);
+	}
+
+	private boolean areClose(Instant instant, Instant nextTs) {
+		if (nextTs == null) return false;
+		Duration between = Duration.between(instant, nextTs);
+		return Math.abs(between.getSeconds()) < (period.duration() / 2);
 	}
 
 	public void put(double[] data) {
