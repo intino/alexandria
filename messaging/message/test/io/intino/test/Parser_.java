@@ -2,7 +2,7 @@ package io.intino.test;
 
 import io.intino.alexandria.message.MessageReader;
 import io.intino.alexandria.message.parser.InlLexicon;
-import io.intino.performance.MessageStreamOld;
+import io.intino.performance.impl.MessageStreamOld;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.Token;

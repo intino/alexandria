@@ -4,6 +4,7 @@ import io.intino.alexandria.message.MessageException;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class MessageStream implements Iterator<String>, AutoCloseable {
@@ -30,8 +31,6 @@ public class MessageStream implements Iterator<String>, AutoCloseable {
 	public String next() {
 		try {
 			if(buffer.length() == 0) return null;
-			final BufferedReader reader = this.reader;
-			final StringBuilder buffer = this.buffer;
 			String next;
 			while((next = reader.readLine()) != null && isNotANewMessage(next)) {
 				buffer.append(next).append('\n');
@@ -49,6 +48,33 @@ public class MessageStream implements Iterator<String>, AutoCloseable {
 		}
 	}
 
+	public int nextLines(String[] lines) {
+		try {
+			if(buffer.length() == 0) return 0;
+			buffer.setLength(buffer.length() - 1);
+			lines[0] = buffer.toString();
+			int i = 1;
+			String next;
+			while((next = reader.readLine()) != null && isNotANewMessage(next)) {
+				addLine(next, i++, lines);
+			}
+			buffer.setLength(0);
+			if(next != null) {
+				buffer.append(next).append('\n');
+			} else {
+				reader.close();
+			}
+			return i;
+		} catch (Exception e) {
+			throw new MessageException(e.getMessage(), e);
+		}
+	}
+
+	private void addLine(String next, int i, String[] lines) {
+		if(i >= lines.length) lines = Arrays.copyOf(lines, lines.length * 2);
+		lines[i] = next;
+	}
+
 	@Override
 	public void close() throws IOException {
 		reader.close();
@@ -60,9 +86,15 @@ public class MessageStream implements Iterator<String>, AutoCloseable {
 
 	private void init() {
 		try {
-			String line = reader.readLine();
+			String line = getFirstLineNonBlank();
 			if(line != null) buffer.append(line).append('\n');
 			else reader.close();
 		} catch (IOException ignored) {}
+	}
+
+	private String getFirstLineNonBlank() throws IOException {
+		String line = reader.readLine();
+		while(line != null && line.isBlank()) line = reader.readLine();
+		return line;
 	}
 }

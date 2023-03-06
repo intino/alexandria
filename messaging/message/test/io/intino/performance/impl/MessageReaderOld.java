@@ -1,7 +1,8 @@
-package io.intino.alexandria.message;
+package io.intino.performance.impl;
 
+import io.intino.alexandria.message.Message;
+import io.intino.alexandria.message.MessageException;
 import io.intino.alexandria.message.parser.InlLexicon;
-import io.intino.alexandria.message.parser.MessageStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Token;
 
@@ -12,21 +13,20 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import static io.intino.alexandria.message.parser.InlLexicon.*;
-import static java.lang.Math.abs;
 
-public class MessageReader implements Iterator<Message>, Iterable<Message>, AutoCloseable {
-	private final MessageStream messageStream;
+public class MessageReaderOld implements Iterator<Message>, Iterable<Message>, AutoCloseable {
+	private final MessageStreamOld messageStream;
 	private String current;
 
-	public MessageReader(String str) {
+	public MessageReaderOld(String str) {
 		this(new ByteArrayInputStream(str.getBytes()));
 	}
 
-	public MessageReader(InputStream inputStream) {
-		this(new MessageStream(inputStream));
+	public MessageReaderOld(InputStream inputStream) {
+		this(new MessageStreamOld(inputStream));
 	}
 
-	public MessageReader(MessageStream messageStream) {
+	public MessageReaderOld(MessageStreamOld messageStream) {
 		this.messageStream = messageStream;
 		if (this.messageStream.hasNext()) current = this.messageStream.next();
 	}
@@ -72,8 +72,7 @@ public class MessageReader implements Iterator<Message>, Iterable<Message>, Auto
 	}
 
 	private boolean isComponent(String next) {
-		final int componentSep = next.indexOf('.');
-		return componentSep > 0 && componentSep < next.indexOf('\n');
+		return next.substring(0, next.indexOf('\n')).contains(".");
 	}
 
 	private Map.Entry<Integer, Message> nextMessage(String next) {

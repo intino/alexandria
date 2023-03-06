@@ -1,4 +1,4 @@
-package io.intino.performance;
+package io.intino.performance.impl;
 
 import io.intino.alexandria.message.MessageException;
 
