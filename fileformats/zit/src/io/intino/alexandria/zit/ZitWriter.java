@@ -21,7 +21,7 @@ public class ZitWriter implements AutoCloseable {
 	public ZitWriter(File file) throws IOException {
 		file.getParentFile().mkdirs();
 		if (file.exists() && file.length() > 0) loadHeader(file);
-		this.writer = new OutputStreamWriter(Zit.compressing(new BufferedOutputStream(new FileOutputStream(file))));
+		this.writer = new OutputStreamWriter(Zit.compressing(new BufferedOutputStream(new FileOutputStream(file, true))));
 		this.resource = DisposableResource.whenDestroyed(this).thenClose(writer);
 	}
 
