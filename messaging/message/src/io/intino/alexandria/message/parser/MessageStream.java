@@ -18,7 +18,7 @@ public class MessageStream implements Iterator<String>, AutoCloseable {
 
 	public MessageStream(InputStream stream, Charset charset) {
 		this.reader = new BufferedReader(new InputStreamReader(stream, charset));
-		this.buffer = new StringBuilder(256);
+		this.buffer = new StringBuilder(64);
 		init();
 	}
 
@@ -36,38 +36,41 @@ public class MessageStream implements Iterator<String>, AutoCloseable {
 				buffer.append(next).append('\n');
 			}
 			final String message = buffer.toString();
-			buffer.setLength(0);
-			if(next != null) {
-				buffer.append(next).append('\n');
-			} else {
-				reader.close();
-			}
+			saveNextLineForLaterOrCloseReader(next);
 			return message;
 		} catch (Exception e) {
 			throw new MessageException(e.getMessage(), e);
 		}
 	}
 
+	private void saveNextLineForLaterOrCloseReader(String next) throws IOException {
+		buffer.setLength(0);
+		if(next != null) {
+			buffer.append(next).append('\n');
+		} else {
+			reader.close();
+		}
+	}
+
 	public int nextLines(String[] lines) {
 		try {
 			if(buffer.length() == 0) return 0;
-			buffer.setLength(buffer.length() - 1);
-			lines[0] = buffer.toString();
+			setFirstLine(lines);
 			int i = 1;
 			String next;
 			while((next = reader.readLine()) != null && isNotANewMessage(next)) {
 				addLine(next, i++, lines);
 			}
-			buffer.setLength(0);
-			if(next != null) {
-				buffer.append(next).append('\n');
-			} else {
-				reader.close();
-			}
+			saveNextLineForLaterOrCloseReader(next);
 			return i;
 		} catch (Exception e) {
 			throw new MessageException(e.getMessage(), e);
 		}
+	}
+
+	private void setFirstLine(String[] lines) {
+		buffer.setLength(buffer.length() - 1);
+		lines[0] = buffer.toString();
 	}
 
 	private void addLine(String next, int i, String[] lines) {

@@ -4,8 +4,10 @@ import java.time.Instant;
 import java.util.*;
 
 public class Message {
-	static final char listSeparator = '\u0001';
+	public static final char listSeparator = '\u0001';
+	public static final String listSeparatorStr = String.valueOf(listSeparator);
 	private static final Value NullValue = new NullValue();
+
 	private final Map<String, String> attributes;
 	private String type;
 	private Message owner;
@@ -188,6 +190,9 @@ public class Message {
 	}
 
 	public interface Value {
+
+		boolean isEmpty();
+
 		String data();
 
 		<T> T as(Class<T> type);

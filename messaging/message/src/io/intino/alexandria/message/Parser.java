@@ -6,5 +6,4 @@ interface Parser {
 	static Parser of(Class<?> aClass) {
 		return ParserFactory.get(aClass);
 	}
-
 }

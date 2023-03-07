@@ -6,16 +6,15 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 public class FastMessageReader implements Iterator<Message>, Iterable<Message>, AutoCloseable {
 
 	private final MessageStream messageStream;
+	private final Message[] contextList;
 	private final String[] lines;
 	private int numLines;
-	private final int contextMaxLevels;
 
 	public FastMessageReader(String str) {
 		this(new ByteArrayInputStream(str.getBytes()), new Config());
@@ -39,8 +38,8 @@ public class FastMessageReader implements Iterator<Message>, Iterable<Message>, 
 
 	public FastMessageReader(MessageStream messageStream, Config config) {
 		this.messageStream = messageStream;
-		this.lines = new String[config.linesBufferSize];
-		this.contextMaxLevels = config.contextMaxLevels;
+		this.lines = new String[Math.max(config.linesBufferSize, 1)];
+		this.contextList = new Message[Math.max(config.contextMaxLevels, 1)];
 		init();
 	}
 
@@ -73,17 +72,11 @@ public class FastMessageReader implements Iterator<Message>, Iterable<Message>, 
 	}
 
 	private Message nextMessage() {
-		Message[] messages = new Message[contextMaxLevels];
-		parse(lines, numLines, messages);
+		parse(lines, numLines, contextList);
 		while((numLines = messageStream.nextLines(lines)) > 0 && isComponent(lines[0])) {
-			parse(lines, numLines, messages);
+			parse(lines, numLines, contextList);
 		}
-		return firstNonNull(messages);
-	}
-
-	private Message firstNonNull(Message[] messages) {
-		for(Message m : messages) if(m != null) return m;
-		throw new NoSuchElementException("No messages left");
+		return firstNonNullAndReset(contextList);
 	}
 
 	private void parse(String[] lines, int size, Message[] contextList) {
@@ -144,6 +137,19 @@ public class FastMessageReader implements Iterator<Message>, Iterable<Message>, 
 		return next.indexOf('.') > 0;
 	}
 
+	private Message firstNonNullAndReset(Message[] messages) {
+		Message message = null;
+		for(int i = 0; i < messages.length; i++) {
+			Message m = messages[i];
+			if (m != null && message == null) {
+				message = m;
+			}
+			messages[i] = null;
+		}
+		if(message == null) throw new NoSuchElementException("No messages left");
+		return message;
+	}
+
 	private void init() {
 		if (this.messageStream.hasNext())
 			this.numLines = this.messageStream.nextLines(lines);
@@ -151,7 +157,7 @@ public class FastMessageReader implements Iterator<Message>, Iterable<Message>, 
 
 	public static class Config {
 		private int linesBufferSize = 128;
-		private int contextMaxLevels = 16;
+		private int contextMaxLevels = 8;
 
 		public Config linesBufferSize(int linesBufferSize) {
 			this.linesBufferSize = linesBufferSize;

@@ -17,6 +17,11 @@ public class DataValue implements Message.Value {
 	}
 
 	@Override
+	public boolean isEmpty() {
+		return false;
+	}
+
+	@Override
 	public String data() {
 		return data;
 	}

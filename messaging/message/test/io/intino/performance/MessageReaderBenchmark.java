@@ -17,16 +17,16 @@ import java.util.concurrent.TimeUnit;
 
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @BenchmarkMode(Mode.AverageTime)
-@Fork(value = 1, warmups = 0)
+@Fork(value = 2, warmups = 1)
 @Warmup(iterations = 2)
 @Measurement(iterations = 8)
 public class MessageReaderBenchmark {
 //	Windows 10, i9-10885H 2.40 GHz
-//  Benchmark                  Mode  Cnt     Score    Error  Units
-//	MessageReaderBenchmark.v0  avgt   10  1616,321 ± 17,921  ms/op
-//	MessageReaderBenchmark.v1  avgt   10  1392,100 ± 67,550  ms/op
-//	MessageReaderBenchmark.v2  avgt   10   681,445 ± 66,251  ms/op
-//	MessageReaderBenchmark.v3  avgt   10   388,133 ± 14,735  ms/op
+//  Benchmark                  Mode  Cnt     Score     Error  Units
+//	MessageReaderBenchmark.v0  avgt   16  1620,430 ± 198,681  ms/op
+//	MessageReaderBenchmark.v1  avgt   16  1508,325 ±  39,845  ms/op
+//	MessageReaderBenchmark.v2  avgt   16   548,339 ±   4,774  ms/op
+//	MessageReaderBenchmark.v3  avgt   16   361,150 ±   2,365  ms/op
 
 	private static final byte[] INL = loadInl().getBytes();
 

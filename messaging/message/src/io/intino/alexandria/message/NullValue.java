@@ -6,6 +6,11 @@ import java.util.List;
 
 class NullValue implements Message.Value {
 	@Override
+	public boolean isEmpty() {
+		return true;
+	}
+
+	@Override
 	public String data() {
 		return null;
 	}
