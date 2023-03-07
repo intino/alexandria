@@ -20,16 +20,9 @@ public class ZitWriter implements AutoCloseable {
 
 	public ZitWriter(File file) throws IOException {
 		file.getParentFile().mkdirs();
+		if (file.exists() && file.length() > 0) loadHeader(file);
 		this.writer = new OutputStreamWriter(Zit.compressing(new BufferedOutputStream(new FileOutputStream(file))));
 		this.resource = DisposableResource.whenDestroyed(this).thenClose(writer);
-		if (file.exists() && file.length() > 0) {
-			try (ZitStream stream = ZitStream.of(file)) {
-				Data data = stream.reduce((first, second) -> second).orElse(null);
-				if (data == null) return;
-				period = stream.period();
-				nextTs = period.next(data.ts());
-			}
-		}
 	}
 
 	public ZitWriter(OutputStream stream) throws IOException {
@@ -52,6 +45,16 @@ public class ZitWriter implements AutoCloseable {
 
 	public void put(String[] sensorModel) {
 		writeLine("@measurements " + String.join(",", sensorModel).stripTrailing());
+	}
+
+	private void loadHeader(File file) throws IOException {
+		try (ZitStream stream = ZitStream.of(file)) {
+			Data data = stream.reduce((first, second) -> second).orElse(null);
+			if (data != null) {
+				period = stream.period();
+				nextTs = period.next(data.ts());
+			}
+		}
 	}
 
 	public void put(Instant instant) {
