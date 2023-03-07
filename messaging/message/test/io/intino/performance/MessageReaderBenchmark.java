@@ -1,10 +1,8 @@
 package io.intino.performance;
 
-import io.intino.alexandria.message.FastMessageReader;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageReader;
 import io.intino.performance.impl.FastMessageReaderOld;
-import io.intino.performance.impl.MessageReaderOld;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
@@ -30,23 +28,23 @@ public class MessageReaderBenchmark {
 
 	private static final byte[] INL = loadInl().getBytes();
 
-	@Benchmark
-	public Blackhole v0(Blackhole bk) {
-		Iterator<Message> iterator = new MessageReaderOld(new ByteArrayInputStream(INL));
-		while(iterator.hasNext()) {
-			bk.consume(iterator.next());
-		}
-		return bk;
-	}
+//	@Benchmark
+//	public Blackhole v0(Blackhole bk) {
+//		Iterator<Message> iterator = new MessageReaderOld(new ByteArrayInputStream(INL));
+//		while(iterator.hasNext()) {
+//			bk.consume(iterator.next());
+//		}
+//		return bk;
+//	}
 
-	@Benchmark
-	public Blackhole v1(Blackhole bk) {
-		Iterator<Message> iterator = new MessageReader(new ByteArrayInputStream(INL));
-		while(iterator.hasNext()) {
-			bk.consume(iterator.next());
-		}
-		return bk;
-	}
+//	@Benchmark
+//	public Blackhole v1(Blackhole bk) {
+//		Iterator<Message> iterator = new MessageReaderV1(new ByteArrayInputStream(INL));
+//		while(iterator.hasNext()) {
+//			bk.consume(iterator.next());
+//		}
+//		return bk;
+//	}
 
 	@Benchmark
 	public Blackhole v2(Blackhole bk) {
@@ -59,7 +57,7 @@ public class MessageReaderBenchmark {
 
 	@Benchmark
 	public Blackhole v3(Blackhole bk) {
-		Iterator<Message> iterator = new FastMessageReader(new ByteArrayInputStream(INL));
+		Iterator<Message> iterator = new MessageReader(new ByteArrayInputStream(INL));
 		while(iterator.hasNext()) {
 			bk.consume(iterator.next());
 		}

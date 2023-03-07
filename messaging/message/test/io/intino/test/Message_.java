@@ -3,13 +3,32 @@ package io.intino.test;
 import io.intino.alexandria.message.Message;
 import org.junit.Test;
 
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 public class Message_ {
 
 	@Test
 	public void overrideAttribute() {
 		new Message("aaaa").set("nombre", "aaa@aaaa").set("nombre", "aaaa");
+	}
+
+	@Test
+	public void iterables() {
+		Message m = new Message("something");
+		m.set("array", new int[]{1, 2, 3});
+		m.set("list", List.of(1, 2, 3));
+		m.set("queue", new ArrayDeque<>(List.of(1, 2, 3)));
+
+		assertArrayEquals(new int[]{1, 2, 3}, m.get("array").as(int[].class));
+		assertArrayEquals(new int[]{1, 2, 3}, m.get("list").as(int[].class));
+		assertArrayEquals(new int[]{1, 2, 3}, m.get("queue").as(int[].class));
 	}
 
 	@Test

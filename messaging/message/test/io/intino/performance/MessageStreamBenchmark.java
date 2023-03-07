@@ -1,6 +1,6 @@
 package io.intino.performance;
 
-import io.intino.alexandria.message.parser.MessageStream;
+import io.intino.alexandria.message.MessageStream;
 import io.intino.performance.impl.MessageStreamOld;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;

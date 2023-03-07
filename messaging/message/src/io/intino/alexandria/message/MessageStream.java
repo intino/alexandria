@@ -1,4 +1,4 @@
-package io.intino.alexandria.message.parser;
+package io.intino.alexandria.message;
 
 import io.intino.alexandria.message.MessageException;
 

@@ -11,7 +11,6 @@ import java.util.Map;
 
 class ParserFactory {
 	private static final Map<Class<?>, Parser> Parsers;
-	private static final String NullValue = "\0";
 
 	static {
 		Parsers = new HashMap<>();
@@ -78,11 +77,11 @@ class ParserFactory {
 		@Override
 		public Object parse(String text) {
 			Parser parser = Parser.of(elementType);
-			String[] items = text.split(Message.listSeparatorStr);
+			String[] items = text.split(Message.ListSepStr);
 			Object result = Array.newInstance(elementType, items.length);
 			for (int i = 0; i < items.length; i++) {// TODO: trim items?
 				String item = items[i];
-				Array.set(result, i, (NullValue.equals(item) ? null : parser.parse(item)));
+				Array.set(result, i, (Message.NullValue.equals(item) ? null : parser.parse(item)));
 			}
 			return result;
 		}

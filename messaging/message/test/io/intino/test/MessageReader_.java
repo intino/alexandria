@@ -1,19 +1,17 @@
 package io.intino.test;
 
-import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageReader;
+import io.intino.alexandria.message.Message;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class MessageReader_ {
 
@@ -27,12 +25,14 @@ public class MessageReader_ {
 				"\tG@R@34";
 		Message next = new MessageReader(message).next();
 		Assert.assertNotNull(next);
+		assertEquals("G@R@34", next.get("message").asString());
 		message = "[WARNING]\n" +
 				"ts: 2021-07-27T14:28:31.494323Z\n" +
 				"source: io.intino.magritte.framework.loaders.ListProcessor:process\n" +
 				"message:G@R@34";
 		next = new MessageReader(message).next();
 		Assert.assertNotNull(next);
+		assertEquals("G@R@34", next.get("message").asString());
 	}
 
 	@Test
