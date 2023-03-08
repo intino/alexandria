@@ -15,8 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.datalake.aws.AwsDatalake.Aws_delimeter;
-import static io.intino.alexandria.datalake.aws.AwsDatalake.Prefix_delimeter;
+import static io.intino.alexandria.datalake.aws.AwsDatalake.AwsDelimiter;
+import static io.intino.alexandria.datalake.aws.AwsDatalake.PrefixDelimiter;
 import static io.intino.alexandria.event.Event.Format.Measurement;
 
 public class MeasurementEventTub implements Tub<MeasurementEvent>, AwsTub {
@@ -37,7 +37,7 @@ public class MeasurementEventTub implements Tub<MeasurementEvent>, AwsTub {
     }
 
     private String name() {
-        String[] route = prefix.split(Aws_delimeter)[0].split(Prefix_delimeter);
+        String[] route = prefix.split(AwsDelimiter)[0].split(PrefixDelimiter);
         return route[route.length - 1].replace(Measurement.extension(), "");
     }
 

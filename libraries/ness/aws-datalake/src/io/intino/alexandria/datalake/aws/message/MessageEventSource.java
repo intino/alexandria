@@ -8,6 +8,8 @@ import io.intino.alexandria.event.message.MessageEvent;
 
 import java.util.stream.Stream;
 
+import static io.intino.alexandria.datalake.aws.AwsDatalake.PrefixDelimiter;
+
 public class MessageEventSource implements Datalake.Store.Source<MessageEvent> {
     private final S3 s3;
     private final String bucketName;
@@ -22,7 +24,7 @@ public class MessageEventSource implements Datalake.Store.Source<MessageEvent> {
 
     @Override
     public String name() {
-        String[] rootArray = prefix.split("_");
+        String[] rootArray = prefix.split(PrefixDelimiter);
         return rootArray[rootArray.length - 1];
     }
 

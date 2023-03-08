@@ -8,9 +8,8 @@ import io.intino.alexandria.event.measurement.MeasurementEvent;
 import io.intino.alexandria.event.message.MessageEvent;
 
 public class AwsDatalake implements Datalake {
-
-    public static final String Prefix_delimeter = "_";
-    public static final String Aws_delimeter = "/";
+    public static final String PrefixDelimiter = "_";
+    public static final String AwsDelimiter = "/";
     private final S3 s3;
     private final String bucketName;
 
@@ -25,7 +24,5 @@ public class AwsDatalake implements Datalake {
     }
 
     @Override
-    public Store<MeasurementEvent> measurementStore() {
-        return new MeasurementEventStore(s3, bucketName);
-    }
+    public Store<MeasurementEvent> measurementStore() {return new MeasurementEventStore(s3, bucketName);}
 }

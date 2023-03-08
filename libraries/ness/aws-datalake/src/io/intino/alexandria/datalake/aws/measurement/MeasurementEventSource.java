@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import static io.intino.alexandria.datalake.aws.AwsDatalake.PrefixDelimiter;
+
 public class MeasurementEventSource implements Datalake.Store.Source<MeasurementEvent> {
     private final S3 s3;
     private final String bucketName;
@@ -24,7 +26,7 @@ public class MeasurementEventSource implements Datalake.Store.Source<Measurement
 
     @Override
     public String name() {
-        String[] rootArray = prefix.split("_");
+        String[] rootArray = prefix.split(PrefixDelimiter);
         return rootArray[rootArray.length - 1];
     }
 
@@ -50,7 +52,7 @@ public class MeasurementEventSource implements Datalake.Store.Source<Measurement
     }
 
     private String tubNameOf(Timetag tag) {
-        return prefix + "_" + tag.value() + "NOT KNOWN"; //TODO
+        return prefix + PrefixDelimiter + tag.value() + "NOT KNOWN"; //TODO
     }
 
     @Override

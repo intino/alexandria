@@ -3,7 +3,7 @@ package io.intino.alexandria.datalake.aws.message;
 import com.amazonaws.services.s3.model.S3Object;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.AwsTub;
-import io.intino.alexandria.datalake.Datalake.Store.Tub;
+import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.aws.S3;
 import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.EventReader;
@@ -15,11 +15,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.datalake.aws.AwsDatalake.Aws_delimeter;
-import static io.intino.alexandria.datalake.aws.AwsDatalake.Prefix_delimeter;
+import static io.intino.alexandria.datalake.aws.AwsDatalake.AwsDelimiter;
+import static io.intino.alexandria.datalake.aws.AwsDatalake.PrefixDelimiter;
 import static io.intino.alexandria.event.Event.Format.Message;
 
-public class MessageEventTub implements Tub<MessageEvent>, AwsTub {
+public class MessageEventTub implements Datalake.Store.Tub<MessageEvent>, AwsTub {
 
     private final S3 s3;
     private final String bucketName;
@@ -37,7 +37,7 @@ public class MessageEventTub implements Tub<MessageEvent>, AwsTub {
     }
 
     private String name() {
-        String[] route = prefix.split(Aws_delimeter)[0].split(Prefix_delimeter);
+        String[] route = prefix.split(AwsDelimiter)[0].split(PrefixDelimiter);
         return route[route.length - 1].replace(Message.extension(), "");
     }
 

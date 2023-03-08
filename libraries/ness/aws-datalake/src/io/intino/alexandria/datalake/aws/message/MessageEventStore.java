@@ -2,13 +2,14 @@ package io.intino.alexandria.datalake.aws.message;
 
 import io.intino.alexandria.datalake.Datalake.Store;
 import io.intino.alexandria.datalake.aws.S3;
-import io.intino.alexandria.datalake.file.FileStore;
 import io.intino.alexandria.event.message.MessageEvent;
 
-import java.io.File;
 import java.util.stream.Stream;
 
-public class MessageEventStore implements Store<MessageEvent>, FileStore {
+import static io.intino.alexandria.datalake.aws.AwsDatalake.PrefixDelimiter;
+
+public class MessageEventStore implements Store<MessageEvent> {
+    public static final String MessagePrefix = "message";
     private final S3 s3;
     private final String bucketName;
 
@@ -19,21 +20,26 @@ public class MessageEventStore implements Store<MessageEvent>, FileStore {
 
     @Override
     public Stream<Tank<MessageEvent>> tanks() {
-        return null;
+        return s3.keysIn(bucketName, MessagePrefix)
+                .map(prefix -> prefix.substring(from(prefix), to(prefix)))
+                .distinct()
+                .map(tank -> new MessageEventTank(s3, bucketName, prefixOf(tank)));
     }
 
     @Override
-    public Tank<MessageEvent> tank(String s) {
-        return null;
+    public Tank<MessageEvent> tank(String name) {
+        return new MessageEventTank(s3, bucketName, prefixOf(name));
     }
 
-    @Override
-    public String fileExtension() {
-        return null;
+    private int from(String s) {
+        return s.indexOf(PrefixDelimiter);
     }
 
-    @Override
-    public File directory() {
-        return null;
+    private int to(String s) {
+        return s.indexOf(PrefixDelimiter, from(s) + 1);
+    }
+
+    private static String prefixOf(String name) {
+        return MessagePrefix + PrefixDelimiter + name;
     }
 }

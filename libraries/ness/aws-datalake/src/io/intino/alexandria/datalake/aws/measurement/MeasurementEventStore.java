@@ -2,36 +2,44 @@ package io.intino.alexandria.datalake.aws.measurement;
 
 import io.intino.alexandria.datalake.Datalake.Store;
 import io.intino.alexandria.datalake.aws.S3;
-import io.intino.alexandria.datalake.file.FileStore;
 import io.intino.alexandria.event.measurement.MeasurementEvent;
 
-import java.io.File;
 import java.util.stream.Stream;
 
-public class MeasurementEventStore implements Store<MeasurementEvent>, FileStore {
+import static io.intino.alexandria.datalake.aws.AwsDatalake.PrefixDelimiter;
 
+public class MeasurementEventStore implements Store<MeasurementEvent> {
+    public static final String MeasurementsPrefix = "measurement";
+    private final S3 s3;
+    private final String bucketName;
 
     public MeasurementEventStore(S3 s3, String bucketName) {
-
+        this.s3 = s3;
+        this.bucketName = bucketName;
     }
 
     @Override
     public Stream<Tank<MeasurementEvent>> tanks() {
-        return null;
+        return s3.keysIn(bucketName, MeasurementsPrefix)
+                .map(prefix -> prefix.substring(from(prefix), to(prefix)))
+                .distinct()
+                .map(tank -> new MeasurementEventTank(s3, bucketName, prefixOf(tank)));
     }
 
     @Override
-    public Tank<MeasurementEvent> tank(String s) {
-        return null;
+    public Tank<MeasurementEvent> tank(String name) {
+        return new MeasurementEventTank(s3, bucketName, prefixOf(name));
     }
 
-    @Override
-    public String fileExtension() {
-        return null;
+    private int from(String s) {
+        return s.indexOf(PrefixDelimiter);
     }
 
-    @Override
-    public File directory() {
-        return null;
+    private int to(String s) {
+        return s.indexOf(PrefixDelimiter, from(s) + 1);
+    }
+
+    private static String prefixOf(String name) {
+        return MeasurementsPrefix + PrefixDelimiter + name;
     }
 }
